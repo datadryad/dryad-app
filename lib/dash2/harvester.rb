@@ -1,4 +1,4 @@
-require "dash2/harvester/version"
+require 'dash2/harvester/version'
 
 module Dash2
   module Harvester
