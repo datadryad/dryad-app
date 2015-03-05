@@ -4,20 +4,20 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'dash2/harvester/version'
 
 Gem::Specification.new do |spec|
-  spec.name          = "dash2-harvester"
+  spec.name          = 'dash2-harvester'
   spec.version       = Dash2::Harvester::VERSION
-  spec.authors       = ["David Moles"]
-  spec.email         = ["chronodm@gmail.com"]
-  spec.summary       = %q{TODO: Write a short summary. Required.}
-  spec.description   = %q{TODO: Write a longer description. Optional.}
-  spec.homepage      = ""
-  spec.license       = "MIT"
+  spec.authors       = ['David Moles']
+  spec.email         = ['david.moles@ucop.edu']
+  spec.summary       = 'Harvests OAI-PMH metadata into Solr'
+  spec.description   = 'Harvests OAI-PMH metadata from a digital repository into Solr for indexing'
+  spec.homepage      = '' # TODO add homepage
+  spec.license       = 'MIT'
 
   spec.files         = `git ls-files -z`.split("\x0")
   spec.executables   = spec.files.grep(%r{^bin/}) { |f| File.basename(f) }
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
-  spec.require_paths = ["lib"]
+  spec.require_paths = ['lib']
 
-  spec.add_development_dependency "bundler", "~> 1.7"
-  spec.add_development_dependency "rake", "~> 10.0"
+  spec.add_development_dependency 'bundler', '~> 1.7'
+  spec.add_development_dependency 'rake', '~> 10.0'
 end
