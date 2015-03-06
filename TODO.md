@@ -28,6 +28,14 @@
 - What should we set them to?
 
 ------------------------------------------------------------
+# Testing
+
+- Set up [Guard](https://github.com/guard/guard) to run tests automatically, since
+  it's not like we can check for compilation errors
+    - See [this StackOverflow answer](http://stackoverflow.com/questions/11996124/is-it-impossible-to-use-guard-with-rubymine/12000765#12000765)
+      on using Guard with RubyMine / IntelliJ
+
+------------------------------------------------------------
 # Notes
 
 - `ruby-oai` provides an `OAI::Provider` that could front a dummy repository for testing purposes
