@@ -11,3 +11,6 @@
 /log/*
 !/log/.keep
 /tmp
+config/database.yml
+.rspec
+/spec/tmp
