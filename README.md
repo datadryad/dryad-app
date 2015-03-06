@@ -6,21 +6,22 @@
 Harvests [OAI-PMH](http://www.openarchives.org/pmh/) metadata from a digital repository into
 [Solr](http://lucene.apache.org/solr/) for indexing.
 
-## Installation
+<!-- TODO: Figure out gem publishing and then uncomment/test these instructions -->
+<!-- ## Installation -->
 
-Add this line to your application's Gemfile:
+<!-- Add this line to your application's Gemfile: -->
 
-```ruby
-gem 'dash2-harvester'
-```
+<!-- ```ruby -->
+<!-- gem 'dash2-harvester' -->
+<!-- ``` -->
 
-And then execute:
+<!-- And then execute: -->
 
-    $ bundle
+<!--     $ bundle -->
 
-Or install it yourself as:
+<!-- Or install it yourself as: -->
 
-    $ gem install dash2-harvester
+<!--     $ gem install dash2-harvester -->
 
 <!-- TODO: Write usage instructions here -->
 <!-- ## Usage -->
