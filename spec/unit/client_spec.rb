@@ -1,5 +1,4 @@
-require 'rspec'
-require 'dash2/harvester'
+require 'spec_helper'
 
 module Dash2
   module Harvester
