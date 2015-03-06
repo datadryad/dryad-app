@@ -20,6 +20,7 @@ mkmf.log
 *.iml
 *.ipr
 *.iws
+.rakeTasks
 
 # Emacs
 
