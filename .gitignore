@@ -20,3 +20,8 @@ mkmf.log
 *.iml
 *.ipr
 *.iws
+
+# Emacs
+
+*~
+
