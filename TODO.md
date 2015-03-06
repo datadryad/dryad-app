@@ -2,6 +2,7 @@
 # Overall architecture
 
 - How is this invoked -- batch, on-demand, both?
+- Stateful? Stateless?
 
 ------------------------------------------------------------
 # Harvesting
