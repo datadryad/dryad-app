@@ -1,6 +1,7 @@
 # Dash2::Harvester
 
-> # This is a work in progress. <!-- TODO remove this when it's no longer true -->
+> # This is a work in progress. 
+<!-- TODO remove the above when it's no longer true -->
 
 Harvests [OAI-PMH](http://www.openarchives.org/pmh/) metadata from a digital repository into
 [Solr](http://lucene.apache.org/solr/) for indexing.
@@ -21,18 +22,14 @@ Or install it yourself as:
 
     $ gem install dash2-harvester
 
-<!--
-## Usage
 <!-- TODO: Write usage instructions here -->
--->
+<!-- ## Usage -->
 
-<!--
-## Contributing
 <!-- TODO: fix github URL and put this back-->
+<!-- ## Contributing -->
+<!-- 1. Fork it ( https://github.com/[my-github-username]/dash2-harvester/fork ) -->
+<!-- 2. Create your feature branch (`git checkout -b my-new-feature`) -->
+<!-- 3. Commit your changes (`git commit -am 'Add some feature'`) -->
+<!-- 4. Push to the branch (`git push origin my-new-feature`) -->
+<!-- 5. Create a new Pull Request -->
 
-1. Fork it ( https://github.com/[my-github-username]/dash2-harvester/fork )
-2. Create your feature branch (`git checkout -b my-new-feature`)
-3. Commit your changes (`git commit -am 'Add some feature'`)
-4. Push to the branch (`git push origin my-new-feature`)
-5. Create a new Pull Request
--->
