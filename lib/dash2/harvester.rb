@@ -1,4 +1,5 @@
-require 'dash2/harvester/version'
+require 'uri'
+require 'oai'
 
 module Dash2
   module Harvester
