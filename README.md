@@ -34,3 +34,10 @@ Harvests [OAI-PMH](http://www.openarchives.org/pmh/) metadata from a digital rep
 <!-- 4. Push to the branch (`git push origin my-new-feature`) -->
 <!-- 5. Create a new Pull Request -->
 
+---
+
+## Useful links
+
+- [Travis continuous integration](https://travis-ci.org/CDLUC3/dash2-harvester)
+
+
