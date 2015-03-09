@@ -1,3 +1,5 @@
+# Dash2
+
 ## README
 
 *   Ruby version ruby 2.2.0p0
@@ -20,3 +22,10 @@
 
 
 `rake doc:app`.
+
+
+---
+
+## Useful links
+
+- [Travis continuous integration](https://travis-ci.org/CDLUC3/dash2)
