@@ -15,11 +15,6 @@ module Dash2
           invalid_url = 'I am not a valid URL'
           expect{Client.new invalid_url}.to raise_error(URI::InvalidURIError)
         end
-
-      end
-
-      it 'fails, just to see how Travis reports it' do
-        raise "Let's see how Travis reports a failure"
       end
     end
     
