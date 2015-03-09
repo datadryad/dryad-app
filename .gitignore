@@ -14,3 +14,15 @@
 config/database.yml
 .rspec
 /spec/tmp
+
+# Ignore code coverage reports.
+/coverage/
+
+# Ignore IntelliJ IDE project configuration.
+*.iml
+*.ipr
+*.iws
+.rakeTasks
+
+# Ignore Emacs backups.
+*~
