@@ -25,4 +25,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'simplecov-console' # TODO do we care about the version?
 
   spec.add_runtime_dependency 'oai', '~> 0.3.1'
+  spec.add_runtime_dependency 'rsolr', '~> 1.0.12'
 end
