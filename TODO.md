@@ -68,9 +68,11 @@ Note: this doesn't really apply to record-by-record requests.
     - dash2 provides us an `identifier`
     - we send that `identifier` in a `GetRecord` request to the OAI-PMH repository
     - something like:
-
-          client = OAI::Client.new 'http://localhost:3333/oai'
-          response = client.get_record {:identifier => 'oai:test/3', :metadata_prefix => 'oai_dc'} # TODO is this syntax correct / Ruby-ish?
+      <pre>
+      client = OAI::Client.new 'http://localhost:3333/oai'
+      response = client.get_record {:identifier => 'oai:test/3', :metadata_prefix => 'oai_dc'}
+                                   # TODO is this syntax correct / Ruby-ish?
+      </pre>
 
 2. extract metadata from OAI repsonse
 3. write metadata to Solr
