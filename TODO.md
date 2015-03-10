@@ -13,6 +13,7 @@
     - checking OAI-PMH configuration:
         - repository URI is correct
         - `metadataPrefix` is a supported format
+            - using the `ListMetadataFormats` verb; see e.g. [http://oai.datacite.org/oai?verb=ListMetadataFormats](http://oai.datacite.org/oai?verb=ListMetadataFormats)
     - checking Solr configuration: **???**
 
 ------------------------------------------------------------
