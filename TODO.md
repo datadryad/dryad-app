@@ -59,6 +59,10 @@ Note: this doesn't really apply to record-by-record requests.
     - See [this StackOverflow answer](http://stackoverflow.com/questions/11996124/is-it-impossible-to-use-guard-with-rubymine/12000765#12000765)
       on using Guard with RubyMine / IntelliJ
 
+- Sample data from `oai.datacite.org`:
+    - [DataCite XML example](http://oai.datacite.org/oai?verb=GetRecord&identifier=oai:oai.datacite.org:32153&metadataPrefix=datacite)
+    - [Dublin Core example](http://oai.datacite.org/oai?verb=GetRecord&identifier=oai:oai.datacite.org:32153&metadataPrefix=oai_dc)
+
 ------------------------------------------------------------
 # Overall architecture
 
@@ -75,6 +79,8 @@ Note: this doesn't really apply to record-by-record requests.
       </pre>
 
 2. extract metadata from OAI repsonse
+    - it comes back as an `REXML::Element`
+
 3. write metadata to Solr
 
 ## Invocation
