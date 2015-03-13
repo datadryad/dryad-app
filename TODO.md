@@ -17,6 +17,19 @@
     - checking Solr configuration: **???**
 
 ------------------------------------------------------------
+# Solr
+
+Solr setup:
+
+- Where do we assume Solr lives / how do we assume Solr is deployed?
+- Do we take Solr as a given, the way we take the repository as a given, or is it (conceptually) embedded our Blacklight app?
+- Are we the only source of Solr data?
+
+Solr configuration:
+
+- Compare [DataCite's Solr config](https://github.com/datacite/search/tree/master/src/main/resources)
+
+------------------------------------------------------------
 # Ingesting
 
 - What's Solr's concept of identity?
@@ -87,10 +100,19 @@ Note: this doesn't really apply to record-by-record requests.
 ## Invocation
 
 - How is this invoked -- batch, on-demand, both?
+- Is the upload UI the only source of data & metadata, or are there other front ends?
+
+## Synchronous or asynchronous?
+
+- [ruby-oai](https://github.com/code4lib/ruby-oai) uses [Faraday](https://github.com/lostisland/faraday) which in theory should allow async I/O? But it appears to use it only in a synchronous manner? Hard to tell.
+    - see [OAI::Client](https://github.com/code4lib/ruby-oai/blob/master/lib/oai/client.rb)
+- [rsolr](https://github.com/code4lib/ruby-oai) uses straight [Net::HTTP](http://ruby-doc.org/stdlib-2.2.1/libdoc/net/http/rdoc/Net/HTTP.html) but it looks like it would be simple to hack/extend to use e.g. [em-http-request](https://github.com/igrigorik/em-http-request)
+    - see [RSolr::Client](https://github.com/rsolr/rsolr/blob/master/lib/rsolr/client.rb)
+    - ref: "[An introduction to eventmachine, and how to avoid callback spaghetti](http://rubylearning.com/blog/2010/10/01/an-introduction-to-eventmachine-and-how-to-avoid-callback-spaghetti/)"
 
 ## Questions
 
-- Stateful? Stateless?
+- Stateful? Stateless? (Please say stateless.)
 
 ------------------------------------------------------------
 # Notes
