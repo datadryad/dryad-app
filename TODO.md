@@ -16,6 +16,8 @@
             - using the `ListMetadataFormats` verb; see e.g. [http://oai.datacite.org/oai?verb=ListMetadataFormats](http://oai.datacite.org/oai?verb=ListMetadataFormats)
     - checking Solr configuration: **???**
 
+## **TODO:** Encapsulate OAI-PMH config in an object with a validate method
+
 ------------------------------------------------------------
 # Solr
 
@@ -109,6 +111,16 @@ Note: this doesn't really apply to record-by-record requests.
 - [rsolr](https://github.com/code4lib/ruby-oai) uses straight [Net::HTTP](http://ruby-doc.org/stdlib-2.2.1/libdoc/net/http/rdoc/Net/HTTP.html) but it looks like it would be simple to hack/extend to use e.g. [em-http-request](https://github.com/igrigorik/em-http-request)
     - see [RSolr::Client](https://github.com/rsolr/rsolr/blob/master/lib/rsolr/client.rb)
     - ref: "[An introduction to eventmachine, and how to avoid callback spaghetti](http://rubylearning.com/blog/2010/10/01/an-introduction-to-eventmachine-and-how-to-avoid-callback-spaghetti/)"
+
+### Active Job: "Active Job is a framework for declaring jobs and making them run on a variety of queueing backends"
+
+- [Active Job basics](http://edgeguides.rubyonrails.org/active_job_basics.html)
+- [Active Job integration testing with Rspec](http://briandear.co/2015/01/19/rails-active-job-integration-testing-with-rspec/)
+
+### Sidekiq: threaded background-job library
+
+- Active Job-compatible
+- Be sure to set `sidekiq_options :retry => false` if we want to be a good citizen
 
 ## Questions
 

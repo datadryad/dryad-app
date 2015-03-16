@@ -1,5 +1,5 @@
 require 'uri'
-require 'oai'
+require 'oai/client'
 
 module Dash2
   module Harvester
@@ -12,7 +12,7 @@ module Dash2
       # Creates a new harvesting client for the given repository
       #
       # @param base_url [String] the base URL of the target repository
-      # @raise [URI::InvalidURIError] if the base URL is invalid
+      # @raise [URI::InvalidURIError] if +base_url+ is invalid
       def initialize(base_url)
         @base_uri = URI.parse base_url
       end
