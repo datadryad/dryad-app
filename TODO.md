@@ -2,7 +2,7 @@
 # Harvesting
 
 - How do we know what to harvest?
-    - dash2 sends us a record identifier
+    - dash2 sends us a ~~record identifier~~ date range
     - the `metadataPrefix` is configurable (?)
 - What's OAI-PMH's concept of identity?
     - items have identifiers
@@ -58,7 +58,7 @@ Solr configuration:
 ------------------------------------------------------------
 # Good harvesting citizenship
 
-Note: this doesn't really apply to record-by-record requests.
+Note: Merritt isn't going to support `resumptionTokens`, but maybe we should try to anyway?
 
 - Check repository time granularity
 - Overlap datestamp-based harvests
@@ -85,14 +85,6 @@ Note: this doesn't really apply to record-by-record requests.
 ## Operations
 
 1. read metadata from OAI-PMH
-    - dash2 provides us an `identifier`
-    - we send that `identifier` in a `GetRecord` request to the OAI-PMH repository
-    - something like:
-      <pre>
-      client = OAI::Client.new 'http://localhost:3333/oai'
-      response = client.get_record {:identifier => 'oai:test/3', :metadata_prefix => 'oai_dc'}
-                                   # TODO is this syntax correct / Ruby-ish?
-      </pre>
 
 2. extract metadata from OAI repsonse
     - it comes back as an `REXML::Element`
@@ -102,7 +94,9 @@ Note: this doesn't really apply to record-by-record requests.
 ## Invocation
 
 - How is this invoked -- batch, on-demand, both?
+    - Answer: batch
 - Is the upload UI the only source of data & metadata, or are there other front ends?
+    - Answer: doesn't matter since we're batch-harvesting
 
 ## Synchronous or asynchronous?
 
