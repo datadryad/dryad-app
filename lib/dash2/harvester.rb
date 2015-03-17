@@ -4,6 +4,16 @@ require 'oai/client'
 module Dash2
   module Harvester
 
+    # Dir.glob(File.expand_path('../harvester/*.rb', __FILE__)).each{|rb_file| require(rb_file)}
+
+    # print('Attempting to require from ' + File.basename(__FILE__, '.rb') + "\n")
+    # print(Dir.glob(File.basename(__FILE__, '.rb') + "\n"))
+    #
+    # Dir.glob(File.basename(__FILE__, '.rb'), &method(:require_relative))
+
+    print('Attempting to require from ' + File.expand_path('../harvester/*.rb', __FILE__) + "\n")
+    Dir.glob(File.expand_path('../harvester/*.rb', __FILE__), &method(:require))
+
     # A harvesting client for a single repository
     class Client
 
