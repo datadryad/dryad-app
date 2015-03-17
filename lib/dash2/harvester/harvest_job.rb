@@ -1,3 +1,5 @@
+require 'active_job'
+
 class Dash2::Harvester::HarvestJob < ActiveJob::Base
   def perform(harvest_task)
     # TODO something like:
