@@ -61,15 +61,18 @@ module Dash2
 
         it 'rejects an invalid metadata prefix'
 
-        # it 'rejects an invalid metadata prefix' do
-        #   invalid_prefix_chars = ':/?#[]@!$&\'()*+,;=' # prefix must be URI unreserved characters
-        #   invalid_prefix_chars.each do |c|
-        #     invalid_prefix = "oai_#{c}"
-        #     expect { HarvestTask.new oai_base_url: 'http://example.org/oai', metadata_prefix: invalid_prefix }.to raise_error(ArgumentError)
-        #   end
-        # end
+        it 'requires a metadata prefix to consist only of RFC 2396 URI unreserved characters' do
+          reserved_rfc_2396 = ';/?:@&=+$,' # prefix must be URI unreserved characters
+          reserved_rfc_2396.each_char do |c|
+            invalid_prefix = "oai_#{c}"
+            expect { HarvestTask.new oai_base_url: 'http://example.org/oai', metadata_prefix: invalid_prefix }.to raise_error(ArgumentError)
+          end
+        end
 
-        it 'defaults to Dublin Core if no metadata prefix is set'
+        it 'defaults to Dublin Core if no metadata prefix is set' do
+          harvest_task = HarvestTask.new oai_base_url: 'http://example.org/oai'
+          expect(harvest_task.metadata_prefix).to eq('oai_dc')
+        end
 
       end
     end
