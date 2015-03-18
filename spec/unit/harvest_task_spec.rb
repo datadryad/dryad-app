@@ -4,13 +4,6 @@ module Dash2
   module Harvester
 
     describe HarvestTask do
-      describe 'its harvesting' do
-        it 'sends a "from" datestamp only if one is specified'
-        it 'sends a "to" datestamp only if one is specified'
-        it 'sends the specified metadata prefix'
-        it 'defaults to "oai_dc" if no metadata prefix is specified'
-      end
-
       describe '#new' do
         it 'accepts a valid repository URL' do
           valid_url = 'http://example.org/oai'
@@ -74,6 +67,63 @@ module Dash2
           expect(harvest_task.metadata_prefix).to eq('oai_dc')
         end
 
+      end
+    end
+
+    describe '#harvest' do
+
+      before(:each) do
+        @oai_client = instance_double(OAI::Client)
+        @uri = 'http://example.org/oai'
+        expect(OAI::Client).to receive(:new).with(@uri) {@oai_client}
+      end
+
+      it 'sends a LoadRecords request' do
+        harvest_task = HarvestTask.new oai_base_url: @uri
+        expect(@oai_client).to receive(:list_records)
+        harvest_task.harvest
+      end
+
+      it 'the ListRecords result' do
+        result = instance_double(OAI::ListRecordsResponse)
+        harvest_task = HarvestTask.new oai_base_url: @uri
+        expect(@oai_client).to receive(:list_records) { result }
+        expect(harvest_task.harvest).to be(result)
+      end
+
+      it 'defaults to "oai_dc" if no metadata prefix is specified' do
+        harvest_task = HarvestTask.new oai_base_url: @uri
+        expect(@oai_client).to receive(:list_records).with({:metadata_prefix => 'oai_dc'})
+        harvest_task.harvest
+      end
+
+      it 'sends the specified metadata prefix' do
+        prefix = 'datacite'
+        harvest_task = HarvestTask.new oai_base_url: @uri, metadata_prefix: prefix
+        expect(@oai_client).to receive(:list_records).with({:metadata_prefix => prefix})
+        harvest_task.harvest
+      end
+
+      it 'sends a "from" datestamp if one is specified' do
+        time = Time.new
+        harvest_task = HarvestTask.new oai_base_url: @uri, from_time: time
+        expect(@oai_client).to receive(:list_records).with({:from => time, :metadata_prefix => 'oai_dc'})
+        harvest_task.harvest
+      end
+
+      it 'sends an "until" datestamp if one is specified' do
+        time = Time.new
+        harvest_task = HarvestTask.new oai_base_url: @uri, until_time: time
+        expect(@oai_client).to receive(:list_records).with({:until => time, :metadata_prefix => 'oai_dc'})
+        harvest_task.harvest
+      end
+
+      it 'sends both datestamps if both are specified' do
+        start_time = Time.new
+        end_time = Time.new
+        harvest_task = HarvestTask.new oai_base_url: @uri, from_time: start_time, until_time: end_time
+        expect(@oai_client).to receive(:list_records).with({:from => start_time, :until => end_time, :metadata_prefix => 'oai_dc'})
+        harvest_task.harvest
       end
     end
 

@@ -11,16 +11,25 @@
 
 class Dash2::Harvester::HarvestTask
 
+  # ------------------------------------------------------------
+  # Constants
+
   DUBLIN_CORE = 'oai_dc'
   private_constant :DUBLIN_CORE
 
   VALID_PREFIX_PATTERN = Regexp.new("^[#{URI::RFC2396_REGEXP::PATTERN::UNRESERVED}]+$")
   private_constant :VALID_PREFIX_PATTERN
 
+  # ------------------------------------------------------------
+  # Attributes
+
   attr_reader :oai_base_uri
   attr_reader :from_time
   attr_reader :until_time
   attr_reader :metadata_prefix
+
+  # ------------------------------------------------------------
+  # Initializer
 
   # Creates a new +HarvestTask+ for harvesting from the specified OAI-PMH repository, with
   # an optional datetime range and metadata prefix.
@@ -50,6 +59,21 @@ class Dash2::Harvester::HarvestTask
     @from_time = from_time
     @until_time = until_time
     @metadata_prefix = metadata_prefix
+  end
+
+  # ------------------------------------------------------------
+  # Methods
+
+  def harvest
+    client = OAI::Client.new @oai_base_uri.to_s
+
+    opts = {}
+    opts[:from] = from_time if from_time
+    opts[:until] = until_time if until_time
+    opts[:metadata_prefix] = metadata_prefix
+
+    client.list_records opts
+
   end
 
 end
