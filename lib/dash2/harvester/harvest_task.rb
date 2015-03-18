@@ -72,8 +72,7 @@ class Dash2::Harvester::HarvestTask
     opts[:until] = until_time if until_time
     opts[:metadata_prefix] = metadata_prefix
 
-    client.list_records opts
-
+    client.list_records(opts)
   end
 
 end

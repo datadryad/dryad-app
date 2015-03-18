@@ -84,12 +84,14 @@ module Dash2
         harvest_task.harvest
       end
 
-      it 'the ListRecords result' do
-        result = instance_double(OAI::ListRecordsResponse)
-        harvest_task = HarvestTask.new oai_base_url: @uri
-        expect(@oai_client).to receive(:list_records) { result }
-        expect(harvest_task.harvest).to be(result)
-      end
+      # it 'returns the ListRecords response' do
+      #   result = instance_double(OAI::ListRecordsResponse)
+      #   harvest_task = HarvestTask.new oai_base_url: @uri
+      #   expect(@oai_client).to receive(:list_records) { result }
+      #   expect(harvest_task.harvest).to be(result)
+      # end
+
+      it 'transforms the ListRecords response into something useful'
 
       it 'defaults to "oai_dc" if no metadata prefix is specified' do
         harvest_task = HarvestTask.new oai_base_url: @uri
