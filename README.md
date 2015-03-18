@@ -2,7 +2,7 @@
 
 ## README
 
-*   Ruby version ruby 2.2.0p0
+*   Ruby version ruby 2.2.1
 
 *   Rails version Rails 4.2.0
 
