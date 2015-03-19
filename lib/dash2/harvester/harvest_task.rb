@@ -64,6 +64,7 @@ class Dash2::Harvester::HarvestTask
   # ------------------------------------------------------------
   # Methods
 
+  # @return [Enumerable]
   def harvest
     client = OAI::Client.new @oai_base_uri.to_s
 
@@ -72,7 +73,8 @@ class Dash2::Harvester::HarvestTask
     opts[:until] = until_time if until_time
     opts[:metadata_prefix] = metadata_prefix
 
-    client.list_records(opts)
+    records = client.list_records(opts)
+    records ? records.map { |r| Dash2::Harvester::OAIRecord.new(r) } : []
   end
 
 end

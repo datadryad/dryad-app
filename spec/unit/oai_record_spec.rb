@@ -1,7 +1,6 @@
 require 'spec_helper'
 require 'oai/client'
 require 'rexml/document'
-require 'rexml/xpath'
 
 module Dash2
   module Harvester
@@ -10,13 +9,20 @@ module Dash2
 
       before(:each) do
         file = File.new( 'spec/data/oai-datacite-32153-datacite.xml' )
-        doc = REXML::Document.new file
-        @resource = REXML::XPath.first(doc, '/OAI-PMH/GetRecord/record/metadata/resource')
-        @record = OAIRecord.new(OAI::GetRecordResponse.new(doc).record)
+        @doc = REXML::Document.new file
+        @record = OAIRecord.new(OAI::GetRecordResponse.new(@doc).record)
       end
 
       it 'extracts the metadata' do
-        expect(@record.metadata_root).to eq(@resource)
+        datacite_resource = REXML::XPath.first(@doc, '/OAI-PMH/GetRecord/record/metadata/resource')
+        expect(@record.metadata_root).to eq(datacite_resource)
+      end
+
+      it 'returns nil metadata for deleted records' do
+        file = File.new( 'spec/data/oai-datacite-22-oai_dc.xml' )
+        doc = REXML::Document.new file
+        deleted_record = OAIRecord.new(OAI::GetRecordResponse.new(doc).record)
+        expect(deleted_record.metadata_root).to be_nil
       end
 
       it 'extracts the identifier' do
@@ -37,6 +43,49 @@ module Dash2
 
       it 'identifies undeleted records as undeleted' do
         expect(@record.deleted?).to be_falsey
+      end
+
+      describe '#==' do
+
+        it 'treats identical records as equal' do
+          expect(@record).to eq(@record)
+        end
+
+        it 'treats equal records as equal' do
+          equal_record = OAIRecord.new(OAI::GetRecordResponse.new(@doc).record)
+          expect(@record).to eq(equal_record)
+          expect(equal_record).to eq(@record)
+        end
+
+        it 'treats records with different datestamps as different' do
+          record2 = OAIRecord.new(OAI::GetRecordResponse.new(@doc).record)
+          record2.stub(:datestamp) { Time.now }
+          expect(@record).to_not eq(record2)
+          expect(record2).to_not eq(@record)
+        end
+
+        it 'treats records with different identifiers as different' do
+          record2 = OAIRecord.new(OAI::GetRecordResponse.new(@doc).record)
+          record2.stub(:identifier) { 'elvis' }
+          expect(@record).to_not eq(record2)
+          expect(record2).to_not eq(@record)
+        end
+
+        it 'treats records with different metadata as different' do
+          file = File.new( 'spec/data/oai-datacite-32153-oai_dc.xml' )
+          doc = REXML::Document.new file
+          dc_record = OAIRecord.new(OAI::GetRecordResponse.new(doc).record)
+          expect(@record).to_not eq(dc_record)
+          expect(dc_record).to_not eq(@record)
+        end
+
+        it 'treats deleted records as different from undeleted records' do
+          record2 = OAIRecord.new(OAI::GetRecordResponse.new(@doc).record)
+          record2.stub(:deleted) { true }
+          expect(@record).to_not eq(record2)
+          expect(record2).to_not eq(@record)
+        end
+
       end
 
     end

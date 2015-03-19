@@ -26,7 +26,18 @@ class Dash2::Harvester::OAIRecord
     @datestamp = Time.parse(record.header.datestamp)
     @deleted = record.deleted?
     @identifier = record.header.identifier
-    @metadata_root = record.metadata.elements[1]
+    @metadata_root = record.deleted? ? nil : record.metadata.elements[1]
   end
+
+  def ==(other)
+    return true if self.equal?(other)
+    return false unless other.instance_of?(self.class)
+    return false unless other.datestamp == self.datestamp
+    return false unless other.deleted == self.deleted
+    return false unless other.identifier == self.identifier
+    return false unless other.metadata_root == self.metadata_root
+    true
+  end
+
 
 end

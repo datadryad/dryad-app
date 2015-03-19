@@ -82,14 +82,20 @@ module Dash2
         harvest_task.harvest
       end
 
-      # it 'returns the ListRecords response' do
-      #   result = instance_double(OAI::ListRecordsResponse)
-      #   harvest_task = HarvestTask.new oai_base_url: @uri
-      #   expect(@oai_client).to receive(:list_records) { result }
-      #   expect(harvest_task.harvest).to be(result)
-      # end
+      it 'maps the ListRecords response as a sequence of Dash2::Havester::OAIRecord objects' do
+        require 'rexml/document'
 
-      it 'transforms the ListRecords response into something useful'
+        file = File.new( 'spec/data/oai-datacite-list-records-june-2011-oai_dc.xml' )
+        doc = REXML::Document.new file
+        result = OAI::ListRecordsResponse.new(doc)
+        expected_array = result.collect { |r| OAIRecord.new(r) }
+
+        harvest_task = HarvestTask.new oai_base_url: @uri
+        expect(@oai_client).to receive(:list_records) { result }
+
+        harvested_array = harvest_task.harvest.collect { |r| r }
+        expect(harvested_array).to eq(expected_array)
+      end
 
       it 'defaults to "oai_dc" if no metadata prefix is specified' do
         harvest_task = HarvestTask.new oai_base_url: @uri
