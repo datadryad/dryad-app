@@ -52,8 +52,6 @@ module Dash2
           expect(harvest_task.metadata_prefix).to eq(prefix)
         end
 
-        it 'rejects an invalid metadata prefix'
-
         it 'requires a metadata prefix to consist only of RFC 2396 URI unreserved characters' do
           reserved_rfc_2396 = ';/?:@&=+$,' # prefix must be URI unreserved characters
           reserved_rfc_2396.each_char do |c|
