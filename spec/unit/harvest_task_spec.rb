@@ -28,22 +28,28 @@ module Dash2
         end
 
         it 'accepts a valid "from" datestamp' do
-          time = Time.new
+          time = Time.new.utc
           harvest_task = HarvestTask.new oai_base_url: 'http://example.org/oai', from_time: time
           expect(harvest_task.from_time).to eq(time)
         end
 
         it 'accepts a valid "until" datestamp' do
-          time = Time.new
+          time = Time.new.utc
           harvest_task = HarvestTask.new oai_base_url: 'http://example.org/oai', until_time: time
           expect(harvest_task.until_time).to eq(time)
         end
 
         it 'rejects datestamps that would create an invalid range' do
-          epoch = Time.at(0)
-          now = Time.new
+          epoch = Time.at(0).utc
+          now = Time.new.utc
 
           expect { HarvestTask.new oai_base_url: 'http://example.org/oai', from_time: now, until_time: epoch }.to raise_error(RangeError)
+        end
+
+        it 'rejects non-UTC datestamps' do
+          non_utc = Time.new(2002, 10, 31, 2, 2, 2, '+02:00')
+          expect { HarvestTask.new oai_base_url: 'http://example.org/oai', from_time: non_utc }.to raise_error(ArgumentError)
+          expect { HarvestTask.new oai_base_url: 'http://example.org/oai', until_time: non_utc }.to raise_error(ArgumentError)
         end
 
         it 'accepts a metadata prefix' do
@@ -111,26 +117,37 @@ module Dash2
       end
 
       it 'sends a "from" datestamp if one is specified' do
-        time = Time.new
-        harvest_task = HarvestTask.new oai_base_url: @uri, from_time: time
+        time = Time.new.utc
+        harvest_task = HarvestTask.new oai_base_url: @uri, from_time: time, seconds_granularity: true
         expect(@oai_client).to receive(:list_records).with({:from => time, :metadata_prefix => 'oai_dc'})
         harvest_task.harvest
       end
 
       it 'sends an "until" datestamp if one is specified' do
-        time = Time.new
-        harvest_task = HarvestTask.new oai_base_url: @uri, until_time: time
+        time = Time.new.utc
+        harvest_task = HarvestTask.new oai_base_url: @uri, until_time: time, seconds_granularity: true
         expect(@oai_client).to receive(:list_records).with({:until => time, :metadata_prefix => 'oai_dc'})
         harvest_task.harvest
       end
 
       it 'sends both datestamps if both are specified' do
-        start_time = Time.new
-        end_time = Time.new
-        harvest_task = HarvestTask.new oai_base_url: @uri, from_time: start_time, until_time: end_time
+        start_time = Time.new.utc
+        end_time = Time.new.utc
+        harvest_task = HarvestTask.new oai_base_url: @uri, from_time: start_time, until_time: end_time, seconds_granularity: true
         expect(@oai_client).to receive(:list_records).with({:from => start_time, :until => end_time, :metadata_prefix => 'oai_dc'})
         harvest_task.harvest
       end
+
+      it 'sends datestamps at day granularity unless otherwise specified' do
+        start_time = Time.new.utc
+        end_time = Time.new.utc
+        harvest_task = HarvestTask.new oai_base_url: @uri, from_time: start_time, until_time: end_time
+        expect(@oai_client).to receive(:list_records).with({:from => start_time.strftime('%Y-%m-%d'), :until => end_time.strftime('%Y-%m-%d'), :metadata_prefix => 'oai_dc'})
+        harvest_task.harvest
+      end
+
+      it 'logs a warning when converting sub-day datestamps to day granularity'
+
     end
 
   end

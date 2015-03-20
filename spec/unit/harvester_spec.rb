@@ -2,13 +2,14 @@ require 'spec_helper'
 
 describe Dash2::Harvester do
   describe 'its OAI-PMH harvesting' do
-    it 'harvests metadata from OAI-PMH'
+    # it 'harvests metadata from OAI-PMH'
     it 'sends appropriate User-Agent and From headers'
     it 'runs on a configurable schedule'
     it 'harvests by datestamp range'
     it 'honors the repository time granularity'
     it 'overlaps date ranges'
     it 'starts from the datestamp of the last successfully indexed record'
+    it 'starts at UTC midnight *before* the datestamp of the last successfully indexed record, when harvesting at day granularity'
     it 'records the datestamp of the last successfully indexed record'
     it 'in the event of a "partial success", records the datestamp of the first failed record'
     it 'maintains enough state to keep track of the start/end datestamp itself'
