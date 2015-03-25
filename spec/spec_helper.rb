@@ -1,6 +1,8 @@
 require 'simplecov'
 require 'simplecov-console'
 
+SimpleCov.minimum_coverage 100
+
 SimpleCov.start do
   SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter[
       SimpleCov::Formatter::HTMLFormatter,
