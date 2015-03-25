@@ -59,14 +59,15 @@ module Dash2
 
         it 'treats records with different datestamps as different' do
           record2 = OAIRecord.new(OAI::GetRecordResponse.new(@doc).record)
-          record2.stub(:datestamp) { Time.now }
+          datestamp = Time.now
+          expect(record2).to receive(:datestamp).at_least(:once) { datestamp }
           expect(@record).to_not eq(record2)
           expect(record2).to_not eq(@record)
         end
 
         it 'treats records with different identifiers as different' do
           record2 = OAIRecord.new(OAI::GetRecordResponse.new(@doc).record)
-          record2.stub(:identifier) { 'elvis' }
+          expect(record2).to receive(:identifier).at_least(:once) { 'elvis' }
           expect(@record).to_not eq(record2)
           expect(record2).to_not eq(@record)
         end
@@ -81,7 +82,7 @@ module Dash2
 
         it 'treats deleted records as different from undeleted records' do
           record2 = OAIRecord.new(OAI::GetRecordResponse.new(@doc).record)
-          record2.stub(:deleted) { true }
+          expect(record2).to receive(:deleted).at_least(:once) { true }
           expect(@record).to_not eq(record2)
           expect(record2).to_not eq(@record)
         end
