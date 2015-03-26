@@ -8,7 +8,7 @@ module Dash2
     describe OAIRecord do
 
       before(:each) do
-        file = File.new( 'spec/data/oai-datacite-32153-datacite.xml' )
+        file = File.new('spec/data/oai-datacite-32153-datacite.xml')
         @doc = REXML::Document.new file
         @record = OAIRecord.new(OAI::GetRecordResponse.new(@doc).record)
       end
@@ -19,7 +19,7 @@ module Dash2
       end
 
       it 'returns nil metadata for deleted records' do
-        file = File.new( 'spec/data/oai-datacite-22-oai_dc.xml' )
+        file = File.new('spec/data/oai-datacite-22-oai_dc.xml')
         doc = REXML::Document.new file
         deleted_record = OAIRecord.new(OAI::GetRecordResponse.new(doc).record)
         expect(deleted_record.metadata_root).to be_nil
@@ -35,7 +35,7 @@ module Dash2
       end
 
       it 'identifies deleted records as deleted' do
-        file = File.new( 'spec/data/oai-datacite-22-oai_dc.xml' )
+        file = File.new('spec/data/oai-datacite-22-oai_dc.xml')
         doc = REXML::Document.new file
         deleted_record = OAIRecord.new(OAI::GetRecordResponse.new(doc).record)
         expect(deleted_record.deleted?).to be_truthy
@@ -73,7 +73,7 @@ module Dash2
         end
 
         it 'treats records with different metadata as different' do
-          file = File.new( 'spec/data/oai-datacite-32153-oai_dc.xml' )
+          file = File.new('spec/data/oai-datacite-32153-oai_dc.xml')
           doc = REXML::Document.new file
           dc_record = OAIRecord.new(OAI::GetRecordResponse.new(doc).record)
           expect(@record).to_not eq(dc_record)

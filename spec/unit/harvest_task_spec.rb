@@ -79,7 +79,7 @@ module Dash2
       before(:each) do
         @oai_client = instance_double(OAI::Client)
         @uri = 'http://example.org/oai'
-        expect(OAI::Client).to receive(:new).with(@uri) {@oai_client}
+        expect(OAI::Client).to receive(:new).with(@uri) { @oai_client }
       end
 
       it 'sends a LoadRecords request' do
@@ -91,7 +91,7 @@ module Dash2
       it 'maps the ListRecords response as a sequence of Dash2::Havester::OAIRecord objects' do
         require 'rexml/document'
 
-        file = File.new( 'spec/data/oai-datacite-list-records-june-2011-oai_dc.xml' )
+        file = File.new('spec/data/oai-datacite-list-records-june-2011-oai_dc.xml')
         doc = REXML::Document.new file
         result = OAI::ListRecordsResponse.new(doc)
         expected_array = result.collect { |r| OAIRecord.new(r) }
