@@ -2,7 +2,6 @@ require 'spec_helper'
 
 module Dash2
   module Harvester
-
     describe HarvestTask do
       describe '#new' do
         it 'accepts a valid repository URL' do
@@ -70,12 +69,10 @@ module Dash2
           harvest_task = HarvestTask.new oai_base_url: 'http://example.org/oai'
           expect(harvest_task.metadata_prefix).to eq('oai_dc')
         end
-
       end
     end
 
     describe '#harvest' do
-
       before(:each) do
         @oai_client = instance_double(OAI::Client)
         @uri = 'http://example.org/oai'
@@ -105,28 +102,28 @@ module Dash2
 
       it 'defaults to "oai_dc" if no metadata prefix is specified' do
         harvest_task = HarvestTask.new oai_base_url: @uri
-        expect(@oai_client).to receive(:list_records).with({:metadata_prefix => 'oai_dc'})
+        expect(@oai_client).to receive(:list_records).with(metadata_prefix: 'oai_dc')
         harvest_task.harvest
       end
 
       it 'sends the specified metadata prefix' do
         prefix = 'datacite'
         harvest_task = HarvestTask.new oai_base_url: @uri, metadata_prefix: prefix
-        expect(@oai_client).to receive(:list_records).with({:metadata_prefix => prefix})
+        expect(@oai_client).to receive(:list_records).with(metadata_prefix: prefix)
         harvest_task.harvest
       end
 
       it 'sends a "from" datestamp if one is specified' do
         time = Time.new.utc
         harvest_task = HarvestTask.new oai_base_url: @uri, from_time: time, seconds_granularity: true
-        expect(@oai_client).to receive(:list_records).with({:from => time, :metadata_prefix => 'oai_dc'})
+        expect(@oai_client).to receive(:list_records).with(from: time, metadata_prefix: 'oai_dc')
         harvest_task.harvest
       end
 
       it 'sends an "until" datestamp if one is specified' do
         time = Time.new.utc
         harvest_task = HarvestTask.new oai_base_url: @uri, until_time: time, seconds_granularity: true
-        expect(@oai_client).to receive(:list_records).with({:until => time, :metadata_prefix => 'oai_dc'})
+        expect(@oai_client).to receive(:list_records).with(until: time, metadata_prefix: 'oai_dc')
         harvest_task.harvest
       end
 
@@ -134,7 +131,7 @@ module Dash2
         start_time = Time.new.utc
         end_time = Time.new.utc
         harvest_task = HarvestTask.new oai_base_url: @uri, from_time: start_time, until_time: end_time, seconds_granularity: true
-        expect(@oai_client).to receive(:list_records).with({:from => start_time, :until => end_time, :metadata_prefix => 'oai_dc'})
+        expect(@oai_client).to receive(:list_records).with(from: start_time, until: end_time, metadata_prefix: 'oai_dc')
         harvest_task.harvest
       end
 
@@ -142,14 +139,11 @@ module Dash2
         start_time = Time.new.utc
         end_time = Time.new.utc
         harvest_task = HarvestTask.new oai_base_url: @uri, from_time: start_time, until_time: end_time
-        expect(@oai_client).to receive(:list_records).with({:from => start_time.strftime('%Y-%m-%d'), :until => end_time.strftime('%Y-%m-%d'), :metadata_prefix => 'oai_dc'})
+        expect(@oai_client).to receive(:list_records).with(from: start_time.strftime('%Y-%m-%d'), until: end_time.strftime('%Y-%m-%d'), metadata_prefix: 'oai_dc')
         harvest_task.harvest
       end
 
       it 'logs a warning when converting sub-day datestamps to day granularity'
-
     end
-
   end
 end
-

@@ -1,6 +1,6 @@
 #! /usr/bin/env ruby
 
-raise Exception, 'dash2-harvester requires Ruby 2.2' unless RUBY_VERSION =~ /^2.2/
+fail Exception, 'dash2-harvester requires Ruby 2.2' unless RUBY_VERSION =~ /^2.2/
 
 # Note: This assumes we're running from the root of the dash2-harvester project
 $LOAD_PATH << File.dirname(__FILE__)
@@ -17,10 +17,10 @@ until_time = Time.utc(2003, 7, 31)
 metadata_prefix = 'oai_dc'
 
 harvest_task = Dash2::Harvester::HarvestTask.new(
-    oai_base_url: oai_base_url,
-    from_time: from_time,
-    until_time: until_time,
-    metadata_prefix: metadata_prefix
+  oai_base_url: oai_base_url,
+  from_time: from_time,
+  until_time: until_time,
+  metadata_prefix: metadata_prefix
 )
 
 response = harvest_task.harvest

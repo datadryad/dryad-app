@@ -13,7 +13,6 @@ require 'time'
 # @!attribute [r] metadata_root
 #   @return [REXML::Element] The root (inner) element of the record metadata.
 class Dash2::Harvester::OAIRecord
-
   attr_reader :datestamp
   attr_reader :deleted
   attr_reader :identifier
@@ -32,12 +31,10 @@ class Dash2::Harvester::OAIRecord
   def ==(other)
     return true if self.equal?(other)
     return false unless other.instance_of?(self.class)
-    return false unless other.datestamp == self.datestamp
-    return false unless other.deleted == self.deleted
-    return false unless other.identifier == self.identifier
-    return false unless other.metadata_root == self.metadata_root
+    return false unless other.datestamp == datestamp
+    return false unless other.deleted == deleted
+    return false unless other.identifier == identifier
+    return false unless other.metadata_root == metadata_root
     true
   end
-
-
 end

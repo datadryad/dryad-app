@@ -12,7 +12,6 @@
 #   @return [String] the metadata prefix defining the metadata format requested from the repository.
 
 class Dash2::Harvester::HarvestTask
-
   # ------------------------------------------------------------
   # Constants
 
@@ -54,22 +53,21 @@ class Dash2::Harvester::HarvestTask
   #   characters per {https://www.ietf.org/rfc/rfc2396.txt RFC 2396}, or if +from_time+ or
   #   +until_time+ is not in UTC.
   def initialize(oai_base_url:, from_time: nil, until_time: nil, seconds_granularity: false, metadata_prefix: DUBLIN_CORE)
-
     if from_time
-      raise ArgumentError, "from_time #{from_time} must be in UTC" unless from_time.utc?
+      fail ArgumentError, "from_time #{from_time} must be in UTC" unless from_time.utc?
     end
 
     if until_time
-      raise ArgumentError, "until_time #{until_time} must be in UTC" unless until_time.utc?
+      fail ArgumentError, "until_time #{until_time} must be in UTC" unless until_time.utc?
     end
 
     if from_time && until_time
-      raise RangeError, "from_time #{from_time} must be <= until_time #{until_time}" unless from_time.to_i <= until_time.to_i
+      fail RangeError, "from_time #{from_time} must be <= until_time #{until_time}" unless from_time.to_i <= until_time.to_i
     end
 
-    raise ArgumentError, "metadata_prefix ''#{metadata_prefix}'' must consist only of RFC 2396 URI unreserved characters" unless VALID_PREFIX_PATTERN =~ metadata_prefix
+    fail ArgumentError, "metadata_prefix ''#{metadata_prefix}'' must consist only of RFC 2396 URI unreserved characters" unless VALID_PREFIX_PATTERN =~ metadata_prefix
 
-    @oai_base_uri = (oai_base_url.kind_of? URI) ? oai_base_url : URI.parse(oai_base_url)
+    @oai_base_uri = (oai_base_url.is_a? URI) ? oai_base_url : URI.parse(oai_base_url)
     @from_time = from_time
     @until_time = until_time
     @seconds_granularity = seconds_granularity
@@ -97,5 +95,4 @@ class Dash2::Harvester::HarvestTask
     records = client.list_records(opts)
     records ? records.map { |r| Dash2::Harvester::OAIRecord.new(r) } : []
   end
-
 end

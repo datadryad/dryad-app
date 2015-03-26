@@ -31,5 +31,4 @@ describe Dash2::Harvester do
     it 'logs each request result'
     it '(...does other necessary stuff TBD...)'
   end
-
 end

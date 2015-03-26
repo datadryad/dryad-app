@@ -6,4 +6,4 @@ RSpec::Core::RakeTask.new(:spec) do |task|
 end
 
 # TODO default should be to build the gem, not just run the specs
-task :default => :spec
+task default: :spec
