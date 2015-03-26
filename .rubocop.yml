@@ -1,2 +1,2 @@
 Metrics/LineLength:
-  Max: 120
+  Enabled: False
