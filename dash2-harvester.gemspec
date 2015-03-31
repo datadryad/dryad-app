@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.email         = ['david.moles@ucop.edu']
   spec.summary       = 'Harvests OAI-PMH metadata into Solr'
   spec.description   = 'Harvests OAI-PMH metadata from a digital repository into Solr for indexing'
-  spec.homepage      = '' # TODO add homepage
+  spec.homepage      = '' # TODO: add homepage
   spec.license       = 'MIT'
 
   spec.files         = `git ls-files -z`.split("\x0")
