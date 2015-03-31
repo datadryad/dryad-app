@@ -30,7 +30,8 @@ module Dash2
         @metadata_root = record.deleted? ? nil : record.metadata.elements[1]
       end
 
-      def ==(other)
+      # TODO: document this
+      def ==(other) # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity
         return true if self.equal?(other)
         return false unless other.instance_of?(self.class)
         return false unless other.datestamp == datestamp
