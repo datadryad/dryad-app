@@ -1,9 +1,8 @@
 module Dash2
   module Harvester
-    # Class representing a single harvest operation.
+
+    # Encapsulates the configuration for a single +ListRecords+ operation.
     #
-    # @!attribute [r] oai_base_uri
-    #   @return [URI] the base URL of the repository.
     # @!attribute [r] from_time
     #   @return [Time, nil] the start (inclusive) of the datestamp range for selective harvesting.
     # @!attribute [r] until_time
@@ -12,7 +11,8 @@ module Dash2
     #   @return [Boolean] whether to include the full time out to the second in the from / until time range. (Defaults to false, i.e., days granularity.)
     # @!attribute [r] metadata_prefix
     #   @return [String] the metadata prefix defining the metadata format requested from the repository.
-    class HarvestTask
+    class ListRecordsConfig
+
       # ------------------------------------------------------------
       # Constants
 
@@ -22,10 +22,12 @@ module Dash2
       VALID_PREFIX_PATTERN = Regexp.new("^[#{URI::RFC2396_REGEXP::PATTERN::UNRESERVED}]+$")
       private_constant :VALID_PREFIX_PATTERN
 
+      TIME_FORMAT = '%Y-%m-%d'
+      private_constant :TIME_FORMAT
+
       # ------------------------------------------------------------
       # Attributes
 
-      attr_reader :oai_base_uri
       attr_reader :from_time
       attr_reader :until_time
       attr_reader :seconds_granularity
@@ -34,10 +36,9 @@ module Dash2
       # ------------------------------------------------------------
       # Initializer
 
-      # Creates a new +HarvestTask+ for harvesting from the specified OAI-PMH repository, with
-      # an optional datetime range and metadata prefix. Note that the datetime range must be in UTC.
+      # Constructs a new +ListRecordsConfig+ with the specified datetime range and metadata prefix.
+      # Note that the datetime range must be in UTC.
       #
-      # @param oai_base_url [URI, String] the base URL of the repository. *(Required)*
       # @param from_time [Time, nil] the start (inclusive) of the datestamp range for selective harvesting.
       #   If +from_time+ is omitted, harvesting will extend back to the earliest datestamp in the
       #   repository. (Optional)
@@ -45,7 +46,7 @@ module Dash2
       #   If +until_time+ is omitted, harvesting will extend forward to the latest datestamp in the
       #   repository. (Optional)
       # @param seconds_granularity [Boolean] whether to include the full time out to the second in
-      #   the from / until time range. (Defaults to false, i.e., days granularity.)
+      #   the from / until time range. (Defaults to +false+, i.e., days granularity.)
       # @param metadata_prefix [String, nil] the metadata prefix defining the metadata format requested
       #   from the repository. If +metadata_prefix+ is omitted, the prefix +oai_dc+ (Dublin Core)
       #   will be used.
@@ -53,10 +54,8 @@ module Dash2
       # @raise [ArgumentError] if +metadata_prefix+ contains invalid characters, i.e. URI reserved
       #   characters per {https://www.ietf.org/rfc/rfc2396.txt RFC 2396}, or if +from_time+ or
       #   +until_time+ is not in UTC.
-      def initialize(oai_base_url:, from_time: nil, until_time: nil, seconds_granularity: false, metadata_prefix: DUBLIN_CORE)
-        # TODO: find a way to validate input in one 'stripe'
+      def initialize(from_time: nil, until_time: nil, seconds_granularity: false, metadata_prefix: DUBLIN_CORE)
         @from_time, @until_time = valid_range(from_time, until_time)
-        @oai_base_uri = to_uri(oai_base_url)
         @seconds_granularity = seconds_granularity
         @metadata_prefix = valid_prefix(metadata_prefix)
       end
@@ -64,24 +63,11 @@ module Dash2
       # ------------------------------------------------------------
       # Methods
 
-      # @return [Enumerable]
-      def harvest
-        # TODO: reduce complexity
-        client = OAI::Client.new @oai_base_uri.to_s
-
-        opts = {}
-
-        if from_time
-          opts[:from] = seconds_granularity ? from_time : from_time.strftime('%Y-%m-%d')
-        end
-        if until_time
-          opts[:until] = seconds_granularity ? until_time : until_time.strftime('%Y-%m-%d')
-        end
-
-        opts[:metadata_prefix] = metadata_prefix
-
-        records = client.list_records(opts)
-        records ? records.map { |r| Dash2::Harvester::OAIRecord.new(r) } : []
+      def to_h
+        opts = { metadata_prefix: metadata_prefix }
+        (opts[:from] = to_s(from_time)) if from_time
+        (opts[:until] = to_s(until_time)) if until_time
+        opts
       end
 
       # ------------------------------------------------------------
@@ -116,9 +102,13 @@ module Dash2
         end
       end
 
-      def to_uri(url)
-        (url.is_a? URI) ? url : URI.parse(url)
+      # ------------------------------
+      # Conversions
+
+      def to_s(time)
+        seconds_granularity ? time : time.strftime(TIME_FORMAT)
       end
+
     end
   end
 end
