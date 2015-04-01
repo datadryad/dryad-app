@@ -17,10 +17,11 @@ until_time = Time.utc(2003, 7, 31)
 metadata_prefix = 'oai_dc'
 
 list_records_config = Dash2::Harvester::ListRecordsConfig.new(
-    from_time: from_time,
-    until_time: until_time,
-    metadata_prefix: metadata_prefix
+  from_time: from_time,
+  until_time: until_time,
+  metadata_prefix: metadata_prefix
 )
+
 list_records_task = Dash2::Harvester::ListRecordsTask.new(
   oai_base_url: oai_base_url,
   config: list_records_config
