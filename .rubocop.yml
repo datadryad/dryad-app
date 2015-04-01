@@ -2,10 +2,18 @@
 Metrics/LineLength:
   Enabled: False
 
-# Allow %r notation for regexes with a single / character
-Style/RegexpLiteral:
-  MaxSlashes: 0
-
 # Disable problematic module documentation check (see https://github.com/bbatsov/rubocop/issues/947)
 Style/Documentation:
   Enabled: false
+
+# Allow one line around class body (Style/EmptyLines will still disallow two or more)
+Style/EmptyLinesAroundClassBody:
+  Enabled: false
+
+# Allow one line around class body (Style/EmptyLines will still disallow two or more)
+Style/EmptyLinesAroundModuleBody:
+  Enabled: false
+
+# Allow %r notation for regexes with a single / character
+Style/RegexpLiteral:
+  MaxSlashes: 0
