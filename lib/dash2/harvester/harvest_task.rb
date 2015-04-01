@@ -54,25 +54,11 @@ module Dash2
       #   characters per {https://www.ietf.org/rfc/rfc2396.txt RFC 2396}, or if +from_time+ or
       #   +until_time+ is not in UTC.
       def initialize(oai_base_url:, from_time: nil, until_time: nil, seconds_granularity: false, metadata_prefix: DUBLIN_CORE)
-        if from_time
-          fail ArgumentError, "from_time #{from_time} must be in UTC" unless from_time.utc?
-        end
-
-        if until_time
-          fail ArgumentError, "until_time #{until_time} must be in UTC" unless until_time.utc?
-        end
-
-        if from_time && until_time
-          fail RangeError, "from_time #{from_time} must be <= until_time #{until_time}" unless from_time.to_i <= until_time.to_i
-        end
-
-        fail ArgumentError, "metadata_prefix ''#{metadata_prefix}'' must consist only of RFC 2396 URI unreserved characters" unless VALID_PREFIX_PATTERN =~ metadata_prefix
-
-        @oai_base_uri = (oai_base_url.is_a? URI) ? oai_base_url : URI.parse(oai_base_url)
-        @from_time = from_time
-        @until_time = until_time
+        # TODO: find a way to validate input in one 'stripe'
+        @from_time, @until_time = valid_range(from_time, until_time)
+        @oai_base_uri = to_uri(oai_base_url)
         @seconds_granularity = seconds_granularity
-        @metadata_prefix = metadata_prefix
+        @metadata_prefix = valid_prefix(metadata_prefix)
       end
 
       # ------------------------------------------------------------
@@ -80,6 +66,7 @@ module Dash2
 
       # @return [Enumerable]
       def harvest
+        # TODO: reduce complexity
         client = OAI::Client.new @oai_base_uri.to_s
 
         opts = {}
@@ -95,6 +82,42 @@ module Dash2
 
         records = client.list_records(opts)
         records ? records.map { |r| Dash2::Harvester::OAIRecord.new(r) } : []
+      end
+
+      # ------------------------------------------------------------
+      # Private methods
+
+      private
+
+      # ------------------------------
+      # Parameter validators
+
+      def utc_or_nil(time)
+        if time && !time.utc?
+          fail ArgumentError, "time #{time}| must be in UTC"
+        else
+          time
+        end
+      end
+
+      def valid_range(from_time, until_time)
+        if from_time && until_time && from_time.to_i > until_time.to_i
+          fail RangeError, "from_time #{from_time} must be <= until_time #{until_time}"
+        else
+          [utc_or_nil(from_time), utc_or_nil(until_time)]
+        end
+      end
+
+      def valid_prefix(metadata_prefix)
+        if VALID_PREFIX_PATTERN =~ metadata_prefix
+          metadata_prefix
+        else
+          fail ArgumentError, "metadata_prefix ''#{metadata_prefix}'' must consist only of RFC 2396 URI unreserved characters"
+        end
+      end
+
+      def to_uri(url)
+        (url.is_a? URI) ? url : URI.parse(url)
       end
     end
   end
