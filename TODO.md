@@ -16,7 +16,33 @@
             - using the `ListMetadataFormats` verb; see e.g. [http://oai.datacite.org/oai?verb=ListMetadataFormats](http://oai.datacite.org/oai?verb=ListMetadataFormats)
     - checking Solr configuration: **???**
 
-## **TODO:** Encapsulate OAI-PMH config in an object with a validate method
+## Harvesting process
+
+Given a `from` datestamp:
+- make a `listRecords` call for all records at or after that datestamp
+- if the call fails
+    - log the failure, but don't change the start datestamp
+- if the call succeeds
+    - for each record
+        - add the record to solr
+            - if the add operation succeeds
+                - log that
+            - if the add operation fails
+                - if it's a permanent failure
+                    - mark that as skippable
+                - if it's a temporary failure
+                    - log that
+    - hard commit
+        - if the commit fails
+            - log the failure, but don't change the start datestamp
+            - mark all records as failed?
+        - if the commit succeeds
+            - log the success
+            - if there are temporary failures
+                - record the datestamp of the earliest temporary failure as the next start datestamp
+            - otherwise
+                - record the datestamp latest success as the next start datestamp
+          
 
 ------------------------------------------------------------
 # Solr
