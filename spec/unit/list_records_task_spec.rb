@@ -46,14 +46,48 @@ module Dash2
 
         file = File.new('spec/data/oai-datacite-list-records-june-2011-oai_dc.xml')
         doc = REXML::Document.new file
-        result = OAI::ListRecordsResponse.new(doc)
+        result = OAI::ListRecordsResponse.new(doc) {} # empty resumption block
         expected_array = result.collect { |r| OAIRecord.new(r) }
 
         task = ListRecordsTask.new oai_base_url: @uri
         expect(@oai_client).to receive(:list_records) { result }
 
-        harvested_array = task.list_records.collect { |r| r }
+        harvested_array = task.list_records.to_a
         expect(harvested_array).to eq(expected_array)
+      end
+
+      it 'supports resumption' do
+        require 'rexml/document'
+
+        file_1 = File.new('spec/data/resumption-1.xml')
+        file_2 = File.new('spec/data/resumption-2.xml')
+        file_full = File.new('spec/data/resumption-full.xml')
+
+        doc_1 = REXML::Document.new file_1
+        doc_2 = REXML::Document.new file_2
+        doc_full = REXML::Document.new file_full
+
+        result_paged = OAI::ListRecordsResponse.new(doc_1) do
+          OAI::ListRecordsResponse.new(doc_2)
+        end
+
+        result_full = OAI::ListRecordsResponse.new(doc_full)
+        expected_array = result_full.collect { |r| OAIRecord.new(r) }
+
+        task = ListRecordsTask.new oai_base_url: @uri
+        expect(@oai_client).to receive(:list_records) { result_paged }
+
+        harvested_array = task.list_records.to_a
+        expect(harvested_array).to match_array(expected_array)
+      end
+
+      it 'is lazy'
+
+      it 'returns an empty enumerable if no response is returned' do
+        task = ListRecordsTask.new oai_base_url: @uri
+        expect(@oai_client).to receive(:list_records) { nil }
+        harvested_array = task.list_records.to_a
+        expect(harvested_array).to eq([])
       end
 
       it 'defaults to "oai_dc" if no metadata prefix is specified' do
