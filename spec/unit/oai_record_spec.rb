@@ -5,9 +5,10 @@ require 'rexml/document'
 module Dash2
   module Harvester
     describe OAIRecord do
+
       before(:each) do
-        file = File.new('spec/data/oai-datacite-32153-datacite.xml')
-        @doc = REXML::Document.new file
+        @file = 'spec/data/oai-datacite-32153-datacite.xml'
+        @doc = REXML::Document.new File.new(@file)
         @record = OAIRecord.new(OAI::GetRecordResponse.new(@doc).record)
       end
 
@@ -49,7 +50,9 @@ module Dash2
         end
 
         it 'treats equal records as equal' do
-          equal_record = OAIRecord.new(OAI::GetRecordResponse.new(@doc).record)
+          equal_doc = REXML::Document.new File.new(@file)
+          equal_record = OAIRecord.new(OAI::GetRecordResponse.new(equal_doc).record)
+
           expect(@record).to eq(equal_record)
           expect(equal_record).to eq(@record)
         end
