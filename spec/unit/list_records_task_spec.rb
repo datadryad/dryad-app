@@ -131,7 +131,23 @@ module Dash2
         expect(harvested_array).to match_array(expected_array)
       end
 
-      it 'is lazy'
+      it 'is lazy' do
+        require 'rexml/document'
+
+        file_1 = File.new('spec/data/resumption-1.xml')
+        doc_1 = REXML::Document.new file_1
+
+        result_paged = OAI::ListRecordsResponse.new(doc_1) do
+          raise "resumption block shouldn't get called if we never iterate beyond the first result"
+        end
+
+        expect(@oai_client).to receive(:list_records) { result_paged }
+        task = ListRecordsTask.new oai_base_url: @uri
+        all_records = task.list_records
+
+        some_records = all_records.take(5).to_a
+        expect(some_records.size).to eq(5)
+      end
 
       it 'respects 503 with Retry-After' # see https://github.com/code4lib/ruby-oai/issues/45
 

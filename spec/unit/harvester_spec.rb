@@ -13,7 +13,7 @@ describe Dash2::Harvester do
     it 'records the datestamp of the last successfully indexed record'
     it 'in the event of a "partial success", records the datestamp of the first failed record'
     it 'maintains enough state to keep track of the start/end datestamp itself'
-    it 'handles resumptionTokens'
+    # it 'handles resumptionTokens'
     it 'handles badResumptionToken errors'
     it 'handles resumptionTokens with expirationDates'
     it 'allows callers to select a metadata format'
