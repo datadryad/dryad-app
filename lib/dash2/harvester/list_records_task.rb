@@ -37,15 +37,10 @@ module Dash2
       def list_records
         client = OAI::Client.new @oai_base_uri.to_s
         records = client.list_records(@opts)
-        # records ? records.map { |r| Dash2::Harvester::OAIRecord.new(r) } : []
-        # records ? records.full.to_enum.map { |r| Dash2::Harvester::OAIRecord.new(r) } : []
-        if records then
-          full = records.full
-          enum = full.lazy.to_enum
-          enum.map { |r| Dash2::Harvester::OAIRecord.new(r) }
-        else
-          [].lazy
-        end
+        return [].lazy unless records
+        full = records.full
+        enum = full.lazy.to_enum
+        enum.map { |r| Dash2::Harvester::OAIRecord.new(r) }
       end
 
       # ------------------------------------------------------------
