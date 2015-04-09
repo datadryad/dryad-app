@@ -24,6 +24,7 @@ describe Dash2::Harvester do
     it 'handles OAI-PMH error responses gracefully'
     it 'logs each request'
     it 'logs each request result'
+    it 'logs all errors'
   end
   describe 'its Solr indexing' do
     it 'indexes metadata into Solr'
