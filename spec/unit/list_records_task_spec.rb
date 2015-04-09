@@ -56,33 +56,6 @@ module Dash2
         expect(harvested_array).to eq(expected_array)
       end
 
-      it 'supports resumption' do
-        require 'rexml/document'
-
-        file_1 = File.new('spec/data/resumption-1.xml')
-        file_2 = File.new('spec/data/resumption-2.xml')
-        file_full = File.new('spec/data/resumption-full.xml')
-
-        doc_1 = REXML::Document.new file_1
-        doc_2 = REXML::Document.new file_2
-        doc_full = REXML::Document.new file_full
-
-        result_paged = OAI::ListRecordsResponse.new(doc_1) do
-          OAI::ListRecordsResponse.new(doc_2)
-        end
-
-        result_full = OAI::ListRecordsResponse.new(doc_full)
-        expected_array = result_full.collect { |r| OAIRecord.new(r) }
-
-        task = ListRecordsTask.new oai_base_url: @uri
-        expect(@oai_client).to receive(:list_records) { result_paged }
-
-        harvested_array = task.list_records.to_a
-        expect(harvested_array).to match_array(expected_array)
-      end
-
-      it 'is lazy'
-
       it 'returns an empty enumerable if no response is returned' do
         task = ListRecordsTask.new oai_base_url: @uri
         expect(@oai_client).to receive(:list_records) { nil }
@@ -132,6 +105,36 @@ module Dash2
         expect(@oai_client).to receive(:list_records).with(from: start_time.strftime('%Y-%m-%d'), until: end_time.strftime('%Y-%m-%d'), metadata_prefix: 'oai_dc')
         task.list_records
       end
+
+      it 'supports resumption' do
+        require 'rexml/document'
+
+        file_1 = File.new('spec/data/resumption-1.xml')
+        file_2 = File.new('spec/data/resumption-2.xml')
+        file_full = File.new('spec/data/resumption-full.xml')
+
+        doc_1 = REXML::Document.new file_1
+        doc_2 = REXML::Document.new file_2
+        doc_full = REXML::Document.new file_full
+
+        result_paged = OAI::ListRecordsResponse.new(doc_1) do
+          OAI::ListRecordsResponse.new(doc_2)
+        end
+
+        result_full = OAI::ListRecordsResponse.new(doc_full)
+        expected_array = result_full.collect { |r| OAIRecord.new(r) }
+
+        task = ListRecordsTask.new oai_base_url: @uri
+        expect(@oai_client).to receive(:list_records) { result_paged }
+
+        harvested_array = task.list_records.to_a
+        expect(harvested_array).to match_array(expected_array)
+      end
+
+      it 'is lazy'
+
+      it 'respects 503 with Retry-After' # see https://github.com/code4lib/ruby-oai/issues/45
+
     end
   end
 end
