@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Ruby defaults
 
 /.bundle/
@@ -15,6 +16,16 @@
 *.a
 mkmf.log
 
+# Rails engine
+
+.bundle/
+log/*.log
+test/dummy/db/*.sqlite3
+test/dummy/db/*.sqlite3-journal
+test/dummy/log/*.log
+test/dummy/tmp/
+test/dummy/.sass-cache
+
 # IntellJ
 
 *.iml
@@ -25,4 +36,5 @@ mkmf.log
 # Emacs
 
 *~
+
 
