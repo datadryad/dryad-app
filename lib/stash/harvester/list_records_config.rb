@@ -1,4 +1,4 @@
-module Dash2
+module Stash
   module Harvester
 
     # Encapsulates the configuration for a single +ListRecords+ operation.

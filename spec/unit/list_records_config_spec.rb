@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-module Dash2
+module Stash
   module Harvester
     describe ListRecordsConfig do
       describe '#new' do

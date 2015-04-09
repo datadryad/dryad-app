@@ -1,11 +1,11 @@
 # coding: utf-8
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'dash2/harvester/version'
+require 'stash/harvester/version'
 
 Gem::Specification.new do |spec|
-  spec.name          = 'dash2-harvester'
-  spec.version       = Dash2::Harvester::VERSION
+  spec.name          = 'stash-harvester'
+  spec.version       = Stash::Harvester::VERSION
   spec.authors       = ['David Moles']
   spec.email         = ['david.moles@ucop.edu']
   spec.summary       = 'Harvests OAI-PMH metadata into Solr'

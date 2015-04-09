@@ -1,4 +1,4 @@
-# Dash2::Harvester
+# Stash::Harvester
 
 > # This is a work in progress. 
 <!-- TODO remove the above when it's no longer true -->
@@ -12,7 +12,7 @@ Harvests [OAI-PMH](http://www.openarchives.org/pmh/) metadata from a digital rep
 <!-- Add this line to your application's Gemfile: -->
 
 <!-- ```ruby -->
-<!-- gem 'dash2-harvester' -->
+<!-- gem 'stash-harvester' -->
 <!-- ``` -->
 
 <!-- And then execute: -->
@@ -21,14 +21,14 @@ Harvests [OAI-PMH](http://www.openarchives.org/pmh/) metadata from a digital rep
 
 <!-- Or install it yourself as: -->
 
-<!--     $ gem install dash2-harvester -->
+<!--     $ gem install stash-harvester -->
 
 <!-- TODO: Write usage instructions here -->
 <!-- ## Usage -->
 
 <!-- TODO: fix github URL and put this back-->
 <!-- ## Contributing -->
-<!-- 1. Fork it ( https://github.com/[my-github-username]/dash2-harvester/fork ) -->
+<!-- 1. Fork it ( https://github.com/[my-github-username]/stash-harvester/fork ) -->
 <!-- 2. Create your feature branch (`git checkout -b my-new-feature`) -->
 <!-- 3. Commit your changes (`git commit -am 'Add some feature'`) -->
 <!-- 4. Push to the branch (`git push origin my-new-feature`) -->
@@ -38,6 +38,6 @@ Harvests [OAI-PMH](http://www.openarchives.org/pmh/) metadata from a digital rep
 
 ## Useful links
 
-- [Travis continuous integration](https://travis-ci.org/CDLUC3/dash2-harvester)
+- [Travis continuous integration](https://travis-ci.org/CDLUC3/stash-harvester)
 
 

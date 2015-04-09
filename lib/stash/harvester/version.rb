@@ -1,4 +1,4 @@
-module Dash2
+module Stash
   module Harvester
     VERSION = '0.0.1'
   end

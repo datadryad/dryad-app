@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-module Dash2
+module Stash
   module Harvester
     describe ListRecordsTask do
       describe '#new' do
@@ -41,7 +41,7 @@ module Dash2
         task.list_records
       end
 
-      it 'maps the ListRecords response as a sequence of Dash2::Havester::OAIRecord objects' do
+      it 'maps the ListRecords response as a sequence of Stash::Havester::OAIRecord objects' do
         require 'rexml/document'
 
         file = File.new('spec/data/oai-datacite-list-records-june-2011-oai_dc.xml')

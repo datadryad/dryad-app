@@ -2,7 +2,7 @@ require 'spec_helper'
 require 'oai/client'
 require 'rexml/document'
 
-module Dash2
+module Stash
   module Harvester
     describe OAIRecord do
 

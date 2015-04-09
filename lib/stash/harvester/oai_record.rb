@@ -1,7 +1,7 @@
 require 'oai/client'
 require 'time'
 
-module Dash2
+module Stash
   module Harvester
     # A utility wrapper around +OAI::Record+ that flattens the OAI XML structure
     # and converts types (e.g., string datestamps to +Time+ objects)

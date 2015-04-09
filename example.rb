@@ -1,23 +1,23 @@
 #! /usr/bin/env ruby
 
-fail Exception, 'dash2-harvester requires Ruby 2.2' unless RUBY_VERSION =~ /^2.2/
+fail Exception, 'stash-harvester requires Ruby 2.2' unless RUBY_VERSION =~ /^2.2/
 
-# Note: This assumes we're running from the root of the dash2-harvester project
+# Note: This assumes we're running from the root of the stash-harvester project
 $LOAD_PATH << File.dirname(__FILE__)
-require 'lib/dash2/harvester'
+require 'lib/stash/harvester'
 
 oai_base_url = 'http://oai.datacite.org/oai'
 from_time = Time.utc(2011, 6, 1)
 until_time = Time.utc(2011, 6, 30)
 metadata_prefix = 'datacite'
 
-list_records_config = Dash2::Harvester::ListRecordsConfig.new(
+list_records_config = Stash::Harvester::ListRecordsConfig.new(
   from_time: from_time,
   until_time: until_time,
   metadata_prefix: metadata_prefix
 )
 
-list_records_task = Dash2::Harvester::ListRecordsTask.new(
+list_records_task = Stash::Harvester::ListRecordsTask.new(
   oai_base_url: oai_base_url,
   config: list_records_config
 )

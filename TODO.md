@@ -2,7 +2,7 @@
 # Harvesting
 
 - How do we know what to harvest?
-    - dash2 sends us a ~~record identifier~~ date range
+    - stash sends us a ~~record identifier~~ date range
     - the `metadataPrefix` is configurable (?)
 - What's OAI-PMH's concept of identity?
     - items have identifiers

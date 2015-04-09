@@ -12,6 +12,6 @@ SimpleCov.start do
 end
 
 require 'rspec'
-require 'dash2/harvester'
+require 'stash/harvester'
 
 RSpec.configure(&:raise_errors_for_deprecations!)

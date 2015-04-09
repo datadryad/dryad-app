@@ -1,4 +1,4 @@
-module Dash2
+module Stash
   module Harvester
 
     # Class representing a single harvest (+ListRecords+) operation.
@@ -40,7 +40,7 @@ module Dash2
         return [].lazy unless records
         full = records.full
         enum = full.lazy.to_enum
-        enum.map { |r| Dash2::Harvester::OAIRecord.new(r) }
+        enum.map { |r| Stash::Harvester::OAIRecord.new(r) }
       end
 
       # ------------------------------------------------------------

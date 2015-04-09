@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Dash2::Harvester do
+describe Stash::Harvester do
   describe 'its OAI-PMH harvesting' do
     # it 'harvests metadata from OAI-PMH'
     it 'sends appropriate User-Agent and From headers'
