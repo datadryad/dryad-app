@@ -23,6 +23,7 @@ Given a `from` datestamp:
 - if the call fails
     - log the failure, but don't change the start datestamp
 - if the call succeeds
+    - **TODO:** put each record or batch of records in temp storage?
     - for each record
         - add the record to solr
             - if the add operation succeeds
