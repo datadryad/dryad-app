@@ -1,14 +1,14 @@
 $:.push File.expand_path("../lib", __FILE__)
 
 # Maintain your gem's version:
-require "harvester/version"
+require "stash/harvester/version"
 
 # Describe your gem and declare its dependencies:
 Gem::Specification.new do |s|
   s.name        = "harvester"
-  s.version     = Harvester::VERSION
+  s.version     = Stash::Harvester::VERSION
   s.authors     = ["David Moles"]
-  s.email       = ["chronodm@gmail.com"]
+  s.email       = ["david.moles@ucop.edu"]
   s.homepage    = "TODO"
   s.summary     = "TODO: Summary of Harvester."
   s.description = "TODO: Description of Harvester."

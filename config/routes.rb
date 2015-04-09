@@ -1,2 +1,2 @@
-Harvester::Engine.routes.draw do
+Stash::Harvester::Engine.routes.draw do
 end

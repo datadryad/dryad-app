@@ -9,7 +9,7 @@ require "action_view/railtie"
 require "rails/test_unit/railtie"
 
 Bundler.require(*Rails.groups)
-require "harvester"
+require "stash/harvester"
 
 module Dummy
   class Application < Rails::Application

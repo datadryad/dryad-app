@@ -1,4 +1,6 @@
-require "harvester/engine"
+require "stash/harvester/engine"
 
-module Harvester
+module Stash
+  module Harvester
+  end
 end
