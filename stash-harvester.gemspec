@@ -19,15 +19,19 @@ Gem::Specification.new do |spec|
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths = ['lib']
 
-  spec.add_dependency "rails", "~> 4.2.1"
+  spec.add_dependency 'rails', '~> 4.2.1'
 
   spec.add_development_dependency 'bundler', '~> 1.7'
-  spec.add_development_dependency 'rake', '~> 10.0'
+  spec.add_development_dependency 'rake', '~> 10.4'
   spec.add_development_dependency 'rspec', '~> 3.2'
   spec.add_development_dependency 'simplecov', '~> 0.9.2'
   spec.add_development_dependency 'simplecov-console', '~> 0.2.0'
   spec.add_development_dependency 'rubocop', '~> 0.29.1'
-  spec.add_development_dependency "sqlite3"
+  spec.add_development_dependency 'sqlite3'
+
+  spec.add_development_dependency 'rspec-rails'
+  spec.add_development_dependency 'capybara'
+  spec.add_development_dependency 'factory_girl_rails'
 
   spec.add_runtime_dependency 'oai', '~> 0.3.1'
   spec.add_runtime_dependency 'rsolr', '~> 1.0.12'
