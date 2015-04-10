@@ -1,3 +1,6 @@
+# ------------------------------------------------------------
+# SimpleCov setup
+
 require 'simplecov'
 require 'simplecov-console'
 
@@ -11,7 +14,15 @@ SimpleCov.start do
   ]
 end
 
-require 'rspec'
-require 'stash/harvester'
+# ------------------------------------------------------------
+# RSpec configuration
 
 RSpec.configure(&:raise_errors_for_deprecations!)
+
+require 'rspec'
+
+# ------------------------------------------------------------
+# Stash::Harvester
+
+require 'stash/harvester'
+
