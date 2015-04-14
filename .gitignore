@@ -36,4 +36,6 @@ spec/dummy/.sass-cache
 
 *~
 
+# Mac OS
 
+.DS_Store
