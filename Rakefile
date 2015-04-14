@@ -18,7 +18,7 @@ require 'rspec/core/rake_task'
 
 # TODO: separate DB and non-DB specs
 RSpec::Core::RakeTask.new(:spec => 'app:db:test:prepare') do |task|
-  task.rspec_opts = %w(--color --format documentation)
+  task.rspec_opts = %w(--color --format documentation --order default)
 end
 
 task :default => :spec
