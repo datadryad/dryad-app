@@ -4,7 +4,7 @@ require 'rexml/document'
 
 module Stash
   module Harvester
-    module OAI_PMH
+    module OAIPMH
 
       describe Record do
 

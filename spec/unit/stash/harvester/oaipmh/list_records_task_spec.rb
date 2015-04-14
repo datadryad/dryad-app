@@ -2,7 +2,7 @@ require 'spec_helper'
 
 module Stash
   module Harvester
-    module OAI_PMH
+    module OAIPMH
 
       describe ListRecordsTask do
         describe '#new' do
@@ -42,7 +42,7 @@ module Stash
             task.list_records
           end
 
-          it 'maps the ListRecords response as a sequence of Stash::Havester::OAI_PMH::Record objects' do
+          it 'maps the ListRecords response as a sequence of Stash::Havester::OAIPMH::Record objects' do
             require 'rexml/document'
 
             file = File.new('spec/data/oai-datacite-list-records-june-2011-oai_dc.xml')

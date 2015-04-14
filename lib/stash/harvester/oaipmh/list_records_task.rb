@@ -1,6 +1,6 @@
 module Stash
   module Harvester
-    module OAI_PMH
+    module OAIPMH
 
       # Class representing a single harvest (+ListRecords+) operation.
       #
@@ -34,14 +34,14 @@ module Stash
         # ------------------------------------------------------------
         # Methods
 
-        # @return [Enumerator::Lazy] A lazy enumerator of {OAI_PMH::Record}s
+        # @return [Enumerator::Lazy] A lazy enumerator of {OAIPMH::Record}s
         def list_records
           client = OAI::Client.new @oai_base_uri.to_s
           records = client.list_records(@opts)
           return [].lazy unless records
           full = records.full
           enum = full.lazy.to_enum
-          enum.map { |r| Stash::Harvester::OAI_PMH::Record.new(r) }
+          enum.map { |r| Stash::Harvester::OAIPMH::Record.new(r) }
         end
 
         # ------------------------------------------------------------

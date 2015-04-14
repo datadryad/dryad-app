@@ -2,7 +2,7 @@ require 'spec_helper'
 
 module Stash
   module Harvester
-    module OAI_PMH
+    module OAIPMH
 
       describe ListRecordsConfig do
         describe '#new' do

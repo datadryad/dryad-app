@@ -3,7 +3,7 @@ require 'time'
 
 module Stash
   module Harvester
-    module OAI_PMH
+    module OAIPMH
 
       # A utility wrapper around +OAI::Record+ that flattens the OAI XML structure
       # and converts types (e.g., string datestamps to +Time+ objects)

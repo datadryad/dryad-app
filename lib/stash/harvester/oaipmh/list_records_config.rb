@@ -1,6 +1,6 @@
 module Stash
   module Harvester
-    module OAI_PMH
+    module OAIPMH
 
       # Encapsulates the configuration for a single +ListRecords+ operation.
       #
@@ -65,7 +65,7 @@ module Stash
         # Methods
 
         def to_h
-          opts = {metadata_prefix: metadata_prefix}
+          opts = { metadata_prefix: metadata_prefix }
           (opts[:from] = to_s(from_time)) if from_time
           (opts[:until] = to_s(until_time)) if until_time
           opts
