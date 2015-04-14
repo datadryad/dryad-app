@@ -1,5 +1,3 @@
-require 'uri'
-require 'oai/client'
 require 'stash/harvester/engine'
 
 module Stash
