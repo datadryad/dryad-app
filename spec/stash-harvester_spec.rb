@@ -15,19 +15,28 @@ module Stash
         it 'harvests metadata from OAI-PMH:' do
           # see ListRecordsTask
         end
+        it 'harvests by datestamp range' do
+          # see ListRecordsTask
+        end
+        it 'honors the repository time granularity' do
+          # see ListRecordsConfig#to_s(Time)
+        end
       end
 
-      describe 'datestamp handling:' do
-        it 'harvests by datestamp range'
-        it 'honors the repository time granularity'
+      describe 'configuration:' do
+        it 'includes the OAI-PMH base URI'
+        it 'includes the repository time granularity'
+      end
+
+      describe 'scheduling:' do
         it 'overlaps date ranges'
         it 'starts from the datestamp of the last successfully indexed record'
         it 'starts at UTC midnight *before* the datestamp of the last successfully indexed record, when harvesting at day granularity'
       end
 
       describe 'state tracking:' do
-        it 'records the datestamp of the last successfully indexed record'
-        it 'in the event of a "partial success", records the datestamp of the first failed record'
+        it 'records the datestamp of the latest successfully indexed record'
+        it 'in the event of a "partial success", records the datestamp of the earliest failed record'
         it 'maintains enough state to keep track of the start/end datestamp itself'
       end
 

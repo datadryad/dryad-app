@@ -152,6 +152,8 @@ module Stash
 
           it 'respects 503 with Retry-After' # see https://github.com/code4lib/ruby-oai/issues/45
 
+          it 'logs errors'
+
         end
       end
 
