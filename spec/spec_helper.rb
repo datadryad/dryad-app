@@ -3,6 +3,9 @@
 
 require 'simplecov'
 require 'simplecov-console'
+
+SimpleCov.minimum_coverage 100
+
 SimpleCov.start 'rails'
 
 SimpleCov.start do
