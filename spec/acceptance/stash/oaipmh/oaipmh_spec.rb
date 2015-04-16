@@ -1,13 +1,6 @@
-require 'spec_helper'
+require 'acceptance/acceptance_helper'
 
 module Stash
-  describe Harvester do
-    it 'runs on a configurable schedule'
-    it 'logs each request'
-    it 'logs each request result'
-    it 'logs all errors'
-  end
-
   module Harvester
     describe OAIPMH do
 
@@ -59,13 +52,5 @@ module Stash
         it 'handles 5xx errors gracefully'
       end
     end
-
-    describe 'Stash::Harvester::Solr' do
-      it 'indexes metadata into Solr'
-      it 'logs each request'
-      it 'logs each request result'
-      it '(...does other necessary stuff TBD...)'
-    end
-
   end
 end

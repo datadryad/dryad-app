@@ -1,3 +1,4 @@
+# TODO: Where should this live? putting it in stash/harvester screws up unit testing
 module Stash
   module Harvester
     class Engine < ::Rails::Engine
