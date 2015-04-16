@@ -81,7 +81,7 @@
 - work scheduling / invocation should be independent of the actual operations
     - but: index-on-harvest? (or after-?)
     
-### Possible workflow (for OAI-PMH anyway)
+### Possible workflow for OAI-PMH
 
 Given a `from` datestamp:
 - make a `listRecords` call for all records at or after that datestamp
@@ -108,6 +108,47 @@ Given a `from` datestamp:
                 - record the datestamp of the earliest temporary failure as the next start datestamp
             - otherwise
                 - record the datestamp latest success as the next start datestamp
+
+### Possible workflow for ResourceSync
+
+- "Baseline synchronization": either
+    - retrieve Resource List for source and retrieve each URL, or
+    - retrieve Resource Dump and Resource Dump Manifest for source and retrieve URL content from dump ZIP file
+- "Incremental synchronization": either
+    - repeat as above, or
+    - instead use Change List / Change Dump & Change Dump Manifest (preferred) -- make sure we poll at the right frequency
+        - (otherwise same process)
+
+#### ResourceSync notes
+
+[Specification](http://www.openarchives.org/rs/1.0/resourcesync)
+
+[DSpace example](http://cottagelabs.com/news/representing-resourcesync-resources-in-dspace)
+
+- extension of [Sitemap protocol](http://www.sitemaps.org/protocol.html)
+- in ResourceSync parlance, the repository is a Source and this harvester is a Destination
+- one goal of ResourceSync, for arXiv, is to "extend the openly available metadata sharing capabilities provided by arXiv.org, currently implemented via OAI-PMH, to full-text sharing"; we don't currently care about that
+- resources can **optionally** include:
+    - a last-modified date 
+    - an md5 hash
+    - a mirror URL
+- "From the ResourceSync perspective, both the resource and the metadata about it are regarded as resources with distinct URIs that are subject to synchronization. Their inter-relationship is expressed by means of links with appropriate relation types."
+- "The `<sitemapindex>` document format is used when it is necessary to group multiple documents of the `<urlset>` format. The ResourceSync framework follows community-defined limits for when to publish multiple documents of the `<urlset>` format. At time of publication of this specification, the limit is 50,000 items per document and a document size of 50 MB."
+- Sources can **optionally** provide Change Lists
+    - **Note:** *Source* has control over Change List/Dump time period
+- Resource Lists and Change Lists:
+    - contain `<urlset>` or `<sitemapindex>`
+    - distinguished by a `capability` attribute on the `<rs:md>` tag of the `<urlset>` (or `<sitemapindex>`?)
+- Resource Dumps and Change Dumps:
+    - contain a (`<urlset>` with?) link to one (**Q:** or more?) Zip file(s)
+    - distinguished by a `capability` attribute on the `<rs:md>` tag of the `<urlset>` (or `<sitemapindex>`?)
+    - should (?) have a corresponding Resource Dump Manifest
+        - very similar to a Resource List but includes the ZIP file path for each `<url>`
+- Capability List
+    - distinguished by a `capability` attribute on the `<rs:md>` tag of the `<urlset>`
+    - contains a list of URLs (with corresponding `capability` attributes) for Resource Lists, Resource Dumps, Change Lists etc.
+- Source Description (required)
+    - enumerates all Capability Lists
 
 ## Deployment
 
