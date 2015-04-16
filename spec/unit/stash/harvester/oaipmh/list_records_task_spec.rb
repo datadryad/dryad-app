@@ -139,7 +139,7 @@ module Stash
             doc_1 = REXML::Document.new file_1
 
             result_paged = OAI::ListRecordsResponse.new(doc_1) do
-              raise "resumption block shouldn't get called if we never iterate beyond the first result"
+              fail "resumption block shouldn't get called if we never iterate beyond the first result"
             end
 
             expect(@oai_client).to receive(:list_records) { result_paged }
