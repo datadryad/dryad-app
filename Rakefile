@@ -11,14 +11,14 @@ load 'rails/tasks/engine.rake'
 
 Bundler::GemHelper.install_tasks
 
-Dir[File.join(File.dirname(__FILE__), 'tasks/**/*.rake')].each {|f| load f }
+Dir[File.join(File.dirname(__FILE__), 'tasks/**/*.rake')].each { |f| load f }
 
 require 'rspec/core'
 require 'rspec/core/rake_task'
 
 # TODO: separate DB and non-DB specs
-RSpec::Core::RakeTask.new(:spec => 'app:db:test:prepare') do |task|
+RSpec::Core::RakeTask.new(spec: 'app:db:test:prepare') do |task|
   task.rspec_opts = %w(--color --format documentation --order default)
 end
 
-task :default => :spec
+task default: :spec
