@@ -47,7 +47,13 @@ end
 desc 'Run all tests'
 task spec: 'spec:all'
 
-# ------------------------------------------------------------ 
-# Defaults  
+# ------------------------------------------------------------
+# RuboCop
 
-task default: :spec
+require 'rubocop/rake_task'
+RuboCop::RakeTask.new
+
+# ------------------------------------------------------------
+# Defaults
+
+task default: [:spec, :rubocop]
