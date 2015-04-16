@@ -1,4 +1,4 @@
 Rails.application.routes.draw do
 
-  mount Stash::Harvester::Engine => "/harvester"
+  mount Stash::Harvester::Engine => '/harvester'
 end

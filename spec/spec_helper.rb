@@ -39,4 +39,3 @@ end
 # Stash::Harvester
 
 require 'stash/harvester'
-
