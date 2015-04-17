@@ -116,8 +116,10 @@ Given a `from` datestamp:
     - retrieve Resource Dump and Resource Dump Manifest for source and retrieve URL content from dump ZIP file
 - "Incremental synchronization": either
     - repeat as above, or
-    - instead use Change List / Change Dump & Change Dump Manifest (preferred) -- make sure we poll at the right frequency
-        - (otherwise same process)
+    - instead use Change List / Change Dump & Change Dump Manifest (preferred)
+        - discover Change List(s) based on published Capability List(s)
+        - keep track of the last processed Change List
+        - distinguish between 'open' and 'closed' Change Lists (see under [spec section 12.1](http://www.openarchives.org/rs/1.0/resourcesync#ChangeList))
 
 #### ResourceSync notes
 
@@ -139,6 +141,7 @@ Given a `from` datestamp:
 - Resource Lists and Change Lists:
     - contain `<urlset>` or `<sitemapindex>`
     - distinguished by a `capability` attribute on the `<rs:md>` tag of the `<urlset>` (or `<sitemapindex>`?)
+    - "the combination of the URI of a changed resource and the datetime of its change should be unique"
 - Resource Dumps and Change Dumps:
     - contain a (`<urlset>` with?) link to one (**Q:** or more?) Zip file(s)
     - distinguished by a `capability` attribute on the `<rs:md>` tag of the `<urlset>` (or `<sitemapindex>`?)
