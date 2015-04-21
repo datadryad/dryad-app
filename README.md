@@ -13,6 +13,8 @@
 
 By alleviating many of the barriers that have historically precluded wider adoption of open data principles, Stash empowers individual scholars to assert active curation control over their research outputs; encourages more widespread data preservation, publication, sharing, and reuse; and promotes open scholarly inquiry and advancement.
 
+### Stash Architecture
+![Architecture](https://raw.githubusercontent.com/CDLUC3/dash/gh-pages/docs/stash_architecture.png)
 
 #This is a work in progress.
 
