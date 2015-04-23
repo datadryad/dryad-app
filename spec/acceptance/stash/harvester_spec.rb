@@ -11,5 +11,11 @@ module Stash
       it 'documents OAI-PMH support in detail'
       it 'makes it clear we\'re at least hypothetically protocol-agnostic'
     end
+
+    describe 'Gemspec' do
+      it 'makes it clear we\'re at least hypothetically protocol-agnostic'
+      it '\'s suitable for submitting to Ruby-Gems'
+    end
+
   end
 end
