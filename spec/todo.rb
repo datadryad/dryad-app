@@ -27,18 +27,6 @@ module Stash
 
     describe OAIPMH do
 
-      describe 'harvesting:' do
-        it 'harvests metadata from OAI-PMH:' do
-          # see ListRecordsTask
-        end
-        it 'harvests by datestamp range' do
-          # see ListRecordsTask
-        end
-        it 'honors the repository time granularity' do
-          # see ListRecordsConfig#to_s(Time)
-        end
-      end
-
       describe 'configuration:' do
         it 'includes the OAI-PMH base URI'
         it 'includes the repository time granularity'
@@ -57,9 +45,6 @@ module Stash
       end
 
       describe 'resumption:' do
-        it 'supports resumptionTokens:' do
-          # see ListRecordsTask#list_records
-        end
         it 'handles badResumptionToken errors'
         it 'handles resumptionTokens with expirationDates'
       end
