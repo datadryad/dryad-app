@@ -1,22 +1,4 @@
 # ------------------------------------------------------------
-# Rails
-
-require 'bundler/gem_tasks'
-
-begin
-  require 'bundler/setup'
-rescue LoadError
-  puts 'You must `gem install bundler` and `bundle install` to run rake tasks'
-end
-
-APP_RAKEFILE = File.expand_path('../spec/dummy/Rakefile', __FILE__)
-load 'rails/tasks/engine.rake'
-
-Bundler::GemHelper.install_tasks
-
-Dir[File.join(File.dirname(__FILE__), 'tasks/**/*.rake')].each { |f| load f }
-
-# ------------------------------------------------------------
 # RSpec
 
 require 'rspec/core'
@@ -32,14 +14,10 @@ namespace :spec do
 
   desc 'Run all acceptance tests'
   RSpec::Core::RakeTask.new(:acceptance) do |task|
+    ENV['COVERAGE'] = nil
     task.rspec_opts = %w(--color --format documentation --order default)
     task.pattern = 'acceptance/**/*_spec.rb'
   end
-
-  # TODO: separate DB and non-DB specs
-  # RSpec::Core::RakeTask.new(spec: 'app:db:test:prepare') do |task|
-  #   task.rspec_opts = %w(--color --format documentation --order default)
-  # end
 
   task all: [:unit, :acceptance]
 end
@@ -48,12 +26,31 @@ desc 'Run all tests'
 task spec: 'spec:all'
 
 # ------------------------------------------------------------
+# Coverage
+
+desc 'Run all unit tests with coverage'
+task :coverage do
+  ENV['COVERAGE'] = 'true'
+  Rake::Task['spec:unit'].execute
+end
+
+# ------------------------------------------------------------
 # RuboCop
 
 require 'rubocop/rake_task'
 RuboCop::RakeTask.new
 
 # ------------------------------------------------------------
+# TODOs
+
+desc 'List TODOs (from spec/todo.rb)'
+RSpec::Core::RakeTask.new(:todo) do |task|
+  task.rspec_opts = %w(--color --format documentation --order default)
+  task.pattern = 'todo.rb'
+end
+
+# ------------------------------------------------------------
 # Defaults
 
-task default: [:spec, :rubocop]
+desc 'Run unit tests, check test coverage, run acceptance tests, check code style'
+task default: [:coverage, 'spec:acceptance', :rubocop]

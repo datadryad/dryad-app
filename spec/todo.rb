@@ -1,7 +1,30 @@
-require 'acceptance/acceptance_helper'
+require 'rspec/core'
+require 'stash/harvester'
 
+# List of TODO items in spec form
 module Stash
+
+  describe Harvester do
+    it 'runs on a configurable schedule'
+    it 'logs each request'
+    it 'logs each request result'
+    it 'logs all errors'
+
+    it 'does something intelligent with deleted resources' # insofar as we can detect them
+
+    describe 'README' do
+      it 'documents OAI-PMH support in detail'
+      it 'makes it clear we\'re at least hypothetically protocol-agnostic'
+    end
+
+    describe 'Gemspec' do
+      it 'makes it clear we\'re at least hypothetically protocol-agnostic'
+      it '\'s suitable for submitting to Ruby-Gems'
+    end
+  end
+
   module Harvester
+
     describe OAIPMH do
 
       describe 'harvesting:' do
@@ -52,5 +75,13 @@ module Stash
         it 'handles 5xx errors gracefully'
       end
     end
+
+    describe 'Stash::Harvester::Solr' do
+      it 'indexes metadata into Solr'
+      it 'logs each request'
+      it 'logs each request result'
+      it '(...does other necessary stuff TBD...)'
+    end
+
   end
 end
