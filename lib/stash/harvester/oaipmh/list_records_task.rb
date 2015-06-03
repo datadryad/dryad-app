@@ -34,7 +34,7 @@ module Stash
         # ------------------------------------------------------------
         # Methods
 
-        # @return [Enumerator::Lazy] A lazy enumerator of {OAIPMH::Record}s
+        # @return [Enumerator::Lazy<OAIPMH::Record>] A lazy enumerator of the harvested records
         def list_records
           client = OAI::Client.new @oai_base_uri.to_s
           records = client.list_records(@opts)
