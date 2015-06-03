@@ -16,6 +16,8 @@ module Resync
           r.get
         end
       end
+
+      it 'is lazy'
     end
   end
 
@@ -52,6 +54,8 @@ module Resync
           r.get
         end
       end
+
+      it 'is lazy'
     end
   end
 end
