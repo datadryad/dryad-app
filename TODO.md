@@ -121,37 +121,18 @@ Given a `from` datestamp:
         - keep track of the last processed Change List
         - distinguish between 'open' and 'closed' Change Lists (see under [spec section 12.1](http://www.openarchives.org/rs/1.0/resourcesync#ChangeList))
 
-#### ResourceSync notes
+1. Get the (well-known) Capability List for the metadata.
+2. For baseline synchronization:
+    - if a Resource Dump exists, get that, and
+        - if it's a plain dump, get each bitstream package, and
+            - extract each resource from the package
+        - if it's a Resource Dump Index, flatten to download each bitstream package in each described dump, then extract each resource from each package
+    - otherwise, get the Resource List, and
+        - if it's a plain list, download each resource
+        - if it's a Resource List Index, flatten to download each resource in each described list
+3. For incremental synchronization:
+    - (same thing but filter changelists based on dates)
 
-[Specification](http://www.openarchives.org/rs/1.0/resourcesync)
-
-[DSpace example](http://cottagelabs.com/news/representing-resourcesync-resources-in-dspace)
-
-- extension of [Sitemap protocol](http://www.sitemaps.org/protocol.html)
-- in ResourceSync parlance, the repository is a Source and this harvester is a Destination
-- one goal of ResourceSync, for arXiv, is to "extend the openly available metadata sharing capabilities provided by arXiv.org, currently implemented via OAI-PMH, to full-text sharing"; we don't currently care about that
-- resources can **optionally** include:
-    - a last-modified date 
-    - an md5 hash
-    - a mirror URL
-- "From the ResourceSync perspective, both the resource and the metadata about it are regarded as resources with distinct URIs that are subject to synchronization. Their inter-relationship is expressed by means of links with appropriate relation types."
-- "The `<sitemapindex>` document format is used when it is necessary to group multiple documents of the `<urlset>` format. The ResourceSync framework follows community-defined limits for when to publish multiple documents of the `<urlset>` format. At time of publication of this specification, the limit is 50,000 items per document and a document size of 50 MB."
-- Sources can **optionally** provide Change Lists
-    - **Note:** *Source* has control over Change List/Dump time period
-- Resource Lists and Change Lists:
-    - contain `<urlset>` or `<sitemapindex>`
-    - distinguished by a `capability` attribute on the `<rs:md>` tag of the `<urlset>` (or `<sitemapindex>`?)
-    - "the combination of the URI of a changed resource and the datetime of its change should be unique"
-- Resource Dumps and Change Dumps:
-    - contain a (`<urlset>` with?) link to one (**Q:** or more?) Zip file(s)
-    - distinguished by a `capability` attribute on the `<rs:md>` tag of the `<urlset>` (or `<sitemapindex>`?)
-    - should (?) have a corresponding Resource Dump Manifest
-        - very similar to a Resource List but includes the ZIP file path for each `<url>`
-- Capability List
-    - distinguished by a `capability` attribute on the `<rs:md>` tag of the `<urlset>`
-    - contains a list of URLs (with corresponding `capability` attributes) for Resource Lists, Resource Dumps, Change Lists etc.
-- Source Description (required)
-    - enumerates all Capability Lists
 
 ## Deployment
 

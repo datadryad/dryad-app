@@ -1,38 +1,21 @@
 # Stash::Harvester
 
-> # This is a work in progress. 
-<!-- TODO remove the above when it's no longer true -->
-
-Harvests [OAI-PMH](http://www.openarchives.org/pmh/) metadata from a digital repository into
+Harvests metadata from a digital repository into
 [Solr](http://lucene.apache.org/solr/) for indexing.
 
-<!-- TODO: Figure out gem publishing and then uncomment/test these instructions -->
-<!-- ## Installation -->
+## OAI-PMH support
 
-<!-- Add this line to your application's Gemfile: -->
+The `Stash::Harvester::OAIPMH` module harvests metadata from an [OAI-PMH](http://www.openarchives.org/pmh/) repoistory.
 
-<!-- ```ruby -->
-<!-- gem 'stash-harvester' -->
-<!-- ``` -->
+## ResourceSync support
 
-<!-- And then execute: -->
+The `Stash::Harvester::Resync` module harvests metadata from a [ResourceSync](http://www.openarchives.org/rs/1.0/resourcesync) source. It makes the following assumptions:
 
-<!--     $ bundle -->
-
-<!-- Or install it yourself as: -->
-
-<!--     $ gem install stash-harvester -->
-
-<!-- TODO: Write usage instructions here -->
-<!-- ## Usage -->
-
-<!-- TODO: fix github URL and put this back-->
-<!-- ## Contributing -->
-<!-- 1. Fork it ( https://github.com/[my-github-username]/stash-harvester/fork ) -->
-<!-- 2. Create your feature branch (`git checkout -b my-new-feature`) -->
-<!-- 3. Commit your changes (`git commit -am 'Add some feature'`) -->
-<!-- 4. Push to the branch (`git push origin my-new-feature`) -->
-<!-- 5. Create a new Pull Request -->
+1. Metadata is a first-class resource with its own lifecycle, its own published change lists, etc.
+2. A [Capability List](http://www.openarchives.org/rs/1.0/resourcesync#CapabilityList) exists, at a well-known URI, to advertise the metadata resources and their changes.
+3. This Capability List advertises a [Change List](http://www.openarchives.org/rs/1.0/resourcesync#ChangeList), a [Change Dump](http://www.openarchives.org/rs/1.0/resourcesync#ChangeDump), or both.
+  * As implied (though not explicitly stated) by the ResourceSync spec, if both a Change List and a Change Dump exist, all changes in the Change List are also in the Change Dump. That is, if both exist, it is sufficient to examine only one or the other.
+4. The Change List / Change Dump resources advertised in the Capability List may be either single lists / dumps or [Change List Indices](http://www.openarchives.org/rs/1.0/resourcesync#ChangeListIndex) / [Change Dump Indices](http://www.openarchives.org/rs/1.0/resourcesync#ChangeDumpIndex), as advertised in the spec.
 
 ---
 
