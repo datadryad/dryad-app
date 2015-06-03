@@ -1,17 +1,21 @@
 # coding: utf-8
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
+
 require 'stash/harvester/version'
+require 'uri'
 
 Gem::Specification.new do |spec|
   spec.name          = 'stash-harvester'
   spec.version       = Stash::Harvester::VERSION
   spec.authors       = ['David Moles']
   spec.email         = ['david.moles@ucop.edu']
-  spec.summary       = 'Harvests OAI-PMH metadata into Solr'
-  spec.description   = 'Harvests OAI-PMH metadata from a digital repository into Solr for indexing'
-  spec.homepage      = '' # TODO: add homepage
+  spec.summary       = 'Harvests metadata into Solr'
+  spec.description   = 'Harvests metadata from a digital repository into Solr for indexing'
   spec.license       = 'MIT'
+
+  origin_uri = URI(`git config --get remote.origin.url`.chomp)
+  spec.homepage = URI::HTTP.build(host: origin_uri.host, path: origin_uri.path.chomp('.git')).to_s
 
   spec.files         = `git ls-files -z`.split("\x0")
   spec.executables   = spec.files.grep(%r{^bin/}) { |f| File.basename(f) }
