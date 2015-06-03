@@ -131,7 +131,19 @@ Given a `from` datestamp:
         - if it's a plain list, download each resource
         - if it's a Resource List Index, flatten to download each resource in each described list
 3. For incremental synchronization:
-    - (same thing but filter changelists based on dates)
+    - given a start and end timestamp range:
+        - if a Change Dump exists, get that
+          - if it's a plain dump
+            - filter to find and download all bitstream packages that intersect the specified range
+            - for each of those, find all changes that fall within the specified range (inclusive), then extract those from the package
+          - if it's a Change Dump Index:
+            - find all dumps that intersect the specified range
+            - filter and download each as above
+        - otherwise, get the Change List and,
+          - if it's a plain list, filter it for changes that fall within the specified range (inclusive) and download those
+          - if it's a Change List Index:
+            - find all lists that intersect the specified range
+            - filter each of those and download as above
 
 
 ## Deployment
