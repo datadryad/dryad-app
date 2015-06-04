@@ -11,13 +11,13 @@ from_time = Time.utc(2011, 6, 1)
 until_time = Time.utc(2011, 6, 30)
 metadata_prefix = 'datacite'
 
-list_records_config = Stash::Harvester::ListRecordsConfig.new(
+list_records_config = Stash::Harvester::OAIPMH::ListRecordsConfig.new(
   from_time: from_time,
   until_time: until_time,
   metadata_prefix: metadata_prefix
 )
 
-list_records_task = Stash::Harvester::ListRecordsTask.new(
+list_records_task = Stash::Harvester::OAIPMH::ListRecordsTask.new(
   oai_base_url: oai_base_url,
   config: list_records_config
 )
