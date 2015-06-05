@@ -9,7 +9,7 @@ module Stash
       describe Record do
 
         before(:each) do
-          @file = 'spec/data/oai-datacite-32153-datacite.xml'
+          @file = 'spec/data/oaipmh/oai-datacite-32153-datacite.xml'
           @doc = REXML::Document.new File.new(@file)
           @record = Record.new(OAI::GetRecordResponse.new(@doc).record)
         end
@@ -20,7 +20,7 @@ module Stash
         end
 
         it 'returns nil metadata for deleted records' do
-          file = File.new('spec/data/oai-datacite-22-oai_dc.xml')
+          file = File.new('spec/data/oaipmh/oai-datacite-22-oai_dc.xml')
           doc = REXML::Document.new file
           deleted_record = Record.new(OAI::GetRecordResponse.new(doc).record)
           expect(deleted_record.metadata_root).to be_nil
@@ -36,7 +36,7 @@ module Stash
         end
 
         it 'identifies deleted records as deleted' do
-          file = File.new('spec/data/oai-datacite-22-oai_dc.xml')
+          file = File.new('spec/data/oaipmh/oai-datacite-22-oai_dc.xml')
           doc = REXML::Document.new file
           deleted_record = Record.new(OAI::GetRecordResponse.new(doc).record)
           expect(deleted_record.deleted?).to be_truthy
@@ -75,7 +75,7 @@ module Stash
           end
 
           it 'treats records with different metadata as different' do
-            file = File.new('spec/data/oai-datacite-32153-oai_dc.xml')
+            file = File.new('spec/data/oaipmh/oai-datacite-32153-oai_dc.xml')
             doc = REXML::Document.new file
             dc_record = Record.new(OAI::GetRecordResponse.new(doc).record)
             expect(@record).to_not eq(dc_record)

@@ -45,7 +45,7 @@ module Stash
           it 'maps the ListRecords response as a sequence of Stash::Havester::OAIPMH::Record objects' do
             require 'rexml/document'
 
-            file = File.new('spec/data/oai-datacite-list-records-june-2011-oai_dc.xml')
+            file = File.new('spec/data/oaipmh/oai-datacite-list-records-june-2011-oai_dc.xml')
             doc = REXML::Document.new file
             result = OAI::ListRecordsResponse.new(doc) {} # empty resumption block
             expected_array = result.collect { |r| Record.new(r) }
@@ -110,9 +110,9 @@ module Stash
           it 'supports resumption' do
             require 'rexml/document'
 
-            file_1 = File.new('spec/data/resumption-1.xml')
-            file_2 = File.new('spec/data/resumption-2.xml')
-            file_full = File.new('spec/data/resumption-full.xml')
+            file_1 = File.new('spec/data/oaipmh/resumption-1.xml')
+            file_2 = File.new('spec/data/oaipmh/resumption-2.xml')
+            file_full = File.new('spec/data/oaipmh/resumption-full.xml')
 
             doc_1 = REXML::Document.new file_1
             doc_2 = REXML::Document.new file_2
@@ -135,7 +135,7 @@ module Stash
           it 'is lazy' do
             require 'rexml/document'
 
-            file_1 = File.new('spec/data/resumption-1.xml')
+            file_1 = File.new('spec/data/oaipmh/resumption-1.xml')
             doc_1 = REXML::Document.new file_1
 
             result_paged = OAI::ListRecordsResponse.new(doc_1) do
