@@ -27,4 +27,20 @@ module Resync
       end
     end
   end
+
+  class ChangeListIndex
+    def each_change(in_range:)
+      @change_lists ||= {}
+      resources.lazy.each do |r|
+        md = r.metadata
+        next unless in_range.cover?(md.from_time)
+        next if md.until_time && !in_range.cover?(md.until_time)
+
+        @change_lists[r] ||= r.get_and_parse
+        @change_lists[r].each_change(in_range: in_range) do |c|
+          yield c
+        end
+      end
+    end
+  end
 end

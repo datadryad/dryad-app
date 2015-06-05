@@ -112,12 +112,12 @@ module Resync
         expect(@helper).to receive(:fetch).with(uri: list2_uri).and_return(list2_data)
 
         resource_index = @client.get_and_parse(resource_index_uri)
-        count = 0
+        index = 0
         resource_index.each_resource do |r|
-          count += 1
-          expect(r.uri).to eq(URI("http://example.com/res#{count}"))
+          expect(r.uri).to eq(URI("http://example.com/res#{index + 1}"))
+          index += 1
         end
-        expect(count).to eq(4)
+        expect(index).to eq(4)
       end
 
       it 'is lazy' do
@@ -130,13 +130,58 @@ module Resync
         expect(@helper).to receive(:fetch).with(uri: list1_uri).and_return(list1_data)
 
         resource_index = @client.get_and_parse(resource_index_uri)
-        count = 0
+        index = 0
         resource_index.each_resource do |r|
-          count += 1
-          expect(r.uri).to eq(URI("http://example.com/res#{count}"))
-          break if count >= 2
+          expect(r.uri).to eq(URI("http://example.com/res#{index + 1}"))
+          index += 1
+          break if index >= 2
         end
-        expect(count).to eq(2)
+        expect(index).to eq(2)
+      end
+    end
+  end
+
+  describe ChangeListIndex do
+    before(:each) do
+      @helper = instance_double(Client::HTTPHelper)
+      @client = Client.new(helper: @helper)
+    end
+
+    describe '#each_change' do
+      it 'flattens the child changelists' do
+        change_index_uri = URI('http://example.com/dataset1/changelist.xml')
+        change_index_data = File.read('spec/data/resync/change-list-index.xml')
+        expect(@helper).to receive(:fetch).with(uri: change_index_uri).and_return(change_index_data)
+
+        list1_uri = URI('http://example.com/20130101-changelist.xml')
+        list1_data = File.read('/Users/dmoles/Work/Stash/stash-harvester/spec/data/resync/change-list-1.xml')
+        expect(@helper).to receive(:fetch).with(uri: list1_uri).and_return(list1_data)
+
+        list2_uri = URI('http://example.com/20130101-changelist.xml')
+        list2_data = File.read('/Users/dmoles/Work/Stash/stash-harvester/spec/data/resync/change-list-2.xml')
+        expect(@helper).to receive(:fetch).with(uri: list2_uri).and_return(list2_data)
+
+        list3_uri = URI('http://example.com/20130101-changelist.xml')
+        list3_data = File.read('/Users/dmoles/Work/Stash/stash-harvester/spec/data/resync/change-list-3.xml')
+        expect(@helper).to receive(:fetch).with(uri: list3_uri).and_return(list3_data)
+
+        expected_mtimes = [
+          Time.utc(2013, 1, 1, 1),
+          Time.utc(2013, 1, 1, 23),
+          Time.utc(2013, 1, 2, 1),
+          Time.utc(2013, 1, 2, 23),
+          Time.utc(2013, 1, 3, 1)
+        ]
+
+        change_index = @client.get_and_parse(change_index_uri)
+        index = 0
+        change_index.each_change(in_range: (Time.utc(0)..Time.new)) do |c|
+          res = index % 2 == 0 ? 1 : 2
+          expect(c.uri).to eq(URI("http://example.com/res#{res}"))
+          expect(c.modified_time).to be_time(expected_mtimes[index])
+          index += 1
+        end
+        expect(index).to eq(5)
       end
     end
   end
