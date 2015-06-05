@@ -154,15 +154,15 @@ module Resync
         expect(@helper).to receive(:fetch).with(uri: change_index_uri).and_return(change_index_data)
 
         list1_uri = URI('http://example.com/20130101-changelist.xml')
-        list1_data = File.read('/Users/dmoles/Work/Stash/stash-harvester/spec/data/resync/change-list-1.xml')
+        list1_data = File.read('spec/data/resync/change-list-1.xml')
         expect(@helper).to receive(:fetch).with(uri: list1_uri).and_return(list1_data)
 
-        list2_uri = URI('http://example.com/20130101-changelist.xml')
-        list2_data = File.read('/Users/dmoles/Work/Stash/stash-harvester/spec/data/resync/change-list-2.xml')
+        list2_uri = URI('http://example.com/20130102-changelist.xml')
+        list2_data = File.read('spec/data/resync/change-list-2.xml')
         expect(@helper).to receive(:fetch).with(uri: list2_uri).and_return(list2_data)
 
-        list3_uri = URI('http://example.com/20130101-changelist.xml')
-        list3_data = File.read('/Users/dmoles/Work/Stash/stash-harvester/spec/data/resync/change-list-3.xml')
+        list3_uri = URI('http://example.com/20130103-changelist.xml')
+        list3_data = File.read('spec/data/resync/change-list-3.xml')
         expect(@helper).to receive(:fetch).with(uri: list3_uri).and_return(list3_data)
 
         expected_mtimes = [
@@ -182,6 +182,29 @@ module Resync
           index += 1
         end
         expect(index).to eq(5)
+      end
+
+      it 'doesn\'t download unnecessary changelists' do
+        change_index_uri = URI('http://example.com/dataset1/changelist.xml')
+        change_index_data = File.read('spec/data/resync/change-list-index.xml')
+        expect(@helper).to receive(:fetch).with(uri: change_index_uri).and_return(change_index_data)
+
+        list2_uri = URI('http://example.com/20130102-changelist.xml')
+        list2_data = File.read('spec/data/resync/change-list-2.xml')
+        expect(@helper).to receive(:fetch).with(uri: list2_uri).and_return(list2_data)
+
+        list3_uri = URI('http://example.com/20130103-changelist.xml')
+        list3_data = File.read('spec/data/resync/change-list-3.xml')
+        expect(@helper).to receive(:fetch).with(uri: list3_uri).and_return(list3_data)
+
+        change_index = @client.get_and_parse(change_index_uri)
+        count = 0
+        change_index.each_change(in_range: (Time.utc(2013, 1, 2, 12)..Time.utc(2013, 1, 3, 0, 30))) do |c|
+          expect(c.modified_time).to be_time(Time.utc(2013, 1, 2, 23))
+          expect(c.uri).to eq(URI('http://example.com/res2'))
+          count +=1
+        end
+        expect(count).to eq(1)
       end
     end
   end

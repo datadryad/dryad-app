@@ -1,4 +1,5 @@
 require 'resync/client'
+require 'active_support/core_ext/range'
 
 # TODO: prepend named extension modules
 # TODO: make these more idiomatic -- named lazy objects?
@@ -33,9 +34,9 @@ module Resync
       @change_lists ||= {}
       resources.lazy.each do |r|
         md = r.metadata
-        next unless in_range.cover?(md.from_time)
-        next if md.until_time && !in_range.cover?(md.until_time)
-
+        from_time = md.from_time
+        until_time = md.until_time || Time.new
+        next unless in_range.overlaps?(from_time..until_time)
         @change_lists[r] ||= r.get_and_parse
         @change_lists[r].each_change(in_range: in_range) do |c|
           yield c
