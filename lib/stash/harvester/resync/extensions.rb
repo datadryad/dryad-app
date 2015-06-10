@@ -3,6 +3,7 @@ require 'active_support/core_ext/range'
 
 # TODO: prepend named extension modules
 # TODO: make these more idiomatic -- named lazy objects?
+# TODO: just move this stuff up into resync (but not right now)
 module Resync
   class ResourceList
     def each_resource(&block)
