@@ -6,16 +6,13 @@ require 'active_support/core_ext/range'
 module Resync
   class ResourceList
     def each_resource(&block)
-      resources.lazy.each(&block)
+      resources.each(&block)
     end
   end
 
   class ChangeList
-    def each_change(in_range:)
-      resources.lazy.each do |r|
-        next unless in_range.cover?(r.modified_time)
-        yield r
-      end
+    def each_change(in_range:, &block)
+      changes(in_range: in_range).each(&block)
     end
   end
 
@@ -30,17 +27,11 @@ module Resync
   end
 
   class ChangeListIndex
-    def each_change(in_range:)
+    def each_change(in_range:, &block)
       @change_lists ||= {}
-      resources.lazy.each do |r|
-        md = r.metadata
-        from_time = md.from_time
-        until_time = md.until_time || Time.new
-        next unless in_range.overlaps?(from_time..until_time)
-        @change_lists[r] ||= r.get_and_parse
-        @change_lists[r].each_change(in_range: in_range) do |c|
-          yield c
-        end
+      change_lists(in_range: in_range).each do |cl|
+        @change_lists[cl] ||= cl.get_and_parse
+        @change_lists[cl].each_change(in_range: in_range, &block)
       end
     end
   end
