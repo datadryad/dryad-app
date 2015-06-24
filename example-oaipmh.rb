@@ -1,7 +1,5 @@
 #! /usr/bin/env ruby
 
-fail Exception, 'stash-harvester requires Ruby 2.2' unless RUBY_VERSION =~ /^2.2/
-
 # Note: This assumes we're running from the root of the stash-harvester project
 $LOAD_PATH << File.dirname(__FILE__)
 require 'lib/stash/harvester'
