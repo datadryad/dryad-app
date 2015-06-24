@@ -84,7 +84,7 @@ module Stash
 
           it 'treats deleted records as different from undeleted records' do
             record2 = Record.new(OAI::GetRecordResponse.new(@doc).record)
-            expect(record2).to receive(:deleted).at_least(:once) { true }
+            expect(record2).to receive(:deleted?).at_least(:once) { true }
             expect(@record).to_not eq(record2)
             expect(record2).to_not eq(@record)
           end

@@ -37,7 +37,7 @@ module Stash
           return true if self.equal?(other)
           return false unless other.instance_of?(self.class)
           return false unless other.datestamp == datestamp
-          return false unless other.deleted == deleted
+          return false unless other.deleted? == deleted?
           return false unless other.identifier == identifier
           return false unless other.metadata_root.to_s == metadata_root.to_s
           true

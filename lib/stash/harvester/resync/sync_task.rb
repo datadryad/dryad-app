@@ -9,7 +9,7 @@ module Stash
         # Constants
 
         # Added to the current time to create an end
-        JULIAN_YEAR_SECONDS = 365.25 * 86400
+        JULIAN_YEAR_SECONDS = 365.25 * 86_400
 
         # ------------------------------------------------------------
         # Attributes
@@ -39,32 +39,19 @@ module Stash
         # Methods
 
         def download
-          client = Resync::Client.new
-          capability_list = client.get_and_parse(capability_list_uri)
-
-          # TODO: wrap in something
-          if time_range
-            # TODO: filter by time_range, most recent for each URI
-            change_dump = capability_list.resource_for(ChangeDump::CAPABILITY)
-            if change_dump
-              zip_packages = change_dump.all_zip_packages(in_range: time_range)
-              return zip_packages.flat_map(&:bitstreams)
-            end
-            change_list = capability_list.resource_for(ChangeList::CAPABILITY)
-            return change_list.all_changes(in_range: time_range).map {|r| [r, r.get] }
-          end
-
-          resource_dump = capability_list.resource_dump_for(ResourceDump::CAPABILITY)
-          if resource_dump
-            zip_packages = change_dump.all_zip_packages
-            return zip_packages.flat_map(&:bitstreams)
-          end
-          resource_list = capability_list.resource_for(ResourceList::CAPABILITY)
-          resource_list.all_resources.map {|r| [r, r.get] }
+          resources_from.map { |r| ResourceContent.new(r) }
         end
 
         # ------------------------------------------------------------
         # Custom accessors
+
+        def client
+          @client ||= ::Resync::Client.new
+        end
+
+        def capability_list
+          @capability_list ||= client.get_and_parse(capability_list_uri)
+        end
 
         def time_range
           @time_range ||= (from_time || until_time) ? range_start..range_end : nil
@@ -74,6 +61,29 @@ module Stash
         # Private methods
 
         private
+
+        def packaged_changes(change_dump, time_range)
+          return nil unless change_dump
+          zip_packages = change_dump.all_zip_packages(in_range: time_range)
+          zip_packages.flat_map(&:bitstreams).map(&:resource)
+        end
+
+        def packaged_resources(resource_dump)
+          return nil unless resource_dump
+          zip_packages = resource_dump.all_zip_packages
+          zip_packages.flat_map(&:bitstreams).map(&:resource)
+        end
+
+        def resources_from
+          if time_range
+            # TODO: filter by time_range, most recent for each URI
+            packaged_changes(capability_list.change_dump, time_range) ||
+              capability_list.change_list.all_changes(in_range: time_range)
+          else
+            packaged_resources(resource_dump) ||
+              capability_list.resource_list.all_resources
+          end
+        end
 
         # ------------------------------
         # Parameter validators
@@ -110,6 +120,32 @@ module Stash
         end
 
       end
+    end
+  end
+end
+
+module Resync
+  class CapabilityList
+
+    def document_for(capability)
+      @documents ||= {}
+      @documents[capability] ||= (resource_for(capability: capability).get_and_parse rescue nil)
+    end
+
+    def change_list
+      document_for(ChangeList::CAPABILITY)
+    end
+
+    def resource_list
+      document_for(ResourceList::CAPABILITY)
+    end
+
+    def change_dump
+      document_for(ChangeDump::CAPABILITY)
+    end
+
+    def resource_dump
+      document_for(ResourceDump::CAPABILITY)
     end
   end
 end
