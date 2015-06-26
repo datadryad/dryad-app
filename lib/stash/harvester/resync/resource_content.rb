@@ -20,7 +20,7 @@ module Stash
           @modified_time = resource.modified_time
           @uri = resource.uri
           metadata = resource.metadata
-          @deleted = metadata.change == ::Resync::Types::Change::DELETED
+          @deleted = metadata && metadata.change == ::Resync::Types::Change::DELETED
           @content = Lazy.promise { @deleted ? nil : content_from(resource) }
         end
 

@@ -77,11 +77,9 @@ module Stash
         def resources_from
           if time_range
             # TODO: filter by time_range, most recent for each URI
-            packaged_changes(capability_list.change_dump, time_range) ||
-              capability_list.change_list.all_changes(in_range: time_range)
+            packaged_changes(capability_list.change_dump, time_range) || capability_list.change_list.all_changes(in_range: time_range)
           else
-            packaged_resources(resource_dump) ||
-              capability_list.resource_list.all_resources
+            packaged_resources(capability_list.resource_dump) || capability_list.resource_list.all_resources
           end
         end
 
@@ -124,28 +122,3 @@ module Stash
   end
 end
 
-module Resync
-  class CapabilityList
-
-    def document_for(capability)
-      @documents ||= {}
-      @documents[capability] ||= (resource_for(capability: capability).get_and_parse rescue nil)
-    end
-
-    def change_list
-      document_for(ChangeList::CAPABILITY)
-    end
-
-    def resource_list
-      document_for(ResourceList::CAPABILITY)
-    end
-
-    def change_dump
-      document_for(ChangeDump::CAPABILITY)
-    end
-
-    def resource_dump
-      document_for(ResourceDump::CAPABILITY)
-    end
-  end
-end
