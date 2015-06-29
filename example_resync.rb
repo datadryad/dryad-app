@@ -10,8 +10,8 @@ capability_list_uri = 'http://localhost:8888/capabilitylist.xml'
 
 sync_task = Stash::Harvester::Resync::SyncTask.new(
   capability_list_uri: capability_list_uri,
-  # from_time: from_time,
-  # until_time: until_time
+# from_time: from_time,
+# until_time: until_time
 )
 
 response = sync_task.download
