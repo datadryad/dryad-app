@@ -42,4 +42,3 @@ File.open(index_file, 'w') do |f|
   formatter.write(index_xml, f)
   f.puts
 end
-
