@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns='http://www.sitemaps.org/schemas/sitemap/0.9' xmlns:rs='http://www.openarchives.org/rs/terms/'>
+  <rs:ln rel='up' href='http://example.org/capability-list.xml'/>
+  <rs:md at='2015-01-01T00:00:00Z' completed='2015-01-06T23:59:59Z' capability='resourcedump'/>
+  <url>
+    <loc>http://example.com/resourcedump1/part1.zip</loc>
+    <rs:ln type='application/xml' rel='contents' href='http://example.com/resourcedump1/part1/manifest.xml'/>
+    <rs:md length='1337' type='application/zip' hash='md5:d8451c08a33a06ae0b76722a31139ece' at='2015-01-01T00:00:00Z' completed='2015-01-02T23:59:59Z'/>
+  </url>
+  <url>
+    <loc>http://example.com/resourcedump1/part2.zip</loc>
+    <rs:ln type='application/xml' rel='contents' href='http://example.com/resourcedump1/part2/manifest.xml'/>
+    <rs:md length='1541' type='application/zip' hash='md5:0516608d7458b4eed6e4e87b5da8647d' at='2015-01-03T00:00:00Z' completed='2015-01-04T23:59:59Z'/>
+  </url>
+  <url>
+    <loc>http://example.com/resourcedump1/part3.zip</loc>
+    <rs:ln type='application/xml' rel='contents' href='http://example.com/resourcedump1/part3/manifest.xml'/>
+    <rs:md length='1511' type='application/zip' hash='md5:44c2eeefbca6c716b78d35d629202f7c' at='2015-01-05T00:00:00Z' completed='2015-01-06T23:59:59Z'/>
+  </url>
+</urlset>
