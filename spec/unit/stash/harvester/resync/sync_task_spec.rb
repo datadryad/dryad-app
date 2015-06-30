@@ -13,8 +13,6 @@ module Stash
           @capability_list = instance_double(::Resync::CapabilityList)
           @cap_list_uri = URI('http://example.org/capability-list.xml')
           expect(@resync_client).to receive(:get_and_parse).with(@cap_list_uri) { @capability_list }
-
-          @sync_task = SyncTask.new(capability_list_uri: @cap_list_uri)
         end
 
         describe "#{::Resync::ChangeDumpIndex} handling" do
@@ -31,10 +29,32 @@ module Stash
         end
         describe "#{::Resync::ChangeList} handling" do
           before(:each) do
+            allow(@capability_list).to receive(:change_dump)
+
             @change_list = ::Resync::XMLParser.parse(File.new('spec/data/resync/change-list-1.xml'))
             expect(@capability_list).to receive(:change_list) { @change_list }
           end
-          it "gets resource contents from a #{::Resync::ChangeList}"
+
+          it "gets resource contents from a #{::Resync::ChangeList}" do
+            @change_list.client_delegate = @resync_client
+
+            resource_contents = []
+            (1..2).each do |r|
+              contents = "content of resource #{r}"
+              expect(@resync_client).to receive(:get).with(URI("http://example.com/res#{r}")) { contents }
+              resource_contents << contents
+            end
+
+            @sync_task = SyncTask.new(capability_list_uri: @cap_list_uri, from_time: Time.utc(2012), until_time: Time.utc(2014))
+            downloaded = @sync_task.download
+            downloaded_array = downloaded.to_a
+            downloaded_array.each_with_index do |rc, i|
+              expect(rc.content).to eq(resource_contents[i])
+            end
+          end
+
+          it 'filters by modified_time'
+
           it 'returns an Enumerator::Lazy'
         end
 
@@ -42,18 +62,19 @@ module Stash
           before(:each) do
             @resource_dump_index = ::Resync::XMLParser.parse(File.new('spec/data/resync/dumps/resourcedumpindex.xml'))
             expect(@capability_list).to receive(:resource_dump) { @resource_dump_index }
+            @sync_task = SyncTask.new(capability_list_uri: @cap_list_uri)
           end
           it "gets resource contents from a #{::Resync::ResourceDumpIndex}" do
             @resource_dump_index.client_delegate = @resync_client
 
             resource_contents = []
             (1..2).each do |d|
-              dump = ::Resync::XMLParser.parse(File.new("spec/data/resync/dumps/resourcedump#{d}/resourcedump#{d}.xml"))
+              dump = ::Resync::XMLParser.parse(File.new("spec/data/resync/dumps/dump#{d}/resourcedump#{d}.xml"))
               dump.client_delegate = @resync_client
               expect(@resync_client).to receive(:get_and_parse).with(URI("http://example.org/resourcedump#{d}/resourcedump#{d}.xml")) { dump }
 
               (1..3).each do |p|
-                dir = "spec/data/resync/dumps/resourcedump#{d}/part#{p}"
+                dir = "spec/data/resync/dumps/dump#{d}/part#{p}"
                 file = "#{dir}.zip"
                 expect(@resync_client).to receive(:download_to_temp_file).with(URI("http://example.org/resourcedump#{d}/part#{p}.zip")) { file }
                 ((p * 2 - 1)..(p * 2)).each do |r|
@@ -77,8 +98,9 @@ module Stash
 
         describe "#{::Resync::ResourceDump} handling" do
           before(:each) do
-            @resource_dump = ::Resync::XMLParser.parse(File.new('spec/data/resync/dumps/dump1/dump1.xml'))
+            @resource_dump = ::Resync::XMLParser.parse(File.new('spec/data/resync/dumps/dump1/resourcedump1.xml'))
             expect(@capability_list).to receive(:resource_dump) { @resource_dump }
+            @sync_task = SyncTask.new(capability_list_uri: @cap_list_uri)
           end
 
           it "gets resource contents from a #{::Resync::ResourceDump}" do
@@ -88,7 +110,7 @@ module Stash
             (1..3).each do |p|
               dir = "spec/data/resync/dumps/dump1/part#{p}"
               file = "#{dir}.zip"
-              expect(@resync_client).to receive(:download_to_temp_file).with(URI("http://example.org/dump1/part#{p}.zip")) { file }
+              expect(@resync_client).to receive(:download_to_temp_file).with(URI("http://example.org/resourcedump1/part#{p}.zip")) { file }
               ((p * 2 - 1)..(p * 2)).each do |r|
                 resource_contents << File.read("#{dir}/res#{r}")
               end
@@ -109,6 +131,8 @@ module Stash
 
         describe "#{::Resync::ResourceListIndex} handling" do
           before(:each) do
+            @sync_task = SyncTask.new(capability_list_uri: @cap_list_uri)
+
             expect(@capability_list).to receive(:resource_dump)
 
             @resource_list_index = ::Resync::XMLParser.parse(File.new('spec/data/resync/resource-list-index.xml'))
@@ -143,6 +167,7 @@ module Stash
 
         describe "#{::Resync::ResourceList} handling" do
           before(:each) do
+            @sync_task = SyncTask.new(capability_list_uri: @cap_list_uri)
             @resource_list = instance_double(::Resync::ResourceList)
             @all_resources = [
               ::Resync::Resource.new(uri: 'http://example.org/res1'),
