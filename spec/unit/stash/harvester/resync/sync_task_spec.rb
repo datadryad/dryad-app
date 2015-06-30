@@ -1,5 +1,6 @@
 require 'spec_helper'
 
+# TODO: Rewrite this to trust resync-client more, be more unit-y
 module Stash
   module Harvester
     module Resync
@@ -36,9 +37,37 @@ module Stash
           it "gets resource contents from a #{::Resync::ResourceDumpIndex}"
           it 'returns an Enumerator::Lazy'
         end
+
         describe "#{::Resync::ResourceDump} handling" do
-          it "gets resource contents from a #{::Resync::ResourceDump}"
-          it 'returns an Enumerator::Lazy'
+          before(:each) do
+            @resource_dump = ::Resync::XMLParser.parse(File.new('spec/data/resync/dumps/resourcedump1/resourcedump1.xml'))
+            expect(@capability_list).to receive(:resource_dump) { @resource_dump }
+          end
+
+          it "gets resource contents from a #{::Resync::ResourceDump}" do
+            @resource_dump.client_delegate = @resync_client
+
+            resource_contents = []
+            (1..3).each do |p|
+              dir = "spec/data/resync/dumps/resourcedump1/part#{p}"
+              file = "#{dir}.zip"
+              expect(@resync_client).to receive(:download_to_temp_file).with(URI("http://example.com/resourcedump1/part#{p}.zip")) { file }
+              ((p * 2 - 1)..(p * 2)).each do |r|
+                resource_contents << File.read("#{dir}/res#{r}")
+              end
+            end
+
+            downloaded = @sync_task.download
+            downloaded_array = downloaded.to_a
+            downloaded_array.each_with_index do |rc, i|
+              expect(rc.content).to eq(resource_contents[i])
+            end
+          end
+
+          it 'returns an Enumerator::Lazy' do
+            downloaded = @sync_task.download
+            expect(downloaded).to be_a(Enumerator::Lazy)
+          end
         end
 
         describe "#{::Resync::ResourceListIndex} handling" do
