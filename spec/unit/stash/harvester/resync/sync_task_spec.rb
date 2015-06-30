@@ -30,6 +30,10 @@ module Stash
           it 'returns an Enumerator::Lazy'
         end
         describe "#{::Resync::ChangeList} handling" do
+          before(:each) do
+            @change_list = ::Resync::XMLParser.parse(File.new('spec/data/resync/change-list-1.xml'))
+            expect(@capability_list).to receive(:change_list) { @change_list }
+          end
           it "gets resource contents from a #{::Resync::ChangeList}"
           it 'returns an Enumerator::Lazy'
         end
@@ -73,7 +77,7 @@ module Stash
 
         describe "#{::Resync::ResourceDump} handling" do
           before(:each) do
-            @resource_dump = ::Resync::XMLParser.parse(File.new('spec/data/resync/dumps/resourcedump1/resourcedump1.xml'))
+            @resource_dump = ::Resync::XMLParser.parse(File.new('spec/data/resync/dumps/dump1/dump1.xml'))
             expect(@capability_list).to receive(:resource_dump) { @resource_dump }
           end
 
@@ -82,9 +86,9 @@ module Stash
 
             resource_contents = []
             (1..3).each do |p|
-              dir = "spec/data/resync/dumps/resourcedump1/part#{p}"
+              dir = "spec/data/resync/dumps/dump1/part#{p}"
               file = "#{dir}.zip"
-              expect(@resync_client).to receive(:download_to_temp_file).with(URI("http://example.org/resourcedump1/part#{p}.zip")) { file }
+              expect(@resync_client).to receive(:download_to_temp_file).with(URI("http://example.org/dump1/part#{p}.zip")) { file }
               ((p * 2 - 1)..(p * 2)).each do |r|
                 resource_contents << File.read("#{dir}/res#{r}")
               end

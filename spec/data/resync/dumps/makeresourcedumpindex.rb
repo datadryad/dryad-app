@@ -13,13 +13,13 @@ at_earliest = nil
 completed_latest = nil
 
 dump_resources = (1..2).map do |d|
-  dump = Resync::XMLParser.parse(File.new("resourcedump#{d}/resourcedump#{d}.xml"))
+  dump = Resync::XMLParser.parse(File.new("dump#{d}/resourcedump#{d}.xml"))
 
   at_earliest = dump.at_time unless at_earliest && at_earliest <= dump.at_time
   completed_latest = dump.completed_time unless completed_latest && completed_latest >= dump.completed_time
 
   ::Resync::Resource.new(
-    uri: URI("#{url_base}/resourcedump#{d}/resourcedump#{d}.xml"),
+    uri: URI("#{url_base}/dump#{d}/resourcedump#{d}.xml"),
     metadata: ::Resync::Metadata.new(at_time: dump.at_time)
   )
 end

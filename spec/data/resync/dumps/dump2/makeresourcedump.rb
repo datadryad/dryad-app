@@ -6,7 +6,7 @@ formatter = REXML::Formatters::Pretty.new
 formatter.compact = true
 formatter.width = 80
 
-url_base = 'http://example.org/resourcedump1'
+url_base = 'http://example.org/dump2'
 cap_list_uri = URI('http://example.org/capability-list.xml')
 
 parts = 1..3
@@ -24,7 +24,7 @@ parts.each do |p|
     size = `wc -c #{path}`.chop.to_i
     Resync::Resource.new(
       uri: URI("http://example.org/#{file}"),
-      modified_time: Time.utc(2015, 1, r),
+      modified_time: Time.utc(2015, 2, r),
       metadata: Resync::Metadata.new(
         hashes: { 'md5' => md5 },
         length: size,
@@ -34,8 +34,8 @@ parts.each do |p|
     )
   end
 
-  at_time = Time.utc(2015, 1, p * 2 - 1)
-  completed_time = Time.utc(2015, 1, p * 2, 23, 59, 59)
+  at_time = Time.utc(2015, 2, p * 2 - 1)
+  completed_time = Time.utc(2015, 2, p * 2, 23, 59, 59)
 
   at_times << at_time
   completed_times << completed_time
@@ -103,7 +103,7 @@ resourcedump_xml = resourcedump.save_to_xml
 
 # formatter.write(resourcedump_xml, $stdout)
 
-resourcedump_file = 'resourcedump1.xml'
+resourcedump_file = 'dump2.xml'
 File.open(resourcedump_file, 'w') do |f|
   f.puts('<?xml version="1.0" encoding="UTF-8"?>')
   formatter.write(resourcedump_xml, f)
