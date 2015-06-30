@@ -15,47 +15,32 @@ module Stash
           expect(@resync_client).to receive(:get_and_parse).with(@cap_list_uri) { @capability_list }
         end
 
-        describe "#{::Resync::ChangeDumpIndex} handling" do
-          it "gets resource contents from a #{::Resync::ChangeDumpIndex}"
-          it 'returns an Enumerator::Lazy'
-        end
-        describe "#{::Resync::ChangeDump} handling" do
-          it "gets resource contents from a #{::Resync::ChangeDump}"
-          it 'returns an Enumerator::Lazy'
-        end
-        describe "#{::Resync::ChangeListIndex} handling" do
-          it "gets resource contents from a #{::Resync::ChangeListIndex}"
-          it 'returns an Enumerator::Lazy'
-        end
-        describe "#{::Resync::ChangeList} handling" do
+        describe "#{::Resync::ResourceList} handling" do
           before(:each) do
-            allow(@capability_list).to receive(:change_dump)
+            @sync_task = SyncTask.new(capability_list_uri: @cap_list_uri)
+            @resource_list = instance_double(::Resync::ResourceList)
+            @all_resources = [
+              ::Resync::Resource.new(uri: 'http://example.org/res1'),
+              ::Resync::Resource.new(uri: 'http://example.org/res2')
+            ]
+            expect(@resource_list).to receive(:all_resources) { @all_resources.lazy }
 
-            @change_list = ::Resync::XMLParser.parse(File.new('spec/data/resync/change-list-1.xml'))
-            expect(@capability_list).to receive(:change_list) { @change_list }
+            expect(@capability_list).to receive(:resource_dump)
+            expect(@capability_list).to receive(:resource_list) { @resource_list }
           end
 
-          it "gets resource contents from a #{::Resync::ChangeList}" do
-            @change_list.client_delegate = @resync_client
-
-            resource_contents = []
-            (1..2).each do |r|
-              contents = "content of resource #{r}"
-              expect(@resync_client).to receive(:get).with(URI("http://example.com/res#{r}")) { contents }
-              resource_contents << contents
-            end
-
-            @sync_task = SyncTask.new(capability_list_uri: @cap_list_uri, from_time: Time.utc(2012), until_time: Time.utc(2014))
+          it "gets resource contents from a #{::Resync::ResourceList}" do
             downloaded = @sync_task.download
             downloaded_array = downloaded.to_a
-            downloaded_array.each_with_index do |rc, i|
-              expect(rc.content).to eq(resource_contents[i])
+            @all_resources.each_with_index do |r, i|
+              expect(downloaded_array[i].uri).to eq(r.uri)
             end
           end
 
-          it 'filters by modified_time'
-
-          it 'returns an Enumerator::Lazy'
+          it 'returns an Enumerator::Lazy' do
+            downloaded = @sync_task.download
+            expect(downloaded).to be_a(Enumerator::Lazy)
+          end
         end
 
         describe "#{::Resync::ResourceDumpIndex} handling" do
@@ -85,8 +70,8 @@ module Stash
 
             downloaded = @sync_task.download
             downloaded_array = downloaded.to_a
-            downloaded_array.each_with_index do |rc, i|
-              expect(rc.content).to eq(resource_contents[i])
+            resource_contents.each_with_index do |rc, i|
+              expect(downloaded_array[i].content).to eq(rc)
             end
           end
 
@@ -118,8 +103,8 @@ module Stash
 
             downloaded = @sync_task.download
             downloaded_array = downloaded.to_a
-            downloaded_array.each_with_index do |rc, i|
-              expect(rc.content).to eq(resource_contents[i])
+            resource_contents.each_with_index do |rc, i|
+              expect(downloaded_array[i].content).to eq(rc)
             end
           end
 
@@ -165,33 +150,119 @@ module Stash
           end
         end
 
-        describe "#{::Resync::ResourceList} handling" do
+        describe "#{::Resync::ChangeList} handling" do
           before(:each) do
-            @sync_task = SyncTask.new(capability_list_uri: @cap_list_uri)
-            @resource_list = instance_double(::Resync::ResourceList)
-            @all_resources = [
-              ::Resync::Resource.new(uri: 'http://example.org/res1'),
-              ::Resync::Resource.new(uri: 'http://example.org/res2')
-            ]
-            expect(@resource_list).to receive(:all_resources) { @all_resources.lazy }
+            allow(@capability_list).to receive(:change_dump)
 
-            expect(@capability_list).to receive(:resource_dump)
-            expect(@capability_list).to receive(:resource_list) { @resource_list }
+            @change_list = ::Resync::XMLParser.parse(File.new('spec/data/resync/change-list-1.xml'))
+            expect(@capability_list).to receive(:change_list) { @change_list }
+            @change_list.client_delegate = @resync_client
           end
 
-          it "gets resource contents from a #{::Resync::ResourceList}" do
+          it "gets resource contents from a #{::Resync::ChangeList}" do
+            resource_contents = []
+            (1..2).each do |r|
+              contents = "content of resource #{r}"
+              expect(@resync_client).to receive(:get).with(URI("http://example.com/res#{r}")) { contents }
+              resource_contents << contents
+            end
+
+            @sync_task = SyncTask.new(capability_list_uri: @cap_list_uri, from_time: Time.utc(2012), until_time: Time.utc(2014))
             downloaded = @sync_task.download
             downloaded_array = downloaded.to_a
-            @all_resources.each_with_index do |r, i|
-              expect(downloaded_array[i].uri).to eq(r.uri)
+            resource_contents.each_with_index do |rc, i|
+              expect(downloaded_array[i].content).to eq(rc)
             end
           end
 
+          it 'filters by modified_time' do
+            contents = 'content of resource 1'
+            expect(@resync_client).to receive(:get).once.with(URI('http://example.com/res1')) { contents }
+
+            @sync_task = SyncTask.new(capability_list_uri: @cap_list_uri, from_time: Time.utc(2012, 12, 31), until_time: Time.utc(2013, 1, 1, 12))
+            downloaded = @sync_task.download
+            downloaded_array = downloaded.to_a
+            expect(downloaded_array.size).to eq(1)
+            expect(downloaded_array[0].content).to eq(contents)
+          end
+
           it 'returns an Enumerator::Lazy' do
+            @sync_task = SyncTask.new(capability_list_uri: @cap_list_uri, from_time: Time.utc(2012), until_time: Time.utc(2014))
             downloaded = @sync_task.download
             expect(downloaded).to be_a(Enumerator::Lazy)
           end
         end
+
+        describe "#{::Resync::ChangeListIndex} handling" do
+          before(:each) do
+            allow(@capability_list).to receive(:change_dump)
+
+            @change_list_index = ::Resync::XMLParser.parse(File.new('spec/data/resync/change-list-index.xml'))
+            expect(@capability_list).to receive(:change_list) { @change_list_index }
+            @change_list_index.client_delegate = @resync_client
+            @all_resources = []
+            (1..3).each do |i|
+              change_list_uri = URI("http://example.com/2013010#{i}-changelist.xml")
+              change_list = ::Resync::XMLParser.parse(File.new("spec/data/resync/change-list-#{i}.xml"))
+              allow(@resync_client).to receive(:get_and_parse).with(change_list_uri) { change_list }
+              change_list.resources.each do |r|
+                @all_resources << r
+              end
+            end
+          end
+
+          it "gets resource contents from a #{::Resync::ChangeListIndex}" do
+            @sync_task = SyncTask.new(capability_list_uri: @cap_list_uri, from_time: Time.utc(2012, 12, 31), until_time: Time.utc(2014, 1, 1))
+
+            resource_contents = []
+            @all_resources.each do |r|
+              content = "content of #{r.uri}"
+              expect(r).to receive(:get) { content }
+              resource_contents << content
+            end
+
+            downloaded = @sync_task.download
+            downloaded_array = downloaded.to_a
+            resource_contents.each_with_index do |rc, i|
+              expect(downloaded_array[i].content).to eq(rc)
+            end
+          end
+
+          it 'filters by time range' do
+            @sync_task = SyncTask.new(capability_list_uri: @cap_list_uri, from_time: Time.utc(2012, 12, 31), until_time: Time.utc(2013, 1, 2, 12))
+
+            resource_contents = []
+            @all_resources.each do |r|
+              content = "content of #{r.uri}"
+              allow(r).to receive(:get) { content }
+              resource_contents << content
+            end
+
+            downloaded = @sync_task.download
+            downloaded_array = downloaded.to_a
+            expect(downloaded_array.size).to eq(3)
+            resource_contents[0, 3].each_with_index do |rc, i|
+              expect(downloaded_array[i].content).to eq(rc)
+            end
+          end
+
+          it 'returns an Enumerator::Lazy' do
+            @sync_task = SyncTask.new(capability_list_uri: @cap_list_uri, from_time: Time.utc(2012, 12, 31), until_time: Time.utc(2014, 1, 1))
+            downloaded = @sync_task.download
+            expect(downloaded).to be_a(Enumerator::Lazy)
+          end
+        end
+
+        describe "#{::Resync::ChangeDumpIndex} handling" do
+          it "gets resource contents from a #{::Resync::ChangeDumpIndex}"
+          it 'returns an Enumerator::Lazy'
+        end
+
+        describe "#{::Resync::ChangeDump} handling" do
+          it "gets resource contents from a #{::Resync::ChangeDump}"
+          it 'returns an Enumerator::Lazy'
+        end
+
       end
     end
   end
