@@ -87,27 +87,6 @@ Given a `from` datestamp:
 - make a `listRecords` call for all records at or after that datestamp
 - if the call fails
     - log the failure, but don't change the start datestamp
-- if the call succeeds
-    - **TODO:** put each record or batch of records in temp storage?
-    - for each record
-        - add the record to solr
-            - if the add operation succeeds
-                - log that
-            - if the add operation fails
-                - if it's a permanent failure
-                    - mark that as skippable
-                - if it's a temporary failure
-                    - log that
-    - hard commit
-        - if the commit fails
-            - log the failure, but don't change the start datestamp
-            - mark all records as failed?
-        - if the commit succeeds
-            - log the success
-            - if there are temporary failures
-                - record the datestamp of the earliest temporary failure as the next start datestamp
-            - otherwise
-                - record the datestamp latest success as the next start datestamp
 
 ### Possible workflow for ResourceSync
 
@@ -146,6 +125,29 @@ Given a `from` datestamp:
           - if it's a Change List Index:
             - find all lists that intersect the specified range
             - filter each of those and download as above
+
+### Possible indexing workflow
+
+- **TODO:** put each record or batch of records in temp storage?
+- for each record
+    - add the record to solr
+        - if the add operation succeeds
+            - log that
+        - if the add operation fails
+            - if it's a permanent failure
+                - mark that as skippable
+            - if it's a temporary failure
+                - log that
+- hard commit
+    - if the commit fails
+        - log the failure, but don't change the start datestamp
+        - mark all records as failed?
+    - if the commit succeeds
+        - log the success
+        - if there are temporary failures
+            - record the datestamp of the earliest temporary failure as the next start datestamp
+        - otherwise
+            - record the datestamp latest success as the next start datestamp
 
 
 ## Deployment
