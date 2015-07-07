@@ -1,4 +1,4 @@
-# Stash::Harvester
+# Stash::Harvester [![Build Status](https://travis-ci.org/dmolesUC3/stash-harvester.png?branch=master)](https://travis-ci.org/dmolesUC3/stash-harvester) [![Code Climate](https://codeclimate.com/github/dmolesUC3/stash-harvester.png)](https://codeclimate.com/github/dmolesUC3/stash-harvester) [![Inline docs](http://inch-ci.org/github/dmolesUC3/stash-harvester.png)](http://inch-ci.org/github/dmolesUC3/stash-harvester)
 
 Harvests metadata from a digital repository into
 [Solr](http://lucene.apache.org/solr/) for indexing.
@@ -16,11 +16,5 @@ The `Stash::Harvester::Resync` module harvests metadata from a [ResourceSync](ht
 3. This Capability List advertises a [Change List](http://www.openarchives.org/rs/1.0/resourcesync#ChangeList), a [Change Dump](http://www.openarchives.org/rs/1.0/resourcesync#ChangeDump), or both.
   * As implied (though not explicitly stated) by the ResourceSync spec, if both a Change List and a Change Dump exist, all changes in the Change List are also in a corresponding Change Dump. That is, wherever both exist, it is sufficient to examine only one or the other.
 4. The Change List / Change Dump resources advertised in the Capability List may be either single lists / dumps or [Change List Indices](http://www.openarchives.org/rs/1.0/resourcesync#ChangeListIndex) / [Change Dump Indices](http://www.openarchives.org/rs/1.0/resourcesync#ChangeDumpIndex), as advertised in the spec.
-
----
-
-## Useful links
-
-- [Travis continuous integration](https://travis-ci.org/CDLUC3/stash-harvester)
 
 
