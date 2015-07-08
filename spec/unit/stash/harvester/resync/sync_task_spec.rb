@@ -1,6 +1,7 @@
 require 'spec_helper'
 
 # TODO: Rewrite this to trust resync-client more, be more unit-y
+# TODO: share more examples
 module Stash
   module Harvester
     module Resync
@@ -254,13 +255,87 @@ module Stash
         end
 
         describe "#{::Resync::ChangeDumpIndex} handling" do
-          it "gets resource contents from a #{::Resync::ChangeDumpIndex}"
-          it 'returns an Enumerator::Lazy'
+
+          before(:each) do
+            @from_time = Time.utc(2012)
+            @until_time = Time.utc(2014)
+            @dump = instance_double(::Resync::ChangeDumpIndex)
+            expect(@capability_list).to receive(:change_dump) { @dump }
+
+            @zip_packages = Array.new(3) { instance_double(::Resync::Client::Zip::ZipPackage) }
+            expect(@dump).to receive(:all_zip_packages).with(in_range: @from_time..@until_time) { @zip_packages.lazy }
+            @sync_task = SyncTask.new(capability_list_uri: @cap_list_uri, from_time: @from_time, until_time: @until_time)
+          end
+
+          it "gets resource contents from a #{::Resync::ChangeDump}" do
+            resource_contents = []
+            @zip_packages.each do |zp|
+              bitstreams = Array.new(3) { instance_double(::Resync::Client::Zip::Bitstream) }
+              bitstreams.each do |bs|
+                index = resource_contents.size
+                content = "contents of resource #{index}"
+                resource_contents << content
+                resource = ::Resync::Resource.new(uri: URI("http://example.com/change#{index}"))
+                allow(resource).to receive(:bitstream) { bs }
+                allow(bs).to receive(:resource) { resource }
+                allow(bs).to receive(:content) { content }
+              end
+              expect(zp).to receive(:bitstreams) { bitstreams }
+            end
+
+            downloaded = @sync_task.download
+            downloaded_array = downloaded.to_a
+            expect(downloaded_array.size).to eq(resource_contents.size)
+            downloaded_array.each_with_index do |rc, i|
+              expect(rc.content).to eq(resource_contents[i])
+            end
+          end
+
+          it 'returns an Enumerator::Lazy' do
+            expect(@sync_task.download).to be_a(Enumerator::Lazy)
+          end
         end
 
         describe "#{::Resync::ChangeDump} handling" do
-          it "gets resource contents from a #{::Resync::ChangeDump}"
-          it 'returns an Enumerator::Lazy'
+
+          before(:each) do
+            @from_time = Time.utc(2012)
+            @until_time = Time.utc(2014)
+            @dump = instance_double(::Resync::ChangeDump)
+            expect(@capability_list).to receive(:change_dump) { @dump }
+
+            @zip_packages = Array.new(3) { instance_double(::Resync::Client::Zip::ZipPackage) }
+            expect(@dump).to receive(:all_zip_packages).with(in_range: @from_time..@until_time) { @zip_packages.lazy }
+            @sync_task = SyncTask.new(capability_list_uri: @cap_list_uri, from_time: @from_time, until_time: @until_time)
+          end
+
+          it "gets resource contents from a #{::Resync::ChangeDump}" do
+            resource_contents = []
+            @zip_packages.each do |zp|
+              bitstreams = Array.new(3) { instance_double(::Resync::Client::Zip::Bitstream) }
+              bitstreams.each do |bs|
+                index = resource_contents.size
+                content = "contents of resource #{index}"
+                resource_contents << content
+                resource = ::Resync::Resource.new(uri: URI("http://example.com/change#{index}"))
+                allow(resource).to receive(:bitstream) { bs }
+                allow(bs).to receive(:resource) { resource }
+                allow(bs).to receive(:content) { content }
+              end
+              expect(zp).to receive(:bitstreams) { bitstreams }
+            end
+
+            downloaded = @sync_task.download
+            downloaded_array = downloaded.to_a
+            expect(downloaded_array.size).to eq(resource_contents.size)
+            downloaded_array.each_with_index do |rc, i|
+              expect(rc.content).to eq(resource_contents[i])
+            end
+          end
+
+          it 'returns an Enumerator::Lazy' do
+            expect(@sync_task.download).to be_a(Enumerator::Lazy)
+          end
         end
 
       end
