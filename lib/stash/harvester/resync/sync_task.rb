@@ -39,7 +39,8 @@ module Stash
         # Methods
 
         def download
-          all_resources.map { |r| ResourceContent.new(r) }
+          resources = time_range ? all_changes : all_resources
+          resources.map { |r| ResourceContent.new(r) }
         end
 
         # ------------------------------------------------------------
@@ -75,12 +76,12 @@ module Stash
         end
 
         def all_resources
-          if time_range
-            # TODO: filter by time_range, most recent for each URI
-            packaged_changes(capability_list.change_dump, time_range) || capability_list.change_list.all_changes(in_range: time_range)
-          else
-            packaged_resources(capability_list.resource_dump) || capability_list.resource_list.all_resources
-          end
+          packaged_resources(capability_list.resource_dump) || capability_list.resource_list.all_resources
+        end
+
+        def all_changes
+          # TODO: filter by time_range, most recent for each URI
+          packaged_changes(capability_list.change_dump, time_range) || capability_list.change_list.all_changes(in_range: time_range)
         end
 
         # ------------------------------
