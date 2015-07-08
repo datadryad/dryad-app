@@ -8,14 +8,14 @@ module Stash
         describe '#new' do
           it 'accepts a valid "from" datestamp' do
             time = Time.new.utc
-            harvest_options = ListRecordsConfig.new(from_time: time)
-            expect(harvest_options.from_time).to eq(time)
+            config = ListRecordsConfig.new(from_time: time)
+            expect(config.from_time).to eq(time)
           end
 
           it 'accepts a valid "until" datestamp' do
             time = Time.new.utc
-            harvest_options = ListRecordsConfig.new(until_time: time)
-            expect(harvest_options.until_time).to eq(time)
+            config = ListRecordsConfig.new(until_time: time)
+            expect(config.until_time).to eq(time)
           end
 
           it 'rejects datestamps that would create an invalid range' do
@@ -33,8 +33,8 @@ module Stash
 
           it 'accepts a metadata prefix' do
             prefix = 'datacite'
-            harvest_options = ListRecordsConfig.new(metadata_prefix: prefix)
-            expect(harvest_options.metadata_prefix).to eq(prefix)
+            config = ListRecordsConfig.new(metadata_prefix: prefix)
+            expect(config.metadata_prefix).to eq(prefix)
           end
 
           it 'requires a metadata prefix to consist only of RFC 2396 URI unreserved characters' do
@@ -46,8 +46,8 @@ module Stash
           end
 
           it 'defaults to Dublin Core if no metadata prefix is set' do
-            harvest_options = ListRecordsConfig.new
-            expect(harvest_options.metadata_prefix).to eq('oai_dc')
+            config = ListRecordsConfig.new
+            expect(config.metadata_prefix).to eq('oai_dc')
           end
 
           it 'logs a warning when converting sub-day datestamps to day granularity'
