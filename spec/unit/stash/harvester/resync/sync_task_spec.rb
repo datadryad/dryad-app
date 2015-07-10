@@ -87,7 +87,7 @@ module Stash
               downloaded = @sync_task.download
               downloaded_array = downloaded.to_a
               @all_resources.each_with_index do |r, i|
-                expect(downloaded_array[i].uri).to eq(r.uri)
+                expect(downloaded_array[i].identifier).to eq(r.uri.to_s)
               end
             end
 
@@ -194,7 +194,7 @@ module Stash
               downloaded = @sync_task.download
               downloaded_array = downloaded.to_a
               @all_resources.each_with_index do |r, i|
-                expect(downloaded_array[i].uri).to eq(r.uri)
+                expect(downloaded_array[i].identifier).to eq(r.uri.to_s)
               end
             end
 

@@ -40,7 +40,7 @@ module Stash
 
         def download
           resources = time_range ? all_changes : all_resources
-          resources.map { |r| ResourceContent.new(r) }
+          resources.map { |r| HarvestedResource.new(r) }
         end
 
         # ------------------------------------------------------------

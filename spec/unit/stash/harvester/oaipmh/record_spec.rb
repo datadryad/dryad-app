@@ -32,7 +32,7 @@ module Stash
 
         it 'converts datestamps to Time objects' do
           expected = Time.utc(2011, 6, 8, 8, 57, 11)
-          expect(@record.datestamp).to eq(expected)
+          expect(@record.timestamp).to eq(expected)
         end
 
         it 'identifies deleted records as deleted' do
@@ -62,7 +62,7 @@ module Stash
           it 'treats records with different datestamps as different' do
             record2 = Record.new(OAI::GetRecordResponse.new(@doc).record)
             datestamp = Time.now
-            expect(record2).to receive(:datestamp).at_least(:once) { datestamp }
+            expect(record2).to receive(:timestamp).at_least(:once) { datestamp }
             expect(@record).to_not eq(record2)
             expect(record2).to_not eq(@record)
           end
