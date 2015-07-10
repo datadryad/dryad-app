@@ -4,6 +4,8 @@ module Stash
   module Harvester
     module OAIPMH
 
+      RESERVED_RCF_2396 = ';/?:@&=+$,'
+
       describe ListRecordsConfig do
         describe '#new' do
           it 'accepts a valid "from" datestamp' do
@@ -38,10 +40,24 @@ module Stash
           end
 
           it 'requires a metadata prefix to consist only of RFC 2396 URI unreserved characters' do
-            reserved_rfc_2396 = ';/?:@&=+$,' # prefix must be URI unreserved characters
-            reserved_rfc_2396.each_char do |c|
+            RESERVED_RCF_2396.each_char do |c|
               invalid_prefix = "oai_#{c}"
               expect { ListRecordsConfig.new(metadata_prefix: invalid_prefix) }.to raise_error(ArgumentError)
+            end
+          end
+
+          it 'accepts a set spec' do
+            set_spec = 'path:to:some:set'
+            config = ListRecordsConfig.new(set_spec: set_spec)
+            expect(config.set_spec).to eq(set_spec)
+          end
+
+          it 'requires each set spec element to consist only of RFC 2396 URI unreserved characters' do
+            RESERVED_RCF_2396.each_char do |c|
+              next if c == ':' # don't confuse the tokenizer
+              invalid_element = "set_#{c}"
+              invalid_spec = "path:to:#{invalid_element}:whoops"
+              expect { ListRecordsConfig.new(metadata_prefix: invalid_spec) }.to raise_error(ArgumentError)
             end
           end
 
