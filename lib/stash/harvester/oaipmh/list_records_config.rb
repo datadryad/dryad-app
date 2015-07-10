@@ -12,7 +12,7 @@ module Stash
       #   @return [Boolean] whether to include the full time out to the second in the from / until time range. (Defaults to false, i.e., days granularity.)
       # @!attribute [r] metadata_prefix
       #   @return [String] the metadata prefix defining the metadata format requested from the repository.
-      # @!attribute [r] set_spec
+      # @!attribute [r] set
       #   @return [String, nil] the colon-separated path to the set requested for selective harvesting.
       class ListRecordsConfig
 
@@ -35,7 +35,7 @@ module Stash
         attr_reader :until_time
         attr_reader :seconds_granularity
         attr_reader :metadata_prefix
-        attr_reader :set_spec
+        attr_reader :set
 
         # ------------------------------------------------------------
         # Initializer
@@ -54,17 +54,17 @@ module Stash
         # @param metadata_prefix [String, nil] the metadata prefix defining the metadata format requested
         #   from the repository. If +metadata_prefix+ is omitted, the prefix +oai_dc+ (Dublin Core)
         #   will be used.
-        # @param set_spec [String, nil] the colon-separated path to the set requested for selective harvesting
+        # @param set [String, nil] the colon-separated path to the set requested for selective harvesting
         #   from the repository. If +set_spec+ is omitted, harvesting will be across all sets.
         # @raise [RangeError] if +from_time+ is later than +until_time+.
         # @raise [ArgumentError] if +metadata_prefix+ or any +set_spec+ element contains invalid characters,
         #   i.e. URI reserved characters per {https://www.ietf.org/rfc/rfc2396.txt RFC 2396}, or if +from_time+ or
         #   +until_time+ is not in UTC.
-        def initialize(from_time: nil, until_time: nil, seconds_granularity: false, metadata_prefix: DUBLIN_CORE, set_spec: nil)
+        def initialize(from_time: nil, until_time: nil, seconds_granularity: false, metadata_prefix: DUBLIN_CORE, set: nil)
           @from_time, @until_time = valid_range(from_time, until_time)
           @seconds_granularity = seconds_granularity
           @metadata_prefix = valid_prefix(metadata_prefix)
-          @set_spec = valid_spec(set_spec)
+          @set = valid_spec(set)
         end
 
         # ------------------------------------------------------------
@@ -74,6 +74,7 @@ module Stash
           opts = { metadata_prefix: metadata_prefix }
           (opts[:from] = to_s(from_time)) if from_time
           (opts[:until] = to_s(until_time)) if until_time
+          (opts[:set] = set) if set
           opts
         end
 

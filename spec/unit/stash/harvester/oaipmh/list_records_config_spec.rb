@@ -48,8 +48,8 @@ module Stash
 
           it 'accepts a set spec' do
             set_spec = 'path:to:some:set'
-            config = ListRecordsConfig.new(set_spec: set_spec)
-            expect(config.set_spec).to eq(set_spec)
+            config = ListRecordsConfig.new(set: set_spec)
+            expect(config.set).to eq(set_spec)
           end
 
           it 'requires each set spec element to consist only of RFC 2396 URI unreserved characters' do
@@ -57,7 +57,7 @@ module Stash
               next if c == ':' # don't confuse the tokenizer
               invalid_element = "set_#{c}"
               invalid_spec = "path:to:#{invalid_element}:whoops"
-              expect { ListRecordsConfig.new(metadata_prefix: invalid_spec) }.to raise_error(ArgumentError)
+              expect { ListRecordsConfig.new(set: invalid_spec) }.to raise_error(ArgumentError)
             end
           end
 

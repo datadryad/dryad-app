@@ -77,6 +77,12 @@ module Stash
             task.list_records
           end
 
+          it 'sends a set spec if one is specified' do
+            task = ListRecordsTask.new oai_base_url: @uri, config: ListRecordsConfig.new(set: 'some:set:spec')
+            expect(@oai_client).to receive(:list_records).with(metadata_prefix: 'oai_dc', set: 'some:set:spec')
+            task.list_records
+          end
+
           it 'sends a "from" datestamp if one is specified' do
             time = Time.new.utc
             task = ListRecordsTask.new oai_base_url: @uri, config: ListRecordsConfig.new(from_time: time, seconds_granularity: true)
@@ -151,6 +157,8 @@ module Stash
           end
 
           it 'respects 503 with Retry-After' # see https://github.com/code4lib/ruby-oai/issues/45
+
+          it 'treats an "empty list" OAI::Exception as an empty list'
 
           it 'logs errors'
 
