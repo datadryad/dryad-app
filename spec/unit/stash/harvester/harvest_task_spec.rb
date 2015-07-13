@@ -28,7 +28,13 @@ module Stash
           expect { HarvestTask.new(from_time: non_utc) }.to raise_error(ArgumentError)
           expect { HarvestTask.new(until_time: non_utc) }.to raise_error(ArgumentError)
         end
+      end
 
+      describe '#harvest_records' do
+        it 'is abstract' do
+          task = HarvestTask.new
+          expect { task.harvest_records }.to raise_error
+        end
       end
     end
   end

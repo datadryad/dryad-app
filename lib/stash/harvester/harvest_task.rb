@@ -43,18 +43,6 @@ module Stash
         end
       end
 
-      # ------------------------------------------------------------
-      # Private methods
-
-      private
-
-      # ------------------------------
-      # Conversions
-
-      def to_uri(url)
-        (url.is_a? URI) ? url : URI.parse(url)
-      end
-
     end
   end
 end
