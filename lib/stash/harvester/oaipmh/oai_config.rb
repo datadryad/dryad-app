@@ -2,23 +2,18 @@ module Stash
   module Harvester
     module OAIPMH
 
-      # TODO: Make this the config for the data source, not the operation
-      # TODO: Move times (only) to ListRecordsTask
-      # TODO: Figure out who's responsible for creating the OAI client & performing the operation
-
-      # Encapsulates the configuration for a single +ListRecords+ operation.
+      # The configuration of an OAI data source. Defaults to harvesting Dublin Core at seconds
+      # granularity, across all record sets.
       #
-      # @!attribute [r] from_time
-      #   @return [Time, nil] the start (inclusive) of the datestamp range for selective harvesting.
-      # @!attribute [r] until_time
-      #   @return [Time, nil] the end (inclusive) of the datestamp range for selective harvesting.
+      # @!attribute [r] oai_base_uri
+      #   @return [URI] the base URL of the repository.
       # @!attribute seconds_granularity [r]
       #   @return [Boolean] whether to include the full time out to the second in the from / until time range. (Defaults to false, i.e., days granularity.)
       # @!attribute [r] metadata_prefix
       #   @return [String] the metadata prefix defining the metadata format requested from the repository.
       # @!attribute [r] set
       #   @return [String, nil] the colon-separated path to the set requested for selective harvesting.
-      class ListRecordsConfig
+      class OAIConfig
 
         # ------------------------------------------------------------
         # Constants
@@ -29,14 +24,10 @@ module Stash
         UNRESERVED_PATTERN = Regexp.new("^[#{URI::RFC2396_REGEXP::PATTERN::UNRESERVED}]+$")
         private_constant :UNRESERVED_PATTERN
 
-        TIME_FORMAT = '%Y-%m-%d'
-        private_constant :TIME_FORMAT
-
         # ------------------------------------------------------------
         # Attributes
 
-        attr_reader :from_time
-        attr_reader :until_time
+        attr_reader :oai_base_uri
         attr_reader :seconds_granularity
         attr_reader :metadata_prefix
         attr_reader :set
@@ -44,15 +35,9 @@ module Stash
         # ------------------------------------------------------------
         # Initializer
 
-        # Constructs a new +ListRecordsConfig+ with the specified datetime range and metadata prefix.
-        # Note that the datetime range must be in UTC.
+        # Constructs a new +OAIConfig+ with the specified properties.
         #
-        # @param from_time [Time, nil] the start (inclusive) of the datestamp range for selective harvesting.
-        #   If +from_time+ is omitted, harvesting will extend back to the earliest datestamp in the
-        #   repository. (Optional)
-        # @param until_time [Time, nil] the end (inclusive) of the datestamp range for selective harvesting.
-        #   If +until_time+ is omitted, harvesting will extend forward to the latest datestamp in the
-        #   repository. (Optional)
+        # @param oai_base_url [URI, String] the base URL of the repository. *(Required)*
         # @param seconds_granularity [Boolean] whether to include the full time out to the second in
         #   the from / until time range. (Defaults to +false+, i.e., days granularity.)
         # @param metadata_prefix [String, nil] the metadata prefix defining the metadata format requested
@@ -60,12 +45,11 @@ module Stash
         #   will be used.
         # @param set [String, nil] the colon-separated path to the set requested for selective harvesting
         #   from the repository. If +set_spec+ is omitted, harvesting will be across all sets.
-        # @raise [RangeError] if +from_time+ is later than +until_time+.
+        # @raise [URI::InvalidURIError] if +oai_base_url+ is a string that is not a valid URI
         # @raise [ArgumentError] if +metadata_prefix+ or any +set_spec+ element contains invalid characters,
-        #   i.e. URI reserved characters per {https://www.ietf.org/rfc/rfc2396.txt RFC 2396}, or if +from_time+ or
-        #   +until_time+ is not in UTC.
-        def initialize(from_time: nil, until_time: nil, seconds_granularity: false, metadata_prefix: DUBLIN_CORE, set: nil)
-          @from_time, @until_time = valid_range(from_time, until_time)
+        #   i.e. URI reserved characters per {https://www.ietf.org/rfc/rfc2396.txt RFC 2396}
+        def initialize(oai_base_url:, seconds_granularity: false, metadata_prefix: DUBLIN_CORE, set: nil)
+          @oai_base_uri = to_uri(oai_base_url)
           @seconds_granularity = seconds_granularity
           @metadata_prefix = valid_prefix(metadata_prefix)
           @set = valid_spec(set)
@@ -76,8 +60,6 @@ module Stash
 
         def to_h
           opts = { metadata_prefix: metadata_prefix }
-          (opts[:from] = to_s(from_time)) if from_time
-          (opts[:until] = to_s(until_time)) if until_time
           (opts[:set] = set) if set
           opts
         end
@@ -128,8 +110,8 @@ module Stash
         # ------------------------------
         # Conversions
 
-        def to_s(time)
-          seconds_granularity ? time : time.strftime(TIME_FORMAT)
+        def to_uri(url)
+          (url.is_a? URI) ? url : URI.parse(url)
         end
 
       end
