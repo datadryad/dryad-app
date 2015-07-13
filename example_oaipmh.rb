@@ -18,7 +18,7 @@ list_records_config = Stash::Harvester::OAIPMH::OAIConfig.new(
 list_records_task = Stash::Harvester::OAIPMH::ListRecordsTask.new(
   config: list_records_config,
   from_time: from_time,
-  until_time: until_time,
+  until_time: until_time
 )
 
 response = list_records_task.harvest_records
