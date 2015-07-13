@@ -8,7 +8,7 @@ module Stash
       #   @return [URI] the base URL of the repository.
       # @!attribute [r] opts
       #   @return [Hash] the options passed to the +ListRecords+ verb
-      class ListRecordsTask
+      class ListRecordsTask < HarvestTask
 
         # ------------------------------------------------------------
         # Attributes
@@ -29,13 +29,14 @@ module Stash
         def initialize(oai_base_url:, config: ListRecordsConfig.new)
           @oai_base_uri = to_uri(oai_base_url)
           @opts = config.to_h
+          super(from_time: config.from_time, until_time: config.until_time)
         end
 
         # ------------------------------------------------------------
         # Methods
 
         # @return [Enumerator::Lazy<OAIPMH::Record>] A lazy enumerator of the harvested records
-        def list_records
+        def harvest_records
           client = OAI::Client.new @oai_base_uri.to_s
           records = client.list_records(@opts)
           return [].lazy unless records

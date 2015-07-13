@@ -14,7 +14,7 @@ sync_task = Stash::Harvester::Resync::SyncTask.new(
 # until_time: until_time
 )
 
-response = sync_task.download
+response = sync_task.harvest_records
 puts response.class
 # response.each do |resource_content|
 #   puts resource_content.uri

@@ -21,7 +21,7 @@ list_records_task = Stash::Harvester::OAIPMH::ListRecordsTask.new(
   config: list_records_config
 )
 
-response = list_records_task.list_records
+response = list_records_task.harvest_records
 response.each do |record|
   puts record.identifier
 end

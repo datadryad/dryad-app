@@ -3,7 +3,7 @@ require 'resync/client'
 module Stash
   module Harvester
     module Resync
-      class SyncTask
+      class SyncTask < HarvestTask
 
         # ------------------------------------------------------------
         # Constants
@@ -15,8 +15,6 @@ module Stash
         # Attributes
 
         attr_reader :capability_list_uri
-        attr_reader :from_time
-        attr_reader :until_time
 
         # ------------------------------------------------------------
         # Initializer
@@ -32,13 +30,13 @@ module Stash
         #   repository. (Optional)
         def initialize(capability_list_uri:, from_time: nil, until_time: nil)
           @capability_list_uri = to_uri(capability_list_uri)
-          @from_time, @until_time = valid_range(from_time, until_time)
+          super(from_time: from_time, until_time: until_time)
         end
 
         # ------------------------------------------------------------
         # Methods
 
-        def download
+        def harvest_records
           resources = time_range ? all_changes : all_resources
           resources.map { |r| HarvestedResource.new(r) }
         end
@@ -82,25 +80,6 @@ module Stash
         def all_changes
           # TODO: filter by time_range, most recent for each URI
           packaged_changes(capability_list.change_dump, time_range) || capability_list.change_list.all_changes(in_range: time_range)
-        end
-
-        # ------------------------------
-        # Parameter validators
-
-        def utc_or_nil(time)
-          if time && !time.utc?
-            fail ArgumentError, "time #{time}| must be in UTC"
-          else
-            time
-          end
-        end
-
-        def valid_range(from_time, until_time)
-          if from_time && until_time && from_time.to_i > until_time.to_i
-            fail RangeError, "from_time #{from_time} must be <= until_time #{until_time}"
-          else
-            [utc_or_nil(from_time), utc_or_nil(until_time)]
-          end
         end
 
         # ------------------------------

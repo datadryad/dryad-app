@@ -84,7 +84,7 @@ module Stash
             end
 
             it "gets resource contents from a #{::Resync::ResourceList}" do
-              downloaded = @sync_task.download
+              downloaded = @sync_task.harvest_records
               downloaded_array = downloaded.to_a
               @all_resources.each_with_index do |r, i|
                 expect(downloaded_array[i].identifier).to eq(r.uri.to_s)
@@ -92,7 +92,7 @@ module Stash
             end
 
             it 'returns an Enumerator::Lazy' do
-              downloaded = @sync_task.download
+              downloaded = @sync_task.harvest_records
               expect(downloaded).to be_a(Enumerator::Lazy)
             end
           end
@@ -122,7 +122,7 @@ module Stash
                 end
               end
 
-              downloaded = @sync_task.download
+              downloaded = @sync_task.harvest_records
               downloaded_array = downloaded.to_a
               resource_contents.each_with_index do |rc, i|
                 expect(downloaded_array[i].content).to eq(rc)
@@ -130,7 +130,7 @@ module Stash
             end
 
             it 'returns an Enumerator::Lazy' do
-              downloaded = @sync_task.download
+              downloaded = @sync_task.harvest_records
               expect(downloaded).to be_a(Enumerator::Lazy)
             end
           end
@@ -155,7 +155,7 @@ module Stash
                 end
               end
 
-              downloaded = @sync_task.download
+              downloaded = @sync_task.harvest_records
               downloaded_array = downloaded.to_a
               resource_contents.each_with_index do |rc, i|
                 expect(downloaded_array[i].content).to eq(rc)
@@ -163,7 +163,7 @@ module Stash
             end
 
             it 'returns an Enumerator::Lazy' do
-              downloaded = @sync_task.download
+              downloaded = @sync_task.harvest_records
               expect(downloaded).to be_a(Enumerator::Lazy)
             end
           end
@@ -191,7 +191,7 @@ module Stash
             end
 
             it "gets resource contents from a #{::Resync::ResourceListIndex}" do
-              downloaded = @sync_task.download
+              downloaded = @sync_task.harvest_records
               downloaded_array = downloaded.to_a
               @all_resources.each_with_index do |r, i|
                 expect(downloaded_array[i].identifier).to eq(r.uri.to_s)
@@ -199,7 +199,7 @@ module Stash
             end
 
             it 'returns an Enumerator::Lazy' do
-              downloaded = @sync_task.download
+              downloaded = @sync_task.harvest_records
               expect(downloaded).to be_a(Enumerator::Lazy)
             end
           end
@@ -222,7 +222,7 @@ module Stash
               end
 
               @sync_task = SyncTask.new(capability_list_uri: @cap_list_uri, from_time: Time.utc(2012), until_time: Time.utc(2014))
-              downloaded = @sync_task.download
+              downloaded = @sync_task.harvest_records
               downloaded_array = downloaded.to_a
               resource_contents.each_with_index do |rc, i|
                 expect(downloaded_array[i].content).to eq(rc)
@@ -234,7 +234,7 @@ module Stash
               expect(@resync_client).to receive(:get).once.with(URI('http://example.com/res1')) { contents }
 
               @sync_task = SyncTask.new(capability_list_uri: @cap_list_uri, from_time: Time.utc(2012, 12, 31), until_time: Time.utc(2013, 1, 1, 12))
-              downloaded = @sync_task.download
+              downloaded = @sync_task.harvest_records
               downloaded_array = downloaded.to_a
               expect(downloaded_array.size).to eq(1)
               expect(downloaded_array[0].content).to eq(contents)
@@ -242,7 +242,7 @@ module Stash
 
             it 'returns an Enumerator::Lazy' do
               @sync_task = SyncTask.new(capability_list_uri: @cap_list_uri, from_time: Time.utc(2012), until_time: Time.utc(2014))
-              downloaded = @sync_task.download
+              downloaded = @sync_task.harvest_records
               expect(downloaded).to be_a(Enumerator::Lazy)
             end
           end
@@ -275,7 +275,7 @@ module Stash
                 resource_contents << content
               end
 
-              downloaded = @sync_task.download
+              downloaded = @sync_task.harvest_records
               downloaded_array = downloaded.to_a
               resource_contents.each_with_index do |rc, i|
                 expect(downloaded_array[i].content).to eq(rc)
@@ -292,7 +292,7 @@ module Stash
                 resource_contents << content
               end
 
-              downloaded = @sync_task.download
+              downloaded = @sync_task.harvest_records
               downloaded_array = downloaded.to_a
               expect(downloaded_array.size).to eq(3)
               resource_contents[0, 3].each_with_index do |rc, i|
@@ -302,7 +302,7 @@ module Stash
 
             it 'returns an Enumerator::Lazy' do
               @sync_task = SyncTask.new(capability_list_uri: @cap_list_uri, from_time: Time.utc(2012, 12, 31), until_time: Time.utc(2014, 1, 1))
-              downloaded = @sync_task.download
+              downloaded = @sync_task.harvest_records
               expect(downloaded).to be_a(Enumerator::Lazy)
             end
           end
@@ -336,7 +336,7 @@ module Stash
                 expect(zp).to receive(:bitstreams) { bitstreams }
               end
 
-              downloaded = @sync_task.download
+              downloaded = @sync_task.harvest_records
               downloaded_array = downloaded.to_a
               expect(downloaded_array.size).to eq(resource_contents.size)
               downloaded_array.each_with_index do |rc, i|
@@ -345,7 +345,7 @@ module Stash
             end
 
             it 'returns an Enumerator::Lazy' do
-              expect(@sync_task.download).to be_a(Enumerator::Lazy)
+              expect(@sync_task.harvest_records).to be_a(Enumerator::Lazy)
             end
           end
 
@@ -378,7 +378,7 @@ module Stash
                 expect(zp).to receive(:bitstreams) { bitstreams }
               end
 
-              downloaded = @sync_task.download
+              downloaded = @sync_task.harvest_records
               downloaded_array = downloaded.to_a
               expect(downloaded_array.size).to eq(resource_contents.size)
               downloaded_array.each_with_index do |rc, i|
@@ -387,7 +387,7 @@ module Stash
             end
 
             it 'returns an Enumerator::Lazy' do
-              expect(@sync_task.download).to be_a(Enumerator::Lazy)
+              expect(@sync_task.harvest_records).to be_a(Enumerator::Lazy)
             end
           end
         end

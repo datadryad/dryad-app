@@ -39,7 +39,7 @@ module Stash
           it 'sends a ListRecords request' do
             task = ListRecordsTask.new oai_base_url: @uri
             expect(@oai_client).to receive(:list_records)
-            task.list_records
+            task.harvest_records
           end
 
           it 'maps the ListRecords response as a sequence of Stash::Havester::OAIPMH::Record objects' do
@@ -53,48 +53,48 @@ module Stash
             task = ListRecordsTask.new oai_base_url: @uri
             expect(@oai_client).to receive(:list_records) { result }
 
-            harvested_array = task.list_records.to_a
+            harvested_array = task.harvest_records.to_a
             expect(harvested_array).to eq(expected_array)
           end
 
           it 'returns an empty enumerable if no response is returned' do
             task = ListRecordsTask.new oai_base_url: @uri
             expect(@oai_client).to receive(:list_records) { nil }
-            harvested_array = task.list_records.to_a
+            harvested_array = task.harvest_records.to_a
             expect(harvested_array).to eq([])
           end
 
           it 'defaults to "oai_dc" if no metadata prefix is specified' do
             task = ListRecordsTask.new oai_base_url: @uri
             expect(@oai_client).to receive(:list_records).with(metadata_prefix: 'oai_dc')
-            task.list_records
+            task.harvest_records
           end
 
           it 'sends the specified metadata prefix' do
             prefix = 'datacite'
             task = ListRecordsTask.new oai_base_url: @uri, config: ListRecordsConfig.new(metadata_prefix: prefix)
             expect(@oai_client).to receive(:list_records).with(metadata_prefix: prefix)
-            task.list_records
+            task.harvest_records
           end
 
           it 'sends a set spec if one is specified' do
             task = ListRecordsTask.new oai_base_url: @uri, config: ListRecordsConfig.new(set: 'some:set:spec')
             expect(@oai_client).to receive(:list_records).with(metadata_prefix: 'oai_dc', set: 'some:set:spec')
-            task.list_records
+            task.harvest_records
           end
 
           it 'sends a "from" datestamp if one is specified' do
             time = Time.new.utc
             task = ListRecordsTask.new oai_base_url: @uri, config: ListRecordsConfig.new(from_time: time, seconds_granularity: true)
             expect(@oai_client).to receive(:list_records).with(from: time, metadata_prefix: 'oai_dc')
-            task.list_records
+            task.harvest_records
           end
 
           it 'sends an "until" datestamp if one is specified' do
             time = Time.new.utc
             task = ListRecordsTask.new oai_base_url: @uri, config: ListRecordsConfig.new(until_time: time, seconds_granularity: true)
             expect(@oai_client).to receive(:list_records).with(until: time, metadata_prefix: 'oai_dc')
-            task.list_records
+            task.harvest_records
           end
 
           it 'sends both datestamps if both are specified' do
@@ -102,7 +102,7 @@ module Stash
             end_time = Time.new.utc
             task = ListRecordsTask.new oai_base_url: @uri, config: ListRecordsConfig.new(from_time: start_time, until_time: end_time, seconds_granularity: true)
             expect(@oai_client).to receive(:list_records).with(from: start_time, until: end_time, metadata_prefix: 'oai_dc')
-            task.list_records
+            task.harvest_records
           end
 
           it 'sends datestamps at day granularity unless otherwise specified' do
@@ -110,7 +110,7 @@ module Stash
             end_time = Time.new.utc
             task = ListRecordsTask.new oai_base_url: @uri, config: ListRecordsConfig.new(from_time: start_time, until_time: end_time)
             expect(@oai_client).to receive(:list_records).with(from: start_time.strftime('%Y-%m-%d'), until: end_time.strftime('%Y-%m-%d'), metadata_prefix: 'oai_dc')
-            task.list_records
+            task.harvest_records
           end
 
           it 'supports resumption' do
@@ -134,7 +134,7 @@ module Stash
             task = ListRecordsTask.new oai_base_url: @uri
             expect(@oai_client).to receive(:list_records) { result_paged }
 
-            harvested_array = task.list_records.to_a
+            harvested_array = task.harvest_records.to_a
             expect(harvested_array).to match_array(expected_array)
           end
 
@@ -150,7 +150,7 @@ module Stash
 
             expect(@oai_client).to receive(:list_records) { result_paged }
             task = ListRecordsTask.new oai_base_url: @uri
-            all_records = task.list_records
+            all_records = task.harvest_records
 
             some_records = all_records.take(5).to_a
             expect(some_records.size).to eq(5)
