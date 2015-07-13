@@ -2,6 +2,10 @@ module Stash
   module Harvester
     module OAIPMH
 
+      # TODO: Make this the config for the data source, not the operation
+      # TODO: Move times (only) to ListRecordsTask
+      # TODO: Figure out who's responsible for creating the OAI client & performing the operation
+
       # Encapsulates the configuration for a single +ListRecords+ operation.
       #
       # @!attribute [r] from_time
