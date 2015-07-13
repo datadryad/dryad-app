@@ -19,6 +19,13 @@ module Stash
           expect(@record.metadata_root).to eq(datacite_resource)
         end
 
+        it 'extracts the content' do
+          datacite_resource_xml = File.read('spec/data/oaipmh/oai-datacite-32153-datacite-resource.xml')
+          content = @record.content
+          expect(content).to be_a(String)
+          expect(content).to be_xml(datacite_resource_xml)
+        end
+
         it 'returns nil metadata for deleted records' do
           file = File.new('spec/data/oaipmh/oai-datacite-22-oai_dc.xml')
           doc = REXML::Document.new file

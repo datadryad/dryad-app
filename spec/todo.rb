@@ -61,7 +61,7 @@ module Stash
       end
     end
 
-    describe 'Stash::Harvester::Solr' do
+    describe 'Stash::Indexer::Solr' do
       it 'indexes metadata into Solr'
       it 'logs each request'
       it 'logs each request result'
