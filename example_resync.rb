@@ -8,12 +8,12 @@ require 'lib/stash/harvester'
 # timestamps should reflect when the simulator was started
 capability_list_uri = 'http://localhost:8888/capabilitylist.xml'
 from_time = Time.utc(2015, 7, 13, 22, 17)
-until_time = Time.utc(2015, 7, 13, 22, 18)
+# until_time = Time.utc(2015, 7, 13, 22, 18)
 
-sync_task = Stash::Harvester::Resync::SyncTask.new(
+sync_task = Stash::Harvester::Resync::ResyncHarvestTask.new(
   capability_list_uri: capability_list_uri,
-  from_time: from_time,
-  until_time: until_time
+  from_time: from_time
+  # until_time: until_time
 )
 
 response = sync_task.harvest_records

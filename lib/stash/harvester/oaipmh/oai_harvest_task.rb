@@ -8,7 +8,7 @@ module Stash
       #
       # @!attribute [r] opts
       #   @return [Hash] the options passed to the +ListRecords+ verb
-      class ListRecordsTask < HarvestTask
+      class OAIHarvestTask < HarvestTask
 
         # ------------------------------------------------------------
         # Constants
@@ -46,7 +46,7 @@ module Stash
           opts
         end
 
-        # @return [Enumerator::Lazy<OAIPMH::Record>] A lazy enumerator of the harvested records
+        # @return [Enumerator::Lazy<OAIPMH::OAIRecord>] A lazy enumerator of the harvested records
         def harvest_records
           base_uri = @config.oai_base_uri
           client = OAI::Client.new(base_uri.to_s)
@@ -54,7 +54,7 @@ module Stash
           return [].lazy unless records
           full = records.full
           enum = full.lazy.to_enum
-          enum.map { |r| Stash::Harvester::OAIPMH::Record.new(r) }
+          enum.map { |r| Stash::Harvester::OAIPMH::OAIRecord.new(r) }
         end
 
         # ------------------------------------------------------------

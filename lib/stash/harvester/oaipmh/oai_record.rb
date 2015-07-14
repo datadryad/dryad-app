@@ -17,7 +17,7 @@ module Stash
       #   @return [String] The OAI identifier of the record.
       # @!attribute [r] metadata_root
       #   @return [REXML::Element] The root (inner) element of the record metadata.
-      class Record < Stash::Harvester::HarvestedRecord
+      class OAIRecord < Stash::Harvester::HarvestedRecord
 
         attr_reader :metadata_root
 

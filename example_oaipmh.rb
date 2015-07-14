@@ -10,7 +10,7 @@ oai_config = Stash::Harvester::OAIPMH::OAIConfig.new(
   set: 'REFQUALITY'
 )
 
-list_records_task = Stash::Harvester::OAIPMH::ListRecordsTask.new(
+list_records_task = Stash::Harvester::OAIPMH::OAIHarvestTask.new(
   config: oai_config,
   from_time: Time.utc(2013, 6, 1),
   until_time: Time.utc(2013, 6, 30)

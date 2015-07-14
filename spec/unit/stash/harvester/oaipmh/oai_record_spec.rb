@@ -6,12 +6,12 @@ module Stash
   module Harvester
     module OAIPMH
 
-      describe Record do
+      describe OAIRecord do
 
         before(:each) do
           @file = 'spec/data/oaipmh/oai-datacite-32153-datacite.xml'
           @doc = REXML::Document.new File.new(@file)
-          @record = Record.new(OAI::GetRecordResponse.new(@doc).record)
+          @record = OAIRecord.new(OAI::GetRecordResponse.new(@doc).record)
         end
 
         it 'extracts the metadata' do
@@ -29,7 +29,7 @@ module Stash
         it 'returns nil metadata for deleted records' do
           file = File.new('spec/data/oaipmh/oai-datacite-22-oai_dc.xml')
           doc = REXML::Document.new file
-          deleted_record = Record.new(OAI::GetRecordResponse.new(doc).record)
+          deleted_record = OAIRecord.new(OAI::GetRecordResponse.new(doc).record)
           expect(deleted_record.metadata_root).to be_nil
         end
 
@@ -45,7 +45,7 @@ module Stash
         it 'identifies deleted records as deleted' do
           file = File.new('spec/data/oaipmh/oai-datacite-22-oai_dc.xml')
           doc = REXML::Document.new file
-          deleted_record = Record.new(OAI::GetRecordResponse.new(doc).record)
+          deleted_record = OAIRecord.new(OAI::GetRecordResponse.new(doc).record)
           expect(deleted_record.deleted?).to be_truthy
         end
 
@@ -60,14 +60,14 @@ module Stash
 
           it 'treats equal records as equal' do
             equal_doc = REXML::Document.new File.new(@file)
-            equal_record = Record.new(OAI::GetRecordResponse.new(equal_doc).record)
+            equal_record = OAIRecord.new(OAI::GetRecordResponse.new(equal_doc).record)
 
             expect(@record).to eq(equal_record)
             expect(equal_record).to eq(@record)
           end
 
           it 'treats records with different datestamps as different' do
-            record2 = Record.new(OAI::GetRecordResponse.new(@doc).record)
+            record2 = OAIRecord.new(OAI::GetRecordResponse.new(@doc).record)
             datestamp = Time.now
             expect(record2).to receive(:timestamp).at_least(:once) { datestamp }
             expect(@record).to_not eq(record2)
@@ -75,7 +75,7 @@ module Stash
           end
 
           it 'treats records with different identifiers as different' do
-            record2 = Record.new(OAI::GetRecordResponse.new(@doc).record)
+            record2 = OAIRecord.new(OAI::GetRecordResponse.new(@doc).record)
             expect(record2).to receive(:identifier).at_least(:once) { 'elvis' }
             expect(@record).to_not eq(record2)
             expect(record2).to_not eq(@record)
@@ -84,13 +84,13 @@ module Stash
           it 'treats records with different metadata as different' do
             file = File.new('spec/data/oaipmh/oai-datacite-32153-oai_dc.xml')
             doc = REXML::Document.new file
-            dc_record = Record.new(OAI::GetRecordResponse.new(doc).record)
+            dc_record = OAIRecord.new(OAI::GetRecordResponse.new(doc).record)
             expect(@record).to_not eq(dc_record)
             expect(dc_record).to_not eq(@record)
           end
 
           it 'treats deleted records as different from undeleted records' do
-            record2 = Record.new(OAI::GetRecordResponse.new(@doc).record)
+            record2 = OAIRecord.new(OAI::GetRecordResponse.new(@doc).record)
             expect(record2).to receive(:deleted?).at_least(:once) { true }
             expect(@record).to_not eq(record2)
             expect(record2).to_not eq(@record)

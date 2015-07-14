@@ -17,7 +17,7 @@ module Stash
       #   @return [String] The URI of the record.
       # @!attribute [r] metadata_root
       #   @return [REXML::Element] The root (inner) element of the record metadata.
-      class HarvestedResource < Stash::Harvester::HarvestedRecord
+      class ResyncRecord < Stash::Harvester::HarvestedRecord
 
         def initialize(resource)
           super(

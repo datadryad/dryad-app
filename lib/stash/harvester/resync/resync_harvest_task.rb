@@ -3,7 +3,7 @@ require 'resync/client'
 module Stash
   module Harvester
     module Resync
-      class SyncTask < HarvestTask
+      class ResyncHarvestTask < HarvestTask
 
         # ------------------------------------------------------------
         # Constants
@@ -38,7 +38,7 @@ module Stash
 
         def harvest_records
           resources = time_range ? all_changes : all_resources
-          resources.map { |r| HarvestedResource.new(r) }
+          resources.map { |r| ResyncRecord.new(r) }
         end
 
         # ------------------------------------------------------------
