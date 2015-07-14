@@ -1,3 +1,5 @@
+require_relative '../source_config'
+
 module Stash
   module Harvester
     module OAIPMH
@@ -5,15 +7,13 @@ module Stash
       # The configuration of an OAI data source. Defaults to harvesting Dublin Core at seconds
       # granularity, across all record sets.
       #
-      # @!attribute [r] oai_base_uri
-      #   @return [URI] the base URL of the repository.
       # @!attribute seconds_granularity [r]
       #   @return [Boolean] whether to include the full time out to the second in the from / until time range. (Defaults to false, i.e., days granularity.)
       # @!attribute [r] metadata_prefix
       #   @return [String] the metadata prefix defining the metadata format requested from the repository.
       # @!attribute [r] set
       #   @return [String, nil] the colon-separated path to the set requested for selective harvesting.
-      class OAIConfig
+      class OAISourceConfig < SourceConfig
 
         # ------------------------------------------------------------
         # Constants
@@ -27,7 +27,6 @@ module Stash
         # ------------------------------------------------------------
         # Attributes
 
-        attr_reader :oai_base_uri
         attr_reader :seconds_granularity
         attr_reader :metadata_prefix
         attr_reader :set
@@ -35,7 +34,7 @@ module Stash
         # ------------------------------------------------------------
         # Initializer
 
-        # Constructs a new +OAIConfig+ with the specified properties.
+        # Constructs a new {OAISourceConfig} with the specified properties.
         #
         # @param oai_base_url [URI, String] the base URL of the repository. *(Required)*
         # @param seconds_granularity [Boolean] whether to include the full time out to the second in
@@ -49,7 +48,7 @@ module Stash
         # @raise [ArgumentError] if +metadata_prefix+ or any +set_spec+ element contains invalid characters,
         #   i.e. URI reserved characters per {https://www.ietf.org/rfc/rfc2396.txt RFC 2396}
         def initialize(oai_base_url:, seconds_granularity: false, metadata_prefix: DUBLIN_CORE, set: nil)
-          @oai_base_uri = to_uri(oai_base_url)
+          super(source_url: oai_base_url)
           @seconds_granularity = seconds_granularity
           @metadata_prefix = valid_prefix(metadata_prefix)
           @set = valid_spec(set)
@@ -89,13 +88,6 @@ module Stash
           else
             fail ArgumentError, "metadata_prefix ''#{metadata_prefix}'' must consist only of RFC 2396 URI unreserved characters"
           end
-        end
-
-        # ------------------------------
-        # Conversions
-
-        def to_uri(url)
-          (url.is_a? URI) ? url : URI.parse(url)
         end
 
       end

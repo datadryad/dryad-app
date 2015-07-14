@@ -4,7 +4,7 @@
 $LOAD_PATH << File.dirname(__FILE__)
 require 'lib/stash/harvester'
 
-oai_config = Stash::Harvester::OAIPMH::OAIConfig.new(
+oai_config = Stash::Harvester::OAIPMH::OAISourceConfig.new(
   oai_base_url: 'http://oai.datacite.org/oai',
   metadata_prefix: 'oai_datacite',
   set: 'REFQUALITY'

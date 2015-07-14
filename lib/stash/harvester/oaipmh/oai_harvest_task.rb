@@ -22,7 +22,7 @@ module Stash
         # Creates a new +ListRecordsTask+ for harvesting from the specified OAI-PMH repository, with
         # an optional datetime range and metadata prefix. Note that the datetime range must be in UTC.
         #
-        # @param config [OAIConfig] The configuration of the OAI data source.
+        # @param config [OAISourceConfig] The configuration of the OAI data source.
         # @param from_time [Time, nil] the start (inclusive) of the datestamp range for selective harvesting.
         #   If +from_time+ is omitted, harvesting will extend back to the earliest datestamp in the
         #   repository. (Optional)
@@ -48,7 +48,7 @@ module Stash
 
         # @return [Enumerator::Lazy<OAIPMH::OAIRecord>] A lazy enumerator of the harvested records
         def harvest_records
-          base_uri = @config.oai_base_uri
+          base_uri = @config.source_uri
           client = OAI::Client.new(base_uri.to_s)
           records = client.list_records(opts)
           return [].lazy unless records

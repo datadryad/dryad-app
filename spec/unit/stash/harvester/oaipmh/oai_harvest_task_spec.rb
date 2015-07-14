@@ -7,7 +7,7 @@ module Stash
       describe OAIHarvestTask do
         before(:each) do
           @uri = 'http://example.org/oai'
-          @config = OAIConfig.new(oai_base_url: @uri)
+          @config = OAISourceConfig.new(oai_base_url: @uri)
         end
 
         describe '#new' do
@@ -44,7 +44,7 @@ module Stash
           end
 
           it 'sends a ListRecords request' do
-            task = OAIHarvestTask.new(config: OAIConfig.new(oai_base_url: @uri))
+            task = OAIHarvestTask.new(config: OAISourceConfig.new(oai_base_url: @uri))
             expect(@oai_client).to receive(:list_records)
             task.harvest_records
           end
@@ -79,27 +79,27 @@ module Stash
 
           it 'sends the specified metadata prefix' do
             prefix = 'datacite'
-            task = OAIHarvestTask.new(config: OAIConfig.new(oai_base_url: @uri, metadata_prefix: prefix))
+            task = OAIHarvestTask.new(config: OAISourceConfig.new(oai_base_url: @uri, metadata_prefix: prefix))
             expect(@oai_client).to receive(:list_records).with(metadata_prefix: prefix)
             task.harvest_records
           end
 
           it 'sends a set spec if one is specified' do
-            task = OAIHarvestTask.new(config: OAIConfig.new(oai_base_url: @uri, set: 'some:set:spec'))
+            task = OAIHarvestTask.new(config: OAISourceConfig.new(oai_base_url: @uri, set: 'some:set:spec'))
             expect(@oai_client).to receive(:list_records).with(metadata_prefix: 'oai_dc', set: 'some:set:spec')
             task.harvest_records
           end
 
           it 'sends a "from" datestamp if one is specified' do
             time = Time.new.utc
-            task = OAIHarvestTask.new(config: OAIConfig.new(oai_base_url: @uri, seconds_granularity: true), from_time: time)
+            task = OAIHarvestTask.new(config: OAISourceConfig.new(oai_base_url: @uri, seconds_granularity: true), from_time: time)
             expect(@oai_client).to receive(:list_records).with(from: time, metadata_prefix: 'oai_dc')
             task.harvest_records
           end
 
           it 'sends an "until" datestamp if one is specified' do
             time = Time.new.utc
-            task = OAIHarvestTask.new(config: OAIConfig.new(oai_base_url: @uri, seconds_granularity: true), until_time: time)
+            task = OAIHarvestTask.new(config: OAISourceConfig.new(oai_base_url: @uri, seconds_granularity: true), until_time: time)
             expect(@oai_client).to receive(:list_records).with(until: time, metadata_prefix: 'oai_dc')
             task.harvest_records
           end
@@ -107,7 +107,7 @@ module Stash
           it 'sends both datestamps if both are specified' do
             start_time = Time.new.utc
             end_time = Time.new.utc
-            task = OAIHarvestTask.new(config: OAIConfig.new(oai_base_url: @uri, seconds_granularity: true), from_time: start_time, until_time: end_time)
+            task = OAIHarvestTask.new(config: OAISourceConfig.new(oai_base_url: @uri, seconds_granularity: true), from_time: start_time, until_time: end_time)
             expect(@oai_client).to receive(:list_records).with(from: start_time, until: end_time, metadata_prefix: 'oai_dc')
             task.harvest_records
           end
@@ -115,7 +115,7 @@ module Stash
           it 'sends datestamps at day granularity unless otherwise specified' do
             start_time = Time.new.utc
             end_time = Time.new.utc
-            task = OAIHarvestTask.new(config: OAIConfig.new(oai_base_url: @uri), from_time: start_time, until_time: end_time)
+            task = OAIHarvestTask.new(config: OAISourceConfig.new(oai_base_url: @uri), from_time: start_time, until_time: end_time)
             expect(@oai_client).to receive(:list_records).with(from: start_time.strftime('%Y-%m-%d'), until: end_time.strftime('%Y-%m-%d'), metadata_prefix: 'oai_dc')
             task.harvest_records
           end
@@ -138,7 +138,7 @@ module Stash
             result_full = OAI::ListRecordsResponse.new(doc_full)
             expected_array = result_full.collect { |r| OAIRecord.new(r) }
 
-            task = OAIHarvestTask.new(config: OAIConfig.new(oai_base_url: @uri))
+            task = OAIHarvestTask.new(config: OAISourceConfig.new(oai_base_url: @uri))
             expect(@oai_client).to receive(:list_records) { result_paged }
 
             harvested_array = task.harvest_records.to_a
@@ -156,7 +156,7 @@ module Stash
             end
 
             expect(@oai_client).to receive(:list_records) { result_paged }
-            task = OAIHarvestTask.new(config: OAIConfig.new(oai_base_url: @uri))
+            task = OAIHarvestTask.new(config: OAISourceConfig.new(oai_base_url: @uri))
             all_records = task.harvest_records
 
             some_records = all_records.take(5).to_a
