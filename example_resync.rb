@@ -13,7 +13,7 @@ from_time = Time.utc(2015, 7, 13, 22, 17)
 sync_task = Stash::Harvester::Resync::ResyncHarvestTask.new(
   capability_list_uri: capability_list_uri,
   from_time: from_time
-  # until_time: until_time
+# until_time: until_time
 )
 
 response = sync_task.harvest_records
