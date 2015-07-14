@@ -12,24 +12,19 @@ module Stash
         JULIAN_YEAR_SECONDS = 365.25 * 86_400
 
         # ------------------------------------------------------------
-        # Attributes
-
-        attr_reader :capability_list_uri
-
-        # ------------------------------------------------------------
         # Initializer
         # Creates a new +IncrementalSyncTask+ for synchronizing with the set of
         # resources whose capabilities are enumerated by the specified capability
         # list
-        # @param capability_list_uri [URI, String] the base URL of the repository. *(Required)*
+        # @param config [ResyncSourceConfig] the source configuration. *(Required)*
         # @param from_time [Time, nil] the start (inclusive) of the datestamp range for selective harvesting.
         #   If +from_time+ is omitted, harvesting will extend back to the earliest datestamp in the
         #   repository. (Optional)
         # @param until_time [Time, nil] the end (inclusive) of the datestamp range for selective harvesting.
         #   If +until_time+ is omitted, harvesting will extend forward to the latest datestamp in the
         #   repository. (Optional)
-        def initialize(capability_list_uri:, from_time: nil, until_time: nil)
-          @capability_list_uri = to_uri(capability_list_uri)
+        def initialize(config:, from_time: nil, until_time: nil)
+          @config = config
           super(from_time: from_time, until_time: until_time)
         end
 
@@ -49,6 +44,7 @@ module Stash
         end
 
         def capability_list
+          capability_list_uri = @config.source_uri
           @capability_list ||= client.get_and_parse(capability_list_uri)
         end
 

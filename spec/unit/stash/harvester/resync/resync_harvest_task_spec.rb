@@ -11,13 +11,13 @@ module Stash
         describe '#new' do
           it 'accepts a valid "from" datestamp' do
             time = Time.new.utc
-            sync_task = ResyncHarvestTask.new(capability_list_uri: 'http://example.org/cap_list.xml', from_time: time)
+            sync_task = ResyncHarvestTask.new(config: ResyncSourceConfig.new(capability_list_url: 'http://example.org/cap_list.xml'), from_time: time)
             expect(sync_task.from_time).to eq(time)
           end
 
           it 'accepts a valid "until" datestamp' do
             time = Time.new.utc
-            sync_task = ResyncHarvestTask.new(capability_list_uri: 'http://example.org/cap_list.xml', until_time: time)
+            sync_task = ResyncHarvestTask.new(config: ResyncSourceConfig.new(capability_list_url: 'http://example.org/cap_list.xml'), until_time: time)
             expect(sync_task.until_time).to eq(time)
           end
 
@@ -25,33 +25,16 @@ module Stash
             epoch = Time.at(0).utc
             now = Time.new.utc
 
-            expect { ResyncHarvestTask.new(capability_list_uri: 'http://example.org/cap_list.xml', from_time: now, until_time: epoch) }.to raise_error(RangeError)
+            expect { ResyncHarvestTask.new(config: ResyncSourceConfig.new(capability_list_url: 'http://example.org/cap_list.xml'), from_time: now, until_time: epoch) }.to raise_error(RangeError)
           end
 
           it 'rejects non-UTC datestamps' do
             non_utc = Time.new(2002, 10, 31, 2, 2, 2, '+02:00')
-            expect { ResyncHarvestTask.new(capability_list_uri: 'http://example.org/cap_list.xml', from_time: non_utc) }.to raise_error(ArgumentError)
-            expect { ResyncHarvestTask.new(capability_list_uri: 'http://example.org/cap_list.xml', until_time: non_utc) }.to raise_error(ArgumentError)
+            expect { ResyncHarvestTask.new(config: ResyncSourceConfig.new(capability_list_url: 'http://example.org/cap_list.xml'), from_time: non_utc) }.to raise_error(ArgumentError)
+            expect { ResyncHarvestTask.new(config: ResyncSourceConfig.new(capability_list_url: 'http://example.org/cap_list.xml'), until_time: non_utc) }.to raise_error(ArgumentError)
           end
 
-          it 'accepts a valid capability list URL' do
-            valid_url = 'http://example.org/capability_list.xml'
-            task = ResyncHarvestTask.new capability_list_uri: valid_url
-            expect(task.capability_list_uri).to eq(URI.parse(valid_url))
-          end
-
-          it 'accepts a URI object as a capability list URL' do
-            uri = URI.parse('http://example.org/capability_list.xml')
-            task = ResyncHarvestTask.new capability_list_uri: uri
-            expect(task.capability_list_uri).to eq(uri)
-          end
-
-          it 'rejects an invalid capability list URL' do
-            invalid_url = 'I am not a valid URL'
-            expect { ResyncHarvestTask.new capability_list_uri: invalid_url }.to raise_error(URI::InvalidURIError)
-          end
-
-          it 'requires a capability list URL' do
+          it 'requires a config' do
             # noinspection RubyArgCount
             expect { ResyncHarvestTask.new }.to raise_error(ArgumentError)
           end
@@ -71,7 +54,7 @@ module Stash
 
           describe "#{::Resync::ResourceList} handling" do
             before(:each) do
-              @sync_task = ResyncHarvestTask.new(capability_list_uri: @cap_list_uri)
+              @sync_task = ResyncHarvestTask.new(config: ResyncSourceConfig.new(capability_list_url: @cap_list_uri))
               @resource_list = instance_double(::Resync::ResourceList)
               @all_resources = [
                 ::Resync::Resource.new(uri: 'http://example.org/res1'),
@@ -101,7 +84,7 @@ module Stash
             before(:each) do
               @resource_dump_index = ::Resync::XMLParser.parse(File.new('spec/data/resync/dumps/resourcedumpindex.xml'))
               expect(@capability_list).to receive(:resource_dump) { @resource_dump_index }
-              @sync_task = ResyncHarvestTask.new(capability_list_uri: @cap_list_uri)
+              @sync_task = ResyncHarvestTask.new(config: ResyncSourceConfig.new(capability_list_url: @cap_list_uri))
             end
             it "gets resource contents from a #{::Resync::ResourceDumpIndex}" do
               @resource_dump_index.client_delegate = @resync_client
@@ -139,7 +122,7 @@ module Stash
             before(:each) do
               @resource_dump = ::Resync::XMLParser.parse(File.new('spec/data/resync/dumps/dump1/resourcedump1.xml'))
               expect(@capability_list).to receive(:resource_dump) { @resource_dump }
-              @sync_task = ResyncHarvestTask.new(capability_list_uri: @cap_list_uri)
+              @sync_task = ResyncHarvestTask.new(config: ResyncSourceConfig.new(capability_list_url: @cap_list_uri))
             end
 
             it "gets resource contents from a #{::Resync::ResourceDump}" do
@@ -170,7 +153,7 @@ module Stash
 
           describe "#{::Resync::ResourceListIndex} handling" do
             before(:each) do
-              @sync_task = ResyncHarvestTask.new(capability_list_uri: @cap_list_uri)
+              @sync_task = ResyncHarvestTask.new(config: ResyncSourceConfig.new(capability_list_url: @cap_list_uri))
 
               expect(@capability_list).to receive(:resource_dump)
 
@@ -221,7 +204,7 @@ module Stash
                 resource_contents << contents
               end
 
-              @sync_task = ResyncHarvestTask.new(capability_list_uri: @cap_list_uri, from_time: Time.utc(2012), until_time: Time.utc(2014))
+              @sync_task = ResyncHarvestTask.new(config: ResyncSourceConfig.new(capability_list_url: @cap_list_uri), from_time: Time.utc(2012), until_time: Time.utc(2014))
               downloaded = @sync_task.harvest_records
               downloaded_array = downloaded.to_a
               resource_contents.each_with_index do |rc, i|
@@ -233,7 +216,7 @@ module Stash
               contents = 'content of resource 1'
               expect(@resync_client).to receive(:get).once.with(URI('http://example.com/res1')) { contents }
 
-              @sync_task = ResyncHarvestTask.new(capability_list_uri: @cap_list_uri, from_time: Time.utc(2012, 12, 31), until_time: Time.utc(2013, 1, 1, 12))
+              @sync_task = ResyncHarvestTask.new(config: ResyncSourceConfig.new(capability_list_url: @cap_list_uri), from_time: Time.utc(2012, 12, 31), until_time: Time.utc(2013, 1, 1, 12))
               downloaded = @sync_task.harvest_records
               downloaded_array = downloaded.to_a
               expect(downloaded_array.size).to eq(1)
@@ -241,7 +224,7 @@ module Stash
             end
 
             it 'returns an Enumerator::Lazy' do
-              @sync_task = ResyncHarvestTask.new(capability_list_uri: @cap_list_uri, from_time: Time.utc(2012), until_time: Time.utc(2014))
+              @sync_task = ResyncHarvestTask.new(config: ResyncSourceConfig.new(capability_list_url: @cap_list_uri), from_time: Time.utc(2012), until_time: Time.utc(2014))
               downloaded = @sync_task.harvest_records
               expect(downloaded).to be_a(Enumerator::Lazy)
             end
@@ -266,7 +249,7 @@ module Stash
             end
 
             it "gets resource contents from a #{::Resync::ChangeListIndex}" do
-              @sync_task = ResyncHarvestTask.new(capability_list_uri: @cap_list_uri, from_time: Time.utc(2012, 12, 31), until_time: Time.utc(2014, 1, 1))
+              @sync_task = ResyncHarvestTask.new(config: ResyncSourceConfig.new(capability_list_url: @cap_list_uri), from_time: Time.utc(2012, 12, 31), until_time: Time.utc(2014, 1, 1))
 
               resource_contents = []
               @all_resources.each do |r|
@@ -283,7 +266,7 @@ module Stash
             end
 
             it 'filters by time range' do
-              @sync_task = ResyncHarvestTask.new(capability_list_uri: @cap_list_uri, from_time: Time.utc(2012, 12, 31), until_time: Time.utc(2013, 1, 2, 12))
+              @sync_task = ResyncHarvestTask.new(config: ResyncSourceConfig.new(capability_list_url: @cap_list_uri), from_time: Time.utc(2012, 12, 31), until_time: Time.utc(2013, 1, 2, 12))
 
               resource_contents = []
               @all_resources.each do |r|
@@ -301,7 +284,7 @@ module Stash
             end
 
             it 'returns an Enumerator::Lazy' do
-              @sync_task = ResyncHarvestTask.new(capability_list_uri: @cap_list_uri, from_time: Time.utc(2012, 12, 31), until_time: Time.utc(2014, 1, 1))
+              @sync_task = ResyncHarvestTask.new(config: ResyncSourceConfig.new(capability_list_url: @cap_list_uri), from_time: Time.utc(2012, 12, 31), until_time: Time.utc(2014, 1, 1))
               downloaded = @sync_task.harvest_records
               expect(downloaded).to be_a(Enumerator::Lazy)
             end
@@ -317,7 +300,7 @@ module Stash
 
               @zip_packages = Array.new(3) { instance_double(::Resync::Client::Zip::ZipPackage) }
               expect(@dump).to receive(:all_zip_packages).with(in_range: @from_time..@until_time) { @zip_packages.lazy }
-              @sync_task = ResyncHarvestTask.new(capability_list_uri: @cap_list_uri, from_time: @from_time, until_time: @until_time)
+              @sync_task = ResyncHarvestTask.new(config: ResyncSourceConfig.new(capability_list_url: @cap_list_uri), from_time: @from_time, until_time: @until_time)
             end
 
             it "gets resource contents from a #{::Resync::ChangeDump}" do
@@ -359,7 +342,7 @@ module Stash
 
               @zip_packages = Array.new(3) { instance_double(::Resync::Client::Zip::ZipPackage) }
               expect(@dump).to receive(:all_zip_packages).with(in_range: @from_time..@until_time) { @zip_packages.lazy }
-              @sync_task = ResyncHarvestTask.new(capability_list_uri: @cap_list_uri, from_time: @from_time, until_time: @until_time)
+              @sync_task = ResyncHarvestTask.new(config: ResyncSourceConfig.new(capability_list_url: @cap_list_uri), from_time: @from_time, until_time: @until_time)
             end
 
             it "gets resource contents from a #{::Resync::ChangeDump}" do
