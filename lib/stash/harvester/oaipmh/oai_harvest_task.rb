@@ -32,15 +32,14 @@ module Stash
         # @raise [ArgumentError] if +from_time+ or +until_time+ is not in UTC.
         # @raise [RangeError] if +from_time+ is later than +until_time+.
         def initialize(config:, from_time: nil, until_time: nil)
-          super(from_time: from_time, until_time: until_time)
-          @config = config
+          super
         end
 
         # ------------------------------------------------------------
         # Methods
 
         def opts
-          opts = @config.to_h
+          opts = config.to_h
           (opts[:from] = to_s(from_time)) if from_time
           (opts[:until] = to_s(until_time)) if until_time
           opts
@@ -48,7 +47,7 @@ module Stash
 
         # @return [Enumerator::Lazy<OAIPMH::OAIRecord>] A lazy enumerator of the harvested records
         def harvest_records
-          base_uri = @config.source_uri
+          base_uri = config.source_uri
           client = OAI::Client.new(base_uri.to_s)
           records = client.list_records(opts)
           return [].lazy unless records

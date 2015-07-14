@@ -13,6 +13,7 @@ module Stash
 
         # ------------------------------------------------------------
         # Initializer
+
         # Creates a new +IncrementalSyncTask+ for synchronizing with the set of
         # resources whose capabilities are enumerated by the specified capability
         # list
@@ -24,8 +25,7 @@ module Stash
         #   If +until_time+ is omitted, harvesting will extend forward to the latest datestamp in the
         #   repository. (Optional)
         def initialize(config:, from_time: nil, until_time: nil)
-          @config = config
-          super(from_time: from_time, until_time: until_time)
+          super
         end
 
         # ------------------------------------------------------------
@@ -44,7 +44,7 @@ module Stash
         end
 
         def capability_list
-          capability_list_uri = @config.source_uri
+          capability_list_uri = config.source_uri
           @capability_list ||= client.get_and_parse(capability_list_uri)
         end
 

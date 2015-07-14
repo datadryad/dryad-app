@@ -1,13 +1,32 @@
 module Stash
   module Harvester
+
+    # Generic superclass of protocol-specific harvest tasks. Subclasses
+    # should override {#harvest_records}, in conjunction with an appropriate
+    # {SourceConfig}, to perform the actual harvest.
+    #
+    # @!attribute [r] config
+    #   @return [SourceConfig] the configuration used by this task
+    # @!attribute [r] from_time
+    #   @return [Time, nil] the start (inclusive) of the datestamp range for selective harvesting.
+    # @!attribute [r] until_time
+    #   @return [Time, nil] the end (inclusive) of the datestamp range for selective harvesting.
     class HarvestTask
 
+      # ------------------------------------------------------------
+      # Accessors
+
+      attr_reader :config
       attr_reader :from_time
       attr_reader :until_time
+
+      # ------------------------------------------------------------
+      # Initializer
 
       # Constructs a new +HarvestTask+ with the specified datetime range.
       # Note that the datetime range must be in UTC.
       #
+      # @param config [HarvestConfig] the configuration to be used by this task.
       # @param from_time [Time, nil] the start (inclusive) of the datestamp range for selective harvesting.
       #   If +from_time+ is omitted, harvesting will extend back to the earliest datestamp in the
       #   repository. (Optional)
@@ -16,13 +35,28 @@ module Stash
       #   repository. (Optional)
       # @raise [RangeError] if +from_time+ is later than +until_time+.
       # @raise [ArgumentError] if +from_time+ or +until_time+ is not in UTC.
-      def initialize(from_time: nil, until_time: nil)
+      def initialize(config:, from_time: nil, until_time: nil)
+        @config = config
         @from_time, @until_time = valid_range(from_time, until_time)
       end
 
+      # Provides access to the harvested records as a lazy enumeration. Implementations should make only
+      # the minimum network requests needed to satisfy the needs of the client. For instance, in a protocol
+      # that requires record-by-record downloading, if the client requests only the first record from the
+      # enumeration, the implementation should only download that record. In a protocol that provides
+      # 1000-record 'pages', the implementation should not download the second page unless the client asks
+      # for more than 1000 records.
+      #
+      # @return [Enumerator::Lazy<HarvestedRecord>, Enumerator::Lazy<Lazy:Promise<HarvestedRecord>>]
+      #   A lazy enumerator of the harvested records
       def harvest_records
         fail "#{self.class} should override #harvest_records to harvest records, but it doesn't"
       end
+
+      # ------------------------------
+      # Private methods
+
+      private
 
       # ------------------------------
       # Parameter validators
