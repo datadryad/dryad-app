@@ -4,14 +4,14 @@
 $LOAD_PATH << File.dirname(__FILE__)
 require 'lib/stash/harvester'
 
-list_records_config = Stash::Harvester::OAIPMH::OAIConfig.new(
+oai_config = Stash::Harvester::OAIPMH::OAIConfig.new(
   oai_base_url: 'http://oai.datacite.org/oai',
   metadata_prefix: 'oai_datacite',
   set: 'REFQUALITY'
 )
 
 list_records_task = Stash::Harvester::OAIPMH::ListRecordsTask.new(
-  config: list_records_config,
+  config: oai_config,
   from_time: Time.utc(2013, 6, 1),
   until_time: Time.utc(2013, 6, 30)
 )
