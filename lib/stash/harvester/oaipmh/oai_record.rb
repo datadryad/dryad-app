@@ -21,6 +21,8 @@ module Stash
 
         attr_reader :metadata_root
 
+        # Constructs a new {OAIRecord} wrapping the specified record.
+        #
         # @param record [OAI::Record] An OAI record as returned by +OAI::Client+
         def initialize(record)
           super(
@@ -31,6 +33,8 @@ module Stash
           @metadata_root = record.deleted? ? nil : record.metadata.elements[1]
         end
 
+        # The root (inner) XML element of the record metadata, as a string.
+        # @return [String] the inner element of the record metadata.
         def content
           @content ||= begin
             formatter = REXML::Formatters::Pretty.new
@@ -41,7 +45,10 @@ module Stash
           end
         end
 
-        # TODO: document this
+        # Compares this record with another for structural equality.
+        #
+        # @return [Boolean] True if this record is equivalent to the specified record;
+        #   false otherwise
         def ==(other) # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity
           return true if self.equal?(other)
           return false unless other.instance_of?(self.class)

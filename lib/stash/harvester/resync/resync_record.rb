@@ -19,6 +19,12 @@ module Stash
       #   @return [REXML::Element] The root (inner) element of the record metadata.
       class ResyncRecord < Stash::Harvester::HarvestedRecord
 
+        # Creates a new {ResyncRecord} wrapping the specified resource. The resource
+        # is responsible for providing its own content; any resource provided by a
+        # {http://www.rubydoc.info/github/dmolesUC3/resync-client/Resync/Client Resync::Client} should be able to do this.
+        #
+        # @param resource [Resync::Resource with Resync::Client::Mixins::Downloadable, Resync::Client::Mixins::BitstreamResource]
+        #   the resource
         def initialize(resource)
           super(
             identifier: resource.uri.to_s,
@@ -31,6 +37,10 @@ module Stash
           @resource = resource
         end
 
+        # The content of the resource, as retrieved from the resource URL, or from
+        # the containing ZIP bitstream package if one is available
+        #
+        # @return [String] the content of the resource
         def content
           @content ||= @deleted ? nil : content_from(@resource)
         end
