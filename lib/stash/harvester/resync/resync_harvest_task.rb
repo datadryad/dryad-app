@@ -89,10 +89,6 @@ module Stash
           until_time || (Time.new.utc + JULIAN_YEAR_SECONDS)
         end
 
-        def to_uri(url)
-          (url.is_a? URI) ? url : URI.parse(url)
-        end
-
       end
     end
   end
