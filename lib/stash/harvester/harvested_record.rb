@@ -17,6 +17,12 @@ module Stash
       attr_reader :timestamp
       attr_reader :deleted
 
+      # Creates a new +HarvestedRecord+
+      #
+      # @param identifier [String] a protocol-specific unique identifier for the record.
+      # @param timestamp [Time] a timestamp for the record, ideally its time of last modification.
+      # @param deleted [Boolean, nil] true if the record has been deleted, false otherwise
+      #   (defaults to false)
       def initialize(identifier:, timestamp:, deleted: false)
         @identifier = identifier
         @timestamp = timestamp
