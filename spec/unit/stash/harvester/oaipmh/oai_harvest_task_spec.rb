@@ -163,13 +163,17 @@ module Stash
             expect(some_records.size).to eq(5)
           end
 
-          it 'respects 503 with Retry-After' # see https://github.com/code4lib/ruby-oai/issues/45
-
-          it 'treats an "empty list" OAI::Exception as an empty list'
+          describe 'error handling:' do
+            it 'logs errors'
+            it 'handles OAI-PMH error responses gracefully'
+            it 'treats an "empty list" OAI::Exception as an empty list'
+            it 'follows 302 Found redirects with Location header'
+            it 'handles 4xx errors gracefully'
+            it 'handles 5xx errors gracefully'
+            it 'respects 503 with Retry-After' # see https://github.com/code4lib/ruby-oai/issues/45
+          end
 
           it 'logs a warning when converting sub-day datestamps to day granularity'
-
-          it 'logs errors'
 
         end
       end

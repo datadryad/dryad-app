@@ -150,14 +150,3 @@ Given a `from` datestamp:
             - record the datestamp latest success as the next start datestamp
 
 
-## Deployment
-
-Solr setup:
-
-- Where do we assume Solr lives / how do we assume Solr is deployed?
-- Do we take Solr as a given, the way we take the repository as a given, or is it (conceptually) embedded our Blacklight app?
-- Are we the only source of Solr data?
-
-Solr configuration:
-
-- Compare [DataCite's Solr config](https://github.com/datacite/search/tree/master/src/main/resources)
