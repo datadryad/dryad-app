@@ -1,3 +1,4 @@
+require 'yaml'
 require_relative '../source_config'
 
 module Stash
@@ -7,12 +8,12 @@ module Stash
       # The configuration of an OAI data source. Defaults to harvesting Dublin Core at seconds
       # granularity, across all record sets.
       #
-      # @!attribute seconds_granularity [r]
-      #   @return [Boolean] whether to include the full time out to the second in the from / until time range. (Defaults to false, i.e., days granularity.)
       # @!attribute [r] metadata_prefix
       #   @return [String] the metadata prefix defining the metadata format requested from the repository.
       # @!attribute [r] set
       #   @return [String, nil] the colon-separated path to the set requested for selective harvesting.
+      # @!attribute seconds_granularity [r]
+      #   @return [Boolean] whether to include the full time out to the second in the from / until time range. (Defaults to false, i.e., days granularity.)
       class OAISourceConfig < SourceConfig
 
         # ------------------------------------------------------------
@@ -37,17 +38,17 @@ module Stash
         # Constructs a new {OAISourceConfig} with the specified properties.
         #
         # @param oai_base_url [URI, String] the base URL of the repository. *(Required)*
-        # @param seconds_granularity [Boolean] whether to include the full time out to the second in
-        #   the from / until time range. (Defaults to +false+, i.e., days granularity.)
         # @param metadata_prefix [String, nil] the metadata prefix defining the metadata format requested
         #   from the repository. If +metadata_prefix+ is omitted, the prefix +oai_dc+ (Dublin Core)
         #   will be used.
         # @param set [String, nil] the colon-separated path to the set requested for selective harvesting
         #   from the repository. If +set_spec+ is omitted, harvesting will be across all sets.
+        # @param seconds_granularity [Boolean] whether to include the full time out to the second in
+        #   the from / until time range. (Defaults to +false+, i.e., days granularity.)
         # @raise [URI::InvalidURIError] if +oai_base_url+ is a string that is not a valid URI
         # @raise [ArgumentError] if +metadata_prefix+ or any +set_spec+ element contains invalid characters,
         #   i.e. URI reserved characters per {https://www.ietf.org/rfc/rfc2396.txt RFC 2396}
-        def initialize(oai_base_url:, seconds_granularity: false, metadata_prefix: DUBLIN_CORE, set: nil)
+        def initialize(oai_base_url:, metadata_prefix: DUBLIN_CORE, set: nil, seconds_granularity: false)
           super(source_url: oai_base_url)
           @seconds_granularity = seconds_granularity
           @metadata_prefix = valid_prefix(metadata_prefix)
@@ -55,7 +56,7 @@ module Stash
         end
 
         # ------------------------------------------------------------
-        # Methods
+        # Instance methods
 
         def to_h
           opts = { metadata_prefix: metadata_prefix }

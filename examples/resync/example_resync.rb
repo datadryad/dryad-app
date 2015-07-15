@@ -1,12 +1,16 @@
 #! /usr/bin/env ruby
 
-# Note: This assumes we're running from the root of the stash-harvester project
-$LOAD_PATH << File.dirname(__FILE__)
-require 'lib/stash/harvester'
+require 'stash/harvester'
 
-config = Stash::Harvester::Resync::ResyncSourceConfig.new(
-  capability_list_url: 'http://localhost:8888/capabilitylist.xml'
+config = Stash::Harvester::Resync::ResyncSourceConfig.from_yaml(
+  File.read('resync_source.yml')
 )
+
+# Alternatively:
+#
+# config = Stash::Harvester::Resync::ResyncSourceConfig.new(
+#   capability_list_url: 'http://localhost:8888/capabilitylist.xml'
+# )
 
 task = Stash::Harvester::Resync::ResyncHarvestTask.new(
   config: config,

@@ -18,11 +18,26 @@ module Stash
       end
 
       # ------------------------------
-      # Conversions
+      # Class methods
+
+      # Parses the specified YAML string and passes it as a hash
+      # with symbol keys to the implementation class constructor
+      #
+      # @return [SourceConfig] a new instance of this implementation class
+      def self.from_yaml(yml)
+        params = YAML.load(yml).map { |k, v| [k.to_sym, v] }.to_h
+        new(params)
+      end
+
+      # ------------------------------
+      # Private methods
+
+      private
 
       def to_uri(url)
         (url.is_a? URI) ? url : URI.parse(url)
       end
+
     end
   end
 end

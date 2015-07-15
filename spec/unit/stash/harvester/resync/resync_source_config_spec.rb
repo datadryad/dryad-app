@@ -27,6 +27,14 @@ module Stash
             expect { ResyncSourceConfig.new }.to raise_error(ArgumentError)
           end
         end
+
+        describe '#from_yaml' do
+          it 'parses a valid YAML config file' do
+            yml = 'capability_list_url: http://localhost:8888/capabilitylist.xml'
+            config = ResyncSourceConfig.from_yaml(yml)
+            expect(config.source_uri).to eq(URI('http://localhost:8888/capabilitylist.xml'))
+          end
+        end
       end
     end
   end
