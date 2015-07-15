@@ -21,7 +21,7 @@ module Stash
       # Class methods
 
       # Parses the specified YAML string and passes it as a hash
-      # with symbol keys to the implementation class constructor
+      # with symbol keys to the implementation class initializer
       #
       # @return [SourceConfig] a new instance of this implementation class
       def self.from_yaml(yml)
