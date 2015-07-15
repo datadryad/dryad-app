@@ -1,4 +1,23 @@
 ------------------------------------------------------------
+# Workflow
+
+## Harvest job
+
+1. given a start date:
+    1. harvest all records update since that date
+    2. for each batch of harvested records:
+        1. save the batch to temporary storage
+        2. schedule an index job for that batch
+
+## Index job
+
+1. given a batch of records:
+    1. for each record:
+        1. transform the record to Solr format
+    2. given the transformed batch:
+        2. index the record in Solr
+
+------------------------------------------------------------
 # Tasks
 
 ## Harvesting
