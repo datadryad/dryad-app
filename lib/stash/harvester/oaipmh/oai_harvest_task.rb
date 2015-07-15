@@ -4,10 +4,8 @@ module Stash
 
       # TODO: check for documentation of inherited attributes
 
-      # Class representing a single harvest (+ListRecords+) operation.
+      # Class representing a single OAI-PMH harvest (+ListRecords+) operation.
       #
-      # @!attribute [r] opts
-      #   @return [Hash] the options passed to the +ListRecords+ verb
       class OAIHarvestTask < HarvestTask
 
         # ------------------------------------------------------------
@@ -38,6 +36,11 @@ module Stash
         # ------------------------------------------------------------
         # Methods
 
+        # Creates a hash containing the {#config} options, {#from_time}, and
+        # {#until_time} (if present) formatted appropriately and with appropriate
+        # keys to be included in the +ListRecords+ request
+        #
+        # @return [Hash] the options passed to the +ListRecords+ verb
         def opts
           opts = config.to_h
           (opts[:from] = to_s(from_time)) if from_time
@@ -45,7 +48,11 @@ module Stash
           opts
         end
 
-        # @return [Enumerator::Lazy<OAIPMH::OAIRecord>] A lazy enumerator of the harvested records
+        # Performs a +ListRecords+ operation and returns the result as a
+        # lazy enumerator of {OAIRecord}s. Paged responses are transparently
+        # fetched one page at a time, as necessary.
+        #
+        # @return [Enumerator::Lazy<OAIRecord>] A lazy enumerator of the harvested records
         def harvest_records
           base_uri = config.source_uri
           client = OAI::Client.new(base_uri.to_s)
@@ -53,7 +60,7 @@ module Stash
           return [].lazy unless records
           full = records.full
           enum = full.lazy.to_enum
-          enum.map { |r| Stash::Harvester::OAIPMH::OAIRecord.new(r) }
+          enum.map { |r| OAIRecord.new(r) }
         end
 
         # ------------------------------------------------------------

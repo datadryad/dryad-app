@@ -47,7 +47,7 @@ module Stash
       # 1000-record 'pages', the implementation should not download the second page unless the client asks
       # for more than 1000 records.
       #
-      # @return [Enumerator::Lazy<HarvestedRecord>, Enumerator::Lazy<Lazy:Promise<HarvestedRecord>>]
+      # @return [Enumerator::Lazy<HarvestedRecord>]
       #   A lazy enumerator of the harvested records
       def harvest_records
         fail "#{self.class} should override #harvest_records to harvest records, but it doesn't"

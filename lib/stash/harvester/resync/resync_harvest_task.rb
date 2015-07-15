@@ -3,12 +3,22 @@ require 'resync/client'
 module Stash
   module Harvester
     module Resync
+
+      # Class representing a single ResourceSync harvest operation.
+      # If a time range (open or closed) is provided, the task will
+      # harvest changes in that time range; otherwise, it will harvest
+      # all resources. {http://www.rubydoc.info/gems/resync/0.1.2/Resync/ChangeDump ChangeDumps}
+      # and {http://www.rubydoc.info/gems/resync/0.1.2/Resync/ResourceDump ResourceDumps}
+      # are preferred to {http://www.rubydoc.info/gems/resync/0.1.2/Resync/ChangeList ChangeLists}
+      # and {http://www.rubydoc.info/gems/resync/0.1.2/Resync/ResourceList ResourceLists},
+      # {http://www.rubydoc.info/gems/resync/0.1.2/Resync/ChangeListIndex ChangeListIndices}
+      # etc. will be transparently crawled to reach the nested lists.
       class ResyncHarvestTask < HarvestTask
 
         # ------------------------------------------------------------
         # Constants
 
-        # Added to the current time to create an end
+        # Added to the current time to create an end timestamp for open ranges
         JULIAN_YEAR_SECONDS = 365.25 * 86_400
 
         # ------------------------------------------------------------
@@ -31,6 +41,8 @@ module Stash
         # ------------------------------------------------------------
         # Methods
 
+        # Harvests the records from the ResourceSync source.
+        # @return [Enumerator::Lazy<ResyncRecord>
         def harvest_records
           resources = time_range ? all_changes : all_resources
           resources.map { |r| ResyncRecord.new(r) }
@@ -43,6 +55,11 @@ module Stash
           @client ||= ::Resync::Client.new
         end
 
+        # ------------------------------------------------------------
+        # Private methods
+
+        private
+
         def capability_list
           capability_list_uri = config.source_uri
           @capability_list ||= client.get_and_parse(capability_list_uri)
@@ -51,11 +68,6 @@ module Stash
         def time_range
           @time_range ||= (from_time || until_time) ? range_start..range_end : nil
         end
-
-        # ------------------------------------------------------------
-        # Private methods
-
-        private
 
         def packaged_changes(change_dump, time_range)
           return nil unless change_dump

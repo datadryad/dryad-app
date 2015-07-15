@@ -49,7 +49,7 @@ module Stash
             task.harvest_records
           end
 
-          it 'maps the ListRecords response as a sequence of Stash::Havester::OAIPMH::Record objects' do
+          it "maps the ListRecords response as a sequence of #{OAIRecord} objects" do
             require 'rexml/document'
 
             file = File.new('spec/data/oaipmh/oai-datacite-list-records-june-2011-oai_dc.xml')
