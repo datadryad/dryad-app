@@ -10,8 +10,8 @@ Gem::Specification.new do |spec|
   spec.version       = Stash::Harvester::VERSION
   spec.authors       = ['David Moles']
   spec.email         = ['david.moles@ucop.edu']
-  spec.summary       = 'Harvests metadata into Solr'
-  spec.description   = 'Harvests metadata from a digital repository into Solr for indexing'
+  spec.summary       = 'Harvests metadata from a digital repository'
+  spec.description   = 'A gem for harvesting metadata from a digital repository for indexing'
   spec.license       = 'MIT'
 
   origin_uri = URI(`git config --get remote.origin.url`.chomp)

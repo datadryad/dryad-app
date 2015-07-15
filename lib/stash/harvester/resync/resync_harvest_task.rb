@@ -49,16 +49,13 @@ module Stash
         end
 
         # ------------------------------------------------------------
-        # Custom accessors
+        # Private methods
+
+        private
 
         def client
           @client ||= ::Resync::Client.new
         end
-
-        # ------------------------------------------------------------
-        # Private methods
-
-        private
 
         def capability_list
           capability_list_uri = config.source_uri
