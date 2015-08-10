@@ -5,7 +5,7 @@ require 'spec_helper'
 module Stash
   module Harvester
     # noinspection RubyTooManyInstanceVariablesInspection
-    module Resync
+    module Resync # rubocop:disable Metrics/ModuleLength
       describe ResyncHarvestTask do
 
         describe '#new' do

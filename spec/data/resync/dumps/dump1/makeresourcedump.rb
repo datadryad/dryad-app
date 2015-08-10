@@ -86,7 +86,7 @@ zipfiles.each_with_index do |zf, i|
         rel: 'contents',
         uri: URI("#{url_base}/part#{i + 1}/manifest.xml"),
         mime_type: MIME::Types['application/xml'].first
-    )]
+      )]
   )
 end
 
