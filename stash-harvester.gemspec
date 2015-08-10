@@ -22,7 +22,6 @@ Gem::Specification.new do |spec|
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths = ['lib']
 
-  spec.add_dependency 'activejob', '~> 4.2'
   spec.add_dependency 'oai', '~> 0.3', '>= 0.3.1'
   spec.add_dependency 'resync-client', '~> 0.3', '>= 0.3.3'
 
