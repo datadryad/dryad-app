@@ -15,7 +15,7 @@
     - schedule harvests & indexes
     - view log records etc.
 
-### Possible indexing workflow
+## Possible indexing workflow
 
 - **TODO:** put each record or batch of records in temp storage?
 - for each record
@@ -37,5 +37,45 @@
             - record the datestamp of the earliest temporary failure as the next start datestamp
         - otherwise
             - record the datestamp latest success as the next start datestamp
+
+## Misc TODOs
+
+### General
+
+- runs on a configurable schedule
+- logs each request
+- logs each request result
+- logs all errors
+- does something intelligent with deleted resources
+- README documents OAI-PMH support in detail
+- README makes it clear we're at least hypothetically protocol-agnostic
+- Gemspec makes it clear we're at least hypothetically protocol-agnostic
+- Gemspec 's suitable for submitting to Ruby-Gems
+- sends appropriate User-Agent and From headers
+
+### Scheduling
+
+- overlaps date ranges
+- starts from the datestamp of the last successfully indexed record
+- starts at UTC midnight *before* the datestamp of the last successfully indexed record, when harvesting at day granularity
+
+### State tracking
+
+- records the datestamp of the latest successfully indexed record
+- in the event of a "partial success", records the datestamp of the earliest failed record
+- maintains enough state to keep track of the start/end datestamp itself
+
+### OAI-PMH
+
+- handles badResumptionToken errors
+- handles resumptionTokens with expirationDates
+
+### Indexing
+
+- indexes in batches of a configurable size
+- logs each request
+- logs each request result
+- indexes metadata into Solr
+
 
 

@@ -41,15 +41,6 @@ require 'rubocop/rake_task'
 RuboCop::RakeTask.new
 
 # ------------------------------------------------------------
-# TODOs
-
-desc 'List TODOs (from spec/todo.rb)'
-RSpec::Core::RakeTask.new(:todo) do |task|
-  task.rspec_opts = %w(--color --format documentation --order default)
-  task.pattern = 'todo.rb'
-end
-
-# ------------------------------------------------------------
 # Defaults
 
 desc 'Run unit tests, check test coverage, run acceptance tests, check code style'
