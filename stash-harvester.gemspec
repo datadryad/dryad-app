@@ -22,8 +22,10 @@ Gem::Specification.new do |spec|
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths = ['lib']
 
+  spec.add_dependency 'activerecord', '~> 4.2', '>= 4.2.3'
   spec.add_dependency 'oai', '~> 0.3', '>= 0.3.1'
   spec.add_dependency 'resync-client', '~> 0.3', '>= 0.3.3'
+  spec.add_dependency 'sqlite3', '~> 1.3', '>= 1.3.10'
 
   spec.add_development_dependency 'bundler', '~> 1.7'
   spec.add_development_dependency 'equivalent-xml', '~> 0.6.0'
