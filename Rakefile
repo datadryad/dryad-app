@@ -19,6 +19,13 @@ namespace :spec do
     task.pattern = 'acceptance/**/*_spec.rb'
   end
 
+  desc 'Run all database tests'
+  RSpec::Core::RakeTask.new(:db) do |task|
+    ENV['COVERAGE'] = nil
+    task.rspec_opts = %w(--color --format documentation --order default)
+    task.pattern = 'db/**/*_spec.rb'
+  end
+
   task all: [:unit, :acceptance]
 end
 
