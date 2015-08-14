@@ -1,6 +1,6 @@
 require 'spec_helper'
-require 'rspec/rails/fixture_support'
-require 'rspec/rails/active_record'
+require 'active_record'
+require 'rspec-activerecord'
 
 # TODO: put this somewhere else?
 models = File.expand_path('app')
@@ -16,8 +16,8 @@ ActiveRecord::Migrator.up 'db/migrate'
 RSpec.configure do |config|
 
   # Limited subset of rspec/rails/configuration
-  config.add_setting :fixture_path
-  config.include RSpec::Rails::FixtureSupport, :use_fixtures
+  # config.add_setting :fixture_path
+  # config.include RSpec::Rails::FixtureSupport, :use_fixtures
 
   config.fixture_path = File.expand_path('spec/fixtures')
   config.around do |example|
