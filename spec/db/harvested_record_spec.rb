@@ -3,7 +3,7 @@ require 'db_spec_helper'
 module Stash
   module Harvester
     module Models
-      describe HarvestedRecord do
+      describe HarvestedRecord, fixture: 'harvested_record_spec' do
 
         before :each do
           # load spec/fixtures/harvested_record_spec.yml

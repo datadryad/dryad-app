@@ -19,7 +19,11 @@ RSpec.configure do |config|
   # config.add_setting :fixture_path
   # config.include RSpec::Rails::FixtureSupport, :use_fixtures
 
-  config.fixture_path = File.expand_path('spec/fixtures')
+  config.before :each do |example|
+    fixture = example.metadata[:fixture]
+    config.fixture_path = File.expand_path("spec/fixtures/#{fixture}")
+  end
+
   config.around do |example|
     ActiveRecord::Base.transaction do
       example.run
