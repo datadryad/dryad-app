@@ -15,6 +15,7 @@ ActiveRecord::Migrator.up 'db/migrate'
 
 RSpec.configure do |config|
 
+  # TODO: Use FactoryGirl instead of fixtures https://semaphoreci.com/blog/2014/01/14/rails-testing-antipatterns-fixtures-and-factories.html
   config.use_transactional_fixtures = true
 
   config.before :each do |example|
