@@ -15,9 +15,7 @@ ActiveRecord::Migrator.up 'db/migrate'
 
 RSpec.configure do |config|
 
-  # Limited subset of rspec/rails/configuration
-  # config.add_setting :fixture_path
-  # config.include RSpec::Rails::FixtureSupport, :use_fixtures
+  config.use_transactional_fixtures = true
 
   config.before :each do |example|
     fixture = example.metadata[:fixture]
