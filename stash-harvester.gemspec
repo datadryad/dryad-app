@@ -5,6 +5,8 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'stash/harvester/version'
 require 'uri'
 
+# TODO: Should this even be a gem?
+
 Gem::Specification.new do |spec|
   spec.name          = 'stash-harvester'
   spec.version       = Stash::Harvester::VERSION
