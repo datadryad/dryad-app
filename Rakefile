@@ -4,6 +4,8 @@
 require 'rspec/core'
 require 'rspec/core/rake_task'
 
+ENV['FIXTURES_PATH'] = 'spec/db/fixtures'
+
 namespace :spec do
 
   desc 'Run all unit tests'
@@ -52,6 +54,13 @@ RuboCop::RakeTask.new
 
 require 'standalone_migrations'
 StandaloneMigrations::Tasks.load_tasks
+
+# ------------------------------------------------------------
+# Miscellaneous
+
+task :debug_load_path do
+  puts $LOAD_PATH
+end
 
 # ------------------------------------------------------------
 # Defaults
