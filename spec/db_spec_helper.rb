@@ -1,5 +1,10 @@
 require 'spec_helper'
-require 'app/models/stash/harvester/models'
+
+# TODO: something cleaner
+models = File.expand_path('../../app/models', __FILE__)
+$LOAD_PATH.unshift(models) unless $LOAD_PATH.include?(models)
+
+require 'stash/harvester/models'
 
 connection_info = YAML.load_file('db/config.yml')['test']
 ActiveRecord::Base.establish_connection(connection_info)

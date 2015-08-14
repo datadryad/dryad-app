@@ -1,4 +1,5 @@
 require 'active_record'
+require_relative 'status'
 
 module Stash
   module Harvester
