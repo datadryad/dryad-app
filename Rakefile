@@ -4,8 +4,6 @@
 require 'rspec/core'
 require 'rspec/core/rake_task'
 
-ENV['FIXTURES_PATH'] = 'spec/db/fixtures'
-
 namespace :spec do
 
   desc 'Run all unit tests'
