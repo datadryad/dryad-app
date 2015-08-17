@@ -14,7 +14,6 @@ module Stash
             end_time: Time.utc(2015, 7, 1, 10),
             status: :completed
           )
-          expect(@hj_initial_harvest).to be_persisted
 
           @hj_incremental_sync = create(
             :harvest_job,
@@ -23,7 +22,6 @@ module Stash
             end_time: Time.utc(2015, 7, 1, 10),
             status: :completed
           )
-          expect(@hj_incremental_sync).to be_persisted
         end
 
         it 'should have a working fixture' do
@@ -33,7 +31,7 @@ module Stash
             puts job.start_time
             puts job.end_time
             puts job.status
-            count += 0
+            count += 1
           end
           expect(count).to eq(2)
         end

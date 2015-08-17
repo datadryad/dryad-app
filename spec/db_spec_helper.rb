@@ -35,32 +35,3 @@ FactoryGirl.find_definitions
 RSpec.configure do |config|
   config.include FactoryGirl::Syntax::Methods
 end
-
-
-
-# # TODO: put this somewhere else?
-# models = File.expand_path('app')
-# $LOAD_PATH.unshift(models) unless $LOAD_PATH.include?(models)
-#
-# require 'spec_helper'
-# # require 'rspec-activerecord'
-# # require 'rspec-activerecord'
-# require 'factory_girl'
-# require 'models/stash/harvester/models'
-#
-# connection_info = YAML.load_file('db/config.yml')['test']
-# ActiveRecord::Base.establish_connection(connection_info)
-#
-# ActiveRecord::Migrator.up 'db/migrate'
-#
-# RSpec.configure do |config|
-#
-#   config.include FactoryGirl::Syntax::Methods
-#
-#   config.around do |example|
-#     ActiveRecord::Base.transaction do
-#       example.run
-#       fail ActiveRecord.Rollback
-#     end
-#   end
-# end
