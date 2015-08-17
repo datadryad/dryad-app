@@ -25,6 +25,7 @@ Gem::Specification.new do |spec|
   spec.require_paths = ['lib']
 
   spec.add_dependency 'activerecord', '~> 4.2', '>= 4.2.3'
+  spec.add_dependency 'factory_girl', '~> 4.0'
   spec.add_dependency 'oai', '~> 0.3', '>= 0.3.1'
   spec.add_dependency 'resync-client', '~> 0.3', '>= 0.3.3'
   spec.add_dependency 'sqlite3', '~> 1.3', '>= 1.3.10'
@@ -34,7 +35,6 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'equivalent-xml', '~> 0.6.0'
   spec.add_development_dependency 'rake', '~> 10.4'
   spec.add_development_dependency 'rspec', '~> 3.2'
-  spec.add_development_dependency 'rspec-activerecord', '0.0.2'
   spec.add_development_dependency 'simplecov', '~> 0.9.2'
   spec.add_development_dependency 'simplecov-console', '~> 0.2.0'
   spec.add_development_dependency 'rubocop', '~> 0.32.1'

@@ -1,6 +1,8 @@
 require 'active_record'
 require_relative 'status'
 
+# TODO: Add validations to all models http://guides.rubyonrails.org/active_record_validations.html
+
 module Stash
   module Harvester
     module Models

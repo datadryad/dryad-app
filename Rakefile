@@ -19,8 +19,17 @@ namespace :spec do
     task.pattern = 'acceptance/**/*_spec.rb'
   end
 
+  # See https://robots.thoughtbot.com/testing-your-factories-first
+  desc 'Ensure FactoryGirl factories produce valid test data'
+  RSpec::Core::RakeTask.new(:factories) do |task|
+    ENV['COVERAGE'] = nil
+    task.pattern = 'factories_spec.rb'
+  end
+
   desc 'Run all database tests'
   RSpec::Core::RakeTask.new(:db) do |task|
+    Rake::Task['spec:factories'].invoke
+
     ENV['COVERAGE'] = nil
     task.rspec_opts = %w(--color --format documentation --order default)
     task.pattern = 'db/**/*_spec.rb'
