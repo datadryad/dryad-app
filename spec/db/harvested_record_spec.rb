@@ -7,7 +7,13 @@ module Stash
       describe HarvestedRecord do
 
         before :each do
-          @hj_initial_harvest = create(
+
+          # TODO: Consolidate boilerplate into FactoryGirl factory
+
+          # ------------------------------
+          # completed harvest
+
+          @harvest_job_completed = create(
             :harvest_job,
             query_url: 'http://oai.datacite.org/oai?verb=ListRecords&metadataPrefix=oai_dc',
             start_time: Time.utc(2015, 7, 1),
@@ -15,21 +21,123 @@ module Stash
             status: :completed
           )
 
-          @hj_incremental_sync = create(
-            :harvest_job,
-            query_url: 'http://oai.datacite.org/oai?verb=ListRecords&metadataPrefix=oai_dc&from_time=2015-07-01T10:00:00Z',
-            start_time: Time.utc(2015, 7, 2),
-            end_time: Time.utc(2015, 7, 2, 10),
+          @harvested_records_completed = Array.new(3) do |index|
+            create(
+              :harvested_record,
+              harvest_job: @harvest_job_completed,
+              identifier: "record#{index}",
+              timestamp: Time.utc(2015, 6, 1 + index),
+              deleted: false,
+              content_path: "/tmp/record#{index}.xml"
+            )
+          end
+
+          @index_job_completed = create(
+            :index_job,
+            harvest_job: @harvest_job_completed,
+            start_time: Time.utc(2015, 7, 1, 10),
+            end_time: Time.utc(2015, 7, 1, 10, 15),
             status: :completed
           )
-        end
 
-        it 'should have a working fixture' do
-          expect(HarvestJob.count).to eq(2)
+          @indexed_records_completed = @harvested_records_completed.each_with_index.map do |harvested_record, index|
+            create(
+              :indexed_record,
+              index_job: @index_job_completed,
+              harvested_record: harvested_record,
+              submitted_time: Time.utc(2015, 7, 10, 1 + index),
+              status: :completed
+            )
+          end
+
+          # ------------------------------
+          # Incremental synchronization (indexing failed)
+
+          @harvest_job_failed = create(
+            :harvest_job,
+            query_url: 'http://oai.datacite.org/oai?verb=ListRecords&metadataPrefix=oai_dc&from_time=2015-07-01T10:00:00Z',
+            start_time: Time.utc(2015, 8, 1),
+            end_time: Time.utc(2015, 8, 1, 10),
+            status: :completed
+          )
+
+          @harvested_records_failed = Array.new(3) do |index|
+            create(
+              :harvested_record,
+              harvest_job: @harvest_job_failed,
+              identifier: "record#{index}",
+              timestamp: Time.utc(2015, 7, 1 + index, 12),
+              deleted: false,
+              content_path: "/tmp/record#{index}.xml"
+            )
+          end
+
+          @index_job_failed = create(
+            :index_job,
+            harvest_job: @harvest_job_failed,
+            start_time: Time.utc(2015, 8, 1, 10),
+            end_time: Time.utc(2015, 8, 1, 10, 15),
+            status: :completed
+          )
+
+          @indexed_records_failed = @harvested_records_failed.each_with_index.map do |harvested_record, index|
+            create(
+              :indexed_record,
+              index_job: @index_job_failed,
+              harvested_record: harvested_record,
+              submitted_time: Time.utc(2015, 8, 10, 1 + index),
+              status: :failed
+            )
+          end
+
+          # ------------------------------
+          # Incremental synchronization (indexing pending)
+
+          @harvest_job_pending = create(
+            :harvest_job,
+            query_url: 'http://oai.datacite.org/oai?verb=ListRecords&metadataPrefix=oai_dc&from_time=2015-07-01T10:00:00Z',
+            start_time: Time.utc(2015, 9, 1),
+            end_time: Time.utc(2015, 9, 1, 10),
+            status: :completed
+          )
+
+          @harvested_records_pending = Array.new(3) do |index|
+            create(
+              :harvested_record,
+              harvest_job: @harvest_job_pending,
+              identifier: "record#{index}",
+              timestamp: Time.utc(2015, 8, 1 + index, 12),
+              deleted: false,
+              content_path: "/tmp/record#{index}.xml"
+            )
+          end
+
+          @index_job_pending = create(
+            :index_job,
+            harvest_job: @harvest_job_pending,
+            start_time: Time.utc(2015, 9, 1, 10),
+            end_time: Time.utc(2015, 9, 1, 10, 15),
+            status: :in_progress
+          )
+
+          @indexed_records_pending = @harvested_records_pending.each_with_index.map do |harvested_record, index|
+            create(
+              :indexed_record,
+              index_job: @index_job_pending,
+              harvested_record: harvested_record,
+              submitted_time: Time.utc(2015, 9, 10, 1 + index),
+              status: :pending
+            )
+          end
         end
 
         describe '#find_last_indexed' do
-          it 'finds only index-completed records'
+
+          it 'finds only index-completed records' do
+            last_indexed = HarvestedRecord.find_last_indexed
+            expect(last_indexed).to eq(@harvested_records_completed.last)
+          end
+
           it 'finds only the most recent such record'
         end
 

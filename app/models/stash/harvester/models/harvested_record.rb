@@ -10,12 +10,15 @@ module Stash
 
         # TODO: test me
         def self.find_last_indexed
-          joins(:indexed_records).where(status: :completed).order(timestamp: :desc).first
+          joins(:indexed_records).
+            where(:indexed_records[:status].
+                    eq(IndexedRecord.statuses[:completed])).
+            order(timestamp: :desc).first
         end
 
         # TODO: test me
         def self.find_first_failed
-          joins(:indexed_records).where(status: :failed).order(:timestamp).last
+          joins(:indexed_records).where(:indexed_records[:status].eq(IndexedRecord.statuses[:failed])).order(:timestamp).last
         end
       end
     end
