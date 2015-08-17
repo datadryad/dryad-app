@@ -20,4 +20,3 @@ describe 'FactoryGirl factories' do
     end
   end
 end
-

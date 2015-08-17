@@ -18,22 +18,14 @@ module Stash
           @hj_incremental_sync = create(
             :harvest_job,
             query_url: 'http://oai.datacite.org/oai?verb=ListRecords&metadataPrefix=oai_dc&from_time=2015-07-01T10:00:00Z',
-            start_time: Time.utc(2015, 7, 1),
-            end_time: Time.utc(2015, 7, 1, 10),
+            start_time: Time.utc(2015, 7, 2),
+            end_time: Time.utc(2015, 7, 2, 10),
             status: :completed
           )
         end
 
         it 'should have a working fixture' do
-          count = 0
-          HarvestJob.find_each do |job|
-            puts job.query_url
-            puts job.start_time
-            puts job.end_time
-            puts job.status
-            count += 1
-          end
-          expect(count).to eq(2)
+          expect(HarvestJob.count).to eq(2)
         end
 
         describe '#find_last_indexed' do
