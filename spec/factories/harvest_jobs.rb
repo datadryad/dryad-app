@@ -12,17 +12,19 @@ FactoryGirl.define do
       transient do
         record_count 5
         deleted false
+        index_job_status :completed
         index_record_status :completed
       end
 
       from_time Time.utc(2012, 1, 1)
-      until_time { from_time + record_count.minutes }
-      query_url { "http://oai.datacite.org/oai?verb=ListRecords&metadataPrefix=oai_dc&from_time=#{ from_time.utc.xmlschema }&until_time=#{ until_time.utc.xmlschema }" }
+      until_time { from_time + record_count.minutes if from_time }
+      # query_url { "http://oai.datacite.org/oai?verb=ListRecords&metadataPrefix=oai_dc&from_time=#{from_time.utc.xmlschema}&until_time=#{until_time.utc.xmlschema}" }
+      query_url { "http://oai.datacite.org/oai?verb=ListRecords&metadataPrefix=oai_dc#{'&from_time=' + from_time.utc.xmlschema if from_time }#{'&until_time=' + until_time.utc.xmlschema if until_time}" }
       start_time Time.utc(2015, 1, 1)
       end_time { start_time + record_count.minutes }
 
       after(:create) do |harvest_job, evaluator|
-        from_timestamp = harvest_job.from_time
+        from_timestamp = harvest_job.from_time || Time.utc(2012, 1, 1)
 
         record_count = evaluator.record_count
         deleted = evaluator.deleted
@@ -49,7 +51,7 @@ FactoryGirl.define do
           harvest_job: harvest_job,
           start_time: index_start_time,
           end_time: index_end_time,
-          status: :completed
+          status: evaluator.index_job_status
         )
         harvested_records.each_with_index do |harvested_record, index|
           create(

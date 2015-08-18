@@ -12,7 +12,7 @@ module Stash
         def self.find_last_indexed
           require_relative 'indexed_record'
 
-          HarvestedRecord.joins(IndexedRecord.where(status: :completed))
+          joins(IndexedRecord.where(status: :completed))
             .order(timestamp: :desc)
             .first
         end

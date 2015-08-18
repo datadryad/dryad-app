@@ -17,8 +17,8 @@ describe 'FactoryGirl factories' do
     end
   end
 
-  describe ":indexed_harvest_job" do
-    it 'has a working factory' do
+  describe 'The indexed_harvest_job factory' do
+    it 'creates a complete, valid tree' do
       count = 3
 
       create(:indexed_harvest_job, record_count: count, from_time: Time.utc(2013, 1, 1), start_time: Time.utc(2015, 1, 1))
@@ -27,7 +27,7 @@ describe 'FactoryGirl factories' do
       harvest_job = Stash::Harvester::Models::HarvestJob.first
       expect(harvest_job.from_time).to eq(Time.utc(2013, 1, 1))
       expect(harvest_job.until_time).to eq(Time.utc(2013, 1, 1, 0, count))
-      expect(harvest_job.query_url).to eq("http://oai.datacite.org/oai?verb=ListRecords&metadataPrefix=oai_dc&from_time=#{ harvest_job.from_time.xmlschema }&until_time=#{ harvest_job.until_time.xmlschema }")
+      expect(harvest_job.query_url).to eq("http://oai.datacite.org/oai?verb=ListRecords&metadataPrefix=oai_dc&from_time=#{harvest_job.from_time.xmlschema}&until_time=#{harvest_job.until_time.xmlschema}")
       expect(harvest_job.start_time).to eq(Time.utc(2015, 1, 1))
       expect(harvest_job.end_time).to eq(Time.utc(2015, 1, 1, 0, count))
       expect(harvest_job.completed?).to be true
@@ -58,6 +58,16 @@ describe 'FactoryGirl factories' do
         expect(r.completed?).to be true
       end
     end
+
+    it 'accepts a nil from_time' do
+      create(:indexed_harvest_job, from_time: nil)
+
+      expect(Stash::Harvester::Models::HarvestJob.count).to eq(1)
+      harvest_job = Stash::Harvester::Models::HarvestJob.first
+      expect(harvest_job.from_time).to be_nil
+      expect(harvest_job.until_time).to be_nil
+      expect(harvest_job.query_url).to eq('http://oai.datacite.org/oai?verb=ListRecords&metadataPrefix=oai_dc')
+
+    end
   end
 end
-
