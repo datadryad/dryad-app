@@ -10,7 +10,7 @@ module Stash
         has_many :indexed_records
 
         def self.find_last_indexed
-          joins(:indexed_records).where(indexed_records: { status: 2 }).order(timestamp: :desc).first
+          HarvestedRecord.joins(:indexed_records).where(indexed_records: { status: Status::COMPLETED }).order(timestamp: :desc).first
         end
 
         def self.find_first_failed

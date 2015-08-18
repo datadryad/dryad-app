@@ -9,18 +9,10 @@ module Stash
         REPETITIONS = 100
 
         before(:each) do
-
-          # load_start_time = Time.now.utc
-
           record_count = RECORD_COUNT
           create(:indexed_harvest_job, record_count: record_count, from_time: nil, start_time: Time.utc(2015, 7, 1))
           create(:indexed_harvest_job, record_count: record_count, from_time: Time.utc(2015, 7, 1, 10), start_time: Time.utc(2015, 8, 1), index_record_status: :failed)
           create(:indexed_harvest_job, record_count: record_count, from_time: Time.utc(2015, 7, 1, 10), start_time: Time.utc(2015, 8, 1), index_job_status: :in_progress, index_record_status: :pending)
-
-          # load_end_time = Time.now.utc
-          #
-          # seconds = (load_end_time.to_f - load_start_time.to_f)
-          # puts "Load time in seconds #{sprintf('%.5g', seconds)}"
 
           @start_time = Time.now.utc
         end
@@ -36,56 +28,30 @@ module Stash
           @end_time = nil
         end
 
-        def call_and_verify(query)
-          harvested_record = nil
-          (0..REPETITIONS).each do
-            harvested_record = query.call
-          end
-          expect(harvested_record).not_to be_nil
-          # puts harvested_record.inspect
-          puts "#{harvested_record.id}\t#{harvested_record.timestamp}\t#{harvested_record.indexed_records.map(&:status).join(', ')}"
-        end
-
         FIND_LAST_INDEXED = {
-
-          find_by_sql_subselect: proc do
-            query = '
-              select
-                harvested_records.*
-              from
-                harvested_records
-              where
-                harvested_records.id in (
-                  select
-                    harvested_record_id
-                  from
-                    indexed_records
-                  where
-                    indexed_records.status = 2
-                )
-              order by
-                timestamp DESC
-              limit 1
-            '
+          find_by_sql_join: proc do
+            query = 'SELECT harvested_records.*
+                      FROM harvested_records
+                        INNER JOIN indexed_records
+                          ON harvested_records.id = indexed_records.harvested_record_id
+                      WHERE indexed_records.status = 2
+                      ORDER BY harvested_records.timestamp
+                        DESC
+                      LIMIT 1'
             HarvestedRecord.find_by_sql(query).first
           end,
 
-          find_by_sql_join: proc do
-            query = '
-              select
-                harvested_records.*
-              from
-                harvested_records
-              inner join
-                indexed_records
-              on
-                harvested_records.id = indexed_records.harvested_record_id
-              where
-                indexed_records.status = 2
-              order by
-                harvested_records.timestamp DESC
-              limit 1
-            '
+          find_by_sql_subselect: proc do
+            query = 'SELECT harvested_records.*
+                      FROM harvested_records
+                      WHERE harvested_records.id IN (
+                        SELECT harvested_record_id
+                        FROM indexed_records
+                        WHERE indexed_records.status = 2
+                      )
+                      ORDER BY timestamp
+                        DESC
+                      LIMIT 1'
             HarvestedRecord.find_by_sql(query).first
           end,
 
@@ -97,21 +63,50 @@ module Stash
         describe 'find_last_indexed' do
           FIND_LAST_INDEXED.each do |method, query|
             it method do
-              ActiveRecord::Base.logger.debug("===== #{method} ========================================")
               puts "===== #{method} ========================================"
-              call_and_verify(query)
+              harvested_record = nil
+              (0..REPETITIONS).each do
+                harvested_record = query.call
+              end
+              expect(harvested_record).not_to be_nil
+              puts "#{harvested_record.id}\t#{harvested_record.timestamp}\t#{harvested_record.indexed_records.map(&:status).join(', ')}"
             end
           end
         end
 
+        FIND_FIRST_FAILED = {
+          find_by_sql_subselect: proc do
+            query = 'SELECT harvested_records.*
+                      FROM harvested_records
+                      WHERE harvested_records.id IN (
+                        SELECT DISTINCT harvested_record_id
+                        FROM indexed_records
+                        WHERE indexed_records.status == 3
+                      ) AND harvested_records.id NOT IN (
+                        SELECT DISTINCT harvested_record_id
+                        FROM indexed_records
+                        WHERE indexed_records.status <> 3
+                      )
+                      ORDER BY harvested_records.timestamp
+                        DESC
+                      LIMIT 1'
+            HarvestedRecord.find_by_sql(query).first
+          end
+        }
+
         describe 'find_first_failed' do
-          # it 'brute force' do
-          #   harvested_record = HarvestedRecord.order(:timestamp).find do |r|
-          #     r.indexed_records.all?(&:failed?)
-          #   end
-          #   expect(harvested_record).not_to be_nil
-          #   puts "#{harvested_record.id}\t#{harvested_record.timestamp}\t#{harvested_record.indexed_records.map(&:status).join(', ')}"
-          # end
+          FIND_FIRST_FAILED.each do |method, query|
+            it method do
+              ActiveRecord::Base.logger.debug("===== #{method} ========================================")
+              puts "===== #{method} ========================================"
+              harvested_record = nil
+              (0..REPETITIONS).each do
+                harvested_record = query.call
+              end
+              expect(harvested_record).not_to be_nil
+              puts "#{harvested_record.id}\t#{harvested_record.timestamp}\t#{harvested_record.indexed_records.map(&:status).join(', ')}"
+            end
+          end
         end
 
       end
