@@ -7,26 +7,19 @@ module Stash
       describe HarvestedRecord do
 
         before :each do
-          # ------------------------------
-          # completed harvest
+          record_count = 3
 
-          @harvest_job_completed = create(:indexed_harvest_job, record_count: 3, from_time: nil, start_time: Time.utc(2015, 7, 1))
+          @harvest_job_completed = create(:indexed_harvest_job, record_count: record_count, from_time: nil, start_time: Time.utc(2015, 7, 1))
           @harvested_records_completed = @harvest_job_completed.harvested_records
           @index_job_completed = @harvest_job_completed.index_jobs.first
           @indexed_records_completed = @index_job_completed.indexed_records
 
-          # ------------------------------
-          # Incremental synchronization (indexing failed)
-
-          @harvest_job_failed = create(:indexed_harvest_job, record_count: 3, from_time: Time.utc(2015, 7, 1, 10), start_time: Time.utc(2015, 8, 1), index_record_status: :failed)
+          @harvest_job_failed = create(:indexed_harvest_job, record_count: record_count, from_time: Time.utc(2015, 7, 1, 10), start_time: Time.utc(2015, 8, 1), index_record_status: :failed)
           @harvested_records_failed = @harvest_job_failed.harvested_records
           @index_job_failed = @harvest_job_failed.index_jobs.first
           @indexed_records_failed = @index_job_failed.indexed_records
 
-          # ------------------------------
-          # Incremental synchronization (indexing pending)
-
-          @harvest_job_pending = create(:indexed_harvest_job, record_count: 3, from_time: Time.utc(2015, 7, 1, 10), start_time: Time.utc(2015, 8, 1), index_job_status: :in_progress, index_record_status: :pending)
+          @harvest_job_pending = create(:indexed_harvest_job, record_count: record_count, from_time: Time.utc(2015, 7, 1, 10), start_time: Time.utc(2015, 8, 1), index_job_status: :in_progress, index_record_status: :pending)
           @harvested_records_pending = @harvest_job_pending.harvested_records
           @index_job_pending = @harvest_job_pending.index_jobs.first
           @indexed_records_pending = @index_job_pending.indexed_records
@@ -52,6 +45,7 @@ module Stash
         describe '#find_last_indexed' do
           it 'finds only index-failed records'
           it 'finds only the oldest such record'
+          it 'ignores index-failed records with subsequently successful indexes'
         end
       end
     end
