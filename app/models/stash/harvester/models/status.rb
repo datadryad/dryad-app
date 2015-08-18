@@ -1,8 +1,14 @@
 module Stash
   module Harvester
     module Models
-      STATUSES = [:pending, :in_progress, :completed, :failed]
-      PENDING = STATUSES.index(:pending)
+      module Status
+        ALL = [:pending, :in_progress, :completed, :failed]
+
+        PENDING = ALL.index(:pending)
+        IN_PROGRESS = ALL.index(:in_progress)
+        COMPLETED = ALL.index(:completed)
+        FAILED = ALL.index(:failed)
+      end
     end
   end
 end

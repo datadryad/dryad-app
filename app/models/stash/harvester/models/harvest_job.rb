@@ -10,7 +10,7 @@ module Stash
         has_many :harvested_records
         has_many :index_jobs
 
-        enum status: STATUSES
+        enum status: Status::ALL
       end
     end
   end

@@ -10,7 +10,7 @@ module Stash
         belongs_to :harvested_record
         belongs_to :index_job
 
-        enum status: STATUSES
+        enum status: Status::ALL
       end
     end
   end
