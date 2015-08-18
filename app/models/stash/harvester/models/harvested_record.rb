@@ -9,7 +9,6 @@ module Stash
         belongs_to :harvest_job
         has_many :indexed_records
 
-        # TODO: test me
         def self.find_last_indexed
           require_relative 'indexed_record'
 
@@ -18,7 +17,6 @@ module Stash
             .first
         end
 
-        # TODO: test me
         def self.find_first_failed
           joins(:indexed_records).where(:indexed_records[:status].eq(IndexedRecord.statuses[:failed])).order(:timestamp).last
         end
