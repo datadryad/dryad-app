@@ -7,5 +7,8 @@ class CreateIndexJobs < ActiveRecord::Migration
       t.datetime :end_time
       t.integer :status, default: 0
     end
+
+    # TODO: Remove these once foreign_key works
+    add_index :index_jobs, :harvest_job_id
   end
 end

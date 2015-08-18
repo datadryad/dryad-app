@@ -6,5 +6,9 @@ class CreateIndexedRecord < ActiveRecord::Migration
       t.datetime :submitted_time
       t.integer :status, default: 0
     end
+
+    # TODO: Remove these once foreign_key works
+    add_index :indexed_records, :index_job_id
+    add_index :indexed_records, :harvested_record_id
   end
 end
