@@ -19,6 +19,10 @@ mkmf.log
 
 db/*.sqlite3
 
+# Logs
+
+/log/
+
 # IntellJ
 
 *.iml

@@ -2,6 +2,10 @@ require 'spec_helper'
 require 'factory_girl'
 require 'active_record'
 
+logfile = File.expand_path('log/test.log')
+FileUtils.mkdir_p File.dirname(logfile)
+ActiveRecord::Base.logger = Logger.new(logfile) if defined?(ActiveRecord::Base)
+
 # ------------------------------------------------------------
 # Model classes under test
 

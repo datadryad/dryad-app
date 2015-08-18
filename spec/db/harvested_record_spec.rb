@@ -31,6 +31,7 @@ module Stash
               content_path: "/tmp/record#{index}.xml"
             )
           end
+          expect(HarvestedRecord.all.size).to eq(3)
 
           @index_job_completed = create(
             :index_job,
@@ -39,6 +40,10 @@ module Stash
             end_time: Time.utc(2015, 7, 1, 10, 15),
             status: :completed
           )
+          expect(IndexJob.all.size).to eq(1)
+          expect(IndexJob.count(status: :completed)).to eq(1)
+          expect(IndexJob.completed).not_to be_nil
+          expect(IndexJob.completed.count).to eq(1)
 
           @indexed_records_completed = @harvested_records_completed.each_with_index.map do |harvested_record, index|
             create(
@@ -49,6 +54,10 @@ module Stash
               status: :completed
             )
           end
+          expect(IndexedRecord.all.size).to eq(3)
+          expect(IndexedRecord.count(status: :completed)).to eq(3)
+          expect(IndexedRecord.completed).not_to be_nil
+          expect(IndexedRecord.completed.count).to eq(3)
 
           # ------------------------------
           # Incremental synchronization (indexing failed)
