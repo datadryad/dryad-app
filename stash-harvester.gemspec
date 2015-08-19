@@ -5,10 +5,8 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'stash/harvester/version'
 require 'uri'
 
-# TODO: Should this even be a gem?
-
 Gem::Specification.new do |spec|
-  spec.name          = 'stash-harvester'
+  spec.name          = Stash::Harvester::NAME
   spec.version       = Stash::Harvester::VERSION
   spec.authors       = ['David Moles']
   spec.email         = ['david.moles@ucop.edu']
@@ -21,8 +19,10 @@ Gem::Specification.new do |spec|
 
   spec.files         = `git ls-files -z`.split("\x0")
   spec.executables   = spec.files.grep(%r{^bin/}) { |f| File.basename(f) }
+
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths = ['lib']
+  spec.require_paths = ['app/models']
 
   spec.add_dependency 'activerecord', '~> 4.2', '>= 4.2.3'
   spec.add_dependency 'factory_girl', '~> 4.0'
@@ -39,3 +39,4 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'simplecov-console', '~> 0.2.0'
   spec.add_development_dependency 'rubocop', '~> 0.32.1'
 end
+

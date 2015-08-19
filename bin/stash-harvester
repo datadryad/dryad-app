@@ -1,0 +1,18 @@
+#! /usr/bin/env ruby
+
+require 'optparse'
+
+require 'stash/harvester'
+
+module Stash
+  module Harvester
+    opt_parser = OptionParser.new do |opts|
+      opts.on('-v', '--version', 'print the version') do
+        puts "#{NAME} #{VERSION}"
+      end
+    end
+
+    opts = opt_parser.parse(ARGV)
+  end
+end
+
