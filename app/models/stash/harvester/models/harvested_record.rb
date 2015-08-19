@@ -14,7 +14,14 @@ module Stash
         end
 
         def self.find_first_failed
-          joins(:indexed_records).where(:indexed_records[:status].eq(IndexedRecord.statuses[:failed])).order(:timestamp).last
+          query = 'SELECT harvested_records.* FROM harvested_records
+                      INNER JOIN indexed_records failed_records
+                        ON harvested_records.id = failed_records.harvested_record_id AND failed_records.status == 3
+                      LEFT JOIN indexed_records other_records
+                        ON harvested_records.id = other_records.harvested_record_id AND other_records.status <> 3
+                    WHERE other_records.id IS NULL
+                    ORDER BY harvested_records.timestamp DESC LIMIT 1'
+          HarvestedRecord.find_by_sql(query).first
         end
       end
     end

@@ -1,11 +1,13 @@
 require 'db_spec_helper'
 
+# TODO: move this into a separate category of spec (rake spec:performance?)
 module Stash
   module Harvester
-    module Models
+    module Models # rubocop:disable Metrics/ModuleLength
       describe HarvestedRecord do
 
-        RECORD_COUNT = 100
+        # RECORD_COUNT = 15000
+        RECORD_COUNT = 50
         REPETITIONS = 100
 
         before(:each) do
@@ -91,14 +93,39 @@ module Stash
                         DESC
                       LIMIT 1'
             HarvestedRecord.find_by_sql(query).first
+          end,
+
+          find_by_sql_subselect_exists: proc do
+            query = 'SELECT harvested_records.*
+                      FROM harvested_records
+                      WHERE exists(SELECT 1
+                                   FROM indexed_records
+                                   WHERE indexed_records.harvested_record_id = harvested_records.id)
+                            AND NOT exists(SELECT 1
+                                           FROM indexed_records
+                                           WHERE indexed_records.harvested_record_id = harvested_records.id
+                                                 AND indexed_records.status <> 3)
+                      ORDER BY harvested_records.timestamp
+                        DESC
+                      LIMIT 1'
+            HarvestedRecord.find_by_sql(query).first
+          end,
+
+          find_by_sql_join: proc do
+            query = 'SELECT harvested_records.* FROM harvested_records
+                      INNER JOIN indexed_records failed_records
+                        ON harvested_records.id = failed_records.harvested_record_id AND failed_records.status == 3
+                      LEFT JOIN indexed_records other_records
+                        ON harvested_records.id = other_records.harvested_record_id AND other_records.status <> 3
+                    WHERE other_records.id IS NULL
+                    ORDER BY harvested_records.timestamp DESC LIMIT 1'
+            HarvestedRecord.find_by_sql(query).first
           end
         }
 
         describe 'find_first_failed' do
           FIND_FIRST_FAILED.each do |method, query|
             it method do
-              ActiveRecord::Base.logger.debug("===== #{method} ========================================")
-              puts "===== #{method} ========================================"
               harvested_record = nil
               (0..REPETITIONS).each do
                 harvested_record = query.call
