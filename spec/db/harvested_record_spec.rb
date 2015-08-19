@@ -63,7 +63,7 @@ module Stash
                 harvested_record: hr,
                 submitted_time: Time.utc(2015, 9, 1, index),
                 # odd-numbered records succeed; even-numbered still failing
-                status: (index % 2 == 0 ? :completed : :failed)
+                status: (index.even? ? :completed : :failed)
               )
             end
 
