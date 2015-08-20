@@ -39,4 +39,3 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'simplecov-console', '~> 0.2.0'
   spec.add_development_dependency 'rubocop', '~> 0.32.1'
 end
-

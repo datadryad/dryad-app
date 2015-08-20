@@ -12,7 +12,7 @@ module Stash
       end
     end
 
-    opts = opt_parser.parse(ARGV)
+    # opts = opt_parser.parse(ARGV)
+    opt_parser.parse(ARGV)
   end
 end
-
