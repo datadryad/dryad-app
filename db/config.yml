@@ -12,7 +12,7 @@ production:
 
 test: &test
   adapter: sqlite3
-  database: db/test.sqlite3
-#  database: ':memory:'
+#  database: db/test.sqlite3
+  database: ':memory:'
   pool: 5
   timeout: 5000
