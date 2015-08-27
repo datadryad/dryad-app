@@ -26,13 +26,13 @@ namespace :spec do
     task.pattern = 'factories_spec.rb'
   end
 
-  desc 'Run all database tests'
-  RSpec::Core::RakeTask.new(:db) do |task|
+  desc 'Run all model tests'
+  RSpec::Core::RakeTask.new(:models) do |task|
     Rake::Task['spec:factories'].invoke
 
     ENV['COVERAGE'] = nil
     task.rspec_opts = %w(--color --format documentation --order default)
-    task.pattern = 'db/**/*_spec.rb'
+    task.pattern = 'models/**/*_spec.rb'
   end
 
   task all: [:unit, :acceptance]
