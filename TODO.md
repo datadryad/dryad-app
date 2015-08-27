@@ -1,3 +1,7 @@
+## Organization
+
+Reorganize test directories
+
 ## Error handling
 
 - handle temporary harvesting failures
