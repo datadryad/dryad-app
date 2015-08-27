@@ -22,7 +22,7 @@ Gem::Specification.new do |spec|
 
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths = ['lib']
-  spec.require_paths = ['app/models']
+  spec.require_paths = ['db']
 
   spec.add_dependency 'activerecord', '~> 4.2', '>= 4.2.3'
   spec.add_dependency 'factory_girl', '~> 4.0'

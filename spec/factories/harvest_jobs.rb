@@ -1,4 +1,4 @@
-require 'stash/harvester/models'
+require 'models'
 require 'stash/harvester/oaipmh'
 
 FactoryGirl.define do

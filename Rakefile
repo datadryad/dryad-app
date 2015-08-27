@@ -12,13 +12,6 @@ namespace :spec do
     task.pattern = 'unit/**/*_spec.rb'
   end
 
-  desc 'Run all acceptance tests'
-  RSpec::Core::RakeTask.new(:acceptance) do |task|
-    ENV['COVERAGE'] = nil
-    task.rspec_opts = %w(--color --format documentation --order default)
-    task.pattern = 'acceptance/**/*_spec.rb'
-  end
-
   # See https://robots.thoughtbot.com/testing-your-factories-first
   desc 'Ensure FactoryGirl factories produce valid test data'
   RSpec::Core::RakeTask.new(:factories) do |task|
@@ -26,16 +19,14 @@ namespace :spec do
     task.pattern = 'factories_spec.rb'
   end
 
-  desc 'Run all model tests'
-  RSpec::Core::RakeTask.new(:models) do |task|
-    Rake::Task['spec:factories'].invoke
-
+  desc 'Run all database tests'
+  RSpec::Core::RakeTask.new(:db) do |task|
     ENV['COVERAGE'] = nil
     task.rspec_opts = %w(--color --format documentation --order default)
-    task.pattern = 'models/**/*_spec.rb'
+    task.pattern = 'db/**/*_spec.rb'
   end
 
-  task all: [:unit, :acceptance]
+  task all: [:unit, :factories, :db]
 end
 
 desc 'Run all tests'
@@ -72,5 +63,5 @@ end
 # ------------------------------------------------------------
 # Defaults
 
-desc 'Run unit tests, check test coverage, run acceptance tests, check code style'
-task default: [:coverage, 'spec:acceptance', :rubocop]
+desc 'Run unit tests, check test coverage, run database tests, check code style'
+task default: [:coverage, 'spec:db', :rubocop]

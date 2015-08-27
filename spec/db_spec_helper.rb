@@ -7,19 +7,18 @@ FileUtils.mkdir_p File.dirname(logfile)
 ActiveRecord::Base.logger = Logger.new(logfile) if defined?(ActiveRecord::Base)
 
 # ------------------------------------------------------------
-# Model classes under test
+# DB-related classes under test
 
 # TODO: Where does this really belong?
-models = File.expand_path('app/models')
-$LOAD_PATH.unshift(models) unless $LOAD_PATH.include?(models)
-
-require 'stash/harvester/models'
+db = File.expand_path('db')
+$LOAD_PATH.unshift(db) unless $LOAD_PATH.include?(db)
 
 # ------------------------------------------------------------
 # ActiveRecord setup
 
 connection_info = YAML.load_file('db/config.yml')['test']
 ActiveRecord::Base.establish_connection(connection_info)
+ActiveRecord::Migration.verbose = false
 ActiveRecord::Migrator.up 'db/migrate'
 
 RSpec.configure do |config|

@@ -1,4 +1,4 @@
-require 'stash/harvester/models'
+require 'models'
 
 FactoryGirl.define do
   # TODO: Find a way to do modules w/o making model class name explicit
