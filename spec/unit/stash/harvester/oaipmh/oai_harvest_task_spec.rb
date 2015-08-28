@@ -2,7 +2,7 @@ require 'spec_helper'
 
 module Stash
   module Harvester
-    module OAIPMH # rubocop:disable Metrics/ModuleLength
+    module OAIPMH
 
       describe OAIHarvestTask do
         before(:each) do

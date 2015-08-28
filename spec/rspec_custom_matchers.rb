@@ -3,7 +3,7 @@ require 'equivalent-xml'
 
 RSpec::Matchers.define :be_xml do |expected|
 
-  def to_nokogiri(xml) # rubocop:disable Metrics/MethodLength
+  def to_nokogiri(xml)
     return nil unless xml
     case xml
     when Nokogiri::XML::Element
