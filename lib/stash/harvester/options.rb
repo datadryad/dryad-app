@@ -54,21 +54,11 @@ module Stash
 
       def init_opts
         OptionParser.new do |opts|
-          opts.on('-h', '--help', 'display this help and exit') do
-            @show_help = true
-          end
-          opts.on('-v', '--version', 'output version information and exit') do
-            @show_version = true
-          end
-          opts.on('-f', '--from DATETIME', 'start date/time for selective harvesting') do |from_time|
-            @from_time = to_time(from_time)
-          end
-          opts.on('-u', '--until DATETIME', 'end date/time for selective harvesting') do |until_time|
-            @until_time = to_time(until_time)
-          end
-          opts.on('-c', '--config FILE', 'configuration file') do |config_file|
-            @config_file = config_file
-          end
+          opts.on('-h', '--help', 'display this help and exit') { @show_help = true }
+          opts.on('-v', '--version', 'output version information and exit') { @show_version = true }
+          opts.on('-f', '--from DATETIME', 'start date/time for selective harvesting') { |from_time| @from_time = to_time(from_time) }
+          opts.on('-u', '--until DATETIME', 'end date/time for selective harvesting') { |until_time| @until_time = to_time(until_time) }
+          opts.on('-c', '--config FILE', 'configuration file') { |config_file| @config_file = config_file }
         end
       end
 
