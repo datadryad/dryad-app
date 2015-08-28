@@ -1,5 +1,6 @@
 require 'time'
 require 'optparse'
+require_relative 'version'
 
 module Stash
   module Harvester
@@ -28,47 +29,64 @@ module Stash
                         '  from the beginning of time to the present day:',
                         '    $ stash-harvester -c my-ds.yml'
                        ].join("\n")
-      ].join("\n\n")
+                      ].join("\n\n")
 
       NOTES = [NOTE_DATETIME, NOTE_CONFIG, NOTE_EXAMPLES].join("\n\n")
+
+      VERSION = "#{NAME} #{VERSION} #{COPYRIGHT}"
+
+      DATE_LENGTH = 'YYYY-MM-DD'.length
 
       attr_reader :show_version
       attr_reader :show_help
       attr_reader :from_time
       attr_reader :until_time
       attr_reader :config_file
+      attr_reader :help
 
       def initialize(argv = nil)
+        @opt_parser = init_opts
+        @help = "#{@opt_parser}\n#{NOTES}"
         parse(argv)
       end
 
       private
 
-      def parse(argv)
-        opt_parser = OptionParser.new do |opts|
+      def init_opts
+        OptionParser.new do |opts|
           opts.on('-h', '--help', 'display this help and exit') do
             @show_help = true
-            return
           end
           opts.on('-v', '--version', 'output version information and exit') do
-            @version = true
-            return
+            @show_version = true
           end
           opts.on('-f', '--from DATETIME', 'start date/time for selective harvesting') do |from_time|
-            @from_time = time_or_nil(from_time)
+            @from_time = to_time(from_time)
           end
           opts.on('-u', '--until DATETIME', 'end date/time for selective harvesting') do |until_time|
-            @until_time = time_or_nil(until_time)
+            @until_time = to_time(until_time)
           end
           opts.on('-c', '--config FILE', 'configuration file') do |config_file|
             @config_file = config_file
           end
         end
-        opt_parser.parse(argv)
       end
 
-      def time_or_nil(time_str)
-        time_str && Time.iso8601(time_str)
+      def parse(argv)
+        @opt_parser.parse(argv)
+      end
+
+      def to_time(time_str)
+        if time_str
+          if time_str.length > DATE_LENGTH
+            Time.iso8601(time_str)
+          else
+            date = Date.iso8601(time_str)
+            Time.utc(date.year, date.month, date.day)
+          end
+        end
+      rescue ArgumentError
+        raise(OptionParser::InvalidArgument, "#{time_str} is not a valid ISO 8601 datetime")
       end
 
     end
