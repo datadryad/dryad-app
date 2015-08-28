@@ -1,73 +1,8 @@
 #! /usr/bin/env ruby
 
-require 'optparse'
-require 'ostruct'
-
 require 'stash/harvester'
 
-module Stash
-  module Harvester
+options = Stash::Harvester::Options.new(ARGV)
+puts options
 
-    NOTE_DATETIME = ['DATETIME arguments:',
-                     '  DATETIME arguments are inclusive and must be in ISO 8601 format',
-                     '  (i.e. YYYY-MM-DD or YYY-MM-DDThh:mm:ssZ). Note that if a time is',
-                     '  specified, it must be in UTC.'].join("\n")
-
-    NOTE_CONFIG = ['Configuration files:',
-                   '  By default, stash-harvester looks for, in order:',
-                   '    - a stash-harvester.yml file in the current working directory',
-                   '    - a .stash-harvester file in the running user\'s home directory'].join("\n")
-
-    NOTE_EXAMPLES = ['Examples:',
-                     ['  Harvest all records in January 2015 from the data source given',
-                      '  in the default configation file:',
-                      '    $ stash-harvester -f 2015-01-01 -u 2015-01-31'
-                     ].join("\n"),
-                     ['  Harvest all records from 1 January 2015 to the present day',
-                      '  from the data source given in the default configation file:',
-                      '    $ stash-harvester -f 2015-01-01 -u 2015-01-31'
-                     ].join("\n"),
-                     ['  Harvest all records from the data source described in my-ds.yml',
-                      '  from the beginning of time to the present day:',
-                      '    $ stash-harvester -c my-ds.yml'
-                     ].join("\n")
-                    ].join("\n\n")
-
-    NOTES = [NOTE_DATETIME, NOTE_CONFIG, NOTE_EXAMPLES].join("\n\n")
-
-    options = OpenStruct.new
-
-    opt_parser = OptionParser.new do |opts|
-
-      opts.on('-v', '--version',
-              'print the version') do
-        puts "#{NAME} #{VERSION}"
-      end
-
-      opts.on('-f', '--from DATETIME',
-              'start date/time for selective harvesting') do |from_time|
-        options.from_time = from_time
-      end
-
-      opts.on('-u', '--until DATETIME',
-              'end date/time for selective harvesting') do |until_time|
-        options.until_time = until_time
-      end
-
-      opts.on('-c', '--config FILE',
-              'configuration file') do |config_file|
-        options.config_file = config_file
-      end
-
-      opts.on('-h', '--help', 'show this message') do
-        puts opts
-        puts
-        puts NOTES
-        exit
-      end
-    end
-
-    # opts = opt_parser.parse(ARGV)
-    opt_parser.parse(ARGV)
-  end
-end
+# Stash::Harvester::Options.parse(ARGV)
