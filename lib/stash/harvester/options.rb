@@ -1,5 +1,5 @@
 require 'time'
-require 'trollop'
+require 'optparse'
 
 module Stash
   module Harvester
@@ -28,17 +28,9 @@ module Stash
                         '  from the beginning of time to the present day:',
                         '    $ stash-harvester -c my-ds.yml'
                        ].join("\n")
-                      ].join("\n\n")
+      ].join("\n\n")
 
       NOTES = [NOTE_DATETIME, NOTE_CONFIG, NOTE_EXAMPLES].join("\n\n")
-
-      PARSER = Trollop::Parser.new do
-        opt :version, 'print the version'
-        opt :from, 'start date/time for selective harvesting', type: :string
-        opt :until, 'end date/time for selective harvesting', type: :string
-        opt :config, 'configuration file', type: :string
-        opt :help, 'show this message'
-      end
 
       attr_reader :show_version
       attr_reader :show_help
@@ -46,14 +38,39 @@ module Stash
       attr_reader :until_time
       attr_reader :config_file
 
-      def initialize(argv)
-        opts = PARSER.parse(argv)
-        @show_version = opts[:version]
-        @show_help = opts[:help]
-        @from_time = (from_time = opts[:from]) ? Time.iso8601(from_time) : nil
-        @until_time = (until_time = opts[:until]) ? Time.iso8601(until_time) : nil
-        @config = opts[:config]
+      def initialize(argv = nil)
+        parse(argv)
       end
+
+      private
+
+      def parse(argv)
+        opt_parser = OptionParser.new do |opts|
+          opts.on('-h', '--help', 'display this help and exit') do
+            @show_help = true
+            return
+          end
+          opts.on('-v', '--version', 'output version information and exit') do
+            @version = true
+            return
+          end
+          opts.on('-f', '--from DATETIME', 'start date/time for selective harvesting') do |from_time|
+            @from_time = time_or_nil(from_time)
+          end
+          opts.on('-u', '--until DATETIME', 'end date/time for selective harvesting') do |until_time|
+            @until_time = time_or_nil(until_time)
+          end
+          opts.on('-c', '--config FILE', 'configuration file') do |config_file|
+            @config_file = config_file
+          end
+        end
+        opt_parser.parse(argv)
+      end
+
+      def time_or_nil(time_str)
+        time_str && Time.iso8601(time_str)
+      end
+
     end
   end
 end
