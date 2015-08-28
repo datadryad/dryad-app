@@ -28,7 +28,7 @@ module Stash
                         '  from the beginning of time to the present day:',
                         '    $ stash-harvester -c my-ds.yml'
                        ].join("\n")
-      ].join("\n\n")
+                      ].join("\n\n")
 
       NOTES = [NOTE_DATETIME, NOTE_CONFIG, NOTE_EXAMPLES].join("\n\n")
 
