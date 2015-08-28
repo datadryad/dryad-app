@@ -142,9 +142,26 @@ module Stash
       end
 
       describe ':config' do
-        it 'parses -c'
-        it 'parses --config'
-        it 'gives a sensible error if no value provided'
+        it 'parses -c' do
+          file = '/home/foo/stash-harvester.yml'
+          options = Options.new(['-c', file])
+          expect(options.config_file).to eq(file)
+        end
+
+        it 'parses --config' do
+          file = '/home/foo/stash-harvester.yml'
+          options = Options.new(['--config', file])
+          expect(options.config_file).to eq(file)
+        end
+
+        it 'gives a sensible error if no value provided' do
+          %w(-c --config).each do |opt|
+            expect { Options.new([opt]) }.to raise_error do |error|
+              expect(error).to be_an(OptionParser::MissingArgument)
+              expect(error.message).to include(opt)
+            end
+          end
+        end
       end
 
     end
