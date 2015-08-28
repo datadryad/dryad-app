@@ -2,7 +2,22 @@
 
 require 'stash/harvester'
 
-options = Stash::Harvester::Options.new(ARGV)
-puts options
-
-# Stash::Harvester::Options.parse(ARGV)
+module Stash
+  module Harvester
+    begin
+      options = Options.new(ARGV)
+      puts Options::VERSION if options.show_version
+      puts Options::HELP if options.show_help
+      unless options.do_exit
+        Application.new(
+          from_time: options.from_time,
+          until_time: options.until_time,
+          config_file: options.config_file
+        ).start
+      end
+    rescue OptionParser::ParseError => e
+      puts e.message
+      puts Options::USAGE
+    end
+  end
+end

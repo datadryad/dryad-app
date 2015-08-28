@@ -47,7 +47,7 @@ module Stash
         end
       end
 
-      describe ':version' do
+      describe '#show_version' do
         it 'parses -v' do
           options = Options.new('-v')
           expect(options.show_version).to be true
@@ -59,7 +59,7 @@ module Stash
         end
       end
 
-      describe ':from' do
+      describe '#from_time' do
         it 'parses -f' do
           time = Time.utc(2001, 2, 3, 4, 5, 6)
           options = Options.new(['-f', time.iso8601])
@@ -100,7 +100,7 @@ module Stash
         end
       end
 
-      describe ':until' do
+      describe '#until_time' do
         it 'parses -u' do
           time = Time.utc(2001, 2, 3, 4, 5, 6)
           options = Options.new(['-u', time.iso8601])
@@ -141,7 +141,7 @@ module Stash
         end
       end
 
-      describe ':config' do
+      describe '#config' do
         it 'parses -c' do
           file = '/home/foo/stash-harvester.yml'
           options = Options.new(['-c', file])
@@ -159,6 +159,33 @@ module Stash
             expect { Options.new([opt]) }.to raise_error do |error|
               expect(error).to be_an(OptionParser::MissingArgument)
               expect(error.message).to include(opt)
+            end
+          end
+        end
+      end
+
+      describe '#do_exit' do
+        it 'returns true for help' do
+          %w(-h --help).each do |arg|
+            options = Options.new(arg)
+            expect(options.do_exit).to be_truthy
+          end
+        end
+
+        it 'returns true for version' do
+          %w(-v --version).each do |arg|
+            options = Options.new(arg)
+            expect(options.do_exit).to be_truthy
+          end
+        end
+
+        it 'returns true for help and version together' do
+          %w(-h --help).each do |h|
+            %w(-v --version).each do |v|
+              [[h, v], [v, h]].each do |args|
+                options = Options.new(args)
+                expect(options.do_exit).to be_truthy
+              end
             end
           end
         end

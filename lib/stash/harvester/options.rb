@@ -19,54 +19,60 @@ module Stash
       NOTE_EXAMPLES = ['Examples:',
                        ['  Harvest all records in January 2015 from the data source given',
                         '  in the default configation file:',
-                        '    $ stash-harvester -f 2015-01-01 -u 2015-01-31'
+                        "\n    $ stash-harvester -f 2015-01-01 -u 2015-01-31"
                        ].join("\n"),
                        ['  Harvest all records from 1 January 2015 to the present day',
                         '  from the data source given in the default configation file:',
-                        '    $ stash-harvester -f 2015-01-01 -u 2015-01-31'
+                        "\n    $ stash-harvester -f 2015-01-01 -u 2015-01-31"
                        ].join("\n"),
-                       ['  Harvest all records from the data source described in my-ds.yml',
+                       ['  Harvest all records from the data source described in my-config.yml',
                         '  from the beginning of time to the present day:',
-                        '    $ stash-harvester -c my-ds.yml'
+                        "\n    $ stash-harvester -c my-config.yml"
                        ].join("\n")
                       ].join("\n\n")
 
-      NOTES = [NOTE_DATETIME, NOTE_CONFIG, NOTE_EXAMPLES].join("\n\n")
+      NOTES = [NOTE_EXAMPLES, NOTE_CONFIG, NOTE_DATETIME].join("\n\n") + "\n"
 
-      VERSION = "#{NAME} #{VERSION} #{COPYRIGHT}"
+      VERSION = "#{NAME} #{VERSION}\n#{COPYRIGHT}\n"
 
       DATE_LENGTH = 'YYYY-MM-DD'.length
 
-      attr_reader :show_version
-      attr_reader :show_help
-      attr_reader :from_time
-      attr_reader :until_time
-      attr_reader :config_file
-      attr_reader :help
+      def self.init_opts(options)
+        OptionParser.new do |opts|
+          opts.on('-h', '--help', 'display this help and exit') { options.show_help = true }
+          opts.on('-v', '--version', 'output version information and exit') { options.show_version = true }
+          opts.on('-f', '--from DATETIME', 'start date/time for selective harvesting') { |from_time| options.from_time = to_time(from_time) }
+          opts.on('-u', '--until DATETIME', 'end date/time for selective harvesting') { |until_time| options.until_time = to_time(until_time) }
+          opts.on('-c', '--config FILE', 'configuration file') { |config_file| options.config_file = config_file }
+        end
+      end
+
+      USAGE = "#{init_opts(nil)}\n"
+
+      HELP = "#{USAGE}#{NOTES}\n"
+
+      attr_accessor :show_version
+      attr_accessor :show_help
+      attr_accessor :from_time
+      attr_accessor :until_time
+      attr_accessor :config_file
 
       def initialize(argv = nil)
-        @opt_parser = init_opts
-        @help = "#{@opt_parser}\n#{NOTES}"
+        @opt_parser = self.class.init_opts(self)
         parse(argv)
       end
 
-      private
-
-      def init_opts
-        OptionParser.new do |opts|
-          opts.on('-h', '--help', 'display this help and exit') { @show_help = true }
-          opts.on('-v', '--version', 'output version information and exit') { @show_version = true }
-          opts.on('-f', '--from DATETIME', 'start date/time for selective harvesting') { |from_time| @from_time = to_time(from_time) }
-          opts.on('-u', '--until DATETIME', 'end date/time for selective harvesting') { |until_time| @until_time = to_time(until_time) }
-          opts.on('-c', '--config FILE', 'configuration file') { |config_file| @config_file = config_file }
-        end
+      def do_exit
+        show_help || show_version
       end
+
+      private
 
       def parse(argv)
         @opt_parser.parse(argv)
       end
 
-      def to_time(time_str)
+      def self.to_time(time_str)
         if time_str
           if time_str.length > DATE_LENGTH
             Time.iso8601(time_str)
@@ -76,7 +82,7 @@ module Stash
           end
         end
       rescue ArgumentError
-        raise(OptionParser::InvalidArgument, "#{time_str} is not a valid ISO 8601 datetime")
+        raise(OptionParser::InvalidArgument, ": '#{time_str}' is not a valid ISO 8601 datetime")
       end
 
     end
