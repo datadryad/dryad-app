@@ -42,7 +42,7 @@ module Stash
       describe '#harvest_records' do
         it 'is abstract' do
           task = HarvestTask.new(config: @config)
-          expect { task.harvest_records }.to raise_error
+          expect { task.harvest_records }.to raise_error(NoMethodError)
         end
       end
     end

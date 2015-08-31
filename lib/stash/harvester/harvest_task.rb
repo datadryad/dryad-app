@@ -50,7 +50,7 @@ module Stash
       # @return [Enumerator::Lazy<HarvestedRecord>]
       #   A lazy enumerator of the harvested records
       def harvest_records
-        fail "#{self.class} should override #harvest_records to harvest records, but it doesn't"
+        fail NoMethodError, "#{self.class} should override #harvest_records to harvest records, but it doesn't"
       end
 
       # ------------------------------

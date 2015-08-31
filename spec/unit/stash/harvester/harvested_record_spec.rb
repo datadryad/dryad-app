@@ -10,7 +10,7 @@ module Stash
 
       describe '#content' do
         it 'is abstract' do
-          expect { @record.content }.to raise_error
+          expect { @record.content }.to raise_error(NoMethodError)
         end
       end
     end
