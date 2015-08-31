@@ -21,4 +21,39 @@ The `Stash::Harvester::Resync` module harvests metadata from a [ResourceSync](ht
   * As implied (though not explicitly stated) by the ResourceSync spec, if both a Change List and a Change Dump exist, all changes in the Change List are also in a corresponding Change Dump. That is, wherever both exist, it is sufficient to examine only one or the other.
 4. The Change List / Change Dump resources advertised in the Capability List may be either single lists / dumps or [Change List Indices](http://www.openarchives.org/rs/1.0/resourcesync#ChangeListIndex) / [Change Dump Indices](http://www.openarchives.org/rs/1.0/resourcesync#ChangeDumpIndex), as advertised in the spec.
 
+## Configuration
+
+A sample configuration file:
+```yaml
+# Metadata configuration
+metadata: ???
+  schema: ???
+
+# Database configuration
+db:
+  adapter: sqlite3
+  database: ':memory:'
+  pool: 5
+  timeout: 5000
+
+# Harvesting source configuration
+source:
+  protocol: OAI              # Stash::Harvester::OAI::OAISourceConfig
+  oai_base_url: http://oai.example.org/oai
+  metadata_prefix: some_prefix
+  set: some_set
+  seconds_granularity: true
+
+# Index destination configuration
+index:
+  adapter: solr
+  url: http://solr.example.org/
+  proxy: http://foo:bar@proxy.example.com/
+  open_timeout: 120          # connection open timeout in seconds
+  read_timeout: 120          # read timeout in seconds
+  retry_503: 3               # max retries
+  retry_after_limit: 20      # retry wait time in seconds
+```
+
+**TO DO: figure out metadata config**
 

@@ -14,8 +14,10 @@ module Stash
 
       def self.from_yaml(yml)
         config = keys_to_syms(YAML.load(yml))
+        db_config = config[:db]
         source_config = SourceConfig.from_hash(config[:source])
-        Config.new(db_config: nil, source_config: source_config, index_config: nil)
+        index_config = IndexConfig.from_hash(config[:index])
+        Config.new(db_config: db_config, source_config: source_config, index_config: index_config)
       end
 
       private

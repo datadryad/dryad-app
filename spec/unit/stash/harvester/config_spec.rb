@@ -15,11 +15,30 @@ module Stash
           @config = Config.from_yaml(yml)
         end
 
-        it 'forwards to DBConfig factory methods'
+        it 'extracts the DB config' do
+          db_config = @config.db_config
+          expect(db_config[:adapter]).to eq('sqlite3')
+          expect(db_config[:database]).to eq(:memory)
+          expect(db_config[:pool]).to eq(5)
+          expect(db_config[:timeout]).to eq(5000)
+        end
 
-        it 'forwards to IndexConfig factory methods'
+        it 'extracts the IndexConfig' do
+          index_config = @config.index_config
+          expect(index_config).to be_a(Solr::SolrIndexConfig)
+          expect(index_config.uri).to eq(URI('http://solr.example.org/'))
+          expect(index_config.proxy_uri).to eq(URI('http://foo:bar@proxy.example.com/'))
 
-        it 'forwards to SourceConfig factory methods' do
+          opts = index_config.opts
+          expect(opts[:url]).to eq('http://solr.example.org/')
+          expect(opts[:proxy]).to eq('http://foo:bar@proxy.example.com/')
+          expect(opts[:open_timeout]).to eq(120)
+          expect(opts[:read_timeout]).to eq(300)
+          expect(opts[:retry_503]).to eq(3)
+          expect(opts[:retry_after_limit]).to eq(20)
+        end
+
+        it 'extracts the SourceConfig' do
           source_config = @config.source_config
           expect(source_config).to be_a(OAI::OAISourceConfig)
           expect(source_config.source_uri).to eq(URI('http://oai.example.org/oai'))
