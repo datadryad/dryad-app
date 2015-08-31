@@ -1,0 +1,23 @@
+db:
+  adapter: sqlite3
+  database: ':memory:'
+  pool: 5
+  timeout: 5000
+
+source:
+  protocol: OAI
+  oai_base_url: http://oai.datacite.org/oai
+  metadata_prefix: oai_datacite
+  set: REFQUALITY
+  seconds_granularity: false
+
+index:
+  adapter: solr
+  url: http://solr.example.org/
+  proxy: http://foo@bar:proxy.example.com/
+  open_timeout: 120          # connection open timeout in seconds
+  read_timeout: 120          # read timeout in seconds
+  retry_503: 3               # max retries
+  retry_after_limit: 20      # retry wait time in seconds
+
+

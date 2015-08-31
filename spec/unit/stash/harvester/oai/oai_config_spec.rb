@@ -2,7 +2,7 @@ require 'spec_helper'
 
 module Stash
   module Harvester
-    module OAIPMH
+    module OAI
 
       RESERVED_RCF_2396 = ';/?:@&=+$,'
 

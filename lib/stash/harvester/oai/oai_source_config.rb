@@ -3,7 +3,7 @@ require_relative '../source_config'
 
 module Stash
   module Harvester
-    module OAIPMH
+    module OAI
 
       # The configuration of an OAI data source. Defaults to harvesting Dublin Core at seconds
       # granularity, across all record sets.

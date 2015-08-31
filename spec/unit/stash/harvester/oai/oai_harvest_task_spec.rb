@@ -2,7 +2,7 @@ require 'spec_helper'
 
 module Stash
   module Harvester
-    module OAIPMH
+    module OAI
 
       describe OAIHarvestTask do
         before(:each) do
@@ -39,8 +39,8 @@ module Stash
 
         describe '#list_records' do
           before(:each) do
-            @oai_client = instance_double(OAI::Client)
-            expect(OAI::Client).to receive(:new).with(@uri) { @oai_client }
+            @oai_client = instance_double(::OAI::Client)
+            expect(::OAI::Client).to receive(:new).with(@uri) { @oai_client }
           end
 
           it 'sends a ListRecords request' do
@@ -52,9 +52,9 @@ module Stash
           it "maps the ListRecords response as a sequence of #{OAIRecord} objects" do
             require 'rexml/document'
 
-            file = File.new('spec/data/oaipmh/oai-datacite-list-records-june-2011-oai_dc.xml')
+            file = File.new('spec/data/oai/oai-datacite-list-records-june-2011-oai_dc.xml')
             doc = REXML::Document.new file
-            result = OAI::ListRecordsResponse.new(doc) {} # empty resumption block
+            result = ::OAI::ListRecordsResponse.new(doc) {} # empty resumption block
             expected_array = result.collect { |r| OAIRecord.new(r) }
 
             task = OAIHarvestTask.new(config: @config)
@@ -123,19 +123,19 @@ module Stash
           it 'supports resumption' do
             require 'rexml/document'
 
-            file_1 = File.new('spec/data/oaipmh/resumption-1.xml')
-            file_2 = File.new('spec/data/oaipmh/resumption-2.xml')
-            file_full = File.new('spec/data/oaipmh/resumption-full.xml')
+            file_1 = File.new('spec/data/oai/resumption-1.xml')
+            file_2 = File.new('spec/data/oai/resumption-2.xml')
+            file_full = File.new('spec/data/oai/resumption-full.xml')
 
             doc_1 = REXML::Document.new file_1
             doc_2 = REXML::Document.new file_2
             doc_full = REXML::Document.new file_full
 
-            result_paged = OAI::ListRecordsResponse.new(doc_1) do
-              OAI::ListRecordsResponse.new(doc_2)
+            result_paged = ::OAI::ListRecordsResponse.new(doc_1) do
+              ::OAI::ListRecordsResponse.new(doc_2)
             end
 
-            result_full = OAI::ListRecordsResponse.new(doc_full)
+            result_full = ::OAI::ListRecordsResponse.new(doc_full)
             expected_array = result_full.collect { |r| OAIRecord.new(r) }
 
             task = OAIHarvestTask.new(config: OAISourceConfig.new(oai_base_url: @uri))
@@ -148,10 +148,10 @@ module Stash
           it 'is lazy' do
             require 'rexml/document'
 
-            file_1 = File.new('spec/data/oaipmh/resumption-1.xml')
+            file_1 = File.new('spec/data/oai/resumption-1.xml')
             doc_1 = REXML::Document.new file_1
 
-            result_paged = OAI::ListRecordsResponse.new(doc_1) do
+            result_paged = ::OAI::ListRecordsResponse.new(doc_1) do
               fail "resumption block shouldn't get called if we never iterate beyond the first result"
             end
 
@@ -166,7 +166,7 @@ module Stash
           describe 'error handling:' do
             it 'logs errors'
             it 'handles OAI-PMH error responses gracefully'
-            it 'treats an "empty list" OAI::Exception as an empty list'
+            it 'treats an "empty list" ::OAI::Exception as an empty list'
             it 'follows 302 Found redirects with Location header'
             it 'handles 4xx errors gracefully'
             it 'handles 5xx errors gracefully'

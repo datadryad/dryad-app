@@ -1,6 +1,6 @@
 module Stash
   module Harvester
-    module OAIPMH
+    module OAI
 
       # TODO: check for documentation of inherited attributes
 
@@ -55,7 +55,7 @@ module Stash
         # @return [Enumerator::Lazy<OAIRecord>] A lazy enumerator of the harvested records
         def harvest_records
           base_uri = config.source_uri
-          client = OAI::Client.new(base_uri.to_s)
+          client = ::OAI::Client.new(base_uri.to_s)
           records = client.list_records(opts)
           return [].lazy unless records
           full = records.full
