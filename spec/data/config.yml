@@ -5,11 +5,11 @@ db:
   timeout: 5000
 
 source:
-  protocol: OAI
-  oai_base_url: http://oai.datacite.org/oai
-  metadata_prefix: oai_datacite
-  set: REFQUALITY
-  seconds_granularity: false
+  protocol: OAI              # Stash::Harvester::OAI::OAISourceConfig
+  oai_base_url: http://oai.example.org/oai
+  metadata_prefix: some_prefix
+  set: some_set
+  seconds_granularity: true
 
 index:
   adapter: solr

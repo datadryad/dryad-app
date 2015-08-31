@@ -35,6 +35,13 @@ module Stash
         Kernel.const_get(protocol_class_name)
       end
 
+      def self.from_hash(hash)
+        protocol_class = for_protocol(hash[:protocol])
+        protocol_params = hash.clone
+        protocol_params.delete(:protocol)
+        protocol_class.new(protocol_params)
+      end
+
       # ------------------------------
       # Private methods
 
