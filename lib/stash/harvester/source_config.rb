@@ -20,26 +20,17 @@ module Stash
       # ------------------------------
       # Class methods
 
-      # Parses the specified YAML string and passes it as a hash
-      # with symbol keys to the implementation class initializer
-      #
-      # @param yml [String] the YAML string containing the configuration
-      # @return [SourceConfig] a new instance of this implementation class
-      def self.from_yaml(yml)
-        params = YAML.load(yml).map { |k, v| [k.to_sym, v] }.to_h
-        new(params)
-      end
-
-      def self.for_protocol(protocol)
-        protocol_class_name = "Stash::Harvester::#{protocol}::#{protocol}SourceConfig"
-        Kernel.const_get(protocol_class_name)
-      end
-
+      # Factory method that creates the appropriate {SourceConfig}
       def self.from_hash(hash)
         protocol_class = for_protocol(hash[:protocol])
         protocol_params = hash.clone
         protocol_params.delete(:protocol)
         protocol_class.new(protocol_params)
+      end
+
+      def self.for_protocol(protocol)
+        protocol_class_name = "Stash::Harvester::#{protocol}::#{protocol}SourceConfig"
+        Kernel.const_get(protocol_class_name)
       end
 
       # ------------------------------

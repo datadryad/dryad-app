@@ -28,6 +28,30 @@ module Stash
           expect(SourceConfig.for_protocol('Foo')).to be(Foo::FooSourceConfig)
         end
       end
+
+      describe '#from_hash' do
+        it 'reads a valid OAI config' do
+          base_url = 'http://oai.datacite.org/oai'
+          prefix = 'oai_datacite'
+          set = 'REFQUALITY'
+          seconds = false
+          hash = { protocol: 'OAI', oai_base_url: base_url, metadata_prefix: prefix, set: set, seconds_granularity: seconds }
+          config = SourceConfig.from_hash(hash)
+          expect(config).to be_a(OAI::OAISourceConfig)
+          expect(config.metadata_prefix).to eq(prefix)
+          expect(config.source_uri).to eq(URI(base_url))
+          expect(config.set).to eq(set)
+          expect(config.seconds_granularity).to eq(seconds)
+        end
+
+        it 'reads a valid Resync config' do
+          cap_list_url = 'http://localhost:8888/capabilitylist.xml'
+          hash = { protocol: 'Resync', capability_list_url: cap_list_url }
+          config = SourceConfig.from_hash(hash)
+          expect(config).to be_a(Resync::ResyncSourceConfig)
+          expect(config.source_uri).to eq(URI(cap_list_url))
+        end
+      end
     end
   end
 end

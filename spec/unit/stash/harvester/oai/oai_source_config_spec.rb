@@ -65,20 +65,6 @@ module Stash
 
         end
 
-        describe '#from_yaml' do
-          it 'parses a valid YAML config file' do
-            yml = ['oai_base_url: http://oai.datacite.org/oai',
-                   'metadata_prefix: oai_datacite',
-                   'set: REFQUALITY',
-                   'seconds_granularity: false'].join("\n")
-            config = OAISourceConfig.from_yaml(yml)
-            expect(config.metadata_prefix).to eq('oai_datacite')
-            expect(config.source_uri).to eq(URI('http://oai.datacite.org/oai'))
-            expect(config.set).to eq('REFQUALITY')
-            expect(config.seconds_granularity).to eq(false)
-          end
-
-        end
       end
 
     end
