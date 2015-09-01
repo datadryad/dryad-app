@@ -34,13 +34,11 @@ module Stash
       end
 
       def self.for_adapter(adapter)
-        begin
-          adapter = Util.ensure_leading_cap(adapter)
-          adapter_class_name = "Stash::Harvester::#{adapter}::#{adapter}IndexConfig"
-          Kernel.const_get(adapter_class_name)
-        rescue => e
-          raise ArgumentError, "Can't find configuration class for adapter '#{adapter}': #{e.message}"
-        end
+        adapter = Util.ensure_leading_cap(adapter)
+        adapter_class_name = "Stash::Harvester::#{adapter}::#{adapter}IndexConfig"
+        Kernel.const_get(adapter_class_name)
+      rescue => e
+        raise ArgumentError, "Can't find configuration class for adapter '#{adapter}': #{e.message}"
       end
 
     end

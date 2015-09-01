@@ -48,7 +48,7 @@ module Stash
         end
 
         it 'provides appropriate error messages for bad config sections' do
-          good_values = [/oai.example.org/, /solr.example.org/, /proxy.example.com/ ]
+          good_values = [/oai.example.org/, /solr.example.org/, /proxy.example.com/]
           bad_value = "'I am not a valid hostname'"
           good_values.each do |good_value|
             bad_yml = File.read('spec/data/config.yml').sub(good_value, bad_value)

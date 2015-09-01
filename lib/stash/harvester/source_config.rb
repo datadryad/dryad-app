@@ -34,13 +34,11 @@ module Stash
       end
 
       def self.for_protocol(protocol)
-        begin
-          protocol = Util.ensure_leading_cap(protocol)
-          protocol_class_name = "Stash::Harvester::#{protocol}::#{protocol}SourceConfig"
-          Kernel.const_get(protocol_class_name)
-        rescue => e
-          raise ArgumentError, "Can't find configuration class for protocol '#{protocol}': #{e.message}"
-        end
+        protocol = Util.ensure_leading_cap(protocol)
+        protocol_class_name = "Stash::Harvester::#{protocol}::#{protocol}SourceConfig"
+        Kernel.const_get(protocol_class_name)
+      rescue => e
+        raise ArgumentError, "Can't find configuration class for protocol '#{protocol}': #{e.message}"
       end
 
     end
