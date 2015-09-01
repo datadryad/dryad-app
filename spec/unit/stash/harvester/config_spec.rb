@@ -15,12 +15,12 @@ module Stash
           @config = Config.from_yaml(yml)
         end
 
-        it 'extracts the DB config' do
-          db_config = @config.db_config
-          expect(db_config[:adapter]).to eq('sqlite3')
-          expect(db_config[:database]).to eq(:memory)
-          expect(db_config[:pool]).to eq(5)
-          expect(db_config[:timeout]).to eq(5000)
+        it 'extracts the DB connection info' do
+          connection_info = @config.connection_info
+          expect(connection_info['adapter']).to eq('sqlite3')
+          expect(connection_info['database']).to eq(':memory:')
+          expect(connection_info['pool']).to eq(5)
+          expect(connection_info['timeout']).to eq(5000)
         end
 
         it 'extracts the IndexConfig' do

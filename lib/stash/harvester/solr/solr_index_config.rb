@@ -5,6 +5,9 @@ module Stash
       # Configuration for a Solr index.
       class SolrIndexConfig < IndexConfig
 
+        SUSPICIOUS_OPTS = { proxy_url: :proxy, proxy_uri: :proxy }
+        private_constant :SUSPICIOUS_OPTS
+
         attr_reader :proxy_uri
         attr_reader :opts
 
@@ -17,6 +20,13 @@ module Stash
         #   the Solr client.
         def initialize(url:, proxy: nil, **opts)
           super(url: url)
+
+          SUSPICIOUS_OPTS.each do |k, v|
+            if opts.include?(k)
+              Harvester.log.warn("#{SolrIndexConfig} initialized with #{k.inspect} => #{opts[k].inspect}. Did you mean #{v.inspect}?")
+            end
+          end
+
           @proxy_uri = Util.to_uri(proxy)
           all_opts = opts.clone
           all_opts[:url] = uri.to_s

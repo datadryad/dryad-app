@@ -16,7 +16,7 @@ module Stash
           bad_protocol = 'Elvis'
           expect { SourceConfig.for_protocol(bad_protocol) }.to raise_error do |e|
             expect(e).to be_a(NameError)
-            expect(e.name).to include(bad_protocol)
+            expect(e.message).to include(bad_protocol)
           end
         end
 

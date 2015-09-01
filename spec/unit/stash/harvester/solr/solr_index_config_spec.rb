@@ -16,7 +16,31 @@ module Stash
 
           it 'rejects an invalid proxy_url' do
             invalid_url = 'I am not a valid URL'
-            expect { SolrIndexConfig.new(url: 'http://example.org', proxy_url: invalid_url) }.to raise_error(URI::InvalidURIError)
+            expect { SolrIndexConfig.new(url: 'http://example.org', proxy: invalid_url) }.to raise_error(URI::InvalidURIError)
+          end
+
+          it 'logs a warning if :proxy_url is used instead of :proxy' do
+            logger = instance_double(Logger)
+            begin
+              Harvester.log = logger
+              proxy_url = 'whatever'
+              expect(log).to receive(:warn).with(a_string_including('WARN', proxy_url, ':proxy'))
+              SolrIndexConfig.new(url: 'http://example.org', proxy_url: proxy_url)
+            rescue
+              Harvester.log = nil
+            end
+          end
+
+          it 'logs a warning if :proxy_uri is used instead of :proxy' do
+            logger = instance_double(Logger)
+            begin
+              Harvester.log = logger
+              proxy_url = 'whatever'
+              expect(log).to receive(:warn).with(a_string_including('WARN', proxy_url, ':proxy'))
+              SolrIndexConfig.new(url: 'http://example.org', proxy_url: proxy_url)
+            rescue
+              Harvester.log = nil
+            end
           end
         end
 
@@ -31,7 +55,7 @@ module Stash
         describe '#proxy_uri' do
           it 'returns the URI as a URI' do
             proxy_url = 'http://proxy.example.org'
-            config = SolrIndexConfig.new(url: 'http://example.org/', proxy_url: proxy_url)
+            config = SolrIndexConfig.new(url: 'http://example.org/', proxy: proxy_url)
             expect(config.proxy_uri).to eq(URI(proxy_url))
           end
         end
