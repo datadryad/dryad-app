@@ -24,7 +24,7 @@ module Stash
       # @return [String] a copy of the string with the first character
       #   capitalized (if applicable)
       def self.ensure_leading_cap(str)
-        (str.to_s == '') ? str : str[0].upcase + str[1..-1]
+        str.sub(/./, &:upcase) if str
       end
     end
   end
