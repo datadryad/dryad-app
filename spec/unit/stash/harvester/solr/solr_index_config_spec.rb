@@ -34,13 +34,14 @@ module Stash
 
           it 'logs a warning if :proxy_uri is used instead of :proxy' do
             logger = instance_double(Logger)
+            original_logger = Harvester.log
             begin
               Harvester.log = logger
               proxy_url = 'whatever'
               expect(log).to receive(:warn).with(a_string_including('WARN', proxy_url, ':proxy'))
               SolrIndexConfig.new(url: 'http://example.org', proxy_url: proxy_url)
             rescue
-              Harvester.log = nil
+              Harvester.log = original_logger
             end
           end
         end
