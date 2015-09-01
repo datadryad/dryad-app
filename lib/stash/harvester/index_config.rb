@@ -22,16 +22,25 @@ module Stash
 
       # Factory method that creates the appropriate {SourceConfig}
       def self.from_hash(hash)
-        adapter_class = for_adapter(hash[:adapter])
-        adapter_params = hash.clone
-        adapter_params.delete(:adapter)
-        adapter_class.new(adapter_params)
+        adapter = hash[:adapter]
+        adapter_class = for_adapter(adapter)
+        begin
+          adapter_params = hash.clone
+          adapter_params.delete(:adapter)
+          adapter_class.new(adapter_params)
+        rescue => e
+          raise ArgumentError, "Can't construct configuration class #{adapter_class} for adapter #{adapter}: #{e.message}"
+        end
       end
 
       def self.for_adapter(adapter)
-        adapter = Util.ensure_leading_cap(adapter)
-        adapter_class_name = "Stash::Harvester::#{adapter}::#{adapter}IndexConfig"
-        Kernel.const_get(adapter_class_name)
+        begin
+          adapter = Util.ensure_leading_cap(adapter)
+          adapter_class_name = "Stash::Harvester::#{adapter}::#{adapter}IndexConfig"
+          Kernel.const_get(adapter_class_name)
+        rescue => e
+          raise ArgumentError, "Can't find configuration class for adapter '#{adapter}': #{e.message}"
+        end
       end
 
     end

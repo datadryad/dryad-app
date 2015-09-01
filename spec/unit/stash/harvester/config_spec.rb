@@ -47,7 +47,36 @@ module Stash
           expect(source_config.seconds_granularity).to be true
         end
 
-        it 'provides appropriate error messages for bad config factories'
+        it 'provides appropriate error messages for bad config sections' do
+          good_values = [/oai.example.org/, /solr.example.org/, /proxy.example.com/ ]
+          bad_value = "'I am not a valid hostname'"
+          good_values.each do |good_value|
+            bad_yml = File.read('spec/data/config.yml').sub(good_value, bad_value)
+            expect { Config.from_yaml(bad_yml) }.to raise_error do |e|
+              expect(e).to be_an ArgumentError
+              expect(e.message).to include(bad_value)
+              expect(e.cause).to be_a URI::InvalidURIError
+            end
+          end
+        end
+
+        it 'provides appropriate error message for invalid source protocol' do
+          bad_yml = File.read('spec/data/config.yml').sub(/OAI/, 'BadProtocol')
+          expect { Config.from_yaml(bad_yml) }.to raise_error do |e|
+            expect(e).to be_an ArgumentError
+            expect(e.message).to include('BadProtocol')
+            expect(e.cause).to be_a NameError
+          end
+        end
+
+        it 'provides appropriate error message for invalid index adapter' do
+          bad_yml = File.read('spec/data/config.yml').sub(/solr/, 'BadAdapter')
+          expect { Config.from_yaml(bad_yml) }.to raise_error do |e|
+            expect(e).to be_an ArgumentError
+            expect(e.message).to include('BadAdapter')
+            expect(e.cause).to be_a NameError
+          end
+        end
       end
     end
   end

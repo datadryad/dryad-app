@@ -22,6 +22,7 @@ module Stash
         @index_config = index_config
       end
 
+      # @param yml [String] the YAML string to load
       def self.from_yaml(yml)
         yaml = YAML.load(yml)
         connection_info = yaml['db']
