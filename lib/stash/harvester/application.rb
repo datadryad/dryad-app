@@ -10,6 +10,7 @@ module Stash
 
       def start
       end
+
     end
   end
 end

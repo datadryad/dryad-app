@@ -22,6 +22,25 @@ module Stash
         @index_config = index_config
       end
 
+      # Reads the specified file and creates a new +Config+ from it.
+      #
+      # @param path [String] the path to read the YAML from
+      # @raise [IOError] in the event the file does not exist, cannot be read, or is invalid
+      def self.from_file(path)
+        fail IOError, "Specified config file #{path} is not a file" unless File.file?(path)
+        fail IOError, "Specified config file #{path} is not readable" unless File.readable?(path)
+        begin
+          yml = File.read(path)
+          from_yaml(yml)
+        rescue IOError
+          raise
+        rescue => e
+          raise IOError, "Error parsing specified config file #{path}: #{e.message}"
+        end
+      end
+
+      # Creates a new +Config+ from the specified YAML string.
+      #
       # @param yml [String] the YAML string to load
       def self.from_yaml(yml)
         yaml = YAML.load(yml)

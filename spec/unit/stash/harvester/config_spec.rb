@@ -78,6 +78,85 @@ module Stash
           end
         end
       end
+
+      describe '#from_file' do
+        it 'reads a file' do
+          @config = Config.from_file('spec/data/config.yml')
+
+          connection_info = @config.connection_info
+          expect(connection_info['adapter']).to eq('sqlite3')
+          expect(connection_info['database']).to eq(':memory:')
+          expect(connection_info['pool']).to eq(5)
+          expect(connection_info['timeout']).to eq(5000)
+
+          index_config = @config.index_config
+          expect(index_config).to be_a(Solr::SolrIndexConfig)
+          expect(index_config.uri).to eq(URI('http://solr.example.org/'))
+          expect(index_config.proxy_uri).to eq(URI('http://foo:bar@proxy.example.com/'))
+
+          opts = index_config.opts
+          expect(opts[:url]).to eq('http://solr.example.org/')
+          expect(opts[:proxy]).to eq('http://foo:bar@proxy.example.com/')
+          expect(opts[:open_timeout]).to eq(120)
+          expect(opts[:read_timeout]).to eq(300)
+          expect(opts[:retry_503]).to eq(3)
+          expect(opts[:retry_after_limit]).to eq(20)
+
+          source_config = @config.source_config
+          expect(source_config).to be_a(OAI::OAISourceConfig)
+          expect(source_config.source_uri).to eq(URI('http://oai.example.org/oai'))
+          expect(source_config.metadata_prefix).to eq('some_prefix')
+          expect(source_config.set).to eq('some_set')
+          expect(source_config.seconds_granularity).to be true
+        end
+
+        it 'raises an IOError for nonexistent files' do
+          nonexistent_file = Tempfile.new('foo')
+          nonexistent_path = nonexistent_file.path
+          nonexistent_file.unlink
+
+          expect { Config.from_file(nonexistent_path) }.to raise_error do |e|
+            expect(e).to be_an IOError
+            expect(e.message).to include(nonexistent_path)
+          end
+        end
+
+        it 'raises an IOError for non-files' do
+          Dir.mktmpdir do |non_file_path|
+            expect { Config.from_file(non_file_path) }.to raise_error do |e|
+              expect(e).to be_an IOError
+              expect(e.message).to include(non_file_path)
+            end
+          end
+        end
+
+        it 'raises an IOError for non-readable files' do
+          Dir.mktmpdir do |tmpdir|
+            unreadable_path = "#{tmpdir}/config.yml"
+            File.open(unreadable_path, 'w') {}
+            File.chmod(0000, unreadable_path)
+            expect { Config.from_file(unreadable_path) }.to raise_error do |e|
+              expect(e).to be_an IOError
+              expect(e.message).to include(unreadable_path)
+            end
+          end
+        end
+
+        it 'raises an IOError for malformed files' do
+          bad_yaml = "\t"
+          Dir.mktmpdir do |tmpdir|
+            bad_yaml_path = "#{tmpdir}/config.yml"
+            File.open(bad_yaml_path, 'w') do |f|
+              f.write(bad_yaml)
+            end
+            expect { Config.from_file(bad_yaml_path) }.to raise_error do |e|
+              expect(e).to be_an IOError
+              expect(e.message).to include(bad_yaml_path)
+            end
+          end
+        end
+      end
+
     end
   end
 end
