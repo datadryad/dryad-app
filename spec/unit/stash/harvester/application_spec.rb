@@ -59,7 +59,7 @@ module Stash
         it 'prefers plain file in current working directory' do
           Dir.mktmpdir do |dir|
             @wd = dir
-            expected = '#{dir}/stash-harvester.yml'
+            expected = "#{dir}/stash-harvester.yml"
             FileUtils.touch(expected)
             expect(Application.default_config_file).to eq(expected)
           end
@@ -68,7 +68,7 @@ module Stash
         it "falls back to dotfile in the user's home directory, if present" do
           Dir.mktmpdir do |dir|
             @home = dir
-            expected = '#{dir}/.stash-harvester.yml'
+            expected = "#{dir}/.stash-harvester.yml"
             FileUtils.touch(expected)
             expect(Application.default_config_file).to eq(expected)
           end

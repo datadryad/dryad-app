@@ -6,8 +6,8 @@ module Stash
       attr_reader :until_time
 
       def initialize(from_time: nil, until_time: nil, config_file: nil)
-        @from_time = from_time
-        @until_time = until_time
+        @from_time = Util.utc_or_nil(from_time)
+        @until_time = Util.utc_or_nil(until_time)
         @config_file = config_file
       end
 
@@ -33,6 +33,7 @@ module Stash
         config_file_defaults.each do |cf|
           return cf if File.exist?(cf)
         end
+        nil
       end
 
       def self.config_file_defaults

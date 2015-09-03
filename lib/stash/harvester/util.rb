@@ -26,6 +26,19 @@ module Stash
       def self.ensure_leading_cap(str)
         str.sub(/./, &:upcase) if str
       end
+
+      # Ensures that the specified time is either nil or in UTC.
+      # @param time [Time, nil] the time
+      # @return the specified time, as a UTC +Time+
+      # @raise ArgumentError if +time+ is not UTC
+      def self.utc_or_nil(time)
+        if time && !time.utc?
+          fail ArgumentError, "time #{time}| must be in UTC"
+        else
+          time
+        end
+      end
+
     end
   end
 end

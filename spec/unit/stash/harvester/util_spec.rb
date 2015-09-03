@@ -53,6 +53,20 @@ module Stash
         end
       end
 
+      describe '#utc_or_nil' do
+        it 'returns a valid UTC Time parameter unchanged' do
+          time = Time.now.utc
+          expect(Util.utc_or_nil(time)).to be(time)
+        end
+        it 'raises ArgumentError for a Time that is not UTC' do
+          time = Time.new(2002, 10, 31, 2, 2, 2, '+02:00')
+          expect { Util.utc_or_nil(time) }.to raise_error do |e|
+            expect(e).to be_an ArgumentError
+            expect(e.message).to include("#{time}")
+          end
+        end
+      end
+
     end
   end
 end

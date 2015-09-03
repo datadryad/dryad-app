@@ -41,8 +41,8 @@ module Stash
         OptionParser.new do |opts|
           opts.on('-h', '--help', 'display this help and exit') { options.show_help = true }
           opts.on('-v', '--version', 'output version information and exit') { options.show_version = true }
-          opts.on('-f', '--from DATETIME', 'start date/time for selective harvesting') { |from_time| options.from_time = to_time(from_time) }
-          opts.on('-u', '--until DATETIME', 'end date/time for selective harvesting') { |until_time| options.until_time = to_time(until_time) }
+          opts.on('-f', '--from DATETIME', 'start date/time for selective harvesting') { |from_time| options.from_time = to_utc_time(from_time) }
+          opts.on('-u', '--until DATETIME', 'end date/time for selective harvesting') { |until_time| options.until_time = to_utc_time(until_time) }
           opts.on('-c', '--config FILE', 'configuration file') { |config_file| options.config_file = config_file }
         end
       end
@@ -54,7 +54,11 @@ module Stash
       attr_accessor :show_version
       attr_accessor :show_help
       attr_accessor :from_time
+
+      # @return [Time, nil] the
       attr_accessor :until_time
+
+      # @return [String, nil] the path to the specified config file
       attr_accessor :config_file
 
       def initialize(argv = nil)
@@ -83,6 +87,11 @@ module Stash
         end
       rescue ArgumentError
         raise(OptionParser::InvalidArgument, ": '#{time_str}' is not a valid ISO 8601 datetime")
+      end
+
+      def self.to_utc_time(time_str)
+        time = to_time(time_str)
+        Util.utc_or_nil(time)
       end
 
     end
