@@ -21,7 +21,7 @@ module Stash
         end
       end
 
-      private
+      # TODO: Refactor tests to make these private
 
       def self.ensure_config_file(config_file)
         config_file ||= default_config_file
