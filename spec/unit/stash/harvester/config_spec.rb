@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'fileutils'
 
 module Stash
   module Harvester
@@ -133,7 +134,7 @@ module Stash
         it 'raises an IOError for non-readable files' do
           Dir.mktmpdir do |tmpdir|
             unreadable_path = "#{tmpdir}/config.yml"
-            File.open(unreadable_path, 'w') {}
+            FileUtils.touch(unreadable_path)
             File.chmod(0000, unreadable_path)
             expect { Config.from_file(unreadable_path) }.to raise_error do |e|
               expect(e).to be_an IOError
