@@ -1,0 +1,30 @@
+<st:stash_wrapper xmlns:st="https://dash.cdlib.org/stash_wrapper/">
+  <st:identifier type="Handle">string</st:identifier>
+  <st:stash_administrative>
+    <st:version>
+      <st:version_number>201</st:version_number>
+      <st:date>2007-10-25</st:date>
+      <!--Optional:-->
+      <st:note>string</st:note>
+    </st:version>
+    <st:license>
+      <st:name>string</st:name>
+      <st:uri>http://www.any.org/ventos/verrantque</st:uri>
+    </st:license>
+    <st:embargo>
+      <st:type>download</st:type>
+      <st:period>string</st:period>
+      <st:start>2009-05-16</st:start>
+      <st:end>2003-08-08-07:00</st:end>
+    </st:embargo>
+    <!--Optional:-->
+    <st:inventory num_files="200">
+      <!--Zero or more repetitions:-->
+      <st:file>anyType</st:file>
+    </st:inventory>
+  </st:stash_administrative>
+  <st:stash_descriptive>
+    <!--You may enter ANY elements at this point-->
+    <AnyElement/>
+  </st:stash_descriptive>
+</st:stash_wrapper>
