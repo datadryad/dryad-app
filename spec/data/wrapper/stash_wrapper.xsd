@@ -238,7 +238,7 @@
             </xs:documentation>
         </xs:annotation>
         <xs:sequence>
-            <xs:element name="file" minOccurs="0" maxOccurs="unbounded">
+            <xs:element name="file" type="file_type" minOccurs="0" maxOccurs="unbounded">
                 <xs:annotation>
                     <xs:documentation xml:lang="en">
                         Dataset submission package file.

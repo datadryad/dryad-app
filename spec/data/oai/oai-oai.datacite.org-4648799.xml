@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resource xmlns='http://datacite.org/schema/kernel-3' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:schemaLocation='http://datacite.org/schema/kernel-3 http://schema.datacite.org/meta/kernel-3/metadata.xsd'>
+  <identifier identifierType='DOI'>10.14749/1407399498</identifier>
+  <creators>
+    <creator>
+      <creatorName>Zuma, Khangelani</creatorName>
+    </creator>
+    <creator>
+      <creatorName>Human Sciences Research Council</creatorName>
+    </creator>
+  </creators>
+  <titles>
+    <title xml:lang='en'>HSRC Master Sample II</title>
+  </titles>
+  <publisher>HSRC - Human Science Research Council SA</publisher>
+  <publicationYear>2014</publicationYear>
+  <contributors>
+    <contributor contributorType='Distributor'>
+      <contributorName>Human Sciences Research Council</contributorName>
+    </contributor>
+    <contributor contributorType='Funder'>
+      <contributorName>Human Sciences Research Council</contributorName>
+    </contributor>
+    <contributor contributorType='RightsHolder'>
+      <contributorName>Human Sciences Research Council</contributorName>
+    </contributor>
+  </contributors>
+  <language>eng</language>
+  <resourceType resourceTypeGeneral='Dataset'/>
+  <version>1.0</version>
+  <rightsList>
+    <rights>
+      By accessing the data, you give assurance that The data and documentation
+      will not be duplicated, redistributed or sold without prior approval from
+      the rights holder. The data will be used for scientific research or
+      educational purposes only. The data will only be used for the specified
+      purpose. If it is used for another purpose the additional purpose will be
+      registered. Redundant data files will be destroyed. The confidentiality of
+      individuals/organisations in the data will be preserved at all times. No
+      attempt will be made to obtain or derive information from the data to
+      identify individuals/organisations. The HSRC will be acknowledged in all
+      published and unpublished works based on the data according to the
+      provided citation. The HSRC will be informed of any books, articles,
+      conference papers, theses, dissertations, reports or other publications
+      resulting from work based in whole or in part on the data and
+      documentation. For archiving and bibliographic purposes an electronic copy
+      of all reports and publications based on the requested data will be sent
+      to the HSRC. To offer for deposit into the HSRC Data Collection any new
+      data sets which have been derived from or which have been created by the
+      combination of the data supplied with other data. The data team bears no
+      responsibility for use of the data or for interpretations or inferences
+      based upon such uses. Failure to comply with the End User License may
+      result in sanctions being imposed.
+    </rights>
+  </rightsList>
+  <descriptions>
+    <description descriptionType='Abstract' xml:lang='en'>
+      &lt;p&gt; The 2005 HSRC Master Sample was used for SABSSM 2008 and 2012,
+      the SANHANES study in 2012 and SASAS 2007-2010 (adjacent EAs) to obtain an
+      understanding of geographical spread of HIV/AIDS, perceptions and
+      attitudes of people and other health related studies over time.&lt;/p&gt;
+    </description>
+    <description descriptionType='Abstract' xml:lang='en'>
+      &lt;p&gt; A sample can be defined as a subset containing the
+      characteristics of a larger population. Samples are used in statistical
+      testing when population sizes are too large for the test to include all
+      possible members or observations. A sample should represent the whole
+      population and not reflect bias toward a specific attribute.[1]&lt;/p&gt;
+      &lt;p&gt; One of the most crucial aspects of sample design in household
+      surveys is its frame. The sampling frame has significant implications on
+      the cost and the quality of any survey, household or
+      otherwise.[2]&lt;/p&gt; &lt;p&gt; The sampling frame .... in a household
+      survey must cover the entire target population. When that frame is used
+      for multiple surveys or multiple rounds of the same survey it is known as
+      a master sample frame or .... master sample.[3]&lt;/p&gt; &lt;p&gt; A
+      master sample is a sample drawn from a population for use on a number of
+      future occasions, so as to avoid ad hoc sampling on each occasion.
+      Sometimes the master sample is large and subsequent inquiries are based on
+      a sub-sample from it.[4]&lt;/p&gt; &lt;p&gt; The HSRC compiles master
+      samples in order to construct samples for various HSRC research studies.
+      The 2005 HSRC Master Sample was used for SABSSM 2008 and 2012, SASAS
+      2007-2010 and the SANHANES study in 2012 to obtain an understanding of
+      geographical spread of HIV/AIDS, perceptions and attitudes of people and
+      other health related studies over time.&lt;/p&gt; &lt;p&gt; The 2005 HSRC
+      Master Sample was created in the following way:&lt;/p&gt; &lt;p&gt; South
+      Africa was delineated into EAs according to municipality and province.
+      Municipal boundaries were obtained from the Municipal Demarcation Board.
+      An Enumeration area (EA) is the smallest geographical unit (piece of land)
+      into which the country is divided for census or survey enumeration.[5] The
+      concepts and definitions of terms used for Census 2001 comply in most
+      instances with United Nations standards for censuses.&lt;/p&gt; &lt;p&gt;
+      A total of 1,000 census enumeration areas (EAs) from the 2001 population
+      census were randomly selected using probability proportional to size and
+      stratified by province, locality type and race in urban areas from a
+      database of 80 787 EAs that were mapped using aerial photography to
+      develop an HSRC master sample for selecting households.&lt;/p&gt;
+      &lt;p&gt; The ideal frame would be complete with respect to the target
+      population if all of its members (the universe) are covered by the
+      frame.&lt;/p&gt; &lt;p&gt; Ideal characteristics of a master
+      sample:&lt;/p&gt; &lt;ul&gt; &lt;li&gt; The master frame should be as
+      complete, accurate and current as practicable.&lt;/li&gt; &lt;li&gt; A
+      master sample frame for household surveys is typically developed from the
+      most recent census, just as a regular sample frame is.&lt;/li&gt;
+      &lt;li&gt; Because the master frame may be used during an entire
+      intercensal (between census) period, however, it will usually require
+      periodic and regular updating such as every 2-3 years.&lt;/li&gt;
+      &lt;li&gt; This is in contrast to a regular frame which is more likely to
+      be up-dated on an ad hoc basis and only when a particular survey is being
+      planned[6]&lt;/li&gt; &lt;/ul&gt; &lt;p&gt; [1]
+      http://www.investopedia.com/terms/s/sample.asp&lt;/p&gt; &lt;p&gt; [2]
+      http://unstats.un.org/unsd/demographic/meetings/egm/sampling_1203/docs/no_3.pdf&lt;/p&gt; &lt;p&gt; [3] http://unstats.un.org/unsd/demographic/meetings/egm/sampling_1203/docs/no_3.pdf&lt;/p&gt; &lt;p&gt; [4] A Dictionary of Statistical Terms, 5th edition, prepared for the International Statistical Institute by F.H.C. Marriott. Published for the International Statistical Institute by Longman Scientific and Technical. http://stats.oecd.org/glossary/detail.asp?ID=3708&lt;/p&gt; &lt;p&gt; [5] http://africageodownloads.info/128_mokgokolo.pdf&lt;/p&gt; &lt;p&gt; [6] http://unstats.un.org/unsd/demographic/meetings/egm/sampling_1203/docs/no_3.pdf&lt;/p&gt;
+    </description>
+  </descriptions>
+  <geoLocations>
+    <geoLocation>
+      <geoLocationPlace> National - all 9 provinces</geoLocationPlace>
+    </geoLocation>
+  </geoLocations>
+</resource>
