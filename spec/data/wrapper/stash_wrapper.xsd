@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xs:schema targetNamespace="https://dash.cdlib.org/stash_wrapper/"
-    xmlns="https://dash.cdlib.org/stash_wrapper/"
-    xmlns:xs="http://www.w3.org/2001/XMLSchema"
-    xmlns:vc="http://www.w3.org/2007/XMLSchema-versioning" elementFormDefault="qualified"
-    attributeFormDefault="unqualified" vc:minVersion="1.0" vc:maxVersion="1.1">
-    
+<xs:schema targetNamespace="http://dash.cdlib.org/stash_wrapper/"
+           xmlns="http://dash.cdlib.org/stash_wrapper/"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:vc="http://www.w3.org/2007/XMLSchema-versioning" elementFormDefault="qualified"
+           attributeFormDefault="unqualified" vc:minVersion="1.0" vc:maxVersion="1.1">
+
     <xs:annotation>
         <xs:documentation xml:lang="en">
             Stash wrapper schema, version 1.0
@@ -27,14 +27,14 @@
         <xs:sequence>
             <xs:element name="identifier" type="identifier_type" minOccurs="1"
                         maxOccurs="1">
-                 <xs:annotation>
+                <xs:annotation>
                     <xs:documentation xml:lang="en">
                         Typed dataset identifier.  Identifier types are drawn from the
                         DataCite schema list.
                     </xs:documentation>
                 </xs:annotation>
             </xs:element>
-            
+
             <xs:element name="stash_administrative" type="stash_administrative_type"
                         minOccurs="1" maxOccurs="1">
                 <xs:annotation>
@@ -43,7 +43,7 @@
                     </xs:documentation>
                 </xs:annotation>
             </xs:element>
-            
+
             <xs:element name="stash_descriptive" type="stash_descriptive_type" minOccurs="1"
                         maxOccurs="1">
                 <xs:annotation>
@@ -56,7 +56,7 @@
             </xs:element>
         </xs:sequence>
     </xs:complexType>
-    
+
     <xs:complexType name="identifier_type">
         <xs:simpleContent>
             <xs:extension base="xs:string">
@@ -68,7 +68,7 @@
                         </xs:documentation>
                     </xs:annotation>
                     <xs:simpleType>
-                        <xs:restriction base="xs:string">                            
+                        <xs:restriction base="xs:string">
                             <xs:enumeration value="ARK"/>
                             <xs:enumeration value="DOI"/>
                             <xs:enumeration value="Handle"/>
@@ -79,7 +79,7 @@
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
-    
+
     <xs:complexType name="stash_administrative_type">
         <xs:annotation>
             <xs:documentation xml:lang="en">
@@ -99,7 +99,7 @@
                     <xs:documentation xml:lang="en">
                         Dataset license.
                     </xs:documentation>
-                </xs:annotation>                
+                </xs:annotation>
             </xs:element>
             <xs:element name="embargo" type="embargo_type" minOccurs="1" maxOccurs="1">
                 <xs:annotation>
@@ -117,7 +117,7 @@
             </xs:element>
         </xs:sequence>
     </xs:complexType>
-    
+
     <xs:complexType name="version_type">
         <xs:annotation>
             <xs:documentation xml:lang="en">
@@ -150,7 +150,7 @@
             </xs:element>
         </xs:sequence>
     </xs:complexType>
-    
+
     <xs:complexType name="license_type">
         <xs:annotation>
             <xs:documentation xml:lang="en">
@@ -174,7 +174,7 @@
             </xs:element>
         </xs:sequence>
     </xs:complexType>
-    
+
     <xs:complexType name="embargo_type">
         <xs:annotation>
             <xs:documentation xml:lang="en">
@@ -217,7 +217,7 @@
             </xs:element>
         </xs:sequence>
     </xs:complexType>
-    
+
     <xs:simpleType name="embargo_type_type">
         <xs:annotation>
             <xs:documentation xml:lang="en">
@@ -230,7 +230,7 @@
             <xs:enumeration value="description"/>
         </xs:restriction>
     </xs:simpleType>
-    
+
     <xs:complexType name="inventory_type">
         <xs:annotation>
             <xs:documentation xml:lang="en">
@@ -254,7 +254,7 @@
             </xs:annotation>
         </xs:attribute>
     </xs:complexType>
-    
+
     <xs:complexType name="file_type">
         <xs:annotation>
             <xs:documentation xml:lang="en">
@@ -269,15 +269,15 @@
                     </xs:documentation>
                 </xs:annotation>
             </xs:element>
-            
+
             <xs:element name="size" type="size_type" minOccurs="1" maxOccurs="1">
-                 <xs:annotation>
+                <xs:annotation>
                     <xs:documentation xml:lang="en">
                         Dataset file size, as an integer.
                     </xs:documentation>
                 </xs:annotation>
             </xs:element>
-            
+
             <xs:element name="mime_type" type="xs:string" minOccurs="1" maxOccurs="1">
                 <xs:annotation>
                     <xs:documentation xml:lang="en">
@@ -287,7 +287,7 @@
             </xs:element>
         </xs:sequence>
     </xs:complexType>
-    
+
     <xs:complexType name="size_type">
         <xs:annotation>
             <xs:documentation xml:lang="en">
@@ -304,9 +304,9 @@
                     </xs:simpleType>
                 </xs:attribute>
             </xs:extension>
-         </xs:simpleContent>
+        </xs:simpleContent>
     </xs:complexType>
-      
+
     <xs:complexType name="stash_descriptive_type">
         <xs:annotation>
             <xs:documentation xml:lang="en">
