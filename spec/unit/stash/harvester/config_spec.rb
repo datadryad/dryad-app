@@ -156,6 +156,23 @@ module Stash
             end
           end
         end
+
+        it 'forwards IOErrors for unreadable files' do
+          Dir.mktmpdir do |tmpdir|
+            path = "#{tmpdir}/whatever.yml"
+            FileUtils.touch(path)
+            err = IOError.new('the message')
+            begin
+              allow(File).to receive(:read).with(path).and_raise(err)
+              expect { Config.from_file(path) }.to raise_error do |e|
+                expect(e).to be_an IOError
+                expect(e.message).to eq(err.message)
+              end
+            ensure
+              allow(File).to receive(:read).and_call_original
+            end
+          end
+        end
       end
 
     end
