@@ -7,6 +7,10 @@
 # Ignore bundler config.
 /.bundle
 
+#ignore files that shouldn't be shown publicly
+/config/database.yml
+/config/secrets.yml
+
 # Ignore all logfiles and tempfiles.
 /log/*
 !/log/.keep
@@ -14,7 +18,6 @@
 config/database.yml
 .rspec
 /spec/tmp
-.idea
 
 # Ignore code coverage reports.
 /coverage/
@@ -24,6 +27,7 @@ config/database.yml
 *.ipr
 *.iws
 .rakeTasks
+.idea
 
 # Ignore Emacs backups.
 *~
