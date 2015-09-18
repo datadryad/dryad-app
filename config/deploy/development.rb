@@ -9,7 +9,7 @@
 
 set :rails_env, "development"
 
-server 'uc3-dash2-dev.cdlib.org', user: 'dash2', roles: %w{web app}
+server 'uc3-dash2-dev.cdlib.org', user: 'dash2', roles: %w{web app db}
 
 set :passenger_pid, "#{deploy_to}/passenger.pid"
 set :passenger_log, "#{deploy_to}/passenger.log"
