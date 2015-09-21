@@ -31,6 +31,11 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 # Use Unicorn as the app server
 # gem 'unicorn'
 
+# We may want to change this branch later or change it per branch of our main app code
+gem 'stash_engine', :git => 'https://github.com/CDLUC3/stash_engine.git', :branch => 'development'
+gem 'stash_datacite', :git => 'https://github.com/CDLUC3/stash_datacite.git', :branch => 'development'
+
+
 # Use Capistrano for deployment
 gem 'capistrano', '~> 3.1'
 gem 'capistrano-rails', '~> 1.1'
@@ -53,6 +58,6 @@ group :development, :test do
   #test coverage
   gem 'simplecov' # TODO do we care about the version?
   gem 'simplecov-console' # TODO do we care about the version?
-  
+
 end
 
