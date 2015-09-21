@@ -1,5 +1,5 @@
 require 'xml/mapping'
-require_relative 'uri_node'
+require 'xml/mapping_extensions'
 
 module Stash
   module Wrapper

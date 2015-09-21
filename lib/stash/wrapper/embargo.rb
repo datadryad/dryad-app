@@ -1,10 +1,10 @@
 require 'xml/mapping'
+require 'xml/mapping_extensions'
 require 'ruby-enum'
-require_relative 'date_node'
 
 module Stash
   module Wrapper
-    
+
     class EmbargoType
       include Ruby::Enum
 
@@ -14,24 +14,11 @@ module Stash
     end
 
     # XML mapping for {EmbargoType}
-    class EmbargoTypeNode < ::XML::Mapping::SingleAttributeNode
-      def initialize(*args)
-        path, *args = super(*args)
-        @path = ::XML::XXPath.new(path)
-        args
-      end
-
-      def extract_attr_value(xml)
-        value = default_when_xpath_err { @path.first(xml).text }
-        value ? EmbargoType.parse(value) : nil
-      end
-
-      def set_attr_value(xml, value)
-        @path.first(xml, ensure_created: true).text = value.to_s
-      end
+    class EmbargoTypeNode < ::XML::MappingExtensions::EnumNodeBase
+      ENUM_CLASS = EmbargoType
     end
     ::XML::Mapping.add_node_class EmbargoTypeNode
-    
+
     # Dataset embargo.
     class Embargo
       include ::XML::Mapping

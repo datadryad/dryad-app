@@ -1,4 +1,5 @@
 require 'xml/mapping'
+require 'xml/mapping_extensions'
 require 'ruby-enum'
 
 module Stash
@@ -15,21 +16,8 @@ module Stash
     end
 
     # XML mapping for {IdentifierType}
-    class IdentifierTypeNode < ::XML::Mapping::SingleAttributeNode
-      def initialize(*args)
-        path, *args = super(*args)
-        @path = ::XML::XXPath.new(path)
-        args
-      end
-
-      def extract_attr_value(xml)
-        value = default_when_xpath_err { @path.first(xml).text }
-        value ? IdentifierType.parse(value) : nil
-      end
-
-      def set_attr_value(xml, value)
-        @path.first(xml, ensure_created: true).text = value.to_s
-      end
+    class IdentifierTypeNode < ::XML::MappingExtensions::EnumNodeBase
+      ENUM_CLASS = IdentifierType
     end
     ::XML::Mapping.add_node_class IdentifierTypeNode
 
