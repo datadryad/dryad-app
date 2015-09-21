@@ -14,6 +14,18 @@ module Stash
           expect(errors.empty?).to be true
         end
       end
+
+      describe '#load_from_xml' do
+        it 'parses an XML file' do
+          data = File.read('spec/data/wrapper/stash_wrapper.xml')
+          xml = REXML::Document.new(data).root
+          wrapper = StashWrapper.load_from_xml(xml)
+
+          id = wrapper.identifier
+          expect(id.type).to eq(Identifier::DOI)
+          expect(id.value).to eq('10.12345/1234567890')
+        end
+      end
     end
   end
 end
