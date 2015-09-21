@@ -9,9 +9,9 @@ Gem::Specification.new do |s|
   s.version     = StashDatacite::VERSION
   s.authors     = ["sfisher"]
   s.email       = ["scott.fisher@ucop.edu"]
-  s.homepage    = "TODO"
-  s.summary     = "TODO: Summary of StashDatacite."
-  s.description = "TODO: Description of StashDatacite."
+  s.homepage    = "https://github.com/CDLUC3/stash_datacite"  #TODO, change
+  s.summary     = "An engine for working with the DataCite schema in Stash." #TODO
+  s.description = "An engine for working with the DataCite schema in Stash." #TODO
   s.license     = "MIT"
 
   s.files = Dir["{app,config,db,lib}/**/*", "MIT-LICENSE", "Rakefile", "README.rdoc"]
