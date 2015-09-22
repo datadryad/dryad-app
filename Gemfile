@@ -31,9 +31,19 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 # Use Unicorn as the app server
 # gem 'unicorn'
 
-# We may want to change this branch later or change it per branch of our main app code
-gem 'stash_engine', :git => 'https://github.com/CDLUC3/stash_engine.git', :branch => 'development'
-gem 'stash_datacite', :git => 'https://github.com/CDLUC3/stash_datacite.git', :branch => 'development'
+
+if File.exist?(File.join('..', 'stash_engine'))
+  gem 'stash_engine', :path => '../stash_engine'
+else
+  gem 'stash_engine', :git => 'https://github.com/CDLUC3/stash_engine.git', :branch => 'development'
+end
+
+if File.exist?(File.join('..', 'stash_datacite'))
+  gem 'stash_datacite', :path => '../stash_datacite'
+else
+  gem 'stash_datacite', :git => 'https://github.com/CDLUC3/stash_datacite.git', :branch => 'development'
+end
+
 
 
 # Use Capistrano for deployment
