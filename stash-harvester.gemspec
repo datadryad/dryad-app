@@ -30,7 +30,6 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'resync-client', '~> 0.3', '>= 0.3.3'
   spec.add_dependency 'sqlite3', '~> 1.3', '>= 1.3.10'
   spec.add_dependency 'standalone_migrations', '~> 4.0', '>= 4.0.2'
-  spec.add_dependency 'xml-mapping_extensions', '~> 0.1.0'
 
   spec.add_development_dependency 'bundler', '~> 1.7'
   spec.add_development_dependency 'equivalent-xml', '~> 0.6.0'
