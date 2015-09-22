@@ -1,12 +1,14 @@
+require 'xml/mapping'
+require 'xml/mapping_extensions'
+
 module Stash
   module Wrapper
-    # The name of this gem
-    NAME = 'stash-wrapper'
-
-    # The version of this gem
-    VERSION = '0.0.1'
-
-    # The copyright notice for this gem
-    COPYRIGHT = 'Copyright (c) 2015 The Regents of the University of California'
+    # Dataset version
+    class Version
+      include ::XML::Mapping
+      numeric_node :version_number, 'version_number'
+      date_node :date, 'date'
+      text_node :note, 'note', default_value: nil
+    end
   end
 end
