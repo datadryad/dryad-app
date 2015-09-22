@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 require 'nokogiri'
-require 'stash/wrapper'
+require 'rexml/element'
 
 module Stash
   module Wrapper
@@ -22,8 +22,18 @@ module Stash
           wrapper = StashWrapper.load_from_xml(xml)
 
           id = wrapper.identifier
-          expect(id.type).to eq(Identifier::DOI)
+          expect(id.type).to eq(IdentifierType::DOI)
           expect(id.value).to eq('10.12345/1234567890')
+
+          # TODO: other elements
+
+          descriptive = wrapper.stash_descriptive
+          expect(descriptive).to be_an(Array)
+          expect(descriptive.size).to eq(1)
+          desc_elem = descriptive[0]
+          expect(desc_elem).to be_an(REXML::Element)
+
+          # TODO: more assertions
         end
       end
     end
