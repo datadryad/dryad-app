@@ -1,8 +1,8 @@
 require 'xml/mapping'
-require_relative 'version'
-require_relative 'license'
-require_relative 'embargo'
-require_relative 'inventory'
+require_relative 'st_version'
+require_relative 'st_license'
+require_relative 'st_embargo'
+require_relative 'st_inventory'
 
 module Stash
   module Wrapper

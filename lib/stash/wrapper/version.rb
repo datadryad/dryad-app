@@ -1,14 +1,13 @@
-require 'xml/mapping'
-require 'xml/mapping_extensions'
-
 module Stash
+  # Code relating to the {https://dash.cdlib.org/stash_wrapper/ Stash wrapper format}
   module Wrapper
-    # Dataset version
-    class Version
-      include ::XML::Mapping
-      numeric_node :version_number, 'version_number'
-      date_node :date, 'date'
-      text_node :note, 'note', default_value: nil
-    end
+    # The name of this gem
+    NAME = 'stash-wrapper'
+
+    # The version of this gem
+    VERSION = '0.0.1'
+
+    # The copyright notice for this gem
+    COPYRIGHT = 'Copyright (c) 2015 The Regents of the University of California'
   end
 end

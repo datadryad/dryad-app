@@ -1,5 +1,5 @@
 require 'xml/mapping'
-require_relative 'identifier'
+require_relative 'st_identifier'
 require_relative 'stash_administrative'
 require_relative 'stash_descriptive'
 
