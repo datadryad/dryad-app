@@ -126,7 +126,18 @@ module Stash
           )
 
           wrapper_xml = wrapper.save_to_xml
+
+          File.open('spec/data/wrapper/wrapper-2-actual.xml', 'w') { |file|
+            formatter = REXML::Formatters::Pretty.new
+            formatter.width = 200
+            formatter.compact = true
+            file.write(formatter.write(wrapper_xml, ''))
+          }
+
           expected_xml = File.read('spec/data/wrapper/wrapper-2.xml')
+
+          # TODO: figure out Zulu dates
+          # TODO: figure out namespace prefixes
 
           expect(wrapper_xml).to be_xml(expected_xml)
         end
