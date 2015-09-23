@@ -2,7 +2,7 @@
 <xs:schema targetNamespace="http://dash.cdlib.org/stash_wrapper/"
            xmlns="http://dash.cdlib.org/stash_wrapper/"
            xmlns:xs="http://www.w3.org/2001/XMLSchema"
-           xmlns:vc="http://www.w3.org/2007/XMLSchema-versioning" elementFormDefault="qualified"
+           xmlns:vc="http://www.w3.org/2007/XMLSchema-versioning/XMLSchema-versioning.xsd" elementFormDefault="qualified"
            attributeFormDefault="unqualified" vc:minVersion="1.0" vc:maxVersion="1.1">
 
     <xs:annotation>
