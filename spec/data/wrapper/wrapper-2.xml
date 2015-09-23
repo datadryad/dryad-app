@@ -11,8 +11,8 @@
             <st:note>Sample wrapped Datacite document</st:note>
         </st:version>
         <st:license>
-            <st:name>CC BY-NC-ND</st:name>
-            <st:uri>http://creativecommons.org/licenses/by-nc-nd/4.0/</st:uri>
+            <st:name>Creative Commons Attribution 4.0 International (CC-BY)</st:name>
+            <st:uri>https://creativecommons.org/licenses/by/4.0/legalcode</st:uri>
         </st:license>
         <st:embargo>
             <st:type>download</st:type>
@@ -23,52 +23,52 @@
         <st:inventory num_files="10">
             <st:file>
                 <st:pathname>HSRC_MasterSampleII.dat</st:pathname>
-                <st:size>12345</st:size>
+                <st:size unit="B">12345</st:size>
                 <st:mime_type>text/plain</st:mime_type>
             </st:file>
             <st:file>
                 <st:pathname>HSRC_MasterSampleII.csv</st:pathname>
-                <st:size>67890</st:size>
+                <st:size unit="B">67890</st:size>
                 <st:mime_type>text/csv</st:mime_type>
             </st:file>
             <st:file>
                 <st:pathname>HSRC_MasterSampleII.sas7bdat</st:pathname>
-                <st:size>123456</st:size>
+                <st:size unit="B">123456</st:size>
                 <st:mime_type>application/x-sas-data</st:mime_type>
             </st:file>
             <st:file>
                 <st:pathname>formats.sas7bcat</st:pathname>
-                <st:size>78910</st:size>
+                <st:size unit="B">78910</st:size>
                 <st:mime_type>application/x-sas-catalog</st:mime_type>
             </st:file>
             <st:file>
                 <st:pathname>HSRC_MasterSampleII.sas</st:pathname>
-                <st:size>11121</st:size>
+                <st:size unit="B">11121</st:size>
                 <st:mime_type>application/x-sas</st:mime_type>
             </st:file>
             <st:file>
                 <st:pathname>HSRC_MasterSampleII.sav</st:pathname>
-                <st:size>31415</st:size>
+                <st:size unit="B">31415</st:size>
                 <st:mime_type>application/x-sav</st:mime_type>
             </st:file>
             <st:file>
                 <st:pathname>HSRC_MasterSampleII.sps</st:pathname>
-                <st:size>16171</st:size>
+                <st:size unit="B">16171</st:size>
                 <st:mime_type>application/x-spss</st:mime_type>
             </st:file>
             <st:file>
                 <st:pathname>HSRC_MasterSampleII.dta</st:pathname>
-                <st:size>81920</st:size>
+                <st:size unit="B">81920</st:size>
                 <st:mime_type>application/x-dta</st:mime_type>
             </st:file>
             <st:file>
                 <st:pathname>HSRC_MasterSampleII.dct</st:pathname>
-                <st:size>212223</st:size>
+                <st:size unit="B">212223</st:size>
                 <st:mime_type>application/x-dct</st:mime_type>
             </st:file>
             <st:file>
                 <st:pathname>HSRC_MasterSampleII.do</st:pathname>
-                <st:size>242526</st:size>
+                <st:size unit="B">242526</st:size>
                 <st:mime_type>application/x-do</st:mime_type>
             </st:file>
         </st:inventory>

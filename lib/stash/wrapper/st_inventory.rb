@@ -38,6 +38,12 @@ module Stash
       object_node :size, 'size'
       mime_type_node :mime_type, 'mime_type'
 
+      def initialize(pathname:, size_bytes:, mime_type:)
+        self.pathname = pathname
+        self.size_bytes = size_bytes
+        self.mime_type = mime_type
+      end
+
       def size_bytes=(bytes)
         self.size = Size.new(bytes: bytes)
       end
@@ -53,6 +59,11 @@ module Stash
 
       array_node :files, 'file', class: StashFile, default_value: []
       numeric_node :num_files, '@num_files', default_value: 0
+
+      def initialize(files:)
+        self.files = files
+        self.num_files = files.size
+      end
     end
   end
 end
