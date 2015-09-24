@@ -15,7 +15,7 @@ module Stash
       object_node :stash_administrative, 'stash_administrative', class: StashAdministrative
       descriptive_node :stash_descriptive, 'stash_descriptive'
 
-      def initialize(identifier:, version:, license:, embargo:, inventory:, descriptive_elements:)
+      def initialize(identifier:, version:, license:, embargo:, inventory:, descriptive_elements:) # rubocop:disable Metrics/ParameterLists
         self.identifier = identifier
         self.stash_administrative = StashAdministrative.new(
           version: version,
