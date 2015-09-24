@@ -44,12 +44,25 @@ module Stash
         self.mime_type = mime_type
       end
 
+      def mime_type=(value)
+        @mime_type = to_mime_type(value)
+      end
+
       def size_bytes=(bytes)
         self.size = Size.new(bytes: bytes)
       end
 
       def size_bytes
-        self.size.size
+        size.size
+      end
+
+      private
+
+      def to_mime_type(value)
+        return nil unless value
+        return value if value.is_a?(MIME::Type)
+        mt_string = value.to_s
+        (mt = MIME::Types[mt_string].first) ? mt : MIME::Type.new(mt_string)
       end
     end
 

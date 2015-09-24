@@ -57,7 +57,7 @@ module Stash
 
           file = inventory.files[0]
           expect(file.pathname).to eq('mydata.xlsx')
-          expect(file.size_bytes).to eq(12345678)
+          expect(file.size_bytes).to eq(12_345_678)
           expect(file.mime_type).to eq(MIME::Type.new('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'))
 
           descriptive = wrapper.stash_descriptive
@@ -111,33 +111,32 @@ module Stash
             embargo: Embargo.new(type: EmbargoType::DOWNLOAD, period: '1 year', start_date: Date.new(2014, 8, 18), end_date: Date.new(2013, 8, 18)),
             inventory: Inventory.new(
               files: [
-                  StashFile.new(pathname: 'HSRC_MasterSampleII.dat', size_bytes: 12345, mime_type: MIME::Type.new('text/plain')),
-                  StashFile.new(pathname: 'HSRC_MasterSampleII.csv', size_bytes: 67890, mime_type: MIME::Type.new('text/csv')),
-                  StashFile.new(pathname: 'HSRC_MasterSampleII.sas7bdat', size_bytes: 123456, mime_type: MIME::Type.new('application/x-sas-data')),
-                  StashFile.new(pathname: 'formats.sas7bcat', size_bytes: 78910, mime_type: MIME::Type.new('application/x-sas-catalog')),
-                  StashFile.new(pathname: 'HSRC_MasterSampleII.sas', size_bytes: 11121, mime_type: MIME::Type.new('application/x-sas')),
-                  StashFile.new(pathname: 'HSRC_MasterSampleII.sav', size_bytes: 31415, mime_type: MIME::Type.new('application/x-sav')),
-                  StashFile.new(pathname: 'HSRC_MasterSampleII.sps', size_bytes: 16171, mime_type: MIME::Type.new('application/x-spss')),
-                  StashFile.new(pathname: 'HSRC_MasterSampleII.dta', size_bytes: 81920, mime_type: MIME::Type.new('application/x-dta')),
-                  StashFile.new(pathname: 'HSRC_MasterSampleII.dct', size_bytes: 212223, mime_type: MIME::Type.new('application/x-dct')),
-                  StashFile.new(pathname: 'HSRC_MasterSampleII.do', size_bytes: 242526, mime_type: MIME::Type.new('application/x-do'))
+                StashFile.new(pathname: 'HSRC_MasterSampleII.dat', size_bytes: 12_345, mime_type: MIME::Type.new('text/plain')),
+                StashFile.new(pathname: 'HSRC_MasterSampleII.csv', size_bytes: 67_890, mime_type: MIME::Type.new('text/csv')),
+                StashFile.new(pathname: 'HSRC_MasterSampleII.sas7bdat', size_bytes: 123_456, mime_type: MIME::Type.new('application/x-sas-data')),
+                StashFile.new(pathname: 'formats.sas7bcat', size_bytes: 78_910, mime_type: MIME::Type.new('application/x-sas-catalog')),
+                StashFile.new(pathname: 'HSRC_MasterSampleII.sas', size_bytes: 11_121, mime_type: MIME::Type.new('application/x-sas')),
+                StashFile.new(pathname: 'HSRC_MasterSampleII.sav', size_bytes: 31_415, mime_type: MIME::Type.new('application/x-sav')),
+                StashFile.new(pathname: 'HSRC_MasterSampleII.sps', size_bytes: 16_171, mime_type: MIME::Type.new('application/x-spss')),
+                StashFile.new(pathname: 'HSRC_MasterSampleII.dta', size_bytes: 81_920, mime_type: MIME::Type.new('application/x-dta')),
+                StashFile.new(pathname: 'HSRC_MasterSampleII.dct', size_bytes: 212_223, mime_type: MIME::Type.new('application/x-dct')),
+                StashFile.new(pathname: 'HSRC_MasterSampleII.do', size_bytes: 242_526, mime_type: MIME::Type.new('application/x-do'))
               ]),
             descriptive_elements: [payload_xml]
           )
 
           wrapper_xml = wrapper.save_to_xml
 
-          File.open('spec/data/wrapper/wrapper-2-actual.xml', 'w') { |file|
+          File.open('spec/data/wrapper/wrapper-2-actual.xml', 'w') do |file|
             formatter = REXML::Formatters::Pretty.new
             formatter.width = 200
             formatter.compact = true
             file.write(formatter.write(wrapper_xml, ''))
-          }
+          end
 
           expected_xml = File.read('spec/data/wrapper/wrapper-2.xml')
 
-          # TODO: figure out Zulu dates
-          # TODO: figure out namespace prefixes
+          # TODO: force rs: namespace prefix
 
           expect(wrapper_xml).to be_xml(expected_xml)
         end

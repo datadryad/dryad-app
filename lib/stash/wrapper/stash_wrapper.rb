@@ -18,15 +18,15 @@ module Stash
       def initialize(identifier:, version:, license:, embargo:, inventory:, descriptive_elements:)
         self.identifier = identifier
         self.stash_administrative = StashAdministrative.new(
-            version: version,
-            license: license,
-            embargo: embargo,
-            inventory: inventory
+          version: version,
+          license: license,
+          embargo: embargo,
+          inventory: inventory
         )
         self.stash_descriptive = descriptive_elements
       end
 
-      def pre_save(options = {mapping: :_default})
+      def pre_save(options = { mapping: :_default })
         xml = super(options)
         xml.add_namespace('http://dash.cdlib.org/stash_wrapper/')
         xml.add_namespace('xsi', 'http://www.w3.org/2001/XMLSchema-instance')
