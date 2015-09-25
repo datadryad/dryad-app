@@ -1,23 +1,10 @@
 require 'xml/mapping'
 require 'xml/mapping_extensions'
-require 'ruby-enum'
+
+require_relative 'st_embargo_type_node'
 
 module Stash
   module Wrapper
-
-    class EmbargoType
-      include Ruby::Enum
-
-      define :NONE, 'none'
-      define :DOWNLOAD, 'download'
-      define :DESCRIPTION, 'description'
-    end
-
-    # XML mapping for {EmbargoType}
-    class EmbargoTypeNode < ::XML::MappingExtensions::EnumNodeBase
-      ENUM_CLASS = EmbargoType
-    end
-    ::XML::Mapping.add_node_class EmbargoTypeNode
 
     # Dataset embargo.
     class Embargo
