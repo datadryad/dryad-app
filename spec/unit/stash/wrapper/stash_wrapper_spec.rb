@@ -102,20 +102,20 @@ module Stash
         describe 'namespace handling' do
           before :each do
             wrapper = StashWrapper.new(
-                identifier: Identifier.new(type: IdentifierType::DOI, value: '10.14749/1407399498'),
-                version: Version.new(number: 1, date: Date.new(2013, 8, 18), note: 'Sample wrapped Datacite document'),
-                license: License::CC_BY,
-                embargo: Embargo.new(type: EmbargoType::DOWNLOAD, period: '1 year', start_date: Date.new(2014, 8, 18), end_date: Date.new(2013, 8, 18)),
-                inventory: Inventory.new(
-                    files: [
-                        StashFile.new(pathname: 'HSRC_MasterSampleII.dat', size_bytes: 12_345, mime_type: 'text/plain')
-                    ]),
-                # Note: the recursive asserts only work because descriptive_elements is empty
-                descriptive_elements: []
+              identifier: Identifier.new(type: IdentifierType::DOI, value: '10.14749/1407399498'),
+              version: Version.new(number: 1, date: Date.new(2013, 8, 18), note: 'Sample wrapped Datacite document'),
+              license: License::CC_BY,
+              embargo: Embargo.new(type: EmbargoType::DOWNLOAD, period: '1 year', start_date: Date.new(2014, 8, 18), end_date: Date.new(2013, 8, 18)),
+              inventory: Inventory.new(
+                files: [
+                  StashFile.new(pathname: 'HSRC_MasterSampleII.dat', size_bytes: 12_345, mime_type: 'text/plain')
+                ]),
+              # Note: the recursive asserts only work because descriptive_elements is empty
+              descriptive_elements: []
             )
             @wrapper_xml = wrapper.save_to_xml
           end
-          
+
           it 'sets the correct namespace' do
             assert_st = lambda do |elem|
               actual = elem.namespace

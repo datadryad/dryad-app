@@ -7,7 +7,6 @@
         <st:version>
             <st:version_number>1</st:version_number>
             <st:date>2013-08-18Z</st:date>
-            <!--Optional:-->
             <st:note>Sample wrapped Datacite document</st:note>
         </st:version>
         <st:license>

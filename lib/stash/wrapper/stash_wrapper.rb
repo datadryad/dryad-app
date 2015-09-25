@@ -37,10 +37,10 @@ module Stash
         xml
       end
 
-      def save_to_xml(options={:mapping=>:_default})
+      def save_to_xml(options = { mapping: :_default })
         elem = super(options)
         set_prefix(prefix: NAMESPACE_PREFIX, elem: elem)
-        elem.add_namespace(nil)
+        elem.add_namespace(nil) # clear the no-prefix namespace
         elem.add_namespace(NAMESPACE_PREFIX, NAMESPACE)
         elem
       end
@@ -52,7 +52,7 @@ module Stash
 
         # name= with a prefixed name sets namespace by side effect and is the only way to actually output the prefix
         elem.name = "#{prefix}:#{elem.name}"
-        elem.each_element { |e| set_prefix(prefix: prefix, elem: e)}
+        elem.each_element { |e| set_prefix(prefix: prefix, elem: e) }
       end
 
     end
