@@ -6,14 +6,6 @@
 
 Gem for working with the Stash [XML wrapper format](https://dash.cdlib.org/stash_wrapper/stash_wrapper.xsd).
 
-## Usage
-
-The `Stash::Wrapper::StashWrapper` class represents a single Stash wrapper document.
-It accepts a payload of one or more XML metadata documents in the form of the
-`descriptive_elements` attribute, an array of `REXML::Element` objects. On calling
-`save_to_xml` on the `StashWrapper` instance, these elements will be embedded in the
-wrapper's `<st:stash_descriptive>` element.
-
 The `StashWrapper` object graph mostly mirrors the `stash_wrapper` schema, though some
 simpler elements have been collapsed into object attributes. Also, some classes and
 attributes have slightly different names from the corresponding XML attributes in order
@@ -46,6 +38,14 @@ to avoid colliding with Ruby keywords (e.g. `end` &rArr; `end_date`) or standard
 Note that [Ruby::Enum](https://github.com/dblock/ruby-enum) enum classes are provided
 for embargo type (`EmbargoType`), identifier type (`IdentifierType`), and size unit
 (`SizeUnit`).
+
+## Usage
+
+The `Stash::Wrapper::StashWrapper` class represents a single Stash wrapper document.
+It accepts a payload of one or more XML metadata documents in the form of the
+`descriptive_elements` attribute, an array of `REXML::Element` objects. On calling
+`save_to_xml` on the `StashWrapper` instance, these elements will be embedded in the
+wrapper's `<st:stash_descriptive>` element.
 
 ### Full example
 
