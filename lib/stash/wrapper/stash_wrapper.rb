@@ -49,7 +49,9 @@ module Stash
 
       def set_prefix(prefix:, elem:)
         return unless elem.namespace == NAMESPACE
-        elem.prefix = prefix
+
+        # name= with a prefixed name sets namespace by side effect and is the only way to actually output the prefix
+        elem.name = "#{prefix}:#{elem.name}"
         elem.each_element { |e| set_prefix(prefix: prefix, elem: e)}
       end
 

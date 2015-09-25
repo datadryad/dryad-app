@@ -145,6 +145,14 @@ module Stash
             end
             assert_st.call(@wrapper_xml.root)
           end
+
+          it 'includes the prefix in the name' do
+            assert_st = lambda do |elem|
+              expect(elem.to_s).to start_with("<#{StashWrapper::NAMESPACE_PREFIX}:")
+              elem.each_element { |e| assert_st.call(e) }
+            end
+            assert_st.call(@wrapper_xml.root)
+          end
         end
 
         it 'maps to XML' do
@@ -176,19 +184,14 @@ module Stash
 
           wrapper_xml = wrapper.save_to_xml
 
-          puts wrapper_xml
-
-          File.open('spec/data/wrapper/wrapper-2-actual.xml', 'w') do |file|
-            formatter = REXML::Formatters::Pretty.new
-            formatter.width = 200
-            formatter.compact = true
-            file.write(formatter.write(wrapper_xml, ''))
-          end
+          # File.open('spec/data/wrapper/wrapper-2-actual.xml', 'w') do |file|
+          #   formatter = REXML::Formatters::Pretty.new
+          #   formatter.width = 200
+          #   formatter.compact = true
+          #   file.write(formatter.write(wrapper_xml, ''))
+          # end
 
           expected_xml = File.read('spec/data/wrapper/wrapper-2.xml')
-
-          # TODO: force rs: namespace prefix
-
           expect(wrapper_xml).to be_xml(expected_xml)
         end
       end
