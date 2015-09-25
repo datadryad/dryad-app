@@ -2,7 +2,7 @@ require 'ruby-enum'
 
 module Stash
   module Wrapper
-    # Identifier type, drawn from the list defined by the DataCite schema.
+    # Controlled vocabulary for {Identifier#type}
     class IdentifierType
       include Ruby::Enum
 

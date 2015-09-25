@@ -6,10 +6,14 @@ require_relative 'stash_administrative'
 
 module Stash
   module Wrapper
+    # Mapping for the root `<st:stash_wrapper>` element
     class StashWrapper
       include ::XML::Mapping
 
+      # The `stash_wrapper` namespace
       NAMESPACE = 'http://dash.cdlib.org/stash_wrapper/'
+
+      # The `st` prefix for the `stash_wrapper` namespace
       NAMESPACE_PREFIX = 'st'
 
       root_element_name 'stash_wrapper'
@@ -18,7 +22,20 @@ module Stash
       object_node :stash_administrative, 'stash_administrative', class: StashAdministrative
       descriptive_node :stash_descriptive, 'stash_descriptive'
 
-      def initialize(identifier:, version:, license:, embargo:, inventory:, descriptive_elements:) # rubocop:disable Metrics/ParameterLists
+      # Creates a new {StashWrapper}. As a convenience, constructs an
+      # internal {StashAdministrative} directly from the supplied
+      # administrative elements.
+      #
+      # @param identifier [Identifier] the identifier
+      # @param version [Version] the version
+      # @param license [License] the license
+      # @param embargo [Embargo] the embargo. Note that per the schema,
+      #   an `<st:embargo>` element is required even if there is no embargo
+      #   on the dataset (in which case it should use {EmbargoType::NONE}).
+      # @param inventory [Inventory, nil] the (optional) file inventory
+      # @param descriptive_elements [Array<REXML::Element>] the encapsulated
+      #   XML metadata
+      def initialize(identifier:, version:, license:, embargo:, inventory: nil, descriptive_elements:) # rubocop:disable Metrics/ParameterLists
         self.identifier = identifier
         self.stash_administrative = StashAdministrative.new(
           version: version,
@@ -29,6 +46,7 @@ module Stash
         self.stash_descriptive = descriptive_elements
       end
 
+      # Overrides `XML::Mapping#pre_save` to set the XML namespace and schema location.
       def pre_save(options = { mapping: :_default })
         xml = super(options)
         xml.add_namespace(NAMESPACE)
@@ -37,6 +55,9 @@ module Stash
         xml
       end
 
+      # Overrides `XML::Mapping#save_to_xml` to set the XML namespace prefix on all
+      # `stash_wrapper` elements. (The elements in `descriptive_elements` should retain
+      # their existing namespaces and prefixes, if any.)
       def save_to_xml(options = { mapping: :_default })
         elem = super(options)
         set_prefix(prefix: NAMESPACE_PREFIX, elem: elem)
@@ -49,7 +70,6 @@ module Stash
 
       def set_prefix(prefix:, elem:)
         return unless elem.namespace == NAMESPACE
-
         # name= with a prefixed name sets namespace by side effect and is the only way to actually output the prefix
         elem.name = "#{prefix}:#{elem.name}"
         elem.each_element { |e| set_prefix(prefix: prefix, elem: e) }

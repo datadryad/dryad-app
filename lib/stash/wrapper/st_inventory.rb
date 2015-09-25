@@ -4,13 +4,15 @@ require_relative 'st_stash_file'
 module Stash
   module Wrapper
 
-    # File inventory of the dataset submission package.
+    # Mapping class for `<st:inventory>`
     class Inventory
       include ::XML::Mapping
 
       array_node :files, 'file', class: StashFile, default_value: []
       numeric_node :num_files, '@num_files', default_value: 0
 
+      # creates a new {Inventory} object
+      # @param files [List<StashFile>] The inventory of files
       def initialize(files:)
         self.files = files
         self.num_files = files.size

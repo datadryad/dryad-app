@@ -6,7 +6,7 @@ require_relative 'st_embargo_type_node'
 module Stash
   module Wrapper
 
-    # Dataset embargo.
+    # Mapping class for `<st:embargo>`
     class Embargo
       include ::XML::Mapping
       embargo_type_node :type, 'type'
@@ -14,6 +14,11 @@ module Stash
       date_node :start_date, 'start', zulu: true
       date_node :end_date, 'end', zulu: true
 
+      # Creates a new {Embargo} object
+      # @param type [EmbargoType] The embargo type
+      # @param period [String] The embargo period
+      # @param start_date [Date] The embargo start date
+      # @param end_date [Date] The embargo end date
       def initialize(type:, period:, start_date:, end_date:)
         self.type = type
         self.period = period
