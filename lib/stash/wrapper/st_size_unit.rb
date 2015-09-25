@@ -8,4 +8,3 @@ module Stash
     end
   end
 end
-

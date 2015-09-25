@@ -10,5 +10,3 @@ module Stash
     ::XML::Mapping.add_node_class EmbargoTypeNode
   end
 end
-
-

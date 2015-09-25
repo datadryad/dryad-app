@@ -99,29 +99,52 @@ module Stash
 
       describe '#save_to_xml' do
 
-        it 'forces the st: prefix' do
-          wrapper = StashWrapper.new(
-              identifier: Identifier.new(type: IdentifierType::DOI, value: '10.14749/1407399498'),
-              version: Version.new(number: 1, date: Date.new(2013, 8, 18), note: 'Sample wrapped Datacite document'),
-              license: License::CC_BY,
-              embargo: Embargo.new(type: EmbargoType::DOWNLOAD, period: '1 year', start_date: Date.new(2014, 8, 18), end_date: Date.new(2013, 8, 18)),
-              inventory: Inventory.new(
-                  files: [
-                      StashFile.new(pathname: 'HSRC_MasterSampleII.dat', size_bytes: 12_345, mime_type: 'text/plain'),
-                  ]),
-              descriptive_elements: []
-          )
-
-          # Note: this only works because descriptive_elements is empty
-          assert_st = lambda do |elem|
-            expect(elem.prefix).to eq(StashWrapper::NAMESPACE_PREFIX)
-            expect(elem.namespace).to eq(StashWrapper::NAMESPACE)
-            expect(elem.namespace(StashWrapper::NAMESPACE_PREFIX)).to eq(StashWrapper::NAMESPACE)
-            elem.elements.each { |e| assert_st.call(e) }
+        describe 'namespace handling' do
+          before :each do
+            wrapper = StashWrapper.new(
+                identifier: Identifier.new(type: IdentifierType::DOI, value: '10.14749/1407399498'),
+                version: Version.new(number: 1, date: Date.new(2013, 8, 18), note: 'Sample wrapped Datacite document'),
+                license: License::CC_BY,
+                embargo: Embargo.new(type: EmbargoType::DOWNLOAD, period: '1 year', start_date: Date.new(2014, 8, 18), end_date: Date.new(2013, 8, 18)),
+                inventory: Inventory.new(
+                    files: [
+                        StashFile.new(pathname: 'HSRC_MasterSampleII.dat', size_bytes: 12_345, mime_type: 'text/plain')
+                    ]),
+                # Note: the recursive asserts only work because descriptive_elements is empty
+                descriptive_elements: []
+            )
+            @wrapper_xml = wrapper.save_to_xml
+          end
+          
+          it 'sets the correct namespace' do
+            assert_st = lambda do |elem|
+              actual = elem.namespace
+              expected = StashWrapper::NAMESPACE
+              expect(actual).to eq(expected), "expected '#{expected}', got '#{actual}': #{elem}"
+              elem.each_element { |e| assert_st.call(e) }
+            end
+            assert_st.call(@wrapper_xml.root)
           end
 
-          wrapper_xml = wrapper.save_to_xml
-          assert_st.call(wrapper_xml.root)
+          it 'sets the correct namespace prefix' do
+            assert_st = lambda do |elem|
+              actual = elem.prefix
+              expected = StashWrapper::NAMESPACE_PREFIX
+              expect(actual).to eq(expected), "expected '#{expected}', got '#{actual}': #{elem}"
+              elem.each_element { |e| assert_st.call(e) }
+            end
+            assert_st.call(@wrapper_xml.root)
+          end
+
+          it 'maps the namespace to the prefix' do
+            assert_st = lambda do |elem|
+              actual = elem.namespace(StashWrapper::NAMESPACE_PREFIX)
+              expected = StashWrapper::NAMESPACE
+              expect(actual).to eq(expected), "expected '#{expected}', got '#{actual}': #{elem}"
+              elem.each_element { |e| assert_st.call(e) }
+            end
+            assert_st.call(@wrapper_xml.root)
+          end
         end
 
         it 'maps to XML' do
@@ -152,6 +175,8 @@ module Stash
           )
 
           wrapper_xml = wrapper.save_to_xml
+
+          puts wrapper_xml
 
           File.open('spec/data/wrapper/wrapper-2-actual.xml', 'w') do |file|
             formatter = REXML::Formatters::Pretty.new

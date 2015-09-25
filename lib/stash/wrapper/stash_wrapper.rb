@@ -37,6 +37,22 @@ module Stash
         xml
       end
 
+      def save_to_xml(options={:mapping=>:_default})
+        elem = super(options)
+        set_prefix(prefix: NAMESPACE_PREFIX, elem: elem)
+        elem.add_namespace(nil)
+        elem.add_namespace(NAMESPACE_PREFIX, NAMESPACE)
+        elem
+      end
+
+      private
+
+      def set_prefix(prefix:, elem:)
+        return unless elem.namespace == NAMESPACE
+        elem.prefix = prefix
+        elem.each_element { |e| set_prefix(prefix: prefix, elem: e)}
+      end
+
     end
 
   end
