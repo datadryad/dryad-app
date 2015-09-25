@@ -9,6 +9,9 @@ module Stash
     class StashWrapper
       include ::XML::Mapping
 
+      NAMESPACE = 'http://dash.cdlib.org/stash_wrapper/'
+      NAMESPACE_PREFIX = 'st'
+
       root_element_name 'stash_wrapper'
 
       object_node :identifier, 'identifier', class: Identifier
@@ -28,7 +31,7 @@ module Stash
 
       def pre_save(options = { mapping: :_default })
         xml = super(options)
-        xml.add_namespace('http://dash.cdlib.org/stash_wrapper/')
+        xml.add_namespace(NAMESPACE)
         xml.add_namespace('xsi', 'http://www.w3.org/2001/XMLSchema-instance')
         xml.add_attribute('xsi:schemaLocation', 'http://dash.cdlib.org/stash_wrapper/ http://dash.cdlib.org/stash_wrapper/stash_wrapper.xsd')
         xml
