@@ -34,7 +34,7 @@ inventory = ST::Inventory.new(
     ),
     ST::StashFile.new(
       pathname: 'HSRC_MasterSampleII.sas7bdat', size_bytes: 123_456, mime_type: 'application/x-sas-data'
-    ),
+    )
   ])
 
 datacite_file = 'spec/data/wrapper/wrapper-2-payload.xml'
