@@ -9,6 +9,7 @@ module Stash
     # Mapping class for `<st:embargo>`
     class Embargo
       include ::XML::Mapping
+
       embargo_type_node :type, 'type'
       text_node :period, 'period'
       date_node :start_date, 'start', zulu: true

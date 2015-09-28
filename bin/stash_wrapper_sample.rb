@@ -12,7 +12,7 @@ ST = Stash::Wrapper
 # ------------------------------------------------------------
 # Generate datacite metadata
 
-def datacite(doi:, creator:, title:, publisher:, pubyear:, subjects:, resource_type:, abstract:)
+def datacite(doi:, creators:, title:, publisher:, pubyear:, subjects:, resource_type:, abstract:)
   xml_text = "<dcs:resource xmlns:dcs='http://datacite.org/schema/kernel-3'
                             xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
                             xsi:schemaLocation='http://datacite.org/schema/kernel-3
@@ -20,7 +20,7 @@ def datacite(doi:, creator:, title:, publisher:, pubyear:, subjects:, resource_t
                 <dcs:identifier identifierType='DOI'>#{doi}</dcs:identifier>
                 <dcs:creators>
                   <dcs:creator>
-                    <dcs:creatorName>#{creator}</dcs:creatorName>
+                  #{(creators.map { |cn| "<dcs:creatorName>#{cn}</dcs:creatorName>" }).join("\n")}
                   </dcs:creator>
                 </dcs:creators>
                 <dcs:titles>
@@ -37,30 +37,6 @@ def datacite(doi:, creator:, title:, publisher:, pubyear:, subjects:, resource_t
                 </dcs:descriptions>
               </dcs:resource>"
   REXML::Document.new(xml_text).root
-end
-
-# ------------------------------------------------------------
-# Main
-
-def main
-  count = 1 + ARGV[1].to_i
-  (1..count).each do |i|
-    formatter = REXML::Formatters::Pretty.new
-    formatter.compact = true
-
-    dcs = datacite(
-        doi: '1/2',
-        creator: 'elvis',
-        title: 'presley',
-        publisher: 'graceland',
-        pubyear: 1976,
-        subjects: ['elvis', 'priscilla'],
-        resource_type: 'single',
-        abstract: 'blue suede shoes'
-    )
-
-    puts formatter.write(dcs, '')
-  end
 end
 
 # ------------------------------------------------------------
@@ -206,6 +182,27 @@ def abstract
   random_text(much_less_than(500)) + "."
 end
 
+def embargo(year)
+  end_date = Date.new(year, 1 + rand(12), 1 + rand(28))
+  embargo_type = random_from(ST::EmbargoType.to_a)
+  if embargo_type == ST::EmbargoType::NONE
+    Embargo(type: embargo_type, period: 'non', start_date: end_date, end_date: end_date)
+  else
+    period_months = 6 * rand(3)
+    period_months = 1 if period_months == 0
+    start_date = end_date - (period_months * 365.24/12)
+    period = case
+               when period_months == 1
+                 '1 month'
+               when period_months == 6
+                 '6 months'
+               else
+                 '1 year'
+             end
+    ST::Embargo.new(type: embargo_type, period: period, start_date: start_date, end_date: end_date)
+  end
+end
+
 def files
   num_files = less_than 10
   (0...num_files).map { |i|
@@ -217,29 +214,44 @@ def files
 end
 
 # ------------------------------------------------------------
-# Invocation of main
+# Main
 
-(0..10).each do |i|
-  doi = doi(i)
-  puts "#{doi}\t#{resource_type}"
-  files.each do |f|
-    puts "\t#{f.pathname}\t#{f.size_bytes}\t#{f.mime_type}"
-  end
+count = 1 + ARGV[1].to_i
+(1..count).each do |i|
+
+  st_year = pub_year
+
+  st_doi = doi(i)
+
+  st_identifier = ST::Identifier.new(type: ST::IdentifierType::DOI, value: st_doi)
+  st_license = ST::License::CC_BY
+  st_embargo = embargo(st_year)
+  st_version = ST::Version.new(number: 1, date:st_embargo.start_date, note: random_sentence(less_than(10)))
+  st_inventory = ST::Inventory.new(files: files)
+
+  dcs = datacite(
+      doi: st_doi,
+      creators: creators,
+      title: title,
+      publisher: publisher,
+      pubyear: st_year,
+      subjects: subjects,
+      resource_type: resource_type,
+      abstract: abstract
+  )
+
+  wrapper = ST::StashWrapper.new(
+    identifier: st_identifier,
+    version: st_version,
+    license: st_license,
+    embargo: st_embargo,
+    inventory: st_inventory,
+    descriptive_elements: [dcs]
+  )
+
+  wrapper_xml = wrapper.save_to_xml
+
+  formatter = REXML::Formatters::Pretty.new
+  formatter.compact = true
+  puts formatter.write(wrapper_xml, '')
 end
-
-# @lts = []
-# @mlts = []
-# @vmlts = []
-# (0..10000).each do |i|
-#   @lts << less_than(100)
-#   @mlts << much_less_than(100)
-#   @vmlts << very_much_less_than(100)
-# end
-#
-# [@lts, @mlts, @vmlts].each do |a|
-#   a.sort!
-#   puts("min: #{a[0]}\tmax: #{a[9999]}\tmed: #{(0.5 * a[4999] + 0.5 * a[5000]).round}")
-# end
-
-# main
-
