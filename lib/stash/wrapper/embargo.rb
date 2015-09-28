@@ -1,7 +1,7 @@
 require 'xml/mapping'
 require 'xml/mapping_extensions'
 
-require_relative 'st_embargo_type_node'
+require_relative 'embargo_type_node'
 
 module Stash
   module Wrapper

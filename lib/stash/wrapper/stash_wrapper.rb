@@ -1,7 +1,7 @@
 require 'xml/mapping'
 
 require_relative 'descriptive_node'
-require_relative 'st_identifier'
+require_relative 'identifier'
 require_relative 'stash_administrative'
 
 module Stash

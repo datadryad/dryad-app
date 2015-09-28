@@ -1,5 +1,5 @@
 require 'xml/mapping_extensions'
-require_relative 'st_identifier_type'
+require_relative 'identifier_type'
 
 module Stash
   module Wrapper

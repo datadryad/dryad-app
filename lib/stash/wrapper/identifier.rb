@@ -1,6 +1,6 @@
 require 'xml/mapping'
 require 'xml/mapping_extensions'
-require_relative 'st_identifier_type_node'
+require_relative 'identifier_type_node'
 
 module Stash
   module Wrapper
