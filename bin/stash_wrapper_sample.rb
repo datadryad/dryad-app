@@ -109,21 +109,41 @@ def random_sentence(word_count)
   text.slice(0, end_index)
 end
 
+def random_words(count)
+  (0...count).map { |i| random_from(@words_unique) }
+end
+
 def less_than(max)
-  ((0...max).inject { |sum, i| sum + rand.round })
+  num = ((0...max).inject { |sum, i| sum + rand.round })
+  num >= 1 ? num : 1
 end
 
 def much_less_than(max)
-  ((0...max).inject { |sum, i| sum + (rand * rand).round })
+  num = ((0...max).inject { |sum, i| sum + (rand * rand).round })
+  num >= 1 ? num : 1
 end
+
+def random_names(max)
+  num_names = much_less_than max
+  (0...num_names).map { |i| random_name }
+end
+
+def random_name
+  names = less_than(4)
+  names = 2 if names < 2
+  random_words(names).map { |w| w.capitalize }.join(" ")
+end
+
+def random_from(list)
+  list[rand(0...list.length)]
+end
+
+@authors = (0...1000).map { |i| random_name }
+@publishers = (0...100).map { |i| random_names(10).join(" ")}
+@resource_types = (0...20).map { |i| random_names(3).join(" ") }
 
 # ------------------------------------------------------------
 # Random sample fields
-
-def keywords
-  num_keywords = much_less_than 20
-  take_random(@words_unique, num_keywords)
-end
 
 def doi(index)
   prefix = take_sublist(@letters, 3).join
@@ -131,8 +151,9 @@ def doi(index)
   "10.#{registrant}/#{prefix}#{1000000 + index}"
 end
 
-def abstract
-  random_text(much_less_than(500)) + "."
+def creators
+  num_authors = less_than(10)
+  (0...num_authors).map { |i| random_from(@authors)}
 end
 
 def title
@@ -142,13 +163,33 @@ def title
   end
 end
 
+def publisher
+  random_from(@publishers)
+end
+
+def pub_year
+  2000 + rand(15)
+end
+
+def subjects
+  num_keywords = much_less_than 20
+  take_random(@words_unique, num_keywords)
+end
+
+def resource_type
+  random_from(@resource_types)
+end
+
+def abstract
+  random_text(much_less_than(500)) + "."
+end
+
 # ------------------------------------------------------------
 # Invocation of main
 
 (0..100).each do |i|
   doi = doi(i)
-  puts "#{doi}\t#{title}"
-  puts "\t#{abstract}"
+  puts "#{doi}\t#{resource_type}"
 end
 
 # main
