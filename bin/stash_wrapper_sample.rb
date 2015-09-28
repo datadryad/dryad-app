@@ -186,7 +186,7 @@ def embargo(year)
   end_date = Date.new(year, 1 + rand(12), 1 + rand(28))
   embargo_type = random_from(ST::EmbargoType.values)
   if embargo_type == ST::EmbargoType::NONE
-    Embargo(type: embargo_type, period: 'non', start_date: end_date, end_date: end_date)
+    ST::Embargo.new(type: embargo_type, period: 'non', start_date: end_date, end_date: end_date)
   else
     period_months = 6 * rand(3)
     period_months = 1 if period_months == 0
@@ -216,7 +216,15 @@ end
 # ------------------------------------------------------------
 # Main
 
-count = 1 + ARGV[1].to_i
+formatter = REXML::Formatters::Pretty.new
+formatter.compact = true
+
+count = ARGV[0].to_i
+
+puts count
+
+digits = 1 + Math.log(count, 10).to_i
+
 (1..count).each do |i|
 
   st_year = pub_year
@@ -252,7 +260,10 @@ count = 1 + ARGV[1].to_i
 
   wrapper_xml = wrapper.save_to_xml
 
-  formatter = REXML::Formatters::Pretty.new
-  formatter.compact = true
-  puts formatter.write(wrapper_xml, '')
+  path = "stash_wrapper-#{i.to_s.rjust(digits, '0')}.xml"
+
+  File.open(path, 'w') do |f|
+    formatter.write(wrapper_xml, f)
+    puts File.absolute_path(path)
+  end
 end
