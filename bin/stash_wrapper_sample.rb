@@ -184,7 +184,7 @@ end
 
 def embargo(year)
   end_date = Date.new(year, 1 + rand(12), 1 + rand(28))
-  embargo_type = random_from(ST::EmbargoType.to_a)
+  embargo_type = random_from(ST::EmbargoType.values)
   if embargo_type == ST::EmbargoType::NONE
     Embargo(type: embargo_type, period: 'non', start_date: end_date, end_date: end_date)
   else
@@ -226,6 +226,7 @@ count = 1 + ARGV[1].to_i
   st_identifier = ST::Identifier.new(type: ST::IdentifierType::DOI, value: st_doi)
   st_license = ST::License::CC_BY
   st_embargo = embargo(st_year)
+
   st_version = ST::Version.new(number: 1, date:st_embargo.start_date, note: random_sentence(less_than(10)))
   st_inventory = ST::Inventory.new(files: files)
 
