@@ -20,8 +20,8 @@ license = ST::License::CC_BY
 embargo = ST::Embargo.new(
   type: ST::EmbargoType::DOWNLOAD,
   period: '1 year',
-  start_date: Date.new(2014, 8, 18),
-  end_date: Date.new(2013, 8, 18)
+  start_date: Date.new(2013, 8, 18),
+  end_date: Date.new(2014, 8, 18)
 )
 
 inventory = ST::Inventory.new(
