@@ -1,15 +1,10 @@
 inherit_from: ../.rubocop.yml
 
-# Offense count: 1
 Metrics/AbcSize:
-  Max: 16
+  Enabled: false
 
-# Offense count: 1
-# Configuration parameters: CountComments.
 Metrics/MethodLength:
-  Max: 22
+  Enabled: false
 
-# Offense count: 1
-# Configuration parameters: CountKeywordArgs.
 Metrics/ParameterLists:
-  Max: 8
+  Enabled: false

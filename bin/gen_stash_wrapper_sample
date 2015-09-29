@@ -129,8 +129,8 @@ end
 @mime_types = random_list_from(@all_mime_types, 20)
 
 @authors = (0...1000).map { |_i| random_name }
-@publishers = (0...100).map { |_i| random_names(10).join(' ') }
-@resource_types = (0...20).map { |_i| random_names(3).join(' ') }
+@publishers = (0...100).map { |_i| random_words(much_less_than(10)).map(&:capitalize).join(' ') }
+@resource_types = (0...20).map { |_i| random_words(less_than(3)).join(' ') }
 
 # ------------------------------------------------------------
 # Random sample fields
@@ -194,7 +194,7 @@ def embargo_for_type(embargo_type, end_date)
 end
 
 def no_embargo(end_date)
-  ST::Embargo.new(ST::EmbargoType::NONE, period: 'none', start_date: end_date, end_date: end_date)
+  ST::Embargo.new(type: ST::EmbargoType::NONE, period: 'none', start_date: end_date, end_date: end_date)
 end
 
 def embargo(year)
@@ -213,20 +213,7 @@ def files
   end
 end
 
-# ------------------------------------------------------------
-# Main
-
-formatter = REXML::Formatters::Pretty.new
-formatter.compact = true
-
-count = ARGV[0].to_i
-
-puts count
-
-digits = 1 + Math.log(count, 10).to_i
-
-(1..count).each do |i|
-
+def gen_sample(i)
   st_year = pub_year
 
   st_doi = doi(i)
@@ -258,12 +245,28 @@ digits = 1 + Math.log(count, 10).to_i
     descriptive_elements: [dcs]
   )
 
-  wrapper_xml = wrapper.save_to_xml
+  wrapper.save_to_xml
+end
 
-  path = "stash_wrapper-#{i.to_s.rjust(digits, '0')}.xml"
+# ------------------------------------------------------------
+# Main
 
-  File.open(path, 'w') do |f|
-    formatter.write(wrapper_xml, f)
-    puts File.absolute_path(path)
+formatter = REXML::Formatters::Pretty.new
+formatter.compact = true
+
+count = ARGV[0].to_i if ARGV[0]
+
+if count
+  digits = 1 + Math.log(count, 10).to_i
+  (1..count).each do |i|
+    wrapper_xml = gen_sample(i)
+    path = "stash_wrapper-#{i.to_s.rjust(digits, '0')}.xml"
+    File.open(path, 'w') do |f|
+      formatter.write(wrapper_xml, f)
+      puts File.absolute_path(path)
+    end
   end
+else
+  wrapper_xml = gen_sample(1)
+  formatter.write(wrapper_xml, $stdout)
 end
