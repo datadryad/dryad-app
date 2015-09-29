@@ -104,6 +104,3 @@ PLATFORMS
 DEPENDENCIES
   sqlite3
   stash_engine!
-
-BUNDLED WITH
-   1.10.2
