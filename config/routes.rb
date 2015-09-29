@@ -53,4 +53,7 @@ Rails.application.routes.draw do
   #     # (app/controllers/admin/products_controller.rb)
   #     resources :products
   #   end
+
+  mount StashEngine::Engine, at: "/stash"
+  mount StashDatacite::Engine, at: "/datacite"
 end
