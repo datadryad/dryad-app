@@ -1,0 +1,13 @@
+default: &default
+
+development:
+  <<: *default
+
+stage:
+  <<: *default
+
+production:
+  <<: *default
+
+test:
+  <<: *default

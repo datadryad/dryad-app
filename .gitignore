@@ -7,9 +7,10 @@
 # Ignore bundler config.
 /.bundle
 
-#ignore files that shouldn't be shown publicly
+#ignore config files with private information
 /config/database.yml
 /config/secrets.yml
+/config/tenants/*.yml
 
 # Ignore all logfiles and tempfiles.
 /log/*
@@ -18,6 +19,7 @@
 config/database.yml
 .rspec
 /spec/tmp
+.DS_Store
 
 # Ignore code coverage reports.
 /coverage/
