@@ -157,7 +157,6 @@ module Stash
 
         it 'maps to XML' do
 
-          # TODO: Allow mime_type: to be a string
           payload = File.read('spec/data/wrapper/wrapper-2-payload.xml')
           payload_xml = REXML::Document.new(payload).root
 
