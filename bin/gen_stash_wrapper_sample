@@ -1,6 +1,7 @@
 #!/usr/bin/env ruby
 
 require 'mime/types'
+require 'nokogiri'
 require 'set'
 require 'stash/wrapper'
 
@@ -37,6 +38,14 @@ def datacite(doi:, creators:, title:, publisher:, pubyear:, subjects:, resource_
                 </dcs:descriptions>
               </dcs:resource>"
   REXML::Document.new(xml_text).root
+end
+
+def dublin_core(datacite_elem)
+  document = Nokogiri::XML(datacite_elem.to_s)
+  template = Nokogiri::XSLT(File.read(File.dirname(__FILE__) + '/../data/kernel3_to_oaidc.xsl'))
+
+  transformed_document = template.transform(document)
+  transformed_document
 end
 
 # ------------------------------------------------------------
@@ -268,5 +277,14 @@ if count
   end
 else
   wrapper_xml = gen_sample(1)
-  formatter.write(wrapper_xml, $stdout)
+  # formatter.write(wrapper_xml, $stdout)
+
+  puts
+
+  dcs_resource = REXML::XPath.first(wrapper_xml, '//dcs:resource')
+  puts dcs_resource
+
+  puts
+
+  puts dublin_core(dcs_resource)
 end
