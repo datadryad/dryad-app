@@ -252,15 +252,22 @@ def gen_sample(i)
   st_version = ST::Version.new(number: 1, date: st_embargo.start_date, note: random_sentence(less_than(10)))
   st_inventory = ST::Inventory.new(files: files)
 
+  st_creators = creators
+  st_title = title
+  st_publisher = publisher
+  st_subjects = subjects
+  st_resource_type = resource_type
+  st_abstract = abstract
+  
   dcs_resource = datacite(
     doi: st_doi,
-    creators: creators,
-    title: title,
-    publisher: publisher,
+    creators: st_creators,
+    title: st_title,
+    publisher: st_publisher,
     pubyear: st_year,
-    subjects: subjects,
-    resource_type: resource_type,
-    abstract: abstract
+    subjects: st_subjects,
+    resource_type: st_resource_type,
+    abstract: st_abstract
   )
 
   wrapper = ST::StashWrapper.new(
@@ -275,13 +282,13 @@ def gen_sample(i)
 
   oai_dc = dublin_core(
       doi: st_doi,
-      creators: creators,
-      title: title,
-      publisher: publisher,
+      creators: st_creators,
+      title: st_title,
+      publisher: st_publisher,
       pubyear: st_year,
-      subjects: subjects,
-      resource_type: resource_type,
-      abstract: abstract
+      subjects: st_subjects,
+      resource_type: st_resource_type,
+      abstract: st_abstract
   )
 
   Sample.new(wrapper_xml: wrapper_xml, dcs_resource: dcs_resource, oai_dc: oai_dc)
@@ -296,7 +303,7 @@ formatter.compact = true
 count = ARGV[0].to_i if ARGV[0]
 
 if count
-  digits = 1 + Math.log(count, 10).to_i
+  digits = 1 + Math.log(count, 10).round
   (1..count).each do |i|
     sample = gen_sample(i)
     record_num = i.to_s.rjust(digits, '0')
