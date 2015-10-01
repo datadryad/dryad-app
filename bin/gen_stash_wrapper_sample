@@ -40,12 +40,30 @@ def datacite(doi:, creators:, title:, publisher:, pubyear:, subjects:, resource_
   REXML::Document.new(xml_text).root
 end
 
-def dublin_core(datacite_elem)
-  document = Nokogiri::XML(datacite_elem.to_s)
-  template = Nokogiri::XSLT(File.read(File.dirname(__FILE__) + '/../data/kernel3_to_oaidc.xsl'))
+def dublin_core(doi:, creators:, title:, publisher:, pubyear:, subjects:, resource_type:, abstract:)
+  xml_text = "<oai_dc:dc xmlns:oai_dc='http://www.openarchives.org/OAI/2.0/oai_dc/' xmlns:dc='http://purl.org/dc/elements/1.1/' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:schemaLocation='http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd'>
+                <dc:title>#{title}</dc:title>
+                #{(creators.map { |cn| "<dc:creator>#{cn}</dc:creator>" }).join("\n")}
+                #{(subjects.map { |s| "<dc:subject>#{s}</dc:subject>" }).join("\n")}
+                <dc:description>#{abstract}</dc:description>
+                <dc:publisher>#{publisher}</dc:publisher>
+                <dc:date>#{pubyear}</dc:date>
+                <dc:type>#{resource_type}</dc:type>
+                <dc:identifier>doi:#{doi}</dc:identifier>
+              </oai_dc:dc>"
+  REXML::Document.new(xml_text).root
+end
 
-  transformed_document = template.transform(document)
-  transformed_document
+class Sample
+  attr_reader :wrapper_xml
+  attr_reader :dcs_resource
+  attr_reader :oai_dc
+
+  def initialize(wrapper_xml:, dcs_resource:, oai_dc:)
+    @wrapper_xml = wrapper_xml
+    @dcs_resource = dcs_resource
+    @oai_dc = oai_dc
+  end
 end
 
 # ------------------------------------------------------------
@@ -234,7 +252,7 @@ def gen_sample(i)
   st_version = ST::Version.new(number: 1, date: st_embargo.start_date, note: random_sentence(less_than(10)))
   st_inventory = ST::Inventory.new(files: files)
 
-  dcs = datacite(
+  dcs_resource = datacite(
     doi: st_doi,
     creators: creators,
     title: title,
@@ -251,10 +269,22 @@ def gen_sample(i)
     license: st_license,
     embargo: st_embargo,
     inventory: st_inventory,
-    descriptive_elements: [dcs]
+    descriptive_elements: [dcs_resource]
+  )
+  wrapper_xml = wrapper.save_to_xml
+
+  oai_dc = dublin_core(
+      doi: st_doi,
+      creators: creators,
+      title: title,
+      publisher: publisher,
+      pubyear: st_year,
+      subjects: subjects,
+      resource_type: resource_type,
+      abstract: abstract
   )
 
-  wrapper.save_to_xml
+  Sample.new(wrapper_xml: wrapper_xml, dcs_resource: dcs_resource, oai_dc: oai_dc)
 end
 
 # ------------------------------------------------------------
@@ -268,23 +298,26 @@ count = ARGV[0].to_i if ARGV[0]
 if count
   digits = 1 + Math.log(count, 10).to_i
   (1..count).each do |i|
-    wrapper_xml = gen_sample(i)
-    path = "stash_wrapper-#{i.to_s.rjust(digits, '0')}.xml"
-    File.open(path, 'w') do |f|
-      formatter.write(wrapper_xml, f)
-      puts File.absolute_path(path)
+    sample = gen_sample(i)
+    record_num = i.to_s.rjust(digits, '0')
+    File.open("stash_wrapper-#{record_num}.xml", 'w') do |f|
+      formatter.write(sample.wrapper_xml, f)
+      puts File.absolute_path(f.path)
+    end
+    File.open("stash_dcs_resource-#{record_num}.xml", 'w') do |f|
+      formatter.write(sample.dcs_resource, f)
+      puts File.absolute_path(f.path)
+    end
+    File.open("stash_oai_dc-#{record_num}.xml", 'w') do |f|
+      formatter.write(sample.oai_dc, f)
+      puts File.absolute_path(f.path)
     end
   end
 else
-  wrapper_xml = gen_sample(1)
-  # formatter.write(wrapper_xml, $stdout)
-
+  sample = gen_sample(1)
+  formatter.write(sample.wrapper_xml, $stdout)
   puts
-
-  dcs_resource = REXML::XPath.first(wrapper_xml, '//dcs:resource')
-  puts dcs_resource
-
+  formatter.write(sample.dcs_resource, $stdout)
   puts
-
-  puts dublin_core(dcs_resource)
+  formatter.write(sample.oai_dc, $stdout)
 end
