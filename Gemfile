@@ -31,14 +31,13 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 # Use Unicorn as the app server
 # gem 'unicorn'
 
-
-if File.exist?(File.join('..', 'stash_engine'))
+if File.exist?(File.join('..', 'stash_engine')) && ENV['LOCAL_ENGINES'] == 'true'
   gem 'stash_engine', :path => '../stash_engine'
 else
   gem 'stash_engine', :git => 'https://github.com/CDLUC3/stash_engine.git', :branch => 'development'
 end
 
-if File.exist?(File.join('..', 'stash_datacite'))
+if File.exist?(File.join('..', 'stash_datacite')) && ENV['LOCAL_ENGINES'] == 'true'
   gem 'stash_datacite', :path => '../stash_datacite'
 else
   gem 'stash_datacite', :git => 'https://github.com/CDLUC3/stash_datacite.git', :branch => 'development'

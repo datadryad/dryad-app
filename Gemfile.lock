@@ -1,11 +1,15 @@
-PATH
-  remote: ../stash_datacite
+GIT
+  remote: https://github.com/CDLUC3/stash_datacite.git
+  revision: 5742f750d495204eefb56e6f8744d5d20ef0f233
+  branch: development
   specs:
     stash_datacite (0.0.1)
       rails (~> 4.2.4)
 
-PATH
-  remote: ../stash_engine
+GIT
+  remote: https://github.com/CDLUC3/stash_engine.git
+  revision: 7e686fbdae59ea9956645fa50d2ca8ba23972ebf
+  branch: development
   specs:
     stash_engine (0.0.1)
       rails (~> 4.2.4)
