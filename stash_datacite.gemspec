@@ -7,9 +7,9 @@ require "stash_datacite/version"
 Gem::Specification.new do |s|
   s.name        = "stash_datacite"
   s.version     = StashDatacite::VERSION
-  s.authors     = ["sfisher"]
-  s.email       = ["scott.fisher@ucop.edu"]
-  s.homepage    = "TODO"
+  s.authors     = ["sfisher bvedula"]
+  s.email       = ["scott.fisher@ucop.edu bvedula@ucop.edu"]
+  s.homepage    = "https://github.com/CDLUC3/stash_datacite"
   s.summary     = "TODO: Summary of StashDatacite."
   s.description = "TODO: Description of StashDatacite."
   s.license     = "MIT"
@@ -19,5 +19,4 @@ Gem::Specification.new do |s|
 
   s.add_dependency "rails", "~> 4.2.4"
 
-  s.add_development_dependency "sqlite3"
 end
