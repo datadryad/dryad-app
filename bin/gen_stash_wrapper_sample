@@ -281,14 +281,14 @@ def gen_sample(i)
   wrapper_xml = wrapper.save_to_xml
 
   oai_dc = dublin_core(
-      doi: st_doi,
-      creators: st_creators,
-      title: st_title,
-      publisher: st_publisher,
-      pubyear: st_year,
-      subjects: st_subjects,
-      resource_type: st_resource_type,
-      abstract: st_abstract
+    doi: st_doi,
+    creators: st_creators,
+    title: st_title,
+    publisher: st_publisher,
+    pubyear: st_year,
+    subjects: st_subjects,
+    resource_type: st_resource_type,
+    abstract: st_abstract
   )
 
   Sample.new(wrapper_xml: wrapper_xml, dcs_resource: dcs_resource, oai_dc: oai_dc)
