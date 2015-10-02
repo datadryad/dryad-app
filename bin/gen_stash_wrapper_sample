@@ -258,7 +258,7 @@ def gen_sample(i)
   st_subjects = subjects
   st_resource_type = resource_type
   st_abstract = abstract
-  
+
   dcs_resource = datacite(
     doi: st_doi,
     creators: st_creators,
