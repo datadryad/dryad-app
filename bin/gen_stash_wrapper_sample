@@ -13,6 +13,8 @@ ST = Stash::Wrapper
 # ------------------------------------------------------------
 # Generate datacite metadata
 
+# TO DO: More realistic DataCite, with files
+
 def datacite(doi:, creators:, title:, publisher:, pubyear:, subjects:, resource_type:, abstract:)
   xml_text = "<dcs:resource xmlns:dcs='http://datacite.org/schema/kernel-3'
                             xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
@@ -20,9 +22,7 @@ def datacite(doi:, creators:, title:, publisher:, pubyear:, subjects:, resource_
                             http://schema.datacite.org/meta/kernel-3/metadata.xsd'>
                 <dcs:identifier identifierType='DOI'>#{doi}</dcs:identifier>
                 <dcs:creators>
-                  <dcs:creator>
-                  #{(creators.map { |cn| "<dcs:creatorName>#{cn}</dcs:creatorName>" }).join("\n")}
-                  </dcs:creator>
+                  #{(creators.map { |cn| "<dcs:creator><dcs:creatorName>#{cn}</dcs:creatorName></dcs:creator>" }).join('\n')}
                 </dcs:creators>
                 <dcs:titles>
                   <dcs:title>#{title}</dcs:title>
@@ -30,7 +30,7 @@ def datacite(doi:, creators:, title:, publisher:, pubyear:, subjects:, resource_
                 <dcs:publisher>#{publisher}</dcs:publisher>
                 <dcs:publicationYear>#{pubyear}</dcs:publicationYear>
                 <dcs:subjects>
-                  #{(subjects.map { |s| "<dcs:subject>#{s}</dcs:subject>" }).join("\n")}
+                  #{(subjects.map { |s| "<dcs:subject>#{s}</dcs:subject>" }).join('\n')}
                 </dcs:subjects>
                 <dcs:resourceType resourceTypeGeneral='Dataset'>#{resource_type}</dcs:resourceType>
                 <dcs:descriptions>
