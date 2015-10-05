@@ -1,4 +1,4 @@
-require 'app_spec_helper'
+require 'spec_helper'
 require 'tmpdir'
 require 'fileutils'
 
