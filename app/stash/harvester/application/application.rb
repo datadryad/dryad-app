@@ -13,6 +13,11 @@ module Stash
       end
 
       def start
+        puts "from_time: #{from_time}"
+        puts "until_time: #{until_time}"
+        puts "connection_info: #{config.connection_info}"
+        puts "source_uri: #{config.source_config.source_uri}"
+        puts "index_uri: #{config.index_config.uri}"
       end
 
       def self.config_file_defaults

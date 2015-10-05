@@ -16,6 +16,7 @@ module Stash
         def initialize(capability_list_url:)
           super(source_url: capability_list_url)
         end
+
       end
     end
   end

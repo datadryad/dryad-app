@@ -1,6 +1,6 @@
 #! /usr/bin/env ruby
 
-require 'stash/harvester'
+require 'stash/harvester/application'
 
 module Stash
   module Harvester
@@ -18,6 +18,8 @@ module Stash
     rescue OptionParser::ParseError => e
       puts e.message
       puts Options::USAGE
+    rescue => e
+      puts e.message
     end
   end
 end
