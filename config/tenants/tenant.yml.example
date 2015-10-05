@@ -11,7 +11,7 @@ default: &default
   long_name: "University of California, Office of the President"
   landing_page: ".ucop.edu"
   external_id_strip: "ucop.edu$"
-  campus: cdl
+  tenant_id: cdl
   logo: blank_institution_logo.png
   authorization:
     method: shibboleth
