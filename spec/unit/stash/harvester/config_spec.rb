@@ -11,7 +11,7 @@ module Stash
       describe '#from_yaml' do
 
         before(:each) do
-          yml = File.read('spec/data/config.yml')
+          yml = File.read('spec/data/stash-harvester.yml')
           expect(yml).not_to be_nil
           @config = Config.from_yaml(yml)
         end
@@ -52,7 +52,7 @@ module Stash
           good_values = [/oai.example.org/, /solr.example.org/, /proxy.example.com/]
           bad_value = "'I am not a valid hostname'"
           good_values.each do |good_value|
-            bad_yml = File.read('spec/data/config.yml').sub(good_value, bad_value)
+            bad_yml = File.read('spec/data/stash-harvester.yml').sub(good_value, bad_value)
             expect { Config.from_yaml(bad_yml) }.to raise_error do |e|
               expect(e).to be_an ArgumentError
               expect(e.message).to include(bad_value)
@@ -62,7 +62,7 @@ module Stash
         end
 
         it 'provides appropriate error message for invalid source protocol' do
-          bad_yml = File.read('spec/data/config.yml').sub(/OAI/, 'BadProtocol')
+          bad_yml = File.read('spec/data/stash-harvester.yml').sub(/OAI/, 'BadProtocol')
           expect { Config.from_yaml(bad_yml) }.to raise_error do |e|
             expect(e).to be_an ArgumentError
             expect(e.message).to include('BadProtocol')
@@ -71,7 +71,7 @@ module Stash
         end
 
         it 'provides appropriate error message for invalid index adapter' do
-          bad_yml = File.read('spec/data/config.yml').sub(/solr/, 'BadAdapter')
+          bad_yml = File.read('spec/data/stash-harvester.yml').sub(/solr/, 'BadAdapter')
           expect { Config.from_yaml(bad_yml) }.to raise_error do |e|
             expect(e).to be_an ArgumentError
             expect(e.message).to include('BadAdapter')
@@ -82,7 +82,7 @@ module Stash
 
       describe '#from_file' do
         it 'reads a file' do
-          @config = Config.from_file('spec/data/config.yml')
+          @config = Config.from_file('spec/data/stash-harvester.yml')
 
           connection_info = @config.connection_info
           expect(connection_info['adapter']).to eq('sqlite3')

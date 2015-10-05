@@ -26,7 +26,14 @@ namespace :spec do
     task.pattern = 'db/**/*_spec.rb'
   end
 
-  task all: [:unit, :factories, :db]
+  desc 'Run all application tests'
+  RSpec::Core::RakeTask.new(:app) do |task|
+    ENV['COVERAGE'] = nil
+    task.rspec_opts = %w(--color --format documentation --order default)
+    task.pattern = 'app/**/*_spec.rb'
+  end
+
+  task all: [:unit, :factories, :db, :app]
 end
 
 desc 'Run all tests'
@@ -35,11 +42,25 @@ task spec: 'spec:all'
 # ------------------------------------------------------------
 # Coverage
 
-desc 'Run all unit tests with coverage'
-task :coverage do
-  ENV['COVERAGE'] = 'true'
-  Rake::Task['spec:unit'].execute
+namespace :coverage do
+
+  desc 'Run all unit tests with coverage'
+  task :unit do
+    ENV['COVERAGE'] = 'true'
+    Rake::Task['spec:unit'].execute
+  end
+
+  desc 'Run all application tests with coverage'
+  task :app do
+    ENV['COVERAGE'] = 'true'
+    Rake::Task['spec:app'].execute
+  end
+
+  task all: [:unit, :app]
 end
+
+desc 'Run all tests with coverage'
+task coverage: 'coverage:all'
 
 # ------------------------------------------------------------
 # RuboCop
