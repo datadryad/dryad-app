@@ -31,20 +31,6 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 # Use Unicorn as the app server
 # gem 'unicorn'
 
-if File.exist?(File.join('..', 'stash_engine')) && ENV['LOCAL_ENGINES'] == 'true'
-  gem 'stash_engine', :path => '../stash_engine'
-else
-  gem 'stash_engine', :git => 'https://github.com/CDLUC3/stash_engine.git', :branch => 'development'
-end
-
-if File.exist?(File.join('..', 'stash_datacite')) && ENV['LOCAL_ENGINES'] == 'true'
-  gem 'stash_datacite', :path => '../stash_datacite'
-else
-  gem 'stash_datacite', :git => 'https://github.com/CDLUC3/stash_datacite.git', :branch => 'development'
-end
-
-
-
 # Use Capistrano for deployment
 gem 'capistrano', '~> 3.1'
 gem 'capistrano-rails', '~> 1.1'
@@ -69,4 +55,26 @@ group :development, :test do
   gem 'simplecov-console' # TODO do we care about the version?
 
 end
+
+# set LOCAL_ENGINES=true (LOCAL_ENGINES=true rails s) to use local
+#
+# I had very frustating problems where it wouldn't read changes in the environment variable in rails
+# console and got rid of it with "spring stop" before rails c would read new env variables.
+# Spring is a preloader that runs in the background all the time for faster startup.
+# https://github.com/rails/rails/issues/19256
+# Do 'export DISABLE_SPRING=1' in your .bash_profile to keep it from running and messing you up
+# if you are switching back and forth for debugging often.
+
+if File.exist?(File.join('..', 'stash_engine')) && ENV.to_hash['LOCAL_ENGINES'] == 'true'
+  gem 'stash_engine', :path => '../stash_engine'
+else
+  gem 'stash_engine', :git => 'https://github.com/CDLUC3/stash_engine.git', :branch => 'development'
+end
+
+if File.exist?(File.join('..', 'stash_datacite')) && ENV.to_hash['LOCAL_ENGINES'] == 'true'
+  gem 'stash_datacite', :path => '../stash_datacite'
+else
+  gem 'stash_datacite', :git => 'https://github.com/CDLUC3/stash_datacite.git', :branch => 'development'
+end
+
 
