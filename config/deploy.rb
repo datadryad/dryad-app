@@ -66,6 +66,15 @@ namespace :deploy do
     end
   end
 
+  desc 'update config repo'
+  task :update_config do
+    on roles(:app) do
+      execute "cd #{deploy_to}/shared; git reset --hard origin/master; git pull"
+    end
+  end
+
+  before :starting, :update_config
+
   after :restart, :clear_cache do
     on roles(:web), in: :groups, limit: 3, wait: 10 do
       # Here we can do anything such as:
