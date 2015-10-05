@@ -19,13 +19,61 @@ module Stash
         allow(Dir).to receive(:home).and_call_original
       end
 
-      describe '#config_file_defaults' do
-        it 'looks for plain file in the current working directory' do
-          expect(Application.config_file_defaults).to include "#{@wd}/stash-harvester.yml"
+      describe '#config' do
+
+        after :each do
+          allow(Config).to receive(:from_file).and_call_original
+          allow(File).to receive(:exist?).and_call_original
         end
 
-        it "looks for dotfile in the user's home directory" do
-          expect(Application.config_file_defaults).to include "#{@home}/.stash-harvester.yml"
+        it 'reads the specified file' do
+          config_file = '/etc/stash-harvester.yml'
+
+          # Trust the Config class to check for nonexistent files
+          config = instance_double(Config)
+          expect(Config).to receive(:from_file).with(config_file).and_return(config)
+
+          app = Application.new(config_file: config_file)
+          expect(app.config).to be(config)
+        end
+
+        it 'defaults to plain file in the current working directory' do
+          wd_config_path = "#{@wd}/stash-harvester.yml"
+          expect(File).to receive(:exist?).with(wd_config_path).and_return(true)
+
+          config = instance_double(Config)
+          expect(Config).to receive(:from_file).with(wd_config_path).and_return(config)
+
+          app = Application.new
+          expect(app.config).to be(config)
+        end
+
+        it 'falls back to dotfile in the user home directory' do
+          wd_config_path = "#{@wd}/stash-harvester.yml"
+          expect(File).to receive(:exist?).with(wd_config_path).and_return(false)
+
+          home_config_path = "#{@home}/.stash-harvester.yml"
+          expect(File).to receive(:exist?).with(home_config_path).and_return(true)
+
+          config = instance_double(Config)
+          expect(Config).to receive(:from_file).with(home_config_path).and_return(config)
+
+          app = Application.new
+          expect(app.config).to be(config)
+        end
+
+        it 'raises ArgumentError if passed nil and no default found' do
+          wd_config_path = "#{@wd}/stash-harvester.yml"
+          expect(File).to receive(:exist?).with(wd_config_path).and_return(false)
+
+          home_config_path = "#{@home}/.stash-harvester.yml"
+          expect(File).to receive(:exist?).with(home_config_path).and_return(false)
+
+          expect { Application.new }.to raise_error do |e|
+            expect(e).to be_an ArgumentError
+            expect(e.message).to include "#{@wd}/stash-harvester.yml"
+            expect(e.message).to include "#{@home}/.stash-harvester.yml"
+          end
         end
       end
 

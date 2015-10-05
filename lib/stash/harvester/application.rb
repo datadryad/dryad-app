@@ -4,21 +4,22 @@ module Stash
 
       attr_reader :from_time
       attr_reader :until_time
+      attr_reader :config
 
       def initialize(from_time: nil, until_time: nil, config_file: nil)
         @from_time = Util.utc_or_nil(from_time)
         @until_time = Util.utc_or_nil(until_time)
-        @config_file = config_file
+        @config = ensure_config(config_file)
       end
 
       def start
       end
 
-      def config
-        @config ||= begin
-          config_file = ensure_config_file(@config_file)
-          Config.from_file(config_file)
-        end
+      private
+
+      def ensure_config(config_file)
+        config_file = Application.ensure_config_file(config_file)
+        Config.from_file(config_file)
       end
 
       # TODO: Refactor tests to make these private
