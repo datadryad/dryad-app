@@ -42,6 +42,8 @@ task spec: 'spec:all'
 # ------------------------------------------------------------
 # Coverage
 
+# TODO: Monolithic "run all specs together" task for coverage only
+
 namespace :coverage do
 
   desc 'Run all unit tests with coverage'
