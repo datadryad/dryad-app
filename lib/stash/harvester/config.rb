@@ -27,8 +27,7 @@ module Stash
       # @param path [String] the path to read the YAML from
       # @raise [IOError] in the event the file does not exist, cannot be read, or is invalid
       def self.from_file(path)
-        fail IOError, "Specified config file #{path} is not a file" unless File.file?(path)
-        fail IOError, "Specified config file #{path} is not readable" unless File.readable?(path)
+        validate_path(path)
         begin
           yml = File.read(path)
           from_yaml(yml)
@@ -59,6 +58,14 @@ module Stash
       end
 
       private_class_method :keys_to_syms
+
+      def self.validate_path(path)
+        fail IOError, "Specified config file #{path} does not exist" unless File.exist?(path)
+        fail IOError, "Specified config file #{path} is not a file" unless File.file?(path)
+        fail IOError, "Specified config file #{path} is not readable" unless File.readable?(path)
+      end
+
+      private_class_method :validate_path
     end
   end
 end
