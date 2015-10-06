@@ -1,8 +1,6 @@
-require_relative 'config'
-require_relative 'util'
-
 module Stash
-  module Harvester
+
+  module HarvesterApp
     class Application
 
       attr_reader :from_time

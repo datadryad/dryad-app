@@ -1,9 +1,12 @@
 require 'spec_helper'
+require 'stash/harvester_app'
+
 require 'tmpdir'
 require 'fileutils'
 
 module Stash
-  module Harvester
+  module HarvesterApp
+
     describe Application do
 
       before :each do

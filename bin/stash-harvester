@@ -1,9 +1,9 @@
 #! /usr/bin/env ruby
 
-require 'stash/harvester/application'
+require 'stash/harvester_app'
 
 module Stash
-  module Harvester
+  module HarvesterApp
     begin
       options = Options.new(ARGV)
       puts Options::VERSION if options.show_version
