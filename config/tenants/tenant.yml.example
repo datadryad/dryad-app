@@ -13,7 +13,7 @@ default: &default
   external_id_strip: "ucop.edu$"
   tenant_id: cdl
   logo: blank_institution_logo.png
-  authorization:
+  authentication:
     method: shibboleth
     entity_id: "urn:mace:incommon:ucop.edu"
     entity_domain: ".ucop.edu"
