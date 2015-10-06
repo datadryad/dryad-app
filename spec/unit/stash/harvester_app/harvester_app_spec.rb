@@ -2,7 +2,7 @@ require 'spec_helper'
 require 'stash/harvester_app'
 
 module Stash
-  module HarvesterApp
+  describe HarvesterApp do
     describe '#constants' do
       it "includes all constants from #{Harvester}" do
         Stash::Harvester.constants.each do |c|
