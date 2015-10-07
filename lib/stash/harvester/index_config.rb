@@ -5,7 +5,7 @@ module Stash
     #
     # @!attribute [r] uri
     #   @return [URI] the URI of the index
-    class IndexConfig
+    class IndexConfig < ConfigBase
 
       attr_reader :uri
 
@@ -20,25 +20,16 @@ module Stash
       # ------------------------------
       # Class methods
 
-      # Factory method that creates the appropriate {SourceConfig}
-      def self.from_hash(hash)
-        adapter = hash[:adapter]
-        adapter_class = for_adapter(adapter)
-        begin
-          adapter_params = hash.clone
-          adapter_params.delete(:adapter)
-          adapter_class.new(adapter_params)
-        rescue => e
-          raise ArgumentError, "Can't construct configuration class #{adapter_class} for adapter #{adapter}: #{e.message}"
-        end
+      def self.config_key
+        :adapter
+      end
+
+      def self.config_class_name(adapter)
+        "Stash::Harvester::#{adapter}::#{adapter}IndexConfig"
       end
 
       def self.for_adapter(adapter)
-        adapter = Util.ensure_leading_cap(adapter)
-        adapter_class_name = "Stash::Harvester::#{adapter}::#{adapter}IndexConfig"
-        Kernel.const_get(adapter_class_name)
-      rescue => e
-        raise ArgumentError, "Can't find configuration class for adapter '#{adapter}': #{e.message}"
+        for_namespace(adapter)
       end
 
     end

@@ -5,7 +5,7 @@ module Stash
     #
     # @!attribute [r] source_uri
     #   @return [URI] the base URL of the repository.
-    class SourceConfig
+    class SourceConfig < ConfigBase
 
       attr_reader :source_uri
 
@@ -20,25 +20,16 @@ module Stash
       # ------------------------------
       # Class methods
 
-      # Factory method that creates the appropriate {SourceConfig}
-      def self.from_hash(hash)
-        protocol = hash[:protocol]
-        protocol_class = for_protocol(protocol)
-        begin
-          protocol_params = hash.clone
-          protocol_params.delete(:protocol)
-          protocol_class.new(protocol_params)
-        rescue => e
-          raise ArgumentError, "Can't construct configuration class #{protocol_class} for protocol #{protocol}: #{e.message}"
-        end
+      def self.config_key
+        :protocol
+      end
+
+      def self.config_class_name(protocol)
+        "Stash::Harvester::#{protocol}::#{protocol}SourceConfig"
       end
 
       def self.for_protocol(protocol)
-        protocol = Util.ensure_leading_cap(protocol)
-        protocol_class_name = "Stash::Harvester::#{protocol}::#{protocol}SourceConfig"
-        Kernel.const_get(protocol_class_name)
-      rescue => e
-        raise ArgumentError, "Can't find configuration class for protocol '#{protocol}': #{e.message}"
+        for_namespace(protocol)
       end
 
     end

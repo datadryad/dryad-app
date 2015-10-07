@@ -21,7 +21,7 @@ module Stash
           raise ArgumentError, "Can't construct configuration class #{config_class} for config #{namespace}: #{e.message}"
         end
       end
-      
+
       def self.for_namespace(namespace)
         namespace = Util.ensure_leading_cap(namespace)
         class_name = config_class_name(namespace)
