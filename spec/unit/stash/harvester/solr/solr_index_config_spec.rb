@@ -70,9 +70,9 @@ module Stash
           end
 
           it 'captures the proxy url as a string' do
-            proxy_url = 'http://proxy.example.org'
-            config = SolrIndexConfig.new(url: 'http://example.org/', proxy_url: proxy_url)
-            expect(config.opts[:proxy_url]).to eq(proxy_url)
+            proxy = 'http://proxy.example.org'
+            config = SolrIndexConfig.new(url: 'http://example.org/', proxy: proxy)
+            expect(config.opts[:proxy]).to eq(proxy)
           end
 
           it 'captures arbitrary additional options' do
