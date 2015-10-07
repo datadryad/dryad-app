@@ -78,7 +78,7 @@ module Stash
           it 'captures arbitrary additional options' do
             config = SolrIndexConfig.new(
               url: 'http://example.org/',
-              proxy_url: 'http://proxy.example.org',
+              proxy: 'http://proxy.example.org',
               elvis: 'presley'
             )
             expect(config.opts[:elvis]).to eq('presley')
@@ -87,7 +87,7 @@ module Stash
           it 'captures arbitrary additional options when args passed as a hash' do
             opts = {
               url: 'http://example.org/',
-              proxy_url: 'http://proxy.example.org',
+              proxy: 'http://proxy.example.org',
               elvis: 'presley'
             }
             config = SolrIndexConfig.new(opts)
