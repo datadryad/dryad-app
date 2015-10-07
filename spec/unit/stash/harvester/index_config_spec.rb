@@ -29,7 +29,7 @@ module Stash
         it 'reads a valid Solr config' do
           url = 'http://example.org'
           proxy = 'http://proxy.example.org'
-          hash = { adapter: 'Solr', url: url, proxy: proxy}
+          hash = { adapter: 'Solr', url: url, proxy: proxy }
 
           config = IndexConfig.from_hash(hash)
           expect(config).to be_a(Solr::SolrIndexConfig)
