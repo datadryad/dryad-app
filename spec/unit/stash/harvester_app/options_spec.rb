@@ -1,8 +1,8 @@
 require 'spec_helper'
-require 'stash/harvester/options'
+require 'stash/harvester_app'
 
 module Stash
-  module Harvester
+  module HarvesterApp
     describe Options do
 
       describe '#new' do

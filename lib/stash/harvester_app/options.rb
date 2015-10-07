@@ -1,9 +1,8 @@
 require 'time'
 require 'optparse'
-require_relative 'version'
 
 module Stash
-  module Harvester
+  module HarvesterApp
     class Options
 
       NOTE_DATETIME = ['DATETIME arguments:',
