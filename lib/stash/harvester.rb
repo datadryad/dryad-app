@@ -10,7 +10,11 @@ module Stash
     Dir.glob(File.expand_path('../harvester/*.rb', __FILE__), &method(:require))
 
     def self.log
-      @log ||= new_logger(logdev: STDOUT)
+      @log ||= new_logger(logdev: $stdout)
+    end
+
+    def self.log_device=(value)
+      @log = new_logger(logdev: value)
     end
 
     private
