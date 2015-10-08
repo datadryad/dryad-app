@@ -2,10 +2,6 @@ module Stash
   module Harvester
     class ConfigBase
 
-      def self.config_key
-        fail NoMethodError "#{self.class} should override #config_key to return a config key, but it doesn't"
-      end
-
       def self.config_class_name(namespace)
         names = name.split('::')
         base_name = names.pop
@@ -13,6 +9,7 @@ module Stash
       end
 
       def self.from_hash(hash)
+        config_key = self::CONFIG_KEY
         namespace = hash[config_key]
         config_class = for_namespace(namespace)
         begin

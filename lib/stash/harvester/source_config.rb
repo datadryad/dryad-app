@@ -7,6 +7,8 @@ module Stash
     #   @return [URI] the base URL of the repository.
     class SourceConfig < ConfigBase
 
+      CONFIG_KEY = :protocol
+
       attr_reader :source_uri
 
       # Constructs a new +SourceConfig+ with the specified properties.
@@ -16,14 +18,6 @@ module Stash
       def initialize(source_url:)
         @source_uri = Util.to_uri(source_url)
       end
-
-      # ------------------------------
-      # Class methods
-
-      def self.config_key
-        :protocol
-      end
-
     end
   end
 end

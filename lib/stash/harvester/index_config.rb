@@ -7,6 +7,8 @@ module Stash
     #   @return [URI] the URI of the index
     class IndexConfig < ConfigBase
 
+      CONFIG_KEY = :adapter
+
       attr_reader :uri
 
       # Constructs a new +IndexConfig+ with the specified properties.
@@ -16,14 +18,6 @@ module Stash
       def initialize(url:)
         @uri = Util.to_uri(url)
       end
-
-      # ------------------------------
-      # Class methods
-
-      def self.config_key
-        :adapter
-      end
-
     end
   end
 end
