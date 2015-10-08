@@ -24,16 +24,6 @@ module Stash
         :protocol
       end
 
-      # TODO: figure out how to pull this up
-      def self.config_class_name(namespace)
-        "Stash::Harvester::#{namespace}::#{namespace}SourceConfig"
-      end
-
-      # TODO: inline this
-      def self.for_protocol(protocol)
-        for_namespace(protocol)
-      end
-
     end
   end
 end

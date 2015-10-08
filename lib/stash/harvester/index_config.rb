@@ -24,16 +24,6 @@ module Stash
         :adapter
       end
 
-      # TODO: figure out how to pull this up
-      def self.config_class_name(namespace)
-        "Stash::Harvester::#{namespace}::#{namespace}IndexConfig"
-      end
-
-      # TODO: inline this
-      def self.for_adapter(adapter)
-        for_namespace(adapter)
-      end
-
     end
   end
 end

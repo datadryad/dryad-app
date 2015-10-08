@@ -6,8 +6,10 @@ module Stash
         fail NoMethodError "#{self.class} should override #config_key to return a config key, but it doesn't"
       end
 
-      def self.config_class_name(_namespace)
-        fail NoMethodError "#{self.class} should override #config_class_name to generate a class name, but it doesn't"
+      def self.config_class_name(namespace)
+        names = name.split('::')
+        base_name = names.pop
+        (names + [namespace, "#{namespace}#{base_name}"]).join("::")
       end
 
       def self.from_hash(hash)

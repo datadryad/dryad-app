@@ -5,12 +5,12 @@ module Stash
     describe IndexConfig do
       describe '#for_adapter' do
         it 'understands Solr' do
-          expect(IndexConfig.for_adapter('Solr')).to be(Solr::SolrIndexConfig)
+          expect(IndexConfig.for_namespace('Solr')).to be(Solr::SolrIndexConfig)
         end
 
         it 'fails for bad adapters' do
           bad_adapter = 'Elvis'
-          expect { IndexConfig.for_adapter(bad_adapter) }.to raise_error do |e|
+          expect { IndexConfig.for_namespace(bad_adapter) }.to raise_error do |e|
             expect(e).to be_an(ArgumentError)
             expect(e.message).to include(bad_adapter)
           end
@@ -21,7 +21,7 @@ module Stash
             class FooIndexConfig < IndexConfig
             end
           end
-          expect(IndexConfig.for_adapter('Foo')).to be(Foo::FooIndexConfig)
+          expect(IndexConfig.for_namespace('Foo')).to be(Foo::FooIndexConfig)
         end
       end
 
