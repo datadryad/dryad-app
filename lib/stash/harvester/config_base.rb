@@ -5,6 +5,7 @@ module Stash
 
       # TODO: document this in a way that's not insane
       def self.config_class_name(namespace)
+        namespace = Util.ensure_leading_cap(namespace)
         names = name.split('::')
         base_name = names.pop
         (names + [namespace, "#{namespace}#{base_name}"]).join('::')
@@ -24,7 +25,6 @@ module Stash
       end
 
       def self.for_namespace(namespace)
-        namespace = Util.ensure_leading_cap(namespace)
         class_name = config_class_name(namespace)
         begin
           Kernel.const_get(class_name)
