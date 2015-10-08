@@ -1,7 +1,9 @@
 module Stash
   module Harvester
+
     class ConfigBase
 
+      # TODO: document this in a way that's not insane
       def self.config_class_name(namespace)
         names = name.split('::')
         base_name = names.pop
