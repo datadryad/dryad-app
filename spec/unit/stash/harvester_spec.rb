@@ -7,7 +7,7 @@ module Stash
         out = StringIO.new
         Harvester.log_device = out
         begin
-          msg = "I am a log message"
+          msg = 'I am a log message'
           Harvester.log.warn(msg)
           logged = out.string
           expect(logged).to include(msg)
@@ -15,7 +15,7 @@ module Stash
           timestamp = DateTime.parse(timestamp_str)
           expect(timestamp.to_date).to eq(Date.today)
         ensure
-          $stdout = orig_stdout
+          Harvester.log_device = $stdout
         end
       end
     end

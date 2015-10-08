@@ -20,28 +20,34 @@ module Stash
           end
 
           it 'logs a warning if :proxy_url is used instead of :proxy' do
-            logger = instance_double(Logger)
-            original_logger = Harvester.log
+            out = StringIO.new
+            Harvester.log_device = out
             begin
-              Harvester.log = logger
               proxy_url = 'whatever'
-              expect(log).to receive(:warn).with(a_string_including('WARN', proxy_url, ':proxy'))
               SolrIndexConfig.new(url: 'http://example.org', proxy_url: proxy_url)
+              logged = out.string
+              expect(logged).to include('WARN')
+              expect(logged).to include(proxy_url)
+              expect(logged).to include(':proxy_url')
+              expect(logged).to include(':proxy')
             rescue
-              Harvester.log = original_logger
+              Harvester.log_device = $stdout
             end
           end
 
           it 'logs a warning if :proxy_uri is used instead of :proxy' do
-            logger = instance_double(Logger)
-            original_logger = Harvester.log
+            out = StringIO.new
+            Harvester.log_device = out
             begin
               Harvester.log = logger
-              proxy_url = 'whatever'
-              expect(log).to receive(:warn).with(a_string_including('WARN', proxy_url, ':proxy'))
-              SolrIndexConfig.new(url: 'http://example.org', proxy_url: proxy_url)
+              SolrIndexConfig.new(url: 'http://example.org', proxy_uri: proxy_url)
+              logged = out.string
+              expect(logged).to include('WARN')
+              expect(logged).to include(proxy_url)
+              expect(logged).to include(':proxy_uri')
+              expect(logged).to include(':proxy')
             rescue
-              Harvester.log = original_logger
+              Harvester.log_device = $stdout
             end
           end
         end

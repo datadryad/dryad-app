@@ -7,7 +7,7 @@ module Stash
       def self.config_class_name(namespace)
         names = name.split('::')
         base_name = names.pop
-        (names + [namespace, "#{namespace}#{base_name}"]).join("::")
+        (names + [namespace, "#{namespace}#{base_name}"]).join('::')
       end
 
       def self.from_hash(hash)
