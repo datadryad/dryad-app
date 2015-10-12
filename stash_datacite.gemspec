@@ -7,11 +7,11 @@ require "stash_datacite/version"
 Gem::Specification.new do |s|
   s.name        = "stash_datacite"
   s.version     = StashDatacite::VERSION
-  s.authors     = ["sfisher bvedula"]
-  s.email       = ["scott.fisher@ucop.edu bhavi.vedula@ucop.edu"]
+  s.authors     = ["sfisher"]
+  s.email       = ["scott.fisher@ucop.edu"]
   s.homepage    = "https://github.com/CDLUC3/stash_datacite"
-  s.summary     = "TODO: Summary of StashDatacite."
-  s.description = "TODO: Description of StashDatacite."
+  s.summary     = "An engine for working with the DataCite schema in Stash."
+  s.description = "An engine for working with the DataCite schema in Stash."
   s.license     = "MIT"
 
   s.files = Dir["{app,config,db,lib}/**/*", "MIT-LICENSE", "Rakefile", "README.rdoc"]
