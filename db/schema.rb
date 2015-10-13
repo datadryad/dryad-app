@@ -11,22 +11,6 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150318213813) do
-
-  create_table "datasets", force: :cascade do |t|
-    t.integer  "PublicationYear",    limit: 4
-    t.string   "language",           limit: 255
-    t.integer  "size",               limit: 4
-    t.datetime "created_at",                     null: false
-    t.datetime "updated_at",                     null: false
-    t.string   "title",              limit: 255
-    t.integer  "metadata_schema_id", limit: 4
-  end
-
-  create_table "metadata_schemas", force: :cascade do |t|
-    t.string   "name",       limit: 255
-    t.datetime "created_at",             null: false
-    t.datetime "updated_at",             null: false
-  end
+ActiveRecord::Schema.define(version: 0) do
 
 end
