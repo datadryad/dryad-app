@@ -16,10 +16,10 @@ GIT
 
 GIT
   remote: https://github.com/CDLUC3/stash_engine.git
-  revision: ea17431ca25cb1b59a24e81b030dc4bea2ce3c93
+  revision: 8e9d328290c74d40efff90abe9f70eee596ca2db
   branch: development
   specs:
-    stash_engine (0.0.4)
+    stash_engine (0.0.5)
       omniauth (~> 1.2.2)
       rails (~> 4.2.4)
 
