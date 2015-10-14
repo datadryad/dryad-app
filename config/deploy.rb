@@ -73,7 +73,14 @@ namespace :deploy do
     end
   end
 
-  before :starting, :update_config
+  desc 'update stash engines without version number changes'
+  task :update_engines do
+    on roles(:app) do
+      execute "cd #{deploy_to}/current; bundle update stash_engine; bundle update stash_datacite"
+    end
+  end
+
+  before :starting, :update_config, :update_engines
 
   after :restart, :clear_cache do
     on roles(:web), in: :groups, limit: 3, wait: 10 do
