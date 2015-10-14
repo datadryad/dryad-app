@@ -1,4 +1,12 @@
 GIT
+  remote: https://bitbucket.org/cdl/omniauth-shibboleth.git
+  revision: 76b0eb998f21a012d22956245f547e1804d37363
+  branch: master
+  specs:
+    omniauth-shibboleth (1.0.8)
+      omniauth (>= 1.0.0)
+
+GIT
   remote: https://github.com/CDLUC3/stash_datacite.git
   revision: 089d00a8ece18c72f78e1ce3e9c2fdfb53e675ce
   branch: development
@@ -225,6 +233,7 @@ DEPENDENCIES
   jbuilder (~> 2.0)
   jquery-rails
   mysql2 (~> 0.3.18)
+  omniauth-shibboleth!
   passenger
   rails (= 4.2.4)
   rspec-rails (~> 3.0)
