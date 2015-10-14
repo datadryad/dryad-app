@@ -1,16 +1,9 @@
-GIT
-  remote: https://bitbucket.org/cdl/omniauth-shibboleth.git
-  revision: 76b0eb998f21a012d22956245f547e1804d37363
-  branch: master
-  specs:
-    omniauth-shibboleth (1.0.8)
-      omniauth (>= 1.0.0)
-
 PATH
   remote: .
   specs:
-    stash_engine (0.0.10)
+    stash_engine (0.0.11)
       omniauth (~> 1.2.2)
+      omniauth-shibboleth (~> 1.2.1)
       rails (~> 4.2.4)
 
 GEM
@@ -71,6 +64,8 @@ GEM
     omniauth (1.2.2)
       hashie (>= 1.2, < 4)
       rack (~> 1.0)
+    omniauth-shibboleth (1.2.1)
+      omniauth (>= 1.0.0)
     rack (1.6.4)
     rack-test (0.6.3)
       rack (>= 1.0)
@@ -114,7 +109,6 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  omniauth-shibboleth!
   stash_engine!
 
 BUNDLED WITH

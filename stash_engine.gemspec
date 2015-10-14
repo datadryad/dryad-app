@@ -19,7 +19,7 @@ Gem::Specification.new do |s|
 
   s.add_dependency "rails", "~> 4.2.4"
   s.add_dependency "omniauth", "~> 1.2.2"
-  # s.add_dependency "omniauth-shibboleth", "~> 1.2.1" #this does not seem to work with nginX/passenger in our config
+  s.add_dependency "omniauth-shibboleth", "~> 1.2.1"
   # you cannot add specific code repo to gemspec so it must just go in the Gemfile instead if for internal use
 
   #s.add_development_dependency "sqlite3"
