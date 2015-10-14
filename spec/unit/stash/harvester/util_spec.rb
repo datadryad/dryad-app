@@ -29,27 +29,31 @@ module Stash
         end
       end
 
-      describe '#ensure_leading_cap' do
+      describe '#ensure_camel_case' do
         it 'returns nil for nil' do
-          expect(Util.ensure_leading_cap(nil)).to be_nil
+          expect(Util.ensure_camel_case(nil)).to be_nil
         end
 
         it 'returns empty for empty' do
-          expect(Util.ensure_leading_cap('')).to eq('')
+          expect(Util.ensure_camel_case('')).to eq('')
         end
 
         it 'upcases the first letter of a lower-case string' do
-          expect(Util.ensure_leading_cap('abcd')).to eq('Abcd')
+          expect(Util.ensure_camel_case('abcd')).to eq('Abcd')
         end
 
-        it 'leaves subsequent characters alone' do
-          expect(Util.ensure_leading_cap('aBCd')).to eq('ABCd')
+        it 'leaves subsequent uppercase characters alone' do
+          expect(Util.ensure_camel_case('aBCd')).to eq('ABCd')
         end
 
         it 'leaves pre-capitalized strings alone' do
           %w(ABC Abc ABc).each do |s|
-            expect(Util.ensure_leading_cap(s)).to eq(s)
+            expect(Util.ensure_camel_case(s)).to eq(s)
           end
+        end
+
+        it 'converts snake_case to CamelCase' do
+          expect(Util.ensure_camel_case('snake_case')).to eq('SnakeCase')
         end
       end
 

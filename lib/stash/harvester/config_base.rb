@@ -5,7 +5,7 @@ module Stash
 
       # TODO: document this in a way that's not insane
       def self.config_class_name(namespace)
-        namespace = Util.ensure_leading_cap(namespace)
+        namespace = Util.ensure_camel_case(namespace)
         names = name.split('::')
         base_name = names.pop
         (names + [namespace, "#{namespace}#{base_name}"]).join('::')

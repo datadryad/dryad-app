@@ -23,8 +23,8 @@ module Stash
       # @param str [String] the string
       # @return [String] a copy of the string with the first character
       #   capitalized (if applicable)
-      def self.ensure_leading_cap(str)
-        str.sub(/./, &:upcase) if str
+      def self.ensure_camel_case(str)
+        str.split('_').collect { |s| s.sub(/./, &:upcase) }.join if str
       end
 
       # Ensures that the specified time is either nil or in UTC.

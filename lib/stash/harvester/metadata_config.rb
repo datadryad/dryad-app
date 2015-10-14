@@ -1,6 +1,6 @@
 module Stash
   module Harvester
-    class Mapper < ConfigBase
+    class MetadataConfig < ConfigBase
       CONFIG_KEY = :mapping
 
       # TODO: Should this assume it's always already extracted from the wrapper?

@@ -16,7 +16,7 @@ module Stash
         it 'uppercases lower-case class prefixes' do
           expect(MockConfig.config_class_name('foo')).to eq('Stash::Harvester::Foo::FooMockConfig')
         end
-        
+
         it 'camel-cases snake-case class prefixes' do
           expect(MockConfig.config_class_name('foo_bar')).to eq('Stash::Harvester::FooBar::FooBarMockConfig')
         end
