@@ -1,3 +1,3 @@
 module StashEngine
-  VERSION = "0.0"
+  VERSION = "0.0.4"
 end
