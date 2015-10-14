@@ -2,7 +2,7 @@ Rails.application.config.middleware.use OmniAuth::Builder do
   provider :shibboleth,
     {
         :request_type   => :header,
-        :host            => 'dash2-dev.cdlib.org',
+        :host            => 'dash2-dev.ucop.edu',
         #:callback_path   => '/stash/auth/:provider/callback',
         :uid_field       => 'eppn',
         :debug           =>  true,
