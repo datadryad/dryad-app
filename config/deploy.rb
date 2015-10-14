@@ -80,7 +80,7 @@ namespace :deploy do
     end
   end
 
-  before :starting, :update_config, :update_engines
+  before :starting, :update_config
 
   after :restart, :clear_cache do
     on roles(:web), in: :groups, limit: 3, wait: 10 do
