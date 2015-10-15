@@ -58,7 +58,7 @@ module Stash
         # ------------------------------------------------------------
         # Instance methods
 
-        def to_h
+        def list_records_opts
           opts = { metadata_prefix: metadata_prefix }
           (opts[:set] = set) if set
           opts

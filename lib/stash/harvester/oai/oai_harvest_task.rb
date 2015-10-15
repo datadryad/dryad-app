@@ -42,7 +42,7 @@ module Stash
         #
         # @return [Hash] the options passed to the +ListRecords+ verb
         def opts
-          opts = config.to_h
+          opts = config.list_records_opts
           (opts[:from] = to_s(from_time)) if from_time
           (opts[:until] = to_s(until_time)) if until_time
           opts

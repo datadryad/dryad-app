@@ -2,11 +2,9 @@
 
 require 'stash/harvester'
 
-config = Stash::Harvester::OAI::OAISourceConfig.from_yaml(
+config = Stash::Harvester::SourceConfig.from_yaml(
   File.read('oai_source.yml')
 )
-
-puts config.to_h
 
 # Alternatively:
 #
@@ -16,8 +14,7 @@ puts config.to_h
 #   set: 'REFQUALITY'
 # )
 
-task = Stash::Harvester::OAI::OAIHarvestTask.new(
-  config: config,
+task = config.create_harvest_task(
   from_time: Time.utc(2013, 6, 1),
   until_time: Time.utc(2013, 6, 30)
 )

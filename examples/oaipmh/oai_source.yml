@@ -1,3 +1,4 @@
+protocol: OAI              # Stash::Harvester::OAI::OAISourceConfig
 oai_base_url: http://oai.datacite.org/oai
 metadata_prefix: oai_datacite
 set: REFQUALITY

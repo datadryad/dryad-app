@@ -24,6 +24,12 @@ module Stash
         end
       end
 
+      def self.from_yaml(yml)
+        yaml = YAML.load(yml)
+        hash = Util.keys_to_syms(yaml)
+        from_hash(hash)
+      end
+
       def self.for_namespace(namespace)
         class_name = config_class_name(namespace)
         begin

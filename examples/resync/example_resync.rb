@@ -2,7 +2,7 @@
 
 require 'stash/harvester'
 
-config = Stash::Harvester::Resync::ResyncSourceConfig.from_yaml(
+config = Stash::Harvester::SourceConfig.from_yaml(
   File.read('resync_source.yml')
 )
 
@@ -12,8 +12,7 @@ config = Stash::Harvester::Resync::ResyncSourceConfig.from_yaml(
 #   capability_list_url: 'http://localhost:8888/capabilitylist.xml'
 # )
 
-task = Stash::Harvester::Resync::ResyncHarvestTask.new(
-  config: config,
+task = config.create_harvest_task(
   from_time: Time.utc(2015, 7, 13, 22, 17),
   until_time: Time.now.utc
 )
