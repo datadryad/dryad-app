@@ -18,6 +18,15 @@ module Stash
       def initialize(source_url:)
         @source_uri = Util.to_uri(source_url)
       end
+
+      # Constructs a new +HarvestTask+ from this configuration. Implementors should
+      # override this method to return an appropriate subclass of +HarvestTask+ for
+      # the data source.
+      #
+      # @return [HarvestTask] a task to harvest records for the specified time range
+      def create_harvest_task(_from_time: nil, _until_time: nil)
+        fail NoMethodError, "#{self.class} should override #create_harvest_task to create a HarvestTask, but it doesn't"
+      end
     end
   end
 end

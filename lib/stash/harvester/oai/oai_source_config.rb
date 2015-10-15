@@ -64,6 +64,10 @@ module Stash
           opts
         end
 
+        def create_harvest_task(from_time: nil, until_time: nil)
+          OAIHarvestTask.new(config: self, from_time: from_time, until_time: until_time)
+        end
+
         # ------------------------------------------------------------
         # Private methods
 
