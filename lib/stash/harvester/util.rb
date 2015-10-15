@@ -39,6 +39,11 @@ module Stash
         end
       end
 
+      def self.keys_to_syms(v)
+        return v unless v.respond_to?(:to_h)
+        v.to_h.map { |k2, v2| [k2.to_sym, keys_to_syms(v2)] }.to_h
+      end
+
     end
   end
 end

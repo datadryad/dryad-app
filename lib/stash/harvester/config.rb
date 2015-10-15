@@ -51,7 +51,7 @@ module Stash
       def self.from_yaml(yml)
         yaml = YAML.load(yml)
         connection_info = yaml['db']
-        config = keys_to_syms(yaml)
+        config = Util.keys_to_syms(yaml)
         source_config = SourceConfig.from_hash(config[:source])
         index_config = IndexConfig.from_hash(config[:index])
         metadata_config = MetadataConfig.from_hash(config[:metadata])
@@ -59,13 +59,6 @@ module Stash
       end
 
       # Private methods
-
-      def self.keys_to_syms(v)
-        return v unless v.respond_to?(:to_h)
-        v.to_h.map { |k2, v2| [k2.to_sym, keys_to_syms(v2)] }.to_h
-      end
-
-      private_class_method :keys_to_syms
 
       def self.validate_path(path)
         fail IOError, "Specified config file #{path} does not exist" unless File.exist?(path)
