@@ -101,6 +101,10 @@ module Stash
           end
 
         end
+
+        describe '#create_indexer' do
+          it 'creates an indexer'
+        end
       end
     end
   end

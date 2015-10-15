@@ -37,6 +37,10 @@ module Stash
           expect(config.proxy_uri).to eq(URI(proxy))
         end
       end
+
+      describe '#create_indexer' do
+        it 'creates an indexer'
+      end
     end
   end
 end
