@@ -5,7 +5,22 @@ module Stash
   module Harvester
     describe Config do
       describe '#new' do
-        it 'requires db, source, and index config'
+        it 'requires db, source, and index config' do
+          args = {
+            connection_info: {},
+            source_config: instance_double(SourceConfig),
+            index_config: instance_double(IndexConfig),
+            metadata_config: instance_double(MetadataConfig)
+          }
+          args.each do |k, v|
+            args_copy = args.clone
+            args_copy.delete(k)
+            expect do
+              # noinspection RubyArgCount
+              Config.new(args_copy)
+            end.to raise_error(ArgumentError)
+          end
+        end
       end
 
       describe '#from_yaml' do
