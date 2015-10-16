@@ -54,13 +54,10 @@ module Stash
         #
         # @return [Enumerator::Lazy<OAIRecord>] A lazy enumerator of the harvested records
         def harvest_records
-          base_uri = config.source_uri
-          client = ::OAI::Client.new(base_uri.to_s)
-          records = client.list_records(opts)
-          return [].lazy unless records
-          full = records.full
-          enum = full.lazy.to_enum
-          enum.map { |r| OAIRecord.new(r) }
+          do_harvest
+        rescue => e
+          Stash::Harvester.log.error(e)
+          raise e
         end
 
         # ------------------------------------------------------------
@@ -75,6 +72,15 @@ module Stash
           @config.seconds_granularity ? time : time.strftime(TIME_FORMAT)
         end
 
+        def do_harvest
+          base_uri = config.source_uri
+          client = ::OAI::Client.new(base_uri.to_s)
+          records = client.list_records(opts)
+          return [].lazy unless records
+          full = records.full
+          enum = full.lazy.to_enum
+          enum.map { |r| OAIRecord.new(r) }
+        end
       end
     end
   end

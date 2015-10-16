@@ -37,7 +37,7 @@ module Stash
           end
         end
 
-        describe '#list_records' do
+        describe '#harvest_records' do
           before(:each) do
             @oai_client = instance_double(::OAI::Client)
             expect(::OAI::Client).to receive(:new).with(@uri) { @oai_client }
@@ -164,7 +164,30 @@ module Stash
           end
 
           describe 'error handling:' do
-            it 'logs errors'
+
+            before(:each) do
+              @out = StringIO.new
+              Harvester.log_device = @out
+            end
+
+            after(:each) do
+              Harvester.log_device = $stdout
+            end
+
+            def logged
+              @out.string
+            end
+
+            it 'logs errors' do
+              err_msg = 'I am an error message'
+              task = OAIHarvestTask.new(config: OAISourceConfig.new(oai_base_url: @uri))
+              expect(@oai_client).to receive(:list_records).and_raise(err_msg)
+              expect { task.harvest_records }.to raise_error(RuntimeError) do |e|
+                expect(e.message).to include(err_msg)
+              end
+              expect(logged).to include(err_msg)
+            end
+
             it 'handles OAI-PMH error responses gracefully'
             it 'treats an "empty list" ::OAI::Exception as an empty list'
             it 'follows 302 Found redirects with Location header'
