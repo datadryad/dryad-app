@@ -12,7 +12,7 @@ module Stash
             index_config: instance_double(IndexConfig),
             metadata_config: instance_double(MetadataConfig)
           }
-          args.each do |k, v|
+          args.each do |k, _v|
             args_copy = args.clone
             args_copy.delete(k)
             expect do
