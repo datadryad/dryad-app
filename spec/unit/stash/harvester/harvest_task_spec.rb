@@ -36,6 +36,8 @@ module Stash
 
         it 'accepts Dates as well as Times'
 
+        it 'rejects mixed Dates and Times'
+
         it 'requires a config' do
           expect { HarvestTask.new }.to raise_error(ArgumentError)
         end

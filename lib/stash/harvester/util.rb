@@ -34,8 +34,9 @@ module Stash
       def self.utc_or_nil(time)
         if time && time.respond_to?(:utc?) && !time.utc?
           fail ArgumentError, "time #{time}| must be in UTC"
+        elsif time.respond_to?(:strftime)
+          Time.parse(time.strftime('%Y-%m-%d %H:%M:%S %z')).utc
         else
-          time
         end
       end
 

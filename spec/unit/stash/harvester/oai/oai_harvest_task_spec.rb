@@ -120,12 +120,21 @@ module Stash
             task.harvest_records
           end
 
-          it 'accepts Dates as well as Times' do
+          it 'accepts Dates as well as Times for day granularity' do
             start_date = Date.new(2014, 1, 1)
             end_date = Date.new(2015, 1, 1)
             config = OAISourceConfig.new(oai_base_url: @uri, seconds_granularity: false)
             task = OAIHarvestTask.new(config: config, from_time: start_date, until_time: end_date)
             expect(@oai_client).to receive(:list_records).with(from: start_date.strftime('%Y-%m-%d'), until: end_date.strftime('%Y-%m-%d'), metadata_prefix: 'oai_dc')
+            task.harvest_records
+          end
+
+          it 'accepts Dates as well as Times for seconds granularity' do
+            start_date = Date.new(2014, 1, 1)
+            end_date = Date.new(2015, 1, 1)
+            config = OAISourceConfig.new(oai_base_url: @uri, seconds_granularity: true)
+            task = OAIHarvestTask.new(config: config, from_time: start_date, until_time: end_date)
+            expect(@oai_client).to receive(:list_records).with(from: Time.utc(2014, 1, 1), until: Time.utc(2015, 1, 1), metadata_prefix: 'oai_dc')
             task.harvest_records
           end
 
