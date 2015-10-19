@@ -18,5 +18,13 @@ Gem::Specification.new do |s|
   s.test_files = Dir["test/**/*"]
 
   s.add_dependency "rails", "~> 4.2.4"
+<<<<<<< HEAD
   s.add_development_dependency "mysql2"
+=======
+  s.add_dependency "omniauth", "~> 1.2.2"
+  s.add_dependency "omniauth-shibboleth", "~> 1.2.1"
+  # you cannot add specific code repo to gemspec so it must just go in the Gemfile instead if for internal use
+
+  #s.add_development_dependency "sqlite3"
+>>>>>>> 1fe0679bfdcf8226311da8e2ab71c8b79035b98e
 end

@@ -1,0 +1,23 @@
+<h1>Test#index</h1>
+<p>Find me in app/views/stash_engine/test/index.html.erb</p>
+
+<!-- this is something like /Shibboleth.sso/Login?target=https://#{host}/auth/shibboleth/callback -->
+
+<!--
+def self.login_path_with_entity(host, entity)
+  "https://#{host}/Shibboleth.sso/Login?target=#{self.return_target(host)}&entityID=#{self.shibboleth_entity_id(entity)}"
+end
+
+# host would be dash2-dev.cdlib.org, for example.
+# entity would be like urn:mace:incommon:ucop.edu  or https://idp.calstatela.edu/idp/shibboleth or urn:mace:incommon:ucla.edu
+
+# self.return_target(host) is -> CGI.escape("https://#{host}/auth/shibboleth/callback")
+# self.shibboleth_entity_id(entity) is -> CGI.escape(entity)
+
+-->
+<p>
+  <a href="https://dash2-dev.ucop.edu/Shibboleth.sso/Login?target=https%3A%2F%2Fdash2-dev.ucop.edu%2Fstash%2Fauth%2Fshibboleth%2Fcallback&entityID=urn%3Amace%3Aincommon%3Aucop.edu">Test login</a>
+</p>
+<p>
+  <a href="https://dash2-dev.ucop.edu/Shibboleth.sso/Login?target=https%3A%2F%2Fdash2-dev.ucop.edu%2Fauth%2Fshibboleth%2Fcallback&entityID=urn%3Amace%3Aincommon%3Aucop.edu">Test login (normal path)</a>
+</p>
