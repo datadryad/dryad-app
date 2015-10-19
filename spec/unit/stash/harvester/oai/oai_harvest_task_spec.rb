@@ -120,6 +120,15 @@ module Stash
             task.harvest_records
           end
 
+          it 'accepts Dates as well as Times' do
+            start_date = Date.new(2014, 1, 1)
+            end_date = Date.new(2015, 1, 1)
+            config = OAISourceConfig.new(oai_base_url: @uri, seconds_granularity: false)
+            task = OAIHarvestTask.new(config: config, from_time: start_date, until_time: end_date)
+            expect(@oai_client).to receive(:list_records).with(from: start_date.strftime('%Y-%m-%d'), until: end_date.strftime('%Y-%m-%d'), metadata_prefix: 'oai_dc')
+            task.harvest_records
+          end
+
           it 'supports resumption' do
             require 'rexml/document'
 
@@ -197,6 +206,8 @@ module Stash
           end
 
           it 'logs a warning when converting sub-day datestamps to day granularity'
+
+          it 'logs a warning when converting date-only datestamps to time granularity'
 
         end
       end

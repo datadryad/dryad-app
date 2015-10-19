@@ -43,8 +43,8 @@ module Stash
         # @return [Hash] the options passed to the +ListRecords+ verb
         def opts
           opts = config.list_records_opts
-          (opts[:from] = to_s(from_time)) if from_time
-          (opts[:until] = to_s(until_time)) if until_time
+          (opts[:from] = to_str(from_time)) if from_time
+          (opts[:until] = to_str(until_time)) if until_time
           opts
         end
 
@@ -68,7 +68,7 @@ module Stash
         # ------------------------------
         # Conversions
 
-        def to_s(time)
+        def to_str(time)
           @config.seconds_granularity ? time : time.strftime(TIME_FORMAT)
         end
 

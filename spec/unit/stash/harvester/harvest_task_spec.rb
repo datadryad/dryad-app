@@ -34,6 +34,8 @@ module Stash
           expect { HarvestTask.new(config: @config, until_time: non_utc) }.to raise_error(ArgumentError)
         end
 
+        it 'accepts Dates as well as Times'
+
         it 'requires a config' do
           expect { HarvestTask.new }.to raise_error(ArgumentError)
         end

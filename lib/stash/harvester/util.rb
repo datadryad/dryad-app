@@ -32,7 +32,7 @@ module Stash
       # @return the specified time, as a UTC +Time+
       # @raise ArgumentError if +time+ is not UTC
       def self.utc_or_nil(time)
-        if time && !time.utc?
+        if time && time.respond_to?(:utc?) && !time.utc?
           fail ArgumentError, "time #{time}| must be in UTC"
         else
           time
