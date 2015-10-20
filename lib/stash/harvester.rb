@@ -23,7 +23,7 @@ module Stash
       logger = Logger.new(logdev, shift_age, shift_size)
       logger.level = level
       logger.formatter = proc do |severity, datetime, progname, msg|
-        "#{datetime.to_time.utc} #{severity} -#{progname}- #{msg}"
+        "#{datetime.to_time.utc} #{severity} -#{progname}- #{msg}\n"
       end
       logger
     end

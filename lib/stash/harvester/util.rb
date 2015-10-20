@@ -27,17 +27,20 @@ module Stash
         str.split('_').collect { |s| s.sub(/./, &:upcase) }.join if str
       end
 
-      # Ensures that the specified time is either nil or in UTC.
-      # @param time [Time, nil] the time
-      # @return the specified time, as a UTC +Time+
-      # @raise ArgumentError if +time+ is not UTC
+      # Ensures that the specified argument is either a ++Date++, a UTC ++Time++, or nil
+      # @param time [Time, Date, nil] the time
+      # @return the argument
+      # @raise ArgumentError if +time+ is not a ++Date++ or ++Time++-like object, or
+      #   if it is a ++Time++ not in UTC
       def self.utc_or_nil(time)
-        if time && time.respond_to?(:utc?) && !time.utc?
-          fail ArgumentError, "time #{time}| must be in UTC"
-        elsif time.respond_to?(:strftime)
-          Time.parse(time.strftime('%Y-%m-%d %H:%M:%S %z')).utc
-        else
+        if time
+          if time.respond_to?(:utc?)
+            fail ArgumentError, "time #{time} must be in UTC" unless time.utc?
+          else
+            fail ArgumentError, "time #{time} does not appear to be a time or date" unless time.respond_to?(:strftime)
+          end
         end
+        time
       end
 
       def self.keys_to_syms(v)

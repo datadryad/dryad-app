@@ -214,9 +214,44 @@ module Stash
             it 'respects 503 with Retry-After' # see https://github.com/code4lib/ruby-oai/issues/45
           end
 
-          it 'logs a warning when converting sub-day datestamps to day granularity'
+          describe 'datestamp granularity warnings' do
+            before(:each) do
+              @out = StringIO.new
+              Harvester.log_device = @out
+            end
 
-          it 'logs a warning when converting date-only datestamps to time granularity'
+            after(:each) do
+              logged.each_line { |l| puts l }
+              Harvester.log_device = $stdout
+            end
+
+            def logged
+              @out.string
+            end
+
+            it 'logs a warning when converting sub-day datestamps to day granularity' do
+              start_time = Time.new(2014, 1, 1, 12, 34, 56).utc
+              end_time = Time.new(2015, 1, 1, 7, 8, 9).utc
+              config = OAISourceConfig.new(oai_base_url: @uri, seconds_granularity: false)
+              task = OAIHarvestTask.new(config: config, from_time: start_time, until_time: end_time)
+              allow(@oai_client).to receive(:list_records).with(from: '2014-01-01', until: '2015-01-01', metadata_prefix: 'oai_dc')
+              task.harvest_records
+              expect(logged).to match(/WARN.*#{Regexp.quote(start_time.to_s)}.*#{Regexp.quote('2014-01-01')}/)
+              expect(logged).to match(/WARN.*#{Regexp.quote(end_time.to_s)}.*#{Regexp.quote('2015-01-01')}/)
+            end
+
+            it 'logs a warning when converting date-only datestamps to time granularity' do
+              start_date = Date.new(2014, 1, 1)
+              end_date = Date.new(2015, 1, 1)
+              config = OAISourceConfig.new(oai_base_url: @uri, seconds_granularity: true)
+              task = OAIHarvestTask.new(config: config, from_time: start_date, until_time: end_date)
+              allow(@oai_client).to receive(:list_records).with(from: Time.utc(2014, 1, 1), until: Time.utc(2015, 1, 1), metadata_prefix: 'oai_dc')
+              task.harvest_records
+              expect(logged).to match(/WARN.*#{Regexp.quote(start_date.to_s)}.*#{Regexp.quote('2014-01-01 00:00:00 UTC')}/)
+              expect(logged).to match(/WARN.*#{Regexp.quote(end_date.to_s)}.*#{Regexp.quote('2015-01-01 00:00:00 UTC')}/)
+            end
+          end
+
 
         end
       end

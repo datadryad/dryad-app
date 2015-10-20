@@ -11,8 +11,8 @@ module Stash
         # ------------------------------------------------------------
         # Constants
 
-        TIME_FORMAT = '%Y-%m-%d'
-        private_constant :TIME_FORMAT
+        DATE_FORMAT = '%Y-%m-%d'
+        private_constant :DATE_FORMAT
 
         # ------------------------------------------------------------
         # Initializer
@@ -69,7 +69,7 @@ module Stash
         # Conversions
 
         def to_str(time)
-          @config.seconds_granularity ? time : time.strftime(TIME_FORMAT)
+          @config.seconds_granularity ? to_time(time) : to_date(time)
         end
 
         def do_harvest
@@ -81,6 +81,23 @@ module Stash
           enum = full.lazy.to_enum
           enum.map { |r| OAIRecord.new(r) }
         end
+
+        def to_time(time_or_date)
+          if time_or_date.respond_to?(:sec)
+            time_or_date
+          else
+            time = Time.parse(time_or_date.strftime('%Y-%m-%d %H:%M:%S %z')).utc
+            Harvester.log.warn("date '#{time_or_date}' converted to time '#{time}' to match configuration seconds_granularity: true")
+            time
+          end
+        end
+
+        def to_date(time_or_date)
+          date_str = time_or_date.strftime(DATE_FORMAT)
+          Harvester.log.warn("time '#{time_or_date}' converted to date '#{date_str}' to match configuration seconds_granularity: false") if time_or_date.respond_to?(:sec)
+          date_str
+        end
+
       end
     end
   end
