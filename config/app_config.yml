@@ -1,0 +1,18 @@
+defaults: &DEFAULTS
+  metadata_engines: [ "StashDatacite"]
+  shared_resource_model: StashEngine::Resource
+
+development: &DEVELOPMENT
+  <<: *DEFAULTS
+
+local_engines:
+  <<: *DEVELOPMENT
+
+test:
+  <<: *DEFAULTS
+
+stage:
+  <<: *DEFAULTS
+
+production:
+  <<: *DEFAULTS
