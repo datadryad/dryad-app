@@ -77,13 +77,13 @@ namespace :deploy do
   task :remove_engines do
     on roles(:app) do
       puts "Attempting to remove previous engines to ensure fresh deploy"
-      Dir.chdir "#{deploy_to}/current"
-      gems = `bundle exec gem list | grep stash`
-      gems = gems.split("\n").map{|i| i.split(' ').first }
-      gems.each do |gem|
-        `bundle exec gem uninstall #{gem}`
-        `gem uninstall #{gem}`
-      end
+      #Dir.chdir "#{deploy_to}/current"
+      #gems = `bundle exec gem list | grep stash`
+      #gems = gems.split("\n").map{|i| i.split(' ').first }
+      #gems.each do |gem|
+      #  `bundle exec gem uninstall #{gem}`
+      #  `gem uninstall #{gem}`
+      #end
     end
   end
 
@@ -94,7 +94,8 @@ namespace :deploy do
     end
   end
 
-  before :starting, :update_config, :remove_engines
+  before :starting, :update_config
+  before :starting, :remove_engines
 
   after :restart, :clear_cache do
     on roles(:web), in: :groups, limit: 3, wait: 10 do
