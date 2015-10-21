@@ -96,7 +96,7 @@ namespace :deploy do
   end
 
   before :starting, :update_config
-  before :starting, :update_engines
+  before :starting, :remove_engines
 
   after :restart, :clear_cache do
     on roles(:web), in: :groups, limit: 3, wait: 10 do
