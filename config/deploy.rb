@@ -75,13 +75,15 @@ namespace :deploy do
 
   desc 'remove engines so they are fresh'
   task :remove_engines do
-    puts "Attempting to remove previous engines to ensure fresh deploy"
-    Dir.chdir "#{deploy_to}/current"
-    gems = `bundle exec gem list | grep stash`
-    gems = gems.split("\n").map{|i| i.split(' ').first }
-    gems.each do |gem|
-      `bundle exec gem uninstall #{gem}`
-      `gem uninstall #{gem}`
+    on roles(:app) do
+      puts "Attempting to remove previous engines to ensure fresh deploy"
+      Dir.chdir "#{deploy_to}/current"
+      gems = `bundle exec gem list | grep stash`
+      gems = gems.split("\n").map{|i| i.split(' ').first }
+      gems.each do |gem|
+        `bundle exec gem uninstall #{gem}`
+        `gem uninstall #{gem}`
+      end
     end
   end
 
