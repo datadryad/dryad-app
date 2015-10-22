@@ -73,6 +73,7 @@ namespace :deploy do
     end
   end
 
+  #this did not refresh engine gems so no longer called
   desc 'remove engines so they are fresh'
   task :remove_engines do
     on roles(:app) do
@@ -87,16 +88,15 @@ namespace :deploy do
     end
   end
 
+  #this did not refresh engines without version number changes, so not called
   desc 'update stash engines without version number changes'
   task :update_engines do
     on roles(:app) do
-      puts "Trying to update engines the easy way!"
       execute "cd #{deploy_to}/current; bundle update stash_engine; bundle update stash_datacite"
     end
   end
 
   before :starting, :update_config
-  before :starting, :remove_engines
 
   after :restart, :clear_cache do
     on roles(:web), in: :groups, limit: 3, wait: 10 do

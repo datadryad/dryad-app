@@ -1,4 +1,5 @@
 source 'https://rubygems.org'
+require File.join(File.dirname(__FILE__), 'lib', 'bundler_help.rb')
 
 ruby "2.2.3"
 
@@ -65,14 +66,14 @@ end
 # Do 'export DISABLE_SPRING=1' in your .bash_profile to keep it from running and messing you up
 # if you are switching back and forth for debugging often.
 
-if File.exist?(File.join('..', 'stash_engine')) && ENV.to_hash['LOCAL_ENGINES'] == 'true'
-  gem 'stash_engine', :path => '../stash_engine'
+if BundlerHelp.find_path('stash_engine') && ENV.to_hash['LOCAL_ENGINES'] == 'true'
+  gem 'stash_engine', :path => BundlerHelp.find_path('stash_engine')
 else
   gem 'stash_engine', :git => 'https://github.com/CDLUC3/stash_engine.git', :branch => 'development'
 end
 
-if File.exist?(File.join('..', 'stash_datacite')) && ENV.to_hash['LOCAL_ENGINES'] == 'true'
-  gem 'stash_datacite', :path => '../stash_datacite'
+if BundlerHelp.find_path('stash_datacite') && ENV.to_hash['LOCAL_ENGINES'] == 'true'
+  gem 'stash_datacite', :path => BundlerHelp.find_path('stash_datacite')
 else
   gem 'stash_datacite', :git => 'https://github.com/CDLUC3/stash_datacite.git', :branch => 'development'
 end

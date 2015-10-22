@@ -65,3 +65,16 @@ set :passenger_port, "3000"
 #     auth_methods: %w(publickey password)
 #     # password: 'please use keys'
 #   }
+
+namespace :deploy do
+
+  desc 'update local engines to get around requiring version number changes in development'
+  task :update_local_engines do
+    on roles(:app) do
+      execute "cd #{deploy_to}/stash_datacite; git reset --hard origin/development; git pull"
+      execute "cd #{deploy_to}/stash_engine; git reset --hard origin/development; git pull"
+    end
+  end
+
+  before :starting, :update_local_engines
+end
