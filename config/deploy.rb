@@ -81,8 +81,8 @@ namespace :deploy do
       gems = capture("cd '#{release_path}'; bundle exec gem list | grep stash")
       gems = gems.split("\n").map{|i| i.split(' ').first }
       gems.each do |gem|
-        execute "cd '#{release_path}'; bundle exec gem uninstall #{gem}"
-        execute "cd '#{release_path}'; gem uninstall #{gem}"
+        execute "cd '#{release_path}'; bundle exec gem uninstall #{gem}", raise_on_non_zero_exit: false
+        execute "cd '#{release_path}'; gem uninstall #{gem}", raise_on_non_zero_exit: false
       end
     end
   end
