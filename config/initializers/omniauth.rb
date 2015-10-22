@@ -1,3 +1,4 @@
+=begin
 Rails.application.config.middleware.use OmniAuth::Builder do
   provider :shibboleth,
     {
@@ -12,3 +13,4 @@ Rails.application.config.middleware.use OmniAuth::Builder do
         }
     }
 end
+=end
