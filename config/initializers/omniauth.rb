@@ -3,7 +3,7 @@ Rails.application.config.middleware.use OmniAuth::Builder do
            {
                :request_type   => :header,
                :host            => 'dash2-dev.ucop.edu',
-               #:callback_path   => '/auth/:provider/callback',
+               :callback_path   => '/stash/auth/:provider/callback',
                :uid_field       => 'eppn',
                #:debug           =>  true,
                :info_fields => {
