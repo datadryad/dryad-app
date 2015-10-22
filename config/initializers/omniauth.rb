@@ -5,6 +5,7 @@ Rails.application.config.middleware.use OmniAuth::Builder do
                :host            => 'dash2-dev.ucop.edu',
                :callback_path   => '/stash/auth/:provider/callback',
                :uid_field       => 'eppn',
+               :path_prefix     => '/stash/auth',
                #:debug           =>  true,
                :info_fields => {
                    :email               => 'mail',
