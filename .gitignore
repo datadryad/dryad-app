@@ -8,8 +8,7 @@
 /.bundle
 
 #ignore config files with private information
-/config/database.yml
-/config/secrets.yml
+/config/*.yml
 /config/tenants/*.yml
 
 # Ignore all logfiles and tempfiles.
