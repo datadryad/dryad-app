@@ -28,16 +28,9 @@ module StashEngine
     # POST /resources.json
     def create
       @resource = Resource.new
+      @resource.save!
+      redirect_to stash_datacite.generals_new_path(resource_id: @resource.id)
 
-      respond_to do |format|
-        if @resource.save
-          format.html { redirect_to datacite.generals_new_path( resource_id: @resource.id) }
-          format.json { render :edit, status: :created, location: @resource }
-        else
-          format.html { redirect_to datacite_creators_path }
-          format.json { render json: @resource.errors, status: :unprocessable_entity }
-        end
-      end
     end
 
     # PATCH/PUT /resources/1
@@ -72,7 +65,7 @@ module StashEngine
 
       # Never trust parameters from the scary internet, only allow the white list through.
       def resource_params
-        params.require(:resource).permit(:user_id, :local_id)
+        params.require(:resource).permit(:user_id, :current_resource_state_id)
       end
 
     end

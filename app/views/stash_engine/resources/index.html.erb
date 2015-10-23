@@ -1,0 +1,29 @@
+<p id="notice"><%= notice %></p>
+<h2> My Data Publications </h2>
+
+<h3>Create new</h3>
+<p>Create a new publication with the metadata standard.<%= link_to "Go", stash_engine.new_resource_path, class: "btn btn-success" %></p>
+
+
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Title</th>
+      <th>Publisher</th>
+      <th>Publication Year</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @resources.each do |resource| %>
+      <tr>
+        <td><%#= title(resource) %></td>
+        <td><%#= publisher(resource) %></td>
+        <td><%#= publication_year(resource) %></td>
+        <td><%#= link_to '<i class="glyphicon glyphicon-pencil"></i> Edit'.html_safe, StashDatacite.generals_edit_path(resource_id:resource.id), class: "btn" %></td>
+        <td><%#= link_to '<i class="glyphicon glyphicon-trash"></i>'.html_safe, '#', class: "btn btn-danger" %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
