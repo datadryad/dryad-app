@@ -12,4 +12,10 @@ Rails.application.config.middleware.use OmniAuth::Builder do
                    :identity_provider   => 'shib_identity_provider'
                }
            }
+  unless Rails.env.production? || Rails.env.stage?
+    provider :developer,
+             :fields => [:first_name, :last_name, :email],
+             :uid_field => :email
+  end
+
 end
