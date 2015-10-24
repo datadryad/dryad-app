@@ -1,6 +1,7 @@
 Rails.application.config.middleware.use OmniAuth::Builder do
+#StashEngine::Engine.config.middleware.use OmniAuth::Builder do
   provider :shibboleth,
-           :callback_path => '/stash/auth/:provider/callback',
+           :callback_path => '/stash/auth/shibboleth/callback',
            :request_type   => :header,
            :host            => 'dash2-dev.ucop.edu',
            :uid_field       => 'eppn',
@@ -13,7 +14,7 @@ Rails.application.config.middleware.use OmniAuth::Builder do
 
   unless Rails.env.production? || Rails.env.stage?
     provider :developer,
-             :callback_path => '/stash/auth/:provider/callback',
+             :callback_path => '/stash/auth/developer/callback',
              :path_prefix => '/stash/auth',
              :fields => [:first_name, :last_name, :email],
              :uid_field => :email
