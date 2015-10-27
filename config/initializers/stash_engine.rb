@@ -3,4 +3,5 @@
 
 StashEngine.setup do |config|
   config.tenants = TENANT_CONFIG
+  config.app = APP_CONFIG
 end
