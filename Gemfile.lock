@@ -8,7 +8,7 @@ GIT
 
 GIT
   remote: https://github.com/CDLUC3/stash_engine.git
-  revision: 66a633cb11bda15141a9232c1a5c08beb94f912d
+  revision: aaa5d79bb3fdf4efabbae869d67789ab115a1bc2
   branch: development
   specs:
     stash_engine (0.0.15)
