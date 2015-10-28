@@ -1,10 +1,12 @@
 require "stash_datacite/engine"
 
 module StashDatacite
-  mattr_accessor :resource_class
-  def self.resource_class
-    @@resource_class.constantize
-  end
+mattr_accessor :resource_class
+
+def self.author_class
+  @@author_class.constantize
+end
+
   class Engine < ::Rails::Engine
     isolate_namespace StashDatacite
 

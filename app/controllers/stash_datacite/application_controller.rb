@@ -1,2 +1,4 @@
-class StashDatacite::ApplicationController < ApplicationController
+module StashDatacite
+  class ApplicationController < ::ApplicationController
+  end
 end
