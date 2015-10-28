@@ -8,6 +8,7 @@ module StashEngine
     # GET /resources.json
     def index
       @resources = Resource.all
+      @titles = StashDatacite::Title.all
     end
 
     # GET /resources/1
