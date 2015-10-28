@@ -1,4 +1,4 @@
-<h1>Welcome to Dash2 login placeholder page</h1>
+<h1>Welcome to Dash2 institution placeholder page</h1>
 <p>Please choose your login below:</p>
 
 <!-- this is something like /Shibboleth.sso/Login?target=https://#{host}/auth/shibboleth/callback -->
@@ -15,10 +15,16 @@ end
 # self.shibboleth_entity_id(entity) is -> CGI.escape(entity)
 
 -->
+<%# @tenants.inspect %>
+<% @tenants.each do |tenant| %>
+  <p><%= link_to tenant.long_name, tenant.omniauth_login_path %></p>
+<% end %>
+<!--
 <p>
   <a href="https://dash2-dev.ucop.edu/Shibboleth.sso/Login?target=https%3A%2F%2Fdash2-dev.ucop.edu%2Fstash%2Fauth%2Fshibboleth%2Fcallback&entityID=urn%3Amace%3Aincommon%3Aucop.edu">UCOP Login</a>
 </p>
+-->
 
 <p>
-  <a href="/auth/developer">Developer login</a>
+  <a href="/stash/auth/developer">Developer login</a>
 </p>
