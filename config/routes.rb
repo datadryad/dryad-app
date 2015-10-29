@@ -4,6 +4,8 @@ StashEngine::Engine.routes.draw do
 
   resources :tenants
 
+  get 'dashboard', to: 'dashboard#show', as: 'dashboard'
+
   get "login", :to => "test#index"
 
   match 'auth/:provider/callback', :to => 'test#after_login', :via => [:get, :post]

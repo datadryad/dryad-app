@@ -1,3 +1,9 @@
-  <div>
-    <%= link_to "New Dataset", new_resource_path %>
-  </div>
+<p id="notice"><%= notice %></p>
+<h2> My Dashboard </h2>
+
+<div>
+  <%= button_to "New Dataset", stash_engine.new_resource_path %>
+</div>
+
+<%= render template: "stash_engine/resources/index" %>
+

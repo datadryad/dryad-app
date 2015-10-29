@@ -1,11 +1,6 @@
 <p id="notice"><%= notice %></p>
-<h2> My Data Publications </h2>
 
-<h3>Create new</h3>
-<p>Create a new publication with the metadata standard.<%= link_to "Go", stash_engine.new_resource_path, class: "btn btn-success" %></p>
-
-
-<table class="table table-striped">
+<table>
   <thead>
     <tr>
       <th>Title</th>
@@ -17,8 +12,8 @@
     <% @resources.each do |resource| %>
       <tr>
         <td><%= title(resource) %></td>
-        <td><%= link_to '<i class="glyphicon glyphicon-pencil"></i> Edit'.html_safe, '#', class: "btn" %></td>
-        <td><%= link_to '<i class="glyphicon glyphicon-trash"></i>'.html_safe, '#', class: "btn btn-danger" %></td>
+        <td><%= link_to 'Edit', stash_datacite.generals_edit_path(resource_id: resource.id), class: "btn" %></td>
+        <td><%= link_to 'Delete', '#', class: "btn" %></td>
       </tr>
     <% end %>
   </tbody>
