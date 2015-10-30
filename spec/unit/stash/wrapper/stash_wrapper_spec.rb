@@ -97,6 +97,30 @@ module Stash
         end
       end
 
+      describe 'convenience accessors' do
+        it 'evades the law of Demeter' do
+          data = File.read('spec/data/wrapper/wrapper-1.xml')
+          xml = REXML::Document.new(data).root
+          wrapper = StashWrapper.load_from_xml(xml)
+
+          expect(wrapper.id_value).to eq('10.12345/1234567890')
+          expect(wrapper.version_number).to eq(1)
+          expect(wrapper.version_date).to eq(Date.new(2015, 9, 8))
+          expect(wrapper.license_name).to eq('Creative Commons Attribution 4.0 International (CC-BY)')
+          expect(wrapper.license_uri).to eq(URI('https://creativecommons.org/licenses/by/4.0/legalcode'))
+          expect(wrapper.embargo_type).to eq(EmbargoType::DOWNLOAD)
+          expect(wrapper.embargo_end_date).to eq(Date.new(2016, 3, 7))
+
+          inventory = wrapper.inventory
+          expect(inventory.num_files).to eq(1)
+          expect(inventory.files.size).to eq(1)
+          file = inventory.files[0]
+          expect(file.pathname).to eq('mydata.xlsx')
+          expect(file.size_bytes).to eq(12_345_678)
+          expect(file.mime_type).to eq(MIME::Type.new('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'))
+        end
+      end
+
       describe '#save_to_xml' do
 
         describe 'namespace handling' do

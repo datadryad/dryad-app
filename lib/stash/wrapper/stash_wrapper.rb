@@ -46,6 +46,50 @@ module Stash
         self.stash_descriptive = descriptive_elements
       end
 
+      def id_value
+        identifier.value
+      end
+
+      def version
+        stash_administrative.version
+      end
+
+      def version_number
+        version.version_number
+      end
+
+      def version_date
+        version.date
+      end
+
+      def license
+        stash_administrative.license
+      end
+
+      def license_name
+        license.name
+      end
+
+      def license_uri
+        license.uri
+      end
+
+      def embargo
+        stash_administrative.embargo
+      end
+
+      def embargo_type
+        embargo.type
+      end
+
+      def embargo_end_date
+        embargo.end_date
+      end
+
+      def inventory
+        stash_administrative.inventory
+      end
+
       # Overrides `XML::Mapping#pre_save` to set the XML namespace and schema location.
       def pre_save(options = { mapping: :_default })
         xml = super(options)
