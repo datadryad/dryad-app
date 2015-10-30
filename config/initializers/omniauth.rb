@@ -4,15 +4,13 @@ Rails.application.config.middleware.use OmniAuth::Builder do
            :callback_path => '/stash/auth/shibboleth/callback',
            :request_type   => :header,
            :host            => 'dash2-dev.ucop.edu',
-           #:uid_field       => 'eppn',
-           :uid_field       => :email,
+           :uid_field       => 'eppn',
            :path_prefix     => '/stash/auth',
                #:debug           =>  true,
-           :fields => [:name, :email]
-           #:info_fields => {
-           #  :email               => 'mail',
-           #  :identity_provider   => 'shib_identity_provider'
-           # }
+           :info_fields => {
+             :email               => 'mail',
+             :identity_provider   => 'shib_identity_provider'
+           }
 
   unless Rails.env.production? || Rails.env.stage?
     provider :developer,
