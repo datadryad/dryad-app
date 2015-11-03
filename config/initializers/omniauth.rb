@@ -24,4 +24,8 @@ Rails.application.config.middleware.use OmniAuth::Builder do
       :callback_path  => '/stash/auth/google_oauth2/callback',
       :path_prefix    => '/stash/auth'
 
+  provider :orcid, APP_CONFIG.orcid_key, APP_CONFIG.orchid_secret,
+       :callback_path  => '/stash/auth/orcid/callback',
+       :path_prefix    => '/stash/auth'
+
 end
