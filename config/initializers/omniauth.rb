@@ -28,7 +28,7 @@ Rails.application.config.middleware.use OmniAuth::Builder do
        :callback_path  => '/stash/auth/orcid/callback',
        :path_prefix    => '/stash/auth',
            :authorize_params => {
-               :scope => 'authenticate'
+               :scope => '/authenticate'
            }
            #:client_options => {
            #    :site => settings.site,
