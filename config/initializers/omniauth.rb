@@ -20,4 +20,8 @@ Rails.application.config.middleware.use OmniAuth::Builder do
              :uid_field => :email
   end
 
+  provider :google_oauth2, APP_CONFIG.google_client_id, APP_CONFIG.google_client_secret,
+      :callback_path  => '/stash/auth/google_oauth2/callback',
+      :path_prefix    => '/stash/auth'
+
 end

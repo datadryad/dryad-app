@@ -29,6 +29,10 @@ module StashEngine
           "&entityID=#{CGI.escape(authentication.entity_id)}"
     end
 
+    def google_login_path
+      "/stash/auth/google_oauth2"
+    end
+
 
 
   end
