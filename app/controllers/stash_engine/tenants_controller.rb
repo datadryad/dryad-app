@@ -13,41 +13,6 @@ module StashEngine
     def show
     end
 
-    # GET /tenants/new
-    def new
-      @tenant = Tenant.new
-    end
-
-    # GET /tenants/1/edit
-    def edit
-    end
-
-    # POST /tenants
-    def create
-      @tenant = Tenant.new(tenant_params)
-
-      if @tenant.save
-        redirect_to @tenant, notice: 'Tenant was successfully created.'
-      else
-        render :new
-      end
-    end
-
-    # PATCH/PUT /tenants/1
-    def update
-      if @tenant.update(tenant_params)
-        redirect_to @tenant, notice: 'Tenant was successfully updated.'
-      else
-        render :edit
-      end
-    end
-
-    # DELETE /tenants/1
-    def destroy
-      @tenant.destroy
-      redirect_to tenants_url, notice: 'Tenant was successfully destroyed.'
-    end
-
     private
       # Use callbacks to share common setup or constraints between actions.
       def set_tenant
