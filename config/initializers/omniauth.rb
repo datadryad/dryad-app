@@ -29,7 +29,7 @@ Rails.application.config.middleware.use OmniAuth::Builder do
        :path_prefix    => '/stash/auth',
            :authorize_params => {
                :scope => 'authenticate'
-           },
+           }
            #:client_options => {
            #    :site => settings.site,
            #    :authorize_url => settings.authorize_url,
