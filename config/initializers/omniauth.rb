@@ -26,6 +26,14 @@ Rails.application.config.middleware.use OmniAuth::Builder do
 
   provider :orcid, APP_CONFIG.orcid_key, APP_CONFIG.orcid_secret,
        :callback_path  => '/stash/auth/orcid/callback',
-       :path_prefix    => '/stash/auth'
+       :path_prefix    => '/stash/auth',
+           :authorize_params => {
+               :scope => 'authenticate'
+           },
+           #:client_options => {
+           #    :site => settings.site,
+           #    :authorize_url => settings.authorize_url,
+           #    :token_url => settings.token_url
+           #}
 
 end
