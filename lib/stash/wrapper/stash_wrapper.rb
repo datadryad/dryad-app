@@ -110,6 +110,11 @@ module Stash
         elem
       end
 
+      def self.parse_xml(xml_str)
+        xml = REXML::Document.new(xml_str).root
+        load_from_xml(xml)
+      end
+
       private
 
       def set_prefix(prefix:, elem:)
