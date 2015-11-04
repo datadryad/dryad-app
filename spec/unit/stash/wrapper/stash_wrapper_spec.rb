@@ -95,6 +95,20 @@ module Stash
 
           expect(desc_elem).to be_xml(expected_xml)
         end
+
+        it 'reads a Merritt OAI response' do
+          data = File.read('spec/data/wrapper/mrtoai-wrapper.xml')
+          xml = REXML::Document.new(data).root
+          wrapper = StashWrapper.load_from_xml(xml)
+
+          expect(wrapper.id_value).to eq('10.21271/wxy1000199')
+          expect(wrapper.version_number).to eq(1)
+          expect(wrapper.version_date).to eq(Date.new(2012, 8, 17))
+          expect(wrapper.license_name).to eq('Creative Commons Attribution 4.0 International (CC-BY)')
+          expect(wrapper.license_uri).to eq(URI('https://creativecommons.org/licenses/by/4.0/legalcode'))
+          expect(wrapper.embargo_type).to eq(EmbargoType::NONE)
+          expect(wrapper.embargo_end_date).to eq(Date.new(2012, 8, 17))
+        end
       end
 
       describe 'convenience accessors' do
