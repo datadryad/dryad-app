@@ -15,14 +15,14 @@ ST = Stash::Wrapper
 
 # TO DO: More realistic DataCite, with files
 
-def datacite(doi:, creators:, title:, publisher:, pubyear:, subjects:, resource_type:, abstract:)
+def datacite(doi:, creators:, title:, publisher:, pubyear:, subjects:, resource_type:, abstract:, methods:, usage:, grant_number:)
   xml_text = "<dcs:resource xmlns:dcs='http://datacite.org/schema/kernel-3'
                             xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
                             xsi:schemaLocation='http://datacite.org/schema/kernel-3
                             http://schema.datacite.org/meta/kernel-3/metadata.xsd'>
                 <dcs:identifier identifierType='DOI'>#{doi}</dcs:identifier>
                 <dcs:creators>
-                  #{(creators.map { |cn| "<dcs:creator><dcs:creatorName>#{cn}</dcs:creatorName></dcs:creator>" }).join("\n")}
+                  #{(creators.map { |cn, ca| "<dcs:creator><dcs:creatorName>#{cn}</dcs:creatorName><dcs:affiliation>#{ca}</dcs:affiliation></dcs:creator>" }).join("\n")}
                 </dcs:creators>
                 <dcs:titles>
                   <dcs:title>#{title}</dcs:title>
@@ -35,17 +35,23 @@ def datacite(doi:, creators:, title:, publisher:, pubyear:, subjects:, resource_
                 <dcs:resourceType resourceTypeGeneral='Dataset'>#{resource_type}</dcs:resourceType>
                 <dcs:descriptions>
                   <dcs:description descriptionType='Abstract'>#{abstract}</dcs:description>
+                  <dcs:description descriptionType='Methods'>#{methods}</dcs:description>
+                  <dcs:description descriptionType='Other'>#{usage}</dcs:description>
+                  <dcs:description descriptionType='Other'>#{grant_number}</dcs:description>
                 </dcs:descriptions>
               </dcs:resource>"
   REXML::Document.new(xml_text).root
 end
 
-def dublin_core(doi:, creators:, title:, publisher:, pubyear:, subjects:, resource_type:, abstract:)
+def dublin_core(doi:, creators:, title:, publisher:, pubyear:, subjects:, resource_type:, abstract:, methods:, usage:, grant_number:)
   xml_text = "<oai_dc:dc xmlns:oai_dc='http://www.openarchives.org/OAI/2.0/oai_dc/' xmlns:dc='http://purl.org/dc/elements/1.1/' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:schemaLocation='http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd'>
                 <dc:title>#{title}</dc:title>
-                #{(creators.map { |cn| "<dc:creator>#{cn}</dc:creator>" }).join("\n")}
+                #{(creators.map { |cn, ca| "<dc:creator>#{cn}</dc:creator>" }).join("\n")}
                 #{(subjects.map { |s| "<dc:subject>#{s}</dc:subject>" }).join("\n")}
                 <dc:description>#{abstract}</dc:description>
+                <dc:description>#{methods}</dc:description>
+                <dc:description>#{usage}</dc:description>
+                <dc:description>#{grant_number}</dc:description>
                 <dc:publisher>#{publisher}</dc:publisher>
                 <dc:date>#{pubyear}</dc:date>
                 <dc:type>#{resource_type}</dc:type>
@@ -157,6 +163,7 @@ end
 
 @authors = (0...1000).map { |_i| random_name }
 @publishers = (0...100).map { |_i| random_words(much_less_than(10)).map(&:capitalize).join(' ') }
+@affiliations = (0...100).map { |_i| random_words(much_less_than(10)).map(&:capitalize).join(' ') }
 @resource_types = (0...20).map { |_i| random_words(less_than(3)).join(' ') }
 
 # ------------------------------------------------------------
@@ -170,7 +177,7 @@ end
 
 def creators
   num_authors = less_than(10)
-  (0...num_authors).map { |_i| random_from(@authors) }
+  (0...num_authors).map { |_i| [random_from(@authors), random_from(@affiliations)] }
 end
 
 def title
@@ -198,7 +205,19 @@ def resource_type
 end
 
 def abstract
+  random_text(less_than(500)) + '.'
+end
+
+def methods
   random_text(much_less_than(500)) + '.'
+end
+
+def usage
+  random_text(less_than(500)) + '.'
+end
+
+def grant_number
+  "#{rand(10)} #{random_word[0]}#{rand(20)} #{random_word[0..1]}#{100000+less_than(1000000)}-#{rand(100)}#{random_word[0]}#{rand(30)}".upcase
 end
 
 def period_for(period_months)
@@ -258,6 +277,9 @@ def gen_sample(i)
   st_subjects = subjects
   st_resource_type = resource_type
   st_abstract = abstract
+  st_methods = methods
+  st_usage = usage
+  st_grant_number = grant_number
 
   dcs_resource = datacite(
     doi: st_doi,
@@ -267,7 +289,10 @@ def gen_sample(i)
     pubyear: st_year,
     subjects: st_subjects,
     resource_type: st_resource_type,
-    abstract: st_abstract
+    abstract: st_abstract,
+    methods: st_methods,
+    usage: st_usage,
+    grant_number: st_grant_number
   )
 
   wrapper = ST::StashWrapper.new(
@@ -288,7 +313,10 @@ def gen_sample(i)
     pubyear: st_year,
     subjects: st_subjects,
     resource_type: st_resource_type,
-    abstract: st_abstract
+    abstract: st_abstract,
+    methods: st_methods,
+    usage: st_usage,
+    grant_number: st_grant_number
   )
 
   Sample.new(wrapper_xml: wrapper_xml, dcs_resource: dcs_resource, oai_dc: oai_dc)
