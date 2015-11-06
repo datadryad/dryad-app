@@ -1,8 +1,7 @@
 StashEngine::Engine.routes.draw do
 
-  resources :resources
-
   resources :tenants
+  resources :resources
 
   get 'dashboard', to: 'dashboard#show', as: 'dashboard'
 

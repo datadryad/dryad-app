@@ -31,7 +31,6 @@ module StashEngine
       @resource = Resource.new
       @resource.save!
       redirect_to stash_datacite.generals_new_path(resource_id: @resource.id)
-
     end
 
     # PATCH/PUT /resources/1
