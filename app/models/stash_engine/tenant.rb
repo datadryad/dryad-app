@@ -25,15 +25,23 @@ module StashEngine
     def shibboleth_login_path
       #"/stash/auth/shibboleth?entityid=#{CGI.escape(authentication.entity_id)}"
       "https://#{StashEngine.app.shib_sp_host}/Shibboleth.sso/Login?" +
-          "target=#{CGI.escape("https://#{StashEngine.app.shib_sp_host}/stash/auth/shibboleth/callback")}" +
+          "target=#{CGI.escape("https://#{StashEngine.app.shib_sp_host}#{StashEngine.app.stash_mount}/auth/shibboleth/callback")}" +
           "&entityID=#{CGI.escape(authentication.entity_id)}"
     end
 
     def google_login_path
-      "/stash/auth/google_oauth2"
+      "#{StashEngine.app.stash_mount}/auth/google_oauth2"
     end
 
+    def tenant_by_domain(domain)
+      StashEngine.tenants.values.each do |t|
 
+      end
+    end
+
+    def self.find(tenant_id)
+      StashEngine.tenants
+    end
 
   end
 end
