@@ -4,7 +4,7 @@ Rails.application.config.middleware.use OmniAuth::Builder do
            :callback_path => '/stash/auth/shibboleth/callback',
            :request_type   => :header,
            #:host            => 'dash2-dev.ucop.edu',
-           :host            => APP_CONFIG.shib_sp_host,
+           :host            => StashEngine.app.shib_sp_host,
            :uid_field       => 'eppn',
            :path_prefix     => '/stash/auth',
            :info_fields => {
@@ -20,11 +20,11 @@ Rails.application.config.middleware.use OmniAuth::Builder do
              :uid_field => :email
   end
 
-  provider :google_oauth2, APP_CONFIG.google_client_id, APP_CONFIG.google_client_secret,
+  provider :google_oauth2, StashEngine.app.google_client_id, StashEngine.app.google_client_secret,
       :callback_path  => '/stash/auth/google_oauth2/callback',
       :path_prefix    => '/stash/auth'
 
-  provider :orcid, APP_CONFIG.orcid_key, APP_CONFIG.orcid_secret,
+  provider :orcid, StashEngine.app.orcid_key, StashEngine.app.orcid_secret,
        :callback_path  => '/stash/auth/orcid/callback',
        :path_prefix    => '/stash/auth',
            :authorize_params => {
