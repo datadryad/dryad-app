@@ -1,0 +1,19 @@
+<%= fields_for @description do |description| %>
+<%#= render "datacite/shared/error_messages", :target => @description %>
+
+<strong><% if @description.description_type == :abstract  %>
+    <%= description.label :description, "Abstract" %><br/>
+    <%= description.hidden_field :descriptionType, value: :abstract %>
+  <% elsif @description.description_type == :methods  %>
+     <%= description.label :description, "Methods" %><br/>
+      <%= description.hidden_field :descriptionType, value: :methods %>
+    <% elsif @description.description_type == :usage_notes  %>
+     <%= description.label :description, "Usage Notes" %><br/>
+      <%= description.hidden_field :descriptionType, value: :usage_notes %>
+  <% else  %>
+    <%= description.label :description, "Description" %><br/>
+  <% end  %></strong>
+  <%= description.text_area :description, size: "150x10" %>
+  <%= description.hidden_field :resource_id, value: params[:resource_id] %>
+  <br/>
+<% end %>
