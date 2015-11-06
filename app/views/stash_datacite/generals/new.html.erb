@@ -4,7 +4,7 @@
 </div>
 
 <div>
-  <%= form_for :general, url: generals_create_path, :html => {:class => "form-horizontal"} do |f| %>
+  <%= form_for :general, url: generals_create_path do |f| %>
 
     <%= f.hidden_field :resource_id, value: params[:resource_id] %>
 
@@ -12,7 +12,8 @@
       <legend><strong>Basic Information</strong></legend>
         <%= render "stash_datacite/titles/form" %><br/>
         <%= render "stash_datacite/creators/form" %><br/>
-        <%= render "stash_datacite/descriptions/form" %>
+        <strong><%= label_tag :description, "Abstract" %></strong><br/>
+        <%= render partial: "stash_datacite/descriptions/form", :locals => { :description_type => 'abstract'}  %>
     </fieldset>
     <br/>
 
@@ -20,7 +21,10 @@
       <legend><strong>Data Description(Optional)</strong></legend>
         <%= render "stash_datacite/contributors/form"%><br/>
         <%= render "stash_datacite/subjects/form" %>
-        <%= render "stash_datacite/descriptions/form" %>
+        <strong><%= label_tag :description, "Methods" %></strong><br/>
+        <%= render "stash_datacite/descriptions/form", locals: { description_type: "methods" } %>
+        <strong><%= label_tag :description, "Usage Notes" %></strong><br/>
+        <%= render "stash_datacite/descriptions/form", locals: { description_type: "usage_notes" } %>
         <%#= render "stash_datacite/relations/form" %>
     </fieldset>
 
