@@ -1,0 +1,21 @@
+<div>
+  <h2> Describe your dataset </h2>  * required fields
+</div>
+<div>
+  <%= form_for :general, url: generals_update_path, method: :put, html: { class: 'form-horizontal' } do |f| %>
+
+    <%= f.hidden_field :resource_id, value: params[:resource_id] %>
+
+    <%#= render "stash_datacite/titles/form" %>
+    <%= render "stash_datacite/creators/form" %>
+    <%#= render "stash_datacite/contributors/form" %>
+    <%#= render "stash_datacite/subjects/form" %>
+    <%#= render "stash_datacite/descriptions/form" %>
+    <%#= render "stash_datacite/publishers/form" %>
+    <%#= render "stash_datacite/publication_years/form" %>
+
+    <%= f.submit 'Submit', class: "btn btn-success" %>
+    <%= link_to 'Back', stash_engine.resources_path, class: "btn" %>
+
+  <% end %>
+</div>
