@@ -1,0 +1,35 @@
+default: &default
+  repository:
+    type: merritt
+    endpoint: "http://merritt-dev.cdlib.org/object/update"
+    username: "ucop_dash_submitter"
+    password: "test08"
+    profile: "dash_cdl_content"
+  contact_email: ["contact1@contact.com", "contact2@contact.com"]
+  abbreviation: "UC"
+  short_name: "UC Office of the President"
+  long_name: "University of California, Office of the President"
+  landing_page: ".ucop.edu"
+  external_id_strip: ".ucop.edu"
+  tenant_id: cdl
+  logo: blank_institution_logo.png
+  authentication:
+    strategy: shibboleth
+    entity_id: urn:mace:incommon:ucop.edu
+    entity_domain: .ucop.edu
+
+development:
+  <<: *default
+  #Add any items that need to override the defaults here
+
+stage:
+  <<: *default
+  #Add any items that need to override the defaults here
+
+production:
+  <<: *default
+  #Add any items that need to override the defaults here
+
+test:
+  <<: *default
+  #Add any items that need to override the defaults here

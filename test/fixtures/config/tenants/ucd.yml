@@ -1,0 +1,35 @@
+default: &default
+  repository:
+    type: merritt
+    endpoint: ""
+    username: ""
+    password: ""
+    profile: ""
+  contact_email: ["contact1@contact.com", "contact2@contact.com"]
+  abbreviation: "Davis"
+  short_name: "UC Davis"
+  long_name: "University of California, Davis"
+  landing_page: ".ucdavis.edu"
+  external_id_strip: "ucdavis.edu$"
+  tenant_id: "ucd"
+  logo: "blank_institution_logo.png"
+  authentication:
+    strategy: shibboleth
+    entity_id: urn:mace:incommon:ucdavis.edu
+    entity_domain: .ucdavis.edu
+
+development:
+  <<: *default
+  #Add any items that need to override the defaults here
+
+stage:
+  <<: *default
+  #Add any items that need to override the defaults here
+
+production:
+  <<: *default
+  #Add any items that need to override the defaults here
+
+test:
+  <<: *default
+  #Add any items that need to override the defaults here

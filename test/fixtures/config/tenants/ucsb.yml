@@ -1,0 +1,35 @@
+default: &default
+  repository:
+    type: merritt
+    endpoint: ""
+    username: ""
+    password: ""
+    profile: ""
+  contact_email: ["contact1@contact.com", "contact2@contact.com"]
+  abbreviation: "UCSB"
+  short_name: "UC Santa Barbara"
+  long_name: "University of California, Santa Barbara"
+  landing_page: ".ucsb.edu"
+  external_id_strip: "ucsb.edu$"
+  tenant_id: ucsb
+  logo: blank_institution_logo.png
+  authentication:
+    strategy: shibboleth
+    entity_id: urn:mace:incommon:ucsb.edu
+    entity_domain: .ucsb.edu
+
+development:
+  <<: *default
+  #Add any items that need to override the defaults here
+
+stage:
+  <<: *default
+  #Add any items that need to override the defaults here
+
+production:
+  <<: *default
+  #Add any items that need to override the defaults here
+
+test:
+  <<: *default
+  #Add any items that need to override the defaults here

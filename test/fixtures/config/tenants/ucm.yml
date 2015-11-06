@@ -1,0 +1,35 @@
+default: &default
+  repository:
+    type: merritt
+    endpoint: "http://merritt-dev.cdlib.org/object/update"
+    username: "ucop_dash_submitter"
+    password: "test07"
+    profile: "dash_cdl_content"
+  contact_email: ["contact1@contact.com", "contact2@contact.com"]
+  abbreviation: "Merced"
+  short_name: "UC Merced"
+  long_name: "University of California, Merced"
+  landing_page: ".ucmerced.edu"
+  external_id_strip: "ucmerced.edu$"
+  tenant_id: ucmerced
+  logo: dash_ucmerced_logo.png
+  authentication:
+    strategy: shibboleth
+    entity_id: urn:mace:incommon:ucmerced.edu
+    entity_domain: .ucmerced.edu
+
+development:
+  <<: *default
+  #Add any items that need to override the defaults here
+
+stage:
+  <<: *default
+  #Add any items that need to override the defaults here
+
+production:
+  <<: *default
+  #Add any items that need to override the defaults here
+
+test:
+  <<: *default
+  #Add any items that need to override the defaults here

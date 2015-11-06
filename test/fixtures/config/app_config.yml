@@ -1,0 +1,21 @@
+defaults: &DEFAULTS
+  metadata_engines: [ "StashDatacite"]
+  shared_resource_model: StashEngine::Resource
+  stash_mount: /stash
+
+development: &DEVELOPMENT
+  <<: *DEFAULTS
+  shib_sp_host: dash2-dev.ucop.edu
+  google_client_id: google_test_id
+  google_client_secret: google_test_secret
+  orcid_key: orcid_test_key
+  orcid_secret: orcid_test_secret
+
+test:
+  <<: *DEFAULTS
+
+stage:
+  <<: *DEFAULTS
+
+production:
+  <<: *DEFAULTS
