@@ -23,5 +23,7 @@ Gem::Specification.new do |s|
 
   s.add_dependency "omniauth", "~> 1.2.2"
   s.add_dependency "omniauth-shibboleth", "~> 1.2.1"
+  s.add_dependency "omniauth-google-oauth2", "~> 0.2.9"
+  s.add_dependency "omniauth-orcid", "~> 1.0.21"
   # you cannot add specific code repo to gemspec so it must just go in the Gemfile instead if for internal use
 end
