@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151019202948) do
+ActiveRecord::Schema.define(version: 20151105190445) do
 
   create_table "datasets", force: :cascade do |t|
     t.integer  "PublicationYear",    limit: 4
@@ -46,12 +46,14 @@ ActiveRecord::Schema.define(version: 20151019202948) do
   end
 
   create_table "dcs_creators", force: :cascade do |t|
-    t.string   "creator_name",       limit: 255
-    t.integer  "name_identifier_id", limit: 4
-    t.integer  "affliation_id",      limit: 4
-    t.integer  "resource_id",        limit: 4
-    t.datetime "created_at",                     null: false
-    t.datetime "updated_at",                     null: false
+    t.string   "creator_first_name",  limit: 255
+    t.integer  "name_identifier_id",  limit: 4
+    t.integer  "affliation_id",       limit: 4
+    t.integer  "resource_id",         limit: 4
+    t.datetime "created_at",                      null: false
+    t.datetime "updated_at",                      null: false
+    t.string   "creator_last_name",   limit: 255
+    t.string   "creator_middle_name", limit: 255
   end
 
   create_table "dcs_dates", force: :cascade do |t|
