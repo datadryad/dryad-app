@@ -56,6 +56,6 @@ Rails.application.routes.draw do
   #     resources :products
   #   end
 
-  mount StashEngine::Engine, at: "/stash"
+  mount StashEngine::Engine, at: APP_CONFIG.stash_mount
   mount StashDatacite::Engine, at: "/stash_datacite"
 end
