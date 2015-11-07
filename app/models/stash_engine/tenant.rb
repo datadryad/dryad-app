@@ -2,13 +2,20 @@ require 'ostruct'
 module StashEngine
   class Tenant
 
+    def self.tenants=(tenants)
+      @@tenants = {}
+      tenants.each do |k,v|
+        @@tenants[k] = self.new(v)
+      end
+    end
+
     def initialize(hash)
       @ostruct = hash.to_ostruct
     end
 
     # return list of all tenants, tenant is a lightly wrapped ostruct (see method missing) with extra methods in here
     def self.all
-      StashEngine.tenants.values.map {|i| self.new(i) }
+      @@tenants.values
     end
 
     #gets the Tenant class to respond to the keys so you can call hash like methods
@@ -33,14 +40,14 @@ module StashEngine
       "#{StashEngine.app.stash_mount}/auth/google_oauth2"
     end
 
-    def tenant_by_domain(domain)
+    def self.tenant_by_domain(domain)
       StashEngine.tenants.values.each do |t|
 
       end
     end
 
     def self.find(tenant_id)
-      StashEngine.tenants
+      @@tenants[tenant_id]
     end
 
   end

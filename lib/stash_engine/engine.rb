@@ -13,6 +13,7 @@ module StashEngine
   # this function maps the vars from your app into your engine
   def self.setup(&block)
     yield self
+    Tenant.tenants = StashEngine.tenants
   end
 
 
