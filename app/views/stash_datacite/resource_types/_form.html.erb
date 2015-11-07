@@ -1,0 +1,7 @@
+<%= fields_for @resource_type do |resource_type| %>
+<%#= render "datacite/shared/error_messages", :target => @resource_type %>
+  <%= resource_type.select(:resource_type_general) %> %>
+  <%#= resource_type.hidden_field :resource_type %>
+  <%= resource_type.hidden_field :resource_id, value: params[:resource_id] %>
+  <br/>
+<% end %>

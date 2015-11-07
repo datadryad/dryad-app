@@ -1,7 +1,7 @@
 <%= fields_for @description do |description| %>
 <%#= render "datacite/shared/error_messages", :target => @description %>
   <%= description.text_area :description, size: "150x10" %>
-  <%= description.text_field :description_type, value: :description_type %>
+  <%= description.hidden_field :description_type, value: description_type %>
   <%= description.hidden_field :resource_id, value: params[:resource_id] %>
   <br/>
 <% end %>

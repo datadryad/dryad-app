@@ -12,8 +12,9 @@
       <legend><strong>Basic Information</strong></legend>
         <%= render "stash_datacite/titles/form" %><br/>
         <%= render "stash_datacite/creators/form" %><br/>
+        <%= render "stash_datacite/resource_types/form" %>
         <strong><%= label_tag :description, "Abstract" %></strong><br/>
-        <%= render partial: "stash_datacite/descriptions/form", :locals => { :description_type => 'abstract'}  %>
+        <%= render partial: "stash_datacite/descriptions/form", locals: { description_type: "abstract" }  %>
     </fieldset>
     <br/>
 
@@ -21,10 +22,10 @@
       <legend><strong>Data Description(Optional)</strong></legend>
         <%= render "stash_datacite/contributors/form"%><br/>
         <%= render "stash_datacite/subjects/form" %>
-        <strong><%= label_tag :description, "Methods" %></strong><br/>
-        <%= render "stash_datacite/descriptions/form", locals: { description_type: "methods" } %>
-        <strong><%= label_tag :description, "Usage Notes" %></strong><br/>
-        <%= render "stash_datacite/descriptions/form", locals: { description_type: "usage_notes" } %>
+        <strong><%= label_tag :description, "Methods" %></strong>&nbsp;&nbsp;How was this dataset collected? How has it been processed?<br/>
+        <%= render partial: "stash_datacite/descriptions/form", locals: { description_type: "methods" } %>
+        <strong><%= label_tag :description, "Usage Notes" %></strong>&nbsp;&nbsp;What else would someone need to know to use this dataset?<br/>
+        <%= render partial: "stash_datacite/descriptions/form", locals: { description_type: "usage_notes" } %>
         <%#= render "stash_datacite/relations/form" %>
     </fieldset>
 

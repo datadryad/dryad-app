@@ -3,8 +3,8 @@
   <strong><%= label_tag "Funding" %><br/></strong>
   <%= contributor.label :contributor_name, "Granting Organization" %>
   <%= contributor.text_field :contributor_name, size: 40 %>
-  <%= contributor.label :affliation_id, "Institutional Affiliation" %>
-  <%= contributor.text_field :affliation_id, size: 40 %>
+  <%#= contributor.label :affliation_id, "Institutional Affiliation" %>
+  <%#= contributor.text_field :affliation_id, size: 40 %>
   <%= contributor.hidden_field :resource_id, value: params[:resource_id] %>
   <br/>
 <% end %>

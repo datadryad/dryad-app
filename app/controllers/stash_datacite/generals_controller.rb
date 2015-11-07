@@ -15,6 +15,7 @@ module StashDatacite
       @description = Description.new
       @contributor = Contributor.new
       @subject = Subject.new
+      @resource_type = ResourceType.new
     end
 
     # GET /generals/id/edit
@@ -31,6 +32,7 @@ module StashDatacite
       @description = Description.new(description_params)
       @contributor = Contributor.new(contributor_params)
       @subject = Subject.new(subject_params)
+      @resource_type = ResourceType.new(resource_type_params)
     end
 
     def destroy
@@ -70,6 +72,10 @@ module StashDatacite
 
       def subject_params
         params.require(:subject).permit(:subject, :subject_scheme, :scheme_URI, :resource_id)
+      end
+
+      def resource_type_params
+        params.require(:resource_type).permit(:resource_type, :resource_type_general, :resource_id)
       end
   end
 end
