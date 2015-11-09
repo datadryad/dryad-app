@@ -1,7 +1,7 @@
 require 'test_helper'
 
 module StashEngine
-  class TestControllerTest < ActionController::TestCase
+  class SessionsControllerTest < ActionController::TestCase
     setup do
       @routes = StashEngine::Engine.routes
     end
