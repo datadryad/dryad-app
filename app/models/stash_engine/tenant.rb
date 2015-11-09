@@ -40,9 +40,9 @@ module StashEngine
       "#{StashEngine.app.stash_mount}/auth/google_oauth2"
     end
 
-    def self.tenant_by_domain(domain)
-      StashEngine.tenants.values.each do |t|
-
+    def self.by_domain(domain)
+      @@tenants.values.each do |t|
+        return t if Regexp.new(t.domain_regex).match(domain)
       end
     end
 

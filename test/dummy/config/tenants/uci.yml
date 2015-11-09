@@ -10,7 +10,7 @@ default: &default
   short_name: "UC Irvine"
   long_name: "University of California, Irvine"
   landing_page: ".lib.uci.edu"
-  external_id_strip: "lib.uci.edu$"
+  domain_regex: "lib.uci.edu$"
   tenant_id: uci
   logo: dash_uci_logo.gif
   authentication:

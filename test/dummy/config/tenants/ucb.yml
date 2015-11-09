@@ -10,7 +10,7 @@ default: &default
   short_name: "UC Berkeley"
   long_name: "University of California, Berkeley"
   landing_page: ".berkeley.edu"
-  external_id_strip: "berkeley.edu$"
+  domain_regex: "berkeley.edu$"
   tenant_id: ucb
   logo: dash_ucb_logo.png
   authentication:

@@ -10,7 +10,7 @@ default: &default
   short_name: "UC Santa Barbara"
   long_name: "University of California, Santa Barbara"
   landing_page: ".ucsb.edu"
-  external_id_strip: "ucsb.edu$"
+  domain_regex: "ucsb.edu$"
   tenant_id: ucsb
   logo: blank_institution_logo.png
   authentication:

@@ -10,7 +10,7 @@ default: &default
   short_name: "UC Los Angeles"
   long_name: "University of California, Los Angeles"
   landing_page: ".ucla.edu"
-  external_id_strip: "dev.dash.ucla.edu$"
+  domain_regex: "dev.dash.ucla.edu$"
   tenant_id: ucla
   logo: dash_ucla_logo.png
   authentication:

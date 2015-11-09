@@ -10,7 +10,7 @@ default: &default
   short_name: "UC Merced"
   long_name: "University of California, Merced"
   landing_page: ".ucmerced.edu"
-  external_id_strip: "ucmerced.edu$"
+  domain_regex: "ucmerced.edu$"
   tenant_id: ucmerced
   logo: dash_ucmerced_logo.png
   authentication:

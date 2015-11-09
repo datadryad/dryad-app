@@ -10,7 +10,7 @@ default: &default
   short_name: "UC Davis"
   long_name: "University of California, Davis"
   landing_page: ".ucdavis.edu"
-  external_id_strip: "ucdavis.edu$"
+  domain_regex: "ucdavis.edu$"
   tenant_id: "ucd"
   logo: "blank_institution_logo.png"
   authentication:

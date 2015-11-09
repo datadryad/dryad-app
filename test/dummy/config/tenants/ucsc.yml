@@ -10,7 +10,7 @@ default: &default
   short_name: "UC Santa Cruz"
   long_name: "University of California, Santa Cruz"
   landing_page: ".library.ucsc.edu"
-  external_id_strip: "library.ucsc.edu$"
+  domain_regex: "library.ucsc.edu$"
   tenant_id: ucsc
   logo: dash_ucsc_logo.jpg
   authentication:

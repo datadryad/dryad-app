@@ -10,7 +10,7 @@ default: &default
   short_name: "UC Office of the President"
   long_name: "University of California, Office of the President"
   landing_page: ".ucop.edu"
-  external_id_strip: ".ucop.edu"
+  domain_regex: ".ucop.edu"
   tenant_id: cdl
   logo: blank_institution_logo.png
   authentication:

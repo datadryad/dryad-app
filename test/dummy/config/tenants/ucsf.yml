@@ -10,7 +10,7 @@ default: &default
   short_name: "UC San Francisco"
   long_name: "University of California, San Francisco"
   landing_page: ".ucsf.edu"
-  external_id_strip: "datashare-dev.ucsf.edu$"
+  domain_regex: "datashare-dev.ucsf.edu$"
   tenant_id: ucsf
   logo: dash_ucsf_logo.png
   authentication:

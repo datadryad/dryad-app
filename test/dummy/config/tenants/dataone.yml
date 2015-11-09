@@ -10,7 +10,7 @@ default: &default
   short_name: "DataONE"
   long_name: "DataONE"
   landing_page: ".cdlib.org"
-  external_id_strip: "oneshare-dev.cdlib.org$"
+  domain_regex: "oneshare-dev.cdlib.org$"
   tenant_id: dataone
   logo: dash_dataone_logo.jpg
   authentication:

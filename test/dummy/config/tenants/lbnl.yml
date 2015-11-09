@@ -10,7 +10,7 @@ default: &default
   short_name: "LBNL"
   long_name: "Livermore National Lab"
   landing_page: ".lbl.gov"
-  external_id_strip: "datasets-dev.lbl.gov$"
+  domain_regex: "datasets-dev.lbl.gov$"
   tenant_id: lbnl
   logo: dash_lbl_logo.png
   authentication:
