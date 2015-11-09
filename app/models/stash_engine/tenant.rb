@@ -2,12 +2,9 @@ require 'ostruct'
 module StashEngine
   class Tenant
 
-    def self.tenants=(tenants)
-      @@tenants = {}
-      tenants.each do |k,v|
-        @@tenants[k] = self.new(v)
-      end
-    end
+    # This was originally designed differently and I had to change it to create some instances on the fly because
+    # testing loads things twice and didn't work correctly to create instances up front on engine initialization
+    # in the test environment.  :-(
 
     def initialize(hash)
       @ostruct = hash.to_ostruct
@@ -15,7 +12,7 @@ module StashEngine
 
     # return list of all tenants, tenant is a lightly wrapped ostruct (see method missing) with extra methods in here
     def self.all
-      @@tenants.values
+      StashEngine.tenants.values.map {|h| self.new(h)}
     end
 
     #gets the Tenant class to respond to the keys so you can call hash like methods
@@ -41,13 +38,13 @@ module StashEngine
     end
 
     def self.by_domain(domain)
-      @@tenants.values.each do |t|
-        return t if Regexp.new(t.domain_regex).match(domain)
+      StashEngine.tenants.values.each do |v|
+        return self.new(v) if Regexp.new(v['domain_regex']).match(domain)
       end
     end
 
     def self.find(tenant_id)
-      @@tenants[tenant_id]
+      self.new(StashEngine.tenants[tenant_id])
     end
 
   end
