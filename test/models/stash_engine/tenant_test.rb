@@ -8,11 +8,10 @@ module StashEngine
     end
 
     test "find" do
-      #assert_instance_of StashEngine::Tenant, Tenant.find('ucb')
-      #puts Tenant.find('ucb')
-      #puts Tenant.find('ucb').logo
-      puts Tenant.all.first.class
-      puts Tenant.find('ucb').class
+      assert_instance_of StashEngine::Tenant, Tenant.find('ucb')
+      assert_equal "UC Berkeley", Tenant.find('ucb').short_name
     end
+
+
   end
 end

@@ -3,7 +3,7 @@ require 'test_helper'
 module StashEngine
   class DashboardControllerTest < ActionController::TestCase
     setup do
-      @routes = Engine.routes
+      @routes = StashEngine::Engine.routes
     end
 
     # test "the truth" do
