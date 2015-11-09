@@ -16,7 +16,7 @@ Rails.application.config.middleware.use OmniAuth::Builder do
     provider :developer,
              :callback_path => '/stash/auth/developer/callback',
              :path_prefix => '/stash/auth',
-             :fields => [:name, :email],
+             :fields => [:name, :email, :test_domain],
              :uid_field => :email
   end
 

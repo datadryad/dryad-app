@@ -8,12 +8,12 @@ StashEngine::Engine.routes.draw do
 
   #get "login", :to => "test#index"
 
+  root 'sessions#index'
   match 'auth/:provider/callback', :to => 'sessions#callback', :via => [:get, :post]
+  get 'sessions/destroy', :to => 'sessions#destroy'
 
   #get 'test/after_login'
 
   #get 'test/index'
-
-  root 'sessions#index'
 
 end
