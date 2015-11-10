@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151019202948) do
+ActiveRecord::Schema.define(version: 20151107181120) do
 
   create_table "datasets", force: :cascade do |t|
     t.integer  "PublicationYear",    limit: 4
@@ -46,12 +46,14 @@ ActiveRecord::Schema.define(version: 20151019202948) do
   end
 
   create_table "dcs_creators", force: :cascade do |t|
-    t.string   "creator_name",       limit: 255
-    t.integer  "name_identifier_id", limit: 4
-    t.integer  "affliation_id",      limit: 4
-    t.integer  "resource_id",        limit: 4
-    t.datetime "created_at",                     null: false
-    t.datetime "updated_at",                     null: false
+    t.string   "creator_first_name",  limit: 255
+    t.integer  "name_identifier_id",  limit: 4
+    t.integer  "affliation_id",       limit: 4
+    t.integer  "resource_id",         limit: 4
+    t.datetime "created_at",                      null: false
+    t.datetime "updated_at",                      null: false
+    t.string   "creator_last_name",   limit: 255
+    t.string   "creator_middle_name", limit: 255
   end
 
   create_table "dcs_dates", force: :cascade do |t|
@@ -145,6 +147,14 @@ ActiveRecord::Schema.define(version: 20151019202948) do
     t.datetime "updated_at",                            null: false
   end
 
+  create_table "dcs_resource_types", force: :cascade do |t|
+    t.string   "resource_type",         limit: 255
+    t.integer  "resource_type_general", limit: 4,   default: 0
+    t.integer  "resource_id",           limit: 4
+    t.datetime "created_at",                                    null: false
+    t.datetime "updated_at",                                    null: false
+  end
+
   create_table "dcs_rights", force: :cascade do |t|
     t.string   "rights",      limit: 255
     t.text     "rights_URI",  limit: 65535
@@ -188,6 +198,11 @@ ActiveRecord::Schema.define(version: 20151019202948) do
     t.string   "name",       limit: 255
     t.datetime "created_at",             null: false
     t.datetime "updated_at",             null: false
+  end
+
+  create_table "stash_datacite_resource_types", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "stash_engine_file_uploads", force: :cascade do |t|
