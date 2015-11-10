@@ -1,18 +1,15 @@
-PATH
+GIT
   remote: https://github.com/CDLUC3/stash_datacite.git
-  revision: ca6494ee37c87424115cfcd86c120faf12d28658
+  revision: d665c0f4e25ea10593a628e312e2a1d142c8cd68
   branch: development
-
   specs:
-    stash_datacite (0.0.3)
+    stash_datacite (0.0.4)
       rails (~> 4.2.4)
 
-
-PATH
+GIT
   remote: https://github.com/CDLUC3/stash_engine.git
   revision: c5023d0ea39652cdd954fed4e8851f96c6e69230
   branch: development
-
   specs:
     stash_engine (0.0.15)
       omniauth (~> 1.2.2)
@@ -64,7 +61,7 @@ GEM
     binding_of_caller (0.7.2)
       debug_inspector (>= 0.0.1)
     builder (3.2.2)
-    byebug (8.0.0)
+    byebug (8.1.0)
     capistrano (3.4.0)
       i18n
       rake (>= 10.0.0)
@@ -214,7 +211,7 @@ GEM
       hirb
       simplecov
     simplecov-html (0.10.0)
-    spring (1.4.0)
+    spring (1.4.1)
     sprockets (3.4.0)
       rack (> 1, < 3)
     sprockets-rails (2.3.3)
