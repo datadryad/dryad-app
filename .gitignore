@@ -10,3 +10,4 @@ test/dummy/.sass-cache
 .DS_Store
 .idea
 .ruby-version
+coverage
