@@ -1,21 +1,15 @@
+<%= link_to 'Back to My Datasets', stash_engine.resources_path, class: "btn" %>
+<%= link_to 'Proceed to Uploads', stash_engine.resources_path, class: "btn" %>
+
 <div>
-  <h2> Describe your dataset </h2>  * required fields
+  <p><h3>Describe your dataset</h3>
+  * required fields</p>
 </div>
+
 <div>
-  <%= form_for :general, url: generals_update_path, method: :put, html: { class: 'form-horizontal' } do |f| %>
+  <%= form_for :general, url: generals_update_path do |f| %>
 
     <%= f.hidden_field :resource_id, value: params[:resource_id] %>
-
-    <%#= render "stash_datacite/titles/form" %>
-    <%= render "stash_datacite/creators/form" %>
-    <%#= render "stash_datacite/contributors/form" %>
-    <%#= render "stash_datacite/subjects/form" %>
-    <%#= render "stash_datacite/descriptions/form" %>
-    <%#= render "stash_datacite/publishers/form" %>
-    <%#= render "stash_datacite/publication_years/form" %>
-
-    <%= f.submit 'Submit', class: "btn btn-success" %>
-    <%= link_to 'Back', stash_engine.resources_path, class: "btn" %>
-
+    <%= render partial: 'stash_datacite/generals/metadata_entry_forms' %>
   <% end %>
 </div>
