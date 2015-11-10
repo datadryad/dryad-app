@@ -41,6 +41,7 @@ module StashEngine
       StashEngine.tenants.values.each do |v|
         return self.new(v) if Regexp.new(v['domain_regex']).match(domain)
       end
+      self.all.first
     end
 
     def self.find(tenant_id)
