@@ -1,3 +1,6 @@
+<%= link_to 'Back to My Datasets', stash_engine.resources_path, class: "btn" %>
+<%= link_to 'Proceed to Uploads', stash_engine.resources_path, class: "btn" %>
+
 <div>
   <p><h3>Describe your dataset</h3>
   * required fields</p>
@@ -12,7 +15,7 @@
       <legend><strong>Basic Information</strong></legend>
         <%= render "stash_datacite/titles/form" %><br/>
         <%= render "stash_datacite/creators/form" %><br/>
-        <%= render "stash_datacite/resource_types/form" %>
+        <%= render "stash_datacite/resource_types/form" %><br/>
         <strong><%= label_tag :description, "Abstract" %></strong><br/>
         <%= render partial: "stash_datacite/descriptions/form", locals: { description_type: "abstract" }  %>
     </fieldset>
@@ -21,20 +24,25 @@
     <fieldset>
       <legend><strong>Data Description(Optional)</strong></legend>
         <%= render "stash_datacite/contributors/form"%><br/>
-        <%= render "stash_datacite/subjects/form" %>
+        <%= render "stash_datacite/subjects/form" %><br/>
         <strong><%= label_tag :description, "Methods" %></strong>&nbsp;&nbsp;How was this dataset collected? How has it been processed?<br/>
-        <%= render partial: "stash_datacite/descriptions/form", locals: { description_type: "methods" } %>
+        <%= render partial: "stash_datacite/descriptions/form", locals: { description_type: "methods" } %><br/>
         <strong><%= label_tag :description, "Usage Notes" %></strong>&nbsp;&nbsp;What else would someone need to know to use this dataset?<br/>
-        <%= render partial: "stash_datacite/descriptions/form", locals: { description_type: "usage_notes" } %>
-        <%#= render "stash_datacite/relations/form" %>
+        <%= render partial: "stash_datacite/descriptions/form", locals: { description_type: "usage_notes" } %><br/>
+        <%= render "stash_datacite/relations/form" %>
     </fieldset>
+    <br/>
 
-
+    <fieldset>
+      <legend><strong>Location information (optional)</strong></legend>
+        <%= render "stash_datacite/geolocation_points/form" %>
+        <%= render "stash_datacite/geolocation_boxes/form" %>
+    </fieldset>
     <%#= render "stash_datacite/publishers/form" %>
     <%#= render "stash_datacite/publication_years/form" %>
 
   </br>
-    <%= f.submit 'Submit', class: "btn btn-success" %>
-    <%= link_to 'Back', stash_engine.resources_path, class: "btn" %>
+    <%= link_to 'Back to My Datasets', stash_engine.resources_path, class: "btn" %>
+    <%= link_to 'Proceed to Uploads', stash_engine.resources_path, class: "btn" %>
   <% end %>
 </div>

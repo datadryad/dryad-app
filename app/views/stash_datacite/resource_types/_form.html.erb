@@ -1,6 +1,7 @@
 <%= fields_for @resource_type do |resource_type| %>
 <%#= render "datacite/shared/error_messages", :target => @resource_type %>
-  <%= resource_type.select(:resource_type_general) %> %>
+  <strong><%= resource_type.label :resource_type, "Type of Data" %></strong><br/>
+  <%= resource_type.select :resource_type, options_for_select([[ "Spreadsheet/Database", :spreadsheet],["Image", :image],["Sound", :sound],["Video", :video],["Text", :text],["Software", :software],["Multiple Types", :multiple_types],["Other", :other]]) %>
   <%#= resource_type.hidden_field :resource_type %>
   <%= resource_type.hidden_field :resource_id, value: params[:resource_id] %>
   <br/>

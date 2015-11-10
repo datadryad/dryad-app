@@ -10,12 +10,17 @@ module StashDatacite
 
     def new
       set_resources
+      @relation_types = RelationType.all
+      @related_identifier_types = RelatedIdentifierType.all
       @creator = Creator.new
       @title = Title.new
       @description = Description.new
       @contributor = Contributor.new
       @subject = Subject.new
       @resource_type = ResourceType.new
+      @related_identifier = RelatedIdentifier.new
+      @geolocation_point = GeolocationPoint.new
+      @geolocation_box = GeolocationBox.new
     end
 
     # GET /generals/id/edit
@@ -33,6 +38,9 @@ module StashDatacite
       @contributor = Contributor.new(contributor_params)
       @subject = Subject.new(subject_params)
       @resource_type = ResourceType.new(resource_type_params)
+      @related_identifier = RelatedIdentifier.new(related_identifier_params)
+      @geolocation_point = GeolocationPoint.new(geolocation_point_params)
+      @geolocation_box = GeolocationBox.new(geolocation_box_params)
     end
 
     def destroy
@@ -76,6 +84,18 @@ module StashDatacite
 
       def resource_type_params
         params.require(:resource_type).permit(:resource_type, :resource_type_general, :resource_id)
+      end
+
+      def related_identifier_params
+        params.require(:related_identifier).permit(:related_identifier, :related_identifier_type_id, :relation_type_id, :resource_id)
+      end
+
+      def geolocation_point_params
+        params.require(:geolocation_point).permit(:latitude, :longitude, :geo_location_place, :resource_id)
+      end
+
+      def geolocation_box_params
+        params.require(:geolocation_point).permit(:sw_latitude, :ne_latitude, :sw_longitude, :ne_longitude, :resource_id)
       end
   end
 end
