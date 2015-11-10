@@ -1,18 +1,15 @@
-PATH
+GIT
   remote: https://github.com/CDLUC3/stash_datacite.git
-  revision: ca6494ee37c87424115cfcd86c120faf12d28658
+  revision: d665c0f4e25ea10593a628e312e2a1d142c8cd68
   branch: development
-
   specs:
-    stash_datacite (0.0.3)
+    stash_datacite (0.0.4)
       rails (~> 4.2.4)
 
-
-PATH
+GIT
   remote: https://github.com/CDLUC3/stash_engine.git
   revision: c5023d0ea39652cdd954fed4e8851f96c6e69230
   branch: development
-
   specs:
     stash_engine (0.0.15)
       omniauth (~> 1.2.2)
