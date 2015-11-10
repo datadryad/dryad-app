@@ -24,10 +24,12 @@ module StashDatacite
     end
 
     # GET /generals/id/edit
-    # def edit
-    #   set_resources
-    #   #@creator = Creator.where(resource_id: @resource.id).first_or_initialize
-    # end
+    def edit
+      set_resources
+      @relation_types = RelationType.all
+      @related_identifier_types = RelatedIdentifierType.all
+      set_instances
+    end
 
     # POST /generals/create
     def create
@@ -60,6 +62,19 @@ module StashDatacite
 
       def set_resources
         @resources = StashDatacite.resource_class.constantize.all
+      end
+
+      def set_instances
+        @resource = StashDatacite.resource_class.constantize.find(params[:resource_id].to_i) unless params[:resource_id].blank?
+        @creator = Creator.where(resource_id: @resource.id).first_or_initialize
+        @title = Title.where(resource_id: @resource.id).first_or_initialize
+        @description = Description.where(resource_id: @resource.id).first_or_initialize
+        @contributor = Contributor.where(resource_id: @resource.id).first_or_initialize
+        @subject = Subject.where(resource_id: @resource.id).first_or_initialize
+        @resource_type = ResourceType.where(resource_id: @resource.id).first_or_initialize
+        @related_identifier = RelatedIdentifier.where(resource_id: @resource.id).first_or_initialize
+        @geolocation_point = GeolocationPoint.where(resource_id: @resource.id).first_or_initialize
+        @geolocation_box = GeolocationBox.where(resource_id: @resource.id).first_or_initialize
       end
 
       def creator_params
