@@ -13,6 +13,7 @@ Rails.application.config.middleware.use OmniAuth::Builder do
            }
 
   unless Rails.env.production? || Rails.env.stage?
+
     provider :developer,
              :callback_path => '/stash/auth/developer/callback',
              :path_prefix => '/stash/auth',
