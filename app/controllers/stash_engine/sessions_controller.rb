@@ -12,13 +12,13 @@ module StashEngine
     def callback
       @auth_hash = request.env['omniauth.auth']
       reset_session
-      if @auth_hash['info'] && @auth_hash['info']['email'] && @auth_hash['info']['name']
+      if @auth_hash && @auth_hash['info'] && @auth_hash['info']['email'] && @auth_hash['info']['name']
         session[:email], session[:name], session[:provider] =
             @auth_hash['info']['email'], @auth_hash['info']['name'], @auth_hash['provider']
         session[:test_domain] = @auth_hash['info']['test_domain'] if session[:provider] == 'developer'
         redirect_to dashboard_path
       else
-        redirect_to tenants_path
+        return head(:forbidden)
       end
     end
 

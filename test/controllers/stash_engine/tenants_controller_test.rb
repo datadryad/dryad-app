@@ -12,5 +12,11 @@ module StashEngine
       assert_not_nil assigns(:tenants)
     end
 
+    test "should show tenant" do
+      session[:test_domain] = 'test.berkeley.edu'
+      get :show, id: 'ucb'
+      assert_response :success
+    end
+
   end
 end

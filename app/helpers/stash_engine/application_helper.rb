@@ -8,7 +8,8 @@ module StashEngine
       end
     end
 
-    # displays log in/out based on session state
+    # displays log in/out based on session state, temorary for now
+    # :nocov:
     def log_in_out
       if session[:email].blank?
         link_to "log in", tenants_path
@@ -16,5 +17,6 @@ module StashEngine
         link_to "log out", sessions_destroy_path
       end
     end
+    # :nocov:
   end
 end

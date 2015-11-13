@@ -2,7 +2,7 @@ require_dependency "stash_engine/application_controller"
 
 module StashEngine
   class TenantsController < ApplicationController
-    before_action :set_tenant, only: [:show, :edit, :update, :destroy]
+    before_action :set_tenant, only: [:show]
 
     # GET /tenants
     def index
@@ -19,9 +19,5 @@ module StashEngine
         @tenant = Tenant.find(params[:id])
       end
 
-      # Only allow a trusted parameter "white list" through.
-      def tenant_params
-        params[:tenant]
-      end
   end
 end
