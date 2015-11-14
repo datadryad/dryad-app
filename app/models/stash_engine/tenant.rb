@@ -16,7 +16,7 @@ module StashEngine
     end
 
     #gets the Tenant class to respond to the keys so you can call hash like methods
-    def method_missing(m, *args, &block)
+    def method_missing(m) #, *args, &block
       @ostruct.send(m)
     end
 
@@ -29,7 +29,8 @@ module StashEngine
     def shibboleth_login_path
       #"/stash/auth/shibboleth?entityid=#{CGI.escape(authentication.entity_id)}"
       "https://#{StashEngine.app.shib_sp_host}/Shibboleth.sso/Login?" +
-          "target=#{CGI.escape("https://#{StashEngine.app.shib_sp_host}#{StashEngine.app.stash_mount}/auth/shibboleth/callback")}" +
+          "target=#{CGI.escape("https://#{StashEngine.app.shib_sp_host}" +
+          "#{StashEngine.app.stash_mount}/auth/shibboleth/callback")}" +
           "&entityID=#{CGI.escape(authentication.entity_id)}"
     end
 

@@ -11,7 +11,7 @@ module StashEngine
   end
 
   # this function maps the vars from your app into your engine
-  def self.setup(&block)
+  def self.setup
     yield self
   end
 

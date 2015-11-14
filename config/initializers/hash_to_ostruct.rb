@@ -10,6 +10,8 @@ class Hash
   # Converts a hash to an OpenStruct along with all its nested hashes. The hash
   # and all its sub-hashes become OpenStruct instances in the resulting
   # structure.
+
+  # rubocop:disable all
   def to_ostruct
     top_ostruct = OpenStruct.new(self)
     stack = top_ostruct.self_and_field_pairs
@@ -35,4 +37,5 @@ class Hash
     end
     top_ostruct
   end
+  # rubocop:enable all
 end

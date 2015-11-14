@@ -13,9 +13,7 @@ module StashEngine
       @auth_hash = request.env['omniauth.auth']
       reset_session
       if @auth_hash && @auth_hash['info'] && @auth_hash['info']['email'] && @auth_hash['info']['name']
-        session[:email], session[:name], session[:provider] =
-            @auth_hash['info']['email'], @auth_hash['info']['name'], @auth_hash['provider']
-        session[:test_domain] = @auth_hash['info']['test_domain'] if session[:provider] == 'developer'
+        set_session
         redirect_to dashboard_path
       else
         return head(:forbidden)
@@ -26,6 +24,15 @@ module StashEngine
     def destroy
       reset_session
       redirect_to root_path
+    end
+
+    private
+
+    def set_session
+      session.merge!(email:    @auth_hash['info']['email'],
+                     name:     @auth_hash['info']['name'],
+                     provider: @auth_hash['provider'])
+      session[:test_domain] = @auth_hash['info']['test_domain'] if session[:provider] == 'developer'
     end
 
   end
