@@ -19,6 +19,7 @@ config/database.yml
 .rspec
 /spec/tmp
 .DS_Store
+public/assets
 
 # Ignore code coverage reports.
 /coverage/
