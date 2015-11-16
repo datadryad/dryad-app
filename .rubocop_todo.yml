@@ -13,41 +13,41 @@
 
 # Offense count: 1
 # Configuration parameters: CountComments.
-Metrics/MethodLength:
-  Max: 19
+#Metrics/MethodLength:
+#  Max: 19
 
 # Offense count: 1
 # Cop supports --auto-correct.
 # Configuration parameters: EnforcedHashRocketStyle, EnforcedColonStyle, EnforcedLastArgumentHashStyle, SupportedLastArgumentHashStyles.
-Style/AlignHash:
-  Exclude:
-    - 'config/initializers/omniauth.rb'
+#Style/AlignHash:
+#  Exclude:
+#    - 'config/initializers/omniauth.rb'
 
 # Offense count: 2
 # Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyle, SupportedStyles.
-Style/AlignParameters:
-  Exclude:
-    - 'config/initializers/omniauth.rb'
+#Style/AlignParameters:
+#  Exclude:
+#    - 'config/initializers/omniauth.rb'
 
 # Offense count: 2
 # Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyle, SupportedStyles.
-Style/BracesAroundHashParameters:
-  Exclude:
-    - 'test/controllers/stash_engine/sessions_controller_test.rb'
+#Style/BracesAroundHashParameters:
+#  Exclude:
+#    - 'test/controllers/stash_engine/sessions_controller_test.rb'
 
 # Offense count: 3
 # Cop supports --auto-correct.
 # Configuration parameters: IndentWhenRelativeTo, SupportedStyles, IndentOneStep.
-Style/CaseIndentation:
-  Enabled: false
+#Style/CaseIndentation:
+#  Enabled: false
 
 # Offense count: 1
 # Configuration parameters: EnforcedStyle, SupportedStyles.
-Style/ClassAndModuleChildren:
-  Exclude:
-    - 'app/controllers/stash_engine/application_controller.rb'
+#Style/ClassAndModuleChildren:
+#  Exclude:
+#    - 'app/controllers/stash_engine/application_controller.rb'
 
 # Offense count: 2
 # Cop supports --auto-correct.
