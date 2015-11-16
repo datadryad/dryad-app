@@ -7,7 +7,6 @@ PATH
       omniauth-orcid (~> 1.0.21)
       omniauth-shibboleth (~> 1.2.1)
       rails (~> 4.2.4)
-      simplecov
 
 GEM
   remote: https://rubygems.org/
@@ -163,6 +162,7 @@ DEPENDENCIES
   byebug
   mysql2 (~> 0.3.20)
   rubocop
+  simplecov
   stash_engine!
 
 BUNDLED WITH
