@@ -11,8 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-
-ActiveRecord::Schema.define(version: 20151107181120) do
+ActiveRecord::Schema.define(version: 20151116143020) do
 
   create_table "datasets", force: :cascade do |t|
     t.integer  "PublicationYear",    limit: 4
@@ -93,13 +92,19 @@ ActiveRecord::Schema.define(version: 20151107181120) do
     t.datetime "updated_at",              null: false
   end
 
-  create_table "dcs_geo_location_points", force: :cascade do |t|
-    t.float    "latitude",           limit: 24
-    t.float    "longitude",          limit: 24
-    t.text     "geo_location_place", limit: 65535
+  create_table "dcs_geo_location_places", force: :cascade do |t|
+    t.string   "geo_location_place", limit: 255
     t.integer  "resource_id",        limit: 4
-    t.datetime "created_at",                       null: false
-    t.datetime "updated_at",                       null: false
+    t.datetime "created_at",                     null: false
+    t.datetime "updated_at",                     null: false
+  end
+
+  create_table "dcs_geo_location_points", force: :cascade do |t|
+    t.float    "latitude",    limit: 24
+    t.float    "longitude",   limit: 24
+    t.integer  "resource_id", limit: 4
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
   end
 
   create_table "dcs_name_identifiers", force: :cascade do |t|
