@@ -16,4 +16,3 @@ gemspec
 gem 'byebug', group: [:development, :test]
 gem 'mysql2', '~> 0.3.20'
 gem 'rubocop', require: false, group: [:development, :test]
-gem 'simplecov', require: false, group: [:development, :test]
