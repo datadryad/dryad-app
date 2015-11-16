@@ -1,7 +1,6 @@
 require 'ostruct'
 module StashEngine
   class Tenant
-
     # This was originally designed differently and I had to change it to create some instances on the fly because
     # testing loads things twice and didn't work correctly to create instances up front on engine initialization
     # in the test environment.  :-(
@@ -12,7 +11,7 @@ module StashEngine
 
     # return list of all tenants, tenant is a lightly wrapped ostruct (see method missing) with extra methods in here
     def self.all
-      StashEngine.tenants.values.map {|h| self.new(h)}
+      StashEngine.tenants.values.map { |h| new(h) }
     end
 
     #gets the Tenant class to respond to the keys so you can call hash like methods
@@ -28,9 +27,9 @@ module StashEngine
     # hack around limitations in the normal omniauth/shibboleth by directly addressing shibboleth.sso
     def shibboleth_login_path
       #"/stash/auth/shibboleth?entityid=#{CGI.escape(authentication.entity_id)}"
-      "https://#{StashEngine.app.shib_sp_host}/Shibboleth.sso/Login?" +
-          "target=#{CGI.escape("https://#{StashEngine.app.shib_sp_host}" +
-          "#{StashEngine.app.stash_mount}/auth/shibboleth/callback")}" +
+      "https://#{StashEngine.app.shib_sp_host}/Shibboleth.sso/Login?" \
+          "target=#{CGI.escape("https://#{StashEngine.app.shib_sp_host}" \
+          "#{StashEngine.app.stash_mount}/auth/shibboleth/callback")}" \
           "&entityID=#{CGI.escape(authentication.entity_id)}"
     end
 
@@ -40,14 +39,13 @@ module StashEngine
 
     def self.by_domain(domain)
       StashEngine.tenants.values.each do |v|
-        return self.new(v) if Regexp.new(v['domain_regex']).match(domain)
+        return new(v) if Regexp.new(v['domain_regex']).match(domain)
       end
-      self.all.first
+      all.first
     end
 
     def self.find(tenant_id)
-      self.new(StashEngine.tenants[tenant_id])
+      new(StashEngine.tenants[tenant_id])
     end
-
   end
 end

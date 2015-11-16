@@ -12,8 +12,7 @@ class StashEngineTest < ActiveSupport::TestCase
     #config.app = APP_CONFIG
   end
 
-  test "truth" do
-    assert_kind_of Module, StashEngine, "module test"
+  test 'truth' do
+    assert_kind_of Module, StashEngine, 'module test'
   end
-
 end

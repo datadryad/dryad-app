@@ -7,13 +7,10 @@ module StashEngine
 
   class << self
     mattr_accessor :app, :tenants
-
   end
 
   # this function maps the vars from your app into your engine
   def self.setup
     yield self
   end
-
-
 end

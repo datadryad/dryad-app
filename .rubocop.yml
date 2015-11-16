@@ -1,4 +1,4 @@
-inherit_from: .rubocop_todo.yml
+# inherit_from: .rubocop_todo.yml
 
 AllCops:
   Include:
@@ -9,8 +9,23 @@ AllCops:
     - 'config/**/*'
     - 'script/**/*'
     - 'bin/**/*'
+    - 'test/dummy/db/**/*'
 
 # other configuration
 Metrics/LineLength:
   Max: 120
+
+# documentation
+Documentation:
+  Exclude:
+    - 'app/controllers/**/*'
+    - 'app/helpers/**/*'
+    - 'app/models/**/*'
+    - 'test/controllers/**/*'
+    - 'lib/stash_engine/**/*'
+    - 'lib/stash_engine.rb'
+    - 'test/**/*'
+
+Style/LeadingCommentSpace:
+  Enabled: false
 

@@ -1,9 +1,8 @@
-require_dependency "stash_engine/application_controller"
+require_dependency 'stash_engine/application_controller'
 
 module StashEngine
   class SessionsController < ApplicationController
-
-    skip_before_filter :verify_authenticity_token, :only => [:callback]
+    skip_before_filter :verify_authenticity_token, only: [:callback]
 
     def index
     end
@@ -34,6 +33,5 @@ module StashEngine
                      provider: @auth_hash['provider'])
       session[:test_domain] = @auth_hash['info']['test_domain'] if session[:provider] == 'developer'
     end
-
   end
 end
