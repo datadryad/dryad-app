@@ -27,5 +27,4 @@ Gem::Specification.new do |s|
   s.add_dependency "omniauth-orcid", "~> 1.0.21"
   # you cannot add specific code repo to gemspec so it must just go in the Gemfile instead if for internal use
 
-  s.add_development_dependency "simplecov"
 end
