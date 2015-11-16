@@ -52,8 +52,8 @@ group :development, :test do
   gem 'rspec-rails', '~> 3.0'
 
   #test coverage
-  gem 'simplecov' # TODO do we care about the version?
-  gem 'simplecov-console' # TODO do we care about the version?
+  #gem 'simplecov' # TODO do we care about the version?
+  #gem 'simplecov-console' # TODO do we care about the version?
 
 end
 
