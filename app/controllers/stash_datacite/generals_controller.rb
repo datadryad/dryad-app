@@ -21,6 +21,7 @@ module StashDatacite
       @related_identifier = RelatedIdentifier.new
       @geolocation_point = GeolocationPoint.new
       @geolocation_box = GeolocationBox.new
+      @geolocation_place = GeolocationPlace.new
     end
 
     # GET /generals/id/edit
@@ -43,6 +44,7 @@ module StashDatacite
       @related_identifier = RelatedIdentifier.new(related_identifier_params)
       @geolocation_point = GeolocationPoint.new(geolocation_point_params)
       @geolocation_box = GeolocationBox.new(geolocation_box_params)
+      @geolocation_place = GeolocationPlace.new(geolocation_place_params)
     end
 
     def destroy
@@ -75,6 +77,7 @@ module StashDatacite
         @related_identifier = RelatedIdentifier.where(resource_id: @resource.id).first_or_initialize
         @geolocation_point = GeolocationPoint.where(resource_id: @resource.id).first_or_initialize
         @geolocation_box = GeolocationBox.where(resource_id: @resource.id).first_or_initialize
+        @geolocation_place = GeolocationPlace.where(resource_id: @resource.id).first_or_initialize
       end
 
       def creator_params
@@ -106,11 +109,15 @@ module StashDatacite
       end
 
       def geolocation_point_params
-        params.require(:geolocation_point).permit(:latitude, :longitude, :geo_location_place, :resource_id)
+        params.require(:geolocation_point).permit(:latitude, :longitude, :resource_id)
       end
 
       def geolocation_box_params
-        params.require(:geolocation_point).permit(:sw_latitude, :ne_latitude, :sw_longitude, :ne_longitude, :resource_id)
+        params.require(:geolocation_box).permit(:sw_latitude, :ne_latitude, :sw_longitude, :ne_longitude, :resource_id)
+      end
+
+      def geolocation_place_params
+        params.require(:geolocation_place).permit(:geo_location_place, :resource_id)
       end
   end
 end
