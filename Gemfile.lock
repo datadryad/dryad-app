@@ -10,10 +10,10 @@ GIT
 
 GIT
   remote: https://github.com/CDLUC3/stash_engine.git
-  revision: d5cad4f0a2c910b89a0015b31be0de43d5c133ff
+  revision: 6180d1d5d4e788d6f721d0707ac8fae6f2c8e16a
   branch: development
   specs:
-    stash_engine (0.0.15)
+    stash_engine (0.0.17)
       omniauth (~> 1.2.2)
       omniauth-google-oauth2 (~> 0.2.9)
       omniauth-orcid (~> 1.0.21)
