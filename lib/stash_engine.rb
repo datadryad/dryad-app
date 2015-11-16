@@ -2,7 +2,11 @@
 # requires all dependencies
 
 Gem.loaded_specs['stash_engine'].dependencies.each do |d|
-  require d.name
+  begin
+    require d.name
+  rescue Exception => ex
+  end
+
 end
 
 require "stash_engine/engine"
