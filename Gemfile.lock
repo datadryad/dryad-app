@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    stash_engine (0.0.15)
+    stash_engine (0.0.16)
       omniauth (~> 1.2.2)
       omniauth-google-oauth2 (~> 0.2.9)
       omniauth-orcid (~> 1.0.21)
