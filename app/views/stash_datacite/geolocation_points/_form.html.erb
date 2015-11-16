@@ -1,13 +1,11 @@
 <p>Where was the data collected? Does it focus on particular locations?</p>
 <%= fields_for @geolocation_point do |geolocation_point| %>
 <%#= render "datacite/shared/error_messages", :target => @geo_location_point %>
-  <strong><%= label_tag "Add a place by name" %></strong><br/>
-  <%= geolocation_point.text_field :geo_location_place, size: 40  %>
-  <%= link_to "Add", '#' %><br/><br/>
   <strong><%= label_tag "Add a point or rectangular area with lat/long coordinates" %></strong><br/>
-  <%= geolocation_point.text_field :latitude, size: "40" %>&nbsp;&nbsp;&nbsp;&nbsp;&#44;
-  <%= geolocation_point.text_field :longitude, size: "40" %>&nbsp;&nbsp;&nbsp;&nbsp;
-  <%= link_to "Add", '#' %><br/>
+  <%= geolocation_point.text_field :latitude %>&nbsp;&nbsp;&nbsp;&nbsp;&#44;
+  <%= geolocation_point.text_field :longitude %>&nbsp;&nbsp;&nbsp;&nbsp;
+  <%= link_to "Add", '#' %><br/><br/>
+  <strong><%= label_tag "Add a point or draw a rectangle on the map" %></strong><br/>
   <%= geolocation_point.hidden_field :resource_id, value: params[:resource_id] %>
   <br/>
 <% end %>

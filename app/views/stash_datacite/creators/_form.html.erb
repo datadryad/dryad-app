@@ -2,14 +2,14 @@
   <%#= render "datacite/shared/error_messages", target: @creator %>
   <strong><%= label_tag "Author(s)" %></strong><br/>
   <%= creator.label :creator_first_name, "First Name" %>
-  <%= creator.text_field :creator_first_name, size: 40 %>
+  <%= creator.text_field :creator_first_name%>
   <%= creator.label :creator_middle_name, "M.I." %>
   <%= creator.text_field :creator_middle_name, size: 5 %>
   <%= creator.label :creator_last_name, "Last Name" %>
-  <%= creator.text_field :creator_last_name, size: 40 %>
+  <%= creator.text_field :creator_last_name %>
   <%#= creator.input :name_identifier_id %>
   <%= creator.label :affliation_id, "Institutional Affiliation" %>
-  <%= creator.text_field :affliation_id, size: 40 %>
+  <%= creator.text_field :affliation_id %>
   <%= link_to 'add ORCID', '#' %>
   <%= creator.hidden_field :resource_id, value: params[:resource_id] %>
   <br/>

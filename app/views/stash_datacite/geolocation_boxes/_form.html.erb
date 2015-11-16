@@ -1,12 +1,14 @@
 <%= fields_for @geolocation_box do |geolocation_box| %>
 <%#= render "datacite/shared/error_messages", :target => @geo_location_point %>
 <sub>sw</sub>
-  <%= geolocation_box.text_field :sw_latitude, size: "40" %>&nbsp;&nbsp;&nbsp;&nbsp;&#44;
-  <%= geolocation_box.text_field :sw_longitude, size: "40" %>&nbsp;&nbsp;&nbsp;&nbsp;&#44;
+  <%= geolocation_box.text_field :sw_latitude %>&nbsp;&nbsp;&nbsp;&nbsp;&#44;
+  <%= geolocation_box.text_field :sw_longitude %>&nbsp;&nbsp;&nbsp;&nbsp;&#44;
 <sub>ne</sub>
-  <%= geolocation_box.text_field :ne_latitude, size: "40" %>&nbsp;&nbsp;&nbsp;&nbsp;&#44;
-  <%= geolocation_box.text_field :ne_longitude, size: "40" %>&nbsp;&nbsp;&nbsp;&nbsp;
+  <%= geolocation_box.text_field :ne_latitude %>&nbsp;&nbsp;&nbsp;&nbsp;&#44;
+  <%= geolocation_box.text_field :ne_longitude %>&nbsp;&nbsp;&nbsp;&nbsp;
   <%= link_to "Add", '#' %>
   <br/>
+  <br/>
+  <strong><%= label_tag "Add a point or draw a rectangle on the map" %></strong><br/>
   <%= geolocation_box.hidden_field :resource_id, value: params[:resource_id] %>
 <% end %>

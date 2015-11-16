@@ -1,0 +1,9 @@
+<p>Where was the data collected? Does it focus on particular locations?</p>
+<%= fields_for @geolocation_place do |geolocation_place| %>
+<%#= render "datacite/shared/error_messages", :target => @geo_location_point %>
+  <strong><%= label_tag "Add a place by name" %></strong><br/>
+  <%= geolocation_point.text_field :geo_location_place, size:50 %>
+  <%= link_to "Add", '#' %><br/><br/>
+  <%= geolocation_point.hidden_field :resource_id, value: params[:resource_id] %>
+  <br/>
+<% end %>
