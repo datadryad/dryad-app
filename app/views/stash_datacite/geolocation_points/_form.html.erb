@@ -4,7 +4,9 @@
   <strong><%= label_tag "Add a point or rectangular area with lat/long coordinates" %></strong><br/>
   <%= geolocation_point.text_field :latitude %>&nbsp;&nbsp;&nbsp;&nbsp;&#44;
   <%= geolocation_point.text_field :longitude %>&nbsp;&nbsp;&nbsp;&nbsp;
-  <%= link_to "Add", '#' %><br/><br/>
+  <%= link_to "Add", '#' %>
+  <br/>
+  <br/>
   <strong><%= label_tag "Add a point or draw a rectangle on the map" %></strong><br/>
   <%= geolocation_point.hidden_field :resource_id, value: params[:resource_id] %>
   <br/>
