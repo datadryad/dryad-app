@@ -1,8 +1,8 @@
 StashEngine::Engine.routes.draw do
 
-
   resources :resources
   resources :tenants, only: [:index, :show]
+  resources :file_uploads
 
   get 'dashboard', to: 'dashboard#show', as: 'dashboard'
 
