@@ -2,7 +2,7 @@ require_dependency 'stash_engine/application_controller'
 
 module StashEngine
   class SessionsController < ApplicationController
-    skip_before_filter :verify_authenticity_token, only: [:callback]
+    skip_before_action :verify_authenticity_token, only: [:callback]
 
     def index
     end
