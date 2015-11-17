@@ -1,9 +1,8 @@
-<%= link_to 'Back to My Datasets', stash_engine.resources_path, class: "btn" %>
-<%= link_to 'Proceed to Uploads', stash_engine.resources_path, class: "btn" %>
-
+<%= link_to 'Back to My Datasets', stash_engine.dashboard_path, class: "btn" %>
+<%= link_to 'Proceed to Uploads', stash_engine.file_uploads_path, class: "btn" %>
 
 <div>
-  <%= form_for :general, url: generals_update_path do |f| %>
+  <%= form_for :general, url: generals_edit_path do |f| %>
 
     <%= f.hidden_field :resource_id, value: params[:resource_id] %>
     <%= render partial: 'stash_datacite/generals/metadata_entry_form' %>
