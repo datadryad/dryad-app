@@ -13,7 +13,6 @@
       <tr>
         <td><%= title(resource) %></td>
         <td><%= link_to 'Edit Resource', stash_datacite.generals_edit_path(resource_id: resource.id), class: "btn" %></td>
-        <% byebug %>
         <td><%= link_to 'Delete Resource', resource, method: :delete, data: { confirm: 'Are you sure?' }, :class => "btn" %></td>
       </tr>
     <% end %>
