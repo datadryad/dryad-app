@@ -35,6 +35,5 @@ module StashEngine
     #  get :destroy
     #  assert_response :success
     #end
-
   end
 end

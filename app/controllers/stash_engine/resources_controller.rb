@@ -1,4 +1,4 @@
-require_dependency "stash_engine/application_controller"
+require_dependency 'stash_engine/application_controller'
 
 module StashEngine
   class ResourcesController < ApplicationController
@@ -68,7 +68,5 @@ module StashEngine
     def resource_params
       params.require(:resource).permit(:user_id, :current_resource_state_id)
     end
-
   end
 end
-

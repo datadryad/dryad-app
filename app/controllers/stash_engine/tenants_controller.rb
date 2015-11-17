@@ -1,4 +1,4 @@
-require_dependency "stash_engine/application_controller"
+require_dependency 'stash_engine/application_controller'
 
 module StashEngine
   class TenantsController < ApplicationController
@@ -14,10 +14,11 @@ module StashEngine
     end
 
     private
-      # Use callbacks to share common setup or constraints between actions.
-      def set_tenant
-        @tenant = Tenant.find(params[:id])
-      end
 
+    # Use callbacks to share common setup or constraints between actions.
+
+    def set_tenant
+      @tenant = Tenant.find(params[:id])
+    end
   end
 end
