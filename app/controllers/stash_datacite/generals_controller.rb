@@ -67,7 +67,8 @@ module StashDatacite
       end
 
       def set_instances
-        @resource = StashDatacite.resource_class.constantize.find(params[:resource_id].to_i) unless params[:resource_id].blank?
+        @resource =
+            StashDatacite.resource_class.constantize.find(params[:resource_id].to_i) unless params[:resource_id].blank?
         @creator = Creator.where(resource_id: @resource.id).first_or_initialize
         @title = Title.where(resource_id: @resource.id).first_or_initialize
         @description = Description.where(resource_id: @resource.id).first_or_initialize
@@ -81,7 +82,8 @@ module StashDatacite
       end
 
       def creator_params
-        params.require(:creator).permit(:creator_first_name, :creator_middle_name, :creator_last_name, :name_identifier_id, :affliation_id, :resource_id)
+        params.require(:creator).permit(:creator_first_name, :creator_middle_name, :creator_last_name,
+                                        :name_identifier_id, :affliation_id, :resource_id)
       end
 
       def title_params
@@ -93,7 +95,8 @@ module StashDatacite
       end
 
       def contributor_params
-        params.require(:contributor).permit(:contributor_name, :contributor_type, :name_identifier_id, :affliation_id, :resource_id )
+        params.require(:contributor).permit(:contributor_name, :contributor_type, :name_identifier_id, :affliation_id,
+                                            :resource_id )
       end
 
       def subject_params
@@ -105,7 +108,8 @@ module StashDatacite
       end
 
       def related_identifier_params
-        params.require(:related_identifier).permit(:related_identifier, :related_identifier_type_id, :relation_type_id, :resource_id)
+        params.require(:related_identifier).permit(:related_identifier, :related_identifier_type_id, :relation_type_id,
+                                                   :resource_id)
       end
 
       def geolocation_point_params
