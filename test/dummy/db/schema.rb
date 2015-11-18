@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151116141144) do
+ActiveRecord::Schema.define(version: 20151116143020) do
 
   create_table "dcs_affliations", force: :cascade do |t|
     t.string   "short_name",   limit: 255
@@ -26,14 +26,13 @@ ActiveRecord::Schema.define(version: 20151116141144) do
   end
 
   create_table "dcs_contributors", force: :cascade do |t|
-    t.string   "contributor_first_name",  limit: 255
-    t.integer  "contributor_type",        limit: 4,   default: 0
-    t.integer  "name_identifier_id",      limit: 4
-    t.integer  "affliation_id",           limit: 4
-    t.integer  "resource_id",             limit: 4
-    t.datetime "created_at",                                      null: false
-    t.datetime "updated_at",                                      null: false
-    t.string   "contributor_middle_name", limit: 255
+    t.string   "contributor_name",   limit: 255
+    t.integer  "contributor_type",   limit: 4,   default: 0
+    t.integer  "name_identifier_id", limit: 4
+    t.integer  "affliation_id",      limit: 4
+    t.integer  "resource_id",        limit: 4
+    t.datetime "created_at",                                 null: false
+    t.datetime "updated_at",                                 null: false
   end
 
   create_table "dcs_creators", force: :cascade do |t|
@@ -81,6 +80,13 @@ ActiveRecord::Schema.define(version: 20151116141144) do
     t.integer  "resource_id",  limit: 4
     t.datetime "created_at",              null: false
     t.datetime "updated_at",              null: false
+  end
+
+  create_table "dcs_geo_location_places", force: :cascade do |t|
+    t.string   "geo_location_place", limit: 255
+    t.integer  "resource_id",        limit: 4
+    t.datetime "created_at",                     null: false
+    t.datetime "updated_at",                     null: false
   end
 
   create_table "dcs_geo_location_points", force: :cascade do |t|
@@ -187,67 +193,6 @@ ActiveRecord::Schema.define(version: 20151116141144) do
   create_table "stash_datacite_resource_types", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-  end
-
-  create_table "stash_engine_file_uploads", force: :cascade do |t|
-    t.string   "upload_file_name",    limit: 255
-    t.string   "upload_content_type", limit: 255
-    t.integer  "upload_file_size",    limit: 4
-    t.integer  "resource_id",         limit: 4
-    t.datetime "upload_updated_at"
-    t.datetime "created_at",                      null: false
-    t.datetime "updated_at",                      null: false
-  end
-
-  create_table "stash_engine_identifiers", force: :cascade do |t|
-    t.string   "identifier",      limit: 255
-    t.string   "identifier_type", limit: 255
-    t.integer  "resource_id",     limit: 4
-    t.datetime "created_at",                  null: false
-    t.datetime "updated_at",                  null: false
-  end
-
-  create_table "stash_engine_image_uploads", force: :cascade do |t|
-    t.string   "image_name",       limit: 255
-    t.string   "image_type",       limit: 255
-    t.integer  "image_size",       limit: 4
-    t.integer  "resource_id",      limit: 4
-    t.datetime "image_updated_at"
-    t.datetime "created_at",                   null: false
-    t.datetime "updated_at",                   null: false
-  end
-
-  create_table "stash_engine_resource_states", force: :cascade do |t|
-    t.integer  "user_id",        limit: 4
-    t.integer  "resource_state", limit: 4, default: 0
-    t.datetime "created_at",                           null: false
-    t.datetime "updated_at",                           null: false
-  end
-
-  create_table "stash_engine_resources", force: :cascade do |t|
-    t.integer  "user_id",                   limit: 4
-    t.integer  "current_resource_state_id", limit: 4
-    t.datetime "created_at",                          null: false
-    t.datetime "updated_at",                          null: false
-  end
-
-  create_table "stash_engine_submission_logs", force: :cascade do |t|
-    t.integer  "resource_id",      limit: 4
-    t.text     "archive_response", limit: 65535
-    t.datetime "created_at",                     null: false
-    t.datetime "updated_at",                     null: false
-  end
-
-  create_table "stash_engine_users", force: :cascade do |t|
-    t.string   "first_name",     limit: 255
-    t.string   "last_name",      limit: 255
-    t.string   "email",          limit: 255
-    t.string   "uid",            limit: 255
-    t.string   "provider",       limit: 255
-    t.string   "oauth_token",    limit: 255
-    t.integer  "institution_id", limit: 4
-    t.datetime "created_at",                 null: false
-    t.datetime "updated_at",                 null: false
   end
 
 end
