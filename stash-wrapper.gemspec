@@ -31,5 +31,6 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'simplecov', '~> 0.9.2'
   spec.add_development_dependency 'simplecov-console', '~> 0.2.0'
   spec.add_development_dependency 'rubocop', '~> 0.32.1'
+  spec.add_development_dependency 'yard', '~> 0.8'
 
 end
