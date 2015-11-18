@@ -1,0 +1,2 @@
+$('form').live 'ajax:success', (event,data) ->
+    $('form').html(data.html) if(data.success == true)

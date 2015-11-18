@@ -13,7 +13,7 @@
     <%= render partial: "stash_datacite/descriptions/form", locals: { description_type: "abstract" }  %>
   </div>
 
-  <h3><strong>Data Description(Optional)</strong></h3>
+  <h3><strong>Data Description (Optional)</strong></h3>
   <div>
     <%= render "stash_datacite/contributors/form"%><br/>
     <%= render "stash_datacite/subjects/form" %><br/>
@@ -30,9 +30,8 @@
     <%= render "stash_datacite/geolocation_points/form" %>
     <%= render "stash_datacite/geolocation_boxes/form" %>
   </div>
-  <%#= render "stash_datacite/publishers/form" %>
-  <%#= render "stash_datacite/publication_years/form" %>
 </div>
+
 </br>
 <%= link_to 'Back to My Datasets', stash_engine.dashboard_path, class: "btn" %>
 <%= link_to 'Proceed to Uploads', stash_engine.file_uploads_path, class: "btn" %>

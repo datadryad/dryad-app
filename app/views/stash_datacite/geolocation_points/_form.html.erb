@@ -1,7 +1,7 @@
 <p>Where was the data collected? Does it focus on particular locations?</p>
 <%= fields_for @geolocation_point do |geolocation_point| %>
 <%#= render "datacite/shared/error_messages", :target => @geo_location_point %>
-  <strong><%= label_tag "Add a point or rectangular area with lat/long coordinates" %></strong><br/>
+  <strong><%= label_tag "Add a point or rectangular area with lat/long coordinates" %></strong><br/>  <br/>
   <%= geolocation_point.text_field :latitude %>&nbsp;&nbsp;&nbsp;&nbsp;&#44;
   <%= geolocation_point.text_field :longitude %>&nbsp;&nbsp;&nbsp;&nbsp;
   <%= link_to "Add", '#' %>

@@ -8,43 +8,12 @@ module StashDatacite
       set_resources
     end
 
-    def new
-      set_resources
+    # GET/POST/PUT  /generals/find_or_create
+    def find_or_create
       @relation_types = RelationType.all
       @related_identifier_types = RelatedIdentifierType.all
-      @creator = Creator.new
-      @title = Title.new
-      @description = Description.new
-      @contributor = Contributor.new
-      @subject = Subject.new
-      @resource_type = ResourceType.new
-      @related_identifier = RelatedIdentifier.new
-      @geolocation_point = GeolocationPoint.new
-      @geolocation_box = GeolocationBox.new
-      @geolocation_place = GeolocationPlace.new
-    end
-
-    # GET /generals/id/edit
-    def edit
-      set_resources
-      @relation_types = RelationType.all
-      @related_identifier_types = RelatedIdentifierType.all
+      @resource = StashDatacite.resource_class.constantize.find(params[:resource_id].to_i) unless params[:resource_id].blank?
       set_instances
-    end
-
-    # POST /generals/create
-    def create
-      @resource = StashDatacite.resource_class.constantize.find(generals_params[:resource_id].to_i)
-      @creator = Creator.new(creator_params)
-      @title = Title.new(title_params)
-      @description = Description.new(description_params)
-      @contributor = Contributor.new(contributor_params)
-      @subject = Subject.new(subject_params)
-      @resource_type = ResourceType.new(resource_type_params)
-      @related_identifier = RelatedIdentifier.new(related_identifier_params)
-      @geolocation_point = GeolocationPoint.new(geolocation_point_params)
-      @geolocation_box = GeolocationBox.new(geolocation_box_params)
-      @geolocation_place = GeolocationPlace.new(geolocation_place_params)
     end
 
     def destroy
@@ -67,7 +36,6 @@ module StashDatacite
       end
 
       def set_instances
-        @resource = StashDatacite.resource_class.constantize.find(params[:resource_id].to_i) unless params[:resource_id].blank?
         @creator = Creator.where(resource_id: @resource.id).first_or_initialize
         @title = Title.where(resource_id: @resource.id).first_or_initialize
         @description = Description.where(resource_id: @resource.id).first_or_initialize

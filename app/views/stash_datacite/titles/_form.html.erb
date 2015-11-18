@@ -2,7 +2,10 @@
   <%#= render "datacite/shared/error_messages", :target => @title %>
   <strong><%= title.label :title, "Title" %></strong>
   <br/>
-  <%= title.text_field :title, size: 130 %>
+  <%= title.text_field :title, size: 130, id: "target" %>
   <%= title.hidden_field :resource_id, value: params[:resource_id] %>
+  <% unless @title.new_record? %>
+    <%= title.text_field :title_id, value: @title.id %>
+  <% end %>
   <br/>
 <% end %>

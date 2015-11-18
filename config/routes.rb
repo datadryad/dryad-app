@@ -1,11 +1,7 @@
 StashDatacite::Engine.routes.draw do
 
   get   'generals/index', to: 'generals#index'
-  get   'generals/new', to: 'generals#new'
-  post  'generals/create', to: 'generals#create'
-  get   'generals/edit', to: 'generals#edit'
-  put   'generals/update', to: 'generals#update'
-  get   'generals/upload', to: 'generals#upload'
+  match 'generals/find_or_create' => 'generals#find_or_create', via: [:post, :put, :get]
   get   'generals/summary', to: 'generals#summary'
 
 end
