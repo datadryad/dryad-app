@@ -5,7 +5,7 @@ Gem.loaded_specs['stash_engine'].dependencies.each do |d|
   begin
     require d.name
   rescue LoadError => e
-    puts "Gem is causing load exception: \n #{e}"
+    logger.warning "Gem is causing load exception: \n #{e}"
   end
 end
 
