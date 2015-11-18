@@ -6,3 +6,4 @@ test/dummy/log/*
 test/dummy/db/*
 # Ignore Mac DS_Store files
 .DS_Store
+coverage/*

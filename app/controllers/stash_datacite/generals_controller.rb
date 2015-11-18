@@ -1,8 +1,7 @@
-require_dependency "stash_datacite/application_controller"
+require_dependency 'stash_datacite/application_controller'
 
 module StashDatacite
   class GeneralsController < ApplicationController
-
     # GET /generals
     def index
       set_resources
