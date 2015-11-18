@@ -30,7 +30,7 @@ module StashEngine
     def create
       @resource = Resource.new
       @resource.save!
-      redirect_to stash_datacite.generals_new_path(resource_id: @resource.id)
+      redirect_to stash_datacite.generals_find_or_create_path(resource_id: @resource.id)
     end
 
     # PATCH/PUT /resources/1
@@ -52,7 +52,7 @@ module StashEngine
     def destroy
       @resource.destroy
       respond_to do |format|
-        format.html { redirect_to resources_url, notice: 'Resource was successfully destroyed.' }
+        format.html { redirect_to dashboard_path, notice: 'Resource was successfully destroyed.' }
         format.json { head :no_content }
       end
     end
