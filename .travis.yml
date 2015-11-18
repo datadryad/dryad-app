@@ -8,6 +8,7 @@ before_script:
 script:
   - RAILS_ENV=test bundle exec rake db:migrate --trace
   - bundle exec rake test
+  - bundle exec rubocop -R
 branches:
   only:
     - development
