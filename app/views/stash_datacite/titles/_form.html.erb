@@ -1,15 +1,5 @@
 <%# the local variable 'title' should be passed in to this partial when there are multiple per page %>
-<%= form_for(title, namespace: @title.id, remote: true, authenticity_token: true) do |f| %>
-  <% if @title.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(@title.errors.count, "error") %> prohibited this title from being saved:</h2>
-      <ul>
-      <% @title.errors.full_messages.each do |message| %>
-        <li><%= message %></li>
-      <% end %>
-      </ul>
-    </div>
-  <% end %>
+<%= form_for(title, namespace: title.id, remote: true, authenticity_token: true) do |f| %>
 
   <%= f.hidden_field :resource_id %>
   <%= f.hidden_field :created_at %>
