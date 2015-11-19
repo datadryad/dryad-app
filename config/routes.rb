@@ -4,4 +4,6 @@ StashDatacite::Engine.routes.draw do
   match 'generals/find_or_create' => 'generals#find_or_create', via: [:post, :put, :get]
   get   'generals/summary', to: 'generals#summary'
 
+  resources :titles, except: [:index]
+
 end

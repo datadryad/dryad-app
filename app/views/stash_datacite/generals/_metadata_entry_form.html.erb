@@ -6,7 +6,7 @@
 <div id="accordion">
   <h3><strong>Basic Information</strong></h3>
   <div>
-    <%= render "stash_datacite/titles/form" %><br/>
+    <%= render partial: "stash_datacite/titles/form", locals: {title: @title} %><br/>
     <%= render "stash_datacite/creators/form" %><br/>
     <%= render "stash_datacite/resource_types/form" %><br/>
     <strong><%= label_tag :description, "Abstract" %></strong><br/>
