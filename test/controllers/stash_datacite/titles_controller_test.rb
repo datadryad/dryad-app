@@ -7,41 +7,41 @@ module StashDatacite
       @routes = Engine.routes
     end
 
-    test "should get index" do
+    test 'should get index' do
       get :index
       assert_response :success
       assert_not_nil assigns(:titles)
     end
 
-    test "should get new" do
+    test 'should get new' do
       get :new
       assert_response :success
     end
 
-    test "should create title" do
+    test 'should create title' do
       assert_difference('Title.count') do
-        post :create, title: {  }
+        post :create, title: {}
       end
 
       assert_redirected_to title_path(assigns(:title))
     end
 
-    test "should show title" do
+    test 'should show title' do
       get :show, id: @title
       assert_response :success
     end
 
-    test "should get edit" do
+    test 'should get edit' do
       get :edit, id: @title
       assert_response :success
     end
 
-    test "should update title" do
-      patch :update, id: @title, title: {  }
+    test 'should update title' do
+      patch :update, id: @title, title: {}
       assert_redirected_to title_path(assigns(:title))
     end
 
-    test "should destroy title" do
+    test 'should destroy title' do
       assert_difference('Title.count', -1) do
         delete :destroy, id: @title
       end
