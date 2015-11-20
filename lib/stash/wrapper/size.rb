@@ -1,5 +1,5 @@
 require 'xml/mapping'
-require_relative 'size_unit_node'
+require_relative 'size_unit'
 
 module Stash
   module Wrapper
@@ -9,7 +9,7 @@ module Stash
       include ::XML::Mapping
 
       numeric_node :size, '.'
-      size_unit_node :unit, '@unit', default: SizeUnit::BYTE
+      typesafe_enum_node :unit, '@unit', class: SizeUnit, default: SizeUnit::BYTE
 
       # Creates a new {Size}
       # @param bytes [Integer] the size in bytes

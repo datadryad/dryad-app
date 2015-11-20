@@ -1,6 +1,5 @@
-require 'xml/mapping'
 require 'xml/mapping_extensions'
-require_relative 'identifier_type_node'
+require_relative 'identifier_type'
 
 module Stash
   module Wrapper
@@ -8,7 +7,7 @@ module Stash
     # Mapping class for `<st:identifier>`
     class Identifier
       include ::XML::Mapping
-      identifier_type_node :type, '@type', default_value: nil
+      typesafe_enum_node :type, '@type', class: IdentifierType, default_value: nil
       text_node :value, '.', default_value: nil
 
       # Creates a new {Identifier}

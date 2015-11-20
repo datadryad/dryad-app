@@ -46,7 +46,7 @@ end
 def dublin_core(doi:, creators:, title:, publisher:, pubyear:, subjects:, resource_type:, abstract:, methods:, usage:, grant_number:)
   xml_text = "<oai_dc:dc xmlns:oai_dc='http://www.openarchives.org/OAI/2.0/oai_dc/' xmlns:dc='http://purl.org/dc/elements/1.1/' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:schemaLocation='http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd'>
                 <dc:title>#{title}</dc:title>
-                #{(creators.map { |cn, ca| "<dc:creator>#{cn}</dc:creator>" }).join("\n")}
+                #{(creators.map { |cn, _ca| "<dc:creator>#{cn}</dc:creator>" }).join("\n")}
                 #{(subjects.map { |s| "<dc:subject>#{s}</dc:subject>" }).join("\n")}
                 <dc:description>#{abstract}</dc:description>
                 <dc:description>#{methods}</dc:description>
@@ -217,7 +217,7 @@ def usage
 end
 
 def grant_number
-  "#{rand(10)} #{random_word[0]}#{rand(20)} #{random_word[0..1]}#{100000+less_than(1000000)}-#{rand(100)}#{random_word[0]}#{rand(30)}".upcase
+  "#{rand(10)} #{random_word[0]}#{rand(20)} #{random_word[0..1]}#{100_000 + less_than(1_000_000)}-#{rand(100)}#{random_word[0]}#{rand(30)}".upcase
 end
 
 def period_for(period_months)

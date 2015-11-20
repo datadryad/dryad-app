@@ -1,7 +1,5 @@
-require 'xml/mapping'
 require 'xml/mapping_extensions'
-
-require_relative 'embargo_type_node'
+require_relative 'embargo_type'
 
 module Stash
   module Wrapper
@@ -10,7 +8,7 @@ module Stash
     class Embargo
       include ::XML::Mapping
 
-      embargo_type_node :type, 'type'
+      typesafe_enum_node :type, 'type', class: EmbargoType
       text_node :period, 'period'
       date_node :start_date, 'start', zulu: true
       date_node :end_date, 'end', zulu: true
