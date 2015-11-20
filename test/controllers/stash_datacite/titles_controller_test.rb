@@ -2,6 +2,7 @@ require 'test_helper'
 
 module StashDatacite
   class TitlesControllerTest < ActionController::TestCase
+=begin
     setup do
       @title = stash_datacite_titles(:one)
       @routes = Engine.routes
@@ -48,5 +49,6 @@ module StashDatacite
 
       assert_redirected_to titles_path
     end
+=end
   end
 end
