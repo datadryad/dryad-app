@@ -4,7 +4,7 @@ Rails.application.routes.draw do
 
   # You can have the root of your site routed with "root"
   root 'host_pages#index'
-  match '/auth/:provider/callback', to: 'host_pages#test', via: [:get, :post]
+  #match '/auth/:provider/callback', to: 'host_pages#test', via: [:get, :post]
 
 
   # Example of regular route:
