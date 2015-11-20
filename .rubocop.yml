@@ -30,3 +30,5 @@ Documentation:
 Style/LeadingCommentSpace:
   Enabled: false
 
+Style/BlockComments:
+  Enabled: false
