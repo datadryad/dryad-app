@@ -3,13 +3,13 @@
 <%= form_for(geolocation_point, url: 'geolocation_points_path', remote: true, namespace: geolocation_point.id, authenticity_token: true) do |f| %>
   <%#= render "datacite/shared/error_messages", :target => @geolocation_point %>
   <strong><%= label_tag "Add a point or rectangular area with lat/long coordinates" %></strong><br/>  <br/>
-  <%= geolocation_point.text_field :latitude %>&nbsp;&nbsp;&nbsp;&nbsp;&#44;
-  <%= geolocation_point.text_field :longitude %>&nbsp;&nbsp;&nbsp;&nbsp;
+  <%= f.text_field :latitude %>&nbsp;&nbsp;&nbsp;&nbsp;&#44;
+  <%= f.text_field :longitude %>&nbsp;&nbsp;&nbsp;&nbsp;
   <%= link_to "Add", '#' %>
   <br/>
   <br/>
   <strong><%= label_tag "Add a point or draw a rectangle on the map" %></strong><br/>
-  <%= geolocation_point.hidden_field :resource_id %>
+  <%= f.hidden_field :resource_id %>
   <br/>
 <% end %>
 
