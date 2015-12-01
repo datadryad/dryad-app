@@ -1,4 +1,4 @@
-require_dependency "stash_datacite/application_controller"
+require_dependency 'stash_datacite/application_controller'
 
 module StashDatacite
   class TitlesController < ApplicationController
@@ -54,14 +54,16 @@ module StashDatacite
     end
 
     private
-      # Use callbacks to share common setup or constraints between actions.
-      def set_title
-        @title = Title.find(params[:id])
-      end
 
-      # Only allow a trusted parameter "white list" through.
-      def title_params
-        params.require(:title).permit(:title, :title_type, :resource_id, :created_at)
-      end
+    # Use callbacks to share common setup or constraints between actions.
+    def set_title
+      @title = Title.find(params[:id])
+    end
+
+    # Only allow a trusted parameter "white list" through.
+    def title_params
+      #params[:title]
+      params.require(:title).permit(:title, :title_type, :resource_id, :created_at)
+    end
   end
 end
