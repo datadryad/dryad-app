@@ -1,14 +1,15 @@
-<%= fields_for @geolocation_box do |geolocation_box| %>
-<%#= render "datacite/shared/error_messages", :target => @geo_location_point %>
+<%# the local variable 'geolocation_box' should be passed in to this partial when there are multiple per page %>
+<%= form_for(geolocation_box, url: 'geolocation_boxes_path', remote: true, namespace: geolocation_box.id, authenticity_token: true) do |f| %>
+<%#= render "datacite/shared/error_messages", :target => @geolocation_box %>
 <sub>sw</sub>
-  <%= geolocation_box.text_field :sw_latitude %>&nbsp;&nbsp;&nbsp;&nbsp;&#44;
-  <%= geolocation_box.text_field :sw_longitude %>&nbsp;&nbsp;&nbsp;&nbsp;&#44;
+  <%= f.text_field :sw_latitude %>&nbsp;&nbsp;&nbsp;&nbsp;&#44;
+  <%= f.text_field :sw_longitude %>&nbsp;&nbsp;&nbsp;&nbsp;&#44;
 <sub>ne</sub>
-  <%= geolocation_box.text_field :ne_latitude %>&nbsp;&nbsp;&nbsp;&nbsp;&#44;
-  <%= geolocation_box.text_field :ne_longitude %>&nbsp;&nbsp;&nbsp;&nbsp;
+  <%= f.text_field :ne_latitude %>&nbsp;&nbsp;&nbsp;&nbsp;&#44;
+  <%= f.text_field :ne_longitude %>&nbsp;&nbsp;&nbsp;&nbsp;
   <%= link_to "Add", '#' %>
   <br/>
   <br/>
   <strong><%= label_tag "Add a point or draw a rectangle on the map" %></strong><br/>
-  <%= geolocation_box.hidden_field :resource_id, value: params[:resource_id] %>
+  <%= f.hidden_field :resource_id %>
 <% end %>
