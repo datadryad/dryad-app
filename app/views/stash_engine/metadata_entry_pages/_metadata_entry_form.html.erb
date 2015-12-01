@@ -1,0 +1,37 @@
+<div>
+  <p><h2>Describe your dataset</h2>
+  * required fields</p>
+</div>
+
+<div id="accordion">
+  <h3><strong>Basic Information</strong></h3>
+  <div>
+    <%= render partial: "stash_datacite/titles/form", locals: { title: @title } %><br/>
+    <%= render partial: "stash_datacite/creators/form", locals: { creator: @creator } %><br/>
+    <%= render partial: "stash_datacite/resource_types/form", locals: { resource_type: @resource_type } %><br/>
+    <strong><%= label_tag :description, "Abstract" %></strong><br/>
+    <%= render partial: "stash_datacite/descriptions/form", locals: { description: @description,  description_type: "abstract" }  %>
+  </div>
+
+  <h3><strong>Data Description (Optional)</strong></h3>
+  <div>
+    <%= render partial: "stash_datacite/contributors/form", locals: { contributor: @contributor } %><br/>
+    <%= render partial: "stash_datacite/subjects/form", locals: { subject: @subject } %><br/>
+    <strong><%= label_tag :description, "Methods" %></strong>&nbsp;&nbsp;How was this dataset collected? How has it been processed?<br/>
+    <%= render partial: "stash_datacite/descriptions/form", locals: { description: @description, description_type: "methods" } %><br/>
+    <strong><%= label_tag :description, "Usage Notes" %></strong>&nbsp;&nbsp;What else would someone need to know to use this dataset?<br/>
+    <%= render partial: "stash_datacite/descriptions/form", locals: { description: @description, description_type: "usage_notes" } %><br/>
+    <%= render partial: "stash_datacite/related_identifiers/form", locals: { related_identifier: @related_identifier } %>
+  </div>
+
+  <h3><strong>Location information (optional)</strong></h3>
+  <div>
+    <%= render partial: "stash_datacite/geolocation_places/form", locals: { geolocation_place: @geolocation_place } %>
+    <%= render partial: "stash_datacite/geolocation_points/form", locals: { geolocation_point: @geolocation_point } %>
+    <%= render partial: "stash_datacite/geolocation_boxes/form", locals: { geolocation_box: @geolocation_box } %>
+  </div>
+</div>
+
+</br>
+<%= link_to 'Back to My Datasets', stash_engine.dashboard_path, class: "btn" %>
+<%= link_to 'Proceed to Uploads', stash_engine.file_uploads_path, class: "btn" %>

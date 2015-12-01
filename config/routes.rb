@@ -6,14 +6,13 @@ StashEngine::Engine.routes.draw do
 
   get 'dashboard', to: 'dashboard#show', as: 'dashboard'
 
-  #get "login", :to => "test#index"
+  match 'metadata_entry_pages/find_or_create' => 'metadata_entry_pages#find_or_create', via: [:get, :post, :put]
 
   root 'sessions#index'
   match 'auth/:provider/callback', :to => 'sessions#callback', :via => [:get, :post]
   get 'sessions/destroy', :to => 'sessions#destroy'
 
-  #get 'test/after_login'
-
+  #get "login", :to => "test#index"
   #get 'test/index'
-
+  #get 'test/after_login'
 end

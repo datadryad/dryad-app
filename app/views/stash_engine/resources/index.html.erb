@@ -12,7 +12,7 @@
     <% @resources.each do |resource| %>
       <tr>
         <td><%= title(resource) %></td>
-        <td><%= link_to 'Edit', stash_datacite.generals_find_or_create_path(resource_id: resource.id), class: "btn" %></td>
+        <td><%= link_to 'Edit', metadata_entry_pages_find_or_create_path(resource_id: resource.id), class: "btn" %></td>
         <td><%= button_to 'Delete', resource_path(resource), method: :delete, data: { confirm: 'Are you sure?' }, :class => "btn" %></td>
       </tr>
     <% end %>

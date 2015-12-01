@@ -30,7 +30,7 @@ module StashEngine
     def create
       @resource = Resource.new
       @resource.save!
-      redirect_to stash_datacite.generals_find_or_create_path(resource_id: @resource.id)
+      redirect_to metadata_entry_pages_find_or_create_path(resource_id: @resource.id)
     end
 
     # PATCH/PUT /resources/1
