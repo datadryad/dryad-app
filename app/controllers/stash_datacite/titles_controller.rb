@@ -56,7 +56,6 @@ module StashDatacite
     private
       # Use callbacks to share common setup or constraints between actions.
       def set_title
-        byebug
         @title = Title.find(params[:id])
       end
 

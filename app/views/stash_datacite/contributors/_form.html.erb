@@ -1,12 +1,12 @@
-<%# the local variable 'title' should be passed in to this partial when there are multiple per page %>
+<%# the local variable 'contributor' should be passed in to this partial when there are multiple per page %>
 <%= form_for(contributor, url: 'contributors_path', remote: true, namespace: contributor.id, authenticity_token: true) do |f| %>
   <%#= render "datacite/shared/error_messages", target: @contributor %>
   <strong><%= label_tag "Funding" %><br/></strong>
-  <%= contributor.label :contributor_name, "Granting Organization" %>
-  <%= contributor.text_field :contributor_name, size: 40 %>
-  <%#= contributor.label :affliation_id, "Institutional Affiliation" %>
-  <%#= contributor.text_field :affliation_id, size: 40 %>
-  <%= contributor.hidden_field :contributor_type %>
-  <%= contributor.hidden_field :resource_id %>
+  <%= f.label :contributor_name, "Granting Organization" %>
+  <%= f.text_field :contributor_name, size: 40 %>
+  <%#= f.label :affliation_id, "Institutional Affiliation" %>
+  <%#= f.text_field :affliation_id, size: 40 %>
+  <%= f.hidden_field :contributor_type %>
+  <%= f.hidden_field :resource_id %>
   <br/>
 <% end %>

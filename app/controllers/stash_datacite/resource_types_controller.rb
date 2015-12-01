@@ -56,7 +56,7 @@ module StashDatacite
 
       # Only allow a trusted parameter "white list" through.
       def resource_type_params
-        params[:resource_type]
+        params.require(:resource_type).permit(:resource_type, :resource_type_general, :resource_id)
       end
   end
 end

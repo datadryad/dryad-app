@@ -1,4 +1,4 @@
-<%# the local variable 'title' should be passed in to this partial when there are multiple per page %>
+<%# the local variable 'creator' should be passed in to this partial when there are multiple per page %>
 <%= form_for(creator, url: 'creators_path', remote: true, namespace: creator.id, authenticity_token: true) do |f| %>
   <%#= render "datacite/shared/error_messages", target: @creator %>
   <strong><%= label_tag "Author(s)" %></strong><br/>
