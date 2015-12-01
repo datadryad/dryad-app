@@ -27,20 +27,23 @@ module StashDatacite
     # POST /titles
     def create
       @title = Title.new(title_params)
-
-      if @title.save
-        redirect_to @title, notice: 'Title was successfully created.'
-      else
-        render :new
+      respond_to do |format|
+        if @title.save
+          format.js
+        else
+          format.html { render :new }
+        end
       end
     end
 
     # PATCH/PUT /titles/1
     def update
-      if @title.update(title_params)
-        redirect_to @title, notice: 'Title was successfully updated.'
-      else
-        render :edit
+      respond_to do |format|
+        if @title.update(title_params)
+          format.js
+        else
+          format.html { render :edit }
+        end
       end
     end
 
@@ -53,12 +56,12 @@ module StashDatacite
     private
       # Use callbacks to share common setup or constraints between actions.
       def set_title
+        byebug
         @title = Title.find(params[:id])
       end
 
       # Only allow a trusted parameter "white list" through.
       def title_params
-        #params[:title]
         params.require(:title).permit(:title, :title_type, :resource_id, :created_at)
       end
   end

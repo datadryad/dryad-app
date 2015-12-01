@@ -1,3 +1,4 @@
+<%# the local variable 'title' should be passed in to this partial when there are multiple per page %>
 <%= fields_for @creator do |creator| %>
   <%#= render "datacite/shared/error_messages", target: @creator %>
   <strong><%= label_tag "Author(s)" %></strong><br/>
@@ -11,7 +12,7 @@
   <%= creator.label :affliation_id, "Institutional Affiliation" %>
   <%= creator.text_field :affliation_id %>
   <%= link_to 'add ORCID', '#' %>
-  <%= creator.text_field :resource_id, value: params[:resource_id] %>
+  <%= creator.hidden_field :resource_id %>
   <% unless @creator.new_record? %>
     <%= creator.text_field :creator_id, value: @creator.id %>
   <% end %>
