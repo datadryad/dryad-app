@@ -1,7 +1,7 @@
-<%= fields_for @description do |description| %>
-<%#= render "datacite/shared/error_messages", :target => @description %>
-  <%= description.text_area :description, size: "130x10" %>
-  <%= description.hidden_field :description_type, value: description_type %>
-  <%= description.hidden_field :resource_id, value: params[:resource_id] %>
+<%= form_for(description, url: 'descriptions_path', remote: true, namespace: description.id, authenticity_token: true) do |f| %>
+  <%#= render "datacite/shared/error_messages", :target => @description %>
+  <%= f.text_area :description, size: "130x10" %>
+  <%= f.hidden_field :description_type, value: description_type %>
+  <%= f.hidden_field :resource_id %>
   <br/>
 <% end %>
