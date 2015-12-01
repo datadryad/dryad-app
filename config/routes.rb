@@ -8,4 +8,5 @@ StashDatacite::Engine.routes.draw do
   resources :related_identifiers, except: [:index]
   resources :subjects, except: [:index]
   resources :geolocation_boxes, except: [:index]
+  resources :geolocation_points, except: [:index]
 end
