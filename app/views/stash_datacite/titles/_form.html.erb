@@ -1,20 +1,9 @@
 <%# the local variable 'title' should be passed in to this partial when there are multiple per page %>
-<% if title.new_record? %>
-  <%= form_for(title, :url =>  'new_title_path' , remote: true, authenticity_token: true) do |f| %>
-    <strong><%= f.label :title %></strong><br/>
-    <%= f.text_field :title, class: "title", size: 130 %>
-    <%= f.hidden_field :title_type %>
-    <%= f.hidden_field :resource_id %>
-    <%= f.hidden_field :id %>
-    <%= f.hidden_field :created_at %>
-  <% end %>
-<% else %>
-  <%= form_for(title, :url =>  'edit_title_path' , namespace: title.id, remote: true, authenticity_token: true) do |f| %>
-    <strong><%= f.label :title %></strong><br/>
-    <%= f.text_field :title, class: "title", size: 130 %>
-    <%= f.hidden_field :title_type %>
-    <%= f.hidden_field :resource_id %>
-    <%= f.hidden_field :id %>
-    <%= f.hidden_field :created_at %>
-  <% end %>
+<%= form_for(title, url: 'titles_path', namespace: title.id, remote: true, authenticity_token: true) do |f| %>
+  <strong><%= f.label :title %></strong><br/>
+  <%= f.text_field :title, id: "title", size: 130 %>
+  <%= f.hidden_field :title_type %>
+  <%= f.hidden_field :resource_id %>
+  <%= f.hidden_field :id %>
+  <%= f.hidden_field :created_at %>
 <% end %>
