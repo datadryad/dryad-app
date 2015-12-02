@@ -12,4 +12,8 @@ script:
 branches:
   only:
     - development
+notifications:
+  email:
+    on_success: change
+    on_failure: always
 #test commit for travis.
