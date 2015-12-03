@@ -1,0 +1,8 @@
+<%= form_for(title, url: stash_datacite.titles_update_path, remote: true, authenticity_token: true, html: {id: "title_update_form"}) do |f| %>
+  <strong><%= f.label :title %></strong><br/>
+  <%= f.text_field :title, id: "title", size: 130 %>
+  <%= f.hidden_field :title_type %>
+  <%= f.hidden_field :resource_id %>
+  <%= f.text_field :id %>
+  <%= f.hidden_field :created_at %>
+<% end %>

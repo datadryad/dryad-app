@@ -1,6 +1,10 @@
 StashDatacite::Engine.routes.draw do
 
-  resources :titles, except: [:index]
+
+  get 'titles/new', to: 'titles#new'
+  post 'titles/create', to: 'titles#create'
+  patch 'titles/update', to: 'titles#update'
+
   resources :creators, except: [:index]
   resources :contributors, except: [:index]
   resources :descriptions, except: [:index]
