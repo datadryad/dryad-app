@@ -1,4 +1,4 @@
-require_dependency "stash_datacite/application_controller"
+require_dependency 'stash_datacite/application_controller'
 
 module StashDatacite
   class RelatedIdentifiersController < ApplicationController
@@ -49,14 +49,16 @@ module StashDatacite
     end
 
     private
-      # Use callbacks to share common setup or constraints between actions.
-      def set_related_identifier
-        @related_identifier = RelatedIdentifier.find(params[:id])
-      end
 
-      # Only allow a trusted parameter "white list" through.
-      def related_identifier_params
-        params.require(:related_identifier).permit(:related_identifier, :related_identifier_type_id, :relation_type_id, :resource_id)
-      end
+    # Use callbacks to share common setup or constraints between actions.
+    def set_related_identifier
+      @related_identifier = RelatedIdentifier.find(params[:id])
+    end
+
+    # Only allow a trusted parameter "white list" through.
+    def related_identifier_params
+      params.require(:related_identifier).permit(:related_identifier, :related_identifier_type_id,
+                                                 :relation_type_id, :resource_id)
+    end
   end
 end

@@ -1,4 +1,4 @@
-require_dependency "stash_datacite/application_controller"
+require_dependency 'stash_datacite/application_controller'
 
 module StashDatacite
   class DescriptionsController < ApplicationController
@@ -49,14 +49,15 @@ module StashDatacite
     end
 
     private
-      # Use callbacks to share common setup or constraints between actions.
-      def set_description
-        @description = Description.find(params[:id])
-      end
 
-      # Only allow a trusted parameter "white list" through.
-      def description_params
-        params.require(:description).permit(:description, :description_type, :resource_id)
-      end
+    # Use callbacks to share common setup or constraints between actions.
+    def set_description
+      @description = Description.find(params[:id])
+    end
+
+    # Only allow a trusted parameter "white list" through.
+    def description_params
+      params.require(:description).permit(:description, :description_type, :resource_id)
+    end
   end
 end

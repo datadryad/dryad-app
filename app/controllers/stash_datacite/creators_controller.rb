@@ -1,4 +1,4 @@
-require_dependency "stash_datacite/application_controller"
+require_dependency 'stash_datacite/application_controller'
 
 module StashDatacite
   class CreatorsController < ApplicationController
@@ -52,14 +52,15 @@ module StashDatacite
     end
 
     private
-      # Use callbacks to share common setup or constraints between actions.
-      def set_creator
-        @creator = Creator.find(params[:id])
-      end
 
-      # Only allow a trusted parameter "white list" through.
-      def creator_params
-        params.require(:creator).permit(:creator_name, :name_identifier_id, :affliation_id, :resource_id)
-      end
+    # Use callbacks to share common setup or constraints between actions.
+    def set_creator
+      @creator = Creator.find(params[:id])
+    end
+
+    # Only allow a trusted parameter "white list" through.
+    def creator_params
+      params.require(:creator).permit(:creator_name, :name_identifier_id, :affliation_id, :resource_id)
+    end
   end
 end

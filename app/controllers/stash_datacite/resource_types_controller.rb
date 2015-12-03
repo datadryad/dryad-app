@@ -1,4 +1,4 @@
-require_dependency "stash_datacite/application_controller"
+require_dependency 'stash_datacite/application_controller'
 
 module StashDatacite
   class ResourceTypesController < ApplicationController
@@ -49,14 +49,15 @@ module StashDatacite
     end
 
     private
-      # Use callbacks to share common setup or constraints between actions.
-      def set_resource_type
-        @resource_type = ResourceType.find(params[:id])
-      end
 
-      # Only allow a trusted parameter "white list" through.
-      def resource_type_params
-        params.require(:resource_type).permit(:resource_type, :resource_type_general, :resource_id)
-      end
+    # Use callbacks to share common setup or constraints between actions.
+    def set_resource_type
+      @resource_type = ResourceType.find(params[:id])
+    end
+
+    # Only allow a trusted parameter "white list" through.
+    def resource_type_params
+      params.require(:resource_type).permit(:resource_type, :resource_type_general, :resource_id)
+    end
   end
 end

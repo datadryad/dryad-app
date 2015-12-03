@@ -1,4 +1,4 @@
-require_dependency "stash_datacite/application_controller"
+require_dependency 'stash_datacite/application_controller'
 
 module StashDatacite
   class SubjectsController < ApplicationController
@@ -49,14 +49,15 @@ module StashDatacite
     end
 
     private
-      # Use callbacks to share common setup or constraints between actions.
-      def set_subject
-        @subject = Subject.find(params[:id])
-      end
 
-      # Only allow a trusted parameter "white list" through.
-      def subject_params
-        params.require(:subject).permit(:subject, :subject_scheme, :scheme_URI, :resource_id)
-      end
+    # Use callbacks to share common setup or constraints between actions.
+    def set_subject
+      @subject = Subject.find(params[:id])
+    end
+
+    # Only allow a trusted parameter "white list" through.
+    def subject_params
+      params.require(:subject).permit(:subject, :subject_scheme, :scheme_URI, :resource_id)
+    end
   end
 end

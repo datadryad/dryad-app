@@ -1,4 +1,4 @@
-require_dependency "stash_datacite/application_controller"
+require_dependency 'stash_datacite/application_controller'
 
 module StashDatacite
   class GeolocationPlacesController < ApplicationController
@@ -49,14 +49,15 @@ module StashDatacite
     end
 
     private
-      # Use callbacks to share common setup or constraints between actions.
-      def set_geolocation_place
-        @geolocation_place = GeolocationPlace.find(params[:id])
-      end
 
-      # Only allow a trusted parameter "white list" through.
-      def geolocation_place_params
-        params.require(:geolocation_place).permit(:geo_location_place, :resource_id)
-      end
+    # Use callbacks to share common setup or constraints between actions.
+    def set_geolocation_place
+      @geolocation_place = GeolocationPlace.find(params[:id])
+    end
+
+    # Only allow a trusted parameter "white list" through.
+    def geolocation_place_params
+      params.require(:geolocation_place).permit(:geo_location_place, :resource_id)
+    end
   end
 end

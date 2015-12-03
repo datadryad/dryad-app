@@ -1,4 +1,4 @@
-require_dependency "stash_datacite/application_controller"
+require_dependency 'stash_datacite/application_controller'
 
 module StashDatacite
   class GeolocationBoxesController < ApplicationController
@@ -49,14 +49,16 @@ module StashDatacite
     end
 
     private
-      # Use callbacks to share common setup or constraints between actions.
-      def set_geolocation_box
-        @geolocation_box = GeolocationBox.find(params[:id])
-      end
 
-      # Only allow a trusted parameter "white list" through.
-      def geolocation_box_params
-        params.require(:geolocation_box).permit(:sw_latitude, :ne_latitude, :sw_longitude, :ne_longitude, :resource_id)
-      end
+    # Use callbacks to share common setup or constraints between actions.
+    def set_geolocation_box
+      @geolocation_box = GeolocationBox.find(params[:id])
+    end
+
+    # Only allow a trusted parameter "white list" through.
+    def geolocation_box_params
+      params.require(:geolocation_box).permit(:sw_latitude, :ne_latitude, :sw_longitude,
+                                              :ne_longitude, :resource_id)
+    end
   end
 end
