@@ -1,0 +1,29 @@
+inherit_from: .rubocop_todo.yml
+
+AllCops:
+  Include:
+    - '**/Rakefile'
+    - '**/config.ru'
+  Exclude:
+    - 'db/**/*'
+    - 'config/**/*'
+    - 'script/**/*'
+    - 'bin/**/*'
+    - 'vendor/**/*'
+
+# other configuration
+Metrics/LineLength:
+  Max: 120
+
+# documentation
+Documentation:
+  Exclude:
+    - 'app/controllers/**/*'
+    - 'app/helpers/**/*'
+    - 'app/models/**/*'
+    - 'test/controllers/**/*'
+    - 'lib/**/*'
+    - 'spec/**/*'
+
+Style/LeadingCommentSpace:
+  Enabled: false
