@@ -4,7 +4,6 @@ module StashDatacite
   class ResourceTypesController < ApplicationController
     before_action :set_resource_type, only: [:update, :destroy]
 
-
     # GET /resource_types/new
     def new
       @resource_type = ResourceType.new
@@ -25,7 +24,7 @@ module StashDatacite
     # PATCH/PUT /resource_types/1
     def update
       respond_to do |format|
-          if @resource_type.update(resource_type_params)
+        if @resource_type.update(resource_type_params)
           format.js
         else
           format.html { render :edit }
