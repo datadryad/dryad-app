@@ -1,8 +1,16 @@
 <%# the local variable 'description' should be passed in to this partial when there are multiple per page %>
-<%= form_for(description, url: 'descriptions_path', remote: true, namespace: description.id, authenticity_token: true) do |f| %>
-  <%#= render "datacite/shared/error_messages", :target => @description %>
-  <%= f.text_area :description, size: "130x10" %>
-  <%= f.hidden_field :description_type, value: description_type %>
-  <%= f.hidden_field :resource_id %>
-  <br/>
+<% if description.new_record? %>
+  <%= form_for(description, url: stash_datacite.descriptions_create_path, remote: true, authenticity_token: true, html: {id: "description_new_form"}) do |f| %>
+    <%#= render "datacite/shared/error_messages", :target => @description %>
+    <%= f.text_area :description, id: "description", size: "130x10" %>
+    <%= f.hidden_field :description_type, value: description_type %>
+    <%= f.hidden_field :resource_id %>
+    <br/>
+  <% end %>
+<% else %>
+    <%= render partial: "stash_datacite/descriptions/update", locals: { description: @description }  %>
 <% end %>
+
+<div class="success" style="display:none">
+  <p>Your Changes are Autosaved.</p>
+</div>

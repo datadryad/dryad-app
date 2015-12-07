@@ -2,43 +2,35 @@ require_dependency 'stash_datacite/application_controller'
 
 module StashDatacite
   class DescriptionsController < ApplicationController
-    before_action :set_description, only: [:show, :edit, :update, :destroy]
+    before_action :set_description, only: [:update, :destroy]
 
-    # GET /descriptions
-    def index
-      @descriptions = Description.all
-    end
-
-    # GET /descriptions/1
-    def show
-    end
+    respond_to :json
 
     # GET /descriptions/new
     def new
       @description = Description.new
     end
 
-    # GET /descriptions/1/edit
-    def edit
-    end
-
     # POST /descriptions
     def create
       @description = Description.new(description_params)
-
-      if @description.save
-        redirect_to @description, notice: 'Description was successfully created.'
-      else
-        render :new
+      respond_to do |format|
+        if @description.save
+          format.js
+        else
+          format.html { render :new }
+        end
       end
     end
 
     # PATCH/PUT /descriptions/1
     def update
-      if @description.update(description_params)
-        redirect_to @description, notice: 'Description was successfully updated.'
-      else
-        render :edit
+      respond_to do |format|
+        if @description.update(description_params)
+          format.js
+        else
+          format.html { render :edit }
+        end
       end
     end
 
@@ -52,12 +44,12 @@ module StashDatacite
 
     # Use callbacks to share common setup or constraints between actions.
     def set_description
-      @description = Description.find(params[:id])
+      @description = Description.find(description_params[:id])
     end
 
     # Only allow a trusted parameter "white list" through.
     def description_params
-      params.require(:description).permit(:description, :description_type, :resource_id)
+      params.require(:description).permit(:id, :description, :description_type, :resource_id)
     end
   end
 end
