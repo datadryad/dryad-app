@@ -1,0 +1,13 @@
+<%# the local variable 'subject' should be passed in to this partial when there are multiple per page %>
+<%= form_for(subject, url: stash_datacite.subjects_update_path, remote: true, authenticity_token: true) do |f| %>
+  <%#= render "datacite/shared/error_messages", target: @subject %>
+  <strong><%= f.label :subject, "Keywords" %></strong><br/>
+  <%= f.text_area :subject, size: "130x10" %>
+  <%#= f.label :subject_scheme, "Subject Scheme" %>
+  <%#= f.text_field :subject_scheme %>
+  <%#= f.label :scheme_URI, "Scheme URI" %>
+  <%#= f.text_field :scheme_URI %>
+  <%= f.hidden_field :resource_id %>
+  <%= f.hidden_field :id %>
+  <br/>
+<% end %>
