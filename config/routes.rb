@@ -5,12 +5,30 @@ StashDatacite::Engine.routes.draw do
   post 'titles/create', to: 'titles#create'
   patch 'titles/update', to: 'titles#update'
 
-  resources :creators, except: [:index]
-  resources :contributors, except: [:index]
-  resources :descriptions, except: [:index]
-  resources :resource_types, except: [:index]
-  resources :related_identifiers, except: [:index]
-  resources :subjects, except: [:index]
+  get 'descriptions/new', to: 'descriptions#new'
+  post 'descriptions/create', to: 'descriptions#create'
+  patch 'descriptions/update', to: 'descriptions#update'
+
+  get 'creators/new', to: 'creators#new'
+  post 'creators/create', to: 'creators#create'
+  patch 'creators/update', to: 'creators#update'
+
+  get 'resource_types/new', to: 'resource_types#new'
+  post 'resource_types/create', to: 'resource_types#create'
+  patch 'resource_types/update', to: 'resource_types#update'
+
+  get 'contributors/new', to: 'contributors#new'
+  post 'contributors/create', to: 'contributors#create'
+  patch 'contributors/update', to: 'contributors#update'
+
+  get 'subjects/new', to: 'subjects#new'
+  post 'subjects/create', to: 'subjects#create'
+  patch 'subjects/update', to: 'subjects#update'
+
+  get 'related_identifiers/new', to: 'related_identifiers#new'
+  post 'related_identifiers/create', to: 'related_identifiers#create'
+  patch 'related_identifiers/update', to: 'related_identifiers#update'
+
   resources :geolocation_boxes, except: [:index]
   resources :geolocation_points, except: [:index]
   resources :geolocation_places, except: [:index]
