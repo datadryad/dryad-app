@@ -1,0 +1,17 @@
+<%= form_for(creator, url: stash_datacite.creators_update_path, remote: true, authenticity_token: true) do |f| %>
+  <%#= render "datacite/shared/error_messages", target: @creator %>
+  <strong><%= label_tag "Author(s)" %></strong><br/>
+  <%= f.label :creator_first_name, "First Name" %>
+  <%= f.text_field :creator_first_name %>
+  <%= f.label :creator_middle_name, "M.I." %>
+  <%= f.text_field :creator_middle_name, size: 5 %>
+  <%= f.label :creator_last_name, "Last Name" %>
+  <%= f.text_field :creator_last_name %>
+  <%#= creator.input :name_identifier_id %>
+  <%= f.label :affliation_id, "Institutional Affiliation" %>
+  <%= f.text_field :affliation_id %>
+  <%= link_to 'add ORCID', '#' %>
+  <%= f.hidden_field :resource_id %>
+  <%= f.hidden_field :id %>
+  <br/>
+<% end %>

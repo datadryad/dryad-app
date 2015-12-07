@@ -1,17 +1,27 @@
 <%# the local variable 'creator' should be passed in to this partial when there are multiple per page %>
-<%= form_for(creator, url: 'creators_path', remote: true, namespace: creator.id, authenticity_token: true) do |f| %>
-  <%#= render "datacite/shared/error_messages", target: @creator %>
-  <strong><%= label_tag "Author(s)" %></strong><br/>
-  <%= f.label :creator_first_name, "First Name" %>
-  <%= f.text_field :creator_first_name %>
-  <%= f.label :creator_middle_name, "M.I." %>
-  <%= f.text_field :creator_middle_name, size: 5 %>
-  <%= f.label :creator_last_name, "Last Name" %>
-  <%= f.text_field :creator_last_name %>
-  <%#= creator.input :name_identifier_id %>
-  <%= f.label :affliation_id, "Institutional Affiliation" %>
-  <%= f.text_field :affliation_id %>
-  <%= link_to 'add ORCID', '#' %>
-  <%= f.hidden_field :resource_id %>
-  <br/>
+<% if creator.new_record? %>
+  <%= form_for(creator, url: stash_datacite.creators_create_path, remote: true, authenticity_token: true, html: { id: "creator_new_form"}) ) do |f| %>
+    <%#= render "datacite/shared/error_messages", target: @creator %>
+    <strong><%= label_tag "Author(s)" %></strong><br/>
+    <%= f.label :creator_first_name, "First Name" %>
+    <%= f.text_field :creator_first_name %>
+    <%= f.label :creator_middle_name, "M.I." %>
+    <%= f.text_field :creator_middle_name, size: 5 %>
+    <%= f.label :creator_last_name, "Last Name" %>
+    <%= f.text_field :creator_last_name %>
+    <%#= creator.input :name_identifier_id %>
+    <%= f.label :affliation_id, "Institutional Affiliation" %>
+    <%= f.text_field :affliation_id %>
+    <%= link_to 'add ORCID', '#' %>
+    <%= f.hidden_field :resource_id %>
+    <%= f.hidden_field :id %>
+    <br/>
+  <% end %>
+
+<% else %>
+  <%= render partial: "stash_datacite/creators/update", locals: { creator: @creator } %><br/>
 <% end %>
+
+<div class="success" style="display:none">
+  <p>Your Changes are Autosaved.</p>
+</div>
