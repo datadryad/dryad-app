@@ -1,9 +1,18 @@
 <%# the local variable 'resource_type' should be passed in to this partial when there are multiple per page %>
-<%= form_for(resource_type, url: 'resource_types_path', remote: true, namespace: resource_type.id, authenticity_token: true) do |f| %>
-  <%#= render "datacite/shared/error_messages", :target => @resource_type %>
-  <strong><%= f.label :resource_type, "Type of Data" %></strong><br/>
-  <%= f.select :resource_type, options_for_select([[ "Spreadsheet/Database", :spreadsheet],["Image", :image],["Sound", :sound],["Video", :video],["Text", :text],["Software", :software],["Multiple Types", :multiple_types],["Other", :other]]) %>
-  <%= f.hidden_field :resource_type %>
-  <%= f.hidden_field :resource_id %>
-  <br/>
+ <% if resource_type.new_record? %>
+  <%= form_for(resource_type, url: stash_datacite.resource_types_create_path, remote: true, authenticity_token: true) do |f| %>
+    <%#= render "datacite/shared/error_messages", :target => @resource_type %>
+    <strong><%= f.label :resource_type, "Type of Data" %></strong><br/>
+    <%= f.select :resource_type, options_for_select([[ "Spreadsheet/Database", :spreadsheet],["Image", :image],["Sound", :sound],["Video", :video],["Text", :text],["Software", :software],["Multiple Types", :multiple_types],["Other", :other]]) %>
+    <%= f.hidden_field :resource_type %>
+    <%= f.hidden_field :resource_id %>
+    <%= f.hidden_field :id %>
+    <br/>
+  <% end %>
+<% else %>
+  <%= render partial: "stash_datacite/resource_types/update", locals: { resource_type: @resource_type } %><br/>
 <% end %>
+
+<div class="success" style="display:none">
+  <p>Your Changes are Autosaved.</p>
+</div>
