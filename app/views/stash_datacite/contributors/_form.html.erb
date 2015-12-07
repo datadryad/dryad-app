@@ -1,12 +1,21 @@
 <%# the local variable 'contributor' should be passed in to this partial when there are multiple per page %>
-<%= form_for(contributor, url: 'contributors_path', remote: true, namespace: contributor.id, authenticity_token: true) do |f| %>
-  <%#= render "datacite/shared/error_messages", target: @contributor %>
-  <strong><%= label_tag "Funding" %><br/></strong>
-  <%= f.label :contributor_name, "Granting Organization" %>
-  <%= f.text_field :contributor_name, size: 40 %>
-  <%#= f.label :affliation_id, "Institutional Affiliation" %>
-  <%#= f.text_field :affliation_id, size: 40 %>
-  <%= f.hidden_field :contributor_type %>
-  <%= f.hidden_field :resource_id %>
-  <br/>
+<% if contributor.new_record? %>
+  <%= form_for(contributor, url: stash_datacite.contributors_create_path, remote: true, authenticity_token: true, html: {id: "contributor_new_form"}) do |f| %>
+    <%#= render "datacite/shared/error_messages", target: @contributor %>
+    <strong><%= label_tag "Funding" %><br/></strong>
+    <%= f.label :contributor_name, "Granting Organization" %>
+    <%= f.text_field :contributor_name, size: 40 %>
+    <%#= f.label :affliation_id, "Institutional Affiliation" %>
+    <%#= f.text_field :affliation_id, size: 40 %>
+    <%= f.hidden_field :contributor_type %>
+    <%= f.hidden_field :resource_id %>
+    <%= f.hidden_field :id %>
+    <br/>
+  <% end %>
+<% else %>
+  <%= render partial: "stash_datacite/contributors/update", locals: { contributor: @contributor } %><br/>
 <% end %>
+
+<div class="success" style="display:none">
+  <p>Your Changes are Autosaved.</p>
+</div>

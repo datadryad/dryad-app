@@ -2,43 +2,33 @@ require_dependency 'stash_datacite/application_controller'
 
 module StashDatacite
   class ContributorsController < ApplicationController
-    before_action :set_contributor, only: [:show, :edit, :update, :destroy]
-
-    # GET /contributors
-    def index
-      @contributors = Contributor.all
-    end
-
-    # GET /contributors/1
-    def show
-    end
+    before_action :set_contributor, only: [:update, :destroy]
 
     # GET /contributors/new
     def new
       @contributor = Contributor.new
     end
 
-    # GET /contributors/1/edit
-    def edit
-    end
-
     # POST /contributors
     def create
       @contributor = Contributor.new(contributor_params)
-
-      if @contributor.save
-        redirect_to @contributor, notice: 'Contributor was successfully created.'
-      else
-        render :new
+      respond_to do |format|
+        if @contributor.save
+          format.js
+        else
+          format.html { render :new }
+        end
       end
     end
 
     # PATCH/PUT /contributors/1
     def update
-      if @contributor.update(contributor_params)
-        redirect_to @contributor, notice: 'Contributor was successfully updated.'
-      else
-        render :edit
+      respond_to do |format|
+        if @contributor.update(contributor_params)
+          format.js
+        else
+          format.html { render :edit }
+        end
       end
     end
 
@@ -52,12 +42,12 @@ module StashDatacite
 
     # Use callbacks to share common setup or constraints between actions.
     def set_contributor
-      @contributor = Contributor.find(params[:id])
+      @contributor = Contributor.find(contributor_params[:id])
     end
 
     # Only allow a trusted parameter "white list" through.
     def contributor_params
-      params.require(:contributor).permit(:contributor_name, :contributor_type, :name_identifier_id,
+      params.require(:contributor).permit(:id, :contributor_name, :contributor_type, :name_identifier_id,
                                           :affliation_id, :resource_id)
     end
   end

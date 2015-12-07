@@ -1,0 +1,2 @@
+$('#contributor_new_form').replaceWith("<%= raw escape_javascript(render partial: 'stash_datacite/contributors/update', locals: {contributor: @contributor}) %>");
+$( "div.success" ).css({"color": "green", "font-weight": "Bold"}).fadeIn( 300 ).delay( 1500 ).fadeOut( 400 );
