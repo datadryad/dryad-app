@@ -1,6 +1,6 @@
 <%# the local variable 'creator' should be passed in to this partial when there are multiple per page %>
 <% if creator.new_record? %>
-  <%= form_for(creator, url: stash_datacite.creators_create_path, remote: true, authenticity_token: true, html: { id: "creator_new_form"}) ) do |f| %>
+  <%= form_for(creator, url: stash_datacite.creators_create_path, remote: true, authenticity_token: true, html: { id: "creator_new_form"}) do |f| %>
     <%#= render "datacite/shared/error_messages", target: @creator %>
     <strong><%= label_tag "Author(s)" %></strong><br/>
     <%= f.label :creator_first_name, "First Name" %>
