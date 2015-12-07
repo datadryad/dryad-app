@@ -49,7 +49,7 @@ module StashDatacite
 
     # Only allow a trusted parameter "white list" through.
     def title_params
-      params.require(:title).permit(:id, :title, :title_type, :resource_id, :created_at)
+      params.require(:title).permit(:id, :title, :title_type, :resource_id)
     end
   end
 end
