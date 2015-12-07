@@ -6,12 +6,7 @@
     <%= f.hidden_field :title_type %>
     <%= f.hidden_field :resource_id %>
     <%= f.hidden_field :id %>
-    <%= f.hidden_field :created_at %>
   <% end %>
 <% else %>
   <%= render partial: "stash_datacite/titles/update", locals: { title: @title } %><br/>
 <% end %>
-
-<div class="success" style="display:none">
-  <p>Your Changes are Autosaved.</p>
-</div>

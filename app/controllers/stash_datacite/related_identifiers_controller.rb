@@ -25,7 +25,7 @@ module StashDatacite
     def update
       respond_to do |format|
         if @related_identifier.update(related_identifier_params)
-          format.js
+          format.js { render :template => "stash_datacite/shared/update.js.erb" }
         else
           format.html { render :edit }
         end
