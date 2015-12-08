@@ -3,6 +3,8 @@
   * required fields</p>
 </div>
 
+<%= render partial: "stash_datacite/shared/flash_messages" %>
+
 <div id="accordion">
   <h3><strong>Basic Information</strong></h3>
   <div>
@@ -10,7 +12,7 @@
     <%= render partial: "stash_datacite/creators/form", locals: { creator: @creator } %><br/>
     <%= render partial: "stash_datacite/resource_types/form", locals: { resource_type: @resource_type } %><br/>
     <strong><%= label_tag :description, "Abstract" %></strong><br/>
-    <%= render partial: "stash_datacite/descriptions/form", locals: { description: @description,  description_type: "abstract" }  %>
+    <%= render partial: "stash_datacite/descriptions/form", locals: { description: @abstract,  description_type: :abstract }  %>
   </div>
 
   <h3><strong>Data Description (Optional)</strong></h3>
@@ -18,9 +20,9 @@
     <%= render partial: "stash_datacite/contributors/form", locals: { contributor: @contributor } %><br/>
     <%= render partial: "stash_datacite/subjects/form", locals: { subject: @subject } %><br/>
     <strong><%= label_tag :description, "Methods" %></strong>&nbsp;&nbsp;How was this dataset collected? How has it been processed?<br/>
-    <%= render partial: "stash_datacite/descriptions/form", locals: { description: @description, description_type: "methods" } %><br/>
+    <%= render partial: "stash_datacite/descriptions/form", locals: { description: @methods, description_type: :methods } %><br/>
     <strong><%= label_tag :description, "Usage Notes" %></strong>&nbsp;&nbsp;What else would someone need to know to use this dataset?<br/>
-    <%= render partial: "stash_datacite/descriptions/form", locals: { description: @description, description_type: "usage_notes" } %><br/>
+    <%= render partial: "stash_datacite/descriptions/form", locals: { description: @usage_notes, description_type: :usage_notes } %><br/>
     <%= render partial: "stash_datacite/related_identifiers/form", locals: { related_identifier: @related_identifier } %>
   </div>
 
