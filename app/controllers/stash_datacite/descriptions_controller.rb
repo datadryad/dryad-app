@@ -11,18 +11,6 @@ module StashDatacite
       @description = Description.new
     end
 
-    # POST /descriptions
-    def create
-      @description = Description.new(description_params)
-      respond_to do |format|
-        if @description.save
-          format.js
-        else
-          format.html { render :new }
-        end
-      end
-    end
-
     # PATCH/PUT /descriptions/1
     def update
       respond_to do |format|

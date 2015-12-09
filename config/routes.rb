@@ -6,7 +6,6 @@ StashDatacite::Engine.routes.draw do
   patch 'titles/update', to: 'titles#update'
 
   get 'descriptions/new', to: 'descriptions#new'
-  post 'descriptions/create', to: 'descriptions#create'
   patch 'descriptions/update', to: 'descriptions#update'
 
   get 'creators/new', to: 'creators#new'
