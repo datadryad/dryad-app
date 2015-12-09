@@ -1,2 +1,6 @@
-$('#title_new_form').replaceWith("<%= raw escape_javascript(render partial: 'stash_datacite/titles/update', locals: {title: @title}) %>");
-$( "div.success" ).slideDown( 300 ).delay( 1000 ).fadeOut( 400 );
+$("#title_new_form").replaceWith('<%= j render(partial: "stash_datacite/titles/update", locals: {title: @title}) %>');
+$('div.success').slideDown( 300 ).delay( 1000 ).fadeOut( 400 );
+$( ".title" ).on('blur', function(e){
+    var form =  $(this).parents('form');
+    $(form).trigger('submit.rails');
+  });

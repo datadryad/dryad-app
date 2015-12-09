@@ -1,7 +1,7 @@
 <%# the local variable 'title' should be passed in to this partial when there are multiple per page %>
 <%= form_for(title, url: stash_datacite.titles_update_path, remote: true, authenticity_token: true) do |f| %>
   <strong><%= f.label :title %></strong><br/>
-  <%= f.text_field :title, id: "title", size: 130 %>
+  <%= f.text_field :title, class: 'title', size: 130 %>
   <%= f.hidden_field :title_type %>
   <%= f.hidden_field :resource_id %>
   <%= f.hidden_field :id %>
