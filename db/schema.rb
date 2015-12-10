@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151116143020) do
+ActiveRecord::Schema.define(version: 20151210190211) do
 
   create_table "datasets", force: :cascade do |t|
     t.integer  "PublicationYear",    limit: 4
@@ -145,12 +145,9 @@ ActiveRecord::Schema.define(version: 20151116143020) do
   end
 
   create_table "dcs_relation_types", force: :cascade do |t|
-    t.string   "relation_type",           limit: 255
-    t.string   "related_metadata_scheme", limit: 255
-    t.text     "scheme_URI",              limit: 65535
-    t.string   "scheme_type",             limit: 255
-    t.datetime "created_at",                            null: false
-    t.datetime "updated_at",                            null: false
+    t.string   "relation_type", limit: 255
+    t.datetime "created_at",                null: false
+    t.datetime "updated_at",                null: false
   end
 
   create_table "dcs_resource_types", force: :cascade do |t|
