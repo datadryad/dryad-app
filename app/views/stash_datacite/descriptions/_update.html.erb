@@ -2,7 +2,7 @@
 <%= form_for(description, url: stash_datacite.descriptions_update_path, remote: true, authenticity_token: true) do |f| %>
   <%#= render "datacite/shared/error_messages", :target => @description %>
   <%= f.text_area :description, size: "130x10", class: "description" %>
-  <%= f.text_field :description_type %>
+  <%= f.hidden_field :description_type %>
   <%= f.hidden_field :resource_id %>
   <%= f.hidden_field :id %>
   <br/>
