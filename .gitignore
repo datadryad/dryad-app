@@ -30,7 +30,8 @@ public/assets
 *.iws
 .rakeTasks
 .idea
-.byebug_history
 
 # Ignore Emacs backups.
 *~
+
+.byebug_history
