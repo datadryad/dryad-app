@@ -12,7 +12,7 @@
       </tr>
       <tr>
         <td>This Dataset&nbsp;</td>
-        <td><%= f.collection_select(:relation_type_id, @relation_types, :id, :relation, prompt: "select relationship") %>&nbsp;&nbsp;&nbsp;</td>
+        <td><%= f.collection_select(:relation_type_id, @relation_types, :id, :relation_type, prompt: "select relationship") %>&nbsp;&nbsp;&nbsp;</td>
         <td><%= f.collection_select(:related_identifier_type_id, @related_identifier_types, :id, :related_identifier_type, prompt: "identifier_type") %>&nbsp;&nbsp;&nbsp;</td>
         <td><%= f.text_field :related_identifier, size: 40 %>&nbsp;&nbsp;&nbsp;</td>
       </tr>
