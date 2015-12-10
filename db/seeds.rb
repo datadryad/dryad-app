@@ -2,18 +2,18 @@ require 'open-uri'
 require 'active_record/fixtures'
 
 related_identifier_types = [
-  [ "DOI" ]
-  [ "URL" ]
-  [" arXiv "]
-  [" PMID "]
-  [" ARK "]
-  [" Handle "]
-  [" ISBN "]
-  [" ISTC"]
-  [" LISSN "]
-  [" LSID"]
-  [" PURL "]
-  [" URN "]
+  "DOI",
+  "URL",
+  "arXiv",
+  "PMID",
+  "ARK",
+  "Handle",
+  "ISBN",
+  "ISTC",
+  "LISSN",
+  "LSID",
+  "PURL",
+  "URN"
 ]
 
 related_identifier_types.each do |related_identifier_type|
@@ -22,21 +22,21 @@ end
 
 
 relation_types = [
-  [ " Cites" ]
-  [ " isCitedBy" ]
-  [ " Supplements" ]
-  [ " IsSupplementedBy" ]
-  [ " IsNewVersionOf" ]
-  [ " IsPreviousVersionOf" ]
-  [ " Continues" ]
-  [ " IsContinuedBy" ]
-  [ " IsPartOf" ]
-  [ " HasPart" ]
-  [ " IsDocumentedBy" ]
-  [ " Documents" ]
-  [ " IsIdenticalTo" ]
-  [ " IsDerivedFrom" ]
-  [ " IsSourceOf" ]
+  "Cites",
+  "isCitedBy",
+  "Supplements" ,
+  "IsSupplementedBy",
+  "IsNewVersionOf",
+  "IsPreviousVersionOf",
+  "Continues",
+  "IsContinuedBy",
+  "IsPartOf",
+  "HasPart",
+  "IsDocumentedBy",
+  "Documents",
+  "IsIdenticalTo",
+  "IsDerivedFrom",
+  "IsSourceOf"
 ]
 
 relation_types.each do |relation_type|
