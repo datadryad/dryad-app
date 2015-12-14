@@ -1,8 +1,8 @@
 # stash-wrapper
 
-[![Build Status](https://travis-ci.org/CDLUC3/stash-wrapper.png?branch=master)](https://travis-ci.org/CDLUC3/stash-wrapper)
-[![Code Climate](https://codeclimate.com/github/CDLUC3/stash-wrapper.png)](https://codeclimate.com/github/CDLUC3/stash-wrapper)
-[![Inline docs](http://inch-ci.org/github/CDLUC3/stash-wrapper.png)](http://inch-ci.org/github/CDLUC3/stash-wrapper)
+[![Build Status](https://travis-ci.org/CDLUC3/stash-wrapper.svg?branch=master)](https://travis-ci.org/CDLUC3/stash-wrapper)
+[![Code Climate](https://codeclimate.com/github/CDLUC3/stash-wrapper.svg)](https://codeclimate.com/github/CDLUC3/stash-wrapper)
+[![Inline docs](http://inch-ci.org/github/CDLUC3/stash-wrapper.svg)](http://inch-ci.org/github/CDLUC3/stash-wrapper)
 [![Gem Version](https://img.shields.io/gem/v/stash-wrapper.svg)](https://github.com/CDLUC3/stash-wrapper/releases)
 
 Gem for working with the [Stash](https://github.com/CDLUC3/stash)
@@ -37,7 +37,7 @@ to avoid colliding with Ruby keywords (e.g. `end` &rArr; `end_date`) or standard
 | `<st:mime_type>` | `StashFile.mime_type` | `MIME::Type` |
 | `<st:stash_descriptive>` | `StashWrapper.descriptive_elements` | `Array<REXML::Element>` |
 
-Note that [Ruby::Enum](https://github.com/dblock/ruby-enum) enum classes are provided
+Note that [TypesafeEnum](https://github.com/dmolesUC3/typesafe_enum) classes are provided
 for embargo type (`EmbargoType`), identifier type (`IdentifierType`), and size unit
 (`SizeUnit`).
 
