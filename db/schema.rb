@@ -11,17 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151211064614) do
-
-  create_table "datasets", force: :cascade do |t|
-    t.integer  "PublicationYear",    limit: 4
-    t.string   "language",           limit: 255
-    t.integer  "size",               limit: 4
-    t.datetime "created_at",                     null: false
-    t.datetime "updated_at",                     null: false
-    t.string   "title",              limit: 255
-    t.integer  "metadata_schema_id", limit: 4
-  end
+ActiveRecord::Schema.define(version: 20151116143020) do
 
   create_table "dcs_affliations", force: :cascade do |t|
     t.string   "short_name",   limit: 255
@@ -37,31 +27,30 @@ ActiveRecord::Schema.define(version: 20151211064614) do
 
   create_table "dcs_contributors", force: :cascade do |t|
     t.string   "contributor_name",   limit: 255
-    t.integer  "contributor_type",   limit: 4,   default: 0
+    t.string   "contributor_type",   limit: 6,   default: "funder"
     t.integer  "name_identifier_id", limit: 4
     t.integer  "affliation_id",      limit: 4
     t.integer  "resource_id",        limit: 4
-    t.datetime "created_at",                                 null: false
-    t.datetime "updated_at",                                 null: false
+    t.datetime "created_at",                                        null: false
+    t.datetime "updated_at",                                        null: false
   end
 
   create_table "dcs_creators", force: :cascade do |t|
-    t.string   "creator_first_name",  limit: 255
-    t.integer  "name_identifier_id",  limit: 4
-    t.integer  "affliation_id",       limit: 4
-    t.integer  "resource_id",         limit: 4
-    t.datetime "created_at",                      null: false
-    t.datetime "updated_at",                      null: false
-    t.string   "creator_last_name",   limit: 255
-    t.string   "creator_middle_name", limit: 255
+    t.string   "creator_first_name", limit: 255
+    t.string   "creator_last_name",  limit: 255
+    t.integer  "name_identifier_id", limit: 4
+    t.integer  "affliation_id",      limit: 4
+    t.integer  "resource_id",        limit: 4
+    t.datetime "created_at",                     null: false
+    t.datetime "updated_at",                     null: false
   end
 
   create_table "dcs_dates", force: :cascade do |t|
     t.date     "date"
-    t.integer  "date_type",   limit: 4, default: 0
+    t.string   "date_type",   limit: 11
     t.integer  "resource_id", limit: 4
-    t.datetime "created_at",                        null: false
-    t.datetime "updated_at",                        null: false
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
   end
 
   create_table "dcs_descriptions", force: :cascade do |t|
@@ -73,13 +62,13 @@ ActiveRecord::Schema.define(version: 20151211064614) do
   end
 
   create_table "dcs_embargoes", force: :cascade do |t|
-    t.integer  "embargo_type", limit: 4,   default: 0
+    t.string   "embargo_type", limit: 11,  default: "none"
     t.string   "period",       limit: 255
     t.date     "start_date"
     t.date     "end_date"
     t.integer  "resource_id",  limit: 4
-    t.datetime "created_at",                           null: false
-    t.datetime "updated_at",                           null: false
+    t.datetime "created_at",                                null: false
+    t.datetime "updated_at",                                null: false
   end
 
   create_table "dcs_geo_location_boxes", force: :cascade do |t|
@@ -145,17 +134,19 @@ ActiveRecord::Schema.define(version: 20151211064614) do
   end
 
   create_table "dcs_relation_types", force: :cascade do |t|
-    t.string   "relation_type", limit: 255
-    t.datetime "created_at",                null: false
-    t.datetime "updated_at",                null: false
+    t.string   "relation_type",           limit: 255
+    t.string   "related_metadata_scheme", limit: 255
+    t.text     "scheme_URI",              limit: 65535
+    t.string   "scheme_type",             limit: 255
+    t.datetime "created_at",                            null: false
+    t.datetime "updated_at",                            null: false
   end
 
   create_table "dcs_resource_types", force: :cascade do |t|
-    t.string   "resource_type",         limit: 255
-    t.integer  "resource_type_general", limit: 4,   default: 0
-    t.integer  "resource_id",           limit: 4
-    t.datetime "created_at",                                    null: false
-    t.datetime "updated_at",                                    null: false
+    t.string   "resource_type", limit: 20
+    t.integer  "resource_id",   limit: 4
+    t.datetime "created_at",               null: false
+    t.datetime "updated_at",               null: false
   end
 
   create_table "dcs_rights", force: :cascade do |t|
@@ -184,10 +175,10 @@ ActiveRecord::Schema.define(version: 20151211064614) do
 
   create_table "dcs_titles", force: :cascade do |t|
     t.string   "title",       limit: 255
-    t.integer  "title_type",  limit: 4,   default: 0
+    t.string   "title_type",  limit: 17,  default: "main"
     t.integer  "resource_id", limit: 4
-    t.datetime "created_at",                          null: false
-    t.datetime "updated_at",                          null: false
+    t.datetime "created_at",                               null: false
+    t.datetime "updated_at",                               null: false
   end
 
   create_table "dcs_versions", force: :cascade do |t|
@@ -195,17 +186,6 @@ ActiveRecord::Schema.define(version: 20151211064614) do
     t.integer  "resource_id", limit: 4
     t.datetime "created_at",              null: false
     t.datetime "updated_at",              null: false
-  end
-
-  create_table "metadata_schemas", force: :cascade do |t|
-    t.string   "name",       limit: 255
-    t.datetime "created_at",             null: false
-    t.datetime "updated_at",             null: false
-  end
-
-  create_table "stash_datacite_resource_types", force: :cascade do |t|
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
   end
 
   create_table "stash_engine_file_uploads", force: :cascade do |t|
