@@ -7,6 +7,7 @@ module Stash
     #   @return [URI] the URI of the index
     class IndexConfig < ConfigBase
 
+      # TODO: this is a bit dopey if 'adapter' is solr-specific; maybe do away with custom config_keys altogether?
       def self.config_key
         :adapter
       end
