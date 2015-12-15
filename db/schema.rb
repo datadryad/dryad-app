@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151210190211) do
+ActiveRecord::Schema.define(version: 20151211064614) do
 
   create_table "datasets", force: :cascade do |t|
     t.integer  "PublicationYear",    limit: 4
@@ -66,10 +66,10 @@ ActiveRecord::Schema.define(version: 20151210190211) do
 
   create_table "dcs_descriptions", force: :cascade do |t|
     t.text     "description",      limit: 65535
-    t.integer  "description_type", limit: 4,     default: 0
+    t.string   "description_type", limit: 11
     t.integer  "resource_id",      limit: 4
-    t.datetime "created_at",                                 null: false
-    t.datetime "updated_at",                                 null: false
+    t.datetime "created_at",                     null: false
+    t.datetime "updated_at",                     null: false
   end
 
   create_table "dcs_embargoes", force: :cascade do |t|
