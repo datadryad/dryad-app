@@ -22,4 +22,5 @@ Gem::Specification.new do |s|
   s.add_dependency 'jquery-rails'
   s.add_dependency 'jquery-ui-rails'
   s.add_dependency 'responders', '~> 2.0'
+  s.add_dependency 'leaflet-rails'
 end
