@@ -3,11 +3,11 @@ module StashDatacite
     self.table_name = 'dcs_descriptions'
     belongs_to :resource, class_name: StashDatacite.resource_class.to_s
 
-    enum description_type: { abstract: 0, methods: 1, usage_notes: 2 }
+    enum description_type: { abstract: 'abstract', methods: 'methods', usage_notes: 'usage_notes' }
 
     # scopes for description_type
-    scope :type_abstract, -> { where(description_type: 0) }
-    scope :type_methods, -> { where(description_type: 1) }
-    scope :type_usage_notes, -> { where(description_type: 2) }
+    scope :type_abstract, -> { where(description_type: 'abstract') }
+    scope :type_methods, -> { where(description_type: 'methods') }
+    scope :type_usage_notes, -> { where(description_type: 'usage_notes') }
   end
 end
