@@ -13,7 +13,7 @@ module Stash
           expect(logged).to include(msg)
           timestamp_str = logged.split[0]
           timestamp = DateTime.parse(timestamp_str)
-          expect(timestamp.to_date).to eq(Date.today)
+          expect(timestamp.to_date).to eq(Time.now.utc.to_date)
         ensure
           Harvester.log_device = $stdout
         end
