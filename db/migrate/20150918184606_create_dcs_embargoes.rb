@@ -1,7 +1,7 @@
 class CreateDcsEmbargoes < ActiveRecord::Migration
   def change
     create_table :dcs_embargoes do |t|
-      t.column :embargo_type, "ENUM('none', 'download', 'description')" default: 'none'
+      t.column :embargo_type, "ENUM('none', 'download', 'description') DEFAULT 'none'"
       t.string :period
       t.date :start_date
       t.date :end_date
