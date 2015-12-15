@@ -5,6 +5,6 @@ module StashDatacite
 
     enum date_type: { accepted: 'accepted', available: 'available', copyrighted: 'copyrighted',
                       collected: 'collected', created: 'created', issued: 'issued',
-                      submitted: 'submitted', updated: 'updated', valid: 'valid_date' }
+                      submitted: 'submitted', updated: 'updated', valid_date: 'valid' }
   end
 end
