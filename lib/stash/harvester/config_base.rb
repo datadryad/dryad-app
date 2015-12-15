@@ -13,14 +13,19 @@ module Stash
 
       def self.from_hash(hash)
         config_key = self::CONFIG_KEY
-        namespace = hash[config_key]
-        config_class = for_namespace(namespace)
-        begin
-          config_params = hash.clone
-          config_params.delete(config_key)
-          config_class.new(config_params)
-        rescue => e
-          raise ArgumentError, "Can't construct configuration class #{config_class} for config #{namespace}: #{e.message}"
+        if hash
+          namespace = hash[config_key]
+          config_class = for_namespace(namespace)
+          begin
+            config_params = hash.clone
+            config_params.delete(config_key)
+            config_class.new(config_params)
+          rescue => e
+            raise ArgumentError, "Can't construct configuration class #{config_class} for config #{namespace}: #{e.message}"
+          end
+        else
+          Stash::Harvester.log.error("No configuration found for config section '#{config_key}'")
+          nil
         end
       end
 

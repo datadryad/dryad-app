@@ -42,12 +42,6 @@ module Stash
           expect(task.until_time).to eq(until_date)
         end
 
-        it 'rejects mixed Dates and Times' do
-          from_date = Date.new(2013, 1, 1)
-          until_time = Time.utc(2014, 1, 1, 12, 34, 56)
-          expect { HarvestTask.new(config: @config, from_time: from_date, until_time: until_time) }.to raise_error(ArgumentError)
-        end
-
         it 'requires a config' do
           expect { HarvestTask.new }.to raise_error(ArgumentError)
         end

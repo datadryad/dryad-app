@@ -19,6 +19,3 @@ index:
   read_timeout: 300          # read timeout in seconds
   retry_503: 3               # max retries
   retry_after_limit: 20      # retry wait time in seconds
-
-metadata:
-  mapping: wrapped_datacite

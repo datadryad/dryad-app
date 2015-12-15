@@ -63,11 +63,6 @@ module Stash
           expect(source_config.seconds_granularity).to be true
         end
 
-        it 'extracts the MetadataConfig' do
-          metadata_config = @config.metadata_config
-          expect(metadata_config).to be_a(WrappedDatacite::WrappedDataciteMetadataConfig)
-        end
-
         it 'provides appropriate error messages for bad config sections' do
           good_values = [/oai.example.org/, /solr.example.org/, /proxy.example.com/]
           bad_value = "'I am not a valid hostname'"
