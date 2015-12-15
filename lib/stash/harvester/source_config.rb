@@ -7,7 +7,9 @@ module Stash
     #   @return [URI] the base URL of the repository.
     class SourceConfig < ConfigBase
 
-      CONFIG_KEY = :protocol
+      def self.config_key
+        :protocol
+      end
 
       attr_reader :source_uri
 

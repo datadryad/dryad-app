@@ -16,17 +16,10 @@ module Stash
       #   subclass of +IndexConfig+ for the specified adapter)
       attr_reader :index_config
 
-      # The metadata configuration
-      # @return [MetadataConfig] the metadata config (as an appropriate
-      #   subclass of +MetadataConfig+ for the harvested metadata format and
-      #   the index configuration)
-      attr_reader :metadata_config
-
-      def initialize(connection_info:, source_config:, index_config:, metadata_config:)
+      def initialize(connection_info:, source_config:, index_config:)
         @connection_info = connection_info
         @source_config = source_config
         @index_config = index_config
-        @metadata_config = metadata_config
       end
 
       # Reads the specified file and creates a new +Config+ from it.
@@ -54,8 +47,7 @@ module Stash
         config = Util.keys_to_syms(yaml)
         source_config = SourceConfig.from_hash(config[:source])
         index_config = IndexConfig.from_hash(config[:index])
-        metadata_config = MetadataConfig.from_hash(config[:metadata])
-        Config.new(connection_info: connection_info, source_config: source_config, index_config: index_config, metadata_config: metadata_config)
+        Config.new(connection_info: connection_info, source_config: source_config, index_config: index_config)
       end
 
       # Private methods

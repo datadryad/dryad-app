@@ -7,7 +7,9 @@ module Stash
     #   @return [URI] the URI of the index
     class IndexConfig < ConfigBase
 
-      CONFIG_KEY = :adapter
+      def self.config_key
+        :adapter
+      end
 
       attr_reader :uri
 

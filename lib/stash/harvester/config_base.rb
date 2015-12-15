@@ -11,8 +11,11 @@ module Stash
         (names + [namespace, "#{namespace}#{base_name}"]).join('::')
       end
 
+      def self.config_key
+        fail NoMethodError, "#{name} should implement config_key to return a domain-appropriate configuration key"
+      end
+
       def self.from_hash(hash)
-        config_key = self::CONFIG_KEY
         if hash
           namespace = hash[config_key]
           config_class = for_namespace(namespace)

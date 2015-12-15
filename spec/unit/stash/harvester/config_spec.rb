@@ -9,8 +9,7 @@ module Stash
           args = {
             connection_info: {},
             source_config: instance_double(SourceConfig),
-            index_config: instance_double(IndexConfig),
-            metadata_config: instance_double(MetadataConfig)
+            index_config: instance_double(IndexConfig)
           }
           args.each do |k, _v|
             args_copy = args.clone

@@ -5,7 +5,9 @@ module Stash
     describe ConfigBase do
 
       class MockConfig < ConfigBase
-        CONFIG_KEY = 'mock_config'
+        def self.config_key
+          'mock_config'
+        end
       end
 
       describe 'config_class_name' do
