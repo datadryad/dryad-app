@@ -1,5 +1,4 @@
 <h1>Welcome to Stash Engine</h1>
-<p>Not much going on here.</p>
 
 <!-- this is something like /Shibboleth.sso/Login?target=https://#{host}/auth/shibboleth/callback -->
 
@@ -24,3 +23,11 @@ end
 </p>
 
 -->
+
+<h2>Links to some common functionalities</h2>
+<ul>
+  <li><%= link_to 'tenants (choose login)', tenants_path %></li>
+  <li><%= link_to 'index of plans (resources)', resources_path %></li>
+  <li><%= link_to 'sample XML output', resource_path(1, format: 'xml') %></li>
+
+</ul>
