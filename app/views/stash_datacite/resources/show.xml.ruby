@@ -1,5 +1,5 @@
-#require 'datacite/mapping'
-=begin
+require 'datacite/mapping'
+
 dm = Datacite::Mapping
 
 # Based on "Example for a simple dataset"
@@ -49,5 +49,3 @@ resource = dm::Resource.new(
 )
 
 resource.write_xml
-=end
-'Hello'
