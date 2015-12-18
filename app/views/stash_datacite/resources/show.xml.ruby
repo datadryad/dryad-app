@@ -1,4 +1,4 @@
-require 'datacite/mapping'
+#require 'datacite/mapping'
 dm = Datacite::Mapping
 
 # Based on "Example for a simple dataset"
