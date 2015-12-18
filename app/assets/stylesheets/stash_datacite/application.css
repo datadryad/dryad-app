@@ -11,6 +11,7 @@
  * file per style scope.
  *
  *= require jquery-ui
+ *= require leaflet
  *= require_tree .
  *= require_self
  */
@@ -24,4 +25,9 @@
     color: #006400;
     font-weight: bold;
     background-color: #BDE5F8;
+}
+
+#map{
+  width: 100%;
+  height: 300px;
 }
