@@ -23,5 +23,5 @@ Gem::Specification.new do |s|
   s.add_dependency 'jquery-ui-rails'
   s.add_dependency 'responders', '~> 2.0'
   s.add_dependency 'leaflet-rails'
-  s.add_dependency 'datacite-mapping'
+  #s.add_dependency 'datacite-mapping'
 end
