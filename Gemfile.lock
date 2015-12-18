@@ -1,7 +1,16 @@
+GIT
+  remote: https://github.com/CDLUC3/datacite-mapping.git
+  revision: 249fed97f1011227ffa3dc4ff8ac31147476fbea
+  specs:
+    datacite-mapping (0.1.1)
+      typesafe_enum (~> 0.1, >= 0.1.2)
+      xml-mapping_extensions (~> 0.3, >= 0.3.2)
+
 PATH
   remote: .
   specs:
     stash_datacite (0.0.5)
+      datacite-mapping
       jquery-rails
       jquery-ui-rails
       leaflet-rails
@@ -133,14 +142,21 @@ GEM
     thor (0.19.1)
     thread_safe (0.3.5)
     tins (1.6.0)
+    typesafe_enum (0.1.2)
     tzinfo (1.2.2)
       thread_safe (~> 0.1)
+    xml-mapping (0.10.0)
+    xml-mapping_extensions (0.3.2)
+      mime-types (~> 2.5)
+      typesafe_enum (~> 0.1, >= 0.1.2)
+      xml-mapping (~> 0.10)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
   byebug
+  datacite-mapping!
   mysql2 (~> 0.3.20)
   responders (~> 2.0)
   rubocop

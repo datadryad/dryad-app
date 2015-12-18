@@ -5,6 +5,7 @@ pkg/
 test/dummy/log/*
 test/dummy/db/*
 test/dummy/tmp/*
+test/dummy/config/database.yml
 # Ignore Mac DS_Store files
 .DS_Store
 coverage/*
