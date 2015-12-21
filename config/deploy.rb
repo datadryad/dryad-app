@@ -120,6 +120,8 @@ namespace :deploy do
     run "cd #{release_path} && bundle install  --without=test --no-update-sources"
   end
 
+  before :restart, :install
+
 end
 
-before "deploy:restart", "bundle:install"
+
