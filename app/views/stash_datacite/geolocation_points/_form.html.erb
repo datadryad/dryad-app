@@ -1,20 +1,11 @@
 <%# the local variable 'geolocation_point' should be passed in to this partial when there are multiple per page %>
-<p>Where was the data collected? Does it focus on particular locations?</p>
-<%= form_for(geolocation_point, url: 'geolocation_points_path', remote: true, namespace: geolocation_point.id, authenticity_token: true) do |f| %>
-  <%#= render "datacite/shared/error_messages", :target => @geolocation_point %>
-  <strong><%= label_tag "Add a point or rectangular area with lat/long coordinates" %></strong><br/>  <br/>
-  <%= f.text_field :latitude %>&nbsp;&nbsp;&nbsp;&nbsp;&#44;
-  <%= f.text_field :longitude %>&nbsp;&nbsp;&nbsp;&nbsp;
-  <%= link_to "Add", '#' %>
-  <br/>
-  <br/>
-  <strong><%= label_tag "Add a point or draw a rectangle on the map" %></strong><br/>
-
-
-  <div id="map"></div>
-
-
-  <%= f.hidden_field :resource_id %>
-  <br/>
-<% end %>
-
+<div id="geolocation_point">
+  <%= form_for(geolocation_point, url: 'geolocation_points_path', remote: true, authenticity_token: true) do |f| %>
+    <%#= render "datacite/shared/error_messages", :target => @geolocation_point %>
+    <%= f.number_field :latitude %>&nbsp;&nbsp;
+    <%= f.number_field :longitude %>&nbsp;&nbsp;
+    <%= link_to "Add", '#' %>
+    <br/>
+    <%= f.hidden_field :resource_id %>
+  <% end %>
+</div>

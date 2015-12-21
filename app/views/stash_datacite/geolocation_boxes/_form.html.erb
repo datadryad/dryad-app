@@ -1,15 +1,15 @@
 <%# the local variable 'geolocation_box' should be passed in to this partial when there are multiple per page %>
-<%= form_for(geolocation_box, url: 'geolocation_boxes_path', remote: true, namespace: geolocation_box.id, authenticity_token: true) do |f| %>
-  <%#= render "datacite/shared/error_messages", :target => @geolocation_box %>
-  <sub>sw</sub>
-  <%= f.text_field :sw_latitude %>&nbsp;&nbsp;&nbsp;&nbsp;&#44;
-  <%= f.text_field :sw_longitude %>&nbsp;&nbsp;&nbsp;&nbsp;&#44;
-  <sub>ne</sub>
-  <%= f.text_field :ne_latitude %>&nbsp;&nbsp;&nbsp;&nbsp;&#44;
-  <%= f.text_field :ne_longitude %>&nbsp;&nbsp;&nbsp;&nbsp;
-  <%= link_to "Add", '#' %>
-  <br/>
-  <br/>
-  <strong><%= label_tag "Add a point or draw a rectangle on the map" %></strong><br/>
-  <%= f.hidden_field :resource_id %>
-<% end %>
+<div id="geolocation_box">
+  <%= form_for(geolocation_box, url: 'geolocation_boxes_path', remote: true, authenticity_token: true) do |f| %>
+    <%#= render "datacite/shared/error_messages", :target => @geolocation_box %>
+    <sub>sw</sub>
+    <%= f.number_field :sw_latitude %>&nbsp;&nbsp;
+    <%= f.number_field :sw_longitude %>&nbsp;&nbsp;
+    <sub>ne</sub>
+    <%= f.number_field :ne_latitude %>&nbsp;&nbsp;
+    <%= f.number_field :ne_longitude %>&nbsp;&nbsp;
+    <%= link_to "Add", '#' %>
+    <br/>
+    <%= f.hidden_field :resource_id %>
+  <% end %>
+</div>
