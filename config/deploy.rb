@@ -34,6 +34,13 @@ set :default_env, { path: "/dash2/local/bin:$PATH" }
 # Default value for keep_releases is 5
 set :keep_releases, 5
 
+# passenger in gemfile set since we have both passenger and capistrano-passenger in gemfile
+set :passenger_in_gemfile, true
+
+# Set whether to restart with touch of touch of tmp/restart.txt.
+# There may be difficulties one way or another.  Normal restart may require sudo in some circumstances.
+set :passenger_restart_with_touch, false
+
 namespace :deploy do
 
   desc 'Stop Phusion'
@@ -57,14 +64,15 @@ namespace :deploy do
   end
   # before "deploy:start", "bundle:install"
 
-  desc 'Restart Phusion'
-  task :restart do
-    on roles(:app), wait: 5 do
-      # Your restart mechanism here, for example:
-      execute :mkdir, '-p', release_path.join('tmp')
-      execute :touch, release_path.join('tmp/restart.txt')
-    end
-  end
+  # capistrano-passenger should already take care of deploy:restart for us
+  #desc 'Restart Phusion'
+  #task :restart do
+  #  on roles(:app), wait: 5 do
+  #    # Your restart mechanism here, for example:
+  #    execute :mkdir, '-p', release_path.join('tmp')
+  #    execute :touch, release_path.join('tmp/restart.txt')
+  #  end
+  #end
 
   desc 'update config repo'
   task :update_config do
