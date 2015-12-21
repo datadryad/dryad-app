@@ -27,16 +27,15 @@ module StashEngine
     end
 
     def set_instances
-      @creator = StashDatacite::Creator.where(resource_id: @resource.id).first_or_initialize
       @contributor = StashDatacite::Contributor.where(resource_id: @resource.id).first_or_initialize
       @subject = StashDatacite::Subject.where(resource_id: @resource.id).first_or_initialize
       @resource_type = StashDatacite::ResourceType.where(resource_id: @resource.id).first_or_initialize
     end
 
     def set_description
-      @abstract = StashDatacite::Description.type_abstract.where(resource_id: @resource.id).first_or_initialize
-      @methods = StashDatacite::Description.type_methods.where(resource_id: @resource.id).first_or_initialize
-      @usage_notes = StashDatacite::Description.type_usage_notes.where(resource_id: @resource.id).first_or_initialize
+      @abstract = StashDatacite::Description.type_abstract.find_or_create_by(resource_id: @resource.id)
+      @methods = StashDatacite::Description.type_methods.find_or_create_by(resource_id: @resource.id)
+      @usage_notes = StashDatacite::Description.type_usage_notes.find_or_create_by(resource_id: @resource.id)
     end
 
     def set_relations

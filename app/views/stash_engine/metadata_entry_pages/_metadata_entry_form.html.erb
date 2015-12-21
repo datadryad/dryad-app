@@ -9,7 +9,11 @@
   <h3><strong>Basic Information</strong></h3>
   <div>
     <%= render partial: "stash_datacite/titles/form", locals: { title: @title } %><br/>
-    <%= render partial: "stash_datacite/creators/form", locals: { creator: @creator } %><br/>
+
+    <div class="authors_form">
+    </div>
+    <%= link_to "Add Author", stash_datacite.creators_new_path , id: "add_author", remote: :true %>
+
     <%= render partial: "stash_datacite/resource_types/form", locals: { resource_type: @resource_type } %><br/>
     <strong><%= label_tag :description, "Abstract" %></strong><br/>
     <%= render partial: "stash_datacite/descriptions/form", locals: { description: @abstract,  description_type: :abstract }  %>
@@ -31,6 +35,7 @@
     <%= render partial: "stash_datacite/geolocation_places/form", locals: { geolocation_place: @geolocation_place } %>
     <%= render partial: "stash_datacite/geolocation_points/form", locals: { geolocation_point: @geolocation_point } %>
     <%= render partial: "stash_datacite/geolocation_boxes/form", locals: { geolocation_box: @geolocation_box } %>
+    <%= render partial: "stash_datacite/shared/map" %>
   </div>
 </div>
 
