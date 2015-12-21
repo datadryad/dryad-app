@@ -117,7 +117,7 @@ namespace :deploy do
 
   desc "run bundle install and ensure all gem requirements are met"
   task :install do
-    run "cd #{release_path} && bundle install  --without=test --no-update-sources"
+    execute "cd '#{release_path}' && bundle install  --without=test --no-update-sources"
   end
 
   before :restart, :install
