@@ -15,9 +15,7 @@ module StashEngine
     # GET /resources/1.json
     def show
       respond_to do |format|
-        format.xml {
-          render template: '/stash_datacite/resources/show'
-        }
+        format.xml { render template: '/stash_datacite/resources/show' }
         format.json {}
       end
     end
