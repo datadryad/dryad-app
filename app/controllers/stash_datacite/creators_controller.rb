@@ -9,6 +9,9 @@ module StashDatacite
     # GET /creators/new
     def new
       @creator = Creator.new
+      respond_to do |format|
+        format.js
+      end
     end
 
     # POST /creators
