@@ -84,7 +84,7 @@ module Stash
         end
 
         it 'provides appropriate error message for invalid index adapter' do
-          bad_yml = File.read('spec/data/stash-harvester.yml').sub(/solr/, 'BadAdapter')
+          bad_yml = File.read('spec/data/stash-harvester.yml').sub(/Solr/, 'BadAdapter')
           env = ::Config::Factory::Environment.load_hash(YAML.load(bad_yml))
           expect { Config.from_env(env) }.to raise_error do |e|
             expect(e).to be_an ArgumentError

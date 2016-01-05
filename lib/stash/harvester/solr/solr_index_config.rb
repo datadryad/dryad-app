@@ -5,7 +5,7 @@ module Stash
       # Configuration for a Solr index.
       class SolrIndexConfig < IndexConfig
 
-        adapter 'solr'
+        adapter 'Solr'
 
         SUSPICIOUS_OPTS = { proxy_url: :proxy, proxy_uri: :proxy }
         private_constant :SUSPICIOUS_OPTS

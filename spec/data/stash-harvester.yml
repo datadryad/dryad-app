@@ -12,7 +12,7 @@ source:
   seconds_granularity: true
 
 index:
-  adapter: solr
+  adapter: Solr
   url: http://solr.example.org/
   proxy: http://foo:bar@proxy.example.com/
   open_timeout: 120          # connection open timeout in seconds
