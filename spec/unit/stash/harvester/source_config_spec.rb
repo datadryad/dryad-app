@@ -29,6 +29,11 @@ module Stash
       end
 
       describe '#create_harvest_task' do
+        it 'is abstract' do
+          config = SourceConfig.new(source_url: URI('http://example.org/source'))
+          expect { config.create_harvest_task }.to raise_error(NoMethodError)
+        end
+
         it 'creates an OAIHarvestTask' do
           base_url = 'http://oai.datacite.org/oai'
           prefix = 'oai_datacite'

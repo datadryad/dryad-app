@@ -18,7 +18,12 @@ module Stash
       end
 
       describe '#create_indexer' do
-        it 'creates an indexer'
+        it 'is abstract' do
+          config = IndexConfig.new(url: URI('http://example.org/index'))
+          expect { config.create_indexer }.to raise_error(NoMethodError)
+        end
+
+        it 'creates a Solr indexer'
       end
     end
   end
