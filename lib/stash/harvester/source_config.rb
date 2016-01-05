@@ -1,3 +1,5 @@
+require 'config/factory'
+
 module Stash
   module Harvester
 
@@ -5,11 +7,10 @@ module Stash
     #
     # @!attribute [r] source_uri
     #   @return [URI] the base URL of the repository.
-    class SourceConfig < ConfigBase
+    class SourceConfig
+      include ::Config::Factory
 
-      def self.config_key
-        :protocol
-      end
+      key :protocol
 
       attr_reader :source_uri
 

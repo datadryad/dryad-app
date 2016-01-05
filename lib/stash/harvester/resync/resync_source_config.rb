@@ -7,6 +7,8 @@ module Stash
       # The configuration of a ResourceSync data source.
       class ResyncSourceConfig < SourceConfig
 
+        protocol 'Resync'
+
         # Constructs a new {ResyncSourceConfig} for resources described by
         # the specified Capability List.
         #

@@ -22,12 +22,11 @@ module Stash
         end
       end
 
-      describe '#from_yaml' do
+      describe '#from_env' do
 
         before(:each) do
-          yml = File.read('spec/data/stash-harvester.yml')
-          expect(yml).not_to be_nil
-          @config = Config.from_yaml(yml)
+          env = ::Config::Factory::Environment.load_file('spec/data/stash-harvester.yml')
+          @config = Config.from_env(env)
         end
 
         it 'extracts the DB connection info' do
@@ -67,29 +66,29 @@ module Stash
           bad_value = "'I am not a valid hostname'"
           good_values.each do |good_value|
             bad_yml = File.read('spec/data/stash-harvester.yml').sub(good_value, bad_value)
-            expect { Config.from_yaml(bad_yml) }.to raise_error do |e|
-              expect(e).to be_an ArgumentError
+            env = ::Config::Factory::Environment.load_hash(YAML.load(bad_yml))
+            expect { Config.from_env(env) }.to raise_error do |e|
+              expect(e).to be_a URI::InvalidURIError
               expect(e.message).to include(bad_value)
-              expect(e.cause).to be_a URI::InvalidURIError
             end
           end
         end
 
         it 'provides appropriate error message for invalid source protocol' do
           bad_yml = File.read('spec/data/stash-harvester.yml').sub(/OAI/, 'BadProtocol')
-          expect { Config.from_yaml(bad_yml) }.to raise_error do |e|
+          env = ::Config::Factory::Environment.load_hash(YAML.load(bad_yml))
+          expect { Config.from_env(env) }.to raise_error do |e|
             expect(e).to be_an ArgumentError
             expect(e.message).to include('BadProtocol')
-            expect(e.cause).to be_a NameError
           end
         end
 
         it 'provides appropriate error message for invalid index adapter' do
           bad_yml = File.read('spec/data/stash-harvester.yml').sub(/solr/, 'BadAdapter')
-          expect { Config.from_yaml(bad_yml) }.to raise_error do |e|
+          env = ::Config::Factory::Environment.load_hash(YAML.load(bad_yml))
+          expect { Config.from_env(env) }.to raise_error do |e|
             expect(e).to be_an ArgumentError
             expect(e.message).to include('BadAdapter')
-            expect(e.cause).to be_a NameError
           end
         end
       end
@@ -175,15 +174,9 @@ module Stash
           Dir.mktmpdir do |tmpdir|
             path = "#{tmpdir}/whatever.yml"
             FileUtils.touch(path)
-            err = IOError.new('the message')
-            begin
-              allow(File).to receive(:read).with(path).and_raise(err)
-              expect { Config.from_file(path) }.to raise_error do |e|
-                expect(e).to be_an IOError
-                expect(e.message).to eq(err.message)
-              end
-            ensure
-              allow(File).to receive(:read).and_call_original
+            expect { Config.from_file(path) }.to raise_error do |e|
+              expect(e).to be_an IOError
+              expect(e.message).to include(path)
             end
           end
         end

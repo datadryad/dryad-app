@@ -17,6 +17,11 @@ module Stash
       class OAISourceConfig < SourceConfig
 
         # ------------------------------------------------------------
+        # Config::Factory
+
+        protocol 'OAI'
+
+        # ------------------------------------------------------------
         # Constants
 
         DUBLIN_CORE = 'oai_dc'

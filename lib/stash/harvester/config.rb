@@ -1,3 +1,5 @@
+require 'config/factory'
+
 module Stash
   module Harvester
     class Config
@@ -29,8 +31,8 @@ module Stash
       def self.from_file(path)
         validate_path(path)
         begin
-          yml = File.read(path)
-          from_yaml(yml)
+          env = ::Config::Factory::Environment.load_file(path)
+          from_env(env)
         rescue IOError
           raise
         rescue => e
@@ -38,15 +40,13 @@ module Stash
         end
       end
 
-      # Creates a new +Config+ from the specified YAML string.
+      # Creates a new +Config+ for the specified environment.
       #
-      # @param yml [String] the YAML string to load
-      def self.from_yaml(yml)
-        yaml = YAML.load(yml)
-        connection_info = yaml['db']
-        config = Util.keys_to_syms(yaml)
-        source_config = SourceConfig.from_hash(config[:source])
-        index_config = IndexConfig.from_hash(config[:index])
+      # @param env [Config::Factory::Environment] the configuration environment.
+      def self.from_env(env)
+        connection_info = env.args_for(:db)
+        source_config = SourceConfig.for_environment(env, :source)
+        index_config = IndexConfig.for_environment(env, :index)
         Config.new(connection_info: connection_info, source_config: source_config, index_config: index_config)
       end
 
