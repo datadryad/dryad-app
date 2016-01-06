@@ -21,4 +21,3 @@ wrapper_example = StashWrapper.new(
 )
 
 puts wrapper_example.write_xml
-
