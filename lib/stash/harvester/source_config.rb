@@ -22,7 +22,7 @@ module Stash
         @source_uri = Util.to_uri(source_url)
       end
 
-      # Constructs a new `HarvestTask` from this configuration. Implementors should
+      # Constructs a new {HarvestTask} from this configuration. Implementors should
       # override this method to return an appropriate subclass of `HarvestTask` for
       # the data source.
       #
