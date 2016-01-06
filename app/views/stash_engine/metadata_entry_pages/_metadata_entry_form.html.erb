@@ -13,6 +13,7 @@
     <div class="authors_form">
     </div>
     <%= link_to "Add Author", stash_datacite.creators_new_path , id: "add_author", remote: :true %>
+    <a href="/stash/auth/orcid/">Add Myself with my Orcid ID</a>
 
     <%= render partial: "stash_datacite/resource_types/form", locals: { resource_type: @resource_type } %><br/>
     <strong><%= label_tag :description, "Abstract" %></strong><br/>
@@ -36,6 +37,7 @@
     <%= render partial: "stash_datacite/geolocation_points/form", locals: { geolocation_point: @geolocation_point } %>
     <%= render partial: "stash_datacite/geolocation_boxes/form", locals: { geolocation_box: @geolocation_box } %>
     <%= render partial: "stash_datacite/shared/map" %>
+    <%#= render partial: "stash_datacite/shared/locations" %>
   </div>
 </div>
 
