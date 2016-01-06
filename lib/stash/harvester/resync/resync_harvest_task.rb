@@ -7,39 +7,30 @@ module Stash
       # Class representing a single ResourceSync harvest operation.
       # If a time range (open or closed) is provided, the task will
       # harvest changes in that time range; otherwise, it will harvest
-      # all resources. {http://www.rubydoc.info/gems/resync/0.1.2/Resync/ChangeDump ChangeDumps}
-      # and {http://www.rubydoc.info/gems/resync/0.1.2/Resync/ResourceDump ResourceDumps}
-      # are preferred to {http://www.rubydoc.info/gems/resync/0.1.2/Resync/ChangeList ChangeLists}
-      # and {http://www.rubydoc.info/gems/resync/0.1.2/Resync/ResourceList ResourceLists},
-      # {http://www.rubydoc.info/gems/resync/0.1.2/Resync/ChangeListIndex ChangeListIndices}
+      # all resources. [ChangeDumps](http://www.rubydoc.info/gems/resync/0.1.2/Resync/ChangeDump)
+      # and [ResourceDumps](http://www.rubydoc.info/gems/resync/0.1.2/Resync/ResourceDump)
+      # are preferred to [ChangeLists](http://www.rubydoc.info/gems/resync/0.1.2/Resync/ChangeList)
+      # and [ResourceLists](http://www.rubydoc.info/gems/resync/0.1.2/Resync/ResourceList),
+      # [ChangeListIndices](http://www.rubydoc.info/gems/resync/0.1.2/Resync/ChangeListIndex)
       # etc. will be transparently crawled to reach the nested lists.
       class ResyncHarvestTask < HarvestTask
-
-        # ------------------------------------------------------------
-        # Constants
 
         # Added to the current time to create an end timestamp for open ranges
         JULIAN_YEAR_SECONDS = 365.25 * 86_400
 
-        # ------------------------------------------------------------
-        # Initializer
-
-        # Creates a new +IncrementalSyncTask+ for synchronizing with the set of
+        # Creates a new `IncrementalSyncTask` for synchronizing with the set of
         # resources whose capabilities are enumerated by the specified capability
         # list
         # @param config [ResyncSourceConfig] the source configuration. *(Required)*
         # @param from_time [Time, nil] the start (inclusive) of the datestamp range for selective harvesting.
-        #   If +from_time+ is omitted, harvesting will extend back to the earliest datestamp in the
+        #   If `from_time` is omitted, harvesting will extend back to the earliest datestamp in the
         #   repository. (Optional)
         # @param until_time [Time, nil] the end (inclusive) of the datestamp range for selective harvesting.
-        #   If +until_time+ is omitted, harvesting will extend forward to the latest datestamp in the
+        #   If `until_time` is omitted, harvesting will extend forward to the latest datestamp in the
         #   repository. (Optional)
         def initialize(config:, from_time: nil, until_time: nil)
           super
         end
-
-        # ------------------------------------------------------------
-        # Methods
 
         # Harvests the records from the ResourceSync source.
         # @return [Enumerator::Lazy<ResyncRecord>
@@ -47,9 +38,6 @@ module Stash
           resources = time_range ? all_changes : all_resources
           resources.map { |r| ResyncRecord.new(r) }
         end
-
-        # ------------------------------------------------------------
-        # Private methods
 
         private
 
@@ -86,9 +74,6 @@ module Stash
           # TODO: filter by time_range, most recent for each URI
           packaged_changes(capability_list.change_dump, time_range) || capability_list.change_list.all_changes(in_range: time_range)
         end
-
-        # ------------------------------
-        # Conversions
 
         def range_start
           from_time || Time.utc(0)

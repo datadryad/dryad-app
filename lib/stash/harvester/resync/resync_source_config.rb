@@ -14,7 +14,7 @@ module Stash
         #
         # @param capability_list_url [URI, String] the URL of the capability list.
         #   *(Required)*
-        # @raise [URI::InvalidURIError] if +capability_list_url+ is a string that is not a valid URI
+        # @raise [URI::InvalidURIError] if `capability_list_url` is a string that is not a valid URI
         def initialize(capability_list_url:)
           super(source_url: capability_list_url)
         end

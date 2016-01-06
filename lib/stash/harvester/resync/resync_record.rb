@@ -6,7 +6,7 @@ module Stash
   module Harvester
     module Resync
 
-      # A utility wrapper around +Resync::Resource+ that includes both the resource
+      # A utility wrapper around `Resync::Resource` that includes both the resource
       # and the content of the resource
       #
       # @!attribute [r] timestamp
@@ -21,7 +21,7 @@ module Stash
 
         # Creates a new {ResyncRecord} wrapping the specified resource. The resource
         # is responsible for providing its own content; any resource provided by a
-        # {http://www.rubydoc.info/github/dmolesUC3/resync-client/Resync/Client Resync::Client} should be able to do this.
+        # [Resync::Client](http://www.rubydoc.info/github/dmolesUC3/resync-client/Resync/Client) should be able to do this.
         #
         # @param resource [Resync::Resource with Resync::Client::Mixins::Downloadable, Resync::Client::Mixins::BitstreamResource]
         #   the resource

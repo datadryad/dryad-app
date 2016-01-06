@@ -21,47 +21,35 @@ module Stash
 
         protocol 'OAI'
 
-        # ------------------------------------------------------------
-        # Constants
-
         DUBLIN_CORE = 'oai_dc'
         private_constant :DUBLIN_CORE
 
         UNRESERVED_PATTERN = Regexp.new("^[#{URI::RFC2396_REGEXP::PATTERN::UNRESERVED}]+$")
         private_constant :UNRESERVED_PATTERN
 
-        # ------------------------------------------------------------
-        # Attributes
-
         attr_reader :seconds_granularity
         attr_reader :metadata_prefix
         attr_reader :set
-
-        # ------------------------------------------------------------
-        # Initializer
 
         # Constructs a new {OAISourceConfig} with the specified properties.
         #
         # @param oai_base_url [URI, String] the base URL of the repository. *(Required)*
         # @param metadata_prefix [String, nil] the metadata prefix defining the metadata format requested
-        #   from the repository. If +metadata_prefix+ is omitted, the prefix +oai_dc+ (Dublin Core)
+        #   from the repository. If `metadata_prefix` is omitted, the prefix `oai_dc` (Dublin Core)
         #   will be used.
         # @param set [String, nil] the colon-separated path to the set requested for selective harvesting
-        #   from the repository. If +set_spec+ is omitted, harvesting will be across all sets.
+        #   from the repository. If `set_spec` is omitted, harvesting will be across all sets.
         # @param seconds_granularity [Boolean] whether to include the full time out to the second in
-        #   the from / until time range. (Defaults to +false+, i.e., days granularity.)
-        # @raise [URI::InvalidURIError] if +oai_base_url+ is a string that is not a valid URI
-        # @raise [ArgumentError] if +metadata_prefix+ or any +set_spec+ element contains invalid characters,
-        #   i.e. URI reserved characters per {https://www.ietf.org/rfc/rfc2396.txt RFC 2396}
+        #   the from / until time range. (Defaults to `false`, i.e., days granularity.)
+        # @raise [URI::InvalidURIError] if `oai_base_url` is a string that is not a valid URI
+        # @raise [ArgumentError] if `metadata_prefix` or any `set_spec` element contains invalid characters,
+        #   i.e. URI reserved characters per [RFC 2396](https://www.ietf.org/rfc/rfc2396.txt)
         def initialize(oai_base_url:, metadata_prefix: DUBLIN_CORE, set: nil, seconds_granularity: false)
           super(source_url: oai_base_url)
           @seconds_granularity = seconds_granularity
           @metadata_prefix = valid_prefix(metadata_prefix)
           @set = valid_spec(set)
         end
-
-        # ------------------------------------------------------------
-        # Instance methods
 
         def list_records_opts
           opts = { metadata_prefix: metadata_prefix }
@@ -73,13 +61,7 @@ module Stash
           OAIHarvestTask.new(config: self, from_time: from_time, until_time: until_time)
         end
 
-        # ------------------------------------------------------------
-        # Private methods
-
         private
-
-        # ------------------------------
-        # Parameter validators
 
         def valid_spec(set_spec)
           return nil unless set_spec

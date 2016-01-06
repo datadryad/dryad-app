@@ -3,7 +3,7 @@ require 'oai/client'
 
 module Stash
   module Harvester
-    # Harvesting support for {http://www.openarchives.org/pmh/ OAI-PMH}
+    # Harvesting support for [OAI-PMH](http://www.openarchives.org/pmh/)
     module OAI
       Dir.glob(File.expand_path('../oai/*.rb', __FILE__), &method(:require))
     end

@@ -4,43 +4,34 @@ module Stash
 
       # TODO: check for documentation of inherited attributes
 
-      # Class representing a single OAI-PMH harvest (+ListRecords+) operation.
+      # Class representing a single OAI-PMH harvest (`ListRecords`) operation.
       #
       class OAIHarvestTask < HarvestTask
-
-        # ------------------------------------------------------------
-        # Constants
 
         DATE_FORMAT = '%Y-%m-%d'
         private_constant :DATE_FORMAT
 
-        # ------------------------------------------------------------
-        # Initializer
-
-        # Creates a new +ListRecordsTask+ for harvesting from the specified OAI-PMH repository, with
+        # Creates a new `ListRecordsTask` for harvesting from the specified OAI-PMH repository, with
         # an optional datetime range and metadata prefix. Note that the datetime range must be in UTC.
         #
         # @param config [OAISourceConfig] The configuration of the OAI data source.
         # @param from_time [Time, nil] the start (inclusive) of the datestamp range for selective harvesting.
-        #   If +from_time+ is omitted, harvesting will extend back to the earliest datestamp in the
+        #   If `from_time` is omitted, harvesting will extend back to the earliest datestamp in the
         #   repository. (Optional)
         # @param until_time [Time, nil] the end (inclusive) of the datestamp range for selective harvesting.
-        #   If +until_time+ is omitted, harvesting will extend forward to the latest datestamp in the
+        #   If `until_time` is omitted, harvesting will extend forward to the latest datestamp in the
         #   repository. (Optional)
-        # @raise [ArgumentError] if +from_time+ or +until_time+ is not in UTC.
-        # @raise [RangeError] if +from_time+ is later than +until_time+.
+        # @raise [ArgumentError] if `from_time` or `until_time` is not in UTC.
+        # @raise [RangeError] if `from_time` is later than `until_time`.
         def initialize(config:, from_time: nil, until_time: nil)
           super
         end
 
-        # ------------------------------------------------------------
-        # Methods
-
         # Creates a hash containing the {#config} options, {#from_time}, and
         # {#until_time} (if present) formatted appropriately and with appropriate
-        # keys to be included in the +ListRecords+ request
+        # keys to be included in the `ListRecords` request
         #
-        # @return [Hash] the options passed to the +ListRecords+ verb
+        # @return [Hash] the options passed to the `ListRecords` verb
         def opts
           opts = config.list_records_opts
           (opts[:from] = to_str(from_time)) if from_time
@@ -48,7 +39,7 @@ module Stash
           opts
         end
 
-        # Performs a +ListRecords+ operation and returns the result as a
+        # Performs a `ListRecords` operation and returns the result as a
         # lazy enumerator of {OAIRecord}s. Paged responses are transparently
         # fetched one page at a time, as necessary.
         #
@@ -60,13 +51,7 @@ module Stash
           raise e
         end
 
-        # ------------------------------------------------------------
-        # Private methods
-
         private
-
-        # ------------------------------
-        # Conversions
 
         def to_str(time)
           @config.seconds_granularity ? to_time(time) : to_date(time)

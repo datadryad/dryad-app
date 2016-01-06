@@ -6,8 +6,8 @@ module Stash
   module Harvester
     module OAI
 
-      # A utility wrapper around +::OAI::Record+ that flattens the OAI XML structure
-      # and converts types (e.g., string datestamps to +Time+ objects)
+      # A utility wrapper around `::OAI::Record` that flattens the OAI XML structure
+      # and converts types (e.g., string datestamps to `Time` objects)
       #
       # @!attribute [r] timestamp
       #   @return [Time] The datestamp of the record.
@@ -23,7 +23,7 @@ module Stash
 
         # Constructs a new {OAIRecord} wrapping the specified record.
         #
-        # @param record [::OAI::Record] An OAI record as returned by +::OAI::Client+
+        # @param record [::OAI::Record] An OAI record as returned by `::OAI::Client`
         def initialize(record)
           super(
             identifier: record.header.identifier,

@@ -13,7 +13,7 @@ module Stash
         attr_reader :proxy_uri
         attr_reader :opts
 
-        # Constructs a new +SolrIndexConfig+ with the specified properties.
+        # Constructs a new `SolrIndexConfig` with the specified properties.
         #
         # @param url [URI, String] The URL of the Solr server
         # @param proxy [URI, String] The URL of any proxy server required

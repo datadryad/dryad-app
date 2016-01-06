@@ -14,16 +14,16 @@ module Stash
 
       attr_reader :uri
 
-      # Constructs a new +IndexConfig+ with the specified properties.
+      # Constructs a new `IndexConfig` with the specified properties.
       #
       # @param url [URI, String] the base URL of the index. *(Required)*
-      # @raise [URI::InvalidURIError] if +url+ is a string that is not a valid URI
+      # @raise [URI::InvalidURIError] if `url` is a string that is not a valid URI
       def initialize(url:)
         @uri = Util.to_uri(url)
       end
 
-      # Constructs a new +Indexer+ from this configuration. Implementors should
-      # override this method to return an appropriate subclass of +Indexer+ for
+      # Constructs a new `Indexer` from this configuration. Implementors should
+      # override this method to return an appropriate subclass of `Indexer` for
       # the index.
       #
       # @return [Indexer] an indexer for this index

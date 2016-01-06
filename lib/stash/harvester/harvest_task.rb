@@ -13,28 +13,22 @@ module Stash
     #   @return [Time, nil] the end (inclusive) of the datestamp range for selective harvesting.
     class HarvestTask
 
-      # ------------------------------------------------------------
-      # Accessors
-
       attr_reader :config
       attr_reader :from_time
       attr_reader :until_time
 
-      # ------------------------------------------------------------
-      # Initializer
-
-      # Constructs a new +HarvestTask+ with the specified datetime range.
+      # Constructs a new `HarvestTask` with the specified datetime range.
       # Note that the datetime range must be in UTC.
       #
       # @param config [HarvestConfig] the configuration to be used by this task.
       # @param from_time [Time, nil] the start (inclusive) of the datestamp range for selective harvesting.
-      #   If +from_time+ is omitted, harvesting will extend back to the earliest datestamp in the
+      #   If `from_time` is omitted, harvesting will extend back to the earliest datestamp in the
       #   repository. (Optional)
       # @param until_time [Time, nil] the end (inclusive) of the datestamp range for selective harvesting.
-      #   If +until_time+ is omitted, harvesting will extend forward to the latest datestamp in the
+      #   If `until_time` is omitted, harvesting will extend forward to the latest datestamp in the
       #   repository. (Optional)
-      # @raise [RangeError] if +from_time+ is later than +until_time+.
-      # @raise [ArgumentError] if +from_time+ or +until_time+ is not in UTC.
+      # @raise [RangeError] if `from_time` is later than `until_time`.
+      # @raise [ArgumentError] if `from_time` or `until_time` is not in UTC.
       def initialize(config:, from_time: nil, until_time: nil)
         @config = config
         @from_time, @until_time = valid_range(from_time, until_time)
@@ -53,13 +47,7 @@ module Stash
         fail NoMethodError, "#{self.class} should override #harvest_records to harvest records, but it doesn't"
       end
 
-      # ------------------------------
-      # Private methods
-
       private
-
-      # ------------------------------
-      # Parameter validators
 
       def valid_range(from_time, until_time)
         if from_time && until_time && from_time > until_time

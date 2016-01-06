@@ -10,12 +10,12 @@ module Stash
 
       # The harvest source configuration
       # @return [SourceConfig] the configuration (as an appropriate
-      #   subclass of +SourceConfig+ for the specified protocol)
+      #   subclass of `SourceConfig` for the specified protocol)
       attr_reader :source_config
 
       # The index configuration
       # @return [IndexConfig] the configuration (as an apporpriate
-      #   subclass of +IndexConfig+ for the specified adapter)
+      #   subclass of `IndexConfig` for the specified adapter)
       attr_reader :index_config
 
       def initialize(connection_info:, source_config:, index_config:)
@@ -24,7 +24,7 @@ module Stash
         @index_config = index_config
       end
 
-      # Reads the specified file and creates a new +Config+ from it.
+      # Reads the specified file and creates a new `Config` from it.
       #
       # @param path [String] the path to read the YAML from
       # @raise [IOError] in the event the file does not exist, cannot be read, or is invalid
@@ -40,7 +40,7 @@ module Stash
         end
       end
 
-      # Creates a new +Config+ for the specified environment.
+      # Creates a new `Config` for the specified environment.
       #
       # @param env [Config::Factory::Environment] the configuration environment.
       def self.from_env(env)
