@@ -18,6 +18,8 @@ module Stash
       #   subclass of `IndexConfig` for the specified adapter)
       attr_reader :index_config
 
+      # TODO: configure MetadataMapper
+
       def initialize(connection_info:, source_config:, index_config:)
         @connection_info = connection_info
         @source_config = source_config
