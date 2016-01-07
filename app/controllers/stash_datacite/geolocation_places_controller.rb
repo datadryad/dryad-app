@@ -9,38 +9,32 @@ module StashDatacite
       @geolocation_places = GeolocationPlace.all
     end
 
-    # GET /geolocation_places/1
-    def show
-    end
-
-    # GET /geolocation_places/new
-    def new
-      @geolocation_place = GeolocationPlace.new
-    end
-
-    # GET /geolocation_places/1/edit
-    def edit
-    end
+    # # GET /geolocation_places/1/edit
+    # def edit
+    # end
 
     # POST /geolocation_places
     def create
-      @geolocation_place = GeolocationPlace.new(geolocation_place_params)
-
-      if @geolocation_place.save
-        redirect_to @geolocation_place, notice: 'Geolocation place was successfully created.'
-      else
-        render :new
+      @geolocation_place = GeolocationPlace.create(geolocation_place_params)
+      respond_to do |format|
+        if @geolocation_place.save
+          format.js
+        else
+          format.html { render :new }
+        end
       end
     end
 
-    # PATCH/PUT /geolocation_places/1
-    def update
-      if @geolocation_place.update(geolocation_place_params)
-        redirect_to @geolocation_place, notice: 'Geolocation place was successfully updated.'
-      else
-        render :edit
-      end
-    end
+    # # PATCH/PUT /geolocation_places/1
+    # def update
+    #   respond_to do |format|
+    #     if if @geolocation_place.update(geolocation_place_params)
+    #       format.js { render template: 'stash_datacite/shared/update.js.erb' }
+    #     else
+    #       format.html { render :edit }
+    #     end
+    #   end
+    # end
 
     # DELETE /geolocation_places/1
     def destroy
@@ -52,7 +46,7 @@ module StashDatacite
 
     # Use callbacks to share common setup or constraints between actions.
     def set_geolocation_place
-      @geolocation_place = GeolocationPlace.find(params[:id])
+      @geolocation_place = GeolocationPlace.find(geolocation_place_params[:id])
     end
 
     # Only allow a trusted parameter "white list" through.
