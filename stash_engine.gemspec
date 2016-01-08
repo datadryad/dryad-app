@@ -27,6 +27,7 @@ Gem::Specification.new do |s|
   s.add_dependency "omniauth-orcid", "~> 1.0.21"
   s.add_dependency 'jquery-rails'
   s.add_dependency 'jquery-ui-rails'
+  s.add_dependency 'jquery-turbolinks'
   # you cannot add specific code repo to gemspec so it must just go in the Gemfile instead if for internal use
 
 end

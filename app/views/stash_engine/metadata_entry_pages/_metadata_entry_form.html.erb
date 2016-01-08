@@ -31,7 +31,7 @@
     <%= render partial: "stash_datacite/related_identifiers/form", locals: { related_identifier: @related_identifier } %>
   </div>
 
-  <h3><strong>Location information (optional)</strong></h3>
+  <h3 id="location_section"><strong>Location information (optional)</strong></h3>
   <div>
     <%= render partial: "stash_datacite/geolocation_places/form", locals: { geolocation_place: @geolocation_place } %>
     <%= render partial: "stash_datacite/geolocation_points/form", locals: { geolocation_point: @geolocation_point } %>
