@@ -9,6 +9,7 @@ StashEngine::Engine.routes.draw do
   match 'metadata_entry_pages/find_or_create' => 'metadata_entry_pages#find_or_create', via: [:get, :post, :put]
 
   root 'sessions#index'
+  match 'auth/orcid/callback', :to => 'metadata_entry_pages#metadata_callback', :via => [:get, :post]
   match 'auth/:provider/callback', :to => 'sessions#callback', :via => [:get, :post]
   get 'sessions/destroy', :to => 'sessions#destroy'
 

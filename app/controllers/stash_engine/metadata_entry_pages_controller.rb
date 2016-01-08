@@ -2,6 +2,8 @@ require_dependency 'stash_engine/application_controller'
 
 module StashEngine
   class MetadataEntryPagesController < ApplicationController
+    # before_filter :find_resource, only: [:metadata_callback]
+
     # GET/POST/PUT  /generals/find_or_create
     def find_or_create
       find_resource
@@ -11,6 +13,12 @@ module StashEngine
       set_geolocations
       set_relations
     end
+
+    # def metadata_callback
+    #   auth_hash = request.env['omniauth.auth']
+    #   @orcid_id = auth_hash['info']['uid']
+    #   redirect_to metadata_entry_pages_find_or_create_path(auth_hash: @auth_hash)
+    # end
 
     private
 
@@ -47,7 +55,8 @@ module StashEngine
     def set_geolocations
       @geolocation_point = StashDatacite::GeolocationPoint.where(resource_id: @resource.id).first_or_initialize
       @geolocation_box = StashDatacite::GeolocationBox.where(resource_id: @resource.id).first_or_initialize
-      @geolocation_place = StashDatacite::GeolocationPlace.where(resource_id: @resource.id).first_or_initialize
+      @geolocation_place = StashDatacite::GeolocationPlace.new(resource_id: @resource.id)
+      @geolocation_places = StashDatacite::GeolocationPlace.where(resource_id: @resource.id)
     end
   end
 end
