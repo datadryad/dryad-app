@@ -29,8 +29,8 @@ StashDatacite::Engine.routes.draw do
   patch 'related_identifiers/update', to: 'related_identifiers#update'
 
   get 'geolocation_places/new', to: 'geolocation_places#new'
-  get 'geolocation_places/index', to: 'geolocation_places#index'
   post 'geolocation_places/create', to: 'geolocation_places#create'
+
 
   resources :geolocation_boxes, except: [:index]
   resources :geolocation_points, except: [:index]

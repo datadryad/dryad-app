@@ -4,18 +4,14 @@ module StashDatacite
   class GeolocationPlacesController < ApplicationController
     before_action :set_geolocation_place, only: [:show, :edit, :update, :destroy]
 
-    # GET /geolocation_places
-    def index
-      @geolocation_places = GeolocationPlace.all
-    end
-
     # # GET /geolocation_places/1/edit
     # def edit
     # end
 
     # POST /geolocation_places
     def create
-      @geolocation_place = GeolocationPlace.create(geolocation_place_params)
+      @geolocation_places = GeolocationPlace.where(resource_id: geolocation_place_params[:resource_id])
+      @geolocation_place = GeolocationPlace.new(geolocation_place_params)
       respond_to do |format|
         if @geolocation_place.save
           format.js
