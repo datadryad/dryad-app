@@ -81,6 +81,13 @@ namespace :deploy do
     end
   end
 
+  desc 'record branch for engines' #this is so when development restarts it can use the same branch name for engines
+  task :record_branch do
+    on roles(:app) do
+      execute "cd #{deploy_to}/current; touch branch_info; echo '#{branch}' > branch_info"
+    end
+  end
+
   #this did not refresh engine gems so no longer called
   desc 'remove engines so they are fresh'
   task :remove_engines do
@@ -105,6 +112,7 @@ namespace :deploy do
   end
 
   before :starting, :update_config
+  after :published, :record_branch
 
   after :restart, :clear_cache do
     on roles(:web), in: :groups, limit: 3, wait: 10 do
