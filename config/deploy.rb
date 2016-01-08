@@ -84,7 +84,7 @@ namespace :deploy do
   desc 'record branch for engines' #this is so when development restarts it can use the same branch name for engines
   task :record_branch do
     on roles(:app) do
-      execute "cd #{deploy_to}/current; touch branch_info; echo '#{branch}' > branch_info"
+      execute "cd #{deploy_to}/current; touch branch_info; echo '#{fetch(:branch)}' > branch_info"
     end
   end
 
