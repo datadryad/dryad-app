@@ -84,8 +84,9 @@ namespace :deploy do
   desc 'update local engines to get around requiring version number changes in development'
   task :update_local_engines do
     on roles(:app) do
-      execute "cd #{deploy_to}/stash_datacite; git reset --hard origin/development; git pull"
-      execute "cd #{deploy_to}/stash_engine; git reset --hard origin/development; git pull"
+      my_branch = capture("cat #{deploy_to}/current/branch_info")
+      execute "cd #{deploy_to}/stash_datacite; git reset --hard origin/#{my_branch}; git pull"
+      execute "cd #{deploy_to}/stash_engine; git reset --hard origin/#{my_branch}; git pull"
     end
   end
 
