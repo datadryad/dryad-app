@@ -1,9 +1,7 @@
-
 GIT
   remote: https://github.com/CDLUC3/stash_datacite.git
   revision: cff4705543162a542e64b8734f5f6d80c3acfe9b
   branch: development
-
   specs:
     stash_datacite (0.0.5)
       datacite-mapping
@@ -13,12 +11,10 @@ GIT
       rails (~> 4.2.4)
       responders (~> 2.0)
 
-
 GIT
   remote: https://github.com/CDLUC3/stash_engine.git
   revision: 2e7c915134bdcb2611acd0e548ee0b2af04e8b8d
   branch: development
-
   specs:
     stash_engine (0.0.17)
       jquery-rails
