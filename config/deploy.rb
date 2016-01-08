@@ -112,7 +112,7 @@ namespace :deploy do
   end
 
   before :starting, :update_config
-  before :bundle, :record_branch
+  after :published, :record_branch
 
   after :restart, :clear_cache do
     on roles(:web), in: :groups, limit: 3, wait: 10 do
