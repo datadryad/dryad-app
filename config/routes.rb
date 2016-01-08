@@ -1,6 +1,10 @@
 StashEngine::Engine.routes.draw do
 
-  resources :resources
+  resources :resources do
+    member do
+      get 'review'
+    end
+  end
   resources :tenants, only: [:index, :show]
   resources :file_uploads
 

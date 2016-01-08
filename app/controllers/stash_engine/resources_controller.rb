@@ -2,7 +2,7 @@ require_dependency 'stash_engine/application_controller'
 
 module StashEngine
   class ResourcesController < ApplicationController
-    before_action :set_resource, only: [:show, :edit, :update, :destroy]
+    before_action :set_resource, only: [:show, :edit, :update, :destroy, :review]
 
     # GET /resources
     # GET /resources.json
@@ -59,6 +59,11 @@ module StashEngine
         format.html { redirect_to dashboard_path, notice: 'Resource was successfully destroyed.' }
         format.json { head :no_content }
       end
+    end
+
+    # review responds as a get request to review the resource before saving
+    def review
+
     end
 
     private
