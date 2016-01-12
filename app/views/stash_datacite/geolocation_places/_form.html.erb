@@ -5,7 +5,7 @@
   <strong><%= label_tag "Add a place by name" %></strong><br/>
   <%= image_tag("stash_datacite/globe.png", size: "20x20", alt: "Place") %>&nbsp;
   <%= f.text_field :geo_location_place, class: 'geo', id: "geo_place", size:50 %>&nbsp;&nbsp;
-  <%= f.text_field :resource_id %>
+  <%= f.hidden_field :resource_id %>
   <%= f.submit "Add" %>
   <br/>
 <% end %>
