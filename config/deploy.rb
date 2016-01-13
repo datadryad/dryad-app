@@ -65,14 +65,14 @@ namespace :deploy do
   # before "deploy:start", "bundle:install"
 
 
-  #desc 'Restart Phusion'
-  #task :restart do
-  #  on roles(:app), wait: 5 do
-  #    # Your restart mechanism here, for example:
-  #    execute :mkdir, '-p', release_path.join('tmp')
-  #    execute :touch, release_path.join('tmp/restart.txt')
-  #  end
-  #end
+  desc 'Restart Phusion'
+  task :restart do
+    on roles(:app), wait: 5 do
+      # Your restart mechanism here, for example:
+      invoke 'deploy:stop'
+      invoke 'deploy:start'
+    end
+  end
 
   desc 'update config repo'
   task :update_config do
