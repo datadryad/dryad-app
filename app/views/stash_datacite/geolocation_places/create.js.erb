@@ -1,1 +1,24 @@
 $('div.locations').replaceWith('<%= j render partial: "stash_datacite/geolocation_places/index" %>');
+$(document).ready(function(){
+
+    map.remove();
+    map = L.map('map', {
+      layers: MQ.mapLayer(),
+    });
+   var place = $('#geo_place').val();
+
+    MQ.geocode().search(place)
+       .on('success', function(e) {
+           var best = e.result.best,
+               latlng = best.latlng;
+
+           map.setView(latlng, 12);
+
+           L.marker([ latlng.lat, latlng.lng ])
+               .addTo(map)
+               .bindPopup( place )
+               .openPopup()
+           });
+
+});
+

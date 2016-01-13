@@ -3,24 +3,13 @@
 var map;
 $(document).ready(function() {
   map = L.map('map', {
-    layers: MQ.mapLayer()
+    layers: MQ.mapLayer(),
+    center: [ 40.731701, -73.993411 ],
+    zoom: 6
   });
+});
 
 
- var place = $('#geo_place').val();
-
-  MQ.geocode().search(place)
-     .on('success', function(e) {
-         var best = e.result.best,
-             latlng = best.latlng;
-
-         map.setView(latlng, 12);
-
-         L.marker([ latlng.lat, latlng.lng ])
-             .addTo(map)
-             .bindPopup( place )
-             .openPopup()
-         });
 
   // map = L.map('map').setView([51.505, -0.09], 13);
   // var layer = L.tileLayer("http://otile{s}.mqcdn.com/tiles/1.0.0/osm/{z}/{x}/{y}.png", {
@@ -32,9 +21,6 @@ $(document).ready(function() {
   // map.attributionControl.setPrefix(''); // Don't show the 'Powered by Leaflet' text. Attribution overload
 
   // var marker = L.marker([51.5, -0.09]).addTo(map);
-
-});
-
 
 $(document).ready(function() {
   $("#geolocation_box").hide();
@@ -59,3 +45,4 @@ $(document).ready(function(){
         }, 300);
     });
 });
+
