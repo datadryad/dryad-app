@@ -3,17 +3,12 @@ PATH
   specs:
     stash_datacite (0.0.5)
       datacite-mapping
-      jquery-rails
-      jquery-turbolinks
-      jquery-ui-rails
       leaflet-rails
       rails (~> 4.2.4)
       responders (~> 2.0)
 
 PATH
-  remote: https://github.com/CDLUC3/stash_engine.git
-  revision: 634de4e29f6c8aae8aeec8ba6e2abcc34ceb414b
-  branch: development
+  remote: /Users/bvedula/workspace2/DASH/stash_engine
   specs:
     stash_engine (0.0.17)
       jquery-rails
