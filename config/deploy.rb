@@ -64,15 +64,15 @@ namespace :deploy do
   end
   # before "deploy:start", "bundle:install"
 
-  # capistrano-passenger should already take care of deploy:restart for us
-  #desc 'Restart Phusion'
-  #task :restart do
-  #  on roles(:app), wait: 5 do
-  #    # Your restart mechanism here, for example:
-  #    execute :mkdir, '-p', release_path.join('tmp')
-  #    execute :touch, release_path.join('tmp/restart.txt')
-  #  end
-  #end
+
+  desc 'Restart Phusion'
+  task :restart do
+    on roles(:app), wait: 5 do
+      # Your restart mechanism here, for example:
+      invoke 'deploy:stop'
+      invoke 'deploy:start'
+    end
+  end
 
   desc 'update config repo'
   task :update_config do
@@ -88,32 +88,6 @@ namespace :deploy do
     end
   end
 
-  #this did not refresh engine gems so no longer called
-  desc 'remove engines so they are fresh'
-  task :remove_engines do
-    on roles(:app) do
-      puts "Attempting to remove previous engines to ensure fresh deploy"
-      #Dir.chdir "#{deploy_to}/current"
-      gems = capture("cd '#{release_path}'; bundle exec gem list | grep stash")
-      gems = gems.split("\n").map{|i| i.split(' ').first }
-      gems.each do |gem|
-        execute "cd '#{release_path}'; bundle exec gem uninstall #{gem}", raise_on_non_zero_exit: false
-        execute "cd '#{release_path}'; gem uninstall #{gem}", raise_on_non_zero_exit: false
-      end
-    end
-  end
-
-  #this did not refresh engines without version number changes, so not called
-  desc 'update stash engines without version number changes'
-  task :update_engines do
-    on roles(:app) do
-      execute "cd #{deploy_to}/current; bundle update stash_engine; bundle update stash_datacite"
-    end
-  end
-
-  before :starting, :update_config
-  after :published, :record_branch
-
   after :restart, :clear_cache do
     on roles(:web), in: :groups, limit: 3, wait: 10 do
       # Here we can do anything such as:
@@ -126,11 +100,14 @@ namespace :deploy do
   desc "run bundle install and ensure all gem requirements are met"
   task :install do
     on roles(:app) do
-      execute "cd '#{release_path}' && bundle install  --without=test"
+      execute "cd '#{release_path}' && bundle install --without=test"
     end
   end
 
-  before :restart, :install
+  #before :restart, :install
+  #before :starting, :install
+  before :starting, :update_config
+  before :published, :record_branch
 
 end
 

@@ -9,11 +9,19 @@
 
 set :rails_env, "development"
 
-server 'uc3-dash2-dev.cdlib.org', user: 'dash2', roles: %w{web app db}
+# To override the default host, set $SERVER_HOST, e.g.
+#    $ SERVER_HOST='localhost' bundle exec cap development deploy
+set :server_host, ENV["SERVER_HOST"] || 'uc3-dash2-dev.cdlib.org'
+server fetch(:server_host), user: 'dash2', roles: %w{web app db}
+
+on roles(:all) do |host|
+  puts "setting server host: #{host.hostname}"
+end
 
 set :passenger_pid, "#{deploy_to}/passenger.pid"
 set :passenger_log, "#{deploy_to}/passenger.log"
 set :passenger_port, "3000"
+
 
 # role-based syntax
 # ==================
@@ -75,8 +83,19 @@ namespace :deploy do
       within current_path do
         with rails_env: fetch(:rails_env) do
           execute "cd #{deploy_to}/current; LOCAL_ENGINES=true bundle install --no-deployment"
+          #execute "cd #{deploy_to}/current; LOCAL_ENGINES=true bundle install"
           execute "cd #{deploy_to}/current; LOCAL_ENGINES=true bundle exec passenger start -d --environment #{fetch(:rails_env)} --pid-file #{fetch(:passenger_pid)} -p #{fetch(:passenger_port)} --log-file #{fetch(:passenger_log)}"
         end
+      end
+    end
+  end
+
+  Rake::Task["stop"].clear_actions
+  desc 'Stop Phusion'
+  task :stop do
+    on roles(:app) do
+      if test("[ -f #{fetch(:passenger_pid)} ]")
+        execute "cd #{deploy_to}/current; LOCAL_ENGINES=true bundle exec passenger stop --pid-file #{fetch(:passenger_pid)}"
       end
     end
   end
@@ -85,10 +104,12 @@ namespace :deploy do
   task :update_local_engines do
     on roles(:app) do
       my_branch = capture("cat #{deploy_to}/current/branch_info")
-      execute "cd #{deploy_to}/stash_datacite; git reset --hard origin/#{my_branch}; git pull"
-      execute "cd #{deploy_to}/stash_engine; git reset --hard origin/#{my_branch}; git pull"
+      execute "cd #{deploy_to}/stash_datacite; git checkout #{my_branch}; git reset --hard origin/#{my_branch}; git pull"
+      execute "cd #{deploy_to}/stash_engine; git checkout #{my_branch}; git reset --hard origin/#{my_branch}; git pull"
+      #execute "cd #{deploy_to}/stash_datacite; git reset --hard origin/development; git pull"
+      #execute "cd #{deploy_to}/stash_engine; git reset --hard origin/development; git pull"
     end
   end
 
-  before :starting, :update_local_engines
+  after :published, :update_local_engines
 end
