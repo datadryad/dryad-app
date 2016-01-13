@@ -64,7 +64,7 @@ namespace :deploy do
   end
   # before "deploy:start", "bundle:install"
 
-  # capistrano-passenger should already take care of deploy:restart for us
+
   #desc 'Restart Phusion'
   #task :restart do
   #  on roles(:app), wait: 5 do
@@ -107,7 +107,7 @@ namespace :deploy do
   #before :restart, :install
   #before :starting, :install
   before :starting, :update_config
-  after :updated, :record_branch
+  before :published, :record_branch
 
 end
 
