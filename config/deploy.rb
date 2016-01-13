@@ -69,8 +69,8 @@ namespace :deploy do
   task :restart do
     on roles(:app), wait: 5 do
       # Your restart mechanism here, for example:
-      #invoke 'deploy:stop'
-      #invoke 'deploy:start'
+      invoke 'deploy:stop'
+      invoke 'deploy:start'
     end
   end
 

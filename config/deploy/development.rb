@@ -90,6 +90,16 @@ namespace :deploy do
     end
   end
 
+  Rake::Task["stop"].clear_actions
+  desc 'Stop Phusion'
+  task :stop do
+    on roles(:app) do
+      if test("[ -f #{fetch(:passenger_pid)} ]")
+        execute "cd #{deploy_to}/current; LOCAL_ENGINES=true bundle exec passenger stop --pid-file #{fetch(:passenger_pid)}"
+      end
+    end
+  end
+
   desc 'update local engines to get around requiring version number changes in development'
   task :update_local_engines do
     on roles(:app) do
