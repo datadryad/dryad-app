@@ -31,6 +31,9 @@ StashDatacite::Engine.routes.draw do
   get 'geolocation_places/new', to: 'geolocation_places#new'
   post 'geolocation_places/create', to: 'geolocation_places#create'
 
+  get 'geolocation_points/new', to: 'geolocation_points#new'
+  post 'geolocation_points/create', to: 'geolocation_points#create'
+
   resources :geolocation_boxes, except: [:index]
   resources :geolocation_points, except: [:index]
 

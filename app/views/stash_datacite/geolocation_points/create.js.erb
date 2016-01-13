@@ -1,0 +1,19 @@
+$('div#locations_points').replaceWith('<%= j render partial: "stash_datacite/geolocation_points/index" %>');
+$('div#locations_places').replaceWith('<%= j render partial: "stash_datacite/geolocation_places/index" %>');
+map.remove();
+$(document).ready(function() {
+  var lat = parseFloat($('#geo_lat_point').val());
+  var lng = parseFloat($('#geo_lng_point').val());
+
+var mapLayer = MQ.mapLayer(),
+    map;
+
+map = L.map('map', {
+    layers: mapLayer,
+    center: [lat, lng],
+    zoom: 12
+});
+L.marker([lat, lng]).addTo(map);
+
+});
+
