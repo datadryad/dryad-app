@@ -128,9 +128,9 @@ namespace :deploy do
     end
   end
 
-  before [:restart, :stop, :start], :install
-  before :starting, update_config
-  after :published, record_branch
+  before [:restart, :starting], :install
+  before :starting, :update_config
+  after :published, :record_branch
 
 end
 
