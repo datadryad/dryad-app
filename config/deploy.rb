@@ -43,6 +43,9 @@ set :passenger_restart_with_touch, false
 
 namespace :deploy do
 
+  before :starting, :update_config
+  after :published, :record_branch
+
   desc 'Stop Phusion'
   task :stop do
     on roles(:app) do
@@ -110,9 +113,6 @@ namespace :deploy do
       execute "cd #{deploy_to}/current; bundle update stash_engine; bundle update stash_datacite"
     end
   end
-
-  before :starting, :update_config
-  after :published, :record_branch
 
   after :restart, :clear_cache do
     on roles(:web), in: :groups, limit: 3, wait: 10 do
