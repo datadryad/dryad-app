@@ -9,11 +9,19 @@
 
 set :rails_env, "development"
 
-server 'uc3-dash2-dev.cdlib.org', user: 'dash2', roles: %w{web app db}
+# To override the default host, set $SERVER_HOST, e.g.
+#    $ SERVER_HOST='localhost' bundle exec cap development deploy
+set :server_host, ENV["SERVER_HOST"] || 'uc3-dash2-dev.cdlib.org'
+server fetch(:server_host), user: 'dash2', roles: %w{web app db}
+
+on roles(:all) do |host|
+  puts "setting server host: #{host.hostname}"
+end
 
 set :passenger_pid, "#{deploy_to}/passenger.pid"
 set :passenger_log, "#{deploy_to}/passenger.log"
 set :passenger_port, "3000"
+
 
 # role-based syntax
 # ==================
@@ -85,9 +93,11 @@ namespace :deploy do
   desc 'update local engines to get around requiring version number changes in development'
   task :update_local_engines do
     on roles(:app) do
-      my_branch = capture("cat #{deploy_to}/current/branch_info")
-      execute "cd #{deploy_to}/stash_datacite; git reset --hard origin/#{my_branch}; git pull"
-      execute "cd #{deploy_to}/stash_engine; git reset --hard origin/#{my_branch}; git pull"
+      #my_branch = capture("cat #{deploy_to}/current/branch_info")
+      #execute "cd #{deploy_to}/stash_datacite; git reset --hard origin/#{my_branch}; git pull"
+      #execute "cd #{deploy_to}/stash_engine; git reset --hard origin/#{my_branch}; git pull"
+      execute "cd #{deploy_to}/stash_datacite; git reset --hard origin/development; git pull"
+      execute "cd #{deploy_to}/stash_engine; git reset --hard origin/development; git pull"
     end
   end
 

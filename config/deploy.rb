@@ -41,7 +41,6 @@ set :passenger_in_gemfile, true
 # There may be difficulties one way or another.  Normal restart may require sudo in some circumstances.
 set :passenger_restart_with_touch, false
 
-
 namespace :deploy do
 
   desc 'Stop Phusion'
@@ -108,7 +107,7 @@ namespace :deploy do
   #before :restart, :install
   #before :starting, :install
   before :starting, :update_config
-  after :published, :record_branch
+  after :updated, :record_branch
 
 end
 
