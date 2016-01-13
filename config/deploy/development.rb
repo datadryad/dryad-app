@@ -9,11 +9,21 @@
 
 set :rails_env, "development"
 
-server 'uc3-dash2-dev.cdlib.org', user: 'dash2', roles: %w{web app db}
+# To override the default host, set $SERVER_HOST, e.g.
+#    $ SERVER_HOST = 'localhost' bundle exec cap development deploy
+set :server_host, ENV["SERVER_HOST"] || 'uc3-dash2-dev.cdlib.org'
+server fetch(:server_host, user: 'dash2', roles: %w{web app db}
+
+on roles(:all) do |host|
+  puts "setting server host: #{host.hostname}"
+end
 
 set :passenger_pid, "#{deploy_to}/passenger.pid"
 set :passenger_log, "#{deploy_to}/passenger.log"
 set :passenger_port, "3000"
+
+
+exit
 
 # role-based syntax
 # ==================
