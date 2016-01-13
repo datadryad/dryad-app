@@ -61,7 +61,7 @@ module StashEngine
       end
     end
 
-    #Review responds as a get request to review the resource before saving
+    # Review responds as a get request to review the resource before saving
     def review
     end
 
