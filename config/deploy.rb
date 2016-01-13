@@ -42,9 +42,6 @@ set :passenger_in_gemfile, true
 set :passenger_restart_with_touch, false
 
 
-before :starting, deploy:update_config
-after :published, deploy:record_branch
-
 namespace :deploy do
 
   desc 'Stop Phusion'
@@ -131,7 +128,9 @@ namespace :deploy do
     end
   end
 
-  before :restart, :install
+  before [:restart, :stop, start], :install
+  before :starting, update_config
+  after :published, record_branch
 
 end
 
