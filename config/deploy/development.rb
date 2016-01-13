@@ -85,6 +85,7 @@ namespace :deploy do
       within current_path do
         with rails_env: fetch(:rails_env) do
           execute "cd #{deploy_to}/current; LOCAL_ENGINES=true bundle install --no-deployment"
+          #execute "cd #{deploy_to}/current; LOCAL_ENGINES=true bundle install"
           execute "cd #{deploy_to}/current; LOCAL_ENGINES=true bundle exec passenger start -d --environment #{fetch(:rails_env)} --pid-file #{fetch(:passenger_pid)} -p #{fetch(:passenger_port)} --log-file #{fetch(:passenger_log)}"
         end
       end
@@ -94,7 +95,7 @@ namespace :deploy do
   desc 'update local engines to get around requiring version number changes in development'
   task :update_local_engines do
     on roles(:app) do
-      my_branch = capture("cat #{deploy_to}/current/branch_info")
+      my_branch = capture("cat #{deploy_to}/current/branch_info") if remote_file_exists?("#{deploy_to}/current/branch_info")
       execute "cd #{deploy_to}/stash_datacite; git reset --hard origin/#{my_branch}; git pull"
       execute "cd #{deploy_to}/stash_engine; git reset --hard origin/#{my_branch}; git pull"
     end
