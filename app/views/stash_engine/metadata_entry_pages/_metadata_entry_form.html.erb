@@ -38,10 +38,11 @@
     <%= render partial: "stash_datacite/geolocation_points/form", locals: { geolocation_point: @geolocation_point } %>
     <%= render partial: "stash_datacite/geolocation_boxes/form", locals: { geolocation_box: @geolocation_box } %>
     <%= render partial: "stash_datacite/shared/map" %>
-    <div class="locations"><%= render partial: "stash_datacite/shared/locations" %></div>
+    <div class="locations_added">
+    <strong>Locations Added</strong>
+      <%= render partial: "stash_datacite/geolocation_points/index", locals: { geolocation_points: @geolocation_points } %>
+      <%= render partial: "stash_datacite/geolocation_places/index", locals: { geolocation_places: @geolocation_places } %>
+    </div>
   </div>
 </div>
 
-</br>
-<%= link_to 'Back to My Datasets', stash_engine.dashboard_path, class: "btn" %>
-<%= link_to 'Proceed to Uploads', stash_engine.file_uploads_path, class: "btn" %>
