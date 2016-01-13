@@ -41,6 +41,16 @@ set :passenger_in_gemfile, true
 # There may be difficulties one way or another.  Normal restart may require sudo in some circumstances.
 set :passenger_restart_with_touch, false
 
+def remote_file_exists?(path)
+  results = []
+
+  invoke_command("if [ -e '#{path}' ]; then echo -n 'true'; fi") do |ch, stream, out|
+    results << (out == 'true')
+  end
+
+  results.all?
+end
+
 
 namespace :deploy do
 
