@@ -128,8 +128,8 @@ namespace :deploy do
     end
   end
 
-  before [:restart, :starting], :install
-  before :starting, :update_config
+  before :restart, :install
+  before :starting, :install, :update_config
   after :published, :record_branch
 
 end
