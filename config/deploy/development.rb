@@ -23,7 +23,7 @@ set :passenger_log, "#{deploy_to}/passenger.log"
 set :passenger_port, "3000"
 
 
-#exit
+exit
 
 # role-based syntax
 # ==================
