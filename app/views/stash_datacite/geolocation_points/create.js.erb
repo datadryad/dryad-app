@@ -4,15 +4,37 @@ $(document).ready(function() {
   var lat = parseFloat($('#geo_lat_point').val());
   var lng = parseFloat($('#geo_lng_point').val());
 
-var mapLayer = MQ.mapLayer(),
-    map;
+  var mapLayer = MQ.mapLayer(),
+      map;
 
-map = L.map('map', {
-    layers: mapLayer,
-    center: [lat, lng],
-    zoom: 12
-});
-L.marker([lat, lng]).addTo(map);
+  map = L.map('map', {
+      layers: mapLayer,
+      center: [lat, lng],
+      zoom: 12
+  });
+  L.marker([lat, lng]).addTo(map);
+
+  var drawnItems = new L.FeatureGroup();
+  map.addLayer(drawnItems);
+
+  var drawControl = new L.Control.Draw({
+      position: 'topright',
+      draw: {
+        polyline : false,
+        polygon : false,
+        circle : false,
+      },
+      edit: {
+          featureGroup: drawnItems
+      }
+  });
+  map.addControl(drawControl);
+
+  map.on('draw:created', function (e) {
+      var type = e.layerType,
+          layer = e.layer;
+      drawnItems.addLayer(layer);
+  });
 
 });
 

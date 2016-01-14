@@ -2,11 +2,37 @@
 // All this logic will automatically be available in application.js.
 var map;
 $(document).ready(function() {
-  map = L.map('map', {
-    layers: MQ.mapLayer(),
-    center: [ 40.731701, -73.993411 ],
-    zoom: 6
-  });
+
+  map = L.map('map').setView([-41.2858, 174.78682], 14);
+        mapLink =
+            '<a href="http://openstreetmap.org">OpenStreetMap</a>';
+        L.tileLayer(
+            'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; ' + mapLink + ' Contributors',
+            maxZoom: 18,
+            }).addTo(map);
+
+        var drawnItems = new L.FeatureGroup();
+        map.addLayer(drawnItems);
+
+        var drawControl = new L.Control.Draw({
+            position: 'topright',
+            draw: {
+              polyline : false,
+              polygon : false,
+              circle : false,
+            },
+            edit: {
+                featureGroup: drawnItems
+            }
+        });
+        map.addControl(drawControl);
+
+        map.on('draw:created', function (e) {
+            var type = e.layerType,
+                layer = e.layer;
+            drawnItems.addLayer(layer);
+        });
 });
 
 
