@@ -5,34 +5,58 @@ $(document).ready(function() {
 
   map = L.map('map').setView([-41.2858, 174.78682], 14);
         mapLink =
-            '<a href="http://openstreetmap.org">OpenStreetMap</a>';
+            '<a href="https://openstreetmap.org">OpenStreetMap</a>';
         L.tileLayer(
-            'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '&copy; ' + mapLink + ' Contributors',
             maxZoom: 18,
             }).addTo(map);
 
-        var drawnItems = new L.FeatureGroup();
-        map.addLayer(drawnItems);
+      var drawnItems = new L.FeatureGroup();
+      map.addLayer(drawnItems);
 
-        var drawControl = new L.Control.Draw({
-            position: 'topright',
-            draw: {
-              polyline : false,
-              polygon : false,
-              circle : false,
-            },
-            edit: {
-                featureGroup: drawnItems
+      var drawControl = new L.Control.Draw({
+        position: 'topright',
+        draw: {
+          polyline : false,
+          polygon : false,
+          circle : false,
+        },
+        edit: {
+            featureGroup: drawnItems
+        }
+      });
+      map.addControl(drawControl);
+
+      map.on('draw:created', function (e) {
+        var type = e.layerType,
+            layer = e.layer;
+        drawnItems.addLayer(layer);
+
+        var shapes = getShapes(drawnItems);
+        alert(shapes);
+      });
+
+      var getShapes = function(drawnItems) {
+
+        var shapes = [];
+
+        drawnItems.eachLayer(function(layer) {
+
+            // Note: Rectangle extends Polygon. Polygon extends Polyline.
+            // Therefore, all of them are instances of Polyline
+            if (layer instanceof L.Polyline) {
+                shapes.push(layer.getLatLngs())
             }
-        });
-        map.addControl(drawControl);
 
-        map.on('draw:created', function (e) {
-            var type = e.layerType,
-                layer = e.layer;
-            drawnItems.addLayer(layer);
+            if (layer instanceof L.Marker) {
+                shapes.push([layer.getLatLng()]);
+            }
+
         });
+
+        return shapes;
+      };
 });
 
 
@@ -71,4 +95,33 @@ $(document).ready(function(){
         }, 300);
     });
 });
+
+$(document).ready(function(){
+  $("#geo_lat_point").on('blur', function(e){
+  var lat = parseFloat($(this).val());
+  var latReg = /^(\+|-)?(?:90(?:(?:\.0{1,6})?)|(?:[0-9]|[1-8][0-9])(?:(?:\.[0-9]{1,6})?))$/;
+  if(!latReg.test(lat)) {
+    alert("Please enter valid latitude value")
+    }
+    else {
+      // do nothing
+    }
+  });
+});
+
+$(document).ready(function(){
+  $("#geo_lng_point").on('blur', function(e){
+  var lng = parseFloat($(this).val());
+  var lngReg = /^(\+|-)?(?:180(?:(?:\.0{1,6})?)|(?:[0-9]|[1-9][0-9]|1[0-7][0-9])(?:(?:\.[0-9]{1,6})?))$/;
+  if (lng == '') {}
+  if(!lngReg.test(lng)) {
+    alert("Please enter valid longitude value")
+    }
+    else {
+      // do nothing
+    }
+  });
+});
+
+
 
