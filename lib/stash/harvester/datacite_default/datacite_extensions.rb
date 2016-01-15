@@ -17,6 +17,11 @@ module Datacite
 
     class Resource
 
+      def default_title
+        title = titles.find { |t| t.type.nil? }
+        title.value if title
+      end
+
       def creator_names
         creators.map(&:name)
       end
@@ -31,12 +36,12 @@ module Datacite
 
       def usage_notes
         usage = descriptions.find(&:usage?)
-        usage.value if value
+        usage.value if usage
       end
 
-      def description_text_for(type:)
+      def description_text_for(type)
         desc = descriptions.find { |d| d.type = type }
-        desc.value if value
+        desc.value if desc
       end
 
       def geo_location_places

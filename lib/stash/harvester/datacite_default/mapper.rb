@@ -6,9 +6,10 @@ require_relative '../metadata_mapper'
 module Stash
   module Harvester
     module DataciteDefault
-      include Datacite::Mapping
 
       class Mapper < MetadataMapper
+        include Datacite::Mapping
+
         metadata_mapping 'datacite_default'
 
         def to_index_document(wrapper) # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
