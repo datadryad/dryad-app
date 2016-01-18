@@ -3,60 +3,87 @@
 var map;
 $(document).ready(function() {
 
+  // create a map in the "map" div, set the view to a given place and zoom
   map = L.map('map').setView([-41.2858, 174.78682], 14);
-        mapLink =
-            '<a href="https://openstreetmap.org">OpenStreetMap</a>';
-        L.tileLayer(
-            'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; ' + mapLink + ' Contributors',
-            maxZoom: 18,
-            }).addTo(map);
+      mapLink = '<a href="https://openstreetmap.org">OpenStreetMap</a>';
 
-      var drawnItems = new L.FeatureGroup();
-      map.addLayer(drawnItems);
+    // add an OpenStreetMap tile layer
+      L.tileLayer(
+          'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          attribution: '&copy; ' + mapLink + ' Contributors',
+          maxZoom: 18,
+          }).addTo(map);
 
-      var drawControl = new L.Control.Draw({
-        position: 'topright',
-        draw: {
-          polyline : false,
-          polygon : false,
-          circle : false,
-        },
-        edit: {
-            featureGroup: drawnItems
-        }
-      });
-      map.addControl(drawControl);
+    // Initialize the FeatureGroup to store editable layers
+        var drawnItems = new L.FeatureGroup();
+        map.addLayer(drawnItems);
 
-      map.on('draw:created', function (e) {
-        var type = e.layerType,
-            layer = e.layer;
-        drawnItems.addLayer(layer);
-
-        var shapes = getShapes(drawnItems);
-        alert(shapes);
-      });
-
-      var getShapes = function(drawnItems) {
-
-        var shapes = [];
-
-        drawnItems.eachLayer(function(layer) {
-
-            // Note: Rectangle extends Polygon. Polygon extends Polyline.
-            // Therefore, all of them are instances of Polyline
-            if (layer instanceof L.Polyline) {
-                shapes.push(layer.getLatLngs())
+    // Initialize the draw control and pass it the FeatureGroup of editable layers
+        var drawControl = new L.Control.Draw({
+            position: 'topright',
+            draw: {
+              polyline : false,
+              polygon : false,
+              circle : false,
+            },
+            edit: {
+                featureGroup: drawnItems
             }
+        });
+        map.addControl(drawControl);
 
-            if (layer instanceof L.Marker) {
-                shapes.push([layer.getLatLng()]);
-            }
+    // listen to the draw created event
+        map.on('draw:created', function (e) {
+          var type = e.layerType,
+              layer = e.layer;
+
+          drawnItems.addLayer(layer);
+
+          var shapes = getShapes(drawnItems);
+          var geoJsonData = {
+                              "type": "Feature",
+                              "properties": {},
+                              "geometry": {
+                                "type": "Polygon",
+                                "coordinates": [ shapes ]
+                              }
+                            };
+
+          var geoJsonLayer = L.geoJson(geoJsonData);
+          alert("Bounding Box: " + geoJsonLayer.getBounds().toBBoxString());
 
         });
 
-        return shapes;
-      };
+        var getShapes = function(drawnItems) {
+
+          // var lng, lat, coordinates = [];
+
+          drawnItems.eachLayer(function(layer) {
+              // Note: Rectangle extends Polygon. Polygon extends Polyline.
+              // Therefore, all of them are instances of Polyline
+              if (layer instanceof L.Polyline) {
+                coordinates = [];
+                latlngs = layer.getLatLngs();
+                for (var i = 0; i < latlngs.length; i++) {
+                    coordinates.push([latlngs[i].lng, latlngs[i].lat])
+                }
+              }
+          });
+          return coordinates;
+        };
+
+// var geoJsonLayer = L.geoJson(geoJsonData);
+
+// console.log("Bounding Box: " + geoJsonLayer.getBounds().toBBoxString());
+    // listen to the draw edited event
+        map.on('draw:edited', function () {
+            // Update db to save latest changes.
+        });
+
+    // listen to the draw deleted event
+        map.on('draw:deleted', function () {
+            // Update db to save latest changes.
+        });
 });
 
 
