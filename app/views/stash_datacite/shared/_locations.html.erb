@@ -1,0 +1,14 @@
+<table>
+  <thead>
+    <tr>
+      <th></th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+  <tbody id ="geolocation_points">
+    <%= render partial: "stash_datacite/geolocation_points/index", locals: { geolocation_points: @geolocation_points } %>
+  </tbody>
+  <tbody id ="geolocation_places" >
+    <%= render partial: "stash_datacite/geolocation_places/index", locals: { geolocation_places: @geolocation_places } %>
+  </tbody>
+</table>

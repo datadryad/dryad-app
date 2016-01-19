@@ -1,4 +1,4 @@
-$('div.geolocation_points').replaceWith('<%= j render partial: "stash_datacite/geolocation_points/index", locals: { geolocation_points: @geolocation_points } %>')
+$('#geolocation_points').replaceWith('<%= j render partial: "stash_datacite/geolocation_points/index", locals: { geolocation_points: @geolocation_points } %>')
 map.remove();
 $(document).ready(function() {
   var lat = parseFloat($('#geo_lat_point').val());
@@ -37,4 +37,3 @@ $(document).ready(function() {
   });
 
 });
-

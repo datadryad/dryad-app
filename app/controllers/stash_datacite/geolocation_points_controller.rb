@@ -2,7 +2,7 @@ require_dependency 'stash_datacite/application_controller'
 
 module StashDatacite
   class GeolocationPointsController < ApplicationController
-    before_action :set_geolocation_point, only: [:edit, :update, :destroy]
+    before_action :set_geolocation_point, only: [:edit, :update, :delete]
 
     # GET /geolocation_points/1/edit
     # def edit
@@ -32,21 +32,21 @@ module StashDatacite
     # end
 
     # DELETE /geolocation_points/1
-    def destroy
+    def delete
       @geolocation_point.destroy
-      redirect_to geolocation_points_url, notice: 'Geolocation point was successfully destroyed.'
+      redirect_to :back, notice: 'Geolocation point was successfully destroyed.'
     end
 
     private
 
     # Use callbacks to share common setup or constraints between actions.
     def set_geolocation_point
-      @geolocation_point = GeolocationPoint.find(geolocation_point_params[:id])
+      @geolocation_point = GeolocationPoint.find(params[:id])
     end
 
     # Only allow a trusted parameter "white list" through.
     def geolocation_point_params
-      params.require(:geolocation_point).permit(:latitude, :longitude, :resource_id)
+      params.require(:geolocation_point).permit(:id, :latitude, :longitude, :resource_id)
     end
   end
 end
