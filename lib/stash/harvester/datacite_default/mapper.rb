@@ -17,22 +17,27 @@ module Stash
           datacite_xml = stash_descriptive.find { |elem| Resource.datacite?(elem) }
           resource = Resource.parse_xml(datacite_xml)
 
-          # TODO: write up a real crosswalk & make sure we have all fields
           {
             id_s:                   wrapper.id_value,
-            dc_title_s:             resource.default_title,
-            dc_creator_sm:          resource.creator_names,
+            title_s:                resource.default_title,
+            creator_sm:             resource.creator_names,
             creator_affiliation_sm: resource.creator_affiliations.map { |a| a.join(', ') },
-            dc_type_s:              resource.type,
-            dc_description_s:       resource.description_text_for(DescriptionType::ABSTRACT),
+            type_s:                 resource.type,
+            abstract_s:             resource.description_text_for(DescriptionType::ABSTRACT),
+            funder_name_s:          resource.funder_name,
+            funder_id_s:            resource.funder_id_value,
+            grant_number_s:         resource.grant_number,
+            keywords_sm:            resource.subjects.map(&:value),
             methods_s:              resource.description_text_for(DescriptionType::METHODS),
             usage_notes_s:          resource.usage_notes,
-            dct_place_sm:           resource.geo_location_places,
-            georss_box_bboxm:       resource.geo_location_boxes,
-            georss_point_ptm:       resource.geo_location_points,
+            related_identifier_sm:  resource.related_identifiers.map(&:value),
+            place_sm:               resource.geo_location_places,
+            box_bboxm:              resource.geo_location_boxes,
+            point_ptm:              resource.geo_location_points,
+            file_names:             wrapper.file_names,
             embargo_type:           wrapper.embargo_type,
             embargo_end_date:       wrapper.embargo_end_date,
-            dc_publisher:           resource.publisher,
+            publisher:              resource.publisher,
             pub_year:               resource.publication_year
           }
 

@@ -1,6 +1,17 @@
 require 'datacite/mapping'
 require 'time'
 
+module Stash
+  module Wrapper
+    class StashWrapper
+      def file_names
+        inv = inventory
+        inv.files.map(&:pathname) if inv
+      end
+    end
+  end
+end
+
 module Datacite
   module Mapping
 
@@ -32,6 +43,31 @@ module Datacite
 
       def type
         resource_type.resource_type_general.value if resource_type
+      end
+
+      def funder_contrib
+        @funder_contrib ||= contributors.find { |c| c.type == ContributorType::FUNDER }
+      end
+
+      def funder_name
+        funder_contrib.name if funder_contrib
+      end
+
+      def funder_id
+        funder_contrib.id if funder_contrib
+      end
+
+      def funder_id_value
+        funder_id.value if funder_id
+      end
+
+      def grant_number
+        grant_regex = /^\s*Data were created with .* under grant (.*)\.\s*$/
+        funding = descriptions.find(&:funding?)
+        return nil unless funding
+
+        match_data = grant_regex.match(funding.value)
+        match_data[1] if match_data
       end
 
       def usage_notes
