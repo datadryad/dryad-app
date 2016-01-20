@@ -4,14 +4,13 @@ module StashDatacite
   class GeolocationBoxesController < ApplicationController
     before_action :set_geolocation_box, only: [:show, :edit, :update, :delete]
 
-
     # # GET /geolocation_boxes/1/edit
     # def edit
     # end
 
     # POST /geolocation_boxes
     def map_coordinates
-      geolocation_box_params =  params.except(:controller, :action)
+      geolocation_box_params = params.except(:controller, :action)
       @geolocation_boxes = GeolocationBox.where(resource_id: params[:resource_id])
       @geolocation_box = GeolocationBox.new(geolocation_box_params.permit!)
       respond_to do |format|
