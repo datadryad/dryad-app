@@ -39,6 +39,7 @@ $(document).ready(function() {
 
           drawnItems.addLayer(layer);
 
+    // obtain bounding box from the shape corodinates (for rectangle)
           var shapes = getShapes(drawnItems);
           var geoJsonData = {
                               "type": "Feature",
@@ -50,13 +51,23 @@ $(document).ready(function() {
                             };
 
           var geoJsonLayer = L.geoJson(geoJsonData);
-          alert("Bounding Box: " + geoJsonLayer.getBounds().toBBoxString());
+          var bounding_box_sw_lat = geoJsonLayer.getBounds().getSouthWest().lat;
+          var bounding_box_sw_lng = geoJsonLayer.getBounds().getSouthWest().lng;
+          var bounding_box_ne_lat = geoJsonLayer.getBounds().getNorthEast().lat;
+          var bounding_box_ne_lng = geoJsonLayer.getBounds().getNorthEast().lng;
+          var resource_id = $.urlParam('resource_id');
 
+          $.ajax({
+            type: "POST",
+            url: "/stash_datacite/geolocation_boxes/map_coordinates",
+            data: { 'sw_latitude' : bounding_box_sw_lat, 'sw_longitude' : bounding_box_sw_lng,
+                    'ne_latitude' : bounding_box_ne_lat, 'ne_longitude' : bounding_box_ne_lng,
+                    'resource_id' : resource_id }
+          });
         });
 
         var getShapes = function(drawnItems) {
-
-          // var lng, lat, coordinates = [];
+          var lng, lat, coordinates = [];
 
           drawnItems.eachLayer(function(layer) {
               // Note: Rectangle extends Polygon. Polygon extends Polyline.
@@ -72,18 +83,18 @@ $(document).ready(function() {
           return coordinates;
         };
 
-// var geoJsonLayer = L.geoJson(geoJsonData);
+
 
 // console.log("Bounding Box: " + geoJsonLayer.getBounds().toBBoxString());
     // listen to the draw edited event
-        map.on('draw:edited', function () {
-            // Update db to save latest changes.
-        });
+        // map.on('draw:edited', function () {
+        //     // Update db to save latest changes.
+        // });
 
     // listen to the draw deleted event
-        map.on('draw:deleted', function () {
-            // Update db to save latest changes.
-        });
+        // map.on('draw:deleted', function () {
+        //     // Update db to save latest changes.
+        // });
 });
 
 
@@ -127,6 +138,7 @@ $(document).ready(function(){
   $("#geo_lat_point").on('blur', function(e){
   var lat = parseFloat($(this).val());
   var latReg = /^(\+|-)?(?:90(?:(?:\.0{1,6})?)|(?:[0-9]|[1-8][0-9])(?:(?:\.[0-9]{1,6})?))$/;
+  if (lat == '' || lat == null) {}
   if(!latReg.test(lat)) {
     alert("Please enter valid latitude value")
     }
@@ -140,7 +152,7 @@ $(document).ready(function(){
   $("#geo_lng_point").on('blur', function(e){
   var lng = parseFloat($(this).val());
   var lngReg = /^(\+|-)?(?:180(?:(?:\.0{1,6})?)|(?:[0-9]|[1-9][0-9]|1[0-7][0-9])(?:(?:\.[0-9]{1,6})?))$/;
-  if (lng == '') {}
+  if (lng == '' || lng == null) {}
   if(!lngReg.test(lng)) {
     alert("Please enter valid longitude value")
     }
@@ -150,5 +162,10 @@ $(document).ready(function(){
   });
 });
 
+
+$.urlParam = function(name){
+  var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
+  return results[1] || 0;
+}
 
 
