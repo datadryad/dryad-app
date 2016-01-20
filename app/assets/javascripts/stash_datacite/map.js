@@ -97,19 +97,6 @@ $(document).ready(function() {
         // });
 });
 
-
-
-  // map = L.map('map').setView([51.505, -0.09], 13);
-  // var layer = L.tileLayer("http://otile{s}.mqcdn.com/tiles/1.0.0/osm/{z}/{x}/{y}.png", {
-  //     subdomains: "1234",
-  //     attribution: "&copy; <a href='http://www.openstreetmap.org/'>OpenStreetMap</a> and contributors, under an <a href='http://www.openstreetmap.org/copyright' title='ODbL'>open license</a>. Tiles Courtesy of <a href='http://www.mapquest.com/'>MapQuest</a> <img src='http://developer.mapquest.com/content/osm/mq_logo.png'>"
-  // })
-
-  // layer.addTo(map);
-  // map.attributionControl.setPrefix(''); // Don't show the 'Powered by Leaflet' text. Attribution overload
-
-  // var marker = L.marker([51.5, -0.09]).addTo(map);
-
 $(document).ready(function() {
   $("#geolocation_box").hide();
   $("#geo_box").on('click', function(e){
