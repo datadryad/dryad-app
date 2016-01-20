@@ -1,0 +1,54 @@
+$('tbody.geolocation_boxes').replaceWith('<%= j render partial: "stash_datacite/geolocation_boxes/index", locals: { geolocation_boxes: @geolocation_boxes } %>')
+// $(document).ready(function() {
+  // var sw_lat = parseFloat($('#geo_sw_lat_point').val());
+  // var sw_lng = parseFloat($('#geo_sw_lng_point').val());
+  // var ne_lat = parseFloat($('#geo_ne_lat_point').val());
+  // var ne_lng = parseFloat($('#geo_ne_lng_point').val());
+
+  // var mapLayer = MQ.mapLayer(),
+  //     map;
+
+  // var drawnItems = new L.FeatureGroup();
+  // map.addLayer(drawnItems);
+
+  // var drawControl = new L.Control.Draw({
+  //     position: 'topright',
+  //     draw: {
+  //       polyline : false,
+  //       polygon : false,
+  //       circle : false,
+  //     },
+  //     edit: {
+  //         featureGroup: drawnItems
+  //     }
+  // });
+  // map.addControl(drawControl);
+
+  // map = L.map('map', {
+  //     layers: mapLayer,
+  //     center: [lat, lng],
+  //     zoom: 12
+  // });
+  // L.marker([lat, lng]).addTo(map);
+
+  // map.on('draw:created', function (e) {
+  //     var type = e.layerType,
+  //         layer = e.layer;
+  //     drawnItems.addLayer(layer);
+  // });
+ // var place = $('#geo_place').val();
+
+  MQ.geocode().search(place)
+     .on('success', function(e) {
+         var best = e.result.best,
+             latlng = best.latlng;
+
+         map.setView(latlng, 12);
+
+         L.marker([ latlng.lat, latlng.lng ])
+             .addTo(map)
+             .bindPopup( place )
+             .openPopup()
+         });
+
+});

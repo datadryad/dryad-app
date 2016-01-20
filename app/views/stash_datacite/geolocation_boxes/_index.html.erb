@@ -1,0 +1,8 @@
+<% geolocation_boxes.each do |geolocation_box| %>
+  <tr>
+    <td><%= image_tag("stash_datacite/geo_box.png", size: "30x30", alt: "Box") %></td>
+    <td><%= geolocation_box.sw_latitude %>,&nbsp; <%= geolocation_box.sw_longitude %>,&nbsp;&nbsp; &nbsp;
+            <%= geolocation_box.ne_latitude %>,&nbsp; <%= geolocation_box.ne_longitude %></td>
+    <td><%= link_to 'remove', stash_datacite.geolocation_boxes_delete_path(geolocation_box), method: :delete, data: { confirm: 'Are you sure?' } %></td>
+  </tr>
+<% end %>
