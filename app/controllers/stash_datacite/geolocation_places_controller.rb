@@ -10,10 +10,10 @@ module StashDatacite
 
     # POST /geolocation_places
     def create
-      @geolocation_places = GeolocationPlace.where(resource_id: geolocation_place_params[:resource_id])
       @geolocation_place = GeolocationPlace.new(geolocation_place_params)
       respond_to do |format|
         if @geolocation_place.save
+          @geolocation_places = GeolocationPlace.where(resource_id: geolocation_place_params[:resource_id])
           format.js
         else
           format.html { render :new }
