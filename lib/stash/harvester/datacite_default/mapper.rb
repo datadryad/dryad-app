@@ -1,6 +1,6 @@
 require 'stash/wrapper'
 require 'datacite/mapping'
-require_relative 'datacite_extensions'
+require_relative '../datacite_extensions'
 require_relative '../metadata_mapper'
 
 module Stash
@@ -35,7 +35,6 @@ module Stash
             box_bboxm:              resource.geo_location_boxes,
             point_ptm:              resource.geo_location_points,
             file_names:             wrapper.file_names,
-            embargo_type:           wrapper.embargo_type,
             embargo_end_date:       wrapper.embargo_end_date,
             publisher:              resource.publisher,
             pub_year:               resource.publication_year

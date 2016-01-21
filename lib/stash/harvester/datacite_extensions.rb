@@ -1,4 +1,5 @@
 require 'datacite/mapping'
+require 'stash/wrapper'
 require 'time'
 
 module Stash
@@ -100,6 +101,10 @@ module Datacite
         return nil unless embargo
         d = embargo.end_date
         Time.utc(d.year, d.month, d.day).xmlschema
+      end
+
+      def license_name
+        license.name if license
       end
 
       def self.datacite?(elem)
