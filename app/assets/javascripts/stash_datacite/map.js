@@ -15,48 +15,46 @@ $(document).ready(function() {
           }).addTo(map);
 
     // Initialize the FeatureGroup to store editable layers
-        var drawnItems = new L.FeatureGroup();
-        map.addLayer(drawnItems);
+      var drawnItems = new L.FeatureGroup();
+      map.addLayer(drawnItems);
 
     // Initialize the draw control and pass it the FeatureGroup of editable layers
-        var drawControl = new L.Control.Draw({
-            position: 'topright',
-            draw: {
-              polyline : false,
-              polygon : false,
-              circle : false,
-            },
-            edit: {
-                featureGroup: drawnItems
-            }
-        });
-        map.addControl(drawControl);
+      var drawControl = new L.Control.Draw({
+          position: 'topright',
+          draw: {
+            polyline : false,
+            polygon : false,
+            circle : false,
+          },
+          edit: {
+              featureGroup: drawnItems
+          }
+      });
+      map.addControl(drawControl);
 
     // listen to the draw created event
-        map.on('draw:created', function (e) {
-          var type = e.layerType,
-              layer = e.layer;
+      map.on('draw:created', function (e) {
+        var type = e.layerType,
+            layer = e.layer;
+      drawnItems.addLayer(layer);
 
-          drawnItems.addLayer(layer);
-
-    // obtain bounding box from the shape corodinates (for rectangle)
-          var shapes = getShapes(drawnItems);
+        var resource_id = $.urlParam('resource_id');
+        var rectangle_coordinates = getShapes(drawnItems);
+        if (type == "rectangle") {
+          //obtain bounding box from the shape coordinates (for rectangle) of map
           var geoJsonData = {
-                              "type": "Feature",
-                              "properties": {},
-                              "geometry": {
-                                "type": "Polygon",
-                                "coordinates": [ shapes ]
-                              }
-                            };
-
+                            "type": "Feature",
+                            "properties": {},
+                            "geometry": {
+                              "type": "Polygon",
+                              "coordinates": [ rectangle_coordinates ]
+                            }
+                          };
           var geoJsonLayer = L.geoJson(geoJsonData);
           var bounding_box_sw_lat = geoJsonLayer.getBounds().getSouthWest().lat;
           var bounding_box_sw_lng = geoJsonLayer.getBounds().getSouthWest().lng;
           var bounding_box_ne_lat = geoJsonLayer.getBounds().getNorthEast().lat;
           var bounding_box_ne_lng = geoJsonLayer.getBounds().getNorthEast().lng;
-          var resource_id = $.urlParam('resource_id');
-
           $.ajax({
             type: "POST",
             url: "/stash_datacite/geolocation_boxes/map_coordinates",
@@ -64,26 +62,41 @@ $(document).ready(function() {
                     'ne_latitude' : bounding_box_ne_lat, 'ne_longitude' : bounding_box_ne_lng,
                     'resource_id' : resource_id }
           });
-        });
+        }
 
-        var getShapes = function(drawnItems) {
-          var lng, lat, coordinates = [];
-
-          drawnItems.eachLayer(function(layer) {
-              // Note: Rectangle extends Polygon. Polygon extends Polyline.
-              // Therefore, all of them are instances of Polyline
-              if (layer instanceof L.Polyline) {
-                coordinates = [];
-                latlngs = layer.getLatLngs();
-                for (var i = 0; i < latlngs.length; i++) {
-                    coordinates.push([latlngs[i].lng, latlngs[i].lat])
-                }
-              }
+        if (type == "marker") {
+          //obtain latlng coordinates from the shape marker of map
+          var marker_coordinates = getShapes(drawnItems).toString().split(",");
+          $.ajax({
+            type: "POST",
+            url: "/stash_datacite/geolocation_points/map_coordinates",
+            data: { 'latitude' : marker_coordinates[0], 'longitude' : marker_coordinates[1],
+                    'resource_id' : resource_id }
           });
-          return coordinates;
-        };
+        }
+      });
 
+      var getShapes = function(drawnItems) {
+        var lng, lat;
 
+        drawnItems.eachLayer(function(layer) {
+            // Note: Rectangle extends Polygon. Polygon extends Polyline.
+            // Therefore, all of them are instances of Polyline
+            if (layer instanceof L.Polyline) {
+              coordinates = [];
+              latlngs = layer.getLatLngs();
+              for (var i = 0; i < latlngs.length; i++) {
+                  coordinates.push([latlngs[i].lng, latlngs[i].lat])
+              }
+            }
+
+            if (layer instanceof L.Marker) {
+              coordinates = [];
+              coordinates.push([layer.getLatLng().lat, layer.getLatLng().lng]);
+            }
+        });
+        return coordinates;
+      };
 
 // console.log("Bounding Box: " + geoJsonLayer.getBounds().toBBoxString());
     // listen to the draw edited event
@@ -121,33 +134,33 @@ $(document).ready(function(){
     });
 });
 
-$(document).ready(function(){
-  $("#geo_lat_point").on('blur', function(e){
-  var lat = parseFloat($(this).val());
-  var latReg = /^(\+|-)?(?:90(?:(?:\.0{1,6})?)|(?:[0-9]|[1-8][0-9])(?:(?:\.[0-9]{1,6})?))$/;
-  if (lat == '' || lat == null) {}
-  if(!latReg.test(lat)) {
-    alert("Please enter valid latitude value")
-    }
-    else {
-      // do nothing
-    }
-  });
-});
+// $(document).ready(function(){
+//   $("#geo_lat_point").on('blur', function(e){
+//   var lat = parseFloat($(this).val());
+//   var latReg = /^(\+|-)?(?:90(?:(?:\.0{1,6})?)|(?:[0-9]|[1-8][0-9])(?:(?:\.[0-9]{1,6})?))$/;
+//   if (lat == '' || lat == null) {}
+//   if(!latReg.test(lat)) {
+//     alert("Please enter valid latitude value")
+//     }
+//     else {
+//       // do nothing
+//     }
+//   });
+// });
 
-$(document).ready(function(){
-  $("#geo_lng_point").on('blur', function(e){
-  var lng = parseFloat($(this).val());
-  var lngReg = /^(\+|-)?(?:180(?:(?:\.0{1,6})?)|(?:[0-9]|[1-9][0-9]|1[0-7][0-9])(?:(?:\.[0-9]{1,6})?))$/;
-  if (lng == '' || lng == null) {}
-  if(!lngReg.test(lng)) {
-    alert("Please enter valid longitude value")
-    }
-    else {
-      // do nothing
-    }
-  });
-});
+// $(document).ready(function(){
+//   $("#geo_lng_point").on('blur', function(e){
+//   var lng = parseFloat($(this).val());
+//   var lngReg = /^(\+|-)?(?:180(?:(?:\.0{1,6})?)|(?:[0-9]|[1-9][0-9]|1[0-7][0-9])(?:(?:\.[0-9]{1,6})?))$/;
+//   if (lng == '' || lng == null) {}
+//   if(!lngReg.test(lng)) {
+//     alert("Please enter valid longitude value")
+//     }
+//     else {
+//       // do nothing
+//     }
+//   });
+// });
 
 
 $.urlParam = function(name){

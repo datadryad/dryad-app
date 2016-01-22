@@ -33,6 +33,7 @@ StashDatacite::Engine.routes.draw do
   delete 'geolocation_places/:id/delete', to: 'geolocation_places#delete', as: 'geolocation_places_delete'
 
   get 'geolocation_points/new', to: 'geolocation_points#new'
+  post 'geolocation_points/map_coordinates', to: 'geolocation_points#map_coordinates'
   post 'geolocation_points/create', to: 'geolocation_points#create'
   delete 'geolocation_points/:id/delete', to: 'geolocation_points#delete', as: 'geolocation_points_delete'
 
