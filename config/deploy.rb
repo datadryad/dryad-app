@@ -23,7 +23,8 @@ set :scm, :git
 # set :pty, true
 
 # Default value for :linked_files is []
-set :linked_files, fetch(:linked_files, []).push(Dir.glob('config/*.yml'), Dir.glob('config/tenants/*.yml')).flatten.uniq
+#set :linked_files, fetch(:linked_files, []).push(Dir.glob('config/*.yml'), Dir.glob('config/tenants/*.yml')).flatten.uniq
+#set :linked_files, fetch(:linked_files, []).push(invoke 'deploy:my_linked_files').flatten.uniq
 
 # Default value for linked_dirs is []
 set :linked_dirs, fetch(:linked_dirs, []).push('log', 'tmp/pids', 'tmp/cache', 'tmp/sockets', 'vendor/bundle', 'public/system')
@@ -42,6 +43,18 @@ set :passenger_in_gemfile, true
 set :passenger_restart_with_touch, false
 
 namespace :deploy do
+
+  desc 'Get list of linked files for capistrano'
+  task :my_linked_files do
+    on roles(:app) do
+      res1 = capture "ls /dash2/apps/ui/shared/config/*.yml -1"
+      res1 = res1.split("\n").map{|i| i.match(/config\/[^\/]+$/).to_s }
+      res2 = capture "ls /dash2/apps/ui/shared/config/tenants/*.yml -1"
+      res2 = res2.split("\n").map{|i| i.match(/config\/tenants\/[^\/]+$/).to_s }
+      set :linked_files, (res1 + res2)
+    end
+  end
+
 
   desc 'Stop Phusion'
   task :stop do
@@ -108,7 +121,6 @@ namespace :deploy do
   #before :starting, :install
   before :starting, :update_config
   before :published, :record_branch
+  before 'deploy:symlink:shared', 'deploy:my_linked_files'
 
 end
-
-
