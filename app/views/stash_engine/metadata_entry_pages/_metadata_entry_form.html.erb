@@ -40,8 +40,7 @@
     <%= render partial: "stash_datacite/shared/map" %>
     <div class="locations_added">
     <strong>Locations Added</strong>
-      <%= render partial: "stash_datacite/geolocation_points/index", locals: { geolocation_points: @geolocation_points } %>
-      <%= render partial: "stash_datacite/geolocation_places/index", locals: { geolocation_places: @geolocation_places } %>
+    <%= render partial: "stash_datacite/shared/locations" %>
     </div>
   </div>
 </div>
