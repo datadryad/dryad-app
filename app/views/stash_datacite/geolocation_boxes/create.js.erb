@@ -4,3 +4,16 @@ var bounds = [[<%= @geolocation_box.sw_latitude %>, <%= @geolocation_box.sw_long
 var newRectangle = L.rectangle(bounds, {color: "#ff7800", weight: 1}).addTo(map);
 // zoom the map to the rectangle bounds
 map.fitBounds(bounds);
+var popup = L.popup(), geocode;
+
+function onMapClick(e) {
+    popup
+        .setLatLng(e.latlng)
+        .openOn(map);
+        geocode.reverse(e.latlng);
+}
+
+map.on('click', onMapClick);
+geocode = MQ.geocode().on('success', function(e) {
+    popup.setContent(geocode.describeLocation(e.result.best));
+});

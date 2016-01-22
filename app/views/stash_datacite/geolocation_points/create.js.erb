@@ -1,3 +1,16 @@
 $('div.geolocation_points').replaceWith('<%= j render partial: "stash_datacite/geolocation_points/index", locals: { geolocation_points: @geolocation_points } %>')
 var newMarker = new L.marker(new L.LatLng(<%= @geolocation_point.latitude %>, <%= @geolocation_point.longitude %>)).addTo(map);
 map.panTo(new L.LatLng(<%= @geolocation_point.latitude %>, <%= @geolocation_point.longitude %>));
+var popup = L.popup(), geocode;
+
+function onMapClick(e) {
+    popup
+        .setLatLng(e.latlng)
+        .openOn(map);
+        geocode.reverse(e.latlng);
+}
+
+map.on('click', onMapClick);
+geocode = MQ.geocode().on('success', function(e) {
+    popup.setContent(geocode.describeLocation(e.result.best));
+});

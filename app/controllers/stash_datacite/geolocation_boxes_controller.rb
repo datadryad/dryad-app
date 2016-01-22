@@ -11,10 +11,10 @@ module StashDatacite
     # POST /geolocation_boxes
     def map_coordinates
       geolocation_box_params = params.except(:controller, :action)
-      @geolocation_boxes = GeolocationBox.where(resource_id: params[:resource_id])
       @geolocation_box = GeolocationBox.new(geolocation_box_params.permit!)
       respond_to do |format|
         if @geolocation_box.save
+          @geolocation_boxes = GeolocationBox.where(resource_id: params[:resource_id])
           format.js { render template: 'stash_datacite/geolocation_boxes/create.js.erb' }
         else
           format.html { render :new }

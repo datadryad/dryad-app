@@ -10,18 +10,16 @@ module StashDatacite
 
     def map_coordinates
       geolocation_point_params = params.except(:controller, :action)
-      @geolocation_points = GeolocationPoint.where(resource_id: params[:resource_id])
       @geolocation_point = GeolocationPoint.new(geolocation_point_params.permit!)
       respond_to do |format|
         if @geolocation_point.save
+          @geolocation_points = GeolocationPoint.where(resource_id: params[:resource_id])
           format.js { render template: 'stash_datacite/geolocation_points/create.js.erb' }
         else
           format.html { render :new }
         end
       end
     end
-
-
 
     # POST /geolocation_points
     def create
