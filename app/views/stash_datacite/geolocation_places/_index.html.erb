@@ -1,7 +1,11 @@
 <div class ="geolocation_places" >
-  <% geolocation_places.each do |geolocation_place| %>
-    <%= image_tag("stash_datacite/globe.png", size: "20x20", alt: "Place") %>
-    <%= geolocation_place.geo_location_place %>
-    <%= link_to 'remove', stash_datacite.geolocation_places_delete_path(geolocation_place), method: :delete, data: { confirm: 'Are you sure?' } %>
-  <% end %>
+  <table>
+    <% geolocation_places.each do |geolocation_place| %>
+    <tr>
+      <td><%= image_tag("stash_datacite/globe.png", size: "20x20", alt: "Place") %></td>
+      <td><%= geolocation_place.geo_location_place %></td>
+      <td><%= link_to 'remove', stash_datacite.geolocation_places_delete_path(geolocation_place), method: :delete, data: { confirm: 'Are you sure?' } %></td>
+    </tr>
+    <% end %>
+  </table>
 </div>
