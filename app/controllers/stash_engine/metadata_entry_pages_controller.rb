@@ -56,7 +56,7 @@ module StashEngine
       @geolocation_point = StashDatacite::GeolocationPoint.new(resource_id: @resource.id)
       @geolocation_points = StashDatacite::GeolocationPoint.where(resource_id: @resource.id)
       @geolocation_box = StashDatacite::GeolocationBox.new(resource_id: @resource.id)
-      @geolocation_boxes =  StashDatacite::GeolocationBox.where(resource_id: @resource.id)
+      @geolocation_boxes = StashDatacite::GeolocationBox.where(resource_id: @resource.id)
       @geolocation_place = StashDatacite::GeolocationPlace.new(resource_id: @resource.id)
       @geolocation_places = StashDatacite::GeolocationPlace.where(resource_id: @resource.id)
     end
