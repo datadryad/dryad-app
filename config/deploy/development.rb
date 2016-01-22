@@ -90,16 +90,26 @@ namespace :deploy do
     end
   end
 
-  desc 'update local engines to get around requiring version number changes in development'
-  task :update_local_engines do
+  Rake::Task["stop"].clear_actions
+  desc 'Stop Phusion'
+  task :stop do
     on roles(:app) do
-      #my_branch = capture("cat #{deploy_to}/current/branch_info")
-      #execute "cd #{deploy_to}/stash_datacite; git reset --hard origin/#{my_branch}; git pull"
-      #execute "cd #{deploy_to}/stash_engine; git reset --hard origin/#{my_branch}; git pull"
-      execute "cd #{deploy_to}/stash_datacite; git reset --hard origin/development; git pull"
-      execute "cd #{deploy_to}/stash_engine; git reset --hard origin/development; git pull"
+      if test("[ -f #{fetch(:passenger_pid)} ]")
+        execute "cd #{deploy_to}/current; LOCAL_ENGINES=true bundle exec passenger stop --pid-file #{fetch(:passenger_pid)}"
+      end
     end
   end
 
-  before :starting, :update_local_engines
+  desc 'update local engines to get around requiring version number changes in development'
+  task :update_local_engines do
+    on roles(:app) do
+      my_branch = capture("cat #{deploy_to}/current/branch_info")
+      execute "cd #{deploy_to}/stash_datacite; git checkout #{my_branch}; git reset --hard origin/#{my_branch}; git pull"
+      execute "cd #{deploy_to}/stash_engine; git checkout #{my_branch}; git reset --hard origin/#{my_branch}; git pull"
+      #execute "cd #{deploy_to}/stash_datacite; git reset --hard origin/development; git pull"
+      #execute "cd #{deploy_to}/stash_engine; git reset --hard origin/development; git pull"
+    end
+  end
+
+  after :published, :update_local_engines
 end
