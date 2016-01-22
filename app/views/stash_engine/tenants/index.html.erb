@@ -24,7 +24,7 @@ end
   <a href="https://dash2-dev.ucop.edu/Shibboleth.sso/Login?target=https%3A%2F%2Fdash2-dev.ucop.edu%2Fstash%2Fauth%2Fshibboleth%2Fcallback&entityID=urn%3Amace%3Aincommon%3Aucop.edu">UCOP Login</a>
 </p>
 -->
-<% if Rails.env == 'development' && (request.remote_ip.start_with?('::') || request.remote_ip.start_with?('128.48')) %>
+<% if Rails.env == 'development' %>
 <p>
   <a href="/stash/auth/developer">Developer login</a>
 </p>
