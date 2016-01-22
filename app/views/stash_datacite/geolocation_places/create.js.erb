@@ -1,87 +1,13 @@
 $('div.geolocation_places').replaceWith('<%= j render partial: "stash_datacite/geolocation_places/index", locals: { geolocation_places: @geolocation_places } %>')
-// $(document).ready(function(){
-//   map.remove();
-//   map = L.map('map', {
-//     layers: MQ.mapLayer(),
-//   });
-//     var drawnItems = new L.FeatureGroup();
-//     map.addLayer(drawnItems);
+var place = $('#geo_place').val();
+  MQ.geocode().search(place).on('success', function(e) {
+      var best = e.result.best,
+          latlng = best.latlng;
 
-//     var drawControl = new L.Control.Draw({
-//         position: 'topright',
-//         draw: {
-//           polyline : false,
-//           polygon : false,
-//           circle : false,
-//         },
-//         edit: {
-//             featureGroup: drawnItems
-//         }
-//     });
-//     map.addControl(drawControl);
+      map.setView(latlng, 12);
 
-//     map.on('draw:created', function (e) {
-//         var type = e.layerType,
-//             layer = e.layer;
-//         drawnItems.addLayer(layer);
-
-//       // obtain bounding box from the shape corodinates (for rectangle)
-//           var shapes = getShapes(drawnItems);
-//           var geoJsonData = {
-//                               "type": "Feature",
-//                               "properties": {},
-//                               "geometry": {
-//                                 "type": "Polygon",
-//                                 "coordinates": [ shapes ]
-//                               }
-//                             };
-
-//           var geoJsonLayer = L.geoJson(geoJsonData);
-//           var bounding_box_sw_lat = geoJsonLayer.getBounds().getSouthWest().lat;
-//           var bounding_box_sw_lng = geoJsonLayer.getBounds().getSouthWest().lng;
-//           var bounding_box_ne_lat = geoJsonLayer.getBounds().getNorthEast().lat;
-//           var bounding_box_ne_lng = geoJsonLayer.getBounds().getNorthEast().lng;
-//           var resource_id = $.urlParam('resource_id');
-
-//           $.ajax({
-//             type: "POST",
-//             url: "/stash_datacite/geolocation_boxes/map_coordinates",
-//             data: { 'sw_latitude' : bounding_box_sw_lat, 'sw_longitude' : bounding_box_sw_lng,
-//                     'ne_latitude' : bounding_box_ne_lat, 'ne_longitude' : bounding_box_ne_lng,
-//                     'resource_id' : resource_id }
-//           });
-//       });
-
-//         var getShapes = function(drawnItems) {
-//           var lng, lat, coordinates = [];
-
-//           drawnItems.eachLayer(function(layer) {
-//               // Note: Rectangle extends Polygon. Polygon extends Polyline.
-//               // Therefore, all of them are instances of Polyline
-//               if (layer instanceof L.Polyline) {
-//                 coordinates = [];
-//                 latlngs = layer.getLatLngs();
-//                 for (var i = 0; i < latlngs.length; i++) {
-//                     coordinates.push([latlngs[i].lng, latlngs[i].lat])
-//                 }
-//               }
-//           });
-//           return coordinates;
-//         };
-
-//     var place = $('#geo_place').val();
-
-//     MQ.geocode().search(place)
-//      .on('success', function(e) {
-//          var best = e.result.best,
-//              latlng = best.latlng;
-
-//          map.setView(latlng, 12);
-
-//          L.marker([ latlng.lat, latlng.lng ])
-//              .addTo(map)
-//              .bindPopup( place )
-//              .openPopup()
-//          });
-
-// });
+      L.popup({ closeButton: false })
+          .setLatLng(latlng)
+          .setContent('<strong>' + best.adminArea5 + ', ' + best.adminArea3 + ', ' + best.adminArea1 +'</strong><br />is located here.')
+          .openOn(map);
+  });
