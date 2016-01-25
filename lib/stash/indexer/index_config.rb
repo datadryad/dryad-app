@@ -1,7 +1,7 @@
 require 'config/factory'
 
 module Stash
-  module Harvester
+  module Indexer
 
     # Superclass for configuration of any index.
     #

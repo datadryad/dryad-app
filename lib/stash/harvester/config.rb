@@ -1,4 +1,5 @@
 require 'config/factory'
+require 'stash/indexer/index_config'
 
 module Stash
   module Harvester
@@ -48,7 +49,7 @@ module Stash
       def self.from_env(env)
         connection_info = env.args_for(:db)
         source_config = SourceConfig.for_environment(env, :source)
-        index_config = IndexConfig.for_environment(env, :index)
+        index_config = Stash::Indexer::IndexConfig.for_environment(env, :index)
         Config.new(connection_info: connection_info, source_config: source_config, index_config: index_config)
       end
 

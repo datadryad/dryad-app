@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 module Stash
-  module Harvester
+  module Indexer
     module DataciteDefault
       describe Mapper do
         before(:each) do

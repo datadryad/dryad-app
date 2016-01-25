@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 module Stash
-  module Harvester
+  module Indexer
     module Solr
       describe SolrIndexConfig do
         describe '#new' do
@@ -21,7 +21,7 @@ module Stash
 
           it 'logs a warning if :proxy_url is used instead of :proxy' do
             out = StringIO.new
-            Harvester.log_device = out
+            Indexer.log_device = out
             begin
               proxy_url = 'whatever'
               SolrIndexConfig.new(url: 'http://example.org', proxy_url: proxy_url)
@@ -31,15 +31,15 @@ module Stash
               expect(logged).to include(':proxy_url')
               expect(logged).to include(':proxy')
             rescue
-              Harvester.log_device = $stdout
+              Indexer.log_device = $stdout
             end
           end
 
           it 'logs a warning if :proxy_uri is used instead of :proxy' do
             out = StringIO.new
-            Harvester.log_device = out
+            Indexer.log_device = out
             begin
-              Harvester.log = logger
+              Indexer.log = logger
               SolrIndexConfig.new(url: 'http://example.org', proxy_uri: proxy_url)
               logged = out.string
               expect(logged).to include('WARN')
@@ -47,7 +47,7 @@ module Stash
               expect(logged).to include(':proxy_uri')
               expect(logged).to include(':proxy')
             rescue
-              Harvester.log_device = $stdout
+              Indexer.log_device = $stdout
             end
           end
         end

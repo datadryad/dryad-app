@@ -9,7 +9,7 @@ module Stash
           args = {
             connection_info: {},
             source_config: instance_double(SourceConfig),
-            index_config: instance_double(IndexConfig)
+            index_config: instance_double(Stash::Indexer::IndexConfig)
           }
           args.each do |k, _v|
             args_copy = args.clone
@@ -39,7 +39,7 @@ module Stash
 
         it 'extracts the IndexConfig' do
           index_config = @config.index_config
-          expect(index_config).to be_a(Solr::SolrIndexConfig)
+          expect(index_config).to be_a(Stash::Indexer::Solr::SolrIndexConfig)
           expect(index_config.uri).to eq(URI('http://solr.example.org/'))
           expect(index_config.proxy_uri).to eq(URI('http://foo:bar@proxy.example.com/'))
 
@@ -104,7 +104,7 @@ module Stash
           expect(connection_info['timeout']).to eq(5000)
 
           index_config = @config.index_config
-          expect(index_config).to be_a(Solr::SolrIndexConfig)
+          expect(index_config).to be_a(Stash::Indexer::Solr::SolrIndexConfig)
           expect(index_config.uri).to eq(URI('http://solr.example.org/'))
           expect(index_config.proxy_uri).to eq(URI('http://foo:bar@proxy.example.com/'))
 

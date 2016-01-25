@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 module Stash
-  module Harvester
+  module Indexer
     describe IndexConfig do
 
       describe '#build_from' do

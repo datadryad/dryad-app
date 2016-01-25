@@ -26,6 +26,6 @@ end
 require 'rspec_custom_matchers'
 
 # ------------------------------------------------------------
-# Stash::Harvester
+# Stash
 
-require 'stash/harvester'
+require 'stash'

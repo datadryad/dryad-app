@@ -4,7 +4,7 @@ require_relative '../datacite_extensions'
 require_relative '../metadata_mapper'
 
 module Stash
-  module Harvester
+  module Indexer
     module DataciteDefault
 
       class Mapper < MetadataMapper

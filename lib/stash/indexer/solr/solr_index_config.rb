@@ -1,5 +1,7 @@
+require_relative '../index_config'
+
 module Stash
-  module Harvester
+  module Indexer
     module Solr
 
       # Configuration for a Solr index.
@@ -36,7 +38,7 @@ module Stash
         def check_opts(opts)
           SUSPICIOUS_OPTS.each do |k, v|
             if opts.include?(k)
-              Harvester.log.warn("#{SolrIndexConfig} initialized with #{k.inspect} => #{opts[k].inspect}. Did you mean #{v.inspect}?")
+              Indexer.log.warn("#{SolrIndexConfig} initialized with #{k.inspect} => #{opts[k].inspect}. Did you mean #{v.inspect}?")
             end
           end
         end

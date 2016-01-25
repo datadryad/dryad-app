@@ -1,7 +1,8 @@
 require 'config/factory'
+require 'stash/wrapper'
 
 module Stash
-  module Harvester
+  module Indexer
 
     # Superclass of installation-specific mappers converting wrapped metadata to
     # indexable documents.
