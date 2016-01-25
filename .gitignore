@@ -11,3 +11,8 @@ test/dummy/.sass-cache
 .idea
 .ruby-version
 coverage
+
+# Ignore IDEA project files
+*.iml
+*.ipr
+*.iws
