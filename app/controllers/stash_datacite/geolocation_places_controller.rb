@@ -4,6 +4,15 @@ module StashDatacite
   class GeolocationPlacesController < ApplicationController
     before_action :set_geolocation_place, only: [:edit, :update, :delete]
 
+    # # GET /geolocation_points/
+    def get_places
+      @geolocation_places = GeolocationPlace.select(:geo_location_place).where(resource_id: params[:resource_id])
+      respond_to do |format|
+        format.html
+        format.json { render json: @geolocation_places }
+      end
+    end
+
     # # GET /geolocation_places/1/edit
     # def edit
     # end

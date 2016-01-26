@@ -1,13 +1,10 @@
 $('div.geolocation_places').replaceWith('<%= j render partial: "stash_datacite/geolocation_places/index", locals: { geolocation_places: @geolocation_places } %>')
 var place = $('#geo_place').val();
   MQ.geocode().search(place).on('success', function(e) {
-      var best = e.result.best,
-          latlng = best.latlng;
+    var best = e.result.best,
+        latlng = best.latlng;
+    var newMarker = new L.marker([latlng.lat, latlng.lng], { draggable: true })
+        .addTo(map).bindPopup('<strong>' + best.adminArea5 + ', ' + best.adminArea3 + ', ' + best.adminArea1);
 
-      map.setView(latlng, 12);
-
-      L.popup({ closeButton: false })
-          .setLatLng(latlng)
-          .setContent('<strong>' + best.adminArea5 + ', ' + best.adminArea3 + ', ' + best.adminArea1 +'</strong><br />is located here.')
-          .openOn(map);
-  });
+  map.setView(latlng, 10);
+});

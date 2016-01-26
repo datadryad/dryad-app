@@ -4,7 +4,7 @@ var map;
 $(document).ready(function() {
 
   // create a map in the "map" div, set the view to a given place and zoom
-  map = L.map('map').setView([-41.2858, 174.78682], 14);
+  map = L.map('map').setView([36.778259, -119.417931], 12);
       mapLink = '<a href="https://openstreetmap.org">OpenStreetMap</a>';
 
     // add an OpenStreetMap tile layer
@@ -13,6 +13,113 @@ $(document).ready(function() {
           attribution: '&copy; ' + mapLink + ' Contributors',
           maxZoom: 18,
           }).addTo(map);
+
+  // -------------------------------- //
+    // get point coordinates from db and load on map
+    var coordinatesMarker = getCoordinates();  // Function is called, return value will end up in an array
+    function getCoordinates() {
+      var resource_id = "", result = [], arr = [];
+        $.ajax({
+          type: "GET",
+          dataType: "json",
+          url: "/stash_datacite/geolocation_points/get_coordinates",
+          data: { resource_id: $.urlParam('resource_id') },
+          async: false,
+          success: function(data) {
+            result = data;
+          },
+          error: function() {
+            alert('Error occured');
+          }
+        });
+        arr = $.map(result, function(n){
+           return [[ n["latitude"], n["longitude"] ]];
+        });
+        return(arr);
+    }
+
+     //Loop through the markers array
+     for (var i=0; i<coordinatesMarker.length; i++) {
+        var lat = coordinatesMarker[i][0];
+        var lng = coordinatesMarker[i][1];
+        var markerLocation = new L.LatLng(lat, lng);
+        var marker = new L.Marker(markerLocation, { draggable: true }).addTo(map).bindPopup(lat +","+ lng);
+     }
+  // -------------------------------- //
+
+  // -------------------------------- //
+    // get bbox coordinates from db and load on map
+    var coordinatesBBox = getCoordinatesBBox();  // Function is called, return value will end up in an array
+    function getCoordinatesBBox() {
+      var resource_id = "", result = [], arr = [];
+        $.ajax({
+          type: "GET",
+          dataType: "json",
+          url: "/stash_datacite/geolocation_boxes/get_coordinates",
+          data: { resource_id: $.urlParam('resource_id') },
+          async: false,
+          success: function(data) {
+            result = data;
+          },
+          error: function() {
+            alert('Error occured');
+          }
+        });
+        arr = $.map(result, function(n){
+           return [[ n["sw_latitude"], n["sw_longitude"], n["ne_latitude"], n["ne_longitude"] ]];
+        });
+        return(arr);
+    }
+
+     // Loop through the bbox array
+     for (var i=0; i<coordinatesBBox.length; i++) {
+        var sw_lat = coordinatesBBox[i][0];
+        var sw_lng = coordinatesBBox[i][1];
+        var ne_lat = coordinatesBBox[i][2];
+        var ne_lng = coordinatesBBox[i][3];
+        var bounds = [[sw_lat, sw_lng], [ne_lat, ne_lng]];
+        var newRectangle = L.rectangle(bounds, {color: "#ff7800", weight: 1}).addTo(map).bindPopup(sw_lat + ", " + sw_lng + ", " + ne_lat + ", " + ne_lng);
+        map.fitBounds(bounds);
+     }
+    // -------------------------------- //
+
+
+    // -------------------------------- //
+      // get location names from db and load on map
+      var locationNames = getLocationNames();  // Function is called, return value will end up in an array
+      function getLocationNames() {
+        var resource_id = "", result = [], arr = [];
+          $.ajax({
+            type: "GET",
+            dataType: "json",
+            url: "/stash_datacite/geolocation_places/get_places",
+            data: { resource_id: $.urlParam('resource_id') },
+            async: false,
+            success: function(data) {
+              result = data;
+            },
+            error: function() {
+              alert('Error occured');
+            }
+          });
+          arr = $.map(result, function(n){
+             return [[ n["geo_location_place"] ]];
+          });
+          return(arr);
+      }
+
+       // Loop through the bbox array
+        for (var i=0; i<locationNames.length; i++) {
+          var place = locationNames[i][0];
+          MQ.geocode().search(place).on('success', function(e) {
+              var best = e.result.best,
+                  latlng = best.latlng;
+
+          var newMarker = new L.marker([latlng.lat, latlng.lng], { draggable: true }).addTo(map).bindPopup('<strong>' + best.adminArea5 + ', ' + best.adminArea3 + ', ' + best.adminArea1);
+          });
+        }
+      // -------------------------------- //
+
 
     // Initialize the FeatureGroup to store editable layers
       var drawnItems = new L.FeatureGroup();
@@ -25,9 +132,17 @@ $(document).ready(function() {
             polyline : false,
             polygon : false,
             circle : false,
+            rect: {
+              shapeOptions: {
+                color: 'green'
+              },
+            },
+            marker: {
+            },
           },
           edit: {
-              featureGroup: drawnItems
+              featureGroup: drawnItems,
+              remove: true
           }
       });
       map.addControl(drawControl);
@@ -76,33 +191,16 @@ $(document).ready(function() {
         }
       });
 
-      var getShapes = function(drawnItems) {
-        var lng, lat;
 
-        drawnItems.eachLayer(function(layer) {
-            // Note: Rectangle extends Polygon. Polygon extends Polyline.
-            // Therefore, all of them are instances of Polyline
-            if (layer instanceof L.Polyline) {
-              coordinates = [];
-              latlngs = layer.getLatLngs();
-              for (var i = 0; i < latlngs.length; i++) {
-                  coordinates.push([latlngs[i].lng, latlngs[i].lat])
-              }
-            }
-
-            if (layer instanceof L.Marker) {
-              coordinates = [];
-              coordinates.push([layer.getLatLng().lat, layer.getLatLng().lng]);
-            }
-        });
-        return coordinates;
-      };
-
-// console.log("Bounding Box: " + geoJsonLayer.getBounds().toBBoxString());
     // listen to the draw edited event
-        // map.on('draw:edited', function () {
-        //     // Update db to save latest changes.
-        // });
+      // map.on('draw:edited', function (e) {
+      //     var layers = e.layers;
+      //     layers.eachLayer(function (layer) {
+      //         if (layer instanceof L.Marker){
+      //                 alert(layer.getLatLng().toString());
+      //         }
+      //     });
+      // });
 
     // listen to the draw deleted event
         // map.on('draw:deleted', function () {

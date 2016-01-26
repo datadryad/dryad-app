@@ -29,15 +29,18 @@ StashDatacite::Engine.routes.draw do
   patch 'related_identifiers/update', to: 'related_identifiers#update'
 
   get 'geolocation_places/new', to: 'geolocation_places#new'
+  get 'geolocation_places/get_places', to: 'geolocation_places#get_places'
   post 'geolocation_places/create', to: 'geolocation_places#create'
   delete 'geolocation_places/:id/delete', to: 'geolocation_places#delete', as: 'geolocation_places_delete'
 
   get 'geolocation_points/new', to: 'geolocation_points#new'
+  get 'geolocation_points/get_coordinates', to: 'geolocation_points#get_coordinates'
   post 'geolocation_points/map_coordinates', to: 'geolocation_points#map_coordinates'
   post 'geolocation_points/create', to: 'geolocation_points#create'
   delete 'geolocation_points/:id/delete', to: 'geolocation_points#delete', as: 'geolocation_points_delete'
 
   get 'geolocation_boxes/new', to: 'geolocation_boxes#new'
+  get 'geolocation_boxes/get_coordinates', to: 'geolocation_boxes#get_coordinates'
   post 'geolocation_boxes/map_coordinates', to: 'geolocation_boxes#map_coordinates'
   post 'geolocation_boxes/create', to: 'geolocation_boxes#create'
   delete 'geolocation_boxes/:id/delete', to: 'geolocation_boxes#delete', as: 'geolocation_boxes_delete'
