@@ -1,5 +1,7 @@
-PATH
-  remote: /Users/bvedula/workspace2/DASH/stash_datacite
+GIT
+  remote: https://github.com/CDLUC3/stash_datacite.git
+  revision: 274ff99f0d223cb89533573756eeafd0311bf4c2
+  branch: development
   specs:
     stash_datacite (0.0.5)
       datacite-mapping
@@ -7,8 +9,10 @@ PATH
       rails (~> 4.2.4)
       responders (~> 2.0)
 
-PATH
-  remote: /Users/bvedula/workspace2/DASH/stash_engine
+GIT
+  remote: https://github.com/CDLUC3/stash_engine.git
+  revision: ab85bee93373f065e930862632c6ff060a632fad
+  branch: development
   specs:
     stash_engine (0.0.17)
       jquery-rails
@@ -155,7 +159,7 @@ GEM
       omniauth-oauth2 (~> 1.3.1)
     omniauth-shibboleth (1.2.1)
       omniauth (>= 1.0.0)
-    parser (2.3.0.1)
+    parser (2.3.0.2)
       ast (~> 2.2)
     passenger (5.0.23)
       rack
@@ -181,14 +185,14 @@ GEM
       activesupport (>= 4.2.0.beta, < 5.0)
       nokogiri (~> 1.6.0)
       rails-deprecated_sanitizer (>= 1.0.1)
-    rails-html-sanitizer (1.0.2)
+    rails-html-sanitizer (1.0.3)
       loofah (~> 2.0)
     railties (4.2.4)
       actionpack (= 4.2.4)
       activesupport (= 4.2.4)
       rake (>= 0.8.7)
       thor (>= 0.18.1, < 2.0)
-    rainbow (2.0.0)
+    rainbow (2.1.0)
     rake (10.5.0)
     rdoc (4.2.1)
       json (~> 1.4)
@@ -203,7 +207,7 @@ GEM
     rspec-mocks (3.4.1)
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.4.0)
-    rspec-rails (3.4.0)
+    rspec-rails (3.4.1)
       actionpack (>= 3.0, < 4.3)
       activesupport (>= 3.0, < 4.3)
       railties (>= 3.0, < 4.3)
