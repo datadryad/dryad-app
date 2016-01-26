@@ -5,8 +5,8 @@ module StashDatacite
     before_action :set_geolocation_point, only: [:edit, :update, :delete]
 
     # # GET /geolocation_points/
-    def get_coordinates
-      @geolocation_points = GeolocationPoint.select(:latitude,:longitude).where(resource_id: params[:resource_id])
+    def points_coordinates
+      @geolocation_points = GeolocationPoint.select(:latitude, :longitude).where(resource_id: params[:resource_id])
       respond_to do |format|
         format.html
         format.json { render json:  @geolocation_points }

@@ -5,7 +5,7 @@ module StashDatacite
     before_action :set_geolocation_place, only: [:edit, :update, :delete]
 
     # # GET /geolocation_points/
-    def get_places
+    def places_coordinates
       @geolocation_places = GeolocationPlace.select(:geo_location_place).where(resource_id: params[:resource_id])
       respond_to do |format|
         format.html

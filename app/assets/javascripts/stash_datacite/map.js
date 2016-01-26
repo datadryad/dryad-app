@@ -22,7 +22,7 @@ $(document).ready(function() {
         $.ajax({
           type: "GET",
           dataType: "json",
-          url: "/stash_datacite/geolocation_points/get_coordinates",
+          url: "/stash_datacite/geolocation_points/points_coordinates",
           data: { resource_id: $.urlParam('resource_id') },
           async: false,
           success: function(data) {
@@ -55,7 +55,7 @@ $(document).ready(function() {
         $.ajax({
           type: "GET",
           dataType: "json",
-          url: "/stash_datacite/geolocation_boxes/get_coordinates",
+          url: "/stash_datacite/geolocation_boxes/boxes_coordinates",
           data: { resource_id: $.urlParam('resource_id') },
           async: false,
           success: function(data) {
@@ -92,7 +92,7 @@ $(document).ready(function() {
           $.ajax({
             type: "GET",
             dataType: "json",
-            url: "/stash_datacite/geolocation_places/get_places",
+            url: "/stash_datacite/geolocation_places/places_coordinates",
             data: { resource_id: $.urlParam('resource_id') },
             async: false,
             success: function(data) {
@@ -193,14 +193,36 @@ $(document).ready(function() {
 
 
     // listen to the draw edited event
-      // map.on('draw:edited', function (e) {
-      //     var layers = e.layers;
-      //     layers.eachLayer(function (layer) {
-      //         if (layer instanceof L.Marker){
-      //                 alert(layer.getLatLng().toString());
-      //         }
-      //     });
-      // });
+      map.on('draw:edited', function (e) {
+          var layers = e.layers;
+          layers.eachLayer(function (layer) {
+              if (layer instanceof L.Marker){
+                      alert(layer.getLatLng().toString());
+              }
+          });
+      });
+
+      var getShapes = function(drawnItems) {
+        var lng, lat;
+
+        drawnItems.eachLayer(function(layer) {
+            // Note: Rectangle extends Polygon. Polygon extends Polyline.
+            // Therefore, all of them are instances of Polyline
+            if (layer instanceof L.Polyline) {
+              coordinates = [];
+              latlngs = layer.getLatLngs();
+              for (var i = 0; i < latlngs.length; i++) {
+                  coordinates.push([latlngs[i].lng, latlngs[i].lat])
+              }
+            }
+
+            if (layer instanceof L.Marker) {
+              coordinates = [];
+              coordinates.push([layer.getLatLng().lat, layer.getLatLng().lng]);
+            }
+        });
+        return coordinates;
+      };
 
     // listen to the draw deleted event
         // map.on('draw:deleted', function () {

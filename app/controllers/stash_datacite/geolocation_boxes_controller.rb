@@ -5,8 +5,10 @@ module StashDatacite
     before_action :set_geolocation_box, only: [:show, :edit, :update, :delete]
 
     # # GET /geolocation_boxes/
-    def get_coordinates
-      @geolocation_boxes = GeolocationBox.select(:sw_latitude,:sw_longitude, :ne_latitude, :ne_longitude).where(resource_id: params[:resource_id])
+    def boxes_coordinates
+      @geolocation_boxes = GeolocationBox.select(:sw_latitude,
+                                                 :sw_longitude, :ne_latitude,
+                                                 :ne_longitude).where(resource_id: params[:resource_id])
       respond_to do |format|
         format.html
         format.json { render json: @geolocation_boxes }
