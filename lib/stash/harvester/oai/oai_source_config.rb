@@ -21,7 +21,7 @@ module Stash
 
         protocol 'OAI'
 
-        DUBLIN_CORE = 'oai_dc'
+        DUBLIN_CORE = 'oai_dc'.freeze
         private_constant :DUBLIN_CORE
 
         UNRESERVED_PATTERN = Regexp.new("^[#{URI::RFC2396_REGEXP::PATTERN::UNRESERVED}]+$")

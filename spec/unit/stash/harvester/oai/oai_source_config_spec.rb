@@ -4,7 +4,7 @@ module Stash
   module Harvester
     module OAI
 
-      RESERVED_RCF_2396 = ';/?:@&=+$,'
+      RESERVED_RCF_2396 = ';/?:@&=+$,'.freeze
 
       describe OAISourceConfig do
         describe '#new' do

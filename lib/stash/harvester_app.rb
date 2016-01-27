@@ -4,7 +4,7 @@ module Stash
 
   # Workaround to allow HarvesterApp to access Harvester classes with unqualified names.
   module Harvester
-    alias_method :old_included, :included if self.method_defined? :included
+    alias old_included included if method_defined? :included
     def self.included(base)
       old_included(base) if method_defined? :old_included
       constants.each { |c| base.const_set(c, const_get("#{self}::#{c}")) }

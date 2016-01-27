@@ -50,7 +50,7 @@ module Stash
         # @return [Boolean] True if this record is equivalent to the specified record;
         #   false otherwise
         def ==(other) # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity
-          return true if self.equal?(other)
+          return true if equal?(other)
           return false unless other.instance_of?(self.class)
           return false unless other.timestamp == timestamp
           return false unless other.deleted? == deleted?

@@ -9,7 +9,7 @@ module Stash
 
         adapter 'Solr'
 
-        SUSPICIOUS_OPTS = { proxy_url: :proxy, proxy_uri: :proxy }
+        SUSPICIOUS_OPTS = { proxy_url: :proxy, proxy_uri: :proxy }.freeze
         private_constant :SUSPICIOUS_OPTS
 
         attr_reader :proxy_uri

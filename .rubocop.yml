@@ -22,3 +22,7 @@ Style/EmptyLinesAroundModuleBody:
 # Allow one line around block body (Style/EmptyLines will still disallow two or more)
 Style/EmptyLinesAroundBlockBody:
   Enabled: false
+
+# Suppress complaints about post-2.0 syntax
+AllCops:
+  TargetRubyVersion: 2.2

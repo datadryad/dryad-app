@@ -32,7 +32,7 @@ module Stash
 
       NOTES = [NOTE_EXAMPLES, NOTE_CONFIG, NOTE_DATETIME].join("\n\n") + "\n"
 
-      VERSION = "#{NAME} #{VERSION}\n#{COPYRIGHT}\n"
+      VERSION = "#{NAME} #{VERSION}\n#{COPYRIGHT}\n".freeze
 
       DATE_LENGTH = 'YYYY-MM-DD'.length
 
@@ -46,9 +46,9 @@ module Stash
         end
       end
 
-      USAGE = "#{init_opts(nil)}\n"
+      USAGE = "#{init_opts(nil)}\n".freeze
 
-      HELP = "#{USAGE}#{NOTES}\n"
+      HELP = "#{USAGE}#{NOTES}\n".freeze
 
       attr_accessor :show_version
       attr_accessor :show_help
@@ -69,8 +69,6 @@ module Stash
         show_help || show_version
       end
 
-      private
-
       def parse(argv)
         @opt_parser.parse(argv)
       end
@@ -87,11 +85,13 @@ module Stash
       rescue ArgumentError
         raise(OptionParser::InvalidArgument, ": '#{time_str}' is not a valid ISO 8601 datetime")
       end
+      private_class_method :to_time
 
       def self.to_utc_time(time_str)
         time = to_time(time_str)
         Util.utc_or_nil(time)
       end
+      private_class_method :to_utc_time
 
     end
   end

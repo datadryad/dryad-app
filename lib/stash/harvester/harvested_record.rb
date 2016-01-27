@@ -41,7 +41,7 @@ module Stash
       # Visibility modifiers
 
       private :deleted
-      alias_method :deleted?, :deleted
+      alias deleted? deleted
       public :deleted?
 
     end

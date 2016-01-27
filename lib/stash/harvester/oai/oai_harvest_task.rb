@@ -8,7 +8,7 @@ module Stash
       #
       class OAIHarvestTask < HarvestTask
 
-        DATE_FORMAT = '%Y-%m-%d'
+        DATE_FORMAT = '%Y-%m-%d'.freeze
         private_constant :DATE_FORMAT
 
         # Creates a new `ListRecordsTask` for harvesting from the specified OAI-PMH repository, with

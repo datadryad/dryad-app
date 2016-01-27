@@ -41,7 +41,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'rspec', '~> 3.2'
   spec.add_development_dependency 'simplecov', '~> 0.9.2'
   spec.add_development_dependency 'simplecov-console', '~> 0.2.0'
-  spec.add_development_dependency 'rubocop', '~> 0.32', '>= 0.32.1'
+  spec.add_development_dependency 'rubocop', '~> 0.36'
   spec.add_development_dependency 'redcarpet', '~> 3.3'
   spec.add_development_dependency 'github-markup', '~> 1.4'
   spec.add_development_dependency 'yard', '~> 0.8'

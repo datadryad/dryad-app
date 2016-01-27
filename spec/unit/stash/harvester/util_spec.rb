@@ -38,7 +38,7 @@ module Stash
           time = Time.new(2002, 10, 31, 2, 2, 2, '+02:00')
           expect { Util.utc_or_nil(time) }.to raise_error do |e|
             expect(e).to be_an ArgumentError
-            expect(e.message).to include("#{time}")
+            expect(e.message).to include(time.to_s)
           end
         end
       end
