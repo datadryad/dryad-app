@@ -4,14 +4,13 @@ var map;
 $(document).ready(function() {
 
   // create a map in the "map" div, set the view to a given place and zoom
-  map = L.map('map').setView([36.778259, -119.417931], 12);
+  map = L.map('map').setView([36.778259, -119.417931], 2);
       mapLink = '<a href="https://openstreetmap.org">OpenStreetMap</a>';
 
     // add an OpenStreetMap tile layer
       L.tileLayer(
           'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
           attribution: '&copy; ' + mapLink + ' Contributors',
-          maxZoom: 18,
           }).addTo(map);
 
   // -------------------------------- //
@@ -44,6 +43,14 @@ $(document).ready(function() {
         var lng = coordinatesMarker[i][1];
         var markerLocation = new L.LatLng(lat, lng);
         var marker = new L.Marker(markerLocation, { draggable: true }).addTo(map).bindPopup(lat +","+ lng);
+
+        marker.on('dragend', function(event){
+          var lat = (e.latlng.lat);
+          var lng = (e.latlng.lng);
+          var newLatLng = new L.LatLng(lat, lng);
+          alert(newLatLng);
+          marker.setLatLng(newLatLng);
+        });
      }
   // -------------------------------- //
 
@@ -108,7 +115,7 @@ $(document).ready(function() {
           return(arr);
       }
 
-       // Loop through the bbox array
+       // Loop through the location names array
         for (var i=0; i<locationNames.length; i++) {
           var place = locationNames[i][0];
           MQ.geocode().search(place).on('success', function(e) {
@@ -134,10 +141,14 @@ $(document).ready(function() {
             circle : false,
             rect: {
               shapeOptions: {
-                color: 'green'
+                color: 'green',
+                repeatMode: true,
               },
             },
             marker: {
+              shapeOptions: {
+                repeatMode: true,
+              },
             },
           },
           edit: {

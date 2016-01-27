@@ -1,10 +1,9 @@
 $('div.geolocation_points').replaceWith('<%= j render partial: "stash_datacite/geolocation_points/index", locals: { geolocation_points: @geolocation_points } %>')
-var newMarker = new L.marker(new L.LatLng(<%= @geolocation_point.latitude %>, <%= @geolocation_point.longitude %>),
+var newMarker = L.marker(new L.LatLng(<%= @geolocation_point.latitude %>, <%= @geolocation_point.longitude %>),
      { draggable: true }).addTo(map).bindPopup(<%= @geolocation_point.latitude %> +","+ <%= @geolocation_point.longitude %>);
 newMarker.on('dragend', function(event){
   var marker = event.target;
   var position = marker.getLatLng();
   alert(position);
-  marker.setLatLng([position],{id:uni,draggable:'true'}).bindPopup(position).update();
+  marker.setLatLng([position],{draggable: true }).bindPopup(position).update();
 });
-map.panTo(new L.LatLng(<%= @geolocation_point.latitude %>, <%= @geolocation_point.longitude %>));
