@@ -7,6 +7,9 @@
 # Ignore bundler config.
 /.bundle
 
+# Ignore bundler local gem installations.
+vendor/
+
 #ignore config files with private information
 /config/*.yml
 /config/tenants/*.yml
