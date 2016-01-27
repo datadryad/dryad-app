@@ -14,7 +14,8 @@ Gem::Specification.new do |spec|
   spec.description   = 'A gem for working with the Stash wrapper XML format'
   spec.license       = 'MIT'
 
-  origin_uri = URI(`git config --get remote.origin.url`.chomp)
+  origin = `git config --get remote.origin.url`.chomp
+  origin_uri = origin.start_with?('http') ? URI(origin) : URI(origin.sub('git@github.com:', 'https://github.com/'))
   spec.homepage = URI::HTTP.build(host: origin_uri.host, path: origin_uri.path.chomp('.git')).to_s
 
   spec.files         = `git ls-files -z`.split("\x0")
@@ -23,8 +24,8 @@ Gem::Specification.new do |spec|
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths = ['lib']
 
-  spec.add_dependency 'typesafe_enum', '~> 0.1', '>= 0.1.2'
-  spec.add_dependency 'xml-mapping_extensions', '~> 0.3', '>= 0.3.2'
+  spec.add_dependency 'typesafe_enum', '~> 0.1', '>= 0.1.5'
+  spec.add_dependency 'xml-mapping_extensions', '~> 0.3', '>= 0.3.4'
 
   spec.add_development_dependency 'bundler', '~> 1.7'
   spec.add_development_dependency 'equivalent-xml', '~> 0.6.0'
