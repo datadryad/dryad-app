@@ -8,7 +8,7 @@ set :repo_url, 'https://github.com/CDLUC3/dashv2.git'
 ask :branch, `git rev-parse --abbrev-ref HEAD`.chomp
 
 # Default deploy_to directory is /var/www/my_app_name
-set :deploy_to, '/dash2/apps/ui'
+set :deploy_to, '/apps/dash2/apps/ui'
 
 # Default value for :scm is :git
 set :scm, :git
@@ -30,7 +30,7 @@ set :scm, :git
 set :linked_dirs, fetch(:linked_dirs, []).push('log', 'tmp/pids', 'tmp/cache', 'tmp/sockets', 'vendor/bundle', 'public/system')
 
 # Default value for default_env is {}
-set :default_env, { path: "/dash2/local/bin:$PATH" }
+set :default_env, { path: "/apps/dash2/local/bin:$PATH" }
 
 # Default value for keep_releases is 5
 set :keep_releases, 5
@@ -47,9 +47,9 @@ namespace :deploy do
   desc 'Get list of linked files for capistrano'
   task :my_linked_files do
     on roles(:app) do
-      res1 = capture "ls /dash2/apps/ui/shared/config/*.yml -1"
+      res1 = capture "ls /apps/dash2/apps/ui/shared/config/*.yml -1"
       res1 = res1.split("\n").map{|i| i.match(/config\/[^\/]+$/).to_s }
-      res2 = capture "ls /dash2/apps/ui/shared/config/tenants/*.yml -1"
+      res2 = capture "ls /apps/dash2/apps/ui/shared/config/tenants/*.yml -1"
       res2 = res2.split("\n").map{|i| i.match(/config\/tenants\/[^\/]+$/).to_s }
       set :linked_files, (res1 + res2)
     end
