@@ -12,6 +12,7 @@ module StashEngine
       @auth_hash = request.env['omniauth.auth']
       reset_session
       if @auth_hash && @auth_hash['info'] && @auth_hash['info']['email'] && @auth_hash['info']['name']
+        logger.debug(@auth_hash)
         set_session
         redirect_to dashboard_path
       else
