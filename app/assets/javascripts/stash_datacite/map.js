@@ -32,7 +32,7 @@ $(document).ready(function() {
           }
         });
         arr = $.map(result, function(n){
-           return [[ n["latitude"], n["longitude"] ]];
+           return [[ n["latitude"], n["longitude"], n["id"] ]];
         });
         return(arr);
     }
@@ -42,20 +42,22 @@ $(document).ready(function() {
      for (var i=0; i<coordinatesMarker.length; i++) {
         var lat = coordinatesMarker[i][0];
         var lng = coordinatesMarker[i][1];
+        var mrk_id = coordinatesMarker[i][2];
         var markerLocation = new L.LatLng(lat, lng);
-        marker = new L.Marker(markerLocation, { draggable: true }).addTo(map).bindPopup(lat +","+ lng);
-        marker = new L.Marker(markerLocation, { draggable: true }).addTo(map).bindPopup(lat +","+ lng).openPopup();
+        // marker = new L.Marker(markerLocation, { draggable: true }).addTo(map).bindPopup(lat +","+ lng);
+        marker = new L.Marker(markerLocation, { draggable: true, id: mrk_id }).addTo(map).bindPopup(lat +","+ lng).openPopup();
         markerArray.push(marker);
      }
 
         marker.on('dragend', function(event){
-            var chagedPos = event.target.getLatLng();
-            this.bindPopup(chagedPos.toString()).openPopup();
+          alert("hi");
+            // var chagedPos = event.target.getLatLng();
+            // this.bindPopup(chagedPos.toString()).openPopup();
             // $.ajax({
             //     dataType: "POST",
             //     url: "/stash_datacite/geolocation_points/update_coordinates",
-            //     data: { 'latitude' : marker.getLatLng().lat, 'longitude' : marker.getLatLng().lng),
-            //            'resource_id' : $.urlParam('resource_id') },
+            //     data: { 'latitude' : marker.getLatLng().lat, 'longitude' : marker.getLatLng().lng,
+            //            'resource_id' : $.urlParam('resource_id'), 'id' : marker.mrk_id },
             //     success: function() {
             //       alert('Success');
             //     },
