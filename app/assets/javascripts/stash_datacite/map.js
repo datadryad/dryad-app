@@ -38,20 +38,33 @@ $(document).ready(function() {
     }
 
      //Loop through the markers array
+     var marker, markerArray = [];
      for (var i=0; i<coordinatesMarker.length; i++) {
         var lat = coordinatesMarker[i][0];
         var lng = coordinatesMarker[i][1];
         var markerLocation = new L.LatLng(lat, lng);
-        var marker = new L.Marker(markerLocation, { draggable: true }).addTo(map).bindPopup(lat +","+ lng);
+        marker = new L.Marker(markerLocation, { draggable: true }).addTo(map).bindPopup(lat +","+ lng);
+        marker = new L.Marker(markerLocation, { draggable: true }).addTo(map).bindPopup(lat +","+ lng).openPopup();
+        markerArray.push(marker);
+     }
 
         marker.on('dragend', function(event){
-          var lat = (e.latlng.lat);
-          var lng = (e.latlng.lng);
-          var newLatLng = new L.LatLng(lat, lng);
-          alert(newLatLng);
-          marker.setLatLng(newLatLng);
+            var chagedPos = event.target.getLatLng();
+            this.bindPopup(chagedPos.toString()).openPopup();
+            // $.ajax({
+            //     dataType: "POST",
+            //     url: "/stash_datacite/geolocation_points/update_coordinates",
+            //     data: { 'latitude' : marker.getLatLng().lat, 'longitude' : marker.getLatLng().lng),
+            //            'resource_id' : $.urlParam('resource_id') },
+            //     success: function() {
+            //       alert('Success');
+            //     },
+            //     error: function() {
+            //       alert('Error occured');
+            //     }
+            //   });
+
         });
-     }
   // -------------------------------- //
 
   // -------------------------------- //

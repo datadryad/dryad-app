@@ -24,6 +24,7 @@ module StashDatacite
         if @geolocation_point.save
           @geolocation_points = GeolocationPoint.where(resource_id: params[:resource_id])
           format.js { render template: 'stash_datacite/geolocation_points/create.js.erb' }
+          format.json { @geolocation_point.id }
         else
           format.html { render :new }
         end
@@ -37,6 +38,23 @@ module StashDatacite
         if @geolocation_point.save
           @geolocation_points = GeolocationPoint.where(resource_id: geolocation_point_params[:resource_id])
           format.js
+        else
+          format.html { render :new }
+        end
+      end
+    end
+
+    def update_coordinates
+      old_latitude = params[:old_latitude]
+      old_longitude = params[:old_longitude]
+      byebug
+      @geolocation_point = GeolocationPoint.where( latitude: old_longitude, longitude: old_longitude, resource_id: params[:resource_id])
+      geolocation_point_params = params.except(:old_latitude, :old_longitude)
+      respond_to do |format|
+        if @geolocation_point.update(geolocation_point_params.permit!)
+          @geolocation_points = GeolocationPoint.where(resource_id: params[:resource_id])
+          format.js
+          format.json { render json:  @geolocation_point.id }
         else
           format.html { render :new }
         end
