@@ -44,12 +44,14 @@ $(document).ready(function() {
         var lng = coordinatesMarker[i][1];
         var mrk_id = coordinatesMarker[i][2];
         var markerLocation = new L.LatLng(lat, lng);
-        // marker = new L.Marker(markerLocation, { draggable: true }).addTo(map).bindPopup(lat +","+ lng);
-        marker = new L.Marker(markerLocation, { draggable: true, id: mrk_id }).addTo(map).bindPopup(lat +","+ lng).openPopup();
+        marker = new L.Marker(markerLocation, { draggable: true, id: mrk_id }).addTo(map).bindPopup(lat +","+ lng);
         markerArray.push(marker);
+         marker.on('dragend', function(event) {
+             console.log(event.target.options.id);
+         });
      }
 
-        marker.on('dragend', function(event){
+        /* marker.on('dragend', function(event){
           alert("hi");
             // var chagedPos = event.target.getLatLng();
             // this.bindPopup(chagedPos.toString()).openPopup();
@@ -66,7 +68,7 @@ $(document).ready(function() {
             //     }
             //   });
 
-        });
+        }); */
   // -------------------------------- //
 
   // -------------------------------- //
@@ -276,7 +278,7 @@ $(document).ready(function(){
     $("#location_section").click(function() {
         setTimeout(function() {
             map.invalidateSize();
-        }, 300);
+        }, 1000);
     });
 });
 
