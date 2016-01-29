@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151116143020) do
+ActiveRecord::Schema.define(version: 20160127073910) do
 
   create_table "dcs_affliations", force: :cascade do |t|
     t.string   "short_name",   limit: 255
@@ -72,13 +72,13 @@ ActiveRecord::Schema.define(version: 20151116143020) do
   end
 
   create_table "dcs_geo_location_boxes", force: :cascade do |t|
-    t.float    "sw_latitude",  limit: 24
-    t.float    "ne_latitude",  limit: 24
-    t.float    "sw_longitude", limit: 24
-    t.float    "ne_longitude", limit: 24
+    t.decimal  "sw_latitude",            precision: 10, scale: 6
+    t.decimal  "ne_latitude",            precision: 10, scale: 6
+    t.decimal  "sw_longitude",           precision: 10, scale: 6
+    t.decimal  "ne_longitude",           precision: 10, scale: 6
     t.integer  "resource_id",  limit: 4
-    t.datetime "created_at",              null: false
-    t.datetime "updated_at",              null: false
+    t.datetime "created_at",                                      null: false
+    t.datetime "updated_at",                                      null: false
   end
 
   create_table "dcs_geo_location_places", force: :cascade do |t|
@@ -89,11 +89,11 @@ ActiveRecord::Schema.define(version: 20151116143020) do
   end
 
   create_table "dcs_geo_location_points", force: :cascade do |t|
-    t.float    "latitude",    limit: 24
-    t.float    "longitude",   limit: 24
+    t.decimal  "latitude",              precision: 10, scale: 6
+    t.decimal  "longitude",             precision: 10, scale: 6
     t.integer  "resource_id", limit: 4
-    t.datetime "created_at",             null: false
-    t.datetime "updated_at",             null: false
+    t.datetime "created_at",                                     null: false
+    t.datetime "updated_at",                                     null: false
   end
 
   create_table "dcs_name_identifiers", force: :cascade do |t|
