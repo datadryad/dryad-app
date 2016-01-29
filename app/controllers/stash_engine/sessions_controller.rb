@@ -11,9 +11,10 @@ module StashEngine
     def callback
       @auth_hash = request.env['omniauth.auth']
       reset_session
-      if @auth_hash && @auth_hash['info'] && @auth_hash['info']['email'] && @auth_hash['info']['name']
-        logger.debug(@auth_hash)
-        set_session
+      if @auth_hash && @auth_hash['info'] && @auth_hash['info']['email'] && @auth_hash['info']['name'] &&
+          @auth_hash['uid']
+        session[:test_domain] = @auth_hash['info']['test_domain'] if session[:provider] == 'developer'
+        User.from_omniauth(@auth_hash, current_tenant.abbreviation)
         redirect_to dashboard_path
       else
         return head(:forbidden)
@@ -34,5 +35,6 @@ module StashEngine
                      provider: @auth_hash['provider'])
       session[:test_domain] = @auth_hash['info']['test_domain'] if session[:provider] == 'developer'
     end
+
   end
 end
