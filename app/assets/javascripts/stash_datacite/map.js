@@ -51,15 +51,13 @@ $(document).ready(function() {
             this.bindPopup(chagedPos.toString()).openPopup();
             $.ajax({
                 type: "PUT",
-                dataType: "json",
+                dataType: "script",
                 url: "/stash_datacite/geolocation_points/update_coordinates",
                 data: { 'latitude' : marker.getLatLng().lat, 'longitude' : marker.getLatLng().lng,
                        'resource_id' : $.urlParam('resource_id'), 'id' : marker.options.id },
                 success: function() {
-                  alert('Success');
                 },
                 error: function() {
-                  alert('Error occured');
                 }
               });
          });
