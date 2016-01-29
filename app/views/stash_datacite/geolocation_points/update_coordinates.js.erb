@@ -1,18 +1,1 @@
 $('div.geolocation_points').replaceWith('<%= j render partial: "stash_datacite/geolocation_points/index", locals: { geolocation_points: @geolocation_points } %>')
-
-// Add id to a marker
-customMarker = L.Marker.extend({
-   options: {
-      id: 'Custom data!'
-   }
-});
-
-var newMarker = new customMarker(new L.LatLng(<%= @geolocation_point.latitude %>, <%= @geolocation_point.longitude %>),
-     { title: 'Marker', draggable: true, id: <%= @geolocation_point.id %> });
-newMarker.addTo(map).bindPopup(<%= @geolocation_point.latitude %> +","+ <%= @geolocation_point.longitude %>);
-
-console.log(newMarker.options.id);
-  newMarker.on('dragend', function(event){
-    var chagedPos = event.target.getLatLng();
-    this.bindPopup(chagedPos.toString()).openPopup();
-  });

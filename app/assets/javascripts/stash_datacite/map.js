@@ -47,28 +47,23 @@ $(document).ready(function() {
         marker = new L.Marker(markerLocation, { draggable: true, id: mrk_id }).addTo(map).bindPopup(lat +","+ lng);
         markerArray.push(marker);
          marker.on('dragend', function(event) {
-             console.log(event.target.options.id);
+            var chagedPos = event.target.getLatLng();
+            this.bindPopup(chagedPos.toString()).openPopup();
+            $.ajax({
+                type: "PUT",
+                dataType: "json",
+                url: "/stash_datacite/geolocation_points/update_coordinates",
+                data: { 'latitude' : marker.getLatLng().lat, 'longitude' : marker.getLatLng().lng,
+                       'resource_id' : $.urlParam('resource_id'), 'id' : marker.options.id },
+                success: function() {
+                  alert('Success');
+                },
+                error: function() {
+                  alert('Error occured');
+                }
+              });
          });
      }
-
-        /* marker.on('dragend', function(event){
-          alert("hi");
-            // var chagedPos = event.target.getLatLng();
-            // this.bindPopup(chagedPos.toString()).openPopup();
-            // $.ajax({
-            //     dataType: "POST",
-            //     url: "/stash_datacite/geolocation_points/update_coordinates",
-            //     data: { 'latitude' : marker.getLatLng().lat, 'longitude' : marker.getLatLng().lng,
-            //            'resource_id' : $.urlParam('resource_id'), 'id' : marker.mrk_id },
-            //     success: function() {
-            //       alert('Success');
-            //     },
-            //     error: function() {
-            //       alert('Error occured');
-            //     }
-            //   });
-
-        }); */
   // -------------------------------- //
 
   // -------------------------------- //
@@ -162,24 +157,20 @@ $(document).ready(function() {
                 repeatMode: true,
               },
             },
-            marker: {
-              shapeOptions: {
-                repeatMode: true,
-              },
-            },
+            marker: {},
           },
           edit: {
-              featureGroup: drawnItems,
-              remove: true
+            featureGroup: drawnItems,
+            edit: false,
+            remove: true
           }
       });
       map.addControl(drawControl);
 
     // listen to the draw created event
       map.on('draw:created', function (e) {
-        var type = e.layerType,
-            layer = e.layer;
-      drawnItems.addLayer(layer);
+        var type = e.layerType;
+      drawnItems.addLayer(e.layer);
 
         var resource_id = $.urlParam('resource_id');
         var rectangle_coordinates = getShapes(drawnItems);
@@ -219,17 +210,6 @@ $(document).ready(function() {
         }
       });
 
-
-    // listen to the draw edited event
-      map.on('draw:edited', function (e) {
-          var layers = e.layers;
-          layers.eachLayer(function (layer) {
-              if (layer instanceof L.Marker){
-                      alert(layer.getLatLng().toString());
-              }
-          });
-      });
-
       var getShapes = function(drawnItems) {
         var lng, lat;
 
@@ -252,10 +232,15 @@ $(document).ready(function() {
         return coordinates;
       };
 
-    // listen to the draw deleted event
-        // map.on('draw:deleted', function () {
-        //     // Update db to save latest changes.
+    // listen to the draw delete event
+    map.on('draw:deleted', function(e) {
+        var layer = e.layer;
+        // layers.eachLayer(function(feature) {
         // });
+     drawnItems.removeLayer(layer);
+    });
+
+
 });
 
 $(document).ready(function() {

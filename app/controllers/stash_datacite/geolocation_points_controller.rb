@@ -45,16 +45,12 @@ module StashDatacite
     end
 
     def update_coordinates
-      old_latitude = params[:old_latitude]
-      old_longitude = params[:old_longitude]
-      byebug
-      @geolocation_point = GeolocationPoint.where( latitude: old_longitude, longitude: old_longitude, resource_id: params[:resource_id])
-      geolocation_point_params = params.except(:old_latitude, :old_longitude)
+      @geolocation_point = GeolocationPoint.where(id: params[:id], resource_id: params[:resource_id]).first
+      geolocation_point_params = params.except(:controller, :action)
       respond_to do |format|
         if @geolocation_point.update(geolocation_point_params.permit!)
           @geolocation_points = GeolocationPoint.where(resource_id: params[:resource_id])
           format.js
-          format.json { render json:  @geolocation_point.id }
         else
           format.html { render :new }
         end

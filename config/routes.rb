@@ -1,6 +1,5 @@
 StashDatacite::Engine.routes.draw do
 
-
   get 'titles/new', to: 'titles#new'
   post 'titles/create', to: 'titles#create'
   patch 'titles/update', to: 'titles#update'
@@ -37,7 +36,7 @@ StashDatacite::Engine.routes.draw do
   get 'geolocation_points/points_coordinates', to: 'geolocation_points#points_coordinates'
   post 'geolocation_points/map_coordinates', to: 'geolocation_points#map_coordinates'
   post 'geolocation_points/create', to: 'geolocation_points#create'
-  post 'geolocation_points/update_coordinates', to: 'geolocation_points#update_coordinates'
+  put 'geolocation_points/update_coordinates', to: 'geolocation_points#update_coordinates'
   delete 'geolocation_points/:id/delete', to: 'geolocation_points#delete', as: 'geolocation_points_delete'
 
   get 'geolocation_boxes/new', to: 'geolocation_boxes#new'
@@ -45,8 +44,4 @@ StashDatacite::Engine.routes.draw do
   post 'geolocation_boxes/map_coordinates', to: 'geolocation_boxes#map_coordinates'
   post 'geolocation_boxes/create', to: 'geolocation_boxes#create'
   delete 'geolocation_boxes/:id/delete', to: 'geolocation_boxes#delete', as: 'geolocation_boxes_delete'
-
-  resources :geolocation_boxes, except: [:index]
-  resources :geolocation_points, except: [:index]
-
 end
