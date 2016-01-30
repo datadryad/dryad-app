@@ -13,6 +13,7 @@ module StashEngine
       reset_session
       if @auth_hash && @auth_hash['info'] && @auth_hash['info']['email'] && @auth_hash['uid']
         session[:test_domain] = @auth_hash['info']['test_domain'] if session[:provider] == 'developer'
+        logger.debug(@auth_hash.inspect)
         User.from_omniauth(@auth_hash, current_tenant.abbreviation)
         redirect_to dashboard_path
       else
