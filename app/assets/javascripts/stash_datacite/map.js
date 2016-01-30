@@ -44,7 +44,7 @@ $(document).ready(function() {
         var lng = coordinatesMarker[i][1];
         var mrk_id = coordinatesMarker[i][2];
         var markerLocation = new L.LatLng(lat, lng);
-        marker = new L.Marker(markerLocation, { draggable: true, id: mrk_id }).addTo(map).bindPopup(lat +","+ lng);
+        marker = new L.Marker(markerLocation, { draggable: true, id: mrk_id }).addTo(map).bindPopup(lat +","+ lng + " " +"<input type='button' value='Delete marker' class='marker-delete-button'/>");
         markerArray.push(marker);
          marker.on('dragend', function(event) {
             var chagedPos = event.target.getLatLng();
@@ -160,7 +160,7 @@ $(document).ready(function() {
           edit: {
             featureGroup: drawnItems,
             edit: false,
-            remove: true
+            remove: false
           }
       });
       map.addControl(drawControl);
@@ -210,7 +210,6 @@ $(document).ready(function() {
 
       var getShapes = function(drawnItems) {
         var lng, lat;
-
         drawnItems.eachLayer(function(layer) {
             // Note: Rectangle extends Polygon. Polygon extends Polyline.
             // Therefore, all of them are instances of Polyline
@@ -225,20 +224,12 @@ $(document).ready(function() {
             if (layer instanceof L.Marker) {
               coordinates = [];
               coordinates.push([layer.getLatLng().lat, layer.getLatLng().lng]);
+              layer.dragging.enable();
+              layer.bindPopup(coordinates + "<input type='button' value='Delete marker' class='marker-delete-button'/>");
             }
         });
         return coordinates;
       };
-
-    // listen to the draw delete event
-    map.on('draw:deleted', function(e) {
-        var layer = e.layer;
-        // layers.eachLayer(function(feature) {
-        // });
-     drawnItems.removeLayer(layer);
-    });
-
-
 });
 
 $(document).ready(function() {

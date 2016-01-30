@@ -1,0 +1,27 @@
+$('div.geolocation_points').replaceWith('<%= j render partial: "stash_datacite/geolocation_points/index", locals: { geolocation_points: @geolocation_points } %>')
+
+var marker;
+function onMapClick(e) {
+  marker = L.marker(new L.LatLng(<%= @geolocation_point.latitude %>, <%= @geolocation_point.longitude %>),
+     { title: 'Marker', draggable: true, id: <%= @geolocation_point.id %> })
+      .addTo(map)
+      .bindPopup(<%= @geolocation_point.latitude %> +","+ <%= @geolocation_point.longitude %> + " " +"<input type='button' value='Delete marker' class='marker-delete-button'/>");
+};
+
+alert("hi");
+
+marker.on('dragend', function(event) {
+  var chagedPos = event.target.getLatLng();
+  this.bindPopup(chagedPos.toString()).openPopup();
+  $.ajax({
+      type: "PUT",
+      dataType: "script",
+      url: "/stash_datacite/geolocation_points/update_coordinates",
+      data: { 'latitude' : marker.getLatLng().lat, 'longitude' : marker.getLatLng().lng,
+             'resource_id' : $.urlParam('resource_id'), 'id' : marker.options.id },
+      success: function() {
+      },
+      error: function() {
+      }
+    });
+});

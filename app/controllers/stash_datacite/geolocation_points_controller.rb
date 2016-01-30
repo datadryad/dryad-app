@@ -23,8 +23,8 @@ module StashDatacite
       respond_to do |format|
         if @geolocation_point.save
           @geolocation_points = GeolocationPoint.where(resource_id: params[:resource_id])
-          format.js { render template: 'stash_datacite/geolocation_points/create.js.erb' }
-          format.json { @geolocation_point.id }
+          format.js
+          format.json
         else
           format.html { render :new }
         end
@@ -69,7 +69,15 @@ module StashDatacite
     # DELETE /geolocation_points/1
     def delete
       @geolocation_point.destroy
-      redirect_to :back, notice: 'Geolocation point was successfully destroyed.'
+      respond_to do |format|
+        if @geolocation_point.update(geolocation_point_params.permit!)
+          @geolocation_points = GeolocationPoint.where(resource_id: params[:resource_id])
+          format.html { redirect_to :back, notice: 'Geolocation point was successfully destroyed.' }
+          format.js { render template: 'stash_datacite/geolocation_points/update_coordinates.js.erb' }
+        else
+          format.html { render :new }
+        end
+      end
     end
 
     private

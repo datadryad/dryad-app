@@ -9,9 +9,9 @@ customMarker = L.Marker.extend({
 
 var newMarker = new customMarker(new L.LatLng(<%= @geolocation_point.latitude %>, <%= @geolocation_point.longitude %>),
      { title: 'Marker', draggable: true, id: <%= @geolocation_point.id %> });
-newMarker.addTo(map).bindPopup(<%= @geolocation_point.latitude %> +","+ <%= @geolocation_point.longitude %>);
+newMarker.addTo(map)
+.bindPopup(<%= @geolocation_point.latitude %> +","+ <%= @geolocation_point.longitude %> + " " +"<input type='button' value='Delete marker' class='marker-delete-button'/>");
 
-console.log(newMarker.options.id);
   newMarker.on('dragend', function(event){
     var chagedPos = event.target.getLatLng();
     this.bindPopup(chagedPos.toString()).openPopup();
