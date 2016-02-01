@@ -9,8 +9,8 @@ module StashEngine
         user.email = auth.info.email.split(";").first #because ucla has two values separated by ;
 
         # name is kludgy and many places do not provide them broken out
-        if user.name
-          name = user.name
+        if auth.info.name
+          name = auth.info.name
           user.first_name = name.split(' ').first
           user.last_name = name.split(' ').last unless name.split(' ').last == user.first_name
         end

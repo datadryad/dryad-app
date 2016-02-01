@@ -11,10 +11,10 @@ module StashEngine
     # displays log in/out based on session state, temorary for now
     # :nocov:
     def log_in_out
-      if session[:email].blank?
+      if session[:user_id].blank?
         link_to 'log in', tenants_path
       else
-        link_to "log out as #{session[:name]}", sessions_destroy_path
+        link_to "log out", sessions_destroy_path
       end
     end
     # :nocov:
