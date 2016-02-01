@@ -39,16 +39,19 @@ $(document).ready(function() {
 
      //Loop through the markers array
      var marker, markerArray = [];
-     for (var i=0; i<coordinatesMarker.length; i++) {
+    for (var i=0; i<coordinatesMarker.length; i++) {
         var lat = coordinatesMarker[i][0];
         var lng = coordinatesMarker[i][1];
         var mrk_id = coordinatesMarker[i][2];
         var markerLocation = new L.LatLng(lat, lng);
-        marker = new L.Marker(markerLocation, { draggable: true, id: mrk_id }).addTo(map).bindPopup(lat +","+ lng + " " +"<input type='button' value='Delete marker' class='marker-delete-button'/>");
-        markerArray.push(marker);
+        marker = new L.Marker(markerLocation, { draggable: true, id: mrk_id }).addTo(map).bindPopup(lat +","+ lng + " " +"<button class='delete-button'>Delete</button>");
+
+         // marker.on("popupopen", onPopupOpen);
+
+
          marker.on('dragend', function(event) {
             var chagedPos = event.target.getLatLng();
-            this.bindPopup(chagedPos.toString()).openPopup();
+            this.bindPopup(chagedPos.toString() + " " +"<button class='delete-button'>Delete</button>");
             $.ajax({
                 type: "PUT",
                 dataType: "script",
@@ -61,7 +64,18 @@ $(document).ready(function() {
                 }
               });
          });
-     }
+
+          function onPopupOpen() {
+
+              var tempMarker = this;
+
+              // To remove marker on click of delete button in the popup of marker
+              $(".marker-delete-button:visible").click(function () {
+                  map.removeLayer(tempMarker);
+              });
+          }
+
+    }
   // -------------------------------- //
 
   // -------------------------------- //
@@ -232,7 +246,7 @@ $(document).ready(function() {
               coordinates = [];
               coordinates.push([layer.getLatLng().lat, layer.getLatLng().lng]);
               layer.dragging.enable();
-              layer.bindPopup(coordinates + "<input type='button' value='Delete marker' class='marker-delete-button'/>");
+              layer.bindPopup(coordinates + "<button class='delete-button'>Delete</button>");
             }
         });
         return coordinates;
