@@ -124,7 +124,14 @@ $(document).ready(function() {
           });
           return(arr);
       }
-
+      L.Icon.Default.imagePath = 'assets/images/stash_datacite';
+      var customIcon = new L.Icon({
+            // iconUrl: L.Icon.Default.imagePath +'/globe.png',
+            iconUrl: 'https://thevendy.files.wordpress.com/2015/02/black-and-white-world-globe.gif',
+            iconSize: [25, 25], // size of the icon
+            iconAnchor: [12, 25], // point of the icon which will correspond to marker's location
+            popupAnchor: [0, -25] // point from which the popup should open relative to the iconAnchor
+      });
        // Loop through the location names array
         for (var i=0; i<locationNames.length; i++) {
           var place = locationNames[i][0];
@@ -132,7 +139,7 @@ $(document).ready(function() {
               var best = e.result.best,
                   latlng = best.latlng;
 
-          var newMarker = new L.marker([latlng.lat, latlng.lng], { draggable: true }).addTo(map).bindPopup('<strong>' + best.adminArea5 + ', ' + best.adminArea3 + ', ' + best.adminArea1);
+          var newMarker = new L.marker([latlng.lat, latlng.lng], { draggable: true, icon: customIcon }).addTo(map).bindPopup('<strong>' + best.adminArea5 + ', ' + best.adminArea3 + ', ' + best.adminArea1);
           });
         }
       // -------------------------------- //
