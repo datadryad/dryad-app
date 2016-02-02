@@ -46,7 +46,7 @@ $(document).ready(function() {
         var markerLocation = new L.LatLng(lat, lng);
         marker = new L.Marker(markerLocation, { draggable: true, id: mrk_id }).addTo(map).bindPopup(lat +","+ lng + " " +"<button class='delete-button'>Delete</button>");
 
-         // marker.on("popupopen", onPopupOpen);
+        marker.on("popupopen", function(event) { onPopupOpen(event.target) });
 
 
          marker.on('dragend', function(event) {
@@ -65,17 +65,30 @@ $(document).ready(function() {
               });
          });
 
-          function onPopupOpen() {
-
-              var tempMarker = this;
-
-              // To remove marker on click of delete button in the popup of marker
-              $(".marker-delete-button:visible").click(function () {
-                  map.removeLayer(tempMarker);
-              });
-          }
-
     }
+
+    function onPopupOpen(marker) {
+        $( ".delete-button" ).click(function() {
+            // alert( "Handler for .click() called. " + marker.options.id );
+            map.removeLayer(marker);
+        });
+
+
+        /* var tempMarker = this;
+
+         // To remove marker on click of delete button in the popup of marker
+         $(".marker-delete-button:visible").click(function () {
+         map.removeLayer(tempMarker);
+         }); */
+    }
+
+
+    /*
+    $('.delete-button').click( function(event){
+        alert('now is time to delete.');
+    });
+    */
+
   // -------------------------------- //
 
   // -------------------------------- //
