@@ -26,6 +26,7 @@ module StashEngine
     def destroy
       test_domain = session[:test_domain]
       reset_session
+      clear_user
       session[:test_domain] = test_domain
       redirect_to root_path
     end
