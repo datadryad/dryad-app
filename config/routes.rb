@@ -28,20 +28,29 @@ StashDatacite::Engine.routes.draw do
   patch 'related_identifiers/update', to: 'related_identifiers#update'
 
   get 'geolocation_places/new', to: 'geolocation_places#new'
-  get 'geolocation_places/places_coordinates', to: 'geolocation_places#places_coordinates'
   post 'geolocation_places/create', to: 'geolocation_places#create'
   delete 'geolocation_places/:id/delete', to: 'geolocation_places#delete', as: 'geolocation_places_delete'
 
   get 'geolocation_points/new', to: 'geolocation_points#new'
-  get 'geolocation_points/points_coordinates', to: 'geolocation_points#points_coordinates'
-  post 'geolocation_points/map_coordinates', to: 'geolocation_points#map_coordinates'
   post 'geolocation_points/create', to: 'geolocation_points#create'
-  put 'geolocation_points/update_coordinates', to: 'geolocation_points#update_coordinates'
   delete 'geolocation_points/:id/delete', to: 'geolocation_points#delete', as: 'geolocation_points_delete'
 
   get 'geolocation_boxes/new', to: 'geolocation_boxes#new'
-  get 'geolocation_boxes/boxes_coordinates', to: 'geolocation_boxes#boxes_coordinates'
-  post 'geolocation_boxes/map_coordinates', to: 'geolocation_boxes#map_coordinates'
   post 'geolocation_boxes/create', to: 'geolocation_boxes#create'
   delete 'geolocation_boxes/:id/delete', to: 'geolocation_boxes#delete', as: 'geolocation_boxes_delete'
+
+
+  # Actions through Leaflet Ajax posts
+  # points
+  get 'geolocation_points/points_coordinates', to: 'geolocation_points#points_coordinates'
+  post 'geolocation_points/map_coordinates', to: 'geolocation_points#map_coordinates'
+  put 'geolocation_points/update_coordinates', to: 'geolocation_points#update_coordinates'
+  delete 'geolocation_points/delete_coordinates', to: 'geolocation_points#delete'
+  # bounding boxes
+  get 'geolocation_boxes/boxes_coordinates', to: 'geolocation_boxes#boxes_coordinates'
+  post 'geolocation_boxes/map_coordinates', to: 'geolocation_boxes#map_coordinates'
+  # location names/places
+  get 'geolocation_places/places_coordinates', to: 'geolocation_places#places_coordinates'
+
+
 end

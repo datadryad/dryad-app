@@ -4,7 +4,7 @@ module StashDatacite
   class GeolocationPointsController < ApplicationController
     before_action :set_geolocation_point, only: [:edit, :update, :delete]
 
-    # # GET /geolocation_points/
+    # GET Leaflet AJAX index
     def points_coordinates
       @geolocation_points = GeolocationPoint.select(:id, :latitude, :longitude).where(resource_id: params[:resource_id])
       respond_to do |format|
@@ -13,10 +13,7 @@ module StashDatacite
       end
     end
 
-    # GET /geolocation_points/1/edit
-    # def edit
-    # end
-
+    # POST Leaflet AJAX create
     def map_coordinates
       geolocation_point_params = params.except(:controller, :action)
       @geolocation_point = GeolocationPoint.new(geolocation_point_params.permit!)
@@ -25,6 +22,20 @@ module StashDatacite
           @geolocation_points = GeolocationPoint.where(resource_id: params[:resource_id])
           format.js
           format.json
+        else
+          format.html { render :new }
+        end
+      end
+    end
+
+    # POST Leaflet AJAX update
+    def update_coordinates
+      @geolocation_point = GeolocationPoint.where(id: params[:id], resource_id: params[:resource_id]).first
+      geolocation_point_params = params.except(:controller, :action)
+      respond_to do |format|
+        if @geolocation_point.update(geolocation_point_params.permit!)
+          @geolocation_points = GeolocationPoint.where(resource_id: params[:resource_id])
+          format.js
         else
           format.html { render :new }
         end
@@ -44,39 +55,13 @@ module StashDatacite
       end
     end
 
-    def update_coordinates
-      @geolocation_point = GeolocationPoint.where(id: params[:id], resource_id: params[:resource_id]).first
-      geolocation_point_params = params.except(:controller, :action)
-      respond_to do |format|
-        if @geolocation_point.update(geolocation_point_params.permit!)
-          @geolocation_points = GeolocationPoint.where(resource_id: params[:resource_id])
-          format.js
-        else
-          format.html { render :new }
-        end
-      end
-    end
-
-    # PATCH/PUT /geolocation_points/1
-    # def update
-    #   if @geolocation_point.update(geolocation_point_params)
-    #     redirect_to @geolocation_point, notice: 'Geolocation point was successfully updated.'
-    #   else
-    #     render :edit
-    #   end
-    # end
-
-    # DELETE /geolocation_points/1
+    # DELETE /geolocation_points/1 && # DELETE Leaflet AJAX update
     def delete
       @geolocation_point.destroy
       respond_to do |format|
-        if @geolocation_point.update(geolocation_point_params.permit!)
-          @geolocation_points = GeolocationPoint.where(resource_id: params[:resource_id])
-          format.html { redirect_to :back, notice: 'Geolocation point was successfully destroyed.' }
-          format.js { render template: 'stash_datacite/geolocation_points/update_coordinates.js.erb' }
-        else
-          format.html { render :new }
-        end
+        @geolocation_points = GeolocationPoint.where(resource_id: params[:resource_id])
+        format.html { redirect_to :back, notice: 'Geolocation point was successfully destroyed.' }
+        format.js { render template: 'stash_datacite/geolocation_points/update_coordinates.js.erb' }
       end
     end
 

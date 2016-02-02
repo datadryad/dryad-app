@@ -37,19 +37,18 @@ $(document).ready(function() {
         return(arr);
     }
 
-     //Loop through the markers array
-     var marker, markerArray = [];
-    for (var i=0; i<coordinatesMarker.length; i++) {
-        var lat = coordinatesMarker[i][0];
-        var lng = coordinatesMarker[i][1];
-        var mrk_id = coordinatesMarker[i][2];
-        var markerLocation = new L.LatLng(lat, lng);
-        marker = new L.Marker(markerLocation, { draggable: true, id: mrk_id }).addTo(map).bindPopup(lat +","+ lng + " " +"<button class='delete-button'>Delete</button>");
+      //Loop through the markers array
+      var marker, markerArray = [];
+      for (var i=0; i<coordinatesMarker.length; i++) {
+          var lat = coordinatesMarker[i][0];
+          var lng = coordinatesMarker[i][1];
+          var mrk_id = coordinatesMarker[i][2];
+          var markerLocation = new L.LatLng(lat, lng);
+          marker = new L.Marker(markerLocation, { draggable: true, id: mrk_id }).addTo(map).bindPopup(lat +","+ lng + " " +"<button class='delete-button'>Delete</button>");
 
-        marker.on("popupopen", function(event) { onPopupOpen(event.target) });
+          marker.on("popupopen", function(event) { onPopupOpen(event.target) });
 
-
-         marker.on('dragend', function(event) {
+          marker.on('dragend', function(event) {
             var chagedPos = event.target.getLatLng();
             this.bindPopup(chagedPos.toString() + " " +"<button class='delete-button'>Delete</button>");
             $.ajax({
@@ -63,32 +62,25 @@ $(document).ready(function() {
                 error: function() {
                 }
               });
-         });
+          });
+      }
 
-    }
-
-    function onPopupOpen(marker) {
+    // Delete marker from map and db
+      function onPopupOpen(marker) {
         $( ".delete-button" ).click(function() {
-            // alert( "Handler for .click() called. " + marker.options.id );
-            map.removeLayer(marker);
+          map.removeLayer(marker);
+          $.ajax({
+              type: "DELETE",
+              dataType: "script",
+              url: "/stash_datacite/geolocation_points/delete_coordinates",
+              data: {'id' : marker.options.id, 'resource_id' : $.urlParam('resource_id') },
+              success: function() {
+              },
+              error: function() {
+              }
+            });
         });
-
-
-        /* var tempMarker = this;
-
-         // To remove marker on click of delete button in the popup of marker
-         $(".marker-delete-button:visible").click(function () {
-         map.removeLayer(tempMarker);
-         }); */
-    }
-
-
-    /*
-    $('.delete-button').click( function(event){
-        alert('now is time to delete.');
-    });
-    */
-
+      }
   // -------------------------------- //
 
   // -------------------------------- //
@@ -126,7 +118,6 @@ $(document).ready(function() {
         map.fitBounds(bounds);
      }
     // -------------------------------- //
-
 
     // -------------------------------- //
       // get location names from db and load on map
@@ -235,6 +226,7 @@ $(document).ready(function() {
           var marker_coordinates = getShapes(drawnItems).toString().split(",");
           $.ajax({
             type: "POST",
+            dataType: "script",
             url: "/stash_datacite/geolocation_points/map_coordinates",
             data: { 'latitude' : marker_coordinates[0], 'longitude' : marker_coordinates[1],
                     'resource_id' : resource_id }
