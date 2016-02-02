@@ -6,9 +6,8 @@ module StashEngine
     before_action :require_login
 
     def show
-
       @resources = Resource.where(user_id: current_user.id )
-      #@titles = StashDatacite::Title.all
+      @titles = StashDatacite::Title.where(resource_id: @resources.pluck(:id))
     end
   end
 end
