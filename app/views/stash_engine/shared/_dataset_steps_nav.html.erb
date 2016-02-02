@@ -1,0 +1,31 @@
+<style type="text/css">
+  .ds-nav {
+    display: inline-block;
+    width: 33%;
+    height: 50px;
+    margin: 0 0 0 0;
+    /* padding: 10px; */
+    border: 1px solid black;
+    box-sizing: border-box;
+    text-align: center;
+    line-height: 50px;
+  }
+
+  .ds-nav a {
+    display: inline-block;
+    vertical-align: middle;
+    line-height: normal;
+    font-size: 125%;
+  }
+</style>
+<div style="width:100%">
+  <div class="ds-nav">
+    <%= link_to 'Describe dataset', controller: 'metadata_entry_pages', action: 'find_or_create', resource_id: @resource.id %>
+  </div>
+  <div class="ds-nav">
+    <%= link_to 'Upload Files', upload_resource_path(@resource.id) %>
+  </div>
+  <div class="ds-nav">
+    <%= link_to 'Review & Submit', review_resource_path(@resource.id) %>
+  </div>
+</div>

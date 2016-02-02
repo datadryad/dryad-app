@@ -2,7 +2,7 @@ require_dependency 'stash_engine/application_controller'
 
 module StashEngine
   class ResourcesController < ApplicationController
-    before_action :set_resource, only: [:show, :edit, :update, :destroy, :review]
+    before_action :set_resource, only: [:show, :edit, :update, :destroy, :review, :upload]
 
     # GET /resources
     # GET /resources.json
@@ -63,6 +63,7 @@ module StashEngine
 
     # Review responds as a get request to review the resource before saving
     def review
+
     end
 
     private
