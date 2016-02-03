@@ -8,7 +8,9 @@ module StashEngine
 
     # get the current tenant for customizations, also deals with login
     def current_tenant
-      if session[:test_domain]
+      if current_user
+        StashEngine::Tenant.find(current_user.tenant_id)
+      elsif session[:test_domain]
         StashEngine::Tenant.by_domain(session[:test_domain])
       else
         StashEngine::Tenant.by_domain(request.host)

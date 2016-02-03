@@ -14,7 +14,8 @@ module StashEngine
       if @auth_hash && @auth_hash['info'] && @auth_hash['info']['email'] && @auth_hash['uid']
         session[:test_domain] = @auth_hash['info']['test_domain'] if @auth_hash[:provider] == 'developer'
         logger.debug(@auth_hash.inspect)
-        user = User.from_omniauth(@auth_hash, current_tenant.abbreviation)
+        session[:user_id] = nil
+        user = User.from_omniauth(@auth_hash, current_tenant.tenant_id)
         session[:user_id] = user.id
         redirect_to dashboard_path
       else

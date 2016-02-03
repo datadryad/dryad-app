@@ -1,7 +1,7 @@
 module StashEngine
   class User < ActiveRecord::Base
 
-    def self.from_omniauth(auth, tenant_abbrev)
+    def self.from_omniauth(auth, tenant_id)
 
       where(uid: auth[:uid]).first_or_initialize.tap do |user|
         user.provider = auth.provider
@@ -22,7 +22,7 @@ module StashEngine
         #  user.external_id = auth.info.email
         #end
         user.oauth_token = auth.credentials.token
-        user.tenant_abbrev = tenant_abbrev
+        user.tenant_id = tenant_id
         user.save!
       end
     end
