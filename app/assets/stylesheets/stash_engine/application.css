@@ -13,6 +13,8 @@
  *= require jquery-ui
  *= require_tree .
  *= require_self
+ *= require jquery.fileupload
+ *= require jquery.fileupload-ui
  */
 
 div.head_box {

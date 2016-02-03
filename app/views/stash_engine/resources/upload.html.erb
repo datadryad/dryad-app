@@ -4,16 +4,11 @@
 
 <h2>Step 1: choose your files</h2>
 <div>
-  <%= form_for @file, html: {multipart: true} do |f| %>
+  <%= form_for @file, html: {multipart: true, id: 'fileupload'} do |f| %>
     <%= f.hidden_field :resource_id %>
 
-    <p>
-      <%= f.file_field :upload_file_name %>
-    </p>
-
-    <p>
-      <%= f.submit %>
-    </p>
+    <%= label_tag(:upload_upload, "Add files...") %>
+    <%= file_field_tag 'upload[upload]', multiple: true %>
 
   <% end %>
 </div>

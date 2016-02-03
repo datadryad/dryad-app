@@ -15,6 +15,7 @@ module StashEngine
     end
 
     def create
+      byebug
       fu = params[:file_upload]
       file = FileUpload.new
       file.upload_file_name = fu[:upload_file_name].original_filename
