@@ -71,6 +71,11 @@ module StashEngine
 
     end
 
+    # Upload files view for resource
+    def upload
+      @file = FileUpload.new(resource_id: @resource.id)
+    end
+
     private
 
     # Use callbacks to share common setup or constraints between actions.
