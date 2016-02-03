@@ -2,7 +2,12 @@ require_dependency 'stash_engine/application_controller'
 
 module StashEngine
   class ResourcesController < ApplicationController
+
+    before_action :require_login
+
     before_action :set_resource, only: [:show, :edit, :update, :destroy, :review, :upload]
+
+    before_action :require_resource_owner, except: [:index]
 
     # GET /resources
     # GET /resources.json
