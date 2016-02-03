@@ -19,11 +19,13 @@
           url: "https://search.mapzen.com/v1/search?api_key=search-OJQOSkw&text="+ request.term,
           dataType: "json",
           success: function( data ) {
-            console.log(data);
-            var geoObject = JSON.parse(data);
-            var features = [];
-            features = geoObject.features;
-            console.log(features);
+            var items = [];
+            $.each(data.features, function (key, val) {
+                $.each(val.properties, function(i,j){
+                    items.push('<li id="' + i + '">' + j + '</li>');
+                })
+            });
+            alert(items);
           }
         });
       },
