@@ -14,3 +14,15 @@
 </div>
 
 <h2>Step 2: Upload your files</h2>
+
+<script id="template-upload" type="text/x-tmpl">
+  <div class="upload">
+    {%=o.name%}
+    <div class="progress"><div class="bar" style="width: 0%"></div></div>
+  </div>
+</script>
+
+<h2>Already Uploaded</h2>
+<% @resource.file_uploads.each do |f| %>
+  <%= f.upload_file_name %> (<%= number_to_human_size(f.upload_file_size) %>)</br>
+<% end %>

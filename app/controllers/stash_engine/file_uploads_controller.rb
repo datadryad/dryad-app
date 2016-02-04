@@ -15,15 +15,15 @@ module StashEngine
     end
 
     def create
-      byebug
       fu = params[:upload][:upload]
-      file = FileUpload.new
-      file.upload_file_name = fu.original_filename
-      file.temp_file_path = fu.tempfile.path
-      file.upload_content_type = fu.content_type
-      file.upload_file_size = File.size(fu.tempfile.path)
-      file.resource_id = params[:file_upload][:resource_id]
-      file.save
+      fn = FileUpload.new
+      fn.upload_file_name = fu.original_filename
+      fn.temp_file_path = fu.tempfile.path
+      fn.upload_content_type = fu.content_type
+      fn.upload_file_size = File.size(fu.tempfile.path)
+      fn.resource_id = params[:file_upload][:resource_id]
+      fn.upload_updated_at = Time.new
+      fn.save
     end
   end
 end
