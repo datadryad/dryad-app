@@ -2,7 +2,7 @@
 <div id="geolocation_point">
   <%= form_for(geolocation_point, url: stash_datacite.geolocation_points_create_path, remote: true, authenticity_token: true, html: {id: "geolocation_point_new_form"}) do |f| %>
     <%#= render "datacite/shared/error_messages", :target => @geolocation_point %>
-    <%= f.text_field :latitude, class: 'geo', id: "geo_lat_point" %>&nbsp;&nbsp;
+    <%= f.text_field :latitude, class: 'geo', id: "geo_lat_point" %>&nbsp;&nbsp;,&nbsp;&nbsp;
     <%= f.text_field :longitude, class: 'geo', id: "geo_lng_point" %>&nbsp;&nbsp;
     <%= f.hidden_field :resource_id %>
     <%= f.submit "Add", id: "add_geo_point" %>

@@ -4,7 +4,7 @@ var map;
 $(document).ready(function() {
 
   // create a map in the "map" div, set the view to a given place and zoom
-  map = L.map('map').setView([36.778259, -119.417931], 2);
+  map = L.map('map').setView([36.778259, -119.417931], 6);
       mapLink = '<a href="https://openstreetmap.org">OpenStreetMap</a>';
 
     // add an OpenStreetMap tile layer
