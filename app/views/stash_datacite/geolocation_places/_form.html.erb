@@ -8,50 +8,41 @@
       return split( term ).pop();
     }
 
-
-      // don't navigate away from the field on tab when selecting an item
-      // .bind( "keydown", function( event ) {
-      //   if ( event.keyCode === $.ui.keyCode.TAB &&
-      //       $( this ).autocomplete( "instance" ).menu.active ) {
-      //     event.preventDefault();
-      //   }
-      // })
     $( "#geo_place" )
       // don't navigate away from the field on tab when selecting an item
-    .bind( "keydown", function( event ) {
+      .bind( "keydown", function( event ) {
         if ( event.keyCode === $.ui.keyCode.TAB &&
             $( this ).autocomplete( "instance" ).menu.active ) {
           event.preventDefault();
         }
       })
-    .autocomplete({
-      source: function( request, response ) {
-        $.ajax({
-          url: "https://search.mapzen.com/v1/search?api_key=search-OJQOSkw&text="+ extractLast( request.term ),
-          dataType: "json",
-          success: function( data ) {
-            var id_labels = jQuery.map( data.features, function( a ) {
-              return [[ a.properties.id, a.properties.label ]];
-            });
-            var items = [];
-            $.each(id_labels, function(index, value) {
-              items.push(value[1]);
-            });
-            response(items);
-          }
-        });
-      },
-      minLength: 2,
-      focus: function() {
-        // prevent value inserted on focus
-        return false;
-      },
+      .autocomplete({
+        source: function( request, response ) {
+          $.ajax({
+            url: "https://search.mapzen.com/v1/search?api_key=search-OJQOSkw&text="+ extractLast( request.term ),
+            dataType: "json",
+            success: function( data ) {
+              var id_labels = jQuery.map( data.features, function( a ) {
+                return [[ a.properties.id, a.properties.label ]];
+              });
+              var items = [];
+              $.each(id_labels, function(index, value) {
+                items.push(value[1]);
+              });
+              response(items);
+            }
+          });
+        },
+        minLength: 2,
+        focus: function() {
+          // prevent value inserted on focus
+          return false;
+        },
+      });
     });
-  });
 </script>
 
 <%# the local variable 'geolocation_place' should be passed in to this partial when there are multiple per page %>
-<p>Where was the data collected? Does it focus on particular locations?</p>
 <%= form_for(geolocation_place, url: stash_datacite.geolocation_places_create_path, remote: true, authenticity_token: true, html: {id: "geolocation_place_new_form"}) do |f| %>
   <%#= render "datacite/shared/error_messages", :target => @geolocation_point %>
   <strong><%= label_tag "Add a place by name" %></strong><br/>

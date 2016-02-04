@@ -15,12 +15,12 @@ module StashDatacite
 
     # POST Leaflet AJAX create
     def map_coordinates
-      geolocation_point_params = params.except(:controller, :action)
+      geolocation_point_params = params.except(:controller, :action, :id)
       @geolocation_point = GeolocationPoint.new(geolocation_point_params.permit!)
       respond_to do |format|
         if @geolocation_point.save
           @geolocation_points = GeolocationPoint.where(resource_id: params[:resource_id])
-          format.js
+          format.js { params[:id] = @geolocation_point.id}
           format.json
         else
           format.html { render :new }
@@ -60,7 +60,7 @@ module StashDatacite
       @geolocation_point.destroy
       respond_to do |format|
         @geolocation_points = GeolocationPoint.where(resource_id: params[:resource_id])
-        format.html { redirect_to :back, notice: 'Geolocation point was successfully destroyed.' }
+        format.html { redirect_to :back }
         format.js { render template: 'stash_datacite/geolocation_points/update_coordinates.js.erb' }
       end
     end

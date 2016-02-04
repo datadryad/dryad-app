@@ -44,7 +44,7 @@ module StashDatacite
     # DELETE /geolocation_places/1
     def delete
       @geolocation_place.destroy
-      redirect_to :back, notice: 'Geolocation place was successfully destroyed.'
+      redirect_to :back
     end
 
     private
