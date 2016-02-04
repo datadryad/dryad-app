@@ -11,7 +11,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
+<<<<<<< HEAD
+ActiveRecord::Schema.define(version: 20160127073910) do
+=======
 ActiveRecord::Schema.define(version: 20160203214606) do
+>>>>>>> c0f3778a61cc2964fa01d412aff27212cb81ae10
 
   create_table "dcs_affliations", force: :cascade do |t|
     t.string   "short_name",   limit: 255
