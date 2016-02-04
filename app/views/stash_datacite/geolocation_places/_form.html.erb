@@ -1,10 +1,13 @@
 <script>
   // based on example at http://jqueryui.com/autocomplete/#remote-jsonp
   $(function() {
-    function log( message ) {
-      $( "<div>" ).text( message ).prependTo( "#log" );
-      $( "#log" ).scrollTop( 0 );
+    function split( val ) {
+      return val.split( /,\s*/ );
     }
+    function extractLast( term ) {
+      return split( term ).pop();
+    }
+
 
       // don't navigate away from the field on tab when selecting an item
       // .bind( "keydown", function( event ) {
@@ -13,36 +16,36 @@
       //     event.preventDefault();
       //   }
       // })
-    $( "#geo_place" ).autocomplete({
+    $( "#geo_place" )
+      // don't navigate away from the field on tab when selecting an item
+    .bind( "keydown", function( event ) {
+        if ( event.keyCode === $.ui.keyCode.TAB &&
+            $( this ).autocomplete( "instance" ).menu.active ) {
+          event.preventDefault();
+        }
+      })
+    .autocomplete({
       source: function( request, response ) {
         $.ajax({
-          url: "https://search.mapzen.com/v1/search?api_key=search-OJQOSkw&text="+ request.term,
+          url: "https://search.mapzen.com/v1/search?api_key=search-OJQOSkw&text="+ extractLast( request.term ),
           dataType: "json",
           success: function( data ) {
-            console.log(data.features[0].properties.label);
-
             var id_labels = jQuery.map( data.features, function( a ) {
               return [[ a.properties.id, a.properties.label ]];
             });
             var items = [];
             $.each(id_labels, function(index, value) {
-              items.push('<li id="' + value[0] + '">' + value[1] + '</li>');
+              items.push(value[1]);
             });
+            response(items);
           }
         });
       },
-      minLength: 3,
-      select: function( event, ui ) {
-        log( ui.item ?
-          "Selected: " + ui.item.label :
-          "Nothing selected, input was " + this.value);
+      minLength: 2,
+      focus: function() {
+        // prevent value inserted on focus
+        return false;
       },
-      open: function() {
-        $( this ).removeClass( "ui-corner-all" ).addClass( "ui-corner-top" );
-      },
-      close: function() {
-        $( this ).removeClass( "ui-corner-top" ).addClass( "ui-corner-all" );
-      }
     });
   });
 </script>

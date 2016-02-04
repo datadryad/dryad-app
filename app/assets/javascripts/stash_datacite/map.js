@@ -12,6 +12,7 @@ $(document).ready(function() {
           'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
           attribution: '&copy; ' + mapLink + ' Contributors',
           }).addTo(map);
+      var geocoder = L.control.geocoder('search-OJQOSkw').addTo(map);
 
   // -------------------------------- //
     // get point coordinates from db and load on map
@@ -229,7 +230,7 @@ $(document).ready(function() {
             dataType: "script",
             url: "/stash_datacite/geolocation_points/map_coordinates",
             data: { 'latitude' : marker_coordinates[0], 'longitude' : marker_coordinates[1],
-                    'resource_id' : resource_id }
+                    'resource_id' : resource_id, 'id': marker_coordinates[2] }
           });
         }
       });
@@ -249,7 +250,8 @@ $(document).ready(function() {
 
             if (layer instanceof L.Marker) {
               coordinates = [];
-              coordinates.push([layer.getLatLng().lat, layer.getLatLng().lng]);
+              var id = "";
+              coordinates.push([layer.getLatLng().lat, layer.getLatLng().lng], id);
               layer.dragging.enable();
               layer.bindPopup(coordinates + "<button class='delete-button'>Delete</button>");
             }
