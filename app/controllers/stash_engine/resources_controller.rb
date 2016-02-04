@@ -7,7 +7,7 @@ module StashEngine
 
     before_action :set_resource, only: [:show, :edit, :update, :destroy, :review, :upload]
 
-    before_action :require_resource_owner, except: [:index]
+    before_action :require_resource_owner, except: [:index, :new]
 
     # GET /resources
     # GET /resources.json
@@ -37,7 +37,7 @@ module StashEngine
     # POST /resources
     # POST /resources.json
     def create
-      @resource = Resource.new
+      @resource = Resource.new(user_id: current_user.id)
       @resource.save!
       redirect_to metadata_entry_pages_find_or_create_path(resource_id: @resource.id)
     end
