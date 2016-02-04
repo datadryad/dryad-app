@@ -34,14 +34,15 @@
 
   <h3 id="location_section"><strong>Location information (optional)</strong></h3>
   <div>
+    <%= render partial: "stash_datacite/shared/map" %>
+    <div class="locations_added">
+      <strong>Locations Added</strong>
+      <%= render partial: "stash_datacite/shared/locations" %>
+    </div>
+    <br/>
     <%= render partial: "stash_datacite/geolocation_places/form", locals: { geolocation_place: @geolocation_place } %>
     <%= render partial: "stash_datacite/geolocation_points/form", locals: { geolocation_point: @geolocation_point } %>
     <%= render partial: "stash_datacite/geolocation_boxes/form", locals: { geolocation_box: @geolocation_box } %>
-    <%= render partial: "stash_datacite/shared/map" %>
-    <div class="locations_added">
-    <strong>Locations Added</strong>
-    <%= render partial: "stash_datacite/shared/locations" %>
-    </div>
   </div>
 </div>
 
