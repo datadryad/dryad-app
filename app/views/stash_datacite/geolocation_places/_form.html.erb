@@ -19,13 +19,15 @@
           url: "https://search.mapzen.com/v1/search?api_key=search-OJQOSkw&text="+ request.term,
           dataType: "json",
           success: function( data ) {
-            var items = [];
-            $.each(data.features, function (key, val) {
-                $.each(val.properties, function(i,j){
-                    items.push('<li id="' + i + '">' + j + '</li>');
-                })
+            console.log(data.features[0].properties.label);
+
+            var id_labels = jQuery.map( data.features, function( a ) {
+              return [[ a.properties.id, a.properties.label ]];
             });
-            alert(items);
+            var items = [];
+            $.each(id_labels, function(index, value) {
+              items.push('<li id="' + value[0] + '">' + value[1] + '</li>');
+            });
           }
         });
       },
