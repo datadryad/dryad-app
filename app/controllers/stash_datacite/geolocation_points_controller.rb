@@ -20,7 +20,7 @@ module StashDatacite
       respond_to do |format|
         if @geolocation_point.save
           @geolocation_points = GeolocationPoint.where(resource_id: params[:resource_id])
-          format.js { params[:id] = @geolocation_point.id}
+          format.js { params[:id] = @geolocation_point.id }
           format.json
         else
           format.html { render :new }
