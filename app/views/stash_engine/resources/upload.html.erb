@@ -4,7 +4,18 @@
 
 <h2>Step 1: choose your files</h2>
 <div>
-  content
+  <%= form_for @file, html: {multipart: true} do |f| %>
+    <%= f.hidden_field :resource_id %>
+
+    <p>
+      <%= f.file_field :upload_file_name %>
+    </p>
+
+    <p>
+      <%= f.submit %>
+    </p>
+
+  <% end %>
 </div>
 
 <h2>Step 2: Upload your files</h2>

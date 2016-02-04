@@ -28,6 +28,8 @@ Gem::Specification.new do |s|
   s.add_dependency 'jquery-rails'
   s.add_dependency 'jquery-ui-rails'
   s.add_dependency 'jquery-turbolinks'
+  s.add_dependency 'carrierwave', "~> 0.10.0"
+  s.add_dependency 'jquery-fileupload-rails', "~> 0.4.6"
   # you cannot add specific code repo to gemspec so it must just go in the Gemfile instead if for internal use
 
 end
