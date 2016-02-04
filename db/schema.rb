@@ -11,7 +11,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
+<<<<<<< HEAD
 ActiveRecord::Schema.define(version: 20160127073910) do
+=======
+ActiveRecord::Schema.define(version: 20160203214606) do
+>>>>>>> c0f3778a61cc2964fa01d412aff27212cb81ae10
 
   create_table "dcs_affliations", force: :cascade do |t|
     t.string   "short_name",   limit: 255
@@ -194,8 +198,9 @@ ActiveRecord::Schema.define(version: 20160127073910) do
     t.integer  "upload_file_size",    limit: 4
     t.integer  "resource_id",         limit: 4
     t.datetime "upload_updated_at"
-    t.datetime "created_at",                      null: false
-    t.datetime "updated_at",                      null: false
+    t.datetime "created_at",                        null: false
+    t.datetime "updated_at",                        null: false
+    t.text     "temp_file_path",      limit: 65535
   end
 
   create_table "stash_engine_identifiers", force: :cascade do |t|
@@ -238,15 +243,17 @@ ActiveRecord::Schema.define(version: 20160127073910) do
   end
 
   create_table "stash_engine_users", force: :cascade do |t|
-    t.string   "first_name",     limit: 255
-    t.string   "last_name",      limit: 255
-    t.string   "email",          limit: 255
-    t.string   "uid",            limit: 255
-    t.string   "provider",       limit: 255
-    t.string   "oauth_token",    limit: 255
-    t.integer  "institution_id", limit: 4
-    t.datetime "created_at",                 null: false
-    t.datetime "updated_at",                 null: false
+    t.string   "first_name",  limit: 255
+    t.string   "last_name",   limit: 255
+    t.string   "email",       limit: 255
+    t.string   "uid",         limit: 255
+    t.string   "provider",    limit: 255
+    t.string   "oauth_token", limit: 255
+    t.datetime "created_at",              null: false
+    t.datetime "updated_at",              null: false
+    t.string   "tenant_id",   limit: 255
   end
+
+  add_index "stash_engine_users", ["tenant_id"], name: "index_stash_engine_users_on_tenant_id", using: :btree
 
 end
