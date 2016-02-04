@@ -2,7 +2,7 @@
 // All this logic will automatically be available in application.js.
 
 jQuery(function() {
-    return $('#new_fileupload').fileupload({
+    return $('#new_file_upload').fileupload({
         dataType: "script",
         add: function(e, data) {
             return data.submit();

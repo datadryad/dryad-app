@@ -16,15 +16,14 @@ module StashEngine
 
     def create
       byebug
-      fu = params[:file_upload]
+      fu = params[:upload][:upload]
       file = FileUpload.new
-      file.upload_file_name = fu[:upload_file_name].original_filename
-      file.temp_file_path = fu[:upload_file_name].tempfile.path
-      file.upload_content_type = fu[:upload_file_name].content_type
-      file.upload_file_size = File.size(file.temp_file_name)
-      file.resource_id = params[:resource_id]
+      file.upload_file_name = fu.original_filename
+      file.temp_file_path = fu.tempfile.path
+      file.upload_content_type = fu.content_type
+      file.upload_file_size = File.size(fu.tempfile.path)
+      file.resource_id = params[:file_upload][:resource_id]
       file.save
-      redi
     end
   end
 end
