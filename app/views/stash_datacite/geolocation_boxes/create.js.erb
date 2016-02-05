@@ -4,3 +4,7 @@ var bounds = [[<%= @geolocation_box.sw_latitude %>, <%= @geolocation_box.sw_long
 var newRectangle = L.rectangle(bounds, {color: "#ff7800", weight: 1}).addTo(map);
 // zoom the map to the rectangle bounds
 map.fitBounds(bounds);
+$('#geo_sw_lat_point').val('');
+$('#geo_sw_lng_point').val('');
+$('#geo_ne_lat_point').val('');
+$('#geo_ne_lng_point').val('');

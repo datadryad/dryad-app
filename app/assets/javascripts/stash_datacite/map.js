@@ -13,8 +13,9 @@ $(document).ready(function() {
           attribution: '&copy; ' + mapLink + ' Contributors',
           }).addTo(map);
 
+  // -------------------------------- //
 
-
+    // mapzen autocomplete search and save to db
       var geocoder = L.control.geocoder('search-OJQOSkw', {
           placeholder: 'Search by Name',
           pointIcon: false,
@@ -39,6 +40,9 @@ $(document).ready(function() {
       geocoder.on('reset', function (e) {
         marker = new L.Marker([lat, lng]).addTo(map).bindPopup(location_name).openPopup();
       });
+
+  // -------------------------------- //
+
 
   // -------------------------------- //
     // get point coordinates from db and load on map
@@ -187,7 +191,7 @@ $(document).ready(function() {
           var newMarker = new L.marker([latlng.lat, latlng.lng], { draggable: true, icon: customIcon }).addTo(map).bindPopup('<strong>' + best.adminArea5 + ', ' + best.adminArea3 + ', ' + best.adminArea1);
           });
         }
-      // -------------------------------- //
+    // -------------------------------- //
 
 
     // Initialize the FeatureGroup to store editable layers
