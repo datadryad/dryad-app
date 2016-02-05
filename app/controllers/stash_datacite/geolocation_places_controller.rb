@@ -13,6 +13,20 @@ module StashDatacite
       end
     end
 
+    # POST Leaflet AJAX create
+    def map_coordinates
+      geolocation_place_params = params.except(:controller, :action)
+      @geolocation_place = GeolocationPlace.new(geolocation_place_params.permit!)
+      respond_to do |format|
+        if @geolocation_place.save
+          @geolocation_places = GeolocationPlace.where(resource_id: params[:resource_id])
+          format.js { render template: 'stash_datacite/geolocation_places/map_coordinates.js.erb' }
+        else
+          format.html { render :new }
+        end
+      end
+    end
+
     # # GET /geolocation_places/1/edit
     # def edit
     # end

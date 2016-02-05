@@ -51,6 +51,6 @@ StashDatacite::Engine.routes.draw do
   post 'geolocation_boxes/map_coordinates', to: 'geolocation_boxes#map_coordinates'
   # location names/places
   get 'geolocation_places/places_coordinates', to: 'geolocation_places#places_coordinates'
-
+  post 'geolocation_places/map_coordinates', to: 'geolocation_places#map_coordinates'
 
 end

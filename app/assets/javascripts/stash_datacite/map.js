@@ -4,15 +4,41 @@ var map;
 $(document).ready(function() {
 
   // create a map in the "map" div, set the view to a given place and zoom
-  map = L.map('map').setView([36.778259, -119.417931], 6);
+  map = L.map('map', { zoomControl: true }).setView([36.778259, -119.417931], 6);
       mapLink = '<a href="https://openstreetmap.org">OpenStreetMap</a>';
-
+  map.zoomControl.setPosition('bottomright');
     // add an OpenStreetMap tile layer
       L.tileLayer(
           'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
           attribution: '&copy; ' + mapLink + ' Contributors',
           }).addTo(map);
-      var geocoder = L.control.geocoder('search-OJQOSkw').addTo(map);
+
+
+
+      var geocoder = L.control.geocoder('search-OJQOSkw', {
+          placeholder: 'Search by Name',
+          pointIcon: false,
+          polygonIcon: false,
+          position: 'topleft',
+          expanded: true
+      }).addTo(map);
+
+      var lat, lng, location_name;
+      geocoder.on('select', function (e) {
+        location_name =  e.feature.properties.label;
+        lat = e.latlng.lat;
+        lng = e.latlng.lng;
+        $.ajax({
+            type: "POST",
+            dataType: "script",
+            url: "/stash_datacite/geolocation_places/map_coordinates",
+            data: { 'geo_location_place' : location_name, 'resource_id' : $.urlParam('resource_id') }
+          });
+      });
+
+      geocoder.on('reset', function (e) {
+        marker = new L.Marker([lat, lng]).addTo(map).bindPopup(location_name).openPopup();
+      });
 
   // -------------------------------- //
     // get point coordinates from db and load on map
