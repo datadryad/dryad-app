@@ -1,0 +1,8 @@
+<% f = uploaded_file %>
+<div class="spaced_row" id="uploaded_file_<%= f.id %>">
+  <div class="spaced_text"><%= image_tag 'stash_engine/green_check.png' %></div>
+  <div class="spaced_text"><%= f.upload_file_name %></div>
+  <div class="spaced_text"><%= number_to_human_size(f.upload_file_size) %></div>
+  <div class="spaced_text"><%= link_to 'delete', f, method: :delete, remote: true %></div>
+  <br class="clear"/>
+</div>

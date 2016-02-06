@@ -56,3 +56,16 @@ div.log_in_out {
     float: right;
     text-align: right;
 }
+
+div.spaced_text {
+    float: left;
+    margin-right: 2em;
+}
+
+.clear {
+    clear: left;
+}
+
+div.spaced_row {
+    margin-bottom: 1ex;
+}

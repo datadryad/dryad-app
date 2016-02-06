@@ -26,29 +26,18 @@
 
 <h2>Step 2: Upload your files</h2>
 
-<table id="upload_table">
-  <thead>
-    <tr>
-      <td>Sample column</td>
-    </tr>
-  </thead>
-</table>
+<div id="upload_list">
+  <%= render partial: "stash_engine/file_uploads/uploaded_file", collection: @resource.file_uploads %>
+</div>
+
 
 <script id="upload-line" type="text/x-tmpl">
-<tr>
-  <td>
+  <div id="not_uploaded_row_{%=o.id%}">
     <button id="up_button_{%=o.id%}">Upload {%=o.name%}</button>
-  </td>
-</tr>
+  </div>
 </script>
 
-<h2>Already Uploaded</h2>
-<% @resource.file_uploads.each do |f| %>
-  <%= f.upload_file_name %> (<%= number_to_human_size(f.upload_file_size) %>)</br>
-<% end %>
-
 <script type="text/javascript" charset="utf-8">
-  /*
   $(function () {
     // Initialize the jQuery File Upload widget:
     $('#fileupload').fileupload({
@@ -57,5 +46,5 @@
       maxFileSize: 2000000000,// 2GB,
       //maxFileSize: 1048576 ,// 1MB,
       limitMultiFileUploadSize: 2000000000 * 5 //10GB
-    }); */
+    });
 </script>
