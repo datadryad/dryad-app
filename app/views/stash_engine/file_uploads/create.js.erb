@@ -1,0 +1,3 @@
+$('#not_uploaded_file_<%= @temp_id%>').replaceWith("<%= escape_javascript(render(partial: 'stash_engine/file_uploads/uploaded_file', object: @my_file)) %>")
+
+$('.upload-it:first').click();

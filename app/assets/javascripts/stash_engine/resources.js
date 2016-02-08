@@ -9,6 +9,7 @@ $(function () {
             data.context = $(tmpl("upload-line", data.files[0]));
             $('#upload_list').append(data.context);
             $('#up_button_' + data.files[0].id ).click(function (e) {
+                e.preventDefault();
                 var inputs = data.context.find(':input');
                 data.formData = inputs.serializeArray();
                 data.submit();
@@ -25,11 +26,17 @@ function generateQuickId() {
         Math.random().toString(36).substring(2, 15);
 }
 
-function formatBytes(bytes,decimals) {
-    if(bytes == 0) return '0 Byte';
-    var k = 1000;
-    var dm = decimals + 1 || 3;
-    var sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
-    var i = Math.floor(Math.log(bytes) / Math.log(k));
-    return (bytes / Math.pow(k, i)).toPrecision(dm) + ' ' + sizes[i];
+function formatSizeUnits(bytes) {
+    if (bytes == 1){
+        return '1 byte';
+    }else if (bytes < 1000){
+        return bytes + ' bytes';
+    }
+
+    var units = ['bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+    for (i = 0; i < units.length; i++) {
+        if(bytes/Math.pow(10, 3*(i+1)) < 1){
+            return (bytes/Math.pow(10, 3*i)).toFixed(2) + " " + units[i];
+        }
+    }
 }

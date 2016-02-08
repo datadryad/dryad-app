@@ -45,6 +45,7 @@ module StashEngine
           fn.resource_id = params[:resource_id]
           fn.upload_updated_at = Time.new
           fn.save
+          @my_file = fn
         }
       end
     end

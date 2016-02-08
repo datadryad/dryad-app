@@ -7,12 +7,12 @@
 
 <script id="upload-line" type="text/x-tmpl">
   <div class="spaced_row" id="not_uploaded_file_{%=o.id%}">
-  <div class="spaced_text"><%= image_tag 'stash_engine/invis_check.png' %></div>
-  <div class="spaced_text">{%=o.name%}</div>
-  <div class="spaced_text">{%=formatBytes(o.size, 1)%}</div>
-  <input name="temp_id" value="{%=o.id%}" type="hidden" />
-  <input name="resource_id" value="<%= @resource.id %>" type="hidden"/>
-  <div class="spaced_text"><a href="#" id="up_button_{%=o.id%}" data-id="{%=o.id%}">Upload</a></div>
+    <div class="spaced_text"><%= image_tag 'stash_engine/invis_check.png' %></div>
+    <div class="spaced_text">{%=o.name%}</div>
+    <div class="spaced_text">{%=formatSizeUnits(o.size)%}</div>
+    <input name="temp_id" value="{%=o.id%}" type="hidden" />
+    <input name="resource_id" value="<%= @resource.id %>" type="hidden"/>
+    <div class="spaced_text"><a href="#" id="up_button_{%=o.id%}" data-id="{%=o.id%}" class="upload-it">Upload</a></div>
   <br class="clear"/>
 </div>
 </script>
