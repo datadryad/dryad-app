@@ -33,7 +33,7 @@ $(document).ready(function() {
             type: "POST",
             dataType: "script",
             url: "/stash_datacite/geolocation_places/map_coordinates",
-            data: { 'geo_location_place' : location_name, 'resource_id' : $.urlParam('resource_id') }
+            data: { 'geo_location_place' : location_name, 'latitude' : lat, 'longitude' : lng, 'resource_id' : $.urlParam('resource_id') }
           });
       });
 
@@ -314,33 +314,33 @@ $(document).ready(function(){
     });
 });
 
-// $(document).ready(function(){
-//   $("#geo_lat_point").on('blur', function(e){
-//   var lat = parseFloat($(this).val());
-//   var latReg = /^(\+|-)?(?:90(?:(?:\.0{1,6})?)|(?:[0-9]|[1-8][0-9])(?:(?:\.[0-9]{1,6})?))$/;
-//   if (lat == '' || lat == null) {}
-//   if(!latReg.test(lat)) {
-//     alert("Please enter valid latitude value")
-//     }
-//     else {
-//       // do nothing
-//     }
-//   });
-// });
+$(document).ready(function(){
+  $("#geo_lat_point").on('blur', function(e){
+  var lat = $(this).val();
+  var latReg = /^(\+|-)?(?:90(?:(?:\.0{1,6})?)|(?:[0-9]|[1-8][0-9])(?:(?:\.[0-9]{1,6})?))$/;
+    if(lat == "") {
+      return false;
+    }
+    else if (!latReg.test(lat)) {
+      alert("Please enter valid latitude value");
+      $('#geo_lat_point').val('');
+    }
+  });
+});
 
-// $(document).ready(function(){
-//   $("#geo_lng_point").on('blur', function(e){
-//   var lng = parseFloat($(this).val());
-//   var lngReg = /^(\+|-)?(?:180(?:(?:\.0{1,6})?)|(?:[0-9]|[1-9][0-9]|1[0-7][0-9])(?:(?:\.[0-9]{1,6})?))$/;
-//   if (lng == '' || lng == null) {}
-//   if(!lngReg.test(lng)) {
-//     alert("Please enter valid longitude value")
-//     }
-//     else {
-//       // do nothing
-//     }
-//   });
-// });
+$(document).ready(function(){
+  $("#geo_lng_point").on('blur', function(e){
+  var lng = $(this).val();
+  var lngReg = /^(\+|-)?(?:180(?:(?:\.0{1,6})?)|(?:[0-9]|[1-9][0-9]|1[0-7][0-9])(?:(?:\.[0-9]{1,6})?))$/;
+    if(lng == "") {
+      return false;
+    }
+    else if(!lngReg.test(lng)) {
+      alert("Please enter valid longitude value")
+      $('#geo_lng_point').val('');
+    }
+  });
+});
 
 
 $.urlParam = function(name){
