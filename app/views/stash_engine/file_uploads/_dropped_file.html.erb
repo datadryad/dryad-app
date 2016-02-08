@@ -1,0 +1,18 @@
+<%
+  # This is a template for a non-standard templating used by the jQuery file drag and drop plugin.
+  # It is required since we need to display some things that do not take remote AJAX actions and this puts it in the
+  # page for the x-tmpl language to deal with.
+  # AJAX doesn't happen until the file is actually uploaded and then uses UJS
+%>
+
+<script id="upload-line" type="text/x-tmpl">
+  <div class="spaced_row" id="not_uploaded_file_{%=o.id%}">
+  <div class="spaced_text"><%= image_tag 'stash_engine/invis_check.png' %></div>
+  <div class="spaced_text">{%=o.name%}</div>
+  <div class="spaced_text">{%=formatBytes(o.size, 1)%}</div>
+  <input name="temp_id" value="{%=o.id%}" type="hidden" />
+  <input name="resource_id" value="<%= @resource.id %>" type="hidden"/>
+  <div class="spaced_text"><a href="#" id="up_button_{%=o.id%}" data-id="{%=o.id%}">Upload</a></div>
+  <br class="clear"/>
+</div>
+</script>

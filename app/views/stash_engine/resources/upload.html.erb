@@ -31,11 +31,7 @@
 </div>
 
 
-<script id="upload-line" type="text/x-tmpl">
-  <div id="not_uploaded_row_{%=o.id%}">
-    <button id="up_button_{%=o.id%}">Upload {%=o.name%}</button>
-  </div>
-</script>
+<%= render partial: 'stash_engine/file_uploads/dropped_file' %>
 
 <script type="text/javascript" charset="utf-8">
   $(function () {
