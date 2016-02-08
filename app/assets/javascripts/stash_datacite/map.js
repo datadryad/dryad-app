@@ -290,21 +290,6 @@ $(document).ready(function() {
       };
 });
 
-$(document).ready(function() {
-  $("#geolocation_box").hide();
-  $("#geo_box").on('click', function(e){
-    $("#geolocation_box").show();
-    $("#geolocation_point").hide();
-  });
-});
-
-$(document).ready(function() {
-  $("#geolocation_point").show();
-  $("#geo_point").on('click', function(e){
-    $("#geolocation_box").hide();
-    $("#geolocation_point").show();
-  });
-});
 
 $(document).ready(function(){
     $("#location_section").click(function() {
@@ -313,35 +298,6 @@ $(document).ready(function(){
         }, 1000);
     });
 });
-
-$(document).ready(function(){
-  $("#geo_lat_point").on('blur', function(e){
-  var lat = $(this).val();
-  var latReg = /^(\+|-)?(?:90(?:(?:\.0{1,6})?)|(?:[0-9]|[1-8][0-9])(?:(?:\.[0-9]{1,6})?))$/;
-    if(lat == "") {
-      return false;
-    }
-    else if (!latReg.test(lat)) {
-      alert("Please enter valid latitude value");
-      $('#geo_lat_point').val('');
-    }
-  });
-});
-
-$(document).ready(function(){
-  $("#geo_lng_point").on('blur', function(e){
-  var lng = $(this).val();
-  var lngReg = /^(\+|-)?(?:180(?:(?:\.0{1,6})?)|(?:[0-9]|[1-9][0-9]|1[0-7][0-9])(?:(?:\.[0-9]{1,6})?))$/;
-    if(lng == "") {
-      return false;
-    }
-    else if(!lngReg.test(lng)) {
-      alert("Please enter valid longitude value")
-      $('#geo_lng_point').val('');
-    }
-  });
-});
-
 
 $.urlParam = function(name){
   var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
