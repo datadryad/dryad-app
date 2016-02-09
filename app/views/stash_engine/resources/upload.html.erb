@@ -4,25 +4,59 @@
 
 <h2>Step 1: choose your files</h2>
 <div>
-  <%= form_for @file, html: {multipart: true} do |f| %>
-    <%= f.hidden_field :resource_id %>
+  <%= form_for @file, html: {multipart: true, id: 'fileupload'} do |f| %>
+    <div id="upload_bg">
 
-    <%= label_tag(:upload_upload, "Add files...") %>
-    <%= file_field_tag 'upload[upload]', multiple: true %>
+      <%= f.hidden_field :resource_id %>
+      <p>
+        <%= image_tag('stash_engine/dragndrop.png') %>
+      </p>
+      or
+
+      <p>
+        <%= label_tag(:upload_upload, "Add files...") %>
+        <%= file_field_tag 'upload[upload]', multiple: true %>
+      </p>
+    </div>
+    <!-- The loading indicator is shown during image processing -->
+    <div class="fileupload-loading"></div>
+    <br/>
+    <!-- The table listing the files available for upload/download -->
+    <table class="table table-striped">
+      <tbody class="files" data-toggle="modal-gallery" data-target="#modal-gallery"></tbody>
+    </table>
 
   <% end %>
 </div>
 
 <h2>Step 2: Upload your files</h2>
 
-<script id="template-upload" type="text/x-tmpl">
-  <div class="upload">
-    {%=o.name%}
-    <div class="progress"><div class="bar" style="width: 0%"></div></div>
-  </div>
-</script>
+<div id="upload_list">
+  <%= render partial: "stash_engine/file_uploads/uploaded_file", collection: @resource.file_uploads %>
+</div>
 
-<h2>Already Uploaded</h2>
-<% @resource.file_uploads.each do |f| %>
-  <%= f.upload_file_name %> (<%= number_to_human_size(f.upload_file_size) %>)</br>
-<% end %>
+<div>
+  <button id="upload_all" type="button">Upload</button>
+</div>
+
+
+<%= render partial: 'stash_engine/file_uploads/dropped_file' %>
+
+<script type="text/javascript" charset="utf-8">
+  $(function () {
+    // Initialize the jQuery File Upload widget:
+    $('#fileupload').fileupload({
+      maxChunkSize: 1048576,
+      //acceptFileTypes: /(\.|\/)(gif|jpe?g|png|tif?f)$/i
+      maxFileSize: 2000000000,// 2GB,
+      //maxFileSize: 1048576 ,// 1MB,
+      limitMultiFileUploadSize: 2000000000 * 5 //10GB
+    });
+  });
+
+  $('#upload_all').click( function(){
+    $('.upload-it:first').click();
+  });
+
+  $('#upload_all').hide();
+</script>

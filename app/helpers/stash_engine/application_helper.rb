@@ -1,3 +1,5 @@
+require 'filesize'
+
 module StashEngine
   module ApplicationHelper
     def title(resource)
@@ -18,5 +20,10 @@ module StashEngine
       end
     end
     # :nocov:
+
+    def filesize(bytes)
+      return "#{bytes} B" if bytes < 1000
+      ::Filesize.new(bytes, Filesize::SI).pretty
+    end
   end
 end

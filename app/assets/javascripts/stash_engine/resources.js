@@ -1,18 +1,44 @@
 // Place all the behaviors and hooks related to the matching controller here.
 // All this logic will automatically be available in application.js.
 
-jQuery(function() {
-    return $('#new_file_upload').fileupload({
-        dataType: "script",
-        add: function(e, data) {
-            return data.submit();
-        }/*,
-        progress: function(e, data) {
-            var progress;
-            if (data.context) {
-                progress = parseInt(data.loaded / data.total * 100, 10);
-                return data.context.find('.bar').css('width', progress + '%');
-            }
-        } */
+// this function triggered when dropped, but also continas the upload function
+$(function () {
+    $('#fileupload').fileupload({
+        dataType: 'script',
+        add: function (e, data) {
+            data.files[0]['id'] = generateQuickId();
+            data.context = $(tmpl("upload-line", data.files[0]));
+            $('#upload_list').append(data.context);
+            $('#upload_all').show();
+            $('#up_button_' + data.files[0].id ).click(function (e) {
+                e.preventDefault();
+                var inputs = data.context.find(':input');
+                data.formData = inputs.serializeArray();
+                data.submit();
+            });
+        },
+        done: function (e, data) {
+            // $('#up_button_' + data.files[0].id).text('Upload finished.');
+        }
     });
 });
+
+function generateQuickId() {
+    return Math.random().toString(36).substring(2, 15) +
+        Math.random().toString(36).substring(2, 15);
+}
+
+function formatSizeUnits(bytes) {
+    if (bytes == 1){
+        return '1 byte';
+    }else if (bytes < 1000){
+        return bytes + ' bytes';
+    }
+
+    var units = ['bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+    for (i = 0; i < units.length; i++) {
+        if(bytes/Math.pow(10, 3*(i+1)) < 1){
+            return (bytes/Math.pow(10, 3*i)).toFixed(2) + " " + units[i];
+        }
+    }
+}
