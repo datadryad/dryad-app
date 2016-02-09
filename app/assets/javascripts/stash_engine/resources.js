@@ -33,6 +33,7 @@ $(function () {
             data.abort();
             data.context.remove();
             e.target.parentNode.parentNode.remove();
+            $('.upload-it:first').click();
           })
         },
         progress: function (e, data) {
