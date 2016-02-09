@@ -8,10 +8,15 @@
     <div id="upload_bg">
 
       <%= f.hidden_field :resource_id %>
+      <p>
+        <%= image_tag('stash_engine/dragndrop.png') %>
+      </p>
+      or
 
-      <%= label_tag(:upload_upload, "Add files...") %>
-      <%= file_field_tag 'upload[upload]', multiple: true %>
-
+      <p>
+        <%= label_tag(:upload_upload, "Add files...") %>
+        <%= file_field_tag 'upload[upload]', multiple: true %>
+      </p>
     </div>
     <!-- The loading indicator is shown during image processing -->
     <div class="fileupload-loading"></div>
