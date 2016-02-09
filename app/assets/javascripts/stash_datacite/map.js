@@ -16,11 +16,20 @@ $(document).ready(function() {
   // -------------------------------- //
 
     // mapzen autocomplete search and save to db
+
+    var customIcon = new L.Icon({
+      // iconUrl: L.Icon.Default.imagePath +'/globe.png',
+      iconUrl: 'https://thevendy.files.wordpress.com/2015/02/black-and-white-world-globe.gif',
+      iconSize: [25, 25], // size of the icon
+      iconAnchor: [12, 25], // point of the icon which will correspond to marker's location
+      popupAnchor: [0, -25] // point from which the popup should open relative to the iconAnchor
+    });
       var geocoder = L.control.geocoder('search-OJQOSkw', {
-          placeholder: 'Search by Name',
+          placeholder: 'Search by Location Name',
           pointIcon: false,
           polygonIcon: false,
           position: 'topleft',
+          markers: { icon: customIcon },
           expanded: true
       }).addTo(map);
 
@@ -38,7 +47,7 @@ $(document).ready(function() {
       });
 
       geocoder.on('reset', function (e) {
-        marker = new L.Marker([lat, lng]).addTo(map).bindPopup(location_name).openPopup();
+        marker = new L.Marker([lat, lng], { icon: customIcon }).addTo(map).bindPopup(location_name).openPopup();
       });
 
   // -------------------------------- //
@@ -71,30 +80,30 @@ $(document).ready(function() {
       //Loop through the markers array
       var marker, markerArray = [];
       for (var i=0; i<coordinatesMarker.length; i++) {
-          var lat = coordinatesMarker[i][0];
-          var lng = coordinatesMarker[i][1];
-          var mrk_id = coordinatesMarker[i][2];
-          var markerLocation = new L.LatLng(lat, lng);
-          marker = new L.Marker(markerLocation, { draggable: true, id: mrk_id }).addTo(map).bindPopup(lat +","+ lng + " " +"<button class='delete-button'>Delete</button>");
+        var lat = coordinatesMarker[i][0];
+        var lng = coordinatesMarker[i][1];
+        var mrk_id = coordinatesMarker[i][2];
+        var markerLocation = new L.LatLng(lat, lng);
+        marker = new L.Marker(markerLocation, { draggable: true, id: mrk_id }).addTo(map).bindPopup(lat +","+ lng + " " +"<button class='delete-button'>Delete</button>");
 
-          marker.on("popupopen", function(event) { onPopupOpen(event.target) });
+        marker.on("popupopen", function(event) { onPopupOpen(event.target) });
 
-          marker.on('dragend', function(event) {
-            var chagedPos = event.target.getLatLng();
-            this.bindPopup(chagedPos.toString() + " " +"<button class='delete-button'>Delete</button>");
-            $.ajax({
-                type: "PUT",
-                dataType: "script",
-                url: "/stash_datacite/geolocation_points/update_coordinates",
-                data: { 'latitude' : marker.getLatLng().lat, 'longitude' : marker.getLatLng().lng,
-                       'resource_id' : $.urlParam('resource_id'), 'id' : marker.options.id },
-                success: function() {
-                },
-                error: function() {
-                }
-              });
-          });
-      }
+        marker.on('dragend', function(event) {
+          var chagedPos = event.target.getLatLng();
+          this.bindPopup(chagedPos.toString() + " " +"<button class='delete-button'>Delete</button>");
+          $.ajax({
+              type: "PUT",
+              dataType: "script",
+              url: "/stash_datacite/geolocation_points/update_coordinates",
+              data: { 'latitude' : marker.getLatLng().lat, 'longitude' : marker.getLatLng().lng,
+                     'resource_id' : $.urlParam('resource_id'), 'id' : marker.options.id },
+              success: function() {
+              },
+              error: function() {
+              }
+            });
+        });
+    }
 
     // Delete marker from map and db
       function onPopupOpen(marker) {
