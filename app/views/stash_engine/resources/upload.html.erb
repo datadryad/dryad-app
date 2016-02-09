@@ -35,6 +35,10 @@
   <%= render partial: "stash_engine/file_uploads/uploaded_file", collection: @resource.file_uploads %>
 </div>
 
+<div>
+  <button id="upload_all" type="button">Upload</button>
+</div>
+
 
 <%= render partial: 'stash_engine/file_uploads/dropped_file' %>
 
@@ -48,4 +52,11 @@
       //maxFileSize: 1048576 ,// 1MB,
       limitMultiFileUploadSize: 2000000000 * 5 //10GB
     });
+  });
+
+  $('#upload_all').click( function(){
+    $('.upload-it:first').click();
+  });
+
+  $('#upload_all').hide();
 </script>

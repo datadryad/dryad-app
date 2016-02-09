@@ -12,7 +12,8 @@
     <div class="spaced_text">{%=formatSizeUnits(o.size)%}</div>
     <input name="temp_id" value="{%=o.id%}" type="hidden" />
     <input name="resource_id" value="<%= @resource.id %>" type="hidden"/>
-    <div class="spaced_text"><a href="#" id="up_button_{%=o.id%}" data-id="{%=o.id%}" class="upload-it">Upload</a></div>
+    <span class="spaced_text" style="visibility: hidden"><a href="#" id="up_button_{%=o.id%}" data-id="{%=o.id%}" class="upload-it">Upload</a></span>
+    <span style="visibility: hidden" class="hidden_bytes">{%=o.size%}</span>
   <br class="clear"/>
 </div>
 </script>

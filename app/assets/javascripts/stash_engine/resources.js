@@ -1,6 +1,7 @@
 // Place all the behaviors and hooks related to the matching controller here.
 // All this logic will automatically be available in application.js.
 
+// this function triggered when dropped, but also continas the upload function
 $(function () {
     $('#fileupload').fileupload({
         dataType: 'script',
@@ -8,6 +9,7 @@ $(function () {
             data.files[0]['id'] = generateQuickId();
             data.context = $(tmpl("upload-line", data.files[0]));
             $('#upload_list').append(data.context);
+            $('#upload_all').show();
             $('#up_button_' + data.files[0].id ).click(function (e) {
                 e.preventDefault();
                 var inputs = data.context.find(':input');
@@ -16,7 +18,7 @@ $(function () {
             });
         },
         done: function (e, data) {
-            $('#up_button_' + data.files[0].id).text('Upload finished.');
+            // $('#up_button_' + data.files[0].id).text('Upload finished.');
         }
     });
 });
