@@ -57,8 +57,13 @@ module StashDatacite
 
     # DELETE /geolocation_places/1
     def delete
+      @latitude = @geolocation_place.latitude
+      @longitude = @geolocation_place.longitude
       @geolocation_place.destroy
-      redirect_to :back
+      respond_to do |format|
+        format.html { redirect_to :back}
+        format.js
+      end
     end
 
     private
@@ -70,7 +75,7 @@ module StashDatacite
 
     # Only allow a trusted parameter "white list" through.
     def geolocation_place_params
-      params.require(:geolocation_place).permit(:id, :geo_location_place, :resource_id)
+      params.require(:geolocation_place).permit(:id, :geo_location_place, :latitude, :longitude, :resource_id)
     end
   end
 end
