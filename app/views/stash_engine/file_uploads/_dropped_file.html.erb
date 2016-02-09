@@ -12,11 +12,11 @@
     <div class="spaced_text">{%=formatSizeUnits(o.size)%}</div>
     <div class="spaced_text"><a href="#" class="remove_link">Remove</a></div>
     <div class="spaced_text progress" style="display: none"><div class="bar" style="width:0%"></div></div>
-    <div class="spaced_text cancel"><a href="#" style="display: none" id="cancel_{%=o.id%}">Cancel</a></div>
+    <div class="spaced_text cancel" style="display: none"><a href="#" id="cancel_{%=o.id%}">Cancel</a></div>
     <input name="temp_id" value="{%=o.id%}" type="hidden" />
     <input name="resource_id" value="<%= @resource.id %>" type="hidden"/>
-    <span class="spaced_text" style="visibility: hidden"><a href="#" id="up_button_{%=o.id%}" data-id="{%=o.id%}" class="upload-it">Upload</a></span>
-    <span style="visibility: hidden" class="hidden_bytes">{%=o.size%}</span>
+    <span class="spaced_text" style="display: none"><a href="#" id="up_button_{%=o.id%}" data-id="{%=o.id%}" class="upload-it">Upload</a></span>
+    <span style="display: none" class="hidden_bytes">{%=o.size%}</span>
   <br class="clear"/>
 </div>
 </script>
