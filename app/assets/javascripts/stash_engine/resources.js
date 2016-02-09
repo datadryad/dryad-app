@@ -1,21 +1,43 @@
 // Place all the behaviors and hooks related to the matching controller here.
 // All this logic will automatically be available in application.js.
-
+var test;
 // this function triggered when dropped, but also continas the upload function
 $(function () {
     $('#fileupload').fileupload({
         dataType: 'script',
         add: function (e, data) {
-            data.files[0]['id'] = generateQuickId();
-            data.context = $(tmpl("upload-line", data.files[0]));
-            $('#upload_list').append(data.context);
-            $('#upload_all').show();
-            $('#up_button_' + data.files[0].id ).click(function (e) {
+          // what happens when added
+          data.files[0]['id'] = generateQuickId();
+          data.context = $(tmpl("upload-line", data.files[0]));
+          $('#upload_list').append(data.context);
+          $('#upload_all').show();
+          // binding remove link action
+          $('.remove_link').click( function(e){
+            e.preventDefault();
+            e.target.parentNode.parentNode.remove();
+          });
+
+          // binding upload link click event
+          $('#up_button_' + data.files[0].id ).click(function (e) {
                 e.preventDefault();
                 var inputs = data.context.find(':input');
+                data.context.find(".progress").show();
+                data.context.find(".cancel").show();
+                data.context.find(".remove_link").hide();
                 data.formData = inputs.serializeArray();
                 data.submit();
             });
+          // binding cancel link click event
+          $('#cancel_' + data.files[0].id ).click(function (e) {
+            e.preventDefault();
+            data.abort();
+            data.context.remove();
+            e.target.parentNode.parentNode.remove();
+          })
+        },
+        progress: function (e, data) {
+          progress = parseInt(data.loaded / data.total * 100, 10);
+          data.context.find('.bar').css('width', progress + '%');
         },
         done: function (e, data) {
             // $('#up_button_' + data.files[0].id).text('Upload finished.');
