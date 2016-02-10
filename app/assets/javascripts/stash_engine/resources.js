@@ -1,7 +1,11 @@
 // Place all the behaviors and hooks related to the matching controller here.
 // All this logic will automatically be available in application.js.
-var test;
+
 // this function triggered when dropped, but also continas the upload function
+
+// *******************************
+// Begin Javascript for FileUpload
+// *******************************
 $(function () {
     $('#fileupload').fileupload({
         dataType: 'script',
@@ -65,3 +69,27 @@ function formatSizeUnits(bytes) {
         }
     }
 }
+
+// hide the upload button until files are dropped
+$('#upload_all').hide();
+
+function totalSize(){
+  nums = $('.hidden_bytes').map(function(){ return parseInt(this.innerHTML); });
+  var total = 0;
+  $.each(nums, function( index, value ) {
+    total += value;
+  });
+  return total;
+}
+
+function largestSize(){
+  nums = $('.hidden_bytes').map(function(){ return parseInt(this.innerHTML); });
+  console.log(nums);
+  if(nums.length < 1){ return 0 };
+  var sorted = nums.sort(function(a, b){return b-a});
+  return sorted[0];
+}
+
+// *****************************
+// end Javascript for FileUpload
+// *****************************

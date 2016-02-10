@@ -69,24 +69,6 @@
     $('.upload-it:first').click();
   });
 
-  // hide the upload button until files are dropped
-  $('#upload_all').hide();
 
-  function totalSize(){
-    nums = $('.hidden_bytes').map(function(){ return parseInt(this.innerHTML); });
-    var total = 0;
-    $.each(nums, function( index, value ) {
-      total += value;
-    });
-    return total;
-  }
-
-  function largestSize(){
-    nums = $('.hidden_bytes').map(function(){ return parseInt(this.innerHTML); });
-    console.log(nums);
-    if(nums.length < 1){ return 0 };
-    var sorted = nums.sort(function(a, b){return b-a});
-    return sorted[0];
-  }
 
 </script>
