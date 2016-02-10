@@ -48,18 +48,45 @@
     $('#fileupload').fileupload({
       maxChunkSize: 1048576,
       //acceptFileTypes: /(\.|\/)(gif|jpe?g|png|tif?f)$/i
-      maxFileSize: 2000000000,// 2GB,
+      maxFileSize: <%= StashEngine.app.max_file_size %>,// 2GB,
       //maxFileSize: 1048576 ,// 1MB,
-      limitMultiFileUploadSize: 2000000000 * 5 //10GB
+      limitMultiFileUploadSize: <%= StashEngine.app.max_submission_size %>
     });
   });
 
   // start first upload-it line
-  $('#upload_all').click( function(){
+  $('#upload_all').click( function(e){
+    if(totalSize() > <%= StashEngine.app.max_submission_size %>){
+      e.preventDefault();
+      alert('You are attempting to upload more than <%= filesize(StashEngine.app.max_submission_size)%>.  Please remove some files to get under this limit.');
+      return false;
+    }
+    if(largestSize() > <%= StashEngine.app.max_file_size %>) {
+      e.preventDefault();
+      alert('You are attempting to upload a file larger than <%= filesize(StashEngine.app.max_file_size)%>.  Please remove any files larger than this limit and try again.');
+      return false;
+    }
     $('.upload-it:first').click();
   });
 
   // hide the upload button until files are dropped
   $('#upload_all').hide();
+
+  function totalSize(){
+    nums = $('.hidden_bytes').map(function(){ return parseInt(this.innerHTML); });
+    var total = 0;
+    $.each(nums, function( index, value ) {
+      total += value;
+    });
+    return total;
+  }
+
+  function largestSize(){
+    nums = $('.hidden_bytes').map(function(){ return parseInt(this.innerHTML); });
+    console.log(nums);
+    if(nums.length < 1){ return 0 };
+    var sorted = nums.sort(function(a, b){return b-a});
+    return sorted[0];
+  }
 
 </script>
