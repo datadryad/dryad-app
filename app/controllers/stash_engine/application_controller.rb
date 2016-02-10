@@ -1,6 +1,6 @@
 module StashEngine
   class ApplicationController < ::ApplicationController
-    helper_method :current_tenant
+    helper_method :current_tenant, :current_user
 
     def stash_datacite
       StashDatacite::Engine.routes.url_helpers
