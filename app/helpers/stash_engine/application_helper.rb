@@ -22,6 +22,7 @@ module StashEngine
     # :nocov:
 
     def filesize(bytes)
+      return '' if bytes.nil?
       return "#{bytes} B" if bytes < 1000
       ::Filesize.new(bytes, Filesize::SI).pretty
     end
