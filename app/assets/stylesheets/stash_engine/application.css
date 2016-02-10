@@ -62,6 +62,19 @@ div.spaced_text {
     margin-right: 2em;
 }
 
+div.progress {
+    height: 18px;
+    width: 100px;
+    background-color: #EEEEEE;
+    border-width: 2px;
+    border-style: inset;
+}
+
+div.bar {
+    background-color: #0086b3;
+    height: 18px;
+}
+
 .clear {
     clear: left;
 }
