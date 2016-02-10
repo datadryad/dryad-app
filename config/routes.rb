@@ -2,10 +2,11 @@ Rails.application.routes.draw do
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
+  get "/", to: redirect('/stash')
   # You can have the root of your site routed with "root"
-  root 'host_pages#index'
+  #root 'host_pages#index'
+  # map.redirect '/', controller: '/stash/pages', action: 'home'
   #match '/auth/:provider/callback', to: 'host_pages#test', via: [:get, :post]
-
 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
