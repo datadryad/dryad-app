@@ -10,6 +10,14 @@ module StashEngine
       end
     end
 
+    def geolocation_image(resource)
+      if resource && resource.geolocation == true
+        image_tag("stash_datacite/geolocation.png", size: "20x20", alt: "Box")
+      else
+        ' '
+      end
+    end
+
     # displays log in/out based on session state, temorary for now
     # :nocov:
     def log_in_out

@@ -1,9 +1,10 @@
 <div>
   <p><h2>Describe your dataset</h2>
   * required fields</p>
+  <div class="success" style="display:none">
+    <p>Your Change are Autosaved.</p>
+  </div>
 </div>
-
-<%= render partial: "stash_datacite/shared/flash_messages" %>
 
 <div id="accordion">
   <h3><strong>Basic Information</strong></h3>
@@ -45,6 +46,6 @@
     <%= render partial: "stash_datacite/geolocation_boxes/form", locals: { geolocation_box: @geolocation_box } %>
   </div>
 </div>
-
+<br/>
 <%= link_to 'Back to My Datasets', dashboard_path , id: 'dashboard_path' %>
 <%= link_to 'Proceed to Upload', upload_resource_path(@resource), id: 'upload_path' %>
