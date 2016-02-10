@@ -38,3 +38,6 @@ public/assets
 *~
 
 .byebug_history
+
+# ignore Gemfile.lock at Davids suggestion since our local engine setup freaks out every time
+Gemfile.lock
