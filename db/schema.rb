@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160203214606) do
+ActiveRecord::Schema.define(version: 20160208223347) do
 
   create_table "dcs_affliations", force: :cascade do |t|
     t.string   "short_name",   limit: 255
@@ -84,8 +84,10 @@ ActiveRecord::Schema.define(version: 20160203214606) do
   create_table "dcs_geo_location_places", force: :cascade do |t|
     t.string   "geo_location_place", limit: 255
     t.integer  "resource_id",        limit: 4
-    t.datetime "created_at",                     null: false
-    t.datetime "updated_at",                     null: false
+    t.datetime "created_at",                                              null: false
+    t.datetime "updated_at",                                              null: false
+    t.decimal  "latitude",                       precision: 10, scale: 6
+    t.decimal  "longitude",                      precision: 10, scale: 6
   end
 
   create_table "dcs_geo_location_points", force: :cascade do |t|
@@ -227,8 +229,9 @@ ActiveRecord::Schema.define(version: 20160203214606) do
   create_table "stash_engine_resources", force: :cascade do |t|
     t.integer  "user_id",                   limit: 4
     t.integer  "current_resource_state_id", limit: 4
-    t.datetime "created_at",                          null: false
-    t.datetime "updated_at",                          null: false
+    t.datetime "created_at",                                          null: false
+    t.datetime "updated_at",                                          null: false
+    t.boolean  "geolocation",                         default: false
   end
 
   create_table "stash_engine_submission_logs", force: :cascade do |t|
