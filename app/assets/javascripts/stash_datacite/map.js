@@ -236,8 +236,9 @@ $(document).ready(function() {
       drawnItems.addLayer(e.layer);
 
         var resource_id = $.urlParam('resource_id');
-        var rectangle_coordinates = getShapes(drawnItems);
+        // ------------------------------------------------------------- //
         if (type == "rectangle") {
+          var rectangle_coordinates = getShapes(drawnItems);
           //obtain bounding box from the shape coordinates (for rectangle) of map
           var geoJsonData = {
                             "type": "Feature",
@@ -272,7 +273,14 @@ $(document).ready(function() {
                     'resource_id' : resource_id, 'id': marker_coordinates[2] }
           });
         }
+        // ------------------------------------------------------------- //
+
+
+
+        var edited_coordinates = dragMarker(drawnItems);
+
       });
+
 
       var getShapes = function(drawnItems) {
         var lng, lat;
@@ -292,10 +300,34 @@ $(document).ready(function() {
               var id = "";
               coordinates.push([layer.getLatLng().lat, layer.getLatLng().lng], id);
               layer.dragging.enable();
-              layer.bindPopup(coordinates + "<button class='delete-button'>Delete</button>");
+              layer.bindPopup(coordinates + "<button class='delete-button'>Delete</button>").openPopup();
             }
         });
         return coordinates;
+      };
+
+
+      // Dragging Marker and Update to db.
+      var dragMarker =  function(drawnItems) {
+        drawnItems.eachLayer(function(layer) {
+            var changedPos;
+            if (layer instanceof L.Marker) {
+                layer.on('dragend', function(event) {
+
+                  changedPos = event.target.getLatLng();
+                  layer.bindPopup(changedPos.lat + ',' + changedPos.lng + " " + "<button class='delete-button'>Delete</button>").openPopup();
+                  $.ajax({
+                    type: "PUT",
+                    dataType: "script",
+                    url: "/stash_datacite/geolocation_points/update_coordinates",
+                    data: { 'latitude' :  changedPos.latitude, 'longitude' :  changedPos.longitude,
+                           'resource_id' : $.urlParam('resource_id'), 'id' : marker.options.id }
+                  });
+
+                });
+            };
+
+        });
       };
 });
 
