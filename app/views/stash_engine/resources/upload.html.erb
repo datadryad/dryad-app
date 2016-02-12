@@ -35,6 +35,11 @@
   <%= render partial: "stash_engine/file_uploads/uploaded_file", collection: @resource.file_uploads %>
 </div>
 
+<div id="upload_total">
+  Total:
+</div>
+
+
 <div>
   <button id="upload_all" type="button">Upload</button>
 </div>
@@ -69,6 +74,6 @@
     $('.upload-it:first').click();
   });
 
-
+  updateTotalSize();
 
 </script>

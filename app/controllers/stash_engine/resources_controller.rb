@@ -73,6 +73,7 @@ module StashEngine
 
     # Upload files view for resource
     def upload
+      @resource.clean_uploads
       @file = FileUpload.new(resource_id: @resource.id)
     end
 

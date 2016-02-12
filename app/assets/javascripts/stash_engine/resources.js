@@ -19,6 +19,7 @@ $(function () {
           $('.remove_link').click( function(e){
             e.preventDefault();
             e.target.parentNode.parentNode.remove();
+            updateTotalSize();
           });
 
           // binding upload link click event
@@ -38,6 +39,7 @@ $(function () {
             data.context.remove();
             e.target.parentNode.parentNode.remove();
             $('.upload-it:first').click();
+            updateTotalSize();
           })
         },
         progress: function (e, data) {
@@ -46,6 +48,7 @@ $(function () {
         },
         done: function (e, data) {
             // $('#up_button_' + data.files[0].id).text('Upload finished.');
+          updateTotalSize();
         }
     });
 });
@@ -90,6 +93,9 @@ function largestSize(){
   return sorted[0];
 }
 
+function updateTotalSize(){
+  $('#upload_total').text("Total: " + formatSizeUnits(totalSize()));
+}
 // *****************************
 // end Javascript for FileUpload
 // *****************************
