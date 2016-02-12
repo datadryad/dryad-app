@@ -16,7 +16,6 @@ $(document).ready(function() {
   // -------------------------------- //
 
     // mapzen autocomplete search and save to db
-
     var customIcon = new L.Icon({
       // iconUrl: L.Icon.Default.imagePath +'/globe.png',
       iconUrl: 'https://thevendy.files.wordpress.com/2015/02/black-and-white-world-globe.gif',
@@ -96,10 +95,12 @@ $(document).ready(function() {
               dataType: "script",
               url: "/stash_datacite/geolocation_points/update_coordinates",
               data: { 'latitude' : marker.getLatLng().lat, 'longitude' : marker.getLatLng().lng,
-                     'resource_id' : $.urlParam('resource_id'), 'id' : marker.options.id },
+                     'resource_id' : $.urlParam('resource_id'), 'id' : event.target.options.id },
               success: function() {
+                updateGeolocationPointsIndex();
               },
               error: function() {
+                alert("error occured");
               }
             });
         });
@@ -203,6 +204,8 @@ $(document).ready(function() {
     // -------------------------------- //
 
 
+  // LEAFLET DRAW PLUGIN CODE FOR CREATING MARKERS, EDITING MARKERS, DELETING MARKERS & CREATING BOUNDING BOXES
+
     // Initialize the FeatureGroup to store editable layers
       var drawnItems = new L.FeatureGroup();
       map.addLayer(drawnItems);
@@ -233,10 +236,10 @@ $(document).ready(function() {
     // listen to the draw created event
       map.on('draw:created', function (e) {
         var type = e.layerType;
-      drawnItems.addLayer(e.layer);
-
+        drawnItems.addLayer(e.layer);
         var resource_id = $.urlParam('resource_id');
-        // ------------------------------------------------------------- //
+
+        // ----------------------------Bounding Box--------------------------------- //
         if (type == "rectangle") {
           var rectangle_coordinates = getShapes(drawnItems);
           //obtain bounding box from the shape coordinates (for rectangle) of map
@@ -261,27 +264,40 @@ $(document).ready(function() {
                     'resource_id' : resource_id }
           });
         }
+        // ------------------------------------------------------------- //
 
+        // -------------------------------Marker------------------------------ //
         if (type == "marker") {
           //obtain latlng coordinates from the shape marker of map
           var marker_coordinates = getShapes(drawnItems).toString().split(",");
+          var result = false;
           $.ajax({
             type: "POST",
-            dataType: "script",
+            dataType: "json",
+            async: false,
             url: "/stash_datacite/geolocation_points/map_coordinates",
             data: { 'latitude' : marker_coordinates[0], 'longitude' : marker_coordinates[1],
-                    'resource_id' : resource_id, 'id': marker_coordinates[2] }
+                    'resource_id' : resource_id, 'id': marker_coordinates[2] },
+            success: function(data) {
+              result = data;
+              updateGeolocationPointsIndex();
+            },
+            error: function() {
+              alert('error occured');
+            }
           });
+            e.layer.options.id = result;
         }
+
         // ------------------------------------------------------------- //
 
-
-
-        var edited_coordinates = dragMarker(drawnItems);
-
+        dragMarker(drawnItems);
+        e.layer.on("popupopen", onPopupClick);
       });
 
 
+    // ------------------------------------------------------------- //
+         // Function to get coordinates based on the layer drawn.
       var getShapes = function(drawnItems) {
         var lng, lat;
         drawnItems.eachLayer(function(layer) {
@@ -300,35 +316,76 @@ $(document).ready(function() {
               var id = "";
               coordinates.push([layer.getLatLng().lat, layer.getLatLng().lng], id);
               layer.dragging.enable();
-              layer.bindPopup(coordinates + "<button class='delete-button'>Delete</button>").openPopup();
+              layer.bindPopup(coordinates + "<button class='draw-button-delete'>Delete</button>");
             }
         });
         return coordinates;
       };
-
-
-      // Dragging Marker and Update to db.
-      var dragMarker =  function(drawnItems) {
-        drawnItems.eachLayer(function(layer) {
+    // ------------------------------------------------------------- //
+    // ------------------------------------------------------------- //
+      // Function to Drag a Marker and Update to db.
+        var dragMarker =  function(drawnItems) {
+          drawnItems.eachLayer(function(layer) {
             var changedPos;
             if (layer instanceof L.Marker) {
                 layer.on('dragend', function(event) {
-
                   changedPos = event.target.getLatLng();
-                  layer.bindPopup(changedPos.lat + ',' + changedPos.lng + " " + "<button class='delete-button'>Delete</button>").openPopup();
+                  layer.bindPopup(changedPos.lat + ',' + changedPos.lng + " " + "<button class='draw-button-delete'>Delete</button>").openPopup();
                   $.ajax({
                     type: "PUT",
                     dataType: "script",
                     url: "/stash_datacite/geolocation_points/update_coordinates",
-                    data: { 'latitude' :  changedPos.latitude, 'longitude' :  changedPos.longitude,
-                           'resource_id' : $.urlParam('resource_id'), 'id' : marker.options.id }
+                    data: { 'latitude' :  changedPos.lat, 'longitude' :  changedPos.lng,
+                           'resource_id' : $.urlParam('resource_id'), 'id' : layer.options.id },
+                    success: function() {
+                      updateGeolocationPointsIndex();
+                    },
+                    error: function() {
+                      alert("error occured");
+                    }
                   });
-
                 });
             };
+          });
+        };
+    // ------------------------------------------------------------- //
+    // ------------------------------------------------------------- //
+        // Function to Delete a Marker from map and update in db.
+          function onPopupClick() {
+            var tempMarker = this;
+            $(".draw-button-delete").click(function () {
+              map.removeLayer(tempMarker);
+              $.ajax({
+                type: "DELETE",
+                dataType: "script",
+                url: "/stash_datacite/geolocation_points/delete_coordinates",
+                data: {'id' : tempMarker.options.id, 'resource_id' : $.urlParam('resource_id') },
+                success: function() {
+                },
+                error: function() {
+                }
+              });
+            });
+          }
 
-        });
-      };
+    // ------------------------------------------------------------- //
+    // ------------------------------------------------------------- //
+        // Function to display the Locations Index partial via Ajax.
+        function updateGeolocationPointsIndex() {
+          $.ajax({
+              type: "GET",
+              dataType: "script",
+              url: "/stash_datacite/geolocation_points/index",
+              data: { 'resource_id' : $.urlParam('resource_id') },
+              success: function() {
+              },
+              error: function() {
+                alert("error occured");
+              }
+          });
+        }
+
+    // ------------------------------------------------------------- //
 });
 
 
