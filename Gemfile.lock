@@ -1,9 +1,7 @@
-
-PATH
+GIT
   remote: https://github.com/CDLUC3/stash_datacite.git
-  revision: 91c3525f373d8df855b80503b2782a0b3c81e291
+  revision: e9df95b167970d73e765af4af256a1c0c8236cc9
   branch: development
-
   specs:
     stash_datacite (0.0.5)
       datacite-mapping
@@ -11,12 +9,10 @@ PATH
       rails (~> 4.2.4)
       responders (~> 2.0)
 
-
-PATH
+GIT
   remote: https://github.com/CDLUC3/stash_engine.git
-  revision: f0c38debeaffad7e703c52396e58805e26ae28dc
+  revision: d6f042d20e30956382bf8449a120adee44187bc5
   branch: development
-
   specs:
     stash_engine (0.0.17)
       carrierwave (~> 0.10.0)
@@ -176,7 +172,7 @@ GEM
       omniauth-oauth2 (~> 1.3.1)
     omniauth-shibboleth (1.2.1)
       omniauth (>= 1.0.0)
-    parser (2.3.0.4)
+    parser (2.3.0.5)
       ast (~> 2.2)
     passenger (5.0.24)
       rack
@@ -233,7 +229,7 @@ GEM
       rspec-mocks (~> 3.4.0)
       rspec-support (~> 3.4.0)
     rspec-support (3.4.1)
-    rubocop (0.37.1)
+    rubocop (0.37.2)
       parser (>= 2.3.0.4, < 3.0)
       powerpack (~> 0.1)
       rainbow (>= 1.99.1, < 3.0)
