@@ -1,5 +1,9 @@
+
 PATH
-  remote: /Users/bvedula/workspace2/DASH/stash_datacite
+  remote: https://github.com/CDLUC3/stash_datacite.git
+  revision: 91c3525f373d8df855b80503b2782a0b3c81e291
+  branch: development
+
   specs:
     stash_datacite (0.0.5)
       datacite-mapping
@@ -7,8 +11,12 @@ PATH
       rails (~> 4.2.4)
       responders (~> 2.0)
 
+
 PATH
-  remote: /Users/bvedula/workspace2/DASH/stash_engine
+  remote: https://github.com/CDLUC3/stash_engine.git
+  revision: f0c38debeaffad7e703c52396e58805e26ae28dc
+  branch: development
+
   specs:
     stash_engine (0.0.17)
       carrierwave (~> 0.10.0)
@@ -110,7 +118,7 @@ GEM
     hashie (3.4.3)
     hirb (0.7.3)
     i18n (0.7.0)
-    jbuilder (2.4.0)
+    jbuilder (2.4.1)
       activesupport (>= 3.0.0, < 5.1)
       multi_json (~> 1.2)
     jquery-fileupload-rails (0.4.6)
@@ -168,7 +176,7 @@ GEM
       omniauth-oauth2 (~> 1.3.1)
     omniauth-shibboleth (1.2.1)
       omniauth (>= 1.0.0)
-    parser (2.3.0.2)
+    parser (2.3.0.4)
       ast (~> 2.2)
     passenger (5.0.24)
       rack
@@ -203,7 +211,7 @@ GEM
       thor (>= 0.18.1, < 2.0)
     rainbow (2.1.0)
     rake (10.5.0)
-    rdoc (4.2.1)
+    rdoc (4.2.2)
       json (~> 1.4)
     ref (2.0.0)
     responders (2.1.1)
@@ -225,8 +233,8 @@ GEM
       rspec-mocks (~> 3.4.0)
       rspec-support (~> 3.4.0)
     rspec-support (3.4.1)
-    rubocop (0.37.0)
-      parser (>= 2.3.0.2, < 3.0)
+    rubocop (0.37.1)
+      parser (>= 2.3.0.4, < 3.0)
       powerpack (~> 0.1)
       rainbow (>= 1.99.1, < 3.0)
       ruby-progressbar (~> 1.7)
