@@ -4,7 +4,7 @@
     <tr>
       <td><%= image_tag("stash_datacite/globe.png", size: "20x20", alt: "Place") %></td>
       <td><%= geolocation_place.geo_location_place %></td>
-      <td><%= link_to 'remove', stash_datacite.geolocation_places_delete_path(geolocation_place), method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      <td><%= link_to 'remove', stash_datacite.geolocation_places_delete_path(geolocation_place), method: :delete, remote: true, data: { confirm: 'Are you sure?' }, class: 'remove_geo' %></td>
     </tr>
     <% end %>
   </table>

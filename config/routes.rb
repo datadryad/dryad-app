@@ -42,6 +42,7 @@ StashDatacite::Engine.routes.draw do
 
   # Actions through Leaflet Ajax posts
   # points
+  get 'geolocation_points/index', to: 'geolocation_points#index'
   get 'geolocation_points/points_coordinates', to: 'geolocation_points#points_coordinates'
   post 'geolocation_points/map_coordinates', to: 'geolocation_points#map_coordinates'
   put 'geolocation_points/update_coordinates', to: 'geolocation_points#update_coordinates'
