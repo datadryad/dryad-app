@@ -87,10 +87,7 @@ $(document).ready(function() {
         marker = new L.Marker(markerLocation, { draggable: true, id: mrk_id }).addTo(map);
         drawPopup(marker, lat, lng);
 
-        marker.on("popupopen", function(event) { onPopupOpen(event.target) });
-
         marker.on('dragend', function(event) {
-          console.log(event.target);
           drawPopup(event.target, event.target.getLatLng().lat, event.target.getLatLng().lng);
           $.ajax({
               type: "PUT",
@@ -300,8 +297,6 @@ $(document).ready(function() {
               var id = "";
               coordinates.push([layer.getLatLng().lat, layer.getLatLng().lng], id);
               layer.dragging.enable();
-              test = layer;
-              console.log(test);
               drawPopup(layer, layer.getLatLng().lat, layer.getLatLng().lng);
             }
         });
@@ -393,5 +388,3 @@ function drawPopup(marker, lat, lng){
   });
 }
 // -------------------------------- //
-
-
