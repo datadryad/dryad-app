@@ -1,6 +1,7 @@
 // Place all the behaviors and hooks related to the matching controller here.
 // All this logic will automatically be available in application.js.
 var map;
+var test;
 $(document).ready(function() {
 
   // create a map in the "map" div, set the view to a given place and zoom
@@ -83,13 +84,14 @@ $(document).ready(function() {
         var lng = coordinatesMarker[i][1];
         var mrk_id = coordinatesMarker[i][2];
         var markerLocation = new L.LatLng(lat, lng);
-        marker = new L.Marker(markerLocation, { draggable: true, id: mrk_id }).addTo(map).bindPopup(lat +","+ lng + " " +"<button class='delete-button'>Delete</button>");
+        marker = new L.Marker(markerLocation, { draggable: true, id: mrk_id }).addTo(map);
+        drawPopup(marker, lat, lng);
 
         marker.on("popupopen", function(event) { onPopupOpen(event.target) });
 
         marker.on('dragend', function(event) {
-          var chagedPos = event.target.getLatLng();
-          this.bindPopup(chagedPos.toString() + " " +"<button class='delete-button'>Delete</button>");
+          console.log(event.target);
+          drawPopup(event.target, event.target.getLatLng().lat, event.target.getLatLng().lng);
           $.ajax({
               type: "PUT",
               dataType: "script",
@@ -105,24 +107,6 @@ $(document).ready(function() {
             });
         });
     }
-
-    // Delete marker from map and db
-      function onPopupOpen(marker) {
-        $( ".delete-button" ).click(function() {
-          map.removeLayer(marker);
-          $.ajax({
-              type: "DELETE",
-              dataType: "script",
-              url: "/stash_datacite/geolocation_points/delete_coordinates",
-              data: {'id' : marker.options.id, 'resource_id' : $.urlParam('resource_id') },
-              success: function() {
-              },
-              error: function() {
-              }
-            });
-        });
-      }
-  // -------------------------------- //
 
   // -------------------------------- //
     // get bbox coordinates from db and load on map
@@ -292,7 +276,7 @@ $(document).ready(function() {
         // ------------------------------------------------------------- //
 
         dragMarker(drawnItems);
-        e.layer.on("popupopen", onPopupClick);
+        // e.layer.on("popupopen", onPopupClick);
       });
 
 
@@ -316,7 +300,9 @@ $(document).ready(function() {
               var id = "";
               coordinates.push([layer.getLatLng().lat, layer.getLatLng().lng], id);
               layer.dragging.enable();
-              layer.bindPopup(coordinates + "<button class='draw-button-delete'>Delete</button>");
+              test = layer;
+              console.log(test);
+              drawPopup(layer, layer.getLatLng().lat, layer.getLatLng().lng);
             }
         });
         return coordinates;
@@ -330,7 +316,7 @@ $(document).ready(function() {
             if (layer instanceof L.Marker) {
                 layer.on('dragend', function(event) {
                   changedPos = event.target.getLatLng();
-                  layer.bindPopup(changedPos.lat + ',' + changedPos.lng + " " + "<button class='draw-button-delete'>Delete</button>").openPopup();
+                  drawPopup(layer, changedPos.lat, changedPos.lng);
                   $.ajax({
                     type: "PUT",
                     dataType: "script",
@@ -348,25 +334,6 @@ $(document).ready(function() {
             };
           });
         };
-    // ------------------------------------------------------------- //
-    // ------------------------------------------------------------- //
-        // Function to Delete a Marker from map and update in db.
-          function onPopupClick() {
-            var tempMarker = this;
-            $(".draw-button-delete").click(function () {
-              map.removeLayer(tempMarker);
-              $.ajax({
-                type: "DELETE",
-                dataType: "script",
-                url: "/stash_datacite/geolocation_points/delete_coordinates",
-                data: {'id' : tempMarker.options.id, 'resource_id' : $.urlParam('resource_id') },
-                success: function() {
-                },
-                error: function() {
-                }
-              });
-            });
-          }
 
     // ------------------------------------------------------------- //
     // ------------------------------------------------------------- //
@@ -401,5 +368,30 @@ $.urlParam = function(name){
   var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
   return results[1] || 0;
 }
+
+// Delete marker from map and db
+function onPopupOpen(marker) {
+
+}
+
+function drawPopup(marker, lat, lng){
+  marker.bindPopup(lat +","+ lng + " " +"<button class='delete-button'>Delete</button>");
+  marker.on("popupopen", function(event) {
+    $( ".delete-button" ).click(function() {
+      map.removeLayer(marker);
+      $.ajax({
+        type: "DELETE",
+        dataType: "script",
+        url: "/stash_datacite/geolocation_points/delete_coordinates",
+        data: {'id' : marker.options.id, 'resource_id' : $.urlParam('resource_id') },
+        success: function() {
+        },
+        error: function() {
+        }
+      });
+    });
+  });
+}
+// -------------------------------- //
 
 
