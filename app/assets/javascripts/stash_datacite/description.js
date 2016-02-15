@@ -4,5 +4,6 @@ $(document).ready(function(){
   $( ".description" ).on('blur', function(e){
     var form =  $(this).parents('form');
     $(form).trigger('submit.rails');
+    $( "div.success" ).show().delay( 1000 ).fadeOut( 400 );
   });
 });
