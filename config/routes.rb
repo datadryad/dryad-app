@@ -10,6 +10,7 @@ StashDatacite::Engine.routes.draw do
   get 'creators/new', to: 'creators#new'
   post 'creators/create', to: 'creators#create'
   patch 'creators/update', to: 'creators#update'
+  delete 'creators/:id/delete', to: 'creators#delete', as: 'creators_delete'
 
   get 'resource_types/new', to: 'resource_types#new'
   post 'resource_types/create', to: 'resource_types#create'
