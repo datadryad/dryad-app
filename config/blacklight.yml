@@ -4,6 +4,7 @@ development:
   url: <%= ENV['SOLR_URL'] || "http://uc3-dash2solr-dev.cdlib.org:8983/solr/geoblacklight" %>
 test: &test
   adapter: solr
+  # TODO: Figure out whether we want/need a local Jetty/Solr for testing
   url: <%= "http://127.0.0.1:#{ENV['TEST_JETTY_PORT'] || 8888}/solr/blacklight-core" %>
 stage:
   adapter: solr
