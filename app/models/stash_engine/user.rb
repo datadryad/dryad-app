@@ -7,7 +7,6 @@ module StashEngine
         user.provider = auth.provider
         user.uid = auth.uid
         user.email = auth.info.email.split(";").first #because ucla has two values separated by ;
-
         # name is kludgy and many places do not provide them broken out
         if auth.info.name
           name = auth.info.name

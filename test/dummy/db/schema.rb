@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150929170816) do
+ActiveRecord::Schema.define(version: 20160208223347) do
 
   create_table "stash_engine_file_uploads", force: :cascade do |t|
     t.string   "upload_file_name",    limit: 255
@@ -19,8 +19,9 @@ ActiveRecord::Schema.define(version: 20150929170816) do
     t.integer  "upload_file_size",    limit: 4
     t.integer  "resource_id",         limit: 4
     t.datetime "upload_updated_at"
-    t.datetime "created_at",                      null: false
-    t.datetime "updated_at",                      null: false
+    t.datetime "created_at",                        null: false
+    t.datetime "updated_at",                        null: false
+    t.text     "temp_file_path",      limit: 65535
   end
 
   create_table "stash_engine_identifiers", force: :cascade do |t|
@@ -51,8 +52,9 @@ ActiveRecord::Schema.define(version: 20150929170816) do
   create_table "stash_engine_resources", force: :cascade do |t|
     t.integer  "user_id",                   limit: 4
     t.integer  "current_resource_state_id", limit: 4
-    t.datetime "created_at",                          null: false
-    t.datetime "updated_at",                          null: false
+    t.datetime "created_at",                                          null: false
+    t.datetime "updated_at",                                          null: false
+    t.boolean  "geolocation",                         default: false
   end
 
   create_table "stash_engine_submission_logs", force: :cascade do |t|
@@ -63,15 +65,17 @@ ActiveRecord::Schema.define(version: 20150929170816) do
   end
 
   create_table "stash_engine_users", force: :cascade do |t|
-    t.string   "first_name",     limit: 255
-    t.string   "last_name",      limit: 255
-    t.string   "email",          limit: 255
-    t.string   "uid",            limit: 255
-    t.string   "provider",       limit: 255
-    t.string   "oauth_token",    limit: 255
-    t.integer  "institution_id", limit: 4
-    t.datetime "created_at",                 null: false
-    t.datetime "updated_at",                 null: false
+    t.string   "first_name",  limit: 255
+    t.string   "last_name",   limit: 255
+    t.string   "email",       limit: 255
+    t.string   "uid",         limit: 255
+    t.string   "provider",    limit: 255
+    t.string   "oauth_token", limit: 255
+    t.datetime "created_at",              null: false
+    t.datetime "updated_at",              null: false
+    t.string   "tenant_id",   limit: 255
   end
+
+  add_index "stash_engine_users", ["tenant_id"], name: "index_stash_engine_users_on_tenant_id", using: :btree
 
 end

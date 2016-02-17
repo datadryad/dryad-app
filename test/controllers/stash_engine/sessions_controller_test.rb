@@ -20,19 +20,23 @@ module StashEngine
 
     test 'callback should set info' do
       @request.env['omniauth.auth'] =
-          {
+          OpenStruct.new({
             info:
-              {
+              OpenStruct.new({
                 email:         'test@test.com',
                 name:          'Test User',
                 test_domain:   'test.berkeley.edu'
-              },
+              }),
+            credentials: OpenStruct.new({ token: nil }),
             provider:     'developer',
             uid:          'test@test.com'
-          }.with_indifferent_access
-      get(:callback, 'provider' => 'developer')
+          }.with_indifferent_access)
+
+      get :callback, provider: 'developer'
       assert_response :redirect
-      assert_equal 'test@test.com', session[:email]
+      assert session['user_id']
+      assert_equal User.find(session['user_id']).uid, 'test@test.com'
+
     end
 
     test 'callback with bad info' do
