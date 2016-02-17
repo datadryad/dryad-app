@@ -1,4 +1,5 @@
-$('#resource_type_new_form').replaceWith("<%= raw escape_javascript(render partial: 'stash_datacite/resource_types/update', locals: {resource_type: @resource_type}) %>");
+// Place all the behaviors and hooks related to the matching controller here.
+// All this logic will automatically be available in application.js.
 $(document).ready(function(){
   $( '.resource_type' ).on('focus', function () {
     previous_value = this.value;
@@ -11,3 +12,5 @@ $(document).ready(function(){
       }
     });
 });
+
+
