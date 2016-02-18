@@ -4,8 +4,17 @@
 # model remove the '{}' from the fixture names and add the columns immediately
 # below each fixture, per the syntax in the comments below
 #
-one: {}
-# column: value
-#
-two: {}
-#  column: value
+<%
+  FileUtils.copy(File.join(Rails.root, 'cat.txt'), File.join(Rails.root, "tmp", 'cat.txt'))
+%>
+
+test_file:
+  id: 1
+  upload_file_name: cat.txt
+  upload_content_type: text/plain
+  upload_file_size: 17
+  resource_id: 1
+  upload_updated_at: <%= Time.new %>
+  temp_file_path: <%= File.join(Rails.root, 'tmp', 'cat.txt') %>
+
+

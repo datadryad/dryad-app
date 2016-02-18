@@ -5,25 +5,16 @@ module StashEngine
 
     before_action :require_login
 
-    before_action :set_file, only: [:edit, :update, :destroy]
+    before_action :set_file, only: [:destroy]
 
-    before_action :require_file_owner, except: [:index, :new, :create]
+    before_action :require_file_owner, except: [ :create]
 
-    def index
-    end
-
-    def new
-    end
-
-    def edit
-    end
-
-    def delete
-    end
 
     def destroy
       respond_to do |format|
+        logger.debug "in format"
         format.js {
+          logger.debug "In format.js"
           File.delete(@file.temp_file_path) if File.exist?(@file.temp_file_path)
           @file_id = @file.id
           @file.destroy
@@ -53,6 +44,9 @@ module StashEngine
     private
 
     def require_file_owner
+      logger.debug "current_user.id = #{current_user.id}"
+      logger.debug "@file.resource.user_id = #{@file.resource.user_id}"
+      logger.debug @file.resource.inspect
       if current_user.id != @file.resource.user_id
         redirect_to tenants_path
         return false
