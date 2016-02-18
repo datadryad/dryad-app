@@ -21,8 +21,8 @@ StashDatacite::Engine.routes.draw do
   patch 'contributors/update', to: 'contributors#update'
 
   get 'subjects/new', to: 'subjects#new'
+  get 'subjects/autocomplete', to: 'subjects#autocomplete'
   post 'subjects/create', to: 'subjects#create'
-  patch 'subjects/update', to: 'subjects#update'
 
   get 'related_identifiers/new', to: 'related_identifiers#new'
   post 'related_identifiers/create', to: 'related_identifiers#create'
