@@ -25,12 +25,12 @@ Metrics/LineLength:
 # It is also extremely stupid and disallows recommended conventions such as responding to format and multiple formats
 # in a controller method.
 Metrics/AbcSize:
-  Max: 20
+  Max: 25
 
 # Rubocop is really bad at counting method length since it counts things such as arrays or hashes with multiple
 # values as a line each if you follow recommended practices of aligning on subsequent lines. Not impressed.
 Metrics/MethodLength:
-  Max: 20
+  Max: 25
 
 # documentation
 Documentation:
