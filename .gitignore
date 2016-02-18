@@ -55,3 +55,8 @@ db/*.sqlite3
 !/log/.keep
 /tmp
 
+# ############################################################
+# Misc annoying stuff
+
+Gemfile.lock
+/test/dummy/log
