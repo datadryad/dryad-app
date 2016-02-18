@@ -13,6 +13,7 @@ module StashEngine
       assert_difference('FileUpload.count', -1) do
         delete :destroy, {id: fu.id, format: :js}, {user_id: 1}
       end
+      assert !File.exist?(fu.temp_file_path)
     end
 
 

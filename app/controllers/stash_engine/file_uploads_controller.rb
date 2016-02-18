@@ -12,9 +12,7 @@ module StashEngine
 
     def destroy
       respond_to do |format|
-        logger.debug "in format"
         format.js {
-          logger.debug "In format.js"
           File.delete(@file.temp_file_path) if File.exist?(@file.temp_file_path)
           @file_id = @file.id
           @file.destroy
@@ -44,9 +42,6 @@ module StashEngine
     private
 
     def require_file_owner
-      logger.debug "current_user.id = #{current_user.id}"
-      logger.debug "@file.resource.user_id = #{@file.resource.user_id}"
-      logger.debug @file.resource.inspect
       if current_user.id != @file.resource.user_id
         redirect_to tenants_path
         return false
