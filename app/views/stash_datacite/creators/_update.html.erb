@@ -1,15 +1,14 @@
 <%= form_for(creator, url: stash_datacite.creators_update_path, remote: true, authenticity_token: true) do |f| %>
   <%#= render "datacite/shared/error_messages", target: @creator %>
-  <strong><%= label_tag "Author(s)" %></strong><br/>
   <%= f.label :creator_first_name, "First Name" %>
-  <%= f.text_field :creator_first_name %>
+  <%= f.text_field :creator_first_name %>&nbsp;&nbsp;
   <%= f.label :creator_last_name, "Last Name" %>
-  <%= f.text_field :creator_last_name %>
+  <%= f.text_field :creator_last_name, class: 'creator_last_name' %>&nbsp;&nbsp;
   <%#= creator.input :name_identifier_id %>
   <%= f.label :affliation_id, "Institutional Affiliation" %>
-  <%= f.text_field :affliation_id %>
-  <%= link_to 'add ORCID', '#' %>
+  <%= f.text_field :affliation_id %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
   <%= f.hidden_field :resource_id %>
   <%= f.hidden_field :id %>
-  <br/>
+  <%= f.submit 'add' %>
+  <%= link_to 'remove', stash_datacite.creators_delete_path(creator.id), method: :delete, remote: true, data: { confirm: 'Are you sure?' }, class: 'delete_creator' %>
 <% end %>

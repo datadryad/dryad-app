@@ -15,13 +15,9 @@
  *= require_self
  */
 .success{
-    border: 1px solid;
     margin: 10px 0px;
     padding:15px 10px 15px 50px;
-    background-repeat: no-repeat;
-    background-position: 10px center;
-    position:relative;
+    position: top;
     color: #006400;
-    font-weight: bold;
-    background-color: #BDE5F8;
+    float: right;
 }

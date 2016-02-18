@@ -2,13 +2,13 @@ require_dependency 'stash_datacite/application_controller'
 
 module StashDatacite
   class CreatorsController < ApplicationController
-    before_action :set_creator, only: [:update, :destroy]
+    before_action :set_creator, only: [:update]
 
     respond_to :json
 
     # GET /creators/new
     def new
-      @creator = Creator.new
+      @creator = Creator.new(resource_id: params[:resource_id])
       respond_to do |format|
         format.js
       end
@@ -38,9 +38,12 @@ module StashDatacite
     end
 
     # DELETE /creators/1
-    def destroy
+    def delete
+      @creator = Creator.find(params[:id])
       @creator.destroy
-      redirect_to creators_url, notice: 'Creator was successfully destroyed.'
+      respond_to do |format|
+        format.js
+      end
     end
 
     private

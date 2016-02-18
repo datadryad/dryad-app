@@ -1,2 +1,2 @@
-$('#creator_new_form').replaceWith("<%= raw escape_javascript(render partial: 'stash_datacite/creators/update', locals: {creator: @creator}) %>");
+$('#creator_new_form').replaceWith("<%= raw escape_javascript(render partial: 'stash_datacite/creators/update', locals: {creator: @creator}) %><br/>");
 $( "div.success" ).slideDown( 300 ).delay( 1000 ).fadeOut( 400 );
