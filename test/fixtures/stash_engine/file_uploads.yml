@@ -5,6 +5,7 @@
 # below each fixture, per the syntax in the comments below
 #
 <%
+  FileUtils.mkdir(File.join(Rails.root, "tmp")) unless File.exists?(File.join(Rails.root, "tmp"))
   FileUtils.copy(File.join(Rails.root, 'cat.txt'), File.join(Rails.root, "tmp", 'cat.txt'))
 %>
 
