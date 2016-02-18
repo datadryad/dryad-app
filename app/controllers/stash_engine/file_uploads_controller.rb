@@ -29,7 +29,7 @@ module StashEngine
             upload_content_type: fu.content_type,
             upload_file_size: File.size(fu.tempfile.path),
             resource_id: params[:resource_id],
-            upload_updated_at: Time.new)
+            upload_updated_at: Time.new.utc)
           @my_file.save
         end
       end
