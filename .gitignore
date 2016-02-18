@@ -60,3 +60,5 @@ db/*.sqlite3
 
 Gemfile.lock
 /test/dummy/log
+/test/dummy/db
+
