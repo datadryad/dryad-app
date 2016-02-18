@@ -2,7 +2,6 @@ require_dependency 'stash_engine/application_controller'
 
 module StashEngine
   class ResourcesController < ApplicationController
-
     before_action :require_login
 
     before_action :set_resource, only: [:show, :edit, :update, :destroy, :review, :upload]
@@ -68,7 +67,6 @@ module StashEngine
 
     # Review responds as a get request to review the resource before saving
     def review
-
     end
 
     # Upload files view for resource

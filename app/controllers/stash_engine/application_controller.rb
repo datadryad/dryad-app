@@ -22,19 +22,18 @@ module StashEngine
     end
 
     def clear_user
-      current_user = nil
+      @current_user = nil
     end
 
     def require_login
-      if !current_user
-        flash[:alert] = "You must be logged in"
-        redirect_to tenants_path
-      end
+      return if current_user
+      flash[:alert] = 'You must be logged in'
+      redirect_to tenants_path
     end
 
     def require_resource_owner
       if current_user.id != @resource.user_id
-        flash[:alert] = "You do not have permission to view this resource"
+        flash[:alert] = 'You do not have permission to view this resource'
         redirect_to tenants_path
       end
     end
