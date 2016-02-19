@@ -1,9 +1,9 @@
 module StashEngine
   class ApplicationController < ::ApplicationController
-    helper_method :current_tenant, :current_user
+    helper_method :current_tenant, :current_user, :metadata_engine
 
-    def stash_datacite
-      StashDatacite::Engine.routes.url_helpers
+    def metadata_url_helpers
+      metadata_engine::Engine.routes.url_helpers
     end
 
     # get the current tenant for customizations, also deals with login
@@ -19,6 +19,10 @@ module StashEngine
 
     def current_user
       @current_user ||= User.find_by_id(session[:user_id]) if session[:user_id]
+    end
+
+    def metadata_engine
+      StashEngine.app.metadata_engine.constantize
     end
 
     def clear_user

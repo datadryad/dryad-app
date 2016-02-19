@@ -1,5 +1,5 @@
 defaults: &DEFAULTS
-  metadata_engines: [ "StashDatacite"]
+  metadata_engine: StashDatacite
   shared_resource_model: StashEngine::Resource
   stash_mount: /stash
 

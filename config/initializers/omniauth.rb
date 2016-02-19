@@ -1,9 +1,7 @@
 Rails.application.config.middleware.use OmniAuth::Builder do
-#StashEngine::Engine.config.middleware.use OmniAuth::Builder do
   provider :shibboleth,
            :callback_path => '/stash/auth/shibboleth/callback',
            :request_type   => :header,
-           #:host            => 'dash2-dev.ucop.edu',
            :host            => StashEngine.app.shib_sp_host,
            :uid_field       => 'eppn',
            :path_prefix     => '/stash/auth',

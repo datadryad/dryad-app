@@ -13,7 +13,7 @@
 
     <div class="authors_form">
     </div>
-    <%= link_to "Add Author", stash_datacite.creators_new_path( auth_hash: @auth_hash ), id: "add_author", remote: :true %>
+    <%= link_to "Add Author", metadata_url_helpers.creators_new_path( auth_hash: @auth_hash ), id: "add_author", remote: :true %>
     <%= link_to "Add Myself with my Orcid ID", '/stash/auth/orcid/' %>
 
 
