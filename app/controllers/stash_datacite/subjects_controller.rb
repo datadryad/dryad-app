@@ -2,7 +2,6 @@ require_dependency 'stash_datacite/application_controller'
 
 module StashDatacite
   class SubjectsController < ApplicationController
-    before_action :set_subject, only: [:update, :destroy]
 
     # GET /subjects/new
     def new
@@ -11,26 +10,16 @@ module StashDatacite
 
     # POST /subjects
     def create
-      @subject = Subject.new(subject_params)
-      respond_to do |format|
-        if @subject.save
-          format.js
-        else
-          format.html { render :new }
+      @resource =  StashEngine::Resource.find(params[:resource_id])
+      subjects_array = subject_params[:subject].split(/[ ,]+/)
+      subjects_array.each do |sub|
+        unless Subject.where("subject LIKE ?", sub).exists?
+          @resource.subjects << Subject.create(subject: sub)
         end
       end
+      @subjects = @resource.subjects.pluck(:subject).join(", ")
+      render template: 'stash_datacite/shared/update.js.erb'
     end
-
-    # PATCH/PUT /subjects/1
-    # def update
-    #   respond_to do |format|
-    #     if @subject.update(subject_params)
-    #       format.js { render template: 'stash_datacite/shared/update.js.erb' }
-    #     else
-    #       format.html { render :edit }
-    #     end
-    #   end
-    # end
 
     # DELETE /subjects/1
     def destroy
@@ -53,7 +42,7 @@ module StashDatacite
 
     # Only allow a trusted parameter "white list" through.
     def subject_params
-      params.require(:subject).permit(:id, :subject, :subject_scheme, :scheme_URI, :resource_id)
+      params
     end
   end
 end
