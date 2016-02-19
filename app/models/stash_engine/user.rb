@@ -1,31 +1,23 @@
 module StashEngine
   class User < ActiveRecord::Base
-
     def self.from_omniauth(auth, tenant_id)
-
       where(uid: auth[:uid]).first_or_initialize.tap do |user|
         user.provider = auth.provider
         user.uid = auth.uid
-        user.email = auth.info.email.split(";").first #because ucla has two values separated by ;
-
+        user.email = auth.info.email.split(';').first #because ucla has two values separated by ;
         # name is kludgy and many places do not provide them broken out
-        if auth.info.name
-          name = auth.info.name
-          user.first_name = name.split(' ').first
-          user.last_name = name.split(' ').last unless name.split(' ').last == user.first_name
-        end
-        #user.first_name = auth.info.first_name
-        #user.last_name = auth.info.last_name
-        #if user.provider == "shibboleth"
-        #  user.external_id = auth.info.external_id
-        #else
-        #  user.external_id = auth.info.email
-        #end
+        user.first_name, user.last_name = split_name(auth.info.name) if auth.info.name
         user.oauth_token = auth.credentials.token
         user.tenant_id = tenant_id
         user.save!
       end
     end
 
+    def self.split_name(name)
+      first = name.split(' ').first
+      last = ''
+      last = name.split(' ').last unless name.split(' ').last == first
+      [first, last]
+    end
   end
 end

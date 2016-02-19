@@ -44,7 +44,7 @@ div.search_and_login {
     text-align: right;
 }
 
-div.menu_bar {
+nav.menu_bar {
     clear:left;
     width: 60%;
     float: left;
@@ -81,4 +81,8 @@ div.bar {
 
 div.spaced_row {
     margin-bottom: 1ex;
+}
+
+#upload_total {
+    margin: 1em 0 1em 0;
 }

@@ -16,6 +16,22 @@ AllCops:
 Metrics/LineLength:
   Max: 120
 
+# Rubocop again acts like a school marm.  They made rules to disallow prepositions at the end of sentences because of
+# Latin. English isn't Latin, so give it a rest.  Usage should be useful for expression, not stupidly prescriptive.
+#
+# While many small methods are ideal, often a small straight-forward chunk is perfectly reasonable and prevents
+# ping-pong code involving jumping through many methods to see complete picture or debug something simple.
+#
+# It is also extremely stupid and disallows recommended conventions such as responding to format and multiple formats
+# in a controller method.
+Metrics/AbcSize:
+  Max: 25
+
+# Rubocop is really bad at counting method length since it counts things such as arrays or hashes with multiple
+# values as a line each if you follow recommended practices of aligning on subsequent lines. Not impressed.
+Metrics/MethodLength:
+  Max: 25
+
 # documentation
 Documentation:
   Exclude:

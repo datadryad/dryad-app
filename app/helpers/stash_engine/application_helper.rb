@@ -12,7 +12,7 @@ module StashEngine
 
     def geolocation_image(resource)
       if resource && resource.geolocation == true
-        image_tag("stash_datacite/geolocation.png", size: "20x20", alt: "Box")
+        image_tag('stash_datacite/geolocation.png', size: '20x20', alt: 'Box')
       else
         ' '
       end
@@ -24,7 +24,7 @@ module StashEngine
       if session[:user_id].blank?
         link_to 'log in', tenants_path
       else
-        link_to "log out", sessions_destroy_path
+        link_to 'log out', sessions_destroy_path
       end
     end
     # :nocov:

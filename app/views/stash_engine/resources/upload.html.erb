@@ -35,12 +35,34 @@
   <%= render partial: "stash_engine/file_uploads/uploaded_file", collection: @resource.file_uploads %>
 </div>
 
+<div id="upload_total">
+  Total:
+</div>
+
+
 <div>
   <button id="upload_all" type="button">Upload</button>
 </div>
 
 
 <%= render partial: 'stash_engine/file_uploads/dropped_file' %>
+
+<style>
+  .buttony {
+    border-width: 1px;
+    border-style: solid;
+    margin: 1em 1em 1em 1em;
+    padding: 1em 1em 1em 1em;
+  }
+</style>
+
+<div style="float: left;" class="buttony">
+  <%= link_to 'Back to Describe Dataset', metadata_entry_pages_find_or_create_path(resource_id: params[:id]) %>
+</div>
+<div style="float: right;" class="buttony">
+  <%= link_to 'Proceed to Review', review_resource_path(params[:id]) %>
+</div>
+<div style="clear: both"></div>
 
 <script type="text/javascript" charset="utf-8">
   $(function () {
@@ -69,6 +91,6 @@
     $('.upload-it:first').click();
   });
 
-
+  updateTotalSize();
 
 </script>

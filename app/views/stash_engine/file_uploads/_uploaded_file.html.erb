@@ -3,7 +3,7 @@
   <div class="spaced_text"><%= image_tag 'stash_engine/green_check.png' %></div>
   <div class="spaced_text"><%= f.upload_file_name %></div>
   <div class="spaced_text"><%= filesize(f.upload_file_size) %></div>
-  <div class="spaced_text"><%= link_to 'delete', f, method: :delete, remote: true %></div>
+  <div class="spaced_text"><%= button_to 'Delete', f, method: :delete, remote: true %></div>
   <span style="visibility: hidden" class="hidden_bytes"><%= f.upload_file_size %></span>
   <br class="clear"/>
 </div>
