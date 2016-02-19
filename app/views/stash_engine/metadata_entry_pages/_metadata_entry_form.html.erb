@@ -1,39 +1,50 @@
 <div>
   <p><h2>Describe your dataset</h2>
   * required fields</p>
-  <div class="success" style="display:none">
-    <p>Your Change are Autosaved.</p>
+  <div class="success">
+    <p>Changes Autosaved at <%= DateTime.now.in_time_zone%></p>
   </div>
 </div>
 
 <div id="accordion">
   <h3><strong>Basic Information</strong></h3>
   <div>
+    <%= render partial: "stash_datacite/resource_types/form", locals: { resource_type: @resource_type } %><br/>
     <%= render partial: "stash_datacite/titles/form", locals: { title: @title } %><br/>
 
+    <strong><%= label_tag "Author(s)" %></strong>
     <div class="authors_form">
+      <% @creators.each do |creator| %>
+        <%= render partial: "stash_datacite/creators/update", locals: { creator: creator } %><br/>
+      <% end %>
     </div>
-    <%= link_to "Add Author", metadata_url_helpers.creators_new_path( auth_hash: @auth_hash ), id: "add_author", remote: :true %>
-    <%= link_to "Add Myself with my Orcid ID", '/stash/auth/orcid/' %>
-
-
-    <%= render partial: "stash_datacite/resource_types/form", locals: { resource_type: @resource_type } %><br/>
+    <%= link_to "Add Author", metadata_url_helpers.creators_new_path( auth_hash: @auth_hash, resource_id: @resource.id ), id: "add_author", remote: :true %>
+    <%= link_to "Add Myself with my Orcid ID", '/stash/auth/orcid/' %><br/>
+    <br/>
     <strong><%= label_tag :description, "Abstract" %></strong><br/>
     <%= render partial: "stash_datacite/descriptions/form", locals: { description: @abstract,  description_type: :abstract }  %>
   </div>
 
   <h3><strong>Data Description (Optional)</strong></h3>
   <div>
-    <%= render partial: "stash_datacite/contributors/form", locals: { contributor: @contributor } %><br/>
-    <%= render partial: "stash_datacite/subjects/form", locals: { subject: @subject } %><br/>
     <strong><%= label_tag :description, "Methods" %></strong>&nbsp;&nbsp;How was this dataset collected? How has it been processed?<br/>
     <%= render partial: "stash_datacite/descriptions/form", locals: { description: @methods, description_type: :methods } %><br/>
+
     <strong><%= label_tag :description, "Usage Notes" %></strong>&nbsp;&nbsp;What else would someone need to know to use this dataset?<br/>
     <%= render partial: "stash_datacite/descriptions/form", locals: { description: @usage_notes, description_type: :usage_notes } %><br/>
-    <%= render partial: "stash_datacite/related_identifiers/form", locals: { related_identifier: @related_identifier } %>
+
+    <% if @subjects.empty? %>
+    <%= render partial: "stash_datacite/subjects/form", locals: { subject: @subject, resource_id: @resource.id } %><br/>
+    <% else %>
+    <%= render partial: "stash_datacite/subjects/form", locals: { subjects: @subjects, resource_id: @resource.id } %><br/>
+    <% end %>
+
+    <%= render partial: "stash_datacite/related_identifiers/form", locals: { related_identifier: @related_identifier } %><br/>
+
+    <%= render partial: "stash_datacite/contributors/form", locals: { contributor: @contributor } %><br/>
   </div>
 
-  <h3 id="location_section"><strong>Location information (optional)</strong></h3>
+  <h3 id="location_section"><strong>Location Information (optional)</strong></h3>
   <div>
     <%= render partial: "stash_datacite/shared/map" %>
     <div class="locations_added">
@@ -41,11 +52,11 @@
       <%= render partial: "stash_datacite/shared/locations" %>
     </div>
     <br/>
-    <%= render partial: "stash_datacite/geolocation_places/form", locals: { geolocation_place: @geolocation_place } %>
     <%= render partial: "stash_datacite/geolocation_points/form", locals: { geolocation_point: @geolocation_point } %>
     <%= render partial: "stash_datacite/geolocation_boxes/form", locals: { geolocation_box: @geolocation_box } %>
   </div>
 </div>
 <br/>
 <%= link_to 'Back to My Datasets', dashboard_path , id: 'dashboard_path' %>
+<%= button_to 'Save', '#', id: 'save_button' %>
 <%= link_to 'Proceed to Upload', upload_resource_path(@resource), id: 'upload_path' %>
