@@ -1,6 +1,6 @@
 module StashEngine
   class ApplicationController < ::ApplicationController
-    helper_method :current_tenant, :current_user, :metadata_engine
+    helper_method :current_tenant, :current_user, :metadata_engine, :metadata_url_helpers
 
     def metadata_url_helpers
       metadata_engine::Engine.routes.url_helpers
