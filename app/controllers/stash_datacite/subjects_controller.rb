@@ -2,7 +2,6 @@ require_dependency 'stash_datacite/application_controller'
 
 module StashDatacite
   class SubjectsController < ApplicationController
-
     # GET /subjects/new
     def new
       @subject = Subject.new
