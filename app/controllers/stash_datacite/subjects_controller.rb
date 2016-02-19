@@ -10,14 +10,14 @@ module StashDatacite
 
     # POST /subjects
     def create
-      @resource =  StashEngine::Resource.find(params[:resource_id])
+      @resource = StashEngine::Resource.find(params[:resource_id])
       subjects_array = subject_params[:subject].split(/[ ,]+/)
       subjects_array.each do |sub|
-        unless Subject.where("subject LIKE ?", sub).exists?
+        unless Subject.where('subject LIKE ?', sub).exists?
           @resource.subjects << Subject.create(subject: sub)
         end
       end
-      @subjects = @resource.subjects.pluck(:subject).join(", ")
+      @subjects = @resource.subjects.pluck(:subject).join(', ')
       render template: 'stash_datacite/shared/update.js.erb'
     end
 
@@ -29,7 +29,7 @@ module StashDatacite
 
     # GET /subjects
     def autocomplete
-      @subjects = Subject.order(:subject).where("subject LIKE ?", "%#{params[:term]}%") unless params[:term].blank?
+      @subjects = Subject.order(:subject).where('subject LIKE ?', "%#{params[:term]}%") unless params[:term].blank?
       render json: @subjects.map(&:subject)
     end
 

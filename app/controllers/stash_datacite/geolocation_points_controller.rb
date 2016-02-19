@@ -26,7 +26,7 @@ module StashDatacite
       @geolocation_point = GeolocationPoint.new(geolocation_point_params.permit!)
       respond_to do |format|
         if @geolocation_point.save
-          format.json {  render json: @geolocation_point.id }
+          format.json { render json: @geolocation_point.id }
         else
           format.html { render :new }
         end
@@ -39,7 +39,7 @@ module StashDatacite
       geolocation_point_params = params.except(:controller, :action)
       respond_to do |format|
         if @geolocation_point.update(geolocation_point_params.permit!)
-          format.json {  render json: @geolocation_point.id }
+          format.json { render json: @geolocation_point.id }
         else
           format.html { render :new }
         end

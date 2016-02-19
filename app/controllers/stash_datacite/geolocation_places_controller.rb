@@ -61,7 +61,7 @@ module StashDatacite
       @longitude = @geolocation_place.longitude
       @geolocation_place.destroy
       respond_to do |format|
-        format.html { redirect_to :back}
+        format.html { redirect_to :back }
         format.js
       end
     end

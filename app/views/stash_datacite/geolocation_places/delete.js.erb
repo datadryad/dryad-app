@@ -1,0 +1,6 @@
+var marker = L.marker([<%= @latitude %>, <%= @longitude %>]);
+  console.log(marker);
+map.removeLayer(marker);
+$('.remove_geo').bind('ajax:success', function() {
+  $(this).closest('tr').fadeOut();
+});

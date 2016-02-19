@@ -4,6 +4,6 @@ module StashDatacite
     belongs_to :resource, class_name: StashDatacite.resource_class.to_s
 
     enum resource_type: { Spreadsheet: 'spreadsheet', Image: 'image', Sound: 'sound', Video: 'audiovisual',
-                                    Text: 'text', Software: 'software', MultipleTypes: 'multiple_types', Other: 'other' }
+                          Text: 'text', Software: 'software', MultipleTypes: 'multiple_types', Other: 'other' }
   end
 end

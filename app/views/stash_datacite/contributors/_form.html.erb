@@ -4,12 +4,16 @@
     <%#= render "datacite/shared/error_messages", target: @contributor %>
     <strong><%= label_tag "Funding" %><br/></strong>
     <%= f.label :contributor_name, "Granting Organization" %>
-    <%= f.text_field :contributor_name, size: 40 %>
+    <%= f.text_field :contributor_name, size: 40 %>&nbsp;&nbsp;&nbsp;&nbsp;
+    <%= label_tag 'Award Number' %>
+    <%= text_field_tag 'award number', '', size: 30 %>
     <%#= f.label :affliation_id, "Institutional Affiliation" %>
     <%#= f.text_field :affliation_id, size: 40 %>
-    <%= f.hidden_field :contributor_type %>
+    <%= f.hidden_field :contributor_type%>
     <%= f.hidden_field :resource_id %>
     <%= f.hidden_field :id %>
+    <%= f.submit 'add' %>
+    <%= link_to 'remove', '#', class: 'remove' %>
     <br/>
   <% end %>
 <% else %>
