@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160208223347) do
+ActiveRecord::Schema.define(version: 20160218195808) do
 
   create_table "dcs_affliations", force: :cascade do |t|
     t.string   "short_name",   limit: 255
@@ -170,9 +170,15 @@ ActiveRecord::Schema.define(version: 20160208223347) do
     t.string   "subject",        limit: 255
     t.string   "subject_scheme", limit: 255
     t.text     "scheme_URI",     limit: 65535
-    t.integer  "resource_id",    limit: 4
     t.datetime "created_at",                   null: false
     t.datetime "updated_at",                   null: false
+  end
+
+  create_table "dcs_subjects_stash_engine_resources", force: :cascade do |t|
+    t.integer  "resource_id", limit: 4
+    t.integer  "subject_id",  limit: 4
+    t.datetime "created_at",            null: false
+    t.datetime "updated_at",            null: false
   end
 
   create_table "dcs_titles", force: :cascade do |t|
