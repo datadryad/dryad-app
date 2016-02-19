@@ -1,9 +1,11 @@
 # -*- encoding : utf-8 -*-
+require 'blacklight/controller'
 require 'blacklight/catalog'
 
 class CatalogController < ApplicationController
-
+  include Blacklight::Controller
   include Blacklight::Catalog
+  layout 'blacklight'
 
   configure_blacklight do |config|
     ## Default parameters to send to solr for all search-like requests. See also SolrHelper#solr_search_params
