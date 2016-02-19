@@ -12,6 +12,8 @@ module StashEngine
       set_description
       set_geolocations
       set_relations
+      set_creators
+      set_subjects
     end
 
     # def metadata_callback
@@ -30,13 +32,21 @@ module StashEngine
       @resources = StashDatacite.resource_class.constantize.all
     end
 
+    def set_creators
+      @creators = StashDatacite::Creator.where(resource_id: @resource.id)
+    end
+
     def set_title
       @title = StashDatacite::Title.where(resource_id: @resource.id).first_or_initialize
     end
 
+    def set_subjects
+      @subject = StashDatacite::Subject.new
+      @subjects = @resource.subjects.pluck(:subject).join(", ")
+    end
+
     def set_instances
       @contributor = StashDatacite::Contributor.where(resource_id: @resource.id).first_or_initialize
-      @subject = StashDatacite::Subject.where(resource_id: @resource.id).first_or_initialize
       @resource_type = StashDatacite::ResourceType.where(resource_id: @resource.id).first_or_initialize
     end
 
