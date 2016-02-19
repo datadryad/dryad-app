@@ -19,6 +19,8 @@ Gem::Specification.new do |s|
 
   s.add_dependency 'rails', '~> 4.2'
   s.add_dependency 'geoblacklight', '~> 0.12.1'
+  s.add_dependency 'jquery-rails', '~> 4.1'
+  s.add_dependency 'turbolinks', '~> 2.5'
 
   # extra deps from generated GeoBlacklight app
   s.add_dependency 'devise-guests', '~> 0.3'
