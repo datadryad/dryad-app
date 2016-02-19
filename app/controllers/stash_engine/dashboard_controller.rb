@@ -6,7 +6,7 @@ module StashEngine
 
     def show
       @resources = Resource.where(user_id: current_user.id)
-      @titles = StashDatacite::Title.where(resource_id: @resources.pluck(:id))
+      @titles = metadata_engine::Title.where(resource_id: @resources.pluck(:id))
     end
   end
 end

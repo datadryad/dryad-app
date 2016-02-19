@@ -31,34 +31,34 @@ module StashEngine
     end
 
     def set_title
-      @title = StashDatacite::Title.where(resource_id: @resource.id).first_or_initialize
+      @title = metadata_engine::Title.where(resource_id: @resource.id).first_or_initialize
     end
 
     def set_instances
-      @contributor = StashDatacite::Contributor.where(resource_id: @resource.id).first_or_initialize
-      @subject = StashDatacite::Subject.where(resource_id: @resource.id).first_or_initialize
-      @resource_type = StashDatacite::ResourceType.where(resource_id: @resource.id).first_or_initialize
+      @contributor = metadata_engine::Contributor.where(resource_id: @resource.id).first_or_initialize
+      @subject = metadata_engine::Subject.where(resource_id: @resource.id).first_or_initialize
+      @resource_type = metadata_engine::ResourceType.where(resource_id: @resource.id).first_or_initialize
     end
 
     def set_description
-      @abstract = StashDatacite::Description.type_abstract.find_or_create_by(resource_id: @resource.id)
-      @methods = StashDatacite::Description.type_methods.find_or_create_by(resource_id: @resource.id)
-      @usage_notes = StashDatacite::Description.type_usage_notes.find_or_create_by(resource_id: @resource.id)
+      @abstract = metadata_engine::Description.type_abstract.find_or_create_by(resource_id: @resource.id)
+      @methods = metadata_engine::Description.type_methods.find_or_create_by(resource_id: @resource.id)
+      @usage_notes = metadata_engine::Description.type_usage_notes.find_or_create_by(resource_id: @resource.id)
     end
 
     def set_relations
-      @related_identifier = StashDatacite::RelatedIdentifier.where(resource_id: @resource.id).first_or_initialize
-      @relation_types = StashDatacite::RelationType.all
-      @related_identifier_types = StashDatacite::RelatedIdentifierType.all
+      @related_identifier = metadata_engine::RelatedIdentifier.where(resource_id: @resource.id).first_or_initialize
+      @relation_types = metadata_engine::RelationType.all
+      @related_identifier_types = metadata_engine::RelatedIdentifierType.all
     end
 
     def set_geolocations
-      @geolocation_point = StashDatacite::GeolocationPoint.new(resource_id: @resource.id)
-      @geolocation_points = StashDatacite::GeolocationPoint.where(resource_id: @resource.id)
-      @geolocation_box = StashDatacite::GeolocationBox.new(resource_id: @resource.id)
-      @geolocation_boxes = StashDatacite::GeolocationBox.where(resource_id: @resource.id)
-      @geolocation_place = StashDatacite::GeolocationPlace.new(resource_id: @resource.id)
-      @geolocation_places = StashDatacite::GeolocationPlace.where(resource_id: @resource.id)
+      @geolocation_point = metadata_engine::GeolocationPoint.new(resource_id: @resource.id)
+      @geolocation_points = metadata_engine::GeolocationPoint.where(resource_id: @resource.id)
+      @geolocation_box = metadata_engine::GeolocationBox.new(resource_id: @resource.id)
+      @geolocation_boxes = metadata_engine::GeolocationBox.where(resource_id: @resource.id)
+      @geolocation_place = metadata_engine::GeolocationPlace.new(resource_id: @resource.id)
+      @geolocation_places = metadata_engine::GeolocationPlace.where(resource_id: @resource.id)
     end
   end
 end
