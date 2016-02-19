@@ -1,7 +1,5 @@
-GIT
-  remote: https://github.com/CDLUC3/stash_datacite.git
-  revision: e9df95b167970d73e765af4af256a1c0c8236cc9
-  branch: development
+PATH
+  remote: /Users/bvedula/workspace2/DASH/stash_datacite
   specs:
     stash_datacite (0.0.5)
       datacite-mapping
@@ -9,10 +7,8 @@ GIT
       rails (~> 4.2.4)
       responders (~> 2.0)
 
-GIT
-  remote: https://github.com/CDLUC3/stash_engine.git
-  revision: d6f042d20e30956382bf8449a120adee44187bc5
-  branch: development
+PATH
+  remote: /Users/bvedula/workspace2/DASH/stash_engine
   specs:
     stash_engine (0.0.17)
       carrierwave (~> 0.10.0)
