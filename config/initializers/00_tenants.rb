@@ -1,4 +1,3 @@
-#APP_CONFIG = YAML.load_file("#{RAILS_ROOT}/config/config.yml")[RAILS_ENV]
 hsh = HashWithIndifferentAccess.new
 
 Dir.glob(File.join(Rails.root, 'config', 'tenants', '**.yml')).each do |fn|
