@@ -12,6 +12,9 @@ end
 require 'stash_engine/engine'
 
 module StashEngine
+
+  mattr_accessor :belong_to_resource
+
   class Engine < ::Rails::Engine
     isolate_namespace StashEngine
 

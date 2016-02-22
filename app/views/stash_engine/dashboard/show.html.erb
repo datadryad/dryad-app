@@ -1,9 +1,13 @@
 <p id="notice"><%= notice %></p>
-<h2> My Dashboard </h2>
+<h2>My Dashboard</h2>
 
 <div>
   <%= link_to "New Dataset", new_resource_path %>
 </div>
 
-<%= render template: "stash_engine/resources/index" %>
+<%# render template: "stash_engine/resources/index" %>
+
+<div id="user_in_progress"
+     data-load="<%= metadata_url_helpers.resources_user_in_progress_path(format: :js) %>">
+</div>
 
