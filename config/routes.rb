@@ -55,4 +55,8 @@ StashDatacite::Engine.routes.draw do
   get 'geolocation_places/places_coordinates', to: 'geolocation_places#places_coordinates'
   post 'geolocation_places/map_coordinates', to: 'geolocation_places#map_coordinates'
 
+  # get composite views or items that begin at the resource level
+  get 'resources/user_in_progress', to: 'resources#user_in_progress'
+
+
 end
