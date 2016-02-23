@@ -9,18 +9,19 @@
 <div id="accordion">
   <h3><strong>Basic Information</strong></h3>
   <div>
-    <%= render partial: "stash_datacite/resource_types/form", locals: { resource_type: @resource_type } %><br/>
-    <%= render partial: "stash_datacite/titles/form", locals: { title: @title } %><br/>
+    <%= render partial: "stash_datacite/resource_types/form", locals: { resource_type: @resource_type } %>
+    <%= render partial: "stash_datacite/titles/form", locals: { title: @title } %>
 
     <strong><%= label_tag "Author(s)" %></strong>
     <div class="authors_form">
       <% @creators.each do |creator| %>
-        <%= render partial: "stash_datacite/creators/update", locals: { creator: creator } %><br/>
+        <%= render partial: "stash_datacite/creators/update", locals: { creator: creator } %>
       <% end %>
     </div>
     <%= link_to "Add Author", metadata_url_helpers.creators_new_path( auth_hash: @auth_hash, resource_id: @resource.id ), id: "add_author", remote: :true %>
     <%= link_to "Add Myself with my Orcid ID", '/stash/auth/orcid/' %><br/>
     <br/>
+
     <strong><%= label_tag :description, "Abstract" %></strong><br/>
     <%= render partial: "stash_datacite/descriptions/form", locals: { description: @abstract,  description_type: :abstract }  %>
   </div>
@@ -36,12 +37,18 @@
     <% if @subjects.empty? %>
     <%= render partial: "stash_datacite/subjects/form", locals: { subject: @subject, resource_id: @resource.id } %><br/>
     <% else %>
-    <%= render partial: "stash_datacite/subjects/form", locals: { subjects: @subjects, resource_id: @resource.id } %><br/>
+    <%= render partial: "stash_datacite/subjects/form", locals: { resource_id: @resource.id } %><br/>
     <% end %>
 
     <%= render partial: "stash_datacite/related_identifiers/form", locals: { related_identifier: @related_identifier } %><br/>
 
-    <%= render partial: "stash_datacite/contributors/form", locals: { contributor: @contributor } %><br/>
+    <strong><%= label_tag "Funding" %><br/></strong>
+    <div class="contributors_form">
+      <% @contributors.each do |contributor| %>
+        <%= render partial: "stash_datacite/contributors/update", locals: { contributor: contributor } %>
+      <% end %>
+    </div>
+    <%= link_to "add funder", metadata_url_helpers.contributors_new_path( resource_id: @resource.id ), id: "add_contributor", remote: :true %>
   </div>
 
   <h3 id="location_section"><strong>Location Information (optional)</strong></h3>

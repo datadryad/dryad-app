@@ -46,7 +46,7 @@ module StashEngine
     end
 
     def set_instances
-      @contributor = metadata_engine::Contributor.where(resource_id: @resource.id).first_or_initialize
+      @contributors = metadata_engine::Contributor.where(resource_id: @resource.id)
       @resource_type = metadata_engine::ResourceType.where(resource_id: @resource.id).first_or_initialize
     end
 
