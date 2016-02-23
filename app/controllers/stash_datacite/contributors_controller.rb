@@ -2,11 +2,14 @@ require_dependency 'stash_datacite/application_controller'
 
 module StashDatacite
   class ContributorsController < ApplicationController
-    before_action :set_contributor, only: [:update, :destroy]
+    before_action :set_contributor, only: [:update]
 
     # GET /contributors/new
     def new
-      @contributor = Contributor.new
+      @contributor = Contributor.new(resource_id: params[:resource_id])
+      respond_to do |format|
+        format.js
+      end
     end
 
     # POST /contributors
@@ -33,9 +36,12 @@ module StashDatacite
     end
 
     # DELETE /contributors/1
-    def destroy
+    def delete
+      @contributor = Contributor.find(params[:id])
       @contributor.destroy
-      redirect_to contributors_url, notice: 'Contributor was successfully destroyed.'
+      respond_to do |format|
+        format.js
+      end
     end
 
     private
@@ -48,7 +54,7 @@ module StashDatacite
     # Only allow a trusted parameter "white list" through.
     def contributor_params
       params.require(:contributor).permit(:id, :contributor_name, :contributor_type, :name_identifier_id,
-                                          :affliation_id, :resource_id)
+                                          :affliation_id, :award_number, :resource_id)
     end
   end
 end

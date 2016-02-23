@@ -12,13 +12,14 @@ StashDatacite::Engine.routes.draw do
   patch 'creators/update', to: 'creators#update'
   delete 'creators/:id/delete', to: 'creators#delete', as: 'creators_delete'
 
-  get 'resource_types/new', to: 'resource_types#new'
-  post 'resource_types/create', to: 'resource_types#create'
-  patch 'resource_types/update', to: 'resource_types#update'
-
   get 'contributors/new', to: 'contributors#new'
   post 'contributors/create', to: 'contributors#create'
   patch 'contributors/update', to: 'contributors#update'
+  delete 'contributors/:id/delete', to: 'contributors#delete', as: 'contributors_delete'
+
+  get 'resource_types/new', to: 'resource_types#new'
+  post 'resource_types/create', to: 'resource_types#create'
+  patch 'resource_types/update', to: 'resource_types#update'
 
   get 'subjects/new', to: 'subjects#new'
   get 'subjects/autocomplete', to: 'subjects#autocomplete'
