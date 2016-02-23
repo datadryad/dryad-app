@@ -1,0 +1,20 @@
+<% # takes local variable line (presenter object) as input to partial %>
+<td>
+  <%= line.title %>
+</td>
+<td>
+  required: <%= line.required_filled %> of <%= line.required_total %><br/>
+  optional: <%= line.optional_filled %> of <%= line.optional_total %>
+</td>
+<td>
+  <%= line.files %>
+</td>
+<td>
+  <%= line.created_at %>
+</td>
+<td>
+  <%= line.updated_at %>
+</td>
+<td>
+  Resume | Delete
+</td>

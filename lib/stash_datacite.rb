@@ -17,7 +17,9 @@ module StashDatacite
 
   def self.resource_class=(my_class)
     @@resource_class = my_class
-    StashDatacite::ResourcePatch.associate_with_resource(@@resource_class.constantize)
+    Rails.application.config.to_prepare do
+      StashDatacite::ResourcePatch.associate_with_resource(@@resource_class.constantize)
+    end
   end
 
   class Engine < ::Rails::Engine
