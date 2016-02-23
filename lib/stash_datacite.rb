@@ -6,12 +6,18 @@
 #end
 
 require 'stash_datacite/engine'
+require 'stash_datacite/resource_patch'
 
 module StashDatacite
-  mattr_writer :resource_class
+  #mattr_writer :resource_class
 
   def self.resource_class
     @@resource_class.constantize
+  end
+
+  def self.resource_class=(my_class)
+    @@resource_class = my_class
+    StashDatacite::ResourcePatch.associate_with_resource(@@resource_class.constantize)
   end
 
   class Engine < ::Rails::Engine
