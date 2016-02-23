@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/CDLUC3/stash_datacite.git
-  revision: 0fabd0018e81b3ee31dd2578289020fac34607e2
+  revision: 4805b6c40c34adf4ec440867d276ef4e9ec86c30
   branch: development
   specs:
     stash_datacite (0.0.5)
@@ -11,7 +11,7 @@ GIT
 
 GIT
   remote: https://github.com/CDLUC3/stash_engine.git
-  revision: e793f9f1d2eb640bc567b1cf0d8783f2d77ae5a0
+  revision: 196734414aee05c9ad75810671eaeb9319b3c0e7
   branch: development
   specs:
     stash_engine (0.0.17)
@@ -259,7 +259,7 @@ GEM
     sprockets (3.5.2)
       concurrent-ruby (~> 1.0)
       rack (> 1, < 3)
-    sprockets-rails (3.0.1)
+    sprockets-rails (3.0.2)
       actionpack (>= 4.0)
       activesupport (>= 4.0)
       sprockets (>= 3.0.0)
