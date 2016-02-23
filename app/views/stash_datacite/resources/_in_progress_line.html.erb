@@ -10,11 +10,12 @@
   <%= line.files %>
 </td>
 <td>
-  <%= line.created_at %>
+  <%= default_date(line.created_at) %>
 </td>
 <td>
-  <%= line.updated_at %>
+  <%= default_date(line.updated_at) %>
 </td>
 <td>
-  Resume | Delete
+  <%= link_to 'Edit', stash_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: line.resource.id), class: "btn" %> |
+  <%= button_to 'Delete', stash_url_helpers.resource_path(line.resource), method: :delete, data: { confirm: 'Are you sure?' }, :class => "btn" %>
 </td>
