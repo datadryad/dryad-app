@@ -1,3 +1,7 @@
+# Why do things this way?
+# http://vrybas.github.io/blog/2014/08/15/a-way-to-organize-poros-in-rails/
+# http://www.jetthoughts.com/blog/tech/2014/08/14/cleaning-up-your-rails-views-with-view-objects.html
+
 module StashDatacite
   class ResourcesController
     class DatasetPresenter
