@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/CDLUC3/stash_datacite.git
-  revision: 4805b6c40c34adf4ec440867d276ef4e9ec86c30
+  revision: f9c44c1de0312fd35183fdab5e022bf68cd25e9a
   branch: development
   specs:
     stash_datacite (0.0.5)
@@ -11,7 +11,7 @@ GIT
 
 GIT
   remote: https://github.com/CDLUC3/stash_engine.git
-  revision: 196734414aee05c9ad75810671eaeb9319b3c0e7
+  revision: de786ec63cac08668609ef4dd3f293e843d3ade3
   branch: development
   specs:
     stash_engine (0.0.17)
@@ -138,7 +138,7 @@ GEM
       nokogiri (>= 1.5.9)
     mail (2.6.3)
       mime-types (>= 1.16, < 3)
-    mime-types (2.99)
+    mime-types (2.99.1)
     mini_portile2 (2.0.0)
     minitest (5.8.4)
     multi_json (1.11.2)
@@ -172,9 +172,9 @@ GEM
       omniauth-oauth2 (~> 1.3.1)
     omniauth-shibboleth (1.2.1)
       omniauth (>= 1.0.0)
-    parser (2.3.0.5)
+    parser (2.3.0.6)
       ast (~> 2.2)
-    passenger (5.0.24)
+    passenger (5.0.25)
       rack
       rake (>= 0.8.1)
     powerpack (0.1.1)
@@ -212,7 +212,7 @@ GEM
     ref (2.0.0)
     responders (2.1.1)
       railties (>= 4.2.0, < 5.1)
-    rspec-core (3.4.2)
+    rspec-core (3.4.3)
       rspec-support (~> 3.4.0)
     rspec-expectations (3.4.0)
       diff-lcs (>= 1.2.0, < 2.0)
