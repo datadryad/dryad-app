@@ -18,7 +18,7 @@
         <%= render partial: "stash_datacite/creators/update", locals: { creator: creator } %>
       <% end %>
     </div>
-    <%= link_to "Add Author", metadata_url_helpers.creators_new_path( auth_hash: @auth_hash, resource_id: @resource.id ), id: "add_author", remote: :true %>
+    <%= link_to "Add Author", metadata_url_helpers.creators_new_path( auth_hash: @auth_hash, resource_id: @resource.id ), remote: :true %>
     <%= link_to "Add Myself with my Orcid ID", '/stash/auth/orcid/' %><br/>
     <br/>
 
@@ -28,27 +28,33 @@
 
   <h3><strong>Data Description (Optional)</strong></h3>
   <div>
-    <strong><%= label_tag :description, "Methods" %></strong>&nbsp;&nbsp;How was this dataset collected? How has it been processed?<br/>
-    <%= render partial: "stash_datacite/descriptions/form", locals: { description: @methods, description_type: :methods } %><br/>
-
-    <strong><%= label_tag :description, "Usage Notes" %></strong>&nbsp;&nbsp;What else would someone need to know to use this dataset?<br/>
-    <%= render partial: "stash_datacite/descriptions/form", locals: { description: @usage_notes, description_type: :usage_notes } %><br/>
-
-    <% if @subjects.empty? %>
-    <%= render partial: "stash_datacite/subjects/form", locals: { subject: @subject, resource_id: @resource.id } %><br/>
-    <% else %>
-    <%= render partial: "stash_datacite/subjects/form", locals: { resource_id: @resource.id } %><br/>
-    <% end %>
-
-    <%= render partial: "stash_datacite/related_identifiers/form", locals: { related_identifier: @related_identifier } %><br/>
-
     <strong><%= label_tag "Funding" %><br/></strong>
     <div class="contributors_form">
       <% @contributors.each do |contributor| %>
         <%= render partial: "stash_datacite/contributors/update", locals: { contributor: contributor } %>
       <% end %>
     </div>
-    <%= link_to "add funder", metadata_url_helpers.contributors_new_path( resource_id: @resource.id ), id: "add_contributor", remote: :true %>
+    <%= link_to "add funder", metadata_url_helpers.contributors_new_path( resource_id: @resource.id ), remote: :true %><br/>
+    <br/>
+    <% if @subjects.empty? %>
+    <%= render partial: "stash_datacite/subjects/form", locals: { subject: @subject, resource_id: @resource.id } %><br/>
+    <% else %>
+    <%= render partial: "stash_datacite/subjects/form", locals: { resource_id: @resource.id } %><br/>
+    <% end %>
+
+    <strong><%= label_tag :description, "Methods" %></strong>&nbsp;&nbsp;How was this dataset collected? How has it been processed?<br/>
+    <%= render partial: "stash_datacite/descriptions/form", locals: { description: @methods, description_type: :methods } %><br/>
+
+    <strong><%= label_tag :description, "Usage Notes" %></strong>&nbsp;&nbsp;What else would someone need to know to use this dataset?<br/>
+    <%= render partial: "stash_datacite/descriptions/form", locals: { description: @usage_notes, description_type: :usage_notes } %><br/>
+
+    <strong><%= label_tag :related_identifier, "Related work(s)" %></strong>articles, other datasets: e.g., This dataset is cited by DOI 10.1000/182.
+    <div class="related_identifiers_form">
+      <% @related_identifiers.each do |related_identifier| %>
+        <%= render partial: "stash_datacite/related_identifiers/update", locals: { related_identifier: related_identifier } %>
+      <% end %>
+    </div>
+    <%= link_to "add related work", metadata_url_helpers.related_identifiers_new_path( resource_id: @resource.id ), remote: :true %><br/>
   </div>
 
   <h3 id="location_section"><strong>Location Information (optional)</strong></h3>

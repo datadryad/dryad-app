@@ -57,9 +57,7 @@ module StashEngine
     end
 
     def set_relations
-      @related_identifier = metadata_engine::RelatedIdentifier.where(resource_id: @resource.id).first_or_initialize
-      @relation_types = metadata_engine::RelationType.all
-      @related_identifier_types = metadata_engine::RelatedIdentifierType.all
+      @related_identifiers = metadata_engine::RelatedIdentifier.where(resource_id: @resource.id)
     end
 
     def set_geolocations
