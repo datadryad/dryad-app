@@ -9,9 +9,9 @@ Gem::Specification.new do |s|
   s.version     = StashDiscovery::VERSION
   s.authors     = ['David Moles']
   s.email       = ['david.moles@ucop.edu']
-  s.homepage    = 'TODO'
-  s.summary     = 'TODO: Summary of StashDiscovery.'
-  s.description = 'TODO: Description of StashDiscovery.'
+  s.homepage    = 'https://github.com/CDLUC3/stash_discovery'
+  s.summary     = 'The discovery module for Stash'
+  s.description = 'GeoBlacklight-based discovery module for Stash'
   s.license     = 'MIT'
 
   s.files = Dir['{app,config,db,lib}/**/*', 'MIT-LICENSE', 'Rakefile', 'README.rdoc']
