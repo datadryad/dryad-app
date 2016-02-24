@@ -1,0 +1,23 @@
+<% # takes local variable line (presenter object) as input to partial %>
+<tr>
+  <td>
+    <%= line.title %>
+  </td>
+  <td>
+    required: <%= line.required_filled %> of <%= line.required_total %><br/>
+    optional: <%= line.optional_filled %> of <%= line.optional_total %>
+  </td>
+  <td>
+    <%= line.files %>
+  </td>
+  <td>
+    <%= default_date(line.created_at) %>
+  </td>
+  <td>
+    <%= default_date(line.updated_at) %>
+  </td>
+  <td>
+    <%= link_to 'Edit', stash_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: line.resource.id), class: "btn" %> |
+    <%= button_to 'Delete', stash_url_helpers.resource_path(line.resource), method: :delete, data: { confirm: 'Are you sure?' }, :class => "btn" %>
+  </td>
+</tr>
