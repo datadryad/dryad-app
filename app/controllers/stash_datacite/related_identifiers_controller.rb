@@ -2,11 +2,14 @@ require_dependency 'stash_datacite/application_controller'
 
 module StashDatacite
   class RelatedIdentifiersController < ApplicationController
-    before_action :set_related_identifier, only: [:update, :destroy]
+    before_action :set_related_identifier, only: [:update]
 
     # GET /related_identifiers/new
     def new
-      @related_identifier = RelatedIdentifier.new
+      @related_identifier = RelatedIdentifier.new(resource_id: params[:resource_id])
+      respond_to do |format|
+        format.js
+      end
     end
 
     # POST /related_identifiers
@@ -33,9 +36,12 @@ module StashDatacite
     end
 
     # DELETE /related_identifiers/1
-    def destroy
+    def delete
+      @related_identifier = RelatedIdentifier.find(params[:id])
       @related_identifier.destroy
-      redirect_to related_identifiers_url, notice: 'Related identifier was successfully destroyed.'
+      respond_to do |format|
+        format.js
+      end
     end
 
     private

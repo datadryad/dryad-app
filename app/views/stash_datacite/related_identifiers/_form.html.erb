@@ -1,25 +1,32 @@
 <%# the local variable 'related_identifier' should be passed in to this partial when there are multiple per page %>
-<% if related_identifier.new_record? %>
-  <%= form_for(related_identifier, url: stash_datacite.related_identifiers_create_path, remote: true, authenticity_token: true, html: {id: "related_identifier_new_form"}) do |f| %>
-    <%#= render "datacite/shared/error_messages", :target => @related_identifier %>
-    <strong><%= f.label :related_identifier, "Related work(s)" %></strong>articles, other datasets: e.g., This dataset is cited by DOI 10.1000/182.
-    <table>
-      <tr>
-          <td></td>
-          <td><%= f.label :relation_type_id, "Relationship" %>&nbsp;&nbsp;&nbsp;</td>
-          <td><%= f.label :related_identifier_type_id, "ID Type" %>&nbsp;&nbsp;&nbsp;</td>
-          <td><%= f.label :related_identifier, "Identifier" %>&nbsp;&nbsp;&nbsp;</td>
-      </tr>
-      <tr>
-        <td>This Dataset&nbsp;</td>
-        <td><%= f.collection_select(:relation_type_id, @relation_types, :id, :relation_type, prompt: "select relationship") %>&nbsp;&nbsp;&nbsp;</td>
-        <td><%= f.collection_select(:related_identifier_type_id, @related_identifier_types, :id, :related_identifier_type, prompt: "identifier_type") %>&nbsp;&nbsp;&nbsp;</td>
-        <td><%= f.text_field :related_identifier, size: 40 %>&nbsp;&nbsp;&nbsp;</td>
-      </tr>
-      <%= f.hidden_field :resource_id %>
-    <br/>
-    </table>
-  <% end %>
-<% else %>
-  <%= render partial: "stash_datacite/related_identifiers/update", locals: { related_identifier: @related_identifier } %><br/>
+<%= form_for(related_identifier, url: stash_datacite.related_identifiers_create_path, remote: true, authenticity_token: true, html: {id: "related_identifier_new_form"}) do |f| %>
+  <%#= render "datacite/shared/error_messages", :target => @related_identifier %>
+  <table>
+    <tr>
+        <td></td>
+        <td><%= f.label :relation_type_id, "Relationship" %>&nbsp;&nbsp;&nbsp;</td>
+        <td><%= f.label :related_identifier_type_id, "ID Type" %>&nbsp;&nbsp;&nbsp;</td>
+        <td><%= f.label :related_identifier, "Identifier" %>&nbsp;&nbsp;&nbsp;</td>
+        <td></td>
+        <td></td>
+    </tr>
+    <tr>
+      <td>This Dataset&nbsp;</td>
+      <td><%= f.collection_select(:relation_type_id, StashDatacite::RelationType.all, :id, :relation_type, {prompt: "select relationship"}, {style: "width:200px"}) %>&nbsp;&nbsp;&nbsp;</td>
+      <td><%= f.collection_select(:related_identifier_type_id, StashDatacite::RelatedIdentifierType.all, :id, :related_identifier_type, {prompt: "identifier_type"}, {style: "width:200px"}) %>&nbsp;&nbsp;&nbsp;</td>
+      <td><%= f.text_field :related_identifier, size: 40 %>&nbsp;&nbsp;&nbsp;</td>
+      <td><%= f.submit "add" %>&nbsp;&nbsp;</td>
+      <td><%= link_to 'remove', '#', class: 'remove' %></td>
+    </tr>
+    <%= f.hidden_field :resource_id %>
+  </table>
 <% end %>
+<script>
+  $(document).ready(function() {
+    $('.remove').on('click', function (event) {
+      $(this).closest('form').remove();
+      $(this).closest('br').remove();
+      event.preventDefault(); // Prevent link from following its href
+    });
+  });
+</script>
