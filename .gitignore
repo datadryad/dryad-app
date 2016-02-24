@@ -37,4 +37,5 @@ public/assets
 # Ignore Emacs backups.
 *~
 
+# Miscellaneous
 .byebug_history

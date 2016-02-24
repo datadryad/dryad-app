@@ -140,7 +140,7 @@ Style/PercentLiteralDelimiters:
 
 # Offense count: 102
 # Cop supports --auto-correct.
-Style/SingleSpaceBeforeFirstArg:
+Style/SpaceBeforeFirstArg:
   Exclude:
     - 'db/schema.rb'
 

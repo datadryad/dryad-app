@@ -58,5 +58,6 @@ Rails.application.routes.draw do
   #   end
 
   mount StashEngine::Engine, at: APP_CONFIG.stash_mount
-  mount StashDatacite::Engine, at: "/stash_datacite"
+  mount StashDatacite::Engine, at: '/stash_datacite'
+  # mount StashDiscovery::Engine, at: '/stash_discovery'
 end
