@@ -67,9 +67,12 @@ end
 # Do 'export DISABLE_SPRING=1' in your .bash_profile to keep it from running and messing you up
 # if you are switching back and forth for debugging often.
 
+env = ENV.to_hash
+my_env = env['RAILS_ENV'] || env['RACK_ENV'] || 'development'
+
 engines = %w(stash_engine stash_datacite stash_discovery)
 engines.each do |engine|
-  if ENV.to_hash['LOCAL_ENGINES'] == 'true' && (engine_path = BundlerHelp.find_path(engine))
+  if my_env == 'development' && ENV.to_hash['LOCAL_ENGINES'] != 'false' && (engine_path = BundlerHelp.find_path(engine))
     gem engine, :path => engine_path
   else
     gem engine, :git => "https://github.com/CDLUC3/#{engine}.git", :branch => 'development'
