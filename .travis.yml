@@ -1,2 +1,6 @@
 language: ruby
+env:
+- LOCAL_ENGINES=false
+
+
 
