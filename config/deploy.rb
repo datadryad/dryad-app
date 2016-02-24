@@ -30,7 +30,7 @@ set :scm, :git
 set :linked_dirs, fetch(:linked_dirs, []).push('log', 'tmp/pids', 'tmp/cache', 'tmp/sockets', 'vendor/bundle', 'public/system')
 
 # Default value for default_env is {}
-set :default_env, { path: "/apps/dash2/local/bin:$PATH" }
+set :default_env, { path: '/apps/dash2/local/bin:$PATH', 'LOCAL_ENGINES' => 'false' }
 
 # Default value for keep_releases is 5
 set :keep_releases, 5
