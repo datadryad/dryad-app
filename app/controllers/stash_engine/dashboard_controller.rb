@@ -5,9 +5,8 @@ module StashEngine
     before_action :require_login
 
     def show
-      #@resources = Resource.where(user_id: current_user.id)
-      #@titles = metadata_engine::Title.where(resource_id: @resources.pluck(:id))
-      #byebug
+      # @resources = Resource.where(user_id: current_user.id)
+      # @titles = metadata_engine::Title.where(resource_id: @resources.pluck(:id))
     end
   end
 end
