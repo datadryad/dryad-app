@@ -67,16 +67,13 @@ end
 # Do 'export DISABLE_SPRING=1' in your .bash_profile to keep it from running and messing you up
 # if you are switching back and forth for debugging often.
 
-if BundlerHelp.find_path('stash_engine') && ENV.to_hash['LOCAL_ENGINES'] == 'true'
-  gem 'stash_engine', :path => BundlerHelp.find_path('stash_engine')
-else
-  gem 'stash_engine', :git => 'https://github.com/CDLUC3/stash_engine.git', :branch => 'development'
-end
-
-if BundlerHelp.find_path('stash_datacite') && ENV.to_hash['LOCAL_ENGINES'] == 'true'
-  gem 'stash_datacite', :path => BundlerHelp.find_path('stash_datacite')
-else
-  gem 'stash_datacite', :git => 'https://github.com/CDLUC3/stash_datacite.git', :branch => 'development'
+engines = %w(stash_engine stash_datacite stash_discovery)
+engines.each do |engine|
+  if ENV.to_hash['LOCAL_ENGINES'] == 'true' && (engine_path = BundlerHelp.find_path(engine))
+    gem engine, :path => engine_path
+  else
+    gem engine, :git => "https://github.com/CDLUC3/#{engine}.git", :branch => 'development'
+  end
 end
 
 #gem "omniauth-shibboleth", :git => "https://bitbucket.org/cdl/omniauth-shibboleth.git", :branch => 'master'
