@@ -11,7 +11,7 @@ module StashEngine
     # GET /resources
     # GET /resources.json
     def index
-      @resources = Resource.all
+      @resources = Resource.where(user_id: current_user.id)
       @titles = metadata_engine::Title.all
     end
 
