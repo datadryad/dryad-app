@@ -70,18 +70,13 @@ end
 env = ENV.to_hash
 my_env = env['RAILS_ENV'] || env['RACK_ENV'] || 'development'
 
-if BundlerHelp.find_path('stash_engine') && ENV.to_hash['LOCAL_ENGINES'] == 'true'
-# if BundlerHelp.find_path('stash_engine') && my_env == 'development' && env['LOCAL_ENGINES'] != 'false'
-  gem 'stash_engine', :path => BundlerHelp.find_path('stash_engine')
-else
-  gem 'stash_engine', :git => 'https://github.com/CDLUC3/stash_engine.git', :branch => 'development'
-end
-
-if BundlerHelp.find_path('stash_datacite') && ENV.to_hash['LOCAL_ENGINES'] == 'true'
-# if BundlerHelp.find_path('stash_datacite') && my_env == 'development' && env['LOCAL_ENGINES'] != 'false'
-  gem 'stash_datacite', :path => BundlerHelp.find_path('stash_datacite')
-else
-  gem 'stash_datacite', :git => 'https://github.com/CDLUC3/stash_datacite.git', :branch => 'development'
+engines = %w(stash_engine stash_datacite stash_discovery)
+engines.each do |engine|
+  if my_env == 'development' && ENV.to_hash['LOCAL_ENGINES'] != 'false' && (engine_path = BundlerHelp.find_path(engine))
+    gem engine, :path => engine_path
+  else
+    gem engine, :git => "https://github.com/CDLUC3/#{engine}.git", :branch => 'development'
+  end
 end
 
 #gem "omniauth-shibboleth", :git => "https://bitbucket.org/cdl/omniauth-shibboleth.git", :branch => 'master'
