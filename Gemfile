@@ -70,15 +70,15 @@ end
 env = ENV.to_hash
 my_env = env['RAILS_ENV'] || env['RACK_ENV'] || 'development'
 
-#if BundlerHelp.find_path('stash_engine') && ENV.to_hash['LOCAL_ENGINES'] == 'true'
-if BundlerHelp.find_path('stash_engine') && my_env == 'development' && env['LOCAL_ENGINES'] != 'false'
+if BundlerHelp.find_path('stash_engine') && ENV.to_hash['LOCAL_ENGINES'] == 'true'
+# if BundlerHelp.find_path('stash_engine') && my_env == 'development' && env['LOCAL_ENGINES'] != 'false'
   gem 'stash_engine', :path => BundlerHelp.find_path('stash_engine')
 else
   gem 'stash_engine', :git => 'https://github.com/CDLUC3/stash_engine.git', :branch => 'development'
 end
 
-#if BundlerHelp.find_path('stash_datacite') && ENV.to_hash['LOCAL_ENGINES'] == 'true'
-if BundlerHelp.find_path('stash_datacite') && my_env == 'development' && env['LOCAL_ENGINES'] != 'false'
+if BundlerHelp.find_path('stash_datacite') && ENV.to_hash['LOCAL_ENGINES'] == 'true'
+# if BundlerHelp.find_path('stash_datacite') && my_env == 'development' && env['LOCAL_ENGINES'] != 'false'
   gem 'stash_datacite', :path => BundlerHelp.find_path('stash_datacite')
 else
   gem 'stash_datacite', :git => 'https://github.com/CDLUC3/stash_datacite.git', :branch => 'development'
