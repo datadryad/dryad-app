@@ -7,6 +7,9 @@
 # Ignore bundler config.
 /.bundle
 
+# Ignore Gemfile.lock (at least during development)
+Gemfile.lock
+
 # Ignore bundler local gem installations.
 vendor/
 
@@ -37,4 +40,5 @@ public/assets
 # Ignore Emacs backups.
 *~
 
+# Miscellaneous
 .byebug_history
