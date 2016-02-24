@@ -1,13 +1,21 @@
 <%# the local variable 'contributor' should be passed in to this partial when there are multiple per page %>
 <%= form_for(contributor, url: stash_datacite.contributors_update_path, remote: true, authenticity_token: true) do |f| %>
   <%#= render "datacite/shared/error_messages", target: @contributor %>
-  <strong><%= label_tag "Funding" %><br/></strong>
-  <%= f.label :contributor_name, "Granting Organization" %>
-  <%= f.text_field :contributor_name, size: 40 %>
-  <%#= f.label :affliation_id, "Institutional Affiliation" %>
-  <%#= f.text_field :affliation_id, size: 40 %>
-  <%= f.hidden_field :contributor_type %>
-  <%= f.hidden_field :resource_id %>
-  <%= f.hidden_field :id %>
-  <br/>
+    <table>
+    <tr>
+        <td><%= f.label :contributor_name, "Granting Organization" %></td>
+        <td><%= f.label :award_number, "Award Number" %></td>
+        <td></td>
+        <td></td>
+    </tr>
+    <tr>
+        <td><%= f.text_field :contributor_name, size: 70 , class: 'funders' %>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+        <td><%= f.text_field :award_number, size: 35 %>&nbsp;&nbsp;</td>
+        <td><%= f.submit "add" %>&nbsp;&nbsp;</td>
+        <td><%= link_to 'remove', stash_datacite.contributors_delete_path(contributor.id), method: :delete, remote: true, data: { confirm: 'Are you sure?' }, class: 'remove_record' %></td>
+    </tr>
+    <%= f.hidden_field :contributor_type, value: :funder %>
+    <%= f.hidden_field :resource_id %>
+    <%= f.hidden_field :id %>
+  </table>
 <% end %>

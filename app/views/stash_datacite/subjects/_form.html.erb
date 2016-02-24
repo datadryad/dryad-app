@@ -66,10 +66,10 @@
   });
   </script>
 <%# the local variable 'subject' should be passed in to this partial when there are multiple per page %>
-<%= form_tag(stash_datacite.subjects_create_path, method: :pos, remote: true, authenticity_token: true) do %>
+<%= form_tag(stash_datacite.subjects_create_path, method: :post, remote: true, authenticity_token: true) do %>
   <%#= render "datacite/shared/error_messages", target: @subject %>
   <strong><%= label_tag 'subject', "Keywords" %></strong><br/>
-  <%= text_field_tag('subject', value = @subjects, { class: 'keywords', size: "130x10" }) %>
+  <%= text_field_tag('subject', value = subjects, { class: 'keywords', size: "130x10" }) %>
   <%#= f.label :subject_scheme, "Subject Scheme" %>
   <%#= f.text_field :subject_scheme %>
   <%#= f.label :scheme_URI, "Scheme URI" %>

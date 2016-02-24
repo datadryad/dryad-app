@@ -1,16 +1,23 @@
 <%# the local variable 'creator' should be passed in to this partial when there are multiple per page %>
 <%= form_for(creator, url: stash_datacite.creators_create_path, remote: true, authenticity_token: true, html: { id: "creator_new_form"}) do |f| %>
 <%#= render "datacite/shared/error_messages", target: @creator %>
-<%= f.label :creator_first_name, "First Name" %>
-<%= f.text_field :creator_first_name %>&nbsp;&nbsp;
-<%= f.label :creator_last_name, "Last Name" %>
-<%= f.text_field :creator_last_name %>&nbsp;&nbsp;
-<%#= creator.input :name_identifier_id %>
-<%= f.label :affliation_id, "Institutional Affiliation" %>
-<%= f.text_field :affliation_id %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-<%= f.hidden_field :resource_id %>
-<%= f.submit 'add' %>
-<%= link_to 'remove', '#', class: 'remove' %>
+  <table>
+    <tr>
+      <td><%= f.label :creator_first_name, "First Name" %></td>
+      <td><%= f.label :creator_last_name, "Last Name" %></td>
+      <td><%= f.label :affliation_id, "Institutional Affiliation" %></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><%= f.text_field :creator_first_name, size: 30 %>&nbsp;&nbsp;</td>
+      <td><%= f.text_field :creator_last_name, size: 30 %>&nbsp;&nbsp;</td>
+      <td><%= f.text_field :affliation_id, size: 40 %>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+      <td><%= f.submit 'add' %>&nbsp;&nbsp;</td>
+      <td><%= link_to 'remove', '#', class: 'remove' %></td>
+    </tr>
+    <%= f.hidden_field :resource_id %>
+  </table>
 <% end %>
 
 <script>

@@ -1,21 +1,74 @@
+ <script>
+  // based on example at http://jqueryui.com/autocomplete/#remote-jsonp
+  $(function() {
+	function split( val ) {
+	  return val.split( /,\s*/ );
+	}
+	function extractLast( term ) {
+	  return split( term ).pop();
+	}
+
+	$( ".funders" )
+	  // don't navigate away from the field on tab when selecting an item
+	  .bind( "keydown", function( event ) {
+		if ( event.keyCode === $.ui.keyCode.TAB &&
+			$( this ).autocomplete( "instance" ).menu.active ) {
+		  event.preventDefault();
+		}
+	  })
+	  .autocomplete({
+		source: function( request, response ) {
+		  $.ajax({
+			url: "https://api.crossref.org/funders?query="+ extractLast( request.term ),
+			dataType: "json",
+			success: function( data ) {
+				var arr = jQuery.map( data.message.items, function( a ) {
+				return [[ a.id, a.name, a.uri ]];
+			  });
+			  console.log(arr);
+			  var labels = [];
+			  $.each(arr, function(index, value) {
+				labels.push(value[1]);
+			  });
+			  response(labels);
+			}
+		  });
+		},
+		minLength: 1,
+		focus: function() {
+		  // prevent value inserted on focus
+		  return false;
+		},
+	  });
+	});
+
+  // Remove link functionality
+	$(document).ready(function() {
+	  $('.remove').on('click', function (event) {
+	    $(this).closest('form').remove();
+	    $(this).closest('br').remove();
+	    event.preventDefault(); // Prevent link from following its href
+	  });
+	});
+</script>
+
 <%# the local variable 'contributor' should be passed in to this partial when there are multiple per page %>
-<% if contributor.new_record? %>
-  <%= form_for(contributor, url: stash_datacite.contributors_create_path, remote: true, authenticity_token: true, html: {id: "contributor_new_form"}) do |f| %>
-    <%#= render "datacite/shared/error_messages", target: @contributor %>
-    <strong><%= label_tag "Funding" %><br/></strong>
-    <%= f.label :contributor_name, "Granting Organization" %>
-    <%= f.text_field :contributor_name, size: 40 %>&nbsp;&nbsp;&nbsp;&nbsp;
-    <%= label_tag 'Award Number' %>
-    <%= text_field_tag 'award number', '', size: 30 %>
-    <%#= f.label :affliation_id, "Institutional Affiliation" %>
-    <%#= f.text_field :affliation_id, size: 40 %>
-    <%= f.hidden_field :contributor_type%>
-    <%= f.hidden_field :resource_id %>
-    <%= f.hidden_field :id %>
-    <%= f.submit 'add' %>
-    <%= link_to 'remove', '#', class: 'remove' %>
-    <br/>
-  <% end %>
-<% else %>
-  <%= render partial: "stash_datacite/contributors/update", locals: { contributor: @contributor } %><br/>
+<%= form_for(contributor, url: stash_datacite.contributors_create_path, remote: true, authenticity_token: true, html: {id: "contributor_new_form"}) do |f| %>
+<%#= render "datacite/shared/error_messages", target: @contributor %>
+  <table>
+    <tr>
+				<td><%= f.label :contributor_name, "Granting Organization" %></td>
+				<td><%= f.label :award_number, "Award Number" %></td>
+				<td></td>
+        <td></td>
+		</tr>
+		<tr>
+				<td><%= f.text_field :contributor_name, size: 70 , class: 'funders' %>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+				<td><%= f.text_field :award_number, size: 35 %>&nbsp;&nbsp;</td>
+				<td><%= f.submit "add" %>&nbsp;&nbsp;</td>
+				<td><%= link_to 'remove', '#', class: 'remove' %></td>
+		</tr>
+		<%= f.hidden_field :contributor_type, value: :funder %>
+		<%= f.hidden_field :resource_id %>
+	</table>
 <% end %>
