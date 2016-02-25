@@ -11,7 +11,8 @@ module StashDatacite
 
       #respond_to do |format|
       #  format.js{
-          @resources = StashDatacite.resource_class.where(user_id: session[:user_id])
+          @resources = StashDatacite.resource_class.where(user_id: session[:user_id]).
+              paginate(:page => params[:page], :per_page => 5)
       #  }
       #end
       @in_progress_lines = @resources.map{|resource| DatasetPresenter.new(resource)}
