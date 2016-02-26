@@ -1,10 +1,11 @@
 GIT
   remote: https://github.com/CDLUC3/stash_datacite.git
-  revision: d2597498df45d3fed542ededd1643e490c58bfae
+  revision: 4940c39189ec661f8172aa2b718cd30186208090
   branch: development
   specs:
     stash_datacite (0.0.5)
       datacite-mapping
+      kaminari
       leaflet-rails
       rails (~> 4.2.4)
       responders (~> 2.0)
@@ -24,7 +25,7 @@ GIT
 
 GIT
   remote: https://github.com/CDLUC3/stash_engine.git
-  revision: d1ba185522a4e9ee80f423ba838574135d0c14f8
+  revision: 35a6e6a6f39911b56a7f300f3ee1f20aac5dea04
   branch: development
   specs:
     stash_engine (0.0.17)
@@ -316,7 +317,7 @@ GEM
     sprockets (3.5.2)
       concurrent-ruby (~> 1.0)
       rack (> 1, < 3)
-    sprockets-rails (3.0.2)
+    sprockets-rails (3.0.3)
       actionpack (>= 4.0)
       activesupport (>= 4.0)
       sprockets (>= 3.0.0)
