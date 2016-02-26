@@ -43,7 +43,7 @@ module Datacite
       end
 
       def type
-        resource_type.resource_type_general.value if resource_type
+        resource_type.value if resource_type
       end
 
       def funder_contrib
