@@ -17,4 +17,4 @@ gem 'rubocop', require: false, group: [:development, :test]
 gem 'simplecov', require: false, group: :test
 gem 'responders', '~> 2.0'
 gem 'datacite-mapping' #, git: 'https://github.com/CDLUC3/datacite-mapping.git'
-gem 'will_paginate'
+gem 'kaminari'

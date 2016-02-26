@@ -1,9 +1,7 @@
 <table>
-
   <%= render 'in_progress_head' %>
   <tbody>
     <%= render partial: 'in_progress_line', collection: @in_progress_lines, as: :line %>
   </tbody>
 </table>
-
-<%= will_paginate @resources %>
+<%= paginate @display_lines, remote: true %>
