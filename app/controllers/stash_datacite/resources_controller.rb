@@ -14,9 +14,12 @@ module StashDatacite
       respond_to do |format|
         format.js{
           page = params[:page] || '1'
-          @resources = StashDatacite.resource_class.where(user_id: session[:user_id])
+          #paging first and using separate object for pager (resources) from display (@in_progress_lines) means
+          #only a page of objects needs calculations for display rather than all objects in list.  However if we need
+          #to sort on calculated fields for display we'll need to calculate all values, sort and use the array pager
+          #form of kaminari instead (which will likely be slower).
+          @resources = StashDatacite.resource_class.where(user_id: session[:user_id]).page(page).per(5)
           @in_progress_lines = @resources.map{|resource| DatasetPresenter.new(resource)}
-          @in_progress_lines = Kaminari.paginate_array(@in_progress_lines).page(page).per(5)
         }
       end
     end
