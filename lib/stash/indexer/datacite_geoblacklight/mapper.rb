@@ -19,6 +19,7 @@ module Stash
 
           # TODO: how do we deal with the fact we have multiple points/boxes & GB doesn't?
           {
+            uuid:             wrapper.id_value,
             dc_identifier_s:  wrapper.id_value,
             dc_title_s:       resource.default_title,
             dc_creator_sm:    resource.creator_names,
@@ -26,7 +27,7 @@ module Stash
             dc_description_s: resource.description_text_for(DescriptionType::ABSTRACT),
             dc_subject_sm:    resource.subjects.map(&:value),
             dct_spatial_sm:   resource.geo_location_places,
-            georss_box_bbox:  resource.geo_location_boxes[0],
+            georss_box_s:     resource.geo_location_boxes[0],
             georss_point_pt:  resource.geo_location_points[0],
             dct_issued_dt:    wrapper.embargo_end_date,
             dc_rights_s:      wrapper.license.name,

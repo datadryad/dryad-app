@@ -29,6 +29,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'factory_girl', '~> 4.0'
   spec.add_dependency 'oai', '~> 0.3', '>= 0.3.1'
   spec.add_dependency 'resync-client', '~> 0.3', '>= 0.3.4'
+  spec.add_dependency 'rsolr', '~> 1.1'
   spec.add_dependency 'sqlite3', '~> 1.3', '>= 1.3.10'
   spec.add_dependency 'standalone_migrations', '~> 4.0', '>= 4.0.2'
 

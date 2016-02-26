@@ -1,4 +1,5 @@
 require_relative '../index_config'
+require 'rsolr'
 
 module Stash
   module Indexer
@@ -17,11 +18,12 @@ module Stash
 
         # Constructs a new `SolrIndexConfig` with the specified properties.
         #
-        # @param url [URI, String] The URL of the Solr server
+        # @param url [URI, String] The URL of the Solr core, e.g.
+        #   `http://solr.example.org:8983/solr/stash`
         # @param proxy [URI, String] The URL of any proxy server required
         #   to access the Solr server
         # @param opts [Hash] Additional options to be passed when creating
-        #   the Solr client.
+        #   the [RSolr](https://github.com/rsolr/rsolr) client.
         def initialize(url:, proxy: nil, **opts)
           super(url: url)
           check_opts(opts)

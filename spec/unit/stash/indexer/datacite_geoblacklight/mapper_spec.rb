@@ -129,7 +129,7 @@ module Stash
 
           it 'extracts the first bounding box' do
             expected_box = @boxes[0]
-            expect(@index_document[:georss_box_bbox]).to eq(expected_box)
+            expect(@index_document[:georss_box_s]).to eq(expected_box)
           end
 
           it 'extracts the first point' do
