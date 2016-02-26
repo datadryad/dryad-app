@@ -23,10 +23,10 @@ module Stash
               'Purdue University'
             ]
             @places = {
-              'Hogwarts' => DM::GeoLocationPoint.new(57.1267878,-3.8796586),
-              'Uagadou' => DM::GeoLocationPoint.new(0.3127848,29.7234399),
-              'Ilvermorny' => DM::GeoLocationPoint.new(46.2992002,-74.0356198),
-              'Castelobruxo' => DM::GeoLocationPoint.new(-8.1466343,-60.3444434)
+              'Hogwarts' => DM::GeoLocationPoint.new(57.1267878, -3.8796586),
+              'Uagadou' => DM::GeoLocationPoint.new(0.3127848, 29.7234399),
+              'Ilvermorny' => DM::GeoLocationPoint.new(46.2992002, -74.0356198),
+              'Castelobruxo' => DM::GeoLocationPoint.new(-8.1466343, -60.3444434)
             }
             locations = @places.map { |plc, pt| DM::GeoLocation.new(place: plc, point: pt) }
 
