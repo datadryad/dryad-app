@@ -5,27 +5,31 @@ module Stash
     module DataciteGeoblacklight
       describe Mapper do
         describe '#to_index_document' do
+          DM = Datacite::Mapping
+          SW = Stash::Wrapper
+
           before(:each) do
-            DM = Datacite::Mapping
-            SW = Stash::Wrapper
 
             @doi_value = '10.14749/1407399498'
+            @default_title = 'An Account of a Very Odd Monstrous Calf'
+            @creator_names = ['Hedy Lamarr', 'Herschlag, Natalie']
+            @resource_type_value = 'Other'
 
             id = DM::Identifier.new(value: @doi_value)
             creators = [
               DM::Creator.new(
-                name: 'Hedy Lamarr',
+                name: @creator_names[0],
                 identifier: DM::NameIdentifier.new(scheme: 'ISNI', scheme_uri: URI('http://isni.org/'), value: '0000-0001-1690-159X'),
                 affiliations: ['United Artists', 'Metro-Goldwyn-Mayer']
               ),
               DM::Creator.new(
-                name: 'Herschlag, Natalie',
+                name: @creator_names[1],
                 identifier: DM::NameIdentifier.new(scheme: 'ISNI', scheme_uri: URI('http://isni.org/'), value: '0000-0001-0907-8419'),
                 affiliations: ['Gaumont Buena Vista International', '20th Century Fox']
               )
             ]
             titles = [
-              DM::Title.new(value: 'An Account of a Very Odd Monstrous Calf', language: 'en-emodeng'),
+              DM::Title.new(value: @default_title, language: 'en-emodeng'),
               DM::Title.new(type: DM::TitleType::SUBTITLE, value: 'And a Contest between Two Artists about Optick Glasses, &c', language: 'en-emodeng')
             ]
             publisher = 'California Digital Library'
@@ -36,7 +40,8 @@ module Stash
               creators: creators,
               titles: titles,
               publisher: publisher,
-              publication_year: pub_year
+              publication_year: pub_year,
+              resource_type: DM::ResourceType.new(resource_type_general: DM::ResourceTypeGeneral::DATASET, value: @resource_type_value)
             )
 
             payload_xml = resource.save_to_xml
@@ -69,6 +74,25 @@ module Stash
             expect(@index_document[:dc_identifier_s]).to eq(@doi_value)
           end
 
+          it 'extracts the title' do
+            expect(@index_document[:dc_title_s]).to eq(@default_title)
+          end
+
+          it 'extracts the creator names' do
+            expect(@index_document[:dc_creator_sm]).to eq(@creator_names)
+          end
+
+          it 'extracts the resource type' do
+            expect(@index_document[:dc_type_s]).to eq(@resource_type_value)
+          end
+
+          it 'extracts the subjects'
+          it 'extracts the places'
+          it 'extracts the bounding boxes'
+          it 'extracts the points'
+          it 'extracts the issue date'
+          it 'extracts the rights'
+          it 'extracts the publisher'
         end
       end
     end
