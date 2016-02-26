@@ -90,7 +90,7 @@ module Datacite
       end
 
       def geo_location_points
-        geo_locations.map(&:point).compact
+        geo_locations.select { |loc| loc.place.nil? }.map(&:point).compact
       end
 
       def self.datacite?(elem)

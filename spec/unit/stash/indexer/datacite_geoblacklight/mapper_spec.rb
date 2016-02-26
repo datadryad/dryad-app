@@ -14,6 +14,7 @@ module Stash
             @default_title = 'An Account of a Very Odd Monstrous Calf'
             @creator_names = ['Hedy Lamarr', 'Herschlag, Natalie']
             @resource_type_value = 'Other'
+            @publisher = 'California Digital Library'
             @subjects = [
               'Assessment',
               'Information Literacy',
@@ -29,6 +30,22 @@ module Stash
               'Castelobruxo' => DM::GeoLocationPoint.new(-8.1466343, -60.3444434)
             }
             locations = @places.map { |plc, pt| DM::GeoLocation.new(place: plc, point: pt) }
+
+            @boxes = [
+              DM::GeoLocationBox.new(56.7843, -3.8727, 57.1497, -3.1641),
+              DM::GeoLocationBox.new(0.357869, 29.873028, 0.385076, 29.903498),
+              DM::GeoLocationBox.new(46.5456, -73.9478, 47.087, -72.9272),
+              DM::GeoLocationBox.new(-8.9773, -61.2817, -5.7854, -57.7551)
+            ]
+            locations.push(*(@boxes.map { |box| DM::GeoLocation.new(box: box) }))
+
+            @points = [
+              DM::GeoLocationPoint.new(56.97, -3.52),
+              DM::GeoLocationPoint.new(0.37, 29.89),
+              DM::GeoLocationPoint.new(46.82, -73.43),
+              DM::GeoLocationPoint.new(-7.38, -59.52)
+            ]
+            locations.push(*(@points.map { |pt| DM::GeoLocation.new(point: pt) }))
 
             id = DM::Identifier.new(value: @doi_value)
             creators = [
@@ -47,14 +64,13 @@ module Stash
               DM::Title.new(value: @default_title, language: 'en-emodeng'),
               DM::Title.new(type: DM::TitleType::SUBTITLE, value: 'And a Contest between Two Artists about Optick Glasses, &c', language: 'en-emodeng')
             ]
-            publisher = 'California Digital Library'
             pub_year = 2015
 
             resource = DM::Resource.new(
               identifier: id,
               creators: creators,
               titles: titles,
-              publisher: publisher,
+              publisher: @publisher,
               publication_year: pub_year,
               resource_type: DM::ResourceType.new(resource_type_general: DM::ResourceTypeGeneral::DATASET, value: @resource_type_value),
               subjects: @subjects.map { |s| DM::Subject.new(value: s) },
@@ -63,7 +79,7 @@ module Stash
 
             payload_xml = resource.save_to_xml
 
-            wrapper = SW::StashWrapper.new(
+            @wrapper = SW::StashWrapper.new(
               identifier: SW::Identifier.new(type: SW::IdentifierType::DOI, value: @doi_value),
               version: SW::Version.new(number: 1, date: Date.new(2013, 8, 18), note: 'Sample wrapped Datacite document'),
               license: SW::License::CC_BY,
@@ -84,7 +100,7 @@ module Stash
               descriptive_elements: [payload_xml]
             )
 
-            @index_document = Mapper.new.to_index_document(wrapper)
+            @index_document = Mapper.new.to_index_document(@wrapper)
           end
 
           it 'extracts the identifier' do
@@ -111,12 +127,27 @@ module Stash
             expect(@index_document[:dct_spatial_sm]).to eq(@places.keys)
           end
 
-          it 'extracts the bounding boxes'
-          it 'extracts the points'
-          it "doesn't extract points from places"
-          it 'extracts the issue date'
-          it 'extracts the rights'
-          it 'extracts the publisher'
+          it 'extracts the first bounding box' do
+            expected_box = @boxes[0]
+            expect(@index_document[:georss_box_bbox]).to eq(expected_box)
+          end
+
+          it 'extracts the first point' do
+            expected_point = @points[0]
+            expect(@index_document[:georss_point_pt]).to eq(expected_point)
+          end
+
+          it 'extracts the issue date' do
+            expect(@index_document[:dct_issued_dt]).to eq(@wrapper.embargo_end_date)
+          end
+
+          it 'extracts the rights' do
+            expect(@index_document[:dc_rights_s]).to eq(@wrapper.license.name)
+          end
+
+          it 'extracts the publisher' do
+            expect(@index_document[:dc_publisher_s]).to eq(@publisher)
+          end
         end
       end
     end
