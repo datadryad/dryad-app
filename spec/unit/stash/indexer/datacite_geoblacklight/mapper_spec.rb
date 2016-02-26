@@ -14,6 +14,21 @@ module Stash
             @default_title = 'An Account of a Very Odd Monstrous Calf'
             @creator_names = ['Hedy Lamarr', 'Herschlag, Natalie']
             @resource_type_value = 'Other'
+            @subjects = [
+              'Assessment',
+              'Information Literacy',
+              'Engineering',
+              'Undergraduate Students',
+              'CELT',
+              'Purdue University'
+            ]
+            @places = {
+              'Hogwarts' => DM::GeoLocationPoint.new(57.1267878,-3.8796586),
+              'Uagadou' => DM::GeoLocationPoint.new(0.3127848,29.7234399),
+              'Ilvermorny' => DM::GeoLocationPoint.new(46.2992002,-74.0356198),
+              'Castelobruxo' => DM::GeoLocationPoint.new(-8.1466343,-60.3444434)
+            }
+            locations = @places.map { |plc, pt| DM::GeoLocation.new(place: plc, point: pt) }
 
             id = DM::Identifier.new(value: @doi_value)
             creators = [
@@ -41,7 +56,9 @@ module Stash
               titles: titles,
               publisher: publisher,
               publication_year: pub_year,
-              resource_type: DM::ResourceType.new(resource_type_general: DM::ResourceTypeGeneral::DATASET, value: @resource_type_value)
+              resource_type: DM::ResourceType.new(resource_type_general: DM::ResourceTypeGeneral::DATASET, value: @resource_type_value),
+              subjects: @subjects.map { |s| DM::Subject.new(value: s) },
+              geo_locations: locations
             )
 
             payload_xml = resource.save_to_xml
@@ -86,10 +103,17 @@ module Stash
             expect(@index_document[:dc_type_s]).to eq(@resource_type_value)
           end
 
-          it 'extracts the subjects'
-          it 'extracts the places'
+          it 'extracts the subjects' do
+            expect(@index_document[:dc_subject_sm]).to eq(@subjects)
+          end
+
+          it 'extracts the places' do
+            expect(@index_document[:dct_spatial_sm]).to eq(@places.keys)
+          end
+
           it 'extracts the bounding boxes'
           it 'extracts the points'
+          it "doesn't extract points from places"
           it 'extracts the issue date'
           it 'extracts the rights'
           it 'extracts the publisher'
