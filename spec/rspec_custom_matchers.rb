@@ -15,7 +15,7 @@ RSpec::Matchers.define :be_xml do |expected|
     when REXML::Element
       to_nokogiri(xml.to_s)
     else
-      fail "be_xml() expected XML, got #{xml.class}"
+      raise "be_xml() expected XML, got #{xml.class}"
     end
   end
 
@@ -28,7 +28,7 @@ RSpec::Matchers.define :be_xml do |expected|
   end
 
   match do |actual|
-    expected_xml = to_nokogiri(expected) || fail("expected value #{expected} does not appear to be XML")
+    expected_xml = to_nokogiri(expected) || raise("expected value #{expected} does not appear to be XML")
     actual_xml = to_nokogiri(actual)
 
     EquivalentXml.equivalent?(expected_xml, actual_xml, element_order: false, normalize_whitespace: true)
@@ -54,7 +54,7 @@ RSpec::Matchers.define :be_time do |expected|
 
   match do |actual|
     return actual.nil? unless expected
-    fail "Expected value #{expected} is not a Time" unless expected.is_a?(Time)
+    raise "Expected value #{expected} is not a Time" unless expected.is_a?(Time)
     actual.is_a?(Time) && (to_string(expected) == to_string(actual))
   end
 

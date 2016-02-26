@@ -93,20 +93,6 @@ module Datacite
         geo_locations.map(&:point).compact
       end
 
-      def embargo_type
-        embargo.type.value if embargo
-      end
-
-      def embargo_end_date
-        return nil unless embargo
-        d = embargo.end_date
-        Time.utc(d.year, d.month, d.day).xmlschema
-      end
-
-      def license_name
-        license.name if license
-      end
-
       def self.datacite?(elem)
         elem.name == 'resource' && elem.namespace == 'http://datacite.org/schema/kernel-3'
       end
