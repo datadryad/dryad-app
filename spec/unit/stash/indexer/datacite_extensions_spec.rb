@@ -6,8 +6,8 @@ module Datacite
     describe Resource do
 
       before :each do
-        @id = Identifier.new(value: '10.14749/1407399495')
-        @creators = [
+        id = Identifier.new(value: '10.14749/1407399495')
+        creators = [
           Creator.new(
             name: 'Hedy Lamarr',
             identifier: NameIdentifier.new(scheme: 'ISNI', scheme_uri: URI('http://isni.org/'), value: '0000-0001-1690-159X'),
@@ -19,19 +19,19 @@ module Datacite
             affiliations: ['Gaumont Buena Vista International', '20th Century Fox']
           )
         ]
-        @titles = [
+        titles = [
           Title.new(value: 'An Account of a Very Odd Monstrous Calf', language: 'en-emodeng'),
           Title.new(type: TitleType::SUBTITLE, value: 'And a Contest between Two Artists about Optick Glasses, &c', language: 'en-emodeng')
         ]
-        @publisher = 'California Digital Library'
-        @pub_year = 2015
+        publisher = 'California Digital Library'
+        pub_year = 2015
 
         @resource = Resource.new(
-          identifier: @id,
-          creators: @creators,
-          titles: @titles,
-          publisher: @publisher,
-          publication_year: @pub_year
+          identifier: id,
+          creators: creators,
+          titles: titles,
+          publisher: publisher,
+          publication_year: pub_year
         )
       end
 
