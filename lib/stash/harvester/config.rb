@@ -56,9 +56,9 @@ module Stash
       # Private methods
 
       def self.validate_path(path)
-        fail IOError, "Specified config file #{path} does not exist" unless File.exist?(path)
-        fail IOError, "Specified config file #{path} is not a file" unless File.file?(path)
-        fail IOError, "Specified config file #{path} is not readable" unless File.readable?(path)
+        raise IOError, "Specified config file #{path} does not exist" unless File.exist?(path)
+        raise IOError, "Specified config file #{path} is not a file" unless File.file?(path)
+        raise IOError, "Specified config file #{path} is not readable" unless File.readable?(path)
       end
 
       private_class_method :validate_path

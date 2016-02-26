@@ -36,7 +36,7 @@ module Stash
       # @raise [RangeError] if `_from_time` is later than `_until_time`.
       # @return [HarvestTask] a task to harvest records for the specified time range
       def create_harvest_task(_from_time: nil, _until_time: nil)
-        fail NoMethodError, "#{self.class} should override #create_harvest_task to create a HarvestTask, but it doesn't"
+        raise NoMethodError, "#{self.class} should override #create_harvest_task to create a HarvestTask, but it doesn't"
       end
     end
   end

@@ -22,9 +22,9 @@ module Stash
     def self.utc_or_nil(time)
       if time
         if time.respond_to?(:utc?)
-          fail ArgumentError, "time #{time} must be in UTC" unless time.utc?
+          raise ArgumentError, "time #{time} must be in UTC" unless time.utc?
         else
-          fail ArgumentError, "time #{time} does not appear to be a time or date" unless time.respond_to?(:strftime)
+          raise ArgumentError, "time #{time} does not appear to be a time or date" unless time.respond_to?(:strftime)
         end
       end
       time

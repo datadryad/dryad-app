@@ -35,7 +35,7 @@ module Stash
 
       def ensure_config_file(config_file)
         config_file ||= default_config_file
-        fail ArgumentError, "No configuration file provided, and none found in default locations #{Application.config_file_defaults.join(' or ')}" unless config_file
+        raise ArgumentError, "No configuration file provided, and none found in default locations #{Application.config_file_defaults.join(' or ')}" unless config_file
         config_file
       end
 

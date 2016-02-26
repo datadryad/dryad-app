@@ -28,7 +28,7 @@ module Stash
       #
       # @return [Indexer] an indexer for this index
       def create_indexer
-        fail NoMethodError, "#{self.class} should override #create_indexer to create an Indexer, but it doesn't"
+        raise NoMethodError, "#{self.class} should override #create_indexer to create an Indexer, but it doesn't"
       end
     end
   end

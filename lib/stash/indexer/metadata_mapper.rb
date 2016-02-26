@@ -18,7 +18,7 @@ module Stash
       # @return [Object] a document extracting information from `wrapped_metadata`
       #   and formatting it appropriately for the index supported by this mapper.
       def to_index_document(_wrapped_metadata)
-        fail NoMethodError, "#{self.class} should override #to_index_document to map wrapped metadata to indexable documents, but it doesn't"
+        raise NoMethodError, "#{self.class} should override #to_index_document to map wrapped metadata to indexable documents, but it doesn't"
       end
     end
   end

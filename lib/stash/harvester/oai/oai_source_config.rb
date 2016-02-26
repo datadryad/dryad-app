@@ -69,7 +69,7 @@ module Stash
             if UNRESERVED_PATTERN =~ element
               element
             else
-              fail ArgumentError, "setSpec element ''#{element}'' must consist only of RFC 2396 URI unreserved characters"
+              raise ArgumentError, "setSpec element ''#{element}'' must consist only of RFC 2396 URI unreserved characters"
             end
           end).join(':')
         end
@@ -78,7 +78,7 @@ module Stash
           if UNRESERVED_PATTERN =~ metadata_prefix
             metadata_prefix
           else
-            fail ArgumentError, "metadata_prefix ''#{metadata_prefix}'' must consist only of RFC 2396 URI unreserved characters"
+            raise ArgumentError, "metadata_prefix ''#{metadata_prefix}'' must consist only of RFC 2396 URI unreserved characters"
           end
         end
 

@@ -35,7 +35,7 @@ module Stash
       # @return [String, nil] the content of the record, or `nil` if the record
       #   has been deleted or the content is otherwise inaccessible.
       def content
-        fail NoMethodError, "#{self.class} should override #content to fetch the record content, but it doesn't"
+        raise NoMethodError, "#{self.class} should override #content to fetch the record content, but it doesn't"
       end
 
       # Visibility modifiers

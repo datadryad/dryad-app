@@ -44,14 +44,14 @@ module Stash
       # @return [Enumerator::Lazy<HarvestedRecord>]
       #   A lazy enumerator of the harvested records
       def harvest_records
-        fail NoMethodError, "#{self.class} should override #harvest_records to harvest records, but it doesn't"
+        raise NoMethodError, "#{self.class} should override #harvest_records to harvest records, but it doesn't"
       end
 
       private
 
       def valid_range(from_time, until_time)
         if from_time && until_time && from_time > until_time
-          fail RangeError, "from_time #{from_time} must be <= until_time #{until_time}"
+          raise RangeError, "from_time #{from_time} must be <= until_time #{until_time}"
         else
           [Util.utc_or_nil(from_time), Util.utc_or_nil(until_time)]
         end
