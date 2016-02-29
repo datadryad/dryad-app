@@ -18,12 +18,12 @@ module StashEngine
 
     def metadata_callback
       auth_hash = request.env['omniauth.auth']
-      params = request.env["omniauth.params"]
-      creator_id = params["creator_id"]
+      params = request.env['omniauth.params']
+      creator_id = params['creator_id']
       creator = metadata_engine::Creator.find(creator_id)
       creator.orcid_id = auth_hash.uid
       creator.save
-      redirect_to "#{request.env['omniauth.origin']}"
+      redirect_to '#{request.env['omniauth.origin']}'
     end
 
     private
