@@ -1,15 +1,4 @@
 GIT
-  remote: https://github.com/CDLUC3/stash_datacite.git
-  revision: d2597498df45d3fed542ededd1643e490c58bfae
-  branch: development
-  specs:
-    stash_datacite (0.0.5)
-      datacite-mapping
-      leaflet-rails
-      rails (~> 4.2.4)
-      responders (~> 2.0)
-
-GIT
   remote: https://github.com/CDLUC3/stash_discovery.git
   revision: e98cd786bf1d93a82c614c3e3990315b1c6dca80
   branch: development
@@ -22,10 +11,18 @@ GIT
       sass-rails (~> 5.0)
       turbolinks (~> 2.5)
 
-GIT
-  remote: https://github.com/CDLUC3/stash_engine.git
-  revision: d1ba185522a4e9ee80f423ba838574135d0c14f8
-  branch: development
+PATH
+  remote: /Users/bvedula/workspace2/DASH/stash_datacite
+  specs:
+    stash_datacite (0.0.5)
+      datacite-mapping
+      kaminari
+      leaflet-rails
+      rails (~> 4.2.4)
+      responders (~> 2.0)
+
+PATH
+  remote: /Users/bvedula/workspace2/DASH/stash_engine
   specs:
     stash_engine (0.0.17)
       carrierwave (~> 0.10.0)
