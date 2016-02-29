@@ -18,4 +18,8 @@
     <%= f.hidden_field :resource_id %>
     <%= f.hidden_field :id %>
   </table>
+  <% if (creator.creator_first_name.downcase == current_user.first_name.downcase) && (creator.creator_last_name.downcase == current_user.last_name.downcase) %>
+    <%= link_to "add my Orcid ID", "/stash/auth/orcid?creator_id=#{creator.id}", id: "add_my_Orcid_ID", style: "display:inline;" %>
+    <%= image_tag("stash_datacite/orcid.png", size: "20x20", alt: "Place") %><%= f.text_field :orcid_id, size: 30, style: "border:none;display:inline;", id: "orcid_id" %>&nbsp;&nbsp;
+  <% end %>
 <% end %>
