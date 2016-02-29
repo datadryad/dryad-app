@@ -1,1 +1,3 @@
-$("#subject_new_form").replaceWith('<%= j render(partial: "stash_datacite/subjects/form", locals: {subjects: @subjects, resource_id: @resource.id }) %>');
+$(".keywords_list").replaceWith('<%= raw escape_javascript(render partial: "stash_datacite/subjects/keywords_list", locals: { subjects: @subjects, resource_id: @resource.id }) %>');
+$( "div.success" ).slideDown( 300 ).delay( 1000 ).fadeOut( 400 );
+

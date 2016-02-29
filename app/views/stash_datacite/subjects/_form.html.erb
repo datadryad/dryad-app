@@ -1,79 +1,8 @@
-  <script>
-  $(function() {
-    function split( val ) {
-      return val.split( /,\s*/ );
-    }
-    function extractLast( term ) {
-      return split( term ).pop();
-    }
-
-    $( ".keywords" )
-      // don't navigate away from the field on tab when selecting an item
-      .bind( "keydown", function( event ) {
-        if ( event.keyCode === $.ui.keyCode.TAB &&
-            $( this ).autocomplete( "instance" ).menu.active ) {
-          event.preventDefault();
-        }
-      })
-      .autocomplete({
-        source: function( request, response ) {
-          $.ajax({
-            url: "<%= stash_datacite.subjects_autocomplete_path %>",
-            dataType: "json",
-            data: {
-              term: extractLast( request.term )
-            },
-            success: function( data ) {
-              response( data );
-            }
-          });
-        },
-        search: function() {
-          // custom minLength
-          var term = extractLast( this.value );
-          if ( term.length < 2 ) {
-            return false;
-          }
-        },
-        focus: function() {
-          // prevent value inserted on focus
-          return false;
-        },
-        select: function( event, ui ) {
-          var terms = split( this.value );
-          // remove the current input
-          terms.pop();
-          // add the selected item
-          terms.push( ui.item.value );
-          // add placeholder to get the comma-and-space at the end
-          terms.push( "" );
-          this.value = terms.join( ", " );
-          return false;
-        },
-        open: function(event, ui) {
-          disable=true
-        },
-        close: function(event, ui) {
-          disable=false;
-          $(this).focus();
-        }
-      }).blur(function() {
-          if(!disable) {
-            var form = $(this).parents('form');
-            $(form).trigger('submit.rails');
-          }
-        });
-  });
-  </script>
 <%# the local variable 'subject' should be passed in to this partial when there are multiple per page %>
-<%= form_tag(stash_datacite.subjects_create_path, method: :post, remote: true, authenticity_token: true) do %>
+<%= form_tag(stash_datacite.subjects_create_path, method: :post, remote: true, authenticity_token: true, html: {id: "subject_new_form"}) do %>
   <%#= render "datacite/shared/error_messages", target: @subject %>
   <strong><%= label_tag 'subject', "Keywords" %></strong><br/>
-  <%= text_field_tag('subject', value = @subjects, { class: 'keywords', size: "130x10" }) %>
-  <%#= f.label :subject_scheme, "Subject Scheme" %>
-  <%#= f.text_field :subject_scheme %>
-  <%#= f.label :scheme_URI, "Scheme URI" %>
-  <%#= f.text_field :scheme_URI %>
+  <%= render partial: "stash_datacite/subjects/keywords_list", locals: { subjects: @subjects, resource_id: resource_id } %><br/>
   <%= hidden_field_tag 'resource_id', resource_id %>
   <br/>
 <% end %>
