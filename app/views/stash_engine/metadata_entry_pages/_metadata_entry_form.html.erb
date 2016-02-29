@@ -47,7 +47,7 @@
     <strong><%= label_tag :description, "Usage Notes" %></strong>&nbsp;&nbsp;What else would someone need to know to use this dataset?<br/>
     <%= render partial: "stash_datacite/descriptions/form", locals: { description: @usage_notes, description_type: :usage_notes } %><br/>
 
-    <strong><%= label_tag :related_identifier, "Related work(s)" %></strong>articles, other datasets: e.g., This dataset is cited by DOI 10.1000/182.
+    <strong><%= label_tag :related_identifier, "Related work(s)" %></strong> articles, other datasets: e.g., This dataset is cited by DOI 10.1000/182.
     <div class="related_identifiers_form">
       <% @related_identifiers.each do |related_identifier| %>
         <%= render partial: "stash_datacite/related_identifiers/update", locals: { related_identifier: related_identifier } %>

@@ -23,7 +23,7 @@ module StashEngine
       creator = metadata_engine::Creator.find(creator_id)
       creator.orcid_id = auth_hash.uid
       creator.save
-      redirect_to '#{request.env['omniauth.origin']}'
+      redirect_to "#{request.env['omniauth.origin']}"
     end
 
     private
@@ -46,7 +46,7 @@ module StashEngine
 
     def set_subjects
       @subject = metadata_engine::Subject.new
-      @subjects = @resource.subjects.pluck(:subject).join(", ")
+      @subjects = @resource.subjects
     end
 
     def set_instances
