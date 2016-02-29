@@ -19,5 +19,9 @@ module StashDatacite
     def current_user
       @current_user ||= StashEngine::User.find_by_id(session[:user_id]) if session[:user_id]
     end
+
+    def ajax_require_current_user
+      return false unless @current_user
+    end
   end
 end
