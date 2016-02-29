@@ -2,7 +2,6 @@
 module StashDatacite
   module ResourcePatch
     #has_many :titles, class_name: 'StashDatacite::Title'
-
     # This patches the resource class to have associations and convenience methods.
     # I'm putting them here since the resource may be used by different metadata
     # engines.  It makes sense for the engine to know a little something about the main

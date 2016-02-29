@@ -1,7 +1,6 @@
 module StashDatacite
   class ApplicationController < ::ApplicationController
     helper_method :stash_url_helpers, :current_tenant, :current_user
-
     def stash_url_helpers
       StashEngine::Engine.routes.url_helpers
     end
@@ -20,6 +19,5 @@ module StashDatacite
     def current_user
       @current_user ||= StashEngine::User.find_by_id(session[:user_id]) if session[:user_id]
     end
-
   end
 end
