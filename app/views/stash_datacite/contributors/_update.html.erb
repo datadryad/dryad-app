@@ -11,7 +11,7 @@
     <tr>
         <td><%= f.text_field :contributor_name, size: 70 , class: 'funders' %>&nbsp;&nbsp;&nbsp;&nbsp;</td>
         <td><%= f.text_field :award_number, size: 35 %>&nbsp;&nbsp;</td>
-        <td><%= f.submit "add" %>&nbsp;&nbsp;</td>
+        <td><%= f.submit "add", class: 'button' %>&nbsp;&nbsp;</td>
         <td><%= link_to 'remove', stash_datacite.contributors_delete_path(contributor.id), method: :delete, remote: true, data: { confirm: 'Are you sure?' }, class: 'remove_record' %></td>
     </tr>
     <%= f.hidden_field :contributor_type, value: :funder %>

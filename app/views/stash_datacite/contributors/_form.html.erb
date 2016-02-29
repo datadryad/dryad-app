@@ -65,7 +65,7 @@
 		<tr>
 				<td><%= f.text_field :contributor_name, size: 70 , class: 'funders' %>&nbsp;&nbsp;&nbsp;&nbsp;</td>
 				<td><%= f.text_field :award_number, size: 35 %>&nbsp;&nbsp;</td>
-				<td><%= f.submit "add" %>&nbsp;&nbsp;</td>
+				<td><%= f.submit "add", class: 'button' %>&nbsp;&nbsp;</td>
 				<td><%= link_to 'remove', '#', class: 'remove' %></td>
 		</tr>
 		<%= f.hidden_field :contributor_type, value: :funder %>
