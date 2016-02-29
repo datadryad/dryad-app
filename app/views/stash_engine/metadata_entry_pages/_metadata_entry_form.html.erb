@@ -9,8 +9,8 @@
 <div id="accordion">
   <h3><strong>Basic Information</strong></h3>
   <div>
-    <%= render partial: "stash_datacite/resource_types/form", locals: { resource_type: @resource_type } %>
-    <%= render partial: "stash_datacite/titles/form", locals: { title: @title } %>
+    <%= render partial: "stash_datacite/resource_types/form", locals: { resource_type: @resource_type } %><br/>
+    <%= render partial: "stash_datacite/titles/form", locals: { title: @title } %><br/>
 
     <strong><%= label_tag "Author(s)" %></strong>
     <div class="authors_form">
@@ -18,8 +18,7 @@
         <%= render partial: "stash_datacite/creators/update", locals: { creator: creator } %>
       <% end %>
     </div>
-    <%= link_to "Add Author", metadata_url_helpers.creators_new_path( auth_hash: @auth_hash, resource_id: @resource.id ), remote: :true %>
-    <%= link_to "Add Myself with my Orcid ID", '/stash/auth/orcid/' %><br/>
+    <%= link_to "Add Author", metadata_url_helpers.creators_new_path( auth_hash: @auth_hash, resource_id: @resource.id ), remote: :true %><br/>
     <br/>
 
     <strong><%= label_tag :description, "Abstract" %></strong><br/>
@@ -60,16 +59,18 @@
   <h3 id="location_section"><strong>Location Information (optional)</strong></h3>
   <div>
     <%= render partial: "stash_datacite/shared/map" %>
+    <strong><%= label_tag "Add a point or rectangular area with lat/long coordinates" %></strong><br/>
+    <div style="float:left"><%= link_to(image_tag("stash_datacite/geo_point.png", size: "30x30", alt: "Point", id: "geo_point"), '#')  %><%= link_to(image_tag("stash_datacite/geo_box.png", size: "30x30", alt: "Box", id: "geo_box"), '#') %>&nbsp;&nbsp;</div>
+    <%= render partial: "stash_datacite/geolocation_points/form", locals: { geolocation_point: @geolocation_point } %>
+    <%= render partial: "stash_datacite/geolocation_boxes/form", locals: { geolocation_box: @geolocation_box } %>
+    <br/>
     <div class="locations_added">
       <strong>Locations Added</strong>
       <%= render partial: "stash_datacite/shared/locations" %>
     </div>
-    <br/>
-    <%= render partial: "stash_datacite/geolocation_points/form", locals: { geolocation_point: @geolocation_point } %>
-    <%= render partial: "stash_datacite/geolocation_boxes/form", locals: { geolocation_box: @geolocation_box } %>
   </div>
 </div>
 <br/>
 <%= link_to 'Back to My Datasets', dashboard_path , id: 'dashboard_path' %>
-<%= button_to 'Save', '#', id: 'save_button' %>
+<%= link_to 'Save', '#', id: 'save_metadata' %>
 <%= link_to 'Proceed to Upload', upload_resource_path(@resource), id: 'upload_path' %>

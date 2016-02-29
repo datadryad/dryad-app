@@ -2,7 +2,7 @@ require_dependency 'stash_engine/application_controller'
 
 module StashEngine
   class MetadataEntryPagesController < ApplicationController
-    # before_filter :find_resource, only: [:metadata_callback]
+    before_filter :find_resource, only: [:metadata_callback]
 
     # GET/POST/PUT  /generals/find_or_create
     def find_or_create
@@ -16,11 +16,15 @@ module StashEngine
       set_subjects
     end
 
-    # def metadata_callback
-    #   auth_hash = request.env['omniauth.auth']
-    #   @orcid_id = auth_hash['info']['uid']
-    #   redirect_to metadata_entry_pages_find_or_create_path(auth_hash: @auth_hash)
-    # end
+    def metadata_callback
+      auth_hash = request.env['omniauth.auth']
+      params = request.env["omniauth.params"]
+      creator_id = params["creator_id"]
+      creator = metadata_engine::Creator.find(creator_id)
+      creator.orcid_id = auth_hash.uid
+      creator.save
+      redirect_to "#{request.env['omniauth.origin']}"
+    end
 
     private
 
