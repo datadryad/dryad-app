@@ -4,4 +4,11 @@
     <%= render partial: 'in_progress_line', collection: @in_progress_lines, as: :line %>
   </tbody>
 </table>
-<%= paginate @resources, remote: true %>
+
+<% if @page_size.to_i == 1_000_000 %>
+  <%= link_to 'show pages', resources_user_in_progress_path(page_size: 5, format: :js), remote: true %>
+<% else %>
+  <%= link_to 'all', resources_user_in_progress_path(page_size: 1_000_000, format: :js), remote: true %>
+<% end %>
+
+<%= paginate @resources, params: {page_size: @page_size}, remote: true %>
