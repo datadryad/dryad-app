@@ -11,6 +11,11 @@ module StashDatacite
     # The designers of a new metadata engine will need to do some set-up to design it
     # to work with Stash, but a user should not have to configure associations for
     # an engine.
+    #
+    # We could add methods to a class more directly if we were not defining the shared resource
+    # class in the configuration.  As it is, it's problematic to change the class until being
+    # certain that the configuration is loaded and so the resource class is defined.  We could
+    # probably make it straight forward if we didn't allow the shared resource class to be user-configurable.
     def self.associate_with_resource(resource)
       resource.instance_eval do
         has_many :contributors, class_name: 'StashDatacite::Contributor' # optional according to datacite
@@ -30,6 +35,7 @@ module StashDatacite
         has_and_belongs_to_many :subjects, class_name: 'StashDatacite::Subject', through: 'StashDatacite::ResourceSubject' #optional
         has_many :titles, class_name: 'StashDatacite::Title' # required
         has_one :version, class_name: 'StashDatacite::Version' # optional
+
       end
     end
   end
