@@ -1,16 +1,4 @@
 GIT
-  remote: https://github.com/CDLUC3/stash_datacite.git
-  revision: 4940c39189ec661f8172aa2b718cd30186208090
-  branch: development
-  specs:
-    stash_datacite (0.0.5)
-      datacite-mapping
-      kaminari
-      leaflet-rails
-      rails (~> 4.2.4)
-      responders (~> 2.0)
-
-GIT
   remote: https://github.com/CDLUC3/stash_discovery.git
   revision: e98cd786bf1d93a82c614c3e3990315b1c6dca80
   branch: development
@@ -23,10 +11,18 @@ GIT
       sass-rails (~> 5.0)
       turbolinks (~> 2.5)
 
-GIT
-  remote: https://github.com/CDLUC3/stash_engine.git
-  revision: 35a6e6a6f39911b56a7f300f3ee1f20aac5dea04
-  branch: development
+PATH
+  remote: /Users/bvedula/workspace2/DASH/stash_datacite
+  specs:
+    stash_datacite (0.0.5)
+      datacite-mapping
+      kaminari
+      leaflet-rails
+      rails (~> 4.2.4)
+      responders (~> 2.0)
+
+PATH
+  remote: /Users/bvedula/workspace2/DASH/stash_engine
   specs:
     stash_engine (0.0.17)
       carrierwave (~> 0.10.0)
@@ -125,7 +121,7 @@ GEM
       coffee-script-source
       execjs
     coffee-script-source (1.10.0)
-    concurrent-ruby (1.0.0)
+    concurrent-ruby (1.0.1)
     datacite-mapping (0.1.5)
       typesafe_enum (~> 0.1, >= 0.1.5)
       xml-mapping_extensions (~> 0.3, >= 0.3.4)
@@ -185,7 +181,7 @@ GEM
     kaminari (0.16.3)
       actionpack (>= 3.0.0)
       activesupport (>= 3.0.0)
-    leaflet-rails (0.7.4)
+    leaflet-rails (0.7.7)
     libv8 (3.16.14.13)
     loofah (2.0.3)
       nokogiri (>= 1.5.9)
@@ -228,7 +224,7 @@ GEM
     orm_adapter (0.5.0)
     parser (2.3.0.6)
       ast (~> 2.2)
-    passenger (5.0.25)
+    passenger (5.0.26)
       rack
       rake (>= 0.8.1)
     powerpack (0.1.1)
@@ -313,11 +309,11 @@ GEM
       hirb
       simplecov
     simplecov-html (0.10.0)
-    spring (1.6.3)
+    spring (1.6.4)
     sprockets (3.5.2)
       concurrent-ruby (~> 1.0)
       rack (> 1, < 3)
-    sprockets-rails (3.0.2)
+    sprockets-rails (3.0.3)
       actionpack (>= 4.0)
       activesupport (>= 4.0)
       sprockets (>= 3.0.0)
