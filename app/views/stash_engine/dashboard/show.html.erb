@@ -1,5 +1,5 @@
 <p id="notice"><%= notice %></p>
-<h2>My Dashboard</h2>
+<h2>My Datasets</h2>
 
 <div>
   <%= link_to "New Dataset", new_resource_path %>
@@ -7,8 +7,12 @@
 
 <%# render template: "stash_engine/resources/index" %>
 
+<h3>In Progress</h3>
 <div id="user_in_progress"
      data-load="<%= metadata_url_helpers.resources_user_in_progress_path(format: :js) %>">
   <%= image_tag 'stash_engine/spinner.gif', size: '80x60', alt: 'Loading spinner' %>
 </div>
 
+<h3>Submitted</h3>
+
+<h3>Latest Activity</h3>
