@@ -1,2 +1,2 @@
 $('#contributor_new_form').replaceWith("<%= raw escape_javascript(render partial: 'stash_datacite/contributors/update', locals: {contributor: @contributor}) %>");
-$( "div.success" ).slideDown( 300 ).delay( 1000 ).fadeOut( 400 );
+$( "div.success" ).show().delay( 1000 ).fadeOut( 400 );
