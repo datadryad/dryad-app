@@ -30,5 +30,3 @@ solr = RSolr.connect(url: 'http://192.168.99.100:32768/solr/geoblacklight')
 solr.add index_document # TODO: Indexer should configure batch size
 
 solr.commit
-
-

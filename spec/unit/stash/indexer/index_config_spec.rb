@@ -23,7 +23,15 @@ module Stash
           expect { config.create_indexer }.to raise_error(NoMethodError)
         end
 
-        it 'creates a Solr indexer'
+        it 'creates a Solr indexer' do
+          url = 'http://example.org'
+          proxy = 'http://proxy.example.org'
+          hash = { adapter: 'Solr', url: url, proxy: proxy }
+
+          config = IndexConfig.build_from(hash)
+          indexer = config.create_indexer
+          expect(indexer).to be_a(Solr::SolrIndexer)
+        end
       end
     end
   end

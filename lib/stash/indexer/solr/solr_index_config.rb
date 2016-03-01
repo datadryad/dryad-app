@@ -35,6 +35,11 @@ module Stash
           @opts = all_opts
         end
 
+        # Creates a new `SolrIndexer` with this configuration.
+        def create_indexer
+          SolrIndexer.new(config: self)
+        end
+
         private
 
         def check_opts(opts)
