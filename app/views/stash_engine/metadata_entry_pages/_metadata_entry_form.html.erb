@@ -1,7 +1,7 @@
 <div>
   <p><h2>Describe your dataset</h2>
   * required fields</p>
-  <div class="success">
+  <div class="success_top">
     <p>Changes Autosaved at <%= DateTime.now.in_time_zone%></p>
   </div>
 </div>
@@ -73,4 +73,5 @@
 <br/>
 <%= link_to 'Back to My Datasets', dashboard_path , id: 'dashboard_path' %>
 <%= link_to 'Save', '#', id: 'save_metadata' %>
-<%= link_to 'Proceed to Upload', upload_resource_path(@resource), id: 'upload_path' %>
+<span class="success_bottom">Changes Autosaved at <%= DateTime.now.in_time_zone%></span>
+<%= link_to 'Proceed to Uploads', upload_resource_path(@resource), id: 'upload_path' %>
