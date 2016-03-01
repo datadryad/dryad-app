@@ -12,18 +12,27 @@ module StashDatacite
       @resource = StashEngine::Resource.find(params[:resource_id])
       subjects_array = subject_params[:subject].split(/[ ,]+/)
       subjects_array.each do |sub|
-        unless Subject.where('subject LIKE ?', sub).exists?
-          @resource.subjects << Subject.create(subject: sub)
+        Subject.create(subject: sub) unless Subject.where('subject LIKE ?', sub).exists?
+        @subject = Subject.where('subject LIKE ?', sub).first
+        unless @resource.subjects.exists?(@subject)
+          @resource.subjects << @subject
         end
       end
-      @subjects = @resource.subjects.pluck(:subject).join(', ')
-      render template: 'stash_datacite/shared/update.js.erb'
+      @subjects = @resource.subjects
+      respond_to do |format|
+        format.js
+      end
     end
 
     # DELETE /subjects/1
-    def destroy
-      @subject.destroy
-      redirect_to subjects_url, notice: 'Subject was successfully destroyed.'
+    def delete
+      @subject = Subject.find(params[:id])
+      @resource = StashEngine::Resource.find(params[:resource_id])
+      @subjects = @resource.subjects
+      @resource.subjects.delete(@subject)
+      respond_to do |format|
+        format.js
+      end
     end
 
     # GET /subjects

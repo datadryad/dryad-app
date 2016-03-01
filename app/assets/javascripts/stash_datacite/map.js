@@ -25,7 +25,7 @@ $(document).ready(function() {
       popupAnchor: [0, -25] // point from which the popup should open relative to the iconAnchor
     });
       var geocoder = L.control.geocoder('search-OJQOSkw', {
-          placeholder: 'Search by Location Name',
+          placeholder: 'Add by Location Name',
           pointIcon: false,
           polygonIcon: false,
           position: 'topleft',

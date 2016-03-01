@@ -24,6 +24,7 @@ StashDatacite::Engine.routes.draw do
   get 'subjects/new', to: 'subjects#new'
   get 'subjects/autocomplete', to: 'subjects#autocomplete'
   post 'subjects/create', to: 'subjects#create'
+  delete 'subjects/:id/delete', to: 'subjects#delete', as: 'subjects_delete'
 
   get 'related_identifiers/new', to: 'related_identifiers#new'
   post 'related_identifiers/create', to: 'related_identifiers#create'

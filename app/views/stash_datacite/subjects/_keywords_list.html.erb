@@ -1,0 +1,82 @@
+<script>
+  $(function() {
+    function split( val ) {
+      return val.split( /,\s*/ );
+    }
+    function extractLast( term ) {
+      return split( term ).pop();
+    }
+
+    $( "#keyword" )
+      // don't navigate away from the field on tab when selecting an item
+      .bind( "keydown", function( event ) {
+        if ( event.keyCode === $.ui.keyCode.TAB &&
+            $( this ).autocomplete( "instance" ).menu.active ) {
+          event.preventDefault();
+        }
+      })
+      .autocomplete({
+        source: function( request, response ) {
+          $.ajax({
+            url: "<%= stash_datacite.subjects_autocomplete_path %>",
+            dataType: "json",
+            data: {
+              term: extractLast( request.term )
+            },
+            success: function( data ) {
+              response( data );
+            }
+          });
+        },
+        search: function() {
+          // custom minLength
+          var term = extractLast( this.value );
+          if ( term.length < 2 ) {
+            return false;
+          }
+        },
+        focus: function() {
+          // prevent value inserted on focus
+          return false;
+        },
+        select: function( event, ui ) {
+          var terms = split( this.value );
+          // remove the current input
+          terms.pop();
+          // add the selected item
+          terms.push( ui.item.value );
+          // add placeholder to get the comma-and-space at the end
+          terms.push( "" );
+          this.value = terms.join( ", " );
+          return false;
+        },
+        open: function(event, ui) {
+          disable=true
+        },
+        close: function(event, ui) {
+          disable=false;
+          $(this).focus();
+        }
+      }).keypress(function(event) {
+          if (event.which == '13') {
+            event.preventDefault();
+              var form = $(this).parents('form');
+              $(form).trigger('submit.rails');
+              $(this).val('');
+            }
+          });
+        // .blur(function() {
+        //   if(!disable) {
+        //     var form = $(this).parents('form');
+        //     $(form).trigger('submit.rails');
+        //   }
+        // });
+  });
+  </script>
+<%# the local variable 'subject' should be passed in to this partial when there are multiple per page %>
+<div class="keywords_list" style="border:0.5px solid black;width:1050px;height:100px;">
+  <% subjects.each do |subject| %>
+    <span class= "keywords" style= "background-color: #73AD21;border-radius: 15px;padding: 10px;margin: auto auto 20px auto; "><%= subject.subject %><%=link_to 'x', stash_datacite.subjects_delete_path(subject.id, resource_id: resource_id), method: :delete, remote: true, data: { confirm: 'Are you sure?' } %></span>
+  <% end %>
+  <%= text_field_tag('subject' , nil, { id: 'keyword', style: "border:none;" }) %>
+</div>

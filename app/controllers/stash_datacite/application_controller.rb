@@ -1,7 +1,6 @@
 module StashDatacite
   class ApplicationController < ::ApplicationController
     helper_method :stash_url_helpers, :current_tenant, :current_user
-
     def stash_url_helpers
       StashEngine::Engine.routes.url_helpers
     end
@@ -24,6 +23,5 @@ module StashDatacite
     def ajax_require_current_user
       return false unless @current_user
     end
-
   end
 end
