@@ -12,7 +12,7 @@
     <tr>
       <td><%= f.text_field :creator_first_name, size: 30 %>&nbsp;&nbsp;</td>
       <td><%= f.text_field :creator_last_name, size: 30 %>&nbsp;&nbsp;</td>
-      <td><%= f.text_field :affliation_id, size: 40 %>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+      <td><%= f.text_field :affliation_id, id: 'affliation_id', size: 40 %>&nbsp;&nbsp;&nbsp;&nbsp;</td>
       <td><%= f.submit 'add', class: 'button' %>&nbsp;&nbsp;</td>
       <td><%= link_to 'remove', '#', class: 'remove' %></td>
     </tr>
@@ -26,6 +26,34 @@ $(document).ready(function() {
     $(this).closest('form').remove();
     $(this).closest('br').remove();
     event.preventDefault(); // Prevent link from following its href
+  });
+});
+
+$(function() {
+  $( "#affliation_id" ).autocomplete({
+    source: function( request, response ) {
+      $.ajax({
+        url: "<%= stash_datacite.affliations_autocomplete_path %>",
+        dataType: "json",
+        data: {
+          term: request.term
+        },
+        success: function( data ) {
+          response( data );
+        }
+      });
+    },
+    minLength: 1,
+    focus: function() {
+      // prevent value inserted on focus
+      return false;
+    },
+    open: function() {
+      $( this ).removeClass( "ui-corner-all" ).addClass( "ui-corner-top" );
+    },
+    close: function() {
+      $( this ).removeClass( "ui-corner-top" ).addClass( "ui-corner-all" );
+    }
   });
 });
 </script>

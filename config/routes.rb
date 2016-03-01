@@ -43,6 +43,10 @@ StashDatacite::Engine.routes.draw do
   post 'geolocation_boxes/create', to: 'geolocation_boxes#create'
   delete 'geolocation_boxes/:id/delete', to: 'geolocation_boxes#delete', as: 'geolocation_boxes_delete'
 
+  get 'affliations/autocomplete', to: 'affliations#autocomplete'
+  get 'affliations/new', to: 'affliations#new'
+  post 'affliations/create', to: 'affliations#create'
+  delete 'affliations/:id/delete', to: 'affliations#delete', as: 'affliations_delete'
 
   # Actions through Leaflet Ajax posts
   # points

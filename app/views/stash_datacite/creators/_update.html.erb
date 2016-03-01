@@ -1,3 +1,33 @@
+<script>
+$(function() {
+  $( "#affliation_id" ).autocomplete({
+    source: function( request, response ) {
+      $.ajax({
+        url: "<%= stash_datacite.affliations_autocomplete_path %>",
+        dataType: "json",
+        data: {
+          term: request.term
+        },
+        success: function( data ) {
+          response( data );
+        }
+      });
+    },
+    minLength: 1,
+    focus: function() {
+      // prevent value inserted on focus
+      return false;
+    },
+    open: function() {
+      $( this ).removeClass( "ui-corner-all" ).addClass( "ui-corner-top" );
+    },
+    close: function() {
+      $( this ).removeClass( "ui-corner-top" ).addClass( "ui-corner-all" );
+    }
+  });
+});
+</script>
+
 <%= form_for(creator, url: stash_datacite.creators_update_path, remote: true, authenticity_token: true) do |f| %>
   <%#= render "datacite/shared/error_messages", target: @creator %>
   <table>
@@ -11,7 +41,7 @@
     <tr>
       <td><%= f.text_field :creator_first_name, size: 30 %>&nbsp;&nbsp;</td>
       <td><%= f.text_field :creator_last_name, size: 30 %>&nbsp;&nbsp;</td>
-      <td><%= f.text_field :affliation_id, size: 40 %>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+      <td><%= f.text_field :affliation_id, id: 'affliation_id', size: 40 %>&nbsp;&nbsp;&nbsp;&nbsp;</td>321`w3
       <td><%= f.submit 'add', class: 'button' %>&nbsp;&nbsp;</td>
       <td><%= link_to 'remove', stash_datacite.creators_delete_path(creator.id), method: :delete, remote: true, data: { confirm: 'Are you sure?' }, class: 'remove_record' %></td>
     </tr>
