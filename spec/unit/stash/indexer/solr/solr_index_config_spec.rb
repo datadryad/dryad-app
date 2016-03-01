@@ -103,7 +103,15 @@ module Stash
         end
 
         describe '#create_indexer' do
-          it 'creates an indexer'
+          it 'creates an indexer' do
+            config = SolrIndexConfig.new(
+              url: 'http://example.org/',
+              proxy: 'http://proxy.example.org',
+              elvis: 'presley'
+            )
+            indexer = config.create_indexer
+            expect(indexer).to be_a(SolrIndexer)
+          end
         end
       end
     end
