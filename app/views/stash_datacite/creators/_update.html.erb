@@ -41,7 +41,7 @@ $(function() {
     <tr>
       <td><%= f.text_field :creator_first_name, size: 30 %>&nbsp;&nbsp;</td>
       <td><%= f.text_field :creator_last_name, size: 30 %>&nbsp;&nbsp;</td>
-      <td><%= f.text_field :affliation_id, id: 'affliation_id', size: 40 %>&nbsp;&nbsp;&nbsp;&nbsp;</td>321`w3
+      <td><%= f.text_field :affliation_id, id: 'affliation_id', size: 40 %>&nbsp;&nbsp;&nbsp;&nbsp;</td>
       <td><%= f.submit 'add', class: 'button' %>&nbsp;&nbsp;</td>
       <td><%= link_to 'remove', stash_datacite.creators_delete_path(creator.id), method: :delete, remote: true, data: { confirm: 'Are you sure?' }, class: 'remove_record' %></td>
     </tr>
