@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/CDLUC3/stash_datacite.git
-  revision: 4940c39189ec661f8172aa2b718cd30186208090
+  revision: 9e8c809b1ed51c2d736a50808c71ce755da49825
   branch: development
   specs:
     stash_datacite (0.0.5)
@@ -25,7 +25,7 @@ GIT
 
 GIT
   remote: https://github.com/CDLUC3/stash_engine.git
-  revision: 35a6e6a6f39911b56a7f300f3ee1f20aac5dea04
+  revision: a5baa35e5edf8e15bc52a262314894d7e02f6d9e
   branch: development
   specs:
     stash_engine (0.0.17)
