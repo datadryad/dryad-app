@@ -6,6 +6,16 @@
 a#upload_path {
   float: right;
 }
-.success {
+.success_top {
   display: none;
+  height:50px;
+  width:50px;
+  position:fixed;
+  top: 0;
+  float: left;
+}
+.success_botton{
+  position:fixed;
+  left: 250px;
+  bottom: 0;
 }
