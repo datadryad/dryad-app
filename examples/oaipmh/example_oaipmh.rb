@@ -2,9 +2,7 @@
 
 require 'stash/harvester'
 
-config = Stash::Harvester::SourceConfig.from_yaml(
-  File.read('oai_source.yml')
-)
+config = Stash::Harvester::SourceConfig.from_file('oai_source.yml', :source)
 
 # Alternatively:
 #

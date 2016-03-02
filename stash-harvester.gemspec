@@ -25,7 +25,7 @@ Gem::Specification.new do |spec|
   spec.require_paths = %w(lib db app)
 
   spec.add_dependency 'activerecord', '~> 4.2', '>= 4.2.3'
-  spec.add_dependency 'config-factory', '~> 0.0.1'
+  spec.add_dependency 'config-factory', '~> 0.0', '>= 0.0.5'
   spec.add_dependency 'factory_girl', '~> 4.0'
   spec.add_dependency 'oai', '~> 0.3', '>= 0.3.1'
   spec.add_dependency 'resync-client', '~> 0.3', '>= 0.3.4'
