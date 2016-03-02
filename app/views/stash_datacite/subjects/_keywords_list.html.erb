@@ -1,3 +1,14 @@
+<%# the local variable 'subject' should be passed in to this partial when there are multiple per page %>
+<div class="keywords_list" style="border:0.5px solid black;width:1080px;height:60px;">
+  <% subjects.each do |subject| %>
+    <span class= "keywords" style= "background-color: #739900;border-radius: 15px;padding: 4px 6px 4px 6px;margin: 4px;">
+      <%= subject.subject %><span class="delete_keyword" style="background: #FFFFFF;margin: 2px;border-radius: 40px;
+    padding-left: 5px;padding-right: 5px;"><%=link_to 'x', stash_datacite.subjects_delete_path(subject.id, resource_id: resource_id), method: :delete, remote: true, data: { confirm: 'Are you sure?' }, style: 'text-decoration:none;' %></span>
+    </span>
+  <% end %>
+  <%= text_field_tag('subject' , nil, { id: 'keyword', style: "border:none;border-radius: 15px;padding: 6px;margin: 4px;" }) %>
+</div>
+
 <script>
   $(function() {
     function split( val ) {
@@ -67,13 +78,3 @@
         });
   });
   </script>
-<%# the local variable 'subject' should be passed in to this partial when there are multiple per page %>
-<div class="keywords_list" style="border:0.5px solid black;width:1080px;height:80px;">
-  <% subjects.each do |subject| %>
-    <span class= "keywords" style= "background-color: #739900;border-radius: 15px;padding: 4px 6px 4px 6px;margin: 4px;">
-      <%= subject.subject %><span class="delete_keyword" style="background: #FFFFFF;margin: 2px;border-radius: 40px;
-    padding-left: 5px;padding-right: 5px;"><%=link_to 'x', stash_datacite.subjects_delete_path(subject.id, resource_id: resource_id), method: :delete, remote: true, data: { confirm: 'Are you sure?' }, style: 'text-decoration:none;' %></span>
-    </span>
-  <% end %>
-  <%= text_field_tag('subject' , nil, { id: 'keyword', style: "border:none;border-radius: 15px;padding: 6px;margin: 4px;" }) %>
-</div>
