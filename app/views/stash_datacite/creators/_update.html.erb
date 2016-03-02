@@ -15,9 +15,12 @@
       <td><%= f.text_field :affliation_id, id: 'affliation_id', size: 40 %>&nbsp;&nbsp;&nbsp;&nbsp;</td>
       <td><%= link_to 'remove', stash_datacite.creators_delete_path(creator.id), method: :delete, remote: true, data: { confirm: 'Are you sure?' }, class: 'remove_record' %></td>
     </tr>
+  </table>
+  <div>
+    <%= image_tag("stash_datacite/orcid.png", class: "orcid_img", size: "20x20", alt: "Place") %><%= f.text_field :orcid_id, style: "border:none;" %>
     <%= f.hidden_field :resource_id %>
     <%= f.hidden_field :id %>
-  </table>
+  </div>
 <% end %>
 
 <script>

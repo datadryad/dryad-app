@@ -1,3 +1,23 @@
+<%# the local variable 'contributor' should be passed in to this partial when there are multiple per page %>
+<%= form_for(contributor, url: stash_datacite.contributors_create_path, remote: true, authenticity_token: true, html: {id: "contributor_new_form"}) do |f| %>
+<%#= render "datacite/shared/error_messages", target: @contributor %>
+  <table>
+    <tr>
+				<td><%= f.label :contributor_name, "Granting Organization" %></td>
+				<td><%= f.label :award_number, "Award Number" %></td>
+				<td></td>
+        <td></td>
+		</tr>
+		<tr>
+				<td><%= f.text_field :contributor_name, size: 70 , class: "funders" %>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+				<td><%= f.text_field :award_number, size: 35, class: "award_number" %>&nbsp;&nbsp;</td>
+				<td><%= link_to 'remove', '#', class: 'remove' %></td>
+		</tr>
+		<%= f.hidden_field :contributor_type, value: :funder %>
+		<%= f.text_field :resource_id %>
+	</table>
+<% end %>
+
  <script>
   // based on example at http://jqueryui.com/autocomplete/#remote-jsonp
   $(function() {
@@ -50,25 +70,31 @@
 	    event.preventDefault(); // Prevent link from following its href
 	  });
 	});
-</script>
 
-<%# the local variable 'contributor' should be passed in to this partial when there are multiple per page %>
-<%= form_for(contributor, url: stash_datacite.contributors_create_path, remote: true, authenticity_token: true, html: {id: "contributor_new_form"}) do |f| %>
-<%#= render "datacite/shared/error_messages", target: @contributor %>
-  <table>
-    <tr>
-				<td><%= f.label :contributor_name, "Granting Organization" %></td>
-				<td><%= f.label :award_number, "Award Number" %></td>
-				<td></td>
-        <td></td>
-		</tr>
-		<tr>
-				<td><%= f.text_field :contributor_name, size: 70 , class: 'funders' %>&nbsp;&nbsp;&nbsp;&nbsp;</td>
-				<td><%= f.text_field :award_number, size: 35 %>&nbsp;&nbsp;</td>
-				<td><%= f.submit "add", class: 'button' %>&nbsp;&nbsp;</td>
-				<td><%= link_to 'remove', '#', class: 'remove' %></td>
-		</tr>
-		<%= f.hidden_field :contributor_type, value: :funder %>
-		<%= f.hidden_field :resource_id %>
-	</table>
-<% end %>
+	$(document).ready(function(){
+	  $( ".funders" ).on('focus', function () {
+	    previous_value = this.value;
+	    }).change(function() {
+	      new_value = this.value;
+	      // Save when the new value is different from the previous value
+	      if(new_value != previous_value) {
+	        var form = $(this).parents('form');
+	        $(form).trigger('submit.rails');
+	      }
+	  });
+	});
+
+	$(document).ready(function(){
+	  $( ".award_number" ).on('focus', function () {
+	    previous_value = this.value;
+	    }).change(function() {
+	      new_value = this.value;
+	      // Save when the new value is different from the previous value
+	      if(new_value != previous_value) {
+	        var form = $(this).parents('form');
+	        $(form).trigger('submit.rails');
+	      }
+	  });
+	});
+
+</script>

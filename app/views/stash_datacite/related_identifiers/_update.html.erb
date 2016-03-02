@@ -14,11 +14,25 @@
         <td>This Dataset&nbsp;</td>
         <td><%= f.collection_select(:relation_type_id, StashDatacite::RelationType.all, :id, :relation_type, {prompt: "select relationship"}, {style: "width:200px"}) %>&nbsp;&nbsp;&nbsp;</td>
         <td><%= f.collection_select(:related_identifier_type_id, StashDatacite::RelatedIdentifierType.all, :id, :related_identifier_type, {prompt: "identifier_type"}, {style: "width:200px"}) %>&nbsp;&nbsp;&nbsp;</td>
-        <td><%= f.text_field :related_identifier, size: 40 %>&nbsp;&nbsp;&nbsp;</td>
-        <td><%= f.submit "add", class: 'button' %>&nbsp;&nbsp;</td>
+        <td><%= f.text_field :related_identifier, size: 40, class: "related_identifier" %>&nbsp;&nbsp;&nbsp;</td>
         <td><%= link_to 'remove', stash_datacite.related_identifiers_delete_path(related_identifier.id), method: :delete, remote: true, data: { confirm: 'Are you sure?' }, class: 'remove_record' %></td>
       </tr>
     <%= f.hidden_field :resource_id %>
     <%= f.hidden_field :id %>
   </table>
 <% end %>
+
+<script>
+  $(document).ready(function(){
+    $( ".related_identifier" ).on('focus', function () {
+      previous_value = this.value;
+      }).change(function() {
+        new_value = this.value;
+        // Save when the new value is different from the previous value
+        if(new_value != previous_value) {
+          var form = $(this).parents('form');
+          $(form).trigger('submit.rails');
+        }
+      });
+  });
+</script>

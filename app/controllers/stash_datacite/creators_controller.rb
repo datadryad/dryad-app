@@ -56,7 +56,7 @@ module StashDatacite
     # Only allow a trusted parameter "white list" through.
     def creator_params
       params.require(:creator).permit(:id, :creator_first_name, :creator_last_name, :creator_middle_name,
-                                      :name_identifier_id, :affliation_id, :resource_id)
+                                      :name_identifier_id, :affliation_id, :resource_id, :orcid_id)
     end
   end
 end

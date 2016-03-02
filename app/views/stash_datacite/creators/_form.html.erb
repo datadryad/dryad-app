@@ -15,8 +15,8 @@
       <td><%= f.text_field :affliation_id, id: 'affliation_id', size: 40 %>&nbsp;&nbsp;&nbsp;&nbsp;</td>
       <td><%= link_to 'remove', '#', class: 'remove' %></td>
     </tr>
-    <%= f.text_field :resource_id %>
   </table>
+  <%= f.hidden_field :resource_id %>
 <% end %>
 
 <script>
