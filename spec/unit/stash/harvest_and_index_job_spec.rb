@@ -33,8 +33,22 @@ module Stash
     end
 
     describe '#harvest_and_index' do
-      it 'harvests records'
-      it 'indexes harvested records'
+      it 'harvests and indexes records' do
+        source_config = instance_double(Harvester::SourceConfig)
+        harvest_task = instance_double(Harvester::HarvestTask)
+        expect(source_config).to receive(:create_harvest_task) { harvest_task }
+
+        indexer = instance_double(Indexer::Indexer)
+        index_config = instance_double(Indexer::IndexConfig)
+        expect(index_config).to receive(:create_indexer) { indexer }
+
+        records = [].lazy
+        expect(harvest_task).to receive(:harvest_records) { records }
+        expect(indexer).to receive(:index).with(records)
+
+        job = HarvestAndIndexJob.new(source_config: source_config, index_config: index_config)
+        job.harvest_and_index
+      end
     end
   end
 end

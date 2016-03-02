@@ -12,7 +12,7 @@ module Stash
     end
 
     def harvest_and_index
-      harvested_records = harvest_task.harvested_records
+      harvested_records = harvest_task.harvest_records
       indexer.index(harvested_records)
     end
   end
