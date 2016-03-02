@@ -26,16 +26,16 @@ module Stash
       # override this method to return an appropriate subclass of `HarvestTask` for
       # the data source.
       #
-      # @param _from_time [Time, nil] the start (inclusive) of the datestamp range for selective harvesting.
-      #   If `_from_time` is omitted, harvesting will extend back to the earliest datestamp in the
+      # @param from_time [Time, nil] the start (inclusive) of the datestamp range for selective harvesting.
+      #   If `from_time` is omitted, harvesting will extend back to the earliest datestamp in the
       #   repository. (Optional)
-      # @param _until_time [Time, nil] the end (inclusive) of the datestamp range for selective harvesting.
-      #   If `_until_time` is omitted, harvesting will extend forward to the latest datestamp in the
+      # @param until_time [Time, nil] the end (inclusive) of the datestamp range for selective harvesting.
+      #   If `until_time` is omitted, harvesting will extend forward to the latest datestamp in the
       #   repository. (Optional)
-      # @raise [ArgumentError] if `_from_time` or `_until_time` is not in UTC.
-      # @raise [RangeError] if `_from_time` is later than `_until_time`.
+      # @raise [ArgumentError] if `from_time` or `until_time` is not in UTC.
+      # @raise [RangeError] if `from_time` is later than `until_time`.
       # @return [HarvestTask] a task to harvest records for the specified time range
-      def create_harvest_task(_from_time: nil, _until_time: nil)
+      def create_harvest_task(from_time: nil, until_time: nil) # rubocop:disable Lint/UnusedMethodArgument
         raise NoMethodError, "#{self.class} should override #create_harvest_task to create a HarvestTask, but it doesn't"
       end
     end
