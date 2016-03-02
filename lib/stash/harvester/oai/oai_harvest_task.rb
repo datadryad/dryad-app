@@ -60,11 +60,19 @@ module Stash
         def do_harvest
           base_uri = config.source_uri
           client = ::OAI::Client.new(base_uri.to_s)
-          records = client.list_records(opts)
+          records = list_records(client)
           return [].lazy unless records
           full = records.full
           enum = full.lazy.to_enum
           enum.map { |r| OAIRecord.new(r) }
+        end
+
+        def list_records(client)
+          client.list_records(opts)
+        rescue ::OAI::Exception => e
+          raise if e.code != 'noRecordsMatch'
+          Stash::Harvester.log.warn("No records returned from #{config.source_uri} for options #{opts}")
+          nil
         end
 
         def to_time(time_or_date)

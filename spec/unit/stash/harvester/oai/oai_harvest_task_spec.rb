@@ -206,8 +206,16 @@ module Stash
               expect(logged).to include(err_msg)
             end
 
+            it 'treats an "empty list" ::OAI::Exception as an empty list' do
+              e = ::OAI::Exception.new('whatevs', 'noRecordsMatch')
+              task = OAIHarvestTask.new(config: OAISourceConfig.new(oai_base_url: @uri))
+              expect(@oai_client).to receive(:list_records).and_raise(e)
+              harvested = task.harvest_records
+              expect(harvested).to be_an(Enumerator::Lazy)
+              expect(harvested.to_a).to eq([])
+            end
+
             it 'handles OAI-PMH error responses gracefully'
-            it 'treats an "empty list" ::OAI::Exception as an empty list'
             it 'follows 302 Found redirects with Location header'
             it 'handles 4xx errors gracefully'
             it 'handles 5xx errors gracefully'
