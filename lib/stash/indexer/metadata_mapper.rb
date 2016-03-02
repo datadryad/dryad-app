@@ -13,11 +13,11 @@ module Stash
 
       # Converts a Stash-wrapped metadata document to an indexable document.
       #
-      # @param _wrapped_metadata [StashWrapper] a Stash-wrapped metadata document with
+      # @param wrapped_metadata [StashWrapper] a Stash-wrapped metadata document with
       #   appropriate descriptive elements for this mapper.
       # @return [Object] a document extracting information from `wrapped_metadata`
       #   and formatting it appropriately for the index supported by this mapper.
-      def to_index_document(_wrapped_metadata)
+      def to_index_document(wrapped_metadata) # rubocop:disable Lint/UnusedMethodArgument
         raise NoMethodError, "#{self.class} should override #to_index_document to map wrapped metadata to indexable documents, but it doesn't"
       end
     end
