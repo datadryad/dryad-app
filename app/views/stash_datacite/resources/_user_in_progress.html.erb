@@ -4,4 +4,5 @@
     <%= render partial: 'in_progress_line', collection: @in_progress_lines, as: :line %>
   </tbody>
 </table>
-<%= paginate @resources, remote: true %>
+
+<%= paginate @resources, params: {page_size: @page_size}, remote: true %>

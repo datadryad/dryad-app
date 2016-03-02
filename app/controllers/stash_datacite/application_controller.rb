@@ -23,5 +23,11 @@ module StashDatacite
     def ajax_require_current_user
       return false unless @current_user
     end
+
+    # this sets up the page variables for use with kaminari paging
+    def set_page_info
+      @page = params[:page] || '1'
+      @page_size = params[:page_size] || '5'
+    end
   end
 end
