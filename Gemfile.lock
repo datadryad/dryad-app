@@ -1,16 +1,4 @@
 GIT
-  remote: https://github.com/CDLUC3/stash_datacite.git
-  revision: c7648cb9f83313c9f569e105d489354c74005996
-  branch: development
-  specs:
-    stash_datacite (0.0.5)
-      datacite-mapping
-      kaminari
-      leaflet-rails
-      rails (~> 4.2.4)
-      responders (~> 2.0)
-
-GIT
   remote: https://github.com/CDLUC3/stash_discovery.git
   revision: e98cd786bf1d93a82c614c3e3990315b1c6dca80
   branch: development
@@ -22,6 +10,18 @@ GIT
       rails (~> 4.2)
       sass-rails (~> 5.0)
       turbolinks (~> 2.5)
+
+GIT
+  remote: https://github.com/CDLUC3/stash_datacite.git
+  revision: c7648cb9f83313c9f569e105d489354c74005996
+  branch: development
+  specs:
+    stash_datacite (0.0.5)
+      datacite-mapping
+      kaminari
+      leaflet-rails
+      rails (~> 4.2.4)
+      responders (~> 2.0)
 
 GIT
   remote: https://github.com/CDLUC3/stash_engine.git
@@ -42,6 +42,7 @@ GIT
       omniauth-shibboleth (~> 1.2.1)
       rails (~> 4.2.4)
 
+GEM
 GEM
   remote: https://rubygems.org/
   specs:
@@ -318,7 +319,7 @@ GEM
     sprockets (3.5.2)
       concurrent-ruby (~> 1.0)
       rack (> 1, < 3)
-    sprockets-rails (3.0.3)
+    sprockets-rails (3.0.4)
       actionpack (>= 4.0)
       activesupport (>= 4.0)
       sprockets (>= 3.0.0)
