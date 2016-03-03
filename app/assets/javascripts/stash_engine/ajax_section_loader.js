@@ -7,7 +7,7 @@ $( document ).ready(function() {
     // $(this).load(path);
     $.ajax({
       url: path,
-      // data: data,
+      data: { resource_id: $.urlParam('resource_id') },
       // success: success,
       dataType: 'script'
     });
