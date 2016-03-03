@@ -13,6 +13,9 @@ module StashDatacite
       set_relations
       set_creators
       set_subjects
+      respond_to do |format|
+        format.js
+      end
     end
 
     private
