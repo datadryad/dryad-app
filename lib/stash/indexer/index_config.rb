@@ -26,8 +26,10 @@ module Stash
       # override this method to return an appropriate subclass of `Indexer` for
       # the index.
       #
+      # @param metadata_mapper [MetadataMapper] the metadata mapper to convert
+      #   harvested documents to indexable documents
       # @return [Indexer] an indexer for this index
-      def create_indexer
+      def create_indexer(metadata_mapper) # rubocop:disable Lint/UnusedMethodArgument
         raise NoMethodError, "#{self.class} should override #create_indexer to create an Indexer, but it doesn't"
       end
     end

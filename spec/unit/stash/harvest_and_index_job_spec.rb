@@ -14,7 +14,9 @@ module Stash
         index_config = instance_double(Indexer::IndexConfig)
         allow(index_config).to receive(:create_indexer)
 
-        job = HarvestAndIndexJob.new(source_config: source_config, index_config: index_config, from_time: from_time, until_time: until_time)
+        metadata_mapper = instance_double(Indexer::MetadataMapper)
+
+        job = HarvestAndIndexJob.new(source_config: source_config, index_config: index_config, metadata_mapper: metadata_mapper, from_time: from_time, until_time: until_time)
         expect(job.harvest_task).to equal(harvest_task)
       end
 
@@ -27,7 +29,9 @@ module Stash
         index_config = instance_double(Indexer::IndexConfig)
         expect(index_config).to receive(:create_indexer) { indexer }
 
-        job = HarvestAndIndexJob.new(source_config: source_config, index_config: index_config)
+        metadata_mapper = instance_double(Indexer::MetadataMapper)
+
+        job = HarvestAndIndexJob.new(source_config: source_config, index_config: index_config, metadata_mapper: metadata_mapper)
         expect(job.indexer).to equal(indexer)
       end
     end
@@ -46,13 +50,15 @@ module Stash
         expect(harvest_task).to receive(:harvest_records) { records }
         expect(indexer).to receive(:index).with(records)
 
-        job = HarvestAndIndexJob.new(source_config: source_config, index_config: index_config)
+        metadata_mapper = instance_double(Indexer::MetadataMapper)
+
+        job = HarvestAndIndexJob.new(source_config: source_config, index_config: index_config, metadata_mapper: metadata_mapper)
         job.harvest_and_index
       end
 
-      it 'deletes deleted records'
-
       it 'logs each successfully indexed record'
+
+      it 'logs each successfully deleted record'
 
       it 'logs each failed record'
 

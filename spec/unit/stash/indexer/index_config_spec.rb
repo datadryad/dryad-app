@@ -20,7 +20,8 @@ module Stash
       describe '#create_indexer' do
         it 'is abstract' do
           config = IndexConfig.new(url: URI('http://example.org/index'))
-          expect { config.create_indexer }.to raise_error(NoMethodError)
+          metadata_mapper = instance_double(MetadataMapper)
+          expect { config.create_indexer(metadata_mapper: metadata_mapper) }.to raise_error(NoMethodError)
         end
 
         it 'creates a Solr indexer' do
@@ -29,7 +30,10 @@ module Stash
           hash = { adapter: 'Solr', url: url, proxy: proxy }
 
           config = IndexConfig.build_from(hash)
-          indexer = config.create_indexer
+
+          metadata_mapper = instance_double(MetadataMapper)
+
+          indexer = config.create_indexer(metadata_mapper)
           expect(indexer).to be_a(Solr::SolrIndexer)
         end
       end

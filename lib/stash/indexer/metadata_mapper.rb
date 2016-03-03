@@ -11,6 +11,12 @@ module Stash
 
       key :metadata_mapping
 
+      attr_reader :opts
+
+      def initialize(*opts)
+        @opts = opts
+      end
+
       # Converts a Stash-wrapped metadata document to an indexable document.
       #
       # @param wrapped_metadata [StashWrapper] a Stash-wrapped metadata document with

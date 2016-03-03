@@ -36,8 +36,8 @@ module Stash
         end
 
         # Creates a new `SolrIndexer` with this configuration.
-        def create_indexer
-          SolrIndexer.new(config: self)
+        def create_indexer(metadata_mapper)
+          SolrIndexer.new(config: self, metadata_mapper: metadata_mapper)
         end
 
         private

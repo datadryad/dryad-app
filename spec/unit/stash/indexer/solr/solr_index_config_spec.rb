@@ -109,7 +109,8 @@ module Stash
               proxy: 'http://proxy.example.org',
               elvis: 'presley'
             )
-            indexer = config.create_indexer
+            metadata_mapper = instance_double(MetadataMapper)
+            indexer = config.create_indexer(metadata_mapper: metadata_mapper)
             expect(indexer).to be_a(SolrIndexer)
           end
         end

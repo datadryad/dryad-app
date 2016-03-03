@@ -6,9 +6,9 @@ module Stash
     attr_reader :harvest_task
     attr_reader :indexer
 
-    def initialize(source_config:, index_config:, from_time: nil, until_time: nil)
+    def initialize(source_config:, index_config:, metadata_mapper:, from_time: nil, until_time: nil)
       @harvest_task = source_config.create_harvest_task(from_time: from_time, until_time: until_time)
-      @indexer = index_config.create_indexer
+      @indexer = index_config.create_indexer(metadata_mapper)
     end
 
     def harvest_and_index

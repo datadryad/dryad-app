@@ -5,7 +5,8 @@ module Stash
     describe Indexer do
       describe '#index' do
         it 'is abstract' do
-          indexer = Indexer.new
+          metadata_mapper = instance_double(MetadataMapper)
+          indexer = Indexer.new(metadata_mapper: metadata_mapper)
           harvested_records = instance_double(Enumerator::Lazy)
           expect { indexer.index(harvested_records) }.to raise_error(NoMethodError)
         end

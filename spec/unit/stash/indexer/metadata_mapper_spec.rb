@@ -3,6 +3,15 @@ require 'spec_helper'
 module Stash
   module Indexer
     describe MetadataMapper do
+
+      describe '#build_from' do
+        it 'reads a valid DataciteGeoblacklight config' do
+          hash = { metadata_mapping: 'datacite_geoblacklight' }
+          mapper = MetadataMapper.build_from(hash)
+          expect(mapper).to be_a(DataciteGeoblacklight::Mapper)
+        end
+      end
+
       describe '#to_index_document' do
         it 'is abstract' do
           wrapped_metadata = instance_double(Stash::Wrapper::StashWrapper)

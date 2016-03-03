@@ -12,6 +12,10 @@ module Stash
 
         metadata_mapping 'datacite_default'
 
+        def initialize(*opts)
+          super
+        end
+
         def to_index_document(wrapper) # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
           stash_descriptive = wrapper.stash_descriptive
           datacite_xml = stash_descriptive.find { |elem| Resource.datacite?(elem) }

@@ -6,7 +6,8 @@ module Stash
       describe SolrIndexer do
         it 'is an Indexer' do
           config = instance_double(SolrIndexConfig)
-          expect(SolrIndexer.new(config: config)).to be_an(Indexer)
+          metadata_mapper = instance_double(MetadataMapper)
+          expect(SolrIndexer.new(metadata_mapper: metadata_mapper, config: config)).to be_an(Indexer)
         end
 
         describe '#index' do
@@ -19,7 +20,8 @@ module Stash
               proxy: @proxy,
               elvis: @elvis
             )
-            @indexer = SolrIndexer.new(config: @config)
+            @metadata_mapper = instance_double(MetadataMapper)
+            @indexer = SolrIndexer.new(metadata_mapper: @metadata_mapper, config: @config)
 
             @rsolr_client = instance_double(RSolr::Client)
             allow(@rsolr_client).to receive(:add)
@@ -46,14 +48,21 @@ module Stash
             expect(@rsolr_options[:elvis]).to eq(@elvis)
           end
 
-          it 'indexes records' do
-            records = [{ id: '10.1000/12345' }, { id: '10.1000/67890' }]
-            expect(@rsolr_client).to receive(:add).with(records)
-            @indexer.index(records.lazy)
-          end
+          it 'transforms records using the specified metadata mapper'
 
+          it 'indexes records'
+
+          # it 'indexes records' do
+          #   records = [{ id: '10.1000/12345' }, { id: '10.1000/67890' }]
+          #   expect(@rsolr_client).to receive(:add).with(records)
+          #   @indexer.index(records.lazy)
+          # end
+
+          it 'deletes deleted records'
           it 'respects the configured batch size'
           it 'is lazy with regard to failures'
+          it 'handles partial add failures'
+          it 'handles partial delete failures'
           it 'commits partial adds'
           it 'returns some useful status'
         end
