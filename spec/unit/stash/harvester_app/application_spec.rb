@@ -24,7 +24,7 @@ module Stash
 
       describe '#config_file_defaults' do
         it 'prefers ./stash-harvester.yml, then ~/.stash-harvester.yml' do
-          expected = ['/stash/apps/stash-harvester/stash-harvester.yml', '/home/stash/.stash-harvester.yml']
+          expected = %w(/stash/apps/stash-harvester/stash-harvester.yml /home/stash/.stash-harvester.yml)
           expect(Application.config_file_defaults).to eq(expected)
         end
       end

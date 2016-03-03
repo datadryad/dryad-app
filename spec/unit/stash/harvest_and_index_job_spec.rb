@@ -49,6 +49,14 @@ module Stash
         job = HarvestAndIndexJob.new(source_config: source_config, index_config: index_config)
         job.harvest_and_index
       end
+
+      it 'deletes deleted records'
+
+      it 'logs each successfully indexed record'
+
+      it 'logs each failed record'
+
+      it 'yields the submission time and status (completed/failed) for each record'
     end
   end
 end
