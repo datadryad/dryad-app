@@ -1,5 +1,7 @@
 require 'spec_helper'
 
+require 'rsolr'
+
 module Stash
   module Indexer
     module Solr
@@ -23,13 +25,13 @@ module Stash
             @metadata_mapper = instance_double(MetadataMapper)
             @indexer = SolrIndexer.new(metadata_mapper: @metadata_mapper, config: @config)
 
-            @rsolr_client = instance_double(RSolr::Client)
-            allow(@rsolr_client).to receive(:add)
-            allow(@rsolr_client).to receive(:commit)
+            @solr = instance_double(RSolr::Client)
+            allow(@solr).to receive(:add)
+            allow(@solr).to receive(:commit)
 
             expect(RSolr::Client).to receive(:new) do |_connection, options|
               @rsolr_options = options
-              @rsolr_client
+              @solr
             end
           end
 
@@ -48,22 +50,68 @@ module Stash
             expect(@rsolr_options[:elvis]).to eq(@elvis)
           end
 
-          it 'transforms records using the specified metadata mapper'
+          it 'transforms and indexes records using the specified metadata mapper' do
+            harvested_record_array = Array.new(3) { |_i| instance_double(Stash::Harvester::HarvestedRecord) }
+            harvested_record_array.each_with_index do |r, i|
+              content = instance_double(Stash::Wrapper::StashWrapper)
+              expect(r).to receive(:deleted?) { false }
+              expect(r).to receive(:content) { content }
+              index_doc = { id: i.to_s }
+              expect(@metadata_mapper).to receive(:to_index_document).with(content) { index_doc }
+              expect(@solr).to receive(:add).with(index_doc)
+            end
+            expect(@solr).to receive(:commit)
+            @indexer.index(harvested_record_array.lazy)
+          end
 
-          it 'indexes records'
+          it 'deletes deleted records' do
+            harvested_record_array = Array.new(3) { |_i| instance_double(Stash::Harvester::HarvestedRecord) }
+            harvested_record_array.each_with_index do |r, i|
+              if i.odd?
+                expect(r).to receive(:deleted?) { true }
+                identifier = i.to_s
+                expect(r).to receive(:identifier) { identifier }
+                expect(@solr).to receive(:delete_by_id).with(identifier)
+              else
+                content = instance_double(Stash::Wrapper::StashWrapper)
+                expect(r).to receive(:deleted?) { false }
+                expect(r).to receive(:content) { content }
+                index_doc = { id: i.to_s }
+                expect(@metadata_mapper).to receive(:to_index_document).with(content) { index_doc }
+              end
+            end
+            expect(@solr).to receive(:commit)
+            @indexer.index(harvested_record_array.lazy)
+          end
 
-          # it 'indexes records' do
-          #   records = [{ id: '10.1000/12345' }, { id: '10.1000/67890' }]
-          #   expect(@rsolr_client).to receive(:add).with(records)
-          #   @indexer.index(records.lazy)
-          # end
-
-          it 'deletes deleted records'
           it 'respects the configured batch size'
           it 'is lazy with regard to failures'
-          it 'handles partial add failures'
+
+          it 'handles partial add failures' do
+            harvested_record_array = Array.new(3) { |_i| instance_double(Stash::Harvester::HarvestedRecord) }
+            harvested_record_array.each_with_index do |r, i|
+              content = instance_double(Stash::Wrapper::StashWrapper)
+              expect(r).to receive(:deleted?) { false }
+              expect(r).to receive(:content) { content }
+              id = i.to_s
+              allow(r).to receive(:identifier) { id }
+              index_doc = { id: id }
+              expect(@metadata_mapper).to receive(:to_index_document).with(content) { index_doc }
+              if i == 2
+                request = instance_double(Net::HTTP::Get)
+                response = instance_double(Net::HTTPResponse)
+                error = RSolr::Error::InvalidResponse.new(request, response)
+                error.define_singleton_method(:to_s) { '(mock InvalidResponse)' }
+                expect(@solr).to receive(:add).with(index_doc).and_raise(error)
+              else
+                expect(@solr).to receive(:add).with(index_doc)
+              end
+            end
+            expect(@solr).to receive(:commit)
+            @indexer.index(harvested_record_array.lazy)
+          end
+
           it 'handles partial delete failures'
-          it 'commits partial adds'
           it 'returns some useful status'
         end
       end
