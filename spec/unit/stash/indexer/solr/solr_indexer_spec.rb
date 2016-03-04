@@ -84,9 +84,6 @@ module Stash
             @indexer.index(harvested_record_array.lazy)
           end
 
-          it 'respects the configured batch size'
-          it 'is lazy with regard to failures'
-
           it 'handles partial add failures' do
             harvested_record_array = Array.new(3) { |_i| instance_double(Stash::Harvester::HarvestedRecord) }
             harvested_record_array.each_with_index do |r, i|
@@ -111,8 +108,30 @@ module Stash
             @indexer.index(harvested_record_array.lazy)
           end
 
-          it 'handles partial delete failures'
-          it 'returns some useful status'
+          it 'handles partial delete failures' do
+            harvested_record_array = Array.new(3) { |_i| instance_double(Stash::Harvester::HarvestedRecord) }
+            harvested_record_array.each_with_index do |r, i|
+              expect(r).to receive(:deleted?) { true }
+              id = i.to_s
+              allow(r).to receive(:identifier) { id }
+              if i == 2
+                request = instance_double(Net::HTTP::Get)
+                response = instance_double(Net::HTTPResponse)
+                error = RSolr::Error::InvalidResponse.new(request, response)
+                error.define_singleton_method(:to_s) { '(mock InvalidResponse)' }
+                expect(@solr).to receive(:delete_by_id).with(id).and_raise(error)
+              else
+                expect(@solr).to receive(:delete_by_id).with(id)
+              end
+            end
+            expect(@solr).to receive(:commit)
+            @indexer.index(harvested_record_array.lazy)
+          end
+
+          it 'returns some useful per-record status'
+
+          it 'respects the configured batch size'
+
         end
       end
     end
