@@ -1,7 +1,7 @@
 // Place all the behaviors and hooks related to the matching controller here.
 // All this logic will automatically be available in application.js.
 
-$(function() {
+function loadAccordion() {
   var icons = {
     header: "ui-icon-circle-arrow-e",
     activeHeader: "ui-icon-circle-arrow-s"
@@ -11,4 +11,4 @@ $(function() {
     collapsible: true,
     icons: icons
   });
-});
+};

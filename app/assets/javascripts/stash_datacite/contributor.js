@@ -1,6 +1,6 @@
 
   // based on example at http://jqueryui.com/autocomplete/#remote-jsonp
-  $(function() {
+ function loadContributors() {
   function split( val ) {
     return val.split( /,\s*/ );
   }
@@ -40,9 +40,8 @@
       return false;
     },
     });
-  });
 
-  $(document).ready(function(){
+
     $( ".funders" ).on('focus', function () {
       previous_value = this.value;
       }).change(function() {
@@ -53,13 +52,11 @@
           $(form).trigger('submit.rails');
         }
       });
-  });
 
   // Remove link functionality
-  $(document).ready(function() {
     $('.remove').on('click', function (event) {
       $(this).closest('form').remove();
       $(this).closest('br').remove();
       event.preventDefault(); // Prevent link from following its href
     });
-  });
+ };
