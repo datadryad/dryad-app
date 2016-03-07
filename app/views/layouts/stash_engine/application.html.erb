@@ -16,16 +16,16 @@
     <div class="search_and_login">Search</div>
   </header>
   <nav class="menu_bar">
-    <%= link_to 'Home', root_path %>
+    <%= link_to 'Home', stash_url_helpers.root_path %>
     |
-    <%= link_to 'Browse Data', search_path %>
+    <%= link_to 'Browse Data', stash_url_helpers.search_path %>
     |
-    <%= link_to 'About Dash', about_path %>
+    <%= link_to 'About Dash', stash_url_helpers.about_path %>
     |
     <% if current_user %>
-      <%= link_to 'My Datasets', dashboard_path %>
+      <%= link_to 'My Datasets', stash_url_helpers.dashboard_path %>
     <% else %>
-      <%= link_to "My Datasets", dashboard_path, html: { style: "color: gray"} %>
+      <%= link_to "My Datasets", stash_url_helpers.dashboard_path, html: { style: "color: gray"} %>
     <% end %>
   </nav>
   <div class="log_in_out">
