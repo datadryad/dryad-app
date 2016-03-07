@@ -15,6 +15,14 @@
 *.o
 *.a
 mkmf.log
+log/*.log
+pkg/
+test/dummy/db/*.sqlite3
+test/dummy/db/*.sqlite3-journal
+test/dummy/log/*.log
+test/dummy/tmp/
+test/dummy/.sass-cache
+doc/*
 
 # ############################################################
 # Database
@@ -35,6 +43,7 @@ db/*.sqlite3
 *.ids
 .rakeTasks
 .generators
+.idea
 
 # ############################################################
 # Emacs

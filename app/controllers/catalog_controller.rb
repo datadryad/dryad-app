@@ -3,9 +3,18 @@ require 'blacklight/controller'
 require 'blacklight/catalog'
 
 class CatalogController < ApplicationController
+#class CatalogController < StashEngine::ApplicationController
+  helper_method :current_tenant, :current_user, :metadata_engine, :metadata_url_helpers, :stash_url_helpers
+
+  helper StashEngine::ApplicationHelper
+
+  include StashEngine::SharedController
+
+  # helper StashEngine::ApplicationHelper
   include Blacklight::Controller
   include Blacklight::Catalog
-  layout 'blacklight'
+  layout 'stash_engine/application'
+  # helper StashEngine::ApplicationHelper
 
   configure_blacklight do |config|
     ## Default parameters to send to solr for all search-like requests. See also SolrHelper#solr_search_params
@@ -221,6 +230,7 @@ class CatalogController < ApplicationController
     # 'positron' http://cartodb.com/basemaps/
     # 'darkMatter' http://cartodb.com/basemaps/
     config.basemap_provider = 'mapquest'
+
   end
 
 
