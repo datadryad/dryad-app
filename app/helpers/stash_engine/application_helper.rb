@@ -2,13 +2,6 @@ require 'filesize'
 
 module StashEngine
   module ApplicationHelper
-    def title(resource)
-      if resource.nil?
-        'unknown'
-      else
-        @titles.where(resource_id: resource.id).pluck(:title).join(' ')
-      end
-    end
 
     def geolocation_image(resource)
       if resource && resource.geolocation == true
@@ -24,7 +17,7 @@ module StashEngine
       if session[:user_id].blank?
         link_to 'log in', tenants_path
       else
-        link_to 'log out', sessions_destroy_path
+        link_to 'log out', stash_url_helpers.sessions_destroy_path
       end
     end
     # :nocov:
