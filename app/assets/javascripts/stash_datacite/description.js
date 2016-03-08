@@ -1,6 +1,6 @@
 // Place all the behaviors and hooks related to the matching controller here.
 // All this logic will automatically be available in application.js.
-$(document).ready(function(){
+function loadDescriptions() {
   $( ".description" ).on('focus', function () {
     previous_value = this.value;
     }).change(function() {
@@ -11,4 +11,4 @@ $(document).ready(function(){
         $(form).trigger('submit.rails');
       }
     });
-});
+};
