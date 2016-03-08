@@ -27,5 +27,6 @@ module StashEngine
       end
     end
     # :nocov:
+
   end
 end
