@@ -3,17 +3,28 @@
 <%#= render "datacite/shared/error_messages", target: @contributor %>
   <table>
     <tr>
-				<td><%= f.label :contributor_name, "Granting Organization" %></td>
-				<td><%= f.label :award_number, "Award Number" %></td>
-				<td></td>
-        <td></td>
-		</tr>
-		<tr>
-				<td><%= f.text_field :contributor_name, size: 70 , class: "funders" %>&nbsp;&nbsp;&nbsp;&nbsp;</td>
-				<td><%= f.text_field :award_number, size: 35, class: "award_number" %>&nbsp;&nbsp;</td>
-				<td><%= link_to 'remove', '#', class: 'remove' %></td>
+			<td><%= f.label :contributor_name, "Granting Organization" %></td>
+			<td><%= f.label :award_number, "Award Number" %></td>
+			<td></td>
+			        <td></td>
+			</tr>
+			<tr>
+			<td><%= f.text_field :contributor_name, size: 70 , class: "funders" %>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+			<td><%= f.text_field :award_number, size: 35, class: "award_number" %>&nbsp;&nbsp;</td>
+			<td><%= link_to 'remove', '#', class: 'remove' %></td>
 		</tr>
 		<%= f.hidden_field :contributor_type, value: :funder %>
-		<%= f.text_field :resource_id %>
+		<%= f.hidden_field :resource_id %>
 	</table>
 <% end %>
+
+ <script>
+	// Remove link functionality
+	$(document).ready(function() {
+	 $('.remove').on('click', function (event) {
+	   $(this).closest('form').remove();
+	   $(this).closest('br').remove();
+	   event.preventDefault(); // Prevent link from following its href
+	 });
+	});
+</script>
