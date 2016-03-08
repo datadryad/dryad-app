@@ -1,6 +1,5 @@
 module StashEngine
   module SharedController
-
     #helper_method :current_tenant, :current_user, :metadata_engine, :metadata_url_helpers
 
     def metadata_url_helpers

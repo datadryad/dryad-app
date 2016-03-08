@@ -2,7 +2,6 @@ require 'filesize'
 
 module StashEngine
   module ApplicationHelper
-
     def geolocation_image(resource)
       if resource && resource.geolocation == true
         image_tag('stash_datacite/geolocation.png', size: '20x20', alt: 'Box')
