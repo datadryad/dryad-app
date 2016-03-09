@@ -1,2 +1,3 @@
 $('#related_identifier_new_form').replaceWith("<%= raw escape_javascript(render partial: 'stash_datacite/related_identifiers/update', locals: {related_identifier: @related_identifier})%>");
 $( "div.success" ).slideDown( 300 ).delay( 1000 ).fadeOut( 400 );
+loadRelatedIdentifiers();

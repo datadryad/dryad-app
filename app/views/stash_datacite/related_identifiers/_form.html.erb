@@ -12,8 +12,8 @@
     </tr>
     <tr>
       <td>This Dataset&nbsp;</td>
-      <td><%= f.collection_select(:relation_type_id, StashDatacite::RelationType.all, :id, :relation_type, {prompt: "select relationship"}, {style: "width:200px"}) %>&nbsp;&nbsp;&nbsp;</td>
-      <td><%= f.collection_select(:related_identifier_type_id, StashDatacite::RelatedIdentifierType.all, :id, :related_identifier_type, {prompt: "identifier_type"}, {style: "width:200px"}) %>&nbsp;&nbsp;&nbsp;</td>
+      <td><%= f.select(:relation_type_id, StashDatacite::RelationType.all.map{|r| [r.relation_type, r.id]}, {prompt: "select relationship"}, {class: "relation_type" , style: "width:200px"}) %>&nbsp;&nbsp;&nbsp;</td>
+      <td><%= f.select(:related_identifier_type_id, StashDatacite::RelatedIdentifierType.all.map{|r| [r.related_identifier_type, r.id ]}, {prompt: "identifier_type"}, {class: "related_identifier_type" , style: "width:200px"}) %>&nbsp;&nbsp;&nbsp;</td>
       <td><%= f.text_field :related_identifier, size: 40, class: "related_identifier"  %>&nbsp;&nbsp;&nbsp;</td>
       <td><%= link_to 'remove', '#', class: 'remove' %></td>
     </tr>
@@ -28,18 +28,5 @@
       $(this).closest('br').remove();
       event.preventDefault(); // Prevent link from following its href
     });
-  });
-
-  $(document).ready(function(){
-    $( ".related_identifier" ).on('focus', function () {
-      previous_value = this.value;
-      }).change(function() {
-        new_value = this.value;
-        // Save when the new value is different from the previous value
-        if(new_value != previous_value) {
-          var form = $(this).parents('form');
-          $(form).trigger('submit.rails');
-        }
-      });
   });
 </script>
