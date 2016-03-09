@@ -16,4 +16,5 @@
 // Required by Blacklight
 //= require blacklight/blacklight
 
-//= require_tree .
+// The following line appears to pull in jquery/jquery_ujs again and causes double-actions.
+// require_tree .
