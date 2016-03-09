@@ -13,8 +13,9 @@
 // require jquery  # these cause loading issues since already required by stash_engine
 // require jquery_ujs
 //
+
 // Required by Blacklight
 //= require blacklight/blacklight
 
 // The following line appears to pull in jquery/jquery_ujs again and causes double-actions.
-// require_tree .
+//= require_tree .
