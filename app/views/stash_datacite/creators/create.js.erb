@@ -1,2 +1,3 @@
 $('#creator_new_form').replaceWith("<%= raw escape_javascript(render partial: 'stash_datacite/creators/update', locals: {creator: @creator}) %>");
 $( "div.success" ).show().delay( 1000 ).fadeOut( 400 );
+loadCreators();

@@ -1,6 +1,7 @@
 <%# the local variable 'creator' should be passed in to this partial when there are multiple per page %>
 <%= form_for(creator, url: stash_datacite.creators_update_path, remote: true, authenticity_token: true) do |f| %>
   <%#= render "datacite/shared/error_messages", target: @creator %>
+  <%= creator.id %>
   <table>
     <tr>
       <td><%= f.label :creator_first_name, "First Name" %></td>
@@ -24,59 +25,3 @@
     <%= f.hidden_field :id %>
   </div>
 <% end %>
-
-<script>
-$(function() {
-  $( "#affliation_id" ).autocomplete({
-    source: function( request, response ) {
-      $.ajax({
-        url: "<%= stash_datacite.affliations_autocomplete_path %>",
-        dataType: "json",
-        data: {
-          term: request.term
-        },
-        success: function( data ) {
-          response( data );
-        }
-      });
-    },
-    minLength: 1,
-    focus: function() {
-      // prevent value inserted on focus
-      return false;
-    },
-    open: function() {
-      $( this ).removeClass( "ui-corner-all" ).addClass( "ui-corner-top" );
-    },
-    close: function() {
-      $( this ).removeClass( "ui-corner-top" ).addClass( "ui-corner-all" );
-    }
-  });
-});
-
-$(document).ready(function(){
-  $( ".creator_first_name" ).on('focus', function () {
-    previous_value = this.value;
-    }).change(function() {
-      new_value = this.value;
-      // Save when the new value is different from the previous value
-      if(new_value != previous_value) {
-        var form = $(this).parents('form');
-        $(form).trigger('submit.rails');
-      }
-    });
-});
-
-$(document).ready(function(){
-  $( ".creator_last_name" ).on('focus', function () {
-    previous_value = this.value;
-    }).change(function() {
-      new_value = this.value;
-      // Save when the new value is different from the previous value
-      if(new_value != previous_value) {
-        var form = $(this).parents('form');
-        $(form).trigger('submit.rails');
-      }
-    });
-});
-</script>
