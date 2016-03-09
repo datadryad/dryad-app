@@ -10,8 +10,8 @@
 // Read Sprockets README (https://github.com/rails/sprockets#sprockets-directives) for details
 // about supported directives.
 //
-//= require jquery
-//= require jquery_ujs
+// require jquery  # these cause loading issues since already required by stash_engine
+// require jquery_ujs
 //
 // Required by Blacklight
 //= require blacklight/blacklight
