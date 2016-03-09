@@ -1,6 +1,18 @@
 GIT
+  remote: https://github.com/CDLUC3/stash_datacite.git
+  revision: 1df145ce16b99ce03ba0756475c016b253c68e16
+  branch: development
+  specs:
+    stash_datacite (0.0.5)
+      datacite-mapping
+      kaminari
+      leaflet-rails
+      rails (~> 4.2.4)
+      responders (~> 2.0)
+
+GIT
   remote: https://github.com/CDLUC3/stash_discovery.git
-  revision: e98cd786bf1d93a82c614c3e3990315b1c6dca80
+  revision: a2ba399d4a7c35a3b5b8427b0480a01b2ef1b840
   branch: development
   specs:
     stash_discovery (0.0.1)
@@ -12,20 +24,8 @@ GIT
       turbolinks (~> 2.5)
 
 GIT
-  remote: https://github.com/CDLUC3/stash_datacite.git
-  revision: c7648cb9f83313c9f569e105d489354c74005996
-  branch: development
-  specs:
-    stash_datacite (0.0.5)
-      datacite-mapping
-      kaminari
-      leaflet-rails
-      rails (~> 4.2.4)
-      responders (~> 2.0)
-
-GIT
   remote: https://github.com/CDLUC3/stash_engine.git
-  revision: 6b5b9b12504683aeeda97f2ffded1d39a9159596
+  revision: 25e480bd4c5432e033e3dda2724c733d1717ff05
   branch: development
   specs:
     stash_engine (0.0.17)
@@ -42,7 +42,6 @@ GIT
       omniauth-shibboleth (~> 1.2.1)
       rails (~> 4.2.4)
 
-GEM
 GEM
   remote: https://rubygems.org/
   specs:
@@ -87,7 +86,7 @@ GEM
     ast (2.2.0)
     autoprefixer-rails (6.3.3.1)
       execjs
-    bcrypt (3.1.10)
+    bcrypt (3.1.11)
     binding_of_caller (0.7.2)
       debug_inspector (>= 0.0.1)
     blacklight (5.18.0)
@@ -132,7 +131,7 @@ GEM
       typesafe_enum (~> 0.1, >= 0.1.5)
       xml-mapping_extensions (~> 0.3, >= 0.3.4)
     debug_inspector (0.0.2)
-    deprecation (0.2.2)
+    deprecation (1.0.0)
       activesupport
     devise (3.5.6)
       bcrypt (~> 3.0)
