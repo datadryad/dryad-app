@@ -1,6 +1,18 @@
+IT
+  remote: https://github.com/CDLUC3/stash_datacite.git
+  revision: 1df145ce16b99ce03ba0756475c016b253c68e16
+  branch: development
+  specs:
+    stash_datacite (0.0.5)
+      datacite-mapping
+      kaminari
+      leaflet-rails
+      rails (~> 4.2.4)
+      responders (~> 2.0)
+
 GIT
   remote: https://github.com/CDLUC3/stash_discovery.git
-  revision: e98cd786bf1d93a82c614c3e3990315b1c6dca80
+  revision: a2ba399d4a7c35a3b5b8427b0480a01b2ef1b840
   branch: development
   specs:
     stash_discovery (0.0.1)
@@ -12,20 +24,8 @@ GIT
       turbolinks (~> 2.5)
 
 GIT
-  remote: https://github.com/CDLUC3/stash_datacite.git
-  revision: c7648cb9f83313c9f569e105d489354c74005996
-  branch: development
-  specs:
-    stash_datacite (0.0.5)
-      datacite-mapping
-      kaminari
-      leaflet-rails
-      rails (~> 4.2.4)
-      responders (~> 2.0)
-
-GIT
   remote: https://github.com/CDLUC3/stash_engine.git
-  revision: 6b5b9b12504683aeeda97f2ffded1d39a9159596
+  revision: 25e480bd4c5432e033e3dda2724c733d1717ff05
   branch: development
   specs:
     stash_engine (0.0.17)
@@ -42,7 +42,6 @@ GIT
       omniauth-shibboleth (~> 1.2.1)
       rails (~> 4.2.4)
 
-GEM
 GEM
   remote: https://rubygems.org/
   specs:
@@ -87,7 +86,7 @@ GEM
     ast (2.2.0)
     autoprefixer-rails (6.3.3.1)
       execjs
-    bcrypt (3.1.10)
+    bcrypt (3.1.11)
     binding_of_caller (0.7.2)
       debug_inspector (>= 0.0.1)
     blacklight (5.18.0)
@@ -132,7 +131,7 @@ GEM
       typesafe_enum (~> 0.1, >= 0.1.5)
       xml-mapping_extensions (~> 0.3, >= 0.3.4)
     debug_inspector (0.0.2)
-    deprecation (0.2.2)
+    deprecation (1.0.0)
       activesupport
     devise (3.5.6)
       bcrypt (~> 3.0)
@@ -264,7 +263,7 @@ GEM
       rake (>= 0.8.7)
       thor (>= 0.18.1, < 2.0)
     rainbow (2.1.0)
-    rake (10.5.0)
+    rake (11.0.1)
     rdoc (4.2.2)
       json (~> 1.4)
     ref (2.0.0)
@@ -272,7 +271,7 @@ GEM
       railties (>= 4.2.0, < 5.1)
     rsolr (1.0.13)
       builder (>= 2.1.2)
-    rspec-core (3.4.3)
+    rspec-core (3.4.4)
       rspec-support (~> 3.4.0)
     rspec-expectations (3.4.0)
       diff-lcs (>= 1.2.0, < 2.0)
@@ -289,12 +288,12 @@ GEM
       rspec-mocks (~> 3.4.0)
       rspec-support (~> 3.4.0)
     rspec-support (3.4.1)
-    rubocop (0.37.2)
-      parser (>= 2.3.0.4, < 3.0)
+    rubocop (0.38.0)
+      parser (>= 2.3.0.6, < 3.0)
       powerpack (~> 0.1)
       rainbow (>= 1.99.1, < 3.0)
       ruby-progressbar (~> 1.7)
-      unicode-display_width (~> 0.3)
+      unicode-display_width (~> 1.0, >= 1.0.1)
     ruby-progressbar (1.7.5)
     sass (3.4.21)
     sass-rails (5.0.4)
@@ -340,7 +339,7 @@ GEM
     uglifier (2.7.2)
       execjs (>= 0.3.0)
       json (>= 1.8.0)
-    unicode-display_width (0.3.1)
+    unicode-display_width (1.0.1)
     warden (1.2.6)
       rack (>= 1.0)
     web-console (2.3.0)
