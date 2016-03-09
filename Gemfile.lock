@@ -11,6 +11,18 @@ IT
       responders (~> 2.0)
 
 GIT
+  remote: https://github.com/CDLUC3/stash_datacite.git
+  revision: 1df145ce16b99ce03ba0756475c016b253c68e16
+  branch: development
+  specs:
+    stash_datacite (0.0.5)
+      datacite-mapping
+      kaminari
+      leaflet-rails
+      rails (~> 4.2.4)
+      responders (~> 2.0)
+
+GIT
   remote: https://github.com/CDLUC3/stash_discovery.git
   revision: a2ba399d4a7c35a3b5b8427b0480a01b2ef1b840
   branch: development
