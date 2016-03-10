@@ -16,10 +16,10 @@
     <div class="authors_form">
     <% if @creators.exists? %>
       <% @creators.each do |creator| %>
-        <%= render partial: "stash_datacite/creators/update", locals: { creator: creator } %>
+        <%= render partial: "stash_datacite/creators/form", locals: { creator: creator, path: stash_datacite.creators_update_path } %>
       <% end %>
     <% else %>
-        <%= render partial: "stash_datacite/creators/form", locals: { creator: @creator } %>
+        <%= render partial: "stash_datacite/creators/form", locals: { creator: @creator, path: stash_datacite.creators_create_path } %>
     <% end %>
     </div>
     <%= link_to "Add Author", stash_datacite.creators_new_path( resource_id: @resource.id ), remote: :true %>

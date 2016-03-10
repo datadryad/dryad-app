@@ -1,2 +1,3 @@
-$('.authors_form').append("<%= escape_javascript(render partial: "stash_datacite/creators/form", locals: { creator: @creator }) %>");
+$('.authors_form').append("<%= escape_javascript(render partial: "stash_datacite/creators/form",
+      locals: { creator: @creator, path: stash_datacite.creators_create_path }) %>");
 loadCreators();

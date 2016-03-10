@@ -1,5 +1,7 @@
-<%# the local variable 'creator' should be passed in to this partial when there are multiple per page %>
-<%= form_for(creator, url: stash_datacite.creators_create_path, remote: true, authenticity_token: true, html: { id: "creator_new_form"}) do |f| %>
+<%# the local variable 'creator' should be passed in to this partial when there are multiple per page.
+  # the 'path' to submit to should also be passed in. %>
+<% form_id = unique_form_id(creator) %>
+<%= form_for(creator, url: path, remote: true, authenticity_token: true, html: { id: form_id }) do |f| %>
 <%#= render "datacite/shared/error_messages", target: @creator %>
   <table>
     <tr>
@@ -13,18 +15,15 @@
       <td><%= f.text_field :creator_first_name, class: "creator_first_name", size: 30 %>&nbsp;&nbsp;</td>
       <td><%= f.text_field :creator_last_name, class: "creator_last_name", size: 30 %>&nbsp;&nbsp;</td>
       <td><%= f.text_field :affliation_id, id: 'affliation_id', size: 40 %>&nbsp;&nbsp;&nbsp;&nbsp;</td>
-      <td><%= link_to 'remove', '#', class: 'remove' %></td>
+      <td><%= link_to 'remove', stash_datacite.creators_delete_path(creator.id || 'new'), method: :delete, remote: true, data: { confirm: 'Are you sure?' }, class: 'remove_record' %></td>
     </tr>
   </table>
   <%= f.hidden_field :resource_id %>
+  <%= f.hidden_field :id %>
+  <%= hidden_field_tag(:form_id, form_id) %>
+  <div>
+    <% unless creator.blank?  || creator.orcid_id.blank? %>
+      <%= image_tag("stash_datacite/orcid.png", class: "orcid_img", size: "20x20", alt: "Place") %><%= f.text_field :orcid_id, style: "border:none;" %>
+    <% end %>
+  </div>
 <% end %>
-
-<script>
-$(document).ready(function() {
-  $('.remove').on('click', function (event) {
-    $(this).closest('form').remove();
-    $(this).closest('br').remove();
-    event.preventDefault(); // Prevent link from following its href
-  });
-});
-</script>

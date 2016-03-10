@@ -39,8 +39,10 @@ module StashDatacite
 
     # DELETE /creators/1
     def delete
-      @creator = Creator.find(params[:id])
-      @creator.destroy
+      unless params[:id] == 'new'
+        @creator = Creator.find(params[:id])
+        @creator.destroy
+      end
       respond_to do |format|
         format.js
       end
