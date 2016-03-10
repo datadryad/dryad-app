@@ -37,8 +37,10 @@ module StashDatacite
 
     # DELETE /related_identifiers/1
     def delete
-      @related_identifier = RelatedIdentifier.find(params[:id])
-      @related_identifier.destroy
+      unless params[:id] == 'new'
+        @related_identifier = RelatedIdentifier.find(params[:id])
+        @related_identifier.destroy
+      end
       respond_to do |format|
         format.js
       end

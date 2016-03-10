@@ -1,3 +1,13 @@
-$('#related_identifier_new_form').replaceWith("<%= raw escape_javascript(render partial: 'stash_datacite/related_identifiers/update', locals: {related_identifier: @related_identifier})%>");
-$( "div.success" ).slideDown( 300 ).delay( 1000 ).fadeOut( 400 );
-loadRelatedIdentifiers();
+// this changes the parts of the form that need to be changed so it converts it to a patch action (POST)
+<% form_id = unique_form_id(@related_identifier) %>
+var form = $('#<%= params[:form_id] %>');
+form.attr('id', '<%= form_id %>');
+form.attr('action', '<%= stash_datacite.related_identifiers_update_path %>');
+form.find("#related_identifier_id").attr('value', '<%= @related_identifier.id %>');
+form.find("#form_id").attr('value', '<%= form_id %>');
+
+$('<input>').attr({
+  type: 'hidden',
+  name: '_method',
+  value: 'patch'
+}).appendTo(form);

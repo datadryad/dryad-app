@@ -7,7 +7,7 @@ $( ".related_identifier" ).on('focus', function () {
     new_value = this.value;
     // Save when the new value is different from the previous value
     if(new_value != previous_value) {
-      var form = $(this).parents('form');
+      var form = $(this.form);
       $(form).trigger('submit.rails');
     }
   });
@@ -18,7 +18,7 @@ $( ".related_identifier" ).on('focus', function () {
     new_value = this.value;
     // Save when the new value is different from the previous value
     if(new_value != previous_value) {
-      var form = $(this).parents('form');
+      var form = $(this.form);
       $(form).trigger('submit.rails');
     }
   });
@@ -29,7 +29,7 @@ $( ".related_identifier" ).on('focus', function () {
     new_value = this.value;
     // Save when the new value is different from the previous value
     if(new_value != previous_value) {
-      var form = $(this).parents('form');
+      var form = $(this.form);
       $(form).trigger('submit.rails');
     }
   });
