@@ -17,11 +17,6 @@ module StashEngine
                                              creator_last_name: auth_hash.info.last_name,
                                              orcid_id: auth_hash.uid)
       creator.save
-      if creator.creator_first_name.downcase == current_user.first_name.downcase &&
-         creator.creator_last_name.downcase == current_user.last_name.downcase
-        current_user.orcid = true
-        current_user.save
-      end
       redirect_to path
     end
   end
