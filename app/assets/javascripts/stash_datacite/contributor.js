@@ -51,7 +51,6 @@ function loadContributors() {
         // Save when the new value is different from the previous value
         if(new_value != previous_value) {
           var form = $(this.form);
-          alert(form);
           $(form).trigger('submit.rails');
         }
     });

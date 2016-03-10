@@ -37,8 +37,10 @@ module StashDatacite
 
     # DELETE /contributors/1
     def delete
-      @contributor = Contributor.find(params[:id])
-      @contributor.destroy
+      unless params[:id] == 'new'
+        @contributor = Contributor.find(params[:id])
+        @contributor.destroy
+      end
       respond_to do |format|
         format.js
       end

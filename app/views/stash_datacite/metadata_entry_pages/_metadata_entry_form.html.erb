@@ -39,10 +39,10 @@
     <div class="contributors_form">
     <% if @contributors.exists? %>
       <% @contributors.each do |contributor| %>
-        <%= render partial: "stash_datacite/contributors/update", locals: { contributor: contributor } %>
+        <%= render partial: "stash_datacite/contributors/form", locals: { contributor: contributor, path: stash_datacite.contributors_update_path } %>
       <% end %>
     <% else %>
-        <%= render partial: "stash_datacite/contributors/form", locals: { contributor: @contributor } %>
+        <%= render partial: "stash_datacite/contributors/form", locals: { contributor: @contributor, path: stash_datacite.contributors_create_path } %>
     <% end %>
     </div>
     <%= link_to "add funder", stash_datacite.contributors_new_path( resource_id: @resource.id ), remote: :true %><br/>
