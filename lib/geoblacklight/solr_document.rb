@@ -1,3 +1,4 @@
+#overriding/monkeypatching some methods in geoblacklight that don't work for us
 Geoblacklight::SolrDocument.class_eval do
   def bounding_box_as_wsen
     begin
