@@ -1,12 +1,10 @@
 <%# the local variable 'title' should be passed in to this partial when there are multiple per page %>
-<% if title.new_record? %>
-  <%= form_for(title, url: stash_datacite.titles_create_path, remote: true, authenticity_token: true, html: {id: "title_new_form"}) do |f| %>
-    <strong><%= f.label :title %></strong><br/>
-    <%= f.text_field :title, class: 'title', size: 130 %>
-    <%= f.hidden_field :title_type, value: :main %>
-    <%= f.hidden_field :resource_id %>
-    <%= f.hidden_field :id %>
-  <% end %>
-<% else %>
-  <%= render partial: "stash_datacite/titles/update", locals: { title: @title } %>
+<% form_id = unique_form_id(title) %>
+<%= form_for(title, url: path, remote: true, authenticity_token: true, html: { id: form_id }) do |f| %>
+  <strong><%= f.label :title %></strong><br/>
+  <%= f.text_field :title, class: 'title', size: 130 %>
+  <%= f.hidden_field :title_type, value: :main %>
+  <%= f.hidden_field :resource_id %>
+  <%= f.hidden_field :id %>
+  <%= hidden_field_tag(:form_id, form_id) %>
 <% end %>

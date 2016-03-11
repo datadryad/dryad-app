@@ -9,8 +9,19 @@
 <div id="accordion">
   <h3><strong>Basic Information</strong></h3>
   <div>
-    <%= render partial: "stash_datacite/resource_types/form", locals: { resource_type: @resource_type } %><br/>
-    <%= render partial: "stash_datacite/titles/form", locals: { title: @title } %><br/>
+  <% if @resource_type.new_record? %>
+    <%= render partial: "stash_datacite/resource_types/form", locals: { resource_type: @resource_type, path: stash_datacite.resource_types_create_path } %>
+  <% else %>
+    <%= render partial: "stash_datacite/resource_types/form", locals: { resource_type: @resource_type, path: stash_datacite.resource_types_update_path } %>
+  <% end %>
+  <br/>
+
+  <% if @title.new_record? %>
+    <%= render partial: "stash_datacite/titles/form", locals: { title: @title, path: stash_datacite.titles_create_path, } %>
+  <% else %>
+    <%= render partial: "stash_datacite/titles/form", locals: { title: @title, path: stash_datacite.titles_update_path } %>
+  <% end %>
+  <br/>
 
     <strong><%= label_tag "Author(s)" %></strong>
     <div class="authors_form">
