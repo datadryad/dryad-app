@@ -14,6 +14,13 @@ module StashDiscovery
         end
       end
     end
+
+    # this requires some open class overrides (ie, Monkeypatches to geoblacklight)
+    config.to_prepare do
+      Dir.glob(Engine.root + "lib/geoblacklight/**/*.rb").each do |c|
+        require_dependency(c)
+      end
+    end
     # :nocov:
   end
 end
