@@ -3,9 +3,6 @@
   They will automatically be included in application.css.
 */
 
-a#upload_path {
-  float: right;
-}
 .success_top {
   display: none;
   height:50px;
@@ -18,4 +15,15 @@ a#upload_path {
   position:fixed;
   left: 250px;
   bottom: 0;
+}
+.link_like_button {
+  font: bold 11px Arial;
+  text-decoration: none;
+  background-color: #EEEEEE;
+  color: #333333;
+  padding: 10px 10px 10px 10px;
+  border-top: 1px solid #CCCCCC;
+  border-right: 1px solid #333333;
+  border-bottom: 1px solid #333333;
+  border-left: 1px solid #CCCCCC;
 }
