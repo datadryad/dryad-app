@@ -13,6 +13,7 @@ module Stash
 
       # Indexes the specified records.
       # @param harvested_records [Enumerator::Lazy<HarvestedRecord>] The records to index.
+      # @yield [IndexResult] the result of the index operation for each record
       def index(harvested_records) # rubocop:disable Lint/UnusedMethodArgument
         raise NoMethodError, "#{self.class} should override #index to index records, but it doesn't"
       end
