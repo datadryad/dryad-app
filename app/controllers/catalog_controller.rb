@@ -26,7 +26,7 @@ class CatalogController < ApplicationController
     #
     config.default_document_solr_params = {
      :qt => 'document',
-     :q => '{!raw f=layer_slug_s v=$id}'
+     :q => '{!raw f=uuid v=$id}'
     }
 
     config.search_builder_class = Geoblacklight::SearchBuilder
