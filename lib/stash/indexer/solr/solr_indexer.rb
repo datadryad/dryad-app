@@ -21,9 +21,9 @@ module Stash
           harvested_records.each do |r|
             begin
               r.deleted? ? delete_record(r, solr) : index_record(r, solr)
-              yield IndexResult.new(record: r) if block_given?
+              yield IndexResult.success(r) if block_given?
             rescue => e
-              yield IndexResult.new(record: r, status: IndexStatus::FAILED, errors: [e]) if block_given?
+              yield IndexResult.failure(r, [e]) if block_given?
             end
           end
           solr.commit

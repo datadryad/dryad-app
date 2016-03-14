@@ -35,7 +35,18 @@ module Stash
         !@errors.empty?
       end
 
-      # TODO: add and use factory methods for success and failure
+      # Factory method for successful results
+      # @return [IndexStatus] a successful result for the specified record
+      def self.success(record)
+        IndexResult.new(record: record)
+      end
+
+      # Factory method for results with errors
+      # @return [IndexStatus] a failed result for the specified record, with
+      #   the specified errors
+      def self.failure(record, errors)
+        IndexResult.new(record: record, status: IndexStatus::FAILED, errors: errors)
+      end
     end
   end
 end
