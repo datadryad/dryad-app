@@ -24,7 +24,7 @@
   <header>
     <div class="logo">image for <%= current_tenant.short_name %></div>
     <div class="dash_logo">Dash</div>
-    <div class="search_and_login">Search</div>
+    <div class="search_and_login"><%= link_to 'Search', main_app.search_path %></div>
   </header>
   <nav class="menu_bar">
     <%= link_to 'Home', stash_url_helpers.root_path %>
