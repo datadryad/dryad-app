@@ -37,22 +37,32 @@ module Stash
     end
 
     describe '#harvest_and_index' do
-      it 'harvests and indexes records' do
-        source_config = instance_double(Harvester::SourceConfig)
+
+      before(:each) do
+        @source_config = instance_double(Harvester::SourceConfig)
         harvest_task = instance_double(Harvester::HarvestTask)
-        expect(source_config).to receive(:create_harvest_task) { harvest_task }
+        expect(@source_config).to receive(:create_harvest_task) { harvest_task }
 
-        indexer = instance_double(Indexer::Indexer)
-        index_config = instance_double(Indexer::IndexConfig)
-        expect(index_config).to receive(:create_indexer) { indexer }
+        @metadata_mapper = instance_double(Indexer::MetadataMapper)
 
-        records = [].lazy
-        expect(harvest_task).to receive(:harvest_records) { records }
-        expect(indexer).to receive(:index).with(records)
+        @indexer = instance_double(Indexer::Indexer)
+        @index_config = instance_double(Indexer::IndexConfig)
+        expect(@index_config).to receive(:create_indexer).with(@metadata_mapper) { @indexer }
 
-        metadata_mapper = instance_double(Indexer::MetadataMapper)
+        @records = Array.new(3) { |_i| instance_double(Stash::Harvester::HarvestedRecord) }.lazy
+        expect(harvest_task).to receive(:harvest_records) { @records }
+      end
 
-        job = HarvestAndIndexJob.new(source_config: source_config, index_config: index_config, metadata_mapper: metadata_mapper)
+      it 'harvests and indexes records (even if no block given)' do
+        expect(@indexer).to receive(:index).with(@records)
+        job = HarvestAndIndexJob.new(source_config: @source_config, index_config: @index_config, metadata_mapper: @metadata_mapper)
+        job.harvest_and_index
+      end
+
+      it 'yields the submission time and status (completed/failed) for each record' do
+        results = @records.map { |r| Indexer::IndexResult.success(r) }
+        expect(@indexer).to receive(:index).with(@records).and_yield(results.to_a)
+        job = HarvestAndIndexJob.new(source_config: @source_config, index_config: @index_config, metadata_mapper: @metadata_mapper)
         job.harvest_and_index
       end
 
@@ -62,7 +72,7 @@ module Stash
 
       it 'logs each failed record'
 
-      it 'yields the submission time and status (completed/failed) for each record'
+      it 'passes from and until times (if present) to harvest task'
     end
   end
 end

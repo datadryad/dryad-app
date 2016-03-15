@@ -13,7 +13,9 @@ module Stash
 
     def harvest_and_index
       harvested_records = harvest_task.harvest_records
-      indexer.index(harvested_records)
+      indexer.index(harvested_records) do |result|
+        yield result if block_given?
+      end
     end
   end
 end
