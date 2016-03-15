@@ -6,6 +6,12 @@ module StashEngine
       metadata_engine::Engine.routes.url_helpers
     end
 
+    def stash_url_helpers
+      StashEngine::Engine.routes.url_helpers
+    end
+
+    # discovery engine isn't namespaced because of blacklight/geoblackight, so "main_app" will work for it.
+
     # get the current tenant for customizations, also deals with login
     def current_tenant
       if current_user
@@ -40,10 +46,6 @@ module StashEngine
         flash[:alert] = 'You do not have permission to view this resource'
         redirect_to tenants_path
       end
-    end
-
-    def stash_url_helpers
-      StashEngine::Engine.routes.url_helpers
     end
 
     def ajax_require_current_user
