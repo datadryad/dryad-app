@@ -1,8 +1,7 @@
 <%= render partial: 'stash_engine/shared/dataset_steps_nav' %>
 
-<h1>Finalize Submission</h1>
-
-<h2>Review Documentation</h2>
-<div>
-  <h3>Specifics for Datacite Review here from partial in stash_datacite engine</h3>
+<div id="review"
+    data-load="<%= metadata_url_helpers.resources_review_path(id: params[:id], format: :js) %>">
+  <%= image_tag 'stash_engine/spinner.gif', size: '80x60', alt: 'Loading spinner' %>
 </div>
+

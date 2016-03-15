@@ -1,0 +1,8 @@
+<% unless file_uploads.nil? %>
+  <% file_uploads.each do |file_upload| %>
+    <ul style="list-style-type:none">
+      <li><%= file_upload.upload_file_name %>,&nbsp;
+      <%= file_upload.upload_file_size %></li>&nbsp;&nbsp;
+    </ul>
+  <% end %>
+<% end %>
