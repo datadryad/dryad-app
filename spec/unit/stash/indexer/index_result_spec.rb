@@ -34,6 +34,20 @@ module Stash
           result = IndexResult.new(record: record)
           expect(result.errors).to eq([])
         end
+
+        it 'defaults the timestamp to now' do
+          record = instance_double(Stash::Harvester::HarvestedRecord)
+          result = IndexResult.new(record: record)
+          expected = Time.now.to_i
+          expect(result.timestamp.to_i).to be_within(1).of(expected)
+        end
+
+        it 'allows an explicit timestamp' do
+          timestamp = Time.utc(1999, 12, 31, 11, 59, 59)
+          record = instance_double(Stash::Harvester::HarvestedRecord)
+          result = IndexResult.new(record: record, timestamp: timestamp)
+          expect(result.timestamp).to be_time(timestamp)
+        end
       end
 
       describe 'success?' do

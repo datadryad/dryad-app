@@ -7,16 +7,18 @@ module Stash
       attr_reader :record
       attr_reader :status
       attr_reader :errors
+      attr_reader :timestamp
 
       # Creates a new `IndexResult`
       # @param record [HarvestedRecord] the record being indexed
       # @param status [IndexStatus] `IndexStatus::COMPLETED` if successful,
       #   `IndexStatus::FAILED` otherwise.
       # @param errors [Array<Exception>] errors for this record, if any.
-      def initialize(record:, status: IndexStatus::COMPLETED, errors: [])
+      def initialize(record:, status: IndexStatus::COMPLETED, errors: [], timestamp: nil)
         @record = record
         @status = status
         @errors = errors
+        @timestamp = Util.utc_or_nil(timestamp) || Time.now.utc
       end
 
       # @return [boolean] `true` if `status` is `IndexStatus::COMPLETED` and
