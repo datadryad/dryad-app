@@ -60,10 +60,17 @@ module Stash
       end
 
       it 'yields the submission time and status (completed/failed) for each record' do
-        results = @records.map { |r| Indexer::IndexResult.success(r) }
-        expect(@indexer).to receive(:index).with(@records).and_yield(results.to_a)
+        expected_results = @records.map { |r| Indexer::IndexResult.success(r) }.to_a
+        expectation = expect(@indexer).to receive(:index).with(@records)
+        expected_results.each do |result|
+          expectation.and_yield(result)
+        end
         job = HarvestAndIndexJob.new(source_config: @source_config, index_config: @index_config, metadata_mapper: @metadata_mapper)
-        job.harvest_and_index
+        actual_results = []
+        job.harvest_and_index do |result|
+          actual_results << result
+        end
+        expect(actual_results).to eq(expected_results)
       end
 
       it 'passes from and until times (if present) to harvest task' do

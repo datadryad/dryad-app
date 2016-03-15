@@ -11,11 +11,9 @@ module Stash
       @indexer = index_config.create_indexer(metadata_mapper)
     end
 
-    def harvest_and_index
+    def harvest_and_index(&block)
       harvested_records = harvest_task.harvest_records
-      indexer.index(harvested_records) do |result|
-        yield result if block_given?
-      end
+      indexer.index(harvested_records, &block)
     end
   end
 end
