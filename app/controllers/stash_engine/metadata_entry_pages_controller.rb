@@ -10,7 +10,6 @@ module StashEngine
     def metadata_callback
       auth_hash = request.env['omniauth.auth']
       params = request.env['omniauth.params']
-      current_user = StashEngine::User.find(params['current_user_id'])
       path = request.env['omniauth.origin']
       creator = metadata_engine::Creator.new(resource_id: params['resource_id'],
                                              creator_first_name: auth_hash.info.first_name,
