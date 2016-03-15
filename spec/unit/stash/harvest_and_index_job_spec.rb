@@ -41,7 +41,7 @@ module Stash
       before(:each) do
         @source_config = instance_double(Harvester::SourceConfig)
         harvest_task = instance_double(Harvester::HarvestTask)
-        expect(@source_config).to receive(:create_harvest_task) { harvest_task }
+        allow(@source_config).to receive(:create_harvest_task) { harvest_task }
 
         @metadata_mapper = instance_double(Indexer::MetadataMapper)
 
@@ -50,7 +50,7 @@ module Stash
         expect(@index_config).to receive(:create_indexer).with(@metadata_mapper) { @indexer }
 
         @records = Array.new(3) { |_i| instance_double(Stash::Harvester::HarvestedRecord) }.lazy
-        expect(harvest_task).to receive(:harvest_records) { @records }
+        allow(harvest_task).to receive(:harvest_records) { @records }
       end
 
       it 'harvests and indexes records (even if no block given)' do
@@ -66,13 +66,29 @@ module Stash
         job.harvest_and_index
       end
 
+      it 'passes from and until times (if present) to harvest task' do
+        from_time = Time.utc(1999, 12, 31, 11, 59, 59)
+        until_time = Time.utc(2001, 12, 31, 11, 59, 59)
+        harvest_task = instance_double(Harvester::HarvestTask)
+        expect(harvest_task).to receive(:harvest_records) { @records }
+        expect(@source_config).to receive(:create_harvest_task).with(from_time: from_time, until_time: until_time) { harvest_task }
+        allow(@indexer).to receive(:index).with(@records)
+        job = HarvestAndIndexJob.new(
+          source_config: @source_config,
+          index_config: @index_config,
+          metadata_mapper: @metadata_mapper,
+          from_time: from_time,
+          until_time: until_time
+        )
+        job.harvest_and_index
+      end
+
       it 'logs each successfully indexed record'
 
       it 'logs each successfully deleted record'
 
       it 'logs each failed record'
 
-      it 'passes from and until times (if present) to harvest task'
     end
   end
 end
