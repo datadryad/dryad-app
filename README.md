@@ -118,7 +118,7 @@ current working directory.
 
 When generating multiple files, the script pulls from a relatively small pool of randomly
 generated authors (1000), publishers (100), and resource types (20), so that files generated
-in the same session wills haer some metadata field values. The MIME types of the `<file/>`
+in the same session will share some metadata field values. The MIME types of the `<file/>`
 entries in a single session will also be pulled from a small subset (20) of real MIME types,
 and the file extensions should match, but the MIME types, being randomly selected, are likely
 to be nonsensical.
