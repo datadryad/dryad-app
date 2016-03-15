@@ -1,0 +1,10 @@
+<% unless geolocation_boxes.nil? %>
+  <% geolocation_boxes.each do |geolocation_box| %>
+    <ul style="list-style-type:none">
+      <li><%= image_tag("stash_datacite/geo_box.png", size: "30x30", alt: "Box", id: "geo_box") %><%= geolocation_box.sw_longitude %>,&nbsp;
+      <%= geolocation_box.sw_latitude %>,&nbsp;
+      <%= geolocation_box.ne_longitude %>,&nbsp;
+      <%= geolocation_box.ne_latitude %></li>&nbsp;
+    </ul>
+  <% end %>
+<% end %>

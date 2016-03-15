@@ -1,0 +1,8 @@
+<% unless geolocation_points.nil? %>
+  <% geolocation_points.each do |geolocation_point| %>
+    <ul style="list-style-type:none;">
+      <li><%= image_tag("stash_datacite/geo_point.png", size: "30x30", alt: "Point", id: "geo_point")%><%= geolocation_point.latitude %>,&nbsp;
+      <%= geolocation_point.longitude %></li>&nbsp;
+    </ul>
+  <% end %>
+<% end %>

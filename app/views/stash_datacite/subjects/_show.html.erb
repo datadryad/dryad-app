@@ -1,0 +1,4 @@
+<h3> Subjects </h3>
+<% unless subjects.nil? %>
+  <%= subjects.map(&:subject).join(", ") %>
+<% end %>

@@ -1,0 +1,9 @@
+<h3>Funding</h3>
+<% unless contributors.nil? %>
+  <% contributors.each do |contributor| %>
+    <ul style="list-style-type:none">
+      <li><%= contributor.contributor_name %>,&nbsp;
+      Award:<%= contributor.award_number %></li>&nbsp;
+    </ul>
+  <% end %>
+<% end %>

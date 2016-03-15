@@ -1,0 +1,27 @@
+/*
+  Place all the styles related to the matching controller here.
+  They will automatically be included in application.css.
+*/
+.review {
+  width: 1100px;
+  margin: auto;
+}
+.review_headers {
+  border: 1px solid;
+  margin: 10px 0px;
+  padding: 6px 6px 6px 6px;
+  width: 1100px;
+  background-repeat: no-repeat;
+  background-color: #336699;
+  color: #ffffff;
+}
+
+#map_review
+{
+  height:250px;
+  width:1000px;
+}
+li {
+  margin: -15px;
+  padding: -15px;
+}

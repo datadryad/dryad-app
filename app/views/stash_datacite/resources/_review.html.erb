@@ -1,0 +1,63 @@
+<div class="review">
+  <h1>Finalize Submission</h1>
+  <h2 class="review_headers">Review Description</h2>
+    <%= link_to "Edit Description", stash_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: @resource.id), class: 'link_like_button', style: "float: right;" %>
+    <%= render partial: "stash_datacite/resource_types/show", locals: { resource_type: @resource_type } %>
+    <%= render partial: "stash_datacite/titles/show", locals: { title: @title } %>
+    <%= render partial: "stash_datacite/creators/show", locals: { creators: @creators } %>
+    <hr/>
+    <%= render partial: "stash_datacite/shared/citations", locals: { creators: @creators, title: @title, resource_type: @resource_type } %>
+    <hr/>
+    <%= render partial: "stash_datacite/descriptions/show", locals: { abstract: @abstract, methods: @methods, usage_notes: @usage_notes } %>
+    <%= render partial: "stash_datacite/subjects/show", locals: { subjects: @subjects } %>
+    <%= render partial: "stash_datacite/contributors/show", locals: { contributors: @contributors } %>
+    <%= render partial: "stash_datacite/related_identifiers/show", locals: { related_identifiers: @related_identifiers } %>
+
+    <h3>Location</h3>
+    <div id="map_review"></div>
+    <%= render partial: "stash_datacite/geolocation_points/show", locals: { geolocation_points: @geolocation_points } %>
+    <%= render partial: "stash_datacite/geolocation_boxes/show", locals: { geolocation_boxes: @geolocation_boxes } %>
+    <%= render partial: "stash_datacite/geolocation_places/show", locals: { geolocation_places: @geolocation_places } %>
+    <%= link_to "Edit Description", stash_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: @resource.id), class: 'link_like_button', style: "float: right;" %>
+
+    <h2 class="review_headers">Review Data Files</h2>
+      <span><%= link_to 'Edit Files', stash_engine.upload_resource_path(@resource), id: 'upload_path', class: 'link_like_button', style: "float: right;" %>
+      <%= render partial: "stash_engine/file_uploads/show", locals: { file_uploads:  @file_uploads } %>
+      </span>
+    <hr/>
+</div>
+<div style = "float: left;margin: auto;">
+  <%= link_to 'Back to My Datasets', stash_url_helpers.dashboard_path , id: 'dashboard_path', class: 'link_like_button' %>
+</div>
+<div style = "float: right;margin: auto;">
+  <%= link_to 'Submit', '#', id: 'submit_popup', class: 'link_like_button' %>
+</div>
+
+
+<div id="dialog" title="Submit?">
+  <p><span style="float:left; margin:0 7px 20px 0;"></span>Are you sure you are ready to submit your dataset?</p>
+</div>
+
+<script type="text/javascript">
+  $(function() {
+    $( "#dialog" ).dialog({
+      autoOpen: false,
+      resizable: false,
+      height: 200,
+      width: 400,
+      modal: true,
+      buttons: {
+        "Submit": function() {
+          $( this ).dialog( "close" );
+        },
+        Cancel: function() {
+          $( this ).dialog( "close" );
+        }
+      }
+    });
+
+    $( "#submit_popup" ).click(function() {
+      $( "#dialog" ).dialog( "open" );
+    });
+  });
+</script>

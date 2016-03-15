@@ -1,0 +1,11 @@
+<h3>References</h3>
+<% unless related_identifiers.nil? %>
+This dataset is cited by:
+  <% related_identifiers.each do |related_identifier| %>
+    <ul style="list-style-type:none">
+      <li><%= related_identifier.related_identifier %>,&nbsp;
+      <%= related_identifier.related_identifier_type.related_identifier_type %>,&nbsp;
+      <%= related_identifier.relation_type.relation_type %>,&nbsp;</li>&nbsp;
+    </ul>
+  <% end %>
+<% end %>

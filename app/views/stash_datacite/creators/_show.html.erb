@@ -1,0 +1,9 @@
+<% unless creators.nil? %>
+  <% creators.each do |creator| %>
+    <ul style="list-style-type:none">
+      <li><%= creator.creator_full_name %>,&nbsp;
+      <%= creator.affliation.try(:long_name) %>,&nbsp;
+      <%= creator.orcid_id %></li>&nbsp;
+    </ul>
+  <% end %>
+<% end %>

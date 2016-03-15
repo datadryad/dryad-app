@@ -65,4 +65,5 @@ StashDatacite::Engine.routes.draw do
   # get composite views or items that begin at the resource level
   get 'resources/user_in_progress', to: 'resources#user_in_progress'
   get 'metadata_entry_pages/find_or_create', to: 'metadata_entry_pages#find_or_create'
+  get 'resources/review', to: 'resources#review'
 end

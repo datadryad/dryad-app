@@ -1,0 +1,7 @@
+<% unless geolocation_places.nil? %>
+  <% geolocation_places.each do |geolocation_place| %>
+    <ul style="list-style-type:none">
+      <li><%= geolocation_place.geo_location_place %></li>&nbsp;
+    </ul>
+  <% end %>
+<% end %>
