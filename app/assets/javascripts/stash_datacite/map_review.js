@@ -46,13 +46,9 @@ function loadReviewMap(resource_id) {
         var lng = coordinatesMarker[i][1];
         var mrk_id = coordinatesMarker[i][2];
         var markerLocation = new L.LatLng(lat, lng);
-        // marker = new L.Marker(markerLocation, { id: mrk_id }).addTo(map);
-        // drawPopup(marker, lat, lng);
-        markerArray.push(new L.Marker(markerLocation).bindPopup(lat +","+ lng));
+        markerArray.push(new L.Marker(markerLocation, { id: mrk_id }).bindPopup(lat +","+ lng));
       }
 
-      group = L.featureGroup(markerArray).addTo(map);
-      map.fitBounds(group.getBounds());
   // -------------------------------- //
     // get bbox coordinates from db and load on map
     var coordinatesBBox = getCoordinatesBBox();  // Function is called, return value will end up in an array
@@ -108,7 +104,7 @@ function loadReviewMap(resource_id) {
             }
           });
           arr = $.map(result, function(n){
-             return [[ n["geo_location_place"] ]];
+             return [[ n["geo_location_place"], n["latitude"], n["longitude"], n["id"] ]];
           });
           return(arr);
       }
@@ -121,14 +117,17 @@ function loadReviewMap(resource_id) {
             popupAnchor: [0, -25] // point from which the popup should open relative to the iconAnchor
       });
        // Loop through the location names array
-        for (var i=0; i<locationNames.length; i++) {
-          var place = locationNames[i][0];
-          MQ.geocode().search(place).on('success', function(e) {
-              var best = e.result.best,
-                  latlng = best.latlng;
-
-          var newMarker = new L.marker([latlng.lat, latlng.lng], { icon: customIcon }).addTo(map).bindPopup('<strong>' + best.adminArea5 + ', ' + best.adminArea3 + ', ' + best.adminArea1);
-          });
-        }
+      for (var i=0; i<locationNames.length; i++) {
+        var place = locationNames[i][0];
+        var lat   = locationNames[i][1];
+        var lng   = locationNames[i][2];
+        var mrk_id = locationNames[i][3];
+        var newMarkerLocation = new L.LatLng(lat, lng);
+        markerArray.push(new L.marker(newMarkerLocation, { icon: customIcon, id: mrk_id }).addTo(map).bindPopup('<strong>' + place));
+      }
     // -------------------------------- //
+
+      group = L.featureGroup(markerArray).addTo(map);
+      map.fitBounds(group.getBounds());
+
 };
