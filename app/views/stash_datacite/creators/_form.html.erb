@@ -14,7 +14,7 @@
     <tr>
       <td><%= f.text_field :creator_first_name, class: "creator_first_name", size: 30 %>&nbsp;&nbsp;</td>
       <td><%= f.text_field :creator_last_name, class: "creator_last_name", size: 30 %>&nbsp;&nbsp;</td>
-      <td><%= text_field_tag(:affliation, creator.affliation.long_name, class: 'affliation', size: 50) %>&nbsp;&nbsp;</td>
+      <td><%= text_field_tag(:affliation, creator.affliation.try(:long_name), class: 'affliation', size: 50) %>&nbsp;&nbsp;</td>
       <td><%= link_to 'remove', stash_datacite.creators_delete_path(creator.id || 'new'), method: :delete, remote: true, data: { confirm: 'Are you sure?' }, class: 'remove_record' %></td>
     </tr>
   </table>
