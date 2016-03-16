@@ -27,7 +27,7 @@ By alleviating many of the barriers that have historically precluded wider adopt
 
 ### Useful Links
 
-#### [Travis continuous integration](https://travis-ci.org/CDLUC3/dash2)
+#### [Travis continuous integration](https://travis-ci.org/CDLUC3/dashv2)
 
 ---------------------------------------------------------
 
