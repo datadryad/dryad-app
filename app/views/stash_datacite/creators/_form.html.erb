@@ -14,12 +14,13 @@
     <tr>
       <td><%= f.text_field :creator_first_name, class: "creator_first_name", size: 30 %>&nbsp;&nbsp;</td>
       <td><%= f.text_field :creator_last_name, class: "creator_last_name", size: 30 %>&nbsp;&nbsp;</td>
-      <td><%= f.text_field :affliation_id, id: 'affliation_id', size: 40 %>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+      <td><%= text_field_tag(:affliation, creator.affliation.long_name, class: 'affliation', size: 50) %>&nbsp;&nbsp;</td>
       <td><%= link_to 'remove', stash_datacite.creators_delete_path(creator.id || 'new'), method: :delete, remote: true, data: { confirm: 'Are you sure?' }, class: 'remove_record' %></td>
     </tr>
   </table>
   <%= f.hidden_field :resource_id %>
   <%= f.hidden_field :id %>
+  <%= f.hidden_field :affliation_id, id: 'affliation_id' %>
   <%= hidden_field_tag(:form_id, form_id) %>
   <div>
     <% unless creator.blank?  || creator.orcid_id.blank? %>
@@ -27,3 +28,48 @@
     <% end %>
   </div>
 <% end %>
+
+<script type="text/javascript">
+$(function() {
+  $( ".affliation" ).autocomplete({
+    source: function( request, response ) {
+      $.ajax({
+        url: "<%= stash_datacite.affliations_autocomplete_path %>",
+        dataType: "json",
+        data: {
+          term: request.term
+        },
+        success: function( data ) {
+          response( $.map( data, function( item ) {
+            return {
+              value: item.long_name,
+              id: item.id
+            }
+          }
+          ));
+        }
+      });
+    },
+    minLength: 1,
+    focus: function() {
+      // prevent value inserted on focus
+      return false;
+    },
+    select: function( event, ui ) {
+      $("#affliation_id").val(ui.item.id); // set hidden field id
+    },
+    open: function(event, ui) {
+       disable=true
+     },
+    close: function(event, ui) {
+       disable=false;
+      $(this).focus();
+     }
+  }).blur(function(event) {
+   if(!disable) {
+    var form = $(this).parents('form');
+    $(form).trigger('submit.rails');
+   }
+ });
+});
+</script>

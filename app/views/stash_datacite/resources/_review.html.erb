@@ -39,25 +39,25 @@
 </div>
 
 <script type="text/javascript">
-  $(function() {
-    $( "#dialog" ).dialog({
-      autoOpen: false,
-      resizable: false,
-      height: 200,
-      width: 400,
-      modal: true,
-      buttons: {
-        "Submit": function() {
-          $( this ).dialog( "close" );
-        },
-        Cancel: function() {
-          $( this ).dialog( "close" );
-        }
+$(function() {
+  $( "#dialog" ).dialog({
+    autoOpen: false,
+    resizable: false,
+    height: 200,
+    width: 400,
+    modal: true,
+    buttons: {
+      "Submit": function() {
+        $( this ).dialog( "close" );
+      },
+      Cancel: function() {
+        $( this ).dialog( "close" );
       }
-    });
-
-    $( "#submit_popup" ).click(function() {
-      $( "#dialog" ).dialog( "open" );
-    });
+    }
   });
+
+  $( "#submit_popup" ).click(function() {
+    $( "#dialog" ).dialog( "open" );
+  });
+});
 </script>

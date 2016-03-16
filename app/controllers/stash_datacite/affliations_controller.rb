@@ -6,7 +6,8 @@ module StashDatacite
     # GET /affliations/autocomplete
     def autocomplete
       @affliations = Affliation.where('long_name LIKE ? OR short_name LIKE ? OR abbreviation LIKE?', "%#{params[:term]}%", "%#{params[:term]}%", "%#{params[:term]}%") unless params[:term].blank?
-      render json: @affliations.map(&:long_name)
+      list = map_affliation_for_autocomplete(@affliations)
+      render json: list
     end
 
     # GET /affliations/new
@@ -38,6 +39,10 @@ module StashDatacite
     # Only allow a trusted parameter "white list" through.
     def affliation_params
       params.require(:affliation).permit(:id, :short_name, :long_name, :abbreviation, :campus, :logo, :url, :url_text)
+    end
+
+    def map_affliation_for_autocomplete(affliations)
+      @affliations.map {|u| Hash[ id: u.id, long_name: u.long_name]}
     end
   end
 end

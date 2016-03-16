@@ -3,7 +3,7 @@
 <%= form_for(resource_type, url: path, remote: true, authenticity_token: true, html: { id: form_id }) do |f| %>
   <%#= render "datacite/shared/error_messages", :target => @resource_type %>
   <strong><%= f.label :resource_type, "Type of Data" %></strong><br/>
-  <%= f.select(:resource_type, options_for_select(StashDatacite::ResourceType.resource_types), {}, { class: 'resource_type' } ) %>
+  <%= f.select(:resource_type, StashDatacite::ResourceType.resource_types.keys, {}, {class: 'resource_type'}) %>
   <%= f.hidden_field :resource_id %>
   <%= f.hidden_field :id %>
   <%= hidden_field_tag(:form_id, form_id) %>
