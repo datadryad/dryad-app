@@ -21,8 +21,10 @@
     <%= link_to "Edit Description", stash_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: @resource.id), class: 'link_like_button', style: "float: right;" %>
 
     <h2 class="review_headers">Review Data Files</h2>
+    <% unless @file_uploads.blank? %>
       <span><%= link_to 'Edit Files', stash_engine.upload_resource_path(@resource), id: 'upload_path', class: 'link_like_button', style: "float: right;" %>
-      <%= render partial: "stash_engine/file_uploads/show", locals: { file_uploads:  @file_uploads } %>
+    <% end %>
+    <%= render partial: "stash_engine/file_uploads/show", locals: { file_uploads:  @file_uploads } %>
       </span>
     <hr/>
 </div>
