@@ -1,11 +1,12 @@
-require_dependency "stash_datacite/application_controller"
+require_dependency 'stash_datacite/application_controller'
 
 module StashDatacite
   class AffliationsController < ApplicationController
-
     # GET /affliations/autocomplete
     def autocomplete
-      @affliations = Affliation.where('long_name LIKE ? OR short_name LIKE ? OR abbreviation LIKE?', "%#{params[:term]}%", "%#{params[:term]}%", "%#{params[:term]}%") unless params[:term].blank?
+      @affliations = Affliation.where('long_name LIKE ? OR short_name LIKE ? OR abbreviation LIKE?',
+                                      "%#{params[:term]}%", "%#{params[:term]}%", "%#{params[:term]}%") unless
+                                      params[:term].blank?
       list = map_affliation_for_autocomplete(@affliations)
       render json: list
     end
@@ -31,6 +32,7 @@ module StashDatacite
     end
 
     private
+
     # Use callbacks to share common setup or constraints between actions.
     def set_affliation
       @affliation = Affliation.find(affliation_params[:id])
@@ -42,7 +44,7 @@ module StashDatacite
     end
 
     def map_affliation_for_autocomplete(affliations)
-      @affliations.map {|u| Hash[ id: u.id, long_name: u.long_name]}
+      affliations.map { |u| Hash[id: u.id, long_name: u.long_name] }
     end
   end
 end

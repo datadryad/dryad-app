@@ -35,7 +35,6 @@ module StashDatacite
                                            through: 'StashDatacite::ResourceSubject' #optional
         has_many :titles, class_name: 'StashDatacite::Title' # required
         has_one :version, class_name: 'StashDatacite::Version' # optional
-
       end
     end
   end

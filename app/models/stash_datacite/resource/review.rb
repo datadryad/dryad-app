@@ -2,7 +2,6 @@
 module StashDatacite
   module Resource
     class Review
-
       def initialize(resource)
         @resource = resource
       end
@@ -20,15 +19,15 @@ module StashDatacite
       end
 
       def abstract
-        @abstract = @resource.descriptions.where( description_type: :abstract ).first
+        @abstract = @resource.descriptions.where(description_type: :abstract).first
       end
 
       def methods
-        @methods = @resource.descriptions.where( description_type: :methods ).first
+        @methods = @resource.descriptions.where(description_type: :methods).first
       end
 
       def usage_notes
-        @usage_notes = @resource.descriptions.where( description_type: :usage_notes ).first
+        @usage_notes = @resource.descriptions.where(description_type: :usage_notes).first
       end
 
       def subjects
@@ -62,7 +61,6 @@ module StashDatacite
       def geolocation_places
         @geolocation_places = @resource.geolocation_places
       end
-
     end
   end
 end

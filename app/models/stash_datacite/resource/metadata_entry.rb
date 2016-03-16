@@ -1,6 +1,6 @@
 module StashDatacite
   module Resource
-    class Metadata_Entry
+    class MetadataEntry
       def initialize(resource)
         @resource = resource
       end
@@ -80,7 +80,6 @@ module StashDatacite
       def geolocation_places
         @geolocation_places = GeolocationPlace.where(resource_id: @resource.id)
       end
-
     end
   end
 end

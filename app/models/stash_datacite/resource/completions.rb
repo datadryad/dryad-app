@@ -2,17 +2,23 @@
 
 # also
 # monkeypatch true and false to_i to be 0 and 1
-class FalseClass; def to_i; 0 end end
-class TrueClass; def to_i; 1 end end
+class FalseClass
+  def to_i
+    0
+  end
+end
+class TrueClass
+  def to_i
+    1
+  end
+end
 
 module StashDatacite
   module Resource
     class Completions
-
       def initialize(resource)
         @resource = resource
       end
-
 
       # these are the required ones and return true/false if completed
 
@@ -25,7 +31,7 @@ module StashDatacite
       end
 
       def data_type
-        (not @resource.resource_type.nil?)
+        !@resource.resource_type.nil?
       end
 
       def creator
@@ -43,7 +49,6 @@ module StashDatacite
       def required_total
         5
       end
-
 
       # these are optional (recommended) ones
       def date
@@ -69,7 +74,6 @@ module StashDatacite
       def optional_total
         4
       end
-
     end
   end
 end
