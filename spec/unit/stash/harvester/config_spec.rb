@@ -61,6 +61,11 @@ module Stash
           expect(source_config.seconds_granularity).to be true
         end
 
+        it 'creates a MetadataMapper' do
+          metadata_mapper = @config.metadata_mapper
+          expect(metadata_mapper).to be_a(Stash::Indexer::DataciteGeoblacklight::Mapper)
+        end
+
         it 'provides appropriate error messages for bad config sections' do
           good_values = [/oai.example.org/, /solr.example.org/, /proxy.example.com/]
           bad_value = "'I am not a valid hostname'"
@@ -89,6 +94,15 @@ module Stash
           expect { Config.from_env(env) }.to raise_error do |e|
             expect(e).to be_an ArgumentError
             expect(e.message).to include('BadAdapter')
+          end
+        end
+
+        it 'provides appropriate error message for invalid metadata mapper' do
+          bad_yml = File.read('spec/data/stash-harvester.yml').sub(/datacite_geoblacklight/, 'bad_mapper')
+          env = ::Config::Factory::Environment.load_hash(YAML.load(bad_yml))
+          expect { Config.from_env(env) }.to raise_error do |e|
+            expect(e).to be_an ArgumentError
+            expect(e.message).to include('bad_mapper')
           end
         end
       end
@@ -122,6 +136,9 @@ module Stash
           expect(source_config.metadata_prefix).to eq('some_prefix')
           expect(source_config.set).to eq('some_set')
           expect(source_config.seconds_granularity).to be true
+
+          metadata_mapper = @config.metadata_mapper
+          expect(metadata_mapper).to be_a(Stash::Indexer::DataciteGeoblacklight::Mapper)
         end
 
         it 'raises an IOError for nonexistent files' do

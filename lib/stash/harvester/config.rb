@@ -19,12 +19,16 @@ module Stash
       #   subclass of `IndexConfig` for the specified adapter)
       attr_reader :index_config
 
-      # TODO: configure MetadataMapper
+      # The metadata mapper
+      # @return [MetadataMapper] the mapper (as an appropriate
+      #   subclass of `MetadataMapper` for the specified mapping)
+      attr_reader :metadata_mapper
 
-      def initialize(connection_info:, source_config:, index_config:)
+      def initialize(connection_info:, source_config:, index_config:, metadata_mapper:)
         @connection_info = connection_info
         @source_config = source_config
         @index_config = index_config
+        @metadata_mapper = metadata_mapper
       end
 
       # Reads the specified file and creates a new `Config` from it.
@@ -50,7 +54,8 @@ module Stash
         connection_info = env.args_for(:db)
         source_config = SourceConfig.for_environment(env, :source)
         index_config = Stash::Indexer::IndexConfig.for_environment(env, :index)
-        Config.new(connection_info: connection_info, source_config: source_config, index_config: index_config)
+        metadata_mapper = Stash::Indexer::MetadataMapper.for_environment(env, :mapper)
+        Config.new(connection_info: connection_info, source_config: source_config, index_config: index_config, metadata_mapper: metadata_mapper)
       end
 
       # Private methods
