@@ -9,28 +9,28 @@
 <div id="accordion">
   <h3><strong>Basic Information</strong></h3>
   <div>
-  <% if @resource_type.new_record? %>
-    <%= render partial: "stash_datacite/resource_types/form", locals: { resource_type: @resource_type, path: stash_datacite.resource_types_create_path } %>
+  <% if @metadata_entry.resource_type.new_record? %>
+    <%= render partial: "stash_datacite/resource_types/form", locals: { resource_type: @metadata_entry.resource_type, path: stash_datacite.resource_types_create_path } %>
   <% else %>
-    <%= render partial: "stash_datacite/resource_types/form", locals: { resource_type: @resource_type, path: stash_datacite.resource_types_update_path } %>
+    <%= render partial: "stash_datacite/resource_types/form", locals: { resource_type: @metadata_entry.resource_type, path: stash_datacite.resource_types_update_path } %>
   <% end %>
   <br/>
 
-  <% if @title.new_record? %>
-    <%= render partial: "stash_datacite/titles/form", locals: { title: @title, path: stash_datacite.titles_create_path, } %>
+  <% if @metadata_entry.title.new_record? %>
+    <%= render partial: "stash_datacite/titles/form", locals: { title: @metadata_entry.title, path: stash_datacite.titles_create_path, } %>
   <% else %>
-    <%= render partial: "stash_datacite/titles/form", locals: { title: @title, path: stash_datacite.titles_update_path } %>
+    <%= render partial: "stash_datacite/titles/form", locals: { title: @metadata_entry.title, path: stash_datacite.titles_update_path } %>
   <% end %>
   <br/>
 
     <strong><%= label_tag "Author(s)" %></strong>
     <div class="authors_form">
-    <% if @creators.exists? %>
-      <% @creators.each do |creator| %>
+    <% if @metadata_entry.creators.exists? %>
+      <% @metadata_entry.creators.each do |creator| %>
         <%= render partial: "stash_datacite/creators/form", locals: { creator: creator, path: stash_datacite.creators_update_path } %>
       <% end %>
     <% else %>
-        <%= render partial: "stash_datacite/creators/form", locals: { creator: @creator, path: stash_datacite.creators_create_path } %>
+        <%= render partial: "stash_datacite/creators/form", locals: { creator: @metadata_entry.new_creator, path: stash_datacite.creators_create_path } %>
     <% end %>
     </div>
     <%= link_to "Add Author", stash_datacite.creators_new_path( resource_id: @resource.id ), remote: :true %>
@@ -41,44 +41,44 @@
     <br/>
 
     <strong><%= label_tag :description, "Abstract" %></strong><br/>
-    <%= render partial: "stash_datacite/descriptions/form", locals: { description: @abstract,  description_type: :abstract }  %>
+    <%= render partial: "stash_datacite/descriptions/form", locals: { description: @metadata_entry.abstract,  description_type: :abstract }  %>
   </div>
 
   <h3><strong>Data Description (Optional)</strong></h3>
   <div>
     <strong><%= label_tag "Funding" %><br/></strong>
     <div class="contributors_form">
-    <% if @contributors.exists? %>
-      <% @contributors.each do |contributor| %>
+    <% if @metadata_entry.contributors.exists? %>
+      <% @metadata_entry.contributors.each do |contributor| %>
         <%= render partial: "stash_datacite/contributors/form", locals: { contributor: contributor, path: stash_datacite.contributors_update_path } %>
       <% end %>
     <% else %>
-        <%= render partial: "stash_datacite/contributors/form", locals: { contributor: @contributor, path: stash_datacite.contributors_create_path } %>
+        <%= render partial: "stash_datacite/contributors/form", locals: { contributor: @metadata_entry.new_contributor, path: stash_datacite.contributors_create_path } %>
     <% end %>
     </div>
     <%= link_to "add funder", stash_datacite.contributors_new_path( resource_id: @resource.id ), remote: :true %><br/>
     <br/>
 
-    <% if @subjects.empty? %>
-    <%= render partial: "stash_datacite/subjects/form", locals: { subject: @subject, resource_id: @resource.id } %><br/>
+    <% if @metadata_entry.subjects.empty? %>
+    <%= render partial: "stash_datacite/subjects/form", locals: { subject: @metadata_entry.new_subject, resource_id: @resource.id } %><br/>
     <% else %>
     <%= render partial: "stash_datacite/subjects/form", locals: { resource_id: @resource.id } %><br/>
     <% end %>
 
     <strong><%= label_tag :description, "Methods" %></strong>&nbsp;&nbsp;How was this dataset collected? How has it been processed?<br/>
-    <%= render partial: "stash_datacite/descriptions/form", locals: { description: @methods, description_type: :methods } %><br/>
+    <%= render partial: "stash_datacite/descriptions/form", locals: { description: @metadata_entry.methods, description_type: :methods } %><br/>
 
     <strong><%= label_tag :description, "Usage Notes" %></strong>&nbsp;&nbsp;What else would someone need to know to use this dataset?<br/>
-    <%= render partial: "stash_datacite/descriptions/form", locals: { description: @usage_notes, description_type: :usage_notes } %><br/>
+    <%= render partial: "stash_datacite/descriptions/form", locals: { description: @metadata_entry.usage_notes, description_type: :usage_notes } %><br/>
 
     <strong><%= label_tag :related_identifier, "Related work(s)" %></strong> articles, other datasets: e.g., This dataset is cited by DOI 10.1000/182.
     <div class="related_identifiers_form">
-    <% if @related_identifiers.exists? %>
-      <% @related_identifiers.each do |related_identifier| %>
+    <% if @metadata_entry.related_identifiers.exists? %>
+      <% @metadata_entry.related_identifiers.each do |related_identifier| %>
         <%= render partial: "stash_datacite/related_identifiers/form", locals: { related_identifier: related_identifier, path: stash_datacite.related_identifiers_update_path } %>
       <% end %>
     <% else %>
-      <%= render partial: "stash_datacite/related_identifiers/form", locals: { related_identifier: @related_identifier, path: stash_datacite.related_identifiers_create_path } %>
+      <%= render partial: "stash_datacite/related_identifiers/form", locals: { related_identifier: @metadata_entry.new_related_identifier, path: stash_datacite.related_identifiers_create_path } %>
     <% end %>
     </div>
     <%= link_to "add related work", stash_datacite.related_identifiers_new_path( resource_id: @resource.id ), remote: :true %><br/>
@@ -89,8 +89,8 @@
     <%= render partial: "stash_datacite/shared/map" %>
     <strong><%= label_tag "Add a point or rectangular area with lat/long coordinates" %></strong><br/>
     <div style="float:left"><%= link_to(image_tag("stash_datacite/geo_point.png", size: "30x30", alt: "Point", id: "geo_point"), '#')  %><%= link_to(image_tag("stash_datacite/geo_box.png", size: "30x30", alt: "Box", id: "geo_box"), '#') %>&nbsp;&nbsp;</div>
-    <%= render partial: "stash_datacite/geolocation_points/form", locals: { geolocation_point: @geolocation_point } %>
-    <%= render partial: "stash_datacite/geolocation_boxes/form", locals: { geolocation_box: @geolocation_box } %>
+    <%= render partial: "stash_datacite/geolocation_points/form", locals: { geolocation_point: @metadata_entry.new_geolocation_point } %>
+    <%= render partial: "stash_datacite/geolocation_boxes/form", locals: { geolocation_box: @metadata_entry.new_geolocation_box } %>
     <br/>
     <div class="locations_added">
       <strong>Locations Added</strong>

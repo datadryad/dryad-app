@@ -25,19 +25,7 @@ module StashDatacite
       respond_to do |format|
         format.js {
           @resource = StashDatacite.resource_class.find(params[:id])
-          @resource_type = @resource.resource_type
-          @title = @resource.titles.where(title_type: :main).first
-          @creators =  @resource.creators
-          @abstract = @resource.descriptions.where( description_type: :abstract ).first
-          @methods = @resource.descriptions.where( description_type: :methods ).first
-          @usage_notes = @resource.descriptions.where( description_type: :usage_notes ).first
-          @subjects = @resource.subjects
-          @contributors = @resource.contributors
-          @related_identifiers = @resource.related_identifiers
-          @file_uploads = @resource.file_uploads
-          @geolocation_points = @resource.geolocation_points
-          @geolocation_boxes = @resource.geolocation_boxes
-          @geolocation_places = @resource.geolocation_places
+          @review = Resource::Review.new(@resource)
         }
       end
     end

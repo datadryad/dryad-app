@@ -2,31 +2,32 @@
   <h1>Finalize Submission</h1>
   <h2 class="review_headers">Review Description</h2>
     <%= link_to "Edit Description", stash_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: @resource.id), class: 'link_like_button', style: "float: right;" %>
-    <%= render partial: "stash_datacite/resource_types/show", locals: { resource_type: @resource_type } %>
-    <%= render partial: "stash_datacite/titles/show", locals: { title: @title } %>
-    <%= render partial: "stash_datacite/creators/show", locals: { creators: @creators } %>
+    <%= render partial: "stash_datacite/resource_types/show", locals: { resource_type: @review.resource_type } %>
+    <%= render partial: "stash_datacite/titles/show", locals: { title: @review.title } %>
+    <%= render partial: "stash_datacite/creators/show", locals: { creators: @review.creators } %>
     <hr/>
-    <%= render partial: "stash_datacite/shared/citations", locals: { creators: @creators, title: @title, resource_type: @resource_type } %>
+    <%= render partial: "stash_datacite/shared/citations", locals: { creators: @review.creators, title: @review.title, resource_type: @review.resource_type } %>
     <hr/>
-    <%= render partial: "stash_datacite/descriptions/show", locals: { abstract: @abstract, methods: @methods, usage_notes: @usage_notes } %>
-    <%= render partial: "stash_datacite/subjects/show", locals: { subjects: @subjects } %>
-    <%= render partial: "stash_datacite/contributors/show", locals: { contributors: @contributors } %>
-    <%= render partial: "stash_datacite/related_identifiers/show", locals: { related_identifiers: @related_identifiers } %>
+    <%= render partial: "stash_datacite/descriptions/show", locals: { abstract: @review.abstract, methods: @review.methods, usage_notes: @review.usage_notes } %>
+    <%= render partial: "stash_datacite/subjects/show", locals: { subjects: @review.subjects } %>
+    <%= render partial: "stash_datacite/contributors/show", locals: { contributors: @review.contributors } %>
+    <%= render partial: "stash_datacite/related_identifiers/show", locals: { related_identifiers: @review.related_identifiers } %>
 
     <h3>Location</h3>
     <div id="map_review"></div>
-    <%= render partial: "stash_datacite/geolocation_points/show", locals: { geolocation_points: @geolocation_points } %>
-    <%= render partial: "stash_datacite/geolocation_boxes/show", locals: { geolocation_boxes: @geolocation_boxes } %>
-    <%= render partial: "stash_datacite/geolocation_places/show", locals: { geolocation_places: @geolocation_places } %>
+    <%= render partial: "stash_datacite/geolocation_points/show", locals: { geolocation_points: @review.geolocation_points } %>
+    <%= render partial: "stash_datacite/geolocation_boxes/show", locals: { geolocation_boxes: @review.geolocation_boxes } %>
+    <%= render partial: "stash_datacite/geolocation_places/show", locals: { geolocation_places: @review.geolocation_places } %>
+    <hr/>
     <%= link_to "Edit Description", stash_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: @resource.id), class: 'link_like_button', style: "float: right;" %>
 
     <h2 class="review_headers">Review Data Files</h2>
     <% unless @file_uploads.blank? %>
       <span><%= link_to 'Edit Files', stash_engine.upload_resource_path(@resource), id: 'upload_path', class: 'link_like_button', style: "float: right;" %>
     <% end %>
-    <%= render partial: "stash_engine/file_uploads/show", locals: { file_uploads:  @file_uploads } %>
+    <%= render partial: "stash_engine/file_uploads/show", locals: { file_uploads:  @review.file_uploads } %>
       </span>
-    <hr/>
+
 </div>
 <div style = "float: left;margin: auto;">
   <%= link_to 'Back to My Datasets', stash_url_helpers.dashboard_path , id: 'dashboard_path', class: 'link_like_button' %>

@@ -2,6 +2,6 @@
 <%= form_tag(stash_datacite.subjects_create_path, method: :post, remote: true, authenticity_token: true, html: {id: "subject_new_form"}) do %>
   <%#= render "datacite/shared/error_messages", target: @subject %>
   <strong><%= label_tag 'subject', "Keywords" %></strong><br/>
-  <%= render partial: "stash_datacite/subjects/keywords_list", locals: { subjects: @subjects, resource_id: resource_id } %>
+  <%= render partial: "stash_datacite/subjects/keywords_list", locals: { subjects: @metadata_entry.subjects, resource_id: resource_id } %>
   <%= hidden_field_tag 'resource_id', resource_id %>
 <% end %>
