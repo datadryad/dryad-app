@@ -5,14 +5,9 @@ module Stash
 
       attr_reader :config
 
-      def initialize(config:) # rubocop:disable Metrics/AbcSize
+      def initialize(config:)
         raise ArgumentError, "Invalid #{Application}.config; expected a #{Config}, got #{config ? config : 'nil'}" unless config && config.is_a?(Config)
         @config = config
-
-        STDERR.puts "connection_info: #{config.connection_info}"
-        STDERR.puts "source_uri: #{config.source_config.source_uri}"
-        STDERR.puts "index_uri: #{config.index_config.uri}"
-        STDERR.puts "metadata_mapper: #{config.metadata_mapper.desc_from} -> #{config.metadata_mapper.desc_to}"
       end
       private_class_method :new
 
@@ -32,7 +27,6 @@ module Stash
       #   default configuration file
       def self.with_config_file(config_file = nil)
         config_file = ensure_config_file(config_file)
-        STDERR.puts "configuration file: #{config_file}"
         config = Config.from_file(config_file)
         with_config(config)
       end
@@ -41,16 +35,14 @@ module Stash
         from_time = Util.utc_or_nil(from_time)
         until_time = Util.utc_or_nil(until_time)
 
-        STDERR.puts "from_time: #{from_time}"
-        STDERR.puts "until_time: #{until_time}"
-        # job = HarvestAndIndexJob.new(
-        #   source_config: source_config,
-        #   index_config: index_config,
-        #   metadata_mapper: metadata_mapper,
-        #   from_time: from_time,
-        #   until_time: until_time
-        # )
-        # job.harvest_and_index
+        job = HarvestAndIndexJob.new(
+          source_config: source_config,
+          index_config: index_config,
+          metadata_mapper: metadata_mapper,
+          from_time: from_time,
+          until_time: until_time
+        )
+        job.harvest_and_index
       end
 
       def self.config_file_defaults

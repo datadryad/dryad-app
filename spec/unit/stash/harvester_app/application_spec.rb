@@ -121,12 +121,46 @@ module Stash
       end
 
       describe '#start' do
+        before(:each) do
+          @source_uri = URI('http://oai.example.org/oai')
+          @index_uri = URI('http://solr.example.org/')
+
+          @source_config = instance_double(Harvester::SourceConfig)
+          @harvest_task = instance_double(Harvester::HarvestTask)
+          allow(@source_config).to receive(:create_harvest_task) { @harvest_task }
+          allow(@source_config).to receive(:source_uri) { @source_uri }
+
+          @metadata_mapper = instance_double(Indexer::MetadataMapper)
+          allow(@metadata_mapper).to receive(:desc_from) { 'foo' }
+          allow(@metadata_mapper).to receive(:desc_to) { 'bar' }
+
+          @indexer = instance_double(Indexer::Indexer)
+          @index_config = instance_double(Indexer::IndexConfig)
+          allow(@index_config).to receive(:create_indexer).with(@metadata_mapper) { @indexer }
+          allow(@index_config).to receive(:uri) { @index_uri }
+
+          @records = Array.new(5) { |_i| instance_double(Stash::Harvester::HarvestedRecord) }.lazy
+
+          @config = Config.allocate
+          allow(@config).to receive(:connection_info) { {} }
+          allow(@config).to receive(:source_config) { @source_config }
+          allow(@config).to receive(:index_config) { @index_config }
+          allow(@config).to receive(:metadata_mapper) { @metadata_mapper }
+        end
+
         it 'logs the from_time and until_time'
         it 'sets from_time, if specified'
         it 'sets until_time, if specified'
         it 'reads from_time from the database, if not specified'
         it 'defaults until_time to now, if not specified'
-        it 'harvests and indexes'
+
+        it 'harvests and indexes' do
+          app = Application.with_config(@config)
+          expect(@harvest_task).to receive(:harvest_records) { @records }
+          expect(@indexer).to receive(:index).with(@records)
+          app.start
+        end
+
         it 'sets the datestamp of the earliest failure as the next start'
         it 'sets the datestamp of the latest success as the next start, if no failures'
         it 'bases success/failure datestamp determination only on the most recent harvest job'
