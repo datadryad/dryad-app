@@ -1,4 +1,5 @@
 require_relative 'harvester'
+require_relative 'indexer'
 
 module Stash
 

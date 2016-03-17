@@ -13,12 +13,13 @@ module Stash
         self.config = config_file
       end
 
-      def start
-        # puts "from_time: #{from_time}"
-        # puts "until_time: #{until_time}"
-        # puts "connection_info: #{config.connection_info}"
-        # puts "source_uri: #{config.source_config.source_uri}"
-        # puts "index_uri: #{config.index_config.uri}"
+      def start # rubocop:disable Metrics/AbcSize
+        STDERR.puts "from_time: #{from_time}"
+        STDERR.puts "until_time: #{until_time}"
+        STDERR.puts "connection_info: #{config.connection_info}"
+        STDERR.puts "source_uri: #{config.source_config.source_uri}"
+        STDERR.puts "index_uri: #{config.index_config.uri}"
+        STDERR.puts "metadata_mapper: #{config.index_config.uri}"
       end
 
       def self.config_file_defaults
