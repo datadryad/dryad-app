@@ -1,4 +1,3 @@
-require 'lazy'
 require 'resync/client'
 require_relative '../harvested_record'
 
