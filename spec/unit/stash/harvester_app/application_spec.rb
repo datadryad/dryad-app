@@ -8,13 +8,6 @@ module Stash
   module HarvesterApp
     describe Application do
       describe '#with_config_file' do
-        describe '#config_file_defaults' do
-          it 'prefers ./stash-harvester.yml, then ~/.stash-harvester.yml' do
-            expected = %w(/stash/apps/stash-harvester/stash-harvester.yml /home/stash/.stash-harvester.yml)
-            expect(Application.config_file_defaults).to eq(expected)
-          end
-        end
-
         before :each do
           @wd = '/stash/apps/stash-harvester'
           allow(Dir).to receive(:pwd) { @wd }
@@ -28,6 +21,13 @@ module Stash
           allow(Dir).to receive(:home).and_call_original
           allow(Config).to receive(:from_file).and_call_original
           allow(File).to receive(:exist?).and_call_original
+        end
+
+        describe '#config_file_defaults' do
+          it 'prefers ./stash-harvester.yml, then ~/.stash-harvester.yml' do
+            expected = %w(/stash/apps/stash-harvester/stash-harvester.yml /home/stash/.stash-harvester.yml)
+            expect(Application.config_file_defaults).to eq(expected)
+          end
         end
 
         it 'reads the specified file' do
@@ -79,6 +79,8 @@ module Stash
             expect(e.message).to include "#{@home}/.stash-harvester.yml"
           end
         end
+
+        it 'logs the config file used'
       end
 
       describe '#with_config' do
@@ -111,7 +113,15 @@ module Stash
         end
       end
 
+      describe '#initialize' do
+        it 'logs the connection info'
+        it 'logs the source URI'
+        it 'logs the index URI'
+        it 'logs the metadata mapper'
+      end
+
       describe '#start' do
+        it 'logs the from_time and until_time'
         it 'sets from_time, if specified'
         it 'sets until_time, if specified'
         it 'reads from_time from the database, if not specified'

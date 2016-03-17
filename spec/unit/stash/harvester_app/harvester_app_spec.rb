@@ -10,5 +10,9 @@ module Stash
         end
       end
     end
+
+    describe '#log' do
+      it 'logs to stdout in a timestamp-first format'
+    end
   end
 end

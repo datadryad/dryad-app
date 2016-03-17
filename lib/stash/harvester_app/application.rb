@@ -5,33 +5,44 @@ module Stash
 
       attr_reader :config
 
-      def initialize(config:)
+      def initialize(config:) # rubocop:disable Metrics/AbcSize
         raise ArgumentError, "Invalid #{Application}.config; expected a #{Config}, got #{config ? config : 'nil'}" unless config && config.is_a?(Config)
         @config = config
-      end
 
+        STDERR.puts "connection_info: #{config.connection_info}"
+        STDERR.puts "source_uri: #{config.source_config.source_uri}"
+        STDERR.puts "index_uri: #{config.index_config.uri}"
+        STDERR.puts "metadata_mapper: #{config.metadata_mapper.desc_from} -> #{config.metadata_mapper.desc_to}"
+      end
       private_class_method :new
 
+      # Initializes a new `Application` with the specified configuration
+      # @param config [Config] The configuration object
       def self.with_config(config)
         new(config: config)
       end
 
+      # Initializes a new `Application` with the specified configuration file. If
+      # no configuration file is provided, by default, `Application` will look for:
+      #
+      # 1. `stash-harvester.yml` in the current working directory
+      # 2. `.stash-harvester.yml` in the user's home directory
+      #
+      # @param config_file [String] The configuration file, or nil to search for a
+      #   default configuration file
       def self.with_config_file(config_file = nil)
         config_file = ensure_config_file(config_file)
+        STDERR.puts "configuration file: #{config_file}"
         config = Config.from_file(config_file)
         with_config(config)
       end
 
-      def start(from_time: nil, until_time: nil) # rubocop:disable Metrics/AbcSize
+      def start(from_time: nil, until_time: nil)
         from_time = Util.utc_or_nil(from_time)
         until_time = Util.utc_or_nil(until_time)
 
         STDERR.puts "from_time: #{from_time}"
         STDERR.puts "until_time: #{until_time}"
-        STDERR.puts "connection_info: #{config.connection_info}"
-        STDERR.puts "source_uri: #{config.source_config.source_uri}"
-        STDERR.puts "index_uri: #{config.index_config.uri}"
-        STDERR.puts "metadata_mapper: #{config.metadata_mapper.desc_from} -> #{config.metadata_mapper.desc_to}"
         # job = HarvestAndIndexJob.new(
         #   source_config: source_config,
         #   index_config: index_config,
