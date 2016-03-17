@@ -9,6 +9,11 @@ module Stash
         inv = inventory
         inv.files.map(&:pathname) if inv
       end
+
+      def embargo_end_date_xmlschema
+        d = embargo_end_date
+        Time.utc(d.year, d.month, d.day).xmlschema
+      end
     end
   end
 end

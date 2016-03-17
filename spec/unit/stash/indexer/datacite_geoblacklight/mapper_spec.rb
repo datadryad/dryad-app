@@ -138,7 +138,9 @@ module Stash
           end
 
           it 'extracts the issue date' do
-            expect(@index_document[:dct_issued_dt]).to eq(@wrapper.embargo_end_date)
+            d = @wrapper.embargo_end_date
+            embargo_end_date = Time.utc(d.year, d.month, d.day).xmlschema
+            expect(@index_document[:dct_issued_dt]).to eq(embargo_end_date)
           end
 
           it 'extracts the rights' do
@@ -149,9 +151,22 @@ module Stash
             expect(@index_document[:dc_publisher_s]).to eq(@publisher)
           end
         end
+
+        describe '#desc_from' do
+          it 'returns a description' do
+            mapper = Mapper.new
+            expect(mapper.desc_from).to be_a(String)
+          end
+        end
+
+        describe '#desc_to' do
+          it 'returns a description' do
+            mapper = Mapper.new
+            expect(mapper.desc_to).to be_a(String)
+          end
+        end
+
       end
     end
   end
 end
-
-# dct_issued_dt should be: Time.utc(d.year, d.month, d.day).xmlschema

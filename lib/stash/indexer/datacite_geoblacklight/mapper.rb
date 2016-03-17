@@ -23,24 +23,31 @@ module Stash
 
           # TODO: how do we deal with the fact we have multiple points/boxes & GB doesn't?
           {
-            uuid:             wrapper.id_value,
-            dc_identifier_s:  wrapper.id_value,
-            dc_title_s:       resource.default_title,
-            dc_creator_sm:    resource.creator_names,
-            dc_type_s:        resource.type,
+            uuid: wrapper.id_value,
+            dc_identifier_s: wrapper.id_value,
+            dc_title_s: resource.default_title,
+            dc_creator_sm: resource.creator_names,
+            dc_type_s: resource.type,
             dc_description_s: resource.description_text_for(DescriptionType::ABSTRACT),
-            dc_subject_sm:    resource.subjects.map(&:value),
-            dct_spatial_sm:   resource.geo_location_places,
-            georss_box_s:     resource.geo_location_boxes[0],
-            georss_point_pt:  resource.geo_location_points[0],
-            dct_issued_dt:    wrapper.embargo_end_date,
-            dc_rights_s:      wrapper.license.name,
-            dc_publisher_s:   resource.publisher
+            dc_subject_sm: resource.subjects.map(&:value),
+            dct_spatial_sm: resource.geo_location_places,
+            georss_box_s: resource.geo_location_boxes[0],
+            georss_point_pt: resource.geo_location_points[0],
+            dct_issued_dt: wrapper.embargo_end_date_xmlschema,
+            dc_rights_s: wrapper.license.name,
+            dc_publisher_s: resource.publisher
           }
 
           # TODO: do we need to strip nil values or does RSolr take care of that?
         end
 
+        def desc_from
+          'Datacite 3.x'
+        end
+
+        def desc_to
+          'Geoblacklight (Solr)'
+        end
       end
     end
   end

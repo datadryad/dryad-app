@@ -19,6 +19,20 @@ module Stash
           expect { mapper.to_index_document(wrapped_metadata) }.to raise_error(NoMethodError)
         end
       end
+
+      describe '#desc_from' do
+        it 'is abstract' do
+          mapper = MetadataMapper.new
+          expect { mapper.desc_from }.to raise_error(NoMethodError)
+        end
+      end
+
+      describe '#desc_to' do
+        it 'is abstract' do
+          mapper = MetadataMapper.new
+          expect { mapper.desc_to }.to raise_error(NoMethodError)
+        end
+      end
     end
   end
 end

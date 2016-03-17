@@ -26,6 +26,20 @@ module Stash
       def to_index_document(wrapped_metadata) # rubocop:disable Lint/UnusedMethodArgument
         raise NoMethodError, "#{self.class} should override #to_index_document to map wrapped metadata to indexable documents, but it doesn't"
       end
+
+      # Describes what (wrapped) metadata format or formats this mapper supports
+      # @return [String] a human-readable description of the metadata format or formats
+      #   consumed by this mapper
+      def desc_from
+        raise NoMethodError, "#{self.class} should override #desc_from to describe what it maps from, but it doesn't"
+      end
+
+      # Describes what index protocol or format and schema this mapper supports
+      # @return [String] a human-readable description of the type of index document
+      #   produced by this mapper
+      def desc_to
+        raise NoMethodError, "#{self.class} should override #desc_to to describe what it maps to, but it doesn't"
+      end
     end
   end
 end
