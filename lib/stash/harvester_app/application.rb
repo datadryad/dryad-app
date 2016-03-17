@@ -19,7 +19,7 @@ module Stash
         STDERR.puts "connection_info: #{config.connection_info}"
         STDERR.puts "source_uri: #{config.source_config.source_uri}"
         STDERR.puts "index_uri: #{config.index_config.uri}"
-        STDERR.puts "metadata_mapper: #{config.index_config.uri}"
+        STDERR.puts "metadata_mapper: #{config.metadata_mapper.desc_from} -> #{config.metadata_mapper.desc_to}"
         # job = HarvestAndIndexJob.new(
         #   source_config: source_config,
         #   index_config: index_config,
