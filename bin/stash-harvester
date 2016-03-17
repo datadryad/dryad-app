@@ -10,14 +10,12 @@ module Stash
       puts Options::HELP if options.show_help
       unless options.do_exit
         Application.new(
+          config_file: options.config_file
+        ).start(
           from_time: options.from_time,
           until_time: options.until_time,
-          config_file: options.config_file
-        ).start
+        )
       end
-    rescue OptionParser::ParseError => e
-      puts e.message
-      puts Options::USAGE
     rescue => e
       puts e.message
       puts Options::USAGE

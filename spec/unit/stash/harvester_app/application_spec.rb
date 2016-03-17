@@ -9,20 +9,20 @@ module Stash
 
     describe Application do
 
-      before :each do
-        @wd = '/stash/apps/stash-harvester'
-        allow(Dir).to receive(:pwd) { @wd }
-
-        @home = '/home/stash'
-        allow(Dir).to receive(:home) { @home }
-      end
-
-      after :each do
-        allow(Dir).to receive(:pwd).and_call_original
-        allow(Dir).to receive(:home).and_call_original
-      end
-
       describe '#config_file_defaults' do
+        before :each do
+          @wd = '/stash/apps/stash-harvester'
+          allow(Dir).to receive(:pwd) { @wd }
+
+          @home = '/home/stash'
+          allow(Dir).to receive(:home) { @home }
+        end
+
+        after :each do
+          allow(Dir).to receive(:pwd).and_call_original
+          allow(Dir).to receive(:home).and_call_original
+        end
+
         it 'prefers ./stash-harvester.yml, then ~/.stash-harvester.yml' do
           expected = %w(/stash/apps/stash-harvester/stash-harvester.yml /home/stash/.stash-harvester.yml)
           expect(Application.config_file_defaults).to eq(expected)
@@ -30,8 +30,17 @@ module Stash
       end
 
       describe '#config' do
+        before :each do
+          @wd = '/stash/apps/stash-harvester'
+          allow(Dir).to receive(:pwd) { @wd }
+
+          @home = '/home/stash'
+          allow(Dir).to receive(:home) { @home }
+        end
 
         after :each do
+          allow(Dir).to receive(:pwd).and_call_original
+          allow(Dir).to receive(:home).and_call_original
           allow(Config).to receive(:from_file).and_call_original
           allow(File).to receive(:exist?).and_call_original
         end
@@ -87,6 +96,15 @@ module Stash
         end
       end
 
+      describe '#start' do
+        it 'sets from_time, if specified'
+        it 'sets until_time, if specified'
+        it 'reads from_time from the database, if not specified'
+        it 'defaults until_time to now, if not specified'
+        it 'sets the datestamp of the earliest failure as the next start'
+        it 'sets the datestamp of the latest success as the next start, if no failures'
+        it 'bases success/failure datestamp determination only on the most recent harvest job'
+      end
     end
   end
 end

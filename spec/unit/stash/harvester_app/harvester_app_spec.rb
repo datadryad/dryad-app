@@ -10,11 +10,5 @@ module Stash
         end
       end
     end
-
-    it 'sets the datestamp of the earliest failure as the next start'
-
-    it 'sets the datestamp of the latest success as the next start, if no failures'
-
-    it 'bases success/failure datestamp determination only on the most recent harvest job'
   end
 end

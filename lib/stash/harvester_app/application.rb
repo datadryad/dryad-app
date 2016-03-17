@@ -3,17 +3,16 @@ module Stash
   module HarvesterApp
     class Application
 
-      attr_reader :from_time
-      attr_reader :until_time
       attr_reader :config
 
-      def initialize(from_time: nil, until_time: nil, config_file: nil)
-        @from_time = Util.utc_or_nil(from_time)
-        @until_time = Util.utc_or_nil(until_time)
+      def initialize(config_file: nil)
         self.config = config_file
       end
 
-      def start # rubocop:disable Metrics/AbcSize
+      def start(from_time: nil, until_time: nil) # rubocop:disable Metrics/AbcSize
+        from_time = Util.utc_or_nil(from_time)
+        until_time = Util.utc_or_nil(until_time)
+
         STDERR.puts "from_time: #{from_time}"
         STDERR.puts "until_time: #{until_time}"
         STDERR.puts "connection_info: #{config.connection_info}"
