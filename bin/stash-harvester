@@ -4,18 +4,16 @@ require 'stash/harvester_app'
 
 module Stash
   module HarvesterApp
+    def self.start_application(options)
+      app = Application.with_config_file(options.config_file)
+      app.start(from_time: options.from_time, until_time: options.until_time)
+    end
+
     begin
       options = Options.new(ARGV)
       puts Options::VERSION if options.show_version
       puts Options::HELP if options.show_help
-      unless options.do_exit
-        Application.new(
-          config_file: options.config_file
-        ).start(
-          from_time: options.from_time,
-          until_time: options.until_time,
-        )
-      end
+      start_application(options) unless options.do_exit
     rescue => e
       puts e.message
       puts Options::USAGE

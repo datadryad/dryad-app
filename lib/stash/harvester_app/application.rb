@@ -5,8 +5,21 @@ module Stash
 
       attr_reader :config
 
-      def initialize(config_file: nil)
-        self.config = config_file
+      def initialize(config:)
+        raise ArgumentError, "Invalid #{Application}.config; expected a #{Config}, got #{config ? config : 'nil'}" unless config && config.is_a?(Config)
+        @config = config
+      end
+
+      private_class_method :new
+
+      def self.with_config(config)
+        new(config: config)
+      end
+
+      def self.with_config_file(config_file = nil)
+        config_file = ensure_config_file(config_file)
+        config = Config.from_file(config_file)
+        with_config(config)
       end
 
       def start(from_time: nil, until_time: nil) # rubocop:disable Metrics/AbcSize
@@ -48,23 +61,20 @@ module Stash
         config.metadata_mapper
       end
 
-      def config=(value)
-        config_file = ensure_config_file(value)
-        @config = Config.from_file(config_file)
-      end
-
-      def ensure_config_file(config_file)
+      def self.ensure_config_file(config_file)
         config_file ||= default_config_file
         raise ArgumentError, "No configuration file provided, and none found in default locations #{Application.config_file_defaults.join(' or ')}" unless config_file
         config_file
       end
+      private_class_method :ensure_config_file
 
-      def default_config_file
+      def self.default_config_file
         Application.config_file_defaults.each do |cf|
           return cf if File.exist?(cf)
         end
         nil
       end
+      private_class_method :default_config_file
 
     end
   end

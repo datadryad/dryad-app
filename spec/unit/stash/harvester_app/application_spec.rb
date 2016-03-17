@@ -6,30 +6,15 @@ require 'fileutils'
 
 module Stash
   module HarvesterApp
-
     describe Application do
-
-      describe '#config_file_defaults' do
-        before :each do
-          @wd = '/stash/apps/stash-harvester'
-          allow(Dir).to receive(:pwd) { @wd }
-
-          @home = '/home/stash'
-          allow(Dir).to receive(:home) { @home }
+      describe '#with_config_file' do
+        describe '#config_file_defaults' do
+          it 'prefers ./stash-harvester.yml, then ~/.stash-harvester.yml' do
+            expected = %w(/stash/apps/stash-harvester/stash-harvester.yml /home/stash/.stash-harvester.yml)
+            expect(Application.config_file_defaults).to eq(expected)
+          end
         end
 
-        after :each do
-          allow(Dir).to receive(:pwd).and_call_original
-          allow(Dir).to receive(:home).and_call_original
-        end
-
-        it 'prefers ./stash-harvester.yml, then ~/.stash-harvester.yml' do
-          expected = %w(/stash/apps/stash-harvester/stash-harvester.yml /home/stash/.stash-harvester.yml)
-          expect(Application.config_file_defaults).to eq(expected)
-        end
-      end
-
-      describe '#config' do
         before :each do
           @wd = '/stash/apps/stash-harvester'
           allow(Dir).to receive(:pwd) { @wd }
@@ -49,10 +34,10 @@ module Stash
           config_file = '/etc/stash-harvester.yml'
 
           # Trust the Config class to check for nonexistent files
-          config = instance_double(Config)
+          config = Config.allocate
           expect(Config).to receive(:from_file).with(config_file).and_return(config)
 
-          app = Application.new(config_file: config_file)
+          app = Application.with_config_file(config_file)
           expect(app.config).to be(config)
         end
 
@@ -60,10 +45,10 @@ module Stash
           wd_config_path = "#{@wd}/stash-harvester.yml"
           expect(File).to receive(:exist?).with(wd_config_path).and_return(true)
 
-          config = instance_double(Config)
+          config = Config.allocate
           expect(Config).to receive(:from_file).with(wd_config_path).and_return(config)
 
-          app = Application.new
+          app = Application.with_config_file
           expect(app.config).to be(config)
         end
 
@@ -74,10 +59,10 @@ module Stash
           home_config_path = "#{@home}/.stash-harvester.yml"
           expect(File).to receive(:exist?).with(home_config_path).and_return(true)
 
-          config = instance_double(Config)
+          config = Config.allocate
           expect(Config).to receive(:from_file).with(home_config_path).and_return(config)
 
-          app = Application.new
+          app = Application.with_config_file
           expect(app.config).to be(config)
         end
 
@@ -88,11 +73,41 @@ module Stash
           home_config_path = "#{@home}/.stash-harvester.yml"
           expect(File).to receive(:exist?).with(home_config_path).and_return(false)
 
-          expect { Application.new }.to raise_error do |e|
+          expect { Application.with_config_file }.to raise_error do |e|
             expect(e).to be_an ArgumentError
             expect(e.message).to include "#{@wd}/stash-harvester.yml"
             expect(e.message).to include "#{@home}/.stash-harvester.yml"
           end
+        end
+      end
+
+      describe '#with_config' do
+        it 'requires a config' do
+          expect { Application.with_config }.to raise_error(ArgumentError)
+        end
+
+        it 'requires a non-nil config' do
+          expect { Application.with_config(nil) }.to raise_error do |e|
+            expect(e).to be_an ArgumentError
+            %w(Stash::HarvesterApp::Application Stash::Harvester::Config nil).each do |m|
+              expect(e.message).to include(m)
+            end
+          end
+        end
+
+        it 'requires a usable Config object' do
+          expect { Application.with_config(Object.new) }.to raise_error do |e|
+            expect(e).to be_an ArgumentError
+            %w(Stash::HarvesterApp::Application Stash::Harvester::Config Object).each do |m|
+              expect(e.message).to include(m)
+            end
+          end
+        end
+
+        it 'sets the config' do
+          config = Config.allocate
+          app = Application.with_config(config)
+          expect(app.config).to be(config)
         end
       end
 
@@ -101,6 +116,7 @@ module Stash
         it 'sets until_time, if specified'
         it 'reads from_time from the database, if not specified'
         it 'defaults until_time to now, if not specified'
+        it 'harvests and indexes'
         it 'sets the datestamp of the earliest failure as the next start'
         it 'sets the datestamp of the latest success as the next start, if no failures'
         it 'bases success/failure datestamp determination only on the most recent harvest job'
