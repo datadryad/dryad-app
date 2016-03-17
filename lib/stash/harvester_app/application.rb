@@ -20,6 +20,14 @@ module Stash
         STDERR.puts "source_uri: #{config.source_config.source_uri}"
         STDERR.puts "index_uri: #{config.index_config.uri}"
         STDERR.puts "metadata_mapper: #{config.index_config.uri}"
+        # job = HarvestAndIndexJob.new(
+        #   source_config: source_config,
+        #   index_config: index_config,
+        #   metadata_mapper: metadata_mapper,
+        #   from_time: from_time,
+        #   until_time: until_time
+        # )
+        # job.harvest_and_index
       end
 
       def self.config_file_defaults
@@ -28,6 +36,18 @@ module Stash
       end
 
       private
+
+      def index_config
+        config.index_config
+      end
+
+      def source_config
+        config.source_config
+      end
+
+      def metadata_mapper
+        config.metadata_mapper
+      end
 
       def config=(value)
         config_file = ensure_config_file(value)
