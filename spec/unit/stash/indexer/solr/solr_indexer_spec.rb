@@ -55,7 +55,7 @@ module Stash
             records.each_with_index do |r, i|
               content = instance_double(Stash::Wrapper::StashWrapper)
               expect(r).to receive(:deleted?) { false }
-              expect(r).to receive(:content) { content }
+              expect(r).to receive(:as_wrapper) { content }
               index_doc = { id: i.to_s }
               expect(@metadata_mapper).to receive(:to_index_document).with(content) { index_doc }
               expect(@solr).to receive(:add).with(index_doc)
@@ -75,7 +75,7 @@ module Stash
               else
                 content = instance_double(Stash::Wrapper::StashWrapper)
                 expect(r).to receive(:deleted?) { false }
-                expect(r).to receive(:content) { content }
+                expect(r).to receive(:as_wrapper) { content }
                 index_doc = { id: i.to_s }
                 expect(@metadata_mapper).to receive(:to_index_document).with(content) { index_doc }
               end
@@ -89,7 +89,7 @@ module Stash
             records.each_with_index do |r, i|
               content = instance_double(Stash::Wrapper::StashWrapper)
               expect(r).to receive(:deleted?) { false }
-              expect(r).to receive(:content) { content }
+              expect(r).to receive(:as_wrapper) { content }
               id = i.to_s
               allow(r).to receive(:identifier) { id }
               index_doc = { id: id }
@@ -137,7 +137,7 @@ module Stash
               r = records[i]
               expect(r).to receive(:deleted?) { false }
               content = instance_double(Stash::Wrapper::StashWrapper)
-              allow(r).to receive(:content) { content }
+              allow(r).to receive(:as_wrapper) { content }
               expect(@metadata_mapper).to receive(:to_index_document).with(content) { { id: records[i].identifier } }
             end
 

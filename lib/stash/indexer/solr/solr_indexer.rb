@@ -32,7 +32,7 @@ module Stash
         private
 
         def index_record(r, solr)
-          wrapped_metadata = r.content
+          wrapped_metadata = r.as_wrapper
           index_document = metadata_mapper.to_index_document(wrapped_metadata)
           solr.add index_document
         rescue => e

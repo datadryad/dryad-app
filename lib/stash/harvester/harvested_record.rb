@@ -1,3 +1,5 @@
+require 'stash/wrapper'
+
 module Stash
   module Harvester
 
@@ -36,6 +38,12 @@ module Stash
       #   has been deleted or the content is otherwise inaccessible.
       def content
         raise NoMethodError, "#{self.class} should override #content to fetch the record content, but it doesn't"
+      end
+
+      # The content of this record, parsed as a `StashWrapper`
+      # @return [Stash::Wrapper::StashWrapper] the parsed content
+      def as_wrapper
+        Stash::Wrapper::StashWrapper.parse_xml(content)
       end
 
       # Visibility modifiers
