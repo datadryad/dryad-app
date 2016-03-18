@@ -1,4 +1,5 @@
 require_dependency 'stash_engine/application_controller'
+require 'fileutils'
 
 module StashEngine
   class FileUploadsController < ApplicationController
@@ -23,11 +24,17 @@ module StashEngine
         format.js do
           @temp_id = params[:temp_id]
           fu = params[:upload][:upload]
+
+          dir = File.join(Rails.root, "uploads", params[:resource_id])
+          FileUtils.mkdir_p dir unless File.exists?(dir)
+          new_fn = File.join(dir, fu.original_filename)
+          FileUtils.mv(fu.tempfile.path, new_fn)
+
           @my_file = FileUpload.new(
             upload_file_name: fu.original_filename,
-            temp_file_path: fu.tempfile.path,
+            temp_file_path: new_fn,
             upload_content_type: fu.content_type,
-            upload_file_size: File.size(fu.tempfile.path),
+            upload_file_size: File.size(new_fn),
             resource_id: params[:resource_id],
             upload_updated_at: Time.new.utc)
           @my_file.save

@@ -4,6 +4,7 @@ StashEngine::Engine.routes.draw do
     member do
       get 'review'
       get 'upload'
+      get 'submission'
     end
   end
   resources :tenants, only: [:index, :show]

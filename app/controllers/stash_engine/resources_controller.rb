@@ -70,6 +70,10 @@ module StashEngine
     def review
     end
 
+    # Submission of the resource to the repository
+    def submission
+    end
+
     # Upload files view for resource
     def upload
       @resource.clean_uploads
