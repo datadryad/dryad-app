@@ -29,5 +29,48 @@ module StashDatacite
         }
       end
     end
+
+    def submission
+      # respond_to do |format|
+      #   format.js {
+          @resource = StashDatacite.resource_class.find(params[:resource_id])
+          check_required_fields(@resource)
+        # }
+      # end
+    end
+
+    private
+
+    def check_required_fields(resource)
+      @completions = Resource::Completions.new(resource)
+      # required fields are Title, Institution, Data type, Data Creator(s), Abstract
+      if @completions.required_completed == @completions.required_total
+        create_resource_state(:submitted, resource)
+      else
+        data = flash_error_missing_data(@completions)
+        redirect_to :back, alert: "You must edit the description to include the #{data} before you can submit your dataset."
+      end
+    end
+
+    def create_resource_state(state, resource)
+      unless resource.current_resource_state.to_sym == state
+        resource.save!
+        StashEngine::ResourceState.create!(resource_id: resource.id, resource_state: :submitted, user_id: current_user.id )
+        redirect_to :back, notice: 'The dataset is submitted successfully.'
+      else
+        redirect_to :back, alert: 'This dataset has already been submitted.'
+      end
+    end
+
+    def flash_error_missing_data(completions)
+      data = []
+      data << "Title" unless completions.title
+      data << "Resource Type" unless completions.data_type
+      data << "Abstract" unless completions.abstract
+      data << "Author" unless completions.creator
+      data << "Affliation" unless completions.institution
+      return data.join(', ')
+    end
   end
 end
+

@@ -66,4 +66,5 @@ StashDatacite::Engine.routes.draw do
   get 'resources/user_in_progress', to: 'resources#user_in_progress'
   get 'metadata_entry_pages/find_or_create', to: 'metadata_entry_pages#find_or_create'
   get 'resources/review', to: 'resources#review'
+  get 'resources/submission', to: 'resources#submission'
 end

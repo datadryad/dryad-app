@@ -33,34 +33,6 @@
   <%= link_to 'Back to My Datasets', stash_url_helpers.dashboard_path , id: 'dashboard_path', class: 'link_like_button' %>
 </div>
 <div style = "float: right;margin: auto;">
-  <%= link_to 'Submit', '#', id: 'submit_popup', class: 'link_like_button' %>
+  <%#= link_to 'Submit', '#', id: 'submit_popup', class: 'link_like_button' %>
+  <%= link_to "Submit", stash_datacite.resources_submission_path(resource_id: @resource.id), data: { :confirm => 'You sure you want to submit?'} , class: 'link_like_button' %>
 </div>
-
-
-<div id="dialog" title="Submit?">
-  <p><span style="float:left; margin:0 7px 20px 0;"></span>Are you sure you are ready to submit your dataset?</p>
-</div>
-
-<script type="text/javascript">
-$(function() {
-  $( "#dialog" ).dialog({
-    autoOpen: false,
-    resizable: false,
-    height: 200,
-    width: 400,
-    modal: true,
-    buttons: {
-      "Submit": function() {
-        $( this ).dialog( "close" );
-      },
-      Cancel: function() {
-        $( this ).dialog( "close" );
-      }
-    }
-  });
-
-  $( "#submit_popup" ).click(function() {
-    $( "#dialog" ).dialog( "open" );
-  });
-});
-</script>
