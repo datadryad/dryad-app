@@ -66,7 +66,7 @@ module Stash
             ]
             pub_year = 2015
 
-            resource = DM::Resource.new(
+            @resource = DM::Resource.new(
               identifier: id,
               creators: creators,
               titles: titles,
@@ -77,7 +77,7 @@ module Stash
               geo_locations: locations
             )
 
-            payload_xml = resource.save_to_xml
+            payload_xml = @resource.save_to_xml
 
             @wrapper = SW::StashWrapper.new(
               identifier: SW::Identifier.new(type: SW::IdentifierType::DOI, value: @doi_value),
@@ -127,20 +127,25 @@ module Stash
             expect(@index_document[:dct_spatial_sm]).to eq(@places.keys)
           end
 
-          it 'extracts the first bounding box' do
-            expected_box = @boxes[0]
+          it 'extracts the bounding box' do
+            expected_box = @resource.calc_bounding_box
             expect(@index_document[:georss_box_s]).to eq(expected_box)
           end
 
-          it 'extracts the first point' do
-            expected_point = @points[0]
-            expect(@index_document[:georss_point_pt]).to eq(expected_point)
+          it 'extracts the bounding box as an envelope' do
+            envelope = @resource.bounding_box_envelope
+            expect(@index_document[:solr_geom]).to eq(envelope)
           end
 
           it 'extracts the issue date' do
             d = @wrapper.embargo_end_date
             embargo_end_date = Time.utc(d.year, d.month, d.day).xmlschema
             expect(@index_document[:dct_issued_dt]).to eq(embargo_end_date)
+          end
+
+          it 'extracts the publication year' do
+            expected_year = @resource.publication_year
+            expect(@index_document[:solr_year_i]).to eq(expected_year)
           end
 
           it 'extracts the rights' do

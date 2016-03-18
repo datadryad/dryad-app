@@ -31,14 +31,13 @@ module Stash
             dc_description_s: resource.description_text_for(DescriptionType::ABSTRACT),
             dc_subject_sm: resource.subjects.map(&:value),
             dct_spatial_sm: resource.geo_location_places,
-            georss_box_s: resource.geo_location_boxes[0],
-            georss_point_pt: resource.geo_location_points[0],
+            georss_box_s: resource.calc_bounding_box,
+            solr_geom: resource.bounding_box_envelope,
+            solr_year_i: resource.publication_year,
             dct_issued_dt: wrapper.embargo_end_date_xmlschema,
             dc_rights_s: wrapper.license.name,
             dc_publisher_s: resource.publisher
           }
-
-          # TODO: do we need to strip nil values or does RSolr take care of that?
         end
 
         def desc_from
