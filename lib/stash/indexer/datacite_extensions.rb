@@ -130,7 +130,7 @@ module Datacite
       end
 
       def bounding_box_envelope
-        calc_bounding_box.to_envelope
+        (bbox = calc_bounding_box) ? bbox.to_envelope : nil
       end
     end
   end
