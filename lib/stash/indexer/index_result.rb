@@ -21,6 +21,10 @@ module Stash
         @timestamp = Util.utc_or_nil(timestamp) || Time.now.utc
       end
 
+      def record_id
+        record.identifier
+      end
+
       # @return [boolean] `true` if `status` is `IndexStatus::COMPLETED` and
       #   there are no errors; `false` otherwise
       def success?
