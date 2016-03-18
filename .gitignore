@@ -23,6 +23,7 @@ config/database.yml
 /spec/tmp
 .DS_Store
 public/assets
+uploads/*
 
 # Ignore code coverage reports.
 /coverage/
