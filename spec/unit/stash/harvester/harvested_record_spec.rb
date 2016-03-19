@@ -42,6 +42,20 @@ module Stash
           expect { @record.content }.to raise_error(NoMethodError)
         end
       end
+
+      describe '#as_wrapper' do
+        it 'parses the content' do
+          def @record.content
+            @content ||= File.read('spec/data/wrapped_datacite/wrapped-datacite-example.xml')
+          end
+          wrapper = @record.as_wrapper
+          expect(wrapper).to be_a(Stash::Wrapper::StashWrapper)
+          id = wrapper.identifier
+          expect(id).to be_a(Stash::Wrapper::Identifier)
+          expect(id.type).to eq(Stash::Wrapper::IdentifierType::DOI)
+          expect(id.value).to eq('10.5072/example-full')
+        end
+      end
     end
   end
 end

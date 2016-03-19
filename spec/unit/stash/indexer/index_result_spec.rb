@@ -3,7 +3,7 @@ require 'spec_helper'
 module Stash
   module Indexer
     describe IndexResult do
-      describe 'initialize' do
+      describe '#initialize' do
         it 'sets the record' do
           record = instance_double(Stash::Harvester::HarvestedRecord)
           result = IndexResult.new(record: record)
@@ -50,7 +50,17 @@ module Stash
         end
       end
 
-      describe 'success?' do
+      describe '#record_id' do
+        it 'extracts the record id' do
+          record = instance_double(Stash::Harvester::HarvestedRecord)
+          identifier = '10.12345/67890'
+          expect(record).to receive(:identifier) { identifier }
+          result = IndexResult.new(record: record)
+          expect(result.record_id).to eq(identifier)
+        end
+      end
+
+      describe '#success?' do
         it 'returns true if no errors and COMPLETED status' do
           record = instance_double(Stash::Harvester::HarvestedRecord)
           result = IndexResult.new(record: record)
