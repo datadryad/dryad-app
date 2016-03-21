@@ -2,7 +2,7 @@
 <% form_id = unique_form_id(resource_type) %>
 <%= form_for(resource_type, url: path, remote: true, authenticity_token: true, html: { id: form_id }) do |f| %>
   <%#= render "datacite/shared/error_messages", :target => @resource_type %>
-  <strong><%= f.label :resource_type, "Type of Data" %></strong><br/>
+  <strong><%= f.label :resource_type, "Type of Data", class: 'required' %></strong><br/>
   <%= f.select(:resource_type, StashDatacite::ResourceType.resource_types.keys, {}, {class: 'resource_type'}) %>
   <%= f.hidden_field :resource_id %>
   <%= f.hidden_field :id %>

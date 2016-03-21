@@ -1,7 +1,7 @@
 <%# the local variable 'title' should be passed in to this partial when there are multiple per page %>
 <% form_id = unique_form_id(title) %>
 <%= form_for(title, url: path, remote: true, authenticity_token: true, html: { id: form_id }) do |f| %>
-  <strong><%= f.label :title %></strong><br/>
+  <strong><%= f.label :title, class: 'required' %></strong><br/>
   <%= f.text_field :title, class: 'title', size: 130 %>
   <%= f.hidden_field :title_type, value: :main %>
   <%= f.hidden_field :resource_id %>
