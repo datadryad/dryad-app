@@ -63,7 +63,7 @@ module Stash
           expect(job.query_url).to eq("http://oai.example.org/oai?verb=ListRecords&from=#{from_str}&until=#{until_str}")
           expect(job.start_time.to_i).to be_within(1).of(now.to_i)
           expect(job.end_time.to_i).to be_within(1).of(now.to_i)
-          expect(job.status).to be(Indexer::IndexStatus::COMPLETED)
+          expect(job.status).to be(Stash::Harvester::Models::Status::COMPLETED)
         end
 
         it 'creates an index job'
@@ -72,6 +72,11 @@ module Stash
 
         it 'creates an indexed_record for each indexed record'
 
+        it 'logs overall job failures'
+
+        it 'sets the harvest status to failed in event of a pre-indexing failure'
+
+        it 'sets the index status to failed in event of an indexing failure'
       end
     end
   end

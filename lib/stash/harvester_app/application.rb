@@ -1,3 +1,6 @@
+require 'active_record'
+require 'db/models'
+
 module Stash
 
   module HarvesterApp
@@ -42,7 +45,26 @@ module Stash
           from_time: from_time,
           until_time: until_time
         )
-        job.harvest_and_index
+
+        # TODO: abstract out database stuff into its own interface
+        job_record = Stash::Harvester::HarvestJob.new do |j|
+          j.from_time = job.from_time
+          j.until_time = job.until_time
+          # j.query_url = job.query_url
+          j.start_time = Time.now
+          j.status = Stash::Harvester::Models::Status::IN_PROGRESS
+        end
+        job_record.save
+
+        end_status = Stash::Harvester::Models::Status::COMPLETED
+        begin
+          job.harvest_and_index
+        rescue
+          end_status = Stash::Harvester::Models::Status::FAILED
+        end
+
+        job_record.end_time = Time.now
+        job_record.status = end_status
       end
 
       def self.config_file_defaults
@@ -51,6 +73,10 @@ module Stash
       end
 
       private
+
+      def init_connection
+        @connection ||= ActiveRecord::Base.establish_connection(config.connection_info)
+      end
 
       def index_config
         config.index_config
