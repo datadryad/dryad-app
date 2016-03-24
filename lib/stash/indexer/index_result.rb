@@ -14,6 +14,7 @@ module Stash
       # @param status [IndexStatus] `IndexStatus::COMPLETED` if successful,
       #   `IndexStatus::FAILED` otherwise.
       # @param errors [Array<Exception>] errors for this record, if any.
+      # @param timestamp [Time] the time of the index operation.
       def initialize(record:, status: IndexStatus::COMPLETED, errors: [], timestamp: nil)
         @record = record
         @status = status
