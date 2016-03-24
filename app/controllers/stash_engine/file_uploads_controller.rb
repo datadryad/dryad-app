@@ -22,13 +22,21 @@ module StashEngine
     def create
       respond_to do |format|
         format.js do
-          @temp_id = params[:temp_id]
-          fu = params[:upload][:upload]
-
           dir = File.join(Rails.root, "uploads", params[:resource_id])
+          @temp_id = params[:temp_id]
+          accum_file = File.join(dir, @temp_id)
+          fu = params[:upload][:upload]
           FileUtils.mkdir_p dir unless File.exists?(dir)
+          add_to_file(accum_file, fu) # this accumulates bytes into file for chunked uploads (default 1 MB chunk)
+
+          if File.size(accum_file) < params[:hidden_bytes].to_i
+            # do not render changes to page until full file uploads and is saved into db
+            head :ok, content_type: "application/javascript"
+            return
+          end
+
           new_fn = File.join(dir, fu.original_filename)
-          FileUtils.mv(fu.tempfile.path, new_fn)
+          FileUtils.mv(accum_file, new_fn)
 
           @my_file = FileUpload.new(
             upload_file_name: fu.original_filename,
@@ -51,6 +59,10 @@ module StashEngine
 
     def set_file
       @file = FileUpload.find(params[:id])
+    end
+
+    def add_to_file(fn, fileupload)
+      File.open(fn, "ab") { |f| f.write(fileupload.read) }
     end
   end
 end
