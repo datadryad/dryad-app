@@ -24,6 +24,7 @@ module Stash
       #   subclass of `MetadataMapper` for the specified mapping)
       attr_reader :metadata_mapper
 
+      # TODO: replace connection_info with a concrete object that does what we want the DB to do
       def initialize(connection_info:, source_config:, index_config:, metadata_mapper:)
         @connection_info = connection_info
         @source_config = source_config

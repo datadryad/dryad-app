@@ -1,4 +1,6 @@
 require 'active_record'
+
+# TODO: abstract out database stuff into its own interface
 require 'db/models'
 
 module Stash
@@ -46,7 +48,6 @@ module Stash
           until_time: until_time
         )
 
-        # TODO: abstract out database stuff into its own interface
         job_record = Stash::Harvester::HarvestJob.new do |j|
           j.from_time = job.from_time
           j.until_time = job.until_time
