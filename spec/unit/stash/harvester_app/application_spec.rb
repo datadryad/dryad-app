@@ -91,7 +91,7 @@ module Stash
         it 'requires a non-nil config' do
           expect { Application.with_config(nil) }.to raise_error do |e|
             expect(e).to be_an ArgumentError
-            %w(Stash::HarvesterApp::Application Stash::Harvester::Config nil).each do |m|
+            %w(Stash::HarvesterApp::Application Stash::Config nil).each do |m|
               expect(e.message).to include(m)
             end
           end
@@ -100,7 +100,7 @@ module Stash
         it 'requires a usable Config object' do
           expect { Application.with_config(Object.new) }.to raise_error do |e|
             expect(e).to be_an ArgumentError
-            %w(Stash::HarvesterApp::Application Stash::Harvester::Config Object).each do |m|
+            %w(Stash::HarvesterApp::Application Stash::Config Object).each do |m|
               expect(e.message).to include(m)
             end
           end
