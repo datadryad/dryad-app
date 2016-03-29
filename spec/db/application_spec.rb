@@ -7,7 +7,7 @@ module Stash
       describe 'start' do
 
         before(:each) do
-          @config = Harvester::Config.from_file('spec/data/stash-harvester.yml')
+          @config = Config.from_file('spec/data/stash-harvester.yml')
           connection_info = @config.connection_info
           source_config = instance_double(Harvester::OAI::OAISourceConfig)
 
