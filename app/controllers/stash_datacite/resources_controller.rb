@@ -20,23 +20,26 @@ module StashDatacite
       end
     end
 
+    def show
+      @resource = StashDatacite.resource_class.find(1)
+    end
+
     # Review responds as a get request to review the resource before saving
     def review
       respond_to do |format|
         format.js {
           @resource = StashDatacite.resource_class.find(params[:id])
+          check_required_fields(@resource)
           @review = Resource::Review.new(@resource)
         }
       end
     end
 
     def submission
-      # respond_to do |format|
-      #   format.js {
-          @resource = StashDatacite.resource_class.find(params[:resource_id])
-          check_required_fields(@resource)
-        # }
-      # end
+      @resource = StashDatacite.resource_class.find(params[:resource_id])
+      @resource_xml = Resource::ResourceFileGeneration.new(@resource)
+      create_resource_state(:submitted, @resource)
+
     end
 
     private
@@ -44,11 +47,8 @@ module StashDatacite
     def check_required_fields(resource)
       @completions = Resource::Completions.new(resource)
       # required fields are Title, Institution, Data type, Data Creator(s), Abstract
-      if @completions.required_completed == @completions.required_total
-        create_resource_state(:submitted, resource)
-      else
-        data = flash_error_missing_data(@completions)
-        redirect_to :back, alert: "You must edit the description to include the #{data} before you can submit your dataset."
+      unless @completions.required_completed == @completions.required_total
+        @data = flash_error_missing_data(@completions)
       end
     end
 
@@ -56,9 +56,9 @@ module StashDatacite
       unless resource.current_resource_state.to_sym == state
         resource.save!
         StashEngine::ResourceState.create!(resource_id: resource.id, resource_state: :submitted, user_id: current_user.id )
-        redirect_to :back, notice: 'The dataset is submitted successfully.'
+        redirect_to stash_url_helpers.dashboard_path, notice: "#{resource.titles.first.title} submitted with doi:XXXXXXXXXX. There may be a delay for processing before the item is available."
       else
-        redirect_to :back, alert: 'This dataset has already been submitted.'
+        redirect_to stash_url_helpers.dashboard_path, alert: 'The dataset has already been submitted.'
       end
     end
 
