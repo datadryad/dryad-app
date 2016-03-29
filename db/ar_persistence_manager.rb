@@ -18,7 +18,7 @@ module Stash
       when Indexer::IndexStatus::FAILED
         Status::FAILED
       else
-        raise ArgumentError("Unknown index status: #{index_status}")
+        raise ArgumentError, "Unknown index status: #{index_status}"
       end
     end
 
@@ -28,7 +28,7 @@ module Stash
           from_time: from_time,
           until_time: until_time,
           query_url: query_url,
-          start_time: Time.now,
+          start_time: Time.now.utc,
           status: Status::IN_PROGRESS
         ).id
       end
@@ -36,19 +36,19 @@ module Stash
 
     def record_harvested_record(harvest_job_id:, identifier:, timestamp:, deleted: false)
       @pool.with_connection do
-        HarvestedRecord.create(
+        return HarvestedRecord.create(
           harvest_job_id: harvest_job_id,
           identifier: identifier,
           timestamp: timestamp,
           deleted: deleted
-        )
+        ).id
       end
     end
 
     def end_harvest_job(harvest_job_id:, status:)
       @pool.with_connection do
         HarvestJob.find_by(id: harvest_job_id).update(
-          end_time: Time.now,
+          end_time: Time.now.utc,
           status: db_status_for(status)
         )
       end
@@ -59,19 +59,20 @@ module Stash
         return IndexJob.create(
           harvest_job_id: harvest_job_id,
           solr_url: solr_url,
-          start_time: Time.now,
+          start_time: Time.now.utc,
           status: Status::IN_PROGRESS
         ).id
       end
     end
 
+    # TODO: should we pass both IDs in, or look up IJID from HRID?
     def record_indexed_record(index_job_id:, harvested_record_id:, status:)
       @pool.with_connection do
         IndexedRecord.create(
           index_job_id: index_job_id,
           harvested_record_id: harvested_record_id,
-          submitted_time: Time.now, # TODO: is this right?
-          status: db_status_for(:status)
+          submitted_time: Time.now.utc, # TODO: is this right?
+          status: db_status_for(status)
         )
       end
     end
@@ -79,7 +80,7 @@ module Stash
     def end_index_job(index_job_id:, status:)
       @pool.with_connection do
         IndexJob.find_by(id: index_job_id).update(
-          end_time: Time.now,
+          end_time: Time.now.utc,
           status: db_status_for(status)
         )
       end

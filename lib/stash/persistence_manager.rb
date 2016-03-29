@@ -13,7 +13,7 @@ module Stash
       raise NoMethodError, "#{self.class} should implement #end_harvest_job, but it doesn't"
     end
 
-    # @return [void]
+    # @return [Integer] the ID of the created record
     def record_harvested_record(harvest_job_id:, identifier:, timestamp:, deleted: false) # rubocop:disable Lint/UnusedMethodArgument
       raise NoMethodError, "#{self.class} should implement #record_harvested_record, but it doesn't"
     end
