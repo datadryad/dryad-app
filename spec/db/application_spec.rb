@@ -11,7 +11,6 @@ module Stash
           connection_info = @config.connection_info
           source_config = instance_double(Harvester::OAI::OAISourceConfig)
 
-
           source_uri = URI('http://oai.example.org/oai')
           index_uri = URI('http://solr.example.org/')
 
