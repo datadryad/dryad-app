@@ -40,8 +40,7 @@ FactoryGirl.define do
             harvest_job: harvest_job,
             identifier: "record#{index}",
             timestamp: from_timestamp + index.minutes,
-            deleted: deleted,
-            content_path: ("/tmp/record#{index}.xml" unless deleted)
+            deleted: deleted
           )
         end
 

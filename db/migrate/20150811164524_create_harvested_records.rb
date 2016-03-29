@@ -4,7 +4,6 @@ class CreateHarvestedRecords < ActiveRecord::Migration
       t.text :identifier
       t.datetime :timestamp
       t.boolean :deleted
-      t.text :content_path
       t.references :harvest_job, foreign_key: true
     end
 
