@@ -1,6 +1,7 @@
 require 'config/factory'
 require 'stash/indexer/index_config'
 
+# TODO: move this out of Stash::Harvester
 module Stash
   module Harvester
     class Config
