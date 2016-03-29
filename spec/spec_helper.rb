@@ -5,6 +5,8 @@ if ENV['COVERAGE']
   require 'simplecov'
   require 'simplecov-console'
 
+  SimpleCov.command_name 'spec:unit'
+
   SimpleCov.minimum_coverage 100
   SimpleCov.start do
     add_filter '/spec/'

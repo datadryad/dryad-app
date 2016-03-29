@@ -38,3 +38,19 @@ FactoryGirl.find_definitions
 RSpec.configure do |config|
   config.include FactoryGirl::Syntax::Methods
 end
+
+# ------------------------------------------------------------
+# SimpleCov setup
+
+if ENV['COVERAGE']
+  require 'simplecov'
+  require 'simplecov-console'
+
+  SimpleCov.command_name 'spec:db'
+
+  SimpleCov.minimum_coverage 100
+  SimpleCov.start do
+    add_filter '/lib/'
+    add_group 'db', '/db/'
+  end
+end
