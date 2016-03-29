@@ -1,6 +1,7 @@
 module Stash
   module Harvester
     module Models
+      # TODO: Merge with Indexer::IndexStatus?
       module Status
         ALL = [:pending, :in_progress, :completed, :failed].freeze
 
