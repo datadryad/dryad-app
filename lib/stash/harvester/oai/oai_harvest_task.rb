@@ -2,8 +2,6 @@ module Stash
   module Harvester
     module OAI
 
-      # TODO: check for documentation of inherited attributes
-
       # Class representing a single OAI-PMH harvest (`ListRecords`) operation.
       #
       class OAIHarvestTask < HarvestTask
