@@ -19,7 +19,7 @@ module Stash
     describe '#end_harvest_hob' do
       it 'is abstract' do
         expect do
-          @mgr.end_harvest_hob(harvest_job_id: 1, status: @completed)
+          @mgr.end_harvest_job(harvest_job_id: 1, status: @completed)
         end.to raise_error(NoMethodError)
       end
     end

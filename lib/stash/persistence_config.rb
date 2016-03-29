@@ -1,10 +1,9 @@
 require 'config/factory'
+require_relative 'persistence_manager'
 
 module Stash
   class PersistenceConfig
     include ::Config::Factory
-
-    key :db
 
     # Constructs a new `PersistenceManager` for this configuration
     # @return [PersistenceManager] a persistence manager for this configuration

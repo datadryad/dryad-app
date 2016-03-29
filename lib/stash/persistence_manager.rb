@@ -1,3 +1,5 @@
+require_relative 'indexer/index_status'
+
 module Stash
   class PersistenceManager
 
@@ -7,11 +9,11 @@ module Stash
     end
 
     # @return [void]
-    def end_harvest_hob(harvest_job_id:, status:) # rubocop:disable Lint/UnusedMethodArgument
+    def end_harvest_job(harvest_job_id:, status:) # rubocop:disable Lint/UnusedMethodArgument
       raise NoMethodError, "#{self.class} should implement #end_harvest_job, but it doesn't"
     end
 
-    # @return [Integer] the ID of the created record
+    # @return [void]
     def record_harvested_record(harvest_job_id:, identifier:, timestamp:, deleted: false) # rubocop:disable Lint/UnusedMethodArgument
       raise NoMethodError, "#{self.class} should implement #record_harvested_record, but it doesn't"
     end
@@ -26,7 +28,7 @@ module Stash
       raise NoMethodError, "#{self.class} should implement #end_index_job, but it doesn't"
     end
 
-    # @return [Integer] the ID of the created record
+    # @return [void]
     def record_indexed_record(index_job_id:, harvested_record_id:, status:) # rubocop:disable Lint/UnusedMethodArgument
       raise NoMethodError, "#{self.class} should implement #record_indexed_record, but it doesn't"
     end
