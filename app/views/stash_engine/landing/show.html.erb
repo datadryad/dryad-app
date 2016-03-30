@@ -1,2 +1,4 @@
-<h1>Landing#show</h1>
-<p>Find me in app/views/stash_engine/landing/show.html.erb</p>
+<div id="display_resource"
+     data-load="<%= metadata_url_helpers.resources_show_path(id: @resource_id, format: :js) %>">
+  <%= image_tag 'stash_engine/spinner.gif', size: '80x60', alt: 'Loading spinner' %>
+</div>
