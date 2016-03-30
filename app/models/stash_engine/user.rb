@@ -1,5 +1,6 @@
 module StashEngine
   class User < ActiveRecord::Base
+    has_many :resources
     def self.from_omniauth(auth, tenant_id)
       where(uid: auth[:uid]).first_or_initialize.tap do |user|
         user.provider = auth.provider

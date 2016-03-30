@@ -1,0 +1,19 @@
+<div style = "float: left;">
+  <%= link_to 'Back to My Datasets', stash_engine.dashboard_path , id: 'dashboard_path', class: 'link_like_button' %>
+  <%= link_to 'Save', '#', id: 'save_metadata', class: 'link_like_button' %>
+  <p id="succcess_bottom">Changes Autosaved at <%= DateTime.now.in_time_zone%></p>
+</div>
+<div style = "float: right;">
+  <%= link_to 'Proceed to Uploads', stash_engine.upload_resource_path(@resource), id: 'upload_path', class: 'link_like_button' %>
+</div>
+
+<script type="text/javascript">
+  $(document).ready(function(){
+    $("p#success_bottom").hide();
+    $("#save_metadata").click(function(e){
+      alert("hi");
+      $("p#success_bottom").show();
+      e.preventDefault();
+    });
+  });
+</script>

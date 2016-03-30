@@ -2,10 +2,13 @@
 <html>
 <head>
   <title>StashEngine</title>
-  <%= stylesheet_link_tag    "stash_engine/application", media: "all" %>
-  <%= javascript_include_tag "stash_engine/application", 'data-turbolinks-track' => true %>
-  <%= stylesheet_link_tag    "stash_datacite/application", media: "all" %>
-  <%= javascript_include_tag "stash_datacite/application", 'data-turbolinks-track' => true %>
+
+  <% # this is hacky, but dependency problems with geoblacklight/discovery loading jquery twice otherwise and no way to stop
+  if request.path.start_with?(APP_CONFIG.stash_mount) %>
+    <%= render 'layouts/stash_engine/head' %>
+  <% else %>
+    <%= render 'layouts/head' %>
+  <% end %>
   <%= csrf_meta_tags %>
 </head>
 <body>
@@ -13,19 +16,19 @@
   <header>
     <div class="logo">image for <%= current_tenant.short_name %></div>
     <div class="dash_logo">Dash</div>
-    <div class="search_and_login">Search</div>
+    <div class="search_and_login"><%= link_to 'Search', main_app.search_path %></div>
   </header>
   <nav class="menu_bar">
-    <%= link_to 'Home', root_path %>
+    <%= link_to 'Home', stash_url_helpers.root_path %>
     |
-    <%= link_to 'Browse Data', search_path %>
+    <%= link_to 'Browse Data', stash_url_helpers.search_path %>
     |
-    <%= link_to 'About Dash', about_path %>
+    <%= link_to 'About Dash', stash_url_helpers.about_path %>
     |
     <% if current_user %>
-      <%= link_to 'My Datasets', dashboard_path %>
+      <%= link_to 'My Datasets', stash_url_helpers.dashboard_path %>
     <% else %>
-      <%= link_to "My Datasets", dashboard_path, html: { style: "color: gray"} %>
+      <%= link_to "My Datasets", stash_url_helpers.dashboard_path, html: { style: "color: gray"} %>
     <% end %>
   </nav>
   <div class="log_in_out">

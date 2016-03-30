@@ -23,9 +23,9 @@
     <%= link_to 'Describe dataset', controller: 'metadata_entry_pages', action: 'find_or_create', resource_id: @resource.id %>
   </div>
   <div class="ds-nav">
-    <%= link_to 'Upload Files', upload_resource_path(@resource.id) %>
+    <%= link_to 'Upload Files', stash_engine.upload_resource_path(@resource.id) %>
   </div>
   <div class="ds-nav">
-    <%= link_to 'Review & Submit', review_resource_path(@resource.id) %>
+    <%= link_to 'Review & Submit', stash_engine.review_resource_path(@resource.id) %>
   </div>
 </div>

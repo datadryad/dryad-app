@@ -1,9 +1,12 @@
 StashEngine::Engine.routes.draw do
 
+  get 'landing/show'
+
   resources :resources do
     member do
       get 'review'
       get 'upload'
+      get 'submission'
     end
   end
   resources :tenants, only: [:index, :show]
@@ -21,6 +24,7 @@ StashEngine::Engine.routes.draw do
 
   get 'about', :to => 'pages#about'
   get 'search', :to => 'searches#index'
+  get 'show/*id', :to => 'landing#show', as: 'show'
   #get "login", :to => "test#index"
   #get 'test/index'
   #get 'test/after_login'

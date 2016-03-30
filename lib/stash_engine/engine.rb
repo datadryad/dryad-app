@@ -1,8 +1,8 @@
+require 'kaminari'
 module StashEngine
   class Engine < ::Rails::Engine
     isolate_namespace StashEngine
   end
-
   # see http://stackoverflow.com/questions/20734766/rails-mountable-engine-how-should-apps-set-configuration-variables
 
   class << self
@@ -13,5 +13,4 @@ module StashEngine
   def self.setup
     yield self
   end
-
 end
