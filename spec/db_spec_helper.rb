@@ -14,6 +14,26 @@ db = File.expand_path('db')
 $LOAD_PATH.unshift(db) unless $LOAD_PATH.include?(db)
 
 # ------------------------------------------------------------
+# SimpleCov setup
+
+if ENV['COVERAGE']
+  require 'simplecov'
+  require 'simplecov-console'
+
+  SimpleCov.command_name 'spec:db'
+
+  SimpleCov.minimum_coverage 100
+  SimpleCov.start do
+    add_group 'db', 'db'
+    add_filter '/spec/'
+    SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter[
+      SimpleCov::Formatter::HTMLFormatter,
+      SimpleCov::Formatter::Console,
+    ]
+  end
+end
+
+# ------------------------------------------------------------
 # ActiveRecord setup
 
 connection_info = YAML.load_file('db/config.yml')['test']
@@ -38,25 +58,3 @@ FactoryGirl.find_definitions
 RSpec.configure do |config|
   config.include FactoryGirl::Syntax::Methods
 end
-
-# ------------------------------------------------------------
-# SimpleCov setup
-
-if ENV['COVERAGE']
-  require 'simplecov'
-  require 'simplecov-console'
-
-  SimpleCov.command_name 'spec:db'
-
-  SimpleCov.minimum_coverage 100
-  SimpleCov.start do
-    add_filter '/spec/'
-    add_group 'db', 'db'
-    add_group 'models', 'db/models'
-    SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter[
-      SimpleCov::Formatter::HTMLFormatter,
-      SimpleCov::Formatter::Console,
-    ]
-  end
-end
-
