@@ -1,6 +1,6 @@
-require 'spec_helper'
 require 'factory_girl'
 require 'active_record'
+require 'stash'
 
 logfile = File.expand_path('log/test.log')
 FileUtils.mkdir_p File.dirname(logfile)
@@ -50,7 +50,13 @@ if ENV['COVERAGE']
 
   SimpleCov.minimum_coverage 100
   SimpleCov.start do
-    add_filter '/lib/'
-    add_group 'db', '/db/'
+    add_filter '/spec/'
+    add_group 'db', 'db'
+    add_group 'models', 'db/models'
+    SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter[
+      SimpleCov::Formatter::HTMLFormatter,
+      SimpleCov::Formatter::Console,
+    ]
   end
 end
+

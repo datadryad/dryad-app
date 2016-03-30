@@ -91,6 +91,18 @@ module Stash
         expect(job.completed?).to eq(true)
         expect(job.end_time.to_i).to be_within(1).of(now)
       end
+
+      it 'rejects an invalid status' do
+        job_id = @mgr.begin_harvest_job(query_url: URI('http://example.org/oai'))
+        expect do
+          @mgr.end_harvest_job(
+            harvest_job_id: job_id,
+            status: 'elvis'
+          )
+        end.to raise_error(ArgumentError)
+        job = HarvestJob.first
+        expect(job.in_progress?).to eq(true)
+      end
     end
 
     describe '#begin_index_job' do
@@ -129,14 +141,35 @@ module Stash
         @mgr.record_indexed_record(
           index_job_id: index_job_id,
           harvested_record_id: harvested_record_id,
-          status: Indexer::IndexStatus::COMPLETED
+          status: Indexer::IndexStatus::FAILED
         )
 
         indexed_record = IndexedRecord.first
         expect(indexed_record.index_job_id).to eq(index_job_id)
         expect(indexed_record.harvested_record_id).to eq(harvested_record_id)
         expect(indexed_record.submitted_time.to_i).to be_within(1).of(now)
-        expect(indexed_record.completed?).to eq(true)
+        expect(indexed_record.failed?).to eq(true)
+      end
+
+      it 'rejects an invalid status' do
+        harvest_job_id = @mgr.begin_harvest_job(query_url: URI('http://example.org/oai'))
+        harvested_record_id = @mgr.record_harvested_record(
+          harvest_job_id: harvest_job_id,
+          identifier: 'doi:10.123/456',
+          timestamp: Time.utc(1972, 5, 18)
+        )
+        index_job_id = @mgr.begin_index_job(
+          harvest_job_id: harvest_job_id,
+          solr_url: URI('http://example.org/solr')
+        )
+        expect do
+          @mgr.record_indexed_record(
+            index_job_id: index_job_id,
+            harvested_record_id: harvested_record_id,
+            status: 'elvis'
+          )
+        end.to raise_error(ArgumentError)
+        expect(IndexedRecord.first).to be_nil
       end
     end
 
@@ -152,6 +185,22 @@ module Stash
         index_job = IndexJob.first
         expect(index_job.end_time.to_i).to be_within(1).of(now)
         expect(index_job.completed?).to eq(true)
+      end
+
+      it 'rejects an invalid status' do
+        harvest_job_id = @mgr.begin_harvest_job(query_url: URI('http://example.org/oai'))
+        index_job_id = @mgr.begin_index_job(
+          harvest_job_id: harvest_job_id,
+          solr_url: URI('http://example.org/solr')
+        )
+        expect do
+          @mgr.end_index_job(
+            index_job_id: index_job_id,
+            status: 'elvis'
+          )
+        end.to raise_error(ArgumentError)
+        job = IndexJob.first
+        expect(job.in_progress?).to eq(true)
       end
     end
   end

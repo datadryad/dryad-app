@@ -5,11 +5,13 @@ if ENV['COVERAGE']
   require 'simplecov'
   require 'simplecov-console'
 
-  SimpleCov.command_name 'spec:unit'
+  SimpleCov.command_name 'spec:lib'
 
   SimpleCov.minimum_coverage 100
   SimpleCov.start do
+    filters.clear
     add_filter '/spec/'
+    add_group 'lib', 'lib'
     SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter[
       SimpleCov::Formatter::HTMLFormatter,
       SimpleCov::Formatter::Console,

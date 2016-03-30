@@ -37,6 +37,7 @@ task spec: 'spec:all'
 desc 'Run all tests with coverage'
 task :coverage do
   ENV['COVERAGE'] = 'true'
+
   Rake::Task['spec:unit'].execute
   Rake::Task['spec:db'].execute
 end
