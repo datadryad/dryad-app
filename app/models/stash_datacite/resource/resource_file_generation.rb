@@ -1,4 +1,4 @@
-require "datacite/mapping"
+require 'datacite/mapping'
 module StashDatacite
   module Resource
     class ResourceFileGeneration
@@ -28,9 +28,9 @@ module StashDatacite
             subjects: @resource.subjects.map do |subject|
               dm::Subject.new(value: "#{subject.subject}")
             end,
-            language: "en",
+            language: 'en',
             resource_type: dm::ResourceType.new(resource_type_general: dm::ResourceTypeGeneral::DATASET, value: "#{@resource.resource_type.resource_type}" ),
-            version: "1",
+            version: '1',
             descriptions: [
                 dm::Description.new(
                     type: dm::DescriptionType::ABSTRACT,
