@@ -1,7 +1,5 @@
-GIT
-  remote: https://github.com/CDLUC3/stash_datacite.git
-  revision: 8f8f1c53b4abfa5b9061dee43a27659dc48c77f5
-  branch: development
+PATH
+  remote: /Users/scottfisher/workspace/stash_datacite
   specs:
     stash_datacite (0.0.5)
       datacite-mapping
@@ -10,10 +8,8 @@ GIT
       rails (~> 4.2.4)
       responders (~> 2.0)
 
-GIT
-  remote: https://github.com/CDLUC3/stash_discovery.git
-  revision: f4385a7a01084b32db27fc2f5b7f8b905113bb40
-  branch: development
+PATH
+  remote: /Users/scottfisher/workspace/stash_discovery
   specs:
     stash_discovery (0.0.1)
       devise-guests (~> 0.3)
@@ -23,10 +19,8 @@ GIT
       sass-rails (~> 5.0)
       turbolinks (~> 2.5)
 
-GIT
-  remote: https://github.com/CDLUC3/stash_engine.git
-  revision: 68e14d13f043ebb9b4cb347be101d43d3bd64aa9
-  branch: development
+PATH
+  remote: /Users/scottfisher/workspace/stash_engine
   specs:
     stash_engine (0.0.17)
       carrierwave (~> 0.10.0)

@@ -31,6 +31,7 @@ module Dash2
     # Do not swallow errors in after_commit/after_rollback callbacks.
     config.active_record.raise_in_transactional_callbacks = true
     config.generators.javascript_engine = :js
+    config.web_console.automount = true # this line must be included for further web_console directives to work
     config.web_console.development_only = false
   end
 end
