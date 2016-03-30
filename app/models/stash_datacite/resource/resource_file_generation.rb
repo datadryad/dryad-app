@@ -6,56 +6,39 @@ module StashDatacite
         @resource = resource
       end
 
-      @reviewed_resource = Resource::Review.new(@resource)
+      def generate_xml
+        dm = Datacite::Mapping
+        # # Based on "Example for a simple dataset"
+        # # http://schema.datacite.org/meta/kernel-3/example/datacite-example-dataset-v3.0.xml
+        resource = dm::Resource.new(
+            identifier: dm::Identifier.new(value: '10.5072/D3P26Q35R-Test'),
 
-      dm = Datacite::Mapping
-      # Based on "Example for a simple dataset"
-      # http://schema.datacite.org/meta/kernel-3/example/datacite-example-dataset-v3.0.xml
-      resource = dm::Resource.new(
-          identifier: dm::Identifier.new(value: '10.5072/D3P26Q35R-Test'),
-          creators: [
-              # dm::Creator.new(name: 'Fosmirer, Michael'),
-              # dm::Creator.new(name: 'Wertz, Ruth'),
-              # dm::Creator.new(name: 'Purzer, Senay')
-          ],
-          titles: [
-              dm::Title.new(value: @reviewed_resource.title)
-          ],
-          publisher: @reviewed_resource.user.affliation,
-          publication_year: Time.now.year,
-          subjects: [
-              # dm::Subject.new(value: 'Assessment'),
-              # dm::Subject.new(value: 'Information Literacy'),
-              # dm::Subject.new(value: 'Engineering'),
-              # dm::Subject.new(value: 'Undergraduate Students'),
-              # dm::Subject.new(value: 'CELT'),
-              # dm::Subject.new(value: 'Purdue University')
-          ],
-          language: 'en',
-          resource_type: dm::ResourceType.new(resource_type_general: @reviewed_resource.resource_type),
-          version: '1',
-          descriptions: [
-              # dm::Description.new(
-              #     type: dm::DescriptionType::ABSTRACT,
-              #     value: 'We developed an instrument, Critical Engineering Literacy Test
-              #       (CELT), which is a multiple choice instrument designed to
-              #       measure undergraduate students’ scientific and information
-              #       literacy skills. It requires students to first read a
-              #       technical memo and, based on the memo’s arguments, answer
-              #       eight multiple choice and six open-ended response questions.
-              #       We collected data from 143 first-year engineering students and
-              #       conducted an item analysis. The KR-20 reliability of the
-              #       instrument was .39. Item difficulties ranged between .17 to
-              #       .83. The results indicate low reliability index but acceptable
-              #       levels of item difficulties and item discrimination indices.
-              #       Students were most challenged when answering items measuring
-              #       scientific and mathematical literacy (i.e., identifying
-              #       incorrect information).'
-              # )
-          ]
-      )
-      resource.save_to_xml
-      # puts resource.write_xml
+            creators: @resource.creators.map do |creator|
+              dm::Creator.new(name: '#{creator.full_name}')
+            end,
+
+            titles: [
+                dm::Title.new(value: '#{@resource.titles.where(title_type: :main).first}')
+            ],
+
+            publisher: '#{@resource.user.affliation}',
+            publication_year: Time.now.year,
+            subjects: @resource.subjects.each do |subject|
+                  dm::Subject.new(value: '#{subject.subject}')
+                end,
+            language: 'en',
+            resource_type: dm::ResourceType.new(resource_type_general: dm::ResourceTypeGeneral::DATASET, value: '#{@resource.resource_type.resource_type' ),
+            version: '1',
+            descriptions: [
+                dm::Description.new(
+                    type: dm::DescriptionType::ABSTRACT,
+                    value: '#{@resource.descriptions.where(description_type: :abstract).first.pluck(:description)}'
+                )
+            ]
+        )
+        resource.save_to_xml
+        # # puts resource.write_xml
+      end
     end
   end
 end

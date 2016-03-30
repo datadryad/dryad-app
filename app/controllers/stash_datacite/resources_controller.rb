@@ -29,17 +29,16 @@ module StashDatacite
       respond_to do |format|
         format.js {
           @resource = StashDatacite.resource_class.find(params[:id])
-          check_required_fields(@resource)
+          @data = check_required_fields(@resource)
           @review = Resource::Review.new(@resource)
         }
       end
     end
 
     def submission
-      @resource = StashDatacite.resource_class.find(params[:resource_id])
-      @resource_xml = Resource::ResourceFileGeneration.new(@resource)
-      create_resource_state(:submitted, @resource)
-
+      resource = StashDatacite.resource_class.find(params[:resource_id])
+      @resource_file_generation = Resource::ResourceFileGeneration.new(resource)
+      @resource_file_generation.generate_xml
     end
 
     private
@@ -48,7 +47,13 @@ module StashDatacite
       @completions = Resource::Completions.new(resource)
       # required fields are Title, Institution, Data type, Data Creator(s), Abstract
       unless @completions.required_completed == @completions.required_total
-        @data = flash_error_missing_data(@completions)
+        data = []
+        data << "Title" unless @completions.title
+        data << "Resource Type" unless @completions.data_type
+        data << "Abstract" unless @completions.abstract
+        data << "Author" unless @completions.creator
+        data << "Affliation" unless @completions.institution
+        return data.join(', ')
       end
     end
 
@@ -62,15 +67,15 @@ module StashDatacite
       end
     end
 
-    def flash_error_missing_data(completions)
-      data = []
-      data << "Title" unless completions.title
-      data << "Resource Type" unless completions.data_type
-      data << "Abstract" unless completions.abstract
-      data << "Author" unless completions.creator
-      data << "Affliation" unless completions.institution
-      return data.join(', ')
-    end
+    # def flash_error_missing_data(completions)
+    #   data = []
+    #   data << "Title" unless completions.title
+    #   data << "Resource Type" unless completions.data_type
+    #   data << "Abstract" unless completions.abstract
+    #   data << "Author" unless completions.creator
+    #   data << "Affliation" unless completions.institution
+    #   return data.join(', ')
+    # end
   end
 end
 
