@@ -1,0 +1,3 @@
+var resource_id = '<%= params[:id] %>';
+$('#display_resource').html("<%= escape_javascript(render(partial: 'show')) %>");
+loadReviewMap(resource_id);
