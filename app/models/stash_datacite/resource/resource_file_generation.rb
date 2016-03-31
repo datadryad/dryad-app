@@ -65,7 +65,7 @@ module StashDatacite
           ]
         )
 
-        datacite_file = resource.save_to_xml
+        datacite_root = resource.save_to_xml
 
         identifier = st::Identifier.new(
           type: ST::IdentifierType::DOI,
@@ -100,8 +100,6 @@ module StashDatacite
             ),
           ])
 
-        datacite_root = REXML::Document.new(datacite_file)
-
         wrapper = st::StashWrapper.new(
           identifier: identifier,
           version: version,
@@ -111,11 +109,7 @@ module StashDatacite
           descriptive_elements: [datacite_root]
         )
 
-        wrapper_xml = wrapper.save_to_xml
-
-        formatter = REXML::Formatters::Pretty.new
-        formatter.compact = true
-        puts formatter.write(wrapper_xml, '')
+        puts wrapper.write_xml
       end
     end
   end
