@@ -2,6 +2,7 @@ require 'config/factory'
 require_relative 'persistence_manager'
 
 module Stash
+  # TODO: do we need an abstract version, or just the concrete AR version?
   class PersistenceConfig
     include ::Config::Factory
 
