@@ -37,7 +37,7 @@ module StashDatacite
 
     def submission
       resource = StashDatacite.resource_class.find(params[:resource_id])
-      @resource_file_generation = Resource::ResourceFileGeneration.new(resource)
+      @resource_file_generation = Resource::ResourceFileGeneration.new(resource, current_tenant)
       @resource_file_generation.generate_xml
     end
 

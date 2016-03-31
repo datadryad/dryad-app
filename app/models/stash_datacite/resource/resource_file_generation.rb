@@ -68,7 +68,7 @@ module StashDatacite
         datacite_file = resource.save_to_xml
 
         identifier = st::Identifier.new(
-          type: ST::IdentifierType::DOI,
+          type: st::IdentifierType::DOI,
           value: '10.14749/1407399498'
         )
 
@@ -79,26 +79,6 @@ module StashDatacite
         )
 
         license = st::License::CC_BY
-
-        embargo = st::Embargo.new(
-          type: ST::EmbargoType::DOWNLOAD,
-          period: '1 year',
-          start_date: Date.new(2013, 8, 18),
-          end_date: Date.new(2014, 8, 18)
-        )
-
-        inventory = st::Inventory.new(
-          files: [
-            ST::StashFile.new(
-              pathname: 'HSRC_MasterSampleII.dat', size_bytes: 12_345, mime_type: 'text/plain'
-            ),
-            ST::StashFile.new(
-              pathname: 'HSRC_MasterSampleII.csv', size_bytes: 67_890, mime_type: 'text/csv'
-            ),
-            ST::StashFile.new(
-              pathname: 'HSRC_MasterSampleII.sas7bdat', size_bytes: 123_456, mime_type: 'application/x-sas-data'
-            ),
-          ])
 
         datacite_root = REXML::Document.new(datacite_file)
 

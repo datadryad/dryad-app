@@ -1,0 +1,23 @@
+<div class="review">
+  <p><%= ( @resource.resource_type ? @resource.resource_type.resource_type : '') %></p>
+
+  <h2><%= @review.title.title %></h2>
+
+  <%# render partial: "stash_datacite/resource_types/show", locals: { resource_type: @review.resource_type } %>
+  <%# render partial: "stash_datacite/titles/show", locals: { title: @review.title } %>
+  <%= render partial: "stash_datacite/creators/show", locals: { creators: @review.creators } %>
+  <hr/>
+  <%= render partial: "stash_datacite/shared/citations", locals: { creators: @review.creators, title: @review.title, resource_type: @review.resource_type } %>
+  <hr/>
+  <%= render partial: "stash_datacite/descriptions/show", locals: { abstract: @review.abstract, methods: @review.methods, usage_notes: @review.usage_notes } %>
+  <%= render partial: "stash_datacite/subjects/show", locals: { subjects: @review.subjects } %>
+  <%= render partial: "stash_datacite/contributors/show", locals: { contributors: @review.contributors } %>
+  <%= render partial: "stash_datacite/related_identifiers/show", locals: { related_identifiers: @review.related_identifiers } %>
+
+  <h3>Location</h3>
+  <div id="map_review"></div>
+  <%= render partial: "stash_datacite/geolocation_points/show", locals: { geolocation_points: @review.geolocation_points } %>
+  <%= render partial: "stash_datacite/geolocation_boxes/show", locals: { geolocation_boxes: @review.geolocation_boxes } %>
+  <%= render partial: "stash_datacite/geolocation_places/show", locals: { geolocation_places: @review.geolocation_places } %>
+
+</div>
