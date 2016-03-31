@@ -21,7 +21,13 @@ module StashDatacite
     end
 
     def show
-      @resource = StashDatacite.resource_class.find(1)
+      respond_to do |format|
+        format.js {
+          @resource = StashDatacite.resource_class.find(params[:id])
+          @data = check_required_fields(@resource)
+          @review = Resource::Review.new(@resource)
+        }
+      end
     end
 
     # Review responds as a get request to review the resource before saving
