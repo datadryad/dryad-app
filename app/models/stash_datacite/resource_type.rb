@@ -3,7 +3,7 @@ module StashDatacite
     self.table_name = 'dcs_resource_types'
     belongs_to :resource, class_name: StashDatacite.resource_class.to_s
 
-    enum resource_type: { Spreadsheet: 'spreadsheet', Image: 'image', Sound: 'sound', Video: 'audiovisual',
-                          Text: 'text', Software: 'software', MultipleTypes: 'multiple_types', Other: 'other' }
+    enum resource_type: { Spreadsheet: 'dataset', Image: 'image', Sound: 'sound', Video: 'audiovisual',
+                          Text: 'text', Software: 'software', MultipleTypes: 'collection', Other: 'other' }
   end
 end
