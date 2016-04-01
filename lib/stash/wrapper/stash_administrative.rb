@@ -18,14 +18,14 @@ module Stash
       #
       # @param version [Version] the version
       # @param license [License] the license
-      # @param embargo [Embargo] the embargo. Note that per the schema,
-      #   an `<st:embargo>` element is required even if there is no embargo
-      #   on the dataset (in which case it should use {EmbargoType::NONE}).
+      # @param embargo [Embargo, nil] the embargo information. If no `Embargo`
+      #   is supplied, it will default to an embargo of type {EmbargoType::NONE}
+      #   with the current date as start and end.
       # @param inventory [Inventory, nil] the (optional) file inventory
-      def initialize(version:, license:, embargo:, inventory: nil)
+      def initialize(version:, license:, embargo: nil, inventory: nil)
         self.version = version
         self.license = license
-        self.embargo = embargo
+        self.embargo = embargo || Embargo.none
         self.inventory = inventory
       end
     end

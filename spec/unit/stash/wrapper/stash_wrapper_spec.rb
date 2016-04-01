@@ -136,6 +136,28 @@ module Stash
         end
       end
 
+      describe '#initialize' do
+        it 'defaults to no embargo' do
+          wrapper = StashWrapper.new(
+            identifier: Identifier.new(type: IdentifierType::DOI, value: '10.14749/1407399498'),
+            version: Version.new(number: 1, date: Date.new(2013, 8, 18), note: 'Sample wrapped Datacite document'),
+            license: License::CC_BY,
+            inventory: Inventory.new(
+              files: [
+                StashFile.new(pathname: 'HSRC_MasterSampleII.dat', size_bytes: 12_345, mime_type: 'text/plain')
+              ]),
+            descriptive_elements: []
+          )
+          embargo = wrapper.embargo
+          expect(embargo).to be_an(Embargo)
+          expect(embargo.type).to eq(EmbargoType::NONE)
+          expect(embargo.period).to eq('none')
+          today = Date.today
+          expect(embargo.start_date).to eq(today)
+          expect(embargo.end_date).to eq(today)
+        end
+      end
+
       describe '#save_to_xml' do
 
         describe 'namespace handling' do

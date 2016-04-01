@@ -29,13 +29,13 @@ module Stash
       # @param identifier [Identifier] the identifier
       # @param version [Version] the version
       # @param license [License] the license
-      # @param embargo [Embargo] the embargo. Note that per the schema,
-      #   an `<st:embargo>` element is required even if there is no embargo
-      #   on the dataset (in which case it should use {EmbargoType::NONE}).
+      # @param embargo [Embargo, nil] the embargo information. If no `Embargo`
+      #   is supplied, it will default to an embargo of type {EmbargoType::NONE}
+      #   with the current date as start and end.
       # @param inventory [Inventory, nil] the (optional) file inventory
       # @param descriptive_elements [Array<REXML::Element>] the encapsulated
       #   XML metadata
-      def initialize(identifier:, version:, license:, embargo:, inventory: nil, descriptive_elements:) # rubocop:disable Metrics/ParameterLists
+      def initialize(identifier:, version:, license:, embargo: nil, inventory: nil, descriptive_elements:) # rubocop:disable Metrics/ParameterLists
         self.identifier = identifier
         self.stash_administrative = StashAdministrative.new(
           version: version,
