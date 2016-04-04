@@ -36,7 +36,12 @@ module StashDatacite
         format.js {
           @resource = StashDatacite.resource_class.find(params[:id])
           @data = check_required_fields(@resource)
-          @review = Resource::Review.new(@resource)
+                    @review = Resource::Review.new(@resource)
+          if @data.nil?
+            ''
+          else
+            flash[:alert] = "You must edit the description to include the #{@data} before you can submit your dataset."
+          end
         }
       end
     end
@@ -73,16 +78,6 @@ module StashDatacite
         redirect_to stash_url_helpers.dashboard_path, alert: 'The dataset has already been submitted.'
       end
     end
-
-    # def flash_error_missing_data(completions)
-    #   data = []
-    #   data << "Title" unless completions.title
-    #   data << "Resource Type" unless completions.data_type
-    #   data << "Abstract" unless completions.abstract
-    #   data << "Author" unless completions.creator
-    #   data << "Affliation" unless completions.institution
-    #   return data.join(', ')
-    # end
   end
 end
 

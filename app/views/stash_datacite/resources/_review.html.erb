@@ -33,6 +33,11 @@
   <%= link_to 'Back to My Datasets', stash_url_helpers.dashboard_path , id: 'dashboard_path', class: 'link_like_button' %>
 </div>
 <div style = "float: right;margin: auto;">
-  <%#= link_to 'Submit', '#', id: 'submit_popup', class: 'link_like_button' %>
-  <%= link_to "Submit", stash_datacite.resources_submission_path(resource_id: @resource.id), data: { :confirm => 'You sure you want to submit?'} , class: 'link_like_button' %>
+  <%= link_to "Submit", stash_datacite.resources_submission_path(resource_id: @resource.id), data: { confirm: 'You sure you want to submit?'} , class: 'link_like_button' %>
 </div>
+
+<script type="text/javascript">
+<% flash.each do |type, message| %>
+  $("#flash_messages").html("<%= type.to_s.humanize %>: <%= message.html_safe %>")
+<% end %>
+</script>
