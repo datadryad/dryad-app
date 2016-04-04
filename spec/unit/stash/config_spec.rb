@@ -1,7 +1,6 @@
 require 'spec_helper'
 require 'fileutils'
 
-
 module Stash
 
   class MockDBConfig < PersistenceConfig
