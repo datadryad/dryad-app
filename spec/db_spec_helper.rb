@@ -36,8 +36,8 @@ end
 # ------------------------------------------------------------
 # ActiveRecord setup
 
-connection_info = YAML.load_file('db/config.yml')['test']
-ActiveRecord::Base.establish_connection(connection_info)
+persistence_config = YAML.load_file('db/config.yml')['test']
+ActiveRecord::Base.establish_connection(persistence_config)
 ActiveRecord::Migration.verbose = false
 ActiveRecord::Migrator.up 'db/migrate'
 

@@ -5,10 +5,14 @@ require_relative 'ar_persistence_manager'
 module Stash
   # Configuration for ActiveRecord persistence.
   class ARPersistenceConfig < PersistenceConfig
+
+    can_build_if { |config| config.key?(:adapter) }
+
     # Creates a new `ARPersistenceConfig`
-    # @param connection_info [Hash] ActiveRecord connection info
+    # @param persistence_config [Hash] ActiveRecord connection info
     def initialize(**connection_info)
-      @connection_spec = ActiveRecord::ConnectionAdapters::ConnectionSpecification.new(connection_info)
+      adapter = connection_info[:adapter]
+      @connection_spec = ActiveRecord::ConnectionAdapters::ConnectionSpecification.new(connection_info, "#{adapter}_connection")
     end
 
     def create_manager

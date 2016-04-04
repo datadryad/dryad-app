@@ -9,7 +9,7 @@ module Stash
 
           before(:each) do
             @config = Config.from_file('spec/data/stash-harvester.yml')
-            connection_info = @config.connection_info
+            connection_info = @config.persistence_config
             source_config = instance_double(Harvester::OAI::OAISourceConfig)
 
             source_uri = URI('http://oai.example.org/oai')
@@ -29,7 +29,7 @@ module Stash
             allow(index_config).to receive(:uri) { index_uri }
 
             @config = Config.allocate
-            allow(@config).to receive(:connection_info) { connection_info }
+            allow(@config).to receive(:persistence_config) { connection_info }
             allow(@config).to receive(:source_config) { source_config }
             allow(@config).to receive(:index_config) { index_config }
             allow(@config).to receive(:metadata_mapper) { metadata_mapper }

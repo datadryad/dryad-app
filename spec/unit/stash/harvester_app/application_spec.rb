@@ -141,12 +141,22 @@ module Stash
 
           @records = Array.new(5) { |_i| instance_double(Stash::Harvester::HarvestedRecord) }.lazy
 
+          @p_mgr = instance_double(PersistenceManager)
+
           @config = Config.allocate
-          allow(@config).to receive(:connection_info) { {} }
+          allow(@config).to receive(:persistence_manager) { p_mgr }
           allow(@config).to receive(:source_config) { @source_config }
           allow(@config).to receive(:index_config) { @index_config }
           allow(@config).to receive(:metadata_mapper) { @metadata_mapper }
         end
+
+        it 'creates a harvest job'
+        it 'creates an index job'
+        it 'creates a harvested_record for each harvested record'
+        it 'creates an indexed_record for each indexed record'
+        it 'logs overall job failures'
+        it 'sets the harvest status to failed in event of a pre-indexing failure'
+        it 'sets the index status to failed in event of an indexing failure'
 
         it 'logs the from_time and until_time'
         it 'sets from_time, if specified'

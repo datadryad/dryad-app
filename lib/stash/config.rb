@@ -7,9 +7,9 @@ require_relative 'indexer/metadata_mapper'
 module Stash
   class Config
 
-    # The database connection info, as a hash
-    # @return [Hash<String, String>] the database connection info
-    attr_reader :connection_info
+    # The persistence configuration
+    # @return [PersistenceConfig] the configuration
+    attr_reader :persistence_config
 
     # The harvest source configuration
     # @return [SourceConfig] the configuration (as an appropriate
@@ -26,9 +26,8 @@ module Stash
     #   subclass of `MetadataMapper` for the specified mapping)
     attr_reader :metadata_mapper
 
-    # TODO: replace connection_info with a concrete object that does what we want the DB to do
-    def initialize(connection_info:, source_config:, index_config:, metadata_mapper:)
-      @connection_info = connection_info
+    def initialize(persistence_config:, source_config:, index_config:, metadata_mapper:)
+      @persistence_config = persistence_config
       @source_config = source_config
       @index_config = index_config
       @metadata_mapper = metadata_mapper
@@ -54,11 +53,11 @@ module Stash
     #
     # @param env [Config::Factory::Environment] the configuration environment.
     def self.from_env(env)
-      connection_info = env.args_for(:db)
+      persistence_config = PersistenceConfig.for_environment(env, :db)
       source_config = Harvester::SourceConfig.for_environment(env, :source)
       index_config = Indexer::IndexConfig.for_environment(env, :index)
       metadata_mapper = Indexer::MetadataMapper.for_environment(env, :mapper)
-      Config.new(connection_info: connection_info, source_config: source_config, index_config: index_config, metadata_mapper: metadata_mapper)
+      Config.new(persistence_config: persistence_config, source_config: source_config, index_config: index_config, metadata_mapper: metadata_mapper)
     end
 
     # Private methods

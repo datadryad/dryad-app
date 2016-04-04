@@ -1,7 +1,19 @@
 require 'spec_helper'
 require 'fileutils'
 
+
 module Stash
+
+  class MockDBConfig < PersistenceConfig
+    can_build_if { |config| config.key?(:adapter) }
+
+    attr_reader :connection_info
+
+    def initialize(**connection_info)
+      @connection_info = connection_info
+    end
+  end
+
   describe Config do
     describe '#new' do
       it 'requires db, source, and index config' do
@@ -28,15 +40,16 @@ module Stash
         @config = Config.from_env(env)
       end
 
-      it 'extracts the DB connection info' do
-        connection_info = @config.connection_info
-        expect(connection_info['adapter']).to eq('sqlite3')
-        expect(connection_info['database']).to eq(':memory:')
-        expect(connection_info['pool']).to eq(5)
-        expect(connection_info['timeout']).to eq(5000)
+      it 'builds a PersistenceConfig' do
+        persistence_config = @config.persistence_config
+        connection_info = persistence_config.connection_info
+        expect(connection_info[:adapter]).to eq('sqlite3')
+        expect(connection_info[:database]).to eq(':memory:')
+        expect(connection_info[:pool]).to eq(5)
+        expect(connection_info[:timeout]).to eq(5000)
       end
 
-      it 'extracts the IndexConfig' do
+      it 'builds a IndexConfig' do
         index_config = @config.index_config
         expect(index_config).to be_an(Indexer::Solr::SolrIndexConfig)
         expect(index_config.uri).to eq(URI('http://solr.example.org/'))
@@ -51,7 +64,7 @@ module Stash
         expect(opts[:retry_after_limit]).to eq(20)
       end
 
-      it 'extracts the SourceConfig' do
+      it 'builds a SourceConfig' do
         source_config = @config.source_config
         expect(source_config).to be_a(Harvester::OAI::OAISourceConfig)
         expect(source_config.source_uri).to eq(URI('http://oai.example.org/oai'))
@@ -60,7 +73,7 @@ module Stash
         expect(source_config.seconds_granularity).to be true
       end
 
-      it 'creates a MetadataMapper' do
+      it 'builds a MetadataMapper' do
         metadata_mapper = @config.metadata_mapper
         expect(metadata_mapper).to be_a(Indexer::DataciteGeoblacklight::Mapper)
       end
@@ -110,11 +123,12 @@ module Stash
       it 'reads a file' do
         @config = Config.from_file('spec/data/stash-harvester.yml')
 
-        connection_info = @config.connection_info
-        expect(connection_info['adapter']).to eq('sqlite3')
-        expect(connection_info['database']).to eq(':memory:')
-        expect(connection_info['pool']).to eq(5)
-        expect(connection_info['timeout']).to eq(5000)
+        persistence_config = @config.persistence_config
+        connection_info = persistence_config.connection_info
+        expect(connection_info[:adapter]).to eq('sqlite3')
+        expect(connection_info[:database]).to eq(':memory:')
+        expect(connection_info[:pool]).to eq(5)
+        expect(connection_info[:timeout]).to eq(5000)
 
         index_config = @config.index_config
         expect(index_config).to be_a(Indexer::Solr::SolrIndexConfig)
