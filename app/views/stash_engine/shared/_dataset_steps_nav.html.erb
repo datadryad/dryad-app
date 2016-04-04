@@ -29,3 +29,6 @@
     <%= link_to 'Review & Submit', stash_engine.review_resource_path(@resource.id) %>
   </div>
 </div>
+<div id="flash">
+  <%= render partial: "stash_engine/shared/flash_messages", flash: flash %>
+</div>
