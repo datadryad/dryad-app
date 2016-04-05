@@ -18,6 +18,7 @@ module Stash
 
         index_config = instance_double(Indexer::IndexConfig)
         allow(index_config).to receive(:create_indexer)
+        allow(index_config).to receive(:uri) { URI('http://solr.example.org/') }
 
         metadata_mapper = instance_double(Indexer::MetadataMapper)
 
@@ -40,6 +41,7 @@ module Stash
 
         index_config = instance_double(Indexer::IndexConfig)
         expect(index_config).to receive(:create_indexer) { indexer }
+        allow(index_config).to receive(:uri) { URI('http://solr.example.org/') }
 
         metadata_mapper = instance_double(Indexer::MetadataMapper)
 
@@ -151,14 +153,31 @@ module Stash
           @job.harvest_and_index
         end
 
+        it 'sets the harvest status to failed in event of a pre-indexing failure' do
+          e = Exception.new('oops')
+          expect(@harvest_task).to receive(:harvest_records).and_raise(e)
+          expect(@persistence_mgr).to receive(:end_harvest_job).with(harvest_job_id: @harvest_job_id, status: Indexer::IndexStatus::FAILED)
+          expect { @job.harvest_and_index }.to raise_error(e)
+        end
+
+        it 'sets the index status to failed in event of an indexing failure' do
+          e = Exception.new('oops')
+          expect(@indexer).to receive(:index).and_raise(e)
+          expect(@persistence_mgr).to receive(:end_index_job).with(index_job_id: @index_job_id, status: Indexer::IndexStatus::FAILED)
+          expect { @job.harvest_and_index }.to raise_error(e)
+        end
+
+        it 'sets the harvest status to successful in event of an indexing failure' do
+          e = Exception.new('oops')
+          expect(@indexer).to receive(:index).and_raise(e)
+          expect(@persistence_mgr).to receive(:end_harvest_job).with(harvest_job_id: @harvest_job_id, status: Indexer::IndexStatus::COMPLETED)
+          expect { @job.harvest_and_index }.to raise_error(e)
+        end
+
         it 'creates a harvested_record for each harvested record'
         it 'creates an indexed_record for each indexed record'
+
         it 'logs overall job failures'
-        it 'sets the harvest status to failed in event of a pre-indexing failure'
-        it 'sets the harvest status to successful in event of a harvesting success'
-        it 'sets the index status to failed in event of an indexing failure'
-        it 'sets the harvest status to successful in event of an indexing failure'
-        it 'sets the index status to successful in event of an indexing success'
         it 'logs each successfully indexed record'
         it 'logs each successfully deleted record'
         it 'logs each failed record'
