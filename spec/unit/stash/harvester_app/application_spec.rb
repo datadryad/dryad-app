@@ -150,7 +150,17 @@ module Stash
           allow(@config).to receive(:metadata_mapper) { @metadata_mapper }
         end
 
-        it 'creates a harvest job'
+        it 'creates a harvest job' do
+          app = Application.with_config(@config)
+
+          from_time = Time.utc(2014, 1, 1)
+          until_time = Time.utc(2016, 1, 1)
+
+          # TODO: figure out where we get the query URL
+          expect(@p_mgr).to receive(:begin_harvest_job).with(from_time: from_time, until_time: until_time, query_url: query_url)
+          app.start(from_time: from_time, until_time: until_time)
+        end
+
         it 'creates an index job'
         it 'creates a harvested_record for each harvested record'
         it 'creates an indexed_record for each indexed record'
