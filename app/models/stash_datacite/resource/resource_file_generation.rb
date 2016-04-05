@@ -41,6 +41,10 @@ module StashDatacite
             dm::Creator.new(name: "#{creator.creator_full_name}")
           end,
 
+          contributors: @resource.contributors.map do |contributor|
+            dm::Contributor.new(name: "#{contributor.contributor_name}", type: "#{contributor.contributor_type}")
+          end,
+
           titles: [
               dm::Title.new(value: "#{@resource.titles.where(title_type: :main).first.title}")
           ],
@@ -132,11 +136,84 @@ module StashDatacite
         f = File.open("#{stash_wrapper_directory}/#{stash_wrapper_target}", 'w') { |f| f.write(stash_wrapper) }
         puts stash_wrapper
       end
+
+      def generate_dublincore
+        xml_content = File.new("#{Rails.root}/public/uploads/#{@resource.id}_dublincore.xml", "w:ASCII-8BIT")
+
+        dc_builder = Nokogiri::XML::Builder.new do |xml|
+          xml.qualifieddc('xmlns:xsi' => 'http://www.w3.org/2001/XMLSchema-instance',
+                          'xsi:noNamespaceSchemaLocation' => 'http://dublincore.org/schemas/xmls/qdc/2008/02/11/qualifieddc.xsd',
+                          'xmlns:dc' => 'http://purl.org/dc/elements/1.1/',
+                          'xmlns:dcterms' => 'http://purl.org/dc/terms/') {
+
+            @resource.creators.each do |c|
+              xml.send(:'dc:creator', "#{c.creator_full_name.gsub(/\r/,"")}")
+            end
+
+            @resource.contributors.each do |c|
+              xml.send(:'dc:contributor', "#{c.contributor_name.gsub(/\r/,"")}")
+              xml.send(:'dc:description', "#{c.award_number.gsub(/\r/,"")}")
+            end
+
+            xml.send(:'dc:title', "#{@resource.titles.where(title_type: :main).first.title}")
+            xml.send(:'dc:publisher', "#{@current_tenant.long_name || 'unknown'}")
+            xml.send(:'dc:date', Time.now.year)
+
+            @resource.subjects.each do |s|
+              xml.send(:'dc:subject', "#{s.subject.gsub(/\r/,"")}")
+            end
+
+            xml.send(:'dc:type', "#{@resource.resource_type.resource_type}")
+            #xml.send(:'dcterms:extent', @total_size)
+
+            @resource.rights.each do |r|
+              xml.send(:'dc:rights', "#{r.rights}")
+              xml.send(:'dcterms:license', "#{r.rights_uri}", "xsi:type" => "dcterms:URI")
+            end
+
+            unless @resource.descriptions.blank?
+              @resource.descriptions.each do |d|
+                xml.send(:'dc:description', "#{d.description.gsub(/\r/,"")}")
+              end
+            end
+
+            @relation_types = StashDatacite::RelationType.all
+            @resource.related_identifiers.each do |r|
+
+              case r.relation_type
+                when "IsPartOf"
+                  xml.send(:'dcterms:isPartOf', "#{r.related_identifier_type.related_identifier_type}" + ": " + "#{r.related_identifier}")
+                when "HasPart"
+                  xml.send(:'dcterms:hasPart',  "#{r.related_identifier_type.related_identifier_type}" + ": " + "#{r.related_identifier}")
+                when "IsCitedBy"
+                  xml.send(:'dcterms:isReferencedBy',  "#{r.related_identifier_type.related_identifier_type}" + ": " + "#{r.related_identifier}")
+                when "Cites"
+                  xml.send(:'dcterms:references',  "#{r.related_identifier_type.related_identifier_type}" + ": " + "#{r.related_identifier}")
+                when "IsReferencedBy"
+                  xml.send(:'dcterms:isReferencedBy',  "#{r.related_identifier_type.related_identifier_type}" + ": " + "#{r.related_identifier}")
+                when "References"
+                  xml.send(:'dcterms:references',  "#{r.related_identifier_type.related_identifier_type}" + ": " + "#{r.related_identifier}")
+                when "IsNewVersionOf"
+                  xml.send(:'dcterms:isVersionOf',  "#{r.related_identifier_type.related_identifier_type}" + ": " + "#{r.related_identifier}")
+                when "IsPreviousVersionOf"
+                  xml.send(:'dcterms:hasVersion',  "#{r.related_identifier_type.related_identifier_type}" + ": " + "#{r.related_identifier}")
+                when "IsVariantFormOf"
+                  xml.send(:'dcterms:isVersionOf',  "#{r.related_identifier_type.related_identifier_type}" + ": " + "#{r.related_identifier}")
+                when "IsOriginalFormOf"
+                  xml.send(:'dcterms:hasVersion',  "#{r.related_identifier_type.related_identifier_type}" + ": " + "#{r.related_identifier}")
+                else
+                  xml.send(:'dcterms:relation',  "#{r.related_identifier_type.related_identifier_type}" + ": " + "#{r.related_identifier}")
+              end
+            end
+
+          }
+        end
+
+        f = File.open("#{Rails.root}/public/uploads/#{@resource.id}_dublincore.xml", 'w') { |f| f.print(dc_builder.to_xml) }
+        puts dc_builder.to_xml.to_s
+        dc_builder.to_xml.to_s
+      end
+
     end
   end
 end
-
-
-
-
-
