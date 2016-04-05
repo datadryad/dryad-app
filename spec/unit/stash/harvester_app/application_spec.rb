@@ -142,37 +142,15 @@ module Stash
           @records = Array.new(5) { |_i| instance_double(Stash::Harvester::HarvestedRecord) }.lazy
 
           @p_mgr = instance_double(PersistenceManager)
+          @p_config = instance_double(PersistenceConfig)
+          allow(@p_config).to receive(:create_manager) { @p_mgr }
 
           @config = Config.allocate
-          allow(@config).to receive(:persistence_manager) { p_mgr }
+          allow(@config).to receive(:persistence_config) { @p_config }
           allow(@config).to receive(:source_config) { @source_config }
           allow(@config).to receive(:index_config) { @index_config }
           allow(@config).to receive(:metadata_mapper) { @metadata_mapper }
         end
-
-        it 'creates a harvest job' do
-          app = Application.with_config(@config)
-
-          from_time = Time.utc(2014, 1, 1)
-          until_time = Time.utc(2016, 1, 1)
-
-          # TODO: figure out where we get the query URL
-          expect(@p_mgr).to receive(:begin_harvest_job).with(from_time: from_time, until_time: until_time, query_url: query_url)
-          app.start(from_time: from_time, until_time: until_time)
-        end
-
-        it 'creates an index job'
-        it 'creates a harvested_record for each harvested record'
-        it 'creates an indexed_record for each indexed record'
-        it 'logs overall job failures'
-        it 'sets the harvest status to failed in event of a pre-indexing failure'
-        it 'sets the index status to failed in event of an indexing failure'
-
-        it 'logs the from_time and until_time'
-        it 'sets from_time, if specified'
-        it 'sets until_time, if specified'
-        it 'reads from_time from the database, if not specified'
-        it 'defaults until_time to now, if not specified'
 
         it 'harvests and indexes' do
           app = Application.with_config(@config)
@@ -184,6 +162,12 @@ module Stash
         it 'sets the datestamp of the earliest failure as the next start'
         it 'sets the datestamp of the latest success as the next start, if no failures'
         it 'bases success/failure datestamp determination only on the most recent harvest job'
+
+        it 'logs the from_time and until_time'
+        it 'sets from_time, if specified'
+        it 'sets until_time, if specified'
+        it 'reads from_time from the database, if not specified'
+        it 'defaults until_time to now, if not specified'
       end
     end
   end

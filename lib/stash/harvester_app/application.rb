@@ -39,6 +39,7 @@ module Stash
           source_config: source_config,
           index_config: index_config,
           metadata_mapper: metadata_mapper,
+          persistence_mgr: persistence_manager,
           from_time: from_time,
           until_time: until_time
         )
@@ -62,6 +63,10 @@ module Stash
 
       def metadata_mapper
         config.metadata_mapper
+      end
+
+      def persistence_manager
+        @persistence_mgr ||= config.persistence_config.create_manager
       end
 
       def self.ensure_config_file(config_file)
