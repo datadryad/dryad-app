@@ -5,7 +5,7 @@ module Stash
   describe HarvestAndIndexJob do
 
     before(:each) do
-      @persistence_mgr = instance_double(PersistenceManager)
+      @persistence_mgr = instance_double(PersistenceManager).as_null_object
     end
 
     describe '#initialize' do
@@ -59,6 +59,7 @@ module Stash
 
         @indexer = instance_double(Indexer::Indexer)
         @index_config = instance_double(Indexer::IndexConfig)
+        allow(@index_config).to receive(:uri) { URI('http://solr.example.org/') }
         expect(@index_config).to receive(:create_indexer).with(@metadata_mapper) { @indexer }
 
         @records = Array.new(3) { |_i| instance_double(Stash::Harvester::HarvestedRecord) }.lazy
@@ -67,8 +68,6 @@ module Stash
         allow(@harvest_task).to receive(:from_time)
         allow(@harvest_task).to receive(:until_time)
         allow(@harvest_task).to receive(:query_uri) { URI('http://source.example.org/') }
-
-        allow(@persistence_mgr).to receive(:begin_harvest_job)
       end
 
       it 'harvests and indexes records (even if no block given)' do
@@ -112,47 +111,58 @@ module Stash
         job.harvest_and_index
       end
 
-      it 'logs each successfully indexed record'
+      describe 'persistence' do
+        before(:each) do
+          @from_time = Time.utc(2014, 1, 1)
+          @until_time = Time.utc(2016, 1, 1)
 
-      it 'logs each successfully deleted record'
+          @job = HarvestAndIndexJob.new(
+            source_config: @source_config,
+            index_config: @index_config,
+            metadata_mapper: @metadata_mapper,
+            persistence_manager: @persistence_mgr,
+            from_time: @from_time,
+            until_time: @until_time
+          )
 
-      it 'logs each failed record'
+          @query_url = URI('http://source.example.org/')
+          allow(@harvest_task).to receive(:from_time) { @from_time }
+          allow(@harvest_task).to receive(:until_time) { @until_time }
+          allow(@harvest_task).to receive(:query_uri) { @query_url }
 
-      it 'creates a harvest job' do
-        from_time = Time.utc(2014, 1, 1)
-        until_time = Time.utc(2016, 1, 1)
+          @harvest_job_id = 17
+          allow(@persistence_mgr).to receive(:begin_harvest_job).with(any_args).and_return(@harvest_job_id)
 
-        job = HarvestAndIndexJob.new(
-          source_config: @source_config,
-          index_config: @index_config,
-          metadata_mapper: @metadata_mapper,
-          persistence_manager: @persistence_mgr,
-          from_time: from_time,
-          until_time: until_time
-        )
+          @index_job_id = 19
+          allow(@persistence_mgr).to receive(:begin_index_job).with(any_args).and_return(@index_job_id)
 
-        query_url = URI('http://source.example.org/')
-        allow(@harvest_task).to receive(:from_time) { from_time }
-        allow(@harvest_task).to receive(:until_time) { until_time }
-        allow(@harvest_task).to receive(:query_uri) { query_url }
+          allow(@indexer).to receive(:index).with(@records)
+        end
 
-        allow(@indexer).to receive(:index).with(@records)
+        it 'begins/ends a harvest job' do
+          expect(@persistence_mgr).to receive(:begin_harvest_job).with(from_time: @from_time, until_time: @until_time, query_url: @query_url).and_return(@harvest_job_id)
+          expect(@persistence_mgr).to receive(:end_harvest_job).with(harvest_job_id: @harvest_job_id, status: Indexer::IndexStatus::COMPLETED)
+          @job.harvest_and_index
+        end
 
-        expect(@persistence_mgr).to receive(:begin_harvest_job).with(from_time: from_time, until_time: until_time, query_url: query_url)
+        it 'begins/ends an index job' do
+          expect(@persistence_mgr).to receive(:begin_index_job).with(harvest_job_id: @harvest_job_id, solr_url: @index_config.uri) { @index_job_id }
+          expect(@persistence_mgr).to receive(:end_index_job).with(index_job_id: @index_job_id, status: Indexer::IndexStatus::COMPLETED)
+          @job.harvest_and_index
+        end
 
-        job.harvest_and_index
+        it 'creates a harvested_record for each harvested record'
+        it 'creates an indexed_record for each indexed record'
+        it 'logs overall job failures'
+        it 'sets the harvest status to failed in event of a pre-indexing failure'
+        it 'sets the harvest status to successful in event of a harvesting success'
+        it 'sets the index status to failed in event of an indexing failure'
+        it 'sets the harvest status to successful in event of an indexing failure'
+        it 'sets the index status to successful in event of an indexing success'
+        it 'logs each successfully indexed record'
+        it 'logs each successfully deleted record'
+        it 'logs each failed record'
       end
-
-      it 'creates an index job'
-      it 'creates a harvested_record for each harvested record'
-      it 'creates an indexed_record for each indexed record'
-      it 'logs overall job failures'
-      it 'sets the harvest status to failed in event of a pre-indexing failure'
-      it 'sets the harvest status to successful in event of a harvesting success'
-      it 'sets the index status to failed in event of an indexing failure'
-      it 'sets the harvest status to successful in event of an indexing failure'
-      it 'sets the index status to successful in event of an indexing success'
-
     end
   end
 end

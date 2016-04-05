@@ -127,8 +127,7 @@ module Stash
           persistence_config = instance_double(PersistenceConfig)
           allow(PersistenceConfig).to receive(:new) { persistence_config }
 
-          @persistence_mgr = instance_double(PersistenceManager)
-          allow(@persistence_mgr).to receive(:begin_harvest_job).with(any_args)
+          @persistence_mgr = instance_double(PersistenceManager).as_null_object
           allow(persistence_config).to receive(:create_manager) { @persistence_mgr }
 
           # Mock Solr
@@ -143,8 +142,8 @@ module Stash
           # Mock OAI
           @stash_wrappers = []
           oai_records = ['spec/data/wrapped_datacite/wrapped-datacite-all-geodata.xml',
-           'spec/data/wrapped_datacite/wrapped-datacite-no-geodata.xml',
-           'spec/data/wrapped_datacite/wrapped-datacite-place-only.xml'].map do |xml|
+                         'spec/data/wrapped_datacite/wrapped-datacite-no-geodata.xml',
+                         'spec/data/wrapped_datacite/wrapped-datacite-place-only.xml'].map do |xml|
             stash_wrapper = Stash::Wrapper::StashWrapper.parse_xml(File.read(xml))
             @stash_wrappers << stash_wrapper
             ark = "http://n2t.net/ark:/#{Digest::MD5.hexdigest(stash_wrapper.id_value)}"

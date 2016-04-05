@@ -14,12 +14,35 @@ module Stash
     end
 
     def harvest_and_index(&block)
-      persistence_mgr.begin_harvest_job(
-        from_time: harvest_task.from_time,
-        until_time: harvest_task.until_time,
-        query_url: harvest_task.query_uri)
-      harvested_records = harvest_task.harvest_records
+      harvested_records = harvest
       indexer.index(harvested_records, &block)
+    end
+
+    private
+
+    def harvest
+      job_id = begin_harvest_job(harvest_task)
+      status = Indexer::IndexStatus::COMPLETED
+      begin
+        harvest_task.harvest_records
+      rescue => e
+        status = Indexer::IndexStatus::FAILED
+        raise e
+      ensure
+        end_harvest_job(job_id, status)
+      end
+    end
+
+    def begin_harvest_job(task)
+      persistence_mgr.begin_harvest_job(
+        from_time: task.from_time,
+        until_time: task.until_time,
+        query_url: task.query_uri
+      )
+    end
+
+    def end_harvest_job(job_id, status)
+      persistence_mgr.end_harvest_job(harvest_job_id: job_id, status: status)
     end
 
   end
