@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/CDLUC3/stash_datacite.git
-  revision: 8f8f1c53b4abfa5b9061dee43a27659dc48c77f5
+  revision: ccb27730603592654390de1d13189f63be150cb6
   branch: development
   specs:
     stash_datacite (0.0.5)
@@ -9,6 +9,7 @@ GIT
       leaflet-rails
       rails (~> 4.2.4)
       responders (~> 2.0)
+      stash-wrapper
 
 GIT
   remote: https://github.com/CDLUC3/stash_discovery.git
@@ -25,7 +26,7 @@ GIT
 
 GIT
   remote: https://github.com/CDLUC3/stash_engine.git
-  revision: 68e14d13f043ebb9b4cb347be101d43d3bd64aa9
+  revision: 60d9ae1a44ae2adcc688c76d7af97d7ce1127846
   branch: development
   specs:
     stash_engine (0.0.17)
@@ -84,7 +85,7 @@ GEM
     ansi (1.5.0)
     arel (6.0.3)
     ast (2.2.0)
-    autoprefixer-rails (6.3.5)
+    autoprefixer-rails (6.3.6)
       execjs
     bcrypt (3.1.11)
     binding_of_caller (0.7.2)
@@ -325,6 +326,9 @@ GEM
     sshkit (1.9.0)
       net-scp (>= 1.1.2)
       net-ssh (>= 2.8.0)
+    stash-wrapper (0.1.2)
+      typesafe_enum (~> 0.1, >= 0.1.5)
+      xml-mapping_extensions (~> 0.3, >= 0.3.4)
     therubyracer (0.12.2)
       libv8 (~> 3.16.14.0)
       ref
