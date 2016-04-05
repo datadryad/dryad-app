@@ -214,6 +214,44 @@ module StashDatacite
         dc_builder.to_xml.to_s
       end
 
+      def generate_dataone
+        File.new("#{Rails.root}/public/uploads/#{@resource.id}_dataone.txt", "w:ASCII-8BIT")
+
+        @files = uploads_list(@resource)
+        content =   "#%dataonem_0.1 " + "\n" +
+            "#%profile | http://uc3.cdlib.org/registry/ingest/manifest/mrt-dataone-manifest " + "\n" +
+            "#%prefix | dom: | http://uc3.cdlib.org/ontology/dataonem " + "\n" +
+            "#%prefix | mrt: | http://uc3.cdlib.org/ontology/mom " + "\n" +
+            "#%fields | dom:scienceMetadataFile | dom:scienceMetadataFormat | " +
+            "dom:scienceDataFile | mrt:mimeType " + "\n"
+
+        @files.each do |file|
+          if file
+            content <<    "mrt-datacite.xml | http://schema.datacite.org/meta/kernel-3/metadata.xsd | " +
+                "#{file[:name]}" + " | #{file[:type]} " + "\n" + "mrt-dc.xml | " +
+                "http://dublincore.org/schemas/xmls/qdc/2008/02/11/qualifieddc.xsd | " +
+                "#{file[:name]}" + " | #{file[:type]} " + "\n"
+          end
+        end
+        content << "#%eof "
+
+        File.open("#{Rails.root}/public/uploads/#{@resource.id}_dataone.txt", 'w') do |f|
+          f.write(content)
+        end
+        puts content.to_s
+        content.to_s
+      end
+
+      def uploads_list(resource)
+        files = []
+        current_uploads = resource.file_uploads
+        current_uploads.each do |u|
+          hash = {:name => u.upload_file_name, :type => u.upload_content_type}
+          files.push(hash)
+        end
+        files
+      end
+
     end
   end
 end

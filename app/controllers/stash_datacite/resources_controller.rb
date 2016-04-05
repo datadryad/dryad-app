@@ -51,6 +51,7 @@ module StashDatacite
       @resource_file_generation = Resource::ResourceFileGeneration.new(resource, current_tenant)
       @resource_file_generation.generate_xml
       @resource_file_generation.generate_dublincore
+      @resource_file_generation.generate_dataone
       create_resource_state(:submitted, resource)
     end
 
