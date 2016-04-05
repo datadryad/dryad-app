@@ -49,23 +49,30 @@ module Stash
           raise e
         end
 
+        def query_uri
+          client.send(:build_uri, 'ListRecords', opts)
+        end
+
         private
+
+        def client
+          base_uri = config.source_uri
+          @client ||= ::OAI::Client.new(base_uri.to_s)
+        end
 
         def to_str(time)
           @config.seconds_granularity ? to_time(time) : to_date(time)
         end
 
         def do_harvest
-          base_uri = config.source_uri
-          client = ::OAI::Client.new(base_uri.to_s)
-          records = list_records(client)
+          records = list_records
           return [].lazy unless records
           full = records.full
           enum = full.lazy.to_enum
           enum.map { |r| OAIRecord.new(r) }
         end
 
-        def list_records(client)
+        def list_records
           client.list_records(opts)
         rescue ::OAI::Exception => e
           raise if e.code != 'noRecordsMatch'

@@ -44,7 +44,15 @@ module Stash
       # @return [Enumerator::Lazy<HarvestedRecord>]
       #   A lazy enumerator of the harvested records
       def harvest_records
-        raise NoMethodError, "#{self.class} should override #harvest_records to harvest records, but it doesn't"
+        raise NoMethodError, "#{self.class} should override #harvest_records, but it doesn't"
+      end
+
+      # Returns the URI queried by the harvest task, or the first URI queried if the harvest
+      # requires multiple queries.
+      #
+      # @return [URI] the query URI
+      def query_uri
+        raise NoMethodError, "#{self.class} should override #query_uri, but it doesn't"
       end
 
       private

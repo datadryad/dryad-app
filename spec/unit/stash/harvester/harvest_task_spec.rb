@@ -53,6 +53,13 @@ module Stash
           expect { task.harvest_records }.to raise_error(NoMethodError)
         end
       end
+
+      describe '#query_uri' do
+        it 'is abstract' do
+          task = HarvestTask.new(config: @config)
+          expect { task.query_uri }.to raise_error(NoMethodError)
+        end
+      end
     end
   end
 end

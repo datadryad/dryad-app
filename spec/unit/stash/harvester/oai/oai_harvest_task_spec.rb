@@ -37,6 +37,19 @@ module Stash
           end
         end
 
+        describe '#query_uri' do
+          it 'returns the full query URI' do
+            prefix = 'my_prefix'
+            set = 'my_set'
+            from_time = Time.utc(2015, 1, 1, 1, 2, 3)
+            until_time = Time.utc(2015, 12, 31, 4, 5, 6)
+            @config = OAISourceConfig.new(oai_base_url: @uri, metadata_prefix: prefix, set: set, seconds_granularity: true)
+            task = OAIHarvestTask.new(config: @config, from_time: from_time, until_time: until_time)
+            expected_uri = URI("#{@uri}?verb=ListRecords&metadataPrefix=#{prefix}&set=#{set}&from=2015-01-01T01:02:03Z&until=2015-12-31T04:05:06Z")
+            expect(task.query_uri).to eq(expected_uri)
+          end
+        end
+
         describe '#harvest_records' do
           before(:each) do
             @oai_client = instance_double(::OAI::Client)

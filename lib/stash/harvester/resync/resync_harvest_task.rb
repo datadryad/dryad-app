@@ -39,6 +39,13 @@ module Stash
           resources.map { |r| ResyncRecord.new(r) }
         end
 
+        # Returns the URI of the initial capability list retrieved by this harvest.
+        #
+        # @return [URI] the capability list URI
+        def query_uri
+          config.source_uri
+        end
+
         private
 
         def client
@@ -46,7 +53,7 @@ module Stash
         end
 
         def capability_list
-          capability_list_uri = config.source_uri
+          capability_list_uri = query_uri
           @capability_list ||= client.get_and_parse(capability_list_uri)
         end
 

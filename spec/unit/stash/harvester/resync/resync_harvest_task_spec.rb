@@ -40,6 +40,14 @@ module Stash
           end
         end
 
+        describe 'query_uri' do
+          it 'returns the capability list URI' do
+            cap_list_url = 'http://example.org/cap_list.xml'
+            sync_task = ResyncHarvestTask.new(config: ResyncSourceConfig.new(capability_list_url: cap_list_url))
+            expect(sync_task.query_uri).to eq(URI(cap_list_url))
+          end
+        end
+
         describe '#download' do
 
           before(:each) do
