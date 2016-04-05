@@ -39,7 +39,7 @@ module Stash
           source_config: source_config,
           index_config: index_config,
           metadata_mapper: metadata_mapper,
-          persistence_mgr: persistence_manager,
+          persistence_manager: persistence_manager,
           from_time: from_time,
           until_time: until_time
         )

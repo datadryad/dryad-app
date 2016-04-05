@@ -3,6 +3,7 @@ require 'stash/harvester_app'
 
 require 'tmpdir'
 require 'fileutils'
+require 'digest'
 
 module Stash
   module HarvesterApp
@@ -122,40 +123,63 @@ module Stash
 
       describe '#start' do
         before(:each) do
-          @source_uri = URI('http://oai.example.org/oai')
-          @index_uri = URI('http://solr.example.org/')
+          # Mock persistence
+          persistence_config = instance_double(PersistenceConfig)
+          allow(PersistenceConfig).to receive(:new) { persistence_config }
 
-          @source_config = instance_double(Harvester::SourceConfig)
-          @harvest_task = instance_double(Harvester::HarvestTask)
-          allow(@source_config).to receive(:create_harvest_task) { @harvest_task }
-          allow(@source_config).to receive(:source_uri) { @source_uri }
+          @persistence_mgr = instance_double(PersistenceManager)
+          allow(@persistence_mgr).to receive(:begin_harvest_job).with(any_args)
+          allow(persistence_config).to receive(:create_manager) { @persistence_mgr }
 
-          @metadata_mapper = instance_double(Indexer::MetadataMapper)
-          allow(@metadata_mapper).to receive(:desc_from) { 'foo' }
-          allow(@metadata_mapper).to receive(:desc_to) { 'bar' }
+          # Mock Solr
+          @solr = instance_double(RSolr::Client)
+          allow(@solr).to receive(:add)
+          allow(@solr).to receive(:commit)
+          allow(RSolr::Client).to receive(:new) do |_connection, options|
+            @rsolr_options = options
+            @solr
+          end
 
-          @indexer = instance_double(Indexer::Indexer)
-          @index_config = instance_double(Indexer::IndexConfig)
-          allow(@index_config).to receive(:create_indexer).with(@metadata_mapper) { @indexer }
-          allow(@index_config).to receive(:uri) { @index_uri }
+          # Mock OAI
+          @stash_wrappers = []
+          oai_records = ['spec/data/wrapped_datacite/wrapped-datacite-all-geodata.xml',
+           'spec/data/wrapped_datacite/wrapped-datacite-no-geodata.xml',
+           'spec/data/wrapped_datacite/wrapped-datacite-place-only.xml'].map do |xml|
+            stash_wrapper = Stash::Wrapper::StashWrapper.parse_xml(File.read(xml))
+            @stash_wrappers << stash_wrapper
+            ark = "http://n2t.net/ark:/#{Digest::MD5.hexdigest(stash_wrapper.id_value)}"
+            datestamp = stash_wrapper.version_date.to_time.utc.xmlschema
 
-          @records = Array.new(5) { |_i| instance_double(Stash::Harvester::HarvestedRecord) }.lazy
+            record = REXML::Document.new(['<record>',
+                                          '  <header> ',
+                                          "   <identifier>#{ark}</identifier>",
+                                          "   <datestamp>#{datestamp}</datestamp>",
+                                          '  </header> ',
+                                          '</record>'].join("\n")).root
 
-          @p_mgr = instance_double(PersistenceManager)
-          @p_config = instance_double(PersistenceConfig)
-          allow(@p_config).to receive(:create_manager) { @p_mgr }
+            metadata = REXML::Element.new('metadata')
+            metadata.add_element(stash_wrapper.save_to_xml)
+            record.add_element(metadata)
+            ::OAI::Record.new(record)
+          end
+          list_records_response = instance_double(::OAI::ListRecordsResponse)
+          allow(list_records_response).to receive(:full).and_return(oai_records)
 
-          @config = Config.allocate
-          allow(@config).to receive(:persistence_config) { @p_config }
-          allow(@config).to receive(:source_config) { @source_config }
-          allow(@config).to receive(:index_config) { @index_config }
-          allow(@config).to receive(:metadata_mapper) { @metadata_mapper }
+          allow_any_instance_of(::OAI::Client).to receive(:list_records).with(any_args).and_return(list_records_response)
+
+          # Config
+          @config = Config.from_file('spec/data/stash-harvester.yml')
+        end
+
+        after(:each) do
+          allow(RSolr::Client).to receive(:new).and_call_original
+          allow_any_instance_of(::OAI::Client).to receive(:list_records).and_call_original
+          allow(PersistenceConfig).to receive(:new).with(any_args).and_call_original
         end
 
         it 'harvests and indexes' do
           app = Application.with_config(@config)
-          expect(@harvest_task).to receive(:harvest_records) { @records }
-          expect(@indexer).to receive(:index).with(@records)
+          expect(@solr).to receive(:add).exactly(@stash_wrappers.length).times
           app.start
         end
 

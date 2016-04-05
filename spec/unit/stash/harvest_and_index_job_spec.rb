@@ -5,7 +5,7 @@ module Stash
   describe HarvestAndIndexJob do
 
     before(:each) do
-      @p_mgr = instance_double(PersistenceManager)
+      @persistence_mgr = instance_double(PersistenceManager)
     end
 
     describe '#initialize' do
@@ -25,7 +25,7 @@ module Stash
           source_config: source_config,
           index_config: index_config,
           metadata_mapper: metadata_mapper,
-          persistence_manager: @p_mgr,
+          persistence_manager: @persistence_mgr,
           from_time: from_time,
           until_time: until_time
         )
@@ -43,7 +43,7 @@ module Stash
 
         metadata_mapper = instance_double(Indexer::MetadataMapper)
 
-        job = HarvestAndIndexJob.new(source_config: source_config, index_config: index_config, metadata_mapper: metadata_mapper, persistence_manager: @p_mgr)
+        job = HarvestAndIndexJob.new(source_config: source_config, index_config: index_config, metadata_mapper: metadata_mapper, persistence_manager: @persistence_mgr)
         expect(job.indexer).to equal(indexer)
       end
     end
@@ -68,12 +68,12 @@ module Stash
         allow(@harvest_task).to receive(:until_time)
         allow(@harvest_task).to receive(:query_uri) { URI('http://source.example.org/') }
 
-        allow(@p_mgr).to receive(:begin_harvest_job)
+        allow(@persistence_mgr).to receive(:begin_harvest_job)
       end
 
       it 'harvests and indexes records (even if no block given)' do
         expect(@indexer).to receive(:index).with(@records)
-        job = HarvestAndIndexJob.new(source_config: @source_config, index_config: @index_config, metadata_mapper: @metadata_mapper, persistence_manager: @p_mgr)
+        job = HarvestAndIndexJob.new(source_config: @source_config, index_config: @index_config, metadata_mapper: @metadata_mapper, persistence_manager: @persistence_mgr)
         job.harvest_and_index
       end
 
@@ -83,7 +83,7 @@ module Stash
         expected_results.each do |result|
           expectation.and_yield(result)
         end
-        job = HarvestAndIndexJob.new(source_config: @source_config, index_config: @index_config, metadata_mapper: @metadata_mapper, persistence_manager: @p_mgr)
+        job = HarvestAndIndexJob.new(source_config: @source_config, index_config: @index_config, metadata_mapper: @metadata_mapper, persistence_manager: @persistence_mgr)
         actual_results = []
         job.harvest_and_index do |result|
           actual_results << result
@@ -105,7 +105,7 @@ module Stash
           source_config: @source_config,
           index_config: @index_config,
           metadata_mapper: @metadata_mapper,
-          persistence_manager: @p_mgr,
+          persistence_manager: @persistence_mgr,
           from_time: from_time,
           until_time: until_time
         )
@@ -126,7 +126,7 @@ module Stash
           source_config: @source_config,
           index_config: @index_config,
           metadata_mapper: @metadata_mapper,
-          persistence_manager: @p_mgr,
+          persistence_manager: @persistence_mgr,
           from_time: from_time,
           until_time: until_time
         )
@@ -138,7 +138,7 @@ module Stash
 
         allow(@indexer).to receive(:index).with(@records)
 
-        expect(@p_mgr).to receive(:begin_harvest_job).with(from_time: from_time, until_time: until_time, query_url: query_url)
+        expect(@persistence_mgr).to receive(:begin_harvest_job).with(from_time: from_time, until_time: until_time, query_url: query_url)
 
         job.harvest_and_index
       end
