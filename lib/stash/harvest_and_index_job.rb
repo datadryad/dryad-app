@@ -39,12 +39,21 @@ module Stash
       index_job_id = begin_index_job(harvest_job_id)
       status = Indexer::IndexStatus::COMPLETED
       begin
-        indexer.index(harvested_records, &block)
+        do_index(harvested_records, harvest_job_id, index_job_id, &block)
       rescue Exception => e # rubocop:disable Lint/RescueException
         status = Indexer::IndexStatus::FAILED
         raise e
       ensure
         end_index_job(index_job_id, status)
+      end
+    end
+
+    def do_index(harvested_records, harvest_job_id, index_job_id)
+      indexer.index(harvested_records) do |result|
+        harvested_record = result.record
+        harvested_record_id = record_harvested(harvested_record, harvest_job_id)
+        record_indexed(index_job_id, harvested_record_id, result.status)
+        yield result if block_given?
       end
     end
 
@@ -56,6 +65,15 @@ module Stash
       )
     end
 
+    def record_harvested(harvested_record, harvest_job_id)
+      @persistence_mgr.record_harvested_record(
+        harvest_job_id: harvest_job_id,
+        identifier: harvested_record.identifier,
+        timestamp: harvested_record.timestamp,
+        deleted: harvested_record.deleted?
+      )
+    end
+
     def end_harvest_job(job_id, status)
       persistence_mgr.end_harvest_job(harvest_job_id: job_id, status: status)
     end
@@ -64,6 +82,14 @@ module Stash
       persistence_mgr.begin_index_job(
         harvest_job_id: harvest_job_id,
         solr_url: index_uri
+      )
+    end
+
+    def record_indexed(index_job_id, harvested_record_id, status)
+      @persistence_mgr.record_indexed_record(
+        index_job_id: index_job_id,
+        harvested_record_id: harvested_record_id,
+        status: status
       )
     end
 

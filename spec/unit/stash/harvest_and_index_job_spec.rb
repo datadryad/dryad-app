@@ -201,27 +201,23 @@ module Stash
           expect { job.harvest_and_index }.to raise_error(e)
         end
 
-        pending do
-          it 'creates harvested_ and indexed_records' do
-            (0...record_count).each do |i|
-              expect(persistence_mgr).to receive(:record_harvested_record).with(
-                harvest_job_id: harvest_job_id,
-                identifier: arks[i],
-                timestamp: timestamp(i),
-                deleted: false
-              ) { i }
-              expect(persistence_mgr).to receive(:record_indexed_record).with(
-                harvest_job_id: harvest_job_id,
-                index_job_id: index_job_id,
-                harvested_record_id: i,
-                status: Indexer::IndexStatus::COMPLETED
-              )
-              job.harvest_and_index
-            end
+        it 'creates harvested_ and indexed_records' do
+          (0...record_count).each do |i|
+            expect(persistence_mgr).to receive(:record_harvested_record).with(
+              harvest_job_id: harvest_job_id,
+              identifier: arks[i],
+              timestamp: timestamp(i),
+              deleted: false
+            ) { i }
+            expect(persistence_mgr).to receive(:record_indexed_record).with(
+              index_job_id: index_job_id,
+              harvested_record_id: i,
+              status: Indexer::IndexStatus::COMPLETED
+            )
+            job.harvest_and_index
           end
         end
 
-        it 'creates an indexed_record for each indexed record'
         it 'logs overall job failures'
         it 'logs each successfully indexed record'
         it 'logs each successfully deleted record'
