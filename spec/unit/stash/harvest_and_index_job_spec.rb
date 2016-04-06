@@ -194,7 +194,7 @@ module Stash
           expect { job.harvest_and_index }.to raise_error(e)
         end
 
-        it 'sets the harvest status to successful in event of an indexing failure' do
+        it 'sets the harvest status to failed in event of an indexing failure' do
           e = Exception.new('oops')
           expect(solr).to receive(:add).and_raise(e)
           expect(persistence_mgr).to receive(:end_harvest_job).with(harvest_job_id: harvest_job_id, status: Indexer::IndexStatus::COMPLETED)
