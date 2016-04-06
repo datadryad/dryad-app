@@ -46,7 +46,7 @@ module Stash
           file = File.new('spec/data/oai/oai-datacite-22-oai_dc.xml')
           doc = REXML::Document.new file
           deleted_record = OAIRecord.new(::OAI::GetRecordResponse.new(doc).record)
-          expect(deleted_record.deleted?).to be_truthy
+          expect(deleted_record.deleted?).to be(true)
         end
 
         it 'identifies undeleted records as undeleted' do
