@@ -24,7 +24,7 @@ StashEngine::Engine.routes.draw do
 
   get 'about', :to => 'pages#about'
   get 'search', :to => 'searches#index'
-  get 'show/*id', :to => 'landing#show', as: 'show'
+  get 'dataset/*id', :to => 'landing#show', as: 'show'
   #get "login", :to => "test#index"
   #get 'test/index'
   #get 'test/after_login'

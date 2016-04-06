@@ -1,5 +1,7 @@
 module StashEngine
   module SharedController
+
+    require 'uri'
     #helper_method :current_tenant, :current_user, :metadata_engine, :metadata_url_helpers
 
     def metadata_url_helpers
@@ -56,6 +58,11 @@ module StashEngine
     def set_page_info
       @page = params[:page] || '1'
       @page_size = params[:page_size] || '5'
+    end
+
+    # helper to generate URL for landing page for an identifier with currently logged-in tenant
+    def landing_url(identifier)
+      URI::HTTPS.build(:host => current_tenant.full_domain, :path => stash_url_helpers.show_path(identifier)).to_s
     end
   end
 end
