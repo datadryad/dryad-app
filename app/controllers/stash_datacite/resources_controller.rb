@@ -49,9 +49,7 @@ module StashDatacite
     def submission
       resource = StashDatacite.resource_class.find(params[:resource_id])
       @resource_file_generation = Resource::ResourceFileGeneration.new(resource, current_tenant)
-      @resource_file_generation.generate_xml
-      @resource_file_generation.generate_dublincore
-      @resource_file_generation.generate_dataone
+      @resource_file_generation.generate_merritt_zip
       create_resource_state(:submitted, resource)
     end
 
@@ -72,12 +70,12 @@ module StashDatacite
     end
 
     def create_resource_state(state, resource)
-      unless resource.current_resource_state == state
+      unless resource.current_resource_state.to_sym == state
         resource.save!
         StashEngine::ResourceState.create!(resource_id: resource.id, resource_state: :submitted, user_id: current_user.id )
         redirect_to stash_url_helpers.dashboard_path, notice: "#{resource.titles.first.title} submitted with doi:XXXXXXXXXX. There may be a delay for processing before the item is available."
       else
-        redirect_to stash_url_helpers.dashboard_path, alert: 'The dataset has already been submitted.'
+        redirect_to stash_url_helpers.dashboard_path, alert: 'This dataset has already been submitted.'
       end
     end
   end

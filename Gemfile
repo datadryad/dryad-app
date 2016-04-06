@@ -19,3 +19,4 @@ gem 'responders', '~> 2.0'
 gem 'datacite-mapping' #, git: 'https://github.com/CDLUC3/datacite-mapping.git'
 gem 'kaminari'
 gem 'stash-wrapper' #, git: 'https://github.com/CDLUC3/stash-wrapper.git'
+gem 'rubyzip', '>= 1.0.0' # will load new rubyzip version

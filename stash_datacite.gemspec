@@ -24,4 +24,5 @@ Gem::Specification.new do |s|
   s.add_dependency 'datacite-mapping'
   s.add_dependency 'kaminari'
   s.add_dependency 'stash-wrapper'
+  s.add_dependency 'rubyzip'
 end

@@ -1,6 +1,8 @@
+require 'zip'
 require 'datacite/mapping'
 require 'stash/wrapper'
 require 'tempfile'
+
 module StashDatacite
   module Resource
     class ResourceFileGeneration
@@ -80,12 +82,10 @@ module StashDatacite
         )
         datacite_to_wrapper = resource.save_to_xml
         datacite_root = resource.write_xml
-        datacite_target = "#{@resource.id}_datacite.xml"
-        datacite_directory = "#{Rails.root}/public/uploads"
-        puts Dir.pwd
-        f = File.open("#{datacite_directory}/#{datacite_target}", 'w') { |f| f.write(datacite_root) }
-        puts datacite_root
-
+        # datacite_target = "#{@resource.id}_datacite.xml"
+        # datacite_directory = "#{Rails.root}/public/uploads"
+        # puts Dir.pwd
+        #f = File.open("#{datacite_directory}/#{datacite_target}", 'w') { |f| f.write(datacite_root) }
 
         identifier = st::Identifier.new(
           type: st::IdentifierType::DOI,
@@ -130,16 +130,15 @@ module StashDatacite
         )
 
         stash_wrapper = wrapper.write_xml
-        stash_wrapper_target = "#{@resource.id}_stash_wrapper.xml"
-        stash_wrapper_directory = "#{Rails.root}/public/uploads"
-        puts Dir.pwd
-        f = File.open("#{stash_wrapper_directory}/#{stash_wrapper_target}", 'w') { |f| f.write(stash_wrapper) }
-        puts stash_wrapper
+        # stash_wrapper_target = "#{@resource.id}_stash_wrapper.xml"
+        # stash_wrapper_directory = "#{Rails.root}/public/uploads"
+        # puts Dir.pwd
+        # f = File.open("#{stash_wrapper_directory}/#{stash_wrapper_target}", 'w') { |f| f.write(stash_wrapper) }
+
+        return [datacite_root, stash_wrapper]
       end
 
       def generate_dublincore
-        xml_content = File.new("#{Rails.root}/public/uploads/#{@resource.id}_dublincore.xml", "w:ASCII-8BIT")
-
         dc_builder = Nokogiri::XML::Builder.new do |xml|
           xml.qualifieddc('xmlns:xsi' => 'http://www.w3.org/2001/XMLSchema-instance',
                           'xsi:noNamespaceSchemaLocation' => 'http://dublincore.org/schemas/xmls/qdc/2008/02/11/qualifieddc.xsd',
@@ -208,15 +207,10 @@ module StashDatacite
 
           }
         end
-
-        f = File.open("#{Rails.root}/public/uploads/#{@resource.id}_dublincore.xml", 'w') { |f| f.print(dc_builder.to_xml) }
-        puts dc_builder.to_xml.to_s
         dc_builder.to_xml.to_s
       end
 
       def generate_dataone
-        File.new("#{Rails.root}/public/uploads/#{@resource.id}_dataone.txt", "w:ASCII-8BIT")
-
         @files = uploads_list(@resource)
         content =   "#%dataonem_0.1 " + "\n" +
             "#%profile | http://uc3.cdlib.org/registry/ingest/manifest/mrt-dataone-manifest " + "\n" +
@@ -234,11 +228,6 @@ module StashDatacite
           end
         end
         content << "#%eof "
-
-        File.open("#{Rails.root}/public/uploads/#{@resource.id}_dataone.txt", 'w') do |f|
-          f.write(content)
-        end
-        puts content.to_s
         content.to_s
       end
 
@@ -250,6 +239,49 @@ module StashDatacite
           files.push(hash)
         end
         files
+      end
+
+      def generate_merritt_zip
+        folder = "#{Rails.root}/public/uploads"
+
+        if File.exist?("#{folder}/#{@resource.id}_archive.zip")
+          File.delete("#{folder}/#{@resource.id}_archive.zip")
+        end
+        if File.exist?("#{folder}/#{@resource.id}_datacite.xml")
+          File.delete("#{folder}/#{@resource.id}_datacite.xml")
+        end
+        if File.exist?("#{folder}/#{@resource.id}_mrt-datacite.xml")
+          File.delete("#{folder}/#{@resource.id}_mrt-datacite.xml")
+        end
+        if File.exist?("#{folder}/#{@resource.id}_mrt-dc.xml")
+          File.delete("#{folder}/#{@resource.id}_mrt-dc.xml")
+        end
+        if File.exist?("#{folder}/#{@resource.id}_mrt-dataone-manifest.txt")
+          File.delete("#{folder}/#{@resource.id}_mrt-dataone-manifest.txt")
+        end
+
+        zipfile_name = "#{folder}/#{@resource.id}_archive.zip"
+        datacite_xml, stashwrapper_xml = generate_xml
+
+        File.open("#{folder}/#{@resource.id}_datacite.xml", "w") do |f|
+          f.write datacite_xml
+        end
+        File.open("#{folder}/#{@resource.id}_mrt-datacite.xml", "w") do |f|
+          f.write stashwrapper_xml
+        end
+        File.open("#{folder}/#{@resource.id}_mrt-dc.xml", "w") do |f|
+          f.write(generate_dublincore)
+        end
+        File.open("#{folder}/#{@resource.id}_mrt-dataone-manifest.txt", 'w') do |f|
+          f.write(generate_dataone)
+        end
+
+        Zip::File.open(zipfile_name, Zip::File::CREATE) do |zipfile|
+          zipfile.add("datacite.xml", "#{folder}/#{@resource.id}_datacite.xml")
+          zipfile.add("mrt-datacite.xml", "#{folder}/#{@resource.id}_mrt-datacite.xml")
+          zipfile.add("mrt-dc.xml", "#{folder}/#{@resource.id}_mrt-dc.xml")
+          zipfile.add("mrt-dataone-manifest.txt", "#{folder}/#{@resource.id}_mrt-dataone-manifest.txt")
+        end
       end
 
     end

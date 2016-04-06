@@ -119,6 +119,7 @@ GEM
       ruby-progressbar (~> 1.7)
       tins (<= 1.6.0)
     ruby-progressbar (1.7.5)
+    rubyzip (1.2.0)
     simplecov (0.10.0)
       docile (~> 1.1.0)
       json (~> 1.8)
@@ -156,6 +157,7 @@ DEPENDENCIES
   mysql2 (~> 0.3.20)
   responders (~> 2.0)
   rubocop
+  rubyzip (>= 1.0.0)
   simplecov
   stash-wrapper
   stash_datacite!
