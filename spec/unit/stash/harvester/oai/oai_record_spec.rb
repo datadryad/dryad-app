@@ -50,7 +50,7 @@ module Stash
         end
 
         it 'identifies undeleted records as undeleted' do
-          expect(@record.deleted?).to be_falsey
+          expect(@record.deleted?).to be(false)
         end
 
         describe '#==' do

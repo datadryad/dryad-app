@@ -28,7 +28,7 @@ module Stash
           super(
             identifier: record.header.identifier,
             timestamp: Time.parse(record.header.datestamp),
-            deleted: record.deleted?
+            deleted: record.deleted? ? true : false
           )
           @metadata_root = record.deleted? ? nil : record.metadata.elements[1]
         end
