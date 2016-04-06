@@ -21,10 +21,10 @@ module Stash
           datacite_xml = stash_descriptive.find { |elem| Resource.datacite?(elem) }
           resource = Resource.parse_xml(datacite_xml)
 
-          # TODO: how do we deal with the fact we have multiple points/boxes & GB doesn't?
+          doi = resource.doi
           {
-            uuid: wrapper.id_value,
-            dc_identifier_s: wrapper.id_value,
+            uuid: doi,
+            dc_identifier_s: doi,
             dc_title_s: resource.default_title,
             dc_creator_sm: resource.creator_names,
             dc_type_s: resource.type,

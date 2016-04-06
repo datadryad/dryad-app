@@ -42,11 +42,21 @@ module Datacite
       end
     end
 
+    class Identifier
+      def to_doi
+        "doi:#{value}"
+      end
+    end
+
     class Resource
 
       def default_title
         title = titles.find { |t| t.type.nil? }
         title.value if title
+      end
+
+      def doi
+        identifier.to_doi
       end
 
       def creator_names

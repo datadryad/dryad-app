@@ -103,8 +103,8 @@ module Stash
             @index_document = Mapper.new.to_index_document(@wrapper)
           end
 
-          it 'extracts the identifier' do
-            expect(@index_document[:dc_identifier_s]).to eq(@doi_value)
+          it 'formats the identifier as a DOI' do
+            expect(@index_document[:dc_identifier_s]).to eq("doi:#{@doi_value}")
           end
 
           it 'extracts the title' do
