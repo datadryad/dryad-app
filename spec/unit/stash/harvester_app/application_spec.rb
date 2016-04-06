@@ -121,6 +121,7 @@ module Stash
         it 'logs the metadata mapper'
       end
 
+      # TODO: eliminate all this and just test we create the right job and call it
       describe '#start' do
         before(:each) do
           # Mock persistence
@@ -129,15 +130,6 @@ module Stash
 
           @persistence_mgr = instance_double(PersistenceManager).as_null_object
           allow(persistence_config).to receive(:create_manager) { @persistence_mgr }
-
-          # Mock Solr
-          @solr = instance_double(RSolr::Client)
-          allow(@solr).to receive(:add)
-          allow(@solr).to receive(:commit)
-          allow(RSolr::Client).to receive(:new) do |_connection, options|
-            @rsolr_options = options
-            @solr
-          end
 
           # Mock OAI
           @stash_wrappers = []
@@ -165,6 +157,15 @@ module Stash
           allow(list_records_response).to receive(:full).and_return(oai_records)
 
           allow_any_instance_of(::OAI::Client).to receive(:list_records).with(any_args).and_return(list_records_response)
+
+          # Mock Solr
+          @solr = instance_double(RSolr::Client)
+          allow(@solr).to receive(:add)
+          allow(@solr).to receive(:commit)
+          allow(RSolr::Client).to receive(:new) do |_connection, options|
+            @rsolr_options = options
+            @solr
+          end
 
           # Config
           @config = Config.from_file('spec/data/stash-harvester.yml')
