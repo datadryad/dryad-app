@@ -3,6 +3,8 @@ module Stash
     module Solr
       class SolrIndexer < Indexer
 
+        attr_reader :config
+
         # Creates a new `SolrIndexer`
         # @param metadata_mapper [MetadataMapper] the metadata mapper to convert
         #   harvested documents to indexable documents

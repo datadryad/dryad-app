@@ -132,12 +132,12 @@ module Stash
           allow(persistence_config).to receive(:create_manager) { @persistence_mgr }
 
           # Mock OAI
-          @stash_wrappers = []
+          @wrappers = []
           oai_records = ['spec/data/wrapped_datacite/wrapped-datacite-all-geodata.xml',
                          'spec/data/wrapped_datacite/wrapped-datacite-no-geodata.xml',
                          'spec/data/wrapped_datacite/wrapped-datacite-place-only.xml'].map do |xml|
             stash_wrapper = Stash::Wrapper::StashWrapper.parse_xml(File.read(xml))
-            @stash_wrappers << stash_wrapper
+            @wrappers << stash_wrapper
             ark = "http://n2t.net/ark:/#{Digest::MD5.hexdigest(stash_wrapper.id_value)}"
             datestamp = stash_wrapper.version_date.to_time.utc.xmlschema
 
@@ -179,7 +179,7 @@ module Stash
 
         it 'harvests and indexes' do
           app = Application.with_config(@config)
-          expect(@solr).to receive(:add).exactly(@stash_wrappers.length).times
+          expect(@solr).to receive(:add).exactly(@wrappers.length).times
           app.start
         end
 
