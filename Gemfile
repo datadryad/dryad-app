@@ -37,6 +37,7 @@ gem 'capistrano', '~> 3.1'
 gem 'capistrano-rails', '~> 1.1'
 gem 'capistrano-passenger'
 gem 'passenger'
+gem 'stash_ezid_datacite', :git => 'https://github.com/CDLUC3/stash_ezid_datacite.git'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
