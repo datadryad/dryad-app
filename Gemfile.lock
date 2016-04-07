@@ -7,6 +7,7 @@ PATH
       leaflet-rails
       rails (~> 4.2.4)
       responders (~> 2.0)
+      rubyzip
       stash-wrapper
 
 GEM

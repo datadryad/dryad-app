@@ -2,6 +2,7 @@ require 'zip'
 require 'datacite/mapping'
 require 'stash/wrapper'
 require 'tempfile'
+require 'stash_ezid/client'
 
 module StashDatacite
   module Resource
@@ -82,6 +83,11 @@ module StashDatacite
         )
         datacite_to_wrapper = resource.save_to_xml
         datacite_root = resource.write_xml
+
+        client = StashEzid::Client.new(@current_tenant.identifier_service.to_h)
+        identifier = client.mint_id
+        client.update_metadata(identifier, datacite_root)
+
         # datacite_target = "#{@resource.id}_datacite.xml"
         # datacite_directory = "#{Rails.root}/public/uploads"
         # puts Dir.pwd
@@ -130,6 +136,7 @@ module StashDatacite
         )
 
         stash_wrapper = wrapper.write_xml
+        client.update_metadata(identifier, stash_wrapper)
         # stash_wrapper_target = "#{@resource.id}_stash_wrapper.xml"
         # stash_wrapper_directory = "#{Rails.root}/public/uploads"
         # puts Dir.pwd
