@@ -13,6 +13,9 @@ module StashDatacite
       end
 
       def generate_xml
+        client = StashEzid::Client.new(@current_tenant.identifier_service.to_h)
+        identifier = client.mint_id
+        simple_id = identifier.split(':', 2)[1]
         dm = Datacite::Mapping
         st = Stash::Wrapper
 
@@ -38,7 +41,7 @@ module StashDatacite
         # # http://schema.datacite.org/meta/kernel-3/example/datacite-example-dataset-v3.0.xml
 
         resource = dm::Resource.new(
-          identifier: dm::Identifier.new(value: '10.5072/D3P26Q35R-Test'),
+          identifier: dm::Identifier.new(value: simple_id),
 
           creators: @resource.creators.map do |creator|
             dm::Creator.new(name: "#{creator.creator_full_name}")
@@ -84,9 +87,7 @@ module StashDatacite
         datacite_to_wrapper = resource.save_to_xml
         datacite_root = resource.write_xml
 
-        client = StashEzid::Client.new(@current_tenant.identifier_service.to_h)
-        identifier = client.mint_id
-        client.update_metadata(identifier, datacite_root)
+        client.update_metadata(identifier, datacite_root) # add target as 3rd parameter
 
         # datacite_target = "#{@resource.id}_datacite.xml"
         # datacite_directory = "#{Rails.root}/public/uploads"
