@@ -105,7 +105,7 @@ module StashDatacite
 
         version = st::Version.new(
           number: 1,
-          date: Date.new(2013, 8, 18),
+          date: Date.today,
           note: 'Sample wrapped Datacite document'
         )
 
