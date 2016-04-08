@@ -94,7 +94,7 @@ module StashDatacite
         @client.update_metadata(identifier, datacite_root, target_url) # add target as 3rd parameter
 
         # datacite_target = "#{@resource.id}_datacite.xml"
-        # datacite_directory = "#{Rails.root}/public/uploads"
+        # datacite_directory = "#{Rails.root}/uploads"
         # puts Dir.pwd
         #f = File.open("#{datacite_directory}/#{datacite_target}", 'w') { |f| f.write(datacite_root) }
 
@@ -142,7 +142,7 @@ module StashDatacite
 
         stash_wrapper = wrapper.write_xml
         # stash_wrapper_target = "#{@resource.id}_stash_wrapper.xml"
-        # stash_wrapper_directory = "#{Rails.root}/public/uploads"
+        # stash_wrapper_directory = "#{Rails.root}/uploads"
         # puts Dir.pwd
         # f = File.open("#{stash_wrapper_directory}/#{stash_wrapper_target}", 'w') { |f| f.write(stash_wrapper) }
 
@@ -254,7 +254,7 @@ module StashDatacite
 
       def generate_merritt_zip(target_url)
         target_url = target_url
-        folder = "#{Rails.root}/public/uploads"
+        folder = "#{Rails.root}/uploads"
 
         if File.exist?("#{folder}/#{@resource.id}_archive.zip")
           File.delete("#{folder}/#{@resource.id}_archive.zip")
