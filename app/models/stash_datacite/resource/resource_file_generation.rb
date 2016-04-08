@@ -12,10 +12,15 @@ module StashDatacite
         @current_tenant = current_tenant
       end
 
-      def generate_xml
-        client = StashEzid::Client.new(@current_tenant.identifier_service.to_h)
-        identifier = client.mint_id
+      def generate_identifier
+        @client = StashEzid::Client.new(@current_tenant.identifier_service.to_h)
+        identifier = @client.mint_id
+      end
+
+      def generate_xml(target_url)
+        identifier  = generate_identifier
         simple_id = identifier.split(':', 2)[1]
+
         dm = Datacite::Mapping
         st = Stash::Wrapper
 
@@ -86,8 +91,7 @@ module StashDatacite
         )
         datacite_to_wrapper = resource.save_to_xml
         datacite_root = resource.write_xml
-
-        client.update_metadata(identifier, datacite_root) # add target as 3rd parameter
+        @client.update_metadata(identifier, datacite_root, target_url) # add target as 3rd parameter
 
         # datacite_target = "#{@resource.id}_datacite.xml"
         # datacite_directory = "#{Rails.root}/public/uploads"
@@ -137,7 +141,6 @@ module StashDatacite
         )
 
         stash_wrapper = wrapper.write_xml
-        client.update_metadata(identifier, stash_wrapper)
         # stash_wrapper_target = "#{@resource.id}_stash_wrapper.xml"
         # stash_wrapper_directory = "#{Rails.root}/public/uploads"
         # puts Dir.pwd
@@ -249,7 +252,8 @@ module StashDatacite
         files
       end
 
-      def generate_merritt_zip
+      def generate_merritt_zip(target_url)
+        target_url = target_url
         folder = "#{Rails.root}/public/uploads"
 
         if File.exist?("#{folder}/#{@resource.id}_archive.zip")
@@ -269,7 +273,7 @@ module StashDatacite
         end
 
         zipfile_name = "#{folder}/#{@resource.id}_archive.zip"
-        datacite_xml, stashwrapper_xml = generate_xml
+        datacite_xml, stashwrapper_xml = generate_xml(target_url)
 
         File.open("#{folder}/#{@resource.id}_datacite.xml", "w") do |f|
           f.write datacite_xml

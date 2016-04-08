@@ -49,7 +49,9 @@ module StashDatacite
     def submission
       resource = StashDatacite.resource_class.find(params[:resource_id])
       @resource_file_generation = Resource::ResourceFileGeneration.new(resource, current_tenant)
-      @resource_file_generation.generate_merritt_zip
+      identifier = @resource_file_generation.generate_identifier.split(':', 2)[1]
+      target_url = current_tenant.landing_url(stash_url_helpers.show_path(identifier))
+      @resource_file_generation.generate_merritt_zip(target_url)
       create_resource_state(:submitted, resource)
     end
 
