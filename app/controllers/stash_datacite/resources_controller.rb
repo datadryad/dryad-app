@@ -73,8 +73,9 @@ module StashDatacite
 
     def create_resource_state(state, resource)
       unless resource.current_resource_state.to_sym == state
+        byebug
         resource.save!
-        StashEngine::ResourceState.create!(resource_id: resource.id, resource_state: :submitted, user_id: current_user.id )
+        StashEngine::ResourceState.create!(resource_id: resource.id, resource_state: :submitted.to_s , user_id: current_user.id )
         redirect_to stash_url_helpers.dashboard_path, notice: "#{resource.titles.first.title} submitted with doi:XXXXXXXXXX. There may be a delay for processing before the item is available."
       else
         redirect_to stash_url_helpers.dashboard_path, alert: 'This dataset has already been submitted.'
