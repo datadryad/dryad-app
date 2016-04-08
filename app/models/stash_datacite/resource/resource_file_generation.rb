@@ -53,7 +53,7 @@ module StashDatacite
           end,
 
           contributors: @resource.contributors.map do |contributor|
-            dm::Contributor.new(name: "#{contributor.contributor_name}", type: "#{contributor.contributor_type}")
+            dm::Contributor.new(name: "#{contributor.contributor_name}", type: dm::ContributorType::FUNDER)
           end,
 
           titles: [
@@ -183,7 +183,7 @@ module StashDatacite
 
             unless @resource.descriptions.blank?
               @resource.descriptions.each do |d|
-                xml.send(:'dc:description', "#{d.description.gsub(/\r/,"")}")
+                xml.send(:'dc:description', "#{d.description.to_s.gsub(/\r/,"")}")
               end
             end
 
