@@ -1,0 +1,8 @@
+#%dataonem_0.1 
+#%profile | http://uc3.cdlib.org/registry/ingest/manifest/mrt-dataone-manifest 
+#%prefix | dom: | http://uc3.cdlib.org/ontology/dataonem 
+#%prefix | mrt: | http://uc3.cdlib.org/ontology/mom 
+#%fields | dom:scienceMetadataFile | dom:scienceMetadataFormat | dom:scienceDataFile | mrt:mimeType 
+mrt-datacite.xml | http://schema.datacite.org/meta/kernel-3/metadata.xsd | DataCite-MetadataKernel_v3.1.pdf | application/pdf 
+mrt-dc.xml | http://dublincore.org/schemas/xmls/qdc/2008/02/11/qualifieddc.xsd | DataCite-MetadataKernel_v3.1.pdf | application/pdf 
+#%eof 

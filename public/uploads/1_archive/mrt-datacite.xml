@@ -13,8 +13,8 @@
     <st:embargo>
       <st:type>none</st:type>
       <st:period>none</st:period>
-      <st:start>2016-04-04T00:00:00ZZ</st:start>
-      <st:end>2016-04-04T00:00:00ZZ</st:end>
+      <st:start>2016-04-06T00:00:00ZZ</st:start>
+      <st:end>2016-04-06T00:00:00ZZ</st:end>
     </st:embargo>
     <st:inventory num_files='3'>
       <st:file>
