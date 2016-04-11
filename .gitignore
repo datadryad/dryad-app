@@ -24,6 +24,7 @@ config/database.yml
 .DS_Store
 public/assets
 uploads/*
+public/uploads/*
 
 # Ignore code coverage reports.
 /coverage/
