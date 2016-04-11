@@ -34,9 +34,9 @@
     <% end %>
     </div>
     <%= link_to "Add Author", stash_datacite.creators_new_path( resource_id: @resource.id ), remote: :true %>
-    <% unless @resource.creators.any? {|creator| creator.orcid_id?} %>
-      <%= link_to "add myself with my Orcid ID", "/stash/auth/orcid?resource_id=#{@resource.id}", class: "add_my_Orcid_ID", style: "display:inline;" %>
-    <% end %>
+    <div class="add_orcid_link" style="display:inline;">
+      <%= render partial: "stash_datacite/creators/add_orcid_link", locals: { resource: @resource } %>
+    </div>
     <br/>
     <br/>
 

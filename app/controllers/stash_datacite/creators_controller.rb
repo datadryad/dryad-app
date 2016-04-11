@@ -41,6 +41,7 @@ module StashDatacite
     def delete
       unless params[:id] == 'new'
         @creator = Creator.find(params[:id])
+        @resource = StashDatacite.resource_class.find(@creator.resource_id)
         @creator.destroy
       end
       respond_to do |format|
