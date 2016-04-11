@@ -56,5 +56,20 @@ module Stash
       end
     end
 
+    describe '#find_newest_indexed_timestamp' do
+      it 'is abstract' do
+        expect do
+          @mgr.find_newest_indexed_timestamp
+        end.to raise_error(NoMethodError)
+      end
+    end
+
+    describe '#find_oldest_failed_timestamp' do
+      it 'is abstract' do
+        expect do
+          @mgr.find_oldest_failed_timestamp
+        end.to raise_error(NoMethodError)
+      end
+    end
   end
 end

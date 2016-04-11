@@ -203,5 +203,53 @@ module Stash
         expect(job.in_progress?).to eq(true)
       end
     end
+
+    describe 'scheduling' do
+
+      before(:each) do
+        @record_count = 3
+
+        @harvest_job_completed = create(:indexed_harvest_job, record_count: @record_count, from_time: nil, start_time: Time.utc(2015, 7, 1))
+        @harvested_records_completed = @harvest_job_completed.harvested_records
+
+        @harvest_job_failed = create(:indexed_harvest_job, record_count: @record_count, from_time: Time.utc(2015, 7, 1, 10), start_time: Time.utc(2015, 8, 1), index_record_status: :failed)
+        @harvested_records_failed = @harvest_job_failed.harvested_records
+
+        @harvest_job_pending = create(:indexed_harvest_job, record_count: @record_count, from_time: Time.utc(2015, 8, 1), start_time: Time.utc(2015, 9, 1), index_job_status: :in_progress, index_record_status: :pending)
+      end
+
+      describe 'find_newest_indexed_timestamp' do
+        it 'returns the timestamp of the newest indexed record' do
+          newest_indexed = @harvested_records_completed.last
+          expected_timestamp = newest_indexed.timestamp
+
+          newest_indexed_timestamp = @mgr.find_newest_indexed_timestamp
+          expect(newest_indexed_timestamp).to be_a(Time)
+          expect(newest_indexed_timestamp).to eq(expected_timestamp)
+        end
+
+        it 'returns nil if there are no indexed records' do
+          @harvested_records_completed.each(&:destroy)
+          expect(@mgr.find_newest_indexed_timestamp).to be_nil
+        end
+      end
+
+      describe 'find_oldest_failed_timestamp' do
+        it 'returns the timestamp of the oldest failed record' do
+          oldest_failed = @harvested_records_failed.first
+          expected_timestamp = oldest_failed.timestamp
+
+          oldest_failed_timestamp = @mgr.find_oldest_failed_timestamp
+          expect(oldest_failed_timestamp).to be_a(Time)
+          expect(oldest_failed_timestamp).to eq(expected_timestamp)
+        end
+
+        it 'returns nil if there are no failed records' do
+          @harvested_records_failed.each(&:destroy)
+          expect(@mgr.find_oldest_failed_timestamp).to be_nil
+        end
+      end
+    end
+
   end
 end
