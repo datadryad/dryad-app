@@ -1,2 +1,1 @@
 APP_CONFIG.metadata_engine.constantize.resource_class = APP_CONFIG.shared_resource_model
-StashEngine.belong_to_resource = APP_CONFIG.belong_to_resource
