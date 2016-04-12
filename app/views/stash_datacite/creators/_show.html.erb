@@ -1,5 +1,6 @@
 <% unless creators.nil? %>
-Author:
+Author:<br/>
+(Author, Affiliation, OrcidID)
   <% creators.each do |creator| %>
     <ul style="list-style-type:none">
       <li><%= creator.creator_full_name %>,&nbsp;
