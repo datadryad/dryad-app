@@ -35,13 +35,8 @@ module StashDatacite
       respond_to do |format|
         format.js {
           @resource = StashDatacite.resource_class.find(params[:id])
-          @data = check_required_fields(@resource)
-                    @review = Resource::Review.new(@resource)
-          if @data.nil?
-            ''
-          else
-            flash[:alert] = "You must edit the description to include the #{@data} before you can submit your dataset."
-          end
+          check_required_fields(@resource)
+          @review = Resource::Review.new(@resource)
         }
       end
     end
@@ -52,7 +47,7 @@ module StashDatacite
       identifier = @resource_file_generation.generate_identifier.split(':', 2)[1]
       target_url = current_tenant.landing_url(stash_url_helpers.show_path(identifier))
       @resource_file_generation.generate_merritt_zip(target_url)
-      create_resource_state(:submitted, resource)
+      create_resource_state(resource)
     end
 
     private
@@ -61,24 +56,21 @@ module StashDatacite
       @completions = Resource::Completions.new(resource)
       # required fields are Title, Institution, Data type, Data Creator(s), Abstract
       unless @completions.required_completed == @completions.required_total
-        data = []
-        data << "Title" unless @completions.title
-        data << "Resource Type" unless @completions.data_type
-        data << "Abstract" unless @completions.abstract
-        data << "Author" unless @completions.creator
-        data << "Affliation" unless @completions.institution
-        return data.join(', ')
+        @data = []
+        @data << "Title" unless @completions.title
+        @data << "Resource Type" unless @completions.data_type
+        @data << "Abstract" unless @completions.abstract
+        @data << "Author" unless @completions.creator
+        @data << "Affliation" unless @completions.institution
+        return @data.join(', ').split(/\W+/)
       end
     end
 
-    def create_resource_state(state, resource)
-      unless resource.current_resource_state.to_sym == state
-        byebug
+    def create_resource_state(resource)
+      unless resource.current_resource_state == 'submitted' && resource.current_resource_state.nil?
         resource.save!
-        StashEngine::ResourceState.create!(resource_id: resource.id, resource_state: :submitted.to_s , user_id: current_user.id )
+        StashEngine::ResourceState.create!(resource_id: resource.id, resource_state: 'submitted' , user_id: current_user.id )
         redirect_to stash_url_helpers.dashboard_path, notice: "#{resource.titles.first.title} submitted with doi:XXXXXXXXXX. There may be a delay for processing before the item is available."
-      else
-        redirect_to stash_url_helpers.dashboard_path, alert: 'This dataset has already been submitted.'
       end
     end
   end
