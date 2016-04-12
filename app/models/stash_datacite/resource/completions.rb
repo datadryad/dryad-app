@@ -52,7 +52,7 @@ module StashDatacite
 
       # these are optional (recommended) ones
       def date
-        @resource.dates.where.not(date: [nil, '']).count > 0
+        @resource.datacite_dates.where.not(date: [nil, '']).count > 0
       end
 
       def keyword

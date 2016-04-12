@@ -19,7 +19,7 @@ module StashDatacite
       resource.instance_eval do
         has_many :contributors, class_name: 'StashDatacite::Contributor' # optional according to datacite
         has_many :creators, class_name: 'StashDatacite::Creator' # mandatory
-        has_many :dates, class_name: 'StashDatacite::Date' # optional
+        has_many :datacite_dates, class_name: 'StashDatacite::DataciteDate' # optional
         has_many :descriptions, class_name: 'StashDatacite::Description' #optional
         has_many :embargoes, class_name: 'StashDatacite::Embargo' #?
         has_many :geolocation_boxes, class_name: 'StashDatacite::GeolocationBox' # optional

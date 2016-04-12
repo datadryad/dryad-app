@@ -89,6 +89,7 @@ module StashDatacite
             )
           ]
         )
+
         datacite_to_wrapper = resource.save_to_xml
         datacite_root = resource.write_xml
         @client.update_metadata(identifier, datacite_root, target_url) # add target as 3rd parameter
@@ -105,7 +106,7 @@ module StashDatacite
 
         version = st::Version.new(
           number: 1,
-          date: Date.today,
+          date:  Date.tomorrow,
           note: 'Sample wrapped Datacite document'
         )
 
@@ -114,8 +115,8 @@ module StashDatacite
         embargo = st::Embargo.new(
           type: st::EmbargoType::NONE,
           period: 'none',
-          start_date: Date.today,
-          end_date: Date.today
+          start_date: Date.tomorrow,
+          end_date: Date.tomorrow,
         )
 
         inventory = st::Inventory.new(
