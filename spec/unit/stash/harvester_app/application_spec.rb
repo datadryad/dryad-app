@@ -121,66 +121,48 @@ module Stash
         it 'logs the metadata mapper'
       end
 
-      # TODO: eliminate all this and just test we create the right job and call it
       describe '#start' do
+
         before(:each) do
-          # Mock persistence
-          persistence_config = instance_double(PersistenceConfig)
-          allow(PersistenceConfig).to receive(:new) { persistence_config }
+          @config = Config.allocate
+
+          @persistence_config = instance_double(PersistenceConfig)
+          allow(@config).to receive(:persistence_config) { @persistence_config }
 
           @persistence_mgr = instance_double(PersistenceManager).as_null_object
-          allow(persistence_config).to receive(:create_manager) { @persistence_mgr }
+          allow(@persistence_config).to receive(:create_manager) { @persistence_mgr }
 
-          # Mock OAI
-          @wrappers = []
-          oai_records = ['spec/data/wrapped_datacite/wrapped-datacite-all-geodata.xml',
-                         'spec/data/wrapped_datacite/wrapped-datacite-no-geodata.xml',
-                         'spec/data/wrapped_datacite/wrapped-datacite-place-only.xml'].map do |xml|
-            stash_wrapper = Stash::Wrapper::StashWrapper.parse_xml(File.read(xml))
-            @wrappers << stash_wrapper
-            ark = "http://n2t.net/ark:/#{Digest::MD5.hexdigest(stash_wrapper.id_value)}"
-            datestamp = stash_wrapper.version_date.to_time.utc.xmlschema
+          @source_config = instance_double(SourceConfig)
+          allow(@config).to receive(:source_config) { @source_config }
 
-            record = REXML::Document.new(['<record>',
-                                          '  <header> ',
-                                          "   <identifier>#{ark}</identifier>",
-                                          "   <datestamp>#{datestamp}</datestamp>",
-                                          '  </header> ',
-                                          '</record>'].join("\n")).root
+          @index_config = instance_double(Indexer::IndexConfig)
+          allow(@config).to receive(:index_config) { @index_config }
 
-            metadata = REXML::Element.new('metadata')
-            metadata.add_element(stash_wrapper.save_to_xml)
-            record.add_element(metadata)
-            ::OAI::Record.new(record)
-          end
-          list_records_response = instance_double(::OAI::ListRecordsResponse)
-          allow(list_records_response).to receive(:full).and_return(oai_records)
-
-          allow_any_instance_of(::OAI::Client).to receive(:list_records).with(any_args).and_return(list_records_response)
-
-          # Mock Solr
-          @solr = instance_double(RSolr::Client)
-          allow(@solr).to receive(:add)
-          allow(@solr).to receive(:commit)
-          allow(RSolr::Client).to receive(:new) do |_connection, options|
-            @rsolr_options = options
-            @solr
-          end
-
-          # Config
-          @config = Config.from_file('spec/data/stash-harvester.yml')
+          @metadata_mapper = instance_double(Indexer::MetadataMapper)
+          allow(@config).to receive(:metadata_mapper) { @metadata_mapper }
         end
 
         after(:each) do
-          allow(RSolr::Client).to receive(:new).and_call_original
-          allow_any_instance_of(::OAI::Client).to receive(:list_records).and_call_original
-          allow(PersistenceConfig).to receive(:new).with(any_args).and_call_original
+          allow(HarvestAndIndexJob).to receive(:new).and_call_original
         end
 
         it 'harvests and indexes' do
+          from_time = Time.utc(1914, 8, 4, 23)
+          until_time = Time.utc(2018, 11, 11, 10)
+
+          job = instance_double(HarvestAndIndexJob)
+          expect(HarvestAndIndexJob).to receive(:new).with(
+            source_config: @source_config,
+            index_config: @index_config,
+            metadata_mapper: @metadata_mapper,
+            persistence_manager: @persistence_mgr,
+            from_time: from_time,
+            until_time: until_time
+          ) { job }
+          expect(job).to receive(:harvest_and_index)
+
           app = Application.with_config(@config)
-          expect(@solr).to receive(:add).exactly(@wrappers.length).times
-          app.start
+          app.start(from_time: from_time, until_time: until_time)
         end
 
         it 'sets the datestamp of the earliest failure as the next start'
