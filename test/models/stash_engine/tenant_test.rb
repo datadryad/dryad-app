@@ -3,7 +3,7 @@ require 'test_helper'
 module StashEngine
   class TenantTest < ActiveSupport::TestCase
     test 'tenants loaded' do
-      assert_equal 11, Tenant.all.length
+      assert_equal 3, Tenant.all.length
       assert_equal Tenant.all.first.tenant_id, 'dataone'
     end
 
@@ -18,8 +18,8 @@ module StashEngine
     end
 
     test 'tenant_by_domain' do
-      assert_instance_of StashEngine::Tenant, Tenant.by_domain('testingfun.ucop.edu')
-      assert_equal 'UC Berkeley', Tenant.by_domain('catfood.berkeley.edu').short_name
+      assert_instance_of StashEngine::Tenant, Tenant.by_domain('oneshare-aws-dev.cdlib.org')
+      assert_equal 'DataONE', Tenant.by_domain('catfood.oneshare-aws-dev.cdlib.org').short_name
     end
   end
 end

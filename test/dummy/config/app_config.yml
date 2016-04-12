@@ -2,17 +2,25 @@ defaults: &DEFAULTS
   metadata_engine: StashDatacite
   shared_resource_model: StashEngine::Resource
   stash_mount: /stash
+# these lower 2 and 10 MB limits are better for testing.
+  max_file_size: 2000000
+  max_submission_size: 10000000
 
 development: &DEVELOPMENT
   <<: *DEFAULTS
   shib_sp_host: dash2-dev.ucop.edu
-  google_client_id: google_test_id
-  google_client_secret: google_test_secret
-  orcid_key: orcid_test_key
-  orcid_secret: orcid_test_secret
+  google_client_id: 1713274285-s1d8mlqdr1pb2giicssrm94fg3gn8lu4.apps.googleusercontent.com
+  google_client_secret: meow
+  orcid_key: APP-9PRKRA446PD7KHXU
+  orcid_secret: meow
 
 test:
   <<: *DEFAULTS
+  shib_sp_host: dash2-dev.ucop.edu
+  google_client_id: 1713274285-s1d8mlqdr1pb2giicssrm94fg3gn8lu4.apps.googleusercontent.com
+  google_client_secret: meow
+  orcid_key: APP-9PRKRA446PD7KHXU
+  orcid_secret: meow
 
 stage:
   <<: *DEFAULTS
