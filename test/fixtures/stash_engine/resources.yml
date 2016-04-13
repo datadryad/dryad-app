@@ -10,3 +10,8 @@ resource_1:
   current_resource_state_id: 1
   geolocation: 0
 
+resource_2:
+  id: 2
+  user_id: 1
+  current_resource_state_id: 2
+  geolocation: 0

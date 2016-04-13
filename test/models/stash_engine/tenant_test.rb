@@ -21,5 +21,10 @@ module StashEngine
       assert_instance_of StashEngine::Tenant, Tenant.by_domain('oneshare-aws-dev.cdlib.org')
       assert_equal 'DataONE', Tenant.by_domain('catfood.oneshare-aws-dev.cdlib.org').short_name
     end
+
+    test 'landing_url' do
+      ucb = Tenant.find('ucb')
+      assert_equal "https://dash2-dev.cdlib.org/catfun/dogfun", ucb.landing_url('/catfun/dogfun')
+    end
   end
 end

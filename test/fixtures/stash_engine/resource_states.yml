@@ -12,3 +12,10 @@ one:
   updated_at: <%= Time.new %>
   resource_id: 1
 
+two:
+  id: 2
+  user_id: 1
+  resource_state: <%= StashEngine::ResourceState.resource_states[:in_progress] %>
+  created_at: <%= Time.new %>
+  updated_at: <%= Time.new %>
+  resource_id: 2
