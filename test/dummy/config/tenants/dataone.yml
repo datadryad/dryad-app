@@ -2,19 +2,27 @@ default: &default
   repository:
     type: merritt
     endpoint: "http://merritt-dev.cdlib.org/object/update"
-    username: "dataone_dash_submitter"
-    password: "test01"
+    username: "dataone"
+    password: ""
     profile: "demo_open_context_content"
   contact_email: ["contact1@contact.com", "contact2@contact.com"]
   abbreviation: "DataONE"
   short_name: "DataONE"
   long_name: "DataONE"
-  landing_page: ".cdlib.org"
-  domain_regex: "oneshare-dev.cdlib.org$"
+  full_domain: "oneshare-aws-dev.cdlib.org"
+  domain_regex: "oneshare-aws-dev.cdlib.org$"
   tenant_id: dataone
   logo: dash_dataone_logo.jpg
+  identifier_service:
+    shoulder: "doi:10.5072/FK2"
+    account: apitest
+    password: apitest
+    coowners: [""]
+    id_scheme: doi
   authentication:
     strategy: google
+    specific1: test
+    specific2: test
 
 development:
   <<: *default

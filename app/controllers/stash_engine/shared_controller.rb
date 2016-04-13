@@ -1,6 +1,5 @@
 module StashEngine
   module SharedController
-
     require 'uri'
     #helper_method :current_tenant, :current_user, :metadata_engine, :metadata_url_helpers
 

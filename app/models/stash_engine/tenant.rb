@@ -49,7 +49,7 @@ module StashEngine
     end
 
     def landing_url(path_to_landing)
-      URI::HTTPS.build(:host => full_domain, :path => path_to_landing).to_s
+      URI::HTTPS.build(host: full_domain, path: path_to_landing).to_s
     end
   end
 end

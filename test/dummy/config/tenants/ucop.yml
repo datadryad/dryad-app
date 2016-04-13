@@ -2,17 +2,23 @@ default: &default
   repository:
     type: merritt
     endpoint: "http://merritt-dev.cdlib.org/object/update"
-    username: "ucop_dash_submitter"
-    password: "test08"
+    username: "ucop"
+    password: ""
     profile: "dash_cdl_content"
   contact_email: ["contact1@contact.com", "contact2@contact.com"]
   abbreviation: "UC"
   short_name: "UC Office of the President"
   long_name: "University of California, Office of the President"
-  landing_page: ".ucop.edu"
+  full_domain: "dash2-dev.ucop.edu"
   domain_regex: ".ucop.edu"
   tenant_id: cdl
   logo: blank_institution_logo.png
+  identifier_service:
+    shoulder: "doi:10.5072/FK2"
+    account: apitest
+    password: apitest
+    coowners: [""]
+    id_scheme: doi
   authentication:
     strategy: shibboleth
     entity_id: urn:mace:incommon:ucop.edu

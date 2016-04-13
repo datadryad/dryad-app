@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160208223347) do
+ActiveRecord::Schema.define(version: 20160318035403) do
 
   create_table "stash_engine_file_uploads", force: :cascade do |t|
     t.string   "upload_file_name",    limit: 255
@@ -47,6 +47,7 @@ ActiveRecord::Schema.define(version: 20160208223347) do
     t.integer  "resource_state", limit: 4, default: 0
     t.datetime "created_at",                           null: false
     t.datetime "updated_at",                           null: false
+    t.integer  "resource_id",    limit: 4
   end
 
   create_table "stash_engine_resources", force: :cascade do |t|
@@ -71,9 +72,10 @@ ActiveRecord::Schema.define(version: 20160208223347) do
     t.string   "uid",         limit: 255
     t.string   "provider",    limit: 255
     t.string   "oauth_token", limit: 255
-    t.datetime "created_at",              null: false
-    t.datetime "updated_at",              null: false
+    t.datetime "created_at",                              null: false
+    t.datetime "updated_at",                              null: false
     t.string   "tenant_id",   limit: 255
+    t.boolean  "orcid",                   default: false
   end
 
   add_index "stash_engine_users", ["tenant_id"], name: "index_stash_engine_users_on_tenant_id", using: :btree

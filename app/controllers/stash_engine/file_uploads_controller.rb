@@ -5,9 +5,11 @@ module StashEngine
   class FileUploadsController < ApplicationController
     before_action :require_login
 
-    before_action :set_file, only: [:destroy]
+    before_action :set_file_info, only: [:destroy]
 
     before_action :require_file_owner, except: [:create]
+
+    before_action :set_create_prerequisites, only: [:create]
 
     def destroy
       respond_to do |format|
@@ -22,26 +24,21 @@ module StashEngine
     def create
       respond_to do |format|
         format.js do
-          dir = File.join(Rails.root, "uploads", params[:resource_id])
-          @temp_id = params[:temp_id]
-          accum_file = File.join(dir, @temp_id)
-          fu = params[:upload][:upload]
-          FileUtils.mkdir_p dir unless File.exists?(dir)
-          add_to_file(accum_file, fu) # this accumulates bytes into file for chunked uploads (default 1 MB chunk)
+          add_to_file(@accum_file, @file_upload) # this accumulates bytes into file for chunked uploads
 
-          if File.size(accum_file) < params[:hidden_bytes].to_i
+          if File.size(@accum_file) < params[:hidden_bytes].to_i
             # do not render changes to page until full file uploads and is saved into db
-            head :ok, content_type: "application/javascript"
+            head :ok, content_type: 'application/javascript'
             return
           end
 
-          new_fn = File.join(dir, fu.original_filename)
-          FileUtils.mv(accum_file, new_fn)
+          new_fn = File.join(@upload_dir, @file_upload.original_filename)
+          FileUtils.mv(@accum_file, new_fn)
 
           @my_file = FileUpload.new(
-            upload_file_name: fu.original_filename,
+            upload_file_name: @file_upload.original_filename,
             temp_file_path: new_fn,
-            upload_content_type: fu.content_type,
+            upload_content_type: @file_upload.content_type,
             upload_file_size: File.size(new_fn),
             resource_id: params[:resource_id],
             upload_updated_at: Time.new.utc)
@@ -53,16 +50,27 @@ module StashEngine
     private
 
     def require_file_owner
-      return if current_user.id = @file.resource.user_id
+      return if current_user.id == @file.resource.user_id
       redirect_to tenants_path && return
     end
 
-    def set_file
+    def set_create_prerequisites
+      unless params[:resource_id] && params[:temp_id] && params[:upload]
+        raise ActionController::RoutingError.new('Not Found'), 'Not Found'
+      end
+      @upload_dir = File.join(Rails.root, 'uploads', params[:resource_id])
+      @temp_id = params[:temp_id]
+      FileUtils.mkdir_p @upload_dir unless File.exist?(@upload_dir)
+      @accum_file = File.join(@upload_dir, @temp_id)
+      @file_upload = params[:upload][:upload]
+    end
+
+    def set_file_info
       @file = FileUpload.find(params[:id])
     end
 
     def add_to_file(fn, fileupload)
-      File.open(fn, "ab") { |f| f.write(fileupload.read) }
+      File.open(fn, 'ab') { |f| f.write(fileupload.read) }
     end
   end
 end
