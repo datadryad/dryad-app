@@ -1,7 +1,9 @@
 module StashEngine
   class Resource < ActiveRecord::Base
     has_many :file_uploads, class_name: 'StashEngine::FileUpload'
+    # rubocop:disable all
     has_and_belongs_to_many :subjects, class_name: 'StashDatacite::Subject'
+    # rubocop:enable all
     belongs_to :user
     has_one :current_state,
             class_name: 'StashEngine::ResourceState',
