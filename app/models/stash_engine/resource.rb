@@ -23,17 +23,17 @@ module StashEngine
     end
 
     def display_state
-      return '' if self.current_state.nil?
-      self.current_state.display_state
+      return '' if current_state.nil?
+      current_state.display_state
     end
 
     def current_resource_state
-      unless self.current_resource_state_id.nil? || self.current_resource_state_id.blank?
-        id  = self.current_resource_state_id
+      if current_resource_state_id.nil? || current_resource_state_id.blank?
+        ResourceState.create!(resource_id: id, user_id: user_id, resource_state: :in_progress)
+      else
+        id = current_resource_state_id
         state = ResourceState.find(id).resource_state
         return state
-      else
-        ResourceState.create!(resource_id: self.id, user_id: self.user_id, resource_state: :in_progress)
       end
     end
   end

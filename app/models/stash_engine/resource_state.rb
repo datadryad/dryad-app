@@ -17,8 +17,8 @@ module StashEngine
 
     def update_current_resource_state
       #update the current resource pointer in the resource
-      r = self.resource
-      r.current_resource_state_id = self.id
+      r = resource
+      r.current_resource_state_id = id
       r.save!
     end
   end

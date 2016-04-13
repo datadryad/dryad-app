@@ -6,10 +6,9 @@ module StashEngine
       @routes = Engine.routes
     end
 
-    test "should get show" do
+    test 'should get show' do
       get :show
       assert_response :success
     end
-
   end
 end
