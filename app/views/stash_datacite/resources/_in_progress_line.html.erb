@@ -1,7 +1,11 @@
 <% # takes local variable line (presenter object) as input to partial %>
 <tr>
   <td>
-    <%= line.title %>
+    <% if line.resource && line.resource.geolocation == true %>
+      <%=  image_tag('stash_datacite/geolocation.png', size: '20x20', alt: 'Box') %><%= line.title %>
+    <% else %>
+      <%= line.title %>
+    <% end %>
   </td>
   <td>
     required: <%= line.required_filled %> of <%= line.required_total %><br/>
