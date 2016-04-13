@@ -9,7 +9,7 @@
   FileUtils.copy(File.join(Rails.root, 'cat.txt'), File.join(Rails.root, "tmp", 'cat.txt'))
 %>
 
-test_file:
+test_file1:
   id: 1
   upload_file_name: cat.txt
   upload_content_type: text/plain
@@ -17,5 +17,14 @@ test_file:
   resource_id: 1
   upload_updated_at: <%= Time.new %>
   temp_file_path: <%= File.join(Rails.root, 'tmp', 'cat.txt') %>
+test_file2:
+  # following is a bogus file that doesn't exist
+  id: 2
+  upload_file_name: dog.txt
+  upload_content_type: text/plain
+  upload_file_size: 0
+  resource_id: 1
+  upload_updated_at: <%= Time.new %>
+  temp_file_path: <%= File.join(Rails.root, 'tmp', 'dog.txt') %>
 
 

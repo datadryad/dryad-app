@@ -24,13 +24,9 @@ module StashEngine
       end
     end
 
-    def display_state
-      return '' if current_state.nil?
-      current_state.display_state
-    end
 
     def current_resource_state
-      if current_resource_state_id.nil? || current_resource_state_id.blank?
+      if current_resource_state_id.blank?
         ResourceState.create!(resource_id: id, user_id: user_id, resource_state: :in_progress)
       else
         id = current_resource_state_id

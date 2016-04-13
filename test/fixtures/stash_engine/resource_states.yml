@@ -4,8 +4,11 @@
 # model remove the '{}' from the fixture names and add the columns immediately
 # below each fixture, per the syntax in the comments below
 #
-one: {}
-# column: value
-#
-two: {}
-#  column: value
+one:
+  id: 1
+  user_id: 1
+  resource_state: <%= StashEngine::ResourceState.resource_states[:in_progress] %>
+  created_at: <%= Time.new %>
+  updated_at: <%= Time.new %>
+  resource_id: 1
+

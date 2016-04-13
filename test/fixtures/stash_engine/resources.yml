@@ -7,6 +7,6 @@
 resource_1:
   id: 1
   user_id: 1
-  current_resource_state_id: 0
+  current_resource_state_id: 1
   geolocation: 0
 
