@@ -38,3 +38,12 @@ li {
   color: #D8000C;
   background-color: #FFBABA;
 }
+
+.error_close img {
+    display: block;
+    float:right;
+    position:relative;
+    top:-12px;
+    right: -10px;
+    height: 20px;
+}

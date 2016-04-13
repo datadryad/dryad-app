@@ -2,7 +2,16 @@
   <%= '' %>
 <% else %>
   <div class="error">
-    <p><%= image_tag("stash_datacite/error_warning.png", size: "20x20", alt: "Box") %>&nbsp;&nbsp;You must edit the description to include the following before you can submit your dataset:</p>
+    <div class="error_close">
+      <%= image_tag("stash_datacite/close.png", size: "20x30", alt: "close") %>
+    </div>
+    <p><%= image_tag("stash_datacite/error_warning.png", size: "20x20", alt: "error_warning") %>&nbsp;&nbsp;You must edit the description to include the following before you can submit your dataset:</p>
     <strong><%= data.join("<br>").html_safe %></strong>
   </div>
 <% end %>
+
+<script type="text/javascript">
+$(".error_close").click(function() {
+    $(this).parent().hide();
+  });
+</script>
