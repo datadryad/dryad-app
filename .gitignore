@@ -12,6 +12,7 @@ doc/*
 
 .ruby-version
 coverage
+.byebug_history
 
 # Ignore IntelliJ IDE project configuration.
 *.iml
