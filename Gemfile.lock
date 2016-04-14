@@ -1,12 +1,7 @@
 GIT
-  remote: https://github.com/CDLUC3/stash_ezid_datacite.git
-  revision: 8307e75648fac26897473e76eb40e09a28166ffa
-  specs:
-    stash_ezid_datacite (0.1.2)
-      ezid-client
-
-PATH
-  remote: /Users/scottfisher/workspace/stash_datacite
+  remote: https://github.com/CDLUC3/stash_datacite.git
+  revision: a6ae75431feb46ed5e9d440f8166367272b2cf5d
+  branch: development
   specs:
     stash_datacite (0.0.5)
       datacite-mapping
@@ -17,8 +12,10 @@ PATH
       rubyzip
       stash-wrapper
 
-PATH
-  remote: /Users/scottfisher/workspace/stash_discovery
+GIT
+  remote: https://github.com/CDLUC3/stash_discovery.git
+  revision: f4385a7a01084b32db27fc2f5b7f8b905113bb40
+  branch: development
   specs:
     stash_discovery (0.0.1)
       devise-guests (~> 0.3)
@@ -28,8 +25,10 @@ PATH
       sass-rails (~> 5.0)
       turbolinks (~> 2.5)
 
-PATH
-  remote: /Users/scottfisher/workspace/stash_engine
+GIT
+  remote: https://github.com/CDLUC3/stash_engine.git
+  revision: ad3d5fccb3903c3216485162cbb647253ad71cf0
+  branch: development
   specs:
     stash_engine (0.0.17)
       carrierwave (~> 0.10.0)
@@ -45,6 +44,13 @@ PATH
       omniauth-orcid (~> 1.0.21)
       omniauth-shibboleth (~> 1.2.1)
       rails (~> 4.2.4)
+
+GIT
+  remote: https://github.com/CDLUC3/stash_ezid_datacite.git
+  revision: 8307e75648fac26897473e76eb40e09a28166ffa
+  specs:
+    stash_ezid_datacite (0.1.2)
+      ezid-client
 
 GEM
   remote: https://rubygems.org/
@@ -201,6 +207,7 @@ GEM
     mail (2.6.4)
       mime-types (>= 1.16, < 4)
     mime-types (2.99.1)
+    mime-types-data (3.2016.0221)
     mini_portile2 (2.0.0)
     minitest (5.8.4)
     multi_json (1.11.2)
