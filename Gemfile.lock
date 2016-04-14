@@ -45,13 +45,6 @@ GIT
       omniauth-shibboleth (~> 1.2.1)
       rails (~> 4.2.4)
 
-GIT
-  remote: https://github.com/CDLUC3/stash_ezid_datacite.git
-  revision: 8307e75648fac26897473e76eb40e09a28166ffa
-  specs:
-    stash_ezid_datacite (0.1.2)
-      ezid-client
-
 GEM
   remote: https://rubygems.org/
   specs:
