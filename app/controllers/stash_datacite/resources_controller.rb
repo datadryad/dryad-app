@@ -5,7 +5,6 @@ module StashDatacite
   class ResourcesController < ApplicationController
     before_action :ajax_require_current_user, only: [:user_in_progress]
     before_action :set_page_info
-
     # get resources and composite information for in-progress table view
     def user_in_progress
       respond_to do |format|
@@ -57,11 +56,11 @@ module StashDatacite
       # required fields are Title, Institution, Data type, Data Creator(s), Abstract
       unless @completions.required_completed == @completions.required_total
         @data = []
-        @data << "Title" unless @completions.title
-        @data << "Resource Type" unless @completions.data_type
-        @data << "Abstract" unless @completions.abstract
-        @data << "Author" unless @completions.creator
-        @data << "Institutional Affiliation" unless @completions.institution
+        @data << 'Title' unless @completions.title
+        @data << 'Resource Type' unless @completions.data_type
+        @data << 'Abstract' unless @completions.abstract
+        @data << 'Author' unless @completions.creator
+        @data << 'Institutional Affiliation' unless @completions.institution
         return @data.join(', ').split(/\W+/)
       end
     end
@@ -69,16 +68,17 @@ module StashDatacite
     def create_resource_state(resource)
       unless resource.current_resource_state == 'submitted' && resource.current_resource_state.nil?
         resource.save!
-        StashEngine::ResourceState.create!(resource_id: resource.id, resource_state: 'submitted' , user_id: current_user.id )
+        StashEngine::ResourceState.create!(resource_id: resource.id, resource_state: 'submitted',
+                                           user_id: current_user.id)
         title = resource.titles.where(title_type: :main).first
         UserMailer.notification(
           resource.user.email,
           "#{title} has been submitted to the repository.",
-          "submission",
-          { user: resource.user, resource: resource, title: title } ).deliver
-        redirect_to stash_url_helpers.dashboard_path, notice: "#{resource.titles.first.title} submitted with doi:XXXXXXXXXX. There may be a delay for processing before the item is available."
+          'submission',
+          { user: resource.user, resource: resource, title: title }).deliver
+        redirect_to stash_url_helpers.dashboard_path, notice: "#{resource.titles.first.title} submitted
+        with doi:XXXXXXXXXX. There may be a delay for processing before the item is available."
       end
     end
   end
 end
-
