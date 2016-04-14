@@ -11,6 +11,7 @@ AllCops:
     - 'bin/**/*'
     - 'test/dummy/db/**/*'
     - 'vendor/**/*'
+    - 'app/models/stash_datacite/resource/resource_file_generation.rb'
 
 # other configuration
 Metrics/LineLength:
