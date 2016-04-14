@@ -2,7 +2,7 @@ Hello <%= @vars[:user].first_name %> <%= @vars[:user].last_name %>,
 
 The dataset "<%= @vars[:title].title %>" has been submitted.
 
-If you have questions pertaining to this action, please visit the Metadat Entry page at
-<%= metadata_entry_pages_find_or_create_path(resource_id: @vars[:resource].id) %>
+If you have questions pertaining to this action, please visit the Metadata Entry page at
+<%= StashEngine::Engine.routes.url_helpers.metadata_entry_pages_find_or_create_path(resource_id: @vars[:resource].id) %>
 
 <%= render :partial => 'stash_datacite/user_mailer/notification_boilerplate.text.erb' %>
