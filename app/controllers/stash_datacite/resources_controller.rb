@@ -70,6 +70,12 @@ module StashDatacite
       unless resource.current_resource_state == 'submitted' && resource.current_resource_state.nil?
         resource.save!
         StashEngine::ResourceState.create!(resource_id: resource.id, resource_state: 'submitted' , user_id: current_user.id )
+        title = resource.titles.where(title_type: :main).first
+        UserMailer.notification(
+          resource.user.email,
+          "#{title} has been submitted to the repository.",
+          "submission",
+          { user: resource.user, resource: resource, title: title } ).deliver
         redirect_to stash_url_helpers.dashboard_path, notice: "#{resource.titles.first.title} submitted with doi:XXXXXXXXXX. There may be a delay for processing before the item is available."
       end
     end

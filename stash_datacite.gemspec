@@ -25,5 +25,4 @@ Gem::Specification.new do |s|
   s.add_dependency 'kaminari'
   s.add_dependency 'stash-wrapper'
   s.add_dependency 'rubyzip'
-  s.add_dependency 'ckeditor_rails'
 end
