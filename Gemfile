@@ -76,7 +76,7 @@ engines.each do |engine|
   if (my_env == 'development' || my_env == 'test') && ENV.to_hash['LOCAL_ENGINES'] != 'false' && (engine_path = BundlerHelp.find_path(engine))
     gem engine, :path => engine_path
   else
-    gem engine, :git => "https://github.com/CDLUC3/#{engine}.git", :branch => 'development'
+    gem engine, :git => "https://github.com/CDLUC3/#{engine}.git", :branch => my_env
   end
 end
 
