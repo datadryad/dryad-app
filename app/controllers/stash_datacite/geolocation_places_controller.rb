@@ -4,7 +4,7 @@ module StashDatacite
   class GeolocationPlacesController < ApplicationController
     before_action :set_geolocation_place, only: [:edit, :update, :delete]
 
-    # # GET /geolocation_points/
+    # GET /geolocation_points/
     def places_coordinates
       @geolocation_places = GeolocationPlace.select(:id, :geo_location_place, :latitude, :longitude)
                                             .where(resource_id: params[:resource_id])
@@ -27,34 +27,6 @@ module StashDatacite
         end
       end
     end
-
-    # # GET /geolocation_places/1/edit
-    # def edit
-    # end
-
-    # POST /geolocation_places
-    def create
-      @geolocation_place = GeolocationPlace.new(geolocation_place_params)
-      respond_to do |format|
-        if @geolocation_place.save
-          @geolocation_places = GeolocationPlace.where(resource_id: geolocation_place_params[:resource_id])
-          format.js
-        else
-          format.html { render :new }
-        end
-      end
-    end
-
-    # # PATCH/PUT /geolocation_places/1
-    # def update
-    #   respond_to do |format|
-    #     if if @geolocation_place.update(geolocation_place_params)
-    #       format.js { render template: 'stash_datacite/shared/update.js.erb' }
-    #     else
-    #       format.html { render :edit }
-    #     end
-    #   end
-    # end
 
     # DELETE /geolocation_places/1
     def delete

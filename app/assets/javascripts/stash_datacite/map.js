@@ -85,7 +85,7 @@ function loadMap() {
       var mrk_id = coordinatesMarker[i][2];
       var markerLocation = new L.LatLng(lat, lng);
       marker = new L.Marker(markerLocation, { draggable: true, id: mrk_id }).addTo(map);
-      markerArray.push(new L.Marker(markerLocation, { id: mrk_id }));
+      // markerArray.push(new L.Marker(markerLocation, { id: mrk_id }));
       drawPopup(marker, lat, lng);
 
       marker.on('dragend', function(event) {
@@ -138,7 +138,7 @@ function loadMap() {
         var ne_lng = coordinatesBBox[i][3];
         var bounds = [[sw_lat, sw_lng], [ne_lat, ne_lng]];
         var newRectangle = L.rectangle(bounds, {color: "#ff7800", weight: 1}).addTo(map).bindPopup(sw_lat + ", " + sw_lng + ", " + ne_lat + ", " + ne_lng);
-        // map.fitBounds(bounds);
+        map.fitBounds(bounds);
      }
     // -------------------------------- //
 
@@ -182,8 +182,6 @@ function loadMap() {
         var newMarkerLocation = new L.LatLng(lat, lng);
         markerArray.push(new L.marker(newMarkerLocation, { icon: customIcon, id: mrk_id }).addTo(map).bindPopup('<strong>' + place));
       }
-
-
       group = L.featureGroup(markerArray).addTo(map);
       map.fitBounds(group.getBounds());
   // -------------------------------- //
