@@ -123,6 +123,7 @@ namespace :deploy do
   task :clone_engines do
     on roles(:app) do
       %w(stash_engine stash_datacite stash_discovery).each do |engine|
+        puts "TRYING TO CLONE #{engine}"
         unless remote_file_exists?("#{deploy_to}/releases/stash_engines/#{engine}")
           execute "mkdir -p #{deploy_to}/releases/stash_engines"
           execute "cd #{deploy_to}/releases/stash_engines; git clone https://github.com/CDLUC3/#{engine}.git; git reset --hard origin/#{my_branch}; git pull"
@@ -143,7 +144,8 @@ namespace :deploy do
 
   #before :restart, :install
   #before :starting, :install
-  before :starting, :update_config, :clone_engines
+  before :starting, :update_config
+  before :starting, :clone_engines
   before :published, :record_branch
   before 'deploy:symlink:shared', 'deploy:my_linked_files'
 
