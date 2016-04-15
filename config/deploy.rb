@@ -35,8 +35,8 @@ set :linked_dirs, fetch(:linked_dirs, []).push('log', 'tmp/pids', 'tmp/cache', '
 # set :default_env, { path: '/apps/dash2/local/bin:$PATH', 'LOCAL_ENGINES' => 'false' }
 set :default_env, { path: '/apps/dash2/local/bin:$PATH' }
 
-# Default value for keep_releases is 5
-set :keep_releases, 5
+# Default value for keep_releases is 5, we are adding one to keep the engines folder + 5 versions (long story)
+set :keep_releases, 6
 
 # passenger in gemfile set since we have both passenger and capistrano-passenger in gemfile
 set :passenger_in_gemfile, true
@@ -59,25 +59,25 @@ namespace :deploy do
   end
 
 
-  desc 'Stop Phusion'
-  task :stop do
-    on roles(:app) do
-      if test("[ -f #{fetch(:passenger_pid)} ]")
-        execute "cd #{deploy_to}/current; bundle exec passenger stop --pid-file #{fetch(:passenger_pid)}"
-      end
-    end
-  end
+  #desc 'Stop Phusion'
+  #task :stop do
+  #  on roles(:app) do
+  #    if test("[ -f #{fetch(:passenger_pid)} ]")
+  #      execute "cd #{deploy_to}/current; bundle exec passenger stop --pid-file #{fetch(:passenger_pid)}"
+  #    end
+  #  end
+  #end
 
-  desc 'Start Phusion'
-  task :start do
-    on roles(:app) do
-      within current_path do
-        with rails_env: fetch(:rails_env) do
-          execute "cd #{deploy_to}/current; bundle exec passenger start -d --environment #{fetch(:rails_env)} --pid-file #{fetch(:passenger_pid)} -p #{fetch(:passenger_port)} --log-file #{fetch(:passenger_log)}"
-        end
-      end
-    end
-  end
+  #desc 'Start Phusion'
+  #task :start do
+  #  on roles(:app) do
+  #    within current_path do
+  #      with rails_env: fetch(:rails_env) do
+  #        execute "cd #{deploy_to}/current; bundle exec passenger start -d --environment #{fetch(:rails_env)} --pid-file #{fetch(:passenger_pid)} -p #{fetch(:passenger_port)} --log-file #{fetch(:passenger_log)}"
+  #      end
+  #    end
+  #  end
+  #end
   # before "deploy:start", "bundle:install"
 
 
@@ -140,19 +140,56 @@ namespace :deploy do
       %w(stash_datacite stash_engine stash_discovery).each do |engine|
         execute "cd #{deploy_to}/releases/stash_engines/#{engine}; git checkout #{my_branch}; git reset --hard origin/#{my_branch}; git pull"
       end
-
-      # execute "cd #{deploy_to}/stash_datacite; git checkout #{my_branch}; git reset --hard origin/#{my_branch}; git pull"
-      # execute "cd #{deploy_to}/stash_engine; git checkout #{my_branch}; git reset --hard origin/#{my_branch}; git pull"
     end
   end
 
-  #before :restart, :install
-  #before :starting, :install
+  #Rake::Task["start"].clear_actions
+  desc 'Start Phusion'
+  task :start do
+    on roles(:app) do
+      within current_path do
+        with rails_env: fetch(:rails_env) do
+          execute "cd #{deploy_to}/current; LOCAL_ENGINES=true bundle install --no-deployment"
+          execute "cd #{deploy_to}/current; LOCAL_ENGINES=true bundle exec passenger start -d --environment #{fetch(:rails_env)} --pid-file #{fetch(:passenger_pid)} -p #{fetch(:passenger_port)} --log-file #{fetch(:passenger_log)}"
+        end
+      end
+    end
+  end
+
+  #Rake::Task["stop"].clear_actions
+  desc 'Stop Phusion'
+  task :stop do
+    on roles(:app) do
+      if test("[ -f #{fetch(:passenger_pid)} ]")
+        execute "cd #{deploy_to}/current; LOCAL_ENGINES=true bundle exec passenger stop --pid-file #{fetch(:passenger_pid)}"
+      end
+    end
+  end
+
+  Rake::Task["cleanup"].clear_actions
+  desc "Clean up old releases"
+  task :cleanup do
+    on release_roles :all do |host|
+      releases = capture(:ls, "-xtr", releases_path).split.keep_if{|i| i.match(/^[0-9]+$/) }
+      if releases.count >= fetch(:keep_releases)
+        info t(:keeping_releases, host: host.to_s, keep_releases: fetch(:keep_releases), releases: releases.count)
+        directories = (releases - releases.last(fetch(:keep_releases)))
+        if directories.any?
+          directories_str = directories.map do |release|
+            releases_path.join(release)
+          end.join(" ")
+          execute :rm, "-rf", directories_str
+        else
+          info t(:no_old_releases, host: host.to_s, keep_releases: fetch(:keep_releases))
+        end
+      end
+    end
+  end
+
   before :starting, :update_config
   before :starting, :clone_engines
   before :published, :record_branch
   before 'deploy:symlink:shared', 'deploy:my_linked_files'
-
   after :published, :update_local_engines
 
 end

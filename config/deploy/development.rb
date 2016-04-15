@@ -76,30 +76,6 @@ set :passenger_port, "3000"
 
 namespace :deploy do
 
-  Rake::Task["start"].clear_actions
-  desc 'Start Phusion'
-  task :start do
-    on roles(:app) do
-      within current_path do
-        with rails_env: fetch(:rails_env) do
-          execute "cd #{deploy_to}/current; LOCAL_ENGINES=true bundle install --no-deployment"
-          #execute "cd #{deploy_to}/current; LOCAL_ENGINES=true bundle install"
-          execute "cd #{deploy_to}/current; LOCAL_ENGINES=true bundle exec passenger start -d --environment #{fetch(:rails_env)} --pid-file #{fetch(:passenger_pid)} -p #{fetch(:passenger_port)} --log-file #{fetch(:passenger_log)}"
-        end
-      end
-    end
-  end
-
-  Rake::Task["stop"].clear_actions
-  desc 'Stop Phusion'
-  task :stop do
-    on roles(:app) do
-      if test("[ -f #{fetch(:passenger_pid)} ]")
-        execute "cd #{deploy_to}/current; LOCAL_ENGINES=true bundle exec passenger stop --pid-file #{fetch(:passenger_pid)}"
-      end
-    end
-  end
-
   #desc 'update local engines to get around requiring version number changes in development'
   #task :update_local_engines do
   #  on roles(:app) do
