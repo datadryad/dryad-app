@@ -35,8 +35,8 @@ set :linked_dirs, fetch(:linked_dirs, []).push('log', 'tmp/pids', 'tmp/cache', '
 # set :default_env, { path: '/apps/dash2/local/bin:$PATH', 'LOCAL_ENGINES' => 'false' }
 set :default_env, { path: '/apps/dash2/local/bin:$PATH' }
 
-# Default value for keep_releases is 5, we are adding one to keep the engines folder + 5 versions (long story)
-set :keep_releases, 6
+# Default value for keep_releases is 5
+set :keep_releases, 5
 
 # passenger in gemfile set since we have both passenger and capistrano-passenger in gemfile
 set :passenger_in_gemfile, true
