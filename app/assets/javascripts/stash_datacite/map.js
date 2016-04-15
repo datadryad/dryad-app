@@ -11,48 +11,49 @@ function loadMap() {
           'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
           attribution: '&copy; ' + mapLink + ' Contributors',
           }).addTo(map);
-
   // -------------------------------- //
 
-    // mapzen autocomplete search and save to db
-    var customIcon = new L.Icon({
-      // iconUrl: L.Icon.Default.imagePath +'/globe.png',
-      iconUrl: 'https://thevendy.files.wordpress.com/2015/02/black-and-white-world-globe.gif',
-      iconSize: [25, 25], // size of the icon
-      iconAnchor: [12, 25], // point of the icon which will correspond to marker's location
-      popupAnchor: [0, -25] // point from which the popup should open relative to the iconAnchor
-    });
+  // mapzen autocomplete search and save to db
+  var customIcon = new L.Icon({
+    // iconUrl: L.Icon.Default.imagePath +'/globe.png',
+    iconUrl: 'https://thevendy.files.wordpress.com/2015/02/black-and-white-world-globe.gif',
+    iconSize: [25, 25], // size of the icon
+    iconAnchor: [12, 25], // point of the icon which will correspond to marker's location
+    popupAnchor: [0, -25] // point from which the popup should open relative to the iconAnchor
+  });
 
-    var geocoder = L.control.geocoder('search-OJQOSkw', {
-        placeholder: 'Add by Location Name',
-        pointIcon: false,
-        polygonIcon: false,
-        position: 'topleft',
-        markers: { icon: customIcon },
-        expanded: true
-    }).addTo(map);
+  var geocoder = L.control.geocoder('search-OJQOSkw', {
+      placeholder: 'Add by Location Name',
+      pointIcon: false,
+      polygonIcon: false,
+      position: 'topleft',
+      markers: { icon: customIcon },
+      expanded: true
+  }).addTo(map);
 
-    var lat, lng, location_name;
-    geocoder.on('select', function (e) {
-      location_name =  e.feature.properties.label;
-      lat = e.latlng.lat;
-      lng = e.latlng.lng;
-      $.ajax({
-          type: "POST",
-          dataType: "script",
-          url: "/stash_datacite/geolocation_places/map_coordinates",
-          data: { 'geo_location_place' : location_name, 'latitude' : lat, 'longitude' : lng, 'resource_id' : $.urlParam('resource_id') }
-        });
-    });
+  var lat, lng, location_name;
+  geocoder.on('select', function (e) {
+    location_name =  e.feature.properties.label;
+    lat = e.latlng.lat;
+    lng = e.latlng.lng;
+    $.ajax({
+        type: "POST",
+        dataType: "script",
+        url: "/stash_datacite/geolocation_places/map_coordinates",
+        data: { 'geo_location_place' : location_name, 'latitude' : lat, 'longitude' : lng, 'resource_id' : $.urlParam('resource_id') }
+      });
+    marker = new L.Marker([lat, lng], { icon: customIcon }).addTo(map).bindPopup(location_name).openPopup();
+  });
 
-    geocoder.on('reset', function (e) {
-      marker = new L.Marker([lat, lng], { icon: customIcon }).addTo(map).bindPopup(location_name).openPopup();
-    });
-
+  // if(lat != null && lng != null) {
+  //   geocoder.on('reset', function (e) {
+  //     marker = new L.Marker([lat, lng], { icon: customIcon }).addTo(map).bindPopup(location_name).openPopup();
+  //   });
+  // }
   // -------------------------------- //
 
-
   // -------------------------------- //
+  var group , markerArray = [];
     // get point coordinates from db and load on map
     var coordinatesMarker = getCoordinates();  // Function is called, return value will end up in an array
     function getCoordinates() {
@@ -76,32 +77,33 @@ function loadMap() {
         return(arr);
     }
 
-      //Loop through the markers array
-      var marker, markerArray = [];
-      for (var i=0; i<coordinatesMarker.length; i++) {
-        var lat = coordinatesMarker[i][0];
-        var lng = coordinatesMarker[i][1];
-        var mrk_id = coordinatesMarker[i][2];
-        var markerLocation = new L.LatLng(lat, lng);
-        marker = new L.Marker(markerLocation, { draggable: true, id: mrk_id }).addTo(map);
-        drawPopup(marker, lat, lng);
+    //Loop through the markers array
+    var marker, markerArray = [];
+    for (var i=0; i<coordinatesMarker.length; i++) {
+      var lat = coordinatesMarker[i][0];
+      var lng = coordinatesMarker[i][1];
+      var mrk_id = coordinatesMarker[i][2];
+      var markerLocation = new L.LatLng(lat, lng);
+      marker = new L.Marker(markerLocation, { draggable: true, id: mrk_id }).addTo(map);
+      markerArray.push(new L.Marker(markerLocation, { id: mrk_id }));
+      drawPopup(marker, lat, lng);
 
-        marker.on('dragend', function(event) {
-          drawPopup(event.target, event.target.getLatLng().lat, event.target.getLatLng().lng);
-          $.ajax({
-              type: "PUT",
-              dataType: "script",
-              url: "/stash_datacite/geolocation_points/update_coordinates",
-              data: { 'latitude' : marker.getLatLng().lat, 'longitude' : marker.getLatLng().lng,
-                     'resource_id' : $.urlParam('resource_id'), 'id' : event.target.options.id },
-              success: function() {
-                updateGeolocationPointsIndex();
-              },
-              error: function() {
-                alert("error occured");
-              }
-            });
-        });
+      marker.on('dragend', function(event) {
+        drawPopup(event.target, event.target.getLatLng().lat, event.target.getLatLng().lng);
+        $.ajax({
+            type: "PUT",
+            dataType: "script",
+            url: "/stash_datacite/geolocation_points/update_coordinates",
+            data: { 'latitude' : marker.getLatLng().lat, 'longitude' : marker.getLatLng().lng,
+                   'resource_id' : $.urlParam('resource_id'), 'id' : event.target.options.id },
+            success: function() {
+              updateGeolocationPointsIndex();
+            },
+            error: function() {
+              alert("error occured");
+            }
+          });
+      });
     }
 
   // -------------------------------- //
@@ -128,7 +130,7 @@ function loadMap() {
         return(arr);
     }
 
-     // Loop through the bbox array
+    // Loop through the bbox array
      for (var i=0; i<coordinatesBBox.length; i++) {
         var sw_lat = coordinatesBBox[i][0];
         var sw_lng = coordinatesBBox[i][1];
@@ -136,12 +138,12 @@ function loadMap() {
         var ne_lng = coordinatesBBox[i][3];
         var bounds = [[sw_lat, sw_lng], [ne_lat, ne_lng]];
         var newRectangle = L.rectangle(bounds, {color: "#ff7800", weight: 1}).addTo(map).bindPopup(sw_lat + ", " + sw_lng + ", " + ne_lat + ", " + ne_lng);
-        map.fitBounds(bounds);
+        // map.fitBounds(bounds);
      }
     // -------------------------------- //
 
     // -------------------------------- //
-      // get location names from db and load on map
+    // get location names from db and load on map
       var locationNames = getLocationNames();  // Function is called, return value will end up in an array
       function getLocationNames() {
         var resource_id = "", result = [], arr = [];
@@ -159,33 +161,35 @@ function loadMap() {
             }
           });
           arr = $.map(result, function(n){
-             return [[ n["geo_location_place"] ]];
+             return [[ n["geo_location_place"], n["latitude"], n["longitude"], n["id"] ]];
           });
           return(arr);
       }
       L.Icon.Default.imagePath = 'assets/images/stash_datacite';
       var customIcon = new L.Icon({
-            // iconUrl: L.Icon.Default.imagePath +'/globe.png',
-            iconUrl: 'https://thevendy.files.wordpress.com/2015/02/black-and-white-world-globe.gif',
-            iconSize: [25, 25], // size of the icon
-            iconAnchor: [12, 25], // point of the icon which will correspond to marker's location
-            popupAnchor: [0, -25] // point from which the popup should open relative to the iconAnchor
+          // iconUrl: L.Icon.Default.imagePath +'/globe.png',
+          iconUrl: 'https://thevendy.files.wordpress.com/2015/02/black-and-white-world-globe.gif',
+          iconSize: [25, 25], // size of the icon
+          iconAnchor: [12, 25], // point of the icon which will correspond to marker's location
+          popupAnchor: [0, -25] // point from which the popup should open relative to the iconAnchor
       });
-       // Loop through the location names array
-        for (var i=0; i<locationNames.length; i++) {
-          var place = locationNames[i][0];
-          MQ.geocode().search(place).on('success', function(e) {
-              var best = e.result.best,
-                  latlng = best.latlng;
+      // Loop through the location names array
+      for (var i=0; i<locationNames.length; i++) {
+        var place = locationNames[i][0];
+        var lat   = locationNames[i][1];
+        var lng   = locationNames[i][2];
+        var mrk_id = locationNames[i][3];
+        var newMarkerLocation = new L.LatLng(lat, lng);
+        markerArray.push(new L.marker(newMarkerLocation, { icon: customIcon, id: mrk_id }).addTo(map).bindPopup('<strong>' + place));
+      }
 
-          var newMarker = new L.marker([latlng.lat, latlng.lng], { draggable: true, icon: customIcon }).addTo(map).bindPopup('<strong>' + best.adminArea5 + ', ' + best.adminArea3 + ', ' + best.adminArea1);
-          });
-        }
-    // -------------------------------- //
+
+      group = L.featureGroup(markerArray).addTo(map);
+      map.fitBounds(group.getBounds());
+  // -------------------------------- //
 
 
   // LEAFLET DRAW PLUGIN CODE FOR CREATING MARKERS, EDITING MARKERS, DELETING MARKERS & CREATING BOUNDING BOXES
-
     // Initialize the FeatureGroup to store editable layers
       var drawnItems = new L.FeatureGroup();
       map.addLayer(drawnItems);
@@ -277,7 +281,7 @@ function loadMap() {
 
 
     // ------------------------------------------------------------- //
-         // Function to get coordinates based on the layer drawn.
+      // Function to get coordinates based on the layer drawn.
       var getShapes = function(drawnItems) {
         var lng, lat;
         drawnItems.eachLayer(function(layer) {
