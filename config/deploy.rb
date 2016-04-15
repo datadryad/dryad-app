@@ -124,7 +124,7 @@ namespace :deploy do
   task :clone_engines do
     on roles(:app) do
       %w(stash_engine stash_datacite stash_discovery).each do |engine|
-        unless test("[ -f #{deploy_to}/releases/stash_engines/#{engine} ]")
+        unless test("[ -d #{deploy_to}/releases/stash_engines/#{engine} ]")
           execute "mkdir -p #{deploy_to}/releases/stash_engines"
           execute "cd #{deploy_to}/releases/stash_engines; git clone https://github.com/CDLUC3/#{engine}.git"
         end
