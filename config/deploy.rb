@@ -126,7 +126,7 @@ namespace :deploy do
         puts "TRYING TO CLONE #{engine}"
         unless test("[ -f #{deploy_to}/releases/stash_engines/#{engine} ]")
           execute "mkdir -p #{deploy_to}/releases/stash_engines"
-          execute "cd #{deploy_to}/releases/stash_engines; git clone https://github.com/CDLUC3/#{engine}.git; git reset --hard origin/#{my_branch}; git pull"
+          execute "cd #{deploy_to}/releases/stash_engines; git clone https://github.com/CDLUC3/#{engine}.git"
         end
       end
     end
