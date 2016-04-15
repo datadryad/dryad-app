@@ -45,7 +45,7 @@ module Stash
               'Slug' => slug,
               'Content-Disposition' => 'attachment; filename=example.zip',
               'Content-MD5' => md5,
-              'Content-Length:' => %r{[0-9]+},
+              'Content-Length' => %r{[0-9]+},
               'Content-Type' => 'application/zip'
             }.each do |k, v|
               expect(actual_headers).to include_header(k, v)
