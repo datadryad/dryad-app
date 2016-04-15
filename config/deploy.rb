@@ -124,22 +124,12 @@ namespace :deploy do
     on roles(:app) do
       %w(stash_engine stash_datacite stash_discovery).each do |engine|
         puts "TRYING TO CLONE #{engine}"
-        unless remote_file_exists?("#{deploy_to}/releases/stash_engines/#{engine}")
+        unless test("[ -f #{deploy_to}/releases/stash_engines/#{engine} ]")
           execute "mkdir -p #{deploy_to}/releases/stash_engines"
           execute "cd #{deploy_to}/releases/stash_engines; git clone https://github.com/CDLUC3/#{engine}.git; git reset --hard origin/#{my_branch}; git pull"
         end
       end
     end
-  end
-
-  def remote_file_exists?(path)
-    results = []
-
-    invoke_command("if [ -e '#{path}' ]; then echo -n 'true'; fi") do |ch, stream, out|
-      results << (out == 'true')
-    end
-
-    results.all?
   end
 
   #before :restart, :install
