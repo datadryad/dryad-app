@@ -37,7 +37,7 @@
   <% if @data.blank? %>
     <%= link_to "Submit", stash_datacite.resources_submission_path(resource_id: @resource.id), data: { confirm: 'You sure you want to submit?'} , class: 'link_like_button' %>
   <% else %>
-    <%= link_to("Submit", stash_datacite.resources_submission_path(resource_id: @resource.id), data: { disable_with: "Submit" }, class: 'link_like_button') %>
+    <%= button_to("Submit", stash_datacite.resources_submission_path(resource_id: @resource.id), disabled: true, class: 'link_like_button') %>
   <% end %>
 </div>
 
