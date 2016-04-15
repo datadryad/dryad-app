@@ -73,11 +73,14 @@ my_env = env['RAILS_ENV'] || env['RACK_ENV'] || 'development'
 
 engines = %w(stash_engine stash_datacite stash_discovery)
 engines.each do |engine|
-  if (my_env == 'development' || my_env == 'test') && ENV.to_hash['LOCAL_ENGINES'] != 'false' && (engine_path = BundlerHelp.find_path(engine))
-    gem engine, :path => engine_path
-  else
-    gem engine, :git => "https://github.com/CDLUC3/#{engine}.git", :branch => 'development'
-  end
+  # I'm commenting this out to see if we can keep our engine paths consistent across all environments to simplify
+  # all of our nightmare bundler Gemfile.lock problems
+  #if (my_env == 'development' || my_env == 'test') && ENV.to_hash['LOCAL_ENGINES'] != 'false' && (engine_path = BundlerHelp.find_path(engine))
+  #  gem engine, :path => engine_path
+  #else
+  #  gem engine, :git => "https://github.com/CDLUC3/#{engine}.git", :branch => 'development'
+  #end
+  gem engine, :path => "../#{engine}"
 end
 
 #gem "omniauth-shibboleth", :git => "https://bitbucket.org/cdl/omniauth-shibboleth.git", :branch => 'master'
