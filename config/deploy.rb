@@ -32,7 +32,8 @@ set :linked_dirs, fetch(:linked_dirs, []).push('log', 'tmp/pids', 'tmp/cache', '
                                                'public/system', 'uploads')
 
 # Default value for default_env is {}
-set :default_env, { path: '/apps/dash2/local/bin:$PATH', 'LOCAL_ENGINES' => 'false' }
+# set :default_env, { path: '/apps/dash2/local/bin:$PATH', 'LOCAL_ENGINES' => 'false' }
+set :default_env, { path: '/apps/dash2/local/bin:$PATH' }
 
 # Default value for keep_releases is 5
 set :keep_releases, 5
@@ -123,12 +124,25 @@ namespace :deploy do
   task :clone_engines do
     on roles(:app) do
       %w(stash_engine stash_datacite stash_discovery).each do |engine|
-        puts "TRYING TO CLONE #{engine}"
         unless test("[ -f #{deploy_to}/releases/stash_engines/#{engine} ]")
           execute "mkdir -p #{deploy_to}/releases/stash_engines"
           execute "cd #{deploy_to}/releases/stash_engines; git clone https://github.com/CDLUC3/#{engine}.git"
         end
       end
+    end
+  end
+
+  desc 'update local engines to get around requiring version number changes in development'
+  task :update_local_engines do
+    on roles(:app) do
+      my_branch = capture("cat #{deploy_to}/current/branch_info")
+
+      %w(stash_datacite stash_engine stash_discovery).each do |engine|
+        execute "cd #{deploy_to}/releases/stash_engines/#{engine}; git checkout #{my_branch}; git reset --hard origin/#{my_branch}; git pull"
+      end
+
+      # execute "cd #{deploy_to}/stash_datacite; git checkout #{my_branch}; git reset --hard origin/#{my_branch}; git pull"
+      # execute "cd #{deploy_to}/stash_engine; git checkout #{my_branch}; git reset --hard origin/#{my_branch}; git pull"
     end
   end
 
@@ -138,5 +152,7 @@ namespace :deploy do
   before :starting, :clone_engines
   before :published, :record_branch
   before 'deploy:symlink:shared', 'deploy:my_linked_files'
+
+  after :published, :update_local_engines
 
 end
