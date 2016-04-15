@@ -1,0 +1,15 @@
+<service xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom">
+  <workspace>
+    <atom:title type="text">Merritt</atom:title>
+    <collection href="http://merritt.cdlib.org/sword/v2/dash_ucb">
+      <atom:title type="text">UCB Dash</atom:title>
+      <accept>*/*</accept>
+      <accept alternate="multipart-related">*/*</accept>
+      <mediation xmlns="http://purl.org/net/sword/terms/">true</mediation>
+      <acceptPackaging xmlns="http://purl.org/net/sword/terms/">http://purl.org/net/sword/package/SimpleZip</acceptPackaging>
+    </collection>
+  </workspace>
+  <generator xmlns="http://www.w3.org/2005/Atom" uri="http://www.swordapp.org/" version="2.0" />
+  <version xmlns="http://purl.org/net/sword/terms/">2.0</version>
+  <maxUploadSize xmlns="http://purl.org/net/sword/terms/">10000000</maxUploadSize>
+</service>

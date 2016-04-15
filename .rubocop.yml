@@ -1,0 +1,24 @@
+# Disable compact style check for example.rb
+Style/ClassAndModuleChildren:
+  Exclude:
+    - 'example.rb'
+
+# Disable line-length check; it's too easy for the cure to be worse than the disease
+Metrics/LineLength:
+  Enabled: False
+
+# Disable problematic module documentation check (see https://github.com/bbatsov/rubocop/issues/947)
+Style/Documentation:
+  Enabled: false
+
+# Allow one line around class body (Style/EmptyLines will still disallow two or more)
+Style/EmptyLinesAroundClassBody:
+  Enabled: false
+
+# Allow one line around module body (Style/EmptyLines will still disallow two or more)
+Style/EmptyLinesAroundModuleBody:
+  Enabled: false
+
+# Allow one line around block body (Style/EmptyLines will still disallow two or more)
+Style/EmptyLinesAroundBlockBody:
+  Enabled: false

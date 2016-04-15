@@ -1,0 +1,40 @@
+﻿Status of submission is tracked - merritt_response {PROCESSING, “User not authorized for Merritt submission”, 
+
+How is dublincore called?  
+
+Review & Submit button —> record.review()
+creates datacite.xml file and places it in the uploads/<local_id>/ directory
+
+Submit button —>  record.send_archive_to_merritt
+
+Set up the user_email request headers 
+Create a new thread
+Record.Generate Merritt Zip()
+Record.Send Archive to Merritt
+Create a submission Log 
+
+
+If submission successful, remove files from local storage and add logging information
+Record.Purge_Files()
+
+Generate_Merritt_Zip()
+set file path to uploads_dir - this is a linked directory shared/uploads so it will stay persistent across releases
+local_id is used to name the uploads directory for a dataset.
+calls self.review
+calls self.dublincore
+calls self.dataone
+creates the zip file 
+purges all temp files, etc
+
+Record.Send_Archive_to_merritt
+gets info to send in curl command from MERRITT_CONFIG and user and camps
+sends curl command - no notification sent if no email
+No DOI/EZID is not created.  Merritt does this.
+returns sys_output
+
+
+SWORD - Slug identifier is the local_id
+
+
+
+   if @user_email.nil?      sys_output = "curl --insecure --verbose -u #{merritt_username}:#{merritt_password} -F \"file=@./#{DATASHARE_CONFIG['uploads_dir']}/#{self.local_id}/#{self.local_id}.zip\" -F \"type=container\" -F \"submitter=Dash/#{external_id}\" -F \"responseForm=xml\" -F \"profile=#{merritt_profile}\" -F \"localIdentifier=#{self.local_id}\" #{merritt_endpoint} 2>&1"    else      sys_output = "curl --insecure --verbose -u #{merritt_username}:#{merritt_password} -F \"file=@./#{DATASHARE_CONFIG['uploads_dir']}/#{self.local_id}/#{self.local_id}.zip\" -F \"notification=#{@user_email}\" -F \"type=container\" -F \"submitter=Dash/#{external_id}\" -F \"responseForm=xml\" -F \"profile=#{merritt_profile}\" -F \"localIdentifier=#{self.local_id}\" #{merritt_endpoint} 2>&1"    end
