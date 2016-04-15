@@ -33,7 +33,7 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 # gem 'unicorn'
 
 # Use Capistrano for deployment
-gem 'capistrano', '~> 3.1'
+gem 'capistrano', '~> 3.4.1'
 gem 'capistrano-rails', '~> 1.1'
 gem 'capistrano-passenger'
 gem 'passenger'
