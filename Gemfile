@@ -59,6 +59,12 @@ group :development, :test do
 
 end
 
+path '../stash_engines' do
+  gem 'stash_engine'
+  gem 'stash_datacite'
+  gem 'stash_discovery'
+end
+
 # set LOCAL_ENGINES=true (LOCAL_ENGINES=true rails s) to use local
 #
 # I had very frustating problems where it wouldn't read changes in the environment variable in rails
@@ -68,11 +74,11 @@ end
 # Do 'export DISABLE_SPRING=1' in your .bash_profile to keep it from running and messing you up
 # if you are switching back and forth for debugging often.
 
-env = ENV.to_hash
-my_env = env['RAILS_ENV'] || env['RACK_ENV'] || 'development'
+#env = ENV.to_hash
+#my_env = env['RAILS_ENV'] || env['RACK_ENV'] || 'development'
 
-engines = %w(stash_engine stash_datacite stash_discovery)
-engines.each do |engine|
+#engines = %w(stash_engine stash_datacite stash_discovery)
+#engines.each do |engine|
   # I'm commenting this out to see if we can keep our engine paths consistent across all environments to simplify
   # all of our nightmare bundler Gemfile.lock problems
   #if (my_env == 'development' || my_env == 'test') && ENV.to_hash['LOCAL_ENGINES'] != 'false' && (engine_path = BundlerHelp.find_path(engine))
@@ -80,8 +86,8 @@ engines.each do |engine|
   #else
   #  gem engine, :git => "https://github.com/CDLUC3/#{engine}.git", :branch => 'development'
   #end
-  gem engine, :path => "../#{engine}"
-end
+#  gem engine, :path => "../#{engine}"
+#end
 
 #gem "omniauth-shibboleth", :git => "https://bitbucket.org/cdl/omniauth-shibboleth.git", :branch => 'master'
 

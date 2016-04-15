@@ -6,7 +6,7 @@ GIT
       ezid-client
 
 PATH
-  remote: ../stash_datacite
+  remote: ../stash_engines
   specs:
     stash_datacite (0.0.5)
       datacite-mapping
@@ -16,10 +16,6 @@ PATH
       responders (~> 2.0)
       rubyzip
       stash-wrapper
-
-PATH
-  remote: ../stash_discovery
-  specs:
     stash_discovery (0.0.1)
       devise-guests (~> 0.3)
       geoblacklight (~> 0.12.1)
@@ -27,10 +23,6 @@ PATH
       rails (~> 4.2)
       sass-rails (~> 5.0)
       turbolinks (~> 2.5)
-
-PATH
-  remote: ../stash_engine
-  specs:
     stash_engine (0.0.17)
       carrierwave (~> 0.10.0)
       ckeditor_rails
