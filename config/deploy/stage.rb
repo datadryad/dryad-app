@@ -9,7 +9,7 @@
 
 set :rails_env, 'stage'
 
-set :bundle_env_variables, { 'RAILS_ENV' => 'stage' }
+#set :bundle_env_variables, { 'RAILS_ENV' => 'stage' }
 
 # To override the default host, set $SERVER_HOST, e.g.
 #    $ SERVER_HOST='localhost' bundle exec cap development deploy

@@ -33,7 +33,7 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 # gem 'unicorn'
 
 # Use Capistrano for deployment
-gem 'capistrano', '~> 3.1'
+gem 'capistrano', '~> 3.4.1'
 gem 'capistrano-rails', '~> 1.1'
 gem 'capistrano-passenger'
 gem 'passenger'
@@ -59,6 +59,12 @@ group :development, :test do
 
 end
 
+path '../stash_engines' do
+  gem 'stash_engine'
+  gem 'stash_datacite'
+  gem 'stash_discovery'
+end
+
 # set LOCAL_ENGINES=true (LOCAL_ENGINES=true rails s) to use local
 #
 # I had very frustating problems where it wouldn't read changes in the environment variable in rails
@@ -68,17 +74,9 @@ end
 # Do 'export DISABLE_SPRING=1' in your .bash_profile to keep it from running and messing you up
 # if you are switching back and forth for debugging often.
 
-env = ENV.to_hash
-my_env = env['RAILS_ENV'] || env['RACK_ENV'] || 'development'
+#env = ENV.to_hash
+#my_env = env['RAILS_ENV'] || env['RACK_ENV'] || 'development'
 
-engines = %w(stash_engine stash_datacite stash_discovery)
-engines.each do |engine|
-  if (my_env == 'development' || my_env == 'test') && ENV.to_hash['LOCAL_ENGINES'] != 'false' && (engine_path = BundlerHelp.find_path(engine))
-    gem engine, :path => engine_path
-  else
-    gem engine, :git => "https://github.com/CDLUC3/#{engine}.git", :branch => my_env
-  end
-end
 
 #gem "omniauth-shibboleth", :git => "https://bitbucket.org/cdl/omniauth-shibboleth.git", :branch => 'master'
 
