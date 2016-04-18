@@ -99,9 +99,19 @@ module Stash
           index_config: index_config,
           metadata_mapper: metadata_mapper,
           persistence_manager: persistence_manager,
-          from_time: from_time,
+          from_time: determine_from_time(from_time),
           until_time: until_time
         )
+      end
+
+      def determine_from_time(from_time)
+        unless from_time
+          from_time = persistence_manager.find_oldest_failed_timestamp
+          unless from_time
+            from_time = persistence_manager.find_newest_indexed_timestamp
+          end
+        end
+        from_time
       end
 
     end

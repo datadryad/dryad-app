@@ -237,6 +237,8 @@ module Stash
           Harvester.log_device = $stdout
         end
 
+        it 'logs the from_time and until_time'
+
         it 'logs each successfully harvested record' do
           job.harvest_and_index
           expect(logged).to include(harvest_job_id.to_s)
@@ -277,5 +279,6 @@ module Stash
         end
       end
     end
+
   end
 end

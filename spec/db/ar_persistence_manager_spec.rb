@@ -249,6 +249,8 @@ module Stash
           expect(@mgr.find_oldest_failed_timestamp).to be_nil
         end
       end
+
+      it 'bases success/failure datestamp determination only on the most recent harvest job'
     end
 
   end

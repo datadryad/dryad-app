@@ -171,15 +171,47 @@ module Stash
           app.start(from_time: from_time, until_time: until_time)
         end
 
-        it 'sets the datestamp of the earliest failure as the next start'
-        it 'sets the datestamp of the latest success as the next start, if no failures'
-        it 'bases success/failure datestamp determination only on the most recent harvest job'
+        it 'sets the datestamp of the latest success as the next start, if no failures' do
+          newest_indexed = Time.utc(2016, 4, 18, 1, 2, 3)
+          expect(@persistence_mgr).to receive(:find_oldest_failed_timestamp) { nil }
+          expect(@persistence_mgr).to receive(:find_newest_indexed_timestamp) { newest_indexed }
 
-        it 'logs the from_time and until_time'
-        it 'sets from_time, if specified'
-        it 'sets until_time, if specified'
-        it 'reads from_time from the database, if not specified'
-        it 'defaults until_time to now, if not specified'
+          job = instance_double(HarvestAndIndexJob)
+          expect(HarvestAndIndexJob).to receive(:new).with(
+            source_config: @source_config,
+            index_config: @index_config,
+            metadata_mapper: @metadata_mapper,
+            persistence_manager: @persistence_mgr,
+            from_time: newest_indexed,
+            until_time: nil
+          ) { job }
+          expect(job).to receive(:harvest_and_index)
+
+          app = Application.with_config(config)
+          app.start
+        end
+
+        it 'sets the datestamp of the earliest failure as the next start' do
+          newest_indexed = Time.utc(2016, 4, 18, 1, 2, 3)
+          allow(@persistence_mgr).to receive(:find_newest_indexed_timestamp) { newest_indexed }
+
+          oldest_failed = Time.utc(1952, 2, 6, 10, 11, 12)
+          expect(@persistence_mgr).to receive(:find_oldest_failed_timestamp) { oldest_failed }
+
+          job = instance_double(HarvestAndIndexJob)
+          expect(HarvestAndIndexJob).to receive(:new).with(
+            source_config: @source_config,
+            index_config: @index_config,
+            metadata_mapper: @metadata_mapper,
+            persistence_manager: @persistence_mgr,
+            from_time: oldest_failed,
+            until_time: nil
+          ) { job }
+          expect(job).to receive(:harvest_and_index)
+
+          app = Application.with_config(config)
+          app.start
+        end
       end
 
       describe 'logging' do
