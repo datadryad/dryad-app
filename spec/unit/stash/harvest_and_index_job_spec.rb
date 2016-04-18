@@ -90,6 +90,8 @@ module Stash
 
       allow_any_instance_of(::OAI::Client).to receive(:list_records).with(any_args).and_return(list_records_response)
 
+      allow(@persistence_mgr).to receive(:record_harvested_record).and_return(*(0...oai_records.length).to_a)
+
       # Mock Solr
       @solr = instance_double(RSolr::Client)
       allow(@solr).to receive(:add)
@@ -181,21 +183,21 @@ module Stash
         end
 
         it 'sets the harvest status to failed in event of a pre-indexing failure' do
-          e = Exception.new('oops')
+          e = Exception.new('(mock :harvest_records error)')
           expect(harvest_task).to receive(:harvest_records).and_raise(e)
           expect(persistence_mgr).to receive(:end_harvest_job).with(harvest_job_id: harvest_job_id, status: Indexer::IndexStatus::FAILED)
           expect { job.harvest_and_index }.to raise_error(e)
         end
 
         it 'sets the index status to failed in event of an indexing failure' do
-          e = Exception.new('oops')
+          e = Exception.new('(mock :add error)')
           expect(solr).to receive(:add).and_raise(e)
           expect(persistence_mgr).to receive(:end_index_job).with(index_job_id: index_job_id, status: Indexer::IndexStatus::FAILED)
           expect { job.harvest_and_index }.to raise_error(e)
         end
 
         it 'sets the harvest status to failed in event of an indexing failure' do
-          e = Exception.new('oops')
+          e = Exception.new('(mock :add error)')
           expect(solr).to receive(:add).and_raise(e)
           expect(persistence_mgr).to receive(:end_harvest_job).with(harvest_job_id: harvest_job_id, status: Indexer::IndexStatus::COMPLETED)
           expect { job.harvest_and_index }.to raise_error(e)
@@ -217,11 +219,62 @@ module Stash
             job.harvest_and_index
           end
         end
+      end
 
-        it 'logs overall job failures'
-        it 'logs each successfully indexed record'
+      describe 'logging' do
+        attr_reader :out
+
+        def logged
+          out.string
+        end
+
+        before(:each) do
+          @out = StringIO.new
+          Harvester.log_device = out
+        end
+
+        after(:each) do
+          Harvester.log_device = $stdout
+        end
+
+        it 'logs each successfully harvested record' do
+          job.harvest_and_index
+          expect(logged).to include(harvest_job_id.to_s)
+          (0...record_count).each do |i|
+            expect(logged).to include(arks[i])
+            expect(logged).to include(timestamp(i).utc.xmlschema)
+            expect(logged).to include(false.to_s)
+          end
+        end
+
+        it 'logs each successfully indexed record' do
+          job.harvest_and_index
+          expect(logged).to include(index_job_id.to_s)
+          (0...record_count).each do |i|
+            expect(logged).to include(arks[i])
+            expect(logged).to include(timestamp(i).utc.xmlschema)
+            expect(logged).to include(Indexer::IndexStatus::COMPLETED.value.to_s)
+          end
+        end
+
         it 'logs each successfully deleted record'
         it 'logs each failed record'
+
+        it 'logs index job failures' do
+          e = Exception.new('(mock :add error)')
+          expect(solr).to receive(:add).and_raise(e)
+          expect { job.harvest_and_index }.to raise_error(e)
+          expect(logged).to include(index_job_id.to_s)
+          expect(logged).to include(Indexer::IndexStatus::FAILED.value.to_s)
+        end
+
+        it 'logs harvest job failures' do
+          e = Exception.new('(mock :list_records error)')
+          allow_any_instance_of(::OAI::Client).to receive(:list_records).and_raise(e)
+          expect { job.harvest_and_index }.to raise_error(e)
+          expect(logged).to include(harvest_job_id.to_s)
+          expect(logged).to include(Indexer::IndexStatus::FAILED.value.to_s)
+        end
       end
     end
   end

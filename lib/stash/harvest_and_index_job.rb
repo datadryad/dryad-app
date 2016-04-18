@@ -2,7 +2,13 @@ require 'stash/harvester'
 require 'stash/indexer'
 
 module Stash
-  class HarvestAndIndexJob
+  class HarvestAndIndexJob # rubocop:disable Metrics/ClassLength:
+
+    HARVEST_JOB_LOG_FORMAT = 'harvest job %d: %s'.freeze
+    INDEX_JOB_LOG_FORMAT = '  index job %d: %s'.freeze
+    HARVESTED_RECORD_LOG_FORMAT = 'harvested %s (timestamp: %s, deleted: %s) (harvest job: %d)'.freeze
+    INDEXED_RECORD_LOG_FORMAT = '  indexed %s (timestamp: %s, deleted: %s; database id: %d): %s (index job: %d)'.freeze
+
     attr_reader :harvest_task
     attr_reader :indexer
     attr_reader :index_uri
@@ -21,6 +27,10 @@ module Stash
       index(harvested_records, harvest_job_id, &block)
     end
 
+    def log
+      Harvester.log
+    end
+
     private
 
     def harvest(job_id)
@@ -29,19 +39,21 @@ module Stash
         harvest_task.harvest_records
       rescue Exception => e # rubocop:disable Lint/RescueException
         status = Indexer::IndexStatus::FAILED
+        log.warn("harvest job #{job_id}: #{e}")
         raise e
       ensure
         end_harvest_job(job_id, status)
       end
     end
 
-    def index(harvested_records, harvest_job_id, &block)
+    def index(harvested_records, harvest_job_id, &block) # rubocop:disable Metrics/MethodLength
       index_job_id = begin_index_job(harvest_job_id)
       status = Indexer::IndexStatus::COMPLETED
       begin
         do_index(harvested_records, harvest_job_id, index_job_id, &block)
       rescue Exception => e # rubocop:disable Lint/RescueException
         status = Indexer::IndexStatus::FAILED
+        log.warn("  index job #{index_job_id}: #{e}")
         raise e
       ensure
         end_index_job(index_job_id, status)
@@ -52,7 +64,7 @@ module Stash
       indexer.index(harvested_records) do |result|
         harvested_record = result.record
         harvested_record_id = record_harvested(harvested_record, harvest_job_id)
-        record_indexed(index_job_id, harvested_record_id, result.status)
+        record_indexed(index_job_id, harvested_record, harvested_record_id, result.status)
         yield result if block_given?
       end
     end
@@ -66,6 +78,7 @@ module Stash
     end
 
     def record_harvested(harvested_record, harvest_job_id)
+      log_harvested(harvest_job_id, harvested_record)
       @persistence_mgr.record_harvested_record(
         harvest_job_id: harvest_job_id,
         identifier: harvested_record.identifier,
@@ -74,7 +87,20 @@ module Stash
       )
     end
 
+    def log_harvested(harvest_job_id, harvested_record)
+      msg = format(
+        HARVESTED_RECORD_LOG_FORMAT,
+        harvested_record.identifier,
+        harvested_record.timestamp.xmlschema,
+        harvested_record.deleted?,
+        harvest_job_id
+      )
+      log.info(msg)
+    end
+
     def end_harvest_job(job_id, status)
+      msg = format(HARVEST_JOB_LOG_FORMAT, job_id, status.value)
+      status == Indexer::IndexStatus::COMPLETED ? log.info(msg) : log.warn(msg)
       persistence_mgr.end_harvest_job(harvest_job_id: job_id, status: status)
     end
 
@@ -85,7 +111,8 @@ module Stash
       )
     end
 
-    def record_indexed(index_job_id, harvested_record_id, status)
+    def record_indexed(index_job_id, harvested_record, harvested_record_id, status)
+      log_indexed(index_job_id, harvested_record, harvested_record_id, status)
       @persistence_mgr.record_indexed_record(
         index_job_id: index_job_id,
         harvested_record_id: harvested_record_id,
@@ -93,7 +120,22 @@ module Stash
       )
     end
 
+    def log_indexed(index_job_id, harvested_record, harvested_record_id, status)
+      msg = format(
+        INDEXED_RECORD_LOG_FORMAT,
+        harvested_record.identifier,
+        harvested_record.timestamp.xmlschema,
+        harvested_record.deleted?,
+        harvested_record_id,
+        status.value,
+        index_job_id
+      )
+      status == Indexer::IndexStatus::COMPLETED ? log.info(msg) : log.warn(msg)
+    end
+
     def end_index_job(job_id, status)
+      msg = format(INDEX_JOB_LOG_FORMAT, job_id, status.value)
+      status == Indexer::IndexStatus::COMPLETED ? log.info(msg) : log.warn(msg)
       persistence_mgr.end_index_job(index_job_id: job_id, status: status)
     end
   end
