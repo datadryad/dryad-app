@@ -114,6 +114,21 @@ module Stash
             expect(indexer).to be_a(SolrIndexer)
           end
         end
+
+        describe '#description' do
+          it 'captures all opts' do
+            opts = {
+              url: 'http://example.org/',
+              proxy: 'http://proxy.example.org',
+              elvis: 'presley'
+            }
+            config = SolrIndexConfig.new(opts)
+            desc = config.description
+            opts.each do |k, v|
+              expect(desc).to include("#{k}: #{v}")
+            end
+          end
+        end
       end
     end
   end

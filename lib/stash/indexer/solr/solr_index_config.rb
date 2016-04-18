@@ -40,6 +40,11 @@ module Stash
           SolrIndexer.new(config: self, metadata_mapper: metadata_mapper)
         end
 
+        def description
+          opts_desc = @opts.map { |k, v| "#{k}: #{v}" }.join(', ')
+          "#{self.class} (#{opts_desc})"
+        end
+
         private
 
         def check_opts(opts)

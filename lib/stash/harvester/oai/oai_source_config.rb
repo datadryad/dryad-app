@@ -61,6 +61,14 @@ module Stash
           OAIHarvestTask.new(config: self, from_time: from_time, until_time: until_time)
         end
 
+        def description
+          params_desc = [:source_uri, :metadata_prefix, :set, :seconds_granularity].map do |p|
+            param_value = send(p)
+            "#{p}: #{param_value}" if param_value
+          end.compact.join(', ')
+          "#{self.class} (#{params_desc})"
+        end
+
         private
 
         def valid_spec(set_spec)
@@ -81,7 +89,6 @@ module Stash
             raise ArgumentError, "metadata_prefix ''#{metadata_prefix}'' must consist only of RFC 2396 URI unreserved characters"
           end
         end
-
       end
 
     end

@@ -63,6 +63,13 @@ module Stash
           expect(task.until_time).to be_time(until_time)
         end
       end
+
+      describe '#description' do
+        it 'is abstract' do
+          config = SourceConfig.new(source_url: 'http://example.org/')
+          expect { config.description }.to raise_error(NoMethodError)
+        end
+      end
     end
   end
 end

@@ -1,5 +1,4 @@
 module Stash
-
   module HarvesterApp
     class Application
 
@@ -8,7 +7,13 @@ module Stash
       def initialize(config:)
         raise ArgumentError, "Invalid #{Application}.config; expected a #{Config}, got #{config ? config : 'nil'}" unless config && config.is_a?(Config)
         @config = config
+
+        [:persistence_config, :source_config, :index_config, :metadata_mapper].each do |c|
+          sub_config = config.send(c)
+          log.info("#{c}: #{sub_config ? sub_config.description : 'nil'}")
+        end
       end
+
       private_class_method :new
 
       # Initializes a new `Application` with the specified configuration
@@ -27,6 +32,7 @@ module Stash
       #   default configuration file
       def self.with_config_file(config_file = nil)
         config_file = ensure_config_file(config_file)
+        log.info("Initializing #{self} with #{config_file}")
         config = Config.from_file(config_file)
         with_config(config)
       end
@@ -42,6 +48,14 @@ module Stash
       def self.config_file_defaults
         [File.expand_path('stash-harvester.yml', Dir.pwd),
          File.expand_path('.stash-harvester.yml', Dir.home)]
+      end
+
+      def self.log
+        HarvesterApp.log
+      end
+
+      def log
+        HarvesterApp.log
       end
 
       private
@@ -67,6 +81,7 @@ module Stash
         raise ArgumentError, "No configuration file provided, and none found in default locations #{Application.config_file_defaults.join(' or ')}" unless config_file
         config_file
       end
+
       private_class_method :ensure_config_file
 
       def self.default_config_file
@@ -75,6 +90,7 @@ module Stash
         end
         nil
       end
+
       private_class_method :default_config_file
 
       def create_job(from_time, until_time)
@@ -87,6 +103,7 @@ module Stash
           until_time: until_time
         )
       end
+
     end
   end
 end

@@ -10,5 +10,9 @@ module Stash
     def create_manager
       raise NoMethodError, "#{self.class} should override create_manager, but it doesn't"
     end
+
+    def description
+      raise NoMethodError, "#{self.class} should override description, but it doesn't"
+    end
   end
 end

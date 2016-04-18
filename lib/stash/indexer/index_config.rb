@@ -32,6 +32,10 @@ module Stash
       def create_indexer(metadata_mapper) # rubocop:disable Lint/UnusedMethodArgument
         raise NoMethodError, "#{self.class} should override #create_indexer to create an Indexer, but it doesn't"
       end
+
+      def description
+        raise NoMethodError, "#{self.class} should override description, but it doesn't"
+      end
     end
   end
 end

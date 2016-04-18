@@ -10,14 +10,14 @@ module Stash
         describe '#new' do
           it 'accepts a valid repository URL' do
             valid_url = 'http://example.org/oai'
-            task = OAISourceConfig.new oai_base_url: valid_url
-            expect(task.source_uri).to eq(URI.parse(valid_url))
+            config = OAISourceConfig.new oai_base_url: valid_url
+            expect(config.source_uri).to eq(URI.parse(valid_url))
           end
 
           it 'accepts a URI object as a repository URL' do
             uri = URI.parse('http://example.org/oai')
-            task = OAISourceConfig.new oai_base_url: uri
-            expect(task.source_uri).to eq(uri)
+            config = OAISourceConfig.new oai_base_url: uri
+            expect(config.source_uri).to eq(uri)
           end
 
           it 'rejects an invalid repository URL' do
@@ -65,6 +65,31 @@ module Stash
 
         end
 
+        describe '#description' do
+          it 'includes the oai_base_url' do
+            valid_url = 'http://example.org/oai'
+            config = OAISourceConfig.new oai_base_url: valid_url
+            expect(config.description).to include(valid_url)
+          end
+
+          it 'includes the metadata prefix' do
+            prefix = 'datacite'
+            config = OAISourceConfig.new(oai_base_url: 'http://example.org/oai', metadata_prefix: prefix)
+            expect(config.description).to include(prefix)
+          end
+
+          it 'includes the set spec' do
+            set_spec = 'path:to:some:set'
+            config = OAISourceConfig.new(oai_base_url: 'http://example.org/oai', set: set_spec)
+            expect(config.description).to include(set_spec)
+          end
+
+          it 'includes the granularity' do
+            prefix = 'oai_dc'
+            config = OAISourceConfig.new(oai_base_url: 'http://example.org/oai', metadata_prefix: prefix, seconds_granularity: true)
+            expect(config.description).to include('true')
+          end
+        end
       end
 
     end

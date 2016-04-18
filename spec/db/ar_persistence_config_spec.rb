@@ -31,5 +31,18 @@ module Stash
         allow(ARPersistenceManager).to receive(:new).with(pool).and_call_original
       end
     end
+
+    describe '#description' do
+      it 'includes the class name and connection info' do
+        env = ::Config::Factory::Environment.load_file('spec/data/stash-harvester.yml')
+        config = PersistenceConfig.for_environment(env, :db)
+        desc = config.description
+        expect(desc).to include(ARPersistenceConfig.to_s)
+        expect(desc).to include('adapter: sqlite3')
+        expect(desc).to include('database: :memory:')
+        expect(desc).to include('pool: 5')
+        expect(desc).to include('timeout: 5000')
+      end
+    end
   end
 end

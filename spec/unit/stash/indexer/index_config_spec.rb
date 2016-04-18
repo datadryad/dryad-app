@@ -37,6 +37,14 @@ module Stash
           expect(indexer).to be_a(Solr::SolrIndexer)
         end
       end
+
+      describe '#description' do
+        it 'is abstract' do
+          config = IndexConfig.new(url: 'http://example.org/')
+          expect { config.description }.to raise_error(NoMethodError)
+        end
+      end
+
     end
   end
 end

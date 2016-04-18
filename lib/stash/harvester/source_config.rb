@@ -39,6 +39,10 @@ module Stash
       def create_harvest_task(from_time: nil, until_time: nil) # rubocop:disable Lint/UnusedMethodArgument
         raise NoMethodError, "#{self.class} should override #create_harvest_task to create a HarvestTask, but it doesn't"
       end
+
+      def description
+        raise NoMethodError, "#{self.class} should override description, but it doesn't"
+      end
     end
   end
 end

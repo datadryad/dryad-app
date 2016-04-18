@@ -6,8 +6,45 @@ require 'fileutils'
 require 'digest'
 
 module Stash
+  class MockDBConfig < PersistenceConfig
+    can_build_if { |config| config.key?(:adapter) }
+
+    attr_reader :connection_info
+
+    def initialize(**connection_info)
+      @connection_info = connection_info
+    end
+
+    def description
+      info_desc = connection_info.map { |k, v| "#{k}: #{v}" }.join(', ')
+      "#{self.class} (#{info_desc})"
+    end
+  end
+
   module HarvesterApp
     describe Application do
+
+      attr_reader :config
+
+      before(:each) do
+        @config = Config.allocate
+
+        @persistence_config = instance_double(PersistenceConfig).as_null_object
+        allow(config).to receive(:persistence_config) { @persistence_config }
+
+        @persistence_mgr = instance_double(PersistenceManager).as_null_object
+        allow(@persistence_config).to receive(:create_manager) { @persistence_mgr }
+
+        @source_config = instance_double(SourceConfig).as_null_object
+        allow(config).to receive(:source_config) { @source_config }
+
+        @index_config = instance_double(Indexer::IndexConfig).as_null_object
+        allow(config).to receive(:index_config) { @index_config }
+
+        @metadata_mapper = instance_double(Indexer::MetadataMapper).as_null_object
+        allow(config).to receive(:metadata_mapper) { @metadata_mapper }
+      end
+
       describe '#with_config_file' do
         before :each do
           @wd = '/stash/apps/stash-harvester'
@@ -35,7 +72,7 @@ module Stash
           config_file = '/etc/stash-harvester.yml'
 
           # Trust the Config class to check for nonexistent files
-          config = Config.allocate
+
           expect(Config).to receive(:from_file).with(config_file).and_return(config)
 
           app = Application.with_config_file(config_file)
@@ -46,7 +83,6 @@ module Stash
           wd_config_path = "#{@wd}/stash-harvester.yml"
           expect(File).to receive(:exist?).with(wd_config_path).and_return(true)
 
-          config = Config.allocate
           expect(Config).to receive(:from_file).with(wd_config_path).and_return(config)
 
           app = Application.with_config_file
@@ -60,7 +96,6 @@ module Stash
           home_config_path = "#{@home}/.stash-harvester.yml"
           expect(File).to receive(:exist?).with(home_config_path).and_return(true)
 
-          config = Config.allocate
           expect(Config).to receive(:from_file).with(home_config_path).and_return(config)
 
           app = Application.with_config_file
@@ -80,8 +115,6 @@ module Stash
             expect(e.message).to include "#{@home}/.stash-harvester.yml"
           end
         end
-
-        it 'logs the config file used'
       end
 
       describe '#with_config' do
@@ -108,39 +141,12 @@ module Stash
         end
 
         it 'sets the config' do
-          config = Config.allocate
           app = Application.with_config(config)
           expect(app.config).to be(config)
         end
       end
 
-      describe '#initialize' do
-        it 'logs the connection info'
-        it 'logs the source URI'
-        it 'logs the index URI'
-        it 'logs the metadata mapper'
-      end
-
       describe '#start' do
-
-        before(:each) do
-          @config = Config.allocate
-
-          @persistence_config = instance_double(PersistenceConfig)
-          allow(@config).to receive(:persistence_config) { @persistence_config }
-
-          @persistence_mgr = instance_double(PersistenceManager).as_null_object
-          allow(@persistence_config).to receive(:create_manager) { @persistence_mgr }
-
-          @source_config = instance_double(SourceConfig)
-          allow(@config).to receive(:source_config) { @source_config }
-
-          @index_config = instance_double(Indexer::IndexConfig)
-          allow(@config).to receive(:index_config) { @index_config }
-
-          @metadata_mapper = instance_double(Indexer::MetadataMapper)
-          allow(@config).to receive(:metadata_mapper) { @metadata_mapper }
-        end
 
         after(:each) do
           allow(HarvestAndIndexJob).to receive(:new).and_call_original
@@ -161,7 +167,7 @@ module Stash
           ) { job }
           expect(job).to receive(:harvest_and_index)
 
-          app = Application.with_config(@config)
+          app = Application.with_config(config)
           app.start(from_time: from_time, until_time: until_time)
         end
 
@@ -174,6 +180,47 @@ module Stash
         it 'sets until_time, if specified'
         it 'reads from_time from the database, if not specified'
         it 'defaults until_time to now, if not specified'
+      end
+
+      describe 'logging' do
+        attr_reader :out
+
+        def logged
+          out.string
+        end
+
+        before(:each) do
+          @out = StringIO.new
+          HarvesterApp.log_device = out
+        end
+
+        after(:each) do
+          HarvesterApp.log_device = $stdout
+        end
+
+        describe '#with_config_file' do
+          it 'logs the config file used' do
+            config_file = '/etc/stash-harvester.yml'
+            expect(Config).to receive(:from_file).with(config_file).and_return(config)
+
+            Application.with_config_file(config_file)
+            expect(logged).to include(config_file)
+          end
+        end
+
+        describe '#with_config' do
+          it 'logs the configuration' do
+            config = Config.from_file('spec/data/stash-harvester.yml')
+            Application.with_config(config)
+            aggregate_failures('config logging') do
+              [:persistence_config, :source_config, :index_config, :metadata_mapper].each do |c|
+                desc = config.send(c).description
+                expect(desc).not_to be_nil
+                expect(logged).to include(desc)
+              end
+            end
+          end
+        end
       end
     end
   end

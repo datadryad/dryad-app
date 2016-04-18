@@ -40,6 +40,10 @@ module Stash
       def desc_to
         raise NoMethodError, "#{self.class} should override #desc_to to describe what it maps to, but it doesn't"
       end
+
+      def description
+        "#{self.class} (#{desc_from} -> #{desc_to})"
+      end
     end
   end
 end

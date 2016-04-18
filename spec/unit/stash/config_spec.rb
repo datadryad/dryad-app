@@ -11,6 +11,11 @@ module Stash
     def initialize(**connection_info)
       @connection_info = connection_info
     end
+
+    def description
+      info_desc = connection_info.map { |k, v| "#{k}: #{v}" }.join(', ')
+      "#{self.class} (#{info_desc})"
+    end
   end
 
   describe Config do
