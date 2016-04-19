@@ -1,0 +1,26 @@
+defaults: &defaults
+  source:
+    protocol: OAI
+    oai_base_url: http://uc3-mrtoai-dev.cdlib.org:37001/mrtoai/oai/v2
+    metadata_prefix: stash_wrapper
+    set: dash_cdl
+    seconds_granularity: true
+  index:
+    adapter: solr
+    url: http://uc3-dash2solr-dev.cdlib.org:8983/solr/geoblacklight
+    open_timeout: 120
+    read_timeout: 300
+
+development:
+  <<: *defaults
+  db:
+    adapter: sqlite3
+    database: development.sqlite3
+    pool: 5
+
+production:
+  <<: *defaults
+  db:
+    adapter: sqlite3
+    database: production.sqlite3
+    pool: 5

@@ -1,6 +1,6 @@
 #! /usr/bin/env ruby
 
-require 'stash/harvester_app'
+require 'stash'
 
 module Stash
   module HarvesterApp
@@ -15,7 +15,12 @@ module Stash
       puts Options::HELP if options.show_help
       start_application(options) unless options.do_exit
     rescue => e
-      puts e.message
+      puts e
+      puts e.backtrace
+      if e.cause
+        puts e.cause
+        puts e.cause.backtrace
+      end
       puts Options::USAGE
     end
   end
