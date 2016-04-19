@@ -51,6 +51,8 @@ RuboCop::RakeTask.new
 # ------------------------------------------------------------
 # Database
 
+ENV['RAILS_ENV'] = ENV['STASH_ENV']
+
 require 'standalone_migrations'
 StandaloneMigrations::Tasks.load_tasks
 

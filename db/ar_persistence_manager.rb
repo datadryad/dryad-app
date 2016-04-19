@@ -87,13 +87,17 @@ module Stash
     end
 
     def find_newest_indexed_timestamp
-      newest_indexed = HarvestedRecord.find_newest_indexed
-      newest_indexed.timestamp if newest_indexed
+      @pool.with_connection do
+        newest_indexed = HarvestedRecord.find_newest_indexed
+        newest_indexed.timestamp if newest_indexed
+      end
     end
 
     def find_oldest_failed_timestamp
-      oldest_failed = HarvestedRecord.find_oldest_failed
-      oldest_failed.timestamp if oldest_failed
+      @pool.with_connection do
+        oldest_failed = HarvestedRecord.find_oldest_failed
+        oldest_failed.timestamp if oldest_failed
+      end
     end
   end
 end

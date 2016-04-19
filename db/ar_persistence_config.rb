@@ -2,6 +2,8 @@ require 'active_record'
 require 'stash/persistence_config'
 require_relative 'ar_persistence_manager'
 
+ENV['RAILS_ENV'] = ENV['STASH_ENV']
+
 module Stash
   # Configuration for ActiveRecord persistence.
   class ARPersistenceConfig < PersistenceConfig
