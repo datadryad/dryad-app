@@ -42,7 +42,8 @@ module StashEngine
     end
 
     def google_login_path
-      "#{StashEngine.app.stash_mount}/auth/google_oauth2"
+      #"#{StashEngine.app.stash_mount}/auth/google_oauth2"
+      "https://#{full_domain}/#{StashEngine.app.stash_mount}/auth/google_oauth2"
     end
 
     def self.by_domain(domain)
