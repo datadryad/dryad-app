@@ -6,7 +6,7 @@ defaults: &defaults
     set: dash_cdl
     seconds_granularity: true
   index:
-    adapter: solr
+    adapter: Solr
     url: http://uc3-dash2solr-dev.cdlib.org:8983/solr/geoblacklight
     open_timeout: 120          # connection open timeout in seconds
     read_timeout: 300          # read timeout in seconds
