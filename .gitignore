@@ -40,3 +40,6 @@ db/*.sqlite3
 # Mac OS
 
 .DS_Store
+
+# Gem
+*.gem
