@@ -38,7 +38,6 @@ describe 'FactoryGirl factories' do
         expect(r.identifier).to eq("record#{i}")
         expect(r.timestamp).to eq(harvest_job.from_time + i.minutes)
         expect(r.deleted?).to be false
-        expect(r.content_path).to eq("/tmp/#{r.identifier}.xml")
         expect(r.indexed_records.count).to eq(1)
       end
 
