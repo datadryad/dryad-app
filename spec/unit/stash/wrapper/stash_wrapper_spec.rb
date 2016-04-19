@@ -25,11 +25,10 @@ module Stash
         end
       end
 
-      describe '#load_from_xml' do
+      describe '#parse_xml' do
         it 'parses an XML file' do
           data = File.read('spec/data/wrapper/wrapper-1.xml')
-          xml = REXML::Document.new(data).root
-          wrapper = StashWrapper.load_from_xml(xml)
+          wrapper = StashWrapper.parse_xml(data)
 
           id = wrapper.identifier
           expect(id.type).to eq(IdentifierType::DOI)
@@ -95,13 +94,25 @@ module Stash
 
           expect(desc_elem).to be_xml(expected_xml)
         end
+
+        it 'reads a Merritt OAI response' do
+          xml_str = File.read('spec/data/wrapper/mrtoai-wrapper.xml')
+          wrapper = StashWrapper.parse_xml(xml_str)
+
+          expect(wrapper.id_value).to eq('10.21271/wxy1000199')
+          expect(wrapper.version_number).to eq(1)
+          expect(wrapper.version_date).to eq(Date.new(2012, 8, 17))
+          expect(wrapper.license_name).to eq('Creative Commons Attribution 4.0 International (CC-BY)')
+          expect(wrapper.license_uri).to eq(URI('https://creativecommons.org/licenses/by/4.0/legalcode'))
+          expect(wrapper.embargo_type).to eq(EmbargoType::NONE)
+          expect(wrapper.embargo_end_date).to eq(Date.new(2012, 8, 17))
+        end
       end
 
       describe 'convenience accessors' do
         it 'evades the law of Demeter' do
           data = File.read('spec/data/wrapper/wrapper-1.xml')
-          xml = REXML::Document.new(data).root
-          wrapper = StashWrapper.load_from_xml(xml)
+          wrapper = StashWrapper.parse_xml(data)
 
           expect(wrapper.id_value).to eq('10.12345/1234567890')
           expect(wrapper.version_number).to eq(1)
@@ -119,34 +130,50 @@ module Stash
           expect(file.size_bytes).to eq(12_345_678)
           expect(file.mime_type).to eq(MIME::Type.new('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'))
         end
-      end
 
-      describe '#parse_xml' do
-        it 'reads a Merritt OAI response' do
-          xml_str = File.read('spec/data/wrapper/mrtoai-wrapper.xml')
-          wrapper = StashWrapper.parse_xml(xml_str)
+        describe '#file_names' do
+          it 'lists the file names' do
+            data = File.read('spec/data/wrapper/wrapper-2.xml')
+            wrapper = StashWrapper.parse_xml(data)
 
-          expect(wrapper.id_value).to eq('10.21271/wxy1000199')
-          expect(wrapper.version_number).to eq(1)
-          expect(wrapper.version_date).to eq(Date.new(2012, 8, 17))
-          expect(wrapper.license_name).to eq('Creative Commons Attribution 4.0 International (CC-BY)')
-          expect(wrapper.license_uri).to eq(URI('https://creativecommons.org/licenses/by/4.0/legalcode'))
-          expect(wrapper.embargo_type).to eq(EmbargoType::NONE)
-          expect(wrapper.embargo_end_date).to eq(Date.new(2012, 8, 17))
+            expected = %w(
+                HSRC_MasterSampleII.dat
+                HSRC_MasterSampleII.csv
+                HSRC_MasterSampleII.sas7bdat
+                formats.sas7bcat
+                HSRC_MasterSampleII.sas
+                HSRC_MasterSampleII.sav
+                HSRC_MasterSampleII.sps
+                HSRC_MasterSampleII.dta
+                HSRC_MasterSampleII.dct
+                HSRC_MasterSampleII.do
+            )
+            expect(wrapper.file_names).to eq(expected)
+          end
+
+          it 'returns an empty array for an empty inventory' do
+            wrapper = StashWrapper.new(
+                identifier: Identifier.new(type: IdentifierType::DOI, value: '10.14749/1407399498'),
+                version: Version.new(number: 1, date: Date.new(2013, 8, 18), note: 'Sample wrapped Datacite document'),
+                license: License::CC_BY,
+                descriptive_elements: []
+            )
+            expect(wrapper.file_names).to eq([])
+          end
         end
       end
 
       describe '#initialize' do
         it 'defaults to no embargo' do
           wrapper = StashWrapper.new(
-            identifier: Identifier.new(type: IdentifierType::DOI, value: '10.14749/1407399498'),
-            version: Version.new(number: 1, date: Date.new(2013, 8, 18), note: 'Sample wrapped Datacite document'),
-            license: License::CC_BY,
-            inventory: Inventory.new(
-              files: [
-                StashFile.new(pathname: 'HSRC_MasterSampleII.dat', size_bytes: 12_345, mime_type: 'text/plain')
-              ]),
-            descriptive_elements: []
+              identifier: Identifier.new(type: IdentifierType::DOI, value: '10.14749/1407399498'),
+              version: Version.new(number: 1, date: Date.new(2013, 8, 18), note: 'Sample wrapped Datacite document'),
+              license: License::CC_BY,
+              inventory: Inventory.new(
+                  files: [
+                      StashFile.new(pathname: 'HSRC_MasterSampleII.dat', size_bytes: 12_345, mime_type: 'text/plain')
+                  ]),
+              descriptive_elements: []
           )
           embargo = wrapper.embargo
           expect(embargo).to be_an(Embargo)
@@ -163,16 +190,16 @@ module Stash
         describe 'namespace handling' do
           before :each do
             wrapper = StashWrapper.new(
-              identifier: Identifier.new(type: IdentifierType::DOI, value: '10.14749/1407399498'),
-              version: Version.new(number: 1, date: Date.new(2013, 8, 18), note: 'Sample wrapped Datacite document'),
-              license: License::CC_BY,
-              embargo: Embargo.new(type: EmbargoType::DOWNLOAD, period: '1 year', start_date: Date.new(2014, 8, 18), end_date: Date.new(2013, 8, 18)),
-              inventory: Inventory.new(
-                files: [
-                  StashFile.new(pathname: 'HSRC_MasterSampleII.dat', size_bytes: 12_345, mime_type: 'text/plain')
-                ]),
-              # Note: the recursive asserts only work because descriptive_elements is empty
-              descriptive_elements: []
+                identifier: Identifier.new(type: IdentifierType::DOI, value: '10.14749/1407399498'),
+                version: Version.new(number: 1, date: Date.new(2013, 8, 18), note: 'Sample wrapped Datacite document'),
+                license: License::CC_BY,
+                embargo: Embargo.new(type: EmbargoType::DOWNLOAD, period: '1 year', start_date: Date.new(2014, 8, 18), end_date: Date.new(2013, 8, 18)),
+                inventory: Inventory.new(
+                    files: [
+                        StashFile.new(pathname: 'HSRC_MasterSampleII.dat', size_bytes: 12_345, mime_type: 'text/plain')
+                    ]),
+                # Note: the recursive asserts only work because descriptive_elements is empty
+                descriptive_elements: []
             )
             @wrapper_xml = wrapper.save_to_xml
           end
@@ -222,24 +249,24 @@ module Stash
           payload_xml = REXML::Document.new(payload).root
 
           wrapper = StashWrapper.new(
-            identifier: Identifier.new(type: IdentifierType::DOI, value: '10.14749/1407399498'),
-            version: Version.new(number: 1, date: Date.new(2013, 8, 18), note: 'Sample wrapped Datacite document'),
-            license: License::CC_BY,
-            embargo: Embargo.new(type: EmbargoType::DOWNLOAD, period: '1 year', start_date: Date.new(2014, 8, 18), end_date: Date.new(2013, 8, 18)),
-            inventory: Inventory.new(
-              files: [
-                StashFile.new(pathname: 'HSRC_MasterSampleII.dat', size_bytes: 12_345, mime_type: 'text/plain'),
-                StashFile.new(pathname: 'HSRC_MasterSampleII.csv', size_bytes: 67_890, mime_type: 'text/csv'),
-                StashFile.new(pathname: 'HSRC_MasterSampleII.sas7bdat', size_bytes: 123_456, mime_type: 'application/x-sas-data'),
-                StashFile.new(pathname: 'formats.sas7bcat', size_bytes: 78_910, mime_type: 'application/x-sas-catalog'),
-                StashFile.new(pathname: 'HSRC_MasterSampleII.sas', size_bytes: 11_121, mime_type: 'application/x-sas'),
-                StashFile.new(pathname: 'HSRC_MasterSampleII.sav', size_bytes: 31_415, mime_type: 'application/x-sav'),
-                StashFile.new(pathname: 'HSRC_MasterSampleII.sps', size_bytes: 16_171, mime_type: 'application/x-spss'),
-                StashFile.new(pathname: 'HSRC_MasterSampleII.dta', size_bytes: 81_920, mime_type: 'application/x-dta'),
-                StashFile.new(pathname: 'HSRC_MasterSampleII.dct', size_bytes: 212_223, mime_type: 'application/x-dct'),
-                StashFile.new(pathname: 'HSRC_MasterSampleII.do', size_bytes: 242_526, mime_type: 'application/x-do')
-              ]),
-            descriptive_elements: [payload_xml]
+              identifier: Identifier.new(type: IdentifierType::DOI, value: '10.14749/1407399498'),
+              version: Version.new(number: 1, date: Date.new(2013, 8, 18), note: 'Sample wrapped Datacite document'),
+              license: License::CC_BY,
+              embargo: Embargo.new(type: EmbargoType::DOWNLOAD, period: '1 year', start_date: Date.new(2014, 8, 18), end_date: Date.new(2013, 8, 18)),
+              inventory: Inventory.new(
+                  files: [
+                      StashFile.new(pathname: 'HSRC_MasterSampleII.dat', size_bytes: 12_345, mime_type: 'text/plain'),
+                      StashFile.new(pathname: 'HSRC_MasterSampleII.csv', size_bytes: 67_890, mime_type: 'text/csv'),
+                      StashFile.new(pathname: 'HSRC_MasterSampleII.sas7bdat', size_bytes: 123_456, mime_type: 'application/x-sas-data'),
+                      StashFile.new(pathname: 'formats.sas7bcat', size_bytes: 78_910, mime_type: 'application/x-sas-catalog'),
+                      StashFile.new(pathname: 'HSRC_MasterSampleII.sas', size_bytes: 11_121, mime_type: 'application/x-sas'),
+                      StashFile.new(pathname: 'HSRC_MasterSampleII.sav', size_bytes: 31_415, mime_type: 'application/x-sav'),
+                      StashFile.new(pathname: 'HSRC_MasterSampleII.sps', size_bytes: 16_171, mime_type: 'application/x-spss'),
+                      StashFile.new(pathname: 'HSRC_MasterSampleII.dta', size_bytes: 81_920, mime_type: 'application/x-dta'),
+                      StashFile.new(pathname: 'HSRC_MasterSampleII.dct', size_bytes: 212_223, mime_type: 'application/x-dct'),
+                      StashFile.new(pathname: 'HSRC_MasterSampleII.do', size_bytes: 242_526, mime_type: 'application/x-do')
+                  ]),
+              descriptive_elements: [payload_xml]
           )
 
           wrapper_xml = wrapper.save_to_xml

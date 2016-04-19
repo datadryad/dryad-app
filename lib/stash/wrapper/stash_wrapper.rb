@@ -90,6 +90,11 @@ module Stash
         stash_administrative.inventory
       end
 
+      def file_names
+        inv = inventory
+        inv ? inv.files.map(&:pathname) : []
+      end
+
       # Overrides `XML::Mapping#pre_save` to set the XML namespace and schema location.
       def pre_save(options = { mapping: :_default })
         xml = super(options)
