@@ -12,6 +12,30 @@ module Datacite
       end
     end
 
+    describe 'Description' do
+      describe '#funding?' do
+        it 'returns true for funding and false for other descriptions' do
+          funding_desc = Description.new(type: DescriptionType::OTHER, value: 'Data were created with funding from the Ministry of Magic under grant 319995.')
+          expect(funding_desc.funding?).to eq(true)
+          usage_desc = Description.new(type: DescriptionType::OTHER, value: 'Some other value')
+          expect(usage_desc.funding?).to eq(false)
+          other_desc = Description.new(language: 'en-us', type: DescriptionType::ABSTRACT, value: 'foo')
+          expect(other_desc.funding?).to eq(false)
+        end
+      end
+
+      describe '#usage?' do
+        it 'returns true for usage and false otherwise' do
+          funding_desc = Description.new(type: DescriptionType::OTHER, value: 'Data were created with funding from the Ministry of Magic under grant 319995.')
+          expect(funding_desc.usage?).to eq(false)
+          usage_desc = Description.new(type: DescriptionType::OTHER, value: 'Some other value')
+          expect(usage_desc.usage?).to eq(true)
+          other_desc = Description.new(language: 'en-us', type: DescriptionType::ABSTRACT, value: 'foo')
+          expect(other_desc.usage?).to eq(false)
+        end
+      end
+    end
+
     describe Resource do
 
       before :each do
@@ -64,6 +88,14 @@ module Datacite
           other_desc = Description.new(language: 'en-us', type: DescriptionType::ABSTRACT, value: 'foo')
           @resource.descriptions << other_desc
           expect(@resource.grant_number).to be_nil
+        end
+      end
+
+      describe '#usage_notes?' do
+        it 'extracts the usage notes' do
+          usage_desc = Description.new(type: DescriptionType::OTHER, value: 'Some other value')
+          @resource.descriptions << usage_desc
+          expect(@resource.usage_notes).to eq(usage_desc.value)
         end
       end
 

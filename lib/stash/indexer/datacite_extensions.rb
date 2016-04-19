@@ -54,32 +54,8 @@ module Datacite
         identifier.to_doi
       end
 
-      def creator_names
-        creators.map(&:name)
-      end
-
-      def creator_affiliations
-        creators.map(&:affiliations)
-      end
-
       def type
         resource_type.value if resource_type
-      end
-
-      def funder_contrib
-        @funder_contrib ||= contributors.find { |c| c.type == ContributorType::FUNDER }
-      end
-
-      def funder_name
-        funder_contrib.name if funder_contrib
-      end
-
-      def funder_id
-        funder_contrib.id if funder_contrib
-      end
-
-      def funder_id_value
-        funder_id.value if funder_id
       end
 
       def grant_number
