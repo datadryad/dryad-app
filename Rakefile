@@ -51,6 +51,7 @@ RuboCop::RakeTask.new
 # ------------------------------------------------------------
 # Database
 
+# Make sure we migrate the right environment
 ENV['RAILS_ENV'] = ENV['STASH_ENV']
 
 require 'standalone_migrations'
