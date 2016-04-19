@@ -27,10 +27,18 @@ module StashEngine
     # hack around limitations in the normal omniauth/shibboleth by directly addressing shibboleth.sso
     def shibboleth_login_path
       #"/stash/auth/shibboleth?entityid=#{CGI.escape(authentication.entity_id)}"
-      "https://#{StashEngine.app.shib_sp_host}/Shibboleth.sso/Login?" \
-          "target=#{CGI.escape("https://#{StashEngine.app.shib_sp_host}" \
+
+      # I think the following is incorrect and we should go to the domain for each host directly
+      #"https://#{StashEngine.app.shib_sp_host}/Shibboleth.sso/Login?" \
+      #    "target=#{CGI.escape("https://#{StashEngine.app.shib_sp_host}" \
+      #    "#{StashEngine.app.stash_mount}/auth/shibboleth/callback")}" \
+      #    "&entityID=#{CGI.escape(authentication.entity_id)}"
+
+      "https://#{full_domain}/Shibboleth.sso/Login?" \
+          "target=#{CGI.escape("https://#{full_domain}" \
           "#{StashEngine.app.stash_mount}/auth/shibboleth/callback")}" \
           "&entityID=#{CGI.escape(authentication.entity_id)}"
+
     end
 
     def google_login_path
