@@ -1,6 +1,7 @@
 #! /usr/bin/env ruby
 
 require 'stash'
+require 'ar_persistence_config'
 
 module Stash
   module HarvesterApp
@@ -18,6 +19,7 @@ module Stash
       puts e
       puts e.backtrace
       if e.cause
+        puts "Caused by:"
         puts e.cause
         puts e.cause.backtrace
       end
