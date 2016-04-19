@@ -1,3 +1,8 @@
+# 0.1.3 (19 April 2016)
+
+- Add convenience method `StashWrapper.file_names` to return a list of filenames
+  from the inventory
+
 # 0.1.2 (31 March 2016)
 
 - Add convenience method `Embargo.none` to create a no-embargo embargo element
