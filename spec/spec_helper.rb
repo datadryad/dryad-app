@@ -30,4 +30,6 @@ require 'rspec_custom_matchers'
 # ------------------------------------------------------------
 # Stash
 
+ENV['STASH_ENV'] = 'test'
+
 require 'stash'

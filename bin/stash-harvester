@@ -19,7 +19,7 @@ module Stash
       puts e
       puts e.backtrace
       if e.cause
-        puts "Caused by:"
+        puts 'Caused by:'
         puts e.cause
         puts e.cause.backtrace
       end

@@ -1,24 +1,39 @@
-db:
-  adapter: sqlite3
-  database: ':memory:'
-  pool: 5
-  timeout: 5000
+defaults: &defaults
+  source:
+    protocol: OAI              # Stash::Harvester::OAI::OAISourceConfig
+    oai_base_url: http://oai.example.org/oai
+    metadata_prefix: some_prefix
+    set: some_set
+    seconds_granularity: true
+  index:
+    adapter: Solr
+    url: http://solr.example.org/
+    proxy: http://foo:bar@proxy.example.com/
+    open_timeout: 120          # connection open timeout in seconds
+    read_timeout: 300          # read timeout in seconds
+    retry_503: 3               # max retries
+    retry_after_limit: 20      # retry wait time in seconds
+  mapper:
+    metadata_mapping: datacite_geoblacklight
 
-source:
-  protocol: OAI              # Stash::Harvester::OAI::OAISourceConfig
-  oai_base_url: http://oai.example.org/oai
-  metadata_prefix: some_prefix
-  set: some_set
-  seconds_granularity: true
+test:
+  <<: *defaults
+  db:
+    adapter: sqlite3
+    database: ':memory:'
+    pool: 5
+    timeout: 5000
 
-index:
-  adapter: Solr
-  url: http://solr.example.org/
-  proxy: http://foo:bar@proxy.example.com/
-  open_timeout: 120          # connection open timeout in seconds
-  read_timeout: 300          # read timeout in seconds
-  retry_503: 3               # max retries
-  retry_after_limit: 20      # retry wait time in seconds
+development:
+  <<: *defaults
+  db:
+    adapter: sqlite3
+    database: development.sqlite3
+    pool: 5
 
-mapper:
-  metadata_mapping: datacite_geoblacklight
+production:
+  <<: *defaults
+  db:
+    adapter: sqlite3
+    database: production.sqlite3
+    pool: 5

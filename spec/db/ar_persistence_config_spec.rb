@@ -11,14 +11,14 @@ module Stash
 
   describe ARPersistenceConfig do
     it 'loads from a config file' do
-      env = ::Config::Factory::Environment.load_file('spec/data/stash-harvester.yml')
+      env = ::Config::Factory::Environments.load_file('spec/data/stash-harvester.yml')[:test]
       config = PersistenceConfig.for_environment(env, :db)
       expect(config).to be_an(ARPersistenceConfig)
     end
 
     it 'creates a connection pool' do
       begin
-        env = ::Config::Factory::Environment.load_file('spec/data/stash-harvester.yml')
+        env = ::Config::Factory::Environments.load_file('spec/data/stash-harvester.yml')[:test]
         config = PersistenceConfig.for_environment(env, :db)
 
         pool = MockPool.new
@@ -34,7 +34,7 @@ module Stash
 
     describe '#description' do
       it 'includes the class name and connection info' do
-        env = ::Config::Factory::Environment.load_file('spec/data/stash-harvester.yml')
+        env = ::Config::Factory::Environments.load_file('spec/data/stash-harvester.yml')[:test]
         config = PersistenceConfig.for_environment(env, :db)
         desc = config.description
         expect(desc).to include(ARPersistenceConfig.to_s)

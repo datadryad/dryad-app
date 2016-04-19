@@ -40,7 +40,7 @@ module Stash
     def self.from_file(path)
       validate_path(path)
       begin
-        env = ::Config::Factory::Environment.load_file(path)
+        env = load_env(path)
         from_env(env)
       rescue IOError
         raise
@@ -61,6 +61,18 @@ module Stash
     end
 
     # Private methods
+
+    # TODO: clean up this code and/or make Environments smarter
+    def self.load_env(path)
+      env_name = ENV['STASH_ENV'] || ::Config::Factory::Environments::DEFAULT_ENVIRONMENT
+      env_name = env_name.to_s.downcase.to_sym
+      envs = ::Config::Factory::Environments.load_file(path)
+
+      # Fall back to parsing as single-environment config file if we have to
+      envs[env_name] || ::Config::Factory::Environment.load_file(path)
+    end
+
+    private_class_method :load_env
 
     def self.validate_path(path)
       raise IOError, "Specified config file #{path} does not exist" unless File.exist?(path)

@@ -144,8 +144,6 @@ module Stash
           app = Application.with_config(config)
           expect(app.config).to be(config)
         end
-
-        it 'respects $STASH_ENV'
       end
 
       describe '#start' do
