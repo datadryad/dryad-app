@@ -1,3 +1,5 @@
+require 'stash/sword'
+
 module StashEngine
   class Resource < ActiveRecord::Base
     has_many :file_uploads, class_name: 'StashEngine::FileUpload'
@@ -33,6 +35,14 @@ module StashEngine
         state = ResourceState.find(id).resource_state
         return state
       end
+    end
+
+    def submission_to_repository(current_tenant, zip_path, doi)
+      repo = current_tenant.repository
+      zip_path =
+      doi = doi
+      client = Stash::Sword::Client.new(username: @username, password: @password)
+      client.post_create(collection_uri: collection_uri, zipfile: zipfile, slug: slug)
     end
   end
 end
