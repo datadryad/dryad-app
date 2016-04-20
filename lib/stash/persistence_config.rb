@@ -8,6 +8,7 @@ module Stash
     # Constructs a new `PersistenceManager` for this configuration
     # @return [PersistenceManager] a persistence manager for this configuration
     def create_manager
+      # TODO: Consider yielding rather than returning, to allow cleanup
       raise NoMethodError, "#{self.class} should override create_manager, but it doesn't"
     end
 
