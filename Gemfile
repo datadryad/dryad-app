@@ -18,3 +18,4 @@ gem 'mysql2', '~> 0.3.20'
 gem 'rubocop', require: false, group: [:development, :test]
 gem 'simplecov', require: false, group: :test
 gem 'jquery-turbolinks'
+gem 'stash-sword', git: 'https://github.com/CDLUC3/stash-sword'
