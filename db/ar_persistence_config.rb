@@ -18,6 +18,8 @@ module Stash
 
     def create_manager
       ActiveRecord::Base.establish_connection(connection_info)
+      ActiveRecord::Migration.verbose = false
+      ActiveRecord::Migrator.up 'db/migrate'
       ARPersistenceManager.new
     end
 
