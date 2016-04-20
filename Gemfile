@@ -64,7 +64,7 @@ path '../stash_engines' do
   gem 'stash_datacite'
   gem 'stash_discovery'
 end
-
+gem 'stash-sword', git: 'https://github.com/CDLUC3/stash-sword.git'
 # set LOCAL_ENGINES=true (LOCAL_ENGINES=true rails s) to use local
 #
 # I had very frustating problems where it wouldn't read changes in the environment variable in rails
