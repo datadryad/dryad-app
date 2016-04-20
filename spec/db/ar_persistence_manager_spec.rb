@@ -4,17 +4,9 @@ require 'ar_persistence_manager'
 module Stash
   include Stash::Harvester::Models
 
-  # Use the default AR connection, so we get default rollback behavior
-  # as defined in db_spec_helper.
-  class MockPool
-    def with_connection
-      yield if block_given?
-    end
-  end
-
   describe ARPersistenceManager do
     before(:each) do
-      @mgr = ARPersistenceManager.new(MockPool.new)
+      @mgr = ARPersistenceManager.new
     end
 
     describe '#begin_harvest_job' do
