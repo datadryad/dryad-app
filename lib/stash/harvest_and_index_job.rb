@@ -70,6 +70,7 @@ module Stash
     end
 
     def begin_harvest_job(task)
+      log.info("Beginning harvest job for query URI #{task.query_uri}")
       persistence_mgr.begin_harvest_job(
         from_time: task.from_time,
         until_time: task.until_time,

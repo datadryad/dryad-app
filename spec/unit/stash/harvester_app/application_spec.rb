@@ -171,6 +171,25 @@ module Stash
           app.start(from_time: from_time, until_time: until_time)
         end
 
+        it 'accepts nil start and from times' do
+          expect(@persistence_mgr).to receive(:find_oldest_failed_timestamp) { nil }
+          expect(@persistence_mgr).to receive(:find_newest_indexed_timestamp) { nil }
+
+          job = instance_double(HarvestAndIndexJob)
+          expect(HarvestAndIndexJob).to receive(:new).with(
+            source_config: @source_config,
+            index_config: @index_config,
+            metadata_mapper: @metadata_mapper,
+            persistence_manager: @persistence_mgr,
+            from_time: nil,
+            until_time: nil
+          ) { job }
+          expect(job).to receive(:harvest_and_index)
+
+          app = Application.with_config(config)
+          app.start
+        end
+
         it 'sets the datestamp of the latest success as the next start, if no failures' do
           newest_indexed = Time.utc(2016, 4, 18, 1, 2, 3)
           expect(@persistence_mgr).to receive(:find_oldest_failed_timestamp) { nil }

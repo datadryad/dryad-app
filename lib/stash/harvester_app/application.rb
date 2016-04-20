@@ -104,16 +104,18 @@ module Stash
         )
       end
 
-      def determine_from_time(from_time)
-        unless from_time
-          from_time = persistence_manager.find_oldest_failed_timestamp
-          unless from_time
-            from_time = persistence_manager.find_newest_indexed_timestamp
-          end
+      def determine_from_time(from_time) # rubocop:disable Metrics/AbcSize
+        if from_time
+          log.info("Starting harvest from provided timestamp #{from_time.utc.xmlschema}")
+        elsif (from_time = persistence_manager.find_oldest_failed_timestamp)
+          log.info("Starting harvest from timestamp (inclusive) of last failed record: #{from_time.utc.xmlschema}")
+        elsif (from_time = persistence_manager.find_newest_indexed_timestamp)
+          log.info("Starting harvest from timestamp (inclusive) of last successfully indexed record: #{from_time.utc.xmlschema}")
+        else
+          log.info('No start timestamp provided, and no previous harvest found; harvesting all records')
         end
         from_time
       end
-
     end
   end
 end
