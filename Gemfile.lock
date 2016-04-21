@@ -28,8 +28,6 @@ PATH
       rubyzip
       stash-wrapper
     stash_discovery (0.0.1)
-      blacklight (~> 5.18.0)
-      devise (~> 4.0.0)
       devise-guests (~> 0.3)
       geoblacklight (~> 0.12.1)
       jquery-rails (~> 4.1)
