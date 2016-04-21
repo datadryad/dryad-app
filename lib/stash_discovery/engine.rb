@@ -1,4 +1,4 @@
-require 'blacklight'
+#require 'blacklight'
 require 'geoblacklight'
 
 # For undocumented reasons, sass-rails won't load without an explicit require
