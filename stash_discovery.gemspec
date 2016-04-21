@@ -26,5 +26,5 @@ Gem::Specification.new do |s|
   # extra deps from generated GeoBlacklight app
   s.add_dependency 'devise-guests', '~> 0.3'
 
-  s.add_development_dependency 'sqlite3'
+  s.add_dependency 'sqlite3'
 end
