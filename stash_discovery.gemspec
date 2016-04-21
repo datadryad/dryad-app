@@ -28,5 +28,5 @@ Gem::Specification.new do |s|
   s.add_dependency 'devise', '~> 4.0.0'
   s.add_dependency 'devise-guests', '~> 0.3'
 
-  s.add_dependency 'sqlite3'
+  #s.add_dependency 'sqlite3'
 end
