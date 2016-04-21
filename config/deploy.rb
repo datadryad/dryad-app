@@ -135,7 +135,7 @@ namespace :deploy do
   desc 'update local engines to get around requiring version number changes in development'
   task :update_local_engines do
     on roles(:app) do
-      my_branch = capture("cat #{deploy_to}/current/branch_info")
+      my_branch = capture("cat #{deploy_to}/current/branch_info") || 'development'
 
       %w(stash_datacite stash_engine stash_discovery).each do |engine|
         execute "cd #{deploy_to}/releases/stash_engines/#{engine}; git checkout #{my_branch}; git reset --hard origin/#{my_branch}; git pull"
@@ -188,6 +188,7 @@ namespace :deploy do
 
   before :starting, :update_config
   before :starting, :clone_engines
+  before :starting, :update_local_engines
   before :published, :record_branch
   before 'deploy:symlink:shared', 'deploy:my_linked_files'
   after :published, :update_local_engines

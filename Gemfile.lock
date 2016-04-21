@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/CDLUC3/stash-sword.git
-  revision: 2cde77166c5bb92effdd9511d74f34713140e121
+  revision: 40267988d3412db075fadc3649c39947cbc00f32
   specs:
     stash-sword (0.0.1)
       datacite-mapping (~> 0.1, >= 0.1.8)
