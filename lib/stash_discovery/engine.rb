@@ -1,5 +1,8 @@
 require 'blacklight'
 require 'geoblacklight'
+# these devise lines must be required otherwise geoblacklight barfs, but only on stage.
+require 'devise'
+require 'devise/orm/active_record'
 
 # For undocumented reasons, sass-rails won't load without an explicit require
 require 'sass-rails'
