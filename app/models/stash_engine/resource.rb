@@ -39,7 +39,7 @@ module StashEngine
 
     def submission_to_repository(current_tenant, zipfile, doi)
       repo = current_tenant.repository
-      collection_uri = "https://uc3-mrtsword-dev.cdlib.org:39001/mrtsword/collection/#{repo.collection}"
+      collection_uri = "http://uc3-mrtsword-dev.cdlib.org:39001/mrtsword/collection/#{repo.collection}"
       client = Stash::Sword::Client.new(username: repo.username, password: repo.password)
       client.post_create(collection_uri: collection_uri, zipfile: zipfile, slug: doi)
     end
