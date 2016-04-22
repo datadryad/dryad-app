@@ -1,3 +1,3 @@
 module Stash
-  Dir.glob(File.expand_path('../stash/*.rb', __FILE__), &method(:require))
+  Dir.glob(File.expand_path('../stash/*.rb', __FILE__)).sort.each(&method(:require))
 end
