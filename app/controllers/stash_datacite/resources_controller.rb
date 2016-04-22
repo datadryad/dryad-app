@@ -46,6 +46,7 @@ module StashDatacite
       identifier = @resource_file_generation.generate_identifier.split(':', 2)[1]
       target_url = current_tenant.landing_url(stash_url_helpers.show_path(identifier))
       @resource_file_generation.generate_merritt_zip(target_url)
+      resource.submission_to_repository(current_tenant, "#{Rails.root}/uploads/#{resource.id}_archive.zip", identifier)
       create_resource_state(resource)
     end
 
