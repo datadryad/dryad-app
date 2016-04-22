@@ -6,6 +6,8 @@ module Stash
   # Configuration for ActiveRecord persistence.
   class ARPersistenceConfig < PersistenceConfig
 
+    MIGRATION_PATH = File.expand_path('../migrate', __FILE__)
+
     can_build_if { |config| config.key?(:adapter) }
 
     attr_reader :connection_info
@@ -19,8 +21,7 @@ module Stash
     def create_manager
       ActiveRecord::Base.establish_connection(connection_info)
       ActiveRecord::Migration.verbose = true
-      # TODO: Figure out why this doesn't do anything
-      ActiveRecord::Migrator.up 'db/migrate'
+      ActiveRecord::Migrator.up MIGRATION_PATH
       ARPersistenceManager.new
     end
 
