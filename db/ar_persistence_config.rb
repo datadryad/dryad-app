@@ -18,13 +18,19 @@ module Stash
 
     def create_manager
       ActiveRecord::Base.establish_connection(connection_info)
-      ActiveRecord::Migration.verbose = false
+      ActiveRecord::Migration.verbose = true
       ActiveRecord::Migrator.up 'db/migrate'
       ARPersistenceManager.new
     end
 
     def description
-      info_desc = connection_info.map { |k, v| "#{k}: #{v}" }.join(', ')
+      info_desc = connection_info.map do |k, v|
+        if k == 'database' && v.to_s.end_with?('.sqlite3')
+          abs_path = File.absolute_path(v.to_s)
+          v = "#{v} (#{abs_path})"
+        end
+        "#{k}: #{v}"
+      end.join(', ')
       "#{self.class} (#{info_desc})"
     end
 
