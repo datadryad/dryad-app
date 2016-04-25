@@ -1,3 +1,7 @@
+# 0.1.4 (25 April 2016)
+
+- Replace all `require_relative` with absolute `require` to avoid symlink issues
+
 # 0.1.3 (19 April 2016)
 
 - Add convenience method `StashWrapper.file_names` to return a list of filenames

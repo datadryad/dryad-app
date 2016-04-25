@@ -1,8 +1,8 @@
 require 'xml/mapping'
 
-require_relative 'descriptive_node'
-require_relative 'identifier'
-require_relative 'stash_administrative'
+require 'stash/wrapper/descriptive_node'
+require 'stash/wrapper/identifier'
+require 'stash/wrapper/stash_administrative'
 
 module Stash
   module Wrapper

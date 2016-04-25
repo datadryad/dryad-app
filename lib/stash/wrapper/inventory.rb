@@ -1,5 +1,5 @@
 require 'xml/mapping'
-require_relative 'stash_file'
+require 'stash/wrapper/stash_file'
 
 module Stash
   module Wrapper

@@ -1,5 +1,5 @@
 require 'xml/mapping'
-require_relative 'size_unit'
+require 'stash/wrapper/size_unit'
 
 module Stash
   module Wrapper
