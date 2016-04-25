@@ -1,3 +1,5 @@
+# 0.1.5 (Next)
+
 # 0.1.4 (25 April 2016)
 
 - Replace all `require_relative` with absolute `require` to avoid symlink issues
