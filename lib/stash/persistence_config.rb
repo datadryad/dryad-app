@@ -1,5 +1,5 @@
 require 'config/factory'
-require_relative 'persistence_manager'
+require 'stash/persistence_manager'
 
 module Stash
   class PersistenceConfig

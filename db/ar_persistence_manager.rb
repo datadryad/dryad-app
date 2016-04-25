@@ -1,6 +1,6 @@
 require 'active_record'
 require 'stash/persistence_manager'
-require_relative 'models'
+require 'models'
 
 module Stash
   # PersistenceManager using ActiveRecord

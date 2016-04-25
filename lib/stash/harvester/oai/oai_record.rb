@@ -1,6 +1,6 @@
 require 'oai/client'
 require 'time'
-require_relative '../harvested_record'
+require 'stash/harvester/harvested_record'
 
 module Stash
   module Harvester

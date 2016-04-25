@@ -1,7 +1,7 @@
 require 'stash/wrapper'
 require 'datacite/mapping'
-require_relative '../datacite_extensions'
-require_relative '../metadata_mapper'
+require 'stash/indexer/datacite_extensions'
+require 'stash/indexer/metadata_mapper'
 
 module Stash
   module Indexer

@@ -1,5 +1,5 @@
 require 'active_record'
-require_relative 'status'
+require 'models/status'
 
 # TODO: Add validations to all models http://guides.rubyonrails.org/active_record_validations.html
 

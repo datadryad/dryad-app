@@ -1,6 +1,6 @@
 require 'active_record'
-require_relative 'status'
-require_relative 'harvest_job'
+require 'models/status'
+require 'models/harvest_job'
 
 module Stash
   module Harvester

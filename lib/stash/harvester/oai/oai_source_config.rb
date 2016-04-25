@@ -1,5 +1,5 @@
 require 'yaml'
-require_relative '../source_config'
+require 'stash/harvester/source_config'
 
 module Stash
   module Harvester

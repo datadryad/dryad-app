@@ -1,4 +1,4 @@
-require_relative 'index_status'
+require 'stash/indexer/index_status'
 
 module Stash
   module Indexer

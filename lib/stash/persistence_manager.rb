@@ -1,4 +1,4 @@
-require_relative 'indexer/index_status'
+require 'stash/indexer/index_status'
 
 module Stash
   # TODO: do we need an abstract version, or just the concrete AR version?

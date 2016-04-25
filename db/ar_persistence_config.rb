@@ -1,6 +1,6 @@
 require 'active_record'
 require 'stash/persistence_config'
-require_relative 'ar_persistence_manager'
+require 'ar_persistence_manager'
 
 module Stash
   # Configuration for ActiveRecord persistence.

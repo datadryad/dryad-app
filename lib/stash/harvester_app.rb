@@ -1,5 +1,5 @@
-require_relative 'harvester'
-require_relative 'indexer'
+require 'stash/harvester'
+require 'stash/indexer'
 require 'forwardable'
 
 module Stash

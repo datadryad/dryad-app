@@ -1,7 +1,7 @@
 require 'config/factory'
-require_relative 'harvester/source_config'
-require_relative 'indexer/index_config'
-require_relative 'indexer/metadata_mapper'
+require 'stash/harvester/source_config'
+require 'stash/indexer/index_config'
+require 'stash/indexer/metadata_mapper'
 
 # TODO: move this out of Stash::Harvester
 module Stash

@@ -1,4 +1,4 @@
-require_relative '../index_config'
+require 'stash/indexer/index_config'
 require 'rsolr'
 
 module Stash
