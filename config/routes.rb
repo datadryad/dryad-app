@@ -22,7 +22,7 @@ StashEngine::Engine.routes.draw do
   match 'auth/:provider/callback', :to => 'sessions#callback', :via => [:get, :post]
   get 'sessions/destroy', :to => 'sessions#destroy'
 
-  get 'about', :to => 'pages#about'
+  get 'help', :to => 'pages#help'
   get 'search', :to => 'searches#index'
   get 'dataset/*id', :to => 'landing#show', as: 'show'
   #get "login", :to => "test#index"

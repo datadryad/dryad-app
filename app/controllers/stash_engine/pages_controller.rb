@@ -6,9 +6,9 @@ module StashEngine
     def home
     end
 
-    # The about controller uses the standard app layout, so the default is here.
+    # The help controller uses the standard app layout, so the default is here.
     # Perhaps specific views would override it in the base application.
-    def about
+    def help
     end
   end
 end
