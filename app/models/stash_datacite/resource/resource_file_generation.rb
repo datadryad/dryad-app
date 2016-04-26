@@ -234,7 +234,7 @@ module StashDatacite
         @files.each do |file|
           if file
             content <<    "mrt-datacite.xml |  http://datacite.org/schema/kernel-3.1 | " +
-                "#{file[:name]}" + " | #{file[:type]} " + "\n" + "mrt-dc.xml | " +
+                "#{file[:name]}" + " | #{file[:type]} " + "\n" + "mrt-oaidc.xml | " +
                 "http://dublincore.org/schemas/xmls/qdc/2008/02/11/qualifieddc.xsd | " +
                 "#{file[:name]}" + " | #{file[:type]} " + "\n"
           end
@@ -260,14 +260,14 @@ module StashDatacite
         if File.exist?("#{folder}/#{@resource.id}_archive.zip")
           File.delete("#{folder}/#{@resource.id}_archive.zip")
         end
-        if File.exist?("#{folder}/#{@resource.id}_datacite.xml")
-          File.delete("#{folder}/#{@resource.id}_datacite.xml")
-        end
         if File.exist?("#{folder}/#{@resource.id}_mrt-datacite.xml")
           File.delete("#{folder}/#{@resource.id}_mrt-datacite.xml")
         end
-        if File.exist?("#{folder}/#{@resource.id}_mrt-dc.xml")
-          File.delete("#{folder}/#{@resource.id}_mrt-dc.xml")
+        if File.exist?("#{folder}/#{@resource.id}_stash-wrapper.xml")
+          File.delete("#{folder}/#{@resource.id}_stash-wrapper.xml")
+        end
+        if File.exist?("#{folder}/#{@resource.id}_mrt-oaidc.xml")
+          File.delete("#{folder}/#{@resource.id}_mrt-oaidc.xml")
         end
         if File.exist?("#{folder}/#{@resource.id}_mrt-dataone-manifest.txt")
           File.delete("#{folder}/#{@resource.id}_mrt-dataone-manifest.txt")
@@ -276,13 +276,13 @@ module StashDatacite
         zipfile_name = "#{folder}/#{@resource.id}_archive.zip"
         datacite_xml, stashwrapper_xml = generate_xml(target_url)
 
-        File.open("#{folder}/#{@resource.id}_datacite.xml", "w") do |f|
+        File.open("#{folder}/#{@resource.id}_mrt-datacite.xml", "w") do |f|
           f.write datacite_xml
         end
-        File.open("#{folder}/#{@resource.id}_mrt-datacite.xml", "w") do |f|
+        File.open("#{folder}/#{@resource.id}_stash-wrapper.xml", "w") do |f|
           f.write stashwrapper_xml
         end
-        File.open("#{folder}/#{@resource.id}_mrt-dc.xml", "w") do |f|
+        File.open("#{folder}/#{@resource.id}_mrt-oaidc.xml", "w") do |f|
           f.write(generate_dublincore)
         end
         File.open("#{folder}/#{@resource.id}_mrt-dataone-manifest.txt", 'w') do |f|
@@ -290,9 +290,9 @@ module StashDatacite
         end
 
         Zip::File.open(zipfile_name, Zip::File::CREATE) do |zipfile|
-          zipfile.add("datacite.xml", "#{folder}/#{@resource.id}_datacite.xml")
           zipfile.add("mrt-datacite.xml", "#{folder}/#{@resource.id}_mrt-datacite.xml")
-          zipfile.add("mrt-dc.xml", "#{folder}/#{@resource.id}_mrt-dc.xml")
+          zipfile.add("stash-wrapper.xml", "#{folder}/#{@resource.id}_stash-wrapper.xml")
+          zipfile.add("mrt-oaidc.xml", "#{folder}/#{@resource.id}_mrt-oaidc.xml")
           zipfile.add("mrt-dataone-manifest.txt", "#{folder}/#{@resource.id}_mrt-dataone-manifest.txt")
         end
       end
