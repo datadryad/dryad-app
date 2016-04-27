@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160318035403) do
+ActiveRecord::Schema.define(version: 20160425163609) do
 
   create_table "bookmarks", force: :cascade do |t|
     t.integer  "user_id",       limit: 4,   null: false
@@ -286,6 +286,14 @@ ActiveRecord::Schema.define(version: 20160318035403) do
   end
 
   add_index "stash_engine_users", ["tenant_id"], name: "index_stash_engine_users_on_tenant_id", using: :btree
+
+  create_table "stash_engine_versions", force: :cascade do |t|
+    t.integer  "version",      limit: 4
+    t.string   "zip_filename", limit: 255
+    t.integer  "resource_id",  limit: 4
+    t.datetime "created_at",               null: false
+    t.datetime "updated_at",               null: false
+  end
 
   create_table "users", force: :cascade do |t|
     t.string   "email",                  limit: 255, default: "",    null: false
