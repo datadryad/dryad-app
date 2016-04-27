@@ -223,7 +223,7 @@ module StashDatacite
       end
 
       def generate_dataone
-        @files = uploads_list(@resource)
+        files = uploads_list(@resource)
         content =   "#%dataonem_0.1 " + "\n" +
             "#%profile | http://uc3.cdlib.org/registry/ingest/manifest/mrt-dataone-manifest " + "\n" +
             "#%prefix | dom: | http://uc3.cdlib.org/ontology/dataonem " + "\n" +
@@ -231,9 +231,9 @@ module StashDatacite
             "#%fields | dom:scienceMetadataFile | dom:scienceMetadataFormat | " +
             "dom:scienceDataFile | mrt:mimeType " + "\n"
 
-        @files.each do |file|
+        files.each do |file|
           if file
-            content <<    "mrt-datacite.xml |  http://datacite.org/schema/kernel-3.1 | " +
+            content <<  "mrt-datacite.xml |  http://datacite.org/schema/kernel-3.1 | " +
                 "#{file[:name]}" + " | #{file[:type]} " + "\n" + "mrt-oaidc.xml | " +
                 "http://dublincore.org/schemas/xmls/qdc/2008/02/11/qualifieddc.xsd | " +
                 "#{file[:name]}" + " | #{file[:type]} " + "\n"
@@ -243,35 +243,11 @@ module StashDatacite
         content.to_s
       end
 
-      def uploads_list(resource)
-        files = []
-        current_uploads = resource.file_uploads
-        current_uploads.each do |u|
-          hash = {:name => u.upload_file_name, :type => u.upload_content_type}
-          files.push(hash)
-        end
-        files
-      end
-
       def generate_merritt_zip(target_url)
         target_url = target_url
-        folder = "#{Rails.root}/uploads"
-
-        if File.exist?("#{folder}/#{@resource.id}_archive.zip")
-          File.delete("#{folder}/#{@resource.id}_archive.zip")
-        end
-        if File.exist?("#{folder}/#{@resource.id}_mrt-datacite.xml")
-          File.delete("#{folder}/#{@resource.id}_mrt-datacite.xml")
-        end
-        if File.exist?("#{folder}/#{@resource.id}_stash-wrapper.xml")
-          File.delete("#{folder}/#{@resource.id}_stash-wrapper.xml")
-        end
-        if File.exist?("#{folder}/#{@resource.id}_mrt-oaidc.xml")
-          File.delete("#{folder}/#{@resource.id}_mrt-oaidc.xml")
-        end
-        if File.exist?("#{folder}/#{@resource.id}_mrt-dataone-manifest.txt")
-          File.delete("#{folder}/#{@resource.id}_mrt-dataone-manifest.txt")
-        end
+        folder = "#{Rails.root}/uploads/"
+        uploads = uploads_list(@resource)
+        purge_existing_files
 
         zipfile_name = "#{folder}/#{@resource.id}_archive.zip"
         datacite_xml, stashwrapper_xml = generate_xml(target_url)
@@ -294,7 +270,39 @@ module StashDatacite
           zipfile.add("stash-wrapper.xml", "#{folder}/#{@resource.id}_stash-wrapper.xml")
           zipfile.add("mrt-oaidc.xml", "#{folder}/#{@resource.id}_mrt-oaidc.xml")
           zipfile.add("mrt-dataone-manifest.txt", "#{folder}/#{@resource.id}_mrt-dataone-manifest.txt")
+          uploads.each do |d|
+            zipfile.add("#{d[:name]}", "#{folder}/#{@resource.id}/#{d[:name]}")
+          end
         end
+      end
+
+      def purge_existing_files
+        folder = "#{Rails.root}/uploads/"
+        if File.exist?("#{folder}/#{@resource.id}_archive.zip")
+          File.delete("#{folder}/#{@resource.id}_archive.zip")
+        end
+        if File.exist?("#{folder}/#{@resource.id}_mrt-datacite.xml")
+          File.delete("#{folder}/#{@resource.id}_mrt-datacite.xml")
+        end
+        if File.exist?("#{folder}/#{@resource.id}_stash-wrapper.xml")
+          File.delete("#{folder}/#{@resource.id}_stash-wrapper.xml")
+        end
+        if File.exist?("#{folder}/#{@resource.id}_mrt-oaidc.xml")
+          File.delete("#{folder}/#{@resource.id}_mrt-oaidc.xml")
+        end
+        if File.exist?("#{folder}/#{@resource.id}_mrt-dataone-manifest.txt")
+          File.delete("#{folder}/#{@resource.id}_mrt-dataone-manifest.txt")
+        end
+      end
+
+      def uploads_list(resource)
+        files = []
+        current_uploads = resource.file_uploads
+        current_uploads.each do |u|
+          hash = {:name => u.upload_file_name, :type => u.upload_content_type}
+          files.push(hash)
+        end
+        files
       end
 
     end
