@@ -9,17 +9,12 @@ access to research data.
 ## Dash helps you:
 
 - Follow best practices when creating or acquiring data.
-
 - Select data for curation through local file browse or drag-and-drop
-    operation.
-
+  operation.
 - Describe data in terms of the DataCite metadata schema.
-
 - Identify data with a persistent DOI for permanent citation and discovery.
-
 - Preserve, Manage, and Share data by uploading to a public Merritt
-    collection.
-
+  collection.
 - Discover and retrieve data through faceted search and browse.
 
 ## Importance of Data Sharing
@@ -43,7 +38,7 @@ UC Berkeley Dash is a collaborative project between the
 [UC Curation Center](http://cdlib.org/uc3) (UC3) at the
 [California Digital Library](http://cdlib.org/).
 
-UC Berkeley Library
+### UC Berkeley Library
 
 The University Library is comprised of 20 campus Libraries—including the
 Doe/Moffitt Libraries, the Bancroft Library, the C. V. Starr East Asian
@@ -52,7 +47,7 @@ data support services including EZID, the DMPTool and DASH. For more
 information on these services visit the
 library[ *data services page*](http://www.lib.berkeley.edu/how-to-find/data-gis).
 
-UC Curation Center (UC3)
+### UC Curation Center (UC3)
 
 The UC3 is a creative partnership bringing together the expertise and
 resources of the CDL, the ten UC campuses, and the broader international

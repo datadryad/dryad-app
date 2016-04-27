@@ -35,17 +35,11 @@ their campus credentials to deposit data in their campus Dash site. Seven
 campuses currently participate in Dash:
 
 - [UC Berkeley](https://dash.berkeley.edu/)
-
 - [UC Irvine](https://dash.lib.uci.edu/)
-
 - [UC Merced](https://dash.ucmerced.edu/)
-
 - [UC Office of the President](https://dash.ucop.edu/)
-
 - [UC Riverside](https://dash.ucr.edu/)
-
 - [UC Santa Cruz](https://dash.ucsc.edu/)[](https://dash.ucsc.edu/)
-
 - [UC San Francisco](https://datashare.ucsf.edu/)
 
 Contact [uc3@ucop.edu](mailto:uc3@ucop.edu) for more information.
@@ -79,34 +73,24 @@ collected from human subjects.
 - Obtain permission from the appropriate Principal Investigators(s) and
   inform any dataset co-creators that you plan to deposit the dataset in
   Dash.
-
 - Take care when sharing sensitive data, and be certain to comply with
   institutional and governmental regulations. It is your responsibility to
   share your data responsibly and ethically.
-
 - Collect the files comprising the data set. Name files systematically and
   use open file formats whenever possible (see the UK Data Archive for a
   [list of optimal file formats](http://www.data-archive.ac.uk/create-manage/format/formats-table)).
   Gather the following information to fully describe the dataset:
-
 - Dataset title - be as specific as possible
-
 - Full names and institutional affiliations of all dataset co-creators
-
 - Keywords for the dataset (use discipline-specific controlled vocabularies
   whenever possible)
-
 - Abstract briefly describing the dataset you are submitting– What is the
   data? Why was it collected?
-
 - Description of the methods used to collect the data
-
 - Citations to associated materials, including grant numbers, publications
   using the dataset, and other related datasets
-
 - If relevant, information about where the data was collected (e.g., the
   placename or lat/long coordinates)
-
 - Any other information that you would want to relay to someone analyzing
   your data
 
@@ -190,12 +174,10 @@ Data found in Dash may be associated with any of the following licensing
 terms:
 
 1. Custom Data Use Agreement.
-
 2. [Creative Commons Attribution 4.0 License](https://creativecommons.org/licenses/by/4.0/)
    (CC-BY-4.0). According to the terms of the CC-BY license, reuse of the
    data must include appropriate credit and must indicate if changes were
    made.
-
 3. [Creative Commons Public Domain Dedication Waiver](https://creativecommons.org/publicdomain/zero/1.0/legalcode)
    (CC0). This waiver has no restrictions on use and encourages reuse of
    data for any and all purposes.
@@ -248,23 +230,19 @@ of the services provided by Merritt, see this document:
 Preservation policy details include:
 
 - **Retention period**: Items will be retained indefinitely, at the
-    discretion of the participating campus library and/or UC3.
-
+  discretion of the participating campus library and/or UC3.
 - **Functional preservation:** Dash makes no promises of usability and
-    understandability of deposited objects over time.
-
+  understandability of deposited objects over time.
 - **File preservation**: Data files are replicated with multiple copies in
-    multiple geographic locations; metadata are backed up on a nightly
-    basis.
-
+  multiple geographic locations; metadata are backed up on a nightly
+  basis.
 - **Fixity and authenticity**: All data files are stored along with a
-    SHA-256 checksum of the file content. Regular checks of files against
-    their checksums are made. The audit process cycles continually, with a
-    current cycle time of approximately two months.
-
+  SHA-256 checksum of the file content. Regular checks of files against
+  their checksums are made. The audit process cycles continually, with a
+  current cycle time of approximately two months.
 - **Succession plans**: In case of closure of the repository, reasonable
-    efforts will be made to integrate all content into suitable alternative
-    institutional and/or subject based repositories.
+  efforts will be made to integrate all content into suitable alternative
+  institutional and/or subject based repositories.
 
 ### Do UC or CDL guarantee the quality of Dash data?
 
