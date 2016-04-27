@@ -1,5 +1,5 @@
 module StashEngine
-  class Identifier < ActiveRecord::Base
+  class Version < ActiveRecord::Base
     belongs_to :resource
   end
 end
