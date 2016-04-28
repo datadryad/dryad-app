@@ -21,8 +21,8 @@ Gem::Specification.new do |s|
   s.add_development_dependency "mysql2"
   s.add_dependency 'responders', '~> 2.0'
   s.add_dependency 'leaflet-rails'
-  s.add_dependency 'datacite-mapping'
+  s.add_dependency 'datacite-mapping', '~> 0.1', '>= 0.1.12'
   s.add_dependency 'kaminari'
-  s.add_dependency 'stash-wrapper'
+  s.add_dependency 'stash-wrapper', '~> 0.1', '>= 0.1.5'
   s.add_dependency 'rubyzip'
 end
