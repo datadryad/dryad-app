@@ -8,7 +8,7 @@
   - [Depositing and Publishing Data](#depositing-and-publishing-data)
     - [How should I prepare to submit data?](#how-should-i-prepare-to-submit-data)
     - [What are the file format requirements?](#what-are-the-file-format-requirements)
-    - [Why is complete documentation so important? Comprehensive documentation](#why-is-complete-documentation-so-important-comprehensive-documentation)
+    - [Why is complete documentation so important? ](#why-is-complete-documentation-so-important-comprehensive-documentation)
     - [Does the data have to be associated with a publication?](#does-the-data-have-to-be-associated-with-a-publication)
     - [Can I obtain a DOI (Digital Object Identifier) before I upload my data](#can-i-obtain-a-doi-digital-object-identifier-before-i-upload-my-data)
     - [Do you support data embargoes or restricted access?](#do-you-support-data-embargoes-or-restricted-access)
