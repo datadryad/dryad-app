@@ -12,7 +12,7 @@
     - [What are the size limits?](#what-are-the-size-limits)
     - [Why is complete documentation so important?](#why-is-complete-documentation-so-important)
     - [Does the data have to be associated with a publication?](#does-the-data-have-to-be-associated-with-a-publication)
-    - [Can I obtain a DOI (Digital Object Identifier) before I upload my data](#can-i-obtain-a-doi-digital-object-identifier-before-i-upload-my-data)
+    - [Can I obtain a DOI (Digital Object Identifier) before I upload my data in Dash?(#can-i-obtain-a-doi-digital-object-identifier-before-i-upload-my-data-in-dash)
     - [Do you support data embargoes or restricted access?](#do-you-support-data-embargoes-or-restricted-access)
   - [Accessing and Using Data](#accessing-and-using-data)
     - [How will anyone find my data?](#how-will-anyone-find-my-data)
@@ -144,8 +144,7 @@ version 3.0, and is broadly applicable to data from any field.
 No. Dash accepts all quality data, regardless of whether they have been
 used to publish a paper.
 
-### Can I obtain a DOI (Digital Object Identifier) before I upload my data
-in Dash?
+### Can I obtain a DOI (Digital Object Identifier) before I upload my data in Dash?
 
 Yes. To obtain a DOI, you must submit a minimal amount of required
 description, but you can return later to upload the data files.
