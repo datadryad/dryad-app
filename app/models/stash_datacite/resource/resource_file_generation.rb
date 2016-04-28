@@ -223,7 +223,7 @@ module StashDatacite
       end
 
       def generate_dataone
-        @files = uploads_list(@resource)
+        files = uploads_list(@resource)
         content =   "#%dataonem_0.1 " + "\n" +
             "#%profile | http://uc3.cdlib.org/registry/ingest/manifest/mrt-dataone-manifest " + "\n" +
             "#%prefix | dom: | http://uc3.cdlib.org/ontology/dataonem " + "\n" +
@@ -231,16 +231,68 @@ module StashDatacite
             "#%fields | dom:scienceMetadataFile | dom:scienceMetadataFormat | " +
             "dom:scienceDataFile | mrt:mimeType " + "\n"
 
-        @files.each do |file|
+        files.each do |file|
           if file
-            content <<    "mrt-datacite.xml |  http://datacite.org/schema/kernel-3.1 | " +
-                "#{file[:name]}" + " | #{file[:type]} " + "\n" + "mrt-dc.xml | " +
+            content <<  "mrt-datacite.xml |  http://datacite.org/schema/kernel-3.1 | " +
+                "#{file[:name]}" + " | #{file[:type]} " + "\n" + "mrt-oaidc.xml | " +
                 "http://dublincore.org/schemas/xmls/qdc/2008/02/11/qualifieddc.xsd | " +
                 "#{file[:name]}" + " | #{file[:type]} " + "\n"
           end
         end
         content << "#%eof "
         content.to_s
+      end
+
+      def generate_merritt_zip(target_url)
+        target_url = target_url
+        folder = "#{Rails.root}/uploads/"
+        uploads = uploads_list(@resource)
+        purge_existing_files
+
+        zipfile_name = "#{folder}/#{@resource.id}_archive.zip"
+        datacite_xml, stashwrapper_xml = generate_xml(target_url)
+
+        File.open("#{folder}/#{@resource.id}_mrt-datacite.xml", "w") do |f|
+          f.write datacite_xml
+        end
+        File.open("#{folder}/#{@resource.id}_stash-wrapper.xml", "w") do |f|
+          f.write stashwrapper_xml
+        end
+        File.open("#{folder}/#{@resource.id}_mrt-oaidc.xml", "w") do |f|
+          f.write(generate_dublincore)
+        end
+        File.open("#{folder}/#{@resource.id}_mrt-dataone-manifest.txt", 'w') do |f|
+          f.write(generate_dataone)
+        end
+
+        Zip::File.open(zipfile_name, Zip::File::CREATE) do |zipfile|
+          zipfile.add("mrt-datacite.xml", "#{folder}/#{@resource.id}_mrt-datacite.xml")
+          zipfile.add("stash-wrapper.xml", "#{folder}/#{@resource.id}_stash-wrapper.xml")
+          zipfile.add("mrt-oaidc.xml", "#{folder}/#{@resource.id}_mrt-oaidc.xml")
+          zipfile.add("mrt-dataone-manifest.txt", "#{folder}/#{@resource.id}_mrt-dataone-manifest.txt")
+          uploads.each do |d|
+            zipfile.add("#{d[:name]}", "#{folder}/#{@resource.id}/#{d[:name]}")
+          end
+        end
+      end
+
+      def purge_existing_files
+        folder = "#{Rails.root}/uploads/"
+        if File.exist?("#{folder}/#{@resource.id}_archive.zip")
+          File.delete("#{folder}/#{@resource.id}_archive.zip")
+        end
+        if File.exist?("#{folder}/#{@resource.id}_mrt-datacite.xml")
+          File.delete("#{folder}/#{@resource.id}_mrt-datacite.xml")
+        end
+        if File.exist?("#{folder}/#{@resource.id}_stash-wrapper.xml")
+          File.delete("#{folder}/#{@resource.id}_stash-wrapper.xml")
+        end
+        if File.exist?("#{folder}/#{@resource.id}_mrt-oaidc.xml")
+          File.delete("#{folder}/#{@resource.id}_mrt-oaidc.xml")
+        end
+        if File.exist?("#{folder}/#{@resource.id}_mrt-dataone-manifest.txt")
+          File.delete("#{folder}/#{@resource.id}_mrt-dataone-manifest.txt")
+        end
       end
 
       def uploads_list(resource)
@@ -251,50 +303,6 @@ module StashDatacite
           files.push(hash)
         end
         files
-      end
-
-      def generate_merritt_zip(target_url)
-        target_url = target_url
-        folder = "#{Rails.root}/uploads"
-
-        if File.exist?("#{folder}/#{@resource.id}_archive.zip")
-          File.delete("#{folder}/#{@resource.id}_archive.zip")
-        end
-        if File.exist?("#{folder}/#{@resource.id}_datacite.xml")
-          File.delete("#{folder}/#{@resource.id}_datacite.xml")
-        end
-        if File.exist?("#{folder}/#{@resource.id}_mrt-datacite.xml")
-          File.delete("#{folder}/#{@resource.id}_mrt-datacite.xml")
-        end
-        if File.exist?("#{folder}/#{@resource.id}_mrt-dc.xml")
-          File.delete("#{folder}/#{@resource.id}_mrt-dc.xml")
-        end
-        if File.exist?("#{folder}/#{@resource.id}_mrt-dataone-manifest.txt")
-          File.delete("#{folder}/#{@resource.id}_mrt-dataone-manifest.txt")
-        end
-
-        zipfile_name = "#{folder}/#{@resource.id}_archive.zip"
-        datacite_xml, stashwrapper_xml = generate_xml(target_url)
-
-        File.open("#{folder}/#{@resource.id}_datacite.xml", "w") do |f|
-          f.write datacite_xml
-        end
-        File.open("#{folder}/#{@resource.id}_mrt-datacite.xml", "w") do |f|
-          f.write stashwrapper_xml
-        end
-        File.open("#{folder}/#{@resource.id}_mrt-dc.xml", "w") do |f|
-          f.write(generate_dublincore)
-        end
-        File.open("#{folder}/#{@resource.id}_mrt-dataone-manifest.txt", 'w') do |f|
-          f.write(generate_dataone)
-        end
-
-        Zip::File.open(zipfile_name, Zip::File::CREATE) do |zipfile|
-          zipfile.add("datacite.xml", "#{folder}/#{@resource.id}_datacite.xml")
-          zipfile.add("mrt-datacite.xml", "#{folder}/#{@resource.id}_mrt-datacite.xml")
-          zipfile.add("mrt-dc.xml", "#{folder}/#{@resource.id}_mrt-dc.xml")
-          zipfile.add("mrt-dataone-manifest.txt", "#{folder}/#{@resource.id}_mrt-dataone-manifest.txt")
-        end
       end
 
     end
