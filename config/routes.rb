@@ -3,6 +3,10 @@ Rails.application.routes.draw do
   # See how all your routes lay out with "rake routes".
 
   get "/", to: redirect('/stash')
+  
+  get '/help' => 'host_pages#help'
+  get '/about' => 'host_pages#about'
+  
   # You can have the root of your site routed with "root"
   #root 'host_pages#index'
   # map.redirect '/', controller: '/stash/pages', action: 'home'

@@ -47,6 +47,7 @@ PATH
       omniauth-orcid (~> 1.0.21)
       omniauth-shibboleth (~> 1.2.1)
       rails (~> 4.2.4)
+      redcarpet (~> 3.3)
 
 GEM
   remote: https://rubygems.org/
@@ -280,6 +281,7 @@ GEM
     rake (11.1.2)
     rdoc (4.2.2)
       json (~> 1.4)
+    redcarpet (3.3.4)
     ref (2.0.0)
     responders (2.1.2)
       railties (>= 4.2.0, < 5.1)
