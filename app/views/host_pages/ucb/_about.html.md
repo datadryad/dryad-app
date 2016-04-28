@@ -45,7 +45,7 @@ Doe/Moffitt Libraries, the Bancroft Library, the C. V. Starr East Asian
 Library and subject specialty libraries. The library supports a range of
 data support services including EZID, the DMPTool and DASH. For more
 information on these services visit the
-library[ *data services page*](http://www.lib.berkeley.edu/how-to-find/data-gis).
+library[*data services page*](http://www.lib.berkeley.edu/how-to-find/data-gis).
 
 ### UC Curation Center (UC3)
 
