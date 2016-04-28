@@ -4,5 +4,7 @@ module StashEngine
                   :landing_url
 
     include SharedController
+
+    prepend_view_path("#{Rails.application.root}/app/views")
   end
 end
