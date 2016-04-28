@@ -5,10 +5,12 @@
     - [Who can deposit data with University of California instances of Dash?](#who-can-deposit-data-with-university-of-california-instances-of-dash)
     - [Can I use University of California Dash if my campus is not participating?](#can-i-use-university-of-california-dash-if-my-campus-is-not-participating)
     - [Who can deposit data with DataONE Dash?](#who-can-deposit-data-with-dataone-dash)
-  - [Depositing and Publishing Data](#depositing-and-publishing-data)
+  - [Depositing and Publishing Data](#depositing-and-publishing-data) 
+    - [What is the content scope of UC Dash?] (#what-is-the-content-scope-of-uc-dash)
     - [How should I prepare to submit data?](#how-should-i-prepare-to-submit-data)
     - [What are the file format requirements?](#what-are-the-file-format-requirements)
-    - [Why is complete documentation so important? ](#why-is-complete-documentation-so-important-comprehensive-documentation)
+    - [What are the size limits?](#what-are-the-size-limits)
+    - [Why is complete documentation so important?](#why-is-complete-documentation-so-important)
     - [Does the data have to be associated with a publication?](#does-the-data-have-to-be-associated-with-a-publication)
     - [Can I obtain a DOI (Digital Object Identifier) before I upload my data](#can-i-obtain-a-doi-digital-object-identifier-before-i-upload-my-data)
     - [Do you support data embargoes or restricted access?](#do-you-support-data-embargoes-or-restricted-access)
@@ -61,7 +63,7 @@ information.
 
 ## Depositing and Publishing Data
 
-**What is the content scope of UC Dash?**
+### What is the content scope of UC Dash?
 
 All fields of scholarship. All types of research artifacts. Dash is
 intended for complete, final research datasets. Content must not violate
@@ -110,7 +112,7 @@ viewing and/or usage of the file. This information can be included in the
 "Methods" or “Usage Notes” section of the description, or as a separate
 readme.txt file archived alongside the dataset files.
 
-**What are the size limits?**
+### What are the size limits?
 
 There is a limit of 2GB per file and 10GB per dataset. All data files are
 stored in the Merritt Repository. More information about the Merritt
@@ -119,8 +121,9 @@ Repository Service is available in the white paper
 Contact [uc3@ucop.edu](mailto:uc3@ucop.edu) for information on submitting
 larger datasets.
 
-### Why is complete documentation so important? Comprehensive documentation
-(i.e. metadata) is the key to future understanding of the data. Without a
+### Why is complete documentation so important? 
+
+Comprehensive documentation (i.e. metadata) is the key to future understanding of the data. Without a
 thorough description of the context of the data file, the context in which
 the data were collected, the measurements that were made, and the quality
 of the data, the data can not be found (through internet searches or data
