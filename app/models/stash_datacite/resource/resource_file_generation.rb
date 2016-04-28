@@ -3,6 +3,7 @@ require 'datacite/mapping'
 require 'stash/wrapper'
 require 'tempfile'
 require 'stash_ezid/client'
+require 'fileutils'
 
 module StashDatacite
   module Resource
@@ -245,7 +246,9 @@ module StashDatacite
 
       def generate_merritt_zip(target_url)
         target_url = target_url
-        folder = "#{Rails.root}/uploads/"
+        folder = "#{Rails.root}/uploads"
+        FileUtils::mkdir_p(folder)
+
         uploads = uploads_list(@resource)
         purge_existing_files
 
