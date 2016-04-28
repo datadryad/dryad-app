@@ -11,4 +11,9 @@ module StashEngine
     def help
     end
   end
+
+  # The about controller uses the standard app layout, so the default is here.
+  # Perhaps specific views would override it in the base application.
+  def about
+  end
 end
