@@ -48,8 +48,12 @@ module StashEngine
     end
 
     def update_identifier(doi)
-      identifier = Identifier.find_or_initialize_by(id)
-      identifier.save!
+      unless self.identifier.nil?
+        identifier = Identifier.where(resource_id: id).first
+        identifier.update(identifier: doi)
+     else
+        identifier = Identifier.create(resource_id: id, identifier: doi, identifier_type: 'DOI')
+      end
     end
 
     def update_version(zipfile)
