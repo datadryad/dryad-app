@@ -42,7 +42,15 @@ module Stash
         until_time = Util.utc_or_nil(until_time)
 
         job = create_job(from_time, until_time)
-        job.harvest_and_index
+        job.harvest_and_index do |result|
+          record = result.record
+          record_identifier = record ? record.identifier : 'nil'
+          log.info("Indexed record #{record_identifier}: #{result.status}")
+          result.errors.each do |e|
+            log.error(e.message)
+            log.debug("Backtrace:\n#{e.backtrace.join("\n")}")
+          end
+        end
       end
 
       def self.config_file_defaults
