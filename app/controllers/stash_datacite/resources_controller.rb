@@ -48,6 +48,8 @@ module StashDatacite
       @resource_file_generation.generate_merritt_zip(target_url)
       resource.submission_to_repository(current_tenant, "#{Rails.root}/uploads/#{ resource.id}_archive.zip", identifier)
       create_resource_state(resource)
+      redirect_to stash_url_helpers.dashboard_path, notice: "#{resource.titles.first.title} submitted
+        with DOI #{StashEngine::Identifier.where(resource_id: resource.id).first.identifier}. There may be a delay for processing before the item is available."
     end
 
     private
@@ -76,8 +78,6 @@ module StashDatacite
           "#{title} has been submitted to the repository.",
           'submission',
           { user: resource.user, resource: resource, title: title }).deliver
-        redirect_to stash_url_helpers.dashboard_path, notice: "#{resource.titles.first.title} submitted
-        with DOI #{resource.identifier.identifier}. There may be a delay for processing before the item is available."
       end
     end
   end

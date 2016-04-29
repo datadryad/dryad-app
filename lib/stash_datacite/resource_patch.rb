@@ -34,6 +34,7 @@ module StashDatacite
         has_and_belongs_to_many :subjects, class_name: 'StashDatacite::Subject',
                                            through: 'StashDatacite::ResourceSubject' #optional
         has_many :titles, class_name: 'StashDatacite::Title' # required
+        has_one :identifier, class_name:  'StashEngine::Identifier'
       end
     end
   end
