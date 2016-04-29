@@ -6,6 +6,5 @@ module StashDatacite
     helper StashEngine::ApplicationHelper
 
     include StashEngine::SharedController
-
   end
 end
