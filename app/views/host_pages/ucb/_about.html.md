@@ -1,5 +1,3 @@
-# About
-
 ## Overview
 
 Dash is a simple self-service tool for researchers to use in publishing

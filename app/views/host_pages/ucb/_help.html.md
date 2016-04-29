@@ -1,32 +1,3 @@
-# Help
-
-- [Help](#help)
-  - [Users](#users)
-    - [Who can deposit data with University of California instances of Dash?](#who-can-deposit-data-with-university-of-california-instances-of-dash)
-    - [What if I have collaborators outside of UC Berkeley?](#what-if-i-have-collaborators-outside-of-uc-berkeley)
-    - [Who can deposit data with DataONE Dash?](#who-can-deposit-data-with-dataone-dash)
-  - [Depositing and Publishing Data](#depositing-and-publishing-data)
-    - [What is the content scope of UC Dash?](#what-is-the-content-scope-of-uc-dash)
-    - [How should I prepare to submit data?](#how-should-i-prepare-to-submit-data)
-    - [What are the file format requirements?](#what-are-the-file-format-requirements)
-    - [What are the size limits?](#what-are-the-size-limits)
-    - [Why is complete documentation so important?](#why-is-complete-documentation-so-important)
-    - [Does the data have to be associated with a publication?](#does-the-data-have-to-be-associated-with-a-publication)
-    - [Can I obtain a DOI (Digital Object Identifier) before I upload my data in Dash?](#can-i-obtain-a-doi-digital-object-identifier-before-i-upload-my-data-in-dash)
-    - [Do you support data embargoes or restricted access?](#do-you-support-data-embargoes-or-restricted-access)
-  - [Accessing and Using Data](#accessing-and-using-data)
-    - [How will anyone find my data?](#how-will-anyone-find-my-data)
-    - [Who can access and use datasets in Dash?](#who-can-access-and-use-datasets-in-dash)
-    - [Do I need to log into Dash to get data?](#do-i-need-to-log-into-dash-to-get-data)
-    - [Do I have to pay to download the data?](#do-i-have-to-pay-to-download-the-data)
-    - [What are my obligations if I use the data in a publication?](#what-are-my-obligations-if-i-use-the-data-in-a-publication)
-    - [For how long will the data be available?](#for-how-long-will-the-data-be-available)
-    - [Do UC or CDL guarantee the quality of Dash data?](#do-uc-or-cdl-guarantee-the-quality-of-dash-data)
-  - [Updating or Removing Data](#updating-or-removing-data)
-    - [Can I update my data?](#can-i-update-my-data)
-    - [Can I delete my data?](#can-i-delete-my-data)
-    - [Can a DOI (Digital Object Identifier) be revoked?](#can-a-doi-digital-object-identifier-be-revoked)
-
 ## Users
 
 ### Who can deposit data with University of California instances of Dash?

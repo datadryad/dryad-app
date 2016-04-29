@@ -1,3 +1,3 @@
-# About
+# Placeholder
 
 (Placeholder for DataONE)
