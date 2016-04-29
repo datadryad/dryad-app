@@ -1,5 +1,8 @@
+<h1>Help</h1>
+
 <% if current_tenant %>
-<%= render "host_pages/#{current_tenant.tenant_id}/help" %>
+    <%= render "host_pages/#{current_tenant.tenant_id}/help", toc: true %>
+    <%= render "host_pages/#{current_tenant.tenant_id}/help" %>
 <% else %>
-<p>A placeholder for the Help page.</p>
+    <p>A placeholder for the Help page.</p>
 <% end %>
