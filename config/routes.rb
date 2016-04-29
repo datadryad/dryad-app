@@ -23,6 +23,7 @@ StashEngine::Engine.routes.draw do
   get 'sessions/destroy', :to => 'sessions#destroy'
 
   get 'help', :to => 'pages#help'
+  get 'about', :to => 'pages#about'
   get 'search', :to => 'searches#index'
   get 'dataset/*id', :to => 'landing#show', as: 'show'
   #get "login", :to => "test#index"

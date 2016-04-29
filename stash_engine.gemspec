@@ -22,6 +22,7 @@ Gem::Specification.new do |s|
 
   s.add_development_dependency "mysql2"
 
+  s.add_dependency 'redcarpet', '~> 3.3'
   s.add_dependency "omniauth", "~> 1.2.2"
   s.add_dependency "omniauth-shibboleth", "~> 1.2.1"
   s.add_dependency "omniauth-google-oauth2", "~> 0.2.9"
