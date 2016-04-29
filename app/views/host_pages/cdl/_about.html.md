@@ -24,7 +24,7 @@ currently seven live instances of UC Dash:
 - [UC Merced](https://dash.ucmerced.edu/)
 - [UC Office of the President](https://dash.ucop.edu/)
 - [UC Riverside](https://dash.ucr.edu/)
-- [UC Santa Cruz](https://dash.ucsc.edu/)[](https://dash.ucsc.edu/)
+- [UC Santa Cruz](https://dash.library.ucsc.edu/)
 - [UC San Francisco](https://datashare.ucsf.edu/)
 
 [DataONE Dash](https://oneshare.cdlib.org/) / ONEShare is a separate
