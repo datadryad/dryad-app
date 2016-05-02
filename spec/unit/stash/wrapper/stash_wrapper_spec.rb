@@ -207,7 +207,7 @@ module Stash
           it 'sets the correct namespace' do
             assert_st = lambda do |elem|
               actual = elem.namespace
-              expected = StashWrapper::NAMESPACE
+              expected = 'http://dash.cdlib.org/stash_wrapper/'
               expect(actual).to eq(expected), "expected '#{expected}', got '#{actual}': #{elem}"
               elem.each_element { |e| assert_st.call(e) }
             end
@@ -217,7 +217,7 @@ module Stash
           it 'sets the correct namespace prefix' do
             assert_st = lambda do |elem|
               actual = elem.prefix
-              expected = StashWrapper::NAMESPACE_PREFIX
+              expected = 'st'
               expect(actual).to eq(expected), "expected '#{expected}', got '#{actual}': #{elem}"
               elem.each_element { |e| assert_st.call(e) }
             end
@@ -226,8 +226,8 @@ module Stash
 
           it 'maps the namespace to the prefix' do
             assert_st = lambda do |elem|
-              actual = elem.namespace(StashWrapper::NAMESPACE_PREFIX)
-              expected = StashWrapper::NAMESPACE
+              actual = elem.namespace('st')
+              expected = 'http://dash.cdlib.org/stash_wrapper/'
               expect(actual).to eq(expected), "expected '#{expected}', got '#{actual}': #{elem}"
               elem.each_element { |e| assert_st.call(e) }
             end
@@ -236,7 +236,7 @@ module Stash
 
           it 'includes the prefix in the name' do
             assert_st = lambda do |elem|
-              expect(elem.to_s).to start_with("<#{StashWrapper::NAMESPACE_PREFIX}:")
+              expect(elem.to_s).to start_with('<st:')
               elem.each_element { |e| assert_st.call(e) }
             end
             assert_st.call(@wrapper_xml.root)

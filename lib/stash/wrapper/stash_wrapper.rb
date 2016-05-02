@@ -10,11 +10,11 @@ module Stash
     class StashWrapper
       include ::XML::Mapping
 
-      # The `stash_wrapper` namespace
-      NAMESPACE = 'http://dash.cdlib.org/stash_wrapper/'
-
-      # The `st` prefix for the `stash_wrapper` namespace
-      NAMESPACE_PREFIX = 'st'
+      NAMESPACE = ::XML::MappingExtensions::Namespace.new(
+        prefix: 'st',
+        uri: 'http://dash.cdlib.org/stash_wrapper/',
+        schema_location: 'http://dash.cdlib.org/stash_wrapper/ http://dash.cdlib.org/stash_wrapper/stash_wrapper.xsd'
+      )
 
       root_element_name 'stash_wrapper'
 
@@ -44,6 +44,7 @@ module Stash
           inventory: inventory
         )
         self.stash_descriptive = descriptive_elements
+        self.namespace = NAMESPACE
       end
 
       def id_value
@@ -95,39 +96,34 @@ module Stash
         inv ? inv.files.map(&:pathname) : []
       end
 
-      # Overrides `XML::Mapping#pre_save` to set the XML namespace and schema location.
-      def pre_save(options = { mapping: :_default })
-        xml = super(options)
-        xml.add_namespace(NAMESPACE)
-        xml.add_namespace('xsi', 'http://www.w3.org/2001/XMLSchema-instance')
-        xml.add_attribute('xsi:schemaLocation', 'http://dash.cdlib.org/stash_wrapper/ http://dash.cdlib.org/stash_wrapper/stash_wrapper.xsd')
-        xml
-      end
-
-      # Overrides `XML::Mapping#save_to_xml` to set the XML namespace prefix on all
-      # `stash_wrapper` elements. (The elements in `descriptive_elements` should retain
-      # their existing namespaces and prefixes, if any.)
-      def save_to_xml(options = { mapping: :_default })
-        elem = super(options)
-        set_prefix(prefix: NAMESPACE_PREFIX, elem: elem)
-        elem.add_namespace(nil) # clear the no-prefix namespace
-        elem.add_namespace(NAMESPACE_PREFIX, NAMESPACE)
-        elem
-      end
-
-      def self.parse_xml(xml_str)
-        xml = REXML::Document.new(xml_str).root
-        load_from_xml(xml)
-      end
-
-      private
-
-      def set_prefix(prefix:, elem:)
-        return unless elem.namespace == NAMESPACE
-        # name= with a prefixed name sets namespace by side effect and is the only way to actually output the prefix
-        elem.name = "#{prefix}:#{elem.name}"
-        elem.each_element { |e| set_prefix(prefix: prefix, elem: e) }
-      end
+      # # Overrides `XML::Mapping#pre_save` to set the XML namespace and schema location.
+      # def pre_save(options = { mapping: :_default })
+      #   xml = super(options)
+      #   xml.add_namespace(NAMESPACE)
+      #   xml.add_namespace('xsi', 'http://www.w3.org/2001/XMLSchema-instance')
+      #   xml.add_attribute('xsi:schemaLocation', 'http://dash.cdlib.org/stash_wrapper/ http://dash.cdlib.org/stash_wrapper/stash_wrapper.xsd')
+      #   xml
+      # end
+      #
+      # # Overrides `XML::Mapping#save_to_xml` to set the XML namespace prefix on all
+      # # `stash_wrapper` elements. (The elements in `descriptive_elements` should retain
+      # # their existing namespaces and prefixes, if any.)
+      # def save_to_xml(options = { mapping: :_default })
+      #   xml = super(options)
+      #   set_prefix(prefix: NAMESPACE_PREFIX, elem: xml)
+      #   xml.add_namespace(nil) # clear the no-prefix namespace
+      #   xml.add_namespace(NAMESPACE_PREFIX, NAMESPACE)
+      #   xml
+      # end
+      #
+      # private
+      #
+      # def set_prefix(prefix:, elem:)
+      #   return unless elem.namespace == NAMESPACE
+      #   # name= with a prefixed name sets namespace by side effect and is the only way to actually output the prefix
+      #   elem.name = "#{prefix}:#{elem.name}"
+      #   elem.each_element { |e| set_prefix(prefix: prefix, elem: e) }
+      # end
 
     end
 

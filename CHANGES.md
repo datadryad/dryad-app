@@ -1,6 +1,12 @@
+# 0.1.6 (2 May 2016)
+
+- Update to XML::MappingExtensions 0.3.6 and remove now-unnecessary namespace hacks
+- Update to TypesafeEnum 0.1.7 for improved debug output
+
 # 0.1.5 (28 April 2016)
 
-- Update to XML::MappingExtensions 0.3.5
+- Update to XML::MappingExtensions 0.3.5 to fix issues with `Date.xmlschema` misbehaving
+  in a Rails / ActiveSupport environment
 
 # 0.1.4 (25 April 2016)
 
