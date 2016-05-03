@@ -3,33 +3,25 @@ require 'spec_helper'
 module Stash
   module Sword2
     describe Namespaces do
+
       it 'defines namespaces' do
-        constants = [
-            :SWORD,
-            :SWORD_TERMS,
-            :SWORD_PACKAGE,
-            :SWORD_ERROR,
-            :SWORD_STATE,
-            :ATOM_PUB,
-            :ATOM,
-            :DC_TERMS,
-            :RDF,
-            :OAI_ORE
-        ]
+        by_namespace = {}
+        by_uri     = {}
+        by_prefix = {}
 
-        prefixes = []
-        uris     = []
-
-        constants.each do |c|
+        Namespaces.constants.each do |c|
           ns = Namespaces.const_get(c)
           expect(ns).to be_an(XML::MappingExtensions::Namespace)
 
-          expect(uris).not_to include(ns.uri)
-          uris << ns.uri
+          expect(by_namespace.key?(ns)).to be(false), "Duplicate namespace: #{by_namespace[ns]} and #{c} both declare #{ns}"
+          by_namespace[ns] = c
+
+          expect(by_uri.key?(ns.uri)).to be(false), "Duplicate URI: #{by_uri[ns.uri]} and #{c} both declare #{ns.uri}"
+          by_uri[ns.uri] = c
 
           if ns.prefix
-            expect(prefixes).not_to include(ns.prefix)
-            prefixes << ns.prefix
+            expect(by_prefix.key?(ns.prefix)).to be(false), "Duplicate prefix: #{by_prefix[ns.prefix]} and #{c} both declare #{ns.prefix}"
+            by_prefix[ns.prefix] = c
           end
         end
 
