@@ -30,4 +30,4 @@ require 'rspec_custom_matchers'
 # ------------------------------------------------------------
 # Code under test
 
-require 'stash/sword'
+require 'stash/sword2'
