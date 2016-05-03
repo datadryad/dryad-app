@@ -12,7 +12,7 @@ campuses currently participate in Dash:
 - [UC Merced](https://dash.ucmerced.edu/)
 - [UC Office of the President](https://dash.ucop.edu/)
 - [UC Riverside](https://dash.ucr.edu/)
-- [UC Santa Cruz](https://dash.ucsc.edu/)[](https://dash.ucsc.edu/)
+- [UC Santa Cruz](https://dash.library.ucsc.edu/)
 - [UC San Francisco](https://datashare.ucsf.edu/)
 
 Contact [uc3@ucop.edu](mailto:uc3@ucop.edu) for more information.
