@@ -16,6 +16,14 @@ module Stash
         schema_location: 'http://dash.cdlib.org/stash_wrapper/ http://dash.cdlib.org/stash_wrapper/stash_wrapper.xsd'
       )
 
+      # Overrides `Class.allocate`, used by `XML::Mapping` on read, to make sure
+      # the namespace gets set even when we don't call the initializer
+      def self.allocate
+        res = super
+        res.namespace = NAMESPACE
+        res
+      end
+
       root_element_name 'stash_wrapper'
 
       object_node :identifier, 'identifier', class: Identifier
@@ -36,6 +44,7 @@ module Stash
       # @param descriptive_elements [Array<REXML::Element>] the encapsulated
       #   XML metadata
       def initialize(identifier:, version:, license:, embargo: nil, inventory: nil, descriptive_elements:) # rubocop:disable Metrics/ParameterLists
+        self.namespace = NAMESPACE
         self.identifier = identifier
         self.stash_administrative = StashAdministrative.new(
           version: version,
@@ -44,7 +53,6 @@ module Stash
           inventory: inventory
         )
         self.stash_descriptive = descriptive_elements
-        self.namespace = NAMESPACE
       end
 
       def id_value
