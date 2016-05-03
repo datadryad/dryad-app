@@ -1,3 +1,4 @@
+require 'typesafe_enum'
 require 'xml/mapping_extensions'
 
 module Stash
