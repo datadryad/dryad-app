@@ -1,54 +1,92 @@
 require 'rspec/expectations'
 
-def basic_encode(username, password)
-  result = 'Basic ' + ["#{username}:#{password}"].pack('m').delete("\r\n")
-  puts "encoding #{username}:#{password} as #{result}"
-  result
-end
+# Workaround for https://github.com/rspec/rspec-mocks/issues/1086
+class RSpec::Mocks::ErrorGenerator
+  unless respond_to?(:_default_error_message)
+    alias_method :_default_error_message, :default_error_message
 
-def header_value(k, headers)
-  key = headers.keys.find { |k2| k2.to_s.downcase == k.to_s.downcase }
-  puts "#{k}: #{key} => #{headers[key] if key}"
-  headers[key] if key
-end
-
-RSpec::Matchers.define :request_for do |h|
-
-  def failures_for(actual, h)
-
-    failures = []
-
-    uri = h[:uri]
-    (failures << "Wrong URI: expected #{uri} but was #{actual.uri || 'nil'}") if uri unless actual.uri == uri
-
-    method = h[:method]
-    (failures << "Wrong method: expected #{method} but was #{actual.method || 'nil'}") if method unless actual.method == method
-
-    headers = h[:headers]
-    if headers
-      headers.each do |k, v|
-        actual_value = header_value(k, actual.to_hash)
-        (failures << "Wrong value for header #{k}: expected #{v}, was #{actual_value || 'nil'}") unless actual_value == v
+    def default_error_message(expectation, expected_args, actual_args)
+      failures = [_default_error_message(expectation, expected_args, actual_args)]
+      expectation.expected_args.each do |expected|
+        if expected.respond_to?(:failure_message)
+          failures << expected.failure_message
+        end
       end
+      failures.join("\n  ")
     end
-
-    username = h[:username]
-    if username
-      expected     = basic_encode(h[:username], h[:password])
-      actual_value = header_value('Authorization', actual.to_hash)
-      (failures << "Wrong value for Authorization header: expecrted #{expected}, was #{actual_value || 'nil'}") unless actual_value == expected
-    end
-
-    failures
   end
+end
 
+def value_for(key:, in_hash:)
+  matching_key = in_hash.keys.find { |k| k.to_s.downcase == key.to_s.downcase }
+  in_hash[matching_key] if matching_key
+end
+
+def has_header(key:, value:, in_hash:)
+  actual_values = value_for(key: key, in_hash: in_hash)
+  unless actual_values.respond_to?(:[])
+    actual_values = [actual_values]
+  end
+  actual_values.find do |actual_value|
+    value.respond_to?(:match) ? value.match(actual_value) : value == actual_value
+  end
+end
+
+def has_all(headers:, in_hash:)
+  headers.each do |k, v|
+    return false unless has_header(key: k, value: v, in_hash: in_hash)
+  end
+  true
+end
+
+RSpec::Matchers.define :request do
   match do |actual|
-    failures_for(actual, h).empty?
+    failures_for(actual).empty?
   end
 
   failure_message do |actual|
-    failures_for(actual, h).join('; ')
+    failures_for(actual).join('; ')
   end
+
+  chain :with_method do |method|
+    @method = method
+  end
+
+  chain :with_uri do |expected_uri|
+    @expected_uri = expected_uri
+    # actual.uri == expected_uri
+  end
+
+  chain :with_headers do |expected_headers|
+    @expected_headers = expected_headers
+    # has_all(headers: expected_headers, in_hash: actual.to_hash).empty
+  end
+
+  chain :with_auth do |username, password|
+    @expected_auth = 'Basic ' + ["#{username}:#{password}"].pack('m').delete("\r\n")
+    # value_for(key: 'Authorization', in_hash: actual.to_hash) == @expected_auth ? true : false
+  end
+
+  def failures_for(actual)
+    return ["Expected Net::HTTPRequest, got: #{actual.class}"] unless actual.is_a?(Net::HTTPRequest)
+
+    failures = []
+    if @method
+      failures << "Expected method #{@method}, got: #{actual.method}" unless actual.method == @method.to_s.upcase
+    end
+    if @expected_uri
+      failures << "Expected uri #{@expected_uri}, got: #{actual.uri}" unless actual.uri == @expected_uri
+    end
+    if @expected_headers
+      failures << "Expected headers #{expected_headers}, got: #{actual.to_hash}" unless has_all(headers: @expected_headers, in_hash: actual.to_hash)
+    end
+    if @expected_auth
+      auth_value = value_for(key: 'Authorization', in_hash: actual.to_hash)
+      failures << "Expected Authorization header #{@expected_auth}, got: #{auth_value || 'nil'}" unless auth_value == @expected_auth
+    end
+    failures
+  end
+
 end
 
 RSpec::Matchers.define :include_header do |k, v|
@@ -57,20 +95,10 @@ RSpec::Matchers.define :include_header do |k, v|
   end
 
   match do |actual|
-    matching_key = matching_key(k, actual)
-    return false unless matching_key
-
-    actual_value = actual[matching_key]
-    if v.respond_to?(:match)
-      v.match(actual_value)
-    else
-      v == actual_value
-    end
+    has_all(headers: {k => v}, in_hash: actual)
   end
 
   failure_message do |actual|
-    matching_key = matching_key(k, actual)
-    return "expected #{k}: #{v} but no #{k} header was found" unless matching_key
-    "expected #{k}: #{v} but found #{matching_key}: #{actual[matching_key]}"
+    "expected #{k}: #{v} but found #{value_for(key: k, in_hash: actual)}"
   end
 end
