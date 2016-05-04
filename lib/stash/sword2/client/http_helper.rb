@@ -1,4 +1,5 @@
 require 'net/http'
+require 'rest-client'
 require 'uri'
 
 module Stash
@@ -30,8 +31,8 @@ module Stash
         def initialize(user_agent:, username: nil, password: nil, redirect_limit: DEFAULT_MAX_REDIRECTS)
           @user_agent     = user_agent
           @redirect_limit = redirect_limit
-          @username = username
-          @password = password
+          @username       = username
+          @password       = password
         end
 
         # Gets the content of the specified URI as a string.
@@ -46,8 +47,17 @@ module Stash
           end
         end
 
-        def post(uri:, limit: redirect_limit)
+        # Posts the specified payload string to the specified URI.
+        def post(uri:, payload:, headers: {}, limit: redirect_limit)
 
+          options = {}
+          options[:user] = username if username
+          options[:password] = password if password
+
+          all_headers = { 'User-Agent' => user_agent }
+          all_headers.merge!(headers)
+
+          RestClient::Request.execute(method: :post, url: uri.to_s, payload: payload, headers: all_headers, **options)
         end
 
         private
@@ -59,12 +69,12 @@ module Stash
           Net::HTTP.start(uri.hostname, uri.port, use_ssl: (uri.scheme == 'https')) do |http|
             http.request(req) do |response|
               case response
-              when Net::HTTPSuccess
-                yield(response)
-              when Net::HTTPInformation, Net::HTTPRedirection
-                do_get(redirect_uri_for(response, uri), limit - 1, &block)
-              else
-                raise "Error #{response.code}: #{response.message} retrieving URI #{uri}"
+                when Net::HTTPSuccess
+                  yield(response)
+                when Net::HTTPInformation, Net::HTTPRedirection
+                  do_get(redirect_uri_for(response, uri), limit - 1, &block)
+                else
+                  raise "Error #{response.code}: #{response.message} retrieving URI #{uri}"
               end
             end
           end

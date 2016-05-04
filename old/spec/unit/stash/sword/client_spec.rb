@@ -31,10 +31,8 @@ module Stash
 
           md5 = Digest::MD5.file(zipfile).to_s
 
-          actual_body = nil
           actual_headers = nil
           expect(a_request(:post, authorized_uri).with do |req|
-            actual_body = req.body
             actual_headers = req.headers
           end).to have_been_made
 

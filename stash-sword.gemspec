@@ -24,10 +24,10 @@ Gem::Specification.new do |spec|
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths = ['lib']
 
+  spec.add_dependency 'rest-client', '~> 1.8'
   spec.add_dependency 'typesafe_enum', '~> 0.1', '>= 0.1.7'
   spec.add_dependency 'xml-mapping_extensions', '~> 0.3', '>= 0.3.7'
 
-  # spec.add_dependency 'rest-client', '~> 1.8'
   # spec.add_dependency 'sword2ruby', '~> 1.0'
   # spec.add_dependency 'multipart-post', '~> 2.0'
   #

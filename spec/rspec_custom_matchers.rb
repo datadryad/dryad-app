@@ -24,9 +24,15 @@ end
 
 def header?(key:, value:, in_hash:)
   actual_values = value_for(key: key, in_hash: in_hash)
-  actual_values = [actual_values] unless actual_values.respond_to?(:[])
+  actual_values = [actual_values] unless actual_values.is_a?(Array)
   actual_values.find do |actual_value|
-    value.respond_to?(:match) ? value.match(actual_value) : value == actual_value
+    if value.nil?
+      actual_value.nil?
+    elsif value.respond_to?(:match)
+      actual_value && value.match(actual_value)
+    else
+      value == actual_value
+    end
   end
 end
 
@@ -35,6 +41,10 @@ def all?(headers:, in_hash:)
     return false unless header?(key: k, value: v, in_hash: in_hash)
   end
   true
+end
+
+def basic_auth(username, password)
+  'Basic ' + ["#{username}:#{password}"].pack('m').delete("\r\n")
 end
 
 RSpec::Matchers.define :request do
@@ -61,7 +71,7 @@ RSpec::Matchers.define :request do
   end
 
   chain :with_auth do |username, password|
-    @expected_auth = 'Basic ' + ["#{username}:#{password}"].pack('m').delete("\r\n")
+    @expected_auth = basic_auth(username, password)
     # value_for(key: 'Authorization', in_hash: actual.to_hash) == @expected_auth ? true : false
   end
 
@@ -99,10 +109,10 @@ RSpec::Matchers.define :include_header do |k, v|
   end
 
   match do |actual|
-    all?(headers: { k => v }, in_hash: actual)
+    all?(headers: {k => v}, in_hash: actual)
   end
 
   failure_message do |actual|
-    "expected #{k}: #{v} but found #{value_for(key: k, in_hash: actual)}"
+    "expected #{k}: #{v} but found #{value_for(key: k, in_hash: actual) || 'nil'}"
   end
 end
