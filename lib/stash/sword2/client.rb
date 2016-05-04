@@ -8,8 +8,8 @@ module Stash
       attr_reader :on_behalf_of
 
       def initialize(username:, password:, on_behalf_of: nil, helper: nil)
-        fail 'no username provided' unless username
-        fail 'no password provided' unless password
+        raise 'no username provided' unless username
+        raise 'no password provided' unless password
         @username = username
         @password = password
         @on_behalf_of = on_behalf_of || username

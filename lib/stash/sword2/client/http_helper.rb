@@ -66,18 +66,18 @@ module Stash
         private
 
         def make_request(uri, limit, &block) # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
-          fail "Redirect limit (#{redirect_limit}) exceeded retrieving URI #{uri}" if limit <= 0
+          raise "Redirect limit (#{redirect_limit}) exceeded retrieving URI #{uri}" if limit <= 0
           req = Net::HTTP::Get.new(uri, 'User-Agent' => user_agent)
           req.basic_auth(username, password) if username && password
           Net::HTTP.start(uri.hostname, uri.port, use_ssl: (uri.scheme == 'https')) do |http|
             http.request(req) do |response|
               case response
-                when Net::HTTPSuccess
-                  block.call(response)
-                when Net::HTTPInformation, Net::HTTPRedirection
-                  make_request(redirect_uri_for(response, uri), limit - 1, &block)
-                else
-                  fail "Error #{response.code}: #{response.message} retrieving URI #{uri}"
+              when Net::HTTPSuccess
+                yield(response)
+              when Net::HTTPInformation, Net::HTTPRedirection
+                make_request(redirect_uri_for(response, uri), limit - 1, &block)
+              else
+                raise "Error #{response.code}: #{response.message} retrieving URI #{uri}"
               end
             end
           end

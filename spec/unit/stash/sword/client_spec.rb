@@ -33,10 +33,10 @@ module Stash
 
           actual_body = nil
           actual_headers = nil
-          expect(a_request(:post, authorized_uri).with { |req|
+          expect(a_request(:post, authorized_uri).with do |req|
             actual_body = req.body
             actual_headers = req.headers
-          }).to have_been_made
+          end).to have_been_made
 
           aggregate_failures('request headers') do
             {
@@ -45,7 +45,7 @@ module Stash
               'Slug' => slug,
               'Content-Disposition' => 'attachment; filename=example.zip',
               'Content-MD5' => md5,
-              'Content-Length' => %r{[0-9]+},
+              'Content-Length' => /[0-9]+/,
               'Content-Type' => 'application/zip'
             }.each do |k, v|
               expect(actual_headers).to include_header(k, v)
@@ -63,21 +63,20 @@ module Stash
 
           client.put_update(edit_iri: edit_iri, slug: slug, new_zipfile: zipfile)
 
-
           md5 = Digest::MD5.file(zipfile).to_s
 
           actual_body = nil
           actual_headers = nil
-          expect(a_request(:put, authorized_uri).with { |req|
+          expect(a_request(:put, authorized_uri).with do |req|
             actual_body = req.body
             actual_headers = req.headers
-          }).to have_been_made
+          end).to have_been_made
 
           aggregate_failures('request headers') do
             {
-              'Content-Length' => %r{[0-9]+},
+              'Content-Length' => /[0-9]+/,
               'Content-Type' => %r{multipart/related; type="application/atom\+xml"; boundary=.*},
-              'On-Behalf-Of' => on_behalf_of,
+              'On-Behalf-Of' => on_behalf_of
             }.each do |k, v|
               expect(actual_headers).to include_header(k, v)
             end
@@ -87,7 +86,7 @@ module Stash
             'Packaging' => 'http://purl.org/net/sword/package/SimpleZip',
             'Content-Disposition' => 'attachment; name="payload"; filename="example.zip"',
             'Content-Type' => 'application/zip',
-            'Content-MD5' => md5,
+            'Content-MD5' => md5
           }
 
           aggregate_failures('MIME headers') do

@@ -4,7 +4,7 @@ module Stash
   module Sword
     class CommandLine
 
-      def self.exec(argv, &block)
+      def self.exec(argv, &_block)
         options = Options.new(argv)
         if options.show_help
           puts Options::USAGE

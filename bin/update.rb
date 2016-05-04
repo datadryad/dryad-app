@@ -4,16 +4,16 @@ require 'stash/sword'
 
 Stash::Sword::CommandLine.exec(ARGV) do |client, options|
   zipfile = options.zipfile
-  fail 'no zipfile provided' unless zipfile
-  fail "#{zipfile} does not exist" unless File.exist?(zipfile)
-  fail "#{zipfile} is not a file" unless File.file?(zipfile)
-  fail "Unable to read #{zipfile}" unless File.readable?(zipfile)
+  raise 'no zipfile provided' unless zipfile
+  raise "#{zipfile} does not exist" unless File.exist?(zipfile)
+  raise "#{zipfile} is not a file" unless File.file?(zipfile)
+  raise "Unable to read #{zipfile}" unless File.readable?(zipfile)
 
   doi = options.doi
-  fail 'no DOI provided' unless doi
+  raise 'no DOI provided' unless doi
 
   edit_iri = options.edit_iri
-  fail 'no Edit-IRI provided' unless edit_iri
+  raise 'no Edit-IRI provided' unless edit_iri
   warn 'Merrit Edit-IRI should end with DOI' unless edit_iri.end_with?(doi)
 
   res = client.put_update(edit_iri: edit_iri, slug: doi, new_zipfile: zipfile)

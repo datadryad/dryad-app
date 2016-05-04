@@ -1,7 +1,9 @@
-# Disable compact style check for example.rb
-Style/ClassAndModuleChildren:
+# Ruby version
+AllCops:
+  TargetRubyVersion: 2.2
   Exclude:
-    - 'example.rb'
+  - 'lib/stash/sword/**/*'
+  - 'spec/unit/stash/sword/**/*'
 
 # Disable line-length check; it's too easy for the cure to be worse than the disease
 Metrics/LineLength:

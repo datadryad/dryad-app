@@ -54,7 +54,7 @@ module Stash
           it 'sets the User-Agent header' do
             agent  = 'Not Elvis'
             helper = HTTPHelper.new(user_agent: agent)
-            expect(@http).to receive(:request).with(request.with_method('GET').with_headers({'User-Agent' => agent})).and_yield(@success)
+            expect(@http).to receive(:request).with(request.with_method('GET').with_headers('User-Agent' => agent)).and_yield(@success)
             helper.fetch(uri: URI('http://example.org/'))
           end
 
@@ -77,7 +77,7 @@ module Stash
             @info = Net::HTTPContinue.allocate
 
             expected = [@info, @success]
-            expect(@http).to receive(:request).twice.with(request.with_method('GET').with_uri(uri).with_headers({'User-Agent' => user_agent})) do |&block|
+            expect(@http).to receive(:request).twice.with(request.with_method('GET').with_uri(uri).with_headers('User-Agent' => user_agent)) do |&block|
               block.call(expected.shift)
             end
 
@@ -89,8 +89,8 @@ module Stash
             uri2      = URI('http://example.org/new')
             @redirect = Net::HTTPMovedPermanently.allocate
             allow(@redirect).to receive(:[]).with('location').and_return(uri2.to_s)
-            expect(@http).to receive(:request).with(request.with_method('GET').with_uri(uri).with_headers({'User-Agent' => user_agent})).and_yield(@redirect)
-            expect(@http).to receive(:request).with(request.with_method('GET').with_uri(uri2).with_headers({'User-Agent' => user_agent})).and_yield(@success)
+            expect(@http).to receive(:request).with(request.with_method('GET').with_uri(uri).with_headers('User-Agent' => user_agent)).and_yield(@redirect)
+            expect(@http).to receive(:request).with(request.with_method('GET').with_uri(uri2).with_headers('User-Agent' => user_agent)).and_yield(@success)
             expect(helper.fetch(uri: uri)).to be(@body)
           end
 
@@ -98,7 +98,7 @@ module Stash
             uri       = URI('http://example.org/')
             @redirect = Net::HTTPMovedPermanently.allocate
             allow(@redirect).to receive(:[]).with('location').and_return(uri.to_s)
-            expect(@http).to receive(:request).with(request.with_method('GET').with_uri(uri).with_headers({'User-Agent' => user_agent})).exactly(HTTPHelper::DEFAULT_MAX_REDIRECTS).times.and_yield(@redirect)
+            expect(@http).to receive(:request).with(request.with_method('GET').with_uri(uri).with_headers('User-Agent' => user_agent)).exactly(HTTPHelper::DEFAULT_MAX_REDIRECTS).times.and_yield(@redirect)
             expect { helper.fetch(uri: uri) }.to raise_error do |e|
               expect(e.message).to match(/Redirect limit.*exceeded.*#{uri.to_s}/)
             end
@@ -171,7 +171,7 @@ module Stash
           it 'sets the User-Agent header' do
             agent  = 'Not Elvis'
             helper = HTTPHelper.new(user_agent: agent)
-            expect(@http).to receive(:request).with(request.with_headers({'User-Agent' => agent})).and_yield(@success)
+            expect(@http).to receive(:request).with(request.with_headers('User-Agent' => agent)).and_yield(@success)
             @path = helper.fetch_to_file(uri: URI('http://example.org/'))
           end
 
@@ -187,7 +187,7 @@ module Stash
             @info = Net::HTTPContinue.allocate
 
             expected = [@info, @success]
-            expect(@http).to receive(:request).twice.with(request.with_method('GET').with_uri(uri).with_headers({'User-Agent' => user_agent})) do |&block|
+            expect(@http).to receive(:request).twice.with(request.with_method('GET').with_uri(uri).with_headers('User-Agent' => user_agent)) do |&block|
               block.call(expected.shift)
             end
 
@@ -200,8 +200,8 @@ module Stash
             uri2      = URI('http://example.org/new')
             @redirect = Net::HTTPMovedPermanently.allocate
             allow(@redirect).to receive(:[]).with('location').and_return(uri2.to_s)
-            expect(@http).to receive(:request).with(request.with_method('GET').with_uri(uri).with_headers({'User-Agent' => user_agent})).and_yield(@redirect)
-            expect(@http).to receive(:request).with(request.with_method('GET').with_uri(uri2).with_headers({'User-Agent' => user_agent})).and_yield(@success)
+            expect(@http).to receive(:request).with(request.with_method('GET').with_uri(uri).with_headers('User-Agent' => user_agent)).and_yield(@redirect)
+            expect(@http).to receive(:request).with(request.with_method('GET').with_uri(uri2).with_headers('User-Agent' => user_agent)).and_yield(@success)
             @path = helper.fetch_to_file(uri: uri)
             expect(File.read(@path)).to eq(@data)
           end
@@ -210,7 +210,7 @@ module Stash
             uri       = URI('http://example.org/')
             @redirect = Net::HTTPMovedPermanently.allocate
             allow(@redirect).to receive(:[]).with('location').and_return(uri.to_s)
-            expect(@http).to receive(:request).with(request.with_method('GET').with_uri(uri).with_headers({'User-Agent' => user_agent})).exactly(HTTPHelper::DEFAULT_MAX_REDIRECTS).times.and_yield(@redirect)
+            expect(@http).to receive(:request).with(request.with_method('GET').with_uri(uri).with_headers('User-Agent' => user_agent)).exactly(HTTPHelper::DEFAULT_MAX_REDIRECTS).times.and_yield(@redirect)
             expect { @path = helper.fetch_to_file(uri: uri) }.to raise_error do |e|
               expect(e.message).to match(/Redirect limit.*exceeded.*#{uri.to_s}/)
             end
@@ -256,4 +256,3 @@ module Stash
     end
   end
 end
-

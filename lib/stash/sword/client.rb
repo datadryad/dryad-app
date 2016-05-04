@@ -6,15 +6,15 @@ module Stash
   module Sword
     class Client
 
-      MULTIPART_RELATED_ATOM_XML = "multipart/related; type=\"application/atom+xml\""
+      MULTIPART_RELATED_ATOM_XML = 'multipart/related; type="application/atom+xml"'.freeze
 
       attr_reader :username
       attr_reader :password
       attr_reader :on_behalf_of
 
       def initialize(username:, password:, on_behalf_of: nil)
-        fail 'no username provided' unless username
-        fail 'no password provided' unless password
+        raise 'no username provided' unless username
+        raise 'no password provided' unless password
         @username = username
         @password = password
         @on_behalf_of = on_behalf_of || username
