@@ -1,49 +1,36 @@
-<style>
-  footer {
-    border: solid;
-    border-width: 1px;
-    margin: 1em;
-    padding: 1em 2em 1em 2em;
-    font-size: 11pt;
-  }
-
-  .foot3 {
-    margin: 0 2em 0 2em;
-    float: left;
-  }
-
-  .foot_stack {
-    margin: 10px 0 10px 0;
-    text-align: center;
-  }
-
-  .special_items {
-    width: 600px;
-    margin: 0 auto 0 auto;
-  }
-</style>
-<footer>
-  <div class="foot_stack">
-    <div class="special_items">
-      <div class="foot3">
-        Terms and Conditions
+<footer class="c-footer">
+  <div class="c-footer__link-group">
+    <div class="c-footer__nav-group">
+      <a href="" class="c-footer__nav-item">Browse Data</a>
+      <%= link_to 'About Dash', stash_url_helpers.about_path, class: 'c-footer__nav-item' %>
+      <a href="" class="c-footer__nav-item">My Datasets</a>
+      <div class="c-footer__logged-in-or-out">
+        <!-- Login -->
+        <div class="o-sites">
+          <details class="o-showhide o-sites__details" role="group">
+            <summary class="o-showhide__summary o-sites__summary">More Dash Sites</summary>
+            <div class="o-sites__group">
+              <span class="o-sites__group-heading">Participating UC Campuses</span>
+              <a href="" class="o-sites__group-item">dash site 1</a>
+              <a href="" class="o-sites__group-item">dash site 2</a>
+              <a href="" class="o-sites__group-item">dash site 3</a>
+            </div>
+          </details>
+          <a href="" class="o-sites__login">Login</a>
+        </div>
+        <!-- Logout -->
+        <!-- <div class="o-logout">
+          <button class="o-logout__button">Logout</button>
+          <div class="o-logout__name">Username</div>
+        </div> -->
       </div>
-      <div class="foot3">
-        Privacy Policy
-      </div>
-      <div class="foot3">
-        Accessibility Policy
-      </div>
-      <div class="foot3">
-        <%= link_to 'About', stash_url_helpers.about_path %>
-      </div>
-      <div style="clear:both"></div>
+    </div>
+    <div class="c-footer__policy-group">
+      <a href="">Terms of Use</a>
+      <a href="">Privacy Policy</a>
+      <a href="">Accessibility Policy</a>
     </div>
   </div>
-  <div class="foot_stack">
-    Dash is a collaborative project between UC Campus Library and the UC Curation center at the California Digital Library.
-  </div>
-  <div class="foot_stack">
-    &copy; The Regents of the University of California
-  </div>
+  <p>Dash is a collaborative project between UC Campus Library and the UC Curation Center of the <a href="http://www.cdlib.org" class="o-link__primary">California Digital Library</a></p>
+  <p>© The Regents of the University of California</p>
 </footer>
