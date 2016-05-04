@@ -18,6 +18,10 @@ module StashDatacite
         @resource.titles.first.title
       end
 
+      def status
+        @resource.current_resource_state
+      end
+
       # according to https://dash.ucop.edu/xtf/search?smode=metadataBasicsPage
       # required fields are Title, Institution, Data type, Data Creator(s), Abstract
       def required_filled

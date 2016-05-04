@@ -19,6 +19,15 @@ module StashDatacite
       end
     end
 
+    def submitted
+      respond_to do |format|
+        format.js do'p
+          @resources = StashDatacite.resource_class.where(user_id: session[:user_id]).page(@page).per(@page_size)
+          @submitted = @resources.map { |resource| DatasetPresenter.new(resource) }
+        end
+      end
+    end
+
     def show
       respond_to do |format|
         format.js do

@@ -121,17 +121,14 @@ module StashDatacite
         )
 
         inventory = st::Inventory.new(
+          uploads = uploads_list(@resource)
+          uploads.each do |d|
           files: [
             st::StashFile.new(
-              pathname: 'HSRC_MasterSampleII.dat', size_bytes: 12_345, mime_type: 'text/plain'
-            ),
-            st::StashFile.new(
-              pathname: 'HSRC_MasterSampleII.csv', size_bytes: 67_890, mime_type: 'text/csv'
-            ),
-            st::StashFile.new(
-              pathname: 'HSRC_MasterSampleII.sas7bdat', size_bytes: 123_456, mime_type: 'application/x-sas-data'
-            ),
+              pathname: "#{d[:name]}", size_bytes: "#{d[:size]}", mime_type: "#{d[:type]}"
+            )
           ])
+          end
 
         wrapper = st::StashWrapper.new(
           identifier: identifier,
@@ -302,7 +299,7 @@ module StashDatacite
         files = []
         current_uploads = resource.file_uploads
         current_uploads.each do |u|
-          hash = {:name => u.upload_file_name, :type => u.upload_content_type}
+          hash = {name: u.upload_file_name, type: u.upload_content_type, size: u.upload_file_size}
           files.push(hash)
         end
         files
