@@ -61,7 +61,7 @@ module Stash
           it 'sets Basic-Auth headers' do
             uri = URI('http://example.org/')
             expect(@http).to receive(:request).with(request.with_method('GET').with_uri(uri).with_auth('elvis', 'presley')).and_yield(@success)
-            HTTPHelper.new(user_agent: user_agent, username: 'elvis', password: 'presley')
+            helper = HTTPHelper.new(user_agent: user_agent, username: 'elvis', password: 'presley')
             helper.fetch(uri: uri)
           end
 

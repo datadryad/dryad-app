@@ -81,8 +81,10 @@ RSpec::Matchers.define :request do
       failures << "Expected headers #{expected_headers}, got: #{actual.to_hash}" unless has_all(headers: @expected_headers, in_hash: actual.to_hash)
     end
     if @expected_auth
-      auth_value = value_for(key: 'Authorization', in_hash: actual.to_hash)
-      failures << "Expected Authorization header #{@expected_auth}, got: #{auth_value || 'nil'}" unless auth_value == @expected_auth
+      unless has_header(key: 'Authorization', value: @expected_auth, in_hash: actual.to_hash)
+        auth_value = value_for(key: 'Authorization', in_hash: actual.to_hash)
+        failures << "Expected Authorization header #{@expected_auth}, got: #{auth_value || 'nil'}"
+      end
     end
     failures
   end
