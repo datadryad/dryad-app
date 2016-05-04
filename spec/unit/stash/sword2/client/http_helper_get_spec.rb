@@ -40,7 +40,7 @@ module Stash
           # ------------------------------
           # Tests
 
-          it 'requests the specified URI' do
+          it 'gets the specified URI' do
             uri = URI('http://example.org/')
             expect(@http).to receive(:request).with(request.with_method('GET').with_uri(uri)).and_yield(@success)
             helper.get(uri: uri)
