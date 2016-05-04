@@ -25,10 +25,6 @@ module Stash
       def prefix
         value.prefix
       end
-
-      def schema_location
-        value.schema_location
-      end
     end
   end
 end
