@@ -1,7 +1,5 @@
 require 'net/http'
-require 'tempfile'
 require 'uri'
-require 'mime-types'
 
 module Stash
   module Sword2
@@ -46,6 +44,10 @@ module Stash
             # doesn't show up in unit tests but it does in example.rb
             return success.body
           end
+        end
+
+        def post(uri:, limit: redirect_limit)
+
         end
 
         private
