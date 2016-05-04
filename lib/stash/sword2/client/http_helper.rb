@@ -18,14 +18,22 @@ module Stash
         # @return [Integer] the number of redirects to follow before erroring out
         attr_accessor :redirect_limit
 
+        # @return [String] the HTTP Basic Authentication username
+        attr_reader :username
+
+        # @return [String] the HTTP Basic Authentication password
+        attr_reader :password
+
         # Creates a new `HTTPHelper`
         #
         # @param user_agent [String] the User-Agent string to send when making requests
         # @param redirect_limit [Integer] the number of redirects to follow before erroring out
         #   (defaults to {DEFAULT_MAX_REDIRECTS})
-        def initialize(user_agent:, redirect_limit: DEFAULT_MAX_REDIRECTS)
+        def initialize(user_agent:, username: nil, password: nil, redirect_limit: DEFAULT_MAX_REDIRECTS)
           @user_agent     = user_agent
           @redirect_limit = redirect_limit
+          @username = username
+          @password = password
         end
 
         # Gets the content of the specified URI as a string.
@@ -60,6 +68,7 @@ module Stash
         def make_request(uri, limit, &block) # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
           fail "Redirect limit (#{redirect_limit}) exceeded retrieving URI #{uri}" if limit <= 0
           req = Net::HTTP::Get.new(uri, 'User-Agent' => user_agent)
+          req.basic_auth(username, password) if username && password
           Net::HTTP.start(uri.hostname, uri.port, use_ssl: (uri.scheme == 'https')) do |http|
             http.request(req) do |response|
               case response

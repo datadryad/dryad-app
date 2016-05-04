@@ -4,14 +4,14 @@ module Stash
   module Sword2
     describe Client do
       it 'can be instantiated' do
-        client = Client.new
+        client = Client.new(username: 'elvis', password: 'presley')
         expect(client).to be_a(Client)
       end
 
       describe '#get' do
         before(:each) do
           @helper = instance_double(Client::HTTPHelper)
-          @client = Client.new(@helper)
+          @client = Client.new(username: 'elvis', password: 'presley', helper: @helper)
         end
 
         it 'gets a URI' do

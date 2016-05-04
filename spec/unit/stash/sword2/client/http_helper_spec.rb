@@ -58,6 +58,13 @@ module Stash
             helper.fetch(uri: URI('http://example.org/'))
           end
 
+          it 'sets Basic-Auth headers' do
+            uri = URI('http://example.org/')
+            expect(@http).to receive(:request).with(request_for(uri: uri, username: 'elvis', password: 'presley')).and_yield(@success)
+            HTTPHelper.new(user_agent: user_agent, username: 'elvis', password: 'presley')
+            helper.fetch(uri: uri)
+          end
+
           it 'uses SSL for https requests' do
             uri = URI('https://example.org/')
             expect(Net::HTTP).to receive(:start).with(uri.hostname, uri.port, use_ssl: true).and_call_original
