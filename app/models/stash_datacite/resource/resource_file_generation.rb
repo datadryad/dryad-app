@@ -90,6 +90,7 @@ module StashDatacite
             )
           ]
         )
+        resource.namespace_prefix = 'dcs'
 
         datacite_to_wrapper = resource.save_to_xml
         datacite_root = resource.write_xml
