@@ -23,7 +23,7 @@ module Stash
         # ------------------------------------------------------------
         # Tests
 
-        describe '#fetch' do
+        describe '#get' do
 
           # ------------------------------
           # Fixture
@@ -43,33 +43,33 @@ module Stash
           it 'requests the specified URI' do
             uri = URI('http://example.org/')
             expect(@http).to receive(:request).with(request.with_method('GET').with_uri(uri)).and_yield(@success)
-            helper.fetch(uri: uri)
+            helper.get(uri: uri)
           end
 
           it 'gets a response' do
             expect(@http).to receive(:request).and_yield(@success)
-            expect(helper.fetch(uri: URI('http://example.org/'))).to be(@body)
+            expect(helper.get(uri: URI('http://example.org/'))).to be(@body)
           end
 
           it 'sets the User-Agent header' do
             agent  = 'Not Elvis'
             helper = HTTPHelper.new(user_agent: agent)
             expect(@http).to receive(:request).with(request.with_method('GET').with_headers('User-Agent' => agent)).and_yield(@success)
-            helper.fetch(uri: URI('http://example.org/'))
+            helper.get(uri: URI('http://example.org/'))
           end
 
           it 'sets Basic-Auth headers' do
             uri = URI('http://example.org/')
             expect(@http).to receive(:request).with(request.with_method('GET').with_uri(uri).with_auth('elvis', 'presley')).and_yield(@success)
             helper = HTTPHelper.new(user_agent: user_agent, username: 'elvis', password: 'presley')
-            helper.fetch(uri: uri)
+            helper.get(uri: uri)
           end
 
           it 'uses SSL for https requests' do
             uri = URI('https://example.org/')
             expect(Net::HTTP).to receive(:start).with(uri.hostname, uri.port, use_ssl: true).and_call_original
             expect(@http).to receive(:request).and_yield(@success)
-            helper.fetch(uri: uri)
+            helper.get(uri: uri)
           end
 
           it 're-requests on receiving a 1xx' do
@@ -81,7 +81,7 @@ module Stash
               block.call(expected.shift)
             end
 
-            expect(helper.fetch(uri: uri)).to be(@body)
+            expect(helper.get(uri: uri)).to be(@body)
           end
 
           it 'redirects on receiving a 3xx' do
@@ -91,7 +91,7 @@ module Stash
             allow(@redirect).to receive(:[]).with('location').and_return(uri2.to_s)
             expect(@http).to receive(:request).with(request.with_method('GET').with_uri(uri).with_headers('User-Agent' => user_agent)).and_yield(@redirect)
             expect(@http).to receive(:request).with(request.with_method('GET').with_uri(uri2).with_headers('User-Agent' => user_agent)).and_yield(@success)
-            expect(helper.fetch(uri: uri)).to be(@body)
+            expect(helper.get(uri: uri)).to be(@body)
           end
 
           it 'only redirects a limited number of times' do
@@ -99,7 +99,7 @@ module Stash
             @redirect = Net::HTTPMovedPermanently.allocate
             allow(@redirect).to receive(:[]).with('location').and_return(uri.to_s)
             expect(@http).to receive(:request).with(request.with_method('GET').with_uri(uri).with_headers('User-Agent' => user_agent)).exactly(HTTPHelper::DEFAULT_MAX_REDIRECTS).times.and_yield(@redirect)
-            expect { helper.fetch(uri: uri) }.to raise_error do |e|
+            expect { helper.get(uri: uri) }.to raise_error do |e|
               expect(e.message).to match(/Redirect limit.*exceeded.*#{uri.to_s}/)
             end
           end
@@ -110,7 +110,7 @@ module Stash
             allow(@error).to receive(:message).and_return('Forbidden')
             expect(@http).to receive(:request).and_yield(@error)
             uri = URI('http://example.org/')
-            expect { helper.fetch(uri: uri) }.to raise_error do |e|
+            expect { helper.get(uri: uri) }.to raise_error do |e|
               expect(e.message).to match(/403.*Forbidden.*#{uri.to_s}/)
             end
           end
@@ -121,13 +121,13 @@ module Stash
             allow(@error).to receive(:message).and_return('Internal Server Error')
             expect(@http).to receive(:request).and_yield(@error)
             uri = URI('http://example.org/')
-            expect { helper.fetch(uri: uri) }.to raise_error do |e|
+            expect { helper.get(uri: uri) }.to raise_error do |e|
               expect(e.message).to match(/500.*Internal Server Error.*#{uri.to_s}/)
             end
           end
         end
 
-        describe '#fetch_to_file' do
+        describe '#get_to_file' do
 
           # ------------------------------
           # Fixture
@@ -158,13 +158,13 @@ module Stash
           it 'requests the specified URI' do
             uri = URI('http://example.org/')
             expect(@http).to receive(:request).with(request.with_method('GET').with_uri(uri)).and_yield(@success)
-            @path = helper.fetch_to_file(uri: uri)
+            @path = helper.get_to_file(uri: uri)
           end
 
           it 'returns the path to a file containing the response' do
             uri = URI('http://example.org/')
             expect(@http).to receive(:request).with(request.with_method('GET').with_uri(uri)).and_yield(@success)
-            @path = helper.fetch_to_file(uri: uri)
+            @path = helper.get_to_file(uri: uri)
             expect(File.read(@path)).to eq(@data)
           end
 
@@ -172,14 +172,14 @@ module Stash
             agent  = 'Not Elvis'
             helper = HTTPHelper.new(user_agent: agent)
             expect(@http).to receive(:request).with(request.with_headers('User-Agent' => agent)).and_yield(@success)
-            @path = helper.fetch_to_file(uri: URI('http://example.org/'))
+            @path = helper.get_to_file(uri: URI('http://example.org/'))
           end
 
           it 'uses SSL for https requests' do
             uri = URI('https://example.org/')
             expect(Net::HTTP).to receive(:start).with(uri.hostname, uri.port, use_ssl: true).and_call_original
             expect(@http).to receive(:request).and_yield(@success)
-            @path = helper.fetch_to_file(uri: uri)
+            @path = helper.get_to_file(uri: uri)
           end
 
           it 're-requests on receiving a 1xx' do
@@ -191,7 +191,7 @@ module Stash
               block.call(expected.shift)
             end
 
-            @path = helper.fetch_to_file(uri: uri)
+            @path = helper.get_to_file(uri: uri)
             expect(File.read(@path)).to eq(@data)
           end
 
@@ -202,7 +202,7 @@ module Stash
             allow(@redirect).to receive(:[]).with('location').and_return(uri2.to_s)
             expect(@http).to receive(:request).with(request.with_method('GET').with_uri(uri).with_headers('User-Agent' => user_agent)).and_yield(@redirect)
             expect(@http).to receive(:request).with(request.with_method('GET').with_uri(uri2).with_headers('User-Agent' => user_agent)).and_yield(@success)
-            @path = helper.fetch_to_file(uri: uri)
+            @path = helper.get_to_file(uri: uri)
             expect(File.read(@path)).to eq(@data)
           end
 
@@ -211,7 +211,7 @@ module Stash
             @redirect = Net::HTTPMovedPermanently.allocate
             allow(@redirect).to receive(:[]).with('location').and_return(uri.to_s)
             expect(@http).to receive(:request).with(request.with_method('GET').with_uri(uri).with_headers('User-Agent' => user_agent)).exactly(HTTPHelper::DEFAULT_MAX_REDIRECTS).times.and_yield(@redirect)
-            expect { @path = helper.fetch_to_file(uri: uri) }.to raise_error do |e|
+            expect { @path = helper.get_to_file(uri: uri) }.to raise_error do |e|
               expect(e.message).to match(/Redirect limit.*exceeded.*#{uri.to_s}/)
             end
             expect(@path).to be_nil
@@ -223,7 +223,7 @@ module Stash
             allow(@error).to receive(:message).and_return('Forbidden')
             expect(@http).to receive(:request).and_yield(@error)
             uri = URI('http://example.org/')
-            expect { @path = helper.fetch_to_file(uri: uri) }.to raise_error do |e|
+            expect { @path = helper.get_to_file(uri: uri) }.to raise_error do |e|
               expect(e.message).to match(/403.*Forbidden.*#{uri.to_s}/)
             end
             expect(@path).to be_nil
@@ -235,7 +235,7 @@ module Stash
             allow(@error).to receive(:message).and_return('Internal Server Error')
             expect(@http).to receive(:request).and_yield(@error)
             uri = URI('http://example.org/')
-            expect { helper.fetch_to_file(uri: uri) }.to raise_error do |e|
+            expect { helper.get_to_file(uri: uri) }.to raise_error do |e|
               expect(e.message).to match(/500.*Internal Server Error.*#{uri.to_s}/)
             end
           end
@@ -246,7 +246,7 @@ module Stash
               path = "#{dir}/http_helper_spec.out"
               uri  = URI('http://example.org/')
               expect(@http).to receive(:request).with(request.with_method('GET').with_uri(uri)).and_yield(@success)
-              helper.fetch_to_file(uri: uri, path: path)
+              helper.get_to_file(uri: uri, path: path)
               expect(File.read(path)).to eq(@data)
             end
           end

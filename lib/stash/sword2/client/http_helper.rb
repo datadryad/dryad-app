@@ -40,7 +40,7 @@ module Stash
         # @param uri [URI] the URI to download
         # @param limit [Integer] the number of redirects to follow (defaults to {#redirect_limit})
         # @return [String] the content of the URI
-        def fetch(uri:, limit: redirect_limit)
+        def get(uri:, limit: redirect_limit)
           make_request(uri, limit) do |success|
             # not 100% clear why we need an explicit return here; it
             # doesn't show up in unit tests but it does in example.rb
@@ -53,7 +53,7 @@ module Stash
         # @param uri [URI] the URI to download
         # @param path [String] the path to save the download to (optional)
         # @return [String] the path to the downloaded file
-        def fetch_to_file(uri:, path: nil, limit: redirect_limit)
+        def get_to_file(uri:, path: nil, limit: redirect_limit)
           make_request(uri, limit) do |success|
             file = path ? File.new(path, 'w+') : Tempfile.new(['resync-client', ".#{extension_for(success)}"])
             open file, 'w' do |out|
