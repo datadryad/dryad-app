@@ -17,7 +17,7 @@ module Stash
         it 'gets a URI' do
           uri = URI('http://example.org')
           result_str = 'the result'
-          expect(@helper).to receive(:fetch).with(uri: uri) { result_str }
+          expect(@helper).to receive(:get).with(uri: uri) { result_str }
           expect(@client.get(uri)).to eq(result_str)
         end
 
@@ -25,7 +25,7 @@ module Stash
           url_str = 'http://example.org'
           uri = URI(url_str)
           result_str = 'the result'
-          expect(@helper).to receive(:fetch).with(uri: uri) { result_str }
+          expect(@helper).to receive(:get).with(uri: uri) { result_str }
           expect(@client.get(url_str)).to eq(result_str)
         end
       end
