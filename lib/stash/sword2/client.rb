@@ -26,7 +26,7 @@ module Stash
       # @param uri [URI, String] the URI to download
       # @return [String] the content of the URI
       def get(uri)
-        @helper.fetch(uri: Sword2.to_uri(uri))
+        @helper.get(uri: Sword2.to_uri(uri))
       end
     end
   end
