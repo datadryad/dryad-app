@@ -12,14 +12,11 @@ module Stash
           @harvest_job_completed = create(:indexed_harvest_job, record_count: @record_count, from_time: nil, start_time: Time.utc(2015, 7, 1))
           @harvested_records_completed = @harvest_job_completed.harvested_records
 
-          @harvest_job_failed = create(:indexed_harvest_job, record_count: @record_count, from_time: Time.utc(2015, 7, 1, 10), start_time: Time.utc(2015, 8, 1), index_record_status: :failed)
+          @harvest_job_failed = create(:indexed_harvest_job, record_count: @record_count + 1, from_time: Time.utc(2015, 7, 1, 10), start_time: Time.utc(2015, 8, 1), index_record_status: :failed)
           @harvested_records_failed = @harvest_job_failed.harvested_records
-
-          @harvest_job_pending = create(:indexed_harvest_job, record_count: @record_count, from_time: Time.utc(2015, 8, 1), start_time: Time.utc(2015, 9, 1), index_job_status: :in_progress, index_record_status: :pending)
         end
 
         describe '#find_newest_indexed' do
-
           it 'finds the newest indexed record' do
             last_indexed = HarvestedRecord.find_newest_indexed
 
@@ -47,30 +44,66 @@ module Stash
           end
 
           it 'ignores index-failed records with subsequently successful indexes' do
+            reharvest_from = @harvested_records_failed.first.timestamp
+            reharvest_job = create(
+              :harvest_job,
+              from_time: reharvest_from,
+              query_url: "http://oai.datacite.org/oai?verb=ListRecords&metadataPrefix=oai_dc#{'&from_time=' + reharvest_from.utc.xmlschema}",
+              start_time: Time.utc(2015, 9, 1),
+              end_time: Time.utc(2015, 9, 1, @record_count)
+            )
+
             reindex_job = create(
               :index_job,
               solr_url: 'http://solr.example.org/',
-              harvest_job: @harvest_job_completed,
-              start_time: Time.utc(2015, 9, 1),
-              end_time: Time.utc(2015, 9, 1, @record_count),
-              status: :in_progress
+              harvest_job: reharvest_job,
+              start_time: Time.utc(2015, 9, 1, @record_count),
+              end_time: Time.utc(2015, 9, 2),
+              status: :completed
             )
 
+            still_failed = []
             @harvested_records_failed.each_with_index do |hr, index|
-              create(
-                :indexed_record,
-                index_job: reindex_job,
-                harvested_record: hr,
-                submitted_time: Time.utc(2015, 9, 1, index),
-                # odd-numbered records succeed; even-numbered still failing
-                status: (index.even? ? :completed : :failed)
-              )
+              if index.even?
+                reharvested_record = create(
+                  :harvested_record,
+                  harvest_job: reharvest_job,
+                  identifier: hr.identifier,
+                  timestamp: Time.utc(2016, 1, 1, index),
+                  deleted: hr.deleted
+                )
+                create(
+                  :indexed_record,
+                  index_job: reindex_job,
+                  harvested_record: reharvested_record,
+                  submitted_time: Time.utc(2015, 9, 1, index),
+                  status: :completed
+                )
+              else
+                still_failed << hr
+              end
             end
+
+            later_failure = create(
+              :harvested_record,
+              harvest_job: reharvest_job,
+              identifier: 'elvis',
+              timestamp: Time.utc(2016, 2, 1),
+              deleted: false
+            )
+
+            create(
+              :indexed_record,
+              index_job: reindex_job,
+              harvested_record: later_failure,
+              submitted_time: Time.utc(2015, 9, 2),
+              status: :failed
+            )
 
             # should be the first even-numbered record
             oldest_failed = HarvestedRecord.find_oldest_failed
 
-            expect(oldest_failed).to eq(@harvested_records_failed.second)
+            expect(oldest_failed).to eq(still_failed.first)
           end
 
         end

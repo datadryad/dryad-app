@@ -204,15 +204,13 @@ module Stash
         @harvest_job_completed = create(:indexed_harvest_job, record_count: @record_count, from_time: nil, start_time: Time.utc(2015, 7, 1))
         @harvested_records_completed = @harvest_job_completed.harvested_records
 
-        @harvest_job_failed = create(:indexed_harvest_job, record_count: @record_count, from_time: Time.utc(2015, 7, 1, 10), start_time: Time.utc(2015, 8, 1), index_record_status: :failed)
+        @harvest_job_failed = create(:indexed_harvest_job, record_count: @record_count + 1, from_time: Time.utc(2015, 7, 1, 10), start_time: Time.utc(2015, 8, 1), index_record_status: :failed)
         @harvested_records_failed = @harvest_job_failed.harvested_records
-
-        @harvest_job_pending = create(:indexed_harvest_job, record_count: @record_count, from_time: Time.utc(2015, 8, 1), start_time: Time.utc(2015, 9, 1), index_job_status: :in_progress, index_record_status: :pending)
       end
 
       describe 'find_newest_indexed_timestamp' do
         it 'returns the timestamp of the newest indexed record' do
-          newest_indexed = @harvested_records_completed.last
+          newest_indexed = HarvestedRecord.find_newest_indexed
           expected_timestamp = newest_indexed.timestamp
 
           newest_indexed_timestamp = @mgr.find_newest_indexed_timestamp
@@ -228,7 +226,7 @@ module Stash
 
       describe 'find_oldest_failed_timestamp' do
         it 'returns the timestamp of the oldest failed record' do
-          oldest_failed = @harvested_records_failed.first
+          oldest_failed = HarvestedRecord.find_oldest_failed
           expected_timestamp = oldest_failed.timestamp
 
           oldest_failed_timestamp = @mgr.find_oldest_failed_timestamp
@@ -241,8 +239,6 @@ module Stash
           expect(@mgr.find_oldest_failed_timestamp).to be_nil
         end
       end
-
-      it 'bases success/failure datestamp determination only on the most recent harvest job'
     end
 
   end

@@ -9,19 +9,46 @@ module Stash
         belongs_to :harvest_job
         has_many :indexed_records
 
+        FIND_OLDEST_FAILED = <<-SQL.freeze
+            SELECT
+              all_records.*
+            FROM
+              (SELECT
+                 harvested_records.id,
+                 harvested_records.identifier,
+                 MAX(harvested_records.timestamp),
+                 indexed_records.status
+               FROM
+                 harvested_records,
+                 indexed_records
+               WHERE
+                 harvested_records.id == indexed_records.harvested_record_id
+               GROUP BY
+                 identifier
+               ORDER BY
+                 timestamp DESC
+              ) AS latest_BY_identifier,
+              harvested_records AS all_records
+            WHERE
+              all_records.id = latest_BY_identifier.id AND
+              latest_BY_identifier.status = #{Status::FAILED}
+            ORDER BY
+              all_records.timestamp
+            LIMIT 1
+        SQL
+
         def self.find_newest_indexed
           HarvestedRecord.joins(:indexed_records).where(indexed_records: { status: Status::COMPLETED }).order(timestamp: :desc).first
         end
 
+        # 1. find the most recent harvest/index operation for each identifier
+        #    (record identifier, *not* database ID), and
+        # 2. of those, find the earliest with index status `FAILED`
+        #
+        # @return [HarvestedRecord] the oldest record that failed to index and
+        #   was not later indexed successfully
         def self.find_oldest_failed
-          query = 'SELECT harvested_records.* FROM harvested_records
-                      INNER JOIN indexed_records failed_records
-                        ON harvested_records.id = failed_records.harvested_record_id AND failed_records.status == 3
-                      LEFT JOIN indexed_records other_records
-                        ON harvested_records.id = other_records.harvested_record_id AND other_records.status <> 3
-                    WHERE other_records.id IS NULL
-                    ORDER BY harvested_records.timestamp LIMIT 1'
-          HarvestedRecord.find_by_sql(query).first
+          HarvestedRecord.find_by_sql(FIND_OLDEST_FAILED).first
         end
       end
     end
