@@ -17,7 +17,7 @@ module Stash
       @log = new_logger(logdev: value)
     end
 
-    def self.new_logger(logdev:, level: Logger::DEBUG, shift_age: 10, shift_size: 1024 * 1024)
+    def self.new_logger(logdev:, level: Stash::LOG_LEVEL, shift_age: 10, shift_size: 1024 * 1024)
       logger = Logger.new(logdev, shift_age, shift_size)
       logger.level = level
       logger.formatter = proc do |severity, datetime, progname, msg|
