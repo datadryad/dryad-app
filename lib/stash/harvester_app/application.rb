@@ -37,7 +37,7 @@ module Stash
         with_config(config)
       end
 
-      def start(from_time: nil, until_time: nil)
+      def start(from_time: nil, until_time: nil) # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
         from_time = Util.utc_or_nil(from_time)
         until_time = Util.utc_or_nil(until_time)
 
