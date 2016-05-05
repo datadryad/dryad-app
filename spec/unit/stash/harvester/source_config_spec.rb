@@ -19,6 +19,19 @@ module Stash
           expect(config.seconds_granularity).to eq(seconds)
         end
 
+        it 'reads a setless OAI config' do
+          base_url = 'http://oai.datacite.org/oai'
+          prefix = 'oai_datacite'
+          seconds = false
+          hash = { protocol: 'OAI', oai_base_url: base_url, metadata_prefix: prefix, seconds_granularity: seconds }
+          config = SourceConfig.build_from(hash)
+          expect(config).to be_a(OAI::OAISourceConfig)
+          expect(config.metadata_prefix).to eq(prefix)
+          expect(config.source_uri).to eq(URI(base_url))
+          expect(config.set).to be_nil
+          expect(config.seconds_granularity).to eq(seconds)
+        end
+
         it 'reads a valid Resync config' do
           cap_list_url = 'http://localhost:8888/capabilitylist.xml'
           hash = { protocol: 'Resync', capability_list_url: cap_list_url }
