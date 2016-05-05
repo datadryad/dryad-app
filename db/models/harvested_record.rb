@@ -9,6 +9,9 @@ module Stash
         belongs_to :harvest_job
         has_many :indexed_records
 
+        # 1. find the most recent harvest/index operation for each identifier
+        #    (record identifier, *not* database ID), and
+        # 2. of those, find the earliest with index status `FAILED`
         FIND_OLDEST_FAILED = <<-SQL.freeze
             SELECT
               all_records.*
@@ -37,16 +40,13 @@ module Stash
             LIMIT 1
         SQL
 
+        # @return [HarvestedRecord] the most recent successfully indexed record
         def self.find_newest_indexed
           HarvestedRecord.joins(:indexed_records).where(indexed_records: { status: Status::COMPLETED }).order(timestamp: :desc).first
         end
 
-        # 1. find the most recent harvest/index operation for each identifier
-        #    (record identifier, *not* database ID), and
-        # 2. of those, find the earliest with index status `FAILED`
-        #
         # @return [HarvestedRecord] the oldest record that failed to index and
-        #   was not later indexed successfully
+        #   for which no later corresponding successfully indexed record exists
         def self.find_oldest_failed
           HarvestedRecord.find_by_sql(FIND_OLDEST_FAILED).first
         end
