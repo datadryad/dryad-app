@@ -23,7 +23,7 @@ module Stash
       end
 
       def record_id
-        record.identifier
+        record.identifier if record
       end
 
       # @return [boolean] `true` if `status` is `IndexStatus::COMPLETED` and
@@ -53,6 +53,17 @@ module Stash
       #   the specified errors
       def self.failure(record, errors)
         IndexResult.new(record: record, status: IndexStatus::FAILED, errors: errors)
+      end
+
+      def ==(other)
+        other.class == self.class && other.state == state
+      end
+      alias eql? ==
+
+      protected
+
+      def state
+        [record, status, errors, timestamp]
       end
     end
   end

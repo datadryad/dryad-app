@@ -15,6 +15,12 @@ module Stash
           expect(config.uri).to eq(URI(url))
           expect(config.proxy_uri).to eq(URI(proxy))
         end
+
+        it 'reads a valid "none" config' do
+          hash = { adapter: 'none' }
+          config = IndexConfig.build_from(hash)
+          expect(config).to be_a(NullIndexConfig)
+        end
       end
 
       describe '#create_indexer' do
