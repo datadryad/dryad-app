@@ -11,7 +11,7 @@
     <% if params[:page_size] == '1000000' %>
       <%= link_to 'show pages', params.merge(page_size: 5, page: 1, format: :js), remote: remote %>
     <% else %>
-      <%= link_to 'all', params.merge(page_size: '1000000', page: 1, format: :js), remote: remote %>
+      <%= link_to 'Show all', params.merge(page_size: '1000000', page: 1, format: :js), remote: remote %>
     <% end %>
 
     <%= first_page_tag unless current_page.first? %>
