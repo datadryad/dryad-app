@@ -18,8 +18,8 @@ module StashEngine
     #end
 
     #resource_states
-    scope :in_progress, -> { joins(:current_state).where('resource_states.resource_state =?', :in_progress) }
-    scope :submitted, -> { joins(:current_state).where('resource_states.resource_state =?', :submitted) }
+    scope :in_progress, -> { joins(:current_state).where('resource_state =?', 'in_progress') }
+    scope :submitted, -> { joins(:current_state).where('resource_state =?', 'submitted') }
 
     # clean up the uploads with files that no longer exist for this resource
     def clean_uploads
