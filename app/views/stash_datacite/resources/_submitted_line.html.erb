@@ -14,12 +14,12 @@
     <%= line.files %>
   </td>
   <td>
-    <%= line.status %>
+    <%= line.resource.current_state.resource_state %>
   </td>
   <td>
-    <%= default_date(line.created_at) %>
+    <%= default_date(line.resource.current_state.created_at) %>
   </td>
   <td>
-    <%= link_to 'Update', stash_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: line.resource.id), class: "btn" %>
+    <%= button_to 'Update', stash_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: line.resource.id), class: "btn" %>
   </td>
 </tr>
