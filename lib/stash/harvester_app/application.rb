@@ -46,9 +46,11 @@ module Stash
           record = result.record
           record_identifier = record ? record.identifier : 'nil'
           log.info("Indexed record #{record_identifier}: #{result.status}")
+
+          # TODO: log these in a sort-friendly way
           result.errors.each do |e|
             log.error(e.message)
-            log.debug("Backtrace:\n#{e.backtrace.join("\n")}")
+            log.debug("Backtrace:\n#{e.backtrace.join("\n")}") if e.backtrace
           end
         end
       end

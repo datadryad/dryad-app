@@ -22,6 +22,7 @@ module Stash
   end
 
   module HarvesterApp
+
     describe Application do
 
       attr_reader :config
@@ -156,6 +157,30 @@ module Stash
           from_time = Time.utc(1914, 8, 4, 23)
           until_time = Time.utc(2018, 11, 11, 10)
 
+          def self.mock_record(i)
+            record = instance_double(Stash::Harvester::HarvestedRecord)
+            allow(record).to receive(:identifier) { "record#{i}" }
+            record
+          end
+
+          IndexResult = Stash::Indexer::IndexResult
+
+          results = Array.new(3) do |i|
+            record = mock_record(i)
+            IndexResult.success(record)
+          end
+
+          ex = StandardError.new('oops #1')
+
+          ex_with_backtrace = nil
+          begin
+            raise 'oops #2'
+          rescue => e
+            ex_with_backtrace = e
+          end
+
+          results << IndexResult.failure(mock_record(17), [ex, ex_with_backtrace])
+
           job = instance_double(HarvestAndIndexJob)
           expect(HarvestAndIndexJob).to receive(:new).with(
             source_config: @source_config,
@@ -165,7 +190,10 @@ module Stash
             from_time: from_time,
             until_time: until_time
           ) { job }
-          expect(job).to receive(:harvest_and_index)
+          expectation = expect(job).to receive(:harvest_and_index)
+          results.each do |r|
+            expectation.and_yield(r)
+          end
 
           app = Application.with_config(config)
           app.start(from_time: from_time, until_time: until_time)
