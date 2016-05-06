@@ -13,7 +13,7 @@ module StashDatacite
           #only a page of objects needs calculations for display rather than all objects in list.  However if we need
           #to sort on calculated fields for display we'll need to calculate all values, sort and use the array pager
           #form of kaminari instead (which will likely be slower).
-          @resources = StashDatacite.resource_class.where(user_id: session[:user_id]).page(@page).per(@page_size)
+          @resources = StashDatacite.resource_class.in_progress.where(user_id: session[:user_id]).page(@page).per(@page_size)
           @in_progress_lines = @resources.map { |resource| DatasetPresenter.new(resource) }
         end
       end
@@ -21,8 +21,8 @@ module StashDatacite
 
     def submitted
       respond_to do |format|
-        format.js do'p
-          @resources = StashDatacite.resource_class.where(user_id: session[:user_id]).page(@page).per(@page_size)
+        format.js do
+          @resources = StashDatacite.resource_class.submitted.where(user_id: session[:user_id]).page(@page).per(@page_size)
           @submitted = @resources.map { |resource| DatasetPresenter.new(resource) }
         end
       end
@@ -82,10 +82,14 @@ module StashDatacite
     end
 
     def create_resource_state(resource)
-      unless resource.current_resource_state == 'submitted' && resource.current_resource_state.nil?
-        resource.save!
-        StashEngine::ResourceState.create!(resource_id: resource.id, resource_state: 'submitted',
-                                           user_id: current_user.id)
+      data = check_required_fields(resource)
+      if data.nil?
+        unless resource.current_resource_state == 'submitted'
+          byebug
+          resource.save!
+          StashEngine::ResourceState.create!(resource_id: resource.id, resource_state: 'submitted',
+                                             user_id: current_user.id)
+        end
       end
       send_user_mail(resource)
     end
