@@ -20,7 +20,7 @@
   </table>
   <%= f.hidden_field :resource_id %>
   <%= f.hidden_field :id %>
-  <%= f.hidden_field :affliation_id, id: 'affliation_id' %>
+  <%= f.hidden_field :affliation_id, class: 'affliation_id' %>
   <%= hidden_field_tag(:form_id, form_id) %>
   <div>
     <% unless creator.blank?  || creator.orcid_id.blank? %>
@@ -56,7 +56,7 @@ $(function() {
       return false;
     },
     select: function( event, ui ) {
-      $("#affliation_id").val(ui.item.id); // set hidden field id
+      $(".affliation_id").val(ui.item.id); // set hidden field id
     },
     open: function(event, ui) {
        disable=true
