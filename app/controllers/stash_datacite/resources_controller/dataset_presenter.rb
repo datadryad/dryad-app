@@ -42,6 +42,15 @@ module StashDatacite
         @resource.clean_uploads
         @resource.file_uploads.count
       end
+
+      def external_identifier
+        id = @resource.identifier
+        if id.blank?
+          'bad_identifier'
+        else
+          "#{id.try(:identifier_type).try(:downcase)}:#{id.try(:identifier)}"
+        end
+      end
     end
   end
 end
