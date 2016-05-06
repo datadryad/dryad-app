@@ -3,7 +3,7 @@
 <head>
   <title>StashEngine</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-  
+
   <% # this is hacky, but dependency problems with geoblacklight/discovery loading jquery twice otherwise and no way to stop
   if request.path.start_with?(APP_CONFIG.stash_mount) %>
     <%= render 'layouts/stash_engine/head' %>
@@ -13,30 +13,35 @@
   <%= csrf_meta_tags %>
 </head>
 <body>
-<div class="head_box">
-  <header>
-    <div class="logo">image for <%= current_tenant.short_name %></div>
-    <div class="dash_logo">Dash</div>
-    <div class="search_and_login"><%= link_to 'Search', main_app.search_path %></div>
+
+  <header class="c-header">
+    <div class="c-header__logos">
+      <button aria-label="mobile menu" class="o-button__menu c-header__menu-button js-header__menu-button"></button>
+      <a href="" class="c-header__dash-logo-link">
+        <img class="c-header__dash-logo-svg" src="<%= asset_path 'stash_engine/logo_dash.svg' %>" alt="University of California, Dash. Data sharing made easy.">
+      </a>
+    </div>
+    <nav class="c-header__nav js-header__nav">
+      <form class="o-global-search c-header__global-search" action="http://dash2-dev.cdlib.org/search" accept-charset="UTF-8" method="get">
+        <input name="utf8" value="✓" type="hidden">
+        <label class="o-global-search__label" for="search-field-input1">Search</label>
+        <input class="o-global-search__input" id="search-field-input1" type="search" name="q" placeholder="Search">
+        <button aria-label="Submit" class="o-global-search__submit-button" type="submit" id="search"></button>
+      </form>
+      <div class="c-header__nav-group">
+        <%= link_to 'Home', stash_url_helpers.root_path, class: 'c-header__nav-item' %>
+        <%= link_to 'Browse Data', stash_url_helpers.search_path, class: 'c-header__nav-item' %>
+        <%= link_to 'Help', stash_url_helpers.help_path, class: 'c-header__nav-item' %>
+        <%= link_to 'My Datasets', stash_url_helpers.dashboard_path, class: 'c-header__nav-item' %>
+        <% if current_user %>
+          <%= render partial: "stash_engine/shared/logout" %>
+        <% else %>
+          <%= render partial: "stash_engine/shared/sites" %>
+        <% end %>
+      </div>
+    </nav>
   </header>
-  <nav class="menu_bar">
-    <%= link_to 'Home', stash_url_helpers.root_path %>
-    |
-    <%= link_to 'Browse Data', stash_url_helpers.search_path %>
-    |
-    <%= link_to 'Help', stash_url_helpers.help_path %>
-    |
-    <% if current_user %>
-      <%= link_to 'My Datasets', stash_url_helpers.dashboard_path %>
-    <% else %>
-      <%= link_to "My Datasets", stash_url_helpers.dashboard_path, html: { style: "color: gray"} %>
-    <% end %>
-  </nav>
-  <div class="log_in_out">
-    <%= log_in_out %>
-  </div>
-  <div style="clear:both"></div>
-</div>
+
 <%= yield %>
 
 <%= render partial: "stash_engine/shared/footer" %>
