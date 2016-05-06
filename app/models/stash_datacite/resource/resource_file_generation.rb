@@ -90,7 +90,6 @@ module StashDatacite
             )
           ]
         )
-        resource.namespace_prefix = 'dcs'
 
         datacite_to_wrapper = resource.save_to_xml
         datacite_root = resource.write_xml
@@ -121,15 +120,13 @@ module StashDatacite
           end_date: Date.tomorrow,
         )
 
-        inventory = st::Inventory.new(
-          uploads = uploads_list(@resource)
-          uploads.each do |d|
-          files: [
-            st::StashFile.new(
-              pathname: "#{d[:name]}", size_bytes: "#{d[:size]}", mime_type: "#{d[:type]}"
-            )
-          ])
-          end
+        uploads = uploads_list(@resource)
+        files = uploads.map do |d|
+          st::StashFile.new(
+            pathname: "#{d[:name]}", size_bytes: d[:size], mime_type: "#{d[:type]}"
+          )
+        end
+        inventory = st::Inventory.new(files: files)
 
         wrapper = st::StashWrapper.new(
           identifier: identifier,
@@ -145,7 +142,6 @@ module StashDatacite
         # stash_wrapper_directory = "#{Rails.root}/uploads"
         # puts Dir.pwd
         # f = File.open("#{stash_wrapper_directory}/#{stash_wrapper_target}", 'w') { |f| f.write(stash_wrapper) }
-
         return [datacite_root, stash_wrapper]
       end
 
@@ -300,7 +296,7 @@ module StashDatacite
         files = []
         current_uploads = resource.file_uploads
         current_uploads.each do |u|
-          hash = {name: u.upload_file_name, type: u.upload_content_type, size: u.upload_file_size}
+          hash = { name: u.upload_file_name, type: u.upload_content_type, size: u.upload_file_size }
           files.push(hash)
         end
         files
