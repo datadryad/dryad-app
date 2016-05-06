@@ -1,0 +1,25 @@
+<% # takes local variable line (presenter object) as input to partial %>
+<tr>
+  <td>
+    <% if line.resource && line.resource.geolocation == true %>
+      <%=  image_tag('stash_datacite/geolocation.png', size: '20x20', alt: 'Box') %><%= line.title %>
+    <% else %>
+      <%= line.title %>
+    <% end %>
+  </td>
+  <td>
+    optional: <%= line.optional_filled %> of <%= line.optional_total %>
+  </td>
+  <td>
+    <%= line.files %>
+  </td>
+  <td>
+    <%= line.resource.current_state.resource_state %>
+  </td>
+  <td>
+    <%= default_date(line.resource.current_state.created_at) %>
+  </td>
+  <td>
+    <%= button_to 'Update', stash_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: line.resource.id), class: "btn" %>
+  </td>
+</tr>
