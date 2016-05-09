@@ -1,8 +1,8 @@
 <p id="notice"><%= notice %></p>
-<h2>My Datasets</h2>
 
-<div>
-  <%= link_to "New Dataset", new_resource_path %>
+<div class="c-datasets-heading">
+	<h1 class="c-datasets-heading__heading o-heading__level1">My Datasets</h1>
+	<%= button_to 'Start New Dataset', new_resource_path, class: 'c-datasets-heading__button', method: :get %>
 </div>
 
 <h3>In Progress</h3>
