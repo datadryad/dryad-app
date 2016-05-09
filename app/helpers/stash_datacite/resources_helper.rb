@@ -11,11 +11,11 @@ module StashDatacite
       title = title.try(:title)
       publisher = current_tenant.try(:long_name)
       resource_type = resource_type.try(:resource_type)
-      [creators_list, publication_year, title, publisher, resource_type, version, target_url(identifier)].join(', ')
+      [creators_list, h(publication_year), h(title), h(publisher), h(resource_type), h(version), target_url(identifier)].join(', ').html_safe
     end
 
     def target_url(identifier)
-      link_to 'http://dx.doi.org/"#{identifier}"', 'http://dx.doi.org/"#{identifier}"'
+      link_to("https://dx.doi.org/#{identifier}", "https://dx.doi.org/#{identifier}")
     end
   end
 end
