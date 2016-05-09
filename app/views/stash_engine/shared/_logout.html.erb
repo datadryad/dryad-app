@@ -1,4 +1,5 @@
 <div class="o-logout">
-  <button class="o-logout__button">Logout</button>
+  <!-- <button class="o-logout__button">Logout</button> -->
+  <%= button_to 'Logout', stash_url_helpers.sessions_destroy_path, class: 'o-logout__button', method: :get %>
   <div class="o-logout__name">Username</div>
 </div>

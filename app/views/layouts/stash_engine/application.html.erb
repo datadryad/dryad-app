@@ -14,7 +14,12 @@
 </head>
 <body>
 
+  <!-- <header class="c-header"> -->
+  <% if params[:controller].try(:include?, 'pages') && params[:action] == 'home' %>
+  <header class="t-home__header c-header">
+  <% else %>
   <header class="c-header">
+  <% end %>
     <div class="c-header__logos">
       <button aria-label="mobile menu" class="o-button__menu c-header__menu-button js-header__menu-button"></button>
       <a href="" class="c-header__dash-logo-link">
