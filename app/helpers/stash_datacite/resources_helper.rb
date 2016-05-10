@@ -11,7 +11,7 @@ module StashDatacite
       title = title.try(:title)
       publisher = current_tenant.try(:long_name)
       resource_type = resource_type.try(:resource_type)
-      [creators_list, h(publication_year), h(title), h(publisher), h(resource_type), h(version), target_url(identifier)].join(', ').html_safe
+      [creators_list, h(title), h(publisher), h(resource_type), h(publication_year), h(version), target_url(identifier)].reject(&:blank?).join(", ").html_safe
     end
 
     def target_url(identifier)
