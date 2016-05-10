@@ -8,8 +8,8 @@
     <% end %>
   </td>
   <td>
-    required: <%= line.required_filled %> of <%= line.required_total %><br/>
-    optional: <%= line.optional_filled %> of <%= line.optional_total %>
+    Required: <span class="o-table__highlight1"><%= line.required_filled %></span> of <%= line.required_total %><br/>
+    Optional: <span class="o-table__highlight2"><%= line.optional_filled %></span> of <%= line.optional_total %>
   </td>
   <td>
     <%= line.files %>
@@ -21,7 +21,7 @@
     <%= default_date(line.updated_at) %>
   </td>
   <td>
-    <%= button_to 'Resume', stash_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: line.resource.id), class: "btn" %> |
-    <%= button_to 'Delete', stash_url_helpers.resource_path(line.resource), method: :delete, data: { confirm: 'Are you sure?' }, :class => "btn" %>
+    <%= button_to 'Resume', stash_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: line.resource.id), class: 'o-button__plain-text6' %>
+    <%= button_to 'Delete', stash_url_helpers.resource_path(line.resource), method: :delete, data: { confirm: 'Are you sure?' }, :class => 'o-button__plain-text7' %>
   </td>
 </tr>
