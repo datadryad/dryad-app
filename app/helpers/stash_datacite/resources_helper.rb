@@ -7,11 +7,11 @@ module StashDatacite
           creators_list << "#{creator.creator_full_name} "
         end
       end
-      publication_year = Time.now.year
+      publication_year = "(#{Time.now.year})"
       title = title.try(:title)
       publisher = current_tenant.try(:long_name)
       resource_type = resource_type.try(:resource_type)
-      [creators_list, h(publication_year), h(title), h(publisher), h(resource_type), h(version), target_url(identifier)].join(', ').html_safe
+      [creators_list.join(" and ").concat(publication_year), h(title), h(version), h(publisher), h(resource_type), target_url(identifier)].reject(&:blank?).join(", ").html_safe
     end
 
     def target_url(identifier)
