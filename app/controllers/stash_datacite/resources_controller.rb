@@ -87,7 +87,6 @@ module StashDatacite
       data = check_required_fields(resource)
       if data.nil?
         unless resource.current_resource_state == 'submitted'
-          byebug
           resource.save!
           StashEngine::ResourceState.create!(resource_id: resource.id, resource_state: 'submitted',
                                              user_id: current_user.id)
