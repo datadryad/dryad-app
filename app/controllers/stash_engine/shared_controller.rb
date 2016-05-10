@@ -11,6 +11,10 @@ module StashEngine
       StashEngine::Engine.routes.url_helpers
     end
 
+    def discovery_url_helpers
+      StashDiscovery::Engine.routes.url_helpers
+    end
+
     # discovery engine isn't namespaced because of blacklight/geoblackight, so "main_app" will work for it.
 
     # get the current tenant for customizations, also deals with login
