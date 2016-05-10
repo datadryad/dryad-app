@@ -8,7 +8,7 @@
     <% end %>
   </td>
   <td>
-    optional: <%= line.optional_filled %> of <%= line.optional_total %>
+    Optional: <span class="o-table__highlight2"><%= line.optional_filled %></span> of <%= line.optional_total %>
   </td>
   <td>
     <%= line.files %>
@@ -20,6 +20,6 @@
     <%= default_date(line.resource.current_state.created_at) %>
   </td>
   <td>
-    <%= button_to 'Update', stash_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: line.resource.id), class: "btn" %>
+    <%= button_to 'Update', stash_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: line.resource.id), class: 'o-button__plain-text7' %>
   </td>
 </tr>
