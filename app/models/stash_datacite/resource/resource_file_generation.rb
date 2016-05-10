@@ -18,8 +18,7 @@ module StashDatacite
         identifier = @client.mint_id
       end
 
-      def generate_xml(target_url)
-        identifier  = generate_identifier
+      def generate_xml(target_url, identifier)
         simple_id = identifier.split(':', 2)[1]
 
         dm = Datacite::Mapping
@@ -238,7 +237,7 @@ module StashDatacite
         content.to_s
       end
 
-      def generate_merritt_zip(target_url)
+      def generate_merritt_zip(target_url, identifier)
         target_url = target_url
         folder = "#{Rails.root}/uploads"
         FileUtils::mkdir_p(folder)
@@ -247,7 +246,7 @@ module StashDatacite
         purge_existing_files
 
         zipfile_name = "#{folder}/#{@resource.id}_archive.zip"
-        datacite_xml, stashwrapper_xml = generate_xml(target_url)
+        datacite_xml, stashwrapper_xml = generate_xml(target_url, identifier)
 
         File.open("#{folder}/#{@resource.id}_mrt-datacite.xml", "w") do |f|
           f.write datacite_xml
