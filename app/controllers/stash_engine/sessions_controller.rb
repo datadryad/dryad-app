@@ -14,7 +14,11 @@ module StashEngine
       session[:user_id] = nil
       user = User.from_omniauth(@auth_hash, current_tenant.tenant_id)
       session[:user_id] = user.id
-      redirect_to dashboard_path
+      if user.resources.empty?
+        redirect_to get_started_path
+      else
+        redirect_to dashboard_path
+      end
     end
 
     # destroy the session (ie, log out)
