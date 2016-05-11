@@ -92,7 +92,6 @@ module Stash
               expect(actual_body).to include("#{k}: #{v}")
             end
           end
-
         end
       end
 
