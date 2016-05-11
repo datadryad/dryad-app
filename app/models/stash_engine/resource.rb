@@ -48,6 +48,7 @@ module StashEngine
     end
 
     def update_identifier(doi)
+      doi = doi.split(':', 2)[1] if doi.start_with?('doi:')
       unless self.identifier.nil?
         identifier = Identifier.where(resource_id: id).first
         identifier.update(identifier: doi)

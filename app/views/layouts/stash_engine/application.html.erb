@@ -21,12 +21,12 @@
   <% end %>
     <div class="c-header__logos">
       <button aria-label="mobile menu" class="o-button__menu c-header__menu-button js-header__menu-button"></button>
-      <%= link_to(root_path, class: 'c-header__dash-logo-link') do %>
+      <%= link_to(stash_url_helpers.root_path, class: 'c-header__dash-logo-link') do %>
         <img class="c-header__dash-logo-svg" src="<%= asset_path 'stash_engine/logo_dash.svg' %>" alt="University of California, Dash. Data sharing made easy.">
       <% end %>
     </div>
     <nav class="c-header__nav js-header__nav">
-      <form class="o-global-search c-header__global-search" action="http://dash2-dev.cdlib.org/search" accept-charset="UTF-8" method="get">
+      <form class="o-global-search c-header__global-search" action="/search" accept-charset="UTF-8" method="get">
         <input name="utf8" value="✓" type="hidden">
         <label class="o-global-search__label" for="search-field-input1">Search</label>
         <input class="o-global-search__input" id="search-field-input1" type="search" name="q" placeholder="Search">

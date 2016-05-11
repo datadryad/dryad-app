@@ -5,6 +5,7 @@ module StashEngine
     before_action :require_login
     # GET/POST/PUT  /generals/find_or_create
     def find_or_create
+      @resource = Resource.find(params[:resource_id])
     end
 
     def metadata_callback
