@@ -49,6 +49,17 @@ module Stash
 
         # Posts the specified payload string to the specified URI.
         def post(uri:, payload:, headers: {}, limit: redirect_limit)
+          do_post_or_put(method: :post, uri: uri, payload: payload, headers: headers, limit: limit)
+        end
+
+        # Puts the specified payload string to the specified URI.
+        def put(uri:, payload:, headers: {}, limit: redirect_limit)
+          do_post_or_put(method: :put, uri: uri, payload: payload, headers: headers, limit: limit)
+        end
+
+        private
+
+        def do_post_or_put(method:, uri:, payload:, headers:, limit:)
           options = {}
           options[:user] = username if username
           options[:password] = password if password
@@ -56,11 +67,9 @@ module Stash
           all_headers = { 'User-Agent' => user_agent }
           all_headers.merge!(headers)
 
-          RestClient::Request.execute(method: :post, url: uri.to_s, payload: payload, headers: all_headers, **options)
+          RestClient::Request.execute(method: method, url: uri.to_s, payload: payload, headers: all_headers, **options)
         end
-
-        private
-
+        
         def do_get(uri, limit, &block) # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
           raise "Redirect limit (#{redirect_limit}) exceeded retrieving URI #{uri}" if limit <= 0
           req = Net::HTTP::Get.new(uri, 'User-Agent' => user_agent)
