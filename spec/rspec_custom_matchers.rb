@@ -109,7 +109,7 @@ RSpec::Matchers.define :include_header do |k, v|
   end
 
   match do |actual|
-    all?(headers: {k => v}, in_hash: actual)
+    all?(headers: { k => v }, in_hash: actual)
   end
 
   failure_message do |actual|

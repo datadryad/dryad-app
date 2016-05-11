@@ -49,7 +49,6 @@ module Stash
 
         # Posts the specified payload string to the specified URI.
         def post(uri:, payload:, headers: {}, limit: redirect_limit)
-
           options = {}
           options[:user] = username if username
           options[:password] = password if password
@@ -69,12 +68,12 @@ module Stash
           Net::HTTP.start(uri.hostname, uri.port, use_ssl: (uri.scheme == 'https')) do |http|
             http.request(req) do |response|
               case response
-                when Net::HTTPSuccess
-                  yield(response)
-                when Net::HTTPInformation, Net::HTTPRedirection
-                  do_get(redirect_uri_for(response, uri), limit - 1, &block)
-                else
-                  raise "Error #{response.code}: #{response.message} retrieving URI #{uri}"
+              when Net::HTTPSuccess
+                yield(response)
+              when Net::HTTPInformation, Net::HTTPRedirection
+                do_get(redirect_uri_for(response, uri), limit - 1, &block)
+              else
+                raise "Error #{response.code}: #{response.message} retrieving URI #{uri}"
               end
             end
           end

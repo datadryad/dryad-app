@@ -22,12 +22,26 @@ module Stash
         c.new(*args)
       end
 
-      # Gets the content of the specified URI as a string.
-      # @param uri [URI, String] the URI to download
-      # @return [String] the content of the URI
-      def get(uri)
-        @helper.get(uri: Sword2.to_uri(uri))
+      def create(collection_uri:, slug:, zipfile:)
+        # states
+        # - submitted (and waiting for response)
+        # - error (bad status code, summary)
+
+        # TODO: how to process asynchronously
+
+        # TODO: do a POST
       end
+
+      def update(edit_iri:, slug:, zipfile:)
+        # states
+        # - submitted (and waiting for response)
+        # - error (bad status code, summary)
+
+        # TODO: how to process asynchronously
+
+        # TODO: do a PUT
+      end
+
     end
   end
 end
