@@ -6,6 +6,7 @@ module Stash
       attr_reader :username
       attr_reader :password
       attr_reader :on_behalf_of
+      attr_reader :helper
 
       def initialize(username:, password:, on_behalf_of: nil, helper: nil)
         raise 'no username provided' unless username
@@ -23,23 +24,46 @@ module Stash
       end
 
       def create(collection_uri:, slug:, zipfile:)
-        # states
-        # - submitted (and waiting for response)
-        # - error (bad status code, summary)
+        warn "#{zipfile} may not be a zipfile" unless zipfile.downcase.end_with?('.zip')
+        uri = Sword2.to_uri(collection_uri).to_s
+        md5 = Digest::MD5.file(zipfile).to_s
 
-        # TODO: how to process asynchronously
-
-        # TODO: do a POST
+        File.open(zipfile, 'rb') do |file|
+          helper.post(uri: uri, payload: file, headers: {
+              'Packaging' => 'http://purl.org/net/sword/package/SimpleZip',
+              'On-Behalf-Of' => on_behalf_of,
+              'Slug' => slug,
+              'Content-MD5' => md5,
+              'Content-Disposition' => "attachment; filename=#{File.basename(zipfile)}",
+              'Content-Type' => 'application/zip'
+          })
+        end
       end
 
       def update(edit_iri:, slug:, zipfile:)
-        # states
-        # - submitted (and waiting for response)
-        # - error (bad status code, summary)
+        warn "#{zipfile} may not be a zipfile" unless zipfile.downcase.end_with?('.zip')
+        uri = Sword2.to_uri(edit_iri).to_s
+        md5 = Digest::MD5.file(zipfile).to_s
 
-        # TODO: how to process asynchronously
+        request_headers = {
+            'Content-Type' => 'multipart/related',
+            'On-Behalf-Of' => on_behalf_of
+        }
 
-        # TODO: do a PUT
+        mime_headers = {
+            'Packaging' => 'http://purl.org/net/sword/package/SimpleZip',
+            'Content-Disposition' => 'attachment; name="payload"; filename="example.zip"',
+            'Content-Type' => 'application/zip',
+            'Content-MD5' => md5
+        }
+
+        File.open(zipfile, 'rb') do |file|
+          helper.put(uri: uri, headers: request_headers, payload: {
+              metadata: mime_headers,
+              file: file
+          })
+        end
+
       end
 
     end

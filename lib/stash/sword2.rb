@@ -10,7 +10,7 @@ module Stash
     #   form (as returned by `to_s`) is parsed as a URI.
     # @return [URI, nil] The URI, or `nil` if `url` is nil.
     # @raise [URI::InvalidURIError] if `url` is a string that is not a valid URI
-    def self.to_uri(url)
+    def self.to_uri(url) # TODO: move this somewhere more logical
       return nil unless url
       return url if url.is_a? URI
       stripped = url.to_s.strip
