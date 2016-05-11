@@ -6,5 +6,17 @@ module StashEngine
 
     def show
     end
+
+    def get_started
+    end
+
+    def metadata_basics
+    end
+
+    def preparing_to_submit
+    end
+
+    def upload_basics
+    end
   end
 end

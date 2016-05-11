@@ -1,0 +1,45 @@
+<div class='outer_container'>
+  <h1 class='steps_to_share'>Steps to Share your Data</h1>
+  <div class='left_container'>
+    <div class='steps_to_publish'>
+      <ul>
+        <li>
+          <span>1. Prepare</span><br/>
+          Gather your data and information. <%= link_to 'Preparing to Submit', stash_engine.preparing_to_submit_path %>
+        </li>
+        <li>
+          <span>2. Describe Data</span><br/>
+          Create your metadata. <%= link_to 'Metadata Entry Basics', stash_engine.metadata_basics_path %>
+        </li>
+        <li>
+          <span>3. Upload Data</span><br/>
+          Add your data to Stash. <%= link_to 'Upload Basics', stash_engine.upload_basics_path %>
+        </li>
+        <li>
+          <span>4. Get Confirmation</span><br/>
+          Receive notification of successful deposit.
+        </li>
+      </ul>
+    </div>
+    <div class='begin'>
+      <%= button_to 'Begin', stash_url_helpers.tenants_path %>
+    </div>
+  </div>
+
+  <div class='right_container'>
+    <h3 class='why_share'>Why Share?</h3>
+    <div class='get_started_points'>
+      <ul>
+        <li>Promotes transparency and reproducibility in research.</li>
+        <br/>
+        <li>Increases the visibility of underlying research (69% increase in citations for articles associated with shared datasets, Piwowar et al. 2007, doi:10.1371/journal.pone.0000308).</li>
+        <br/>
+        <li>Allows you to get credit for your dataset—add it to your CV, share it with colleagues, and have others cite your dataset when using it.</li>
+        <br/>
+        <li>Helps you meet funder and publisher requirements for data availability.
+            Increases chances for collaboration.</li>
+      </ul>
+    </div>
+      <p class='get_started_points'>For more information, see the <a href='http://www.data-archive.ac.uk/create-manage/planning-for-sharing/why-share-data'>UK Data Archive list of reasons to share data</a>.</p>
+    </div>
+</div>
