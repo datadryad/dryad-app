@@ -41,7 +41,6 @@
 
   </fieldset>
 
-    <strong><%= label_tag :description, "Abstract", class: 'required'  %></strong><br/>
     <%= render partial: "stash_datacite/descriptions/form", locals: { description: @metadata_entry.abstract,  description_type: :abstract }  %>
 
     <p><span style="color:red;">*</span> required fields</p>
