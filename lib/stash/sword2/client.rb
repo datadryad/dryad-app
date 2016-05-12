@@ -47,12 +47,12 @@ module Stash
 
         request_headers = {
             'Content-Type' => 'multipart/related',
-            'On-Behalf-Of' => on_behalf_of
+            'On-Behalf-Of' => on_behalf_of,
+            'Slug' => slug
         }
 
         mime_headers = {
             'Packaging' => 'http://purl.org/net/sword/package/SimpleZip',
-            'Content-Disposition' => 'attachment; name="payload"; filename="example.zip"',
             'Content-Type' => 'application/zip',
             'Content-MD5' => md5
         }
@@ -66,6 +66,40 @@ module Stash
 
       end
 
+    end
+  end
+end
+
+module RestClient
+  # Patch to support (SWORD 2 subset of) multipart/related in RestClient
+
+  module Payload
+    class MultipartRelated < Base
+      EOL = "\r\n"
+
+      def build_stream(params)
+        separator = "--#{boundary}"
+        read, write = IO.pipe(binmode: true)
+        begin
+          write.binmode
+          # TODO: do we need to write anything here?
+          write.write("#{separator}#{EOL}")
+          # TODO: write MIME headers for metadata
+          # TODO: write <entry/>
+          write.write("#{separator}#{EOL}")
+          # TODO: write MIME headers for data
+          # TODO: stream zipfile data
+        rescue
+          write.write("#{separator}--#{EOL}")
+          write.close
+        end
+        # TODO: this is obviously wrong, it's going to deadlock
+        read
+      end
+
+      def boundary
+        @boundary ||= "========#{Time.now.to_i}=="
+      end
     end
   end
 end
