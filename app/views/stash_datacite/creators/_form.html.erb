@@ -1,23 +1,22 @@
 <%# the local variable 'creator' should be passed in to this partial when there are multiple per page.
   # the 'path' to submit to should also be passed in. %>
 <% form_id = unique_form_id(creator) %>
-<%= form_for(creator, url: path, remote: true, authenticity_token: true, html: { id: form_id }) do |f| %>
+<%= form_for(creator, url: path, remote: true, authenticity_token: true, html: { id: form_id, class: 'c-input__inline' }) do |f| %>
 <%#= render "datacite/shared/error_messages", target: @creator %>
-  <table>
-    <tr>
-      <td><%= f.label :creator_first_name, "First Name" %></td>
-      <td><%= f.label :creator_last_name, "Last Name", class: 'required' %></td>
-      <td><%= f.label :affliation_id, "Institutional Affiliation" %></td>
-      <td></td>
-      <td></td>
-    </tr>
-    <tr>
-      <td><%= f.text_field :creator_first_name, class: "creator_first_name", size: 30 %>&nbsp;&nbsp;</td>
-      <td><%= f.text_field :creator_last_name, class: "creator_last_name", size: 30 %>&nbsp;&nbsp;</td>
-      <td><%= text_field_tag(:affliation, creator.affliation.try(:long_name), class: 'affliation', size: 50) %>&nbsp;&nbsp;</td>
-      <td><%= link_to 'remove', stash_datacite.creators_delete_path(creator.id || 'new'), method: :delete, remote: true, data: { confirm: 'Are you sure?' }, class: 'remove_record' %></td>
-    </tr>
-  </table>
+  <div class="c-input">
+    <%= f.label :creator_first_name, "First Name", class: 'c-input__label' %>
+    <%= f.text_field :creator_first_name, class: "c-input__text creator_first_name" %>
+  </div>
+  <div class="c-input">
+    <%= f.label :creator_last_name, "Last Name", class: 'c-input__label required' %>
+    <%= f.text_field :creator_last_name, class: "c-input__text creator_last_name" %>
+  </div>
+  <div class="c-input">
+    <%= f.label :affliation_id, "Institutional Affiliation", class: 'c-input__label' %>
+    <%= text_field_tag(:affliation, creator.affliation.try(:long_name), class: 'c-input__text affliation') %>
+  </div>
+  <%= button_to 'remove', stash_datacite.creators_delete_path(creator.id || 'new'), method: :delete, remote: true, data: { confirm: 'Are you sure?' }, class: 't-describe__remove-button o-button__remove remove_record' %>
+
   <%= f.hidden_field :resource_id %>
   <%= f.hidden_field :id %>
   <%= f.hidden_field :affliation_id, class: 'affliation_id' %>
