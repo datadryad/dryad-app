@@ -20,17 +20,20 @@ module Stash
         end
       end
 
+      def empty?
+        # use <= instead of == to get around https://github.com/bbatsov/rubocop/issues/3131
+        size <= 0
+      end
+
       def read(length = nil, outbuf = nil)
-        return nil if size == 0
+        return nil if empty?
         outbuf = outbuf ? outbuf.clear : ''
         length ? read_segment(length, outbuf) : read_fully(outbuf)
         outbuf
       end
 
       def close
-        while input != nil
-          next_input!
-        end
+        next_input! until input.nil?
       end
 
       private
@@ -40,7 +43,7 @@ module Stash
       attr_reader :inputs
 
       def read_fully(buffer)
-        while input != nil
+        until input.nil?
           buffer << input.read(nil)
           next_input!
         end

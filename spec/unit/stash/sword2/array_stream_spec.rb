@@ -41,7 +41,7 @@ module Stash
         end
 
         it 'reads n < length chars' do
-          length = len/2
+          length = len / 2
           expected = content.slice(0, length)
           expect(stream.read(length, outbuf)).to eq(expected)
           expect(outbuf).to eq(expected)
@@ -100,7 +100,7 @@ module Stash
         end
 
         it 'reads n < length chars' do
-          length = len/2
+          length = len / 2
           expected = content.slice(0, length)
           expect(stream.read(length, outbuf)).to eq(expected)
           expect(outbuf).to eq(expected)
@@ -138,7 +138,7 @@ module Stash
         end
 
         it 'reads n < length chars' do
-          length = len/2
+          length = len / 2
           expected = content.slice(0, length)
           expect(stream.read(length, outbuf)).to eq(expected)
           expect(outbuf).to eq(expected)
@@ -158,7 +158,7 @@ module Stash
       end
 
       describe 'an array of files' do
-        
+
         before(:each) do
           @len = 100
           @content = ''
@@ -192,7 +192,7 @@ module Stash
         end
 
         it 'reads n < length chars' do
-          length = len/2
+          length = len / 2
           expected = content.slice(0, length)
           expect(stream.read(length, outbuf)).to eq(expected)
           expect(outbuf).to eq(expected)
@@ -235,7 +235,7 @@ module Stash
 
           @inputs = (0..9).map do |i|
             index = i / 2
-            if i % 2 == 0
+            if i.even?
               @content << file_contents[index]
               File.open(@tempfiles[index], 'rb')
             else
@@ -261,7 +261,7 @@ module Stash
         end
 
         it 'reads n < length chars' do
-          length = len/2
+          length = len / 2
           expected = content.slice(0, length)
           expect(stream.read(length, outbuf)).to eq(expected)
           expect(outbuf).to eq(expected)
