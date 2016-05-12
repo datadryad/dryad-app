@@ -6,8 +6,6 @@
   </div>
 </div>
 
-<p class="c-input__required-note">required fields</p>
-
 <h3 class="o-heading__page-span">Basic Information</h3>
 
   <% if @metadata_entry.resource_type.new_record? %>
@@ -43,7 +41,7 @@
 
     <%= render partial: "stash_datacite/descriptions/form", locals: { description: @metadata_entry.abstract,  description_type: :abstract }  %>
 
-    <p><span style="color:red;">*</span> required fields</p>
+<p class="c-input__required-note">required fields</p>
 
   <div id="accordion">
 
