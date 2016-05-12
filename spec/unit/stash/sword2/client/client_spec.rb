@@ -26,7 +26,7 @@ module Stash
           authorized_uri = collection_uri.sub('http://', "http://#{username}:#{password}@")
 
           stub_request(:post, authorized_uri).to_return(
-              body: '<entry xmlns="http://www.w3.org/2005/Atom"><id>http://merritt.cdlib.org/sword/v2/object/ark:/99999/fk4t157x4p</id><author><name>ucb_dash_submitter</name></author><generator uri="http://www.swordapp.org/" version="2.0" /><link href="http://merritt.cdlib.org/sword/v2/object/ark:/99999/fk4t157x4p" rel="edit" /><link href="http://merritt.cdlib.org/sword/v2/object/ark:/99999/fk4t157x4p" rel="http://purl.org/net/sword/terms/add" /><link href="http://merritt.cdlib.org/sword/v2/object/ark:/99999/fk4t157x4p" rel="edit-media" /><treatment xmlns="http://purl.org/net/sword/terms/">no treatment information available</treatment></entry>'
+            body: '<entry xmlns="http://www.w3.org/2005/Atom"><id>http://merritt.cdlib.org/sword/v2/object/ark:/99999/fk4t157x4p</id><author><name>ucb_dash_submitter</name></author><generator uri="http://www.swordapp.org/" version="2.0" /><link href="http://merritt.cdlib.org/sword/v2/object/ark:/99999/fk4t157x4p" rel="edit" /><link href="http://merritt.cdlib.org/sword/v2/object/ark:/99999/fk4t157x4p" rel="http://purl.org/net/sword/terms/add" /><link href="http://merritt.cdlib.org/sword/v2/object/ark:/99999/fk4t157x4p" rel="edit-media" /><treatment xmlns="http://purl.org/net/sword/terms/">no treatment information available</treatment></entry>'
           )
 
           client.create(collection_uri: collection_uri, zipfile: zipfile, slug: slug)
@@ -40,13 +40,13 @@ module Stash
 
           aggregate_failures('request headers') do
             {
-                'On-Behalf-Of' => on_behalf_of,
-                'Packaging' => 'http://purl.org/net/sword/package/SimpleZip',
-                'Slug' => slug,
-                'Content-Disposition' => 'attachment; filename=example.zip',
-                'Content-MD5' => md5,
-                'Content-Length' => /[0-9]+/,
-                'Content-Type' => 'application/zip'
+              'On-Behalf-Of' => on_behalf_of,
+              'Packaging' => 'http://purl.org/net/sword/package/SimpleZip',
+              'Slug' => slug,
+              'Content-Disposition' => 'attachment; filename=example.zip',
+              'Content-MD5' => md5,
+              'Content-Length' => /[0-9]+/,
+              'Content-Type' => 'application/zip'
             }.each do |k, v|
               expect(actual_headers).to include_header(k, v)
             end
@@ -79,19 +79,19 @@ module Stash
 
           aggregate_failures('request headers') do
             {
-                'Content-Length' => /[0-9]+/,
-                'Content-Type' => %r{multipart/related; type="application/atom\+xml"; boundary=.*},
-                'On-Behalf-Of' => on_behalf_of
+              'Content-Length' => /[0-9]+/,
+              'Content-Type' => %r{multipart/related; type="application/atom\+xml"; boundary=.*},
+              'On-Behalf-Of' => on_behalf_of
             }.each do |k, v|
               expect(actual_headers).to include_header(k, v)
             end
           end
 
           mime_headers = {
-              'Packaging' => 'http://purl.org/net/sword/package/SimpleZip',
-              'Content-Disposition' => 'attachment; name="payload"; filename="example.zip"',
-              'Content-Type' => 'application/zip',
-              'Content-MD5' => md5
+            'Packaging' => 'http://purl.org/net/sword/package/SimpleZip',
+            'Content-Disposition' => 'attachment; name="payload"; filename="example.zip"',
+            'Content-Type' => 'application/zip',
+            'Content-MD5' => md5
           }
 
           aggregate_failures('MIME headers') do

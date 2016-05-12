@@ -73,8 +73,8 @@ module Stash
             stub_request(:put, uri)
 
             headers = {
-                'Packaging' => 'http://purl.org/net/sword/package/SimpleZip',
-                'Content-Type' => 'application/zip'
+              'Packaging' => 'http://purl.org/net/sword/package/SimpleZip',
+              'Content-Type' => 'application/zip'
             }
             helper.put(uri: uri, payload: 'the payload', headers: headers)
 

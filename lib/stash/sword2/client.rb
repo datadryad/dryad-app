@@ -30,13 +30,13 @@ module Stash
 
         File.open(zipfile, 'rb') do |file|
           helper.post(uri: uri, payload: file, headers: {
-              'Packaging' => 'http://purl.org/net/sword/package/SimpleZip',
-              'On-Behalf-Of' => on_behalf_of,
-              'Slug' => slug,
-              'Content-MD5' => md5,
-              'Content-Disposition' => "attachment; filename=#{File.basename(zipfile)}",
-              'Content-Type' => 'application/zip'
-          })
+                        'Packaging' => 'http://purl.org/net/sword/package/SimpleZip',
+                        'On-Behalf-Of' => on_behalf_of,
+                        'Slug' => slug,
+                        'Content-MD5' => md5,
+                        'Content-Disposition' => "attachment; filename=#{File.basename(zipfile)}",
+                        'Content-Type' => 'application/zip'
+                      })
         end
       end
 
@@ -46,25 +46,23 @@ module Stash
         md5 = Digest::MD5.file(zipfile).to_s
 
         request_headers = {
-            'Content-Type' => 'multipart/related',
-            'On-Behalf-Of' => on_behalf_of,
-            'Slug' => slug
+          'Content-Type' => 'multipart/related',
+          'On-Behalf-Of' => on_behalf_of,
+          'Slug' => slug
         }
 
         mime_headers = {
-            'Packaging' => 'http://purl.org/net/sword/package/SimpleZip',
-            'Content-Type' => 'application/zip',
-            'Content-MD5' => md5
+          'Packaging' => 'http://purl.org/net/sword/package/SimpleZip',
+          'Content-Type' => 'application/zip',
+          'Content-MD5' => md5
         }
 
         File.open(zipfile, 'rb') do |file|
           helper.put(uri: uri, headers: request_headers, payload: stream_from(metadata: mime_headers, file: file))
         end
-
       end
 
       def stream_from(mime_headers:, zipfile:)
-
       end
 
     end
@@ -76,9 +74,9 @@ module RestClient
 
   module Payload
     class MultipartRelated < Base
-      EOL = "\r\n"
+      EOL = "\r\n".freeze
 
-      def build_stream(params)
+      def build_stream(_params)
         separator = "--#{boundary}"
         read, write = IO.pipe(binmode: true)
         begin
@@ -88,8 +86,8 @@ module RestClient
           # TODO: write MIME headers for metadata
           # TODO: write <entry/>
           write.write("#{separator}#{EOL}")
-            # TODO: write MIME headers for data
-            # TODO: stream zipfile data
+        # TODO: write MIME headers for data
+        # TODO: stream zipfile data
         rescue
           write.write("#{separator}--#{EOL}")
           write.close
