@@ -31,7 +31,7 @@ module Stash
 
           client.create(collection_uri: collection_uri, zipfile: zipfile, slug: slug)
 
-          md5 = Digest::MD5.file(zipfile).to_s
+          md5 = Digest::MD5.tempfile(zipfile).to_s
 
           actual_headers = nil
           expect(a_request(:post, authorized_uri).with do |req|
@@ -68,7 +68,7 @@ module Stash
 
           client.update(edit_iri: edit_iri, slug: slug, zipfile: zipfile)
 
-          md5 = Digest::MD5.file(zipfile).to_s
+          md5 = Digest::MD5.tempfile(zipfile).to_s
 
           actual_body = nil
           actual_headers = nil

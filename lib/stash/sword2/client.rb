@@ -58,11 +58,12 @@ module Stash
         }
 
         File.open(zipfile, 'rb') do |file|
-          helper.put(uri: uri, headers: request_headers, payload: {
-              metadata: mime_headers,
-              file: file
-          })
+          helper.put(uri: uri, headers: request_headers, payload: stream_from(metadata: mime_headers, file: file))
         end
+
+      end
+
+      def stream_from(mime_headers:, zipfile:)
 
       end
 
@@ -87,8 +88,8 @@ module RestClient
           # TODO: write MIME headers for metadata
           # TODO: write <entry/>
           write.write("#{separator}#{EOL}")
-          # TODO: write MIME headers for data
-          # TODO: stream zipfile data
+            # TODO: write MIME headers for data
+            # TODO: stream zipfile data
         rescue
           write.write("#{separator}--#{EOL}")
           write.close
