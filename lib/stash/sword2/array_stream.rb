@@ -51,30 +51,23 @@ module Stash
 
       def read_segment(length, buffer)
         return unless input && length > 0
-        result = input.read(length)
-        if result
+
+        remaining = length
+        if (result = input.read(length))
           buffer << result
           remaining = length - result.length
-          if remaining > 0
-            next_input!
-            read_segment(remaining, buffer)
-          end
-        else
-          next_input!
-          read_segment(length, buffer)
         end
+        return unless remaining > 0
+
+        next_input!
+        read_segment(remaining, buffer)
       end
 
       # TODO: Array.pop! or something
       def next_input!
         input.close if input && input.respond_to?(:close)
-        if index + 1 < inputs.length
-          self.index += 1
-          self.input = inputs[index]
-        else
-          self.index = inputs.size
-          self.input = nil
-        end
+        self.index += 1
+        self.input = index < inputs.length ? inputs[index] : nil
       end
 
     end
