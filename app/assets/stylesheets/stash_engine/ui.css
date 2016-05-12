@@ -496,6 +496,7 @@ html.no-multiplebgs .o-banner {
 
 .o-banner__button {
   padding: 6px 12px;
+  text-decoration: none;
   border: none;
   background-color: white;
   color: #005581;
@@ -1775,9 +1776,11 @@ html.svg .c-facet__check-label {
   display: -ms-flexbox;
   display: flex; }
 
-.c-input__required-note::before {
-  color: #e65722;
-  content: '* '; }
+.c-input__required-note {
+  margin: 0 0 20px; }
+  .c-input__required-note::before {
+    color: #e65722;
+    content: '* '; }
 
 .c-license__version {
   display: -webkit-flex;
