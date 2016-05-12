@@ -13,17 +13,16 @@
   <% else %>
     <%= render partial: "stash_datacite/resource_types/form", locals: { resource_type: @metadata_entry.resource_type, path: stash_datacite.resource_types_update_path } %>
   <% end %>
-  <br/>
 
   <% if @metadata_entry.title.new_record? %>
     <%= render partial: "stash_datacite/titles/form", locals: { title: @metadata_entry.title, path: stash_datacite.titles_create_path, } %>
   <% else %>
     <%= render partial: "stash_datacite/titles/form", locals: { title: @metadata_entry.title, path: stash_datacite.titles_update_path } %>
   <% end %>
-  <br/>
 
-    <strong><%= label_tag "Author(s)" %></strong>
-    <div class="authors_form">
+  <fieldset class="c-fieldset">
+  <legend class="c-fieldset__legend">Author(s)</legend>
+
     <% if @metadata_entry.creators.exists? %>
       <% @metadata_entry.creators.each do |creator| %>
         <%= render partial: "stash_datacite/creators/form", locals: { creator: creator, path: stash_datacite.creators_update_path } %>
@@ -36,8 +35,8 @@
     <div class="add_orcid_link" style="display:inline;">
       <%= render partial: "stash_datacite/creators/add_orcid_link", locals: { resource: @resource } %>
     </div>
-    <br/>
-    <br/>
+
+  </fieldset>
 
     <strong><%= label_tag :description, "Abstract", class: 'required'  %></strong><br/>
     <%= render partial: "stash_datacite/descriptions/form", locals: { description: @metadata_entry.abstract,  description_type: :abstract }  %>
