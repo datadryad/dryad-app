@@ -1,4 +1,10 @@
+<div style="clear:both;">&nbsp;</div>
 <div id="display_resource"
-     data-load="<%= metadata_url_helpers.resources_show_path(id: @resource_id, format: :js) %>">
+     data-load="<%= metadata_url_helpers.resources_show_path(id: @resource_id, format: :js) %>"
+ style="width:70%;float: left; overflow: scroll;">
   <%= image_tag 'stash_engine/spinner.gif', size: '80x60', alt: 'Loading spinner' %>
 </div>
+<div id="sidebar" style="width:25%;float: right;">
+  <%= render :partial => 'sidebar' %>
+</div>
+<div style="clear:both;">&nbsp;</div>

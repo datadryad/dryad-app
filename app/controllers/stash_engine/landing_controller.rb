@@ -8,6 +8,7 @@ module StashEngine
       @identifiers = Identifier.where(identifier_type: @type).where(identifier: @id)
       render('not_available') && return if @identifiers.count < 1
       @resource_id = @identifiers.first.resource_id
+      @resource = Resource.find(@resource_id)
     end
   end
 end
