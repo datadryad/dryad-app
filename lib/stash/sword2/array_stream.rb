@@ -4,72 +4,72 @@ module Stash
   module Sword2
     class ArrayStream
 
-      attr_reader :inputs
-
-      # TODO: make these private
-      attr_accessor :stream_index
-      attr_accessor :input
-
       def initialize(inputs)
-        inputs = [inputs] unless inputs.respond_to?(:map)
+        inputs = [inputs] unless inputs.respond_to?(:[]) && inputs.respond_to?(:map)
         @inputs = inputs.map do |input|
-          if input.respond_to?(:read)
-            input
-          else
-            StringIO.new(input.to_s)
-          end
+          input.respond_to?(:read) ? input : StringIO.new(input.to_s)
         end
-        self.stream_index = 0
-        @input = @inputs[0] unless @inputs.empty?
+        self.index = 0
+        self.input = @inputs[index] unless inputs.empty?
       end
 
       def size
         @size ||= inputs.inject(0) do |sum, input|
-          raise "#{input} does not respond to :size" unless input.respond_to?(:size)
+          raise "input #{input} does not respond to :size" unless input.respond_to?(:size)
           sum + input.size
         end
       end
 
       def read(length = nil, outbuf = nil)
-        if outbuf
-          outbuf.clear
-        else
-          outbuf = ''
-        end
-        return '' if length == 0
-        return nil unless read_chars(length, outbuf)
+        return nil if size == 0
+        outbuf = outbuf ? outbuf.clear : ''
+        length ? read_segment(length, outbuf) : read_fully(outbuf)
         outbuf
       end
 
       def close
-        input.close if input
-        self.stream_index = inputs.size
+        while input != nil
+          next_input!
+        end
       end
 
       private
 
-      def read_chars(length, outbuf)
-        return nil unless input
-        str = input.read(length)
-        if str && str.length > 0
-          outbuf << str
-          str.length
-        else
-          next_stream
-          read_chars(length, outbuf)
+      attr_accessor :input
+      attr_accessor :index
+      attr_reader :inputs
+
+      def read_fully(buffer)
+        while input != nil
+          buffer << input.read(nil)
+          next_input!
         end
       end
 
-      def has_more_streams
-        stream_index < inputs.size
+      def read_segment(length, buffer)
+        return unless input && length > 0
+        result = input.read(length)
+        if result
+          buffer << result
+          remaining = length - result.length
+          if remaining > 0
+            next_input!
+            read_segment(remaining, buffer)
+          end
+        else
+          next_input!
+          read_segment(length, buffer)
+        end
       end
 
-      def next_stream
-        self.input.close if self.input
-        if has_more_streams
-          self.stream_index += 1
-          self.input = inputs[self.stream_index]
+      # TODO: Array.pop! or something
+      def next_input!
+        input.close if input && input.respond_to?(:close)
+        if index + 1 < inputs.length
+          self.index += 1
+          self.input = inputs[index]
         else
+          self.index = inputs.size
           self.input = nil
         end
       end
