@@ -42,7 +42,9 @@ module StashEngine
       repo = current_tenant.repository
       collection_uri = "http://uc3-mrtsword-dev.cdlib.org:39001/mrtsword/collection/#{repo.collection}"
       client = Stash::Sword::Client.new(username: repo.username, password: repo.password)
-      client.post_create(collection_uri: collection_uri, zipfile: zipfile, slug: doi)
+      response = client.post_create(collection_uri: collection_uri, zipfile: zipfile, slug: doi)
+      self.download_uri = extract_download_url(response, current_tenant)
+      self.save # save my download URL for this resource
       update_identifier(doi)
       update_version(zipfile)
     end
@@ -68,6 +70,19 @@ module StashEngine
         version.increment(:version)
         version.save!
       end
+    end
+
+    # Extracting the dl URL is kludgy because it's not being returned directly
+    def extract_download_url(xml_response, current_tenant)
+      doc = Nokogiri::XML(xml_response)
+      doc.remove_namespaces!
+      icky_id = doc.xpath('/entry/id').first.text
+      id = icky_id[/ark:.+$/]
+
+      # get endpoint domain
+      uri = URI.parse(current_tenant.repository.endpoint)
+
+      "http://#{uri.host}/d/#{CGI.escape(id)}"
     end
 
   end
