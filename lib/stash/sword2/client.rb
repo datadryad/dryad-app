@@ -10,7 +10,7 @@ module Stash
 
       EOL = "\r\n".freeze
       SIMPLE_ZIP = 'http://purl.org/net/sword/package/SimpleZip'.freeze
-      APPLICATION_ZIP = 'application/zip'
+      APPLICATION_ZIP = 'application/zip'.freeze
       MULTIPART_RELATED_ATOM_XML = 'multipart/related; type="application/atom+xml"'.freeze
 
       attr_reader :username
@@ -32,8 +32,6 @@ module Stash
         c.send(:include, self)
         c.new(*args)
       end
-
-
 
       def create(collection_uri:, slug:, zipfile:)
         warn "#{zipfile} may not be a zipfile" unless zipfile.downcase.end_with?('.zip')
@@ -61,20 +59,20 @@ module Stash
 
         filename = File.basename(zipfile)
         mime_headers = {
-            'Content-Type' => APPLICATION_ZIP,
-            'Content-Disposition' => "attachment; name=payload; filename=\"#{filename}\"",
-            'Packaging' => SIMPLE_ZIP,
-            'Content-MD5' => md5,
-            'MIME-Version' => '1.0'
+          'Content-Type' => APPLICATION_ZIP,
+          'Content-Disposition' => "attachment; name=payload; filename=\"#{filename}\"",
+          'Packaging' => SIMPLE_ZIP,
+          'Content-MD5' => md5,
+          'MIME-Version' => '1.0'
         }
 
         stream = stream_from(mime_headers: mime_headers, zipfile: File.open(zipfile, 'rb'), boundary: boundary)
         request_headers = {
-            'Content-Length' => stream.size.to_s,
-            'Content-Type' => "#{MULTIPART_RELATED_ATOM_XML}; boundary=\"#{boundary}\"",
-            'On-Behalf-Of' => on_behalf_of,
-            'Slug' => slug, # TODO: is this necessary?
-            'MIME-Version' => '1.0'
+          'Content-Length' => stream.size.to_s,
+          'Content-Type' => "#{MULTIPART_RELATED_ATOM_XML}; boundary=\"#{boundary}\"",
+          'On-Behalf-Of' => on_behalf_of,
+          'Slug' => slug, # TODO: is this necessary?
+          'MIME-Version' => '1.0'
         }
 
         begin
