@@ -47,7 +47,10 @@
 
   <h3><strong>Data Description (Optional)</strong></h3>
   <div>
-    <strong><%= label_tag "Funding" %><br/></strong>
+
+    <fieldset class="c-fieldset">
+    <legend class="c-fieldset__legend">Funding</legend>
+
     <div class="contributors_form">
     <% if @metadata_entry.contributors.exists? %>
       <% @metadata_entry.contributors.each do |contributor| %>
@@ -57,8 +60,9 @@
         <%= render partial: "stash_datacite/contributors/form", locals: { contributor: @metadata_entry.new_contributor, path: stash_datacite.contributors_create_path } %>
     <% end %>
     </div>
-    <%= link_to "add funder", stash_datacite.contributors_new_path( resource_id: @resource.id ), remote: :true %><br/>
-    <br/>
+    <%= link_to "add funder", stash_datacite.contributors_new_path( resource_id: @resource.id ), remote: :true %>
+
+    </fieldset>
 
     <% if @metadata_entry.subjects.empty? %>
     <%= render partial: "stash_datacite/subjects/form", locals: { subject: @metadata_entry.new_subject, resource_id: @resource.id } %><br/>
