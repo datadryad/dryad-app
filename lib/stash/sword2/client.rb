@@ -1,6 +1,6 @@
 require 'digest'
 require 'uri'
-require 'stash/sword2/array_stream'
+require 'stash/sword2/sequence_io'
 require 'stash/sword2/client/http_helper'
 
 module Stash
@@ -97,7 +97,7 @@ module Stash
         update_mime_headers(zipfile).each { |k, v| content << "#{k}: #{v}#{EOL}" }
         content << zipfile
         content << "--#{boundary}--#{EOL}"
-        ArrayStream.new(content)
+        SequenceIO.new(content)
       end
 
     end

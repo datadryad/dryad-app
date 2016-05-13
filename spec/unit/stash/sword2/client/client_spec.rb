@@ -66,7 +66,7 @@ module Stash
 
           stub_request(:put, authorized_uri)
 
-          client.update(edit_iri: edit_iri, slug: slug, zipfile: zipfile)
+          client.update(edit_iri: edit_iri, zipfile: zipfile)
 
           md5 = Digest::MD5.file(zipfile).to_s
 

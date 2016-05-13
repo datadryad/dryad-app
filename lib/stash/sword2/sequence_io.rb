@@ -2,7 +2,7 @@ require 'stringio'
 
 module Stash
   module Sword2
-    class ArrayStream
+    class SequenceIO
 
       def initialize(inputs)
         inputs = [inputs] unless inputs.respond_to?(:[]) && inputs.respond_to?(:map)

@@ -5,7 +5,7 @@ module Stash
   module Sword2
 
     # TODO: refactor with shared examples
-    describe ArrayStream do
+    describe SequenceIO do
 
       ALPHANUMERIC = Array('A'..'Z') + Array('a'..'z') + Array('0'..'9')
 
@@ -28,7 +28,7 @@ module Stash
         before(:each) do
           @len = 100
           @content = Array.new(len) { ALPHANUMERIC.sample }.join
-          @stream = ArrayStream.new(@content)
+          @stream = SequenceIO.new(@content)
         end
 
         it 'reads' do
@@ -83,7 +83,7 @@ module Stash
           # end
 
           @inputs = File.open(@tempfile, 'rb')
-          @stream = ArrayStream.new(@inputs)
+          @stream = SequenceIO.new(@inputs)
         end
 
         after(:each) do
@@ -125,7 +125,7 @@ module Stash
           @len = 100
           @inputs = Array.new(10) { Array.new(10) { ALPHANUMERIC.sample }.join }
           @content = @inputs.join
-          @stream = ArrayStream.new(@inputs)
+          @stream = SequenceIO.new(@inputs)
         end
 
         it 'reads' do
@@ -175,7 +175,7 @@ module Stash
             f.path
           end
           @inputs = @tempfiles.map { |f| File.open(f, 'rb') }
-          @stream = ArrayStream.new(inputs)
+          @stream = SequenceIO.new(inputs)
         end
 
         after(:each) do
@@ -244,7 +244,7 @@ module Stash
             end
           end
 
-          @stream = ArrayStream.new(inputs)
+          @stream = SequenceIO.new(inputs)
         end
 
         after(:each) do
