@@ -1,7 +1,7 @@
 // Place all the behaviors and hooks related to the matching controller here.
 // All this logic will automatically be available in application.js.
 function loadResourceTypes() {
-  $( '.resource_type' ).on('focus', function () {
+  $( '.js-resource_type' ).on('focus', function () {
     previous_value = this.value;
     }).change(function() {
       new_value = this.value;
