@@ -5,6 +5,7 @@ module StashEngine
     has_many :file_uploads, class_name: 'StashEngine::FileUpload'
     has_one :version, class_name: 'StashEngine::Version'
     has_one :identifier, class_name: 'StashEngine::Identifier'
+    has_one :resource_usage, class_name: 'StashEngine::ResourceUsage'
     # rubocop:disable all
     has_and_belongs_to_many :subjects, class_name: 'StashDatacite::Subject'
     # rubocop:enable all
@@ -85,5 +86,21 @@ module StashEngine
       "http://#{uri.host}/d/#{CGI.escape(id)}"
     end
 
+    def increment_downloads
+      ensure_resource_usage
+      resource_usage.increment(:downloads)
+    end
+
+    def increment_views
+      ensure_resource_usage
+      resource_usage.increment(:views)
+    end
+
+    private
+    def ensure_resource_usage
+      if resource_usage.nil?
+        create_resource_usage(downloads: 0, views: 0)
+      end
+    end
   end
 end
