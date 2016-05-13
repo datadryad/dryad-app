@@ -1,7 +1,17 @@
+require 'digest'
+require 'uri'
+require 'stash/sword2/array_stream'
+require 'stash/sword2/client/http_helper'
+
 module Stash
   module Sword2
     module Client
       Dir.glob(File.expand_path('../client/*.rb', __FILE__)).sort.each(&method(:require))
+
+      EOL = "\r\n".freeze
+      SIMPLE_ZIP = 'http://purl.org/net/sword/package/SimpleZip'.freeze
+      APPLICATION_ZIP = 'application/zip'
+      MULTIPART_RELATED_ATOM_XML = 'multipart/related; type="application/atom+xml"'.freeze
 
       attr_reader :username
       attr_reader :password
@@ -23,6 +33,8 @@ module Stash
         c.new(*args)
       end
 
+
+
       def create(collection_uri:, slug:, zipfile:)
         warn "#{zipfile} may not be a zipfile" unless zipfile.downcase.end_with?('.zip')
         uri = Sword2.to_uri(collection_uri).to_s
@@ -30,12 +42,12 @@ module Stash
 
         File.open(zipfile, 'rb') do |file|
           helper.post(uri: uri, payload: file, headers: {
-                        'Packaging' => 'http://purl.org/net/sword/package/SimpleZip',
+                        'Packaging' => SIMPLE_ZIP,
                         'On-Behalf-Of' => on_behalf_of,
                         'Slug' => slug,
                         'Content-MD5' => md5,
                         'Content-Disposition' => "attachment; filename=#{File.basename(zipfile)}",
-                        'Content-Type' => 'application/zip'
+                        'Content-Type' => APPLICATION_ZIP
                       })
         end
       end
@@ -47,62 +59,43 @@ module Stash
 
         boundary = "========#{Time.now.to_i}=="
 
-        stream = stream_from(md5: md5, zipfile: File.open(zipfile, 'rb'), boundary: boundary)
+        filename = File.basename(zipfile)
+        mime_headers = {
+            'Content-Type' => APPLICATION_ZIP,
+            'Content-Disposition' => "attachment; name=payload; filename=\"#{filename}\"",
+            'Packaging' => SIMPLE_ZIP,
+            'Content-MD5' => md5,
+            'MIME-Version' => '1.0'
+        }
+
+        stream = stream_from(mime_headers: mime_headers, zipfile: File.open(zipfile, 'rb'), boundary: boundary)
+        request_headers = {
+            'Content-Length' => stream.size.to_s,
+            'Content-Type' => "#{MULTIPART_RELATED_ATOM_XML}; boundary=\"#{boundary}\"",
+            'On-Behalf-Of' => on_behalf_of,
+            'Slug' => slug, # TODO: is this necessary?
+            'MIME-Version' => '1.0'
+        }
 
         begin
-          request_headers = {
-              'Content-Length' => stream.size.to_s,
-              'Content-Type' => "multipart/related; type=\"application/atom+xml\"; boundary=\"#{boundary}\"",
-              'On-Behalf-Of' => on_behalf_of,
-              'Slug' => slug
-          }
           helper.put(uri: uri, headers: request_headers, payload: stream)
         ensure
           stream.close
         end
       end
 
-      def stream_from(md5:, zipfile:, boundary:)
-        separator = "--#{boundary}"
+      private
+
+      def stream_from(mime_headers:, zipfile:, boundary:)
         content = []
-        # TODO: don't forget to join everything with EOLs
+        # strictly speaking, do we need an Atom <entry/> first?
+        content << "--#{boundary}#{EOL}"
+        mime_headers.each { |k, v| content << "#{k}: #{v}#{EOL}" }
+        content << zipfile
+        content << "--#{boundary}--#{EOL}"
         ArrayStream.new(content)
       end
 
-    end
-  end
-end
-
-module RestClient
-  # Patch to support (SWORD 2 subset of) multipart/related in RestClient
-
-  module Payload
-    class MultipartRelated < Base
-      EOL = "\r\n".freeze
-
-      def build_stream(_params)
-        separator = "--#{boundary}"
-        read, write = IO.pipe(binmode: true)
-        begin
-          write.binmode
-          # TODO: do we need to write anything here?
-          write.write("#{separator}#{EOL}")
-          # TODO: write MIME headers for metadata
-          # TODO: write <entry/>
-          write.write("#{separator}#{EOL}")
-        # TODO: write MIME headers for data
-        # TODO: stream zipfile data
-        rescue
-          write.write("#{separator}--#{EOL}")
-          write.close
-        end
-        # TODO: this is obviously wrong, it's going to deadlock
-        read
-      end
-
-      def boundary
-        @boundary ||= "========#{Time.now.to_i}=="
-      end
     end
   end
 end

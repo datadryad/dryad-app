@@ -31,7 +31,7 @@ module Stash
 
           client.create(collection_uri: collection_uri, zipfile: zipfile, slug: slug)
 
-          md5 = Digest::MD5.tempfile(zipfile).to_s
+          md5 = Digest::MD5.file(zipfile).to_s
 
           actual_headers = nil
           expect(a_request(:post, authorized_uri).with do |req|
@@ -68,7 +68,7 @@ module Stash
 
           client.update(edit_iri: edit_iri, slug: slug, zipfile: zipfile)
 
-          md5 = Digest::MD5.tempfile(zipfile).to_s
+          md5 = Digest::MD5.file(zipfile).to_s
 
           actual_body = nil
           actual_headers = nil
@@ -89,14 +89,14 @@ module Stash
 
           mime_headers = {
             'Packaging' => 'http://purl.org/net/sword/package/SimpleZip',
-            'Content-Disposition' => 'attachment; name="payload"; filename="example.zip"',
+            'Content-Disposition' => 'attachment; name=payload; filename="example.zip"',
             'Content-Type' => 'application/zip',
             'Content-MD5' => md5
           }
 
           aggregate_failures('MIME headers') do
             mime_headers.each do |k, v|
-              expect(actual_body).to include("#{k}: #{v}")
+              expect(actual_body).to include("#{k}: #{v}"), "expected #{k}: #{v}, closest match was #{actual_body[/#{k}[^\n]+/m]}"
             end
           end
         end

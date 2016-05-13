@@ -7,6 +7,7 @@ module Stash
       def initialize(inputs)
         inputs = [inputs] unless inputs.respond_to?(:[]) && inputs.respond_to?(:map)
         @inputs = inputs.map do |input|
+          input.binmode if input.respond_to?(:binmode)
           input.respond_to?(:read) ? input : StringIO.new(input.to_s)
         end
         self.index = 0
@@ -28,8 +29,16 @@ module Stash
         outbuf
       end
 
+      def binmode?
+        true
+      end
+
       def close
         next_input! until input.nil?
+      end
+
+      def closed?
+        input.nil? && index >= inputs.length
       end
 
       private
