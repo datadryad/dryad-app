@@ -20,13 +20,9 @@ module Stash
         end
       end
 
-      def empty?
-        # use <= instead of == to get around https://github.com/bbatsov/rubocop/issues/3131
-        size <= 0
-      end
-
       def read(length = nil, outbuf = nil)
-        return nil if empty?
+        # use <= instead of == to get around https://github.com/bbatsov/rubocop/issues/3131
+        return nil if size <= 0
         outbuf = outbuf ? outbuf.clear : ''
         length ? read_segment(length, outbuf) : read_fully(outbuf)
         outbuf
