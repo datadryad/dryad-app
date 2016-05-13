@@ -45,24 +45,28 @@ module Stash
         uri = Sword2.to_uri(edit_iri).to_s
         md5 = Digest::MD5.file(zipfile).to_s
 
-        request_headers = {
-          'Content-Type' => 'multipart/related',
-          'On-Behalf-Of' => on_behalf_of,
-          'Slug' => slug
-        }
+        boundary = "========#{Time.now.to_i}=="
 
-        mime_headers = {
-          'Packaging' => 'http://purl.org/net/sword/package/SimpleZip',
-          'Content-Type' => 'application/zip',
-          'Content-MD5' => md5
-        }
+        stream = stream_from(md5: md5, zipfile: File.open(zipfile, 'rb'), boundary: boundary)
 
-        File.open(zipfile, 'rb') do |file|
-          helper.put(uri: uri, headers: request_headers, payload: stream_from(metadata: mime_headers, file: file))
+        begin
+          request_headers = {
+              'Content-Length' => stream.size.to_s,
+              'Content-Type' => "multipart/related; type=\"application/atom+xml\"; boundary=\"#{boundary}\"",
+              'On-Behalf-Of' => on_behalf_of,
+              'Slug' => slug
+          }
+          helper.put(uri: uri, headers: request_headers, payload: stream)
+        ensure
+          stream.close
         end
       end
 
-      def stream_from(mime_headers:, zipfile:)
+      def stream_from(md5:, zipfile:, boundary:)
+        separator = "--#{boundary}"
+        content = []
+        # TODO: don't forget to join everything with EOLs
+        ArrayStream.new(content)
       end
 
     end
