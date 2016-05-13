@@ -76,7 +76,11 @@
     <strong><%= label_tag :description, "Usage Notes" %></strong>&nbsp;&nbsp;What else would someone need to know to use this dataset?<br/>
     <%= render partial: "stash_datacite/descriptions/form", locals: { description: @metadata_entry.usage_notes, description_type: :usage_notes } %><br/>
 
-    <strong><%= label_tag :related_identifier, "Related work(s)" %></strong> articles, other datasets: e.g., This dataset is cited by DOI 10.1000/182.
+    <!-- <strong><%= label_tag :related_identifier, "Related work(s)" %></strong> articles, other datasets: e.g., This dataset is cited by DOI 10.1000/182. -->
+
+    <fieldset class="c-fieldset">
+    <legend class="c-fieldset__legend">Related work(s) <span class="c-input__hint">articles, other datasets: e.g., This dataset is cited by DOI 10.1000/182.</span></legend>
+
     <div class="related_identifiers_form">
     <% if @metadata_entry.related_identifiers.exists? %>
       <% @metadata_entry.related_identifiers.each do |related_identifier| %>
@@ -86,8 +90,10 @@
       <%= render partial: "stash_datacite/related_identifiers/form", locals: { related_identifier: @metadata_entry.new_related_identifier, path: stash_datacite.related_identifiers_create_path } %>
     <% end %>
     </div>
-    <%= link_to "add related work", stash_datacite.related_identifiers_new_path( resource_id: @resource.id ), remote: :true %><br/>
-  </div>
+    <%= link_to "add another related work", stash_datacite.related_identifiers_new_path( resource_id: @resource.id ), remote: :true, class: 'o-button__add' %><br/>
+    </div>
+
+    </fieldset>
 
   <h3 id="location_section"><strong>Location Information (optional)</strong></h3>
   <div>
