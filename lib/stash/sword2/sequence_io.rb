@@ -2,14 +2,18 @@ require 'stringio'
 
 module Stash
   module Sword2
+    # A read-only `IO`-like that concatenates a sequence of strings or IOs.
     class SequenceIO
 
+      # Creates a new {SequenceIO} concatenating the specified input sources.
+      # Strings are wrapped internally as `StringIO`.
+      #
+      # @param inputs [Enumerable<String, IO>] an array of strings and/or IOs to
+      #   concatenate
       def initialize(inputs)
-        inputs = [inputs] unless inputs.respond_to?(:[]) && inputs.respond_to?(:map)
-        @inputs = inputs.map do |input|
-          input.binmode if input.respond_to?(:binmode)
-          input.respond_to?(:read) ? input : StringIO.new(input.to_s)
-        end
+        inputs  = [inputs] unless inputs.respond_to?(:[]) && inputs.respond_to?(:map)
+        @inputs = to_ios(inputs)
+        binmode if any_binmode(@inputs)
         self.index = 0
         self.input = @inputs[index] unless inputs.empty?
       end
@@ -29,8 +33,17 @@ module Stash
         outbuf
       end
 
+      def binmode
+        return self if binmode?
+        inputs.each do |input|
+          input.binmode if input.respond_to?(:binmode)
+        end
+        @binmode = true
+        self
+      end
+
       def binmode?
-        true
+        @binmode
       end
 
       def close
@@ -75,6 +88,18 @@ module Stash
         self.input = index < inputs.length ? inputs[index] : nil
       end
 
+      def to_ios(inputs)
+        inputs.map do |input|
+          input.respond_to?(:read) ? input : StringIO.new(input.to_s)
+        end
+      end
+
+      def any_binmode(ios)
+        ios.each do |io|
+          return true if io.respond_to?(:binmode?) && io.binmode?
+        end
+        false
+      end
     end
   end
 end
