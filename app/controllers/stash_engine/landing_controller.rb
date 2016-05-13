@@ -7,8 +7,10 @@ module StashEngine
       @type, @id = params[:id].split(':', 2)
       @identifiers = Identifier.where(identifier_type: @type).where(identifier: @id)
       render('not_available') && return if @identifiers.count < 1
-      @resource_id = @identifiers.first.resource_id
-      @resource = Resource.find(@resource_id)
+      @id = @identifiers.first
+      @resource_id = @id.resource_id
+      @resource = @id.resource # XXX change this when we get versions working
+      @resource.increment_views
     end
   end
 end

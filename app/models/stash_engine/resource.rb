@@ -88,12 +88,12 @@ module StashEngine
 
     def increment_downloads
       ensure_resource_usage
-      resource_usage.increment(:downloads)
+      resource_usage.increment(:downloads).save
     end
 
     def increment_views
       ensure_resource_usage
-      resource_usage.increment(:views)
+      resource_usage.increment(:views).save
     end
 
     private
