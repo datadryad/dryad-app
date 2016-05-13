@@ -496,7 +496,6 @@ html.no-multiplebgs .o-banner {
 
 .o-banner__button {
   padding: 6px 12px;
-  text-decoration: none;
   border: none;
   background-color: white;
   color: #005581;
@@ -629,15 +628,20 @@ html.no-multiplebgs .o-banner {
   border: none;
   background: transparent url('data:image/svg+xml;charset=utf-8,%3C%3Fxml%20version%3D%221.0%22%20encoding%3D%22iso-8859-1%22%3F%3E%0A%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20xmlns%3Axlink%3D%22http%3A%2F%2Fwww.w3.org%2F1999%2Fxlink%22%20version%3D%221.1%22%20x%3D%220px%22%20y%3D%220px%22%20viewBox%3D%220%200%2024%2024%22%20style%3D%22enable-background%3Anew%200%200%2024%2024%3B%22%20xml%3Aspace%3D%22preserve%22%20width%3D%22512px%22%20height%3D%22512px%22%3E%0A%3Cg%3E%0A%09%3Cpath%20d%3D%22M16.043%2C11.667L22.609%2C5.1c0.963-0.963%2C0.963-2.539%2C0-3.502l-0.875-0.875%20%20%20c-0.963-0.964-2.539-0.964-3.502%2C0L11.666%2C7.29L5.099%2C0.723c-0.962-0.963-2.538-0.963-3.501%2C0L0.722%2C1.598%20%20%20c-0.962%2C0.963-0.962%2C2.539%2C0%2C3.502l6.566%2C6.566l-6.566%2C6.567c-0.962%2C0.963-0.962%2C2.539%2C0%2C3.501l0.876%2C0.875%20%20%20c0.963%2C0.963%2C2.539%2C0.963%2C3.501%2C0l6.567-6.565l6.566%2C6.565c0.963%2C0.963%2C2.539%2C0.963%2C3.502%2C0l0.875-0.875%20%20%20c0.963-0.963%2C0.963-2.539%2C0-3.501L16.043%2C11.667z%22%20fill%3D%22%23FFFFFF%22%2F%3E%0A%3C%2Fg%3E%0A%3C%2Fsvg%3E') center/15px no-repeat; }
 
-.o-button__add {
-  padding: 2px 5px 2px 0;
+.o-button__add, .o-button__remove {
+  padding: 2px 0;
   border: none;
   background-color: white;
   color: #005581;
   text-align: left; }
-  .o-button__add::before {
-    margin: 0 0.25em 0 0;
-    content: '+'; }
+  .o-button__add::before, .o-button__remove::before {
+    margin: 0 0.25em 0 0; }
+
+.o-button__add::before {
+  content: '+'; }
+
+.o-button__remove::before {
+  content: '\2013'; }
 
 .o-button__help {
   margin: 0 0.5em;
@@ -2220,16 +2224,25 @@ html.svg .c-facet__check-label {
     color: #005581;
     font-size: 1.2em; } }
 
-.t-describe__group1-buttons {
+.t-describe__remove-button {
+  margin: 0 0 20px; }
+  @media (min-width: 760px) {
+    .t-describe__remove-button {
+      margin: 0 0 0 20px; } }
+
+.t-describe__group-add-buttons {
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
   margin: 0 0 20px; }
+  @media (min-width: 760px) {
+    .t-describe__group-add-buttons {
+      margin: 0 5em 20px 0; } }
 
-.t-describe__group1-button:nth-of-type(1) {
+.t-describe__group-add-button:nth-of-type(1) {
   margin: 0 10px 0 0; }
   @media (min-width: 760px) {
-    .t-describe__group1-button:nth-of-type(1) {
+    .t-describe__group-add-button:nth-of-type(1) {
       width: 31.5%;
       margin: 0 2.5% 0 0; } }
 
