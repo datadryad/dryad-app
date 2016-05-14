@@ -17,6 +17,12 @@ module Stash
       it 'reads n < length chars' do
         length   = len / 2
         expected = content.slice(0, length)
+        expect(sqio.read(length)).to eq(expected)
+      end
+
+      it 'reads n < length chars into a buffer' do
+        length   = len / 2
+        expected = content.slice(0, length)
         expect(sqio.read(length, outbuf)).to eq(expected)
         expect(outbuf).to eq(expected)
       end
@@ -25,8 +31,18 @@ module Stash
         expect(sqio.read(len)).to eq(content)
       end
 
+      it 'reads n == length chars into a buffer' do
+        expect(sqio.read(len, outbuf)).to eq(content)
+        expect(outbuf).to eq(content)
+      end
+
       it 'reads n > length chars' do
         expect(sqio.read(len * 2)).to eq(content)
+      end
+
+      it 'reads n > length chars into a buffer' do
+        expect(sqio.read(len * 2, outbuf)).to eq(content)
+        expect(outbuf).to eq(content)
       end
 
       it 'calculates the size' do
