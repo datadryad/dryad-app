@@ -41,9 +41,8 @@ module StashEngine
 
     def submission_to_repository(current_tenant, zipfile, doi)
       repo = current_tenant.repository
-      collection_uri = "http://uc3-mrtsword-dev.cdlib.org:39001/mrtsword/collection/#{repo.collection}"
       client = Stash::Sword::Client.new(username: repo.username, password: repo.password)
-      response = client.post_create(collection_uri: collection_uri, zipfile: zipfile, slug: doi)
+      response = client.post_create(collection_uri: repo.endpoint, zipfile: zipfile, slug: doi)
       self.download_uri = extract_download_url(response, current_tenant)
       self.save # save my download URL for this resource
       update_identifier(doi)
@@ -81,9 +80,10 @@ module StashEngine
       id = icky_id[/ark:.+$/]
 
       # get endpoint domain
-      uri = URI.parse(current_tenant.repository.endpoint)
+      #uri = URI.parse(current_tenant.repository.endpoint)
+      mrt_host = current_tenant.repository.domain
 
-      "http://#{uri.host}/d/#{CGI.escape(id)}"
+      "http://#{mrt_host}/d/#{CGI.escape(id)}"
     end
 
     def increment_downloads
