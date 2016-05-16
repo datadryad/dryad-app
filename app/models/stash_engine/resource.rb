@@ -4,7 +4,7 @@ module StashEngine
   class Resource < ActiveRecord::Base
     has_many :file_uploads, class_name: 'StashEngine::FileUpload'
     has_one :version, class_name: 'StashEngine::Version'
-    belongs_to :identifier, class_name: 'StashEngine::Identifier'
+    belongs_to :identifier, :class_name => 'StashEngine::Identifier', foreign_key: 'identifier_id'
     has_one :resource_usage, class_name: 'StashEngine::ResourceUsage'
     # rubocop:disable all
     has_and_belongs_to_many :subjects, class_name: 'StashDatacite::Subject'
@@ -21,6 +21,7 @@ module StashEngine
     #resource_states
     scope :in_progress, -> { joins(:current_state).where(stash_engine_resource_states: {resource_state:  :in_progress}) }
     scope :submitted, -> { joins(:current_state).where(stash_engine_resource_states: {resource_state:  :submitted}) }
+    scope :last_saved_version, -> {joins(:stash_engine_versions).order(version: :desc).first }
 
     # clean up the uploads with files that no longer exist for this resource
     def clean_uploads

@@ -1,12 +1,6 @@
 module StashEngine
   class Identifier < ActiveRecord::Base
-    has_many :resources, class_name: 'StashEngine::Resource'
-
-    def download_count
-      self.join(resource: :resource_state)
-      ResourceState.joins(resource: :identifier )
-    end
-
+    has_many :resources, :class_name => 'StashEngine::Resource'
     def view_count
       ResourceUsage.joins(resource: :identifier ).
           where("stash_engine_identifiers.identifier = ? AND stash_engine_identifiers.identifier_type = ?",
@@ -18,5 +12,6 @@ module StashEngine
           where("stash_engine_identifiers.identifier = ? AND stash_engine_identifiers.identifier_type = ?",
                 identifier, identifier_type).sum(:downloads)
     end
+
   end
 end
