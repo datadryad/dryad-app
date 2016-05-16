@@ -14,8 +14,8 @@ module Stash
         inputs  = [inputs] unless inputs.respond_to?(:[]) && inputs.respond_to?(:map)
         @inputs = to_ios(inputs)
         binmode if any_binmode(@inputs)
-        self.index = 0
-        self.input = @inputs[index] unless inputs.empty?
+        @index = 0
+        @input = @inputs[index] unless inputs.empty?
       end
 
       def size
@@ -56,8 +56,8 @@ module Stash
 
       private
 
-      attr_accessor :input
-      attr_accessor :index
+      attr_reader :input
+      attr_reader :index
       attr_reader :inputs
 
       def read_fully(buffer)
@@ -84,8 +84,8 @@ module Stash
       # TODO: Array.pop! or something
       def next_input!
         input.close if input && input.respond_to?(:close)
-        self.index += 1
-        self.input = index < inputs.length ? inputs[index] : nil
+        @index += 1
+        @input = index < inputs.length ? inputs[index] : nil
       end
 
       def to_ios(inputs)
