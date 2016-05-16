@@ -4,7 +4,7 @@ module StashEngine
   class Resource < ActiveRecord::Base
     has_many :file_uploads, class_name: 'StashEngine::FileUpload'
     has_one :version, class_name: 'StashEngine::Version'
-    has_one :identifier, class_name: 'StashEngine::Identifier'
+    belongs_to :identifier, class_name: 'StashEngine::Identifier'
     has_one :resource_usage, class_name: 'StashEngine::ResourceUsage'
     # rubocop:disable all
     has_and_belongs_to_many :subjects, class_name: 'StashDatacite::Subject'

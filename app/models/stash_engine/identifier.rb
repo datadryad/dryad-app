@@ -1,6 +1,6 @@
 module StashEngine
   class Identifier < ActiveRecord::Base
-    belongs_to :resource, class_name: 'StashEngine::Resource'
+    has_many :resources, class_name: 'StashEngine::Resource'
 
     def download_count
       self.join(resource: :resource_state)
