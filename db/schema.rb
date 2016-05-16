@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160512214651) do
+ActiveRecord::Schema.define(version: 20160516182448) do
 
   create_table "bookmarks", force: :cascade do |t|
     t.integer  "user_id",       limit: 4,   null: false
@@ -234,7 +234,6 @@ ActiveRecord::Schema.define(version: 20160512214651) do
   create_table "stash_engine_identifiers", force: :cascade do |t|
     t.string   "identifier",      limit: 255
     t.string   "identifier_type", limit: 255
-    t.integer  "resource_id",     limit: 4
     t.datetime "created_at",                  null: false
     t.datetime "updated_at",                  null: false
   end
@@ -270,6 +269,7 @@ ActiveRecord::Schema.define(version: 20160512214651) do
     t.datetime "updated_at",                                            null: false
     t.boolean  "geolocation",                           default: false
     t.string   "download_uri",              limit: 255
+    t.integer  "identifier_id",             limit: 4
   end
 
   create_table "stash_engine_submission_logs", force: :cascade do |t|
