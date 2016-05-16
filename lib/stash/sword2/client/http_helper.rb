@@ -76,6 +76,7 @@ module Stash
             **options)
         end
 
+        # TODO: Consider rewriting with RestClient
         def do_get(uri, limit, &block) # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
           raise "Redirect limit (#{redirect_limit}) exceeded retrieving URI #{uri}" if limit <= 0
           req = Net::HTTP::Get.new(uri, 'User-Agent' => user_agent)
