@@ -1,12 +1,11 @@
 require 'digest'
 require 'uri'
 require 'stash/sword2/sequence_io'
-require 'stash/sword2/client/http_helper'
+require 'stash/sword2/http_helper'
 
 module Stash
   module Sword2
-    module Client
-      Dir.glob(File.expand_path('../client/*.rb', __FILE__)).sort.each(&method(:require))
+    class Client
 
       EOL                        = "\r\n".freeze
       SIMPLE_ZIP                 = 'http://purl.org/net/sword/package/SimpleZip'.freeze
@@ -25,12 +24,6 @@ module Stash
         @password     = password
         @on_behalf_of = on_behalf_of || username
         @helper       = helper || HTTPHelper.new(username: username, password: password, user_agent: "stash-sword2 #{VERSION}")
-      end
-
-      def self.new(*args)
-        c = Class.new
-        c.send(:include, self)
-        c.new(*args)
       end
 
       def create(collection_uri:, slug:, zipfile:)
