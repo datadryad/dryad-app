@@ -7,7 +7,7 @@
   <%# render partial: "stash_datacite/titles/show", locals: { title: @review.title } %>
   <%= render partial: "stash_datacite/creators/show", locals: { creators: @review.creators } %>
   <hr/>
-  <%= render partial: "stash_datacite/shared/citations", locals: { creators: @review.creators, title: @review.title, resource_type: @review.resource_type } %>
+  <%= render partial: "stash_datacite/shared/citations", locals: { creators: @review.creators, title: @review.title, resource_type: @review.resource_type, version: @resource.version.nil? ? 'v0' : "v#{@review.version.version }", identifier: @resource.identifier.nil? ? 'DOI' : "#{@review.identifier.identifier }" } %>
   <hr/>
   <%= render partial: "stash_datacite/descriptions/show", locals: { abstract: @review.abstract, methods: @review.methods, usage_notes: @review.usage_notes } %>
   <%= render partial: "stash_datacite/subjects/show", locals: { subjects: @review.subjects } %>

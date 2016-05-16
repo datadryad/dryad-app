@@ -18,6 +18,10 @@ module StashDatacite
         @resource.titles.first.title
       end
 
+      def status
+        @resource.current_resource_state
+      end
+
       # according to https://dash.ucop.edu/xtf/search?smode=metadataBasicsPage
       # required fields are Title, Institution, Data type, Data Creator(s), Abstract
       def required_filled
@@ -41,6 +45,15 @@ module StashDatacite
       def files
         @resource.clean_uploads
         @resource.file_uploads.count
+      end
+
+      def external_identifier
+        id = @resource.identifier
+        if id.blank?
+          'bad_identifier'
+        else
+          "#{id.try(:identifier_type).try(:downcase)}:#{id.try(:identifier)}"
+        end
       end
     end
   end

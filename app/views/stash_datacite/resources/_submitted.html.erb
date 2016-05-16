@@ -1,0 +1,7 @@
+<table>
+  <%= render 'submitted_head' %>
+  <tbody>
+    <%= render partial: 'submitted_line', collection: @submitted, as: :line %>
+  </tbody>
+</table>
+<%= paginate @resources, params: {page_size: @page_size}, remote: true %>

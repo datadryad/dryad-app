@@ -1,8 +1,8 @@
-<table>
+<table class="o-table c-table-progress js-table-progress">
   <%= render 'in_progress_head' %>
   <tbody>
     <%= render partial: 'in_progress_line', collection: @in_progress_lines, as: :line %>
   </tbody>
 </table>
-
 <%= paginate @resources, params: {page_size: @page_size}, remote: true %>
+<br/>

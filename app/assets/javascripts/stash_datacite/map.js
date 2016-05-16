@@ -68,7 +68,7 @@ function loadMap() {
             result = data;
           },
           error: function() {
-            alert('Error occured');
+            console.log('Error occured');
           }
         });
         arr = $.map(result, function(n){
@@ -100,7 +100,7 @@ function loadMap() {
               updateGeolocationPointsIndex();
             },
             error: function() {
-              alert("error occured");
+              console.log("error occured");
             }
           });
       });
@@ -121,7 +121,7 @@ function loadMap() {
             result = data;
           },
           error: function() {
-            alert('Error occured');
+            console.log('Error occured');
           }
         });
         arr = $.map(result, function(n){
@@ -157,7 +157,7 @@ function loadMap() {
               result = data;
             },
             error: function() {
-              alert('Error occured');
+              console.log('Error occured');
             }
           });
           arr = $.map(result, function(n){
@@ -265,7 +265,7 @@ function loadMap() {
               updateGeolocationPointsIndex();
             },
             error: function() {
-              alert('error occured');
+              console.log('error occured');
             }
           });
             e.layer.options.id = result;
@@ -323,7 +323,7 @@ function loadMap() {
                       updateGeolocationPointsIndex();
                     },
                     error: function() {
-                      alert("error occured");
+                      console.log("error occured");
                     }
                   });
                 });
@@ -343,7 +343,7 @@ function loadMap() {
               success: function() {
               },
               error: function() {
-                alert("error occured");
+                console.log("error occured");
               }
           });
         }

@@ -18,6 +18,15 @@ module StashDatacite
         @resource.creators
       end
 
+      def version
+        @resource.version
+      end
+
+
+      def identifier
+        @resource.identifier
+      end
+
       def abstract
         @abstract = @resource.descriptions.where(description_type: :abstract).first
       end

@@ -30,7 +30,7 @@ function loadReviewMap(resource_id) {
             result = data;
           },
           error: function() {
-            alert('Error occured');
+            console.log('Error occured');
           }
         });
         arr = $.map(result, function(n){
@@ -64,7 +64,7 @@ function loadReviewMap(resource_id) {
             result = data;
           },
           error: function() {
-            alert('Error occured');
+            console.log('Error occured');
           }
         });
         arr = $.map(result, function(n){
@@ -100,7 +100,7 @@ function loadReviewMap(resource_id) {
             result = data;
           },
           error: function() {
-            alert('Error occured');
+            console.log('Error occured');
           }
         });
         arr = $.map(result, function(n){

@@ -18,8 +18,7 @@ module StashDatacite
         identifier = @client.mint_id
       end
 
-      def generate_xml(target_url)
-        identifier  = generate_identifier
+      def generate_xml(target_url, identifier)
         simple_id = identifier.split(':', 2)[1]
 
         dm = Datacite::Mapping
@@ -90,7 +89,6 @@ module StashDatacite
             )
           ]
         )
-        resource.namespace_prefix = 'dcs'
 
         datacite_to_wrapper = resource.save_to_xml
         datacite_root = resource.write_xml
@@ -121,18 +119,13 @@ module StashDatacite
           end_date: Date.tomorrow,
         )
 
-        inventory = st::Inventory.new(
-          files: [
-            st::StashFile.new(
-              pathname: 'HSRC_MasterSampleII.dat', size_bytes: 12_345, mime_type: 'text/plain'
-            ),
-            st::StashFile.new(
-              pathname: 'HSRC_MasterSampleII.csv', size_bytes: 67_890, mime_type: 'text/csv'
-            ),
-            st::StashFile.new(
-              pathname: 'HSRC_MasterSampleII.sas7bdat', size_bytes: 123_456, mime_type: 'application/x-sas-data'
-            ),
-          ])
+        uploads = uploads_list(@resource)
+        files = uploads.map do |d|
+          st::StashFile.new(
+            pathname: "#{d[:name]}", size_bytes: d[:size], mime_type: "#{d[:type]}"
+          )
+        end
+        inventory = st::Inventory.new(files: files)
 
         wrapper = st::StashWrapper.new(
           identifier: identifier,
@@ -148,7 +141,6 @@ module StashDatacite
         # stash_wrapper_directory = "#{Rails.root}/uploads"
         # puts Dir.pwd
         # f = File.open("#{stash_wrapper_directory}/#{stash_wrapper_target}", 'w') { |f| f.write(stash_wrapper) }
-
         return [datacite_root, stash_wrapper]
       end
 
@@ -245,7 +237,7 @@ module StashDatacite
         content.to_s
       end
 
-      def generate_merritt_zip(target_url)
+      def generate_merritt_zip(target_url, identifier)
         target_url = target_url
         folder = "#{Rails.root}/uploads"
         FileUtils::mkdir_p(folder)
@@ -254,7 +246,7 @@ module StashDatacite
         purge_existing_files
 
         zipfile_name = "#{folder}/#{@resource.id}_archive.zip"
-        datacite_xml, stashwrapper_xml = generate_xml(target_url)
+        datacite_xml, stashwrapper_xml = generate_xml(target_url, identifier)
 
         File.open("#{folder}/#{@resource.id}_mrt-datacite.xml", "w") do |f|
           f.write datacite_xml
@@ -303,7 +295,7 @@ module StashDatacite
         files = []
         current_uploads = resource.file_uploads
         current_uploads.each do |u|
-          hash = {:name => u.upload_file_name, :type => u.upload_content_type}
+          hash = { name: u.upload_file_name, type: u.upload_content_type, size: u.upload_file_size }
           files.push(hash)
         end
         files
