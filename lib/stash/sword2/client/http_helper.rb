@@ -67,7 +67,13 @@ module Stash
           all_headers = { 'User-Agent' => user_agent }
           all_headers.merge!(headers)
 
-          RestClient::Request.execute(method: method, url: uri.to_s, payload: payload, headers: all_headers, **options)
+          RestClient::Request.execute(
+            method: method,
+            url: uri.to_s,
+            payload: payload,
+            headers: all_headers,
+            max_redirects: limit,
+            **options)
         end
 
         def do_get(uri, limit, &block) # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
