@@ -1,7 +1,7 @@
 // Place all the behaviors and hooks related to the matching controller here.
 // All this logic will automatically be available in application.js.
 function loadCreators() {
-  $( ".creator_first_name" ).on('focus', function () {
+  $( ".js-creator_first_name" ).on('focus', function () {
     previous_value = this.value;
     }).change(function() {
       new_value = this.value;
@@ -12,7 +12,7 @@ function loadCreators() {
       }
     });
 
-  $( ".creator_last_name" ).on('focus', function () {
+  $( ".js-creator_last_name" ).on('focus', function () {
     previous_value = this.value;
     }).change(function() {
       new_value = this.value;
