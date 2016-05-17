@@ -11,11 +11,16 @@ module StashDatacite
       def initialize(resource, current_tenant)
         @resource = resource
         @current_tenant = current_tenant
+        @version = @resource.next_version
       end
 
       def generate_identifier
-        @client = StashEzid::Client.new(@current_tenant.identifier_service.to_h)
-        identifier = @client.mint_id
+        if @resource.identifier
+          "#{@resource.identifier.identifier_type.downcase}:#{@resource.identifier.identifier}"
+        else
+          @client = StashEzid::Client.new(@current_tenant.identifier_service.to_h)
+          @client.mint_id
+        end
       end
 
       def generate_xml(target_url, identifier)
@@ -105,7 +110,7 @@ module StashDatacite
         )
 
         version = st::Version.new(
-          number: 1,
+          number: @version,
           date:  Date.tomorrow,
           note: 'Sample wrapped Datacite document'
         )
