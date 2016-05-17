@@ -52,11 +52,12 @@ module StashEngine
 
     def update_identifier(doi)
       doi = doi.split(':', 2)[1] if doi.start_with?('doi:')
-      unless self.identifier.nil?
-        identifier = Identifier.where(resource_id: id).first
-        identifier.update(identifier: doi)
-     else
-        identifier = Identifier.create(resource_id: id, identifier: doi, identifier_type: 'DOI')
+      if self.identifier.nil?
+        identifier = Identifier.create(identifier: doi, identifier_type: 'DOI')
+        self.identifier_id = identifier.id
+        save
+      else
+        self.identifier.update(identifier: doi)
       end
     end
 
