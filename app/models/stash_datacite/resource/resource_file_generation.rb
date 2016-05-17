@@ -11,11 +11,26 @@ module StashDatacite
       def initialize(resource, current_tenant)
         @resource = resource
         @current_tenant = current_tenant
+        if @resource.identifier.blank?
+          @version = 1
+        else
+          last_version = @resource.identifier.last_submitted_version
+          if last_version.blank?
+            @version = 1
+          else
+            #this looks crazy, but association from resource to version to version field
+            @version = last_version.version.version + 1
+          end
+        end
       end
 
       def generate_identifier
-        @client = StashEzid::Client.new(@current_tenant.identifier_service.to_h)
-        identifier = @client.mint_id
+        if @resource.identifier
+          "#{@resource.identifier.identifier_type.downcase}:#{@resource.identifier.identifier}"
+        else
+          @client = StashEzid::Client.new(@current_tenant.identifier_service.to_h)
+          @client.mint_id
+        end
       end
 
       def generate_xml(target_url, identifier)
