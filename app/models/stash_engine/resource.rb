@@ -73,6 +73,20 @@ module StashEngine
       end
     end
 
+    def next_version
+      if self.identifier.blank?
+        return 1
+      else
+        last_version = self.identifier.last_submitted_version
+        if last_version.blank?
+          1
+        else
+          #this looks crazy, but association from resource to version to version field
+          last_version.version.version + 1
+        end
+      end
+    end
+
     # Extracting the dl URL is kludgy because it's not being returned directly
     def extract_download_url(xml_response, current_tenant)
       doc = Nokogiri::XML(xml_response)
