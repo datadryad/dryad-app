@@ -56,7 +56,7 @@ module StashDatacite
       file_generation(resource)
       create_resource_state(resource)
       redirect_to stash_url_helpers.dashboard_path, notice: "#{resource.titles.first.title} submitted
-        with DOI #{StashEngine::Identifier.where(resource_id: resource.id).first.identifier}.
+        with DOI #{resource.identifier.identifier}.
         There may be a delay for processing before the item is available."
     end
 

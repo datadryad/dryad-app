@@ -12,13 +12,13 @@ module StashDatacite
         @resource = resource
         @current_tenant = current_tenant
         @version = @resource.next_version
+        @client = StashEzid::Client.new(@current_tenant.identifier_service.to_h)
       end
 
       def generate_identifier
         if @resource.identifier
           "#{@resource.identifier.identifier_type.downcase}:#{@resource.identifier.identifier}"
         else
-          @client = StashEzid::Client.new(@current_tenant.identifier_service.to_h)
           @client.mint_id
         end
       end
