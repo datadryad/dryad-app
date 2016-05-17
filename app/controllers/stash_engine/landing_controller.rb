@@ -8,8 +8,9 @@ module StashEngine
       @identifiers = Identifier.where(identifier_type: @type).where(identifier: @id)
       render('not_available') && return if @identifiers.count < 1
       @id = @identifiers.first
-      @resource_id = @id.resource_id
-      @resource = @id.resource # XXX change this when we get versions working
+      @resource = @id.resources.submitted.last_version
+      render('not_available') && return if @resource.blank?
+      @resource_id = @resource.id
       @resource.increment_views
     end
   end
