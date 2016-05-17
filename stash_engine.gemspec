@@ -34,5 +34,6 @@ Gem::Specification.new do |s|
   s.add_dependency 'jquery-fileupload-rails', '~> 0.4.6'
   s.add_dependency 'filesize', '~> 0.1.1'
   s.add_dependency 'kaminari'
+  s.add_dependency 'amoeba', '~> 3.0.0'
   # you cannot add specific code repo to gemspec so it must just go in the Gemfile instead if for internal use
 end
