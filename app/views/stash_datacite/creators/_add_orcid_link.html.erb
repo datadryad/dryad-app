@@ -1,4 +1,3 @@
 <% unless resource.creators.any? { |creator| creator.orcid_id? } %>
-  <%#= link_to "add myself with my Orcid ID", "/stash/auth/orcid?resource_id=#{resource.id}", class: "add_my_Orcid_ID" %>
-  <%= link_to "add myself with my Orcid ID", "https://sandbox.orcid.org/signin?resource_id=#{resource.id}", class: "t-describe__group-add-button o-button__add add_my_Orcid_ID" %>
+  <%= link_to "add myself with my Orcid ID", "/stash/auth/orcid?resource_id=#{resource.id}", class: "add_my_Orcid_ID" %>
 <% end %>

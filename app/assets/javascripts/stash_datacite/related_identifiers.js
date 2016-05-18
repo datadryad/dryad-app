@@ -1,7 +1,7 @@
 // Place all the behaviors and hooks related to the matching controller here.
 // All this logic will automatically be available in application.js.
 function loadRelatedIdentifiers() {
-$( ".related_identifier" ).on('focus', function () {
+$( ".js-related_identifier" ).on('focus', function () {
   previous_value = this.value;
   }).change(function() {
     new_value = this.value;
@@ -12,7 +12,7 @@ $( ".related_identifier" ).on('focus', function () {
     }
   });
 
-  $( ".relation_type" ).on('focus', function () {
+  $( ".js-relation_type" ).on('focus', function () {
   previous_value = this.value;
   }).change(function() {
     new_value = this.value;
@@ -23,7 +23,7 @@ $( ".related_identifier" ).on('focus', function () {
     }
   });
 
-  $( ".related_identifier_type" ).on('focus', function () {
+  $( ".js-related_identifier_type" ).on('focus', function () {
   previous_value = this.value;
   }).change(function() {
     new_value = this.value;

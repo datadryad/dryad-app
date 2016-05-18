@@ -10,7 +10,7 @@ function loadContributors() {
       return split( term ).pop();
     }
 
-    $( ".funders" )
+    $( ".js-funders" )
       // don't navigate away from the field on tab when selecting an item
       .bind( "keydown", function( event ) {
         if ( event.keyCode === $.ui.keyCode.TAB &&
@@ -44,7 +44,7 @@ function loadContributors() {
       });
     });
 
-    $( ".funders" ).on('focus', function () {
+    $( ".js-funders" ).on('focus', function () {
       previous_value = this.value;
       }).change(function() {
         new_value = this.value;
@@ -55,7 +55,7 @@ function loadContributors() {
         }
     });
 
-    $( ".award_number" ).on('focus', function () {
+    $( ".js-award_number" ).on('focus', function () {
       previous_value = this.value;
       }).change(function() {
         new_value = this.value;
