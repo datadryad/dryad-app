@@ -2,13 +2,13 @@ PATH
   remote: .
   specs:
     stash_datacite (0.0.5)
-      datacite-mapping (~> 0.1, >= 0.1.14)
+      datacite-mapping (~> 0.1, >= 0.1.15)
       kaminari
       leaflet-rails
       rails (~> 4.2.4)
       responders (~> 2.0)
       rubyzip
-      stash-wrapper (~> 0.1, >= 0.1.8)
+      stash-wrapper (~> 0.1, >= 0.1.9)
 
 GEM
   remote: https://rubygems.org/
@@ -53,9 +53,9 @@ GEM
     builder (3.2.2)
     byebug (9.0.3)
     concurrent-ruby (1.0.2)
-    datacite-mapping (0.1.14)
+    datacite-mapping (0.1.15)
       typesafe_enum (~> 0.1, >= 0.1.7)
-      xml-mapping_extensions (~> 0.4)
+      xml-mapping_extensions (~> 0.4, >= 0.4.1)
     docile (1.1.5)
     erubis (2.7.0)
     globalid (0.3.6)
@@ -130,9 +130,9 @@ GEM
       actionpack (>= 4.0)
       activesupport (>= 4.0)
       sprockets (>= 3.0.0)
-    stash-wrapper (0.1.8)
+    stash-wrapper (0.1.9)
       typesafe_enum (~> 0.1, >= 0.1.7)
-      xml-mapping_extensions (~> 0.4)
+      xml-mapping_extensions (~> 0.4, >= 0.4.1)
     thor (0.19.1)
     thread_safe (0.3.5)
     typesafe_enum (0.1.7)
@@ -140,7 +140,7 @@ GEM
       thread_safe (~> 0.1)
     unicode-display_width (1.0.5)
     xml-mapping (0.10.0)
-    xml-mapping_extensions (0.4.0)
+    xml-mapping_extensions (0.4.1)
       mime-types (~> 2.5)
       typesafe_enum (~> 0.1, >= 0.1.5)
       xml-mapping (~> 0.10)
