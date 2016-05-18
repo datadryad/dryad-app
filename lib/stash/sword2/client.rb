@@ -18,6 +18,13 @@ module Stash
       attr_reader :on_behalf_of
       attr_reader :helper
 
+      # Creates a new {Client} for the specified collection URI, with the specified credentials.
+      #
+      # @param collection_uri [URI, String] The collection URI
+      # @param username [String] the username
+      # @param password [String] the password
+      # @param on_behalf_of [String, nil] the user for whom the original sword package was deposited on behalf of.
+      #   Defaults to `username`.
       def initialize(collection_uri:, username:, password:, on_behalf_of: nil, helper: nil)
         raise 'no collection URI provided' unless collection_uri
         raise 'no username provided' unless username
@@ -44,7 +51,7 @@ module Stash
       end
 
       # Updates a resource with a new zipfile
-      # @param se_iri [String, URI] the SWORD Edit IRI
+      # @param se_iri [URI, String] the SWORD Edit IRI
       # @param zipfile [String] the zipfile path
       def update(se_iri:, zipfile:)
         warn "#{zipfile} may not be a zipfile" unless zipfile.downcase.end_with?('.zip')
