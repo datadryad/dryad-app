@@ -1,6 +1,6 @@
 $('.remove_record').bind('ajax:success', function() {
   $(this).closest('form').remove();
   <% unless @resource.nil? %>
-    $('.add_orcid_link').replaceWith('<%= j render partial: "stash_datacite/creators/add_orcid_link", locals: {  resource: @resource } %>')
+    $('.js-add_orcid_link').replaceWith('<%= j render partial: "stash_datacite/creators/add_orcid_link", locals: {  resource: @resource } %>')
   <% end %>
 });
