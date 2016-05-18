@@ -1,3 +1,11 @@
+# 0.1.9 (18 May 2016)
+
+- Update to XML::MappingExtensions 0.4.1
+
+# 0.1.8 (17 May 2016)
+
+- Update to XML::MappingExtensions 0.4.0
+
 # 0.1.7 (2 May 2016)
 
 - Fix issue where namespace would not be set correctly when round-tripping from XML

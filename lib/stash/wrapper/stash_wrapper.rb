@@ -13,7 +13,7 @@ module Stash
       namespace ::XML::MappingExtensions::Namespace.new(
         prefix: 'st',
         uri: 'http://dash.cdlib.org/stash_wrapper/',
-        schema_location: 'http://dash.cdlib.org/stash_wrapper/ http://dash.cdlib.org/stash_wrapper/stash_wrapper.xsd'
+        schema_location: 'http://dash.cdlib.org/stash_wrapper/stash_wrapper.xsd'
       )
 
       root_element_name 'stash_wrapper'
