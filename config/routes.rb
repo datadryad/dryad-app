@@ -19,6 +19,7 @@ StashEngine::Engine.routes.draw do
   get 'upload_basics', to: 'dashboard#upload_basics', as: 'upload_basics'
 
   match 'metadata_entry_pages/find_or_create' => 'metadata_entry_pages#find_or_create', via: [:get, :post, :put]
+  match 'metadata_entry_pages/new_version' => 'metadata_entry_pages#new_version', via: [:post]
 
   # root 'sessions#index'
   root 'pages#home'

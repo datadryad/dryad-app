@@ -8,6 +8,20 @@ module StashEngine
       @resource = Resource.find(params[:resource_id])
     end
 
+    #create a new version of this resource before editing with find or create
+    def new_version
+      #create new version deep copy of most items
+      @resource = Resource.find(params[:resource_id])
+      @new_res = @resource.amoeba_dup
+      @new_res.save!
+      res_state = ResourceState.create(user_id: current_user.id, resource_state: 'in_progress', resource_id: @new_res.id)
+      @new_res.current_resource_state_id = res_state.id
+      @new_res.save!
+
+      #redirect to find or create path
+      redirect_to metadata_entry_pages_find_or_create_path(resource_id: @new_res.id)
+    end
+
     def metadata_callback
       auth_hash = request.env['omniauth.auth']
       params = request.env['omniauth.params']
