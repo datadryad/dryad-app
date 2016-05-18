@@ -33,11 +33,13 @@ module Stash
         ::XML::MappingExtensions.to_uri(url)
       end
 
-      def create(slug:, zipfile:)
+      # @param doi [String] the DOI
+      # @param zipfile [String] the zipfile path
+      def create(doi:, zipfile:)
         warn "#{zipfile} may not be a zipfile" unless zipfile.downcase.end_with?('.zip')
         uri = collection_uri.to_s
 
-        headers = create_request_headers(zipfile, slug)
+        headers = create_request_headers(zipfile, doi)
 
         File.open(zipfile, 'rb') do |file|
           helper.post(uri: uri, payload: file, headers: headers)
