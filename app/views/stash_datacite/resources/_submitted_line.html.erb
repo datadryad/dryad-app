@@ -2,9 +2,9 @@
 <tr>
   <td>
     <% if line.resource && line.resource.geolocation == true %>
-      <%=  image_tag('stash_datacite/geolocation.png', size: '20x20', alt: 'Box') %><%= line.title %>
+      <%=  image_tag('stash_datacite/geolocation.png', size: '20x20', alt: 'Box') %><%= link_to line.title, stash_url_helpers.show_path(line.external_identifier) %>
     <% else %>
-      <%= line.title %>
+      <%= link_to line.title, stash_url_helpers.show_path(line.external_identifier) %>
     <% end %>
   </td>
   <td>
