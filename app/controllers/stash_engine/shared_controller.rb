@@ -1,6 +1,7 @@
 module StashEngine
   module SharedController
     require 'uri'
+    require 'securerandom'
     #helper_method :current_tenant, :current_user, :metadata_engine, :metadata_url_helpers
 
     def metadata_url_helpers
@@ -66,6 +67,15 @@ module StashEngine
     # helper to generate URL for landing page for an identifier with currently logged-in tenant
     def landing_url(identifier)
       current_tenant.landing_url(stash_url_helpers.show_path(identifier))
+    end
+
+    # make suffix number making ids in html forms
+    def field_suffix(object)
+      if object && object.id
+        "_#{object.id}"
+      else
+        "_#{SecureRandom.uuid}"
+      end
     end
   end
 end
