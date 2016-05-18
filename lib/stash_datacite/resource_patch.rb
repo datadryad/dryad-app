@@ -34,6 +34,13 @@ module StashDatacite
         has_and_belongs_to_many :subjects, class_name: 'StashDatacite::Subject',
                                            through: 'StashDatacite::ResourceSubject' #optional
         has_many :titles, class_name: 'StashDatacite::Title' # required
+
+        # this enables deep copying of the resource
+        amoeba do
+          include_association [:contributors, :creators, :datacite_dates, :descriptions, :embargoes, :geolocation_boxes,
+                              :geolocation_places, :geolocation_points, :publication_years, :publishers,
+                              :related_identifiers, :resource_type, :rights, :size, :subjects, :titles]
+        end
       end
     end
   end
