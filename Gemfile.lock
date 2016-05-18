@@ -20,13 +20,13 @@ PATH
   remote: ../stash_engines
   specs:
     stash_datacite (0.0.5)
-      datacite-mapping (~> 0.1, >= 0.1.13)
+      datacite-mapping (~> 0.1, >= 0.1.15)
       kaminari
       leaflet-rails
       rails (~> 4.2.4)
       responders (~> 2.0)
       rubyzip
-      stash-wrapper (~> 0.1, >= 0.1.8)
+      stash-wrapper (~> 0.1, >= 0.1.9)
     stash_discovery (0.0.1)
       devise-guests (~> 0.3)
       geoblacklight (~> 0.12.1)
@@ -135,9 +135,9 @@ GEM
       execjs
     coffee-script-source (1.10.0)
     concurrent-ruby (1.0.2)
-    datacite-mapping (0.1.13)
+    datacite-mapping (0.1.15)
       typesafe_enum (~> 0.1, >= 0.1.7)
-      xml-mapping_extensions (~> 0.3, >= 0.3.6)
+      xml-mapping_extensions (~> 0.4, >= 0.4.1)
     debug_inspector (0.0.2)
     deprecation (1.0.0)
       activesupport
@@ -346,9 +346,9 @@ GEM
     sshkit (1.10.0)
       net-scp (>= 1.1.2)
       net-ssh (>= 2.8.0)
-    stash-wrapper (0.1.8)
+    stash-wrapper (0.1.9)
       typesafe_enum (~> 0.1, >= 0.1.7)
-      xml-mapping_extensions (~> 0.4)
+      xml-mapping_extensions (~> 0.4, >= 0.4.1)
     sword2ruby (1.0.1)
       atom-tools (~> 2.0.5)
       hpricot (~> 0.8.3)
@@ -377,7 +377,7 @@ GEM
       railties (>= 4.0)
       sprockets-rails (>= 2.0, < 4.0)
     xml-mapping (0.10.0)
-    xml-mapping_extensions (0.4.0)
+    xml-mapping_extensions (0.4.1)
       mime-types (~> 2.5)
       typesafe_enum (~> 0.1, >= 0.1.5)
       xml-mapping (~> 0.10)
