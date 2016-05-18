@@ -29,10 +29,7 @@ module Stash
         @helper       = helper || HTTPHelper.new(username: username, password: password, user_agent: "stash-sword2 #{VERSION}")
       end
 
-      def to_uri(url)
-        ::XML::MappingExtensions.to_uri(url)
-      end
-
+      # Creates a new resource for the specified DOI with the specified zipfile
       # @param doi [String] the DOI
       # @param zipfile [String] the zipfile path
       def create(doi:, zipfile:)
@@ -46,6 +43,9 @@ module Stash
         end
       end
 
+      # Updates a resource with a new zipfile
+      # @param se_iri [String, URI] the SWORD Edit IRI
+      # @param zipfile [String] the zipfile path
       def update(se_iri:, zipfile:)
         warn "#{zipfile} may not be a zipfile" unless zipfile.downcase.end_with?('.zip')
         uri = to_uri(se_iri).to_s
@@ -101,6 +101,11 @@ module Stash
         content << "--#{boundary}--#{EOL}"
         SequenceIO.new(content).binmode
       end
+
+      def to_uri(url)
+        ::XML::MappingExtensions.to_uri(url)
+      end
+      protected :to_uri
 
     end
   end

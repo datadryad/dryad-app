@@ -4,16 +4,16 @@ require 'webmock/rspec'
 module Stash
   module Sword2
     describe Client do
-      attr_reader :username, :client, :password, :on_behalf_of, :zipfile, :slug, :collection_uri
+      attr_reader :username, :client, :password, :on_behalf_of, :zipfile, :doi, :collection_uri
 
       before(:each) do
-        @username = 'ucb_dash_submitter'
-        @password = 'ucb_dash_password'
+        @username       = 'ucb_dash_submitter'
+        @password       = 'ucb_dash_password'
         @collection_uri = 'http://uc3-mrtsword-dev.cdlib.org:39001/mrtsword/collection/dash_ucb'
-        @on_behalf_of = 'ucb_dash_author'
-        @client = Client.new(collection_uri: @collection_uri, username: @username, password: @password, on_behalf_of: @on_behalf_of)
-        @zipfile = 'examples/uploads/example.zip'
-        @slug = "doi:10.5072/FK#{Time.now.getutc.xmlschema.gsub(/[^0-9a-z]/i, '')}"
+        @on_behalf_of   = 'ucb_dash_author'
+        @client         = Client.new(collection_uri: @collection_uri, username: @username, password: @password, on_behalf_of: @on_behalf_of)
+        @zipfile        = 'examples/uploads/example.zip'
+        @doi            = "doi:10.5072/FK#{Time.now.getutc.xmlschema.gsub(/[^0-9a-z]/i, '')}"
       end
 
       describe '#create' do
@@ -24,7 +24,7 @@ module Stash
             body: '<entry xmlns="http://www.w3.org/2005/Atom"><id>http://merritt.cdlib.org/sword/v2/object/ark:/99999/fk4t157x4p</id><author><name>ucb_dash_submitter</name></author><generator uri="http://www.swordapp.org/" version="2.0" /><link href="http://merritt.cdlib.org/sword/v2/object/ark:/99999/fk4t157x4p" rel="edit" /><link href="http://merritt.cdlib.org/sword/v2/object/ark:/99999/fk4t157x4p" rel="http://purl.org/net/sword/terms/add" /><link href="http://merritt.cdlib.org/sword/v2/object/ark:/99999/fk4t157x4p" rel="edit-media" /><treatment xmlns="http://purl.org/net/sword/terms/">no treatment information available</treatment></entry>'
           )
 
-          client.create(zipfile: zipfile, slug: slug)
+          client.create(zipfile: zipfile, doi: doi)
 
           md5 = Digest::MD5.file(zipfile).to_s
 
@@ -37,7 +37,7 @@ module Stash
             {
               'On-Behalf-Of' => on_behalf_of,
               'Packaging' => 'http://purl.org/net/sword/package/SimpleZip',
-              'Slug' => slug,
+              'Slug' => doi,
               'Content-Disposition' => 'attachment; filename=example.zip',
               'Content-MD5' => md5,
               'Content-Length' => /[0-9]+/,
@@ -58,7 +58,7 @@ module Stash
 
       describe '#update' do
         it 'PUTs with the correct headers' do
-          se_iri = "http://merritt.cdlib.org/sword/v2/object/#{slug}"
+          se_iri = "http://merritt.cdlib.org/sword/v2/object/#{doi}"
           authorized_uri = se_iri.sub('http://', "http://#{username}:#{password}@")
 
           stub_request(:put, authorized_uri)
