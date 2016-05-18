@@ -12,23 +12,30 @@ module Stash
       APPLICATION_ZIP            = 'application/zip'.freeze
       MULTIPART_RELATED_ATOM_XML = 'multipart/related; type="application/atom+xml"'.freeze
 
+      attr_reader :collection_uri
       attr_reader :username
       attr_reader :password
       attr_reader :on_behalf_of
       attr_reader :helper
 
-      def initialize(username:, password:, on_behalf_of: nil, helper: nil)
+      def initialize(collection_uri:, username:, password:, on_behalf_of: nil, helper: nil)
+        raise 'no collection URI provided' unless collection_uri
         raise 'no username provided' unless username
         raise 'no password provided' unless password
+        @collection_uri = to_uri(collection_uri)
         @username     = username
         @password     = password
         @on_behalf_of = on_behalf_of || username
         @helper       = helper || HTTPHelper.new(username: username, password: password, user_agent: "stash-sword2 #{VERSION}")
       end
 
-      def create(collection_uri:, slug:, zipfile:)
+      def to_uri(url)
+        ::XML::MappingExtensions.to_uri(url)
+      end
+
+      def create(slug:, zipfile:)
         warn "#{zipfile} may not be a zipfile" unless zipfile.downcase.end_with?('.zip')
-        uri = Sword2.to_uri(collection_uri).to_s
+        uri = collection_uri.to_s
 
         headers = create_request_headers(zipfile, slug)
 
@@ -37,9 +44,9 @@ module Stash
         end
       end
 
-      def update(edit_iri:, zipfile:)
+      def update(se_iri:, zipfile:)
         warn "#{zipfile} may not be a zipfile" unless zipfile.downcase.end_with?('.zip')
-        uri = Sword2.to_uri(edit_iri).to_s
+        uri = to_uri(se_iri).to_s
 
         boundary        = "========#{Time.now.to_i}=="
         stream          = stream_for(zipfile: File.open(zipfile, 'rb'), boundary: boundary)
