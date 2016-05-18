@@ -54,6 +54,7 @@ module Stash
         it 'forwards a success response'
         it 'forwards a 4xx error'
         it 'forwards a 5xx error'
+        it 'forwards an internal exception'
       end
 
       describe '#update' do
@@ -102,6 +103,7 @@ module Stash
         it 'forwards a success response'
         it 'forwards a 4xx error'
         it 'forwards a 5xx error'
+        it 'forwards an internal exception'
       end
 
     end

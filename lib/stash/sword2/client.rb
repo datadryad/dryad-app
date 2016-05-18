@@ -37,37 +37,61 @@ module Stash
       end
 
       # Creates a new resource for the specified DOI with the specified zipfile
+      #
       # @param doi [String] the DOI
       # @param zipfile [String] the zipfile path
+      # @return [DepositReceipt] the deposit receipt
       def create(doi:, zipfile:)
         warn "#{zipfile} may not be a zipfile" unless zipfile.downcase.end_with?('.zip')
         uri = collection_uri.to_s
-
-        headers = create_request_headers(zipfile, doi)
-
-        File.open(zipfile, 'rb') do |file|
-          helper.post(uri: uri, payload: file, headers: headers)
-        end
+        response = do_post(uri, zipfile, create_request_headers(zipfile, doi))
+        receipt_from(response)
       end
 
       # Updates a resource with a new zipfile
+      #
       # @param se_iri [URI, String] the SWORD Edit IRI
       # @param zipfile [String] the zipfile path
       def update(se_iri:, zipfile:)
         warn "#{zipfile} may not be a zipfile" unless zipfile.downcase.end_with?('.zip')
         uri = to_uri(se_iri).to_s
+        response = do_put(uri, zipfile)
+        if [301, 302, 307].include?(response.code)
+          response = response.follow_get_redirection
+        end
+        response.code # TODO: what if anything should we return here?
+      end
 
+      private
+
+      def receipt_from(response)
+        body = response.body.strip
+        return DepositReceipt.parse_xml(body) unless body.empty?
+
+        edit_iri = response.headers[:location]
+        return nil unless edit_iri
+
+        body = helper.get(to_uri(edit_iri))
+        return nil unless body
+
+        DepositReceipt.parse_xml(body)
+      end
+
+      def do_post(uri, zipfile, headers)
+        File.open(zipfile, 'rb') do |file|
+          return helper.post(uri: uri, payload: file, headers: headers)
+        end
+      end
+
+      def do_put(uri, zipfile)
         boundary        = "========#{Time.now.to_i}=="
         stream          = stream_for(zipfile: File.open(zipfile, 'rb'), boundary: boundary)
-
         begin
-          helper.put(uri: uri, headers: update_request_headers(stream, boundary), payload: stream)
+          return helper.put(uri: uri, headers: update_request_headers(stream, boundary), payload: stream)
         ensure
           stream.close
         end
       end
-
-      private
 
       def create_request_headers(zipfile, slug)
         {
