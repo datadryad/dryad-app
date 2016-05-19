@@ -77,7 +77,7 @@ module StashDatacite
 
           resource_type: dm::ResourceType.new(resource_type_general: @type, value: "#{@resource.resource_type.resource_type}" ),
 
-          version: '1',
+          version: @version,
 
           descriptions: [
             dm::Description.new(
@@ -134,7 +134,7 @@ module StashDatacite
 
         wrapper = st::StashWrapper.new(
           identifier: identifier,
-          version: version,
+          version: @version,
           license: license,
           embargo: embargo,
           inventory: inventory,
