@@ -6,12 +6,19 @@ module StashEngine
     # GET/POST/PUT  /generals/find_or_create
     def find_or_create
       @resource = Resource.find(params[:resource_id])
+      if @resource.current_resource_state == 'submitted'
+        redirect_to metadata_entry_pages_new_version_path(resource_id: params[:resource_id]) and return
+      end
     end
 
     #create a new version of this resource before editing with find or create
     def new_version
       #create new version deep copy of most items
       @resource = Resource.find(params[:resource_id])
+      if @resource.identifier.has_in_progress?
+        id = @resource.identifier.in_progress_version.id
+        redirect_to metadata_entry_pages_find_or_create_path(resource_id: id) and return
+      end
       @new_res = @resource.amoeba_dup
       @new_res.save!
       res_state = ResourceState.create(user_id: current_user.id, resource_state: 'in_progress', resource_id: @new_res.id)

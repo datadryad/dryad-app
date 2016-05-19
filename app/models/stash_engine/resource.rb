@@ -63,13 +63,12 @@ module StashEngine
 
     def update_version(zipfile)
       zip_filename = File.basename(zipfile)
-      unless self.version.nil?
-        version = Version.where(resource_id: id, zip_filename: zip_filename).first
-        version.increment(:version)
+      if self.version.nil?
+        version = Version.new(resource_id: id, zip_filename: zip_filename, version: next_version)
         version.save!
       else
-        version = Version.new(resource_id: id, zip_filename: zip_filename)
-        version.increment(:version)
+        version = Version.where(resource_id: id, zip_filename: zip_filename).first
+        version.version = next_version
         version.save!
       end
     end

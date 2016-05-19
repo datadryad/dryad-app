@@ -18,6 +18,10 @@ module StashEngine
       self.resources.submitted.last_version
     end
 
+    def in_progress_version
+      self.resources.in_progress.first
+    end
+
     # returns true if there is an in progress version
     def has_in_progress?
       self.resources.in_progress.count > 0
