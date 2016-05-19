@@ -1,21 +1,19 @@
 require 'digest'
 require 'uri'
-require 'stash/sword2/sequence_io'
+require 'stash/sword2/header_utils'
 require 'stash/sword2/http_helper'
+require 'stash/sword2/sequence_io'
 
 module Stash
   module Sword2
     class Client
+      include HeaderUtils
 
-      EOL                        = "\r\n".freeze
-      SIMPLE_ZIP                 = 'http://purl.org/net/sword/package/SimpleZip'.freeze
-      APPLICATION_ZIP            = 'application/zip'.freeze
-      MULTIPART_RELATED_ATOM_XML = 'multipart/related; type="application/atom+xml"'.freeze
+      EOL = "\r\n".freeze
 
       attr_reader :collection_uri
       attr_reader :username
       attr_reader :password
-      attr_reader :on_behalf_of
       attr_reader :helper
 
       # Creates a new {Client} for the specified collection URI, with the specified credentials.
@@ -46,6 +44,9 @@ module Stash
         uri = collection_uri.to_s
         response = do_post(uri, zipfile, create_request_headers(zipfile, doi))
         receipt_from(response)
+      rescue => e
+        log(e.response) if e.respond_to?(:response)
+        raise
       end
 
       # Updates a resource with a new zipfile
@@ -55,12 +56,7 @@ module Stash
       def update(se_iri:, zipfile:)
         warn "#{zipfile} may not be a zipfile" unless zipfile.downcase.end_with?('.zip')
         uri = to_uri(se_iri).to_s
-        response = do_put(uri, zipfile)
-        if [301, 302, 307].include?(response.code)
-          log(response)
-          log.debug("Response code #{response.code}; redirecting")
-          response = response.follow_get_redirection
-        end
+        response = maybe_redirect(do_put(uri, zipfile))
         log(response)
         response.code # TODO: what if anything should we return here?
       rescue => e
@@ -69,6 +65,13 @@ module Stash
       end
 
       private
+
+      def maybe_redirect(response)
+        return response unless [301, 302, 307].include?(response.code)
+        log(response)
+        log.debug("Response code #{response.code}; redirecting")
+        response.follow_get_redirection
+      end
 
       def receipt_from(response)
         log(response)
@@ -101,36 +104,6 @@ module Stash
         end
       end
 
-      def create_request_headers(zipfile, slug)
-        {
-          'Content-Type'        => APPLICATION_ZIP,
-          'Content-Disposition' => "attachment; filename=#{File.basename(zipfile)}",
-          'Packaging'           => SIMPLE_ZIP,
-          'Content-MD5'         => Digest::MD5.file(zipfile).to_s,
-          'On-Behalf-Of'        => on_behalf_of,
-          'Slug'                => slug
-        }
-      end
-
-      def update_request_headers(stream, boundary)
-        {
-          'Content-Length' => stream.size.to_s,
-          'Content-Type'   => "#{MULTIPART_RELATED_ATOM_XML}; boundary=\"#{boundary}\"",
-          'On-Behalf-Of'   => on_behalf_of,
-          'MIME-Version'   => '1.0'
-        }
-      end
-
-      def update_mime_headers(zipfile)
-        {
-          'Content-Type'        => APPLICATION_ZIP,
-          'Content-Disposition' => "attachment; name=payload; filename=\"#{File.basename(zipfile)}\"",
-          'Packaging'           => SIMPLE_ZIP,
-          'Content-MD5'         => Digest::MD5.file(zipfile).to_s,
-          'MIME-Version'        => '1.0'
-        }
-      end
-
       def stream_for(zipfile:, boundary:)
         content = []
         # strictly speaking, do we need an Atom <entry/> first?
@@ -145,10 +118,8 @@ module Stash
         msg = [
           '-----------------------------------------------------',
           "code: #{response.code}",
-          '-----------------------------------------------------',
           'headers:',
           response.headers.map { |k, v| "\t#{k}:#{v}" }.join("\n"),
-          '-----------------------------------------------------',
           "body:\n#{response.body}",
           '-----------------------------------------------------'
         ].join("\n")
