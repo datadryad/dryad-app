@@ -73,6 +73,16 @@ module StashEngine
       end
     end
 
+    #smartly gives a version number for this resource for either current version if version is already set
+    #or what it would be when it is submitted (the versino to be), assuming it's submitted next
+    def smart_version
+      if self.version.blank? || self.version.version == 0
+        next_version
+      else
+        self.version.version
+      end
+    end
+
     def next_version
       if self.identifier.blank?
         return 1
