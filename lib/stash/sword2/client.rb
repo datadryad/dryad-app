@@ -57,14 +57,22 @@ module Stash
         uri = to_uri(se_iri).to_s
         response = do_put(uri, zipfile)
         if [301, 302, 307].include?(response.code)
+          log(response)
+          log.debug("Response code #{response.code}; redirecting")
           response = response.follow_get_redirection
         end
+        log(response)
         response.code # TODO: what if anything should we return here?
+      rescue => e
+        log(e.response) if e.respond_to?(:response)
+        raise
       end
 
       private
 
       def receipt_from(response)
+        log(response)
+
         body = response.body.strip
         return DepositReceipt.parse_xml(body) unless body.empty?
 
@@ -131,6 +139,20 @@ module Stash
         content << zipfile
         content << "--#{boundary}--#{EOL}"
         SequenceIO.new(content).binmode
+      end
+
+      def log(response)
+        msg = [
+          '-----------------------------------------------------',
+          "code: #{response.code}",
+          '-----------------------------------------------------',
+          'headers:',
+          response.headers.map { |k, v| "\t#{k}:#{v}" }.join("\n"),
+          '-----------------------------------------------------',
+          "body:\n#{response.body}",
+          '-----------------------------------------------------'
+        ].join("\n")
+        Sword2.log.debug(msg)
       end
 
       def to_uri(url)
