@@ -1,18 +1,19 @@
 <%# the local variable 'related_identifier' should be passed in to this partial when there are multiple per page %>
 <% form_id = unique_form_id(related_identifier) %>
 <%= form_for(related_identifier, url: path, remote: true, authenticity_token: true, html: { id: form_id, class: 'c-input__inline' }) do |f| %>
+  <% my_suffix = field_suffix(related_identifier) %>
   <%#= render "datacite/shared/error_messages", :target => @related_identifier %>
   <div class="c-input">
-    <%= f.label :relation_type_id, "Relationship", class: 'c-input__label' %>
-    <%= f.select(:relation_type_id, StashDatacite::RelationType.all.map{|r| [r.relation_type, r.id]}, {prompt: "select relationship"}, {class: "js-relation_type c-input__select"}) %>
+    <%= f.label "relation_type_id_#{my_suffix}", "Relationship", class: 'c-input__label' %>
+    <%= f.select(:relation_type_id, StashDatacite::RelationType.all.map{|r| [r.relation_type, r.id]}, {prompt: "select relationship"}, {id: "relation_type_id_#{my_suffix}", class: "js-relation_type c-input__select"}) %>
   </div>
   <div class="c-input">
-    <%= f.label :related_identifier_type_id, "ID Type", class: 'c-input__label' %>
-    <%= f.select(:related_identifier_type_id, StashDatacite::RelatedIdentifierType.all.map{|r| [r.related_identifier_type, r.id ]}, {prompt: "identifier_type"}, {class: "js-related_identifier_type c-input__select"}) %>
+    <%= f.label "related_identifier_type_id_#{my_suffix}", "ID Type", class: 'c-input__label' %>
+    <%= f.select(:related_identifier_type_id, StashDatacite::RelatedIdentifierType.all.map{|r| [r.related_identifier_type, r.id ]}, {prompt: "identifier_type"}, {id: "related_identifier_type_id_#{my_suffix}", class: "js-related_identifier_type c-input__select"}) %>
   </div>
   <div class="c-input">
-    <%= f.label :related_identifier, "Identifier", class: 'c-input__label' %>
-    <%= f.text_field :related_identifier, size: 40, class: "js-related_identifier c-input__text"  %>
+    <%= f.label "related_identifier_#{my_suffix}", "Identifier", class: 'c-input__label' %>
+    <%= f.text_field :related_identifier, size: 40, id: "related_identifier_#{my_suffix}", class: "js-related_identifier c-input__text"  %>
   </div>
   <%= link_to 'remove', stash_datacite.related_identifiers_delete_path(related_identifier.id || 'new'), method: :delete, remote: true, data: { confirm: 'Are you sure?' }, class: 'remove_record t-describe__remove-button o-button__remove' %>
     <%= f.hidden_field :resource_id %>

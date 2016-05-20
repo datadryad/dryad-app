@@ -2,18 +2,20 @@
   # the 'path' to submit to should also be passed in. %>
 <% form_id = unique_form_id(creator) %>
 <%= form_for(creator, url: path, remote: true, authenticity_token: true, html: { id: form_id, class: 'c-input__inline' }) do |f| %>
+<% my_suffix = field_suffix(creator) %>
+
 <%#= render "datacite/shared/error_messages", target: @creator %>
   <div class="c-input">
-    <%= f.label :creator_first_name, "First Name", class: 'c-input__label' %>
-    <%= f.text_field :creator_first_name, class: "c-input__text js-creator_first_name" %>
+    <%= f.label "creator_first_name_#{my_suffix}", "First Name", class: 'c-input__label' %>
+    <%= f.text_field :creator_first_name, id: "creator_first_name_#{my_suffix}", class: "c-input__text js-creator_first_name" %>
   </div>
   <div class="c-input">
-    <%= f.label :creator_last_name, "Last Name", class: 'c-input__label required' %>
-    <%= f.text_field :creator_last_name, class: "c-input__text js-creator_last_name" %>
+    <%= f.label "creator_last_name_#{my_suffix}", "Last Name", class: 'c-input__label required' %>
+    <%= f.text_field :creator_last_name, id: "creator_last_name_#{my_suffix}", class: "c-input__text js-creator_last_name" %>
   </div>
   <div class="c-input">
-    <%= f.label :affliation_id, "Institutional Affiliation", class: 'c-input__label' %>
-    <%= text_field_tag(:affliation, creator.affliation.try(:long_name), class: 'c-input__text js-affliation') %>
+    <%= f.label "affliation_id_#{my_suffix}", "Institutional Affiliation", class: 'c-input__label' %>
+    <%= text_field_tag(:affliation, creator.affliation.try(:long_name), id: "affliation_id_#{my_suffix}", class: 'c-input__text js-affliation') %>
   </div>
   <%= link_to 'remove', stash_datacite.creators_delete_path(creator.id || 'new'), method: :delete, remote: true, data: { confirm: 'Are you sure?' }, class: 't-describe__remove-button o-button__remove remove_record' %>
   <div>
