@@ -56,13 +56,10 @@
   }
 </style>
 
-<div style="float: left;" class="buttony">
-  <%= link_to 'Back to Describe Dataset', metadata_entry_pages_find_or_create_path(resource_id: params[:id]) %>
+<div class="t-describe__dataset-nav o-dataset-nav">
+  <%= link_to 'Back to Describe Dataset', metadata_entry_pages_find_or_create_path(resource_id: params[:id]), class: 'o-button__icon-left', role: 'button' %>
+  <%= link_to 'Proceed to Review', review_resource_path(params[:id]), class: 'o-button__icon-right', role: 'button' %>
 </div>
-<div style="float: right;" class="buttony">
-  <%= link_to 'Proceed to Review', review_resource_path(params[:id]) %>
-</div>
-<div style="clear: both"></div>
 
 <script type="text/javascript" charset="utf-8">
   $(function () {
