@@ -43,7 +43,6 @@ module StashDatacite
       end
 
       def files
-        @resource.clean_uploads
         @resource.file_uploads.count
       end
 
