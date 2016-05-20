@@ -32,14 +32,12 @@
       </span>
 
 </div>
-<div style = "float: left;margin: auto;">
-  <%= link_to 'Back to My Datasets', stash_url_helpers.dashboard_path , id: 'dashboard_path', class: 'link_like_button' %>
-</div>
-<div style = "float: right;margin: auto;">
+<div class="t-describe__dataset-nav o-dataset-nav">
+  <%= link_to 'Back to My Datasets', stash_url_helpers.dashboard_path , id: 'dashboard_path', class: 'o-button__icon-left', role: 'button' %>
   <% if @data.blank? %>
-    <%= link_to "Submit", stash_datacite.resources_submission_path(resource_id: @resource.id), data: { confirm: 'You sure you want to submit?'} , class: 'link_like_button' %>
+    <%= link_to "Submit", stash_datacite.resources_submission_path(resource_id: @resource.id), data: { confirm: 'You sure you want to submit?'} , class: 'o-button__plain-text2', role: 'button' %>
   <% else %>
-    <%= button_to("Submit", stash_datacite.resources_submission_path(resource_id: @resource.id), disabled: true, class: 'link_like_button') %>
+    <%= button_to("Submit", stash_datacite.resources_submission_path(resource_id: @resource.id), disabled: true, class: 'o-button__plain-text2') %>
   <% end %>
 </div>
 
