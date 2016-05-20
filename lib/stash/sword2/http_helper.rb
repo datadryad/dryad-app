@@ -69,7 +69,17 @@ module Stash
         options[:user]     = username if username
         options[:password] = password if password
 
+        log_request(options)
+
         RestClient::Request.execute(**options)
+      end
+
+      def log_request(options)
+        msg = options.map do |k, v|
+          value = v.is_a?(Hash) ? v.map { |k2, v2| "\n\t#{k2}: #{v2}"}.join : v
+          "#{k}: #{value}"
+        end.join("\n")
+        Sword2.log.debug(msg)
       end
 
       # TODO: Consider rewriting with RestClient
