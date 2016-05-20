@@ -1,9 +1,10 @@
 <%# the local variable 'resource_type' should be passed in to this partial when there are multiple per page %>
 <% form_id = unique_form_id(resource_type) %>
 <%= form_for(resource_type, url: path, remote: true, authenticity_token: true, html: { id: form_id, class: 't-describe__select1 c-input' }) do |f| %>
+  <% my_suffix = field_suffix(resource_type) %>
   <%#= render "datacite/shared/error_messages", :target => @resource_type %>
-  <%= f.label :resource_type, "Type of Data", class: 'required c-input__label' %>
-  <%= f.select(:resource_type, StashDatacite::ResourceType.resource_types.keys, {prompt: "Select Type"}, {class: 'c-input__select js-resource_type'}) %>
+  <%= f.label "resource_type_#{my_suffix}", "Type of Data", class: 'required c-input__label' %>
+  <%= f.select(:resource_type, StashDatacite::ResourceType.resource_types.keys, {prompt: "Select Type"}, { id: "resource_type_#{my_suffix}", class: 'c-input__select js-resource_type'}) %>
   <%= f.hidden_field :resource_id %>
   <%= f.hidden_field :id %>
   <%= hidden_field_tag(:form_id, form_id) %>
