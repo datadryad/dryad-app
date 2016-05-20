@@ -22,6 +22,7 @@ module StashEngine
     scope :in_progress, -> { joins(:current_state).where(stash_engine_resource_states: {resource_state:  :in_progress}) }
     scope :submitted, -> { joins(:current_state).where(stash_engine_resource_states: {resource_state:  :submitted}) }
     scope :last_version, -> { joins(:version).order('stash_engine_versions.version DESC').first }
+    scope :by_version, -> { joins(:version).order('stash_engine_versions.version ASC') }
 
     # clean up the uploads with files that no longer exist for this resource
     def clean_uploads
