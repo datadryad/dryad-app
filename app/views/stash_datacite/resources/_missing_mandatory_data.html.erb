@@ -8,6 +8,15 @@
     <p><%= image_tag("stash_datacite/error_warning.png", size: "20x20", alt: "error_warning") %>&nbsp;&nbsp;You must edit the description to include the following before you can submit your dataset:</p>
     <strong><%= data.join("<br>").html_safe %></strong>
   </div>
+
+<!-- Integrated code once jQuery source fixed:
+    <div class="js-alert c-alert--error" role="alert">
+    <div class="c-alert__text">
+      You must edit the description to include the following before you can submit your dataset:
+      <p><strong><%= data.join("<br>").html_safe %></strong></p>
+    </div>
+    <button aria-label="close" class="js-alert__close o-button__close c-alert__close"></button>
+  </div> -->
 <% end %>
 
 <script type="text/javascript">
