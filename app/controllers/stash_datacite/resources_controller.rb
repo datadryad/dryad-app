@@ -23,7 +23,8 @@ module StashDatacite
     def user_submitted
       respond_to do |format|
         format.js do
-          @resources = StashDatacite.resource_class.where(user_id: session[:user_id]).submitted.
+          #@resources = StashDatacite.resource_class.where(user_id: session[:user_id]).submitted.
+          @resources = current_user.latest_completed_resource_per_identifier.
               page(@page).per(@page_size)
           @submitted_lines = @resources.map { |resource| DatasetPresenter.new(resource) }
         end
