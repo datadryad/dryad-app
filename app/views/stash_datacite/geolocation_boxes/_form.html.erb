@@ -1,16 +1,19 @@
 <%# the local variable 'geolocation_box' should be passed in to this partial when there are multiple per page %>
-<div id="geolocation_box">
-  <%= form_for(geolocation_box, url: stash_datacite.geolocation_boxes_create_path, remote: true, authenticity_token: true, html: {id: "geolocation_box_new_form"}) do |f| %>
+<div id="geolocation_box" style="flex: 1 0 auto">
+  <%= form_for(geolocation_box, url: stash_datacite.geolocation_boxes_create_path, remote: true, authenticity_token: true, html: {id: "geolocation_box_new_form", class: 'c-location__box-inputs'}) do |f| %>
     <%#= render "datacite/shared/error_messages", :target => @geolocation_box %>
-    <sub>sw</sub>
-    <%= f.text_field :sw_latitude, class: 'geo', id: "geo_sw_lat_point" %>&nbsp;&nbsp;
-    <%= f.text_field :sw_longitude, class: 'geo', id: "geo_sw_lng_point" %>&nbsp;&nbsp;,&nbsp;&nbsp;
-    <sub>ne</sub>
-    <%= f.text_field :ne_latitude, class: 'geo', id: "geo_ne_lat_point" %>&nbsp;&nbsp;
-    <%= f.text_field :ne_longitude, class: 'geo', id: "geo_ne_lng_point" %>&nbsp;&nbsp;
-    <%= f.hidden_field :resource_id %>
-    <%= f.submit "Add", id: "add_geo_point" %>
-    <br/>
+    <div class="c-location__coordinates" role="group" aria-labelledby="c-location__legend1">
+      <div class="c-location__legend" id="c-location__legend1"><abbr title="Southwest">SW</abbr></div>
+      <%= f.text_field :sw_latitude, class: 'c-location__input', id: "geo_sw_lat_point" %>
+      <%= f.text_field :sw_longitude, class: 'c-location__input', id: "geo_sw_lng_point" %>&nbsp;,&nbsp;
+    </div>
+    <div class="c-location__coordinates" role="group" aria-labelledby="c-location__legend2">
+      <div class="c-location__legend" id="c-location__legend2"><abbr title="Northeast">NE</abbr></div>
+      <%= f.text_field :ne_latitude, class: 'c-location__input', id: "geo_ne_lat_point" %>
+      <%= f.text_field :ne_longitude, class: 'c-location__input', id: "geo_ne_lng_point" %>
+      <%= f.hidden_field :resource_id %>
+      <%= f.submit "Add", id: "add_geo_point", class: 'c-location__add-button o-button__plain-text2' %>
+    </div>
   <% end %>
 </div>
 

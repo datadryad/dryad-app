@@ -102,11 +102,16 @@
     <p>Where was the data collected? Does it focus on particular locations?</p>
     <fieldset class="c-fieldset">
       <legend class="c-fieldset__legend">Add a point or rectangular area with lat/long coordinates</legend>
-    <div style="float:left"><%= link_to(image_tag("stash_datacite/geo_point.png", size: "30x30", alt: "Point", id: "geo_point"), '#')  %><%= link_to(image_tag("stash_datacite/geo_box.png", size: "30x30", alt: "Box", id: "geo_box"), '#') %>&nbsp;&nbsp;</div>
-    <%= render partial: "stash_datacite/geolocation_points/form", locals: { geolocation_point: @metadata_entry.new_geolocation_point } %>
-    <%= render partial: "stash_datacite/geolocation_boxes/form", locals: { geolocation_box: @metadata_entry.new_geolocation_box } %>
-    <br>
+      <div class="c-location">
+        <div class="c-location__button-group">
+          <button id="geo_point" class="c-location__point-button--active">Point</button>
+          <button id="geo_box" class="c-location__box-button">Bounding Box</button>
+        </div>
+        <%= render partial: "stash_datacite/geolocation_points/form", locals: { geolocation_point: @metadata_entry.new_geolocation_point } %>
+        <%= render partial: "stash_datacite/geolocation_boxes/form", locals: { geolocation_box: @metadata_entry.new_geolocation_box } %>
+      </div>
     </fieldset>
+    <br>
     <%= render partial: "stash_datacite/shared/map" %>
     <div class="locations_added">
       <strong>Locations Added</strong>
