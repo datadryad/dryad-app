@@ -42,7 +42,7 @@ module StashDatacite
         @completions.optional_total
       end
 
-      def files
+      def file_count
         @resource.file_uploads.count
       end
 
