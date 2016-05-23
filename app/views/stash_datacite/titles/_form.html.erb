@@ -2,7 +2,7 @@
 <% form_id = unique_form_id(title) %>
 <%= form_for(title, url: path, remote: true, authenticity_token: true, html: { id: form_id, class: 'c-input' }) do |f| %>
   <% my_suffix = field_suffix(title) %>
-  <strong><%= f.label "title_#{my_suffix}", class: 'required c-input__label' %></strong><br/>
+  <strong><%= f.label "title_#{my_suffix}", "Title", class: 'required c-input__label' %></strong><br/>
   <%= f.text_field :title, id: "title_#{my_suffix}", class: 'title c-input__text', size: 130 %>
   <%= f.hidden_field :title_type, value: :main %>
   <%= f.hidden_field :resource_id %>
