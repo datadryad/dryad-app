@@ -18,11 +18,20 @@ module StashEngine
 
     # discovery engine isn't namespaced because of blacklight/geoblackight, so "main_app" will work for it.
 
-    # get the current tenant for customizations, also deals with login
+    # get the current tenant for submission
     def current_tenant
       if current_user
         StashEngine::Tenant.find(current_user.tenant_id)
       elsif session[:test_domain]
+        StashEngine::Tenant.by_domain(session[:test_domain])
+      else
+        StashEngine::Tenant.by_domain(request.host)
+      end
+    end
+
+    # get the current tenant for display elements, only, ignores logged in
+    def current_tenant_display
+      if session[:test_domain]
         StashEngine::Tenant.by_domain(session[:test_domain])
       else
         StashEngine::Tenant.by_domain(request.host)

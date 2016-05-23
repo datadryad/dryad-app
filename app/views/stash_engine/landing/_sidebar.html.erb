@@ -4,7 +4,12 @@
 
 <div>
   <h3>Data Files</h3>
-  File1
+  <% @id.resources.submitted.by_version.each do |resource| %>
+    <p>Version <%= resource.version.version %></p>
+    <% resource.file_uploads.each do |fu| %>
+      <p>&nbsp;<%= fu.upload_file_name %>&nbsp;&nbsp;<%= filesize(fu.upload_file_size) %></p>
+    <% end %>
+  <% end %>
 </div>
 
 <div>

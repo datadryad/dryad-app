@@ -22,6 +22,7 @@ module StashEngine
     scope :in_progress, -> { joins(:current_state).where(stash_engine_resource_states: {resource_state:  :in_progress}) }
     scope :submitted, -> { joins(:current_state).where(stash_engine_resource_states: {resource_state:  :submitted}) }
     scope :last_version, -> { joins(:version).order('stash_engine_versions.version DESC').first }
+    scope :by_version, -> { joins(:version).order('stash_engine_versions.version ASC') }
 
     # clean up the uploads with files that no longer exist for this resource
     def clean_uploads
@@ -70,6 +71,16 @@ module StashEngine
         version = Version.where(resource_id: id, zip_filename: zip_filename).first
         version.version = next_version
         version.save!
+      end
+    end
+
+    #smartly gives a version number for this resource for either current version if version is already set
+    #or what it would be when it is submitted (the versino to be), assuming it's submitted next
+    def smart_version
+      if self.version.blank? || self.version.version == 0
+        next_version
+      else
+        self.version.version
       end
     end
 
