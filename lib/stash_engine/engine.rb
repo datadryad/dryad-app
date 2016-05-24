@@ -2,6 +2,8 @@ require 'kaminari'
 module StashEngine
   class Engine < ::Rails::Engine
     isolate_namespace StashEngine
+
+    config.active_job.queue_adapter = :delayed_job
   end
   # see http://stackoverflow.com/questions/20734766/rails-mountable-engine-how-should-apps-set-configuration-variables
 
