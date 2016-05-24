@@ -27,7 +27,7 @@ db/*.sqlite3
 
 /log/
 
-# IntellJ
+# IntelliJ
 
 *.iml
 *.ipr
