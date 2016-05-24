@@ -1,4 +1,4 @@
-require 'stash/sword2'
+
 
 module StashEngine
   class Resource < ActiveRecord::Base
@@ -43,15 +43,7 @@ module StashEngine
 
     def submission_to_repository(current_tenant, zipfile, doi)
       repo = current_tenant.repository
-      client = Stash::Sword2::Client.new(collection_uri: repo.endpoint, username: repo.username, password: repo.password)
-      if self.update_uri # update
-        client.update(se_iri: self.update_uri, zipfile: zipfile)
-      else # create
-        receipt = client.create(doi: doi, zipfile: zipfile)
-        self.download_uri = receipt.em_iri
-        self.update_uri = receipt.se_iri
-        self.save # save download and update URLs for this resource
-      end
+      SubmitResourceJob.perform_later(repo: repo, zipfile: zipfile, doi: doi, resource: self)
       # TODO: why do we do this *after* zipfile generation/uploading? (DM 05/24/16)
       # TODO: (and why in this method in any case?) (DM 05/24/16)
       update_identifier(doi)
