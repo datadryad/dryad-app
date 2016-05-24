@@ -6,16 +6,16 @@
 
 <%#= render "datacite/shared/error_messages", target: @creator %>
   <div class="c-input">
-    <%= f.label "creator_first_name_#{my_suffix}", "First Name", class: 'c-input__label' %>
+    <%= f.label "first_name_#{my_suffix}", "First Name", class: 'c-input__label' %>
     <%= f.text_field :creator_first_name, id: "creator_first_name_#{my_suffix}", class: "c-input__text js-creator_first_name" %>
   </div>
   <div class="c-input">
-    <%= f.label "creator_last_name_#{my_suffix}", "Last Name", class: 'c-input__label required' %>
+    <%= f.label "last_name_#{my_suffix}", "Last Name", class: 'c-input__label required' %>
     <%= f.text_field :creator_last_name, id: "creator_last_name_#{my_suffix}", class: "c-input__text js-creator_last_name" %>
   </div>
   <div class="c-input">
     <%= f.label "affliation_id_#{my_suffix}", "Institutional Affiliation", class: 'c-input__label' %>
-    <%= text_field_tag(:affliation, creator.affliation.try(:long_name), id: "affliation_id_#{my_suffix}", class: 'c-input__text js-affliation') %>
+    <%= text_field_tag(:affliation, creator.affliation.try(:long_name), id: "creator_affliation_id_#{my_suffix}", class: 'c-input__text js-affliation') %>
   </div>
   <%= link_to 'remove', stash_datacite.creators_delete_path(creator.id || 'new'), method: :delete, remote: true, data: { confirm: 'Are you sure?' }, class: 't-describe__remove-button o-button__remove remove_record' %>
   <div>
