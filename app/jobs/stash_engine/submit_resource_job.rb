@@ -1,11 +1,20 @@
 require 'stash/sword2'
 
+module Sword2
+  @log = Delayed::Worker.logger
+end
+
 module StashEngine
   class SubmitResourceJob < ActiveJob::Base
     queue_as :default
 
+    def log
+      Delayed::Worker.logger
+    end
+
     # TODO: can we get the DOI from the resource?
     def perform(zipfile:, doi:, repo:, resource:)
+      log.debug("SubmitResourceJob: zipfile: #{zipfile}, doi: #{doi}, repo: #{repo ? repo.endpoint : 'nil'}, resource: #{resource ? resource.id : 'nil'}")
       client = Stash::Sword2::Client.new(collection_uri: repo.endpoint, username: repo.username, password: repo.password)
       if resource.update_uri # update
         client.update(se_iri: resource.update_uri, zipfile: zipfile)
