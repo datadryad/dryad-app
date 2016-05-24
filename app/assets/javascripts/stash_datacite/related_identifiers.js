@@ -9,6 +9,7 @@ $( ".js-related_identifier" ).on('focus', function () {
     if(new_value != previous_value) {
       var form = $(this.form);
       $(form).trigger('submit.rails');
+      $('.saved_text').show(0).delay(3000).hide(0);
     }
   });
 
@@ -20,6 +21,7 @@ $( ".js-related_identifier" ).on('focus', function () {
     if(new_value != previous_value) {
       var form = $(this.form);
       $(form).trigger('submit.rails');
+      $('.saved_text').show(0).delay(3000).hide(0);
     }
   });
 
@@ -31,6 +33,7 @@ $( ".js-related_identifier" ).on('focus', function () {
     if(new_value != previous_value) {
       var form = $(this.form);
       $(form).trigger('submit.rails');
+      $('.saved_text').show(0).delay(3000).hide(0);
     }
   });
 };

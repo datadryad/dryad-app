@@ -9,6 +9,7 @@ function loadCreators() {
       if(new_value != previous_value) {
         var form = $(this).parents('form');
         $(form).trigger('submit.rails');
+        $('.saved_text').show(0).delay(3000).hide(0);
       }
     });
 
@@ -20,6 +21,7 @@ function loadCreators() {
       if(new_value != previous_value) {
         var form = $(this).parents('form');
         $(form).trigger('submit.rails');
+        $('.saved_text').show(0).delay(3000).hide(0);
       }
     });
 };
