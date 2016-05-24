@@ -15,7 +15,7 @@ Gem::Specification.new do |spec|
   spec.license       = 'MIT'
 
   origin = `git config --get remote.origin.url`.chomp
-  origin_uri = origin.start_with?('http') ? URI(origin) : URI(origin.sub('git@github.com:', 'https://github.com/'))
+  origin_uri = origin.start_with?('http') ? URI(origin) : URI(origin.gsub(%r{git@([^:]+)(.com|.org)[^\/]+}, 'http://\1\2'))
   spec.homepage = URI::HTTP.build(host: origin_uri.host, path: origin_uri.path.chomp('.git')).to_s
 
   spec.files         = `git ls-files -z`.split("\x0")
