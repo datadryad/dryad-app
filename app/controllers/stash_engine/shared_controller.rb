@@ -38,6 +38,11 @@ module StashEngine
       end
     end
 
+    # get current tenant, only based on the domain
+    def current_tenant_simple
+      StashEngine::Tenant.by_domain(request.host)
+    end
+
     def current_user
       @current_user ||= User.find_by_id(session[:user_id]) if session[:user_id]
     end
