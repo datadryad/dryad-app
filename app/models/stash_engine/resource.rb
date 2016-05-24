@@ -1,4 +1,4 @@
-require 'stash/sword'
+require 'stash/sword2'
 
 module StashEngine
   class Resource < ActiveRecord::Base
@@ -43,10 +43,17 @@ module StashEngine
 
     def submission_to_repository(current_tenant, zipfile, doi)
       repo = current_tenant.repository
-      client = Stash::Sword::Client.new(username: repo.username, password: repo.password)
-      response = client.post_create(collection_uri: repo.endpoint, zipfile: zipfile, slug: doi)
-      self.download_uri = extract_download_url(response, current_tenant)
-      self.save # save my download URL for this resource
+      client = Stash::Sword2::Client.new(collection_uri: repo.endpoint, username: repo.username, password: repo.password)
+      if self.update_uri # update
+        client.update(se_iri: self.update_uri, zipfile: zipfile)
+      else # create
+        receipt = client.create(doi: doi, zipfile: zipfile)
+        self.download_uri = receipt.em_iri
+        self.update_uri = receipt.se_iri
+        self.save # save download and update URLs for this resource
+      end
+      # TODO: why do we do this *after* zipfile generation/uploading? (DM 05/24/16)
+      # TODO: (and why in this method in any case?) (DM 05/24/16)
       update_identifier(doi)
       update_version(zipfile)
     end
@@ -99,18 +106,18 @@ module StashEngine
     end
 
     # Extracting the dl URL is kludgy because it's not being returned directly
-    def extract_download_url(xml_response, current_tenant)
-      doc = Nokogiri::XML(xml_response)
-      doc.remove_namespaces!
-      icky_id = doc.xpath('/entry/id').first.text
-      id = icky_id[/ark:.+$/]
-
-      # get endpoint domain
-      #uri = URI.parse(current_tenant.repository.endpoint)
-      mrt_host = current_tenant.repository.domain
-
-      "http://#{mrt_host}/d/#{CGI.escape(id)}"
-    end
+    # def extract_download_url(xml_response, current_tenant)
+    #   doc = Nokogiri::XML(xml_response)
+    #   doc.remove_namespaces!
+    #   icky_id = doc.xpath('/entry/id').first.text
+    #   id = icky_id[/ark:.+$/]
+    #
+    #   # get endpoint domain
+    #   #uri = URI.parse(current_tenant.repository.endpoint)
+    #   mrt_host = current_tenant.repository.domain
+    #
+    #   "http://#{mrt_host}/d/#{CGI.escape(id)}"
+    # end
 
     def increment_downloads
       ensure_resource_usage
