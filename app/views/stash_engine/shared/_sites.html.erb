@@ -8,5 +8,5 @@
     </div>
   </details>
   <!-- <a href="" class="o-sites__login">Login</a> -->
-  <%= link_to 'Login', stash_url_helpers.tenants_path, class: 'o-sites__login' %>
+  <%= link_to 'Login', current_tenant.omniauth_login_path, class: 'o-sites__login' %>
 </div>
