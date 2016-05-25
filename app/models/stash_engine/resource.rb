@@ -101,6 +101,16 @@ module StashEngine
       end
     end
 
+    # this bit of code may be useful to run in a console to update old items
+    # res = StashEngine::Resource.where('download_uri IS NOT NULL')
+    # res.each do |r|
+    #   if r.update_uri.nil? && r.identifier
+    #     id = r.identifier
+    #     str_id = CGI.escape("#{id.identifier_type.downcase}:#{id.identifier}")
+    #     r.update_uri = "http://sword-aws-dev.cdlib.org:39001/mrtsword/edit/dash_ucb/#{str_id}"
+    #     r.save
+    #   end
+    # end
 
     #:download_uri and :update_uri returned in hash
     def extract_urls(xml_response)
