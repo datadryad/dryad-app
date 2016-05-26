@@ -4,7 +4,7 @@ require 'blacklight/catalog'
 
 class CatalogController < ApplicationController
   helper_method :current_tenant, :current_user, :metadata_engine, :metadata_url_helpers, :stash_url_helpers,
-                :current_tenant_simple
+                :current_tenant_simple, :logo_path
 
   helper StashEngine::ApplicationHelper
 
