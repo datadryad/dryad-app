@@ -2,9 +2,9 @@
 
 <% if current_tenant %>
     <div class="toc">
-      <%= render "host_pages/#{current_tenant.tenant_id}/help", toc: true %>
+      <%= render "tenants/#{current_tenant.tenant_id}/help", toc: true %>
     </div>
-    <%= render "host_pages/#{current_tenant.tenant_id}/help" %>
+    <%= render "tenants/#{current_tenant.tenant_id}/help" %>
 <% else %>
     <p>A placeholder for the Help page.</p>
 <% end %>
