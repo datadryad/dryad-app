@@ -3,6 +3,7 @@ module StashDatacite
     class MetadataEntry
       def initialize(resource)
         @resource = resource
+        ensure_cc0
       end
 
       def resource_type
@@ -79,6 +80,14 @@ module StashDatacite
 
       def geolocation_places
         @geolocation_places = GeolocationPlace.where(resource_id: @resource.id)
+      end
+
+      private
+      def ensure_cc0
+        if @resource.rights.empty?
+          @resource.rights.create(rights: 'Creative Commons Public Domain License',
+                                 rights_uri: 'https://creativecommons.org/publicdomain/zero/1.0/')
+        end
       end
     end
   end
