@@ -1,9 +1,9 @@
 module StashDatacite
   module Resource
     class MetadataEntry
-      def initialize(resource)
+      def initialize(resource, tenant)
         @resource = resource
-        ensure_cc0
+        ensure_license(tenant)
       end
 
       def resource_type
@@ -83,10 +83,11 @@ module StashDatacite
       end
 
       private
-      def ensure_cc0
+      def ensure_license(tenant)
         if @resource.rights.empty?
-          @resource.rights.create(rights: 'Creative Commons Public Domain License',
-                                 rights_uri: 'https://creativecommons.org/publicdomain/zero/1.0/')
+          license = StashEngine::License.by_id(tenant.default_license)
+          @resource.rights.create(rights: license[:name],
+                                 rights_uri: license[:uri])
         end
       end
     end

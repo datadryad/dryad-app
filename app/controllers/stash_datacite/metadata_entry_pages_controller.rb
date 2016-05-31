@@ -5,7 +5,7 @@ module StashDatacite
     before_action :find_resource
 
     def find_or_create
-      @metadata_entry = Resource::MetadataEntry.new(@resource)
+      @metadata_entry = Resource::MetadataEntry.new(@resource, current_tenant)
       respond_to do |format|
         format.js
       end
