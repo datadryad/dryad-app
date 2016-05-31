@@ -48,6 +48,8 @@ StashDatacite::Engine.routes.draw do
   post 'affliations/create', to: 'affliations#create'
   delete 'affliations/:id/delete', to: 'affliations#delete', as: 'affliations_delete'
 
+  get 'licenses/details', to: 'licenses#details', as: 'license_details'
+
   # Actions through Leaflet Ajax posts
   # points
   get 'geolocation_points/index', to: 'geolocation_points#index'

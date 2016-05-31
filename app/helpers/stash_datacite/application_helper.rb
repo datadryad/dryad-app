@@ -25,5 +25,10 @@ module StashDatacite
     def simple_obj_name(obj)
       obj.class.to_s.split('::').last.downcase
     end
+
+    # returns the installation id for the rights_uri
+    def license_id(uri)
+      StashEngine::License.by_uri(uri)[:id]
+    end
   end
 end

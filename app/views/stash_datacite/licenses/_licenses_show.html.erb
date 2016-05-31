@@ -1,0 +1,3 @@
+<% @rights.each do |r| %>
+  <%= render partial: "licenses/#{license_id(r.rights_uri)}" %>
+<% end %>
