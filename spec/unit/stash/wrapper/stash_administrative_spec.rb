@@ -21,6 +21,12 @@ module Stash
           expect(embargo.start_date).to eq(today)
           expect(embargo.end_date).to eq(today)
         end
+        
+        it 'requires a version'
+        it 'requires a valid version'
+
+        it 'requires a license'
+        it 'requires a valid license'
       end
     end
   end

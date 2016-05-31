@@ -109,6 +109,17 @@ module Stash
         end
       end
 
+      describe '#initialize' do
+        it 'requires an identifier'
+        it 'requires a valid identifier'
+
+        it 'requires a version'
+        it 'requires a valid version'
+
+        it 'requires a version'
+        it 'requires a valid version'
+      end
+
       describe 'convenience accessors' do
         it 'evades the law of Demeter' do
           data = File.read('spec/data/wrapper/wrapper-1.xml')
