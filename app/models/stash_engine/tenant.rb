@@ -11,7 +11,7 @@ module StashEngine
 
     # return list of all tenants, tenant is a lightly wrapped ostruct (see method missing) with extra methods in here
     def self.all
-      StashEngine.tenants.values.map { |h| new(h) }
+      StashEngine.tenants.values.map { |h| new(h) if h['enabled'] && h['enabled'] == true }.compact
     end
 
     #gets the Tenant class to respond to the keys so you can call hash like methods
@@ -48,7 +48,9 @@ module StashEngine
 
     def self.by_domain(domain)
       StashEngine.tenants.values.each do |v|
-        return new(v) if Regexp.new(v['domain_regex']).match(domain)
+        if v['enabled'] && v['enabled'] == true
+          return new(v) if Regexp.new(v['domain_regex']).match(domain)
+        end
       end
       all.first
     end
@@ -60,5 +62,7 @@ module StashEngine
     def landing_url(path_to_landing)
       URI::HTTPS.build(host: full_domain, path: path_to_landing).to_s
     end
+
+
   end
 end

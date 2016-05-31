@@ -15,14 +15,15 @@
 <body>
 
   <% if params[:controller].try(:include?, 'pages') && params[:action] == 'home' %>
-  <header class="t-home__header c-header">
+    <header class="t-home__header c-header">
   <% else %>
-  <header class="c-header">
+    <header class="c-header">
   <% end %>
     <div class="c-header__logos">
       <button aria-label="mobile menu" class="o-button__menu c-header__menu-button js-header__menu-button"></button>
       <%= link_to(stash_url_helpers.root_path, class: 'c-header__dash-logo-link') do %>
-        <img class="c-header__dash-logo-svg" src="<%= asset_path 'stash_engine/logo_dash.svg' %>" alt="University of California, Dash. Data sharing made easy.">
+        <%= logo_path class: "c-header__dash-logo-svg" %>
+        <%#  %>
       <% end %>
     </div>
     <nav class="c-header__nav js-header__nav">
@@ -32,6 +33,7 @@
         <input class="o-global-search__input" id="search-field-input1" type="search" name="q" placeholder="Search">
         <button aria-label="Submit" class="o-global-search__submit-button" type="submit" id="search"></button>
       </form>
+
       <div class="c-header__nav-group">
         <%= link_to 'Home', stash_url_helpers.root_path, class: 'c-header__nav-item' %>
         <%= link_to 'Browse Data', stash_url_helpers.search_path, class: 'c-header__nav-item' %>
