@@ -134,7 +134,7 @@ module StashDatacite
 
         wrapper = st::StashWrapper.new(
           identifier: identifier,
-          version: @version,
+          version: version,
           license: license,
           embargo: embargo,
           inventory: inventory,
