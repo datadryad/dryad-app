@@ -8,9 +8,9 @@ module Stash
 
         before(:each) do
           @params = {
-              number: 1,
-              date: Date.today,
-              note: 'I am a note'
+            number: 1,
+            date: Date.today,
+            note: 'I am a note'
           }
         end
 
