@@ -41,6 +41,14 @@ module StashDatacite
       render json: @subjects.map(&:subject)
     end
 
+    # get subjects/landing(?params), for display of "keywords" on landing page
+    def landing
+      @resource = StashDatacite.resource_class.find(params[:resource_id])
+      respond_to do |format|
+        format.js
+      end
+    end
+
     private
 
     # Use callbacks to share common setup or constraints between actions.

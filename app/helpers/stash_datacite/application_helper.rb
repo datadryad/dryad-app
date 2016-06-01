@@ -30,5 +30,10 @@ module StashDatacite
     def license_id(uri)
       StashEngine::License.by_uri(uri)[:id]
     end
+
+    # create string for facet limit to subject
+    def subject_facet(term)
+      "/search?#{CGI.escape('f[dc_subject_sm][]')}=#{CGI.escape(term)}"
+    end
   end
 end

@@ -1,0 +1,3 @@
+<% @resource.subjects.each do |s| %>
+  <p><%= link_to s.subject, subject_facet(s.subject) %></p>
+<% end %>
