@@ -45,8 +45,11 @@ module StashEngine
       repo = current_tenant.repository
       client = Stash::Sword::Client.new(username: repo.username, password: repo.password)
       response = client.post_create(collection_uri: repo.endpoint, zipfile: zipfile, slug: doi)
-      self.download_uri = extract_download_url(response, current_tenant)
-      self.save # save my download URL for this resource
+      #self.download_uri = extract_download_url(response, current_tenant)
+      urls = extract_urls(response)
+      self.download_uri = urls[:download_uri]
+      self.update_uri = urls[:update_uri]
+      save # save the URLs for this resource
       update_identifier(doi)
       update_version(zipfile)
       update_submission_log(client, zipfile, doi)
@@ -104,18 +107,23 @@ module StashEngine
       end
     end
 
-    # Extracting the dl URL is kludgy because it's not being returned directly
-    def extract_download_url(xml_response, current_tenant)
+    # this bit of code may be useful to run in a console to update old items
+    # res = StashEngine::Resource.where('download_uri IS NOT NULL')
+    # res.each do |r|
+    #   if r.update_uri.nil? && r.identifier
+    #     id = r.identifier
+    #     str_id = CGI.escape("#{id.identifier_type.downcase}:#{id.identifier}")
+    #     r.update_uri = "http://sword-aws-dev.cdlib.org:39001/mrtsword/edit/dash_ucb/#{str_id}"
+    #     r.save
+    #   end
+    # end
+
+    #:download_uri and :update_uri returned in hash
+    def extract_urls(xml_response)
       doc = Nokogiri::XML(xml_response)
       doc.remove_namespaces!
-      icky_id = doc.xpath('/entry/id').first.text
-      id = icky_id[/ark:.+$/]
-
-      # get endpoint domain
-      #uri = URI.parse(current_tenant.repository.endpoint)
-      mrt_host = current_tenant.repository.domain
-
-      "http://#{mrt_host}/d/#{CGI.escape(id)}"
+      { download_uri: doc.xpath("/entry/link[@rel='edit-media']").first.attribute('href').to_s,
+        update_uri: doc.xpath("/entry/link[@rel='edit']").first.attribute('href').to_s }
     end
 
     def increment_downloads

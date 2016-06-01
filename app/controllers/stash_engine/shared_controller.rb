@@ -91,5 +91,13 @@ module StashEngine
         "_#{SecureRandom.uuid}"
       end
     end
+
+    # make logo_string for image_tag per tenant
+    def logo_path(hsh)
+      view_context.image_tag "tenants/#{current_tenant.tenant_id}_logo.svg",
+                hsh.merge({alt: "#{current_tenant.long_name}, Dash. Data sharing made easy."})
+
+
+    end
   end
 end

@@ -24,4 +24,8 @@
 
 <div>
   <h3>License</h3>
+  <div id="show_license"
+       data-load="<%= metadata_url_helpers.license_details_path(resource_id: @resource.id, format: :js) %>">
+    <%= image_tag 'stash_engine/spinner.gif', size: '80x60', alt: 'Loading spinner' %>
+  </div>
 </div>
