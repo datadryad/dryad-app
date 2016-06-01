@@ -1,3 +1,6 @@
 require 'yaml'
 require 'ostruct'
-LICENSES = YAML.load_file(File.join(Rails.root, 'config', 'licenses.yml')).with_indifferent_access
+lic = File.join(Rails.root, 'config', 'licenses.yml')
+if File.exists?(lic)
+  LICENSES = YAML.load_file(lic).with_indifferent_access
+end
