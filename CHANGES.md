@@ -5,6 +5,7 @@
   - `StashAdministrative` (fixes issue #2)
   - `Embargo`
   - `Identifier`
+  - `Inventory`
   - `Version`
 
 # 0.1.9 (18 May 2016)
