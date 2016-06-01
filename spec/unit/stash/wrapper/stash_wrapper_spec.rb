@@ -244,7 +244,7 @@ module Stash
               identifier: Identifier.new(type: IdentifierType::DOI, value: '10.14749/1407399498'),
               version: Version.new(number: 1, date: Date.new(2013, 8, 18), note: 'Sample wrapped Datacite document'),
               license: License::CC_BY,
-              embargo: Embargo.new(type: EmbargoType::DOWNLOAD, period: '1 year', start_date: Date.new(2014, 8, 18), end_date: Date.new(2013, 8, 18)),
+              embargo: Embargo.new(type: EmbargoType::DOWNLOAD, period: '1 year', start_date: Date.new(2013, 8, 18), end_date: Date.new(2014, 8, 18)),
               inventory: Inventory.new(
                 files: [
                   StashFile.new(pathname: 'HSRC_MasterSampleII.dat', size_bytes: 12_345, mime_type: 'text/plain')
@@ -303,7 +303,7 @@ module Stash
             identifier: Identifier.new(type: IdentifierType::DOI, value: '10.14749/1407399498'),
             version: Version.new(number: 1, date: Date.new(2013, 8, 18), note: 'Sample wrapped Datacite document'),
             license: License::CC_BY,
-            embargo: Embargo.new(type: EmbargoType::DOWNLOAD, period: '1 year', start_date: Date.new(2014, 8, 18), end_date: Date.new(2013, 8, 18)),
+            embargo: Embargo.new(type: EmbargoType::DOWNLOAD, period: '1 year', start_date: Date.new(2013, 8, 18), end_date: Date.new(2014, 8, 18)),
             inventory: Inventory.new(
               files: [
                 StashFile.new(pathname: 'HSRC_MasterSampleII.dat', size_bytes: 12_345, mime_type: 'text/plain'),

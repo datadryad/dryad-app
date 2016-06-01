@@ -16,8 +16,8 @@
         <st:embargo>
             <st:type>download</st:type>
             <st:period>1 year</st:period>
-            <st:start>2014-08-18Z</st:start>
-            <st:end>2013-08-18Z</st:end>
+            <st:start>2013-08-18Z</st:start>
+            <st:end>2014-08-18Z</st:end>
         </st:embargo>
         <st:inventory num_files="10">
             <st:file>
