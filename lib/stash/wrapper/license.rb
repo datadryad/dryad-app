@@ -12,10 +12,13 @@ module Stash
 
       # Creates a new {License} object
       # @param name [String] The license name
-      # @param uri [URI] The license URI
+      # @param uri [URI, String] The license URI
+      # @raise [URI::InvalidURIError] if `uri` is a string that is not a valid URI
       def initialize(name:, uri:)
+        fail ArgumentError, "License name does not appear to be a non-empty string: #{name.inspect}" if name.to_s.strip.empty?
+        fail ArgumentError, 'No uri provided' unless uri
         self.name = name
-        self.uri = uri
+        self.uri = ::XML::MappingExtensions.to_uri(uri)
       end
     end
 
@@ -24,6 +27,13 @@ module Stash
       CC_BY = License.new(
         name: 'Creative Commons Attribution 4.0 International (CC-BY)',
         uri: URI('https://creativecommons.org/licenses/by/4.0/legalcode')
+      )
+
+      # Convenience instance for the [CC0](https://creativecommons.org/publicdomain/zero/1.0/legalcode)
+      # public domain declaration
+      CC_ZERO = License.new(
+        name: 'CC0 1.0 Universal (CC0 1.0) Public Domain Dedication',
+        uri: URI('https://creativecommons.org/publicdomain/zero/1.0/legalcode')
       )
     end
   end
