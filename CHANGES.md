@@ -1,3 +1,11 @@
+# 0.2.0 (next)
+
+- Validate parameters for:
+  - `StashWrapper`
+  - `StashAdministrative` (fixes issue #2)
+  - `Embargo`
+  - `Version`
+
 # 0.1.9 (18 May 2016)
 
 - Update to XML::MappingExtensions 0.4.1
