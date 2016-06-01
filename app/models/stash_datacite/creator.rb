@@ -6,7 +6,7 @@ module StashDatacite
     belongs_to :affliation
 
     def creator_full_name
-      "#{creator_first_name} #{creator_last_name}".strip
+      "#{creator_last_name} #{creator_first_name}".strip
     end
   end
 end
