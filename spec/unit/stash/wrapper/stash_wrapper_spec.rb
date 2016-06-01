@@ -110,14 +110,54 @@ module Stash
       end
 
       describe '#initialize' do
-        it 'requires an identifier'
-        it 'requires a valid identifier'
 
-        it 'requires a version'
-        it 'requires a valid version'
+        attr_reader :params
 
-        it 'requires a version'
-        it 'requires a valid version'
+        before(:each) do
+          @params = {
+            identifier: Identifier.new(type: IdentifierType::DOI, value: '10.14749/1407399498'),
+            version: Version.new(number: 1, date: Date.new(2013, 8, 18), note: 'Sample wrapped Datacite document'),
+            license: License::CC_BY,
+            inventory: Inventory.new(
+              files: [
+                StashFile.new(pathname: 'HSRC_MasterSampleII.dat', size_bytes: 12_345, mime_type: 'text/plain')
+              ]),
+            descriptive_elements: []
+          }
+        end
+
+        it 'requires an identifier' do
+          params.delete(:identifier)
+          expect { StashWrapper.new(params) }.to raise_error(ArgumentError)
+        end
+
+        it 'requires a valid identifier' do
+          params[:identifier] = 'doi:10.14749/1407399498'
+          expect { StashWrapper.new(params) }.to raise_error(ArgumentError)
+        end
+
+        it 'requires a version' do
+          params.delete(:version)
+          expect { StashWrapper.new(params) }.to raise_error(ArgumentError)
+        end
+
+        it 'requires a valid version' do
+          params[:version] = 1
+          expect { StashWrapper.new(params) }.to raise_error(ArgumentError)
+
+          params[:version] = '1'
+          expect { StashWrapper.new(params) }.to raise_error(ArgumentError)
+        end
+
+        it 'requires a license' do
+          params.delete(:license)
+          expect { StashWrapper.new(params) }.to raise_error(ArgumentError)
+        end
+
+        it 'requires a valid license' do
+          params[:license] = 'CC-BY'
+          expect { StashWrapper.new(params) }.to raise_error(ArgumentError)
+        end
       end
 
       describe 'convenience accessors' do

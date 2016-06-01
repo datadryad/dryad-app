@@ -23,6 +23,11 @@ module Stash
       #   with the current date as start and end.
       # @param inventory [Inventory, nil] the (optional) file inventory
       def initialize(version:, license:, embargo: nil, inventory: nil)
+        fail ArgumentError, "version does not appear to be a Version object: #{version || 'nil'}" unless version.is_a?(Version)
+        fail ArgumentError, "license does not appear to be a License object: #{license || 'nil'}" unless license.is_a?(License)
+        fail ArgumentError, "embargo does not appear to be an Embargo object: #{embargo || 'nil'}" if embargo unless embargo.is_a?(Embargo)
+        fail ArgumentError, "inventory does not appear to be an Inventory object: #{inventory || 'nil'}" if inventory unless inventory.is_a?(Inventory)
+
         self.version = version
         self.license = license
         self.embargo = embargo || Embargo.none

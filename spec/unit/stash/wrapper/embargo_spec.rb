@@ -3,6 +3,8 @@ require 'spec_helper'
 module Stash
   module Wrapper
     describe Embargo do
+      it 'validates its arguments'
+
       describe 'none' do
         it "returns a no-embargo #{Embargo}" do
           embargo = Embargo.none
