@@ -1,0 +1,8 @@
+<% @document_list.each do |document| %>
+  <div style="border-style: solid; margin: 10px 10px 10px 10px; padding: 10px 10px 10px 10px;">
+    <%= link_to document['dc_title_s'], stash_url_helpers.show_path(document['dc_identifier_s']), title: document['dc_title_s'] %><br/>
+    <%= document['dc_creator_sm'].map{|i| name_reverser(i) }.reject{|i| i.blank? }.join('; ') %><br/>
+    <%= document['dc_type_s'] %><br/>
+    <%= document['dc_publisher_s'] %>
+  </div>
+<% end %>
