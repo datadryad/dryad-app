@@ -21,4 +21,7 @@
 	</div>
 </div>
 <h1 class="o-heading__level1">Latest Dash Datasets</h1>
-<p>[To go here]</p>
+<div id="latest_tiles"
+     data-load="<%= main_app.latest_index_path(format: :js, q: '*:*') %>">
+  <%= image_tag 'stash_engine/spinner.gif', size: '80x60', alt: 'Loading spinner' %>
+</div>
