@@ -1,11 +1,6 @@
-<div class ="geolocation_places" >
-  <table>
-    <% geolocation_places.each do |geolocation_place| %>
-    <tr>
-      <td><%= image_tag("stash_datacite/globe.png", size: "20x20", alt: "Place") %></td>
-      <td><%= geolocation_place.geo_location_place %></td>
-      <td><%= link_to 'remove', stash_datacite.geolocation_places_delete_path(geolocation_place), method: :delete, remote: true, data: { confirm: 'Are you sure?' }, class: 'remove_geo' %></td>
-    </tr>
-    <% end %>
-  </table>
+<% geolocation_places.each do |geolocation_place| %>
+<div class="c-locations__place">
+	<div class="c-locations__data"><%= geolocation_place.geo_location_place %></div>
+	<%= link_to 'remove', stash_datacite.geolocation_places_delete_path(geolocation_place), method: :delete, remote: true, data: { confirm: 'Are you sure?' }, class: 'remove_geo c-locations__button', role: 'button' %>
 </div>
+<% end %>
