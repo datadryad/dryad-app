@@ -1,5 +1,4 @@
 <% unless creators.nil? %>
-<p>Author (Author Name, Affiliation, OrcidID):</p>
   <% creators.each do |creator| %>
     <ul style="list-style-type:none">
       <li><%= [creator.creator_full_name, creator.affliation.try(:long_name), creator.orcid_id].reject(&:blank?).join(", ") %></li>&nbsp;
