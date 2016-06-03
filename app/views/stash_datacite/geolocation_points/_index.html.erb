@@ -1,11 +1,8 @@
-<div class ="geolocation_points">
-  <table>
-  <% geolocation_points.each do |geolocation_point| %>
-  <tr>
-    <td><%= image_tag("stash_datacite/geo_point.png", size: "30x30", alt: "Box") %></td>
-    <td><%= geolocation_point.latitude %>,&nbsp; <%= geolocation_point.longitude %></td>
-    <td><%= link_to 'remove', stash_datacite.geolocation_points_delete_path(geolocation_point.id), method: :delete, data: { confirm: 'Are you sure?' } %></td>
-  </tr>
-  <% end %>
-  </table>
+<% geolocation_points.each do |geolocation_point| %>
+<div class="c-locations__point">
+	<div class="c-locations__data">
+		<%= geolocation_point.latitude %>,&nbsp; <%= geolocation_point.longitude %>
+	</div>
+	<%= link_to 'remove', stash_datacite.geolocation_points_delete_path(geolocation_point.id), method: :delete, class: 'c-locations__button', role: 'button', data: { confirm: 'Are you sure?' } %>
 </div>
+<% end %>
