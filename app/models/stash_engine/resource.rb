@@ -53,7 +53,6 @@ module StashEngine
       update_identifier(doi)
       update_version(zipfile)
       update_submission_log(doi, zipfile, client)
-      byebug
     end
 
     def update_submission_log(doi, zipfile, client)
