@@ -5,6 +5,9 @@ module StashDatacite
     belongs_to :name_identifier
     belongs_to :affliation
 
+    scope :filled, -> { joins(:affliation).
+        where("TRIM(IFNULL(creator_first_name,'')) <> '' AND TRIM(IFNULL(creator_last_name,'')) <> ''") }
+
     def creator_full_name
       "#{creator_last_name} #{creator_first_name}".strip
     end
