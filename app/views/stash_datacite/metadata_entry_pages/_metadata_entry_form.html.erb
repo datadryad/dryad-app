@@ -7,11 +7,7 @@
 
 <h3 class="o-heading__page-span">Basic Information</h3>
 
-  <% if @metadata_entry.resource_type.new_record? %>
-    <%= render partial: "stash_datacite/resource_types/form", locals: { resource_type: @metadata_entry.resource_type, path: stash_datacite.resource_types_create_path } %>
-  <% else %>
-    <%= render partial: "stash_datacite/resource_types/form", locals: { resource_type: @metadata_entry.resource_type, path: stash_datacite.resource_types_update_path } %>
-  <% end %>
+  <%= render partial: "stash_datacite/resource_types/form", locals: { resource_type: @metadata_entry.resource_type, path: stash_datacite.resource_types_update_path } %>
 
   <% if @metadata_entry.title.new_record? %>
     <%= render partial: "stash_datacite/titles/form", locals: { title: @metadata_entry.title, path: stash_datacite.titles_create_path, } %>

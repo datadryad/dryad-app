@@ -7,7 +7,7 @@ module StashDatacite
       end
 
       def resource_type
-        @resource_type = ResourceType.where(resource_id: @resource.id).first_or_initialize
+        @resource_type = ResourceType.find_or_create_by(resource_id: @resource.id, resource_type: 'dataset')
       end
 
       def title
