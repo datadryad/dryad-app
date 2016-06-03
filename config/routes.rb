@@ -13,7 +13,6 @@ StashEngine::Engine.routes.draw do
   resources :file_uploads
 
   get 'dashboard', to: 'dashboard#show', as: 'dashboard'
-  get 'get_started', to: 'dashboard#get_started', as: 'get_started'
   get 'metadata_basics', to: 'dashboard#metadata_basics', as: 'metadata_basics'
   get 'preparing_to_submit', to: 'dashboard#preparing_to_submit', as: 'preparing_to_submit'
   get 'upload_basics', to: 'dashboard#upload_basics', as: 'upload_basics'
