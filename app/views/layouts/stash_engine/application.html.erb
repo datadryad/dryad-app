@@ -42,7 +42,6 @@
           <%= link_to 'My Datasets', stash_url_helpers.dashboard_path, class: 'c-header__nav-item' %>
           <%= render partial: "stash_engine/shared/logout" %>
         <% else %>
-          <span class="c-header__disabled-nav-item">My Datasets</span>
           <%= render partial: "stash_engine/shared/sites" %>
         <% end %>
       </div>
