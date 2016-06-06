@@ -50,6 +50,9 @@ module StashEngine
       # self.download_uri = urls[:download_uri]
       # self.update_uri = urls[:update_uri]
       # save # save the URLs for this resource
+      msg = "SubmitResourceJob.perform_later(zipfile: #{zipfile}, doi: #{doi}, repo: #{repo ? repo.endpoint : 'nil'}, resource: #{resource ? resource.id : 'nil'})"
+      log.debug(msg)
+
       SubmitResourceJob.perform_later(repo: repo, zipfile: zipfile, doi: doi, resource: self)
       # TODO: why do we do this *after* zipfile generation/uploading? (DM 05/24/16)
       # TODO: (and why in this method in any case?) (DM 05/24/16)
