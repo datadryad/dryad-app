@@ -12,6 +12,7 @@ PATH
     stash_engine (0.0.17)
       amoeba (~> 3.0.0)
       carrierwave (~> 0.10.0)
+      delayed_job
       delayed_job_active_record
       filesize (~> 0.1.1)
       jquery-fileupload-rails (~> 0.4.6)
@@ -119,7 +120,7 @@ GEM
       railties (>= 3.2.16)
     json (1.8.3)
     jwt (1.5.1)
-    kaminari (0.16.3)
+    kaminari (0.17.0)
       actionpack (>= 3.0.0)
       activesupport (>= 3.0.0)
     loofah (2.0.3)
