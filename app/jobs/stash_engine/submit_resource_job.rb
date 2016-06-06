@@ -1,8 +1,8 @@
 require 'stash/sword'
 
-# module Sword
-#   @log = Delayed::Worker.logger
-# end
+module Sword
+  @log = Delayed::Worker.logger
+end
 
 module StashEngine
   class SubmitResourceJob < ActiveJob::Base
