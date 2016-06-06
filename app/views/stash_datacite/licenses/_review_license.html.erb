@@ -1,0 +1,20 @@
+<h2 class="review_headers">License</h2>
+
+<% if @resource.current_state.blank? || @resource.rights.empty? %>
+  <p>This dataset will be licensed as follows:</p>
+  <% lic = StashEngine::License.by_id(current_tenant.default_license) %>
+  <%= lic['name'] %><br/>
+  <%= link_to lic['uri'], lic['uri'] %>
+<% else %>
+  <% if @resource.current_state.resource_state == 'in_progress' %>
+    <p>The dataset will be licensed as follows:</p>
+  <% else %>
+    <p>The dataset is licenced as follows:</p>
+  <% end %>
+    <% @resource.rights.each do |r| %>
+      <p>
+        <%= r.rights %><br/>
+        <%= link_to r.rights_uri, r.rights_uri %>
+      </p>
+    <% end %>
+<% end %>

@@ -25,17 +25,19 @@
     <%= link_to "Edit Description", stash_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: @resource.id), class: 'link_like_button', style: "float: right;" %>
 
     <h2 class="review_headers">Review Data Files</h2>
-    <% unless @file_uploads.blank? %>
-      <span><%= link_to 'Edit Files', stash_engine.upload_resource_path(@resource), id: 'upload_path', class: 'link_like_button', style: "float: right;" %>
-    <% end %>
-    <%= render partial: "stash_engine/file_uploads/show", locals: { file_uploads:  @review.file_uploads } %>
-      </span>
+    <span>
+      <% unless @file_uploads.blank? %>
+        <%= link_to 'Edit Files', stash_engine.upload_resource_path(@resource), id: 'upload_path', class: 'link_like_button', style: "float: right;" %>
+      <% end %>
+      <%= render partial: "stash_engine/file_uploads/show", locals: { file_uploads:  @review.file_uploads } %>
+    </span>
+    <%= render partial: "stash_datacite/licenses/review_license" %>
 
 </div>
 <div class="t-describe__dataset-nav o-dataset-nav">
   <%= link_to 'Back to My Datasets', stash_url_helpers.dashboard_path , id: 'dashboard_path', class: 'o-button__icon-left', role: 'button' %>
   <% if @data.blank? %>
-    <%= link_to "Submit", stash_datacite.resources_submission_path(resource_id: @resource.id), data: { confirm: 'You sure you want to submit?'} , class: 'o-button__plain-text2', role: 'button' %>
+    <%= link_to "Submit", stash_datacite.resources_submission_path(resource_id: @resource.id), class: 'o-button__plain-text2', role: 'button' %>
   <% else %>
     <%= button_to("Submit", stash_datacite.resources_submission_path(resource_id: @resource.id), disabled: true, class: 'o-button__plain-text2') %>
   <% end %>
