@@ -137,6 +137,7 @@ GEM
       execjs
     coffee-script-source (1.10.0)
     concurrent-ruby (1.0.2)
+    daemons (1.2.3)
     datacite-mapping (0.1.15)
       typesafe_enum (~> 0.1, >= 0.1.7)
       xml-mapping_extensions (~> 0.4, >= 0.4.1)
@@ -394,6 +395,7 @@ DEPENDENCIES
   capistrano-passenger
   capistrano-rails (~> 1.1)
   coffee-rails (~> 4.1.0)
+  daemons
   jbuilder (~> 2.0)
   jquery-rails
   mysql2 (~> 0.3.18)

@@ -37,6 +37,10 @@ gem 'capistrano', '~> 3.4.1'
 gem 'capistrano-rails', '~> 1.1'
 gem 'capistrano-passenger'
 gem 'passenger'
+
+# run DelayedJob jobs in the background
+gem 'daemons'
+
 gem 'stash_ezid_datacite', :git => 'https://github.com/CDLUC3/stash_ezid_datacite.git'
 
 group :development, :test do
