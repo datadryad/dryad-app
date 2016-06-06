@@ -4,7 +4,7 @@
   <% if current_user %>
     <%= link_to 'Get Started', dashboard_path, class: "o-banner__button" %>
   <% else %>
-    <%= link_to 'Get Started', current_tenant_simple.omniauth_login_path, class: "o-banner__button" %>
+    <%= link_to 'Get Started', current_tenant_simple.try(:omniauth_login_path), class: "o-banner__button" %>
   <% end %>
 </div>
 <div class="t-home__quote-search-group">
