@@ -3,7 +3,7 @@ require 'rest-client'
 require 'uri'
 
 module Stash
-  module Sword2
+  module Sword
     # Utility class simplifying GET requests for HTTP/HTTPS resources.
     class HTTPHelper
 
@@ -79,7 +79,7 @@ module Stash
           value = v.is_a?(Hash) ? v.map { |k2, v2| "\n\t#{k2}: #{v2}"}.join : v
           "#{k}: #{value}"
         end.join("\n")
-        Sword2.log.debug(msg)
+        Sword.log.debug(msg)
       end
 
       # TODO: Consider rewriting with RestClient

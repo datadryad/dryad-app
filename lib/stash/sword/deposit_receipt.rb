@@ -1,8 +1,8 @@
 require 'xml/mapping_extensions'
-require 'stash/sword2/namespace'
+require 'stash/sword/namespace'
 
 module Stash
-  module Sword2
+  module Sword
 
     class Link
       include ::XML::Mapping

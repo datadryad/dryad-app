@@ -2,7 +2,7 @@ require 'spec_helper'
 require 'webmock/rspec'
 
 module Stash
-  module Sword2
+  module Sword
     describe HTTPHelper do
 
       # ------------------------------------------------------------

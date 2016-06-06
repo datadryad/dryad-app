@@ -1,5 +1,5 @@
 module Stash
-  module Sword2
+  module Sword
     # The name of this gem
     NAME = 'stash-sword'.freeze
 

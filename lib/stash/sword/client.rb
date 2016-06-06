@@ -1,11 +1,11 @@
 require 'digest'
 require 'uri'
-require 'stash/sword2/header_utils'
-require 'stash/sword2/http_helper'
-require 'stash/sword2/sequence_io'
+require 'stash/sword/header_utils'
+require 'stash/sword/http_helper'
+require 'stash/sword/sequence_io'
 
 module Stash
-  module Sword2
+  module Sword
     class Client
       include HeaderUtils
 
@@ -31,7 +31,7 @@ module Stash
         @username     = username
         @password     = password
         @on_behalf_of = on_behalf_of || username
-        @helper       = helper || HTTPHelper.new(username: username, password: password, user_agent: "stash-sword2 #{VERSION}")
+        @helper       = helper || HTTPHelper.new(username: username, password: password, user_agent: "stash-sword #{VERSION}")
       end
 
       # Creates a new resource for the specified DOI with the specified zipfile
@@ -123,7 +123,7 @@ module Stash
           "body:\n#{response.body}",
           '-----------------------------------------------------'
         ].join("\n")
-        Sword2.log.debug(msg)
+        Sword.log.debug(msg)
       end
 
       def to_uri(url)

@@ -2,7 +2,7 @@ require 'spec_helper'
 require 'tempfile'
 
 module Stash
-  module Sword2
+  module Sword
 
     RSpec.shared_examples 'reading' do
       it 'reads' do

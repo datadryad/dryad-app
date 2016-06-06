@@ -2,7 +2,7 @@ require 'spec_helper'
 require 'webmock/rspec'
 
 module Stash
-  module Sword2
+  module Sword
     describe Client do
       attr_reader :username, :client, :password, :on_behalf_of, :zipfile, :doi, :collection_uri
 

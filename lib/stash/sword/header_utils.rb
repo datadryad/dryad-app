@@ -1,5 +1,5 @@
 module Stash
-  module Sword2
+  module Sword
     module HeaderUtils
 
       SIMPLE_ZIP                 = 'http://purl.org/net/sword/package/SimpleZip'.freeze

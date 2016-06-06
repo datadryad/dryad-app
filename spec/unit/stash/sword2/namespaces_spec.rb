@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 module Stash
-  module Sword2
+  module Sword
     describe Namespace do
 
       it 'defines namespaces' do

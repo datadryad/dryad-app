@@ -1,8 +1,8 @@
 #! /usr/bin/env ruby
 
-require 'stash/sword2'
+require 'stash/sword'
 
-include Stash::Sword2
+include Stash::Sword
 
 username, password, collection = ARGV
 

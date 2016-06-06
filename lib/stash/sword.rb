@@ -13,9 +13,9 @@ module Stash
                 Logger::WARN
               end
 
-  module Sword2
+  module Sword
 
-    Dir.glob(File.expand_path('../sword2/*.rb', __FILE__)).sort.each(&method(:require))
+    Dir.glob(File.expand_path('../sword/*.rb', __FILE__)).sort.each(&method(:require))
 
     def self.log
       @log ||= new_logger(logdev: $stdout)
