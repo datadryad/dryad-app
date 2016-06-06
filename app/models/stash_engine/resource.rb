@@ -52,6 +52,12 @@ module StashEngine
       save # save the URLs for this resource
       update_identifier(doi)
       update_version(zipfile)
+      update_submission_log(doi, zipfile, client)
+    end
+
+    def update_submission_log(doi, zipfile, client)
+      request = [doi, zipfile, client]
+      SubmissionLog.create(resource_id: id, archive_submission_request: request)
     end
 
     def update_identifier(doi)
