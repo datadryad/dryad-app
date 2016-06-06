@@ -15,10 +15,9 @@ module StashEngine
     # TODO: can we get the DOI from the resource?
     def perform(doi:, zipfile:, resource_id:, sword_params:)
       log.debug("CreateResourceJob: doi: #{doi}, zipfile: #{zipfile}, resource_id: #{resource_id}, sword_params: #{sword_params}")
-      resource = Resource.load(resource_id)
-
-      request_msg = "Submitting initial #{zipfile} with #{DOI} to SWORD; #{sword_params.each { |k, v| "#{k}: v" }.join(', ')}"
+      request_msg = "Submitting initial #{zipfile} with #{doi} to SWORD; #{(sword_params.map { |k, v| "#{k}: #{v}" }).join(', ')}"
       begin
+        resource = Resource.find(resource_id)
         client = Stash::Sword::Client.new(sword_params)
         log.debug("invoking create(doi: #{doi}, zipfile: #{zipfile})")
         receipt = client.create(doi: doi, zipfile: zipfile)

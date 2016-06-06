@@ -14,10 +14,9 @@ module StashEngine
 
     def perform(zipfile:, resource_id:, sword_params:)
       log.debug("UpdateResourceJob: zipfile: #{zipfile}, resource_id: #{resource_id}, sword_params: #{sword_params}")
-      resource = Resource.load(resource_id)
-
-      request_msg = "Submitting update #{zipfile} to SWORD; #{sword_params.each { |k, v| "#{k}: v" }.join(', ')}"
+      request_msg = "Submitting update #{zipfile} to SWORD; #{(sword_params.map { |k, v| "#{k}: #{v}" }).join(', ')}"
       begin
+        resource = Resource.find(resource_id)
         client = Stash::Sword::Client.new(sword_params)
 
         update_uri = resource.update_uri
