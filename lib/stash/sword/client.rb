@@ -40,6 +40,7 @@ module Stash
       # @param zipfile [String] the zipfile path
       # @return [DepositReceipt] the deposit receipt
       def create(doi:, zipfile:)
+        Sword.log.debug("Stash::Sword::Client.create(doi: #{doi}, zipfile: #{zipfile})")
         warn "#{zipfile} may not be a zipfile" unless zipfile.downcase.end_with?('.zip')
         uri = collection_uri.to_s
         response = do_post(uri, zipfile, create_request_headers(zipfile, doi))
@@ -54,6 +55,7 @@ module Stash
       # @param se_iri [URI, String] the SWORD Edit IRI
       # @param zipfile [String] the zipfile path
       def update(se_iri:, zipfile:)
+        Sword.log.debug("Stash::Sword::Client.update(se_iri: #{se_iri}, zipfile: #{zipfile})")
         warn "#{zipfile} may not be a zipfile" unless zipfile.downcase.end_with?('.zip')
         uri = to_uri(se_iri).to_s
         response = maybe_redirect(do_put(uri, zipfile))
