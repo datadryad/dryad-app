@@ -18,7 +18,7 @@ namespace :configs do
     end.parse!
 
     if options[:dir].blank?
-      puts "Usage: rake configs:symlink -- -d [directory]"
+      puts "Usage: rake configs:symlink -- -d [dash2-config directory]"
       exit 0
     end
 
