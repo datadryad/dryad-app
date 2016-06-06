@@ -46,8 +46,13 @@ module StashEngine
       self.update_identifier(doi)
 
       repository = current_tenant.repository
-      sword_params = repository.to_h # ActiveJob can't serialize OpenStruct
-      sword_params[:collection_uri] = repository.endpoint
+      # ActiveJob can't serialize OpenStruct
+      sword_params = {
+          collection_uri: repository.endpoint,
+          username: repository.username,
+          password: repository.password
+      }
+
       if self.update_uri
         UpdateResourceJob.perform_later(zipfile: zipfile, resource_id: self.id, sword_params: sword_params)
       else
