@@ -42,28 +42,21 @@ module StashEngine
     end
 
     def submission_to_repository(current_tenant, zipfile, doi)
-      repo = current_tenant.repository
-      # client = Stash::Sword::Client.new(username: repo.username, password: repo.password)
-      # response = client.post_create(collection_uri: repo.endpoint, zipfile: zipfile, slug: doi)
-      # #self.download_uri = extract_download_url(response, current_tenant)
-      # urls = extract_urls(response)
-      # self.download_uri = urls[:download_uri]
-      # self.update_uri = urls[:update_uri]
-      # save # save the URLs for this resource
-      msg = "SubmitResourceJob.perform_later(zipfile: #{zipfile}, doi: #{doi}, repo: #{repo ? repo.endpoint : 'nil'}, resource: #{id})"
-      logger.debug(msg)
+      # TODO: is it OK to do this before submitting/updating?
+      self.update_identifier(doi)
 
-      SubmitResourceJob.perform_later(repo: repo, zipfile: zipfile, doi: doi, resource: self)
-      # TODO: why do we do this *after* zipfile generation/uploading? (DM 05/24/16)
-      # TODO: (and why in this method in any case?) (DM 05/24/16)
-      update_identifier(doi)
-      update_version(zipfile)
-      update_submission_log(doi, zipfile, client)
+      repository = current_tenant.repository
+      sword_params = repository.to_h # ActiveJob can't serialize OpenStruct
+      sword_params[:collection_uri] = repository.endpoint
+      if self.update_uri
+        UpdateResourceJob.perform_later(zipfile: zipfile, resource_id: self.id, sword_params: sword_params)
+      else
+        CreateResourceJob.perform_later(doi: doi, zipfile: zipfile, resource_id: self.id, sword_params: sword_params)
+      end
     end
 
-    def update_submission_log(doi, zipfile, client)
-      request = [doi, zipfile, client]
-      SubmissionLog.create(resource_id: id, archive_submission_request: request)
+    def update_submission_log(request_msg:, response_msg: nil)
+      SubmissionLog.create(resource_id: id, archive_submission_request: request_msg, archive_response: response_msg)
     end
 
     def update_identifier(doi)
