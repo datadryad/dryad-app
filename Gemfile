@@ -19,4 +19,4 @@ gem 'rubocop', require: false, group: [:development, :test]
 gem 'simplecov', require: false, group: :test
 gem 'jquery-turbolinks'
 
-gem 'stash-sword', git: 'https://github.com/CDLUC3/stash-sword.git', branch: 'sword2'
+gem 'stash-sword', path: '../../stash-sword'

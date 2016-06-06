@@ -1,7 +1,5 @@
-GIT
-  remote: https://github.com/CDLUC3/stash-sword.git
-  revision: 47eead3c9521a740b991da5735648349b4bff663
-  branch: sword2
+PATH
+  remote: ../../stash-sword
   specs:
     stash-sword (0.0.1)
       rest-client (= 2.0.0.rc2)
@@ -229,7 +227,7 @@ GEM
     unf_ext (0.0.7.2)
     unicode-display_width (1.0.3)
     xml-mapping (0.10.0)
-    xml-mapping_extensions (0.4.1)
+    xml-mapping_extensions (0.4.2)
       mime-types (~> 2.5)
       typesafe_enum (~> 0.1, >= 0.1.5)
       xml-mapping (~> 0.10)
