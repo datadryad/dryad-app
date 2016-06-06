@@ -1799,6 +1799,56 @@ html.svg .c-facet__check-label {
     color: #e65722;
     content: '* '; }
 
+.c-keywords {
+  margin: 0 0 20px; }
+
+.c-keywords__label {
+  font-weight: bold; }
+
+.c-keywords__container,
+.c-keywords__container--has-blur, .c-keywords__container--has-focus {
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-flow: row wrap;
+      -ms-flex-flow: row wrap;
+          flex-flow: row wrap;
+  -webkit-align-items: center;
+      -ms-flex-align: center;
+          align-items: center;
+  padding: 5px 5px 0;
+  border: 1px solid #7b7d7e;
+  cursor: text; }
+
+.c-keywords__container--has-focus {
+  border: 2px solid #e65722; }
+
+.c-keywords__keyword {
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-align-items: center;
+      -ms-flex-align: center;
+          align-items: center;
+  min-height: 25px;
+  margin: 0 5px 5px 0;
+  padding: 0 6px;
+  background-color: #4891af;
+  color: white; }
+
+.c-keywords__keyword-remove {
+  margin: 0 0 0 8px;
+  padding: 6px;
+  background: url('data:image/svg+xml;charset=utf-8,%3C%3Fxml%20version%3D%221.0%22%20encoding%3D%22iso-8859-1%22%3F%3E%0A%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20xmlns%3Axlink%3D%22http%3A%2F%2Fwww.w3.org%2F1999%2Fxlink%22%20version%3D%221.1%22%20x%3D%220px%22%20y%3D%220px%22%20viewBox%3D%220%200%2024%2024%22%20style%3D%22enable-background%3Anew%200%200%2024%2024%3B%22%20xml%3Aspace%3D%22preserve%22%20width%3D%22512px%22%20height%3D%22512px%22%3E%0A%3Cg%3E%0A%09%3Cpath%20d%3D%22M16.043%2C11.667L22.609%2C5.1c0.963-0.963%2C0.963-2.539%2C0-3.502l-0.875-0.875%20%20%20c-0.963-0.964-2.539-0.964-3.502%2C0L11.666%2C7.29L5.099%2C0.723c-0.962-0.963-2.538-0.963-3.501%2C0L0.722%2C1.598%20%20%20c-0.962%2C0.963-0.962%2C2.539%2C0%2C3.502l6.566%2C6.566l-6.566%2C6.567c-0.962%2C0.963-0.962%2C2.539%2C0%2C3.501l0.876%2C0.875%20%20%20c0.963%2C0.963%2C2.539%2C0.963%2C3.501%2C0l6.567-6.565l6.566%2C6.565c0.963%2C0.963%2C2.539%2C0.963%2C3.502%2C0l0.875-0.875%20%20%20c0.963-0.963%2C0.963-2.539%2C0-3.501L16.043%2C11.667z%22%20fill%3D%22%23FFFFFF%22%2F%3E%0A%3C%2Fg%3E%0A%3C%2Fsvg%3E') center/10px no-repeat;
+  color: inherit; }
+
+.c-keywords__input {
+  height: 20px;
+  margin: 0 0 5px;
+  padding: 0;
+  border: none;
+  outline: none; }
+
 .c-license__version {
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -1990,11 +2040,8 @@ html.svg .c-facet__check-label {
   -webkit-flex: 0 0 auto;
       -ms-flex: 0 0 auto;
           flex: 0 0 auto;
-  border: none;
-  background-color: white;
-  color: #4891af; }
-  .c-locations__button::before {
-    content: 'x '; }
+  color: #4891af;
+  text-decoration: none; }
 
 .c-pagination {
   display: -webkit-flex;

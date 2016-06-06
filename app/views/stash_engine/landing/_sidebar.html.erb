@@ -20,12 +20,16 @@
 
 <div>
   <h3>Keywords</h3>
+  <div id="show_subjects"
+       data-load="<%= metadata_url_helpers.subjects_landing_path(resource_id: @resource.id, format: :js) %>">
+    <%= image_tag 'stash_engine/spinner.gif', size: '80x60', alt: 'Loading spinner' %>
+  </div>
 </div>
 
 <div>
   <h3>License</h3>
   <div id="show_license"
-       data-load="<%# metadata_url_helpers.resources_user_in_progress_path(format: :js) %>">
+       data-load="<%= metadata_url_helpers.license_details_path(resource_id: @resource.id, format: :js) %>">
     <%= image_tag 'stash_engine/spinner.gif', size: '80x60', alt: 'Loading spinner' %>
   </div>
 </div>

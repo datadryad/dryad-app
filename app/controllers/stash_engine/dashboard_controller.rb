@@ -8,9 +8,6 @@ module StashEngine
     def show
     end
 
-    def get_started
-    end
-
     def metadata_basics
     end
 

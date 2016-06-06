@@ -1,13 +1,19 @@
-# http://stackoverflow.com/questions/5159607/rails-engine-gems-dependencies-how-to-load-them-into-the-application
-# requires all dependencies
-Gem.loaded_specs['stash_engine'].dependencies.each do |d|
-  begin
-    require d.name
-  rescue LoadError => e
-    puts "Gem is causing load exception: \n #{e}"
-  end
-end
-
+require 'rails'
+require 'redcarpet'
+require 'omniauth'
+require 'redcarpet'
+require 'omniauth'
+require 'omniauth-shibboleth'
+require 'omniauth-google-oauth2'
+require 'omniauth-orcid'
+require 'jquery-rails'
+require 'jquery-ui-rails'
+require 'jquery-turbolinks'
+require 'carrierwave'
+require 'jquery-fileupload-rails'
+require 'filesize'
+require 'kaminari'
+require 'amoeba'
 
 require 'stash_engine/engine'
 module StashEngine

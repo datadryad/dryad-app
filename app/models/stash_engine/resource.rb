@@ -58,6 +58,12 @@ module StashEngine
       # TODO: (and why in this method in any case?) (DM 05/24/16)
       update_identifier(doi)
       update_version(zipfile)
+      update_submission_log(doi, zipfile, client)
+    end
+
+    def update_submission_log(doi, zipfile, client)
+      request = [doi, zipfile, client]
+      SubmissionLog.create(resource_id: id, archive_submission_request: request)
     end
 
     def update_identifier(doi)
