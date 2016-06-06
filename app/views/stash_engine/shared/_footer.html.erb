@@ -6,7 +6,7 @@
       <% if current_user %>
         <%= link_to 'My Datasets', stash_url_helpers.dashboard_path, class: 'c-footer__nav-item' %>
         <!-- Logout -->
-        <%= button_to 'Logout', stash_url_helpers.sessions_destroy_path, class: 'c-footer__nav-item', method: :get %>
+        <%= link_to 'Logout', stash_url_helpers.sessions_destroy_path, class: 'c-footer__nav-item' %>
       <% else %>
         <%= link_to 'Login', current_tenant_simple.omniauth_login_path, class: 'c-footer__nav-item' %>
         <div class="c-footer__logged-in-or-out">
