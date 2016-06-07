@@ -20,7 +20,7 @@ $(function () {
             e.preventDefault();
             e.target.parentNode.parentNode.remove();
             updateTotalSize();
-            updateUploadButtonVisibility();
+            updateButtonLinkStates();
           });
 
           // binding upload link click event
@@ -42,10 +42,10 @@ $(function () {
             e.target.parentNode.parentNode.remove();
             $('.upload-it:first').click();
             updateTotalSize();
-            updateUploadButtonVisibility();
+            updateButtonLinkStates();
           })
           updateTotalSize(); // update the total size after drop, also.
-          updateUploadButtonVisibility();
+          updateButtonLinkStates();
         },
         progress: function (e, data) {
           progress = parseInt(data.loaded / data.total * 100, 10);
@@ -54,13 +54,13 @@ $(function () {
         done: function (e, data) {
             // $('#up_button_' + data.files[0].id).text('Upload finished.');
           updateTotalSize();
-          updateUploadButtonVisibility();
+          updateButtonLinkStates();
         }
     });
 });
 
 $( document ).ready(function() {
-  updateUploadButtonVisibility();
+  updateButtonLinkStates();
 });
 
 function generateQuickId() {
@@ -96,11 +96,18 @@ function filesWaitingForUpload(){
   return ($("div[id^='not_uploaded_file_']").length > 0);
 }
 
-function updateUploadButtonVisibility(){
+// update the button and navigation link states based on pending upload files
+function updateButtonLinkStates(){
   if (filesWaitingForUpload()){
     $('#upload_all').show();
+    $("a[class^='c-progress__tab'], #describe_back, #proceed_review").unbind( "click" );
+    $("a[class^='c-progress__tab'], #describe_back, #proceed_review").click(function(e) {
+      e.preventDefault();
+      alert('You have files that have not been uploaded, please upload them or remove them from your list before continuing.');
+    });
   }else{
     $('#upload_all').hide();
+    $("a[class^='c-progress__tab'], #describe_back, #proceed_review").unbind( "click" );
   }
 }
 
