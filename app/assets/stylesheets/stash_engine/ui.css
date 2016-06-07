@@ -495,21 +495,20 @@ html.no-multiplebgs .o-banner {
       font-size: 4vw; } }
 
 .o-banner__button {
+  display: inline-block;
   padding: 6px 12px;
-  border: none;
   background-color: white;
   color: #005581;
+  text-decoration: none;
   z-index: 1; }
   @media (min-width: 480px) {
     .o-banner__button {
-      height: 4vw;
-      padding: 0 1.5vw;
-      font-size: 2.2vw; } }
+      padding: 6px 2vw;
+      font-size: 2.4vw; } }
   @media (min-width: 760px) {
     .o-banner__button {
-      height: 3.2vw;
-      padding: 0 1vw;
-      font-size: 1.7vw; } }
+      padding: 6px 2vw;
+      font-size: 1.9vw; } }
 
 .o-button__plain-text1, .o-button__plain-text2, .o-button__plain-text3 {
   display: inline-block;
@@ -568,6 +567,9 @@ html.no-multiplebgs .o-banner {
   color: #005581;
   font-weight: bold;
   text-align: left; }
+
+.o-button__inline-form {
+  display: inline; }
 
 .o-button__icon-left, .o-button__icon-left--active, .o-button__icon-right, .o-button__icon-right--active {
   display: inline-block;
