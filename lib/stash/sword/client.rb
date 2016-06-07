@@ -124,6 +124,7 @@ module Stash
         # strictly speaking, do we need an Atom <entry/> first?
         content << "--#{boundary}#{EOL}"
         update_mime_headers(zipfile).each { |k, v| content << "#{k}: #{v}#{EOL}" }
+        content << EOL
         content << zipfile
         content << "--#{boundary}--#{EOL}"
         SequenceIO.new(content).binmode
