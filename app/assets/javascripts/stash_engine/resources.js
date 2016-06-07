@@ -20,6 +20,7 @@ $(function () {
             e.preventDefault();
             e.target.parentNode.parentNode.remove();
             updateTotalSize();
+            updateUploadButtonVisibility();
           });
 
           // binding upload link click event
@@ -41,8 +42,10 @@ $(function () {
             e.target.parentNode.parentNode.remove();
             $('.upload-it:first').click();
             updateTotalSize();
+            updateUploadButtonVisibility();
           })
           updateTotalSize(); // update the total size after drop, also.
+          updateUploadButtonVisibility();
         },
         progress: function (e, data) {
           progress = parseInt(data.loaded / data.total * 100, 10);
@@ -51,8 +54,13 @@ $(function () {
         done: function (e, data) {
             // $('#up_button_' + data.files[0].id).text('Upload finished.');
           updateTotalSize();
+          updateUploadButtonVisibility();
         }
     });
+});
+
+$( document ).ready(function() {
+  updateUploadButtonVisibility();
 });
 
 function generateQuickId() {
@@ -75,9 +83,6 @@ function formatSizeUnits(bytes) {
     }
 }
 
-// hide the upload button until files are dropped
-$('#upload_all').hide();
-
 function totalSize(){
   nums = $('.hidden_bytes').map(function(){ return parseInt(this.innerHTML); });
   var total = 0;
@@ -85,6 +90,18 @@ function totalSize(){
     total += value;
   });
   return total;
+}
+
+function filesWaitingForUpload(){
+  return ($("div[id^='not_uploaded_file_']").length > 0);
+}
+
+function updateUploadButtonVisibility(){
+  if (filesWaitingForUpload()){
+    $('#upload_all').show();
+  }else{
+    $('#upload_all').hide();
+  }
 }
 
 function largestSize(){
