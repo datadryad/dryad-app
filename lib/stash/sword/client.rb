@@ -34,19 +34,28 @@ module Stash
         @helper       = helper || HTTPHelper.new(username: username, password: password, user_agent: "stash-sword #{VERSION}")
       end
 
+      def log
+        ::Stash::Sword.log
+      end
+      protected :log
+
       # Creates a new resource for the specified DOI with the specified zipfile
       #
       # @param doi [String] the DOI
       # @param zipfile [String] the zipfile path
       # @return [DepositReceipt] the deposit receipt
       def create(doi:, zipfile:)
-        Sword.log.debug("Stash::Sword::Client.create(doi: #{doi}, zipfile: #{zipfile})")
+        log.debug("Stash::Sword::Client.create(doi: #{doi}, zipfile: #{zipfile})")
         warn "#{zipfile} may not be a zipfile" unless zipfile.downcase.end_with?('.zip')
         uri = collection_uri.to_s
         response = do_post(uri, zipfile, create_request_headers(zipfile, doi))
         receipt_from(response)
       rescue => e
-        log(e.response) if e.respond_to?(:response)
+        if e.respond_to?(:response)
+          log.error(to_log_msg(e.response))
+        else
+          log.error('Unable to log response')
+        end
         raise
       end
 
@@ -55,14 +64,18 @@ module Stash
       # @param se_iri [URI, String] the SWORD Edit IRI
       # @param zipfile [String] the zipfile path
       def update(se_iri:, zipfile:)
-        Sword.log.debug("Stash::Sword::Client.update(se_iri: #{se_iri}, zipfile: #{zipfile})")
+        log.debug("Stash::Sword::Client.update(se_iri: #{se_iri}, zipfile: #{zipfile})")
         warn "#{zipfile} may not be a zipfile" unless zipfile.downcase.end_with?('.zip')
         uri = to_uri(se_iri).to_s
         response = maybe_redirect(do_put(uri, zipfile))
-        log(response)
+        log.debug(to_log_msg(response))
         response.code # TODO: what if anything should we return here?
       rescue => e
-        log(e.response) if e.respond_to?(:response)
+        if e.respond_to?(:response)
+          log.error(to_log_msg(e.response))
+        else
+          log.error('Unable to log response')
+        end
         raise
       end
 
@@ -70,13 +83,13 @@ module Stash
 
       def maybe_redirect(response)
         return response unless [301, 302, 307].include?(response.code)
-        log(response)
+        log.debug(to_log_msg(response))
         log.debug("Response code #{response.code}; redirecting")
         response.follow_get_redirection
       end
 
       def receipt_from(response)
-        log(response)
+        log.debug(to_log_msg(response))
 
         body = response.body.strip
         return DepositReceipt.parse_xml(body) unless body.empty?
@@ -116,17 +129,17 @@ module Stash
         SequenceIO.new(content).binmode
       end
 
-      def log(response)
-        msg = [
-          '-----------------------------------------------------',
-          "code: #{response.code}",
-          'headers:',
-          response.headers.map { |k, v| "\t#{k}:#{v}" }.join("\n"),
-          "body:\n#{response.body}",
-          '-----------------------------------------------------'
+      def to_log_msg(response)
+        [
+            '-----------------------------------------------------',
+            "code: #{response.code}",
+            'headers:',
+            response.headers.map { |k, v| "\t#{k}:#{v}" }.join("\n"),
+            "body:\n#{response.body}",
+            '-----------------------------------------------------'
         ].join("\n")
-        Sword.log.debug(msg)
       end
+      protected :to_log_msg
 
       def to_uri(url)
         ::XML::MappingExtensions.to_uri(url)
