@@ -1,7 +1,7 @@
 // Place all the behaviors and hooks related to the matching controller here.
 // All this logic will automatically be available in application.js.
 
-// this function triggered when dropped, but also continas the upload function
+// this function triggered when dropped, but also continues the upload function
 
 // *******************************
 // Begin Javascript for FileUpload
@@ -32,6 +32,7 @@ $(function () {
                 data.formData = inputs.serializeArray();
                 data.submit();
             });
+
           // binding cancel link click event
           $('#cancel_' + data.files[0].id ).click(function (e) {
             e.preventDefault();
@@ -41,6 +42,7 @@ $(function () {
             $('.upload-it:first').click();
             updateTotalSize();
           })
+          updateTotalSize(); // update the total size after drop, also.
         },
         progress: function (e, data) {
           progress = parseInt(data.loaded / data.total * 100, 10);
