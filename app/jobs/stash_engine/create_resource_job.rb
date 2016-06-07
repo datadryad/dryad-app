@@ -1,7 +1,9 @@
 require 'stash/sword'
 
-module Sword
-  @log = Delayed::Worker.logger
+module Stash
+  module Sword
+    @log = Delayed::Worker.logger
+  end
 end
 
 module StashEngine

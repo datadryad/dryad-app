@@ -1,7 +1,9 @@
 require 'stash/sword'
 
-module Sword
-  @log = Delayed::Worker.logger
+module Stash
+  module Sword
+    @log = Delayed::Worker.logger
+  end
 end
 
 module StashEngine
@@ -30,6 +32,7 @@ module StashEngine
         resource.update_submission_log(request_msg: request_msg, response_msg: "Success")
       rescue => e
         log.error(e)
+        log.debug(e.backtrace.join("\n")) if e.backtrace
         resource.update_submission_log(request_msg: request_msg, response_msg: "Failed: #{e}")
       end
     end
