@@ -30,10 +30,11 @@ module StashEngine
         log.debug("resource #{resource.id} saved")
         resource.update_version(zipfile)
 
-        resource.update_submission_log(request_msg: request_msg, response_msg: "Success: received EM-IRI #{receipt.em_iri}, SE-IRI #{se_iri}")
+        resource.update_submission_log(request_msg: request_msg, response_msg: "Success: received EM-IRI #{receipt.em_iri}, SE-IRI #{receipt.se_iri}")
       rescue => e
         log.error(e)
         resource.update_submission_log(request_msg: request_msg, response_msg: "Failed: #{e}")
+        raise
       end
     end
   end
