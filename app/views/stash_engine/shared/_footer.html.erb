@@ -1,14 +1,14 @@
 <footer class="c-footer">
   <div class="c-footer__link-group">
     <div class="c-footer__nav-group">
-      <%= link_to 'Browse Data', stash_url_helpers.search_path, class: 'c-footer__nav-item' %>
+      <%= link_to 'Browse Data', '/search', class: 'c-footer__nav-item' %>
       <%= link_to 'About Dash', stash_url_helpers.about_path, class: 'c-footer__nav-item' %>
       <% if current_user %>
         <%= link_to 'My Datasets', stash_url_helpers.dashboard_path, class: 'c-footer__nav-item' %>
         <!-- Logout -->
         <%= link_to 'Logout', stash_url_helpers.sessions_destroy_path, class: 'c-footer__nav-item' %>
       <% else %>
-        <%= link_to 'Login', current_tenant_simple.omniauth_login_path, class: 'c-footer__nav-item' %>
+        <%= link_to 'Login', current_tenant_simple.try(:omniauth_login_path), class: 'c-footer__nav-item' %>
         <div class="c-footer__logged-in-or-out">
           <div class="o-sites">
             <details class="o-showhide o-sites__details" role="group">

@@ -46,13 +46,20 @@ module StashEngine
       "https://#{full_domain}/#{StashEngine.app.stash_mount}/auth/google_oauth2"
     end
 
+
     def self.by_domain(domain)
+      i = by_domain_w_nil(domain)
+      return all.first if i.nil?
+      i
+    end
+
+    def self.by_domain_w_nil(domain)
       StashEngine.tenants.values.each do |v|
         if v['enabled'] && v['enabled'] == true
           return new(v) if Regexp.new(v['domain_regex']).match(domain)
         end
       end
-      all.first
+      nil
     end
 
     def self.find(tenant_id)

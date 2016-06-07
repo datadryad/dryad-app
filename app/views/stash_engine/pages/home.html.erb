@@ -1,27 +1,30 @@
 <!-- Begin Banner Object -->
 <div class="t-home__banner o-banner" style="background-image: url(<%= asset_path 'stash_engine/bg_drawer-of-bugs.jpg' %>)">
-	<div class="o-banner__tagline">Data sharing made easy</div>
-	<% if current_user %>
-		<%= link_to 'Get Started', dashboard_path, class: "o-banner__button" %>
-	<% else %>
-		<%= link_to 'Get Started', current_tenant_simple.omniauth_login_path, class: "o-banner__button" %>
-	<% end %>
+  <div class="o-banner__tagline">Data sharing made easy</div>
+  <% if current_user %>
+    <%= link_to 'Get Started', dashboard_path, class: "o-banner__button" %>
+  <% else %>
+    <%= link_to 'Get Started', current_tenant_simple.try(:omniauth_login_path), class: "o-banner__button" %>
+  <% end %>
 </div>
 <div class="t-home__quote-search-group">
-	<div class="t-home__quote o-quote">
-		<blockquote class="o-quote__quote">“hypotheses come and and go, but <b>data remain</b>”</blockquote>
-		<b class="o-quote__author">Santiago Ramón y Cajal, 1897</b>
-	</div>
-	<div class="t-home__search o-home-search">
-		<label class="o-home-search__label" for="home-search-input">Discover University of California Research Data</label>
-		<div class="o-home__search-group">
-			<input class="o-home-search__input" id="home-search-input" type="search" name="[name]">
-			<button class="o-home-search__submit-button">Search</button>
-		</div>
-	</div>
+  <div class="t-home__quote o-quote">
+    <blockquote class="o-quote__quote">“hypotheses come and and go, but <b>data remain</b>”</blockquote>
+    <b class="o-quote__author">Santiago Ramón y Cajal, 1897</b>
+  </div>
+  <div class="t-home__search o-home-search">
+    <form action="/search" accept-charset="UTF-8" method="get">
+      <label class="o-home-search__label" for="home-search-input">Discover University of California Research
+        Data</label>
+      <div class="o-home__search-group">
+        <input class="o-home-search__input" id="home-search-input" type="search" name="q">
+        <button class="o-home-search__submit-button">Search</button>
+      </div>
+    </form>
+  </div>
 </div>
 <h1 class="o-heading__level1">Latest Dash Datasets</h1>
 <div id="latest_tiles"
-    data-load="<%= main_app.latest_index_path(format: :js, q: '*:*') %>">
-	<%= image_tag 'stash_engine/spinner.gif', size: '80x60', alt: 'Loading spinner' %>
+     data-load="<%= main_app.latest_index_path(format: :js, q: '*:*') %>">
+  <%= image_tag 'stash_engine/spinner.gif', size: '80x60', alt: 'Loading spinner' %>
 </div>

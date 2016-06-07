@@ -40,7 +40,7 @@ module StashEngine
 
     # get current tenant, only based on the domain
     def current_tenant_simple
-      StashEngine::Tenant.by_domain(request.host)
+      StashEngine::Tenant.by_domain_w_nil(request.host)
     end
 
     def current_user

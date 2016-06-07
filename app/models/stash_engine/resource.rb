@@ -101,12 +101,12 @@ module StashEngine
       if self.identifier.blank?
         return 1
       else
-        last_version = self.identifier.last_submitted_version
-        if last_version.blank?
+        last_v = self.identifier.last_submitted_version
+        if last_v.blank?
           1
         else
           #this looks crazy, but association from resource to version to version field
-          last_version.version.version + 1
+          last_v.version.version + 1
         end
       end
     end

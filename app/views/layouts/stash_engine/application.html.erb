@@ -36,7 +36,7 @@
 
       <div class="c-header__nav-group">
         <%= link_to 'Home', stash_url_helpers.root_path, class: 'c-header__nav-item' %>
-        <%= link_to 'Browse Data', stash_url_helpers.search_path, class: 'c-header__nav-item' %>
+        <%= link_to 'Browse Data', '/search', class: 'c-header__nav-item' %>
         <%= link_to 'Help', stash_url_helpers.help_path, class: 'c-header__nav-item' %>
         <% if current_user %>
           <%= link_to 'My Datasets', stash_url_helpers.dashboard_path, class: 'c-header__nav-item' %>
