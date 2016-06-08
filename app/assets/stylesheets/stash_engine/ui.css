@@ -550,7 +550,7 @@ html.no-multiplebgs .o-banner {
 
 .o-button__plain-text6 {
   margin: 0 8px 0 0;
-  padding: 0 8px 0 0;
+  padding: 0 12px 0 0;
   border: none;
   border-right: 2px solid #9d9fa2;
   background-color: white;
@@ -559,6 +559,8 @@ html.no-multiplebgs .o-banner {
   @media (min-width: 760px) {
     .o-button__plain-text6 {
       margin: 0 8px 10px 0; } }
+  .o-button__plain-text6[disabled] {
+    color: #7b7d7e; }
 
 .o-button__plain-text7 {
   padding: 0;
@@ -567,6 +569,8 @@ html.no-multiplebgs .o-banner {
   color: #005581;
   font-weight: bold;
   text-align: left; }
+  .o-button__plain-text7[disabled] {
+    color: #7b7d7e; }
 
 .o-button__inline-form {
   display: inline; }
