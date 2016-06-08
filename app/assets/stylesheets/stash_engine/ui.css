@@ -658,7 +658,7 @@ html.no-multiplebgs .o-banner {
   content: '+'; }
 
 .o-button__remove::before {
-  content: '\2013'; }
+  content: '\00d7'; }
 
 .o-button__help {
   display: inline-block;
