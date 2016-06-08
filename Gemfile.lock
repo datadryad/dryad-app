@@ -6,14 +6,6 @@ GIT
       ezid-client
 
 PATH
-  remote: ../stash-sword
-  specs:
-    stash-sword (0.1.0)
-      rest-client (= 2.0.0.rc2)
-      typesafe_enum (~> 0.1, >= 0.1.7)
-      xml-mapping_extensions (~> 0.4, >= 0.4.1)
-
-PATH
   remote: ../stash_engines
   specs:
     stash_datacite (0.0.5)
@@ -353,6 +345,10 @@ GEM
     sshkit (1.10.0)
       net-scp (>= 1.1.2)
       net-ssh (>= 2.8.0)
+    stash-sword (0.1.0)
+      rest-client (= 2.0.0.rc2)
+      typesafe_enum (~> 0.1, >= 0.1.7)
+      xml-mapping_extensions (~> 0.4, >= 0.4.1)
     stash-wrapper (0.1.9)
       typesafe_enum (~> 0.1, >= 0.1.7)
       xml-mapping_extensions (~> 0.4, >= 0.4.1)
@@ -408,7 +404,6 @@ DEPENDENCIES
   simplecov
   simplecov-console
   spring
-  stash-sword!
   stash_datacite!
   stash_discovery!
   stash_engine!
