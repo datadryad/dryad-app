@@ -1,4 +1,4 @@
-require 'stash/sword'
+
 
 module StashEngine
   class Resource < ActiveRecord::Base
@@ -21,7 +21,7 @@ module StashEngine
     #resource_states
     scope :in_progress, -> { joins(:current_state).where(stash_engine_resource_states: {resource_state:  :in_progress}) }
     scope :submitted, -> { joins(:current_state).where(stash_engine_resource_states: {resource_state:  :submitted}) }
-    scope :last_version, -> { joins(:version).order('stash_engine_versions.version DESC').first }
+    scope :by_version_desc, -> { joins(:version).order('stash_engine_versions.version DESC') }
     scope :by_version, -> { joins(:version).order('stash_engine_versions.version ASC') }
 
     # clean up the uploads with files that no longer exist for this resource
@@ -42,22 +42,27 @@ module StashEngine
     end
 
     def submission_to_repository(current_tenant, zipfile, doi)
-      repo = current_tenant.repository
-      client = Stash::Sword::Client.new(username: repo.username, password: repo.password)
-      response = client.post_create(collection_uri: repo.endpoint, zipfile: zipfile, slug: doi)
-      #self.download_uri = extract_download_url(response, current_tenant)
-      urls = extract_urls(response)
-      self.download_uri = urls[:download_uri]
-      self.update_uri = urls[:update_uri]
-      save # save the URLs for this resource
-      update_identifier(doi)
-      update_version(zipfile)
-      update_submission_log(doi, zipfile, client)
+      # TODO: is it OK to do this before submitting/updating?
+      self.update_identifier(doi)
+
+      repository = current_tenant.repository
+      # ActiveJob can't serialize OpenStruct
+      sword_params = {
+          collection_uri: repository.endpoint,
+          username: repository.username,
+          password: repository.password
+      }
+
+      # TODO: make this check once update is working
+      # if self.update_uri
+      #   UpdateResourceJob.perform_later(zipfile: zipfile, resource_id: self.id, sword_params: sword_params)
+      # else
+      CreateResourceJob.perform_later(doi: doi, zipfile: zipfile, resource_id: self.id, sword_params: sword_params)
+      # end
     end
 
-    def update_submission_log(doi, zipfile, client)
-      request = [doi, zipfile, client]
-      SubmissionLog.create(resource_id: id, archive_submission_request: request)
+    def update_submission_log(request_msg:, response_msg: nil)
+      SubmissionLog.create(resource_id: id, archive_submission_request: request_msg, archive_response: response_msg)
     end
 
     def update_identifier(doi)
@@ -119,12 +124,12 @@ module StashEngine
     # end
 
     #:download_uri and :update_uri returned in hash
-    def extract_urls(xml_response)
-      doc = Nokogiri::XML(xml_response)
-      doc.remove_namespaces!
-      { download_uri: doc.xpath("/entry/link[@rel='edit-media']").first.attribute('href').to_s,
-        update_uri: doc.xpath("/entry/link[@rel='edit']").first.attribute('href').to_s }
-    end
+    # def extract_urls(xml_response)
+    #   doc = Nokogiri::XML(xml_response)
+    #   doc.remove_namespaces!
+    #   { download_uri: doc.xpath("/entry/link[@rel='edit-media']").first.attribute('href').to_s,
+    #     update_uri: doc.xpath("/entry/link[@rel='edit']").first.attribute('href').to_s }
+    # end
 
     def increment_downloads
       ensure_resource_usage

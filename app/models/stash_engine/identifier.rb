@@ -15,7 +15,8 @@ module StashEngine
 
     # this returns a resource object for the last version
     def last_submitted_version
-      self.resources.submitted.last_version
+      submitted = self.resources.submitted
+      submitted.by_version_desc.first
     end
 
     def in_progress_version
