@@ -21,9 +21,12 @@ module StashDatacite
       end
 
       # these are the required ones and return true/false if completed
-
       def title
         @resource.titles.where.not(title: [nil, '']).count > 0
+      end
+
+      def institution
+        @resource.creators.where.not(affliation_id: nil).count > 0
       end
 
       def data_type
@@ -41,18 +44,14 @@ module StashDatacite
       end
 
       def required_completed
-        title.to_i + data_type.to_i + creator.to_i + abstract.to_i
+        title.to_i + institution.to_i + data_type.to_i + creator.to_i + abstract.to_i
       end
 
       def required_total
-        4
+        5
       end
 
       # these are optional (recommended) ones
-      def institution
-        @resource.creators.where.not(affliation_id: nil).count > 0
-      end
-
       def date
         @resource.datacite_dates.where.not(date: [nil, '']).count > 0
       end
@@ -70,11 +69,11 @@ module StashDatacite
       end
 
       def optional_completed
-        institution.to_i + date.to_i + keyword.to_i + method.to_i + citation.to_i
+        date.to_i + keyword.to_i + method.to_i + citation.to_i
       end
 
       def optional_total
-        5
+        4
       end
     end
   end
