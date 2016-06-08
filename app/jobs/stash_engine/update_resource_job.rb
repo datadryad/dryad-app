@@ -22,11 +22,11 @@ module StashEngine
         client = Stash::Sword::Client.new(sword_params)
 
         update_uri = resource.update_uri
-        request_msg << ", se_iri: #{update_uri}"
+        request_msg << ", edit_iri: #{update_uri}"
 
-        log.debug("invoking update(se_iri: #{update_uri}, zipfile: #{zipfile})")
-        client.update(se_iri: update_uri, zipfile: zipfile)
-        log.debug("update(se_iri: #{update_uri}, zipfile: #{zipfile}) complete")
+        log.debug("invoking update(edit_iri: #{update_uri}, zipfile: #{zipfile})")
+        client.update(edit_iri: update_uri, zipfile: zipfile)
+        log.debug("update(edit_iri: #{update_uri}, zipfile: #{zipfile}) complete")
 
         resource.update_version(zipfile)
         resource.update_submission_log(request_msg: request_msg, response_msg: "Success")
