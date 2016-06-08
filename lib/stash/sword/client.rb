@@ -61,12 +61,12 @@ module Stash
 
       # Updates a resource with a new zipfile
       #
-      # @param se_iri [URI, String] the SWORD Edit IRI
+      # @param edit_iri [URI, String] the Atom Edit-IRI
       # @param zipfile [String] the zipfile path
-      def update(se_iri:, zipfile:)
-        log.debug("Stash::Sword::Client.update(se_iri: #{se_iri}, zipfile: #{zipfile})")
+      def update(edit_iri:, zipfile:)
+        log.debug("Stash::Sword::Client.update(edit_iri: #{edit_iri}, zipfile: #{zipfile})")
         warn "#{zipfile} may not be a zipfile" unless zipfile.downcase.end_with?('.zip')
-        uri = to_uri(se_iri).to_s
+        uri = to_uri(edit_iri).to_s
         response = maybe_redirect(do_put(uri, zipfile))
         log.debug(to_log_msg(response))
         response.code # TODO: what if anything should we return here?
@@ -94,9 +94,11 @@ module Stash
         body = response.body.strip
         return DepositReceipt.parse_xml(body) unless body.empty?
 
+        log.debug('Desposit receipt not provided in SWORD response body')
         edit_iri = response.headers[:location]
         return nil unless edit_iri
 
+        log.debug("Retrieving deposit receipt from Location header Edit-IRI: #{edit_iri}")
         body = helper.get(to_uri(edit_iri))
         return nil unless body
 

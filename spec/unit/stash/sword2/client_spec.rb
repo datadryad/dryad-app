@@ -50,7 +50,6 @@ module Stash
 
         it 'returns the entry'
         it "gets the entry from the Edit-IRI in the Location: header if it isn't returned in the body"
-        it 'does something clever and asynchronous'
         it 'forwards a success response'
         it 'forwards a 4xx error'
         it 'forwards a 5xx error'
@@ -59,12 +58,12 @@ module Stash
 
       describe '#update' do
         it 'PUTs with the correct headers' do
-          se_iri = "http://merritt.cdlib.org/sword/v2/object/#{doi}"
-          authorized_uri = se_iri.sub('http://', "http://#{username}:#{password}@")
+          edit_iri = "http://merritt.cdlib.org/sword/v2/object/#{doi}"
+          authorized_uri = edit_iri.sub('http://', "http://#{username}:#{password}@")
 
           stub_request(:put, authorized_uri)
 
-          client.update(se_iri: se_iri, zipfile: zipfile)
+          client.update(edit_iri: edit_iri, zipfile: zipfile)
 
           md5 = Digest::MD5.file(zipfile).to_s
 
