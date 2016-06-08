@@ -1,5 +1,7 @@
 require 'stringio'
 
+require 'tempfile'
+
 module Stash
   module Sword
     # A read-only `IO`-like that concatenates a sequence of strings or IOs.
@@ -17,6 +19,11 @@ module Stash
         @index = 0
         @input = @inputs[index] unless inputs.empty?
       end
+
+      def log
+        ::Stash::Sword.log
+      end
+      protected :log
 
       def size
         @size ||= inputs.inject(0) do |sum, input|
@@ -47,7 +54,14 @@ module Stash
       end
 
       def close
+        log.debug("SequenceIO.close: index = #{index}, input = #{input}")
         next_input! until input.nil?
+
+        tb_file = "/tmp/trace_buffer-#{Time.now.to_i}.bin"
+        File.open(tb_file, 'w') do |f|
+          f.write(trace_buffer)
+        end
+        log.debug("SequenceIO.close: wrote trace_buffer (#{trace_buffer.length} bytes) to #{tb_file}")
       end
 
       def closed?
@@ -60,9 +74,15 @@ module Stash
       attr_reader :index
       attr_reader :inputs
 
+      def trace_buffer
+        @trace_buffer ||= ''.b
+      end
+
       def read_fully(buffer)
         until input.nil?
-          buffer << input.read(nil)
+          result = input.read(nil)
+          buffer << result
+          trace_buffer << result
           next_input!
         end
       end
@@ -73,6 +93,7 @@ module Stash
         remaining = length
         if (result = input.read(length))
           buffer << result
+          trace_buffer << result
           remaining = length - result.length
         end
         return unless remaining > 0
@@ -83,7 +104,8 @@ module Stash
 
       # TODO: Array.pop! or something
       def next_input!
-        input.close if input && input.respond_to?(:close)
+        do_close = input && input.respond_to?(:close)
+        input.close if do_close
         @index += 1
         @input = index < inputs.length ? inputs[index] : nil
       end

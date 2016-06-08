@@ -132,12 +132,12 @@ module Stash
 
       def to_log_msg(response)
         [
-            '-----------------------------------------------------',
-            "code: #{response.code}",
-            'headers:',
-            response.headers.map { |k, v| "\t#{k}:#{v}" }.join("\n"),
-            "body:\n#{response.body}",
-            '-----------------------------------------------------'
+          '-----------------------------------------------------',
+          "code: #{response.code}",
+          'headers:',
+          response.headers.map { |k, v| "\t#{k}:#{v}" }.join("\n"),
+          "body:\n#{response.body}",
+          '-----------------------------------------------------'
         ].join("\n")
       end
       protected :to_log_msg

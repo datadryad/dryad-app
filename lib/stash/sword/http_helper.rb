@@ -28,10 +28,10 @@ module Stash
       # @param redirect_limit [Integer] the number of redirects to follow before erroring out
       #   (defaults to {DEFAULT_MAX_REDIRECTS})
       def initialize(user_agent:, username: nil, password: nil, redirect_limit: DEFAULT_MAX_REDIRECTS)
-        @user_agent     = user_agent
+        @user_agent = user_agent
         @redirect_limit = redirect_limit
-        @username       = username
-        @password       = password
+        @username = username
+        @password = password
       end
 
       # Gets the content of the specified URI as a string.
@@ -60,13 +60,16 @@ module Stash
 
       def do_post_or_put(method:, uri:, payload:, headers:, limit:)
         options = {
-          method:        method,
-          url:           uri.to_s,
-          payload:       payload,
-          headers:       headers.merge('User-Agent' => user_agent),
+          method: method,
+          url: uri.to_s,
+          payload: payload,
+          headers: headers.merge(
+            'User-Agent' => user_agent,
+            'Content-Transfer-Encoding' => 'binary'
+          ),
           max_redirects: limit
         }
-        options[:user]     = username if username
+        options[:user] = username if username
         options[:password] = password if password
 
         log_request(options)
@@ -76,7 +79,7 @@ module Stash
 
       def log_request(options)
         msg = options.map do |k, v|
-          value = v.is_a?(Hash) ? v.map { |k2, v2| "\n\t#{k2}: #{v2}"}.join : v
+          value = v.is_a?(Hash) ? v.map { |k2, v2| "\n\t#{k2}: #{v2}" }.join : v
           "#{k}: #{value}"
         end.join("\n")
         Sword.log.debug(msg)
@@ -106,7 +109,7 @@ module Stash
           original_uri
         else
           location = response['location']
-          new_uri  = URI(location)
+          new_uri = URI(location)
           new_uri.relative? ? original_uri + location : new_uri
         end
       end
