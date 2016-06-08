@@ -1,8 +1,8 @@
 <%# the local variable 'creator' should be passed in to this partial when there are multiple per page.
   # the 'path' to submit to should also be passed in. %>
 <% form_id = unique_form_id(creator) %>
-<%= form_for(creator, url: path, remote: true, authenticity_token: true, html: { id: form_id, class: 'c-input__inline' }) do |f| %>
-<% my_suffix = field_suffix(creator) %>
+<%= form_for(creator, url: path, remote: true, authenticity_token: true, html: {id: form_id, class: 'c-input__inline'}) do |f| %>
+  <% my_suffix = field_suffix(creator) %>
 
 <%#= render "datacite/shared/error_messages", target: @creator %>
   <div class="c-input">
@@ -17,9 +17,9 @@
     <%= f.label "affliation_id_#{my_suffix}", "Institutional Affiliation", class: 'c-input__label' %>
     <%= text_field_tag(:affliation, creator.affliation.try(:long_name), id: "creator_affliation_id_#{my_suffix}", class: 'c-input__text js-affliation') %>
   </div>
-  <%= link_to 'remove', stash_datacite.creators_delete_path(creator.id || 'new'), method: :delete, remote: true, data: { confirm: 'Are you sure?' }, class: 't-describe__remove-button o-button__remove remove_record' %>
+  <%= link_to 'remove', stash_datacite.creators_delete_path(creator.id || 'new'), method: :delete, remote: true, data: {confirm: 'Are you sure?'}, class: 't-describe__remove-button o-button__remove remove_record' %>
   <div>
-    <% unless creator.blank?  || creator.orcid_id.blank? %>
+    <% unless creator.blank? || creator.orcid_id.blank? %>
       <%= image_tag("stash_datacite/orcid.png", class: "orcid_img", size: "20x20", alt: "Place") %><%= f.text_field :orcid_id, readonly: true, style: "border:none;" %>
     <% end %>
   </div>
@@ -30,49 +30,48 @@
 <% end %>
 
 <script type="text/javascript">
-$(function() {
-  $( ".js-affliation" ).autocomplete({
-    source: function( request, response ) {
-      $.ajax({
-        url: "<%= stash_datacite.affliations_autocomplete_path %>",
-        dataType: "json",
-        data: {
-          term: request.term
-        },
-        success: function( data ) {
-          response( $.map( data, function( item ) {
-            return {
-              value: item.long_name,
-              id: item.id
-            }
+  $(function () {
+    $('.js-affliation').unbind('blur');
+    $(".js-affliation").autocomplete({
+      source: function (request, response) {
+        $.ajax({
+          url: "<%= stash_datacite.affliations_autocomplete_path %>",
+          dataType: "json",
+          data: {
+            term: request.term
+          },
+          success: function (data) {
+            response($.map(data, function (item) {
+                  return {
+                    value: item.long_name,
+                    id: item.id
+                  }
+                }
+            ));
           }
-          ));
-        }
-      });
-    },
-    minLength: 1,
-    focus: function() {
-      // prevent value inserted on focus
-      return false;
-    },
-    select: function( event, ui ) {
-      $(".js-affliation_id").val(ui.item.id); // set hidden field id
-    },
-    open: function(event, ui) {
-       disable=true
-     },
-    close: function(event, ui) {
-       disable=false;
-      $(this).focus();
-     }
-  }).blur(function(event) {
-   if(!disable) {
-      alert($(this).val());
-      var form = $(this).parents('form');
-      $(form).trigger('submit.rails');
-      $('.saved_text').show(0).delay(3000).hide(0);
-    }
-  }
- });
-});
+        });
+      },
+      minLength: 1,
+      focus: function () {
+        // prevent value inserted on focus
+        return false;
+      },
+      select: function (event, ui) {
+        $(".js-affliation_id").val(ui.item.id); // set hidden field id
+      },
+      open: function (event, ui) {
+        disable = true
+      },
+      close: function (event, ui) {
+        disable = false;
+        $(this).focus();
+      }
+    }).blur(function (event) {
+      if (!disable) {
+        var form = $(this).parents('form');
+        $(form).trigger('submit.rails');
+        $('.saved_text').show(0).delay(3000).hide(0);
+      }
+    });
+  });
 </script>
