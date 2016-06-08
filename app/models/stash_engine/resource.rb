@@ -53,11 +53,12 @@ module StashEngine
           password: repository.password
       }
 
-      if self.update_uri
-        UpdateResourceJob.perform_later(zipfile: zipfile, resource_id: self.id, sword_params: sword_params)
-      else
-        CreateResourceJob.perform_later(doi: doi, zipfile: zipfile, resource_id: self.id, sword_params: sword_params)
-      end
+      # TODO: make this check once update is working
+      # if self.update_uri
+      #   UpdateResourceJob.perform_later(zipfile: zipfile, resource_id: self.id, sword_params: sword_params)
+      # else
+      CreateResourceJob.perform_later(doi: doi, zipfile: zipfile, resource_id: self.id, sword_params: sword_params)
+      # end
     end
 
     def update_submission_log(request_msg:, response_msg: nil)
