@@ -33,9 +33,10 @@ module StashDatacite
 
     # PATCH/PUT /creators/1
     def update
-      @affliation = Affliation.where('long_name LIKE ? OR short_name LIKE ? OR abbreviation LIKE?',
+      @affliation = Affliation.where('long_name LIKE ? OR short_name LIKE ? OR abbreviation LIKE ?',
                                        "%#{params[:affliation]}%", "%#{params[:affliation]}%", "%#{params[:affliation]}%") unless params[:affliation].blank?
-      if @affliation.nil?
+
+      if @affliation.blank?
         Affliation.create(long_name: params[:affliation])
       end
       respond_to do |format|
