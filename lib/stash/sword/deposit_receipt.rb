@@ -30,6 +30,11 @@ module Stash
         em_iri.href if em_iri
       end
 
+      def edit_iri
+        edit_iri = link(rel: 'edit')
+        edit_iri.href if edit_iri
+      end
+
       def se_iri
         se_iri = link(rel: URI('http://purl.org/net/sword/terms/add'))
         se_iri.href if em_iri
