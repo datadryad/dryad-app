@@ -118,7 +118,11 @@ module Stash
         update_mime_headers(zipfile).each { |k, v| content << "#{k}: #{v}#{EOL}" }
         content << EOL
         content << zipfile
+        content << EOL
         content << "--#{boundary}--#{EOL}"
+
+        log.debug("Payload:\n\t#{content.map(&:to_s).join("\t")}")
+
         SequenceIO.new(content).binmode
       end
 
