@@ -8,7 +8,7 @@ GIT
 PATH
   remote: ../stash-sword
   specs:
-    stash-sword (0.0.1)
+    stash-sword (0.1.0)
       rest-client (= 2.0.0.rc2)
       typesafe_enum (~> 0.1, >= 0.1.7)
       xml-mapping_extensions (~> 0.4, >= 0.4.1)
@@ -34,8 +34,8 @@ PATH
     stash_engine (0.0.17)
       amoeba (~> 3.0.0)
       carrierwave (~> 0.10.0)
-      delayed_job
-      delayed_job_active_record
+      delayed_job (~> 4.1)
+      delayed_job_active_record (~> 4.1)
       filesize (~> 0.1.1)
       jquery-fileupload-rails (~> 0.4.6)
       jquery-rails
@@ -48,7 +48,7 @@ PATH
       omniauth-shibboleth (~> 1.2.1)
       rails (~> 4.2.4)
       redcarpet (~> 3.3)
-      stash-sword
+      stash-sword (~> 0.1, >= 0.1.0)
 
 GEM
   remote: https://rubygems.org/
