@@ -22,9 +22,9 @@ Gem::Specification.new do |s|
 
   s.add_development_dependency 'mysql2'
 
-  s.add_dependency 'stash-sword'
-  s.add_dependency 'delayed_job'
-  s.add_dependency 'delayed_job_active_record'
+  s.add_dependency 'stash-sword', '~> 0.1', '>= 0.1.0'
+  s.add_dependency 'delayed_job', '~> 4.1'
+  s.add_dependency 'delayed_job_active_record', '~> 4.1'
 
   s.add_dependency 'redcarpet', '~> 3.3'
   s.add_dependency 'omniauth', '~> 1.2.2'
