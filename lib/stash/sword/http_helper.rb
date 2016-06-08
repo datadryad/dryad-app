@@ -1,11 +1,14 @@
 require 'net/http'
 require 'rest-client'
 require 'uri'
+require 'stash/sword/log_utils'
 
 module Stash
   module Sword
     # Utility class simplifying GET requests for HTTP/HTTPS resources.
     class HTTPHelper
+
+      include LogUtils
 
       # The default number of redirects to follow before erroring out.
       DEFAULT_MAX_REDIRECTS = 5
@@ -58,31 +61,30 @@ module Stash
 
       private
 
+      def default_headers
+        {
+          'User-Agent' => user_agent,
+          'Content-Transfer-Encoding' => 'binary'
+        }.freeze
+      end
+
       def do_post_or_put(method:, uri:, payload:, headers:, limit:)
+        options = request_options(headers, limit, method, payload, uri)
+        log_hash(options)
+        RestClient::Request.execute(**options)
+      end
+
+      def request_options(headers, limit, method, payload, uri)
         options = {
           method: method,
           url: uri.to_s,
           payload: payload,
-          headers: headers.merge(
-            'User-Agent' => user_agent,
-            'Content-Transfer-Encoding' => 'binary'
-          ),
+          headers: headers.merge(default_headers),
           max_redirects: limit
         }
         options[:user] = username if username
         options[:password] = password if password
-
-        log_request(options)
-
-        RestClient::Request.execute(**options)
-      end
-
-      def log_request(options)
-        msg = options.map do |k, v|
-          value = v.is_a?(Hash) ? v.map { |k2, v2| "\n\t#{k2}: #{v2}" }.join : v
-          "#{k}: #{value}"
-        end.join("\n")
-        Sword.log.debug(msg)
+        options
       end
 
       # TODO: Consider rewriting with RestClient

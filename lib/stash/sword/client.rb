@@ -58,7 +58,7 @@ module Stash
         log.debug("Stash::Sword::Client.update(edit_iri: #{edit_iri}, zipfile: #{zipfile})")
         uri = to_uri(edit_iri).to_s
         response = maybe_redirect(do_put(uri, zipfile))
-        log.debug(to_log_msg(response))
+        log.debug(response_to_log_msg(response))
         response.code # TODO: what if anything should we return here?
       rescue => e
         log_error(e)
@@ -69,13 +69,13 @@ module Stash
 
       def maybe_redirect(response)
         return response unless [301, 302, 307].include?(response.code)
-        log.debug(to_log_msg(response))
+        log.debug(response_to_log_msg(response))
         log.debug("Response code #{response.code}; redirecting")
         response.follow_get_redirection
       end
 
       def receipt_from(response)
-        log.debug(to_log_msg(response))
+        log.debug(response_to_log_msg(response))
 
         body = response.body.strip
         return DepositReceipt.parse_xml(body) unless body.empty?
