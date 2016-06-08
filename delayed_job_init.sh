@@ -4,7 +4,7 @@
 
 export RAILS_ENV=development
 
-appDir=$HOME/apps/ui/current
+appDir=$(readlink -f $HOME/apps/ui/current)
 delayed_job=${appDir}/bin/delayed_job
 
 case "$1" in
@@ -20,7 +20,3 @@ case "$1" in
         ;;
 esac
 exit 0
-
-	      
-
-
