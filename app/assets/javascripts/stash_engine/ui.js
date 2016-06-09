@@ -581,9 +581,25 @@ $(document).ready(function(){
 
 $(document).ready(function(){
 
+  // ***** Keywords Input Focus ***** //
+
+  $('#js-keywords__container').click(function(){
+    $('.js-keywords__input').focus();
+  });
+
+  $('.js-keywords__input').focus(function(){
+    $('#js-keywords__container').attr('class', 'c-keywords__container--has-focus');
+  });
+
+  $('.js-keywords__input').blur(function(){
+    $('#js-keywords__container').attr('class', 'c-keywords__container--has-blur');
+  });
+
   // ***** Initialize jQuery UI Tooltip ***** //
 
-  $('.o-button__help').tooltip();
+  // Comment out tooltip method until jQuery UI is included on every page:
+  
+  // $('.o-button__help').tooltip();
 
   // ***** Toggle Table Cell Details ***** //
 
