@@ -33,7 +33,7 @@ module Stash
       def update_mime_headers(zipfile)
         {
           'Content-Type'        => APPLICATION_ZIP,
-          'Content-Disposition' => "#{CONTENT_DISPOSITION}; name=payload; filename=\"#{File.basename(zipfile)}\"",
+          'Content-Disposition' => "#{CONTENT_DISPOSITION}; name=\"payload\"; filename=\"#{File.basename(zipfile)}\"",
           'Packaging'           => SIMPLE_ZIP,
           'Content-MD5'         => Digest::MD5.file(zipfile).to_s,
           'MIME-Version'        => '1.0'
