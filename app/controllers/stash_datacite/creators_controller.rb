@@ -39,17 +39,19 @@ module StashDatacite
     # PATCH/PUT /creators/1
     def update
       respond_to do |format|
-        unless params[:affliation] == ''
-          existing_affliation = Affliation.where('long_name LIKE ? OR short_name LIKE ? OR abbreviation LIKE?',
-                                         "%#{params[:affliation]}%", "%#{params[:affliation]}%", "%#{params[:affliation]}%").first unless params[:affliation].blank?
-          if existing_affliation.blank?
-            @affliation = Affliation.create(long_name: params[:affliation])
-            @creator.affliation_id = @affliation.id
-          else
-            @creator.affliation_id = existing_affliation.id
-          end
-        end
         if @creator.update(creator_params)
+          unless params[:affliation] == ''
+            existing_affliation = Affliation.where('long_name LIKE ? OR short_name LIKE ? OR abbreviation LIKE?',
+                                           "%#{params[:affliation]}%", "%#{params[:affliation]}%", "%#{params[:affliation]}%").first unless params[:affliation].blank?
+            if existing_affliation.blank?
+              @affliation = Affliation.create(long_name: params[:affliation])
+              @creator.affliation_id = @affliation.id
+              @creator.save
+            else
+              @creator.affliation_id = existing_affliation.id
+              @creator.save
+            end
+          end
           format.js { render template: 'stash_datacite/shared/update.js.erb' }
         else
           format.html { render :edit }
