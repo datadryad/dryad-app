@@ -12,6 +12,7 @@ module StashDatacite
         @resource = resource
         @current_tenant = current_tenant
         @version = @resource.next_version
+        ResourceFileGeneration.set_pub_year(@resource)
         @client = StashEzid::Client.new(@current_tenant.identifier_service.to_h)
       end
 
@@ -304,6 +305,12 @@ module StashDatacite
           files.push(hash)
         end
         files
+      end
+
+      # set the publication year to the current one if it has not been set yet
+      def self.set_pub_year(resource)
+        return if resource.publication_years.count > 0
+        PublicationYear.create({publication_year: Time.now.year, resource_id: resource.id})
       end
 
     end

@@ -1,17 +1,11 @@
 module StashDatacite
   module ResourcesHelper
-    def citation(creators, title, resource_type, version, identifier)
-      unless creators.nil?
-        creators_list = []
-        creators.each do |creator|
-          creators_list << "#{creator.creator_full_name} "
-        end
-      end
-      publication_year = "(#{Time.now.year})"
+    def citation(creators, title, resource_type, version, identifier, publication_years)
+      publication_year = publication_years.try(:first).try(:publication_year) || Time.now.year
       title = title.try(:title)
       publisher = current_tenant.try(:long_name)
       resource_type = resource_type.try(:resource_type)
-      [creators_list.join(" and ").concat(publication_year), h(title), h(version), h(publisher), h(resource_type), target_url(identifier)].reject(&:blank?).join(", ").html_safe
+      ["#{creator_citation_format(creators)} (#{publication_year})", h(title), h(version), h(publisher), h(resource_type), target_url(identifier)].reject(&:blank?).join(", ").html_safe
     end
 
     def target_url(identifier)
@@ -20,6 +14,14 @@ module StashDatacite
       else
         'https://dx.doi.org/placeholderDOI'
       end
+    end
+
+    def creator_citation_format(creators)
+      return '' if creators.blank?
+      str_creator = creators.map{|c| c.creator_full_name unless c.creator_full_name.match(/^[ ,]+$/) }.compact
+      return '' if str_creator.blank?
+      return "#{str_creator.first} et al." if str_creator.length > 4
+      str_creator.join('; ')
     end
   end
 end
