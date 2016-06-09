@@ -1,15 +1,4 @@
 GIT
-  remote: https://github.com/CDLUC3/stash-sword.git
-  revision: 3253b7bc702d230d878aba00604e970e015d1512
-  specs:
-    stash-sword (0.0.1)
-      datacite-mapping (~> 0.1, >= 0.1.8)
-      multipart-post (~> 2.0)
-      rest-client (~> 1.8)
-      stash-wrapper (~> 0.1, >= 0.1.2)
-      sword2ruby (~> 1.0)
-
-GIT
   remote: https://github.com/CDLUC3/stash_ezid_datacite.git
   revision: 8307e75648fac26897473e76eb40e09a28166ffa
   specs:
@@ -37,6 +26,8 @@ PATH
     stash_engine (0.0.17)
       amoeba (~> 3.0.0)
       carrierwave (~> 0.10.0)
+      delayed_job (~> 4.1)
+      delayed_job_active_record (~> 4.1)
       filesize (~> 0.1.1)
       jquery-fileupload-rails (~> 0.4.6)
       jquery-rails
@@ -49,6 +40,7 @@ PATH
       omniauth-shibboleth (~> 1.2.1)
       rails (~> 4.2.4)
       redcarpet (~> 3.3)
+      stash-sword (~> 0.1, >= 0.1.0)
 
 GEM
   remote: https://rubygems.org/
@@ -94,8 +86,7 @@ GEM
     ansi (1.5.0)
     arel (6.0.3)
     ast (2.2.0)
-    atom-tools (2.0.5)
-    autoprefixer-rails (6.3.6.1)
+    autoprefixer-rails (6.3.6.2)
       execjs
     bcrypt (3.1.11)
     binding_of_caller (0.7.2)
@@ -111,7 +102,7 @@ GEM
       autoprefixer-rails (>= 5.2.1)
       sass (>= 3.3.4)
     builder (3.2.2)
-    byebug (9.0.4)
+    byebug (9.0.5)
     capistrano (3.4.1)
       i18n
       rake (>= 10.0.0)
@@ -138,10 +129,16 @@ GEM
       execjs
     coffee-script-source (1.10.0)
     concurrent-ruby (1.0.2)
+    daemons (1.2.3)
     datacite-mapping (0.1.15)
       typesafe_enum (~> 0.1, >= 0.1.7)
       xml-mapping_extensions (~> 0.4, >= 0.4.1)
     debug_inspector (0.0.2)
+    delayed_job (4.1.2)
+      activesupport (>= 3.0, < 5.1)
+    delayed_job_active_record (4.1.1)
+      activerecord (>= 3.0, < 5.1)
+      delayed_job (>= 3.0, < 5)
     deprecation (1.0.0)
       activesupport
     devise (4.1.1)
@@ -178,11 +175,10 @@ GEM
       activesupport (>= 4.1.0)
     hashie (3.4.4)
     hirb (0.7.3)
-    hpricot (0.8.6)
     http-cookie (1.0.2)
       domain_name (~> 0.5)
     i18n (0.7.0)
-    jbuilder (2.4.1)
+    jbuilder (2.5.0)
       activesupport (>= 3.0.0, < 5.1)
       multi_json (~> 1.2)
     jquery-fileupload-rails (0.4.6)
@@ -200,7 +196,7 @@ GEM
       railties (>= 3.2.16)
     json (1.8.3)
     jwt (1.5.1)
-    kaminari (0.16.3)
+    kaminari (0.17.0)
       actionpack (>= 3.0.0)
       activesupport (>= 3.0.0)
     leaflet-rails (0.7.7)
@@ -245,7 +241,7 @@ GEM
     omniauth-shibboleth (1.2.1)
       omniauth (>= 1.0.0)
     orm_adapter (0.5.0)
-    parser (2.3.1.0)
+    parser (2.3.1.2)
       ast (~> 2.2)
     passenger (5.0.28)
       rack
@@ -288,10 +284,10 @@ GEM
     ref (2.0.0)
     responders (2.2.0)
       railties (>= 4.2.0, < 5.1)
-    rest-client (1.8.0)
+    rest-client (2.0.0.rc2)
       http-cookie (>= 1.0.2, < 2.0)
       mime-types (>= 1.16, < 3.0)
-      netrc (~> 0.7)
+      netrc (~> 0.8)
     rsolr (1.0.13)
       builder (>= 2.1.2)
     rspec-core (3.4.4)
@@ -349,18 +345,19 @@ GEM
     sshkit (1.10.0)
       net-scp (>= 1.1.2)
       net-ssh (>= 2.8.0)
+    stash-sword (0.1.0)
+      rest-client (= 2.0.0.rc2)
+      typesafe_enum (~> 0.1, >= 0.1.7)
+      xml-mapping_extensions (~> 0.4, >= 0.4.1)
     stash-wrapper (0.1.9)
       typesafe_enum (~> 0.1, >= 0.1.7)
       xml-mapping_extensions (~> 0.4, >= 0.4.1)
-    sword2ruby (1.0.1)
-      atom-tools (~> 2.0.5)
-      hpricot (~> 0.8.3)
     therubyracer (0.12.2)
       libv8 (~> 3.16.14.0)
       ref
     thor (0.19.1)
     thread_safe (0.3.5)
-    tilt (2.0.4)
+    tilt (2.0.5)
     turbolinks (2.5.3)
       coffee-rails
     typesafe_enum (0.1.7)
@@ -380,7 +377,7 @@ GEM
       railties (>= 4.0)
       sprockets-rails (>= 2.0, < 4.0)
     xml-mapping (0.10.0)
-    xml-mapping_extensions (0.4.1)
+    xml-mapping_extensions (0.4.2)
       mime-types (~> 2.5)
       typesafe_enum (~> 0.1, >= 0.1.5)
       xml-mapping (~> 0.10)
@@ -394,6 +391,7 @@ DEPENDENCIES
   capistrano-passenger
   capistrano-rails (~> 1.1)
   coffee-rails (~> 4.1.0)
+  daemons
   jbuilder (~> 2.0)
   jquery-rails
   mysql2 (~> 0.3.18)
@@ -406,7 +404,6 @@ DEPENDENCIES
   simplecov
   simplecov-console
   spring
-  stash-sword!
   stash_datacite!
   stash_discovery!
   stash_engine!
