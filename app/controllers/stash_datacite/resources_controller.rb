@@ -69,10 +69,10 @@ module StashDatacite
       unless @completions.required_completed == @completions.required_total
         @data = []
         @data << 'Title' unless @completions.title
-        @data << 'Affiliation' unless @completions.institution
         @data << 'Resource Type' unless @completions.data_type
         @data << 'Abstract' unless @completions.abstract
-        @data << 'Author' unless @completions.creator
+        @data << 'Author' unless @completions.creator_name
+        @data << 'Author Affiliation' unless @completions.creator_affliation
         return @data.join(', ').split(/\W+/)
       end
     end
