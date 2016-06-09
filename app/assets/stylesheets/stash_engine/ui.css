@@ -1666,7 +1666,6 @@ html.svg .c-facet__check-label {
       -webkit-justify-content: space-between;
           -ms-flex-pack: justify;
               justify-content: space-between;
-      width: 560px;
       margin: 0; } }
 
 .c-header__nav--is-open {
@@ -1700,10 +1699,6 @@ html.svg .c-facet__check-label {
       -webkit-flex-flow: row nowrap;
           -ms-flex-flow: row nowrap;
               flex-flow: row nowrap;
-      -webkit-align-items: flex-end;
-          -ms-flex-align: end;
-                  -ms-grid-row-align: flex-end;
-              align-items: flex-end;
       -webkit-justify-content: space-between;
           -ms-flex-pack: justify;
               justify-content: space-between;
@@ -1718,7 +1713,7 @@ html.svg .c-facet__check-label {
   @media (min-width: 870px) {
     .c-header__nav-item, .c-header__nav-item--active {
       margin: 0;
-      padding: 0 15px;
+      padding: 0 1em;
       background-color: white;
       color: black; }
       .c-header__nav-item:hover, .c-header__nav-item--active:hover, .c-header__nav-item:focus, .c-header__nav-item--active:focus {
