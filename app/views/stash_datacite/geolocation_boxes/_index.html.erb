@@ -2,6 +2,6 @@
 <div class="c-locations__area">
   <div class="c-locations__data"><abbr title="Southwest" class="c-locations__coordinate">SW</abbr> <%= geolocation_box.sw_latitude %>,&nbsp; <%= geolocation_box.sw_longitude %></div>
   <div class="c-locations__data"><abbr title="Northwest" class="c-locations__coordinate">NW</abbr> <%= geolocation_box.ne_latitude %>,&nbsp; <%= geolocation_box.ne_longitude %></div>
-  <%= link_to 'remove', stash_datacite.geolocation_boxes_delete_path(geolocation_box), method: :delete, class: 'c-locations__button', role: 'button', data: { confirm: 'Are you sure?' } %>
+  <%= link_to 'remove', stash_datacite.geolocation_boxes_delete_path(geolocation_box), method: :delete, class: 'c-locations__button', role: 'button' %>
 </div>
 <% end %>

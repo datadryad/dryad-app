@@ -3,6 +3,6 @@
 	<div class="c-locations__data">
 		<%= geolocation_point.latitude %>,&nbsp; <%= geolocation_point.longitude %>
 	</div>
-	<%= link_to 'remove', stash_datacite.geolocation_points_delete_path(geolocation_point.id), method: :delete, class: 'c-locations__button', role: 'button', data: { confirm: 'Are you sure?' } %>
+	<%= link_to 'remove', stash_datacite.geolocation_points_delete_path(geolocation_point.id), method: :delete, class: 'c-locations__button', role: 'button' } %>
 </div>
 <% end %>
