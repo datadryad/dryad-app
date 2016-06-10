@@ -1,7 +1,7 @@
 module StashDatacite
   class UserMailer < ApplicationMailer
     default from: APP_CONFIG['feedback_email_from'],
-            return_path: 'dash2-dev@ucop.du'
+            return_path: 'dash2-dev@ucop.edu'
     #an example call:
     # UserMailer.notification(['catdog@mailinator.com', 'dogdog@mailinator.com'],
     #                           'that frosty mug taste', 'test_mail').deliver

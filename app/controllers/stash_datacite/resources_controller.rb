@@ -100,9 +100,10 @@ module StashDatacite
       title = resource.titles.where(title_type: :main).first
       UserMailer.notification(
         resource.user.email,
-        "#{title} has been submitted to the repository.",
+        "Dataset submitted: #{title.try(:title)}",
         'submission',
-        { user: resource.user, resource: resource, title: title }).deliver
+        { user: resource.user, resource: resource, title: title.try(:title),
+          identifier: resource.identifier, path: stash_url_helpers.dashboard_path }).deliver
     end
   end
 end

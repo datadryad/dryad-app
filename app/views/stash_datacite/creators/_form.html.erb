@@ -36,7 +36,7 @@
 <script type="text/javascript">
   $(function () {
     $('.js-affliation').unbind('blur');
-    $(".js-affliation").autocomplete({
+    $('.js-affliation').autocomplete({
       source: function (request, response) {
         $.ajax({
           url: "<%= stash_datacite.affliations_autocomplete_path %>",
@@ -71,11 +71,11 @@
         $(this).focus();
       }
     }).blur(function (event) {
-      if (!disable) {
+      // if (!disable) {
         var form = $(this).parents('form');
         $(form).trigger('submit.rails');
         $('.saved_text').show(0).delay(3000).hide(0);
-      }
+      // }
     });
   });
 </script>

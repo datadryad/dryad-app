@@ -10,6 +10,11 @@ module StashDatacite
 
     scope :names_filled, -> { where("TRIM(IFNULL(creator_first_name,'')) <> '' AND TRIM(IFNULL(creator_last_name,'')) <> ''") }
 
+
+    scope :affliation_filled, -> { joins(:affliation).
+        where("TRIM(IFNULL(dcs_affliations.long_name,'')) <> ''") }
+
+
     def creator_full_name
       "#{creator_last_name}, #{creator_first_name}".strip
     end

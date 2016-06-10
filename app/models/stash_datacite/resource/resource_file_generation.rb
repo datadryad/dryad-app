@@ -116,7 +116,8 @@ module StashDatacite
           note: 'Sample wrapped Datacite document'
         )
 
-        license = st::License::CC_BY
+        r = @resource.rights.try(:first)
+        license = st::License.new(name: r.rights , uri: r.rights_uri) if r
 
         embargo = st::Embargo.new(
           type: st::EmbargoType::NONE,
