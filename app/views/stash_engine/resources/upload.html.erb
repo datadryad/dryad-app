@@ -1,9 +1,11 @@
 <% @page_title = 'Upload Your Files' %>
 <%= render partial: 'stash_engine/shared/dataset_steps_nav' %>
 
-<h1>Upload your files (optional)</h1>
+<h1 class="o-heading__level1">Upload Your Files <span class="t-upload__heading-optional">(optional)</span></h1>
 
-<h2>Step 1: choose your files</h2>
+<p>Size limits: 2GB per file, 10 GB in total. To upload larger datasets, <a href="mailto:uc3@ucop.edu">contact us</a>.</p>
+
+<h2 class="t-upload__choose-heading--active">Step 1: Choose your files</h2>
 <div>
   <%= form_for @file, html: {multipart: true, id: 'fileupload'} do |f| %>
     <div id="upload_bg">
@@ -30,7 +32,7 @@
   <% end %>
 </div>
 
-<h2>Step 2: Upload your files</h2>
+<h2 class="t-upload__choose-heading">Step 2: Upload your files</h2>
 
 <div id="upload_list">
   <%= render partial: "stash_engine/file_uploads/uploaded_file", collection: @resource.file_uploads %>
