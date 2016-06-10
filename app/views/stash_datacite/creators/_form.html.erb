@@ -18,21 +18,20 @@
     <%= text_field_tag(:affliation, creator.affliation.try(:long_name), id: "creator_affliation_id_#{my_suffix}", class: 'c-input__text js-affliation') %>
   </div>
   <%= link_to 'remove', stash_datacite.creators_delete_path(creator.id || 'new'), method: :delete, remote: true, data: {confirm: 'Are you sure?'}, class: 't-describe__remove-button o-button__remove remove_record' %>
-
-
-<!-- Begin Orcid ID Component -->
-  <div class="c-orcid">
-    <% unless creator.blank? || creator.orcid_id.blank? %>
-      <%= image_tag("stash_datacite/orcid.png", class: "c-orcid_icon", size: "18x18", title: "orcid_website", alt: "orcid_website") %><%= text_field_tag(:orcid_id, "http://orcid.org/#{creator.orcid_id}", readonly: true, style: "border:none;", class: "c-orcid_id") %>
-    <% end %>
-  </div>
-<!-- Begin Orcid ID Component -->
-
   <%= f.hidden_field :resource_id %>
   <%= f.hidden_field :id %>
   <%= f.hidden_field :affliation_id, class: 'js-affliation_id' %>
   <%= hidden_field_tag(:form_id, form_id) %>
 <% end %>
+
+<!-- Begin Orcid ID Component -->
+  <div class="c-orcid">
+    <% unless creator.blank? || creator.orcid_id.blank? %>
+      <%= link_to '', "http://orcid.org", class: 'c-orcid_icon', title: 'orcid_website' %>
+      <%= link_to "http://orcid.org/#{creator.orcid_id}", "http://orcid.org/#{creator.orcid_id}",target: '_blank', class: 'c-orcid_id' %>
+    <% end %>
+  </div>
+<!-- Begin Orcid ID Component -->
 
 <script type="text/javascript">
   $(function () {
