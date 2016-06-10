@@ -10,7 +10,10 @@ module StashEngine
       reset_session
       return head(:forbidden) unless auth_hash_good
 
-      session[:test_domain] = @auth_hash['info']['test_domain'] if @auth_hash[:provider] == 'developer'
+      if @auth_hash[:provider] == 'developer'
+        session[:test_domain] = @auth_hash['info']['test_domain']
+        @auth_hash[:uid] = mangle_uid_with_tenant(@auth_hash[:uid], current_tenant.tenant_id)
+      end
       session[:user_id] = nil
       user = User.from_omniauth(@auth_hash, current_tenant.tenant_id)
       session[:user_id] = user.id
@@ -37,6 +40,14 @@ module StashEngine
 
     def auth_hash_good
       @auth_hash && @auth_hash['info'] && @auth_hash['info']['email'] && @auth_hash['uid']
+    end
+
+    #get the uid and mangle it with the tenant_id and return it, this is for the developer login to make unique per tenant
+    def mangle_uid_with_tenant(uid, tenant_id)
+      sp = uid.split('@')
+      sp.push('bad-email-domain.com') if sp.length == 1
+      sp = ['bad', 'bad-email-domain.com'] if sp.blank? or sp.length > 2
+      "#{sp.first}-#{tenant_id}@#{sp.last}"
     end
   end
 end
