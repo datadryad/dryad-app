@@ -52,10 +52,10 @@ Selector pattern using above mixin:
       margin: 0 -30px; } }
 
 @media (min-width: 760px) {
-  .c-autosave-footer, .t-describe__basic-info, .t-describe__dataset-nav, .t-review__container, .t-upload__container {
+  .c-autosave-footer, .t-describe__basic-info, .t-describe__dataset-nav, .t-review__container {
     padding-right: 200px; } }
 
-.o-global-search__label, .c-facet__refine-label, html.svg .c-facet__check-input, .c-location__label {
+.o-global-search__label, .c-facet__refine-label, html.svg .c-facet__check-input, .c-input__file, .c-location__label {
   position: absolute;
   left: -9999px; }
 
@@ -1798,6 +1798,14 @@ html.svg .c-facet__check-label {
   .c-input__required-note::before {
     color: #e65722;
     content: '* '; }
+
+.c-input__file-label {
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: #4891af;
+  color: white;
+  font-size: 1.1em;
+  cursor: pointer; }
 
 .c-keywords {
   margin: 0 0 20px; }
