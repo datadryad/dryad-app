@@ -1,4 +1,4 @@
-<h2 class="review_headers">License</h2>
+<h2 class="o-heading__page-span">Choose License & Publication Date</h2>
 
 <% if @resource.current_state.blank? || @resource.rights.empty? %>
   <%= render partial: "licenses/#{current_tenant.default_license}_review" %>

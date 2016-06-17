@@ -1,7 +1,7 @@
 <div class="review">
-  <h1>Finalize Submission</h1>
+  <h1 class="o-heading__level1">Finalize Submission</h1>
     <%= render partial: "stash_datacite/resources/missing_mandatory_data", locals: { data: @data } %>
-  <h2 class="review_headers">Review Description</h2>
+  <h2 class="o-heading__page-span">Review Description</h2>
     <%= link_to "Edit Description", stash_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: @resource.id), class: 'link_like_button', style: "float: right;" %>
     <%= render partial: "stash_datacite/resource_types/show", locals: { resource_type: @review.resource_type } %>
     <%= render partial: "stash_datacite/titles/show", locals: { title: @review.title } %>
@@ -25,7 +25,7 @@
     <hr/>
     <%= link_to "Edit Description", stash_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: @resource.id), class: 'link_like_button', style: "float: right;" %>
 
-    <h2 class="review_headers">Review Data Files</h2>
+    <h2 class="o-heading__page-span">Review Data Files</h2>
     <span>
       <% unless @file_uploads.blank? %>
         <%= link_to 'Edit Files', stash_engine.upload_resource_path(@resource), id: 'upload_path', class: 'link_like_button', style: "float: right;" %>
