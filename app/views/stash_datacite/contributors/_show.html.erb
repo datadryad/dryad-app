@@ -1,9 +1,7 @@
-<h3>Funding</h3>
+<h3 class="o-heading__level2">Funding</h3>
 <% unless contributors.nil? %>
   <% contributors.each do |contributor| %>
-    <ul style="list-style-type:none">
-      <li><%= contributor.contributor_name %>,&nbsp;
-      Award:<%= contributor.award_number %></li>&nbsp;
-    </ul>
+     <p><%= contributor.contributor_name %>,
+      Award:<%= contributor.award_number %></p>
   <% end %>
 <% end %>

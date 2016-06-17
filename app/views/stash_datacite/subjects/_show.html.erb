@@ -1,4 +1,4 @@
-<h3> Subjects </h3>
+<h3 class="o-heading__level2">Subjects</h3>
 <% unless subjects.nil? %>
-  <%= subjects.map(&:subject).join(", ") %>
+<p><%= subjects.map(&:subject).join(", ") %></p>
 <% end %>

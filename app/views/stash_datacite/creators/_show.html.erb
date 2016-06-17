@@ -1,7 +1,5 @@
 <% unless creators.nil? %>
   <% creators.each do |creator| %>
-    <ul style="list-style-type:none">
-      <li><%= [creator.creator_full_name, creator.affliation.try(:long_name), creator.orcid_id].reject(&:blank?).join(", ") %></li>&nbsp;
-    </ul>
+      <p><%= [creator.creator_full_name, creator.affliation.try(:long_name), creator.orcid_id].reject(&:blank?).join(", ") %></p>
   <% end %>
 <% end %>
