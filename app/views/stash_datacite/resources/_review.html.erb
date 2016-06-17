@@ -1,28 +1,29 @@
   <h1 class="o-heading__level1">Finalize Submission</h1>
     <%= render partial: "stash_datacite/resources/missing_mandatory_data", locals: { data: @data } %>
   <h2 class="o-heading__page-span">Review Description</h2>
-    <%= link_to "Edit Description", stash_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: @resource.id), class: 'link_like_button', style: "float: right;" %>
+    <%= link_to "Edit Description", stash_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: @resource.id), class: 't-review__edit-button-top o-button__icon-left', role: 'button' %>
     <%= render partial: "stash_datacite/resource_types/show", locals: { resource_type: @review.resource_type } %>
     <%= render partial: "stash_datacite/titles/show", locals: { title: @review.title } %>
     <%= render partial: "stash_datacite/creators/show", locals: { creators: @review.creators } %>
-    <hr/>
+    <section class="o-section">
     <%= render partial: "stash_datacite/shared/citations", locals: { creators: @review.creators, title: @review.title,
                          resource_type: @review.resource_type, version: "v#{@resource.smart_version}",
                          identifier: @resource.identifier.nil? ? nil : "#{@review.identifier.identifier}",
                          publication_years: @resource.publication_years } %>
-    <hr/>
-    <%= render partial: "stash_datacite/descriptions/show", locals: { abstract: @review.abstract, methods: @review.methods, usage_notes: @review.usage_notes } %>
+    </section>
+    <%= render partial: "stash_datacite/descriptions/show", locals: { abstract: @review.abstract, methods: @review.methods, usage_notes: @review.usage_notes } %> 
     <%= render partial: "stash_datacite/subjects/show", locals: { subjects: @review.subjects } %>
-    <%= render partial: "stash_datacite/contributors/show", locals: { contributors: @review.contributors } %>
-    <%= render partial: "stash_datacite/related_identifiers/show", locals: { related_identifiers: @review.related_identifiers } %>
-
+    <section class="t-review__funding-section o-section">
+      <%= render partial: "stash_datacite/contributors/show", locals: { contributors: @review.contributors } %>
+      <%= render partial: "stash_datacite/related_identifiers/show", locals: { related_identifiers: @review.related_identifiers } %>
+      <%= link_to "Edit Description", stash_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: @resource.id), class: 't-review__edit-button-bottom o-button__icon-left', role: 'button' %>
+    </section>
     <h3>Location</h3>
     <div id="map_review"></div>
     <%= render partial: "stash_datacite/geolocation_points/show", locals: { geolocation_points: @review.geolocation_points } %>
     <%= render partial: "stash_datacite/geolocation_boxes/show", locals: { geolocation_boxes: @review.geolocation_boxes } %>
     <%= render partial: "stash_datacite/geolocation_places/show", locals: { geolocation_places: @review.geolocation_places } %>
     <hr/>
-    <%= link_to "Edit Description", stash_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: @resource.id), class: 'link_like_button', style: "float: right;" %>
 
     <h2 class="o-heading__page-span">Review Data Files</h2>
 
