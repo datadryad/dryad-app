@@ -3,7 +3,7 @@
 </div>
 
 <div>
-  <h3>Data Files</h3>
+  <h3 class="o-heading__level2">Data Files</h3>
   <% @id.resources.submitted.by_version.each do |resource| %>
     <p>Version <%= resource.version.version %></p>
     <% resource.file_uploads.each do |fu| %>
@@ -13,13 +13,13 @@
 </div>
 
 <div>
-  <h3>Metrics</h3>
+  <h3 class="o-heading__level2">Metrics</h3>
   (view icon): <%= @id.view_count %><br/>
   (downloads icon): <%= @id.download_count %>
 </div>
 
 <div>
-  <h3>Keywords</h3>
+  <h3 class="o-heading__level2">Keywords</h3>
   <div id="show_subjects"
        data-load="<%= metadata_url_helpers.subjects_landing_path(resource_id: @resource.id, format: :js) %>">
     <%= image_tag 'stash_engine/spinner.gif', size: '80x60', alt: 'Loading spinner' %>
@@ -27,7 +27,7 @@
 </div>
 
 <div>
-  <h3>License</h3>
+  <h3 class="o-heading__level2">License</h3>
   <div id="show_license"
        data-load="<%= metadata_url_helpers.license_details_path(resource_id: @resource.id, format: :js) %>">
     <%= image_tag 'stash_engine/spinner.gif', size: '80x60', alt: 'Loading spinner' %>
