@@ -1,11 +1,5 @@
 require 'stash/sword'
 
-module Stash
-  module Sword
-    @log = Delayed::Worker.logger
-  end
-end
-
 module StashEngine
   class UpdateResourceJob < ActiveJob::Base
     queue_as :default
@@ -19,7 +13,7 @@ module StashEngine
       request_msg = "Submitting update #{zipfile} to SWORD; #{(sword_params.map { |k, v| "#{k}: #{v}" }).join(', ')}"
       begin
         resource = Resource.find(resource_id)
-        client = Stash::Sword::Client.new(sword_params)
+        client = Stash::Sword::Client.new(logger: log, **sword_params)
 
         update_uri = resource.update_uri
         request_msg << ", edit_iri: #{update_uri}"

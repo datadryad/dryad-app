@@ -1,11 +1,5 @@
 require 'stash/sword'
 
-module Stash
-  module Sword
-    @log = Delayed::Worker.logger
-  end
-end
-
 module StashEngine
   class CreateResourceJob < ActiveJob::Base
     queue_as :default
@@ -20,7 +14,7 @@ module StashEngine
       request_msg = "Submitting initial #{zipfile} with #{doi} to SWORD; #{(sword_params.map { |k, v| "#{k}: #{v}" }).join(', ')}"
       begin
         resource = Resource.find(resource_id)
-        client = Stash::Sword::Client.new(sword_params)
+        client = Stash::Sword::Client.new(logger: log, **sword_params)
         log.debug("invoking create(doi: #{doi}, zipfile: #{zipfile})")
         receipt = client.create(doi: doi, zipfile: zipfile)
         log.debug("create(doi: #{doi}, zipfile: #{zipfile}) complete")
