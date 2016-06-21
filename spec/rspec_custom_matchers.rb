@@ -113,6 +113,6 @@ RSpec::Matchers.define :include_header do |k, v|
   end
 
   failure_message do |actual|
-    "expected #{k}: #{v} but found #{value_for(key: k, in_hash: actual) || 'nil'}"
+    "expected #{k} to be '#{v}' but found '#{value_for(key: k, in_hash: actual) || 'nil'}'"
   end
 end

@@ -33,12 +33,14 @@ module Stash
             actual_headers = req.headers
           end).to have_been_made
 
+          expected_disposition = 'attachment'
+
           aggregate_failures('request headers') do
             {
               'On-Behalf-Of' => on_behalf_of,
               'Packaging' => 'http://purl.org/net/sword/package/SimpleZip',
               'Slug' => doi,
-              'Content-Disposition' => 'attachment; filename=example.zip',
+              'Content-Disposition' => "#{expected_disposition}; filename=example.zip",
               'Content-MD5' => md5,
               'Content-Length' => /[0-9]+/,
               'Content-Type' => 'application/zip'
@@ -84,16 +86,19 @@ module Stash
             end
           end
 
+          expected_disposition = 'attachment'
+
           mime_headers = {
             'Packaging' => 'http://purl.org/net/sword/package/SimpleZip',
-            'Content-Disposition' => 'attachment; name=payload; filename="example.zip"',
+            'Content-Disposition' => "#{expected_disposition}; name=payload; filename=\"example.zip\"",
             'Content-Type' => 'application/zip',
             'Content-MD5' => md5
           }
 
           aggregate_failures('MIME headers') do
             mime_headers.each do |k, v|
-              expect(actual_body).to include("#{k}: #{v}"), "expected #{k}: #{v}, closest match was #{actual_body[/#{k}[^\n]+/m]}"
+              closest_match = actual_body[/#{k}[^\n]+/m].strip
+              expect(actual_body).to include("#{k}: #{v}"), "expected '#{k}: #{v}'; closest match was '#{closest_match}'"
             end
           end
         end
