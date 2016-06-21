@@ -1,8 +1,9 @@
 module Stash
   module Sword
     module LogUtils
+
       def log
-        ::Stash::Sword.log
+        @log ||= default_logger
       end
 
       def log_error(e)
@@ -34,6 +35,28 @@ module Stash
           "#{k}: #{value}"
         end.join("\n")
       end
+
+      def level
+        # TODO: make this configurable
+        @level ||= case ENV['RAILS_ENV'].to_s.downcase
+                   when 'test'
+                     Logger::DEBUG
+                   when 'development'
+                     Logger::INFO
+                   else
+                     Logger::WARN
+                   end
+      end
+
+      def default_logger
+        logger = Logger.new($stdout, 10, 1024 * 1024)
+        logger.level = level
+        logger.formatter = proc do |severity, datetime, progname, msg|
+          "#{datetime.to_time.utc} #{severity} -#{progname}- #{msg}\n"
+        end
+        logger
+      end
+
     end
   end
 end

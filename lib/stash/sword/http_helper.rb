@@ -30,11 +30,13 @@ module Stash
       # @param user_agent [String] the User-Agent string to send when making requests
       # @param redirect_limit [Integer] the number of redirects to follow before erroring out
       #   (defaults to {DEFAULT_MAX_REDIRECTS})
-      def initialize(user_agent:, username: nil, password: nil, redirect_limit: DEFAULT_MAX_REDIRECTS)
+      # @param logger [Logger, nil] the logger to use, or nil to use a default logger
+      def initialize(user_agent:, username: nil, password: nil, redirect_limit: DEFAULT_MAX_REDIRECTS, logger: nil)
         @user_agent = user_agent
         @redirect_limit = redirect_limit
         @username = username
         @password = password
+        @log = logger || default_logger
       end
 
       # Gets the content of the specified URI as a string.

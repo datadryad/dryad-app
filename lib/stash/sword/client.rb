@@ -4,6 +4,7 @@ require 'stash/sword/header_utils'
 require 'stash/sword/log_utils'
 require 'stash/sword/http_helper'
 require 'stash/sword/sequence_io'
+require 'logger'
 
 module Stash
   module Sword
@@ -24,7 +25,8 @@ module Stash
       # @param password [String] the password
       # @param on_behalf_of [String, nil] the user for whom the original sword package was deposited on behalf of.
       #   Defaults to `username`.
-      def initialize(collection_uri:, username:, password:, on_behalf_of: nil, helper: nil)
+      # @param logger [Logger, nil] the logger to use, or nil to use a default logger
+      def initialize(collection_uri:, username:, password:, on_behalf_of: nil, logger: nil, helper: nil)
         raise 'no collection URI provided' unless collection_uri
         raise 'no username provided' unless username
         raise 'no password provided' unless password
@@ -32,7 +34,8 @@ module Stash
         @username     = username
         @password     = password
         @on_behalf_of = on_behalf_of || username
-        @helper       = helper || HTTPHelper.new(username: username, password: password, user_agent: "stash-sword #{VERSION}")
+        @helper       = helper || HTTPHelper.new(username: username, password: password, user_agent: "stash-sword #{VERSION}", logger: logger)
+        @log          = logger || default_logger
       end
 
       # Creates a new resource for the specified DOI with the specified zipfile
