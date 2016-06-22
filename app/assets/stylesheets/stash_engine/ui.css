@@ -2005,6 +2005,9 @@ html.svg .c-facet__check-label {
           -ms-flex-item-align: start;
               align-self: flex-start; } }
 
+.c-locations {
+  margin: 0 0 20px; }
+
 .c-locations__label {
   margin: 0 0 20px;
   font-weight: bold; }
