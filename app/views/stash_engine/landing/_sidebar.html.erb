@@ -19,8 +19,22 @@
 
 <div class="c-sidebox">
   <h3 class="c-sidebox__heading">Metrics</h3>
-  (view icon): <%= @id.view_count %><br/>
-  (downloads icon): <%= @id.download_count %>
+  <div class="o-metrics">
+    <div class="o-metrics__metric">
+      <div class="o-metrics__group">
+        <%= image_tag 'stash_engine/icon_eye.svg', class: 'o-metrics__icon', alt: '' %>
+        <span class="o-metrics__label">views</span>
+      </div>
+      <span class="o-metrics__number"><%= @id.view_count %></span>
+    </div>
+    <div class="o-metrics__metric">
+      <div class="o-metrics__group">
+        <%= image_tag 'stash_engine/icon_graph.svg', class: 'o-metrics__icon', alt: '' %>
+        <span class="o-metrics__label">downloads</span>
+      </div>
+      <span class="o-metrics__number"><%= @id.download_count %></span>
+    </div>
+  </div>
 </div>
 
 <div class="c-sidebox">
