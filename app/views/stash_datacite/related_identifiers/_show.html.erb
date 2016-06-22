@@ -2,10 +2,8 @@
 <% unless related_identifiers.nil? %>
 <p>This dataset is cited by:</p>
   <% related_identifiers.each do |related_identifier| %>
-    <ul style="list-style-type:none">
-      <li><%= related_identifier.related_identifier %>,&nbsp;
-      <%= related_identifier.try(:related_identifier_type).try(:related_identifier_type) %>,&nbsp;
-      <%= related_identifier.try(:relation_type).try(:relation_type) %>,&nbsp;</li>&nbsp;
-    </ul>
+ 		<p><%= related_identifier.related_identifier %>,&nbsp;
+    <%= related_identifier.try(:related_identifier_type).try(:related_identifier_type) %>,&nbsp;
+    <%= related_identifier.try(:relation_type).try(:relation_type) %></p>
   <% end %>
 <% end %>
