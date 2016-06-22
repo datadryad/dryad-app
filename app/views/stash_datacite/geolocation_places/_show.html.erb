@@ -1,7 +1,7 @@
 <% unless geolocation_places.nil? %>
   <% geolocation_places.each do |geolocation_place| %>
-    <ul style="list-style-type:none">
-      <li><%= image_tag("stash_datacite/globe.png", size: "20x20", alt: "Place") %><%= geolocation_place.geo_location_place %></li>&nbsp;
-    </ul>
+    <div class="c-locations__place">
+			<div class="c-locations__data"><%= geolocation_place.geo_location_place %></div>
+		</div>
   <% end %>
 <% end %>
