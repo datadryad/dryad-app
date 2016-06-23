@@ -55,7 +55,7 @@ module StashEngine
 
       # TODO: make this check once update is working
       # if self.update_uri
-      #   UpdateResourceJob.perform_later(zipfile: zipfile, resource_id: self.id, sword_params: sword_params)
+      #   UpdateResourceJob.perform_later(doi: doi, zipfile: zipfile, resource_id: self.id, sword_params: sword_params)
       # else
       CreateResourceJob.perform_later(doi: doi, zipfile: zipfile, resource_id: self.id, sword_params: sword_params)
       # end
