@@ -27,8 +27,8 @@
 <!-- Begin Orcid ID Component -->
   <div class="c-orcid">
     <% unless creator.blank? || creator.orcid_id.blank? %>
-      <%= link_to '', "http://orcid.org", class: 'c-orcid_icon', title: 'orcid_website' %>
-      <%= link_to "https://sandbox.orcid.org/#{creator.orcid_id}", "https://sandbox.orcid.org/#{creator.orcid_id}",target: '_blank', class: 'c-orcid_id' %>
+      <%= link_to '', "http://orcid.org", class: 'c-orcid__icon', title: 'orcid_website' %>
+      <%= link_to "https://sandbox.orcid.org/#{creator.orcid_id}", "https://sandbox.orcid.org/#{creator.orcid_id}",target: '_blank', class: 'c-orcid__id' %>
     <% end %>
   </div>
 <!-- Begin Orcid ID Component -->
