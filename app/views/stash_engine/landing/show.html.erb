@@ -1,10 +1,13 @@
-<div style="clear:both;">&nbsp;</div>
-<div id="display_resource"
-     data-load="<%= metadata_url_helpers.resources_show_path(id: @resource_id, format: :js) %>"
- style="width:70%;float: left; overflow: scroll;">
-  <%= image_tag 'stash_engine/spinner.gif', size: '80x60', alt: 'Loading spinner' %>
+<div class="c-columns">
+	<main class="t-landing__main c-columns__content">
+		<div id="display_resource"
+		  data-load="<%= metadata_url_helpers.resources_show_path(id: @resource_id, format: :js) %>"
+		  <%= image_tag 'stash_engine/spinner.gif', size: '80x60', alt: 'Loading spinner' %>
+		</div>
+	</main>
+	<aside class="t-landing__sidebar c-columns__sidebar2">
+		<div id="sidebar">
+		  <%= render :partial => 'sidebar' %>
+		</div>
+	</aside>
 </div>
-<div id="sidebar" style="width:25%;float: right;">
-  <%= render :partial => 'sidebar' %>
-</div>
-<div style="clear:both;">&nbsp;</div>
