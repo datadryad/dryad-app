@@ -51,10 +51,6 @@ Selector pattern using above mixin:
     .t-home__banner, .t-home__quote-search-group {
       margin: 0 -30px; } }
 
-@media (min-width: 760px) {
-  .c-autosave-footer, .t-describe__basic-info, .t-describe__dataset-nav {
-    padding-right: 200px; } }
-
 .o-global-search__label, .c-facet__refine-label, html.svg .c-facet__check-input, .c-input__file, .c-location__label {
   position: absolute;
   left: -9999px; }
@@ -1518,9 +1514,6 @@ html.svg .c-facet__check-label {
 
 .c-fgroup {
   margin: 0 0 20px; }
-  @media (min-width: 760px) {
-    .c-fgroup {
-      padding-right: 200px; } }
   .c-fgroup[open] .c-fgroup__summary::after {
     -webkit-transform: rotate(-90deg);
             transform: rotate(-90deg); }
@@ -1533,9 +1526,6 @@ html.svg .c-facet__check-label {
   background-color: #005581;
   color: white;
   font-size: 1.3em; }
-  @media (min-width: 760px) {
-    .c-fgroup__summary {
-      margin-right: -230px; } }
   .c-fgroup__summary::after {
     position: absolute;
     right: 10px;
