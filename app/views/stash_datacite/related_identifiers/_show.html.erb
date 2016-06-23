@@ -1,11 +1,11 @@
 <h3 class="o-heading__level2">References</h3>
 <% unless related_identifiers.nil? %>
 <p>This dataset is cited by:</p>
+<ul class="o-list">
   <% related_identifiers.each do |related_identifier| %>
-    <ul style="list-style-type:none">
-      <li><%= related_identifier.related_identifier %>,&nbsp;
-      <%= related_identifier.try(:related_identifier_type).try(:related_identifier_type) %>,&nbsp;
-      <%= related_identifier.try(:relation_type).try(:relation_type) %>,&nbsp;</li>&nbsp;
-    </ul>
+ 		<li><%= related_identifier.related_identifier %>,&nbsp;
+    <%= related_identifier.try(:related_identifier_type).try(:related_identifier_type) %>,&nbsp;
+    <%= related_identifier.try(:relation_type).try(:relation_type) %></li>
   <% end %>
+</ul>
 <% end %>
