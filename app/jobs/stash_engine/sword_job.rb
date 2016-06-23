@@ -34,6 +34,9 @@ module StashEngine
         log.debug(e.backtrace.join("\n")) if e.backtrace
         resource.update_submission_log(request_msg: request_msg, response_msg: "Failed: #{e}")
         raise
+
+        # TODO: Enable this (and don't raise) once we have ExceptionNotifier configured
+        # ExceptionNotifier.notify_exception(e, data: {doi: doi, zipfile: zipfile, resource_id: resource_id, sword_params: sword_params})
       end
     end
 
