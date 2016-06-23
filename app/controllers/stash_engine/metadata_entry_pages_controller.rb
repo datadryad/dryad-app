@@ -3,6 +3,7 @@ require_dependency 'stash_engine/application_controller'
 module StashEngine
   class MetadataEntryPagesController < ApplicationController
     before_action :require_login
+    before_action :resource_exist, except: [:metadata_callback]
     # GET/POST/PUT  /generals/find_or_create
     def find_or_create
       @resource = Resource.find(params[:resource_id])
@@ -39,6 +40,15 @@ module StashEngine
                                              orcid_id: auth_hash.uid)
       creator.save
       redirect_to path
+    end
+
+    private
+
+    def resource_exist
+      @resource = Resource.find(params[:resource_id])
+      if @resource.nil?
+        redirect_to root_path, notice: "The dataset you are looking for does not exist."
+      end
     end
   end
 end
