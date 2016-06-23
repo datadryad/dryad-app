@@ -1,33 +1,52 @@
-<div>
-  <%= link_to "Download this dataset", @resource.download_uri %>
+<div class="o-download">
+  <%= button_to "Download this dataset", @resource.download_uri, class: 'o-download__files' %>
 </div>
 
-<div>
-  <h3>Data Files</h3>
+<div class="c-sidebox">
+  <h3 class="c-sidebox__heading">Data Files</h3>
   <% @id.resources.submitted.by_version.each do |resource| %>
-    <p>Version <%= resource.version.version %></p>
+    <details class="c-file-group" role="group">
+      <summary class="o-showhide__summary c-file-group__summary">
+      Version <%= resource.version.version %></summary>
+      <ul class="c-file-group__list">
     <% resource.file_uploads.each do |fu| %>
-      <p>&nbsp;<%= fu.upload_file_name %>&nbsp;&nbsp;<%= filesize(fu.upload_file_size) %></p>
+      <li><%= fu.upload_file_name %>&nbsp;<%= filesize(fu.upload_file_size) %></li>
     <% end %>
+      </ul>
+    </details>
   <% end %>
 </div>
 
-<div>
-  <h3>Metrics</h3>
-  (view icon): <%= @id.view_count %><br/>
-  (downloads icon): <%= @id.download_count %>
+<div class="c-sidebox">
+  <h3 class="c-sidebox__heading">Metrics</h3>
+  <div class="o-metrics">
+    <div class="o-metrics__metric">
+      <div class="o-metrics__group">
+        <%= image_tag 'stash_engine/icon_eye.svg', class: 'o-metrics__icon', alt: '' %>
+        <span class="o-metrics__label">views</span>
+      </div>
+      <span class="o-metrics__number"><%= @id.view_count %></span>
+    </div>
+    <div class="o-metrics__metric">
+      <div class="o-metrics__group">
+        <%= image_tag 'stash_engine/icon_graph.svg', class: 'o-metrics__icon', alt: '' %>
+        <span class="o-metrics__label">downloads</span>
+      </div>
+      <span class="o-metrics__number"><%= @id.download_count %></span>
+    </div>
+  </div>
 </div>
 
-<div>
-  <h3>Keywords</h3>
+<div class="c-sidebox">
+  <h3 class="c-sidebox__heading">Keywords</h3>
   <div id="show_subjects"
        data-load="<%= metadata_url_helpers.subjects_landing_path(resource_id: @resource.id, format: :js) %>">
     <%= image_tag 'stash_engine/spinner.gif', size: '80x60', alt: 'Loading spinner' %>
   </div>
 </div>
 
-<div>
-  <h3>License</h3>
+<div class="c-sidebox">
+  <h3 class="c-sidebox__heading">License</h3>
   <div id="show_license"
        data-load="<%= metadata_url_helpers.license_details_path(resource_id: @resource.id, format: :js) %>">
     <%= image_tag 'stash_engine/spinner.gif', size: '80x60', alt: 'Loading spinner' %>
