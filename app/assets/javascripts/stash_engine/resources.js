@@ -16,7 +16,7 @@ $(function () {
           $('#upload_list').append(data.context);
           $('#upload_all').show();
           // binding remove link action
-          $('.remove_link').click( function(e){
+          $('.js-remove_link').click( function(e){
             e.preventDefault();
             e.target.parentNode.parentNode.remove();
             updateTotalSize();
@@ -27,9 +27,9 @@ $(function () {
           $('#up_button_' + data.files[0].id ).click(function (e) {
                 e.preventDefault();
                 var inputs = data.context.find(':input');
-                data.context.find(".progress").show();
-                data.context.find(".cancel").show();
-                data.context.find(".remove_link").hide();
+                data.context.find(".js-bar").show();
+                data.context.find(".js-cancel").show();
+                data.context.find(".js-remove_link").hide();
                 data.formData = inputs.serializeArray();
                 data.submit();
             });
@@ -49,7 +49,7 @@ $(function () {
         },
         progress: function (e, data) {
           progress = parseInt(data.loaded / data.total * 100, 10);
-          data.context.find('.bar').css('width', progress + '%');
+          data.context.find('.js-bar').attr("value", progress)
         },
         done: function (e, data) {
             // $('#up_button_' + data.files[0].id).text('Upload finished.');
@@ -84,7 +84,7 @@ function formatSizeUnits(bytes) {
 }
 
 function totalSize(){
-  nums = $('.hidden_bytes').map(function(){ return parseInt(this.innerHTML); });
+  nums = $('.js-hidden_bytes').map(function(){ return parseInt(this.innerHTML); });
   var total = 0;
   $.each(nums, function( index, value ) {
     total += value;
@@ -112,7 +112,7 @@ function updateButtonLinkStates(){
 }
 
 function largestSize(){
-  nums = $('.hidden_bytes').map(function(){ return parseInt(this.innerHTML); });
+  nums = $('.js-hidden_bytes').map(function(){ return parseInt(this.innerHTML); });
   console.log(nums);
   if(nums.length < 1){ return 0 };
   var sorted = nums.sort(function(a, b){return b-a});

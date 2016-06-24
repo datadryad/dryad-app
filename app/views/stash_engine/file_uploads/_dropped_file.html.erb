@@ -6,18 +6,17 @@
 %>
 
 <script id="upload-line" type="text/x-tmpl">
-  <div class="spaced_row" id="not_uploaded_file_{%=o.id%}">
-    <div class="spaced_text"><%= image_tag 'stash_engine/invis_check.png' %></div>
-    <div class="spaced_text">{%=o.name%}</div>
-    <div class="spaced_text">{%=formatSizeUnits(o.size)%}</div>
-    <div class="spaced_text"><button class="remove_link">Remove</button></div>
-    <div class="spaced_text progress" style="display: none"><div class="bar" style="width:0%"></div></div>
-    <div class="spaced_text cancel" style="display: none"><button id="cancel_{%=o.id%}">Cancel</button></div>
+  <div class="c-upload" id="not_uploaded_file_{%=o.id%}">
+    <div class="c-upload__filename">{%=o.name%} <span class="c-upload__filesize">{%=formatSizeUnits(o.size)%}</span></div>
+    <div class="c-upload__action">
+      <progress class="js-bar" style="display: none" max="100" value="80"></progress>
+      <button class="js-remove_link c-upload__button">Remove</button>
+      <button class="js-cancel c-upload__button" style="display: none" id="cancel_{%=o.id%}">Cancel</button>
+    </div>
     <input name="temp_id" value="{%=o.id%}" type="hidden" />
     <input name="resource_id" value="<%= @resource.id %>" type="hidden"/>
     <input name="hidden_bytes" value="{%=o.size%}" type="hidden" />
     <span class="spaced_text" style="display: none"><a href="#" id="up_button_{%=o.id%}" data-id="{%=o.id%}" class="upload-it">Upload</a></span>
-    <span style="display: none" class="hidden_bytes">{%=o.size%}</span>
-  <br class="clear"/>
+    <span style="display: none" class="js-hidden_bytes">{%=o.size%}</span>
 </div>
 </script>
