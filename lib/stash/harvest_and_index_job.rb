@@ -96,7 +96,7 @@ module Stash
         harvested_record.deleted?,
         harvest_job_id
       )
-      log.info(msg)
+      log.debug(msg)
     end
 
     def end_harvest_job(job_id, status)
@@ -131,7 +131,7 @@ module Stash
         status.value,
         index_job_id
       )
-      status == Indexer::IndexStatus::COMPLETED ? log.info(msg) : log.warn(msg)
+      status == Indexer::IndexStatus::COMPLETED ? log.debug(msg) : log.warn(msg)
     end
 
     def end_index_job(job_id, status)

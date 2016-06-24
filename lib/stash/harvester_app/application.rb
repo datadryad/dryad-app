@@ -10,7 +10,7 @@ module Stash
 
         [:persistence_config, :source_config, :index_config, :metadata_mapper].each do |c|
           sub_config = config.send(c)
-          log.info("#{c}: #{sub_config ? sub_config.description : 'nil'}")
+          log.debug("#{c}: #{sub_config ? sub_config.description : 'nil'}")
         end
       end
 
@@ -32,7 +32,7 @@ module Stash
       #   default configuration file
       def self.with_config_file(config_file = nil)
         config_file = ensure_config_file(config_file)
-        log.info("Initializing #{self} with #{config_file}")
+        log.debug("Initializing #{self} with #{config_file}")
         config = Config.from_file(config_file)
         with_config(config)
       end
@@ -45,7 +45,7 @@ module Stash
         job.harvest_and_index do |result|
           record = result.record
           record_identifier = record ? record.identifier : 'nil'
-          log.info("Indexed record #{record_identifier}: #{result.status}")
+          log.debug("Indexed record #{record_identifier}: #{result.status}")
 
           # TODO: log these in a sort-friendly way
           result.errors.each do |e|
@@ -116,13 +116,13 @@ module Stash
 
       def determine_from_time(from_time) # rubocop:disable Metrics/AbcSize
         if from_time
-          log.info("Starting harvest from provided timestamp #{from_time.utc.xmlschema}")
+          log.debug("Starting harvest from provided timestamp #{from_time.utc.xmlschema}")
         elsif (from_time = persistence_manager.find_oldest_failed_timestamp)
-          log.info("Starting harvest from timestamp (inclusive) of last failed record: #{from_time.utc.xmlschema}")
+          log.debug("Starting harvest from timestamp (inclusive) of last failed record: #{from_time.utc.xmlschema}")
         elsif (from_time = persistence_manager.find_newest_indexed_timestamp)
-          log.info("Starting harvest from timestamp (inclusive) of last successfully indexed record: #{from_time.utc.xmlschema}")
+          log.debug("Starting harvest from timestamp (inclusive) of last successfully indexed record: #{from_time.utc.xmlschema}")
         else
-          log.info('No start timestamp provided, and no previous harvest found; harvesting all records')
+          log.debug('No start timestamp provided, and no previous harvest found; harvesting all records')
         end
         from_time
       end

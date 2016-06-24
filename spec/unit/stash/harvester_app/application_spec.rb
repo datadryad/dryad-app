@@ -199,6 +199,8 @@ module Stash
           app.start(from_time: from_time, until_time: until_time)
         end
 
+        it 'logs failure exceptions in a sort-friendly way'
+
         it 'accepts nil start and from times' do
           expect(@persistence_mgr).to receive(:find_oldest_failed_timestamp) { nil }
           expect(@persistence_mgr).to receive(:find_newest_indexed_timestamp) { nil }
