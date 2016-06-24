@@ -40,7 +40,7 @@ PATH
       omniauth-shibboleth (~> 1.2.1)
       rails (~> 4.2.4)
       redcarpet (~> 3.3)
-      stash-sword (~> 0.1, >= 0.1.0)
+      stash-sword (~> 0.1, >= 0.1.1)
 
 GEM
   remote: https://rubygems.org/
@@ -151,7 +151,7 @@ GEM
       devise
     diff-lcs (1.2.5)
     docile (1.1.5)
-    domain_name (0.5.20160310)
+    domain_name (0.5.20160615)
       unf (>= 0.0.5, < 1.0.0)
     erubis (2.7.0)
     execjs (2.7.0)
@@ -181,7 +181,7 @@ GEM
     jbuilder (2.5.0)
       activesupport (>= 3.0.0, < 5.1)
       multi_json (~> 1.2)
-    jquery-fileupload-rails (0.4.6)
+    jquery-fileupload-rails (0.4.7)
       actionpack (>= 3.1)
       railties (>= 3.1)
       sass (>= 3.2)
@@ -345,7 +345,7 @@ GEM
     sshkit (1.10.0)
       net-scp (>= 1.1.2)
       net-ssh (>= 2.8.0)
-    stash-sword (0.1.0)
+    stash-sword (0.1.1)
       rest-client (= 2.0.0.rc2)
       typesafe_enum (~> 0.1, >= 0.1.7)
       xml-mapping_extensions (~> 0.4, >= 0.4.1)
