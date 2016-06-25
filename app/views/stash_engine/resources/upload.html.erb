@@ -27,10 +27,14 @@
   <% end %>
 </div>
 
-<h2 class="t-upload__choose-heading">Step 2: Upload your files</h2>
+<h2 class="t-upload__choose-heading" id="upload_tweaker_head">Step 2: Upload your files</h2>
 
 <div id="upload_list">
-  <%= render partial: "stash_engine/file_uploads/uploaded_file", collection: @resource.file_uploads %>
+  <% if @resource.file_uploads.count < 1 %>
+    <span id="no_chosen">No files chosen</span>
+  <% else %>
+    <%= render partial: "stash_engine/file_uploads/uploaded_file", collection: @resource.file_uploads %>
+  <% end %>
 </div>
 
 <div id="upload_total">
@@ -45,15 +49,6 @@
 
 
 <%= render partial: 'stash_engine/file_uploads/dropped_file' %>
-
-<style>
-  .buttony {
-    border-width: 1px;
-    border-style: solid;
-    margin: 1em 1em 1em 1em;
-    padding: 1em 1em 1em 1em;
-  }
-</style>
 
 <div class="t-describe__dataset-nav o-dataset-nav">
   <%= link_to 'Back to Describe Dataset', metadata_entry_pages_find_or_create_path(resource_id: params[:id]), class: 'o-button__icon-left', role: 'button', id: 'describe_back' %>

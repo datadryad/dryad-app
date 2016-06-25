@@ -11,6 +11,7 @@ $(function () {
         dataType: 'script',
         add: function (e, data) {
           // what happens when added
+          $('#no_chosen').hide();
           data.files[0]['id'] = generateQuickId();
           data.context = $(tmpl("upload-line", data.files[0]));
           $('#upload_list').append(data.context);
@@ -100,12 +101,14 @@ function filesWaitingForUpload(){
 function updateButtonLinkStates(){
   if (filesWaitingForUpload()){
     $('#upload_all').show();
+    $('#upload_tweaker_head').removeClass('t-upload__choose-heading').addClass('t-upload__choose-heading--active');
     $("a[class^='c-progress__tab'], #describe_back, #proceed_review").unbind( "click" );
     $("a[class^='c-progress__tab'], #describe_back, #proceed_review").click(function(e) {
       e.preventDefault();
       alert('You have files that have not been uploaded, please upload them or remove them from your list before continuing.');
     });
   }else{
+    $('#upload_tweaker_head').removeClass('t-upload__choose-heading--active').addClass('t-upload__choose-heading');
     $('#upload_all').hide();
     $("a[class^='c-progress__tab'], #describe_back, #proceed_review").unbind( "click" );
   }
