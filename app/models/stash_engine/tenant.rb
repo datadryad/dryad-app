@@ -46,6 +46,15 @@ module StashEngine
       "https://#{full_domain}/#{StashEngine.app.stash_mount}/auth/google_oauth2"
     end
 
+    def sword_params
+      # ActiveJob can't serialize OpenStruct
+      repository = self.repository
+      {
+          collection_uri: repository.endpoint,
+          username: repository.username,
+          password: repository.password
+      }
+    end
 
     def self.by_domain(domain)
       i = by_domain_w_nil(domain)

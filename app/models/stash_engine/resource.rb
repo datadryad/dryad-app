@@ -44,25 +44,7 @@ module StashEngine
     def submission_to_repository(current_tenant, zipfile, doi)
       # TODO: is it OK to do this before submitting/updating?
       self.update_identifier(doi)
-
-      repository = current_tenant.repository
-      # ActiveJob can't serialize OpenStruct
-      sword_params = {
-          collection_uri: repository.endpoint,
-          username: repository.username,
-          password: repository.password
-      }
-
-      # TODO: make this check once update is working
-      # if self.update_uri
-      #   UpdateResourceJob.perform_later(doi: doi, zipfile: zipfile, resource_id: self.id, sword_params: sword_params)
-      # else
-      CreateResourceJob.perform_later(doi: doi, zipfile: zipfile, resource_id: self.id, sword_params: sword_params)
-      # end
-    end
-
-    def update_submission_log(request_msg:, response_msg: nil)
-      SubmissionLog.create(resource_id: id, archive_submission_request: request_msg, archive_response: response_msg)
+      SwordJob.perform_later(doi: doi, zipfile: zipfile, resource_id: self.id, sword_params: current_tenant.sword_params)
     end
 
     def update_identifier(doi)
