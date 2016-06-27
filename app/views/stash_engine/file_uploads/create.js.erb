@@ -1,7 +1,9 @@
 $('#not_uploaded_file_<%= @temp_id%>').replaceWith("<%= escape_javascript(render(partial: 'stash_engine/file_uploads/uploaded_file', object: @my_file)) %>")
 
-if($('.upload-it:first').length){
-  $('.upload-it:first').click();
+if($('.js-upload-it:first').length && uploadInProgress){
+  $('.js-upload-it:first').click();
 }else{
-  $('#upload_all').hide();
+  uploadInProgress = false;
+  $('#cancel_all').hide();
+  updateButtonLinkStates();
 }

@@ -26,14 +26,15 @@ $(function () {
 
           // binding upload link click event
           $('#up_button_' + data.files[0].id ).click(function (e) {
-                e.preventDefault();
-                var inputs = data.context.find(':input');
-                data.context.find(".js-bar").show();
-                data.context.find(".js-cancel").show();
-                data.context.find(".js-remove_link").hide();
-                data.formData = inputs.serializeArray();
-                data.submit();
-            });
+            e.preventDefault();
+            var inputs = data.context.find(':input');
+            data.context.find(".js-bar").show();
+            data.context.find(".js-cancel").show();
+            data.context.find(".js-remove_link").hide();
+            data.formData = inputs.serializeArray();
+            data.submit();
+          });
+
 
           // binding cancel link click event
           $('#cancel_' + data.files[0].id ).click(function (e) {
@@ -41,7 +42,9 @@ $(function () {
             data.abort();
             data.context.remove();
             e.target.parentNode.parentNode.remove();
-            $('.upload-it:first').click();
+            if(uploadInProgress) {
+              $('.js-upload-it:first').click();
+            };
             updateTotalSize();
             updateButtonLinkStates();
           })
@@ -62,7 +65,12 @@ $(function () {
 
 $( document ).ready(function() {
   updateButtonLinkStates();
+  $('#cancel_all').click(function() {
+    uploadInProgress = false;
+    $('.js-cancel:visible').delay(1000).click();
+  });
 });
+
 
 function generateQuickId() {
     return Math.random().toString(36).substring(2, 15) +
@@ -107,7 +115,12 @@ function updateButtonLinkStates(){
       e.preventDefault();
       alert('You have files that have not been uploaded, please upload them or remove them from your list before continuing.');
     });
+    if(uploadInProgress) {
+      $('#cancel_all').show();
+      $('#upload_all').hide();
+    }
   }else{
+    $('#cancel_all').hide();
     $('#upload_tweaker_head').removeClass('t-upload__choose-heading--active').addClass('t-upload__choose-heading');
     $('#upload_all').hide();
     $("a[class^='c-progress__tab'], #describe_back, #proceed_review").unbind( "click" );
@@ -116,7 +129,6 @@ function updateButtonLinkStates(){
 
 function largestSize(){
   nums = $('.js-hidden_bytes').map(function(){ return parseInt(this.innerHTML); });
-  console.log(nums);
   if(nums.length < 1){ return 0 };
   var sorted = nums.sort(function(a, b){return b-a});
   return sorted[0];

@@ -16,7 +16,7 @@
     <input name="temp_id" value="{%=o.id%}" type="hidden" />
     <input name="resource_id" value="<%= @resource.id %>" type="hidden"/>
     <input name="hidden_bytes" value="{%=o.size%}" type="hidden" />
-    <span class="spaced_text" style="display: none"><a href="#" id="up_button_{%=o.id%}" data-id="{%=o.id%}" class="upload-it">Upload</a></span>
+    <span class="spaced_text" style="display: none"><a href="#" id="up_button_{%=o.id%}" data-id="{%=o.id%}" class="js-upload-it">Upload</a></span>
     <span style="display: none" class="js-hidden_bytes">{%=o.size%}</span>
 </div>
 </script>

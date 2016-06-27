@@ -46,6 +46,7 @@
 
 <div>
   <button id="upload_all" type="button">Upload</button>
+  <button id="cancel_all" type="button" style="display:none;">Cancel all</button>
 </div>
 <div style="clear:both">&nbsp;</div>
 
@@ -58,6 +59,7 @@
 </div>
 
 <script type="text/javascript" charset="utf-8">
+  var uploadInProgress = false;
   $(function () {
     // Initialize the jQuery File Upload widget:
     $('#fileupload').fileupload({
@@ -69,7 +71,7 @@
     });
   });
 
-  // start first upload-it line
+  // start first js-upload-it line
   $('#upload_all').click( function(e){
     if(totalSize() > <%= StashEngine.app.max_submission_size %>){
       e.preventDefault();
@@ -81,7 +83,9 @@
       alert('You are attempting to upload a file larger than <%= filesize(StashEngine.app.max_file_size)%>.  Please remove any files larger than this limit and try again.');
       return false;
     }
-    $('.upload-it:first').click();
+    uploadInProgress = true;
+    $('.js-upload-it:first').click();
+    updateButtonLinkStates();
   });
 
   updateTotalSize();
