@@ -741,12 +741,13 @@ html.no-multiplebgs .o-banner {
   border: 3px dashed #7b7d7e;
   border-radius: 0.5em;
   color: #005581;
-  font-size: 1.6em; }
+  font-size: 1.6em;
+  text-align: center; }
   @media (min-width: 760px) {
     .o-drop {
       padding: 2em;
       border-radius: 0.75em;
-      font-size: 2em; } }
+      font-size: 1.9em; } }
 
 .o-global-search {
   display: -webkit-flex;
@@ -1195,6 +1196,41 @@ html.no-details .o-showhide__summary {
 
 .c-autosave__text {
   margin: 0 0 0 1em; }
+
+@media (min-width: 480px) {
+  .c-choose {
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-align-items: center;
+        -ms-flex-align: center;
+            align-items: center;
+    -webkit-justify-content: space-between;
+        -ms-flex-pack: justify;
+            justify-content: space-between; } }
+
+.c-choose__drop {
+  display: none; }
+  @media (min-width: 480px) {
+    .c-choose__drop {
+      display: block;
+      margin: 0 20px 0 0; } }
+
+.c-choose__or {
+  display: none; }
+  @media (min-width: 480px) {
+    .c-choose__or {
+      display: block;
+      margin: 0 20px 0 0;
+      color: #005581;
+      font-size: 1.5em;
+      font-weight: bold; } }
+
+.c-choose__label {
+  -webkit-flex: 0 0 auto;
+      -ms-flex: 0 0 auto;
+          flex: 0 0 auto;
+  margin: 0 10vw 0 0; }
 
 @media (min-width: 760px) {
   .c-columns {
@@ -2567,40 +2603,6 @@ html.svg .c-facet__check-label {
 
 .t-upload__choose-heading--active {
   color: #005581; }
-
-@media (min-width: 480px) {
-  .t-upload__choose-files {
-    display: -webkit-flex;
-    display: -ms-flexbox;
-    display: flex;
-    -webkit-align-items: center;
-        -ms-flex-align: center;
-            align-items: center;
-    -webkit-justify-content: space-between;
-        -ms-flex-pack: justify;
-            justify-content: space-between; } }
-
-.t-upload__o-drop {
-  display: none; }
-  @media (min-width: 480px) {
-    .t-upload__o-drop {
-      display: block;
-      margin: 0 20px 0 0; } }
-
-.t-upload__or {
-  display: none; }
-  @media (min-width: 480px) {
-    .t-upload__or {
-      display: block;
-      margin: 0 20px 0 0;
-      color: #005581;
-      font-size: 1.5em;
-      font-weight: bold; } }
-
-.t-upload__button {
-  -webkit-flex: 0 0 auto;
-      -ms-flex: 0 0 auto;
-          flex: 0 0 auto; }
 
 @font-face {
   font-family: 'KievitWeb';

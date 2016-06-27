@@ -8,14 +8,16 @@
 <h2 class="t-upload__choose-heading--active">Step 1: Choose your files</h2>
 <div>
   <%= form_for @file, html: {multipart: true, id: 'fileupload'} do |f| %>
-    <div id="upload_bg" class="t-upload__choose-files">
+    <div class="c-choose">
       <%= f.hidden_field :resource_id %>
-      <div class="t-upload__o-drop o-drop">
+      <div id="upload_bg" class="c-choose__drop o-drop">
         Drag and drop files here
       </div>
-      <div class="t-upload__or">or</div>
-      <%= label_tag(:upload_upload, "Choose Files", class: 't-upload__button c-input__file-label') %>
-      <%= file_field_tag 'upload[upload]', multiple: true, class: 'c-input__file' %>
+      <div class="c-choose__or">or</div>
+      <div class="c-choose__label">
+        <%= label_tag(:upload_upload, "Choose Files", class: 'c-input__file-label') %>
+        <%= file_field_tag 'upload[upload]', multiple: true, class: 'c-input__file' %>
+      </div>
     </div>
     <!-- The loading indicator is shown during image processing -->
     <div class="fileupload-loading"></div>
@@ -27,10 +29,14 @@
   <% end %>
 </div>
 
-<h2 class="t-upload__choose-heading">Step 2: Upload your files</h2>
+<h2 class="t-upload__choose-heading" id="upload_tweaker_head">Step 2: Upload your files</h2>
 
 <div id="upload_list">
-  <%= render partial: "stash_engine/file_uploads/uploaded_file", collection: @resource.file_uploads %>
+  <% if @resource.file_uploads.count < 1 %>
+    <span id="no_chosen">No files chosen</span>
+  <% else %>
+    <%= render partial: "stash_engine/file_uploads/uploaded_file", collection: @resource.file_uploads %>
+  <% end %>
 </div>
 
 <div id="upload_total">
@@ -45,15 +51,6 @@
 
 
 <%= render partial: 'stash_engine/file_uploads/dropped_file' %>
-
-<style>
-  .buttony {
-    border-width: 1px;
-    border-style: solid;
-    margin: 1em 1em 1em 1em;
-    padding: 1em 1em 1em 1em;
-  }
-</style>
 
 <div class="t-describe__dataset-nav o-dataset-nav">
   <%= link_to 'Back to Describe Dataset', metadata_entry_pages_find_or_create_path(resource_id: params[:id]), class: 'o-button__icon-left', role: 'button', id: 'describe_back' %>

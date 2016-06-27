@@ -1,9 +1,10 @@
 <% f = uploaded_file %>
-<div class="spaced_row" id="uploaded_file_<%= f.id %>">
-  <div class="spaced_text"><%= image_tag 'stash_engine/green_check.png' %></div>
-  <div class="spaced_text"><%= f.upload_file_name %></div>
-  <div class="spaced_text"><%= filesize(f.upload_file_size) %></div>
-  <div class="spaced_text"><%= button_to 'Delete', f, method: :delete, remote: true %></div>
-  <span style="visibility: hidden" class="hidden_bytes"><%= f.upload_file_size %></span>
-  <br class="clear"/>
+<div class="c-upload--complete" id="uploaded_file_<%= f.id %>">
+  <div class="c-upload__filename"><%= f.upload_file_name %>
+    <span class="c-upload__filesize"><%= filesize(f.upload_file_size) %></span>
+  </div>
+  <div class="c-upload__action">
+    <span style="display: none" class="js-hidden_bytes"><%= f.upload_file_size %></span>
+    <%= button_to 'Delete', f, method: :delete, remote: true, class: "c-upload__button", form_class: 'o-button__inline-form' %>
+  </div>
 </div>
