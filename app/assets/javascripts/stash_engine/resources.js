@@ -20,7 +20,6 @@ $(function () {
           $('.js-remove_link').click( function(e){
             e.preventDefault();
             e.target.parentNode.parentNode.remove();
-            updateTotalSize();
             updateButtonLinkStates();
           });
 
@@ -45,10 +44,8 @@ $(function () {
             if(uploadInProgress) {
               $('.js-upload-it:first').click();
             };
-            updateTotalSize();
             updateButtonLinkStates();
           })
-          updateTotalSize(); // update the total size after drop, also.
           updateButtonLinkStates();
         },
         progress: function (e, data) {
@@ -56,8 +53,6 @@ $(function () {
           data.context.find('.js-bar').attr("value", progress)
         },
         done: function (e, data) {
-            // $('#up_button_' + data.files[0].id).text('Upload finished.');
-          updateTotalSize();
           updateButtonLinkStates();
         }
     });
@@ -126,6 +121,7 @@ function filesWaitingForUpload(){
 // update the button and navigation link states based on pending upload files
 function updateButtonLinkStates(){
   if (filesWaitingForUpload()){
+    // if files are waiting for upload
     $('#upload_all').show();
     $('#upload_tweaker_head').removeClass('t-upload__choose-heading').addClass('t-upload__choose-heading--active');
     $("a[class^='c-progress__tab'], #describe_back, #proceed_review").unbind( "click" );
@@ -138,12 +134,15 @@ function updateButtonLinkStates(){
       $('#upload_all').hide();
     }
   }else{
+    // files are already uploaded or there are none
     $('#cancel_all').hide();
     $('#upload_tweaker_head').removeClass('t-upload__choose-heading--active').addClass('t-upload__choose-heading');
     $('#upload_all').hide();
     $("a[class^='c-progress__tab'], #describe_back, #proceed_review").unbind( "click" );
     uploadInProgress = false;
   }
+
+  updateTotalSize();
 }
 
 function largestSize(){
@@ -155,6 +154,12 @@ function largestSize(){
 
 function updateTotalSize(){
   $('#upload_total').text("Total: " + formatSizeUnits(totalSize()));
+
+  if(overTotalSize(totalSize()) || overFileSize(largestSize())){
+    $('#upload_total').removeClass().addClass('c-upload__total-size--warning');
+  }else{
+    $('#upload_total').removeClass().addClass('c-upload__total-size');
+  }
 }
 // *****************************
 // end Javascript for FileUpload
