@@ -82,24 +82,6 @@
     return (mySize > maxFileSize());
   }
 
-
-  // start first js-upload-it line
-  $('#upload_all').click( function(e){
-    if(overTotalSize(totalSize())){
-      e.preventDefault();
-      alert('You are attempting to upload more than ' + formatSizeUnits(maxTotalSize()) + '.  Please remove some files to get under this limit.');
-      return false;
-    }
-    if(overFileSize(largestSize())) {
-      e.preventDefault();
-      alert('You are attempting to upload a file larger than ' + formatSizeUnits(maxFileSize()) + '.  Please remove any files larger than this limit and try again.');
-      return false;
-    }
-    uploadInProgress = true;
-    $('.js-upload-it:first').click();
-    updateButtonLinkStates();
-  });
-
   updateTotalSize();
 
 </script>
