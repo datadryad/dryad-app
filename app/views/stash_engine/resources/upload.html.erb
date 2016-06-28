@@ -19,13 +19,6 @@
         <%= file_field_tag 'upload[upload]', multiple: true, class: 'c-input__file' %>
       </div>
     </div>
-    <!-- The loading indicator is shown during image processing -->
-    <div class="fileupload-loading"></div>
-    <!-- The table listing the files available for upload/download -->
-    <table class="table table-striped">
-      <tbody class="files" data-toggle="modal-gallery" data-target="#modal-gallery"></tbody>
-    </table>
-
   <% end %>
 </div>
 
@@ -43,10 +36,12 @@
   Total:
 </div>
 
+<div class="c-upload__upload-complete-text" id="upload_complete" style="display: none;">Upload complete.</div>
+
 
 <div>
-  <button id="upload_all" type="button">Upload</button>
-  <button id="cancel_all" type="button" style="display:none;">Cancel all</button>
+  <button id="upload_all" type="button" class="o-button__plain-text2">Upload</button>
+  <button id="cancel_all" type="button" class="o-button__plain-text2" style="display:none;">Cancel all</button>
 </div>
 <div style="clear:both">&nbsp;</div>
 

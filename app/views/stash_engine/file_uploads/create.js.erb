@@ -6,4 +6,5 @@ if($('.js-upload-it:first').length && uploadInProgress){
   uploadInProgress = false;
   $('#cancel_all').hide();
   updateButtonLinkStates();
+  $('#upload_complete').show(0).delay(5000).fadeOut(1000)
 }
