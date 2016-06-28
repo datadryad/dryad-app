@@ -66,16 +66,33 @@
     });
   });
 
+  function maxTotalSize(){
+    return <%= StashEngine.app.max_submission_size %>;
+  }
+
+  function maxFileSize(){
+    return <%= StashEngine.app.max_file_size %>;
+  }
+
+  function overTotalSize(mySize){
+    return (mySize > maxTotalSize());
+  }
+
+  function overFileSize(mySize){
+    return (mySize > maxFileSize());
+  }
+
+
   // start first js-upload-it line
   $('#upload_all').click( function(e){
-    if(totalSize() > <%= StashEngine.app.max_submission_size %>){
+    if(overTotalSize(totalSize())){
       e.preventDefault();
-      alert('You are attempting to upload more than <%= filesize(StashEngine.app.max_submission_size)%>.  Please remove some files to get under this limit.');
+      alert('You are attempting to upload more than ' + formatSizeUnits(maxTotalSize()) + '.  Please remove some files to get under this limit.');
       return false;
     }
-    if(largestSize() > <%= StashEngine.app.max_file_size %>) {
+    if(overFileSize(largestSize())) {
       e.preventDefault();
-      alert('You are attempting to upload a file larger than <%= filesize(StashEngine.app.max_file_size)%>.  Please remove any files larger than this limit and try again.');
+      alert('You are attempting to upload a file larger than ' + formatSizeUnits(maxFileSize()) + '.  Please remove any files larger than this limit and try again.');
       return false;
     }
     uploadInProgress = true;
