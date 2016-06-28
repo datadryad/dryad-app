@@ -67,7 +67,8 @@ $( document ).ready(function() {
   updateButtonLinkStates();
   $('#cancel_all').click(function() {
     uploadInProgress = false;
-    $('.js-cancel:visible').delay(1000).click();
+    $('.js-cancel:visible').click();
+    $('#cancel_all').hide();
   });
 });
 
@@ -124,6 +125,7 @@ function updateButtonLinkStates(){
     $('#upload_tweaker_head').removeClass('t-upload__choose-heading--active').addClass('t-upload__choose-heading');
     $('#upload_all').hide();
     $("a[class^='c-progress__tab'], #describe_back, #proceed_review").unbind( "click" );
+    uploadInProgress = false;
   }
 }
 
