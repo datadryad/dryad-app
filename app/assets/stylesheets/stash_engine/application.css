@@ -75,6 +75,10 @@ div.bar {
     height: 18px;
 }
 
+div.bad_upload {
+    color: red;
+}
+
 .clear {
     clear: left;
 }

@@ -152,6 +152,7 @@ function largestSize(){
   return sorted[0];
 }
 
+// sets the total size and modifies UI to display states for too-large uploads and other stuff.
 function updateTotalSize(){
   $('#upload_total').text("Total: " + formatSizeUnits(totalSize()));
 
@@ -159,6 +160,30 @@ function updateTotalSize(){
     $('#upload_total').removeClass().addClass('c-upload__total-size--warning');
   }else{
     $('#upload_total').removeClass().addClass('c-upload__total-size');
+  }
+
+  // remove and notify if over size.
+  if(overFileSize(largestSize())){
+    // UI design says delete the large items automatically and swat the user with a rolled up newspaper.
+    $("div[id^='not_uploaded_file_']").each(function( index ) {
+      if(overFileSize($( this ).find('.js-hidden_bytes').text())){
+        var name = $( this ).find('.js-filename').text();
+        $('#over_single_size').append("<p>The file " + name  + " has been removed from your upload list since it is larger than the maximum allowed single file size.</p>");
+        $( this ).remove();
+        setTimeout(function(){
+          $('#over_single_size').empty();
+        }, 20000);
+        updateTotalSize();
+      }
+    });
+  }
+
+  if(overTotalSize(totalSize())){
+    $('#over_files_size').show();
+    $('#upload_all').hide();
+  }else{
+    $('#over_files_size').hide();
+    if(!uploadInProgress && filesWaitingForUpload()) $('#upload_all').show();
   }
 }
 // *****************************
