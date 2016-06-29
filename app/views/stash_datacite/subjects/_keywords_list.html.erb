@@ -23,6 +23,7 @@
         if ( event.keyCode === $.ui.keyCode.TAB &&
             $( this ).autocomplete( "instance" ).menu.active ) {
           event.preventDefault();
+          changeDivColor();
         }
       })
       .autocomplete({
@@ -47,6 +48,7 @@
         },
         focus: function() {
           // prevent value inserted on focus
+          changeDivColor();
           return false;
         },
         select: function( event, ui ) {
@@ -72,6 +74,7 @@
         var form = $(this).parents('form');
         $(form).trigger('submit.rails');
         $('.saved_text').show(0).delay(3000).hide(0);
+        revertDivColor();
       }
     });
 
@@ -86,6 +89,13 @@
       // $('.js-keywords__input').blur(function(){
       //   $('#js-keywords__container').attr('class', 'c-keywords__container--has-blur');
       // });
-
+    function changeDivColor() {
+      alert("hi");
+      $('#js-keywords__container').css("border", "orange");
+    }
+    function revertDivColor() {
+      alert("hi");
+      $('#js-keywords__container').css("border", "black");
+    }
   });
   </script>
