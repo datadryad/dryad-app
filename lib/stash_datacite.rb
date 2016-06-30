@@ -1,5 +1,6 @@
 require 'stash_datacite/engine'
 require 'stash_datacite/resource_patch'
+require 'stash_datacite/test_import'
 module StashDatacite
   #mattr_writer :resource_class
 
