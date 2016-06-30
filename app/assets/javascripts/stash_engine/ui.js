@@ -528,53 +528,54 @@ return a=K(a),this[a+"s"]()}function $c(a){return function(){return this._data[a
 
 $(document).ready(function(){
 
-  // Detect via Modernizr if details element is supported in a browser:
+  setTimeout(function() {
+    // Detect via Modernizr if details element is supported in a browser:
 
-  if (Modernizr.details) {
+    if (Modernizr.details) {
 
-    // Details element supported:
+      // Details element supported:
 
-    $('details').attr('aria-expanded', 'false');
-    $('summary').attr('role', 'button');
+      $('details').attr('aria-expanded', 'false');
+      $('summary').attr('role', 'button');
 
-    if ($('details').is('[open]')) {
-      $('[open]').attr('aria-expanded', 'true');
-    }
-
-    $('summary').click(function(){
-      if ($(this).parent().is('[open]')) {
-        $(this).parent().attr('aria-expanded', 'false');
-      } else {
-        $(this).parent().attr('aria-expanded', 'true');
+      if ($('details').is('[open]')) {
+        $('[open]').attr('aria-expanded', 'true');
       }
-    });
 
-  } else {
+      $('summary').click(function () {
+        if ($(this).parent().is('[open]')) {
+          $(this).parent().attr('aria-expanded', 'false');
+        } else {
+          $(this).parent().attr('aria-expanded', 'true');
+        }
+      });
 
-    // Details element not supported:
+    } else {
 
-    $('details').attr('aria-expanded', 'false');
-    $('summary').attr('role', 'button');
-    $('summary').siblings().hide();
+      // Details element not supported:
 
-    if ($('details').is('[open]')) {
-      $('[open]').children().show();
-      $('[open]').attr('aria-expanded', 'true');
-    }
+      $('details').attr('aria-expanded', 'false');
+      $('summary').attr('role', 'button');
+      $('summary').siblings().hide();
 
-    $('summary').click(function(){
-      $(this).siblings().toggle();
-
-      if ($(this).parent().is('[open]')) {
-        $(this).parent().removeAttr('open');
-        $(this).parent().attr('aria-expanded', 'false');
-      } else {
-        $(this).parent().attr('open', '');
-        $(this).parent().attr('aria-expanded', 'true');
+      if ($('details').is('[open]')) {
+        $('[open]').children().show();
+        $('[open]').attr('aria-expanded', 'true');
       }
-    });
-  }
 
+      $('summary').click(function () {
+        $(this).siblings().toggle();
+
+        if ($(this).parent().is('[open]')) {
+          $(this).parent().removeAttr('open');
+          $(this).parent().attr('aria-expanded', 'false');
+        } else {
+          $(this).parent().attr('open', '');
+          $(this).parent().attr('aria-expanded', 'true');
+        }
+      });
+    }
+  }, 5000);
 }); // Close $(document).ready(function()
 
 // ##### Main JavaScript ##### //
