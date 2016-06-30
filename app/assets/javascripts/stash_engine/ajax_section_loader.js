@@ -10,6 +10,8 @@ $( document ).ready(function() {
       //data,
       // success: success,
       dataType: 'script'
+    }).always(function() {
+      modernizeIt();
     });
   });
 
