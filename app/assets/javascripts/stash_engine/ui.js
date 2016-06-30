@@ -567,7 +567,7 @@ function modernizeIt(){
       $('[open]').attr('aria-expanded', 'true');
     }
 
-    $('summary').unbind().on("click", function () {
+    $('summary').unbind('click').on("click", function () {
       $(this).siblings().toggle();
 
       if ($(this).parent().is('[open]')) {
