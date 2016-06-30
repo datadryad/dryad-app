@@ -7,6 +7,10 @@
 // Begin Javascript for FileUpload
 // *******************************
 $(function () {
+  // only do this stuff on the file upload page.
+  if($('body.resources_upload').length < 1){
+    return;
+  }
     $('#fileupload').fileupload({
         dataType: 'script',
         add: function (e, data) {
@@ -56,9 +60,7 @@ $(function () {
           updateButtonLinkStates();
         }
     });
-});
 
-$( document ).ready(function() {
   updateButtonLinkStates();
   $('#cancel_all').click(function() {
     uploadInProgress = false;
@@ -83,7 +85,6 @@ $( document ).ready(function() {
     updateButtonLinkStates();
   });
 });
-
 
 function generateQuickId() {
     return Math.random().toString(36).substring(2, 15) +

@@ -15,7 +15,7 @@
 
   <%= favicon_link_tag 'favicon.ico' %>
 </head>
-<body>
+<body class='<%= "#{controller_name}_#{action_name}" %>'>
 
   <% if params[:controller].try(:include?, 'pages') && params[:action] == 'home' %>
     <header class="t-home__header c-header">
