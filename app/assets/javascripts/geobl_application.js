@@ -16,4 +16,5 @@
 //
 // Required by Blacklight
 //= require blacklight/blacklight
+//= require stash_engine/ui
 //= require_tree .
