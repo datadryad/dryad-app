@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta content='text/html; charset=UTF-8' http-equiv='Content-Type'/>
+</head>
+<body>
+
+<p>An error occurred while submitting dataset &ldquo;<%= @vars[:title]%>&rdquo;
+  (<%= link_to("https://dx.doi.org/#{@vars[:identifier].identifier}", "doi:#{@vars[:identifier].identifier}")%>)
+  for user <%= link_to("mailto:#{@vars[:user_email]}", @vars[:user_name]) %>. The error details are below.
+</p>
+
+<hr/>
+
+<pre>
+<%= @vars[:backtrace] %>
+</pre>
+
+</body>
+</html>
