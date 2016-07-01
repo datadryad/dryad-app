@@ -29,7 +29,7 @@ StashEngine::Engine.routes.draw do
   get 'help', :to => 'pages#help'
   get 'about', :to => 'pages#about'
   get 'search', :to => 'searches#index'
-  get 'dataset/*id', :to => 'landing#show', as: 'show', :constraints => { :id => /[^ ]+/ }
+  get 'dataset/*id', :to => 'landing#show', as: 'show', :constraints => { :id => /\S+/ }
   #get "login", :to => "test#index"
   #get 'test/index'
   #get 'test/after_login'
