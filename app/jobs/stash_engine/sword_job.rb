@@ -33,10 +33,11 @@ module StashEngine
     end
 
     def create_or_update(title, doi, zipfile, resource, sword_params)
+      client = client_for(sword_params)
       if resource.update_uri
-        update(title: title, doi: doi, zipfile: zipfile, resource_id: self.id, sword_params: sword_params)
+        update(title: title, doi: doi, zipfile: zipfile, resource: resource, client: client)
       else
-        create(title: title, doi: doi, zipfile: zipfile, resource_id: self.id, sword_params: sword_params)
+        create(title: title, doi: doi, zipfile: zipfile, resource: resource, client: client)
       end
     end
 
