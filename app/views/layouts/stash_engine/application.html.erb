@@ -25,8 +25,8 @@
     <div class="c-header__logos">
       <button aria-label="mobile menu" class="o-button__menu c-header__menu-button js-header__menu-button"></button>
       <%= link_to(stash_url_helpers.root_path, class: 'c-header__dash-logo-link') do %>
+        <%= image_tag 'stash_engine/logo_dash.svg', class: 'c-header__dash-logo-svg', alt: 'Dash logo' %>
         <%= logo_path class: "c-header__dash-logo-svg" %>
-        <%#  %>
       <% end %>
     </div>
     <nav class="c-header__nav js-header__nav">
