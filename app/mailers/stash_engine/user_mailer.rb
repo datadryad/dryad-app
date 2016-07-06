@@ -6,18 +6,19 @@ module StashEngine
 
     # TODO: DRY these methods
 
-    def create_succeeded(resource, title, dashboard_path)
+    def create_succeeded(resource, title, request_host, request_port)
       user = resource.user
-      to_address = to_address_list(user.email)
       @to_name = "#{user.first_name} #{user.last_name}" #TODO: something more i18n-friendly
       @title = title
       @identifier = identifier_for(resource)
-      @dashboard_path = dashboard_path
+      @request_host = request_host
+      @request_port = request_port
 
-      mail(to: to_address, subject: "Dataset \"#{@title}\" (#{@identifier}) submitted")
+      to_address = to_address_list(user.email)
+      mail(to: to_address, subject: "Dataset submitted: #{@title}")
     end
 
-    def create_failed(resource, title, error)
+    def create_failed(resource, title, request_host, request_port, error)
       user = resource.user
       @to_name = "#{user.first_name} #{user.last_name}" #TODO: something more i18n-friendly
       @title = title
@@ -25,23 +26,26 @@ module StashEngine
       @backtrace = to_backtrace(error)
       tenant = user.tenant
       @contact_email = to_address_list(tenant.contact_email)
+      @request_host = request_host
+      @request_port = request_port
 
       to_address = to_address_list(user.email)
-      mail(to: to_address, subject: "Submission of dataset \"#{@title}\" (#{@identifier}) failed")
+      mail(to: to_address, subject: "Dataset submission failure: #{@title}")
     end
 
-    def update_succeeded(resource, title, dashboard_path)
+    def update_succeeded(resource, title, request_host, request_port)
       user = resource.user
       @to_name = "#{user.first_name} #{user.last_name}" #TODO: something more i18n-friendly
       @title = title
       @identifier = identifier_for(resource)
-      @dashboard_path = dashboard_path
+      @request_host = request_host
+      @request_port = request_port
 
       to_address = to_address_list(user.email)
       mail(to: to_address, subject: "Dataset \"#{@title}\" (#{@identifier}) updated")
     end
 
-    def update_failed(resource, title, error)
+    def update_failed(resource, title, request_host, request_port, error)
       user = resource.user
       @to_name = "#{user.first_name} #{user.last_name}" #TODO: something more i18n-friendly
       @title = title
@@ -49,6 +53,9 @@ module StashEngine
       @backtrace = to_backtrace(error)
       tenant = user.tenant
       @contact_email = to_address_list(tenant.contact_email)
+      @request_host = request_host
+      @request_port = request_port
+
       to_address = to_address_list(user.email)
       mail(to: to_address, subject: "Updating dataset \"#{@title}\" (#{@identifier}) failed")
     end

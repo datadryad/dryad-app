@@ -41,7 +41,7 @@ module StashEngine
       end
     end
 
-    def submission_to_repository(current_tenant, zipfile, title, doi, dashboard_path)
+    def submission_to_repository(current_tenant, zipfile, title, doi, request_host, request_port)
       # TODO: is it OK to do this before submitting/updating?
       self.update_identifier(doi)
       SwordJob.perform_later(
@@ -50,7 +50,8 @@ module StashEngine
           zipfile: zipfile,
           resource_id: self.id,
           sword_params: current_tenant.sword_params,
-          dashboard_path: dashboard_path
+          request_host: request_host,
+          request_port: request_port
       )
     end
 

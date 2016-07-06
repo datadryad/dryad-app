@@ -12,14 +12,14 @@ module StashEngine
       Stash::Sword::Client.new(logger: log, **sword_params)
     end
 
-    def perform(title:, doi:, zipfile:, resource_id:, sword_params:, dashboard_path:)
+    def perform(title:, doi:, zipfile:, resource_id:, sword_params:, request_host:, request_port:)
       log.debug("#{self.class}: title: '#{title}', doi: #{doi}, zipfile: #{zipfile}, resource_id: #{resource_id}, sword_params: #{sword_params}")
       request_msg = "Submitting #{zipfile} for '#{title}' (#{doi}): #{(sword_params.map { |k, v| "#{k}: #{v}" }).join(', ')}"
 
       resource = nil
       begin
         resource = Resource.find(resource_id)
-        create_or_update(title, doi, zipfile, resource, sword_params, dashboard_path)
+        create_or_update(title, doi, zipfile, resource, sword_params, request_host, request_port)
         resource.update_version(zipfile)
         update_submission_log(resource_id: resource_id, request_msg: request_msg, response_msg: 'Success')
       rescue => e
@@ -29,9 +29,9 @@ module StashEngine
 
         if resource
           if resource.update_uri
-            UserMailer.update_failed(resource, title, e)
+            UserMailer.update_failed(resource, title, request_host, request_port, e)
           else
-            UserMailer.create_failed(resource, title, e)
+            UserMailer.create_failed(resource, title, request_host, request_port, e)
           end
         end
 
@@ -44,14 +44,14 @@ module StashEngine
 
     private
 
-    def create_or_update(title, doi, zipfile, resource, sword_params, dashboard_path)
+    def create_or_update(title, doi, zipfile, resource, sword_params, request_host, request_port)
       client = client_for(sword_params)
       if resource.update_uri
         update(title: title, doi: doi, zipfile: zipfile, resource: resource, client: client)
-        UserMailer.update_succeeded(resource, title, dashboard_path).deliver_later
+        UserMailer.update_succeeded(resource, title, request_host, request_port).deliver_later
       else
         create(title: title, doi: doi, zipfile: zipfile, resource: resource, client: client)
-        UserMailer.create_succeeded(resource, title, dashboard_path).deliver_later
+        UserMailer.create_succeeded(resource, title, request_host, request_port).deliver_later
       end
     end
 

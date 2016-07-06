@@ -7,17 +7,25 @@
 
 <p>Dear <%= @to_name %>:</p>
 
-<p>An error occurred while submitting your dataset &ldquo;<%= @title %>&rdquo;
+<p>
+  An error occurred while submitting your dataset &ldquo;<%= @title %>&rdquo;
   (<%= link_to("https://dx.doi.org/#{@identifier}", "doi:#{@identifier}")%>)
-  to Dash. The error details have been sent to the Dash administrative team, and you will be contacted
-  once the problem has been resolved.
+  to Dash.
 </p>
 
 <p>
-  If you have any questions, please contact your administrator at
-  <%= link_to("mailto:#{@contact_email }", @contact_email ) %>;
-  do not reply to this email.
+  The Dash support team has been notified and will fix the problem as soon as possible.
+  You do not need to do anything.
 </p>
+
+<p>
+  To see the status of your dataset, visit your
+  <%= link_to 'My Datasets', url_for(host: @request_host, port: @request_port, controller: 'stash_engine/dashboard', action: 'show') %>
+  page. If you have questions or concerns, please visit the
+  <%= link_to 'help page', url_for(host: @request_host, port: @request_port, controller: 'stash_engine/pages', action: 'help') %>.
+</p>
+
+<p>Please do not reply to this email.</p>
 
 </body>
 </html>
