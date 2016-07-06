@@ -1,7 +1,7 @@
 // Place all the behaviors and hooks related to the matching controller here.
 // All this logic will automatically be available in application.js.
 function loadTitles() {
-  $( ".title" ).on('focus', function () {
+  $( '.title' ).on('focus', function () {
     $('.saving_text').show();
     $('.saved_text').hide();
     previous_value = this.value;
@@ -11,8 +11,11 @@ function loadTitles() {
       if(new_value != previous_value) {
         var form = $(this).parents('form');
         $(form).trigger('submit.rails');
-        $('.saved_text').show();
-        $('.saving_text').hide();
       }
     });
+
+  $( '.title' ).blur(function (event) {
+    $('.saved_text').show();
+    $('.saving_text').hide();
+  });
 };

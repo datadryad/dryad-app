@@ -11,10 +11,13 @@ function loadResourceTypes() {
       if(new_value != previous_value) {
         var form = $(this.form);
         $(form).trigger('submit.rails');
-        $('.saved_text').show();
-        $('.saving_text').hide();
       }
     });
+
+  $( '.js-resource_type' ).blur(function (event) {
+    $('.saved_text').show();
+    $('.saving_text').hide();
+  });
 };
 
 

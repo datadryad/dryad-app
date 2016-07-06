@@ -74,8 +74,8 @@
       if (!disable) {
         var form = $(this).parents('form');
         $(form).trigger('submit.rails');
-        $('.saved_text').show(0).delay(3000).hide(0);
-        revertDivColor();
+        $('.saved_text').show();
+        $('.saving_text').hide();
       }
     });
 
@@ -85,6 +85,8 @@
 
       $('.js-keywords__input').focus(function(){
         $('#js-keywords__container').addClass('c-keywords__container--has-focus').removeClass('c-keywords__container--has-blur');
+        $('.saving_text').show();
+        $('.saved_text').hide();
       });
 
       $('.js-keywords__input').blur(function(){
