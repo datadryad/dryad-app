@@ -1,8 +1,8 @@
-<div class="c-autosave-footer">
-  <div class="c-autosave__text saving_text" style="display: none;">Saving&hellip;</div>
-  <div class="c-autosave__text saved_text" style="display: none;">Changes Autosaved at <%= DateTime.now.in_time_zone%></div>
-</div>
 <div class="t-describe__dataset-nav o-dataset-nav">
   <%= link_to 'Back to My Datasets', stash_engine.dashboard_path , id: 'dashboard_path', class: 'o-button__icon-left', role: 'button' %>
+  <div class="c-autosave-footer">
+    <div class="c-autosave__text saving_text" style="display: none;">Saving&hellip;</div>
+    <div class="c-autosave__text saved_text" style="display: none;">All Progress Saved.</div>
+  </div>
   <%= link_to 'Proceed to Upload', stash_engine.upload_resource_path(@resource), id: 'upload_path', class: 'o-button__icon-right', role: 'button' %>
 </div>
