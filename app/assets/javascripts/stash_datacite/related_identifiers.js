@@ -2,6 +2,8 @@
 // All this logic will automatically be available in application.js.
 function loadRelatedIdentifiers() {
 $( ".js-related_identifier" ).on('focus', function () {
+  $('.saving_text').show();
+  $('.saved_text').hide();
   previous_value = this.value;
   }).change(function() {
     new_value = this.value;
@@ -9,7 +11,8 @@ $( ".js-related_identifier" ).on('focus', function () {
     if( (new_value != '') && (new_value != previous_value) )  {
       var form = $(this.form);
       $(form).trigger('submit.rails');
-      $('.saved_text').show(0).delay(3000).hide(0);
+      $('.saved_text').show();
+      $('.saving_text').hide();
     }
   });
 };
