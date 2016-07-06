@@ -19,18 +19,6 @@ module StashDatacite
       end
     end
 
-    # POST /affliations
-    def create
-      @affliation = Affliation.new(affliation_params)
-      respond_to do |format|
-        if @affliation.save
-          format.js
-        else
-          format.html { render :new }
-        end
-      end
-    end
-
     private
 
     # Use callbacks to share common setup or constraints between actions.
