@@ -58,6 +58,8 @@
       minLength: 1,
       focus: function () {
         // prevent value inserted on focus
+        $('.saving_text').show();
+        $('.saved_text').hide();
         return false;
       },
       select: function (event, ui) {
@@ -74,7 +76,8 @@
       // if (!disable) {
         var form = $(this).parents('form');
         $(form).trigger('submit.rails');
-        $('.saved_text').show(0).delay(3000).hide(0);
+        $('.saved_text').show();
+        $('.saving_text').hide();
       // }
     });
   });

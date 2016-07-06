@@ -2,7 +2,7 @@
 <div class="c-autosave-header">
   <h1 class="o-heading__level1">Describe Your Datasets</h1>
   <div class="c-autosave__text saving_text" style="display: none;">Saving&hellip;</div>
-  <div class="c-autosave__text saved_text" style="display: none;">Changes Autosaved at <%= DateTime.now.in_time_zone%></div>
+  <div class="c-autosave__text saved_text" style="display: none;">All Progress Saved.</div>
 </div>
 
 <h3 class="o-heading__page-span">Basic Information</h3>
@@ -66,7 +66,7 @@
 
     <%= label_tag :description, "Usage Notes", class: 'c-input__label' %>&nbsp;&nbsp;What else would someone need to know to use this dataset?
     <%= render partial: "stash_datacite/descriptions/form", locals: { description: @metadata_entry.usage_notes, description_type: :usage_notes } %>
-    
+
     <fieldset class="c-fieldset">
     <legend class="c-fieldset__legend">Related work(s) <span class="c-input__hint">articles, other datasets: e.g., This dataset is cited by DOI 10.1000/182.</span></legend>
     <div class="js-related_identifiers_form">
@@ -96,7 +96,7 @@
         <%= render partial: "stash_datacite/geolocation_boxes/form", locals: { geolocation_box: @metadata_entry.new_geolocation_box } %>
       </div>
     </fieldset>
-    
+
     <p class="t-describe__map-label">Add a point or draw a rectangle on the map</p>
     <%= render partial: "stash_datacite/shared/map" %>
     <div class="t-describe__locations c-locations" role="group" aria-labelledby="c-locations__label">

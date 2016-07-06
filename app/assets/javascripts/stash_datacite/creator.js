@@ -2,6 +2,8 @@
 // All this logic will automatically be available in application.js.
 function loadCreators() {
   $( ".js-creator_first_name" ).on('focus', function () {
+    $('.saving_text').show();
+    $('.saved_text').hide();
     previous_value = this.value;
     }).change(function() {
       new_value = this.value;
@@ -9,11 +11,13 @@ function loadCreators() {
       if(new_value != previous_value) {
         var form = $(this).parents('form');
         $(form).trigger('submit.rails');
-        $('.saved_text').show(0).delay(3000).hide(0);
-      }
+        $('.saved_text').show();
+        $('.saving_text').hide();      }
     });
 
   $( ".js-creator_last_name" ).on('focus', function () {
+    $('.saving_text').show();
+    $('.saved_text').hide();
     previous_value = this.value;
     }).change(function() {
       new_value = this.value;
@@ -21,7 +25,8 @@ function loadCreators() {
       if(new_value != previous_value) {
         var form = $(this).parents('form');
         $(form).trigger('submit.rails');
-        $('.saved_text').show(0).delay(3000).hide(0);
+        $('.saved_text').show();
+        $('.saving_text').hide();
       }
     });
 };
