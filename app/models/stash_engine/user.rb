@@ -21,6 +21,10 @@ module StashEngine
       [first, last]
     end
 
+    def tenant
+      Tenant.find(self.tenant_id)
+    end
+
     #gets the latest completed resources by user, a lot of SQL since this becomes complicated
     def latest_completed_resource_per_identifier
       # this is hackish since it requires resource ids to be assigned in ascending order,
