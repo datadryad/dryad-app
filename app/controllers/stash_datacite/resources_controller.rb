@@ -110,7 +110,8 @@ module StashDatacite
     end
 
     def main_title(resource)
-      resource.titles.where(title_type: :main).first
+      title = resource.titles.where(title_type: :main).first
+      title.try(:title)
     end
   end
 end
