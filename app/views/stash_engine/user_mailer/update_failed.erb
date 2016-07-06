@@ -9,7 +9,7 @@
 
 <p>An error occurred while updating your dataset &ldquo;<%= @title %>&rdquo;
   (<%= link_to("https://dx.doi.org/#{@identifier}", "doi:#{@identifier}")%>)
-  to Dash. The error details below have been sent to the Dash administrative team, and you will be contacted
+  to Dash. The error details have been sent to the Dash administrative team, and you will be contacted
   once the problem has been resolved.
 </p>
 
@@ -18,12 +18,6 @@
   <%= link_to("mailto:#{@contact_email }", @contact_email ) %>;
   do not reply to this email.
 </p>
-
-<hr/>
-
-<pre>
-<%= @backtrace  %>
-</pre>
 
 </body>
 </html>

@@ -6,12 +6,13 @@ module StashEngine
 
     # TODO: DRY these methods
 
-    def create_succeeded(resource, title)
+    def create_succeeded(resource, title, dashboard_path)
       user = resource.user
       to_address = to_address_list(user.email)
       @to_name = "#{user.first_name} #{user.last_name}" #TODO: something more i18n-friendly
       @title = title
       @identifier = identifier_for(resource)
+      @dashboard_path = dashboard_path
 
       mail(to: to_address, subject: "Dataset \"#{@title}\" (#{@identifier}) submitted")
     end
@@ -29,11 +30,12 @@ module StashEngine
       mail(to: to_address, subject: "Submission of dataset \"#{@title}\" (#{@identifier}) failed")
     end
 
-    def update_succeeded(resource, title)
+    def update_succeeded(resource, title, dashboard_path)
       user = resource.user
       @to_name = "#{user.first_name} #{user.last_name}" #TODO: something more i18n-friendly
       @title = title
       @identifier = identifier_for(resource)
+      @dashboard_path = dashboard_path
 
       to_address = to_address_list(user.email)
       mail(to: to_address, subject: "Dataset \"#{@title}\" (#{@identifier}) updated")
@@ -47,7 +49,6 @@ module StashEngine
       @backtrace = to_backtrace(error)
       tenant = user.tenant
       @contact_email = to_address_list(tenant.contact_email)
-
       to_address = to_address_list(user.email)
       mail(to: to_address, subject: "Updating dataset \"#{@title}\" (#{@identifier}) failed")
     end
