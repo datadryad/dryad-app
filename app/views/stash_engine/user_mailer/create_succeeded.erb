@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta content='text/html; charset=UTF-8' http-equiv='Content-Type'/>
+</head>
+<body>
+
+<p>Dear <%= @to_name %>:</p>
+
+<p>Your dataset &ldquo;<%= @title %>&rdquo;
+  (<%= link_to("https://dx.doi.org/#{@identifier}", "doi:#{@identifier}")%>)
+  has been successfully submitted to Dash.</p>
+
+<%
+  # TODO: Figure out how to get the 'My Datasets' URL in here, with the correct host
+%>
+<p>To see the status of your dataset, visit the <%= link_to 'My Datasets', 'http://example.edu/my_datasets' %> page.
+  There may be a brief delay for processing before the dataset is published.</p>
+
+<p>Please do not reply to this email.</p>
+
+</body>
+</html>

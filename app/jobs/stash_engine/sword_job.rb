@@ -16,6 +16,7 @@ module StashEngine
       log.debug("#{self.class}: title: '#{title}', doi: #{doi}, zipfile: #{zipfile}, resource_id: #{resource_id}, sword_params: #{sword_params}")
       request_msg = "Submitting #{zipfile} for '#{title}' (#{doi}): #{(sword_params.map { |k, v| "#{k}: #{v}" }).join(', ')}"
 
+      resource = nil
       begin
         resource = Resource.find(resource_id)
         create_or_update(title, doi, zipfile, resource, sword_params)
@@ -25,10 +26,19 @@ module StashEngine
         log.error(e)
         log.debug(e.backtrace.join("\n")) if e.backtrace
         update_submission_log(resource_id: resource_id, request_msg: request_msg, response_msg: "Failed: #{e}")
-        raise
+
+        if resource
+          if resource.update_uri
+            UserMailer.update_failed(resource, title, e)
+          else
+            UserMailer.create_failed(resource, title, e)
+          end
+        end
 
         # TODO: Enable this (and don't raise) once we have ExceptionNotifier configured
         # ExceptionNotifier.notify_exception(e, data: {title: title, doi: doi, zipfile: zipfile, resource_id: resource_id, sword_params: sword_params})
+
+        raise
       end
     end
 
@@ -36,8 +46,10 @@ module StashEngine
       client = client_for(sword_params)
       if resource.update_uri
         update(title: title, doi: doi, zipfile: zipfile, resource: resource, client: client)
+        UserMailer.update_succeeded(resource, title).deliver_later
       else
         create(title: title, doi: doi, zipfile: zipfile, resource: resource, client: client)
+        UserMailer.create_succeeded(resource, title).deliver_later
       end
     end
 
