@@ -82,7 +82,9 @@ module StashDatacite
       identifier = @resource_file_generation.generate_identifier
       target_url = current_tenant.landing_url(stash_url_helpers.show_path(identifier))
       @resource_file_generation.generate_merritt_zip(target_url, identifier)
-      resource.submission_to_repository(current_tenant, "#{Rails.root}/uploads/#{resource.id}_archive.zip", identifier)
+      zipfile = "#{Rails.root}/uploads/#{resource.id}_archive.zip"
+      title = main_title(resource)
+      resource.submission_to_repository(current_tenant, zipfile, title, identifier, stash_url_helpers.dashboard_url(host: request.host, port: request.port))
     end
 
     def create_resource_state(resource)
@@ -93,17 +95,22 @@ module StashDatacite
                                              user_id: current_user.id)
         end
       end
-      send_user_mail(resource)
+      # send_user_mail(resource)
     end
 
-    def send_user_mail(resource)
+    # def send_user_mail(resource)
+    #   title = main_title(resource)
+    #   UserMailer.notification(
+    #     resource.user.email,
+    #     "Dataset submitted: #{title.try(:title)}",
+    #     'submission',
+    #     { user: resource.user, resource: resource, title: title.try(:title),
+    #       identifier: resource.identifier, path: stash_url_helpers.dashboard_path }).deliver
+    # end
+
+    def main_title(resource)
       title = resource.titles.where(title_type: :main).first
-      UserMailer.notification(
-        resource.user.email,
-        "Dataset submitted: #{title.try(:title)}",
-        'submission',
-        { user: resource.user, resource: resource, title: title.try(:title),
-          identifier: resource.identifier, path: stash_url_helpers.dashboard_path }).deliver
+      title.try(:title)
     end
   end
 end
