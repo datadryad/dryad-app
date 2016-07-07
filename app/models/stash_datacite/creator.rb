@@ -5,6 +5,8 @@ module StashDatacite
     belongs_to :name_identifier
     belongs_to :affliation
 
+    before_save :strip_whitespace
+
     scope :filled, -> { joins(:affliation).
         where("TRIM(IFNULL(creator_first_name,'')) <> '' AND TRIM(IFNULL(creator_last_name,'')) <> ''") }
 
@@ -14,9 +16,14 @@ module StashDatacite
     scope :affliation_filled, -> { joins(:affliation).
         where("TRIM(IFNULL(dcs_affliations.long_name,'')) <> ''") }
 
-
     def creator_full_name
       "#{creator_last_name}, #{creator_first_name}".strip
+    end
+
+    private
+    def strip_whitespace
+      self.creator_first_name = self.creator_first_name.strip unless self.creator_first_name.nil?
+      self.creator_last_name = self.creator_last_name.strip unless self.creator_last_name.nil?
     end
   end
 end

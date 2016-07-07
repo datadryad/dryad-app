@@ -5,5 +5,12 @@ module StashDatacite
 
     enum title_type: { main: 'main', subtitle: 'subtitle', alternative_title: 'alternative_title',
                        translated_title: 'translated_title' }
+
+    before_save :strip_whitespace
+
+    private
+    def strip_whitespace
+      self.title = self.title.strip unless self.title.nil?
+    end
   end
 end
