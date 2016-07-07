@@ -1,13 +1,17 @@
-// this changes the parts of the form that need to be changed so it converts it to a patch action (POST)
-<% form_id = unique_form_id(@creator) %>
-var form = $('#<%= params[:form_id] %>');
-form.attr('id', '<%= form_id %>');
-form.attr('action', '<%= creators_update_path %>');
-form.find("#creator_id").attr('value', '<%= @creator.id %>');
-form.find("#form_id").attr('value', '<%= form_id %>');
+<% if @metadata_entry.creators.exists? %>
+  <% @metadata_entry.creators.each do |creator| %>
+    // this changes the parts of the form that need to be changed so it converts it to a patch action (POST)
+    <% form_id = unique_form_id(creator) %>
+    var form = $('#<%= params[:form_id] %>');
+    form.attr('id', '<%= form_id %>');
+    form.attr('action', '<%= creators_update_path %>');
+    form.find("#creator_id").attr('value', '<%= creator.id %>');
+    form.find("#form_id").attr('value', '<%= form_id %>');
 
-$('<input>').attr({
-  type: 'hidden',
-  name: '_method',
-  value: 'patch'
-}).appendTo(form);
+    $('<input>').attr({
+      type: 'hidden',
+      name: '_method',
+      value: 'patch'
+    }).appendTo(form);
+  <% end %>
+<% end %>
