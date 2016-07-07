@@ -999,6 +999,7 @@ html.no-multiplebgs .o-quote {
 .o-section {
   margin-bottom: 20px;
   padding-top: 20px;
+  clear: right;
   border-top: 1px solid #7b7d7e;
   border-bottom: 1px solid #7b7d7e; }
 
@@ -2516,9 +2517,11 @@ html.svg .c-facet__check-label {
   .t-landing__sidebar .c-sidebox {
     margin: 30px 0 0; }
 
-@media (min-width: 480px) {
-  .t-review__edit-button-top {
-    float: right; } }
+.t-review__edit-button-top {
+  margin: 0 0 20px; }
+  @media (min-width: 480px) {
+    .t-review__edit-button-top {
+      float: right; } }
 
 .t-review__funding-section {
   position: relative; }
