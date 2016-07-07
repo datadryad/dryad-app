@@ -4,7 +4,12 @@ module StashDatacite
     belongs_to :resource, class_name: StashDatacite.resource_class.to_s
     belongs_to :name_identifier
 
-    enum contributor_type: { funder: 'funder' }
+    types = 'contactperson', 'datacollector', 'datacurator', 'datamanager', 'distributor', 'editor',  'funder',
+        'hostinginstitution', 'producer', 'projectleader', 'projectmanager', 'projectmember',
+        'registrationagency', 'registrationauthority', 'relatedperson', 'researcher', 'researchgroup', 'rightsholder',
+        'sponsor', 'supervisor', 'workpackageleader', 'other'
+
+    enum contributor_type: types.map{|i| [i.to_sym, i]}.to_h
 
     before_save :strip_whitespace
 

@@ -4,23 +4,25 @@ require 'stash_ezid/client'
 module StashDatacite
   class TestImport
 
+    # TODO: the enums are all lowercase, is this how we want them?
+
     def initialize(
         user_uid='scott.fisher-ucb@ucop.edu',
         xml_filename=File.join(StashDatacite::Engine.root, 'test', 'fixtures', 'datacite-example-full-v3.1.xml'),
         ezid_shoulder="doi:10.5072/FK2",
         ezid_account="apitest",
         ezid_password="apitest"
-        )
+    )
       @user = StashEngine::User.find_by_uid(user_uid)
       @xml_str = File.read(xml_filename)
       @m_resource = Datacite::Mapping::Resource.parse_xml(@xml_str)
       @ezid_client = StashEzid::Client.new(
-                  { shoulder:   ezid_shoulder,
-                    account:    ezid_account,
-                    password:   ezid_password,
-                    coowners:   [''],
-                    id_scheme: 'doi'
-                  })
+          {shoulder: ezid_shoulder,
+           account: ezid_account,
+           password: ezid_password,
+           coowners: [''],
+           id_scheme: 'doi'
+          })
     end
 
     def datacite_mapping
@@ -68,34 +70,32 @@ module StashDatacite
     def add_creators
       @m_resource.creators.each do |c|
         lname, fname = extract_last_first(c.name)
-        affils = Affliation.where("short_name = ? or long_name = ?", c.affiliations.try(:first), c.affiliations.try(:first))
-        affil_no = nil
-        if affils.blank?
-          affil_no = Affliation.create(long_name: c.affiliations.first ).id if c.affiliations.length > 0
-        else
-          affil_no = affils.first.id
-        end
         name_identifier_id = nil
         orcid_id = nil
+        affil_no = get_or_create_affiliation(c.affiliations.try(:first))
+
+        # set/create orcid or name identifier (other than orcid?)
         unless c.try(:identifier).blank?
+          # TODO: check into this since it's weird that ORCIDs are handled differently than other name identifiers
           if c.identifier.scheme == 'ORCID'
             orcid_id = c.identifier.value unless c.identifier.value.blank?
           else
             name_id = NameIdentifier.find_or_create_by(name_identifier: c.identifier.value) do |ni|
-              ni.scheme = c.identifier.scheme
-              ni.scheme_uri = c.identifier.scheme_uri
+              ni.name_identifier_scheme = c.identifier.try(:scheme)
+              ni.scheme_URI = c.identifier.try(:scheme_uri).try(:to_s)
             end
             name_identifier_id = name_id.id
           end
         end
 
+        # add creator with the
         Creator.create(
-            creator_first_name:   fname,
-            creator_last_name:    lname,
-            name_identifier_id:   name_identifier_id,
-            orcid_id:             orcid_id,
-            resource_id:          @resource.id,
-            affliation_id:        affil_no
+            creator_first_name: fname,
+            creator_last_name: lname,
+            name_identifier_id: name_identifier_id,
+            orcid_id: orcid_id,
+            resource_id: @resource.id,
+            affliation_id: affil_no
         )
       end
     end
@@ -123,16 +123,42 @@ module StashDatacite
     end
 
     def add_subjects
-
+      @m_resource.subjects.each do |s|
+        subj = Subject.find_or_create_by(subject: s.value) do |sub|
+          sub.subject_scheme = s.scheme
+          sub.scheme_URI = s.try(:scheme_uri).try(:to_s)
+        end
+        ResourcesSubjects.create(resource_id: @resource.id, subject_id: subj.id)
+      end
     end
 
     def add_contributors
+      @m_resource.contributors.each do |c|
+        affil_no = get_or_create_affiliation(c.affiliations.try(:first))
+        name_identifier_id = nil
 
+        unless c.try(:identifier).blank?
+          name_id = NameIdentifier.find_or_create_by(name_identifier: c.identifier.value) do |ni|
+            ni.name_identifier_scheme = c.identifier.try(:scheme)
+            ni.scheme_URI = c.identifier.try(:scheme_uri).try(:to_s)
+          end
+          name_identifier_id = name_id.id
+        end
+
+        # TODO:  I think we're missing contributor types in our database enum.
+        Contributor.create(
+            contributor_name: c.name,
+            contributor_type: c.try(:type).try(:value).try(:downcase),
+            name_identifier_id: name_identifier_id,
+            affliation_id: affil_no,
+            resource_id: @resource.id
+        )
+      end
     end
 
     def add_dates
       @m_resource.dates.each do |d|
-        Dates.create(date: d.value, date_type: d.type.value.downcase)
+        DataciteDate.create(date: d.value, date_type: d.type.value.downcase)
       end
     end
 
@@ -151,11 +177,11 @@ module StashDatacite
     end
 
     def add_alternate_identifiers
-
+      # TODO: are we ignoring alternate identifiers?  I don't see a table in the database.
     end
 
     def add_related_identifiers
-
+      #
     end
 
     def add_sizes
@@ -176,7 +202,7 @@ module StashDatacite
 
     def add_rights
       @m_resource.rights_list.each do |r|
-        Rights.create(rights: r.value , rights_uri: r.uri)
+        Right.create(rights: r.value, rights_uri: r.uri)
       end
     end
 
@@ -193,7 +219,21 @@ module StashDatacite
 
     private
     def extract_last_first(name_w_comma)
-      name_w_comma.split(',', 2).map{|i| i.strip}
+      name_w_comma.split(',', 2).map { |i| i.strip }
+    end
+
+    # gets or creates an affiliation and returns the affiliation id or nil
+    def get_or_create_affiliation(affil_name_string)
+      affils = Affliation.where("short_name = ? or long_name = ?", affil_name_string, affil_name_string)
+      affil_no = nil
+      if affils.blank?
+        unless affil_name_string.blank?
+          affil_no = Affliation.create(long_name: affil_name_string).id
+        end
+      else
+        affil_no = affils.first.id
+      end
+      affil_no
     end
   end
 end
