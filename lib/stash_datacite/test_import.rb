@@ -4,7 +4,7 @@ require 'stash_ezid/client'
 module StashDatacite
   class TestImport
 
-    # TODO: the enums are all lowercase, is this how we want them?
+    # TODO: the enums are all lowercase, is this really how we want them?
 
     def initialize(
         user_uid='scott.fisher-ucb@ucop.edu',
@@ -54,17 +54,20 @@ module StashDatacite
     end
 
     def set_up_resource
+      # commented this out since testing 'in_progress' dataset instead
       #get a new ezid id ready and create identifier in DB
-      minted_id = @ezid_client.mint_id # retured like "doi:10.5072/FK2NK3C276"
-      ezid_id_type, ezid_id_body = minted_id.split(':', 2)
-      ezid_id_type.upcase!
-      stash_id = StashEngine::Identifier.create(identifier: ezid_id_body, identifier_type: ezid_id_type)
+      #minted_id = @ezid_client.mint_id # retured like "doi:10.5072/FK2NK3C276"
+      #ezid_id_type, ezid_id_body = minted_id.split(':', 2)
+      #ezid_id_type.upcase!
+      #stash_id = StashEngine::Identifier.create(identifier: ezid_id_body, identifier_type: ezid_id_type)
 
       # create resource with resource_state, identifier (DOI) and version for a user
-      @resource = StashEngine::Resource.create(user_id: @user.id, identifier_id: stash_id.id)
-      resource_state = StashEngine::ResourceState.create(user_id: @user.id, resource_state: 'submitted', resource_id: @resource.id)
+      @resource = StashEngine::Resource.create(user_id: @user.id)
+      #@resource = StashEngine::Resource.create(user_id: @user.id, identifier_id: stash_id.id)
+      #resource_state = StashEngine::ResourceState.create(user_id: @user.id, resource_state: 'submitted', resource_id: @resource.id)
+      resource_state = StashEngine::ResourceState.create(user_id: @user.id, resource_state: 'in_progress', resource_id: @resource.id)
       @resource.update(current_resource_state_id: resource_state.id)
-      StashEngine::Version.create(version: 1, resource_id: @resource.id)
+      #StashEngine::Version.create(version: 1, resource_id: @resource.id)
     end
 
     def add_creators
@@ -88,6 +91,7 @@ module StashDatacite
           end
         end
 
+        # TODO: affiliation 0-n in datacite, but 0-1 here
         # add creator with the
         Creator.create(
             creator_first_name: fname,
@@ -145,7 +149,7 @@ module StashDatacite
           name_identifier_id = name_id.id
         end
 
-        # TODO:  I think we're missing contributor types in our database enum.
+        # TODO: affiliation 0-n in datacite, but 0-1 here
         Contributor.create(
             contributor_name: c.name,
             contributor_type: c.try(:type).try(:value).try(:downcase),
@@ -181,7 +185,18 @@ module StashDatacite
     end
 
     def add_related_identifiers
-      #
+      @m_resource.related_identifiers.each do |ri|
+        related_iden_type_id = RelatedIdentifierType.find_by_related_identifier_type(ri.identifier_type.value)
+        relation_type_id = RelationType.find_by_relation_type(ri.relation_type.value)
+        # TODO: we are losing some data since relation_type table has properties that belong to related identifiers instead
+
+        RelatedIdentifier.create(
+            related_identifier:           ri.value,
+            related_identifier_type_id:   related_iden_type_id,
+            relation_type_id:             relation_type_id,
+            resource_id:                  @resource.id
+        )
+      end
     end
 
     def add_sizes
@@ -213,6 +228,31 @@ module StashDatacite
     end
 
     def add_geolocations
+      # TODO:  It seems as though we're missing the parent geolocation (spatial region or named place) element from
+      # DataCite 3.1 and are just focusing on the points, boxes and place elements 0..1 that are dependent elements
+
+      # TODO: is the db place name the place element or the top level description? Also datacite_mapping doesn't give both
+
+      @m_resource.geo_locations.each do |geo|
+        unless geo.place.blank?
+          GeolocationPlace.create(geo_location_place: geo.place, resource_id: @resource.id)
+        end
+
+        unless geo.try(:point).blank?
+          GeolocationPoint.create(latitude: geo.point.latitude, longitude: geo.point.longitude, resource_id: @resource.id)
+        end
+
+        unless geo.try(:box).blank?
+          GeolocationBox.create(
+                            ne_latitude: geo.box.north_latitude,
+                            ne_longitude: geo.box.east_longitude,
+                            sw_latitude: geo.box.south_latitude,
+                            sw_longitude: geo.box.west_longitude,
+                            resource_id: @resource.id
+          )
+        end
+      end
+
 
     end
 
