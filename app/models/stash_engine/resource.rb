@@ -20,7 +20,7 @@ module StashEngine
 
     #resource_states
     scope :in_progress, -> { joins(:current_state).where(stash_engine_resource_states: {resource_state:  :in_progress}) }
-    scope :submitted, -> { joins(:current_state).where(stash_engine_resource_states: {resource_state:  :submitted}) }
+    scope :submitted, -> { joins(:current_state).where(stash_engine_resource_states: {resource_state:  [:published, :processing]}) }
     scope :by_version_desc, -> { joins(:version).order('stash_engine_versions.version DESC') }
     scope :by_version, -> { joins(:version).order('stash_engine_versions.version ASC') }
 

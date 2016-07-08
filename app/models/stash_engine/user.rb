@@ -42,7 +42,7 @@ module StashEngine
       #   JOIN `stash_engine_resource_states` states
       #   ON resources.current_resource_state_id = states.id
       #   WHERE resources.user_id = ? AND resources.identifier_id IS NOT NULL
-      #   AND states.resource_state IN ('submitted')
+      #   AND states.resource_state IN ('published', 'processing')
       #   GROUP BY resources.identifier_id)", id])
 
       Resource.where("id IN
@@ -50,7 +50,7 @@ module StashEngine
         JOIN `stash_engine_resource_states` states
         ON resources.current_resource_state_id = states.id
         WHERE resources.user_id = ? AND resources.identifier_id IS NOT NULL
-        AND states.resource_state IN ('submitted')
+        AND states.resource_state IN ('published', 'processing')
         GROUP BY resources.identifier_id)", id)
 
       # this doesn't work correctly
@@ -64,7 +64,7 @@ module StashEngine
       # ON resources.`id` = versions.resource_id
       # JOIN `stash_engine_resource_states` states
       # ON resources.current_resource_state_id = states.id
-      # WHERE identifier_id IS NOT NULL AND states.resource_state IN ('submitted')
+      # WHERE identifier_id IS NOT NULL AND states.resource_state IN ('published', 'processing')
       # AND resources.user_id = 7
       # GROUP BY identifier_id
       # ORDER BY updated_at DESC;
