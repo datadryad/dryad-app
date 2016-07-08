@@ -64,7 +64,7 @@ module StashDatacite
       # create resource with resource_state, identifier (DOI) and version for a user
       @resource = StashEngine::Resource.create(user_id: @user.id)
       #@resource = StashEngine::Resource.create(user_id: @user.id, identifier_id: stash_id.id)
-      #resource_state = StashEngine::ResourceState.create(user_id: @user.id, resource_state: 'submitted', resource_id: @resource.id)
+      #resource_state = StashEngine::ResourceState.create(user_id: @user.id, resource_state: 'published', resource_id: @resource.id)
       resource_state = StashEngine::ResourceState.create(user_id: @user.id, resource_state: 'in_progress', resource_id: @resource.id)
       @resource.update(current_resource_state_id: resource_state.id)
       #StashEngine::Version.create(version: 1, resource_id: @resource.id)
@@ -188,7 +188,8 @@ module StashDatacite
       @m_resource.related_identifiers.each do |ri|
         related_iden_type_id = RelatedIdentifierType.find_by_related_identifier_type(ri.identifier_type.value)
         relation_type_id = RelationType.find_by_relation_type(ri.relation_type.value)
-        # TODO: we are losing some data since relation_type table has properties that belong to related identifiers instead
+        # TODO: we are losing some data since relation_type table has properties that belong to related identifiers
+        # instead
 
         RelatedIdentifier.create(
             related_identifier:           ri.value,
