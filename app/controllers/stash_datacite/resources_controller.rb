@@ -90,8 +90,8 @@ module StashDatacite
     def create_resource_state(resource)
       data = check_required_fields(resource)
       if data.nil?
-        unless resource.current_resource_state == 'submitted'
-          StashEngine::ResourceState.create!(resource_id: resource.id, resource_state: 'submitted',
+        unless ['published', 'processing'].include?(resource.current_resource_state)
+          StashEngine::ResourceState.create!(resource_id: resource.id, resource_state: 'processing',
                                              user_id: current_user.id)
         end
       end
