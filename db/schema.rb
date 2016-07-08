@@ -11,8 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-
-ActiveRecord::Schema.define(version: 20160527210518) do
+ActiveRecord::Schema.define(version: 20160708184030) do
 
   create_table "bookmarks", force: :cascade do |t|
     t.integer  "user_id",       limit: 4,   null: false
@@ -40,7 +39,7 @@ ActiveRecord::Schema.define(version: 20160527210518) do
 
   create_table "dcs_contributors", force: :cascade do |t|
     t.string   "contributor_name",   limit: 255
-    t.string   "contributor_type",   limit: 6,   default: "funder"
+    t.string   "contributor_type",   limit: 21,  default: "funder"
     t.integer  "name_identifier_id", limit: 4
     t.integer  "affliation_id",      limit: 4
     t.integer  "resource_id",        limit: 4
