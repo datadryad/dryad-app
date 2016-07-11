@@ -456,8 +456,8 @@ th {
       background-image: none !important; } }
   @media (min-width: 480px) {
     .o-banner {
-      height: 28vw;
-      padding: 8vw 0 0;
+      height: 27vw;
+      padding: 10vw 0 0;
       background-repeat: no-repeat;
       background-position: 0 0;
       background-size: 100%; }
@@ -467,11 +467,16 @@ th {
         right: 0;
         bottom: 0;
         left: 0;
-        background: linear-gradient(transparent 6vw, rgba(0, 85, 129, 0.6) 6vw, rgba(0, 85, 129, 0.6) 22vw, transparent 22vw);
+        background: linear-gradient(transparent 8vw, rgba(0, 85, 129, 0.6) 8vw, rgba(0, 85, 129, 0.6) 25vw, transparent 25vw);
         content: ''; } }
   @media (min-width: 760px) {
-    .o-banner::before {
-      background: linear-gradient(transparent 6vw, rgba(0, 85, 129, 0.6) 6vw, rgba(0, 85, 129, 0.6) 20vw, transparent 20vw); } }
+    .o-banner {
+      padding: 75px 0 0; }
+      .o-banner::before {
+        background: linear-gradient(transparent 60px, rgba(0, 85, 129, 0.6) 60px, rgba(0, 85, 129, 0.6) 190px, transparent 190px); } }
+  @media (min-width: 1280px) {
+    .o-banner {
+      height: 345px; } }
 
 html.no-multiplebgs .o-banner {
   padding: 20px 0;
@@ -485,10 +490,11 @@ html.no-multiplebgs .o-banner {
   @media (min-width: 480px) {
     .o-banner__tagline {
       margin: 0 0 2vw;
-      font-size: 5vw; } }
+      font-size: 5.5vw; } }
   @media (min-width: 760px) {
     .o-banner__tagline {
-      font-size: 4vw; } }
+      margin: 0 0 15px;
+      font-size: 2.6em; } }
 
 .o-banner__button {
   display: inline-block;
@@ -500,11 +506,11 @@ html.no-multiplebgs .o-banner {
   @media (min-width: 480px) {
     .o-banner__button {
       padding: 6px 2vw;
-      font-size: 2.4vw; } }
+      font-size: 2.8vw; } }
   @media (min-width: 760px) {
     .o-banner__button {
-      padding: 6px 2vw;
-      font-size: 1.9vw; } }
+      padding: 7px 16px;
+      font-size: 1.3em; } }
 
 .o-button__plain-text1, .o-button__plain-text2, .o-button__plain-text3 {
   display: inline-block;
@@ -2646,14 +2652,16 @@ summary::-webkit-details-marker {
       color: inherit; }
 
 body {
-  margin: 10px;
+  max-width: 1220px;
+  margin: 0 auto;
+  padding: 10px;
   font-family: 'KievitWeb'; }
   @media (min-width: 480px) {
     body {
-      margin: 10px 20px; } }
+      padding: 10px 20px; } }
   @media (min-width: 760px) {
     body {
-      margin: 10px 30px; } }
+      padding: 10px 30px; } }
 
 .svg-codeblock {
   display: none; }
