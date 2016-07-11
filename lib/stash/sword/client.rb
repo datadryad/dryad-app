@@ -26,10 +26,8 @@ module Stash
       # @param on_behalf_of [String, nil] the user for whom the original sword package was deposited on behalf of.
       #   Defaults to `username`.
       # @param logger [Logger, nil] the logger to use, or nil to use a default logger
-      def initialize(collection_uri:, username:, password:, on_behalf_of: nil, logger: nil, helper: nil)
-        raise 'no collection URI provided' unless collection_uri
-        raise 'no username provided' unless username
-        raise 'no password provided' unless password
+      def initialize(collection_uri:, username:, password:, on_behalf_of: nil, logger: nil, helper: nil) # rubocop:disable Metrics/ParameterLists
+        validate(collection_uri, password, username)
         @collection_uri = to_uri(collection_uri)
         @username     = username
         @password     = password
@@ -69,6 +67,12 @@ module Stash
       end
 
       private
+
+      def validate(collection_uri, password, username)
+        raise 'no collection URI provided' unless collection_uri
+        raise 'no username provided' unless username
+        raise 'no password provided' unless password
+      end
 
       def maybe_redirect(response)
         return response unless [301, 302, 307].include?(response.code)

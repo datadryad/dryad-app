@@ -5,8 +5,8 @@ module Stash
       SIMPLE_ZIP                 = 'http://purl.org/net/sword/package/SimpleZip'.freeze
       APPLICATION_ZIP            = 'application/zip'.freeze
       MULTIPART_RELATED_ATOM_XML = 'multipart/related; type="application/atom+xml"'.freeze
-      # CONTENT_DISPOSITION        = 'attachment'.freeze
-      CONTENT_DISPOSITION        = 'form-data'.freeze
+      CONTENT_DISPOSITION        = 'attachment'.freeze
+      # CONTENT_DISPOSITION        = 'form-data'.freeze
 
       attr_reader :on_behalf_of
 

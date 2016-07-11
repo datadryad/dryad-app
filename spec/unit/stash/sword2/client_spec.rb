@@ -90,7 +90,7 @@ module Stash
 
           mime_headers = {
             'Packaging' => 'http://purl.org/net/sword/package/SimpleZip',
-            'Content-Disposition' => "#{expected_disposition}; name=payload; filename=\"example.zip\"",
+            'Content-Disposition' => "#{expected_disposition}; name=\"payload\"; filename=\"example.zip\"",
             'Content-Type' => 'application/zip',
             'Content-MD5' => md5
           }
