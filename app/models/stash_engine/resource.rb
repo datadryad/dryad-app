@@ -131,6 +131,12 @@ module StashEngine
       resource_usage.increment(:views).save
     end
 
+    def set_state(state_string)
+      state = ResourceState.create(user_id: user_id, resource_state: state_string, resource_id: id)
+      current_resource_state_id = state.id
+      save
+    end
+
     private
     def ensure_resource_usage
       if resource_usage.nil?

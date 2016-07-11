@@ -28,6 +28,7 @@ module StashEngine
         update_submission_log(resource_id: resource_id, request_msg: request_msg, response_msg: "Failed: #{e}")
 
         if resource
+          resource.set_state('error')
           if resource.update_uri
             UserMailer.update_failed(resource, title, request_host, request_port, e)
           else
@@ -53,6 +54,7 @@ module StashEngine
         create(title: title, doi: doi, zipfile: zipfile, resource: resource, client: client)
         UserMailer.create_succeeded(resource, title, request_host, request_port).deliver_later
       end
+      resource.set_state('published')
     end
 
     def create(title:, doi:, zipfile:, resource:, client:)
