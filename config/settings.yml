@@ -5,7 +5,7 @@
 GEOMETRY_FIELD: 'solr_geom'
 
 # Institution deployed at
-INSTITUTION: 'Stanford'
+INSTITUTION: 'University of California'
 
 # Metadata shown in tool panel
 METADATA_SHOWN:

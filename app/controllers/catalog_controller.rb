@@ -231,7 +231,8 @@ class CatalogController < ApplicationController
     # 'mapquest' http://developer.mapquest.com/web/products/open/map
     # 'positron' http://cartodb.com/basemaps/
     # 'darkMatter' http://cartodb.com/basemaps/
-    config.basemap_provider = 'mapquest'
+    # changing this to positron for now, since openstreetmap may require larger changes.
+    config.basemap_provider = 'positron'
 
   end
 
