@@ -42,7 +42,6 @@ function loadCreators() {
 function hideRemoveLinkCreators() {
   if($('.js-creator_first_name').length < 2)
   {
-    alert("hi");
    $('.js-creator_first_name').first().parent().parent().find('.remove_record').hide();
   }
   else{
