@@ -527,10 +527,21 @@ return a=K(a),this[a+"s"]()}function $c(a){return function(){return this._data[a
 // ##### Details Element Polyfill ##### //
 
 $(document).ready(function(){
-  //setTimeout(function() {
-    modernizeIt();
-  //}, 2500);
-}); // Close $(document).ready(function()
+  setTimeout(function() {
+    // $('details div.o-sites__group').hide();
+    if($.active > 0) {
+      $(document).ajaxStop(function () {
+        // $('details div.o-sites__group').show();
+        modernizeIt();
+        joelsReady();
+        $(this).unbind("ajaxStop"); // required since it fires everytime ajax stops after that, otherwise!
+      });
+    }else{
+      modernizeIt();
+      joelsReady();
+    }
+  }, 30);
+});
 
 function modernizeIt(){
 // Detect via Modernizr if details element is supported in a browser:
@@ -567,7 +578,8 @@ function modernizeIt(){
       $('[open]').attr('aria-expanded', 'true');
     }
 
-    $('summary').unbind('click').on("click", function () {
+    // unbind('click') removed
+    $('summary').on("click", function () {
       $(this).siblings().toggle();
 
       if ($(this).parent().is('[open]')) {
@@ -583,7 +595,7 @@ function modernizeIt(){
 
 // ##### Main JavaScript ##### //
 
-$(document).ready(function(){
+function joelsReady(){
 
   // ***** Keywords Input Focus ***** //
 
@@ -753,4 +765,4 @@ $(document).ready(function(){
   $('.js-pubdate__year1').text(year1);
   $('.js-pubdate__year1').attr('datetime', year1datetime);
 
-}); // Close $(document).ready(function()
+}// close joelsReady()

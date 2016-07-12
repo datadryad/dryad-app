@@ -11,7 +11,7 @@ $( document ).ready(function() {
       // success: success,
       dataType: 'script'
     }).always(function() {
-      modernizeIt();
+      // modernizeIt();
     });
   });
 
