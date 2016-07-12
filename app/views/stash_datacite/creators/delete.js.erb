@@ -4,4 +4,5 @@ $('.remove_record').bind('ajax:success', function() {
   <% unless @resource.nil? %>
     $('.js-add_orcid_link').replaceWith('<%= j render partial: "stash_datacite/creators/add_orcid_link", locals: {  resource: @resource } %>')
   <% end %>
+  hideRemoveLinkCreators();
 });

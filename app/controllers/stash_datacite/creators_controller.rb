@@ -16,46 +16,44 @@ module StashDatacite
 
     # POST /creators
     def create
+      duplicate_affliation = Affliation.where('long_name LIKE ? OR short_name LIKE ?',
+                                           "#{params[:affliation]}", "#{params[:affliation]}").first
       @creator = Creator.new(creator_params)
       respond_to do |format|
-        unless params[:affliation] == ''
-          existing_affliation = Affliation.where('long_name LIKE ? OR short_name LIKE ? OR abbreviation LIKE?',
-                                         "%#{params[:affliation]}%", "%#{params[:affliation]}%", "%#{params[:affliation]}%").first unless params[:affliation].blank?
-          if existing_affliation.blank?
+        @creator.save
+        @creator.reload
+        unless duplicate_affliation.present?
+          if params[:affliation].present?
             @affliation = Affliation.create(long_name: params[:affliation])
             @creator.affliation_id = @affliation.id
+            @creator.save
           else
-            @creator.affliation_id = existing_affliation.id
+            ''
           end
         end
-        if @creator.save
-          format.js
-        else
-          format.html { render :new }
-        end
+        format.js
       end
     end
 
     # PATCH/PUT /creators/1
     def update
+      duplicate_affliation = Affliation.where('long_name LIKE ? OR short_name LIKE ?',
+                                           "#{params[:affliation]}", "#{params[:affliation]}").first
       respond_to do |format|
-        if @creator.update(creator_params)
-          unless params[:affliation] == ''
-            existing_affliation = Affliation.where('long_name LIKE ? OR short_name LIKE ? OR abbreviation LIKE?',
-                                           "%#{params[:affliation]}%", "%#{params[:affliation]}%", "%#{params[:affliation]}%").first unless params[:affliation].blank?
-            if existing_affliation.blank?
-              @affliation = Affliation.create(long_name: params[:affliation])
-              @creator.affliation_id = @affliation.id
-              @creator.save
-            else
-              @creator.affliation_id = existing_affliation.id
-              @creator.save
-            end
+        unless duplicate_affliation.present?
+          @creator.update(creator_params)
+          @creator.reload
+          if params[:affliation].present?
+            @affliation = Affliation.create(long_name: params[:affliation])
+            @creator.affliation_id = @affliation.id
+            @creator.save
+          else
+            ''
           end
-          format.js { render template: 'stash_datacite/shared/update.js.erb' }
         else
-          format.html { render :edit }
+          @creator.update(creator_params)
         end
+        format.js { render template: 'stash_datacite/shared/update.js.erb' }
       end
     end
 
