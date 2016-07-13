@@ -80,3 +80,14 @@ function loadContributors() {
       $('.saving_text').hide();
     });
 };
+
+function hideRemoveLinkContributors() {
+  if($('.js-funders').length < 2)
+  {
+   $('.js-funders').first().parent().parent().find('.remove_record').hide();
+  }
+  else
+  {
+   $('.js-funders').first().parent().parent().find('.remove_record').show();
+  }
+};

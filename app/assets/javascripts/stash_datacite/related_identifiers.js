@@ -19,3 +19,14 @@ $( '.js-related_identifier' ).on('focus', function () {
     $('.saving_text').hide();
   });
 };
+
+function hideRemoveLinkRelatedIdentifiers() {
+  if($('.js-related_identifier').length < 2)
+  {
+   $('.js-related_identifier').first().parent().parent().find('.remove_record').hide();
+  }
+  else
+  {
+   $('.js-related_identifier').first().parent().parent().find('.remove_record').show();
+  }
+};
