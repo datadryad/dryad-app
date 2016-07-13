@@ -54,7 +54,7 @@
 
 <%= render partial: 'stash_engine/file_uploads/dropped_file' %>
 
-<div class="t-describe__dataset-nav o-dataset-nav">
+<div class="o-dataset-nav">
   <%= link_to 'Back to Describe Dataset', metadata_entry_pages_find_or_create_path(resource_id: params[:id]), class: 'o-button__icon-left', role: 'button', id: 'describe_back' %>
   <%= link_to 'Proceed to Review', review_resource_path(params[:id]), class: 'o-button__icon-right', role: 'button', id: 'proceed_review' %>
 </div>
