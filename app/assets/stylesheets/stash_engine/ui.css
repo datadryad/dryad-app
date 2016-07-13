@@ -603,6 +603,17 @@ html.no-multiplebgs .o-banner {
   border: 1px solid #9fc7d8;
   background-color: #9fc7d8; }
 
+.o-button__submit {
+  width: 180px;
+  height: 35px;
+  padding: 0 12px;
+  border: none;
+  background-color: #9fc7d8;
+  text-decoration: none; }
+  .o-button__submit[disabled] {
+    background-color: #d1d2d4;
+    color: #7c7e7f; }
+
 .o-button__no-bg-icon-left1, .o-button__no-bg-icon-left2 {
   padding: 3px 0 3px 25px;
   border: none;
@@ -2384,9 +2395,9 @@ html.svg .c-facet__check-label {
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
-  -webkit-flex-flow: row wrap;
-      -ms-flex-flow: row wrap;
-          flex-flow: row wrap;
+  -webkit-flex-flow: row nowrap;
+      -ms-flex-flow: row nowrap;
+          flex-flow: row nowrap;
   -webkit-align-items: center;
       -ms-flex-align: center;
           align-items: center;
@@ -2404,18 +2415,29 @@ html.svg .c-facet__check-label {
   padding: 0 0 0 25px;
   background: url('data:image/svg+xml;charset=utf-8,%3C%3Fxml%20version%3D%221.0%22%20encoding%3D%22iso-8859-1%22%3F%3E%0A%3C!DOCTYPE%20svg%20PUBLIC%20%22-%2F%2FW3C%2F%2FDTD%20SVG%201.1%2F%2FEN%22%20%22http%3A%2F%2Fwww.w3.org%2FGraphics%2FSVG%2F1.1%2FDTD%2Fsvg11.dtd%22%3E%0A%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20xmlns%3Axlink%3D%22http%3A%2F%2Fwww.w3.org%2F1999%2Fxlink%22%20version%3D%221.1%22%20x%3D%220px%22%20y%3D%220px%22%20width%3D%22512px%22%20height%3D%22512px%22%20viewBox%3D%220%200%20442.533%20442.533%22%20style%3D%22enable-background%3Anew%200%200%20442.533%20442.533%3B%22%20xml%3Aspace%3D%22preserve%22%3E%0A%3Cg%3E%0A%09%3Cpath%20d%3D%22M434.539%2C98.499l-38.828-38.828c-5.324-5.328-11.799-7.993-19.41-7.993c-7.618%2C0-14.093%2C2.665-19.417%2C7.993L169.59%2C247.248%20%20%20l-83.939-84.225c-5.33-5.33-11.801-7.992-19.412-7.992c-7.616%2C0-14.087%2C2.662-19.417%2C7.992L7.994%2C201.852%20%20%20C2.664%2C207.181%2C0%2C213.654%2C0%2C221.269c0%2C7.609%2C2.664%2C14.088%2C7.994%2C19.416l103.351%2C103.349l38.831%2C38.828%20%20%20c5.327%2C5.332%2C11.8%2C7.994%2C19.414%2C7.994c7.611%2C0%2C14.084-2.669%2C19.414-7.994l38.83-38.828L434.539%2C137.33%20%20%20c5.325-5.33%2C7.994-11.802%2C7.994-19.417C442.537%2C110.302%2C439.864%2C103.829%2C434.539%2C98.499z%22%20fill%3D%22%23389818%22%2F%3E%0A%3C%2Fg%3E%0A%3C%2Fsvg%3E') left center/15px no-repeat; }
 
-.c-upload__filesize {
-  margin: 0 0 0 1em; }
+.c-upload__filename {
+  margin: 0 10px 0 0;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden; }
 
-.c-upload__action progress[value] {
-  height: 10px;
-  border: none;
-  -webkit-appearance: none;
-     -moz-appearance: none;
-          appearance: none; }
+.c-upload__filesize {
+  margin: 0 0 0 0.25em; }
+
+.c-upload__action {
+  -webkit-flex: 0 0 auto;
+      -ms-flex: 0 0 auto;
+          flex: 0 0 auto; }
+  .c-upload__action progress[value] {
+    width: 20vw;
+    height: 10px;
+    border: none;
+    -webkit-appearance: none;
+       -moz-appearance: none;
+            appearance: none; }
 
 .c-upload__button {
-  margin: 0 0 0 10px;
+  padding: 0 10px;
   border: none;
   background-color: transparent;
   color: #005581;
