@@ -179,7 +179,7 @@ module StashDatacite
 
     def add_resource_type
       unless @m_resource.resource_type.blank?
-        ResourceType.create(resource_type: @m_resource.resource_type.try(:resource_type_general).try(:value),
+        ResourceType.create(resource_type: @m_resource.resource_type.try(:resource_type_general).try(:value).try(:downcase),
                             resource_id: @resource.id)
       end
     end
