@@ -1785,18 +1785,19 @@ html.svg .c-facet__check-label {
   font-weight: normal; }
 
 .c-input__text, .c-input__textarea, .c-input__select {
-  border: 1px solid #7c7e7f; }
+  border: 1px solid #7c7e7f;
+  box-sizing: border-box; }
 
 .c-input__text {
   height: 30px;
   padding: 0 5px; }
 
 .c-input__textarea {
-  height: 5em;
+  height: 80px;
   padding: 3px 5px; }
 
 .c-input__select {
-  height: 32px;
+  height: 30px;
   padding: 0 35px 0 5px;
   border-radius: 0;
   background: url('data:image/svg+xml;charset=utf-8,%3C%3Fxml%20version%3D%221.0%22%20encoding%3D%22utf-8%22%3F%3E%0D%0A%3C!--%20Generator%3A%20Adobe%20Illustrator%2016.0.0%2C%20SVG%20Export%20Plug-In%20.%20SVG%20Version%3A%206.00%20Build%200)%20%20--%3E%0D%0A%3C!DOCTYPE%20svg%20PUBLIC%20%22-%2F%2FW3C%2F%2FDTD%20SVG%201.1%2F%2FEN%22%20%22http%3A%2F%2Fwww.w3.org%2FGraphics%2FSVG%2F1.1%2FDTD%2Fsvg11.dtd%22%3E%0D%0A%3Csvg%20version%3D%221.1%22%20id%3D%22Layer_1%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20xmlns%3Axlink%3D%22http%3A%2F%2Fwww.w3.org%2F1999%2Fxlink%22%20x%3D%220px%22%20y%3D%220px%22%0D%0A%09%20width%3D%2211.211px%22%20height%3D%2218.622px%22%20viewBox%3D%220%200%2011.211%2018.622%22%20enable-background%3D%22new%200%200%2011.211%2018.622%22%20xml%3Aspace%3D%22preserve%22%3E%0D%0A%3Cg%3E%0D%0A%09%3Cg%3E%0D%0A%09%09%3Cpath%20fill%3D%22%23FFFFFF%22%20d%3D%22M11.211%2C11.573H0l5.603%2C7.049L11.211%2C11.573z%20M11.211%2C11.573%22%2F%3E%0D%0A%09%3C%2Fg%3E%0D%0A%09%3Cg%3E%0D%0A%09%09%3Cpath%20fill%3D%22%23FFFFFF%22%20d%3D%22M0%2C7.048h11.211L5.607%2C0L0%2C7.048z%20M0%2C7.048%22%2F%3E%0D%0A%09%3C%2Fg%3E%0D%0A%3C%2Fg%3E%0D%0A%3C%2Fsvg%3E') right 9px center/12px no-repeat, linear-gradient(#4891af, #4891af) right/30px 30px no-repeat;
@@ -2495,12 +2496,6 @@ html.svg .c-facet__check-label {
 
 .t-describe__map-label {
   font-weight: bold; }
-
-.t-describe__map {
-  margin: 0 0 20px; }
-
-.t-describe__locations {
-  margin: 0 0 20px; }
 
 .t-home__header {
   margin-bottom: 10px;
