@@ -19,7 +19,7 @@
       <%= link_to "Edit Description", stash_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: @resource.id), class: 't-review__edit-button-bottom o-button__icon-left', role: 'button' %>
     </section>
     <h3 class="o-heading__level2">Location</h3>
-    <div id="map_review" style="width: 100%"></div>
+    <div id="map_review" class="o-map"></div>
     <div class="c-locations">
       <%= render partial: "stash_datacite/geolocation_points/show", locals: { geolocation_points: @review.geolocation_points } %>
       <%= render partial: "stash_datacite/geolocation_boxes/show", locals: { geolocation_boxes: @review.geolocation_boxes } %>
