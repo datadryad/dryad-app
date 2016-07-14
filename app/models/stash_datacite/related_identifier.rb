@@ -7,6 +7,8 @@ module StashDatacite
 
     before_save :strip_whitespace
 
+    # TODO: we are creating bad DataCite by saving a grant number as a related identifier without a type and it is
+    # also not a globally unique identifier, either.
 
     # this is to provide a useful message about the related identifier
     def to_s
