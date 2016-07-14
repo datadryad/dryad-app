@@ -19,7 +19,7 @@
       <%= link_to "Edit Description", stash_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: @resource.id), class: 't-review__edit-button-bottom o-button__icon-left', role: 'button' %>
     </section>
     <h3 class="o-heading__level2">Location</h3>
-    <div id="map_review" style="width: 100%"></div>
+    <div id="map_review" class="o-map"></div>
     <div class="c-locations">
       <%= render partial: "stash_datacite/geolocation_points/show", locals: { geolocation_points: @review.geolocation_points } %>
       <%= render partial: "stash_datacite/geolocation_boxes/show", locals: { geolocation_boxes: @review.geolocation_boxes } %>
@@ -35,12 +35,12 @@
 
     <%= render partial: "stash_datacite/licenses/review_license" %>
 
-<div class="t-describe__dataset-nav o-dataset-nav">
+<div class="o-dataset-nav">
   <%= link_to 'Back to My Datasets', stash_url_helpers.dashboard_path , id: 'dashboard_path', class: 'o-button__icon-left', role: 'button' %>
   <% if @data.blank? %>
-    <%= link_to "Submit", stash_datacite.resources_submission_path(resource_id: @resource.id), class: 'o-button__plain-text2', role: 'button' %>
+    <%= button_to("Submit", stash_datacite.resources_submission_path(resource_id: @resource.id), class: 'o-button__submit') %>
   <% else %>
-    <%= button_to("Submit", stash_datacite.resources_submission_path(resource_id: @resource.id), disabled: true, class: 'o-button__plain-text2') %>
+    <%= button_to("Submit", stash_datacite.resources_submission_path(resource_id: @resource.id), disabled: true, class: 'o-button__submit') %>
   <% end %>
 </div>
 

@@ -1,26 +1,11 @@
 <% if data.nil? %>
   <%= '' %>
 <% else %>
-  <div class="error">
-    <div class="error_close">
-      <%= image_tag("stash_datacite/close.png", size: "20x30", alt: "close") %>
-    </div>
-    <p><%= image_tag("stash_datacite/error_warning.png", size: "20x20", alt: "error_warning") %>&nbsp;&nbsp;You must edit the description to include the following before you can submit your dataset:</p>
-    <strong><%= data.join("<br>").html_safe %></strong>
-  </div>
-
-<!-- Integrated code once jQuery source fixed:
-    <div class="js-alert c-alert--error" role="alert">
+  <div class="js-alert c-alert--error" role="alert">
     <div class="c-alert__text">
       You must edit the description to include the following before you can submit your dataset:
-      <p><strong><%= data.join("<br>").html_safe %></strong></p>
+      <br><br><strong><%= data.join("<br>").html_safe %></strong>
     </div>
     <button aria-label="close" class="js-alert__close o-button__close c-alert__close"></button>
-  </div> -->
+  </div>
 <% end %>
-
-<script type="text/javascript">
-$(".error_close").click(function() {
-    $(this).parent().hide();
-  });
-</script>
