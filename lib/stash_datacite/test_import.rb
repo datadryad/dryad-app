@@ -19,7 +19,7 @@ module StashDatacite
       good_contrib_replacement = "<contributor contributorType=\"\\1\">\n<contributorName>\\2</contributorName>\n</contributor>"
       @xml_str.gsub!(bad_contrib_regex, good_contrib_replacement)
 
-      @m_resource = Datacite::Mapping::Resource.parse_xml(@xml_str)
+      @m_resource = Datacite::Mapping::Resource.parse_xml(@xml_str, mapping: :nonvalidating)
       @ezid_client = StashEzid::Client.new(
           {shoulder: ezid_shoulder,
            account: ezid_account,
@@ -292,13 +292,15 @@ module StashDatacite
 
   class TestImportDir
     def initialize(path_string = '/Users/scottfisher/dataone', uid = 'scott.fisher-ucb@ucop.edu')
-      xml_fns = Dir.glob(File.join(path_string, '**/mrt-datacite.xml'))
+      @uid = uid
+      @xml_fns = Dir.glob(File.join(path_string, '**/mrt-datacite.xml'))
+    end
 
-      xml_fns.each do |fn|
-        resource = StashDatacite::TestImport(uid, fn)
+    def import_xml
+      @xml_fns.each do |fn|
+        resource = StashDatacite::TestImport.new(@uid, fn)
         resource.populate_tables
       end
-
     end
   end
 end
