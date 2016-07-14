@@ -4,8 +4,6 @@ require 'stash_ezid/client'
 module StashDatacite
   class TestImport
 
-    # TODO: the enums are all lowercase, is this really how we want them?
-
     def initialize(
         user_uid='scott.fisher-ucb@ucop.edu',
         xml_filename=File.join(StashDatacite::Engine.root, 'test', 'fixtures', 'datacite-example-full-v3.1.xml'),
@@ -15,6 +13,12 @@ module StashDatacite
     )
       @user = StashEngine::User.find_by_uid(user_uid)
       @xml_str = File.read(xml_filename)
+
+      ## a hack to fix some bad data in the xml files
+      bad_contrib_regex = Regexp.new('<contributor contributorType="([^"]+)">\p{Space}*<contributor>([^<]+)</contributor>\p{Space}*</contributor>', Regexp::MULTILINE)
+      good_contrib_replacement = "<contributor contributorType=\"\\1\">\n<contributorName>\\2</contributorName>\n</contributor>"
+      @xml_str.gsub!(bad_contrib_regex, good_contrib_replacement)
+
       @m_resource = Datacite::Mapping::Resource.parse_xml(@xml_str)
       @ezid_client = StashEzid::Client.new(
           {shoulder: ezid_shoulder,
@@ -234,13 +238,16 @@ module StashDatacite
 
       # TODO: is the db place name the place element or the top level description? Also datacite_mapping doesn't give both
 
+      set_geolocation = false
       @m_resource.geo_locations.each do |geo|
         unless geo.place.blank?
           GeolocationPlace.create(geo_location_place: geo.place, resource_id: @resource.id)
+          set_geolocation = true
         end
 
         unless geo.try(:point).blank?
           GeolocationPoint.create(latitude: geo.point.latitude, longitude: geo.point.longitude, resource_id: @resource.id)
+          set_geolocation = true
         end
 
         unless geo.try(:box).blank?
@@ -251,6 +258,11 @@ module StashDatacite
                             sw_longitude: geo.box.west_longitude,
                             resource_id: @resource.id
           )
+          set_geolocation
+        end
+        if set_geolocation
+          @resource.geolocation = true
+          @resource.save!
         end
       end
 
@@ -275,6 +287,18 @@ module StashDatacite
         affil_no = affils.first.id
       end
       affil_no
+    end
+  end
+
+  class TestImportDir
+    def initialize(path_string = '/Users/scottfisher/dataone', uid = 'scott.fisher-ucb@ucop.edu')
+      xml_fns = Dir.glob(File.join(path_string, '**/mrt-datacite.xml'))
+
+      xml_fns.each do |fn|
+        resource = StashDatacite::TestImport(uid, fn)
+        resource.populate_tables
+      end
+
     end
   end
 end
