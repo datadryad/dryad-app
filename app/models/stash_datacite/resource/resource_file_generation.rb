@@ -163,8 +163,8 @@ module StashDatacite
             end
 
             @resource.contributors.each do |c|
-              xml.send(:'dc:contributor', "#{c.contributor_name.gsub(/\r/,"")}")
-              xml.send(:'dc:description', "#{c.award_number.gsub(/\r/,"")}")
+              xml.send(:'dc:contributor', "#{c.contributor_name.gsub(/\r/,"")}") unless c.try(:contributor_name).blank?
+              xml.send(:'dc:description', "#{c.award_number.gsub(/\r/,"")}") unless c.try(:award_number).blank?
             end
 
             xml.send(:'dc:title', "#{@resource.titles.where(title_type: :main).first.title}")
