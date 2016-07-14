@@ -937,6 +937,10 @@ html.no-multiplebgs .o-banner {
       text-overflow: ellipsis;
       overflow: hidden; } }
 
+.o-map {
+  width: 100% !important;
+  margin: 0 0 20px; }
+
 .o-metadata {
   margin: 0 0 10px; }
 
@@ -2490,7 +2494,6 @@ html.svg .c-facet__check-label {
   margin: 0 0 20px; }
 
 .t-describe__map-label {
-  margin: 1em 0 0;
   font-weight: bold; }
 
 .t-describe__map {
