@@ -94,10 +94,14 @@ module StashEngine
 
     # make logo_string for image_tag per tenant
     def logo_path(hsh)
-      view_context.image_tag "tenants/logo_#{current_tenant.tenant_id}.svg",
-                hsh.merge({alt: "#{current_tenant.long_name} logo"})
-
-
+      test_path = File.join(Rails.root, 'app', 'assets', 'images', 'tenants')
+      base_fn = "logo_#{current_tenant.tenant_id}"
+      ['.svg', '.png', '.jpg'].each do |ext|
+        if File.exists?(File.join(test_path, "#{base_fn}#{ext}"))
+          return view_context.image_tag "tenants/#{base_fn}#{ext}",
+                                 hsh.merge({alt: "#{current_tenant.long_name} logo"})
+        end
+      end
     end
   end
 end
