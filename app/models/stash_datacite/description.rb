@@ -5,7 +5,9 @@ module StashDatacite
 
     #%w(Abstract Methods SeriesInformation TableOfContents Other)
 
-    # usage_notes is our special sauce for 'other' which is the real value it would take in datacite.xml
+    # usage_notes is our special sauce for 'other' which is the real value it would take in datacite.xml.  I suspect
+    # we also want to prefix the value with "Usage Notes:" in the XML so we can differentiate it.
+    #
 
     enum description_type: { abstract: 'abstract', methods: 'methods', usage_notes: 'usage_notes' }
 
