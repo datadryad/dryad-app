@@ -62,6 +62,7 @@ module StashDatacite
       unless params[:id] == 'new'
         @creator = Creator.find(params[:id])
         @resource = StashDatacite.resource_class.find(@creator.resource_id)
+        @if_orcid = check_for_orcid_id(@creator)
         @creator.destroy
       end
       respond_to do |format|
@@ -80,6 +81,14 @@ module StashDatacite
     def creator_params
       params.require(:creator).permit(:id, :creator_first_name, :creator_last_name, :creator_middle_name,
                                       :name_identifier_id, :affliation_id, :resource_id, :orcid_id)
+    end
+
+    def check_for_orcid_id(creator)
+      if creator.orcid_id
+        return true
+      else
+        return false
+      end
     end
   end
 end
