@@ -1,11 +1,13 @@
 require 'stash/sword'
 
+# TODO: use Concurrent::Async (http://ruby-concurrency.github.io/concurrent-ruby/Concurrent/Async.html)
+
 module StashEngine
   class SwordJob < ActiveJob::Base
     queue_as :default
 
     def log
-      Delayed::Worker.logger
+      Rails.logger
     end
 
     def client_for(sword_params)

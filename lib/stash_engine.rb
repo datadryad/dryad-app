@@ -14,8 +14,6 @@ require 'jquery-fileupload-rails'
 require 'filesize'
 require 'kaminari'
 require 'amoeba'
-require 'delayed_job'
-require 'delayed_job_active_record'
 
 require 'stash_engine/engine'
 module StashEngine
