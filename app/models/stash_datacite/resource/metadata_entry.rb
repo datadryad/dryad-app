@@ -7,7 +7,12 @@ module StashDatacite
       end
 
       def resource_type
-        @resource_type = ResourceType.find_or_create_by(resource_id: @resource.id, resource_type: 'dataset')
+        resource_type = ResourceType.where(resource_id: @resource.id).first
+        if resource_type.present?
+          @resource_type = resource_type
+        else
+          @resource_type = ResourceType.create(resource_id: @resource.id, resource_type: 'dataset')
+        end
       end
 
       def title
