@@ -1,14 +1,14 @@
 module StashEngine
   class UserMailer < ApplicationMailer
-    # TODO: is this right?
-    default from: APP_CONFIG['feedback_email_from'] ,
-            return_path: APP_CONFIG['feedback_email_from']
 
     # TODO: DRY these methods
 
+    default from: "Dash Notifications <#{APP_CONFIG['feedback_email_from']}>",
+            return_path: "#{APP_CONFIG['feedback_email_from']}"
+
     def create_succeeded(resource, title, request_host, request_port)
       user = resource.user
-      @to_name = "#{user.first_name} #{user.last_name}" #TODO: something more i18n-friendly
+      @to_name = "#{user.first_name} #{user.last_name}"
       @title = title
       @identifier = identifier_for(resource)
       @request_host = request_host
@@ -20,7 +20,7 @@ module StashEngine
 
     def create_failed(resource, title, request_host, request_port, error)
       user = resource.user
-      @to_name = "#{user.first_name} #{user.last_name}" #TODO: something more i18n-friendly
+      @to_name = "#{user.first_name} #{user.last_name}"
       @title = title
       @identifier = identifier_for(resource)
       @backtrace = to_backtrace(error)
@@ -35,7 +35,7 @@ module StashEngine
 
     def update_succeeded(resource, title, request_host, request_port)
       user = resource.user
-      @to_name = "#{user.first_name} #{user.last_name}" #TODO: something more i18n-friendly
+      @to_name = "#{user.first_name} #{user.last_name}"
       @title = title
       @identifier = identifier_for(resource)
       @request_host = request_host
@@ -47,7 +47,7 @@ module StashEngine
 
     def update_failed(resource, title, request_host, request_port, error)
       user = resource.user
-      @to_name = "#{user.first_name} #{user.last_name}" #TODO: something more i18n-friendly
+      @to_name = "#{user.first_name} #{user.last_name}"
       @title = title
       @identifier = identifier_for(resource)
       @backtrace = to_backtrace(error)
@@ -61,8 +61,8 @@ module StashEngine
     end
 
     def error_report(resource, title, error)
-      @user_name = "#{user.first_name} #{user.last_name}" #TODO: something more i18n-friendly
-      @user_email = user.email #TODO: something more i18n-friendly
+      @user_name = "#{user.first_name} #{user.last_name}"
+      @user_email = user.email
       @title = title
       @identifier = identifier_for(resource)
       @backtrace = to_backtrace(error)
