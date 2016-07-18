@@ -20,7 +20,7 @@ module StashEngine
 
     #resource_states
     scope :in_progress, -> { joins(:current_state).where(stash_engine_resource_states: {resource_state:  :in_progress}) }
-    scope :submitted, -> { joins(:current_state).where(stash_engine_resource_states: {resource_state:  [:published, :processing]}) }
+    scope :submitted, -> { joins(:current_state).where(stash_engine_resource_states: {resource_state:  [:published, :processing, :error]}) }
     scope :by_version_desc, -> { joins(:version).order('stash_engine_versions.version DESC') }
     scope :by_version, -> { joins(:version).order('stash_engine_versions.version ASC') }
 
@@ -43,6 +43,7 @@ module StashEngine
 
     def submission_to_repository(current_tenant, zipfile, title, doi, request_host, request_port)
       self.update_identifier(doi)
+      Rails::logger.debug("Submitting SwordJob for '#{title}' (#{doi})")
       SwordJob.submit_async(
           title: title,
           doi: doi,
