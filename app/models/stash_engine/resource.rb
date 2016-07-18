@@ -43,29 +43,15 @@ module StashEngine
 
     def submission_to_repository(current_tenant, zipfile, title, doi, request_host, request_port)
       self.update_identifier(doi)
-      result = SwordJob.new(
-                  title: title,
-                  doi: doi,
-                  zipfile: zipfile,
-                  resource_id: self.id,
-                  sword_params: current_tenant.sword_params,
-                  request_host: request_host,
-                  request_port: request_port
-              ).async.submit
-      # TODO: fewer shenanigans
-      result.add_observer do
-        returning(Object.new) do |observer|
-          class << observer
-            def update(time, value, reason)
-              if reason
-                Rails.logger.info("SwordJob for '#{title}' (#{doi}) failed at #{time}: #{reason}") if reason
-                return
-              end
-              Rails.logger.info("SwordJob for '#{title}' (#{doi}) succeeded at #{time}: #{value}") if value
-            end
-          end
-        end
-      end
+      SwordJob.submit_async(
+          title: title,
+          doi: doi,
+          zipfile: zipfile,
+          resource_id: self.id,
+          sword_params: current_tenant.sword_params,
+          request_host: request_host,
+          request_port: request_port
+      )
     end
 
     def update_identifier(doi)

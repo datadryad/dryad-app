@@ -4,6 +4,20 @@ module StashEngine
   class SwordJob
     include Concurrent::Async
 
+    def self.submit_async(title:, doi:, zipfile:, resource_id:, sword_params:, request_host:, request_port:)
+      result = SwordJob.new(
+          title: title,
+          doi: doi,
+          zipfile: zipfile,
+          resource_id: resource_id,
+          sword_params: sword_params,
+          request_host: request_host,
+          request_port: request_port
+      ).async.submit
+
+      result.add_observer(ResultLoggingObserver.new(title: title, doi: doi))
+    end
+
     def initialize(title:, doi:, zipfile:, resource_id:, sword_params:, request_host:, request_port:)
       super()
       @title = title
@@ -88,5 +102,31 @@ module StashEngine
       SubmissionLog.create(resource_id: resource_id, archive_submission_request: request_msg, archive_response: response_msg)
     end
 
+  end
+
+  class ResultLoggingObserver
+    def log
+      Rails.logger
+    end
+
+    attr_reader :title
+    attr_reader :doi
+
+    def initialize(title:, doi:)
+      @doi = doi
+      @title = title
+    end
+
+    def update(time, value, reason)
+      reason ? log_failure(time, reason) : log_success(time, value)
+    end
+
+    def log_failure(time, reason)
+      log.warn("SwordJob for '#{title}' (#{doi}) failed at #{time}: #{reason}")
+    end
+
+    def log_success(time, value)
+      log.info("SwordJob for '#{title}' (#{doi}) succeeded at #{time}: #{value}")
+    end
   end
 end
