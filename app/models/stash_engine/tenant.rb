@@ -47,7 +47,6 @@ module StashEngine
     end
 
     def sword_params
-      # ActiveJob can't serialize OpenStruct
       repository = self.repository
       {
           collection_uri: repository.endpoint,

@@ -50,7 +50,7 @@ module StashEngine
         JOIN `stash_engine_resource_states` states
         ON resources.current_resource_state_id = states.id
         WHERE resources.user_id = ? AND resources.identifier_id IS NOT NULL
-        AND states.resource_state IN ('published', 'processing')
+        AND states.resource_state IN ('published', 'processing', 'error')
         GROUP BY resources.identifier_id)", id)
 
       # this doesn't work correctly
