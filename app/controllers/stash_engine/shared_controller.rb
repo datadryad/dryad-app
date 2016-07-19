@@ -56,7 +56,6 @@ module StashEngine
     end
 
     def require_login
-      byebug
       return if current_user
       flash[:alert] = 'You must be logged in.'
       redirect_to current_tenant.try(:omniauth_login_path)
