@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160715195538) do
+ActiveRecord::Schema.define(version: 20160718225757) do
 
   create_table "bookmarks", force: :cascade do |t|
     t.integer  "user_id",       limit: 4,   null: false
@@ -134,26 +134,14 @@ ActiveRecord::Schema.define(version: 20160715195538) do
     t.datetime "updated_at",              null: false
   end
 
-  create_table "dcs_related_identifier_types", force: :cascade do |t|
-    t.string   "related_identifier_type", limit: 255
-    t.datetime "created_at",                          null: false
-    t.datetime "updated_at",                          null: false
-  end
-
   create_table "dcs_related_identifiers", force: :cascade do |t|
-    t.string   "related_identifier",         limit: 255
-    t.integer  "related_identifier_type_id", limit: 4
-    t.integer  "relation_type_id",           limit: 4
-    t.integer  "resource_id",                limit: 4
-    t.datetime "created_at",                             null: false
-    t.datetime "updated_at",                             null: false
-  end
-
-  create_table "dcs_relation_types", force: :cascade do |t|
-    t.string   "relation_type",           limit: 255
-    t.string   "related_metadata_scheme", limit: 255
+    t.string   "related_identifier",      limit: 255
+    t.string   "related_identifier_type", limit: 7
+    t.string   "relation_type",           limit: 19
+    t.text     "related_metadata_scheme", limit: 65535
     t.text     "scheme_URI",              limit: 65535
     t.string   "scheme_type",             limit: 255
+    t.integer  "resource_id",             limit: 4
     t.datetime "created_at",                            null: false
     t.datetime "updated_at",                            null: false
   end
