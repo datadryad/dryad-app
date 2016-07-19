@@ -30,7 +30,7 @@ module StashDatacite
         dm = Datacite::Mapping
         st = Stash::Wrapper
 
-        case @resource.resource_type.resource_type
+        case @resource.resource_type.resource_type_ui
           when "Spreadsheet"
             @type = dm::ResourceTypeGeneral::DATASET
           when "MultipleTypes"
