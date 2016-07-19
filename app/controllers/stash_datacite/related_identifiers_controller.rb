@@ -55,8 +55,9 @@ module StashDatacite
 
     # Only allow a trusted parameter "white list" through.
     def related_identifier_params
-      params.require(:related_identifier).permit(:id, :related_identifier, :related_identifier_type_id,
-                                                 :relation_type_id, :resource_id)
+      params.require(:related_identifier).permit(:id, :related_identifier, :related_identifier_type,
+                                                 :relation_type, :related_metadata_scheme, :scheme_URI, :scheme_type,
+                                                 :resource_id)
     end
   end
 end

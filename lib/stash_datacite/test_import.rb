@@ -186,14 +186,14 @@ module StashDatacite
 
     def add_related_identifiers
       @m_resource.related_identifiers.each do |ri|
-        related_iden_type_id = RelatedIdentifierType.find_by_related_identifier_type(ri.identifier_type.value)
+        related_iden_type_id = ri.identifier_type.value
         relation_type_id = RelationType.find_by_relation_type(ri.relation_type.value)
         # TODO: we are losing some data since relation_type table has properties that belong to related identifiers
         # instead
 
         RelatedIdentifier.create(
             related_identifier:           ri.value,
-            related_identifier_type_id:   related_iden_type_id,
+            related_identifier_type_id:   ri.identifier_type.value,
             relation_type_id:             relation_type_id,
             resource_id:                  @resource.id
         )

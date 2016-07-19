@@ -194,27 +194,27 @@ module StashDatacite
 
               case r.relation_type
                 when "IsPartOf"
-                  xml.send(:'dcterms:isPartOf', "#{r.related_identifier_type.try(:related_identifier_type)}" + ": " + "#{r.related_identifier}")
+                  xml.send(:'dcterms:isPartOf', "#{r.related_identifier_type}" + ": " + "#{r.related_identifier}")
                 when "HasPart"
-                  xml.send(:'dcterms:hasPart',  "#{r.related_identifier_type.try(:related_identifier_type)}" + ": " + "#{r.related_identifier}")
+                  xml.send(:'dcterms:hasPart',  "#{r.related_identifier_type}" + ": " + "#{r.related_identifier}")
                 when "IsCitedBy"
-                  xml.send(:'dcterms:isReferencedBy',  "#{r.related_identifier_type.try(:related_identifier_type)}" + ": " + "#{r.related_identifier}")
+                  xml.send(:'dcterms:isReferencedBy',  "#{r.related_identifier_type}" + ": " + "#{r.related_identifier}")
                 when "Cites"
-                  xml.send(:'dcterms:references',  "#{r.related_identifier_type.try(:related_identifier_type)}" + ": " + "#{r.related_identifier}")
+                  xml.send(:'dcterms:references',  "#{r.related_identifier_type}" + ": " + "#{r.related_identifier}")
                 when "IsReferencedBy"
-                  xml.send(:'dcterms:isReferencedBy',  "#{r.related_identifier_type.try(:related_identifier_type)}" + ": " + "#{r.related_identifier}")
+                  xml.send(:'dcterms:isReferencedBy',  "#{r.related_identifier_type}" + ": " + "#{r.related_identifier}")
                 when "References"
-                  xml.send(:'dcterms:references',  "#{r.related_identifier_type.try(:related_identifier_type)}" + ": " + "#{r.related_identifier}")
+                  xml.send(:'dcterms:references',  "#{r.related_identifier_type}" + ": " + "#{r.related_identifier}")
                 when "IsNewVersionOf"
-                  xml.send(:'dcterms:isVersionOf',  "#{r.related_identifier_type.try(:related_identifier_type)}" + ": " + "#{r.related_identifier}")
+                  xml.send(:'dcterms:isVersionOf',  "#{r.related_identifier_type}" + ": " + "#{r.related_identifier}")
                 when "IsPreviousVersionOf"
-                  xml.send(:'dcterms:hasVersion',  "#{r.related_identifier_type.try(:related_identifier_type)}" + ": " + "#{r.related_identifier}")
+                  xml.send(:'dcterms:hasVersion',  "#{r.related_identifier_type}" + ": " + "#{r.related_identifier}")
                 when "IsVariantFormOf"
-                  xml.send(:'dcterms:isVersionOf',  "#{r.related_identifier_type.try(:related_identifier_type)}" + ": " + "#{r.related_identifier}")
+                  xml.send(:'dcterms:isVersionOf',  "#{r.related_identifier_type}" + ": " + "#{r.related_identifier}")
                 when "IsOriginalFormOf"
-                  xml.send(:'dcterms:hasVersion',  "#{r.related_identifier_type.try(:related_identifier_type)}" + ": " + "#{r.related_identifier}")
+                  xml.send(:'dcterms:hasVersion',  "#{r.related_identifier_type}" + ": " + "#{r.related_identifier}")
                 else
-                  xml.send(:'dcterms:relation',  "#{r.related_identifier_type.try(:related_identifier_type)}" + ": " + "#{r.related_identifier}")
+                  xml.send(:'dcterms:relation',  "#{r.related_identifier_type}" + ": " + "#{r.related_identifier}")
               end
             end
 
