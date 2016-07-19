@@ -1,14 +1,20 @@
-<h3 class="o-heading__level2">Abstract</h3>
-<p>
-  <%= abstract.description %>
-</p>
+<% unless abstract.try(:description).blank? %>
+  <h3 class="o-heading__level2">Abstract</h3>
+  <p>
+    <%= abstract.description %>
+  </p>
+<% end %>
 
-<h3 class="o-heading__level2">Methods</h3>
-<p>
-  <%= methods.description %>
-</p>
+<% unless methods.try(:description).blank? %>
+  <h3 class="o-heading__level2">Methods</h3>
+  <p>
+    <%= methods.description %>
+  </p>
+<% end %>
 
-<h3 class="o-heading__level2">Usage Notes</h3>
-<p>
-  <%= usage_notes.description %>
-</p>
+<% unless usage_notes.try(:description).blank? %>
+  <h3 class="o-heading__level2">Usage Notes</h3>
+  <p>
+    <%= usage_notes.description %>
+  </p>
+<% end %>
