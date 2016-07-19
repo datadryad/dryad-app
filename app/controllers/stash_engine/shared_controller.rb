@@ -57,14 +57,14 @@ module StashEngine
 
     def require_login
       return if current_user
-      flash[:alert] = 'You must be logged in'
+      flash[:alert] = 'You must be logged in.'
       redirect_to current_tenant_simple.try(:omniauth_login_path)
     end
 
     def require_resource_owner
       if current_user.id != @resource.user_id
-        flash[:alert] = 'You do not have permission to view this resource'
-        redirect_to tenants_path
+        flash[:alert] = 'You do not have permission to modify this dataset.'
+        redirect_to stash_engine.dashboard_path
       end
     end
 

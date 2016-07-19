@@ -4,6 +4,8 @@ module StashEngine
   class MetadataEntryPagesController < ApplicationController
     before_action :require_login
     before_action :resource_exist, except: [:metadata_callback]
+    before_action :require_resource_owner, except: [:metadata_callback]
+
     # GET/POST/PUT  /generals/find_or_create
     def find_or_create
       @resource = Resource.find(params[:resource_id])
@@ -48,6 +50,13 @@ module StashEngine
       @resource = Resource.find(params[:resource_id])
       if @resource.nil?
         redirect_to root_path, notice: "The dataset you are looking for does not exist."
+      end
+    end
+
+    def require_resource_owner
+      if current_user.id != @resource.user_id
+        flash[:alert] = 'You do not have permission to modify this dataset.'
+        redirect_to stash_engine.dashboard_path
       end
     end
   end
