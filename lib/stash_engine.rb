@@ -1,5 +1,5 @@
 require 'rails'
-require 'redcarpet'
+#require 'redcarpet'
 require 'omniauth'
 require 'redcarpet'
 require 'omniauth'
