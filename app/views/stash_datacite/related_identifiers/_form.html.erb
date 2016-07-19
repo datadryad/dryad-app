@@ -5,7 +5,7 @@
   <%#= render "datacite/shared/error_messages", :target => @related_identifier %>
   <div class="c-input">
     <%= f.label "relation_type_#{my_suffix}", "Relationship", class: 'c-input__label' %>
-    <%= f.select(:relation_type, StashDatacite::RelatedIdentifier::RelationType.map{|r| [r, r.downcase]}, {}, {id: "relation_type_#{my_suffix}", class: "js-relation_type c-input__select"}) %>
+    <%= f.select(:relation_type, StashDatacite::RelatedIdentifier::RelationTypes.map{|r| [r, r.downcase]}, {}, {id: "relation_type_#{my_suffix}", class: "js-relation_type c-input__select"}) %>
   </div>
   <div class="c-input">
     <%= f.label "type_id_#{my_suffix}", "ID Type", class: 'c-input__label' %>

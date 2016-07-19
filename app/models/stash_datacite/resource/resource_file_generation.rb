@@ -189,7 +189,7 @@ module StashDatacite
               end
             end
 
-            @relation_types = StashDatacite::RelationIdentifier::RelationTypes
+            @relation_types = StashDatacite::RelatedIdentifier::RelationTypes
             @resource.related_identifiers.each do |r|
 
               case r.relation_type_friendly
