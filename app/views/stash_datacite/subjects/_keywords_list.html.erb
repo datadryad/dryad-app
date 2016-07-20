@@ -48,7 +48,6 @@
         },
         focus: function() {
           // prevent value inserted on focus
-          changeDivColor();
           return false;
         },
         select: function( event, ui ) {
@@ -68,19 +67,8 @@
         close: function(event, ui) {
           disable=false;
           $(this).focus();
-        },
-      })
-      .keypress(function(event) {
-        if (event.which == '13') {
-          event.preventDefault();
-          var form = $(this).parents('form');
-          $(form).trigger('submit.rails');
-          $('.saved_text').show();
-          $('.saving_text').hide();
-          keepFocus();
         }
-      })
-      .blur(function (event) {
+      }).blur(function (event) {
       if (!disable) {
         var form = $(this).parents('form');
         $(form).trigger('submit.rails');
@@ -88,22 +76,16 @@
         $('.saving_text').hide();
       }
     });
-
       $('#js-keywords__container').click(function(){
         $('#keyword').focus();
       });
-
       $('.js-keywords__input').focus(function(){
         $('#js-keywords__container').addClass('c-keywords__container--has-focus').removeClass('c-keywords__container--has-blur');
         $('.saving_text').show();
         $('.saved_text').hide();
       });
-
       $('.js-keywords__input').blur(function(){
         $('#js-keywords__container').removeClass('c-keywords__container--has-focus').addClass('c-keywords__container--has-blur');
       });
   });
-  function keepFocus() {
-    $('#keyword').focus();
-  };
   </script>

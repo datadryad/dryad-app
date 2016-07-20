@@ -10,7 +10,7 @@ module StashDatacite
     scope :filled, -> { joins(:affliation).
         where("TRIM(IFNULL(creator_first_name,'')) <> '' AND TRIM(IFNULL(creator_last_name,'')) <> ''") }
 
-    scope :names_filled, -> { where("TRIM(IFNULL(creator_first_name,'')) <> '' AND TRIM(IFNULL(creator_last_name,'')) <> ''") }
+    scope :names_filled, -> { where("TRIM(IFNULL(creator_first_name,'')) <> ''") }
 
 
     scope :affliation_filled, -> { joins(:affliation).
