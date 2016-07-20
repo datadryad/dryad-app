@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160720190930) do
+ActiveRecord::Schema.define(version: 20160720211329) do
 
   create_table "bookmarks", force: :cascade do |t|
     t.integer  "user_id",       limit: 4,   null: false
@@ -37,11 +37,24 @@ ActiveRecord::Schema.define(version: 20160720190930) do
     t.datetime "updated_at",                 null: false
   end
 
+  create_table "dcs_affiliations_dcs_contributors", force: :cascade do |t|
+    t.integer  "affiliation_id", limit: 4
+    t.integer  "contributor_id", limit: 4
+    t.datetime "created_at",               null: false
+    t.datetime "updated_at",               null: false
+  end
+
+  create_table "dcs_affiliations_dcs_creators", force: :cascade do |t|
+    t.integer  "affiliation_id", limit: 4
+    t.integer  "creator_id",     limit: 4
+    t.datetime "created_at",               null: false
+    t.datetime "updated_at",               null: false
+  end
+
   create_table "dcs_contributors", force: :cascade do |t|
     t.string   "contributor_name",   limit: 255
     t.string   "contributor_type",   limit: 21,  default: "funder"
     t.integer  "name_identifier_id", limit: 4
-    t.integer  "affiliation_id",     limit: 4
     t.integer  "resource_id",        limit: 4
     t.datetime "created_at",                                        null: false
     t.datetime "updated_at",                                        null: false
@@ -52,7 +65,6 @@ ActiveRecord::Schema.define(version: 20160720190930) do
     t.string   "creator_first_name", limit: 255
     t.string   "creator_last_name",  limit: 255
     t.integer  "name_identifier_id", limit: 4
-    t.integer  "affiliation_id",     limit: 4
     t.integer  "resource_id",        limit: 4
     t.datetime "created_at",                     null: false
     t.datetime "updated_at",                     null: false
