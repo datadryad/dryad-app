@@ -26,7 +26,7 @@ module StashDatacite
       end
 
       def institution
-        @resource.creators.where.not(affliation_id: nil).count > 0
+        @resource.creators.where.not(affiliation_id: nil).count > 0
       end
 
       def data_type
@@ -57,10 +57,10 @@ module StashDatacite
         @resource.creators.names_filled.count == num_creators  # the completely filled in creators must equal number of creators
       end
 
-      def creator_affliation
+      def creator_affiliation
         num_creators = @resource.creators.count
         return false if num_creators < 1
-        @resource.creators.affliation_filled.count == num_creators  # the completely filled in creators must equal number of creators
+        @resource.creators.affiliation_filled.count == num_creators  # the completely filled in creators must equal number of creators
       end
 
       # these are optional (recommended) ones

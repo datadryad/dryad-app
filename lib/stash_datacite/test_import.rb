@@ -99,7 +99,7 @@ module StashDatacite
             name_identifier_id: name_identifier_id,
             orcid_id: orcid_id,
             resource_id: @resource.id,
-            affliation_id: affil_no
+            affiliation_id: affil_no
         )
       end
     end
@@ -154,7 +154,7 @@ module StashDatacite
             contributor_name: c.name,
             contributor_type: c.try(:type).try(:value).try(:downcase),
             name_identifier_id: name_identifier_id,
-            affliation_id: affil_no,
+            affiliation_id: affil_no,
             resource_id: @resource.id
         )
       end
@@ -265,11 +265,11 @@ module StashDatacite
 
     # gets or creates an affiliation and returns the affiliation id or nil
     def get_or_create_affiliation(affil_name_string)
-      affils = Affliation.where("short_name = ? or long_name = ?", affil_name_string, affil_name_string)
+      affils = Affiliation.where("short_name = ? or long_name = ?", affil_name_string, affil_name_string)
       affil_no = nil
       if affils.blank?
         unless affil_name_string.blank?
-          affil_no = Affliation.create(long_name: affil_name_string).id
+          affil_no = Affiliation.create(long_name: affil_name_string).id
         end
       else
         affil_no = affils.first.id

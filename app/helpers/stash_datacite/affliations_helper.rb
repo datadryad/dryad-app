@@ -1,4 +1,4 @@
 module StashDatacite
-  module AffliationsHelper
+  module AffiliationsHelper
   end
 end

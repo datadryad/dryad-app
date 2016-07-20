@@ -14,13 +14,13 @@
     <%= f.text_field :creator_last_name, id: "creator_last_name_#{my_suffix}", class: "c-input__text js-creator_last_name" %>
   </div>
   <div class="c-input">
-    <%= f.label "affliation_id_#{my_suffix}", "Institutional Affiliation", class: 'c-input__label required' %>
-    <%= text_field_tag(:affliation, creator.affliation.try(:long_name), id: "creator_affliation_id_#{my_suffix}", class: 'c-input__text js-affliation') %>
+    <%= f.label "affiliation_id_#{my_suffix}", "Institutional Affiliation", class: 'c-input__label required' %>
+    <%= text_field_tag(:affiliation, creator.affiliation.try(:long_name), id: "creator_affiliation_id_#{my_suffix}", class: 'c-input__text js-affiliation') %>
   </div>
   <%= link_to 'remove', stash_datacite.creators_delete_path(creator.id || 'new'), method: :delete, remote: true, data: {confirm: 'Are you sure?'}, class: 't-describe__remove-button o-button__remove remove_record' %>
   <%= f.hidden_field :resource_id %>
   <%= f.hidden_field :id %>
-  <%= f.hidden_field :affliation_id, class: 'js-affliation_id' %>
+  <%= f.hidden_field :affiliation_id, class: 'js-affiliation_id' %>
   <%= hidden_field_tag(:form_id, form_id) %>
 <% end %>
 
@@ -35,11 +35,11 @@
 
 <script type="text/javascript">
   $(function () {
-    $('.js-affliation').unbind('blur');
-    $('.js-affliation').autocomplete({
+    $('.js-affiliation').unbind('blur');
+    $('.js-affiliation').autocomplete({
       source: function (request, response) {
         $.ajax({
-          url: "<%= stash_datacite.affliations_autocomplete_path %>",
+          url: "<%= stash_datacite.affiliations_autocomplete_path %>",
           dataType: "json",
           data: {
             term: request.term
@@ -63,7 +63,7 @@
         return false;
       },
       select: function (event, ui) {
-        $(".js-affliation_id").val(ui.item.id); // set hidden field id
+        $(".js-affiliation_id").val(ui.item.id); // set hidden field id
       },
       open: function (event, ui) {
         disable = true

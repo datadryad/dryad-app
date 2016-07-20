@@ -72,7 +72,7 @@ module StashDatacite
         @data << 'Resource Type' unless @completions.data_type
         @data << 'Abstract' unless @completions.abstract
         @data << 'Author(s)' unless @completions.creator_name
-        @data << 'Author Affiliation' unless @completions.creator_affliation
+        @data << 'Author Affiliation' unless @completions.creator_affiliation
         return @data.join(', ').split(/\W+/)
       end
     end

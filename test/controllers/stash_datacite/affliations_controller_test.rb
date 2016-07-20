@@ -1,7 +1,7 @@
 require 'test_helper'
 
 module StashDatacite
-  class AffliationsControllerTest < ActionController::TestCase
+  class AffiliationsControllerTest < ActionController::TestCase
     setup do
       @routes = Engine.routes
     end

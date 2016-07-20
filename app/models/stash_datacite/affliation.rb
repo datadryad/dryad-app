@@ -1,6 +1,6 @@
 module StashDatacite
-  class Affliation < ActiveRecord::Base
-    self.table_name = 'dcs_affliations'
+  class Affiliation < ActiveRecord::Base
+    self.table_name = 'dcs_affiliations'
     has_many :creators
 
     before_save :strip_whitespace

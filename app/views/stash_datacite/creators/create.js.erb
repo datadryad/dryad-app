@@ -4,7 +4,7 @@ var form = $('#<%= params[:form_id] %>');
 form.attr('id', '<%= form_id %>');
 form.attr('action', '<%= creators_update_path %>');
 form.find("#creator_id").attr('value', '<%= @creator.id %>');
-form.find("#creator_affliation_id").attr('value', '<%= @creator.affliation_id %>');
+form.find("#creator_affiliation_id").attr('value', '<%= @creator.affiliation_id %>');
 form.find("#form_id").attr('value', '<%= form_id %>');
 
 $('<input>').attr({

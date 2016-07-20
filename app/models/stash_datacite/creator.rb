@@ -3,18 +3,18 @@ module StashDatacite
     self.table_name = 'dcs_creators'
     belongs_to :resource, class_name: StashDatacite.resource_class.to_s
     belongs_to :name_identifier
-    belongs_to :affliation
+    belongs_to :affiliation
 
     before_save :strip_whitespace
 
-    scope :filled, -> { joins(:affliation).
+    scope :filled, -> { joins(:affiliation).
         where("TRIM(IFNULL(creator_first_name,'')) <> '' AND TRIM(IFNULL(creator_last_name,'')) <> ''") }
 
     scope :names_filled, -> { where("TRIM(IFNULL(creator_first_name,'')) <> '' AND TRIM(IFNULL(creator_last_name,'')) <> ''") }
 
 
-    scope :affliation_filled, -> { joins(:affliation).
-        where("TRIM(IFNULL(dcs_affliations.long_name,'')) <> ''") }
+    scope :affiliation_filled, -> { joins(:affiliation).
+        where("TRIM(IFNULL(dcs_affiliations.long_name,'')) <> ''") }
 
     def creator_full_name
       "#{creator_last_name}, #{creator_first_name}".strip
