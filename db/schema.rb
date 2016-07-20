@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160720180420) do
+ActiveRecord::Schema.define(version: 20160720190930) do
 
   create_table "bookmarks", force: :cascade do |t|
     t.integer  "user_id",       limit: 4,   null: false
@@ -25,7 +25,7 @@ ActiveRecord::Schema.define(version: 20160720180420) do
 
   add_index "bookmarks", ["user_id"], name: "index_bookmarks_on_user_id", using: :btree
 
-  create_table "dcs_affliations", force: :cascade do |t|
+  create_table "dcs_affiliations", force: :cascade do |t|
     t.string   "short_name",   limit: 255
     t.string   "long_name",    limit: 255
     t.string   "abbreviation", limit: 255
@@ -41,7 +41,7 @@ ActiveRecord::Schema.define(version: 20160720180420) do
     t.string   "contributor_name",   limit: 255
     t.string   "contributor_type",   limit: 21,  default: "funder"
     t.integer  "name_identifier_id", limit: 4
-    t.integer  "affliation_id",      limit: 4
+    t.integer  "affiliation_id",     limit: 4
     t.integer  "resource_id",        limit: 4
     t.datetime "created_at",                                        null: false
     t.datetime "updated_at",                                        null: false
@@ -52,7 +52,7 @@ ActiveRecord::Schema.define(version: 20160720180420) do
     t.string   "creator_first_name", limit: 255
     t.string   "creator_last_name",  limit: 255
     t.integer  "name_identifier_id", limit: 4
-    t.integer  "affliation_id",      limit: 4
+    t.integer  "affiliation_id",     limit: 4
     t.integer  "resource_id",        limit: 4
     t.datetime "created_at",                     null: false
     t.datetime "updated_at",                     null: false
