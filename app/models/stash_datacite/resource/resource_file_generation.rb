@@ -63,7 +63,7 @@ module StashDatacite
           end,
 
           titles: [
-              dm::Title.new(value: "#{@resource.titles.where(title_type: :main).first.title}")
+              dm::Title.new(value: "#{@resource.titles.where(title_type: nil).first.title}")
           ],
 
           publisher: "#{@current_tenant.long_name || 'unknown'}",
@@ -167,7 +167,7 @@ module StashDatacite
               xml.send(:'dc:description', "#{c.award_number.gsub(/\r/,"")}")
             end
 
-            xml.send(:'dc:title', "#{@resource.titles.where(title_type: :main).first.title}")
+            xml.send(:'dc:title', "#{@resource.titles.where(title_type: nil).first.title}")
             xml.send(:'dc:publisher', "#{@current_tenant.long_name || 'unknown'}")
             xml.send(:'dc:date', Time.now.year)
 

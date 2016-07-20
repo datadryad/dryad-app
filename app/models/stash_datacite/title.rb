@@ -14,7 +14,7 @@ module StashDatacite
 
     def title_type_friendly=(type)
       # self required here to work correctly
-      if type.blank? || type.downcase == 'main'
+      if type.blank?
         self.title_type = nil
         return
       end

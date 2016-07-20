@@ -106,7 +106,7 @@ module StashDatacite
 
     def add_titles
       @m_resource.titles.each do |t|
-        title_type = 'main'
+        title_type = nil
         unless t.type.nil?
           title_type = t.type.value.downcase
         end
