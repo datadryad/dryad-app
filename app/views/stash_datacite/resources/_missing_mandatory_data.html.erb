@@ -1,6 +1,4 @@
-<% if data.nil? || data.blank? %>
-  <%= '' %>
-<% else %>
+<% if data.present? %>
   <div class="js-alert c-alert--error" role="alert">
     <div class="c-alert__text">
       You must edit the description to include the following before you can submit your dataset:
@@ -8,4 +6,6 @@
     </div>
     <button aria-label="close" class="js-alert__close o-button__close c-alert__close"></button>
   </div>
+<% else %>
+  <%= '' %>
 <% end %>
