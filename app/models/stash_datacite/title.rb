@@ -3,10 +3,28 @@ module StashDatacite
     self.table_name = 'dcs_titles'
     belongs_to :resource, class_name: StashDatacite.resource_class.to_s
 
-    enum title_type: { main: 'main', subtitle: 'subtitle', alternative_title: 'alternative_title',
-                       translated_title: 'translated_title' }
+    TitleTypes = %w(AlternativeTitle Subtitle TranslatedTitle)
+
+    TitleTypesEnum = TitleTypes.map{|i| [i.downcase.to_sym, i.downcase]}.to_h
+    TitleTypesStrToFull = TitleTypes.map{|i| [i.downcase, i]}.to_h
+
+    enum title_type: TitleTypesEnum
 
     before_save :strip_whitespace
+
+    def title_type_friendly=(type)
+      # self required here to work correctly
+      if type.blank? || type.downcase == 'main'
+        self.title_type = nil
+        return
+      end
+      self.title_type = type.to_s.downcase
+    end
+
+    def title_type_friendly
+      return nil if title_type.blank?
+      TitleTypesStrToFull[title_type]
+    end
 
     private
     def strip_whitespace
