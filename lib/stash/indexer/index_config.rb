@@ -1,4 +1,5 @@
 require 'config/factory'
+require 'stash/util'
 
 module Stash
   module Indexer
