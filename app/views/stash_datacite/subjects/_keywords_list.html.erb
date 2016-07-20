@@ -26,7 +26,7 @@
           event.preventDefault();
         }
       })
-      .autocomplete({
+     .autocomplete({
         source: function( request, response ) {
           $.ajax({
             url: "<%= stash_datacite.subjects_autocomplete_path %>",
@@ -48,6 +48,7 @@
         },
         focus: function() {
           // prevent value inserted on focus
+          changeDivColor();
           return false;
         },
         select: function( event, ui ) {
@@ -76,16 +77,18 @@
         $('.saving_text').hide();
       }
     });
-      $('#js-keywords__container').click(function(){
-        $('#keyword').focus();
-      });
-      $('.js-keywords__input').focus(function(){
-        $('#js-keywords__container').addClass('c-keywords__container--has-focus').removeClass('c-keywords__container--has-blur');
-        $('.saving_text').show();
-        $('.saved_text').hide();
-      });
-      $('.js-keywords__input').blur(function(){
-        $('#js-keywords__container').removeClass('c-keywords__container--has-focus').addClass('c-keywords__container--has-blur');
-      });
+    $('#js-keywords__container').click(function(){
+      $('#keyword').focus();
+    });
+
+    $('.js-keywords__input').focus(function(){
+      $('#js-keywords__container').addClass('c-keywords__container--has-focus').removeClass('c-keywords__container--has-blur');
+      $('.saving_text').show();
+      $('.saved_text').hide();
+    });
+
+    $('.js-keywords__input').blur(function(){
+      $('#js-keywords__container').removeClass('c-keywords__container--has-focus').addClass('c-keywords__container--has-blur');
+    });
   });
   </script>
