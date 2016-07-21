@@ -17,7 +17,9 @@ module StashDatacite
         where("TRIM(IFNULL(dcs_affliations.long_name,'')) <> ''") }
 
     def creator_full_name
-      "#{creator_last_name}, #{creator_first_name}".strip
+      full_name = [creator_last_name, creator_first_name]
+      creator_full_name = full_name.compact.split("").flatten.join(", ")
+      return creator_full_name
     end
 
     private
