@@ -38,7 +38,7 @@ module StashDatacite
         # this enables deep copying of the resource
         amoeba do
           include_association [:contributors, :creators, :datacite_dates, :descriptions, :embargoes, :geolocation_boxes,
-                              :geolocation_places, :geolocation_points, :publication_years, :publishers,
+                              :geolocation_places, :geolocation_points, :publication_years, :publisher,
                               :related_identifiers, :resource_type, :rights, :size, :subjects, :titles]
         end
       end
