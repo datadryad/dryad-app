@@ -26,7 +26,7 @@ module StashDatacite
         has_many :geolocation_places, class_name: 'StashDatacite::GeolocationPlace' # optional
         has_many :geolocation_points, class_name: 'StashDatacite::GeolocationPoint' # optional
         has_many :publication_years, class_name: 'StashDatacite::PublicationYear' # required
-        has_many :publishers, class_name: 'StashDatacite::Publisher' # required
+        has_one :publisher, class_name: 'StashDatacite::Publisher' # required
         has_many :related_identifiers, class_name: 'StashDatacite::RelatedIdentifier' # optional
         has_one :resource_type, class_name: 'StashDatacite::ResourceType' # optional
         has_many :rights, class_name: 'StashDatacite::Right' # optional

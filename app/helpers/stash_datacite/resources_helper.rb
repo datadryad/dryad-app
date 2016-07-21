@@ -1,9 +1,9 @@
 module StashDatacite
   module ResourcesHelper
-    def citation(creators, title, resource_type, version, identifier, publication_years)
+    def citation(creators, title, resource_type, version, identifier, publisher, publication_years)
       publication_year = publication_years.try(:first).try(:publication_year) || Time.now.year
       title = title.try(:title)
-      publisher = current_tenant.try(:long_name)
+      publisher = publisher.try(:publisher)
       resource_type = resource_type.try(:resource_type)
       ["#{creator_citation_format(creators)} (#{publication_year})", h(title), h(version), h(publisher), h(resource_type), target_url(identifier)].reject(&:blank?).join(", ").html_safe
     end

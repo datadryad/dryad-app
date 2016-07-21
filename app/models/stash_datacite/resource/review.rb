@@ -22,7 +22,6 @@ module StashDatacite
         @resource.version
       end
 
-
       def identifier
         @resource.identifier
       end
@@ -69,6 +68,10 @@ module StashDatacite
 
       def geolocation_places
         @geolocation_places = @resource.geolocation_places
+      end
+
+      def publisher
+        @publisher = @resource.publisher
       end
     end
   end

@@ -66,7 +66,7 @@ module StashDatacite
               dm::Title.new(value: "#{@resource.titles.where(title_type: :main).first.title}")
           ],
 
-          publisher: "#{@current_tenant.long_name || 'unknown'}",
+          publisher: "#{@resource.publisher.publisher || 'unknown'}",
 
           publication_year: Time.now.year,
 
