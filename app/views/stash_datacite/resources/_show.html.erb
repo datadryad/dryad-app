@@ -9,6 +9,7 @@
                        resource_type: @review.resource_type,
                        version: @resource.version.nil? ? 'v0' : "v#{@review.version.version }",
                        identifier: @resource.identifier.nil? ? 'DOI' : "#{@review.identifier.identifier }",
+                       publisher: "#{@review.publisher}",
                        publication_years: @resource.publication_years } %>
   </section>
   <%= render partial: "stash_datacite/descriptions/show", locals: { abstract: @review.abstract, methods: @review.methods, usage_notes: @review.usage_notes } %>
