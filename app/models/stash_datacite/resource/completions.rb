@@ -26,7 +26,7 @@ module StashDatacite
       end
 
       def institution
-        @resource.creators.where.not(affiliation_id: nil).count > 0
+        @resource.creators.joins(:affiliations).count > 0
       end
 
       def data_type
