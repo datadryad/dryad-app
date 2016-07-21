@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160720211329) do
+ActiveRecord::Schema.define(version: 20160721000715) do
 
   create_table "bookmarks", force: :cascade do |t|
     t.integer  "user_id",       limit: 4,   null: false
@@ -37,14 +37,14 @@ ActiveRecord::Schema.define(version: 20160720211329) do
     t.datetime "updated_at",                 null: false
   end
 
-  create_table "dcs_affiliations_dcs_contributors", force: :cascade do |t|
+  create_table "dcs_affiliations_contributors", force: :cascade do |t|
     t.integer  "affiliation_id", limit: 4
     t.integer  "contributor_id", limit: 4
     t.datetime "created_at",               null: false
     t.datetime "updated_at",               null: false
   end
 
-  create_table "dcs_affiliations_dcs_creators", force: :cascade do |t|
+  create_table "dcs_affiliations_creators", force: :cascade do |t|
     t.integer  "affiliation_id", limit: 4
     t.integer  "creator_id",     limit: 4
     t.datetime "created_at",               null: false
