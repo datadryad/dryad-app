@@ -7,7 +7,7 @@ module StashDatacite
 
     before_save :strip_whitespace
 
-    scope :filled, -> { joins(:affiliation).
+    scope :filled, -> { joins(:affiliations).
         where("TRIM(IFNULL(creator_first_name,'')) <> '' AND TRIM(IFNULL(creator_last_name,'')) <> ''") }
 
     scope :names_filled, -> { where("TRIM(IFNULL(creator_first_name,'')) <> '' AND TRIM(IFNULL(creator_last_name,'')) <> ''") }
@@ -37,6 +37,27 @@ module StashDatacite
     def orcid_id
       return nil if name_identifier_id.blank? || name_identifier.name_identifier_scheme != 'ORCID'
       name_identifier.name_identifier
+    end
+
+    #this is to simulate the bad old structure where a user can only have one affiliation
+    def affiliation_id=(affil_id)
+      self.affiliation_ids = affil_id
+    end
+
+    #this is to simulate the bad old structure where a user can only have one affiliation
+    def affiliation_id
+      affiliation_ids.try(:first)
+    end
+
+    #this is to simulate the bad old structure where a user can only have one affiliation
+    def affiliation=(affil)
+      affiliations.clear
+      affiliations << affil
+    end
+
+    #this is to simulate the bad old structure where a user can only have one affiliation
+    def affiliation
+      affiliations.try(:first)
     end
 
     private
