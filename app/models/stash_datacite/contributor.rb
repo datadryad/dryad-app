@@ -3,6 +3,7 @@ module StashDatacite
     self.table_name = 'dcs_contributors'
     belongs_to :resource, class_name: StashDatacite.resource_class.to_s
     belongs_to :name_identifier
+    has_and_belongs_to_many :affiliations, :class_name => 'StashDatacite::Affiliation'
     
     ContributorTypes = %w(ContactPerson DataCollector DataCurator DataManager Distributor Editor Funder
           HostingInstitution Other Producer ProjectLeader ProjectManager ProjectMember RegistrationAgency
