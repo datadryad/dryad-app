@@ -6,8 +6,8 @@ module StashEngine
     has_one :version, class_name: 'StashEngine::Version'
     belongs_to :identifier, :class_name => 'StashEngine::Identifier', foreign_key: 'identifier_id'
     has_one :resource_usage, class_name: 'StashEngine::ResourceUsage'
-    # rubocop:disable all
-    has_and_belongs_to_many :subjects, class_name: 'StashDatacite::Subject'
+    # # rubocop:disable all
+    # has_and_belongs_to_many :subjects, class_name: 'StashDatacite::Subject'
     # rubocop:enable all
     belongs_to :user, class_name: 'StashEngine::User'
     has_one :current_state,
