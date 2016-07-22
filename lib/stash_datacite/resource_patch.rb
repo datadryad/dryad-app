@@ -34,6 +34,9 @@ module StashDatacite
         has_and_belongs_to_many :subjects, class_name: 'StashDatacite::Subject',
                                            through: 'StashDatacite::ResourceSubject' #optional
         has_many :titles, class_name: 'StashDatacite::Title' # required
+        has_one :language, class_name: 'StashDatacite::Language' #required
+        has_many :alternate_identifiers, :class_name => 'StashDatacite::AlternateIdentifier' #optional
+        has_many :formats, :class_name => 'StashDatacite::Format' #optional
 
         # this enables deep copying of the resource
         amoeba do

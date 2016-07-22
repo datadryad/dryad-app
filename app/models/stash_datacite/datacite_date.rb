@@ -3,8 +3,25 @@ module StashDatacite
     self.table_name = 'dcs_dates'
     belongs_to :resource, class_name: StashDatacite.resource_class.to_s
 
-    enum date_type: { accepted: 'accepted', available: 'available', copyrighted: 'copyrighted',
-                      collected: 'collected', created: 'created', issued: 'issued',
-                      submitted: 'submitted', updated: 'updated', valid_date: 'valid' }
+    # the valid method causes errors because it tries to add methods for enum and there is already valid method
+    # so need to make it valid_date for symbol for rails not to error!
+    DateTypes = %w(Accepted Available Collected Copyrighted Created Issued Submitted Updated Valid)
+
+    DateTypesEnum = DateTypes.map{|i| [i.downcase.to_sym, i.downcase]}.to_h.select{|k,v| k != :valid}.merge({ :valid_date => 'valid'})
+    DateTypesStrToFull = DateTypes.map{|i| [i.downcase, i]}.to_h
+
+    enum date_type: DateTypesEnum
+
+    # these are hacks around rails method problems.
+    def date_type_friendly=(type)
+      # self required here to work correctly
+      self.date_type = type.to_s.downcase unless type.blank?
+    end
+
+    def date_type_friendly
+      return nil if date_type.blank?
+      return 'Valid' if self.date_type == 'valid_date' #exception for bad method names
+      DateTypesStrToFull[date_type]
+    end
   end
 end

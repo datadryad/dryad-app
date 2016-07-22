@@ -16,16 +16,16 @@ module StashDatacite
 
     # POST /creators
     def create
-      duplicate_affliation = Affliation.where('long_name LIKE ? OR short_name LIKE ?',
-                                           "#{params[:affliation]}", "#{params[:affliation]}").first
+      duplicate_affiliation = Affiliation.where('long_name LIKE ? OR short_name LIKE ?',
+                                           "#{params[:affiliation]}", "#{params[:affiliation]}").first
       @creator = Creator.new(creator_params)
       respond_to do |format|
         @creator.save
         @creator.reload
-        unless duplicate_affliation.present?
-          if params[:affliation].present?
-            @affliation = Affliation.create(long_name: params[:affliation])
-            @creator.affliation_id = @affliation.id
+        unless duplicate_affiliation.present?
+          if params[:affiliation].present?
+            @affiliation = Affiliation.create(long_name: params[:affiliation])
+            @creator.affiliation_id = @affiliation.id
             @creator.save
           else
             ''
@@ -37,15 +37,15 @@ module StashDatacite
 
     # PATCH/PUT /creators/1
     def update
-      duplicate_affliation = Affliation.where('long_name LIKE ? OR short_name LIKE ?',
-                                           "#{params[:affliation]}", "#{params[:affliation]}").first
+      duplicate_affiliation = Affiliation.where('long_name LIKE ? OR short_name LIKE ?',
+                                           "#{params[:affiliation]}", "#{params[:affiliation]}").first
       respond_to do |format|
-        unless duplicate_affliation.present?
+        unless duplicate_affiliation.present?
           @creator.update(creator_params)
           @creator.reload
-          if params[:affliation].present?
-            @affliation = Affliation.create(long_name: params[:affliation])
-            @creator.affliation_id = @affliation.id
+          if params[:affiliation].present?
+            @affiliation = Affiliation.create(long_name: params[:affiliation])
+            @creator.affiliation_id = @affiliation.id
             @creator.save
           else
             ''
@@ -80,7 +80,7 @@ module StashDatacite
     # Only allow a trusted parameter "white list" through.
     def creator_params
       params.require(:creator).permit(:id, :creator_first_name, :creator_last_name, :creator_middle_name,
-                                      :name_identifier_id, :affliation_id, :resource_id, :orcid_id)
+                                      :name_identifier_id, :affiliation_id, :resource_id, :orcid_id)
     end
 
     def check_for_orcid_id(creator)

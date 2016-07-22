@@ -7,7 +7,7 @@ module StashDatacite
       end
 
       def title
-        @resource.titles.where(title_type: :main).first
+        @resource.titles.where(title_type: nil).first
       end
 
       def resource_type

@@ -103,14 +103,14 @@ module StashDatacite
             name_identifier_id: name_identifier_id,
             orcid_id: orcid_id,
             resource_id: @resource.id,
-            affliation_id: affil_no
+            affiliation_id: affil_no
         )
       end
     end
 
     def add_titles
       @m_resource.titles.each do |t|
-        title_type = 'main'
+        title_type = nil
         unless t.type.nil?
           title_type = t.type.value.downcase
         end
@@ -158,7 +158,7 @@ module StashDatacite
             contributor_name: c.name,
             contributor_type: c.try(:type).try(:value).try(:downcase),
             name_identifier_id: name_identifier_id,
-            affliation_id: affil_no,
+            affiliation_id: affil_no,
             resource_id: @resource.id
         )
       end
@@ -190,14 +190,14 @@ module StashDatacite
 
     def add_related_identifiers
       @m_resource.related_identifiers.each do |ri|
-        related_iden_type_id = RelatedIdentifierType.find_by_related_identifier_type(ri.identifier_type.value)
+        related_iden_type_id = ri.identifier_type.value
         relation_type_id = RelationType.find_by_relation_type(ri.relation_type.value)
         # TODO: we are losing some data since relation_type table has properties that belong to related identifiers
         # instead
 
         RelatedIdentifier.create(
             related_identifier:           ri.value,
-            related_identifier_type_id:   related_iden_type_id,
+            related_identifier_type_id:   ri.identifier_type.value,
             relation_type_id:             relation_type_id,
             resource_id:                  @resource.id
         )
@@ -277,11 +277,11 @@ module StashDatacite
 
     # gets or creates an affiliation and returns the affiliation id or nil
     def get_or_create_affiliation(affil_name_string)
-      affils = Affliation.where("short_name = ? or long_name = ?", affil_name_string, affil_name_string)
+      affils = Affiliation.where("short_name = ? or long_name = ?", affil_name_string, affil_name_string)
       affil_no = nil
       if affils.blank?
         unless affil_name_string.blank?
-          affil_no = Affliation.create(long_name: affil_name_string).id
+          affil_no = Affiliation.create(long_name: affil_name_string).id
         end
       else
         affil_no = affils.first.id
