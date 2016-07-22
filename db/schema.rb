@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160722171642) do
+ActiveRecord::Schema.define(version: 20160722183102) do
 
   create_table "bookmarks", force: :cascade do |t|
     t.integer  "user_id",       limit: 4,   null: false
@@ -102,6 +102,13 @@ ActiveRecord::Schema.define(version: 20160722171642) do
     t.integer  "resource_id",  limit: 4
     t.datetime "created_at",                                null: false
     t.datetime "updated_at",                                null: false
+  end
+
+  create_table "dcs_formats", force: :cascade do |t|
+    t.text     "format",      limit: 65535
+    t.integer  "resource_id", limit: 4,     null: false
+    t.datetime "created_at",                null: false
+    t.datetime "updated_at",                null: false
   end
 
   create_table "dcs_geo_location_boxes", force: :cascade do |t|
