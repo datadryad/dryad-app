@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160722165052) do
+ActiveRecord::Schema.define(version: 20160722171642) do
 
   create_table "bookmarks", force: :cascade do |t|
     t.integer  "user_id",       limit: 4,   null: false
@@ -49,6 +49,14 @@ ActiveRecord::Schema.define(version: 20160722165052) do
     t.integer  "creator_id",     limit: 4
     t.datetime "created_at",               null: false
     t.datetime "updated_at",               null: false
+  end
+
+  create_table "dcs_alternate_identifiers", force: :cascade do |t|
+    t.text     "alternate_identifier",      limit: 65535
+    t.text     "alternate_identifier_type", limit: 65535
+    t.integer  "resource_id",               limit: 4,     null: false
+    t.datetime "created_at",                              null: false
+    t.datetime "updated_at",                              null: false
   end
 
   create_table "dcs_contributors", force: :cascade do |t|
