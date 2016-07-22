@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  alternate_identifier: MyText
+  alternate_identifier_type: MyText
+  resource_id: 1
+
+two:
+  alternate_identifier: MyText
+  alternate_identifier_type: MyText
+  resource_id: 1
