@@ -3,16 +3,20 @@ class MigrateAffiliationHasAndBelongsToMany < ActiveRecord::Migration
 
     StashDatacite::Creator.where('affiliation_id IS NOT NULL').each do |c|
       #we shouldn't need to worry about sanitization since theres are only integers in current db for these fields
-      sql = "INSERT INTO dcs_affiliations_creators (affiliation_id, creator_id, " +
+      unless c.affiliation_id.blank?
+        sql = "INSERT INTO dcs_affiliations_creators (affiliation_id, creator_id, " +
                           "created_at, updated_at) VALUES(#{c.affiliation_id}, #{c.id}, NOW(), NOW())"
-      ret = ActiveRecord::Base.connection.insert(sql)
+        ret = ActiveRecord::Base.connection.insert(sql)
+      end
     end
 
     StashDatacite::Contributor.where('affiliation_id IS NOT NULL').each do |c|
       #we shouldn't need to worry about sanitization since theres are only integers in current db for these fields
-      sql = "INSERT INTO dcs_affiliations_contributors (affiliation_id, contributor_id, " +
+      unless c.affiliation_id.blank?
+        sql = "INSERT INTO dcs_affiliations_contributors (affiliation_id, contributor_id, " +
           "created_at, updated_at) VALUES(#{c.affiliation_id}, #{c.id}, NOW(), NOW())"
-      ret = ActiveRecord::Base.connection.insert(sql)
+        ret = ActiveRecord::Base.connection.insert(sql)
+      end
     end
 
     remove_column :dcs_creators, :affiliation_id
