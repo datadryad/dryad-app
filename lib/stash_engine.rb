@@ -14,6 +14,7 @@ require 'jquery-fileupload-rails'
 require 'filesize'
 require 'kaminari'
 require 'amoeba'
+require 'exception_notification'
 
 require 'stash_engine/engine'
 module StashEngine
