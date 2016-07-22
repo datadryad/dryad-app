@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160721000715) do
+ActiveRecord::Schema.define(version: 20160722165052) do
 
   create_table "bookmarks", force: :cascade do |t|
     t.integer  "user_id",       limit: 4,   null: false
@@ -121,6 +121,13 @@ ActiveRecord::Schema.define(version: 20160721000715) do
     t.integer  "resource_id", limit: 4
     t.datetime "created_at",                                     null: false
     t.datetime "updated_at",                                     null: false
+  end
+
+  create_table "dcs_languages", force: :cascade do |t|
+    t.string   "language",    limit: 255
+    t.integer  "resource_id", limit: 4
+    t.datetime "created_at",              null: false
+    t.datetime "updated_at",              null: false
   end
 
   create_table "dcs_name_identifiers", force: :cascade do |t|
