@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160715183015) do
+ActiveRecord::Schema.define(version: 20160722183102) do
 
   create_table "bookmarks", force: :cascade do |t|
     t.integer  "user_id",       limit: 4,   null: false
@@ -25,7 +25,7 @@ ActiveRecord::Schema.define(version: 20160715183015) do
 
   add_index "bookmarks", ["user_id"], name: "index_bookmarks_on_user_id", using: :btree
 
-  create_table "dcs_affliations", force: :cascade do |t|
+  create_table "dcs_affiliations", force: :cascade do |t|
     t.string   "short_name",   limit: 255
     t.string   "long_name",    limit: 255
     t.string   "abbreviation", limit: 255
@@ -37,11 +37,32 @@ ActiveRecord::Schema.define(version: 20160715183015) do
     t.datetime "updated_at",                 null: false
   end
 
+  create_table "dcs_affiliations_contributors", force: :cascade do |t|
+    t.integer  "affiliation_id", limit: 4
+    t.integer  "contributor_id", limit: 4
+    t.datetime "created_at",               null: false
+    t.datetime "updated_at",               null: false
+  end
+
+  create_table "dcs_affiliations_creators", force: :cascade do |t|
+    t.integer  "affiliation_id", limit: 4
+    t.integer  "creator_id",     limit: 4
+    t.datetime "created_at",               null: false
+    t.datetime "updated_at",               null: false
+  end
+
+  create_table "dcs_alternate_identifiers", force: :cascade do |t|
+    t.text     "alternate_identifier",      limit: 65535
+    t.text     "alternate_identifier_type", limit: 65535
+    t.integer  "resource_id",               limit: 4,     null: false
+    t.datetime "created_at",                              null: false
+    t.datetime "updated_at",                              null: false
+  end
+
   create_table "dcs_contributors", force: :cascade do |t|
     t.string   "contributor_name",   limit: 255
     t.string   "contributor_type",   limit: 21,  default: "funder"
     t.integer  "name_identifier_id", limit: 4
-    t.integer  "affliation_id",      limit: 4
     t.integer  "resource_id",        limit: 4
     t.datetime "created_at",                                        null: false
     t.datetime "updated_at",                                        null: false
@@ -52,11 +73,9 @@ ActiveRecord::Schema.define(version: 20160715183015) do
     t.string   "creator_first_name", limit: 255
     t.string   "creator_last_name",  limit: 255
     t.integer  "name_identifier_id", limit: 4
-    t.integer  "affliation_id",      limit: 4
     t.integer  "resource_id",        limit: 4
     t.datetime "created_at",                     null: false
     t.datetime "updated_at",                     null: false
-    t.string   "orcid_id",           limit: 255
   end
 
   create_table "dcs_dates", force: :cascade do |t|
@@ -83,6 +102,13 @@ ActiveRecord::Schema.define(version: 20160715183015) do
     t.integer  "resource_id",  limit: 4
     t.datetime "created_at",                                null: false
     t.datetime "updated_at",                                null: false
+  end
+
+  create_table "dcs_formats", force: :cascade do |t|
+    t.text     "format",      limit: 65535
+    t.integer  "resource_id", limit: 4,     null: false
+    t.datetime "created_at",                null: false
+    t.datetime "updated_at",                null: false
   end
 
   create_table "dcs_geo_location_boxes", force: :cascade do |t|
@@ -112,6 +138,13 @@ ActiveRecord::Schema.define(version: 20160715183015) do
     t.datetime "updated_at",                                     null: false
   end
 
+  create_table "dcs_languages", force: :cascade do |t|
+    t.string   "language",    limit: 255
+    t.integer  "resource_id", limit: 4
+    t.datetime "created_at",              null: false
+    t.datetime "updated_at",              null: false
+  end
+
   create_table "dcs_name_identifiers", force: :cascade do |t|
     t.string   "name_identifier",        limit: 255
     t.string   "name_identifier_scheme", limit: 255
@@ -134,32 +167,20 @@ ActiveRecord::Schema.define(version: 20160715183015) do
     t.datetime "updated_at",              null: false
   end
 
-  create_table "dcs_related_identifier_types", force: :cascade do |t|
-    t.string   "related_identifier_type", limit: 255
-    t.datetime "created_at",                          null: false
-    t.datetime "updated_at",                          null: false
-  end
-
   create_table "dcs_related_identifiers", force: :cascade do |t|
-    t.string   "related_identifier",         limit: 255
-    t.integer  "related_identifier_type_id", limit: 4
-    t.integer  "relation_type_id",           limit: 4
-    t.integer  "resource_id",                limit: 4
-    t.datetime "created_at",                             null: false
-    t.datetime "updated_at",                             null: false
-  end
-
-  create_table "dcs_relation_types", force: :cascade do |t|
-    t.string   "relation_type",           limit: 255
-    t.string   "related_metadata_scheme", limit: 255
+    t.string   "related_identifier",      limit: 255
+    t.string   "related_identifier_type", limit: 7
+    t.string   "relation_type",           limit: 19
+    t.text     "related_metadata_scheme", limit: 65535
     t.text     "scheme_URI",              limit: 65535
     t.string   "scheme_type",             limit: 255
+    t.integer  "resource_id",             limit: 4
     t.datetime "created_at",                            null: false
     t.datetime "updated_at",                            null: false
   end
 
   create_table "dcs_resource_types", force: :cascade do |t|
-    t.string   "resource_type", limit: 20
+    t.string   "resource_type", limit: 19
     t.integer  "resource_id",   limit: 4
     t.datetime "created_at",               null: false
     t.datetime "updated_at",               null: false
@@ -197,10 +218,10 @@ ActiveRecord::Schema.define(version: 20160715183015) do
 
   create_table "dcs_titles", force: :cascade do |t|
     t.string   "title",       limit: 255
-    t.string   "title_type",  limit: 17,  default: "main"
+    t.string   "title_type",  limit: 16
     t.integer  "resource_id", limit: 4
-    t.datetime "created_at",                               null: false
-    t.datetime "updated_at",                               null: false
+    t.datetime "created_at",              null: false
+    t.datetime "updated_at",              null: false
   end
 
   create_table "dcs_versions", force: :cascade do |t|
