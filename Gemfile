@@ -60,7 +60,7 @@ group :development, :test do
   gem 'simplecov', :require => false, :group => :test
   gem 'rubocop', require: false
   gem 'simplecov-console', :require => false, :group => :test
-
+  gem 'exception_notification'
 end
 
 path '../stash_engines' do

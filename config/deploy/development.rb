@@ -74,6 +74,19 @@ set :passenger_port, "3000"
 #     # password: 'please use keys'
 #   }
 
+Rails.application.config.middleware.use ExceptionNotification::Rack,
+  :email => {
+    # :deliver_with => :deliver, # Rails >= 4.2.1 do not need this option since it defaults to :deliver_now
+    :email_prefix => "[Stash Exception]",
+    :sender_address => %{"notifier" no-reply-dash2-dev@ucop.edu },
+    :exception_recipients => %w{david.moles@ucop.edu marisa.strong@ucop.edu scott.fisher@ucop.edu bhavi.vedula@ucop.edu}
+  }
+
+  config.action_mailer.delivery_method = :sendmail
+
+  config.action_mailer.perform_deliveries = true
+  config.action_mailer.raise_delivery_errors = true
+
 namespace :deploy do
 
   #desc 'update local engines to get around requiring version number changes in development'
