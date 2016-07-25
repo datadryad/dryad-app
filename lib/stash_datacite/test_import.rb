@@ -24,7 +24,6 @@ module StashDatacite
           {shoulder: ezid_shoulder,
            account: ezid_account,
            password: ezid_password,
-           coowners: [''],
            id_scheme: 'doi'
           })
     end
