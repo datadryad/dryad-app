@@ -43,6 +43,8 @@ gem 'daemons'
 
 gem 'stash_ezid_datacite', :git => 'https://github.com/CDLUC3/stash_ezid_datacite.git'
 
+gem 'exception_notification'
+
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug'
@@ -60,7 +62,6 @@ group :development, :test do
   gem 'simplecov', :require => false, :group => :test
   gem 'rubocop', require: false
   gem 'simplecov-console', :require => false, :group => :test
-  gem 'exception_notification'
 end
 
 path '../stash_engines' do
