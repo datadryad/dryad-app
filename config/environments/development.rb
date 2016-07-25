@@ -39,15 +39,13 @@ Rails.application.configure do
   # Raises error for missing translations
   # config.action_view.raise_on_missing_translations = true
 
-  # ActionMailer::Base.delivery_method = :smtp
-  # ActionMailer::Base.smtp_settings = {
-  #     :address        => 'smtp.gmail.com',
-  #     :domain         => '<mail.google.com>',
-  #     :port           => 587,
-  #     :user_name      => '<bhavi.vedula04@gmail.com>',
-  #     :password       => 'SeRaBh13',
-  #     :authentication => :plain
-  # }
+  Rails.application.config.middleware.use ExceptionNotification::Rack,
+  :email => {
+    # :deliver_with => :deliver, # Rails >= 4.2.1 do not need this option since it defaults to :deliver_now
+    :email_prefix => "[Stash Exception]",
+    :sender_address => %{"notifier" no-reply-dash2-dev@ucop.edu },
+    :exception_recipients => %w{david.moles@ucop.edu marisa.strong@ucop.edu scott.fisher@ucop.edu bhavi.vedula@ucop.edu}
+  }
 
   config.action_mailer.delivery_method = :sendmail
   config.action_mailer.perform_deliveries = true
