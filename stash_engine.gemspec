@@ -38,6 +38,5 @@ Gem::Specification.new do |s|
   s.add_dependency 'filesize', '~> 0.1.1'
   s.add_dependency 'kaminari'
   s.add_dependency 'amoeba', '~> 3.0.0'
-  s.add_dependency 'exception_notification'
   # you cannot add specific code repo to gemspec so it must just go in the Gemfile instead if for internal use
 end
