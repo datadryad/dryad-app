@@ -17,7 +17,6 @@ default: &default
     shoulder: "doi:10.5072/FK2"
     account: apitest
     password: apitest
-    coowners: [""]
     id_scheme: doi
   authentication:
     strategy: google
