@@ -1,8 +1,3 @@
-require 'exception_notifier'
-require 'exception_notification/rack'
-require 'exception_notification/rails'
-require 'exception_notification'
-
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 
