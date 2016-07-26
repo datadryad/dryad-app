@@ -1,1 +1,2 @@
-$(".js-keywords_list").replaceWith('<%= raw escape_javascript(render partial: "stash_datacite/subjects/keywords_list", locals: {subjects: @subjects, resource_id: @resource.id }) %>');
+$("#js-keywords__container").replaceWith('<%= raw escape_javascript(render partial: "stash_datacite/subjects/keywords_list", locals: {subjects: @subjects, resource_id: @resource.id }) %>');
+loadSubjects();

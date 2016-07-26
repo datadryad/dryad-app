@@ -1,5 +1,5 @@
 <%# the local variable 'subject' should be passed in to this partial when there are multiple per page %>
-<div id="js-keywords__container" class="js-keywords_list c-keywords__container">
+<div id="js-keywords__container" class="c-keywords__container">
   <% subjects.each do |subject| %>
     <span class="c-keywords__keyword">
       <%= subject.subject %><span class="delete_keyword"><%=link_to '', stash_datacite.subjects_delete_path(subject.id, resource_id: resource_id), method: :delete, remote: true, class: 'c-keywords__keyword-remove' %></span>
@@ -8,7 +8,7 @@
   <%= text_field_tag('subject' , nil, { id: 'keyword', class: 'js-keywords__input c-keywords__input' }) %>
 </div>
 
-<script>
+<script type="text/javascript">
   var disable;
   $(function() {
     function split( val ) {
@@ -47,8 +47,7 @@
           }
         },
         focus: function() {
-          // prevent value inserted on focus
-          changeDivColor();
+          // prevent value inserted on c-keywords__container--has-focus
           return false;
         },
         select: function( event, ui ) {
@@ -69,26 +68,6 @@
           disable=false;
           $(this).focus();
         }
-      }).blur(function (event) {
-      if (!disable) {
-        var form = $(this).parents('form');
-        $(form).trigger('submit.rails');
-        $('.saved_text').show();
-        $('.saving_text').hide();
-      }
-    });
-    $('#js-keywords__container').click(function(){
-      $('#keyword').focus();
-    });
-
-    $('.js-keywords__input').focus(function(){
-      $('#js-keywords__container').addClass('c-keywords__container--has-focus').removeClass('c-keywords__container--has-blur');
-      $('.saving_text').show();
-      $('.saved_text').hide();
-    });
-
-    $('.js-keywords__input').blur(function(){
-      $('#js-keywords__container').removeClass('c-keywords__container--has-focus').addClass('c-keywords__container--has-blur');
-    });
+      });
   });
   </script>
