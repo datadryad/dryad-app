@@ -61,6 +61,7 @@ module StashEngine
     end
 
     def error_report(resource, title, error)
+      user = resource.user
       @user_name = "#{user.first_name} #{user.last_name}"
       @user_email = user.email
       @title = title
