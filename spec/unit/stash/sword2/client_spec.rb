@@ -53,8 +53,19 @@ module Stash
         it 'returns the entry'
         it "gets the entry from the Edit-IRI in the Location: header if it isn't returned in the body"
         it 'forwards a success response'
-        it 'forwards a 4xx error'
-        it 'forwards a 5xx error'
+
+        it 'forwards a 4xx error' do
+          authorized_uri = collection_uri.sub('http://', "http://#{username}:#{password}@")
+          stub_request(:post, authorized_uri).to_return(status: [403, 'Forbidden'])
+          expect { client.create(zipfile: zipfile, doi: doi) }.to raise_error(RestClient::Forbidden)
+        end
+
+        it 'forwards a 5xx error' do
+          authorized_uri = collection_uri.sub('http://', "http://#{username}:#{password}@")
+          stub_request(:post, authorized_uri).to_return(status: [500, 'Internal Server Error'])
+          expect { client.create(zipfile: zipfile, doi: doi) }.to raise_error(RestClient::InternalServerError)
+        end
+
         it 'forwards an internal exception'
       end
 
@@ -105,8 +116,21 @@ module Stash
 
         it 'does something clever and asynchronous'
         it 'forwards a success response'
-        it 'forwards a 4xx error'
-        it 'forwards a 5xx error'
+
+        it 'forwards a 4xx error' do
+          edit_iri = "http://merritt.cdlib.org/sword/v2/object/#{doi}"
+          authorized_uri = edit_iri.sub('http://', "http://#{username}:#{password}@")
+          stub_request(:put, authorized_uri).to_return(status: [403, 'Forbidden'])
+          expect { client.update(edit_iri: edit_iri, zipfile: zipfile) }.to raise_error(RestClient::Forbidden)
+        end
+
+        it 'forwards a 5xx error' do
+          edit_iri = "http://merritt.cdlib.org/sword/v2/object/#{doi}"
+          authorized_uri = edit_iri.sub('http://', "http://#{username}:#{password}@")
+          stub_request(:put, authorized_uri).to_return(status: [500, 'Internal Server Error'])
+          expect { client.update(edit_iri: edit_iri, zipfile: zipfile) }.to raise_error(RestClient::InternalServerError)
+        end
+
         it 'forwards an internal exception'
       end
 
