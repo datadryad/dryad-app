@@ -4,8 +4,19 @@ module StashEngine
   class SwordJob
     include Concurrent::Async
 
+    # Creates a {SwordJob} and submits it on a background thread, logging the result.
+    #
+    # @param title [String] The title of the dataset being submitted
+    # @param doi [String] The DOI of the dataset being submitted
+    # @param zipfile [String] The local path, on the server, of the zipfile to be submitted
+    # @param resource_id [Integer] The ID of the resource being submitted
+    # @param sword_params [Hash] Initialization parameters for `Stash::Sword::Client`.
+    #   See the [stash-sword documentation](http://www.rubydoc.info/gems/stash-sword/Stash/Sword/Client#initialize-instance_method)
+    #   for details.
+    # @param request_host [String] The public hostname of the application UI. Used to generate links in the notification email.
+    # @param request_port [Integer] The public-facing port of the application UI. Used to generate links in the notification email.
     def self.submit_async(title:, doi:, zipfile:, resource_id:, sword_params:, request_host:, request_port:)
-      result = SwordJob.new(
+      task = SwordJob.new(
           title: title,
           doi: doi,
           zipfile: zipfile,
@@ -13,11 +24,24 @@ module StashEngine
           sword_params: sword_params,
           request_host: request_host,
           request_port: request_port
-      ).async.submit
+      )
 
+      # See https://github.com/ruby-concurrency/concurrent-ruby/blob/master/doc/future.md
+      result = task.async.submit
       result.add_observer(ResultLoggingObserver.new(title: title, doi: doi))
     end
 
+    # Creates a new {SwordJob}.
+    #
+    # @param title [String] The title of the dataset being submitted
+    # @param doi [String] The DOI of the dataset being submitted
+    # @param zipfile [String] The local path, on the server, of the zipfile to be submitted
+    # @param resource_id [Integer] The ID of the resource being submitted
+    # @param sword_params [Hash] Initialization parameters for `Stash::Sword::Client`.
+    #   See the [stash-sword documentation](http://www.rubydoc.info/gems/stash-sword/Stash/Sword/Client#initialize-instance_method)
+    #   for details.
+    # @param request_host [String] The public hostname of the application UI. Used to generate links in the notification email.
+    # @param request_port [Integer] The public-facing port of the application UI. Used to generate links in the notification email.
     def initialize(title:, doi:, zipfile:, resource_id:, sword_params:, request_host:, request_port:)
       super()
       @title = title
@@ -29,6 +53,7 @@ module StashEngine
       @request_port = request_port
     end
 
+    # Submits this job
     def submit
       log.debug("#{self.class}.submit() at #{Time.now}: title: '#{title}', doi: #{doi}, zipfile: #{zipfile}, resource_id: #{resource_id}, sword_params: #{sword_params}")
       request_msg = "Submitting #{zipfile} for '#{title}' (#{doi}) at #{Time.now}: #{(sword_params.map { |k, v| "#{k}: #{v}" }).join(', ')}"
@@ -41,19 +66,13 @@ module StashEngine
         resource.update_version(zipfile)
         update_submission_log(resource_id: resource_id, request_msg: request_msg, response_msg: 'Success')
       rescue => e
-        log.error(e)
-        log.debug(e.backtrace.join("\n")) if e.backtrace
+        backtrace = "\n#{e.backtrace.join("\n")}" if e.backtrace
+        log.error("#{e}#{backtrace}")
 
         update_submission_log(resource_id: resource_id, request_msg: request_msg, response_msg: "Failed: #{e}")
-
-        if resource
-          resource.set_state('error')
-          if resource.update_uri
-            UserMailer.update_failed(resource, title, request_host, request_port, e).deliver_now
-          else
-            UserMailer.create_failed(resource, title, request_host, request_port, e).deliver_now
-          end
-        end
+        error_report(resource, e).deliver_now
+        failure_report(resource, e).deliver_now
+        resource.set_state('error') if resource
 
         # TODO: Enable this (and don't raise) once we have ExceptionNotifier configured
         # ExceptionNotifier.notify_exception(e, data: {title: title, doi: doi, zipfile: zipfile, resource_id: resource_id, sword_params: sword_params})
@@ -91,6 +110,8 @@ module StashEngine
     end
 
     def update(resource)
+      raise RestClient::InternalServerError
+
       update_uri = resource.update_uri
       log.debug("invoking update(edit_iri: #{update_uri}, zipfile: #{zipfile}) for resource #{resource.id} (title: '#{title}')")
       status = client.update(edit_iri: update_uri, zipfile: zipfile)
@@ -102,8 +123,33 @@ module StashEngine
       SubmissionLog.create(resource_id: resource_id, archive_submission_request: request_msg, archive_response: response_msg)
     end
 
+    # Generates an error report (w/stack trace) to be emailed to Stash administrators
+    #
+    # @param resource [Resource, nil] The resource, or nil if the resource could not be found in the database
+    #   at submission time
+    # @param e [Exception] The error
+    # @return [ActionMailer::MessageDelivery] a deliverable email message
+    def error_report(resource, e)
+      UserMailer.error_report(resource, title, e)
+    end
+
+    # Generates a failure report (w/link to 'My Datasets' page) to be emailed to the owner of the
+    # dataset that could not be submitted
+    #
+    # @param resource [Resource, nil] The resource, or nil if the resource could not be found in the database
+    #   at submission time
+    # @param e [Exception] The error
+    # @return [ActionMailer::MessageDelivery] a deliverable email message
+    def failure_report(resource, e)
+      if resource && resource.update_uri
+        UserMailer.update_failed(resource, title, request_host, request_port, e)
+      else
+        UserMailer.create_failed(resource, title, request_host, request_port, e)
+      end
+    end
   end
 
+  # Logs the result of the SwordJob, whether success or failure
   class ResultLoggingObserver
     def log
       Rails.logger
@@ -112,11 +158,16 @@ module StashEngine
     attr_reader :title
     attr_reader :doi
 
+    # Creates a new {ResultLoggingObserver}
+    # @param title [String] the title of the dataset being submitted
+    # @param doi [String] the DOI of the dataset being submitted
     def initialize(title:, doi:)
       @doi = doi
       @title = title
     end
 
+    # Called by the `Concurrent::Async` framework on completion of the
+    # {SwordJob} async background task
     def update(time, value, reason)
       reason ? log_failure(time, reason) : log_success(time, value)
     end
