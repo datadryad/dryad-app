@@ -110,8 +110,6 @@ module StashEngine
     end
 
     def update(resource)
-      raise RestClient::InternalServerError
-
       update_uri = resource.update_uri
       log.debug("invoking update(edit_iri: #{update_uri}, zipfile: #{zipfile}) for resource #{resource.id} (title: '#{title}')")
       status = client.update(edit_iri: update_uri, zipfile: zipfile)
