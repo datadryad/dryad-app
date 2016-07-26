@@ -10,7 +10,7 @@ module StashDatacite
     # POST /subjects
     def create
       @resource = StashEngine::Resource.find(params[:resource_id])
-      subjects_array = subject_params[:subject].split(/\s*,\s*/)
+      subjects_array = subject_params[:subject].split(/\s*,\s*/).delete_if {|i| i.blank? }
       subjects_array.each do |sub|
         Subject.create(subject: sub) unless Subject.where('subject LIKE ?', sub).exists?
         @subject = Subject.where('subject LIKE ?', sub).first
