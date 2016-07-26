@@ -10,7 +10,7 @@ function loadSubjects() {
     $('.saved_text').hide();
   });
 
-  $('#keyword').keypress(function(event) {
+  $('#keyword').keydown(function(event) {
     if (event.keyCode == 13 || event.keyCode == 9) {
       var self = $(this);
       var form = self.parents('form');
