@@ -1,8 +1,8 @@
 GIT
   remote: https://github.com/CDLUC3/stash_ezid_datacite.git
-  revision: 21232f00ea8bbc3d068961cdb028e6dad43a4580
+  revision: 875a85f7419e1304d981f4a44d43f8f0177e65e8
   specs:
-    stash_ezid_datacite (0.1.3)
+    stash_ezid_datacite (0.1.4)
       ezid-client
 
 PATH
