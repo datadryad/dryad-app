@@ -5,6 +5,10 @@ module StashDatacite
     belongs_to :name_identifier
     has_and_belongs_to_many :affiliations, :class_name => 'StashDatacite::Affiliation'
 
+    amoeba do
+      enable
+    end
+
     before_save :strip_whitespace
 
     scope :filled, -> { joins(:affiliations).
