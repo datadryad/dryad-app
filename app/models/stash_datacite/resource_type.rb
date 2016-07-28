@@ -18,7 +18,6 @@ module StashDatacite
     enum resource_type: ResourceTypeEnum
 
     def resource_type_friendly=(type)
-      # self required here to work correctly
       self.resource_type = type.to_s.downcase unless type.blank?
     end
 

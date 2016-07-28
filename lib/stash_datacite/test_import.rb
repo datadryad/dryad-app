@@ -39,7 +39,6 @@ module StashDatacite
       #TODO: also need to add additional values to resource: geolocation (0/1), download_uri, update_uri
 
       add_creators
-      byebug
       add_titles
       add_publisher
       add_publication_year
@@ -49,6 +48,7 @@ module StashDatacite
       add_language
       add_resource_type
       add_alternate_identifiers
+      byebug
       add_related_identifiers
       add_sizes
       add_formats
@@ -79,7 +79,6 @@ module StashDatacite
       @m_resource.creators.each do |creator|
         lname, fname = extract_last_first(creator.name)
         name_ident = nil
-        orcid_id = nil
 
         affil_ids = creator.affiliations.map{|i| get_or_create_affiliation(i)}
 
@@ -95,7 +94,7 @@ module StashDatacite
         ar_creator = Creator.create(
             creator_first_name: fname,
             creator_last_name: lname,
-            name_identifier_id: name_ident.id, # This is seriously messed up, it will not set this on create, WTF?
+            name_identifier_id: name_ident.try(:id),
             resource_id: @resource.id
         )
         ar_creator.affiliation_ids = affil_ids
@@ -104,11 +103,7 @@ module StashDatacite
 
     def add_titles
       @m_resource.titles.each do |t|
-        title_type = nil
-        unless t.type.nil?
-          title_type = t.type.value.downcase
-        end
-        Title.create(title: t.value, title_type: title_type, resource_id: @resource.id)
+        Title.create(title: t.value, title_type_friendly: t.try(:type).try(:value), resource_id: @resource.id)
       end
     end
 
@@ -119,7 +114,7 @@ module StashDatacite
     end
 
     def add_publication_year
-      unless @m_resource.publication_year.blank?
+      unless @m_resource.try(:publication_year).blank?
         PublicationYear.create(publication_year: @m_resource.publication_year, resource_id: @resource.id)
       end
     end
@@ -127,7 +122,7 @@ module StashDatacite
     def add_subjects
       @m_resource.subjects.each do |s|
         subj = Subject.find_or_create_by(subject: s.value) do |sub|
-          sub.subject_scheme = s.scheme
+          sub.subject_scheme = s.try(:scheme)
           sub.scheme_URI = s.try(:scheme_uri).try(:to_s)
         end
         ResourcesSubjects.create(resource_id: @resource.id, subject_id: subj.id)
@@ -136,50 +131,52 @@ module StashDatacite
 
     def add_contributors
       @m_resource.contributors.each do |c|
-        affil_no = get_or_create_affiliation(c.affiliations.try(:first))
-        name_identifier_id = nil
+        affil_ids = c.affiliations.map{|i| get_or_create_affiliation(i)}
+        name_ident = nil
 
+        # get/create name identifier
         unless c.try(:identifier).blank?
-          name_id = NameIdentifier.find_or_create_by(name_identifier: c.identifier.value) do |ni|
+          name_ident = NameIdentifier.find_or_create_by(name_identifier: c.identifier.value,
+                                                        name_identifier_scheme: c.identifier.try(:scheme)) do |ni|
             ni.name_identifier_scheme = c.identifier.try(:scheme)
             ni.scheme_URI = c.identifier.try(:scheme_uri).try(:to_s)
           end
-          name_identifier_id = name_id.id
         end
 
-        # TODO: affiliation 0-n in datacite, but 0-1 here
-        Contributor.create(
+        ar_contributor = Contributor.create(
             contributor_name: c.name,
-            contributor_type: c.try(:type).try(:value).try(:downcase),
-            name_identifier_id: name_identifier_id,
-            affiliation_id: affil_no,
+            contributor_type_friendly: c.try(:type).try(:value),
+            name_identifier_id: name_ident.try(:id),
             resource_id: @resource.id
         )
+        ar_contributor.affiliation_ids = affil_ids
       end
     end
 
     def add_dates
       @m_resource.dates.each do |d|
-        DataciteDate.create(date: d.value, date_type: d.type.value.downcase)
+        DataciteDate.create(date: d.value, date_type_friendly: d.try(:type).try(:value), resource_id: @resource.id)
       end
     end
 
     def add_language
-      # TODO: We don't seem to have a language in the database
-      #unless @m_resource.language.blank?
-      #
-      #end
+      unless @m_resource.language.blank?
+        Language.create(language: @m_resource.language, resource_id: @resource.id )
+      end
     end
 
     def add_resource_type
       unless @m_resource.resource_type.blank?
-        ResourceType.create(resource_type: @m_resource.resource_type.try(:resource_type_general).try(:value).try(:downcase),
+        ResourceType.create(resource_type_friendly: @m_resource.resource_type.try(:resource_type_general).try(:value),
                             resource_id: @resource.id)
       end
     end
 
     def add_alternate_identifiers
-      # TODO: are we ignoring alternate identifiers?  I don't see a table in the database.
+      @m_resource.alternate_identifiers.each do |ai|
+        my_ai = AlternateIdentifier.create(alternate_identifier: ai.value, alternate_identifier_type: ai.type, resource_id: @resource.id)
+        byebug
+      end
     end
 
     def add_related_identifiers

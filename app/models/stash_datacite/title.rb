@@ -13,7 +13,6 @@ module StashDatacite
     before_save :strip_whitespace
 
     def title_type_friendly=(type)
-      # self required here to work correctly
       if type.blank?
         self.title_type = nil
         return
