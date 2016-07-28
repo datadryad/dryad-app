@@ -168,7 +168,7 @@ GEM
       leaflet-rails (~> 0.7.3)
       rails_config (~> 0.4.2)
     geoblacklight-icons (0.3.0)
-    globalid (0.3.6)
+    globalid (0.3.7)
       activesupport (>= 4.1.0)
     hashie (3.4.4)
     hirb (0.7.3)
