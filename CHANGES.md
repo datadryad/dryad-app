@@ -1,4 +1,4 @@
-# 0.2.0 (next)
+# 0.1.10 (next)
 
 - Added convenience constant `License::CC_ZERO` for the
   [CC0](https://creativecommons.org/publicdomain/zero/1.0/legalcode) public domain declaration
