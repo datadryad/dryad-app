@@ -48,13 +48,13 @@ module StashDatacite
       add_language
       add_resource_type
       add_alternate_identifiers
-      byebug
       add_related_identifiers
       add_sizes
       add_formats
       add_version
       add_rights
       add_descriptions
+      byebug
       add_geolocations
     end
 
@@ -174,24 +174,19 @@ module StashDatacite
 
     def add_alternate_identifiers
       @m_resource.alternate_identifiers.each do |ai|
-        my_ai = AlternateIdentifier.create(alternate_identifier: ai.value, alternate_identifier_type: ai.type, resource_id: @resource.id)
-        byebug
+        AlternateIdentifier.create(alternate_identifier: ai.value, alternate_identifier_type: ai.type, resource_id: @resource.id)
       end
     end
 
     def add_related_identifiers
       @m_resource.related_identifiers.each do |ri|
-        related_iden_type_id = ri.identifier_type.value
-        relation_type_id = RelationType.find_by_relation_type(ri.relation_type.value)
-        # TODO: we are losing some data since relation_type table has properties that belong to related identifiers
-        # instead
-
-        RelatedIdentifier.create(
-            related_identifier:           ri.value,
-            related_identifier_type_id:   ri.identifier_type.value,
-            relation_type_id:             relation_type_id,
-            resource_id:                  @resource.id
-        )
+        RelatedIdentifier.create(related_identifier:                ri.value,
+                                 related_identifier_type_friendly:  ri.try(:identifier_type).try(:value),
+                                 relation_type_friendly:            ri.try(:relation_type).try(:value),
+                                 related_metadata_scheme:           ri.try(:related_metadata_scheme),
+                                 scheme_URI:                        ri.try(:scheme_uri).try(:to_s),
+                                 scheme_type:                       ri.try(:scheme_type),
+                                 resource_id:                       @resource.id)
       end
     end
 
@@ -202,33 +197,31 @@ module StashDatacite
     end
 
     def add_formats
-      # TODO: formats seems to be missing from database
+      @m_resource.formats.each do |fmt|
+        Format.create(format: fmt, resource_id: @resource.id)
+      end
     end
 
     def add_version
       unless @m_resource.version.blank?
-        Version.create(version: @m_resource.version)
+        Version.create(version: @m_resource.version, resource_id: @resource.id)
       end
     end
 
     def add_rights
       @m_resource.rights_list.each do |r|
-        Right.create(rights: r.value, rights_uri: r.uri)
+        Right.create(rights: r.try(:value), rights_uri: r.try(:uri).try(:to_s), resource_id: @resource.id)
       end
     end
 
     def add_descriptions
       @m_resource.descriptions.each do |d|
-        Description.create(description: d.value, description_type: d.type.value.downcase, resource_id: @resource.id)
+        des = Description.create(description: d.value, description_type_datacite: d.try(:type).try(:value), resource_id: @resource.id)
       end
+      # TODO, need more secret sauce here for reading the special Other description types that mean something in dash.
     end
 
     def add_geolocations
-      # TODO:  It seems as though we're missing the parent geolocation (spatial region or named place) element from
-      # DataCite 3.1 and are just focusing on the points, boxes and place elements 0..1 that are dependent elements
-
-      # TODO: is the db place name the place element or the top level description? Also datacite_mapping doesn't give both
-
       set_geolocation = false
       @m_resource.geo_locations.each do |geo|
         unless geo.place.blank?

@@ -38,6 +38,10 @@ module StashDatacite
       EnumToDcsDescriptions[desription_type]
     end
 
+    def description_type_datacite=(type)
+      self.description_type = type.to_s.downcase unless type.blank?
+    end
+
     # these do not exist in datacite but are our own special sauce
     def special_sauce_description_type?
       SpecialSauceDescriptionTypes.include?(description_type)
