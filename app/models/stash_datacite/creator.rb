@@ -10,6 +10,10 @@ module StashDatacite
       enable
     end
 
+    amoeba do
+      enable
+    end
+
     before_save :strip_whitespace
 
     scope :filled, -> { joins(:affiliations).
