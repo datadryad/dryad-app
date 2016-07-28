@@ -2,8 +2,9 @@ module StashDatacite
   class Creator < ActiveRecord::Base
     self.table_name = 'dcs_creators'
     belongs_to :resource, class_name: StashDatacite.resource_class.to_s
-    belongs_to :name_identifier
-    has_and_belongs_to_many :affiliations, :class_name => 'StashDatacite::Affiliation'
+    belongs_to :name_identifier, class_name: 'StashDatacite::NameIdentifier', foreign_key: 'name_identifier_id'
+
+    has_and_belongs_to_many :affiliations, class_name: 'StashDatacite::Affiliation'
 
     before_save :strip_whitespace
 

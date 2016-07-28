@@ -24,7 +24,8 @@ module StashDatacite
           {shoulder: ezid_shoulder,
            account: ezid_account,
            password: ezid_password,
-           id_scheme: 'doi'
+           id_scheme: 'doi',
+           owner: 'apitest'
           })
     end
 
@@ -38,6 +39,7 @@ module StashDatacite
       #TODO: also need to add additional values to resource: geolocation (0/1), download_uri, update_uri
 
       add_creators
+      byebug
       add_titles
       add_publisher
       add_publication_year
@@ -74,36 +76,29 @@ module StashDatacite
     end
 
     def add_creators
-      @m_resource.creators.each do |c|
-        lname, fname = extract_last_first(c.name)
-        name_identifier_id = nil
+      @m_resource.creators.each do |creator|
+        lname, fname = extract_last_first(creator.name)
+        name_ident = nil
         orcid_id = nil
-        affil_no = get_or_create_affiliation(c.affiliations.try(:first))
 
-        # set/create orcid or name identifier (other than orcid?)
-        unless c.try(:identifier).blank?
-          # TODO: check into this since it's weird that ORCIDs are handled differently than other name identifiers
-          if c.identifier.scheme == 'ORCID'
-            orcid_id = c.identifier.value unless c.identifier.value.blank?
-          else
-            name_id = NameIdentifier.find_or_create_by(name_identifier: c.identifier.value) do |ni|
-              ni.name_identifier_scheme = c.identifier.try(:scheme)
-              ni.scheme_URI = c.identifier.try(:scheme_uri).try(:to_s)
-            end
-            name_identifier_id = name_id.id
+        affil_ids = creator.affiliations.map{|i| get_or_create_affiliation(i)}
+
+        # get/create name identifier
+        unless creator.try(:identifier).blank?
+          name_ident = NameIdentifier.find_or_create_by(name_identifier: creator.identifier.value,
+                                                             name_identifier_scheme: creator.identifier.try(:scheme)) do |ni|
+            ni.name_identifier_scheme = creator.identifier.try(:scheme)
+            ni.scheme_URI = creator.identifier.try(:scheme_uri).try(:to_s)
           end
         end
 
-        # TODO: affiliation 0-n in datacite, but 0-1 here
-        # add creator with the
-        Creator.create(
+        ar_creator = Creator.create(
             creator_first_name: fname,
             creator_last_name: lname,
-            name_identifier_id: name_identifier_id,
-            orcid_id: orcid_id,
-            resource_id: @resource.id,
-            affiliation_id: affil_no
+            name_identifier_id: name_ident.id, # This is seriously messed up, it will not set this on create, WTF?
+            resource_id: @resource.id
         )
+        ar_creator.affiliation_ids = affil_ids
       end
     end
 
