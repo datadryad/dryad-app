@@ -38,6 +38,8 @@ gem 'capistrano-rails', '~> 1.1'
 gem 'capistrano-passenger'
 gem 'passenger'
 
+gem 'sass', '~> 3.4.22'
+
 # run DelayedJob jobs in the background
 gem 'daemons'
 
