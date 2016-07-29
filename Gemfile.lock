@@ -348,9 +348,9 @@ GEM
       rest-client (= 2.0.0.rc2)
       typesafe_enum (~> 0.1, >= 0.1.7)
       xml-mapping_extensions (~> 0.4, >= 0.4.1)
-    stash-wrapper (0.1.9)
+    stash-wrapper (0.1.10)
       typesafe_enum (~> 0.1, >= 0.1.7)
-      xml-mapping_extensions (~> 0.4, >= 0.4.1)
+      xml-mapping_extensions (~> 0.4, >= 0.4.2)
     therubyracer (0.12.2)
       libv8 (~> 3.16.14.0)
       ref
@@ -362,7 +362,7 @@ GEM
     typesafe_enum (0.1.7)
     tzinfo (1.2.2)
       thread_safe (~> 0.1)
-    uglifier (3.0.0)
+    uglifier (3.0.1)
       execjs (>= 0.3.0, < 3)
     unf (0.1.4)
       unf_ext
