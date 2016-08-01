@@ -5,10 +5,7 @@ module StashDatacite
     belongs_to :name_identifier
     has_and_belongs_to_many :affiliations, :class_name => 'StashDatacite::Affiliation'
 
-    ContributorTypes = %w(ContactPerson DataCollector DataCurator DataManager Distributor Editor Funder
-          HostingInstitution Other Producer ProjectLeader ProjectManager ProjectMember RegistrationAgency
-          RegistrationAuthority RelatedPerson ResearchGroup RightsHolder Researcher Sponsor Supervisor
-          WorkPackageLeader)
+    ContributorTypes = Datacite::Mapping::ContributorType.map(&:value)
 
     ContributorTypesEnum = ContributorTypes.map{|i| [i.downcase.to_sym, i.downcase]}.to_h
     ContributorTypesStrToFull = ContributorTypes.map{|i| [i.downcase, i]}.to_h
@@ -22,13 +19,22 @@ module StashDatacite
     end
 
     def contributor_type_friendly=(type)
-      # self required here to work correctly
       self.contributor_type = type.to_s.downcase unless type.blank?
     end
 
     def contributor_type_friendly
       return nil if contributor_type.blank?
       ContributorTypesStrToFull[contributor_type]
+    end
+
+    def self.contributor_type_mapping_obj(str)
+      return nil if str.nil?
+      Datacite::Mapping::ContributorType.find_by_value(str)
+    end
+
+    def contributor_type_mapping_obj
+      return nil if contributor_type_friendly.nil?
+      Contributor.contributor_type_mapping_obj(contributor_type_friendly)
     end
 
     #this is to simulate the bad old structure where a user can only have one affiliation

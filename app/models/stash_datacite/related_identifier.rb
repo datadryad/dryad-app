@@ -3,15 +3,12 @@ module StashDatacite
     self.table_name = 'dcs_related_identifiers'
     belongs_to :resource, class_name: StashDatacite.resource_class.to_s
 
-    RelationTypes = %w(IsCitedBy Cites IsSupplementTo IsSupplementedBy IsContinuedBy Continues IsNewVersionOf
-              IsPreviousVersionOf IsPartOf HasPart IsReferencedBy References IsDocumentedBy Documents IsCompiledBy
-              Compiles IsVariantFormOf IsOriginalFormOf IsIdenticalTo HasMetadata IsMetadataFor Reviews IsReviewedBy
-              IsDerivedFrom IsSourceOf)
+    RelationTypes = Datacite::Mapping::RelationType.map(&:value)
 
     RelationTypesEnum = RelationTypes.map{|i| [i.downcase.to_sym, i.downcase]}.to_h
     RelationTypesStrToFull = RelationTypes.map{|i| [i.downcase, i]}.to_h
 
-    RelatedIdentifierTypes = %w(ARK arXiv bibcode DOI EAN13 EISSN Handle ISBN ISSN ISTC LISSN LSID PMID PURL UPC URL URN)
+    RelatedIdentifierTypes = Datacite::Mapping::RelatedIdentifierType.map(&:value)
 
     RelatedIdentifierTypesEnum = RelatedIdentifierTypes.map{|i| [i.downcase.to_sym, i.downcase]}.to_h
     RelatedIdentifierTypesStrToFull = RelatedIdentifierTypes.map{|i| [i.downcase, i]}.to_h
@@ -34,6 +31,16 @@ module StashDatacite
       relation_type_friendly.scan(/[A-Z]{1}[a-z]*/).map{|i| i.downcase}.join(' ')
     end
 
+    def self.relation_type_mapping_obj(str)
+      return nil if str.nil?
+      Datacite::Mapping::RelationType.find_by_value(str)
+    end
+
+    def relation_type_mapping_obj
+      return nil if relation_type_friendly.nil?
+      RelatedIdentifier.relation_type_mapping_obj(relation_type_friendly)
+    end
+
     def related_identifier_type_friendly=(type)
       # self required here to work correctly
       self.related_identifier_type = type.to_s.downcase unless type.blank?
@@ -42,6 +49,16 @@ module StashDatacite
     def related_identifier_type_friendly
       return nil if related_identifier_type.blank?
       RelatedIdentifierTypesStrToFull[related_identifier_type]
+    end
+
+    def self.related_identifier_type_mapping_obj(str)
+      return nil if str.nil?
+      Datacite::Mapping::RelatedIdentifierType.find_by_value(str)
+    end
+
+    def related_identifier_type_mapping_obj
+      return nil if related_identifier_type_friendly.nil?
+      RelatedIdentifier.related_identifier_type_mapping_obj(related_identifier_type_friendly)
     end
 
     # this is to provide a useful message about the related identifier

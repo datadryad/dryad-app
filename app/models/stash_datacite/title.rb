@@ -3,7 +3,7 @@ module StashDatacite
     self.table_name = 'dcs_titles'
     belongs_to :resource, class_name: StashDatacite.resource_class.to_s
 
-    TitleTypes = %w(AlternativeTitle Subtitle TranslatedTitle)
+    TitleTypes = Datacite::Mapping::TitleType.map(&:value)
 
     TitleTypesEnum = TitleTypes.map{|i| [i.downcase.to_sym, i.downcase]}.to_h
     TitleTypesStrToFull = TitleTypes.map{|i| [i.downcase, i]}.to_h
@@ -23,6 +23,16 @@ module StashDatacite
     def title_type_friendly
       return nil if title_type.blank?
       TitleTypesStrToFull[title_type]
+    end
+
+    def self.title_type_mapping_obj(str)
+      return nil if str.blank?
+      Datacite::Mapping::TitleType.find_by_value(str)
+    end
+
+    def title_type_mapping_obj
+      return nil if title_type_friendly.nil?
+      Title.title_type_mapping_obj(title_type_friendly)
     end
 
     private
