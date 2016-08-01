@@ -4,6 +4,8 @@ require 'stash_ezid/client'
 module StashDatacite
   class TestImport
 
+    GrantRegex = Regexp.new(/^Data were created with funding from (.+) under grant (.+)$/)
+
     def initialize(
         user_uid='scott.fisher-ucb@ucop.edu',
         xml_filename=File.join(StashDatacite::Engine.root, 'test', 'fixtures', 'datacite-example-full-v3.1.xml'),
@@ -54,7 +56,6 @@ module StashDatacite
       add_version
       add_rights
       add_descriptions
-      byebug
       add_geolocations
     end
 
@@ -216,33 +217,39 @@ module StashDatacite
 
     def add_descriptions
       @m_resource.descriptions.each do |d|
-        des = Description.create(description: d.value, description_type_datacite: d.try(:type).try(:value), resource_id: @resource.id)
+        if d.try(:type).try(:value) == 'Other' && (m = GrantRegex.match(d.value)) #setting m here
+          # this is actually a grant funder and a grant number special sauce which we're hacking into the
+          # contributors table for now
+          Contributor.create(contributor_name: m[1], contributor_type: 'funder', award_number: m[2],
+                                  resource_id: @resource_id)
+        else
+          des = Description.create(description: d.value, description_type_friendly: d.try(:type).try(:value), resource_id: @resource.id)
+        end
       end
-      # TODO, need more secret sauce here for reading the special Other description types that mean something in dash.
     end
 
     def add_geolocations
       set_geolocation = false
       @m_resource.geo_locations.each do |geo|
         unless geo.place.blank?
-          GeolocationPlace.create(geo_location_place: geo.place, resource_id: @resource.id)
+          myh = GeolocationPlace.create(geo_location_place: geo.place, resource_id: @resource.id)
           set_geolocation = true
         end
 
         unless geo.try(:point).blank?
-          GeolocationPoint.create(latitude: geo.point.latitude, longitude: geo.point.longitude, resource_id: @resource.id)
+          myh = GeolocationPoint.create(latitude: geo.point.latitude, longitude: geo.point.longitude, resource_id: @resource.id)
           set_geolocation = true
         end
 
         unless geo.try(:box).blank?
-          GeolocationBox.create(
+          myh = GeolocationBox.create(
                             ne_latitude: geo.box.north_latitude,
                             ne_longitude: geo.box.east_longitude,
                             sw_latitude: geo.box.south_latitude,
                             sw_longitude: geo.box.west_longitude,
                             resource_id: @resource.id
           )
-          set_geolocation
+          set_geolocation = true
         end
         if set_geolocation
           @resource.geolocation = true
