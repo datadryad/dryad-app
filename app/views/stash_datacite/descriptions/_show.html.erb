@@ -12,9 +12,9 @@
   </p>
 <% end %>
 
-<% unless usage_notes.try(:description).blank? %>
+<% unless other.try(:description).blank? %>
   <h3 class="o-heading__level2">Usage Notes</h3>
   <p>
-    <%= usage_notes.description %>
+    <%= other.description %>
   </p>
 <% end %>

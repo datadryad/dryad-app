@@ -34,8 +34,8 @@ module StashDatacite
         @methods = @resource.descriptions.where(description_type: :methods).first
       end
 
-      def usage_notes
-        @usage_notes = @resource.descriptions.where(description_type: :usage_notes).first
+      def other
+        @other = @resource.descriptions.where(description_type: :other).first
       end
 
       def subjects

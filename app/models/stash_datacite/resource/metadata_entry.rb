@@ -36,8 +36,8 @@ module StashDatacite
         @methods = Description.type_methods.find_or_create_by(resource_id: @resource.id)
       end
 
-      def usage_notes
-        @usage_notes = Description.type_usage_notes.find_or_create_by(resource_id: @resource.id)
+      def other
+        @other = Description.type_other.find_or_create_by(resource_id: @resource.id)
       end
 
       def new_subject

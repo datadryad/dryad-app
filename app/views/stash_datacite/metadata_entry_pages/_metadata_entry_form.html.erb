@@ -64,8 +64,8 @@
     <%= label_tag :description, "Methods", class: 'c-input__label', for: 'description_methods' %>&nbsp;&nbsp;How was this dataset collected? How has it been processed?
     <%= render partial: "stash_datacite/descriptions/form", locals: { description: @metadata_entry.methods, description_type: :methods } %>
 
-    <%= label_tag :description, "Usage Notes", class: 'c-input__label', for: 'description_usage_notes' %>&nbsp;&nbsp;What else would someone need to know to use this dataset?
-    <%= render partial: "stash_datacite/descriptions/form", locals: { description: @metadata_entry.usage_notes, description_type: :usage_notes } %>
+    <%= label_tag :description, "Usage Notes", class: 'c-input__label', for: 'description_other' %>&nbsp;&nbsp;What else would someone need to know to use this dataset?
+    <%= render partial: "stash_datacite/descriptions/form", locals: { description: @metadata_entry.other, description_type: :other } %>
 
     <fieldset class="c-fieldset">
     <legend class="c-fieldset__legend">Related work(s) <span class="c-input__hint">articles, other datasets: e.g., This dataset is cited by DOI 10.1000/182.</span></legend>

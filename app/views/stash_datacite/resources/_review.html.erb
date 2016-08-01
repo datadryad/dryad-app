@@ -12,7 +12,7 @@
                          publisher: @review.publisher,
                          publication_years: @resource.publication_years } %>
     </section>
-    <%= render partial: "stash_datacite/descriptions/show", locals: { abstract: @review.abstract, methods: @review.methods, usage_notes: @review.usage_notes } %>
+    <%= render partial: "stash_datacite/descriptions/show", locals: { abstract: @review.abstract, methods: @review.methods, other: @review.other } %>
     <%= render partial: "stash_datacite/subjects/show", locals: { subjects: @review.subjects } %>
 
     <% unless @review.contributors.length + @review.related_identifiers.length < 1 %>

@@ -91,7 +91,7 @@ module StashDatacite
             ),
             dm::Description.new(
                 type: dm::DescriptionType::OTHER,
-                value: "#{@resource.descriptions.where(description_type: :usage_notes).first.description}"
+                value: "#{@resource.descriptions.where(description_type: :other).first.description}"
             )
           ]
         )
