@@ -76,4 +76,17 @@ Rails.application.configure do
 
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
+
+  # Exception Notification settings in Production
+  Rails.application.config.middleware.use ExceptionNotification::Rack,
+  :email => {
+    # :deliver_with => :deliver, # Rails >= 4.2.1 do not need this option since it defaults to :deliver_now
+    :email_prefix => "[Dash Exception]",
+    :sender_address => %{"Notifier" no-reply-dash2-prd.cdlib.org},
+    :exception_recipients => %w{david.moles@ucop.edu marisa.strong@ucop.edu scott.fisher@ucop.edu bhavi.vedula@ucop.edu}
+  }
+
+  config.action_mailer.delivery_method = :sendmail
+  config.action_mailer.perform_deliveries = true
+  config.action_mailer.raise_delivery_errors = true
 end
