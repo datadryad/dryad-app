@@ -306,7 +306,7 @@ GEM
       rspec-mocks (~> 3.5.0)
       rspec-support (~> 3.5.0)
     rspec-support (3.5.0)
-    rubocop (0.42.0)
+    rubocop (0.41.2)
       parser (>= 2.3.1.1, < 3.0)
       powerpack (~> 0.1)
       rainbow (>= 1.99.1, < 3.0)
@@ -348,9 +348,9 @@ GEM
       rest-client (= 2.0.0.rc2)
       typesafe_enum (~> 0.1, >= 0.1.7)
       xml-mapping_extensions (~> 0.4, >= 0.4.1)
-    stash-wrapper (0.1.9)
+    stash-wrapper (0.1.10)
       typesafe_enum (~> 0.1, >= 0.1.7)
-      xml-mapping_extensions (~> 0.4, >= 0.4.1)
+      xml-mapping_extensions (~> 0.4, >= 0.4.2)
     therubyracer (0.12.2)
       libv8 (~> 3.16.14.0)
       ref
@@ -362,7 +362,7 @@ GEM
     typesafe_enum (0.1.7)
     tzinfo (1.2.2)
       thread_safe (~> 0.1)
-    uglifier (3.0.0)
+    uglifier (3.0.1)
       execjs (>= 0.3.0, < 3)
     unf (0.1.4)
       unf_ext
@@ -380,6 +380,7 @@ GEM
       mime-types (~> 2.5)
       typesafe_enum (~> 0.1, >= 0.1.5)
       xml-mapping (~> 0.10)
+    yui-compressor (0.12.0)
 
 PLATFORMS
   ruby
@@ -412,6 +413,7 @@ DEPENDENCIES
   turbolinks
   uglifier (>= 1.3.0)
   web-console (~> 2.0)
+  yui-compressor
 
 BUNDLED WITH
    1.11.2
