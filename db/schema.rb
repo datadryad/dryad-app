@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160805221450) do
+ActiveRecord::Schema.define(version: 20160805223035) do
 
   create_table "bookmarks", force: :cascade do |t|
     t.integer  "user_id",       limit: 4,   null: false
@@ -37,12 +37,18 @@ ActiveRecord::Schema.define(version: 20160805221450) do
     t.datetime "updated_at",                 null: false
   end
 
+  add_index "dcs_affiliations", ["long_name"], name: "index_dcs_affiliations_on_long_name", using: :btree
+  add_index "dcs_affiliations", ["short_name"], name: "index_dcs_affiliations_on_short_name", using: :btree
+
   create_table "dcs_affiliations_contributors", force: :cascade do |t|
     t.integer  "affiliation_id", limit: 4
     t.integer  "contributor_id", limit: 4
     t.datetime "created_at",               null: false
     t.datetime "updated_at",               null: false
   end
+
+  add_index "dcs_affiliations_contributors", ["affiliation_id"], name: "index_dcs_affiliations_contributors_on_affiliation_id", using: :btree
+  add_index "dcs_affiliations_contributors", ["contributor_id"], name: "index_dcs_affiliations_contributors_on_contributor_id", using: :btree
 
   create_table "dcs_affiliations_creators", force: :cascade do |t|
     t.integer  "affiliation_id", limit: 4
@@ -51,6 +57,9 @@ ActiveRecord::Schema.define(version: 20160805221450) do
     t.datetime "updated_at",               null: false
   end
 
+  add_index "dcs_affiliations_creators", ["affiliation_id"], name: "index_dcs_affiliations_creators_on_affiliation_id", using: :btree
+  add_index "dcs_affiliations_creators", ["creator_id"], name: "index_dcs_affiliations_creators_on_creator_id", using: :btree
+
   create_table "dcs_alternate_identifiers", force: :cascade do |t|
     t.text     "alternate_identifier",      limit: 65535
     t.text     "alternate_identifier_type", limit: 65535
@@ -58,6 +67,8 @@ ActiveRecord::Schema.define(version: 20160805221450) do
     t.datetime "created_at",                              null: false
     t.datetime "updated_at",                              null: false
   end
+
+  add_index "dcs_alternate_identifiers", ["resource_id"], name: "index_dcs_alternate_identifiers_on_resource_id", using: :btree
 
   create_table "dcs_contributors", force: :cascade do |t|
     t.string   "contributor_name",   limit: 255
@@ -69,6 +80,9 @@ ActiveRecord::Schema.define(version: 20160805221450) do
     t.string   "award_number",       limit: 255
   end
 
+  add_index "dcs_contributors", ["name_identifier_id"], name: "index_dcs_contributors_on_name_identifier_id", using: :btree
+  add_index "dcs_contributors", ["resource_id"], name: "index_dcs_contributors_on_resource_id", using: :btree
+
   create_table "dcs_creators", force: :cascade do |t|
     t.string   "creator_first_name", limit: 255
     t.string   "creator_last_name",  limit: 255
@@ -78,6 +92,9 @@ ActiveRecord::Schema.define(version: 20160805221450) do
     t.datetime "updated_at",                     null: false
   end
 
+  add_index "dcs_creators", ["name_identifier_id"], name: "index_dcs_creators_on_name_identifier_id", using: :btree
+  add_index "dcs_creators", ["resource_id"], name: "index_dcs_creators_on_resource_id", using: :btree
+
   create_table "dcs_dates", force: :cascade do |t|
     t.date     "date"
     t.string   "date_type",   limit: 11
@@ -86,6 +103,8 @@ ActiveRecord::Schema.define(version: 20160805221450) do
     t.datetime "updated_at",             null: false
   end
 
+  add_index "dcs_dates", ["resource_id"], name: "index_dcs_dates_on_resource_id", using: :btree
+
   create_table "dcs_descriptions", force: :cascade do |t|
     t.text     "description",      limit: 65535
     t.string   "description_type", limit: 17
@@ -93,6 +112,8 @@ ActiveRecord::Schema.define(version: 20160805221450) do
     t.datetime "created_at",                     null: false
     t.datetime "updated_at",                     null: false
   end
+
+  add_index "dcs_descriptions", ["resource_id"], name: "index_dcs_descriptions_on_resource_id", using: :btree
 
   create_table "dcs_embargoes", force: :cascade do |t|
     t.string   "embargo_type", limit: 11,  default: "none"
@@ -104,12 +125,16 @@ ActiveRecord::Schema.define(version: 20160805221450) do
     t.datetime "updated_at",                                null: false
   end
 
+  add_index "dcs_embargoes", ["resource_id"], name: "index_dcs_embargoes_on_resource_id", using: :btree
+
   create_table "dcs_formats", force: :cascade do |t|
     t.text     "format",      limit: 65535
     t.integer  "resource_id", limit: 4,     null: false
     t.datetime "created_at",                null: false
     t.datetime "updated_at",                null: false
   end
+
+  add_index "dcs_formats", ["resource_id"], name: "index_dcs_formats_on_resource_id", using: :btree
 
   create_table "dcs_geo_location_boxes", force: :cascade do |t|
     t.decimal  "sw_latitude",            precision: 10, scale: 6
@@ -121,6 +146,8 @@ ActiveRecord::Schema.define(version: 20160805221450) do
     t.datetime "updated_at",                                      null: false
   end
 
+  add_index "dcs_geo_location_boxes", ["resource_id"], name: "index_dcs_geo_location_boxes_on_resource_id", using: :btree
+
   create_table "dcs_geo_location_places", force: :cascade do |t|
     t.string   "geo_location_place", limit: 255
     t.integer  "resource_id",        limit: 4
@@ -130,6 +157,8 @@ ActiveRecord::Schema.define(version: 20160805221450) do
     t.decimal  "longitude",                      precision: 10, scale: 6
   end
 
+  add_index "dcs_geo_location_places", ["resource_id"], name: "index_dcs_geo_location_places_on_resource_id", using: :btree
+
   create_table "dcs_geo_location_points", force: :cascade do |t|
     t.decimal  "latitude",              precision: 10, scale: 6
     t.decimal  "longitude",             precision: 10, scale: 6
@@ -138,12 +167,16 @@ ActiveRecord::Schema.define(version: 20160805221450) do
     t.datetime "updated_at",                                     null: false
   end
 
+  add_index "dcs_geo_location_points", ["resource_id"], name: "index_dcs_geo_location_points_on_resource_id", using: :btree
+
   create_table "dcs_languages", force: :cascade do |t|
     t.string   "language",    limit: 255
     t.integer  "resource_id", limit: 4
     t.datetime "created_at",              null: false
     t.datetime "updated_at",              null: false
   end
+
+  add_index "dcs_languages", ["resource_id"], name: "index_dcs_languages_on_resource_id", using: :btree
 
   create_table "dcs_name_identifiers", force: :cascade do |t|
     t.string   "name_identifier",        limit: 255
@@ -153,6 +186,8 @@ ActiveRecord::Schema.define(version: 20160805221450) do
     t.datetime "updated_at",                           null: false
   end
 
+  add_index "dcs_name_identifiers", ["name_identifier"], name: "index_dcs_name_identifiers_on_name_identifier", using: :btree
+
   create_table "dcs_publication_years", force: :cascade do |t|
     t.string   "publication_year", limit: 255
     t.integer  "resource_id",      limit: 4
@@ -160,12 +195,16 @@ ActiveRecord::Schema.define(version: 20160805221450) do
     t.datetime "updated_at",                   null: false
   end
 
+  add_index "dcs_publication_years", ["resource_id"], name: "index_dcs_publication_years_on_resource_id", using: :btree
+
   create_table "dcs_publishers", force: :cascade do |t|
     t.string   "publisher",   limit: 255
     t.integer  "resource_id", limit: 4
     t.datetime "created_at",              null: false
     t.datetime "updated_at",              null: false
   end
+
+  add_index "dcs_publishers", ["resource_id"], name: "index_dcs_publishers_on_resource_id", using: :btree
 
   create_table "dcs_related_identifiers", force: :cascade do |t|
     t.string   "related_identifier",      limit: 255
@@ -179,12 +218,17 @@ ActiveRecord::Schema.define(version: 20160805221450) do
     t.datetime "updated_at",                            null: false
   end
 
+  add_index "dcs_related_identifiers", ["related_identifier"], name: "index_dcs_related_identifiers_on_related_identifier", using: :btree
+  add_index "dcs_related_identifiers", ["resource_id"], name: "index_dcs_related_identifiers_on_resource_id", using: :btree
+
   create_table "dcs_resource_types", force: :cascade do |t|
     t.string   "resource_type", limit: 19
     t.integer  "resource_id",   limit: 4
     t.datetime "created_at",               null: false
     t.datetime "updated_at",               null: false
   end
+
+  add_index "dcs_resource_types", ["resource_id"], name: "index_dcs_resource_types_on_resource_id", using: :btree
 
   create_table "dcs_rights", force: :cascade do |t|
     t.string   "rights",      limit: 255
@@ -194,12 +238,16 @@ ActiveRecord::Schema.define(version: 20160805221450) do
     t.datetime "updated_at",                null: false
   end
 
+  add_index "dcs_rights", ["resource_id"], name: "index_dcs_rights_on_resource_id", using: :btree
+
   create_table "dcs_sizes", force: :cascade do |t|
     t.string   "size",        limit: 255
     t.integer  "resource_id", limit: 4
     t.datetime "created_at",              null: false
     t.datetime "updated_at",              null: false
   end
+
+  add_index "dcs_sizes", ["resource_id"], name: "index_dcs_sizes_on_resource_id", using: :btree
 
   create_table "dcs_subjects", force: :cascade do |t|
     t.string   "subject",        limit: 255
@@ -209,12 +257,17 @@ ActiveRecord::Schema.define(version: 20160805221450) do
     t.datetime "updated_at",                   null: false
   end
 
+  add_index "dcs_subjects", ["subject"], name: "index_dcs_subjects_on_subject", using: :btree
+
   create_table "dcs_subjects_stash_engine_resources", force: :cascade do |t|
     t.integer  "resource_id", limit: 4
     t.integer  "subject_id",  limit: 4
     t.datetime "created_at",            null: false
     t.datetime "updated_at",            null: false
   end
+
+  add_index "dcs_subjects_stash_engine_resources", ["resource_id"], name: "index_dcs_subjects_stash_engine_resources_on_resource_id", using: :btree
+  add_index "dcs_subjects_stash_engine_resources", ["subject_id"], name: "index_dcs_subjects_stash_engine_resources_on_subject_id", using: :btree
 
   create_table "dcs_titles", force: :cascade do |t|
     t.string   "title",       limit: 255
@@ -224,12 +277,16 @@ ActiveRecord::Schema.define(version: 20160805221450) do
     t.datetime "updated_at",              null: false
   end
 
+  add_index "dcs_titles", ["resource_id"], name: "index_dcs_titles_on_resource_id", using: :btree
+
   create_table "dcs_versions", force: :cascade do |t|
     t.string   "version",     limit: 255
     t.integer  "resource_id", limit: 4
     t.datetime "created_at",              null: false
     t.datetime "updated_at",              null: false
   end
+
+  add_index "dcs_versions", ["resource_id"], name: "index_dcs_versions_on_resource_id", using: :btree
 
   create_table "searches", force: :cascade do |t|
     t.text     "query_params", limit: 65535
@@ -264,6 +321,8 @@ ActiveRecord::Schema.define(version: 20160805221450) do
     t.datetime "updated_at",                  null: false
   end
 
+  add_index "stash_engine_identifiers", ["identifier"], name: "index_stash_engine_identifiers_on_identifier", using: :btree
+
   create_table "stash_engine_image_uploads", force: :cascade do |t|
     t.string   "image_name",       limit: 255
     t.string   "image_type",       limit: 255
@@ -282,11 +341,16 @@ ActiveRecord::Schema.define(version: 20160805221450) do
     t.integer  "resource_id",    limit: 4
   end
 
+  add_index "stash_engine_resource_states", ["resource_state"], name: "index_stash_engine_resource_states_on_resource_state", using: :btree
+  add_index "stash_engine_resource_states", ["user_id"], name: "index_stash_engine_resource_states_on_user_id", using: :btree
+
   create_table "stash_engine_resource_usages", force: :cascade do |t|
     t.integer "resource_id", limit: 4
     t.integer "downloads",   limit: 4
     t.integer "views",       limit: 4
   end
+
+  add_index "stash_engine_resource_usages", ["resource_id"], name: "index_stash_engine_resource_usages_on_resource_id", using: :btree
 
   create_table "stash_engine_resources", force: :cascade do |t|
     t.integer  "user_id",                   limit: 4
@@ -299,6 +363,8 @@ ActiveRecord::Schema.define(version: 20160805221450) do
     t.string   "update_uri",                limit: 255
   end
 
+  add_index "stash_engine_resources", ["identifier_id"], name: "index_stash_engine_resources_on_identifier_id", using: :btree
+
   create_table "stash_engine_submission_logs", force: :cascade do |t|
     t.integer  "resource_id",                limit: 4
     t.text     "archive_response",           limit: 65535
@@ -306,6 +372,8 @@ ActiveRecord::Schema.define(version: 20160805221450) do
     t.datetime "updated_at",                               null: false
     t.text     "archive_submission_request", limit: 65535
   end
+
+  add_index "stash_engine_submission_logs", ["resource_id"], name: "index_stash_engine_submission_logs_on_resource_id", using: :btree
 
   create_table "stash_engine_users", force: :cascade do |t|
     t.string   "first_name",  limit: 255
@@ -320,7 +388,9 @@ ActiveRecord::Schema.define(version: 20160805221450) do
     t.boolean  "orcid",                   default: false
   end
 
+  add_index "stash_engine_users", ["email"], name: "index_stash_engine_users_on_email", using: :btree
   add_index "stash_engine_users", ["tenant_id"], name: "index_stash_engine_users_on_tenant_id", using: :btree
+  add_index "stash_engine_users", ["uid"], name: "index_stash_engine_users_on_uid", using: :btree
 
   create_table "stash_engine_versions", force: :cascade do |t|
     t.integer  "version",      limit: 4
@@ -329,6 +399,8 @@ ActiveRecord::Schema.define(version: 20160805221450) do
     t.datetime "created_at",               null: false
     t.datetime "updated_at",               null: false
   end
+
+  add_index "stash_engine_versions", ["resource_id"], name: "index_stash_engine_versions_on_resource_id", using: :btree
 
   create_table "users", force: :cascade do |t|
     t.string   "email",                  limit: 255, default: "",    null: false
