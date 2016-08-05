@@ -25,7 +25,7 @@ module Stash
     class License
       # Convenience instance for the [CC-BY](https://creativecommons.org/licenses/by/4.0/) license
       CC_BY = License.new(
-        name: 'Creative Commons Attribution 4.0 International (CC-BY)',
+        name: 'Creative Commons Attribution 4.0 International (CC BY 4.0)',
         uri: URI('https://creativecommons.org/licenses/by/4.0/')
       )
 

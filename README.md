@@ -135,8 +135,8 @@ to be nonsensical.
       <st:note>Mecum noctem illam superiorem; iam intellege</st:note>
     </st:version>
     <st:license>
-      <st:name>Creative Commons Attribution 4.0 International (CC-BY)</st:name>
-      <st:uri>https://creativecommons.org/licenses/by/4.0/legalcode</st:uri>
+      <st:name>Creative Commons Attribution 4.0 International (CC BY 4.0)</st:name>
+      <st:uri>https://creativecommons.org/licenses/by/4.0/</st:uri>
     </st:license>
     <st:embargo>
       <st:type>none</st:type>

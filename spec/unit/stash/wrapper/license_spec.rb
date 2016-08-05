@@ -10,7 +10,7 @@ module Stash
         before(:each) do
           @params = {
             name: 'Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0)',
-            uri: URI('http://creativecommons.org/licenses/by-sa/4.0/legalcode')
+            uri: URI('http://creativecommons.org/licenses/by-sa/4.0/')
           }
         end
 

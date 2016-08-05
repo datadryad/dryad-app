@@ -1,3 +1,9 @@
+# 0.1.11.1 (5 August 2016)
+
+- In `License::CC_BY`, use "Creative Commons Attribution 4.0 International (CC BY 4.0)" 
+  as name, as per [summary](https://creativecommons.org/licenses/by/4.0/), instead of 
+  "Creative Commons Attribution 4.0 International (CC-BY)".
+
 # 0.1.11 (5 August 2016)
 
 - In the convenience constant `License::CC_BY`, use the 

@@ -41,7 +41,7 @@ module Stash
           expect(version.date).to eq(Date.new(2015, 9, 8))
 
           license = admin.license
-          expect(license.name).to eq('Creative Commons Attribution 4.0 International (CC-BY)')
+          expect(license.name).to eq('Creative Commons Attribution 4.0 International (CC BY 4.0)')
           expect(license.uri).to eq(URI('https://creativecommons.org/licenses/by/4.0/'))
 
           embargo = admin.embargo
@@ -102,7 +102,7 @@ module Stash
           expect(wrapper.id_value).to eq('10.21271/wxy1000199')
           expect(wrapper.version_number).to eq(1)
           expect(wrapper.version_date).to eq(Date.new(2012, 8, 17))
-          expect(wrapper.license_name).to eq('Creative Commons Attribution 4.0 International (CC-BY)')
+          expect(wrapper.license_name).to eq('Creative Commons Attribution 4.0 International (CC BY 4.0)')
           expect(wrapper.license_uri).to eq(URI('https://creativecommons.org/licenses/by/4.0/'))
           expect(wrapper.embargo_type).to eq(EmbargoType::NONE)
           expect(wrapper.embargo_end_date).to eq(Date.new(2012, 8, 17))
@@ -168,7 +168,7 @@ module Stash
           expect(wrapper.id_value).to eq('10.12345/1234567890')
           expect(wrapper.version_number).to eq(1)
           expect(wrapper.version_date).to eq(Date.new(2015, 9, 8))
-          expect(wrapper.license_name).to eq('Creative Commons Attribution 4.0 International (CC-BY)')
+          expect(wrapper.license_name).to eq('Creative Commons Attribution 4.0 International (CC BY 4.0)')
           expect(wrapper.license_uri).to eq(URI('https://creativecommons.org/licenses/by/4.0/'))
           expect(wrapper.embargo_type).to eq(EmbargoType::DOWNLOAD)
           expect(wrapper.embargo_end_date).to eq(Date.new(2016, 3, 7))
