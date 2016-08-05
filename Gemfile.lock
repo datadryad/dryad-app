@@ -9,13 +9,13 @@ PATH
   remote: ../stash_engines
   specs:
     stash_datacite (0.0.5)
-      datacite-mapping (~> 0.1, >= 0.1.17)
+      datacite-mapping (~> 0.1, >= 0.1.17.1)
       kaminari
       leaflet-rails
       rails (~> 4.2.4)
       responders (~> 2.0)
       rubyzip
-      stash-wrapper (~> 0.1, >= 0.1.11)
+      stash-wrapper (~> 0.1, >= 0.1.11.1)
     stash_discovery (0.0.1)
       devise-guests (~> 0.3)
       geoblacklight (~> 0.12.1)
@@ -129,7 +129,7 @@ GEM
     coffee-script-source (1.10.0)
     concurrent-ruby (1.0.2)
     daemons (1.2.4)
-    datacite-mapping (0.1.17)
+    datacite-mapping (0.1.17.1)
       typesafe_enum (~> 0.1, >= 0.1.7)
       xml-mapping_extensions (~> 0.4, >= 0.4.5)
     debug_inspector (0.0.2)
@@ -348,7 +348,7 @@ GEM
       rest-client (= 2.0.0.rc2)
       typesafe_enum (~> 0.1, >= 0.1.7)
       xml-mapping_extensions (~> 0.4, >= 0.4.1)
-    stash-wrapper (0.1.11)
+    stash-wrapper (0.1.11.1)
       typesafe_enum (~> 0.1, >= 0.1.7)
       xml-mapping_extensions (~> 0.4, >= 0.4.2)
     therubyracer (0.12.2)
