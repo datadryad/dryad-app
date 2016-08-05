@@ -1,19 +1,35 @@
 <% f = uploaded_file %>
-<div class="c-upload__item--complete" id="uploaded_file_<%= f.id %>">
-  <div class="c-upload__filename"><%= f.upload_file_name %>
-    <span class="c-upload__filesize"><%= filesize(f.upload_file_size) %></span>
-  </div>
-  <div class="c-upload__action">
-    <span style="display: none" class="js-hidden_bytes"><%= f.upload_file_size %></span>
-    <% if uploaded_file.file_state == 'created' || uploaded_file.file_state.nil? %>
+
+<% if uploaded_file.file_state == 'created' || uploaded_file.file_state.nil? %>
+  <div class="c-upload__item--complete js-created_file" id="uploaded_file_<%= f.id %>">
+    <div class="c-upload__filename"><%= f.upload_file_name %>
+      <span class="c-upload__filesize"><%= filesize(f.upload_file_size) %></span>
+    </div>
+    <div class="c-upload__action">
+      <span style="display: none" class="js-hidden_bytes"><%= f.upload_file_size %></span>
       <%= button_to 'Delete', f, method: :delete, remote: true, class: "c-upload__button",
                     form_class: 'o-button__inline-form' %>
-    <% elsif uploaded_file.file_state == 'copied' %>
+    </div>
+  </div>
+<% elsif uploaded_file.file_state == 'copied' %>
+  <div class="c-upload__item--complete js-copied_file" id="uploaded_file_<%= f.id %>">
+    <div class="c-upload__filename"><%= f.upload_file_name %>
+      <span class="c-upload__filesize"><%= filesize(f.upload_file_size) %></span>
+    </div>
+    <div class="c-upload__action">
+      <span style="display: none" class="js-hidden_bytes"><%= f.upload_file_size %></span>
       <%= button_to 'Remove from version', remove_file_upload_path(f), method: :patch, remote: true,
                     class: "c-upload__button", form_class: 'o-button__inline-form' %>
-    <% elsif uploaded_file.file_state == 'deleted' %>
+    </div>
+  </div>
+<% elsif uploaded_file.file_state == 'deleted' %>
+  <div class="c-upload__item--complete js-deleted_file" id="uploaded_file_<%= f.id %>">
+    <div class="c-upload__filename" style="text-decoration: line-through"><%= f.upload_file_name %>
+      <span class="c-upload__filesize"><%= filesize(f.upload_file_size) %></span>
+    </div>
+    <div class="c-upload__action">
       <%= button_to 'Restore to version', restore_file_upload_path(f), method: :patch, remote: true,
                     class: "c-upload__button", form_class: 'o-button__inline-form' %>
-    <% end %>
+    </div>
   </div>
-</div>
+<% end %>
