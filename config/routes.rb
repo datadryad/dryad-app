@@ -10,7 +10,12 @@ StashEngine::Engine.routes.draw do
     end
   end
   resources :tenants, only: [:index, :show]
-  resources :file_uploads
+  resources :file_uploads do
+    member do
+      patch 'remove'
+      patch 'restore'
+    end
+  end
 
   get 'dashboard', to: 'dashboard#show', as: 'dashboard'
   get 'metadata_basics', to: 'dashboard#metadata_basics', as: 'metadata_basics'

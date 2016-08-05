@@ -5,6 +5,15 @@
   </div>
   <div class="c-upload__action">
     <span style="display: none" class="js-hidden_bytes"><%= f.upload_file_size %></span>
-    <%= button_to 'Delete', f, method: :delete, remote: true, class: "c-upload__button", form_class: 'o-button__inline-form' %>
+    <% if uploaded_file.file_state == 'created' || uploaded_file.file_state.nil? %>
+      <%= button_to 'Delete', f, method: :delete, remote: true, class: "c-upload__button",
+                    form_class: 'o-button__inline-form' %>
+    <% elsif uploaded_file.file_state == 'copied' %>
+      <%= button_to 'Remove from version', remove_file_upload_path(f), method: :patch, remote: true,
+                    class: "c-upload__button", form_class: 'o-button__inline-form' %>
+    <% elsif uploaded_file.file_state == 'deleted' %>
+      <%= button_to 'Restore to version', restore_file_upload_path(f), method: :patch, remote: true,
+                    class: "c-upload__button", form_class: 'o-button__inline-form' %>
+    <% end %>
   </div>
 </div>
