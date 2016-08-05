@@ -1,0 +1,15 @@
+// ##### Links Object ##### //
+
+%o-link__primary {
+  color: $design-dark-blue-color;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+
+}
+
+.o-link__primary {
+  @extend %o-link__primary;
+}

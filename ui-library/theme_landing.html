@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+<head>
+	<meta charset="UTF-8">
+	<title>Landing Page Theme</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+	<!-- build:css css/ui.css -->
+	<link rel="stylesheet" href="css/main.css">
+	<!-- endbuild -->
+	<style>
+		/* styles for this page only */
+	</style>
+	<script
+    src="https://code.jquery.com/jquery-2.2.3.min.js"
+    integrity="sha256-a23g1Nt4dtEYOj7bR+vTu7+T8VP13humZFBJNIYoEJo="
+    crossorigin="anonymous"></script>
+</head>
+<body>
+
+  <div class="ui-library-header">
+    <h1><a href="index.html">Dash UI Library</a></h1>
+    <h2>Landing Page Theme</h2>
+  </div>
+
+	<!-- Begin Header Component -->
+	<!--#include file="includes/header.html" -->
+	<!-- End Header Component -->
+
+	<div class="c-columns">
+	  <main class="t-landing__main c-columns__content">
+	  	<div class="t-landing__data-type">Type of Data</div>	
+
+			<h1 class="o-heading__level1">Title of Datasets</h1>
+
+			<!-- Begin Metadata Object -->
+			<div class="t-landing__metadata o-metadata">
+				<div class="o-metadata__group1">
+					<span class="o-metadata__author">Author Name</span>,
+					<span class="o-metadata__affiliation">Affiliation</span>,
+					<span class="o-metadata__orcid">Orcid</span>
+				</div>
+				<div class="o-metadata__group2">
+					<div class="o-metadata__group2-item">Submission Date: </div>
+					<div class="o-metadata__group2-item">Published Date: </div>
+					<div class="o-metadata__group2-item">Publisher: </div>
+					<div class="o-metadata__group2-item">doi: xxxxx/xxxxxxxx</div>
+				</div>
+			</div>
+			<!-- End Metadata Object -->
+
+			<section class="o-section">
+				<h2 class="o-heading__level2">Cite as</h2>
+				<p>Author Name and Author Name, Title_of_dataset. Type_of_data. Publisher. Version n (DD Month YYYY). http://dx.doi.org/xxxx.xxxx</p>
+			</section>
+
+			<h2 class="o-heading__level2">Abstract</h2>
+
+			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Distinctio quod, eius aliquid, placeat quos nisi consectetur maiores iusto accusamus! Repellat nihil esse quis consequatur mollitia, optio itaque nulla veritatis, natus!</p>
+			<p>Veritatis tenetur, perspiciatis, commodi numquam repudiandae, voluptas asperiores reprehenderit dolor sint voluptatibus quam quo, itaque quidem nobis. Harum atque, officiis modi ipsum neque, odit, voluptate aspernatur, error porro vitae ad.</p>
+
+			<h2 class="o-heading__level2">Methods</h2>
+
+			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Praesentium laborum inventore totam dolorem ipsam in at ratione, odio, atque sequi aliquid. Exercitationem nobis maiores facilis vel repellendus, neque, quas assumenda.</p>
+
+			<h2 class="o-heading__level2">Usage Notes</h2>
+
+			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quas eveniet tenetur amet ipsum ullam modi dicta illo repellendus, reiciendis, labore aut minus. Quidem amet architecto odit. Quae, expedita maxime assumenda.</p>
+
+			<h2 class="o-heading__level2">Location</h2>
+
+			<!-- Begin Map Object -->
+			<!--#include file="includes/map.html" -->
+			<!-- End Map Object -->
+
+			<!-- Begin Locations Component -->
+			<!--#include file="includes/locations.html" -->
+			<!-- End Locations Component -->
+
+			<section class="o-section">
+				<h2 class="o-heading__level2">Funding</h2>
+				<p>Granting Organization Name, award ##########</p>
+				<h2 class="o-heading__level2">Reference</h2>
+				<p>This dataset is cited by doi: http://dx.doi.org/xxxx.xxxx</p>
+			</section>
+
+			<h2 class="o-heading__level2">Version History</h2>
+
+			<p><b>V001</b> DD Month YYYY,HH:MM:SS</p>
+			<p><b>V002</b> DD Month YYYY,HH:MM:SS</p>
+
+			<p>(change notes) Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quis cupiditate dolor quo, ducimus omnis laborum commodi impedit odio, consequatur quae, praesentium fugiat, vel repudiandae aliquid exercitationem animi hic voluptas facere!</p>
+
+	  </main>
+	  <aside class="t-landing__sidebar c-columns__sidebar2">
+	  	<div class="o-download">
+				<button class="o-download__files">Download files and (ZIP) 400Mb</button>
+			</div>
+			<div class="o-download">
+				<button class="o-download__docs">Download documentation only (PDF)</button>
+			</div>
+	  	<div class="c-sidebox">
+				<h2 class="c-sidebox__heading">Data Files</h2>
+				<!-- Begin File Group Component -->
+				<!--#include file="includes/file-group.html" -->
+				<!-- End File Group Component -->
+			</div>
+			<div class="c-sidebox">
+				<h2 class="c-sidebox__heading">Metrics</h2>
+				<!-- Begin Metrics Object -->
+				<!--#include file="includes/metrics.html" -->
+				<!-- End Metrics Object -->
+			</div>
+			<div class="c-sidebox">
+				<h2 class="c-sidebox__heading">Keywords</h2>
+				<!-- Begin List Object -->
+				<ul class="o-list">
+					<li><a href="" class="o-link__primary">Keyword</a></li>
+					<li><a href="" class="o-link__primary">Keyword</a></li>
+					<li><a href="" class="o-link__primary">Keyword</a></li>
+					<li><a href="" class="o-link__primary">Keyword</a></li>
+					<li><a href="" class="o-link__primary">Keyword</a></li>
+				</ul>
+				<!-- End List Object -->
+			</div>
+			<div class="c-sidebox">
+				<h2 class="c-sidebox__heading">License</h2>
+				<p>This work is licensed under a <a href="http://creativecommons.org/licenses/by/4.0/" class="o-link__primary">Creative Commons Attribution 4.0 International License</a>.</p>
+				<img src="images/icon_cc-by.svg" alt="Creative Commons icon">
+			</div>
+		</aside>
+	</div>
+
+	<!--#include file="includes/footer.html" -->
+
+	<!-- build:js js/ui.js -->
+  <script src="js/modernizr-custombuild.js"></script>
+  <script src="js/details-polyfill.js"></script>
+  <script src="js/main.js"></script>
+  <!-- endbuild -->
+	
+</body>
+</html>

@@ -1,0 +1,125 @@
+// ##### Global Mixins ##### //
+
+// Abstract Bootstrap's responsive breakpoints for use in custom Sass.
+
+@mixin bp($point) {
+
+  @if $point == screen1 {
+    @media (min-width: $screen-sm-min) { @content; }
+
+  } @else if $point == screen2 {
+    @media (min-width: $screen-md-min) { @content; }
+
+  } @else if $point == screen3 {
+    @media (min-width: $screen-lg-min) { @content; }
+
+  } @else if $point == screen4 {
+    @media (min-width: $screen-max) { @content; }
+  }
+
+}
+
+/*
+
+Selector pattern using above mixin:
+
+.selector {
+  property: $value;
+
+  @include bp(screen1) {
+    property: $value;
+  }
+
+  @include bp(screen2) {
+    property: $value;
+  }
+
+  @include bp(screen3) {
+    property: $value;
+  }
+
+}
+
+*/
+
+// Pull component/object container over responsive body margins to small screen margin. Reset content to mirror responsive body margins. Typically used for top/bottom borders, like with select object
+
+%pull-borders {
+
+  @include bp(screen1) {
+    margin: 0 -10px;
+    padding: 0 10px;
+  }
+
+  @include bp(screen2) {
+    margin: 0 -20px;
+    padding: 0 20px;
+  }
+
+}
+
+// Pull component/object container over responsive body margins to viewport edge. Reset content to mirror responsive body margins by adding padding. Typically used for bleeding background to page edge, like with table heading component
+
+%pull-background {
+  margin: 0 -10px;
+  padding: 0 10px;
+
+  @include bp(screen1) {
+    margin: 0 -20px;
+    padding: 0 20px;
+  }
+
+  @include bp(screen2) {
+    margin: 0 -30px;
+    padding: 0 30px;
+  }
+
+}
+
+// Pull component/object container over responsive body margins to viewport edge without adding padding. Typically used for bleeding components to page edge, like with banner object on home theme
+
+%pull-full-bleed {
+  margin: 0 -10px;
+
+  @include bp(screen1) {
+    margin: 0 -20px;
+  }
+
+  @include bp(screen2) {
+    margin: 0 -30px;
+  }
+
+}
+
+%right-padding {
+
+  @include bp(screen2) {
+    padding-right: 200px;
+  }
+
+}
+
+// Hide/show something visually but not for screen readers
+
+%hide {
+  position: absolute;
+  left: -9999px;
+}
+
+%show {
+  position: static;
+  left: auto;
+}
+
+// Set form field focus styles
+
+%fcontrol-focus:focus {
+  border-width: 2px;
+  border-color: $design-orange-color;
+  outline: 0;
+
+  &::placeholder {
+    opacity: 0.5;
+  }
+
+}

@@ -1,0 +1,35 @@
+// ##### File Group Component ##### //
+
+.c-file-group {
+
+  &[open] .c-file-group__summary {
+
+    &::before {
+      transform: rotate(90deg);
+    }
+
+  }
+
+}
+
+.c-file-group__summary {
+  position: relative;
+  padding: 0 0 0 20px;
+
+  &::before {
+    position: absolute;
+    top: 0;
+    left: 0;
+    content: inline('../images/icon_thin-right-arrow.svg');
+  }
+
+}
+
+.c-file-group__list {
+  list-style: none;
+
+  li {
+    margin: 0 0 0.3em;
+  }
+
+}
