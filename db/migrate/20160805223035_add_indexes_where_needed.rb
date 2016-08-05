@@ -19,7 +19,7 @@ class AddIndexesWhereNeeded < ActiveRecord::Migration
     add_index(:dcs_geo_location_places, :resource_id)
     add_index(:dcs_geo_location_points, :resource_id)
     add_index(:dcs_languages, :resource_id)
-    add_index(:dcs_name_identifiers, :)
+    add_index(:dcs_name_identifiers, :name_identifier)
     add_index(:dcs_publication_years, :resource_id)
     add_index(:dcs_publishers, :resource_id)
     add_index(:dcs_related_identifiers, :related_identifier)
