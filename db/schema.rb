@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160804171716) do
+ActiveRecord::Schema.define(version: 20160805221450) do
 
   create_table "bookmarks", force: :cascade do |t|
     t.integer  "user_id",       limit: 4,   null: false
@@ -252,6 +252,10 @@ ActiveRecord::Schema.define(version: 20160804171716) do
     t.text     "temp_file_path",      limit: 65535
     t.string   "file_state",          limit: 7
   end
+
+  add_index "stash_engine_file_uploads", ["file_state"], name: "index_stash_engine_file_uploads_on_file_state", using: :btree
+  add_index "stash_engine_file_uploads", ["resource_id"], name: "index_stash_engine_file_uploads_on_resource_id", using: :btree
+  add_index "stash_engine_file_uploads", ["upload_file_name"], name: "index_stash_engine_file_uploads_on_upload_file_name", using: :btree
 
   create_table "stash_engine_identifiers", force: :cascade do |t|
     t.string   "identifier",      limit: 255
