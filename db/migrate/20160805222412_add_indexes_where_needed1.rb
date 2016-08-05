@@ -1,4 +1,4 @@
-class AddIndexesWhereNeeded < ActiveRecord::Migration
+class AddIndexesWhereNeeded1 < ActiveRecord::Migration
   def change
     add_index(:stash_engine_identifiers, :identifier)
     add_index(:stash_engine_resource_states, :user_id)
