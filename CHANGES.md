@@ -1,7 +1,10 @@
 # 0.1.10 (next)
 
+- In the convenience constant `License::CC_BY`, use the 
+  [human-readable summary](https://creativecommons.org/licenses/by/4.0/) URL for the license 
+  instead of the [legal code](https://creativecommons.org/licenses/by/4.0/legalcode).
 - Added convenience constant `License::CC_ZERO` for the
-  [CC0](https://creativecommons.org/publicdomain/zero/1.0/legalcode) public domain declaration
+  [CC0](https://creativecommons.org/publicdomain/zero/1.0/) public domain declaration
 - Allow `License` to take a string as a `uri` parameter, so long as that string is a valid URI
 - Validate parameters for:
   - `StashWrapper`

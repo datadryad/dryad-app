@@ -23,17 +23,17 @@ module Stash
     end
 
     class License
-      # Convenience instance for the [CC-BY](https://creativecommons.org/licenses/by/4.0/legalcode) license
+      # Convenience instance for the [CC-BY](https://creativecommons.org/licenses/by/4.0/) license
       CC_BY = License.new(
         name: 'Creative Commons Attribution 4.0 International (CC-BY)',
-        uri: URI('https://creativecommons.org/licenses/by/4.0/legalcode')
+        uri: URI('https://creativecommons.org/licenses/by/4.0/')
       )
 
-      # Convenience instance for the [CC0](https://creativecommons.org/publicdomain/zero/1.0/legalcode)
+      # Convenience instance for the [CC0](https://creativecommons.org/publicdomain/zero/1.0/)
       # public domain declaration
       CC_ZERO = License.new(
         name: 'CC0 1.0 Universal (CC0 1.0) Public Domain Dedication',
-        uri: URI('https://creativecommons.org/publicdomain/zero/1.0/legalcode')
+        uri: URI('https://creativecommons.org/publicdomain/zero/1.0/')
       )
     end
   end

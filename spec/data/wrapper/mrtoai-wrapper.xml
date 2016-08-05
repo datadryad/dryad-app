@@ -8,7 +8,7 @@
     </st:version>
     <st:license xmlns:st='http://dash.cdlib.org/stash_wrapper/'>
       <st:name xmlns:st='http://dash.cdlib.org/stash_wrapper/'>Creative Commons Attribution 4.0 International (CC-BY)</st:name>
-      <st:uri xmlns:st='http://dash.cdlib.org/stash_wrapper/'>https://creativecommons.org/licenses/by/4.0/legalcode</st:uri>
+      <st:uri xmlns:st='http://dash.cdlib.org/stash_wrapper/'>https://creativecommons.org/licenses/by/4.0/</st:uri>
     </st:license>
     <st:embargo xmlns:st='http://dash.cdlib.org/stash_wrapper/'>
       <st:type xmlns:st='http://dash.cdlib.org/stash_wrapper/'>none</st:type>
