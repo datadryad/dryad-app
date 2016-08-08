@@ -28,7 +28,9 @@ module StashDatacite
 
     # returns the installation id for the rights_uri
     def license_id(uri)
-      StashEngine::License.by_uri(uri)[:id]
+      license = StashEngine::License.by_uri(uri)
+      warn("No license configured for URI #{uri}") unless license
+      license && license[:id]
     end
 
     # create string for facet limit to subject
