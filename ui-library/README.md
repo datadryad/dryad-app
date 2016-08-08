@@ -90,6 +90,8 @@ In the UI element HTML, two or more classes with different namespaces will somet
 
 Image and font files are inlined as Base64 into the CSS to eliminate the paths to these assets and reduce HTTP requests for better performance. To do this, change a CSS selector's `url` value to `inline` while running `gulp`. [More about inlining files with PostCSS Assets](https://github.com/assetsjs/postcss-assets#inlining-files)
 
+CSS properties should not be prefixed, as this is done automatically via the Gulp toolkit's [Autoprefixer](https://www.npmjs.com/package/gulp-autoprefixer).
+
 ## Scripts
 
 The JavaScript authored in this library takes place in one file, **ui-library/js/main.js** and mostly performs basic DOM changes using jQuery. When classes or IDs are used to target the DOM, they are typically prefixed with the **-js** namespace, as mentioned above.
