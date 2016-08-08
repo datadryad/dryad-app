@@ -28,7 +28,7 @@
     <% if @resource.file_uploads.count < 1 %>
       <span id="no_chosen">No files chosen</span>
     <% else %>
-      <%= render partial: "stash_engine/file_uploads/uploaded_file", collection: @resource.file_uploads %>
+      <%= render partial: "stash_engine/file_uploads/uploaded_file", collection: @resource.file_uploads.order(:upload_file_name) %>
     <% end %>
   </div>
 

@@ -5,9 +5,9 @@ module StashEngine
   class FileUploadsController < ApplicationController
     before_action :require_login
 
-    before_action :set_file_info, only: [:destroy]
+    before_action :set_file_info, only: [:destroy, :remove, :restore]
 
-    before_action :require_file_owner, except: [:create]
+    before_action :require_file_owner, except: [:create, :destroy, :remove, :restore]
 
     before_action :set_create_prerequisites, only: [:create]
 
@@ -20,6 +20,25 @@ module StashEngine
         end
       end
     end
+
+    def remove
+      respond_to do |format|
+        format.js do
+          @file.update_attribute(:file_state, 'deleted') # This because carrierwave interferes with something not its business
+          @file.reload
+        end
+      end
+    end
+
+    def restore
+      respond_to do |format|
+        format.js do
+          @file.update_attribute(:file_state, 'copied') # This because carrierwave interferes with something not its business
+          @file.reload
+        end
+      end
+    end
+
 
     def create
       respond_to do |format|
@@ -41,7 +60,8 @@ module StashEngine
             upload_content_type: @file_upload.content_type,
             upload_file_size: File.size(new_fn),
             resource_id: params[:resource_id],
-            upload_updated_at: Time.new.utc)
+            upload_updated_at: Time.new.utc,
+            file_state: 'created')
           @my_file.save
         end
       end
