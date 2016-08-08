@@ -58,10 +58,6 @@ You are welcome to use any build tool to do these tasks. However, you are encour
 
 **/js**: JavaScript files exist in **ui-library/js** and get compiled to **demo/js/ui.js** during the build process. The main JavaScript file at **ui-library/js/main.js** is mostly for basic DOM manipulation of HTML attributes, typically using jQuery. Two other custom JS files, **details-polyfill.js** and **modernizr-custombuild.js** exist within **ui-library/js** and get concatenated into **ui.js** for builds. Like the CSS files mentioned above, you should not modify **ui.js** in the **demo** directory, as it will be overwritten during each build.
 
-### UI vs Application JavaScript
-
-Some JavaScript in the Stash application is more "UI" focused, while other scripts focus more on "application" logic. For elements in the UI library that require simple UI interactivity (like show/hide on click), it is recommended that JavaScript for them be written within the UI library's **ui-library/js** file. Scripts that focus on application logic are better kept as separate entities outside of the UI library. This is to ensure that the UI-based JavaScript can function independently of the application business logic without breaking the logic-directed scripting in the Stash application.
-
 ## UI Elements
 
 UI elements are typically organized from the smallest part (Objects) that make up larger structures (Components), which are assembled at the page level (Themes). This hierarchy is similar to the [Atomic Design model](http://bradfrost.com/blog/post/atomic-web-design).
@@ -97,6 +93,10 @@ CSS properties should not be prefixed, as this is done automatically via the Gul
 The JavaScript authored in this library takes place in one file, **ui-library/js/main.js** and mostly performs basic DOM changes using jQuery. When classes or IDs are used to target the DOM, they are typically prefixed with the **-js** namespace, as mentioned above.
 
 Styles are kept out of these classes prefixed with **-js**, only JavaScript binding is used. This is to honor a separation of concerns and avoid style/script conflicts. When styles and scripts are needed together on a UI element, their classes are chained together in the HTML class attribute, like `class="js-widget c-widget"`.
+
+### UI vs Application JavaScript
+
+Some JavaScript in the Stash application is more "UI" focused, while other scripts focus more on "application" logic. For elements in the UI library that require simple UI interactivity (like show/hide on click), it is recommended that JavaScript for them be written within the UI library's **ui-library/js** file. Scripts that focus on application logic are better kept as separate entities outside of the UI library. This is to ensure that the UI-based JavaScript can function independently of the application business logic without breaking the logic-directed scripting in the Stash application.
 
 ## Integrating UI Library Code into Dash Application
 
