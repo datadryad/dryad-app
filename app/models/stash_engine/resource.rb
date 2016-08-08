@@ -36,6 +36,12 @@ module StashEngine
       FileUpload.joins("INNER JOIN (#{subquery.to_sql}) sub on id = sub.last_id").order(upload_file_name: :asc)
     end
 
+    def latest_file_states
+      subquery = FileUpload.where(resource_id: id).
+          select("max(id) last_id, upload_file_name").group(:upload_file_name)
+      FileUpload.joins("INNER JOIN (#{subquery.to_sql}) sub on id = sub.last_id").order(upload_file_name: :asc)
+    end
+
     def current_resource_state
       if current_resource_state_id.blank?
         ResourceState.create!(resource_id: id, user_id: user_id, resource_state: :in_progress)
