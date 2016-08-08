@@ -106,8 +106,23 @@ function formatSizeUnits(bytes) {
     }
 }
 
+/* The size is complicated since we are showing rows in many states in the same table with div classes around row:
+   .js-copied_file    --    A file previously uploaded from an earlier version of dataset with entry in database
+   .js-unuploaded     --    A file dropped but does not exist on server side
+   .js-created_file   --    A file that has been dropped and uploaded to the server in this version
+   .js-deleted_file   --    A file the user wants to remove from this version but existed previously
+              Note that files newly uploaded (or not uploaded yet) and deleted disappear from the table forever
+
+   I believe files dropped and that match a file already in the table will make the previous file disappear since
+   we cannot have duplicate filenames and it would be very confusing to list two files with same names.  There
+   may need special handling after uploading for these files which are replacements.  Not sure how deletion of
+   these files works.
+
+   Size would be copied, unuploaded (dropped) and created files, assuming only one of each unique filename is shown.
+ */
 function totalSize(){
-  nums = $('.js-hidden_bytes').map(function(){ return parseInt(this.innerHTML); });
+  nums = $('div.js-created_file .js-hidden_bytes,div.js-copied_file .js-hidden_bytes,div.js-unuploaded .js-hidden_bytes')
+      .map(function(){ return parseInt(this.innerHTML); });
   var total = 0;
   $.each(nums, function( index, value ) {
     total += value;
