@@ -71,7 +71,7 @@ gulp.task('modernizr', function() {
 
 // Validate build HTML:
 gulp.task('validateHTML', function () {
-  gulp.src('public/**/*.html')
+  gulp.src('public/demo/**/*.html')
     .pipe(validateHTML())
 });
 
@@ -130,27 +130,27 @@ gulp.task('useref', function(){
     .pipe(gulpIf('*.css', minifyCSS()))
     .pipe(gulpIf('*.js', uglify()))
     .pipe(lbInclude()) // Process <!--#include file="" --> statements
-    .pipe(gulp.dest('public'))
+    .pipe(gulp.dest('public/demo'))
 });
 
 
-// Delete 'public' directory at start of build process:
+// Delete 'demo' directory at start of build process:
 gulp.task('clean', function() {
-  return del('public');
+  return del('public/demo');
 })
 
 
-// Copy images to public directory during the build process:
+// Copy images to demo directory during the build process:
 gulp.task('copy-images', function(){
   return gulp.src('ui-library/images/**')
-  .pipe(gulp.dest('public/images'))
+  .pipe(gulp.dest('public/demo/images'))
 });
 
 
 // Copy the single CSS and JS files from UI library build to Rails asset pipeline:
 gulp.task('copy-to-assets', shell.task([
-  'cp public/css/ui.css app/assets/stylesheets/stash_engine',
-  'cp public/js/ui.js app/assets/javascripts/stash_engine'
+  'cp public/demo/css/ui.css app/assets/stylesheets/stash_engine',
+  'cp public/demo/js/ui.js app/assets/javascripts/stash_engine'
 ]))
 
 
@@ -158,7 +158,7 @@ gulp.task('copy-to-assets', shell.task([
 gulp.task('scss-lint', function() {
   return gulp.src(['ui-library/scss/**/*.scss', '!ui-library/scss/vendor/**/*.scss'])
     .pipe(scsslint({
-      'config': 'scss-lint-config.yml' // Settings for linters. See: https://github.com/brigade/scss-lint/tree/master/lib/scss_lint/linter
+      'config': 'scss-lint-config.yml' // Settings for the linter. See: https://github.com/brigade/scss-lint/tree/master/lib/scss_lint/linter
     }));
 });
 
