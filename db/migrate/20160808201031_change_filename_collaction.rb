@@ -1,6 +1,6 @@
 class ChangeFilenameCollaction < ActiveRecord::Migration
   def up
-    # remove_index :stash_engine_file_uploads, name: 'index_stash_engine_file_uploads_on_upload_file_name'
+    remove_index :stash_engine_file_uploads, name: 'index_stash_engine_file_uploads_on_upload_file_name'
     execute <<-SQL
       ALTER TABLE stash_engine_file_uploads MODIFY
       upload_file_name TEXT
