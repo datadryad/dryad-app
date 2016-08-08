@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160805223035) do
+ActiveRecord::Schema.define(version: 20160808205130) do
 
   create_table "bookmarks", force: :cascade do |t|
     t.integer  "user_id",       limit: 4,   null: false
@@ -299,7 +299,7 @@ ActiveRecord::Schema.define(version: 20160805223035) do
   add_index "searches", ["user_id"], name: "index_searches_on_user_id", using: :btree
 
   create_table "stash_engine_file_uploads", force: :cascade do |t|
-    t.string   "upload_file_name",    limit: 255
+    t.text     "upload_file_name",    limit: 65535
     t.string   "upload_content_type", limit: 255
     t.integer  "upload_file_size",    limit: 4
     t.integer  "resource_id",         limit: 4
@@ -312,7 +312,7 @@ ActiveRecord::Schema.define(version: 20160805223035) do
 
   add_index "stash_engine_file_uploads", ["file_state"], name: "index_stash_engine_file_uploads_on_file_state", using: :btree
   add_index "stash_engine_file_uploads", ["resource_id"], name: "index_stash_engine_file_uploads_on_resource_id", using: :btree
-  add_index "stash_engine_file_uploads", ["upload_file_name"], name: "index_stash_engine_file_uploads_on_upload_file_name", using: :btree
+  add_index "stash_engine_file_uploads", ["upload_file_name"], name: "index_stash_engine_file_uploads_on_upload_file_name", length: {"upload_file_name"=>100}, using: :btree
 
   create_table "stash_engine_identifiers", force: :cascade do |t|
     t.string   "identifier",      limit: 255
