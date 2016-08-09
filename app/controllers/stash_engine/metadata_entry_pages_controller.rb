@@ -24,6 +24,7 @@ module StashEngine
       end
       @new_res = @resource.amoeba_dup
       @new_res.save!
+      copy_files(@new_res, @resource)
       res_state = ResourceState.create(user_id: current_user.id, resource_state: 'in_progress', resource_id: @new_res.id)
       @new_res.current_resource_state_id = res_state.id
       @new_res.save!
@@ -59,5 +60,17 @@ module StashEngine
         redirect_to stash_engine.dashboard_path
       end
     end
+
+    def copy_files(new_resource, resource)
+      new_resource.file_uploads << resource.file_uploads.collect { |file| file.dup }
+      if new_resource.file_uploads.any?
+        new_resource.file_uploads.each do |file|
+          file.resource_id = new_resource.id
+          file.file_state = 'copied'
+          file.save!
+        end
+      end
+    end
+
   end
 end
