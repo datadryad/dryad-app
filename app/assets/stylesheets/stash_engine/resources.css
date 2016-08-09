@@ -21,3 +21,6 @@
   }
 }
 
+.strike-deleted {
+  text-decoration: line-through;
+}
