@@ -29,13 +29,14 @@ module StashEngine
       end
     end
 
+    # gets the latest files that are not deleted in db, current files for this version
     def current_file_uploads
-      # gets the latest files that are not deleted in db
       subquery = FileUpload.where(resource_id: id).where("file_state <> 'deleted'").
           select("max(id) last_id, upload_file_name").group(:upload_file_name)
       FileUpload.joins("INNER JOIN (#{subquery.to_sql}) sub on id = sub.last_id").order(upload_file_name: :asc)
     end
 
+    # the states of the latest files of the same name in the resource (version), included deleted
     def latest_file_states
       subquery = FileUpload.where(resource_id: id).
           select("max(id) last_id, upload_file_name").group(:upload_file_name)

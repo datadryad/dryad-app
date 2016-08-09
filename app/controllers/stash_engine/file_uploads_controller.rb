@@ -57,7 +57,7 @@ module StashEngine
               where(upload_file_name: @file_upload.original_filename)
 
           existing_files.each do |old_f|
-            if old_f.file_state == 'created' || old_file.file_state.blank?
+            if old_f.file_state == 'created' || old_f.file_state.blank?
               # delete this old file before overwriting with this one, there can be only one current with same name
               File.delete(old_f.temp_file_path) if File.exist?(old_f.temp_file_path)
               old_f.destroy

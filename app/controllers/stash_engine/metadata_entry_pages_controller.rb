@@ -62,7 +62,7 @@ module StashEngine
     end
 
     def copy_files(new_resource, resource)
-      new_resource.file_uploads << resource.file_uploads.collect { |file| file.dup }
+      new_resource.file_uploads << resource.current_file_uploads.collect { |file| file.dup }
       if new_resource.file_uploads.any?
         new_resource.file_uploads.each do |file|
           file.resource_id = new_resource.id
