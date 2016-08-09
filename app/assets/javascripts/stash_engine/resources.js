@@ -18,6 +18,7 @@ $(function () {
           $('#no_chosen').hide();
           data.files[0]['id'] = generateQuickId();
           data.context = $(tmpl("upload-line", data.files[0]));
+          removeDuplicateFilename(data.files[0].name); // removes existing duplicate before adding again
           $('#upload_list').append(data.context);
           $('#upload_all').show();
           // binding remove link action
@@ -49,7 +50,7 @@ $(function () {
               $('.js-upload-it:first').click();
             };
             updateButtonLinkStates();
-          })
+          });
           updateButtonLinkStates();
         },
         progress: function (e, data) {
@@ -201,6 +202,17 @@ function updateTotalSize(){
     $('#over_files_size').hide();
     if(!uploadInProgress && filesWaitingForUpload()) $('#upload_all').show();
   }
+}
+
+/*  Function called when a new file is dropped and rids list of existing names that are exactly the same
+    and issues warning that the previous file has been replaced.
+ */
+function removeDuplicateFilename(fn){
+  dups = $('.js-filename').filter(function( index ) {
+    return (fn == $(this).text());
+  });
+  // get row element with these classes and delete it.
+  dups.parents('.js-copied_file,.js-unuploaded,.js-created_file,.js-deleted_file').remove();
 }
 // *****************************
 // end Javascript for FileUpload
