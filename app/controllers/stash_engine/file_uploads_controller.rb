@@ -52,17 +52,23 @@ module StashEngine
           end
 
           new_fn = File.join(@upload_dir, @file_upload.original_filename)
-          FileUtils.mv(@accum_file, new_fn)
 
-          @my_file = FileUpload.new(
-            upload_file_name: @file_upload.original_filename,
-            temp_file_path: new_fn,
-            upload_content_type: @file_upload.content_type,
-            upload_file_size: File.size(new_fn),
-            resource_id: params[:resource_id],
-            upload_updated_at: Time.new.utc,
-            file_state: 'created')
-          @my_file.save
+          existing_files = FileUpload.where(resource_id: params[:resource_id]).
+              where(upload_file_name: @file_upload.original_filename)
+
+          existing_files.each do |old_f|
+            if old_f.file_state == 'created' || old_file.file_state.blank?
+              # delete this old file before overwriting with this one, there can be only one current with same name
+              File.delete(old_f.temp_file_path) if File.exist?(old_f.temp_file_path)
+              old_f.destroy
+            elsif old_f.file_state == 'deleted'
+              # set back to 'copied' since this is really just a new version of this old file with same name
+              old_f.update_attribute(:file_state, 'copied')
+            end
+          end
+
+          FileUtils.mv(@accum_file, new_fn) # moves the file from the original unique_id fn to the final one
+          create_db_file(new_fn) # no files exist for this so new "created" file
         end
       end
     end
@@ -91,6 +97,18 @@ module StashEngine
 
     def add_to_file(fn, fileupload)
       File.open(fn, 'ab') { |f| f.write(fileupload.read) }
+    end
+
+    def create_db_file(new_fn)
+      @my_file = FileUpload.new(
+          upload_file_name: @file_upload.original_filename,
+          temp_file_path: new_fn,
+          upload_content_type: @file_upload.content_type,
+          upload_file_size: File.size(new_fn),
+          resource_id: params[:resource_id],
+          upload_updated_at: Time.new.utc,
+          file_state: 'created')
+      @my_file.save
     end
   end
 end
