@@ -249,7 +249,8 @@ module StashDatacite
         folder = "#{Rails.root}/uploads"
         FileUtils::mkdir_p(folder)
 
-        uploads = uploads_list(@resource)
+        uploads = @resource.file_uploads.newly_created.map{|i|
+                { name: i.upload_file_name, type: i.upload_content_type, size: i.upload_file_size } }
         purge_existing_files
 
         zipfile_name = "#{folder}/#{@resource.id}_archive.zip"
@@ -267,12 +268,14 @@ module StashDatacite
         File.open("#{folder}/#{@resource.id}_mrt-dataone-manifest.txt", 'w') do |f|
           f.write(generate_dataone)
         end
+        del_fn = create_delete_file(folder)
 
         Zip::File.open(zipfile_name, Zip::File::CREATE) do |zipfile|
           zipfile.add("mrt-datacite.xml", "#{folder}/#{@resource.id}_mrt-datacite.xml")
           zipfile.add("stash-wrapper.xml", "#{folder}/#{@resource.id}_stash-wrapper.xml")
           zipfile.add("mrt-oaidc.xml", "#{folder}/#{@resource.id}_mrt-oaidc.xml")
           zipfile.add("mrt-dataone-manifest.txt", "#{folder}/#{@resource.id}_mrt-dataone-manifest.txt")
+          zipfile.add("mrt-delete.txt", del_fn) unless del_fn.nil?
           uploads.each do |d|
             zipfile.add("#{d[:name]}", "#{folder}/#{@resource.id}/#{d[:name]}")
           end
@@ -296,16 +299,30 @@ module StashDatacite
         if File.exist?("#{folder}/#{@resource.id}_mrt-dataone-manifest.txt")
           File.delete("#{folder}/#{@resource.id}_mrt-dataone-manifest.txt")
         end
+        if File.exist?("#{folder}/#{@resource.id}_mrt-delete.txt")
+          File.delete("#{folder}/#{@resource.id}_mrt-delete.txt")
+        end
       end
 
       def uploads_list(resource)
         files = []
-        current_uploads = resource.file_uploads
+        current_uploads = resource.current_file_uploads
         current_uploads.each do |u|
           hash = { name: u.upload_file_name, type: u.upload_content_type, size: u.upload_file_size }
           files.push(hash)
         end
         files
+      end
+
+      # create list of files to delete and return filename, return nil if no deletes needed
+      def create_delete_file(folder)
+        del_files = @resource.file_uploads.deleted
+        return nil if del_files.blank?
+        fn = "#{folder}/#{@resource.id}_mrt-delete.txt"
+        File.open(fn, "w") do |f|
+          f.write del_files.map(&:upload_file_name).join("\n")
+        end
+        fn
       end
 
       # set the publication year to the current one if it has not been set yet
