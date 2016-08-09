@@ -212,7 +212,14 @@ function removeDuplicateFilename(fn){
     return (fn == $(this).text());
   });
   // get row element with these classes and delete it.
-  dups.parents('.js-copied_file,.js-unuploaded,.js-created_file,.js-deleted_file').remove();
+  if(dups.length > 0) {
+    dups.parents('.js-copied_file,.js-unuploaded,.js-created_file,.js-deleted_file').remove();
+    $('#over_single_size').append("<p>Your previous file <strong>" + fn +
+        "</strong> has been replaced in your upload list with a newer file with the same name.</p>");
+    setTimeout(function () {
+      $('#over_single_size').empty();
+    }, 20000);
+  }
 }
 // *****************************
 // end Javascript for FileUpload
