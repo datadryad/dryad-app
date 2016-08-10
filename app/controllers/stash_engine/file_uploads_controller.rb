@@ -11,6 +11,7 @@ module StashEngine
 
     before_action :set_create_prerequisites, only: [:create]
 
+    # this is a newly uploaded file and we're deleting it
     def destroy
       respond_to do |format|
         format.js do
@@ -27,6 +28,7 @@ module StashEngine
       end
     end
 
+    # this is a file from a previous version and we're marking it for deletion
     def remove
       respond_to do |format|
         format.js do
@@ -36,6 +38,7 @@ module StashEngine
       end
     end
 
+    # this is a file from a previous version marked as deleted and we're unmarking it for deletion
     def restore
       respond_to do |format|
         format.js do
@@ -46,6 +49,7 @@ module StashEngine
     end
 
 
+    # a file being uploaded (chunk by chunk)
     def create
       respond_to do |format|
         format.js do

@@ -18,7 +18,7 @@
     </div>
     <div class="c-upload__action">
       <span style="display: none" class="js-hidden_bytes"><%= f.upload_file_size %></span>
-      <%= button_to 'Remove from version', remove_file_upload_path(f), method: :patch, remote: true,
+      <%= button_to 'Delete', remove_file_upload_path(f), method: :patch, remote: true,
                     class: "c-upload__button", form_class: 'o-button__inline-form' %>
     </div>
   </div>

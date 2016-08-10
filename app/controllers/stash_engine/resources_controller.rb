@@ -78,7 +78,7 @@ module StashEngine
     def upload
       #@resource.clean_uploads # might want this back cleans database to match existing files on file system
       @file = FileUpload.new(resource_id: @resource.id) #this is apparanty needed for the upload control
-      @uploads = @resource.latest_file_states
+      @uploads = @resource.current_file_uploads
     end
 
     private
