@@ -14,9 +14,15 @@ module StashEngine
     def destroy
       respond_to do |format|
         format.js do
+          fn = @file.upload_file_name
+          res_id = @file.resource_id
           File.delete(@file.temp_file_path) if File.exist?(@file.temp_file_path)
           @file_id = @file.id
           @file.destroy
+          @extra_files = FileUpload.where(resource_id: res_id, upload_file_name: fn)
+          @extra_files.each do |my_f|
+            my_f.update_attribute(:file_state, 'deleted') if my_f.file_state == 'copied'
+          end
         end
       end
     end
