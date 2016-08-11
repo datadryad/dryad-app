@@ -2,4 +2,4 @@
 
 $('#uploaded_file_<%= @file.id %>').replaceWith("<%= escape_javascript(render(partial: 'stash_engine/file_uploads/uploaded_file', object: @file)) %>");
 
-updateTotalSize();
+updateUiStates();

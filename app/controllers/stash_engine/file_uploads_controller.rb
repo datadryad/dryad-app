@@ -87,6 +87,19 @@ module StashEngine
       respond_to do |format|
         format.js do
           # in here we need to remove the files from filesystem and database except the 'copied' state files
+          @resource = Resource.where(id: params[:resource_id])
+          raise ActionController::RoutingError.new('Not Found') if @resource.length < 1 ||
+              @resource.first.user_id != session[:user_id]
+          @resource = @resource.first
+          @resource.file_uploads.each do |fu|
+            if fu.file_state == 'created'
+              File.delete(fu.temp_file_path) if File.exist?(fu.temp_file_path)
+              fu.destroy
+            else
+              fu.update_attribute(:file_state, 'copied')
+            end
+          end
+          @uploads = @resource.latest_file_states
         end
       end
     end

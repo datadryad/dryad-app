@@ -160,10 +160,11 @@ function updateButtonLinkStates(){
     uploadInProgress = false;
     updateRevertState();
   }
-  updateTotalSize();
+  updateUiStates();
 }
 
 function updateRevertState(){
+  console.log((new Date()).toISOString() + ' updating revert button state');
   if($(".js-create_file,.js-deleted_file").length > 0){
     $("#revert_all").show();
   }else{
@@ -178,8 +179,8 @@ function largestSize(){
   return sorted[0];
 }
 
-// sets the total size and modifies UI to display states for too-large uploads and other stuff.
-function updateTotalSize(){
+// updates the size and other UI state updates after changes to the file list
+function updateUiStates(){
   $('#upload_total').text("Total: " + formatSizeUnits(totalSize()));
 
   if(overTotalSize(totalSize()) || overFileSize(largestSize())){
@@ -187,7 +188,7 @@ function updateTotalSize(){
   }else{
     $('#upload_total').removeClass().addClass('c-upload__total-size');
   }
-
+  updateRevertState();
   // remove and notify if over size.
   if(overFileSize(largestSize())){
     // UI design says delete the large items automatically and swat the user with a rolled up newspaper.
@@ -199,7 +200,7 @@ function updateTotalSize(){
         setTimeout(function(){
           $('#over_single_size').empty();
         }, 20000);
-        updateTotalSize();
+        updateUiStates();
       }
     });
   }

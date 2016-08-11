@@ -1,2 +1,6 @@
 // this is the part where we re-display the full file upload section after we've reverted the files to the previous
 // version state in the controller
+
+$('#upload_list').replaceWith("<%= escape_javascript(render(partial: "stash_engine/file_uploads/uploaded_file", collection: @uploads)) %>");
+
+updateUiStates();
