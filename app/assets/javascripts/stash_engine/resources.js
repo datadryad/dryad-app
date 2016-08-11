@@ -165,7 +165,7 @@ function updateButtonLinkStates(){
 
 function updateRevertState(){
   console.log((new Date()).toISOString() + ' updating revert button state');
-  if($(".js-create_file,.js-deleted_file").length > 0){
+  if($(".js-created_file,.js-deleted_file,.js-unuploaded").length > 0){
     $("#revert_all").show();
   }else{
     $('#revert_all').hide();
