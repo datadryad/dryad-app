@@ -50,6 +50,12 @@
     <button id="upload_all" type="button" class="o-button__plain-text2">Upload</button>
     <button id="cancel_all" type="button" class="o-button__plain-text2" style="display:none;">Cancel all</button>
   </div>
+
+  <div id="revert_all">
+    <%= button_to 'Revert all files', revert_file_upload_path(resource_id: @resource.id), method: :patch, remote: true,
+                  class: "o-button__plain-text2", form_class: 'o-button__inline-form' %>
+    <!-- <button id="revert_all" type="button" class="o-button__plain-text2">Revert all files</button> -->
+  </div>
 </div>
 
 <%= render partial: 'stash_engine/file_uploads/dropped_file' %>

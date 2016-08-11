@@ -149,6 +149,7 @@ function updateButtonLinkStates(){
     if(uploadInProgress) {
       $('#cancel_all').show();
       $('#upload_all').hide();
+      $('#revert_all').hide();
     }
   }else{
     // files are already uploaded or there are none
@@ -157,9 +158,17 @@ function updateButtonLinkStates(){
     $('#upload_all').hide();
     $("a[class^='c-progress__tab'], #describe_back, #proceed_review").unbind( "click" );
     uploadInProgress = false;
+    updateRevertState();
   }
-
   updateTotalSize();
+}
+
+function updateRevertState(){
+  if($(".js-create_file,.js-deleted_file").length > 0){
+    $("#revert_all").show();
+  }else{
+    $('#revert_all').hide();
+  }
 }
 
 function largestSize(){

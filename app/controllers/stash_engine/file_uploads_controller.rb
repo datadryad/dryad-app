@@ -7,7 +7,7 @@ module StashEngine
 
     before_action :set_file_info, only: [:destroy, :remove, :restore]
 
-    before_action :require_file_owner, except: [:create, :destroy, :remove, :restore]
+    before_action :require_file_owner, except: [:create, :destroy, :remove, :restore, :revert]
 
     before_action :set_create_prerequisites, only: [:create]
 
@@ -79,6 +79,14 @@ module StashEngine
 
           FileUtils.mv(@accum_file, new_fn) # moves the file from the original unique_id fn to the final one
           create_db_file(new_fn) # no files exist for this so new "created" file
+        end
+      end
+    end
+
+    def revert
+      respond_to do |format|
+        format.js do
+          # in here we need to remove the files from filesystem and database except the 'copied' state files
         end
       end
     end
