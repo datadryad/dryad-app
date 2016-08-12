@@ -244,9 +244,8 @@ module StashDatacite
         content.to_s
       end
 
-      def generate_merritt_zip(target_url, identifier)
+      def generate_merritt_zip(folder, target_url, identifier)
         target_url = target_url
-        folder = "#{Rails.root}/uploads"
         FileUtils::mkdir_p(folder)
 
         uploads = uploads_list(@resource)
@@ -277,6 +276,8 @@ module StashDatacite
             zipfile.add("#{d[:name]}", "#{folder}/#{@resource.id}/#{d[:name]}")
           end
         end
+
+        zipfile_name
       end
 
       def purge_existing_files
