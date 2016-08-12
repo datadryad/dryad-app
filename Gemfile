@@ -18,3 +18,6 @@ gem 'mysql2', '~> 0.3.20'
 gem 'rubocop', require: false, group: [:development, :test]
 gem 'simplecov', require: false, group: :test
 gem 'jquery-turbolinks'
+group :development do
+  gem 'scss_lint'
+end
