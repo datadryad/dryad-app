@@ -10,21 +10,23 @@ You are welcome to use any build tool to do these tasks. However, you are encour
 
 ### Toolkit Requirements
 
-* node.js
+* [Node and npm](https://nodejs.org/en)
 
-* npm
+* [Bower](https://bower.io): `$ sudo npm install -g bower`
 
-* ruby (for the Sass lint plugin)
+* [Gulp](https://github.com/gulpjs/gulp/blob/master/docs/getting-started.md): `$ sudo npm install -g gulp-cli`
+
+* [Ruby](https://www.ruby-lang.org/en/downloads) for the Sass lint plugin
 
 ### Toolkit Installation
 
 1. Clone this repo and cd to its root directory on your machine
 
-2. Run `$ npm update --save-dev` to install Gulp plugins. Ignore the various "depreciated" warnings that appear.
+2. Run `$ npm install` to install Gulp plugins. Ignore the various "depreciated" warnings that appear.
 
-3. Run `$ gem install scss_lint` (for the Sass lint plugin)
+3. Run `$ gem install scss_lint` for the Sass lint plugin.
 
-4. Run `$ bower install --save-dev` to install Bower libraries
+4. Run `$ bower install` to install Bower libraries
 
 ### Running the Toolkit
 
