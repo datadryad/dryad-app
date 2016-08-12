@@ -17,26 +17,27 @@ module StashDatacite
     # probably make it straight forward if we didn't allow the shared resource class to be user-configurable.
     def self.associate_with_resource(resource)
       resource.instance_eval do
-        has_many :contributors, class_name: 'StashDatacite::Contributor' # optional according to datacite
-        has_many :creators, class_name: 'StashDatacite::Creator' # mandatory
-        has_many :datacite_dates, class_name: 'StashDatacite::DataciteDate' # optional
-        has_many :descriptions, class_name: 'StashDatacite::Description' #optional
-        has_many :embargoes, class_name: 'StashDatacite::Embargo' #?
-        has_many :geolocation_boxes, class_name: 'StashDatacite::GeolocationBox' # optional
-        has_many :geolocation_places, class_name: 'StashDatacite::GeolocationPlace' # optional
-        has_many :geolocation_points, class_name: 'StashDatacite::GeolocationPoint' # optional
-        has_many :publication_years, class_name: 'StashDatacite::PublicationYear' # required
-        has_one :publisher, class_name: 'StashDatacite::Publisher' # required
-        has_many :related_identifiers, class_name: 'StashDatacite::RelatedIdentifier' # optional
-        has_one :resource_type, class_name: 'StashDatacite::ResourceType' # optional
-        has_many :rights, class_name: 'StashDatacite::Right' # optional
-        has_one :size, class_name: 'StashDatacite::Size' # optional
+        has_many :descriptions, class_name: 'StashDatacite::Description', dependent: :destroy #optional
+        has_many :contributors, class_name: 'StashDatacite::Contributor', dependent: :destroy  # optional according to datacite
+        has_many :creators, class_name: 'StashDatacite::Creator', dependent: :destroy # mandatory
+        has_many :datacite_dates, class_name: 'StashDatacite::DataciteDate', dependent: :destroy # optional
+        has_many :descriptions, class_name: 'StashDatacite::Description', dependent: :destroy #optional
+        has_many :embargoes, class_name: 'StashDatacite::Embargo', dependent: :destroy #?
+        has_many :geolocation_boxes, class_name: 'StashDatacite::GeolocationBox', dependent: :destroy # optional
+        has_many :geolocation_places, class_name: 'StashDatacite::GeolocationPlace', dependent: :destroy # optional
+        has_many :geolocation_points, class_name: 'StashDatacite::GeolocationPoint', dependent: :destroy # optional
+        has_many :publication_years, class_name: 'StashDatacite::PublicationYear', dependent: :destroy # required
+        has_one :publisher, class_name: 'StashDatacite::Publisher', dependent: :destroy # required
+        has_many :related_identifiers, class_name: 'StashDatacite::RelatedIdentifier', dependent: :destroy # optional
+        has_one :resource_type, class_name: 'StashDatacite::ResourceType', dependent: :destroy # optional
+        has_many :rights, class_name: 'StashDatacite::Right', dependent: :destroy # optional
+        has_one :size, class_name: 'StashDatacite::Size', dependent: :destroy # optional
         has_and_belongs_to_many :subjects, class_name: 'StashDatacite::Subject',
-                                           through: 'StashDatacite::ResourceSubject' #optional
-        has_many :titles, class_name: 'StashDatacite::Title' # required
-        has_one :language, class_name: 'StashDatacite::Language' #required
-        has_many :alternate_identifiers, :class_name => 'StashDatacite::AlternateIdentifier' #optional
-        has_many :formats, :class_name => 'StashDatacite::Format' #optional
+                                           through: 'StashDatacite::ResourceSubject', dependent: :destroy #optional
+        has_many :titles, class_name: 'StashDatacite::Title', dependent: :destroy # required
+        has_one :language, class_name: 'StashDatacite::Language', dependent: :destroy #required
+        has_many :alternate_identifiers, :class_name => 'StashDatacite::AlternateIdentifier', dependent: :destroy #optional
+        has_many :formats, :class_name => 'StashDatacite::Format', dependent: :destroy #optional
 
         # this enables deep copying of the resource
         amoeba do

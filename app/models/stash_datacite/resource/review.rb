@@ -51,7 +51,7 @@ module StashDatacite
       end
 
       def file_uploads
-        @file_uploads = @resource.file_uploads
+        @file_uploads = @resource.current_file_uploads
       end
 
       def image_uploads

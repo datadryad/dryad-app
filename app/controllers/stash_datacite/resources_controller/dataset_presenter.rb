@@ -43,7 +43,7 @@ module StashDatacite
       end
 
       def file_count
-        @resource.file_uploads.count
+        @resource.current_file_uploads.count
       end
 
       def external_identifier
