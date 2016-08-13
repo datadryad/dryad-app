@@ -40,7 +40,7 @@
       <%= link_to 'Edit Files', stash_engine.upload_resource_path(@resource), id: 'upload_path', class: 'c-review-files-button o-button__icon-left', role: 'button' %>
     </div>
 
-    <%= render partial: "stash_datacite/licenses/review_license" %>
+    <%= render partial: "stash_datacite/licenses/review" %>
 
 <div class="o-dataset-nav">
   <%= link_to 'Back to My Datasets', stash_url_helpers.dashboard_path , id: 'dashboard_path', class: 'o-button__icon-left', role: 'button' %>
