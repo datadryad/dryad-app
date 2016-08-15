@@ -61,11 +61,11 @@ module Stash
       end
 
       def self.log
-        HarvesterApp.log
+        ::Stash::Harvester.log
       end
 
       def log
-        HarvesterApp.log
+        ::Stash::Harvester.log
       end
 
       private

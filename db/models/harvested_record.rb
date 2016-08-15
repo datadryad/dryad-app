@@ -42,7 +42,11 @@ module Stash
 
         # @return [HarvestedRecord] the most recent successfully indexed record
         def self.find_newest_indexed
-          HarvestedRecord.joins(:indexed_records).where(indexed_records: { status: Status::COMPLETED }).order(timestamp: :desc).first
+          HarvestedRecord
+            .joins(:indexed_records)
+            .where(indexed_records: { status: Status::COMPLETED })
+            .order(timestamp: :desc)
+            .first
         end
 
         # @return [HarvestedRecord] the oldest record that failed to index and

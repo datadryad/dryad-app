@@ -1,5 +1,6 @@
 require 'active_support'
 require 'logger'
+require 'stash'
 
 module Stash
   # A gem for harvesting metadata from a digital repository for indexing
