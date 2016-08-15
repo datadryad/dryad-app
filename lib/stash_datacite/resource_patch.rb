@@ -31,7 +31,7 @@ module StashDatacite
         has_many :related_identifiers, class_name: 'StashDatacite::RelatedIdentifier', dependent: :destroy # optional
         has_one :resource_type, class_name: 'StashDatacite::ResourceType', dependent: :destroy # optional
         has_many :rights, class_name: 'StashDatacite::Right', dependent: :destroy # optional
-        has_one :size, class_name: 'StashDatacite::Size', dependent: :destroy # optional
+        has_many :sizes, class_name: 'StashDatacite::Size', dependent: :destroy # optional
         has_and_belongs_to_many :subjects, class_name: 'StashDatacite::Subject',
                                            through: 'StashDatacite::ResourceSubject', dependent: :destroy #optional
         has_many :titles, class_name: 'StashDatacite::Title', dependent: :destroy # required
