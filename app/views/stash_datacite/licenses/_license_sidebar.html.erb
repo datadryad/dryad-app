@@ -1,3 +1,9 @@
-<%# license object from main configuration should be passed in as local 'license' %>
-<p>This work is licensed under a <a href="http://creativecommons.org/publicdomain/zero/1.0/" class="o-link__primary">Creative Commons Public Domain license</a>.</p>
-<%= image_tag('licenses/icon_cc-zero.svg', alt: 'Creative Commons Zero logo') %>
+<%# license object from main configuration should be passed in as local 'license', rights object as 'right' %>
+<% if license.nil? %>
+  <%= render partial: 'stash_datacite/licenses/no_license_review', locals: {right: right} %>
+<% else %>
+  <p>
+    This work is licensed under a <%= link_to license['name'], license['uri'] %> license.
+  </p>
+  <%= image_tag("licenses/#{license['badge']}", alt: "#{license['name']} logo") %>
+<% end %>
