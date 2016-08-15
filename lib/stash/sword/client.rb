@@ -55,6 +55,7 @@ module Stash
       #
       # @param edit_iri [URI, String] the Atom Edit-IRI
       # @param zipfile [String] the zipfile path
+      # @return [Integer] the response code (if the request succeeds)
       def update(edit_iri:, zipfile:)
         log.debug("Stash::Sword::Client.update(edit_iri: #{edit_iri}, zipfile: #{zipfile})")
         uri = to_uri(edit_iri).to_s

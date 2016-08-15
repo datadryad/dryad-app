@@ -1,3 +1,7 @@
+## 0.1.3 (15 August 2016)
+
+- Use 2.0.0 release version of `rest-client` to fix issues with cookie handling in redirection
+
 ## 0.1.2 (11 July 2016)
 
 - Use `Content-disposition: attachment` (per [SWORD spec](http://swordapp.github.io/SWORDv2-Profile/SWORDProfile.html))
