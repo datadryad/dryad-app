@@ -105,6 +105,22 @@ module StashDatacite
           @publisher = Publisher.create(publisher: tenant.long_name, resource_id: @resource.id)
         end
       end
+
+      def create_language
+        language = Language.where(resource_id: @resource.id)
+        if language.present?
+          @language = language
+        else
+          @language = Language.create(language: 'en-us', resource_id: @resource.id)
+      end
+    end
+
+    def create_format
+      format = Format.where(resource_id: @resource.id).first
+      if format.present?
+        @format = format
+      else
+        @format = Format.create(format: 'application/xml', resource_id: @resource.id)
     end
   end
 end
