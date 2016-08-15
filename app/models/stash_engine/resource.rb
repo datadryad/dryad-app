@@ -1,7 +1,7 @@
 module StashEngine
   class Resource < ActiveRecord::Base
     has_many :file_uploads, class_name: 'StashEngine::FileUpload'
-    has_many :versions, class_name: 'StashEngine::Version'
+    has_one :version, class_name: 'StashEngine::Version'
     belongs_to :identifier, :class_name => 'StashEngine::Identifier', foreign_key: 'identifier_id'
     has_one :resource_usage, class_name: 'StashEngine::ResourceUsage'
     # # rubocop:disable all
