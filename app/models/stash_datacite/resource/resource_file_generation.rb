@@ -74,7 +74,7 @@ module StashDatacite
             dm::Subject.new(value: "#{subject.subject}")
           end,
 
-          language: @resource.language.language || 'en-us',
+          language: 'en',
 
           resource_type: dm::ResourceType.new(resource_type_general: @type, value: "#{@resource.resource_type.resource_type}" ),
 
