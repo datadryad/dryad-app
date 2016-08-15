@@ -23,3 +23,9 @@ coverage
 
 # Ignore Emacs backups.
 *~
+
+# Ignore UI library files.
+node_modules
+ui-library/css/main.css
+ui-library/bower_components
+*.css.map

@@ -1,0 +1,34 @@
+// ##### Global Variables ##### //
+
+// ***** General ***** //
+
+$global-search-width: 190px;
+$input-height: 30px;
+
+// ***** Colors ***** //
+
+$design-dark-blue-color: rgb(0, 85, 129);
+$design-light-blue-color: rgb(72, 145, 175);
+$design-lighter-blue-color: lighten($design-light-blue-color, 25%);
+$design-dark-gray-color: rgb(124, 126, 127);
+$design-light-gray-color: rgb(157, 159, 162);
+$design-orange-color: rgb(230, 87, 34);
+$design-black-color: rgb(0, 0, 0);
+$design-white-color: rgb(255, 255, 255);
+$design-red-color: rgb(209, 44, 29);
+$design-green-color: rgb(56, 152, 24);
+
+// ***** Breakpoints ***** //
+
+$screen-sm-min: 480px;
+$screen-md-min: 760px;
+$screen-lg-min: 870px;
+$screen-max: 1280px;
+
+// ***** Spacing ***** //
+
+$spacing-base: 5px;
+$spacing-sm: 10px;
+$spacing-md: 20px;
+$spacing-lg: 30px;
+$spacing-body: $spacing-sm;
