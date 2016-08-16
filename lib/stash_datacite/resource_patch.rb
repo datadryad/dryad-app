@@ -38,6 +38,7 @@ module StashDatacite
         has_one :language, class_name: 'StashDatacite::Language', dependent: :destroy #required
         has_many :alternate_identifiers, :class_name => 'StashDatacite::AlternateIdentifier', dependent: :destroy #optional
         has_many :formats, :class_name => 'StashDatacite::Format', dependent: :destroy #optional
+        has_one :version, class_name: 'StashDatacite::Version', dependent: :destroy #optional
 
         # this enables deep copying of the resource
         amoeba do

@@ -107,7 +107,7 @@ module StashDatacite
       end
 
       def create_language
-        language = Language.where(resource_id: @resource.id)
+        language = Language.where(resource_id: @resource.id).first
         if language.present?
           @language = language
         else
