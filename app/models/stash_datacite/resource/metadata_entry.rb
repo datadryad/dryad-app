@@ -111,16 +111,27 @@ module StashDatacite
         if language.present?
           @language = language
         else
-          @language = Language.create(language: 'en-us', resource_id: @resource.id)
+          @language =  Language.create(language: 'en-us', resource_id: @resource.id)
+        end
       end
-    end
 
-    def create_format
-      format = Format.where(resource_id: @resource.id).first
-      if format.present?
-        @format = format
-      else
-        @format = Format.create(format: 'application/xml', resource_id: @resource.id)
+      def create_format
+        format = Format.where(resource_id: @resource.id).first
+        if format.present?
+          @format = format
+        else
+          @format = Format.create(format: 'application/xml', resource_id: @resource.id)
+        end
+      end
+
+      def create_version
+        version = Version.where(resource_id: @resource.id).first
+        if version.present?
+          @version = version
+        else
+          @version = Version.create(version: '3.1', resource_id: @resource.id)
+        end
+      end
     end
   end
 end
