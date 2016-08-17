@@ -50,8 +50,20 @@ module Stash
           end
         end
 
+        it "gets the entry from the Edit-IRI in the Location: header if it isn't returned in the body" do
+          authorized_uri = collection_uri.sub('http://', "http://#{username}:#{password}@")
+
+          redirect_url = 'http://www.example.org/'
+          stub_request(:post, authorized_uri).to_return(status: 201, headers: { 'Location' => redirect_url })
+          stub_request(:get, redirect_url.sub('http://', "http://#{username}:#{password}@")).to_return(
+            body: '<entry xmlns="http://www.w3.org/2005/Atom"><id>http://merritt.cdlib.org/sword/v2/object/ark:/99999/fk4t157x4p</id><author><name>ucb_dash_submitter</name></author><generator uri="http://www.swordapp.org/" version="2.0" /><link href="http://merritt.cdlib.org/sword/v2/object/ark:/99999/fk4t157x4p" rel="edit" /><link href="http://merritt.cdlib.org/sword/v2/object/ark:/99999/fk4t157x4p" rel="http://purl.org/net/sword/terms/add" /><link href="http://merritt.cdlib.org/sword/v2/object/ark:/99999/fk4t157x4p" rel="edit-media" /><treatment xmlns="http://purl.org/net/sword/terms/">no treatment information available</treatment></entry>'
+          )
+
+          receipt = client.create(zipfile: zipfile, doi: doi)
+          expect(receipt).to be_a(DepositReceipt)
+        end
+
         it 'returns the entry'
-        it "gets the entry from the Edit-IRI in the Location: header if it isn't returned in the body"
         it 'forwards a success response'
 
         it 'forwards a 4xx error' do
@@ -115,8 +127,15 @@ module Stash
           end
         end
 
-        it 'does something clever and asynchronous'
-        it 'forwards a success response'
+        it 'follows redirects' do
+          edit_iri = "http://merritt.cdlib.org/sword/v2/object/#{doi}"
+          authorized_uri = edit_iri.sub('http://', "http://#{username}:#{password}@")
+          redirect_url = 'http://www.example.org/'
+          stub_request(:put, authorized_uri).to_return(status: 303, headers: { 'Location' => redirect_url })
+          stub_request(:get, redirect_url.sub('http://', "http://#{username}:#{password}@")).to_return(status: 200)
+          code = client.update(edit_iri: edit_iri, zipfile: zipfile)
+          expect(code).to eq(200)
+        end
 
         it 'forwards a 4xx error' do
           edit_iri = "http://merritt.cdlib.org/sword/v2/object/#{doi}"

@@ -59,7 +59,7 @@ module Stash
       def update(edit_iri:, zipfile:)
         log.debug("Stash::Sword::Client.update(edit_iri: #{edit_iri}, zipfile: #{zipfile})")
         uri = to_uri(edit_iri).to_s
-        response = maybe_redirect(do_put(uri, zipfile))
+        response = do_put(uri, zipfile)
         log.debug(response_to_log_msg(response))
         response.code # TODO: what if anything should we return here?
       rescue => e
@@ -73,13 +73,6 @@ module Stash
         raise 'no collection URI provided' unless collection_uri
         raise 'no username provided' unless username
         raise 'no password provided' unless password
-      end
-
-      def maybe_redirect(response)
-        return response unless [301, 302, 307].include?(response.code)
-        log.debug(response_to_log_msg(response))
-        log.debug("Response code #{response.code}; redirecting")
-        response.follow_get_redirection
       end
 
       def receipt_from(response)
@@ -97,7 +90,7 @@ module Stash
         return nil unless edit_iri
 
         log.debug("Retrieving deposit receipt from Location header Edit-IRI: #{edit_iri}")
-        body = helper.get(to_uri(edit_iri))
+        body = helper.get(uri: to_uri(edit_iri))
         return nil unless body
 
         DepositReceipt.parse_xml(body)
