@@ -34,51 +34,60 @@
 <!-- Begin Orcid ID Component -->
 
 <script type="text/javascript">
+var disable;
   $(function () {
-    $('.js-affiliation').unbind('blur');
-    $('.js-affiliation').autocomplete({
-      source: function (request, response) {
-        $.ajax({
-          url: "<%= stash_datacite.affiliations_autocomplete_path %>",
-          dataType: "json",
-          data: {
-            term: request.term
-          },
-          success: function (data) {
-            response($.map(data, function (item) {
-                  return {
-                    value: item.long_name,
-                    id: item.id
+    // $('.js-affiliation').unbind('blur');
+    $('.js-affiliation')
+      // don't navigate away from the field on tab when selecting an item
+      .bind( "keydown", function( event ) {
+        if ( event.keyCode === $.ui.keyCode.TAB &&
+            $( this ).autocomplete( "instance" ).menu.active ) {
+          event.preventDefault();
+        }
+      })
+      .autocomplete({
+        source: function (request, response) {
+          $.ajax({
+            url: "<%= stash_datacite.affiliations_autocomplete_path %>",
+            dataType: "json",
+            data: {
+              term: request.term
+            },
+            success: function (data) {
+              response($.map(data, function (item) {
+                    return {
+                      value: item.long_name,
+                      id: item.id
+                    }
                   }
-                }
-            ));
-          }
-        });
-      },
-      minLength: 1,
-      focus: function () {
-        // prevent value inserted on focus
-        $('.saving_text').show();
-        $('.saved_text').hide();
-        return false;
-      },
-      select: function (event, ui) {
-        $(".js-affiliation_id").val(ui.item.id); // set hidden field id
-      },
-      open: function (event, ui) {
-        disable = true
-      },
-      close: function (event, ui) {
-        disable = false;
-        $(this).focus();
-      }
-    }).blur(function (event) {
-      // if (!disable) {
-        var form = $(this).parents('form');
-        $(form).trigger('submit.rails');
-        $('.saved_text').show();
-        $('.saving_text').hide();
-      // }
-    });
+              ));
+            }
+          });
+        },
+        minLength: 1,
+        focus: function () {
+          // prevent value inserted on focus
+          $('.saving_text').show();
+          $('.saved_text').hide();
+          return false;
+        },
+        select: function (event, ui) {
+          $(".js-affiliation_id").val(ui.item.id); // set hidden field id
+        },
+        open: function (event, ui) {
+          disable = true
+        },
+        close: function (event, ui) {
+          disable = false;
+          $(this).focus();
+        }
+      }).blur(function (event) {
+        if (!disable) {
+          var form = $(this).parents('form');
+          $(form).trigger('submit.rails');
+          $('.saved_text').show();
+          $('.saving_text').hide();
+        }
+      });
   });
 </script>
