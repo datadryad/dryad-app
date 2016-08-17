@@ -23,10 +23,10 @@ module Stash
 
       it 'sets the log level based on $RAILS_ENV' do
         expected = {
-            'test' => Logger::DEBUG,
-            'development' => Logger::INFO,
-            'stage' => Logger::WARN,
-            'production' => Logger::WARN
+          'test' => Logger::DEBUG,
+          'development' => Logger::INFO,
+          'stage' => Logger::WARN,
+          'production' => Logger::WARN
         }
         expected.each do |env, lvl|
           ENV['RAILS_ENV'] = env

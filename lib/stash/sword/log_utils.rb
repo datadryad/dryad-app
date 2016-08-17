@@ -13,19 +13,19 @@ module Stash
       def to_log_msg(e)
         msg_lines = []
 
-        if e.respond_to?(:message) && e.message
-          msg_lines << "message: #{e.message}"
-        else
-          msg_lines << e.to_s
-        end
+        msg_lines << if e.respond_to?(:message) && e.message
+                       "message: #{e.message}"
+                     else
+                       e.to_s
+                     end
 
         if e.respond_to?(:response) && e.response
           response = e.response
           msg_lines.unshift(*[
-            "code: #{response.code}",
-            'headers:', hash_to_log_msg(response.headers),
-            "body:\n#{response.body}",
-          ])
+                              "code: #{response.code}",
+                              'headers:', hash_to_log_msg(response.headers),
+                              "body:\n#{response.body}"
+                            ])
         end
 
         if e.respond_to?(:backtrace) && e.backtrace
