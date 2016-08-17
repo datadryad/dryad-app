@@ -12,26 +12,9 @@ module Stash
 
       def to_log_msg(e)
         msg_lines = []
-
-        if e.respond_to?(:message) && e.message
-          msg_lines << "message: #{e.message}"
-        else
-          msg_lines << e.to_s
-        end
-
-        if e.respond_to?(:response) && e.response
-          response = e.response
-          msg_lines.unshift(*[
-            "code: #{response.code}",
-            'headers:', hash_to_log_msg(response.headers),
-            "body:\n#{response.body}",
-          ])
-        end
-
-        if e.respond_to?(:backtrace) && e.backtrace
-          msg_lines.unshift(*e.backtrace)
-        end
-
+        append_message(msg_lines, e)
+        append_response(msg_lines, e)
+        append_backtrace(msg_lines, e)
         msg_lines.join("\n")
       end
 
@@ -70,6 +53,31 @@ module Stash
           "#{datetime.to_time.utc} #{severity} -#{progname}- #{msg}\n"
         end
         logger
+      end
+
+      private
+
+      def append_message(msg_lines, e)
+        msg_lines << if e.respond_to?(:message) && e.message
+                       "message: #{e.message}"
+                     else
+                       e.to_s
+                     end
+      end
+
+      def append_response(msg_lines, e)
+        return unless e.respond_to?(:response) && e.response
+        response = e.response
+        msg_lines.unshift(*[
+                            "code: #{response.code}",
+                            'headers:', hash_to_log_msg(response.headers),
+                            "body:\n#{response.body}"
+                          ])
+      end
+
+      def append_backtrace(msg_lines, e)
+        return unless e.respond_to?(:backtrace) && e.backtrace
+        msg_lines.unshift(*e.backtrace)
       end
 
     end
