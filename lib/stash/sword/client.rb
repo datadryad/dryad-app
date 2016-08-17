@@ -60,7 +60,7 @@ module Stash
         log.debug("Stash::Sword::Client.update(edit_iri: #{edit_iri}, zipfile: #{zipfile})")
         uri = to_uri(edit_iri).to_s
         response = do_put(uri, zipfile)
-        log.debug(response_to_log_msg(response))
+        log.debug(to_log_msg(response))
         response.code # TODO: what if anything should we return here?
       rescue => e
         log_error(e)
@@ -76,7 +76,7 @@ module Stash
       end
 
       def receipt_from(response)
-        log.debug(response_to_log_msg(response))
+        log.debug(to_log_msg(response))
 
         body = response.body.strip
         return DepositReceipt.parse_xml(body) unless body.empty?

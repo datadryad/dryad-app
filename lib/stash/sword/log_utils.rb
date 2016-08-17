@@ -7,21 +7,32 @@ module Stash
       end
 
       def log_error(e)
-        if e.respond_to?(:response)
-          log.error(response_to_log_msg(e.response))
-        else
-          log.error('Unable to log response')
-        end
+        log.error(to_log_msg(e))
       end
 
-      def response_to_log_msg(response)
-        [
-          '-----------------------------------------------------',
-          "code: #{response.code}",
-          'headers:', hash_to_log_msg(response.headers),
-          "body:\n#{response.body}",
-          '-----------------------------------------------------'
-        ].join("\n")
+      def to_log_msg(e)
+        msg_lines = []
+
+        if e.respond_to?(:message) && e.message
+          msg_lines << "message: #{e.message}"
+        else
+          msg_lines << e.to_s
+        end
+
+        if e.respond_to?(:response) && e.response
+          response = e.response
+          msg_lines.unshift(*[
+            "code: #{response.code}",
+            'headers:', hash_to_log_msg(response.headers),
+            "body:\n#{response.body}",
+          ])
+        end
+
+        if e.respond_to?(:backtrace) && e.backtrace
+          msg_lines.unshift(*e.backtrace)
+        end
+
+        msg_lines.join("\n")
       end
 
       def log_hash(hash)
@@ -49,7 +60,11 @@ module Stash
       end
 
       def default_logger
-        logger = Logger.new($stdout, 10, 1024 * 1024)
+        LogUtils.create_default_logger($stdout, level)
+      end
+
+      def self.create_default_logger(io, level)
+        logger = Logger.new(io, 10, 1024 * 1024)
         logger.level = level
         logger.formatter = proc do |severity, datetime, progname, msg|
           "#{datetime.to_time.utc} #{severity} -#{progname}- #{msg}\n"
