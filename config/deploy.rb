@@ -192,7 +192,8 @@ namespace :deploy do
 
   before :starting, :update_config
   before :starting, :clone_engines
-  before :starting, :update_local_engines
+  #before :starting, :update_local_engines
+  after :started, :update_local_engines
   before :published, :record_branch
   before 'deploy:symlink:shared', 'deploy:my_linked_files'
   after :published, :update_local_engines
