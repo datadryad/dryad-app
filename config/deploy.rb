@@ -135,11 +135,12 @@ namespace :deploy do
   desc 'update local engines to get around requiring version number changes in development'
   task :update_local_engines do
     on roles(:app) do
-      if test("[ -f #{deploy_to}/current/branch_info ]")
-        my_branch = capture("cat #{deploy_to}/current/branch_info")
-      else
-        my_branch = 'development'
-      end
+      #if test("[ -f #{deploy_to}/current/branch_info ]")
+      #  my_branch = capture("cat #{deploy_to}/current/branch_info")
+      #else
+      #  my_branch = 'development'
+      #end
+      my_branch = fetch(:branch, 'development')
 
       %w(stash_datacite stash_engine stash_discovery).each do |engine|
         execute "cd #{deploy_to}/releases/stash_engines/#{engine}; git checkout #{my_branch}; git reset --hard origin/#{my_branch}; git pull"
