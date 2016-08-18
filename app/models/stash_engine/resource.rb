@@ -1,7 +1,7 @@
 module StashEngine
   class Resource < ActiveRecord::Base
     has_many :file_uploads, class_name: 'StashEngine::FileUpload'
-    has_one :version, class_name: 'StashEngine::Version'
+    has_one :stash_version, class_name: 'StashEngine::Version'
     belongs_to :identifier, :class_name => 'StashEngine::Identifier', foreign_key: 'identifier_id'
     has_one :resource_usage, class_name: 'StashEngine::ResourceUsage'
     # # rubocop:disable all
@@ -19,8 +19,8 @@ module StashEngine
     #resource_states
     scope :in_progress, -> { joins(:current_state).where(stash_engine_resource_states: {resource_state:  :in_progress}) }
     scope :submitted, -> { joins(:current_state).where(stash_engine_resource_states: {resource_state:  [:published, :processing, :error]}) }
-    scope :by_version_desc, -> { joins(:version).order('stash_engine_versions.version DESC') }
-    scope :by_version, -> { joins(:version).order('stash_engine_versions.version ASC') }
+    scope :by_version_desc, -> { joins(:stash_version).order('stash_engine_versions.version DESC') }
+    scope :by_version, -> { joins(:stash_version).order('stash_engine_versions.version ASC') }
 
     # clean up the uploads with files that no longer exist for this resource
     def clean_uploads
@@ -80,11 +80,11 @@ module StashEngine
 
     def update_version(zipfile)
       zip_filename = File.basename(zipfile)
-      if self.version.nil?
-        version = Version.new(resource_id: id, zip_filename: zip_filename, version: next_version)
+      if self.stash_version.nil?
+        version = StashEngine::Version.new(resource_id: id, zip_filename: zip_filename, version: next_version)
         version.save!
       else
-        version = Version.where(resource_id: id, zip_filename: zip_filename).first
+        version = StashEngine::Version.where(resource_id: id, zip_filename: zip_filename).first
         version.version = next_version
         version.save!
       end
@@ -93,10 +93,10 @@ module StashEngine
     #smartly gives a version number for this resource for either current version if version is already set
     #or what it would be when it is submitted (the versino to be), assuming it's submitted next
     def smart_version
-      if self.version.blank? || self.version.version == 0
+      if self.stash_version.blank? || self.stash_version.version == 0
         next_version
       else
-        self.version.version
+        self.stash_version.version
       end
     end
 
@@ -109,7 +109,7 @@ module StashEngine
           1
         else
           #this looks crazy, but association from resource to version to version field
-          last_v.version.version + 1
+          last_v.stash_version.version + 1
         end
       end
     end
