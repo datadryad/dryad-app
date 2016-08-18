@@ -1,0 +1,18 @@
+// ##### Drop Region Object ##### //
+
+.o-drop {
+	display: inline-block;
+	padding: 1.5em;
+	border: 3px dashed $design-dark-gray-color;
+	border-radius: 0.5em;
+	color: $design-dark-blue-color;
+	font-size: 1.6em;
+	text-align: center;
+
+	@include bp(screen2) {
+		padding: 2em;
+		border-radius: 0.75em;
+		font-size: 1.9em;
+	}
+
+}

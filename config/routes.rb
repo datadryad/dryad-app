@@ -17,6 +17,12 @@ StashEngine::Engine.routes.draw do
     end
   end
 
+  resource :file_upload do
+    member do
+      patch 'revert'
+    end
+  end
+
   get 'dashboard', to: 'dashboard#show', as: 'dashboard'
   get 'metadata_basics', to: 'dashboard#metadata_basics', as: 'metadata_basics'
   get 'preparing_to_submit', to: 'dashboard#preparing_to_submit', as: 'preparing_to_submit'

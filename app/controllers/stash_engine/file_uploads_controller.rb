@@ -7,20 +7,28 @@ module StashEngine
 
     before_action :set_file_info, only: [:destroy, :remove, :restore]
 
-    before_action :require_file_owner, except: [:create, :destroy, :remove, :restore]
+    before_action :require_file_owner, except: [:create, :destroy, :remove, :restore, :revert]
 
     before_action :set_create_prerequisites, only: [:create]
 
+    # this is a newly uploaded file and we're deleting it
     def destroy
       respond_to do |format|
         format.js do
+          fn = @file.upload_file_name
+          res_id = @file.resource_id
           File.delete(@file.temp_file_path) if File.exist?(@file.temp_file_path)
           @file_id = @file.id
           @file.destroy
+          @extra_files = FileUpload.where(resource_id: res_id, upload_file_name: fn)
+          @extra_files.each do |my_f|
+            my_f.update_attribute(:file_state, 'deleted') if my_f.file_state == 'copied'
+          end
         end
       end
     end
 
+    # this is a file from a previous version and we're marking it for deletion
     def remove
       respond_to do |format|
         format.js do
@@ -30,6 +38,7 @@ module StashEngine
       end
     end
 
+    # this is a file from a previous version marked as deleted and we're unmarking it for deletion
     def restore
       respond_to do |format|
         format.js do
@@ -40,6 +49,7 @@ module StashEngine
     end
 
 
+    # a file being uploaded (chunk by chunk)
     def create
       respond_to do |format|
         format.js do
@@ -52,17 +62,44 @@ module StashEngine
           end
 
           new_fn = File.join(@upload_dir, @file_upload.original_filename)
-          FileUtils.mv(@accum_file, new_fn)
 
-          @my_file = FileUpload.new(
-            upload_file_name: @file_upload.original_filename,
-            temp_file_path: new_fn,
-            upload_content_type: @file_upload.content_type,
-            upload_file_size: File.size(new_fn),
-            resource_id: params[:resource_id],
-            upload_updated_at: Time.new.utc,
-            file_state: 'created')
-          @my_file.save
+          existing_files = FileUpload.where(resource_id: params[:resource_id]).
+              where(upload_file_name: @file_upload.original_filename)
+
+          existing_files.each do |old_f|
+            if old_f.file_state == 'created' || old_f.file_state.blank?
+              # delete this old file before overwriting with this one, there can be only one current with same name
+              File.delete(old_f.temp_file_path) if File.exist?(old_f.temp_file_path)
+              old_f.destroy
+            elsif old_f.file_state == 'deleted'
+              # set back to 'copied' since this is really just a new version of this old file with same name
+              old_f.update_attribute(:file_state, 'copied')
+            end
+          end
+
+          FileUtils.mv(@accum_file, new_fn) # moves the file from the original unique_id fn to the final one
+          create_db_file(new_fn) # no files exist for this so new "created" file
+        end
+      end
+    end
+
+    def revert
+      respond_to do |format|
+        format.js do
+          # in here we need to remove the files from filesystem and database except the 'copied' state files
+          @resource = Resource.where(id: params[:resource_id])
+          raise ActionController::RoutingError.new('Not Found') if @resource.length < 1 ||
+              @resource.first.user_id != session[:user_id]
+          @resource = @resource.first
+          @resource.file_uploads.each do |fu|
+            if fu.file_state == 'created'
+              File.delete(fu.temp_file_path) if File.exist?(fu.temp_file_path)
+              fu.destroy
+            else
+              fu.update_attribute(:file_state, 'copied')
+            end
+          end
+          @uploads = @resource.latest_file_states
         end
       end
     end
@@ -91,6 +128,18 @@ module StashEngine
 
     def add_to_file(fn, fileupload)
       File.open(fn, 'ab') { |f| f.write(fileupload.read) }
+    end
+
+    def create_db_file(new_fn)
+      @my_file = FileUpload.new(
+          upload_file_name: @file_upload.original_filename,
+          temp_file_path: new_fn,
+          upload_content_type: @file_upload.content_type,
+          upload_file_size: File.size(new_fn),
+          resource_id: params[:resource_id],
+          upload_updated_at: Time.new.utc,
+          file_state: 'created')
+      @my_file.save
     end
   end
 end

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+<head>
+	<meta charset="UTF-8">
+	<title>Facet Component</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+	<link rel="stylesheet" href="css/ui.css">
+	<style>
+		/* styles for this page only */
+		.c-facet {
+			max-width: 300px;
+		}
+	</style>
+	<script
+		src="https://code.jquery.com/jquery-2.2.3.min.js"
+		integrity="sha256-a23g1Nt4dtEYOj7bR+vTu7+T8VP13humZFBJNIYoEJo="
+		crossorigin="anonymous"></script>
+</head>
+<body>
+
+  <div class="ui-library-header">
+    <h1><a href="index.html">Dash UI Library</a></h1>
+    <h2>Facet Component</h2>
+  </div>
+
+  
+<div class="c-facet" role="group" aria-labelledby="c-facet__heading-1">
+	<div class="c-facet__header">
+		<div class="c-facet__heading">
+      <div id="c-facet__heading-1" class="c-facet__heading-text">Author</div>
+      <button class="c-facet__toggle-button js-facet__toggle-button"></button>
+    </div>
+    <button class="c-facet__deselect-button js-facet__deselect-button" disabled>Deselect All</button>
+	</div>
+	<div class="c-facet__check-group js-facet__check-group">
+    <label class="c-facet__refine-label" for="c-facet-text-input1">Refine Results</label>
+    <input class="c-facet__refine" id="c-facet-text-input1" type="text">
+
+    <input id="c-facet__check-input-1a" class="c-facet__check-input js-facet__check-input" type="checkbox">
+    <label class="c-facet__check-label" for="c-facet__check-input-1a">Aguilar, Fernando (74)</label>
+    
+    <input id="c-facet__check-input-2a" class="c-facet__check-input js-facet__check-input" type="checkbox">
+    <label class="c-facet__check-label" for="c-facet__check-input-2a">Aisen, Paul (12)</label>
+    
+    <input id="c-facet__check-input-3a" class="c-facet__check-input js-facet__check-input" type="checkbox">
+    <label class="c-facet__check-label" for="c-facet__check-input-3a">Ale Ebrahim, Nader (1)</label>
+
+    <input id="c-facet__check-input-4a" class="c-facet__check-input js-facet__check-input" type="checkbox">
+    <label class="c-facet__check-label" for="c-facet__check-input-4a">Allison, Steven D. (2)</label>
+
+    <input id="c-facet__check-input-5a" class="c-facet__check-input js-facet__check-input" type="checkbox">
+    <label class="c-facet__check-label" for="c-facet__check-input-5a">Baldassare, Mark (23)</label>
+
+    <input id="c-facet__check-input-6a" class="c-facet__check-input js-facet__check-input" type="checkbox">
+    <label class="c-facet__check-label" for="c-facet__check-input-6a">Another Filter (1)</label>
+
+    <input id="c-facet__check-input-7a" class="c-facet__check-input js-facet__check-input" type="checkbox">
+    <label class="c-facet__check-label" for="c-facet__check-input-7a">Another Filter (2)</label>
+
+    <input id="c-facet__check-input-8a" class="c-facet__check-input js-facet__check-input" type="checkbox">
+    <label class="c-facet__check-label" for="c-facet__check-input-8a">Another Filter (3)</label>
+  </div>
+</div>
+
+
+	<script src="js/ui.js"></script>
+	
+</body>
+</html>

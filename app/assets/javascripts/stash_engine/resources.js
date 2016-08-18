@@ -18,6 +18,7 @@ $(function () {
           $('#no_chosen').hide();
           data.files[0]['id'] = generateQuickId();
           data.context = $(tmpl("upload-line", data.files[0]));
+          removeDuplicateFilename(data.files[0].name); // removes existing duplicate before adding again
           $('#upload_list').append(data.context);
           $('#upload_all').show();
           // binding remove link action
@@ -49,7 +50,7 @@ $(function () {
               $('.js-upload-it:first').click();
             };
             updateButtonLinkStates();
-          })
+          });
           updateButtonLinkStates();
         },
         progress: function (e, data) {
@@ -106,8 +107,23 @@ function formatSizeUnits(bytes) {
     }
 }
 
+/* The size is complicated since we are showing rows in many states in the same table with div classes around row:
+   .js-copied_file    --    A file previously uploaded from an earlier version of dataset with entry in database
+   .js-unuploaded     --    A file dropped but does not exist on server side
+   .js-created_file   --    A file that has been dropped and uploaded to the server in this version
+   .js-deleted_file   --    A file the user wants to remove from this version but existed previously
+              Note that files newly uploaded (or not uploaded yet) and deleted disappear from the table forever
+
+   I believe files dropped and that match a file already in the table will make the previous file disappear since
+   we cannot have duplicate filenames and it would be very confusing to list two files with same names.  There
+   may need special handling after uploading for these files which are replacements.  Not sure how deletion of
+   these files works.
+
+   Size would be copied, unuploaded (dropped) and created files, assuming only one of each unique filename is shown.
+ */
 function totalSize(){
-  nums = $('.js-hidden_bytes').map(function(){ return parseInt(this.innerHTML); });
+  nums = $('div.js-created_file .js-hidden_bytes,div.js-copied_file .js-hidden_bytes,div.js-unuploaded .js-hidden_bytes')
+      .map(function(){ return parseInt(this.innerHTML); });
   var total = 0;
   $.each(nums, function( index, value ) {
     total += value;
@@ -133,6 +149,7 @@ function updateButtonLinkStates(){
     if(uploadInProgress) {
       $('#cancel_all').show();
       $('#upload_all').hide();
+      $('#revert_all').hide();
     }
   }else{
     // files are already uploaded or there are none
@@ -141,9 +158,18 @@ function updateButtonLinkStates(){
     $('#upload_all').hide();
     $("a[class^='c-progress__tab'], #describe_back, #proceed_review").unbind( "click" );
     uploadInProgress = false;
+    updateRevertState();
   }
+  updateUiStates();
+}
 
-  updateTotalSize();
+function updateRevertState(){
+  console.log((new Date()).toISOString() + ' updating revert button state');
+  if($(".js-created_file,.js-deleted_file,.js-unuploaded").length > 0){
+    $("#revert_all").show();
+  }else{
+    $('#revert_all').hide();
+  }
 }
 
 function largestSize(){
@@ -153,8 +179,8 @@ function largestSize(){
   return sorted[0];
 }
 
-// sets the total size and modifies UI to display states for too-large uploads and other stuff.
-function updateTotalSize(){
+// updates the size and other UI state updates after changes to the file list
+function updateUiStates(){
   $('#upload_total').text("Total: " + formatSizeUnits(totalSize()));
 
   if(overTotalSize(totalSize()) || overFileSize(largestSize())){
@@ -162,7 +188,7 @@ function updateTotalSize(){
   }else{
     $('#upload_total').removeClass().addClass('c-upload__total-size');
   }
-
+  updateRevertState();
   // remove and notify if over size.
   if(overFileSize(largestSize())){
     // UI design says delete the large items automatically and swat the user with a rolled up newspaper.
@@ -174,7 +200,7 @@ function updateTotalSize(){
         setTimeout(function(){
           $('#over_single_size').empty();
         }, 20000);
-        updateTotalSize();
+        updateUiStates();
       }
     });
   }
@@ -185,6 +211,24 @@ function updateTotalSize(){
   }else{
     $('#over_files_size').hide();
     if(!uploadInProgress && filesWaitingForUpload()) $('#upload_all').show();
+  }
+}
+
+/*  Function called when a new file is dropped and rids list of existing names that are exactly the same
+    and issues warning that the previous file has been replaced.
+ */
+function removeDuplicateFilename(fn){
+  dups = $('.js-filename').filter(function( index ) {
+    return (fn == $(this).text());
+  });
+  // get row element with these classes and delete it.
+  if(dups.length > 0) {
+    dups.parents('.js-copied_file,.js-unuploaded,.js-created_file,.js-deleted_file').remove();
+    $('#over_single_size').append("<p>Your previous file <strong>" + fn +
+        "</strong> has been replaced in your upload list with a newer file with the same name.</p>");
+    setTimeout(function () {
+      $('#over_single_size').empty();
+    }, 20000);
   }
 }
 // *****************************
