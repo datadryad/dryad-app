@@ -39,18 +39,6 @@ module StashDatacite
         @resource.creators.filled.count == num_creators  # the completely filled in creators must equal number of creators
       end
 
-      def abstract
-        @resource.descriptions.where(description_type: 'abstract').where.not(description: [nil, '']).count > 0
-      end
-
-      def required_completed
-        title.to_i + institution.to_i + data_type.to_i + creator.to_i + abstract.to_i
-      end
-
-      def required_total
-        5
-      end
-
       def creator_name
         num_creators = @resource.creators.count
         return false if num_creators < 1
@@ -61,6 +49,18 @@ module StashDatacite
         num_creators = @resource.creators.count
         return false if num_creators < 1
         @resource.creators.affiliation_filled.count == num_creators  # the completely filled in creators must equal number of creators
+      end
+
+      def abstract
+        @resource.descriptions.where(description_type: 'abstract').where.not(description: [nil, '']).count > 0
+      end
+
+      def required_completed
+        title.to_i + creator_affiliation.to_i + data_type.to_i + creator_name.to_i + abstract.to_i
+      end
+
+      def required_total
+        5
       end
 
       # these are optional (recommended) ones
