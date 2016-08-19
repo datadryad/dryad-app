@@ -112,7 +112,8 @@ namespace :deploy do
       my_branch = fetch(:branch, 'development')
 
       %w(stash_datacite stash_engine stash_discovery).each do |engine|
-        execute "cd #{deploy_to}/releases/stash_engines/#{engine}; git checkout #{my_branch}; git reset --hard origin/#{my_branch}; git pull"
+        # execute "cd #{deploy_to}/releases/stash_engines/#{engine}; git checkout #{my_branch}; git reset --hard origin/#{my_branch}; git pull"
+        execute "cd #{deploy_to}/releases/stash_engines/#{engine}; git pull; git checkout #{my_branch}"
       end
     end
   end
