@@ -7,7 +7,10 @@
 # server 'example.com', user: 'deploy', roles: %w{app web}, other_property: :other_value
 # server 'db.example.com', user: 'deploy', roles: %w{db}
 
+set :rails_env, 'production'
 
+set :server_host, ENV["SERVER_HOST"] || 'uc3-dash2-prd.cdlib.org'
+server fetch(:server_host), user: 'dash2', roles: %w{web app db}
 
 # role-based syntax
 # ==================

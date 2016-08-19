@@ -16,13 +16,13 @@ set :rails_env, 'stage'
 set :server_host, ENV["SERVER_HOST"] || 'uc3-dash2-stg.cdlib.org'
 server fetch(:server_host), user: 'dash2', roles: %w{web app db}
 
-on roles(:all) do |host|
-  puts "setting server host: #{host.hostname}"
-end
+#on roles(:all) do |host|
+#  puts "setting server host: #{host.hostname}"
+#end
 
-set :passenger_pid, "#{deploy_to}/passenger.pid"
-set :passenger_log, "#{deploy_to}/passenger.log"
-set :passenger_port, "3000"
+#set :passenger_pid, "#{deploy_to}/passenger.pid"
+#set :passenger_log, "#{deploy_to}/passenger.log"
+#set :passenger_port, "3000"
 
 # role-based syntax
 # ==================

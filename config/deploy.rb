@@ -45,6 +45,10 @@ set :passenger_in_gemfile, true
 # There may be difficulties one way or another.  Normal restart may require sudo in some circumstances.
 set :passenger_restart_with_touch, false
 
+set :passenger_pid, "#{deploy_to}/passenger.pid"
+set :passenger_log, "#{deploy_to}/passenger.log"
+set :passenger_port, "3000"
+
 namespace :deploy do
 
   desc 'Get list of linked files for capistrano'
@@ -57,29 +61,6 @@ namespace :deploy do
       set :linked_files, (res1 + res2)
     end
   end
-
-
-  #desc 'Stop Phusion'
-  #task :stop do
-  #  on roles(:app) do
-  #    if test("[ -f #{fetch(:passenger_pid)} ]")
-  #      execute "cd #{deploy_to}/current; bundle exec passenger stop --pid-file #{fetch(:passenger_pid)}"
-  #    end
-  #  end
-  #end
-
-  #desc 'Start Phusion'
-  #task :start do
-  #  on roles(:app) do
-  #    within current_path do
-  #      with rails_env: fetch(:rails_env) do
-  #        execute "cd #{deploy_to}/current; bundle exec passenger start -d --environment #{fetch(:rails_env)} --pid-file #{fetch(:passenger_pid)} -p #{fetch(:passenger_port)} --log-file #{fetch(:passenger_log)}"
-  #      end
-  #    end
-  #  end
-  #end
-  # before "deploy:start", "bundle:install"
-
 
   desc 'Restart Phusion'
   task :restart do
@@ -94,13 +75,6 @@ namespace :deploy do
   task :update_config do
     on roles(:app) do
       execute "cd #{deploy_to}/shared; git reset --hard origin/master; git pull"
-    end
-  end
-
-  desc 'record branch for engines' #this is so when development restarts it can use the same branch name for engines
-  task :record_branch do
-    on roles(:app) do
-      execute "cd #{deploy_to}/current; touch branch_info; echo '#{fetch(:branch)}' > branch_info"
     end
   end
 
@@ -135,11 +109,6 @@ namespace :deploy do
   desc 'update local engines to get around requiring version number changes in development'
   task :update_local_engines do
     on roles(:app) do
-      #if test("[ -f #{deploy_to}/current/branch_info ]")
-      #  my_branch = capture("cat #{deploy_to}/current/branch_info")
-      #else
-      #  my_branch = 'development'
-      #end
       my_branch = fetch(:branch, 'development')
 
       %w(stash_datacite stash_engine stash_discovery).each do |engine|
@@ -154,8 +123,8 @@ namespace :deploy do
     on roles(:app) do
       within current_path do
         with rails_env: fetch(:rails_env) do
-          execute "cd #{deploy_to}/current; LOCAL_ENGINES=true bundle install --no-deployment"
-          execute "cd #{deploy_to}/current; LOCAL_ENGINES=true bundle exec passenger start -d --environment #{fetch(:rails_env)} --pid-file #{fetch(:passenger_pid)} -p #{fetch(:passenger_port)} --log-file #{fetch(:passenger_log)}"
+          execute "cd #{deploy_to}/current; bundle install --no-deployment"
+          execute "cd #{deploy_to}/current; bundle exec passenger start -d --environment #{fetch(:rails_env)} --pid-file #{fetch(:passenger_pid)} -p #{fetch(:passenger_port)} --log-file #{fetch(:passenger_log)}"
         end
       end
     end
@@ -166,7 +135,7 @@ namespace :deploy do
   task :stop do
     on roles(:app) do
       if test("[ -f #{fetch(:passenger_pid)} ]")
-        execute "cd #{deploy_to}/current; LOCAL_ENGINES=true bundle exec passenger stop --pid-file #{fetch(:passenger_pid)}"
+        execute "cd #{deploy_to}/current; bundle exec passenger stop --pid-file #{fetch(:passenger_pid)}"
       end
     end
   end
@@ -193,10 +162,8 @@ namespace :deploy do
 
   before :starting, :update_config
   before :starting, :clone_engines
-  #before :starting, :update_local_engines
   after :started, :update_local_engines
-  before :published, :record_branch
   before 'deploy:symlink:shared', 'deploy:my_linked_files'
-  after :published, :update_local_engines
+  #after :published, :update_local_engines
 
 end
