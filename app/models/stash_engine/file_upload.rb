@@ -1,6 +1,6 @@
 module StashEngine
   class FileUpload < ActiveRecord::Base
-    belongs_to :resource, class_name: 'StashEngine::Resource', dependent: :destroy
+    belongs_to :resource, class_name: 'StashEngine::Resource'
     # mount_uploader :uploader, FileUploader # it seems like maybe I don't need this since I'm doing so much manually
 
     scope :deleted_from_version, -> { where(file_state: :deleted) }
