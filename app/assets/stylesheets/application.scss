@@ -1,0 +1,9 @@
+// This is the correct way to customize according to
+// http://geoblacklight.org/tutorial/2015/02/09/customize-your-application.html .
+//
+// May also wish to look at https://github.com/projectblacklight/blacklight/wiki#blacklight-customization
+// or
+// http://stackoverflow.com/questions/13966259/how-to-namespace-twitter-bootstrap-so-styles-dont-conflict
+@import 'blacklight';
+@import 'geoblacklight';
+// @import 'stash_engine/ui';
