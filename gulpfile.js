@@ -127,8 +127,9 @@ gulp.task('browserSync', function() {
 gulp.task('useref', function(){
   return gulp.src(['ui-library/**/*.html', '!ui-library/includes/*'])
     .pipe(useref())
-    .pipe(gulpIf('*.css', minifyCSS()))
-    .pipe(gulpIf('*.js', uglify()))
+    // commenting out minify and uglify since asset pipeline will do this and makes it easier to troubleshoot without
+    // .pipe(gulpIf('*.css', minifyCSS()))
+    // .pipe(gulpIf('*.js', uglify()))
     .pipe(lbInclude()) // Process <!--#include file="" --> statements
     .pipe(gulp.dest('public/demo'))
 });
