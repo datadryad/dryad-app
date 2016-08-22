@@ -164,11 +164,16 @@ function updateButtonLinkStates(){
 }
 
 function updateRevertState(){
-  console.log((new Date()).toISOString() + ' updating revert button state');
-  if($(".js-created_file,.js-deleted_file,.js-unuploaded").length > 0){
-    $("#revert_all").show();
+  // console.log((new Date()).toISOString() + ' updating revert button state');
+  but = $('#revert_all')
+  if(versionNumber() == 1){
+    but.hide();
+  }else if($(".js-created_file,.js-deleted_file,.js-unuploaded").length > 0){
+    but.show().prop("disabled", false).addClass('o-button__undo').removeClass('o-button__undo-disabled');
+    console.log('enabling');
   }else{
-    $('#revert_all').hide();
+    but.show().prop("disabled", true).addClass('o-button__undo-disabled').removeClass('o-button__undo');
+    console.log('disabling');
   }
 }
 

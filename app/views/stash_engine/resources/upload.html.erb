@@ -21,8 +21,11 @@
     </div>
   <% end %>
 </div>
-
-<h2 class="t-upload__choose-heading" id="upload_tweaker_head">Step 2: Upload your files</h2>
+<div class="t-upload__container">
+  <h2 class="t-upload__choose-heading" id="upload_tweaker_head">Step 2: Upload your files</h2>
+  <%= button_to 'undo all changes', revert_file_upload_path(resource_id: @resource.id), method: :patch, remote: true,
+                class: "o-button__undo", form_class: 'o-button__inline-form', id: 'revert_all' %>
+</div>
 <div class="c-upload">
   <div id="upload_list">
     <% if @resource.file_uploads.count < 1 %>
@@ -52,7 +55,7 @@
   </div>
 
   <div id="revert_all">
-    <%= button_to 'Revert all files', revert_file_upload_path(resource_id: @resource.id), method: :patch, remote: true,
+    <%# button_to 'undo all changes', revert_file_upload_path(resource_id: @resource.id), method: :patch, remote: true,
                   class: "o-button__plain-text2", form_class: 'o-button__inline-form' %>
     <!-- <button id="revert_all" type="button" class="o-button__plain-text2">Revert all files</button> -->
   </div>
@@ -92,6 +95,10 @@
 
   function overFileSize(mySize){
     return (mySize > maxFileSize());
+  }
+
+  function versionNumber(){
+    return <%= @resource.smart_version %>;
   }
 
   updateButtonLinkStates();
