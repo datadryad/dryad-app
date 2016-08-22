@@ -157,6 +157,17 @@
   background: inline('../images/icon_details.svg') left center no-repeat;
 }
 
+.o-button__undo {
+  @extend %o-button__no-bg-icon-left;
+  background: inline('../images/icon_undo-blue.png') left center no-repeat;
+}
+
+.o-button__undo-disabled {
+  @extend %o-button__no-bg-icon-left;
+  background: inline('../images/icon_undo-disabled.png') left center no-repeat;
+  color: $design-light-gray-color;
+}
+
 %o-button__prev-next {
   border: none;
   background-color: $design-white-color;

@@ -6,6 +6,15 @@
 
 %t-upload__choose-heading {
 	font-size: 1.2em;
+
+}
+
+.t-upload__container {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-top: 1em;
 }
 
 .t-upload__choose-heading {
