@@ -5,7 +5,7 @@ module LatestHelper
     return '[Name not set]' if name.blank?
     name_split = name.split(' ')
     return name if name_split.length < 2
-    "#{name_split.last}, #{name_split[0..-2].join(' ')}"
+    "#{name_split.last} #{name_split[0..-2].join(' ')}"
   end
 
 end
