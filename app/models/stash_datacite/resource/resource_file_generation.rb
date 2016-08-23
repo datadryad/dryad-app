@@ -5,6 +5,7 @@ require 'tempfile'
 require 'stash_ezid/client'
 require 'fileutils'
 require 'stash_datacite/dublin_core_builder'
+require 'stash_datacite/data_one_manifest_builder'
 
 module StashDatacite
   module Resource
@@ -157,24 +158,7 @@ module StashDatacite
       end
 
       def generate_dataone
-        files = uploads_list(@resource)
-        content =   "#%dataonem_0.1 " + "\n" +
-            "#%profile | http://uc3.cdlib.org/registry/ingest/manifest/mrt-dataone-manifest " + "\n" +
-            "#%prefix | dom: | http://uc3.cdlib.org/ontology/dataonem " + "\n" +
-            "#%prefix | mrt: | http://uc3.cdlib.org/ontology/mom " + "\n" +
-            "#%fields | dom:scienceMetadataFile | dom:scienceMetadataFormat | " +
-            "dom:scienceDataFile | mrt:mimeType " + "\n"
-
-        files.each do |file|
-          if file
-            content <<  "mrt-datacite.xml |  http://datacite.org/schema/kernel-3.1 | " +
-                "#{file[:name]}" + " | #{file[:type]} " + "\n" + "mrt-oaidc.xml | " +
-                "http://dublincore.org/schemas/xmls/qdc/2008/02/11/qualifieddc.xsd | " +
-                "#{file[:name]}" + " | #{file[:type]} " + "\n"
-          end
-        end
-        content << "#%eof "
-        content.to_s
+        DataONEManifestBuilder.new(uploads_list(@resource)).build_dataone_manifest
       end
 
       def generate_merritt_zip(folder, target_url, identifier)
