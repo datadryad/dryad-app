@@ -16,6 +16,8 @@ module StashDatacite
 
       attr_reader :files
 
+      # @param files [Array[Hash]] a list of "files", where each file is a hash
+      #   keyed by `:name` and `:type`
       def initialize(files)
         @files = files
       end
