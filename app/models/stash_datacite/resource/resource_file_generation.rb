@@ -32,24 +32,9 @@ module StashDatacite
         dm = Datacite::Mapping
         st = Stash::Wrapper
 
-        case @resource.resource_type.resource_type_ui
-          when "Spreadsheet"
-            @type = dm::ResourceTypeGeneral::DATASET
-          when "MultipleTypes"
-            @type = dm::ResourceTypeGeneral::COLLECTION
-          when "Image"
-            @type = dm::ResourceTypeGeneral::IMAGE
-          when "Sound"
-            @type = dm::ResourceTypeGeneral::SOUND
-          when "Video"
-            @type = dm::ResourceTypeGeneral::AUDIOVISUAL
-          when "Text"
-            @type = dm::ResourceTypeGeneral::TEXT
-          when "Software"
-            @type = dm::ResourceTypeGeneral::SOFTWARE
-          else
-            @type = dm::ResourceTypeGeneral::OTHER
-        end
+
+        @type = @resource.resource_type.resource_type_mapping_obj
+
         # # Based on "Example for a simple dataset"
         # # http://schema.datacite.org/meta/kernel-3/example/datacite-example-dataset-v3.0.xml
 
@@ -78,7 +63,7 @@ module StashDatacite
 
           language: 'en',
 
-          resource_type: dm::ResourceType.new(resource_type_general: @type, value: "#{@resource.resource_type.resource_type}" ),
+          resource_type: dm::ResourceType.new(resource_type_general: @type, value: nil ),
 
           version: @version,
 
