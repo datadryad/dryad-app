@@ -44,8 +44,10 @@ module StashDatacite
       end
 
       def add_pub_year(xml)
-        # TODO: is this right? do we have a more canonical date in the record somewhere?
-        xml.send(:'dc:date', Time.now.year)
+        pub_year = resource.publication_years.first
+        if pub_year
+          xml.send(:'dc:date', pub_year.publication_year)
+        end
       end
 
       def add_publisher(xml)
