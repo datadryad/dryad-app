@@ -2519,6 +2519,9 @@ summary::-webkit-details-marker {
     .ui-library-header h1 a {
       color: inherit; }
 
+p {
+  line-height: 150%; }
+
 body {
   max-width: 1220px;
   margin: 0 auto;
