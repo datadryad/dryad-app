@@ -55,7 +55,11 @@ module Datacite
       end
 
       def type
-        resource_type.value if resource_type
+        general_type.value if general_type
+      end
+
+      def general_type
+        resource_type.resource_type_general if resource_type
       end
 
       def grant_number

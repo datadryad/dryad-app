@@ -116,7 +116,7 @@ module Stash
           end
 
           it 'extracts the resource type' do
-            expect(@index_document[:dc_type_s]).to eq(@resource_type_value)
+            expect(@index_document[:dc_type_s]).to eq(DM::ResourceTypeGeneral::DATASET.value)
           end
 
           it 'extracts the subjects' do
