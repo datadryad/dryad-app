@@ -4,8 +4,10 @@ module StashDatacite
       publication_year = publication_years.try(:first).try(:publication_year) || Time.now.year
       title = title.try(:title)
       publisher = publisher.try(:publisher)
-      resource_type = resource_type.try(:resource_type)
-      ["#{creator_citation_format(creators)} (#{publication_year})", h(title), h(version), h(publisher), h(resource_type), target_url(identifier)].reject(&:blank?).join(", ").html_safe
+      resource_type = resource_type.try(:resource_type_friendly)
+      ["#{creator_citation_format(creators)} (#{publication_year})", h(title),
+       (version == 'v1'? nil : h(version)), h(publisher), h(resource_type),
+       target_url(identifier)].reject(&:blank?).join(", ").html_safe
     end
 
     def target_url(identifier)
