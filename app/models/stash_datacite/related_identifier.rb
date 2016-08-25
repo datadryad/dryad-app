@@ -13,6 +13,14 @@ module StashDatacite
     RelatedIdentifierTypesEnum = RelatedIdentifierTypes.map{|i| [i.downcase.to_sym, i.downcase]}.to_h
     RelatedIdentifierTypesStrToFull = RelatedIdentifierTypes.map{|i| [i.downcase, i]}.to_h
 
+    RelatedIdentifierTypesLimited = { DOI: 'doi', ARK: 'ark', ArXiv: 'arxiv', Handle: 'handle',
+                            ISBN: 'isbn', PMID: 'pmid', PURL: 'purl', URL: 'url', URN: 'urn' }
+
+    RelationTypesLimited = { cites: 'cites', :'is cited by' => 'iscitedby', supplements: 'issupplementto',
+        :'is supplemented by' => 'issupplementedby', continues: 'continues', :'is continued by' => 'iscontinuedby',
+        :'is a new version of' => 'isnewversionof', :'is a previous version of' => 'ispreviousversionof',
+        :'is part of' => 'ispartof', :'has part' => 'haspart', documents: 'documents', :'is documented by' => 'isdocumentedby',
+        :'is identical to' => 'isidenticalto', :'is derived from' => 'isderivedfrom', :'is source of' => 'issourceof' }
 
     before_save :strip_whitespace
 
