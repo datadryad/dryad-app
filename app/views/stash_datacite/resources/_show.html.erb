@@ -7,7 +7,7 @@
   <%= render partial: "stash_datacite/shared/citations",
              locals: { creators: @review.creators, title: @review.title,
                        resource_type: @review.resource_type,
-                       version: @resource.version.nil? ? 'v0' : "v#{@review.version.version }",
+                       version: @resource.stash_version.nil? ? 'v0' : "v#{@review.version.version }",
                        identifier: @resource.identifier.nil? ? 'DOI' : "#{@review.identifier.identifier }",
                        publisher: "#{@review.publisher}",
                        publication_years: @resource.publication_years } %>

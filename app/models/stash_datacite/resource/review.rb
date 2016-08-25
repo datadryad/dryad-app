@@ -19,7 +19,7 @@ module StashDatacite
       end
 
       def version
-        @resource.version
+        @resource.stash_version
       end
 
       def identifier
