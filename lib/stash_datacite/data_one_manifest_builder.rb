@@ -30,7 +30,7 @@ module StashDatacite
             content << "#{md_filename} | #{md_schema} | #{file[:name]} | #{file[:type]}"
           end
         end
-        content << '#%eof'
+        content << "#%eof\n"
         content.join("\n")
       end
 
