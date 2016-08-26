@@ -2,12 +2,12 @@
 
 .c-footer {
   @extend %pull-borders;
-  margin-top: 1em;
+  margin-top: 2em;
   margin-bottom: $spacing-md;
   padding-top: 10px;
   clear: both;
   border-top: 1px solid $design-dark-gray-color;
-  font-size: 2em;
+  font-size: 1em;
 
   @include bp(screen3) {
     font-size: 0.8em;
