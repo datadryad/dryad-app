@@ -11,9 +11,8 @@ module StashEngine
       unless session[:test_domain] || request.host == current_tenant_display.full_domain
         uri = URI(request.original_url)
         uri.host = current_tenant_display.full_domain
-        redirect_to uri.to_s and return
+        redirect_to(uri.to_s) && return
       end
     end
-
   end
 end

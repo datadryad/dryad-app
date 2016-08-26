@@ -6,13 +6,13 @@ module StashEngine
 
     def self.submit_async(title:, doi:, zipfile:, resource_id:, sword_params:, request_host:, request_port:)
       result = SwordJob.new(
-          title: title,
-          doi: doi,
-          zipfile: zipfile,
-          resource_id: resource_id,
-          sword_params: sword_params,
-          request_host: request_host,
-          request_port: request_port
+        title: title,
+        doi: doi,
+        zipfile: zipfile,
+        resource_id: resource_id,
+        sword_params: sword_params,
+        request_host: request_host,
+        request_port: request_port
       ).async.submit
 
       result.add_observer(ResultLoggingObserver.new(title: title, doi: doi))
@@ -101,7 +101,6 @@ module StashEngine
     def update_submission_log(resource_id:, request_msg:, response_msg:)
       SubmissionLog.create(resource_id: resource_id, archive_submission_request: request_msg, archive_response: response_msg)
     end
-
   end
 
   class ResultLoggingObserver

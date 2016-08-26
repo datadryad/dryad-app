@@ -22,7 +22,7 @@ module StashEngine
     end
 
     def tenant
-      Tenant.find(self.tenant_id)
+      Tenant.find(tenant_id)
     end
 
     #gets the latest completed resources by user, a lot of SQL since this becomes complicated

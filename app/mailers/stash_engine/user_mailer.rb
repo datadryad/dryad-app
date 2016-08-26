@@ -1,10 +1,9 @@
 module StashEngine
   class UserMailer < ApplicationMailer
-
     # TODO: DRY these methods
 
     default from: "Dash Notifications <#{APP_CONFIG['feedback_email_from']}>",
-            return_path: "#{APP_CONFIG['feedback_email_from']}"
+            return_path: (APP_CONFIG['feedback_email_from']).to_s
 
     def create_succeeded(resource, title, request_host, request_port)
       user = resource.user

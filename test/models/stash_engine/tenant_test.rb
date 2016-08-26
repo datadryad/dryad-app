@@ -24,7 +24,7 @@ module StashEngine
 
     test 'landing_url' do
       ucb = Tenant.find('ucb')
-      assert_equal "https://dash2-dev.cdlib.org/catfun/dogfun", ucb.landing_url('/catfun/dogfun')
+      assert_equal 'https://dash2-dev.cdlib.org/catfun/dogfun', ucb.landing_url('/catfun/dogfun')
     end
   end
 end

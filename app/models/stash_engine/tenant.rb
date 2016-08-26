@@ -38,7 +38,6 @@ module StashEngine
           "target=#{CGI.escape("https://#{full_domain}" \
           "#{StashEngine.app.stash_mount}/auth/shibboleth/callback")}" \
           "&entityID=#{CGI.escape(authentication.entity_id)}"
-
     end
 
     def google_login_path
@@ -49,9 +48,9 @@ module StashEngine
     def sword_params
       repository = self.repository
       {
-          collection_uri: repository.endpoint,
-          username: repository.username,
-          password: repository.password
+        collection_uri: repository.endpoint,
+        username: repository.username,
+        password: repository.password
       }
     end
 
@@ -77,7 +76,5 @@ module StashEngine
     def landing_url(path_to_landing)
       URI::HTTPS.build(host: full_domain, path: path_to_landing).to_s
     end
-
-
   end
 end
