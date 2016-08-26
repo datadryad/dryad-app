@@ -24,7 +24,7 @@ class CatalogController < ApplicationController
       'q.alt' => '*:*'
     }
 
-    ## Default parameters to send on single-document requests to Solr. These settings are the Blackligt defaults (see SolrHelper#solr_doc_params) or
+    ## Default parameters to send on single-document requests to Solr. These settings are the Blacklight defaults (see SolrHelper#solr_doc_params) or
     ## parameters included in the Blacklight-jetty document requestHandler.
     #
     config.default_document_solr_params = {
@@ -236,6 +236,24 @@ class CatalogController < ApplicationController
 
   end
 
+  def index
 
+    # this is a hack to get a results list to display when no search term is entered and it's searched
+    params[:q] = '*:*' if !params[:q].nil? && params[:q].blank?
+
+    (@response, @document_list) = search_results(params, search_params_logic)
+
+    respond_to do |format|
+      format.html { store_preferred_view }
+      format.rss  { render :layout => false }
+      format.atom { render :layout => false }
+      format.json do
+        render json: render_search_results_as_json
+      end
+
+      additional_response_formats(format)
+      document_export_formats(format)
+    end
+  end
 
 end
