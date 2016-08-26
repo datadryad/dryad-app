@@ -1460,11 +1460,12 @@ html.svg .c-facet__check-label {
     margin: 0 0 0.3em; }
 
 .c-footer {
+  margin-top: 1em;
   margin-bottom: 20px;
   padding-top: 10px;
   clear: both;
   border-top: 1px solid #7c7e7f;
-  font-size: 1em; }
+  font-size: 2em; }
   @media (min-width: 870px) {
     .c-footer {
       font-size: 0.8em; } }
