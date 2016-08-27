@@ -25,7 +25,8 @@ module StashEngine
       @new_res = @resource.amoeba_dup
       @new_res.save!
       copy_files(@new_res, @resource)
-      res_state = ResourceState.create(user_id: current_user.id, resource_state: 'in_progress', resource_id: @new_res.id)
+      res_state = ResourceState.create(user_id: current_user.id, resource_state: 'in_progress',
+                                       resource_id: @new_res.id)
       @new_res.current_resource_state_id = res_state.id
       @new_res.save!
 
@@ -49,9 +50,7 @@ module StashEngine
 
     def resource_exist
       @resource = Resource.find(params[:resource_id])
-      if @resource.nil?
-        redirect_to root_path, notice: 'The dataset you are looking for does not exist.'
-      end
+      redirect_to root_path, notice: 'The dataset you are looking for does not exist.' if @resource.nil?
     end
 
     def require_resource_owner

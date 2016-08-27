@@ -4,11 +4,8 @@ require 'fileutils'
 module StashEngine
   class FileUploadsController < ApplicationController
     before_action :require_login
-
     before_action :set_file_info, only: [:destroy, :remove, :restore]
-
     before_action :require_file_owner, except: [:create, :destroy, :remove, :restore, :revert]
-
     before_action :set_create_prerequisites, only: [:create]
 
     # this is a newly uploaded file and we're deleting it
@@ -32,7 +29,7 @@ module StashEngine
     def remove
       respond_to do |format|
         format.js do
-          @file.update_attribute(:file_state, 'deleted') # This because carrierwave interferes with something not its business
+          @file.update_attribute(:file_state, 'deleted')
           @file.reload
         end
       end
@@ -42,7 +39,7 @@ module StashEngine
     def restore
       respond_to do |format|
         format.js do
-          @file.update_attribute(:file_state, 'copied') # This because carrierwave interferes with something not its business
+          @file.update_attribute(:file_state, 'copied')
           @file.reload
         end
       end
@@ -62,19 +59,7 @@ module StashEngine
 
           new_fn = File.join(@upload_dir, @file_upload.original_filename)
 
-          existing_files = FileUpload.where(resource_id: params[:resource_id])
-                                     .where(upload_file_name: @file_upload.original_filename)
-
-          existing_files.each do |old_f|
-            if old_f.file_state == 'created' || old_f.file_state.blank?
-              # delete this old file before overwriting with this one, there can be only one current with same name
-              File.delete(old_f.temp_file_path) if File.exist?(old_f.temp_file_path)
-              old_f.destroy
-            elsif old_f.file_state == 'deleted'
-              # set back to 'copied' since this is really just a new version of this old file with same name
-              old_f.update_attribute(:file_state, 'copied')
-            end
-          end
+          correct_existing_for_overwrite(params[:resource_id], @file_upload)
 
           FileUtils.mv(@accum_file, new_fn) # moves the file from the original unique_id fn to the final one
           create_db_file(new_fn) # no files exist for this so new "created" file
@@ -140,6 +125,23 @@ module StashEngine
         file_state: 'created'
       )
       @my_file.save
+    end
+
+    def correct_existing_for_overwrite(resource_id, file_upload)
+      existing_files = FileUpload
+                       .where(resource_id: resource_id)
+                       .where(upload_file_name: file_upload.original_filename)
+
+      existing_files.each do |old_f|
+        if old_f.file_state == 'created' || old_f.file_state.blank?
+          # delete this old file before overwriting with this one, there can be only one current with same name
+          File.delete(old_f.temp_file_path) if File.exist?(old_f.temp_file_path)
+          old_f.destroy
+        elsif old_f.file_state == 'deleted'
+          # set back to 'copied' since this is really just a new version of this old file with same name
+          old_f.update_attribute(:file_state, 'copied')
+        end
+      end
     end
   end
 end
