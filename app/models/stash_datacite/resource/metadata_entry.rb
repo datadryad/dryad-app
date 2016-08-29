@@ -9,11 +9,11 @@ module StashDatacite
 
       def resource_type
         resource_type = ResourceType.where(resource_id: @resource.id).first
-        if resource_type.present?
-          @resource_type = resource_type
-        else
-          @resource_type = ResourceType.create(resource_id: @resource.id, resource_type: 'dataset')
-        end
+        @resource_type = if resource_type.present?
+                           resource_type
+                         else
+                           ResourceType.create(resource_id: @resource.id, resource_type: 'dataset')
+                         end
       end
 
       def title
@@ -89,48 +89,49 @@ module StashDatacite
       end
 
       private
+
       def ensure_license(tenant)
         if @resource.rights.empty?
           license = StashEngine::License.by_id(tenant.default_license)
           @resource.rights.create(rights: license[:name],
-                                 rights_uri: license[:uri])
+                                  rights_uri: license[:uri])
         end
       end
 
       def create_publisher(tenant)
         publisher = Publisher.where(resource_id: @resource.id).first
-        if publisher.present?
-          @publisher = publisher
-        else
-          @publisher = Publisher.create(publisher: tenant.long_name, resource_id: @resource.id)
-        end
+        @publisher = if publisher.present?
+                       publisher
+                     else
+                       Publisher.create(publisher: tenant.long_name, resource_id: @resource.id)
+                     end
       end
 
       def create_language
         language = Language.where(resource_id: @resource.id).first
-        if language.present?
-          @language = language
-        else
-          @language =  Language.create(language: 'en-us', resource_id: @resource.id)
-        end
+        @language = if language.present?
+                      language
+                    else
+                      Language.create(language: 'en-us', resource_id: @resource.id)
+                    end
       end
 
       def create_format
         format = Format.where(resource_id: @resource.id).first
-        if format.present?
-          @format = format
-        else
-          @format = Format.create(format: 'application/xml', resource_id: @resource.id)
-        end
+        @format = if format.present?
+                    format
+                  else
+                    Format.create(format: 'application/xml', resource_id: @resource.id)
+                  end
       end
 
       def create_version
         version = Version.where(resource_id: @resource.id).first
-        if version.present?
-          @version = version
-        else
-          @version = Version.create(version: '3.1', resource_id: @resource.id)
-        end
+        @version = if version.present?
+                     version
+                   else
+                     Version.create(version: '3.1', resource_id: @resource.id)
+                   end
       end
     end
   end

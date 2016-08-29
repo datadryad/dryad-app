@@ -5,8 +5,8 @@ module StashDatacite
 
     TitleTypes = Datacite::Mapping::TitleType.map(&:value)
 
-    TitleTypesEnum = TitleTypes.map{|i| [i.downcase.to_sym, i.downcase]}.to_h
-    TitleTypesStrToFull = TitleTypes.map{|i| [i.downcase, i]}.to_h
+    TitleTypesEnum = TitleTypes.map { |i| [i.downcase.to_sym, i.downcase] }.to_h
+    TitleTypesStrToFull = TitleTypes.map { |i| [i.downcase, i] }.to_h
 
     enum title_type: TitleTypesEnum
 
@@ -36,8 +36,9 @@ module StashDatacite
     end
 
     private
+
     def strip_whitespace
-      self.title = self.title.strip unless self.title.nil?
+      self.title = title.strip unless title.nil?
     end
   end
 end

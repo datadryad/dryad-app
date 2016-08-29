@@ -5,22 +5,22 @@ module StashDatacite
 
     RelationTypes = Datacite::Mapping::RelationType.map(&:value)
 
-    RelationTypesEnum = RelationTypes.map{|i| [i.downcase.to_sym, i.downcase]}.to_h
-    RelationTypesStrToFull = RelationTypes.map{|i| [i.downcase, i]}.to_h
+    RelationTypesEnum = RelationTypes.map { |i| [i.downcase.to_sym, i.downcase] }.to_h
+    RelationTypesStrToFull = RelationTypes.map { |i| [i.downcase, i] }.to_h
 
     RelatedIdentifierTypes = Datacite::Mapping::RelatedIdentifierType.map(&:value)
 
-    RelatedIdentifierTypesEnum = RelatedIdentifierTypes.map{|i| [i.downcase.to_sym, i.downcase]}.to_h
-    RelatedIdentifierTypesStrToFull = RelatedIdentifierTypes.map{|i| [i.downcase, i]}.to_h
+    RelatedIdentifierTypesEnum = RelatedIdentifierTypes.map { |i| [i.downcase.to_sym, i.downcase] }.to_h
+    RelatedIdentifierTypesStrToFull = RelatedIdentifierTypes.map { |i| [i.downcase, i] }.to_h
 
     RelatedIdentifierTypesLimited = { DOI: 'doi', ARK: 'ark', ArXiv: 'arxiv', Handle: 'handle',
-                            ISBN: 'isbn', PMID: 'pmid', PURL: 'purl', URL: 'url', URN: 'urn' }
+                                      ISBN: 'isbn', PMID: 'pmid', PURL: 'purl', URL: 'url', URN: 'urn' }.freeze
 
-    RelationTypesLimited = { cites: 'cites', :'is cited by' => 'iscitedby', supplements: 'issupplementto',
-        :'is supplemented by' => 'issupplementedby', continues: 'continues', :'is continued by' => 'iscontinuedby',
-        :'is a new version of' => 'isnewversionof', :'is a previous version of' => 'ispreviousversionof',
-        :'is part of' => 'ispartof', :'has part' => 'haspart', documents: 'documents', :'is documented by' => 'isdocumentedby',
-        :'is identical to' => 'isidenticalto', :'is derived from' => 'isderivedfrom', :'is source of' => 'issourceof' }
+    RelationTypesLimited = { cites: 'cites', 'is cited by': 'iscitedby', supplements: 'issupplementto',
+                             'is supplemented by': 'issupplementedby', continues: 'continues', 'is continued by': 'iscontinuedby',
+                             'is a new version of': 'isnewversionof', 'is a previous version of': 'ispreviousversionof',
+                             'is part of': 'ispartof', 'has part': 'haspart', documents: 'documents', 'is documented by': 'isdocumentedby',
+                             'is identical to': 'isidenticalto', 'is derived from': 'isderivedfrom', 'is source of': 'issourceof' }.freeze
 
     before_save :strip_whitespace
 
@@ -36,7 +36,7 @@ module StashDatacite
 
     def relation_name_english
       return '' if relation_type_friendly.nil?
-      relation_type_friendly.scan(/[A-Z]{1}[a-z]*/).map{|i| i.downcase}.join(' ')
+      relation_type_friendly.scan(/[A-Z]{1}[a-z]*/).map(&:downcase).join(' ')
     end
 
     def self.relation_type_mapping_obj(str)
@@ -75,8 +75,9 @@ module StashDatacite
     end
 
     private
+
     def strip_whitespace
-      self.related_identifier = self.related_identifier.strip unless self.related_identifier.nil?
+      self.related_identifier = related_identifier.strip unless related_identifier.nil?
     end
   end
 end

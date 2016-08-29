@@ -7,8 +7,8 @@ module StashDatacite
     # so need to make it valid_date for symbol for rails not to error!
     DateTypes = Datacite::Mapping::DateType.map(&:value)
 
-    DateTypesEnum = DateTypes.map{|i| [i.downcase.to_sym, i.downcase]}.to_h.select{|k,v| k != :valid}.merge({ :valid_date => 'valid'})
-    DateTypesStrToFull = DateTypes.map{|i| [i.downcase, i]}.to_h
+    DateTypesEnum = DateTypes.map { |i| [i.downcase.to_sym, i.downcase] }.to_h.select { |k, _v| k != :valid }.merge(valid_date: 'valid')
+    DateTypesStrToFull = DateTypes.map { |i| [i.downcase, i] }.to_h
 
     enum date_type: DateTypesEnum
 
@@ -20,7 +20,7 @@ module StashDatacite
 
     def date_type_friendly
       return nil if date_type.blank?
-      return 'Valid' if self.date_type == 'valid_date' #exception for bad method names
+      return 'Valid' if date_type == 'valid_date' #exception for bad method names
       DateTypesStrToFull[date_type]
     end
 

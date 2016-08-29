@@ -3,15 +3,14 @@ require 'stash_ezid/client'
 
 module StashDatacite
   class TestImport
-
     GrantRegex = Regexp.new(/^Data were created with funding from (.+) under grant (.+)$/)
 
     def initialize(
-        user_uid='scott.fisher-ucb@ucop.edu',
-        xml_filename=File.join(StashDatacite::Engine.root, 'test', 'fixtures', 'datacite-example-full-v3.1.xml'),
-        ezid_shoulder="doi:10.5072/FK2",
-        ezid_account="apitest",
-        ezid_password="apitest"
+        user_uid = 'scott.fisher-ucb@ucop.edu',
+        xml_filename = File.join(StashDatacite::Engine.root, 'test', 'fixtures', 'datacite-example-full-v3.1.xml'),
+        ezid_shoulder = 'doi:10.5072/FK2',
+        ezid_account = 'apitest',
+        ezid_password = 'apitest'
     )
       @user = StashEngine::User.find_by_uid(user_uid)
       @xml_str = File.read(xml_filename)
@@ -23,12 +22,12 @@ module StashDatacite
 
       @m_resource = Datacite::Mapping::Resource.parse_xml(@xml_str, mapping: :nonvalidating)
       @ezid_client = StashEzid::Client.new(
-          {shoulder: ezid_shoulder,
-           account: ezid_account,
-           password: ezid_password,
-           id_scheme: 'doi',
-           owner: 'apitest'
-          })
+        shoulder: ezid_shoulder,
+         account: ezid_account,
+         password: ezid_password,
+         id_scheme: 'doi',
+         owner: 'apitest'}
+)
     end
 
     def datacite_mapping
@@ -36,7 +35,6 @@ module StashDatacite
     end
 
     def populate_tables
-
       set_up_resource
       #TODO: also need to add additional values to resource: geolocation (0/1), download_uri, update_uri
 
@@ -81,22 +79,22 @@ module StashDatacite
         lname, fname = extract_last_first(creator.name)
         name_ident = nil
 
-        affil_ids = creator.affiliations.map{|i| get_or_create_affiliation(i)}
+        affil_ids = creator.affiliations.map { |i| get_or_create_affiliation(i) }
 
         # get/create name identifier
         unless creator.try(:identifier).blank?
           name_ident = NameIdentifier.find_or_create_by(name_identifier: creator.identifier.value,
-                                                             name_identifier_scheme: creator.identifier.try(:scheme)) do |ni|
+                                                        name_identifier_scheme: creator.identifier.try(:scheme)) do |ni|
             ni.name_identifier_scheme = creator.identifier.try(:scheme)
             ni.scheme_URI = creator.identifier.try(:scheme_uri).try(:to_s)
           end
         end
 
         ar_creator = Creator.create(
-            creator_first_name: fname,
-            creator_last_name: lname,
-            name_identifier_id: name_ident.try(:id),
-            resource_id: @resource.id
+          creator_first_name: fname,
+          creator_last_name: lname,
+          name_identifier_id: name_ident.try(:id),
+          resource_id: @resource.id
         )
         ar_creator.affiliation_ids = affil_ids
       end
@@ -132,7 +130,7 @@ module StashDatacite
 
     def add_contributors
       @m_resource.contributors.each do |c|
-        affil_ids = c.affiliations.map{|i| get_or_create_affiliation(i)}
+        affil_ids = c.affiliations.map { |i| get_or_create_affiliation(i) }
         name_ident = nil
 
         # get/create name identifier
@@ -145,10 +143,10 @@ module StashDatacite
         end
 
         ar_contributor = Contributor.create(
-            contributor_name: c.name,
-            contributor_type_friendly: c.try(:type).try(:value),
-            name_identifier_id: name_ident.try(:id),
-            resource_id: @resource.id
+          contributor_name: c.name,
+          contributor_type_friendly: c.try(:type).try(:value),
+          name_identifier_id: name_ident.try(:id),
+          resource_id: @resource.id
         )
         ar_contributor.affiliation_ids = affil_ids
       end
@@ -162,7 +160,7 @@ module StashDatacite
 
     def add_language
       unless @m_resource.language.blank?
-        Language.create(language: @m_resource.language, resource_id: @resource.id )
+        Language.create(language: @m_resource.language, resource_id: @resource.id)
       end
     end
 
@@ -221,7 +219,7 @@ module StashDatacite
           # this is actually a grant funder and a grant number special sauce which we're hacking into the
           # contributors table for now
           Contributor.create(contributor_name: m[1], contributor_type: 'funder', award_number: m[2],
-                                  resource_id: @resource_id)
+                             resource_id: @resource_id)
         else
           des = Description.create(description: d.value, description_type_friendly: d.try(:type).try(:value), resource_id: @resource.id)
         end
@@ -243,11 +241,11 @@ module StashDatacite
 
         unless geo.try(:box).blank?
           myh = GeolocationBox.create(
-                            ne_latitude: geo.box.north_latitude,
-                            ne_longitude: geo.box.east_longitude,
-                            sw_latitude: geo.box.south_latitude,
-                            sw_longitude: geo.box.west_longitude,
-                            resource_id: @resource.id
+            ne_latitude: geo.box.north_latitude,
+            ne_longitude: geo.box.east_longitude,
+            sw_latitude: geo.box.south_latitude,
+            sw_longitude: geo.box.west_longitude,
+            resource_id: @resource.id
           )
           set_geolocation = true
         end
@@ -257,18 +255,17 @@ module StashDatacite
         end
       end
 
-
     end
 
-
     private
+
     def extract_last_first(name_w_comma)
       name_w_comma.split(',', 2).map { |i| i.strip }
     end
 
     # gets or creates an affiliation and returns the affiliation id or nil
     def get_or_create_affiliation(affil_name_string)
-      affils = Affiliation.where("short_name = ? or long_name = ?", affil_name_string, affil_name_string)
+      affils = Affiliation.where('short_name = ? or long_name = ?', affil_name_string, affil_name_string)
       affil_no = nil
       if affils.blank?
         unless affil_name_string.blank?

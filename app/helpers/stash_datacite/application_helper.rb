@@ -2,7 +2,7 @@ require 'securerandom'
 
 module StashDatacite
   module ApplicationHelper
-    DEFAULT_TZ = 'America/Los_Angeles'
+    DEFAULT_TZ = 'America/Los_Angeles'.freeze
 
     def default_time(t)
       local_time(t).strftime('%m/%d/%y %I:%M %p')

@@ -5,8 +5,8 @@ module StashDatacite
 
     DescriptionTypes = Datacite::Mapping::DescriptionType.map(&:value)
 
-    DescriptionTypesEnum = DescriptionTypes.map{|i| [i.downcase.to_sym, i.downcase]}.to_h
-    DescriptionTypesStrToFull = DescriptionTypes.map{|i| [i.downcase, i]}.to_h
+    DescriptionTypesEnum = DescriptionTypes.map { |i| [i.downcase.to_sym, i.downcase] }.to_h
+    DescriptionTypesStrToFull = DescriptionTypes.map { |i| [i.downcase, i] }.to_h
 
     # GrantRegex = Regexp.new(/^Data were created with funding from (.+) under grant (.+)$/)
 
@@ -25,14 +25,12 @@ module StashDatacite
     # awkward string every time we save it in the DB, we can simply write this string into Desription with type other
     # on export to DataCite XML for items with that award_number.
 
-
     # scopes for description_type
     scope :type_abstract, -> { where(description_type: 'abstract') }
     scope :type_methods, -> { where(description_type: 'methods') }
     scope :type_other, -> { where(description_type: 'other') }
 
     # the xml description type for DataCite when we've excluded our special sauce
-
 
     def description_type_friendly=(type)
       self.description_type = type.to_s.downcase unless type.blank?
@@ -52,6 +50,5 @@ module StashDatacite
       return nil if description_type_friendly.nil?
       Description.description_type_mapping_obj(description_type_friendly)
     end
-
   end
 end

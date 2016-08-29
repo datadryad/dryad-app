@@ -6,7 +6,7 @@ module StashDatacite
         '#%profile | http://uc3.cdlib.org/registry/ingest/manifest/mrt-dataone-manifest',
         '#%prefix | dom: | http://uc3.cdlib.org/ontology/dataonem',
         '#%prefix | mrt: | http://uc3.cdlib.org/ontology/mom',
-        '#%fields | dom:scienceMetadataFile | dom:scienceMetadataFormat | dom:scienceDataFile | mrt:mimeType',
+        '#%fields | dom:scienceMetadataFile | dom:scienceMetadataFormat | dom:scienceDataFile | mrt:mimeType'
       ].join("\n").freeze
 
       METADATA_FILES = {
@@ -33,7 +33,6 @@ module StashDatacite
         content << "#%eof\n"
         content.join("\n")
       end
-
     end
   end
 end

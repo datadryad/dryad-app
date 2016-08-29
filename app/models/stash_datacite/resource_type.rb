@@ -5,14 +5,13 @@ module StashDatacite
 
     ResourceTypes = Datacite::Mapping::ResourceTypeGeneral.map(&:value)
 
-    ResourceTypeEnum = ResourceTypes.map{|i| [i.downcase.to_sym, i.downcase]}.to_h
-    ResourceTypesStrToFull = ResourceTypes.map{|i| [i.downcase, i]}.to_h
-
+    ResourceTypeEnum = ResourceTypes.map { |i| [i.downcase.to_sym, i.downcase] }.to_h
+    ResourceTypesStrToFull = ResourceTypes.map { |i| [i.downcase, i] }.to_h
 
     # odd ones out here are Spreadsheet, Video, Multiple Types and are only for UI display
 
     ResourceTypesLimited = { Spreadsheet: 'dataset', Image: 'image', Sound: 'sound', Video: 'audiovisual',
-                             Text: 'text', Software: 'software', :"Multiple Types" => 'collection', Other: 'other' }
+                             Text: 'text', Software: 'software', "Multiple Types": 'collection', Other: 'other' }.freeze
 
     enum resource_type: ResourceTypeEnum
 
@@ -39,6 +38,5 @@ module StashDatacite
       return nil if resource_type_friendly.nil?
       ResourceType.resource_type_mapping_obj(resource_type_friendly)
     end
-
   end
 end

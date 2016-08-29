@@ -5,7 +5,7 @@ module StashDatacite
     # GET /affiliations/autocomplete
     def autocomplete
       @affiliations = Affiliation.where('long_name LIKE ? OR short_name LIKE ? OR abbreviation LIKE?',
-                                      "%#{params[:term]}%", "%#{params[:term]}%", "%#{params[:term]}%") unless
+                                        "%#{params[:term]}%", "%#{params[:term]}%", "%#{params[:term]}%") unless
                                       params[:term].blank?
       list = map_affiliation_for_autocomplete(@affiliations)
       render json: list

@@ -36,19 +36,19 @@ module StashDatacite
       def creator
         num_creators = @resource.creators.count
         return false if num_creators < 1
-        @resource.creators.filled.count == num_creators  # the completely filled in creators must equal number of creators
+        @resource.creators.filled.count == num_creators # the completely filled in creators must equal number of creators
       end
 
       def creator_name
         num_creators = @resource.creators.count
         return false if num_creators < 1
-        @resource.creators.names_filled.count == num_creators  # the completely filled in creators must equal number of creators
+        @resource.creators.names_filled.count == num_creators # the completely filled in creators must equal number of creators
       end
 
       def creator_affiliation
         num_creators = @resource.creators.count
         return false if num_creators < 1
-        @resource.creators.affiliation_filled.count == num_creators  # the completely filled in creators must equal number of creators
+        @resource.creators.affiliation_filled.count == num_creators # the completely filled in creators must equal number of creators
       end
 
       def abstract

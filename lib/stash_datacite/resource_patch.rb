@@ -18,7 +18,7 @@ module StashDatacite
     def self.associate_with_resource(resource)
       resource.instance_eval do
         has_many :descriptions, class_name: 'StashDatacite::Description', dependent: :destroy #optional
-        has_many :contributors, class_name: 'StashDatacite::Contributor', dependent: :destroy  # optional according to datacite
+        has_many :contributors, class_name: 'StashDatacite::Contributor', dependent: :destroy # optional according to datacite
         has_many :creators, class_name: 'StashDatacite::Creator', dependent: :destroy # mandatory
         has_many :datacite_dates, class_name: 'StashDatacite::DataciteDate', dependent: :destroy # optional
         has_many :descriptions, class_name: 'StashDatacite::Description', dependent: :destroy #optional
@@ -36,15 +36,15 @@ module StashDatacite
                                            through: 'StashDatacite::ResourceSubject', dependent: :destroy #optional
         has_many :titles, class_name: 'StashDatacite::Title', dependent: :destroy # required
         has_one :language, class_name: 'StashDatacite::Language', dependent: :destroy #required
-        has_many :alternate_identifiers, :class_name => 'StashDatacite::AlternateIdentifier', dependent: :destroy #optional
-        has_many :formats, :class_name => 'StashDatacite::Format', dependent: :destroy #optional
+        has_many :alternate_identifiers, class_name: 'StashDatacite::AlternateIdentifier', dependent: :destroy #optional
+        has_many :formats, class_name: 'StashDatacite::Format', dependent: :destroy #optional
         has_one :version, class_name: 'StashDatacite::Version', dependent: :destroy #optional
 
         # this enables deep copying of the resource
         amoeba do
           include_association [:contributors, :creators, :datacite_dates, :descriptions, :embargoes, :geolocation_boxes,
-                              :geolocation_places, :geolocation_points, :publication_years, :publisher,
-                              :related_identifiers, :resource_type, :rights, :sizes, :subjects, :titles]
+                               :geolocation_places, :geolocation_points, :publication_years, :publisher,
+                               :related_identifiers, :resource_type, :rights, :sizes, :subjects, :titles]
         end
       end
     end

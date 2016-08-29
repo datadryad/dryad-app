@@ -6,8 +6,8 @@ module StashDatacite
       publisher = publisher.try(:publisher)
       resource_type = resource_type.try(:resource_type_friendly)
       ["#{creator_citation_format(creators)} (#{publication_year})", h(title),
-       (version == 'v1'? nil : h(version)), h(publisher), h(resource_type),
-       target_url(identifier)].reject(&:blank?).join(", ").html_safe
+       (version == 'v1' ? nil : h(version)), h(publisher), h(resource_type),
+       target_url(identifier)].reject(&:blank?).join(', ').html_safe
     end
 
     def target_url(identifier)
@@ -20,7 +20,7 @@ module StashDatacite
 
     def creator_citation_format(creators)
       return '' if creators.blank?
-      str_creator = creators.map{|c| c.creator_full_name unless c.creator_full_name.match(/^[ ,]+$/) }.compact
+      str_creator = creators.map { |c| c.creator_full_name unless c.creator_full_name =~ /^[ ,]+$/ }.compact
       return '' if str_creator.blank?
       return "#{str_creator.first} et al." if str_creator.length > 4
       str_creator.join('; ')

@@ -16,19 +16,22 @@ module StashDatacite
 
     before_save :strip_whitespace
 
-    scope :filled, -> { joins(:affiliations).
-        where("TRIM(IFNULL(creator_first_name,'')) <> '' AND TRIM(IFNULL(creator_last_name,'')) <> ''") }
+    scope :filled, -> {
+      joins(:affiliations)
+        .where("TRIM(IFNULL(creator_first_name,'')) <> '' AND TRIM(IFNULL(creator_last_name,'')) <> ''")
+    }
 
     scope :names_filled, -> { where("TRIM(IFNULL(creator_first_name,'')) <> ''") }
 
-
-    scope :affiliation_filled, -> { joins(:affiliations).
-        where("TRIM(IFNULL(dcs_affiliations.long_name,'')) <> ''") }
+    scope :affiliation_filled, -> {
+      joins(:affiliations)
+        .where("TRIM(IFNULL(dcs_affiliations.long_name,'')) <> ''")
+    }
 
     def creator_full_name
       full_name = [creator_last_name, creator_first_name]
-      creator_full_name = full_name.compact.split("").flatten.join(", ")
-      return creator_full_name
+      creator_full_name = full_name.compact.split('').flatten.join(', ')
+      creator_full_name
     end
 
     # convenience methods to set orcid name identifier
@@ -72,9 +75,10 @@ module StashDatacite
     end
 
     private
+
     def strip_whitespace
-      self.creator_first_name = self.creator_first_name.strip unless self.creator_first_name.nil?
-      self.creator_last_name = self.creator_last_name.strip unless self.creator_last_name.nil?
+      self.creator_first_name = creator_first_name.strip unless creator_first_name.nil?
+      self.creator_last_name = creator_last_name.strip unless creator_last_name.nil?
     end
   end
 end

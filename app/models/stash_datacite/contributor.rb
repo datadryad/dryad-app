@@ -3,12 +3,12 @@ module StashDatacite
     self.table_name = 'dcs_contributors'
     belongs_to :resource, class_name: StashDatacite.resource_class.to_s
     belongs_to :name_identifier
-    has_and_belongs_to_many :affiliations, :class_name => 'StashDatacite::Affiliation'
+    has_and_belongs_to_many :affiliations, class_name: 'StashDatacite::Affiliation'
 
     ContributorTypes = Datacite::Mapping::ContributorType.map(&:value)
 
-    ContributorTypesEnum = ContributorTypes.map{|i| [i.downcase.to_sym, i.downcase]}.to_h
-    ContributorTypesStrToFull = ContributorTypes.map{|i| [i.downcase, i]}.to_h
+    ContributorTypesEnum = ContributorTypes.map { |i| [i.downcase.to_sym, i.downcase] }.to_h
+    ContributorTypesStrToFull = ContributorTypes.map { |i| [i.downcase, i] }.to_h
 
     enum contributor_type: ContributorTypesEnum
 
@@ -59,9 +59,10 @@ module StashDatacite
     end
 
     private
+
     def strip_whitespace
-      self.contributor_name = self.contributor_name.strip unless self.contributor_name.nil?
-      self.award_number =  self.award_number.strip unless self.award_number.nil?
+      self.contributor_name = contributor_name.strip unless contributor_name.nil?
+      self.award_number = award_number.strip unless award_number.nil?
     end
   end
 end

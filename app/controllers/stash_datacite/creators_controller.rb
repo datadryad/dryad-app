@@ -17,7 +17,7 @@ module StashDatacite
     # POST /creators
     def create
       duplicate_affiliation = Affiliation.where('long_name LIKE ? OR short_name LIKE ?',
-                                           "#{params[:affiliation]}", "#{params[:affiliation]}").first
+                                                params[:affiliation].to_s, params[:affiliation].to_s).first
       @creator = Creator.new(creator_params)
       respond_to do |format|
         @creator.save
@@ -38,7 +38,7 @@ module StashDatacite
     # PATCH/PUT /creators/1
     def update
       duplicate_affiliation = Affiliation.where('long_name LIKE ? OR short_name LIKE ?',
-                                           "#{params[:affiliation]}", "#{params[:affiliation]}").first
+                                                params[:affiliation].to_s, params[:affiliation].to_s).first
       respond_to do |format|
         unless duplicate_affiliation.present?
           @creator.update(creator_params)
@@ -84,11 +84,7 @@ module StashDatacite
     end
 
     def check_for_orcid_id(creator)
-      if creator.orcid_id
-        return true
-      else
-        return false
-      end
+      creator.orcid_id ? true : false
     end
   end
 end
