@@ -272,11 +272,11 @@ module Stash
 
         before(:each) do
           @out = StringIO.new
-          HarvesterApp.log_device = out
+          Stash::Harvester.log_device = out
         end
 
         after(:each) do
-          HarvesterApp.log_device = $stdout
+          Stash::Harvester.log_device = $stdout
         end
 
         describe '#with_config_file' do
