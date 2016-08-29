@@ -14,11 +14,9 @@ module Stash
   end
 
   class NoOpPersistenceConfig < PersistenceConfig
-    can_build_if do |config|
-      config == 'none'
-    end
+    can_build_if { |config| config == 'none' }
 
-    def initialize(_args); end
+    def initialize(_args = nil); end
 
     def description
       to_s

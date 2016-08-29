@@ -103,7 +103,7 @@ module Stash
 
       private_class_method :default_config_file
 
-      def create_job(from_time, until_time)
+      def create_job(from_time = nil, until_time = nil)
         HarvestAndIndexJob.new(
           source_config: source_config,
           index_config: index_config,
