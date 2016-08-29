@@ -11,6 +11,8 @@ AllCops:
     - 'bin/**/*'
     - 'test/dummy/db/**/*'
     - 'vendor/**/*'
+    - 'ui-library/**/*'
+    - 'node_modules/**/*'
 
 # other configuration
 Metrics/LineLength:

@@ -17,8 +17,12 @@ module StashEngine
     #end
 
     #resource_states
-    scope :in_progress, -> { joins(:current_state).where(stash_engine_resource_states: { resource_state:  :in_progress }) }
-    scope :submitted, -> { joins(:current_state).where(stash_engine_resource_states: { resource_state:  [:published, :processing, :error] }) }
+    scope :in_progress, (lambda do
+      joins(:current_state).where(stash_engine_resource_states: { resource_state:  :in_progress })
+    end)
+    scope :submitted, (lambda do
+      joins(:current_state).where(stash_engine_resource_states: { resource_state:  [:published, :processing, :error] })
+    end)
     scope :by_version_desc, -> { joins(:stash_version).order('stash_engine_versions.version DESC') }
     scope :by_version, -> { joins(:stash_version).order('stash_engine_versions.version ASC') }
 
@@ -80,14 +84,14 @@ module StashEngine
 
     def update_version(zipfile)
       zip_filename = File.basename(zipfile)
+      version = nil
       if stash_version.nil?
         version = StashEngine::Version.new(resource_id: id, zip_filename: zip_filename, version: next_version)
-        version.save!
       else
         version = StashEngine::Version.where(resource_id: id, zip_filename: zip_filename).first
         version.version = next_version
-        version.save!
       end
+      version.save!
     end
 
     #smartly gives a version number for this resource for either current version if version is already set
@@ -101,17 +105,11 @@ module StashEngine
     end
 
     def next_version
-      if identifier.blank?
-        return 1
-      else
-        last_v = identifier.last_submitted_version
-        if last_v.blank?
-          1
-        else
-          #this looks crazy, but association from resource to version to version field
-          last_v.stash_version.version + 1
-        end
-      end
+      return 1 if identifier.blank?
+      last_v = identifier.last_submitted_version
+      return 1 if last_v.blank?
+      #this looks crazy, but association from resource to version to version field
+      last_v.stash_version.version + 1
     end
 
     # this bit of code may be useful to run in a console to update old items
@@ -143,9 +141,9 @@ module StashEngine
       resource_usage.increment(:views).save
     end
 
-    def set_state(state_string)
-      state = ResourceState.create(user_id: user_id, resource_state: state_string, resource_id: id)
-      current_resource_state_id = state.id
+    def current_state=(state_string)
+      my_state = ResourceState.create(user_id: user_id, resource_state: state_string, resource_id: id)
+      self.current_resource_state_id = my_state.id
       save
     end
 

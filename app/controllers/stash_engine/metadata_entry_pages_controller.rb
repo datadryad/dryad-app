@@ -18,7 +18,7 @@ module StashEngine
     def new_version
       #create new version deep copy of most items
       @resource = Resource.find(params[:resource_id])
-      if @resource.identifier.has_in_progress?
+      if @resource.identifier.in_progress?
         id = @resource.identifier.in_progress_version.id
         redirect_to(metadata_entry_pages_find_or_create_path(resource_id: id)) && return
       end

@@ -24,7 +24,7 @@ module StashEngine
     end
 
     # returns true if there is an in progress version
-    def has_in_progress?
+    def in_progress?
       resources.in_progress.count > 0
     end
   end

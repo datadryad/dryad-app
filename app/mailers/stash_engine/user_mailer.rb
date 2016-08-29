@@ -1,4 +1,5 @@
 module StashEngine
+  # Mails users about submissions
   class UserMailer < ApplicationMailer
     # TODO: DRY these methods
 
