@@ -22,6 +22,6 @@
   <td>
       <%= button_to 'Update', stash_url_helpers.metadata_entry_pages_new_version_path(resource_id: line.resource.id),
                     class: 'o-button__plain-text7',
-                    disabled: (line.resource.identifier && line.resource.identifier.has_in_progress? ) %>
+                    disabled: (line.resource.identifier && line.resource.identifier.in_progress? ) %>
   </td>
 </tr>
