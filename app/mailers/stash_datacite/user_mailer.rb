@@ -1,4 +1,5 @@
 module StashDatacite
+  #app/mailers/stash_datacite/user_mailer.rb
   class UserMailer < ApplicationMailer
     default from: APP_CONFIG['feedback_email_from'],
             return_path: 'dash2-dev@ucop.edu'

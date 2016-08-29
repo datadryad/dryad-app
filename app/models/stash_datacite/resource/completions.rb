@@ -36,19 +36,22 @@ module StashDatacite
       def creator
         num_creators = @resource.creators.count
         return false if num_creators < 1
-        @resource.creators.filled.count == num_creators # the completely filled in creators must equal number of creators
+        # the completely filled in creators must equal number of creators
+        @resource.creators.filled.count == num_creators
       end
 
       def creator_name
         num_creators = @resource.creators.count
         return false if num_creators < 1
-        @resource.creators.names_filled.count == num_creators # the completely filled in creators must equal number of creators
+        # the completely filled in creators must equal number of creators
+        @resource.creators.names_filled.count == num_creators
       end
 
       def creator_affiliation
         num_creators = @resource.creators.count
         return false if num_creators < 1
-        @resource.creators.affiliation_filled.count == num_creators # the completely filled in creators must equal number of creators
+        # the completely filled in creators must equal number of creators
+        @resource.creators.affiliation_filled.count == num_creators
       end
 
       def abstract
@@ -73,7 +76,8 @@ module StashDatacite
       end
 
       def method
-        @resource.descriptions.where(description_type: 'methods').where.not(description: [nil, '']).count > 0
+        @resource.descriptions.where(description_type: 'methods').where
+                 .not(description: [nil, '']).count > 0
       end
 
       def citation
