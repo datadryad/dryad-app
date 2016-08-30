@@ -18,9 +18,9 @@
 
 #map_review
 {
-  height: 250px;
-  width: 1000px;
-  margin: 0 auto autoauto;
+  height: 400px;
+  width: 450px;
+  margin: 0 auto auto auto;
   padding-bottom: 30px;
 }
 .review li {

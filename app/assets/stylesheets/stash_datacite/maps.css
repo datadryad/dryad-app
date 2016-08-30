@@ -3,8 +3,8 @@
   They will automatically be included in application.css.
 */
 #map{
-  width: 100%;
-  height: 250px;
+  width: 450px;
+  height: 400px;
 }
 .ui-autocomplete {
 z-index: 100;
