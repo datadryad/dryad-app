@@ -18,13 +18,15 @@ Gem::Specification.new do |s|
   s.test_files = Dir['test/**/*']
 
   s.add_dependency 'rails', '~> 4.2'
-  s.add_dependency 'geoblacklight', '~> 0.12.1'
-  s.add_dependency 'jquery-rails', '~> 4.1'
-  s.add_dependency 'sass-rails', '~> 5.0'
-  s.add_dependency 'turbolinks', '~> 2.5'
+  s.add_dependency 'geoblacklight', '~> 1.1.2'
+  s.add_dependency 'config'
+  s.add_dependency 'rsolr'
+  #s.add_dependency 'jquery-rails', '~> 4.1'
+  #s.add_dependency 'sass-rails', '~> 5.0'
+  #s.add_dependency 'turbolinks', '~> 2.5'
 
   # extra deps from generated GeoBlacklight app
-  s.add_dependency 'devise-guests', '~> 0.3'
+  s.add_dependency 'devise-guests', '~> 0.5'
 
   s.add_development_dependency 'sqlite3'
 end
