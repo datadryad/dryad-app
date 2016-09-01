@@ -1953,7 +1953,8 @@ html.svg .c-facet__check-label {
 
 .c-location__add-button {
   -ms-flex-item-align: end;
-      align-self: flex-end; }
+      align-self: flex-end;
+  margin: 0 5px 0 5px; }
   @media (min-width: 760px) {
     .c-location__add-button {
       -ms-flex-item-align: start;
