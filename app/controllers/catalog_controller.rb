@@ -5,10 +5,17 @@ class CatalogController < ApplicationController
 
   # these were in application controller for sample app
   include Blacklight::Controller
-  layout 'blacklight'
-
   # this was in the catalog controller of sample app
   include Blacklight::Catalog
+
+  helper StashEngine::ApplicationHelper
+  include StashEngine::SharedController
+
+  helper_method :current_tenant, :current_user, :metadata_engine, :metadata_url_helpers, :stash_url_helpers,
+                :current_tenant_simple, :logo_path
+
+  #layout 'blacklight'
+  layout 'stash_engine/application'
 
   configure_blacklight do |config|
     ## Default parameters to send to solr for all search-like requests. See also SolrHelper#solr_search_params

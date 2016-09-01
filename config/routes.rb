@@ -12,8 +12,8 @@ Rails.application.routes.draw do
   mount Geoblacklight::Engine => 'geoblacklight'
   mount Blacklight::Engine => '/'
 
-  root to: "catalog#index" # this seems to be a required route for some layouts, at least the current header
-  #get '/search', to: 'catalog#index'
+  #root to: "catalog#index" # this seems to be a required route for some layouts, at least the current header
+  get '/search', to: 'catalog#index'
     concern :searchable, Blacklight::Routes::Searchable.new
 
   resource :catalog, only: [:index], as: 'catalog', path: '/search', controller: 'catalog' do
