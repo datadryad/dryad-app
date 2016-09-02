@@ -21,6 +21,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'geoblacklight', '~> 1.1.2'
   s.add_dependency 'config'
   s.add_dependency 'rsolr'
+  s.add_dependency 'solr_wrapper'
   #s.add_dependency 'jquery-rails', '~> 4.1'
   #s.add_dependency 'sass-rails', '~> 5.0'
   #s.add_dependency 'turbolinks', '~> 2.5'
