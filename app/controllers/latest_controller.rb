@@ -1,6 +1,4 @@
 # -*- encoding : utf-8 -*-
-require 'blacklight/controller'
-require 'blacklight/catalog'
 
 class LatestController < ApplicationController
   helper_method :current_tenant, :current_user, :metadata_engine, :metadata_url_helpers, :stash_url_helpers,
@@ -75,6 +73,7 @@ class LatestController < ApplicationController
       format.html { store_preferred_view }
       format.rss  { render :layout => false }
       format.atom { render :layout => false }
+      format.js
       format.json do
         render json: render_search_results_as_json
         #@presenter = Blacklight::JsonPresenter.new(@response,
