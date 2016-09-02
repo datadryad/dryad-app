@@ -89,9 +89,10 @@
       <legend class="c-fieldset__legend">Add a point or rectangular area with lat/long coordinates</legend>
       <div class="c-location">
         <div class="c-location__button-group">
-          <button id="geo_point" class="c-location__point-button--active">Point</button>
-          <button id="geo_box" class="c-location__box-button">Bounding Box</button>
+          <button id="geo_point" class="js-location__point-button c-location__point-button--active">Point</button>
+          <button id="geo_box" class="js-location__box-button c-location__box-button">Bounding Box</button>
         </div>
+
         <%= render partial: "stash_datacite/geolocation_points/form", locals: { geolocation_point: @metadata_entry.new_geolocation_point } %>
         <%= render partial: "stash_datacite/geolocation_boxes/form", locals: { geolocation_box: @metadata_entry.new_geolocation_box } %>
       </div>
