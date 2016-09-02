@@ -241,6 +241,16 @@ class CatalogController < ApplicationController
     config.autocomplete_path = 'suggest'
   end
 
+  ##
+  # Overrides default Blacklight method to return true for an empty q value
+  # @return [Boolean]
+  #
+  # this has the effect of making a blank query (with a q=) show the results
+  # list rather than the welcome page.
+  def has_search_parameters?
+    !params[:q].nil? || super
+  end
+
 
 
 end
