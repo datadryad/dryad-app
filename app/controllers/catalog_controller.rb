@@ -237,8 +237,8 @@ class CatalogController < ApplicationController
     config.basemap_provider = 'positron'
 
     # Configuration for autocomplete suggestor
-    config.autocomplete_enabled = true
-    config.autocomplete_path = 'suggest'
+    #config.autocomplete_enabled = true
+    #config.autocomplete_path = 'suggest'
   end
 
   ##
