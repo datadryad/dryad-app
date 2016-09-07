@@ -42,11 +42,11 @@ module StashEngine
       @auth_hash && @auth_hash['info'] && @auth_hash['info']['email'] && @auth_hash['uid']
     end
 
-    #get the uid and mangle it with the tenant_id and return it, this is for the developer login to make unique per tenant
+    #get uid and mangle it with the tenant_id and return it, this is for the developer login to make unique per tenant
     def mangle_uid_with_tenant(uid, tenant_id)
       sp = uid.split('@')
       sp.push('bad-email-domain.com') if sp.length == 1
-      sp = ['bad', 'bad-email-domain.com'] if sp.blank? or sp.length > 2
+      sp = ['bad', 'bad-email-domain.com'] if sp.blank? || sp.length > 2
       "#{sp.first}-#{tenant_id}@#{sp.last}"
     end
   end

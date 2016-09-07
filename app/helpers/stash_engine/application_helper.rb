@@ -18,6 +18,5 @@ module StashEngine
       return "#{bytes} B" if bytes < 1000
       ::Filesize.new(bytes, Filesize::SI).pretty
     end
-
   end
 end

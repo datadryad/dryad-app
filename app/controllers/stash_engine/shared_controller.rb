@@ -97,9 +97,9 @@ module StashEngine
       test_path = File.join(Rails.root, 'app', 'assets', 'images', 'tenants')
       base_fn = "logo_#{current_tenant.tenant_id}"
       ['.svg', '.png', '.jpg'].each do |ext|
-        if File.exists?(File.join(test_path, "#{base_fn}#{ext}"))
+        if File.exist?(File.join(test_path, "#{base_fn}#{ext}"))
           return view_context.image_tag "tenants/#{base_fn}#{ext}",
-                                 hsh.merge({alt: "#{current_tenant.long_name} logo"})
+                                        hsh.merge(alt: "#{current_tenant.long_name} logo")
         end
       end
     end

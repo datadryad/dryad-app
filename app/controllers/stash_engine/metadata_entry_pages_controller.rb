@@ -10,7 +10,7 @@ module StashEngine
     def find_or_create
       @resource = Resource.find(params[:resource_id])
       if @resource.current_resource_state == 'published'
-        redirect_to metadata_entry_pages_new_version_path(resource_id: params[:resource_id]) and return
+        redirect_to(metadata_entry_pages_new_version_path(resource_id: params[:resource_id])) && return
       end
     end
 
@@ -18,14 +18,15 @@ module StashEngine
     def new_version
       #create new version deep copy of most items
       @resource = Resource.find(params[:resource_id])
-      if @resource.identifier.has_in_progress?
+      if @resource.identifier.in_progress?
         id = @resource.identifier.in_progress_version.id
-        redirect_to metadata_entry_pages_find_or_create_path(resource_id: id) and return
+        redirect_to(metadata_entry_pages_find_or_create_path(resource_id: id)) && return
       end
       @new_res = @resource.amoeba_dup
       @new_res.save!
       copy_files(@new_res, @resource)
-      res_state = ResourceState.create(user_id: current_user.id, resource_state: 'in_progress', resource_id: @new_res.id)
+      res_state = ResourceState.create(user_id: current_user.id, resource_state: 'in_progress',
+                                       resource_id: @new_res.id)
       @new_res.current_resource_state_id = res_state.id
       @new_res.save!
 
@@ -49,9 +50,7 @@ module StashEngine
 
     def resource_exist
       @resource = Resource.find(params[:resource_id])
-      if @resource.nil?
-        redirect_to root_path, notice: "The dataset you are looking for does not exist."
-      end
+      redirect_to root_path, notice: 'The dataset you are looking for does not exist.' if @resource.nil?
     end
 
     def require_resource_owner
@@ -62,7 +61,7 @@ module StashEngine
     end
 
     def copy_files(new_resource, resource)
-      new_resource.file_uploads << resource.current_file_uploads.collect { |file| file.dup }
+      new_resource.file_uploads << resource.current_file_uploads.collect(&:dup)
       if new_resource.file_uploads.any?
         new_resource.file_uploads.each do |file|
           file.resource_id = new_resource.id
@@ -71,6 +70,5 @@ module StashEngine
         end
       end
     end
-
   end
 end

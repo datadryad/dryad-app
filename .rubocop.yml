@@ -1,6 +1,7 @@
 # inherit_from: .rubocop_todo.yml
 
 AllCops:
+  TargetRubyVersion: 2.2
   Include:
     - '**/Rakefile'
     - '**/config.ru'
@@ -11,6 +12,8 @@ AllCops:
     - 'bin/**/*'
     - 'test/dummy/db/**/*'
     - 'vendor/**/*'
+    - 'ui-library/**/*'
+    - 'node_modules/**/*'
 
 # other configuration
 Metrics/LineLength:

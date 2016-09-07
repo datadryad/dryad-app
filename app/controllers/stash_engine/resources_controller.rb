@@ -38,7 +38,7 @@ module StashEngine
     def create
       @resource = Resource.new(user_id: current_user.id)
       @resource.save!
-      ResourceState.create!(resource_id: @resource.id, resource_state: 'in_progress', user_id: current_user.id )
+      ResourceState.create!(resource_id: @resource.id, resource_state: 'in_progress', user_id: current_user.id)
       redirect_to metadata_entry_pages_find_or_create_path(resource_id: @resource.id)
     end
 

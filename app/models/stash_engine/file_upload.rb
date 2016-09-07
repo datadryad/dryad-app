@@ -5,6 +5,6 @@ module StashEngine
 
     scope :deleted_from_version, -> { where(file_state: :deleted) }
     scope :newly_created, -> { where("file_state = 'created' OR file_state IS NULL") }
-    enum file_state: ['created', 'copied', 'deleted'].map{|i| [i.to_sym, i]}.to_h
+    enum file_state: %w(created copied deleted).map { |i| [i.to_sym, i] }.to_h
   end
 end

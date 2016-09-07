@@ -1,6 +1,7 @@
 require 'stash/sword'
 
 module StashEngine
+  # a class for asynchronous sword submission
   class SwordJob
     include Concurrent::Async
 
@@ -13,21 +14,21 @@ module StashEngine
     # @param sword_params [Hash] Initialization parameters for `Stash::Sword::Client`.
     #   See the [stash-sword documentation](http://www.rubydoc.info/gems/stash-sword/Stash/Sword/Client#initialize-instance_method)
     #   for details.
-    # @param request_host [String] The public hostname of the application UI. Used to generate links in the notification email.
-    # @param request_port [Integer] The public-facing port of the application UI. Used to generate links in the notification email.
-    def self.submit_async(title:, doi:, zipfile:, resource_id:, sword_params:, request_host:, request_port:)
-      task = SwordJob.new(
-          title: title,
-          doi: doi,
-          zipfile: zipfile,
-          resource_id: resource_id,
-          sword_params: sword_params,
-          request_host: request_host,
-          request_port: request_port
-      )
+    # @param request_host [String] The public hostname of the application UI. Used to generate links in the
+    #   notification email.
+    # @param request_port [Integer] The public-facing port of the application UI. Used to generate links in the
+    #   notification email.
+    def self.submit_async(title:, doi:, zipfile:, resource_id:, sword_params:, request_host:, request_port:) # rubocop:disable Metrics/ParameterLists, Metrics/LineLength
+      result = SwordJob.new(
+        title: title,
+        doi: doi,
+        zipfile: zipfile,
+        resource_id: resource_id,
+        sword_params: sword_params,
+        request_host: request_host,
+        request_port: request_port
+      ).async.submit
 
-      # See https://github.com/ruby-concurrency/concurrent-ruby/blob/master/doc/future.md
-      result = task.async.submit
       result.add_observer(ResultLoggingObserver.new(title: title, doi: doi))
     end
 
@@ -37,12 +38,14 @@ module StashEngine
     # @param doi [String] The DOI of the dataset being submitted
     # @param zipfile [String] The local path, on the server, of the zipfile to be submitted
     # @param resource_id [Integer] The ID of the resource being submitted
-    # @param sword_params [Hash] Initialization parameters for `Stash::Sword::Client`.
-    #   See the [stash-sword documentation](http://www.rubydoc.info/gems/stash-sword/Stash/Sword/Client#initialize-instance_method)
+    # @param sword_params [Hash] Initialization parameters for `Stash::Sword::Client`. See the
+    #   [stash-sword documentation](http://www.rubydoc.info/gems/stash-sword/Stash/Sword/Client#initialize-instance_method)
     #   for details.
-    # @param request_host [String] The public hostname of the application UI. Used to generate links in the notification email.
-    # @param request_port [Integer] The public-facing port of the application UI. Used to generate links in the notification email.
-    def initialize(title:, doi:, zipfile:, resource_id:, sword_params:, request_host:, request_port:)
+    # @param request_host [String] The public hostname of the application UI. Used to generate links in the
+    #   notification email.
+    # @param request_port [Integer] The public-facing port of the application UI. Used to generate links in the
+    #   notification email.
+    def initialize(title:, doi:, zipfile:, resource_id:, sword_params:, request_host:, request_port:) # rubocop:disable Metrics/ParameterLists, Metrics/LineLength
       super()
       @title = title
       @doi = doi
@@ -55,27 +58,15 @@ module StashEngine
 
     # Submits this job
     def submit
-      log.debug("#{self.class}.submit() at #{Time.now}: title: '#{title}', doi: #{doi}, zipfile: #{zipfile}, resource_id: #{resource_id}, sword_params: #{sword_params}")
-      request_msg = "Submitting #{zipfile} for '#{title}' (#{doi}) at #{Time.now}: #{(sword_params.map { |k, v| "#{k}: #{v}" }).join(', ')}"
-
+      log.debug("#{self.class}.submit() at #{Time.now}: title: '#{title}', doi: #{doi}, zipfile: #{zipfile}, "\
+                "resource_id: #{resource_id}, sword_params: #{sword_params}")
+      request_msg = "Submitting #{zipfile} for '#{title}' (#{doi}) at #{Time.now}: "\
+                    "#{(sword_params.map { |k, v| "#{k}: #{v}" }).join(', ')}"
       resource = nil
       begin
-        resource = Resource.find(resource_id)
-        resource.update_uri ? update(resource) : create(resource)
-        resource.set_state('published')
-        resource.update_version(zipfile)
-        update_submission_log(resource_id: resource_id, request_msg: request_msg, response_msg: 'Success')
+        resource = do_submit(request_msg)
       rescue => e
-        backtrace = "\n#{e.backtrace.join("\n")}" if e.backtrace
-        log.error("#{e}#{backtrace}")
-
-        update_submission_log(resource_id: resource_id, request_msg: request_msg, response_msg: "Failed: #{e}")
-        error_report(resource, e).deliver_now
-        failure_report(resource, e).deliver_now
-        resource.set_state('error') if resource
-
-        # TODO: Enable this (and don't raise) once we have ExceptionNotifier configured
-        # ExceptionNotifier.notify_exception(e, data: {title: title, doi: doi, zipfile: zipfile, resource_id: resource_id, sword_params: sword_params})
+        report_error(e, resource, request_msg)
         raise
       end
     end
@@ -98,10 +89,34 @@ module StashEngine
       @client ||= Stash::Sword::Client.new(logger: log, **sword_params)
     end
 
+    def do_submit(request_msg)
+      resource = Resource.find(resource_id)
+      resource.update_uri ? update(resource) : create(resource)
+      resource.current_state = 'published'
+      resource.update_version(zipfile)
+      update_submission_log(resource_id: resource_id, request_msg: request_msg, response_msg: 'Success')
+      resource
+    end
+
+    def report_error(e, resource, request_msg)
+      log.error(e.to_s + (backtrace = e.backtrace) && "\n#{backtrace.join("\n")}")
+
+      update_submission_log(resource_id: resource_id, request_msg: request_msg, response_msg: "Failed: #{e}")
+      error_report(resource, e).deliver_now
+      failure_report(resource, e).deliver_now
+
+      resource.current_state = 'error' if resource
+
+      # TODO: Enable this (and don't raise) once we have ExceptionNotifier configured
+      # ExceptionNotifier.notify_exception(e, data: {title: title, doi: doi, zipfile: zipfile,
+      # resource_id: resource_id, sword_params: sword_params})
+    end
+
     def create(resource)
       log.debug("invoking create(doi: #{doi}, zipfile: #{zipfile}) for resource #{resource.id} (title: '#{title}')")
       receipt = client.create(doi: doi, zipfile: zipfile)
-      log.debug("create(doi: #{doi}, zipfile: #{zipfile}) for resource #{resource.id} completed with em_iri #{receipt.em_iri}, edit_iri #{receipt.edit_iri}")
+      log.debug("create(doi: #{doi}, zipfile: #{zipfile}) for resource #{resource.id} completed with em_iri "\
+                "#{receipt.em_iri}, edit_iri #{receipt.edit_iri}")
       resource.download_uri = receipt.em_iri
       resource.update_uri = receipt.edit_iri
       resource.save # save download and update URLs for this resource
@@ -111,14 +126,17 @@ module StashEngine
 
     def update(resource)
       update_uri = resource.update_uri
-      log.debug("invoking update(edit_iri: #{update_uri}, zipfile: #{zipfile}) for resource #{resource.id} (title: '#{title}')")
+      log.debug("invoking update(edit_iri: #{update_uri}, zipfile: #{zipfile}) for resource #{resource.id} "\
+                "(title: '#{title}')")
       status = client.update(edit_iri: update_uri, zipfile: zipfile)
-      log.debug("update(edit_iri: #{update_uri}, zipfile: #{zipfile}) for resource #{resource.id} completed with status #{status}")
+      log.debug("update(edit_iri: #{update_uri}, zipfile: #{zipfile}) for resource #{resource.id} completed "\
+                "with status #{status}")
       UserMailer.update_succeeded(resource, title, request_host, request_port).deliver_now
     end
 
     def update_submission_log(resource_id:, request_msg:, response_msg:)
-      SubmissionLog.create(resource_id: resource_id, archive_submission_request: request_msg, archive_response: response_msg)
+      SubmissionLog.create(resource_id: resource_id, archive_submission_request: request_msg,
+                           archive_response: response_msg)
     end
 
     # Generates an error report (w/stack trace) to be emailed to Stash administrators
