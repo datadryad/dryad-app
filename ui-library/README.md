@@ -14,7 +14,12 @@ pipeline.
 
 ### Toolkit Requirements
 
-* [Node and npm](https://nodejs.org/en) Node needs to be installed.
+* [Node and npm](https://nodejs.org/en) Node needs to be installed. 
+
+  For Mac OS users with Homebrew, note that the Homebrew `node`/`npm`
+  installation has issues. Use the `.pkg` installer from
+  [nodejs.org](https://nodejs.org/en/download/), and afterwards add
+  `$HOME/.npm-packages/bin` to your `$PATH`.
 
 * [Bower](https://bower.io): `$ sudo npm install -g bower`
 
