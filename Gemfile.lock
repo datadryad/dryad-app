@@ -20,9 +20,12 @@ PATH
       config
       devise-guests (~> 0.5)
       geoblacklight (~> 1.1.2)
+      jquery-rails (~> 4.1)
       rails (~> 4.2)
       rsolr
+      sass-rails (~> 5.0)
       solr_wrapper
+      turbolinks
     stash_engine (0.0.17)
       amoeba (~> 3.0.0)
       carrierwave (~> 0.10.0)
