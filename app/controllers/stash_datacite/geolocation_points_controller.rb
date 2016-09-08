@@ -51,7 +51,6 @@ module StashDatacite
     def create
       @geolocation_point = GeolocationPoint.new(geolocation_point_params)
       @resource = StashDatacite.resource_class.find(geolocation_point_params[:resource_id])
-      byebug
       respond_to do |format|
         if @geolocation_point.save
           @geolocation_points = GeolocationPoint.where(resource_id: geolocation_point_params[:resource_id])
