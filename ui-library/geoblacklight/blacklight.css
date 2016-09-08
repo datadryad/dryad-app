@@ -368,7 +368,7 @@ th {
 }
 @font-face {
   font-family: 'Glyphicons Halflings';
-  src: url('glyphicons-halflings-regular.ttf') format('truetype');
+  src: url('glyphicons-halflings-regular.woff2') format('woff2');
 }
 /* line 24, /apps/dash2/local/lib/ruby/gems/2.2.0/gems/bootstrap-sass-3.3.7/assets/stylesheets/bootstrap/_glyphicons.scss */
 .glyphicon {
