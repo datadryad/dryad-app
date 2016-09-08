@@ -25,6 +25,7 @@
 
     <% if @resource.geolocation %>
       <h3 class="o-heading__level2">Location</h3>
+      <%= render partial: "stash_datacite/shared/geolocation_data", locals: {resource: @resource} %>
       <div id="map_review" class="o-map"></div>
       <div class="c-locations">
         <%= render partial: "stash_datacite/geolocation_points/show", locals: { geolocation_points: @review.geolocation_points } %>
