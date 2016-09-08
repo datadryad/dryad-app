@@ -5,16 +5,17 @@ module StashDatacite
     before_action :set_geolocation_point, only: [:edit, :update, :delete]
 
     def index
-      @geolocation_points = GeolocationPoint.where(resource_id: params[:resource_id])
       respond_to do |format|
+        @geolocation_points = GeolocationPoint.where(resource_id: params[:resource_id])
+        @resource = StashDatacite.resource_class.find(params[:resource_id])
         format.js
       end
     end
 
     # GET Leaflet AJAX index
     def points_coordinates
-      @geolocation_points = GeolocationPoint.select(:id, :latitude, :longitude).where(resource_id: params[:resource_id])
       respond_to do |format|
+        @geolocation_points = GeolocationPoint.select(:id, :latitude, :longitude).where(resource_id: params[:resource_id])
         format.html
         format.json { render json:  @geolocation_points }
       end
@@ -49,6 +50,8 @@ module StashDatacite
     # POST /geolocation_points
     def create
       @geolocation_point = GeolocationPoint.new(geolocation_point_params)
+      @resource = StashDatacite.resource_class.find(geolocation_point_params[:resource_id])
+      byebug
       respond_to do |format|
         if @geolocation_point.save
           @geolocation_points = GeolocationPoint.where(resource_id: geolocation_point_params[:resource_id])
@@ -61,10 +64,13 @@ module StashDatacite
 
     # DELETE /geolocation_points/1 && # DELETE Leaflet AJAX update
     def delete
+      @latitude = @geolocation_point.latitude
+      @longitude = @geolocation_point.longitude
       @geolocation_point.destroy
+      @resource = StashDatacite.resource_class.find(params[:resource_id])
+      @geolocation_points = GeolocationPoint.where(resource_id: params[:resource_id])
       respond_to do |format|
-        @geolocation_points = GeolocationPoint.where(resource_id: params[:resource_id])
-        format.js { render template: 'stash_datacite/geolocation_points/index.js.erb' }
+        format.js
       end
     end
 

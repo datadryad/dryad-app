@@ -25,6 +25,7 @@ module StashDatacite
       @geolocation_box = GeolocationBox.new(geolocation_box_params.permit!)
       respond_to do |format|
         if @geolocation_box.save
+          @resource = StashDatacite.resource_class.find(params[:resource_id])
           @geolocation_boxes = GeolocationBox.where(resource_id: params[:resource_id])
           format.js { render template: 'stash_datacite/geolocation_boxes/create.js.erb' }
         else
@@ -38,6 +39,7 @@ module StashDatacite
       @geolocation_box = GeolocationBox.new(geolocation_box_params)
       respond_to do |format|
         if @geolocation_box.save
+          @resource = StashDatacite.resource_class.find(geolocation_box_params[:resource_id])
           @geolocation_boxes = GeolocationBox.where(resource_id: geolocation_box_params[:resource_id])
           format.js
         else
@@ -46,19 +48,18 @@ module StashDatacite
       end
     end
 
-    # PATCH/PUT /geolocation_boxes/1
-    # def update
-    #   if @geolocation_box.update(geolocation_box_params)
-    #     redirect_to @geolocation_box, notice: 'Geolocation box was successfully updated.'
-    #   else
-    #     render :edit
-    #   end
-    # end
-
     # DELETE /geolocation_boxes/1
     def delete
+      @sw_latitude = @geolocation_box.sw_latitude
+      @sw_longitude = @geolocation_box.sw_longitude
+      @ne_latitude = @geolocation_box.ne_latitude
+      @ne_longitude = @geolocation_box.ne_longitude
       @geolocation_box.destroy
-      redirect_to :back
+      @resource = StashDatacite.resource_class.find(params[:resource_id])
+      @geolocation_boxes = GeolocationBox.where(resource_id: params[:resource_id])
+      respond_to do |format|
+        format.js
+      end
     end
 
     private

@@ -1,0 +1,3 @@
+$('div.geolocation_boxes').replaceWith('<%= j render partial: "stash_datacite/geolocation_boxes/index", locals: { geolocation_boxes: @geolocation_boxes, resource_id: @resource.id } %>')
+var marker = L.marker([<%= @sw_latitude %>, <%= @sw_longitude %>, <%= @ne_latitude %>, <%= @ne_longitude %>]);
+map.removeLayer(marker);

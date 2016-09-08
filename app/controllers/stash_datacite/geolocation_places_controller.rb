@@ -4,7 +4,7 @@ module StashDatacite
   class GeolocationPlacesController < ApplicationController
     before_action :set_geolocation_place, only: [:edit, :update, :delete]
 
-    # GET /geolocation_points/
+    # GET /geolocation_places/
     def places_coordinates
       @geolocation_places = GeolocationPlace.select(:id, :geo_location_place, :latitude, :longitude)
                                             .where(resource_id: params[:resource_id])
@@ -18,10 +18,11 @@ module StashDatacite
     def map_coordinates
       geolocation_place_params = params.except(:controller, :action)
       @geolocation_place = GeolocationPlace.new(geolocation_place_params.permit!)
+      @resource = StashDatacite.resource_class.find(params[:resource_id])
       respond_to do |format|
         if @geolocation_place.save
           @geolocation_places = GeolocationPlace.where(resource_id: params[:resource_id])
-          format.js { render template: 'stash_datacite/geolocation_places/map_coordinates.js.erb' }
+          format.js
         else
           format.html { render :new }
         end
@@ -33,8 +34,9 @@ module StashDatacite
       @latitude = @geolocation_place.latitude
       @longitude = @geolocation_place.longitude
       @geolocation_place.destroy
+      @resource = StashDatacite.resource_class.find(params[:resource_id])
+      @geolocation_places = GeolocationPlace.where(resource_id: params[:resource_id])
       respond_to do |format|
-        format.html { redirect_to :back }
         format.js
       end
     end

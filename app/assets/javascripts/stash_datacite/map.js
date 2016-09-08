@@ -17,7 +17,9 @@ function loadMap() {
   mapzen();
 
   // Get Point BBox and Place Coordinates from db and load on map
-  getAndLoadGeo();
+  getAndLoadGeoPoint();
+  getAndLoadGeoBox();
+  getAndLoadGeoPlace();
 
   //LEAFLET DRAW PLUGIN
   leafletDraw();
