@@ -1,16 +1,15 @@
 // Place all the behaviors and hooks related to the matching controller here.
 // All this logic will automatically be available in application.js.
-function getAndLoadGeoPoint() {
+function getAndLoadGeoPoint(resource_id) {
   // Get Point Coordinates from db and load on map
-  var group , markerArray = [];
-  var coordinatesMarker = getCoordinates();  // Function is called, return value will end up in an array
+  var coordinatesMarker = getCoordinates(resource_id);  // Function is called, return value will end up in an array
   function getCoordinates() {
-    var resource_id = "", result = [], arr = [];
+    var result = [], arr = [];
       $.ajax({
         type: "GET",
         dataType: "json",
         url: "/stash_datacite/geolocation_points/points_coordinates",
-        data: { resource_id: $.urlParam('resource_id') },
+        data: { resource_id: resource_id },
         async: false,
         success: function(data) {
           result = data;
@@ -43,7 +42,7 @@ function getAndLoadGeoPoint() {
           dataType: "script",
           url: "/stash_datacite/geolocation_points/update_coordinates",
           data: { 'latitude' : marker.getLatLng().lat, 'longitude' : marker.getLatLng().lng,
-                 'resource_id' : $.urlParam('resource_id'), 'id' : event.target.options.id },
+                 'resource_id' : resource_id, 'id' : event.target.options.id },
           success: function() {
             updateGeolocationPointsIndex();
           },
@@ -62,7 +61,7 @@ function getAndLoadGeoPoint() {
         type: "GET",
         dataType: "script",
         url: "/stash_datacite/geolocation_points/index",
-        data: { 'resource_id' : $.urlParam('resource_id') },
+        data: { 'resource_id' : resource_id },
         success: function() {
         },
         error: function() {
@@ -82,7 +81,7 @@ function getAndLoadGeoPoint() {
           type: "DELETE",
           dataType: "script",
           url: "/stash_datacite/geolocation_points/delete_coordinates",
-          data: {'id' : marker.options.id, 'resource_id' : $.urlParam('resource_id') },
+          data: {'id' : marker.options.id, 'resource_id' : resource_id },
           success: function() {
           },
           error: function() {

@@ -17,9 +17,10 @@ function loadMap() {
   mapzen();
 
   // Get Point BBox and Place Coordinates from db and load on map
-  getAndLoadGeoPoint();
-  getAndLoadGeoBox();
-  getAndLoadGeoPlace();
+  var resource_id = $.urlParam('resource_id');
+  getAndLoadGeoPoint(resource_id);
+  getAndLoadGeoBox(resource_id);
+  getAndLoadGeoPlace(resource_id);
 
   //LEAFLET DRAW PLUGIN
   leafletDraw();

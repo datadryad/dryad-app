@@ -1,16 +1,15 @@
 // Place all the behaviors and hooks related to the matching controller here.
 // All this logic will automatically be available in application.js.
-function getAndLoadGeoBox() {
+function getAndLoadGeoBox(resource_id) {
   // Get Bounding Box coordinates from db and load on map
-  var group , markerArray = [];
-  var coordinatesBBox = getCoordinatesBBox();  // Function is called, return value will end up in an array
-  function getCoordinatesBBox() {
-    var resource_id = "", result = [], arr = [];
+  var coordinatesBBox = getCoordinatesBBox(resource_id);  // Function is called, return value will end up in an array
+  function getCoordinatesBBox(resource_id) {
+    var result = [], arr = [];
       $.ajax({
         type: "GET",
         dataType: "json",
         url: "/stash_datacite/geolocation_boxes/boxes_coordinates",
-        data: { resource_id: $.urlParam('resource_id') },
+        data: { resource_id: resource_id },
         async: false,
         success: function(data) {
           result = data;

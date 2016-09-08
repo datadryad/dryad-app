@@ -1,16 +1,15 @@
 // Place all the behaviors and hooks related to the matching controller here.
 // All this logic will automatically be available in application.js.
-function getAndLoadGeoPlace() {
+function getAndLoadGeoPlace(resource_id) {
   // Get GeoLocation Place Names from db and load on map
-  var group , markerArray = [];
-  var locationNames = getLocationNames();  // Function is called, return value will end up in an array
-  function getLocationNames() {
-    var resource_id = "", result = [], arr = [];
+  var locationNames = getLocationNames(resource_id);  // Function is called, return value will end up in an array
+  function getLocationNames(resource_id) {
+    var result = [], arr = [];
       $.ajax({
         type: "GET",
         dataType: "json",
         url: "/stash_datacite/geolocation_places/places_coordinates",
-        data: { resource_id: $.urlParam('resource_id') },
+        data: { resource_id: resource_id },
         async: false,
         success: function(data) {
           result = data;
