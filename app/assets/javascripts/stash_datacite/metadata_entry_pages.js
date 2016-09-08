@@ -11,4 +11,12 @@ function loadAccordion() {
     collapsible: true,
     icons: icons
   });
+
+  $('#location_opener').click(function(){
+    map.invalidateSize();
+    setTimeout(function() {
+      map.invalidateSize();
+      map.fitBounds(mapBounds());
+    }, 1000);
+  });
 };

@@ -128,5 +128,5 @@ function loadReviewMap(resource_id) {
     // -------------------------------- //
 
     group = L.featureGroup(markerArray).addTo(map);
-    map.fitBounds(mapBounds(), { padding: [10, 10] } );
+    map.fitBounds(mapBounds(), { padding: [25, 25] } );
 };

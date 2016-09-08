@@ -13,6 +13,8 @@ function loadMap() {
           }).addTo(map);
   // -------------------------------- //
 
+  // map.fitBounds(mapBounds(), { padding: [25, 25] } );
+
   // MAPZEN autocomplete search and save to db
   mapzen();
 
