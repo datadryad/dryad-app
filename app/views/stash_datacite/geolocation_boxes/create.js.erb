@@ -3,7 +3,8 @@ var bounds = [[<%= @geolocation_box.sw_latitude %>, <%= @geolocation_box.sw_long
 // create an orange rectangle
 var newRectangle = L.rectangle(bounds, {color: "#ff7800", weight: 1}).addTo(map);
 // zoom the map to the rectangle bounds
-map.fitBounds(bounds);
+// map.fitBounds(bounds);
+map.fitBounds(mapBounds());
 $('#geo_sw_lat_point').val('');
 $('#geo_sw_lng_point').val('');
 $('#geo_ne_lat_point').val('');
