@@ -74,6 +74,7 @@
 .c-location__point-inputs {
 	display: flex;
 	align-items: flex-end; // align commas to bottom
+	max-width: 30%;
 	margin: 0 0 10px;
 	padding: 0 0 0 30px;
 	background: inline('../images/icon_point-blue.svg') left 8px center no-repeat;
@@ -149,7 +150,7 @@
 
 .c-location__add-button {
 	align-self: flex-end;
-
+	margin: 0 5px 0 5px;
 	@include bp(screen2) {
 		align-self: flex-start;
 	}
