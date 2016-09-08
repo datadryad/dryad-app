@@ -53,6 +53,8 @@
     border-left: 2px solid $design-dark-gray-color;
   }
 
+  /* Blacklight/geoblacklight resets */
+  box-sizing: content-box;
 }
 
 %c-header__nav {
