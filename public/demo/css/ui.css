@@ -1580,7 +1580,9 @@ html.svg .c-facet__check-label {
 
 .c-header__dash-logo-svg {
   height: 30px;
-  padding: 5px 0; }
+  padding: 5px 0;
+  /* Blacklight/geoblacklight resets */
+  box-sizing: content-box; }
   @media (min-width: 870px) {
     .c-header__dash-logo-svg {
       height: 40px; } }
@@ -2529,7 +2531,9 @@ body {
   max-width: 1220px;
   margin: 0 auto;
   padding: 10px;
-  font-family: 'KievitWeb'; }
+  font-family: 'KievitWeb';
+  /* Blacklight/geoblacklight resets */
+  font-size: initial; }
   @media (min-width: 480px) {
     body {
       padding: 10px 20px; } }
