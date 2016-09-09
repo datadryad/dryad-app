@@ -17,7 +17,7 @@ module StashDatacite
     # POST Leaflet AJAX create
     def map_coordinates
       geolocation_place_params = params.except(:controller, :action)
-      @geolocation_place = GeolocationPlace.new(geolocation_place_params.permit!)
+      @geolocation_place = GeolocationPlace.find_or_initialize_by(geolocation_place_params.permit!)
       @resource = StashDatacite.resource_class.find(params[:resource_id])
       respond_to do |format|
         if @geolocation_place.save
