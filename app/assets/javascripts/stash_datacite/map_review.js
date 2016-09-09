@@ -6,12 +6,15 @@ function loadReviewMap(resource_id) {
   // create a map in the "map" div, set the view to a given place and zoom
   var map = L.map('map_review', { zoomControl: true }).setView([36.778259, -119.417931], 12);
       mapLink = '<a href="https://openstreetmap.org">OpenStreetMap</a>';
-  map.zoomControl.setPosition('bottomright');
+      map.zoomControl.setPosition('bottomright');
     // add an OpenStreetMap tile layer
       L.tileLayer(
-          'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-          attribution: '&copy; ' + mapLink + ' Contributors',
-          }).addTo(map);
+        'https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}{retina}.png', {
+          attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="http://cartodb.com/attributions">CartoDB</a>',
+          worldCopyJump: true,
+          retina: '@2x',
+          detectRetina: false
+        }).addTo(map);
 
   // -------------------------------- //
 

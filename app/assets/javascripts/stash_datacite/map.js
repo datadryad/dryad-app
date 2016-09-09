@@ -8,9 +8,12 @@ function loadMap() {
   map.zoomControl.setPosition('bottomright');
     // add an OpenStreetMap tile layer
       L.tileLayer(
-          'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-          attribution: '&copy; ' + mapLink + ' Contributors',
-          }).addTo(map);
+        'https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}{retina}.png', {
+          attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="http://cartodb.com/attributions">CartoDB</a>',
+          worldCopyJump: true,
+          retina: '@2x',
+          detectRetina: false
+        }).addTo(map);
   // -------------------------------- //
 
   // map.fitBounds(mapBounds(), { padding: [25, 25] } );
@@ -75,7 +78,7 @@ function mapBounds(){
   if(Math.abs(ne.lat - sw.lat) < small && Math.abs(ne.lng - sw.lng) < small){
     bbox.extend(L.bboxToBounds((sw.lng - small2) + " " + (sw.lat - small2) + " " + (ne.lng + small2) + " " + (ne.lat + small2)));
   }
-  
+
   return bbox;
   // return [ [bbox.getSouth(), bbox.getWest() ], [ bbox.getNorth(), bbox.getEast() ] ];
   // return [ bbox.getSouthWest(), bbox.getNorthEast() ];
