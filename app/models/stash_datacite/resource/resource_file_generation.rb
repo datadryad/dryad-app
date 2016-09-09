@@ -80,7 +80,21 @@ module StashDatacite
                 type: dm::DescriptionType::OTHER,
                 value: "#{@resource.descriptions.where(description_type: :other).first.description}"
             )
-          ]
+          ],
+
+          geo_locations:
+              @resource.geolocation_points.map do |p|
+                dm::GeoLocation.new(point: dm::GeoLocationPoint.new(p.latitude, p.longitude))
+              end +
+              @resource.geolocation_boxes.map do |b|
+                dm::GeoLocation.new(box: dm::GeoLocationBox.
+                    new(b.sw_latitude, b.sw_longitude, b.ne_latitude, b.ne_longitude))
+              end +
+              @resource.geolocation_places.map do |p|
+                dm::GeoLocation.new(point:
+                      ((p.latitude && p.longitude) ? dm::GeoLocationPoint.new(p.latitude, p.longitude) : nil),
+                                    place: p.geo_location_place)
+              end
         )
 
         datacite_to_wrapper = resource.save_to_xml
