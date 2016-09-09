@@ -51,7 +51,7 @@ L.bboxToBounds = function(bbox) {
 // adjusts the leaflet map to fit the points/boxes/places already defined
 function mapBounds(){
   bbox = undefined;
-  $('#geolocation_info [data-bbox]').each(function() {
+  $('[data-bbox]').each(function() {
     bb = $(this).data().bbox;
     if(bb) {
       if (typeof bbox === 'undefined') {
