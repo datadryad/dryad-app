@@ -54,6 +54,11 @@ L.bboxToBounds = function(bbox) {
 // adjusts the leaflet map to fit the points/boxes/places already defined
 function mapBounds(){
   bbox = undefined;
+
+  // remove empty data-bbox elements
+  $("[data-bbox='']").each(function() {
+    $( this ).removeAttr("data-bbox");
+  });
   $('[data-bbox]').each(function() {
     bb = $(this).data().bbox;
     if(bb) {
@@ -79,6 +84,7 @@ function mapBounds(){
     bbox.extend(L.bboxToBounds((sw.lng - small2) + " " + (sw.lat - small2) + " " + (ne.lng + small2) + " " + (ne.lat + small2)));
   }
 
+  console.log(bbox);
   return bbox;
   // return [ [bbox.getSouth(), bbox.getWest() ], [ bbox.getNorth(), bbox.getEast() ] ];
   // return [ bbox.getSouthWest(), bbox.getNorthEast() ];

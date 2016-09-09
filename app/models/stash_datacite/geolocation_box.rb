@@ -11,5 +11,11 @@ module StashDatacite
       resource.geolocation = true
       resource.save!
     end
+
+    #returns a bounding box string for use with Javascript
+    def bounding_box_str
+      return nil unless sw_longitude && sw_latitude && ne_longitude && ne_latitude
+      "#{sw_longitude} #{sw_latitude} #{ne_longitude} #{ne_latitude}"
+    end
   end
 end
