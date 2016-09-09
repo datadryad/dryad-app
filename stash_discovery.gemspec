@@ -19,6 +19,7 @@ Gem::Specification.new do |s|
 
   s.add_dependency 'rails', '~> 4.2'
   s.add_dependency 'geoblacklight', '~> 1.1.2'
+  s.add_dependency 'blacklight', '~> 6.5.0'
   s.add_dependency 'config'
   s.add_dependency 'rsolr'
   s.add_dependency 'solr_wrapper'
