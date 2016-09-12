@@ -92,6 +92,11 @@ module StashEngine
       end
     end
 
+    # contact us url
+    def contact_us_url
+      StashEngine.app.contact_us_uri
+    end
+
     # make logo_string for image_tag per tenant
     def logo_path(hsh)
       test_path = File.join(Rails.root, 'app', 'assets', 'images', 'tenants')
