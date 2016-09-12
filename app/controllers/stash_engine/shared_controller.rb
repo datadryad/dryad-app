@@ -94,7 +94,7 @@ module StashEngine
 
     # contact us url
     def contact_us_url
-      StashEngine.app.contact_us_uri
+      StashEngine.try(:app).try(:contact_us_uri)
     end
 
     # make logo_string for image_tag per tenant
