@@ -67,8 +67,6 @@ var disable;
         minLength: 1,
         focus: function () {
           // prevent value inserted on focus
-          $('.saving_text').show();
-          $('.saved_text').hide();
           return false;
         },
         select: function (event, ui) {
@@ -85,8 +83,6 @@ var disable;
         if (!disable) {
           var form = $(this).parents('form');
           $(form).trigger('submit.rails');
-          $('.saved_text').show();
-          $('.saving_text').hide();
         }
       });
   });

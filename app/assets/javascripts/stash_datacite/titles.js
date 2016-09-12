@@ -2,8 +2,6 @@
 // All this logic will automatically be available in application.js.
 function loadTitles() {
   $( '.title' ).on('focus', function () {
-    $('.saving_text').show();
-    $('.saved_text').hide();
     previous_value = this.value;
     }).change(function() {
       new_value = this.value;
@@ -13,9 +11,4 @@ function loadTitles() {
         $(form).trigger('submit.rails');
       }
     });
-
-  $( '.title' ).blur(function (event) {
-    $('.saved_text').show();
-    $('.saving_text').hide();
-  });
 };

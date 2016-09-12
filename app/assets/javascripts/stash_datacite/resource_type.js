@@ -2,8 +2,6 @@
 // All this logic will automatically be available in application.js.
 function loadResourceTypes() {
   $( '.js-resource_type' ).on('focus', function () {
-    $('.saving_text').show();
-    $('.saved_text').hide();
     previous_value = this.value;
     }).change(function() {
       new_value = this.value;
@@ -13,11 +11,6 @@ function loadResourceTypes() {
         $(form).trigger('submit.rails');
       }
     });
-
-  $( '.js-resource_type' ).blur(function (event) {
-    $('.saved_text').show();
-    $('.saving_text').hide();
-  });
 };
 
 
