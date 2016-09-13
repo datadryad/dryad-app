@@ -20,3 +20,21 @@ function loadAccordion() {
     }, 1000);
   });
 };
+
+function addSavingDisplay(){
+
+  els = $("[data-remote='true']").not("[data-savedisplay='true']");
+  els.bind('ajax:success', function(evt, data, status, xhr){
+    $('.saving_text').hide();
+    $('.saved_text').show();
+  })
+
+  els.bind('ajax:beforeSend', function(evt, data, status, xhr){
+    $('.saving_text').show();
+    $('.saved_text').hide();
+  });
+  // adds data-save-display if event attached
+  els.each(function() {
+    $(this).attr('data-savedisplay', 'true');
+  });
+};

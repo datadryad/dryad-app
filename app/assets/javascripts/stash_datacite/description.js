@@ -2,8 +2,6 @@
 // All this logic will automatically be available in application.js.
 function loadDescriptions() {
   $( '.js-description' ).on('focus', function () {
-    $('.saving_text').show();
-    $('.saved_text').hide();
     previous_value = this.value;
     }).change(function() {
       new_value = this.value;
@@ -13,9 +11,4 @@ function loadDescriptions() {
         $(form).trigger('submit.rails');
       }
     });
-
-  $( '.js-description' ).blur(function (event) {
-    $('.saved_text').show();
-    $('.saving_text').hide();
-  });
 };
