@@ -22,7 +22,7 @@ module StashDatacite
     # POST /geolocation_boxes
     def map_coordinates
       geolocation_box_params = params.except(:controller, :action)
-      @geolocation_box = GeolocationBox.new(geolocation_box_params.permit!)
+      @geolocation_box = GeolocationBox.find_or_initialize_by(geolocation_box_params.permit!)
       respond_to do |format|
         if @geolocation_box.save
           @resource = StashDatacite.resource_class.find(params[:resource_id])
@@ -36,7 +36,7 @@ module StashDatacite
 
     # POST /geolocation_boxes
     def create
-      @geolocation_box = GeolocationBox.new(geolocation_box_params)
+      @geolocation_box = GeolocationBox.find_or_initialize_by(geolocation_box_params)
       respond_to do |format|
         if @geolocation_box.save
           @resource = StashDatacite.resource_class.find(geolocation_box_params[:resource_id])
