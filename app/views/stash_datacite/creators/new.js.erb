@@ -2,3 +2,4 @@ $('.js-authors_form').append('<%= escape_javascript(render partial: "stash_datac
       locals: { creator: @creator, path: stash_datacite.creators_create_path }) %>');
 loadCreators();
 hideRemoveLinkCreators();
+addSavingDisplay();

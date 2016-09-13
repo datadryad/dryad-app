@@ -2,3 +2,4 @@ $('.js-related_identifiers_form').append("<%= escape_javascript(render partial: 
       locals: { related_identifier: @related_identifier, path: stash_datacite.related_identifiers_create_path }) %>");
 loadRelatedIdentifiers();
 hideRemoveLinkRelatedIdentifiers();
+addSavingDisplay();

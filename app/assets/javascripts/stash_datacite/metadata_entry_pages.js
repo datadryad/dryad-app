@@ -22,13 +22,19 @@ function loadAccordion() {
 };
 
 function addSavingDisplay(){
-  $("[data-remote='true']").bind('ajax:success', function(evt, data, status, xhr){
+
+  els = $("[data-remote='true']").not("[data-savedisplay='true']");
+  els.bind('ajax:success', function(evt, data, status, xhr){
     $('.saving_text').hide();
     $('.saved_text').show();
-  });
+  })
 
-  $("[data-remote='true']").bind('ajax:beforeSend', function(evt, data, status, xhr){
+  els.bind('ajax:beforeSend', function(evt, data, status, xhr){
     $('.saving_text').show();
     $('.saved_text').hide();
+  });
+  // adds data-save-display if event attached
+  els.each(function() {
+    $(this).attr('data-savedisplay', 'true');
   });
 };

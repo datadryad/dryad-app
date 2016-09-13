@@ -2,3 +2,4 @@ $('.js-contributors_form').append("<%= escape_javascript(render partial: "stash_
       locals: { contributor: @contributor, path: stash_datacite.contributors_create_path }) %>");
 loadContributors();
 hideRemoveLinkContributors();
+addSavingDisplay();
