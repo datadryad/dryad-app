@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160808205130) do
+ActiveRecord::Schema.define(version: 20160914234320) do
 
   create_table "bookmarks", force: :cascade do |t|
     t.integer  "user_id",       limit: 4,   null: false
@@ -300,7 +300,7 @@ ActiveRecord::Schema.define(version: 20160808205130) do
 
   create_table "stash_engine_file_uploads", force: :cascade do |t|
     t.text     "upload_file_name",    limit: 65535
-    t.string   "upload_content_type", limit: 255
+    t.text     "upload_content_type", limit: 65535
     t.integer  "upload_file_size",    limit: 4
     t.integer  "resource_id",         limit: 4
     t.datetime "upload_updated_at"
@@ -315,13 +315,13 @@ ActiveRecord::Schema.define(version: 20160808205130) do
   add_index "stash_engine_file_uploads", ["upload_file_name"], name: "index_stash_engine_file_uploads_on_upload_file_name", length: {"upload_file_name"=>100}, using: :btree
 
   create_table "stash_engine_identifiers", force: :cascade do |t|
-    t.string   "identifier",      limit: 255
-    t.string   "identifier_type", limit: 255
-    t.datetime "created_at",                  null: false
-    t.datetime "updated_at",                  null: false
+    t.text     "identifier",      limit: 65535
+    t.text     "identifier_type", limit: 65535
+    t.datetime "created_at",                    null: false
+    t.datetime "updated_at",                    null: false
   end
 
-  add_index "stash_engine_identifiers", ["identifier"], name: "index_stash_engine_identifiers_on_identifier", using: :btree
+  add_index "stash_engine_identifiers", ["identifier"], name: "index_stash_engine_identifiers_on_identifier", length: {"identifier"=>50}, using: :btree
 
   create_table "stash_engine_image_uploads", force: :cascade do |t|
     t.string   "image_name",       limit: 255
@@ -355,12 +355,12 @@ ActiveRecord::Schema.define(version: 20160808205130) do
   create_table "stash_engine_resources", force: :cascade do |t|
     t.integer  "user_id",                   limit: 4
     t.integer  "current_resource_state_id", limit: 4
-    t.datetime "created_at",                                            null: false
-    t.datetime "updated_at",                                            null: false
-    t.boolean  "geolocation",                           default: false
-    t.string   "download_uri",              limit: 255
+    t.datetime "created_at",                                              null: false
+    t.datetime "updated_at",                                              null: false
+    t.boolean  "geolocation",                             default: false
+    t.text     "download_uri",              limit: 65535
     t.integer  "identifier_id",             limit: 4
-    t.string   "update_uri",                limit: 255
+    t.text     "update_uri",                limit: 65535
   end
 
   add_index "stash_engine_resources", ["identifier_id"], name: "index_stash_engine_resources_on_identifier_id", using: :btree
@@ -376,28 +376,28 @@ ActiveRecord::Schema.define(version: 20160808205130) do
   add_index "stash_engine_submission_logs", ["resource_id"], name: "index_stash_engine_submission_logs_on_resource_id", using: :btree
 
   create_table "stash_engine_users", force: :cascade do |t|
-    t.string   "first_name",  limit: 255
-    t.string   "last_name",   limit: 255
-    t.string   "email",       limit: 255
-    t.string   "uid",         limit: 255
-    t.string   "provider",    limit: 255
-    t.string   "oauth_token", limit: 255
-    t.datetime "created_at",                              null: false
-    t.datetime "updated_at",                              null: false
-    t.string   "tenant_id",   limit: 255
-    t.boolean  "orcid",                   default: false
+    t.text     "first_name",  limit: 65535
+    t.text     "last_name",   limit: 65535
+    t.text     "email",       limit: 65535
+    t.text     "uid",         limit: 65535
+    t.text     "provider",    limit: 65535
+    t.text     "oauth_token", limit: 65535
+    t.datetime "created_at",                                null: false
+    t.datetime "updated_at",                                null: false
+    t.text     "tenant_id",   limit: 65535
+    t.boolean  "orcid",                     default: false
   end
 
-  add_index "stash_engine_users", ["email"], name: "index_stash_engine_users_on_email", using: :btree
-  add_index "stash_engine_users", ["tenant_id"], name: "index_stash_engine_users_on_tenant_id", using: :btree
-  add_index "stash_engine_users", ["uid"], name: "index_stash_engine_users_on_uid", using: :btree
+  add_index "stash_engine_users", ["email"], name: "index_stash_engine_users_on_email", length: {"email"=>50}, using: :btree
+  add_index "stash_engine_users", ["tenant_id"], name: "index_stash_engine_users_on_tenant_id", length: {"tenant_id"=>50}, using: :btree
+  add_index "stash_engine_users", ["uid"], name: "index_stash_engine_users_on_uid", length: {"uid"=>50}, using: :btree
 
   create_table "stash_engine_versions", force: :cascade do |t|
     t.integer  "version",      limit: 4
-    t.string   "zip_filename", limit: 255
+    t.text     "zip_filename", limit: 65535
     t.integer  "resource_id",  limit: 4
-    t.datetime "created_at",               null: false
-    t.datetime "updated_at",               null: false
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
   end
 
   add_index "stash_engine_versions", ["resource_id"], name: "index_stash_engine_versions_on_resource_id", using: :btree
