@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160915212547) do
+ActiveRecord::Schema.define(version: 20160915213253) do
 
   create_table "bookmarks", force: :cascade do |t|
     t.integer  "user_id",       limit: 4,   null: false
@@ -318,16 +318,6 @@ ActiveRecord::Schema.define(version: 20160915212547) do
   end
 
   add_index "stash_engine_identifiers", ["identifier"], name: "index_stash_engine_identifiers_on_identifier", length: {"identifier"=>50}, using: :btree
-
-  create_table "stash_engine_image_uploads", force: :cascade do |t|
-    t.string   "image_name",       limit: 255
-    t.string   "image_type",       limit: 255
-    t.integer  "image_size",       limit: 4
-    t.integer  "resource_id",      limit: 4
-    t.datetime "image_updated_at"
-    t.datetime "created_at",                   null: false
-    t.datetime "updated_at",                   null: false
-  end
 
   create_table "stash_engine_resource_states", force: :cascade do |t|
     t.integer  "user_id",        limit: 4
