@@ -266,11 +266,11 @@ ActiveRecord::Schema.define(version: 20160916234320) do
   add_index "dcs_subjects_stash_engine_resources", ["subject_id"], name: "index_dcs_subjects_stash_engine_resources_on_subject_id", using: :btree
 
   create_table "dcs_titles", force: :cascade do |t|
-    t.string   "title",       limit: 255
+    t.text     "title",       limit: 65535
     t.string   "title_type",  limit: 16
     t.integer  "resource_id", limit: 4
-    t.datetime "created_at",              null: false
-    t.datetime "updated_at",              null: false
+    t.datetime "created_at",                null: false
+    t.datetime "updated_at",                null: false
   end
 
   add_index "dcs_titles", ["resource_id"], name: "index_dcs_titles_on_resource_id", using: :btree
