@@ -39,8 +39,8 @@ module StashDatacite
 
     def set_geolocation_flag
       resource = StashDatacite.resource_class.where(id: resource_id).first
-      return unless resource && resource.geolocation == false
-      resource.geolocation = true
+      return unless resource && resource.has_geolocation == false
+      resource.has_geolocation = true
       resource.save!
     end
 
