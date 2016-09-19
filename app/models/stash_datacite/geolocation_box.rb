@@ -1,9 +1,7 @@
 module StashDatacite
   class GeolocationBox < ActiveRecord::Base
     self.table_name = 'dcs_geo_location_boxes'
-    belongs_to :resource, class_name: StashDatacite.resource_class.to_s
-
-    after_save :set_geolocation_flag
+    has_one :geolocation, class_name: 'StashDatacite::Geolocation', foreign_key: 'box_id', dependent: :nullify
 
     def set_geolocation_flag
       resource = StashDatacite.resource_class.where(id: resource_id).first
