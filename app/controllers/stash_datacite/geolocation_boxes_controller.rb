@@ -6,7 +6,7 @@ module StashDatacite
 
     # # GET /geolocation_boxes/
     def boxes_coordinates
-      @geolocation_boxes = GeolocationBox.select(:sw_latitude, :sw_longitude, :ne_latitude, :ne_longitude).
+      @geolocation_boxes = GeolocationBox.select(:resource_id, :sw_latitude, :sw_longitude, :ne_latitude, :ne_longitude).
                              from_resource_id(params[:resource_id])
       respond_to do |format|
         format.html
@@ -20,30 +20,26 @@ module StashDatacite
 
     # POST /geolocation_boxes
     def map_coordinates
-      geolocation_box_params = params.except(:controller, :action)
-      @geolocation_box = GeolocationBox.find_or_initialize_by(geolocation_box_params.permit!)
+      p = params.except(:controller, :action)
+      Geolocation.new_geolocation(box: [p[:ne_latitude], p[:ne_longitude], p[:sw_latitude], p[:sw_longitude]],
+                                  resource_id: params[:resource_id])
       respond_to do |format|
-        if @geolocation_box.save
-          @resource = StashDatacite.resource_class.find(params[:resource_id])
-          @geolocation_boxes = GeolocationBox.where(resource_id: params[:resource_id])
-          format.js { render template: 'stash_datacite/geolocation_boxes/create.js.erb' }
-        else
-          format.html { render :new }
+        @resource = StashDatacite.resource_class.find(params[:resource_id])
+        @geolocation_boxes = GeolocationBox.from_resource_id(params[:resource_id])
+        format.js { render template: 'stash_datacite/geolocation_boxes/create.js.erb' }
         end
       end
     end
 
     # POST /geolocation_boxes
     def create
-      @geolocation_box = GeolocationBox.find_or_initialize_by(geolocation_box_params)
+      @geolocation_box = GeolocationBox.create(ne_latitude: params[:ne_latitude], ne_longitude: params[:ne_longitude],
+                                               sw_latitude: params[:sw_latitude], sw_longitude: params[:sw_longitude])
+      @geolocation = Geolocation.create(box_id: @geolocation_box.id, resource_id: params[:resource_id])
       respond_to do |format|
-        if @geolocation_box.save
-          @resource = StashDatacite.resource_class.find(geolocation_box_params[:resource_id])
-          @geolocation_boxes = GeolocationBox.where(resource_id: geolocation_box_params[:resource_id])
-          format.js
-        else
-          format.html { render :new }
-        end
+        @resource = StashDatacite.resource_class.find(params[:resource_id])
+        @geolocation_boxes = GeolocationBox.from_resource_id(params[:resource_id])
+        format.js
       end
     end
 
@@ -53,9 +49,10 @@ module StashDatacite
       @sw_longitude = @geolocation_box.sw_longitude
       @ne_latitude = @geolocation_box.ne_latitude
       @ne_longitude = @geolocation_box.ne_longitude
-      @geolocation_box.destroy
+      @geolocation_box.try(:geolocation).try(:destroy_box)
+
       @resource = StashDatacite.resource_class.find(params[:resource_id])
-      @geolocation_boxes = GeolocationBox.where(resource_id: params[:resource_id])
+      @geolocation_boxes = GeolocationBox.from_resource_id(params[:resource_id])
       respond_to do |format|
         format.js
       end

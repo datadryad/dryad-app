@@ -35,7 +35,36 @@ module StashDatacite
                          resource_id: resource_id)
     end
 
+    def destroy_place
+      pl = geolocation_place
+      pl.destroy
+      self.place_id = nil
+      destroy_if_empty
+    end
+
+    def destroy_point
+      po = geolocation_point
+      po.destroy
+      self.point_id = nil
+      destroy_if_empty
+    end
+
+    def destroy_box
+      bo = geolocation_box
+      bo.destroy
+      self.box_id = nil
+      destroy_if_empty
+    end
+
     private
+
+    def destroy_if_empty
+      if place_id.nil? && point_id.nil? && box_id.nil?
+        destroy
+      else
+        save
+      end
+    end
 
     def set_geolocation_flag
       resource = StashDatacite.resource_class.where(id: resource_id).first
@@ -45,9 +74,9 @@ module StashDatacite
     end
 
     def destroy_place_point_box
-      geolocation_place.destroy
-      geolocation_point.destroy
-      geolocation_box.destroy
+      geolocation_place.destroy unless place_id.nil?
+      geolocation_point.destroy unless point_id.nil?
+      geolocation_box.destroy unless box_id.nil?
     end
 
   end
