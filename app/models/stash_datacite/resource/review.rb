@@ -73,6 +73,10 @@ module StashDatacite
       def publisher
         @publisher = @resource.publisher
       end
+
+      def no_geolocation_data
+        (@resource.geolocation_points.length < 1 && @resource.geolocation_places.length < 1 && @resource.geolocation_boxes.length < 1) ? true : false
+      end
     end
   end
 end

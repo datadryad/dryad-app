@@ -37,6 +37,10 @@ module StashDatacite
           @resource = StashDatacite.resource_class.find(params[:id])
           @data = check_required_fields(@resource)
           @review = Resource::Review.new(@resource)
+          if @review.no_geolocation_data == true
+            @resource.geolocation = false
+            @resource.save!
+          end
         end
       end
     end
@@ -48,6 +52,10 @@ module StashDatacite
           @resource = StashDatacite.resource_class.find(params[:id])
           check_required_fields(@resource)
           @review = Resource::Review.new(@resource)
+          if @review.no_geolocation_data == true
+            @resource.geolocation = false
+            @resource.save!
+          end
         end
       end
     end
