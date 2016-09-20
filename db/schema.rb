@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160808205130) do
+ActiveRecord::Schema.define(version: 20160916234520) do
 
   create_table "bookmarks", force: :cascade do |t|
     t.integer  "user_id",       limit: 4,   null: false
@@ -26,19 +26,15 @@ ActiveRecord::Schema.define(version: 20160808205130) do
   add_index "bookmarks", ["user_id"], name: "index_bookmarks_on_user_id", using: :btree
 
   create_table "dcs_affiliations", force: :cascade do |t|
-    t.string   "short_name",   limit: 255
-    t.string   "long_name",    limit: 255
-    t.string   "abbreviation", limit: 255
-    t.string   "campus",       limit: 255
-    t.string   "logo",         limit: 255
-    t.string   "url",          limit: 255
-    t.text     "url_text",     limit: 65535
+    t.text     "short_name",   limit: 65535
+    t.text     "long_name",    limit: 65535
+    t.text     "abbreviation", limit: 65535
     t.datetime "created_at",                 null: false
     t.datetime "updated_at",                 null: false
   end
 
-  add_index "dcs_affiliations", ["long_name"], name: "index_dcs_affiliations_on_long_name", using: :btree
-  add_index "dcs_affiliations", ["short_name"], name: "index_dcs_affiliations_on_short_name", using: :btree
+  add_index "dcs_affiliations", ["long_name"], name: "index_dcs_affiliations_on_long_name", length: {"long_name"=>50}, using: :btree
+  add_index "dcs_affiliations", ["short_name"], name: "index_dcs_affiliations_on_short_name", length: {"short_name"=>50}, using: :btree
 
   create_table "dcs_affiliations_contributors", force: :cascade do |t|
     t.integer  "affiliation_id", limit: 4
@@ -71,25 +67,25 @@ ActiveRecord::Schema.define(version: 20160808205130) do
   add_index "dcs_alternate_identifiers", ["resource_id"], name: "index_dcs_alternate_identifiers_on_resource_id", using: :btree
 
   create_table "dcs_contributors", force: :cascade do |t|
-    t.string   "contributor_name",   limit: 255
-    t.string   "contributor_type",   limit: 21,  default: "funder"
+    t.text     "contributor_name",   limit: 65535
+    t.string   "contributor_type",   limit: 21,    default: "funder"
     t.integer  "name_identifier_id", limit: 4
     t.integer  "resource_id",        limit: 4
-    t.datetime "created_at",                                        null: false
-    t.datetime "updated_at",                                        null: false
-    t.string   "award_number",       limit: 255
+    t.datetime "created_at",                                          null: false
+    t.datetime "updated_at",                                          null: false
+    t.text     "award_number",       limit: 65535
   end
 
   add_index "dcs_contributors", ["name_identifier_id"], name: "index_dcs_contributors_on_name_identifier_id", using: :btree
   add_index "dcs_contributors", ["resource_id"], name: "index_dcs_contributors_on_resource_id", using: :btree
 
   create_table "dcs_creators", force: :cascade do |t|
-    t.string   "creator_first_name", limit: 255
-    t.string   "creator_last_name",  limit: 255
+    t.text     "creator_first_name", limit: 65535
+    t.text     "creator_last_name",  limit: 65535
     t.integer  "name_identifier_id", limit: 4
     t.integer  "resource_id",        limit: 4
-    t.datetime "created_at",                     null: false
-    t.datetime "updated_at",                     null: false
+    t.datetime "created_at",                       null: false
+    t.datetime "updated_at",                       null: false
   end
 
   add_index "dcs_creators", ["name_identifier_id"], name: "index_dcs_creators_on_name_identifier_id", using: :btree
@@ -149,12 +145,12 @@ ActiveRecord::Schema.define(version: 20160808205130) do
   add_index "dcs_geo_location_boxes", ["resource_id"], name: "index_dcs_geo_location_boxes_on_resource_id", using: :btree
 
   create_table "dcs_geo_location_places", force: :cascade do |t|
-    t.string   "geo_location_place", limit: 255
+    t.text     "geo_location_place", limit: 65535
     t.integer  "resource_id",        limit: 4
-    t.datetime "created_at",                                              null: false
-    t.datetime "updated_at",                                              null: false
-    t.decimal  "latitude",                       precision: 10, scale: 6
-    t.decimal  "longitude",                      precision: 10, scale: 6
+    t.datetime "created_at",                                                null: false
+    t.datetime "updated_at",                                                null: false
+    t.decimal  "latitude",                         precision: 10, scale: 6
+    t.decimal  "longitude",                        precision: 10, scale: 6
   end
 
   add_index "dcs_geo_location_places", ["resource_id"], name: "index_dcs_geo_location_places_on_resource_id", using: :btree
@@ -170,23 +166,23 @@ ActiveRecord::Schema.define(version: 20160808205130) do
   add_index "dcs_geo_location_points", ["resource_id"], name: "index_dcs_geo_location_points_on_resource_id", using: :btree
 
   create_table "dcs_languages", force: :cascade do |t|
-    t.string   "language",    limit: 255
+    t.text     "language",    limit: 65535
     t.integer  "resource_id", limit: 4
-    t.datetime "created_at",              null: false
-    t.datetime "updated_at",              null: false
+    t.datetime "created_at",                null: false
+    t.datetime "updated_at",                null: false
   end
 
   add_index "dcs_languages", ["resource_id"], name: "index_dcs_languages_on_resource_id", using: :btree
 
   create_table "dcs_name_identifiers", force: :cascade do |t|
-    t.string   "name_identifier",        limit: 255
-    t.string   "name_identifier_scheme", limit: 255
+    t.text     "name_identifier",        limit: 65535
+    t.text     "name_identifier_scheme", limit: 65535
     t.text     "scheme_URI",             limit: 65535
     t.datetime "created_at",                           null: false
     t.datetime "updated_at",                           null: false
   end
 
-  add_index "dcs_name_identifiers", ["name_identifier"], name: "index_dcs_name_identifiers_on_name_identifier", using: :btree
+  add_index "dcs_name_identifiers", ["name_identifier"], name: "index_dcs_name_identifiers_on_name_identifier", length: {"name_identifier"=>50}, using: :btree
 
   create_table "dcs_publication_years", force: :cascade do |t|
     t.string   "publication_year", limit: 255
@@ -198,27 +194,27 @@ ActiveRecord::Schema.define(version: 20160808205130) do
   add_index "dcs_publication_years", ["resource_id"], name: "index_dcs_publication_years_on_resource_id", using: :btree
 
   create_table "dcs_publishers", force: :cascade do |t|
-    t.string   "publisher",   limit: 255
+    t.text     "publisher",   limit: 65535
     t.integer  "resource_id", limit: 4
-    t.datetime "created_at",              null: false
-    t.datetime "updated_at",              null: false
+    t.datetime "created_at",                null: false
+    t.datetime "updated_at",                null: false
   end
 
   add_index "dcs_publishers", ["resource_id"], name: "index_dcs_publishers_on_resource_id", using: :btree
 
   create_table "dcs_related_identifiers", force: :cascade do |t|
-    t.string   "related_identifier",      limit: 255
+    t.text     "related_identifier",      limit: 65535
     t.string   "related_identifier_type", limit: 7
     t.string   "relation_type",           limit: 19
     t.text     "related_metadata_scheme", limit: 65535
     t.text     "scheme_URI",              limit: 65535
-    t.string   "scheme_type",             limit: 255
+    t.text     "scheme_type",             limit: 65535
     t.integer  "resource_id",             limit: 4
     t.datetime "created_at",                            null: false
     t.datetime "updated_at",                            null: false
   end
 
-  add_index "dcs_related_identifiers", ["related_identifier"], name: "index_dcs_related_identifiers_on_related_identifier", using: :btree
+  add_index "dcs_related_identifiers", ["related_identifier"], name: "index_dcs_related_identifiers_on_related_identifier", length: {"related_identifier"=>50}, using: :btree
   add_index "dcs_related_identifiers", ["resource_id"], name: "index_dcs_related_identifiers_on_resource_id", using: :btree
 
   create_table "dcs_resource_types", force: :cascade do |t|
@@ -231,7 +227,7 @@ ActiveRecord::Schema.define(version: 20160808205130) do
   add_index "dcs_resource_types", ["resource_id"], name: "index_dcs_resource_types_on_resource_id", using: :btree
 
   create_table "dcs_rights", force: :cascade do |t|
-    t.string   "rights",      limit: 255
+    t.text     "rights",      limit: 65535
     t.text     "rights_uri",  limit: 65535
     t.integer  "resource_id", limit: 4
     t.datetime "created_at",                null: false
@@ -241,23 +237,23 @@ ActiveRecord::Schema.define(version: 20160808205130) do
   add_index "dcs_rights", ["resource_id"], name: "index_dcs_rights_on_resource_id", using: :btree
 
   create_table "dcs_sizes", force: :cascade do |t|
-    t.string   "size",        limit: 255
+    t.text     "size",        limit: 65535
     t.integer  "resource_id", limit: 4
-    t.datetime "created_at",              null: false
-    t.datetime "updated_at",              null: false
+    t.datetime "created_at",                null: false
+    t.datetime "updated_at",                null: false
   end
 
   add_index "dcs_sizes", ["resource_id"], name: "index_dcs_sizes_on_resource_id", using: :btree
 
   create_table "dcs_subjects", force: :cascade do |t|
-    t.string   "subject",        limit: 255
-    t.string   "subject_scheme", limit: 255
+    t.text     "subject",        limit: 65535
+    t.text     "subject_scheme", limit: 65535
     t.text     "scheme_URI",     limit: 65535
     t.datetime "created_at",                   null: false
     t.datetime "updated_at",                   null: false
   end
 
-  add_index "dcs_subjects", ["subject"], name: "index_dcs_subjects_on_subject", using: :btree
+  add_index "dcs_subjects", ["subject"], name: "index_dcs_subjects_on_subject", length: {"subject"=>50}, using: :btree
 
   create_table "dcs_subjects_stash_engine_resources", force: :cascade do |t|
     t.integer  "resource_id", limit: 4
@@ -270,11 +266,11 @@ ActiveRecord::Schema.define(version: 20160808205130) do
   add_index "dcs_subjects_stash_engine_resources", ["subject_id"], name: "index_dcs_subjects_stash_engine_resources_on_subject_id", using: :btree
 
   create_table "dcs_titles", force: :cascade do |t|
-    t.string   "title",       limit: 255
+    t.text     "title",       limit: 65535
     t.string   "title_type",  limit: 16
     t.integer  "resource_id", limit: 4
-    t.datetime "created_at",              null: false
-    t.datetime "updated_at",              null: false
+    t.datetime "created_at",                null: false
+    t.datetime "updated_at",                null: false
   end
 
   add_index "dcs_titles", ["resource_id"], name: "index_dcs_titles_on_resource_id", using: :btree
@@ -300,7 +296,7 @@ ActiveRecord::Schema.define(version: 20160808205130) do
 
   create_table "stash_engine_file_uploads", force: :cascade do |t|
     t.text     "upload_file_name",    limit: 65535
-    t.string   "upload_content_type", limit: 255
+    t.text     "upload_content_type", limit: 65535
     t.integer  "upload_file_size",    limit: 4
     t.integer  "resource_id",         limit: 4
     t.datetime "upload_updated_at"
@@ -315,23 +311,13 @@ ActiveRecord::Schema.define(version: 20160808205130) do
   add_index "stash_engine_file_uploads", ["upload_file_name"], name: "index_stash_engine_file_uploads_on_upload_file_name", length: {"upload_file_name"=>100}, using: :btree
 
   create_table "stash_engine_identifiers", force: :cascade do |t|
-    t.string   "identifier",      limit: 255
-    t.string   "identifier_type", limit: 255
-    t.datetime "created_at",                  null: false
-    t.datetime "updated_at",                  null: false
+    t.text     "identifier",      limit: 65535
+    t.text     "identifier_type", limit: 65535
+    t.datetime "created_at",                    null: false
+    t.datetime "updated_at",                    null: false
   end
 
-  add_index "stash_engine_identifiers", ["identifier"], name: "index_stash_engine_identifiers_on_identifier", using: :btree
-
-  create_table "stash_engine_image_uploads", force: :cascade do |t|
-    t.string   "image_name",       limit: 255
-    t.string   "image_type",       limit: 255
-    t.integer  "image_size",       limit: 4
-    t.integer  "resource_id",      limit: 4
-    t.datetime "image_updated_at"
-    t.datetime "created_at",                   null: false
-    t.datetime "updated_at",                   null: false
-  end
+  add_index "stash_engine_identifiers", ["identifier"], name: "index_stash_engine_identifiers_on_identifier", length: {"identifier"=>50}, using: :btree
 
   create_table "stash_engine_resource_states", force: :cascade do |t|
     t.integer  "user_id",        limit: 4
@@ -355,12 +341,12 @@ ActiveRecord::Schema.define(version: 20160808205130) do
   create_table "stash_engine_resources", force: :cascade do |t|
     t.integer  "user_id",                   limit: 4
     t.integer  "current_resource_state_id", limit: 4
-    t.datetime "created_at",                                            null: false
-    t.datetime "updated_at",                                            null: false
-    t.boolean  "geolocation",                           default: false
-    t.string   "download_uri",              limit: 255
+    t.datetime "created_at",                                              null: false
+    t.datetime "updated_at",                                              null: false
+    t.boolean  "geolocation",                             default: false
+    t.text     "download_uri",              limit: 65535
     t.integer  "identifier_id",             limit: 4
-    t.string   "update_uri",                limit: 255
+    t.text     "update_uri",                limit: 65535
   end
 
   add_index "stash_engine_resources", ["identifier_id"], name: "index_stash_engine_resources_on_identifier_id", using: :btree
@@ -376,28 +362,28 @@ ActiveRecord::Schema.define(version: 20160808205130) do
   add_index "stash_engine_submission_logs", ["resource_id"], name: "index_stash_engine_submission_logs_on_resource_id", using: :btree
 
   create_table "stash_engine_users", force: :cascade do |t|
-    t.string   "first_name",  limit: 255
-    t.string   "last_name",   limit: 255
-    t.string   "email",       limit: 255
-    t.string   "uid",         limit: 255
-    t.string   "provider",    limit: 255
-    t.string   "oauth_token", limit: 255
-    t.datetime "created_at",                              null: false
-    t.datetime "updated_at",                              null: false
-    t.string   "tenant_id",   limit: 255
-    t.boolean  "orcid",                   default: false
+    t.text     "first_name",  limit: 65535
+    t.text     "last_name",   limit: 65535
+    t.text     "email",       limit: 65535
+    t.text     "uid",         limit: 65535
+    t.text     "provider",    limit: 65535
+    t.text     "oauth_token", limit: 65535
+    t.datetime "created_at",                                null: false
+    t.datetime "updated_at",                                null: false
+    t.text     "tenant_id",   limit: 65535
+    t.boolean  "orcid",                     default: false
   end
 
-  add_index "stash_engine_users", ["email"], name: "index_stash_engine_users_on_email", using: :btree
-  add_index "stash_engine_users", ["tenant_id"], name: "index_stash_engine_users_on_tenant_id", using: :btree
-  add_index "stash_engine_users", ["uid"], name: "index_stash_engine_users_on_uid", using: :btree
+  add_index "stash_engine_users", ["email"], name: "index_stash_engine_users_on_email", length: {"email"=>50}, using: :btree
+  add_index "stash_engine_users", ["tenant_id"], name: "index_stash_engine_users_on_tenant_id", length: {"tenant_id"=>50}, using: :btree
+  add_index "stash_engine_users", ["uid"], name: "index_stash_engine_users_on_uid", length: {"uid"=>50}, using: :btree
 
   create_table "stash_engine_versions", force: :cascade do |t|
     t.integer  "version",      limit: 4
-    t.string   "zip_filename", limit: 255
+    t.text     "zip_filename", limit: 65535
     t.integer  "resource_id",  limit: 4
-    t.datetime "created_at",               null: false
-    t.datetime "updated_at",               null: false
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
   end
 
   add_index "stash_engine_versions", ["resource_id"], name: "index_stash_engine_versions_on_resource_id", using: :btree
