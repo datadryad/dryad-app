@@ -61,21 +61,21 @@
   $("#flash_messages").html("<%= type.to_s.humanize %>: <%= message.html_safe %>")
 <% end %>
 
-  $('#submit-dialog-confirm').hide();
-  $('.o-button__submit').click(function() {
-    $( "#submit-dialog-confirm" ).dialog({
-      resizable: false,
-      height: 300,
-      width: 550,
-      modal: true,
-      buttons: {
-        "Submit": function() {
-          $( this ).dialog( "close" );
-        },
-        Cancel: function() {
-          $( this ).dialog( "close" );
-        }
-      }
-    });
-  } );
+  // $('#submit-dialog-confirm').hide();
+  // $('.o-button__submit').click(function() {
+  //   $( "#submit-dialog-confirm" ).dialog({
+  //     resizable: false,
+  //     height: 300,
+  //     width: 550,
+  //     modal: true,
+  //     buttons: {
+  //       "Submit": function() {
+  //         $( this ).dialog( "close" );
+  //       },
+  //       Cancel: function() {
+  //         $( this ).dialog( "close" );
+  //       }
+  //     }
+  //   });
+  // } );
 </script>
