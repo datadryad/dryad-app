@@ -1,16 +1,10 @@
 module StashDatacite
   class GeolocationPlace < ActiveRecord::Base
     self.table_name = 'dcs_geo_location_places'
-    belongs_to :resource, class_name: StashDatacite.resource_class
+    has_one :geolocation, class_name: 'StashDatacite::Geolocation', foreign_key: 'place_id', dependent: :nullify
 
-    after_save :set_geolocation_flag
-
-    def set_geolocation_flag
-      resource = StashDatacite.resource_class.where(id: resource_id).first
-      return unless resource && resource.geolocation == false
-      resource.geolocation = true
-      resource.save!
-    end
+    scope :from_resource_id, ->(resource_id) { joins(:geolocation).
+        where('dcs_geo_locations.resource_id = ?', resource_id)}
 
     #returns a bounding box string for use with Javascript
     def bounding_box_str

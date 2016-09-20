@@ -23,9 +23,10 @@ module StashDatacite
         has_many :datacite_dates, class_name: 'StashDatacite::DataciteDate', dependent: :destroy # optional
         has_many :descriptions, class_name: 'StashDatacite::Description', dependent: :destroy #optional
         has_many :embargoes, class_name: 'StashDatacite::Embargo', dependent: :destroy #?
-        has_many :geolocation_boxes, class_name: 'StashDatacite::GeolocationBox', dependent: :destroy # optional
-        has_many :geolocation_places, class_name: 'StashDatacite::GeolocationPlace', dependent: :destroy # optional
-        has_many :geolocation_points, class_name: 'StashDatacite::GeolocationPoint', dependent: :destroy # optional
+        has_many :geolocations, class_name: 'StashDatacite::Geolocation'
+        #has_many :geolocation_boxes, class_name: 'StashDatacite::GeolocationBox', dependent: :destroy # optional
+        #has_many :geolocation_places, class_name: 'StashDatacite::GeolocationPlace', dependent: :destroy # optional
+        #has_many :geolocation_points, class_name: 'StashDatacite::GeolocationPoint', dependent: :destroy # optional
         has_many :publication_years, class_name: 'StashDatacite::PublicationYear', dependent: :destroy # required
         has_one :publisher, class_name: 'StashDatacite::Publisher', dependent: :destroy # required
         has_many :related_identifiers, class_name: 'StashDatacite::RelatedIdentifier', dependent: :destroy # optional
@@ -42,9 +43,9 @@ module StashDatacite
 
         # this enables deep copying of the resource
         amoeba do
-          include_association [:contributors, :creators, :datacite_dates, :descriptions, :embargoes, :geolocation_boxes,
-                               :geolocation_places, :geolocation_points, :publication_years, :publisher,
-                               :related_identifiers, :resource_type, :rights, :sizes, :subjects, :titles]
+          include_association [:contributors, :creators, :datacite_dates, :descriptions, :embargoes, :geolocations,
+                               :geolocation_boxes, :geolocation_places, :geolocation_points, :publication_years,
+                               :publisher, :related_identifiers, :resource_type, :rights, :sizes, :subjects, :titles]
         end
       end
     end
