@@ -17,6 +17,7 @@ PATH
       rubyzip
       stash-wrapper (~> 0.1, >= 0.1.11.1)
     stash_discovery (0.0.2)
+      blacklight (~> 6.5.0)
       config
       devise-guests (~> 0.5)
       geoblacklight (~> 1.1.2)
@@ -342,7 +343,7 @@ GEM
       hirb
       simplecov
     simplecov-html (0.10.0)
-    solr_wrapper (0.16.0)
+    solr_wrapper (0.18.0)
       faraday
       ruby-progressbar
       rubyzip
@@ -385,7 +386,7 @@ GEM
     unf (0.1.4)
       unf_ext
     unf_ext (0.0.7.2)
-    unicode-display_width (1.1.0)
+    unicode-display_width (1.1.1)
     warden (1.2.6)
       rack (>= 1.0)
     web-console (2.3.0)
