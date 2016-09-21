@@ -24,10 +24,9 @@ module StashDatacite
 
     # POST Leaflet AJAX create
     def map_coordinates
-      geo = geolocation_by_point
+      geo = geolocation_by_point(params)
       unless geo
-        pt_params = params[:geolocation_point]
-        geo = Geolocation.new_geolocation(point: [pt_params[:latitude], pt_params[:longitude]], resource_id: params[:resource_id])
+        geo = Geolocation.new_geolocation(point: [params[:latitude], params[:longitude]], resource_id: params[:resource_id])
       end
       @geolocation_point = geo.geolocation_point
       respond_to do |format|
@@ -50,7 +49,7 @@ module StashDatacite
 
     # POST /geolocation_points
     def create
-      geo = geolocation_by_point
+      geo = geolocation_by_point(params[:geolocation_point])
       unless geo
         pt_params = params[:geolocation_point]
         geo = Geolocation.new_geolocation(point: [pt_params[:latitude], pt_params[:longitude]],
@@ -79,8 +78,8 @@ module StashDatacite
     private
 
     # geolocation exists with params resource_id, latitude, longitude
-    def geolocation_by_point
-      pt_params = params[:geolocation_point]
+    def geolocation_by_point(object_params)
+      pt_params = object_params
       points = GeolocationPoint.from_resource_id(params[:resource_id]).
           where(latitude: pt_params[:latitude], longitude: pt_params[:longitude])
       return nil if points.length < 1
