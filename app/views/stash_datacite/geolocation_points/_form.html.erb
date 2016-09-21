@@ -4,7 +4,7 @@
     <%#= render "datacite/shared/error_messages", :target => @geolocation_point %>
     <%= f.text_field :latitude, class: 'c-location__input', id: "geo_lat_point" %>&nbsp;,&nbsp;
     <%= f.text_field :longitude, class: 'c-location__input', id: "geo_lng_point" %>
-    <%= f.hidden_field :resource_id %>
+    <%= hidden_field_tag :resource_id, @resource.id %>
     <%= f.submit "Add", id: "add_geo_point", class: 'c-location__add-button o-button__plain-text2' %>
   <% end %>
 </div>
