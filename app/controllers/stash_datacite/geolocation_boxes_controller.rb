@@ -20,23 +20,24 @@ module StashDatacite
 
     # POST /geolocation_boxes
     def map_coordinates
-      geo = geolocation_by_box
+      geo = geolocation_by_box(params)
       unless geo
         box_params = params[:geolocation_box]
-        geo = Geolocation.new_geolocation(box: [box_params[:ne_latitude], box_params[:ne_longitude],
-                                          box_params[:sw_latitude], box_params[:sw_longitude]],
+        geo = Geolocation.new_geolocation(box: [params[:ne_latitude], params[:ne_longitude],
+                                          params[:sw_latitude], params[:sw_longitude]],
                                     resource_id: params[:resource_id])
       end
       respond_to do |format|
         @resource = StashDatacite.resource_class.find(params[:resource_id])
         @geolocation_boxes = GeolocationBox.from_resource_id(params[:resource_id])
+        @geolocation_box = geo.geolocation_box
         format.js { render template: 'stash_datacite/geolocation_boxes/create.js.erb' }
       end
     end
 
     # POST /geolocation_boxes
     def create
-      geo = geolocation_by_box
+      geo = geolocation_by_box(params[:geolocation_box])
       unless geo
         box_params = params[:geolocation_box]
         geo = Geolocation.new_geolocation(box: [box_params[:ne_latitude], box_params[:ne_longitude],
@@ -70,8 +71,8 @@ module StashDatacite
     private
 
     # geolocation exists with params resource_id, latitude, longitude
-    def geolocation_by_box
-      box_params = params[:geolocation_box]
+    def geolocation_by_box(object_params)
+      box_params = object_params
       n_lat, e_long = box_params[:ne_latitude].to_d, box_params[:ne_longitude].to_d
       s_lat, w_long = box_params[:sw_latitude].to_d, box_params[:sw_longitude].to_d
       n_lat, s_lat = s_lat, n_lat if n_lat < s_lat
