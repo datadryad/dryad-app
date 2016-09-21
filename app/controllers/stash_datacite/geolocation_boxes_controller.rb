@@ -27,7 +27,6 @@ module StashDatacite
         @resource = StashDatacite.resource_class.find(params[:resource_id])
         @geolocation_boxes = GeolocationBox.from_resource_id(params[:resource_id])
         format.js { render template: 'stash_datacite/geolocation_boxes/create.js.erb' }
-        end
       end
     end
 
