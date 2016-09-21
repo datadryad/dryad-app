@@ -83,7 +83,7 @@ module StashDatacite
           ],
 
           geo_locations:
-              @resource.geolocation.map do |geo|
+              @resource.geolocations.map do |geo|
                 dm::GeoLocation.new(
                   place: geo.datacite_mapping_place,
                   point: geo.datacite_mapping_point,

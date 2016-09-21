@@ -66,12 +66,17 @@ module StashDatacite
     #handles creating datacite mapping which might be nil or have other complexities
     def datacite_mapping_point
       return nil unless geolocation_point
+      return nil if geolocation_point.latitude.blank? || geolocation_point.longitude.blank?
       Datacite::Mapping::GeoLocationPoint.new(geolocation_point.latitude, geolocation_point.longitude)
     end
 
     #handles creating datacite mapping which might be nil or have other complexities
     def datacite_mapping_box
       return nil unless geolocation_box
+      if geolocation_box.sw_latitude.blank? || geolocation_box.sw_longitude.blank?
+         geolocation_box.ne_latitude.blank? || geolocation_box.ne_longitude.blank?
+        return nil
+      end
       Datacite::Mapping::GeoLocationBox.new(geolocation_box.sw_latitude, geolocation_box.sw_longitude,
                                    geolocation_box.ne_latitude, geolocation_box.ne_longitude)
     end
