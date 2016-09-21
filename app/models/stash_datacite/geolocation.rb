@@ -1,3 +1,5 @@
+require 'datacite/mapping'
+
 module StashDatacite
   class Geolocation < ActiveRecord::Base
     self.table_name = 'dcs_geo_locations'
@@ -54,6 +56,24 @@ module StashDatacite
       bo.destroy
       self.box_id = nil
       destroy_if_empty
+    end
+
+    #handles creating datacite mapping which might be nil or have other complexities
+    def datacite_mapping_place
+      try(:geolocation_place).try(:geo_location_place)
+    end
+
+    #handles creating datacite mapping which might be nil or have other complexities
+    def datacite_mapping_point
+      return nil unless geolocation_point
+      Datacite::Mapping::GeoLocationPoint.new(geolocation_point.latitude, geolocation_point.longitude)
+    end
+
+    #handles creating datacite mapping which might be nil or have other complexities
+    def datacite_mapping_box
+      return nil unless geolocation_box
+      Datacite::Mapping::GeoLocationBox.new(geolocation_box.sw_latitude, geolocation_box.sw_longitude,
+                                   geolocation_box.ne_latitude, geolocation_box.ne_longitude)
     end
 
     private

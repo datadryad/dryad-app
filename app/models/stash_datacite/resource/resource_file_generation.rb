@@ -83,17 +83,11 @@ module StashDatacite
           ],
 
           geo_locations:
-              @resource.geolocation_points.map do |p|
-                dm::GeoLocation.new(point: dm::GeoLocationPoint.new(p.latitude, p.longitude))
-              end +
-              @resource.geolocation_boxes.map do |b|
-                dm::GeoLocation.new(box: dm::GeoLocationBox.
-                    new(b.sw_latitude, b.sw_longitude, b.ne_latitude, b.ne_longitude))
-              end +
-              @resource.geolocation_places.map do |p|
-                dm::GeoLocation.new(point:
-                      ((p.latitude && p.longitude) ? dm::GeoLocationPoint.new(p.latitude, p.longitude) : nil),
-                                    place: p.geo_location_place)
+              @resource.geolocation.map do |geo|
+                dm::GeoLocation.new(
+                  place: geo.datacite_mapping_place,
+                  point: geo.datacite_mapping_point,
+                  box: geo.datacite_mapping_box)
               end
         )
 
