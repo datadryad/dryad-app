@@ -20,9 +20,13 @@ module StashDatacite
 
     # POST /geolocation_boxes
     def map_coordinates
-      p = params.except(:controller, :action)
-      Geolocation.new_geolocation(box: [p[:ne_latitude], p[:ne_longitude], p[:sw_latitude], p[:sw_longitude]],
-                                  resource_id: params[:resource_id])
+      geo = geolocation_by_box
+      unless geo
+        box_params = params[:geolocation_box]
+        geo = Geolocation.new_geolocation(box: [box_params[:ne_latitude], box_params[:ne_longitude],
+                                          box_params[:sw_latitude], box_params[:sw_longitude]],
+                                    resource_id: params[:resource_id])
+      end
       respond_to do |format|
         @resource = StashDatacite.resource_class.find(params[:resource_id])
         @geolocation_boxes = GeolocationBox.from_resource_id(params[:resource_id])
@@ -32,9 +36,15 @@ module StashDatacite
 
     # POST /geolocation_boxes
     def create
-      @geolocation_box = GeolocationBox.create(ne_latitude: params[:ne_latitude], ne_longitude: params[:ne_longitude],
-                                               sw_latitude: params[:sw_latitude], sw_longitude: params[:sw_longitude])
-      @geolocation = Geolocation.create(box_id: @geolocation_box.id, resource_id: params[:resource_id])
+      geo = geolocation_by_box
+      unless geo
+        box_params = params[:geolocation_box]
+        geo = Geolocation.new_geolocation(box: [box_params[:ne_latitude], box_params[:ne_longitude],
+                                          box_params[:sw_latitude], box_params[:sw_longitude]],
+                                    resource_id: params[:resource_id])
+      end
+      @geolocation = geo
+      @geolocation_box = geo.geolocation_box
       respond_to do |format|
         @resource = StashDatacite.resource_class.find(params[:resource_id])
         @geolocation_boxes = GeolocationBox.from_resource_id(params[:resource_id])
@@ -58,6 +68,19 @@ module StashDatacite
     end
 
     private
+
+    # geolocation exists with params resource_id, latitude, longitude
+    def geolocation_by_box
+      box_params = params[:geolocation_box]
+      n_lat, e_long = box_params[:ne_latitude].to_d, box_params[:ne_longitude].to_d
+      s_lat, w_long = box_params[:sw_latitude].to_d, box_params[:sw_longitude].to_d
+      n_lat, s_lat = s_lat, n_lat if n_lat < s_lat
+      e_long, w_long = w_long, e_long if e_long < w_long
+      boxes = GeolocationBox.from_resource_id(params[:resource_id]).
+          where(ne_latitude: n_lat, ne_longitude: e_long, sw_latitude: s_lat, sw_longitude: w_long)
+      return nil if boxes.length < 1
+      boxes.first.geolocation
+    end
 
     # Use callbacks to share common setup or constraints between actions.
     def set_geolocation_box
