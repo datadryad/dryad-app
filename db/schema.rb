@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160916234520) do
+ActiveRecord::Schema.define(version: 20160919234251) do
 
   create_table "bookmarks", force: :cascade do |t|
     t.integer  "user_id",       limit: 4,   null: false
@@ -133,37 +133,40 @@ ActiveRecord::Schema.define(version: 20160916234520) do
   add_index "dcs_formats", ["resource_id"], name: "index_dcs_formats_on_resource_id", using: :btree
 
   create_table "dcs_geo_location_boxes", force: :cascade do |t|
-    t.decimal  "sw_latitude",            precision: 10, scale: 6
-    t.decimal  "ne_latitude",            precision: 10, scale: 6
-    t.decimal  "sw_longitude",           precision: 10, scale: 6
-    t.decimal  "ne_longitude",           precision: 10, scale: 6
-    t.integer  "resource_id",  limit: 4
-    t.datetime "created_at",                                      null: false
-    t.datetime "updated_at",                                      null: false
+    t.decimal  "sw_latitude",  precision: 10, scale: 6
+    t.decimal  "ne_latitude",  precision: 10, scale: 6
+    t.decimal  "sw_longitude", precision: 10, scale: 6
+    t.decimal  "ne_longitude", precision: 10, scale: 6
+    t.datetime "created_at",                            null: false
+    t.datetime "updated_at",                            null: false
   end
-
-  add_index "dcs_geo_location_boxes", ["resource_id"], name: "index_dcs_geo_location_boxes_on_resource_id", using: :btree
 
   create_table "dcs_geo_location_places", force: :cascade do |t|
     t.text     "geo_location_place", limit: 65535
-    t.integer  "resource_id",        limit: 4
-    t.datetime "created_at",                                                null: false
-    t.datetime "updated_at",                                                null: false
-    t.decimal  "latitude",                         precision: 10, scale: 6
-    t.decimal  "longitude",                        precision: 10, scale: 6
+    t.datetime "created_at",                       null: false
+    t.datetime "updated_at",                       null: false
   end
-
-  add_index "dcs_geo_location_places", ["resource_id"], name: "index_dcs_geo_location_places_on_resource_id", using: :btree
 
   create_table "dcs_geo_location_points", force: :cascade do |t|
-    t.decimal  "latitude",              precision: 10, scale: 6
-    t.decimal  "longitude",             precision: 10, scale: 6
-    t.integer  "resource_id", limit: 4
-    t.datetime "created_at",                                     null: false
-    t.datetime "updated_at",                                     null: false
+    t.decimal  "latitude",   precision: 10, scale: 6
+    t.decimal  "longitude",  precision: 10, scale: 6
+    t.datetime "created_at",                          null: false
+    t.datetime "updated_at",                          null: false
   end
 
-  add_index "dcs_geo_location_points", ["resource_id"], name: "index_dcs_geo_location_points_on_resource_id", using: :btree
+  create_table "dcs_geo_locations", force: :cascade do |t|
+    t.integer  "place_id",    limit: 4
+    t.integer  "point_id",    limit: 4
+    t.integer  "box_id",      limit: 4
+    t.datetime "created_at",            null: false
+    t.datetime "updated_at",            null: false
+    t.integer  "resource_id", limit: 4
+  end
+
+  add_index "dcs_geo_locations", ["box_id"], name: "index_dcs_geo_locations_on_box_id", using: :btree
+  add_index "dcs_geo_locations", ["place_id"], name: "index_dcs_geo_locations_on_place_id", using: :btree
+  add_index "dcs_geo_locations", ["point_id"], name: "index_dcs_geo_locations_on_point_id", using: :btree
+  add_index "dcs_geo_locations", ["resource_id"], name: "index_dcs_geo_locations_on_resource_id", using: :btree
 
   create_table "dcs_languages", force: :cascade do |t|
     t.text     "language",    limit: 65535
@@ -343,7 +346,7 @@ ActiveRecord::Schema.define(version: 20160916234520) do
     t.integer  "current_resource_state_id", limit: 4
     t.datetime "created_at",                                              null: false
     t.datetime "updated_at",                                              null: false
-    t.boolean  "geolocation",                             default: false
+    t.boolean  "has_geolocation",                         default: false
     t.text     "download_uri",              limit: 65535
     t.integer  "identifier_id",             limit: 4
     t.text     "update_uri",                limit: 65535
