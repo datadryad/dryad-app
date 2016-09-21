@@ -6,7 +6,7 @@ module StashDatacite
 
     # GET /geolocation_places/
     def places_coordinates
-      @geolocation_places = GeolocationPlace.select(:id, :geo_location_place, :latitude, :longitude)
+      @geolocation_places = GeolocationPlace.select(:id, :geo_location_place)
                                             .where(resource_id: params[:resource_id])
       respond_to do |format|
         format.html
@@ -17,11 +17,12 @@ module StashDatacite
     # POST Leaflet AJAX create
     def map_coordinates
       geolocation_place_params = params.except(:controller, :action)
-      @geolocation_place = GeolocationPlace.find_or_initialize_by(geolocation_place_params.permit!)
-      @resource = StashDatacite.resource_class.find(params[:resource_id])
+      geo = Geolocation.new_geolocation(place: p[:geo_location_place], resource_id: params[:resource_id])
+      @geolocation_place = geo.geolocation_place
       respond_to do |format|
         if @geolocation_place.save
-          @geolocation_places = GeolocationPlace.where(resource_id: params[:resource_id])
+          @resource = StashDatacite.resource_class.find(params[:resource_id])
+          @geolocation_points = GeolocationPlace.from_resource_id(params[:resource_id])
           format.js
         else
           format.html { render :new }
@@ -31,11 +32,9 @@ module StashDatacite
 
     # DELETE /geolocation_places/1
     def delete
-      @latitude = @geolocation_place.latitude
-      @longitude = @geolocation_place.longitude
       @geolocation_place.destroy
       @resource = StashDatacite.resource_class.find(params[:resource_id])
-      @geolocation_places = GeolocationPlace.where(resource_id: params[:resource_id])
+      @geolocation_places = GeolocationPlace.from_resource_id(params[:resource_id])
       respond_to do |format|
         format.js
       end
