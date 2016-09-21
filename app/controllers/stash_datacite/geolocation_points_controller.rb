@@ -24,8 +24,11 @@ module StashDatacite
 
     # POST Leaflet AJAX create
     def map_coordinates
-      p = params.except(:controller, :action)
-      geo = Geolocation.new_geolocation(point: [p[:latitude], p[:longitude]], resource_id: params[:resource_id])
+      geo = geolocation_by_point
+      unless geo
+        pt_params = params[:geolocation_point]
+        geo = Geolocation.new_geolocation(point: [pt_params[:latitude], pt_params[:longitude]], resource_id: params[:resource_id])
+      end
       @geolocation_point = geo.geolocation_point
       respond_to do |format|
         format.json { render json: @geolocation_point.id }
@@ -47,7 +50,12 @@ module StashDatacite
 
     # POST /geolocation_points
     def create
-      geo = Geolocation.new_geolocation(point: [params[:latitude], params[:longitude]], resource_id: params[:resource_id])
+      geo = geolocation_by_point
+      unless geo
+        pt_params = params[:geolocation_point]
+        geo = Geolocation.new_geolocation(point: [pt_params[:latitude], pt_params[:longitude]],
+                                          resource_id: params[:resource_id])
+      end
       @geolocation_point = geo.geolocation_point
       @resource = StashDatacite.resource_class.find(params[:resource_id])
       respond_to do |format|
@@ -70,10 +78,20 @@ module StashDatacite
 
     private
 
+    # geolocation exists with params resource_id, latitude, longitude
+    def geolocation_by_point
+      pt_params = params[:geolocation_point]
+      points = GeolocationPoint.from_resource_id(params[:resource_id]).
+          where(latitude: pt_params[:latitude], longitude: pt_params[:longitude])
+      return nil if points.length < 1
+      points.first.geolocation
+    end
+
     # Use callbacks to share common setup or constraints between actions.
     def set_geolocation_point
       @geolocation_point = GeolocationPoint.find(params[:id])
     end
+
 
     # Only allow a trusted parameter "white list" through.
     def geolocation_point_params
