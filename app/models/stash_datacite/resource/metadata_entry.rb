@@ -70,7 +70,7 @@ module StashDatacite
       end
 
       def geolocation_points
-        @geolocation_points = GeolocationPoint.where(resource_id: @resource.id)
+        @geolocation_points = GeolocationPoint.from_resource_id(@resource.id)
       end
 
       def new_geolocation_box
@@ -79,7 +79,7 @@ module StashDatacite
       end
 
       def geolocation_boxes
-        @geolocation_boxes = GeolocationBox.where(resource_id: @resource.id)
+        @geolocation_boxes = GeolocationBox.from_resource_id(@resource.id)
       end
 
       def new_geolocation_place
@@ -87,7 +87,7 @@ module StashDatacite
       end
 
       def geolocation_places
-        @geolocation_places = GeolocationPlace.where(resource_id: @resource.id)
+        @geolocation_places = GeolocationPlace.from_resource_id(@resource.id)
       end
 
       private
