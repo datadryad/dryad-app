@@ -8,8 +8,10 @@ module StashDatacite
 
     #returns a bounding box string for use with Javascript
     def bounding_box_str
-      return nil unless longitude && latitude
-      "#{longitude} #{latitude} #{longitude} #{latitude}"
+      return nil unless geolocation
+      return geolocation.geolocation_box.bounding_box_str if geolocation.geolocation_box
+      return geolocation.geolocation_point.bounding_box_str if geolocation.geolocation_point
+      nil
     end
   end
 end
