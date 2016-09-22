@@ -71,8 +71,9 @@ Blacklight.onLoad(function() {
 
   function updatePage(url) {
     $.get(url).done(function(data) {
-      var resp = $.parseHTML(data);
-      $doc = $(resp);
+      // var resp = $.parseHTML(data);
+      // $doc = $(resp);
+      $doc = $('<div/>').append(data);
       $('#documents').replaceWith($doc.find('#documents'));
       $('#sidebar').replaceWith($doc.find('#sidebar'));
       $('#sortAndPerPage').replaceWith($doc.find('#sortAndPerPage'));
