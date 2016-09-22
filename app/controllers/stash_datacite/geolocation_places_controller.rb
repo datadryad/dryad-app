@@ -21,7 +21,6 @@ module StashDatacite
         p = params.except(:controller, :action)
         geo = Geolocation.new_geolocation(place: p[:geo_location_place],
                                           point: [p[:latitude], p[:longitude]],
-                                          box:   [p[:ne_latitude], p[:ne_longitude],p[:sw_latitude], p[:sw_longitude]],
                                           resource_id: params[:resource_id])
       end
       @geolocation_place = geo.geolocation_place
@@ -57,11 +56,13 @@ module StashDatacite
     def geo_places(resource_id)
       places = []
       geo_places = GeolocationPlace.from_resource_id(resource_id)
-      geo_places.each do |geo_pl|
-        geolocation_place = []
-        geolocation_place << geo_pl.geo_location_place << geo_pl.geolocation.geolocation_point.latitude << geo_pl.geolocation.geolocation_point.latitude << geo_pl.id
-        places << geolocation_place
-        return places
+      unless geo_places.blank?
+        geo_places.each do |geo_pl|
+          geolocation_place = []
+          geolocation_place << geo_pl.geo_location_place << geo_pl.geolocation.geolocation_point.latitude << geo_pl.geolocation.geolocation_point.longitude << geo_pl.id
+          places << geolocation_place
+          return places
+        end
       end
     end
 
