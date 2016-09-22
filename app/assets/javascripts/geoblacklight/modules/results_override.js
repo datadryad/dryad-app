@@ -36,7 +36,7 @@ Blacklight.onLoad(function() {
     // nudge to expand the map a bit if it's too small and looks hideous.
     ne = bbox.getNorthEast();
     sw = bbox.getSouthWest();
-    small = 0.004;
+    small = 0.025;
     small2 = small / 2;
     if(Math.abs(ne.lat - sw.lat) < small && Math.abs(ne.lng - sw.lng) < small){
       bbox.extend(L.bboxToBounds((sw.lng - small2) + " " + (sw.lat - small2) + " " + (ne.lng + small2) + " " + (ne.lat + small2)));
