@@ -18,10 +18,10 @@ function getAndLoadGeoPlace(resource_id) {
           console.log('Error occured');
         }
       });
-      arr = $.map(result, function(n){
-         return [[ n["geo_location_place"], n["latitude"], n["longitude"], n["id"] ]];
-      });
-      return(arr);
+      // arr = $.map(result, function(n){
+      //    return [[ n["geo_location_place"], n["latitude"], n["longitude"], n["id"] ]];
+      // });
+      return(result);
   }
   L.Icon.Default.imagePath = 'assets/images/stash_datacite';
   var customIcon = new L.Icon({
