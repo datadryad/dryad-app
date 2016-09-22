@@ -53,7 +53,7 @@ module StashDatacite
           check_required_fields(@resource)
           @review = Resource::Review.new(@resource)
           if @review.no_geolocation_data == true
-            @resource.geolocation = false
+            @resource.has_geolocation = false
             @resource.save!
           end
         end
