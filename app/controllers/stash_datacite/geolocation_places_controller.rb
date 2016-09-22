@@ -59,11 +59,13 @@ module StashDatacite
       unless geo_places.blank?
         geo_places.each do |geo_pl|
           geolocation_place = []
-          geolocation_place << geo_pl.geo_location_place << geo_pl.geolocation.geolocation_point.latitude << geo_pl.geolocation.geolocation_point.longitude << geo_pl.id
+          geolocation_place << geo_pl.geo_location_place << geo_pl.geolocation.geolocation_point.latitude <<
+              geo_pl.geolocation.geolocation_point.longitude << geo_pl.id
           places << geolocation_place
-          return places
         end
       end
+      byebug
+      places
     end
 
     def geolocation_by_place
