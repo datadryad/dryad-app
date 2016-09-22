@@ -6,8 +6,7 @@ module StashDatacite
 
     # GET /geolocation_places/
     def places_coordinates
-      @geolocation_places = GeolocationPlace.select(:id, :geo_location_place)
-                                            .where(resource_id: params[:resource_id])
+      @geolocation_places =  geo_places(params[:resource_id])
       respond_to do |format|
         format.html
         format.json { render json: @geolocation_places }
@@ -15,14 +14,15 @@ module StashDatacite
     end
 
 
-
-
     # POST Leaflet AJAX create
     def map_coordinates
       geo = geolocation_by_place
       unless geo
         p = params.except(:controller, :action)
-        geo = Geolocation.new_geolocation(place: p[:geo_location_place], resource_id: params[:resource_id])
+        geo = Geolocation.new_geolocation(place: p[:geo_location_place],
+                                          point: [p[:latitude], p[:longitude]],
+                                          box:   [p[:ne_latitude], p[:ne_longitude],p[:sw_latitude], p[:sw_longitude]],
+                                          resource_id: params[:resource_id])
       end
       @geolocation_place = geo.geolocation_place
       respond_to do |format|
@@ -52,8 +52,19 @@ module StashDatacite
     end
 
     private
-
     # Use callbacks to share common setup or constraints between actions.
+
+    def geo_places(resource_id)
+      places = []
+      geo_places = GeolocationPlace.from_resource_id(resource_id)
+      geo_places.each do |geo_pl|
+        geolocation_place = []
+        geolocation_place << geo_pl.geo_location_place << geo_pl.geolocation.geolocation_point.latitude << geo_pl.geolocation.geolocation_point.latitude << geo_pl.id
+        places << geolocation_place
+        return places
+      end
+    end
+
     def geolocation_by_place
       place_params = params.except(:controller, :action)
       places = GeolocationPlace.from_resource_id(params[:resource_id]).
