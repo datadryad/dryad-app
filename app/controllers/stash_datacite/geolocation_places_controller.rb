@@ -31,11 +31,14 @@ module StashDatacite
 
     # DELETE /geolocation_places/1
     def delete
-      @latitude = @geolocation_place.latitude
-      @longitude = @geolocation_place.longitude
-      @geolocation_place.destroy
+      #@latitude = @geolocation_place.latitude
+      #@longitude = @geolocation_place.longitude
+      geo = @geolocation_place.try(:geolocation)
+      geo.destroy_place
+      geo.destroy_box
+      geo.destroy_point
       @resource = StashDatacite.resource_class.find(params[:resource_id])
-      @geolocation_places = GeolocationPlace.where(resource_id: params[:resource_id])
+      @geolocation_places = GeolocationPlace.from_resource_id(params[:resource_id])
       respond_to do |format|
         format.js
       end

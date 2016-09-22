@@ -39,23 +39,29 @@ module StashDatacite
 
     def destroy_place
       pl = geolocation_place
-      pl.destroy
-      self.place_id = nil
-      destroy_if_empty
+      if pl
+        pl.destroy
+        self.place_id = nil
+        destroy_if_empty
+      end
     end
 
     def destroy_point
       po = geolocation_point
-      po.destroy
-      self.point_id = nil
-      destroy_if_empty
+      if po
+        po.destroy
+        self.point_id = nil
+        destroy_if_empty
+      end
     end
 
     def destroy_box
       bo = geolocation_box
-      bo.destroy
-      self.box_id = nil
-      destroy_if_empty
+      if bo
+        bo.destroy
+        self.box_id = nil
+        destroy_if_empty
+      end
     end
 
     #handles creating datacite mapping which might be nil or have other complexities
