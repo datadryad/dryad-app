@@ -64,7 +64,6 @@ module StashDatacite
           places << geolocation_place
         end
       end
-      byebug
       places
     end
 
