@@ -56,7 +56,7 @@ module StashDatacite
     def geo_places(resource_id)
       places = []
       geo_places = GeolocationPlace.from_resource_id(resource_id)
-      unless geo_places.blank?
+      unless geo_places.present?
         geo_places.each do |geo_pl|
           geolocation_place = []
           geolocation_place << geo_pl.geo_location_place << geo_pl.geolocation.geolocation_point.latitude <<
@@ -64,7 +64,6 @@ module StashDatacite
           places << geolocation_place
         end
       end
-      byebug
       places
     end
 
