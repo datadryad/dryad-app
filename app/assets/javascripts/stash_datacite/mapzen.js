@@ -4,7 +4,7 @@
 function mapzen() {
 // MAPZEN AUTOCOMPLETE SEARCH AND SAVE TO DB
   var customIcon = new L.Icon({
-    iconUrl: 'https://thevendy.files.wordpress.com/2015/02/black-and-white-world-globe.gif',
+    iconUrl: 'https://www.clipartkid.com/images/309/big-blue-wire-globe-clip-art-at-clker-com-vector-clip-art-online-sgseOP-clipart.png',
     iconSize: [25, 25], // size of the icon
     iconAnchor: [12, 25], // point of the icon which will correspond to marker's location
     popupAnchor: [0, -25] // point from which the popup should open relative to the iconAnchor
@@ -13,7 +13,6 @@ function mapzen() {
   var geocoder = L.control.geocoder('search-OJQOSkw', {
       placeholder: 'Add by Location Name',
       pointIcon: false,
-      polygonIcon: false,
       position: 'topleft',
       markers: { icon: customIcon },
       expanded: true
