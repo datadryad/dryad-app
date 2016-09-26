@@ -4,7 +4,7 @@
 function mapzen() {
 // MAPZEN AUTOCOMPLETE SEARCH AND SAVE TO DB
   var customIcon = new L.Icon({
-    iconUrl: 'https://www.clipartkid.com/images/309/big-blue-wire-globe-clip-art-at-clker-com-vector-clip-art-online-sgseOP-clipart.png',
+    iconUrl: 'https://upload.wikimedia.org/wikipedia/commons/0/0b/Blue_globe_icon.svg',
     iconSize: [25, 25], // size of the icon
     iconAnchor: [12, 25], // point of the icon which will correspond to marker's location
     popupAnchor: [0, -25] // point from which the popup should open relative to the iconAnchor

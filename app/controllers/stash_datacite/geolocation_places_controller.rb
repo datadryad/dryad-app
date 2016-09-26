@@ -6,7 +6,7 @@ module StashDatacite
 
     # GET /geolocation_places/
     def places_coordinates
-      @geolocation_places =  geo_places(params[:resource_id])
+      @geolocation_places =  GeolocationPlace.geo_places(params[:resource_id])
       respond_to do |format|
         format.html
         format.json { render json: @geolocation_places }
@@ -52,21 +52,6 @@ module StashDatacite
 
     private
     # Use callbacks to share common setup or constraints between actions.
-
-    def geo_places(resource_id)
-      places = []
-      geo_places = GeolocationPlace.from_resource_id(resource_id)
-      unless geo_places.present?
-        geo_places.each do |geo_pl|
-          geolocation_place = []
-          geolocation_place << geo_pl.geo_location_place << geo_pl.geolocation.geolocation_point.latitude <<
-              geo_pl.geolocation.geolocation_point.longitude << geo_pl.id
-          places << geolocation_place
-        end
-      end
-      places
-    end
-
     def geolocation_by_place
       place_params = params.except(:controller, :action)
       places = GeolocationPlace.from_resource_id(params[:resource_id]).

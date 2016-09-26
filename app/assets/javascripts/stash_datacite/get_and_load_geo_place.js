@@ -21,12 +21,13 @@ function getAndLoadGeoPlace(resource_id) {
       // arr = $.map(result, function(n){
       //    return [[ n["geo_location_place"], n["latitude"], n["longitude"], n["id"] ]];
       // });
+
       return(result);
   }
   L.Icon.Default.imagePath = 'assets/images/stash_datacite';
   var customIcon = new L.Icon({
       // iconUrl: L.Icon.Default.imagePath +'/globe.png',
-      iconUrl: 'https://www.clipartkid.com/images/309/big-blue-wire-globe-clip-art-at-clker-com-vector-clip-art-online-sgseOP-clipart.png',
+      iconUrl: 'https://upload.wikimedia.org/wikipedia/commons/0/0b/Blue_globe_icon.svg',
       iconSize: [25, 25], // size of the icon
       iconAnchor: [12, 25], // point of the icon which will correspond to marker's location
       popupAnchor: [0, -25] // point from which the popup should open relative to the iconAnchor
@@ -34,11 +35,12 @@ function getAndLoadGeoPlace(resource_id) {
 
   // Loop through the location names array
   for (var i=0; i<locationNames.length; i++) {
-    var place = locationNames[i][0];
-    var lat   = locationNames[i][1];
-    var lng   = locationNames[i][2];
-    var mrk_id = locationNames[i][3];
+    var place = locationNames[i]['geolocation_place'];
+    var lat   = locationNames[i]['latitude'];
+    var lng   = locationNames[i]['longitude'];
+    var mrk_id = locationNames[i]['id'];
     var newMarkerLocation = new L.LatLng(lat, lng);
+    console.log(newMarkerLocation);
     markerArray.push(new L.marker(newMarkerLocation, { icon: customIcon, id: mrk_id }).addTo(map).bindPopup('<strong>' + place));
   }
   // group = L.featureGroup(markerArray).addTo(map);
