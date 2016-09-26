@@ -70,7 +70,7 @@ module StashDatacite
       end
 
       def geolocation_points
-        @geolocation_points = GeolocationPoint.from_resource_id(@resource.id)
+        @geolocation_points = GeolocationPoint.only_geo_points(@resource.id)
       end
 
       def new_geolocation_box

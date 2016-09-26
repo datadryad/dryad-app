@@ -6,6 +6,11 @@ module StashDatacite
     scope :from_resource_id, ->(resource_id) { joins(:geolocation).
         where('dcs_geo_locations.resource_id = ?', resource_id)}
 
+    scope :only_geo_points, ->(resource_id) { joins(:geolocation)
+        .where('dcs_geo_locations.resource_id = ?', resource_id)
+        .where('dcs_geo_locations.place_id = ? and dcs_geo_locations.box_id = ?', nil, nil)
+      }
+
     #returns a bounding box string for use with Javascript
     def bounding_box_str
       return nil unless longitude && latitude
