@@ -16,7 +16,7 @@ module StashDatacite
     def points_coordinates
       respond_to do |format|
         @geolocation_points = GeolocationPoint.select(:resource_id, :id, :latitude, :longitude).
-            from_resource_id(params[:resource_id])
+            only_geo_points(params[:resource_id])
         format.html
         format.json { render json:  @geolocation_points }
       end
