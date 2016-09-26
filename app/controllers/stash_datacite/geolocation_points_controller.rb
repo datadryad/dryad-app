@@ -58,7 +58,7 @@ module StashDatacite
       @geolocation_point = geo.geolocation_point
       @resource = StashDatacite.resource_class.find(params[:resource_id])
       respond_to do |format|
-        @geolocation_points = GeolocationPoint.from_resource_id(params[:resource_id])
+        @geolocation_points = GeolocationPoint.only_geo_points(params[:resource_id])
         format.js
       end
     end
@@ -69,7 +69,7 @@ module StashDatacite
       @longitude = @geolocation_point.longitude
       @geolocation_point.try(:geolocation).try(:destroy_point)
       @resource = StashDatacite.resource_class.find(params[:resource_id])
-      @geolocation_points = GeolocationPoint.from_resource_id(params[:resource_id])
+      @geolocation_points = GeolocationPoint.only_geo_points(params[:resource_id])
       respond_to do |format|
         format.js
       end
@@ -80,7 +80,7 @@ module StashDatacite
     # geolocation exists with params resource_id, latitude, longitude
     def geolocation_by_point(object_params)
       pt_params = object_params
-      points = GeolocationPoint.from_resource_id(params[:resource_id]).
+      points = GeolocationPoint.only_geo_points(params[:resource_id]).
           where(latitude: pt_params[:latitude], longitude: pt_params[:longitude])
       return nil if points.length < 1
       points.first.geolocation
