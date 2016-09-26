@@ -6,7 +6,7 @@ module StashDatacite
 
     def index
       respond_to do |format|
-        @geolocation_points = GeolocationPoint.from_resource_id(params[:resource_id])
+        @geolocation_points = GeolocationPoint.only_geo_points(params[:resource_id])
         @resource = StashDatacite.resource_class.find(params[:resource_id])
         format.js
       end

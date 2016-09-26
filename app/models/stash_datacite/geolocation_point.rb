@@ -8,7 +8,7 @@ module StashDatacite
 
     scope :only_geo_points, ->(resource_id) { joins(:geolocation)
         .where('dcs_geo_locations.resource_id = ?', resource_id)
-        .where('dcs_geo_locations.place_id = ? and dcs_geo_locations.box_id = ?', nil, nil)
+        .where('dcs_geo_locations.place_id IS NULL AND dcs_geo_locations.box_id IS NULL')
       }
 
     #returns a bounding box string for use with Javascript
