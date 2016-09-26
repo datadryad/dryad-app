@@ -36,7 +36,7 @@ function getAndLoadGeoPlace(resource_id) {
     var lng   = locationNames[i]['longitude'];
     var mrk_id = locationNames[i]['id'];
     var newMarkerLocation = new L.LatLng(lat, lng);
-    marker = new L.marker(newMarkerLocation, { icon: customIcon, id: mrk_id }).addTo(map).bindPopup('<strong>' + place);
+    var marker = new L.marker(newMarkerLocation, { icon: customIcon, id: mrk_id }).addTo(map).bindPopup('<strong>' + place);
   }
 // ----------------------------------------------------------------- //
 };

@@ -11,7 +11,7 @@ function loadGeolocationPoints() {
       $('.js-location__box-button').addClass('c-location__box-button');
     });
 
-    // latitude longitude vlaidation for Geolcoation Point
+    // latitude longitude validation for Geolcoation Point
     $("#geo_lat_point").on('blur', function(e){
     var lat = $(this).val();
     var latReg = /^(\+|-)?(?:90(?:(?:\.0{1,6})?)|(?:[0-9]|[1-8][0-9])(?:(?:\.[0-9]{1,6})?))$/;
@@ -36,4 +36,10 @@ function loadGeolocationPoints() {
       }
     });
 
+    $("#geolocation_point_new_form").submit(function() {
+      if ($.trim($("#geo_lat_point").val()) === "" || $.trim($("#geo_lng_point").val()) === "") {
+        alert('please fill in both latitude and longitude fields');
+        return false;
+      }
+    });
 };

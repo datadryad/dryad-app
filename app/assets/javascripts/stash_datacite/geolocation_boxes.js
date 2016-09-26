@@ -59,4 +59,11 @@ function loadGeolocationBoxes() {
         $('#geo_ne_lng_point').val('');
       }
     });
+
+    $("#geolocation_box_new_form").submit(function() {
+      if ($.trim($("#geo_sw_lat_point").val()) === "" || $.trim($("#geo_ne_lat_point").val()) === "" || $.trim($("#geo_sw_lng_point").val()) === "" || $.trim($("#geo_ne_lng_point").val()) === "") {
+        alert('please fill in all the bounding box fields');
+        return false;
+      }
+    });
 };
