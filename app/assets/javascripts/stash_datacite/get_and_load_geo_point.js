@@ -18,21 +18,17 @@ function getAndLoadGeoPoint(resource_id) {
           console.log('Error occured');
         }
       });
-      arr = $.map(result, function(n){
-         return [[ n["latitude"], n["longitude"], n["id"] ]];
-      });
-      return(arr);
+      return(result);
   }
 
   //Loop through the markers array
   var marker, markerArray = [];
   for (var i=0; i<coordinatesMarker.length; i++) {
-    var lat = coordinatesMarker[i][0];
-    var lng = coordinatesMarker[i][1];
-    var mrk_id = coordinatesMarker[i][2];
+    var lat = coordinatesMarker[i]['latitude'];
+    var lng = coordinatesMarker[i]['longitude'];
+    var mrk_id = coordinatesMarker[i]['id'];
     var markerLocation = new L.LatLng(lat, lng);
     marker = new L.Marker(markerLocation, { draggable: true, id: mrk_id }).addTo(map);
-    // markerArray.push(new L.Marker(markerLocation, { id: mrk_id }));
     drawPopup(marker, lat, lng);
 
     marker.on('dragend', function(event) {

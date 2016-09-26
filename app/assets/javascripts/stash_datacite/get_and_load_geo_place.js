@@ -18,10 +18,6 @@ function getAndLoadGeoPlace(resource_id) {
           console.log('Error occured');
         }
       });
-      // arr = $.map(result, function(n){
-      //    return [[ n["geo_location_place"], n["latitude"], n["longitude"], n["id"] ]];
-      // });
-
       return(result);
   }
   L.Icon.Default.imagePath = 'assets/images/stash_datacite';
@@ -40,10 +36,7 @@ function getAndLoadGeoPlace(resource_id) {
     var lng   = locationNames[i]['longitude'];
     var mrk_id = locationNames[i]['id'];
     var newMarkerLocation = new L.LatLng(lat, lng);
-    console.log(newMarkerLocation);
-    markerArray.push(new L.marker(newMarkerLocation, { icon: customIcon, id: mrk_id }).addTo(map).bindPopup('<strong>' + place));
+    marker = new L.marker(newMarkerLocation, { icon: customIcon, id: mrk_id }).addTo(map).bindPopup('<strong>' + place);
   }
-  // group = L.featureGroup(markerArray).addTo(map);
-  // map.fitBounds(group.getBounds());
 // ----------------------------------------------------------------- //
 };

@@ -32,7 +32,6 @@ function getAndLoadGeoBox(resource_id) {
       var ne_lng = coordinatesBBox[i][3];
       var bounds = [[sw_lat, sw_lng], [ne_lat, ne_lng]];
       var newRectangle = L.rectangle(bounds, {color: "#ff7800", weight: 1}).addTo(map).bindPopup(sw_lat + ", " + sw_lng + ", " + ne_lat + ", " + ne_lng);
-      //map.fitBounds(bounds);
    }
 // ----------------------------------------------------------------- //
 };
