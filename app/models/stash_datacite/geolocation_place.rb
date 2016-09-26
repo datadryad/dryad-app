@@ -21,9 +21,13 @@ module StashDatacite
     end
 
     def geo_place_coordinates(resource_id)
-      latitude = self.geolocation.geolocation_point.latitude
-      longitude = self.geolocation.geolocation_point.longitude
-      return [latitude, longitude]
+      if self.geolocation.geolocation_point.present?
+        latitude = self.geolocation.geolocation_point.latitude
+        longitude = self.geolocation.geolocation_point.longitude
+        return [latitude, longitude]
+      else
+        []
+      end
     end
 
     # def geo_place_boxes(resource_id)
