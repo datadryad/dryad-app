@@ -7,7 +7,7 @@ module StashDatacite
     # # GET /geolocation_boxes/
     def boxes_coordinates
       @geolocation_boxes = GeolocationBox.select(:resource_id, :sw_latitude, :sw_longitude, :ne_latitude, :ne_longitude).
-                             from_resource_id(params[:resource_id])
+                             only_geo_bbox(params[:resource_id])
       respond_to do |format|
         format.html
         format.json { render json: @geolocation_boxes }
@@ -29,7 +29,7 @@ module StashDatacite
       end
       respond_to do |format|
         @resource = StashDatacite.resource_class.find(params[:resource_id])
-        @geolocation_boxes = GeolocationBox.from_resource_id(params[:resource_id])
+        @geolocation_boxes = GeolocationBox.only_geo_bbox(params[:resource_id])
         @geolocation_box = geo.geolocation_box
         format.js { render template: 'stash_datacite/geolocation_boxes/create.js.erb' }
       end
@@ -48,7 +48,7 @@ module StashDatacite
       @geolocation_box = geo.geolocation_box
       respond_to do |format|
         @resource = StashDatacite.resource_class.find(params[:resource_id])
-        @geolocation_boxes = GeolocationBox.from_resource_id(params[:resource_id])
+        @geolocation_boxes = GeolocationBox.only_geo_bbox(params[:resource_id])
         format.js
       end
     end
@@ -62,7 +62,7 @@ module StashDatacite
       @geolocation_box.try(:geolocation).try(:destroy_box)
 
       @resource = StashDatacite.resource_class.find(params[:resource_id])
-      @geolocation_boxes = GeolocationBox.from_resource_id(params[:resource_id])
+      @geolocation_boxes = GeolocationBox.only_geo_bbox(params[:resource_id])
       respond_to do |format|
         format.js
       end
@@ -77,7 +77,7 @@ module StashDatacite
       s_lat, w_long = box_params[:sw_latitude].to_d, box_params[:sw_longitude].to_d
       n_lat, s_lat = s_lat, n_lat if n_lat < s_lat
       e_long, w_long = w_long, e_long if e_long < w_long
-      boxes = GeolocationBox.from_resource_id(params[:resource_id]).
+      boxes = GeolocationBox.only_geo_bbox(params[:resource_id]).
           where(ne_latitude: n_lat, ne_longitude: e_long, sw_latitude: s_lat, sw_longitude: w_long)
       return nil if boxes.length < 1
       boxes.first.geolocation

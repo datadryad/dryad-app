@@ -13,6 +13,7 @@ function mapzen() {
   var geocoder = L.control.geocoder('search-OJQOSkw', {
       placeholder: 'Add by Location Name',
       pointIcon: false,
+      polygonIcon: false,
       position: 'topleft',
       markers: { icon: customIcon },
       expanded: true
@@ -23,11 +24,12 @@ function mapzen() {
     location_name =  e.feature.properties.label;
     lat = e.latlng.lat;
     lng = e.latlng.lng;
+    bbox = e.feature.bbox;
     $.ajax({
         type: "POST",
         dataType: "script",
         url: "/stash_datacite/geolocation_places/map_coordinates",
-        data: { 'geo_location_place' : location_name, 'latitude' : lat, 'longitude' : lng, 'resource_id' : $.urlParam('resource_id') }
+        data: { 'geo_location_place' : location_name, 'latitude' : lat, 'longitude' : lng, 'bbox': bbox, 'resource_id' : $.urlParam('resource_id') }
       });
     marker = new L.Marker([lat, lng], { icon: customIcon }).addTo(map).bindPopup(location_name).openPopup();
   });
