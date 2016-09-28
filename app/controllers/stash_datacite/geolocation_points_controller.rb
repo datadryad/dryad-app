@@ -26,7 +26,8 @@ module StashDatacite
     def map_coordinates
       geo = geolocation_by_point(params)
       unless geo
-        geo = Geolocation.new_geolocation(point: [params[:latitude], params[:longitude]], resource_id: params[:resource_id])
+        geo = Geolocation.new_geolocation(point: [params[:latitude], params[:longitude]],
+                                          resource_id: params[:resource_id])
       end
       @geolocation_point = geo.geolocation_point
       respond_to do |format|

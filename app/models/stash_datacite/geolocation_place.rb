@@ -14,7 +14,8 @@ module StashDatacite
       unless geo_places.blank?
         geo_places.each do |geo_pl|
           coordinates = geo_pl.geo_place_coordinates(resource_id)
-          geo_hash = { geolocation_place: geo_pl.geo_location_place, latitude: coordinates[0], longitude: coordinates[1], id: geo_pl.id }
+          geo_hash = { geolocation_place: geo_pl.geo_location_place, latitude: coordinates[0],
+                       longitude: coordinates[1], id: geo_pl.id }
           places << geo_hash
         end
       end

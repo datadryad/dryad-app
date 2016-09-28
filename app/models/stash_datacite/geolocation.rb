@@ -35,37 +35,37 @@ module StashDatacite
         w_long = sides[3]
         e_long, w_long = w_long, e_long if w_long > e_long
 
-        box_obj = GeolocationBox.create(sw_latitude: s_lat, ne_latitude: n_lat, sw_longitude: w_long, ne_longitude: e_long)
+        box_obj = GeolocationBox.create(sw_latitude: s_lat, ne_latitude: n_lat,
+                                        sw_longitude: w_long, ne_longitude: e_long)
       end
-      Geolocation.create(place_id: place_obj.try(:id), point_id: point_obj.try(:id), box_id: box_obj.try(:id),
+      Geolocation.create(place_id: place_obj.try(:id),
+                         point_id: point_obj.try(:id),
+                         box_id: box_obj.try(:id),
                          resource_id: resource_id)
     end
 
     def destroy_place
       pl = geolocation_place
-      if pl
-        pl.destroy
-        self.place_id = nil
-        destroy_if_empty
-      end
+      return unless pl
+      pl.destroy
+      self.place_id = nil
+      destroy_if_empty
     end
 
     def destroy_point
       po = geolocation_point
-      if po
-        po.destroy
-        self.point_id = nil
-        destroy_if_empty
-      end
+      return unless po
+      po.destroy
+      self.point_id = nil
+      destroy_if_empty
     end
 
     def destroy_box
       bo = geolocation_box
-      if bo
-        bo.destroy
-        self.box_id = nil
-        destroy_if_empty
-      end
+      return unless bo
+      bo.destroy
+      self.box_id = nil
+      destroy_if_empty
     end
 
     #handles creating datacite mapping which might be nil or have other complexities

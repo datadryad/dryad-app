@@ -23,8 +23,8 @@ module StashDatacite
       geo = geolocation_by_box(params)
       unless geo
         box_params = params[:geolocation_box]
-        geo = Geolocation.new_geolocation(box: [params[:ne_latitude], params[:ne_longitude],
-                                                params[:sw_latitude], params[:sw_longitude]],
+        geo = Geolocation.new_geolocation(box: [box_params[:ne_latitude], box_params[:ne_longitude],
+                                                box_params[:sw_latitude], box_params[:sw_longitude]],
                                           resource_id: params[:resource_id])
       end
       respond_to do |format|
