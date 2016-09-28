@@ -30,6 +30,8 @@
 
 .c-locations__area {
 	@extend %c-locations__group;
+	padding-left: 26px;
+	background: inline('../images/icon_box-blue.svg') left 1px center no-repeat;
 }
 
 .c-locations__coordinate {
