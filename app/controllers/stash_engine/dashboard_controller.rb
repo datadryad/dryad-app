@@ -16,5 +16,15 @@ module StashEngine
 
     def upload_basics
     end
+
+    # an AJAX wait to allow in-progress items to complete before continuing.
+    def ajax_wait
+      respond_to do |format|
+        format.js do
+          sleep 0.25
+          head :ok, content_type: 'application/javascript'
+        end
+      end
+    end
   end
 end

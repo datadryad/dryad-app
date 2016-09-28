@@ -24,6 +24,7 @@ StashEngine::Engine.routes.draw do
   end
 
   get 'dashboard', to: 'dashboard#show', as: 'dashboard'
+  get 'ajax_wait', to: 'dashboard#ajax_wait', as: 'ajax_wait'
   get 'metadata_basics', to: 'dashboard#metadata_basics', as: 'metadata_basics'
   get 'preparing_to_submit', to: 'dashboard#preparing_to_submit', as: 'preparing_to_submit'
   get 'upload_basics', to: 'dashboard#upload_basics', as: 'upload_basics'
