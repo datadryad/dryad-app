@@ -21,7 +21,7 @@ module StashEngine
     def ajax_wait
       respond_to do |format|
         format.js do
-          sleep 0.25
+          sleep 0.5
           head :ok, content_type: 'application/javascript'
         end
       end
