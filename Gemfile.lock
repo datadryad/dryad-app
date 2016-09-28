@@ -2,7 +2,7 @@ PATH
   remote: .
   specs:
     stash_datacite (0.0.5)
-      datacite-mapping (~> 0.2, >= 0.2.0)
+      datacite-mapping (~> 0.2, >= 0.2.1)
       kaminari
       leaflet-rails
       rails (~> 4.2.4)
@@ -53,7 +53,7 @@ GEM
     builder (3.2.2)
     byebug (9.0.5)
     concurrent-ruby (1.0.2)
-    datacite-mapping (0.2.0)
+    datacite-mapping (0.2.1)
       typesafe_enum (~> 0.1, >= 0.1.7)
       xml-mapping_extensions (~> 0.4, >= 0.4.7)
     docile (1.1.5)
@@ -71,7 +71,6 @@ GEM
     mail (2.6.4)
       mime-types (>= 1.16, < 4)
     mime-types (2.99.3)
-    mime-types-data (3.2016.0521)
     mini_portile2 (2.1.0)
     minitest (5.9.1)
     mysql2 (0.3.21)
