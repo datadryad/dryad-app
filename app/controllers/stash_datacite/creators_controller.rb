@@ -40,7 +40,9 @@ module StashDatacite
       duplicate_affiliation = Affiliation.where('long_name LIKE ? OR short_name LIKE ?',
                                                 params[:affiliation].to_s, params[:affiliation].to_s).first
       respond_to do |format|
-        unless duplicate_affiliation.present?
+        if duplicate_affiliation.present?
+          @creator.update(creator_params)
+        else
           @creator.update(creator_params)
           @creator.reload
           if params[:affiliation].present?
@@ -50,8 +52,6 @@ module StashDatacite
           else
             ''
           end
-        else
-          @creator.update(creator_params)
         end
         format.js { render template: 'stash_datacite/shared/update.js.erb' }
       end

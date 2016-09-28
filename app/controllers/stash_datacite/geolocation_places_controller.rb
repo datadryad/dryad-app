@@ -6,13 +6,12 @@ module StashDatacite
 
     # GET /geolocation_places/
     def places_coordinates
-      @geolocation_places =  GeolocationPlace.geo_places(params[:resource_id])
+      @geolocation_places = GeolocationPlace.geo_places(params[:resource_id])
       respond_to do |format|
         format.html
         format.json { render json: @geolocation_places }
       end
     end
-
 
     # POST Leaflet AJAX create
     def map_coordinates
@@ -52,12 +51,13 @@ module StashDatacite
     end
 
     private
+
     # Use callbacks to share common setup or constraints between actions.
     def geolocation_by_place
       place_params = params.except(:controller, :action)
-      places = GeolocationPlace.from_resource_id(params[:resource_id]).
-                                where(geo_location_place: place_params[:geo_location_place])
-      return nil if places.length < 1
+      places = GeolocationPlace.from_resource_id(params[:resource_id])
+                               .where(geo_location_place: place_params[:geo_location_place])
+      return nil if places.empty?
       places.first.geolocation
     end
 

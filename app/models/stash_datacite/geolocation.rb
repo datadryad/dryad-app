@@ -20,15 +20,19 @@ module StashDatacite
     # place is string, point is [lat long] and box is [[ lat, long], [lat, long]] (or [lat, long, lat, long] )
     def self.new_geolocation(place: nil, point: nil, box: nil, resource_id: resource_id)
       return unless place || point || box
-      place_obj, point_obj, box_obj = nil, nil, nil
+      place_obj = nil
+      point_obj = nil
+      box_obj = nil
       place_obj = GeolocationPlace.create(geo_location_place: place) unless place.blank?
       point_obj = GeolocationPoint.create(latitude: point[0], longitude: point[1]) unless point.blank?
       unless box.blank? || box.flatten.length != 4
         sides = box.flatten
-        s_lat, n_lat = sides[0], sides[2]
+        s_lat = sides[0]
+        n_lat = sides[2]
         s_lat, n_lat = n_lat, s_lat if s_lat > n_lat
 
-        e_long, w_long = sides[1], sides[3]
+        e_long = sides[1]
+        w_long = sides[3]
         e_long, w_long = w_long, e_long if w_long > e_long
 
         box_obj = GeolocationBox.create(sw_latitude: s_lat, ne_latitude: n_lat, sw_longitude: w_long, ne_longitude: e_long)
@@ -80,11 +84,11 @@ module StashDatacite
     def datacite_mapping_box
       return nil unless geolocation_box
       if geolocation_box.sw_latitude.blank? || geolocation_box.sw_longitude.blank?
-         geolocation_box.ne_latitude.blank? || geolocation_box.ne_longitude.blank?
+        geolocation_box.ne_latitude.blank? || geolocation_box.ne_longitude.blank?
         return nil
       end
       Datacite::Mapping::GeoLocationBox.new(geolocation_box.sw_latitude, geolocation_box.sw_longitude,
-                                   geolocation_box.ne_latitude, geolocation_box.ne_longitude)
+                                            geolocation_box.ne_latitude, geolocation_box.ne_longitude)
     end
 
     private
@@ -109,6 +113,5 @@ module StashDatacite
       geolocation_point.destroy unless point_id.nil?
       geolocation_box.destroy unless box_id.nil?
     end
-
   end
 end

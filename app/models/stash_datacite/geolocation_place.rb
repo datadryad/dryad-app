@@ -3,9 +3,10 @@ module StashDatacite
     self.table_name = 'dcs_geo_location_places'
     has_one :geolocation, class_name: 'StashDatacite::Geolocation', foreign_key: 'place_id', dependent: :nullify
 
-    scope :from_resource_id, ->(resource_id) { joins(:geolocation).
-        where('dcs_geo_locations.resource_id = ?', resource_id)}
-
+    scope :from_resource_id, ->(resource_id) {
+      joins(:geolocation)
+        .where('dcs_geo_locations.resource_id = ?', resource_id)
+    }
 
     def self.geo_places(resource_id)
       places = []
@@ -20,10 +21,10 @@ module StashDatacite
       places
     end
 
-    def geo_place_coordinates(resource_id)
-      if self.geolocation.geolocation_point.present?
-        latitude = self.geolocation.geolocation_point.latitude
-        longitude = self.geolocation.geolocation_point.longitude
+    def geo_place_coordinates(_resource_id)
+      if geolocation.geolocation_point.present?
+        latitude = geolocation.geolocation_point.latitude
+        longitude = geolocation.geolocation_point.longitude
         return [latitude, longitude]
       else
         []
@@ -44,6 +45,5 @@ module StashDatacite
       return geolocation.geolocation_point.bounding_box_str if geolocation.geolocation_point
       nil
     end
-
   end
 end
