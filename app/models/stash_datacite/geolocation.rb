@@ -18,7 +18,7 @@ module StashDatacite
 
     # a simple convenience method for creating datacite geolocation full record
     # place is string, point is [lat long] and box is [[ lat, long], [lat, long]] (or [lat, long, lat, long] )
-    def self.new_geolocation(place: nil, point: nil, box: nil, resource_id: resource_id)
+    def self.new_geolocation(place: nil, point: nil, box: nil, resource_id:)
       return unless place || point || box
       place_obj, point_obj, box_obj = nil, nil, nil
       place_obj = GeolocationPlace.create(geo_location_place: place) unless place.blank?
