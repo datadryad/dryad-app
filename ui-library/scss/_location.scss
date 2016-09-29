@@ -150,7 +150,8 @@
 
 .c-location__add-button {
 	align-self: flex-end;
-	margin: 0 5px 0 5px;
+	margin: 0 5px;
+
 	@include bp(screen2) {
 		align-self: flex-start;
 	}

@@ -19,13 +19,16 @@
 	border-top: 1px solid $design-dark-gray-color;
 
 	@include bp(screen1) {
+        /* one column */
 		display: flex;
 		justify-content: space-between;
 		padding: 10px 10px 0;
 	}
 
 	@include bp(screen2) {
+        /* two column */
 		flex: 1 0 40%;
+        justify-content: space-between;
 		padding: 20px 20px 0;
 
 		&:nth-of-type(even) {
@@ -37,7 +40,7 @@
 }
 
 .c-latest__title-group {
-	flex: 0 1 auto; // IE 10 fix
+	flex: 3 1 auto; // IE 10 fix, modified to make safari work, also
 }
 
 .c-latest__title {
@@ -50,6 +53,7 @@
 }
 
 .c-latest__type {
+    flex: 1 0 auto; // for safari so that things don't overflow
 	margin: 0 0 10px 1em;
 	font-size: 0.9em;
 	font-weight: bold;

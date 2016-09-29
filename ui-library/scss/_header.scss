@@ -43,6 +43,9 @@
   height: 30px;
   padding: 5px 0;
 
+  /* Blacklight/geoblacklight resets */
+  box-sizing: content-box;
+
   @include bp(screen3) {
     height: 40px;
   }
@@ -53,8 +56,6 @@
     border-left: 2px solid $design-dark-gray-color;
   }
 
-  /* Blacklight/geoblacklight resets */
-  box-sizing: content-box;
 }
 
 %c-header__nav {
