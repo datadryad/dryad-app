@@ -91,9 +91,8 @@ module StashDatacite
               end
         )
 
-        datacite_to_wrapper = resource.save_to_xml
-        datacite_root = resource.write_xml
-        @client.update_metadata(identifier, datacite_root, target_url) # add target as 3rd parameter
+        datacite3_xml = resource.write_xml(mapping: :datacite_3)
+        @client.update_metadata(identifier, datacite3_xml, target_url)
 
         # datacite_target = "#{@resource.id}_datacite.xml"
         # datacite_directory = "#{Rails.root}/uploads"
@@ -112,7 +111,7 @@ module StashDatacite
         )
 
         r = @resource.rights.try(:first)
-        license = st::License.new(name: r.rights , uri: r.rights_uri) if r
+        license = r && st::License.new(name: r.rights , uri: r.rights_uri)
 
         embargo = st::Embargo.new(
           type: st::EmbargoType::NONE,
@@ -129,21 +128,17 @@ module StashDatacite
         end
         inventory = st::Inventory.new(files: files)
 
+        datacite4_element = resource.save_to_xml
         wrapper = st::StashWrapper.new(
           identifier: identifier,
           version: version,
           license: license,
           embargo: embargo,
           inventory: inventory,
-          descriptive_elements: [datacite_to_wrapper]
+          descriptive_elements: [datacite4_element]
         )
 
-        stash_wrapper = wrapper.write_xml
-        # stash_wrapper_target = "#{@resource.id}_stash_wrapper.xml"
-        # stash_wrapper_directory = "#{Rails.root}/uploads"
-        # puts Dir.pwd
-        # f = File.open("#{stash_wrapper_directory}/#{stash_wrapper_target}", 'w') { |f| f.write(stash_wrapper) }
-        return [datacite_root, stash_wrapper]
+        [resource.write_xml, wrapper.write_xml]
       end
 
       def generate_dublincore
