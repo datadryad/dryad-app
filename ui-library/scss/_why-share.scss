@@ -1,0 +1,55 @@
+// ##### Why Share section ##### //
+
+.c-why-share {
+
+  @include bp(screen1) {
+    margin: 0 -10px;
+  }
+
+  @include bp(screen2) {
+    display: flex;
+    flex-flow: row wrap;
+    // margin: 0 -20px;
+  }
+
+}
+
+
+.c-why-share__info {
+  // padding: 10px 0 0;
+  /* border-top: 1px solid $design-dark-gray-color; */
+
+  @include bp(screen1) {
+    /* one column */
+    // display: flex;
+    // justify-content: space-between;
+    // padding: 10px 10px 0;
+  }
+
+  @include bp(screen3) {
+    /* three column */
+    flex: 1 0 26%;
+    /* justify-content: space-between;
+    padding: 20px 20px 0; */
+
+    /* &:nth-of-type(3n+0) .c-why-share__text-group, */ &:nth-of-type(3n+2) .c-why-share__text-group {
+      border-left: 1px dashed $design-orange-color;
+      border-right: 1px dashed $design-orange-color
+    }
+  }
+}
+
+.c-why-share__text-group {
+  @include bp(screen1) {
+
+  }
+
+  @include bp(screen3) {
+    padding: 0 40px;
+
+    div {
+      font-size: 1.3em;
+      line-height: 1.5em;
+    }
+  }
+}

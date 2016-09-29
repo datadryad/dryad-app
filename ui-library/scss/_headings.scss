@@ -11,6 +11,11 @@
   @extend %o-heading__level1;
 }
 
+.o-heading__level1-home {
+  @extend %o-heading__level1;
+  text-align: center;
+}
+
 %o-heading__level2 {
   margin: 0 0 $spacing-md;
   color: $design-dark-blue-color;
