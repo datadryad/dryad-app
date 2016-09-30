@@ -17,6 +17,8 @@
  *= require jquery.fileupload-ui
  */
 
+/* I think  require font-awesome is not longer needed */
+
 div.head_box {
     border-style: solid;
     border-width: 1px;

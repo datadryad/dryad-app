@@ -2969,7 +2969,7 @@ html.no-multiplebgs .o-banner {
 .o-heading__level1-home {
   text-align: center; }
 
-.o-heading__level2 {
+.o-heading__level2, .o-heading__level2-why-share {
   margin: 0 0 20px;
   color: #005581;
   font-size: 1.3em;
@@ -4498,33 +4498,71 @@ html.svg .c-facet__check-label {
   color: #389818;
   font-weight: bold; }
 
-@media (min-width: 480px) {
-  .c-why-share {
-    margin: 0 -10px; } }
+.o-heading__level2-why-share {
+  font-size: 1.6em; }
 
-@media (min-width: 760px) {
-  .c-why-share {
-    display: -ms-flexbox;
-    display: flex;
-    -ms-flex-flow: row wrap;
-        flex-flow: row wrap; } }
+.c-why-share {
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-flow: row wrap;
+      flex-flow: row wrap; }
 
-.c-why-share__info {
-  /* border-top: 1px solid $design-dark-gray-color; */ }
+.c-why-share__icon {
+  color: #005581;
+  text-align: center; }
   @media (min-width: 480px) {
-    .c-why-share__info {
-      /* one column */ } }
+    .c-why-share__icon {
+      width: 80px;
+      height: 120px;
+      float: left;
+      clear: left;
+      text-align: center; } }
   @media (min-width: 870px) {
-    .c-why-share__info {
-      /* three column */
-      -ms-flex: 1 0 26%;
-          flex: 1 0 26%;
-      /* justify-content: space-between;
-    padding: 20px 20px 0; */
-      /* &:nth-of-type(3n+0) .c-why-share__text-group, */ }
-      .c-why-share__info:nth-of-type(3n+2) .c-why-share__text-group {
-        border-left: 1px dashed #e65722;
-        border-right: 1px dashed #e65722; } }
+    .c-why-share__icon {
+      width: 100%;
+      height: auto;
+      margin: 30px 0 40px;
+      float: none; } }
+
+@media (min-width: 870px) {
+  .c-why-share__double-icon-fix {
+    margin: 30px 0 10px;
+    text-align: center; } }
+
+.c-why-share__halo {
+  position: relative;
+  top: -12px;
+  width: 100%;
+  height: 16px;
+  text-align: center; }
+
+.c-why-share__user {
+  position: relative;
+  top: -10px;
+  width: 100%;
+  height: 64px;
+  text-align: center; }
+
+.c-why-share__icon-squish {
+  display: block;
+  clear: both;
+  transform: scale(1, 0.3);
+  /* W3C */ }
+
+@media (min-width: 480px) {
+  .c-why-share__info {
+    /* one column */
+    margin-bottom: 12px; } }
+
+@media (min-width: 870px) {
+  .c-why-share__info {
+    /* three column */
+    -ms-flex: 1 0 26%;
+        flex: 1 0 26%;
+    margin-bottom: 40px; }
+    .c-why-share__info:nth-of-type(3n+2) .c-why-share__text-group {
+      border-right: 1px dashed #e65722;
+      border-left: 1px dashed #e65722; } }
 
 @media (min-width: 870px) {
   .c-why-share__text-group {
