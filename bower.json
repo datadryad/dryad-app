@@ -12,5 +12,8 @@
   "devDependencies": {
     "normalize-scss": "^3.0.3",
     "moment": "^2.13.0"
+  },
+  "dependencies": {
+    "font-awesome": "fontawesome#^4.6.3"
   }
 }

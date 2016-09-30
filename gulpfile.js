@@ -45,11 +45,16 @@ gulp.task('default', function (callback) {
 // Run the build process 'build':
 gulp.task('build', function (callback) {
   runSequence('clean', 
-    ['scss-lint', 'js-lint', 'sass', 'useref', 'copy-images'], 'copy-to-assets',
+    ['scss-lint', 'js-lint', 'sass', 'useref', 'icons', 'copy-images', 'copy-fonts' ], 'copy-to-assets',
     callback
   )
 })
 
+// copy font-awesome into fonts
+gulp.task('icons', function() {
+  return gulp.src('./ui-library/bower_components/font-awesome/fonts/**.*')
+      .pipe(gulp.dest('./ui-library/fonts'));
+});
 
 // Minify all images during development:
 gulp.task('minify-images', function(){
@@ -145,6 +150,12 @@ gulp.task('clean', function() {
 gulp.task('copy-images', function(){
   return gulp.src('ui-library/images/**')
   .pipe(gulp.dest('public/demo/images'))
+});
+
+// Copy fonts to demo directory during the build process:
+gulp.task('copy-fonts', function(){
+  return gulp.src('ui-library/fonts/**')
+      .pipe(gulp.dest('public/demo/fonts'))
 });
 
 

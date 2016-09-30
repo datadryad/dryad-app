@@ -1,6 +1,6 @@
 // ##### Styles for Dash ##### //
 
-// ***** Global Settings ***** //
+// ***** Global Settings ***** //u
 
 @import 'variables';
 @import 'mixins';
@@ -9,6 +9,7 @@
 // ***** Vendor Libraries ***** //
 
 @import '../bower_components/normalize-scss/_normalize.scss';
+@import "../bower_components/font-awesome/scss/font-awesome.scss";
 
 // ***** Objects ***** //
 

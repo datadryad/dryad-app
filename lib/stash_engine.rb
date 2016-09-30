@@ -14,6 +14,7 @@ require 'jquery-fileupload-rails'
 require 'filesize'
 require 'kaminari'
 require 'amoeba'
+# require 'font-awesome-rails' #perhaps not needed because of way Joel did his integration
 
 require 'stash_engine/engine'
 module StashEngine
