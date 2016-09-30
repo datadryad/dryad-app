@@ -15,6 +15,7 @@
  *= require_self
  *= require jquery.fileupload
  *= require jquery.fileupload-ui
+ *= require font-awesome
  */
 
 /* I think  require font-awesome is not longer needed */

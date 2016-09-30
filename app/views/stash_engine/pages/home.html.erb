@@ -23,6 +23,8 @@
     </form>
   </div>
 </div>
+<%= render partial: 'why_share' %>
+
 <h1 class="o-heading__level1">Latest Dash Datasets</h1>
 <div id="latest_tiles"
      data-load="<%= main_app.latest_index_path(format: :js, q: '*:*') %>">
