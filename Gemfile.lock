@@ -32,6 +32,7 @@ PATH
       carrierwave (~> 0.10.0)
       concurrent-ruby (~> 1.0)
       filesize (~> 0.1.1)
+      font-awesome-rails
       jquery-fileupload-rails (~> 0.4.6)
       jquery-rails
       jquery-turbolinks
