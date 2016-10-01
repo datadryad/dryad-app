@@ -1,0 +1,32 @@
+.c-why-use__group {
+  margin: 1em 0 2em;
+}
+
+.c-why-use__items {
+  background-color: darkgray;
+  margin: 0 0 0 0;
+  padding: 0 0 0 0;
+}
+
+.c-why-use__blurb {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  color: white;
+}
+
+.c-why-use__icon {
+  padding: 10px 30px;
+}
+
+.c-why-use__text {
+  font-size: 1.3em;
+  margin: 1em 1em 1em 0;
+  line-height: 1.5;
+}
+
+.c-why-use__blocker {
+  height: 10px;
+  width: 100%;
+  background-color: white;
+}
