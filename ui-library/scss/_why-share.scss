@@ -1,8 +1,12 @@
 // ##### Why Share section ##### //
 
 .o-heading__level2-why-share {
-  @extend .o-heading__level2;
+  @extend %o-heading__level2;
   font-size: 1.6em;
+}
+
+.t-home__why-share-group {
+  padding-top: 20px;
 }
 
 .c-why-share {

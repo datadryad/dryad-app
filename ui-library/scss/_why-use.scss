@@ -1,18 +1,23 @@
 .c-why-use__group {
+  width: 100%;
   margin: 1em 0 2em;
+  padding: 0;
 }
 
 .c-why-use__items {
-  background-color: darkgray;
-  margin: 0 0 0 0;
-  padding: 0 0 0 0;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  background: linear-gradient(rgba($design-light-gray-color, 0.85) 100%, transparent 0), inline('../images/why_use_bg.jpg') top left / cover no-repeat;
+  background-color: $design-dark-gray-color;
+  color: $design-offwhite-color;
 }
 
 .c-why-use__blurb {
   display: flex;
-  justify-content: flex-start;
   align-items: center;
-  color: white;
+  justify-content: flex-start;
+  color: $design-white-color;
 }
 
 .c-why-use__icon {
@@ -20,13 +25,23 @@
 }
 
 .c-why-use__text {
+  margin: 1em 0;
+  padding: 0 2em 0 0;
   font-size: 1.3em;
-  margin: 1em 1em 1em 0;
-  line-height: 1.5;
+  line-height: 1.7;
+}
+
+.c-why-use__strong {
+  display: inline-block;
+  padding: 0 0.27em 0 0;
+  color: $design-white-color;
+  font-size: 1.15em;
+  font-weight: bold;
+
 }
 
 .c-why-use__blocker {
-  height: 10px;
   width: 100%;
-  background-color: white;
+  height: 10px;
+  background-color: $design-white-color;
 }

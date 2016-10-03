@@ -3,13 +3,13 @@
 .c-latest {
 
 	@include bp(screen1) {
-    margin: 0 -10px;
+    // margin: 0 -10px;
   }
 
 	@include bp(screen2) {
 		display: flex;
 		flex-flow: row wrap;
-		margin: 0 -20px;
+		// margin: 0 -20px;
 	}
 
 }
