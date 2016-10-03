@@ -4562,6 +4562,11 @@ html.svg .c-facet__check-label {
       border-right: 1px dashed #e65722;
       border-left: 1px dashed #e65722; } }
 
+@media (min-width: 480px) {
+  .c-why-share__text-group div {
+    font-size: 1.1em;
+    line-height: 1.5em; } }
+
 @media (min-width: 870px) {
   .c-why-share__text-group {
     padding: 0 40px; }

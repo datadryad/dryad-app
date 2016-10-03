@@ -25,7 +25,11 @@
 </div>
 <%= render partial: 'why_share' %>
 
-<h1 class="o-heading__level1">Latest Dash Datasets</h1>
+<%= render partial: 'why_use' %>
+
+<%= render partial: 'sharing_steps' %>
+
+<h1 class="o-heading__level1-home">Browse most recent</h1>
 <div id="latest_tiles"
      data-load="<%= main_app.latest_index_path(format: :js, q: '*:*') %>">
   <%= image_tag 'stash_engine/spinner.gif', size: '80x60', alt: 'Loading spinner' %>

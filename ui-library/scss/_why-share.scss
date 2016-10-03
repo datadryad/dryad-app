@@ -88,6 +88,13 @@
 }
 
 .c-why-share__text-group {
+  @include bp(screen1){
+    div {
+      font-size: 1.1em;
+      line-height: 1.5em;
+    }
+  }
+
   @include bp(screen3) {
     padding: 0 40px;
 
