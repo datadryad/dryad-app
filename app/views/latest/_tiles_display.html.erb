@@ -6,7 +6,7 @@
                   class: 'c-latest__title', title: document['dc_title_s'] %>
         <p class="c-latest__author"><%= document['dc_creator_sm'].map{|i| name_reverser(i) }.reject{|i| i.blank? }.join('; ') %>, <%= document['dc_publisher_s'] %></p>
       </div>
-      <p class="c-latest__type"><%= document['dc_type_s'] %></p>
+      <p class="c-latest__type"><%= document['dc_type_s'].try(:strip) %></p>
     </div>
   <% end %>
   <% if @document_list.length.odd? %>
