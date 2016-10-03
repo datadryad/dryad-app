@@ -88,7 +88,7 @@
 }
 
 .c-why-share__text-group {
-  @include bp(screen1){
+  @include bp(screen1) {
     div {
       font-size: 1.1em;
       line-height: 1.5em;
