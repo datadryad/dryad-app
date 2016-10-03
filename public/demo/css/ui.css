@@ -4633,6 +4633,11 @@ html.svg .c-facet__check-label {
 .c-sharing-steps__li {
   margin: 30px 20px;
   padding-left: 1em; }
+  .c-sharing-steps__li a {
+    color: #f2f2f2;
+    text-decoration: none; }
+  .c-sharing-steps__li a:hover {
+    text-decoration: underline; }
 
 .c-sharing-steps__strong {
   display: inline-block;

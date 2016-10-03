@@ -23,6 +23,15 @@
 .c-sharing-steps__li {
   margin: 30px 20px;
   padding-left: 1em;
+
+  a {
+    color: $design-offwhite-color;
+    text-decoration: none;
+  }
+
+  a:hover {
+    text-decoration: underline;
+  }
 }
 
 .c-sharing-steps__strong {
