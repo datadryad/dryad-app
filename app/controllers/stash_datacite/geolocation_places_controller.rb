@@ -20,7 +20,7 @@ module StashDatacite
         p = params.except(:controller, :action)
         geo = Geolocation.new_geolocation(place: p[:geo_location_place],
                                           point: [p[:latitude], p[:longitude]],
-                                          box: [p[:bbox]],
+                                          box: p[:bbox].reverse,
                                           resource_id: params[:resource_id])
       end
       @geolocation_place = geo.geolocation_place
