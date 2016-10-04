@@ -55,6 +55,7 @@ module StashDatacite
 
     #this is to simulate the bad old structure where a user can only have one affiliation
     def affiliation_id=(affil_id)
+      affiliations.clear
       self.affiliation_ids = affil_id
     end
 
