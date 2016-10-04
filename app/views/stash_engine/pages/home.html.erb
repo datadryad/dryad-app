@@ -14,8 +14,7 @@
   </div>
   <div class="t-home__search o-home-search">
     <form action="/search" accept-charset="UTF-8" method="get">
-      <label class="o-home-search__label" for="home-search-input">Discover University of California Research
-        Data</label>
+      <label class="o-home-search__label" for="home-search-input">Search <%= @dataset_count %> datasets</label>
       <div class="o-home__search-group">
         <input class="o-home-search__input" id="home-search-input" type="search" name="q">
         <button class="o-home-search__submit-button">Search</button>
@@ -23,7 +22,13 @@
     </form>
   </div>
 </div>
-<h1 class="o-heading__level1">Latest Dash Datasets</h1>
+<%= render partial: 'why_share' %>
+
+<%= render partial: 'why_use' %>
+
+<%= render partial: 'sharing_steps' %>
+
+<h1 class="o-heading__level1-home">Browse most recent</h1>
 <div id="latest_tiles"
      data-load="<%= main_app.latest_index_path(format: :js, q: '*:*') %>">
   <%= image_tag 'stash_engine/spinner.gif', size: '80x60', alt: 'Loading spinner' %>
