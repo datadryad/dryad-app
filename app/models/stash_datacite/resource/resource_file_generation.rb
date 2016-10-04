@@ -40,17 +40,19 @@ module StashDatacite
         )
 
         dc3_xml = datacite_xml_builder.build_datacite_xml(datacite_3: true)
+        File.open("tmp/#{doi_value.gsub('/', '-')}-dc3.xml", 'w') { |f| f.write(dc3_xml) }
         @client.update_metadata(identifier, dc3_xml, target_url)
 
         dc4_resource = datacite_xml_builder.build_resource
-        wrapper_xml = generate_stash_wrapper(dc4_resource, uploads)
+        wrapper_xml = generate_stash_wrapper(dc4_resource, @version, uploads)
 
         [dc4_resource.write_xml, wrapper_xml]
       end
 
-      def generate_stash_wrapper(dc4_resource, uploads)
+      def generate_stash_wrapper(dc4_resource, version_number, uploads)
         Stash::Wrapper::StashWrapperBuilder.new(
           dcs_resource: dc4_resource,
+          version_number: version_number,
           uploads: uploads
         ).build_xml
       end

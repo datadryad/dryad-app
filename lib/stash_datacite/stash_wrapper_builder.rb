@@ -5,16 +5,18 @@ module Stash
     class StashWrapperBuilder
       attr_reader :dcs_resource
       attr_reader :uploads
+      attr_reader :version_number
 
-      def initialize(dcs_resource:, uploads:)
+      def initialize(dcs_resource:, version_number:, uploads:)
         @dcs_resource = dcs_resource
+        @version_number = version_number
         @uploads = uploads
       end
 
       def build_stash_wrapper
         StashWrapper.new(
           identifier: to_sw_identifier(dcs_resource.identifier),
-          version: Version.new(number: dcs_resource.version, date: Date.today),
+          version: Version.new(number: version_number, date: Date.today),
           license: to_sw_license(dcs_resource.rights_list),
           inventory: to_sw_inventory(uploads),
           descriptive_elements: [dcs_resource.save_to_xml]
@@ -29,7 +31,7 @@ module Stash
 
       def to_sw_identifier(dcs_identifier)
         return unless dcs_identifier
-        raise "Invalid identifier type; expected DOI, was #{dcs_identifier.type}" unless dcs_identifier.type == 'DOI'
+        raise "Invalid identifier type; expected DOI, was #{dcs_identifier.identifier_type}" unless dcs_identifier.identifier_type == 'DOI'
         Identifier.new(type: IdentifierType::DOI, value: dcs_identifier.value)
       end
 
