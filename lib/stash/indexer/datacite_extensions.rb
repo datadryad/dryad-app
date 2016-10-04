@@ -16,6 +16,13 @@ end
 module Datacite
   module Mapping
 
+    DATACITE_NAMESPACES = [DATACITE_3_NAMESPACE, DATACITE_4_NAMESPACE].freeze
+    DATACITE_NAMESPACE_URIS = DATACITE_NAMESPACES.map(&:uri).freeze
+
+    def self.datacite_namespace?(elem)
+      (ns = elem.namespace) && DATACITE_NAMESPACE_URIS.include?(ns)
+    end
+
     class Description
       def funding?
         # TODO: Make 'data were created with' etc. a constant or something and move it to Datacite::Mapping
@@ -90,11 +97,11 @@ module Datacite
       end
 
       def geo_location_points
-        geo_locations.select { |loc| loc.place.nil? }.map(&:point).compact
+        geo_locations.map(&:point).compact
       end
 
       def self.datacite?(elem)
-        elem.name == 'resource' && elem.namespace == 'http://datacite.org/schema/kernel-3'
+        elem.name == 'resource' && Datacite::Mapping.datacite_namespace?(elem)
       end
 
       def calc_bounding_box # rubocop:disable Metrics/AbcSize, Metrics/MethodLength

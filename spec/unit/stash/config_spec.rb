@@ -89,7 +89,7 @@ module Stash
           bad_yml = File.read('spec/data/stash-harvester.yml').sub(good_value, bad_value)
           env = ::Config::Factory::Environments.load_hash(YAML.load(bad_yml))[:test]
           expect { Config.from_env(env) }.to raise_error do |e|
-            expect(e).to be_a URI::InvalidURIError
+            expect(e.cause).to be_a URI::InvalidURIError
             expect(e.message).to include(bad_value)
           end
         end

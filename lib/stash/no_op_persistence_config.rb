@@ -19,7 +19,7 @@ module Stash
     def initialize(_args = nil); end
 
     def description
-      "#{NoOpPersistenceConfig}"
+      NoOpPersistenceConfig.to_s
     end
 
     def create_manager

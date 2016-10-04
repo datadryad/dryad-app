@@ -107,14 +107,16 @@ module Datacite
           @point2 = GeoLocationPoint.new(-33.45, -122.33)
           @place1 = 'Pacific Ocean'
           @place2 = 'Ouagadougou'
+          @place_point1 = GeoLocationPoint.new(-48.8767, -123.3933)
+          @place_point2 = GeoLocationPoint.new(12.3572, -1.5353)
           allow(@resource).to receive(:geo_locations) do
             [
               GeoLocation.new(box: @box1),
               GeoLocation.new(point: @point1),
-              GeoLocation.new(place: @place1, point: GeoLocationPoint.new(-48.8767, -123.3933)),
+              GeoLocation.new(place: @place1, point: @place_point1),
               GeoLocation.new(box: @box2),
               GeoLocation.new(point: @point2),
-              GeoLocation.new(place: @place2, point: GeoLocationPoint.new(12.3572, -1.5353))
+              GeoLocation.new(place: @place2, point: @place_point2)
             ]
           end
         end
@@ -127,7 +129,7 @@ module Datacite
 
         describe '#geo_location_points' do
           it 'should extract the points' do
-            expect(@resource.geo_location_points).to eq([@point1, @point2])
+            expect(@resource.geo_location_points).to contain_exactly(@point1, @point2, @place_point1, @place_point2)
           end
         end
 
@@ -171,17 +173,16 @@ module Datacite
           expect(@resource.calc_bounding_box).to eq(box)
         end
 
-        it 'should ignore place points' do
+        it 'should include place points and boxes' do
           allow(@resource).to receive(:geo_locations) do
             [
               GeoLocation.new(point: GeoLocationPoint.new(16.31591, 80)),
               GeoLocation.new(place: 'Pacific Ocean', point: GeoLocationPoint.new(-48.8767, -123.3933)),
               GeoLocation.new(point: GeoLocationPoint.new(20, 83.068985)),
-              GeoLocation.new(place: 'Ouagadougou', point: GeoLocationPoint.new(12.3572, -1.5353)),
-              GeoLocation.new(box: GeoLocationBox.new(18, 73.480431, 22.672657, 78))
+              GeoLocation.new(place: 'Ouagadougou', box: GeoLocationBox.new(18, 73.480431, 22.672657, 78))
             ]
           end
-          box = GeoLocationBox.new(16.31591, 73.480431, 22.672657, 83.068985)
+          box = GeoLocationBox.new(-48.8767, -123.3933, 22.672657, 83.068985)
           expect(@resource.calc_bounding_box).to eq(box)
         end
       end

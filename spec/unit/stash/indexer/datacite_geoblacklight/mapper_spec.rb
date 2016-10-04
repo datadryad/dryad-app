@@ -83,7 +83,7 @@ module Stash
               identifier: SW::Identifier.new(type: SW::IdentifierType::DOI, value: @doi_value),
               version: SW::Version.new(number: 1, date: Date.new(2013, 8, 18), note: 'Sample wrapped Datacite document'),
               license: SW::License::CC_BY,
-              embargo: SW::Embargo.new(type: SW::EmbargoType::DOWNLOAD, period: '1 year', start_date: Date.new(2014, 8, 18), end_date: Date.new(2013, 8, 18)),
+              embargo: SW::Embargo.new(type: SW::EmbargoType::DOWNLOAD, period: '1 year', start_date: Date.new(2013, 8, 18), end_date: Date.new(2014, 8, 18)),
               inventory: SW::Inventory.new(
                 files: [
                   SW::StashFile.new(pathname: 'HSRC_MasterSampleII.dat', size_bytes: 12_345, mime_type: 'text/plain'),
