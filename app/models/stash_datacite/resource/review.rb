@@ -75,7 +75,7 @@ module StashDatacite
       end
 
       def no_geolocation_data
-        (geolocation_points.length < 1 && geolocation_places.length < 1 && geolocation_boxes.length < 1) ? true : false
+        geolocation_points.empty? && geolocation_places.empty? && geolocation_boxes.empty? ? true : false
       end
     end
   end

@@ -4,6 +4,8 @@ require 'stash/wrapper'
 require 'tempfile'
 require 'stash_ezid/client'
 require 'fileutils'
+require 'stash_datacite/datacite_xml_builder'
+require 'stash_datacite/stash_wrapper_builder'
 require 'stash_datacite/dublin_core_builder'
 require 'stash_datacite/data_one_manifest_builder'
 

@@ -45,13 +45,15 @@ module StashDatacite
           @creator.reload
           if params[:affiliation].present?
             @affiliation = Affiliation.create(long_name: params[:affiliation])
-            @creator.affiliation_id = @affiliation.id
+            @creator.affiliation = @affiliation
             @creator.save
           else
             ''
           end
         else
           @creator.update(creator_params)
+          @creator.affiliation = duplicate_affiliation
+          @creator.save
         end
         format.js { render template: 'stash_datacite/shared/update.js.erb' }
       end

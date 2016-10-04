@@ -15,8 +15,8 @@ module StashDatacite
     # GET Leaflet AJAX index
     def points_coordinates
       respond_to do |format|
-        @geolocation_points = GeolocationPoint.select(:resource_id, :id, :latitude, :longitude).
-            only_geo_points(params[:resource_id])
+        @geolocation_points = GeolocationPoint.select(:resource_id, :id, :latitude, :longitude)
+                                              .only_geo_points(params[:resource_id])
         format.html
         format.json { render json:  @geolocation_points }
       end
@@ -26,7 +26,8 @@ module StashDatacite
     def map_coordinates
       geo = geolocation_by_point(params)
       unless geo
-        geo = Geolocation.new_geolocation(point: [params[:latitude], params[:longitude]], resource_id: params[:resource_id])
+        geo = Geolocation.new_geolocation(point: [params[:latitude], params[:longitude]],
+                                          resource_id: params[:resource_id])
       end
       @geolocation_point = geo.geolocation_point
       respond_to do |format|
@@ -80,9 +81,9 @@ module StashDatacite
     # geolocation exists with params resource_id, latitude, longitude
     def geolocation_by_point(object_params)
       pt_params = object_params
-      points = GeolocationPoint.only_geo_points(params[:resource_id]).
-          where(latitude: pt_params[:latitude], longitude: pt_params[:longitude])
-      return nil if points.length < 1
+      points = GeolocationPoint.only_geo_points(params[:resource_id])
+                               .where(latitude: pt_params[:latitude], longitude: pt_params[:longitude])
+      return nil if points.empty?
       points.first.geolocation
     end
 
@@ -90,7 +91,6 @@ module StashDatacite
     def set_geolocation_point
       @geolocation_point = GeolocationPoint.find(params[:id])
     end
-
 
     # Only allow a trusted parameter "white list" through.
     def geolocation_point_params

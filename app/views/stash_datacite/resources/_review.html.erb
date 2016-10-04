@@ -43,16 +43,12 @@
     <%= render partial: "stash_datacite/licenses/review" %>
 
 <div class="o-dataset-nav">
-
-  <div id="submit-dialog-confirm" title="Submission to Dash">
-    <p>By confirming submission to Dash, your data will be publicly available on the Dash website under a CC0 license. Please only submit legitimate, complete data.” (Note we might not want to hard-code the license in the alert since it's configurable—maybe just leave it out.</p>
-  </div>
-
   <%= link_to 'Back to My Datasets', stash_url_helpers.dashboard_path , id: 'dashboard_path', class: 'o-button__icon-left', role: 'button' %>
   <% if @data.blank? %>
-    <%= button_to("Submit", stash_datacite.resources_submission_path(resource_id: @resource.id), class: 'o-button__submit') %>
+    <%= button_to("Submit", stash_datacite.resources_submission_path(resource_id: @resource.id),
+        data: {confirm: "By confirming submission to Dash, your data will be publicly available on the Dash website under a #{@resource.rights.first.try(:rights)} license. Please only submit legitimate, complete data."}, class: 'o-button__submit') %>
   <% else %>
-    <%= button_to("Submit", stash_datacite.resources_submission_path(resource_id: @resource.id), disabled: true, class: 'o-button__submit') %>
+    <%= button_to("Submit", '#', disabled: true, class: 'o-button__submit') %>
   <% end %>
 </div>
 
@@ -60,22 +56,4 @@
 <% flash.each do |type, message| %>
   $("#flash_messages").html("<%= type.to_s.humanize %>: <%= message.html_safe %>")
 <% end %>
-
-  $('#submit-dialog-confirm').hide();
-  // $('.o-button__submit').click(function() {
-  //   $( "#submit-dialog-confirm" ).dialog({
-  //     resizable: false,
-  //     height: 300,
-  //     width: 550,
-  //     modal: true,
-  //     buttons: {
-  //       "Submit": function() {
-  //         $( this ).dialog( "close" );
-  //       },
-  //       Cancel: function() {
-  //         $( this ).dialog( "close" );
-  //       }
-  //     }
-  //   });
-  // } );
 </script>
