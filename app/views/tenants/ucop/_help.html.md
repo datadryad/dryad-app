@@ -7,14 +7,14 @@ Use this checklist to prepare your dataset for submission. See our Policies sect
 4.  Prepare or obtain relevant explanatory documents related to the dataset (e.g., readme.txt files, formal metadata records, or other critical information, etc.)
 5.  Gather the following information, to be entered as metadata (see Metadata Basics section below for more information):
 
-- Dataset title (make sure to be as descriptive as possible)
-- Full names of all dataset co-creators (or better yet, include ORCIDs for each creator)
-- Keywords for the dataset (use discipline-specific controlled vocabularies whenever possible)
-- Abstract (this is a description describing the dataset you are submitting)
-- Methods (description of the methods used to collect the data)
-- Usage Notes (instructions for other researchers to use or explore the data)
-- Funding Information : Name of the funding organization that supported creation of the resource, including applicable grant number(s)
-- Related Works including grant numbers, publications using the dataset, and other related datasets 
+  - Dataset title (make sure to be as descriptive as possible)
+  - Full names of all dataset co-creators (or better yet, include ORCIDs for each creator)
+  - Keywords for the dataset (use discipline-specific controlled vocabularies whenever possible)
+  - Abstract (this is a description describing the dataset you are submitting)
+  - Methods (description of the methods used to collect the data)
+  - Usage Notes (instructions for other researchers to use or explore the data)
+  - Funding Information : Name of the funding organization that supported creation of the resource, including applicable grant number(s)
+  - Related Works including grant numbers, publications using the dataset, and other related datasets 
 
 ## Metadata Basics
 Comprehensive data documentation (i.e. metadata) is the key to future understanding of data. Without a thorough description of the context of the data file, the context in which the data were collected, the measurements that were made, and the quality of the data, it is unlikely that the data can be easily discovered, understood, or effectively used. Metadata is important not only to help people understand and make proper use of a data resource, but metadata also makes the resource discoverable (for example through internet searches or data indexing services). Read more about metadata in the [DataONE Primer on Data Management Best Practices](http://www.dataone.org/sites/all/documents/DataONE_BP_Primer_020212.pdf)
