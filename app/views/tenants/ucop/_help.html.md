@@ -6,6 +6,7 @@ Use this checklist to prepare your dataset for submission. See our Policies sect
 3.  Prepare or obtain the most up-to-date and complete version of dataset
 4.  Prepare or obtain relevant explanatory documents related to the dataset (e.g., readme.txt files, formal metadata records, or other critical information, etc.)
 5.  Gather the following information, to be entered as metadata (see Metadata Basics section below for more information):
+
 - Dataset title (make sure to be as descriptive as possible)
 - Full names of all dataset co-creators (or better yet, include ORCIDs for each creator)
 - Keywords for the dataset (use discipline-specific controlled vocabularies whenever possible)
