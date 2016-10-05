@@ -30,7 +30,7 @@ Required Fields:
 
 Optional Fields (the more you describe your dataset, the wider the reach):
 
-- Keyword(s) : Descriptive words that may help others discover your dataset. Dash recommends that you determine whether your discipline has an existing controlled vocabulary from which to choose your keywords. Please enter as many keywords as applicable
+- Keyword(s) : Descriptive words that may help others discover your dataset. We recommend that you determine whether your discipline has an existing controlled vocabulary from which to choose your keywords. Please enter as many keywords as applicable
 - Abstract : An abstract or general description of the dataset
 - Methods : Any technical or methodological information that may help others to understand how the data were generated
 - Usage Notes : Any technical or methodological information that may help others determine how the data may be properly reused
@@ -55,6 +55,9 @@ Here is some basic information on uploading datasets. See Policies section below
 
 ### Who can use?
 
+#### Where am I?
+You are accessing a self-service data publication service developed by the California Digital Library.  This sevice is branded under the names, Dash, datashare, and ONEshare.  Don't worry, each of these brands offer the same product and features.  
+
 #### Who can publish data?
 
 This site is targeted for use by members of the University of California community. Researchers in any field from participating UC campuses can use their campus credentials to deposit data in their campus-specific website. The following seven campuses currently participate:
@@ -74,10 +77,10 @@ Contact [uc3@ucop.edu](mailto:uc3@ucop.edu) for more information.
 Anyone can search, view and download datasets. However, for each campus-specific website, data submission is limited to individuals
 affiliated with that campus.  Contact [uc3@ucop.edu](mailto:uc3@ucop.edu) for more information.
 
-#### Who can use DataONE Dash?
-DataONE Dash is a separate service, operated by CDL in collaboration with the
+#### What is ONEshare?
+ONEshare is a service, operated by CDL in collaboration with the
 [DataONE project](http://dataone.org/). Anyone can deposit Environmental and Earth observation data within
-[DataONE Dash](https://oneshare.cdlib.org/). Contact uc3@ucop.edu for more
+[ONEshare](https://oneshare.cdlib.org/). Contact uc3@ucop.edu for more
 information.
 
 ### What content is appropriate? 
@@ -93,14 +96,13 @@ collected from human subjects.
 Here is some basic information on submitting datasets. See the Submission Basics section above for more details.
 
 - Obtain permission from the appropriate Principal Investigators(s) and
-  inform any dataset co-creators that you plan to deposit the dataset in
-  Dash.
+  inform any dataset co-creators that you plan to deposit the dataset
 - Take care when sharing sensitive data, and be certain to comply with
   institutional and governmental regulations. It is your responsibility to
-  share your data responsibly and ethically.
+  share your data responsibly and ethically
 - Collect the files comprising the data set. Name files systematically and
   use open file formats whenever possible (see the UK Data Archive for a
-  [list of optimal file formats](http://www.data-archive.ac.uk/create-manage/format/formats-table)).
+  [list of optimal file formats](http://www.data-archive.ac.uk/create-manage/format/formats-table))
   Gather the following information to fully describe the dataset:
  - Dataset title - be as specific as possible
  - Full names and institutional affiliations of all dataset co-creators
@@ -156,7 +158,7 @@ metadata in the
 We require a few key pieces of metadata. Additional information can be
 included in the “Usage Notes” section of the description, or as a separate
 readme.txt file archived alongside the dataset files. The metadata entry
-form for Dash is based on fields from the
+form is based on fields from the
 [DataCite schema](http://schema.datacite.org/meta/kernel-3/index.html) and is broadly applicable to data from any field.
 
 #### Does the data have to be associated with a publication?
@@ -164,14 +166,14 @@ form for Dash is based on fields from the
 No. We accept all quality data, regardless of whether they have been
 used to publish a paper.
 
-#### Can I obtain a DOI (Digital Object Identifier) before I upload my data in Dash?
+#### Can I obtain a DOI (Digital Object Identifier) before I upload my data?
 
 Yes. To obtain a DOI, you must submit a minimal amount of required
 description, but you can return later to upload the data files.
 
 #### Do you support data embargoes or restricted access?
 
-Not at this time. We do have plans to expand the Dash functionality to
+Not at this time. We do have plans to expand the functionality to
 include both. If you have specific requests for functionality, please add
 them to our [GitHub Issues page](http://github.com/cdluc3/dash/issues).  
 
@@ -186,13 +188,13 @@ All datasets will be indexed by the
 and [Scopus](http://www.elsevier.com/online-tools/scopus). Furthermore, each dataset
 is given a unique Digital Object Identifier or DOI. Entering the
 DOI URL in any browser will take the user to the dataset's landing page in
-Merritt. Dash also provides a faceted search and browse capability for
+Merritt. This service also provides a faceted search and browse capability for
 direct discovery.
 
 #### Who can access and use datasets?
 
 Every dataset landing page includes usage information associated with the
-dataset. Data found in Dash may be associated with any of the following licensing
+dataset. Data may be associated with any of the following licensing
 terms:
 
 1. Custom Data Use Agreement.
@@ -204,11 +206,11 @@ terms:
    (CC0). This waiver has no restrictions on use and encourages reuse of
    data for any and all purposes.
 
-All new data intended for DashONE Dash must be submitted under the terms of
+All new data intended for ONEshare must be submitted under the terms of
 the CC0 waiver; data intended for any of the UC campus instances must be
 submitted under the terms of the CC-BY license.
 
-Note: data contributed before Dash's standardization to these two licensing
+Note: data contributed before standardization to these two licensing
 regimes retain their original licensing terms.
 
 Although many researchers would prefer to maintain more control over who
@@ -237,7 +239,7 @@ proper attribution to the creators. To do so, we ask that you cite the data
 formally in the reference section of your publication. Each dataset’s
 landing page includes a suggested citation.
 
-Note: datasets in DataONE Dash are in the public domain under a
+Note: datasets in ONEshare are in the public domain under a
 [Creative Commons Universal waiver ](http://creativecommons.org/publicdomain/zero/1.0/)(CC0).
 You have no legal obligations, but we do ask that you cite the data
 formally when practical to acknowledge the creators and to make your own
@@ -247,7 +249,7 @@ research more reproducible.
 
 #### For how long will the data be available?
 
-Data deposited in Dash are permanently archived and available through the
+Data deposited are permanently archived and available through the
 [California Digital Library](http://cdlib.org/)'s
 [Merritt Repository](https://merritt.cdlib.org/). For a full description
 of the services provided by Merritt, see this document:
@@ -257,7 +259,7 @@ Preservation policy details include:
 
 - **Retention period**: Items will be retained indefinitely, at the
   discretion of the participating campus library and/or UC3.
-- **Functional preservation:** Dash makes no promises of usability and
+- **Functional preservation:** We make no promises of usability and
   understandability of deposited objects over time.
 - **File preservation**: Data files are replicated with multiple copies in
   multiple geographic locations; metadata are backed up on a nightly
@@ -278,7 +280,7 @@ undergone formal review.
 All information is provided "as-is" and the user shall hold the California
 Digital Library, UC Campus, and any information provider supplying data free and harmless in connection with the use of such information.
 
-### Can I update or remove published data?
+### Can I update or remove?
 
 #### Can I update my data?
 
@@ -299,7 +301,7 @@ properly de-identified). If your data must be deleted, contact
 #### Can a DOI (Digital Object Identifier) be revoked?
 
 Content not considered to fall under the scope of the repository will be
-removed and associated DOIs issued by Dash revoked. Please signal promptly
+removed and associated DOIs issued revoked. Please signal promptly
 any suspected policy violations, ideally no later than 24 hours from
 upload. User access may be revoked on violation of
 [Terms of Use](http://www.cdlib.org/about/terms.html).
