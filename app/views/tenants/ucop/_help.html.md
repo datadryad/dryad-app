@@ -47,9 +47,45 @@ Here is some basic information on uploading datasets. See Policies section below
 - It is your responsibility to ensure your data are being shared responsibly and ethically. Please be careful of sharing sensitive data and ensure you are complying with institutional and governmental regulations
 
 
-## Publishing Your Data
 
-### What is the content scope of UC Dash?
+
+
+
+##  Frequently Asked Questions
+
+### Using this service
+
+#### Who can publish data?
+
+This site is targeted for use by members of the University of California community. Researchers in any field from participating UC campuses can use their campus credentials to deposit data in their campus-specific website. The following seven campuses currently participate:
+
+- [UC Berkeley](https://dash.berkeley.edu/)
+- [UC Irvine](https://dash.lib.uci.edu/)
+- [UC Merced](https://dash.ucmerced.edu/)
+- [UC Office of the President](https://dash.ucop.edu/)
+- [UC Riverside](https://dash.ucr.edu/)
+- [UC Santa Cruz](https://dash.library.ucsc.edu/)
+- [UC San Francisco](https://datashare.ucsf.edu/)
+
+Contact [uc3@ucop.edu](mailto:uc3@ucop.edu) for more information.
+
+#### Can I use if my campus is not listed?
+
+Anyone can search, view and download datasets. However, for each campus-specific website, data submission is limited to individuals
+affiliated with that campus.  Contact [uc3@ucop.edu](mailto:uc3@ucop.edu) for more information.
+
+#### Who can use DataONE Dash?
+DataONE Dash is a separate service, operated by CDL in collaboration with the
+[DataONE project](http://dataone.org/). Anyone can deposit Environmental and Earth observation data within
+[DataONE Dash](https://oneshare.cdlib.org/). Contact uc3@ucop.edu for more
+information.
+
+
+
+
+### Publishing Your Data
+
+#### What is the content scope of UC Dash?
 
 All fields of scholarship. All types of research artifacts. Dash is
 intended for complete, final research datasets. Content must not violate
@@ -266,32 +302,3 @@ removed and associated DOIs issued by Dash revoked. Please signal promptly
 any suspected policy violations, ideally no later than 24 hours from
 upload. User access may be revoked on violation of
 [Terms of Use](http://www.cdlib.org/about/terms.html).
-
-
-## Other Frequently Asked Questions
-
-### Who can publish data?
-
-This site is targeted for use by members of the University of California community. Researchers in any field from participating UC campuses can use their campus credentials to deposit data in their campus-specific website. The following seven campuses currently participate:
-
-- [UC Berkeley](https://dash.berkeley.edu/)
-- [UC Irvine](https://dash.lib.uci.edu/)
-- [UC Merced](https://dash.ucmerced.edu/)
-- [UC Office of the President](https://dash.ucop.edu/)
-- [UC Riverside](https://dash.ucr.edu/)
-- [UC Santa Cruz](https://dash.library.ucsc.edu/)
-- [UC San Francisco](https://datashare.ucsf.edu/)
-
-Contact [uc3@ucop.edu](mailto:uc3@ucop.edu) for more information.
-
-### Can I use if my campus is not listed?
-
-Anyone can search, view and download datasets. However, for each campus-specific website, data submission is limited to individuals
-affiliated with that campus.  Contact [uc3@ucop.edu](mailto:uc3@ucop.edu) for more information.
-
-### Who can use DataONE Dash?
-DataONE Dash is a separate service, operated by CDL in collaboration with the
-[DataONE project](http://dataone.org/). Anyone can deposit Environmental and Earth observation data within
-[DataONE Dash](https://oneshare.cdlib.org/). Contact uc3@ucop.edu for more
-information.
-
