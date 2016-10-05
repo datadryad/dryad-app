@@ -53,7 +53,7 @@ Here is some basic information on uploading datasets. See Policies section below
 
 ##  Frequently Asked Questions
 
-### Using this service
+### Who can use?
 
 #### Who can publish data?
 
@@ -80,19 +80,17 @@ DataONE Dash is a separate service, operated by CDL in collaboration with the
 [DataONE Dash](https://oneshare.cdlib.org/). Contact uc3@ucop.edu for more
 information.
 
+### What content is appropriate? 
 
+#### What type of data is within scope?
 
-
-### Publishing Your Data
-
-#### What is the content scope of UC Dash?
-
-All fields of scholarship. All types of research artifacts. Dash is
-intended for complete, final research datasets. Content must not violate
+All fields of scholarship. All types of research artifacts. However, this service is
+intended for complete, final research datasets and all content must not violate
 privacy or copyright, or breach confidentiality or nondisclosure for data
 collected from human subjects.
 
-### How should I prepare to submit data?
+#### How should I prepare to submit data?
+Here is some basic information on submitting datasets. See the Submission Basics section above for more details.
 
 - Obtain permission from the appropriate Principal Investigators(s) and
   inform any dataset co-creators that you plan to deposit the dataset in
@@ -104,27 +102,27 @@ collected from human subjects.
   use open file formats whenever possible (see the UK Data Archive for a
   [list of optimal file formats](http://www.data-archive.ac.uk/create-manage/format/formats-table)).
   Gather the following information to fully describe the dataset:
-- Dataset title - be as specific as possible
-- Full names and institutional affiliations of all dataset co-creators
-- Keywords for the dataset (use discipline-specific controlled vocabularies
+ - Dataset title - be as specific as possible
+ - Full names and institutional affiliations of all dataset co-creators
+ - Keywords for the dataset (use discipline-specific controlled vocabularies
   whenever possible)
-- Abstract briefly describing the dataset you are submitting– What is the
+ - Abstract briefly describing the dataset you are submitting– What is the
   data? Why was it collected?
-- Description of the methods used to collect the data
-- Citations to associated materials, including grant numbers, publications
+ - Description of the methods used to collect the data
+ - Related works and associated materials, including grant numbers, publications
   using the dataset, and other related datasets
-- If relevant, information about where the data was collected (e.g., the
+ - If relevant, information about where the data was collected (e.g., the
   placename or lat/long coordinates)
-- Any other information that you would want to relay to someone analyzing
+ - Any other information that you would want to relay to someone analyzing
   your data
 
 For generic data management help, see the
 [DataONE Primer on Data Management Best Practices](http://www.dataone.org/sites/all/documents/DataONE_BP_Primer_020212.pdf)
 (PDF).
 
-### What are the file format requirements?
+#### What are the file format requirements?
 
-Dash accepts files in any format for deposit. However, we recommend using
+We accept files in any format for deposit. However, we recommend using
 non-proprietary/open file types to make the data readable by more
 researchers over a longer span of time. (See the UK Data Archive for a
 [list of optimal file formats](http://www.data-archive.ac.uk/create-manage/format/formats-table).)
@@ -134,7 +132,7 @@ viewing and/or usage of the file. This information can be included in the
 "Methods" or “Usage Notes” section of the description, or as a separate
 readme.txt file archived alongside the dataset files.
 
-### What are the size limits?
+#### What are the size limits?
 
 There is a limit of 2GB per file and 10GB per dataset. All data files are
 stored in the Merritt Repository. More information about the Merritt
@@ -142,6 +140,7 @@ Repository Service is available in the white paper
 "[UC3, Merritt and Long-term Preservation](https://merritt.cdlib.org/d/ark%3A%2F13030%2Fm52f7p63/2/producer%2FUC3-Merritt-preservation-latest.pdf)."
 Contact [uc3@ucop.edu](mailto:uc3@ucop.edu) for information on submitting
 larger datasets.
+
 
 ### Why is complete documentation so important? 
 
@@ -177,24 +176,22 @@ Not at this time. We do have plans to expand the Dash functionality to
 include both. If you have specific requests for functionality, please add
 them to our [GitHub Issues page](http://github.com/cdluc3/dash/issues).
 
-## Metadata Basics: Accessing and Using Data
+### Who will find my data?
 
-### How will anyone find my data?
+#### How are the datasets dscoverable?
 
-Dash datasets will be indexed by the
+All datasets will be indexed by the
 [Thomson-Reuters Data Citation Index](http://wokinfo.com/products_tools/multidisciplinary/dci/about/)
-and [Scopus](http://www.elsevier.com/online-tools/scopus). All datasets
-in Dash are given a unique Digital Object Identifier or DOI. Entering the
+and [Scopus](http://www.elsevier.com/online-tools/scopus). Furthermore, each dataset
+is given a unique Digital Object Identifier or DOI. Entering the
 DOI URL in any browser will take the user to the dataset's landing page in
 Merritt. Dash also provides a faceted search and browse capability for
 direct discovery.
 
-### Who can access and use datasets in Dash?
+#### Who can access and use datasets?
 
 Every dataset landing page includes usage information associated with the
-dataset.
-
-Data found in Dash may be associated with any of the following licensing
+dataset. Data found in Dash may be associated with any of the following licensing
 terms:
 
 1. Custom Data Use Agreement.
@@ -219,33 +216,37 @@ supports the advancement of knowledge. Read the
 [Panton Principles for Open Data in Science](http://pantonprinciples.org/)
 for more information.
 
-### Do I need to log into Dash to get data?
+### Do I need to log in to access published datasets?
 
 No. Users can download data without logging in.
 
-### Do I have to pay to download the data?
+### How do I reuse published datasets?
+
+#### Do I have to pay to download/reuse published datasets?
 
 No. These data are made publicly available free of charge.
 
 ### What are my obligations if I use the data in a publication?
 
 Except for some legacy datasets that were released with custom use
-agreements, data in UC Dash is released under the terms of the
+agreements, data is released under the terms of the
 [Creative Commons Attribution license ](http://creativecommons.org/licenses/by/4.0/)(CC-BY-4.0).
 This means that you can use the data for any purpose, but you must give
 proper attribution to the creators. To do so, we ask that you cite the data
 formally in the reference section of your publication. Each dataset’s
 landing page includes a suggested citation.
 
-Data in DataONE Dash is in the public domain under a
+Note: datasets in DataONE Dash are in the public domain under a
 [Creative Commons Universal waiver ](http://creativecommons.org/publicdomain/zero/1.0/)(CC0).
 You have no legal obligations, but we do ask that you cite the data
 formally when practical to acknowledge the creators and to make your own
 research more reproducible.
 
-### For how long will the data be available?
+### What guarantees do you give?
 
-Data deposited in Dash is permanently archived and available through the
+#### For how long will the data be available?
+
+Data deposited in Dash are permanently archived and available through the
 [California Digital Library](http://cdlib.org/)'s
 [Merritt Repository](https://merritt.cdlib.org/). For a full description
 of the services provided by Merritt, see this document:
@@ -268,34 +269,33 @@ Preservation policy details include:
   efforts will be made to integrate all content into suitable alternative
   institutional and/or subject based repositories.
 
-### Do UC or CDL guarantee the quality of Dash data?
+#### Do you check to ensure the quality of the data?
 
-No. Dash data is self-deposited by researchers and may or may not have
+No. Data found in this service is self-deposited by researchers and may or may not have
 undergone formal review.
 
 All information is provided "as-is" and the user shall hold the California
-Digital Library, UC Campus, and information providers supplying data to
-Dash free and harmless in connection with the use of such information.
+Digital Library, UC Campus, and any information provider supplying data free and harmless in connection with the use of such information.
 
-## Updating or Removing Data
+### Can I update or remove published data?
 
-### Can I update my data?
+#### Can I update my data?
 
 Yes, you can update both the description and the data files. All versions
 of a dataset will be accessible and kept in the Merritt Repository, but the
 dataset DOI will always resolve to the newest version. Contact
 [uc3@ucop.edu](mailto:uc3@ucop.edu) for more information.
 
-### Can I delete my data?
+#### Can I delete my data?
 
-Data deposited in Dash is intended to remain permanently archived and
+Data deposited is intended to remain permanently archived and
 available. Deletion of a deposited dataset is considered an exceptional
 action which normally should be requested and fully justified by the
 original contributor (e.g., if sensitive human subject data was not
 properly de-identified). If your data must be deleted, contact
 [uc3@ucop.edu](mailto:uc3@ucop.edu).
 
-### Can a DOI (Digital Object Identifier) be revoked?
+#### Can a DOI (Digital Object Identifier) be revoked?
 
 Content not considered to fall under the scope of the repository will be
 removed and associated DOIs issued by Dash revoked. Please signal promptly
