@@ -52,11 +52,10 @@ Here is some basic information on uploading datasets. See Policies section below
 
 
 ##  Frequently Asked Questions
+You are accessing a self-service data publication service developed by the California Digital Library.  This service is branded under different names: Dash, datashare, and ONEshare.  Don't worry, each of these brands offer the same product and features.  Below are FAQs.  Unless otherwise mentioned, all infomration below covers all instances of our service.
+
 
 ### Who can use?
-
-#### Where am I?
-You are accessing a self-service data publication service developed by the California Digital Library.  This sevice is branded under the names, Dash, datashare, and ONEshare.  Don't worry, each of these brands offer the same product and features.  
 
 #### Who can publish data?
 
