@@ -182,7 +182,7 @@ module Stash
         Dir.mktmpdir do |tmpdir|
           unreadable_path = "#{tmpdir}/config.yml"
           FileUtils.touch(unreadable_path)
-          File.chmod(0000, unreadable_path)
+          File.chmod(0o000, unreadable_path)
           expect { Config.from_file(unreadable_path) }.to raise_error do |e|
             expect(e).to be_an IOError
             expect(e.message).to include(unreadable_path)

@@ -18,17 +18,13 @@ module Stash
       NOTE_EXAMPLES = ['Examples:',
                        ['  Harvest all records in January 2015 from the data source given',
                         '  in the default configation file:',
-                        "\n    $ stash-harvester -f 2015-01-01 -u 2015-01-31"
-                       ].join("\n"),
+                        "\n    $ stash-harvester -f 2015-01-01 -u 2015-01-31"].join("\n"),
                        ['  Harvest all records from 1 January 2015 to the present day',
                         '  from the data source given in the default configation file:',
-                        "\n    $ stash-harvester -f 2015-01-01 -u 2015-01-31"
-                       ].join("\n"),
+                        "\n    $ stash-harvester -f 2015-01-01 -u 2015-01-31"].join("\n"),
                        ['  Harvest all records from the data source described in my-config.yml',
                         '  from the beginning of time to the present day:',
-                        "\n    $ stash-harvester -c my-config.yml"
-                       ].join("\n")
-                      ].join("\n\n")
+                        "\n    $ stash-harvester -c my-config.yml"].join("\n")].join("\n\n")
 
       NOTES = [NOTE_EXAMPLES, NOTE_CONFIG, NOTE_DATETIME].join("\n\n") + "\n"
 

@@ -45,7 +45,8 @@ module Stash
         def harvest_records
           do_harvest
         rescue => e
-          Stash::Harvester.log.error(e)
+          log.error(e)
+          log.debug(e.backtrace.join("\n")) if e.backtrace
           raise e
         end
 
@@ -54,6 +55,10 @@ module Stash
         end
 
         private
+
+        def log
+          Stash::Harvester.log
+        end
 
         def client
           base_uri = config.source_uri
@@ -76,7 +81,7 @@ module Stash
           client.list_records(opts)
         rescue ::OAI::Exception => e
           raise if e.code != 'noRecordsMatch'
-          Stash::Harvester.log.warn("No records returned from #{config.source_uri} for options #{opts}")
+          log.warn("No records returned from #{config.source_uri} for options #{opts}")
           nil
         end
 

@@ -33,13 +33,18 @@ module Stash
 
         private
 
+        def log
+          Stash::Indexer.log
+        end
+
         def index_record(r, solr)
           wrapped_metadata = r.as_wrapper
           index_document = metadata_mapper.to_index_document(wrapped_metadata)
           solr.add index_document
         rescue => e
           identifier = r.identifier if r
-          Stash::Indexer.log.error("Error adding record with identifier #{identifier}: #{e}")
+          log.error("Error adding record with identifier #{identifier}: #{e}")
+          log.debug(e.backtrace.join("\n")) if e.backtrace
           raise
         end
 
@@ -47,7 +52,8 @@ module Stash
           solr.delete_by_id r.identifier
         rescue => e
           identifier = r.identifier if r
-          Stash::Indexer.log.error("Error deleting record with identifier #{identifier}: #{e}")
+          log.error("Error deleting record with identifier #{identifier}: #{e}")
+          log.debug(e.backtrace.join("\n")) if e.backtrace
           raise
         end
       end

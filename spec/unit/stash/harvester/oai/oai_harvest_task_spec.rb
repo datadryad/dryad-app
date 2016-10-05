@@ -69,6 +69,7 @@ module Stash
             doc = REXML::Document.new file
             result = ::OAI::ListRecordsResponse.new(doc) {} # empty resumption block
             expected_array = result.collect { |r| OAIRecord.new(r) }
+            expect(expected_array.size).to eq(4) # just to be sure
 
             task = OAIHarvestTask.new(config: @config)
             expect(@oai_client).to receive(:list_records) { result }

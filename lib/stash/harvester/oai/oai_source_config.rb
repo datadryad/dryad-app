@@ -73,21 +73,17 @@ module Stash
 
         def valid_spec(set_spec)
           return nil unless set_spec
-          (set_spec.split(':').map do |element|
-            if UNRESERVED_PATTERN =~ element
-              element
-            else
-              raise ArgumentError, "setSpec element ''#{element}'' must consist only of RFC 2396 URI unreserved characters"
-            end
-          end).join(':')
+          (set_spec.split(':').map { |element| valid_set_spec(element) }).join(':')
+        end
+
+        def valid_set_spec(element)
+          return element if UNRESERVED_PATTERN =~ element
+          raise ArgumentError, "setSpec element ''#{element}'' must consist only of RFC 2396 URI unreserved characters"
         end
 
         def valid_prefix(metadata_prefix)
-          if UNRESERVED_PATTERN =~ metadata_prefix
-            metadata_prefix
-          else
-            raise ArgumentError, "metadata_prefix ''#{metadata_prefix}'' must consist only of RFC 2396 URI unreserved characters"
-          end
+          return metadata_prefix if UNRESERVED_PATTERN =~ metadata_prefix
+          raise ArgumentError, "metadata_prefix ''#{metadata_prefix}'' must consist only of RFC 2396 URI unreserved characters"
         end
       end
 

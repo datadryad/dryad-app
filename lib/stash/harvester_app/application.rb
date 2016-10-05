@@ -50,7 +50,7 @@ module Stash
           # TODO: log these in a sort-friendly way
           result.errors.each do |e|
             log.error(e.message)
-            log.debug("Backtrace:\n#{e.backtrace.join("\n")}") if e.backtrace
+            log.debug(e.backtrace.join("\n")) if e.backtrace
           end
         end
       end

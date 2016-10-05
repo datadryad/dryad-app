@@ -58,7 +58,7 @@ module Stash
         end
 
         def time_range
-          @time_range ||= (from_time || until_time) ? range_start..range_end : nil
+          @time_range ||= from_time || until_time ? range_start..range_end : nil
         end
 
         def packaged_changes(change_dump, time_range)
