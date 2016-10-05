@@ -1,10 +1,16 @@
 // Place all the behaviors and hooks related to the matching controller here.
 // All this logic will automatically be available in application.js.
 var map;
-function loadMap() {
+function loadMap(bounds) { // bounds is optional
   // Create a map in the "map" div, set the view to a given place and zoom
-  map = L.map('map', { zoomControl: true }).setView([36.778259, -119.417931], 3);
-      mapLink = '<a href="https://openstreetmap.org">OpenStreetMap</a>';
+  map = L.map('map', { zoomControl: true });
+  if(bounds === undefined){
+    map.setView([36.778259, -119.417931], 3);
+  }else{
+    map.fitBounds(bounds);
+  }
+
+  mapLink = '<a href="https://openstreetmap.org">OpenStreetMap</a>';
   map.zoomControl.setPosition('bottomright');
     // add an OpenStreetMap tile layer
       L.tileLayer(
