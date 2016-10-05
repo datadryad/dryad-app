@@ -141,40 +141,41 @@ Repository Service is available in the white paper
 Contact [uc3@ucop.edu](mailto:uc3@ucop.edu) for information on submitting
 larger datasets.
 
+### What features do you offer?
 
-### Why is complete documentation so important? 
+#### What feature do you offer to make my dataset have the broadest reach? 
 
-Comprehensive documentation (i.e. metadata) is the key to future understanding of the data. Without a
-thorough description of the context of the data file, the context in which
+Comprehensive documentation (i.e. metadata) is the key for dicoverability as well as ensuring future researchers understand the data. Without thorough metadata (description of the context of the data file, the context in which
 the data were collected, the measurements that were made, and the quality
-of the data, the data can not be found (through internet searches or data
-indexing services), understood, or effectively used. Read more about
+of the data), the data cannot be found through internet searches or data
+indexing services, understood by fellow researchers, or effectively used. Read more about
 metadata in the
 [DataONE Primer on Data Management](http://www.dataone.org/sites/all/documents/DataONE_BP_Primer_020212.pdf)
 (PDF).
 
-Dash requires a few key pieces of metadata. Additional information can be
+We require a few key pieces of metadata. Additional information can be
 included in the “Usage Notes” section of the description, or as a separate
 readme.txt file archived alongside the dataset files. The metadata entry
 form for Dash is based on fields from the
-[DataCite schema](http://schema.datacite.org/meta/kernel-3/index.html),
-version 3.0, and is broadly applicable to data from any field.
+[DataCite schema](http://schema.datacite.org/meta/kernel-3/index.html) and is broadly applicable to data from any field.
 
-### Does the data have to be associated with a publication?
+#### Does the data have to be associated with a publication?
 
-No. Dash accepts all quality data, regardless of whether they have been
+No. We accept all quality data, regardless of whether they have been
 used to publish a paper.
 
-### Can I obtain a DOI (Digital Object Identifier) before I upload my data in Dash?
+#### Can I obtain a DOI (Digital Object Identifier) before I upload my data in Dash?
 
 Yes. To obtain a DOI, you must submit a minimal amount of required
 description, but you can return later to upload the data files.
 
-### Do you support data embargoes or restricted access?
+#### Do you support data embargoes or restricted access?
 
 Not at this time. We do have plans to expand the Dash functionality to
 include both. If you have specific requests for functionality, please add
-them to our [GitHub Issues page](http://github.com/cdluc3/dash/issues).
+them to our [GitHub Issues page](http://github.com/cdluc3/dash/issues).  
+
+Note: You are free to stage your dataset publications. Your data will not be exposed to the public until you click "Submit". 
 
 ### Who will find my data?
 
@@ -216,17 +217,17 @@ supports the advancement of knowledge. Read the
 [Panton Principles for Open Data in Science](http://pantonprinciples.org/)
 for more information.
 
-### Do I need to log in to access published datasets?
+#### Do I need to log in to access published datasets?
 
 No. Users can download data without logging in.
 
-### How do I reuse published datasets?
+### How can I use published datasets?
 
 #### Do I have to pay to download/reuse published datasets?
 
 No. These data are made publicly available free of charge.
 
-### What are my obligations if I use the data in a publication?
+#### What are my obligations if I use the data in a publication?
 
 Except for some legacy datasets that were released with custom use
 agreements, data is released under the terms of the
