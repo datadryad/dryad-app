@@ -6,6 +6,7 @@ module StashEngine
     before_action :force_to_domain, only: [:show]
 
     def getting_started
+      return unless current_user
       @resources = Resource.where(user_id: current_user.id)
       if @resources.present?
         redirect_to stash_url_helpers.dashboard_path
