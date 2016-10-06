@@ -42,7 +42,7 @@ module Stash
       end
 
       def to_sw_inventory(uploads)
-        return unless uploads && !uploads.empty?
+        return unless uploads
         Inventory.new(files: uploads.map { |upload| to_stash_file(upload) })
       end
 
