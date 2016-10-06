@@ -1,5 +1,5 @@
 ## Submission Basics
-Use this checklist to prepare your dataset for submission. See our Policies section below for more information.
+Use this checklist to prepare your dataset for submission. See our FAQs section below for more information.
 
 1.  Inform your dataset co-creators that you plan to publish the dataset
 2.  Ensure that all governmental and institutional regulations regarding the handling of sensitive data are addressed
@@ -39,7 +39,7 @@ Optional Fields (the more you describe your dataset, the wider the reach):
 -  Location information : Include the geo-corridinates or name of the location where your data were generated or the location that is the focus of your research
 
 ##  Upload Basics
-Here is some basic information on uploading datasets. See Policies section below for more details.
+Here is some basic information on uploading datasets. See FAQs section below for more details.
 
 - We accept all file formats, although it is good practice to share data using open formats. See the [UK Data Archive](http://www.data-archive.ac.uk/create-manage/format/formats-table) for a list of optimal file formats
 - Include any files that may help others to use your data. This includes readme files, formal metadata files, or other critical information
