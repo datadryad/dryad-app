@@ -1,6 +1,6 @@
 // ##### Getting Started section ##### //
 
-.c-getting-started{
+.c-getting-started {
 
   @include bp(screen1) {
     margin: 0 -10px;
@@ -18,7 +18,7 @@
   @extend %o-heading__level1;
 }
 
-.o-heading__steps{
+.o-heading__steps {
   margin: 20px 10px $spacing-md;
   color: $design-dark-blue-color;
   font-size: 1.3em;
@@ -26,21 +26,21 @@
 }
 
 .c-steps__text-group {
-  margin: 0 0 30px 0;
+  margin: 0 0 30px;
   padding: 10px;
   color: $design-dark-blue-color;
   font-size: 1.3em;
 }
 
 .c-getting-started-heading__button {
+  display: inline-block;
   height: 45px;
-  background: $design-light-blue-color;
+  margin: 10px;
+  padding: 6px 12px;
   border: none;
+  background: $design-light-blue-color;
   color: $design-white-color;
   font-size: 1.1em;
-  display: inline-block;
-  padding: 6px 12px;
-  margin: 10px;
   text-decoration: none;
   z-index: 1;
 
