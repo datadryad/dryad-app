@@ -29,6 +29,8 @@ module StashEngine
         request_port: request_port
       ).async.submit
 
+      # it seems like only the first observer actually gets called
+      result.add_observer(FileCleanupObserver.new(resource_id: resource_id))
       result.add_observer(ResultLoggingObserver.new(title: title, doi: doi))
     end
 
@@ -195,6 +197,43 @@ module StashEngine
     def log_success(time, value)
       msg = value ? value.archive_response : 'nil'
       log.info("SwordJob for '#{title}' (#{doi}) completed at #{time}: #{msg}")
+    end
+  end
+
+  class FileCleanupObserver
+
+    def log
+      Rails.logger
+    end
+
+    attr_reader :resource_id
+
+    def initialize(resource_id:)
+      @resource_id = resource_id
+      log.info('FileCleanup initialized')
+    end
+
+    # Called by the `Concurrent::Async` framework on completion of the
+    # {SwordJob} async background task.  if reason is not set then successful
+    def update(time, value, reason)
+      unless reason
+        res = Resource.where(id: @resource_id).first
+        if uploads = res.try(:file_uploads)
+          log.info("#{self.class} removing uploaded files for resource_id: #{@resource_id}")
+          uploads.each do |upload|
+            File.delete(upload.temp_file_path) if File.exist?(upload.temp_file_path)
+          end
+          #delete directory
+          if File.exist?(File.join(Rails.root, 'uploads', @resource_id.to_s))
+            Dir.rmdir(File.join(Rails.root, 'uploads', @resource_id.to_s))
+          end
+        end
+        #delete any zipfiles and temp files
+        files = Dir[File.join(Rails.root, 'uploads', "#{@resource_id.to_s}_*")]
+        files.each do |file|
+          File.delete(file) if File.exist?(file)
+        end
+      end
     end
   end
 end
