@@ -58,7 +58,8 @@ module StashDatacite
       end
 
       def generate_dublincore
-        DublinCoreBuilder.new(resource: @resource, tenant: @current_tenant).build_xml_string
+        # Added full namespace since otherwise it was erroring.
+        StashDatacite::Resource::DublinCoreBuilder.new(resource: @resource, tenant: @current_tenant).build_xml_string
       end
 
       def generate_dataone
