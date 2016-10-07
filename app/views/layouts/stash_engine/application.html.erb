@@ -49,12 +49,11 @@
         <%= link_to 'Home', stash_url_helpers.root_path, class: 'c-header__nav-item' %>
         <%= link_to 'Explore Data', '/search', class: 'c-header__nav-item' %>
         <%= link_to 'Help', stash_url_helpers.help_path, class: 'c-header__nav-item' %>
-        <% if current_user && params[:action] == 'getting_started' %>
-          <%= render partial: "stash_engine/shared/logout" %>
-        <% elsif current_user %>
+        <% if current_user && current_user.resources.present? %>
           <%= link_to 'My Datasets', stash_url_helpers.dashboard_path, class: 'c-header__nav-item' %>
           <%= render partial: "stash_engine/shared/logout" %>
         <% else %>
+          <%= link_to 'My Datasets', stash_url_helpers.dashboard_getting_started_path, class: 'c-header__nav-item' %>
           <%= render partial: "stash_engine/shared/sites" %>
         <% end %>
       </div>
