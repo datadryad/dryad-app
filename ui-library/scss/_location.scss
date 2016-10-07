@@ -74,33 +74,42 @@
 .c-location__point-inputs {
 	display: flex;
 	align-items: flex-end; // align commas to bottom
-	max-width: 30%;
+	min-width: 35%;
 	margin: 0 0 10px;
 	padding: 0 0 0 30px;
 	background: inline('../images/icon_point-blue.svg') left 8px center no-repeat;
 
 	@include bp(screen2) {
-		flex: 1 0 auto;
-		min-width: 30%;
+		min-width: 35%;
 		margin: 0 10px;
 	}
 
+	@include bp(screen3) {
+		min-width: 35%;
+		margin: 0 10px;
+	}
 }
 
 .c-location__box-inputs {
 	display: flex;
-	flex-flow: column nowrap;
+	flex-flow: column wrap;
 	margin: 0 0 10px;
 	padding: 0 0 0 30px;
 	background: inline('../images/icon_box-blue.svg') left 8px center no-repeat;
 
 	@include bp(screen2) {
 		flex: 1 0 auto;
-		flex-flow: row nowrap;
+		flex-flow: row wrap;
 		margin: 0 10px 0 0;
 		padding: 0 0 0 20px;
 	}
 
+	@include bp(screen3) {
+		flex: 1 0 auto;
+		flex-flow: row wrap;
+		margin: 0 10px 0 0;
+		padding: 0 0 0 20px;
+	}
 }
 
 .c-location__input {
