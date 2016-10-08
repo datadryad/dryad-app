@@ -120,7 +120,7 @@ module Datacite
           sd_date = d.date
           Date.new(
             type: d.date_type_mapping_obj,
-            value: sd_date.respond_to?(:iso8601) ? sd_date.iso8601 : sd_date.to_s
+            value: sd_date
           )
         end
       end
