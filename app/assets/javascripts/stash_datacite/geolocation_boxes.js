@@ -1,10 +1,10 @@
 // Place all the behaviors and hooks related to the matching controller here.
 // All this logic will automatically be available in application.js.
 function loadGeolocationBoxes() {
-  $("#geolocation_box").hide();
+  $("#geolocation_box_new_form").hide();
     $("#geo_box").on('click', function(e){
-      $("#geolocation_box").show();
-      $("#geolocation_point").hide();
+      $("#geolocation_box_new_form").show();
+      $("#geolocation_point_new_form").hide();
       $('.js-location__box-button').removeClass('c-location__box-button');
       $('.js-location__box-button').addClass('c-location__box-button--active');
       $('.js-location__point-button').removeClass('c-location__point-button--active');
