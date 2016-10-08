@@ -4108,12 +4108,12 @@ html.svg .c-facet__check-label {
       flex: 1 0 auto;
   width: 50px;
   height: 30px;
-  padding: 0 5px;
+  padding: 0 10px;
   border: 1px solid #7c7e7f; }
   .c-location__input:first-of-type {
-    margin: 0 5px 0 0; }
+    margin: 0 10px 0 0; }
   .c-location__input:last-of-type {
-    margin: 0 0 0 5px; }
+    margin: 0 0 0 10px; }
 
 .c-location__coordinates {
   display: -ms-flexbox;

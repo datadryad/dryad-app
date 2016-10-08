@@ -117,15 +117,15 @@
 	flex: 1 0 auto;
 	width: 50px;
 	height: $input-height;
-	padding: 0 5px;
+	padding: 0 10px;
 	border: 1px solid $design-dark-gray-color;
 
 	&:first-of-type {
-		margin: 0 5px 0 0;
+		margin: 0 10px 0 0;
 	}
 
 	&:last-of-type {
-		margin: 0 0 0 5px;
+		margin: 0 0 0 10px;
 	}
 
 }
