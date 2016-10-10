@@ -75,6 +75,10 @@ Blacklight.onLoad(function() {
       // $doc = $(resp);
       $doc = $('<div/>').append(data);
       $('#documents').replaceWith($doc.find('#documents'));
+      // keeps layout from going wonky (Stanford defaults) when no results from moving map.
+      if($('#documents').hasClass('noresults')){
+        $('#documents').removeClass('noresults').addClass('docView').addClass('col-md-6');
+      }
       $('#sidebar').replaceWith($doc.find('#sidebar'));
       $('#sortAndPerPage').replaceWith($doc.find('#sortAndPerPage'));
       $('#appliedParams').replaceWith($doc.find('#appliedParams'));
