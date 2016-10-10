@@ -4113,7 +4113,7 @@ html.svg .c-facet__check-label {
   .c-location__input:first-of-type {
     margin: 0 10px 0 0; }
   .c-location__input:last-of-type {
-    margin: 0 0 0 10px; }
+    margin: 0; }
 
 .c-location__coordinates {
   display: -ms-flexbox;
@@ -4142,11 +4142,12 @@ html.svg .c-facet__check-label {
 .c-location__add-button {
   -ms-flex-item-align: end;
       align-self: flex-end;
-  margin: 0 5px; }
+  margin: 10px 10px 0 10px; }
   @media (min-width: 760px) {
     .c-location__add-button {
       -ms-flex-item-align: start;
-          align-self: flex-start; } }
+          align-self: flex-start;
+      margin: 0 5px; } }
 
 .c-locations {
   margin: 0 0 20px; }
