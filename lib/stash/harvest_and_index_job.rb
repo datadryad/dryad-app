@@ -61,12 +61,15 @@ module Stash
     end
 
     def do_index(harvested_records, harvest_job_id, index_job_id)
+      count = 0
       indexer.index(harvested_records) do |result|
         harvested_record = result.record
         harvested_record_id = record_harvested(harvested_record, harvest_job_id)
         record_indexed(index_job_id, harvested_record, harvested_record_id, result.status)
+        count += 1
         yield result if block_given?
       end
+      log.info("  indexed #{count} records")
     end
 
     def begin_harvest_job(task)
