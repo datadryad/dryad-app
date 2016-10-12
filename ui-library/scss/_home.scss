@@ -1,8 +1,10 @@
 // ##### Home Page Theme ##### //
 
 .t-home__header {
+    position: relative;
 	margin-bottom: 10px;
 	border-bottom: none;
+    z-index: 10;
 
 	@include bp(screen3) {
 		margin-bottom: 0;
