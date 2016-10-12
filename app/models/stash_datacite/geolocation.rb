@@ -24,9 +24,10 @@ module StashDatacite
       point_obj = nil
       box_obj = nil
       place_obj = GeolocationPlace.create(geo_location_place: place) unless place.blank?
-      point_obj = GeolocationPoint.create(latitude: point[0], longitude: point[1]) unless point.blank?
+      point_obj = GeolocationPoint.create(
+          latitude: point[0].try(:to_d), longitude: point[1].try(:to_d)) unless point.blank?
       unless box.blank? || box.flatten.length != 4
-        sides = box.flatten
+        sides = box.flatten.map{|i| i.try(:to_d)}
         s_lat = sides[0]
         n_lat = sides[2]
         s_lat, n_lat = n_lat, s_lat if s_lat > n_lat
