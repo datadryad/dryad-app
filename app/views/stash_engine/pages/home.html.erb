@@ -1,6 +1,6 @@
 <% @page_title = 'Home' %>
 <div class="t-home__banner o-banner" style="background-image: url(<%= asset_path 'stash_engine/bg_drawer-of-bugs.jpg' %>)">
-  <div class="o-banner__tagline">Data sharing made easy</div>
+  <div class="o-banner__tagline">An easy-to-use data preservation and publication service</div>
   <% if current_user %>
     <%= link_to 'Get Started', dashboard_getting_started_path, class: "o-banner__button", role: 'button' %>
   <% else %>

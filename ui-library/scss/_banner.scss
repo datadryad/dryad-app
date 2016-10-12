@@ -64,10 +64,17 @@ html.no-multiplebgs .o-banner {
 
 	@include bp(screen1) {
 		margin: 0 0 2vw;
-		font-size: 5.5vw;
+		font-size: 3.5vw;
 	}
 
-	@include bp(screen2) {
+    @include bp(screen2) {
+      font-size: 3.1vw;
+    }
+
+    @include bp(screen3) {
+      font-size: 2.1em;
+    }
+	@include bp(screen4) {
 		margin: 0 0 15px;
 		font-size: 2.6em;
 	}
