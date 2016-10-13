@@ -1,5 +1,6 @@
 // ##### Getting Started section ##### //
 
+
 .c-getting-started {
 
   @include bp(screen1) {
@@ -53,6 +54,7 @@
   }
 }
 
+/*
 .c-why-share__icon {
   color: $design-dark-blue-color;
   text-align: center;
@@ -70,5 +72,38 @@
     height: auto;
     margin: 30px 0 40px;
     float: none;
+  }
+}
+*/
+
+.o-heading__level2-why-side {
+  @extend %o-heading__level2;
+  font-size: 1.4em;
+
+  @include bp(screen3) {
+    text-align: center;
+  }
+}
+
+.c-why-share__text-group-side {
+
+  @include bp(screen1) {
+    div {
+      font-size: 1em;
+      line-height: 1.5em;
+    }
+  }
+
+  @include bp(screen3) {
+    padding: 0 40px;
+
+    div {
+      font-size: 1.2em;
+      line-height: 1.5em;
+    }
+  }
+
+  div {
+    margin-bottom: 3em;
   }
 }
