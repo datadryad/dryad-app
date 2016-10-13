@@ -90,7 +90,7 @@ GEM
     ansi (1.5.0)
     arel (6.0.3)
     ast (2.3.0)
-    autoprefixer-rails (6.5.0)
+    autoprefixer-rails (6.5.1)
       execjs
     bcrypt (3.1.11)
     binding_of_caller (0.7.2)
@@ -108,12 +108,12 @@ GEM
       autoprefixer-rails (>= 5.2.1)
       sass (>= 3.3.4)
     builder (3.2.2)
-    byebug (9.0.5)
+    byebug (9.0.6)
     capistrano (3.4.1)
       i18n
       rake (>= 10.0.0)
       sshkit (~> 1.3)
-    capistrano-bundler (1.1.4)
+    capistrano-bundler (1.2.0)
       capistrano (~> 3.1)
       sshkit (~> 1.2)
     capistrano-passenger (0.2.0)
@@ -139,7 +139,7 @@ GEM
       activesupport (>= 3.0)
       deep_merge (~> 1.1.1)
     daemons (1.2.4)
-    datacite-mapping (0.2.2)
+    datacite-mapping (0.2.3)
       typesafe_enum (~> 0.1, >= 0.1.7)
       xml-mapping_extensions (~> 0.4, >= 0.4.7)
     debug_inspector (0.0.2)
@@ -185,7 +185,7 @@ GEM
       activesupport (>= 4.1.0)
     hashie (3.4.6)
     hirb (0.7.3)
-    http-cookie (1.0.2)
+    http-cookie (1.0.3)
       domain_name (~> 0.5)
     i18n (0.7.0)
     jbuilder (2.6.0)
@@ -215,6 +215,9 @@ GEM
       nokogiri (>= 1.5.9)
     mail (2.6.4)
       mime-types (>= 1.16, < 4)
+    markdown-rails (0.2.1)
+      rails
+      rdiscount (>= 1.6.8, < 2.0)
     mime-types (2.99.3)
     mini_portile2 (2.1.0)
     minitest (5.9.1)
@@ -226,9 +229,8 @@ GEM
       net-ssh (>= 2.6.5)
     net-ssh (3.2.0)
     netrc (0.11.0)
-    nokogiri (1.6.8)
+    nokogiri (1.6.8.1)
       mini_portile2 (~> 2.1.0)
-      pkg-config (~> 1.1.7)
     oauth2 (1.2.0)
       faraday (>= 0.8, < 0.10)
       jwt (~> 1.0)
@@ -257,7 +259,6 @@ GEM
     passenger (5.0.30)
       rack
       rake (>= 0.8.1)
-    pkg-config (1.1.7)
     powerpack (0.1.1)
     rack (1.6.4)
     rack-test (0.6.3)
@@ -288,6 +289,7 @@ GEM
       thor (>= 0.18.1, < 2.0)
     rainbow (2.1.0)
     rake (11.3.0)
+    rdiscount (1.6.8)
     rdoc (4.2.2)
       json (~> 1.4)
     redcarpet (3.3.4)
@@ -300,7 +302,7 @@ GEM
       netrc (~> 0.8)
     rsolr (1.1.2)
       builder (>= 2.1.2)
-    rspec-core (3.5.3)
+    rspec-core (3.5.4)
       rspec-support (~> 3.5.0)
     rspec-expectations (3.5.0)
       diff-lcs (>= 1.2.0, < 2.0)
@@ -332,7 +334,7 @@ GEM
       sprockets (>= 2.8, < 4.0)
       sprockets-rails (>= 2.0, < 4.0)
       tilt (>= 1.1, < 3)
-    sdoc (0.4.1)
+    sdoc (0.4.2)
       json (~> 1.7, >= 1.7.7)
       rdoc (~> 4.0)
     simplecov (0.12.0)
@@ -344,11 +346,12 @@ GEM
       hirb
       simplecov
     simplecov-html (0.10.0)
-    solr_wrapper (0.18.0)
+    solr_wrapper (0.18.1)
       faraday
       ruby-progressbar
       rubyzip
-    spring (1.7.2)
+    spring (2.0.0)
+      activesupport (>= 4.2)
     sprockets (3.7.0)
       concurrent-ruby (~> 1.0)
       rack (> 1, < 3)
@@ -415,6 +418,7 @@ DEPENDENCIES
   exception_notification
   jbuilder (~> 2.0)
   jquery-rails
+  markdown-rails
   mysql2 (~> 0.3.18)
   passenger
   rails (= 4.2.7.1)
