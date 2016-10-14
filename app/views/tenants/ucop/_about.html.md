@@ -28,8 +28,9 @@ To facilitate flexible configuration and future enhancement, all support for the
 We welcome collaborations to develop additional modules for additional metadata schemas and repository protocols.  Please email UC3 (uc3 at ucop dot edu) or visit GitHub (http://cdluc3.github.io/dash/) for more information.  
 
 
+## Features of Dash service
 
-| Feature of Dash service | Technical-focused | User-focused | The story |
+| Feature | Technical-focused | User-focused | The story |
 |---------------------------------|:-------------------------:|------------------:|--------------:|
 | Open Source | X |  | All components open source, MIT licensed code (http://cdluc3.github.io/dash/) |
 | Standards compliant | X |  | Dash integrates with any SWORD/OAI-PMH-compliant repository |
