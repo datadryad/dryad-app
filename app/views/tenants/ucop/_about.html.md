@@ -22,6 +22,10 @@ Dash is completely open source.  Our code is made publicly available on GitHub (
 - Harvest: The Harvest component is responsible for retrieval of descriptive metadata from that repository for inclusion into a Solr search index
 - Share: The Share component, based on GeoBlacklight, is responsible for the faceted search and browse interface
 
+
+![Dash Architecture Diagram](https://github.com/adam-p/markdown-here/raw/master/src/common/images/icon48.png "Dash Architecture Diagram")
+
+
 Individual dataset landing pages are formatted as an online version of a data paper, presenting all appropriate descriptive and administrative metadata in a form that can be downloaded as an individual PDF file, or as part of the complete dataset download package, incorporating all data files for all versions.
 
 To facilitate flexible configuration and future enhancement, all support for the various external service providers and repository protocols are fully encapsulated into pluggable modules. Metadata modules are available for the DataCite and Dublin Core14 metadata schemas. Protocol modules are available for the SWORD 2.0 deposit protocol15 and the OAI-PMH16 and ResourceSync17 harvesting protocols. Authentication modules are available for InCommon/Shibboleth18 and Google/OAuth19 identity providers (IdPs). 
