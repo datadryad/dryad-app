@@ -22,7 +22,7 @@ Dash is completely open source.  Our code is made publicly available on GitHub (
 - Harvest: The Harvest component is responsible for retrieval of descriptive metadata from that repository for inclusion into a Solr search index
 - Share: The Share component, based on GeoBlacklight, is responsible for the faceted search and browse interface
 
-->![Dash Architecture Diagram](https://github.com/adam-p/markdown-here/raw/master/src/common/images/icon48.png "Dash Architecture Diagram")<-
+![Dash Architecture Diagram](https://github.com/adam-p/markdown-here/raw/master/src/common/images/icon48.png "Dash Architecture Diagram")
 
 Individual dataset landing pages are formatted as an online version of a data paper, presenting all appropriate descriptive and administrative metadata in a form that can be downloaded as an individual PDF file, or as part of the complete dataset download package, incorporating all data files for all versions.
 
