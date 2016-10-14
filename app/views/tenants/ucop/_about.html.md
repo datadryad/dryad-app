@@ -93,3 +93,35 @@ and the
 (CTSI). CTSI is part of the Clinical and Translational Science Award
 program funded by the National Center for Advancing Translational Sciences
 at the National Institutes of Health (Grant Number UL1 TR000004).
+
+
+| Feature of Dash service | Technical-focused | User-focused | The story |
+|---------------------------------|:-------------------------:|------------------:|--------------:|
+| Open Source | X |  | All components open source, MIT licensed code (http://cdluc3.github.io/dash/) |
+| Standards compliant | X |  | Dash integrates with any SWORD/OAI-PMH-compliant repository |
+| Pluggable Framework | X |  | Inherent extensibility for supporting additional protocols and metadata schemas |
+| Flexible metadata schemas | X |  | Support Datacite metadata schema out-of-the-box, but can be configured to support any schema |
+| Innovation | X |  | Our modular framework will make new feature development easier and quicker |
+| Mobile/responsive design | X | X | Built mobile-first, from the ground up, for better user experience |
+| Geolocation - Metadata | X | X | For applicable research outputs, we have an easy to use way to capture location of your datasets |
+| Persistent Identifers - ORCID | X | X | Dash allows researchers to attach their ORCID, allowing them to track and get credit for their work |
+| Persistent Identifers - DOIs | X | X | Dash issues DOIs for all datasets, allowing researchers to track and get credit for their work |
+| Persistent Identifers - Fundref | X | X | Dash tracks funder information using FundRef, allowing researchers and funders to track their reasearch outputs |
+| Login - Shibboleth /OAuth2 | X | X | We offer easy single-sign with your campus credentials or Google account |
+| Versioning | X | X | Datasets can change. Dash offers a quick way for you to upload new versions of your datasets and offer a simple process for tracking updates |
+| Accessibility | X | X | The technology, design, and user workflows have all been built with accessibility in mind |
+| Better user experience |  | X | Self-depositing made easy. Simple workflow, drag-and-drop upload, simple navigation, clean data publication pages, user dashboards |
+| Geolocation - Search |  | X | With GeoBlacklight, we can offer search by location |
+| Robust Search |  | X | Search by subject, filetype, keywords, campus, location, etc. |
+| Discoverability |  | X | Indexing by search engines for Google, Bing, etc. |
+| Build Relationships |  | X | Many datasets are related to publications or other data. Dash offers a quick way to describe these relationships |
+| Supports Best Practices |  | X | Data publication can be confusing. But with Dash, you can trust Dash is following best practices |
+| Data Metrics |  | X | See the reach of your datasets through usage and download metrics |
+| Data Citations |  | X | Quick access to a well-formed citiation reference (with DOI) to every data publication. Easy for your peers to quickly grab |
+| Open License |  | X | Dash supports open Creative Commons licensing for all data deposits; can be configured for other licenses |
+| Lower Barrier to Entry |  | X | For those in a hurry, Dash offers a quick interface to self-deposit. Only three steps and few required fields |
+| Support Data Reuse |  | X | Focus researchers on describing methods and explaining ways to reuse their datasets |
+| Satisfies Data Availability Requirements |  | X | Many publishers and funders require researchers to make their data available. Dash is an readily accepted and easy way to comply |
+
+
+
