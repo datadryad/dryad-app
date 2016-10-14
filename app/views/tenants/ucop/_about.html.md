@@ -95,7 +95,7 @@ program funded by the National Center for Advancing Translational Sciences
 at the National Institutes of Health (Grant Number UL1 TR000004).
 
 
-| Feature of Dash service | Technical-focused | User-focused | The story |
+| Feature of Dash service | Tech-focused | User-focused | The story |
 |---------------------------------|:-------------------------:|------------------:|--------------:|
 | Open Source | X |  | All components open source, MIT licensed code (http://cdluc3.github.io/dash/) |
 | Standards compliant | X |  | Dash integrates with any SWORD/OAI-PMH-compliant repository |
