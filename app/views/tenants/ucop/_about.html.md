@@ -32,7 +32,7 @@ We welcome collaborations to develop additional modules for additional metadata 
 
 ## Features of Dash service
 
-| Feature | Tech-focused Value | User-focused Value | Description |
+| Feature | Tech-focused | User-focused | Description |
 |:---------------------------------|:-------------------------:|:------------------:|:--------------|
 | Open Source | X |  | All components open source, MIT licensed code (http://cdluc3.github.io/dash/) |
 | Standards compliant | X |  | Dash integrates with any SWORD/OAI-PMH-compliant repository |
