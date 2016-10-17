@@ -1,3 +1,1 @@
-# Placeholder
-
-(Placeholder for DataONE)
+<%= render partial: "layouts/about", language: :markdown %>
