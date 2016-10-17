@@ -38,6 +38,7 @@ gem 'capistrano', '~> 3.4.1'
 gem 'capistrano-rails', '~> 1.1'
 gem 'capistrano-passenger'
 gem 'passenger'
+gem 'httparty'
 
 # run DelayedJob jobs in the background
 gem 'daemons'

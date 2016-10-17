@@ -31,3 +31,29 @@ By alleviating many of the barriers that have historically precluded wider adopt
 
 ---------------------------------------------------------
 
+### Deployment, Operations and Utility Tasks (work in progress)
+
+When using Rails with Capistrano, it is typical to have some deploy tasks as part of the application. These tasks
+address our deployment and operational needs such as using Phusion Passenger Standalone (with Apache in front) and
+some of our development needs. They may be less useful to others with different set ups.
+
+#### Quick Cheat Sheet
+
+* Deploying with Capistrano (leave off branch and you'll be prompted)
+```ruby
+cap <capistrano-deploy-environment> deploy BRANCH="<branch-or-tag-name>"
+```
+
+* Symlink in tenant and other config files by checking out repo of configuration at same directory level as the this app
+directory and then run `./symlink_config.sh`.
+
+* To do development across engines concurrently with this app, create a directory called stash_engines at the same level
+as the app and clone the engines inside that directory (stash_datacite, stash_discovery, stash_engine).  They
+will be included as local engines by the Gemfile which is our current default for development.
+
+* The rake app_data:clear task will clear most database and SOLR data.  It can be useful to run before testing data
+import and transformation from our previous version of the app.  It will not erase data in the production environment
+or until it gets confirmation that you really want to erase the data.
+```ruby
+bundle exec rake app_data:clear RAILS_ENV=<rails-environment>
+```

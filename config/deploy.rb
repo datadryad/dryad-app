@@ -45,6 +45,8 @@ set :passenger_in_gemfile, true
 # There may be difficulties one way or another.  Normal restart may require sudo in some circumstances.
 set :passenger_restart_with_touch, false
 
+set :passenger_restart_options, -> { "#{deploy_to} --ignore-passenger-not-running" }
+
 set :passenger_pid, "#{deploy_to}/passenger.pid"
 set :passenger_log, "#{deploy_to}/passenger.log"
 set :passenger_port, "3000"
@@ -135,7 +137,7 @@ namespace :deploy do
   desc 'Stop Phusion'
   task :stop do
     on roles(:app) do
-      if test("[ -f #{fetch(:passenger_pid)} ]")
+      if test("[ -f '#{fetch(:passenger_pid)}' ]")
         execute "cd #{deploy_to}/current; bundle exec passenger stop --pid-file #{fetch(:passenger_pid)}"
       end
     end
