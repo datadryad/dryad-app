@@ -11,29 +11,22 @@ function loadGeolocationPoints() {
       $('.js-location__box-button').addClass('c-location__box-button');
     });
 
-    // latitude longitude validation for Geolcoation Point
+    // latitude validation for Geolcoation Point
     $("#geo_lat_point").on('blur', function(e){
-    var lat = $(this).val();
-    var latReg = /^(\+|-)?(?:90(?:(?:\.0{1,6})?)|(?:[0-9]|[1-8][0-9])(?:(?:\.[0-9]{1,6})?))$/;
+      var lat = $(this).val();
       if(lat == "") {
         return false;
       }
-      else if (!latReg.test(lat)) {
-        alert("Please enter valid latitude value");
-        $('#geo_lat_point').val('');
-      }
+      isLatitude(lat);
     });
 
+    //longitude validation for Geolcoation Point
     $("#geo_lng_point").on('blur', function(e){
-    var lng = $(this).val();
-    var lngReg = /^(\+|-)?(?:180(?:(?:\.0{1,6})?)|(?:[0-9]|[1-9][0-9]|1[0-7][0-9])(?:(?:\.[0-9]{1,6})?))$/;
+      var lng = $(this).val();
       if(lng == "") {
         return false;
       }
-      else if(!lngReg.test(lng)) {
-        alert("Please enter valid longitude value")
-        $('#geo_lng_point').val('');
-      }
+      isLongitude(lng);
     });
 
     $("#geolocation_point_new_form").submit(function() {
@@ -43,3 +36,23 @@ function loadGeolocationPoints() {
       }
     });
 };
+
+function isLatitude(lat) {
+  if(isFinite(lat) && Math.abs(lat) <= 90) {
+    return lat;
+  }
+  else {
+    alert("Please enter valid latitude value");
+    $('#geo_lat_point').val('');
+  }
+}
+
+function isLongitude(lng) {
+  if(isFinite(lng) && Math.abs(lng) <= 180){
+    return lat;
+  }
+  else {
+    alert("Please enter valid longitude value")
+    $('#geo_lng_point').val('');
+  }
+}
