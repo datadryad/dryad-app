@@ -1,1 +1,1 @@
-<%= render partial: "layouts/help" %>
+<%= render partial: "layouts/help", language: :markdown %>
