@@ -36,7 +36,8 @@ module Stash
             solr_year_i: resource.publication_year,
             dct_issued_dt: wrapper.embargo_end_date_xmlschema,
             dc_rights_s: wrapper.license.name,
-            dc_publisher_s: resource.publisher
+            dc_publisher_s: resource.publisher,
+            dct_temporal_sm: resource.dct_temporal_dates
           }
         end
 

@@ -121,6 +121,22 @@ module Datacite
         GeoLocationBox.new(lat_min, long_min, lat_max, long_max) if lat_min && long_min && lat_max && long_max
       end
 
+      # converts to DublinCore Terms, temporal, see http://journal.code4lib.org/articles/9710 or
+      # https://github.com/geoblacklight/geoblacklight-schema and seems very similar to the annotation going
+      # into the original DataCite element.  https://terms.tdwg.org/wiki/dcterms:temporal
+      #
+      # method takes the values supplied and also adds every year for a range so people can search for
+      # any of those years which may not be explicitly named
+      def dct_temporal_dates
+        items = dates.map(&:to_s).compact
+        year_range_items = dates.map do |i|
+          if i.range_start && i.range_end && i.range_start.year && i.range_end.year
+            (i.range_start.year..i.range_end.year).to_a.map(&:to_s)
+          end
+        end
+        (items + year_range_items).compact.flatten.uniq
+      end
+
       def bounding_box_envelope
         (bbox = calc_bounding_box) ? bbox.to_envelope : nil
       end
