@@ -9,8 +9,6 @@ module MarkdownHandler
   def self.call(template)
     @md_options ||= {
       autolink: true,
-      space_after_headers: true,
-      fenced_code_blocks: true,
       underline: true,
       no_intra_emphasis: true,
       highlight: true,
@@ -25,7 +23,7 @@ module MarkdownHandler
                else
                  'Redcarpet::Render::HTML.new(with_toc_data: true)'
                end
-    "Redcarpet::Markdown.new(#{renderer}, #{@md_options} )."\
+    "Redcarpet::Markdown.new(#{renderer},no_intra_emphasis: true, autolink: true, tables: true )."\
     "render(begin;#{compiled_source};end).html_safe"
   end
 end
