@@ -13,7 +13,7 @@ module MarkdownHandler
                else
                  'Redcarpet::Render::HTML.new(with_toc_data: true)'
                end
-    "Redcarpet::Markdown.new(#{renderer}, no_intra_emphasis: true, autolink: true)."\
+    "Redcarpet::Markdown.new(#{renderer}, no_intra_emphasis: true, autolink: true, tables: true)."\
     "render(begin;#{compiled_source};end).html_safe"
   end
 end
