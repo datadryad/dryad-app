@@ -14,7 +14,6 @@ module MarkdownHandler
       tables: true,
       highlight: true,
       footnotes: true,
-      tables: true,
       link_attributes: {rel: 'nofollow', target: "_blank"}
     }
 
