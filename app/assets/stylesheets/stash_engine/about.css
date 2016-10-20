@@ -1,0 +1,56 @@
+/*
+ * This is a manifest file that'll be compiled into application.css, which will include all the files
+ * listed below.
+ *
+ * Any CSS and SCSS file within this directory, lib/assets/stylesheets, vendor/assets/stylesheets,
+ * or any plugin's vendor/assets/stylesheets directory can be referenced here using a relative path.
+ *
+ * You're free to add application-wide styles to this file and they'll appear at the bottom of the
+ * compiled file so the styles you add here take precedence over styles defined in any styles
+ * defined in the other CSS/SCSS files in this directory. It is generally better to create a new
+ * file per style scope.
+ *
+ *= require_tree .
+ *= require_self
+ */
+
+.pages_about table {
+  padding: 0;
+}
+.pages_about table tr {
+  border-top: 1px solid #cccccc;
+  background-color: white;
+  margin: 0;
+  padding: 0;
+}
+.pages_about table tr:nth-child(2n) {
+  background-color: #f8f8f8;
+}
+.pages_about table tr th {
+  font-weight: bold;
+  border: 1px solid #cccccc;
+  text-align: left;
+  margin: 0;
+  padding: 6px 13px;
+}
+.pages_about table tr td {
+  border: 1px solid #cccccc;
+  text-align: left;
+  margin: 0;
+  padding: 6px 13px;
+}
+.pages_about table tr th :first-child {
+  margin-top: 0;
+}
+
+.pages_about table tr td :first-child {
+  margin-top: 0;
+}
+
+.pages_about table tr th :last-child {
+  margin-bottom: 0;
+}
+
+.pages_about table tr td :last-child {
+  margin-bottom: 0;
+}
