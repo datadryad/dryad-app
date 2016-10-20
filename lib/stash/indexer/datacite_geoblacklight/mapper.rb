@@ -26,17 +26,17 @@ module Stash
             uuid: doi,
             dc_identifier_s: doi,
             dc_title_s: resource.default_title,
-            dc_creator_sm: resource.creator_names,
+            dc_creator_sm: resource.creator_names.map{|i| "#{i}".strip}.delete_if(&:empty?),
             dc_type_s: resource.type,
-            dc_description_s: resource.description_text_for(DescriptionType::ABSTRACT),
-            dc_subject_sm: resource.subjects.map(&:value),
+            dc_description_s: "#{resource.description_text_for(DescriptionType::ABSTRACT)}".strip,
+            dc_subject_sm: resource.subjects.map{|i| "#{i.value}".strip}.delete_if(&:empty?),
             dct_spatial_sm: resource.geo_location_places,
             georss_box_s: resource.calc_bounding_box,
             solr_geom: resource.bounding_box_envelope,
             solr_year_i: resource.publication_year,
             dct_issued_dt: wrapper.embargo_end_date_xmlschema,
             dc_rights_s: wrapper.license.name,
-            dc_publisher_s: resource.publisher,
+            dc_publisher_s: "#{resource.publisher}".strip,
             dct_temporal_sm: resource.dct_temporal_dates
           }
         end

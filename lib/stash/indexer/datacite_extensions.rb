@@ -54,7 +54,7 @@ module Datacite
 
       def default_title
         title = titles.find { |t| t.type.nil? }
-        title.value if title
+        "#{title.value}".strip if title
       end
 
       def doi
@@ -62,7 +62,7 @@ module Datacite
       end
 
       def type
-        general_type.value if general_type
+        "#{general_type.value}".strip if general_type
       end
 
       def general_type

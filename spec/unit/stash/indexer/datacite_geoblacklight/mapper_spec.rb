@@ -48,6 +48,11 @@ module Stash
             @dates = ["2000", "2001-02-03", "2010-10-01/2011-02-15", "2012/2015", "2010", "2011",
                       "2012", "2013", "2014", "2015"]
 
+            @descriptions = [DM::Description.new(
+                value: "Your cat has fleas. Now you get to learn to eradicate them.",
+                type: DM::DescriptionType.find_by_value('Abstract')
+            )]
+
             locations.push(*(@points.map { |pt| DM::GeoLocation.new(point: pt) }))
 
             id = DM::Identifier.new(value: @doi_value)
@@ -84,7 +89,8 @@ module Stash
               resource_type: DM::ResourceType.new(resource_type_general: DM::ResourceTypeGeneral::DATASET, value: @resource_type_value),
               subjects: @subjects.map { |s| DM::Subject.new(value: s) },
               geo_locations: locations,
-              dates: dates
+              dates: dates,
+              descriptions: @descriptions
             )
 
             payload_xml = @resource.save_to_xml
@@ -169,6 +175,10 @@ module Stash
 
           it 'extracts and calculates dates (years)' do
             expect(@index_document[:dct_temporal_sm]).to eq(@dates)
+          end
+
+          it 'expects abstract (description) to be present' do
+            expect(@index_document[:dc_description_s]).to eq(@descriptions.first.value)
           end
         end
 
