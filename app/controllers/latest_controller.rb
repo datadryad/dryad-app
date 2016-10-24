@@ -67,7 +67,8 @@ class LatestController < ApplicationController
 
   # get search results from the solr index
   def index
-    (@response, @document_list) = search_results(params)
+    # (@response, @document_list) = search_results(params)
+    set_cached_latest
 
     respond_to do |format|
       format.html { store_preferred_view }
@@ -86,4 +87,17 @@ class LatestController < ApplicationController
     end
   end
 
+  private
+
+  def floor_stamp(time, seconds = 10.minutes)
+    Time.at((time.to_f / seconds).floor * seconds).utc.strftime('%Y%m%dT%H%M%S')
+  end
+
+  def set_cached_latest
+    key = "#{floor_stamp(Time.new)}_latest_datasets"
+    unless Rails.cache.exist?(key)
+      Rails.cache.write(key, search_results(params) )
+    end
+    (@response, @document_list) = Rails.cache.fetch(key)
+  end
 end
