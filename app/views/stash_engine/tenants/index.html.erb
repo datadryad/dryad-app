@@ -2,7 +2,7 @@
 <p>Please choose your login below:</p>
 
 <% @tenants.each do |tenant| %>
-  <p><%= link_to tenant.long_name, tenant.omniauth_login_path %></p>
+  <p><%= link_to tenant.short_name, tenant.omniauth_login_path %></p>
 <% end %>
 
 <% if Rails.env == 'development' %>
