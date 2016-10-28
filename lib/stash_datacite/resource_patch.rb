@@ -23,7 +23,7 @@ module StashDatacite
         has_many :datacite_dates, class_name: 'StashDatacite::DataciteDate', dependent: :destroy # optional
         has_many :descriptions, class_name: 'StashDatacite::Description', dependent: :destroy #optional
         has_many :embargoes, class_name: 'StashDatacite::Embargo', dependent: :destroy #?
-        has_many :geolocations, class_name: 'StashDatacite::Geolocation'
+        has_many :geolocations, class_name: 'StashDatacite::Geolocation', dependent: :destroy
         #has_many :geolocation_boxes, class_name: 'StashDatacite::GeolocationBox', dependent: :destroy # optional
         #has_many :geolocation_places, class_name: 'StashDatacite::GeolocationPlace', dependent: :destroy # optional
         #has_many :geolocation_points, class_name: 'StashDatacite::GeolocationPoint', dependent: :destroy # optional

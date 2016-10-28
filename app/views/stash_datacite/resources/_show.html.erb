@@ -1,4 +1,7 @@
-  <div class="t-landing__data-type"><%= ( @resource.resource_type ? @resource.resource_type.resource_type : '') %></div>
+<script type="application/ld+json">
+  <%= @schema_org_ds %>
+</script>
+<div class="t-landing__data-type"><%= ( @resource.resource_type ? @resource.resource_type.resource_type : '') %></div>
   <h2 class="o-heading__level1"><%= @review.title.title %></h2>
   <%# render partial: "stash_datacite/resource_types/show", locals: { resource_type: @review.resource_type } %>
   <%# render partial: "stash_datacite/titles/show", locals: { title: @review.title } %>
