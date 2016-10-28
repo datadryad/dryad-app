@@ -42,7 +42,7 @@ function isLatitude(lat) {
     return lat;
   }
   else {
-    alert("Please enter valid latitude value");
+    alert("Please enter a valid latitude value. The valid range is -90 to +90 degrees from the equator.");
     $('#geo_lat_point').val('');
   }
 }
@@ -52,7 +52,7 @@ function isLongitude(lng) {
     return lat;
   }
   else {
-    alert("Please enter valid longitude value")
+    alert("Please enter a valid longitude value.The valid range is -180 to +180 degrees from the prime meridian.")
     $('#geo_lng_point').val('');
   }
 }
