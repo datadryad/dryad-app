@@ -77,7 +77,7 @@ module StashDatacite
       def creators
         return [] unless @resource.creators
         @resource.creators.map do |i|
-          {'@type' => 'Person', 'familyName' => i.creator_first_name, 'givenName' => i.creator_last_name }
+          {'@type' => 'Person', 'givenName' => i.creator_first_name, 'familyName' => i.creator_last_name }
         end
       end
 
