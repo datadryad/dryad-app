@@ -11,9 +11,6 @@ class CatalogController < ApplicationController
   helper StashEngine::ApplicationHelper
   include StashEngine::SharedController
 
-  helper_method :current_tenant, :current_user, :metadata_engine, :metadata_url_helpers, :stash_url_helpers,
-                :current_tenant_simple, :logo_path
-
   #layout 'blacklight'
   layout 'stash_engine/application'
 
