@@ -1,8 +1,8 @@
 <div class="c-columns">
 	<main class="t-landing__main c-columns__content">
-		<div id="display_resource"
-		  data-load="<%= metadata_url_helpers.resources_show_path(id: @resource_id, format: :js) %>"
-		  <%= image_tag 'stash_engine/spinner.gif', size: '80x60', alt: 'Loading spinner' %>
+		<div id="display_resource">
+		  <%# image_tag 'stash_engine/spinner.gif', size: '80x60', alt: 'Loading spinner' %>
+      <%= render(partial: 'stash_datacite/resources/show') %>
 		</div>
 	</main>
 	<aside class="t-landing__sidebar c-columns__sidebar2">

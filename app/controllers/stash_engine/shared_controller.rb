@@ -2,7 +2,12 @@ module StashEngine
   module SharedController
     require 'uri'
     require 'securerandom'
-    #helper_method :current_tenant, :current_user, :metadata_engine, :metadata_url_helpers
+
+    def self.included(c)
+      c.helper_method :current_tenant, :current_tenant_simple, :current_user, :metadata_engine, :metadata_url_helpers,
+                      :stash_url_helpers, :discovery_url_helpers, :landing_url,  :field_suffix, :logo_path,
+                      :contact_us_url
+    end
 
     def metadata_url_helpers
       metadata_engine::Engine.routes.url_helpers
