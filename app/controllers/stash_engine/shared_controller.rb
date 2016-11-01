@@ -5,12 +5,17 @@ module StashEngine
 
     def self.included(c)
       c.helper_method :current_tenant, :current_tenant_simple, :current_user, :metadata_engine, :metadata_url_helpers,
-                      :stash_url_helpers, :discovery_url_helpers, :landing_url,  :field_suffix, :logo_path,
-                      :contact_us_url
+                      :metadata_render_path, :stash_url_helpers, :discovery_url_helpers, :landing_url,  :field_suffix,
+                      :logo_path, :contact_us_url
     end
 
     def metadata_url_helpers
       metadata_engine::Engine.routes.url_helpers
+    end
+
+    # generate a render path in the metadata engine
+    def metadata_render_path(*args)
+      File.join(metadata_engine::Engine.root.to_s.split(File::SEPARATOR).last, args)
     end
 
     def stash_url_helpers

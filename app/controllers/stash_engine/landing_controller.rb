@@ -2,7 +2,7 @@ require_dependency 'stash_engine/application_controller'
 
 module StashEngine
   class LandingController < ApplicationController
-    include StashDatacite::LandingMixin # instead of being hard coded, this should rely on configuration
+    include StashEngine.app.metadata_engine.constantize::LandingMixin
 
     def show
       render('not_available') && return if params[:id].blank?
