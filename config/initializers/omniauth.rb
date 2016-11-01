@@ -34,4 +34,12 @@ Rails.application.config.middleware.use OmniAuth::Builder do
               :authorize_url => StashEngine.app.orcid_authorize_url,
               :token_url => StashEngine.app.orcid_token_url
            }
+
+
+# OmniAuth.config.on_failure = Proc.new { |env|
+#   OmniAuth::FailureEndpoint.new(env).redirect_to_failure
+# }
+OmniAuth.config.on_failure = -> (env) do
+  Rack::Response.new(['302 Moved'], 302, 'Location' => env['omniauth.origin'] || "/").finish
+end
 end
