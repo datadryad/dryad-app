@@ -6,6 +6,8 @@ module StashDatacite
     before_action :ajax_require_current_user, only: [:user_in_progress]
     before_action :set_page_info
     # get resources and composite information for in-progress table view
+
+    include StashDatacite::LandingMixin
     def user_in_progress
       respond_to do |format|
         format.js do
@@ -34,19 +36,7 @@ module StashDatacite
     def show
       respond_to do |format|
         format.js do
-          @resource = StashDatacite.resource_class.find(params[:id])
-          ds_presenter = DatasetPresenter.new(@resource)
-          @data = check_required_fields(@resource)
-          @review = Resource::Review.new(@resource)
-
-          @schema_org_ds = StashDatacite::Resource::SchemaDataset.new(resource: @resource, citation: plain_citation,
-              landing: stash_url_helpers.show_url(ds_presenter.external_identifier, host: request.host)).generate
-          @schema_org_ds = JSON.pretty_generate(@schema_org_ds).html_safe
-
-          if @review.no_geolocation_data == true
-            @resource.has_geolocation = false
-            @resource.save!
-          end
+          setup_show_variables(params[:id]) #this method is from LandingMixin so it can be reused in StashEngine
         end
       end
     end
@@ -76,20 +66,6 @@ module StashDatacite
     end
 
     private
-
-    def check_required_fields(resource)
-      @completions = Resource::Completions.new(resource)
-      # required fields are Title, Institution, Data type, Data Creator(s), Abstract
-      unless @completions.required_completed == @completions.required_total
-        @data = []
-        @data << 'Title' unless @completions.title
-        @data << 'Resource Type' unless @completions.data_type
-        @data << 'Abstract' unless @completions.abstract
-        @data << 'Author(s)' unless @completions.creator_name
-        @data << 'Author Affiliation' unless @completions.creator_affiliation
-        return @data.join(', ').split(/\W+/)
-      end
-    end
 
     def file_generation(resource)
       @resource_file_generation = Resource::ResourceFileGeneration.new(resource, current_tenant)
@@ -127,33 +103,5 @@ module StashDatacite
       title.try(:title)
     end
 
-    def plain_citation
-      citation(
-          @review.creators,
-          @review.title,
-          @review.resource_type,
-          @resource.stash_version.nil? ? 'v0' : "v#{@review.version.version }",
-          @resource.identifier.nil? ? 'DOI' : "#{@review.identifier.identifier }",
-          "#{@review.publisher}",
-          @resource.publication_years)
-    end
-
-    def citation(creators, title, resource_type, version, identifier, publisher, publication_years)
-      publication_year = publication_years.try(:first).try(:publication_year) || Time.now.year
-      title = title.try(:title)
-      publisher = publisher.try(:publisher)
-      resource_type = resource_type.try(:resource_type_friendly)
-      ["#{creator_citation_format(creators)} (#{publication_year})", title,
-       (version == 'v1' ? nil : version), publisher, resource_type,
-       "https://dx.doi.org/#{identifier}"].reject(&:blank?).join(', ')
-    end
-
-    def creator_citation_format(creators)
-      return '' if creators.blank?
-      str_creator = creators.map { |c| c.creator_full_name unless c.creator_full_name =~ /^[ ,]+$/ }.compact
-      return '' if str_creator.blank?
-      return "#{str_creator.first} et al." if str_creator.length > 4
-      str_creator.join('; ')
-    end
   end
 end

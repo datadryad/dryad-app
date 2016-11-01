@@ -128,7 +128,6 @@ module StashDatacite
         @citation
       end
 
-      # "license":{'@type':'CreativeWork','name':'Snog','license':'http://snog.com/cat'}
       def license
         return [] unless @resource.rights
         @resource.rights.map do |right|
