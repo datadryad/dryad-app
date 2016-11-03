@@ -18,8 +18,9 @@
           total.(<%= link_to 'Upload Basics', help_path(anchor: 'upload-basics') %>)
         </li>
       </ol>
-
-      <%= button_to 'Start New Dataset', new_resource_path, class: 'c-getting-started-heading__button', form_class: 'o-button__inline-form', method: :get %>
+      <% if current_user %>
+        <%= button_to 'Start New Dataset', new_resource_path, class: 'c-getting-started-heading__button', form_class: 'o-button__inline-form', method: :get %>
+      <% end %>
     </div>
   </main>
 
