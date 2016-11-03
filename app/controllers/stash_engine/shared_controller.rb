@@ -6,7 +6,7 @@ module StashEngine
     def self.included(c)
       c.helper_method :current_tenant, :current_tenant_simple, :current_user, :metadata_engine, :metadata_url_helpers,
                       :metadata_render_path, :stash_url_helpers, :discovery_url_helpers, :landing_url,  :field_suffix,
-                      :logo_path, :contact_us_url
+                      :logo_path, :contact_us_url, :display_br
     end
 
     def metadata_url_helpers
@@ -117,6 +117,14 @@ module StashEngine
                                         hsh.merge(alt: "#{current_tenant.long_name} logo")
         end
       end
+    end
+
+    #function to take a string and make it into html_safe string as paragraphs
+    def display_br(str)
+      return nil if str.nil?
+      str_arr = str.split(/\< *br *[\/]{0,1} *\>/).reject(&:blank?)
+      my_str = str_arr.map{|i| ERB::Util.html_escape(i) }.join('</p><p>')
+      my_str.html_safe
     end
   end
 end
