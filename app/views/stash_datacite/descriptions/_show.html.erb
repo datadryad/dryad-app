@@ -1,20 +1,20 @@
 <% unless abstract.try(:description).blank? %>
   <h3 class="o-heading__level2">Abstract</h3>
   <p>
-    <%= abstract.description %>
+    <%= display_br(abstract.description) %>
   </p>
 <% end %>
 
 <% unless methods.try(:description).blank? %>
   <h3 class="o-heading__level2">Methods</h3>
   <p>
-    <%= methods.description %>
+    <%= display_br(methods.description) %>
   </p>
 <% end %>
 
 <% unless other.try(:description).blank? %>
   <h3 class="o-heading__level2">Usage Notes</h3>
   <p>
-    <%= other.description %>
+    <%= display_br(other.description) %>
   </p>
 <% end %>
