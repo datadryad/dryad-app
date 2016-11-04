@@ -2,7 +2,7 @@ require_dependency 'stash_engine/application_controller'
 
 module StashEngine
   class DashboardController < ApplicationController
-    before_action :require_login, only: [:show, :getting_started]
+    before_action :require_login, only: [:show]
     before_action :force_to_domain, only: [:show]
 
     def getting_started
@@ -16,6 +16,10 @@ module StashEngine
     end
 
     def show
+      unless current_user.resources.present?
+        redirect_to stash_url_helpers.dashboard_getting_started_path
+        return false
+      end
     end
 
     def metadata_basics
