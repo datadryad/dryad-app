@@ -18,6 +18,9 @@ module StashDatacite
       enable
     end
 
+    # scopes for contributor
+    scope :with_award_numbers, -> { where("award_number <> ''") }
+
     def contributor_type_friendly=(type)
       self.contributor_type = type.to_s.downcase unless type.blank?
     end

@@ -2,8 +2,6 @@
   <h3 class="o-heading__level2">Funding</h3>
   <% contributors.each do |contributor| %>
      <p><%= contributor.contributor_name %>,
-      <% if contributor.award_number%>
-        Award:<%= contributor.award_number %></p>
-      <% end %>
+      Award:<%= contributor.award_number %></p>
   <% end %>
 <% end %>
