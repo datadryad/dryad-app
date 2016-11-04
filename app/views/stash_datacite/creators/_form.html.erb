@@ -28,7 +28,11 @@
   <div class="c-orcid">
     <% unless creator.blank? || creator.orcid_id.blank? %>
       <%= link_to '', "http://orcid.org", class: 'c-orcid__icon', title: 'orcid_website' %>
-      <%= link_to "https://sandbox.orcid.org/#{creator.orcid_id}", "https://sandbox.orcid.org/#{creator.orcid_id}",target: '_blank', class: 'c-orcid__id' %>
+      <% if StashEngine.app.site == "https://sandbox.orcid.org/" %>
+        <%= link_to "https://sandbox.orcid.org/#{creator.orcid_id}", "https://sandbox.orcid.org/#{creator.orcid_id}",target: '_blank', class: 'c-orcid__id' %>
+      <% else %>
+        <%= link_to "https://orcid.org/#{creator.orcid_id}", "https://orcid.org/#{creator.orcid_id}",target: '_blank', class: 'c-orcid__id' %>
+      <% end %>
     <% end %>
   </div>
 <!-- Begin Orcid ID Component -->
