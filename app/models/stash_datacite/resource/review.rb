@@ -43,7 +43,7 @@ module StashDatacite
       end
 
       def contributors
-        @contributors = @resource.contributors
+        @contributors = @resource.contributors.where(contributor_type: :funder)
       end
 
       def related_identifiers
