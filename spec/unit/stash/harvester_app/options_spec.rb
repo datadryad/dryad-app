@@ -13,6 +13,7 @@ module Stash
           expect(options.from_time).to be_nil
           expect(options.until_time).to be_nil
           expect(options.config_file).to be_nil
+          expect(options.stop_file).to be_nil
         end
 
         it 'takes an empty array' do
@@ -22,6 +23,7 @@ module Stash
           expect(options.from_time).to be_nil
           expect(options.until_time).to be_nil
           expect(options.config_file).to be_nil
+          expect(options.stop_file).to be_nil
         end
 
         it 'takes an array' do
@@ -141,7 +143,7 @@ module Stash
         end
       end
 
-      describe '#config' do
+      describe '#config_file' do
         it 'parses -c' do
           file = '/home/foo/stash-harvester.yml'
           options = Options.new(['-c', file])
@@ -164,6 +166,52 @@ module Stash
         end
       end
 
+      describe '#stop_file' do
+        it 'parses -s' do
+          file = '/home/foo/stash-harvester.stop'
+          options = Options.new(['-s', file])
+          expect(options.stop_file).to eq(file)
+        end
+
+        it 'parses --stop-file' do
+          file = '/home/foo/stash-harvester.stop'
+          options = Options.new(['--stop-file', file])
+          expect(options.stop_file).to eq(file)
+        end
+
+        it 'gives a sensible error if no value provided' do
+          %w(-s --stop-file).each do |opt|
+            expect { Options.new([opt]) }.to raise_error do |error|
+              expect(error).to be_an(OptionParser::MissingArgument)
+              expect(error.message).to include(opt)
+            end
+          end
+        end
+
+        describe '#stop_file_present' do
+          it 'returns false for nonexistent files' do
+            path = "/home/foo/missing-#{Time.now.to_i}"
+            expect(File.exist?(path)).to be_falsey # just to be sure
+            options = Options.new
+            options.stop_file = path
+            expect(options.stop_file_present).to be_falsey
+          end
+
+          it 'returns true for files that exist' do
+            file = Tempfile.new('stopfile-test')
+            begin
+              path = file.path
+              expect(File.exist?(path)).to be_truthy # just to be sure
+              options = Options.new
+              options.stop_file = path
+              expect(options.stop_file_present).to be_truthy
+            ensure
+              file.unlink
+            end
+          end
+        end
+      end
+
       describe '#do_exit' do
         it 'returns true for help' do
           %w(-h --help).each do |arg|
@@ -176,6 +224,19 @@ module Stash
           %w(-v --version).each do |arg|
             options = Options.new(arg)
             expect(options.do_exit).to be_truthy
+          end
+        end
+
+        it 'returns true if stopfile present' do
+          file = Tempfile.new('stopfile-test')
+          begin
+            path = file.path
+            expect(File.exist?(path)).to be_truthy # just to be sure
+            options = Options.new
+            options.stop_file = path
+            expect(options.do_exit).to be_truthy
+          ensure
+            file.unlink
           end
         end
 

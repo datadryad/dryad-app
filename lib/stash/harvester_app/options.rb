@@ -39,6 +39,7 @@ module Stash
           opts.on('-f', '--from DATETIME', 'start date/time for selective harvesting') { |from_time| options.from_time = to_utc_time(from_time) }
           opts.on('-u', '--until DATETIME', 'end date/time for selective harvesting') { |until_time| options.until_time = to_utc_time(until_time) }
           opts.on('-c', '--config FILE', 'configuration file') { |config_file| options.config_file = config_file }
+          opts.on('-s', '--stop-file FILE', 'stop file') { |stop_file| options.stop_file = stop_file }
         end
       end
 
@@ -56,17 +57,29 @@ module Stash
       # @return [String, nil] the path to the specified config file
       attr_accessor :config_file
 
+      # @return [String, nil] the path to the specified stop file
+      attr_accessor :stop_file
+
       def initialize(argv = nil)
         @opt_parser = self.class.init_opts(self)
         parse(argv)
       end
 
       def do_exit
-        show_help || show_version
+        show_help || show_version || stop_file_present
       end
 
       def parse(argv)
         @opt_parser.parse(argv)
+      end
+
+      def stop_file_present
+        stop_file && File.exist?(stop_file)
+      end
+
+      def stop_file_message
+        return unless stop_file_present
+        "Found stop file #{File.absolute_path(stop_file)}"
       end
 
       def self.to_time(time_str)
