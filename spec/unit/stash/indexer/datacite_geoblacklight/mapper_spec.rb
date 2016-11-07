@@ -45,6 +45,14 @@ module Stash
               DM::GeoLocationPoint.new(46.82, -73.43),
               DM::GeoLocationPoint.new(-7.38, -59.52)
             ]
+            @dates = ["2000", "2001-02-03", "2010-10-01/2011-02-15", "2012/2015", "2010", "2011",
+                      "2012", "2013", "2014", "2015"]
+
+            @descriptions = [DM::Description.new(
+                value: "Your cat has fleas. Now you get to learn to eradicate them.",
+                type: DM::DescriptionType.find_by_value('Abstract')
+            )]
+
             locations.push(*(@points.map { |pt| DM::GeoLocation.new(point: pt) }))
 
             id = DM::Identifier.new(value: @doi_value)
@@ -65,6 +73,12 @@ module Stash
               DM::Title.new(type: DM::TitleType::SUBTITLE, value: 'And a Contest between Two Artists about Optick Glasses, &c', language: 'en-emodeng')
             ]
             pub_year = 2015
+            dates = [
+              DM::Date.new(type: DM::DateType.find_by_value('Accepted'), value: '2000'),
+              DM::Date.new(type: DM::DateType.find_by_value('Created'), value: Date.new(2001,2,3)),
+              DM::Date.new(type: DM::DateType.find_by_value('Collected'), value: '2010-10-01/2011-02-15'),
+              DM::Date.new(type: DM::DateType.find_by_value('Submitted'), value: '2012/2015')
+            ]
 
             @resource = DM::Resource.new(
               identifier: id,
@@ -74,7 +88,9 @@ module Stash
               publication_year: pub_year,
               resource_type: DM::ResourceType.new(resource_type_general: DM::ResourceTypeGeneral::DATASET, value: @resource_type_value),
               subjects: @subjects.map { |s| DM::Subject.new(value: s) },
-              geo_locations: locations
+              geo_locations: locations,
+              dates: dates,
+              descriptions: @descriptions
             )
 
             payload_xml = @resource.save_to_xml
@@ -155,6 +171,14 @@ module Stash
 
           it 'extracts the publisher' do
             expect(@index_document[:dc_publisher_s]).to eq(@publisher)
+          end
+
+          it 'extracts and calculates dates (years)' do
+            expect(@index_document[:dct_temporal_sm]).to eq(@dates)
+          end
+
+          it 'expects abstract (description) to be present' do
+            expect(@index_document[:dc_description_s]).to eq(@descriptions.first.value)
           end
         end
 

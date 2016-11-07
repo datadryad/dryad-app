@@ -54,7 +54,7 @@ module Datacite
 
       def default_title
         title = titles.find { |t| t.type.nil? }
-        title.value if title
+        "#{title.value}".strip if title
       end
 
       def doi
@@ -62,7 +62,7 @@ module Datacite
       end
 
       def type
-        general_type.value if general_type
+        "#{general_type.value}".strip if general_type
       end
 
       def general_type
@@ -119,6 +119,22 @@ module Datacite
           long_max = [long_max, box.west_longitude, box.east_longitude].compact.max
         end
         GeoLocationBox.new(lat_min, long_min, lat_max, long_max) if lat_min && long_min && lat_max && long_max
+      end
+
+      # converts to DublinCore Terms, temporal, see http://journal.code4lib.org/articles/9710 or
+      # https://github.com/geoblacklight/geoblacklight-schema and seems very similar to the annotation going
+      # into the original DataCite element.  https://terms.tdwg.org/wiki/dcterms:temporal
+      #
+      # method takes the values supplied and also adds every year for a range so people can search for
+      # any of those years which may not be explicitly named
+      def dct_temporal_dates
+        items = dates.map(&:to_s).compact
+        year_range_items = dates.map do |i|
+          if i.range_start && i.range_end && i.range_start.year && i.range_end.year
+            (i.range_start.year..i.range_end.year).to_a.map(&:to_s)
+          end
+        end
+        (items + year_range_items).compact.flatten.uniq
       end
 
       def bounding_box_envelope
