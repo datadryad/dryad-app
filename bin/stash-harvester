@@ -14,7 +14,7 @@ module Stash
       options = Options.new(ARGV)
       puts Options::VERSION if options.show_version
       puts Options::HELP if options.show_help
-      puts options.stop_file_message if options.stop_file_present
+      log.info(options.stop_file_message) if options.stop_file_present
       start_application(options) unless options.do_exit
     rescue => e
       warn e
