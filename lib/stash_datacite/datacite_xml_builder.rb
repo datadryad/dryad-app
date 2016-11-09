@@ -1,4 +1,5 @@
 require 'datacite/mapping'
+require 'byebug'
 
 module Datacite
   module Mapping
@@ -94,7 +95,7 @@ module Datacite
       end
 
       def add_related_ids(resource)
-        resource.related_identifiers = se_resource.related_identifiers.map do |id|
+        resource.related_identifiers = se_resource.related_identifiers.completed.map do |id|
           RelatedIdentifier.new(
             relation_type: id.relation_type_mapping_obj,
             value: id.related_identifier,
@@ -130,7 +131,7 @@ module Datacite
       end
 
       def add_contributors(resource)
-        se_resource.contributors.where.not(contributor_type: 'funder').each do |c|
+        se_resource.contributors.completed.where.not(contributor_type: 'funder').each do |c|
           resource.contributors << Contributor.new(
             name: c.contributor_name,
             identifier: to_dcs_identifier(c.name_identifier),
@@ -140,7 +141,7 @@ module Datacite
       end
 
       def add_funding(resource, datacite_3: false)
-        sd_funder_contribs = se_resource.contributors.where(contributor_type: 'funder')
+        sd_funder_contribs = se_resource.contributors.completed.where(contributor_type: 'funder')
         if datacite_3
           resource.contributors = sd_funder_contribs.map do |c|
             desc_text = "Data were created with funding from #{c.contributor_name}"

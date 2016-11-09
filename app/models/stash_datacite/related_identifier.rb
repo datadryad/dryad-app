@@ -3,6 +3,8 @@ module StashDatacite
     self.table_name = 'dcs_related_identifiers'
     belongs_to :resource, class_name: StashDatacite.resource_class.to_s
 
+    scope :completed, ->  { where("TRIM(IFNULL(related_identifier, '')) > ''") } # only non-null & blank
+
     RelationTypes = Datacite::Mapping::RelationType.map(&:value)
 
     RelationTypesEnum = RelationTypes.map { |i| [i.downcase.to_sym, i.downcase] }.to_h
