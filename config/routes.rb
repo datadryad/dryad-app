@@ -2,7 +2,7 @@ Rails.application.routes.draw do
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
-  get "/", to: redirect('/stash')
+  root :to => redirect(APP_CONFIG.stash_mount)
   
   get '/help' => 'host_pages#help'
   get '/about' => 'host_pages#about'
