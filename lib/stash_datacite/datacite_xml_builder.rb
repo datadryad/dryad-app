@@ -1,5 +1,4 @@
 require 'datacite/mapping'
-require 'byebug'
 
 module Datacite
   module Mapping
