@@ -5,7 +5,11 @@ module StashEngine
 
     # Initializer to combine this engines static assets with the static assets of the hosting site.
     initializer 'static assets' do |app|
-      app.middleware.insert_before(::ActionDispatch::Static, ::ActionDispatch::Static, "#{root}/public")
+      # in production these should be served by the web server? we think? (DM 2016-11-09)
+      # see http://stackoverflow.com/questions/30563342/rails-cant-start-when-serve-static-assets-disabled-in-production
+      if Rails.application.config.serve_static_files
+        app.middleware.insert_before(::ActionDispatch::Static, ::ActionDispatch::Static, "#{root}/public")
+      end
     end
   end
   # see http://stackoverflow.com/questions/20734766/rails-mountable-engine-how-should-apps-set-configuration-variables
