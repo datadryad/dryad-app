@@ -11,7 +11,7 @@ module StashEngine
 
     # return list of all tenants, tenant is a lightly wrapped ostruct (see method missing) with extra methods in here
     def self.all
-      StashEngine.tenants.values.map { |h| new(h) if h['enabled'] && h['enabled'] == true }.compact
+      StashEngine.tenants.values.map { |h| new(h) if h['enabled'] && h['enabled'] == true }.compact.sort_by(&:short_name)
     end
 
     #gets the Tenant class to respond to the keys so you can call hash like methods
