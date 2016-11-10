@@ -437,5 +437,8 @@ DEPENDENCIES
   web-console (~> 2.0)
   yui-compressor
 
+RUBY VERSION
+   ruby 2.2.5p319
+
 BUNDLED WITH
-   1.11.2
+   1.13.6

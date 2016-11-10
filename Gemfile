@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 require File.join(File.dirname(__FILE__), 'lib', 'bundler_help.rb')
 
-ruby "2.2.3"
+ruby "2.2.5"
 
 gem 'yui-compressor'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
