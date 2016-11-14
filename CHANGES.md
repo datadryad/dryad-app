@@ -1,3 +1,8 @@
+## 0.1.4 (14 November 2016)
+
+- Update to Ruby 2.2.5
+- Add `timeout:` parameter to `HTTPHelper`, with a default of 10 minutes.
+
 ## 0.1.3 (15 August 2016)
 
 - Use 2.0.0 release version of `rest-client` to fix issues with cookie handling in redirection

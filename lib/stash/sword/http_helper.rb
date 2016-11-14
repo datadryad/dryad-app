@@ -13,11 +13,17 @@ module Stash
       # The default number of redirects to follow before erroring out.
       DEFAULT_MAX_REDIRECTS = 5
 
+      # The default number of seconds to allow before timing out. Defaults to 10 minutes.
+      DEFAULT_TIMEOUT = 60 * 10
+
       # @return [String] the User-Agent string to send when making requests
       attr_accessor :user_agent
 
       # @return [Integer] the number of redirects to follow before erroring out
       attr_accessor :redirect_limit
+
+      # @return [Integer] the number of seconds to allow before timing out
+      attr_accessor :timeout
 
       # @return [String] the HTTP Basic Authentication username
       attr_reader :username
@@ -31,9 +37,10 @@ module Stash
       # @param redirect_limit [Integer] the number of redirects to follow before erroring out
       #   (defaults to {DEFAULT_MAX_REDIRECTS})
       # @param logger [Logger, nil] the logger to use, or nil to use a default logger
-      def initialize(user_agent:, username: nil, password: nil, redirect_limit: DEFAULT_MAX_REDIRECTS, logger: nil)
+      def initialize(user_agent:, username: nil, password: nil, redirect_limit: DEFAULT_MAX_REDIRECTS, timeout: DEFAULT_TIMEOUT, logger: nil)
         @user_agent = user_agent
         @redirect_limit = redirect_limit
+        @timeout = timeout
         @username = username
         @password = password
         @log = logger || default_logger
@@ -53,12 +60,12 @@ module Stash
 
       # Posts the specified payload string to the specified URI.
       def post(uri:, payload:, headers: {}, limit: redirect_limit)
-        do_post_or_put(method: :post, uri: uri, payload: payload, headers: headers, limit: limit)
+        do_post_or_put(method: :post, uri: uri, payload: payload, headers: headers, limit: limit, timeout: timeout)
       end
 
       # Puts the specified payload string to the specified URI.
       def put(uri:, payload:, headers: {}, limit: redirect_limit)
-        do_post_or_put(method: :put, uri: uri, payload: payload, headers: headers, limit: limit)
+        do_post_or_put(method: :put, uri: uri, payload: payload, headers: headers, limit: limit, timeout: timeout)
       end
 
       private
@@ -70,19 +77,20 @@ module Stash
         }.freeze
       end
 
-      def do_post_or_put(method:, uri:, payload:, headers:, limit:)
-        options = request_options(headers, limit, method, payload, uri)
+      def do_post_or_put(method:, uri:, payload:, headers:, limit:, timeout:)
+        options = request_options(headers, limit, method, payload, uri, timeout)
         log_hash(options)
         RestClient::Request.execute(**options)
       end
 
-      def request_options(headers, limit, method, payload, uri)
+      def request_options(headers, limit, method, payload, uri, timeout)
         options = {
           method: method,
           url: uri.to_s,
           payload: payload,
           headers: headers.merge(default_headers),
-          max_redirects: limit
+          max_redirects: limit,
+          timeout: timeout
         }
         options[:user] = username if username
         options[:password] = password if password

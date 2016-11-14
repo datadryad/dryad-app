@@ -7,7 +7,7 @@ include Stash::Sword
 password = ARGV[0]
 username = 'ucop_dash_submitter'
 collection = 'dash_cdl'
-collection_uri = "http://uc3-mrtsword-dev.cdlib.org:39001/mrtsword/collection/#{collection}"
+collection_uri = "http://sword-aws-dev.cdlib.org:39001/mrtsword/collection/#{collection}"
 zipfile = File.expand_path('../uploads/example.zip', __FILE__)
 
 doi = "doi:10.5072/FK#{Time.now.to_i}"
