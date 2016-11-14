@@ -22,7 +22,7 @@ Gem::Specification.new do |s|
 
   s.add_development_dependency 'mysql2'
 
-  s.add_dependency 'stash-sword', '~> 0.1', '>= 0.1.2'
+  s.add_dependency 'stash-sword', '~> 0.1', '>= 0.1.4'
 
   s.add_dependency 'concurrent-ruby', '~> 1.0'
   s.add_dependency 'redcarpet', '~> 3.3'
