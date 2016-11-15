@@ -62,6 +62,9 @@
 	@extend %c-input__element;
 	height: $input-height + 50px;
 	padding: 3px 5px;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  word-break: break-all;
 }
 
 .c-input__select {
