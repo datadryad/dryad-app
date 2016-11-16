@@ -101,9 +101,10 @@ module StashEngine
     end
 
     def report_error(e, resource, request_msg)
-      log.error(e.to_s + (backtrace = e.backtrace) && "\n#{backtrace.join("\n")}")
+      log.error("#{e}\n#{e.backtrace.join("\n")}")
 
       update_submission_log(resource_id: resource_id, request_msg: request_msg, response_msg: "Failed: #{e}")
+      resource = Resource.find(resource_id) unless resource
       error_report(resource, e).deliver_now
       failure_report(resource, e).deliver_now
 
@@ -218,7 +219,7 @@ module StashEngine
     def update(time, value, reason)
       unless reason
         res = Resource.where(id: @resource_id).first
-        if uploads = res.try(:file_uploads)
+        if (uploads = res.try(:file_uploads))
           log.info("#{self.class} removing uploaded files for resource_id: #{@resource_id}")
           uploads.each do |upload|
             File.delete(upload.temp_file_path) if File.exist?(upload.temp_file_path)

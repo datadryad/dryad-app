@@ -7,6 +7,9 @@ module StashEngine
             return_path: (APP_CONFIG['feedback_email_from']).to_s
 
     def create_succeeded(resource, title, request_host, request_port)
+      warn("Unable to report successful create; nil resource") unless resource
+      return unless resource
+
       user = resource.user
       @to_name = "#{user.first_name} #{user.last_name}"
       @title = title
@@ -19,6 +22,9 @@ module StashEngine
     end
 
     def create_failed(resource, title, request_host, request_port, error)
+      warn("Unable to report create error #{error}; nil resource") unless resource
+      return unless resource
+
       user = resource.user
       @to_name = "#{user.first_name} #{user.last_name}"
       @title = title
@@ -34,6 +40,9 @@ module StashEngine
     end
 
     def update_succeeded(resource, title, request_host, request_port)
+      warn("Unable to report successful update; nil resource") unless resource
+      return unless resource
+
       user = resource.user
       @to_name = "#{user.first_name} #{user.last_name}"
       @title = title
@@ -46,6 +55,9 @@ module StashEngine
     end
 
     def update_failed(resource, title, request_host, request_port, error)
+      warn("Unable to report update failure #{error}; nil resource") unless resource
+      return unless resource
+
       user = resource.user
       @to_name = "#{user.first_name} #{user.last_name}"
       @title = title
@@ -61,6 +73,9 @@ module StashEngine
     end
 
     def error_report(resource, title, error)
+      warn("Unable to report update error #{error}; nil resource") unless resource
+      return unless resource
+
       user = resource.user
       @user_name = "#{user.first_name} #{user.last_name}"
       @user_email = user.email
