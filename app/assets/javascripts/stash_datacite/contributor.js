@@ -27,7 +27,7 @@ function loadContributors() {
                 var arr = jQuery.map( data.message.items, function( a ) {
                 return [[ a.id, a.name, a.uri ]];
               });
-              console.log(arr);
+              // console.log(arr);
               var labels = [];
               $.each(arr, function(index, value) {
                 labels.push(value[1]);
@@ -37,6 +37,13 @@ function loadContributors() {
           });
         },
         minLength: 1,
+        select: function( event, ui ) {
+          new_value = ui.item.value;
+          this.value = new_value;
+          var form = $(this.form);
+          $(form).trigger('submit.rails');
+          previous_value = new_value;
+        },
         focus: function() {
           // prevent value inserted on focus
           return false;
@@ -46,6 +53,7 @@ function loadContributors() {
 
     $( '.js-funders' ).on('focus', function () {
       previous_value = this.value;
+      // console.log('previous value:' + previous_value );
       }).change(function() {
         new_value = this.value;
         // Save when the new value is different from the previous value
