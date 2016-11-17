@@ -1,4 +1,13 @@
 GIT
+  remote: https://github.com/CDLUC3/stash-sword.git
+  revision: cacb23faac2d2425662e3e42fd06df171110fa08
+  specs:
+    stash-sword (0.1.5)
+      rest-client (~> 2.0, = 2.0.0)
+      typesafe_enum (~> 0.1, >= 0.1.7)
+      xml-mapping_extensions (~> 0.4, >= 0.4.1)
+
+GIT
   remote: https://github.com/CDLUC3/stash_ezid_datacite.git
   revision: 875a85f7419e1304d981f4a44d43f8f0177e65e8
   specs:
@@ -44,7 +53,7 @@ PATH
       omniauth-shibboleth (~> 1.2.1)
       rails (~> 4.2.4)
       redcarpet (~> 3.3)
-      stash-sword (~> 0.1, >= 0.1.4)
+      stash-sword (~> 0.1, >= 0.1.5)
 
 GEM
   remote: https://rubygems.org/
@@ -362,10 +371,6 @@ GEM
     sshkit (1.11.3)
       net-scp (>= 1.1.2)
       net-ssh (>= 2.8.0)
-    stash-sword (0.1.4)
-      rest-client (~> 2.0, = 2.0.0)
-      typesafe_enum (~> 0.1, >= 0.1.7)
-      xml-mapping_extensions (~> 0.4, >= 0.4.1)
     stash-wrapper (0.1.11.1)
       typesafe_enum (~> 0.1, >= 0.1.7)
       xml-mapping_extensions (~> 0.4, >= 0.4.2)
@@ -429,6 +434,7 @@ DEPENDENCIES
   simplecov
   simplecov-console
   spring
+  stash-sword!
   stash_datacite!
   stash_discovery!
   stash_engine!

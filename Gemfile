@@ -47,6 +47,8 @@ gem 'stash_ezid_datacite', :git => 'https://github.com/CDLUC3/stash_ezid_datacit
 
 gem 'exception_notification'
 
+gem 'stash-sword', :git => 'https://github.com/CDLUC3/stash-sword.git'
+
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug'
