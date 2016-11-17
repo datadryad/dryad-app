@@ -1,3 +1,7 @@
+## 0.1.5 (17 November 2016)
+
+- Setting read_timeout with timeout for REST actions, also.
+
 ## 0.1.4 (14 November 2016)
 
 - Update to Ruby 2.2.5
