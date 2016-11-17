@@ -90,7 +90,8 @@ module Stash
           payload: payload,
           headers: headers.merge(default_headers),
           max_redirects: limit,
-          timeout: timeout
+          timeout: timeout,
+          read_timeout: timeout
         }
         options[:user] = username if username
         options[:password] = password if password
