@@ -68,11 +68,11 @@ module Stash
       def append_response(msg_lines, e)
         return unless e.respond_to?(:response) && e.response
         response = e.response
-        msg_lines.unshift(*[
-                            "code: #{response.code}",
-                            'headers:', hash_to_log_msg(response.headers),
-                            "body:\n#{response.body}"
-                          ])
+        msg_lines.unshift(
+          "code: #{response.code}",
+          'headers:', hash_to_log_msg(response.headers),
+          "body:\n#{response.body}"
+        )
       end
 
       def append_backtrace(msg_lines, e)

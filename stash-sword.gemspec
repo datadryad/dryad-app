@@ -5,7 +5,7 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'uri'
 require 'stash/sword/module_info'
 
-Gem::Specification.new do |spec|
+Gem::Specification.new do |spec| # rubocop:disable Metrics/BlockLength
   spec.name          = Stash::Sword::NAME
   spec.version       = Stash::Sword::VERSION
   spec.authors       = ['David Moles']
@@ -27,12 +27,6 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'rest-client', '~> 2.0', '2.0.0'
   spec.add_dependency 'typesafe_enum', '~> 0.1', '>= 0.1.7'
   spec.add_dependency 'xml-mapping_extensions', '~> 0.4', '>= 0.4.1'
-
-  # spec.add_dependency 'swordruby', '~> 1.0'
-  # spec.add_dependency 'multipart-post', '~> 2.0'
-  #
-  # spec.add_dependency 'stash-wrapper', '~> 0.1', '>= 0.1.2'
-  # spec.add_dependency 'datacite-mapping', '~> 0.1', '>= 0.1.8'
 
   spec.add_development_dependency 'equivalent-xml', '~> 0.6.0'
 

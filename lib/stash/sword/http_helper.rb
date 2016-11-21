@@ -37,7 +37,7 @@ module Stash
       # @param redirect_limit [Integer] the number of redirects to follow before erroring out
       #   (defaults to {DEFAULT_MAX_REDIRECTS})
       # @param logger [Logger, nil] the logger to use, or nil to use a default logger
-      def initialize(user_agent:, username: nil, password: nil, redirect_limit: DEFAULT_MAX_REDIRECTS, timeout: DEFAULT_TIMEOUT, logger: nil)
+      def initialize(user_agent:, username: nil, password: nil, redirect_limit: DEFAULT_MAX_REDIRECTS, timeout: DEFAULT_TIMEOUT, logger: nil) # rubocop:disable Metrics/ParameterLists
         @user_agent = user_agent
         @redirect_limit = redirect_limit
         @timeout = timeout
@@ -77,20 +77,20 @@ module Stash
         }.freeze
       end
 
-      def do_post_or_put(method:, uri:, payload:, headers:, limit:, timeout:)
+      def do_post_or_put(method:, uri:, payload:, headers:, limit:, timeout:) # rubocop:disable Metrics/ParameterLists
         options = request_options(headers, limit, method, payload, uri, timeout)
         log_hash(options)
         RestClient::Request.execute(**options)
       end
 
-      def request_options(headers, limit, method, payload, uri, timeout)
+      def request_options(headers, limit, method, payload, uri, timeout) # rubocop:disable Metrics/MethodLength, Metrics/ParameterLists
         options = {
           method: method,
           url: uri.to_s,
           payload: payload,
           headers: headers.merge(default_headers),
           max_redirects: limit,
-          timeout: timeout,
+          open_timeout: timeout,
           read_timeout: timeout
         }
         options[:user] = username if username
