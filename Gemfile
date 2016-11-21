@@ -21,3 +21,11 @@ gem 'jquery-turbolinks'
 group :development do
   gem 'scss_lint'
 end
+group :test do
+  gem 'page-object'
+  gem 'rspec-rails'
+  gem 'capybara'
+  gem 'database_cleaner'
+  gem 'selenium-webdriver'
+  gem 'database_cleaner'
+end

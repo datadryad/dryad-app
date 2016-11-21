@@ -41,3 +41,4 @@ Rails.application.config.middleware.use OmniAuth::Builder do
     Rack::Response.new(['302 Moved'], 302, 'Location' => env['omniauth.origin'] || "/").finish
   end
 end
+
