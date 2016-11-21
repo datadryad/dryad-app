@@ -1,6 +1,6 @@
-## 0.1.5 (17 November 2016)
+## 0.1.5 (21 November 2016)
 
-- Setting read_timeout with timeout for REST actions, also.
+- Pass `read_timeout` and `open_timeout` explicitly for clarity.
 
 ## 0.1.4 (14 November 2016)
 
