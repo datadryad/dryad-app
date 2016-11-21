@@ -14,6 +14,7 @@ gemspec
 
 # To use a debugger
 gem 'byebug', group: [:development, :test]
+gem 'stash-sword', :git => 'https://github.com/CDLUC3/stash-sword.git'
 gem 'mysql2', '~> 0.3.20'
 gem 'rubocop', require: false, group: [:development, :test]
 gem 'simplecov', require: false, group: :test
