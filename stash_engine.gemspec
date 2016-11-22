@@ -12,9 +12,11 @@ Gem::Specification.new do |s|
   s.description = 'Core Stash application functionality independent of repository, metadata schema, or customization'
   s.license     = 'MIT'
 
-  s.files = Dir['{app,config,db,lib}/**/*', 'MIT-LICENSE', 'Rakefile', 'README.rdoc']
-  s.test_files = Dir['test/**/*']
-  s.require_paths = %w(lib app/models)
+  s.files         = `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(test|spec|features)/}) }
+  s.bindir        = 'exe'
+  s.executables   = s.files.grep(%r{^exe/}) { |f| File.basename(f) }
+  s.require_paths = ['lib']
+  s.test_files = Dir['spec/**/*']
 
   s.add_dependency 'stash-sword', '~> 0.1', '>= 0.1.5'
 

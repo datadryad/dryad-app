@@ -82,8 +82,8 @@
 #  Exclude:
 #    - 'config/initializers/omniauth.rb'
 #    - 'config/routes.rb'
-#    - 'test/dummy/config/routes.rb'
-#    - 'test/dummy/db/schema.rb'
+#    - 'spec/dummy/config/routes.rb'
+#    - 'spec/dummy/db/schema.rb'
 
 # Offense count: 13
 # Cop supports --auto-correct.
@@ -116,7 +116,7 @@
 #Style/ExtraSpacing:
 #  Exclude:
 #    - 'stash_engine.gemspec'
-#    - 'test/dummy/bin/setup'
+#    - 'spec/dummy/bin/setup'
 #    - 'test/test_helper.rb'
 
 # Offense count: 28
@@ -185,7 +185,7 @@
 # Cop supports --auto-correct.
 #Style/SingleSpaceBeforeFirstArg:
 #  Exclude:
-#    - 'test/dummy/db/schema.rb'
+#    - 'spec/dummy/db/schema.rb'
 
 # Offense count: 2
 # Cop supports --auto-correct.
@@ -222,10 +222,10 @@
 #    - 'app/helpers/stash_engine/sessions_helper.rb'
 #    - 'config/initializers/hash_to_ostruct.rb'
 #    - 'config/initializers/omniauth.rb'
-#    - 'test/dummy/config/application.rb'
-#    - 'test/dummy/config/initializers/00_tenants.rb'
-#    - 'test/dummy/config/initializers/app_config.rb'
-#    - 'test/dummy/config/initializers/stash_engine.rb'
+#    - 'spec/dummy/config/application.rb'
+#    - 'spec/dummy/config/initializers/00_tenants.rb'
+#    - 'spec/dummy/config/initializers/app_config.rb'
+#    - 'spec/dummy/config/initializers/stash_engine.rb'
 #    - 'test/helpers/stash_engine/application_helper_test.rb'
 #    - 'test/integration/navigation_test.rb'
 

@@ -10,7 +10,7 @@ AllCops:
     - 'config/**/*'
     - 'script/**/*'
     - 'bin/**/*'
-    - 'test/dummy/db/**/*'
+    - 'spec/dummy/db/**/*'
     - 'vendor/**/*'
     - 'ui-library/**/*'
     - 'node_modules/**/*'
