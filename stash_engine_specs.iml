@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="RUBY_MODULE" version="4">
+  <component name="NewModuleRootManager" inherit-compiler-output="true">
+    <exclude-output />
+    <content url="file://$MODULE_DIR$" />
+    <orderEntry type="jdk" jdkName="RVM: ruby-2.2.5" jdkType="RUBY_SDK" />
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="module-library">
+      <library name="stash_engine (v0.0.17, /Users/dmoles/Work/stash_engines/stash_engine) [path][gem]">
+        <CLASSES>
+          <root url="file://$MODULE_DIR$/../stash_engines/stash_engine/db" />
+          <root url="file://$MODULE_DIR$/../stash_engines/stash_engine/app" />
+          <root url="file://$MODULE_DIR$/../stash_engines/stash_engine/bin" />
+          <root url="file://$MODULE_DIR$/../stash_engines/stash_engine/lib" />
+          <root url="file://$MODULE_DIR$/../stash_engines/stash_engine/log" />
+          <root url="file://$MODULE_DIR$/../stash_engines/stash_engine/tmp" />
+          <root url="file://$MODULE_DIR$/../stash_engines/stash_engine/config" />
+          <root url="file://$MODULE_DIR$/../stash_engines/stash_engine/public" />
+          <root url="file://$MODULE_DIR$/../stash_engines/stash_engine/script" />
+          <root url="file://$MODULE_DIR$/../stash_engines/stash_engine/coverage" />
+          <root url="file://$MODULE_DIR$/../stash_engines/stash_engine/ui-library" />
+          <root url="file://$MODULE_DIR$/../stash_engines/stash_engine/node_modules" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES>
+          <root url="file://$MODULE_DIR$/../stash_engines/stash_engine/db" />
+          <root url="file://$MODULE_DIR$/../stash_engines/stash_engine/app" />
+          <root url="file://$MODULE_DIR$/../stash_engines/stash_engine/bin" />
+          <root url="file://$MODULE_DIR$/../stash_engines/stash_engine/lib" />
+          <root url="file://$MODULE_DIR$/../stash_engines/stash_engine/log" />
+          <root url="file://$MODULE_DIR$/../stash_engines/stash_engine/tmp" />
+          <root url="file://$MODULE_DIR$/../stash_engines/stash_engine/config" />
+          <root url="file://$MODULE_DIR$/../stash_engines/stash_engine/public" />
+          <root url="file://$MODULE_DIR$/../stash_engines/stash_engine/script" />
+          <root url="file://$MODULE_DIR$/../stash_engines/stash_engine/coverage" />
+          <root url="file://$MODULE_DIR$/../stash_engines/stash_engine/ui-library" />
+          <root url="file://$MODULE_DIR$/../stash_engines/stash_engine/node_modules" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="library" scope="PROVIDED" name="actionmailer (v4.2.7.1, RVM: ruby-2.2.5) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="actionpack (v4.2.7.1, RVM: ruby-2.2.5) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="actionview (v4.2.7.1, RVM: ruby-2.2.5) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="activejob (v4.2.7.1, RVM: ruby-2.2.5) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="activemodel (v4.2.7.1, RVM: ruby-2.2.5) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="activerecord (v4.2.7.1, RVM: ruby-2.2.5) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="activesupport (v4.2.7.1, RVM: ruby-2.2.5) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="addressable (v2.5.0, RVM: ruby-2.2.5) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="amoeba (v3.0.0, RVM: ruby-2.2.5) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="ansi (v1.5.0, RVM: ruby-2.2.5) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="arel (v6.0.3, RVM: ruby-2.2.5) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="ast (v2.3.0, RVM: ruby-2.2.5) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="builder (v3.2.2, RVM: ruby-2.2.5) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="bundler (v1.13.6, RVM: ruby-2.2.5) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="carrierwave (v0.10.0, RVM: ruby-2.2.5) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="concurrent-ruby (v1.0.2, RVM: ruby-2.2.5) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="crack (v0.4.3, RVM: ruby-2.2.5) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="database_cleaner (v1.5.3, RVM: ruby-2.2.5) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="diff-lcs (v1.2.5, RVM: ruby-2.2.5) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="diffy (v3.1.0, RVM: ruby-2.2.5) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="docile (v1.1.5, RVM: ruby-2.2.5) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="domain_name (v0.5.20161021, RVM: ruby-2.2.5) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="equivalent-xml (v0.6.0, RVM: ruby-2.2.5) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="erubis (v2.7.0, RVM: ruby-2.2.5) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="faraday (v0.9.2, RVM: ruby-2.2.5) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="filesize (v0.1.1, RVM: ruby-2.2.5) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="font-awesome-rails (v4.7.0.0, RVM: ruby-2.2.5) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="globalid (v0.3.7, RVM: ruby-2.2.5) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="hashdiff (v0.3.0, RVM: ruby-2.2.5) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="hashie (v3.4.6, RVM: ruby-2.2.5) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="hirb (v0.7.3, RVM: ruby-2.2.5) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="http-cookie (v1.0.3, RVM: ruby-2.2.5) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="i18n (v0.7.0, RVM: ruby-2.2.5) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="jquery-fileupload-rails (v0.4.7, RVM: ruby-2.2.5) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="jquery-rails (v4.2.1, RVM: ruby-2.2.5) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="jquery-turbolinks (v2.1.0, RVM: ruby-2.2.5) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="jquery-ui-rails (v5.0.5, RVM: ruby-2.2.5) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="json (v1.8.3, RVM: ruby-2.2.5) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="jwt (v1.5.6, RVM: ruby-2.2.5) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="kaminari (v0.17.0, RVM: ruby-2.2.5) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="loofah (v2.0.3, RVM: ruby-2.2.5) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="mail (v2.6.4, RVM: ruby-2.2.5) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="mime-types (v2.99.3, RVM: ruby-2.2.5) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="mini_portile2 (v2.1.0, RVM: ruby-2.2.5) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="minitest (v5.9.1, RVM: ruby-2.2.5) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="multi_json (v1.12.1, RVM: ruby-2.2.5) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="multi_xml (v0.5.5, RVM: ruby-2.2.5) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="multipart-post (v2.0.0, RVM: ruby-2.2.5) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="netrc (v0.11.0, RVM: ruby-2.2.5) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="nokogiri (v1.6.8.1, RVM: ruby-2.2.5) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="oauth2 (v1.2.0, RVM: ruby-2.2.5) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="omniauth (v1.2.2, RVM: ruby-2.2.5) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="omniauth-google-oauth2 (v0.2.10, RVM: ruby-2.2.5) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="omniauth-oauth2 (v1.3.1, RVM: ruby-2.2.5) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="omniauth-orcid (v1.0.38, RVM: ruby-2.2.5) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="omniauth-shibboleth (v1.2.1, RVM: ruby-2.2.5) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="parser (v2.3.2.0, RVM: ruby-2.2.5) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="powerpack (v0.1.1, RVM: ruby-2.2.5) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="public_suffix (v2.0.4, RVM: ruby-2.2.5) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="rack (v1.6.5, RVM: ruby-2.2.5) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="rack-test (v0.6.3, RVM: ruby-2.2.5) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="rails (v4.2.7.1, RVM: ruby-2.2.5) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="rails-deprecated_sanitizer (v1.0.3, RVM: ruby-2.2.5) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="rails-dom-testing (v1.0.7, RVM: ruby-2.2.5) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="rails-html-sanitizer (v1.0.3, RVM: ruby-2.2.5) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="railties (v4.2.7.1, RVM: ruby-2.2.5) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="rainbow (v2.1.0, RVM: ruby-2.2.5) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="rake (v11.3.0, RVM: ruby-2.2.5) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="redcarpet (v3.3.4, RVM: ruby-2.2.5) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="rest-client (v2.0.0, RVM: ruby-2.2.5) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="rspec (v3.5.0, RVM: ruby-2.2.5) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="rspec-core (v3.5.4, RVM: ruby-2.2.5) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="rspec-expectations (v3.5.0, RVM: ruby-2.2.5) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="rspec-mocks (v3.5.0, RVM: ruby-2.2.5) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="rspec-rails (v3.5.2, RVM: ruby-2.2.5) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="rspec-support (v3.5.0, RVM: ruby-2.2.5) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="rubocop (v0.45.0, RVM: ruby-2.2.5) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="ruby-progressbar (v1.8.1, RVM: ruby-2.2.5) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="safe_yaml (v1.0.4, RVM: ruby-2.2.5) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="sass (v3.4.22, RVM: ruby-2.2.5) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="simplecov (v0.12.0, RVM: ruby-2.2.5) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="simplecov-console (v0.3.1, RVM: ruby-2.2.5) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="simplecov-html (v0.10.0, RVM: ruby-2.2.5) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="sprockets (v3.7.0, RVM: ruby-2.2.5) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="sprockets-rails (v3.2.0, RVM: ruby-2.2.5) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="stash-sword (v0.1.5, RVM: ruby-2.2.5) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="thor (v0.19.1, RVM: ruby-2.2.5) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="thread_safe (v0.3.5, RVM: ruby-2.2.5) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="turbolinks (v5.0.1, RVM: ruby-2.2.5) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="turbolinks-source (v5.0.0, RVM: ruby-2.2.5) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="typesafe_enum (v0.1.7, RVM: ruby-2.2.5) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="tzinfo (v1.2.2, RVM: ruby-2.2.5) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="unf (v0.1.4, RVM: ruby-2.2.5) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="unf_ext (v0.0.7.2, RVM: ruby-2.2.5) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="unicode-display_width (v1.1.1, RVM: ruby-2.2.5) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="webmock (v1.24.6, RVM: ruby-2.2.5) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="xml-mapping (v0.10.0, RVM: ruby-2.2.5) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="xml-mapping_extensions (v0.4.7, RVM: ruby-2.2.5) [gem]" level="application" />
+  </component>
+  <component name="RModuleSettingsStorage">
+    <LOAD_PATH number="1" string0="$MODULE_DIR$/spec" />
+    <I18N_FOLDERS number="0" />
+  </component>
+</module>
