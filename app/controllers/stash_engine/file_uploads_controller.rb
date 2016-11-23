@@ -99,9 +99,9 @@ module StashEngine
       unless params[:resource_id] && params[:temp_id] && params[:upload]
         raise ActionController::RoutingError.new('Not Found'), 'Not Found'
       end
-      @upload_dir = File.join(Rails.root, 'uploads', params[:resource_id])
-      @temp_id = params[:temp_id]
+      @upload_dir = StashEngine::Resource.upload_dir_for(params[:resource_id])
       FileUtils.mkdir_p @upload_dir unless File.exist?(@upload_dir)
+      @temp_id = params[:temp_id]
       @accum_file = File.join(@upload_dir, @temp_id)
       @file_upload = params[:upload][:upload]
     end

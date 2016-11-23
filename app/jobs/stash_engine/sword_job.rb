@@ -1,5 +1,7 @@
 require 'stash/sword'
 
+require 'concurrent/async'
+
 module StashEngine
   # a class for asynchronous sword submission
   class SwordJob
@@ -18,8 +20,9 @@ module StashEngine
     #   notification email.
     # @param request_port [Integer] The public-facing port of the application UI. Used to generate links in the
     #   notification email.
+    # @return [Concurrent::Ivar] a future containing the submitted resource, or an error
     def self.submit_async(title:, doi:, zipfile:, resource_id:, sword_params:, request_host:, request_port:) # rubocop:disable Metrics/ParameterLists, Metrics/LineLength
-      result = SwordJob.new(
+      future = SwordJob.new(
         title: title,
         doi: doi,
         zipfile: zipfile,
@@ -30,8 +33,10 @@ module StashEngine
       ).async.submit
 
       # it seems like only the first observer actually gets called
-      result.add_observer(FileCleanupObserver.new(resource_id: resource_id))
-      result.add_observer(ResultLoggingObserver.new(title: title, doi: doi))
+      future.add_observer(FileCleanupObserver.new(resource_id: resource_id))
+      future.add_observer(ResultLoggingObserver.new(title: title, doi: doi))
+
+      future
     end
 
     # Creates a new {SwordJob}.
@@ -187,6 +192,9 @@ module StashEngine
 
     # Called by the `Concurrent::Async` framework on completion of the
     # {SwordJob} async background task
+    # @param time [Time] the time the job completed
+    # @param value [Resource, nil] the resource updated, or nil in the event of a failure
+    # @param reason [Error, nil] any error, or nil in the event of success
     def update(time, value, reason)
       reason ? log_failure(time, reason) : log_success(time, value)
     end
@@ -195,9 +203,10 @@ module StashEngine
       log.warn("SwordJob for '#{title}' (#{doi}) failed at #{time}: #{reason}")
     end
 
-    def log_success(time, value)
-      msg = value ? value.archive_response : 'nil'
-      log.info("SwordJob for '#{title}' (#{doi}) completed at #{time}: #{msg}")
+    def log_success(time, resource)
+      download_uri = resource ? resource.download_uri : 'nil'
+      update_uri = resource ? resource.update_uri : 'nil'
+      log.info("SwordJob for '#{title}' (#{doi}) completed at #{time}: download_uri = #{download_uri}, update_uri = #{update_uri}")
     end
   end
 
@@ -225,12 +234,13 @@ module StashEngine
             File.delete(upload.temp_file_path) if File.exist?(upload.temp_file_path)
           end
           #delete directory
-          if File.exist?(File.join(Rails.root, 'uploads', @resource_id.to_s))
-            Dir.rmdir(File.join(Rails.root, 'uploads', @resource_id.to_s))
+          upload_dir = StashEngine::Resource.upload_dir_for(@resource_id)
+          if File.exist?(upload_dir)
+            Dir.rmdir(upload_dir)
           end
         end
         #delete any zipfiles and temp files
-        files = Dir[File.join(Rails.root, 'uploads', "#{@resource_id.to_s}_*")]
+        files = Dir[File.join(StashEngine::Resource.uploads_dir, "#{@resource_id.to_s}_*")]
         files.each do |file|
           File.delete(file) if File.exist?(file)
         end

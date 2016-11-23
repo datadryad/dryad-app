@@ -1,22 +1,21 @@
 module StashEngine
   class Resource < ActiveRecord::Base
+    # ------------------------------------------------------------
+    # Relations
+
     has_many :file_uploads, class_name: 'StashEngine::FileUpload', dependent: :destroy
     has_one :stash_version, class_name: 'StashEngine::Version'
     belongs_to :identifier, class_name: 'StashEngine::Identifier', foreign_key: 'identifier_id'
     has_one :resource_usage, class_name: 'StashEngine::ResourceUsage'
-    # # rubocop:disable all
-    # has_and_belongs_to_many :subjects, class_name: 'StashDatacite::Subject'
-    # rubocop:enable all
     belongs_to :user, class_name: 'StashEngine::User'
     has_one :current_state,
             class_name: 'StashEngine::ResourceState',
             primary_key: 'current_resource_state_id',
             foreign_key: 'id'
-    #StashEngine.belong_to_resource.each do |i|
-    #  has_many i.downcase, class_name: "#{}::"
-    #end
 
-    #resource_states
+    # ------------------------------------------------------------
+    # Scopes
+
     scope :in_progress, (lambda do
       joins(:current_state).where(stash_engine_resource_states: { resource_state:  :in_progress })
     end)
@@ -25,6 +24,21 @@ module StashEngine
     end)
     scope :by_version_desc, -> { joins(:stash_version).order('stash_engine_versions.version DESC') }
     scope :by_version, -> { joins(:stash_version).order('stash_engine_versions.version ASC') }
+
+    # ------------------------------------------------------------
+    # File upload utility methods
+
+    def self.uploads_dir
+      File.join(Rails.root, 'uploads')
+    end
+
+    def self.upload_dir_for(resource_id)
+      File.join(uploads_dir, resource_id.to_s)
+    end
+
+    def upload_dir
+      Resource.upload_dir_for(id)
+    end
 
     # clean up the uploads with files that no longer exist for this resource
     def clean_uploads
@@ -47,6 +61,9 @@ module StashEngine
       FileUpload.joins("INNER JOIN (#{subquery.to_sql}) sub on id = sub.last_id").order(upload_file_name: :asc)
     end
 
+    # ------------------------------------------------------------
+    # Current resource state
+
     def current_resource_state
       if current_resource_state_id.blank?
         ResourceState.create!(resource_id: id, user_id: user_id, resource_state: :in_progress)
@@ -56,6 +73,15 @@ module StashEngine
         return state
       end
     end
+
+    def current_state=(state_string)
+      my_state = ResourceState.create(user_id: user_id, resource_state: state_string, resource_id: id)
+      self.current_resource_state_id = my_state.id
+      save
+    end
+
+    # ------------------------------------------------------------
+    # File submission
 
     def submission_to_repository(current_tenant, zipfile, title, doi, request_host, request_port)
       update_identifier(doi)
@@ -71,6 +97,9 @@ module StashEngine
       )
     end
 
+    # ------------------------------------------------------------
+    # Identifiers
+
     def update_identifier(doi)
       doi = doi.split(':', 2)[1] if doi.start_with?('doi:')
       if identifier.nil?
@@ -81,6 +110,9 @@ module StashEngine
         self.identifier.update(identifier: doi)
       end
     end
+
+    # ------------------------------------------------------------
+    # Versioning
 
     def update_version(zipfile)
       zip_filename = File.basename(zipfile)
@@ -112,42 +144,10 @@ module StashEngine
       last_v.stash_version.version + 1
     end
 
-    # this bit of code may be useful to run in a console to update old items
-    # res = StashEngine::Resource.where('download_uri IS NOT NULL')
-    # res.each do |r|
-    #   if r.update_uri.nil? && r.identifier
-    #     id = r.identifier
-    #     str_id = CGI.escape("#{id.identifier_type.downcase}:#{id.identifier}")
-    #     r.update_uri = "http://sword-aws-dev.cdlib.org:39001/mrtsword/edit/dash_ucb/#{str_id}"
-    #     r.save
-    #   end
-    # end
+    # ------------------------------------------------------------
+    # Usage and statistics
 
-    #:download_uri and :update_uri returned in hash
-    # def extract_urls(xml_response)
-    #   doc = Nokogiri::XML(xml_response)
-    #   doc.remove_namespaces!
-    #   { download_uri: doc.xpath("/entry/link[@rel='edit-media']").first.attribute('href').to_s,
-    #     update_uri: doc.xpath("/entry/link[@rel='edit']").first.attribute('href').to_s }
-    # end
-
-    def increment_downloads
-      ensure_resource_usage
-      resource_usage.increment(:downloads).save
-    end
-
-    def increment_views
-      ensure_resource_usage
-      resource_usage.increment(:views).save
-    end
-
-    def current_state=(state_string)
-      my_state = ResourceState.create(user_id: user_id, resource_state: state_string, resource_id: id)
-      self.current_resource_state_id = my_state.id
-      save
-    end
-
-    # gets the count of submitted datasets
+    # total count of submitted datasets
     def self.submitted_dataset_count
       sql = "SELECT count(*) as my_count FROM\
       (SELECT res.identifier_id\
@@ -163,6 +163,16 @@ module StashEngine
       #    group('identifier_id')
 
       count_by_sql(sql)
+    end
+
+    def increment_downloads
+      ensure_resource_usage
+      resource_usage.increment(:downloads).save
+    end
+
+    def increment_views
+      ensure_resource_usage
+      resource_usage.increment(:views).save
     end
 
     private
