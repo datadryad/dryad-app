@@ -107,24 +107,18 @@ module StashDatacite
       end
 
       def purge_existing_files
-        folder = "#{Rails.root}/uploads/"
-        if File.exist?("#{folder}/#{@resource.id}_archive.zip")
-          File.delete("#{folder}/#{@resource.id}_archive.zip")
-        end
-        if File.exist?("#{folder}/#{@resource.id}_mrt-datacite.xml")
-          File.delete("#{folder}/#{@resource.id}_mrt-datacite.xml")
-        end
-        if File.exist?("#{folder}/#{@resource.id}_stash-wrapper.xml")
-          File.delete("#{folder}/#{@resource.id}_stash-wrapper.xml")
-        end
-        if File.exist?("#{folder}/#{@resource.id}_mrt-oaidc.xml")
-          File.delete("#{folder}/#{@resource.id}_mrt-oaidc.xml")
-        end
-        if File.exist?("#{folder}/#{@resource.id}_mrt-dataone-manifest.txt")
-          File.delete("#{folder}/#{@resource.id}_mrt-dataone-manifest.txt")
-        end
-        if File.exist?("#{folder}/#{@resource.id}_mrt-delete.txt")
-          File.delete("#{folder}/#{@resource.id}_mrt-delete.txt")
+        uploads_dir = StashEngine::Resource.uploads_dir
+        resource_id = @resource.id
+        %w(
+          archive.zip
+          mrt-datacite.xml
+          mrt-dataone-manifest.txt
+          mrt-delete.txt
+          mrt-oaidc.xml
+          stash-wrapper.xml
+        ).each do |filename|
+          file = File.join(uploads_dir, "#{resource_id}_#{filename}")
+          File.delete(file) if File.exist?(file)
         end
       end
 
