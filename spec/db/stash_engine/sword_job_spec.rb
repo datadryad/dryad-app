@@ -4,9 +4,7 @@ require 'fileutils'
 require 'webmock'
 
 module StashEngine
-
   describe SwordJob do
-
     attr_reader :title
     attr_reader :doi
     attr_reader :resource_id
@@ -28,9 +26,9 @@ module StashEngine
       @request_port = 80
 
       @sword_params = {
-          collection_uri: 'http://example.org/sword/my_collection',
-          username: 'elvis',
-          password: 'presley'
+        collection_uri: 'http://example.org/sword/my_collection',
+        username: 'elvis',
+        password: 'presley'
       }.freeze
     end
 
@@ -78,13 +76,13 @@ module StashEngine
 
     def submit_resource
       SwordJob.submit_async(
-          title: title,
-          doi: doi,
-          zipfile: zipfile,
-          resource_id: resource_id,
-          sword_params: sword_params,
-          request_host: request_host,
-          request_port: request_port
+        title: title,
+        doi: doi,
+        zipfile: zipfile,
+        resource_id: resource_id,
+        sword_params: sword_params,
+        request_host: request_host,
+        request_port: request_port
       ).value!
     end
 
@@ -109,6 +107,5 @@ module StashEngine
         end
       end
     end
-
   end
 end

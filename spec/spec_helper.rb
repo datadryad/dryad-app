@@ -28,4 +28,3 @@ Dir.glob("#{stash_engine_path}/app/mailers/**/*.rb").sort.each(&method(:require)
 Dir.glob("#{stash_engine_path}/app/mailers/stash_engine/**/*.rb").sort.each(&method(:require))
 Dir.glob("#{stash_engine_path}/app/jobs/stash_engine/**/*.rb").sort.each(&method(:require))
 Dir.glob("#{stash_engine_path}/lib/stash_engine/**/*.rb").sort.each(&method(:require))
-
