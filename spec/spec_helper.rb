@@ -23,3 +23,4 @@ require "#{stash_engine_path}/config/initializers/hash_to_ostruct.rb"
 Dir.glob("#{stash_engine_path}/app/models/stash_engine/**/*.rb").sort.each(&method(:require))
 Dir.glob("#{stash_engine_path}/app/jobs/stash_engine/**/*.rb").sort.each(&method(:require))
 Dir.glob("#{stash_engine_path}/lib/stash_engine/**/*.rb").sort.each(&method(:require))
+
