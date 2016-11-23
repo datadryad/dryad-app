@@ -29,7 +29,6 @@ module StashEngine
           username: 'elvis',
           password: 'presley'
       }.freeze
-
     end
 
     before(:each) do
@@ -52,7 +51,16 @@ module StashEngine
       @immediate_executor = Concurrent::ImmediateExecutor.new
       allow(Concurrent).to receive(:global_io_executor).and_return(@immediate_executor)
 
-      allow(RestClient::Request).to receive(:execute)
+      receipt = instance_double(Stash::Sword::DepositReceipt)
+      allow(receipt).to(receive(:em_iri)).and_return("http://example.org/#{doi}/em")
+      allow(receipt).to(receive(:edit_iri)).and_return("http://example.org/#{doi}/edit")
+
+      @sword_client = instance_double(Stash::Sword::Client)
+      allow(@sword_client).to receive(:update).and_return(200)
+      allow(@sword_client).to receive(:create) { receipt }
+      allow(Stash::Sword::Client).to receive(:new) { @sword_client }
+
+      allow_any_instance_of(ActionMailer::MessageDelivery).to receive(:deliver_now)
     end
 
     after(:each) do
