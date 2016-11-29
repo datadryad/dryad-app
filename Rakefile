@@ -17,11 +17,15 @@ namespace :spec do
     task.pattern = 'db/**/*_spec.rb'
   end
 
-  task all: [:unit, :db]
+  desc 'Run unit and database tests as single suite (for coverage)'
+  RSpec::Core::RakeTask.new(:unified) do |task|
+    task.rspec_opts = %w(--color --format documentation --order default)
+    task.pattern = '{db,unit}/**/*_spec.rb'
+  end
 end
 
 desc 'Run all tests'
-task spec: 'spec:all'
+task spec: %w(spec:unit spec:db)
 
 # ------------------------------------------------------------
 # Coverage
@@ -29,7 +33,7 @@ task spec: 'spec:all'
 desc 'Run all tests with coverage'
 task :coverage do
   ENV['COVERAGE'] = 'true'
-  Rake::Task['spec'].invoke
+  Rake::Task['spec:unified'].invoke
 end
 
 # ------------------------------------------------------------
@@ -57,5 +61,5 @@ end
 # ------------------------------------------------------------
 # Defaults
 
-desc 'Run unit tests, check test coverage, check code style'
-task default: [:spec, :rubocop]
+desc 'Check code style, run unit tests, check test coverage'
+task default: [:spec, :rubocop, :coverage]
