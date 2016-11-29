@@ -114,7 +114,7 @@ module StashEngine
       ['.svg', '.png', '.jpg'].each do |ext|
         if File.exist?(File.join(test_path, "#{base_fn}#{ext}"))
           return view_context.image_tag "tenants/#{base_fn}#{ext}",
-                                        hsh.merge(alt: "#{current_tenant.long_name} logo")
+                                        hsh.merge(alt: "#{current_tenant.short_name} logo")
         end
       end
     end
