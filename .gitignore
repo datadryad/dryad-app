@@ -183,3 +183,5 @@ crashlytics.properties
 crashlytics-build.properties
 fabric.properties
 
+# Raketasks
+.rakeTasks

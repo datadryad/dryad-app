@@ -1,10 +1,6 @@
 require 'spec_helper'
 require 'database_cleaner'
 
-# logfile = File.expand_path('log/test.log')
-# FileUtils.mkdir_p File.dirname(logfile)
-# ActiveRecord::Base.logger = Logger.new(logfile) if defined?(ActiveRecord::Base)
-
 db_config = YAML.load_file('config/database.yml')['test']
 
 host = db_config['host']

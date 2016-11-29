@@ -23,7 +23,14 @@ end
 desc 'Run all tests'
 task spec: 'spec:all'
 
-# TODO: figure out cross-repo coverage
+# ------------------------------------------------------------
+# Coverage
+
+desc 'Run all tests with coverage'
+task :coverage do
+  ENV['COVERAGE'] = 'true'
+  Rake::Task['spec'].invoke
+end
 
 # ------------------------------------------------------------
 # RuboCop
