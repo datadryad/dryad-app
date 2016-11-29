@@ -25,7 +25,7 @@ module StashDatacite
 
     scope :affiliation_filled, -> {
       joins(:affiliations)
-        .where("TRIM(IFNULL(dcs_affiliations.long_name,'')) <> ''")
+        .where("TRIM(IFNULL(dcs_affiliations.long_name,'')) <> '' OR TRIM(IFNULL(dcs_affiliations.short_name,'')) <> ''")
     }
 
     def creator_full_name

@@ -49,7 +49,7 @@ module StashDatacite
 
       def add_publisher(xml)
         # TODO: should we just leave dc:publisher out if it's not present, or is it required, & if so by what?
-        xml.send(:'dc:publisher', (tenant.long_name || 'unknown').to_s)
+        xml.send(:'dc:publisher', (tenant.short_name || tenant.long_name || 'unknown').to_s)
       end
 
       def add_title(xml)

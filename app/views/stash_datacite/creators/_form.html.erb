@@ -15,7 +15,7 @@
   </div>
   <div class="c-input">
     <%= f.label "affiliation_id_#{my_suffix}", "Institutional Affiliation", class: 'c-input__label required' %>
-    <%= text_field_tag(:affiliation, creator.affiliation.try(:long_name), id: "creator_affiliation_id_#{my_suffix}", class: 'c-input__text js-affiliation') %>
+    <%= text_field_tag(:affiliation, creator.affiliation.try(:smart_name), id: "creator_affiliation_id_#{my_suffix}", class: 'c-input__text js-affiliation') %>
   </div>
   <%= link_to 'remove', stash_datacite.creators_delete_path(creator.id || 'new'), method: :delete, remote: true, data: {confirm: 'Are you sure?'}, class: 't-describe__remove-button o-button__remove remove_record' %>
   <%= f.hidden_field :resource_id %>

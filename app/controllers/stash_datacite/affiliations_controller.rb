@@ -4,7 +4,7 @@ module StashDatacite
   class AffiliationsController < ApplicationController
     # GET /affiliations/autocomplete
     def autocomplete
-      @affiliations = Affiliation.where('long_name LIKE ? OR short_name LIKE ? OR abbreviation LIKE?',
+      @affiliations = Affiliation.where('long_name LIKE ? OR short_name LIKE ? OR abbreviation LIKE ?',
                                         "%#{params[:term]}%", "%#{params[:term]}%", "%#{params[:term]}%") unless
                                       params[:term].blank?
       list = map_affiliation_for_autocomplete(@affiliations)
@@ -32,7 +32,9 @@ module StashDatacite
     end
 
     def map_affiliation_for_autocomplete(affiliations)
-      affiliations.map { |u| Hash[id: u.id, long_name: u.long_name] }
+      # This is a bit tricky since we want to prefer short names if they are set (ie defined manually in database),
+      # however new user-entered items go into long name.
+      affiliations.map { |u| Hash[id: u.id, long_name: (u.short_name.blank? ? u.long_name : u.short_name)] }
     end
   end
 end

@@ -31,7 +31,7 @@ module Datacite
             Creator.new(
               name: c.creator_full_name,
               identifier: to_dcs_identifier(c.name_identifier),
-              affiliations: c.affiliations.map(&:long_name)
+              affiliations: c.affiliations.map(&:smart_name)
             )
           end,
           titles: se_resource.titles.map { |t| Title.new(value: t.title, type: t.title_type_mapping_obj) },

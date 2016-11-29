@@ -105,7 +105,7 @@ module StashDatacite
         @publisher = if publisher.present?
                        publisher
                      else
-                       Publisher.create(publisher: tenant.long_name, resource_id: @resource.id)
+                       Publisher.create(publisher: tenant.short_name, resource_id: @resource.id)
                      end
       end
 

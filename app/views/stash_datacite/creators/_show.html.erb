@@ -1,5 +1,5 @@
 <% unless creators.nil? %>
   <% creators.each do |creator| %>
-      <p><%= [creator.creator_full_name, creator.affiliation.try(:long_name), creator.orcid_id].reject(&:blank?).join(", ") %></p>
+      <p><%= [creator.creator_full_name, creator.affiliation.try(:smart_name), creator.orcid_id].reject(&:blank?).join(", ") %></p>
   <% end %>
 <% end %>

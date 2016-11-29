@@ -6,10 +6,17 @@ module StashDatacite
 
     before_save :strip_whitespace
 
+    # prefer short_name if it is set over long name and make string
+    def smart_name
+      return '' if short_name.blank? && long_name.blank?
+      (short_name.blank? ? long_name.strip : short_name.strip )
+    end
+
     private
 
     def strip_whitespace
       self.long_name = long_name.strip unless long_name.nil?
     end
+
   end
 end
