@@ -14,7 +14,8 @@
         </li>
 
         <li class="c-steps__text-group ">Upload. Add your dataset through upload form or drag-and-drop. Each file can be
-          up to 2GB; datasets can be up to 10GB
+          up to <%= filesize(StashEngine.app.max_file_size) %>; datasets can be up to
+          <%= filesize(StashEngine.app.max_submission_size) %>
           total.(<%= link_to 'Upload Basics', help_path(anchor: 'upload-basics') %>)
         </li>
       </ol>
