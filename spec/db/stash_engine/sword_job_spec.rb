@@ -91,7 +91,7 @@ module StashEngine
     end
 
     def create_some_upload
-      @some_upload = Tempfile.new('foo.bin').path
+      @some_upload = Tempfile.new(%w(foo bin)).path
       File.write(some_upload, '')
       FileUpload.create(
         resource_id: resource_id,
