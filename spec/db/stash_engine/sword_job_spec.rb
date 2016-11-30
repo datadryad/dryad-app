@@ -16,6 +16,9 @@ module StashEngine
     attr_reader :request_port
     attr_reader :tmpdir
     attr_reader :logger
+    attr_reader :resource_upload_dir
+    attr_reader :some_upload
+    attr_reader :some_tempfile
 
     before(:all) do
       WebMock.disable_net_connect!
@@ -30,6 +33,14 @@ module StashEngine
         username: 'elvis',
         password: 'presley'
       }.freeze
+    end
+
+    def update_uri
+      "http://example.org/#{doi}/edit"
+    end
+
+    def download_uri
+      "http://example.org/#{doi}/em"
     end
 
     before(:each) do
@@ -57,8 +68,8 @@ module StashEngine
       allow(Concurrent).to receive(:global_io_executor).and_return(@immediate_executor)
 
       receipt = instance_double(Stash::Sword::DepositReceipt)
-      allow(receipt).to(receive(:em_iri)).and_return("http://example.org/#{doi}/em")
-      allow(receipt).to(receive(:edit_iri)).and_return("http://example.org/#{doi}/edit")
+      allow(receipt).to(receive(:em_iri)).and_return(download_uri)
+      allow(receipt).to(receive(:edit_iri)).and_return(update_uri)
 
       @sword_client = instance_double(Stash::Sword::Client)
       allow(@sword_client).to receive(:update).and_return(200)
@@ -72,6 +83,35 @@ module StashEngine
       allow(Concurrent).to receive(:global_io_executor).and_call_original
       Rails.logger = @rails_logger
       FileUtils.remove_entry_secure tmpdir
+    end
+
+    def create_some_tempfile
+      @some_tempfile = File.join(uploads_dir, "#{resource_id}_foo.bin")
+      File.write(some_tempfile, '')
+    end
+
+    def create_some_upload
+      @some_upload = Tempfile.new('foo.bin').path
+      File.write(some_upload, '')
+      FileUpload.create(
+        resource_id: resource_id,
+        upload_file_name: 'foo.bin',
+        upload_content_type: 'application/binary',
+        upload_file_size: 0,
+        file_state: 'created',
+        temp_file_path: some_upload
+      )
+    end
+
+    def create_resource_upload_dir
+      @resource_upload_dir = File.join(uploads_dir, resource_id.to_s)
+      FileUtils.mkdir_p(resource_upload_dir)
+    end
+
+    def create_cleanup_files
+      create_resource_upload_dir
+      create_some_upload
+      create_some_tempfile
     end
 
     def submit_resource
@@ -95,15 +135,106 @@ module StashEngine
 
         it 'sets the update and download URIs' do
           resource = submit_resource
-          expect(resource.download_uri).to eq("http://example.org/#{doi}/em")
-          expect(resource.update_uri).to eq("http://example.org/#{doi}/edit")
+          expect(resource.download_uri).to eq(download_uri)
+          expect(resource.update_uri).to eq(update_uri)
         end
 
-        it 'sends an "update succeeded" email' do
+        it 'sends a "create succeeded" email' do
           message = instance_double(ActionMailer::MessageDelivery)
           expect(UserMailer).to receive(:create_succeeded).with(kind_of(Resource), title, request_host, request_port).and_return(message)
           expect(message).to receive(:deliver_now)
           submit_resource
+        end
+
+        it 'cleans up on success' do
+          create_cleanup_files
+          submit_resource
+          [resource_upload_dir, some_upload, some_tempfile].each { |f| expect(File.exist?(f)).to be_falsey }
+        end
+
+        describe 'failure handling' do
+          before(:each) do
+            expect(sword_client).to receive(:create).and_raise(RestClient::NotFound)
+          end
+
+          it 'logs an error' do
+            expect(logger).to receive(:error).with(/.*Not Found.*/)
+            expect { submit_resource }.to raise_error(RestClient::NotFound)
+          end
+
+          it 'logs a detailed warning' do
+            expect(logger).to receive(:warn).with(/SwordJob for '#{Regexp.quote(title)}' \(#{Regexp.quote(doi)}\) failed at [0-9 \-:]+: Not Found/)
+            expect { submit_resource }.to raise_error(RestClient::NotFound)
+          end
+
+          it 'sets the current resource state' do
+            expect { submit_resource }.to raise_error(RestClient::NotFound)
+            resource = Resource.find(resource_id)
+            current_state = resource.current_state
+            expect(current_state.resource_state).to eq('error')
+          end
+
+          it 'leaves temp files in place' do
+            create_cleanup_files
+            expect { submit_resource }.to raise_error(RestClient::NotFound)
+            [resource_upload_dir, some_upload, some_tempfile].each { |f| expect(File.exist?(f)).to be_truthy }
+          end
+        end
+      end
+
+      describe '#update' do
+        before(:each) do
+          resource = Resource.find(resource_id)
+          resource.update_uri = update_uri
+          resource.download_uri = download_uri
+          resource.save
+        end
+
+        it 'updates a SWORD resource' do
+          expect(sword_client).to receive(:update).with(edit_iri: update_uri, zipfile: zipfile).and_return(200)
+          submit_resource
+        end
+
+        it 'sends an "update succeeded" email' do
+          message = instance_double(ActionMailer::MessageDelivery)
+          expect(UserMailer).to receive(:update_succeeded).with(kind_of(Resource), title, request_host, request_port).and_return(message)
+          expect(message).to receive(:deliver_now)
+          submit_resource
+        end
+
+        it 'cleans up on success' do
+          create_cleanup_files
+          submit_resource
+          [resource_upload_dir, some_upload, some_tempfile].each { |f| expect(File.exist?(f)).to be_falsey }
+        end
+
+        describe 'failure handling' do
+          before(:each) do
+            expect(sword_client).to receive(:update).and_raise(RestClient::NotFound)
+          end
+
+          it 'logs an error' do
+            expect(logger).to receive(:error).with(/.*Not Found.*/)
+            expect { submit_resource }.to raise_error(RestClient::NotFound)
+          end
+
+          it 'logs a detailed warning' do
+            expect(logger).to receive(:warn).with(/SwordJob for '#{Regexp.quote(title)}' \(#{Regexp.quote(doi)}\) failed at [0-9 \-:]+: Not Found/)
+            expect { submit_resource }.to raise_error(RestClient::NotFound)
+          end
+
+          it 'sets the current resource state' do
+            expect { submit_resource }.to raise_error(RestClient::NotFound)
+            resource = Resource.find(resource_id)
+            current_state = resource.current_state
+            expect(current_state.resource_state).to eq('error')
+          end
+
+          it 'leaves temp files in place' do
+            create_cleanup_files
+            expect { submit_resource }.to raise_error(RestClient::NotFound)
+            [resource_upload_dir, some_upload, some_tempfile].each { |f| expect(File.exist?(f)).to be_truthy }
+          end
         end
       end
     end
