@@ -200,7 +200,8 @@ function updateUiStates(){
     $("div[id^='not_uploaded_file_']").each(function( index ) {
       if(overFileSize($( this ).find('.js-hidden_bytes').text())){
         var name = $( this ).find('.js-filename').text();
-        $('#over_single_size').append("<p>The file " + name  + " has been removed from your upload list since it is larger than the maximum allowed single file size.</p>");
+        $('#over_single_size').append("<p>The file " + name  + " has been removed from your upload list since it is" +
+            "larger than " + formatSizeUnits(maxFileSize()) + ".</p>");
         $( this ).remove();
         setTimeout(function(){
           $('#over_single_size').empty();

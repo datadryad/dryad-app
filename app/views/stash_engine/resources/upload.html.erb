@@ -4,7 +4,8 @@
 <h1 class="o-heading__level1">Upload Your Files <span class="t-upload__heading-optional">(optional)</span></h1>
 
 <p>
-  Size limits: 2GB per file, 10 GB in total. To upload larger datasets,
+  Size limits: <%= filesize(StashEngine.app.max_file_size) %> per file,
+  <%= filesize(StashEngine.app.max_submission_size) %> in total. To upload larger datasets,
   <%= link_to "contact us", contact_us_url, class: 'o-link__primary' %>.
 </p>
 
