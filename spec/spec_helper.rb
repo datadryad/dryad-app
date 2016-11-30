@@ -25,7 +25,9 @@ require 'stash_engine'
 stash_engine_path = Gem::Specification.find_by_name('stash_engine').gem_dir
 require "#{stash_engine_path}/config/initializers/hash_to_ostruct.rb"
 
-::LICENSES = YAML.load_file('config/licenses.yml')
+# TODO: MockRails.application.root and use stash_engine/config/initializers/licenses.rb
+::LICENSES = YAML.load_file('config/licenses.yml').with_indifferent_access
+# TODO: as above, but also move /config/initializers/app_config.rb from dash2 into stash_engine
 ::APP_CONFIG = OpenStruct.new(YAML.load_file('config/app_config.yml')['test'])
 
 %w(
