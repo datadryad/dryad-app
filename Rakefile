@@ -1,4 +1,17 @@
 # ------------------------------------------------------------
+# Git dependencies
+
+namespace :git do
+  desc 'Update engines'
+  task :pull_stash_engine do
+    stash_engine_path = Gem::Specification.find_by_name('stash_engine').gem_dir
+    sh "cd '#{stash_engine_path}' && git pull"
+  end
+end
+
+task git_pull: ['git:pull_stash_engine']
+
+# ------------------------------------------------------------
 # RSpec
 
 require 'rspec/core'
@@ -62,4 +75,4 @@ end
 # Defaults
 
 desc 'Check code style, run unit tests, check test coverage'
-task default: [:spec, :rubocop, :coverage]
+task default: [:git_pull, :spec, :rubocop, :coverage]
