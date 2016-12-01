@@ -6,9 +6,11 @@
 
   @include bp(screen3) {
     display: flex;
+    position: relative;
     justify-content: space-between;
     padding-bottom: 10px;
     border-bottom: 1px solid $design-dark-gray-color;
+    z-index: 1; /* positioning is so that dd-menu goes in a higher order and context than some other parts of page */
   }
 
 }
