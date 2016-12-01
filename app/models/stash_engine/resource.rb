@@ -64,13 +64,23 @@ module StashEngine
     # ------------------------------------------------------------
     # Current resource state
 
+    def published?
+      current_resource_state.resource_state == 'published'
+    end
+
+    def processing?
+      current_resource_state.resource_state == 'processing'
+    end
+
+    def current_resource_state_value
+      current_resource_state.resource_state
+    end
+
     def current_resource_state
       if current_resource_state_id.blank?
         ResourceState.create!(resource_id: id, user_id: user_id, resource_state: :in_progress)
       else
-        id = current_resource_state_id
-        state = ResourceState.find(id).resource_state
-        return state
+        ResourceState.find(current_resource_state_id).resource_state
       end
     end
 

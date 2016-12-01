@@ -9,7 +9,7 @@ module StashEngine
     # GET/POST/PUT  /generals/find_or_create
     def find_or_create
       @resource = Resource.find(params[:resource_id])
-      if @resource.current_resource_state == 'published'
+      if @resource.published?
         redirect_to(metadata_entry_pages_new_version_path(resource_id: params[:resource_id])) && return
       end
     end
