@@ -80,9 +80,12 @@ module StashDatacite
     def create_resource_state(resource)
       data = check_required_fields(resource)
       if data.nil?
-        unless %w(published processing).include?(resource.current_resource_state)
-          StashEngine::ResourceState.create!(resource_id: resource.id, resource_state: 'processing',
-                                             user_id: current_user.id)
+        unless resource.published? || resource.processing?
+          StashEngine::ResourceState.create!(
+            resource_id: resource.id,
+            resource_state: 'processing',
+            user_id: current_user.id
+          )
         end
       end
       # send_user_mail(resource)
