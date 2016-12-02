@@ -31,11 +31,9 @@ Bundler::GemHelper.install_tasks
 # task default: :test
 
 # ------------------------------------------------------------
-# RSpec
-
 require 'rspec/core'
 require 'rspec/core/rake_task'
-
+# RSpec
 namespace :spec do
   desc 'Run all unit tests'
   RSpec::Core::RakeTask.new(:unit) do |task|
@@ -55,4 +53,3 @@ namespace :spec do
     task.pattern = 'features/**/*_spec.rb'
   end
 end
-

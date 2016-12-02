@@ -49,5 +49,5 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'selenium-webdriver'
   s.add_development_dependency 'simplecov', '~> 0.12'
   s.add_development_dependency 'simplecov-console', '~> 0.3.0'
-  
+  # you cannot add specific code repo to gemspec so it must just go in the Gemfile instead if for internal use
 end
