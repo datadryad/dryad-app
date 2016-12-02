@@ -3746,10 +3746,13 @@ html.svg .c-facet__check-label {
     .c-header {
       display: -ms-flexbox;
       display: flex;
+      position: relative;
       -ms-flex-pack: justify;
           justify-content: space-between;
       padding-bottom: 10px;
-      border-bottom: 1px solid #7c7e7f; } }
+      border-bottom: 1px solid #7c7e7f;
+      z-index: 1;
+      /* positioning is so that dd-menu goes in a higher order and context than some other parts of page */ } }
 
 .c-header__logos {
   display: -ms-flexbox;
@@ -3892,7 +3895,7 @@ html.svg .c-facet__check-label {
   padding: 3px 5px;
   overflow-wrap: break-word;
   word-wrap: break-word;
-  word-break: break-word; }
+  word-break: break-all; }
 
 .c-input__select {
   height: 30px;
