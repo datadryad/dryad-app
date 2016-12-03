@@ -15,21 +15,17 @@ module StashDatacite
       def initialize(resource, current_tenant)
         @resource = resource
         @current_tenant = current_tenant
-        @version = @resource.next_version
-        ResourceFileGeneration.set_pub_year(@resource)
+        @version = @resource.version_number
         @client = StashEzid::Client.new(@current_tenant.identifier_service.to_h)
+        PublicationYear.ensure_pub_year(@resource) # TODO: call this only when needed
       end
 
-      def generate_identifier
-        if @resource.identifier
-          "#{@resource.identifier.identifier_type.downcase}:#{@resource.identifier.identifier}"
-        else
-          @client.mint_id
-        end
+      def identifier_str
+        @identifier_str ||= @resource.identifier_str || @client.mint_id
       end
 
-      def generate_xml(target_url, identifier)
-        doi_value = identifier.split(':', 2)[1]
+      def generate_xml(target_url)
+        doi_value = identifier_str.split(':', 2)[1]
         uploads = uploads_list(@resource)
 
         datacite_xml_builder = Datacite::Mapping::DataciteXMLBuilder.new(
@@ -41,7 +37,7 @@ module StashDatacite
 
         dc3_xml = datacite_xml_builder.build_datacite_xml(datacite_3: true)
         File.open("tmp/#{doi_value.gsub('/', '-')}-dc3.xml", 'w') { |f| f.write(dc3_xml) }
-        @client.update_metadata(identifier, dc3_xml, target_url)
+        @client.update_metadata(identifier_str, dc3_xml, target_url)
 
         dc4_resource = datacite_xml_builder.build_resource
         wrapper_xml = generate_stash_wrapper(dc4_resource, @version, uploads)
@@ -58,15 +54,14 @@ module StashDatacite
       end
 
       def generate_dublincore
-        # Added full namespace since otherwise it was erroring.
-        StashDatacite::Resource::DublinCoreBuilder.new(resource: @resource, tenant: @current_tenant).build_xml_string
+        DublinCoreBuilder.new(resource: @resource, tenant: @current_tenant).build_xml_string
       end
 
       def generate_dataone
         DataONEManifestBuilder.new(uploads_list(@resource)).build_dataone_manifest
       end
 
-      def generate_merritt_zip(folder, target_url, identifier)
+      def generate_merritt_zip(folder, target_url)
         target_url = target_url
         FileUtils.mkdir_p(folder)
 
@@ -76,7 +71,7 @@ module StashDatacite
         purge_existing_files
 
         zipfile_name = "#{folder}/#{@resource.id}_archive.zip"
-        datacite_xml, stashwrapper_xml = generate_xml(target_url, identifier)
+        datacite_xml, stashwrapper_xml = generate_xml(target_url)
 
         File.open("#{folder}/#{@resource.id}_mrt-datacite.xml", 'w') do |f|
           f.write datacite_xml
@@ -143,11 +138,6 @@ module StashDatacite
         fn
       end
 
-      # set the publication year to the current one if it has not been set yet
-      def self.set_pub_year(resource)
-        return if resource.publication_years.count > 0
-        PublicationYear.create(publication_year: Time.now.year, resource_id: resource.id)
-      end
     end
   end
 end

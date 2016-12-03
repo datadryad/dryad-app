@@ -69,10 +69,10 @@ module StashDatacite
 
     def file_generation(resource)
       @resource_file_generation = Resource::ResourceFileGeneration.new(resource, current_tenant)
-      identifier = @resource_file_generation.generate_identifier
+      identifier = @resource_file_generation.identifier_str
       target_url = current_tenant.landing_url(stash_url_helpers.show_path(identifier))
       folder = StashEngine::Resource.uploads_dir
-      zipfile = @resource_file_generation.generate_merritt_zip(folder, target_url, identifier)
+      zipfile = @resource_file_generation.generate_merritt_zip(folder, target_url)
       title = main_title(resource)
       resource.submission_to_repository(current_tenant, zipfile, title, identifier, request.host, request.port)
     end
