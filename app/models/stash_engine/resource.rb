@@ -14,6 +14,25 @@ module StashEngine
             foreign_key: 'id'
 
     # ------------------------------------------------------------
+    # Hooks
+
+    after_create :init_state, :init_version
+
+    def init_state
+      state = ResourceState.create!(resource_id: id, resource_state: 'in_progress', user_id: user_id)
+      current_resource_state_id = state.id
+      save!
+    end
+    protected :init_state
+
+    def init_version
+      last_version = identifier && identifier.last_submitted_version_number
+      next_version = last_version ? last_version + 1 : 1
+      StashEngine::Version.create(resource_id: id, version: next_version, zip_filename: nil)
+    end
+    protected :init_version
+
+    # ------------------------------------------------------------
     # Scopes
 
     scope :in_progress, (lambda do
@@ -61,6 +80,18 @@ module StashEngine
       FileUpload.joins("INNER JOIN (#{subquery.to_sql}) sub on id = sub.last_id").order(upload_file_name: :asc)
     end
 
+    # TODO: get amoeba to do this for us
+    def copy_file_records_from(other_resource)
+      file_uploads << other_resource.current_file_uploads.collect(&:dup)
+      if file_uploads.any?
+        file_uploads.each do |file|
+          file.resource_id = id
+          file.file_state = 'copied'
+          file.save!
+        end
+      end
+    end
+
     # ------------------------------------------------------------
     # Current resource state
 
@@ -80,7 +111,7 @@ module StashEngine
       if current_resource_state_id.blank?
         ResourceState.create!(resource_id: id, user_id: user_id, resource_state: :in_progress)
       else
-        ResourceState.find(current_resource_state_id).resource_state
+        ResourceState.find(current_resource_state_id)
       end
     end
 
@@ -110,6 +141,11 @@ module StashEngine
     # ------------------------------------------------------------
     # Identifiers
 
+    def identifier_str
+      ident = identifier
+      ident && "#{ident.identifier_type.downcase}:#{ident.identifier}"
+    end
+
     def update_identifier(doi)
       doi = doi.split(':', 2)[1] if doi.start_with?('doi:')
       if identifier.nil?
@@ -124,35 +160,42 @@ module StashEngine
     # ------------------------------------------------------------
     # Versioning
 
+    def version_number
+      stash_version.version
+    end
+
     def update_version(zipfile)
-      zip_filename = File.basename(zipfile)
-      version = nil
-      if stash_version.nil?
-        version = StashEngine::Version.new(resource_id: id, zip_filename: zip_filename, version: next_version)
-      else
-        version = StashEngine::Version.where(resource_id: id, zip_filename: zip_filename).first
-        version.version = next_version
-      end
-      version.save!
+      version_record = stash_version
+      version_record.zip_filename = zipfile
+      version_record.save!
+      # zip_filename = File.basename(zipfile)
+      # version = nil
+      # if stash_version.nil?
+      #   version = StashEngine::Version.new(resource_id: id, zip_filename: zip_filename, version: next_version)
+      # else
+      #   version = StashEngine::Version.where(resource_id: id, zip_filename: zip_filename).first
+      #   version.version = next_version
+      # end
+      # version.save!
     end
 
     #smartly gives a version number for this resource for either current version if version is already set
     #or what it would be when it is submitted (the versino to be), assuming it's submitted next
-    def smart_version
-      if stash_version.blank? || stash_version.version.zero?
-        next_version
-      else
-        stash_version.version
-      end
-    end
+    # def smart_version
+    #   if stash_version.blank? || stash_version.version.zero?
+    #     next_version
+    #   else
+    #     stash_version.version
+    #   end
+    # end
 
-    def next_version
-      return 1 if identifier.blank?
-      last_v = identifier.last_submitted_version
-      return 1 if last_v.blank?
-      #this looks crazy, but association from resource to version to version field
-      last_v.stash_version.version + 1
-    end
+    # def next_version
+    #   return 1 if identifier.blank?
+    #   last_v = identifier.last_submitted_version
+    #   return 1 if last_v.blank?
+    #   #this looks crazy, but association from resource to version to version field
+    #   last_v.stash_version.version + 1
+    # end
 
     # ------------------------------------------------------------
     # Usage and statistics

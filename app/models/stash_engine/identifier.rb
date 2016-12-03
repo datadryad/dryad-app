@@ -13,6 +13,10 @@ module StashEngine
                           identifier, identifier_type).sum(:downloads)
     end
 
+    def last_submitted_version_number
+      last_submitted_version && last_submitted_version.version
+    end
+
     # this returns a resource object for the last version
     def last_submitted_version
       submitted = resources.submitted
