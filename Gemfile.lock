@@ -390,7 +390,7 @@ GEM
     typesafe_enum (0.1.7)
     tzinfo (1.2.2)
       thread_safe (~> 0.1)
-    uglifier (3.0.2)
+    uglifier (3.0.4)
       execjs (>= 0.3.0, < 3)
     unf (0.1.4)
       unf_ext
@@ -441,7 +441,7 @@ DEPENDENCIES
   stash_ezid_datacite!
   therubyracer
   turbolinks
-  uglifier (>= 1.3.0)
+  uglifier (~> 3.0.4)
   web-console (~> 2.0)
   yui-compressor
 
