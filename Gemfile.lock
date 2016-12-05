@@ -149,7 +149,7 @@ GEM
       activesupport (>= 3.0)
       deep_merge (~> 1.1.1)
     daemons (1.2.4)
-    datacite-mapping (0.2.3)
+    datacite-mapping (0.2.4)
       typesafe_enum (~> 0.1, >= 0.1.7)
       xml-mapping_extensions (~> 0.4, >= 0.4.7)
     debug_inspector (0.0.2)
