@@ -14,23 +14,19 @@ module StashEngine
             foreign_key: 'id'
 
     # ------------------------------------------------------------
-    # Hooks
-
-    after_create :init_state, :init_version
+    # Callbacks
 
     def init_state
-      state = ResourceState.create!(resource_id: id, resource_state: 'in_progress', user_id: user_id)
-      current_resource_state_id = state.id
-      save!
+      self.current_resource_state_id = ResourceState.create(resource_id: id, resource_state: 'in_progress', user_id: user_id).id
     end
     protected :init_state
+    after_create :init_state
 
     def init_version
-      last_version = identifier && identifier.last_submitted_version_number
-      next_version = last_version ? last_version + 1 : 1
-      StashEngine::Version.create(resource_id: id, version: next_version, zip_filename: nil)
+      self.stash_version = StashEngine::Version.create(resource_id: id, version: next_version_number, zip_filename: nil)
     end
     protected :init_version
+    after_create :init_version
 
     # ------------------------------------------------------------
     # Scopes
@@ -108,11 +104,13 @@ module StashEngine
     end
 
     def current_resource_state
-      if current_resource_state_id.blank?
-        ResourceState.create!(resource_id: id, user_id: user_id, resource_state: :in_progress)
-      else
-        ResourceState.find(current_resource_state_id)
-      end
+      ResourceState.find(current_resource_state_id)
+      # warn("current_resource_state_id is #{current_resource_state_id || 'nil'} for resource #{id}")
+      # if current_resource_state_id.blank?
+      #   ResourceState.create!(resource_id: id, user_id: user_id, resource_state: :in_progress)
+      # else
+      #   ResourceState.find(current_resource_state_id)
+      # end
     end
 
     def current_state=(state_string)
@@ -125,7 +123,7 @@ module StashEngine
     # File submission
 
     def submission_to_repository(current_tenant, zipfile, title, doi, request_host, request_port)
-      update_identifier(doi)
+      ensure_identifier(doi)
       Rails.logger.debug("Submitting SwordJob for '#{title}' (#{doi})")
       SwordJob.submit_async(
         title: title,
@@ -143,30 +141,56 @@ module StashEngine
 
     def identifier_str
       ident = identifier
-      ident && "#{ident.identifier_type.downcase}:#{ident.identifier}"
+      ident && "#{identifier_type}:#{ident.identifier}"
     end
 
-    def update_identifier(doi)
-      doi = doi.split(':', 2)[1] if doi.start_with?('doi:')
-      if identifier.nil?
-        identifier = Identifier.create(identifier: doi, identifier_type: 'DOI')
-        self.identifier_id = identifier.id
-        save
-      else
-        self.identifier.update(identifier: doi)
+    def identifier_type
+      ident = identifier
+      return unless ident
+      ident_type = ident.identifier_type
+      ident_type && ident_type.downcase
+    end
+
+    def identifier_value
+      ident = identifier
+      ident && ident.identifier
+    end
+
+    def ensure_identifier(doi)
+      doi_value = doi.start_with?('doi:') ? doi.split(':', 2)[1] : doi
+      current_id_value = identifier_value
+      return if current_id_value == doi_value
+      if current_id_value
+        raise ArgumentError, "Resource #{id} already has an identifier #{current_id_value}; can't set new value #{doi_value}"
       end
+
+      existing_identifier = Identifier.find_by(identifier: doi_value, identifier_type: 'DOI')
+      if existing_identifier
+        self.identifier = existing_identifier
+        version_record = stash_version
+        version_record.version = next_version_number
+        version_record.save!
+      else
+        self.identifier = Identifier.create(identifier: doi_value, identifier_type: 'DOI')
+      end
+      save!
     end
 
     # ------------------------------------------------------------
     # Versioning
 
     def version_number
-      stash_version.version
+      stash_version && stash_version.version
     end
 
-    def update_version(zipfile)
+    def next_version_number
+      last_version = (identifier && identifier.last_submitted_version_number)
+      last_version ? last_version + 1 : 1
+    end
+
+    def version_zipfile=(zipfile)
       version_record = stash_version
-      version_record.zip_filename = zipfile
+      version_record.zip_filename = File.basename(zipfile)
       version_record.save!
       # zip_filename = File.basename(zipfile)
       # version = nil
