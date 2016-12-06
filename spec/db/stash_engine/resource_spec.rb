@@ -2,7 +2,6 @@ require 'db_spec_helper'
 
 module StashEngine
   describe Resource do
-
     attr_reader :user
 
     before(:each) do
@@ -14,7 +13,6 @@ module StashEngine
         provider: 'developer',
         tenant_id: 'ucop'
       )
-      warn("Created user #{user.id}")
     end
 
     describe 'uploads directory' do
@@ -247,6 +245,66 @@ module StashEngine
           it 'is based on the last submitted version' do
             expect(resource.next_version_number).to eq(2)
           end
+        end
+      end
+    end
+
+    describe 'identifiers' do
+      attr_reader :resource
+      before(:each) do
+        @resource = Resource.create(user_id: user.id)
+      end
+      describe '#ensure_identifier' do
+        it 'defaults to nil' do
+          expect(resource.identifier).to be_nil
+        end
+
+        it 'sets the identifier value' do
+          doi_value = '10.12345/679810'
+          resource.ensure_identifier(doi_value)
+          ident = resource.identifier
+          expect(ident).not_to be_nil
+          expect(ident.identifier_type).to eq('DOI')
+          expect(ident.identifier).to eq(doi_value)
+        end
+
+        it 'works with or without "doi:" prefix' do
+          doi_value = '10.12345/679810'
+          resource.ensure_identifier("doi:#{doi_value}")
+          ident = resource.identifier
+          expect(ident).not_to be_nil
+          expect(ident.identifier_type).to eq('DOI')
+          expect(ident.identifier).to eq(doi_value)
+        end
+
+        it 'raises an error if the resource already has a different identifier' do
+          doi_value = '10.123/456'
+          resource.ensure_identifier(doi_value)
+          expect { resource.ensure_identifier('10.345/678') }.to raise_error(ArgumentError)
+          expect(Identifier.count).to eq(1)
+          expect(resource.identifier_value).to eq(doi_value)
+        end
+
+        it 'doesn\'t create extra identifier records' do
+          doi_value = '10.123/456'
+          existing_ident = Identifier.create(identifier: doi_value, identifier_type: 'DOI')
+          (0..3).each do |_|
+            resource.ensure_identifier(doi_value)
+          end
+          expect(Identifier.count).to eq(1)
+          expect(resource.identifier).to eq(existing_ident)
+        end
+      end
+
+      describe '#identifier_str' do
+        it 'defaults to nil' do
+          expect(resource.identifier_str).to be_nil
+        end
+
+        it 'returns the full DOI' do
+          doi_value = '10.123/456'
+          resource.ensure_identifier(doi_value)
+          expect(resource.identifier_str).to eq("doi:#{doi_value}")
         end
       end
     end
