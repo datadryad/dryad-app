@@ -30,6 +30,9 @@ require "#{stash_engine_path}/config/initializers/hash_to_ostruct.rb"
 # TODO: as above, but also move /config/initializers/app_config.rb from dash2 into stash_engine
 ::APP_CONFIG = OpenStruct.new(YAML.load_file('config/app_config.yml')['test'])
 
+# Note: Even if we're not doing any database work, ActiveRecord callbacks will still raise warnings
+ActiveRecord::Base.raise_in_transactional_callbacks = true
+
 %w(
   app/models/stash_engine
   app/mailers
