@@ -1,37 +1,32 @@
 default: &default
+  enabled: true
   repository:
     type: merritt
-    endpoint: "http://merritt-dev.cdlib.org/object/update"
-    username: "ucop"
+    domain: merritt-dev.cdlib.org
+    endpoint: ""
+    username: ""
     password: ""
-    profile: "dash_cdl_content"
-  contact_email: ["contact1@contact.com", "contact2@contact.com"]
+  contact_email: ["contact1@example.edu", "contact2@example.edu"]
   abbreviation: "UC"
   short_name: "UC Office of the President"
   long_name: "University of California, Office of the President"
   full_domain: "dash2-dev.ucop.edu"
-  domain_regex: ".ucop.edu"
-  tenant_id: cdl
-  logo: blank_institution_logo.png
+  domain_regex: "ucop.edu$"
+  tenant_id: ucop
   identifier_service:
     shoulder: "doi:10.5072/FK2"
-    account: apitest
-    password: apitest
+    account: ""
+    password: ""
     id_scheme: doi
+    owner: null
   authentication:
     strategy: shibboleth
-    entity_id: urn:mace:incommon:ucop.edu
-    entity_domain: .ucop.edu
+    entity_id: ""
+    entity_domain: ""
+  default_license: cc_by
+  dash_logo_after_tenant: true
 
 development:
-  <<: *default
-  #Add any items that need to override the defaults here
-
-stage:
-  <<: *default
-  #Add any items that need to override the defaults here
-
-production:
   <<: *default
   #Add any items that need to override the defaults here
 
