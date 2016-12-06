@@ -104,13 +104,8 @@ module StashEngine
     end
 
     def current_resource_state
+      # You'd think we could use #current_state, but no, ActiveRecord gets confused in #current_state=
       ResourceState.find(current_resource_state_id)
-      # warn("current_resource_state_id is #{current_resource_state_id || 'nil'} for resource #{id}")
-      # if current_resource_state_id.blank?
-      #   ResourceState.create!(resource_id: id, user_id: user_id, resource_state: :in_progress)
-      # else
-      #   ResourceState.find(current_resource_state_id)
-      # end
     end
 
     def current_state=(state_string)
@@ -187,34 +182,7 @@ module StashEngine
       version_record = stash_version
       version_record.zip_filename = File.basename(zipfile)
       version_record.save!
-      # zip_filename = File.basename(zipfile)
-      # version = nil
-      # if stash_version.nil?
-      #   version = StashEngine::Version.new(resource_id: id, zip_filename: zip_filename, version: next_version)
-      # else
-      #   version = StashEngine::Version.where(resource_id: id, zip_filename: zip_filename).first
-      #   version.version = next_version
-      # end
-      # version.save!
     end
-
-    #smartly gives a version number for this resource for either current version if version is already set
-    #or what it would be when it is submitted (the versino to be), assuming it's submitted next
-    # def smart_version
-    #   if stash_version.blank? || stash_version.version.zero?
-    #     next_version
-    #   else
-    #     stash_version.version
-    #   end
-    # end
-
-    # def next_version
-    #   return 1 if identifier.blank?
-    #   last_v = identifier.last_submitted_version
-    #   return 1 if last_v.blank?
-    #   #this looks crazy, but association from resource to version to version field
-    #   last_v.stash_version.version + 1
-    # end
 
     # ------------------------------------------------------------
     # Usage and statistics
