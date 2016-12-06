@@ -3,41 +3,10 @@
   <component name="NewModuleRootManager" inherit-compiler-output="true">
     <exclude-output />
     <content url="file://$MODULE_DIR$" />
+    <content url="file://$MODULE_DIR$/../stash_engines/stash_datacite" />
+    <content url="file://$MODULE_DIR$/../stash_engines/stash_engine" />
     <orderEntry type="jdk" jdkName="RVM: ruby-2.2.5" jdkType="RUBY_SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module-library">
-      <library name="stash_engine (v0.0.17, /Users/dmoles/Work/stash_engines/stash_engine) [path][gem]">
-        <CLASSES>
-          <root url="file://$MODULE_DIR$/../stash_engines/stash_engine/db" />
-          <root url="file://$MODULE_DIR$/../stash_engines/stash_engine/app" />
-          <root url="file://$MODULE_DIR$/../stash_engines/stash_engine/bin" />
-          <root url="file://$MODULE_DIR$/../stash_engines/stash_engine/lib" />
-          <root url="file://$MODULE_DIR$/../stash_engines/stash_engine/log" />
-          <root url="file://$MODULE_DIR$/../stash_engines/stash_engine/tmp" />
-          <root url="file://$MODULE_DIR$/../stash_engines/stash_engine/config" />
-          <root url="file://$MODULE_DIR$/../stash_engines/stash_engine/public" />
-          <root url="file://$MODULE_DIR$/../stash_engines/stash_engine/script" />
-          <root url="file://$MODULE_DIR$/../stash_engines/stash_engine/coverage" />
-          <root url="file://$MODULE_DIR$/../stash_engines/stash_engine/ui-library" />
-          <root url="file://$MODULE_DIR$/../stash_engines/stash_engine/node_modules" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES>
-          <root url="file://$MODULE_DIR$/../stash_engines/stash_engine/db" />
-          <root url="file://$MODULE_DIR$/../stash_engines/stash_engine/app" />
-          <root url="file://$MODULE_DIR$/../stash_engines/stash_engine/bin" />
-          <root url="file://$MODULE_DIR$/../stash_engines/stash_engine/lib" />
-          <root url="file://$MODULE_DIR$/../stash_engines/stash_engine/log" />
-          <root url="file://$MODULE_DIR$/../stash_engines/stash_engine/tmp" />
-          <root url="file://$MODULE_DIR$/../stash_engines/stash_engine/config" />
-          <root url="file://$MODULE_DIR$/../stash_engines/stash_engine/public" />
-          <root url="file://$MODULE_DIR$/../stash_engines/stash_engine/script" />
-          <root url="file://$MODULE_DIR$/../stash_engines/stash_engine/coverage" />
-          <root url="file://$MODULE_DIR$/../stash_engines/stash_engine/ui-library" />
-          <root url="file://$MODULE_DIR$/../stash_engines/stash_engine/node_modules" />
-        </SOURCES>
-      </library>
-    </orderEntry>
     <orderEntry type="library" scope="PROVIDED" name="actionmailer (v4.2.7.1, RVM: ruby-2.2.5) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="actionpack (v4.2.7.1, RVM: ruby-2.2.5) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="actionview (v4.2.7.1, RVM: ruby-2.2.5) [gem]" level="application" />
