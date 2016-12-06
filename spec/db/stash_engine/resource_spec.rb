@@ -44,7 +44,6 @@ module StashEngine
       attr_reader :state
       before(:each) do
         @resource = Resource.create(user_id: user.id)
-        warn("created resource #{resource.id} (user #{user.id})")
         @state = ResourceState.find_by(resource_id: resource.id)
       end
 
@@ -70,6 +69,7 @@ module StashEngine
 
       describe '#current_resource_state' do
         it 'returns the initial state' do
+          expect(state).not_to be_nil # just to be sure
           expect(resource.current_resource_state).to eq(state)
         end
 
@@ -193,23 +193,60 @@ module StashEngine
       before(:each) do
         @resource = Resource.create
       end
-      describe '#update_version' do
+
+      describe '#stash_version' do
+        it 'is initialized' do
+          expect(resource.stash_version).not_to be_nil
+        end
+      end
+
+      describe '#version_number' do
+        it 'defaults to 1' do
+          expect(resource.version_number).to eq(1)
+        end
+      end
+
+      describe '#version_zipfile=' do
         it 'creates the first version' do
           zipfile = '/apps/stash/stash_engine/uploads/17-archive.zip'
-          resource.update_version(zipfile)
+          resource.version_zipfile = zipfile
           version = StashEngine::Version.find_by(resource_id: resource.id)
           expect(version).not_to be_nil
           expect(version.zip_filename).to eq('17-archive.zip')
           expect(version.version).to eq(1)
         end
-        it 'updates an existing version with the same file' do
-          zipfile = '/apps/stash/stash_engine/uploads/17-archive.zip'
-          StashEngine::Version.create(resource_id: resource.id, zip_filename: '17-archive.zip', version: 1)
-          resource.update_version(zipfile)
-          version = StashEngine::Version.find_by(resource_id: resource.id)
-          expect(version).not_to be_nil
-          expect(version.zip_filename).to eq('17-archive.zip')
-          expect(version.version).to eq(2)
+      end
+
+      describe 'identifier interaction' do
+        before(:each) do
+          doi_value = '10.1234/5678'
+          resource.ensure_identifier("doi:#{doi_value}")
+          # TODO: collapse this into single method on resource
+          resource.current_state = 'published'
+          resource.version_zipfile = "#{resource.id}-archive.zip"
+        end
+
+        describe '#version_number' do
+          it 'still defaults to 1' do
+            expect(resource.version_number).to eq(1)
+          end
+
+          it 'is incremented for the next resource by Amoeba duplication' do
+            new_resource = resource.amoeba_dup
+            new_resource.save!
+            expect(new_resource.version_number).to eq(2)
+          end
+
+          it 'is incremented for the next resource' do
+            new_resource = Resource.create(identifier: resource.identifier)
+            expect(new_resource.version_number).to eq(2)
+          end
+        end
+
+        describe '#next_version_number' do
+          it 'is based on the last submitted version' do
+            expect(resource.next_version_number).to eq(2)
+          end
         end
       end
     end
