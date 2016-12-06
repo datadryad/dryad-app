@@ -307,6 +307,115 @@ module StashEngine
           expect(resource.identifier_str).to eq("doi:#{doi_value}")
         end
       end
+
     end
+
+    describe '#submission_to_repository' do
+      attr_reader :resource
+      attr_reader :logger
+      attr_reader :tenant
+      attr_reader :sword_params
+      attr_reader :zipfile
+      attr_reader :title
+      attr_reader :doi
+      attr_reader :request_host
+      attr_reader :request_port
+
+      before(:each) do
+        allow(SwordJob).to receive(:submit_async)
+
+        @resource = Resource.create(user_id: user.id)
+
+        @logger = instance_double(Logger)
+        allow(logger).to receive(:debug)
+
+        @rails_logger = Rails.logger
+        Rails.logger = logger
+
+        @tenant = instance_double(Tenant)
+        @sword_params = {collection_uri: 'http://sword.example.org/royal-society'}
+        allow(tenant).to receive(:sword_params).and_return(sword_params)
+
+        @zipfile = "#{resource.id}-archive.zip"
+        @title = 'An Account of a Very Odd Monstrous Calf'
+        @doi = 'doi:10.1098/rstl.1665.0007'
+        @request_host = 'stash.example.org'
+        @request_port = 80
+      end
+
+      after(:each) do
+        Rails.logger = @rails_logger
+      end
+
+      it 'sets the DOI' do
+        resource.submission_to_repository(tenant, zipfile, title, doi, request_host, request_port)
+        expect(resource.identifier_str).to eq(doi)
+      end
+
+      it 'submits the job' do
+        expect(SwordJob).to receive(:submit_async).with(
+          title: title,
+          doi: doi,
+          zipfile: zipfile,
+          resource_id: resource.id,
+          sword_params: sword_params,
+          request_host: request_host,
+          request_port: request_port
+        )
+        resource.submission_to_repository(tenant, zipfile, title, doi, request_host, request_port)
+      end
+    end
+
+    describe 'statistics' do
+      describe '#submitted_dataset_count' do
+        it 'defaults to zero' do
+          expect(Resource.submitted_dataset_count).to eq(0)
+        end
+        it 'counts published current states' do
+          (0...3).each do |index|
+            resource = Resource.create(user_id: user.id)
+            resource.ensure_identifier("10.123/#{index}")
+            resource.current_state = 'published'
+            resource.save
+          end
+          expect(Resource.submitted_dataset_count).to eq(3)
+        end
+        it 'groups by identifier' do
+          (0...3).each do |index|
+            res1 = Resource.create(user_id: user.id)
+            res1.ensure_identifier('10.123/456')
+            res1.current_state = 'published'
+            res1.save
+
+            res2 = Resource.create(user_id: user.id)
+            res2.ensure_identifier('10.345/678')
+            res2.current_state = 'published'
+            res2.save
+          end
+          expect(Resource.submitted_dataset_count).to eq(2)
+        end
+
+        it 'doesn\'t count non-published datasets' do
+          %w(in_progress processing error embargoed).each_with_index do |state, index|
+            resource = Resource.create(user_id: user.id)
+            resource.ensure_identifier("10.123/#{index}")
+            resource.current_state = state
+            resource.save
+          end
+          expect(Resource.submitted_dataset_count).to eq(0)
+        end
+        it 'doesn\'t count non-current states' do
+          %w(in_progress processing error embargoed).each_with_index do |state, index|
+            resource = Resource.create(user_id: user.id)
+            resource.ensure_identifier("10.123/#{index}")
+            resource.current_state = 'published'
+            resource.current_state = state
+            resource.save
+          end
+          expect(Resource.submitted_dataset_count).to eq(0)
+        end
+      end
+    end
+
   end
 end
