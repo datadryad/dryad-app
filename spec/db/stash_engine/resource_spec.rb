@@ -2,6 +2,21 @@ require 'db_spec_helper'
 
 module StashEngine
   describe Resource do
+
+    attr_reader :user
+
+    before(:each) do
+      @user = StashEngine::User.create(
+        uid: 'lmuckenhaupt-ucop@ucop.edu',
+        first_name: 'Lisa',
+        last_name: 'Muckenhaupt',
+        email: 'lmuckenhaupt@ucop.edu',
+        provider: 'developer',
+        tenant_id: 'ucop'
+      )
+      warn("Created user #{user.id}")
+    end
+
     describe 'uploads directory' do
       before(:each) do
         allow(Rails).to receive(:root).and_return('/apps/stash/stash_engine')
@@ -20,6 +35,90 @@ module StashEngine
         it 'returns the upload directory for this resource' do
           resource = Resource.create
           expect(resource.upload_dir).to eq("/apps/stash/stash_engine/uploads/#{resource.id}")
+        end
+      end
+    end
+
+    describe 'resource state' do
+      attr_reader :resource
+      attr_reader :state
+      before(:each) do
+        @resource = Resource.create(user_id: user.id)
+        warn("created resource #{resource.id} (user #{user.id})")
+        @state = ResourceState.find_by(resource_id: resource.id)
+      end
+
+      describe '#init_state' do
+        it 'initializes the state to in_progress' do
+          expect(state.resource_state).to eq('in_progress')
+        end
+        it 'sets the user ID' do
+          expect(state.user_id).to eq(user.id)
+        end
+      end
+
+      describe '#current_state=' do
+        it 'sets the state' do
+          new_state_value = 'published'
+          resource.current_state = new_state_value
+          new_state_id = resource.current_resource_state_id
+          expect(new_state_id).not_to eq(state.id)
+          new_state = ResourceState.find(new_state_id)
+          expect(new_state.resource_state).to eq(new_state_value)
+        end
+      end
+
+      describe '#current_resource_state' do
+        it 'returns the initial state' do
+          expect(resource.current_resource_state).to eq(state)
+        end
+
+        it 'reflects state changes' do
+          %w(processing error embargoed published).each do |state_value|
+            resource.current_state = state_value
+            new_state = resource.current_resource_state
+            new_state_id = new_state.id
+            expect(new_state_id).not_to eq(state.id)
+            expect(new_state.resource_state).to eq(state_value)
+          end
+        end
+      end
+
+      describe '#published?' do
+        it 'returns true if the current state is published' do
+          resource.current_state = 'published'
+          expect(resource.published?).to eq(true)
+        end
+        it 'returns false otherwise' do
+          expect(resource.published?).to eq(false)
+          %w(in_progress processing error embargoed).each do |state_value|
+            resource.current_state = state_value
+            expect(resource.published?).to eq(false)
+          end
+        end
+      end
+
+      describe '#processing?' do
+        it 'returns true if the current state is processing' do
+          resource.current_state = 'processing'
+          expect(resource.processing?).to eq(true)
+        end
+        it 'returns false otherwise' do
+          expect(resource.processing?).to eq(false)
+          %w(in_progress published error embargoed).each do |state_value|
+            resource.current_state = state_value
+            expect(resource.processing?).to eq(false)
+          end
+        end
+      end
+
+      describe '#current_resource_state_value' do
+        it 'returns the value of the current state' do
+          expect(resource.current_resource_state_value).to eq('in_progress')
+          %w(processing error embargoed published).each do |state_value|
+            resource.current_state = state_value
+            expect(resource.current_resource_state_value).to eq(state_value)
+          end
         end
       end
     end
@@ -85,6 +184,32 @@ module StashEngine
           expect(FileUpload.where(resource_id: resource.id).count).to eq(6) # just to be sure
           resource.clean_uploads
           expect(FileUpload.where(resource_id: resource.id).count).to eq(3)
+        end
+      end
+    end
+
+    describe 'versioning' do
+      attr_reader :resource
+      before(:each) do
+        @resource = Resource.create
+      end
+      describe '#update_version' do
+        it 'creates the first version' do
+          zipfile = '/apps/stash/stash_engine/uploads/17-archive.zip'
+          resource.update_version(zipfile)
+          version = StashEngine::Version.find_by(resource_id: resource.id)
+          expect(version).not_to be_nil
+          expect(version.zip_filename).to eq('17-archive.zip')
+          expect(version.version).to eq(1)
+        end
+        it 'updates an existing version with the same file' do
+          zipfile = '/apps/stash/stash_engine/uploads/17-archive.zip'
+          StashEngine::Version.create(resource_id: resource.id, zip_filename: '17-archive.zip', version: 1)
+          resource.update_version(zipfile)
+          version = StashEngine::Version.find_by(resource_id: resource.id)
+          expect(version).not_to be_nil
+          expect(version.zip_filename).to eq('17-archive.zip')
+          expect(version.version).to eq(2)
         end
       end
     end
