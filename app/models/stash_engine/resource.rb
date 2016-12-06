@@ -141,14 +141,9 @@ module StashEngine
 
     def identifier_str
       ident = identifier
-      ident && "#{identifier_type}:#{ident.identifier}"
-    end
-
-    def identifier_type
-      ident = identifier
       return unless ident
       ident_type = ident.identifier_type
-      ident_type && ident_type.downcase
+      ident && "#{ident_type && ident_type.downcase}:#{ident.identifier}"
     end
 
     def identifier_value
