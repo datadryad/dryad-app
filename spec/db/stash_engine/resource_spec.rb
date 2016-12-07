@@ -15,27 +15,84 @@ module StashEngine
       )
     end
 
-    describe 'uploads directory' do
-      before(:each) do
-        allow(Rails).to receive(:root).and_return('/apps/stash/stash_engine')
-      end
-      describe '#uploads_dir' do
-        it 'returns the uploads directory' do
-          expect(Resource.uploads_dir).to eq('/apps/stash/stash_engine/uploads')
+    describe 'file uploads' do
+
+      describe 'uploads directory' do
+        before(:each) do
+          allow(Rails).to receive(:root).and_return('/apps/stash/stash_engine')
+        end
+        describe '#uploads_dir' do
+          it 'returns the uploads directory' do
+            expect(Resource.uploads_dir).to eq('/apps/stash/stash_engine/uploads')
+          end
+        end
+        describe '#upload_dir_for' do
+          it 'returns a separate directory by resource ID' do
+            expect(Resource.upload_dir_for(17)).to eq('/apps/stash/stash_engine/uploads/17')
+          end
+        end
+        describe '#upload_dir' do
+          it 'returns the upload directory for this resource' do
+            resource = Resource.create
+            expect(resource.upload_dir).to eq("/apps/stash/stash_engine/uploads/#{resource.id}")
+          end
         end
       end
-      describe '#upload_dir_for' do
-        it 'returns a separate directory by resource ID' do
-          expect(Resource.upload_dir_for(17)).to eq('/apps/stash/stash_engine/uploads/17')
+
+      describe '#current_file_uploads' do
+        attr_reader :res1
+        attr_reader :res2
+        attr_reader :created_files
+        attr_reader :copied_files
+        attr_reader :deleted_files
+        before(:each) do
+          @res1 = Resource.create(user_id: user.id)
+
+          @created_files = Array.new(3) { |i| FileUpload.create(resource: res1, file_state: 'created', upload_file_name: "created#{i}.bin") }
+          @copied_files = Array.new(3) { |i| FileUpload.create(resource: res1, file_state: 'copied', upload_file_name: "copied#{i}.bin") }
+          @deleted_files = Array.new(3) { |i| FileUpload.create(resource: res1, file_state: 'deleted', upload_file_name: "deleted#{i}.bin") }
+
+          @res2 = Resource.create(user_id: user.id)
+        end
+
+        it 'defaults to empty' do
+          expect(res2.current_file_uploads).to be_empty
+        end
+
+        it 'includes created and copied' do
+          current = res1.current_file_uploads
+          created_files.each { |f| expect(current).to include(f) }
+          copied_files.each { |f| expect(current).to include(f) }
+          deleted_files.each { |f| expect(current).not_to include(f) }
         end
       end
-      describe '#upload_dir' do
-        it 'returns the upload directory for this resource' do
-          resource = Resource.create
-          expect(resource.upload_dir).to eq("/apps/stash/stash_engine/uploads/#{resource.id}")
+
+      describe '#copy_file_records_from' do
+        attr_reader :res1
+        attr_reader :res2
+        before(:each) do
+          @res1 = Resource.create(user_id: user.id)
+
+          (0...3).each { |i| FileUpload.create(resource: res1, file_state: 'created', upload_file_name: "created#{i}.bin") }
+          (0...3).each { |i| FileUpload.create(resource: res1, file_state: 'copied', upload_file_name: "copied#{i}.bin") }
+          (0...3).each { |i| FileUpload.create(resource: res1, file_state: 'deleted', upload_file_name: "deleted#{i}.bin") }
+
+          @res2 = Resource.create(user_id: user.id)
+          res2.copy_file_records_from(res1)
+        end
+
+        it 'copies the records' do
+          expected_names = res1.current_file_uploads.map { |f| f.upload_file_name }
+          actual_names = res2.current_file_uploads.map { |f| f.upload_file_name }
+          expect(actual_names).to contain_exactly(*expected_names)
+        end
+
+        it 'sets the state to "copied"' do
+          res2.current_file_uploads.each { |f| expect(f.file_state).to eq('copied') }
         end
       end
     end
+
 
     describe 'resource state' do
       attr_reader :resource
