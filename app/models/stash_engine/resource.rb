@@ -189,20 +189,14 @@ module StashEngine
 
     # total count of submitted datasets
     def self.submitted_dataset_count
-      sql = "SELECT count(*) as my_count FROM\
-      (SELECT res.identifier_id\
-      FROM stash_engine_resources res\
-      JOIN stash_engine_resource_states state\
-      ON res.current_resource_state_id = state.id\
-      WHERE state.resource_state = 'published'\
-      GROUP BY res.identifier_id) as tbl"
-
-      # this query becomes difficult to deal with because of complexity in activerecord and so counting by sql
-      # all.joins(:current_state).select(:identifier_id).
-      #    where("stash_engine_resource_states.resource_state = 'published'").
-      #    group('identifier_id')
-
-      count_by_sql(sql)
+      sql = %q(
+        SELECT COUNT(DISTINCT r.identifier_id)
+          FROM stash_engine_resources r
+          JOIN stash_engine_resource_states rs
+            ON r.current_resource_state_id = rs.id
+         WHERE rs.resource_state = 'published'
+      )
+      connection.execute(sql).first[0]
     end
 
     def increment_downloads
