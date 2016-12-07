@@ -128,28 +128,30 @@ module StashEngine
 
     describe '#submit_async' do
       describe '#create' do
-        it 'creates a SWORD resource' do
-          expect(sword_client).to receive(:create).with(doi: doi, zipfile: zipfile)
-          submit_resource
-        end
+        describe '#success handling' do
+          it 'creates a SWORD resource' do
+            expect(sword_client).to receive(:create).with(doi: doi, zipfile: zipfile)
+            submit_resource
+          end
 
-        it 'sets the update and download URIs' do
-          resource = submit_resource
-          expect(resource.download_uri).to eq(download_uri)
-          expect(resource.update_uri).to eq(update_uri)
-        end
+          it 'sets the update and download URIs' do
+            resource = submit_resource
+            expect(resource.download_uri).to eq(download_uri)
+            expect(resource.update_uri).to eq(update_uri)
+          end
 
-        it 'sends a "create succeeded" email' do
-          message = instance_double(ActionMailer::MessageDelivery)
-          expect(UserMailer).to receive(:create_succeeded).with(kind_of(Resource), title, request_host, request_port).and_return(message)
-          expect(message).to receive(:deliver_now)
-          submit_resource
-        end
+          it 'sends a "create succeeded" email' do
+            message = instance_double(ActionMailer::MessageDelivery)
+            expect(UserMailer).to receive(:create_succeeded).with(kind_of(Resource), title, request_host, request_port).and_return(message)
+            expect(message).to receive(:deliver_now)
+            submit_resource
+          end
 
-        it 'cleans up on success' do
-          create_cleanup_files
-          submit_resource
-          [resource_upload_dir, some_upload, some_tempfile].each { |f| expect(File.exist?(f)).to be_falsey }
+          it 'cleans up on success' do
+            create_cleanup_files
+            submit_resource
+            [resource_upload_dir, some_upload, some_tempfile].each { |f| expect(File.exist?(f)).to be_falsey }
+          end
         end
 
         describe 'failure handling' do
