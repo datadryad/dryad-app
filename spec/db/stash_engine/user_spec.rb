@@ -40,5 +40,20 @@ module StashEngine
         expect(user.oauth_token).to eq('1234567890')
       end
     end
+
+    describe '#tenant' do
+      it 'finds the tenant' do
+        tenant = instance_double(Tenant)
+        allow(Tenant).to receive(:find).with('ucop').and_return(tenant)
+        user = User.create(uid: 'lmuckenhaupt-ucop@ucop.edu', tenant_id: 'ucop')
+        expect(user.tenant).to eq(tenant)
+      end
+    end
+
+    describe '#latest_completed_resource_per_identifier' do
+      it 'finds the user\'s resources'
+      it 'ignores "in progress" resources'
+      it 'finds only the latest for each identifier'
+    end
   end
 end
