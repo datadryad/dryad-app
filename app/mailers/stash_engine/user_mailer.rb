@@ -91,9 +91,7 @@ module StashEngine
 
     def identifier_for(resource)
       return unless resource
-      # TODO: add something like 'delegate :identifier_value' to Resource, cf. http://devblog.avdi.org/2011/07/05/demeter-its-not-just-a-good-idea-its-the-law/
-      # TODO: and make sure it works even if we're not talking Datacite
-      resource.identifier.try(:identifier)
+      resource.identifier_str
     end
 
     def to_address_list(addresses)
