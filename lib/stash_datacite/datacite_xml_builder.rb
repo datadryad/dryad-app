@@ -61,7 +61,8 @@ module Datacite
       private
 
       def to_dcs_type(sd_resource_type)
-        ResourceType.new(resource_type_general: sd_resource_type.resource_type_mapping_obj)
+        ResourceType.new(resource_type_general: sd_resource_type.resource_type_general_mapping_obj,
+                              value: sd_resource_type.resource_type)
       end
 
       def add_locations(resource)

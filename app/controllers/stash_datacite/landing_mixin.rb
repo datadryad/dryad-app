@@ -56,9 +56,9 @@ module StashDatacite
       publication_year = publication_years.try(:first).try(:publication_year) || Time.now.year
       title = title.try(:title)
       publisher = publisher.try(:publisher)
-      resource_type = resource_type.try(:resource_type_friendly)
+      resource_type_general = resource_type.try(:resource_type_general_friendly)
       ["#{creator_citation_format(creators)} (#{publication_year})", title,
-       (version == 'v1' ? nil : version), publisher, resource_type,
+       (version == 'v1' ? nil : version), publisher, resource_type_general,
        "https://dx.doi.org/#{identifier}"].reject(&:blank?).join(', ')
     end
 
