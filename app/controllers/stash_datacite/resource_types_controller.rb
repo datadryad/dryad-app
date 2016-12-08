@@ -25,6 +25,8 @@ module StashDatacite
     def update
       respond_to do |format|
         if @resource_type.update(resource_type_params)
+          @resource_type.resource_type = @resource_type.resource_type_general
+          @resource_type.save
           format.js { render template: 'stash_datacite/shared/update.js.erb' }
         else
           format.html { render :edit }
@@ -47,7 +49,7 @@ module StashDatacite
 
     # Only allow a trusted parameter "white list" through.
     def resource_type_params
-      params.require(:resource_type).permit(:id, :resource_type, :resource_id)
+      params.require(:resource_type).permit(:id, :resource_type_general, :resource_type, :resource_id)
     end
   end
 end
