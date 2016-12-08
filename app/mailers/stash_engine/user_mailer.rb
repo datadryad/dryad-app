@@ -51,7 +51,7 @@ module StashEngine
       @request_port = request_port
 
       to_address = to_address_list(user.email)
-      mail(to: to_address, subject: "Dataset \"#{@title}\" (#{@identifier}) updated")
+      mail(to: to_address, subject: "Dataset \"#{@title}\" (doi:#{@identifier}) updated")
     end
 
     def update_failed(resource, title, request_host, request_port, error)
@@ -69,7 +69,7 @@ module StashEngine
       @request_port = request_port
 
       to_address = to_address_list(user.email)
-      mail(to: to_address, subject: "Updating dataset \"#{@title}\" (#{@identifier}) failed")
+      mail(to: to_address, subject: "Updating dataset \"#{@title}\" (doi:#{@identifier}) failed")
     end
 
     def error_report(resource, title, error)
@@ -84,7 +84,7 @@ module StashEngine
       @backtrace = to_backtrace(error)
 
       to_address = to_address_list(APP_CONFIG['feedback_email_to'])
-      mail(to: to_address, subject: "Submitting dataset \"#{@title}\" (#{@identifier}) failed")
+      mail(to: to_address, subject: "Submitting dataset \"#{@title}\" (doi:#{@identifier}) failed")
     end
 
     private
@@ -101,7 +101,7 @@ module StashEngine
 
     # TODO: look at Rails standard ways to report/format backtrace
     def to_backtrace(e)
-      backtrace = e.respond_to?(:backtrace) ? e.backtrace.join("\n") : ''
+      backtrace = (e.respond_to?(:backtrace) && e.backtrace) ? e.backtrace.join("\n") : ''
       "#{e.class}: #{e}\n#{backtrace}"
     end
   end
