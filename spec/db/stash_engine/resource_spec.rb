@@ -16,7 +16,6 @@ module StashEngine
     end
 
     describe 'file uploads' do
-
       describe 'uploads directory' do
         before(:each) do
           allow(Rails).to receive(:root).and_return('/apps/stash/stash_engine')
@@ -82,8 +81,8 @@ module StashEngine
         end
 
         it 'copies the records' do
-          expected_names = res1.current_file_uploads.map { |f| f.upload_file_name }
-          actual_names = res2.current_file_uploads.map { |f| f.upload_file_name }
+          expected_names = res1.current_file_uploads.map(&:upload_file_name)
+          actual_names = res2.current_file_uploads.map(&:upload_file_name)
           expect(actual_names).to contain_exactly(*expected_names)
         end
 
@@ -92,7 +91,6 @@ module StashEngine
         end
       end
     end
-
 
     describe 'resource state' do
       attr_reader :resource
@@ -364,7 +362,6 @@ module StashEngine
           expect(resource.identifier_str).to eq("doi:#{doi_value}")
         end
       end
-
     end
 
     describe '#submission_to_repository' do
@@ -390,7 +387,7 @@ module StashEngine
         Rails.logger = logger
 
         @tenant = instance_double(Tenant)
-        @sword_params = {collection_uri: 'http://sword.example.org/royal-society'}
+        @sword_params = { collection_uri: 'http://sword.example.org/royal-society' }
         allow(tenant).to receive(:sword_params).and_return(sword_params)
 
         @zipfile = "#{resource.id}-archive.zip"
@@ -438,7 +435,7 @@ module StashEngine
           expect(Resource.submitted_dataset_count).to eq(3)
         end
         it 'groups by identifier' do
-          (0...3).each do |index|
+          (0...3).each do |_index|
             res1 = Resource.create(user_id: user.id)
             res1.ensure_identifier('10.123/456')
             res1.current_state = 'published'
@@ -498,6 +495,5 @@ module StashEngine
         end
       end
     end
-
   end
 end
