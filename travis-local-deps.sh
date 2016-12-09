@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-BRANCH=$(git rev-parse --abbrev-ref HEAD)
+BRANCH=${TRAVIS_PULL_REQUEST_BRANCH:-$TRAVIS_BRANCH}
 ENGINES_DIR=../stash_engines
 
 mkdir ${ENGINES_DIR} && \
