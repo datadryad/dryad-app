@@ -63,6 +63,8 @@ GEM
     amoeba (3.0.0)
       activerecord (>= 3.2.6)
     ansi (1.5.0)
+    archive-zip (0.7.0)
+      io-like (~> 0.3.0)
     arel (6.0.3)
     ast (2.3.0)
     builder (3.2.2)
@@ -81,6 +83,9 @@ GEM
       mime-types (>= 1.16)
     childprocess (0.5.9)
       ffi (~> 1.0, >= 1.0.11)
+    chromedriver-helper (1.0.0)
+      archive-zip (~> 0.7.0)
+      nokogiri (~> 1.6)
     concurrent-ruby (1.0.2)
     data_magic (1.0)
       faker (>= 1.1.2)
@@ -106,6 +111,7 @@ GEM
     http-cookie (1.0.3)
       domain_name (~> 0.5)
     i18n (0.7.0)
+    io-like (0.3.0)
     jquery-fileupload-rails (0.4.7)
       actionpack (>= 3.1)
       railties (>= 3.1)
@@ -293,6 +299,7 @@ PLATFORMS
 DEPENDENCIES
   byebug
   capybara
+  chromedriver-helper
   database_cleaner (~> 1.5)
   mysql2 (~> 0.3)
   page-object
