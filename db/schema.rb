@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161007221310) do
+ActiveRecord::Schema.define(version: 20161207193328) do
 
   create_table "bookmarks", force: :cascade do |t|
     t.integer  "user_id",       limit: 4,   null: false
@@ -221,10 +221,11 @@ ActiveRecord::Schema.define(version: 20161007221310) do
   add_index "dcs_related_identifiers", ["resource_id"], name: "index_dcs_related_identifiers_on_resource_id", using: :btree
 
   create_table "dcs_resource_types", force: :cascade do |t|
-    t.string   "resource_type", limit: 19
-    t.integer  "resource_id",   limit: 4
-    t.datetime "created_at",               null: false
-    t.datetime "updated_at",               null: false
+    t.string   "resource_type_general", limit: 19
+    t.text     "resource_type",         limit: 65535
+    t.integer  "resource_id",           limit: 4
+    t.datetime "created_at",                          null: false
+    t.datetime "updated_at",                          null: false
   end
 
   add_index "dcs_resource_types", ["resource_id"], name: "index_dcs_resource_types_on_resource_id", using: :btree

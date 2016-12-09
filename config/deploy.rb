@@ -46,6 +46,7 @@ set :passenger_in_gemfile, true
 set :passenger_restart_with_touch, false
 
 set :passenger_restart_options, -> { "#{deploy_to} --ignore-passenger-not-running" }
+set :passenger_environment_variables, {}
 
 set :passenger_pid, "#{deploy_to}/passenger.pid"
 set :passenger_log, "#{deploy_to}/passenger.log"
@@ -127,7 +128,9 @@ namespace :deploy do
       within current_path do
         with rails_env: fetch(:rails_env) do
           execute "cd #{deploy_to}/current; bundle install --no-deployment"
-          execute "cd #{deploy_to}/current; bundle exec passenger start -d --environment #{fetch(:rails_env)} --pid-file #{fetch(:passenger_pid)} -p #{fetch(:passenger_port)} --log-file #{fetch(:passenger_log)}"
+          execute "cd #{deploy_to}/current; bundle exec passenger start -d --environment #{fetch(:rails_env)} "\
+              "--pid-file #{fetch(:passenger_pid)} -p #{fetch(:passenger_port)} "\
+              "--log-file #{fetch(:passenger_log)} --pool-idle-time 600"
         end
       end
     end
