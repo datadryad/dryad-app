@@ -14,7 +14,7 @@ module StashEngine
     end
 
     def last_submitted_version_number
-      last_submitted_version && last_submitted_version.version_number
+      (lsv = last_submitted_version) && lsv.version_number
     end
 
     # this returns a resource object for the last version
