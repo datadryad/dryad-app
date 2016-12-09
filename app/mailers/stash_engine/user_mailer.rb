@@ -13,7 +13,7 @@ module StashEngine
       user = resource.user
       @to_name = "#{user.first_name} #{user.last_name}"
       @title = title
-      @identifier = identifier_for(resource)
+      @identifier = resource.identifier_str
       @request_host = request_host
       @request_port = request_port
 
@@ -28,7 +28,7 @@ module StashEngine
       user = resource.user
       @to_name = "#{user.first_name} #{user.last_name}"
       @title = title
-      @identifier = identifier_for(resource)
+      @identifier = resource.identifier_str
       @backtrace = to_backtrace(error)
       tenant = user.tenant
       @contact_email = to_address_list(tenant.contact_email)
@@ -46,7 +46,7 @@ module StashEngine
       user = resource.user
       @to_name = "#{user.first_name} #{user.last_name}"
       @title = title
-      @identifier = identifier_for(resource)
+      @identifier = resource.identifier_str
       @request_host = request_host
       @request_port = request_port
 
@@ -61,7 +61,7 @@ module StashEngine
       user = resource.user
       @to_name = "#{user.first_name} #{user.last_name}"
       @title = title
-      @identifier = identifier_for(resource)
+      @identifier = resource.identifier_str
       @backtrace = to_backtrace(error)
       tenant = user.tenant
       @contact_email = to_address_list(tenant.contact_email)
@@ -80,7 +80,7 @@ module StashEngine
       @user_name = "#{user.first_name} #{user.last_name}"
       @user_email = user.email
       @title = title
-      @identifier = identifier_for(resource)
+      @identifier = resource.identifier_str
       @backtrace = to_backtrace(error)
 
       to_address = to_address_list(APP_CONFIG['feedback_email_to'])
@@ -88,11 +88,6 @@ module StashEngine
     end
 
     private
-
-    def identifier_for(resource)
-      return unless resource
-      resource.identifier_str
-    end
 
     def to_address_list(addresses)
       addresses = [addresses] unless addresses.respond_to?(:join)
