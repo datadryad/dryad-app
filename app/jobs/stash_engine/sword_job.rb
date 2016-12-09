@@ -98,9 +98,10 @@ module StashEngine
 
     def do_submit(request_msg)
       resource = Resource.find(resource_id)
+      # TODO: collapse this into single method on resource
       resource.update_uri ? update(resource) : create(resource)
       resource.current_state = 'published'
-      resource.update_version(zipfile)
+      resource.version_zipfile = zipfile
       update_submission_log(resource_id: resource_id, request_msg: request_msg, response_msg: 'Success')
       resource
     end
@@ -125,6 +126,7 @@ module StashEngine
       receipt = client.create(doi: doi, zipfile: zipfile)
       log.debug("create(doi: #{doi}, zipfile: #{zipfile}) for resource #{resource.id} completed with em_iri "\
                 "#{receipt.em_iri}, edit_iri #{receipt.edit_iri}")
+      # TODO: collapse this into single method on resource
       resource.download_uri = receipt.em_iri
       resource.update_uri = receipt.edit_iri
       resource.save # save download and update URLs for this resource
