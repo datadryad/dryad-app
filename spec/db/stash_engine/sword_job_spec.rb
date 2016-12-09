@@ -165,7 +165,7 @@ module StashEngine
           end
 
           it 'logs a detailed warning' do
-            expect(logger).to receive(:warn).with(/SwordJob for '#{Regexp.quote(title)}' \(#{Regexp.quote(doi)}\) failed at [0-9 \-:]+: Not Found/)
+            expect(logger).to receive(:warn).with(/SwordJob for '#{Regexp.quote(title)}' \(#{Regexp.quote(doi)}\) failed at [0-9 \-+:]+: Not Found/)
             expect { submit_resource }.to raise_error(RestClient::NotFound)
           end
 
@@ -221,7 +221,7 @@ module StashEngine
           end
 
           it 'logs a detailed warning' do
-            expect(logger).to receive(:warn).with(/SwordJob for '#{Regexp.quote(title)}' \(#{Regexp.quote(doi)}\) failed at [0-9 \-:]+: Not Found/)
+            expect(logger).to receive(:warn).with(/SwordJob for '#{Regexp.quote(title)}' \(#{Regexp.quote(doi)}\) failed at [0-9 \-+:]+: Not Found/)
             expect { submit_resource }.to raise_error(RestClient::NotFound)
           end
 
