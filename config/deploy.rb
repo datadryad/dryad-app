@@ -130,7 +130,7 @@ namespace :deploy do
           execute "cd #{deploy_to}/current; bundle install --no-deployment"
           execute "cd #{deploy_to}/current; bundle exec passenger start -d --environment #{fetch(:rails_env)} "\
               "--pid-file #{fetch(:passenger_pid)} -p #{fetch(:passenger_port)} "\
-              "--log-file #{fetch(:passenger_log)} --pool-idle-time 600"
+              "--log-file #{fetch(:passenger_log)} --pool-idle-time 1800"
         end
       end
     end
