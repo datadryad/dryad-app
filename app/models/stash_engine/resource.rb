@@ -16,17 +16,12 @@ module StashEngine
     # ------------------------------------------------------------
     # Callbacks
 
-    def init_state
+    def init_state_and_version
       self.current_resource_state_id = ResourceState.create(resource_id: id, resource_state: 'in_progress', user_id: user_id).id
-    end
-    protected :init_state
-    after_create :init_state
-
-    def init_version
       self.stash_version = StashEngine::Version.create(resource_id: id, version: next_version_number, zip_filename: nil)
+      save
     end
-    protected :init_version
-    after_create :init_version
+    after_create :init_state_and_version
 
     # ------------------------------------------------------------
     # Scopes
@@ -109,6 +104,7 @@ module StashEngine
     end
 
     def current_state=(state_string)
+      return if state_string == current_resource_state_value
       my_state = ResourceState.create(user_id: user_id, resource_state: state_string, resource_id: id)
       self.current_resource_state_id = my_state.id
       save
