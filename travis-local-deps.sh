@@ -9,5 +9,5 @@ mkdir ${ENGINES_DIR} && \
   cd stash_engine && \
   git checkout ${BRANCH}
 
-
-
+REVISION=$(git rev-parse HEAD)
+echo "Checked out stash_engine branch ${BRANCH}, revision ${REVISION}"
