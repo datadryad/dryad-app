@@ -4,17 +4,6 @@ module StashEngine
   describe User do
     attr_reader :user
 
-    # before(:each) do
-    #   @user = User.create(
-    #     uid: 'lmuckenhaupt-ucop@ucop.edu',
-    #     first_name: 'Lisa',
-    #     last_name: 'Muckenhaupt',
-    #     email: 'lmuckenhaupt@ucop.edu',
-    #     provider: 'developer',
-    #     tenant_id: 'ucop'
-    #   )
-    # end
-
     describe '#from_omniauth' do
       it 'creates a user' do
         auth = {
@@ -26,7 +15,7 @@ module StashEngine
           },
           credentials: {
             token: '1234567890'
-          },
+          }
         }.to_ostruct
         user = User.from_omniauth(auth, 'ucop')
         expect(user).to be_a(User)
@@ -51,9 +40,62 @@ module StashEngine
     end
 
     describe '#latest_completed_resource_per_identifier' do
-      it 'finds the user\'s resources'
-      it 'ignores "in progress" resources'
-      it 'finds only the latest for each identifier'
+      attr_reader :user
+
+      before(:each) do
+        @user = User.create(
+          uid: 'lmuckenhaupt-ucop@ucop.edu',
+          first_name: 'Lisa',
+          last_name: 'Muckenhaupt',
+          email: 'lmuckenhaupt@ucop.edu',
+          provider: 'developer',
+          tenant_id: 'ucop'
+        )
+      end
+
+      it 'finds the user\'s resources' do
+        resources = Array.new(5) do |index|
+          resource = Resource.create(user_id: user.id)
+          resource.current_state = 'published'
+          resource.ensure_identifier("10.123/#{index}")
+          resource
+        end
+        latest = user.latest_completed_resource_per_identifier
+        expect(latest).to contain_exactly(*resources)
+      end
+
+      it 'ignores "in progress" resources' do
+        in_progress = []
+        other = []
+        %w(published processing error).each_with_index do |state, index|
+          doi_value = "10.123/#{index}"
+          res1 = Resource.create(user_id: user.id)
+          res1.ensure_identifier(doi_value)
+          res1.current_state = 'in_progress'
+          in_progress << res1
+          res2 = Resource.create(user_id: user.id)
+          res2.ensure_identifier(doi_value)
+          res2.current_state = state
+          other << res2
+        end
+        latest = user.latest_completed_resource_per_identifier
+        expect(latest).to contain_exactly(*other)
+        in_progress.each do |res|
+          expect(latest).not_to include(res)
+        end
+      end
+
+      it 'finds only the latest for each identifier' do
+        resources = Array.new(5) do |_|
+          doi_value = '10.123/1234'
+          resource = Resource.create(user_id: user.id)
+          resource.current_state = 'published'
+          resource.ensure_identifier(doi_value)
+          resource
+        end
+        latest = user.latest_completed_resource_per_identifier
+        expect(latest).to contain_exactly(resources.last)
+      end
     end
   end
 end

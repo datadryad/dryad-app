@@ -118,6 +118,13 @@ module StashEngine
           new_state = ResourceState.find(new_state_id)
           expect(new_state.resource_state).to eq(new_state_value)
         end
+        it 'doesn\'t create unnecesary values' do
+          state = resource.current_resource_state
+          expect(ResourceState.count).to eq(1)
+          resource.current_state = 'in_progress'
+          expect(ResourceState.count).to eq(1)
+          expect(resource.current_resource_state).to eq(state)
+        end
       end
 
       describe '#current_resource_state' do

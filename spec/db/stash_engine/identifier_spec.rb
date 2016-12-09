@@ -20,14 +20,14 @@ module StashEngine
     describe '@download_count' do
       it 'returns the download count' do
         download_count = usage1.downloads + usage2.downloads
-        expect(identifier.download_count).to be(download_count)
+        expect(identifier.download_count).to eq(download_count)
       end
     end
 
     describe '@view_count' do
       it 'returns the view count' do
         view_count = usage1.views + usage2.views
-        expect(identifier.view_count).to be(view_count)
+        expect(identifier.view_count).to eq(view_count)
       end
     end
 
