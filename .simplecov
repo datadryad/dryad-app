@@ -4,6 +4,7 @@ class StashEngineFilter < SimpleCov::Filter
   def matches?(source_file)
     stash_engine_path = filter_argument
     path = source_file.filename
+    return true if path =~ %r{vendor/bundle/ruby}
     return false if path =~ /^#{stash_engine_path}/
     return false if path =~ /^#{SimpleCov.root}/
     true
