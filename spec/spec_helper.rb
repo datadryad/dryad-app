@@ -56,4 +56,6 @@ stash_datacite_path = Gem::Specification.find_by_name('stash_datacite').gem_dir
   Dir.glob("#{stash_datacite_path}/#{dir}/**/*.rb").sort.each(&method(:require))
 end
 
+StashDatacite::ResourcePatch.associate_with_resource(StashEngine::Resource)
+
 require 'util/resource_builder'
