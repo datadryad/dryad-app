@@ -1,0 +1,6 @@
+test:
+  host: localhost
+  adapter: mysql2
+  database: stash_engine_test
+  username: travis
+  encoding: utf8
