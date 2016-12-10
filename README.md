@@ -1,8 +1,8 @@
-# `stash_engine_specs`
+# `stash_datacite_specs`
 
-[![Build Status](https://travis-ci.org/CDLUC3/stash_engine_specs.png?branch=master)](https://travis-ci.org/CDLUC3/stash_engine_specs) 
+[![Build Status](https://travis-ci.org/CDLUC3/stash_datacite_specs.png?branch=master)](https://travis-ci.org/CDLUC3/stash_datacite_specs) 
 
-RSpec tests for [`stash_engine`](https://github.com/CDLUC3/stash_engine).
+RSpec tests for [`stash_datacite`](https://github.com/CDLUC3/stash_datacite).
 
 ## Database configuration
 

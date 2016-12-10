@@ -1,3 +1,10 @@
+GIT
+  remote: https://github.com/CDLUC3/stash_ezid_datacite.git
+  revision: 875a85f7419e1304d981f4a44d43f8f0177e65e8
+  specs:
+    stash_ezid_datacite (0.1.4)
+      ezid-client
+
 PATH
   remote: ../stash_engines/stash_datacite
   specs:
@@ -98,6 +105,8 @@ GEM
     equivalent-xml (0.6.0)
       nokogiri (>= 1.4.3)
     erubis (2.7.0)
+    ezid-client (1.5.0)
+      hashie (~> 3.4, >= 3.4.3)
     faraday (0.9.2)
       multipart-post (>= 1.2, < 3)
     filesize (0.1.1)
@@ -298,6 +307,7 @@ DEPENDENCIES
   simplecov-console (~> 0.3.0)
   stash_datacite!
   stash_engine!
+  stash_ezid_datacite!
   webmock (~> 1.24)
 
 BUNDLED WITH

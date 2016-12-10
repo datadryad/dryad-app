@@ -19,6 +19,9 @@ require 'rspec_custom_matchers'
 ENV['STASH_ENV'] = 'test'
 ENV['RAILS_ENV'] = 'test'
 
+require 'stash_engine'
+require 'stash_datacite'
+
 # TODO: MockRails.application.root and use stash_engine/config/initializers/licenses.rb
 ::LICENSES = YAML.load_file('config/licenses.yml').with_indifferent_access
 # TODO: as above, but also move /config/initializers/app_config.rb from dash2 into stash_engine
@@ -29,7 +32,6 @@ require 'active_record'
 ActiveRecord::Base.raise_in_transactional_callbacks = true
 
 # TODO: simplify / standardize this
-require 'stash_engine'
 stash_engine_path = Gem::Specification.find_by_name('stash_engine').gem_dir
 require "#{stash_engine_path}/config/initializers/hash_to_ostruct.rb"
 %w(
@@ -42,7 +44,10 @@ require "#{stash_engine_path}/config/initializers/hash_to_ostruct.rb"
   Dir.glob("#{stash_engine_path}/#{dir}/**/*.rb").sort.each(&method(:require))
 end
 
-require 'stash_datacite'
+module StashDatacite
+  @@resource_class = 'StashEngine::Resource' # rubocop:disable Style/ClassVars
+end
+
 stash_datacite_path = Gem::Specification.find_by_name('stash_datacite').gem_dir
 %w(
   app/models/stash_datacite
@@ -50,3 +55,5 @@ stash_datacite_path = Gem::Specification.find_by_name('stash_datacite').gem_dir
 ).each do |dir|
   Dir.glob("#{stash_datacite_path}/#{dir}/**/*.rb").sort.each(&method(:require))
 end
+
+require 'util/resource_builder'

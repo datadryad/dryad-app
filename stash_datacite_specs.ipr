@@ -90,6 +90,9 @@
   <component name="ScalaSbtSettings">
     <option name="vmParameters" value="" />
   </component>
+  <component name="VcsDirectoryMappings">
+    <mapping directory="" vcs="Git" />
+  </component>
   <component name="masterDetails">
     <states>
       <state key="ProjectJDKs.UI">
