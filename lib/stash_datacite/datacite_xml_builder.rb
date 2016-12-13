@@ -46,7 +46,6 @@ module Datacite
         resource.version = version
 
         add_subjects(resource)
-        add_funding(resource, datacite_3: datacite_3)
         add_contributors(resource)
         add_dates(resource)
         add_alt_ids(resource)
@@ -54,6 +53,7 @@ module Datacite
         add_rights(resource)
         add_descriptions(resource)
         add_locations(resource)
+        add_funding(resource, datacite_3: datacite_3)
 
         resource
       end
@@ -135,7 +135,8 @@ module Datacite
           resource.contributors << Contributor.new(
             name: c.contributor_name,
             identifier: to_dcs_identifier(c.name_identifier),
-            type: c.contributor_type_mapping_obj
+            type: c.contributor_type_mapping_obj,
+            affiliations: c.affiliations.map(&:long_name)
           )
         end
       end
@@ -143,17 +144,20 @@ module Datacite
       def add_funding(resource, datacite_3: false)
         sd_funder_contribs = se_resource.contributors.completed.where(contributor_type: 'funder')
         if datacite_3
-          resource.contributors = sd_funder_contribs.map do |c|
-            desc_text = "Data were created with funding from #{c.contributor_name}"
-            desc_text << " under grant(s) #{c.award_number}" if c.award_number
+           sd_funder_contribs.each do |c|
+            contrib_name = c.contributor_name
+            award_num = c.award_number
+            desc_text = "Data were created with funding from #{contrib_name}"
+            desc_text << " under grant(s) #{award_num}." if award_num
             desc = Description.new(type: DescriptionType::OTHER, value: desc_text)
             resource.descriptions << desc
 
-            Contributor.new(
-              name: c.contributor_name,
+            contrib = Contributor.new(
+              name: contrib_name,
               identifier: to_dcs_identifier(c.name_identifier),
               type: ContributorType::FUNDER
             )
+            resource.contributors << contrib
           end
         else
           resource.funding_references = sd_funder_contribs.map do |c|

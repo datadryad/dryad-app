@@ -58,9 +58,11 @@ module StashDatacite
       end
 
       def add_contributors(xml)
-        resource.contributors.each do |c|
-          xml.send(:'dc:contributor', c.contributor_name.delete("\r").to_s) unless c.try(:contributor_name).blank?
-          xml.send(:'dc:description', c.award_number.delete("\r").to_s) unless c.try(:award_number).blank?
+        # Funder contributors are handled under 'add_descriptions' below
+        resource.contributors.where.not(contributor_type: 'funder').each do |c|
+          if (contrib_name = c.contributor_name) && !contrib_name.blank?
+            xml.send(:'dc:contributor', contrib_name.strip)
+          end
         end
       end
 
@@ -71,8 +73,8 @@ module StashDatacite
       end
 
       def add_resource_type(xml)
-        # TODO: do we only want the general type, or do we want the specific type?
-        xml.send(:'dc:type', resource.resource_type.resource_type.to_s)
+        resource_type = (rt = resource.resource_type) && rt.resource_type_general
+        xml.send(:'dc:type', resource_type.strip) unless resource_type.blank?
       end
 
       def add_rights(xml)
@@ -88,6 +90,14 @@ module StashDatacite
             desc_text = d.description.to_s.delete("\r")
             xml.send(:'dc:description', desc_text.to_s) unless desc_text.blank?
           end
+        end
+        resource.contributors.where(contributor_type: 'funder').each do |c|
+          contrib_name = c.contributor_name
+          award_num = c.award_number
+          desc_text = 'Data were created'
+          desc_text << " with funding from #{contrib_name}" unless contrib_name.blank?
+          desc_text << " under grant(s) #{award_num}" unless award_num.blank?
+          xml.send(:'dc:description', desc_text)
         end
       end
 
