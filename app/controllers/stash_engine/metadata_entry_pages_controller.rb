@@ -9,7 +9,7 @@ module StashEngine
     # GET/POST/PUT  /generals/find_or_create
     def find_or_create
       @resource = Resource.find(params[:resource_id])
-      if @resource.current_resource_state == 'published'
+      if @resource.published?
         redirect_to(metadata_entry_pages_new_version_path(resource_id: params[:resource_id])) && return
       end
     end
@@ -18,17 +18,14 @@ module StashEngine
     def new_version
       #create new version deep copy of most items
       @resource = Resource.find(params[:resource_id])
-      if @resource.identifier.in_progress?
-        id = @resource.identifier.in_progress_version.id
-        redirect_to(metadata_entry_pages_find_or_create_path(resource_id: id)) && return
+      identifier = @resource.identifier
+      in_progress_version = identifier && identifier.in_progress_version
+      if in_progress_version
+        redirect_to(metadata_entry_pages_find_or_create_path(resource_id: in_progress_version.id)) && return
       end
       @new_res = @resource.amoeba_dup
       @new_res.save!
-      copy_files(@new_res, @resource)
-      res_state = ResourceState.create(user_id: current_user.id, resource_state: 'in_progress',
-                                       resource_id: @new_res.id)
-      @new_res.current_resource_state_id = res_state.id
-      @new_res.save!
+      @new_res.copy_file_records_from(@resource)
 
       #redirect to find or create path
       redirect_to metadata_entry_pages_find_or_create_path(resource_id: @new_res.id)
@@ -57,17 +54,6 @@ module StashEngine
       if current_user.id != @resource.user_id
         flash[:alert] = 'You do not have permission to modify this dataset.'
         redirect_to stash_engine.dashboard_path
-      end
-    end
-
-    def copy_files(new_resource, resource)
-      new_resource.file_uploads << resource.current_file_uploads.collect(&:dup)
-      if new_resource.file_uploads.any?
-        new_resource.file_uploads.each do |file|
-          file.resource_id = new_resource.id
-          file.file_state = 'copied'
-          file.save!
-        end
       end
     end
   end

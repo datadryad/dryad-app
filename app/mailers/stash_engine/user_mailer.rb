@@ -13,7 +13,7 @@ module StashEngine
       user = resource.user
       @to_name = "#{user.first_name} #{user.last_name}"
       @title = title
-      @identifier = identifier_for(resource)
+      @identifier = resource.identifier_str
       @request_host = request_host
       @request_port = request_port
 
@@ -28,7 +28,7 @@ module StashEngine
       user = resource.user
       @to_name = "#{user.first_name} #{user.last_name}"
       @title = title
-      @identifier = identifier_for(resource)
+      @identifier = resource.identifier_str
       @backtrace = to_backtrace(error)
       tenant = user.tenant
       @contact_email = to_address_list(tenant.contact_email)
@@ -46,12 +46,12 @@ module StashEngine
       user = resource.user
       @to_name = "#{user.first_name} #{user.last_name}"
       @title = title
-      @identifier = identifier_for(resource)
+      @identifier = resource.identifier_str
       @request_host = request_host
       @request_port = request_port
 
       to_address = to_address_list(user.email)
-      mail(to: to_address, subject: "Dataset \"#{@title}\" (#{@identifier}) updated")
+      mail(to: to_address, subject: "Dataset \"#{@title}\" (doi:#{@identifier}) updated")
     end
 
     def update_failed(resource, title, request_host, request_port, error)
@@ -61,7 +61,7 @@ module StashEngine
       user = resource.user
       @to_name = "#{user.first_name} #{user.last_name}"
       @title = title
-      @identifier = identifier_for(resource)
+      @identifier = resource.identifier_str
       @backtrace = to_backtrace(error)
       tenant = user.tenant
       @contact_email = to_address_list(tenant.contact_email)
@@ -69,7 +69,7 @@ module StashEngine
       @request_port = request_port
 
       to_address = to_address_list(user.email)
-      mail(to: to_address, subject: "Updating dataset \"#{@title}\" (#{@identifier}) failed")
+      mail(to: to_address, subject: "Updating dataset \"#{@title}\" (doi:#{@identifier}) failed")
     end
 
     def error_report(resource, title, error)
@@ -80,21 +80,14 @@ module StashEngine
       @user_name = "#{user.first_name} #{user.last_name}"
       @user_email = user.email
       @title = title
-      @identifier = identifier_for(resource)
+      @identifier = resource.identifier_str
       @backtrace = to_backtrace(error)
 
       to_address = to_address_list(APP_CONFIG['feedback_email_to'])
-      mail(to: to_address, subject: "Submitting dataset \"#{@title}\" (#{@identifier}) failed")
+      mail(to: to_address, subject: "Submitting dataset \"#{@title}\" (doi:#{@identifier}) failed")
     end
 
     private
-
-    def identifier_for(resource)
-      return unless resource
-      # TODO: add something like 'delegate :identifier_value' to Resource, cf. http://devblog.avdi.org/2011/07/05/demeter-its-not-just-a-good-idea-its-the-law/
-      # TODO: and make sure it works even if we're not talking Datacite
-      resource.identifier.try(:identifier)
-    end
 
     def to_address_list(addresses)
       addresses = [addresses] unless addresses.respond_to?(:join)
@@ -103,7 +96,7 @@ module StashEngine
 
     # TODO: look at Rails standard ways to report/format backtrace
     def to_backtrace(e)
-      backtrace = e.respond_to?(:backtrace) ? e.backtrace.join("\n") : ''
+      backtrace = (e.respond_to?(:backtrace) && e.backtrace) ? e.backtrace.join("\n") : ''
       "#{e.class}: #{e}\n#{backtrace}"
     end
   end
