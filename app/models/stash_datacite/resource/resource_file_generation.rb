@@ -36,13 +36,12 @@ module StashDatacite
         )
 
         dc3_xml = datacite_xml_builder.build_datacite_xml(datacite_3: true)
-        File.open("tmp/#{doi_value.gsub('/', '-')}-dc3.xml", 'w') { |f| f.write(dc3_xml) }
         @client.update_metadata(identifier_str, dc3_xml, target_url)
 
         dc4_resource = datacite_xml_builder.build_resource
         wrapper_xml = generate_stash_wrapper(dc4_resource, @version, uploads)
 
-        [dc4_resource.write_xml, wrapper_xml]
+        [dc3_xml, wrapper_xml]
       end
 
       def generate_stash_wrapper(dc4_resource, version_number, uploads)
@@ -71,10 +70,10 @@ module StashDatacite
         purge_existing_files
 
         zipfile_name = "#{folder}/#{@resource.id}_archive.zip"
-        datacite_xml, stashwrapper_xml = generate_xml(target_url)
+        dc3_xml, stashwrapper_xml = generate_xml(target_url)
 
         File.open("#{folder}/#{@resource.id}_mrt-datacite.xml", 'w') do |f|
-          f.write datacite_xml
+          f.write dc3_xml
         end
         File.open("#{folder}/#{@resource.id}_stash-wrapper.xml", 'w') do |f|
           f.write stashwrapper_xml
