@@ -2,7 +2,16 @@ Rails.application.routes.draw do
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
-  root :to => redirect(path: APP_CONFIG.stash_mount)
+  #root :requirements => { :protocol => 'http' },
+  #    :to => redirect(path: APP_CONFIG.stash_mount, protocol: 'http' )
+
+  #root :requirements => { :protocol => 'https' },
+  #     :to => redirect(path: APP_CONFIG.stash_mount, protocol: 'https' )
+
+  get '/', :requirements => { :protocol => 'http' }, to: redirect(path: APP_CONFIG.stash_mount, protocol: 'http' )
+
+  get '/', :requirements => { :protocol => 'https' }, to: redirect(path: APP_CONFIG.stash_mount, protocol: 'https' )
+  #     constraints: { protocol: 'https' }
   
   get '/help' => 'host_pages#help'
   get '/about' => 'host_pages#about'
