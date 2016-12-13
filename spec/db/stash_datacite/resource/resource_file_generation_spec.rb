@@ -96,12 +96,18 @@ module StashDatacite
 
           expected_metadata.each do |path, content|
             if path.end_with?('xml')
-              actual = zip_entry(path) # .gsub(/xml:lang=["']en["']/, '').gsub(/\s+/, ' ')
-              expected = content # .gsub(/xml:lang=["']en["']/, '').gsub(/\s+/, ' ')
-              expect(actual).to be_xml(expected)
+              actual = zip_entry(path).gsub(/20[0-9][0-9]-[0-9][0-9]-[0-9][0-9]Z/, '')
+              expected = content.gsub(/20[0-9][0-9]-[0-9][0-9]-[0-9][0-9]Z/, '')
+              expect(actual).to be_xml(expected, path)
             else
               actual = zip_entry(path).strip
               expected = content.strip
+              if actual != expected
+                now = Time.now.to_i
+                FileUtils.mkdir('tmp') unless File.directory?('tmp')
+                File.open("tmp/#{now}-expected-#{path}", 'w') { |f| f.write(expected) }
+                File.open("tmp/#{now}-actual-#{path}", 'w') { |f| f.write(actual) }
+              end
               expect(actual).to eq(expected)
             end
           end

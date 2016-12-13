@@ -95,8 +95,8 @@
         </creator>
       </creators>
       <titles>
-        <title xml:lang='en'>A Zebrafish Model for Studies on Esophageal Epithelial Biology</title>
-        <title xml:lang='en-us' titleType='Subtitle'>
+        <title>A Zebrafish Model for Studies on Esophageal Epithelial Biology</title>
+        <title titleType='Subtitle'>
           Characterizing a region of stratified squamous epithelium in the
           zebrafish upper digestive tract
         </title>
@@ -148,7 +148,7 @@
         <relatedIdentifier relationType='IsDocumentedBy' relatedIdentifierType='URL'> http://journals.plos.org/plosone/article?id=10.1371/journal.pone.0143878 </relatedIdentifier>
       </relatedIdentifiers>
       <sizes>
-        <size>3824823</size>
+        <size>3286679 bytes</size>
       </sizes>
       <formats>
         <format>text/plain</format>
@@ -156,11 +156,12 @@
         <format>application/xml</format>
         <format>application/pdf</format>
       </formats>
+      <version>1</version>
       <rightsList>
         <rights rightsURI='https://creativecommons.org/publicdomain/zero/1.0/'>CC0 1.0 Universal (CC0 1.0) Public Domain Dedication</rights>
       </rightsList>
       <descriptions>
-        <description xml:lang='en' descriptionType='Abstract'>
+        <description descriptionType='Abstract'>
           Mammalian esophagus exhibits a remarkable change in epithelial
           structure during the transition from embryo to adult. However, the
           molecular mechanisms of esophageal epithelial development are not well
@@ -182,16 +183,6 @@
           zebrafish upper digestive tract which can be used for functional
           studies of candidate genes involved in esophageal epithelial biology.
         </description>
-        <description xml:lang='en' descriptionType='Other'>
-          Data were created with funding from the U.S. Environmental Protection
-          Agency under grant EPA STAR Fellowship 2011.
-        </description>
-        <description xml:lang='en' descriptionType='Other'>
-          Data were created with funding from the CYBER-ShARE Center of
-          Excellence National Science Foundation (NSF) CREST grants under grants
-          HRD-0734825 and HRD-1242122.
-        </description>
-        <description xml:lang='en' descriptionType='Other'>Data were created with funding from the CI-Team Grant under grant OCI-1135525.</description>
       </descriptions>
       <geoLocations>
         <geoLocation>

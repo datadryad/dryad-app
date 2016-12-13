@@ -9,6 +9,8 @@ require 'time'
 module StashDatacite
   class ResourceBuilder # rubocop:disable Metrics/ClassLength
 
+    DESCRIPTION_TYPE = Datacite::Mapping::DescriptionType
+
     attr_reader :user_id
     attr_reader :dcs_resource
     attr_reader :stash_files
@@ -77,7 +79,7 @@ module StashDatacite
     def set_sd_identifier(dcs_identifier)
       return unless dcs_identifier
       se_resource.identifier_id = StashEngine::Identifier.create(
-        identifier: dcs_identifier.value,
+        identifier: dcs_identifier.value && dcs_identifier.value.strip,
         identifier_type: dcs_identifier.identifier_type
       ).id
     end
@@ -108,7 +110,7 @@ module StashDatacite
     def add_sd_title(dcs_title)
       title_type = dcs_title.type
       Title.create(
-        title: dcs_title.value,
+        title: dcs_title.value && dcs_title.value.strip,
         title_type_friendly: (title_type.value if title_type),
         resource_id: se_resource_id
       )
@@ -143,7 +145,7 @@ module StashDatacite
     def add_sd_date(dcs_date)
       date_type = dcs_date.type
       DataciteDate.create(
-        date: dcs_date.value,
+        date: dcs_date.value && dcs_date.value.strip,
         date_type_friendly: (date_type.value if date_type),
         resource_id: se_resource_id
       )
@@ -176,7 +178,7 @@ module StashDatacite
 
     def add_sd_alternate_ident(dcs_alternate_ident)
       AlternateIdentifier.create(
-        alternate_identifier: dcs_alternate_ident.value,
+        alternate_identifier: dcs_alternate_ident.value && dcs_alternate_ident.value.strip,
         alternate_identifier_type: dcs_alternate_ident.type, # a string, not an enum
         resource_id: se_resource_id
       )
@@ -187,7 +189,7 @@ module StashDatacite
       rel_type = dcs_related_ident.relation_type
       scheme_uri = dcs_related_ident.scheme_uri
       RelatedIdentifier.create(
-        related_identifier: dcs_related_ident.value,
+        related_identifier: dcs_related_ident.value && dcs_related_ident.value.strip,
         related_identifier_type_friendly: (ident_type.value if ident_type),
         relation_type_friendly: (rel_type.value if rel_type),
         related_metadata_scheme: dcs_related_ident.related_metadata_scheme,
@@ -215,7 +217,7 @@ module StashDatacite
     def add_sd_rights(dcs_rights)
       rights_uri = dcs_rights.uri
       Right.create(
-        rights: dcs_rights.value,
+        rights: dcs_rights.value && dcs_rights.value.strip,
         rights_uri: (rights_uri.to_s if rights_uri),
         resource_id: se_resource_id
       )
@@ -223,12 +225,28 @@ module StashDatacite
 
     def add_sd_description(dcs_description)
       desc_type = dcs_description.type
-      return if desc_type == Datacite::Mapping::DescriptionType::OTHER && dcs_description.value.start_with?('Data were created with funding')
-      Description.create(
-        description: dcs_description.value,
-        description_type_friendly: (desc_type.value if desc_type),
-        resource_id: se_resource_id
-      )
+      if desc_type == DESCRIPTION_TYPE::OTHER && dcs_description.value.start_with?('Data were created with funding')
+        funding_desc_value = dcs_description.value
+        pat = %r{Data were created with funding from(.*)under grant\(?s?\)?(.*)\.?}m
+        if (md = pat.match(funding_desc_value)) && md.size == 3
+          contrib_name = md[1].gsub(/\s+/m, ' ').strip
+          award_num = md[2].gsub(/\s+/m, ' ').sub(/.$/, '').strip
+          matching_contrib = se_resource.contributors.where(
+            "contributor_name LIKE ? and contributor_type='funder'",
+            "%#{contrib_name.sub(/^[Tt]he ?/, '')}%"
+          ).take
+          if matching_contrib
+            matching_contrib.award_number = award_num
+            matching_contrib.save!
+          end
+        end
+      else
+        Description.create(
+          description: dcs_description.value && dcs_description.value.strip,
+          description_type_friendly: (desc_type.value if desc_type),
+          resource_id: se_resource_id
+        )
+      end
     end
 
     def add_sd_geo_location(dcs_geo_location)
@@ -291,7 +309,7 @@ module StashDatacite
       scheme_uri = dcs_name_identifier.scheme_uri
       value = dcs_name_identifier.value
       sd_name_ident = StashDatacite::NameIdentifier.find_or_create_by(
-        name_identifier: value,
+        name_identifier: value.to_s.strip,
         name_identifier_scheme: dcs_name_identifier.scheme,
         scheme_URI: (scheme_uri if scheme_uri)
       )
@@ -302,7 +320,7 @@ module StashDatacite
       return nil unless dcs_subject
       scheme_uri = dcs_subject.scheme_uri
       StashDatacite::Subject.find_or_create_by(
-        subject: dcs_subject.value,
+        subject: dcs_subject.value && dcs_subject.value.strip,
         subject_scheme: dcs_subject.scheme,
         scheme_URI: (scheme_uri if scheme_uri)
       ).id
