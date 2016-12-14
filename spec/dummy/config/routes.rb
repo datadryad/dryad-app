@@ -1,4 +1,4 @@
 Rails.application.routes.draw do
-
-  mount YourEngineName::Engine => "/your_engine_name"
+  mount StashDatacite::Engine => "/stash_datacite"
+  mount StashEngine::Engine => '/stash_engine'
 end

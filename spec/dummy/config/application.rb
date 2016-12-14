@@ -9,7 +9,7 @@ require "sprockets/railtie"
 # require "rails/test_unit/railtie"
 
 Bundler.require(*Rails.groups)
-require "your_engine_name"
+require "stash_datacite"
 
 module Dummy
   class Application < Rails::Application
