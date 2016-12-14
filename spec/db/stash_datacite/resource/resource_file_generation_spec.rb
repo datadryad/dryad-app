@@ -112,7 +112,27 @@ module StashDatacite
             end
           end
         end
+
+        it 'includes a delete list' do
+          deleted = []
+          resource.file_uploads.each_with_index do |upload, index|
+            if index % 2 == 0
+              upload.file_state = 'deleted'
+              upload.save
+              deleted << upload.upload_file_name
+            end
+          end
+
+          rfg = Resource::ResourceFileGeneration.new(resource, tenant)
+          folder = StashEngine::Resource.uploads_dir
+          @zipfile_path = rfg.generate_merritt_zip(folder, target_url)
+          mrt_delete = zip_entry('mrt-delete.txt')
+          deleted.each do |filename|
+            expect(mrt_delete).to include(filename)
+          end
+        end
       end
+
     end
   end
 end
