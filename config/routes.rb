@@ -35,4 +35,17 @@ Rails.application.routes.draw do
   #  end
   #end
 
+  # want to put this in the main app, but load order seems uncontrollable to make it come after and this file loads
+  # last with no way to mount it since it's not a mountable/namespaced engine.
+
+  # The URL http://blog.arkency.com/2015/02/how-to-split-routes-dot-rb-into-smaller-parts/
+  # might contain a clue, but it would not work for me when I tried a variety of that solution because it still
+  # attempted to load the discovery routes again after loading them manually and made other errors.
+
+  unless Rails.env.development? || Rails.env.test?
+    # see also http://rubyjunky.com/cleaning-up-rails-4-production-logging.html
+    #match ":url" => "application#show_404", :constraints => { :url => /.*/ }, via: :all
+    match '*path', via: :all, to: redirect("#{APP_CONFIG.stash_mount}/404")
+  end
+
 end
