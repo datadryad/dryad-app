@@ -11,10 +11,15 @@ module StashEngine
     # Perhaps specific views would override it in the base application.
     def help
     end
-  end
 
-  # The about controller uses the standard app layout, so the default is here.
-  # Perhaps specific views would override it in the base application.
-  def about
+    # The about controller uses the standard app layout, so the default is here.
+    # Perhaps specific views would override it in the base application.
+    def about
+    end
+
+    # an application 404 page to make it look nicer
+    def app_404
+      render :status => :not_found
+    end
   end
 end
