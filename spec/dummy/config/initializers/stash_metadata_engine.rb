@@ -1,0 +1,1 @@
+APP_CONFIG.metadata_engine.constantize.resource_class = APP_CONFIG.shared_resource_model
