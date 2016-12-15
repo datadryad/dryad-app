@@ -72,4 +72,10 @@ Rails.application.routes.draw do
   mount StashEngine::Engine, at: APP_CONFIG.stash_mount
   mount StashDatacite::Engine, at: '/stash_datacite'
   # mount StashDiscovery::Engine, at: '/stash_discovery'
+
+  unless Rails.env.development? || Rails.env.test?
+    # see also http://rubyjunky.com/cleaning-up-rails-4-production-logging.html
+    match ":url" => "application#show_404", :constraints => { :url => /.*/ }, via: :all
+  end
+
 end
