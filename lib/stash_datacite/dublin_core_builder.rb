@@ -8,6 +8,15 @@ module StashDatacite
         'xmlns:dcterms' => 'http://purl.org/dc/terms/'
       }.freeze
 
+      DC_RELATION_TYPES = {
+        'cites' => 'references',
+        'iscitedby' => 'isReferencedBy',
+        'isnewversionof' => 'isVersionOf',
+        'ispreviousversionof' => 'hasVersion',
+        'ispartof' => 'isPartOf',
+        'haspart' => 'hasPart'
+      }.freeze
+
       attr_reader :resource
       attr_reader :tenant
 
@@ -103,30 +112,8 @@ module StashDatacite
 
       def add_related_identifiers(xml)
         resource.related_identifiers.each do |r|
-          case r.relation_type_friendly
-          when 'IsPartOf'
-            xml.send(:'dcterms:isPartOf', r.related_identifier_type_friendly.to_s + ': ' + r.related_identifier.to_s)
-          when 'HasPart'
-            xml.send(:'dcterms:hasPart', r.related_identifier_type_friendly.to_s + ': ' + r.related_identifier.to_s)
-          when 'IsCitedBy'
-            xml.send(:'dcterms:isReferencedBy', r.related_identifier_type_friendly.to_s + ': ' + r.related_identifier.to_s)
-          when 'Cites'
-            xml.send(:'dcterms:references', r.related_identifier_type_friendly.to_s + ': ' + r.related_identifier.to_s)
-          when 'IsReferencedBy'
-            xml.send(:'dcterms:isReferencedBy', r.related_identifier_type_friendly.to_s + ': ' + r.related_identifier.to_s)
-          when 'References'
-            xml.send(:'dcterms:references', r.related_identifier_type_friendly.to_s + ': ' + r.related_identifier.to_s)
-          when 'IsNewVersionOf'
-            xml.send(:'dcterms:isVersionOf', r.related_identifier_type_friendly.to_s + ': ' + r.related_identifier.to_s)
-          when 'IsPreviousVersionOf'
-            xml.send(:'dcterms:hasVersion', r.related_identifier_type_friendly.to_s + ': ' + r.related_identifier.to_s)
-          when 'IsVariantFormOf'
-            xml.send(:'dcterms:isVersionOf', r.related_identifier_type_friendly.to_s + ': ' + r.related_identifier.to_s)
-          when 'IsOriginalFormOf'
-            xml.send(:'dcterms:hasVersion', r.related_identifier_type_friendly.to_s + ': ' + r.related_identifier.to_s)
-          else
-            xml.send(:'dcterms:relation', r.related_identifier_type_friendly.to_s + ': ' + r.related_identifier.to_s)
-          end
+          dc_relation_type = DC_RELATION_TYPES[r.relation_type] || 'relation'
+          xml.send(:"dcterms:#{dc_relation_type}", "#{r.related_identifier_type_friendly}: #{r.related_identifier}")
         end
       end
     end
