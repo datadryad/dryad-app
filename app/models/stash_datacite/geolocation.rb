@@ -10,6 +10,17 @@ module StashDatacite
 
     amoeba do
       enable
+      customize(lambda do |orig_geo, new_geo|
+        # this duplicates any non-null associated places, points, boxes and associtaes them with the new record
+        items = {:place_id= => :geolocation_place, :point_id= => :geolocation_point, :box_id= => :geolocation_box}
+        items.each_pair do |my_id, my_association|
+          if new_geo.send(my_association) # if it's associated, duplicate it and reset id to new one
+            newone = new_geo.send(my_association).dup
+            newone.save
+            new_geo.send(my_id, newone.id) # set the id for duplicated item in the geolocation record
+          end
+        end
+      end)
     end
 
     after_save :set_geolocation_flag
@@ -92,6 +103,7 @@ module StashDatacite
                                             geolocation_box.ne_latitude, geolocation_box.ne_longitude)
     end
 
+
     private
 
     def destroy_if_empty
@@ -110,9 +122,10 @@ module StashDatacite
     end
 
     def destroy_place_point_box
-      geolocation_place.destroy unless place_id.nil?
-      geolocation_point.destroy unless point_id.nil?
-      geolocation_box.destroy unless box_id.nil?
+      GeolocationPlace.destroy(place_id) unless place_id.nil? || GeolocationPlace.where(id: place_id).count < 1
+      GeolocationPoint.destroy(point_id) unless point_id.nil? || GeolocationPoint.where(id: point_id).count < 1
+      GeolocationBox.destroy(box_id) unless box_id.nil? || GeolocationBox.where(id: box_id).count < 1
     end
+
   end
 end
