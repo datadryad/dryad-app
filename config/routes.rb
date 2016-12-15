@@ -71,11 +71,11 @@ Rails.application.routes.draw do
 
   mount StashEngine::Engine, at: APP_CONFIG.stash_mount
   mount StashDatacite::Engine, at: '/stash_datacite'
-  # mount StashDiscovery::Engine, at: '/stash_discovery'
 
-  unless Rails.env.development? || Rails.env.test?
-    # see also http://rubyjunky.com/cleaning-up-rails-4-production-logging.html
-    match ":url" => "application#show_404", :constraints => { :url => /.*/ }, via: :all
-  end
+  # we have to do this to make the geoblacklight routes come before catchall
+  # http://blog.arkency.com/2015/02/how-to-split-routes-dot-rb-into-smaller-parts/
+  #instance_eval(File.read(StashDiscovery::Engine.root.join("config/routes.rb")))
+
+  get 'xtf/search', to: 'catalog#index'
 
 end
