@@ -10,7 +10,7 @@ module StashDatacite
         tenant_id: 'dataone'
       )
       resource = StashEngine::Resource.create(user_id: user.id)
-      @contrib = Contributor.new(
+      @contrib = Contributor.create(
         resource_id: resource.id,
         contributor_name: 'Elvis Presley',
         contributor_type: 'supervisor'
@@ -60,6 +60,3 @@ module StashDatacite
     end
   end
 end
-
-
-# 'contactperson','datacollector','datacurator','datamanager','distributor','editor','funder','hostinginstitution','producer','projectleader','projectmanager','projectmember','registrationagency','registrationauthority','relatedperson','researcher','researchgroup','rightsholder','sponsor','supervisor','workpackageleader','other'
