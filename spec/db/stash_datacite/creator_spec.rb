@@ -2,6 +2,7 @@ require 'db_spec_helper'
 
 module StashDatacite
   describe Creator do
+    attr_reader :resource
     attr_reader :creator
     before(:each) do
       user = StashEngine::User.create(
@@ -9,12 +10,15 @@ module StashDatacite
         email: 'lmuckenhaupt@example.edu',
         tenant_id: 'dataone'
       )
-      resource = StashEngine::Resource.create(user_id: user.id)
+      @resource = StashEngine::Resource.create(user_id: user.id)
       @creator = Creator.create(
         resource_id: resource.id,
         creator_first_name: 'Elvis',
         creator_last_name: 'Presley',
       )
+    end
+
+    describe 'scopes' do
     end
 
     describe 'affiliations' do
@@ -26,6 +30,14 @@ module StashDatacite
         creator.affiliation_ids = affiliations.map(&:id)
         creator.save
         expect(creator.affiliations.count).to eq(affiliations.size)
+      end
+
+      describe '#affiliation_filled' do
+        it 'returns creators with affiliations' do
+          Creator.create(resource_id: resource.id, creator_first_name: 'Priscilla', creator_last_name: 'Presley')
+          filled = Creator.affiliation_filled.to_a
+          expect(filled).to contain_exactly(creator)
+        end
       end
 
       describe '#affiliation_id' do
