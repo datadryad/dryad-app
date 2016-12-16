@@ -7,6 +7,7 @@ StashEngine::Engine.routes.draw do
       get 'review'
       get 'upload'
       get 'submission'
+      put 'increment_downloads'
     end
   end
   resources :tenants, only: [:index, :show]
