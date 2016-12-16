@@ -33,13 +33,6 @@ module StashDatacite
         !@resource.resource_type.nil?
       end
 
-      def creator
-        num_creators = @resource.creators.count
-        return false if num_creators < 1
-        # the completely filled in creators must equal number of creators
-        @resource.creators.filled.count == num_creators
-      end
-
       def creator_name
         num_creators = @resource.creators.count
         return false if num_creators < 1

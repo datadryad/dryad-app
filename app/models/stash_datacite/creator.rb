@@ -12,11 +12,6 @@ module StashDatacite
 
     before_save :strip_whitespace
 
-    scope :filled, -> {
-      joins(:affiliations)
-        .where("TRIM(IFNULL(creator_first_name,'')) <> '' AND TRIM(IFNULL(creator_last_name,'')) <> ''")
-    }
-
     scope :names_filled, -> { where("TRIM(IFNULL(creator_first_name,'')) <> ''") }
 
     scope :affiliation_filled, -> {
