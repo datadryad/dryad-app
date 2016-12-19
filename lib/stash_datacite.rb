@@ -7,6 +7,7 @@ module StashDatacite
     @@resource_class.constantize
   end
 
+  # TODO: stop injecting this, just hard-code & load the patch in an initializer
   def self.resource_class=(my_class)
     @@resource_class = my_class
     Rails.application.config.to_prepare do
