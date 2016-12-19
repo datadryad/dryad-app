@@ -29,10 +29,10 @@ feature "User lands on metadata entry page and navigates through it" do
     expect(page).to have_content 'Describe Your Datasets'
 
     #Data Type
-    select 'Image', from: 'Type of Data'
+    select 'Multiple Types', from: 'Type of Data'
 
     #Title
-    fill_in 'Title', with: 'Test Dataset - In Identification Information Section'
+    fill_in 'Title', with: 'Test Dataset - Best practices for creating unique datasets'
 
     #Author
     fill_in 'First Name', with: 'Test'
@@ -57,32 +57,33 @@ feature "User lands on metadata entry page and navigates through it" do
     # page.should have_content("Royal Norwegian Embassy in London")
     fill_in 'Award Number', with: '21-10-513021'
 
-    #Keywords
-    fill_in 'Keywords', with: 'testing all, possible options'
-
-    #Methods
-    fill_in 'Methods', with: "Lorem ipsum dolor sit amet, consectetur"\
-    "adipiscing elit. Maecenas posuere quis ligula eu luctus."\
-    "Donec laoreet sit amet lacus ut efficitur. Donec mauris erat,"\
-    "aliquet eu finibus id, lobortis at ligula. Donec iaculis orci nisl,"\
-    "quis vulputate orci efficitur nec. Proin imperdiet in lorem eget sodales."\
-    "Etiam blandit eget quam nec tristique. In hac habitasse platea dictumst."\
-    "Integer id nunc in purus sagittis dapibus sed ac augue. Aenean eu lobortis turpis."\
-
-    #Usage Notes
-    fill_in 'Usage Notes', with: "Lorem ipsum dolor sit amet, consectetur"\
-    "adipiscing elit. Maecenas posuere quis ligula eu luctus."\
-    "Donec laoreet sit amet lacus ut efficitur. Donec mauris erat,"\
-    "aliquet eu finibus id, lobortis at ligula. Donec iaculis orci nisl,"\
-    "quis vulputate orci efficitur nec. Proin imperdiet in lorem eget sodales."\
-    "Etiam blandit eget quam nec tristique. In hac habitasse platea dictumst."\
-    "Integer id nunc in purus sagittis dapibus sed ac augue. Aenean eu lobortis turpis."\
-
     #Related work(s)
     select 'is cited by', from: 'related_identifier[relation_type]'
     select 'DOI', from: 'related_identifier[related_identifier_type]'
     fill_in 'Identifier', with: 'gov.noaa.class:AVHRR'
     click_link 'add another related work'
+
+    find('summary', text: "Location Information (optional)").click
+
+    find('#geo_point').click
+
+    #Geolocation Points
+    fill_in 'geolocation_point[latitude]', with: '37.801239'
+    fill_in 'geolocation_point[longitude]', with: '-122.258301'
+    click_button 'Add'
+
+    expect(page).to have_css('div.c-locations__point', text: '37.801239, -122.258301' )
+
+    find('#geo_box').click
+
+    #Geolocation Boxes
+    fill_in 'geolocation_box[sw_latitude]', with: '25.8371'
+    fill_in 'geolocation_box[sw_longitude]', with: '-106.6460'
+    fill_in 'geolocation_box[ne_latitude]', with: '36.5007'
+    fill_in 'geolocation_box[ne_longitude]', with: '-93.5083'
+    click_button 'Add'
+
+    expect(page).to have_css('div.c-locations__area', text: 'SW 25.8371, -106.646 NE 36.5007, -93.5083')
 
     click_link 'Proceed to Upload'
 
