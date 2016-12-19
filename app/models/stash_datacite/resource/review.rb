@@ -1,4 +1,5 @@
 # basing this structure on that suggested in http://vrybas.github.io/blog/2014/08/15/a-way-to-organize-poros-in-rails/
+# TODO: is this class really necessary? seems like we could add about four methods in resource_patch.rb and be done.
 module StashDatacite
   module Resource
     class Review
@@ -52,10 +53,6 @@ module StashDatacite
 
       def file_uploads
         @file_uploads = @resource.current_file_uploads
-      end
-
-      def image_uploads
-        @image_uploads = @resource.image_uploads
       end
 
       def geolocation_points
