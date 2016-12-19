@@ -6,11 +6,16 @@ module StashEngine
     def self.included(c)
       c.helper_method :current_tenant, :current_tenant_simple, :current_user, :metadata_engine, :metadata_url_helpers,
                       :metadata_render_path, :stash_url_helpers, :discovery_url_helpers, :landing_url,  :field_suffix,
-                      :logo_path, :contact_us_url, :display_br
+                      :logo_path, :contact_us_url, :display_br, :formatted_date
     end
 
     def metadata_url_helpers
       metadata_engine::Engine.routes.url_helpers
+    end
+
+    def formatted_date(t)
+      return 'Not available' if t.blank?
+      t.strftime("%B %e, %Y")
     end
 
     # generate a render path in the metadata engine

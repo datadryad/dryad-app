@@ -3128,6 +3128,9 @@ html.no-multiplebgs .o-banner {
 .o-metadata__orcid {
   text-transform: uppercase; }
 
+.o-metadata__group2-item {
+  margin-bottom: 0.5em; }
+
 .o-metrics {
   display: -ms-flexbox;
   display: flex;
