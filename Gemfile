@@ -1,3 +1,4 @@
+
 source 'https://rubygems.org'
 
 # Declare your gem's dependencies in stash_datacite.gemspec.
@@ -20,3 +21,5 @@ gem 'datacite-mapping' #, git: 'https://github.com/CDLUC3/datacite-mapping.git'
 gem 'kaminari'
 gem 'stash-wrapper' #, git: 'https://github.com/CDLUC3/stash-wrapper.git'
 gem 'rubyzip', '>= 1.0.0' # will load new rubyzip version
+gem 'stash_engine', git: 'https://github.com/CDLUC3/stash_engine.git', branch: 'development', group: [:development, :test]
+gem 'stash_discovery', git: 'https://github.com/CDLUC3/stash_discovery.git', branch: 'development', group: [:development, :test]

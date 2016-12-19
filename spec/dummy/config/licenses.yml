@@ -1,0 +1,11 @@
+# this file has license information starting with an identifier for the license
+# and then uri and name
+
+#please do no user dashes in identifiers since they make problems for templating
+cc0:
+  uri: http://creativecommons.org/publicdomain/zero/1.0/
+  name: Creative Commons Public Domain License
+
+cc_by:
+  uri: http://creativecommons.org/licenses/by/4.0/
+  name: Creative Commons Attribution 4.0 International
