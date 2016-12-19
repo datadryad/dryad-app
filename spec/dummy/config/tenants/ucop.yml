@@ -10,8 +10,8 @@ default: &default
   abbreviation: "UC"
   short_name: "UC Office of the President"
   long_name: "University of California, Office of the President"
-  full_domain: "dash2-dev.ucop.edu"
-  domain_regex: "ucop.edu$"
+  full_domain: "localhost:3000"
+  domain_regex: "localhost:3000$"
   tenant_id: ucop
   identifier_service:
     shoulder: "doi:10.5072/FK2"
