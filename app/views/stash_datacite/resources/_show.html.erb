@@ -2,7 +2,10 @@
   <%= @schema_org_ds %>
 </script>
   <%= render partial: "stash_datacite/titles/show", locals: { title: @review.title } %>
-  <%= render partial: "stash_datacite/creators/show", locals: { creators: @review.creators } %>
+  <div class="t-landing__metadata o-metadata">
+    <%= render partial: "stash_datacite/creators/show", locals: { creators: @review.creators } %>
+    <%= render partial: "stash_datacite/publishers/publication_info", locals: {resource: @resource } %>
+  </div>
 
   <section class="o-section">
   <%= render partial: "stash_datacite/shared/citations",
