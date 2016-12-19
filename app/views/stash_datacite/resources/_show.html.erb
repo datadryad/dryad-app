@@ -1,11 +1,9 @@
 <script type="application/ld+json">
   <%= @schema_org_ds %>
 </script>
-<div class="t-landing__data-type"><%= ( @resource.resource_type ? @resource.resource_type.resource_type_general : '') %></div>
-  <h2 class="o-heading__level1"><%= @review.title.title %></h2>
-  <%# render partial: "stash_datacite/resource_types/show", locals: { resource_type: @review.resource_type } %>
-  <%# render partial: "stash_datacite/titles/show", locals: { title: @review.title } %>
+  <%= render partial: "stash_datacite/titles/show", locals: { title: @review.title } %>
   <%= render partial: "stash_datacite/creators/show", locals: { creators: @review.creators } %>
+
   <section class="o-section">
   <%= render partial: "stash_datacite/shared/citations",
              locals: { creators: @review.creators, title: @review.title,
@@ -15,18 +13,23 @@
                        publisher: "#{@review.publisher}",
                        publication_years: @resource.publication_years } %>
   </section>
-  <%= render partial: "stash_datacite/descriptions/show", locals: { abstract: @review.abstract, methods: @review.methods, other: @review.other } %>
+  <%= render partial: "stash_datacite/descriptions/show", locals: { abstract: @review.abstract,
+                                                                    methods: @review.methods, other: @review.other } %>
   <%#= render partial: "stash_datacite/subjects/show", locals: { subjects: @review.subjects } %>
   <%= render partial: "stash_datacite/contributors/show", locals: { contributors: @review.contributors } %>
-  <%= render partial: "stash_datacite/related_identifiers/show", locals: { related_identifiers: @review.related_identifiers } %>
+  <%= render partial: "stash_datacite/related_identifiers/show",
+             locals: { related_identifiers: @review.related_identifiers } %>
 
   <% if @review.no_geolocation_data == false %>
     <h3 class="o-heading__level2">Location</h3>
     <div id="map_review" class="o-map"></div>
     <div class="c-locations">
-      <%= render partial: "stash_datacite/geolocation_points/show", locals: { geolocation_points: @review.geolocation_points } %>
-      <%= render partial: "stash_datacite/geolocation_boxes/show", locals: { geolocation_boxes: @review.geolocation_boxes } %>
-      <%= render partial: "stash_datacite/geolocation_places/show", locals: { geolocation_places: @review.geolocation_places } %>
+      <%= render partial: "stash_datacite/geolocation_points/show",
+                 locals: { geolocation_points: @review.geolocation_points } %>
+      <%= render partial: "stash_datacite/geolocation_boxes/show",
+                 locals: { geolocation_boxes: @review.geolocation_boxes } %>
+      <%= render partial: "stash_datacite/geolocation_places/show",
+                 locals: { geolocation_places: @review.geolocation_places } %>
     </div>
   <% end %>
 <script>
