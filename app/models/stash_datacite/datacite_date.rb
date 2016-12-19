@@ -13,6 +13,9 @@ module StashDatacite
 
     enum date_type: DateTypesEnum
 
+    # with enum the types are automatically scopes such as available
+    #scope :available, -> { where(date_type: 'available')}
+
     # these are hacks around rails method problems.
     def date_type_friendly=(type)
       # self required here to work correctly
