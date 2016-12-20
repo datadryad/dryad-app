@@ -3,24 +3,26 @@ require 'db_spec_helper'
 module StashDatacite
   module Resource
     describe Review do
+      attr_reader :user
+      attr_reader :stash_wrapper
+      attr_reader :dcs_resource
       attr_reader :resource
       attr_reader :review
 
-      before(:each) do
-        user = StashEngine::User.create(
+      before(:all) do
+        @user = StashEngine::User.create(
           uid: 'lmuckenhaupt-example@example.edu',
           email: 'lmuckenhaupt@example.edu',
           tenant_id: 'dataone'
         )
 
         dc3_xml = File.read('spec/data/archive/mrt-datacite.xml')
-        dcs_resource = Datacite::Mapping::Resource.parse_xml(dc3_xml)
+        @dcs_resource = Datacite::Mapping::Resource.parse_xml(dc3_xml)
         stash_wrapper_xml = File.read('spec/data/archive/stash-wrapper.xml')
-        stash_wrapper = Stash::Wrapper::StashWrapper.parse_xml(stash_wrapper_xml)
+        @stash_wrapper = Stash::Wrapper::StashWrapper.parse_xml(stash_wrapper_xml)
+      end
 
-        # @tenant = double(StashEngine::Tenant)
-        # allow(tenant).to receive(:short_name).and_return('DataONE')
-
+      before(:each) do
         @resource = ResourceBuilder.new(
           user_id: user.id,
           dcs_resource: dcs_resource,
@@ -100,9 +102,7 @@ module StashDatacite
       end
 
       it 'identifies the absence of geolocation data' do
-        resource.geolocations.to_a.each do |loc|
-          loc.destroy
-        end
+        resource.geolocations.to_a.each(&:destroy)
         @review = Review.new(resource)
         expect(review.no_geolocation_data).to eq(true)
       end
