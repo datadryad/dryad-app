@@ -56,4 +56,3 @@ describe StashDatacite do
     end
   end
 end
-

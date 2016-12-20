@@ -3,7 +3,6 @@ require 'spec_helper'
 module Datacite
   module Mapping
     describe DataciteXMLBuilder do
-
       attr_reader :doi_value
       attr_reader :total_size_bytes
       attr_reader :dc3_xml
@@ -15,7 +14,7 @@ module Datacite
         stash_wrapper = Stash::Wrapper::StashWrapper.parse_xml(stash_wrapper_xml)
 
         doi_value = '10.15146/R3RG6G'
-        total_size_bytes = 3286679
+        total_size_bytes = 3_286_679
 
         @dc3_xml = File.read('spec/data/archive/mrt-datacite.xml')
         @dcs_resource = Datacite::Mapping::Resource.parse_xml(dc3_xml)

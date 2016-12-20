@@ -23,4 +23,3 @@ module StashDatacite
     end
   end
 end
-

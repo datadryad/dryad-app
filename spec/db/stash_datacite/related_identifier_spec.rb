@@ -24,7 +24,7 @@ module StashDatacite
             related_identifier: related_doi_value
           )
           rel_type_friendly = RelatedIdentifier::RelationTypesStrToFull[rel_type]
-          rel_type_english = rel_type_friendly.underscore.gsub('_', ' ').downcase
+          rel_type_english = rel_type_friendly.underscore.tr('_', ' ').downcase
 
           str = rel_id.to_s
           expect(str).to include(rel_type_english)

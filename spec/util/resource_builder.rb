@@ -4,11 +4,9 @@ require 'datacite/mapping'
 require 'stash/wrapper'
 require 'time'
 
-
 # Borrowed from stash_migrator
 module StashDatacite
   class ResourceBuilder # rubocop:disable Metrics/ClassLength
-
     DESCRIPTION_TYPE = Datacite::Mapping::DescriptionType
 
     attr_reader :user_id
@@ -51,7 +49,7 @@ module StashDatacite
       se_resource.id
     end
 
-    def populate_se_resource! # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
+    def populate_se_resource! # rubocop:disable Metrics/AbcSize
       set_sd_identifier(dcs_resource.identifier)
       stash_files.each { |stash_file| add_stash_file(stash_file) }
       dcs_resource.creators.each { |dcs_creator| add_sd_creator(dcs_creator) }
@@ -184,7 +182,7 @@ module StashDatacite
       )
     end
 
-    def add_sd_related_ident(dcs_related_ident) # rubocop:disable Metrics/MethodLength
+    def add_sd_related_ident(dcs_related_ident)
       ident_type = dcs_related_ident.identifier_type
       rel_type = dcs_related_ident.relation_type
       scheme_uri = dcs_related_ident.scheme_uri
@@ -227,7 +225,7 @@ module StashDatacite
       desc_type = dcs_description.type
       if desc_type == DESCRIPTION_TYPE::OTHER && dcs_description.value.start_with?('Data were created with funding')
         funding_desc_value = dcs_description.value
-        pat = %r{Data were created with funding from(.*)under grant\(?s?\)?(.*)\.?}m
+        pat = /Data were created with funding from(.*)under grant\(?s?\)?(.*)\.?/m
         if (md = pat.match(funding_desc_value)) && md.size == 3
           contrib_name = md[1].gsub(/\s+/m, ' ').strip
           award_num = md[2].gsub(/\s+/m, ' ').sub(/.$/, '').strip

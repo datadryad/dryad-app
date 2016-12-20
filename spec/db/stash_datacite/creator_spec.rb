@@ -14,7 +14,7 @@ module StashDatacite
       @creator = Creator.create(
         resource_id: resource.id,
         creator_first_name: 'Elvis',
-        creator_last_name: 'Presley',
+        creator_last_name: 'Presley'
       )
     end
 

@@ -28,12 +28,10 @@ module StashDatacite
           tenant_id: 'dataone'
         )
         @tenant = double(StashEngine::Tenant)
-        allow(tenant).to receive(:identifier_service).and_return({
-          shoulder: 'doi:10.15146/R3',
-          account: 'stash',
-          password: 'stash',
-          id_scheme: 'doi'
-        })
+        allow(tenant).to receive(:identifier_service).and_return(shoulder: 'doi:10.15146/R3',
+                                                                 account: 'stash',
+                                                                 password: 'stash',
+                                                                 id_scheme: 'doi')
         allow(tenant).to receive(:short_name).and_return('DataONE')
 
         @stash_wrapper_xml = File.read('spec/data/archive/stash-wrapper.xml')
@@ -116,11 +114,10 @@ module StashDatacite
         it 'includes a delete list' do
           deleted = []
           resource.file_uploads.each_with_index do |upload, index|
-            if index % 2 == 0
-              upload.file_state = 'deleted'
-              upload.save
-              deleted << upload.upload_file_name
-            end
+            next unless index.even?
+            upload.file_state = 'deleted'
+            upload.save
+            deleted << upload.upload_file_name
           end
 
           rfg = Resource::ResourceFileGeneration.new(resource, tenant)
@@ -132,7 +129,6 @@ module StashDatacite
           end
         end
       end
-
     end
   end
 end
