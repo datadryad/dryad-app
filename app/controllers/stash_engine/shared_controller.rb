@@ -15,6 +15,7 @@ module StashEngine
 
     def formatted_date(t)
       return 'Not available' if t.blank?
+      t = t.to_time if t.class == String
       t.strftime("%B %e, %Y")
     end
 

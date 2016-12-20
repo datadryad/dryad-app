@@ -4,8 +4,8 @@
 <h1 class="o-heading__level1">Upload Your Files <span class="t-upload__heading-optional">(optional)</span></h1>
 
 <p>
-  Size limits: <%= filesize(StashEngine.app.max_file_size) %> per file,
-  <%= filesize(StashEngine.app.max_submission_size) %> in total. To upload larger datasets,
+  Size limits: <%= filesize(current_tenant.max_file_size) %> per file,
+  <%= filesize(current_tenant.max_submission_size) %> in total. To upload larger datasets,
   <%= link_to "contact us", contact_us_url, class: 'o-link__primary' %>.
 </p>
 
@@ -48,8 +48,8 @@
   <div class="bad_upload" id="over_single_size"></div>
   <div class="bad_upload" id="over_files_size" style="display: none;">
     <p>
-      Your file size is over <%= filesize(StashEngine.app.max_submission_size) %>. You must remove some files to bring your total
-      file size under this limit before you can upload.
+      Your file size is over <%= filesize(app_config.max_submission_size) %>. You must remove some files to bring your total
+      for newly submitted files under this limit before you can upload.
     </p>
   </div>
 
@@ -79,22 +79,30 @@
     $('#fileupload').fileupload({
       maxChunkSize: 1048576,
       //acceptFileTypes: /(\.|\/)(gif|jpe?g|png|tif?f)$/i
-      maxFileSize: <%= StashEngine.app.max_file_size %>,// 2GB,
+      maxFileSize: <%= current_tenant.max_file_size %>,// 2GB,
       //maxFileSize: 1048576 ,// 1MB,
-      limitMultiFileUploadSize: <%= StashEngine.app.max_submission_size %>
+      limitMultiFileUploadSize: <%= current_tenant.max_submission_size %>
     });
   });
 
   function maxTotalSize(){
-    return <%= StashEngine.app.max_submission_size %>;
+    return <%= app_config.max_total_version_size %>;
+  }
+
+  function maxSubmissionSize(){
+    return <%= app_config.max_submission_size %>;
   }
 
   function maxFileSize(){
-    return <%= StashEngine.app.max_file_size %>;
+    return <%= current_tenant.max_file_size %>;
   }
 
   function overTotalSize(mySize){
     return (mySize > maxTotalSize());
+  }
+
+  function overSubmissionSize(mySize){
+    return (mySize > maxSubmissionSize());
   }
 
   function overFileSize(mySize){
