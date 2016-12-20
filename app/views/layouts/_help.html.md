@@ -135,8 +135,8 @@ readme.txt file archived alongside the dataset files.
 
 #### What are the size limits?
 
-There is a limit of <%= filesize(StashEngine.app.max_file_size) %> per file and
-<%= filesize(StashEngine.app.max_submission_size) %> per dataset. All data files are
+There is a limit of <%= filesize(current_tenant.max_file_size) %> per file and
+<%= filesize(current_tenant.max_total_version_size) %> per dataset. All data files are
 stored in the Merritt Repository. More information about the Merritt
 Repository Service is available in the white paper
 "[UC3, Merritt and Long-term Preservation](https://merritt.cdlib.org/d/ark%3A%2F13030%2Fm52f7p63/2/producer%2FUC3-Merritt-preservation-latest.pdf)."
