@@ -73,7 +73,8 @@ $(function () {
   $('#upload_all').click( function(e){
     if(overTotalSize(totalSize())){
       e.preventDefault();
-      alert('You are attempting to upload more than ' + formatSizeUnits(maxTotalSize()) + '.  Please remove some files to get under this limit.');
+      alert('You are attempting to create a version with more than ' + formatSizeUnits(maxTotalSize()) +
+          '.  Please remove some files to get under this limit for total size.');
       return false;
     }
     if(overFileSize(largestSize())) {
@@ -107,9 +108,9 @@ function formatSizeUnits(bytes) {
     }
 }
 
-/* The size is complicated since we are showing rows in many states in the same table with div classes around row:
+/* The size is complicated since we are showing rows in many states in the same table with div classes around rows:
    .js-copied_file    --    A file previously uploaded from an earlier version of dataset with entry in database
-   .js-unuploaded     --    A file dropped but does not exist on server side
+   .js-unuploaded     --    A file dropped but does not exist on server side and hasn't been uploaded yet
    .js-created_file   --    A file that has been dropped and uploaded to the server in this version
    .js-deleted_file   --    A file the user wants to remove from this version but existed previously
               Note that files newly uploaded (or not uploaded yet) and deleted disappear from the table forever
@@ -119,10 +120,21 @@ function formatSizeUnits(bytes) {
    may need special handling after uploading for these files which are replacements.  Not sure how deletion of
    these files works.
 
-   Size would be copied, unuploaded (dropped) and created files, assuming only one of each unique filename is shown.
+   Total size would be copied, un-uploaded (drag'n'dropped) and created files, assuming only one of each unique filename.
  */
 function totalSize(){
   nums = $('div.js-created_file .js-hidden_bytes,div.js-copied_file .js-hidden_bytes,div.js-unuploaded .js-hidden_bytes')
+      .map(function(){ return parseInt(this.innerHTML); });
+  var total = 0;
+  $.each(nums, function( index, value ) {
+    total += value;
+  });
+  return total;
+}
+
+// Just the new stuff to be uploaded into this version
+function uploadSize(){
+  nums = $('div.js-created_file .js-hidden_bytes,div.js-unuploaded .js-hidden_bytes')
       .map(function(){ return parseInt(this.innerHTML); });
   var total = 0;
   $.each(nums, function( index, value ) {
@@ -186,9 +198,10 @@ function largestSize(){
 
 // updates the size and other UI state updates after changes to the file list
 function updateUiStates(){
-  $('#upload_total').text("Total: " + formatSizeUnits(totalSize()));
+  $('#upload_total_all').text("Total: " + formatSizeUnits(totalSize()));
+  $('#upload_in_version').text("New in this version: " + formatSizeUnits(uploadSize()));
 
-  if(overTotalSize(totalSize()) || overFileSize(largestSize())){
+  if(overTotalSize(totalSize()) || overFileSize(largestSize()) || overSubmissionSize(uploadSize())){
     $('#upload_total').removeClass().addClass('c-upload__total-size--warning');
   }else{
     $('#upload_total').removeClass().addClass('c-upload__total-size');
@@ -216,6 +229,14 @@ function updateUiStates(){
     $('#upload_all').hide();
   }else{
     $('#over_files_size').hide();
+    if(!uploadInProgress && filesWaitingForUpload()) $('#upload_all').show();
+  }
+
+  if(overSubmissionSize(uploadSize())){
+    $('#over_upload_size').show();
+    $('#upload_all').hide();
+  }else{
+    $('#over_upload_size').hide();
     if(!uploadInProgress && filesWaitingForUpload()) $('#upload_all').show();
   }
 }
