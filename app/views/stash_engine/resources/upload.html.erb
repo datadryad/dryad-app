@@ -48,7 +48,7 @@
   <div class="bad_upload" id="over_single_size"></div>
   <div class="bad_upload" id="over_files_size" style="display: none;">
     <p>
-      Your file size is over <%= filesize(app_config.max_submission_size) %>. You must remove some files to bring your total
+      Your file size is over <%= filesize(current_tenant.max_submission_size) %>. You must remove some files to bring your total
       for newly submitted files under this limit before you can upload.
     </p>
   </div>
@@ -86,11 +86,11 @@
   });
 
   function maxTotalSize(){
-    return <%= app_config.max_total_version_size %>;
+    return <%= current_tenant.max_total_version_size %>;
   }
 
   function maxSubmissionSize(){
-    return <%= app_config.max_submission_size %>;
+    return <%= current_tenant.max_submission_size %>;
   }
 
   function maxFileSize(){
