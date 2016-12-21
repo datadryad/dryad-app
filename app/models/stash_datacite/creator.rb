@@ -12,11 +12,6 @@ module StashDatacite
 
     before_save :strip_whitespace
 
-    scope :filled, -> {
-      joins(:affiliations)
-        .where("TRIM(IFNULL(creator_first_name,'')) <> '' AND TRIM(IFNULL(creator_last_name,'')) <> ''")
-    }
-
     scope :names_filled, -> { where("TRIM(IFNULL(creator_first_name,'')) <> ''") }
 
     scope :affiliation_filled, -> {
@@ -32,16 +27,16 @@ module StashDatacite
 
     # convenience methods to set orcid name identifier
     def orcid_id=(orcid)
-      #remove if not set and an orcid exists
-      if orcid.blank? && !name_identifier_id.blank? && name_identifier.name_identifier_scheme == 'ORCID'
-        self.name_identifier_id = nil
-        return
+      if orcid.blank?
+        if (name_id = name_identifier) && name_id.name_identifier_scheme == 'ORCID'
+          self.name_identifier_id = nil
+        end
+      else
+        name_id = NameIdentifier.find_or_create_by(name_identifier: orcid, name_identifier_scheme: 'ORCID') do |ni|
+          ni.scheme_URI = 'http://orcid.org'
+        end
+        self.name_identifier_id = name_id.id
       end
-      name_id = NameIdentifier.find_or_create_by(name_identifier: orcid, name_identifier_scheme: 'ORCID') do |ni|
-        ni.name_identifier_scheme = 'ORCID'
-        ni.scheme_URI = 'http://orcid.org'
-      end
-      self.name_identifier_id = name_id.id
     end
 
     def orcid_id

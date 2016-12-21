@@ -1,5 +1,12 @@
 <% unless creators.nil? %>
   <% creators.each do |creator| %>
-      <p><%= [creator.creator_full_name, creator.affiliation.try(:smart_name), creator.orcid_id].reject(&:blank?).join(", ") %></p>
+    <div class="o-metadata__group1">
+      <%= ([ (creator.creator_full_name ?
+              "<span class='o-metadata__author'>#{h(creator.creator_full_name)}</span>" : nil) ] +
+         creator.affiliations.map{|i|
+              (i.try(:smart_name) ? "<span class='o-metadata__affiliation'>#{h(i.try(:smart_name))}</span>" : nil) } +
+         [ (creator.orcid_id ? "<span class='o-metadata__orcid'>#{h(creator.orcid_id)}</span>" : nil) ])
+          .flatten.reject(&:blank?).join(", ").html_safe %>
+    </div>
   <% end %>
 <% end %>
