@@ -9,30 +9,13 @@ module StashDatacite
     }
 
     def self.geo_places(resource_id)
-      places = []
-      geo_places = GeolocationPlace.from_resource_id(resource_id)
-      unless geo_places.blank?
-        geo_places.each do |geo_pl|
-          coordinates = geo_pl.geo_place_coordinates(resource_id)
-          geo_hash = { geolocation_place: geo_pl.geo_location_place, latitude: coordinates[0],
-                       longitude: coordinates[1], id: geo_pl.id }
-          places << geo_hash
-        end
-      end
-      places
-    end
-
-    def geo_place_coordinates(_resource_id)
-      if geolocation.geolocation_point.present?
-        latitude = geolocation.geolocation_point.latitude
-        longitude = geolocation.geolocation_point.longitude
-        return [latitude, longitude]
-      else
-        []
+      GeolocationPlace.from_resource_id(resource_id).map do |place|
+        geo_hash = { geolocation_place: place.geo_location_place }
+        point = (loc = place.geolocation) && loc.geolocation_point
+        point ? geo_hash.merge({ latitude: point.latitude, longitude: point.longitude }) : geo_hash
       end
     end
 
-    #returns a bounding box string for use with Javascript
     def bounding_box_str
       return nil unless geolocation
       return geolocation.geolocation_box.bounding_box_str if geolocation.geolocation_box
