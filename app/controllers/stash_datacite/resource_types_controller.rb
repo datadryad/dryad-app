@@ -25,7 +25,8 @@ module StashDatacite
     def update
       respond_to do |format|
         if @resource_type.update(resource_type_params)
-          @resource_type.resource_type = @resource_type.resource_type_general
+          # @resource_type.resource_type = @resource_type.resource_type_general
+          # not overwriting any existing resource_type values
           @resource_type.save
           format.js { render template: 'stash_datacite/shared/update.js.erb' }
         else

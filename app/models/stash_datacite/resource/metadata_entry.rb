@@ -12,8 +12,7 @@ module StashDatacite
         @resource_type = if resource_type.present?
                            resource_type
                          else
-                           ResourceType.create(resource_id: @resource.id, resource_type: 'dataset',
-                                               resource_type_general: 'dataset')
+                           ResourceType.create(resource_id: @resource.id, resource_type_general: 'dataset')
                          end
       end
 
