@@ -113,9 +113,7 @@ module StashEngine
         it 'sets the state' do
           new_state_value = 'published'
           resource.current_state = new_state_value
-          new_state_id = resource.current_resource_state_id
-          expect(new_state_id).not_to eq(state.id)
-          new_state = ResourceState.find(new_state_id)
+          new_state = resource.current_resource_state
           expect(new_state.resource_state).to eq(new_state_value)
         end
         it 'doesn\'t create unnecesary values' do
@@ -137,8 +135,6 @@ module StashEngine
           %w(processing error embargoed published).each do |state_value|
             resource.current_state = state_value
             new_state = resource.current_resource_state
-            new_state_id = new_state.id
-            expect(new_state_id).not_to eq(state.id)
             expect(new_state.resource_state).to eq(state_value)
           end
         end
