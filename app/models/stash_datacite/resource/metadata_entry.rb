@@ -84,7 +84,8 @@ module StashDatacite
       end
 
       def new_geolocation_place
-        @geolocation_place = GeolocationPlace.new(resource_id: @resource.id)
+        @geolocation = Geolocation.new(resource_id: @resource.id)
+        @geolocation_place = @geolocation.build_geolocation_place
       end
 
       def geolocation_places
