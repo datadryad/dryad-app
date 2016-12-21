@@ -31,6 +31,8 @@ module StashDatacite
           stash_files: stash_wrapper.inventory.files,
           upload_date: stash_wrapper.version_date
         ).build
+        resource.download_uri = "https://repo.example.edu/#{resource.identifier_str}.zip"
+        resource.save
 
         landing_page_url = "https://stash-dev.example.edu/#{resource.identifier_str}"
         citation = 'Chen, Hao (2016), A Zebrafish Model for Studies on Esophageal Epithelial Biology, Dataset, https://dx.doi.org/10.15146/R3RG6G'

@@ -19,6 +19,11 @@
     "givenName": "Hao",
     "familyName": "Chen"
   },
+  "distribution": {
+    "@type": "DataDownload",
+    "fileFormat": "application/zip",
+    "contentURL": "https://repo.example.edu/doi:10.15146/R3RG6G.zip"
+  },
   "includedInDataCatalog": "https://merritt.cdlib.org",
   "temporalCoverage": [
     "2016",
