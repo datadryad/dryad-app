@@ -29,7 +29,8 @@ module StashEngine
     end
 
     def in_progress_version
-      resources.in_progress.first
+      in_progress = resources.in_progress
+      in_progress.first
     end
 
     # returns true if there is an in progress version
@@ -38,6 +39,7 @@ module StashEngine
     end
 
     def to_s
+      # TODO: Make sure this is correct for all identifier types
       "#{identifier_type.downcase}:#{identifier}"
     end
   end

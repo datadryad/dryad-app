@@ -105,9 +105,9 @@ module StashEngine
 
     def current_state=(state_string)
       return if state_string == current_resource_state_value
-      my_state = ResourceState.create(user_id: user_id, resource_state: state_string, resource_id: id)
-      self.current_resource_state_id = my_state.id
-      save
+      my_state = current_resource_state
+      my_state.resource_state = state_string
+      my_state.save
     end
 
     # ------------------------------------------------------------
