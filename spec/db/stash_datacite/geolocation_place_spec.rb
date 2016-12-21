@@ -57,20 +57,6 @@ module StashDatacite
       end
     end
 
-    describe '#geo_place_coordinates' do
-      it 'returns the coordinates of a point, if present' do
-        point = GeolocationPoint.create(latitude: 38.5816, longitude: -121.4944)
-        place = GeolocationPlace.create(geo_location_place: 'Los Angeles')
-        Geolocation.create(resource_id: resource.id, point_id: point.id, place_id: place.id)
-        expect(place.geo_place_coordinates).to eq([38.5816, -121.4944])
-      end
-      it 'returns nil if no point present' do
-        place = GeolocationPlace.create(geo_location_place: 'Los Angeles')
-        Geolocation.create(resource_id: resource.id, place_id: place.id)
-        expect(place.geo_place_coordinates).to be_nil
-      end
-    end
-
     describe '#bounding_box_str' do
       it 'returns a bounding box string based on the point' do
         point = GeolocationPoint.create(latitude: 38.5816, longitude: -121.4944)
