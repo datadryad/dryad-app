@@ -95,7 +95,7 @@ module StashDatacite
     #handles creating datacite mapping which might be nil or have other complexities
     def datacite_mapping_box
       return nil unless geolocation_box
-      if geolocation_box.sw_latitude.blank? || geolocation_box.sw_longitude.blank?
+      if geolocation_box.sw_latitude.blank? || geolocation_box.sw_longitude.blank? ||
         geolocation_box.ne_latitude.blank? || geolocation_box.ne_longitude.blank?
         return nil
       end

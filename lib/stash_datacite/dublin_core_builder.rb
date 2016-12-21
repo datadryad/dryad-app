@@ -8,6 +8,15 @@ module StashDatacite
         'xmlns:dcterms' => 'http://purl.org/dc/terms/'
       }.freeze
 
+      DC_RELATION_TYPES = {
+        'cites' => 'references',
+        'iscitedby' => 'isReferencedBy',
+        'isnewversionof' => 'isVersionOf',
+        'ispreviousversionof' => 'hasVersion',
+        'ispartof' => 'isPartOf',
+        'haspart' => 'hasPart'
+      }.freeze
+
       attr_reader :resource
       attr_reader :tenant
 
@@ -58,9 +67,11 @@ module StashDatacite
       end
 
       def add_contributors(xml)
-        resource.contributors.each do |c|
-          xml.send(:'dc:contributor', c.contributor_name.delete("\r").to_s) unless c.try(:contributor_name).blank?
-          xml.send(:'dc:description', c.award_number.delete("\r").to_s) unless c.try(:award_number).blank?
+        # Funder contributors are handled under 'add_descriptions' below
+        resource.contributors.where.not(contributor_type: 'funder').each do |c|
+          if (contrib_name = c.contributor_name) && !contrib_name.blank?
+            xml.send(:'dc:contributor', contrib_name.strip)
+          end
         end
       end
 
@@ -71,8 +82,8 @@ module StashDatacite
       end
 
       def add_resource_type(xml)
-        # TODO: do we only want the general type, or do we want the specific type?
-        xml.send(:'dc:type', resource.resource_type.resource_type.to_s)
+        resource_type = (rt = resource.resource_type) && rt.resource_type_general
+        xml.send(:'dc:type', resource_type.strip) unless resource_type.blank?
       end
 
       def add_rights(xml)
@@ -89,34 +100,20 @@ module StashDatacite
             xml.send(:'dc:description', desc_text.to_s) unless desc_text.blank?
           end
         end
+        resource.contributors.where(contributor_type: 'funder').each do |c|
+          contrib_name = c.contributor_name
+          award_num = c.award_number
+          desc_text = 'Data were created'
+          desc_text << " with funding from #{contrib_name}" unless contrib_name.blank?
+          desc_text << " under grant(s) #{award_num}" unless award_num.blank?
+          xml.send(:'dc:description', desc_text)
+        end
       end
 
       def add_related_identifiers(xml)
         resource.related_identifiers.each do |r|
-          case r.relation_type_friendly
-          when 'IsPartOf'
-            xml.send(:'dcterms:isPartOf', r.related_identifier_type_friendly.to_s + ': ' + r.related_identifier.to_s)
-          when 'HasPart'
-            xml.send(:'dcterms:hasPart', r.related_identifier_type_friendly.to_s + ': ' + r.related_identifier.to_s)
-          when 'IsCitedBy'
-            xml.send(:'dcterms:isReferencedBy', r.related_identifier_type_friendly.to_s + ': ' + r.related_identifier.to_s)
-          when 'Cites'
-            xml.send(:'dcterms:references', r.related_identifier_type_friendly.to_s + ': ' + r.related_identifier.to_s)
-          when 'IsReferencedBy'
-            xml.send(:'dcterms:isReferencedBy', r.related_identifier_type_friendly.to_s + ': ' + r.related_identifier.to_s)
-          when 'References'
-            xml.send(:'dcterms:references', r.related_identifier_type_friendly.to_s + ': ' + r.related_identifier.to_s)
-          when 'IsNewVersionOf'
-            xml.send(:'dcterms:isVersionOf', r.related_identifier_type_friendly.to_s + ': ' + r.related_identifier.to_s)
-          when 'IsPreviousVersionOf'
-            xml.send(:'dcterms:hasVersion', r.related_identifier_type_friendly.to_s + ': ' + r.related_identifier.to_s)
-          when 'IsVariantFormOf'
-            xml.send(:'dcterms:isVersionOf', r.related_identifier_type_friendly.to_s + ': ' + r.related_identifier.to_s)
-          when 'IsOriginalFormOf'
-            xml.send(:'dcterms:hasVersion', r.related_identifier_type_friendly.to_s + ': ' + r.related_identifier.to_s)
-          else
-            xml.send(:'dcterms:relation', r.related_identifier_type_friendly.to_s + ': ' + r.related_identifier.to_s)
-          end
+          dc_relation_type = DC_RELATION_TYPES[r.relation_type] || 'relation'
+          xml.send(:"dcterms:#{dc_relation_type}", "#{r.related_identifier_type_friendly}: #{r.related_identifier}")
         end
       end
     end

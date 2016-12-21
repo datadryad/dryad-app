@@ -15,17 +15,13 @@ module StashDatacite
 
     enum resource_type_general: ResourceTypeGeneralEnum
 
-    def resource_type_general_friendly=(type)
-      self.resource_type_general = type.to_s.downcase unless type.blank?
-    end
-
     def resource_type_general_friendly
       return nil if resource_type_general.blank?
       ResourceTypesGeneralStrToFull[resource_type_general]
     end
 
     def resource_type_general_ui
-      return nil if resource_type.blank?
+      return nil if resource_type_general.blank?
       ResourceTypesGeneralLimited.invert[resource_type_general].to_s
     end
 

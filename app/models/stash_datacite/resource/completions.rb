@@ -15,6 +15,8 @@ end
 
 module StashDatacite
   module Resource
+    # TODO: is this class really necessary? as with Review, seems like we could just patch Resource
+    # TODO: and we don't need most of these to return false or 0 when they can just return nil
     class Completions
       def initialize(resource)
         @resource = resource
@@ -31,13 +33,6 @@ module StashDatacite
 
       def data_type
         !@resource.resource_type.nil?
-      end
-
-      def creator
-        num_creators = @resource.creators.count
-        return false if num_creators < 1
-        # the completely filled in creators must equal number of creators
-        @resource.creators.filled.count == num_creators
       end
 
       def creator_name
@@ -80,6 +75,7 @@ module StashDatacite
                  .not(description: [nil, '']).count > 0
       end
 
+      # TODO: why is this called 'citation'?
       def citation
         @resource.related_identifiers.where.not(related_identifier: [nil, '']).count > 0
       end
