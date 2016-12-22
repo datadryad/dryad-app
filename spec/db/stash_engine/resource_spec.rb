@@ -426,6 +426,67 @@ module StashEngine
       end
     end
 
+    describe '#package_and_submit' do
+      attr_reader :logger
+
+      before(:each) do
+        immediate_executor = Concurrent::ImmediateExecutor.new
+        allow(Concurrent).to receive(:global_io_executor).and_return(immediate_executor)
+
+        @logger = instance_double(Logger)
+        allow(logger).to receive(:debug)
+        allow(logger).to receive(:info)
+        allow(logger).to receive(:warn)
+        allow(logger).to receive(:error)
+
+        @rails_logger = Rails.logger
+        Rails.logger = logger
+      end
+
+      after(:each) do
+        allow(Concurrent).to receive(:global_io_executor).and_call_original
+        Rails.logger = @rails_logger
+      end
+
+      it 'packages and submits' do
+        resource = Resource.create(user_id: user.id)
+        doi = 'doi:10.1098/rstl.1665.0007'
+
+        tenant = double(Tenant)
+        allow(tenant).to receive(:tenant_id).and_return('ucop')
+        packager = instance_double(Sword::Packager)
+        allow(packager).to receive(:resource).and_return(resource)
+        allow(packager).to receive(:tenant).and_return(tenant)
+
+        package = instance_double(Sword::Package)
+        allow(package).to receive(:resource_id).and_return(resource.id)
+        allow(package).to receive(:zipfile).and_return('example.zip')
+        allow(package).to receive(:doi).and_return(doi)
+
+        expect(packager).to receive(:create_package).and_return(package)
+
+        expect(Sword::SubmitJob).to receive(:submit_async).with(package)
+        resource.package_and_submit(packager)
+
+        resource.reload
+        expect(resource.identifier_str).to eq(doi)
+      end
+
+      it 'logs a failure' do
+        resource = Resource.create(user_id: user.id)
+        tenant = double(Tenant)
+        allow(tenant).to receive(:tenant_id).and_return('ucop')
+        packager = instance_double(Sword::Packager)
+        allow(packager).to receive(:resource).and_return(resource)
+        allow(packager).to receive(:tenant).and_return(tenant)
+
+        allow(packager).to receive(:create_package).and_raise(IOError)
+        expect(logger).to receive(:warn).with(/PackageJob.*#{resource.id}.*ucop.*IOError.*/)
+        expect(logger).to receive(:warn).with(/.*SubmitPackageObserver.*#{resource.id}.*IOError.*/)
+        resource.package_and_submit(packager)
+      end
+    end
+
     describe 'statistics' do
       describe '#submitted_dataset_count' do
         it 'defaults to zero' do
