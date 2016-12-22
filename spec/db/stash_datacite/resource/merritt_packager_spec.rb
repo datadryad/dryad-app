@@ -87,22 +87,6 @@ module StashDatacite
       end
     end
 
-    describe '#to_s' do
-      attr_reader :packager
-
-      before(:each) do
-        @packager = MerrittPackager.new(resource: resource, tenant: tenant, url_helpers: url_helpers, request_host: 'stash.example.edu', request_port: '443')
-      end
-
-      it 'includes the resource id' do
-        expect(packager.to_s).to include("#{resource.id}")
-      end
-
-      it 'includes the tenant id' do
-        expect(packager.to_s).to include(tenant.tenant_id)
-      end
-    end
-
     describe '#generate_merritt_zip' do
       it 'builds a zipfile' do
         expected_metadata = Dir.glob('spec/data/archive/*').map do |path|
