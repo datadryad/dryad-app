@@ -113,9 +113,13 @@ module StashEngine
     # ------------------------------------------------------------
     # File submission
 
+    def package_and_submit(packager)
+
+    end
+
     def submit(sword_package)
       ensure_identifier(sword_package.doi)
-      SwordJob.submit_async(sword_package)
+      Sword::SubmitJob.submit_async(sword_package)
     end
 
     # ------------------------------------------------------------

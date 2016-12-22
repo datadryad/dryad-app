@@ -1,6 +1,6 @@
 module StashEngine
-  class SwordJob
-    class SwordPackage
+  module Sword
+    class Package
       attr_reader :title
       attr_reader :doi
       attr_reader :zipfile
@@ -9,7 +9,7 @@ module StashEngine
       attr_reader :request_host
       attr_reader :request_port
 
-      # Creates a new {SwordPackage}
+      # Creates a new {Package}
       #
       # @param title [String] The title of the dataset being submitted
       # @param doi [String] The DOI of the dataset being submitted

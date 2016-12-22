@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 module StashEngine
-  describe SwordJob do
+  describe SubmitJob do
     before(:each) do
       expect(StashEngine::Resource.find).to be_nil
     end
