@@ -62,9 +62,16 @@ module StashDatacite
       resource = StashDatacite.resource_class.find(params[:resource_id])
       submit_async(resource)
       create_resource_state(resource)
-      redirect_to stash_url_helpers.dashboard_path, notice: "#{resource.titles.first.title} submitted
-        with DOI #{resource.identifier.identifier}.
-        There may be a delay for processing before the item is available."
+
+      title = resource.titles.first
+      identifier_str = resource.identifier_str
+
+      notice = []
+      notice << "#{title ? title.title : '(unknown title)'} submitted"
+      notice << (identifier_str ? "with DOI #{identifier_str}." : '.')
+      notice << 'There may be a delay for processing before the item is available.'
+
+      redirect_to stash_url_helpers.dashboard_path, notice: notice.join(' ')
     end
 
     private
