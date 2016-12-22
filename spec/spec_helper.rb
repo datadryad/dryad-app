@@ -52,6 +52,8 @@ stash_datacite_path = Gem::Specification.find_by_name('stash_datacite').gem_dir
 %w(
   app/models/stash_datacite
   app/models/stash_datacite/resource
+  lib/stash_datacite
+  lib
 ).each do |dir|
   Dir.glob("#{stash_datacite_path}/#{dir}/**/*.rb").sort.each(&method(:require))
 end
