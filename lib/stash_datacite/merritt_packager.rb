@@ -1,23 +1,11 @@
 require 'stash_engine'
+require 'stash_engine/sword/packager'
 require 'stash_datacite'
 require 'stash_datacite/resource_file_generation'
 
 module StashDatacite
   # Creates a {Package} for submission to Merritt
-  class MerrittPackager
-    attr_reader :resource
-    attr_reader :tenant
-    attr_reader :url_helpers
-    attr_reader :request_host
-    attr_reader :request_port
-
-    def initialize(resource:, tenant:, url_helpers:, request_host:, request_port:)
-      @resource = resource
-      @tenant = tenant
-      @url_helpers = url_helpers
-      @request_host = request_host
-      @request_port = request_port
-    end
+  class MerrittPackager < StashEngine::Sword::Packager
 
     # Creates a new zipfile package
     #
@@ -37,10 +25,6 @@ module StashDatacite
         request_host: request_host,
         request_port: request_port
       )
-    end
-
-    def to_s
-      "#{self.class}(resource: #{resource.id}, tenant: #{tenant.tenant_id})"
     end
 
     private
