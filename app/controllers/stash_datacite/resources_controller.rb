@@ -1,5 +1,7 @@
 require_dependency 'stash_datacite/application_controller'
 
+require 'stash_datacite/merritt_packager'
+
 module StashDatacite
   # this is a class for composite (AJAX/UJS?) views starting at the resource or resources
   class ResourcesController < ApplicationController
@@ -68,13 +70,15 @@ module StashDatacite
     private
 
     def file_generation(resource)
-      @resource_file_generation = Resource::ResourceFileGeneration.new(resource, current_tenant)
-      identifier = @resource_file_generation.identifier_str
-      target_url = current_tenant.landing_url(stash_url_helpers.show_path(identifier))
-      folder = StashEngine::Resource.uploads_dir
-      zipfile = @resource_file_generation.generate_merritt_zip(folder, target_url)
-      title = main_title(resource)
-      resource.submission_to_repository(current_tenant, zipfile, title, identifier, request.host, request.port)
+      packager = StashDatacite::MerrittPackager.new(
+        resource: resource,
+        tenant: current_tenant,
+        url_helpers: stash_url_helpers,
+        request_host: request.host,
+        request_port: request.port
+      )
+      package = packager.create_package
+      resource.submit(package)
     end
 
     def create_resource_state(resource)

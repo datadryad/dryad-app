@@ -10,7 +10,6 @@ require 'stash_datacite/dublin_core_builder'
 require 'stash_datacite/data_one_manifest_builder'
 
 module StashDatacite
-  module Resource
     class ResourceFileGeneration
       def initialize(resource, current_tenant)
         @resource = resource
@@ -24,6 +23,7 @@ module StashDatacite
         @identifier_str ||= @resource.identifier_str || @client.mint_id
       end
 
+      # TODO: separate EZID shenanigans out of ZIP packaging
       def generate_xml(target_url)
         doi_value = identifier_str.split(':', 2)[1]
         uploads = uploads_list(@resource)
@@ -60,6 +60,7 @@ module StashDatacite
         DataONEManifestBuilder.new(uploads_list(@resource)).build_dataone_manifest
       end
 
+      # TODO: separate EZID shenanigans out of ZIP packaging
       def generate_merritt_zip(folder, target_url)
         target_url = target_url
         FileUtils.mkdir_p(folder)
@@ -139,4 +140,3 @@ module StashDatacite
 
     end
   end
-end
