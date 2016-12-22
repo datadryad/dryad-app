@@ -367,7 +367,7 @@ module StashEngine
       end
     end
 
-    describe '#submission_to_repository' do
+    describe '#submit' do
       attr_reader :resource
       attr_reader :logger
       attr_reader :tenant
@@ -377,9 +377,10 @@ module StashEngine
       attr_reader :doi
       attr_reader :request_host
       attr_reader :request_port
+      attr_reader :package
 
       before(:each) do
-        allow(SwordJob).to receive(:submit_async)
+        allow(Sword::SubmitJob).to receive(:submit_async)
 
         @resource = Resource.create(user_id: user.id)
 
@@ -398,19 +399,8 @@ module StashEngine
         @doi = 'doi:10.1098/rstl.1665.0007'
         @request_host = 'stash.example.org'
         @request_port = 80
-      end
 
-      after(:each) do
-        Rails.logger = @rails_logger
-      end
-
-      it 'sets the DOI' do
-        resource.submission_to_repository(tenant, zipfile, title, doi, request_host, request_port)
-        expect(resource.identifier_str).to eq(doi)
-      end
-
-      it 'submits the job' do
-        expect(SwordJob).to receive(:submit_async).with(
+        @package = Sword::Package.new(
           title: title,
           doi: doi,
           zipfile: zipfile,
@@ -419,7 +409,20 @@ module StashEngine
           request_host: request_host,
           request_port: request_port
         )
-        resource.submission_to_repository(tenant, zipfile, title, doi, request_host, request_port)
+      end
+
+      after(:each) do
+        Rails.logger = @rails_logger
+      end
+
+      it 'sets the DOI' do
+        resource.submit(package)
+        expect(resource.identifier_str).to eq(doi)
+      end
+
+      it 'submits the job' do
+        expect(Sword::SubmitJob).to receive(:submit_async).with(package)
+        resource.submit(package)
       end
     end
 
