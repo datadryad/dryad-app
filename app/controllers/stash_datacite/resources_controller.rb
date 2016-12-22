@@ -60,7 +60,7 @@ module StashDatacite
 
     def submission
       resource = StashDatacite.resource_class.find(params[:resource_id])
-      file_generation(resource)
+      submit_async(resource)
       create_resource_state(resource)
       redirect_to stash_url_helpers.dashboard_path, notice: "#{resource.titles.first.title} submitted
         with DOI #{resource.identifier.identifier}.
@@ -69,7 +69,7 @@ module StashDatacite
 
     private
 
-    def file_generation(resource)
+    def submit_async(resource)
       packager = StashDatacite::MerrittPackager.new(
         resource: resource,
         tenant: current_tenant,
@@ -77,13 +77,14 @@ module StashDatacite
         request_host: request.host,
         request_port: request.port
       )
-      package = packager.create_package
-      resource.submit(package)
+      resource.package_and_submit(packager)
     end
 
     def create_resource_state(resource)
+      # TODO: why are we checking required fields after we already submitted?
       data = check_required_fields(resource)
       if data.nil?
+        # TODO: let the background jobs take care of this
         unless resource.published? || resource.processing?
           resource.current_state = 'processing'
         end

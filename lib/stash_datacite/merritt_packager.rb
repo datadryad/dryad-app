@@ -39,6 +39,10 @@ module StashDatacite
       )
     end
 
+    def to_s
+      "#{self.class}(resource: #{resource.id}, tenant: #{tenant.tenant_id})"
+    end
+
     private
     
     def main_title(resource)
