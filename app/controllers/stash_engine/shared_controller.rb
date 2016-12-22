@@ -126,10 +126,25 @@ module StashEngine
     end
 
     #function to take a string and make it into html_safe string as paragraphs
+    #expanded to also make html links, but really we should be doing this a different
+    #way in the long term by having people enter html formatting and then displaying
+    #what they actually want instead of guessing at things they typed and trying to
+    #display magic html tags based on their textual, non-html.  We could strip it out if something hates html.
     def display_br(str)
       return nil if str.nil?
+
+      # add the awful paragraph junk for BRs and encode since we need to encode manually if we're saying html is safe
       str_arr = str.split(/\< *br *[\/]{0,1} *\>/).reject(&:blank?)
-      my_str = str_arr.map{|i| ERB::Util.html_escape(i) }.join('</p><p>')
+      my_str = str_arr.map{|i| ERB::Util.html_escape(i) }.join(' </p><p> ')
+
+      # kludge in some linking of random URLs they pooped into their text.
+      my_str.gsub!(/https?:\/\/\S+/) do |m|
+        "<a href=\"#{Nokogiri::HTML.parse(m).text}\" title=\"#{Nokogiri::HTML.parse(m).text}\">" +
+            "#{ActionController::Base.helpers.truncate(m)}</a>"
+      end
+
+      # Nokogiri::HTML.parse(escaped).text will give unescaped
+
       my_str.html_safe
     end
   end
