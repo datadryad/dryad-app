@@ -130,7 +130,7 @@ module StashEngine
 
       describe '#submit_async' do
         describe '#create' do
-          describe '#success handling' do
+          describe 'success handling' do
             it 'creates a SWORD resource' do
               expect(sword_client).to receive(:create).with(doi: doi, zipfile: zipfile)
               submit_resource
