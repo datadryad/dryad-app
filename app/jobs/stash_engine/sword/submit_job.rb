@@ -4,7 +4,7 @@ require 'concurrent/async'
 
 module StashEngine
   module Sword
-    # a class for asynchronous sword submission
+    # Background job for asynchronous SWORD submission
     class SubmitJob
       include Concurrent::Async
 

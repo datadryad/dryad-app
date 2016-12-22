@@ -114,12 +114,30 @@ module StashEngine
     # File submission
 
     def package_and_submit(packager)
-
+      future = Sword::PackageJob.package_async(packager)
+      future.add_observer(SubmitPackageObserver.new)
     end
 
     def submit(sword_package)
       ensure_identifier(sword_package.doi)
       Sword::SubmitJob.submit_async(sword_package)
+    end
+
+    class SubmitPackageObserver
+      def log
+        Rails.logger
+      end
+
+      def update(time, package, reason)
+        resource_id = package && package.resource_id
+        if reason
+          log.warn("#{self.class}: PackageJob failed at #{time} for resource #{resource_id || '(unknown ID)'}")
+          return
+        end
+        log.info("#{self.class}: PackageJob completed at #{time} for resource #{resource_id}")
+        resource = Resource.find(resource_id)
+        resource.submit(package)
+      end
     end
 
     # ------------------------------------------------------------
