@@ -113,18 +113,9 @@ module StashEngine
     # ------------------------------------------------------------
     # File submission
 
-    def submission_to_repository(current_tenant, zipfile, title, doi, request_host, request_port)
-      ensure_identifier(doi)
-      Rails.logger.debug("Submitting SwordJob for '#{title}' (#{doi})")
-      SwordJob.submit_async(
-        title: title,
-        doi: doi,
-        zipfile: zipfile,
-        resource_id: id,
-        sword_params: current_tenant.sword_params,
-        request_host: request_host,
-        request_port: request_port
-      )
+    def submit(sword_package)
+      ensure_identifier(sword_package.doi)
+      SwordJob.submit_async(sword_package)
     end
 
     # ------------------------------------------------------------
@@ -212,3 +203,4 @@ module StashEngine
     end
   end
 end
+

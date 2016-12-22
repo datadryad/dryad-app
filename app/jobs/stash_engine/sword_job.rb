@@ -9,33 +9,26 @@ module StashEngine
 
     # Creates a {SwordJob} and submits it on a background thread, logging the result.
     #
-    # @param title [String] The title of the dataset being submitted
-    # @param doi [String] The DOI of the dataset being submitted
-    # @param zipfile [String] The local path, on the server, of the zipfile to be submitted
-    # @param resource_id [Integer] The ID of the resource being submitted
-    # @param sword_params [Hash] Initialization parameters for `Stash::Sword::Client`.
-    #   See the [stash-sword documentation](http://www.rubydoc.info/gems/stash-sword/Stash/Sword/Client#initialize-instance_method)
-    #   for details.
-    # @param request_host [String] The public hostname of the application UI. Used to generate links in the
-    #   notification email.
-    # @param request_port [Integer] The public-facing port of the application UI. Used to generate links in the
-    #   notification email.
+    # @param sword_package [SwordPackage] the package to submit
     # @return [Concurrent::Ivar] a future containing the submitted resource, or an error
-    def self.submit_async(title:, doi:, zipfile:, resource_id:, sword_params:, request_host:, request_port:) # rubocop:disable Metrics/ParameterLists, Metrics/LineLength
+    def self.submit_async(sword_package)
+      title = sword_package.title
+      resource_id = sword_package.resource_id
+      doi = sword_package.doi
+      Rails.logger.debug("Submitting SwordJob for resource #{resource_id}: '#{title}' (#{doi})")
+
       future = SwordJob.new(
         title: title,
         doi: doi,
-        zipfile: zipfile,
+        zipfile: sword_package.zipfile,
         resource_id: resource_id,
-        sword_params: sword_params,
-        request_host: request_host,
-        request_port: request_port
+        sword_params: sword_package.sword_params,
+        request_host: sword_package.request_host,
+        request_port: sword_package.request_port
       ).async.submit
 
-      # it seems like only the first observer actually gets called
       future.add_observer(FileCleanupObserver.new(resource_id: resource_id))
       future.add_observer(ResultLoggingObserver.new(title: title, doi: doi))
-
       future
     end
 
