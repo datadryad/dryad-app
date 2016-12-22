@@ -1,9 +1,8 @@
 require 'spec_helper'
-
 require 'tmpdir'
 
 module StashDatacite
-  describe ResourceFileGeneration do
+  describe MerrittPackager do
     attr_reader :rails_root
     attr_reader :user
     attr_reader :tenant
@@ -12,6 +11,7 @@ module StashDatacite
     attr_reader :resource
     attr_reader :target_url
     attr_reader :zipfile_path
+    attr_reader :url_helpers
 
     before(:each) do
       @rails_root = Dir.mktmpdir('rails_root')
@@ -32,6 +32,8 @@ module StashDatacite
                                                                password: 'stash',
                                                                id_scheme: 'doi')
       allow(tenant).to receive(:short_name).and_return('DataONE')
+      allow(tenant).to receive(:landing_url) { |path| "https://stash-dev.example.edu/#{path}" }
+      allow(tenant).to receive(:sword_params).and_return(collection_uri: 'http://sword.example.edu/stash-dev')
 
       @stash_wrapper_xml = File.read('spec/data/archive/stash-wrapper.xml')
       stash_wrapper = Stash::Wrapper::StashWrapper.parse_xml(stash_wrapper_xml)
@@ -45,6 +47,9 @@ module StashDatacite
         stash_files: stash_wrapper.inventory.files,
         upload_date: stash_wrapper.version_date
       ).build
+
+      @url_helpers = double(Module) # yes, apparently URL helpers are an anonymous module
+      allow(url_helpers).to(receive(:show_path)) { |identifier| identifier }
 
       # TODO: move this to ResourceBuilder
       stash_wrapper.inventory.files.each do |stash_file|
@@ -87,9 +92,9 @@ module StashDatacite
           [File.basename(path), File.read(path)]
         end.to_h
 
-        rfg = ResourceFileGeneration.new(resource, tenant)
-        folder = StashEngine::Resource.uploads_dir
-        @zipfile_path = rfg.generate_merritt_zip(folder, target_url)
+        packager = MerrittPackager.new(resource: resource, tenant: tenant, url_helpers: url_helpers, request_host: 'stash.example.edu', request_port: '443')
+
+        @zipfile_path = packager.create_package.zipfile
 
         expected_metadata.each do |path, content|
           if path.end_with?('xml')
@@ -119,9 +124,9 @@ module StashDatacite
           deleted << upload.upload_file_name
         end
 
-        rfg = ResourceFileGeneration.new(resource, tenant)
-        folder = StashEngine::Resource.uploads_dir
-        @zipfile_path = rfg.generate_merritt_zip(folder, target_url)
+        packager = MerrittPackager.new(resource: resource, tenant: tenant, url_helpers: url_helpers, request_host: 'stash.example.edu', request_port: '443')
+
+        @zipfile_path = packager.create_package.zipfile
         mrt_delete = zip_entry('mrt-delete.txt')
         deleted.each do |filename|
           expect(mrt_delete).to include(filename)

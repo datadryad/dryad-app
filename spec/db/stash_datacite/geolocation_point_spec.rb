@@ -43,7 +43,7 @@ module StashDatacite
 
     describe '#bounding_box_str' do
       it 'returns a bounding box string for the point' do
-        point = GeolocationPoint.create(latitude: 38.5816, longitude: -121.4944 )
+        point = GeolocationPoint.create(latitude: 38.5816, longitude: -121.4944)
         expect(point.bounding_box_str).to eq('-121.4944 38.5816 -121.4944 38.5816')
       end
     end

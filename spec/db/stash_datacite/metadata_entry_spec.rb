@@ -17,7 +17,6 @@ module StashDatacite
           tenant_id: 'dataone'
         )
 
-
         dc3_xml = File.read('spec/data/archive/mrt-datacite.xml')
         @dcs_resource = Datacite::Mapping::Resource.parse_xml(dc3_xml)
         stash_wrapper_xml = File.read('spec/data/archive/stash-wrapper.xml')
