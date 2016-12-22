@@ -49,11 +49,6 @@ module StashEngine
 
         res3.current_state = 'in_progress'
         Version.create(resource_id: res3.id, version: 3)
-
-        (1..3).each do |r|
-          res = instance_variable_get(:"@res#{r}")
-          puts "res#{r}.id = #{res.id}"
-        end
       end
 
       describe '#first_submitted_version' do
