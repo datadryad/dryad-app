@@ -84,18 +84,7 @@ module StashDatacite
           resource.current_state = 'processing'
         end
       end
-      # send_user_mail(resource)
     end
-
-    # def send_user_mail(resource)
-    #   title = main_title(resource)
-    #   UserMailer.notification(
-    #     resource.user.email,
-    #     "Dataset submitted: #{title.try(:title)}",
-    #     'submission',
-    #     { user: resource.user, resource: resource, title: title.try(:title),
-    #       identifier: resource.identifier, path: stash_url_helpers.dashboard_path }).deliver
-    # end
 
     def main_title(resource)
       title = resource.titles.where(title_type: nil).first
