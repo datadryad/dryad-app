@@ -139,8 +139,11 @@ module StashEngine
 
       # kludge in some linking of random URLs they pooped into their text.
       my_str.gsub!(/https?:\/\/\S+/) do |m|
-        "<a href=\"#{Nokogiri::HTML.parse(m).text}\" title=\"#{Nokogiri::HTML.parse(m).text}\">" +
-            "#{ActionController::Base.helpers.truncate(m)}</a>"
+        full_url = Nokogiri::HTML.parse(m).text
+        end_punctuation = full_url.match(/[\(\)\.\?\!]+$/).to_s
+        full_url = full_url[0..-end_punctuation.length-1]
+        "<a href=\"#{full_url}\" title=\"#{full_url}\">" +
+            "#{ActionController::Base.helpers.truncate(m)}</a>#{ERB::Util.html_escape(end_punctuation)}"
       end
 
       # Nokogiri::HTML.parse(escaped).text will give unescaped
