@@ -6,11 +6,17 @@ module StashEngine
     def self.included(c)
       c.helper_method :current_tenant, :current_tenant_simple, :current_user, :metadata_engine, :metadata_url_helpers,
                       :metadata_render_path, :stash_url_helpers, :discovery_url_helpers, :landing_url,  :field_suffix,
-                      :logo_path, :contact_us_url, :display_br
+                      :logo_path, :contact_us_url, :display_br, :formatted_date
     end
 
     def metadata_url_helpers
       metadata_engine::Engine.routes.url_helpers
+    end
+
+    def formatted_date(t)
+      return 'Not available' if t.blank?
+      t = t.to_time if t.class == String
+      t.strftime("%B %e, %Y")
     end
 
     # generate a render path in the metadata engine
@@ -120,10 +126,28 @@ module StashEngine
     end
 
     #function to take a string and make it into html_safe string as paragraphs
+    #expanded to also make html links, but really we should be doing this a different
+    #way in the long term by having people enter html formatting and then displaying
+    #what they actually want instead of guessing at things they typed and trying to
+    #display magic html tags based on their textual, non-html.  We could strip it out if something hates html.
     def display_br(str)
       return nil if str.nil?
+
+      # add the awful paragraph junk for BRs and encode since we need to encode manually if we're saying html is safe
       str_arr = str.split(/\< *br *[\/]{0,1} *\>/).reject(&:blank?)
-      my_str = str_arr.map{|i| ERB::Util.html_escape(i) }.join('</p><p>')
+      my_str = str_arr.map{|i| ERB::Util.html_escape(i) }.join(' </p><p> ')
+
+      # kludge in some linking of random URLs they pooped into their text.
+      my_str.gsub!(/https?:\/\/\S+/) do |m|
+        full_url = Nokogiri::HTML.parse(m).text
+        end_punctuation = full_url.match(/[\(\)\.\?\!]+$/).to_s
+        full_url = full_url[0..-end_punctuation.length-1]
+        "<a href=\"#{full_url}\" title=\"#{full_url}\">" +
+            "#{ActionController::Base.helpers.truncate(m)}</a>#{ERB::Util.html_escape(end_punctuation)}"
+      end
+
+      # Nokogiri::HTML.parse(escaped).text will give unescaped
+
       my_str.html_safe
     end
   end

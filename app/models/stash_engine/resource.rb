@@ -105,26 +105,51 @@ module StashEngine
 
     def current_state=(state_string)
       return if state_string == current_resource_state_value
-      my_state = ResourceState.create(user_id: user_id, resource_state: state_string, resource_id: id)
-      self.current_resource_state_id = my_state.id
-      save
+      my_state = current_resource_state
+      my_state.resource_state = state_string
+      my_state.save
     end
 
     # ------------------------------------------------------------
     # File submission
 
-    def submission_to_repository(current_tenant, zipfile, title, doi, request_host, request_port)
-      ensure_identifier(doi)
-      Rails.logger.debug("Submitting SwordJob for '#{title}' (#{doi})")
-      SwordJob.submit_async(
-        title: title,
-        doi: doi,
-        zipfile: zipfile,
-        resource_id: id,
-        sword_params: current_tenant.sword_params,
-        request_host: request_host,
-        request_port: request_port
-      )
+    def package_and_submit(packager)
+      future = Sword::PackageJob.package_async(packager)
+      future.add_observer(SubmitPackageObserver.new(packager))
+    end
+
+    # TODO: does this even belong in Resource? Should packages just submit themselves?
+    def submit(sword_package)
+      package_resource_id = sword_package.resource_id
+      raise ArgumentError, "Invalid package: expected resource ID #{id}, was #{package_resource_id}" unless package_resource_id == id
+
+      ensure_identifier(sword_package.doi)
+      Sword::SubmitJob.submit_async(sword_package)
+    end
+
+    # TODO: does this even belong in Resource?
+    class SubmitPackageObserver
+      def log
+        Rails.logger
+      end
+
+      attr_reader :packager
+
+      def initialize(packager)
+        @packager = packager
+      end
+
+      def update(time, package, reason)
+        if reason
+          resource_id = (resource = packager.resource) && resource.id
+          log.warn("#{self.class}: PackageJob failed at #{time} for resource #{resource_id || '(unknown ID)'}: #{reason}")
+          return
+        end
+        resource_id = package.resource_id
+        log.info("#{self.class}: PackageJob completed at #{time} for resource #{resource_id}")
+        resource = Resource.find(resource_id)
+        resource.submit(package)
+      end
     end
 
     # ------------------------------------------------------------
@@ -212,3 +237,4 @@ module StashEngine
     end
   end
 end
+

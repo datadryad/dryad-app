@@ -2,11 +2,11 @@ require_dependency 'stash_engine/application_controller'
 
 module StashEngine
   class ResourcesController < ApplicationController
-    before_action :require_login
+    before_action :require_login, except: [:increment_downloads]
 
-    before_action :set_resource, only: [:show, :edit, :update, :destroy, :review, :upload]
+    before_action :set_resource, only: [:show, :edit, :update, :destroy, :review, :upload, :increment_downloads]
 
-    before_action :require_resource_owner, except: [:index, :new]
+    before_action :require_resource_owner, except: [:index, :new, :increment_downloads]
 
     # GET /resources
     # GET /resources.json
@@ -82,6 +82,15 @@ module StashEngine
       #@resource.clean_uploads # might want this back cleans database to match existing files on file system
       @file = FileUpload.new(resource_id: @resource.id) #this is apparanty needed for the upload control
       @uploads = @resource.latest_file_states
+    end
+
+    # PATCH/PUT /resources/1/increment_downloads
+    def increment_downloads
+      respond_to do |format|
+        format.js do
+          @resource.increment_downloads
+        end
+      end
     end
 
     private

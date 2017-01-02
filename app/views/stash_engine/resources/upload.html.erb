@@ -4,8 +4,8 @@
 <h1 class="o-heading__level1">Upload Your Files <span class="t-upload__heading-optional">(optional)</span></h1>
 
 <p>
-  Size limits: <%= filesize(StashEngine.app.max_file_size) %> per file,
-  <%= filesize(StashEngine.app.max_submission_size) %> in total. To upload larger datasets,
+  Size limits: <%= filesize(current_tenant.max_file_size) %> per file,
+  <%= filesize(current_tenant.max_submission_size) %> in total. To upload larger datasets,
   <%= link_to "contact us", contact_us_url, class: 'o-link__primary' %>.
 </p>
 
@@ -40,16 +40,25 @@
   </div>
 
   <div id="upload_total">
-    Total:
+    <span id="upload_total_all">Total:</span><br/><br/>
+    <span id="upload_in_version">In this version:</span>
   </div>
 
   <div class="c-upload__upload-complete-text" id="upload_complete" style="display: none;">Upload complete.</div>
 
   <div class="bad_upload" id="over_single_size"></div>
+
+  <div class="bad_upload" id="over_upload_size" style="display: none;">
+    <p>
+      The files you've added are larger than <%= filesize(current_tenant.max_submission_size) %> which is the upload
+      limit for a single version.  Please remove some files to bring your upload size for this version under
+      <%= filesize(current_tenant.max_submission_size) %>.
+    </p>
+  </div>
   <div class="bad_upload" id="over_files_size" style="display: none;">
     <p>
-      Your file size is over <%= filesize(StashEngine.app.max_submission_size) %>. You must remove some files to bring your total
-      file size under this limit before you can upload.
+      Your file size is over <%= filesize(current_tenant.max_total_version_size) %>. You must remove some files to bring your
+      total under this limit before you can upload these files.
     </p>
   </div>
 
@@ -79,22 +88,30 @@
     $('#fileupload').fileupload({
       maxChunkSize: 1048576,
       //acceptFileTypes: /(\.|\/)(gif|jpe?g|png|tif?f)$/i
-      maxFileSize: <%= StashEngine.app.max_file_size %>,// 2GB,
+      maxFileSize: <%= current_tenant.max_file_size %>,// 2GB,
       //maxFileSize: 1048576 ,// 1MB,
-      limitMultiFileUploadSize: <%= StashEngine.app.max_submission_size %>
+      limitMultiFileUploadSize: <%= current_tenant.max_submission_size %>
     });
   });
 
   function maxTotalSize(){
-    return <%= StashEngine.app.max_submission_size %>;
+    return <%= current_tenant.max_total_version_size %>;
+  }
+
+  function maxSubmissionSize(){
+    return <%= current_tenant.max_submission_size %>;
   }
 
   function maxFileSize(){
-    return <%= StashEngine.app.max_file_size %>;
+    return <%= current_tenant.max_file_size %>;
   }
 
   function overTotalSize(mySize){
     return (mySize > maxTotalSize());
+  }
+
+  function overSubmissionSize(mySize){
+    return (mySize > maxSubmissionSize());
   }
 
   function overFileSize(mySize){

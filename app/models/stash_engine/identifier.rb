@@ -23,13 +23,24 @@ module StashEngine
       submitted.by_version_desc.first
     end
 
+    def first_submitted_version
+      submitted = resources.submitted
+      submitted.by_version.first
+    end
+
     def in_progress_version
-      resources.in_progress.first
+      in_progress = resources.in_progress
+      in_progress.first
     end
 
     # returns true if there is an in progress version
     def in_progress?
       resources.in_progress.count > 0
+    end
+
+    def to_s
+      # TODO: Make sure this is correct for all identifier types
+      "#{identifier_type.downcase}:#{identifier}"
     end
   end
 end
