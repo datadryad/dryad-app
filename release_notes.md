@@ -1,5 +1,36 @@
 # Release notes
 
+## v0.1.22 (Jan 3, 2016)
+
+- Integration testing working for many pages in the application with Capybara browser testing.
+
+- Zip packaging handled by background task, so not a long wait after a submission.
+
+- Branches and tags added to config repo and deployment changed to use config version consistent with our code.
+
+- 3 different maximum sizes ("total" size, submission size, file size) which are configured per tenant.
+
+- Unknown/404 pages showing a custom not found page.
+
+- Less verbose logging in stage/production.
+
+- Mobile menu working in discovery part of web application.
+
+- Titles of pages include "publish and preserve' and footer modified.
+
+- Things that look like URLs in text of landing page auto-converted into links and shorter URLs.
+
+- Graph icon shows as graph instead of random box.
+
+- Maximum size for submission only counts added/replaced files in a version.
+
+- Added Google Analytics.
+
+- ResourceTypes with free text that come from outside imports are retained even though no way to set in the UI.
+
+- Misc code cleanup and simplifications.
+
+
 ## v0.1.15 to v0.1.21 (Nov 18 to Dec 9, 2016)
 
 - UC Merced logo -- Added extra space added on top
