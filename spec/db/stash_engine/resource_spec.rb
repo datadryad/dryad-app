@@ -441,9 +441,12 @@ module StashEngine
 
         @rails_logger = Rails.logger
         Rails.logger = logger
+
+        allow_any_instance_of(ActionMailer::MessageDelivery).to receive(:deliver_now)
       end
 
       after(:each) do
+        allow_any_instance_of(ActionMailer::MessageDelivery).to receive(:deliver_now).and_call_original
         allow(Concurrent).to receive(:global_io_executor).and_call_original
         Rails.logger = @rails_logger
       end
@@ -456,6 +459,7 @@ module StashEngine
         allow(tenant).to receive(:tenant_id).and_return('ucop')
         packager = instance_double(Sword::Packager)
         allow(packager).to receive(:resource).and_return(resource)
+        allow(packager).to receive(:resource_title).and_return('An Account of a Very Odd Monstrous Calf')
         allow(packager).to receive(:tenant).and_return(tenant)
 
         package = instance_double(Sword::Package)
@@ -474,15 +478,20 @@ module StashEngine
 
       it 'logs a failure' do
         resource = Resource.create(user_id: user.id)
+
         tenant = double(Tenant)
         allow(tenant).to receive(:tenant_id).and_return('ucop')
         packager = instance_double(Sword::Packager)
         allow(packager).to receive(:resource).and_return(resource)
+        allow(packager).to receive(:resource_title).and_return('An Account of a Very Odd Monstrous Calf')
         allow(packager).to receive(:tenant).and_return(tenant)
+        allow(packager).to receive(:request_host).and_return('stash.example.edu')
+        allow(packager).to receive(:request_port).and_return('80')
 
         allow(packager).to receive(:create_package).and_raise(IOError)
         expect(logger).to receive(:warn).with(/PackageJob.*#{resource.id}.*ucop.*IOError.*/)
         expect(logger).to receive(:warn).with(/.*SubmitPackageObserver.*#{resource.id}.*IOError.*/)
+        expect(resource).to receive(:current_state=).with('error')
         resource.package_and_submit(packager)
       end
     end

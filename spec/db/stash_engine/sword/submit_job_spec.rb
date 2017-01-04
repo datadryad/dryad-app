@@ -81,6 +81,7 @@ module StashEngine
       end
 
       after(:each) do
+        allow_any_instance_of(ActionMailer::MessageDelivery).to receive(:deliver_now).and_call_original
         allow(Concurrent).to receive(:global_io_executor).and_call_original
         Rails.logger = @rails_logger
         FileUtils.remove_entry_secure tmpdir

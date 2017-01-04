@@ -22,6 +22,7 @@ module StashEngine
 
       describe '#package_async' do
         attr_reader :logger
+        attr_reader :resource
 
         RESOURCE_ID = 17
         TENANT_ID = 'dataone'
@@ -30,9 +31,10 @@ module StashEngine
           immediate_executor = Concurrent::ImmediateExecutor.new
           allow(Concurrent).to receive(:global_io_executor).and_return(immediate_executor)
 
-          resource = double(Resource)
+          @resource = double(Resource)
           allow(resource).to receive(:id).and_return(RESOURCE_ID)
           allow(packager).to receive(:resource).and_return(resource)
+          allow(packager).to receive(:resource_title).and_return('An Account of a Very Odd Monstrous Calf')
 
           tenant = double(Tenant)
           allow(tenant).to receive(:tenant_id).and_return(TENANT_ID)
@@ -69,10 +71,96 @@ module StashEngine
           PackageJob.package_async(packager).value!
         end
 
-        it 'logs failure' do
-          allow(packager).to receive(:create_package).and_raise(IOError)
-          expect(logger).to receive(:warn).with(/PackageJob.*#{RESOURCE_ID}.*#{TENANT_ID}.*IOError.*/)
-          expect { PackageJob.package_async(packager).value! }.to raise_error(IOError)
+        describe 'failure logging and email' do
+          attr_reader :title
+          attr_reader :request_host
+          attr_reader :request_port
+
+          before(:each) do
+            @title = 'An Account of a Very Odd Monstrous Calf'
+            allow(resource).to receive(:title).and_return(title)
+
+            @request_host = 'stash.example.edu'
+            @request_port = 80
+
+            allow(packager).to receive(:create_package).and_raise(IOError)
+            allow(packager).to receive(:request_host).and_return(request_host)
+            allow(packager).to receive(:request_port).and_return(request_port)
+
+            allow(resource).to receive(:current_state=)
+
+            msg = double(ActionMailer::MessageDelivery)
+            allow(msg).to receive(:deliver_now)
+
+            allow(UserMailer).to receive(:error_report).and_return(msg)
+            allow(UserMailer).to receive(:update_failed).and_return(msg)
+            allow(UserMailer).to receive(:create_failed).and_return(msg)
+          end
+
+          describe 'on create' do
+            before(:each) do
+              allow(resource).to receive(:update_uri).and_return(nil)
+            end
+
+            it 'sends "create failed"' do
+              msg = double(ActionMailer::MessageDelivery)
+              expect(msg).to receive(:deliver_now)
+
+              expect(UserMailer).to receive(:create_failed).with(resource, title, request_host, request_port, kind_of(IOError)).and_return(msg)
+              expect { PackageJob.package_async(packager).value! }.to raise_error(IOError)
+            end
+
+            it 'logs a failure' do
+              expect(logger).to receive(:warn).with(/PackageJob.*#{RESOURCE_ID}.*#{TENANT_ID}.*IOError.*/)
+              expect { PackageJob.package_async(packager).value! }.to raise_error(IOError)
+            end
+
+            it 'sets the resource state' do
+              expect(resource).to receive(:current_state=).with('error')
+              expect { PackageJob.package_async(packager).value! }.to raise_error(IOError)
+            end
+
+            it 'sends an error report' do
+              msg = double(ActionMailer::MessageDelivery)
+              expect(msg).to receive(:deliver_now)
+
+              expect(UserMailer).to receive(:error_report).with(resource, title, kind_of(IOError)).and_return(msg)
+              expect { PackageJob.package_async(packager).value! }.to raise_error(IOError)
+            end
+          end
+
+          describe 'on update' do
+            before(:each) do
+              allow(resource).to receive(:update_uri).and_return('https://repo.example.edu/10.123/456')
+            end
+
+            it 'sends "update failed"' do
+              msg = double(ActionMailer::MessageDelivery)
+              expect(msg).to receive(:deliver_now)
+
+              expect(UserMailer).to receive(:update_failed).with(resource, title, request_host, request_port, kind_of(IOError)).and_return(msg)
+              expect { PackageJob.package_async(packager).value! }.to raise_error(IOError)
+            end
+
+            it 'logs a failure' do
+              expect(logger).to receive(:warn).with(/PackageJob.*#{RESOURCE_ID}.*#{TENANT_ID}.*IOError.*/)
+              expect { PackageJob.package_async(packager).value! }.to raise_error(IOError)
+            end
+
+            it 'sets the resource state' do
+              expect(resource).to receive(:current_state=).with('error')
+              expect { PackageJob.package_async(packager).value! }.to raise_error(IOError)
+            end
+
+            it 'sends an error report' do
+              msg = double(ActionMailer::MessageDelivery)
+              expect(msg).to receive(:deliver_now)
+
+              expect(UserMailer).to receive(:error_report).with(resource, title, kind_of(IOError)).and_return(msg)
+              expect { PackageJob.package_async(packager).value! }.to raise_error(IOError)
+            end
+          end
+
         end
       end
     end

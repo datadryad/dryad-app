@@ -4,6 +4,7 @@ module StashEngine
   describe UserMailer do
     attr_reader :title
     attr_reader :doi
+    attr_reader :doi_value
     attr_reader :request_host
     attr_reader :request_port
     attr_reader :user
@@ -15,7 +16,8 @@ module StashEngine
 
     before(:each) do
       @title = 'An Account of a Very Odd Monstrous Calf'
-      @doi = '10.1098/rstl.1665.0007'
+      @doi_value = '10.1098/rstl.1665.0007'
+      @doi = "doi:#{doi_value}"
       @request_host = 'stash.example.org'
       @request_port = 80
 
@@ -31,6 +33,7 @@ module StashEngine
       @resource = double(Resource)
       allow(resource).to receive(:user).and_return(user)
       allow(resource).to receive(:identifier_str).and_return(doi)
+      allow(resource).to receive(:identifier_value).and_return(doi_value)
 
       @delivery_method = ActionMailer::Base.delivery_method
       ActionMailer::Base.delivery_method = :test
@@ -78,7 +81,7 @@ module StashEngine
           expect(headers[k]).to eq(v)
         end
 
-        expect(delivery.body.to_s).to include("<a href=\"https://dx.doi.org/#{doi}\">doi:#{doi}</a>")
+        expect(delivery.body.to_s).to include("<a href=\"https://doi.org/#{doi_value}\">#{doi}</a>")
       end
     end
 
@@ -102,7 +105,7 @@ module StashEngine
           expect(headers[k]).to eq(v)
         end
 
-        expect(delivery.body.to_s).to include("<a href=\"https://dx.doi.org/#{doi}\">doi:#{doi}</a>")
+        expect(delivery.body.to_s).to include("<a href=\"https://doi.org/#{doi_value}\">#{doi}</a>")
       end
     end
 
@@ -117,7 +120,7 @@ module StashEngine
           'Return-Path' => sender_address,
           'From' => "Dash Notifications <#{sender_address}>",
           'To' => user.email,
-          'Subject' => "Dataset \"#{title}\" (doi:#{doi}) updated"
+          'Subject' => "Dataset \"#{title}\" (#{doi}) updated"
         }
 
         headers = delivery.header.fields.map { |field| [field.name, field.value] }.to_h
@@ -125,7 +128,7 @@ module StashEngine
           expect(headers[k]).to eq(v)
         end
 
-        expect(delivery.body.to_s).to include("<a href=\"https://dx.doi.org/#{doi}\">doi:#{doi}</a>")
+        expect(delivery.body.to_s).to include("<a href=\"https://doi.org/#{doi_value}\">#{doi}</a>")
       end
     end
 
@@ -141,7 +144,7 @@ module StashEngine
           'Return-Path' => sender_address,
           'From' => "Dash Notifications <#{sender_address}>",
           'To' => user.email,
-          'Subject' => "Updating dataset \"#{title}\" (doi:#{doi}) failed"
+          'Subject' => "Updating dataset \"#{title}\" (#{doi}) failed"
         }
 
         headers = delivery.header.fields.map { |field| [field.name, field.value] }.to_h
@@ -149,7 +152,7 @@ module StashEngine
           expect(headers[k]).to eq(v)
         end
 
-        expect(delivery.body.to_s).to include("<a href=\"https://dx.doi.org/#{doi}\">doi:#{doi}</a>")
+        expect(delivery.body.to_s).to include("<a href=\"https://doi.org/#{doi_value}\">#{doi}</a>")
       end
     end
 
@@ -165,7 +168,7 @@ module StashEngine
           'Return-Path' => sender_address,
           'From' => "Dash Notifications <#{sender_address}>",
           'To' => feedback_address.join(','),
-          'Subject' => "Submitting dataset \"#{title}\" (doi:#{doi}) failed"
+          'Subject' => "Submitting dataset \"#{title}\" (#{doi}) failed"
         }
 
         headers = delivery.header.fields.map { |field| [field.name, field.value] }.to_h
@@ -174,7 +177,7 @@ module StashEngine
         end
 
         body = delivery.body.to_s
-        expect(body).to include("<a href=\"https://dx.doi.org/#{doi}\">doi:#{doi}</a>")
+        expect(body).to include("<a href=\"https://doi.org/#{doi_value}\">#{doi}</a>")
         expect(body).to include("<a href=\"mailto:#{user.email}\">#{user.first_name} #{user.last_name}</a>")
       end
     end
