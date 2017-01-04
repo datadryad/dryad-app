@@ -7,13 +7,14 @@ module StashEngine
             return_path: (APP_CONFIG['feedback_email_from']).to_s
 
     def create_succeeded(resource, title, request_host, request_port)
-      warn("Unable to report successful create; nil resource") unless resource
+      warn('Unable to report successful create; nil resource') unless resource
       return unless resource
 
       user = resource.user
       @to_name = "#{user.first_name} #{user.last_name}"
       @title = title
-      @identifier = resource.identifier_str
+      @identifier_str = resource.identifier_str
+      @identifier_value = resource.identifier_value
       @request_host = request_host
       @request_port = request_port
 
@@ -28,7 +29,8 @@ module StashEngine
       user = resource.user
       @to_name = "#{user.first_name} #{user.last_name}"
       @title = title
-      @identifier = resource.identifier_str
+      @identifier_str = resource.identifier_str
+      @identifier_value = resource.identifier_value
       @backtrace = to_backtrace(error)
       tenant = user.tenant
       @contact_email = to_address_list(tenant.contact_email)
@@ -40,18 +42,19 @@ module StashEngine
     end
 
     def update_succeeded(resource, title, request_host, request_port)
-      warn("Unable to report successful update; nil resource") unless resource
+      warn('Unable to report successful update; nil resource') unless resource
       return unless resource
 
       user = resource.user
       @to_name = "#{user.first_name} #{user.last_name}"
       @title = title
-      @identifier = resource.identifier_str
+      @identifier_str = resource.identifier_str
+      @identifier_value = resource.identifier_value
       @request_host = request_host
       @request_port = request_port
 
       to_address = to_address_list(user.email)
-      mail(to: to_address, subject: "Dataset \"#{@title}\" (doi:#{@identifier}) updated")
+      mail(to: to_address, subject: "Dataset \"#{@title}\" (doi:#{@identifier_value}) updated")
     end
 
     def update_failed(resource, title, request_host, request_port, error)
@@ -61,7 +64,8 @@ module StashEngine
       user = resource.user
       @to_name = "#{user.first_name} #{user.last_name}"
       @title = title
-      @identifier = resource.identifier_str
+      @identifier_str = resource.identifier_str
+      @identifier_value = resource.identifier_value
       @backtrace = to_backtrace(error)
       tenant = user.tenant
       @contact_email = to_address_list(tenant.contact_email)
@@ -69,7 +73,7 @@ module StashEngine
       @request_port = request_port
 
       to_address = to_address_list(user.email)
-      mail(to: to_address, subject: "Updating dataset \"#{@title}\" (doi:#{@identifier}) failed")
+      mail(to: to_address, subject: "Updating dataset \"#{@title}\" (doi:#{@identifier_value}) failed")
     end
 
     def error_report(resource, title, error)
@@ -80,11 +84,12 @@ module StashEngine
       @user_name = "#{user.first_name} #{user.last_name}"
       @user_email = user.email
       @title = title
-      @identifier = resource.identifier_str
+      @identifier_str = resource.identifier_str
+      @identifier_value = resource.identifier_value
       @backtrace = to_backtrace(error)
 
       to_address = to_address_list(APP_CONFIG['feedback_email_to'])
-      mail(to: to_address, subject: "Submitting dataset \"#{@title}\" (doi:#{@identifier}) failed")
+      mail(to: to_address, subject: "Submitting dataset \"#{@title}\" (doi:#{@identifier_value}) failed")
     end
 
     private
