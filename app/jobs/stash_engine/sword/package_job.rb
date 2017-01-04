@@ -15,27 +15,63 @@ module StashEngine
       def self.package_async(packager)
         resource = packager.resource
         tenant = packager.tenant
-        Rails.logger.debug("Creating PackageJob for resource: #{resource.id}, tenant: #{tenant.tenant_id}")
-        
+        log.debug("Creating PackageJob for resource: #{resource.id}, tenant: #{tenant.tenant_id}")
+
         future = PackageJob.new(packager).async.create_package
         future.add_observer(ResultLoggingObserver.new(packager))
         future
       end
-      
+
+      def self.log
+        Rails.logger
+      end
+
+      def log
+        Rails.logger
+      end
+
       # Creates a new {PackageJob}.
       #
       # @param packager [Packager] the packager.
       def initialize(packager)
         @packager = packager
       end
-      
+
       # @return [SwordPackager] the package.
       def create_package
         packager.create_package
+      rescue => e
+        report_error(e, packager.resource)
+        raise
       end
-      
+
       private
-      
+
+      def report_error(e, resource)
+        log.error("#{e}\n#{e.backtrace.join("\n")}")
+        resource.current_state = 'error' if resource
+
+        title = packager.resource_title
+        error_msg(e, resource, title).deliver_now
+
+        request_host = packager.request_host
+        request_port = packager.request_port
+
+        failure_msg(resource, title, request_host, request_port, e).deliver_now
+      end
+
+      def error_msg(e, resource, title)
+        UserMailer.error_report(resource, title, e)
+      end
+
+      def failure_msg(resource, title, request_host, request_port, e)
+        if resource && resource.update_uri
+          UserMailer.update_failed(resource, title, request_host, request_port, e)
+        else
+          UserMailer.create_failed(resource, title, request_host, request_port, e)
+        end
+      end
+
       attr_reader :packager
 
       # Logs the result of the packageJob, whether success or failure
