@@ -12,9 +12,6 @@ Rails.application.routes.draw do
   #get '/', :requirements => { :protocol => 'https' }, to: redirect(path: APP_CONFIG.stash_mount, protocol: 'https' )
   #     constraints: { protocol: 'https' }
   
-  get '/help' => 'host_pages#help'
-  get '/about' => 'host_pages#about'
-  
   # You can have the root of your site routed with "root"
   #root 'host_pages#index'
   # map.redirect '/', controller: '/stash/pages', action: 'home'
@@ -77,5 +74,8 @@ Rails.application.routes.draw do
   #instance_eval(File.read(StashDiscovery::Engine.root.join("config/routes.rb")))
 
   get 'xtf/search', to: 'catalog#index'
+
+  # this will route an item at the root of the site into the namespaced engine
+  get 'sitemap.xml' => "stash_engine/pages#sitemap", :format => "xml", :as => 'sitemap'
 
 end
