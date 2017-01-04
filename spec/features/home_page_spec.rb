@@ -1,11 +1,9 @@
 require 'rails_helper'
 
-feature  :type => :feature do
+feature 'User lands on Home page and selects a Participating Partner' do
 
-  scenario "User logs in" do
+  scenario "User selects a Participating Partner from the list" do
     visit "/stash_engine"
-
-    #click_button "Get Started"
 
     expect(page).to have_text("Get Started")
   end

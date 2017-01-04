@@ -10,8 +10,8 @@ default: &default
   abbreviation: "DataONE"
   short_name: "DataONE"
   long_name: "DataONE"
-  full_domain: "localhost:3000"
-  domain_regex: "localhost:3000$"
+  full_domain: "oneshare2-dev.cdlib.org"
+  domain_regex: "oneshare2-dev.cdlib.org$"
   tenant_id: dataone
   identifier_service:
     shoulder: "doi:10.5072/FK2"
