@@ -6,7 +6,7 @@
 <body>
 
 <p>An error occurred while submitting dataset &ldquo;<%= @title %>&rdquo;
-  (<%= link_to("doi:#{@identifier}", "https://dx.doi.org/#{@identifier}")%>)
+  (<%= link_to("#{@identifier}", "https://doi.org/#{@identifier}")%>)
   for user <%= link_to(@user_name, "mailto:#{@user_email }") %>. The error details are below.
 </p>
 
