@@ -17,7 +17,7 @@ module StashDatacite
       target_url = tenant.landing_url(path)
       folder = StashEngine::Resource.uploads_dir
       StashEngine::Sword::Package.new(
-        title: main_title(resource),
+        title: resource_title,
         doi: identifier,
         zipfile: resource_file_generation.generate_merritt_zip(folder, target_url),
         resource_id: resource.id,
@@ -27,11 +27,11 @@ module StashDatacite
       )
     end
 
-    private
-    
-    def main_title(resource)
-      title = resource.titles.where(title_type: nil).first
-      title.try(:title)
+    def resource_title
+      @resource_title ||= begin
+        title = resource.titles.where(title_type: nil).first
+        title.try(:title)
+      end
     end
   end
 end
