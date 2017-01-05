@@ -25,7 +25,7 @@ module StashEngine
         attr_reader :resource
 
         RESOURCE_ID = 17
-        TENANT_ID = 'dataone'
+        TENANT_ID = 'dataone'.freeze
 
         before(:each) do
           immediate_executor = Concurrent::ImmediateExecutor.new
@@ -160,7 +160,6 @@ module StashEngine
               expect { PackageJob.package_async(packager).value! }.to raise_error(IOError)
             end
           end
-
         end
       end
     end
