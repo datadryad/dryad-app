@@ -251,14 +251,14 @@ module StashDatacite
           resource.descriptions.where(description_type: 'methods').each(&:destroy)
           expect(completions.method).to be_falsey
         end
-        it 'fails for resources with no non-nil methodss' do
+        it 'fails for resources with no non-nil methods' do
           resource.descriptions.where(description_type: 'methods').each do |methods|
             methods.description = nil
             methods.save
           end
           expect(completions.method).to be_falsey
         end
-        it 'fails for resources with no non-blank methodss' do
+        it 'fails for resources with no non-blank methods' do
           resource.descriptions.where(description_type: 'methods').each do |methods|
             methods.description = ''
             methods.save
@@ -328,14 +328,14 @@ module StashDatacite
           resource.descriptions.where(description_type: 'methods').each(&:destroy)
           expect(completions.optional_completed).to eq(OPTIONAL_COUNT - 1)
         end
-        it 'counts if resource has no non-nil methodss' do
+        it 'counts if resource has no non-nil methods' do
           resource.descriptions.where(description_type: 'methods').each do |methods|
             methods.description = nil
             methods.save
           end
           expect(completions.optional_completed).to eq(OPTIONAL_COUNT - 1)
         end
-        it 'counts if resource has no non-blank methodss' do
+        it 'counts if resource has no non-blank methods' do
           resource.descriptions.where(description_type: 'methods').each do |methods|
             methods.description = ''
             methods.save
