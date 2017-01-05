@@ -1,3 +1,8 @@
+addons:
+  apt:
+    packages:
+      realpath
+
 before_install: ./travis-local-deps.sh
 
 services:
