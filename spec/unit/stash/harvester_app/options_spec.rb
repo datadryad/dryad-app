@@ -210,6 +210,30 @@ module Stash
             end
           end
         end
+
+        describe '#stop_file_message' do
+          it 'returns nil if no stop file found' do
+            path = "/home/foo/missing-#{Time.now.to_i}"
+            expect(File.exist?(path)).to be_falsey # just to be sure
+            options = Options.new
+            options.stop_file = path
+            expect(options.stop_file_message).to be_nil
+          end
+
+          it 'returns a message if the stop file is found' do
+            file = Tempfile.new('stopfile-test')
+            begin
+              path = file.path
+              expect(File.exist?(path)).to be_truthy # just to be sure
+              options = Options.new
+              options.stop_file = path
+              expected_msg = "Found stop file #{File.absolute_path(path)}"
+              expect(options.stop_file_message).to eq(expected_msg)
+            ensure
+              file.unlink
+            end
+          end
+        end
       end
 
       describe '#do_exit' do
