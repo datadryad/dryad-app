@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 BRANCH=${TRAVIS_PULL_REQUEST_BRANCH:-$TRAVIS_BRANCH}
-ENGINES_DIR=$(realpath ../stash_engines)
+ENGINES_DIR=$(realpath ..)/stash_engines
 
 mkdir ${ENGINES_DIR} && \
   cd ${ENGINES_DIR}
