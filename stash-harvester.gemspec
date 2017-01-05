@@ -5,7 +5,7 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'stash/harvester/version'
 require 'uri'
 
-Gem::Specification.new do |spec|
+Gem::Specification.new do |spec| # rubocop:disable Metrics/BlockLength
   spec.name          = Stash::Harvester::NAME
   spec.version       = Stash::Harvester::VERSION
   spec.authors       = ['David Moles']

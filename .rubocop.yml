@@ -2,6 +2,7 @@
 AllCops:
   Exclude:
     - 'db/schema.rb'
+  TargetRubyVersion: 2.2
 
 # Confusing and weird
 Style/VariableNumber:
@@ -26,10 +27,6 @@ Style/EmptyLinesAroundModuleBody:
 # Allow one line around block body (Style/EmptyLines will still disallow two or more)
 Style/EmptyLinesAroundBlockBody:
   Enabled: false
-
-# Suppress complaints about post-2.0 syntax
-AllCops:
-  TargetRubyVersion: 2.2
 
 # Suppress complaints about binaries not being named .rb
 Style/FileName:
