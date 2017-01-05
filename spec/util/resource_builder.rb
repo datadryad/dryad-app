@@ -224,20 +224,7 @@ module StashDatacite
     def add_sd_description(dcs_description)
       desc_type = dcs_description.type
       if desc_type == DESCRIPTION_TYPE::OTHER && dcs_description.value.start_with?('Data were created with funding')
-        funding_desc_value = dcs_description.value
-        pat = /Data were created with funding from(.*)under grant\(?s?\)?(.*)\.?/m
-        if (md = pat.match(funding_desc_value)) && md.size == 3
-          contrib_name = md[1].gsub(/\s+/m, ' ').strip
-          award_num = md[2].gsub(/\s+/m, ' ').sub(/.$/, '').strip
-          matching_contrib = se_resource.contributors.where(
-            "contributor_name LIKE ? and contributor_type='funder'",
-            "%#{contrib_name.sub(/^[Tt]he ?/, '')}%"
-          ).take
-          if matching_contrib
-            matching_contrib.award_number = award_num
-            matching_contrib.save!
-          end
-        end
+        add_sd_award_number(dcs_description.value)
       else
         Description.create(
           description: dcs_description.value && dcs_description.value.strip,
@@ -245,6 +232,27 @@ module StashDatacite
           resource_id: se_resource_id
         )
       end
+    end
+
+    def add_sd_award_number(funding_desc_value)
+      pat = /Data were created with funding from(.*)under grant\(?s?\)?(.*)\.?/m
+      return unless (md = pat.match(funding_desc_value)) && md.size == 3
+
+      contrib_name = md[1].gsub(/\s+/m, ' ').strip
+      award_num = md[2].gsub(/\s+/m, ' ').sub(/.$/, '').strip
+
+      matching_contrib = find_sd_funder(contrib_name)
+      return unless matching_contrib
+
+      matching_contrib.award_number = award_num
+      matching_contrib.save!
+    end
+
+    def find_sd_funder(contrib_name)
+      se_resource.contributors.where(
+        "contributor_name LIKE ? and contributor_type='funder'",
+        "%#{contrib_name.sub(/^[Tt]he ?/, '')}%"
+      ).take
     end
 
     def add_sd_geo_location(dcs_geo_location)

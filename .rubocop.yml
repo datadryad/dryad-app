@@ -1,3 +1,8 @@
 # Disable line-length check; it's too easy for the cure to be worse than the disease
 Metrics/LineLength:
   Enabled: False
+
+# These 'set' methods aren't conventional accessors, but Rubocop doesn't know that
+Style/AccessorMethodName:
+  Exclude:
+    - 'spec/util/resource_builder.rb'
