@@ -11,7 +11,7 @@ module StashEngine
       # Creates a {SubmitJob} and submits it on a background thread, logging the result.
       #
       # @param sword_package [Package] the package to submit
-      # @return [Concurrent::Ivar] a future containing the submitted resource, or an error
+      # @return [Concurrent::Ivar<Integer>] a future containing the ID of the submitted resource, or an error
       def self.submit_async(sword_package)
         title = sword_package.title
         resource_id = sword_package.resource_id
@@ -58,17 +58,20 @@ module StashEngine
       end
 
       # Submits this job
+      # @return [Integer] the ID of the submitted resource
       def submit
-        log.debug("#{self.class}.submit() at #{Time.now}: title: '#{title}', doi: #{doi}, zipfile: #{zipfile}, "\
-                "resource_id: #{resource_id}, sword_params: #{sword_params}")
-        request_msg = "Submitting #{zipfile} for '#{title}' (#{doi}) at #{Time.now}: "\
-                    "#{(sword_params.map { |k, v| "#{k}: #{v}" }).join(', ')}"
-        resource = nil
-        begin
-          resource = do_submit(request_msg)
-        rescue => e
-          report_error(e, resource, request_msg)
-          raise
+        sword_params_str = (sword_params.map { |k, v| "#{k}: #{v}" }).join(', ')
+        request_msg = "#{self.class}: Submitting #{zipfile} for '#{title}' (#{doi}) (id: #{resource_id}) at #{Time.now} with sword_params: #{sword_params_str}"
+        log.debug(request_msg)
+
+        # Ensure we don't leak connections when running in a background thread
+        ActiveRecord::Base.connection_pool.with_connection do
+          begin
+            do_submit(request_msg)
+          rescue => e
+            report_error(e, request_msg)
+            raise
+          end
         end
       end
 
@@ -97,22 +100,18 @@ module StashEngine
         resource.current_state = 'published'
         resource.version_zipfile = zipfile
         update_submission_log(resource_id: resource_id, request_msg: request_msg, response_msg: 'Success')
-        resource
+        resource_id
       end
 
-      def report_error(e, resource, request_msg)
+      def report_error(e, request_msg)
         log.error("#{e}\n#{e.backtrace.join("\n")}")
 
         update_submission_log(resource_id: resource_id, request_msg: request_msg, response_msg: "Failed: #{e}")
-        resource = Resource.find(resource_id) unless resource
-        error_report(resource, e).deliver_now
-        failure_report(resource, e).deliver_now
-
+        resource = Resource.find(resource_id)
         resource.current_state = 'error' if resource
 
-        # TODO: Enable this (and don't raise) once we have ExceptionNotifier configured
-        # ExceptionNotifier.notify_exception(e, data: {title: title, doi: doi, zipfile: zipfile,
-        # resource_id: resource_id, sword_params: sword_params})
+        error_report(resource, e).deliver_now
+        failure_report(resource, e).deliver_now
       end
 
       def create(resource)
@@ -199,7 +198,8 @@ module StashEngine
         log.warn("SubmitJob for '#{title}' (#{doi}) failed at #{time}: #{reason}")
       end
 
-      def log_success(time, resource)
+      def log_success(time, resource_id)
+        resource = Resource.find(resource_id)
         download_uri = resource ? resource.download_uri : 'nil'
         update_uri = resource ? resource.update_uri : 'nil'
         log.info("SubmitJob for '#{title}' (#{doi}) completed at #{time}: download_uri = #{download_uri}, update_uri = #{update_uri}")
@@ -207,7 +207,6 @@ module StashEngine
     end
 
     class FileCleanupObserver
-
       def log
         Rails.logger
       end
@@ -221,7 +220,7 @@ module StashEngine
 
       # Called by the `Concurrent::Async` framework on completion of the
       # {SubmitJob} async background task.  if reason is not set then successful
-      def update(time, value, reason)
+      def update(_time, _value, reason)
         unless reason
           res = Resource.where(id: @resource_id).first
           if (uploads = res.try(:file_uploads))
@@ -231,12 +230,10 @@ module StashEngine
             end
             #delete directory
             upload_dir = StashEngine::Resource.upload_dir_for(@resource_id)
-            if File.exist?(upload_dir)
-              Dir.rmdir(upload_dir)
-            end
+            Dir.rmdir(upload_dir) if File.exist?(upload_dir)
           end
           #delete any zipfiles and temp files
-          files = Dir[File.join(StashEngine::Resource.uploads_dir, "#{@resource_id.to_s}_*")]
+          files = Dir[File.join(StashEngine::Resource.uploads_dir, "#{@resource_id}_*")]
           files.each do |file|
             File.delete(file) if File.exist?(file)
           end

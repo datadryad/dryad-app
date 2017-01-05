@@ -39,10 +39,15 @@ module StashEngine
 
       # @return [SwordPackager] the package.
       def create_package
-        packager.create_package
-      rescue => e
-        report_error(e, packager.resource)
-        raise
+        # Ensure we don't leak connections when running in a background thread
+        ActiveRecord::Base.connection_pool.with_connection do
+          begin
+            packager.create_package
+          rescue => e
+            report_error(e, packager.resource)
+            raise
+          end
+        end
       end
 
       private
@@ -114,7 +119,6 @@ module StashEngine
           log.info("PackageJob for resource: #{resource_id}, tenant: #{tenant_id} completed at #{time}: zipfile is #{zipfile}")
         end
       end
-
     end
   end
 end
