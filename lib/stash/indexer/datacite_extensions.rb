@@ -54,7 +54,7 @@ module Datacite
 
       def default_title
         title = titles.find { |t| t.type.nil? }
-        "#{title.value}".strip if title
+        title.value.to_s.strip if title
       end
 
       def doi
@@ -62,7 +62,7 @@ module Datacite
       end
 
       def type
-        "#{general_type.value}".strip if general_type
+        general_type.value.to_s.strip if general_type
       end
 
       def general_type
@@ -127,7 +127,7 @@ module Datacite
       #
       # method takes the values supplied and also adds every year for a range so people can search for
       # any of those years which may not be explicitly named
-      def dct_temporal_dates
+      def dct_temporal_dates # rubocop:disable Metrics/AbcSize
         items = dates.map(&:to_s).compact
         year_range_items = dates.map do |i|
           if i.range_start && i.range_end && i.range_start.year && i.range_end.year
