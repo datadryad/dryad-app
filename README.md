@@ -3,6 +3,8 @@
 [![Build Status](https://travis-ci.org/CDLUC3/stash_datacite_specs.png?branch=master)](https://travis-ci.org/CDLUC3/stash_datacite_specs) 
 
 RSpec tests for [`stash_datacite`](https://github.com/CDLUC3/stash_datacite).
+(In a separate project to work around RubyMine / IDEA issue 
+[RUBY-18841](https://youtrack.jetbrains.com/issue/RUBY-18841).)
 
 ## Database configuration
 
