@@ -18,7 +18,7 @@ This should look something like:
 ```
 $ mysql -u root
 mysql> create user 'travis'@'localhost';
-mysql> create database stash_engine_test;
+mysql> create database stash_engine_test character set UTF8mb4 collate utf8mb4_bin;
 mysql> use stash_engine_test;
 mysql> grant all privileges on stash_engine_test to 'travis'@'localhost';
 ```
