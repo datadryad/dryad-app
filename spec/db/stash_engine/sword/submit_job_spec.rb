@@ -138,7 +138,8 @@ module StashEngine
             end
 
             it 'sets the update and download URIs' do
-              resource = submit_resource
+              resource_id = submit_resource
+              resource = Resource.find(resource_id)
               expect(resource.download_uri).to eq(download_uri)
               expect(resource.update_uri).to eq(update_uri)
             end
