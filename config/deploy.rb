@@ -77,7 +77,9 @@ namespace :deploy do
   desc 'update config repo'
   task :update_config do
     on roles(:app) do
-      execute "cd #{deploy_to}/shared; git reset --hard origin/master; git pull"
+      my_branch = fetch(:branch, 'development')
+      my_branch = "origin/#{my_branch}" unless my_branch.match(/^[v\d\.]+$/) #git acts differently with branch vs tag
+      execute "cd #{deploy_to}/shared; git fetch --all; git reset --hard #{my_branch}"
     end
   end
 
@@ -113,10 +115,10 @@ namespace :deploy do
   task :update_local_engines do
     on roles(:app) do
       my_branch = fetch(:branch, 'development')
+      my_branch = "origin/#{my_branch}" unless my_branch.match(/^[v\d\.]+$/) #git acts differently with branch vs tag
 
       %w(stash_datacite stash_engine stash_discovery).each do |engine|
-        # execute "cd #{deploy_to}/releases/stash_engines/#{engine}; git checkout #{my_branch}; git reset --hard origin/#{my_branch}; git pull"
-        execute "cd #{deploy_to}/releases/stash_engines/#{engine}; git pull; git checkout #{my_branch}"
+        execute "cd #{deploy_to}/releases/stash_engines/#{engine}; git fetch --all; git reset --hard #{my_branch}"
       end
     end
   end
@@ -130,7 +132,7 @@ namespace :deploy do
           execute "cd #{deploy_to}/current; bundle install --no-deployment"
           execute "cd #{deploy_to}/current; bundle exec passenger start -d --environment #{fetch(:rails_env)} "\
               "--pid-file #{fetch(:passenger_pid)} -p #{fetch(:passenger_port)} "\
-              "--log-file #{fetch(:passenger_log)} --pool-idle-time 600"
+              "--log-file #{fetch(:passenger_log)} --pool-idle-time 1800"
         end
       end
     end

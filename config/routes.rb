@@ -2,10 +2,15 @@ Rails.application.routes.draw do
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
-  root :to => redirect(APP_CONFIG.stash_mount)
-  
-  get '/help' => 'host_pages#help'
-  get '/about' => 'host_pages#about'
+  root :requirements => { :protocol => 'http' }, :to => redirect(path: APP_CONFIG.stash_mount )
+
+  #root :requirements => { :protocol => 'https' },
+  #     :to => redirect(path: APP_CONFIG.stash_mount, protocol: 'https' )
+
+  #get '/', :requirements => { :protocol => 'http' }, to: redirect(path: APP_CONFIG.stash_mount, protocol: 'http' )
+
+  #get '/', :requirements => { :protocol => 'https' }, to: redirect(path: APP_CONFIG.stash_mount, protocol: 'https' )
+  #     constraints: { protocol: 'https' }
   
   # You can have the root of your site routed with "root"
   #root 'host_pages#index'
@@ -63,5 +68,14 @@ Rails.application.routes.draw do
 
   mount StashEngine::Engine, at: APP_CONFIG.stash_mount
   mount StashDatacite::Engine, at: '/stash_datacite'
-  # mount StashDiscovery::Engine, at: '/stash_discovery'
+
+  # we have to do this to make the geoblacklight routes come before catchall
+  # http://blog.arkency.com/2015/02/how-to-split-routes-dot-rb-into-smaller-parts/
+  #instance_eval(File.read(StashDiscovery::Engine.root.join("config/routes.rb")))
+
+  get 'xtf/search', to: 'catalog#index'
+
+  # this will route an item at the root of the site into the namespaced engine
+  get 'sitemap.xml' => "stash_engine/pages#sitemap", :format => "xml", :as => 'sitemap'
+
 end
