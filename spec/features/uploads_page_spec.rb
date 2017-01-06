@@ -48,16 +48,19 @@ feature "User lands on Uploads page and navigates through it" do
     "Integer id nunc in purus sagittis dapibus sed ac augue. Aenean eu lobortis turpis."\
 
     click_link 'Proceed to Upload'
-    script = "$('#upload_upload').css({opacity: 100, display: 'block'});"
-    page.driver.browser.execute_script(script)
-    attach_file(find('input[id="upload_upload"]', visible: false), @file_path)
-    # page.find('input[id="upload_upload"]', visible: false).set(@file_path)
-    # page.find('#upload_all', visible: false).click
+    page.find('input[id="upload_upload"]', visible: false).set(@file_path)
+    page.find('#upload_all', visible: false).click
 
     sleep 5
     page.evaluate_script("window.location.reload()")
     expect(page).to have_content 'UC3-Dash.pdf'
 
+    page.find('input[id="upload_upload"]', visible: false).set(@image_path)
+    page.find('#upload_all', visible: false).click
+    sleep 5
+
+    page.evaluate_script("window.location.reload()")
+    expect(page).to have_content 'books.jpeg'
     click_link 'Proceed to Review'
 
   end
