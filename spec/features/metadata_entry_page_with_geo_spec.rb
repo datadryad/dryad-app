@@ -1,8 +1,5 @@
 require 'rails_helper'
-
-# RSpec.configure do |config|
-#   config.include FeatureHelper, :type => :feature
-# end
+require 'database_cleaner'
 
 feature "User lands on metadata entry page and navigates through it" do
 
@@ -18,14 +15,12 @@ feature "User lands on metadata entry page and navigates through it" do
     within('form') do
       fill_in 'Name', with: 'testuser'
       fill_in 'Email', with: 'testuser.ucop@gmail.com'
-      fill_in 'test_domain', with: 'testuser@ucop.edu'
+      fill_in 'test_domain', with: 'testuser@example.edu'
       click_button 'Sign In'
     end
-    if page.has_content?('My Datasets: Getting Started') == true
-      click_button 'Start New Dataset'
-    else
-      click_button 'Resume'
-    end
+
+    click_button 'Start New Dataset'
+    sleep 5
     expect(page).to have_content 'Describe Your Datasets'
 
     #Data Type
@@ -71,7 +66,7 @@ feature "User lands on metadata entry page and navigates through it" do
     fill_in 'geolocation_point[latitude]', with: '37.801239'
     fill_in 'geolocation_point[longitude]', with: '-122.258301'
     click_button 'Add'
-
+    sleep 3
     expect(page).to have_css('div.c-locations__point', text: '37.801239, -122.258301' )
 
     find('#geo_box').click
@@ -82,10 +77,9 @@ feature "User lands on metadata entry page and navigates through it" do
     fill_in 'geolocation_box[ne_latitude]', with: '36.5007'
     fill_in 'geolocation_box[ne_longitude]', with: '-93.5083'
     click_button 'Add'
-
+    sleep 3
     expect(page).to have_css('div.c-locations__area', text: 'SW 25.8371, -106.646 NE 36.5007, -93.5083')
 
     click_link 'Proceed to Upload'
-
   end
 end

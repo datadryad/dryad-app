@@ -20,7 +20,7 @@ feature "User lands on Uploads page and navigates through it" do
     within('form') do
       fill_in 'Name', with: 'testuser'
       fill_in 'Email', with: 'testuser.ucop@gmail.com'
-      fill_in 'test_domain', with: 'testuser@ucop.edu'
+      fill_in 'test_domain', with: 'testuser@example.edu'
       click_button 'Sign In'
     end
     if page.has_content?('My Datasets: Getting Started') == true
@@ -28,21 +28,24 @@ feature "User lands on Uploads page and navigates through it" do
     else
       click_button 'Resume'
     end
+    sleep 5
     expect(page).to have_content 'Describe Your Datasets'
 
     click_link 'Proceed to Upload'
+    script = "$('#upload_upload').css({opacity: 100, display: 'block'});"
+    page.driver.browser.execute_script(script)
+    # ('input[id="upload_upload"]').set(@file_path)
+    page.find('#upload_all', visible: false).click
 
-    file_field = page.find('input[id="upload_upload"]', visible: false)
-    file_field.set(@file_path)
-    find('#upload_all').click
-    sleep 3
-    page.evaluate_script("window.location.reload()")
-    file_field = page.find('input[id="upload_upload"]', visible: false)
-    file_field.set(@image_path)
-    click_button('Upload')
-    sleep 3
+    sleep 5
+    expect(page).to have_content 'UC3-Dash.pdf'
+    # page.evaluate_script("window.location.reload()")
+    # file_field = page.find('input[id="upload_upload"]', visible: false)
+    # file_field.set(@image_path)
+    # click_button('Upload')
+    # sleep 5
 
-    click_link 'Proceed to Review'
+    # click_link 'Proceed to Review'
 
   end
 end

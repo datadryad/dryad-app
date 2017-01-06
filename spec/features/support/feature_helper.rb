@@ -22,4 +22,19 @@ module FeatureHelper
       yield
     end
   end
+
+  # def fill_autocomplete(field, options = {})
+    # puts "Result is: #{field.inspect}"
+    # exec_js = "$('input[name=\"contributor[contributor_name]\"]').prop('id')"
+    # result = Capybara.evaluate_script(exec_js)
+    # puts "Result is: #{result.inspect}"
+
+    #  fill_in result, :with => options[:with]
+    # page.execute_script %Q{ $('##{field}').trigger("focus") }
+    # page.execute_script %Q{ $('##{field}').trigger("keydown") }
+    # selector = "ul.ui-autocomplete a:contains('#{options[:select]}')"
+
+    # page.should have_selector selector
+    # page.execute_script "$(\"#{selector}\").mouseenter().click()"
+  # end
 end
