@@ -27,47 +27,28 @@ module StashEngine
 
     #gets the latest completed resources by user, a lot of SQL since this becomes complicated
     def latest_completed_resource_per_identifier
-      # this is hackish since it requires resource ids to be assigned in ascending order,
-      # so the last version in a group is also the highest resource_id.
-      # however, the join to version becomes more complicated and unoptimized since a group and Max doesn't work across
-      # different tables and returns a max that is independent from the correct ID.
+      # Joining on version is messy, so we just assume the latest version in a
+      # group is the one with the highest resource_id.
       #
-      # for optimization we may need to add a marker for the latest completed resource to the table in the future
-      # and then toggle it on (and previous versions off) in our code when something is submitted.
+      # Note that resources with null identifiers (resources not yet assigned
+      # a DOI) are assumed to be different from one another. This is a little
+      # hacky, but should be OK since most of the time this will be a transient
+      # state immediately after submission. However, if we reach an error state
+      # before a DOI is reserved, we could end up with multiple instances of the
+      # "same" resource appearing in the table.
+      query = <<-SQL
+        id IN
+          (SELECT MAX(resources.id) AS resources_id
+             FROM stash_engine_resources resources
+                  JOIN stash_engine_resource_states AS states
+                  ON resources.current_resource_state_id = states.id
+            WHERE resources.user_id = ?
+              AND states.resource_state IN ('published', 'processing', 'error')
+         GROUP BY resources.identifier_id,
+                  IF(resources.identifier_id IS NULL, resources.id, 0))
+      SQL
 
-      # Resource.find_by_sql(["
-      #   SELECT * FROM stash_engine_resources
-      #   WHERE id IN
-      #   (SELECT MAX(resources.id) as resources_id FROM `stash_engine_resources` resources
-      #   JOIN `stash_engine_resource_states` states
-      #   ON resources.current_resource_state_id = states.id
-      #   WHERE resources.user_id = ? AND resources.identifier_id IS NOT NULL
-      #   AND states.resource_state IN ('published', 'processing')
-      #   GROUP BY resources.identifier_id)", id])
-
-      Resource.where("id IN
-        (SELECT MAX(resources.id) as resources_id FROM `stash_engine_resources` resources
-        JOIN `stash_engine_resource_states` states
-        ON resources.current_resource_state_id = states.id
-        WHERE resources.user_id = ? AND resources.identifier_id IS NOT NULL
-        AND states.resource_state IN ('published', 'processing', 'error')
-        GROUP BY resources.identifier_id)", id)
-
-      # this doesn't work correctly
-      # Resource.select("stash_engine_resources.*, MAX(stash_engine_versions.version)").joins(:version).submitted.
-      #    where('identifier_id IS NOT NULL').where(user_id: id).
-      #    group(:identifier_id).order(:updated_at)
-
-      # /* I thought it worked, but it doesn't */
-      # SELECT resources.*, MAX(versions.version) as max_version FROM `stash_engine_resources` resources
-      # JOIN `stash_engine_versions` versions
-      # ON resources.`id` = versions.resource_id
-      # JOIN `stash_engine_resource_states` states
-      # ON resources.current_resource_state_id = states.id
-      # WHERE identifier_id IS NOT NULL AND states.resource_state IN ('published', 'processing')
-      # AND resources.user_id = 7
-      # GROUP BY identifier_id
-      # ORDER BY updated_at DESC;
+      Resource.where(query, id)
     end
   end
 end
