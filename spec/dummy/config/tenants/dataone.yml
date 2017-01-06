@@ -2,7 +2,7 @@ default: &default
   enabled: true
   repository:
     type: merritt
-    domain: merritt-dev.cdlib.org
+    domain: ""
     endpoint: ""
     username: ""
     password: ""
