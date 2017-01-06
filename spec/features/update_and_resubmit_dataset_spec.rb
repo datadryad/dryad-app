@@ -1,5 +1,5 @@
 require 'rails_helper'
-
+require 'database_cleaner'
 # RSpec.configure do |config|
 #   config.include FeatureHelper, :type => :feature
 # end
