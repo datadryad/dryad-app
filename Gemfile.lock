@@ -1,7 +1,12 @@
 GIT
-  remote: https://github.com/CDLUC3/stash_discovery.git
-  revision: 4bfb77d0eca515474a78dd65677dc5758fa553e0
-  branch: development
+  remote: https://github.com/CDLUC3/stash_ezid_datacite.git
+  revision: 875a85f7419e1304d981f4a44d43f8f0177e65e8
+  specs:
+    stash_ezid_datacite (0.1.4)
+      ezid-client
+
+PATH
+  remote: ..
   specs:
     stash_discovery (0.0.2)
       blacklight (~> 6.5.0)
@@ -14,12 +19,6 @@ GIT
       sass-rails (~> 5.0)
       solr_wrapper
       turbolinks
-
-GIT
-  remote: https://github.com/CDLUC3/stash_engine.git
-  revision: b5435cc17fa5118e95067acc38034a83969173e6
-  branch: development
-  specs:
     stash_engine (0.0.17)
       amoeba (~> 3.0.0)
       carrierwave (~> 0.10.0)
@@ -95,9 +94,9 @@ GEM
       activerecord (>= 3.2.6)
     archive-zip (0.7.0)
       io-like (~> 0.3.0)
-    arel (6.0.3)
+    arel (6.0.4)
     ast (2.3.0)
-    autoprefixer-rails (6.5.4)
+    autoprefixer-rails (6.6.1)
       execjs
     bcrypt (3.1.11)
     blacklight (6.5.0)
@@ -132,8 +131,8 @@ GEM
       archive-zip (~> 0.7.0)
       nokogiri (~> 1.6)
     coderay (1.1.1)
-    concurrent-ruby (1.0.2)
-    config (1.3.0)
+    concurrent-ruby (1.0.4)
+    config (1.4.0)
       activesupport (>= 3.0)
       deep_merge (~> 1.1.1)
     data_magic (1.0)
@@ -160,9 +159,11 @@ GEM
       unf (>= 0.0.5, < 1.0.0)
     erubis (2.7.0)
     execjs (2.7.0)
+    ezid-client (1.5.0)
+      hashie (~> 3.4, >= 3.4.3)
     faker (1.6.6)
       i18n (~> 0.5)
-    faraday (0.9.2)
+    faraday (0.10.1)
       multipart-post (>= 1.2, < 3)
     ffi (1.9.14)
     filesize (0.1.1)
@@ -190,7 +191,7 @@ GEM
       actionpack (>= 3.1)
       railties (>= 3.1)
       sass (>= 3.2)
-    jquery-rails (4.2.1)
+    jquery-rails (4.2.2)
       rails-dom-testing (>= 1, < 3)
       railties (>= 4.2.0)
       thor (>= 0.14, < 2.0)
@@ -220,8 +221,8 @@ GEM
     netrc (0.11.0)
     nokogiri (1.6.8.1)
       mini_portile2 (~> 2.1.0)
-    oauth2 (1.2.0)
-      faraday (>= 0.8, < 0.10)
+    oauth2 (1.3.0)
+      faraday (>= 0.8, < 0.11)
       jwt (~> 1.0)
       multi_json (~> 1.3)
       multi_xml (~> 0.5)
@@ -283,7 +284,7 @@ GEM
       thor (>= 0.18.1, < 2.0)
     rainbow (2.1.0)
     rake (12.0.0)
-    redcarpet (3.3.4)
+    redcarpet (3.4.0)
     responders (2.3.0)
       railties (>= 4.2.0, < 5.1)
     rest-client (2.0.0)
@@ -321,7 +322,7 @@ GEM
       unicode-display_width (~> 1.0, >= 1.0.1)
     ruby-progressbar (1.8.1)
     rubyzip (1.2.0)
-    sass (3.4.22)
+    sass (3.4.23)
     sass-rails (5.0.6)
       railties (>= 4.0.0, < 6)
       sass (~> 3.1)
@@ -341,7 +342,7 @@ GEM
       faraday
       ruby-progressbar
       rubyzip
-    sprockets (3.7.0)
+    sprockets (3.7.1)
       concurrent-ruby (~> 1.0)
       rack (> 1, < 3)
     sprockets-rails (3.2.0)
@@ -409,6 +410,7 @@ DEPENDENCIES
   stash_datacite!
   stash_discovery!
   stash_engine!
+  stash_ezid_datacite!
 
 BUNDLED WITH
    1.13.6

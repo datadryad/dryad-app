@@ -21,5 +21,13 @@ gem 'datacite-mapping' #, git: 'https://github.com/CDLUC3/datacite-mapping.git'
 gem 'kaminari'
 gem 'stash-wrapper' #, git: 'https://github.com/CDLUC3/stash-wrapper.git'
 gem 'rubyzip', '>= 1.0.0' # will load new rubyzip version
-gem 'stash_engine', git: 'https://github.com/CDLUC3/stash_engine.git', branch: 'development', group: [:development, :test]
-gem 'stash_discovery', git: 'https://github.com/CDLUC3/stash_discovery.git', branch: 'development', group: [:development, :test]
+
+# TODO: remove this once the EZID calls are out of StashDatacite
+gem 'stash_ezid_datacite', git: 'https://github.com/CDLUC3/stash_ezid_datacite.git'
+
+group :development, :test do
+  path '..' do
+    gem 'stash_engine'
+    gem 'stash_discovery'
+  end
+end
