@@ -1,12 +1,12 @@
 require 'rails_helper'
 require 'database_cleaner'
 
-feature "User lands on metadata entry page and navigates through it" do
+feature "User creates a dataset and submits it to the repository" do
 
   background do
 	@tenant = ::StashEngine::Tenant.find(tenant_id = "dataone")
 	@user = ::StashEngine::User.create(first_name: 'test', last_name: 'user', email: 'testuser.ucop@gmail.com', tenant_id: @tenant.tenant_id)
-	@file_path = File.join(Rails.root, '/spec/support/UC3-Dash.pdf')
+	@file_path = File.join(Rails.root, '/public/UC3-Dash.pdf')
   end
 
   it "Logged in user fills metadata entry page", js: true do
@@ -78,18 +78,27 @@ feature "User lands on metadata entry page and navigates through it" do
 	sleep 5
 	expect(page).to have_css('div.c-locations__area', text: 'SW 25.8371, -106.646 NE 36.5007, -93.5083')
 
-	# click_link 'Proceed to Upload'
+  click_link 'Proceed to Upload'
+  page.find('input[id="upload_upload"]', visible: false).set(@file_path)
+  page.find('#upload_all', visible: false).click
 
-	# file_field = page.find('input[id="upload_upload"]', visible: false)
-	# file_field.set(@file_path)
-	# find('#upload_all').click
-	# sleep 5
+  sleep 5
+  page.evaluate_script("window.location.reload()")
+  expect(page).to have_content 'UC3-Dash.pdf'
 
-	click_link 'Review and Submit'
+	click_link 'Proceed to Review'
   sleep 10
   find('.o-button__submit', visible: false).click
 
   page.driver.browser.alert.accept
   sleep 5
+
+  expect(page).to have_content 'My Datasets'
+  expect(page).to have_current_path("localhost:3000/stash/dashboard")
+  sleep 50
+
+  click_link 'Test Dataset - Best practices for creating unique datasets'
+  expect(page).to have_content 'Test Dataset - Best practices for creating unique datasets'
+
   end
 end
