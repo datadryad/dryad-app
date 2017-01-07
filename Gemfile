@@ -43,8 +43,6 @@ gem 'httparty'
 # run DelayedJob jobs in the background
 gem 'daemons'
 
-gem 'stash_ezid_datacite', :git => 'https://github.com/CDLUC3/stash_ezid_datacite.git'
-
 gem 'exception_notification'
 
 gem 'stash-sword', :git => 'https://github.com/CDLUC3/stash-sword.git'
