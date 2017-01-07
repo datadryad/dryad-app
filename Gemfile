@@ -3,8 +3,6 @@ source 'https://rubygems.org'
 gem 'stash_datacite', path: '../stash_engines/stash_datacite'
 gem 'stash_engine', path: '../stash_engines/stash_engine'
 
-gem 'stash_ezid_datacite', git: 'https://github.com/CDLUC3/stash_ezid_datacite.git'
-
 gem 'database_cleaner', '~> 1.5'
 gem 'diffy', '~> 3.1'
 gem 'equivalent-xml', '~> 0.6.0'
