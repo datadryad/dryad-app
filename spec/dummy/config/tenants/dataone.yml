@@ -23,6 +23,9 @@ default: &default
     strategy: google
   default_license: cc0
   dash_logo_after_tenant: false
+  max_file_size: 500000000
+  max_submission_size: 10000000000
+  max_total_version_size: 100000000000
 
 development:
   <<: *default

@@ -8,6 +8,7 @@ feature "User lands on Uploads page and navigates through it" do
     @user = ::StashEngine::User.create(first_name: 'test', last_name: 'user', email: 'testuser.ucop@gmail.com', tenant_id: @tenant.tenant_id)
     @image_path = File.join(Rails.root, '/public/books.jpeg')
     @file_path = File.join(Rails.root, '/public/UC3-Dash.pdf')
+    @large_file_path = File.join(Rails.root, '/public/test100mb.db')
   end
 
   it "Logged in user fills metadata entry page", js: true do
@@ -61,7 +62,17 @@ feature "User lands on Uploads page and navigates through it" do
 
     page.evaluate_script("window.location.reload()")
     expect(page).to have_content 'books.jpeg'
+
+    page.find('input[id="upload_upload"]', visible: false).set(@large_file_path)
+    page.find('#upload_all', visible: false).click
+    sleep 5
+
+    page.evaluate_script("window.location.reload()")
+    expect(page).to have_content 'test100mb.db'
+
     click_link 'Proceed to Review'
 
+    sleep 5
+    expect(page).to have_content 'Finalize Submission'
   end
 end
