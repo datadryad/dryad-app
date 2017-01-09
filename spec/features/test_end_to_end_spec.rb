@@ -1,6 +1,27 @@
 require 'rails_helper'
 require 'database_cleaner'
 
+def wait_for_ajax
+  Timeout.timeout(Capybara.default_max_wait_time) do
+    loop until finished_all_ajax_requests?
+  end
+end
+
+def finished_all_ajax_requests?
+  page.evaluate_script('jQuery.active').zero?
+end
+
+def handle_popups
+  if page.driver.class == Capybara::Selenium::Driver
+    page.driver.browser.switch_to.alert.accept
+  elsif page.driver.class == Capybara::Webkit::Driver
+    sleep 1 # prevent test from failing by waiting for popup
+    page.driver.browser.accept_js_confirms
+  else
+    raise "Unsupported driver"
+  end
+end
+
 feature "User creates a dataset and submits it to the repository" do
 
   background do
@@ -10,95 +31,92 @@ feature "User creates a dataset and submits it to the repository" do
   end
 
   it "Logged in user fills metadata entry page", js: true do
-    # visit "localhost:3000/stash"
-    visit "http://localhost:3000/stash/auth/developer"
-	within('form') do
-	  fill_in 'Name', with: 'testuser'
-	  fill_in 'Email', with: 'testuser.ucop@gmail.com'
-	  fill_in 'test_domain', with: 'example.edu'
-	  click_button 'Sign In'
-	end
+    visit "localhost:3000/stash"
+    visit "http://#{@tenant.full_domain}/stash/auth/developer"
+  	within('form') do
+  	  fill_in 'Name', with: 'testuser'
+  	  fill_in 'Email', with: 'testuser.ucop@gmail.com'
+  	  fill_in 'test_domain', with: 'example.edu'
+  	  click_button 'Sign In'
+  	end
 
-	click_button 'Start New Dataset'
-	sleep 5
-	expect(page).to have_content 'Describe Your Datasets'
+    click_button 'Start New Dataset'
+    wait_for_ajax
+    expect(page).to have_content 'Describe Your Datasets'
 
-	# Data Type
-	select 'Multiple Types', from: 'Type of Data'
+    # Data Type
+    select 'Multiple Types', from: 'Type of Data'
 
-	# Title
-	fill_in 'Title', with: 'Test Dataset - Best practices for creating unique datasets'
+    # Title
+    fill_in 'Title', with: 'Test Dataset - Best practices for creating unique datasets'
 
-	# Author
-	fill_in 'First Name', with: 'Test'
-	fill_in 'Last Name', with: 'User'
-	fill_in 'Institutional Affiliation', with: 'UCOP'
-	click_link 'Add Author'
+    # Author
+    fill_in 'First Name', with: 'Test'
+    fill_in 'Last Name', with: 'User'
+    fill_in 'Institutional Affiliation', with: 'UCOP'
+    click_link 'Add Author'
 
-	# Abstract
-	fill_in 'Abstract', with: "Lorem ipsum dolor sit amet, consectetur"\
-	"adipiscing elit. Maecenas posuere quis ligula eu luctus."\
-	"Donec laoreet sit amet lacus ut efficitur. Donec mauris erat,"\
-	"aliquet eu finibus id, lobortis at ligula. Donec iaculis orci nisl,"\
-	"quis vulputate orci efficitur nec. Proin imperdiet in lorem eget sodales."\
-	"Etiam blandit eget quam nec tristique. In hac habitasse platea dictumst."\
-	"Integer id nunc in purus sagittis dapibus sed ac augue. Aenean eu lobortis turpis."\
+    # Abstract
+    fill_in 'Abstract', with: "Lorem ipsum dolor sit amet, consectetur"\
+    "adipiscing elit. Maecenas posuere quis ligula eu luctus."\
+    "Donec laoreet sit amet lacus ut efficitur. Donec mauris erat,"\
+    "aliquet eu finibus id, lobortis at ligula. Donec iaculis orci nisl,"\
+    "quis vulputate orci efficitur nec. Proin imperdiet in lorem eget sodales."\
+    "Etiam blandit eget quam nec tristique. In hac habitasse platea dictumst."\
+    "Integer id nunc in purus sagittis dapibus sed ac augue. Aenean eu lobortis turpis."\
 
-	find('summary', text: "Data Description (optional)").click
+    find('summary', text: "Data Description (optional)").click
 
-	#Funding
-	# fill_autocomplete 'contributor[contributor_name]', with: 'Royal Norwegian Embassy in London'
-	fill_in 'Award Number', with: '21-10-513021'
+    #Funding
+    # fill_autocomplete 'contributor[contributor_name]', with: 'Royal Norwegian Embassy in London'
+    fill_in 'Award Number', with: '21-10-513021'
 
-	# Related work(s)
-	select 'is cited by', from: 'related_identifier[relation_type]'
-	select 'DOI', from: 'related_identifier[related_identifier_type]'
-	fill_in 'Identifier', with: 'gov.noaa.class:AVHRR'
-	click_link 'add another related work'
+    # Related work(s)
+    select 'is cited by', from: 'related_identifier[relation_type]'
+    select 'DOI', from: 'related_identifier[related_identifier_type]'
+    fill_in 'Identifier', with: 'gov.noaa.class:AVHRR'
+    click_link 'add another related work'
 
-	find('summary', text: "Location Information (optional)").click
+    find('summary', text: "Location Information (optional)").click
 
-	find('#geo_point').click
+    find('#geo_point').click
 
-	#Geolocation Points
-	fill_in 'geolocation_point[latitude]', with: '37.801239'
-	fill_in 'geolocation_point[longitude]', with: '-122.258301'
-	click_button 'Add'
-	sleep 5
-	expect(page).to have_css('div.c-locations__point', text: '37.801239, -122.258301' )
+    #Geolocation Points
+    fill_in 'geolocation_point[latitude]', with: '37.801239'
+    fill_in 'geolocation_point[longitude]', with: '-122.258301'
+    click_button 'Add'
+    wait_for_ajax
+    expect(page).to have_css('div.c-locations__point', text: '37.801239, -122.258301' )
 
-	find('#geo_box').click
+    find('#geo_box').click
 
-	#Geolocation Boxes
-	fill_in 'geolocation_box[sw_latitude]', with: '25.8371'
-	fill_in 'geolocation_box[sw_longitude]', with: '-106.6460'
-	fill_in 'geolocation_box[ne_latitude]', with: '36.5007'
-	fill_in 'geolocation_box[ne_longitude]', with: '-93.5083'
-	click_button 'Add'
-	sleep 5
-	expect(page).to have_css('div.c-locations__area', text: 'SW 25.8371, -106.646 NE 36.5007, -93.5083')
+    #Geolocation Boxes
+    fill_in 'geolocation_box[sw_latitude]', with: '25.8371'
+    fill_in 'geolocation_box[sw_longitude]', with: '-106.6460'
+    fill_in 'geolocation_box[ne_latitude]', with: '36.5007'
+    fill_in 'geolocation_box[ne_longitude]', with: '-93.5083'
+    click_button 'Add'
+    wait_for_ajax
+    expect(page).to have_css('div.c-locations__area', text: 'SW 25.8371, -106.646 NE 36.5007, -93.5083')
 
-  click_link 'Proceed to Upload'
-  page.find('input[id="upload_upload"]', visible: false).set(@file_path)
-  page.find('#upload_all', visible: false).click
+    click_link 'Proceed to Upload'
+    page.find('input[id="upload_upload"]', visible: false).set(@file_path)
+    page.find('#upload_all', visible: false).click
 
-  sleep 5
-  page.evaluate_script("window.location.reload()")
-  expect(page).to have_content 'UC3-Dash.pdf'
+    wait_for_ajax
+    page.evaluate_script("window.location.reload()")
+    expect(page).to have_content 'UC3-Dash.pdf'
 
-	click_link 'Proceed to Review'
-  sleep 10
-  find('.o-button__submit', visible: false).click
+    click_link 'Proceed to Review'
+    wait_for_ajax
+    find('.o-button__submit', visible: false).click
+    handle_popups
 
-  page.driver.browser.alert.accept
-  sleep 5
+    expect(page).to have_current_path("/stash/dashboard")
+    expect(page).to have_content 'Test Dataset - Best practices for creating unique datasets submitted . There may be a delay for processing before the item is available.'
+    sleep 15
 
-  expect(page).to have_content 'My Datasets'
-  expect(page).to have_current_path("localhost:3000/stash/dashboard")
-  sleep 50
-
-  click_link 'Test Dataset - Best practices for creating unique datasets'
-  expect(page).to have_content 'Test Dataset - Best practices for creating unique datasets'
-
+    click_link 'Test Dataset - Best practices for creating unique datasets'
+    expect(page).to have_content 'The dataset you are trying to view is not available.'
   end
 end

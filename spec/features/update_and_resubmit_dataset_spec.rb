@@ -1,11 +1,33 @@
 require 'rails_helper'
 require 'database_cleaner'
 
+def wait_for_ajax
+  Timeout.timeout(Capybara.default_max_wait_time) do
+    loop until finished_all_ajax_requests?
+  end
+end
+
+def finished_all_ajax_requests?
+  page.evaluate_script('jQuery.active').zero?
+end
+
+def handle_popups
+  if page.driver.class == Capybara::Selenium::Driver
+    page.driver.browser.switch_to.alert.accept
+  elsif page.driver.class == Capybara::Webkit::Driver
+    sleep 1 # prevent test from failing by waiting for popup
+    page.driver.browser.accept_js_confirms
+  else
+    raise "Unsupported driver"
+  end
+end
+
 feature "User updates and submits a published dataset" do
 
   background do
     @tenant = ::StashEngine::Tenant.find(tenant_id = "dataone")
     @user = ::StashEngine::User.create(first_name: 'test', last_name: 'user', email: 'testuser.ucop@gmail.com', tenant_id: @tenant.tenant_id)
+    @file_path = File.join(Rails.root, '/public/UC3-Dash.pdf')
   end
 
   it "Logged in user fills metadata entry page", js: true do
@@ -20,7 +42,7 @@ feature "User updates and submits a published dataset" do
     end
 
     click_button 'Start New Dataset'
-    sleep 5
+    wait_for_ajax
     expect(page).to have_content 'Describe Your Datasets'
 
     #Data Type
@@ -59,18 +81,15 @@ feature "User updates and submits a published dataset" do
     click_link 'add another related work'
 
     click_link 'Review and Submit'
-    sleep 10
+    wait_for_ajax
     find('.o-button__submit', visible: false).click
-    page.driver.browser.alert.accept
-    sleep 5
+    handle_popups
 
-    expect(page).to have_content 'My Datasets'
-    expect(page).to have_current_path("localhost:3000/stash/dashboard")
-
-    sleep 50
-
+    expect(page).to have_current_path("/stash/dashboard")
+    sleep 10
     click_button 'Update'
-    sleep 5
+    wait_for_ajax
+
     expect(page).to have_content 'Describe Your Datasets'
 
     find('summary', text: "Location Information (optional)").click
@@ -81,7 +100,7 @@ feature "User updates and submits a published dataset" do
     fill_in 'geolocation_point[latitude]', with: '37.801239'
     fill_in 'geolocation_point[longitude]', with: '-122.258301'
     click_button 'Add'
-    sleep 3
+    wait_for_ajax
     expect(page).to have_css('div.c-locations__point', text: '37.801239, -122.258301' )
 
     find('#geo_box').click
@@ -92,22 +111,27 @@ feature "User updates and submits a published dataset" do
     fill_in 'geolocation_box[ne_latitude]', with: '36.5007'
     fill_in 'geolocation_box[ne_longitude]', with: '-93.5083'
     click_button 'Add'
-    sleep 3
+    wait_for_ajax
     expect(page).to have_css('div.c-locations__area', text: 'SW 25.8371, -106.646 NE 36.5007, -93.5083')
 
     click_link 'Proceed to Upload'
-
     page.find('input[id="upload_upload"]', visible: false).set(@file_path)
     page.find('#upload_all', visible: false).click
-    sleep 5
+
+    wait_for_ajax
     page.evaluate_script("window.location.reload()")
     expect(page).to have_content 'UC3-Dash.pdf'
 
     click_link 'Proceed to Review'
-    sleep 10
+    wait_for_ajax
     find('.o-button__submit', visible: false).click
+    handle_popups
 
-    page.driver.browser.alert.accept
-    sleep 5
+    expect(page).to have_current_path("/stash/dashboard")
+    expect(page).to have_content 'Test Dataset - Best practices for creating unique datasets submitted . There may be a delay for processing before the item is available.'
+    sleep 15
+
+    click_link 'Test Dataset - Best practices for creating unique datasets'
+    expect(page).to have_content 'The dataset you are trying to view is not available.'
   end
 end
