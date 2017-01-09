@@ -49,12 +49,15 @@
     </option>
   </component>
   <component name="InspectionProjectProfileManager">
-    <option name="PROJECT_PROFILE" />
+    <profile version="1.0">
+      <option name="myName" value="Project Default" />
+    </profile>
     <version value="1.0" />
   </component>
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/stash-merritt.iml" filepath="$PROJECT_DIR$/stash-merritt.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../stash-repo/stash-repo.iml" filepath="$PROJECT_DIR$/../stash-repo/stash-repo.iml" />
     </modules>
   </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_1_6" default="true">
