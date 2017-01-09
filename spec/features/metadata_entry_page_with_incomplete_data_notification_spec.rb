@@ -28,12 +28,10 @@ feature "User lands on metadata entry page and navigates through it" do
       fill_in 'test_domain', with: 'testuser@example.edu'
       click_button 'Sign In'
     end
-    if page.has_content?('My Datasets: Getting Started') == true
-      click_button 'Start New Dataset'
-    else
-      click_button 'Resume'
-    end
-    sleep 5
+
+    click_button 'Start New Dataset'
+
+    wait_for_ajax
     expect(page).to have_content 'Describe Your Datasets'
 
     #Data Type
@@ -45,7 +43,6 @@ feature "User lands on metadata entry page and navigates through it" do
     # #Author
     fill_in 'First Name', with: 'Test'
     fill_in 'Last Name', with: 'User'
-    fill_in 'Institutional Affiliation', with: 'UCOP'
     click_link 'Add Author'
 
     find('summary', text: "Data Description (optional)").click
@@ -57,6 +54,7 @@ feature "User lands on metadata entry page and navigates through it" do
     wait_for_ajax
 
     expect(page).to have_content 'Finalize Submission'
-
+    sleep 3
+    expect(page).to have_content 'You must edit the description to include the following before you can submit your dataset: Abstract Author Affiliation'
   end
 end

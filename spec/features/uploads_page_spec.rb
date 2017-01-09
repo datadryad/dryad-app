@@ -1,6 +1,16 @@
 require 'rails_helper'
 require 'database_cleaner'
 
+def wait_for_ajax
+  Timeout.timeout(Capybara.default_max_wait_time) do
+    loop until finished_all_ajax_requests?
+  end
+end
+
+def finished_all_ajax_requests?
+  page.evaluate_script('jQuery.active').zero?
+end
+
 feature "User lands on Uploads page and navigates through it" do
 
   background do
@@ -8,6 +18,7 @@ feature "User lands on Uploads page and navigates through it" do
     @user = ::StashEngine::User.create(first_name: 'test', last_name: 'user', email: 'testuser.ucop@gmail.com', tenant_id: @tenant.tenant_id)
     @image_path = File.join(Rails.root, '/public/books.jpeg')
     @file_path = File.join(Rails.root, '/public/UC3-Dash.pdf')
+    @large_file_path = File.join(Rails.root, '/public/test100mb.db')
   end
 
   it "Logged in user fills metadata entry page", js: true do
@@ -23,7 +34,7 @@ feature "User lands on Uploads page and navigates through it" do
 
     click_button 'Start New Dataset'
 
-    sleep 5
+    wait_for_ajax
     expect(page).to have_content 'Describe Your Datasets'
 
     #Data Type
@@ -51,17 +62,27 @@ feature "User lands on Uploads page and navigates through it" do
     page.find('input[id="upload_upload"]', visible: false).set(@file_path)
     page.find('#upload_all', visible: false).click
 
-    sleep 5
+    wait_for_ajax
     page.evaluate_script("window.location.reload()")
     expect(page).to have_content 'UC3-Dash.pdf'
 
     page.find('input[id="upload_upload"]', visible: false).set(@image_path)
     page.find('#upload_all', visible: false).click
-    sleep 5
+    wait_for_ajax
 
     page.evaluate_script("window.location.reload()")
     expect(page).to have_content 'books.jpeg'
+
+    page.find('input[id="upload_upload"]', visible: false).set(@large_file_path)
+    page.find('#upload_all', visible: false).click
+    wait_for_ajax
+
+    page.evaluate_script("window.location.reload()")
+    expect(page).to have_content 'test100mb.db'
     click_link 'Proceed to Review'
 
+    wait_for_ajax
+    expect(page).to have_content 'Finalize Submission'
+    expect(page).to have_content 'Test Dataset - Updating practices for creating unique datasets'
   end
 end
