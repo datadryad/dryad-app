@@ -2,6 +2,7 @@
 log/*.log
 pkg/
 spec/dummy/tmp/
+spec/dummy/uploads/
 spec/dummy/log/*.log
 test/dummy/log/*
 test/dummy/db/*
