@@ -13,9 +13,6 @@ gem 'responders', '~> 2.0'
 gem 'kaminari'
 gem 'rubyzip', '>= 1.0.0' # will load new rubyzip version
 
-# TODO: remove this once the EZID calls are out of StashDatacite
-gem 'stash_ezid_datacite', git: 'https://github.com/CDLUC3/stash_ezid_datacite.git'
-
 group :development, :test do
   path '..' do
     gem 'stash_engine'
