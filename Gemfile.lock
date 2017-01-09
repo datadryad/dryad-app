@@ -7,8 +7,9 @@ PATH
       leaflet-rails
       rails (~> 4.2.4)
       responders (~> 2.0)
-      rubyzip
+      rubyzip (>= 1.0.0)
       stash-wrapper (~> 0.1, >= 0.1.11.1)
+      stash_ezid_datacite (~> 0.1)
 
 PATH
   remote: ../stash_engines/stash_engine
@@ -98,6 +99,8 @@ GEM
     equivalent-xml (0.6.0)
       nokogiri (>= 1.4.3)
     erubis (2.7.0)
+    ezid-client (1.5.0)
+      hashie (~> 3.4, >= 3.4.3)
     faraday (0.9.2)
       multipart-post (>= 1.2, < 3)
     filesize (0.1.1)
@@ -260,6 +263,8 @@ GEM
     stash-wrapper (0.1.11.1)
       typesafe_enum (~> 0.1, >= 0.1.7)
       xml-mapping_extensions (~> 0.4, >= 0.4.2)
+    stash_ezid_datacite (0.1.5)
+      ezid-client (~> 1.5)
     thor (0.19.4)
     thread_safe (0.3.5)
     turbolinks (5.0.1)
@@ -301,4 +306,4 @@ DEPENDENCIES
   webmock (~> 1.24)
 
 BUNDLED WITH
-   1.13.6
+   1.13.7
