@@ -47,8 +47,9 @@ PATH
       leaflet-rails
       rails (~> 4.2.4)
       responders (~> 2.0)
-      rubyzip
+      rubyzip (>= 1.0.0)
       stash-wrapper (~> 0.1, >= 0.1.11.1)
+      stash_ezid_datacite (~> 0.1)
 
 GEM
   remote: https://rubygems.org/
@@ -395,7 +396,6 @@ DEPENDENCIES
   capybara
   chromedriver-helper
   database_cleaner (~> 1.5)
-  datacite-mapping
   kaminari
   mysql2 (~> 0.3.20)
   page-object
@@ -406,11 +406,10 @@ DEPENDENCIES
   rubyzip (>= 1.0.0)
   selenium-webdriver
   simplecov
-  stash-wrapper
   stash_datacite!
   stash_discovery!
   stash_engine!
   stash_ezid_datacite!
 
 BUNDLED WITH
-   1.13.6
+   1.13.7

@@ -18,13 +18,18 @@ Gem::Specification.new do |s|
   s.test_files = Dir['test/**/*']
 
   s.add_dependency 'rails', '~> 4.2.4'
-  s.add_development_dependency 'mysql2'
   s.add_dependency 'responders', '~> 2.0'
   s.add_dependency 'leaflet-rails'
-  s.add_dependency 'datacite-mapping', '~> 0.2', '>= 0.2.2'
   s.add_dependency 'kaminari'
+  s.add_dependency 'rubyzip', '>= 1.0.0'
+
+  s.add_dependency 'datacite-mapping', '~> 0.2', '>= 0.2.2'
   s.add_dependency 'stash-wrapper', '~> 0.1', '>= 0.1.11.1'
-  s.add_dependency 'rubyzip'
+
+  # TODO: remove this once the EZID calls are out of StashDatacite
+  s.add_dependency 'stash_ezid_datacite', '~> 0.1'
+
+  s.add_development_dependency 'mysql2', '~> 0.3'
 
   s.add_development_dependency 'rspec', '~> 3.5'
   s.add_development_dependency 'rspec-rails', '~> 3.5'
