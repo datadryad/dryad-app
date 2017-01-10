@@ -5,7 +5,6 @@ require 'rspec/core'
 require 'rspec/core/rake_task'
 
 namespace :spec do
-
   desc 'Run all unit tests'
   RSpec::Core::RakeTask.new(:unit) do |task|
     task.rspec_opts = %w(--color --format documentation --order default)
