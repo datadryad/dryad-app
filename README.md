@@ -1,4 +1,4 @@
-# Stash::Repo
+# Stash::Merritt
 
 [![Build Status](https://travis-ci.org/CDLUC3/stash-merritt.svg?branch=master)](https://travis-ci.org/CDLUC3/stash-merritt) 
 [![Code Climate](https://codeclimate.com/github/CDLUC3/stash-merritt.svg)](https://codeclimate.com/github/CDLUC3/stash-merritt) 
