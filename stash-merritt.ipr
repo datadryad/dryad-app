@@ -60,7 +60,7 @@
       <module fileurl="file://$PROJECT_DIR$/../stash-repo/stash-repo.iml" filepath="$PROJECT_DIR$/../stash-repo/stash-repo.iml" />
     </modules>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_6" default="true">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_3" default="false" project-jdk-name="RVM: ruby-2.2.5 [global] (1)" project-jdk-type="RUBY_SDK">
     <output url="file://$PROJECT_DIR$/out" />
   </component>
   <component name="PropertiesComponent">

@@ -5,6 +5,7 @@
     <content url="file://$MODULE_DIR$" />
     <orderEntry type="jdk" jdkName="RVM: ruby-2.2.5" jdkType="RUBY_SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="module" module-name="stash-repo" />
     <orderEntry type="library" scope="PROVIDED" name="ast (v2.3.0, RVM: ruby-2.2.5) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="bundler (v1.13.7, RVM: ruby-2.2.5) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="colorize (v0.8.1, RVM: ruby-2.2.5) [gem]" level="application" />
@@ -28,5 +29,9 @@
     <orderEntry type="library" scope="PROVIDED" name="simplecov-html (v0.9.0, RVM: ruby-2.2.5) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="unicode-display_width (v1.1.2, RVM: ruby-2.2.5) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="yard (v0.9.5, RVM: ruby-2.2.5) [gem]" level="application" />
+  </component>
+  <component name="RModuleSettingsStorage">
+    <LOAD_PATH number="2" string0="$MODULE_DIR$/lib" string1="$MODULE_DIR$/spec" />
+    <I18N_FOLDERS number="0" />
   </component>
 </module>
