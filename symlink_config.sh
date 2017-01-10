@@ -6,7 +6,7 @@ CURRENTDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 echo $CURRENTDIR
 
-find "$mydir" -name *.yml | while read -r line
+find "$mydir" -name '*.yml' | while read -r line
 do
 	shortfn=${line:len}
         fullfn="$CURRENTDIR/$line"
