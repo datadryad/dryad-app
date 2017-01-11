@@ -1,5 +1,4 @@
 require 'rails_helper'
-require 'database_cleaner'
 
 feature "User lands on metadata entry page and navigates through it" do
 

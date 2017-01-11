@@ -1,5 +1,4 @@
 require 'rails_helper'
-require 'database_cleaner'
 
 def wait_for_ajax
   Timeout.timeout(Capybara.default_max_wait_time) do
