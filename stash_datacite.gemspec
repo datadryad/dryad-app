@@ -23,7 +23,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'kaminari'
   s.add_dependency 'rubyzip', '>= 1.0.0'
 
-  s.add_dependency 'datacite-mapping', '~> 0.2', '>= 0.2.2'
+  s.add_dependency 'datacite-mapping', '~> 0.2', '>= 0.2.5'
   s.add_dependency 'stash-wrapper', '~> 0.1', '>= 0.1.11.1'
 
   # TODO: remove this once the EZID calls are out of StashDatacite

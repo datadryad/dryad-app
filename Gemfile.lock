@@ -35,7 +35,7 @@ PATH
   remote: .
   specs:
     stash_datacite (0.0.5)
-      datacite-mapping (~> 0.2, >= 0.2.2)
+      datacite-mapping (~> 0.2, >= 0.2.5)
       kaminari
       leaflet-rails
       rails (~> 4.2.4)
@@ -133,7 +133,7 @@ GEM
       faker (>= 1.1.2)
       yml_reader (>= 0.6)
     database_cleaner (1.5.3)
-    datacite-mapping (0.2.4)
+    datacite-mapping (0.2.5)
       typesafe_enum (~> 0.1, >= 0.1.7)
       xml-mapping_extensions (~> 0.4, >= 0.4.7)
     deep_merge (1.1.1)
