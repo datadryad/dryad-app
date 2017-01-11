@@ -14,43 +14,61 @@
  *= require_self
  */
 
+.pages_about ul {
+  list-style: circle outside;
+}
+.pages_about li {
+  padding: 10px;
+}
+
+.pages_about h1 {
+  color: #e65722;
+}
+.pages_about h3 {
+  font-size: 1.19em;
+  color: #e65722;
+}
+.pages_about h2 {
+  color: #005581;
+}
+.pages_about h4 {
+  color: #005581;
+}
+
 .pages_about table {
-  padding: 0;
+  padding: 10px;
 }
 .pages_about table tr {
-  border-top: 1px solid #cccccc;
+  border-top: 0.5px solid #cccccc;
   background-color: white;
-  margin: 0;
-  padding: 0;
+  margin: 10px;
+  padding: 10px;
 }
 .pages_about table tr:nth-child(2n) {
   background-color: #f8f8f8;
 }
 .pages_about table tr th {
   font-weight: bold;
-  border: 1px solid #cccccc;
+  border: 0.5px solid #cccccc;
   text-align: left;
-  margin: 0;
-  padding: 6px 13px;
+  margin: 10px;
+  padding: 10px 18px;
 }
 .pages_about table tr td {
-  border: 1px solid #cccccc;
+  border: 0.5px solid #cccccc;
   text-align: left;
-  margin: 0;
-  padding: 6px 13px;
+  margin: 10px;
+  padding: 10px 18px;
 }
 .pages_about table tr th :first-child {
-  margin-top: 0;
+  margin-top: 20;
 }
-
 .pages_about table tr td :first-child {
-  margin-top: 0;
+  margin-top: 20;
 }
-
 .pages_about table tr th :last-child {
-  margin-bottom: 0;
+  margin-bottom: 20;
 }
-
 .pages_about table tr td :last-child {
-  margin-bottom: 0;
+  margin-bottom: 20;
 }
