@@ -34,7 +34,6 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'rspec', '~> 3.5'
   s.add_development_dependency 'rspec-rails', '~> 3.5'
   s.add_development_dependency 'capybara'
-  s.add_development_dependency 'page-object'
   s.add_development_dependency 'selenium-webdriver'
   s.add_development_dependency 'chromedriver-helper'
   s.add_development_dependency 'database_cleaner', '~> 1.5'
