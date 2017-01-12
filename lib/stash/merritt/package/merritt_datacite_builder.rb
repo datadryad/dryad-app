@@ -1,3 +1,4 @@
+require 'datacite/mapping/datacite_xml_factory'
 require 'stash/repo/util/file_builder'
 
 module Stash

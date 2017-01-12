@@ -7,7 +7,7 @@ PATH
   remote: ../stash_engines/stash_datacite
   specs:
     stash_datacite (0.0.5)
-      datacite-mapping (~> 0.2, >= 0.2.2)
+      datacite-mapping (~> 0.2, >= 0.2.5)
       kaminari
       leaflet-rails
       rails (~> 4.2.4)
@@ -100,13 +100,17 @@ GEM
       mime-types (>= 1.16)
     colorize (0.8.1)
     concurrent-ruby (1.0.4)
-    datacite-mapping (0.2.4)
+    database_cleaner (1.5.3)
+    datacite-mapping (0.2.5)
       typesafe_enum (~> 0.1, >= 0.1.7)
       xml-mapping_extensions (~> 0.4, >= 0.4.7)
     diff-lcs (1.2.5)
+    diffy (3.1.0)
     docile (1.1.5)
     domain_name (0.5.20161129)
       unf (>= 0.0.5, < 1.0.0)
+    equivalent-xml (0.6.0)
+      nokogiri (>= 1.4.3)
     erubis (2.7.0)
     ezid-client (1.5.0)
       hashie (~> 3.4, >= 3.4.3)
@@ -140,7 +144,7 @@ GEM
     kaminari (0.17.0)
       actionpack (>= 3.0.0)
       activesupport (>= 3.0.0)
-    leaflet-rails (0.7.7)
+    leaflet-rails (1.0.2)
     loofah (2.0.3)
       nokogiri (>= 1.5.9)
     mail (2.6.4)
@@ -151,6 +155,7 @@ GEM
     multi_json (1.12.1)
     multi_xml (0.6.0)
     multipart-post (2.0.0)
+    mysql2 (0.4.5)
     netrc (0.11.0)
     nokogiri (1.6.8.1)
       mini_portile2 (~> 2.1.0)
@@ -287,6 +292,10 @@ PLATFORMS
 
 DEPENDENCIES
   bundler (~> 1.7)
+  database_cleaner (~> 1.5)
+  diffy (~> 3.1)
+  equivalent-xml (~> 0.6.0)
+  mysql2 (~> 0.3)
   rake (~> 10.4)
   rspec (~> 3.2)
   rubocop (~> 0.37)

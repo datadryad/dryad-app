@@ -2,7 +2,11 @@ require 'fileutils'
 require 'tmpdir'
 require 'stash_engine'
 require 'stash_datacite'
-require 'stash/merritt/package/datacite_xml_factory'
+require 'datacite/mapping/datacite_xml_factory'
+require 'stash/merritt/package/data_one_manifest_builder'
+require 'stash/merritt/package/merritt_datacite_builder'
+require 'stash/merritt/package/merritt_delete_builder'
+require 'stash/merritt/package/merritt_oaidc_builder'
 require 'stash/merritt/package/stash_wrapper_builder'
 
 module Stash

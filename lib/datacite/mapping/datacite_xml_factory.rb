@@ -1,10 +1,8 @@
-require 'stash_engine'
-require 'stash_datacite'
 require 'datacite/mapping'
 
 module Datacite
   module Mapping
-    class DataciteXMLFactory # rubocop:disable Metrics/ClassLength
+    class DataciteXMLFactory
       attr_reader :doi_value
       attr_reader :se_resource
       attr_reader :total_size_bytes
@@ -64,7 +62,7 @@ module Datacite
 
       def to_dcs_type(sd_resource_type)
         ResourceType.new(resource_type_general: sd_resource_type.resource_type_general_mapping_obj,
-                              value: sd_resource_type.resource_type)
+                         value: sd_resource_type.resource_type)
       end
 
       def add_locations(resource)
@@ -146,7 +144,7 @@ module Datacite
       def add_funding(resource, datacite_3: false)
         sd_funder_contribs = se_resource.contributors.completed.where(contributor_type: 'funder')
         if datacite_3
-           sd_funder_contribs.each do |c|
+          sd_funder_contribs.each do |c|
             contrib_name = c.contributor_name
             award_num = c.award_number
             desc_text = "Data were created with funding from #{contrib_name}"

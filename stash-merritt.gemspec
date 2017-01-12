@@ -39,4 +39,10 @@ Gem::Specification.new do |spec| # rubocop:disable Metrics/BlockLength
   spec.add_development_dependency 'simplecov-console', '~> 0.2.0'
   spec.add_development_dependency 'rubocop', '~> 0.37'
   spec.add_development_dependency 'yard', '~> 0.8'
+
+  spec.add_development_dependency 'database_cleaner', '~> 1.5'
+  spec.add_development_dependency 'diffy', '~> 3.1'
+  spec.add_development_dependency 'equivalent-xml', '~> 0.6.0'
+  spec.add_development_dependency 'mysql2', '~> 0.3'
+
 end
