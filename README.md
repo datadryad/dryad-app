@@ -31,4 +31,23 @@ deposit module for submitting
 1. submit Datacite XML and landing page URL to EZID
 1. clean up temporary files
 
+## Development
 
+### Test database creation
+
+For compatibility with Travis, you need
+
+1. a local MySQL installation
+2. a `travis@localhost` user with no password
+3. a `stash_merritt` database
+4. `travis` to have all privileges on that database
+
+This should look something like:
+
+```
+$ mysql -u root
+mysql> create user 'travis'@'localhost';
+mysql> create database 'stash_merritt' character set UTF8mb4 collate utf8mb4_bin;
+mysql> use 'stash_merritt';
+mysql> grant all on 'stash_merritt'.* to 'travis'@'localhost';
+```
