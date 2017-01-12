@@ -4,7 +4,7 @@ require 'datacite/mapping'
 
 module Datacite
   module Mapping
-    class DataciteXMLBuilder # rubocop:disable Metrics/ClassLength
+    class DataciteXMLFactory # rubocop:disable Metrics/ClassLength
       attr_reader :doi_value
       attr_reader :se_resource
       attr_reader :total_size_bytes
