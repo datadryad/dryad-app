@@ -11,7 +11,7 @@ module Stash
         end
 
         def file_name
-          'mrt-delete.xml'
+          'mrt-delete.txt'
         end
 
         def contents

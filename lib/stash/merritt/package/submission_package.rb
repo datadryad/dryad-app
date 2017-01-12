@@ -21,21 +21,25 @@ module Stash
           @tenant = tenant
         end
 
-        def create_zipfile
-          zipfile_path = File.join(workdir, "#{resource_id}_archive.zip")
-          Zip::File.open(zipfile_path, Zip::File::CREATE) do |zipfile|
-            builders.each do |builder|
-              file = builder.write_file(workdir)
-              zipfile.add(builder.file_name, file) if file
+        def zipfile
+          @zipfile ||= begin
+            zipfile_path = File.join(workdir, "#{resource_id}_archive.zip")
+            Zip::File.open(zipfile_path, Zip::File::CREATE) do |zipfile|
+              builders.each do |builder|
+                file = builder.write_file(workdir)
+                zipfile.add(builder.file_name, file) if file
+              end
+              uploads.each do |d|
+                zipfile.add(d[:name], d[:path])
+              end
             end
-            uploads.each do |d|
-              zipfile.add(d[:name], d[:path])
-            end
+            zipfile_path
           end
         end
 
         def cleanup
           FileUtils.remove_dir(workdir)
+          @zipfile = nil
         end
 
         def to_s
@@ -107,7 +111,7 @@ module Stash
 
         def datacite_xml_factory
           @datacite_xml_factory ||= begin
-            DataciteXMLFactory.new(
+            Datacite::Mapping::DataciteXMLFactory.new(
               doi_value: resource.identifier_value,
               se_resource: resource,
               total_size_bytes: total_size_bytes,

@@ -81,6 +81,6 @@ StashDatacite::ResourcePatch.associate_with_resource(StashEngine::Resource)
 require 'util/resource_builder'
 
 # ------------------------------------------------------------
-# Stash::Repo
+# Stash::Merritt
 
-require 'stash/repo'
+require 'stash/merritt'

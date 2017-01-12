@@ -25,3 +25,7 @@ RSpec.configure do |config|
     DatabaseCleaner.clean
   end
 end
+
+# Helpers
+
+require 'util/resource_builder'
