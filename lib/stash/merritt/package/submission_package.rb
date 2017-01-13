@@ -25,16 +25,16 @@ module Stash
           @zipfile ||= begin
             zipfile_path = File.join(workdir, "#{resource_id}_archive.zip")
             Zip::File.open(zipfile_path, Zip::File::CREATE) do |zipfile|
-              builders.each do |builder|
-                file = builder.write_file(workdir)
-                zipfile.add(builder.file_name, file) if file
-              end
-              uploads.each do |d|
-                zipfile.add(d[:name], d[:path])
-              end
+              builders.each { |builder| add_to_zipfile(zipfile, builder) }
+              uploads.each { |upload| zipfile.add(upload[:name], upload[:path]) }
             end
             zipfile_path
           end
+        end
+
+        def add_to_zipfile(zipfile, builder)
+          return unless (file = builder.write_file(workdir))
+          zipfile.add(builder.file_name, file)
         end
 
         def cleanup!
@@ -53,13 +53,11 @@ module Stash
         end
 
         def builders
-          [
-            stash_wrapper_builder,
-            mrt_datacite_builder,
-            mrt_oaidc_builder,
-            mrt_dataone_manifest_builder,
-            mrt_delete_builder
-          ]
+          [stash_wrapper_builder,
+           mrt_datacite_builder,
+           mrt_oaidc_builder,
+           mrt_dataone_manifest_builder,
+           mrt_delete_builder]
         end
 
         def stash_wrapper_builder

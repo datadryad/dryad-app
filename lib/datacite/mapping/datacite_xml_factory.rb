@@ -2,7 +2,7 @@ require 'datacite/mapping'
 
 module Datacite
   module Mapping
-    class DataciteXMLFactory
+    class DataciteXMLFactory # rubocop:disable Metrics/ClassLength
       attr_reader :doi_value
       attr_reader :se_resource
       attr_reader :total_size_bytes
@@ -142,31 +142,42 @@ module Datacite
       end
 
       def add_funding(resource, datacite_3: false)
-        sd_funder_contribs = se_resource.contributors.completed.where(contributor_type: 'funder')
-        if datacite_3
-          sd_funder_contribs.each do |c|
-            contrib_name = c.contributor_name
-            award_num = c.award_number
-            desc_text = "Data were created with funding from #{contrib_name}"
-            desc_text << " under grant(s) #{award_num}." if award_num
-            desc = Description.new(type: DescriptionType::OTHER, value: desc_text)
-            resource.descriptions << desc
+        datacite_3 ? add_dc3_funders(resource) : add_funding_references(resource)
+      end
 
-            contrib = Contributor.new(
-              name: contrib_name,
-              identifier: to_dcs_identifier(c.name_identifier),
-              type: ContributorType::FUNDER
-            )
-            resource.contributors << contrib
-          end
-        else
-          resource.funding_references = sd_funder_contribs.map do |c|
-            FundingReference.new(
-              name: c.contributor_name,
-              award_number: c.award_number
-            )
-          end
+      def sd_funder_contribs
+        se_resource.contributors.completed.where(contributor_type: 'funder')
+      end
+
+      def add_dc3_funders(resource)
+        sd_funder_contribs.each do |contrib|
+          resource.descriptions << to_funding_desc(contrib)
+          resource.contributors << to_dcs_funder(contrib)
         end
+      end
+
+      def add_funding_references(resource)
+        resource.funding_references = sd_funder_contribs.map do |c|
+          FundingReference.new(
+            name: c.contributor_name,
+            award_number: c.award_number
+          )
+        end
+      end
+
+      def to_dcs_funder(contrib)
+        Contributor.new(
+          name: contrib.contributor_name,
+          identifier: to_dcs_identifier(contrib.name_identifier),
+          type: ContributorType::FUNDER
+        )
+      end
+
+      def to_funding_desc(contrib)
+        award_num = contrib.award_number
+        desc_text = "Data were created with funding from #{contrib.contributor_name}"
+        desc_text << " under grant(s) #{award_num}." if award_num
+        Description.new(type: DescriptionType::OTHER, value: desc_text)
       end
 
       def to_dcs_identifier(sd_name_ident)

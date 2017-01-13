@@ -134,7 +134,7 @@ module Stash
             @zipfile_path = package.zipfile
             workdir = File.dirname(zipfile_path)
             package.cleanup!
-            expect(File.exists?(workdir)).to eq(false)
+            expect(File.exist?(workdir)).to eq(false)
           end
         end
 
@@ -148,7 +148,7 @@ module Stash
             expect(package_str).to include('SubmissionPackage')
           end
           it 'includes the resource ID' do
-            expect(package_str).to include("#{resource.id}")
+            expect(package_str).to include(resource.id.to_s)
           end
         end
       end

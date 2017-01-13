@@ -11,11 +11,11 @@ module Stash
 
       def tasks_for(resource_id:)
         [
-            Ezid::EnsureIdentifierTask.new(resource_id: resource_id, ezid_client: ezid_client),
-            Package::CreatePackageTask.new(resource_id: resource_id),
-            Sword::SwordTask.new(sword_client: sword_client),
-            Ezid::UpdateMetadataTask.new(ezid_client: ezid_client, url_helpers: url_helpers, resource_id: resource_id),
-            Package::PackageCleanupTask.new(resource_id: resource_id)
+          Ezid::EnsureIdentifierTask.new(resource_id: resource_id, ezid_client: ezid_client),
+          Package::CreatePackageTask.new(resource_id: resource_id),
+          Sword::SwordTask.new(sword_client: sword_client),
+          Ezid::UpdateMetadataTask.new(ezid_client: ezid_client, url_helpers: url_helpers, resource_id: resource_id),
+          Package::PackageCleanupTask.new(resource_id: resource_id)
         ]
       end
 
@@ -23,11 +23,11 @@ module Stash
         @ezid_client ||= begin
           id_params = tenant.identifier_service
           StashEzid::Client.new(
-              shoulder: id_params.shoulder,
-              account: id_params.account,
-              password: id_params.password,
-              owner: id_params.owner,
-              id_scheme: id_params.scheme
+            shoulder: id_params.shoulder,
+            account: id_params.account,
+            password: id_params.password,
+            owner: id_params.owner,
+            id_scheme: id_params.scheme
           )
         end
       end
@@ -36,10 +36,10 @@ module Stash
         @sword_client ||= begin
           repository = tenant.repository
           Stash::Sword::Client.new(
-              logger: log,
-              collection_uri: repository.endpoint,
-              username: repository.username,
-              password: repository.password
+            logger: log,
+            collection_uri: repository.endpoint,
+            username: repository.username,
+            password: repository.password
           )
         end
       end

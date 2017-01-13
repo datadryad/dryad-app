@@ -22,3 +22,11 @@ Style/EmptyLinesAroundModuleBody:
 Style/EmptyLinesAroundBlockBody:
   Enabled: false
 
+# Unclear why it's a good idea to give parameters semantically meaningless names
+Style/SingleLineBlockParams:
+  Enabled: false
+
+# These 'set' methods aren't conventional accessors, but Rubocop doesn't know that
+Style/AccessorMethodName:
+  Exclude:
+    - 'spec/util/resource_builder.rb'
