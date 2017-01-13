@@ -55,7 +55,7 @@ module Stash
         private
 
         def resource
-          Thread.current[:submission_package_resource] ||= StashEngine::Resource.find(resource_id)
+          @resource ||= StashEngine::Resource.find(resource_id)
         end
 
         def builders
@@ -77,7 +77,7 @@ module Stash
         end
 
         def mrt_oaidc_builder
-          @mrt_oaidc_builder ||= MerrittOAIDCBuilder.new(resource: resource, tenant: tenant)
+          @mrt_oaidc_builder ||= MerrittOAIDCBuilder.new(resource_id: resource_id, tenant: tenant)
         end
 
         def mrt_dataone_manifest_builder
@@ -85,7 +85,7 @@ module Stash
         end
 
         def mrt_delete_builder
-          @mrt_delete_builder ||= MerrittDeleteBuilder.new(resource)
+          @mrt_delete_builder ||= MerrittDeleteBuilder.new(resource_id: resource_id)
         end
 
         def total_size_bytes
@@ -113,7 +113,7 @@ module Stash
           @datacite_xml_factory ||= begin
             Datacite::Mapping::DataciteXMLFactory.new(
               doi_value: resource.identifier_value,
-              se_resource: resource,
+              se_resource_id: resource_id,
               total_size_bytes: total_size_bytes,
               version: version_number
             )

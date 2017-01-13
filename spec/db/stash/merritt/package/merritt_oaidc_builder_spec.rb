@@ -55,7 +55,7 @@ module Stash
               'IsOriginalFormOf' => 'hasVersion'
             }
 
-            dc_builder = MerrittOAIDCBuilder.new(resource: resource, tenant: tenant)
+            dc_builder = MerrittOAIDCBuilder.new(resource_id: resource.id, tenant: tenant)
             xml_string = dc_builder.contents
             rel_ids.each do |rel_id|
               predicate = expected[rel_id.relation_type_friendly] || 'relation'

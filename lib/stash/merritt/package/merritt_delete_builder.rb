@@ -4,14 +4,15 @@ module Stash
   module Merritt
     module Package
       class MerrittDeleteBuilder < Stash::Repo::Util::FileBuilder
-        attr_reader :resource
+        attr_reader :resource_id
 
-        def initialize(resource)
-          @resource = resource
+        def initialize(resource_id:)
+          super(file_name: 'mrt-delete.txt')
+          @resource_id = resource_id
         end
 
-        def file_name
-          'mrt-delete.txt'
+        def resource
+          @resource ||= StashEngine::Resource.find(resource_id)
         end
 
         def contents

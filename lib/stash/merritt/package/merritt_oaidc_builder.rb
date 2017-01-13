@@ -20,16 +20,13 @@ module Stash
           'haspart' => 'hasPart'
         }.freeze
 
-        attr_reader :resource
+        attr_reader :resource_id
         attr_reader :tenant
 
-        def initialize(resource:, tenant:)
-          @resource = resource
+        def initialize(resource_id:, tenant:)
+          super(file_name: 'mrt-oaidc.xml')
+          @resource_id = resource_id
           @tenant = tenant
-        end
-
-        def file_name
-          'mrt-oaidc.xml'
         end
 
         def contents # rubocop:disable Metrics/MethodLength
@@ -50,6 +47,10 @@ module Stash
         end
 
         private
+
+        def resource
+          @resource ||= StashEngine::Resource.find(resource_id)
+        end
 
         def add_creators(xml)
           resource.creators.each { |c| xml.send(:'dc:creator', c.creator_full_name.delete("\r").to_s) }

@@ -9,11 +9,8 @@ module Stash
 
         # @param factory [DataciteXMLFactory] the Datacite XML factory
         def initialize(factory)
+          super(file_name: 'mrt-datacite.xml')
           @factory = factory
-        end
-
-        def file_name
-          'mrt-datacite.xml'
         end
 
         def contents

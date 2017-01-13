@@ -35,7 +35,7 @@ module Datacite
 
         @xml_factory = DataciteXMLFactory.new(
           doi_value: doi_value,
-          se_resource: resource,
+          se_resource_id: resource.id,
           total_size_bytes: total_size_bytes,
           version: 1
         )

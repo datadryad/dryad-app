@@ -9,13 +9,10 @@ module Stash
       attr_reader :version_number
 
       def initialize(dcs_resource:, version_number:, uploads:)
+        super(file_name: 'stash-wrapper.xml')
         @dcs_resource = dcs_resource
         @version_number = version_number
         @uploads = uploads
-      end
-
-      def file_name
-        'stash-wrapper.xml'
       end
 
       def contents

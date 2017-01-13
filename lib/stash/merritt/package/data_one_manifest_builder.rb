@@ -22,11 +22,8 @@ module Stash
         # @param files [Array[Hash]] a list of "files", where each file is a hash
         #   keyed by `:name` and `:type`
         def initialize(files)
+          super(file_name: 'mrt-dataone-manifest.txt')
           @files = files
-        end
-
-        def file_name
-          'mrt-dataone-manifest.txt'
         end
 
         def contents
