@@ -37,7 +37,7 @@ module Stash
           end
         end
 
-        def cleanup
+        def cleanup!
           FileUtils.remove_dir(workdir)
           @zipfile = nil
         end

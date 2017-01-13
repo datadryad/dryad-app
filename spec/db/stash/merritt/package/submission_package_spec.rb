@@ -127,6 +127,16 @@ module Stash
             end
           end
         end
+
+        describe :cleanup! do
+          it 'removes the working directory' do
+            package = SubmissionPackage.new(resource_id: resource.id, tenant: tenant)
+            @zipfile_path = package.zipfile
+            workdir = File.dirname(zipfile_path)
+            package.cleanup!
+            expect(File.exists?(workdir)).to eq(false)
+          end
+        end
       end
     end
   end
