@@ -76,11 +76,6 @@ CREATE USER 'dashuser'@'%' IDENTIFIED BY '<my-password>';
 GRANT ALL PRIVILEGES ON dash . * TO 'dashuser'@'%';
 FLUSH PRIVILEGES;
 
-# If you would like to import a sample record into your database, use the
-# following two lines. Change the path to the sample_record.sql to match your path, if needed
-USE dash;
-source dash2-config/sample_data/sample_record.sql;
-
 # To exit the MySQL client, type *exit* or press ctrl-d
 
 ```
@@ -160,6 +155,55 @@ bundle exec rake db:migrate
 rails s
 ```
 
+If you want to view sample data, then insert a sample record into the database (recommended).
+
+```
+# connect to mysql, note the <username> is probably root in a new installation
+mysql -u <username> -p
+
+# Use the following two lines.
+USE dash;
+source ../dash2-config/sample_data/sample_record.sql;
+
+# To exit the MySQL client, type *exit* or press ctrl-d
+```
+
 ## Testing basic functionality
 
+### Explore the datasets
 Open your web browser and go to [http://localhost:3000](http://localhost:3000) to see the homepage.
+
+The *Explore Data* link will allow you to search and view your dataset, if you imported a sample record.
+
+![Explore Splash](./explore1.png)<br><br>
+![Search Results](./explore2.png)<br><br>
+![Dataset Page](./explore3.png)
+
+### Use the developer login
+
+Until a tenant is configured and login methods are set up you can use the developer login to access password protected parts of the application for testing or development. The developer login is only available in the development and test environments and is a useful way to test functionality and tenant configuration without having to have a new domain name registered for each tenant (very useful on a local or development machine).  It is also useful for pre-testing a tenant and submitting test records for that tenant into a repository without having to obtain an account for the authentication method (such as Shibboleth with a campus account) that a tenant normally uses.
+
+To use the developer login:
+
+1. Click the *More Dash Sites* drop-down menu and then click *developer login (only development)*.<br>![More Dash Sites](./dev_login1.png)<br><br>
+2. In the login screen enter a name, email address and a domain name.  The domain name should allow the *domain_regex* regular expression from one of your tenant configurations to match the string you enter as the test domain.<br>![Developer Login Page](./dev_login2.png).
+3. Until you log in again or your cookies expire, the user interface will display items specific to the tenant you entered the domain name for (such as the logo, help and other things configured for that tenant). It will also act as that tenant when submitting data to a configured repository.
+
+### Enter dataset metadata, upload files and preview the landing page
+
+After you log in, you will be able to start entering metadata and uploading files for a dataset by clicking the *My Datasets* menu link.
+
+Metadata entry, file uploading and landing page preview should be functional.  However, submitting a dataset to an underlying repository probably will not work without configuring the repository and probably adding some additional code.
+
+We have enabled submission to a SWORD-enabled Merritt repository, but have only implemented relevant parts of the SWORD specification and not every functionality in the specification has been implemented.
+
+## Next steps in configuration
+
+### Configuring Google authentication
+TODO
+
+### Configuring Shibboleth authentication
+TODO
+
+### Configuring ORCID authentication (or obtaining an ORCID)
+TODO
