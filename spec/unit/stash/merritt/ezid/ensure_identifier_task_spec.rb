@@ -41,14 +41,14 @@ module Stash
             allow(identifier).to receive(:id).and_return(new_identifier_str)
 
             ezid_client = instance_double(::Ezid::Client)
-            expect(ezid_client).to receive(:mint_identifier)
-              .with('doi:10.15146/R3', status: 'reserved', profile: 'datacite')
-              .and_return(identifier)
             allow(::Ezid::Client).to receive(:new)
               .with(user: 'stash', password: '3cc9d3fbd9788148c6a32a1415fa673a')
               .and_return(ezid_client)
 
             expect(resource).to receive(:identifier_str).and_return(nil)
+            expect(ezid_client).to receive(:mint_identifier)
+              .with('doi:10.15146/R3', status: 'reserved', profile: 'datacite')
+              .and_return(identifier)
             expect(resource).to receive(:ensure_identifier).with(new_identifier_str)
             expect(task.exec).to eq(new_identifier_str)
           end

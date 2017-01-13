@@ -21,6 +21,12 @@ module Stash
           @tenant = tenant
         end
 
+        def dc3_xml
+          @dc3_xml ||= begin
+            datacite_xml_factory.build_datacite_xml(datacite_3: true)
+          end
+        end
+
         def zipfile
           @zipfile ||= begin
             zipfile_path = File.join(workdir, "#{resource_id}_archive.zip")
@@ -49,15 +55,11 @@ module Stash
         private
 
         def resource
-          @resource ||= StashEngine::Resource.find(resource_id)
+          Thread.current[:submission_package_resource] ||= StashEngine::Resource.find(resource_id)
         end
 
         def builders
-          [stash_wrapper_builder,
-           mrt_datacite_builder,
-           mrt_oaidc_builder,
-           mrt_dataone_manifest_builder,
-           mrt_delete_builder]
+          [stash_wrapper_builder, mrt_datacite_builder, mrt_oaidc_builder, mrt_dataone_manifest_builder, mrt_delete_builder]
         end
 
         def stash_wrapper_builder

@@ -25,6 +25,8 @@ module Stash
           new_identifier_str
         end
 
+        private
+
         def ezid_client
           @ezid_client ||= begin
             id_params = tenant.identifier_service
