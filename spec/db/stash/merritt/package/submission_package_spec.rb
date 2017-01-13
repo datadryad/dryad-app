@@ -137,6 +137,20 @@ module Stash
             expect(File.exists?(workdir)).to eq(false)
           end
         end
+
+        describe :to_s do
+          attr_reader :package_str
+          before(:each) do
+            package = SubmissionPackage.new(resource_id: resource.id, tenant: tenant)
+            @package_str = package.to_s
+          end
+          it 'includes the class name' do
+            expect(package_str).to include('SubmissionPackage')
+          end
+          it 'includes the resource ID' do
+            expect(package_str).to include("#{resource.id}")
+          end
+        end
       end
     end
   end
