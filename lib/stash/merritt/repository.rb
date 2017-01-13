@@ -11,25 +11,12 @@ module Stash
 
       def tasks_for(resource_id:)
         [
-          Ezid::EnsureIdentifierTask.new(resource_id: resource_id, ezid_client: ezid_client),
+          Ezid::EnsureIdentifierTask.new(resource_id: resource_id, tenant: tenant),
           Package::CreatePackageTask.new(resource_id: resource_id),
           Sword::SwordTask.new(sword_client: sword_client),
           Ezid::UpdateMetadataTask.new(ezid_client: ezid_client, url_helpers: url_helpers, resource_id: resource_id),
           Package::PackageCleanupTask.new(resource_id: resource_id)
         ]
-      end
-
-      def ezid_client
-        @ezid_client ||= begin
-          id_params = tenant.identifier_service
-          StashEzid::Client.new(
-            shoulder: id_params.shoulder,
-            account: id_params.account,
-            password: id_params.password,
-            owner: id_params.owner,
-            id_scheme: id_params.scheme
-          )
-        end
       end
 
       def sword_client
