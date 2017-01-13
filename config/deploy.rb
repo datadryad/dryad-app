@@ -95,7 +95,7 @@ namespace :deploy do
   desc "run bundle install and ensure all gem requirements are met"
   task :install do
     on roles(:app) do
-      execute "cd '#{release_path}' && bundle install --without=test"
+      execute "cd '#{release_path}' && bundle install --without=test --deployment"
     end
   end
 
@@ -129,7 +129,7 @@ namespace :deploy do
     on roles(:app) do
       within current_path do
         with rails_env: fetch(:rails_env) do
-          execute "cd #{deploy_to}/current; bundle install --no-deployment"
+          execute "cd #{deploy_to}/current; bundle install --deployment"
           execute "cd #{deploy_to}/current; bundle exec passenger start -d --environment #{fetch(:rails_env)} "\
               "--pid-file #{fetch(:passenger_pid)} -p #{fetch(:passenger_port)} "\
               "--log-file #{fetch(:passenger_log)} --pool-idle-time 1800"
