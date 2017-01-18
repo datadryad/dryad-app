@@ -46,9 +46,9 @@ module Stash
 
       def to_stash_file(upload)
         StashFile.new(
-          pathname: upload[:name],
-          size_bytes: upload[:size],
-          mime_type: upload[:type]
+          pathname: upload.upload_file_name,
+          size_bytes: upload.upload_file_size,
+          mime_type: upload.upload_content_type
         )
       end
     end

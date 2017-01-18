@@ -35,16 +35,11 @@ module Stash
           @zipfile ||= begin
             zipfile_path = File.join(workdir, "#{resource_id}_archive.zip")
             Zip::File.open(zipfile_path, Zip::File::CREATE) do |zipfile|
-              builders.each { |builder| add_to_zipfile(zipfile, builder) }
-              uploads.each { |upload| zipfile.add(upload[:name], upload[:path]) }
+              builders.each { |builder| write_to_zipfile(zipfile, builder) }
+              uploads.each { |upload| add_to_zipfile(zipfile, upload) }
             end
             zipfile_path
           end
-        end
-
-        def add_to_zipfile(zipfile, builder)
-          return unless (file = builder.write_file(workdir))
-          zipfile.add(builder.file_name, file)
         end
 
         def cleanup!
@@ -69,18 +64,23 @@ module Stash
 
         private
 
+        def write_to_zipfile(zipfile, builder)
+          return unless (file = builder.write_file(workdir))
+          zipfile.add(builder.file_name, file)
+        end
+
+        def add_to_zipfile(zipfile, upload)
+          path = File.join(resource.upload_dir, upload.upload_file_name)
+          raise ArgumentError("Upload file '#{upload.upload_file_name}' not found in directory #{resource.upload_dir}") unless File.exist?(path)
+          zipfile.add(upload.upload_file_name, path)
+        end
+
         def builders
           [stash_wrapper_builder, mrt_datacite_builder, mrt_oaidc_builder, mrt_dataone_manifest_builder, mrt_delete_builder]
         end
 
         def stash_wrapper_builder
-          @stash_wrapper_builder ||= begin
-            Stash::Wrapper::StashWrapperBuilder.new(
-              dcs_resource: dc4_resource,
-              version_number: version_number,
-              uploads: uploads
-            )
-          end
+          @stash_wrapper_builder ||= Stash::Wrapper::StashWrapperBuilder.new(dcs_resource: dc4_resource, version_number: version_number, uploads: uploads)
         end
 
         def mrt_datacite_builder
@@ -100,24 +100,15 @@ module Stash
         end
 
         def total_size_bytes
-          @total_size_bytes ||= uploads.inject(0) { |sum, upload| sum + upload[:size] }
+          @total_size_bytes ||= uploads.inject(0) { |sum, u| sum + u.upload_file_size }
         end
 
         def version_number
           @version_number ||= resource.version_number
         end
 
-        def uploads # TODO: something less messy than this map
-          @uploads ||= begin
-            resource.current_file_uploads.map do |u|
-              {
-                name: u.upload_file_name,
-                type: u.upload_content_type,
-                size: u.upload_file_size,
-                path: File.join(resource.upload_dir, u.upload_file_name) # TODO: is this right?
-              }
-            end
-          end
+        def uploads
+          resource.current_file_uploads
         end
 
         def datacite_xml_factory

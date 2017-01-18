@@ -17,21 +17,19 @@ module Stash
           'mrt-oaidc.xml' => 'http://dublincore.org/schemas/xmls/qdc/2008/02/11/qualifieddc.xsd'
         }.freeze
 
-        attr_reader :files
+        attr_reader :uploads
 
-        # @param files [Array[Hash]] a list of "files", where each file is a hash
-        #   keyed by `:name` and `:type`
-        def initialize(files)
+        # @param uploads [Array[StashEngine::FileUpload]] a list of file uploads
+        def initialize(uploads)
           super(file_name: 'mrt-dataone-manifest.txt')
-          @files = files
+          @uploads = uploads
         end
 
         def contents
           content = [HEADER]
-          # TODO: do we really need to expect nils in the file list?
-          files.compact.each do |file|
+          uploads.each do |upload|
             METADATA_FILES.each do |md_filename, md_schema|
-              content << "#{md_filename} | #{md_schema} | #{file[:name]} | #{file[:type]}"
+              content << "#{md_filename} | #{md_schema} | #{upload.upload_file_name} | #{upload.upload_content_type}"
             end
           end
           content << "#%eof\n"
