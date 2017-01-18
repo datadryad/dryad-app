@@ -83,7 +83,20 @@ module Stash
         end
 
         describe :initialize do
-          it 'fails if the resource doesn\'t have an identifier'
+          it 'fails if the resource does not exist' do
+            bad_id = resource.id * 17
+            expect { SubmissionPackage.new(resource_id: bad_id, tenant: tenant) }.to raise_error(ActiveRecord::RecordNotFound)
+          end
+
+          it 'fails if the resource doesn\'t have an identifier' do
+            resource.identifier = nil
+            resource.save!
+            expect { SubmissionPackage.new(resource_id: resource.id, tenant: tenant) }.to raise_error(ArgumentError)
+          end
+
+          it 'fails if the tenant is nil' do
+            expect { SubmissionPackage.new(resource_id: resource.id, tenant: nil) }.to raise_error(ArgumentError)
+          end
         end
 
         describe :zipfile do

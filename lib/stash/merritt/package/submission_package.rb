@@ -13,12 +13,16 @@ module Stash
   module Merritt
     module Package
       class SubmissionPackage
-        attr_reader :resource_id
+        attr_reader :resource
         attr_reader :tenant
 
         def initialize(resource_id:, tenant:)
-          @resource_id = resource_id
-          @tenant = tenant
+          @resource = SubmissionPackage.ensure_resource(resource_id)
+          @tenant = SubmissionPackage.ensure_tenant(tenant)
+        end
+
+        def resource_id
+          resource.id
         end
 
         def dc3_xml
@@ -52,11 +56,18 @@ module Stash
           "#{self.class}: submission package for resource #{resource_id}"
         end
 
-        private
-
-        def resource
-          @resource ||= StashEngine::Resource.find(resource_id)
+        def self.ensure_tenant(tenant)
+          return tenant if tenant
+          fail ArgumentError, 'Tenant cannot be nil'
         end
+
+        def self.ensure_resource(resource_id)
+          resource = StashEngine::Resource.find(resource_id)
+          fail ArgumentError, "Resource (#{resource_id}) must have an identifier before submission" unless resource.identifier_str
+          resource
+        end
+
+        private
 
         def builders
           [stash_wrapper_builder, mrt_datacite_builder, mrt_oaidc_builder, mrt_dataone_manifest_builder, mrt_delete_builder]
