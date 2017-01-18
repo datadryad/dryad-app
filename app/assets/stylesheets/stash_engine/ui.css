@@ -4499,14 +4499,36 @@ html.svg .c-facet__check-label {
 
 .c-upload__action {
   -ms-flex: 0 0 auto;
-      flex: 0 0 auto; }
+      flex: 0 0 auto;
+  /* getting progress color to set is a PITA:
+     http://thenewcode.com/866/Using-The-HTML5-progress-Element
+     http://html5doctor.com/the-progress-element/
+  */
+  /* bar color, firefox */
+  /* foreground bar -- chrome and safari */
+  /* background of unfilled bar -- chrome and safari */ }
+  .c-upload__action progress {
+    border: none;
+    background-color: #f2f2f2;
+    color: #005581;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    appearance: none; }
+  .c-upload__action progress::-moz-progress-bar {
+    background: #005581; }
+  .c-upload__action progress::-webkit-progress-value {
+    background: #005581; }
+  .c-upload__action progress::-webkit-progress-bar {
+    background: #f2f2f2; }
+  .c-upload__action progress::-webkit-progress-bar,
+  .c-upload__action progress::-moz-progress-bar,
+  .c-upload__action progress::progress-bar {
+    background-color: #005581; }
   .c-upload__action progress[value] {
     width: 20vw;
     height: 10px;
     border: none;
-    -webkit-appearance: none;
-       -moz-appearance: none;
-            appearance: none; }
+    /* appearance: none; */ }
 
 .c-upload__button {
   padding: 0 10px;
