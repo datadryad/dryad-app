@@ -58,12 +58,12 @@ module Stash
 
         def self.ensure_tenant(tenant)
           return tenant if tenant
-          fail ArgumentError, 'Tenant cannot be nil'
+          raise ArgumentError, 'Tenant cannot be nil'
         end
 
         def self.ensure_resource(resource_id)
           resource = StashEngine::Resource.find(resource_id)
-          fail ArgumentError, "Resource (#{resource_id}) must have an identifier before submission" unless resource.identifier_str
+          raise ArgumentError, "Resource (#{resource_id}) must have an identifier before submission" unless resource.identifier_str
           resource
         end
 

@@ -14,7 +14,7 @@ module Stash
         attr_reader :url_helpers
 
         before(:each) do
-          @resource    = double(StashEngine::Resource)
+          @resource = double(StashEngine::Resource)
           @identifier_str = 'doi:10.15146/R38675309'
           allow(resource).to receive(:identifier_str).and_return(identifier_str)
 
