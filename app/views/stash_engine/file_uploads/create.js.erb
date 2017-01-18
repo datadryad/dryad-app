@@ -1,8 +1,13 @@
 $('#not_uploaded_file_<%= @temp_id%>').replaceWith("<%= escape_javascript(render(partial: 'stash_engine/file_uploads/uploaded_file', object: @my_file)) %>")
 
-if($('.js-upload-it:first').length && uploadInProgress){
-  $('.js-upload-it:first').click();
-}else{
+// these are the upload buttons for items with the remove link visible, so upload hasn't started
+var to_upload_buttons = $('.js-unuploaded .js-remove_link:visible').closest('.js-unuploaded').find('.js-upload-it');
+
+if(to_upload_buttons.length && uploadInProgress){
+  to_upload_buttons.first().click();
+  console.log("Should've started another");
+}else if($('.js-upload-it').length < 1 && uploadInProgress){
+  // all are done, so stop the upload process
   uploadInProgress = false;
   $('#cancel_all').hide();
   updateButtonLinkStates();
