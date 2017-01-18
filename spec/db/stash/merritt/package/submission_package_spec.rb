@@ -128,6 +128,13 @@ module Stash
           end
         end
 
+        describe :dc3_xml do
+          it 'builds Datacite 3 XML' do
+            package = SubmissionPackage.new(resource_id: resource.id, tenant: tenant)
+            expect(package.dc3_xml).to be_xml(datacite_xml)
+          end
+        end
+
         describe :cleanup! do
           it 'removes the working directory' do
             package = SubmissionPackage.new(resource_id: resource.id, tenant: tenant)
