@@ -11,8 +11,9 @@ module Stash
 
       def tasks_for(resource_id:)
         [
+          # TODO: should we pass the tenant around, or get it from the resource?
           Ezid::EnsureIdentifierTask.new(resource_id: resource_id, tenant: tenant),
-          Package::CreatePackageTask.new(resource_id: resource_id),
+          Package::CreatePackageTask.new(resource_id: resource_id, tenant: tenant),
           Sword::SwordTask.new(sword_client: sword_client),
           Ezid::UpdateMetadataTask.new(ezid_client: ezid_client, url_helpers: url_helpers, resource_id: resource_id),
           Package::PackageCleanupTask.new(resource_id: resource_id)

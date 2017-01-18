@@ -23,8 +23,18 @@ module Stash
             id_scheme: 'doi'
           }
           allow(tenant).to receive(:identifier_service).and_return(OpenStruct.new(id_params))
+          allow(tenant).to receive(:tenant_id).and_return('dataone')
 
           @task = EnsureIdentifierTask.new(resource_id: resource_id, tenant: tenant)
+        end
+
+        describe :to_s do
+          it 'describes the task' do
+            task_str = task.to_s
+            expect(task_str).to include(EnsureIdentifierTask.to_s)
+            expect(task_str).to include(resource_id.to_s)
+            expect(task_str).to include('dataone')
+          end
         end
 
         describe :exec do

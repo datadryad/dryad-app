@@ -82,6 +82,10 @@ module Stash
           end
         end
 
+        describe :initialize do
+          it 'fails if the resource doesn\'t have an identifier'
+        end
+
         describe :zipfile do
           it 'builds a zipfile' do
             expected_metadata = Dir.glob('spec/data/archive/*').map do |path|

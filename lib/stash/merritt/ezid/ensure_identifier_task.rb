@@ -14,6 +14,10 @@ module Stash
           @tenant = tenant
         end
 
+        def to_s
+          "#{super}: resource #{resource_id}, tenant: #{tenant.tenant_id}"
+        end
+
         # @return [String] the identifier (DOI, ARK, or URN)
         def exec(*)
           resource = StashEngine::Resource.find(resource_id)

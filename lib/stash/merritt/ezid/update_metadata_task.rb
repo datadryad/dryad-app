@@ -34,7 +34,7 @@ module Stash
         end
 
         def to_s
-          "#{super}: resource #{resource_id} (#{identifier_str}), landing page #{landing_page_url}"
+          "#{super}: resource #{resource_id} (#{identifier_str}), tenant #{tenant.tenant_id}, landing page #{landing_page_url}"
         end
 
         private

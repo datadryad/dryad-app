@@ -34,6 +34,7 @@ module Stash
             id_scheme: 'doi'
           }
           allow(tenant).to receive(:identifier_service).and_return(OpenStruct.new(id_params))
+          allow(tenant).to receive(:tenant_id).and_return('dataone')
 
           @task = UpdateMetadataTask.new(resource_id: resource_id, tenant: tenant, url_helpers: url_helpers)
         end
@@ -43,6 +44,7 @@ module Stash
             task_str = task.to_s
             expect(task_str).to include(UpdateMetadataTask.to_s)
             expect(task_str).to include(resource_id.to_s)
+            expect(task_str).to include('dataone')
             expect(task_str).to include(identifier_str)
             expect(task_str).to include(landing_page_url)
           end
