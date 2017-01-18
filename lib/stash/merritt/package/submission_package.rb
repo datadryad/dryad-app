@@ -26,9 +26,12 @@ module Stash
         end
 
         def dc3_xml
-          @dc3_xml ||= begin
-            datacite_xml_factory.build_datacite_xml(datacite_3: true)
-          end
+          @dc3_xml ||= datacite_xml_factory.build_datacite_xml(datacite_3: true)
+        end
+
+        def resource_title
+          primary_title = resource.titles.where(title_type: nil).first
+          primary_title.title.to_s if primary_title
         end
 
         def zipfile
@@ -48,7 +51,7 @@ module Stash
         end
 
         def to_s
-          "#{self.class}: submission package for resource #{resource_id}"
+          "#{self.class}: submission package for resource #{resource_id} (#{resource_title}"
         end
 
         def self.ensure_tenant(tenant)
@@ -112,14 +115,7 @@ module Stash
         end
 
         def datacite_xml_factory
-          @datacite_xml_factory ||= begin
-            Datacite::Mapping::DataciteXMLFactory.new(
-              doi_value: resource.identifier_value,
-              se_resource_id: resource_id,
-              total_size_bytes: total_size_bytes,
-              version: version_number
-            )
-          end
+          @datacite_xml_factory ||= Datacite::Mapping::DataciteXMLFactory.new(doi_value: resource.identifier_value, se_resource_id: resource_id, total_size_bytes: total_size_bytes, version: version_number)
         end
 
         def dc4_resource

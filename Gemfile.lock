@@ -100,6 +100,8 @@ GEM
       mime-types (>= 1.16)
     colorize (0.8.1)
     concurrent-ruby (1.0.4)
+    crack (0.4.3)
+      safe_yaml (~> 1.0.0)
     database_cleaner (1.5.3)
     datacite-mapping (0.2.5)
       typesafe_enum (~> 0.1, >= 0.1.7)
@@ -121,6 +123,7 @@ GEM
       railties (>= 3.2, < 5.1)
     globalid (0.3.7)
       activesupport (>= 4.1.0)
+    hashdiff (0.3.1)
     hashie (3.4.6)
     hirb (0.7.3)
     http-cookie (1.0.3)
@@ -242,6 +245,7 @@ GEM
       unicode-display_width (~> 1.0, >= 1.0.1)
     ruby-progressbar (1.8.1)
     rubyzip (1.2.0)
+    safe_yaml (1.0.4)
     sass (3.4.23)
     simplecov (0.9.2)
       docile (~> 1.1.0)
@@ -280,6 +284,10 @@ GEM
       unf_ext
     unf_ext (0.0.7.2)
     unicode-display_width (1.1.2)
+    webmock (1.24.6)
+      addressable (>= 2.3.6)
+      crack (>= 0.3.2)
+      hashdiff
     xml-mapping (0.10.0)
     xml-mapping_extensions (0.4.7)
       mime-types (~> 2.5)
@@ -305,6 +313,7 @@ DEPENDENCIES
   stash-repo!
   stash_datacite!
   stash_engine!
+  webmock (~> 1.24)
   yard (~> 0.8)
 
 BUNDLED WITH

@@ -78,6 +78,7 @@
     <orderEntry type="library" scope="PROVIDED" name="carrierwave (v0.10.0, RVM: ruby-2.2.5) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="colorize (v0.8.1, RVM: ruby-2.2.5) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="concurrent-ruby (v1.0.4, RVM: ruby-2.2.5) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="crack (v0.4.3, RVM: ruby-2.2.5) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="database_cleaner (v1.5.3, RVM: ruby-2.2.5) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="datacite-mapping (v0.2.5, RVM: ruby-2.2.5) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="diff-lcs (v1.2.5, RVM: ruby-2.2.5) [gem]" level="application" />
@@ -91,6 +92,7 @@
     <orderEntry type="library" scope="PROVIDED" name="filesize (v0.1.1, RVM: ruby-2.2.5) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="font-awesome-rails (v4.7.0.1, RVM: ruby-2.2.5) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="globalid (v0.3.7, RVM: ruby-2.2.5) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="hashdiff (v0.3.1, RVM: ruby-2.2.5) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="hashie (v3.4.6, RVM: ruby-2.2.5) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="hirb (v0.7.3, RVM: ruby-2.2.5) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="http-cookie (v1.0.3, RVM: ruby-2.2.5) [gem]" level="application" />
@@ -143,6 +145,7 @@
     <orderEntry type="library" scope="PROVIDED" name="rubocop (v0.46.0, RVM: ruby-2.2.5) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="ruby-progressbar (v1.8.1, RVM: ruby-2.2.5) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="rubyzip (v1.2.0, RVM: ruby-2.2.5) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="safe_yaml (v1.0.4, RVM: ruby-2.2.5) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="sass (v3.4.23, RVM: ruby-2.2.5) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="simplecov (v0.9.2, RVM: ruby-2.2.5) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="simplecov-console (v0.2.0, RVM: ruby-2.2.5) [gem]" level="application" />
@@ -161,6 +164,7 @@
     <orderEntry type="library" scope="PROVIDED" name="unf (v0.1.4, RVM: ruby-2.2.5) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="unf_ext (v0.0.7.2, RVM: ruby-2.2.5) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="unicode-display_width (v1.1.2, RVM: ruby-2.2.5) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="webmock (v1.24.6, RVM: ruby-2.2.5) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="xml-mapping (v0.10.0, RVM: ruby-2.2.5) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="xml-mapping_extensions (v0.4.7, RVM: ruby-2.2.5) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="yard (v0.9.5, RVM: ruby-2.2.5) [gem]" level="application" />
