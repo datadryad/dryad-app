@@ -2,7 +2,7 @@ require 'stash/repo/util/file_builder'
 
 module Stash
   module Merritt
-    module Package
+    class SubmissionPackage
       class DataONEManifestBuilder < Stash::Repo::Util::FileBuilder
         HEADER = [
           '#%dataonem_0.1',

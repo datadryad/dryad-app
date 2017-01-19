@@ -21,7 +21,7 @@ module Stash
         new_identifier_str
       end
 
-      def update_metadata(dc3_xml)
+      def update_metadata(dc3_xml:)
         identifier_str = resource.identifier_str
         landing_page_url = url_helpers.show_path(identifier_str)
         ezid_client.update_metadata(identifier_str, dc3_xml, landing_page_url)

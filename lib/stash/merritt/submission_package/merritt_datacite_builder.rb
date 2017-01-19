@@ -3,7 +3,7 @@ require 'stash/repo/util/file_builder'
 
 module Stash
   module Merritt
-    module Package
+    class SubmissionPackage
       class MerrittDataciteBuilder < Stash::Repo::Util::FileBuilder
         attr_reader :factory
 

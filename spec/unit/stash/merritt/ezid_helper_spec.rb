@@ -80,7 +80,7 @@ module Stash
           )
 
           expect(resource).to receive(:identifier_str).and_return(identifier_str)
-          helper.update_metadata(dc3_xml)
+          helper.update_metadata(dc3_xml: dc3_xml)
         end
       end
     end
