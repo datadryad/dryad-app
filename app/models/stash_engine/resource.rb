@@ -113,6 +113,8 @@ module StashEngine
     # ------------------------------------------------------------
     # File submission
 
+    # TODO: make sure we send the necessary email(s) after stash_repo submits
+
     def package_and_submit(packager)
       future = Sword::PackageJob.package_async(packager)
       future.add_observer(SubmitPackageObserver.new(packager))
@@ -203,6 +205,17 @@ module StashEngine
       version_record = stash_version
       version_record.zip_filename = File.basename(zipfile)
       version_record.save!
+    end
+
+    # ------------------------------------------------------------
+    # Ownership
+
+    def tenant
+      Tenant.find(tenant_id)
+    end
+
+    def tenant_id
+      user.tenant_id
     end
 
     # ------------------------------------------------------------
