@@ -49,12 +49,41 @@
 .c-upload__action {
 	flex: 0 0 auto;
 
-	progress[value] {
-		width: 20vw;
-		height: 10px;
-		border: none;
-		appearance: none;
-	}
+  /* getting progress color to set is a PITA:
+     http://thenewcode.com/866/Using-The-HTML5-progress-Element
+     http://html5doctor.com/the-progress-element/
+  */
+
+  progress {
+    border: none;
+    background-color: $design-offwhite-color;
+    color: $design-dark-blue-color;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+
+  /* bar color, firefox */
+  progress::-moz-progress-bar { background: $design-dark-blue-color; }
+
+  /* foreground bar -- chrome and safari */
+  progress::-webkit-progress-value {background: $design-dark-blue-color;  }
+
+  /* background of unfilled bar -- chrome and safari */
+  progress::-webkit-progress-bar { background: $design-offwhite-color; }
+
+  progress::-webkit-progress-bar,
+  progress::-moz-progress-bar,
+  progress::progress-bar {
+    background-color: $design-dark-blue-color;
+  }
+
+  progress[value] {
+      width: 20vw;
+      height: 10px;
+      border: none;
+      /* appearance: none; */
+  }
 
 }
 

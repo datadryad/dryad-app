@@ -83,7 +83,7 @@ $(function () {
       return false;
     }
     uploadInProgress = true;
-    $('.js-upload-it:first').click();
+    $('.js-upload-it:lt(3)').click();
     updateButtonLinkStates();
   });
 });
@@ -182,10 +182,8 @@ function updateRevertState(){
     but.hide();
   }else if($(".js-created_file,.js-deleted_file,.js-unuploaded").length > 0){
     but.show().prop("disabled", false).addClass('o-button__undo').removeClass('o-button__undo-disabled');
-    console.log('enabling');
   }else{
     but.show().prop("disabled", true).addClass('o-button__undo-disabled').removeClass('o-button__undo');
-    console.log('disabling');
   }
 }
 
