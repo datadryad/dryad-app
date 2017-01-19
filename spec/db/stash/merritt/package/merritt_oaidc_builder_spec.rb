@@ -21,6 +21,7 @@ module Stash
 
           @tenant = double(StashEngine::Tenant)
           allow(tenant).to receive(:short_name).and_return('DataONE')
+          allow(StashEngine::Tenant).to receive(:find).with('dataone').and_return(tenant)
 
           @resource = StashDatacite::ResourceBuilder.new(
             user_id: user.id,
@@ -55,7 +56,7 @@ module Stash
               'IsOriginalFormOf' => 'hasVersion'
             }
 
-            dc_builder = MerrittOAIDCBuilder.new(resource_id: resource.id, tenant: tenant)
+            dc_builder = MerrittOAIDCBuilder.new(resource_id: resource.id)
             xml_string = dc_builder.contents
             rel_ids.each do |rel_id|
               predicate = expected[rel_id.relation_type_friendly] || 'relation'

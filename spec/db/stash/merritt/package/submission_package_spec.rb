@@ -36,6 +36,7 @@ module Stash
           allow(tenant).to receive(:short_name).and_return('DataONE')
           allow(tenant).to receive(:landing_url) { |path| "https://stash-dev.example.edu/#{path}" }
           allow(tenant).to receive(:sword_params).and_return(collection_uri: 'http://sword.example.edu/stash-dev')
+          allow(StashEngine::Tenant).to receive(:find).with('dataone').and_return(tenant)
 
           @stash_wrapper_xml = File.read('spec/data/archive/stash-wrapper.xml')
           stash_wrapper = Stash::Wrapper::StashWrapper.parse_xml(stash_wrapper_xml)
@@ -85,17 +86,13 @@ module Stash
         describe :initialize do
           it 'fails if the resource does not exist' do
             bad_id = resource.id * 17
-            expect { SubmissionPackage.new(resource_id: bad_id, tenant: tenant) }.to raise_error(ActiveRecord::RecordNotFound)
+            expect { SubmissionPackage.new(resource_id: bad_id) }.to raise_error(ActiveRecord::RecordNotFound)
           end
 
           it 'fails if the resource doesn\'t have an identifier' do
             resource.identifier = nil
             resource.save!
-            expect { SubmissionPackage.new(resource_id: resource.id, tenant: tenant) }.to raise_error(ArgumentError)
-          end
-
-          it 'fails if the tenant is nil' do
-            expect { SubmissionPackage.new(resource_id: resource.id, tenant: nil) }.to raise_error(ArgumentError)
+            expect { SubmissionPackage.new(resource_id: resource.id) }.to raise_error(ArgumentError)
           end
         end
 
@@ -105,7 +102,7 @@ module Stash
               [File.basename(path), File.read(path)]
             end.to_h
 
-            package = SubmissionPackage.new(resource_id: resource.id, tenant: tenant)
+            package = SubmissionPackage.new(resource_id: resource.id)
             @zipfile_path = package.zipfile
 
             expected_metadata.each do |path, content|
@@ -136,7 +133,7 @@ module Stash
               deleted << upload.upload_file_name
             end
 
-            package = SubmissionPackage.new(resource_id: resource.id, tenant: tenant)
+            package = SubmissionPackage.new(resource_id: resource.id)
             @zipfile_path = package.zipfile
             mrt_delete = zip_entry('mrt-delete.txt')
             deleted.each do |filename|
@@ -147,14 +144,14 @@ module Stash
 
         describe :dc3_xml do
           it 'builds Datacite 3 XML' do
-            package = SubmissionPackage.new(resource_id: resource.id, tenant: tenant)
+            package = SubmissionPackage.new(resource_id: resource.id)
             expect(package.dc3_xml).to be_xml(datacite_xml)
           end
         end
 
         describe :cleanup! do
           it 'removes the working directory' do
-            package = SubmissionPackage.new(resource_id: resource.id, tenant: tenant)
+            package = SubmissionPackage.new(resource_id: resource.id)
             @zipfile_path = package.zipfile
             workdir = File.dirname(zipfile_path)
             package.cleanup!
@@ -165,7 +162,7 @@ module Stash
         describe :to_s do
           attr_reader :package_str
           before(:each) do
-            package = SubmissionPackage.new(resource_id: resource.id, tenant: tenant)
+            package = SubmissionPackage.new(resource_id: resource.id)
             @package_str = package.to_s
           end
           it 'includes the class name' do

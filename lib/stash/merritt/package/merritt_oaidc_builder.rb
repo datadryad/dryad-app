@@ -21,12 +21,10 @@ module Stash
         }.freeze
 
         attr_reader :resource_id
-        attr_reader :tenant
 
-        def initialize(resource_id:, tenant:)
+        def initialize(resource_id:)
           super(file_name: 'mrt-oaidc.xml')
           @resource_id = resource_id
-          @tenant = tenant
         end
 
         def contents # rubocop:disable Metrics/MethodLength
@@ -50,6 +48,10 @@ module Stash
 
         def resource
           @resource ||= StashEngine::Resource.find(resource_id)
+        end
+
+        def tenant
+          resource.tenant
         end
 
         def add_creators(xml)

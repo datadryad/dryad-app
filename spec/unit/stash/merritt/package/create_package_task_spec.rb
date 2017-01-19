@@ -13,7 +13,8 @@ module Stash
           @resource_id = 17
           @tenant = double(StashEngine::Tenant)
           allow(tenant).to receive(:tenant_id).and_return('dataone')
-          @task = CreatePackageTask.new(resource_id: resource_id, tenant: tenant)
+          allow(StashEngine::Tenant).to receive(:find).with('dataone').and_return(tenant)
+          @task = CreatePackageTask.new(resource_id: resource_id)
         end
 
         describe :to_s do
@@ -21,14 +22,13 @@ module Stash
             task_str = task.to_s
             expect(task_str).to include(CreatePackageTask.to_s)
             expect(task_str).to include(resource_id.to_s)
-            expect(task_str).to include('dataone')
           end
         end
 
         describe :exec do
           it 'returns a new package' do
             pkg = instance_double(SubmissionPackage)
-            expect(SubmissionPackage).to receive(:new).with(resource_id: resource_id, tenant: tenant).and_return(pkg)
+            expect(SubmissionPackage).to receive(:new).with(resource_id: resource_id).and_return(pkg)
             expect(task.exec).to eq(pkg)
           end
         end

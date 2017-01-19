@@ -63,6 +63,7 @@ module Stash
           allow(tenant).to receive(:short_name).and_return('DataONE')
           allow(tenant).to receive(:landing_url) { |path| "https://stash-dev.example.edu/#{path}" }
           allow(tenant).to receive(:sword_params).and_return(sword_params)
+          allow(StashEngine::Tenant).to receive(:find).with('dataone').and_return(tenant)
 
           stash_wrapper_xml = File.read('spec/data/archive/stash-wrapper.xml')
           stash_wrapper = Stash::Wrapper::StashWrapper.parse_xml(stash_wrapper_xml)
@@ -117,7 +118,7 @@ module Stash
         describe :exec do
           describe 'create' do
             it 'submits the zipfile' do
-              package = Stash::Merritt::Package::SubmissionPackage.new(resource_id: resource.id, tenant: tenant)
+              package = Stash::Merritt::Package::SubmissionPackage.new(resource_id: resource.id)
               expect(sword_client).to receive(:create).with(doi: doi, zipfile: package.zipfile)
               expect(task.exec(package)).to be(package)
             end
@@ -134,7 +135,7 @@ module Stash
             end
 
             it 'submits the zipfile' do
-              package = Stash::Merritt::Package::SubmissionPackage.new(resource_id: resource.id, tenant: tenant)
+              package = Stash::Merritt::Package::SubmissionPackage.new(resource_id: resource.id)
               expect(sword_client).to receive(:update).with(edit_iri: update_uri, zipfile: package.zipfile).and_return(200)
               expect(task.exec(package)).to be(package)
             end

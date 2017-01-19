@@ -24,8 +24,9 @@ module Stash
           }
           allow(tenant).to receive(:identifier_service).and_return(OpenStruct.new(id_params))
           allow(tenant).to receive(:tenant_id).and_return('dataone')
+          allow(resource).to receive(:tenant).and_return(tenant)
 
-          @task = EnsureIdentifierTask.new(resource_id: resource_id, tenant: tenant)
+          @task = EnsureIdentifierTask.new(resource_id: resource_id)
         end
 
         describe :to_s do
@@ -33,7 +34,6 @@ module Stash
             task_str = task.to_s
             expect(task_str).to include(EnsureIdentifierTask.to_s)
             expect(task_str).to include(resource_id.to_s)
-            expect(task_str).to include('dataone')
           end
         end
 

@@ -10,10 +10,6 @@ module Stash
           @sword_params = sword_params
         end
 
-        def client
-          @client ||= Stash::Sword::Client.new(logger: log, **sword_params)
-        end
-
         # @return [SubmissionPackage] the package
         def exec(package)
           resource = package.resource
@@ -26,11 +22,16 @@ module Stash
         private
 
         def submit(resource, zipfile)
+          client = sword_client_for(resource.tenant)
           if (update_uri = resource.update_uri)
             client.update(edit_iri: update_uri, zipfile: zipfile)
           else
             client.create(doi: resource.identifier_str, zipfile: zipfile)
           end
+        end
+
+        def sword_client_for(tenant)
+          Stash::Sword::Client.new(logger: log, **tenant.sword_params)
         end
       end
     end

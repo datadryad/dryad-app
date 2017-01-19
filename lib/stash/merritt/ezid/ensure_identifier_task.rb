@@ -6,16 +6,13 @@ module Stash
     module Ezid
       class EnsureIdentifierTask < Stash::Repo::Task
         attr_reader :resource_id
-        attr_reader :tenant
 
-        # @param ezid_client [StashEzid::Client] the EZID client
-        def initialize(resource_id:, tenant:)
+        def initialize(resource_id:)
           @resource_id = resource_id
-          @tenant = tenant
         end
 
         def to_s
-          "#{super}: resource #{resource_id}, tenant: #{tenant.tenant_id}"
+          "#{super}: resource #{resource_id}"
         end
 
         # @return [String] the identifier (DOI, ARK, or URN)
@@ -24,6 +21,7 @@ module Stash
           identifier_str = resource.identifier_str
           return identifier_str if identifier_str
 
+          ezid_client = ezid_client_for(resource.tenant)
           new_identifier_str = ezid_client.mint_id
           resource.ensure_identifier(new_identifier_str)
           new_identifier_str
@@ -31,17 +29,15 @@ module Stash
 
         private
 
-        def ezid_client
-          @ezid_client ||= begin
-            id_params = tenant.identifier_service
-            StashEzid::Client.new(
-              shoulder: id_params.shoulder,
-              account: id_params.account,
-              password: id_params.password,
-              owner: id_params.owner,
-              id_scheme: id_params.scheme
-            )
-          end
+        def ezid_client_for(tenant)
+          id_params = tenant.identifier_service
+          StashEzid::Client.new(
+            shoulder: id_params.shoulder,
+            account: id_params.account,
+            password: id_params.password,
+            owner: id_params.owner,
+            id_scheme: id_params.scheme
+          )
         end
 
       end

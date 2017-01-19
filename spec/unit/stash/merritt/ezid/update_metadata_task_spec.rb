@@ -35,18 +35,15 @@ module Stash
           }
           allow(tenant).to receive(:identifier_service).and_return(OpenStruct.new(id_params))
           allow(tenant).to receive(:tenant_id).and_return('dataone')
+          allow(resource).to receive(:tenant).and_return(tenant)
 
-          @task = UpdateMetadataTask.new(resource_id: resource_id, tenant: tenant, url_helpers: url_helpers)
+          @task = UpdateMetadataTask.new(url_helpers: url_helpers)
         end
 
         describe(:to_s) do
           it 'describes the task' do
             task_str = task.to_s
             expect(task_str).to include(UpdateMetadataTask.to_s)
-            expect(task_str).to include(resource_id.to_s)
-            expect(task_str).to include('dataone')
-            expect(task_str).to include(identifier_str)
-            expect(task_str).to include(landing_page_url)
           end
         end
 
@@ -56,6 +53,7 @@ module Stash
             datacite_xml = '<resource/>'
             package = instance_double(Stash::Merritt::Package::SubmissionPackage)
             expect(package).to receive(:dc3_xml).and_return(datacite_xml)
+            allow(package).to receive(:resource).and_return(resource)
 
             ezid_client = instance_double(::Ezid::Client)
             allow(::Ezid::Client).to receive(:new)

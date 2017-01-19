@@ -14,11 +14,9 @@ module Stash
     module Package
       class SubmissionPackage
         attr_reader :resource
-        attr_reader :tenant
 
-        def initialize(resource_id:, tenant:)
+        def initialize(resource_id:)
           @resource = SubmissionPackage.ensure_resource(resource_id)
-          @tenant = SubmissionPackage.ensure_tenant(tenant)
         end
 
         def resource_id
@@ -54,11 +52,6 @@ module Stash
           "#{self.class}: submission package for resource #{resource_id} (#{resource_title}"
         end
 
-        def self.ensure_tenant(tenant)
-          return tenant if tenant
-          raise ArgumentError, 'Tenant cannot be nil'
-        end
-
         def self.ensure_resource(resource_id)
           resource = StashEngine::Resource.find(resource_id)
           raise ArgumentError, "Resource (#{resource_id}) must have an identifier before submission" unless resource.identifier_str
@@ -66,6 +59,10 @@ module Stash
         end
 
         private
+
+        def tenant
+          resource.tenant
+        end
 
         def write_to_zipfile(zipfile, builder)
           return unless (file = builder.write_file(workdir))
@@ -91,7 +88,7 @@ module Stash
         end
 
         def mrt_oaidc_builder
-          @mrt_oaidc_builder ||= MerrittOAIDCBuilder.new(resource_id: resource_id, tenant: tenant)
+          @mrt_oaidc_builder ||= MerrittOAIDCBuilder.new(resource_id: resource_id)
         end
 
         def mrt_dataone_manifest_builder
