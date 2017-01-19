@@ -11,7 +11,7 @@ module Stash
 
       def tasks_for(resource_id:)
         [
-          Ezid::EnsureIdentifierTask.new(resource_id: resource_id),
+          Ezid::EzidHelper.new(resource_id: resource_id),
           Package::CreatePackageTask.new(resource_id: resource_id),
           Sword::SwordTask.new,
           Ezid::UpdateMetadataTask.new(ezid_client: ezid_client, url_helpers: url_helpers, resource_id: resource_id),
