@@ -54,10 +54,6 @@ module Stash
 
       private
 
-      def tenant
-        resource.tenant
-      end
-
       def write_to_zipfile(zipfile, builder)
         return unless (file = builder.write_file(workdir))
         zipfile.add(builder.file_name, file)
