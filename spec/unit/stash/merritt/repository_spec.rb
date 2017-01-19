@@ -9,7 +9,7 @@ module Stash
           repo = Repository.new(url_helpers: url_helpers)
           resource_id = 17
           job = repo.create_submission_job(resource_id: resource_id)
-          expect(job).to be_a(MerrittSubmissionJob)
+          expect(job).to be_a(SubmissionJob)
           expect(job.resource_id).to eq(resource_id)
           expect(job.url_helpers).to be(url_helpers)
         end

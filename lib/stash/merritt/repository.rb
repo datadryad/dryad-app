@@ -1,5 +1,5 @@
 require 'stash/repo'
-require 'stash/merritt/merritt_submission_job'
+require 'stash/merritt/submission_job'
 
 module Stash
   module Merritt
@@ -10,7 +10,7 @@ module Stash
       end
 
       def create_submission_job(resource_id:)
-        MerrittSubmissionJob.new(resource_id: resource_id, url_helpers: url_helpers)
+        SubmissionJob.new(resource_id: resource_id, url_helpers: url_helpers)
       end
     end
   end

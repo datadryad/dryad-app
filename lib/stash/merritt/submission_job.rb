@@ -5,7 +5,7 @@ require 'stash/merritt/sword_helper'
 
 module Stash
   module Merritt
-    class MerrittSubmissionJob < Stash::Repo::SubmissionJob
+    class SubmissionJob < Stash::Repo::SubmissionJob
       attr_reader :resource_id
       attr_reader :url_helpers
 
@@ -15,6 +15,7 @@ module Stash
       end
 
       def submit!
+        resource = StashEngine::Resource.find(resource_id)
         ezid_helper = EzidHelper.new(resource: resource, url_helpers: url_helpers)
         ezid_helper.ensure_identifier
         package = SubmissionPackage.new(resource: resource)
@@ -23,17 +24,6 @@ module Stash
         ezid_helper.update_metadata(dc3_xml: package.dc3_xml)
         package.cleanup!
       end
-
-      private
-
-      def resource
-        @resource ||= StashEngine::Resource.find(resource_id)
-      end
-
-      def identifier_str
-        resource.identifier_str
-      end
-
     end
   end
 end

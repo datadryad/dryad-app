@@ -59,15 +59,10 @@ module Stash
         allow(tenant).to receive(:sword_params).and_return(sword_params)
         allow(StashEngine::Tenant).to receive(:find).with('dataone').and_return(tenant)
 
-        stash_wrapper_xml = File.read('spec/data/archive/stash-wrapper.xml')
-        stash_wrapper = Stash::Wrapper::StashWrapper.parse_xml(stash_wrapper_xml)
-
-        datacite_xml = File.read('spec/data/archive/mrt-datacite.xml')
-        dcs_resource = Datacite::Mapping::Resource.parse_xml(datacite_xml)
-
+        stash_wrapper = Stash::Wrapper::StashWrapper.parse_xml(File.read('spec/data/archive/stash-wrapper.xml'))
         @resource = StashDatacite::ResourceBuilder.new(
           user_id: user.id,
-          dcs_resource: dcs_resource,
+          dcs_resource: Datacite::Mapping::Resource.parse_xml(File.read('spec/data/archive/mrt-datacite.xml')),
           stash_files: stash_wrapper.inventory.files,
           upload_date: stash_wrapper.version_date
         ).build
