@@ -84,15 +84,10 @@ module Stash
         end
 
         describe :initialize do
-          it 'fails if the resource does not exist' do
-            bad_id = resource.id * 17
-            expect { SubmissionPackage.new(resource_id: bad_id) }.to raise_error(ActiveRecord::RecordNotFound)
-          end
-
           it 'fails if the resource doesn\'t have an identifier' do
             resource.identifier = nil
             resource.save!
-            expect { SubmissionPackage.new(resource_id: resource.id) }.to raise_error(ArgumentError)
+            expect { SubmissionPackage.new(resource: resource) }.to raise_error(ArgumentError)
           end
         end
 
@@ -102,7 +97,7 @@ module Stash
               [File.basename(path), File.read(path)]
             end.to_h
 
-            package = SubmissionPackage.new(resource_id: resource.id)
+            package = SubmissionPackage.new(resource: resource)
             @zipfile_path = package.zipfile
 
             expected_metadata.each do |path, content|
@@ -133,7 +128,7 @@ module Stash
               deleted << upload.upload_file_name
             end
 
-            package = SubmissionPackage.new(resource_id: resource.id)
+            package = SubmissionPackage.new(resource: resource)
             @zipfile_path = package.zipfile
             mrt_delete = zip_entry('mrt-delete.txt')
             deleted.each do |filename|
@@ -144,14 +139,14 @@ module Stash
 
         describe :dc3_xml do
           it 'builds Datacite 3 XML' do
-            package = SubmissionPackage.new(resource_id: resource.id)
+            package = SubmissionPackage.new(resource: resource)
             expect(package.dc3_xml).to be_xml(datacite_xml)
           end
         end
 
         describe :cleanup! do
           it 'removes the working directory' do
-            package = SubmissionPackage.new(resource_id: resource.id)
+            package = SubmissionPackage.new(resource: resource)
             @zipfile_path = package.zipfile
             workdir = File.dirname(zipfile_path)
             package.cleanup!
@@ -162,7 +157,7 @@ module Stash
         describe :to_s do
           attr_reader :package_str
           before(:each) do
-            package = SubmissionPackage.new(resource_id: resource.id)
+            package = SubmissionPackage.new(resource: resource)
             @package_str = package.to_s
           end
           it 'includes the class name' do

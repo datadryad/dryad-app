@@ -114,7 +114,7 @@ module Stash
         describe :exec do
           describe 'create' do
             it 'submits the zipfile' do
-              package = Stash::Merritt::Package::SubmissionPackage.new(resource_id: resource.id)
+              package = Stash::Merritt::Package::SubmissionPackage.new(resource: resource)
               task = SwordTask.new(package: package)
               expect(sword_client).to receive(:create).with(doi: doi, zipfile: package.zipfile)
               task.exec
@@ -132,7 +132,7 @@ module Stash
             end
 
             it 'submits the zipfile' do
-              package = Stash::Merritt::Package::SubmissionPackage.new(resource_id: resource.id)
+              package = Stash::Merritt::Package::SubmissionPackage.new(resource: resource)
               task = SwordTask.new(package: package)
               expect(sword_client).to receive(:update).with(edit_iri: update_uri, zipfile: package.zipfile).and_return(200)
               task.exec

@@ -15,8 +15,9 @@ module Stash
       class SubmissionPackage
         attr_reader :resource
 
-        def initialize(resource_id:)
-          @resource = SubmissionPackage.ensure_resource(resource_id)
+        def initialize(resource:)
+          raise ArgumentError, "Resource (#{resource.id}) must have an identifier before submission" unless resource.identifier_str
+          @resource = resource
         end
 
         def resource_id
@@ -50,12 +51,6 @@ module Stash
 
         def to_s
           "#{self.class}: submission package for resource #{resource_id} (#{resource_title}"
-        end
-
-        def self.ensure_resource(resource_id)
-          resource = StashEngine::Resource.find(resource_id)
-          raise ArgumentError, "Resource (#{resource_id}) must have an identifier before submission" unless resource.identifier_str
-          resource
         end
 
         private
