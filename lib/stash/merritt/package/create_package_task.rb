@@ -10,10 +10,6 @@ module Stash
           @resource_id = resource_id
         end
 
-        def to_s
-          "#{super}: resource #{resource_id}"
-        end
-
         # @return [SubmissionPackage] the package
         def exec(*)
           SubmissionPackage.new(resource_id: resource_id)

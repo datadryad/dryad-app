@@ -40,13 +40,6 @@ module Stash
           @task = UpdateMetadataTask.new(url_helpers: url_helpers)
         end
 
-        describe(:to_s) do
-          it 'describes the task' do
-            task_str = task.to_s
-            expect(task_str).to include(UpdateMetadataTask.to_s)
-          end
-        end
-
         describe :exec do
           it 'updates the metadata and landing page' do
 

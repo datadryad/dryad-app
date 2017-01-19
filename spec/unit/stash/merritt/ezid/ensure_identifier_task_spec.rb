@@ -29,14 +29,6 @@ module Stash
           @task = EnsureIdentifierTask.new(resource_id: resource_id)
         end
 
-        describe :to_s do
-          it 'describes the task' do
-            task_str = task.to_s
-            expect(task_str).to include(EnsureIdentifierTask.to_s)
-            expect(task_str).to include(resource_id.to_s)
-          end
-        end
-
         describe :exec do
           it 'returns an existing identifier without bothering EZID' do
             identifier_str = 'doi:123/456'

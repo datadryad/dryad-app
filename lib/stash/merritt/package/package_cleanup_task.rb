@@ -16,10 +16,6 @@ module Stash
           package.cleanup
           package
         end
-
-        def to_s
-          "#{super}: cleanup task for package #{package}"
-        end
       end
     end
   end
