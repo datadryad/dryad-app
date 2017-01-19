@@ -11,7 +11,7 @@ module Stash
         end
 
         # @return [SubmissionPackage] the package
-        def exec(*)
+        def exec
           SubmissionPackage.new(resource_id: resource_id)
         end
       end

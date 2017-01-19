@@ -5,15 +5,17 @@ module Stash
   module Merritt
     module Ezid
       class UpdateMetadataTask < Stash::Repo::Task
+        attr_reader :package
         attr_reader :url_helpers
 
-        def initialize(url_helpers:)
+        # @param package [SubmissionPackage] the package to submit
+        def initialize(package:, url_helpers:)
+          @package = package
           @url_helpers = url_helpers
         end
 
-        # @param package [SubmissionPackage] the package to submit
         # @return [SubmissionPackage] the package
-        def exec(package)
+        def exec
           resource = package.resource
           identifier_str = resource.identifier_str
           landing_page_url = url_helpers.show_path(identifier_str)

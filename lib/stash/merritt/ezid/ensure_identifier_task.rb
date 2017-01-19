@@ -12,7 +12,7 @@ module Stash
         end
 
         # @return [String] the identifier (DOI, ARK, or URN)
-        def exec(*)
+        def exec
           resource = StashEngine::Resource.find(resource_id)
           identifier_str = resource.identifier_str
           return identifier_str if identifier_str

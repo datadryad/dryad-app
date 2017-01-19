@@ -21,8 +21,6 @@ module Stash
         attr_reader :tenant
         attr_reader :resource
         attr_reader :sword_client
-        attr_reader :package
-        attr_reader :task
 
         before(:all) do
           WebMock.disable_net_connect!
@@ -106,8 +104,6 @@ module Stash
           allow(@sword_client).to receive(:update).and_return(200)
           allow(@sword_client).to receive(:create) { receipt }
           allow(Stash::Sword::Client).to receive(:new) { @sword_client }
-
-          @task = SwordTask.new(sword_params: sword_params)
         end
 
         after(:each) do
@@ -119,8 +115,9 @@ module Stash
           describe 'create' do
             it 'submits the zipfile' do
               package = Stash::Merritt::Package::SubmissionPackage.new(resource_id: resource.id)
+              task = SwordTask.new(package: package)
               expect(sword_client).to receive(:create).with(doi: doi, zipfile: package.zipfile)
-              expect(task.exec(package)).to be(package)
+              task.exec
             end
 
             it 'returns the update and download URIs'
@@ -136,8 +133,9 @@ module Stash
 
             it 'submits the zipfile' do
               package = Stash::Merritt::Package::SubmissionPackage.new(resource_id: resource.id)
+              task = SwordTask.new(package: package)
               expect(sword_client).to receive(:update).with(edit_iri: update_uri, zipfile: package.zipfile).and_return(200)
-              expect(task.exec(package)).to be(package)
+              task.exec
             end
 
             it 'forwards errors'

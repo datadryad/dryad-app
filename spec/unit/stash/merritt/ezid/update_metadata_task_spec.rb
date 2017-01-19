@@ -37,7 +37,6 @@ module Stash
           allow(tenant).to receive(:tenant_id).and_return('dataone')
           allow(resource).to receive(:tenant).and_return(tenant)
 
-          @task = UpdateMetadataTask.new(url_helpers: url_helpers)
         end
 
         describe :exec do
@@ -61,7 +60,8 @@ module Stash
               owner: 'stash_admin'
             )
 
-            expect(task.exec(package)).to eq(package)
+            @task = UpdateMetadataTask.new(package: package, url_helpers: url_helpers)
+            expect(task.exec).to eq(package)
           end
         end
       end

@@ -4,34 +4,41 @@ module Stash
   module Merritt
     module Sword
       class SwordTask < Stash::Repo::Task
-        attr_reader :sword_params
+        attr_reader :package
 
-        def initialize(sword_params:)
-          @sword_params = sword_params
+        def initialize(package:)
+          @package = package
         end
 
-        # @return [SubmissionPackage] the package
-        def exec(package)
-          resource = package.resource
-          zipfile = package.zipfile
+        def exec
           log.debug("#{self.class}: Submitting #{zipfile} for '#{package.resource_title}' (#{resource.identifier_str}) (id: #{resource.id}) at #{Time.now} with sword_params: #{(sword_params.map { |k, v| "#{k}: #{v}" }).join(', ')}")
-          submit(resource, zipfile)
-          package
+          if (update_uri = resource.update_uri)
+            sword_client.update(edit_iri: update_uri, zipfile: zipfile)
+          else
+            sword_client.create(doi: resource.identifier_str, zipfile: zipfile)
+          end
         end
 
         private
 
-        def submit(resource, zipfile)
-          client = sword_client_for(resource.tenant)
-          if (update_uri = resource.update_uri)
-            client.update(edit_iri: update_uri, zipfile: zipfile)
-          else
-            client.create(doi: resource.identifier_str, zipfile: zipfile)
-          end
+        def resource
+          package.resource
         end
 
-        def sword_client_for(tenant)
-          Stash::Sword::Client.new(logger: log, **tenant.sword_params)
+        def zipfile
+          package.zipfile
+        end
+
+        def tenant
+          resource.tenant
+        end
+
+        def sword_params
+          tenant.sword_params
+        end
+
+        def sword_client
+          Stash::Sword::Client.new(logger: log, **sword_params)
         end
       end
     end
