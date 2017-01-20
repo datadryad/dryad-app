@@ -1,65 +1,52 @@
 module StashEngine
   module LinkGenerator
 
-    def create_link(type:, value: )
-
+    def self.create_link(type:, value: )
       # get [link_text, href] back from the id so we can create normal <a href link>
+      self.send(type.downcase, value)
+    end
 
+    def self.method_missing(method_name, *arguments, &block)
+      arguments.first
     end
 
     # all these return [link_text, url]
     def self.doi(value)
       # example reference: doi:10.5061/DRYAD.VN88Q
       # example url: http://doi.org/10.5061/DRYAD.VN88Q
-
-      f = Fixolator.new(id_value: value, target_prefix: 'doi:')
-      return [value, value] if f.is_url?
-
-      [f.reference_form, "https://doi.org/#{f.bare_id}"]
+      Fixolator.new(id_value: value, target_prefix: 'doi:', resolver_prefix: 'https://doi.org/').text_and_link
     end
 
     def self.ark(value)
       # example reference: ark:/13030/m55d9m2t
       # example url: http://n2t.net/ark:/13030/m55d9m2t
-
-      f = Fixolator.new(id_value: value, target_prefix: 'ark:/')
-      return [value, value] if f.is_url?
-
-      [f.reference_form, "http://n2t.net/ark:/#{f.bare_id}"]
+      Fixolator.new(id_value: value, target_prefix: 'ark:/', resolver_prefix: 'http://n2t.net/ark:/').text_and_link
     end
 
     def self.arxiv(value)
       # info at https://arxiv.org/help/arxiv_identifier
       # example reference: arXiv:1212.4795
       # example url: https://arxiv.org/abs/1212.4795
-
-      link_text = "arXiv:#{link_text}" if link_text == value
-      [link_text, "https://arxiv.org/abs/#{value}"]
+      Fixolator.new(id_value: value, target_prefix: 'arXiv:', resolver_prefix: 'https://arxiv.org/abs/').text_and_link
     end
 
     def self.handle(value)
-      # handle urls look like http://hdl.handle.net/2027.42/67268
+      # handle urls look like http://hdl.handle.net/2027.42/67268 sometimes.  Also hdl:1839/00-0000-0000-0009-3C7E-F
       # it seems like they do not represent them like handle:/2027/67268 or anything that I can find, but as full urls
       # in the citations I'm seeing
-
-      value = "http://hdl.handle.net/#{value.strip}" unless value.strip.start_with?('http')
-      [link_text, value]
+      Fixolator.new(id_value: value, target_prefix: 'hdl:', resolver_prefix: 'https://hdl.handle.net/').text_and_link
     end
 
     def self.isbn(value)
       # ISBNs are just numbers with maybe dashes in them (or spaces?)
       # a url like this seems to return results for isbns from worldcat. http://www.worldcat.org/search?q=bn%3A0142000280
-
-      return [link_text, value] if value.strip.start_with?('http')
-      [link_text, "http://www.worldcat.org/search?q=bn%3A#{value}"]
+      Fixolator.new(id_value: value, target_prefix: 'ISBN: ', resolver_prefix: 'http://www.worldcat.org/search?q=bn%3A').text_and_link
     end
 
     def self.pmid(value)
       # pubmed id references look like PMID: 19386008
       # the urls look like https://www.ncbi.nlm.nih.gov/pubmed/19386008
-
-      link_text = "PMID: #{link_text}" if link_text == value
-      [link_text, "https://www.ncbi.nlm.nih.gov/pubmed/#{value}"]
+      Fixolator.new(id_value: value, target_prefix: 'PMID: ', resolver_prefix: 'https://www.ncbi.nlm.nih.gov/pubmed/').text_and_link
     end
 
     def self.purl(value)
@@ -67,20 +54,20 @@ module StashEngine
       # http://purl.org/net/ea/cleath/docs/cat/
 
       value = "http://#{value}" unless value.strip.start_with?('http')
-      [link_text, value]
+      [value, value]
     end
 
     def self.url(value)
-      # a url is a very common thing and everyone should be able to put them in correctly by copy/pasting, but maybe
+      # I think people should be able to put them in correctly by copy/pasting, but maybe
       # people leave off the http(s) sometimes?
 
-      [link_text, value]
+      value = "http://#{value}" unless value.strip.start_with?('http')
+      [value, value]
     end
 
     def self.urn(value)
       # a urn could be a url or other things that may resolve or not resolve.  Just pass it on through.
-
-      [link_text, value]
+      value
     end
 
     # A standard fixing and extracting class to get parts of many identifiers.
@@ -91,10 +78,12 @@ module StashEngine
     # if the item is really a url for resolution (starting with http) then we need to know that, also.
     class Fixolator
       # id_value would be something that the user typed in and may be full of garbage
-      # prefix is what we know the prefix should be based on the ID type from outsied this class
-      def initialize(id_value:, target_prefix:)
+      # target_prefix is what we know the generally used prefix should be when it's written
+      # usually as a reference such as doi: or ark:/
+      def initialize(id_value:, target_prefix:, resolver_prefix:)
         @id_value = id_value
         @target_prefix = target_prefix
+        @resolver_prefix = resolver_prefix
         @is_url = id_value.strip.downcase.start_with?('http')
         @has_correct_prefix = id_value.strip.downcase.start_with?(target_prefix.strip.downcase)
       end
@@ -115,11 +104,17 @@ module StashEngine
       def bare_id
         if has_correct_prefix?
           #remove the prefix and give bare id
-          @id_value[@target_prefix.length..-1]
+          @id_value[@target_prefix.strip.length..-1].strip
         else
           #they must've given it as a bare id if it didn't have the prefix (and isn't a URL)
-          @id_value
+          @id_value.strip
         end
+      end
+
+      # returns text and link for creating a URL
+      def text_and_link
+        return [@id_value, @id_value] if is_url?
+        [reference_form, "#{@resolver_prefix}#{bare_id}"]
       end
     end
   end

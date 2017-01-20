@@ -6,7 +6,7 @@ module StashEngine
     def self.included(c)
       c.helper_method :current_tenant, :current_tenant_simple, :current_user, :metadata_engine, :metadata_url_helpers,
                       :metadata_render_path, :stash_url_helpers, :discovery_url_helpers, :landing_url,  :field_suffix,
-                      :logo_path, :contact_us_url, :display_br, :formatted_date
+                      :logo_path, :contact_us_url, :display_br, :display_id, :formatted_date
     end
 
     def metadata_url_helpers
@@ -122,6 +122,15 @@ module StashEngine
           return view_context.image_tag "tenants/#{base_fn}#{ext}",
                                         hsh.merge(alt: "#{current_tenant.short_name} logo")
         end
+      end
+    end
+
+    def display_id(type:, my_id:)
+      result = StashEngine::LinkGenerator.create_link(type: type, value: my_id)
+      if result.class == Array
+        view_context.link_to(result.first, result[1], {target: '_blank'})
+      else
+        "#{type}: #{result}"
       end
     end
 
