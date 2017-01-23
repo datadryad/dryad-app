@@ -40,7 +40,7 @@ git clone https://github.com/CDLUC3/dash2-config-example.git dash2-config
 
 You should end up with a directory structure that looks like this one.
 
-![Structure of your directories](structure.png)
+![Structure of your directories](images/structure.png)
 
 Your config files are currently in a seperate directory from your application. It can be handy to keep them apart from the application so that you can back them up or commit them to a private repository for configuration separate from the application.  The application will need to have these configuration files symlinked into the application. to symlink the files in using a bash shell, type these commands:
 
@@ -111,22 +111,22 @@ cd .. && bin/solr restart
 ```
 <br>Make sure Solr is working by going to  [http://localhost:8983](http://localhost:8983). You should see a Solr admin page.
 
-![Solr screen](./solr1.png)
+![Solr screen](images/solr1.png)
 
 Verify Solr is set up correctly from the Admin UI:
 
-1. Choose the geoblacklight core from the core selector list.<br>![core selctor](./solr2.png)
+1. Choose the geoblacklight core from the core selector list.<br>![core selctor](images/solr2.png)
 
-2. You can then click the *query* sidebar tab and scroll down to the bottom of the form to submit a blank query.  While the document will not return any results yet because there are no documents in SOLR, you should see it execute and you can verify that Solr queries are running.<br>![query test](./solr3.png)
+2. You can then click the *query* sidebar tab and scroll down to the bottom of the form to submit a blank query.  While the document will not return any results yet because there are no documents in SOLR, you should see it execute and you can verify that Solr queries are running.<br>![query test](images/solr3.png)
 
 <br>(Optional, but recommended) Add a sample record to match the sample database record from earlier.
 
-1. Click the *Documents* tab on the left side.<br>![Documents](./solr4.png)
+1. Click the *Documents* tab on the left side.<br>![Documents](images/solr4.png)
 
 2. Find the file *dash2-config/sample\_data/sample\_record.json* in the dash2-config repo.  Open the file in a text editor, select all the text and copy it.
 
-3. Paste the text into the *Document(s)* box on the page.<br>![json pasted](./solr5.png)
-4. Click *Submit Document* and be sure it shows a status of success.<br>![success status](./solr6.png)
+3. Paste the text into the *Document(s)* box on the page.<br>![json pasted](images/solr5.png)
+4. Click *Submit Document* and be sure it shows a status of success.<br>![success status](images/solr6.png)
 
 ## Getting the Rails application running
 
@@ -175,9 +175,9 @@ Open your web browser and go to [http://localhost:3000](http://localhost:3000) t
 
 The *Explore Data* link will allow you to search and view your dataset, if you imported a sample record.
 
-![Explore Splash](./explore1.png)<br><br>
-![Search Results](./explore2.png)<br><br>
-![Dataset Page](./explore3.png)
+![Explore Splash](images/explore1.png)<br><br>
+![Search Results](images/explore2.png)<br><br>
+![Dataset Page](images/explore3.png)
 
 ### Use the developer login
 
@@ -185,8 +185,8 @@ Until a tenant is configured and login methods are set up you can use the develo
 
 To use the developer login:
 
-1. Click the *More Dash Sites* drop-down menu and then click *developer login (only development)*.<br>![More Dash Sites](./dev_login1.png)<br><br>
-2. In the login screen enter a name, email address and a domain name.  The domain name should allow the *domain_regex* regular expression from one of your tenant configurations to match the string you enter as the test domain.<br>![Developer Login Page](./dev_login2.png).
+1. Click the *More Dash Sites* drop-down menu and then click *developer login (only development)*.<br>![More Dash Sites](images/dev_login1.png)<br><br>
+2. In the login screen enter a name, email address and a domain name.  The domain name should allow the *domain_regex* regular expression from one of your tenant configurations to match the string you enter as the test domain.<br>![Developer Login Page](images/dev_login2.png).
 3. Until you log in again or your cookies expire, the user interface will display items specific to the tenant you entered the domain name for (such as the logo, help and other things configured for that tenant). It will also act as that tenant when submitting data to a configured repository.
 
 ### Enter dataset metadata, upload files and preview the landing page
