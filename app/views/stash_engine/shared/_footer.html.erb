@@ -5,6 +5,7 @@
       <%= link_to 'About Dash', stash_url_helpers.about_path, class: 'c-footer__nav-item' %>
       <% if current_user %>
         <%= link_to 'My Datasets', stash_url_helpers.dashboard_path, class: 'c-footer__nav-item' %>
+        <%= link_to 'Help', stash_url_helpers.help_path, class: 'c-footer__nav-item' %>
         <!-- Logout -->
         <%= link_to 'Logout', stash_url_helpers.sessions_destroy_path, class: 'c-footer__nav-item' %>
       <% else %>
