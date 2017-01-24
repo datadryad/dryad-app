@@ -31,6 +31,7 @@ StashDatacite::Engine.routes.draw do
   post 'related_identifiers/create', to: 'related_identifiers#create'
   patch 'related_identifiers/update', to: 'related_identifiers#update'
   delete 'related_identifiers/:id/delete', to: 'related_identifiers#delete', as: 'related_identifiers_delete'
+  get 'related_identifiers/report', to: 'related_identifiers#report', as: 'related_identifiers_report'
 
   get 'geolocation_places/new', to: 'geolocation_places#new'
   post 'geolocation_places/create', to: 'geolocation_places#create'
