@@ -2,6 +2,8 @@ PATH
   remote: ../stash-repo
   specs:
     stash-repo (0.0.1)
+      concurrent-ruby (~> 1.0)
+      typesafe_enum (~> 0.1, >= 0.1.7)
 
 PATH
   remote: ../stash_engines/stash_datacite
@@ -42,7 +44,6 @@ PATH
   remote: .
   specs:
     stash-merritt (0.0.1)
-      concurrent-ruby (~> 1.0)
       stash-repo (~> 0.0)
       stash_datacite
       stash_engine
