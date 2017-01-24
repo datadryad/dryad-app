@@ -61,7 +61,7 @@ module StashEngine
       # I think people should be able to put them in correctly by copy/pasting, but maybe
       # people leave off the http(s) sometimes?
 
-      value = "http://#{value}" unless value.strip.start_with?('http')
+      value = "http://#{value}" unless value.nil? || value.strip.start_with?('http')
       [value, value]
     end
 
@@ -84,8 +84,13 @@ module StashEngine
         @id_value = id_value
         @target_prefix = target_prefix
         @resolver_prefix = resolver_prefix
-        @is_url = id_value.strip.downcase.start_with?('http')
-        @has_correct_prefix = id_value.strip.downcase.start_with?(target_prefix.strip.downcase)
+        if id_value.nil?
+          @is_url = false
+          @has_correct_prefix = false
+        else
+          @is_url = id_value.strip.downcase.start_with?('http')
+          @has_correct_prefix = id_value.strip.downcase.start_with?(target_prefix.strip.downcase)
+        end
       end
 
       def is_url?
