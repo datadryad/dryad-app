@@ -98,7 +98,13 @@ module StashEngine
       respond_to do |format|
         format.html
         format.pdf do
-          render pdf: "test_data_paper"   # Excluding ".pdf" extension.
+          # see https://www.viget.com/articles/how-to-create-pdfs-in-rails which is more
+          # helpful for options than the documentation for some options
+          render pdf: "test_data_paper",
+                 page_size: 'letter',
+                 title: 'my test title'
+
+          # Excluding ".pdf" extension.
         end
       end
     end
