@@ -2,11 +2,11 @@ require_dependency 'stash_engine/application_controller'
 
 module StashEngine
   class ResourcesController < ApplicationController
-    before_action :require_login, except: [:increment_downloads]
+    before_action :require_login, except: [:increment_downloads, :data_paper]
 
     before_action :set_resource, only: [:show, :edit, :update, :destroy, :review, :upload, :increment_downloads]
 
-    before_action :require_resource_owner, except: [:index, :new, :increment_downloads]
+    before_action :require_resource_owner, except: [:index, :new, :increment_downloads, :data_paper]
 
     # GET /resources
     # GET /resources.json
@@ -89,6 +89,16 @@ module StashEngine
       respond_to do |format|
         format.js do
           @resource.increment_downloads
+        end
+      end
+    end
+
+    # get /resources/1/data_paper
+    def data_paper
+      respond_to do |format|
+        format.html
+        format.pdf do
+          render pdf: "test_data_paper"   # Excluding ".pdf" extension.
         end
       end
     end
