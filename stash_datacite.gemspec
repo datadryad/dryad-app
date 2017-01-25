@@ -25,8 +25,6 @@ Gem::Specification.new do |s|
 
   s.add_dependency 'datacite-mapping', '~> 0.2', '>= 0.2.5'
   s.add_dependency 'stash-wrapper', '~> 0.1', '>= 0.1.11.1'
-  s.add_dependency 'wicked_pdf', '~> 1.1.0'
-  s.add_dependency 'wkhtmltopdf-binary', '~> 0.12.3.1'
 
   # TODO: remove this once the EZID calls are out of StashDatacite
   s.add_dependency 'stash_ezid_datacite', '~> 0.1'
