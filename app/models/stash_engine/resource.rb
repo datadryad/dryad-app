@@ -14,6 +14,13 @@ module StashEngine
             foreign_key: 'id'
 
     # ------------------------------------------------------------
+    # Patch points
+
+    def primary_title
+      raise NoMethodError, 'Metadata engine should patch Resource to implement :primary_title'
+    end
+
+    # ------------------------------------------------------------
     # Callbacks
 
     def init_state_and_version
