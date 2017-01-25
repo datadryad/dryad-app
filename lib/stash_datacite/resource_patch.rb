@@ -15,8 +15,8 @@ module StashDatacite
     # class in the configuration.  As it is, it's problematic to change the class until being
     # certain that the configuration is loaded and so the resource class is defined.  We could
     # probably make it straight forward if we didn't allow the shared resource class to be user-configurable.
-    def self.associate_with_resource(resource)
-      resource.instance_eval do
+    def self.associate_with_resource(resource_class)
+      resource_class.instance_eval do
         has_many :descriptions, class_name: 'StashDatacite::Description', dependent: :destroy #optional
         has_many :contributors, class_name: 'StashDatacite::Contributor', dependent: :destroy # optional
         has_many :creators, class_name: 'StashDatacite::Creator', dependent: :destroy # mandatory
@@ -46,6 +46,13 @@ module StashDatacite
           include_association [:contributors, :creators, :datacite_dates, :descriptions, :embargoes, :geolocations,
                                :publication_years, :publisher, :related_identifiers, :resource_type, :rights, :sizes,
                                :subjects, :titles]
+        end
+      end
+
+      resource_class.class_eval do
+        def primary_title
+          dcs_title = titles.where(title_type: nil).first
+          dcs_title && dcs_title.title.to_s
         end
       end
     end
