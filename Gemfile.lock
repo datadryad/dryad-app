@@ -19,6 +19,8 @@ PATH
       rubyzip (>= 1.0.0)
       stash-wrapper (~> 0.1, >= 0.1.11.1)
       stash_ezid_datacite (~> 0.1)
+      wicked_pdf (~> 1.1.0)
+      wkhtmltopdf-binary (~> 0.12.3.1)
     stash_discovery (0.0.2)
       blacklight (~> 6.5.0)
       config
@@ -398,6 +400,8 @@ GEM
       binding_of_caller (>= 0.7.2)
       railties (>= 4.0)
       sprockets-rails (>= 2.0, < 4.0)
+    wicked_pdf (1.1.0)
+    wkhtmltopdf-binary (0.12.3.1)
     xml-mapping (0.10.0)
     xml-mapping_extensions (0.4.7)
       mime-types (~> 2.5)
