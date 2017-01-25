@@ -2,7 +2,9 @@
   <h3 class="o-heading__level2">References</h3>
   <ul class="o-list">
     <% related_identifiers.each do |related_identifier| %>
-      <li><%= related_identifier %></li>
+      <li>This dataset <%= related_identifier.relation_name_english %>
+        <%= display_id(type: related_identifier.related_identifier_type,
+                         my_id: related_identifier.related_identifier) %></li>
     <% end %>
   </ul>
 <% end %>
