@@ -4,7 +4,9 @@ var map;
 function loadReviewMap(resource_id) {
   var resource_id = resource_id;
   // create a map in the "map" div, set the view to a given place and zoom
-  map = L.map('map_review', { zoomControl: true }).setView([36.778259, -119.417931], 3);
+  map = L.map('map_review', { zoomControl: true, scrollWheelZoom: false }).setView([36.778259, -119.417931], 3);
+  map.on('focus', function() { map.scrollWheelZoom.enable(); });
+  map.on('blur', function() { map.scrollWheelZoom.disable(); });
       mapLink = '<a href="https://openstreetmap.org">OpenStreetMap</a>';
       map.zoomControl.setPosition('bottomright');
     // add an OpenStreetMap tile layer
