@@ -93,22 +93,6 @@ module StashEngine
       end
     end
 
-    # get /resources/1/data_paper
-    def data_paper
-      respond_to do |format|
-        format.html
-        format.pdf do
-          # see https://www.viget.com/articles/how-to-create-pdfs-in-rails which is more
-          # helpful for options than the documentation for some options
-          render pdf: "test_data_paper",
-                 page_size: 'letter',
-                 title: 'my test title'
-
-          # Excluding ".pdf" extension.
-        end
-      end
-    end
-
     private
 
     # Use callbacks to share common setup or constraints between actions.

@@ -1,0 +1,27 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset='utf-8' />
+  <%# if params[:debug]
+        # stylesheet_link_tag 'stash_engine/ui'
+      #else
+      #  wicked_pdf_stylesheet_link_tag('/assets/stash_engine/ui')
+      #end  -%>
+  <%# wicked_pdf_javascript_include_tag "number_pages" %>
+
+  <style>
+    <%= file_content_dump(StashEngine::Engine.root, 'app/assets/stylesheets/stash_engine/ui.css') %>
+    <%# File.open(File.join(StashEngine::Engine.root, 'app/assets/stylesheets/stash_engine/ui.css'), 'rb').read %>
+  </style>
+</head>
+<body ongload='number_pages'>
+<div id="header">
+  <main class="t-landing__main c-columns__content">
+    <div id="display_resource">
+      <%= render(partial: metadata_render_path('resources', 'show')) %>
+    </div>
+  </main>
+</div>
+</body>
+</html>
+
