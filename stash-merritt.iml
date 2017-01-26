@@ -13,9 +13,7 @@
           <root url="file://$MODULE_DIR$/../stash_engines/stash_datacite/app" />
           <root url="file://$MODULE_DIR$/../stash_engines/stash_datacite/bin" />
           <root url="file://$MODULE_DIR$/../stash_engines/stash_datacite/lib" />
-          <root url="file://$MODULE_DIR$/../stash_engines/stash_datacite/tmp" />
           <root url="file://$MODULE_DIR$/../stash_engines/stash_datacite/config" />
-          <root url="file://$MODULE_DIR$/../stash_engines/stash_datacite/coverage" />
         </CLASSES>
         <JAVADOC />
         <SOURCES>
@@ -23,9 +21,7 @@
           <root url="file://$MODULE_DIR$/../stash_engines/stash_datacite/app" />
           <root url="file://$MODULE_DIR$/../stash_engines/stash_datacite/bin" />
           <root url="file://$MODULE_DIR$/../stash_engines/stash_datacite/lib" />
-          <root url="file://$MODULE_DIR$/../stash_engines/stash_datacite/tmp" />
           <root url="file://$MODULE_DIR$/../stash_engines/stash_datacite/config" />
-          <root url="file://$MODULE_DIR$/../stash_engines/stash_datacite/coverage" />
         </SOURCES>
       </library>
     </orderEntry>
@@ -36,14 +32,10 @@
           <root url="file://$MODULE_DIR$/../stash_engines/stash_engine/app" />
           <root url="file://$MODULE_DIR$/../stash_engines/stash_engine/bin" />
           <root url="file://$MODULE_DIR$/../stash_engines/stash_engine/lib" />
-          <root url="file://$MODULE_DIR$/../stash_engines/stash_engine/log" />
-          <root url="file://$MODULE_DIR$/../stash_engines/stash_engine/tmp" />
           <root url="file://$MODULE_DIR$/../stash_engines/stash_engine/config" />
           <root url="file://$MODULE_DIR$/../stash_engines/stash_engine/public" />
           <root url="file://$MODULE_DIR$/../stash_engines/stash_engine/script" />
-          <root url="file://$MODULE_DIR$/../stash_engines/stash_engine/coverage" />
           <root url="file://$MODULE_DIR$/../stash_engines/stash_engine/ui-library" />
-          <root url="file://$MODULE_DIR$/../stash_engines/stash_engine/node_modules" />
         </CLASSES>
         <JAVADOC />
         <SOURCES>
@@ -51,14 +43,10 @@
           <root url="file://$MODULE_DIR$/../stash_engines/stash_engine/app" />
           <root url="file://$MODULE_DIR$/../stash_engines/stash_engine/bin" />
           <root url="file://$MODULE_DIR$/../stash_engines/stash_engine/lib" />
-          <root url="file://$MODULE_DIR$/../stash_engines/stash_engine/log" />
-          <root url="file://$MODULE_DIR$/../stash_engines/stash_engine/tmp" />
           <root url="file://$MODULE_DIR$/../stash_engines/stash_engine/config" />
           <root url="file://$MODULE_DIR$/../stash_engines/stash_engine/public" />
           <root url="file://$MODULE_DIR$/../stash_engines/stash_engine/script" />
-          <root url="file://$MODULE_DIR$/../stash_engines/stash_engine/coverage" />
           <root url="file://$MODULE_DIR$/../stash_engines/stash_engine/ui-library" />
-          <root url="file://$MODULE_DIR$/../stash_engines/stash_engine/node_modules" />
         </SOURCES>
       </library>
     </orderEntry>
