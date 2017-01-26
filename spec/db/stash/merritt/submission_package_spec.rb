@@ -152,7 +152,6 @@ module Stash
           expect(File.exist?(workdir)).to eq(false)
         end
 
-        it 'removes uploaded files'
       end
 
       describe :to_s do

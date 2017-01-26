@@ -19,6 +19,7 @@ module Stash
       attr_reader :tenant
       attr_reader :resource
       attr_reader :sword_client
+      attr_reader :receipt
 
       before(:all) do
         WebMock.disable_net_connect!
@@ -78,13 +79,13 @@ module Stash
           end
         end
 
-        receipt = instance_double(Stash::Sword::DepositReceipt)
+        @receipt = instance_double(Stash::Sword::DepositReceipt)
         allow(receipt).to(receive(:em_iri)).and_return(download_uri)
         allow(receipt).to(receive(:edit_iri)).and_return(update_uri)
 
         @sword_client = instance_double(Stash::Sword::Client)
         allow(sword_client).to receive(:update).and_return(200)
-        allow(sword_client).to receive(:create) { receipt }
+        allow(sword_client).to receive(:create).and_return(receipt)
         allow(Stash::Sword::Client).to receive(:new).and_return(sword_client)
       end
 
@@ -101,9 +102,29 @@ module Stash
             helper.submit!
           end
 
-          it 'sets the update and download URIs'
-          it 'sets the version zipfile'
-          it 'forwards errors'
+          it 'sets the update and download URIs' do
+            package = Stash::Merritt::SubmissionPackage.new(resource: resource)
+            helper = SwordHelper.new(package: package)
+            expect(sword_client).to receive(:create).with(doi: doi, zipfile: package.zipfile).and_return(receipt)
+            helper.submit!
+            expect(resource.download_uri).to eq(download_uri)
+            expect(resource.update_uri).to eq(update_uri)
+          end
+
+          it 'sets the version zipfile' do
+            package = Stash::Merritt::SubmissionPackage.new(resource: resource)
+            SwordHelper.new(package: package).submit!
+            version = resource.stash_version
+            zipfile = File.basename(package.zipfile)
+            expect(version.zip_filename).to eq(zipfile)
+          end
+
+          it 'forwards errors' do
+            package = Stash::Merritt::SubmissionPackage.new(resource: resource)
+            helper = SwordHelper.new(package: package)
+            expect(sword_client).to receive(:create).and_raise(RestClient::RequestFailed)
+            expect { helper.submit! }.to raise_error(RestClient::RequestFailed)
+          end
         end
 
         describe 'update' do
@@ -120,8 +141,20 @@ module Stash
             helper.submit!
           end
 
-          it 'sets the version zipfile'
-          it 'forwards errors'
+          it 'sets the version zipfile' do
+            package = Stash::Merritt::SubmissionPackage.new(resource: resource)
+            SwordHelper.new(package: package).submit!
+            version = resource.stash_version
+            zipfile = File.basename(package.zipfile)
+            expect(version.zip_filename).to eq(zipfile)
+          end
+
+          it 'forwards errors' do
+            package = Stash::Merritt::SubmissionPackage.new(resource: resource)
+            helper = SwordHelper.new(package: package)
+            expect(sword_client).to receive(:update).and_raise(RestClient::RequestFailed)
+            expect { helper.submit! }.to raise_error(RestClient::RequestFailed)
+          end
         end
       end
     end
