@@ -2,7 +2,7 @@
 
 ### Introduction
 
-**Stash** is a **UC3** service for storing and sharing research data.  Stash, a replacement for UC3’s current Dash service (UC3, 2015), is simple self-service repository overlay layer for submission and discovery of research datasets.  Stash is intended to be applicable to any standards-compliant repository that supports the SWORD protocol for deposit and the OAI-PMH protocol for metadata harvesting.  Stash enables individual scholars to:
+**Stash** is a **UC3** application framework for storing and sharing research data.  [Dash v2](https://github.com/CDLUC3/dashv2), is a replacement for UC3’s Dash v1 service (UC3, 2015) and is an implementation of the Stash framework.  Dash v2 is a simple self-service repository overlay layer for submission and discovery of research datasets.  Stash is intended to be applicable to any standards-compliant repository that supports the SWORD protocol for deposit and the OAI-PMH protocol for metadata harvesting.  Stash enables individual scholars to:
 
 1. Prepare datasets for curation by reviewing best practice guidance for the creation or acquisition of research data.
 2. Select data for curation through local file browse or drag-and-drop operation.
