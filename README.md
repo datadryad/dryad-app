@@ -31,6 +31,12 @@ By alleviating many of the barriers that have historically precluded wider adopt
 
 ---------------------------------------------------------
 
+### Installation 
+
+Notes for installing the Dash v2 application are described [here](https://github.com/CDLUC3/dashv2/blob/development/documentation/dash2_install.md).
+
+---------------------------------------------------------
+
 ### Deployment, Operations and Utility Tasks (work in progress)
 
 When using Rails with Capistrano, it is typical to have some deploy tasks as part of the application. These tasks
