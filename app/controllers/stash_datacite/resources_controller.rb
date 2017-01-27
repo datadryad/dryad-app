@@ -1,6 +1,6 @@
 require_dependency 'stash_datacite/application_controller'
 
-require 'stash_datacite/merritt_packager'
+#require 'stash_datacite/merritt_packager'
 
 module StashDatacite
   # this is a class for composite (AJAX/UJS?) views starting at the resource or resources
