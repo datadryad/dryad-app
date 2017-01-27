@@ -3,6 +3,7 @@
 function loadCreators() {
 
   // this uses a namespace (.mycreators) to disconnect previous events (off) before attaching them again
+  // http://stackoverflow.com/questions/11612874/how-can-you-bind-an-event-handler-only-if-it-doesnt-already-exist
   $( '.js-creator_first_name, .js-creator_last_name' )
     .off('.mycreators')
     .on('focus.mycreators', function () {
@@ -19,17 +20,17 @@ function loadCreators() {
     });
 
 
+  // ajax events for ujs listed at https://github.com/rails/jquery-ujs/wiki/ajax
   $('form.js-creator_form')
-      .off('mycreator_forms')
-      .on('ajax:beforeSend.mycreator_forms', function(event, xhr, status) {
-        console.log('ajax:beforeSend');
-      })
+      .off('.mycreator_forms')
       .on('ajax:complete.mycreator_forms', function(event, xhr, status) {
         console.log('ajax:complete');
-        ajaxInProgress = false;
         if(ajaxQueue.length > 0){
           console.log('submitting form for next queued request:' + ajaxQueue[ajaxQueue.length-1]);
+          ajaxInProgress = true;
           $(ajaxQueue.pop()).trigger('submit.rails');
+        }else{
+          ajaxInProgress = false;
         }
       });
 
@@ -52,6 +53,7 @@ function hideRemoveLinkCreators() {
 
 var ajaxQueue = [];
 var ajaxInProgress = false;
+
 function queueAjaxFormSubmit(form){
   console.log('using queueAjaxFormSubmit');
   console.log("ajaxQueue.length " + ajaxQueue.length);
