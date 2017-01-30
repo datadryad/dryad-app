@@ -93,16 +93,6 @@ module StashEngine
       end
     end
 
-    # get /resources/1/data_paper
-    def data_paper
-      respond_to do |format|
-        format.html
-        format.pdf do
-          render pdf: "test_data_paper"   # Excluding ".pdf" extension.
-        end
-      end
-    end
-
     private
 
     # Use callbacks to share common setup or constraints between actions.

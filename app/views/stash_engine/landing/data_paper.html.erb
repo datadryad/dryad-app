@@ -1,0 +1,35 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset='utf-8' />
+  <%# if params[:debug]
+        # stylesheet_link_tag 'stash_engine/ui'
+      #else
+      #  wicked_pdf_stylesheet_link_tag('/assets/stash_engine/ui')
+      #end  -%>
+  <%# wicked_pdf_javascript_include_tag "number_pages" %>
+  <%= stylesheet_link_tag wicked_pdf_asset_base64("stash_engine/ui.css") %>
+  <%= stylesheet_link_tag wicked_pdf_asset_base64("stash_datacite/review.css") %>
+  <%= stylesheet_link_tag wicked_pdf_asset_base64("leaflet.css") %>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/0.4.0/leaflet.draw.css"/>
+  <%= javascript_include_tag wicked_pdf_asset_base64("jquery.js") %>
+  <%= javascript_include_tag wicked_pdf_asset_base64("leaflet.js") %>
+  <%= javascript_include_tag wicked_pdf_asset_base64("stash_datacite/leaflet_draw.js") %>
+  <%= javascript_include_tag wicked_pdf_asset_base64("stash_datacite/map_review.js") %>
+  <style>
+    <%
+      # file_content_dump(StashEngine::Engine.root, 'app/assets/stylesheets/stash_engine/ui.css')
+    %>
+  </style>
+</head>
+<body ongload='number_pages'>
+<div id="header">
+  <main class="t-landing__main c-columns__content">
+    <div id="display_resource">
+      <%= render(partial: metadata_render_path('resources', 'show')) %>
+    </div>
+  </main>
+</div>
+</body>
+</html>
+
