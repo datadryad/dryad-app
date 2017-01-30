@@ -1,7 +1,7 @@
 <%# the local variable 'creator' should be passed in to this partial when there are multiple per page.
   # the 'path' to submit to should also be passed in. %>
 <% form_id = unique_form_id(creator) %>
-<%= form_for(creator, url: path, remote: true, authenticity_token: true, html: {id: form_id, class: 'c-input__inline'}) do |f| %>
+<%= form_for(creator, url: path, remote: true, authenticity_token: true, html: {id: form_id, class: 'c-input__inline js-creator_form'}) do |f| %>
   <% my_suffix = field_suffix(creator) %>
 
 <%#= render "datacite/shared/error_messages", target: @creator %>

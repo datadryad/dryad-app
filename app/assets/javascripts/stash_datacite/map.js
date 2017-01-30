@@ -3,7 +3,9 @@
 var map;
 function loadMap(bounds) { // bounds is optional
   // Create a map in the "map" div, set the view to a given place and zoom
-  map = L.map('map', { zoomControl: true });
+  map = L.map('map', { zoomControl: true, scrollWheelZoom: false });
+  map.on('focus', function() { map.scrollWheelZoom.enable(); });
+  map.on('blur', function() { map.scrollWheelZoom.disable(); });
   if(bounds === undefined){
     map.setView([36.778259, -119.417931], 3);
   }else{
