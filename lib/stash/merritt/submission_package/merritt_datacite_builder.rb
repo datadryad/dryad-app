@@ -1,10 +1,10 @@
 require 'datacite/mapping/datacite_xml_factory'
-require 'stash/repo/util/file_builder'
+require 'stash/repo/file_builder'
 
 module Stash
   module Merritt
     class SubmissionPackage
-      class MerrittDataciteBuilder < Stash::Repo::Util::FileBuilder
+      class MerrittDataciteBuilder < Stash::Repo::FileBuilder
         attr_reader :factory
 
         # @param factory [DataciteXMLFactory] the Datacite XML factory

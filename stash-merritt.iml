@@ -13,7 +13,9 @@
           <root url="file://$MODULE_DIR$/../stash_engines/stash_datacite/app" />
           <root url="file://$MODULE_DIR$/../stash_engines/stash_datacite/bin" />
           <root url="file://$MODULE_DIR$/../stash_engines/stash_datacite/lib" />
+          <root url="file://$MODULE_DIR$/../stash_engines/stash_datacite/tmp" />
           <root url="file://$MODULE_DIR$/../stash_engines/stash_datacite/config" />
+          <root url="file://$MODULE_DIR$/../stash_engines/stash_datacite/coverage" />
         </CLASSES>
         <JAVADOC />
         <SOURCES>
@@ -21,7 +23,9 @@
           <root url="file://$MODULE_DIR$/../stash_engines/stash_datacite/app" />
           <root url="file://$MODULE_DIR$/../stash_engines/stash_datacite/bin" />
           <root url="file://$MODULE_DIR$/../stash_engines/stash_datacite/lib" />
+          <root url="file://$MODULE_DIR$/../stash_engines/stash_datacite/tmp" />
           <root url="file://$MODULE_DIR$/../stash_engines/stash_datacite/config" />
+          <root url="file://$MODULE_DIR$/../stash_engines/stash_datacite/coverage" />
         </SOURCES>
       </library>
     </orderEntry>
@@ -32,10 +36,14 @@
           <root url="file://$MODULE_DIR$/../stash_engines/stash_engine/app" />
           <root url="file://$MODULE_DIR$/../stash_engines/stash_engine/bin" />
           <root url="file://$MODULE_DIR$/../stash_engines/stash_engine/lib" />
+          <root url="file://$MODULE_DIR$/../stash_engines/stash_engine/log" />
+          <root url="file://$MODULE_DIR$/../stash_engines/stash_engine/tmp" />
           <root url="file://$MODULE_DIR$/../stash_engines/stash_engine/config" />
           <root url="file://$MODULE_DIR$/../stash_engines/stash_engine/public" />
           <root url="file://$MODULE_DIR$/../stash_engines/stash_engine/script" />
+          <root url="file://$MODULE_DIR$/../stash_engines/stash_engine/coverage" />
           <root url="file://$MODULE_DIR$/../stash_engines/stash_engine/ui-library" />
+          <root url="file://$MODULE_DIR$/../stash_engines/stash_engine/node_modules" />
         </CLASSES>
         <JAVADOC />
         <SOURCES>
@@ -43,10 +51,14 @@
           <root url="file://$MODULE_DIR$/../stash_engines/stash_engine/app" />
           <root url="file://$MODULE_DIR$/../stash_engines/stash_engine/bin" />
           <root url="file://$MODULE_DIR$/../stash_engines/stash_engine/lib" />
+          <root url="file://$MODULE_DIR$/../stash_engines/stash_engine/log" />
+          <root url="file://$MODULE_DIR$/../stash_engines/stash_engine/tmp" />
           <root url="file://$MODULE_DIR$/../stash_engines/stash_engine/config" />
           <root url="file://$MODULE_DIR$/../stash_engines/stash_engine/public" />
           <root url="file://$MODULE_DIR$/../stash_engines/stash_engine/script" />
+          <root url="file://$MODULE_DIR$/../stash_engines/stash_engine/coverage" />
           <root url="file://$MODULE_DIR$/../stash_engines/stash_engine/ui-library" />
+          <root url="file://$MODULE_DIR$/../stash_engines/stash_engine/node_modules" />
         </SOURCES>
       </library>
     </orderEntry>
@@ -117,7 +129,7 @@
     <orderEntry type="library" scope="PROVIDED" name="rack-test (v0.6.3, RVM: ruby-2.2.5) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="rails (v4.2.7.1, RVM: ruby-2.2.5) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="rails-deprecated_sanitizer (v1.0.3, RVM: ruby-2.2.5) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="rails-dom-testing (v1.0.7, RVM: ruby-2.2.5) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="rails-dom-testing (v1.0.8, RVM: ruby-2.2.5) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="rails-html-sanitizer (v1.0.3, RVM: ruby-2.2.5) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="railties (v4.2.7.1, RVM: ruby-2.2.5) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="rainbow (v2.2.1, RVM: ruby-2.2.5) [gem]" level="application" />
@@ -153,8 +165,6 @@
     <orderEntry type="library" scope="PROVIDED" name="unf_ext (v0.0.7.2, RVM: ruby-2.2.5) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="unicode-display_width (v1.1.2, RVM: ruby-2.2.5) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="webmock (v1.24.6, RVM: ruby-2.2.5) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="wicked_pdf (v1.1.0, RVM: ruby-2.2.5) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="wkhtmltopdf-binary (v0.12.3.1, RVM: ruby-2.2.5) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="xml-mapping (v0.10.0, RVM: ruby-2.2.5) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="xml-mapping_extensions (v0.4.7, RVM: ruby-2.2.5) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="yard (v0.9.5, RVM: ruby-2.2.5) [gem]" level="application" />

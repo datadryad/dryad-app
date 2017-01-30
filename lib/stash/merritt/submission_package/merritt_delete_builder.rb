@@ -1,9 +1,9 @@
-require 'stash/repo/util/file_builder'
+require 'stash/repo/file_builder'
 
 module Stash
   module Merritt
     class SubmissionPackage
-      class MerrittDeleteBuilder < Stash::Repo::Util::FileBuilder
+      class MerrittDeleteBuilder < Stash::Repo::FileBuilder
         attr_reader :resource_id
 
         def initialize(resource_id:)

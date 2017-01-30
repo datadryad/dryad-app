@@ -1,9 +1,9 @@
-require 'stash/repo/util/file_builder'
+require 'stash/repo/file_builder'
 
 module Stash
   module Merritt
     class SubmissionPackage
-      class DataONEManifestBuilder < Stash::Repo::Util::FileBuilder
+      class DataONEManifestBuilder < Stash::Repo::FileBuilder
         HEADER = [
           '#%dataonem_0.1',
           '#%profile | http://uc3.cdlib.org/registry/ingest/manifest/mrt-dataone-manifest',

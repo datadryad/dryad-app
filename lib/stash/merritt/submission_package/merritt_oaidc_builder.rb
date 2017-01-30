@@ -1,9 +1,9 @@
-require 'stash/repo/util/file_builder'
+require 'stash/repo/file_builder'
 
 module Stash
   module Merritt
     class SubmissionPackage
-      class MerrittOAIDCBuilder < Stash::Repo::Util::FileBuilder
+      class MerrittOAIDCBuilder < Stash::Repo::FileBuilder
         ROOT_ATTRIBUTES = {
           'xmlns:xsi' => 'http://www.w3.org/2001/XMLSchema-instance',
           'xsi:noNamespaceSchemaLocation' => 'http://dublincore.org/schemas/xmls/qdc/2008/02/11/qualifieddc.xsd',
@@ -128,3 +128,4 @@ module Stash
     end
   end
 end
+

@@ -1,10 +1,10 @@
 require 'stash/wrapper'
-require 'stash/repo/util/file_builder'
+require 'stash/repo/file_builder'
 
 module Stash
   module Merritt
     class SubmissionPackage
-      class StashWrapperBuilder < Stash::Repo::Util::FileBuilder
+      class StashWrapperBuilder < Stash::Repo::FileBuilder
         include Stash::Wrapper
         attr_reader :dcs_resource
         attr_reader :uploads
