@@ -90,7 +90,13 @@ module StashEngine
       end
 
       def client
-        @client ||= Stash::Sword::Client.new(logger: log, **sword_params)
+        if @client
+          @client
+        else
+          @client = Stash::Sword::Client.new(logger: log, **sword_params)
+          @client.helper.timeout = 3600
+          @client
+        end
       end
 
       def do_submit(request_msg)
