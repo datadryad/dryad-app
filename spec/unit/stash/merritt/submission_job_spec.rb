@@ -25,6 +25,7 @@ module Stash
         @resource_id = 37
         @resource = double(StashEngine::Resource)
         allow(StashEngine::Resource).to receive(:find).with(resource_id).and_return(resource)
+        allow(resource).to receive(:identifier_str).and_return('doi:10.123/456')
 
         @url_helpers = double(Module) # yes, apparently URL helpers are an anonymous module
         allow(url_helpers).to(receive(:show_path)) { |identifier| identifier }
