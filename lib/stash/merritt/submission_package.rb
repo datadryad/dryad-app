@@ -13,10 +13,12 @@ module Stash
   module Merritt
     class SubmissionPackage
       attr_reader :resource
+      attr_reader :zipfile
 
       def initialize(resource:)
         raise ArgumentError, "Resource (#{resource.id}) must have an identifier before submission" unless resource.identifier_str
         @resource = resource
+        @zipfile = create_zipfile
       end
 
       def resource_id
@@ -32,15 +34,13 @@ module Stash
         primary_title.title.to_s if primary_title
       end
 
-      def zipfile
-        @zipfile ||= begin
-          zipfile_path = File.join(workdir, "#{resource_id}_archive.zip")
-          Zip::File.open(zipfile_path, Zip::File::CREATE) do |zipfile|
-            builders.each { |builder| write_to_zipfile(zipfile, builder) }
-            uploads.each { |upload| add_to_zipfile(zipfile, upload) }
-          end
-          zipfile_path
+      def create_zipfile
+        zipfile_path = File.join(workdir, "#{resource_id}_archive.zip")
+        Zip::File.open(zipfile_path, Zip::File::CREATE) do |zipfile|
+          builders.each { |builder| write_to_zipfile(zipfile, builder) }
+          uploads.each { |upload| add_to_zipfile(zipfile, upload) }
         end
+        zipfile_path
       end
 
       def cleanup!
