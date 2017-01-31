@@ -15,14 +15,22 @@ module Stash
       end
 
       def submit!
-        resource = StashEngine::Resource.find(resource_id)
-        ezid_helper = EzidHelper.new(resource: resource, url_helpers: url_helpers)
         ezid_helper.ensure_identifier
         package = SubmissionPackage.new(resource: resource)
         sword_helper = SwordHelper.new(package: package, logger: log)
         sword_helper.submit!
         ezid_helper.update_metadata(dc3_xml: package.dc3_xml)
         package.cleanup!
+      end
+
+      private
+
+      def resource
+        @resource ||= StashEngine::Resource.find(resource_id)
+      end
+
+      def ezid_helper
+        @ezid_helper ||= EzidHelper.new(resource: resource, url_helpers: url_helpers)
       end
     end
   end
