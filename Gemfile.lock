@@ -47,7 +47,6 @@ PATH
   remote: .
   specs:
     stash-merritt (0.0.1)
-      stash-repo (~> 0.0)
       stash_datacite
       stash_engine
       stash_ezid_datacite (~> 0.1)

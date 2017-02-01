@@ -5,7 +5,19 @@
     <content url="file://$MODULE_DIR$" />
     <orderEntry type="jdk" jdkName="RVM: ruby-2.2.5" jdkType="RUBY_SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module" module-name="stash-repo" />
+    <orderEntry type="module-library">
+      <library name="stash-repo (v[path]) [path][gem]">
+        <CLASSES>
+          <root url="file://$MODULE_DIR$/../stash-repo/lib" />
+          <root url="file://$MODULE_DIR$/../stash-repo/coverage" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES>
+          <root url="file://$MODULE_DIR$/../stash-repo/lib" />
+          <root url="file://$MODULE_DIR$/../stash-repo/coverage" />
+        </SOURCES>
+      </library>
+    </orderEntry>
     <orderEntry type="module-library">
       <library name="stash_datacite (v0.0.5) [path][gem]">
         <CLASSES>

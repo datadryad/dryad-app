@@ -81,7 +81,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/stash-merritt.iml" filepath="$PROJECT_DIR$/stash-merritt.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../stash-repo/stash-repo.iml" filepath="$PROJECT_DIR$/../stash-repo/stash-repo.iml" />
     </modules>
   </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_1_3" default="false" project-jdk-name="RVM: ruby-2.2.5 [global]" project-jdk-type="RUBY_SDK">
