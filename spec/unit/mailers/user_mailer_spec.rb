@@ -23,6 +23,7 @@ module StashEngine
 
       @tenant = double(Tenant)
       allow(tenant).to receive(:contact_email).and_return(%w(contact1@example.edu contact2@example.edu))
+      allow(tenant).to receive(:full_domain).and_return(request_host)
 
       @user = double(User)
       allow(user).to receive(:first_name).and_return('Jane')
@@ -32,8 +33,9 @@ module StashEngine
 
       @resource = double(Resource)
       allow(resource).to receive(:user).and_return(user)
-      allow(resource).to receive(:identifier_str).and_return(doi)
+      allow(resource).to receive(:identifier_uri).and_return("https://doi.org/#{doi_value}")
       allow(resource).to receive(:identifier_value).and_return(doi_value)
+      allow(resource).to receive(:primary_title).and_return(title)
 
       @delivery_method = ActionMailer::Base.delivery_method
       ActionMailer::Base.delivery_method = :test
@@ -62,9 +64,9 @@ module StashEngine
       ActionMailer::Base.delivery_method = @delivery_method
     end
 
-    describe '#create_succeeded' do
+    describe '#submission_succeeded' do
       it 'sends a success email' do
-        UserMailer.create_succeeded(resource, title, request_host, request_port).deliver_now
+        UserMailer.submission_succeeded(resource).deliver_now
         deliveries = ActionMailer::Base.deliveries
         expect(deliveries.size).to eq(1)
         delivery = deliveries[0]
@@ -73,7 +75,7 @@ module StashEngine
           'Return-Path' => sender_address,
           'From' => "Dash Notifications <#{sender_address}>",
           'To' => user.email,
-          'Subject' => "Dataset submitted: #{title}"
+          'Subject' => "Dataset \"#{title}\" (#{doi}) submitted"
         }
 
         headers = delivery.header.fields.map { |field| [field.name, field.value] }.to_h
@@ -81,14 +83,15 @@ module StashEngine
           expect(headers[k]).to eq(v)
         end
 
-        expect(delivery.body.to_s).to include("<a href=\"https://doi.org/#{doi_value}\">#{doi}</a>")
+        doi_href = "https://doi.org/#{doi_value}"
+        expect(delivery.body.to_s).to include("<a href=\"#{doi_href}\">#{doi_href}</a>")
       end
     end
 
-    describe '#create_failed' do
+    describe '#submission_failed' do
       it 'sends a failure email' do
         error = ArgumentError.new
-        UserMailer.create_failed(resource, title, request_host, request_port, error).deliver_now
+        UserMailer.submission_failed(resource, error).deliver_now
         deliveries = ActionMailer::Base.deliveries
         expect(deliveries.size).to eq(1)
         delivery = deliveries[0]
@@ -97,7 +100,7 @@ module StashEngine
           'Return-Path' => sender_address,
           'From' => "Dash Notifications <#{sender_address}>",
           'To' => user.email,
-          'Subject' => "Dataset submission failure: #{title}"
+          'Subject' => "Submitting dataset \"#{title}\" (#{doi}) failed"
         }
 
         headers = delivery.header.fields.map { |field| [field.name, field.value] }.to_h
@@ -105,61 +108,15 @@ module StashEngine
           expect(headers[k]).to eq(v)
         end
 
-        expect(delivery.body.to_s).to include("<a href=\"https://doi.org/#{doi_value}\">#{doi}</a>")
-      end
-    end
-
-    describe '#update_succeeded' do
-      it 'sends a success email' do
-        UserMailer.update_succeeded(resource, title, request_host, request_port).deliver_now
-        deliveries = ActionMailer::Base.deliveries
-        expect(deliveries.size).to eq(1)
-        delivery = deliveries[0]
-
-        expected_headers = {
-          'Return-Path' => sender_address,
-          'From' => "Dash Notifications <#{sender_address}>",
-          'To' => user.email,
-          'Subject' => "Dataset \"#{title}\" (#{doi}) updated"
-        }
-
-        headers = delivery.header.fields.map { |field| [field.name, field.value] }.to_h
-        expected_headers.each do |k, v|
-          expect(headers[k]).to eq(v)
-        end
-
-        expect(delivery.body.to_s).to include("<a href=\"https://doi.org/#{doi_value}\">#{doi}</a>")
-      end
-    end
-
-    describe '#update_failed' do
-      it 'sends a failure email' do
-        error = ArgumentError.new
-        UserMailer.update_failed(resource, title, request_host, request_port, error).deliver_now
-        deliveries = ActionMailer::Base.deliveries
-        expect(deliveries.size).to eq(1)
-        delivery = deliveries[0]
-
-        expected_headers = {
-          'Return-Path' => sender_address,
-          'From' => "Dash Notifications <#{sender_address}>",
-          'To' => user.email,
-          'Subject' => "Updating dataset \"#{title}\" (#{doi}) failed"
-        }
-
-        headers = delivery.header.fields.map { |field| [field.name, field.value] }.to_h
-        expected_headers.each do |k, v|
-          expect(headers[k]).to eq(v)
-        end
-
-        expect(delivery.body.to_s).to include("<a href=\"https://doi.org/#{doi_value}\">#{doi}</a>")
+        doi_href = "https://doi.org/#{doi_value}"
+        expect(delivery.body.to_s).to include("<a href=\"#{doi_href}\">#{doi_href}</a>")
       end
     end
 
     describe '#error_report' do
       it 'sends an error report email' do
         error = ArgumentError.new
-        UserMailer.error_report(resource, title, error).deliver_now
+        UserMailer.error_report(resource, error).deliver_now
         deliveries = ActionMailer::Base.deliveries
         expect(deliveries.size).to eq(1)
         delivery = deliveries[0]
@@ -177,8 +134,9 @@ module StashEngine
         end
 
         body = delivery.body.to_s
-        expect(body).to include("<a href=\"https://doi.org/#{doi_value}\">#{doi}</a>")
         expect(body).to include("<a href=\"mailto:#{user.email}\">#{user.first_name} #{user.last_name}</a>")
+        doi_href = "https://doi.org/#{doi_value}"
+        expect(body).to include("<a href=\"#{doi_href}\">#{doi_href}</a>")
       end
     end
   end
