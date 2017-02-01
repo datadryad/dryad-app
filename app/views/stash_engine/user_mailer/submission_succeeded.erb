@@ -8,7 +8,7 @@
 <p>Dear <%= @to_name %>:</p>
 
 <p>Your dataset &ldquo;<%= @title %>&rdquo;
-  (<%= link_to("#{@identifier_str}", "https://doi.org/#{@identifier_value}")%>)
+  (<%= link_to(@identifier_uri, @identifier_uri)%>)
   has been successfully updated. There may be a brief delay for processing
   before the dataset is published.
 </p>

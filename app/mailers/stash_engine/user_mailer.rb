@@ -14,8 +14,8 @@ module StashEngine
       user = resource.user
       @user_name = "#{user.first_name} #{user.last_name}"
       @user_email = user.email
-      @title = title
-      @identifier_str = resource.identifier_str
+      @title = resource.primary_title
+      @identifier_uri = resource.identifier_uri
       @identifier_value = resource.identifier_value
       @backtrace = to_backtrace(error)
 
@@ -30,12 +30,13 @@ module StashEngine
       user = resource.user
       @to_name = "#{user.first_name} #{user.last_name}"
       @title = resource.primary_title
-      @identifier_str = resource.identifier_str
+      @identifier_uri = resource.identifier_uri
       @identifier_value = resource.identifier_value
 
       tenant = user.tenant
       @host = tenant.full_domain
 
+      to_address = to_address_list(user.email)
       mail(to: to_address, subject: "Dataset \"#{@title}\" (doi:#{@identifier_value}) submitted")
     end
 
@@ -46,7 +47,7 @@ module StashEngine
       user = resource.user
       @to_name = "#{user.first_name} #{user.last_name}"
       @title = resource.primary_title
-      @identifier_str = resource.identifier_str
+      @identifier_uri = resource.identifier_uri
       @identifier_value = resource.identifier_value
 
       tenant = user.tenant

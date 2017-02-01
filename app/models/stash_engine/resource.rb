@@ -171,6 +171,14 @@ module StashEngine
       ident && "#{ident_type && ident_type.downcase}:#{ident.identifier}"
     end
 
+    def identifier_uri
+      ident = identifier
+      return unless ident
+      ident_type = ident.identifier_type
+      raise TypeError, "Unsupported identifier type #{ident_type}" unless 'DOI' == ident_type
+      "https://doi.org/#{ident.identifier}"
+    end
+
     def identifier_value
       ident = identifier
       ident && ident.identifier
