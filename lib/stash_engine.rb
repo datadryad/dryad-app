@@ -17,6 +17,8 @@ require 'amoeba'
 require 'font-awesome-rails' #perhaps not needed because of way Joel did his integration
 
 require 'stash_engine/engine'
+require 'stash/repo'
+
 module StashEngine
   class Engine < ::Rails::Engine
     isolate_namespace StashEngine
