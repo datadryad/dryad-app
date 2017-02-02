@@ -15,14 +15,31 @@ module Stash
       end
 
       def submit!
-        ensure_identifier
+        log.info("#{Time.now.xmlschema} #{description}")
+        do_submit!
+      rescue => e
+        Stash::Repo::SubmissionResult.failure(resource_id: resource_id, request_desc: description, error: e)
+      end
+
+      def description
+        @description ||= begin
+          resource = StashEngine::Resource.find(resource_id)
+          description_for(resource)
+        rescue => e
+          log.error("Can't find resource #{resource_id}: #{e}\n#{e.backtrace.join("\n")}")
+          "#{self.class} for missing resource #{resource_id}"
+        end
+      end
+
+      private
+
+      def do_submit!
         package = create_package
         submit(package)
         update_metadata(package.dc3_xml)
         cleanup(package)
+        Stash::Repo::SubmissionResult.success(resource_id: resource_id, request_desc: description, message: 'Success')
       end
-
-      private
 
       def resource
         @resource ||= StashEngine::Resource.find(resource_id)
@@ -38,6 +55,7 @@ module Stash
       end
 
       def create_package
+        ensure_identifier
         log.info("#{Time.now.xmlschema} #{self.class}: creating package for resource #{resource_id} (#{resource.identifier_str})")
         SubmissionPackage.new(resource: resource)
       end
@@ -58,6 +76,15 @@ module Stash
         package.cleanup!
       end
 
+      def description_for(resource)
+        msg = "#{self.class} for resource #{resource_id} (#{resource.identifier_str}): "
+        msg << if (update_uri = resource.update_uri)
+                 "posting update to #{update_uri}"
+               else
+                 "posting new object to #{resource.tenant.sword_params[:collection_uri]}"
+               end
+        msg << " (tenant: #{resource.tenant_id})"
+      end
     end
   end
 end

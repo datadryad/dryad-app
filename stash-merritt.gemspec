@@ -24,6 +24,8 @@ Gem::Specification.new do |spec| # rubocop:disable Metrics/BlockLength
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths = ['lib']
 
+  spec.add_dependency 'rubyzip', '~> 1.1'
+
   spec.add_dependency 'stash_ezid_datacite', '~> 0.1' # TODO: fold this in
 
   spec.add_dependency 'stash_datacite'
@@ -34,7 +36,7 @@ Gem::Specification.new do |spec| # rubocop:disable Metrics/BlockLength
   spec.add_development_dependency 'rspec', '~> 3.2'
   spec.add_development_dependency 'simplecov', '~> 0.9.2'
   spec.add_development_dependency 'simplecov-console', '~> 0.2.0'
-  spec.add_development_dependency 'rubocop', '~> 0.37'
+  spec.add_development_dependency 'rubocop', '~> 0.47'
   spec.add_development_dependency 'yard', '~> 0.8'
 
   spec.add_development_dependency 'database_cleaner', '~> 1.5'

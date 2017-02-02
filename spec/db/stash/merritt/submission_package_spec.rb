@@ -88,6 +88,8 @@ module Stash
           resource.save!
           expect { SubmissionPackage.new(resource: resource) }.to raise_error(ArgumentError)
         end
+
+        it 'sets publication year if needed'
       end
 
       describe :zipfile do

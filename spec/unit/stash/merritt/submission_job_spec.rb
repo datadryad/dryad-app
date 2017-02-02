@@ -4,6 +4,7 @@ module Stash
   module Merritt
     describe SubmissionJob do
       attr_reader :logger
+      attr_reader :tenant
       attr_reader :resource_id
       attr_reader :resource
       attr_reader :url_helpers
@@ -14,18 +15,30 @@ module Stash
 
       before(:each) do
         @logger = instance_double(Logger)
-        allow(logger).to receive(:debug)
-        allow(logger).to receive(:info)
-        allow(logger).to receive(:warn)
-        allow(logger).to receive(:error)
+        allow(logger).to receive(:debug) { |msg| puts "debug: #{msg}" }
+        allow(logger).to receive(:info) { |msg| puts "info: #{msg}" }
+        allow(logger).to receive(:warn) { |msg| puts "warn: #{msg}" }
+        allow(logger).to receive(:error) { |msg| puts "error: #{msg}" }
 
         @rails_logger = Rails.logger
         Rails.logger = logger
+
+        @tenant = double(StashEngine::Tenant)
+        sword_params = {
+          collection_uri: 'http://example.edu/sword/example',
+          username: 'elvis',
+          password: 'presley'
+        }.freeze
+        allow(tenant).to receive(:sword_params).and_return(sword_params)
+        allow(tenant).to receive(:id).and_return('example_u')
 
         @resource_id = 37
         @resource = double(StashEngine::Resource)
         allow(StashEngine::Resource).to receive(:find).with(resource_id).and_return(resource)
         allow(resource).to receive(:identifier_str).and_return('doi:10.123/456')
+        allow(resource).to receive(:update_uri).and_return(nil)
+        allow(resource).to receive(:tenant).and_return(tenant)
+        allow(resource).to receive(:tenant_id).and_return('example_u')
 
         @url_helpers = double(Module) # yes, apparently URL helpers are an anonymous module
         allow(url_helpers).to(receive(:show_path)) { |identifier| identifier }
@@ -74,32 +87,38 @@ module Stash
           job.submit!
         end
 
+        it 'returns a result' do
+          result = job.submit!
+          expect(result).to be_a(Stash::Repo::SubmissionResult)
+          expect(result.success?).to be_truthy
+        end
+
         describe 'error handling' do
           it 'fails on a bad resource ID' do
             bad_id = resource_id * 17
             job = SubmissionJob.new(resource_id: bad_id, url_helpers: url_helpers)
-            expect(StashEngine::Resource).to receive(:find).with(bad_id).and_raise(ActiveRecord::RecordNotFound)
-            expect { job.submit! }.to raise_error(ActiveRecord::RecordNotFound)
+            allow(StashEngine::Resource).to receive(:find).with(bad_id).and_raise(ActiveRecord::RecordNotFound)
+            expect(job.submit!.error).to be_a(ActiveRecord::RecordNotFound)
           end
 
           it 'fails on an ID minting error' do
             expect(ezid_helper).to receive(:ensure_identifier).and_raise(Ezid::NotAllowedError)
-            expect { job.submit! }.to raise_error(Ezid::NotAllowedError)
+            expect(job.submit!.error).to be_a(Ezid::NotAllowedError)
           end
 
           it 'fails on a SWORD submission error' do
             expect(sword_helper).to receive(:submit!).and_raise(RestClient::RequestFailed)
-            expect { job.submit! }.to raise_error(RestClient::RequestFailed)
+            expect(job.submit!.error).to be_a(RestClient::RequestFailed)
           end
 
           it 'fails on a metadata update error' do
             expect(ezid_helper).to receive(:update_metadata).and_raise(Ezid::IdentifierNotFoundError)
-            expect { job.submit! }.to raise_error(Ezid::IdentifierNotFoundError)
+            expect(job.submit!.error).to be_a(Ezid::IdentifierNotFoundError)
           end
 
           it 'fails on a package cleanup error' do
             expect(package).to receive(:cleanup!).and_raise(Errno::ENOENT)
-            expect { job.submit! }.to raise_error(Errno::ENOENT)
+            expect(job.submit!.error).to be_a(Errno::ENOENT)
           end
         end
       end

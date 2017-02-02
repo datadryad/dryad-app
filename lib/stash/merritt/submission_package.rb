@@ -2,6 +2,7 @@ require 'fileutils'
 require 'tmpdir'
 require 'stash_engine'
 require 'stash_datacite'
+require 'zip'
 require 'datacite/mapping/datacite_xml_factory'
 require 'stash/merritt/submission_package/data_one_manifest_builder'
 require 'stash/merritt/submission_package/merritt_datacite_builder'
@@ -35,6 +36,7 @@ module Stash
       end
 
       def create_zipfile
+        StashDatacite::PublicationYear.ensure_pub_year(resource)
         zipfile_path = File.join(workdir, "#{resource_id}_archive.zip")
         Zip::File.open(zipfile_path, Zip::File::CREATE) do |zipfile|
           builders.each { |builder| write_to_zipfile(zipfile, builder) }
