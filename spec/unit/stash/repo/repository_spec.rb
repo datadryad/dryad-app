@@ -48,6 +48,7 @@ module Stash
           @resource_id = 53
           @resource = double(StashEngine::Resource)
           allow(resource).to receive(:id).and_return(resource_id)
+          allow(resource).to receive(:current_state=)
           allow(StashEngine::Resource).to receive(:find).with(resource_id).and_return(resource)
 
           @res_upload_dir = Dir.mktmpdir
@@ -82,6 +83,10 @@ module Stash
           repo.submit(resource_id: resource_id)
         end
 
+        describe :submit do
+          it 'sets the state to processing'
+        end
+
         describe :handle_success do
           before(:each) do
             allow(logger).to receive(:info)
@@ -111,6 +116,10 @@ module Stash
             expect(File.exist?(res_upload_dir)).to be_falsey
           end
 
+          it 'sets the state to submitted'
+
+          it 'updates the submission log table'
+
           describe 'unexpected errors' do
             before(:each) do
               allow_any_instance_of(ActionMailer::MessageDelivery).to receive(:deliver_now).and_raise(Net::SMTPAuthenticationError)
@@ -130,10 +139,14 @@ module Stash
               end
             end
 
-            it 'leaves the uploads dir in place on success' do
+            it 'leaves the uploads dir in place on failure' do
               submit_resource
               expect(File.exist?(res_upload_dir)).to be_truthy
             end
+
+            it 'sets the state to submitted'
+
+            it 'updates the submission log table'
           end
 
           describe 'file cleanup errors' do
@@ -150,6 +163,10 @@ module Stash
               expect(msg).to include(resource_id.to_s)
               expect(msg).to include('No such file or directory')
             end
+
+            it 'sets the state to submitted'
+
+            it 'updates the submission log table'
           end
         end
 
@@ -192,6 +209,10 @@ module Stash
             expect(File.exist?(res_upload_dir)).to be_truthy
           end
 
+          it 'sets the state to failed'
+
+          it 'updates the submission log table'
+
           describe 'unexpected errors' do
             before(:each) do
               allow_any_instance_of(ActionMailer::MessageDelivery).to receive(:deliver_now).and_raise(Net::SMTPAuthenticationError)
@@ -215,6 +236,10 @@ module Stash
               submit_resource
               expect(File.exist?(res_upload_dir)).to be_truthy
             end
+
+            it 'sets the state to failed'
+
+            it 'updates the submission log table'
           end
         end
       end
