@@ -35,6 +35,7 @@
                  locals: { geolocation_places: @review.geolocation_places } %>
     </div>
   <% end %>
+
 <script>
   $( document ).ready( loadReviewMap(<%=@resource.id%>) );
 </script>
