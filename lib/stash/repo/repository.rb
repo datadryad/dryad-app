@@ -20,6 +20,7 @@ module Stash
       end
 
       def submit(resource_id:)
+        StashEngine::Resource.find(resource_id).current_state = 'processing'
         create_submission_job = create_submission_job(resource_id: resource_id)
         promise = create_submission_job.submit_async
         promise.on_success { |result| result.success? ? handle_success(result) : handle_failure(result) }
@@ -31,9 +32,11 @@ module Stash
       def handle_success(result)
         result.log_to(log)
         resource = StashEngine::Resource.find(result.resource_id)
+        resource.current_state = 'published'
         StashEngine::UserMailer.submission_succeeded(resource).deliver_now
         cleanup_files(resource)
       rescue => e
+        # errors here don't constitute a submission failure, so we don't change the resource state
         log_error(e)
       end
 
@@ -44,6 +47,8 @@ module Stash
         StashEngine::UserMailer.submission_failed(resource, result.error).deliver_now
       rescue => e
         log_error(e)
+      ensure
+        resource.current_state = 'error' if resource
       end
 
       def log_error(error)
