@@ -1,0 +1,10 @@
+<h3 class="o-heading__level2">Files</h3>
+<table class="t-landing__pdftable">
+  <% @resource.file_uploads.each do |fu| %>
+    <tr>
+      <td><%= fu.upload_file_name %></td>
+      <td><%= fu.upload_file_size %></td>
+      <td><%= fu.upload_content_type %></td>
+    </tr>
+  <% end %>
+</table>
