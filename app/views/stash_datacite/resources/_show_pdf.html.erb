@@ -34,7 +34,13 @@
 
 <%= render partial: "stash_datacite/subjects/show", locals: { subjects: @review.subjects } %>
 
+<h3 class="o-heading__level2">Type</h3>
+<p><%= @resource.resource_type.resource_type_general_friendly %></p>
+
 <%= render partial: 'stash_engine/landing/versions_pdf' %>
+
+<%= render partial: 'stash_engine/landing/files_pdf' %>
+
 <script>
   $( document ).ready( loadReviewMap(<%=@resource.id%>) );
 </script>
