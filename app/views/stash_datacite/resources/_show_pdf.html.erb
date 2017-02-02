@@ -33,6 +33,8 @@
 <% end %>
 
 <%= render partial: "stash_datacite/subjects/show", locals: { subjects: @review.subjects } %>
+
+<%= render partial: 'stash_engine/landing/versions_pdf' %>
 <script>
   $( document ).ready( loadReviewMap(<%=@resource.id%>) );
 </script>
