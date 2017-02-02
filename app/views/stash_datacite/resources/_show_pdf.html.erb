@@ -41,6 +41,8 @@
 
 <%= render partial: 'stash_engine/landing/files_pdf' %>
 
+<%= render partial: 'stash_datacite/licenses/review' %>
+
 <script>
   $( document ).ready( loadReviewMap(<%=@resource.id%>) );
 </script>
