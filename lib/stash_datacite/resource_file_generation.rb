@@ -83,6 +83,8 @@ module StashDatacite
         end
         del_fn = create_delete_file(folder)
 
+        Zip.write_zip64_support = true
+
         Zip::File.open(zipfile_name, Zip::File::CREATE) do |zipfile|
           zipfile.add('mrt-datacite.xml', "#{folder}/#{@resource.id}_mrt-datacite.xml")
           zipfile.add('stash-wrapper.xml', "#{folder}/#{@resource.id}_stash-wrapper.xml")
