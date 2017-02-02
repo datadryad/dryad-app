@@ -1,0 +1,9 @@
+<h3 class="o-heading__level2">Change history</h3>
+<table class="t-landing__pdftable">
+  <% @id.resources.submitted.by_version.each do |resource| %>
+    <tr>
+      <td>Version <%= resource.stash_version.version %></td>
+      <td><%= formatted_date(resource.stash_version.updated_at) %></td>
+    </tr>
+  <% end %>
+</table>

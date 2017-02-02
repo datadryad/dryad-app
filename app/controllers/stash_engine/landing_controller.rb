@@ -33,6 +33,7 @@ module StashEngine
       # lots of problems getting all styles and javascript to load with wicked pdf
       # https://github.com/mileszs/wicked_pdf/issues/257
       # https://github.com/mileszs/wicked_pdf
+      my_debug = params[:debug] ? true : false
       respond_to do |format|
         format.any(:html, :pdf){
           render pdf: "test_data_paper",
@@ -40,7 +41,7 @@ module StashEngine
                  title: 'my test title',
                  javascript_delay: 3000,
                  'viewport-size': '1600x1024',
-                 show_as_html: params[:debug]
+                 show_as_html: my_debug
         }
       end
     end

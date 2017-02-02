@@ -4878,6 +4878,9 @@ html.svg .c-facet__check-label {
   .t-landing__sidebar .c-sidebox {
     margin: 30px 0 0; }
 
+.t-landing__pdftable td {
+  padding: 0.25em 1em; }
+
 .t-review__edit-button-top {
   margin: 0 0 20px; }
   @media (min-width: 480px) {
