@@ -118,50 +118,6 @@ module StashEngine
     end
 
     # ------------------------------------------------------------
-    # File submission
-
-    # TODO: make sure we send the necessary email(s) after stash_repo submits
-
-    def package_and_submit(packager)
-      future = Sword::PackageJob.package_async(packager)
-      future.add_observer(SubmitPackageObserver.new(packager))
-    end
-
-    # TODO: does this even belong in Resource? Should packages just submit themselves?
-    def submit(sword_package)
-      package_resource_id = sword_package.resource_id
-      raise ArgumentError, "Invalid package: expected resource ID #{id}, was #{package_resource_id}" unless package_resource_id == id
-
-      ensure_identifier(sword_package.doi)
-      Sword::SubmitJob.submit_async(sword_package)
-    end
-
-    # TODO: does this even belong in Resource?
-    class SubmitPackageObserver
-      def log
-        Rails.logger
-      end
-
-      attr_reader :packager
-
-      def initialize(packager)
-        @packager = packager
-      end
-
-      def update(time, package, reason)
-        if reason
-          resource_id = (resource = packager.resource) && resource.id
-          log.warn("#{self.class}: PackageJob failed at #{time} for resource #{resource_id || '(unknown ID)'}: #{reason}")
-          return
-        end
-        resource_id = package.resource_id
-        log.info("#{self.class}: PackageJob completed at #{time} for resource #{resource_id}")
-        resource = Resource.find(resource_id)
-        resource.submit(package)
-      end
-    end
-
-    # ------------------------------------------------------------
     # Identifiers
 
     def identifier_str
