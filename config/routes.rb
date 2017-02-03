@@ -1,6 +1,7 @@
 require 'blacklight'
 require 'geoblacklight'
 
+
 Rails.application.routes.draw do
   #get '/search', to: 'catalog#index'
   get '/latest', to: 'latest#index', as: 'latest_index'
@@ -45,7 +46,9 @@ Rails.application.routes.draw do
   unless Rails.env.development? || Rails.env.test?
     # see also http://rubyjunky.com/cleaning-up-rails-4-production-logging.html
     #match ":url" => "application#show_404", :constraints => { :url => /.*/ }, via: :all
-    match '*path', via: :all, to: redirect("#{APP_CONFIG.stash_mount}/404")
+    match '*path', via: :all, to: redirect("#{APP_CONFIG.stash_mount}/404"),
+      constraints: lambda { |request| !File.exist?(File.join(Rails.root.to_s, 'public', request.env['REQUEST_PATH'])) }
+    # the constraint above excludes this catchall for files in public so it still serves them as static files
   end
 
 end
