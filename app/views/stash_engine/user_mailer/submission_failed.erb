@@ -8,8 +8,8 @@
 <p>Dear <%= @to_name %>:</p>
 
 <p>
-  An error occurred while updating your dataset &ldquo;<%= @title %>&rdquo;
-  (<%= link_to("#{@identifier_str}", "https://doi.org/#{@identifier_value}")%>)
+  An error occurred while submitting your dataset &ldquo;<%= @title %>&rdquo;
+  (<%= link_to(@identifier_uri, @identifier_uri)%>)
   to Dash.
 </p>
 
