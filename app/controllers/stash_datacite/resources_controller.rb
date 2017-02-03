@@ -61,7 +61,7 @@ module StashDatacite
     # TODO: move this to StashEngine
     def submission
       resource_id = params[:resource_id]
-      StashEngine::repository.submit(resource_id)
+      StashEngine::repository.submit(resource_id: resource_id)
 
       # TODO: hard-code StashEngine::Resource everywhere instead of StashDatacite.resource_class
       resource = StashDatacite.resource_class.find(resource_id)
