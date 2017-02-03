@@ -76,7 +76,10 @@ module StashEngine
         it 'returns true if an in-progress version exists' do
           expect(identifier.in_progress?).to eq(true)
         end
-        it 'returns false if no in-progress version exists'
+        it 'returns false if no in-progress version exists' do
+          res3.current_state = 'error'
+          expect(identifier.in_progress?).to eq(false)
+        end
       end
     end
   end

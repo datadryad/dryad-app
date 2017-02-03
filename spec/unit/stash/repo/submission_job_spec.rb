@@ -33,7 +33,7 @@ module Stash
 
       describe :submit_async do
         it 'delegates to :submit!, asynchronously' do
-          result = SubmissionResult.new(resource_id: 17, message: 'whee!')
+          result = SubmissionResult.new(resource_id: 17, request_desc: 'test', message: 'whee!')
           job.define_singleton_method(:submit!) { result }
           promise = job.submit_async
           raise promise.reason if promise.reason

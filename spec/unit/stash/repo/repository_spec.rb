@@ -14,6 +14,7 @@ module Stash
 
         @logger = instance_double(Logger)
         allow(Rails).to receive(:logger).and_return(logger)
+        allow(logger).to receive(:info)
 
         immediate_executor = Concurrent::ImmediateExecutor.new
         allow(Concurrent).to receive(:global_io_executor).and_return(immediate_executor)
@@ -73,6 +74,8 @@ module Stash
             raise ArgumentError unless params[:resource_id] == expected_id
             returned_job
           end
+
+          allow(StashEngine::SubmissionLog).to receive(:create)
         end
 
         after(:each) do
@@ -83,14 +86,10 @@ module Stash
           repo.submit(resource_id: resource_id)
         end
 
-        describe :submit do
-          it 'sets the state to processing'
-        end
-
         describe :handle_success do
           before(:each) do
-            allow(logger).to receive(:info)
-            allow(job).to receive(:submit!).and_return(SubmissionResult.new(resource_id: resource_id))
+            allow(job).to receive(:submit!).and_return(SubmissionResult.new(resource_id: resource_id, request_desc: 'test', message: 'whee!'))
+            allow(job).to receive(:description).and_return('test')
           end
 
           it 'sends a "submission succeeded" email' do
@@ -116,9 +115,20 @@ module Stash
             expect(File.exist?(res_upload_dir)).to be_falsey
           end
 
-          it 'sets the state to submitted'
+          it 'sets the state to submitted' do
+            expect(resource).to receive(:current_state=).with('processing')
+            expect(resource).to receive(:current_state=).with('published')
+            submit_resource
+          end
 
-          it 'updates the submission log table'
+          it 'updates the submission log table' do
+            expect(StashEngine::SubmissionLog).to receive(:create).with(
+              resource_id: resource_id,
+              archive_submission_request: 'test',
+              archive_response: 'whee!'
+            )
+            submit_resource
+          end
 
           describe 'unexpected errors' do
             before(:each) do
@@ -144,9 +154,20 @@ module Stash
               expect(File.exist?(res_upload_dir)).to be_truthy
             end
 
-            it 'sets the state to submitted'
+            it 'sets the state to submitted' do
+              expect(resource).to receive(:current_state=).with('processing')
+              expect(resource).to receive(:current_state=).with('published')
+              submit_resource
+            end
 
-            it 'updates the submission log table'
+            it 'updates the submission log table' do
+              expect(StashEngine::SubmissionLog).to receive(:create).with(
+                resource_id: resource_id,
+                archive_submission_request: 'test',
+                archive_response: 'whee!'
+              )
+              submit_resource
+            end
           end
 
           describe 'file cleanup errors' do
@@ -164,16 +185,28 @@ module Stash
               expect(msg).to include('No such file or directory')
             end
 
-            it 'sets the state to submitted'
+            it 'sets the state to submitted' do
+              expect(resource).to receive(:current_state=).with('processing')
+              expect(resource).to receive(:current_state=).with('published')
+              submit_resource
+            end
 
-            it 'updates the submission log table'
+            it 'updates the submission log table' do
+              expect(StashEngine::SubmissionLog).to receive(:create).with(
+                resource_id: resource_id,
+                archive_submission_request: 'test',
+                archive_response: 'whee!'
+              )
+              submit_resource
+            end
           end
         end
 
         describe :handle_failure do
           before(:each) do
             allow(job).to receive(:submit!).and_raise(ActiveRecord::ConnectionTimeoutError)
-            allow(logger).to receive(:error)
+            allow(job).to receive(:description).and_return('test')
+            allow(logger).to receive(:error) { |m| $stderr.puts(m) }
           end
           it 'sends a "submission failed" email' do
             message = instance_double(ActionMailer::MessageDelivery)
@@ -209,9 +242,20 @@ module Stash
             expect(File.exist?(res_upload_dir)).to be_truthy
           end
 
-          it 'sets the state to failed'
+          it 'sets the state to failed' do
+            expect(resource).to receive(:current_state=).with('processing')
+            expect(resource).to receive(:current_state=).with('error')
+            submit_resource
+          end
 
-          it 'updates the submission log table'
+          it 'updates the submission log table' do
+            expect(StashEngine::SubmissionLog).to receive(:create).with(
+              resource_id: resource_id,
+              archive_submission_request: 'test',
+              archive_response: ActiveRecord::ConnectionTimeoutError.to_s
+            )
+            submit_resource
+          end
 
           describe 'unexpected errors' do
             before(:each) do
@@ -237,9 +281,20 @@ module Stash
               expect(File.exist?(res_upload_dir)).to be_truthy
             end
 
-            it 'sets the state to failed'
+            it 'sets the state to failed' do
+              expect(resource).to receive(:current_state=).with('processing')
+              expect(resource).to receive(:current_state=).with('error')
+              submit_resource
+            end
 
-            it 'updates the submission log table'
+            it 'updates the submission log table' do
+              expect(StashEngine::SubmissionLog).to receive(:create).with(
+                resource_id: resource_id,
+                archive_submission_request: 'test',
+                archive_response: ActiveRecord::ConnectionTimeoutError.to_s
+              )
+              submit_resource
+            end
           end
         end
       end
