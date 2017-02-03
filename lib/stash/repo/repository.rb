@@ -4,7 +4,6 @@ require 'fileutils'
 module Stash
   module Repo
     class Repository
-
       attr_reader :url_helpers
 
       def initialize(url_helpers:)
@@ -21,10 +20,14 @@ module Stash
 
       def submit(resource_id:)
         StashEngine::Resource.find(resource_id).current_state = 'processing'
-        create_submission_job = create_submission_job(resource_id: resource_id)
-        promise = create_submission_job.submit_async
-        promise.on_success { |result| result.success? ? handle_success(result) : handle_failure(result) }
-        promise.rescue { |reason| handle_failure(SubmissionResult.new(resource_id: resource_id, error: reason)) }
+        submission_job = create_submission_job(resource_id: resource_id)
+        promise = submission_job.submit_async
+        promise.on_success do |result|
+          result.success? ? handle_success(result) : handle_failure(result)
+        end
+        promise.rescue do |reason|
+          handle_failure(SubmissionResult.new(resource_id: resource_id, request_desc: submission_job.description, error: reason))
+        end
       end
 
       private
@@ -33,6 +36,7 @@ module Stash
         result.log_to(log)
         resource = StashEngine::Resource.find(result.resource_id)
         resource.current_state = 'published'
+        update_submission_log(result)
         StashEngine::UserMailer.submission_succeeded(resource).deliver_now
         cleanup_files(resource)
       rescue => e
@@ -42,6 +46,7 @@ module Stash
 
       def handle_failure(result)
         result.log_to(log)
+        update_submission_log(result)
         resource = StashEngine::Resource.find(result.resource_id)
         StashEngine::UserMailer.error_report(resource, result.error).deliver_now
         StashEngine::UserMailer.submission_failed(resource, result.error).deliver_now
@@ -80,6 +85,13 @@ module Stash
         msg
       end
 
+      def update_submission_log(result)
+        StashEngine::SubmissionLog.create(
+          resource_id: result.resource_id,
+          archive_submission_request: result.request_desc,
+          archive_response: (result.message || result.error.to_s)
+        )
+      end
     end
   end
 end

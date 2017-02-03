@@ -3,7 +3,6 @@ require 'fileutils'
 module Stash
   module Repo
     class FileBuilder
-
       attr_reader :file_name
 
       # @param file_name [String] the default file name, or nil if overriding #file_name
@@ -45,7 +44,6 @@ module Stash
         File.open(outfile, mode) { |f| f.write(file_contents) }
         outfile
       end
-
     end
   end
 end
