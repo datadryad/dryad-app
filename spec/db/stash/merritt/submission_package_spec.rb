@@ -33,7 +33,7 @@ module Stash
                                                                  id_scheme: 'doi')
         allow(tenant).to receive(:tenant_id).and_return('dataone')
         allow(tenant).to receive(:short_name).and_return('DataONE')
-        allow(tenant).to receive(:landing_url) { |path| "https://stash-dev.example.edu/#{path}" }
+        allow(tenant).to receive(:landing_url) { |path_to_landing| URI::HTTPS.build(host: 'stash.example.edu', path: path_to_landing).to_s }
         allow(tenant).to receive(:sword_params).and_return(collection_uri: 'http://sword.example.edu/stash-dev')
         allow(StashEngine::Tenant).to receive(:find).with('dataone').and_return(tenant)
 
@@ -51,7 +51,7 @@ module Stash
         ).build
 
         @url_helpers = double(Module) # yes, apparently URL helpers are an anonymous module
-        allow(url_helpers).to(receive(:show_path)) { |identifier| identifier }
+        allow(url_helpers).to(receive(:show_path)) { |identifier| "/stash/#{identifier}" }
 
         # TODO: move this to ResourceBuilder
         stash_wrapper.inventory.files.each do |stash_file|

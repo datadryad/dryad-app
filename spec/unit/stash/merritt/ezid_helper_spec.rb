@@ -19,8 +19,10 @@ module Stash
 
         @identifier_str = 'doi:10.15146/R38675309'
         @url_helpers = double(Module)
-        @landing_page_url = "http://stash.example.edu/stash/#{identifier_str}"
-        allow(url_helpers).to receive(:show_path).with(identifier_str).and_return(landing_page_url)
+
+        path_to_landing = "/stash/#{identifier_str}"
+        @landing_page_url = URI::HTTPS.build(host: 'stash.example.edu', path: path_to_landing).to_s
+        allow(url_helpers).to receive(:show_path).with(identifier_str).and_return(path_to_landing)
 
         @tenant = double(StashEngine::Tenant)
         id_params = {
@@ -32,9 +34,10 @@ module Stash
         }
         allow(tenant).to receive(:identifier_service).and_return(OpenStruct.new(id_params))
         allow(tenant).to receive(:tenant_id).and_return('dataone')
+        allow(tenant).to receive(:landing_url).with(path_to_landing).and_return(landing_page_url)
         allow(resource).to receive(:tenant).and_return(tenant)
 
-        @helper = EzidHelper.new(resource: resource, url_helpers: url_helpers)
+        @helper = EzidHelper.new(resource: resource)
       end
 
       describe :ensure_identifier do
@@ -80,7 +83,7 @@ module Stash
           )
 
           expect(resource).to receive(:identifier_str).and_return(identifier_str)
-          helper.update_metadata(dc3_xml: dc3_xml)
+          helper.update_metadata(dc3_xml: dc3_xml, landing_page_url: landing_page_url)
         end
       end
     end

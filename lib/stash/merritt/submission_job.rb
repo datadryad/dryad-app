@@ -45,8 +45,19 @@ module Stash
         @resource ||= StashEngine::Resource.find(resource_id)
       end
 
+      def tenant
+        @tenant ||= resource.tenant
+      end
+
+      def landing_page_url
+        @landing_page_url ||= begin
+          path_to_landing = url_helpers.show_path(resource.identifier_str)
+          tenant.landing_url(path_to_landing)
+        end
+      end
+
       def ezid_helper
-        @ezid_helper ||= EzidHelper.new(resource: resource, url_helpers: url_helpers)
+        @ezid_helper ||= EzidHelper.new(resource: resource)
       end
 
       def ensure_identifier
@@ -67,8 +78,8 @@ module Stash
       end
 
       def update_metadata(dc3_xml)
-        log.info("#{Time.now.xmlschema} #{self.class}: updating identifier metadata for resource #{resource_id} (#{resource.identifier_str})")
-        ezid_helper.update_metadata(dc3_xml: dc3_xml)
+        log.info("#{Time.now.xmlschema} #{self.class}: updating identifier landing page (#{landing_page_url}) and metadata for resource #{resource_id} (#{resource.identifier_str})")
+        ezid_helper.update_metadata(dc3_xml: dc3_xml, landing_page_url: landing_page_url)
       end
 
       def cleanup(package)

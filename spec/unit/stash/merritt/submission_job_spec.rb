@@ -4,6 +4,7 @@ module Stash
   module Merritt
     describe SubmissionJob do
       attr_reader :logger
+      attr_reader :landing_page_url
       attr_reader :tenant
       attr_reader :resource_id
       attr_reader :resource
@@ -23,6 +24,8 @@ module Stash
         @rails_logger = Rails.logger
         Rails.logger = logger
 
+        @landing_page_url = URI::HTTPS.build(host: 'stash.example.edu', path: '/stash/doi:10.123/456').to_s
+
         @tenant = double(StashEngine::Tenant)
         sword_params = {
           collection_uri: 'http://example.edu/sword/example',
@@ -31,6 +34,7 @@ module Stash
         }.freeze
         allow(tenant).to receive(:sword_params).and_return(sword_params)
         allow(tenant).to receive(:id).and_return('example_u')
+        allow(tenant).to receive(:landing_url) { |path_to_landing| URI::HTTPS.build(host: 'stash.example.edu', path: path_to_landing).to_s }
 
         @resource_id = 37
         @resource = double(StashEngine::Resource)
@@ -41,10 +45,10 @@ module Stash
         allow(resource).to receive(:tenant_id).and_return('example_u')
 
         @url_helpers = double(Module) # yes, apparently URL helpers are an anonymous module
-        allow(url_helpers).to(receive(:show_path)) { |identifier| identifier }
+        allow(url_helpers).to(receive(:show_path)) { |identifier| "/stash/#{identifier}" }
 
         @ezid_helper = instance_double(EzidHelper)
-        allow(EzidHelper).to receive(:new).with(resource: resource, url_helpers: url_helpers).and_return(ezid_helper)
+        allow(EzidHelper).to receive(:new).with(resource: resource).and_return(ezid_helper)
         allow(ezid_helper).to receive(:ensure_identifier)
         allow(ezid_helper).to receive(:update_metadata)
 
@@ -78,7 +82,7 @@ module Stash
         it 'updates the metadata' do
           dc3_xml = '<resource/>'
           expect(package).to receive(:dc3_xml).and_return(dc3_xml)
-          expect(ezid_helper).to receive(:update_metadata).with(dc3_xml: dc3_xml)
+          expect(ezid_helper).to receive(:update_metadata).with(dc3_xml: dc3_xml, landing_page_url: landing_page_url)
           job.submit!
         end
 
