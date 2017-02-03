@@ -38,7 +38,7 @@ PATH
 PATH
   remote: .
   specs:
-    stash-merritt (0.0.1)
+    stash-merritt (0.1.0)
       rubyzip (~> 1.1)
       stash_datacite
       stash_engine
