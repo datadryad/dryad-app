@@ -16,4 +16,32 @@
   <%
     # file_content_dump(StashEngine::Engine.root, 'app/assets/stylesheets/stash_engine/ui.css')
   %>
+  /* fixing bad svg images I suppose */
+  /*
+  .c-locations__point {
+    background: url('data:image/png;base64<%= "file:///#{StashEngine::Engine.root}/app/assets/images/icon_point-blue.png" %>') left 2px center no-repeat;
+  }
+
+  .c-locations__point {
+    background: url(data:image/gif;base64,R0lGODlhEAAQAMQAAORHHOVSKudfOulrSOp3WOyDZu6QdvCchPGolfO0o/XBs/fNwfjZ0frl3/zy7////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAkAABAALAAAAAAQABAAAAVVICSOZGlCQAosJ6mu7fiyZeKqNKToQGDsM8hBADgUXoGAiqhSvp5QAnQKGIgUhwFUYLCVDFCrKUE1lBavAViFIDlTImbKC5Gm2hB0SlBCBMQiB0UjIQA7) left 2px center no-repeat;
+  }
+
+  .c-locations__point {
+    background: url('<%= wicked_pdf_asset_base64('icon_point-blue.jpg') %>') left 2px center no-repeat !important;
+  }*/
+
+  .c-locations__point {
+    background-image: url('https://dash2-dev.ucop.edu/demo/images/icon_point-blue.svg') !important;
+    background-repeat: no-repeat;
+    background-position: 4px center;
+  }
+
+
+  .c-locations__place {
+    background: url('/demo/images/icon_globe.svg') left 1px center no-repeat;
+  }
+
+  .c-locations__area {
+    background: url('/demo/images/icon_box-blue.svg') left 1px center no-repeat;
+  }
 </style>

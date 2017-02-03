@@ -43,6 +43,10 @@
 
 <%= render partial: 'stash_datacite/licenses/datapaper' %>
 
+<%= "file://#{StashEngine::Engine.root}/public/demo/images/icon_point-blue.svg" %>
+
+<%= image_tag wicked_pdf_asset_base64('icon_point-blue.jpg') %>
+
 
 <script>
   $( document ).ready( loadReviewMap(<%=@resource.id%>) );
