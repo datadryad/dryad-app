@@ -1,6 +1,6 @@
 require_dependency 'stash_datacite/application_controller'
 
-require 'stash_datacite/merritt_packager'
+#require 'stash_datacite/merritt_packager'
 
 module StashDatacite
   # this is a class for composite (AJAX/UJS?) views starting at the resource or resources
@@ -50,7 +50,7 @@ module StashDatacite
           @resource = StashDatacite.resource_class.find(params[:id])
           check_required_fields(@resource)
           @review = Resource::Review.new(@resource)
-          if @review.no_geolocation_data == true
+          if @review.no_geolocation_data
             @resource.has_geolocation = false
             @resource.save!
           end
@@ -58,45 +58,23 @@ module StashDatacite
       end
     end
 
+    # TODO: move this to StashEngine
     def submission
-      resource = StashDatacite.resource_class.find(params[:resource_id])
-      submit_async(resource)
-      create_resource_state(resource)
+      resource_id = params[:resource_id]
+      StashEngine::repository.submit(resource_id: resource_id)
 
-      title = resource.titles.first
-      identifier_str = resource.identifier_str
+      # TODO: hard-code StashEngine::Resource everywhere instead of StashDatacite.resource_class
+      resource = StashDatacite.resource_class.find(resource_id)
 
       notice = []
-      notice << "#{title ? title.title : '(unknown title)'} submitted"
-      notice << (identifier_str ? "with DOI #{identifier_str}." : '.')
+      notice << "#{resource.primary_title || '(unknown title)'} submitted"
+      identifier_uri = resource.identifier_uri
+      notice << (identifier_uri ? "with DOI #{identifier_uri}." : '.')
       notice << 'There may be a delay for processing before the item is available.'
-
       redirect_to stash_url_helpers.dashboard_path, notice: notice.join(' ')
     end
 
     private
-
-    def submit_async(resource)
-      packager = StashDatacite::MerrittPackager.new(
-        resource: resource,
-        tenant: current_tenant,
-        url_helpers: stash_url_helpers,
-        request_host: request.host,
-        request_port: request.port
-      )
-      resource.package_and_submit(packager)
-    end
-
-    def create_resource_state(resource)
-      # TODO: why are we checking required fields after we already submitted?
-      data = check_required_fields(resource)
-      if data.nil?
-        # TODO: let the background jobs take care of this
-        unless resource.published? || resource.processing?
-          resource.current_state = 'processing'
-        end
-      end
-    end
 
     def main_title(resource)
       title = resource.titles.where(title_type: nil).first
