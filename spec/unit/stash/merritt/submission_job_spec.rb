@@ -44,12 +44,14 @@ module Stash
         allow(resource).to receive(:tenant).and_return(tenant)
         allow(resource).to receive(:tenant_id).and_return('example_u')
 
+        identifier = double(StashEngine::Identifier)
+        allow(resource).to receive(:identifier).and_return(identifier)
+
         @url_helpers = double(Module) # yes, apparently URL helpers are an anonymous module
-        allow(url_helpers).to(receive(:show_path)) { |identifier| "/stash/#{identifier}" }
+        allow(url_helpers).to(receive(:show_path)) { |identifier_str| "/stash/#{identifier_str}" }
 
         @ezid_helper = instance_double(EzidHelper)
         allow(EzidHelper).to receive(:new).with(resource: resource).and_return(ezid_helper)
-        allow(ezid_helper).to receive(:ensure_identifier)
         allow(ezid_helper).to receive(:update_metadata)
 
         @package = instance_double(SubmissionPackage)
@@ -69,8 +71,10 @@ module Stash
       end
 
       describe :submit! do
-        it 'ensures an identifier' do
-          expect(ezid_helper).to receive(:ensure_identifier)
+        it 'mints an ID if needed' do
+          expect(resource).to receive(:identifier).and_return(nil)
+          expect(ezid_helper).to receive(:mint_id).and_return('doi:10.123/456')
+          expect(resource).to receive(:ensure_identifier).with('doi:10.123/456')
           job.submit!
         end
 
@@ -106,7 +110,8 @@ module Stash
           end
 
           it 'fails on an ID minting error' do
-            expect(ezid_helper).to receive(:ensure_identifier).and_raise(Ezid::NotAllowedError)
+            expect(resource).to receive(:identifier).and_return(nil)
+            expect(ezid_helper).to receive(:mint_id).and_raise(Ezid::NotAllowedError)
             expect(job.submit!.error).to be_a(Ezid::NotAllowedError)
           end
 

@@ -10,13 +10,8 @@ module Stash
       end
 
       # @return [String] the identifier (DOI, ARK, or URN)
-      def ensure_identifier
-        identifier_str = resource.identifier_str
-        return identifier_str if identifier_str
-
-        new_identifier_str = ezid_client.mint_id
-        resource.ensure_identifier(new_identifier_str)
-        new_identifier_str
+      def mint_id
+        ezid_client.mint_id
       end
 
       def update_metadata(dc3_xml:, landing_page_url:)

@@ -40,14 +40,8 @@ module Stash
         @helper = EzidHelper.new(resource: resource)
       end
 
-      describe :ensure_identifier do
-        it 'returns an existing identifier without bothering EZID' do
-          expect(resource).to receive(:identifier_str).and_return(identifier_str)
-          expect(::Ezid::Client).not_to receive(:new)
-          expect(helper.ensure_identifier).to eq(identifier_str)
-        end
-
-        it 'mints and assigns a new identifier if none is present' do
+      describe :mint_id do
+        it 'mints a new identifier' do
           identifier = instance_double(::Ezid::MintIdentifierResponse)
           allow(identifier).to receive(:id).and_return(identifier_str)
 
@@ -56,12 +50,11 @@ module Stash
             .with(user: 'stash', password: '3cc9d3fbd9788148c6a32a1415fa673a')
             .and_return(ezid_client)
 
-          expect(resource).to receive(:identifier_str).and_return(nil)
           expect(ezid_client).to receive(:mint_identifier)
             .with('doi:10.15146/R3', status: 'reserved', profile: 'datacite')
             .and_return(identifier)
-          expect(resource).to receive(:ensure_identifier).with(identifier_str)
-          expect(helper.ensure_identifier).to eq(identifier_str)
+
+          expect(helper.mint_id).to eq(identifier_str)
         end
       end
 

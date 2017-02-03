@@ -61,8 +61,9 @@ module Stash
       end
 
       def ensure_identifier
-        log.info("#{Time.now.xmlschema} #{self.class}: ensuring identifier for resource #{resource_id} (#{resource.identifier_str})")
-        ezid_helper.ensure_identifier
+        return if resource.identifier
+        log.info("#{Time.now.xmlschema} #{self.class}: minting new identifier for resource #{resource_id}")
+        resource.ensure_identifier(ezid_helper.mint_id)
       end
 
       def create_package
