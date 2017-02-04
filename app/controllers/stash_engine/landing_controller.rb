@@ -29,6 +29,8 @@ module StashEngine
       render('not_available') && return if @resource.blank?
       @resource_id = @resource.id
       setup_show_variables(@resource_id) #sets up the specific metadata view variables from <meta_engine>::LandingMixin
+      # TODO: we need to fix the way we mixin/set up variables and the citation is too complicated to deal with
+      pdf_meta = metadata_engine::ResourcesController::PdfMetadata.new(@resource, @id, plain_citation)
 
       # lots of problems getting all styles and javascript to load with wicked pdf
       # https://github.com/mileszs/wicked_pdf/issues/257
@@ -41,6 +43,12 @@ module StashEngine
                  title: 'my test title',
                  javascript_delay: 3000,
                  'viewport-size': '1600x1024',
+                 header: {
+                     left: pdf_meta.top_left,
+                     right: pdf_meta.top_right },
+                 footer: {
+                     left: pdf_meta.bottom_left,
+                     right: pdf_meta.bottom_right },
                  show_as_html: my_debug
         }
       end
