@@ -4,6 +4,7 @@
       #  wicked_pdf_stylesheet_link_tag('/assets/stash_engine/ui')
       #end  -%>
 <%# wicked_pdf_javascript_include_tag "number_pages" %>
+<meta charset="utf-8" />
 <%= stylesheet_link_tag wicked_pdf_asset_base64("stash_engine/ui.css") %>
 <%= stylesheet_link_tag wicked_pdf_asset_base64("stash_datacite/review.css") %>
 <%= stylesheet_link_tag wicked_pdf_asset_base64("leaflet.css") %>
@@ -12,6 +13,9 @@
 <%= javascript_include_tag wicked_pdf_asset_base64("leaflet.js") %>
 <%= javascript_include_tag wicked_pdf_asset_base64("stash_datacite/leaflet_draw.js") %>
 <%= javascript_include_tag wicked_pdf_asset_base64("stash_datacite/map_review.js") %>
+<%= javascript_include_tag wicked_pdf_asset_base64("stash_datacite/map_bounds.js") %>
+<%= javascript_include_tag wicked_pdf_asset_base64("stash_datacite/get_and_load_geo_box.js") %>
+<%= javascript_include_tag wicked_pdf_asset_base64("stash_datacite/get_and_load_geo_place.js") %>
 <style>
   /* AARGH.  It was a nightmare to get the styles to work for these background images.  Lots of conflicting
    information online.  Some say you can only use jpg (not true).  Even jpg didn't work.  However,
