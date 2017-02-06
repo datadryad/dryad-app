@@ -6,6 +6,7 @@ before_script:
   - git clone https://github.com/CDLUC3/stash_engine.git ../stash_engine
   - git clone https://github.com/CDLUC3/stash_discovery.git ../stash_discovery
 script:
+  - bundle install
   - RAILS_ENV=test bundle exec rake db:migrate --trace
   - bundle exec rspec spec/features
 branches:
