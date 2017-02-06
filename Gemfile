@@ -12,6 +12,7 @@ gem 'simplecov', require: false, group: :test
 gem 'responders', '~> 2.0'
 gem 'kaminari'
 gem 'rubyzip', '>= 1.0.0' # will load new rubyzip version
+gem 'parallel_tests', group: [:development, :test]
 
 group :development, :test do
   path '..' do

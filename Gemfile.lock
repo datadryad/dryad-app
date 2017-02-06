@@ -386,7 +386,7 @@ DEPENDENCIES
   database_cleaner (~> 1.5)
   kaminari
   mysql2 (~> 0.3.20)
-  parallel_tests (~> 1.6.1)
+  parallel_tests
   responders (~> 2.0)
   rspec (~> 3.5)
   rspec-rails (~> 3.5)
