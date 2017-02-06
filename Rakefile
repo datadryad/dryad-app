@@ -19,11 +19,12 @@ load 'rails/tasks/engine.rake'
 load 'rails/tasks/statistics.rake'
 Bundler::GemHelper.install_tasks
 
-# ------------------------------------------------------------
-require 'rspec/core'
+require 'rake'
 require 'rspec/core/rake_task'
-# RSpec
-desc "Run all specs in spec directory"
-RSpec::Core::RakeTask.new(:spec => 'app:db:test:prepare')
 
+RSpec::Core::RakeTask.new(:spec) do |t|
+t.pattern = Dir.glob('spec/**/*_spec.rb')
+t.rspec_opts = '--format documentation'
+# t.rspec_opts << ' more options'
+end
 task :default => :spec

@@ -38,4 +38,5 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'chromedriver-helper'
   s.add_development_dependency 'database_cleaner', '~> 1.5'
   s.add_development_dependency 'sauce_whisk'
+  s.add_development_dependency 'parallel_tests', '~> 1.6.1'
 end
