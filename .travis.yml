@@ -15,3 +15,11 @@ notifications:
     on_success: change
     on_failure: always
 #test commit for travis.
+env:
+  global:
+    - secure: "cdluc3"
+    - secure: "4eb42a92-0fc6-43d5-9494-4d52a50a066f"
+    - SAUCY: true
+
+addons:
+  sauce_connect: true
