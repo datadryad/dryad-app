@@ -13,7 +13,7 @@ module StashDatacite
       @resource = StashDatacite.resource_class.find(resource_id)
       ds_presenter = StashDatacite::ResourcesController::DatasetPresenter.new(@resource)
       @data = check_required_fields(@resource)
-      @review = Resource::Review.new(@resource)
+      @review = StashDatacite::Resource::Review.new(@resource)
 
       @schema_org_ds = StashDatacite::Resource::SchemaDataset.new(resource: @resource, citation: plain_citation,
                                                                   landing: stash_url_helpers.show_url(ds_presenter.external_identifier, host: request.host)).generate
