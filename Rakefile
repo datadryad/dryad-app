@@ -22,8 +22,15 @@ Bundler::GemHelper.install_tasks
 # ------------------------------------------------------------
 require 'rspec/core'
 require 'rspec/core/rake_task'
-# RSpec
-desc "Run all specs in spec directory"
-RSpec::Core::RakeTask.new(:spec => 'app:db:test:prepare')
 
-task :default => :spec
+task :default => [:spec]
+
+desc "Run the specs."
+RSpec::Core::RakeTask.new do |t|
+  t.pattern = "spec/**/*_spec.rb"
+end
+
+desc "Run the specs whenever a relevant file changes."
+task :watch do
+  system "watchr watch.rb"
+end

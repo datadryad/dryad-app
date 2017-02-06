@@ -5,8 +5,7 @@ before_script:
   - mysql -e 'create database stash_datacite_test;'
 script:
   - RAILS_ENV=test bundle exec rake db:migrate --trace
-  - bundle exec rake test
-  - bundle exec rubocop -R
+  - bundle exec rspec spec/features
 branches:
   only:
     - development
