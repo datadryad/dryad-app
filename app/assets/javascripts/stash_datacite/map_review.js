@@ -10,13 +10,18 @@ function loadReviewMap(resource_id) {
       mapLink = '<a href="https://openstreetmap.org">OpenStreetMap</a>';
       map.zoomControl.setPosition('bottomright');
     // add an OpenStreetMap tile layer
-      L.tileLayer(
+      var tileLayer = L.tileLayer(
         'https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}{retina}.png', {
           attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="http://cartodb.com/attributions">CartoDB</a>',
           worldCopyJump: true,
           retina: '@2x',
           detectRetina: false
-        }).addTo(map);
+        });
+      tileLayer.addTo(map);
+      tileLayer.on("load",function() {
+        console.log("all visible tiles have been loaded");
+        $('#random_message').html('Tile layer has been loaded');
+      });
 
   // size map to show correct scale for the items present (from list), please don't remove
   map.fitBounds(mapBounds(), { padding: [25, 25] } );

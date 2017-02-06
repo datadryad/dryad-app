@@ -43,10 +43,14 @@
 
 <%= render partial: 'stash_datacite/licenses/datapaper' %>
 
+<div id="random_message"></div>
+
 <script>
   $( document ).ready(function() {
     $('#map_review').css('width', 'auto');
     $('#map_review').removeClass('o-map');
+    $('#map_review').css('position', 'static');
+    $('#map_review').css('overflow', 'auto');
     loadReviewMap(<%=@resource.id%>);
     // $('.testdiv').text('hi there');
   });
