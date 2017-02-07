@@ -43,16 +43,8 @@ module SauceDriver
       return nil
     end
 
-    def default_capabilities
-      {
-        :browserName => "Chrome",
-        :version => "55",
-        :platform => "OSX 10.10.5"
-      }
-    end
-
     def desired_caps
-      environment_capabilities || default_capabilities
+      environment_capabilities
     end
 
     def webdriver_config
