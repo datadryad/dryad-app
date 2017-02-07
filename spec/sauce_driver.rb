@@ -2,20 +2,65 @@ require "selenium/webdriver"
 
 module SauceDriver
   class << self
-    def sauce_endpoint
-      "http://cdluc3:4eb42a92-0fc6-43d5-9494-4d52a50a066f@ondemand.saucelabs.com:80/wd/hub"
+
+    def username
+      ENV['SAUCE_USERNAME']
     end
 
-    def caps
-      caps = {
-        :platform => "Mac OS X 10.10",
+    def access_key
+      ENV['SAUCE_ACCESS_KEY']
+    end
+
+    def authentication
+      "#{username}:#{access_key}"
+    end
+
+    def sauce_server
+      'ondemand.saucelabs.com'
+    end
+
+    def sauce_port
+      80
+    end
+
+    def endpoint
+      "http://#{authentication}@#{sauce_server}:#{sauce_port}/wd/hub"
+    end
+
+    def environment_capabilities
+      browser = ENV['SAUCE_BROWSER']
+      version = ENV['SAUCE_VERSION']
+      platform = ENV['SAUCE_PLATFORM']
+
+      if browser && version && platform
+        return {
+          :browserName => browser,
+          :version => version,
+          :platform => platform
+        }
+      end
+
+      return nil
+    end
+
+    def default_capabilities
+      {
         :browserName => "Chrome",
-        :version => "55.0"
+        :version => "55",
+        :platform => "OSX 10.10.5"
       }
     end
 
-    def new_driver
-      Selenium::WebDriver.for :remote, :url => sauce_endpoint, :desired_capabilities => caps
+    def desired_caps
+      environment_capabilities || default_capabilities
+    end
+
+    def webdriver_config
+      {
+        :browser => :remote,
+        :url => endpoint,
+        :desired_capabilities => desired_caps
+      }
     end
   end
 end
