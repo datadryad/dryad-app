@@ -2,6 +2,7 @@ language: ruby
 services:
   - mysql
 before_install:
+  - gem update --system
   - git clone https://github.com/CDLUC3/stash_engine.git ../stash_engine
   - git clone https://github.com/CDLUC3/stash_discovery.git ../stash_discovery
 before_script:
