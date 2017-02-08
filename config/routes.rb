@@ -43,12 +43,18 @@ Rails.application.routes.draw do
   # might contain a clue, but it would not work for me when I tried a variety of that solution because it still
   # attempted to load the discovery routes again after loading them manually and made other errors.
 
+  # This will go to the 404 page as last resort if there is no file in public (static route) in the app
+  # and if it can accept an html format as a return format.  Otherwise it falls through to either render a
+  # static file (if there is one) or whatever the standard response is in rails for no route
+
   unless Rails.env.development? || Rails.env.test?
     # see also http://rubyjunky.com/cleaning-up-rails-4-production-logging.html
     #match ":url" => "application#show_404", :constraints => { :url => /.*/ }, via: :all
     match '*path', via: :all, to: redirect("#{APP_CONFIG.stash_mount}/404"),
-      constraints: lambda { |request| !File.exist?(File.join(Rails.root.to_s, 'public', request.env['REQUEST_PATH'])) }
-    # the constraint above excludes this catchall for files in public so it still serves them as static files
+      constraints: lambda { |request|
+        !File.exist?(File.join(Rails.root.to_s, 'public', request.env['REQUEST_PATH'])) &&
+            request.env['HTTP_ACCEPT'].match(/text\/html|\*\/\*|text\/\*/)
+      }
   end
 
 end
