@@ -1,3 +1,7 @@
+# 0.1.12 (next)
+
+- Update to Ruby 2.2.5
+
 # 0.1.11.1 (5 August 2016)
 
 - In `License::CC_BY`, use "Creative Commons Attribution 4.0 International (CC BY 4.0)" 
