@@ -45,7 +45,7 @@ module StashEngine
                  page_size: 'Letter',
                  title: @review.title_str,
                  javascript_delay: 3000,
-                 'viewport_size' => '1600x1024',
+                 #'viewport_size' => '1600x1024',
                  'use_xserver' => true,
                  margin: { top: 20, bottom: 20, left: 20, right: 20 },
                  header: {
