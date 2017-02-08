@@ -68,27 +68,13 @@ module Stash
       end
 
       def builders
-        [stash_wrapper_builder, mrt_datacite_builder, mrt_oaidc_builder, mrt_dataone_manifest_builder, mrt_delete_builder]
-      end
-
-      def stash_wrapper_builder
-        @stash_wrapper_builder ||= StashWrapperBuilder.new(dcs_resource: dc4_resource, version_number: version_number, uploads: uploads)
-      end
-
-      def mrt_datacite_builder
-        @mrt_datacite_builder ||= MerrittDataciteBuilder.new(datacite_xml_factory)
-      end
-
-      def mrt_oaidc_builder
-        @mrt_oaidc_builder ||= MerrittOAIDCBuilder.new(resource_id: resource_id)
-      end
-
-      def mrt_dataone_manifest_builder
-        @mrt_dataone_manifest_builder ||= DataONEManifestBuilder.new(uploads)
-      end
-
-      def mrt_delete_builder
-        @mrt_delete_builder ||= MerrittDeleteBuilder.new(resource_id: resource_id)
+        @builders ||= [
+          StashWrapperBuilder.new(dcs_resource: dc4_resource, version_number: version_number, uploads: uploads),
+          MerrittDataciteBuilder.new(datacite_xml_factory),
+          MerrittOAIDCBuilder.new(resource_id: resource_id),
+          DataONEManifestBuilder.new(uploads),
+          MerrittDeleteBuilder.new(resource_id: resource_id)
+        ]
       end
 
       def total_size_bytes
