@@ -12,10 +12,10 @@
 <%= javascript_include_tag wicked_pdf_asset_base64("jquery.js") %>
 <%= javascript_include_tag wicked_pdf_asset_base64("leaflet.js") %>
 <%= javascript_include_tag wicked_pdf_asset_base64("stash_datacite/leaflet_draw.js") %>
-<%= javascript_include_tag wicked_pdf_asset_base64("stash_datacite/map_review.js") %>
+<%# javascript_include_tag wicked_pdf_asset_base64("stash_datacite/map_review.js") %>
 <%= javascript_include_tag wicked_pdf_asset_base64("stash_datacite/map_bounds.js") %>
-<%= javascript_include_tag wicked_pdf_asset_base64("stash_datacite/get_and_load_geo_box.js") %>
-<%= javascript_include_tag wicked_pdf_asset_base64("stash_datacite/get_and_load_geo_place.js") %>
+<%# javascript_include_tag wicked_pdf_asset_base64("stash_datacite/get_and_load_geo_box.js") %>
+<%# javascript_include_tag wicked_pdf_asset_base64("stash_datacite/get_and_load_geo_place.js") %>
 <style>
   /* AARGH.  It was a nightmare to get the styles to work for these background images.  Lots of conflicting
    information online.  Some say you can only use jpg (not true).  Even jpg didn't work.  However,
@@ -42,5 +42,9 @@
     background-image: url('<%= wicked_pdf_asset_base64('icon_box-blue.png') %>') !important;
     background-repeat: no-repeat;
     background-position: 4px center;
+  }
+
+  div.map_review {
+    page-break-inside: avoid !important;
   }
 </style>
