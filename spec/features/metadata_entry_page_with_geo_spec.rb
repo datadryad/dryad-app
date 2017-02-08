@@ -1,14 +1,12 @@
 require 'rails_helper'
 
 def wait_for_ajax
-  Timeout.timeout(Capybara.default_max_wait_time) do
-    loop until finished_all_ajax_requests?
-  end
+  Capybara.default_max_wait_time = 500
 end
 
-def finished_all_ajax_requests?
-  page.evaluate_script('jQuery.active').zero?
-end
+# def finished_all_ajax_requests?
+#   page.evaluate_script('jQuery.active').zero?
+# end
 
 feature "User lands on metadata entry page and navigates through it" do
 
@@ -18,9 +16,8 @@ feature "User lands on metadata entry page and navigates through it" do
   end
 
   it "Logged in user fills metadata entry page", js: true do
-    visit "localhost:3000/stash"
     visit "http://#{@tenant.full_domain}/stash/auth/developer"
-
+    wait_for_ajax
     within('form') do
       fill_in 'Name', with: 'testuser'
       fill_in 'Email', with: 'testuser.ucop@gmail.com'

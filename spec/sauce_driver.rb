@@ -30,7 +30,7 @@ module SauceDriver
     def environment_capabilities
       browser = ENV['SAUCE_BROWSER']
       version = ENV['SAUCE_VERSION']
-      platform = ENV['SAUCE_PLATFORM']
+      platform = "Mac OS X 10.10"
 
       if browser && version && platform
         return {
@@ -49,7 +49,7 @@ module SauceDriver
 
     def webdriver_config
       {
-        :browser => :remote,
+        :browser => :chrome,
         :url => endpoint,
         :desired_capabilities => desired_caps
       }

@@ -1,14 +1,12 @@
 require 'rails_helper'
 
 def wait_for_ajax
-  Timeout.timeout(Capybara.default_max_wait_time) do
-    loop until finished_all_ajax_requests?
-  end
+  Capybara.default_max_wait_time = 500
 end
 
-def finished_all_ajax_requests?
-  page.evaluate_script('jQuery.active').zero?
-end
+# def finished_all_ajax_requests?
+#   page.evaluate_script('jQuery.active').zero?
+# end
 
 def handle_popups
   if page.driver.class == Capybara::Selenium::Driver
@@ -30,7 +28,6 @@ feature "User creates a dataset and submits it to the repository" do
   end
 
   it "Logged in user fills metadata entry page", js: true do
-    visit "localhost:3000/stash"
     visit "http://#{@tenant.full_domain}/stash/auth/developer"
   	within('form') do
   	  fill_in 'Name', with: 'testuser'
