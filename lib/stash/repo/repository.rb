@@ -3,21 +3,36 @@ require 'fileutils'
 
 module Stash
   module Repo
+
+    # Abstraction for a repository
     class Repository
       attr_reader :url_helpers
 
+      # Initializes this repository
+      # @param url_helpers [Module] Rails URL helpers
       def initialize(url_helpers:)
         @url_helpers = url_helpers
       end
 
+      # Creates a {SubmissionJob} for the specified resource
+      # @param resource_id [Integer] the database ID of the resource
+      # @return [SubmissionJob] a job that will submit that resource
       def create_submission_job(resource_id:) # rubocop:disable Lint/UnusedMethodArgument
         raise NoMethodError, "#{self.class} should override #create_submission_job to return one or more submission tasks"
       end
 
+      # Returns a logger
+      # @return [Logger] a logger
       def log
         Rails.logger
       end
 
+      # Calls {#create_submission_job} to create a submission job,
+      # and executes it in the background using {Concurrent#global_io_executor},
+      # "a global thread pool optimized for long, blocking (IO) tasks",
+      # updates the resource state and sends notification email based
+      # on the result.
+      # @param resource_id [Integer] the ID of the resource
       def submit(resource_id:)
         StashEngine::Resource.find(resource_id).current_state = 'processing'
         submission_job = create_submission_job(resource_id: resource_id)

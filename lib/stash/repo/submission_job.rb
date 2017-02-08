@@ -25,7 +25,10 @@ module Stash
         raise NoMethodError, "#{self.class} should override #submit! to do some work, but it doesn't"
       end
 
-      # Describes this submission job.
+      # Describes this submission job. This may include the resource ID, the type
+      # of submission (create vs. update), and any configuration information (repository
+      # URLs etc.) useful for debugging, but should not include any secret information
+      # such as repository credentials, as it will be logged.
       # return [String] a description of the job
       def description
         raise NoMethodError, "#{self.class} should override #description to describe itself, but it doesn't"
