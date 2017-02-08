@@ -71,34 +71,65 @@ module Stash
       end
 
       describe :submit! do
-        it 'mints an ID if needed' do
-          expect(resource).to receive(:identifier).and_return(nil)
-          expect(ezid_helper).to receive(:mint_id).and_return('doi:10.123/456')
-          expect(resource).to receive(:ensure_identifier).with('doi:10.123/456')
-          job.submit!
+        describe 'create' do
+          it 'mints an ID if needed' do
+            expect(resource).to receive(:identifier).and_return(nil)
+            expect(ezid_helper).to receive(:mint_id).and_return('doi:10.123/456')
+            expect(resource).to receive(:ensure_identifier).with('doi:10.123/456')
+            job.submit!
+          end
+
+          it 'submits the package' do
+            expect(sword_helper).to receive(:submit!)
+            job.submit!
+          end
+
+          it 'updates the metadata' do
+            dc3_xml = '<resource/>'
+            expect(package).to receive(:dc3_xml).and_return(dc3_xml)
+            expect(ezid_helper).to receive(:update_metadata).with(dc3_xml: dc3_xml, landing_page_url: landing_page_url)
+            job.submit!
+          end
+
+          it 'cleans up the package' do
+            expect(package).to receive(:cleanup!)
+            job.submit!
+          end
+
+          it 'returns a result' do
+            result = job.submit!
+            expect(result).to be_a(Stash::Repo::SubmissionResult)
+            expect(result.success?).to be_truthy
+          end
         end
 
-        it 'submits the package' do
-          expect(sword_helper).to receive(:submit!)
-          job.submit!
-        end
+        describe 'update' do
+          before(:each) do
+            expect(resource).to receive(:update_uri).and_return('http://example.sword.edu/doi:10.123/456')
+          end
 
-        it 'updates the metadata' do
-          dc3_xml = '<resource/>'
-          expect(package).to receive(:dc3_xml).and_return(dc3_xml)
-          expect(ezid_helper).to receive(:update_metadata).with(dc3_xml: dc3_xml, landing_page_url: landing_page_url)
-          job.submit!
-        end
+          it 'submits the package' do
+            expect(sword_helper).to receive(:submit!)
+            job.submit!
+          end
 
-        it 'cleans up the package' do
-          expect(package).to receive(:cleanup!)
-          job.submit!
-        end
+          it 'updates the metadata' do
+            dc3_xml = '<resource/>'
+            expect(package).to receive(:dc3_xml).and_return(dc3_xml)
+            expect(ezid_helper).to receive(:update_metadata).with(dc3_xml: dc3_xml, landing_page_url: landing_page_url)
+            job.submit!
+          end
 
-        it 'returns a result' do
-          result = job.submit!
-          expect(result).to be_a(Stash::Repo::SubmissionResult)
-          expect(result.success?).to be_truthy
+          it 'cleans up the package' do
+            expect(package).to receive(:cleanup!)
+            job.submit!
+          end
+
+          it 'returns a result' do
+            result = job.submit!
+            expect(result).to be_a(Stash::Repo::SubmissionResult)
+            expect(result.success?).to be_truthy
+          end
         end
 
         describe 'error handling' do
