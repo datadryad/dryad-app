@@ -25,6 +25,7 @@ require 'sauce_whisk'
  #  Capybara::Selenium::Driver.new(app, :browser => :chrome)
  # end
 Capybara.register_driver :selenium do |app|
+  Capybara.default_max_wait_time = 300
   Capybara::Selenium::Driver.new(app, SauceDriver.webdriver_config)
 end
 
