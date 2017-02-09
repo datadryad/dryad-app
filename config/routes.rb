@@ -78,8 +78,4 @@ Rails.application.routes.draw do
   # this will route an item at the root of the site into the namespaced engine
   get 'sitemap.xml' => "stash_engine/pages#sitemap", :format => "xml", :as => 'sitemap'
 
-  # Note, some code to handle custom 404s (w/dynamic rails layout) is in the stash_discovery engine.  Despite it
-  # being more appropriate here, it is there because of load-order problems and it needed
-  # to come after other routes since it's a catchall for everything else.
-
 end
