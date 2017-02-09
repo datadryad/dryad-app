@@ -52,7 +52,7 @@ Rails.application.routes.draw do
     #match ":url" => "application#show_404", :constraints => { :url => /.*/ }, via: :all
     match '*path', via: :all, to: redirect("#{APP_CONFIG.stash_mount}/404"),
       constraints: lambda { |request|
-        !File.exist?(File.join("#{Rails.root}", 'public', request.env['REQUEST_PATH'])) &&
+        !File.exist?(File.join("#{Rails.root}", 'public', "#{request.env['REQUEST_PATH']}")) &&
             "#{request.env['HTTP_ACCEPT']}".match(/text\/html|\*\/\*|text\/\*/)
       }
   end
