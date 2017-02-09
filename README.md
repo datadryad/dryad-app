@@ -56,7 +56,7 @@ This should look something like:
 ```
 $ mysql -u root
 mysql> create user 'travis'@'localhost';
-mysql> create database 'stash_merritt' character set UTF8mb4 collate utf8mb4_bin;
-mysql> use 'stash_merritt';
-mysql> grant all on 'stash_merritt'.* to 'travis'@'localhost';
+mysql> create database stash_merritt character set UTF8mb4 collate utf8mb4_bin;
+mysql> use stash_merritt;
+mysql> grant all on stash_merritt.* to 'travis'@'localhost';
 ```
