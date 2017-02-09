@@ -7,11 +7,11 @@ before_install:
   - git clone https://github.com/CDLUC3/stash_discovery.git ../stash_discovery
 before_script:
   - mysql -e 'create database stash_datacite_test;'
-script:
   - RAILS_ENV=test bundle exec rake db:schema:load
-  - echo $PATH
-  - 'cd /spec/dummy/ && RAILS_ENV=test bundle exec rails server'
-  - 'cd ../../'
+  - cd $TRAVIS_BUILD_DIR/spec/dummy
+script:
+  - RAILS_ENV=test bundle exec rails server
+  - cd ../../
   - bundle exec rspec spec/metadata_entry_page_with_geo_spec.rb
 branches:
   only:
@@ -23,3 +23,6 @@ notifications:
 #test commit for travis.
 addons:
   sauce_connect: true
+env:
+  global:
+  - RAILS_ENV=test
