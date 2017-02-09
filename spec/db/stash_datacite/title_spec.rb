@@ -14,7 +14,7 @@ module StashDatacite
       @resource = StashEngine::Resource.create(user_id: user.id)
       @primary_title = Title.create(
         resource_id: resource.id,
-        title: 'An account of a very odd Monstrous Calf',
+        title: 'An account of a very odd Monstrous Calf'
       )
       @another_title = Title.create(
         resource_id: resource.id,
