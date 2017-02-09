@@ -10,7 +10,7 @@ before_script:
   - RAILS_ENV=test bundle exec rake db:schema:load
 script:
   - cd $TRAVIS_BUILD_DIR/spec/dummy
-  - $echo PATH
+  - echo $PATH
 branches:
   only:
     - development
