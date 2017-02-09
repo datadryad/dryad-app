@@ -4,5 +4,10 @@
     <div class="o-metadata__group2-item">Published Date: <%= formatted_date(i.date) %></div>
   <% end %>
   <div class="o-metadata__group2-item">Publisher: <%= resource.try(:publisher).try(:publisher) %></div>
-  <div class="o-metadata__group2-item"><%= resource.try(:identifier).try(:to_s) %></div>
+  <% if resource.identifier %>
+    <div class="o-metadata__group2-item">
+      <%= display_id_plain(type: resource.identifier.identifier_type,
+                           my_id: resource.identifier.identifier) %>
+    </div>
+  <% end %>
 </div>
