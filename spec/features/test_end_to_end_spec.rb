@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 def wait_for_ajax
-  Capybara.default_max_wait_time = 500
+  Capybara.default_max_wait_time = 50
 end
 
 # def finished_all_ajax_requests?
@@ -102,7 +102,7 @@ feature "User creates a dataset and submits it to the repository" do
     wait_for_ajax
     page.evaluate_script("window.location.reload()")
     expect(page).to have_content 'UC3-Dash.pdf'
-
+    sleep 100
     click_link 'Proceed to Review'
     wait_for_ajax
     find('.o-button__submit', visible: false).click
@@ -110,7 +110,7 @@ feature "User creates a dataset and submits it to the repository" do
 
     expect(page).to have_current_path("/stash/dashboard")
     expect(page).to have_content 'Test Dataset - Best practices for creating unique datasets submitted . There may be a delay for processing before the item is available.'
-    sleep 15
+    sleep 100
 
     click_link 'Test Dataset - Best practices for creating unique datasets'
     expect(page).to have_content 'The dataset you are trying to view is not available.'

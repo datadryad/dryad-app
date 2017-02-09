@@ -24,7 +24,7 @@ feature "User lands on metadata entry page and navigates through it" do
       fill_in 'test_domain', with: 'testuser@example.edu'
       click_button 'Sign In'
     end
-
+    wait_for_ajax
     click_button 'Start New Dataset'
     wait_for_ajax
     expect(page).to have_content 'Describe Your Datasets'

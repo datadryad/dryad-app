@@ -1,13 +1,5 @@
 require 'rails_helper'
 
-def wait_for_ajax
-  Capybara.default_max_wait_time = 500
-end
-
-# def finished_all_ajax_requests?
-#     page.evaluate_script("jQuery.active") == 0
-# end
-
 feature "User lands on metadata entry page and navigates through it" do
 
   background do
@@ -27,7 +19,7 @@ feature "User lands on metadata entry page and navigates through it" do
 
     click_button 'Start New Dataset'
 
-    wait_for_ajax
+
     expect(page).to have_content 'Describe Your Datasets'
 
     #Data Type
@@ -47,10 +39,9 @@ feature "User lands on metadata entry page and navigates through it" do
     fill_in 'Keywords', with: 'testing all, possible options'
 
     click_link 'Review and Submit'
-    wait_for_ajax
 
     expect(page).to have_content 'Finalize Submission'
-    sleep 3
+
     expect(page).to have_content 'You must edit the description to include the following before you can submit your dataset: Abstract Author Affiliation'
   end
 end
