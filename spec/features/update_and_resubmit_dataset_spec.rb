@@ -68,17 +68,14 @@ feature "User updates and submits a published dataset" do
     fill_in 'Identifier', with: 'gov.noaa.class:AVHRR'
     click_link 'add another related work'
 
-
     click_link 'Review and Submit'
 
     find('.o-button__submit', visible: false).click
     handle_popups
 
-
     expect(page).to have_current_path("/stash/dashboard")
 
     click_button 'Update'
-
 
     expect(page).to have_content 'Describe Your Datasets'
 
@@ -109,10 +106,9 @@ feature "User updates and submits a published dataset" do
     page.find('input[id="upload_upload"]', visible: false).set(@file_path)
     page.find('#upload_all', visible: false).click
 
-
     page.evaluate_script("window.location.reload()")
     expect(page).to have_content 'UC3-Dash.pdf'
-
+    sleep 100
     click_link 'Proceed to Review'
 
     find('.o-button__submit', visible: false).click
@@ -120,7 +116,6 @@ feature "User updates and submits a published dataset" do
 
     expect(page).to have_current_path("/stash/dashboard")
     expect(page).to have_content 'Test Dataset - Best practices for creating unique datasets submitted . There may be a delay for processing before the item is available.'
-
 
     click_link 'Test Dataset - Best practices for creating unique datasets'
     expect(page).to have_content 'The dataset you are trying to view is not available.'

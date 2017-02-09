@@ -49,20 +49,19 @@ feature "User lands on Uploads page and navigates through it" do
     page.find('input[id="upload_upload"]', visible: false).set(@file_path)
     page.find('#upload_all', visible: false).click
 
-    page.evaluate_script("window.location.reload()")
+    sleep 100
     expect(page).to have_content 'UC3-Dash.pdf'
 
     page.find('input[id="upload_upload"]', visible: false).set(@image_path)
     page.find('#upload_all', visible: false).click
 
-
-    page.evaluate_script("window.location.reload()")
+    sleep 100
     expect(page).to have_content 'books.jpeg'
 
     page.find('input[id="upload_upload"]', visible: false).set(@large_file_path)
     page.find('#upload_all', visible: false).click
 
-    page.evaluate_script("window.location.reload()")
+    sleep 100
     expect(page).to have_content 'test100mb.db'
     click_link 'Proceed to Review'
 
