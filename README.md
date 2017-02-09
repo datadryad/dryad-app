@@ -42,6 +42,19 @@ If at any point one of these steps fails, the job exits with a failed `Submissio
 
 ## Development
 
+### Dependencies
+
+stash-merritt expects to find the [stash_engine](https://github.com/CDLUC3/stash_engine) and 
+[stash_datacite](https://github.com/CDLUC3/stash_datacite) source locally under
+a sister directory `stash_engines`:
+
+```
+┬── stash-merritt
+└── stash_engines
+    ├── stash_datacite
+    └── stash_engine
+```
+
 ### Test database creation
 
 For compatibility with Travis, you need
