@@ -40,21 +40,21 @@ Rails.application.routes.draw do
   # last with no way to mount it since it's not a mountable/namespaced engine.
 
   # The URL http://blog.arkency.com/2015/02/how-to-split-routes-dot-rb-into-smaller-parts/
-  # might contain a clue, but it would not work for me when I tried a variety of that solution because it still
-  # attempted to load the discovery routes again after loading them manually and made other errors.
+  # might contain a clue, but it would not work for me.  This will go to the 404
+  # page as last resort if there is no file in public (static route)
 
-  # This will go to the 404 page as last resort if there is no file in public (static route) in the app
-  # and if it can accept an html format as a return format.  Otherwise it falls through to either render a
-  # static file (if there is one) or whatever the standard response is in rails for no route
+  # Commented out this route since there are too many complexities/problems with this approach
+  # and our multi-engines and other things.  Instead put a meta redirect into the static
+  # 404.html file to go to our custom app 404 page and make things look nicer without so many problems.
 
-  unless Rails.env.development? || Rails.env.test?
+  #unless Rails.env.development? || Rails.env.test?
     # see also http://rubyjunky.com/cleaning-up-rails-4-production-logging.html
-    #match ":url" => "application#show_404", :constraints => { :url => /.*/ }, via: :all
-    match '*path', via: :all, to: redirect("#{APP_CONFIG.stash_mount}/404"),
-      constraints: lambda { |request|
-        !File.exist?(File.join("#{Rails.root}", 'public', "#{request.env['REQUEST_PATH']}")) &&
-            "#{request.env['HTTP_ACCEPT']}".match(/text\/html|\*\/\*|text\/\*/)
-      }
-  end
+  #  #match ":url" => "application#show_404", :constraints => { :url => /.*/ }, via: :all
+  #  match '*path', via: :all, to: redirect("#{APP_CONFIG.stash_mount}/404"),
+  #    constraints: lambda { |request|
+  #      !File.exist?(File.join("#{Rails.root}", 'public', "#{request.env['REQUEST_PATH']}")) &&
+  #          "#{request.env['HTTP_ACCEPT']}".match(/text\/html|\*\/\*|text\/\*/)
+  #    }
+  #end
 
 end
