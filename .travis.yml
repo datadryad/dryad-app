@@ -12,6 +12,7 @@ script:
   - cd $TRAVIS_BUILD_DIR/
   - cd spec/dummy/ && RAILS_ENV=test bundle exec rails server -d && cd ../../
   - bundle exec rspec spec/features/metadata_entry_page_with_geo_spec.rb
+  - bundle exec rspec spec/features/metadata_entry_page_with_incomplete_data_notification_spec.rb
 branches:
   only:
     - development
