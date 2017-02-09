@@ -8,11 +8,9 @@ before_install:
 before_script:
   - mysql -e 'create database stash_datacite_test;'
   - RAILS_ENV=test bundle exec rake db:schema:load
-  - cd $TRAVIS_BUILD_DIR/spec/dummy
 script:
-  - RAILS_ENV=test bundle exec rails server
-  - cd ../../
-  - bundle exec rspec spec/metadata_entry_page_with_geo_spec.rb
+  - cd $TRAVIS_BUILD_DIR/spec/dummy
+  - $echo PATH
 branches:
   only:
     - development
@@ -23,6 +21,3 @@ notifications:
 #test commit for travis.
 addons:
   sauce_connect: true
-env:
-  global:
-  - RAILS_ENV=test
