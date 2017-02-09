@@ -14,7 +14,8 @@ module StashEngine
     def self.doi(value)
       # example reference: doi:10.5061/DRYAD.VN88Q
       # example url: http://doi.org/10.5061/DRYAD.VN88Q
-      Fixolator.new(id_value: value, target_prefix: 'doi:', resolver_prefix: 'https://doi.org/').text_and_link
+      item = Fixolator.new(id_value: value, target_prefix: 'doi:', resolver_prefix: 'https://dx.doi.org/').text_and_link
+      [ item[1], item[1] ]
     end
 
     def self.ark(value)
