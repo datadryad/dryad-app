@@ -1,7 +1,7 @@
 # Stash::Merritt
 
-[![Build Status](https://travis-ci.org/CDLUC3/stash-merritt.svg?branch=master)](https://travis-ci.org/CDLUC3/stash-merritt) 
-[![Code Climate](https://codeclimate.com/github/CDLUC3/stash-merritt.svg)](https://codeclimate.com/github/CDLUC3/stash-merritt) 
+[![Build Status](https://travis-ci.org/CDLUC3/stash-merritt.svg?branch=master)](https://travis-ci.org/CDLUC3/stash-merritt)
+[![Code Climate](https://codeclimate.com/github/CDLUC3/stash-merritt.svg)](https://codeclimate.com/github/CDLUC3/stash-merritt)
 [![Inline docs](http://inch-ci.org/github/CDLUC3/stash-merritt.svg)](http://inch-ci.org/github/CDLUC3/stash-merritt)
 
 Packaging and
@@ -12,24 +12,33 @@ deposit module for submitting
 
 ## Submission process
 
-1. mint a new DOI with EZID, if not already present
-1. generate:
-   - Datacite XML, including DOI
-   - Stash wrapper XML
-   - Dublin Core metadata XML
-   - DataONE manifest
-   - `mrt-delete.txt`, if needed
-1. create ZIP archive including:
-   - Datacite XML
-   - Stash wrapper XML
-   - DublinCore XML
-   - DataONE manifest
-   - `mrt-delete.txt`, if present
-   - all user-uploaded files
-1. submit to SWORD
-1. determine landing page URL based on DOI
-1. submit Datacite XML and landing page URL to EZID
-1. clean up temporary files
+The `Stash::Merritt::SubmissionJob` class does the following:
+
+1. if no identifier is present, mint a new DOI with EZID
+   (using the [ezid-client](https://github.com/duke-libraries/ezid-client) gem)
+   and assign it to the resource
+1. generate a ZIP package containing:
+
+   | filename | purpose |
+   | -------- | ------- |
+   | `stash-wrapper.xml` | [Stash wrapper](https://github.com/CDLUC3/stash-wrapper), including [Datacite 4](https://schema.datacite.org/meta/kernel-4.0/) XML |
+   | `mrt-datacite.xml` | [Datacite 3](https://schema.datacite.org/meta/kernel-3/) XML, for Merritt internal use. |
+   | `mrt-oaidc.xml` | Dublin Core metadata, packaged in [oai_dc](https://www.openarchives.org/OAI/openarchivesprotocol.html#dublincore) format for [OAI-PMH](https://www.openarchives.org/OAI/openarchivesprotocol.html) compliance |
+   | `mrt-dataone-manifest.txt` | legacy [DataONE manifest](http://cdluc3.github.io/dash/release-criteria/)* |
+   | `mrt-delete.txt` | list of files to be deleted in this version, if any |
+
+   \* Note that the DataONE manifest is generated for all tenants, not just DataONE.
+
+1. using the [stash-sword](https://github.com/CDLUC3/stash-sword) gem, submit the
+   package to Merritt via [SWORD 2.0](http://swordapp.github.io/SWORDv2-Profile/SWORDProfile.html);
+   update the `download_uri` and `update_uri` of the resource if not present
+1. set the resource `version_zipfile`
+1. again via [ezid-client](https://github.com/duke-libraries/ezid-client), update the
+   target URL (landing page) and Datacite 3 metadata for the DOI
+1. clean up uploads and other temporary files
+1. returns a successful `SubmissionResult`
+
+If at any point one of these steps fails, the job exits with a failed `SubmissionResult`.
 
 ## Development
 
