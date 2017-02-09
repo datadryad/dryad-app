@@ -49,7 +49,7 @@ module SauceDriver
 
     def webdriver_config
       {
-        :browser => :chrome,
+        :browser => :remote,
         :url => endpoint,
         :desired_capabilities => desired_caps
       }
