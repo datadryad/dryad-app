@@ -10,8 +10,8 @@ default: &default
   abbreviation: "DataONE"
   short_name: "DataONE"
   long_name: "DataONE"
-  full_domain: "localhost:4445"
-  domain_regex: "localhost:4445$"
+  full_domain: "localhost:3000"
+  domain_regex: "localhost:3000$"
   tenant_id: dataone
   identifier_service:
     shoulder: "doi:10.5072/FK2"

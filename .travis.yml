@@ -3,13 +3,14 @@ services:
   - mysql
 before_install:
   - gem update --system 2.6.8
+after_install:
   - git clone https://github.com/CDLUC3/stash_engine.git ../stash_engine
   - git clone https://github.com/CDLUC3/stash_discovery.git ../stash_discovery
+  - cd $TRAVIS_BUILD_DIR/
 before_script:
   - mysql -e 'create database stash_datacite_test;'
   - RAILS_ENV=test bundle exec rake db:schema:load
 script:
-  - cd $TRAVIS_BUILD_DIR/
   - bundle exec rspec spec/features/metadata_entry_page_with_geo_spec.rb
 branches:
   only:
