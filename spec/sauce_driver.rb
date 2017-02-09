@@ -31,12 +31,14 @@ module SauceDriver
       browser = ENV['SAUCE_BROWSER']
       version = ENV['SAUCE_VERSION']
       platform = "Mac OS X 10.10"
+      tunnel_identifier = ENV['TRAVIS_JOB_NUMBER']
 
       if browser && version && platform
         return {
           :browserName => browser,
           :version => version,
-          :platform => platform
+          :platform => platform,
+          :tunnel_identifier => tunnel_identifier
         }
       end
 
