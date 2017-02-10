@@ -11,6 +11,8 @@ class MigrateDscDatesDateToString < ActiveRecord::Migration
     remove_column :dcs_dates, :date
 
     rename_column :dcs_dates, :new_date, :date
+
+    StashDatacite::DataciteDate.reset_column_information
   end
 
   def self.down
