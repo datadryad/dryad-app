@@ -46,7 +46,9 @@ feature "User lands on Uploads page and navigates through it" do
     "Integer id nunc in purus sagittis dapibus sed ac augue. Aenean eu lobortis turpis."\
 
     click_link 'Proceed to Upload'
-    page.find('input[id="upload_upload"]', visible: false).set(@file_path)
+    element = page.find('input[id="upload_upload"]', visible: false)
+    element.set(@file_path)
+    debugger
     page.find('#upload_all', visible: false).click
     sleep 100
     expect(page).to have_content 'UC3-Dash.pdf'
