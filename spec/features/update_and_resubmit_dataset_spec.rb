@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 def handle_popups
-  if page.driver.class == Capybara::Selenium::Driver
+  if page.driver.class == Selenium::WebDriver::Error
     driver.switch_to.alert.accept rescue Selenium::WebDriver::Error::NoAlertOpenError
   elsif page.driver.class == Capybara::Webkit::Driver
     sleep 1 # prevent test from failing by waiting for popup
@@ -68,17 +68,14 @@ feature "User updates and submits a published dataset" do
     fill_in 'Identifier', with: 'gov.noaa.class:AVHRR'
     click_link 'add another related work'
 
-
     click_link 'Review and Submit'
 
     find('.o-button__submit', visible: false).click
     handle_popups
 
-
     expect(page).to have_current_path("/stash/dashboard")
 
     click_button 'Update'
-
 
     expect(page).to have_content 'Describe Your Datasets'
 
@@ -108,11 +105,10 @@ feature "User updates and submits a published dataset" do
     click_link 'Proceed to Upload'
     page.find('input[id="upload_upload"]', visible: false).set(@file_path)
     page.find('#upload_all', visible: false).click
-
-
+    sleep 50
     page.evaluate_script("window.location.reload()")
+    sleep 50
     expect(page).to have_content 'UC3-Dash.pdf'
-
     click_link 'Proceed to Review'
 
     find('.o-button__submit', visible: false).click
@@ -120,7 +116,6 @@ feature "User updates and submits a published dataset" do
 
     expect(page).to have_current_path("/stash/dashboard")
     expect(page).to have_content 'Test Dataset - Best practices for creating unique datasets submitted . There may be a delay for processing before the item is available.'
-
 
     click_link 'Test Dataset - Best practices for creating unique datasets'
     expect(page).to have_content 'The dataset you are trying to view is not available.'

@@ -24,19 +24,19 @@ feature "User lands on Uploads page and navigates through it" do
 
     expect(page).to have_content 'Describe Your Datasets'
 
-    #Data Type
+    # #Data Type
     select 'Spreadsheet', from: 'Type of Data'
 
-    #Title
+    # #Title
     fill_in 'Title', with: 'Test Dataset - Updating practices for creating unique datasets'
 
-    #Author
+    # #Author
     fill_in 'First Name', with: 'Test 2'
     fill_in 'Last Name', with: 'User 2'
     fill_in 'Institutional Affiliation', with: 'UCOP'
     click_link 'Add Author'
 
-    #Abstract
+    # #Abstract
     fill_in 'Abstract', with: "Lorem ipsum dolor sit amet, consectetur"\
     "adipiscing elit. Maecenas posuere quis ligula eu luctus."\
     "Donec laoreet sit amet lacus ut efficitur. Donec mauris erat,"\
@@ -48,22 +48,25 @@ feature "User lands on Uploads page and navigates through it" do
     click_link 'Proceed to Upload'
     page.find('input[id="upload_upload"]', visible: false).set(@file_path)
     page.find('#upload_all', visible: false).click
-
+    sleep 50
     page.evaluate_script("window.location.reload()")
+    sleep 50
     expect(page).to have_content 'UC3-Dash.pdf'
 
     page.find('input[id="upload_upload"]', visible: false).set(@image_path)
     page.find('#upload_all', visible: false).click
-
-
+    sleep 50
     page.evaluate_script("window.location.reload()")
-    expect(page).to have_content 'books.jpeg'
+    sleep 50
+    expect(page).to have_content 'UC3-Dash.pdf'
 
     page.find('input[id="upload_upload"]', visible: false).set(@large_file_path)
     page.find('#upload_all', visible: false).click
-
+    sleep 50
     page.evaluate_script("window.location.reload()")
-    expect(page).to have_content 'test100mb.db'
+    sleep 50
+    expect(page).to have_content 'UC3-Dash.pdf'
+
     click_link 'Proceed to Review'
 
     expect(page).to have_content 'Finalize Submission'

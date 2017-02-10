@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 def wait_for_ajax
-  Capybara.default_max_wait_time = 500
+  Capybara.default_max_wait_time = 50
 end
 
 # def finished_all_ajax_requests?
@@ -37,7 +37,7 @@ feature "User creates a dataset and submits it to the repository" do
   	end
 
     click_button 'Start New Dataset'
-    wait_for_ajax
+
     expect(page).to have_content 'Describe Your Datasets'
 
     # Data Type
@@ -81,7 +81,7 @@ feature "User creates a dataset and submits it to the repository" do
     fill_in 'geolocation_point[latitude]', with: '37.801239'
     fill_in 'geolocation_point[longitude]', with: '-122.258301'
     click_button 'Add'
-    wait_for_ajax
+
     expect(page).to have_css('div.c-locations__point', text: '37.801239, -122.258301' )
 
     find('#geo_box').click
@@ -92,25 +92,25 @@ feature "User creates a dataset and submits it to the repository" do
     fill_in 'geolocation_box[ne_latitude]', with: '36.5007'
     fill_in 'geolocation_box[ne_longitude]', with: '-93.5083'
     click_button 'Add'
-    wait_for_ajax
+
     expect(page).to have_css('div.c-locations__area', text: 'SW 25.8371, -106.646 NE 36.5007, -93.5083')
 
     click_link 'Proceed to Upload'
     page.find('input[id="upload_upload"]', visible: false).set(@file_path)
     page.find('#upload_all', visible: false).click
 
-    wait_for_ajax
     page.evaluate_script("window.location.reload()")
+    sleep 100
     expect(page).to have_content 'UC3-Dash.pdf'
 
     click_link 'Proceed to Review'
-    wait_for_ajax
+
     find('.o-button__submit', visible: false).click
     handle_popups
 
     expect(page).to have_current_path("/stash/dashboard")
     expect(page).to have_content 'Test Dataset - Best practices for creating unique datasets submitted . There may be a delay for processing before the item is available.'
-    sleep 15
+    sleep 100
 
     click_link 'Test Dataset - Best practices for creating unique datasets'
     expect(page).to have_content 'The dataset you are trying to view is not available.'
