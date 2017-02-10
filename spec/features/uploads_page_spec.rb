@@ -10,9 +10,9 @@ feature "User lands on Uploads page and navigates through it" do
   background do
     @tenant = ::StashEngine::Tenant.find(tenant_id = "dataone")
     @user = ::StashEngine::User.create(first_name: 'test', last_name: 'user', email: 'testuser.ucop@gmail.com', tenant_id: @tenant.tenant_id)
-    @image_path = File.join(Rails.root, '/public/books.jpeg')
-    @file_path = File.join(Rails.root, '/public/UC3-Dash.pdf')
-    @large_file_path = File.join(Rails.root, '/public/test100mb.db')
+    @file_path = File.join(StashDatacite::Engine.root.to_s, 'spec', 'dummy', 'public', 'UC3-Dash.pdf')
+    @image_path = File.join(StashDatacite::Engine.root.to_s, 'spec', 'dummy', 'public', 'books.jpeg')
+    # @large_file_path = File.join(StashDatacite::Engine.root.to_s, 'spec', 'dummy', 'public', 'test100mb.db')
   end
 
   it "Logged in user fills metadata entry page", js: true do
@@ -52,15 +52,15 @@ feature "User lands on Uploads page and navigates through it" do
 
     click_link 'Proceed to Upload'
     page.find('input[id="upload_upload"]', visible: false).set(@file_path)
-    sleep 100
+    sleep 50
     page.find('#upload_all', visible: false).click
-    sleep 100
+    sleep 50
     expect(page).to have_content 'UC3-Dash.pdf'
 
     page.find('input[id="upload_upload"]', visible: false).set(@image_path)
-    sleep 100
+    sleep 50
     page.find('#upload_all', visible: false).click
-    sleep 100
+    sleep 50
     expect(page).to have_content 'books.jpeg'
 
     # page.find('input[id="upload_upload"]', visible: false).set(@large_file_path)
