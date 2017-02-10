@@ -5,8 +5,8 @@ feature "User lands on Uploads page and navigates through it" do
   background do
     @tenant = ::StashEngine::Tenant.find(tenant_id = "dataone")
     @user = ::StashEngine::User.create(first_name: 'test', last_name: 'user', email: 'testuser.ucop@gmail.com', tenant_id: @tenant.tenant_id)
-    @image_path = File.join('spec/dummy', '/public/books.jpeg')
-    @file_path = File.join('spec/dummy', '/public/UC3-Dash.pdf')
+    @image_path = File.join('/spec/dummy', '/public/books.jpeg')
+    @file_path = File.join('/spec/dummy', '/public/UC3-Dash.pdf')
     @large_file_path = File.join('spec/dummy', '/public/test100mb.db')
   end
 
