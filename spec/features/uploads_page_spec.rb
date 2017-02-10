@@ -1,13 +1,18 @@
 require 'rails_helper'
+require 'byebug'
+
+def wait_for_ajax
+  Capybara.default_max_wait_time = 50
+end
 
 feature "User lands on Uploads page and navigates through it" do
 
   background do
     @tenant = ::StashEngine::Tenant.find(tenant_id = "dataone")
     @user = ::StashEngine::User.create(first_name: 'test', last_name: 'user', email: 'testuser.ucop@gmail.com', tenant_id: @tenant.tenant_id)
-    @image_path = File.join('/spec/dummy', '/public/books.jpeg')
-    @file_path = File.join('/spec/dummy', '/public/UC3-Dash.pdf')
-    @large_file_path = File.join('spec/dummy', '/public/test100mb.db')
+    @image_path = File.join(Rails.root, '/public/books.jpeg')
+    @file_path = File.join(Rails.root, '/public/UC3-Dash.pdf')
+    @large_file_path = File.join(Rails.root, '/public/test100mb.db')
   end
 
   it "Logged in user fills metadata entry page", js: true do
@@ -24,19 +29,19 @@ feature "User lands on Uploads page and navigates through it" do
 
     expect(page).to have_content 'Describe Your Datasets'
 
-    # #Data Type
+    #Data Type
     select 'Spreadsheet', from: 'Type of Data'
 
-    # #Title
+    #Title
     fill_in 'Title', with: 'Test Dataset - Updating practices for creating unique datasets'
 
-    # #Author
+    #Author
     fill_in 'First Name', with: 'Test 2'
     fill_in 'Last Name', with: 'User 2'
     fill_in 'Institutional Affiliation', with: 'UCOP'
     click_link 'Add Author'
 
-    # #Abstract
+    #Abstract
     fill_in 'Abstract', with: "Lorem ipsum dolor sit amet, consectetur"\
     "adipiscing elit. Maecenas posuere quis ligula eu luctus."\
     "Donec laoreet sit amet lacus ut efficitur. Donec mauris erat,"\
@@ -46,28 +51,17 @@ feature "User lands on Uploads page and navigates through it" do
     "Integer id nunc in purus sagittis dapibus sed ac augue. Aenean eu lobortis turpis."\
 
     click_link 'Proceed to Upload'
-    element = page.find('input[id="upload_upload"]', visible: false)
-    attach_file(element, @file_path)
+    page.find('input[id="upload_upload"]', visible: false).set(@file_path)
     page.find('#upload_all', visible: false).click
-    sleep 50
-    page.evaluate_script("window.location.reload()")
-    sleep 50
     expect(page).to have_content 'UC3-Dash.pdf'
 
-    # page.find('input[id="upload_upload"]', visible: false).set(@image_path)
-    # page.find('#upload_all', visible: false).click
-    # sleep 50
-    # page.evaluate_script("window.location.reload()")
-    # sleep 50
-    # expect(page).to have_content 'UC3-Dash.pdf'
+    page.find('input[id="upload_upload"]', visible: false).set(@image_path)
+    page.find('#upload_all', visible: false).click
+    expect(page).to have_content 'books.jpeg'
 
     # page.find('input[id="upload_upload"]', visible: false).set(@large_file_path)
     # page.find('#upload_all', visible: false).click
-    # sleep 50
-    # page.evaluate_script("window.location.reload()")
-    # sleep 50
-    # expect(page).to have_content 'UC3-Dash.pdf'
-
+    # expect(page).to have_content 'test100mb.db'
     click_link 'Proceed to Review'
 
     expect(page).to have_content 'Finalize Submission'
