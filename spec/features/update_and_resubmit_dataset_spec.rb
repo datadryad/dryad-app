@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 def handle_popups
-  if page.driver.class == Capybara::Selenium::Driver
+  if page.driver.class == Selenium::WebDriver::Error
     driver.switch_to.alert.accept rescue Selenium::WebDriver::Error::NoAlertOpenError
   elsif page.driver.class == Capybara::Webkit::Driver
     sleep 1 # prevent test from failing by waiting for popup
@@ -105,10 +105,10 @@ feature "User updates and submits a published dataset" do
     click_link 'Proceed to Upload'
     page.find('input[id="upload_upload"]', visible: false).set(@file_path)
     page.find('#upload_all', visible: false).click
-
+    sleep 50
     page.evaluate_script("window.location.reload()")
+    sleep 50
     expect(page).to have_content 'UC3-Dash.pdf'
-    sleep 100
     click_link 'Proceed to Review'
 
     find('.o-button__submit', visible: false).click

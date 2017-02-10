@@ -37,7 +37,7 @@ feature "User creates a dataset and submits it to the repository" do
   	end
 
     click_button 'Start New Dataset'
-    wait_for_ajax
+
     expect(page).to have_content 'Describe Your Datasets'
 
     # Data Type
@@ -81,7 +81,7 @@ feature "User creates a dataset and submits it to the repository" do
     fill_in 'geolocation_point[latitude]', with: '37.801239'
     fill_in 'geolocation_point[longitude]', with: '-122.258301'
     click_button 'Add'
-    wait_for_ajax
+
     expect(page).to have_css('div.c-locations__point', text: '37.801239, -122.258301' )
 
     find('#geo_box').click
@@ -92,19 +92,19 @@ feature "User creates a dataset and submits it to the repository" do
     fill_in 'geolocation_box[ne_latitude]', with: '36.5007'
     fill_in 'geolocation_box[ne_longitude]', with: '-93.5083'
     click_button 'Add'
-    wait_for_ajax
+
     expect(page).to have_css('div.c-locations__area', text: 'SW 25.8371, -106.646 NE 36.5007, -93.5083')
 
     click_link 'Proceed to Upload'
     page.find('input[id="upload_upload"]', visible: false).set(@file_path)
     page.find('#upload_all', visible: false).click
 
-    wait_for_ajax
     page.evaluate_script("window.location.reload()")
-    expect(page).to have_content 'UC3-Dash.pdf'
     sleep 100
+    expect(page).to have_content 'UC3-Dash.pdf'
+
     click_link 'Proceed to Review'
-    wait_for_ajax
+
     find('.o-button__submit', visible: false).click
     handle_popups
 
