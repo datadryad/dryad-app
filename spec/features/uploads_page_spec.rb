@@ -12,7 +12,7 @@ feature "User lands on Uploads page and navigates through it" do
     @user = ::StashEngine::User.create(first_name: 'test', last_name: 'user', email: 'testuser.ucop@gmail.com', tenant_id: @tenant.tenant_id)
     @file_path = File.join(StashDatacite::Engine.root.to_s, 'spec', 'dummy', 'public', 'UC3-Dash.pdf')
     @image_path = File.join(StashDatacite::Engine.root.to_s, 'spec', 'dummy', 'public', 'books.jpeg')
-    # @large_file_path = File.join(StashDatacite::Engine.root.to_s, 'spec', 'dummy', 'public', 'test100mb.db')
+    @large_file_path = File.join(StashDatacite::Engine.root.to_s, 'spec', 'dummy', 'public', 'test_100mb_file.pdf')
   end
 
   it "Logged in user fills metadata entry page", js: true do
@@ -51,21 +51,21 @@ feature "User lands on Uploads page and navigates through it" do
     "Integer id nunc in purus sagittis dapibus sed ac augue. Aenean eu lobortis turpis."\
 
     click_link 'Proceed to Upload'
-    page.find('input[id="upload_upload"]', visible: false).set(@file_path)
-    sleep 50
-    page.find('#upload_all', visible: false).click
-    sleep 50
+    element = page.find('input[id="upload_upload"]', visible: false)
+    element.send_keys(@file_path)
+    page.find('#upload_all').click
+    sleep 15
     expect(page).to have_content 'UC3-Dash.pdf'
 
-    page.find('input[id="upload_upload"]', visible: false).set(@image_path)
-    sleep 50
-    page.find('#upload_all', visible: false).click
-    sleep 50
-    expect(page).to have_content 'books.jpeg'
+    # page.find('input[id="upload_upload"]', visible: false).set(@image_path)
+    # page.find('#upload_all').click
+    # sleep 15
+    # expect(page).to have_content 'books.jpeg'
 
     # page.find('input[id="upload_upload"]', visible: false).set(@large_file_path)
-    # page.find('#upload_all', visible: false).click
-    # expect(page).to have_content 'test100mb.db'
+    # page.find('#upload_all').click
+    # sleep 30
+    # expect(page).to have_content 'test_100mb_file.pdf'
     click_link 'Proceed to Review'
 
     expect(page).to have_content 'Finalize Submission'

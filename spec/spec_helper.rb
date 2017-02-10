@@ -21,12 +21,15 @@ require 'sauce_whisk'
 # The `.rspec` file also contains a few flags that are not defaults but that
 # users commonly want.
 #
- # Capybara.register_driver :selenium do |app|
- #  Capybara::Selenium::Driver.new(app, :browser => :chrome)
- # end
+  # Capybara.register_driver :selenium do |app|
+  #   Capybara.ignore_hidden_elements = true
+  #   Capybara::Selenium::Driver.new(app, :browser => :chrome)
+  # end
 Capybara.register_driver :sauce do |app|
   Capybara.default_max_wait_time = 300
-  Capybara::Selenium::Driver.new(app, SauceDriver.webdriver_config)
+  my_driver = Capybara::Selenium::Driver.new(app, SauceDriver.webdriver_config)
+  my_driver.browser.file_detector = lambda {|args| args.first.to_s}
+  my_driver
 end
 Capybara.default_driver = :sauce
 Capybara.javascript_driver = :sauce
