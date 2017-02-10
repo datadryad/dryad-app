@@ -5,9 +5,9 @@ feature "User lands on Uploads page and navigates through it" do
   background do
     @tenant = ::StashEngine::Tenant.find(tenant_id = "dataone")
     @user = ::StashEngine::User.create(first_name: 'test', last_name: 'user', email: 'testuser.ucop@gmail.com', tenant_id: @tenant.tenant_id)
-    @image_path = File.join(Rails.root, '/public/books.jpeg')
-    @file_path = File.join(Rails.root, '/public/UC3-Dash.pdf')
-    @large_file_path = File.join(Rails.root, '/public/test100mb.db')
+    @image_path = File.join('spec/dummy', '/public/books.jpeg')
+    @file_path = File.join('spec/dummy', '/public/UC3-Dash.pdf')
+    @large_file_path = File.join('spec/dummy', '/public/test100mb.db')
   end
 
   it "Logged in user fills metadata entry page", js: true do
@@ -46,8 +46,8 @@ feature "User lands on Uploads page and navigates through it" do
     "Integer id nunc in purus sagittis dapibus sed ac augue. Aenean eu lobortis turpis."\
 
     click_link 'Proceed to Upload'
-    # page.find('input[id="upload_upload"]', visible: false).set(@file_path)
-    attach_file('input[id="upload_upload"]', @file_path)
+    element = page.find('input[id="upload_upload"]', visible: false)
+    attach_file(element, @file_path)
     page.find('#upload_all', visible: false).click
     sleep 50
     page.evaluate_script("window.location.reload()")
