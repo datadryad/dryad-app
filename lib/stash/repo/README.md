@@ -7,6 +7,8 @@ This is the repository abstraction for Stash.
 - separate identifier assignment from submission
 - configure `SubmissionJob` subclass directly, so implementors don't have to 
   subclass `Repository`
+- identify `Stash::Merritt`-specific database fields and move them to their own
+  tables self-contained in that gem
 
 ## Workflow
 
