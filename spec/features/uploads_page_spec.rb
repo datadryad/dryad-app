@@ -2,7 +2,7 @@ require 'rails_helper'
 require 'byebug'
 
 def wait_for_ajax
-  Capybara.default_max_wait_time = 50
+Capybara.default_max_wait_time = 50
 end
 
 feature "User lands on Uploads page and navigates through it" do
@@ -52,11 +52,15 @@ feature "User lands on Uploads page and navigates through it" do
 
     click_link 'Proceed to Upload'
     page.find('input[id="upload_upload"]', visible: false).set(@file_path)
+    sleep 100
     page.find('#upload_all', visible: false).click
+    sleep 100
     expect(page).to have_content 'UC3-Dash.pdf'
 
     page.find('input[id="upload_upload"]', visible: false).set(@image_path)
+    sleep 100
     page.find('#upload_all', visible: false).click
+    sleep 100
     expect(page).to have_content 'books.jpeg'
 
     # page.find('input[id="upload_upload"]', visible: false).set(@large_file_path)
