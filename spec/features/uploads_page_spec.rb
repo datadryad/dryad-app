@@ -47,7 +47,7 @@ feature "User lands on Uploads page and navigates through it" do
 
     click_link 'Proceed to Upload'
     # page.find('input[id="upload_upload"]', visible: false).set(@file_path)
-    attach_file 'input[id="upload_upload"]', @file_path
+    attach_file('input[id="upload_upload"]', @file_path)
     page.find('#upload_all', visible: false).click
     sleep 50
     page.evaluate_script("window.location.reload()")
