@@ -5,7 +5,7 @@
 
 <p>
   Size limits: <%= filesize(current_tenant.max_file_size) %> per file,
-  <%= filesize(current_tenant.max_submission_size) %> in total. To upload larger datasets,
+  <%= filesize(current_tenant.max_total_version_size) %> in total. To upload larger datasets,
   <%= link_to "contact us", contact_us_url, class: 'o-link__primary' %>.
 </p>
 
@@ -51,8 +51,7 @@
   <div class="bad_upload" id="over_upload_size" style="display: none;">
     <p>
       The files you've added are larger than <%= filesize(current_tenant.max_submission_size) %> which is the upload
-      limit for a single version.  Please remove some files to bring your upload size for this version under
-      <%= filesize(current_tenant.max_submission_size) %>.
+      limit for a single submission.  Please remove some files to bring your upload size under this limit.
     </p>
   </div>
   <div class="bad_upload" id="over_files_size" style="display: none;">

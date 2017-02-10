@@ -15,7 +15,7 @@
 
         <li class="c-steps__text-group ">Upload. Add your dataset through upload form or drag-and-drop. Each file can be
           up to <%= filesize(current_tenant.max_file_size) %>; datasets can be up to
-          <%= filesize(current_tenant.max_submission_size) %>
+          <%= filesize(current_tenant.max_total_version_size) %>
           total.(<%= link_to 'Upload Basics', help_path(anchor: 'upload-basics') %>)
         </li>
       </ol>
