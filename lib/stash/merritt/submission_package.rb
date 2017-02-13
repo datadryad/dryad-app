@@ -40,7 +40,7 @@ module Stash
         zipfile_path = File.join(workdir, "#{resource_id}_archive.zip")
         Zip::File.open(zipfile_path, Zip::File::CREATE) do |zipfile|
           builders.each { |builder| write_to_zipfile(zipfile, builder) }
-          uploads.each { |upload| add_to_zipfile(zipfile, upload) }
+          new_uploads.each { |upload| add_to_zipfile(zipfile, upload) }
         end
         zipfile_path
       end
@@ -63,7 +63,7 @@ module Stash
 
       def add_to_zipfile(zipfile, upload)
         path = File.join(resource.upload_dir, upload.upload_file_name)
-        raise ArgumentError("Upload file '#{upload.upload_file_name}' not found in directory #{resource.upload_dir}") unless File.exist?(path)
+        raise ArgumentError, "Upload file '#{upload.upload_file_name}' not found in directory #{resource.upload_dir}" unless File.exist?(path)
         zipfile.add(upload.upload_file_name, path)
       end
 
@@ -87,6 +87,10 @@ module Stash
 
       def uploads
         resource.current_file_uploads
+      end
+
+      def new_uploads
+        resource.new_file_uploads
       end
 
       def datacite_xml_factory
