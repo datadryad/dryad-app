@@ -28,17 +28,18 @@ module SauceDriver
     end
 
     def environment_capabilities
+      caps = Selenium::WebDriver::Remote::Capabilities.chrome
       browser = ENV['SAUCE_BROWSER']
-      version = ENV['SAUCE_VERSION']
-      platform = "Mac OS X 10.10"
-      tunnel_identifier = ENV['TRAVIS_JOB_NUMBER']
+      caps.version = ENV['SAUCE_VERSION']
+      caps.platform = "Mac OS X 10.10"
+      caps['tunnel_identifier'] = ENV['TRAVIS_JOB_NUMBER']
 
-      if browser && version && platform
+      if browser && caps.version && caps.platform && caps['tunnel_identifier']
         return {
           :browserName => browser,
-          :version => version,
-          :platform => platform,
-          :tunnel_identifier => tunnel_identifier
+          :version => caps.version,
+          :platform => caps.platform,
+          :tunnel_identifier => caps['tunnel_identifier']
         }
       end
 
@@ -49,12 +50,5 @@ module SauceDriver
       environment_capabilities
     end
 
-    def webdriver_config
-      {
-        :browser => :remote,
-        :url => endpoint,
-        :desired_capabilities => desired_caps
-      }
-    end
   end
 end

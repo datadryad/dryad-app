@@ -21,19 +21,32 @@ require 'sauce_whisk'
 # The `.rspec` file also contains a few flags that are not defaults but that
 # users commonly want.
 #
-  # Capybara.register_driver :selenium do |app|
-  #   Capybara.ignore_hidden_elements = true
-  #   Capybara::Selenium::Driver.new(app, :browser => :chrome)
+
+Capybara.register_driver :remote do |app|
+  # @my_driver = Capybara::Selenium::Driver.new(app, :browser => :remote, :url => SauceDriver.endpoint, SauceDriver.desired_caps)
+  Capybara::Selenium::Driver.new(app,
+    :browser => :chrome,
+    :url => SauceDriver.endpoint,
+    :desired_capabilities => SauceDriver.desired_caps)
+  # @driver.file_detector = lambda do |args|
+  #    # args => ["/path/to/file"]
+  #    str = args.first.to_s
+  #    str if File.exist?(str)
   # end
-Capybara.register_driver :sauce do |app|
-  Capybara.default_max_wait_time = 300
-  my_driver = Capybara::Selenium::Driver.new(app, SauceDriver.webdriver_config)
-  my_driver.browser.file_detector = lambda {|args| args.first.to_s}
-  my_driver
 end
-Capybara.default_driver = :sauce
-Capybara.javascript_driver = :sauce
-Capybara.current_driver = :sauce
+Capybara.default_driver    = :remote
+Capybara.javascript_driver = :remote
+
+
+# Capybara.register_driver :selenium do |app|
+#   Capybara.default_max_wait_time = 300
+#   @my_driver = Capybara::Selenium::Driver.new(app, :url => SauceDriver.endpoint , :desired_capabilities => SauceDriver.desired_caps)
+#     debugger
+#   @my_driver.file_detector = lambda do |args|
+#     str = args.first.to_s
+#     str if File.exist?(str)
+#   end
+# end
 
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 RSpec.configure do |config|
