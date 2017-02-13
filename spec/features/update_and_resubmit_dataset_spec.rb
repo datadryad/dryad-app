@@ -3,9 +3,6 @@ require 'rails_helper'
 def handle_popups
   if page.driver.class == Selenium::WebDriver::Error
     driver.switch_to.alert.accept rescue Selenium::WebDriver::Error::NoAlertOpenError
-  elsif page.driver.class == Capybara::Webkit::Driver
-    sleep 1 # prevent test from failing by waiting for popup
-    page.driver.browser.accept_js_confirms
   else
     raise "Unsupported driver"
   end

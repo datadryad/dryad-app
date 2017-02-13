@@ -51,7 +51,7 @@ feature "User lands on Uploads page and navigates through it" do
     "Integer id nunc in purus sagittis dapibus sed ac augue. Aenean eu lobortis turpis."\
 
     click_link 'Proceed to Upload'
-    selenium_driver = page.object.browser
+    selenium_driver = page.driver.browser
     selenium_driver.file_detector = lambda {|args| args.first.to_s}
     element = page.find('input[id="upload_upload"]', visible: false)
     element.send_keys(@file_path)

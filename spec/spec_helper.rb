@@ -21,7 +21,10 @@ require 'sauce_whisk'
 # The `.rspec` file also contains a few flags that are not defaults but that
 # users commonly want.
 #
-
+# Capybara.register_driver :selenium do |app|
+#  Capybara.ignore_hidden_elements = true
+#  Capybara::Selenium::Driver.new(app, :browser => :chrome)
+# end
 Capybara.register_driver :remote do |app|
   # @my_driver = Capybara::Selenium::Driver.new(app, :browser => :remote, :url => SauceDriver.endpoint, SauceDriver.desired_caps)
   Capybara::Selenium::Driver.new(app,
