@@ -71,6 +71,13 @@ module StashEngine
       FileUpload.joins("INNER JOIN (#{subquery.to_sql}) sub on id = sub.last_id").order(upload_file_name: :asc)
     end
 
+    # gets new files in this version
+    def new_file_uploads
+      subquery = FileUpload.where(resource_id: id).where("file_state = 'created'")
+                     .select('max(id) last_id, upload_file_name').group(:upload_file_name)
+      FileUpload.joins("INNER JOIN (#{subquery.to_sql}) sub on id = sub.last_id").order(upload_file_name: :asc)
+    end
+
     # the states of the latest files of the same name in the resource (version), included deleted
     def latest_file_states
       subquery = FileUpload.where(resource_id: id)
