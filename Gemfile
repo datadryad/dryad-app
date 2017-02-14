@@ -45,7 +45,8 @@ gem 'daemons'
 
 gem 'exception_notification'
 
-gem 'stash-merritt', '~> 0.1'
+# TODO: fix later - I don't have I have permisison to push to rubygems for this gem and David created it
+gem 'stash-merritt', :git => 'https://github.com/CDLUC3/stash-merritt.git', :ref => '67c9fbb02d52a3c0e1ebed57a11e3bded32a58b9'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
