@@ -1,8 +1,8 @@
 require 'rails_helper'
 
 def handle_popups
-  if page.driver.class == Selenium::WebDriver::Error
-    driver.switch_to.alert.accept rescue Selenium::WebDriver::Error::NoAlertOpenError
+  if page.driver.class == Capybara::Selenium::Driver
+    page.driver.browser.switch_to.alert.accept
   else
     raise "Unsupported driver"
   end
@@ -18,7 +18,6 @@ feature "User updates and submits a published dataset" do
 
   it "Logged in user fills metadata entry page", js: true do
     visit "http://#{@tenant.full_domain}/stash/auth/developer"
-
     within('form') do
       fill_in 'Name', with: 'testuser'
       fill_in 'Email', with: 'testuser.ucop@gmail.com'
@@ -69,7 +68,7 @@ feature "User updates and submits a published dataset" do
 
     find('.o-button__submit', visible: false).click
     handle_popups
-
+    sleep 20
     expect(page).to have_current_path("/stash/dashboard")
 
     click_button 'Update'
@@ -102,15 +101,13 @@ feature "User updates and submits a published dataset" do
     click_link 'Proceed to Upload'
     page.find('input[id="upload_upload"]', visible: false).set(@file_path)
     page.find('#upload_all', visible: false).click
-    sleep 50
     page.evaluate_script("window.location.reload()")
-    sleep 50
     expect(page).to have_content 'UC3-Dash.pdf'
     click_link 'Proceed to Review'
 
-    find('.o-button__submit', visible: false).click
+    find('.o-button__submit').click
     handle_popups
-
+    sleep 20
     expect(page).to have_current_path("/stash/dashboard")
     expect(page).to have_content 'Test Dataset - Best practices for creating unique datasets submitted . There may be a delay for processing before the item is available.'
 
