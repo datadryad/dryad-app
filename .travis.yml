@@ -12,7 +12,6 @@ script:
   - cd $TRAVIS_BUILD_DIR/
   - cd spec/dummy/ && RAILS_ENV=test bundle exec rails server -d && cd ../../
   - bundle exec rspec spec/features/uploads_page_spec.rb
-  - bundle exec rspec spec/features/update_and_resubmit_dataset_spec.rb
 branches:
   only:
     - development

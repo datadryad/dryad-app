@@ -25,31 +25,26 @@ require 'sauce_whisk'
 #  Capybara.ignore_hidden_elements = true
 #  Capybara::Selenium::Driver.new(app, :browser => :chrome)
 # end
-Capybara.register_driver :remote do |app|
-  # @my_driver = Capybara::Selenium::Driver.new(app, :browser => :remote, :url => SauceDriver.endpoint, SauceDriver.desired_caps)
-  Capybara::Selenium::Driver.new(app,
-    :browser => :chrome,
-    :url => SauceDriver.endpoint,
-    :desired_capabilities => SauceDriver.desired_caps)
-  # @driver.file_detector = lambda do |args|
-  #    # args => ["/path/to/file"]
-  #    str = args.first.to_s
-  #    str if File.exist?(str)
-  # end
-end
-Capybara.default_driver    = :remote
-Capybara.javascript_driver = :remote
 
+# SauceLabs and Capybara Required Settings
+  caps = Selenium::WebDriver::Remote::Capabilities.chrome
+  caps.browser_name = ENV['SAUCE_BROWSER']
+  caps.version = ENV['SAUCE_VERSION']
+  caps.platform = "Mac OS X 10.10"
+  caps['tunnel_identifier'] = ENV['TRAVIS_JOB_NUMBER']
 
-# Capybara.register_driver :selenium do |app|
-#   Capybara.default_max_wait_time = 300
-#   @my_driver = Capybara::Selenium::Driver.new(app, :url => SauceDriver.endpoint , :desired_capabilities => SauceDriver.desired_caps)
-#     debugger
-#   @my_driver.file_detector = lambda do |args|
-#     str = args.first.to_s
-#     str if File.exist?(str)
-#   end
-# end
+  Capybara.register_driver :remote do |app|
+    Capybara::Selenium::Driver.new(app, :browser => :remote, :url => SauceDriver.endpoint, :desired_capabilities => caps)
+  end
+  Capybara.default_max_wait_time = 300
+  Capybara.ignore_hidden_elements = true
+  Capybara.default_driver    = :remote
+  Capybara.javascript_driver = :remote
+  Capybara.current_session.driver.browser.file_detector = lambda do |args|
+    str = args.first.to_s
+    str if File.exist?(str)
+  end
+
 
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 RSpec.configure do |config|

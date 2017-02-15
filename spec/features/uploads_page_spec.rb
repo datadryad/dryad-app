@@ -1,9 +1,4 @@
 require 'rails_helper'
-require 'byebug'
-
-def wait_for_ajax
-Capybara.default_max_wait_time = 50
-end
 
 feature "User lands on Uploads page and navigates through it" do
 
@@ -51,13 +46,12 @@ feature "User lands on Uploads page and navigates through it" do
     "Integer id nunc in purus sagittis dapibus sed ac augue. Aenean eu lobortis turpis."\
 
     click_link 'Proceed to Upload'
-    selenium_driver = page.driver.browser
-    selenium_driver.file_detector = lambda {|args| args.first.to_s}
     element = page.find('input[id="upload_upload"]', visible: false)
-    element.send_keys(@file_path)
+    element.send_keys(@image_path)
+    page.attach_file(element, @image_path)
     page.find('#upload_all').click
     sleep 15
-    expect(page).to have_content 'UC3-Dash.pdf'
+    expect(page).to have_content 'books.jpeg'
 
     # page.find('input[id="upload_upload"]', visible: false).set(@image_path)
     # page.find('#upload_all').click
