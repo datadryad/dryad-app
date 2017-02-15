@@ -1,13 +1,5 @@
 require 'rails_helper'
 
-def wait_for_ajax
-  Capybara.default_max_wait_time = 500
-end
-
-# def finished_all_ajax_requests?
-#   page.evaluate_script('jQuery.active').zero?
-# end
-
 feature "User lands on metadata entry page and navigates through it" do
 
   background do
@@ -17,16 +9,16 @@ feature "User lands on metadata entry page and navigates through it" do
 
   it "Logged in user fills metadata entry page", js: true do
     visit "http://#{@tenant.full_domain}/stash/auth/developer"
-    wait_for_ajax
+
     within('form') do
       fill_in 'Name', with: 'testuser'
       fill_in 'Email', with: 'testuser.ucop@gmail.com'
       fill_in 'test_domain', with: 'testuser@example.edu'
       click_button 'Sign In'
     end
-    wait_for_ajax
+
     click_button 'Start New Dataset'
-    wait_for_ajax
+
     expect(page).to have_content 'Describe Your Datasets'
 
     #Data Type
@@ -72,7 +64,6 @@ feature "User lands on metadata entry page and navigates through it" do
     fill_in 'geolocation_point[latitude]', with: '37.801239'
     fill_in 'geolocation_point[longitude]', with: '-122.258301'
     click_button 'Add'
-    wait_for_ajax
     expect(page).to have_css('div.c-locations__point', text: '37.801239, -122.258301' )
 
     find('#geo_box').click
@@ -83,7 +74,6 @@ feature "User lands on metadata entry page and navigates through it" do
     fill_in 'geolocation_box[ne_latitude]', with: '36.5007'
     fill_in 'geolocation_box[ne_longitude]', with: '-93.5083'
     click_button 'Add'
-    wait_for_ajax
     expect(page).to have_css('div.c-locations__area', text: 'SW 25.8371, -106.646 NE 36.5007, -93.5083')
 
     click_link 'Proceed to Upload'
