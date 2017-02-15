@@ -12,6 +12,7 @@ module StashEngine
       if @resource.published?
         redirect_to(metadata_entry_pages_new_version_path(resource_id: params[:resource_id])) && return
       end
+      @resource.init_state_and_version #initializes them only if they don't exist already
     end
 
     #create a new version of this resource before editing with find or create

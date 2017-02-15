@@ -24,8 +24,14 @@ module StashEngine
     # Callbacks
 
     def init_state_and_version
-      self.current_resource_state_id = ResourceState.create(resource_id: id, resource_state: 'in_progress', user_id: user_id).id
-      self.stash_version = StashEngine::Version.create(resource_id: id, version: next_version_number, zip_filename: nil)
+      # only add these things if they don't exist since we need to use for old resources that may exist in the db
+      # and are in an inconsistent DB state
+      unless current_resource_state_id
+        self.current_resource_state_id = ResourceState.create(resource_id: id, resource_state: 'in_progress', user_id: user_id).id
+      end
+      unless stash_version
+        self.stash_version = StashEngine::Version.create(resource_id: id, version: next_version_number, zip_filename: nil)
+      end
       save
     end
     after_create :init_state_and_version
