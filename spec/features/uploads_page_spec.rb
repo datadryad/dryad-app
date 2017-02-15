@@ -48,9 +48,8 @@ feature "User lands on Uploads page and navigates through it" do
     click_link 'Proceed to Upload'
     element = page.find('input[id="upload_upload"]', visible: false)
     element.send_keys(@image_path)
-    page.attach_file(element, @image_path)
     page.find('#upload_all').click
-    sleep 15
+    sleep 5
     expect(page).to have_content 'books.jpeg'
 
     # page.find('input[id="upload_upload"]', visible: false).set(@image_path)
