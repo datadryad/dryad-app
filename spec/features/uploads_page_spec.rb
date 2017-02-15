@@ -46,9 +46,10 @@ feature "User lands on Uploads page and navigates through it" do
     "Integer id nunc in purus sagittis dapibus sed ac augue. Aenean eu lobortis turpis."\
 
     click_link 'Proceed to Upload'
-    element = page.find('input[id="upload_upload"]', visible: false)
-    element.send_keys(@image_path)
-    Capybara.current_session.driver.find('#upload_all').click
+    # element = page.find('input[id="upload_upload"]', visible: false)
+    # element.send_keys(@image_path)
+    attach_file("Choose Files", @image_path)
+    page.find('#upload_all').click
     sleep 5
     expect(page).to have_content 'books.jpeg'
 
