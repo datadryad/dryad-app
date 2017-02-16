@@ -9,6 +9,16 @@ GIT
       stash_engine
       stash_ezid_datacite (~> 0.1)
 
+GIT
+  remote: https://github.com/CDLUC3/stash-sword.git
+  revision: 816d12af1929d650d87a313612a6ed3153498349
+  ref: 816d12af1929d650d87a313612a6ed3153498349
+  specs:
+    stash-sword (0.1.5)
+      rest-client (~> 2.0, = 2.0.0)
+      typesafe_enum (~> 0.1, >= 0.1.7)
+      xml-mapping_extensions (~> 0.4, >= 0.4.1)
+
 PATH
   remote: ../stash_engines
   specs:
@@ -377,10 +387,6 @@ GEM
     sshkit (1.11.4)
       net-scp (>= 1.1.2)
       net-ssh (>= 2.8.0)
-    stash-sword (0.1.5)
-      rest-client (~> 2.0, = 2.0.0)
-      typesafe_enum (~> 0.1, >= 0.1.7)
-      xml-mapping_extensions (~> 0.4, >= 0.4.1)
     stash-wrapper (0.1.11.1)
       typesafe_enum (~> 0.1, >= 0.1.7)
       xml-mapping_extensions (~> 0.4, >= 0.4.2)
@@ -449,6 +455,7 @@ DEPENDENCIES
   simplecov-console
   spring
   stash-merritt!
+  stash-sword!
   stash_datacite!
   stash_discovery!
   stash_engine!
@@ -462,4 +469,4 @@ RUBY VERSION
    ruby 2.2.5p319
 
 BUNDLED WITH
-   1.13.7
+   1.14.4
