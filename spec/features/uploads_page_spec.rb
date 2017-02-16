@@ -25,7 +25,7 @@ feature "User lands on Uploads page and navigates through it" do
     expect(page).to have_content 'Describe Your Datasets'
 
     #Data Type
-    select 'Spreadsheet', from: 'Type of Data'
+    select 'Multiple Types', from: 'Type of Data'
 
     #Title
     fill_in 'Title', with: 'Test Dataset - Updating practices for creating unique datasets'
@@ -46,8 +46,9 @@ feature "User lands on Uploads page and navigates through it" do
     "Integer id nunc in purus sagittis dapibus sed ac augue. Aenean eu lobortis turpis."\
 
     click_link 'Proceed to Upload'
-    element = page.find('input[id="upload_upload"]', visible: false)
-    element.attach_file("Upload", @image_path)
+    # element = page.find('input[id="upload_upload"]', visible: false)
+    # element.send_keys(@image_path)
+    page.attach_file('upload_upload', @image_path, :visible => false)
     page.find('#upload_all').click
     sleep 5
     expect(page).to have_content 'books.jpeg'
