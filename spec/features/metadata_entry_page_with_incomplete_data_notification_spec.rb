@@ -33,6 +33,15 @@ feature "User lands on metadata entry page and navigates through it" do
     fill_in 'Last Name', with: 'User'
     click_link 'Add Author'
 
+    #Abstract
+    fill_in 'Abstract', with: "Lorem ipsum dolor sit amet, consectetur"\
+    "adipiscing elit. Maecenas posuere quis ligula eu luctus."\
+    "Donec laoreet sit amet lacus ut efficitur. Donec mauris erat,"\
+    "aliquet eu finibus id, lobortis at ligula. Donec iaculis orci nisl,"\
+    "quis vulputate orci efficitur nec. Proin imperdiet in lorem eget sodales."\
+    "Etiam blandit eget quam nec tristique. In hac habitasse platea dictumst."\
+    "Integer id nunc in purus sagittis dapibus sed ac augue. Aenean eu lobortis turpis."\
+
     find('summary', text: "Data Description (optional)").click
 
     # #Keywords
@@ -42,6 +51,6 @@ feature "User lands on metadata entry page and navigates through it" do
 
     expect(page).to have_content 'Finalize Submission'
 
-    expect(page).to have_content 'You must edit the description to include the following before you can submit your dataset: Abstract Author Affiliation'
+    expect(page).to have_content 'You must edit the description to include the following before you can submit your dataset: Author Affiliation'
   end
 end

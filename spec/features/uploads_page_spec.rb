@@ -47,17 +47,17 @@ feature "User lands on Uploads page and navigates through it" do
 
     click_link 'Proceed to Upload'
     attach_file("Choose Files", @image_path)
-    page.find('#upload_all').click
+    page.find('#upload_all', visible: false).click
     sleep 10
     expect(page).to have_content 'books.jpeg'
 
     attach_file("Choose Files", @file_path)
-    page.find('#upload_all').click
+    page.find('#upload_all', visible: false).click
     sleep 10
     expect(page).to have_content 'UC3-Dash.pdf'
 
     attach_file("Choose Files", @large_file_path)
-    page.find('#upload_all').click
+    page.find('#upload_all', visible: false).click
     sleep 30
     expect(page).to have_content 'test_100mb_file.pdf'
     click_link 'Proceed to Review'
