@@ -21,30 +21,27 @@ require 'byebug'
 # The `.rspec` file also contains a few flags that are not defaults but that
 # users commonly want.
 #
-Capybara.register_driver :selenium do |app|
- Capybara.ignore_hidden_elements = false
- Capybara::Selenium::Driver.new(app, :browser => :chrome)
-end
+# Capybara.register_driver :selenium do |app|
+#  Capybara.ignore_hidden_elements = false
+#  Capybara::Selenium::Driver.new(app, :browser => :chrome)
+# end
 
-# SauceLabs and Capybara Required Settings
-  # caps = Selenium::WebDriver::Remote::Capabilities.chrome
-  # caps.browser_name = ENV['SAUCE_BROWSER']
-  # caps.version = ENV['SAUCE_VERSION']
-  # caps.platform = "Mac OS X 10.10"
-  # caps['tunnel_identifier'] = ENV['TRAVIS_JOB_NUMBER']
+#SauceLabs and Capybara Required Settings
+  caps = Selenium::WebDriver::Remote::Capabilities.chrome
+  caps.browser_name = ENV['SAUCE_BROWSER']
+  caps.version = ENV['SAUCE_VERSION']
+  caps.platform = "Mac OS X 10.10"
+  caps['tunnel_identifier'] = ENV['TRAVIS_JOB_NUMBER']
 
-  # Capybara.register_driver :remote do |app|
-  #   Capybara::Selenium::Driver.new(app, :browser => :remote, :url => SauceDriver.endpoint, :desired_capabilities => caps)
-  # end
-  # Capybara.default_max_wait_time = 300
-  # Capybara.ignore_hidden_elements = false
-  # Capybara.default_driver    = :remote
-  # Capybara.javascript_driver = :remote
-  # Capybara.current_session.driver.browser.file_detector = lambda do |args|
-  #   str = args.first.to_s
-  #   str if File.exist?(str)
-  # end
-
+  Capybara.register_driver :remote do |app|
+    Capybara::Selenium::Driver.new(app, :browser => :remote, :url => SauceDriver.endpoint, :desired_capabilities => caps)
+  end
+  Capybara.default_max_wait_time = 300
+  Capybara.ignore_hidden_elements = false
+  Capybara.default_driver    = :remote
+  Capybara.javascript_driver = :remote
+  selenium_driver = Capybara.current_session.driver.browser
+  selenium_driver.file_detector = lambda {|args| args.first.to_s}
 
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 RSpec.configure do |config|
