@@ -5,7 +5,7 @@ require File.expand_path('../dummy/config/environment', __FILE__)
 abort("The Rails environment is running in production mode!") if Rails.env.production?
 require 'spec_helper'
 require 'rspec/rails'
-require 'capybara'
+
 # Add additional requires below this line. Rails is not loaded until this point!
 require 'database_cleaner'
 # Requires supporting ruby files with custom matchers and macros, etc, in
@@ -59,8 +59,6 @@ RSpec.configure do |config|
   config.use_transactional_fixtures = true
   config.infer_base_class_for_anonymous_controllers = false
   config.order = "random"
-  config.include Capybara::DSL
-  Capybara.default_max_wait_time = 20
 
   config.before(:each) do
     DatabaseCleaner.strategy = :transaction
