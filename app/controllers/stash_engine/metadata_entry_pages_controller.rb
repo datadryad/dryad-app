@@ -12,7 +12,7 @@ module StashEngine
       if @resource.published?
         redirect_to(metadata_entry_pages_new_version_path(resource_id: params[:resource_id])) && return
       end
-      @resource.init_state_and_version #initializes them only if they don't exist already
+      @resource.init_state_and_version
     end
 
     #create a new version of this resource before editing with find or create
@@ -26,6 +26,7 @@ module StashEngine
       end
       @new_res = @resource.amoeba_dup
       @new_res.save!
+      @new_res.init_state_and_version
       @new_res.copy_file_records_from(@resource)
 
       #redirect to find or create path
