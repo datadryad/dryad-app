@@ -46,22 +46,20 @@ feature "User lands on Uploads page and navigates through it" do
     "Integer id nunc in purus sagittis dapibus sed ac augue. Aenean eu lobortis turpis."\
 
     click_link 'Proceed to Upload'
-    # element = page.find('input[id="upload_upload"]', visible: false)
-    # element.send_keys(@image_path)
     attach_file("Choose Files", @image_path)
     page.find('#upload_all').click
-    sleep 5
+    sleep 10
     expect(page).to have_content 'books.jpeg'
 
-    # page.find('input[id="upload_upload"]', visible: false).set(@image_path)
-    # page.find('#upload_all').click
-    # sleep 15
-    # expect(page).to have_content 'books.jpeg'
+    attach_file("Choose Files", @file_path)
+    page.find('#upload_all').click
+    sleep 10
+    expect(page).to have_content 'UC3-Dash.pdf'
 
-    # page.find('input[id="upload_upload"]', visible: false).set(@large_file_path)
-    # page.find('#upload_all').click
-    # sleep 30
-    # expect(page).to have_content 'test_100mb_file.pdf'
+    attach_file("Choose Files", @large_file_path)
+    page.find('#upload_all').click
+    sleep 30
+    expect(page).to have_content 'test_100mb_file.pdf'
     click_link 'Proceed to Review'
 
     expect(page).to have_content 'Finalize Submission'

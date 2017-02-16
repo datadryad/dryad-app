@@ -13,7 +13,7 @@ feature "User updates and submits a published dataset" do
   background do
     @tenant = ::StashEngine::Tenant.find(tenant_id = "dataone")
     @user = ::StashEngine::User.create(first_name: 'test', last_name: 'user', email: 'testuser.ucop@gmail.com', tenant_id: @tenant.tenant_id)
-    @file_path = File.join(Rails.root, '/public/UC3-Dash.pdf')
+    @file_path = File.join(StashDatacite::Engine.root.to_s, 'spec', 'dummy', 'public', 'UC3-Dash.pdf')
   end
 
   it "Logged in user fills metadata entry page", js: true do
@@ -83,7 +83,9 @@ feature "User updates and submits a published dataset" do
     #Geolocation Points
     fill_in 'geolocation_point[latitude]', with: '37.801239'
     fill_in 'geolocation_point[longitude]', with: '-122.258301'
-    click_button 'Add'
+    within find('#geolocation_point_new_form') do
+      click_button 'Add'
+    end
 
     expect(page).to have_css('div.c-locations__point', text: '37.801239, -122.258301' )
 
@@ -94,20 +96,20 @@ feature "User updates and submits a published dataset" do
     fill_in 'geolocation_box[sw_longitude]', with: '-106.6460'
     fill_in 'geolocation_box[ne_latitude]', with: '36.5007'
     fill_in 'geolocation_box[ne_longitude]', with: '-93.5083'
-    click_button 'Add'
+    within find('#geolocation_point_box_form') do
+      click_button 'Add'
+    end
 
     expect(page).to have_css('div.c-locations__area', text: 'SW 25.8371, -106.646 NE 36.5007, -93.5083')
 
-    click_link 'Proceed to Upload'
-    page.find('input[id="upload_upload"]', visible: false).set(@file_path)
-    page.find('#upload_all', visible: false).click
-    page.evaluate_script("window.location.reload()")
+    attach_file("Choose Files", @file_path)
+    page.find('#upload_all').click
     expect(page).to have_content 'UC3-Dash.pdf'
     click_link 'Proceed to Review'
 
     find('.o-button__submit').click
     handle_popups
-    sleep 20
+
     expect(page).to have_current_path("/stash/dashboard")
     expect(page).to have_content 'Test Dataset - Best practices for creating unique datasets submitted . There may be a delay for processing before the item is available.'
 
