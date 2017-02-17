@@ -27,11 +27,6 @@ require 'sauce_whisk'
 # end
 
 #SauceLabs and Capybara Required Settings
-  # caps = Selenium::WebDriver::Remote::Capabilities.chrome
-  # caps.browser_name = ENV['SAUCE_BROWSER']
-  # caps.version = ENV['SAUCE_VERSION']
-  # caps.platform = "Mac OS X 10.10"
-  # caps['tunnel_identifier'] = ENV['TRAVIS_JOB_NUMBER']
   Capybara.register_driver :remote do |app|
     Capybara::Selenium::Driver.new(app, :browser => :remote, :url => SauceDriver.endpoint,
                                    :desired_capabilities => SauceDriver.desired_caps)
