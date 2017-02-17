@@ -8,7 +8,8 @@ feature "User lands on Uploads page and navigates through it" do
     # @file_path = File.join(StashDatacite::Engine.root.to_s, 'spec', 'dummy', 'public', 'UC3-Dash.pdf')
     # @image_path = File.join(StashDatacite::Engine.root.to_s, 'spec', 'dummy', 'public', 'books.jpeg')
     # @large_file_path = File.join(StashDatacite::Engine.root.to_s, 'spec', 'dummy', 'public', 'test_100mb_file.pdf')
-    @image_path = 'https://saucelabs.com/rest/v1/storage/ENV['SAUCE_USERNAME']/books.jpeg'
+    # @image_path = 'https://saucelabs.com/rest/v1/storage/ENV['SAUCE_USERNAME']/books.jpeg'
+    @image_path = '/tmp/hydra.jpg'
   end
 
   it "Logged in user fills metadata entry page", js: true do
