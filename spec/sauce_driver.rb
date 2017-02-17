@@ -26,5 +26,12 @@ module SauceDriver
     def endpoint
       "http://#{authentication}@#{sauce_server}:#{sauce_port}/wd/hub"
     end
+
+    def prerun
+      {
+           'executable':'https://raw.githubusercontent.com/CDLUC3/stash_datacite/development/spec/features/support/copy_image_to_sauce.sh',
+           'background': 'false'
+      }
+    end
   end
 end
