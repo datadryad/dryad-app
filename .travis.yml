@@ -6,7 +6,7 @@ before_install:
   - git clone https://github.com/CDLUC3/stash_engine.git ../stash_engine
   - git clone https://github.com/CDLUC3/stash_discovery.git ../stash_discovery
 before_script:
-  - ./remote_upload_script.sh
+  # - ./remote_upload_script.sh
   - mysql -e 'create database stash_datacite_test;'
   - RAILS_ENV=test bundle exec rake db:schema:load
 script:
