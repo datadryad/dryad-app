@@ -16,6 +16,7 @@ script:
   - bundle exec rspec spec/features/uploads_page_spec.rb
   # - bundle exec rspec spec/features/update_and_resubmit_dataset_spec.rb
   # - bundle exec rspec spec/features/test_end_to_end_spec.rb
+  - curl -u ENV['SAUCE_USERNAME']:ENV['SAUCE_ACCESS_KEY'] -X POST -H "Content-Type: application/octet-stream" https://saucelabs.com/rest/v1/storage/ENV['SAUCE_USERNAME']/test_file_name?overwrite=true --data-binary https://raw.githubusercontent.com/CDLUC3/stash_datacite/development/spec/features/support/hydra.jpg
 branches:
   only:
     - development
