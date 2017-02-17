@@ -53,7 +53,7 @@ feature "User lands on Uploads page and navigates through it" do
     # trying the sauce labs pre-uploaded file
     page.attach_file('upload_upload', @image_path, :visible => false, wait: Capybara.default_max_wait_time)
     page.find('#upload_all', :visible => false).click
-    expect(page).to have_content 'books.jpeg'
+    expect(page).to have_content 'ls'
 
     # attach_file("Choose Files", @image_path)
     # page.find('#upload_all').click
