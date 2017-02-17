@@ -51,5 +51,12 @@ module SauceDriver
       environment_capabilities
     end
 
+    # def prerun
+    #   {
+    #        'executable':'https://raw.githubusercontent.com/CDLUC3/stash_datacite/development/spec/features/support/copy_image_to_sauce.sh',
+    #        'background': 'false'
+    #   }
+    # end
+
   end
 end
