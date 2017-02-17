@@ -5,9 +5,10 @@ feature "User lands on Uploads page and navigates through it" do
   background do
     @tenant = ::StashEngine::Tenant.find(tenant_id = "dataone")
     @user = ::StashEngine::User.create(first_name: 'test', last_name: 'user', email: 'testuser.ucop@gmail.com', tenant_id: @tenant.tenant_id)
-    @file_path = File.join(StashDatacite::Engine.root.to_s, 'spec', 'dummy', 'public', 'UC3-Dash.pdf')
-    @image_path = File.join(StashDatacite::Engine.root.to_s, 'spec', 'dummy', 'public', 'books.jpeg')
-    @large_file_path = File.join(StashDatacite::Engine.root.to_s, 'spec', 'dummy', 'public', 'test_100mb_file.pdf')
+    # @file_path = File.join(StashDatacite::Engine.root.to_s, 'spec', 'dummy', 'public', 'UC3-Dash.pdf')
+    # @image_path = File.join(StashDatacite::Engine.root.to_s, 'spec', 'dummy', 'public', 'books.jpeg')
+    # @large_file_path = File.join(StashDatacite::Engine.root.to_s, 'spec', 'dummy', 'public', 'test_100mb_file.pdf')
+    @image_path = 'https://raw.githubusercontent.com/CDLUC3/stash_datacite/development/spec/dummy/public/books.jpeg'
   end
 
   it "Logged in user fills metadata entry page", js: true do
@@ -48,7 +49,6 @@ feature "User lands on Uploads page and navigates through it" do
     click_link 'Proceed to Upload'
     page.attach_file('upload_upload', @image_path, :visible => false, wait: Capybara.default_max_wait_time)
     page.find('#upload_all', :visible => false).click
-    sleep 20
     expect(page).to have_content 'books.jpeg'
 
     # attach_file("Choose Files", @image_path)
