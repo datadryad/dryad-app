@@ -35,7 +35,7 @@ module SauceDriver
       prerun = { 'executable':'https://raw.githubusercontent.com/CDLUC3/stash_datacite/development/spec/features/support/copy_image_to_sauce.sh','background': 'false' }
       #prerun = 'https://raw.githubusercontent.com/CDLUC3/stash_datacite/development/spec/features/support/copy_image_to_sauce.sh'
 
-      #if browser && version && platform && tunnel_identifier
+      if browser && version && platform && tunnel_identifier
         return {
           :browserName => browser,
           :version => version,
@@ -43,7 +43,7 @@ module SauceDriver
           :tunnel_identifier => tunnel_identifier,
           :prerun => prerun
         }
-      #end
+      end
 
       return nil
     end
