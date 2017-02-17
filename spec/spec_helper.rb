@@ -33,7 +33,8 @@ require 'sauce_whisk'
   # caps.platform = "Mac OS X 10.10"
   # caps['tunnel_identifier'] = ENV['TRAVIS_JOB_NUMBER']
   Capybara.register_driver :remote do |app|
-    Capybara::Selenium::Driver.new(app, :browser => :remote, :url => SauceDriver.endpoint, :desired_capabilities => SauceDriver.desired_caps)
+    Capybara::Selenium::Driver.new(app, :browser => :remote, :url => SauceDriver.endpoint,
+                                   :desired_capabilities => SauceDriver.desired_caps)
   end
   Capybara.default_max_wait_time = 300
   Capybara.ignore_hidden_elements = false
