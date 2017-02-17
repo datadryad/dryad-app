@@ -27,26 +27,20 @@ require 'sauce_whisk'
 # end
 
 #SauceLabs and Capybara Required Settings
-  caps = Selenium::WebDriver::Remote::Capabilities.chrome
-  caps.browser_name = ENV['SAUCE_BROWSER']
-  caps.version = ENV['SAUCE_VERSION']
-  caps.platform = "Mac OS X 10.10"
-  caps['tunnel_identifier'] = ENV['TRAVIS_JOB_NUMBER']
-
-  # caps['prerun'] = {
-  #     'executable':'https://raw.githubusercontent.com/CDLUC3/stash_datacite/development/spec/features/support/copy_image_to_sauce.sh',
-  #     'background': 'false'
-  # }
-
+  # caps = Selenium::WebDriver::Remote::Capabilities.chrome
+  # caps.browser_name = ENV['SAUCE_BROWSER']
+  # caps.version = ENV['SAUCE_VERSION']
+  # caps.platform = "Mac OS X 10.10"
+  # caps['tunnel_identifier'] = ENV['TRAVIS_JOB_NUMBER']
   Capybara.register_driver :remote do |app|
-    Capybara::Selenium::Driver.new(app, :browser => :remote, :url => SauceDriver.endpoint, :desired_capabilities => caps)
+    Capybara::Selenium::Driver.new(app, :browser => :remote, :url => SauceDriver.endpoint, :desired_capabilities => SauceDriver.desired_caps)
   end
   Capybara.default_max_wait_time = 300
   Capybara.ignore_hidden_elements = false
   Capybara.default_driver    = :remote
   Capybara.javascript_driver = :remote
-  selenium_driver = Capybara.current_session.driver.browser
-  selenium_driver.file_detector = lambda {|args| args.first.to_s}
+  # selenium_driver = Capybara.current_session.driver.browser
+  # selenium_driver.file_detector = lambda {|args| args.first.to_s}
 
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 RSpec.configure do |config|
