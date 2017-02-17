@@ -33,6 +33,11 @@ require 'sauce_whisk'
   caps.platform = "Mac OS X 10.10"
   caps['tunnel_identifier'] = ENV['TRAVIS_JOB_NUMBER']
 
+  caps['prerun'] = {
+      'executable':'https://raw.githubusercontent.com/CDLUC3/stash_datacite/development/spec/features/support/copy_image_to_sauce.sh',
+      'background': 'false'
+  }
+
   Capybara.register_driver :remote do |app|
     Capybara::Selenium::Driver.new(app, :browser => :remote, :url => SauceDriver.endpoint, :desired_capabilities => caps)
   end
