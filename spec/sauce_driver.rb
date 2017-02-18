@@ -32,16 +32,15 @@ module SauceDriver
       version = ENV['SAUCE_VERSION']
       platform = "Mac OS X 10.10"
       tunnel_identifier = ENV['TRAVIS_JOB_NUMBER']
-      #prerun = { 'executable':'https://raw.githubusercontent.com/CDLUC3/stash_datacite/development/spec/features/support/copy_image_to_sauce.sh','background': 'false' }
-      prerun = 'https://raw.githubusercontent.com/CDLUC3/stash_datacite/development/spec/features/support/copy_image_to_sauce.sh'
+      # prerun = 'https://raw.githubusercontent.com/CDLUC3/stash_datacite/development/spec/features/support/copy_image_to_sauce.sh'
 
       if browser && version && platform && tunnel_identifier
         return {
           :browserName => browser,
           :version => version,
           :platform => platform,
-          :tunnel_identifier => tunnel_identifier,
-          :prerun => prerun
+          :tunnel_identifier => tunnel_identifier
+          # :prerun => prerun
         }
       end
 
@@ -51,13 +50,5 @@ module SauceDriver
     def desired_caps
       environment_capabilities
     end
-
-    # def prerun
-    #   {
-    #        'executable':'https://raw.githubusercontent.com/CDLUC3/stash_datacite/development/spec/features/support/copy_image_to_sauce.sh',
-    #        'background': 'false'
-    #   }
-    # end
-
   end
 end

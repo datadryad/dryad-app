@@ -5,11 +5,9 @@ feature "User lands on Uploads page and navigates through it" do
   background do
     @tenant = ::StashEngine::Tenant.find(tenant_id = "dataone")
     @user = ::StashEngine::User.create(first_name: 'test', last_name: 'user', email: 'testuser.ucop@gmail.com', tenant_id: @tenant.tenant_id)
-    # @file_path = File.join(StashDatacite::Engine.root.to_s, 'spec', 'dummy', 'public', 'UC3-Dash.pdf')
     # @image_path = File.join(StashDatacite::Engine.root.to_s, 'spec', 'dummy', 'public', 'books.jpeg')
     # @large_file_path = File.join(StashDatacite::Engine.root.to_s, 'spec', 'dummy', 'public', 'test_100mb_file.pdf')
     # @image_path = 'https://saucelabs.com/rest/v1/storage/ENV['SAUCE_USERNAME']/books.jpeg'
-    #@image_path = '/tmp/hydra.jpg'
     @image_path = '/bin/ls'
   end
 
@@ -49,18 +47,14 @@ feature "User lands on Uploads page and navigates through it" do
     "Integer id nunc in purus sagittis dapibus sed ac augue. Aenean eu lobortis turpis."\
 
     click_link 'Proceed to Upload'
-    # page.attach_file('upload_upload', @image_path, :visible => false, wait: Capybara.default_max_wait_time)
+
     # trying the sauce labs pre-uploaded file
     page.attach_file('upload_upload', @image_path, :visible => false, wait: Capybara.default_max_wait_time)
     page.find('#upload_all', :visible => false).click
+    # expect(page).to have_content 'books.jpeg'
     expect(page).to have_content 'ls'
 
-    # attach_file("Choose Files", @image_path)
-    # page.find('#upload_all').click
-    # sleep 5
-    # expect(page).to have_content 'books.jpeg'
-
-    # page.find('input[id="upload_upload"]', visible: false).set(@large_file_path)
+    # page.attach_file('upload_upload', @large_file_path, :visible => false, wait: Capybara.default_max_wait_time)
     # page.find('#upload_all').click
     # sleep 30
     # expect(page).to have_content 'test_100mb_file.pdf'

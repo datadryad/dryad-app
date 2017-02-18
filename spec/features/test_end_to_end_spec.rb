@@ -1,13 +1,5 @@
 require 'rails_helper'
 
-def wait_for_ajax
-  Capybara.default_max_wait_time = 50
-end
-
-# def finished_all_ajax_requests?
-#   page.evaluate_script('jQuery.active').zero?
-# end
-
 def handle_popups
   if page.driver.class == Capybara::Selenium::Driver
     page.driver.browser.switch_to.alert.accept
@@ -24,7 +16,8 @@ feature "User creates a dataset and submits it to the repository" do
   background do
 	@tenant = ::StashEngine::Tenant.find(tenant_id = "dataone")
 	@user = ::StashEngine::User.create(first_name: 'test', last_name: 'user', email: 'testuser.ucop@gmail.com', tenant_id: @tenant.tenant_id)
-	@file_path = File.join(Rails.root, '/public/UC3-Dash.pdf')
+	# @image_path = File.join(StashDatacite::Engine.root.to_s, 'spec', 'dummy', 'public', 'books.jpeg')
+    @image_path = '/bin/ls'
   end
 
   it "Logged in user fills metadata entry page", js: true do
@@ -96,12 +89,12 @@ feature "User creates a dataset and submits it to the repository" do
     expect(page).to have_css('div.c-locations__area', text: 'SW 25.8371, -106.646 NE 36.5007, -93.5083')
 
     click_link 'Proceed to Upload'
-    page.find('input[id="upload_upload"]', visible: false).set(@file_path)
-    page.find('#upload_all', visible: false).click
 
-    page.evaluate_script("window.location.reload()")
-    sleep 100
-    expect(page).to have_content 'UC3-Dash.pdf'
+    # trying the sauce labs pre-uploaded file
+    page.attach_file('upload_upload', @image_path, :visible => false, wait: Capybara.default_max_wait_time)
+    page.find('#upload_all', :visible => false).click
+    # expect(page).to have_content 'books.jpeg'
+    expect(page).to have_content 'ls'
 
     click_link 'Proceed to Review'
 

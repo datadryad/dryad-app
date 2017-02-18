@@ -13,7 +13,8 @@ feature "User updates and submits a published dataset" do
   background do
     @tenant = ::StashEngine::Tenant.find(tenant_id = "dataone")
     @user = ::StashEngine::User.create(first_name: 'test', last_name: 'user', email: 'testuser.ucop@gmail.com', tenant_id: @tenant.tenant_id)
-    @file_path = File.join(StashDatacite::Engine.root.to_s, 'spec', 'dummy', 'public', 'UC3-Dash.pdf')
+    # @image_path = File.join(StashDatacite::Engine.root.to_s, 'spec', 'dummy', 'public', 'books.jpeg')
+    @image_path = '/bin/ls'
   end
 
   it "Logged in user fills metadata entry page", js: true do
@@ -102,9 +103,14 @@ feature "User updates and submits a published dataset" do
 
     expect(page).to have_css('div.c-locations__area', text: 'SW 25.8371, -106.646 NE 36.5007, -93.5083')
 
-    attach_file("Choose Files", @file_path)
-    page.find('#upload_all').click
-    expect(page).to have_content 'UC3-Dash.pdf'
+    click_link 'Proceed to Upload'
+
+    # trying the sauce labs pre-uploaded file
+    page.attach_file('upload_upload', @image_path, :visible => false, wait: Capybara.default_max_wait_time)
+    page.find('#upload_all', :visible => false).click
+    # expect(page).to have_content 'books.jpeg'
+    expect(page).to have_content 'ls'
+
     click_link 'Proceed to Review'
 
     find('.o-button__submit').click
