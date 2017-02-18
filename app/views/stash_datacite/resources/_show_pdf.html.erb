@@ -1,17 +1,18 @@
 <%= render partial: "stash_datacite/titles/show", locals: { title: @review.title } %>
 <div class="t-landing__metadata o-metadata">
   <%= render partial: "stash_datacite/creators/show", locals: { creators: @review.creators } %>
-  <%= render partial: "stash_datacite/publishers/publication_info", locals: {resource: @resource } %>
+  <%= render partial: "stash_datacite/publishers/publication_info_pdf", locals: {resource: @resource } %>
 </div>
 
 <section class="o-section">
-  <%= render partial: "stash_datacite/shared/citations",
+  <%= render partial: "stash_datacite/shared/citations_pdf",
              locals: { creators: @review.creators, title: @review.title,
                        resource_type: @review.resource_type,
                        version: @resource.stash_version.nil? ? 'v0' : "v#{@review.version.version }",
                        identifier: @resource.identifier.nil? ? 'DOI' : "#{@review.identifier.identifier }",
                        publisher: "#{@review.publisher}",
-                       publication_years: @resource.publication_years } %>
+                       publication_years: @resource.publication_years }
+  %>
 </section>
 <%= render partial: "stash_datacite/descriptions/show", locals: { abstract: @review.abstract,
                                                                   methods: @review.methods, other: @review.other } %>
@@ -21,7 +22,9 @@
 
 <% unless @review.no_geolocation_data %>
   <h3 class="o-heading__level2">Location</h3>
-  <div id="map_review" class="o-map"></div>
+  <div style="overflow: hidden">
+    <div id="map_review" class="o-map"></div>
+  </div>
   <div class="c-locations">
     <%= render partial: "stash_datacite/geolocation_points/show",
                locals: { geolocation_points: @review.geolocation_points } %>
@@ -33,9 +36,6 @@
 <% end %>
 
 <%= render partial: "stash_datacite/subjects/show", locals: { subjects: @review.subjects } %>
-
-<h3 class="o-heading__level2">Type</h3>
-<p><%= @resource.resource_type.resource_type_general_friendly %></p>
 
 <%= render partial: 'stash_engine/landing/versions_pdf' %>
 
@@ -116,4 +116,5 @@
     }
   }
 </script>
+
 <%# render partial: "stash_datacite/licenses/review" %>
