@@ -45,15 +45,18 @@ module StashEngine
                  page_size: 'Letter',
                  title: @review.title_str,
                  javascript_delay: 3000,
-                 #'viewport_size' => '1600x1024',
-                 'use_xserver' => true,
+                 #'use_xserver' => true,
                  margin: { top: 20, bottom: 20, left: 20, right: 20 },
                  header: {
-                     left: pdf_meta.top_left,
-                     right: pdf_meta.top_right},
+                    left: pdf_meta.top_left,
+                    right: pdf_meta.top_right,
+                    font_size: 9,
+                    spacing: 5},
                  footer: {
                      left: pdf_meta.bottom_left,
-                     right: pdf_meta.bottom_right },
+                     right: pdf_meta.bottom_right,
+                     font_size: 9,
+                     spacing: 5},
                  show_as_html: my_debug
         }
       end
