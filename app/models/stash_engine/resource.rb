@@ -7,6 +7,7 @@ module StashEngine
     has_one :stash_version, class_name: 'StashEngine::Version'
     belongs_to :identifier, class_name: 'StashEngine::Identifier', foreign_key: 'identifier_id'
     has_one :resource_usage, class_name: 'StashEngine::ResourceUsage'
+    has_one :embargo, class_name: 'StashEngine::Embargo'
     belongs_to :user, class_name: 'StashEngine::User'
     has_one :current_state,
             class_name: 'StashEngine::ResourceState',
