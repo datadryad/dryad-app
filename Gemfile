@@ -45,10 +45,7 @@ gem 'daemons'
 
 gem 'exception_notification'
 
-# TODO: fix later - I don't have I have permisison to push to rubygems for stash-merritt or stash-sword.
-# Now using ref, but do right way when David comes back.  Also doesn't seem to detect version from github-only.
-gem 'stash-merritt', :git => 'https://github.com/CDLUC3/stash-merritt.git', :ref => '67c9fbb02d52a3c0e1ebed57a11e3bded32a58b9'
-gem 'stash-sword', :git => 'https://github.com/CDLUC3/stash-sword.git', :ref => '816d12af1929d650d87a313612a6ed3153498349'
+gem 'stash-merritt', '~> 0.1.1'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
