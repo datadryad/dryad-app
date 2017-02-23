@@ -37,11 +37,20 @@ module StashEngine
     # Callbacks
 
     def init_state_and_version
-      self.current_resource_state_id = ResourceState.create(resource_id: id, resource_state: 'in_progress', user_id: user_id).id
-      self.stash_version = StashEngine::Version.create(resource_id: id, version: next_version_number, zip_filename: nil)
+      init_state
+      init_version
       save
     end
     after_create :init_state_and_version
+
+    # shouldn't be necessary but we have some stale data floating around
+    def ensure_state_and_version
+      return if stash_version && current_resource_state_id
+      init_version unless stash_version
+      init_state unless current_resource_state_id
+      save
+    end
+    after_find :ensure_state_and_version
 
     # ------------------------------------------------------------
     # Scopes
@@ -125,6 +134,11 @@ module StashEngine
       my_state.save
     end
 
+    def init_state
+      self.current_resource_state_id = ResourceState.create(resource_id: id, resource_state: 'in_progress', user_id: user_id).id
+    end
+    private :init_state
+
     # ------------------------------------------------------------
     # Identifiers
 
@@ -185,6 +199,11 @@ module StashEngine
       version_record.zip_filename = File.basename(zipfile)
       version_record.save!
     end
+
+    def init_version
+      self.stash_version = StashEngine::Version.create(resource_id: id, version: next_version_number, zip_filename: nil)
+    end
+    private :init_version
 
     # ------------------------------------------------------------
     # Ownership
