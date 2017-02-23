@@ -18,7 +18,7 @@ Gem::Specification.new do |s|
   s.require_paths = ['lib']
   s.test_files = Dir['spec/**/*']
 
-  s.add_dependency 'stash-sword', '~> 0.1', '>= 0.1.5'
+  s.add_dependency 'stash-sword', '~> 0.1', '>= 0.1.6'
 
   s.add_dependency 'amoeba', '~> 3.0.0'
   s.add_dependency 'carrierwave', '~> 0.10.0'
