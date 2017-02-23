@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161207193328) do
+ActiveRecord::Schema.define(version: 20170223180412) do
 
   create_table "bookmarks", force: :cascade do |t|
     t.integer  "user_id",       limit: 4,   null: false
@@ -110,18 +110,6 @@ ActiveRecord::Schema.define(version: 20161207193328) do
   end
 
   add_index "dcs_descriptions", ["resource_id"], name: "index_dcs_descriptions_on_resource_id", using: :btree
-
-  create_table "dcs_embargoes", force: :cascade do |t|
-    t.string   "embargo_type", limit: 11,  default: "none"
-    t.string   "period",       limit: 255
-    t.date     "start_date"
-    t.date     "end_date"
-    t.integer  "resource_id",  limit: 4
-    t.datetime "created_at",                                null: false
-    t.datetime "updated_at",                                null: false
-  end
-
-  add_index "dcs_embargoes", ["resource_id"], name: "index_dcs_embargoes_on_resource_id", using: :btree
 
   create_table "dcs_formats", force: :cascade do |t|
     t.text     "format",      limit: 65535
@@ -297,6 +285,13 @@ ActiveRecord::Schema.define(version: 20161207193328) do
   end
 
   add_index "searches", ["user_id"], name: "index_searches_on_user_id", using: :btree
+
+  create_table "stash_engine_embargoes", force: :cascade do |t|
+    t.string   "end_date",    limit: 255
+    t.integer  "resource_id", limit: 4
+    t.datetime "created_at",              null: false
+    t.datetime "updated_at",              null: false
+  end
 
   create_table "stash_engine_file_uploads", force: :cascade do |t|
     t.text     "upload_file_name",    limit: 65535
