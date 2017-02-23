@@ -98,7 +98,7 @@
     <orderEntry type="library" scope="PROVIDED" name="simplecov-html (v0.10.0, ruby-2.2.5-p319) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="sprockets (v3.7.1, ruby-2.2.5-p319) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="sprockets-rails (v3.2.0, ruby-2.2.5-p319) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="stash-sword (v0.1.5, ruby-2.2.5-p319) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="stash-sword (v0.1.6, ruby-2.2.5-p319) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="stash-wrapper (v0.1.11.1, ruby-2.2.5-p319) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="stash_ezid_datacite (v0.1.5, ruby-2.2.5-p319) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="thor (v0.19.4, ruby-2.2.5-p319) [gem]" level="application" />
