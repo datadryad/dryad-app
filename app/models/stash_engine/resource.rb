@@ -13,11 +13,6 @@ module StashEngine
             primary_key: 'current_resource_state_id',
             foreign_key: 'id'
 
-    # amoemba for duplication of items (to be excluded)
-    amoeba do
-      exclude_association :stash_version
-    end
-
     # ------------------------------------------------------------
     # Patch points
 
