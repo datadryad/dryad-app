@@ -40,7 +40,6 @@ module StashEngine
 
       describe '#current_file_uploads' do
         attr_reader :res1
-        attr_reader :res2
         attr_reader :created_files
         attr_reader :copied_files
         attr_reader :deleted_files
@@ -50,11 +49,10 @@ module StashEngine
           @created_files = Array.new(3) { |i| FileUpload.create(resource: res1, file_state: 'created', upload_file_name: "created#{i}.bin") }
           @copied_files = Array.new(3) { |i| FileUpload.create(resource: res1, file_state: 'copied', upload_file_name: "copied#{i}.bin") }
           @deleted_files = Array.new(3) { |i| FileUpload.create(resource: res1, file_state: 'deleted', upload_file_name: "deleted#{i}.bin") }
-
-          @res2 = Resource.create(user_id: user.id)
         end
 
         it 'defaults to empty' do
+          res2 = Resource.create(user_id: user.id)
           expect(res2.current_file_uploads).to be_empty
         end
 
@@ -64,30 +62,35 @@ module StashEngine
           copied_files.each { |f| expect(current).to include(f) }
           deleted_files.each { |f| expect(current).not_to include(f) }
         end
-      end
 
-      describe '#copy_file_records_from' do
-        attr_reader :res1
-        attr_reader :res2
-        before(:each) do
-          @res1 = Resource.create(user_id: user.id)
+        describe 'amoeba duplication' do
+          attr_reader :res2
+          before(:each) do
+            @res2 = res1.amoeba_dup
+          end
 
-          (0...3).each { |i| FileUpload.create(resource: res1, file_state: 'created', upload_file_name: "created#{i}.bin") }
-          (0...3).each { |i| FileUpload.create(resource: res1, file_state: 'copied', upload_file_name: "copied#{i}.bin") }
-          (0...3).each { |i| FileUpload.create(resource: res1, file_state: 'deleted', upload_file_name: "deleted#{i}.bin") }
+          it 'copies the records' do
+            expected_names = res1.file_uploads.map(&:upload_file_name)
+            actual_names = res2.file_uploads.map(&:upload_file_name)
+            expect(actual_names).to contain_exactly(*expected_names)
+          end
 
-          @res2 = Resource.create(user_id: user.id)
-          res2.copy_file_records_from(res1)
-        end
+          it 'copies all current records' do
+            old_current_names = res1.current_file_uploads.map(&:upload_file_name)
+            new_current_names = res2.current_file_uploads.map(&:upload_file_name)
+            expect(new_current_names).to contain_exactly(*old_current_names)
+          end
 
-        it 'copies the records' do
-          expected_names = res1.current_file_uploads.map(&:upload_file_name)
-          actual_names = res2.current_file_uploads.map(&:upload_file_name)
-          expect(actual_names).to contain_exactly(*expected_names)
-        end
+          it 'sets all current records to "copied"' do
+            res2.current_file_uploads.each { |f| expect(f.file_state).to eq('copied') }
+          end
 
-        it 'sets the state to "copied"' do
-          res2.current_file_uploads.each { |f| expect(f.file_state).to eq('copied') }
+          it 'copies all deleted recoreds' do
+            old_deleted_names = deleted_files.map(&:upload_file_name)
+            new_deleted_names = res2.file_uploads.deleted.map(&:upload_file_name)
+            expect(new_deleted_names).to contain_exactly(*old_deleted_names)
+          end
+
         end
       end
     end
@@ -136,6 +139,22 @@ module StashEngine
             resource.current_state = state_value
             new_state = resource.current_resource_state
             expect(new_state.resource_state).to eq(state_value)
+          end
+        end
+
+        it 'is not copied or clobbered in Amoeba duplication' do
+          %w(processing error embargoed published).each do |state_value|
+            resource.current_state = state_value
+            new_resource = resource.amoeba_dup
+            new_resource.save!
+
+            new_resource_state = new_resource.current_resource_state
+            expect(new_resource_state.resource_id).to eq(new_resource.id)
+            expect(new_resource_state.resource_state).to eq('in_progress')
+
+            orig_resource_state = resource.current_resource_state
+            expect(orig_resource_state.resource_id).to eq(resource.id)
+            expect(orig_resource_state.resource_state).to eq(state_value)
           end
         end
       end
@@ -419,9 +438,11 @@ module StashEngine
 
       describe '#resource_usage' do
         attr_reader :resource
+
         def usage
           resource.resource_usage
         end
+
         before(:each) do
           @resource = Resource.create(user_id: user.id)
         end
