@@ -13,6 +13,19 @@ module StashEngine
             primary_key: 'current_resource_state_id',
             foreign_key: 'id'
 
+    amoeba do
+      include_association :file_uploads
+      customize(lambda do |_, new_resource|
+        new_resource.file_uploads.each do |file|
+          raise "Expected #{new_resource.id}, was #{file.resource_id}" unless file.resource_id == new_resource.id
+          if file.file_state == 'created'
+            file.file_state = 'copied'
+            file.save
+          end
+        end
+      end)
+    end
+
     # ------------------------------------------------------------
     # Patch points
 
@@ -24,12 +37,8 @@ module StashEngine
     # Callbacks
 
     def init_state_and_version
-      # only add these things if they don't exist since we need to use for old resources that may exist in the db
-      # and are in an inconsistent DB state
       self.current_resource_state_id = ResourceState.create(resource_id: id, resource_state: 'in_progress', user_id: user_id).id
-      unless stash_version
-        self.stash_version = StashEngine::Version.create(resource_id: id, version: next_version_number, zip_filename: nil)
-      end
+      self.stash_version = StashEngine::Version.create(resource_id: id, version: next_version_number, zip_filename: nil)
       save
     end
     after_create :init_state_and_version
@@ -87,18 +96,6 @@ module StashEngine
       subquery = FileUpload.where(resource_id: id)
                            .select('max(id) last_id, upload_file_name').group(:upload_file_name)
       FileUpload.joins("INNER JOIN (#{subquery.to_sql}) sub on id = sub.last_id").order(upload_file_name: :asc)
-    end
-
-    # TODO: get amoeba to do this for us
-    def copy_file_records_from(other_resource)
-      file_uploads << other_resource.current_file_uploads.collect(&:dup)
-      if file_uploads.any?
-        file_uploads.each do |file|
-          file.resource_id = id
-          file.file_state = 'copied'
-          file.save!
-        end
-      end
     end
 
     # ------------------------------------------------------------
