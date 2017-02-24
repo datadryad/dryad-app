@@ -12,10 +12,10 @@ module StashDatacite
 
     def target_url(identifier)
       if identifier
-        "#{link_to("https://dx.doi.org/#{identifier}", "https://dx.doi.org/#{identifier}", target: '_blank')}"\
+        "#{link_to("https://doi.org/#{identifier}", "https://doi.org/#{identifier}", target: '_blank')}"\
         '(opens in a new window)'
       else
-        'https://dx.doi.org/placeholderDOI'
+        'https://doi.org/placeholderDOI'
       end
     end
 
