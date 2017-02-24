@@ -42,9 +42,12 @@ module StashDatacite
 
         # this enables deep copying of the resource
         amoeba do
-          include_association [:contributors, :creators, :datacite_dates, :descriptions, :geolocations,
-                               :publication_years, :publisher, :related_identifiers, :resource_type, :rights, :sizes,
-                               :subjects, :titles]
+          # can't just pass the array to include_association() or it clobbers the ones defined in stash_engine
+          [:contributors, :creators, :datacite_dates, :descriptions, :geolocations,
+            :publication_years, :publisher, :related_identifiers, :resource_type, :rights, :sizes,
+            :subjects, :titles].each do |assoc|
+            include_association assoc
+          end
         end
       end
 
