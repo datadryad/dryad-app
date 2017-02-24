@@ -35,7 +35,7 @@ module StashDatacite
         resource.save
 
         landing_page_url = "https://stash-dev.example.edu/#{resource.identifier_str}"
-        citation = 'Chen, Hao (2016), A Zebrafish Model for Studies on Esophageal Epithelial Biology, Dataset, https://dx.doi.org/10.15146/R3RG6G'
+        citation = 'Chen, Hao (2016), A Zebrafish Model for Studies on Esophageal Epithelial Biology, Dataset, https://doi.org/10.15146/R3RG6G'
         @schema_dataset = SchemaDataset.new(resource: resource, citation: citation, landing: landing_page_url)
       end
 
