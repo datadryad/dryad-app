@@ -14,9 +14,17 @@ module StashEngine
             primary_key: 'current_resource_state_id',
             foreign_key: 'id'
 
-    # amoemba for duplication of items (to be excluded)
     amoeba do
-      exclude_association :stash_version
+      include_association :file_uploads
+      customize(lambda do |_, new_resource|
+        new_resource.file_uploads.each do |file|
+          raise "Expected #{new_resource.id}, was #{file.resource_id}" unless file.resource_id == new_resource.id
+          if file.file_state == 'created'
+            file.file_state = 'copied'
+            file.save
+          end
+        end
+      end)
     end
 
     # ------------------------------------------------------------
@@ -30,15 +38,20 @@ module StashEngine
     # Callbacks
 
     def init_state_and_version
-      # only add these things if they don't exist since we need to use for old resources that may exist in the db
-      # and are in an inconsistent DB state
-      self.current_resource_state_id = ResourceState.create(resource_id: id, resource_state: 'in_progress', user_id: user_id).id
-      unless stash_version
-        self.stash_version = StashEngine::Version.create(resource_id: id, version: next_version_number, zip_filename: nil)
-      end
+      init_state
+      init_version
       save
     end
     after_create :init_state_and_version
+
+    # shouldn't be necessary but we have some stale data floating around
+    def ensure_state_and_version
+      return if stash_version && current_resource_state_id
+      init_version unless stash_version
+      init_state unless current_resource_state_id
+      save
+    end
+    after_find :ensure_state_and_version
 
     # ------------------------------------------------------------
     # Scopes
@@ -95,18 +108,6 @@ module StashEngine
       FileUpload.joins("INNER JOIN (#{subquery.to_sql}) sub on id = sub.last_id").order(upload_file_name: :asc)
     end
 
-    # TODO: get amoeba to do this for us
-    def copy_file_records_from(other_resource)
-      file_uploads << other_resource.current_file_uploads.collect(&:dup)
-      if file_uploads.any?
-        file_uploads.each do |file|
-          file.resource_id = id
-          file.file_state = 'copied'
-          file.save!
-        end
-      end
-    end
-
     # ------------------------------------------------------------
     # Current resource state
 
@@ -133,6 +134,11 @@ module StashEngine
       my_state.resource_state = state_string
       my_state.save
     end
+
+    def init_state
+      self.current_resource_state_id = ResourceState.create(resource_id: id, resource_state: 'in_progress', user_id: user_id).id
+    end
+    private :init_state
 
     # ------------------------------------------------------------
     # Identifiers
@@ -194,6 +200,11 @@ module StashEngine
       version_record.zip_filename = File.basename(zipfile)
       version_record.save!
     end
+
+    def init_version
+      self.stash_version = StashEngine::Version.create(resource_id: id, version: next_version_number, zip_filename: nil)
+    end
+    private :init_version
 
     # ------------------------------------------------------------
     # Ownership

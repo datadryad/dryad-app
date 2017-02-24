@@ -103,7 +103,7 @@ GEM
       railties (>= 3.2, < 5.1)
     globalid (0.3.7)
       activesupport (>= 4.1.0)
-    hashie (3.5.4)
+    hashie (3.5.3)
     hirb (0.7.3)
     http-cookie (1.0.3)
       domain_name (~> 0.5)
@@ -309,4 +309,4 @@ DEPENDENCIES
   stash_engine!
 
 BUNDLED WITH
-   1.13.7
+   1.14.5
