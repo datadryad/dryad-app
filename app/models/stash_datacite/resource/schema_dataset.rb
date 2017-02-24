@@ -58,7 +58,7 @@ module StashDatacite
       # google says URLs of the Location of a page describing the dataset
       def url
         # the url should be the dx.doi, this seems like view logic
-        "https://dx.doi.org/#{@resource.try(:identifier).try(:identifier)}"
+        "https://doi.org/#{@resource.try(:identifier).try(:identifier)}"
       end
 
       def same_as
