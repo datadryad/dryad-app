@@ -38,14 +38,35 @@ module Stash
 
       describe :write_file do
         it 'writes the file' do
+          contents = "<contents/>\n"
           file_name = 'contents.xml'
-          contents = '<contents/>'
           builder = FileBuilder.new(file_name: file_name)
           builder.define_singleton_method(:contents) { contents }
           Dir.mktmpdir do |target_dir|
             builder.write_file(target_dir)
             outfile = File.join(target_dir, file_name)
             expect(File.read(outfile)).to eq(contents)
+          end
+        end
+        it 'appends a newline if needed' do
+          file_name = 'contents.xml'
+          builder = FileBuilder.new(file_name: file_name)
+          builder.define_singleton_method(:contents) { 'elvis' }
+          Dir.mktmpdir do |target_dir|
+            builder.write_file(target_dir)
+            outfile = File.join(target_dir, file_name)
+            expect(File.read(outfile)).to eq("elvis\n")
+          end
+        end
+        it 'doesn\'t append newlines to binary files' do
+          file_name = 'contents.xml'
+          builder = FileBuilder.new(file_name: file_name)
+          builder.define_singleton_method(:binary?) { true }
+          builder.define_singleton_method(:contents) { 'elvis' }
+          Dir.mktmpdir do |target_dir|
+            builder.write_file(target_dir)
+            outfile = File.join(target_dir, file_name)
+            expect(File.read(outfile)).to eq('elvis')
           end
         end
         it 'writes nothing if #contents returns nil' do
