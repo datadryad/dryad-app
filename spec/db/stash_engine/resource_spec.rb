@@ -454,14 +454,11 @@ module StashEngine
           end
         end
         describe '#amoeba_duplication' do
-          it 'preserves views and downloads' do
+          it 'doesn\'t duplicate usage' do
             resource.increment_views
             resource.increment_downloads
             res2 = resource.amoeba_dup
-            usage2 = res2.resource_usage
-            expect(usage2).not_to(be_nil)
-            expect(usage2.views).to eq(1)
-            expect(usage2.downloads).to eq(1)
+            expect(res2.resource_usage).to(be_nil)
           end
         end
       end
