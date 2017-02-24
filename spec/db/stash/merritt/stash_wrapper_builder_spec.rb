@@ -104,6 +104,17 @@ module Stash
             expect(embargo.end_date).to eq(expected_end_date)
             expect(embargo.start_date).to be <= embargo.end_date
           end
+
+          it 'rejects a non-date' do
+            expect do
+              StashWrapperBuilder.new(
+                dcs_resource: dc4_resource,
+                version_number: 1,
+                uploads: [],
+                embargo_end_date: Time.now.xmlschema
+              )
+            end.to raise_error(ArgumentError)
+          end
         end
       end
     end

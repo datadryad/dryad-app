@@ -120,7 +120,7 @@ module Stash
           end
         end
 
-        it 'includes a delete list' do
+        it 'includes a delete list if needed' do
           deleted = []
           resource.file_uploads.each_with_index do |upload, index|
             next unless index.even?
@@ -135,6 +135,15 @@ module Stash
           deleted.each do |filename|
             expect(mrt_delete).to include(filename)
           end
+        end
+
+        it 'includes an embargo file if needed' do
+          end_date = Time.new(2020, 1, 1, 0, 0, 1, '+12:45')
+          resource.embargo = StashEngine::Embargo.new(end_date: end_date)
+          package = SubmissionPackage.new(resource: resource)
+          @zipfile_path = package.zipfile
+          mrt_embargo = zip_entry('mrt-embargo.txt')
+          expect(mrt_embargo.strip).to eq(end_date.iso8601)
         end
       end
 
