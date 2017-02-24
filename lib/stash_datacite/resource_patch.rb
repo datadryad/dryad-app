@@ -22,7 +22,6 @@ module StashDatacite
         has_many :creators, class_name: 'StashDatacite::Creator', dependent: :destroy # mandatory
         has_many :datacite_dates, class_name: 'StashDatacite::DataciteDate', dependent: :destroy # optional
         has_many :descriptions, class_name: 'StashDatacite::Description', dependent: :destroy #optional
-        has_many :embargoes, class_name: 'StashDatacite::Embargo', dependent: :destroy #?
         has_many :geolocations, class_name: 'StashDatacite::Geolocation', dependent: :destroy
         #has_many :geolocation_boxes, class_name: 'StashDatacite::GeolocationBox', dependent: :destroy # optional
         #has_many :geolocation_places, class_name: 'StashDatacite::GeolocationPlace', dependent: :destroy # optional
@@ -43,7 +42,7 @@ module StashDatacite
 
         # this enables deep copying of the resource
         amoeba do
-          include_association [:contributors, :creators, :datacite_dates, :descriptions, :embargoes, :geolocations,
+          include_association [:contributors, :creators, :datacite_dates, :descriptions, :geolocations,
                                :publication_years, :publisher, :related_identifiers, :resource_type, :rights, :sizes,
                                :subjects, :titles]
         end
