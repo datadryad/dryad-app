@@ -243,6 +243,13 @@ module StashEngine
       resource_usage.increment(:views).save
     end
 
+    # -----------------------------------------------------------
+    # Embargoes
+    def under_embargo?
+      return false if embargo.nil? || embargo.end_date.nil?
+      Time.new < embargo.end_date
+    end
+
     private
 
     def ensure_resource_usage
