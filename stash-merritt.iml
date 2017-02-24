@@ -7,29 +7,6 @@
     <content url="file://$MODULE_DIR$/../stash_engines/stash_engine" />
     <orderEntry type="jdk" jdkName="ruby-2.2.5-p319" jdkType="RUBY_SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module-library">
-      <library name="stash_datacite (v0.0.5) [path][gem]">
-        <CLASSES>
-          <root url="file://$MODULE_DIR$/../stash_engines/stash_datacite/db" />
-          <root url="file://$MODULE_DIR$/../stash_engines/stash_datacite/app" />
-          <root url="file://$MODULE_DIR$/../stash_engines/stash_datacite/bin" />
-          <root url="file://$MODULE_DIR$/../stash_engines/stash_datacite/lib" />
-          <root url="file://$MODULE_DIR$/../stash_engines/stash_datacite/tmp" />
-          <root url="file://$MODULE_DIR$/../stash_engines/stash_datacite/config" />
-          <root url="file://$MODULE_DIR$/../stash_engines/stash_datacite/coverage" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES>
-          <root url="file://$MODULE_DIR$/../stash_engines/stash_datacite/db" />
-          <root url="file://$MODULE_DIR$/../stash_engines/stash_datacite/app" />
-          <root url="file://$MODULE_DIR$/../stash_engines/stash_datacite/bin" />
-          <root url="file://$MODULE_DIR$/../stash_engines/stash_datacite/lib" />
-          <root url="file://$MODULE_DIR$/../stash_engines/stash_datacite/tmp" />
-          <root url="file://$MODULE_DIR$/../stash_engines/stash_datacite/config" />
-          <root url="file://$MODULE_DIR$/../stash_engines/stash_datacite/coverage" />
-        </SOURCES>
-      </library>
-    </orderEntry>
     <orderEntry type="library" scope="PROVIDED" name="actionmailer (v4.2.7.1, ruby-2.2.5-p319) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="actionpack (v4.2.7.1, ruby-2.2.5-p319) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="actionview (v4.2.7.1, ruby-2.2.5-p319) [gem]" level="application" />
@@ -42,7 +19,7 @@
     <orderEntry type="library" scope="PROVIDED" name="arel (v6.0.4, ruby-2.2.5-p319) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="ast (v2.3.0, ruby-2.2.5-p319) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="builder (v3.2.3, ruby-2.2.5-p319) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="bundler (v1.14.3, ruby-2.2.5-p319) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="bundler (v1.14.5, ruby-2.2.5-p319) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="carrierwave (v0.10.0, ruby-2.2.5-p319) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="colorize (v0.8.1, ruby-2.2.5-p319) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="concurrent-ruby (v1.0.4, ruby-2.2.5-p319) [gem]" level="application" />
@@ -123,7 +100,7 @@
     <orderEntry type="library" scope="PROVIDED" name="simplecov-html (v0.9.0, ruby-2.2.5-p319) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="sprockets (v3.7.1, ruby-2.2.5-p319) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="sprockets-rails (v3.2.0, ruby-2.2.5-p319) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="stash-sword (v0.1.5, ruby-2.2.5-p319) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="stash-sword (v0.1.6, ruby-2.2.5-p319) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="stash-wrapper (v0.1.11.1, ruby-2.2.5-p319) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="stash_ezid_datacite (v0.1.5, ruby-2.2.5-p319) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="thor (v0.19.4, ruby-2.2.5-p319) [gem]" level="application" />

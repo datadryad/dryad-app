@@ -9,6 +9,7 @@ require 'stash/merritt/submission_package/merritt_datacite_builder'
 require 'stash/merritt/submission_package/merritt_delete_builder'
 require 'stash/merritt/submission_package/merritt_oaidc_builder'
 require 'stash/merritt/submission_package/stash_wrapper_builder'
+require 'stash/merritt/submission_package/merritt_embargo_builder'
 
 module Stash
   module Merritt
@@ -67,13 +68,14 @@ module Stash
         zipfile.add(upload.upload_file_name, path)
       end
 
-      def builders
+      def builders # rubocop:disable Metrics/AbcSize
         @builders ||= [
-          StashWrapperBuilder.new(dcs_resource: dc4_resource, version_number: version_number, uploads: uploads),
+          StashWrapperBuilder.new(dcs_resource: dc4_resource, version_number: version_number, uploads: uploads, embargo_end_date: embargo_end_date),
           MerrittDataciteBuilder.new(datacite_xml_factory),
           MerrittOAIDCBuilder.new(resource_id: resource_id),
           DataONEManifestBuilder.new(uploads),
-          MerrittDeleteBuilder.new(resource_id: resource_id)
+          MerrittDeleteBuilder.new(resource_id: resource_id),
+          MerrittEmbargoBuilder.new(embargo_end_date: embargo_end_date)
         ]
       end
 
@@ -87,6 +89,10 @@ module Stash
 
       def uploads
         resource.current_file_uploads
+      end
+
+      def embargo_end_date
+        @embargo_end_date ||= (embargo = resource.embargo) && embargo.end_date
       end
 
       def new_uploads
