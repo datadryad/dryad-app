@@ -41,7 +41,10 @@ module Stash
         outfile = File.join(target_dir, file_name)
         FileUtils.mkdir_p(File.dirname(outfile))
         mode = binary? ? 'wb' : 'w'
-        File.open(outfile, mode) { |f| f.write(file_contents) }
+        File.open(outfile, mode) do |f|
+          f.write(file_contents)
+          f.write("\n") unless (binary? || file_contents.end_with?("\n"))
+        end
         outfile
       end
     end
