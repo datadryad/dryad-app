@@ -4,8 +4,8 @@ module StashEngine
   class UserMailer < ApplicationMailer
     # TODO: DRY these methods
 
-    # add the formatted_date helper for view
-    helper :formatted_date
+    # add the formatted_date helper for view BAH -- doesn't seem to work
+    # helper :formatted_date
 
     default from: "Dash Notifications <#{APP_CONFIG['feedback_email_from']}>",
       return_path: (APP_CONFIG['feedback_email_from']).to_s
