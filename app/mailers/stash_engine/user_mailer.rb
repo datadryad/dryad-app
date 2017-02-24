@@ -4,6 +4,9 @@ module StashEngine
   class UserMailer < ApplicationMailer
     # TODO: DRY these methods
 
+    # add the formatted_date helper for view
+    helper :formatted_date
+
     default from: "Dash Notifications <#{APP_CONFIG['feedback_email_from']}>",
       return_path: (APP_CONFIG['feedback_email_from']).to_s
 
@@ -32,6 +35,9 @@ module StashEngine
       @title = resource.primary_title
       @identifier_uri = resource.identifier_uri
       @identifier_value = resource.identifier_value
+
+      @embargo_date = nil
+      @embargo_date = resource.embargo.end_date if resource.embargo
 
       tenant = user.tenant
       @host = tenant.full_domain
