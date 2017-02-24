@@ -15,6 +15,7 @@ module StashEngine
             foreign_key: 'id'
 
     amoeba do
+      include_association :embargo
       include_association :file_uploads
       customize(lambda do |_, new_resource|
         new_resource.file_uploads.each do |file|
