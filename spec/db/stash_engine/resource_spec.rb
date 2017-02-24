@@ -15,86 +15,6 @@ module StashEngine
       )
     end
 
-    describe 'file uploads' do
-      describe 'uploads directory' do
-        before(:each) do
-          allow(Rails).to receive(:root).and_return('/apps/stash/stash_engine')
-        end
-        describe '#uploads_dir' do
-          it 'returns the uploads directory' do
-            expect(Resource.uploads_dir).to eq('/apps/stash/stash_engine/uploads')
-          end
-        end
-        describe '#upload_dir_for' do
-          it 'returns a separate directory by resource ID' do
-            expect(Resource.upload_dir_for(17)).to eq('/apps/stash/stash_engine/uploads/17')
-          end
-        end
-        describe '#upload_dir' do
-          it 'returns the upload directory for this resource' do
-            resource = Resource.create
-            expect(resource.upload_dir).to eq("/apps/stash/stash_engine/uploads/#{resource.id}")
-          end
-        end
-      end
-
-      describe '#current_file_uploads' do
-        attr_reader :res1
-        attr_reader :created_files
-        attr_reader :copied_files
-        attr_reader :deleted_files
-        before(:each) do
-          @res1 = Resource.create(user_id: user.id)
-
-          @created_files = Array.new(3) { |i| FileUpload.create(resource: res1, file_state: 'created', upload_file_name: "created#{i}.bin") }
-          @copied_files = Array.new(3) { |i| FileUpload.create(resource: res1, file_state: 'copied', upload_file_name: "copied#{i}.bin") }
-          @deleted_files = Array.new(3) { |i| FileUpload.create(resource: res1, file_state: 'deleted', upload_file_name: "deleted#{i}.bin") }
-        end
-
-        it 'defaults to empty' do
-          res2 = Resource.create(user_id: user.id)
-          expect(res2.current_file_uploads).to be_empty
-        end
-
-        it 'includes created and copied' do
-          current = res1.current_file_uploads
-          created_files.each { |f| expect(current).to include(f) }
-          copied_files.each { |f| expect(current).to include(f) }
-          deleted_files.each { |f| expect(current).not_to include(f) }
-        end
-
-        describe 'amoeba duplication' do
-          attr_reader :res2
-          before(:each) do
-            @res2 = res1.amoeba_dup
-          end
-
-          it 'copies the records' do
-            expected_names = res1.file_uploads.map(&:upload_file_name)
-            actual_names = res2.file_uploads.map(&:upload_file_name)
-            expect(actual_names).to contain_exactly(*expected_names)
-          end
-
-          it 'copies all current records' do
-            old_current_names = res1.current_file_uploads.map(&:upload_file_name)
-            new_current_names = res2.current_file_uploads.map(&:upload_file_name)
-            expect(new_current_names).to contain_exactly(*old_current_names)
-          end
-
-          it 'sets all current records to "copied"' do
-            res2.current_file_uploads.each { |f| expect(f.file_state).to eq('copied') }
-          end
-
-          it 'copies all deleted recoreds' do
-            old_deleted_names = deleted_files.map(&:upload_file_name)
-            new_deleted_names = res2.file_uploads.deleted.map(&:upload_file_name)
-            expect(new_deleted_names).to contain_exactly(*old_deleted_names)
-          end
-
-        end
-      end
-    end
-
     describe 'resource state' do
       attr_reader :resource
       attr_reader :state
@@ -198,67 +118,129 @@ module StashEngine
       end
     end
 
-    describe '#file_uploads' do
-      attr_reader :temp_file_paths
-      attr_reader :uploads
-      attr_reader :resource
-
-      before(:each) do
-        @resource = Resource.create
-        @temp_file_paths = Array.new(3) do |i|
-          tempfile = Tempfile.new(["foo-#{i}", 'bin'])
-          File.write(tempfile.path, '')
-          tempfile.path
+    describe 'file uploads' do
+      describe 'uploads directory' do
+        before(:each) do
+          allow(Rails).to receive(:root).and_return('/apps/stash/stash_engine')
         end
-        @uploads = temp_file_paths.map do |path|
-          FileUpload.create(
-            resource_id: resource.id,
-            upload_file_name: File.basename(path),
-            temp_file_path: path,
-            file_state: :created
-          )
+        describe '#uploads_dir' do
+          it 'returns the uploads directory' do
+            expect(Resource.uploads_dir).to eq('/apps/stash/stash_engine/uploads')
+          end
+        end
+        describe '#upload_dir_for' do
+          it 'returns a separate directory by resource ID' do
+            expect(Resource.upload_dir_for(17)).to eq('/apps/stash/stash_engine/uploads/17')
+          end
+        end
+        describe '#upload_dir' do
+          it 'returns the upload directory for this resource' do
+            resource = Resource.create
+            expect(resource.upload_dir).to eq("/apps/stash/stash_engine/uploads/#{resource.id}")
+          end
         end
       end
 
       describe '#current_file_uploads' do
-        it 'finds all non-deleted files' do
-          (0...3).each do |i|
+        attr_reader :res1
+        attr_reader :created_files
+        attr_reader :copied_files
+        attr_reader :deleted_files
+        before(:each) do
+          @res1 = Resource.create(user_id: user.id)
+
+          @created_files = Array.new(3) { |i| FileUpload.create(resource: res1, file_state: 'created', upload_file_name: "created#{i}.bin") }
+          @copied_files = Array.new(3) { |i| FileUpload.create(resource: res1, file_state: 'copied', upload_file_name: "copied#{i}.bin") }
+          @deleted_files = Array.new(3) { |i| FileUpload.create(resource: res1, file_state: 'deleted', upload_file_name: "deleted#{i}.bin") }
+        end
+
+        it 'defaults to empty' do
+          res2 = Resource.create(user_id: user.id)
+          expect(res2.current_file_uploads).to be_empty
+        end
+
+        it 'includes created and copied' do
+          current = res1.current_file_uploads
+          created_files.each { |f| expect(current).to include(f) }
+          copied_files.each { |f| expect(current).to include(f) }
+          deleted_files.each { |f| expect(current).not_to include(f) }
+        end
+
+        describe 'amoeba duplication' do
+          attr_reader :res2
+          before(:each) do
+            @res2 = res1.amoeba_dup
+          end
+
+          it 'copies the records' do
+            expected_names = res1.file_uploads.map(&:upload_file_name)
+            actual_names = res2.file_uploads.map(&:upload_file_name)
+            expect(actual_names).to contain_exactly(*expected_names)
+          end
+
+          it 'copies all current records' do
+            old_current_names = res1.current_file_uploads.map(&:upload_file_name)
+            new_current_names = res2.current_file_uploads.map(&:upload_file_name)
+            expect(new_current_names).to contain_exactly(*old_current_names)
+          end
+
+          it 'sets all current records to "copied"' do
+            res2.current_file_uploads.each { |f| expect(f.file_state).to eq('copied') }
+          end
+
+          it 'copies all deleted recoreds' do
+            old_deleted_names = deleted_files.map(&:upload_file_name)
+            new_deleted_names = res2.file_uploads.deleted.map(&:upload_file_name)
+            expect(new_deleted_names).to contain_exactly(*old_deleted_names)
+          end
+        end
+      end
+
+      describe '#file_uploads' do
+        attr_reader :temp_file_paths
+        attr_reader :uploads
+        attr_reader :resource
+
+        before(:each) do
+          @resource = Resource.create
+          @temp_file_paths = Array.new(3) do |i|
+            tempfile = Tempfile.new(["foo-#{i}", 'bin'])
+            File.write(tempfile.path, '')
+            tempfile.path
+          end
+          @uploads = temp_file_paths.map do |path|
             FileUpload.create(
               resource_id: resource.id,
-              upload_file_name: "missing-file-#{i}.bin",
-              temp_file_path: "/missing-file-#{i}.bin",
-              file_state: :deleted
+              upload_file_name: File.basename(path),
+              temp_file_path: path,
+              file_state: :created
             )
           end
-          expect(FileUpload.where(resource_id: resource.id).count).to eq(6) # just to be sure
-          current = resource.current_file_uploads
-          expect(current.count).to eq(uploads.size)
-          current.each { |upload| expect(uploads).to include(upload) }
         end
-      end
 
-      describe '#latest_file_states' do
-        it 'finds the latest version of each file' do
-          new_latest = uploads.each_with_index.map do |upload, i|
-            FileUpload.create(
-              resource_id: upload.resource_id,
-              upload_file_name: upload.upload_file_name,
-              temp_file_path: Tempfile.new(["foo-#{i}", 'bin']),
-              file_state: :copied
-            )
+        describe '#latest_file_states' do
+          it 'finds the latest version of each file' do
+            new_latest = uploads.each_with_index.map do |upload, i|
+              FileUpload.create(
+                resource_id: upload.resource_id,
+                upload_file_name: upload.upload_file_name,
+                temp_file_path: Tempfile.new(["foo-#{i}", 'bin']),
+                file_state: :copied
+              )
+            end
+            latest = resource.latest_file_states
+            expect(latest.count).to eq(new_latest.size)
+            latest.each { |upload| expect(new_latest).to include(upload) }
           end
-          latest = resource.latest_file_states
-          expect(latest.count).to eq(new_latest.size)
-          latest.each { |upload| expect(new_latest).to include(upload) }
         end
-      end
 
-      describe '#clean_uploads' do
-        it 'removes all upload records without files' do
-          (0...3).each { |i| FileUpload.create(resource_id: resource.id, temp_file_path: "/missing-file-#{i}.bin", file_state: :created) }
-          expect(FileUpload.where(resource_id: resource.id).count).to eq(6) # just to be sure
-          resource.clean_uploads
-          expect(FileUpload.where(resource_id: resource.id).count).to eq(3)
+        describe '#clean_uploads' do
+          it 'removes all upload records without files' do
+            (0...3).each { |i| FileUpload.create(resource_id: resource.id, temp_file_path: "/missing-file-#{i}.bin", file_state: :created) }
+            expect(FileUpload.where(resource_id: resource.id).count).to eq(6) # just to be sure
+            resource.clean_uploads
+            expect(FileUpload.where(resource_id: resource.id).count).to eq(3)
+          end
         end
       end
     end
@@ -331,6 +313,7 @@ module StashEngine
       before(:each) do
         @resource = Resource.create(user_id: user.id)
       end
+
       describe '#ensure_identifier' do
         it 'defaults to nil' do
           expect(resource.identifier).to be_nil
@@ -382,6 +365,15 @@ module StashEngine
           doi_value = '10.123/456'
           resource.ensure_identifier(doi_value)
           expect(resource.identifier_str).to eq("doi:#{doi_value}")
+        end
+      end
+
+      describe 'amoeba duplication' do
+        it 'preserves the identifier' do
+          doi_value = '10.12345/679810'
+          resource.ensure_identifier(doi_value)
+          res2 = resource.amoeba_dup
+          expect(res2.identifier_str).to eq("doi:#{doi_value}")
         end
       end
     end
@@ -459,6 +451,17 @@ module StashEngine
           it 'increments downloads' do
             resource.increment_downloads
             expect(usage.downloads).to eq(1)
+          end
+        end
+        describe '#amoeba_duplication' do
+          it 'preserves views and downloads' do
+            resource.increment_views
+            resource.increment_downloads
+            res2 = resource.amoeba_dup
+            usage2 = res2.resource_usage
+            expect(usage2).not_to(be_nil)
+            expect(usage2.views).to eq(1)
+            expect(usage2.downloads).to eq(1)
           end
         end
       end
