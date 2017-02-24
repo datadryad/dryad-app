@@ -193,7 +193,6 @@ module StashEngine
             new_deleted_names = res2.file_uploads.deleted.map(&:upload_file_name)
             expect(new_deleted_names).to contain_exactly(*old_deleted_names)
           end
-
         end
       end
 
@@ -314,6 +313,7 @@ module StashEngine
       before(:each) do
         @resource = Resource.create(user_id: user.id)
       end
+
       describe '#ensure_identifier' do
         it 'defaults to nil' do
           expect(resource.identifier).to be_nil
@@ -365,6 +365,15 @@ module StashEngine
           doi_value = '10.123/456'
           resource.ensure_identifier(doi_value)
           expect(resource.identifier_str).to eq("doi:#{doi_value}")
+        end
+      end
+
+      describe 'amoeba duplication' do
+        it 'preserves the identifier' do
+          doi_value = '10.12345/679810'
+          resource.ensure_identifier(doi_value)
+          res2 = resource.amoeba_dup
+          expect(res2.identifier_str).to eq("doi:#{doi_value}")
         end
       end
     end
@@ -442,6 +451,14 @@ module StashEngine
           it 'increments downloads' do
             resource.increment_downloads
             expect(usage.downloads).to eq(1)
+          end
+        end
+        describe '#amoeba_duplication' do
+          it 'doesn\'t duplicate usage' do
+            resource.increment_views
+            resource.increment_downloads
+            res2 = resource.amoeba_dup
+            expect(res2.resource_usage).to(be_nil)
           end
         end
       end
