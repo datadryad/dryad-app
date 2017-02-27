@@ -4,8 +4,6 @@ module StashEngine
   class EmbargoesController < ApplicationController
     before_action :set_embargo, only: [:edit, :update, :delete]
 
-    resspond_to :json
-
     # GET /embargos/new
     def new
       @embargo = Embargo.new(resource_id: params[:resource_id])
@@ -49,12 +47,12 @@ module StashEngine
     private
       # Use callbacks to share common setup or constraints between actions.
       def set_embargo
-        @embargo = Embargo.find(params[:id])
+        @embargo = Embargo.find(embargo_params[:id])
       end
 
       # Only allow a trusted parameter "white list" through.
       def embargo_params
-        params[:embargo]
+        params.require(:embargo).permit(:id, :end_date, :resource_id)
       end
   end
 end

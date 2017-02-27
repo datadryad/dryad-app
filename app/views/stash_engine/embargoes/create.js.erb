@@ -1,0 +1,14 @@
+// this changes the parts of the form that need to be changed so it converts it to a patch action (POST)
+<% form_id = unique_form_id(@embargo) %>
+var form = $('#<%= params[:form_id] %>');
+form.attr('id', '<%= form_id %>');
+form.attr('action', '<%= embargoes_update_path %>');
+form.find('#datepicker').attr('value'), '<%= @embargo.end_date.strftime("%Y-%m-%d")%>'
+form.find("#embargo_id").attr('value', '<%= @embargo.id %>');
+form.find("#form_id").attr('value', '<%= form_id %>');
+
+$('<input>').attr({
+  type: 'hidden',
+  name: '_method',
+  value: 'patch'
+}).appendTo(form);
