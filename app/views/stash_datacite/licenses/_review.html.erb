@@ -1,5 +1,3 @@
-<h2 class="o-heading__page-span"> License</h2>
-
 <% if @resource.rights.blank? %>
   <%= render partial: 'stash_datacite/licenses/license_review', locals:
       {license: StashEngine::License.by_id(current_tenant.default_license), right: nil } %>

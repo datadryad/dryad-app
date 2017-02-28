@@ -54,6 +54,8 @@
                   class: 'c-review-files-button o-button__icon-left', role: 'button' %>
     </div>
 
+    <h2 class="o-heading__page-span">Choose Publication Date & License</h2>
+    <%= render partial: "stash_datacite/embargoes/review", locals: { embargo: @review.embargo } %>
     <%= render partial: "stash_datacite/licenses/review" %>
 
 <div class="o-dataset-nav">

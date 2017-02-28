@@ -79,6 +79,14 @@ module StashDatacite
         geolocation_points.empty? && geolocation_places.empty? && geolocation_boxes.empty? ? true : false
       end
 
+      def embargo
+        if @resource.embargo.present?
+          @embargo = @resource.embargo
+        else
+          @embargo = StashEngine::Embargo.new
+        end
+      end
+
       def pdf_filename
         # “surname_date_first_five_title_words.pdf” or “surname_et_al_date_first_five_title_words.pdf”,
         # where “surname” is the surname of the first author, “date” is the publication year, and
