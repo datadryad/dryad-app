@@ -3,7 +3,6 @@ require 'stash/repo'
 module StashEngine
   def self.repository
     @repository ||= begin
-      debugger
       repository_class_name = APP_CONFIG.repository
       Rails::logger.debug("StashEngine.app.repository = #{repository_class_name}")
 

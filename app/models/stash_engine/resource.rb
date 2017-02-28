@@ -15,6 +15,7 @@ module StashEngine
             foreign_key: 'id'
 
     amoeba do
+      include_association :embargo
       include_association :file_uploads
       customize(lambda do |_, new_resource|
         new_resource.file_uploads.each do |file|
@@ -240,6 +241,13 @@ module StashEngine
     def increment_views
       ensure_resource_usage
       resource_usage.increment(:views).save
+    end
+
+    # -----------------------------------------------------------
+    # Embargoes
+    def under_embargo?
+      return false if embargo.nil? || embargo.end_date.nil?
+      Time.new < embargo.end_date
     end
 
     private
