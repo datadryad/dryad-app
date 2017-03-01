@@ -287,10 +287,10 @@ ActiveRecord::Schema.define(version: 20170223180412) do
   add_index "searches", ["user_id"], name: "index_searches_on_user_id", using: :btree
 
   create_table "stash_engine_embargoes", force: :cascade do |t|
-    t.string   "end_date",    limit: 255
+    t.datetime "end_date"
     t.integer  "resource_id", limit: 4
-    t.datetime "created_at",              null: false
-    t.datetime "updated_at",              null: false
+    t.datetime "created_at",            null: false
+    t.datetime "updated_at",            null: false
   end
 
   create_table "stash_engine_file_uploads", force: :cascade do |t|
