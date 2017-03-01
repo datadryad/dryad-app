@@ -22,6 +22,12 @@
       </details>
     <% end %>
   </div>
+<% else %>
+  <div class="c-sidebox">
+    <h3 class="c-sidebox__heading">Data Files</h3>
+    <p>This dataset will be released on <%= formatted_date(@resource.embargo.end_date) %>.</p>
+    <p>Lists of files and downloads will become available on the release date.</p>
+  </div>
 <% end %>
 
 <div class="c-sidebox">
