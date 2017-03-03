@@ -2,8 +2,13 @@
 <% form_id = unique_form_id(@embargo) %>
 var form = $('#<%= params[:form_id] %>');
 form.attr('id', '<%= form_id %>');
-form.attr('action', '<%= embargoes_update_path %>');
-form.find('#datepicker').attr('value'), '<%= @embargo.end_date.strftime("%Y-%m-%d")%>'
+form.attr('action', '<%= stash_engine.embargoes_update_path %>');
+<% if @embargo.end_date == @embargo.created_at %>
+  form.find('#date_options').attr('value'), "today"
+<% else %>
+  form.find('#date_options').attr('value'), "on a specific date"
+<% end %>
+form.find('#datepicker').attr('value'), '<%= @embargo.end_date.strftime("%B %d %Y") %>'
 form.find("#embargo_id").attr('value', '<%= @embargo.id %>');
 form.find("#form_id").attr('value', '<%= form_id %>');
 
@@ -12,3 +17,4 @@ $('<input>').attr({
   name: '_method',
   value: 'patch'
 }).appendTo(form);
+loadEmbargoes();

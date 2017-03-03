@@ -3,45 +3,25 @@
 <%= form_for(embargo, url: path, remote: true, authenticity_token: true, html: {
   class: 't-describe__select1 c-input', id: form_id }) do |f| %>
   <p><%= label_tag 'publish', 'Publish this dataset', class: 'c-input__label' %>
-    <%= select_tag 'options', options_for_select([ "on a specific date", "today" ]), { id: 'date_options'} %>&nbsp;&nbsp;
 
-    <%= f.label :end_date, "Release Date:", { class: 'c-input__label release_date'} %>
-    <%= f.text_field :end_date, { id: "datepicker", class: 'release_date'} %>
-    <%= f.hidden_field :resource_id, value: resource_id %>
-    <%= f.hidden_field :id %>
-    <%= hidden_field_tag(:form_id, form_id) %>
+  <% if embargo.new_record? %>
+    <%= select_tag 'options', options_for_select([ 'today', 'on a specific date' ], 'today'), { id: 'date_options'} %>&nbsp;&nbsp;
+  <% elsif embargo.persisted? && embargo.end_date.to_date == embargo.updated_at.to_date %>
+    <%= select_tag 'options', options_for_select([ 'today', 'on a specific date' ], 'today'), { id: 'date_options'} %>&nbsp;&nbsp;
+  <% else %>
+    <%= select_tag 'options', options_for_select([ 'today', 'on a specific date' ], 'on a specific date'), { id: 'date_options'} %>&nbsp;&nbsp;
+    <%= f.label :end_date, 'Release Date:', { class: 'c-input__label release_date' } %>
+    <%= f.text_field :end_date, value: embargo.end_date.strftime("%B %d %Y"), class: 'release_date'  %>
+  <% end %>
+
+  <%= f.label :end_date, 'Release Date:', { class: 'c-input__label release_date', style: 'display:none;' } %>
+  <%= f.text_field :end_date, { id: "datepicker", class: 'release_date', style: 'display:none;' } %>
+  <%= f.hidden_field :resource_id, value: resource_id %>
+  <%= f.hidden_field :id %>
+  <%= hidden_field_tag(:form_id, form_id) %>
   </p>
 <% end %>
 
-<script>
-$( function() {
-  $( '#datepicker' ).datepicker({
-    changeMonth: true,
-    changeYear: true,
-    minDate: 0,
-    dateFormat: 'dd-mm-yy',
-    onClose: function(strDate, datepicker) {
-      // According to the docs this situation occurs when
-      // the dialog closes without the user making a selection
-      if(strDate == "") {
-        return;
-      }
-      // updated value at this point.
-      $(this).parent().trigger('submit.rails');
-    }
-  });
-
-  $( '#date_options' ).on('change', function () {
-      new_value = this.value;
-      // Show the release date label and datepicker
-      if(new_value == "today") {
-        $('.release_date').hide();
-        $('#datepicker').datepicker('setDate', new Date()).parent().trigger('submit.rails');
-        $('.release_date').val('');
-      }
-      else {
-        $('.release_date').show();
-      }
-    });
-} );
+<script type="text/javascript">
+loadEmbargoes();
 </script>
