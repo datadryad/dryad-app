@@ -59,7 +59,7 @@ module StashDatacite
       resource_type_general = resource_type.try(:resource_type_general_friendly)
       ["#{creator_citation_format(creators)} (#{publication_year})", title,
        (version == 'v1' ? nil : version), publisher, resource_type_general,
-       "https://dx.doi.org/#{identifier}"].reject(&:blank?).join(', ')
+       "https://doi.org/#{identifier}"].reject(&:blank?).join(', ')
     end
 
     def creator_citation_format(creators)
