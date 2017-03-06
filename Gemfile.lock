@@ -1,3 +1,14 @@
+GIT
+  remote: https://github.com/CDLUC3/stash-merritt
+  revision: fe633a01907f934c97029f37a93d1bac1f44121d
+  branch: embargo
+  specs:
+    stash-merritt (0.2.0)
+      rubyzip (~> 1.1)
+      stash_datacite
+      stash_engine
+      stash_ezid_datacite (~> 0.1)
+
 PATH
   remote: ../stash_engines
   specs:
@@ -161,7 +172,7 @@ GEM
       actionmailer (>= 4.0, < 6)
       activesupport (>= 4.0, < 6)
     execjs (2.7.0)
-    ezid-client (1.5.0)
+    ezid-client (1.6.0)
       hashie (~> 3.4, >= 3.4.3)
     faraday (0.10.1)
       multipart-post (>= 1.2, < 3)
@@ -181,7 +192,7 @@ GEM
     geoblacklight-icons (1.0.0)
     globalid (0.3.7)
       activesupport (>= 4.1.0)
-    hashie (3.5.3)
+    hashie (3.5.5)
     hirb (0.7.3)
     http-cookie (1.0.3)
       domain_name (~> 0.5)
@@ -368,9 +379,6 @@ GEM
     sshkit (1.11.4)
       net-scp (>= 1.1.2)
       net-ssh (>= 2.8.0)
-    stash-merritt (0.1.1)
-      rubyzip (~> 1.1)
-      stash_ezid_datacite (~> 0.1)
     stash-sword (0.1.6)
       rest-client (~> 2.0, = 2.0.0)
       typesafe_enum (~> 0.1, >= 0.1.7)
@@ -442,7 +450,7 @@ DEPENDENCIES
   simplecov
   simplecov-console
   spring
-  stash-merritt (~> 0.1.1)
+  stash-merritt!
   stash_datacite!
   stash_discovery!
   stash_engine!
@@ -456,4 +464,4 @@ RUBY VERSION
    ruby 2.2.5p319
 
 BUNDLED WITH
-   1.14.4
+   1.14.5
