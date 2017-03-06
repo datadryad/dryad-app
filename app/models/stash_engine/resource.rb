@@ -52,6 +52,8 @@ module StashEngine
       init_state unless current_resource_state_id
       save
     end
+    # TODO: we may want to disable this if/when we don't need it since it really kills performance for finding a long
+    # list of resources.  For example in the rails console, resource.all does another query for each item in the list
     after_find :ensure_state_and_version
 
     # ------------------------------------------------------------
