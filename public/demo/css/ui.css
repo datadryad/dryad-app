@@ -3977,6 +3977,7 @@ html.svg .c-facet__check-label {
 
 .c-keywords__input {
   height: 20px;
+  width: 500px;
   margin: 0 0 5px;
   padding: 0;
   border: none;
