@@ -1,7 +1,7 @@
 defaults: &DEFAULTS
   metadata_engine: StashDatacite
   shared_resource_model: StashEngine::Resource
-  repository: Stash::Merritt::Repository
+  repository: Stash::MockRepository
   stash_mount: /stash
 
 development: &DEVELOPMENT
