@@ -4,7 +4,7 @@ module StashEngine
   class ResourcesController < ApplicationController
     before_action :require_login, except: [:increment_downloads, :data_paper, :stream_download]
 
-    before_action :set_resource, only: [:show, :edit, :update, :destroy, :review, :upload, :increment_downloads]
+    before_action :set_resource, only: [:show, :edit, :update, :destroy, :review, :upload, :increment_downloads, :stream_download]
 
     before_action :require_resource_owner, except: [:index, :new, :increment_downloads, :data_paper, :stream_download]
 
@@ -79,23 +79,17 @@ module StashEngine
 
     # allows streaming of file through the dash UI without exposing Merritt URL
     # this is just for testing right now.
-    #
-    # TODO: It looks like merritt is redirecting me to the guest login when I try to stream.
-    # Code 302 found, http://merritt-dev.cdlib.org/guest_login
-    #
-    # try sending the tenant repository username/password as as a basic-auth header.
-    # that should get you the cookie and another redirect.
-    # ideally your client library would then send the cookie when it follows the redirect,
-    # but I know we had problems with that in stash-sword (didn't work till we upgraded to RestClient 2.0)
-    # so you might need to do that by hand if you're not using RestClient.
     def stream_download
       #stream_response('http://www.cdlib.org/images/staff/sdeng.jpg', current_tenant.repository.username,
       #       current_tenant.repository.password)
       #stream_response('http://merritt-dev.cdlib.org/d/ark%3A%2Fb5072%2Ffk2pv6hw34', current_tenant.repository.username,
       #                current_tenant.repository.password) # testing resource_id 747 on dev
 
-      stream_response('http://merritt-dev.cdlib.org/u/ark%3A%2Fb5072%2Ffk2pv6hw34', current_tenant.repository.username,
-                      current_tenant.repository.password) # testing resource_id 747 on dev
+      # this gets the main download since the producer-only download is currently broken, it seems
+      stream_response(@resource.download_uri, current_tenant.repository.username, current_tenant.repository.password)
+
+      #stream_response('http://merritt-dev.cdlib.org/u/ark%3A%2Fb5072%2Ffk2pv6hw34', current_tenant.repository.username,
+      #                current_tenant.repository.password) # testing resource_id 747 on dev
 
 
     end
