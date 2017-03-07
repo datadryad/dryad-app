@@ -20,10 +20,24 @@ module StashEngine
     def stream_response(url)
       # get original header info from http headers
       clnt = HTTPClient.new
-      headers = clnt.head(url)
+      File.open(File.join(Rails.root, 'tmp', 'cookie.dat'), "w") {} unless File.exists?(File.join(Rails.root, 'tmp', 'cookie.dat'))
+
+      # probably don't need to set the cookie store.
+      #clnt.set_cookie_store(File.join(Rails.root, 'tmp', 'cookie.dat'))
+
+      # auth = Base64.strict_encode64("ucop_dash_submitter:a3jg5yAz")
+      # clnt.follow_redirect_count = 4
+
+      clnt.set_auth(url, 'ucop_dash_submitter', 'a3jg5yAz')
+      # headers = clnt.head(url, {follow_redirect: true}, {'Authorization' => auth})
+      headers = clnt.head(url, follow_redirect: true)
+      puts headers.http_header['Status']
+      puts headers.http_header['Location']
+      byebug
       content_type, content_length = '', '0'
       content_type = headers.http_header['Content-Type'].first if headers.http_header['Content-Type'].try(:first)
       content_length = headers.http_header['Content-Length'].first if headers.http_header['Content-Length'].try(:first)
+
       filename = File.basename(URI.parse(url).path)
 
       response.headers["Content-Type"] = content_type
