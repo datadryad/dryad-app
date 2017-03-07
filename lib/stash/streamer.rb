@@ -1,17 +1,16 @@
 module Stash
   class Streamer
-    def initialize(url)
+    def initialize(http_client, url)
+      @http_client = http_client
+      @http_client.receive_timeout = 7200
+      @http_client.send_timeout = 3600
+      @http_client.connect_timeout = 7200
+      @http_client.keep_alive_timeout = 3600
       @url = url
     end
 
     def each
-      client = HTTPClient.new
-      client.receive_timeout = 7200
-      client.send_timeout = 3600
-      client.connect_timeout = 7200
-      client.keep_alive_timeout = 3600
-
-      client.get_content(@url) { |chunk|
+      @http_client.get_content(@url) { |chunk|
         yield chunk
       }
     end

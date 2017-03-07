@@ -89,11 +89,15 @@ module StashEngine
     # but I know we had problems with that in stash-sword (didn't work till we upgraded to RestClient 2.0)
     # so you might need to do that by hand if you're not using RestClient.
     def stream_download
-      #stream_response('http://www.cdlib.org/images/staff/sdeng.jpg')
-      #stream_response('http://merritt-dev.cdlib.org/d/ark%3A%2Fb5072%2Ffk2h41r89x')
-      stream_response('http://merritt-dev.cdlib.org/d/ark%3A%2Fb5072%2Ffk2pv6hw34') # testing resource_id 747 on dev
-      # ucop_dash_submitter
-      # a3jg5yAz
+      #stream_response('http://www.cdlib.org/images/staff/sdeng.jpg', current_tenant.repository.username,
+      #       current_tenant.repository.password)
+      #stream_response('http://merritt-dev.cdlib.org/d/ark%3A%2Fb5072%2Ffk2pv6hw34', current_tenant.repository.username,
+      #                current_tenant.repository.password) # testing resource_id 747 on dev
+
+      stream_response('http://merritt-dev.cdlib.org/u/ark%3A%2Fb5072%2Ffk2pv6hw34', current_tenant.repository.username,
+                      current_tenant.repository.password) # testing resource_id 747 on dev
+
+
     end
 
     # Upload files view for resource

@@ -17,34 +17,29 @@ module StashEngine
       end
     end
 
-    def stream_response(url)
+    def stream_response(url, user, pwd)
       # get original header info from http headers
       clnt = HTTPClient.new
-      File.open(File.join(Rails.root, 'tmp', 'cookie.dat'), "w") {} unless File.exists?(File.join(Rails.root, 'tmp', 'cookie.dat'))
 
-      # probably don't need to set the cookie store.
-      #clnt.set_cookie_store(File.join(Rails.root, 'tmp', 'cookie.dat'))
-
-      # auth = Base64.strict_encode64("ucop_dash_submitter:a3jg5yAz")
-      # clnt.follow_redirect_count = 4
-
-      clnt.set_auth(url, 'ucop_dash_submitter', 'a3jg5yAz')
+      # auth = Base64.strict_encode64("<user>:<pwd>")
       # headers = clnt.head(url, {follow_redirect: true}, {'Authorization' => auth})
+
+      clnt.set_auth(url, user, pwd)
+
       headers = clnt.head(url, follow_redirect: true)
-      puts headers.http_header['Status']
-      puts headers.http_header['Location']
-      byebug
-      content_type, content_length = '', '0'
-      content_type = headers.http_header['Content-Type'].first if headers.http_header['Content-Type'].try(:first)
-      content_length = headers.http_header['Content-Length'].first if headers.http_header['Content-Length'].try(:first)
+
+      content_type = headers.http_header['Content-Type'].try(:first)
+      content_length = headers.http_header['Content-Length'].try(:first)
+      content_disposition = headers.http_header['Content-Disposition'].try(:first)
 
       filename = File.basename(URI.parse(url).path)
 
-      response.headers["Content-Type"] = content_type
-      response.headers["Content-Disposition"] = "inline; filename=\"#{filename}\""
-      response.headers["Content-Length"] = content_length
+      response.headers["Content-Type"] = content_type if content_type
+      # response.headers["Content-Disposition"] = "inline; filename=\"#{filename}.zip\""
+      response.headers["Content-Disposition"] = content_disposition || "inline; filename=\"#{filename}.zip\""
+      response.headers["Content-Length"] = content_length || ''
       response.headers['Last-Modified'] = Time.now.httpdate
-      self.response_body = Stash::Streamer.new(url)
+      self.response_body = Stash::Streamer.new(clnt, url)
     end
 
   end
