@@ -52,5 +52,9 @@ StashEngine::Engine.routes.draw do
   get 'embargoes/new', to: 'embargoes#new'
   post 'embargoes/create', to: 'embargoes#create'
   patch 'embargoes/update', to: 'embargoes#update'
-  delete 'embargoes/:id/delete', to: 'embargoes#delete', as: 'creators_delete'
+  delete 'embargoes/:id/delete', to: 'embargoes#delete'
+
+  post 'shares/create', to: 'shares#create'
+  patch 'shares/update', to: 'shares#update'
+  delete 'shares/:id/delete', to: 'shares#delete'
 end

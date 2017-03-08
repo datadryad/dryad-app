@@ -29,7 +29,7 @@ module StashEngine
     def update
       respond_to do |format|
         if @embargo.update(embargo_params)
-          format.js { render template: 'stash_datacite/shared/update.js.erb' }
+          format.js
         else
           format.html { render :edit }
         end
