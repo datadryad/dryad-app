@@ -14,7 +14,7 @@ module StashEngine
         end
       else
         # redirect to the producer file download link
-        redirect_to @resource.merritt_producer_download_uri(version_number: @resource.stash_version.version)
+        redirect_to @resource.merritt_producer_download_uri
       end
     end
 
