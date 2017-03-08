@@ -32,6 +32,8 @@ StashEngine::Engine.routes.draw do
   get 'preparing_to_submit', to: 'dashboard#preparing_to_submit', as: 'preparing_to_submit'
   get 'upload_basics', to: 'dashboard#upload_basics', as: 'upload_basics'
 
+  match 'download_resource/:resource_id', to: 'downloads#download_resource', as: 'download_resource', via: [:get, :post]
+
   match 'metadata_entry_pages/find_or_create' => 'metadata_entry_pages#find_or_create', via: [:get, :post, :put]
   match 'metadata_entry_pages/new_version' => 'metadata_entry_pages#new_version', via: [:post, :get]
 
