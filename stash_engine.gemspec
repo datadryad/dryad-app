@@ -39,6 +39,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'wicked_pdf', '~> 1.1.0'
   s.add_dependency 'wkhtmltopdf-binary', '~> 0.12.3.1'
   s.add_dependency 'httpclient', '~> 2.8.3'
+  s.add_dependency 'zeroclipboard-rails'
 
   s.add_development_dependency 'byebug'
   s.add_development_dependency 'database_cleaner', '~> 1.5'
