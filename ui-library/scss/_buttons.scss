@@ -278,3 +278,9 @@
   background: $design-white-color inline('../images/icon_question-mark.svg') center / 15px no-repeat;
   text-decoration: none;
 }
+
+.o-button__clipboard-icon {
+  display: inline-block;
+  margin: 5px 5px 0 0;
+  padding: 10px 0 5px 0;
+}
