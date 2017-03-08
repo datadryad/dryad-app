@@ -87,6 +87,14 @@ module StashDatacite
         end
       end
 
+      def share
+        if @resource.share.present?
+          @share = @resource.share
+        else
+          @share = StashEngine::Share.new
+        end
+      end
+
       def pdf_filename
         # “surname_date_first_five_title_words.pdf” or “surname_et_al_date_first_five_title_words.pdf”,
         # where “surname” is the surname of the first author, “date” is the publication year, and

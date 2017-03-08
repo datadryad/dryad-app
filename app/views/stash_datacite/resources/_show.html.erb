@@ -18,7 +18,10 @@
   </section>
   <%= render partial: "stash_datacite/descriptions/show", locals: { abstract: @review.abstract,
                                                                     methods: @review.methods, other: @review.other } %>
-  <%#= render partial: "stash_datacite/subjects/show", locals: { subjects: @review.subjects } %>
+  <% if current_user && @resource.user_id == current_user.id %>
+    <%= render partial: "stash_datacite/shares/show", locals: { share: @review.share } %>
+  <% end %>
+
   <%= render partial: "stash_datacite/contributors/show", locals: { contributors: @review.contributors } %>
   <%= render partial: "stash_datacite/related_identifiers/show",
              locals: { related_identifiers: @review.related_identifiers } %>

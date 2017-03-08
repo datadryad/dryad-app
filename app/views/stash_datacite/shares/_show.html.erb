@@ -1,0 +1,7 @@
+<h3 class="o-heading__level2">Sharing Link</h3>
+
+<% if share.persisted? %>
+  <%= render partial: 'stash_engine/shares/form', locals: { share: share, resource_id: @resource.id, path: stash_engine.shares_update_path } %>
+<% else %>
+  <%= render partial: 'stash_engine/shares/create', locals: { share: share, resource_id: @resource.id }%>
+<% end %>
