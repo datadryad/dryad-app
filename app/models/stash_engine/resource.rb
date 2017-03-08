@@ -113,6 +113,18 @@ module StashEngine
     end
 
     # ------------------------------------------------------------
+    # Special merritt download URLs
+
+    # this takes the download URI we get from merritt for the whole object and manipulates it into a producer download
+    # the version number is the merritt version number, or nil for latest version
+    def merritt_producer_download_uri
+      return nil if download_uri.nil?
+      return nil unless download_uri.match(/^https*:\/\/[^\/]+\/d\/\S+$/)
+      version_number = stash_version.version
+      "#{download_uri.sub('/d/', '/u/')}/#{version_number}"
+    end
+
+    # ------------------------------------------------------------
     # Current resource state
 
     def published?
