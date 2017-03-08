@@ -35,7 +35,7 @@ Optional Fields (the more you describe your dataset, the wider the reach):
 - Usage Notes : Any technical or methodological information that may help others determine how the data may be properly reused
 - Funding Information : Name of the funding organization that supported creation of the resource, including applicable grant number(s)
 - Related Works : Use this field to indicate other resources that are associated with the data. Examples include publications, other datasets, etc.
--  Location information : Include the geo-corridinates or name of the location where your data were generated or the location that is the focus of your research
+-  Location information : Include the geo-coordinates or name of the location where your data were generated or the location that is the focus of your research
 
 ##  Upload Basics
 Here is some basic information on uploading datasets. See FAQs section below for more details.
@@ -180,7 +180,7 @@ Note: You are free to stage your dataset publications. Your data will not be exp
 
 ### Who will find my data?
 
-#### How are the datasets dscoverable?
+#### How are the datasets discoverable?
 
 All datasets will be indexed by the
 [Thomson-Reuters Data Citation Index](http://wokinfo.com/products_tools/multidisciplinary/dci/about/)
