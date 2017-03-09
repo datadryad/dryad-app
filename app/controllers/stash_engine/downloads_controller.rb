@@ -46,21 +46,18 @@ module StashEngine
       domain, local_id = resource.merritt_domain_and_local_id
       username = resource.tenant.repository.username
       password = resource.tenant.repository.password
-      basic_url = "http://#{domain}"
       url = "http://#{domain}/lostorage"
+
       clnt = HTTPClient.new
       # ran into problems like https://github.com/nahi/httpclient/issues/181 so forcing basic auth
       clnt.force_basic_auth = true
-
       clnt.set_basic_auth(nil, username, password)
+
       body = { 'object'             =>  local_id,
                'version'            =>  resource.stash_version.version,
                'user_agent_email'   =>  email,
                'uDownload'          =>  'true',
                'commit'             =>  'Submit'}
-      # do a head request first to set cookies for login
-      #headers = clnt.head(url, follow_redirect: true)
-      #byebug
 
       # from actual merritt form these are the items being submitted:
       # utf8=%E2%9C%93
