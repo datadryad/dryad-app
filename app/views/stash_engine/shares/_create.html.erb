@@ -1,3 +1,5 @@
-<p>
-  <%= link_to 'Create a link', stash_engine.shares_create_path(resource_id: resource_id), method: :post %> to share this dataset with others. They will have <%= current_user.tenant.sharing_expiration_days %> days to view the sharing link you create before it expires. You may extend the link at any time to extend the time.
-</p>
+<div class="new_sharing">
+  <p>
+    <%= link_to 'Create a link', stash_engine.shares_create_path(resource_id: resource_id), method: :post, remote: true %> to share this dataset with others. They will have <%= current_user.tenant.sharing_expiration_days %> days to view the sharing link you create before it expires. You may extend the link at any time to extend the time.
+  </p>
+</div>

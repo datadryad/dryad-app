@@ -16,7 +16,7 @@ module StashEngine
         if @share.save
           format.js
         else
-          render :new
+          format.html { render 'new' }
         end
       end
     end
@@ -29,7 +29,7 @@ module StashEngine
         if @share.save
           format.js
         else
-          render :edit
+          format.html { render 'edit' }
         end
       end
     end
