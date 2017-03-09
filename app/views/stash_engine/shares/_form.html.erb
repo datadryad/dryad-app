@@ -7,8 +7,14 @@
 <% form_id = unique_form_id(share) %>
 <%= form_for(share, url: path, remote: true, authenticity_token: true, html: { id: form_id, class: 'c-input' }) do |f| %>
     <%= f.text_field :sharing_link, id: 'sharing_link', class: 'c-input__text'%>
-    <span><button class='o-button__clipboard-icon' data-clipboard-target='sharing_link' data-clipboard-text='Default clipboard text from attribute' id='d_clip_button' title='Click me to copy to clipboard.', style="background-image: url(/stash_engine/icon_clipboard.png); width:30px; height:35px;">
-    </button></span>
+    <span>
+      <input type="image" src="<%= image_path('stash_engine/icon_clipboard') %>"
+             class='o-button__clipboard-icon' data-clipboard-target='sharing_link'
+              data-clipboard-text='Default clipboard text from attribute' id='d_clip_button'
+              title='Click me to copy to clipboard.'
+              style="width:30px; height:35px;">
+      </input>
+    </span>
   <%= f.hidden_field :expiration_date %>
   <%= f.hidden_field :resource_id %>
   <%= f.hidden_field :id %>
@@ -18,5 +24,9 @@
 <script>
   $(document).ready(function() {
     var clip = new ZeroClipboard($("#d_clip_button"))
+  });
+
+  $('#d_clip_button').click(function(event) {
+    event.preventDefault();
   });
 </script>
