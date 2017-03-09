@@ -7,7 +7,7 @@ module StashEngine
       c.helper_method :current_tenant, :current_tenant_simple, :current_user, :metadata_engine, :metadata_url_helpers,
                       :metadata_render_path, :stash_url_helpers, :discovery_url_helpers, :landing_url,  :field_suffix,
                       :logo_path, :contact_us_url, :display_br, :display_id, :display_id_plain,
-                      :formatted_date, :file_content_dump, :can_display_embargoed?
+                      :formatted_date, :can_display_embargoed?
     end
 
     def metadata_url_helpers
@@ -172,13 +172,6 @@ module StashEngine
       # Nokogiri::HTML.parse(escaped).text will give unescaped
 
       my_str.html_safe
-    end
-
-    # Dumps the content of a path from an engine's root (source code) out as a string
-    # It seems we have to do this because the PDF library needs either included code or
-    # an absolute path and  wicked_pdf_stylesheet_link_tag didn't work
-    def file_content_dump(engine_root, path)
-      File.open(File.join(engine_root, path), 'rb').read
     end
   end
 end
