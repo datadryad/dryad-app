@@ -1,7 +1,7 @@
 <p>
   You are sharing this dataset with others using this url link below.</br>
   The exipration date for the link is <%= share.expiration_date.strftime("%B %d, %Y") %>.</br>
-  You may <%= link_to 'Renew the Expiration', stash_engine.shares_update_path(share, resource_id: resource_id), method: :patch %> which will extend the expiration to <%= current_user.tenant.sharing_expiration_days %> days from now.
+  You may <%= link_to 'Renew the Expiration', stash_engine.shares_update_path(id: share.id, resource_id: resource_id), method: :patch %> which will extend the expiration to <%= current_user.tenant.sharing_expiration_days %> days from now.
 </p>
 <%# the local variable 'title' should be passed in to this partial when there are multiple per page %>
 <% form_id = unique_form_id(share) %>

@@ -2,7 +2,7 @@ require_dependency "stash_engine/application_controller"
 
 module StashEngine
   class SharesController < ApplicationController
-    before_action :set_share, only: [:edit, :update, :delete]
+    # before_action :set_share, only: [:edit, :update, :delete]
 
     # GET /shares/1/edit
     def edit
@@ -23,10 +23,10 @@ module StashEngine
 
     # PATCH/PUT /shares/1
     def update
-              byebug
+      @share = Share.where(id: params[:id], resource_id: params[:resource_id]).first
       respond_to do |format|
         @share.expiration_date = @share.expiration_date + 30.days
-        if @share.update(share_params)
+        if @share.save
           format.js
         else
           render :edit
@@ -44,9 +44,9 @@ module StashEngine
 
     private
       # Use callbacks to share common setup or constraints between actions.
-      def set_share
-        @share = Share.find(share_params[:id])
-      end
+      # def set_share
+      #   @share = Share.find(params[:id])
+      # end
 
       # Only allow a trusted parameter "white list" through.
       def share_params
