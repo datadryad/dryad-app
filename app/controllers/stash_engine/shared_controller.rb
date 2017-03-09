@@ -86,7 +86,7 @@ module StashEngine
     end
 
     def can_display_embargoed?(resource)
-      !@resource.under_embargo? || (current_user && current_user.id == resource.user_id)
+      !resource.under_embargo? || (current_user && current_user.id == resource.user_id)
     end
 
     def ajax_require_current_user
