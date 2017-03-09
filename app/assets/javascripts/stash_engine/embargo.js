@@ -3,7 +3,7 @@ function loadEmbargoes() {
     changeMonth: true,
     changeYear: true,
     minDate: 0,
-    dateFormat: 'MM-dd-yy',
+    dateFormat: 'MM dd, yy',
     onClose: function(strDate, datepicker) {
       // According to the docs this situation occurs when
       // the dialog closes without the user making a selection
