@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170307174211) do
+ActiveRecord::Schema.define(version: 20170310200506) do
 
   create_table "bookmarks", force: :cascade do |t|
     t.integer  "user_id",       limit: 4,   null: false
@@ -352,6 +352,7 @@ ActiveRecord::Schema.define(version: 20170307174211) do
 
   create_table "stash_engine_shares", force: :cascade do |t|
     t.string   "sharing_link",    limit: 255
+    t.string   "secret_id",       limit: 255
     t.datetime "expiration_date"
     t.integer  "resource_id",     limit: 4
     t.datetime "created_at",                  null: false
@@ -386,11 +387,12 @@ ActiveRecord::Schema.define(version: 20170307174211) do
   add_index "stash_engine_users", ["uid"], name: "index_stash_engine_users_on_uid", length: {"uid"=>50}, using: :btree
 
   create_table "stash_engine_versions", force: :cascade do |t|
-    t.integer  "version",      limit: 4
-    t.text     "zip_filename", limit: 65535
-    t.integer  "resource_id",  limit: 4
-    t.datetime "created_at",                 null: false
-    t.datetime "updated_at",                 null: false
+    t.integer  "version",         limit: 4
+    t.text     "zip_filename",    limit: 65535
+    t.integer  "resource_id",     limit: 4
+    t.datetime "created_at",                    null: false
+    t.datetime "updated_at",                    null: false
+    t.integer  "merritt_version", limit: 4
   end
 
   add_index "stash_engine_versions", ["resource_id"], name: "index_stash_engine_versions_on_resource_id", using: :btree
