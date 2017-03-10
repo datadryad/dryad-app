@@ -25,7 +25,7 @@ module StashEngine
     def update
       @share = Share.where(id: params[:id], resource_id: params[:resource_id]).first
       respond_to do |format|
-        @share.expiration_date = Time.new + 30.days
+        @share.expiration_date = @share.tenant.sharing_expiration_days.days.from_now
         if @share.save
           format.js
         else
