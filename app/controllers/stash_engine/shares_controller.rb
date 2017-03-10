@@ -25,7 +25,7 @@ module StashEngine
     def update
       @share = Share.where(id: params[:id], resource_id: params[:resource_id]).first
       respond_to do |format|
-        @share.expiration_date = @share.expiration_date + 30.days
+        @share.expiration_date = Time.new + 30.days
         if @share.save
           format.js
         else
@@ -50,7 +50,7 @@ module StashEngine
 
       # Only allow a trusted parameter "white list" through.
       def share_params
-        params.require(:share).permit(:id, :sharing_link, :expiration_date, :resource_id)
+        params.require(:share).permit(:id, :secret_id, :expiration_date, :resource_id)
       end
   end
 end
