@@ -37,6 +37,25 @@ module StashEngine
       post_async_form(resource: @resource, email: @email)
     end
 
+    # method to download by the secret sharing link, must match the string they generated to look up and download
+    def share
+      @shares = Share.where(secret_id: params[:id])
+      raise ActionController::RoutingError, 'Not Found' if @shares.count < 1 || @shares.first.expiration_date < Time.new
+
+      @resource = @shares.first.resource
+      async_download = false
+
+      if async_download
+        #redirect to the form for filling in their email address to get an email
+        #don't forget to be sure that action has good security, so that people can't just go
+        #to that page and bypass embargoes without a login or a token for downloading
+      else
+        stream_response(@resource.merritt_producer_download_uri,
+                        @resource.tenant.repository.username,
+                        @resource.tenant.repository.password)
+      end
+    end
+
     private
 
     # TODO: specific to Merritt and hacky

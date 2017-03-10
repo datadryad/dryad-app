@@ -34,6 +34,7 @@ StashEngine::Engine.routes.draw do
   # download related
   match 'downloads/download_resource/:resource_id', to: 'downloads#download_resource', as: 'download_resource', via: [:get, :post]
   match 'downloads/async_request/:resource_id', to: 'downloads#async_request', as: 'download_async_request', via: [:get]
+  get 'share/:id', to: 'downloads#share'
 
   match 'metadata_entry_pages/find_or_create' => 'metadata_entry_pages#find_or_create', via: [:get, :post, :put]
   match 'metadata_entry_pages/new_version' => 'metadata_entry_pages#new_version', via: [:post, :get]
