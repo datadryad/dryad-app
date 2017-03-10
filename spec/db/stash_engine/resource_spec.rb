@@ -263,6 +263,12 @@ module StashEngine
         end
       end
 
+      describe '#merritt_version' do
+        it 'defaults to 1' do
+          expect(resource.merritt_version).to eq(1)
+        end
+      end
+
       describe '#version_zipfile=' do
         it 'creates the first version' do
           zipfile = '/apps/stash/stash_engine/uploads/17-archive.zip'
@@ -300,9 +306,32 @@ module StashEngine
           end
         end
 
+        describe '#merritt_version' do
+          it 'still defaults to 1' do
+            expect(resource.merritt_version).to eq(1)
+          end
+
+          it 'is incremented for the next resource by Amoeba duplication' do
+            new_resource = resource.amoeba_dup
+            new_resource.save!
+            expect(new_resource.merritt_version).to eq(2)
+          end
+
+          it 'is incremented for the next resource' do
+            new_resource = Resource.create(identifier: resource.identifier)
+            expect(new_resource.merritt_version).to eq(2)
+          end
+        end
+
         describe '#next_version_number' do
           it 'is based on the last submitted version' do
             expect(resource.next_version_number).to eq(2)
+          end
+        end
+
+        describe '#next_merritt_version' do
+          it 'is based on the last submitted version' do
+            expect(resource.next_merritt_version).to eq(2)
           end
         end
       end
