@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170310214849) do
+ActiveRecord::Schema.define(version: 20170310223319) do
 
   create_table "bookmarks", force: :cascade do |t|
     t.integer  "user_id",       limit: 4,   null: false
@@ -357,6 +357,8 @@ ActiveRecord::Schema.define(version: 20170310214849) do
     t.datetime "created_at",                  null: false
     t.datetime "updated_at",                  null: false
   end
+
+  add_index "stash_engine_shares", ["secret_id"], name: "index_stash_engine_shares_on_secret_id", using: :btree
 
   create_table "stash_engine_submission_logs", force: :cascade do |t|
     t.integer  "resource_id",                limit: 4
