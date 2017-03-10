@@ -190,8 +190,18 @@ module StashEngine
     end
 
     def next_version_number
-      last_version = (identifier && identifier.last_submitted_version_number)
-      last_version ? last_version + 1 : 1
+      last_version_number = (identifier && identifier.last_submitted_version_number)
+      last_version_number ? last_version_number + 1 : 1
+    end
+
+    # TODO: get this out of StashEngine into Stash::Merritt
+    def merritt_version
+      stash_version && stash_version.merritt_version
+    end
+
+    def next_merritt_version
+      last_version = (identifier && identifier.last_last_submitted_version)
+      last_version ? last_version.merritt_version + 1 : 1
     end
 
     def version_zipfile=(zipfile)
@@ -201,7 +211,7 @@ module StashEngine
     end
 
     def init_version
-      self.stash_version = StashEngine::Version.create(resource_id: id, version: next_version_number, zip_filename: nil)
+      self.stash_version = StashEngine::Version.create(resource_id: id, version: next_version_number, merritt_version: next_merritt_version, zip_filename: nil)
     end
     private :init_version
 
