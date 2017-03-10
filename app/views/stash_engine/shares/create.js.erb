@@ -1,14 +1,1 @@
-// this changes the parts of the form that need to be changed so it converts it to a patch action (POST)
-<% byebug %>
-<% form_id = unique_form_id(@share) %>
-var form = $('#<%= params[:form_id] %>');
-form.attr('id', '<%= form_id %>');
-form.attr('action', '<%= stash_engine.shares_update_path %>');
-form.find("#share_id").attr('value', '<%= @share.id %>');
-form.find("#form_id").attr('value', '<%= form_id %>');
-
-$('<input>').attr({
-  type: 'hidden',
-  name: '_method',
-  value: 'patch'
-}).appendTo(form);
+$(".new_sharing").html("<%= escape_javascript(render partial: 'stash_engine/shares/form', locals: { share: @share, resource_id: @share.resource_id, path: stash_engine.shares_update_path}) %>")
