@@ -12,8 +12,8 @@ module Stash
         end
 
         def contents
-          return unless embargo_end_date
-          embargo_end_date.iso8601
+          end_date_str = (embargo_end_date && embargo_end_date.iso8601)
+          "embargoEndDate:#{end_date_str || 'none'}"
         end
       end
     end

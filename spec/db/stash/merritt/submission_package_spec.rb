@@ -137,13 +137,22 @@ module Stash
           end
         end
 
-        it 'includes an embargo file if needed' do
-          end_date = Time.new(2020, 1, 1, 0, 0, 1, '+12:45')
-          resource.embargo = StashEngine::Embargo.new(end_date: end_date)
-          package = SubmissionPackage.new(resource: resource)
-          @zipfile_path = package.zipfile
-          mrt_embargo = zip_entry('mrt-embargo.txt')
-          expect(mrt_embargo.strip).to eq(end_date.iso8601)
+        describe 'mrt-embargo.txt' do
+          it 'includes the embargo end date if present' do
+            end_date = Time.new(2020, 1, 1, 0, 0, 1, '+12:45')
+            resource.embargo = StashEngine::Embargo.new(end_date: end_date)
+            package = SubmissionPackage.new(resource: resource)
+            @zipfile_path = package.zipfile
+            mrt_embargo = zip_entry('mrt-embargo.txt')
+            expect(mrt_embargo.strip).to eq("embargoEndDate:#{end_date.iso8601}")
+          end
+
+          it 'sets end date to none if no end date present' do
+            package = SubmissionPackage.new(resource: resource)
+            @zipfile_path = package.zipfile
+            mrt_embargo = zip_entry('mrt-embargo.txt')
+            expect(mrt_embargo.strip).to eq('embargoEndDate:none')
+          end
         end
       end
 
