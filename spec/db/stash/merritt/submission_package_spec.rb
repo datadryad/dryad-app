@@ -144,7 +144,7 @@ module Stash
             package = SubmissionPackage.new(resource: resource)
             @zipfile_path = package.zipfile
             mrt_embargo = zip_entry('mrt-embargo.txt')
-            expect(mrt_embargo.strip).to eq("embargoEndDate:#{end_date.iso8601}")
+            expect(mrt_embargo.strip).to eq('embargoEndDate:2019-12-31T11:15:01Z')
           end
 
           it 'sets end date to none if no end date present' do
