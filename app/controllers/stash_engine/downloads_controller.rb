@@ -7,11 +7,10 @@ module StashEngine
 
     def download_resource
       @resource = Resource.find(params[:resource_id])
-      async_download = false
       if @resource.under_embargo?
         # if you're the owner do streaming download
         if current_user && current_user.id == @resource.user_id
-          if async_download
+          if merritt_async_download?(resource: @resource)
             # redirect somewhere for more forms
           else
             stream_response(@resource.merritt_producer_download_uri,
@@ -22,7 +21,7 @@ module StashEngine
       else
         # not under embargo and public
         # redirect to the producer file download link
-        if async_download
+        if merritt_async_download?(resource: @resource)
           # redirect somewhere to capture email and send different request
         else
           redirect_to @resource.merritt_producer_download_uri
@@ -43,9 +42,8 @@ module StashEngine
       raise ActionController::RoutingError, 'Not Found' if @shares.count < 1 || @shares.first.expiration_date < Time.new
 
       @resource = @shares.first.resource
-      async_download = false
 
-      if async_download
+      if merritt_async_download?(resource: @resource)
         #redirect to the form for filling in their email address to get an email
         #don't forget to be sure that action has good security, so that people can't just go
         #to that page and bypass embargoes without a login or a token for downloading
@@ -96,6 +94,22 @@ module StashEngine
       end
     end
 
+    def merritt_async_download?(resource:)
+      domain, local_id = resource.merritt_domain_and_local_id
+      username = resource.tenant.repository.username
+      password = resource.tenant.repository.password
+      url = "http://#{domain}/async/#{local_id}/#{resource.stash_version.version}"
+
+      res = http_client_w_basic_auth(username: username, password: password).get(url, nil, follow_redirect: true)
+      if res.status_code == 406
+        return false  #406 is synchronous
+      elsif res.status_code == 200
+        return true #200 is code for asyncronous
+      else
+        raise "unknown status code while determining if async download from Merritt"
+      end
+    end
+
     def api_async_download(resource:, email:)
       # set up all needed parameters
       domain, local_id = resource.merritt_domain_and_local_id
@@ -104,29 +118,28 @@ module StashEngine
       url = "http://#{domain}/asyncd/#{local_id}/#{resource.stash_version.version}"
       params = { user_agent_email: email, userFriendly: true}
 
-      clnt = HTTPClient.new
-      # ran into problems like https://github.com/nahi/httpclient/issues/181 so forcing basic auth
-      clnt.force_basic_auth = true
-      clnt.set_basic_auth(nil, username, password)
-      res = clnt.get(url, params, follow_redirect: true)
+      res = http_client_w_basic_auth(username: username, password: password).get(url, params, follow_redirect: true)
 
       unless res.status_code == 200
         raise "There was a problem making an async download request to Merritt"
       end
     end
 
+    # encapsulates all the settings to make basic auth with a get request work correctly for Merritt
+    def http_client_w_basic_auth(username:, password:)
+      clnt = HTTPClient.new
+      # ran into problems like https://github.com/nahi/httpclient/issues/181 so forcing basic auth
+      clnt.force_basic_auth = true
+      clnt.set_basic_auth(nil, username, password)
+      clnt
+    end
+
     # to stream the response through this UI instead of redirecting, keep login and other stuff private
     def stream_response(url, user, pwd)
       # get original header info from http headers
-      clnt = HTTPClient.new
+      clnt = http_client_w_basic_auth(username: user, password: pwd)
 
-      # auth = Base64.strict_encode64("<user>:<pwd>")
-      # headers = clnt.head(url, {follow_redirect: true}, {'Authorization' => auth})
-
-      clnt.force_basic_auth = true
-      clnt.set_auth(url, user, pwd)
-
-      headers = clnt.head(url, follow_redirect: true)
+      headers = clnt.head(url, nil, follow_redirect: true)
 
       content_type = headers.http_header['Content-Type'].try(:first)
       content_length = headers.http_header['Content-Length'].try(:first)
