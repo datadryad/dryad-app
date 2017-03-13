@@ -73,7 +73,7 @@ module StashEngine
       clnt.set_basic_auth(nil, username, password)
 
       body = { 'object'             =>  local_id,
-               'version'            =>  resource.stash_version.version,
+               'version'            =>  resource.stash_version.merritt_version,
                'user_agent_email'   =>  email,
                'uDownload'          =>  'true',
                'commit'             =>  'Submit'}
@@ -98,7 +98,7 @@ module StashEngine
       domain, local_id = resource.merritt_domain_and_local_id
       username = resource.tenant.repository.username
       password = resource.tenant.repository.password
-      url = "http://#{domain}/async/#{local_id}/#{resource.stash_version.version}"
+      url = "http://#{domain}/async/#{local_id}/#{resource.stash_version.merritt_version}"
 
       res = http_client_w_basic_auth(username: username, password: password).get(url, nil, follow_redirect: true)
       if res.status_code == 406
@@ -115,7 +115,7 @@ module StashEngine
       domain, local_id = resource.merritt_domain_and_local_id
       username = resource.tenant.repository.username
       password = resource.tenant.repository.password
-      url = "http://#{domain}/asyncd/#{local_id}/#{resource.stash_version.version}"
+      url = "http://#{domain}/asyncd/#{local_id}/#{resource.stash_version.merritt_version}"
       params = { user_agent_email: email, userFriendly: true}
 
       res = http_client_w_basic_auth(username: username, password: password).get(url, params, follow_redirect: true)

@@ -121,7 +121,7 @@ module StashEngine
     def merritt_producer_download_uri
       return nil if download_uri.nil?
       return nil unless download_uri.match(/^https*:\/\/[^\/]+\/d\/\S+$/)
-      version_number = stash_version.version
+      version_number = stash_version.merritt_version
       "#{download_uri.sub('/d/', '/u/')}/#{version_number}"
     end
 
