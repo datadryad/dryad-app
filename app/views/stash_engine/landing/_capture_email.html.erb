@@ -6,7 +6,7 @@
       <h3>The dataset you are trying to download is large and hence we need your email address to contact you with further instructions.</h3>
 
       <div>
-        <%= form_tag stash_engine.download_capture_email_path(@resource.id), method: :post do %>
+        <%= form_tag stash_engine.download_async_request_path(@resource.id), method: :post do %>
           <%= label_tag 'email', 'Email', class: 'required c-input__label' %>
           <%= email_field_tag 'email', '', id: 'user_email', type:'email', required: true, class: 'c-input__text', placeholder: "yourname@gmail.com", style: "height:40px;width:500px;" %>
           <%= hidden_field_tag :resource_id, value: @resource.id %>

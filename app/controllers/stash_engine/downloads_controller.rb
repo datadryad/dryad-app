@@ -7,27 +7,26 @@ module StashEngine
 
     def download_resource
       @resource = Resource.find(params[:resource_id])
-      redirect_to  stash_engine.download_capture_email_path(@resource)
-      # if @resource.under_embargo?
-      #   # if you're the owner do streaming download
-      #   if current_user && current_user.id == @resource.user_id
-      #     if merritt_async_download?(resource: @resource)
-      #       redirect_to  stash_engine.download_capture_email_path(@resource)
-      #     else
-      #       stream_response(@resource.merritt_producer_download_uri,
-      #         @resource.tenant.repository.username,
-      #         @resource.tenant.repository.password)
-      #     end
-      #   end
-      # else
-      #   # not under embargo and public
-      #   # redirect to the producer file download link
-      #   if merritt_async_download?(resource: @resource)
-      #     # redirect somewhere to capture email and send different request
-      #   else
-      #     redirect_to @resource.merritt_producer_download_uri
-      #   end
-      # end
+      if @resource.under_embargo?
+        # if you're the owner do streaming download
+        if current_user && current_user.id == @resource.user_id
+          if merritt_async_download?(resource: @resource)
+            redirect_to  stash_engine.download_capture_email_path(@resource)
+          else
+            stream_response(@resource.merritt_producer_download_uri,
+              @resource.tenant.repository.username,
+              @resource.tenant.repository.password)
+          end
+        end
+      else
+        # not under embargo and public
+        # redirect to the producer file download link
+        if merritt_async_download?(resource: @resource)
+          redirect_to  stash_engine.download_capture_email_path(@resource)
+        else
+          redirect_to @resource.merritt_producer_download_uri
+        end
+      end
     end
 
     def capture_email
@@ -52,6 +51,7 @@ module StashEngine
 
       if merritt_async_download?(resource: @resource)
         #redirect to the form for filling in their email address to get an email
+        redirect_to  stash_engine.download_capture_email_path(@resource)
         #don't forget to be sure that action has good security, so that people can't just go
         #to that page and bypass embargoes without a login or a token for downloading
       else
