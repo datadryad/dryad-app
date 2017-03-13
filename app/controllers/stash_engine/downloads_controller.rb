@@ -7,32 +7,32 @@ module StashEngine
 
     def download_resource
       @resource = Resource.find(params[:resource_id])
-      if @resource.under_embargo?
-        # if you're the owner do streaming download
-        if current_user && current_user.id == @resource.user_id
-          if merritt_async_download?(resource: @resource)
-            # redirect somewhere for more forms
-          else
-            stream_response(@resource.merritt_producer_download_uri,
-              @resource.tenant.repository.username,
-              @resource.tenant.repository.password)
-          end
-        end
-      else
-        # not under embargo and public
-        # redirect to the producer file download link
-        if merritt_async_download?(resource: @resource)
-          # redirect somewhere to capture email and send different request
-        else
-          redirect_to @resource.merritt_producer_download_uri
-        end
-      end
+      redirect_to  stash_engine.download_capture_email_path(@resource)
+      # if @resource.under_embargo?
+      #   # if you're the owner do streaming download
+      #   if current_user && current_user.id == @resource.user_id
+      #     if merritt_async_download?(resource: @resource)
+      #       redirect_to  stash_engine.download_capture_email_path(@resource)
+      #     else
+      #       stream_response(@resource.merritt_producer_download_uri,
+      #         @resource.tenant.repository.username,
+      #         @resource.tenant.repository.password)
+      #     end
+      #   end
+      # else
+      #   # not under embargo and public
+      #   # redirect to the producer file download link
+      #   if merritt_async_download?(resource: @resource)
+      #     # redirect somewhere to capture email and send different request
+      #   else
+      #     redirect_to @resource.merritt_producer_download_uri
+      #   end
+      # end
     end
-
 
     def capture_email
       @resource = Resource.find(params[:resource_id])
-      @user_email = params[:email]
+      render partial: 'stash_engine/landing/capture_email'
     end
 
     def async_request
@@ -40,6 +40,7 @@ module StashEngine
       @email = params[:email]
       # this posts the data imitating the large version download form that Merritt uses
       api_async_download(resource: @resource, email: @email)
+      redirect_to stash_url_helpers.dashboard_path
     end
 
     # method to download by the secret sharing link, must match the string they generated to look up and download
