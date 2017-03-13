@@ -30,6 +30,12 @@ module StashEngine
       end
     end
 
+
+    def capture_email
+      @resource = Resource.find(params[:resource_id])
+      @user_email = params[:email]
+    end
+
     def async_request
       @resource = Resource.find(params[:resource_id])
       @email = params[:email]
