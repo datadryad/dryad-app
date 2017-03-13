@@ -34,13 +34,34 @@ module StashEngine
       @resource = Resource.find(params[:resource_id])
       @email = params[:email]
       # this posts the data imitating the large version download form that Merritt uses
-      post_async_form(resource: @resource, email: @email)
+      api_async_download(resource: @resource, email: @email)
+    end
+
+    # method to download by the secret sharing link, must match the string they generated to look up and download
+    def share
+      @shares = Share.where(secret_id: params[:id])
+      raise ActionController::RoutingError, 'Not Found' if @shares.count < 1 || @shares.first.expiration_date < Time.new
+
+      @resource = @shares.first.resource
+      async_download = false
+
+      if async_download
+        #redirect to the form for filling in their email address to get an email
+        #don't forget to be sure that action has good security, so that people can't just go
+        #to that page and bypass embargoes without a login or a token for downloading
+      else
+        stream_response(@resource.merritt_producer_download_uri,
+                        @resource.tenant.repository.username,
+                        @resource.tenant.repository.password)
+      end
     end
 
     private
 
     # TODO: specific to Merritt and hacky
     # post an async form, right now @resource and @email should be set correctly before calling
+    # ---
+    # note, it seems as though this has been deprecated and Mark has created an API call for it now
     def post_async_form(resource:, email:)
       # set up all needed parameters
       domain, local_id = resource.merritt_domain_and_local_id
@@ -72,6 +93,25 @@ module StashEngine
       # this is sketchy validation, but their form would redirect to that location if it's successful
       unless res.http_header['Location'] && res.http_header['Location'].first.include?("#{domain}/m/#{local_id}")
         raise "Invalid response from Merritt"
+      end
+    end
+
+    def api_async_download(resource:, email:)
+      # set up all needed parameters
+      domain, local_id = resource.merritt_domain_and_local_id
+      username = resource.tenant.repository.username
+      password = resource.tenant.repository.password
+      url = "http://#{domain}/asyncd/#{local_id}/#{resource.stash_version.version}"
+      params = { user_agent_email: email, userFriendly: true}
+
+      clnt = HTTPClient.new
+      # ran into problems like https://github.com/nahi/httpclient/issues/181 so forcing basic auth
+      clnt.force_basic_auth = true
+      clnt.set_basic_auth(nil, username, password)
+      res = clnt.get(url, params, follow_redirect: true)
+
+      unless res.status_code == 200
+        raise "There was a problem making an async download request to Merritt"
       end
     end
 
