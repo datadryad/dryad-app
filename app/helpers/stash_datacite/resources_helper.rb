@@ -26,17 +26,5 @@ module StashDatacite
       return "#{str_creator.first} et al." if str_creator.length > 4
       str_creator.join('; ')
     end
-
-    def display_orcid_id(creator)
-      if StashEngine.app.site == "https://sandbox.orcid.org/"
-        link_to("https://sandbox.orcid.org/#{creator.orcid_id}",
-                "https://sandbox.orcid.org/#{creator.orcid_id}",
-                target: '_blank', class: 'c-orcid__id').html_safe
-      else
-        link_to("https://orcid.org/#{creator.orcid_id}",
-                "https://orcid.org/#{creator.orcid_id}",
-                target: '_blank', class: 'c-orcid__id').html_safe
-      end
-    end
   end
 end
