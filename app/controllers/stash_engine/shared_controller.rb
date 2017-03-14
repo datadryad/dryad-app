@@ -2,7 +2,6 @@ module StashEngine
   module SharedController
     require 'uri'
     require 'securerandom'
-    include ActionView::Helpers::UrlHelper
 
     def self.included(c)
       c.helper_method :current_tenant, :current_tenant_simple, :current_user, :metadata_engine, :metadata_url_helpers,
@@ -184,11 +183,11 @@ module StashEngine
 
     def display_orcid_id(creator)
       if StashEngine.app.site == "https://sandbox.orcid.org/"
-        link_to("https://sandbox.orcid.org/#{creator.orcid_id}",
+        view_context.link_to("https://sandbox.orcid.org/#{creator.orcid_id}",
                 "https://sandbox.orcid.org/#{creator.orcid_id}",
                 target: '_blank', class: 'c-orcid__id').html_safe
       else
-        link_to("https://orcid.org/#{creator.orcid_id}",
+        view_context.link_to("https://orcid.org/#{creator.orcid_id}",
                 "https://orcid.org/#{creator.orcid_id}",
                 target: '_blank', class: 'c-orcid__id').html_safe
       end
