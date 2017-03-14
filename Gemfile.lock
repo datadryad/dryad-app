@@ -52,7 +52,6 @@ PATH
       stash-sword (~> 0.1, >= 0.1.6)
       wicked_pdf (~> 1.1.0)
       wkhtmltopdf-binary (~> 0.12.3.1)
-      zeroclipboard-rails
 
 GEM
   remote: https://rubygems.org/
@@ -424,8 +423,6 @@ GEM
       typesafe_enum (~> 0.1, >= 0.1.5)
       xml-mapping (~> 0.10)
     yui-compressor (0.12.0)
-    zeroclipboard-rails (0.1.2)
-      railties (>= 3.1)
 
 PLATFORMS
   ruby
