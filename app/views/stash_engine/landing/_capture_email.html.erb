@@ -1,7 +1,7 @@
 <div class="capture_email">
-  <h3>Hi <%= "#{current_user.first_name} #{current_user.last_name}" %></h3>
+  <h3>Hi <%= "#{current_user.first_name} #{current_user.last_name}" %>,</h3>
   <h4>The dataset you are trying to download is large. Please submit your email address so we could mail you the url to download .</h4>
-  <div class="capture_email_form" align="center" >
+  <div class="capture_email_form" >
     <%= form_tag stash_engine.download_async_request_path(@resource.id), method: :post do %>
       <strong><%= label_tag 'email', 'Email', class: 'required c-input__label' %></strong>
       <% if current_user %>
