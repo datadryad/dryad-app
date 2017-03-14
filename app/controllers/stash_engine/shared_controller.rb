@@ -171,13 +171,12 @@ module StashEngine
       my_str.html_safe
     end
 
-<<<<<<< Updated upstream
     # Dumps the content of a path from an engine's root (source code) out as a string
     # It seems we have to do this because the PDF library needs either included code or
     # an absolute path and  wicked_pdf_stylesheet_link_tag didn't work
     def file_content_dump(engine_root, path)
       File.open(File.join(engine_root, path), 'rb').read
-=======
+
     def display_orcid_id(creator)
       if StashEngine.app.site == "https://sandbox.orcid.org/"
         link_to("https://sandbox.orcid.org/#{creator.orcid_id}",
@@ -188,7 +187,6 @@ module StashEngine
                 "https://orcid.org/#{creator.orcid_id}",
                 target: '_blank', class: 'c-orcid__id').html_safe
       end
->>>>>>> Stashed changes
     end
   end
 end
