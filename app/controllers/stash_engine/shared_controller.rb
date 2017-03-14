@@ -176,6 +176,7 @@ module StashEngine
     # an absolute path and  wicked_pdf_stylesheet_link_tag didn't work
     def file_content_dump(engine_root, path)
       File.open(File.join(engine_root, path), 'rb').read
+    end
 
     def display_orcid_id(creator)
       if StashEngine.app.site == "https://sandbox.orcid.org/"
@@ -188,5 +189,6 @@ module StashEngine
                 target: '_blank', class: 'c-orcid__id').html_safe
       end
     end
+
   end
 end
