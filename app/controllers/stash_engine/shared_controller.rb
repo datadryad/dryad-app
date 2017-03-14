@@ -2,12 +2,13 @@ module StashEngine
   module SharedController
     require 'uri'
     require 'securerandom'
+    include ActionView::Helpers::UrlHelper
 
     def self.included(c)
       c.helper_method :current_tenant, :current_tenant_simple, :current_user, :metadata_engine, :metadata_url_helpers,
                       :metadata_render_path, :stash_url_helpers, :discovery_url_helpers, :landing_url,  :field_suffix,
                       :logo_path, :contact_us_url, :display_br, :display_id, :display_id_plain,
-                      :formatted_date, :can_display_embargoed?
+                      :formatted_date, :can_display_embargoed?, :file_content_dump, :can_display_embargoed?, :display_orcid_id
     end
 
     def metadata_url_helpers
@@ -172,6 +173,24 @@ module StashEngine
       # Nokogiri::HTML.parse(escaped).text will give unescaped
 
       my_str.html_safe
+    end
+
+    # Dumps the content of a path from an engine's root (source code) out as a string
+    # It seems we have to do this because the PDF library needs either included code or
+    # an absolute path and  wicked_pdf_stylesheet_link_tag didn't work
+    def file_content_dump(engine_root, path)
+      File.open(File.join(engine_root, path), 'rb').read
+
+    def display_orcid_id(creator)
+      if StashEngine.app.site == "https://sandbox.orcid.org/"
+        link_to("https://sandbox.orcid.org/#{creator.orcid_id}",
+                "https://sandbox.orcid.org/#{creator.orcid_id}",
+                target: '_blank', class: 'c-orcid__id').html_safe
+      else
+        link_to("https://orcid.org/#{creator.orcid_id}",
+                "https://orcid.org/#{creator.orcid_id}",
+                target: '_blank', class: 'c-orcid__id').html_safe
+      end
     end
   end
 end
