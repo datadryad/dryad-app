@@ -3,14 +3,19 @@ require 'rest-client'
 
 # TODO: how downloads are handled depend heavily on the repository in use, needs moving elsewhere to be flexible
 module StashEngine
+
+  class MerrittResponseError < StandardError; end
+
   class DownloadsController < ApplicationController
 
     def download_resource
       @resource = Resource.find(params[:resource_id])
+
       if @resource.under_embargo?
         # if you're the owner do streaming download
         if current_user && current_user.id == @resource.user_id
-          if merritt_async_download?(resource: @resource)
+          setup_async_download_variable #which may redirect to different page in certain circumstances
+          if @async_download
             redirect_to  stash_engine.download_capture_email_path(@resource)
           else
             stream_response(@resource.merritt_producer_download_uri,
@@ -21,7 +26,8 @@ module StashEngine
       else
         # not under embargo and public
         # redirect to the producer file download link
-        if merritt_async_download?(resource: @resource)
+        setup_async_download_variable #which may redirect to different page in certain circumstances
+        if @async_download
           redirect_to  stash_engine.download_capture_email_path(@resource)
         else
           redirect_to @resource.merritt_producer_download_uri
@@ -37,7 +43,6 @@ module StashEngine
     def async_request
       @resource = Resource.find(params[:resource_id])
       @email = params[:email]
-      # this posts the data imitating the large version download form that Merritt uses
       api_async_download(resource: @resource, email: @email)
       redirect_to stash_url_helpers.dashboard_path
     end
@@ -49,7 +54,9 @@ module StashEngine
 
       @resource = @shares.first.resource
 
-      if merritt_async_download?(resource: @resource)
+      setup_async_download_variable #which may redirect to different page in certain circumstances
+
+      if @async_download
         #redirect to the form for filling in their email address to get an email
         redirect_to  stash_engine.download_capture_email_path(@resource)
         #don't forget to be sure that action has good security, so that people can't just go
@@ -62,6 +69,26 @@ module StashEngine
     end
 
     private
+
+    # this sets up the async download variable which it determines from Merritt and handles any exceptions with
+    # possible redirect to tell people to wait for submission to complete
+    def setup_async_download_variable
+      @async_download = nil
+      begin
+        @async_download = merritt_async_download?(resource: @resource)
+      rescue StashEngine::MerrittResponseError => ex
+        # do something with this exception ex and redirect if it's a recent submission
+        if @resource.updated_at > Time.new - 2.hours
+          #recently updated, so display a "hold your horses" message
+          flash[:alert] = "This dataset was recently submitted and downloads are not yet available. " +
+              "Downloads generally become available in less than 2 hours."
+          redirect_to landing_show_path(
+                          id: "#{@resource.identifier.identifier_type.downcase}:#{@resource.identifier.identifier}")
+        else
+          raise ex
+        end
+      end
+    end
 
     # TODO: specific to Merritt and hacky
     # post an async form, right now @resource and @email should be set correctly before calling
@@ -108,12 +135,14 @@ module StashEngine
       url = "http://#{domain}/async/#{local_id}/#{resource.stash_version.merritt_version}"
 
       res = http_client_w_basic_auth(username: username, password: password).get(url, nil, follow_redirect: true)
+
       if res.status_code == 406
         return false  #406 is synchronous
       elsif res.status_code == 200
         return true #200 is code for asyncronous
       else
-        raise "unknown status code while determining if async download from Merritt"
+        raise StashEngine::MerrittResponseError,
+              "undefined api status code #{res.status_code} obtained while determining if #{url} was an async download from Merritt"
       end
     end
 
