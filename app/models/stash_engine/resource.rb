@@ -177,6 +177,7 @@ module StashEngine
         self.identifier = existing_identifier
         version_record = stash_version
         version_record.version = next_version_number
+        version_record.merritt_version = next_merritt_version
         version_record.save!
       else
         self.identifier = Identifier.create(identifier: doi_value, identifier_type: 'DOI')
@@ -213,6 +214,7 @@ module StashEngine
     end
 
     def init_version
+      # we probably don't have an identifier at this point so the version and merritt_version will probably always be 1, but you never know
       self.stash_version = StashEngine::Version.create(resource_id: id, version: next_version_number, merritt_version: next_merritt_version, zip_filename: nil)
     end
     private :init_version
