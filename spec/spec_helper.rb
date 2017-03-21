@@ -25,6 +25,7 @@ require 'stash_engine'
 stash_engine_path = Gem::Specification.find_by_name('stash_engine').gem_dir
 require "#{stash_engine_path}/config/initializers/hash_to_ostruct.rb"
 require "#{stash_engine_path}/config/initializers/repository.rb"
+require "#{stash_engine_path}/config/initializers/inflections.rb"
 
 # TODO: MockRails.application.root and use stash_engine/config/initializers/licenses.rb
 ::LICENSES = YAML.load_file('config/licenses.yml').with_indifferent_access
