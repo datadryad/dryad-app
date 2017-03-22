@@ -224,11 +224,3 @@ repository: # change me: you'll probably have to change all the following indent
     owner: null
 ```
 
-### Configuring Google authentication
-TODO
-
-### Configuring Shibboleth authentication
-TODO
-
-### Configuring ORCID authentication (or obtaining an ORCID)
-TODO
