@@ -54,6 +54,18 @@ module StashDatacite
           "#{id.try(:identifier_type).try(:downcase)}:#{id.try(:identifier)}"
         end
       end
+
+      def embargo_status
+        if @resource.embargo && @resource.embargo.end_date > Time.new && @resource.current_resource_state_value == 'published'
+          'embargoed'
+        else
+          status
+        end
+      end
+
+      def publication_date
+        (@resource.embargo && @resource.embargo.end_date) || @resource.current_state.created_at
+      end
     end
   end
 end
