@@ -17,10 +17,10 @@
     <%= line.file_count %>
   </td>
   <td>
-    <%= line.resource.current_state.resource_state %>
+    <%= line.resource.current_state %>
   </td>
   <td>
-    <%= default_date(line.resource.current_state.created_at) %>
+    <%= default_date(line.resource.current_resource_state.created_at) %>
   </td>
   <td>
       <%= button_to 'Update', stash_url_helpers.metadata_entry_pages_new_version_path(resource_id: line.resource.id),
