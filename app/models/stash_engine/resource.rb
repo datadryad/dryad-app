@@ -17,9 +17,12 @@ module StashEngine
     amoeba do
       include_association :embargo
       include_association :file_uploads
-      # include_association :current_resource_state
       customize(lambda do |_, new_resource|
+        # you'd think 'include_association :current_resource_state' would do the right thing and deep-copy
+        # the resource state, but instead it keeps the reference to the old one, so we need to clear it and
+        # let init_version do its job
         new_resource.current_resource_state_id = nil
+
         new_resource.file_uploads.each do |file|
           raise "Expected #{new_resource.id}, was #{file.resource_id}" unless file.resource_id == new_resource.id
           if file.file_state == 'created'
