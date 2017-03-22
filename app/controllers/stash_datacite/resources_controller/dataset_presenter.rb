@@ -59,7 +59,7 @@ module StashDatacite
         if @resource.embargo && @resource.embargo.end_date > Time.new && @resource.current_resource_state_value == 'published'
           'embargoed'
         else
-          status
+          status.resource_state
         end
       end
 
