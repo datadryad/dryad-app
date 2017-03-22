@@ -9,7 +9,7 @@ module StashEngine
     has_one :resource_usage, class_name: 'StashEngine::ResourceUsage'
     has_one :embargo, class_name: 'StashEngine::Embargo'
     belongs_to :user, class_name: 'StashEngine::User'
-    has_one :current_state,
+    has_one :current_resource_state,
             class_name: 'StashEngine::ResourceState',
             primary_key: 'current_resource_state_id',
             foreign_key: 'id'
@@ -17,7 +17,9 @@ module StashEngine
     amoeba do
       include_association :embargo
       include_association :file_uploads
+      # include_association :current_resource_state
       customize(lambda do |_, new_resource|
+        new_resource.current_resource_state_id = nil
         new_resource.file_uploads.each do |file|
           raise "Expected #{new_resource.id}, was #{file.resource_id}" unless file.resource_id == new_resource.id
           if file.file_state == 'created'
@@ -58,10 +60,10 @@ module StashEngine
     # Scopes
 
     scope :in_progress, (lambda do
-      joins(:current_state).where(stash_engine_resource_states: { resource_state:  :in_progress })
+      joins(:current_resource_state).where(stash_engine_resource_states: { resource_state:  :in_progress })
     end)
     scope :submitted, (lambda do
-      joins(:current_state).where(stash_engine_resource_states: { resource_state:  [:published, :processing, :error] })
+      joins(:current_resource_state).where(stash_engine_resource_states: { resource_state:  [:published, :processing, :error] })
     end)
     scope :by_version_desc, -> { joins(:stash_version).order('stash_engine_versions.version DESC') }
     scope :by_version, -> { joins(:stash_version).order('stash_engine_versions.version ASC') }
@@ -120,19 +122,15 @@ module StashEngine
       current_resource_state.resource_state == 'processing'
     end
 
-    def current_resource_state_value
-      current_resource_state.resource_state
+    def current_state
+      current_resource_state && current_resource_state.resource_state
     end
 
-    def current_resource_state
-      # You'd think we could use #current_state, but no, ActiveRecord gets confused in #current_state=
-      ResourceState.find(current_resource_state_id)
-    end
-
-    def current_state=(state_string)
-      return if state_string == current_resource_state_value
+    def current_state=(value)
+      return if value == current_state
       my_state = current_resource_state
-      my_state.resource_state = state_string
+      raise "current_resource_state not initialized for resource #{id}" unless my_state
+      my_state.resource_state = value
       my_state.save
     end
 
