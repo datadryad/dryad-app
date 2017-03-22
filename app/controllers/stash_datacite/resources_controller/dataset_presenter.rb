@@ -19,7 +19,7 @@ module StashDatacite
       end
 
       def status
-        @resource.current_resource_state_value
+        @resource.current_state
       end
 
       # according to https://dash.ucop.edu/xtf/search?smode=metadataBasicsPage
