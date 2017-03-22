@@ -46,6 +46,22 @@ module StashEngine
           expect(ResourceState.count).to eq(1)
           expect(resource.current_resource_state).to eq(state)
         end
+        describe 'amoeba duplication' do
+          it 'defaults to in-progress' do
+            resource.current_state = 'published'
+            res1 = resource.amoeba_dup
+            res1.save!
+            expect(res1.current_state).to eq('in_progress')
+          end
+          it 'creates a new instance' do
+            resource.current_state = 'published'
+            res1 = resource.amoeba_dup
+            res1.save!
+            res1.current_state = 'error'
+            expect(res1.current_state).to eq('error')
+            expect(resource.current_state).to eq('published')
+          end
+        end
       end
 
       describe '#current_resource_state' do
@@ -107,12 +123,12 @@ module StashEngine
         end
       end
 
-      describe '#current_resource_state_value' do
+      describe '#current_state' do
         it 'returns the value of the current state' do
-          expect(resource.current_resource_state_value).to eq('in_progress')
+          expect(resource.current_state).to eq('in_progress')
           %w(processing error embargoed published).each do |state_value|
             resource.current_state = state_value
-            expect(resource.current_resource_state_value).to eq(state_value)
+            expect(resource.current_state).to eq(state_value)
           end
         end
       end
@@ -263,6 +279,12 @@ module StashEngine
         end
       end
 
+      describe '#merritt_version' do
+        it 'defaults to 1' do
+          expect(resource.merritt_version).to eq(1)
+        end
+      end
+
       describe '#version_zipfile=' do
         it 'creates the first version' do
           zipfile = '/apps/stash/stash_engine/uploads/17-archive.zip'
@@ -292,17 +314,45 @@ module StashEngine
             new_resource = resource.amoeba_dup
             new_resource.save!
             expect(new_resource.version_number).to eq(2)
+
+            newer_resource = new_resource.amoeba_dup
+            newer_resource.save!
+            expect(newer_resource.version_number).to eq(2)
           end
 
           it 'is incremented for the next resource' do
             new_resource = Resource.create(identifier: resource.identifier)
             expect(new_resource.version_number).to eq(2)
           end
+
+        end
+
+        describe '#merritt_version' do
+          it 'still defaults to 1' do
+            expect(resource.merritt_version).to eq(1)
+          end
+
+          it 'is incremented for the next resource by Amoeba duplication' do
+            new_resource = resource.amoeba_dup
+            new_resource.save!
+            expect(new_resource.merritt_version).to eq(2)
+          end
+
+          it 'is incremented for the next resource' do
+            new_resource = Resource.create(identifier: resource.identifier)
+            expect(new_resource.merritt_version).to eq(2)
+          end
         end
 
         describe '#next_version_number' do
           it 'is based on the last submitted version' do
             expect(resource.next_version_number).to eq(2)
+          end
+        end
+
+        describe '#next_merritt_version' do
+          it 'is based on the last submitted version' do
+            expect(resource.next_merritt_version).to eq(2)
           end
         end
       end
