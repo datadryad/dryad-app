@@ -48,7 +48,7 @@ module StashDatacite
 
     # this is a report of related identifiers in tsv
     def report
-      @resources = StashEngine::Resource.joins(:related_identifiers).joins(:current_state).
+      @resources = StashEngine::Resource.joins(:related_identifiers).joins(:current_resource_state).
           joins(:identifier).joins(:stash_version).order('stash_engine_identifiers.identifier').
           where(stash_engine_resource_states: { resource_state:  :published }).distinct
       respond_to do |format|
