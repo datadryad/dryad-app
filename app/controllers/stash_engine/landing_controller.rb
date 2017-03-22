@@ -15,6 +15,7 @@ module StashEngine
       @resource_id = @resource.id
       @resource.increment_views
       setup_show_variables(@resource_id) #sets up the specific metadata view variables from <meta_engine>::LandingMixin
+      @page_title = @review.title.title
     end
 
     def data_paper
