@@ -43,7 +43,8 @@ module StashEngine
       @host = tenant.full_domain
 
       to_address = to_address_list(user.email)
-      mail(to: to_address, subject: "Dataset \"#{@title}\" (doi:#{@identifier_value}) submitted")
+      bcc_address = to_address_list(tenant.manager_email)
+      mail(to: to_address, bcc: bcc_address, subject: "Dataset \"#{@title}\" (doi:#{@identifier_value}) submitted")
     end
 
     def submission_failed(resource, error)
@@ -58,7 +59,7 @@ module StashEngine
 
       tenant = user.tenant
       @host = tenant.full_domain
-      @contact_email = to_address_list(tenant.contact_email)
+      @contact_email = to_address_list([APP_CONFIG['feedback_email_to']].flatten + [tenant.manager_email].flatten)
 
       @backtrace = to_backtrace(error)
 
@@ -70,7 +71,7 @@ module StashEngine
 
     def to_address_list(addresses)
       addresses = [addresses] unless addresses.respond_to?(:join)
-      addresses.join(',')
+      addresses.reject { |i| i.nil? || i.blank? }.join(',')
     end
 
     # TODO: look at Rails standard ways to report/format backtrace
