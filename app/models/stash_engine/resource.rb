@@ -30,6 +30,7 @@ module StashEngine
             file.save
           end
         end
+        new_resource.file_uploads.where(file_state: 'deleted').delete_all
       end)
     end
 
