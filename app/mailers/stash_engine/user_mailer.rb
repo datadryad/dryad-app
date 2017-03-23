@@ -20,7 +20,7 @@ module StashEngine
       @backtrace = to_backtrace(error)
 
       to_address = to_address_list(APP_CONFIG['feedback_email_to'])
-      mail(to: to_address, subject: "Submitting dataset \"#{@title}\" (doi:#{@identifier_value}) failed")
+      mail(to: to_address, subject: "#{rails_env}Submitting dataset \"#{@title}\" (doi:#{@identifier_value}) failed")
     end
 
     def submission_succeeded(resource)
@@ -38,7 +38,7 @@ module StashEngine
 
       to_address = to_address_list(user.email)
       bcc_address = to_address_list(tenant.manager_email)
-      mail(to: to_address, bcc: bcc_address, subject: "Dataset \"#{@title}\" (doi:#{@identifier_value}) submitted")
+      mail(to: to_address, bcc: bcc_address, subject: "#{rails_env}Dataset \"#{@title}\" (doi:#{@identifier_value}) submitted")
     end
 
     def submission_failed(resource, error)
@@ -58,7 +58,7 @@ module StashEngine
       @backtrace = to_backtrace(error)
 
       to_address = to_address_list(user.email)
-      mail(to: to_address, subject: "Submitting dataset \"#{@title}\" (doi:#{@identifier_value}) failed")
+      mail(to: to_address, subject: "#{rails_env}Submitting dataset \"#{@title}\" (doi:#{@identifier_value}) failed")
     end
 
     private
@@ -66,6 +66,11 @@ module StashEngine
     def to_address_list(addresses)
       addresses = [addresses] unless addresses.respond_to?(:join)
       addresses.reject { |i| i.nil? || i.blank? }.join(',')
+    end
+
+    def rails_env
+      return "[#{Rails.env}] " unless Rails.env == 'production'
+      ''
     end
 
     # TODO: look at Rails standard ways to report/format backtrace
