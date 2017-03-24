@@ -117,7 +117,7 @@ module Stash
 
           it 'sets the state to submitted' do
             expect(resource).to receive(:current_state=).with('processing')
-            expect(resource).to receive(:current_state=).with('published')
+            expect(resource).to receive(:current_state=).with('submitted')
             submit_resource
           end
 
@@ -156,7 +156,7 @@ module Stash
 
             it 'sets the state to submitted' do
               expect(resource).to receive(:current_state=).with('processing')
-              expect(resource).to receive(:current_state=).with('published')
+              expect(resource).to receive(:current_state=).with('submitted')
               submit_resource
             end
 
@@ -187,7 +187,7 @@ module Stash
 
             it 'sets the state to submitted' do
               expect(resource).to receive(:current_state=).with('processing')
-              expect(resource).to receive(:current_state=).with('published')
+              expect(resource).to receive(:current_state=).with('submitted')
               submit_resource
             end
 

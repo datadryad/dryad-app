@@ -41,10 +41,10 @@ module StashEngine
 
     describe 'versioning' do
       before(:each) do
-        res1.current_state = 'published'
+        res1.current_state = 'submitted'
         Version.create(resource_id: res1.id, version: 1)
 
-        res2.current_state = 'published'
+        res2.current_state = 'submitted'
         Version.create(resource_id: res2.id, version: 2)
 
         res3.current_state = 'in_progress'

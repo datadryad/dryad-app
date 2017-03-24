@@ -56,7 +56,7 @@ module StashEngine
       it 'finds the user\'s resources' do
         resources = Array.new(5) do |index|
           resource = Resource.create(user_id: user.id)
-          resource.current_state = 'published'
+          resource.current_state = 'submitted'
           resource.ensure_identifier("10.123/#{index}")
           resource
         end
@@ -67,7 +67,7 @@ module StashEngine
       it 'ignores "in progress" resources' do
         in_progress = []
         other = []
-        %w(published processing error).each_with_index do |state, index|
+        %w(submitted processing).each_with_index do |state, index|
           doi_value = "10.123/#{index}"
           res1 = Resource.create(user_id: user.id)
           res1.ensure_identifier(doi_value)
@@ -89,7 +89,7 @@ module StashEngine
         resources = Array.new(5) do |_|
           doi_value = '10.123/1234'
           resource = Resource.create(user_id: user.id)
-          resource.current_state = 'published'
+          resource.current_state = 'submitted'
           resource.ensure_identifier(doi_value)
           resource
         end
