@@ -67,7 +67,7 @@ module StashEngine
       joins(:current_resource_state).where(stash_engine_resource_states: { resource_state:  :in_progress })
     end)
     scope :submitted, (lambda do
-      joins(:current_resource_state).where(stash_engine_resource_states: { resource_state:  [:published, :processing, :error] })
+      joins(:current_resource_state).where(stash_engine_resource_states: { resource_state:  [:submitted, :processing, :error] })
     end)
     scope :by_version_desc, -> { joins(:stash_version).order('stash_engine_versions.version DESC') }
     scope :by_version, -> { joins(:stash_version).order('stash_engine_versions.version ASC') }
@@ -118,8 +118,9 @@ module StashEngine
     # ------------------------------------------------------------
     # Current resource state
 
+    # TODO: EMBARGO: change this to :submitted?, and/or check embargo dates/status and add :embargoed?
     def published?
-      current_resource_state.resource_state == 'published'
+      current_resource_state.resource_state == 'submitted'
     end
 
     def processing?
@@ -235,6 +236,7 @@ module StashEngine
     # ------------------------------------------------------------
     # Usage and statistics
 
+    # TODO: EMBARGO: do we care about published vs. embargoed in this count?
     # total count of submitted datasets
     def self.submitted_dataset_count
       sql = %q(
@@ -242,7 +244,7 @@ module StashEngine
           FROM stash_engine_resources r
           JOIN stash_engine_resource_states rs
             ON r.current_resource_state_id = rs.id
-         WHERE rs.resource_state = 'published'
+         WHERE rs.resource_state = 'submitted'
       )
       connection.execute(sql).first[0]
     end
