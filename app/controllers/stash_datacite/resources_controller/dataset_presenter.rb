@@ -56,15 +56,16 @@ module StashDatacite
       end
 
       def embargo_status
-        if @resource.embargo && @resource.embargo.end_date > Time.new && @resource.current_resource_state_value == 'published'
+        if @resource.embargo && @resource.embargo.end_date > Time.new && @resource.current_state == 'published'
           'embargoed'
         else
-          status.resource_state
+          @resource.current_state
         end
       end
 
       def publication_date
-        (@resource.embargo && @resource.embargo.end_date) || @resource.current_state.created_at
+        #TODO this needs fixing since I'm not clear where we're getting publication date now, used to get it from the time status was changed to published
+        (@resource.embargo && @resource.embargo.end_date) || @resource.updated_at
       end
     end
   end
