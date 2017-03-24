@@ -22,6 +22,10 @@ module StashEngine
               @resource.tenant.repository.username,
               @resource.tenant.repository.password)
           end
+        else # no user is logged in for this embargoed item
+          flash[:alert] = "This dataset is embargoed and may not be downloaded."
+          redirect_to landing_show_path(
+                          id: "#{@resource.identifier.identifier_type.downcase}:#{@resource.identifier.identifier}")
         end
       else
         # not under embargo and public
