@@ -34,7 +34,7 @@ module StashEngine
 
       describe '#current_state=' do
         it 'sets the state' do
-          new_state_value = 'published'
+          new_state_value = 'submitted'
           resource.current_state = new_state_value
           new_state = resource.current_resource_state
           expect(new_state.resource_state).to eq(new_state_value)
@@ -48,18 +48,18 @@ module StashEngine
         end
         describe 'amoeba duplication' do
           it 'defaults to in-progress' do
-            resource.current_state = 'published'
+            resource.current_state = 'submitted'
             res1 = resource.amoeba_dup
             res1.save!
             expect(res1.current_state).to eq('in_progress')
           end
           it 'creates a new instance' do
-            resource.current_state = 'published'
+            resource.current_state = 'submitted'
             res1 = resource.amoeba_dup
             res1.save!
             res1.current_state = 'error'
             expect(res1.current_state).to eq('error')
-            expect(resource.current_state).to eq('published')
+            expect(resource.current_state).to eq('submitted')
           end
         end
       end
@@ -71,7 +71,7 @@ module StashEngine
         end
 
         it 'reflects state changes' do
-          %w(processing error embargoed published).each do |state_value|
+          %w(processing error submitted).each do |state_value|
             resource.current_state = state_value
             new_state = resource.current_resource_state
             expect(new_state.resource_state).to eq(state_value)
@@ -79,7 +79,7 @@ module StashEngine
         end
 
         it 'is not copied or clobbered in Amoeba duplication' do
-          %w(processing error embargoed published).each do |state_value|
+          %w(processing error submitted).each do |state_value|
             resource.current_state = state_value
             new_resource = resource.amoeba_dup
             new_resource.save!
@@ -97,12 +97,12 @@ module StashEngine
 
       describe '#published?' do
         it 'returns true if the current state is published' do
-          resource.current_state = 'published'
+          resource.current_state = 'submitted'
           expect(resource.published?).to eq(true)
         end
         it 'returns false otherwise' do
           expect(resource.published?).to eq(false)
-          %w(in_progress processing error embargoed).each do |state_value|
+          %w(in_progress processing error).each do |state_value|
             resource.current_state = state_value
             expect(resource.published?).to eq(false)
           end
@@ -116,7 +116,7 @@ module StashEngine
         end
         it 'returns false otherwise' do
           expect(resource.processing?).to eq(false)
-          %w(in_progress published error embargoed).each do |state_value|
+          %w(in_progress submitted error).each do |state_value|
             resource.current_state = state_value
             expect(resource.processing?).to eq(false)
           end
@@ -126,7 +126,7 @@ module StashEngine
       describe '#current_state' do
         it 'returns the value of the current state' do
           expect(resource.current_state).to eq('in_progress')
-          %w(processing error embargoed published).each do |state_value|
+          %w(processing error submitted).each do |state_value|
             resource.current_state = state_value
             expect(resource.current_state).to eq(state_value)
           end
@@ -204,10 +204,8 @@ module StashEngine
             res2.current_file_uploads.each { |f| expect(f.file_state).to eq('copied') }
           end
 
-          it 'copies all deleted recoreds' do
-            old_deleted_names = deleted_files.map(&:upload_file_name)
-            new_deleted_names = res2.file_uploads.deleted.map(&:upload_file_name)
-            expect(new_deleted_names).to contain_exactly(*old_deleted_names)
+          it 'doesn\'t copy deleted files' do
+            expect(res2.file_uploads.deleted).to be_empty
           end
         end
       end
@@ -301,7 +299,7 @@ module StashEngine
           doi_value = '10.1234/5678'
           resource.ensure_identifier("doi:#{doi_value}")
           # TODO: collapse this into single method on resource
-          resource.current_state = 'published'
+          resource.current_state = 'submitted'
           resource.version_zipfile = "#{resource.id}-archive.zip"
         end
 
@@ -437,7 +435,7 @@ module StashEngine
           (0...3).each do |index|
             resource = Resource.create(user_id: user.id)
             resource.ensure_identifier("10.123/#{index}")
-            resource.current_state = 'published'
+            resource.current_state = 'submitted'
             resource.save
           end
           expect(Resource.submitted_dataset_count).to eq(3)
@@ -446,19 +444,19 @@ module StashEngine
           (0...3).each do |_index|
             res1 = Resource.create(user_id: user.id)
             res1.ensure_identifier('10.123/456')
-            res1.current_state = 'published'
+            res1.current_state = 'submitted'
             res1.save
 
             res2 = Resource.create(user_id: user.id)
             res2.ensure_identifier('10.345/678')
-            res2.current_state = 'published'
+            res2.current_state = 'submitted'
             res2.save
           end
           expect(Resource.submitted_dataset_count).to eq(2)
         end
 
         it 'doesn\'t count non-published datasets' do
-          %w(in_progress processing error embargoed).each_with_index do |state, index|
+          %w(in_progress processing error).each_with_index do |state, index|
             resource = Resource.create(user_id: user.id)
             resource.ensure_identifier("10.123/#{index}")
             resource.current_state = state
@@ -467,10 +465,10 @@ module StashEngine
           expect(Resource.submitted_dataset_count).to eq(0)
         end
         it 'doesn\'t count non-current states' do
-          %w(in_progress processing error embargoed).each_with_index do |state, index|
+          %w(in_progress processing error).each_with_index do |state, index|
             resource = Resource.create(user_id: user.id)
             resource.ensure_identifier("10.123/#{index}")
-            resource.current_state = 'published'
+            resource.current_state = 'submitted'
             resource.current_state = state
             resource.save
           end
