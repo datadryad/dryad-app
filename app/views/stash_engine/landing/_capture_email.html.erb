@@ -4,14 +4,15 @@
   <% end %>
   <h4>The dataset you are trying to download is large. Please submit your email address so we could mail you the url to download .</h4>
   <div class="capture_email_form" >
-    <%= form_tag stash_engine.download_async_request_path(@resource.id), method: :post do %>
+    <%= form_tag stash_engine.download_async_request_path(resource.id), method: :post do %>
       <strong><%= label_tag 'email', 'Email', class: 'required c-input__label' %></strong>
       <% if current_user %>
         <%= email_field_tag 'email', current_user.email , id: 'user_email', class: 'c-input__text' %>
       <% else %>
         <%= email_field_tag 'email', '', id: 'user_email', class: 'c-input__text', placeholder: 'yourname@gmail.com' %>
       <% end %>
-      <%= hidden_field_tag :resource_id, value: @resource.id %>
+      <%= hidden_field_tag :resource_id, value: resource.id %>
+      <%= hidden_field_tag :secret_id, value: secret_id %>
     <%= submit_tag 'submit', value: 'Submit', id: 'capture_email_submit' %>
     <%end%>
   </div>

@@ -16,7 +16,9 @@ module StashEngine
         if current_user && current_user.id == @resource.user_id
           setup_async_download_variable #which may redirect to different page in certain circumstances
           if @async_download
-            redirect_to  stash_engine.download_capture_email_path(@resource) and return
+            #redirect_to  stash_engine.download_capture_email_path(@resource)
+            render(partial: 'stash_engine/landing/capture_email',
+                   locals: {resource: @resource, secret_id: '' })
           else
             stream_response(@resource.merritt_producer_download_uri,
               @resource.tenant.repository.username,
@@ -32,27 +34,33 @@ module StashEngine
         # redirect to the producer file download link
         setup_async_download_variable #which may redirect to different page in certain circumstances
         if @async_download
-          redirect_to  stash_engine.download_capture_email_path(@resource) and return
+          #redirect_to  stash_engine.download_capture_email_path(@resource)
+          render(partial: 'stash_engine/landing/capture_email',
+                   locals: {resource: @resource, secret_id: '' })
         else
           redirect_to @resource.merritt_producer_download_uri and return
         end
       end
     end
 
-    def capture_email
-      @resource = Resource.find(params[:resource_id])
-      render partial: 'stash_engine/landing/capture_email'
-    end
+    # def capture_email
+    #   @resource = Resource.find(params[:resource_id])
+    #   render partial: 'stash_engine/landing/capture_email'
+    # end
 
     def async_request
       @resource = Resource.find(params[:resource_id])
       @email = params[:email]
-      api_async_download(resource: @resource, email: @email)
-      # redirect_to stash_url_helpers.dashboard_path
-      flash[:alert] = "You have submitted a request to download this large file.  You'll get an email with the " +
-                  "download details shortly."
-      redirect_to landing_show_path(
-                      id: "#{@resource.identifier.identifier_type.downcase}:#{@resource.identifier.identifier}")
+      if @resource.under_embargo? && ( @resource.user_id == current_user.id || params[:secret_id] == @resource.share.secret_id)
+        api_async_download(resource: @resource, email: @email)
+        redirect_to landing_show_path(
+          id: "#{@resource.identifier.identifier_type.downcase}:#{@resource.identifier.identifier}"),
+          notice: 'You shall shortly receive an email with the link to download the dataset.'
+      else
+        redirect_to landing_show_path(
+          id: "#{@resource.identifier.identifier_type.downcase}:#{@resource.identifier.identifier}"),
+          notice: 'You do not have the permission to download the dataset.'
+      end
     end
 
     # method to download by the secret sharing link, must match the string they generated to look up and download
@@ -61,12 +69,13 @@ module StashEngine
       raise ActionController::RoutingError, 'Not Found' if @shares.count < 1 || @shares.first.expiration_date < Time.new
 
       @resource = @shares.first.resource
-
       setup_async_download_variable #which may redirect to different page in certain circumstances
 
       if @async_download
         #redirect to the form for filling in their email address to get an email
-        redirect_to  stash_engine.download_capture_email_path(@resource)
+        #redirect_to  stash_engine.download_capture_email_path(@resource)
+        render(partial: 'stash_engine/landing/capture_email',
+               locals: {resource: @resource, secret_id: @resource.share.secret_id })
         #don't forget to be sure that action has good security, so that people can't just go
         #to that page and bypass embargoes without a login or a token for downloading
       else
