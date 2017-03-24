@@ -11,8 +11,8 @@
       <% else %>
         <%= email_field_tag 'email', '', id: 'user_email', class: 'c-input__text', placeholder: 'yourname@gmail.com' %>
       <% end %>
-      <%= hidden_field_tag :resource_id, value: resource.id %>
-      <%= hidden_field_tag :secret_id, value: secret_id %>
+      <%= hidden_field_tag :resource_id, resource.id %>
+      <%= hidden_field_tag :secret_id, secret_id %>
     <%= submit_tag 'submit', value: 'Submit', id: 'capture_email_submit' %>
     <%end%>
   </div>

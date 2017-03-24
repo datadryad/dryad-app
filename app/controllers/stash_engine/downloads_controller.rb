@@ -51,7 +51,8 @@ module StashEngine
     def async_request
       @resource = Resource.find(params[:resource_id])
       @email = params[:email]
-      if @resource.under_embargo? && ( @resource.user_id == current_user.id || params[:secret_id] == @resource.share.secret_id)
+      if !@resource.under_embargo? || ( current_user && current_user.id == @resource.user_id) ||
+          ( params[:secret_id] == @resource.share.secret_id )
         api_async_download(resource: @resource, email: @email)
         redirect_to landing_show_path(
           id: "#{@resource.identifier.identifier_type.downcase}:#{@resource.identifier.identifier}"),
@@ -97,7 +98,7 @@ module StashEngine
         # do something with this exception ex and redirect if it's a recent submission
         if @resource.updated_at > Time.new - 2.hours
           #recently updated, so display a "hold your horses" message
-          flash[:alert] = "This dataset was recently submitted and downloads are not yet available. " +
+          flash[:notice] = "This dataset was recently submitted and downloads are not yet available. " +
               "Downloads generally become available in less than 2 hours."
           redirect_to landing_show_path(
                           id: "#{@resource.identifier.identifier_type.downcase}:#{@resource.identifier.identifier}")
