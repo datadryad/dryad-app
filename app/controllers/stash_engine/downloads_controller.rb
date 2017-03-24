@@ -16,7 +16,7 @@ module StashEngine
         if current_user && current_user.id == @resource.user_id
           setup_async_download_variable #which may redirect to different page in certain circumstances
           if @async_download
-            redirect_to  stash_engine.download_capture_email_path(@resource)
+            redirect_to  stash_engine.download_capture_email_path(@resource) and return
           else
             stream_response(@resource.merritt_producer_download_uri,
               @resource.tenant.repository.username,
@@ -25,16 +25,16 @@ module StashEngine
         else # no user is logged in for this embargoed item
           flash[:alert] = "This dataset is embargoed and may not be downloaded."
           redirect_to landing_show_path(
-                          id: "#{@resource.identifier.identifier_type.downcase}:#{@resource.identifier.identifier}")
+                          id: "#{@resource.identifier.identifier_type.downcase}:#{@resource.identifier.identifier}") and return
         end
       else
         # not under embargo and public
         # redirect to the producer file download link
         setup_async_download_variable #which may redirect to different page in certain circumstances
         if @async_download
-          redirect_to  stash_engine.download_capture_email_path(@resource)
+          redirect_to  stash_engine.download_capture_email_path(@resource) and return
         else
-          redirect_to @resource.merritt_producer_download_uri
+          redirect_to @resource.merritt_producer_download_uri and return
         end
       end
     end
@@ -48,7 +48,11 @@ module StashEngine
       @resource = Resource.find(params[:resource_id])
       @email = params[:email]
       api_async_download(resource: @resource, email: @email)
-      redirect_to stash_url_helpers.dashboard_path
+      # redirect_to stash_url_helpers.dashboard_path
+      flash[:alert] = "You have submitted a request to download this large file.  You'll get an email with the " +
+                  "download details shortly."
+      redirect_to landing_show_path(
+                      id: "#{@resource.identifier.identifier_type.downcase}:#{@resource.identifier.identifier}")
     end
 
     # method to download by the secret sharing link, must match the string they generated to look up and download
