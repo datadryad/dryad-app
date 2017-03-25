@@ -24,6 +24,7 @@ module StashEngine
       @tenant = double(Tenant)
       allow(tenant).to receive(:contact_email).and_return(%w(contact1@example.edu contact2@example.edu))
       allow(tenant).to receive(:full_domain).and_return(request_host)
+      allow(tenant).to receive(:manager_email).and_return('alan.smithee@example.edu')
 
       @user = double(User)
       allow(user).to receive(:first_name).and_return('Jane')
@@ -75,7 +76,8 @@ module StashEngine
           'Return-Path' => sender_address,
           'From' => "Dash Notifications <#{sender_address}>",
           'To' => user.email,
-          'Subject' => "Dataset \"#{title}\" (#{doi}) submitted"
+          'Bcc' => 'alan.smithee@example.edu',
+          'Subject' => "[#{ENV['RAILS_ENV']}] Dataset \"#{title}\" (#{doi}) submitted"
         }
 
         headers = delivery.header.fields.map { |field| [field.name, field.value] }.to_h
@@ -100,7 +102,7 @@ module StashEngine
           'Return-Path' => sender_address,
           'From' => "Dash Notifications <#{sender_address}>",
           'To' => user.email,
-          'Subject' => "Submitting dataset \"#{title}\" (#{doi}) failed"
+          'Subject' => "[#{ENV['RAILS_ENV']}] Submitting dataset \"#{title}\" (#{doi}) failed"
         }
 
         headers = delivery.header.fields.map { |field| [field.name, field.value] }.to_h
@@ -125,7 +127,7 @@ module StashEngine
           'Return-Path' => sender_address,
           'From' => "Dash Notifications <#{sender_address}>",
           'To' => feedback_address.join(','),
-          'Subject' => "Submitting dataset \"#{title}\" (#{doi}) failed"
+          'Subject' => "[#{ENV['RAILS_ENV']}] Submitting dataset \"#{title}\" (#{doi}) failed"
         }
 
         headers = delivery.header.fields.map { |field| [field.name, field.value] }.to_h
