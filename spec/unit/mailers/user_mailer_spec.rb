@@ -88,6 +88,20 @@ module StashEngine
         doi_href = "https://doi.org/#{doi_value}"
         expect(delivery.body.to_s).to include("<a href=\"#{doi_href}\">#{doi_href}</a>")
       end
+
+      it 'omits the environment name in production' do
+        allow(Rails).to receive(:env).and_return('production')
+        begin
+          UserMailer.submission_succeeded(resource).deliver_now
+          deliveries = ActionMailer::Base.deliveries
+          expect(deliveries.size).to eq(1)
+          delivery = deliveries[0]
+          headers = delivery.header.fields.map { |field| [field.name, field.value] }.to_h
+          expect(headers['Subject']).to eq("Dataset \"#{title}\" (#{doi}) submitted")
+        ensure
+          allow(Rails).to receive(:env).and_call_original
+        end
+      end
     end
 
     describe '#submission_failed' do
