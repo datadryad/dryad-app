@@ -1,3 +1,7 @@
+# RSpec tests are inevitably one big BlockLength violation
+Metrics/BlockLength:
+  Enabled: False
+
 # Disable line-length check; it's too easy for the cure to be worse than the disease
 Metrics/LineLength:
   Enabled: False
