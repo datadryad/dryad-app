@@ -322,7 +322,6 @@ module StashEngine
             new_resource = Resource.create(identifier: resource.identifier)
             expect(new_resource.version_number).to eq(2)
           end
-
         end
 
         describe '#merritt_version' do

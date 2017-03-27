@@ -75,4 +75,4 @@ end
 # Defaults
 
 desc 'Check code style, run unit tests, check test coverage'
-task default: [:git_pull, :spec, :rubocop, :coverage]
+task default: %i(git_pull spec rubocop coverage)
