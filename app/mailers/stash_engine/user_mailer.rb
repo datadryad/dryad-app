@@ -19,8 +19,10 @@ module StashEngine
       @identifier_value = resource.identifier_value
       @backtrace = to_backtrace(error)
 
-      to_address = to_address_list(APP_CONFIG['feedback_email_to'])
-      mail(to: to_address, subject: "#{rails_env}Submitting dataset \"#{@title}\" (doi:#{@identifier_value}) failed")
+      to_address = to_address_list(APP_CONFIG['support_team_email'])
+      bcc_address = to_address_list(tenant.manager_email)
+      mail(to: to_address, bcc: bcc_address,
+           subject: "#{rails_env}Submitting dataset \"#{@title}\" (doi:#{@identifier_value}) failed")
     end
 
     def submission_succeeded(resource)
@@ -38,7 +40,8 @@ module StashEngine
 
       to_address = to_address_list(user.email)
       bcc_address = to_address_list(tenant.manager_email)
-      mail(to: to_address, bcc: bcc_address, subject: "#{rails_env}Dataset \"#{@title}\" (doi:#{@identifier_value}) submitted")
+      mail(to: to_address, bcc: bcc_address,
+           subject: "#{rails_env}Dataset \"#{@title}\" (doi:#{@identifier_value}) submitted")
     end
 
     def submission_failed(resource, error)
@@ -53,12 +56,13 @@ module StashEngine
 
       tenant = user.tenant
       @host = tenant.full_domain
-      @contact_email = to_address_list([APP_CONFIG['feedback_email_to']].flatten + [tenant.manager_email].flatten)
 
       @backtrace = to_backtrace(error)
 
       to_address = to_address_list(user.email)
-      mail(to: to_address, subject: "#{rails_env}Submitting dataset \"#{@title}\" (doi:#{@identifier_value}) failed")
+      bcc_address = to_address_list([APP_CONFIG['support_team_email']].flatten + [tenant.manager_email].flatten)
+      mail(to: to_address, bcc: bcc_address,
+           subject: "#{rails_env}Submitting dataset \"#{@title}\" (doi:#{@identifier_value}) failed")
     end
 
     private
