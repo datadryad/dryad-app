@@ -1,3 +1,6 @@
+# don't lock gemfile for specs
+Gemfile.lock
+
 #### joe made this: http://goel.io/joe
 #### ruby ####
 *.gem
