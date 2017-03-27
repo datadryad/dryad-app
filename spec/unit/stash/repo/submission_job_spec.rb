@@ -31,6 +31,12 @@ module Stash
         end
       end
 
+      describe :description do
+        it 'is abstract' do
+          expect { job.description }.to raise_error(NoMethodError)
+        end
+      end
+
       describe :submit_async do
         it 'delegates to :submit!, asynchronously' do
           result = SubmissionResult.new(resource_id: 17, request_desc: 'test', message: 'whee!')
