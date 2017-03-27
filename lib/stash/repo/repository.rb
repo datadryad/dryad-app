@@ -50,7 +50,7 @@ module Stash
       def handle_success(result)
         result.log_to(log)
         resource = StashEngine::Resource.find(result.resource_id)
-        resource.current_state = 'published'
+        resource.current_state = 'submitted'
         update_submission_log(result)
         StashEngine::UserMailer.submission_succeeded(resource).deliver_now
         cleanup_files(resource)
