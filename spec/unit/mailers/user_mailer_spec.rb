@@ -12,7 +12,7 @@ module StashEngine
     attr_reader :mailer
     attr_reader :tenant
     attr_reader :sender_address
-    attr_reader :feedback_address
+    attr_reader :support_address
 
     before(:each) do
       @title = 'An Account of a Very Odd Monstrous Calf'
@@ -46,7 +46,7 @@ module StashEngine
       ActionMailer::Base._view_paths.push("#{stash_engine_path}/app/views")
 
       @sender_address = APP_CONFIG['feedback_email_from']
-      @feedback_address = APP_CONFIG['feedback_email_to']
+      @support_address = APP_CONFIG['support_team_email']
 
       allow_any_instance_of(ActionView::Helpers::UrlHelper)
         .to receive(:url_for)
@@ -126,7 +126,8 @@ module StashEngine
         expected_headers = {
           'Return-Path' => sender_address,
           'From' => "Dash Notifications <#{sender_address}>",
-          'To' => feedback_address.join(','),
+          'To' => support_address.join(','),
+          'Bcc' => 'alan.smithee@example.edu',
           'Subject' => "[#{ENV['RAILS_ENV']}] Submitting dataset \"#{title}\" (#{doi}) failed"
         }
 
