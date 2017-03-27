@@ -20,6 +20,7 @@ module StashEngine
       @backtrace = to_backtrace(error)
 
       to_address = to_address_list(APP_CONFIG['support_team_email'])
+      tenant = user.tenant
       bcc_address = to_address_list(tenant.manager_email)
       mail(to: to_address, bcc: bcc_address,
            subject: "#{rails_env}Submitting dataset \"#{@title}\" (doi:#{@identifier_value}) failed")
