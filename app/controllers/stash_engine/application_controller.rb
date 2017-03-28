@@ -1,3 +1,7 @@
+require 'stash/streamer'
+require 'httpclient'
+require 'uri'
+
 module StashEngine
   class ApplicationController < ::ApplicationController
 
@@ -12,5 +16,6 @@ module StashEngine
         redirect_to(uri.to_s) && return
       end
     end
+
   end
 end

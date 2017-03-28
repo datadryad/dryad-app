@@ -1,0 +1,41 @@
+<div class="sharing_form">
+  <p>
+    You can share this dataset with others using this url link below.
+  </p>
+  <%# the local variable 'title' should be passed in to this partial when there are multiple per page %>
+  <% form_id = unique_form_id(share) %>
+  <%= form_for(share, url: path, remote: true, authenticity_token: true, html: { id: form_id, class: 'c-input' }) do |f| %>
+      <div>
+        <%= text_field_tag :sharing_link, share.sharing_link,  id: 'sharing_link', class: 'c-input__text', disabled: true,
+                         style: 'width:700px; display: inline-block;' %>
+        <%= f.hidden_field(:secret_id) %>
+        <input type="image" src="<%= image_path('stash_engine/icon_clipboard') %>"
+                data-clipboard-target='sharing_link'
+                data-clipboard-text='Default clipboard text from attribute'
+                id='d_clip_button'
+                title='Click me to copy to clipboard.'
+                style='width:30px; height:30px;'>
+        </input>
+      </div>
+
+    <%= f.hidden_field :resource_id %>
+    <%= f.hidden_field :id %>
+    <%= hidden_field_tag(:form_id, form_id) %>
+  <% end %>
+</div>
+
+
+<script>
+  $(document).ready(function() {
+    var clip = new ZeroClipboard($("#d_clip_button"))
+  });
+
+  $('#d_clip_button').click(function(event) {
+    event.preventDefault();
+    $(this).attr('src', '<%= image_path('stash_engine/icon_clipboard2') %>');
+    $(this).fadeOut(20).fadeIn(200);
+    setTimeout(function() {
+      $('#d_clip_button').attr('src', '<%= image_path('stash_engine/icon_clipboard') %>');
+    }, 500);
+  });
+</script>

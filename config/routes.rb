@@ -31,6 +31,13 @@ StashEngine::Engine.routes.draw do
   get 'preparing_to_submit', to: 'dashboard#preparing_to_submit', as: 'preparing_to_submit'
   get 'upload_basics', to: 'dashboard#upload_basics', as: 'upload_basics'
 
+  # download related
+  match 'downloads/download_resource/:resource_id', to: 'downloads#download_resource', as: 'download_resource', via: [:get, :post]
+  match 'downloads/async_request/:resource_id', to: 'downloads#async_request', as: 'download_async_request', via: [:get, :post]
+  match 'downloads/capture_email/:resource_id', to: 'downloads#capture_email', as: 'download_capture_email', via: [:get, :post]
+  get 'share/:id', to: 'downloads#share', as: 'share'
+
+
   match 'metadata_entry_pages/find_or_create' => 'metadata_entry_pages#find_or_create', via: [:get, :post, :put]
   match 'metadata_entry_pages/new_version' => 'metadata_entry_pages#new_version', via: [:post, :get]
 
@@ -47,5 +54,14 @@ StashEngine::Engine.routes.draw do
   get 'dataset/*id', :to => 'landing#show', as: 'show', :constraints => { :id => /\S+/ }
   get 'data_paper/*id', :to => 'landing#data_paper', as: 'data_paper', :constraints => { :id => /\S+/ }
   get '404', :to => 'pages#app_404', as: 'app_404'
+
+  get 'embargoes/new', to: 'embargoes#new'
+  post 'embargoes/create', to: 'embargoes#create'
+  patch 'embargoes/update', to: 'embargoes#update'
+  delete 'embargoes/:id/delete', to: 'embargoes#delete'
+
+  post 'shares/create', to: 'shares#create'
+  patch 'shares/update', to: 'shares#update'
+  delete 'shares/:id/delete', to: 'shares#delete'
 
 end

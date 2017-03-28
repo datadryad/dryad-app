@@ -7,7 +7,7 @@ module StashEngine
       c.helper_method :current_tenant, :current_tenant_simple, :current_user, :metadata_engine, :metadata_url_helpers,
                       :metadata_render_path, :stash_url_helpers, :discovery_url_helpers, :landing_url,  :field_suffix,
                       :logo_path, :contact_us_url, :display_br, :display_id, :display_id_plain,
-                      :formatted_date, :file_content_dump, :display_orcid_id
+                      :formatted_date, :can_display_embargoed?, :file_content_dump, :display_orcid_id
     end
 
     def metadata_url_helpers
@@ -83,6 +83,10 @@ module StashEngine
         flash[:alert] = 'You do not have permission to modify this dataset.'
         redirect_to stash_engine.dashboard_path
       end
+    end
+
+    def can_display_embargoed?(resource)
+      !resource.under_embargo? || (current_user && current_user.id == resource.user_id)
     end
 
     def ajax_require_current_user

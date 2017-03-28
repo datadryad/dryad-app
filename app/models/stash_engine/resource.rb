@@ -7,7 +7,8 @@ module StashEngine
     has_one :stash_version, class_name: 'StashEngine::Version'
     belongs_to :identifier, class_name: 'StashEngine::Identifier', foreign_key: 'identifier_id'
     has_one :resource_usage, class_name: 'StashEngine::ResourceUsage'
-    has_one :embargo, class_name: 'StashEngine::Embargo'
+    has_one :embargo, class_name: 'StashEngine::Embargo', dependent: :destroy
+    has_one :share, class_name: 'StashEngine::Share', dependent: :destroy
     belongs_to :user, class_name: 'StashEngine::User'
     has_one :current_resource_state,
             class_name: 'StashEngine::ResourceState',
@@ -58,6 +59,8 @@ module StashEngine
       init_state unless current_resource_state_id
       save
     end
+    # TODO: we may want to disable this if/when we don't need it since it really kills performance for finding a long
+    # list of resources.  For example in the rails console, resource.all does another query for each item in the list
     after_find :ensure_state_and_version
 
     # ------------------------------------------------------------
@@ -113,6 +116,28 @@ module StashEngine
       subquery = FileUpload.where(resource_id: id)
                            .select('max(id) last_id, upload_file_name').group(:upload_file_name)
       FileUpload.joins("INNER JOIN (#{subquery.to_sql}) sub on id = sub.last_id").order(upload_file_name: :asc)
+    end
+
+    # ------------------------------------------------------------
+    # Special merritt download URLs
+
+    # this takes the download URI we get from merritt for the whole object and manipulates it into a producer download
+    # the version number is the merritt version number, or nil for latest version
+    # TODO: this knows about merritt specifics transforming the sword url into a merritt url, needs to be elsewhere
+    def merritt_producer_download_uri
+      return nil if download_uri.nil?
+      return nil unless download_uri.match(/^https*:\/\/[^\/]+\/d\/\S+$/)
+      version_number = stash_version.merritt_version
+      "#{download_uri.sub('/d/', '/u/')}/#{version_number}"
+    end
+
+    # TODO: we need a better way to get a Merritt local_id and domain then ripping it from the headlines
+    # (ie the Sword download URI)
+    def merritt_domain_and_local_id
+      return nil if download_uri.nil?
+      return nil unless download_uri.match(/^https*:\/\/[^\/]+\/d\/\S+$/)
+      matches = download_uri.match(/^https*:\/\/([^\/]+)\/d\/(\S+)$/)
+      [matches[1], matches[2]]
     end
 
     # ------------------------------------------------------------
@@ -257,6 +282,13 @@ module StashEngine
     def increment_views
       ensure_resource_usage
       resource_usage.increment(:views).save
+    end
+
+    # -----------------------------------------------------------
+    # Embargoes
+    def under_embargo?
+      return false if embargo.nil? || embargo.end_date.nil?
+      Time.new < embargo.end_date
     end
 
     private
