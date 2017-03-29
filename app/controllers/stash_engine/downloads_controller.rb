@@ -16,9 +16,8 @@ module StashEngine
         if current_user && current_user.id == @resource.user_id
           setup_async_download_variable #which may redirect to different page in certain circumstances
           if @async_download
-            #redirect_to  stash_engine.download_capture_email_path(@resource)
-            render(partial: 'stash_engine/landing/capture_email',
-                   locals: {resource: @resource, secret_id: '' })
+            @secret_id = ''
+            render 'capture_email'
           else
             stream_response(@resource.merritt_producer_download_uri,
               @resource.tenant.repository.username,
@@ -34,19 +33,13 @@ module StashEngine
         # redirect to the producer file download link
         setup_async_download_variable #which may redirect to different page in certain circumstances
         if @async_download
-          #redirect_to  stash_engine.download_capture_email_path(@resource)
-          render(partial: 'stash_engine/landing/capture_email',
-                   locals: {resource: @resource, secret_id: '' })
+          @secret_id = ''
+          render 'capture_email'
         else
           redirect_to @resource.merritt_producer_download_uri and return
         end
       end
     end
-
-    # def capture_email
-    #   @resource = Resource.find(params[:resource_id])
-    #   render partial: 'stash_engine/landing/capture_email'
-    # end
 
     def async_request
       @resource = Resource.find(params[:resource_id])
@@ -74,9 +67,8 @@ module StashEngine
 
       if @async_download
         #redirect to the form for filling in their email address to get an email
-        #redirect_to  stash_engine.download_capture_email_path(@resource)
-        render(partial: 'stash_engine/landing/capture_email',
-               locals: {resource: @resource, secret_id: @resource.share.secret_id })
+        @secret_id = @resource.share.secret_id
+        render 'capture_email'
         #don't forget to be sure that action has good security, so that people can't just go
         #to that page and bypass embargoes without a login or a token for downloading
       else
