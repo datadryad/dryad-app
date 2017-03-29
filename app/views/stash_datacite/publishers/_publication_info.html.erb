@@ -1,5 +1,8 @@
 <div class="o-metadata__group2">
-  <div class="o-metadata__group2-item">Submission Date: <%= formatted_date(resource.try(:identifier).try(:created_at)) %></div>
+  <div class="o-metadata__group2-item">Original submission date: <%= formatted_date(resource.identifier.first_submitted_resource.stash_version.updated_at) %></div>
+  <% if resource.stash_version.version != 1 %>
+    <div class="o-metadata__group2-item">Version <%= resource.stash_version.version %> submission date: <%= formatted_date(resource.stash_version.updated_at) %></div>
+  <% end %>
   <% resource.datacite_dates.available.each do |i| %>
     <div class="o-metadata__group2-item">Published Date: <%= formatted_date(i.date) %></div>
   <% end %>
