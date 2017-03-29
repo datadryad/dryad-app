@@ -231,7 +231,7 @@ module StashEngine
     end
 
     def next_merritt_version
-      last_version = (identifier && identifier.last_submitted_version)
+      last_version = (identifier && identifier.last_submitted_resource)
       last_version ? last_version.merritt_version + 1 : 1
     end
 
