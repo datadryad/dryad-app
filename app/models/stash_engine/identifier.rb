@@ -28,6 +28,7 @@ module StashEngine
       submitted.by_version.first
     end
 
+    # @return Resource the current in-progress resource
     def in_progress_version
       in_progress = resources.in_progress
       in_progress.first
