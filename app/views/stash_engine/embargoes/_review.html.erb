@@ -1,0 +1,13 @@
+<p>
+  Publication date make data publicly accessible right away, or after a waiting period.
+</p>
+
+<% if embargo.persisted? %>
+  <%= render partial: "stash_engine/embargoes/form", locals: { embargo: embargo, path: stash_engine.embargoes_update_path, resource_id: @resource.id }%>
+<% else %>
+  <%= render partial: "stash_engine/embargoes/form", locals: { embargo: embargo, path: stash_engine.embargoes_create_path, resource_id: @resource.id }%>
+<% end %>
+
+<p>
+  This dataset will be published as soon as your submission is processed.
+</p>
