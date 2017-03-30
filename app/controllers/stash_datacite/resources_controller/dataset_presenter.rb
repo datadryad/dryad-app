@@ -56,7 +56,7 @@ module StashDatacite
       end
 
       def embargo_status
-        return 'embargoed' if @resource.embargoed?
+        return 'private' if @resource.embargoed?
         return 'published' if @resource.published?
         resource.current_state
       end
