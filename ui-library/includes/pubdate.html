@@ -1,41 +1,21 @@
-
+<p class="c-pubdate__random_strong">Make my dataset publicly available:</p>
 <div class="o-select">
 	<div class="c-input o-select__input">
-		<label class="c-input__label" for="c-pubdate__input1">Publish this dataset</label>
-		<select class="o-select__select c-input__select" name="" id="c-pubdate__input1">
-			<option class="js-select__option1" value="">today</option>
-			<option class="js-select__option2" value="">in 1 week</option>
-			<option class="js-select__option3" value="">in 1 month</option>
-			<option class="js-select__option4" value="">in 3 months</option>
-			<option class="js-select__option5" value="">in 6 months</option>
-			<option class="js-select__option6" value="">in 1 year</option>
-			<option class="js-select__option7" value="">on a specific date</option>
-		</select>
-	</div>
-	<div class="js-select__content1 o-select__content">
-		Your data will be published as soon as your submission is processed.
-	</div>
-	<div class="js-select__content2 o-select__content">
-		This data is scheduled to be published on <time class="js-pubdate__week1"></time>. You will be able to change the publication date any time up to that date.
-	</div>
-	<div class="js-select__content3 o-select__content">
-		This data is scheduled to be published on <time class="js-pubdate__month1"></time>. You will be able to change the publication date any time up to that date.
-	</div>
-	<div class="js-select__content4 o-select__content">
-		This data is scheduled to be published on <time class="js-pubdate__month3"></time>. You will be able to change the publication date any time up to that date.
-	</div>
-	<div class="js-select__content5 o-select__content">
-		This data is scheduled to be published on <time class="js-pubdate__month6"></time>. You will be able to change the publication date any time up to that date.
-	</div>
-	<div class="js-select__content6 o-select__content">
-		This data is scheduled to be published on <time class="js-pubdate__year1"></time>. You will be able to change the publication date any time up to that date.
-	</div>
-	<div class="js-select__content7 o-select__content">
-		<p>This data is scheduled to be published on the following release date. You will be able to change the publication date any time up to that date.</p>
-		<div class="c-input">
-			<label class="c-input__label" for="c-pubdate__input2">Release Date</label>
-			<input class="js-pubdate__release-date-input c-input__text c-pubdate__release-date-input" id="c-pubdate__input2" type="date" name="">
-			<div class="c-input__error-message js-input__error-message">Error message.</div>
-		</div>
+
+
+    <label class=c-pubdate__radio-label" for="today_button">
+      <input type="radio" class="c-pubdate__radio" id="today_button" name="when-to-publish" value="today" checked />
+      Today
+    </label>
+
+
+		<label class="c-pubdate__radio-label" for="future_button">
+      <input type="radio" class="c-pubdate__radio" id="future_button" name="when-to-publish" value="in_future" />
+      On
+      <input type="text" pattern="[0-9]{1,2}" maxlength="2" id="mmEmbargo" class="c-pubdate__two_digit" /> /
+      <input type="text" pattern="[0-9]{1,2}" maxlength="2" id="ddEmbargo" class="c-pubdate__two_digit" /> /
+      <input type="text" pattern="[0-9]{4}" maxlength="4" id="yyyyEmbargo" class="c-pubdate__four_digit" />
+    </label>
+
 	</div>
 </div>

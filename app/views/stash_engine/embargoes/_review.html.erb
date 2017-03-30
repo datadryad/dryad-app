@@ -1,13 +1,18 @@
 <p>
-  Publication date make data publicly accessible right away, or after a waiting period.
+  You may choose to publish your dataset on a specific date up to <%= APP_CONFIG.max_review_days %> days from today.
 </p>
 
-<% if embargo.persisted? %>
+<p><strong>Make my dataset publicly available:</strong></p>
+
+<input type="radio" name="when-to-publish" value="today" checked />Today
+
+<input type="radio" name="when-to-publish" value="in_future" />
+On
+
+
+
+<% if false && embargo.persisted? %>
   <%= render partial: "stash_engine/embargoes/form", locals: { embargo: embargo, path: stash_engine.embargoes_update_path, resource_id: @resource.id }%>
 <% else %>
-  <%= render partial: "stash_engine/embargoes/form", locals: { embargo: embargo, path: stash_engine.embargoes_create_path, resource_id: @resource.id }%>
+  <%# render partial: "stash_engine/embargoes/form", locals: { embargo: embargo, path: stash_engine.embargoes_create_path, resource_id: @resource.id }%>
 <% end %>
-
-<p>
-  This dataset will be published as soon as your submission is processed.
-</p>
