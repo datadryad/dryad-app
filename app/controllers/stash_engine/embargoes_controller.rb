@@ -54,17 +54,25 @@ module StashEngine
         format.js {
           @resource = Resource.find(params[:resource_id])
           @embargo = @resource.embargo
-          @message = ''
+          @messages = []
           return if @resource.user.id != current_user.id
           if params['when-to-publish'] == 'in_future'
             @embargo = Embargo.new(resource_id: @resource.id) unless @embargo
             r = Regexp.new(/^\d+$/)
             # all numbers
             if params['mmEmbargo'].match(r) && params['ddEmbargo'].match(r) && params['yyyyEmbargo'].match(r)
-              @embargo.end_date = Time.new(params['yyyyEmbargo'].to_i, params['mmEmbargo'].to_i, params['ddEmbargo'].to_i)
-              @embargo.save
+              mm, dd, yyyy = params['mmEmbargo'].to_i, params['ddEmbargo'].to_i, params['yyyyEmbargo'].to_i
+              if !valid_date_parts?(yyyy, mm, dd)
+                @messages += ['Please enter a valid month / day / year for your date.']
+              elsif !valid_range?(yyyy, mm, dd)
+                @messages += [ 'Please enter a date between now and ' +
+                      "#{(Time.new + APP_CONFIG.max_review_days.to_i.days).strftime("%-m/%-d/%Y")}." ]
+              else
+                @embargo.end_date = Time.new(yyyy, mm, dd)
+                @embargo.save
+              end
             else
-              #not numbers
+              @messages += ['Please enter numeric values for the month / day / year.']
             end
           else
             #publish now, not later.  Destroy embargo
@@ -72,10 +80,26 @@ module StashEngine
           end
         }
       end
-
     end
 
     private
+
+    def valid_date_parts?(yyyy, mm, dd)
+      begin
+        Time.new(yyyy, mm, dd)
+      rescue ArgumentError => ex
+        return false
+      end
+      true
+    end
+
+    def valid_range?(yyyy, mm, dd)
+      t = Time.new
+      today = Time.new(t.year, t.month, t.day)
+      max_day = Time.new + APP_CONFIG.max_review_days.to_i.days
+      my_day = Time.new(yyyy, mm, dd)
+      (my_day >= today) && (my_day < max_day)
+    end
 
     # Use callbacks to share common setup or constraints between actions.
     def set_embargo
@@ -86,5 +110,6 @@ module StashEngine
     def embargo_params
       params.require(:embargo).permit(:id, :end_date, :resource_id)
     end
+
   end
 end
