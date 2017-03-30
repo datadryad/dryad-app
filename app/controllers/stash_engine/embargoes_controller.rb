@@ -47,6 +47,12 @@ module StashEngine
       end
     end
 
+    # this is a generic action to handle all create/modify/delete actions for an embargo since it's just one form
+    # and using the rest methods in this case is overly complicated and annoying
+    def changed
+      byebug
+    end
+
     private
 
     # Use callbacks to share common setup or constraints between actions.
