@@ -1,0 +1,5 @@
+$('#embargo_warnings').text('');
+
+<% @messages.each do |m| %>
+  $('#embargo_warnings').append('<p><%= m %></p>');
+<% end %>
