@@ -51,16 +51,16 @@ module StashEngine
         Version.create(resource_id: res3.id, version: 3)
       end
 
-      describe '#first_submitted_version' do
+      describe '#first_submitted_resource' do
         it 'returns the first submitted version' do
-          lsv = identifier.first_submitted_version
+          lsv = identifier.first_submitted_resource
           expect(lsv.id).to eq(res1.id)
         end
       end
 
-      describe '#last_submitted_version' do
+      describe '#last_submitted_resource' do
         it 'returns the last submitted version' do
-          lsv = identifier.last_submitted_version
+          lsv = identifier.last_submitted_resource
           expect(lsv.id).to eq(res2.id)
         end
       end
