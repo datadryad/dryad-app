@@ -47,6 +47,34 @@ module StashEngine
       end
     end
 
+    # this is a generic action to handle all create/modify/delete actions for an embargo since it's just one form
+    # and using the rest methods in this case is overly complicated and annoying
+    def changed
+      respond_to do |format|
+        format.js {
+          @resource = Resource.find(params[:resource_id])
+          @embargo = @resource.embargo
+          @message = ''
+          return if @resource.user.id != current_user.id
+          if params['when-to-publish'] == 'in_future'
+            @embargo = Embargo.new(resource_id: @resource.id) unless @embargo
+            r = Regexp.new(/^\d+$/)
+            # all numbers
+            if params['mmEmbargo'].match(r) && params['ddEmbargo'].match(r) && params['yyyyEmbargo'].match(r)
+              @embargo.end_date = Time.new(params['yyyyEmbargo'].to_i, params['mmEmbargo'].to_i, params['ddEmbargo'].to_i)
+              @embargo.save
+            else
+              #not numbers
+            end
+          else
+            #publish now, not later.  Destroy embargo
+            @embargo.destroy if @embargo
+          end
+        }
+      end
+
+    end
+
     private
 
     # Use callbacks to share common setup or constraints between actions.
