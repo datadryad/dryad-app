@@ -143,13 +143,17 @@ module StashEngine
     # ------------------------------------------------------------
     # Current resource state
 
-    # TODO: EMBARGO: change this to :submitted?, and/or check embargo dates/status and add :embargoed?
+    # TODO: EMBARGO: change this to :submitted? or exclude embargoed?
     def published?
-      current_resource_state.resource_state == 'submitted'
+      current_state == 'submitted'
     end
 
     def processing?
-      current_resource_state.resource_state == 'processing'
+      current_state == 'processing'
+    end
+
+    def embargoed?
+      current_state == 'submitted' && (embargo && embargo.end_date > Time.now)
     end
 
     def current_state
