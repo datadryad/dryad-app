@@ -1,7 +1,7 @@
 class FixInProgressVersions < ActiveRecord::Migration
   def change
     StashEngine::Identifier.find_each do |identifier|
-      lsv = identifier.last_submitted_version
+      lsv = identifier.last_submitted_resource
       next unless lsv
       lsv_stash_version = lsv.version_number
       lsv_merritt_version = lsv.merritt_version
