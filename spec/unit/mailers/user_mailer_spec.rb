@@ -13,6 +13,7 @@ module StashEngine
     attr_reader :tenant
     attr_reader :sender_address
     attr_reader :support_address
+    attr_reader :embargo
 
     before(:each) do
       @title = 'An Account of a Very Odd Monstrous Calf'
@@ -32,11 +33,15 @@ module StashEngine
       allow(user).to receive(:email).and_return('jane.doe@example.edu')
       allow(user).to receive(:tenant).and_return(tenant)
 
+      @embargo = double(Embargo)
+      allow(embargo).to receive(:end_date).and_return(Date.tomorrow.to_time(:utc))
+
       @resource = double(Resource)
       allow(resource).to receive(:user).and_return(user)
       allow(resource).to receive(:identifier_uri).and_return("https://doi.org/#{doi_value}")
       allow(resource).to receive(:identifier_value).and_return(doi_value)
       allow(resource).to receive(:primary_title).and_return(title)
+      allow(resource).to receive(:embargo).and_return(embargo)
 
       @delivery_method = ActionMailer::Base.delivery_method
       ActionMailer::Base.delivery_method = :test
