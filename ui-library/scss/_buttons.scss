@@ -278,3 +278,11 @@
   background: $design-white-color inline('../images/icon_question-mark.svg') center / 15px no-repeat;
   text-decoration: none;
 }
+
+.o-button__calendar {
+  padding: 15px;
+  border: none;
+  background: transparent inline('../images/icon_mini_calendar.png') top / 22px no-repeat;
+}
+
+button.o-button__calendar:focus { outline: none; }
