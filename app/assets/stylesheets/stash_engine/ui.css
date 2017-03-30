@@ -4345,6 +4345,14 @@ html.svg .c-facet__check-label {
 .c-pubdate__fourdigit {
   width: 4em; }
 
+.c-pubdate__warning-visible {
+  display: block;
+  color: #d12c1d;
+  font-weight: bold; }
+
+.c-pubdate__warning-hidden {
+  display: none; }
+
 .c-review-files {
   display: -ms-flexbox;
   display: flex;

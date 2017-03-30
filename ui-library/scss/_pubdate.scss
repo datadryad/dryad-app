@@ -8,9 +8,6 @@
   margin: 0.1em 0.25em 1em 2px;
 }
 
-.c-pubdate__radio-label {
-}
-
 .c-pubdate__randomstrong {
   font-size: 110%;
   font-weight: bold;
@@ -24,3 +21,12 @@
   width: 4em;
 }
 
+.c-pubdate__warning-visible {
+  display: block;
+  color: $design-red-color;
+  font-weight: bold;
+}
+
+.c-pubdate__warning-hidden {
+  display: none;
+}
