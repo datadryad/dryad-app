@@ -56,13 +56,9 @@ module StashDatacite
       end
 
       def embargo_status
-        if @resource.embargo && @resource.embargo.end_date > Time.new && @resource.current_state == 'submitted'
-          'embargoed'
-        elsif @resource.current_state == 'submitted'
-          'published'
-        else
-          @resource.current_state
-        end
+        return 'embargoed' if @resource.embargoed?
+        return 'published' if @resource.published?
+        resource.current_state
       end
 
       def publication_date
