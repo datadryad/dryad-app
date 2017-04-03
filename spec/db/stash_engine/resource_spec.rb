@@ -15,6 +15,90 @@ module StashEngine
       )
     end
 
+    describe 'author' do
+      attr_reader :resource
+      before(:each) do
+        @resource = Resource.create(user_id: user.id)
+      end
+
+      it 'defaults to no authors' do
+        expect(resource.authors).to be_empty
+      end
+
+      it 'allows one author' do
+        author = Author.create(
+          resource_id: resource.id,
+          author_first_name: 'Albert',
+          author_last_name: 'Einstein',
+          author_email: 'bigal@example.edu',
+          author_orcid: '0000-0001-8528-2091'
+        )
+        expect(resource.authors.first).to eq(author)
+      end
+
+      it 'allows multiple authors' do
+        author1 = Author.create(
+          resource_id: resource.id,
+          author_first_name: 'Lise',
+          author_last_name: 'Meitner',
+          author_email: 'lmeitner@example.edu',
+          author_orcid: '0000-0003-4293-0137'
+        )
+        author2 = Author.create(
+          resource_id: resource.id,
+          author_first_name: 'Albert',
+          author_last_name: 'Einstein',
+          author_email: 'bigal@example.edu',
+          author_orcid: '0000-0001-8528-2091'
+        )
+        expect(resource.authors).to include(author1, author2)
+      end
+
+      describe 'amoeba duplication' do
+        attr_reader :authors
+
+        before(:each) do
+          @authors = [
+            Author.create(
+              resource_id: resource.id,
+              author_first_name: 'Lise',
+              author_last_name: 'Meitner',
+              author_email: 'lmeitner@example.edu',
+              author_orcid: '0000-0003-4293-0137'
+            ),
+            Author.create(
+              resource_id: resource.id,
+              author_first_name: 'Albert',
+              author_last_name: 'Einstein',
+              author_email: 'bigal@example.edu',
+              author_orcid: '0000-0001-8528-2091'
+            )
+          ]
+        end
+
+        it 'copies authors' do
+          old_authors = resource.authors.to_a
+          expect(Author.count).to eq(2) # just to be sure
+          expect(old_authors.size).to eq(2) # just to be sure
+
+          new_resource = resource.amoeba_dup
+          new_resource.save!
+          expect(Author.count).to eq(4)
+
+          new_authors = new_resource.authors.to_a
+          expect(new_authors.size).to eq(2)
+          new_authors.each_with_index do |author, i|
+            expect(author.id).not_to eq(old_authors[i].id)
+            expect(author.resource_id).to eq(new_resource.id)
+            expect(author.author_first_name).to eq(old_authors[i].author_first_name)
+            expect(author.author_last_name).to eq(old_authors[i].author_last_name)
+            expect(author.author_email).to eq(old_authors[i].author_email)
+            expect(author.author_orcid).to eq(old_authors[i].author_orcid)
+          end
+        end
+      end
+    end
+
     describe 'resource state' do
       attr_reader :resource
       attr_reader :state
