@@ -1,3 +1,6 @@
+<style>
+  .hidden { display: none; }
+</style>
 <p>
   You may choose to publish your dataset on a specific date up to <%= APP_CONFIG.max_review_days %> days from today.
 </p>
@@ -27,7 +30,10 @@
         /
         <input type="text" pattern="[0-9]{4}" maxlength="4" id="yyyyEmbargo" name="yyyyEmbargo"
                value="<%= starting_embargo.year %>" class="c-pubdate__fourdigit js-embargo-select"/>
-        <button aria-label="open calendar" class="o-button__calendar js-embargo-select"></button>
+        <!-- this ugly hidden button is because the datepicker needs a text input -->
+        <input type="text" id="date" class="hidden" />
+        <button aria-label="open calendar" id="datepicker" class="o-button__calendar js-embargo-select"
+            title="Press to open calendar"></button>
       </label>
 
 
@@ -35,31 +41,9 @@
     </div>
   </div>
 <% end %>
-
 <script>
-  // switch the mm/dd/yyy to readonly and back, probably not needed.
-  function setEmbargoState(){
-    if($('#today_button').is(':checked')){
-      $('.js-embargo-select').attr( "readonly", "readonly" );
-    }else{
-      $('.js-embargo-select').removeAttr('readonly');
-    }
-  }
-  // set correct option when people click into mm/dd/yyyy or other things
-  $('.js-embargo-select').click(function() {
-    $("#future_button").prop("checked", true);
-    setEmbargoState();
-  });
-  // when changed from today to future or opposite update state and submit the form
-  $('#future_button,#today_button').click(function() {
-    setEmbargoState();
-    $('#embargo_form').submit();
-  });
-  $('#mmEmbargo,#ddEmbargo,#yyyyEmbargo').blur(function() {
-    $('#embargo_form').submit();
-  });
+  loadDatepicker(<%= APP_CONFIG.max_review_days %>);
 </script>
-
 
 
 <% if false && embargo.persisted? %>
