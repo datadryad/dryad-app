@@ -1,0 +1,5 @@
+module StashEngine
+  class Author < ActiveRecord::Base
+    belongs_to :resource, class_name: 'StashEngine::Resource'
+  end
+end
