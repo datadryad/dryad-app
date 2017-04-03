@@ -11,30 +11,33 @@
              remote: true, authenticity_token: true, id: 'embargo_form') do %>
   <div class="o-select">
     <div class="c-input o-select__input">
-      <label class=c-pubdate__radio-label" for="today_button">
-        <input type="radio" class="c-pubdate__radio" id="today_button" name="when-to-publish" value="today"
-          <%= @resource.embargo && @resource.embargo.end_date ? '' : 'checked' %> />
-        Today
-      </label>
+      <span style="white-space:nowrap">
+        <label class=c-pubdate__radio-label" for="today_button">
+          <input type="radio" class="c-pubdate__radio" id="today_button" name="when-to-publish" value="today"
+            <%= @resource.embargo && @resource.embargo.end_date ? '' : 'checked' %> />
+          Today
+        </label>
+      </span>
 
-
-      <label class="c-pubdate__radio-label" for="future_button">
-        <input type="radio" class="c-pubdate__radio" id="future_button" name="when-to-publish" value="in_future"
-               <%= @resource.embargo && @resource.embargo.end_date ? 'checked' : '' %> />
-        On
-        <input type="text" pattern="[0-9]{1,2}" maxlength="2" id="mmEmbargo" name="mmEmbargo"
-               value="<%= starting_embargo.month %>" class="c-pubdate__twodigit js-embargo-select"/>
-        /
-        <input type="text" pattern="[0-9]{1,2}" maxlength="2" id="ddEmbargo" name="ddEmbargo"
-               value="<%= starting_embargo.day %>" class="c-pubdate__twodigit js-embargo-select"/>
-        /
-        <input type="text" pattern="[0-9]{4}" maxlength="4" id="yyyyEmbargo" name="yyyyEmbargo"
-               value="<%= starting_embargo.year %>" class="c-pubdate__fourdigit js-embargo-select"/>
-        <!-- this ugly hidden button is because the datepicker needs a text input -->
-        <input type="text" id="date" class="hidden" />
-        <button aria-label="open calendar" id="datepicker" class="o-button__calendar js-embargo-select"
-            title="Press to open calendar"></button>
-      </label>
+      <span style="white-space:nowrap">
+        <label class="c-pubdate__radio-label" for="future_button">
+          <input type="radio" class="c-pubdate__radio" id="future_button" name="when-to-publish" value="in_future"
+                 <%= @resource.embargo && @resource.embargo.end_date ? 'checked' : '' %> />
+          On
+          <input type="text" pattern="[0-9]{1,2}" maxlength="2" id="mmEmbargo" name="mmEmbargo"
+                 value="<%= starting_embargo.month %>" class="c-pubdate__twodigit js-embargo-select"/>
+          /
+          <input type="text" pattern="[0-9]{1,2}" maxlength="2" id="ddEmbargo" name="ddEmbargo"
+                 value="<%= starting_embargo.day %>" class="c-pubdate__twodigit js-embargo-select"/>
+          /
+          <input type="text" pattern="[0-9]{4}" maxlength="4" id="yyyyEmbargo" name="yyyyEmbargo"
+                 value="<%= starting_embargo.year %>" class="c-pubdate__fourdigit js-embargo-select"/>
+          <!-- this ugly hidden button is because the datepicker needs a text input -->
+          <input type="text" id="date" class="hidden" />
+          <button aria-label="open calendar" id="datepicker" class="o-button__calendar js-embargo-select"
+              title="Press to open calendar"></button>
+        </label>
+      </span>
 
 
       <div class="c-pubdate__warning-visible" id="embargo_warnings"></div>
