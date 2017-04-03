@@ -1,5 +1,5 @@
 <div class="o-metadata__group2">
-  <div class="o-metadata__group2-item">Original submission date: <%= formatted_date(resource.identifier.first_submitted_resource.stash_version.updated_at) %></div>
+  <div class="o-metadata__group2-item">Original submission date: <%= resource.identifier && formatted_date(resource.identifier.first_submitted_resource.stash_version.updated_at) %></div>
   <% if resource.stash_version.version != 1 %>
     <div class="o-metadata__group2-item">Version <%= resource.stash_version.version %> submission date: <%= formatted_date(resource.stash_version.updated_at) %></div>
   <% end %>
