@@ -21,11 +21,11 @@ module StashDatacite
       end
 
       def new_creator
-        @creator = Creator.new(resource_id: @resource.id)
+        @creator = Author.new(resource_id: @resource.id)
       end
 
       def creators
-        @creators = Creator.where(resource_id: @resource.id)
+        @creators = Author.where(resource_id: @resource.id)
       end
 
       def abstract

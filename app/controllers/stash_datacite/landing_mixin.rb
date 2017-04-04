@@ -64,7 +64,7 @@ module StashDatacite
 
     def creator_citation_format(creators)
       return '' if creators.blank?
-      str_creator = creators.map { |c| c.creator_full_name unless c.creator_full_name =~ /^[ ,]+$/ }.compact
+      str_creator = creators.map { |c| c.author_full_name unless c.author_full_name =~ /^[ ,]+$/ }.compact
       return '' if str_creator.blank?
       return "#{str_creator.first} et al." if str_creator.length > 4
       str_creator.join('; ')

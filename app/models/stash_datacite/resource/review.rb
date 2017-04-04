@@ -101,9 +101,9 @@ module StashDatacite
         # “first_five_title_words” are the first five whitespace-separated words of the dataset title.
         author = ''
         if creators.length > 1
-          author = "#{creators.first.creator_last_name}_et_al"
+          author = "#{creators.first.author_last_name}_et_al"
         else
-          author = "#{creators.try(:first).try(:creator_last_name)}"
+          author = "#{creators.try(:first).try(:author_last_name)}"
         end
         pub_year = @resource.try(:publication_years).try(:first).try(:publication_year) || ''
 

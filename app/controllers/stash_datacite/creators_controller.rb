@@ -8,7 +8,7 @@ module StashDatacite
 
     # GET /creators/new
     def new
-      @creator = Creator.new(resource_id: params[:resource_id])
+      @creator = Author.new(resource_id: params[:resource_id])
       respond_to do |format|
         format.js
       end
@@ -18,7 +18,7 @@ module StashDatacite
     def create
       duplicate_affiliation = Affiliation.where('long_name LIKE ? OR short_name LIKE ?',
                                                 params[:affiliation].to_s, params[:affiliation].to_s).first
-      @creator = Creator.new(creator_params)
+      @creator = Author.new(creator_params)
       respond_to do |format|
         @creator.save
         @creator.reload
@@ -62,7 +62,7 @@ module StashDatacite
     # DELETE /creators/1
     def delete
       unless params[:id] == 'new'
-        @creator = Creator.find(params[:id])
+        @creator = Author.find(params[:id])
         @resource = StashDatacite.resource_class.find(@creator.resource_id)
         @if_orcid = check_for_orcid_id(@creator)
         @creator.destroy
@@ -76,12 +76,12 @@ module StashDatacite
 
     # Use callbacks to share common setup or constraints between actions.
     def set_creator
-      @creator = Creator.find(creator_params[:id])
+      @creator = Author.find(creator_params[:id])
     end
 
     # Only allow a trusted parameter "white list" through.
     def creator_params
-      params.require(:creator).permit(:id, :creator_first_name, :creator_last_name, :creator_middle_name,
+      params.require(:creator).permit(:id, :author_first_name, :author_last_name, :author_middle_name,
                                       :name_identifier_id, :affiliation_id, :resource_id, :orcid_id)
     end
 
