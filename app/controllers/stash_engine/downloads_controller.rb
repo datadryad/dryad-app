@@ -63,18 +63,23 @@ module StashEngine
       raise ActionController::RoutingError, 'Not Found' if @shares.count < 1
 
       @resource = @shares.first.resource
-      setup_async_download_variable #which may redirect to different page in certain circumstances
-
-      if @async_download
-        #redirect to the form for filling in their email address to get an email
-        @secret_id = @resource.share.secret_id
-        render 'capture_email'
-        #don't forget to be sure that action has good security, so that people can't just go
-        #to that page and bypass embargoes without a login or a token for downloading
+      if @resource.under_embargo?
+        setup_async_download_variable #which may redirect to different page in certain circumstances
+        if @async_download
+          #redirect to the form for filling in their email address to get an email
+          @secret_id = @resource.share.secret_id
+          render 'capture_email'
+          #don't forget to be sure that action has good security, so that people can't just go
+          #to that page and bypass embargoes without a login or a token for downloading
+        else
+          stream_response(@resource.merritt_producer_download_uri,
+                          @resource.tenant.repository.username,
+                          @resource.tenant.repository.password)
+        end
       else
-        stream_response(@resource.merritt_producer_download_uri,
-                        @resource.tenant.repository.username,
-                        @resource.tenant.repository.password)
+        redirect_to landing_show_path(
+          id: "#{@resource.identifier.identifier_type.downcase}:#{@resource.identifier.identifier}"),
+          notice: 'The dataset is public now public.'
       end
     end
 
