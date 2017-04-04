@@ -34,11 +34,13 @@ module StashEngine
       auth_hash = request.env['omniauth.auth']
       params = request.env['omniauth.params']
       path = request.env['omniauth.origin']
-      creator = metadata_engine::Creator.new(resource_id: params['resource_id'],
-                                             creator_first_name: auth_hash.info.first_name,
-                                             creator_last_name: auth_hash.info.last_name,
-                                             orcid_id: auth_hash.uid)
-      creator.save
+      author = StashEngine::Author.new(
+        resource_id: params['resource_id'],
+        author_first_name: auth_hash.info.first_name,
+        author_last_name: auth_hash.info.last_name,
+        author_orcid: auth_hash.uid
+      )
+      author.save
       redirect_to path
     end
 
