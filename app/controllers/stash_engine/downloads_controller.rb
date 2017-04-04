@@ -81,7 +81,7 @@ module StashEngine
       else
         redirect_to landing_show_path(
           id: "#{@resource.identifier.identifier_type.downcase}:#{@resource.identifier.identifier}"),
-          notice: 'The dataset is public now public.'
+          notice: 'The dataset is public now published.'
       end
     end
 
