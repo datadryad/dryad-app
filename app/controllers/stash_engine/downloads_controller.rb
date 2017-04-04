@@ -61,7 +61,7 @@ module StashEngine
     # method to download by the secret sharing link, must match the string they generated to look up and download
     def share
       @shares = Share.where(secret_id: params[:id])
-      raise ActionController::RoutingError, 'Not Found' if @shares.count < 1 || @shares.first.expiration_date < Time.new
+      raise ActionController::RoutingError, 'Not Found' if @shares.count < 1
 
       @resource = @shares.first.resource
       setup_async_download_variable #which may redirect to different page in certain circumstances
