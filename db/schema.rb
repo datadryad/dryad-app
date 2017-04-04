@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170328212647) do
+ActiveRecord::Schema.define(version: 20170403214243) do
 
   create_table "bookmarks", force: :cascade do |t|
     t.integer  "user_id",       limit: 4,   null: false
@@ -286,6 +286,19 @@ ActiveRecord::Schema.define(version: 20170328212647) do
 
   add_index "searches", ["user_id"], name: "index_searches_on_user_id", using: :btree
 
+  create_table "stash_engine_authors", force: :cascade do |t|
+    t.string   "author_first_name", limit: 255
+    t.string   "author_last_name",  limit: 255
+    t.string   "author_email",      limit: 255
+    t.string   "author_orcid",      limit: 255
+    t.integer  "resource_id",       limit: 4
+    t.datetime "created_at",                    null: false
+    t.datetime "updated_at",                    null: false
+  end
+
+  add_index "stash_engine_authors", ["author_orcid"], name: "index_stash_engine_authors_on_author_orcid", length: {"author_orcid"=>20}, using: :btree
+  add_index "stash_engine_authors", ["resource_id"], name: "index_stash_engine_authors_on_resource_id", using: :btree
+
   create_table "stash_engine_embargoes", force: :cascade do |t|
     t.datetime "end_date"
     t.integer  "resource_id", limit: 4
@@ -357,7 +370,7 @@ ActiveRecord::Schema.define(version: 20170328212647) do
     t.datetime "updated_at",              null: false
   end
 
-  add_index "stash_engine_shares", ["secret_id"], name: "index_stash_engine_shares_on_secret_id", using: :btree
+  add_index "stash_engine_shares", ["secret_id"], name: "index_stash_engine_shares_on_secret_id", length: {"secret_id"=>50}, using: :btree
 
   create_table "stash_engine_submission_logs", force: :cascade do |t|
     t.integer  "resource_id",                limit: 4
