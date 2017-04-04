@@ -15,6 +15,10 @@ WickedPdf.config = {
     #   or
     # exe_path: Gem.bin_path('wkhtmltopdf-binary', 'wkhtmltopdf')
 
+    # We are not using the whkthmltopdf-binary because it causes errors for NFS mounts in the logs which
+    # make Debra annoyed and someone left code in there they shouldn't have.
+    exe_path: '/apps/dash2/local/bin/wkhtmltopdf'
+
     # Layout file to be used for all PDFs
     # (but can be overridden in `render :pdf` calls)
     # layout: 'pdf.html',
