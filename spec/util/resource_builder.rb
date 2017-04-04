@@ -52,7 +52,7 @@ module StashDatacite
     def populate_se_resource! # rubocop:disable Metrics/AbcSize
       set_sd_identifier(dcs_resource.identifier)
       stash_files.each { |stash_file| add_stash_file(stash_file) }
-      dcs_resource.creators.each { |dcs_creator| add_sd_creator(dcs_creator) }
+      dcs_resource.authors.each { |dcs_author| add_sd_author(dcs_author) }
       dcs_resource.titles.each { |dcs_title| add_sd_title(dcs_title) }
       set_sd_publisher(dcs_resource.publisher)
       set_sd_pubyear(dcs_resource.publication_year)
@@ -93,16 +93,16 @@ module StashDatacite
       )
     end
 
-    def add_sd_creator(dcs_creator)
-      last_name, first_name = extract_last_first(dcs_creator.name)
-      sd_creator = Creator.create(
-        creator_first_name: first_name,
-        creator_last_name: last_name,
-        name_identifier_id: sd_name_identifier_id_for(dcs_creator.identifier),
+    def add_sd_author(dcs_author)
+      last_name, first_name = extract_last_first(dcs_author.name)
+      sd_author = Author.create(
+        author_first_name: first_name,
+        author_last_name: last_name,
+        name_identifier_id: sd_name_identifier_id_for(dcs_author.identifier),
         resource_id: se_resource_id
       )
-      sd_creator.affiliation_ids = dcs_creator.affiliations.map { |affiliation_str| sd_affiliation_id_for(affiliation_str) }
-      sd_creator
+      sd_author.affiliation_ids = dcs_author.affiliations.map { |affiliation_str| sd_affiliation_id_for(affiliation_str) }
+      sd_author
     end
 
     def add_sd_title(dcs_title)

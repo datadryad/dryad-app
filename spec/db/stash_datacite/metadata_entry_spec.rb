@@ -80,9 +80,9 @@ module StashDatacite
         end
       end
 
-      describe '#creators' do
-        it 'extracts the creators' do
-          expect(metadata_entry.creators).to eq(resource.creators)
+      describe '#authors' do
+        it 'extracts the authors' do
+          expect(metadata_entry.authors).to eq(resource.authors)
         end
       end
 
@@ -140,11 +140,11 @@ module StashDatacite
         end
       end
 
-      describe 'new_creator' do
-        it 'creates a creator' do
-          creator = metadata_entry.new_creator
-          expect(creator).to be_a(Creator)
-          expect(creator.instance_variable_get(:@new_record)).to eq(true)
+      describe 'new_author' do
+        it 'creates a author' do
+          author = metadata_entry.new_author
+          expect(author).to be_a(Author)
+          expect(author.instance_variable_get(:@new_record)).to eq(true)
         end
       end
 

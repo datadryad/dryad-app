@@ -41,8 +41,8 @@ module StashDatacite
         expect(review.resource_type).to eq(resource.resource_type)
       end
 
-      it 'extracts the creators' do
-        expect(review.creators).to eq(resource.creators)
+      it 'extracts the authors' do
+        expect(review.authors).to eq(resource.authors)
       end
 
       it 'extracts the version' do

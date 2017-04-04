@@ -3,7 +3,7 @@ require 'db_spec_helper'
 module StashDatacite
   module Resource
     describe Completions do
-      REQUIRED_FIELDS = ['title', 'creator affiliation', 'resource type', 'creator name', 'abstract'].freeze
+      REQUIRED_FIELDS = ['title', 'author affiliation', 'resource type', 'author name', 'abstract'].freeze
       REQUIRED_COUNT = REQUIRED_FIELDS.size
 
       OPTIONAL_FIELDS = ['date', 'keywords', 'methods', 'related identifiers'].freeze
@@ -51,12 +51,12 @@ module StashDatacite
       end
 
       describe('#institution') do
-        it 'passes for resources with creator affiliations' do
+        it 'passes for resources with author affiliations' do
           expect(completions.institution).to be_truthy
         end
 
-        it 'fails if creator affiliation is missing' do
-          resource.creators.flat_map(&:affiliations).each(&:destroy)
+        it 'fails if author affiliation is missing' do
+          resource.authors.flat_map(&:affiliations).each(&:destroy)
           expect(completions.institution).to be_falsey
         end
       end
@@ -72,35 +72,35 @@ module StashDatacite
         end
       end
 
-      describe('#creator_name') do
-        it 'passes if all creators have first names' do
-          expect(completions.creator_name).to be_truthy
+      describe('#author_name') do
+        it 'passes if all authors have first names' do
+          expect(completions.author_name).to be_truthy
         end
-        it 'fails if some creators don\'t have first names' do
-          creator = resource.creators.first
-          creator.creator_first_name = nil
-          creator.save
-          expect(completions.creator_name).to be_falsey
+        it 'fails if some authors don\'t have first names' do
+          author = resource.authors.first
+          author.author_first_name = nil
+          author.save
+          expect(completions.author_name).to be_falsey
         end
-        it 'fails if creator is missing' do
-          resource.creators.each(&:destroy)
-          expect(completions.creator_name).to be_falsey
+        it 'fails if author is missing' do
+          resource.authors.each(&:destroy)
+          expect(completions.author_name).to be_falsey
         end
       end
 
-      describe('#creator_affiliation') do
-        it 'fails if creator is missing' do
-          resource.creators.each(&:destroy)
-          expect(completions.creator_affiliation).to be_falsey
+      describe('#author_affiliation') do
+        it 'fails if author is missing' do
+          resource.authors.each(&:destroy)
+          expect(completions.author_affiliation).to be_falsey
         end
 
-        it 'passes for resources with creator affiliations' do
-          expect(completions.creator_affiliation).to be_truthy
+        it 'passes for resources with author affiliations' do
+          expect(completions.author_affiliation).to be_truthy
         end
 
-        it 'fails if creator affiliation is missing' do
-          resource.creators.flat_map(&:affiliations).each(&:destroy)
-          expect(completions.creator_affiliation).to be_falsey
+        it 'fails if author affiliation is missing' do
+          resource.authors.flat_map(&:affiliations).each(&:destroy)
+          expect(completions.author_affiliation).to be_falsey
         end
       end
 
@@ -149,7 +149,7 @@ module StashDatacite
         end
 
         it 'counts if affiliation is missing' do
-          resource.creators.flat_map(&:affiliations).each(&:destroy)
+          resource.authors.flat_map(&:affiliations).each(&:destroy)
           expect(completions.required_completed).to  eq(REQUIRED_COUNT - 1)
         end
 
@@ -159,15 +159,15 @@ module StashDatacite
           expect(completions.required_completed).to eq(REQUIRED_COUNT - 1)
         end
 
-        it 'double-counts (creator and name) if creator is missing' do
-          resource.creators.each(&:destroy)
+        it 'double-counts (author and name) if author is missing' do
+          resource.authors.each(&:destroy)
           expect(completions.required_completed).to eq(REQUIRED_COUNT - 2)
         end
 
-        it 'counts if creator name is missing' do
-          creator = resource.creators.first
-          creator.creator_first_name = nil
-          creator.save
+        it 'counts if author name is missing' do
+          author = resource.authors.first
+          author.author_first_name = nil
+          author.save
           expect(completions.required_completed).to eq(REQUIRED_COUNT - 1)
         end
 
