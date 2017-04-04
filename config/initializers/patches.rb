@@ -1,0 +1,1 @@
+StashDatacite::AuthorPatch.patch!

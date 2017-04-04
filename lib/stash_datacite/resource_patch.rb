@@ -1,7 +1,6 @@
 #for monkeypatching shared resource to have associations
 module StashDatacite
   module ResourcePatch
-    #has_many :titles, class_name: 'StashDatacite::Title'
     # This patches the resource class to have associations and convenience methods.
     # I'm putting them here since the resource may be used by different metadata
     # engines.  It makes sense for the engine to know a little something about the main
@@ -15,6 +14,7 @@ module StashDatacite
     # class in the configuration.  As it is, it's problematic to change the class until being
     # certain that the configuration is loaded and so the resource class is defined.  We could
     # probably make it straight forward if we didn't allow the shared resource class to be user-configurable.
+    # TODO: just hard-code the resource class and call this from initializers/patches.rb (cf. AuthorPatch)
     def self.associate_with_resource(resource_class)
       resource_class.instance_eval do
         has_many :descriptions, class_name: 'StashDatacite::Description', dependent: :destroy #optional

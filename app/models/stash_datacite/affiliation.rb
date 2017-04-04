@@ -1,7 +1,7 @@
 module StashDatacite
   class Affiliation < ActiveRecord::Base
     self.table_name = 'dcs_affiliations'
-    has_and_belongs_to_many :creators, class_name: 'StashDatacite::Creator'
+    has_and_belongs_to_many :authors, class_name: 'StashEngine::Author'
     has_and_belongs_to_many :contributors, class_name: 'StashDatacite::Contributor'
 
     before_save :strip_whitespace
