@@ -47,6 +47,7 @@ module StashEngine
       if !@resource.under_embargo? || ( current_user && current_user.id == @resource.user_id) ||
           ( params[:secret_id] == @resource.share.secret_id )
         api_async_download(resource: @resource, email: @email)
+        @resource.increment_downloads
         redirect_to landing_show_path(
           id: "#{@resource.identifier.identifier_type.downcase}:#{@resource.identifier.identifier}"),
           notice: 'You shall shortly receive an email with the link to download the dataset.'
