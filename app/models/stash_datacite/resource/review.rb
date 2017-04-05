@@ -19,8 +19,8 @@ module StashDatacite
         @resource.resource_type
       end
 
-      def creators
-        @resource.creators
+      def authors
+        @resource.authors
       end
 
       def version
@@ -100,10 +100,10 @@ module StashDatacite
         # where “surname” is the surname of the first author, “date” is the publication year, and
         # “first_five_title_words” are the first five whitespace-separated words of the dataset title.
         author = ''
-        if creators.length > 1
-          author = "#{creators.first.author_last_name}_et_al"
+        if authors.length > 1
+          author = "#{authors.first.author_last_name}_et_al"
         else
-          author = "#{creators.try(:first).try(:author_last_name)}"
+          author = "#{authors.try(:first).try(:author_last_name)}"
         end
         pub_year = @resource.try(:publication_years).try(:first).try(:publication_year) || ''
 

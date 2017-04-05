@@ -28,25 +28,25 @@ module StashDatacite
       end
 
       def institution
-        @resource.creators.joins(:affiliations).count > 0
+        @resource.authors.joins(:affiliations).count > 0
       end
 
       def data_type
         !@resource.resource_type.nil?
       end
 
-      def creator_name
-        num_creators = @resource.creators.count
-        return false if num_creators < 1
-        # the completely filled in creators must equal number of creators
-        @resource.creators.names_filled.count == num_creators
+      def author_name
+        num_authors = @resource.authors.count
+        return false if num_authors < 1
+        # the completely filled in authors must equal number of authors
+        @resource.authors.names_filled.count == num_authors
       end
 
-      def creator_affiliation
-        num_creators = @resource.creators.count
-        return false if num_creators < 1
-        # the completely filled in creators must equal number of creators
-        @resource.creators.affiliation_filled.count == num_creators
+      def author_affiliation
+        num_authors = @resource.authors.count
+        return false if num_authors < 1
+        # the completely filled in authors must equal number of authors
+        @resource.authors.affiliation_filled.count == num_authors
       end
 
       def abstract
@@ -54,7 +54,7 @@ module StashDatacite
       end
 
       def required_completed
-        title.to_i + creator_affiliation.to_i + data_type.to_i + creator_name.to_i + abstract.to_i
+        title.to_i + author_affiliation.to_i + data_type.to_i + author_name.to_i + abstract.to_i
       end
 
       def required_total

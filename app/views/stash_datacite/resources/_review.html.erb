@@ -6,12 +6,12 @@
                 class: 't-review__edit-button-top o-button__icon-left', role: 'button' %>
     <%= render partial: "stash_datacite/titles/show", locals: { title: @review.title } %>
     <div class="o-metadata__group2">
-      <%= render partial: "stash_datacite/creators/show", locals: { creators: @review.creators } %>
+      <%= render partial: "stash_datacite/authors/show", locals: { authors: @review.authors } %>
       <%= render partial: "stash_datacite/publishers/publication_info", locals: {resource: @resource } %>
     </div>
 
     <section class="o-section">
-    <%= render partial: "stash_datacite/shared/citations", locals: { creators: @review.creators, title: @review.title,
+    <%= render partial: "stash_datacite/shared/citations", locals: { authors: @review.authors, title: @review.title,
                          resource_type: @review.resource_type, version: "v#{@resource.version_number}",
                          identifier: @resource.identifier.nil? ? nil : "#{@review.identifier.identifier}",
                          publisher: @review.publisher,

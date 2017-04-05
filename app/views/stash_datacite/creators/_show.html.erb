@@ -1,11 +1,11 @@
-<% unless creators.nil? %>
-  <% creators.each do |creator| %>
+<% unless authors.nil? %>
+  <% authors.each do |author| %>
     <div class="o-metadata__group1">
-      <%= ([ (creator.author_full_name ?
-              "<span class='o-metadata__author'>#{h(creator.author_full_name)}</span>" : nil) ] +
-         creator.affiliations.map{|i|
+      <%= ([ (author.author_full_name ?
+              "<span class='o-metadata__author'>#{h(author.author_full_name)}</span>" : nil) ] +
+         author.affiliations.map{|i|
               (i.try(:smart_name) ? "<span class='o-metadata__affiliation'>#{h(i.try(:smart_name))}</span>" : nil) } +
-         [ (creator.orcid_id ? "<a class='c-orcid__icon' title='orcid_website' href='http://orcid.org'></a><span>#{display_orcid_id(creator)}</span>" : nil) ])
+         [ (author.author_orcid ? "<a class='c-orcid__icon' title='orcid_website' href='http://orcid.org'></a><span>#{display_orcid_id(author)}</span>" : nil) ])
           .flatten.reject(&:blank?).join(", ").html_safe %>
     </div>
   <% end %>

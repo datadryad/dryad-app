@@ -19,7 +19,7 @@ module StashDatacite
             'sameAs'                  => :same_as,
             'version'                 => :version,
             'keywords'                => :keywords,
-            'creator'                 => :creators,
+            'creator'                 => :authors,
             'includedInDataCatalog'   => :included_in_data_catalog,
             'distribution'            => :distribution,
             'temporalCoverage'        => :temporal_coverages,
@@ -74,9 +74,9 @@ module StashDatacite
         @resource.subjects.map(&:subject).compact
       end
 
-      def creators
-        return [] unless @resource.creators
-        @resource.creators.map do |i|
+      def authors
+        return [] unless @resource.authors
+        @resource.authors.map do |i|
           {'@type' => 'Person', 'givenName' => i.author_first_name, 'familyName' => i.author_last_name }
         end
       end

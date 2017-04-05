@@ -1,10 +1,10 @@
-<%# the local variable 'creator' should be passed in to this partial when there are multiple per page.
+<%# the local variable 'author' should be passed in to this partial when there are multiple per page.
   # the 'path' to submit to should also be passed in. %>
-<% form_id = unique_form_id(creator) %>
-<%= form_for(creator, url: path, remote: true, authenticity_token: true, html: {id: form_id, class: 'c-input__inline js-creator_form'}) do |f| %>
-  <% my_suffix = field_suffix(creator) %>
+<% form_id = unique_form_id(author) %>
+<%= form_for(author, url: path, remote: true, authenticity_token: true, html: {id: form_id, class: 'c-input__inline js-author_form'}) do |f| %>
+  <% my_suffix = field_suffix(author) %>
 
-<%#= render "datacite/shared/error_messages", target: @creator %>
+<%#= render "datacite/shared/error_messages", target: @author %>
   <div class="c-input">
     <%= f.label "first_name_#{my_suffix}", "First Name", class: 'c-input__label required' %>
     <%= f.text_field :author_first_name, id: "author_first_name_#{my_suffix}", class: "c-input__text js-author_first_name" %>
@@ -15,9 +15,9 @@
   </div>
   <div class="c-input">
     <%= f.label "affiliation_id_#{my_suffix}", "Institutional Affiliation", class: 'c-input__label required' %>
-    <%= text_field_tag(:affiliation, creator.affiliation.try(:smart_name), id: "creator_affiliation_id_#{my_suffix}", class: 'c-input__text js-affiliation') %>
+    <%= text_field_tag(:affiliation, author.affiliation.try(:smart_name), id: "author_affiliation_id_#{my_suffix}", class: 'c-input__text js-affiliation') %>
   </div>
-  <%= link_to 'remove', stash_datacite.creators_delete_path(creator.id || 'new'), method: :delete, remote: true, data: {confirm: 'Are you sure?'}, class: 't-describe__remove-button o-button__remove remove_record' %>
+  <%= link_to 'remove', stash_datacite.authors_delete_path(author.id || 'new'), method: :delete, remote: true, data: {confirm: 'Are you sure?'}, class: 't-describe__remove-button o-button__remove remove_record' %>
   <%= f.hidden_field :resource_id %>
   <%= f.hidden_field :id %>
   <%= f.hidden_field :affiliation_id, class: 'js-affiliation_id' %>
@@ -26,12 +26,12 @@
 
 <!-- Begin Orcid ID Component -->
   <div class="c-orcid">
-    <% unless creator.blank? || creator.orcid_id.blank? %>
+    <% unless author.blank? || author.author_orcid.blank? %>
       <%= link_to '', "http://orcid.org", class: 'c-orcid__icon', title: 'orcid_website' %>
       <% if StashEngine.app.site == "https://sandbox.orcid.org/" %>
-        <%= link_to "https://sandbox.orcid.org/#{creator.orcid_id}", "https://sandbox.orcid.org/#{creator.orcid_id}",target: '_blank', class: 'c-orcid__id' %>
+        <%= link_to "https://sandbox.orcid.org/#{author.author_orcid}", "https://sandbox.orcid.org/#{author.author_orcid}",target: '_blank', class: 'c-orcid__id' %>
       <% else %>
-        <%= link_to "https://orcid.org/#{creator.orcid_id}", "https://orcid.org/#{creator.orcid_id}",target: '_blank', class: 'c-orcid__id' %>
+        <%= link_to "https://orcid.org/#{author.author_orcid}", "https://orcid.org/#{author.author_orcid}",target: '_blank', class: 'c-orcid__id' %>
       <% end %>
     <% end %>
   </div>

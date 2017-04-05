@@ -2,7 +2,7 @@ module StashDatacite
   module AuthorPatch
     def self.patch!
       StashEngine::Author.instance_eval do
-        has_and_belongs_to_many :affiliations, class_name: 'StashDatacite::Affiliation'
+        has_and_belongs_to_many :affiliations, class_name: 'StashDatacite::Affiliation', join_table: 'dcs_affiliations_authors'
 
         scope :affiliation_filled, -> {
           joins(:affiliations).where <<-SQL

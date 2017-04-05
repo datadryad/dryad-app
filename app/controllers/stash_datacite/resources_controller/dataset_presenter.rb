@@ -23,7 +23,7 @@ module StashDatacite
       end
 
       # according to https://dash.ucop.edu/xtf/search?smode=metadataBasicsPage
-      # required fields are Title, Institution, Data type, Data Creator(s), Abstract
+      # required fields are Title, Institution, Data type, Data Author(s), Abstract
       def required_filled
         @completions.required_completed
       end

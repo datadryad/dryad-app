@@ -7,10 +7,10 @@ StashDatacite::Engine.routes.draw do
   get 'descriptions/new', to: 'descriptions#new'
   patch 'descriptions/update', to: 'descriptions#update'
 
-  get 'creators/new', to: 'creators#new'
-  post 'creators/create', to: 'creators#create'
-  patch 'creators/update', to: 'creators#update'
-  delete 'creators/:id/delete', to: 'creators#delete', as: 'creators_delete'
+  get 'authors/new', to: 'authors#new'
+  post 'authors/create', to: 'authors#create'
+  patch 'authors/update', to: 'authors#update'
+  delete 'authors/:id/delete', to: 'authors#delete', as: 'authors_delete'
 
   get 'contributors/new', to: 'contributors#new'
   post 'contributors/create', to: 'contributors#create'
