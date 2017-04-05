@@ -12,7 +12,7 @@ module StashEngine
 
     # TODO: replace these with :author_orcid=
     def orcid_id=(value)
-      self.author_orcid = (value.trim unless value.blank?)
+      self.author_orcid = (value.strip unless value.blank?)
     end
 
     # TODO: replace these with :author_orcid
