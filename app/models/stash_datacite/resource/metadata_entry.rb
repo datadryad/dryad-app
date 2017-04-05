@@ -21,11 +21,11 @@ module StashDatacite
       end
 
       def new_author
-        @author = Author.new(resource_id: @resource.id)
+        @author = StashEngine::Author.new(resource_id: @resource.id)
       end
 
       def authors
-        @authors = Author.where(resource_id: @resource.id)
+        @authors = StashEngine::Author.where(resource_id: @resource.id)
       end
 
       def abstract
