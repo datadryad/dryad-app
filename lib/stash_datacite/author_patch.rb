@@ -10,7 +10,9 @@ module StashDatacite
             OR TRIM(IFNULL(dcs_affiliations.short_name,'')) <> ''
           SQL
         }
+      end
 
+      StashEngine::Author.class_eval do
         #this is to simulate the bad old structure where a user can only have one affiliation
         def affiliation_id=(affil_id)
           affiliations.clear
