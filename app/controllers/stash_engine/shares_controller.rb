@@ -49,7 +49,7 @@ module StashEngine
 
       # Only allow a trusted parameter "white list" through.
       def share_params
-        params.require(:share).permit(:id, :secret_id, :expiration_date, :resource_id)
+        params.require(:share).permit(:id, :secret_id, :resource_id)
       end
   end
 end

@@ -37,6 +37,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'rails', '~> 4.2.4'
   s.add_dependency 'redcarpet', '~> 3.3'
   s.add_dependency 'wicked_pdf', '~> 1.1.0'
+  s.add_dependency 'wkhtmltopdf-binary', '~> 0.12.3.1'
   s.add_dependency 'httpclient', '~> 2.8.3'
   s.add_dependency 'zeroclipboard-rails'
 
