@@ -19,6 +19,12 @@ module StashEngine # TODO: are we testing Author or Affiliation? (Or AuthorPatch
     end
 
     describe 'scopes' do
+      describe :affiliation_filled do
+        it 'includes affiliations w/short name'
+        it 'includes affiliations w/long name'
+        it 'includes affiliations w/both'
+        it 'excludes affiliations w/neither'
+      end
     end
 
     describe 'affiliations' do
@@ -73,56 +79,34 @@ module StashEngine # TODO: are we testing Author or Affiliation? (Or AuthorPatch
     end
 
     describe 'ORCIDs' do
-      describe '#orcid_id=' do
+      describe '#author_orcid=' do
         it 'sets the ORCID' do
           orcid = '5555-5555-5555-5555'
-          author.orcid_id = orcid
-          ident_id = author.name_identifier_id
-          expect(ident_id).not_to be_nil
-          ident = NameIdentifier.find(ident_id)
-          expect(ident.name_identifier_scheme).to eq('ORCID')
-          expect(ident.name_identifier).to eq(orcid)
+          author.author_orcid = orcid
+          expect(author.author_orcid).to eq(orcid)
         end
 
         it 'clears the orcid with nil' do
-          author.orcid_id = '5555-5555-5555-5555'
-          author.orcid_id = nil
-          expect(author.name_identifier_id).to be_nil
+          author.author_orcid = '5555-5555-5555-5555'
+          author.author_orcid = nil
         end
 
         it 'clears the orcid with the empty string' do
-          author.orcid_id = '5555-5555-5555-5555'
-          author.orcid_id = ''
-          expect(author.name_identifier_id).to be_nil
+          author.author_orcid = '5555-5555-5555-5555'
+          author.author_orcid = ''
         end
 
         it 'clears the orcid with a blank string' do
-          author.orcid_id = '5555-5555-5555-5555'
-          author.orcid_id = ' '
-          expect(author.name_identifier_id).to be_nil
-        end
-
-        it 'doesn\'t clear non-ORCID identifiers' do
-          name_ident = NameIdentifier.create(name_identifier_scheme: 'ISNI', name_identifier: '0000-0001-1690-159X')
-          author.name_identifier_id = name_ident.id
-          author.save
-          author.orcid_id = nil
-          expect(author.name_identifier_id).to eq(name_ident.id)
+          author.author_orcid = '5555-5555-5555-5555'
+          author.author_orcid = ' '
         end
       end
 
-      describe 'orcid_id' do
+      describe 'author_orcid' do
         it 'returns the ORCID' do
           orcid = '5555-5555-5555-5555'
-          author.orcid_id = orcid
-          expect(author.orcid_id).to eq(orcid)
-        end
-
-        it 'returns nil for non-ORCID IDs' do
-          name_ident = NameIdentifier.create(name_identifier_scheme: 'ISNI', name_identifier: '0000-0001-1690-159X')
-          author.name_identifier_id = name_ident.id
-          author.save
-          expect(author.orcid_id).to be_nil
+          author.author_orcid = orcid
+          expect(author.author_orcid).to eq(orcid)
         end
       end
     end

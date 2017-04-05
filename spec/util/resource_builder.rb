@@ -52,7 +52,7 @@ module StashDatacite
     def populate_se_resource! # rubocop:disable Metrics/AbcSize
       set_sd_identifier(dcs_resource.identifier)
       stash_files.each { |stash_file| add_stash_file(stash_file) }
-      dcs_resource.authors.each { |dcs_author| add_sd_author(dcs_author) }
+      dcs_resource.creators.each { |dcs_creator| add_se_author(dcs_creator) }
       dcs_resource.titles.each { |dcs_title| add_sd_title(dcs_title) }
       set_sd_publisher(dcs_resource.publisher)
       set_sd_pubyear(dcs_resource.publication_year)
@@ -93,16 +93,17 @@ module StashDatacite
       )
     end
 
-    def add_sd_author(dcs_author)
-      last_name, first_name = extract_last_first(dcs_author.name)
-      sd_author = Author.create(
+    def add_se_author(dcs_creator)
+      last_name, first_name = extract_last_first(dcs_creator.name)
+      se_author = StashEngine::Author.create(
         author_first_name: first_name,
         author_last_name: last_name,
-        name_identifier_id: sd_name_identifier_id_for(dcs_author.identifier),
+        author_email: email_from(dcs_creator.identifier),
+        author_orcid: email_from(dcs_creator.identifier),
         resource_id: se_resource_id
       )
-      sd_author.affiliation_ids = dcs_author.affiliations.map { |affiliation_str| sd_affiliation_id_for(affiliation_str) }
-      sd_author
+      se_author.affiliation_ids = dcs_creator.affiliations.map { |affiliation_str| sd_affiliation_id_for(affiliation_str) }
+      se_author
     end
 
     def add_sd_title(dcs_title)
@@ -308,6 +309,22 @@ module StashDatacite
       sd_affiliations = StashDatacite::Affiliation.where('short_name = ? or long_name = ?', affiliation_str, affiliation_str)
       return sd_affiliations.first.id unless sd_affiliations.empty?
       StashDatacite::Affiliation.create(long_name: affiliation_str).id unless affiliation_str.blank?
+    end
+
+    def email_from(dcs_name_identifier)
+      return unless dcs_name_identifier
+      return unless 'email' == dcs_name_identifier.scheme
+      value = dcs_name_identifier.value
+      return unless value
+      value.to_s.strip.sub('mailto:', '')
+    end
+
+    def orcid_from(dcs_name_identifier)
+      return unless dcs_name_identifier
+      return unless 'ORCID' == dcs_name_identifier.scheme
+      value = dcs_name_identifier.value
+      return unless value
+      value.to_s.strip
     end
 
     def sd_name_identifier_id_for(dcs_name_identifier)

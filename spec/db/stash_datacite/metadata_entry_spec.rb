@@ -143,7 +143,7 @@ module StashDatacite
       describe 'new_author' do
         it 'creates a author' do
           author = metadata_entry.new_author
-          expect(author).to be_a(Author)
+          expect(author).to be_a(StashEngine::Author)
           expect(author.instance_variable_get(:@new_record)).to eq(true)
         end
       end
