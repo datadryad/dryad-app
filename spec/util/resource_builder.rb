@@ -28,7 +28,7 @@ module StashDatacite
     def self.stash_files(stash_files)
       return stash_files if stash_files.all? do |file|
         file.is_a?(Stash::Wrapper::StashFile) ||
-        file.to_s =~ /InstanceDouble\(Stash::Wrapper::StashFile\)/ # For RSpec tests
+          file.to_s =~ /InstanceDouble\(Stash::Wrapper::StashFile\)/ # For RSpec tests
       end
       raise ArgumentError, "stash_files does not appear to be an array of Stash::Wrapper::StashFile objects: #{stash_files || 'nil'}"
     end
@@ -50,7 +50,7 @@ module StashDatacite
     def populate_se_resource! # rubocop:disable Metrics/AbcSize
       set_sd_identifier(dcs_resource.identifier)
       stash_files.each { |stash_file| add_stash_file(stash_file) }
-      dcs_resource.creators.each { |dcs_creator| add_sd_creator(dcs_creator) }
+      dcs_resource.creators.each { |dcs_creator| add_se_author(dcs_creator) }
       dcs_resource.titles.each { |dcs_title| add_sd_title(dcs_title) }
       set_sd_publisher(dcs_resource.publisher)
       set_sd_pubyear(dcs_resource.publication_year)
@@ -91,16 +91,17 @@ module StashDatacite
       )
     end
 
-    def add_sd_creator(dcs_creator)
+    def add_se_author(dcs_creator)
       last_name, first_name = extract_last_first(dcs_creator.name)
-      sd_creator = Creator.create(
-        creator_first_name: first_name,
-        creator_last_name: last_name,
-        name_identifier_id: sd_name_identifier_id_for(dcs_creator.identifier),
+      se_author = StashEngine::Author.create(
+        author_first_name: first_name,
+        author_last_name: last_name,
+        author_email: email_from(dcs_creator.identifier),
+        author_orcid: email_from(dcs_creator.identifier),
         resource_id: se_resource_id
       )
-      sd_creator.affiliation_ids = dcs_creator.affiliations.map { |affiliation_str| sd_affiliation_id_for(affiliation_str) }
-      sd_creator
+      se_author.affiliation_ids = dcs_creator.affiliations.map { |affiliation_str| sd_affiliation_id_for(affiliation_str) }
+      se_author
     end
 
     def add_sd_title(dcs_title)
@@ -308,16 +309,20 @@ module StashDatacite
       StashDatacite::Affiliation.create(long_name: affiliation_str).id unless affiliation_str.blank?
     end
 
-    def sd_name_identifier_id_for(dcs_name_identifier)
-      return nil unless dcs_name_identifier
-      scheme_uri = dcs_name_identifier.scheme_uri
+    def email_from(dcs_name_identifier)
+      return unless dcs_name_identifier
+      return unless 'email' == dcs_name_identifier.scheme
       value = dcs_name_identifier.value
-      sd_name_ident = StashDatacite::NameIdentifier.find_or_create_by(
-        name_identifier: value.to_s.strip,
-        name_identifier_scheme: dcs_name_identifier.scheme,
-        scheme_URI: (scheme_uri if scheme_uri)
-      )
-      sd_name_ident.id
+      return unless value
+      value.to_s.strip.sub('mailto:', '')
+    end
+
+    def orcid_from(dcs_name_identifier)
+      return unless dcs_name_identifier
+      return unless 'ORCID' == dcs_name_identifier.scheme
+      value = dcs_name_identifier.value
+      return unless value
+      value.to_s.strip
     end
 
     def sd_subject_id_for(dcs_subject)

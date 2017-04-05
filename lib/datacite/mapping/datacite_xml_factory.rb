@@ -27,10 +27,10 @@ module Datacite
 
         dcs_resource = Resource.new(
           identifier: Identifier.from_doi(doi_value),
-          creators: se_resource.creators.map do |c|
+          creators: se_resource.authors.map do |c|
             Creator.new(
-              name: c.creator_full_name,
-              identifier: to_dcs_identifier(c.name_identifier),
+              name: c.author_full_name,
+              identifier: to_dcs_identifier(c.author_orcid),
               affiliations: c.affiliations.map(&:smart_name)
             )
           end,

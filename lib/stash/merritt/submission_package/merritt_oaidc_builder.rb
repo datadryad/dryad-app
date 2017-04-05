@@ -55,7 +55,7 @@ module Stash
         end
 
         def add_creators(xml)
-          resource.creators.each { |c| xml.send(:'dc:creator', c.creator_full_name.delete("\r").to_s) }
+          resource.authors.each { |c| xml.send(:'dc:creator', c.author_full_name.delete("\r").to_s) }
         end
 
         def add_pub_year(xml)

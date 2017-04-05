@@ -91,7 +91,7 @@
     <orderEntry type="library" scope="PROVIDED" name="rspec-expectations (v3.5.0, ruby-2.2.5-p319) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="rspec-mocks (v3.5.0, ruby-2.2.5-p319) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="rspec-support (v3.5.0, ruby-2.2.5-p319) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="rubocop (v0.48.0, ruby-2.2.5-p319) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="rubocop (v0.48.1, ruby-2.2.5-p319) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="ruby-progressbar (v1.8.1, ruby-2.2.5-p319) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="rubyzip (v1.2.1, ruby-2.2.5-p319) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="safe_yaml (v1.0.4, ruby-2.2.5-p319) [gem]" level="application" />
