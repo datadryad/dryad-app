@@ -8,7 +8,7 @@ module StashDatacite
 
     # GET /authors/new
     def new
-      @author = Author.new(resource_id: params[:resource_id])
+      @author = StashEngine::Author.new(resource_id: params[:resource_id])
       respond_to do |format|
         format.js
       end
@@ -18,7 +18,7 @@ module StashDatacite
     def create
       duplicate_affiliation = Affiliation.where('long_name LIKE ? OR short_name LIKE ?',
                                                 params[:affiliation].to_s, params[:affiliation].to_s).first
-      @author = Author.new(author_params)
+      @author = StashEngine::Author.new(author_params)
       respond_to do |format|
         @author.save
         @author.reload
@@ -62,7 +62,7 @@ module StashDatacite
     # DELETE /authors/1
     def delete
       unless params[:id] == 'new'
-        @author = Author.find(params[:id])
+        @author = StashEngine::Author.find(params[:id])
         @resource = StashDatacite.resource_class.find(@author.resource_id)
         @if_orcid = check_for_orcid_id(@author)
         @author.destroy
@@ -76,7 +76,7 @@ module StashDatacite
 
     # Use callbacks to share common setup or constraints between actions.
     def set_author
-      @author = Author.find(author_params[:id])
+      @author = StashEngine::Author.find(author_params[:id])
     end
 
     # Only allow a trusted parameter "white list" through.
