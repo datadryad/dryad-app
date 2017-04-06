@@ -91,7 +91,7 @@ module StashDatacite
         if @resource.share.present?
           @share = @resource.share
         else
-          @share = StashEngine::Share.new
+          @share = StashEngine::Share.create(resource_id: @resource.id)
         end
       end
 

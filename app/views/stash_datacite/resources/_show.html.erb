@@ -20,6 +20,7 @@
                                                                     methods: @review.methods, other: @review.other } %>
 
   <% if current_user && @resource.user_id == current_user.id && @resource.under_embargo? %>
+    <h3 class="o-heading__level2">Reviewer URL</h3>
     <%= render partial: "stash_datacite/shares/show", locals: { share: @review.share } %>
   <% end %>
 

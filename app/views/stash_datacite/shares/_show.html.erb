@@ -1,7 +1,1 @@
-<h3 class="o-heading__level2">Reviewer URL</h3>
-
-<% if share.persisted? %>
-  <%= render partial: 'stash_engine/shares/form', locals: { share: share, resource_id: share.resource_id, path: stash_engine.shares_update_path } %>
-<% else %>
-  <%= render partial: 'stash_engine/shares/create', locals: { share: share, resource_id: @resource.id }%>
-<% end %>
+<%= render partial: 'stash_engine/shares/form', locals: { share: share, resource_id: share.resource_id } %>
