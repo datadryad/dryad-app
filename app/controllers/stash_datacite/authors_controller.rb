@@ -1,32 +1,32 @@
 require_dependency 'stash_datacite/application_controller'
 
 module StashDatacite
-  class CreatorsController < ApplicationController
-    before_action :set_creator, only: [:update]
+  class AuthorsController < ApplicationController
+    before_action :set_author, only: [:update]
 
     respond_to :json
 
-    # GET /creators/new
+    # GET /authors/new
     def new
-      @creator = Creator.new(resource_id: params[:resource_id])
+      @author = StashEngine::Author.new(resource_id: params[:resource_id])
       respond_to do |format|
         format.js
       end
     end
 
-    # POST /creators
+    # POST /authors
     def create
       duplicate_affiliation = Affiliation.where('long_name LIKE ? OR short_name LIKE ?',
                                                 params[:affiliation].to_s, params[:affiliation].to_s).first
-      @creator = Creator.new(creator_params)
+      @author = StashEngine::Author.new(author_params)
       respond_to do |format|
-        @creator.save
-        @creator.reload
+        @author.save
+        @author.reload
         unless duplicate_affiliation.present?
           if params[:affiliation].present?
             @affiliation = Affiliation.create(long_name: params[:affiliation])
-            @creator.affiliation_id = @affiliation.id
-            @creator.save
+            @author.affiliation_id = @affiliation.id
+            @author.save
           else
             ''
           end
@@ -35,37 +35,37 @@ module StashDatacite
       end
     end
 
-    # PATCH/PUT /creators/1
+    # PATCH/PUT /authors/1
     def update
       duplicate_affiliation = Affiliation.where('long_name LIKE ? OR short_name LIKE ?',
                                                 params[:affiliation].to_s, params[:affiliation].to_s).first
       respond_to do |format|
         unless duplicate_affiliation.present?
-          @creator.update(creator_params)
-          @creator.reload
+          @author.update(author_params)
+          @author.reload
           if params[:affiliation].present?
             @affiliation = Affiliation.create(long_name: params[:affiliation])
-            @creator.affiliation = @affiliation
-            @creator.save
+            @author.affiliation = @affiliation
+            @author.save
           else
             ''
           end
         else
-          @creator.update(creator_params)
-          @creator.affiliation = duplicate_affiliation
-          @creator.save
+          @author.update(author_params)
+          @author.affiliation = duplicate_affiliation
+          @author.save
         end
         format.js { render template: 'stash_datacite/shared/update.js.erb' }
       end
     end
 
-    # DELETE /creators/1
+    # DELETE /authors/1
     def delete
       unless params[:id] == 'new'
-        @creator = Creator.find(params[:id])
-        @resource = StashDatacite.resource_class.find(@creator.resource_id)
-        @if_orcid = check_for_orcid_id(@creator)
-        @creator.destroy
+        @author = StashEngine::Author.find(params[:id])
+        @resource = StashDatacite.resource_class.find(@author.resource_id)
+        @if_orcid = check_for_orcid_id(@author)
+        @author.destroy
       end
       respond_to do |format|
         format.js
@@ -75,18 +75,18 @@ module StashDatacite
     private
 
     # Use callbacks to share common setup or constraints between actions.
-    def set_creator
-      @creator = Creator.find(creator_params[:id])
+    def set_author
+      @author = StashEngine::Author.find(author_params[:id])
     end
 
     # Only allow a trusted parameter "white list" through.
-    def creator_params
-      params.require(:creator).permit(:id, :creator_first_name, :creator_last_name, :creator_middle_name,
+    def author_params
+      params.require(:author).permit(:id, :author_first_name, :author_last_name, :author_middle_name,
                                       :name_identifier_id, :affiliation_id, :resource_id, :orcid_id)
     end
 
-    def check_for_orcid_id(creator)
-      creator.orcid_id ? true : false
+    def check_for_orcid_id(author)
+      author.orcid_id ? true : false
     end
   end
 end

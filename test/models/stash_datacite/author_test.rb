@@ -1,7 +1,7 @@
 require 'test_helper'
 
 module StashDatacite
-  class CreatorTest < ActiveSupport::TestCase
+  class AuthorTest < ActiveSupport::TestCase
     # test "the truth" do
     #   assert true
     # end

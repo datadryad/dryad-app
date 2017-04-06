@@ -29,21 +29,21 @@ module StashDatacite
 
     def check_required_fields(resource)
       @completions = Resource::Completions.new(resource)
-      # required fields are Title, Institution, Data type, Data Creator(s), Abstract
+      # required fields are Title, Institution, Data type, Data author(s), Abstract
       unless @completions.required_completed == @completions.required_total
         @data = []
         @data << 'Title' unless @completions.title
         @data << 'Resource Type' unless @completions.data_type
         @data << 'Abstract' unless @completions.abstract
-        @data << 'Author(s)' unless @completions.creator_name
-        @data << 'Author Affiliation' unless @completions.creator_affiliation
+        @data << 'Author(s)' unless @completions.author_name
+        @data << 'Author Affiliation' unless @completions.author_affiliation
         return @data.join(', ').split(/\W+/)
       end
     end
 
     def plain_citation
       citation(
-          @review.creators,
+          @review.authors,
           @review.title,
           @review.resource_type,
           @resource.stash_version.nil? ? 'v0' : "v#{@review.version.version }",
@@ -52,22 +52,22 @@ module StashDatacite
           @resource.publication_years)
     end
 
-    def citation(creators, title, resource_type, version, identifier, publisher, publication_years)
+    def citation(authors, title, resource_type, version, identifier, publisher, publication_years)
       publication_year = publication_years.try(:first).try(:publication_year) || Time.now.year
       title = title.try(:title)
       publisher = publisher.try(:publisher)
       resource_type_general = resource_type.try(:resource_type_general_friendly)
-      ["#{creator_citation_format(creators)} (#{publication_year})", title,
+      ["#{author_citation_format(authors)} (#{publication_year})", title,
        (version == 'v1' ? nil : version), publisher, resource_type_general,
        "https://doi.org/#{identifier}"].reject(&:blank?).join(', ')
     end
 
-    def creator_citation_format(creators)
-      return '' if creators.blank?
-      str_creator = creators.map { |c| c.creator_full_name unless c.creator_full_name =~ /^[ ,]+$/ }.compact
-      return '' if str_creator.blank?
-      return "#{str_creator.first} et al." if str_creator.length > 4
-      str_creator.join('; ')
+    def author_citation_format(authors)
+      return '' if authors.blank?
+      str_author = authors.map { |c| c.author_full_name unless c.author_full_name =~ /^[ ,]+$/ }.compact
+      return '' if str_author.blank?
+      return "#{str_author.first} et al." if str_author.length > 4
+      str_author.join('; ')
     end
 
   end

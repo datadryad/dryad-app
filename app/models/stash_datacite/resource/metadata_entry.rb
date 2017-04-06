@@ -20,12 +20,12 @@ module StashDatacite
         @title = Title.where(resource_id: @resource.id).first_or_initialize
       end
 
-      def new_creator
-        @creator = Creator.new(resource_id: @resource.id)
+      def new_author
+        @author = StashEngine::Author.new(resource_id: @resource.id)
       end
 
-      def creators
-        @creators = Creator.where(resource_id: @resource.id)
+      def authors
+        @authors = StashEngine::Author.where(resource_id: @resource.id)
       end
 
       def abstract

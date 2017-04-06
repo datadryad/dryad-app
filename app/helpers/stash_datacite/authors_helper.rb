@@ -1,4 +1,4 @@
 module StashDatacite
-  module CreatorsHelper
+  module AuthorsHelper
   end
 end

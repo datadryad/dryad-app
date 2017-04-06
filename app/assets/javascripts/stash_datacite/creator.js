@@ -1,10 +1,10 @@
 // Place all the behaviors and hooks related to the matching controller here.
 // All this logic will automatically be available in application.js.
-function loadCreators() {
+function loadAuthors() {
 
   // this uses a namespace (.mycreators) to disconnect previous events (off) before attaching them again
   // http://stackoverflow.com/questions/11612874/how-can-you-bind-an-event-handler-only-if-it-doesnt-already-exist
-  $( '.js-creator_first_name, .js-creator_last_name' )
+  $( '.js-author_first_name, .js-author_last_name' )
     .off('.mycreators')
     .on('focus.mycreators', function () {
       previous_value = this.value;
@@ -41,13 +41,13 @@ function loadCreators() {
 };
 
 
-function hideRemoveLinkCreators() {
-  if($('.js-creator_first_name').length < 2)
+function hideRemoveLinkAuthors() {
+  if($('.js-author_first_name').length < 2)
   {
-   $('.js-creator_first_name').first().parent().parent().find('.remove_record').hide();
+   $('.js-author_first_name').first().parent().parent().find('.remove_record').hide();
   }
   else{
-   $('.js-creator_first_name').first().parent().parent().find('.remove_record').show();
+   $('.js-author_first_name').first().parent().parent().find('.remove_record').show();
   }
 };
 
