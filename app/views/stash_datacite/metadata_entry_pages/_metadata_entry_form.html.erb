@@ -19,18 +19,18 @@
   <fieldset class="c-fieldset">
   <legend class="c-fieldset__legend">Author(s)</legend>
     <div class="js-authors_form">
-      <% if @metadata_entry.creators.exists? %>
-        <% @metadata_entry.creators.each do |creator| %>
-          <%= render partial: "stash_datacite/creators/form", locals: { creator: creator, path: stash_datacite.creators_update_path } %>
+      <% if @metadata_entry.authors.exists? %>
+        <% @metadata_entry.authors.each do |author| %>
+          <%= render partial: "stash_datacite/authors/form", locals: { author: author, path: stash_datacite.authors_update_path } %>
         <% end %>
       <% else %>
-          <%= render partial: "stash_datacite/creators/form", locals: { creator: @metadata_entry.new_creator, path: stash_datacite.creators_create_path } %>
+          <%= render partial: "stash_datacite/authors/form", locals: { author: @metadata_entry.new_author, path: stash_datacite.authors_create_path } %>
       <% end %>
     </div>
-    <%= link_to "Add Author", stash_datacite.creators_new_path( resource_id: @resource.id ), remote: :true, class: 't-describe__add-button o-button__add' %>
+    <%= link_to "Add Author", stash_datacite.authors_new_path( resource_id: @resource.id ), remote: :true, class: 't-describe__add-button o-button__add' %>
     <div class="t-describe__add-orcid">
       <div class="js-add_orcid_link">
-        <%= render partial: "stash_datacite/creators/add_orcid_link", locals: { resource: @resource } %>
+        <%= render partial: "stash_datacite/authors/add_orcid_link", locals: { resource: @resource } %>
       </div>
     </div>
   </fieldset>

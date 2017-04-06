@@ -1,7 +1,6 @@
 #for monkeypatching shared resource to have associations
 module StashDatacite
   module ResourcePatch
-    #has_many :titles, class_name: 'StashDatacite::Title'
     # This patches the resource class to have associations and convenience methods.
     # I'm putting them here since the resource may be used by different metadata
     # engines.  It makes sense for the engine to know a little something about the main
@@ -15,17 +14,14 @@ module StashDatacite
     # class in the configuration.  As it is, it's problematic to change the class until being
     # certain that the configuration is loaded and so the resource class is defined.  We could
     # probably make it straight forward if we didn't allow the shared resource class to be user-configurable.
+    # TODO: just hard-code the resource class and call this from initializers/patches.rb (cf. AuthorPatch)
     def self.associate_with_resource(resource_class)
       resource_class.instance_eval do
         has_many :descriptions, class_name: 'StashDatacite::Description', dependent: :destroy #optional
         has_many :contributors, class_name: 'StashDatacite::Contributor', dependent: :destroy # optional
-        has_many :creators, class_name: 'StashDatacite::Creator', dependent: :destroy # mandatory
         has_many :datacite_dates, class_name: 'StashDatacite::DataciteDate', dependent: :destroy # optional
         has_many :descriptions, class_name: 'StashDatacite::Description', dependent: :destroy #optional
         has_many :geolocations, class_name: 'StashDatacite::Geolocation', dependent: :destroy
-        #has_many :geolocation_boxes, class_name: 'StashDatacite::GeolocationBox', dependent: :destroy # optional
-        #has_many :geolocation_places, class_name: 'StashDatacite::GeolocationPlace', dependent: :destroy # optional
-        #has_many :geolocation_points, class_name: 'StashDatacite::GeolocationPoint', dependent: :destroy # optional
         has_many :publication_years, class_name: 'StashDatacite::PublicationYear', dependent: :destroy # required
         has_one :publisher, class_name: 'StashDatacite::Publisher', dependent: :destroy # required
         has_many :related_identifiers, class_name: 'StashDatacite::RelatedIdentifier', dependent: :destroy # optional
@@ -43,7 +39,7 @@ module StashDatacite
         # this enables deep copying of the resource
         amoeba do
           # can't just pass the array to include_association() or it clobbers the ones defined in stash_engine
-          [:contributors, :creators, :datacite_dates, :descriptions, :geolocations,
+          [:contributors, :datacite_dates, :descriptions, :geolocations,
             :publication_years, :publisher, :related_identifiers, :resource_type, :rights, :sizes,
             :subjects, :titles].each do |assoc|
             include_association assoc
