@@ -30,7 +30,7 @@ module Datacite
           creators: se_resource.authors.map do |c|
             Creator.new(
               name: c.author_full_name,
-              identifier: to_dcs_identifier(c.author_orcid),
+              identifier: dcs_identifier_from(c.author_orcid),
               affiliations: c.affiliations.map(&:smart_name)
             )
           end,
@@ -182,6 +182,15 @@ module Datacite
         desc_text = "Data were created with funding from #{contrib.contributor_name}"
         desc_text << " under grant(s) #{award_num}." if award_num
         Description.new(type: DescriptionType::OTHER, value: desc_text)
+      end
+
+      def dcs_identifier_from(author_orcid)
+        return unless author_orcid && !author_orcid.empty?
+        NameIdentifier.new(
+          scheme: 'ORCID',
+          scheme_uri: 'http://orcid.org/',
+          value: author_orcid
+        )
       end
 
       def to_dcs_identifier(sd_name_ident)

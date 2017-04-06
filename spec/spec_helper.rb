@@ -56,6 +56,8 @@ require 'stash_engine'
   Dir.glob("#{stash_engine_path}/#{dir}/**/*.rb").sort.each(&method(:require))
 end
 
+$LOAD_PATH.unshift("#{stash_engine_path}/app/models")
+
 # ------------------------------------------------------------
 # StashDatacite
 
@@ -75,8 +77,8 @@ stash_datacite_path = Gem::Specification.find_by_name('stash_datacite').gem_dir
 ).each do |dir|
   Dir.glob("#{stash_datacite_path}/#{dir}/**/*.rb").sort.each(&method(:require))
 end
-
 StashDatacite::ResourcePatch.associate_with_resource(StashEngine::Resource)
+require "#{stash_datacite_path}/config/initializers/patches.rb"
 
 require 'util/resource_builder'
 
