@@ -40,7 +40,7 @@ class CatalogController < ApplicationController
 
     config.show.display_type_field = 'format'
 
-    ## 
+    ##
     # Configure the index document presenter.
     config.index.document_presenter_class = Geoblacklight::DocumentPresenter
 
@@ -80,12 +80,12 @@ class CatalogController < ApplicationController
     # }
 
     #config.add_facet_field Settings.FIELDS.PROVENANCE, label: 'Institution', limit: 8, partial: "icon_facet"
-    config.add_facet_field Settings.FIELDS.CREATOR, :label => 'Author', :limit => 8
+    #config.add_facet_field Settings.FIELDS.CREATOR, :label => 'Author', :limit => 8
     config.add_facet_field 'dc_type_s', :label => 'Type', :limit => 8
-    config.add_facet_field Settings.FIELDS.PUBLISHER, :label => 'Publisher', :limit => 8
+    config.add_facet_field Settings.FIELDS.PUBLISHER, :label => 'Institution', :limit => 8
     config.add_facet_field Settings.FIELDS.YEAR, :label => 'Year', :limit => 10
-    config.add_facet_field Settings.FIELDS.SUBJECT, :label => 'Subject', :limit => 8
-    config.add_facet_field Settings.FIELDS.SPATIAL_COVERAGE, :label => 'Place', :limit => 8
+    config.add_facet_field Settings.FIELDS.SUBJECT, :label => 'Subject Area', :limit => 8
+    config.add_facet_field Settings.FIELDS.SPATIAL_COVERAGE, :label => 'Geographical Location', :limit => 8
     config.add_facet_field Settings.FIELDS.PART_OF, :label => 'Collection', :limit => 8
 
 
@@ -131,10 +131,10 @@ class CatalogController < ApplicationController
     # helper_method: [Symbol] method that can be used to render the value
     config.add_show_field Settings.FIELDS.CREATOR, label: 'Author(s)', itemprop: 'author'
     config.add_show_field Settings.FIELDS.DESCRIPTION, label: 'Description', itemprop: 'description', helper_method: :render_value_as_truncate_abstract
-    config.add_show_field Settings.FIELDS.PUBLISHER, label: 'Publisher', itemprop: 'publisher'
+    config.add_show_field Settings.FIELDS.PUBLISHER, label: 'Institution', itemprop: 'publisher'
     config.add_show_field Settings.FIELDS.PART_OF, label: 'Collection', itemprop: 'isPartOf'
-    config.add_show_field Settings.FIELDS.SPATIAL_COVERAGE, label: 'Place(s)', itemprop: 'spatial', link_to_search: true
-    config.add_show_field Settings.FIELDS.SUBJECT, label: 'Subject(s)', itemprop: 'keywords', link_to_search: true
+    config.add_show_field Settings.FIELDS.SPATIAL_COVERAGE, label: 'Geographical Location(s)', itemprop: 'spatial', link_to_search: true
+    config.add_show_field Settings.FIELDS.SUBJECT, label: 'Subject Area(s)', itemprop: 'keywords', link_to_search: true
     config.add_show_field Settings.FIELDS.TEMPORAL, label: 'Year', itemprop: 'temporal'
     config.add_show_field Settings.FIELDS.PROVENANCE, label: 'Held by', link_to_search: true
 
@@ -212,7 +212,7 @@ class CatalogController < ApplicationController
     # except in the relevancy case).
     config.add_sort_field 'score desc, dc_title_sort asc', :label => 'relevance'
     config.add_sort_field "#{Settings.FIELDS.YEAR} desc, dc_title_sort asc", :label => 'year'
-    config.add_sort_field "#{Settings.FIELDS.PUBLISHER} asc, dc_title_sort asc", :label => 'publisher'
+    config.add_sort_field "#{Settings.FIELDS.PUBLISHER} asc, dc_title_sort asc", :label => 'institution'
     config.add_sort_field 'dc_title_sort asc', :label => 'title'
 
     # If there are more than this many search results, no spelling ("did you
