@@ -1,6 +1,6 @@
 <div>
   <p>
-    <span><%= check_box_tag 'agree_to_license', 'yes', false, class: 't-review__agree-to-license' %></span>By checking this box, I agree to the
+    <span><%= check_box_tag 'agree_to_license', 'yes', false, class: 't-review__agree-to-license' %></span>By checking this box, I agree to the license
       <% if @resource.rights.blank? %>
         <%= render partial: 'stash_datacite/licenses/license_review', locals:
             {license: StashEngine::License.by_id(current_tenant.default_license), right: nil } %>
@@ -10,7 +10,6 @@
                 {license: StashEngine::License.by_uri(r.rights_uri), right: r } %>
           <% end %>
       <% end %>
-      license.
   </p>
 </div>
 
