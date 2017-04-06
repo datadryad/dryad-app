@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title><%= @page_title %></title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+  <% # this is hacky, but dependency problems with geoblacklight/discovery loading jquery twice otherwise and no way to stop
+  if request.path.start_with?(APP_CONFIG.stash_mount) %>
+    <%= render 'layouts/stash_engine/head' %>
+  <% else %>
+    <%= render 'layouts/head' %>
+  <% end %>
+
+  <%= render 'layouts/stash_engine/google_analytics' %>
+
+  <%= csrf_meta_tags %>
+
+  <%= favicon_link_tag 'favicon.ico' %>
+</head>
+<body class='<%= "#{controller_name}_#{action_name}" %>'>
+  <% unless request.path.start_with?(APP_CONFIG.stash_mount) %>
+    <%= render partial: 'layouts/geoblacklight_extras' %>
+  <% end %>
+  <% if params[:controller].try(:include?, 'pages') && params[:action] == 'home' %>
+    <header class="t-home__header c-header">
+  <% else %>
+    <header class="c-header">
+  <% end %>
+    <div class="c-header__logos">
+      <button aria-label="mobile menu" class="o-button__menu c-header__menu-button js-header__menu-button"></button>
+      <%= link_to(stash_url_helpers.root_path, class: 'c-header__dash-logo-link') do %>
+        <%
+          dash_logo = image_tag('stash_engine/logo_dash.svg', class: 'c-header__dash-logo-svg', alt: 'Dash logo')
+        tenant_logo = logo_path(class: "c-header__dash-logo-svg") %>
+        <% if current_tenant.dash_logo_after_tenant %>
+          <%= tenant_logo %><%= dash_logo %>
+        <% else %>
+          <%= dash_logo %><%= tenant_logo %>
+        <% end %>
+      <% end %>
+    </div>
+    <nav class="c-header__nav js-header__nav">
+      <form class="o-global-search c-header__global-search" action="/search" accept-charset="UTF-8" method="get">
+        <input name="utf8" value="✓" type="hidden">
+        <label class="o-global-search__label" for="search-field-input1">Search</label>
+        <input class="o-global-search__input" id="search-field-input1" type="search" name="q" placeholder="Search">
+        <button aria-label="Submit" class="o-global-search__submit-button" type="submit" id="search"></button>
+      </form>
+
+      <div class="c-header__nav-group">
+        <%# link_to 'Home', stash_url_helpers.root_path, class: 'c-header__nav-item' %>
+        <%= link_to 'Explore Data', '/search', class: 'c-header__nav-item' %>
+        <%# link_to 'Help', stash_url_helpers.help_path, class: 'c-header__nav-item' %>
+        <% if current_user %>
+          <%= link_to 'My Datasets', stash_url_helpers.dashboard_path, class: 'c-header__nav-item' %>
+          <%= render partial: "stash_engine/shared/logout" %>
+        <% else %>
+          <%= link_to 'My Datasets', stash_url_helpers.dashboard_getting_started_path, class: 'c-header__nav-item' %>
+          <%= render partial: "stash_engine/shared/sites" %>
+        <% end %>
+      </div>
+    </nav>
+  </header>
+  <%= render partial: "stash_engine/shared/flash_messages" %>
+<%= yield %>
+
+<%= render partial: "stash_engine/shared/footer" %>
+</body>
+</html>

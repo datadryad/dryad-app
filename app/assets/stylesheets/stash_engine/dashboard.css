@@ -1,0 +1,58 @@
+/*
+  Place all the styles related to the matching controller here.
+  They will automatically be included in application.css.
+*/
+.outer_container {
+  height: 480px;
+  margin: 40px 40px 40px 40px;
+  background-color: #E5E4E2;
+}
+
+.left_container {
+  float: left;
+  width: 450px;
+  height: 335px;
+  background-color: #cecdcb;
+  padding: 20px 10px 10px 20px;
+  margin: 20px;
+}
+
+.right_container {
+  float: right;
+  width: 450px;
+  height: 350px;
+  padding: 0px 20px 10px 20px;
+  margin: 0px;
+}
+
+.steps_to_publish ul li {
+  background-image: url("../stash_engine/mark.png");
+  background-size: 20px 20px;
+  background-repeat: no-repeat;
+  font-size: 100%;
+  margin: 5px 10px 10px 14px;
+  padding: 5px 0 0 24px;
+  line-height: 130%;
+}
+
+.steps_to_publish ul {
+  list-style-type: none;
+}
+
+.get_started_points {
+  background-color: #cecdcb;
+  padding: 6px;
+}
+.why_share {
+  background-color: #cecdcb;
+  padding: 8px;
+}
+.steps_to_share {
+  padding: 20px 10px 0px 10px;
+  margin: 20px 10px 0px 10px;
+}
+
+.begin {
+  margin: 30px;
+  padding: 40px;
+}

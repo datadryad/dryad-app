@@ -1,0 +1,169 @@
+// ##### Location Component ##### //
+
+.c-location {
+	display: flex;
+	flex-flow: column nowrap;
+
+	@include bp(screen2) {
+		flex-flow: row nowrap;
+	}
+
+}
+
+.c-location__button-group {
+	display: flex;
+	margin: 0 0 10px;
+
+	@include bp(screen2) {
+		margin: 0;
+	}
+
+}
+
+%c-location__button-base {
+	flex: 1 0 50%;
+	height: $input-height + 2px;
+	padding: 0 8px 0 30px;
+	border: 1px solid $design-dark-blue-color;
+	background: left 8px center no-repeat;
+	color: $design-dark-blue-color;
+	text-align: left;
+
+	@include bp(screen2) {
+		flex: 0 1 auto;
+	}
+
+}
+
+%c-location__point-button {
+	@extend %c-location__button-base;
+}
+
+.c-location__point-button {
+	@extend %c-location__point-button;
+	background-image: inline('../images/icon_point-blue.svg');
+}
+
+.c-location__point-button--active {
+	@extend %c-location__point-button;
+	background-color: $design-dark-blue-color;
+	background-image: inline('../images/icon_point-white.svg');
+	color: $design-white-color;
+}
+
+%c-location__box-button {
+	@extend %c-location__button-base;
+}
+
+.c-location__box-button {
+	@extend %c-location__box-button;
+	background-image: inline('../images/icon_box-blue.svg');
+}
+
+.c-location__box-button--active {
+	@extend %c-location__box-button;
+	background-color: $design-dark-blue-color;
+	background-image: inline('../images/icon_box-white.svg');
+	color: $design-white-color;
+}
+
+.c-location__label {
+	@extend %hide;
+}
+
+.c-location__point-inputs {
+	display: flex;
+	align-items: flex-end; // align commas to bottom
+	min-width: 35%;
+	margin: 0 0 10px;
+	padding: 0 0 0 30px;
+	background: inline('../images/icon_point-blue.svg') left 8px center no-repeat;
+
+	@include bp(screen2) {
+		min-width: 35%;
+		margin: 0 10px;
+	}
+
+	@include bp(screen3) {
+		min-width: 35%;
+		margin: 0 10px;
+	}
+}
+
+.c-location__box-inputs {
+	display: flex;
+	flex-flow: column wrap;
+	margin: 0 0 10px;
+	padding: 0 0 0 30px;
+	background: inline('../images/icon_box-blue.svg') left 8px center no-repeat;
+
+	@include bp(screen2) {
+		flex: 1 0 auto;
+		flex-flow: row wrap;
+		margin: 0 10px 0 0;
+		padding: 0 0 0 20px;
+	}
+
+	@include bp(screen3) {
+		flex: 1 0 auto;
+		flex-flow: row wrap;
+		margin: 0 10px 0 0;
+		padding: 0 0 0 20px;
+	}
+}
+
+.c-location__input {
+	@extend %fcontrol-focus;
+	flex: 1 0 auto;
+	width: 50px;
+	height: $input-height;
+	padding: 0 10px;
+	border: 1px solid $design-dark-gray-color;
+
+	&:first-of-type {
+		margin: 0 10px 0 0;
+	}
+
+	&:last-of-type {
+		margin: 0;
+	}
+
+}
+
+.c-location__coordinates {
+	display: flex;
+	align-items: flex-end; // align commas to bottom
+
+	@include bp(screen2) {
+		flex: 1 0 auto;
+		margin: 0 0 0 10px;
+	}
+
+	&:first-of-type {
+		margin: 0 0 10px;
+
+		@include bp(screen2) {
+			margin: 0 0 0 10px;
+		}
+
+	}
+
+}
+
+.c-location__legend {
+	align-self: center;
+	width: 25px;
+	margin: 0 5px 0 0;
+	color: $design-light-blue-color;
+	text-align: right;
+}
+
+.c-location__add-button {
+	align-self: flex-end;
+	margin: 10px 5px 0 10px;
+
+	@include bp(screen2) {
+		align-self: flex-start;
+		margin: 0 5px;
+	}
+}

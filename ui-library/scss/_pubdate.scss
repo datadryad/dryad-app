@@ -1,0 +1,32 @@
+// ##### Publication Date Component ##### //
+
+.c-pubdate__release-date-input {
+	align-self: flex-start;
+}
+
+.c-pubdate__radio {
+  margin: 0.1em 0.25em 1em 2px;
+}
+
+.c-pubdate__randomstrong {
+  font-size: 110%;
+  font-weight: bold;
+}
+
+.c-pubdate__twodigit {
+  width: 2em;
+}
+
+.c-pubdate__fourdigit {
+  width: 4em;
+}
+
+.c-pubdate__warning-visible {
+  display: block;
+  color: $design-red-color;
+  font-weight: bold;
+}
+
+.c-pubdate__warning-hidden {
+  display: none;
+}

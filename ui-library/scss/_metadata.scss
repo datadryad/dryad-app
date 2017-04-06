@@ -1,0 +1,31 @@
+// ##### Metadata Object ##### //
+
+.o-metadata {
+	margin: 0 0 $spacing-sm;
+}
+
+.o-metadata__group1 {
+	margin: 0 0 10px;
+	font-size: 1.1em;
+	font-weight: bold;
+}
+
+.o-metadata__author {
+	color: $design-dark-blue-color;
+}
+
+.o-metadata__affiliation {
+	// empty
+}
+
+.o-metadata__orcid {
+	text-transform: uppercase;
+}
+
+.o-metadata__group2 {
+	// empty
+}
+
+.o-metadata__group2-item {
+  margin-bottom: 0.5em;
+}

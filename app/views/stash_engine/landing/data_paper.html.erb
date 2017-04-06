@@ -1,0 +1,17 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset='utf-8' />
+  <%= render(partial: metadata_render_path('resources', 'show_pdf_head')) %>
+</head>
+<body ongload='number_pages'>
+<div id="header">
+  <main class="t-landing__main c-columns__content">
+    <div id="display_resource">
+      <%= render(partial: metadata_render_path('resources', 'show_pdf')) %>
+    </div>
+  </main>
+</div>
+</body>
+</html>
+

@@ -1,0 +1,5 @@
+// some javascript here to do something to the files display
+
+$('#uploaded_file_<%= @file.id %>').replaceWith("<%= escape_javascript(render(partial: 'stash_engine/file_uploads/uploaded_file', object: @file)) %>");
+
+updateUiStates();

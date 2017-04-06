@@ -1,0 +1,47 @@
+.c-why-use__group {
+  width: 100%;
+  margin: 1em 0 2em;
+  padding: 0;
+}
+
+.c-why-use__items {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  background: linear-gradient(rgba($design-light-gray-color, 0.85) 100%, transparent 0), inline('../images/stem.jpg') top left / cover no-repeat;
+  background-color: $design-dark-gray-color;
+  color: $design-offwhite-color;
+}
+
+.c-why-use__blurb {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  color: $design-white-color;
+}
+
+.c-why-use__icon {
+  padding: 10px 30px;
+}
+
+.c-why-use__text {
+  margin: 1em 0;
+  padding: 0 2em 0 0;
+  font-size: 1.3em;
+  line-height: 1.7;
+}
+
+.c-why-use__strong {
+  display: inline-block;
+  padding: 0 0.27em 0 0;
+  color: $design-white-color;
+  font-size: 1.15em;
+  font-weight: bold;
+
+}
+
+.c-why-use__blocker {
+  width: 100%;
+  height: 10px;
+  background-color: $design-white-color;
+}

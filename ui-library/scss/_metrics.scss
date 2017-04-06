@@ -1,0 +1,30 @@
+// ##### Metrics Object ##### //
+
+.o-metrics {
+	display: flex;
+	justify-content: space-around;
+}
+
+.o-metrics__metric {
+	display: flex;
+}
+
+.o-metrics__group {
+	display: flex;
+	flex-flow: column nowrap;
+	align-items: center;
+}
+
+.o-metrics__icon {
+	width: 30px;
+	height: 30px;
+}
+
+.o-metrics__label {
+	// empty
+}
+
+.o-metrics__number {
+	margin: 7px 0 0;
+	font-size: 1.3em;
+}

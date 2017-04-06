@@ -1,0 +1,12 @@
+<div class="o-sites">
+  <details class="o-showhide o-sites__details" role="group">
+    <summary class="o-showhide__summary o-sites__summary">More Dash Sites</summary>
+    <div class="o-sites__group">
+      <!-- <span class="o-sites__group-heading">Participating UC Campuses</span> -->
+      <span class="o-sites__group-heading">Participating Partners</span>
+      <%= render partial: "stash_engine/shared/sites_list" %>
+    </div>
+  </details>
+  <!-- <a href="" class="o-sites__login">Login</a> -->
+  <%= link_to 'Login', current_tenant_simple.try(:omniauth_login_path), class: 'o-sites__login' %>
+</div>

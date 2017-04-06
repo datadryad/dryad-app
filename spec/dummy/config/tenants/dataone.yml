@@ -1,0 +1,33 @@
+default: &default
+  enabled: true
+  repository:
+    type: merritt
+    domain: merritt-dev.cdlib.org
+    endpoint: ""
+    username: ""
+    password: ""
+  contact_email: ["contact1@example.edu", "contact2@example.edu"]
+  abbreviation: "DataONE"
+  short_name: "DataONE"
+  long_name: "DataONE"
+  full_domain: "oneshare2-dev.cdlib.org"
+  domain_regex: "oneshare2-dev.cdlib.org$"
+  tenant_id: dataone
+  identifier_service:
+    shoulder: "doi:10.5072/FK2"
+    account:
+    password:
+    id_scheme: doi
+    owner: null
+  authentication:
+    strategy: google
+  default_license: cc0
+  dash_logo_after_tenant: false
+
+development:
+  <<: *default
+  #Add any items that need to override the defaults here
+
+test:
+  <<: *default
+  #Add any items that need to override the defaults here

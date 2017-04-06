@@ -1,0 +1,141 @@
+// ##### Dash Sites Object ##### //
+
+.o-sites {
+
+  @include bp(screen3) {
+    display: flex;
+    position: relative; // to .o-sites__group
+    flex-flow: row-reverse nowrap;
+    justify-content: space-between;
+    width: $global-search-width;
+  }
+
+}
+
+// Rotate icon when details open:
+
+.o-sites__details {
+
+  &[open] .o-sites__summary {
+
+    &::after {
+      transform: rotate(-90deg);
+
+      @include bp(screen3) {
+        transform: rotate(-180deg);
+      }
+
+    }
+
+  }
+
+}
+
+%o-sites__item {
+  display: block;
+  margin: 0 0 2px;
+  padding: 10px;
+  background-color: $design-light-blue-color;
+  color: $design-white-color;
+  text-decoration: none;
+
+  @include bp(screen3) {
+    margin: 0;
+    background-color: $design-white-color;
+    color: $design-black-color;
+  }
+
+}
+
+.o-sites__summary {
+  @extend %o-sites__item;
+  position: relative;
+
+  @include bp(screen3) {
+    padding: 0 20px 0 0;
+    background-color: transparent;
+    text-align: right; // if browser text size is increased beyond normal size
+  }
+
+  &::after {
+    position: absolute;
+    right: $spacing-body + 5px;
+    transform: rotate(90deg);
+    content: inline('../images/icon_right-white-arrow.svg');
+
+    @include bp(screen3) {
+      display: inline-block;
+      right: 0;
+      transform: rotate(0deg);
+      content: inline('../images/icon_down-blue-arrow.svg');
+    }
+
+  }
+
+}
+
+.o-sites__group {
+
+  @include bp(screen3) {
+    position: absolute; // to .o-sites
+    right: 0;
+    left: 0;
+    margin: 10px 0 0;
+  }
+
+}
+
+.o-sites__group-heading {
+  @extend %o-sites__item;
+  padding: 5px 10px;
+  background-color: $design-dark-gray-color;
+
+  @include bp(screen3) {
+    background-color: $design-dark-blue-color;
+    color: $design-white-color;
+  }
+
+}
+
+.o-sites__group-item {
+  @extend %o-sites__item;
+
+  @include bp(screen3) {
+    border-right: 1px solid $design-light-gray-color;
+    border-bottom: 1px solid $design-light-gray-color;
+    border-left: 1px solid $design-light-gray-color;
+
+    &:hover {
+      color: $design-light-blue-color;
+      text-decoration: underline;
+    }
+
+  }
+
+  &::before {
+    display: inline-block;
+    margin: 0 0.4em 0 0;
+    font-size: 1.2em;
+    content: '\2219';
+  }
+
+}
+
+.o-sites__login {
+  @extend %o-sites__item;
+  background-color: $design-dark-blue-color;
+  text-align: center;
+
+  @include bp(screen3) {
+    padding: 0;
+    background-color: transparent;
+    color: $design-dark-blue-color;
+    text-align: left;
+
+    &:hover {
+      color: $design-light-blue-color;
+    }
+
+  }
+
+}

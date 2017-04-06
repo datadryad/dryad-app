@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+<head>
+	<meta charset="UTF-8">
+	<title>Metadata Entry Theme</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+	<!-- build:css css/ui.css -->
+	<link rel="stylesheet" href="css/main.css">
+	<!-- endbuild -->
+	<style>
+		/* styles for this page only */
+	</style>
+	<script
+    src="https://code.jquery.com/jquery-2.2.3.min.js"
+    integrity="sha256-a23g1Nt4dtEYOj7bR+vTu7+T8VP13humZFBJNIYoEJo="
+    crossorigin="anonymous"></script>
+</head>
+<body>
+
+  <div class="ui-library-header">
+    <h1><a href="index.html">Dash UI Library</a></h1>
+    <h2>Metadata Entry Theme</h2>
+  </div>
+
+	<!-- Begin Header Component -->
+	<!--#include file="includes/header.html" -->
+	<!-- End Header Component -->
+
+	<div class="c-progress">
+		<a class="c-progress__tab1" href="">Describe Dataset</a>
+		<a class="c-progress__tab2--active" href="">Upload files</a>
+		<a class="c-progress__tab3" href="">Review and Submit</a>
+	</div>
+
+	<h1 class="o-heading__level1">Upload Your Files <span class="t-upload__heading-optional">(optional)</span></h1>
+
+		<h2 class="t-upload__choose-heading--active">Step 1: Choose your files</h2>
+
+		<!-- Begin Choose Files Component -->
+		<!--#include file="includes/choose.html" -->
+		<!-- End Choose Files Component -->
+
+    <div class="t-upload__container">
+		  <h2 class="t-upload__choose-heading">Step 2: Upload your files</h2>
+      <form class="o-button__inline-form" action="">
+        <button disabled class="o-button__undo">undo all changes</button>
+      </form>
+    </div>
+
+		<!-- Begin Upload Files Component -->
+		<!--#include file="includes/upload_2-4.html" -->
+		<!-- End Upload Files Component -->
+
+		<!-- Begin Dataset Navigation Object -->
+		<div class="o-dataset-nav">
+			<button class="o-button__icon-left">Back to My Datasets</button>
+			<button class="o-button__icon-right">Proceed to Review</button>
+		</div>
+		<!-- End Dataset Navigation Object -->
+
+	<!--#include file="includes/footer.html" -->
+
+	<!-- build:js js/ui.js -->
+  <script src="js/modernizr-custombuild.js"></script>
+  <script src="js/details-polyfill.js"></script>
+  <script src="js/main.js"></script>
+  <!-- endbuild -->
+	
+</body>
+</html>

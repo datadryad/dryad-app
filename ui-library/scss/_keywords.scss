@@ -1,0 +1,57 @@
+// ##### Keywords Component ##### //
+
+$keywords-height: 25px;
+$keywords-spacing: 5px;
+
+.c-keywords {
+	margin: 0 0 20px;
+}
+
+.c-keywords__label {
+	font-weight: bold;
+}
+
+%c-keywords__container {
+	display: flex;
+	flex-flow: row wrap;
+	align-items: center;
+	padding: $keywords-spacing $keywords-spacing 0;
+	border: 1px solid $design-dark-gray-color;
+	cursor: text;
+}
+
+.c-keywords__container,
+.c-keywords__container--has-blur {
+	@extend %c-keywords__container;
+}
+
+.c-keywords__container--has-focus {
+	@extend %c-keywords__container;
+	border: 2px solid $design-orange-color;
+}
+
+.c-keywords__keyword {
+	display: inline-flex;
+	align-items: center;
+	min-height: $keywords-height;
+	margin: 0 $keywords-spacing $keywords-spacing 0;
+	padding: 0 6px;
+	background-color: $design-light-blue-color;
+	color: $design-white-color;
+}
+
+.c-keywords__keyword-remove {
+	margin: 0 0 0 8px;
+	padding: 6px;
+	background: inline('../images/icon_close.svg') center / 10px no-repeat;
+	color: inherit;
+}
+
+.c-keywords__input {
+ 	width: 500px;
+	height: $keywords-height - $keywords-spacing;
+	margin: 0 0 $keywords-spacing;
+	padding: 0;
+	border: none;
+	outline: none;
+}

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+<head>
+	<meta charset="UTF-8">
+	<title>Location Component</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+	<link rel="stylesheet" href="css/ui.css">
+	<style>
+		/* styles for this page only */
+		
+	</style>
+	<script
+		src="https://code.jquery.com/jquery-2.2.3.min.js"
+		integrity="sha256-a23g1Nt4dtEYOj7bR+vTu7+T8VP13humZFBJNIYoEJo="
+		crossorigin="anonymous"></script>
+</head>
+<body>
+
+  <div class="ui-library-header">
+    <h1><a href="index.html">Dash UI Library</a></h1>
+    <h2>Location Component</h2>
+  </div>
+
+  
+<div class="c-location">
+	<div class="c-location__button-group">
+		<button class="js-location__point-button c-location__point-button--active">Point</button>
+		<button class="js-location__box-button c-location__box-button">Bounding Box</button>
+	</div>
+	<div class="js-location__point-inputs c-location__point-inputs">
+		<label class="c-location__label" for="c-location__input1">Latitude</label>
+		<input name="name1" type="number" class="c-location__input" id="c-location__input1">,
+		<label class="c-location__label" for="c-location__input2">Longitude</label>
+		<input name="name2" type="number" class="c-location__input" id="c-location__input2">
+	</div>
+	<div class="js-location__box-inputs c-location__box-inputs">
+		<div class="c-location__coordinates" role="group" aria-labelledby="c-location__legend1">
+			<div class="c-location__legend" id="c-location__legend1"><abbr title="Southwest">SW</abbr></div>
+			<label class="c-location__label" for="c-location__input3">Latitude</label>
+			<input name="name1" type="number" class="c-location__input" id="c-location__input3">,
+			<label class="c-location__label" for="c-location__input4">Longitude</label>
+			<input name="name2" type="number" class="c-location__input" id="c-location__input4">
+		</div>
+		<div class="c-location__coordinates" role="group" aria-labelledby="c-location__legend2">
+			<div class="c-location__legend" id="c-location__legend2"><abbr title="Northeast">NE</abbr></div>
+			<label class="c-location__label" for="c-location__input5">Longitude</label>
+			<input name="name3" type="number" class="c-location__input" id="c-location__input5">,
+			<label class="c-location__label" for="c-location__input6">Longitude</label>
+			<input name="name4" type="number" class="c-location__input" id="c-location__input6">
+		</div>
+		<button class="c-location__add-button o-button__plain-text2">Add</button>
+	</div>
+</div>
+
+
+	<script src="js/ui.js"></script>
+	
+</body>
+</html>

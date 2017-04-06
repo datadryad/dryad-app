@@ -1,0 +1,15 @@
+// ##### Show / Hide Object ##### //
+
+.o-showhide {
+  // empty
+}
+
+.o-showhide__summary {
+	// empty
+}
+
+// Set basic style to confirm Modernizr script loading correctly:
+html.details .o-showhide__summary,
+html.no-details .o-showhide__summary {
+  cursor: pointer;
+}

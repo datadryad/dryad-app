@@ -1,0 +1,43 @@
+// ##### Locations Component ##### //
+
+.c-locations {
+	margin: 0 0 20px;
+}
+
+.c-locations__label {
+	margin: 0 0 20px;
+	font-weight: bold;
+}
+
+%c-locations__group {
+	display: flex;
+	justify-content: space-between;
+	padding: 0.6em 0 0.2em;
+	border-bottom: 1px solid $design-light-gray-color;
+}
+
+.c-locations__point {
+	@extend %c-locations__group;
+	padding-left: 26px;
+	background: inline('../images/icon_point-blue.svg') left 2px center no-repeat;
+}
+
+.c-locations__place {
+	@extend %c-locations__group;
+	padding-left: 26px;
+	background: inline('../images/icon_globe.svg') left 1px center no-repeat;
+}
+
+.c-locations__area {
+	@extend %c-locations__group;
+	padding-left: 26px;
+	background: inline('../images/icon_box-blue.svg') left 1px center no-repeat;
+}
+
+.c-locations__coordinate {
+	color: $design-dark-blue-color;
+}
+
+.c-locations__data {
+	margin: 0 1em 0 0;
+}

@@ -1,0 +1,95 @@
+/*
+ * This is a manifest file that'll be compiled into application.css, which will include all the files
+ * listed below.
+ *
+ * Any CSS and SCSS file within this directory, lib/assets/stylesheets, vendor/assets/stylesheets,
+ * or any plugin's vendor/assets/stylesheets directory can be referenced here using a relative path.
+ *
+ * You're free to add application-wide styles to this file and they'll appear at the bottom of the
+ * compiled file so the styles you add here take precedence over styles defined in any styles
+ * defined in the other CSS/SCSS files in this directory. It is generally better to create a new
+ * file per style scope.
+ *
+ *= require jquery-ui
+ *= require_tree .
+ *= require_self
+ *= require jquery.fileupload
+ *= require jquery.fileupload-ui
+ *= require font-awesome
+ */
+
+/* I think  require font-awesome is not longer needed */
+
+div.head_box {
+    border-style: solid;
+    border-width: 1px;
+    padding: 10px;
+}
+
+div.logo {
+    width: 200px;
+    height: 50px;
+    clear: left;
+    float: left;
+}
+
+div.dash_logo {
+    width: 200px;
+    height: 50px;
+    float: left;
+    font-size: xx-large;
+}
+
+div.search_and_login {
+    width: 400px;
+    height: 50px;
+    float:right;
+    text-align: right;
+}
+
+nav.menu_bar {
+    clear:left;
+    width: 60%;
+    float: left;
+}
+
+div.log_in_out {
+    float: right;
+    width: 40%;
+    float: right;
+    text-align: right;
+}
+
+div.spaced_text {
+    float: left;
+    margin-right: 2em;
+}
+
+div.progress {
+    height: 18px;
+    width: 100px;
+    background-color: #EEEEEE;
+    border-width: 2px;
+    border-style: inset;
+}
+
+div.bar {
+    background-color: #0086b3;
+    height: 18px;
+}
+
+div.bad_upload {
+    color: red;
+}
+
+.clear {
+    clear: left;
+}
+
+div.spaced_row {
+    margin-bottom: 1ex;
+}
+
+#upload_total {
+    margin: 1em 0 1em 0;
+}

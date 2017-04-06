@@ -1,0 +1,32 @@
+/*
+  Place all the styles related to the matching controller here.
+  They will automatically be included in application.css.
+*/
+
+.success_top {
+  display: none;
+  height:50px;
+  width:50px;
+  position:fixed;
+  top: 0;
+  float: left;
+}
+.success_botton{
+  position:fixed;
+  left: 250px;
+  bottom: 0;
+}
+.link_like_button {
+  font: bold 11px Arial;
+  text-decoration: none;
+  background-color: #EEEEEE;
+  color: #333333;
+  text-align: center;
+  margin: auto;
+  width: 200px;
+  padding: 10px 10px 10px 10px;
+  border-top: 1px solid #CCCCCC;
+  border-right: 1px solid #333333;
+  border-bottom: 1px solid #333333;
+  border-left: 1px solid #CCCCCC;
+}
