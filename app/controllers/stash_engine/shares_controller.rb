@@ -10,15 +10,6 @@ module StashEngine
 
     # POST /shares
     def create
-      ## creates a new share object with resource_id as params
-      @share = Share.new(resource_id: params[:resource_id])
-      respond_to do |format|
-        if @share.save
-          format.js
-        else
-          format.html { render 'new' }
-        end
-      end
     end
 
     # PATCH/PUT /shares/1
@@ -49,7 +40,7 @@ module StashEngine
 
       # Only allow a trusted parameter "white list" through.
       def share_params
-        params.require(:share).permit(:id, :secret_id, :expiration_date, :resource_id)
+        params.require(:share).permit(:id, :secret_id, :resource_id)
       end
   end
 end

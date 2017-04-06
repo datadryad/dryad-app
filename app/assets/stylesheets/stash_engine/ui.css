@@ -3984,8 +3984,8 @@ html.svg .c-facet__check-label {
   color: inherit; }
 
 .c-keywords__input {
-  height: 20px;
   width: 500px;
+  height: 20px;
   margin: 0 0 5px;
   padding: 0;
   border: none;
@@ -4921,6 +4921,14 @@ html.svg .c-facet__check-label {
 
 .t-review__funding-section {
   position: relative; }
+
+.t-review__agree-to-license {
+  position: relative;
+  width: 25px;
+  margin: 5px;
+  border: 1px solid #ddd;
+  background: #eee;
+  cursor: pointer; }
 
 .t-review__doi {
   padding: 0 170px 0 0; }

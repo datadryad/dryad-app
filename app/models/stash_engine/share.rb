@@ -20,7 +20,6 @@ module StashEngine
       #::urlsafe_base64 generates a random URL-safe base64 string.
       # The result may contain A-Z, a-z, 0-9, “-” and “_”.
       self.secret_id = SecureRandom.urlsafe_base64(32)
-      self.expiration_date = tenant.sharing_expiration_days.days.from_now
     end
   end
 end

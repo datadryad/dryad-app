@@ -47,6 +47,7 @@ module StashEngine
       if !@resource.under_embargo? || ( current_user && current_user.id == @resource.user_id) ||
           ( params[:secret_id] == @resource.share.secret_id )
         api_async_download(resource: @resource, email: @email)
+        @resource.increment_downloads
         redirect_to landing_show_path(
           id: "#{@resource.identifier.identifier_type.downcase}:#{@resource.identifier.identifier}"),
           notice: 'You shall shortly receive an email with the link to download the dataset.'
@@ -60,21 +61,28 @@ module StashEngine
     # method to download by the secret sharing link, must match the string they generated to look up and download
     def share
       @shares = Share.where(secret_id: params[:id])
-      raise ActionController::RoutingError, 'Not Found' if @shares.count < 1 || @shares.first.expiration_date < Time.new
+      raise ActionController::RoutingError, 'Not Found' if @shares.count < 1
 
       @resource = @shares.first.resource
-      setup_async_download_variable #which may redirect to different page in certain circumstances
+      if @resource.under_embargo?
+        setup_async_download_variable #which may redirect to different page in certain circumstances
 
-      if @async_download
-        #redirect to the form for filling in their email address to get an email
-        @secret_id = @resource.share.secret_id
-        render 'capture_email'
-        #don't forget to be sure that action has good security, so that people can't just go
-        #to that page and bypass embargoes without a login or a token for downloading
+        if @async_download
+          #redirect to the form for filling in their email address to get an email
+          @secret_id = @resource.share.secret_id
+          render 'capture_email'
+          #don't forget to be sure that action has good security, so that people can't just go
+          #to that page and bypass embargoes without a login or a token for downloading
+        else
+          @resource.increment_downloads
+          stream_response(@resource.merritt_producer_download_uri,
+                          @resource.tenant.repository.username,
+                          @resource.tenant.repository.password)
+        end
       else
-        stream_response(@resource.merritt_producer_download_uri,
-                        @resource.tenant.repository.username,
-                        @resource.tenant.repository.password)
+        redirect_to landing_show_path(
+          id: "#{@resource.identifier.identifier_type.downcase}:#{@resource.identifier.identifier}"),
+          notice: 'The dataset is public now published.'
       end
     end
 
