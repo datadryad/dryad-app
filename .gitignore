@@ -1,0 +1,46 @@
+# Ruby defaults
+
+/.bundle/
+/.yardoc
+/Gemfile.lock
+/_yardoc/
+/coverage/
+/doc/
+/pkg/
+/spec/reports/
+/tmp/
+*.bundle
+*.so
+*.o
+*.a
+mkmf.log
+
+# Built gem
+
+*.gem
+
+# Database
+
+db/*.sqlite3
+
+# Logs
+
+/log/
+
+# IntelliJ
+
+*.iml
+*.ipr
+*.iws
+*.ids
+.rakeTasks
+
+# Emacs
+
+*~
+\#*
+.#*
+
+# Mac OS
+
+.DS_Store
