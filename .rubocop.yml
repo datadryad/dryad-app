@@ -1,0 +1,41 @@
+inherit_from: .rubocop_todo.yml
+
+AllCops:
+  Include:
+    - '**/Rakefile'
+    - '**/config.ru'
+  Exclude:
+    - 'db/**/*'
+    - 'config/**/*'
+    - 'script/**/*'
+    - 'bin/**/*'
+    - 'test/dummy/db/**/*'
+    - 'vendor/**/*'
+    - 'app/models/stash_datacite/resource/resource_file_generation.rb'
+
+# other configuration
+Metrics/LineLength:
+  Max: 120
+
+Metrics/AbcSize:
+  Max: 25
+
+Metrics/MethodLength:
+  Max: 25
+
+# documentation
+Documentation:
+  Exclude:
+    - 'app/controllers/**/*'
+    - 'app/helpers/**/*'
+    - 'app/models/**/*'
+    - 'test/controllers/**/*'
+    - 'lib/stash_datacite/**/*'
+    - 'lib/stash_datacite.rb'
+    - 'test/**/*'
+
+Style/LeadingCommentSpace:
+  Enabled: false
+
+Style/BlockComments:
+  Enabled: false

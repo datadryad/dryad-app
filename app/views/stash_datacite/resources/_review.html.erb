@@ -1,0 +1,80 @@
+  <h1 class="o-heading__level1">Finalize Submission</h1>
+    <%= render partial: "stash_datacite/resources/missing_mandatory_data", locals: { data: @data } %>
+  <h2 class="o-heading__page-span">Review Description</h2>
+    <%= link_to "Edit Description",
+                stash_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: @resource.id),
+                class: 't-review__edit-button-top o-button__icon-left', role: 'button' %>
+    <%= render partial: "stash_datacite/titles/show", locals: { title: @review.title } %>
+    <div class="o-metadata__group2">
+      <%= render partial: "stash_datacite/authors/show", locals: { authors: @review.authors } %>
+      <%= render partial: "stash_datacite/publishers/publication_info", locals: {resource: @resource } %>
+    </div>
+
+    <section class="o-section">
+    <%= render partial: "stash_datacite/shared/citations", locals: { authors: @review.authors, title: @review.title,
+                         resource_type: @review.resource_type, version: "v#{@resource.version_number}",
+                         identifier: @resource.identifier.nil? ? nil : "#{@review.identifier.identifier}",
+                         publisher: @review.publisher,
+                         publication_years: @resource.publication_years } %>
+    </section>
+
+    <%= render partial: "stash_datacite/descriptions/show", locals:
+        { abstract: @review.abstract, methods: @review.methods, other: @review.other } %>
+    <%= render partial: "stash_datacite/subjects/show", locals: { subjects: @review.subjects } %>
+
+    <% unless @review.contributors.length + @review.related_identifiers.length < 1 %>
+      <section class="t-review__funding-section o-section">
+        <%= render partial: "stash_datacite/contributors/show", locals: { contributors: @review.contributors } %>
+        <%= render partial: "stash_datacite/related_identifiers/show", locals:
+            { related_identifiers: @review.related_identifiers } %>
+        <%= link_to "Edit Description",
+                    stash_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: @resource.id),
+                    class: 't-review__edit-button-bottom o-button__icon-left', role: 'button' %>
+      </section>
+    <% end %>
+
+    <% if @resource.has_geolocation %>
+      <h3 class="o-heading__level2">Location</h3>
+      <div id="map_review" class="o-map"></div>
+      <div class="c-locations">
+        <%= render partial: "stash_datacite/geolocation_points/show",
+                   locals: { geolocation_points: @review.geolocation_points } %>
+        <%= render partial: "stash_datacite/geolocation_boxes/show",
+                   locals: { geolocation_boxes: @review.geolocation_boxes } %>
+        <%= render partial: "stash_datacite/geolocation_places/show",
+                   locals: { geolocation_places: @review.geolocation_places } %>
+      </div>
+    <% end %>
+
+    <h2 class="o-heading__page-span">Review Data Files</h2>
+
+    <div class="c-review-files">
+      <%= render partial: "stash_engine/file_uploads/show", locals: { file_uploads:  @review.file_uploads } %>
+      <%= link_to 'Edit Files', stash_engine.upload_resource_path(@resource), id: 'upload_path',
+                  class: 'c-review-files-button o-button__icon-left', role: 'button' %>
+    </div>
+
+    <h2 class="o-heading__page-span">Choose Publication Date</h2>
+    <div id="embargo_section">
+      <%= render partial: "stash_engine/embargoes/review", locals: { embargo: @review.embargo } %>
+    </div>
+
+  <h2 class="o-heading__page-span">Agree to License</h2>
+    <%= render partial: "stash_datacite/licenses/review" %>
+
+<div class="o-dataset-nav">
+  <%= link_to 'Back to My Datasets', stash_url_helpers.dashboard_path , id: 'dashboard_path',
+              class: 'o-button__icon-left', role: 'button' %>
+  <% if @data.blank? %>
+    <%= check_box_tag 'all_filled',  1, true, :style => "display: none;", class: 'all_filled' %>
+    <%= button_to("Submit", stash_datacite.resources_submission_path(resource_id: @resource.id), disabled: true, class: 'o-button__submit') %>
+  <% else %>
+    <%= button_to("Submit", '#', disabled: true, class: 'o-button__submit') %>
+  <% end %>
+</div>
+
+<script type="text/javascript">
+<% flash.each do |type, message| %>
+  $("#flash_messages").html("<%= type.to_s.humanize %>: <%= message.html_safe %>")
+<% end %>
+</script>

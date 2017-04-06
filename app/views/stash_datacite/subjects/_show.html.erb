@@ -1,0 +1,4 @@
+<% unless subjects.nil? || subjects.length < 1 %>
+  <h3 class="o-heading__level2">Keywords</h3>
+  <p><%= subjects.map(&:subject).join(", ") %></p>
+<% end %>

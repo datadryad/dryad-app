@@ -1,0 +1,11 @@
+<div class = "geolocation_points" >
+  <% geolocation_points.each do |geolocation_point| %>
+  <div class="c-locations__point"
+       data-bbox="<%= geolocation_point.bounding_box_str %>">
+  	<div class="c-locations__data">
+  		<%= geolocation_point.latitude %>,&nbsp; <%= geolocation_point.longitude %>
+  	</div>
+  	<%= link_to 'remove', stash_datacite.geolocation_points_delete_path(geolocation_point.id, resource_id: @resource.id ), method: :delete, remote: true, class: 'o-button__remove', role: 'button' %>
+  </div>
+  <% end %>
+</div>

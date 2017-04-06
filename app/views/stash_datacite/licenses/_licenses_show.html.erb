@@ -1,0 +1,4 @@
+<% @rights.each do |r| %>
+  <%= render partial: 'stash_datacite/licenses/license_sidebar', locals:
+      {license: StashEngine::License.by_uri(r.rights_uri), right: r } %>
+<% end %>

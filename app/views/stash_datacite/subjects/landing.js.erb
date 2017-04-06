@@ -1,0 +1,4 @@
+$('#show_subjects').html("<%= escape_javascript(render(partial: 'landing_subjects')) %>");
+<% if @resource.subjects.length < 1 %>
+  $('#keyword_section').hide();
+<% end %>

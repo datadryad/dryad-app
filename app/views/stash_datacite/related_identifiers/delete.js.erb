@@ -1,0 +1,4 @@
+$('.remove_record').bind('ajax:success', function() {
+  $(this).closest('form').remove();
+  hideRemoveLinkRelatedIdentifiers();
+});

@@ -1,0 +1,9 @@
+# TODO: Move this to dash2-config; don't hard-code UC3 dash2 instance names here
+development:
+  adapter: solr
+  url: <%= ENV['SOLR_URL'] || "http://uc3-dash2solr-dev.cdlib.org:8983/solr/geoblacklight" %>
+test: &test
+  adapter: solr
+  url: <%= ENV['SOLR_URL'] || "http://uc3-dash2solr-dev.cdlib.org:8983/solr/geoblacklight" %>
+  # TODO: Figure out whether we want/need a local Jetty/Solr for testing
+  # url: <%= "http://127.0.0.1:#{ENV['TEST_JETTY_PORT'] || 8888}/solr/blacklight-core" %>

@@ -1,0 +1,5 @@
+<h3 class="o-heading__level2">Citation</h3>
+<% cit = citation(authors, title, resource_type, version, identifier, publisher, publication_years)
+  cit.gsub!(/(https?:\/\/doi.org\/\S+)/, "<a href='\\1' target='_blank'>\\1</a>")
+%>
+<p><%= cit.html_safe %></p>

@@ -1,0 +1,28 @@
+.bundle/
+log/*.log
+pkg/
+spec/dummy/tmp/
+spec/dummy/uploads/
+spec/dummy/log/*.log
+test/dummy/log/*
+test/dummy/db/*
+test/dummy/tmp/*
+test/dummy/.generators
+spec/dummy/log/*
+tmp/*
+
+# Ignore Mac DS_Store files
+.DS_Store
+
+.ruby-version
+coverage
+
+# Ignore IntelliJ IDE project configuration.
+*.iml
+*.ipr
+*.iws
+.rakeTasks
+.idea
+
+# Ignore Emacs backups.
+*~

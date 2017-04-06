@@ -1,0 +1,27 @@
+defaults: &DEFAULTS
+  metadata_engine: StashDatacite
+  shared_resource_model: StashEngine::Resource
+  repository: Stash::MockRepository
+  stash_mount: /stash
+
+development: &DEVELOPMENT
+  <<: *DEFAULTS
+  shib_sp_host: ""
+  google_client_id: 1713274285-s1d8mlqdr1pb2giicssrm94fg3gn8lu4.apps.googleusercontent.com
+  google_client_secret: Lf2nVTSLxWwXMgH4Q_-p9vLa
+  # sandbox orcid credentials
+  site: https://sandbox.orcid.org/
+  authorize_url: https://sandbox.orcid.org/oauth/authorize
+  token_url: https://api.sandbox.orcid.org/oauth/token
+  orcid_key:  APP-I07IMI2NJTMP9Z6G
+  orcid_secret: 4f271274-6071-4d87-98e8-6a7636900c1c
+  member: true
+  sandbox: true
+  feedback_email_to: [bhavi.vedula@ucop.edu]
+  feedback_email_from: no-reply-dash2-test@ucop.edu
+  collection_uri: ""
+  contact_us_uri: ""
+  google_analytics_id: UA-30638119-15
+
+test:
+  <<: *DEFAULTS

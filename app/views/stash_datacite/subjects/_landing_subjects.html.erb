@@ -1,0 +1,5 @@
+<ul class="o-list">
+<% @resource.subjects.each do |s| %>
+  <li><%= link_to s.subject, subject_facet(s.subject), class: 'o-link__primary' %></li>
+<% end %>
+</ul>
