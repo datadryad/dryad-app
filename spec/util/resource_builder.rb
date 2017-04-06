@@ -30,7 +30,7 @@ module StashDatacite
     def self.stash_files(stash_files)
       return stash_files if stash_files.all? do |file|
         file.is_a?(Stash::Wrapper::StashFile) ||
-        file.to_s =~ /InstanceDouble\(Stash::Wrapper::StashFile\)/ # For RSpec tests
+          file.to_s =~ /InstanceDouble\(Stash::Wrapper::StashFile\)/ # For RSpec tests
       end
       raise ArgumentError, "stash_files does not appear to be an array of Stash::Wrapper::StashFile objects: #{stash_files || 'nil'}"
     end
@@ -99,7 +99,7 @@ module StashDatacite
         author_first_name: first_name,
         author_last_name: last_name,
         author_email: email_from(dcs_creator.identifier),
-        author_orcid: email_from(dcs_creator.identifier),
+        author_orcid: orcid_from(dcs_creator.identifier),
         resource_id: se_resource_id
       )
       se_author.affiliation_ids = dcs_creator.affiliations.map { |affiliation_str| sd_affiliation_id_for(affiliation_str) }
