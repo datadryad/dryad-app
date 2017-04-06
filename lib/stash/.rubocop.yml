@@ -1,0 +1,13 @@
+inherit_from: ../../.rubocop.yml
+
+Lint/UnusedMethodArgument:
+  Exclude:
+    - 'no_op_persistence_config.rb'
+
+Style/EmptyLineBetweenDefs:
+  Exclude:
+    - 'no_op_persistence_config.rb'
+
+Style/SingleLineMethods:
+  Exclude:
+    - 'no_op_persistence_config.rb'

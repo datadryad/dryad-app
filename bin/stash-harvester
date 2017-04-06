@@ -1,0 +1,30 @@
+#! /usr/bin/env ruby
+
+require 'stash'
+require 'ar_persistence_config'
+
+module Stash
+  module HarvesterApp
+    def self.start_application(options)
+      app = Application.with_config_file(options.config_file)
+      app.start(from_time: options.from_time, until_time: options.until_time)
+    end
+
+    begin
+      options = Options.new(ARGV)
+      puts Options::VERSION if options.show_version
+      puts Options::HELP if options.show_help
+      log.info(options.stop_file_message) if options.stop_file_present
+      start_application(options) unless options.do_exit
+    rescue => e
+      warn e
+      warn e.backtrace
+      if e.cause
+        warn 'Caused by:'
+        warn e.cause
+        warn e.cause.backtrace
+      end
+      warn Options::USAGE
+    end
+  end
+end
