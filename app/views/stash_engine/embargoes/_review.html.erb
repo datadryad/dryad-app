@@ -1,9 +1,19 @@
 <style>
   .hidden { display: none; }
 </style>
+
 <p>
-  You may choose to publish your dataset on a specific date up to <%= APP_CONFIG.max_review_days %> days from today.
+  If you would like to keep your dataset private for peer review, for up to <%= APP_CONFIG.max_review_days %> days,
+  please select a date below.
 </p>
+<p>
+  A private reviewer URL will be available for sharing until your dataset is public. Your permanent DOI
+  for citation use will be available upon submission on the data landing page. If you would like to
+  preserve data privately for longer than six months for non-peer review purposes, please contact us at
+  <a href="mailto:<%= [current_tenant.contact_email].flatten.first %>">
+    <%= [current_tenant.contact_email].flatten.first %></a>.
+</p>
+
 
 <% starting_embargo = (@resource.embargo && @resource.embargo.end_date) || Time.new %>
 <p class="c-pubdate__randomstrong">Make my dataset publicly available:</p>
@@ -48,9 +58,3 @@
   loadDatepicker(<%= APP_CONFIG.max_review_days %>);
 </script>
 
-
-<% if false && embargo.persisted? %>
-  <%= render partial: "stash_engine/embargoes/form", locals: { embargo: embargo, path: stash_engine.embargoes_update_path, resource_id: @resource.id }%>
-<% else %>
-  <%# render partial: "stash_engine/embargoes/form", locals: { embargo: embargo, path: stash_engine.embargoes_create_path, resource_id: @resource.id }%>
-<% end %>
