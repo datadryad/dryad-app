@@ -6,18 +6,12 @@ module StashEngine
 
     scope :names_filled, -> { where("TRIM(IFNULL(author_first_name,'')) <> ''") }
 
+    amoeba do
+      enable
+    end
+
     def author_full_name
       [author_last_name, author_first_name].reject(&:blank?).join(', ')
-    end
-
-    # TODO: replace these with :author_orcid=
-    def orcid_id=(value)
-      self.author_orcid = (value.strip unless value.blank?)
-    end
-
-    # TODO: replace these with :author_orcid
-    def orcid_id
-      self.author_orcid
     end
 
     private
