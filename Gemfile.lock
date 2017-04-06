@@ -30,7 +30,7 @@ PATH
       httpclient (~> 2.8.3)
       jquery-fileupload-rails (~> 0.4.6)
       jquery-rails
-      jquery-turbolinks
+      jquery-turbolinks (~> 2.1.0)
       jquery-ui-rails
       kaminari
       omniauth (~> 1.2.2)
@@ -82,7 +82,7 @@ GEM
       minitest (~> 5.1)
       thread_safe (~> 0.3, >= 0.3.4)
       tzinfo (~> 1.1)
-    addressable (2.5.0)
+    addressable (2.5.1)
       public_suffix (~> 2.0, >= 2.0.2)
     amoeba (3.0.0)
       activerecord (>= 3.2.6)
@@ -155,7 +155,7 @@ GEM
       devise
     diff-lcs (1.2.5)
     docile (1.1.5)
-    domain_name (0.5.20170223)
+    domain_name (0.5.20170404)
       unf (>= 0.0.5, < 1.0.0)
     erubis (2.7.0)
     exception_notification (4.2.1)
