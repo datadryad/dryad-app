@@ -1,6 +1,8 @@
-## 0.2 (next)
+## 0.2.0 (6 April 2017)
 
 - add support for embargoes in `stash-wrapper.xml` and `mrt-embargo.txt`
+- update to reflect new DB schema with StashEngine::Author replacing
+  StashDatacite::Creator
 
 ## 0.1.1 (23 February 2017)
 
