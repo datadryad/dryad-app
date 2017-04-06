@@ -67,12 +67,7 @@
               class: 'o-button__icon-left', role: 'button' %>
   <% if @data.blank? %>
     <%= check_box_tag 'all_filled',  1, true, :style => "display: none;", class: 'all_filled' %>
-    <%= button_to("Submit", stash_datacite.resources_submission_path(resource_id: @resource.id),
-        data: {confirm:
-                 "By confirming submission to Dash, your data will be publicly available on the Dash website under a " +
-                     " #{@resource.rights.first.try(:rights)} license. Please only submit legitimate, complete data."},
-                  disabled: true,
-                  class: 'o-button__submit') %>
+    <%= button_to("Submit", stash_datacite.resources_submission_path(resource_id: @resource.id), disabled: true, class: 'o-button__submit') %>
   <% else %>
     <%= button_to("Submit", '#', disabled: true, class: 'o-button__submit') %>
   <% end %>
