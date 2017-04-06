@@ -64,7 +64,7 @@ module StashDatacite
       unless params[:id] == 'new'
         @author = StashEngine::Author.find(params[:id])
         @resource = StashDatacite.resource_class.find(@author.resource_id)
-        @if_orcid = check_for_orcid_id(@author)
+        @if_orcid = check_for_orcid(@author)
         @author.destroy
       end
       respond_to do |format|
@@ -82,11 +82,11 @@ module StashDatacite
     # Only allow a trusted parameter "white list" through.
     def author_params
       params.require(:author).permit(:id, :author_first_name, :author_last_name, :author_middle_name,
-                                      :name_identifier_id, :affiliation_id, :resource_id, :orcid_id)
+                                      :affiliation_id, :resource_id, :author_orcid)
     end
 
-    def check_for_orcid_id(author)
-      author.orcid_id ? true : false
+    def check_for_orcid(author)
+      author.author_orcid ? true : false
     end
   end
 end
