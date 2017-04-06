@@ -1,0 +1,53 @@
+<div style="clear: both;">&nbsp;</div>
+<div id="dialog-form" title="Large File Download Request">
+
+  <p>Due to its size, this dataset is not available for immediate download.</p>
+
+  <p>
+    Please provide your email address to receive an email with a download link when the dataset is ready. We
+    will not use your email for any other purpose.
+  </p>
+  <%= form_tag stash_engine.download_async_request_path(resource.id), method: :post do %>
+    <strong><%= label_tag 'email', 'Email', class: 'required c-input__label' %></strong>
+    <%= email_field_tag 'email', (current_user.try(:email) || session[:saved_email]), id: 'user_email',
+                        class: 'c-input__text', placeholder: 'yourname@yourdomain.com', width: 30 %>
+    <%= hidden_field_tag :resource_id, resource.id %>
+    <%= hidden_field_tag :secret_id, params[:secret_id] %>
+    <%= submit_tag 'submit', value: 'Submit', id: 'capture_email_submit' %>
+  <% end %>
+</div>
+
+<script>
+  alert('fuck you');
+
+  /*
+  $( function (){
+    alert('hi');
+  });
+  $( function(){
+    alert('loaded js');
+    var dialog, form;
+    dialog = $("#dialog-form").dialog({
+      autoOpen: false,
+      height: 400,
+      width: 350,
+      modal: true,
+      buttons: {
+        Cancel: function () {
+          dialog.dialog("close");
+          alert('hi cancel button');
+        },
+        "Submit": function() {
+          alert('hi submit button');
+        }
+      },
+      close: function () {
+        // form[0].reset();
+        // allFields.removeClass("ui-state-error");
+        alert('hi close');
+      }
+    });
+  });
+  */
+
+</script>
