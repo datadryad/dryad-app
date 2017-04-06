@@ -3,6 +3,7 @@ module StashEngine
     # ------------------------------------------------------------
     # Relations
 
+    has_many :authors, class_name: 'StashEngine::Author', dependent: :destroy
     has_many :file_uploads, class_name: 'StashEngine::FileUpload', dependent: :destroy
     has_one :stash_version, class_name: 'StashEngine::Version'
     belongs_to :identifier, class_name: 'StashEngine::Identifier', foreign_key: 'identifier_id'
@@ -16,6 +17,7 @@ module StashEngine
             foreign_key: 'id'
 
     amoeba do
+      include_association :authors
       include_association :embargo
       include_association :file_uploads
       customize(lambda do |_, new_resource|
