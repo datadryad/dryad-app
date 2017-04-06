@@ -45,7 +45,7 @@ gem 'daemons'
 
 gem 'exception_notification'
 
-gem 'stash-merritt', git: 'https://github.com/CDLUC3/stash-merritt', branch: 'embargo'
+gem 'stash-merritt', '~> 0.2.0'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console

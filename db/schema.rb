@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170403214243) do
+ActiveRecord::Schema.define(version: 20170404221801) do
 
   create_table "bookmarks", force: :cascade do |t|
     t.integer  "user_id",       limit: 4,   null: false
@@ -36,6 +36,16 @@ ActiveRecord::Schema.define(version: 20170403214243) do
   add_index "dcs_affiliations", ["long_name"], name: "index_dcs_affiliations_on_long_name", length: {"long_name"=>50}, using: :btree
   add_index "dcs_affiliations", ["short_name"], name: "index_dcs_affiliations_on_short_name", length: {"short_name"=>50}, using: :btree
 
+  create_table "dcs_affiliations_authors", force: :cascade do |t|
+    t.integer  "affiliation_id", limit: 4
+    t.integer  "author_id",      limit: 4
+    t.datetime "created_at",               null: false
+    t.datetime "updated_at",               null: false
+  end
+
+  add_index "dcs_affiliations_authors", ["affiliation_id"], name: "index_dcs_affiliations_authors_on_affiliation_id", using: :btree
+  add_index "dcs_affiliations_authors", ["author_id"], name: "index_dcs_affiliations_authors_on_author_id", using: :btree
+
   create_table "dcs_affiliations_contributors", force: :cascade do |t|
     t.integer  "affiliation_id", limit: 4
     t.integer  "contributor_id", limit: 4
@@ -45,16 +55,6 @@ ActiveRecord::Schema.define(version: 20170403214243) do
 
   add_index "dcs_affiliations_contributors", ["affiliation_id"], name: "index_dcs_affiliations_contributors_on_affiliation_id", using: :btree
   add_index "dcs_affiliations_contributors", ["contributor_id"], name: "index_dcs_affiliations_contributors_on_contributor_id", using: :btree
-
-  create_table "dcs_affiliations_creators", force: :cascade do |t|
-    t.integer  "affiliation_id", limit: 4
-    t.integer  "creator_id",     limit: 4
-    t.datetime "created_at",               null: false
-    t.datetime "updated_at",               null: false
-  end
-
-  add_index "dcs_affiliations_creators", ["affiliation_id"], name: "index_dcs_affiliations_creators_on_affiliation_id", using: :btree
-  add_index "dcs_affiliations_creators", ["creator_id"], name: "index_dcs_affiliations_creators_on_creator_id", using: :btree
 
   create_table "dcs_alternate_identifiers", force: :cascade do |t|
     t.text     "alternate_identifier",      limit: 65535
