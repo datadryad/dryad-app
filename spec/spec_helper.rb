@@ -43,6 +43,7 @@ ENV['RAILS_ENV'] = 'test'
 
 stash_engine_path = Gem::Specification.find_by_name('stash_engine').gem_dir
 require "#{stash_engine_path}/config/initializers/hash_to_ostruct.rb"
+require "#{stash_engine_path}/config/initializers/inflections.rb"
 
 require 'stash_engine'
 
