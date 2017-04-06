@@ -10,15 +10,6 @@ module StashEngine
 
     # POST /shares
     def create
-      ## creates a new share object with resource_id as params
-      @share = Share.new(resource_id: params[:resource_id])
-      respond_to do |format|
-        if @share.save
-          format.js
-        else
-          format.html { render 'new' }
-        end
-      end
     end
 
     # PATCH/PUT /shares/1
