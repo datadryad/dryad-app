@@ -1,0 +1,15 @@
+/*
+*= require geoblacklight/application
+*= require_self
+*/
+
+/* these positions are a fix to keep the geoblacklight under the titlebar w drop-down menu which is set to 1 */
+div.jumbotron{
+  position: relative;
+  z-index: 0;
+}
+
+div.container{
+  position: relative;
+  z-index: 0;
+}
