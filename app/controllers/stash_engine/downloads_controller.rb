@@ -72,10 +72,9 @@ module StashEngine
 
         if @async_download
           #redirect to the form for filling in their email address to get an email
-          @secret_id = @resource.share.secret_id
-          render 'capture_email'
-          #don't forget to be sure that action has good security, so that people can't just go
-          #to that page and bypass embargoes without a login or a token for downloading
+          redirect_to landing_show_path(
+                          id: "#{@resource.identifier.identifier_type.downcase}:#{@resource.identifier.identifier}",
+                          big: 'showme', secret_id: params[:id])
         else
           @resource.increment_downloads
           stream_response(@resource.merritt_producer_download_uri,
@@ -85,7 +84,7 @@ module StashEngine
       else
         redirect_to landing_show_path(
           id: "#{@resource.identifier.identifier_type.downcase}:#{@resource.identifier.identifier}"),
-          notice: 'The dataset is public now published.'
+          notice: 'The dataset is now published, please use the download button on the right side.'
       end
     end
 
