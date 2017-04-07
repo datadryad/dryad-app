@@ -95,7 +95,7 @@ namespace :deploy do
   desc "run bundle install and ensure all gem requirements are met"
   task :install do
     on roles(:app) do
-      execute "cd '#{release_path}' && bundle install --without=test --deployment --full-index"
+      execute "cd '#{release_path}' && bundle install --without=test --deployment"
     end
   end
 
