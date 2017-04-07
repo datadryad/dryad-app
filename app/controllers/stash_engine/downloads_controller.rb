@@ -16,8 +16,9 @@ module StashEngine
         if current_user && current_user.id == @resource.user_id
           setup_async_download_variable #which may redirect to different page in certain circumstances
           if @async_download
-            @secret_id = ''
-            render 'capture_email'
+            redirect_to landing_show_path(
+                      id: "#{@resource.identifier.identifier_type.downcase}:#{@resource.identifier.identifier}",
+                      big: 'showme')
           else
             stream_response(@resource.merritt_producer_download_uri,
               @resource.tenant.repository.username,
@@ -33,8 +34,9 @@ module StashEngine
         # redirect to the producer file download link
         setup_async_download_variable #which may redirect to different page in certain circumstances
         if @async_download
-          @secret_id = ''
-          render 'capture_email'
+          redirect_to landing_show_path(
+                          id: "#{@resource.identifier.identifier_type.downcase}:#{@resource.identifier.identifier}",
+                          big: 'showme')
         else
           redirect_to @resource.merritt_producer_download_uri and return
         end
@@ -44,17 +46,18 @@ module StashEngine
     def async_request
       @resource = Resource.find(params[:resource_id])
       @email = params[:email]
-      if !@resource.under_embargo? || ( current_user && current_user.id == @resource.user_id) ||
-          ( params[:secret_id] == @resource.share.secret_id )
-        api_async_download(resource: @resource, email: @email)
-        @resource.increment_downloads
-        redirect_to landing_show_path(
-          id: "#{@resource.identifier.identifier_type.downcase}:#{@resource.identifier.identifier}"),
-          notice: 'You shall shortly receive an email with the link to download the dataset.'
-      else
-        redirect_to landing_show_path(
-          id: "#{@resource.identifier.identifier_type.downcase}:#{@resource.identifier.identifier}"),
-          notice: 'You do not have the permission to download the dataset.'
+      session[:saved_email] = @email
+      respond_to do |format|
+        format.js do
+          if !@resource.under_embargo? || ( current_user && current_user.id == @resource.user_id) ||
+              ( params[:secret_id] == @resource.share.secret_id )
+            api_async_download(resource: @resource, email: @email)
+            @resource.increment_downloads
+            @message = "Dash will send an email with a download link to #{@email} when your requested dataset is ready."
+          else
+            @message = 'You do not have the permission to download the dataset.'
+          end
+        end
       end
     end
 
