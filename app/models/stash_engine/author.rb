@@ -14,6 +14,15 @@ module StashEngine
       [author_last_name, author_first_name].reject(&:blank?).join(', ')
     end
 
+    def author_standard_name
+      "#{author_first_name} #{author_last_name}".strip
+    end
+
+    def author_html_email_string
+      author_email.blank? ? nil : "<a href=\"mailto:#{CGI::escapeHTML(author_email.strip)}\">" +
+          "#{CGI::escapeHTML(author_standard_name.strip) }</a>"
+    end
+
     private
 
     def strip_whitespace
