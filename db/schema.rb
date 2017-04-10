@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170404221801) do
+ActiveRecord::Schema.define(version: 20170406223409) do
 
   create_table "bookmarks", force: :cascade do |t|
     t.integer  "user_id",       limit: 4,   null: false
@@ -78,18 +78,6 @@ ActiveRecord::Schema.define(version: 20170404221801) do
 
   add_index "dcs_contributors", ["name_identifier_id"], name: "index_dcs_contributors_on_name_identifier_id", using: :btree
   add_index "dcs_contributors", ["resource_id"], name: "index_dcs_contributors_on_resource_id", using: :btree
-
-  create_table "dcs_creators", force: :cascade do |t|
-    t.text     "creator_first_name", limit: 65535
-    t.text     "creator_last_name",  limit: 65535
-    t.integer  "name_identifier_id", limit: 4
-    t.integer  "resource_id",        limit: 4
-    t.datetime "created_at",                       null: false
-    t.datetime "updated_at",                       null: false
-  end
-
-  add_index "dcs_creators", ["name_identifier_id"], name: "index_dcs_creators_on_name_identifier_id", using: :btree
-  add_index "dcs_creators", ["resource_id"], name: "index_dcs_creators_on_resource_id", using: :btree
 
   create_table "dcs_dates", force: :cascade do |t|
     t.string   "date",        limit: 255
