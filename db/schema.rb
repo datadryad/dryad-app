@@ -370,7 +370,7 @@ ActiveRecord::Schema.define(version: 20170404221801) do
     t.datetime "updated_at",              null: false
   end
 
-  add_index "stash_engine_shares", ["secret_id"], name: "index_stash_engine_shares_on_secret_id", length: {"secret_id"=>50}, using: :btree
+  add_index "stash_engine_shares", ["secret_id"], name: "index_stash_engine_shares_on_secret_id", using: :btree
 
   create_table "stash_engine_submission_logs", force: :cascade do |t|
     t.integer  "resource_id",                limit: 4
