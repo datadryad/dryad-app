@@ -152,9 +152,9 @@ module StashEngine
       domain, local_id = resource.merritt_domain_and_local_id
       username = resource.tenant.repository.username
       password = resource.tenant.repository.password
-      url = "http://#{domain}/async/#{local_id}/#{resource.stash_version.merritt_version}"
+      url = "https://#{domain}/async/#{local_id}/#{resource.stash_version.merritt_version}"
 
-      res = http_client_w_basic_auth(username: username, password: password).get(url, nil, follow_redirect: true)
+      res = http_client_w_basic_auth(username: username, password: password).get(url, follow_redirect: true)
 
       if res.status_code == 406
         return false  #406 is synchronous
@@ -184,6 +184,12 @@ module StashEngine
     # encapsulates all the settings to make basic auth with a get request work correctly for Merritt
     def http_client_w_basic_auth(username:, password:)
       clnt = HTTPClient.new
+
+      # this callback allows following redirects from http to https, otherwise it will not
+      clnt.redirect_uri_callback = ->(uri, res) {
+        res.header['location'][0]
+      }
+
       # ran into problems like https://github.com/nahi/httpclient/issues/181 so forcing basic auth
       clnt.force_basic_auth = true
       clnt.set_basic_auth(nil, username, password)
@@ -195,7 +201,7 @@ module StashEngine
       # get original header info from http headers
       clnt = http_client_w_basic_auth(username: user, password: pwd)
 
-      headers = clnt.head(url, nil, follow_redirect: true)
+      headers = clnt.head(url, follow_redirect: true)
 
       content_type = headers.http_header['Content-Type'].try(:first)
       content_length = headers.http_header['Content-Length'].try(:first)
