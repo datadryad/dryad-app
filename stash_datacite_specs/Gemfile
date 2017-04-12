@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 
-gem 'stash_datacite', path: '../stash_engines/stash_datacite'
-gem 'stash_engine', path: '../stash_engines/stash_engine'
+gem 'stash_datacite', path: '../stash_datacite'
+gem 'stash_engine', path: '../stash_engine'
 
 gem 'database_cleaner', '~> 1.5'
 gem 'diffy', '~> 3.1'

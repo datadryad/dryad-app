@@ -1,6 +1,10 @@
 PATH
   remote: ..
   specs:
+    stash-sword (0.1.6)
+      rest-client (~> 2.0, = 2.0.0)
+      typesafe_enum (~> 0.1, >= 0.1.7)
+      xml-mapping_extensions (~> 0.4, >= 0.4.1)
     stash_discovery (0.0.2)
       blacklight (~> 6.5.0)
       config
@@ -21,7 +25,7 @@ PATH
       httpclient (~> 2.8.3)
       jquery-fileupload-rails (~> 0.4.6)
       jquery-rails
-      jquery-turbolinks
+      jquery-turbolinks (~> 2.1.0)
       jquery-ui-rails
       kaminari
       omniauth (~> 1.2.2)
@@ -340,10 +344,6 @@ GEM
       actionpack (>= 4.0)
       activesupport (>= 4.0)
       sprockets (>= 3.0.0)
-    stash-sword (0.1.6)
-      rest-client (~> 2.0, = 2.0.0)
-      typesafe_enum (~> 0.1, >= 0.1.7)
-      xml-mapping_extensions (~> 0.4, >= 0.4.1)
     stash-wrapper (0.1.11.1)
       typesafe_enum (~> 0.1, >= 0.1.7)
       xml-mapping_extensions (~> 0.4, >= 0.4.2)
@@ -405,4 +405,4 @@ DEPENDENCIES
   stash_engine!
 
 BUNDLED WITH
-   1.14.4
+   1.14.6
