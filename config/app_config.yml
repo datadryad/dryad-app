@@ -1,0 +1,4 @@
+test:
+  support_team_email: [stash-dev@example.edu, stash-ops@example.edu]
+  feedback_email_from: stash-noreply@example.edu
+  repository: Stash::MockRepository
