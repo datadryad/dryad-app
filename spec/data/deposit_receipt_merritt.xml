@@ -1,0 +1,25 @@
+<entry xmlns="http://www.w3.org/2005/Atom">
+    <author>
+        <name>ucop_dash_submitter</name>
+    </author>
+    <title type="text">doi:10.5072/FK1465406644</title>
+    <id>http://n2t.net/ark:/99999/fk47h1tz4k</id>
+    <updated>2016-06-08T17:24:12.643Z</updated>
+    <generator uri="http://www.swordapp.org/" version="2.0"/>
+    <link
+            href="http://sword-aws-dev.cdlib.org:39001/mrtsword/edit/dash_cdl/doi%3A10.5072%2FFK1465406644"
+            rel="edit"
+    />
+    <link
+            href="http://sword-aws-dev.cdlib.org:39001/mrtsword/edit/dash_cdl/doi%3A10.5072%2FFK1465406644"
+            rel="http://purl.org/net/sword/terms/add"
+    />
+    <link
+            href="http://merritt-dev.cdlib.org/d/ark%3A%2F99999%2Ffk47h1tz4k"
+            rel="edit-media"
+    />
+    <treatment xmlns="http://purl.org/net/sword/terms/">no treatment information available</treatment>
+    <link
+            href="http://n2t.net/ark:/99999/fk47h1tz4k" rel="alternate"
+    />
+</entry>
