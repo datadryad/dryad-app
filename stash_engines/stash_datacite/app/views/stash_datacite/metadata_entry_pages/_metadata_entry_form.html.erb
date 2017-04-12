@@ -33,6 +33,13 @@
         <%= render partial: "stash_datacite/authors/add_orcid_link", locals: { resource: @resource } %>
       </div>
     </div>
+    <div>
+      <% if @metadata_entry.author_first.exists? %>
+        <% @metadata_entry.authors.each do |author| %>
+          <%= render partial: 'stash_datacite/authors/email', locals: { author: @metadata_entry.author_first } %>
+        <% end %>
+      <% end %>
+    </div>
   </fieldset>
 
     <%= label_tag :description, "Abstract", class: 'c-input__label required', for: 'description_abstract' %>
