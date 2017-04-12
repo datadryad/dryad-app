@@ -16,8 +16,9 @@ module StashEngine
         if current_user && current_user.id == @resource.user_id
           setup_async_download_variable #which may redirect to different page in certain circumstances
           if @async_download
-            @secret_id = ''
-            render 'capture_email'
+            redirect_to landing_show_path(
+                      id: "#{@resource.identifier.identifier_type.downcase}:#{@resource.identifier.identifier}",
+                      big: 'showme')
           else
             stream_response(@resource.merritt_producer_download_uri,
               @resource.tenant.repository.username,
@@ -33,8 +34,9 @@ module StashEngine
         # redirect to the producer file download link
         setup_async_download_variable #which may redirect to different page in certain circumstances
         if @async_download
-          @secret_id = ''
-          render 'capture_email'
+          redirect_to landing_show_path(
+                          id: "#{@resource.identifier.identifier_type.downcase}:#{@resource.identifier.identifier}",
+                          big: 'showme')
         else
           redirect_to @resource.merritt_producer_download_uri and return
         end
@@ -44,17 +46,18 @@ module StashEngine
     def async_request
       @resource = Resource.find(params[:resource_id])
       @email = params[:email]
-      if !@resource.under_embargo? || ( current_user && current_user.id == @resource.user_id) ||
-          ( params[:secret_id] == @resource.share.secret_id )
-        api_async_download(resource: @resource, email: @email)
-        @resource.increment_downloads
-        redirect_to landing_show_path(
-          id: "#{@resource.identifier.identifier_type.downcase}:#{@resource.identifier.identifier}"),
-          notice: 'You shall shortly receive an email with the link to download the dataset.'
-      else
-        redirect_to landing_show_path(
-          id: "#{@resource.identifier.identifier_type.downcase}:#{@resource.identifier.identifier}"),
-          notice: 'You do not have the permission to download the dataset.'
+      session[:saved_email] = @email
+      respond_to do |format|
+        format.js do
+          if !@resource.under_embargo? || ( current_user && current_user.id == @resource.user_id) ||
+              ( params[:secret_id] == @resource.share.secret_id )
+            api_async_download(resource: @resource, email: @email)
+            @resource.increment_downloads
+            @message = "Dash will send an email with a download link to #{@email} when your requested dataset is ready."
+          else
+            @message = 'You do not have the permission to download the dataset.'
+          end
+        end
       end
     end
 
@@ -69,10 +72,9 @@ module StashEngine
 
         if @async_download
           #redirect to the form for filling in their email address to get an email
-          @secret_id = @resource.share.secret_id
-          render 'capture_email'
-          #don't forget to be sure that action has good security, so that people can't just go
-          #to that page and bypass embargoes without a login or a token for downloading
+          redirect_to landing_show_path(
+                          id: "#{@resource.identifier.identifier_type.downcase}:#{@resource.identifier.identifier}",
+                          big: 'showme', secret_id: params[:id])
         else
           @resource.increment_downloads
           stream_response(@resource.merritt_producer_download_uri,
@@ -82,7 +84,7 @@ module StashEngine
       else
         redirect_to landing_show_path(
           id: "#{@resource.identifier.identifier_type.downcase}:#{@resource.identifier.identifier}"),
-          notice: 'The dataset is public now published.'
+          notice: 'The dataset is now published, please use the download button on the right side.'
       end
     end
 
@@ -150,9 +152,9 @@ module StashEngine
       domain, local_id = resource.merritt_domain_and_local_id
       username = resource.tenant.repository.username
       password = resource.tenant.repository.password
-      url = "http://#{domain}/async/#{local_id}/#{resource.stash_version.merritt_version}"
+      url = "https://#{domain}/async/#{local_id}/#{resource.stash_version.merritt_version}"
 
-      res = http_client_w_basic_auth(username: username, password: password).get(url, nil, follow_redirect: true)
+      res = http_client_w_basic_auth(username: username, password: password).get(url, follow_redirect: true)
 
       if res.status_code == 406
         return false  #406 is synchronous
@@ -182,9 +184,16 @@ module StashEngine
     # encapsulates all the settings to make basic auth with a get request work correctly for Merritt
     def http_client_w_basic_auth(username:, password:)
       clnt = HTTPClient.new
+
+      # this callback allows following redirects from http to https, otherwise it will not
+      clnt.redirect_uri_callback = ->(uri, res) {
+        res.header['location'][0]
+      }
+
       # ran into problems like https://github.com/nahi/httpclient/issues/181 so forcing basic auth
       clnt.force_basic_auth = true
       clnt.set_basic_auth(nil, username, password)
+      #clnt.ssl_config.verify_mode = OpenSSL::SSL::VERIFY_NONE
       clnt
     end
 
@@ -193,7 +202,7 @@ module StashEngine
       # get original header info from http headers
       clnt = http_client_w_basic_auth(username: user, password: pwd)
 
-      headers = clnt.head(url, nil, follow_redirect: true)
+      headers = clnt.head(url, follow_redirect: true)
 
       content_type = headers.http_header['Content-Type'].try(:first)
       content_length = headers.http_header['Content-Length'].try(:first)

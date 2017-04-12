@@ -27,7 +27,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'font-awesome-rails'
   s.add_dependency 'jquery-fileupload-rails', '~> 0.4.6'
   s.add_dependency 'jquery-rails'
-  s.add_dependency 'jquery-turbolinks'
+  s.add_dependency 'jquery-turbolinks', '~> 2.1.0'
   s.add_dependency 'jquery-ui-rails'
   s.add_dependency 'kaminari'
   s.add_dependency 'omniauth', '~> 1.2.2'

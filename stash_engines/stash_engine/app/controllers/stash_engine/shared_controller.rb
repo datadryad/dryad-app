@@ -7,7 +7,8 @@ module StashEngine
       c.helper_method :current_tenant, :current_tenant_simple, :current_user, :metadata_engine, :metadata_url_helpers,
                       :metadata_render_path, :stash_url_helpers, :discovery_url_helpers, :landing_url,  :field_suffix,
                       :logo_path, :contact_us_url, :display_br, :display_id, :display_id_plain,
-                      :formatted_date, :can_display_embargoed?, :file_content_dump, :display_author_orcid
+                      :formatted_date, :can_display_embargoed?, :file_content_dump, :display_author_orcid,
+                      :english_list
     end
 
     def metadata_url_helpers
@@ -191,6 +192,14 @@ module StashEngine
                 "https://orcid.org/#{author.author_orcid}",
                 target: '_blank', class: 'c-orcid__id').html_safe
       end
+    end
+
+    # an english list of items with the conjunction between the final pair, if needed.  Conjunction would be 'and' or
+    # 'or' usually
+    def english_list(array:, conjunction:)
+      return '' if array.length < 1
+      return array.first if array.length == 1
+      "#{array[0..-2].join(', ')} #{conjunction} #{array.last}"
     end
 
   end
