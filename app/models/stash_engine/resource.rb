@@ -133,12 +133,14 @@ module StashEngine
       "#{download_uri.sub('/d/', '/u/')}/#{version_number}"
     end
 
-    # TODO: we need a better way to get a Merritt local_id and domain then ripping it from the headlines
+    # TODO: we need a better way to get a Merritt local_id and domain than ripping it from the headlines
     # (ie the Sword download URI)
-    def merritt_domain_and_local_id
+
+    # returns two parts the protocol_and_domain part of the URL (with no trailing slash) and the local_id
+    def merritt_protodomain_and_local_id
       return nil if download_uri.nil?
       return nil unless download_uri.match(/^https*:\/\/[^\/]+\/d\/\S+$/)
-      matches = download_uri.match(/^https*:\/\/([^\/]+)\/d\/(\S+)$/)
+      matches = download_uri.match(/^(https*:\/\/[^\/]+)\/d\/(\S+)$/)
       [matches[1], matches[2]]
     end
 
