@@ -174,7 +174,7 @@ module StashEngine
       url = "#{domain}/asyncd/#{local_id}/#{resource.stash_version.merritt_version}"
       params = { user_agent_email: email, userFriendly: true}
 
-      res = http_client_w_basic_auth(username: username, password: password).get(url, params, follow_redirect: true)
+      res = http_client_w_basic_auth(username: username, password: password).get(url, query: params, follow_redirect: true)
 
       unless res.status_code == 200
         raise "There was a problem making an async download request to Merritt"
