@@ -1,6 +1,18 @@
 PATH
-  remote: ../stash_engines
+  remote: ../stash
   specs:
+    stash-merritt (0.2.0)
+      rubyzip (~> 1.1)
+      stash_datacite
+      stash_engine
+      stash_ezid_datacite (~> 0.1)
+    stash-sword (0.1.6)
+      rest-client (~> 2.0, = 2.0.0)
+      typesafe_enum (~> 0.1, >= 0.1.7)
+      xml-mapping_extensions (~> 0.4, >= 0.4.1)
+    stash-wrapper (0.1.11.1)
+      typesafe_enum (~> 0.1, >= 0.1.7)
+      xml-mapping_extensions (~> 0.4, >= 0.4.2)
     stash_datacite (0.0.5)
       datacite-mapping (~> 0.2, >= 0.2.5)
       kaminari
@@ -369,18 +381,6 @@ GEM
     sshkit (1.13.1)
       net-scp (>= 1.1.2)
       net-ssh (>= 2.8.0)
-    stash-merritt (0.2.0)
-      rubyzip (~> 1.1)
-      stash_datacite
-      stash_engine
-      stash_ezid_datacite (~> 0.1)
-    stash-sword (0.1.6)
-      rest-client (~> 2.0, = 2.0.0)
-      typesafe_enum (~> 0.1, >= 0.1.7)
-      xml-mapping_extensions (~> 0.4, >= 0.4.1)
-    stash-wrapper (0.1.11.1)
-      typesafe_enum (~> 0.1, >= 0.1.7)
-      xml-mapping_extensions (~> 0.4, >= 0.4.2)
     stash_ezid_datacite (0.1.5)
       ezid-client (~> 1.5)
     therubyracer (0.12.3)
@@ -403,7 +403,7 @@ GEM
       execjs (>= 0.3.0, < 3)
     unf (0.1.4)
       unf_ext
-    unf_ext (0.0.7.2)
+    unf_ext (0.0.7.3)
     unicode-display_width (1.1.3)
     warden (1.2.7)
       rack (>= 1.0)
@@ -447,7 +447,7 @@ DEPENDENCIES
   simplecov
   simplecov-console
   spring
-  stash-merritt (~> 0.2.0)
+  stash-merritt!
   stash_datacite!
   stash_discovery!
   stash_engine!
