@@ -193,6 +193,7 @@ module StashEngine
       # ran into problems like https://github.com/nahi/httpclient/issues/181 so forcing basic auth
       clnt.force_basic_auth = true
       clnt.set_basic_auth(nil, username, password)
+      clnt.ssl_config.verify_mode = OpenSSL::SSL::VERIFY_NONE
       clnt
     end
 
