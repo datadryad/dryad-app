@@ -1,0 +1,12 @@
+addons:
+  apt:
+    packages:
+      realpath
+
+before_install: ./travis-local-deps.sh
+
+services:
+  - mysql
+
+before_script:
+  - mysql -e 'create database stash_merritt character set UTF8mb4 collate utf8mb4_bin;'
