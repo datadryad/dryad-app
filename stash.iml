@@ -5,24 +5,5 @@
     <content url="file://$MODULE_DIR$" />
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module-library">
-      <library name="stash_datacite (v0.0.5) [path][gem]">
-        <CLASSES>
-          <root url="file://$MODULE_DIR$/stash_datacite/db" />
-          <root url="file://$MODULE_DIR$/stash_datacite/app" />
-          <root url="file://$MODULE_DIR$/stash_datacite/bin" />
-          <root url="file://$MODULE_DIR$/stash_datacite/lib" />
-          <root url="file://$MODULE_DIR$/stash_datacite/config" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES>
-          <root url="file://$MODULE_DIR$/stash_datacite/db" />
-          <root url="file://$MODULE_DIR$/stash_datacite/app" />
-          <root url="file://$MODULE_DIR$/stash_datacite/bin" />
-          <root url="file://$MODULE_DIR$/stash_datacite/lib" />
-          <root url="file://$MODULE_DIR$/stash_datacite/config" />
-        </SOURCES>
-      </library>
-    </orderEntry>
   </component>
 </module>
