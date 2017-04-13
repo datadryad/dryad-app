@@ -31,14 +31,14 @@ Gem::Specification.new do |spec| # rubocop:disable Metrics/BlockLength
   spec.add_dependency 'resync-client', '~> 0.4', '>= 0.4.5'
   spec.add_dependency 'rsolr', '~> 1.1'
   spec.add_dependency 'sqlite3', '~> 1.3', '>= 1.3.10'
-  spec.add_dependency 'standalone_migrations', '~> 4.0', '>= 4.0.2'
+  spec.add_dependency 'standalone_migrations', '~> 5.0'
 
   spec.add_dependency 'datacite-mapping', '~> 0.2', '>= 0.2.3'
   spec.add_dependency 'stash-wrapper'
 
   spec.add_development_dependency 'bundler', '~> 1.7'
   spec.add_development_dependency 'equivalent-xml', '~> 0.6.0'
-  spec.add_development_dependency 'rake', '~> 10.4'
+  spec.add_development_dependency 'rake', '~> 12.0'
   spec.add_development_dependency 'rspec', '~> 3.2'
   spec.add_development_dependency 'simplecov', '~> 0.9.2'
   spec.add_development_dependency 'simplecov-console', '~> 0.2.0'
