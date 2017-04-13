@@ -116,10 +116,10 @@ module StashEngine
     # note, it seems as though this has been deprecated and Mark has created an API call for it now
     def post_async_form(resource:, email:)
       # set up all needed parameters
-      domain, local_id = resource.merritt_domain_and_local_id
+      domain, local_id = resource.merritt_protodomain_and_local_id
       username = resource.tenant.repository.username
       password = resource.tenant.repository.password
-      url = "http://#{domain}/lostorage"
+      url = "#{domain}/lostorage"
 
       clnt = HTTPClient.new
       # ran into problems like https://github.com/nahi/httpclient/issues/181 so forcing basic auth
@@ -149,10 +149,10 @@ module StashEngine
     end
 
     def merritt_async_download?(resource:)
-      domain, local_id = resource.merritt_domain_and_local_id
+      domain, local_id = resource.merritt_protodomain_and_local_id
       username = resource.tenant.repository.username
       password = resource.tenant.repository.password
-      url = "https://#{domain}/async/#{local_id}/#{resource.stash_version.merritt_version}"
+      url = "#{domain}/async/#{local_id}/#{resource.stash_version.merritt_version}"
 
       res = http_client_w_basic_auth(username: username, password: password).get(url, follow_redirect: true)
 
@@ -168,13 +168,13 @@ module StashEngine
 
     def api_async_download(resource:, email:)
       # set up all needed parameters
-      domain, local_id = resource.merritt_domain_and_local_id
+      domain, local_id = resource.merritt_protodomain_and_local_id
       username = resource.tenant.repository.username
       password = resource.tenant.repository.password
-      url = "http://#{domain}/asyncd/#{local_id}/#{resource.stash_version.merritt_version}"
+      url = "#{domain}/asyncd/#{local_id}/#{resource.stash_version.merritt_version}"
       params = { user_agent_email: email, userFriendly: true}
 
-      res = http_client_w_basic_auth(username: username, password: password).get(url, params, follow_redirect: true)
+      res = http_client_w_basic_auth(username: username, password: password).get(url, query: params, follow_redirect: true)
 
       unless res.status_code == 200
         raise "There was a problem making an async download request to Merritt"
@@ -193,7 +193,9 @@ module StashEngine
       # ran into problems like https://github.com/nahi/httpclient/issues/181 so forcing basic auth
       clnt.force_basic_auth = true
       clnt.set_basic_auth(nil, username, password)
-      #clnt.ssl_config.verify_mode = OpenSSL::SSL::VERIFY_NONE
+      # TODO: remove this once Merritt has fixed their certs on their stage server.
+      clnt.ssl_config.verify_mode = OpenSSL::SSL::VERIFY_NONE if Rails.env == 'stage'
+      clnt.ssl_config.set_trust_ca(APP_CONFIG.ssl_cert_file) if APP_CONFIG.ssl_cert_file
       clnt
     end
 
