@@ -45,8 +45,6 @@ gem 'daemons'
 
 gem 'exception_notification'
 
-gem 'stash-merritt', '~> 0.2.0'
-
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug'
@@ -66,10 +64,11 @@ group :development, :test do
   gem 'simplecov-console', :require => false, :group => :test
 end
 
-path '../stash_engines' do
+path '../stash' do
   gem 'stash_engine'
   gem 'stash_datacite'
   gem 'stash_discovery'
+  gem 'stash-merritt'
 end
 
 # set LOCAL_ENGINES=true (LOCAL_ENGINES=true rails s) to use local
