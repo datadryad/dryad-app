@@ -2,7 +2,9 @@ PATH
   remote: ../stash
   specs:
     stash-merritt (0.2.0)
+      datacite-mapping (~> 0.2, >= 0.2.5)
       rubyzip (~> 1.1)
+      stash-wrapper
       stash_datacite
       stash_engine
       stash_ezid_datacite (~> 0.1)
@@ -20,7 +22,9 @@ PATH
       rails (~> 4.2.4)
       responders (~> 2.0)
       rubyzip (>= 1.0.0)
-      stash-wrapper (~> 0.1, >= 0.1.11.1)
+      stash-wrapper
+      stash_discovery
+      stash_engine
       stash_ezid_datacite (~> 0.1)
     stash_discovery (0.0.2)
       blacklight (~> 6.5.0)
@@ -51,7 +55,7 @@ PATH
       omniauth-shibboleth (~> 1.2.1)
       rails (~> 4.2.4)
       redcarpet (~> 3.3)
-      stash-sword (~> 0.1, >= 0.1.6)
+      stash-sword
       wicked_pdf (~> 1.1.0)
       wkhtmltopdf-binary (~> 0.12.3.1)
       zeroclipboard-rails
