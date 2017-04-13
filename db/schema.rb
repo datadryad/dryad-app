@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170406223409) do
+ActiveRecord::Schema.define(version: 20170413213736) do
 
   create_table "bookmarks", force: :cascade do |t|
     t.integer  "user_id",       limit: 4,   null: false
@@ -300,15 +300,19 @@ ActiveRecord::Schema.define(version: 20170406223409) do
     t.integer  "upload_file_size",    limit: 4
     t.integer  "resource_id",         limit: 4
     t.datetime "upload_updated_at"
-    t.datetime "created_at",                        null: false
-    t.datetime "updated_at",                        null: false
+    t.datetime "created_at",                                        null: false
+    t.datetime "updated_at",                                        null: false
     t.text     "temp_file_path",      limit: 65535
     t.string   "file_state",          limit: 7
+    t.text     "url",                 limit: 65535
+    t.integer  "status_code",         limit: 4
+    t.boolean  "timed_out",                         default: false
   end
 
   add_index "stash_engine_file_uploads", ["file_state"], name: "index_stash_engine_file_uploads_on_file_state", using: :btree
   add_index "stash_engine_file_uploads", ["resource_id"], name: "index_stash_engine_file_uploads_on_resource_id", using: :btree
   add_index "stash_engine_file_uploads", ["upload_file_name"], name: "index_stash_engine_file_uploads_on_upload_file_name", length: {"upload_file_name"=>100}, using: :btree
+  add_index "stash_engine_file_uploads", ["url"], name: "index_stash_engine_file_uploads_on_url", length: {"url"=>50}, using: :btree
 
   create_table "stash_engine_identifiers", force: :cascade do |t|
     t.text     "identifier",      limit: 65535
@@ -358,7 +362,7 @@ ActiveRecord::Schema.define(version: 20170406223409) do
     t.datetime "updated_at",              null: false
   end
 
-  add_index "stash_engine_shares", ["secret_id"], name: "index_stash_engine_shares_on_secret_id", length: {"secret_id"=>50}, using: :btree
+  add_index "stash_engine_shares", ["secret_id"], name: "index_stash_engine_shares_on_secret_id", using: :btree
 
   create_table "stash_engine_submission_logs", force: :cascade do |t|
     t.integer  "resource_id",                limit: 4
