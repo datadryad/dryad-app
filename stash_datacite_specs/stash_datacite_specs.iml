@@ -74,7 +74,6 @@
     <orderEntry type="library" scope="PROVIDED" name="rubyzip (v1.2.1, rbenv: 2.2.5) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="sass (v3.4.23, rbenv: 2.2.5) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="sass-rails (v5.0.6, rbenv: 2.2.5) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="sauce_whisk (v0.0.21, rbenv: 2.2.5) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="scss_lint (v0.53.0, rbenv: 2.2.5) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="selenium-webdriver (v3.3.0, rbenv: 2.2.5) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="simplecov (v0.14.1, rbenv: 2.2.5) [gem]" level="application" />
