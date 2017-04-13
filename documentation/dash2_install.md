@@ -30,17 +30,24 @@ Open a (bash) shell and type these commands inside a directory where you want to
 
 ```
 git clone https://github.com/CDLUC3/dashv2
-mkdir stash_engines && cd stash_engines
-git clone https://github.com/CDLUC3/stash_engine
-git clone https://github.com/CDLUC3/stash_datacite
-git clone https://github.com/CDLUC3/stash_discovery
-cd ..
+git clone https://github.com/CDLUC3/stash
 git clone https://github.com/CDLUC3/dash2-config-example.git dash2-config
 ```
 
 You should end up with a directory structure that looks like this one.
 
-![Structure of your directories](images/structure.png)
+```
+├── dash2-config
+├── dashv2
+└── stash
+    ├── stash-harvester
+    ├── stash-merritt
+    ├── stash-sword
+    ├── stash-wrapper
+    ├── stash_datacite
+    ├── stash_discovery
+    └── stash_engine
+```
 
 Your config files are currently in a seperate directory from your application. It can be handy to keep them apart from the application so that you can back them up or commit them to a private repository for configuration separate from the application.  The application will need to have these configuration files symlinked into the application. to symlink the files in using a bash shell, type these commands:
 
