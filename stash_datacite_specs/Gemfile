@@ -1,6 +1,7 @@
 source 'https://rubygems.org'
 
 gem 'stash_datacite', path: '../stash_datacite'
+gem 'stash_discovery', path: '../stash_discovery'
 gem 'stash_engine', path: '../stash_engine'
 
 gem 'database_cleaner', '~> 1.5'

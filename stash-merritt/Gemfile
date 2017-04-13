@@ -2,6 +2,8 @@ source 'https://rubygems.org'
 
 gemspec
 
+gem 'stash-wrapper', path: '../stash-wrapper'
 gem 'stash_datacite', path: '../stash_datacite'
+gem 'stash_discovery', path: '../stash_discovery'
 gem 'stash_engine', path: '../stash_engine'
 

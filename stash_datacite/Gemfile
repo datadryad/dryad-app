@@ -16,7 +16,8 @@ gem 'parallel_tests', group: [:development, :test]
 
 group :development, :test do
   path '..' do
-    gem 'stash_engine'
+    gem 'stash-wrapper'
     gem 'stash_discovery'
+    gem 'stash_engine'
   end
 end

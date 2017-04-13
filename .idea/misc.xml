@@ -3,7 +3,7 @@
   <component name="FrameworkDetectionExcludesConfiguration">
     <type id="RailsFacetType" />
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_6">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_6" default="false" project-jdk-name="ruby-2.2.5-p319" project-jdk-type="RUBY_SDK">
     <output url="file://$PROJECT_DIR$/out" />
   </component>
 </project>
