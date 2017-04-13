@@ -29,7 +29,7 @@ The `Stash::Merritt::SubmissionJob` class does the following:
 
    \* Note that the DataONE manifest is generated for all tenants, not just DataONE.
 
-1. using the [stash-sword](https://github.com/CDLUC3/stash-sword) gem, submit the
+1. using the [stash-sword](../stash-sword) gem, submit the
    package to Merritt via [SWORD 2.0](http://swordapp.github.io/SWORDv2-Profile/SWORDProfile.html);
    update the `download_uri` and `update_uri` of the resource if not present
 1. set the resource `version_zipfile`
@@ -41,19 +41,6 @@ The `Stash::Merritt::SubmissionJob` class does the following:
 If at any point one of these steps fails, the job exits with a failed `SubmissionResult`.
 
 ## Development
-
-### Dependencies
-
-stash-merritt expects to find the [stash_engine](https://github.com/CDLUC3/stash_engine) and 
-[stash_datacite](https://github.com/CDLUC3/stash_datacite) source locally under
-a sister directory `stash_engines`:
-
-```
-┬── stash-merritt
-└── stash_engines
-    ├── stash_datacite
-    └── stash_engine
-```
 
 ### Test database creation
 
