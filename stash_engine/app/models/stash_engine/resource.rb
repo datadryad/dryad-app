@@ -120,6 +120,11 @@ module StashEngine
       FileUpload.joins("INNER JOIN (#{subquery.to_sql}) sub on id = sub.last_id").order(upload_file_name: :asc)
     end
 
+    # the size of this resource (created + copied files)
+    def size
+      file_uploads.where(file_state: ['copied', 'created']).sum(:upload_file_size)
+    end
+
     # ------------------------------------------------------------
     # Special merritt download URLs
 
