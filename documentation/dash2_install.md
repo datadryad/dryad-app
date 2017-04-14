@@ -8,7 +8,7 @@ You'll need the following parts installed and configured on a (local) UI develop
 
 - (Recommended) A ruby version manager such as [rbenv](https://github.com/rbenv/rbenv) or [rvm](https://rvm.io/)
 - The [bare dashv2 application](https://github.com/CDLUC3/dashv2) cloned from github
-- The [stash_engine](https://github.com/CDLUC3/stash_engine), [stash_datacite](https://github.com/CDLUC3/stash_datacite) and [stash_discovery](https://github.com/CDLUC3/stash_discovery) repositories cloned from github into specific locations as described below
+- The [stash](https://github.com/CDLUC3/stash) repository cloned from github
 - A separate directory of configuration files called *dash2-config* which you can start by cloning [dash2-config-example](https://github.com/CDLUC3/dash2-config-example) and modifying to fit your settings.
 
 You'll also need the following components installed either on the same server or on separate servers for all the application features to work:
