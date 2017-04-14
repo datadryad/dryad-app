@@ -8,7 +8,7 @@ You'll need the following parts installed and configured on a (local) UI develop
 
 - (Recommended) A ruby version manager such as [rbenv](https://github.com/rbenv/rbenv) or [rvm](https://rvm.io/)
 - The [bare dashv2 application](https://github.com/CDLUC3/dashv2) cloned from github
-- The [stash_engine](https://github.com/CDLUC3/stash_engine), [stash_datacite](https://github.com/CDLUC3/stash_datacite) and [stash_discovery](https://github.com/CDLUC3/stash_discovery) repositories cloned from github into specific locations as described below
+- The [stash](https://github.com/CDLUC3/stash) repository cloned from github
 - A separate directory of configuration files called *dash2-config* which you can start by cloning [dash2-config-example](https://github.com/CDLUC3/dash2-config-example) and modifying to fit your settings.
 
 You'll also need the following components installed either on the same server or on separate servers for all the application features to work:
@@ -30,17 +30,24 @@ Open a (bash) shell and type these commands inside a directory where you want to
 
 ```
 git clone https://github.com/CDLUC3/dashv2
-mkdir stash_engines && cd stash_engines
-git clone https://github.com/CDLUC3/stash_engine
-git clone https://github.com/CDLUC3/stash_datacite
-git clone https://github.com/CDLUC3/stash_discovery
-cd ..
+git clone https://github.com/CDLUC3/stash
 git clone https://github.com/CDLUC3/dash2-config-example.git dash2-config
 ```
 
 You should end up with a directory structure that looks like this one.
 
-![Structure of your directories](images/structure.png)
+```
+├── dash2-config
+├── dashv2
+└── stash
+    ├── stash-harvester
+    ├── stash-merritt
+    ├── stash-sword
+    ├── stash-wrapper
+    ├── stash_datacite
+    ├── stash_discovery
+    └── stash_engine
+```
 
 Your config files are currently in a seperate directory from your application. It can be handy to keep them apart from the application so that you can back them up or commit them to a private repository for configuration separate from the application.  The application will need to have these configuration files symlinked into the application. to symlink the files in using a bash shell, type these commands:
 
