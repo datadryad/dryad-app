@@ -31,7 +31,7 @@ PATH
       jquery-turbolinks (~> 2.1.0)
       jquery-ui-rails
       kaminari
-      omniauth (~> 1.2.2)
+      omniauth (~> 1.6.1)
       omniauth-google-oauth2 (~> 0.2.9)
       omniauth-orcid (~> 1.0.21)
       omniauth-shibboleth (~> 1.2.1)
@@ -237,9 +237,9 @@ GEM
       multi_json (~> 1.3)
       multi_xml (~> 0.5)
       rack (>= 1.2, < 3)
-    omniauth (1.2.2)
-      hashie (>= 1.2, < 4)
-      rack (~> 1.0)
+    omniauth (1.6.1)
+      hashie (>= 3.4.6, < 3.6.0)
+      rack (>= 1.6.2, < 3)
     omniauth-google-oauth2 (0.2.10)
       addressable (~> 2.3)
       jwt (~> 1.0)
