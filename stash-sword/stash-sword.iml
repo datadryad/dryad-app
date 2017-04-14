@@ -45,6 +45,6 @@
     <orderEntry type="library" scope="PROVIDED" name="webmock (v1.24.6, rbenv: 2.2.5) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="xml-mapping (v0.10.0, rbenv: 2.2.5) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="xml-mapping_extensions (v0.4.7, rbenv: 2.2.5) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="yard (v0.9.5, rbenv: 2.2.5) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="yard (v0.9.8, rbenv: 2.2.5) [gem]" level="application" />
   </component>
 </module>
