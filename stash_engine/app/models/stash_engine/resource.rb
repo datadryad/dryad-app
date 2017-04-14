@@ -177,6 +177,10 @@ module StashEngine
       my_state.save
     end
 
+    def publication_date
+      (embargo && embargo.end_date) || updated_at
+    end
+
     def init_state
       self.current_resource_state_id = ResourceState.create(resource_id: id, resource_state: 'in_progress', user_id: user_id).id
     end
