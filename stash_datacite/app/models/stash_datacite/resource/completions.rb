@@ -42,6 +42,13 @@ module StashDatacite
         @resource.authors.names_filled.count == num_authors
       end
 
+      def author_email
+        num_authors = @resource.authors.count
+        return false if num_authors < 1
+        author = @resource.authors.order(created_at: :asc).first
+        return author.author_email.present?  ? true : false
+      end
+
       def author_affiliation
         num_authors = @resource.authors.count
         return false if num_authors < 1
@@ -54,11 +61,11 @@ module StashDatacite
       end
 
       def required_completed
-        title.to_i + author_affiliation.to_i + data_type.to_i + author_name.to_i + abstract.to_i
+        title.to_i + author_affiliation.to_i + data_type.to_i + author_name.to_i + abstract.to_i + author_email.to_i
       end
 
       def required_total
-        5
+        6
       end
 
       # these are optional (recommended) ones

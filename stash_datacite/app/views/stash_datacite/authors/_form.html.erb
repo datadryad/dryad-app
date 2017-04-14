@@ -4,7 +4,6 @@
 <%= form_for(author, url: path, remote: true, authenticity_token: true, html: {id: form_id, class: 'c-input__inline js-author_form'}) do |f| %>
   <% my_suffix = field_suffix(author) %>
 
-<%#= render "datacite/shared/error_messages", target: @author %>
   <div class="c-input">
     <%= f.label "first_name_#{my_suffix}", "First Name", class: 'c-input__label required' %>
     <%= f.text_field :author_first_name, id: "author_first_name_#{my_suffix}", class: "c-input__text js-author_first_name" %>
@@ -16,6 +15,10 @@
   <div class="c-input">
     <%= f.label "affiliation_id_#{my_suffix}", "Institutional Affiliation", class: 'c-input__label required' %>
     <%= text_field_tag(:affiliation, author.affiliation.try(:smart_name), id: "author_affiliation_id_#{my_suffix}", class: 'c-input__text js-affiliation') %>
+  </div>
+  <div class="c-input">
+  <%= f.label "author_email", "Author Email", class: 'c-input__label js-author_label' %>
+  <%= f.email_field :author_email, class: 'c-input__text js-author_email', placeholder: 'email@ydomain.com' %>
   </div>
   <%= link_to 'remove', stash_datacite.authors_delete_path(author.id || 'new'), method: :delete, remote: true, data: {confirm: 'Are you sure?'}, class: 't-describe__remove-button o-button__remove remove_record' %>
   <%= f.hidden_field :resource_id %>

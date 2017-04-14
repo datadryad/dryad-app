@@ -2,4 +2,5 @@ $('.js-authors_form').append('<%= escape_javascript(render partial: "stash_datac
       locals: { author: @author, path: stash_datacite.authors_create_path }) %>');
 loadAuthors();
 hideRemoveLinkAuthors();
+hideRemoveRequiredLabelAuthors()
 addSavingDisplay();

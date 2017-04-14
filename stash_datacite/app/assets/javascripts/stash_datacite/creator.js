@@ -4,7 +4,7 @@ function loadAuthors() {
 
   // this uses a namespace (.mycreators) to disconnect previous events (off) before attaching them again
   // http://stackoverflow.com/questions/11612874/how-can-you-bind-an-event-handler-only-if-it-doesnt-already-exist
-  $( '.js-author_first_name, .js-author_last_name' )
+  $( '.js-author_first_name, .js-author_last_name, .js-author_email' )
     .off('.mycreators')
     .on('focus.mycreators', function () {
       previous_value = this.value;
@@ -49,6 +49,10 @@ function hideRemoveLinkAuthors() {
   else{
    $('.js-author_first_name').first().parent().parent().find('.remove_record').show();
   }
+};
+
+function hideRemoveRequiredLabelAuthors() {
+   $('.js-author_label').first().addClass("required");
 };
 
 var ajaxQueue = [];

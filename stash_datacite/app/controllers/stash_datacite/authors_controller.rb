@@ -81,7 +81,7 @@ module StashDatacite
 
     # Only allow a trusted parameter "white list" through.
     def author_params
-      params.require(:author).permit(:id, :author_first_name, :author_last_name, :author_middle_name,
+      params.require(:author).permit(:id, :author_first_name, :author_last_name, :author_middle_name, :author_email,
                                       :affiliation_id, :resource_id, :author_orcid)
     end
 

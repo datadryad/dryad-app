@@ -28,10 +28,6 @@ module StashDatacite
         @authors = StashEngine::Author.where(resource_id: @resource.id)
       end
 
-      def author_first
-        @author_first = StashEngine::Author.where(resource_id: @resource.id).order(created_at: :asc).first
-      end
-
       def abstract
         @abstract = Description.type_abstract.find_or_create_by(resource_id: @resource.id)
       end
