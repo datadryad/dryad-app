@@ -102,11 +102,8 @@ namespace :deploy do
   desc "clone all engines locally if they don't exist"
   task :clone_engines do
     on roles(:app) do
-      %w(stash_engine stash_datacite stash_discovery).each do |engine|
-        unless test("[ -d #{deploy_to}/releases/stash_engines/#{engine} ]")
-          execute "mkdir -p #{deploy_to}/releases/stash_engines"
-          execute "cd #{deploy_to}/releases/stash_engines; git clone https://github.com/CDLUC3/#{engine}.git"
-        end
+      unless test("[ -d #{deploy_to}/releases/stash ]")
+        execute "cd #{deploy_to}/releases; git clone https://github.com/CDLUC3/stash.git"
       end
     end
   end
@@ -116,10 +113,7 @@ namespace :deploy do
     on roles(:app) do
       my_branch = fetch(:branch, 'development')
       my_branch = "origin/#{my_branch}" unless my_branch.match(/^[v\d\.]+$/) #git acts differently with branch vs tag
-
-      %w(stash_datacite stash_engine stash_discovery).each do |engine|
-        execute "cd #{deploy_to}/releases/stash_engines/#{engine}; git fetch --all; git reset --hard #{my_branch}"
-      end
+      execute "cd #{deploy_to}/releases/stash; git fetch --all; git reset --hard #{my_branch}"
     end
   end
 
