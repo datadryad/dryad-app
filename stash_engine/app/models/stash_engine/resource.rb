@@ -120,6 +120,11 @@ module StashEngine
       FileUpload.joins("INNER JOIN (#{subquery.to_sql}) sub on id = sub.last_id").order(upload_file_name: :asc)
     end
 
+    # the size of this resource (created + copied files)
+    def size
+      file_uploads.where(file_state: ['copied', 'created']).sum(:upload_file_size)
+    end
+
     # ------------------------------------------------------------
     # Special merritt download URLs
 
@@ -170,6 +175,10 @@ module StashEngine
       raise "current_resource_state not initialized for resource #{id}" unless my_state
       my_state.resource_state = value
       my_state.save
+    end
+
+    def publication_date
+      (embargo && embargo.end_date) || updated_at
     end
 
     def init_state
