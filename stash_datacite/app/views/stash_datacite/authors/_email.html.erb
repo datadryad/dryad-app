@@ -1,6 +1,0 @@
-<div>
-<%= form_for(author, url: stash_datacite.authors_update_path, remote: true, authenticity_token: true, html: { class: 'c-input__inline'}) do |f| %>
-  <%= f.label "author_email", "Author Email", class: 'c-input__label required' %>
-  <%= f.email_field :author_email, id: "author_email", class: 'c-input__text', placeholder: 'youremail@ydomain.com', style: "width: 18em;" %>
-<% end %>
-</div>
