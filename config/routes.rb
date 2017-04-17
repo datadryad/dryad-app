@@ -73,7 +73,9 @@ Rails.application.routes.draw do
   # http://blog.arkency.com/2015/02/how-to-split-routes-dot-rb-into-smaller-parts/
   #instance_eval(File.read(StashDiscovery::Engine.root.join("config/routes.rb")))
 
-  get 'xtf/search', to: 'catalog#index'
+  # get 'xtf/search', to: 'catalog#index'
+
+  get 'xtf/search', :to => redirect { |params, request| "/search?#{request.params.to_query}" }
 
   # this will route an item at the root of the site into the namespaced engine
   get 'sitemap.xml' => "stash_engine/pages#sitemap", :format => "xml", :as => 'sitemap'
