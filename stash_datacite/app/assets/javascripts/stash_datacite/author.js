@@ -38,6 +38,24 @@ function loadAuthors() {
   $('form.js-creator_form').on('ajax:beforeSend', function(event, xhr, settings) {
     console.log('ajax beforesend');
   }); */
+
+  $('#invalid_email').hide();
+  $('.js-author_email').blur(function() {
+      var sEmail = $(this).val();
+      if (validateEmail(sEmail)) {
+        $('#invalid_email').hide();
+      }
+      else {
+        $('#invalid_email').insertAfter($(this).first()).show().delay(2000).fadeOut();
+      }
+  });
+  /* jQuery Validate Emails with Regex */
+  function validateEmail(Email) {
+      var pattern = /^([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
+
+      return $.trim(Email).match(pattern) ? true : false;
+  }
+
 };
 
 
