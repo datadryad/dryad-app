@@ -2,6 +2,10 @@ module StashEngine
   class Author < ActiveRecord::Base
     belongs_to :resource, class_name: 'StashEngine::Resource'
 
+    EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z\d\-]+)*\.[a-z]+\z/i
+
+    validates :author_email, format: EMAIL_REGEX, allow_blank: true
+
     before_save :strip_whitespace
 
     scope :names_filled, -> { where("TRIM(IFNULL(author_first_name,'')) <> ''") }

@@ -4,7 +4,7 @@ function loadAuthors() {
 
   // this uses a namespace (.mycreators) to disconnect previous events (off) before attaching them again
   // http://stackoverflow.com/questions/11612874/how-can-you-bind-an-event-handler-only-if-it-doesnt-already-exist
-  $( '.js-author_first_name, .js-author_last_name, .js-author_email' )
+  $( '.js-author_first_name, .js-author_last_name' )
     .off('.mycreators')
     .on('focus.mycreators', function () {
       previous_value = this.value;
@@ -40,15 +40,28 @@ function loadAuthors() {
   }); */
 
   $('#invalid_email').hide();
-  $('.js-author_email').blur(function() {
-      var sEmail = $(this).val();
-      if (validateEmail(sEmail)) {
+  $('.js-author_email' )
+    .off('.mycreators')
+    .on('focus.mycreators', function () {
+      previous_value = this.value;
+    })
+    .on('change.mycreators', function() {
+      new_value = this.value;
+      //Validate the email address entered
+      if (validateEmail(new_value)) {
         $('#invalid_email').hide();
       }
       else {
         $('#invalid_email').insertAfter($(this).first()).show().delay(2000).fadeOut();
       }
+      // Save when the new value is different from the previous value
+      if(new_value != previous_value) {
+        var form = $(this).parents('form');
+        // $(form).trigger('submit.rails');
+        queueAjaxFormSubmit(form);
+      }
   });
+
   /* jQuery Validate Emails with Regex */
   function validateEmail(Email) {
       var pattern = /^([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
