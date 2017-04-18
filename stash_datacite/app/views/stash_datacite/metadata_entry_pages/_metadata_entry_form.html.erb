@@ -69,7 +69,7 @@
     <%= render partial: "stash_datacite/descriptions/form", locals: { description: @metadata_entry.other, description_type: :other } %>
 
     <fieldset class="c-fieldset">
-    <legend class="c-fieldset__legend">Related work(s) <span class="c-input__hint">articles, other datasets: e.g., This dataset is cited by DOI 10.1000/182.</span></legend>
+    <legend class="c-fieldset__legend">Related work(s) <span class="c-input__hint">Are there any articles (posted or published), datasets, or code that are related to this Data Publication? Please choose the relation type and identifier type from the drop downs and enter your unique permanent identifier below.</span></legend>
     <div class="js-related_identifiers_form">
       <% if @metadata_entry.related_identifiers.exists? %>
         <% @metadata_entry.related_identifiers.each do |related_identifier| %>
