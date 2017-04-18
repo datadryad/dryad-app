@@ -2,14 +2,14 @@
 // All this logic will automatically be available in application.js.
 function loadAuthors() {
 
-  // this uses a namespace (.mycreators) to disconnect previous events (off) before attaching them again
+  // this uses a namespace (.myauthors) to disconnect previous events (off) before attaching them again
   // http://stackoverflow.com/questions/11612874/how-can-you-bind-an-event-handler-only-if-it-doesnt-already-exist
   $( '.js-author_first_name, .js-author_last_name' )
-    .off('.mycreators')
-    .on('focus.mycreators', function () {
+    .off('.myauthors')
+    .on('focus.myauthors', function () {
       previous_value = this.value;
     })
-    .on('change.mycreators', function() {
+    .on('change.myauthors', function() {
       new_value = this.value;
       // Save when the new value is different from the previous value
       if(new_value != previous_value) {
@@ -21,9 +21,9 @@ function loadAuthors() {
 
 
   // ajax events for ujs listed at https://github.com/rails/jquery-ujs/wiki/ajax
-  $('form.js-creator_form')
-      .off('.mycreator_forms')
-      .on('ajax:complete.mycreator_forms', function(event, xhr, status) {
+  $('form.js-author_form')
+      .off('.myauthor_forms')
+      .on('ajax:complete.myauthor_forms', function(event, xhr, status) {
         console.log('ajax:complete');
         if(ajaxQueue.length > 0){
           console.log('submitting form for next queued request:' + ajaxQueue[ajaxQueue.length-1]);
@@ -35,24 +35,23 @@ function loadAuthors() {
       });
 
   /*
-  $('form.js-creator_form').on('ajax:beforeSend', function(event, xhr, settings) {
+  $('form.js-author_form').on('ajax:beforeSend', function(event, xhr, settings) {
     console.log('ajax beforesend');
   }); */
 
   $('#invalid_email').hide();
   $('.js-author_email' )
-    .off('.mycreators')
-    .on('focus.mycreators', function () {
+    .off('.myauthors')
+    .on('focus.myauthors', function () {
       previous_value = this.value;
     })
-    .on('change.mycreators', function() {
+    .on('change.myauthors', function() {
       new_value = this.value;
-      //Validate the email address entered
       if (validateEmail(new_value)) {
         $('#invalid_email').hide();
       }
       else {
-        $('#invalid_email').insertAfter($(this).first()).show().delay(2000).fadeOut();
+        $('#invalid_email').insertAfter($(this)).show().delay(2000).fadeOut();
       }
       // Save when the new value is different from the previous value
       if(new_value != previous_value) {
@@ -61,7 +60,6 @@ function loadAuthors() {
         queueAjaxFormSubmit(form);
       }
   });
-
   /* jQuery Validate Emails with Regex */
   function validateEmail(Email) {
       var pattern = /^([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
