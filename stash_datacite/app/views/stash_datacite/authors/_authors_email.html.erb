@@ -1,8 +1,0 @@
-<div class="o-metadata__group2">
-  <div class="o-metadata__group2-item">Authors Email:
-    <% authors.each do |author| %>
-      <%= [ (author.author_email ?
-            "<span class='o-metadata__author'>#{h(author.author_email)}</span>" : nil) ].reject(&:blank?).join(', ').html_safe %>
-    <% end %>
-  </div>
-</div>

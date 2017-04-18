@@ -9,5 +9,7 @@
           .flatten.reject(&:blank?).join(", ").html_safe %>
     </div>
   <% end %>
+  <div class="o-metadata__group1">
+    <%= authors.map{ |author| author.author_email }.reject(&:blank?).join(", ").html_safe  %>
+  </div>
 <% end %>
-
