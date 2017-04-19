@@ -27,8 +27,9 @@ Gem::Specification.new do |spec| # rubocop:disable Metrics/BlockLength
   spec.add_dependency 'datacite-mapping', '~> 0.2', '>= 0.2.5'
   spec.add_dependency 'rubyzip', '~> 1.1'
   spec.add_dependency 'stash_ezid_datacite', '~> 0.1' # TODO: fold this in
-  spec.add_dependency 'stash-wrapper'
+  spec.add_dependency 'merritt-manifest', '~> 0.1', '>= 0.1.1'
 
+  spec.add_dependency 'stash-wrapper'
   spec.add_dependency 'stash_datacite'
   spec.add_dependency 'stash_engine' # TODO: should stash_datacite export this?
 
