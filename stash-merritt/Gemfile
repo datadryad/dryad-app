@@ -2,6 +2,7 @@ source 'https://rubygems.org'
 
 gemspec
 
+gem 'stash-sword', path: '../stash-sword'
 gem 'stash-wrapper', path: '../stash-wrapper'
 gem 'stash_datacite', path: '../stash_datacite'
 gem 'stash_discovery', path: '../stash_discovery'
