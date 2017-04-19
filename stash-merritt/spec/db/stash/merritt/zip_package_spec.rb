@@ -89,6 +89,8 @@ module Stash
           expect { ZipPackage.new(resource: resource) }.to raise_error(ArgumentError)
         end
 
+        it 'fails if the resource has URL "uploads"'
+
         it 'sets publication year if needed'
       end
 
