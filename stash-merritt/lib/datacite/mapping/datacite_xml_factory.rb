@@ -3,6 +3,8 @@ require 'datacite/mapping'
 module Datacite
   module Mapping
     class DataciteXMLFactory # rubocop:disable Metrics/ClassLength
+      DEFAULT_RESOURCE_TYPE = ResourceType.new(resource_type_general: ResourceTypeGeneral::DATASET, value: 'dataset')
+
       attr_reader :doi_value
       attr_reader :se_resource_id
       attr_reader :total_size_bytes
@@ -65,6 +67,7 @@ module Datacite
       end
 
       def to_dcs_type(sd_resource_type)
+        return DEFAULT_RESOURCE_TYPE unless sd_resource_type
         ResourceType.new(resource_type_general: sd_resource_type.resource_type_general_mapping_obj,
                          value: sd_resource_type.resource_type)
       end
