@@ -96,14 +96,14 @@ module Stash
       describe :submit! do
         describe 'create' do
           it 'submits the zipfile' do
-            package = Stash::Merritt::SubmissionPackage.new(resource: resource)
+            package = Stash::Merritt::ZipPackage.new(resource: resource)
             helper = SwordHelper.new(package: package)
             expect(sword_client).to receive(:create).with(doi: doi, zipfile: package.zipfile)
             helper.submit!
           end
 
           it 'sets the update and download URIs' do
-            package = Stash::Merritt::SubmissionPackage.new(resource: resource)
+            package = Stash::Merritt::ZipPackage.new(resource: resource)
             helper = SwordHelper.new(package: package)
             expect(sword_client).to receive(:create).with(doi: doi, zipfile: package.zipfile).and_return(receipt)
             helper.submit!
@@ -112,7 +112,7 @@ module Stash
           end
 
           it 'sets the version zipfile' do
-            package = Stash::Merritt::SubmissionPackage.new(resource: resource)
+            package = Stash::Merritt::ZipPackage.new(resource: resource)
             SwordHelper.new(package: package).submit!
             version = resource.stash_version
             zipfile = File.basename(package.zipfile)
@@ -120,7 +120,7 @@ module Stash
           end
 
           it 'forwards errors' do
-            package = Stash::Merritt::SubmissionPackage.new(resource: resource)
+            package = Stash::Merritt::ZipPackage.new(resource: resource)
             helper = SwordHelper.new(package: package)
             expect(sword_client).to receive(:create).and_raise(RestClient::RequestFailed)
             expect { helper.submit! }.to raise_error(RestClient::RequestFailed)
@@ -135,14 +135,14 @@ module Stash
           end
 
           it 'submits the zipfile' do
-            package = Stash::Merritt::SubmissionPackage.new(resource: resource)
+            package = Stash::Merritt::ZipPackage.new(resource: resource)
             helper = SwordHelper.new(package: package)
             expect(sword_client).to receive(:update).with(edit_iri: update_uri, zipfile: package.zipfile).and_return(200)
             helper.submit!
           end
 
           it 'sets the version zipfile' do
-            package = Stash::Merritt::SubmissionPackage.new(resource: resource)
+            package = Stash::Merritt::ZipPackage.new(resource: resource)
             SwordHelper.new(package: package).submit!
             version = resource.stash_version
             zipfile = File.basename(package.zipfile)
@@ -150,7 +150,7 @@ module Stash
           end
 
           it 'forwards errors' do
-            package = Stash::Merritt::SubmissionPackage.new(resource: resource)
+            package = Stash::Merritt::ZipPackage.new(resource: resource)
             helper = SwordHelper.new(package: package)
             expect(sword_client).to receive(:update).and_raise(RestClient::RequestFailed)
             expect { helper.submit! }.to raise_error(RestClient::RequestFailed)

@@ -2,7 +2,7 @@ require 'db_spec_helper'
 
 module Stash
   module Merritt
-    describe SubmissionPackage do
+    describe ZipPackage do
       attr_reader :rails_root
       attr_reader :user
       attr_reader :tenant
@@ -86,7 +86,7 @@ module Stash
         it 'fails if the resource doesn\'t have an identifier' do
           resource.identifier = nil
           resource.save!
-          expect { SubmissionPackage.new(resource: resource) }.to raise_error(ArgumentError)
+          expect { ZipPackage.new(resource: resource) }.to raise_error(ArgumentError)
         end
 
         it 'sets publication year if needed'
@@ -98,7 +98,7 @@ module Stash
             [File.basename(path), File.read(path)]
           end.to_h
 
-          package = SubmissionPackage.new(resource: resource)
+          package = ZipPackage.new(resource: resource)
           @zipfile_path = package.zipfile
 
           expected_metadata.each do |path, content|
@@ -129,7 +129,7 @@ module Stash
             deleted << upload.upload_file_name
           end
 
-          package = SubmissionPackage.new(resource: resource)
+          package = ZipPackage.new(resource: resource)
           @zipfile_path = package.zipfile
           mrt_delete = zip_entry('mrt-delete.txt')
           deleted.each do |filename|
@@ -141,14 +141,14 @@ module Stash
           it 'includes the embargo end date if present' do
             end_date = Time.new(2020, 1, 1, 0, 0, 1, '+12:45')
             resource.embargo = StashEngine::Embargo.new(end_date: end_date)
-            package = SubmissionPackage.new(resource: resource)
+            package = ZipPackage.new(resource: resource)
             @zipfile_path = package.zipfile
             mrt_embargo = zip_entry('mrt-embargo.txt')
             expect(mrt_embargo.strip).to eq('embargoEndDate:2019-12-31T11:15:01Z')
           end
 
           it 'sets end date to none if no end date present' do
-            package = SubmissionPackage.new(resource: resource)
+            package = ZipPackage.new(resource: resource)
             @zipfile_path = package.zipfile
             mrt_embargo = zip_entry('mrt-embargo.txt')
             expect(mrt_embargo.strip).to eq('embargoEndDate:none')
@@ -158,14 +158,14 @@ module Stash
 
       describe :dc3_xml do
         it 'builds Datacite 3 XML' do
-          package = SubmissionPackage.new(resource: resource)
+          package = ZipPackage.new(resource: resource)
           expect(package.dc3_xml).to be_xml(datacite_xml)
         end
       end
 
       describe :cleanup! do
         it 'removes the working directory' do
-          package = SubmissionPackage.new(resource: resource)
+          package = ZipPackage.new(resource: resource)
           @zipfile_path = package.zipfile
           workdir = File.dirname(zipfile_path)
           package.cleanup!
@@ -177,11 +177,11 @@ module Stash
       describe :to_s do
         attr_reader :package_str
         before(:each) do
-          package = SubmissionPackage.new(resource: resource)
+          package = ZipPackage.new(resource: resource)
           @package_str = package.to_s
         end
         it 'includes the class name' do
-          expect(package_str).to include('SubmissionPackage')
+          expect(package_str).to include(ZipPackage.class.name)
         end
         it 'includes the resource ID' do
           expect(package_str).to include(resource.id.to_s)

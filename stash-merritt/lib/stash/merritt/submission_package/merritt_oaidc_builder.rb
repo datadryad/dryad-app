@@ -2,7 +2,7 @@ require 'stash/repo/file_builder'
 
 module Stash
   module Merritt
-    class SubmissionPackage
+    module SubmissionPackage
       class MerrittOAIDCBuilder < Stash::Repo::FileBuilder
         ROOT_ATTRIBUTES = {
           'xmlns:xsi' => 'http://www.w3.org/2001/XMLSchema-instance',

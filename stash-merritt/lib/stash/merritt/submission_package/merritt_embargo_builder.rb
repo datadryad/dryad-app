@@ -2,7 +2,7 @@ require 'stash/repo/file_builder'
 
 module Stash
   module Merritt
-    class SubmissionPackage
+    module SubmissionPackage
       class MerrittEmbargoBuilder < Stash::Repo::FileBuilder
         attr_reader :embargo_end_date
 

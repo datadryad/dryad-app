@@ -54,8 +54,8 @@ module Stash
         allow(EzidHelper).to receive(:new).with(resource: resource).and_return(ezid_helper)
         allow(ezid_helper).to receive(:update_metadata)
 
-        @package = instance_double(SubmissionPackage)
-        allow(SubmissionPackage).to receive(:new).with(resource: resource).and_return(package)
+        @package = instance_double(ZipPackage)
+        allow(ZipPackage).to receive(:new).with(resource: resource).and_return(package)
         allow(package).to receive(:dc3_xml)
         allow(package).to receive(:cleanup!)
 

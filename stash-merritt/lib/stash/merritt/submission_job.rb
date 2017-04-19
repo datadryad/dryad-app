@@ -69,7 +69,7 @@ module Stash
       def create_package
         ensure_identifier
         log.info("#{Time.now.xmlschema} #{self.class}: creating package for resource #{resource_id} (#{resource.identifier_str})")
-        SubmissionPackage.new(resource: resource)
+        ZipPackage.new(resource: resource)
       end
 
       def submit(package)
