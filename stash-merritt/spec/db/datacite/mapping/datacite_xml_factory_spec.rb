@@ -4,6 +4,7 @@ require 'datacite/mapping/datacite_xml_factory'
 module Datacite
   module Mapping
     describe DataciteXMLFactory do
+      attr_reader :resource
       attr_reader :dc3_xml
       attr_reader :dcs_resource
       attr_reader :xml_factory
@@ -26,7 +27,7 @@ module Datacite
           provider: 'developer',
           tenant_id: 'dataone'
         )
-        resource = StashDatacite::ResourceBuilder.new(
+        @resource = StashDatacite::ResourceBuilder.new(
           user_id: user.id,
           dcs_resource: dcs_resource,
           stash_files: stash_wrapper.inventory.files,
@@ -50,6 +51,16 @@ module Datacite
         expected = File.read('spec/data/dc4-with-funding-references.xml')
         actual = xml_factory.build_datacite_xml
         expect(actual).to be_xml(expected)
+      end
+
+      it 'defaults missing resource_type to DATASET' do
+        resource.resource_type = nil
+        resource.save!
+
+        dcs_resource = xml_factory.build_resource
+        resource_type = dcs_resource.resource_type
+        expect(resource_type).not_to be_nil
+        expect(resource_type.resource_type_general).to be(ResourceTypeGeneral::DATASET)
       end
     end
   end
