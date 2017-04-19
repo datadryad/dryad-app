@@ -3,6 +3,9 @@
 
 require 'simplecov' if ENV['COVERAGE']
 
+# webmock
+require 'webmock/rspec'
+
 # ------------------------------------------------------------
 # Rspec configuration
 
