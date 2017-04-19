@@ -1,5 +1,3 @@
-require 'stash_engine/author'
-
 module StashDatacite
   module AuthorPatch
     def self.patch!
