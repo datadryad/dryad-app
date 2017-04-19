@@ -61,11 +61,11 @@ module StashDatacite
       end
 
       def required_completed
-        title.to_i + author_affiliation.to_i + data_type.to_i + author_name.to_i + abstract.to_i + author_email.to_i
+        title.to_i + author_affiliation.to_i + author_name.to_i + abstract.to_i + author_email.to_i
       end
 
       def required_total
-        6
+        5
       end
 
       # these are optional (recommended) ones
