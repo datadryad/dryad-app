@@ -1,3 +1,7 @@
+## 0.1.6 (next)
+
+- Support choosing binary packaging instead of zip.
+
 ## 0.1.5 (21 November 2016)
 
 - Pass `read_timeout` and `open_timeout` explicitly for clarity.

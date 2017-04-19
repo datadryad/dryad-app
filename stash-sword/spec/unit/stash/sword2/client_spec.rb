@@ -50,6 +50,8 @@ module Stash
           end
         end
 
+        it 'allows Packaging to be overridden'
+
         it "gets the entry from the Edit-IRI in the Location: header if it isn't returned in the body" do
           authorized_uri = collection_uri.sub('http://', "http://#{username}:#{password}@")
 
@@ -126,6 +128,8 @@ module Stash
             end
           end
         end
+
+        it 'allows Packaging to be overridden'
 
         it 'follows redirects' do
           edit_iri = "http://merritt.cdlib.org/sword/v2/object/#{doi}"
