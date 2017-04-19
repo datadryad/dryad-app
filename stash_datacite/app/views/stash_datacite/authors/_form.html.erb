@@ -18,7 +18,7 @@
   </div>
   <div class="c-input">
   <%= f.label "author_email", "Author Email", class: 'c-input__label js-author_label' %>
-  <%= f.email_field :author_email, class: 'c-input__text js-author_email', placeholder: 'email@ydomain.com' %>
+  <%= f.email_field :author_email, class: 'c-input__text js-author_email', placeholder: 'email@example.com' %>
   <p id="invalid_email" class="c-input__error-message">Please enter a valid email address.</p>
   </div>
   <%= link_to 'remove', stash_datacite.authors_delete_path(author.id || 'new'), method: :delete, remote: true, data: {confirm: 'Are you sure?'}, class: 't-describe__remove-button o-button__remove remove_record' %>
