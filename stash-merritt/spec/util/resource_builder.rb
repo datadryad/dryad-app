@@ -95,10 +95,11 @@ module StashDatacite
 
     def add_se_author(dcs_creator)
       last_name, first_name = extract_last_first(dcs_creator.name)
+      email_address = email_from(dcs_creator.identifier) || "#{first_name}.#{last_name}@example.edu".gsub(%r{\s +}, '_')
       se_author = StashEngine::Author.create(
         author_first_name: first_name,
         author_last_name: last_name,
-        author_email: email_from(dcs_creator.identifier),
+        author_email: email_address,
         author_orcid: orcid_from(dcs_creator.identifier),
         resource_id: se_resource_id
       )
