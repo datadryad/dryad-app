@@ -1,29 +1,35 @@
 <div>
   <p>
-    <span><%= check_box_tag 'agree_to_license', 'yes', false, class: 't-review__agree-to-license' %></span>By checking this box, I agree to the license
-      <% if @resource.rights.blank? %>
+    <% unless @resource.version_number > 1 %>
+      <span><%= check_box_tag 'agree_to_license', 'yes', false, class: 't-review__agree-to-license' %></span>By checking this box, I agree to the license
+    <% else %>
+      <span><%= check_box_tag 'agree_to_license', 'yes', true, class: 't-review__agree-to-license' %></span>By
+      checking this box, I agree to the license
+    <% end %>
+
+    <% if @resource.rights.blank? %>
+      <%= render partial: 'stash_datacite/licenses/license_review', locals:
+          {license: StashEngine::License.by_id(current_tenant.default_license), right: nil } %>
+    <% else %>
+      <% @resource.rights.each do |r| %>
         <%= render partial: 'stash_datacite/licenses/license_review', locals:
-            {license: StashEngine::License.by_id(current_tenant.default_license), right: nil } %>
-      <% else %>
-          <% @resource.rights.each do |r| %>
-            <%= render partial: 'stash_datacite/licenses/license_review', locals:
-                {license: StashEngine::License.by_uri(r.rights_uri), right: r } %>
-          <% end %>
+            {license: StashEngine::License.by_uri(r.rights_uri), right: r } %>
       <% end %>
+    <% end %>
   </p>
 </div>
 
 
 <script type="text/javascript">
 $(document).ready(function(){
-  $('.t-review__agree-to-license').click(function () {
+  $('.t-review__agree-to-license').bind( "click", function() {
     //check if checkbox is checked
     if ($(this).is(':checked') && $('.all_filled').is(':checked') ) {
 
-        $('.o-button__submit').removeAttr('disabled'); //enable input
+        $('.js-submission').attr('disabled', false); //enable input
 
     } else {
-        $('.o-button__submit').attr('disabled', true); //disable input
+        $('.js-submission').attr('disabled', true); //disable input
     }
   });
 });
