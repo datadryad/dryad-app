@@ -3,7 +3,7 @@ require 'db_spec_helper'
 module StashDatacite
   module Resource
     describe Completions do
-      REQUIRED_FIELDS = ['title', 'author affiliation', 'resource type', 'author name', 'abstract'].freeze
+      REQUIRED_FIELDS = ['title', 'author affiliation', 'author name', 'abstract', 'author email'].freeze
       REQUIRED_COUNT = REQUIRED_FIELDS.size
 
       OPTIONAL_FIELDS = ['date', 'keywords', 'methods', 'related identifiers'].freeze
@@ -104,6 +104,10 @@ module StashDatacite
         end
       end
 
+      describe('#author_email') do
+
+      end
+
       describe('#abstract') do
         it 'passes for resources with abstracts' do
           expect(completions.abstract).to be_truthy
@@ -153,15 +157,9 @@ module StashDatacite
           expect(completions.required_completed).to  eq(REQUIRED_COUNT - 1)
         end
 
-        it 'counts if resource type is missing' do
-          resource.resource_type.destroy
-          resource.reload # ActiveRecord is not smart enough to check 'destroyed' flag
-          expect(completions.required_completed).to eq(REQUIRED_COUNT - 1)
-        end
-
-        it 'double-counts (author and name) if author is missing' do
+        it 'triple-counts (author, name, and email) if author is missing' do
           resource.authors.each(&:destroy)
-          expect(completions.required_completed).to eq(REQUIRED_COUNT - 2)
+          expect(completions.required_completed).to eq(REQUIRED_COUNT - 3)
         end
 
         it 'counts if author name is missing' do
