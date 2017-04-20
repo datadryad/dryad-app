@@ -1,6 +1,10 @@
 source 'https://rubygems.org'
 
-gem 'stash_engine', path: '../stash_engine'
+path '..' do
+  gem 'stash-sword'
+  gem 'stash-wrapper'
+  gem 'stash_engine'
+end
 
 gem 'database_cleaner', '~> 1.5'
 gem 'diffy', '~> 3.1'

@@ -18,8 +18,6 @@ Gem::Specification.new do |s|
   s.require_paths = ['lib']
   s.test_files = Dir['spec/**/*']
 
-  s.add_dependency 'stash-sword'
-
   s.add_dependency 'amoeba', '~> 3.0.0'
   s.add_dependency 'carrierwave', '~> 0.10.0'
   s.add_dependency 'concurrent-ruby', '~> 1.0'
