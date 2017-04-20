@@ -11,6 +11,7 @@ $(function () {
   if($('body.resources_upload').length < 1){
     return;
   }
+
     $('#fileupload').fileupload({
         dataType: 'script',
         add: function (e, data) {
@@ -20,7 +21,8 @@ $(function () {
           data.context = $(tmpl("upload-line", data.files[0]));
           removeDuplicateFilename(data.files[0].name); // removes existing duplicate before adding again
           $('#upload_list').append(data.context);
-          $('#upload_all').show();
+          $('#confirm_text_upload, #upload_all').show();
+          confirmToUpload();
           // binding remove link action
           $('.js-remove_link').click( function(e){
             e.preventDefault();
@@ -151,7 +153,6 @@ function filesWaitingForUpload(){
 function updateButtonLinkStates(){
   if (filesWaitingForUpload()){
     // if files are waiting for upload
-    $('#upload_all').show();
     $('#upload_tweaker_head').removeClass('t-upload__choose-heading').addClass('t-upload__choose-heading--active');
     $("a[class^='c-progress__tab'], #describe_back, #proceed_review").unbind( "click" );
     $("a[class^='c-progress__tab'], #describe_back, #proceed_review").click(function(e) {
@@ -160,14 +161,16 @@ function updateButtonLinkStates(){
     });
     if(uploadInProgress) {
       $('#cancel_all').show();
-      $('#upload_all').hide();
+      $('#confirm_to_upload').attr('checked', false);
+      $('#confirm_text_upload, #upload_all').hide();
       $('#revert_all').hide();
     }
   }else{
     // files are already uploaded or there are none
     $('#cancel_all').hide();
     $('#upload_tweaker_head').removeClass('t-upload__choose-heading--active').addClass('t-upload__choose-heading');
-    $('#upload_all').hide();
+    $('#confirm_to_upload').attr('checked', false);
+    $('#confirm_text_upload, #upload_all').hide();
     $("a[class^='c-progress__tab'], #describe_back, #proceed_review").unbind( "click" );
     uploadInProgress = false;
     updateRevertState();
@@ -224,18 +227,26 @@ function updateUiStates(){
 
   if(overTotalSize(totalSize())){
     $('#over_files_size').show();
-    $('#upload_all').hide();
+    $('#confirm_to_upload').attr('checked', false);
+    $('#confirm_text_upload, #upload_all').hide();
   }else{
     $('#over_files_size').hide();
-    if(!uploadInProgress && filesWaitingForUpload()) $('#upload_all').show();
+    if(!uploadInProgress && filesWaitingForUpload()) {
+      $('#confirm_text_upload, #upload_all').show();
+      confirmToUpload();
+    }
   }
 
   if(overSubmissionSize(uploadSize())){
     $('#over_upload_size').show();
-    $('#upload_all').hide();
+    $('#confirm_to_upload').attr('checked', false);
+    $('#confirm_text_upload, #upload_all').hide();
   }else{
     $('#over_upload_size').hide();
-    if(!uploadInProgress && filesWaitingForUpload()) $('#upload_all').show();
+    if(!uploadInProgress && filesWaitingForUpload()) {
+      $('#confirm_text_upload, #upload_all').show();
+      confirmToUpload();
+    }
   }
 }
 
@@ -254,8 +265,24 @@ function removeDuplicateFilename(fn){
     setTimeout(function () {
       $('#over_single_size').empty();
     }, 20000);
+    $('#confirm_text_upload, #upload_all').show();
+    confirmToUpload();
   }
 }
+
+function confirmToUpload(){
+  // bind the upload button to the check box
+  $('#confirm_to_upload').bind( "click", function() {
+    //check if checkbox is checked
+    if ($(this).is(':checked')) {
+      $('#upload_all').removeAttr('disabled'); //enable input
+    }
+    else {
+      $('#upload_all').attr('disabled', true); //disable input
+    }
+  });
+}
+
 // *****************************
 // end Javascript for FileUpload
 // *****************************
