@@ -161,7 +161,7 @@ function updateButtonLinkStates(){
     });
     if(uploadInProgress) {
       $('#cancel_all').show();
-      $('#confirm_to_upload').attr('checked', false);
+      undoConfirmUpload();
       $('#confirm_text_upload, #upload_all').hide();
       $('#revert_all').hide();
     }
@@ -169,7 +169,7 @@ function updateButtonLinkStates(){
     // files are already uploaded or there are none
     $('#cancel_all').hide();
     $('#upload_tweaker_head').removeClass('t-upload__choose-heading--active').addClass('t-upload__choose-heading');
-    $('#confirm_to_upload').attr('checked', false);
+    undoConfirmUpload();
     $('#confirm_text_upload, #upload_all').hide();
     $("a[class^='c-progress__tab'], #describe_back, #proceed_review").unbind( "click" );
     uploadInProgress = false;
@@ -227,7 +227,7 @@ function updateUiStates(){
 
   if(overTotalSize(totalSize())){
     $('#over_files_size').show();
-    $('#confirm_to_upload').attr('checked', false);
+    undoConfirmUpload();
     $('#confirm_text_upload, #upload_all').hide();
   }else{
     $('#over_files_size').hide();
@@ -239,7 +239,7 @@ function updateUiStates(){
 
   if(overSubmissionSize(uploadSize())){
     $('#over_upload_size').show();
-    $('#confirm_to_upload').attr('checked', false);
+    undoConfirmUpload();
     $('#confirm_text_upload, #upload_all').hide();
   }else{
     $('#over_upload_size').hide();
@@ -281,6 +281,11 @@ function confirmToUpload(){
       $('#upload_all').attr('disabled', true); //disable input
     }
   });
+}
+
+function undoConfirmUpload() {
+  $('#confirm_to_upload').attr('checked', false);
+  $('#upload_all').attr('disabled', true);
 }
 
 // *****************************
