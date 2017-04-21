@@ -8,12 +8,7 @@ module StashDatacite
       end
 
       def resource_type
-        resource_type = ResourceType.where(resource_id: @resource.id).first
-        @resource_type = if resource_type.present?
-                           resource_type
-                         else
-                           ResourceType.create(resource_id: @resource.id, resource_type: 'dataset', resource_type_general: 'dataset')
-                         end
+        @resource_type = ResourceType.create_with(resource_id: @resource.id, resource_type: 'dataset', resource_type_general: 'dataset').find_or_create_by(resource_id: @resource.id)
       end
 
       def title
@@ -109,7 +104,6 @@ module StashDatacite
                        Publisher.create(publisher: tenant.short_name, resource_id: @resource.id)
                      end
       end
-
     end
   end
 end
