@@ -3,6 +3,10 @@ module Stash
     module SubmissionPackage
       Dir.glob(File.expand_path('../submission_package/*.rb', __FILE__)).sort.each(&method(:require))
 
+      def resource
+        raise NoMethodError, "#{self.class} should override #resource to return the resource, but it doesn't"
+      end
+
       def resource_id
         resource.id
       end
@@ -42,7 +46,7 @@ module Stash
       end
 
       def new_uploads
-        resource.new_file_uploads
+        resource.new_file_uploads.select { |upload| upload.file_state != 'deleted' }
       end
 
       def builders # rubocop:disable Metrics/AbcSize

@@ -15,6 +15,7 @@ module Stash
       attr_reader :root_url
 
       def initialize(resource:, root_url:)
+        raise ArgumentError, 'No resource provided' unless resource
         raise ArgumentError, "Resource (#{resource.id}) must have an identifier before submission" unless resource.identifier_str
         raise URI::InvalidURIError, "No root URL provided: #{root_url ? "'#{root_url}'" : 'nil'}" if root_url.blank?
         @resource = resource
@@ -23,7 +24,7 @@ module Stash
 
       def create_manifest
         StashDatacite::PublicationYear.ensure_pub_year(resource)
-        data_files = resource.new_file_uploads.map { |upload| entry_for(upload) }
+        data_files = new_uploads.map { |upload| entry_for(upload) }
         system_files = builders.map { |builder| write_to_public(builder) }.compact
         manifest = ::Merritt::Manifest::Object.new(files: (system_files + data_files))
         manifest_path = workdir_path.join("#{resource_id}-manifest.checkm").to_s
