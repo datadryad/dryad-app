@@ -56,11 +56,7 @@ module Stash
           filename_encoded = ERB::Util.url_encode(upload_file_name)
           filename_decoded = URI.decode(filename_encoded)
           expect(filename_decoded).to eq(upload_file_name) # just to be sure
-
-          url = "http://example.org/uploads/#{filename_encoded}"
-          puts "Setting URL #{url}"
-
-          upload.url = url
+          upload.url = "http://example.org/uploads/#{filename_encoded}"
           upload.save
         end
       end
@@ -98,21 +94,91 @@ module Stash
       end
 
       describe :manifest do
-        it 'builds a manifest' do
-          package = ObjectManifestPackage.new(resource: resource, root_url: root_url)
-          manifest_path = package.create_manifest
-          fail "not implemented"
+        attr_reader :package
+        attr_reader :manifest_path
+
+        before(:each) do
+          @package = ObjectManifestPackage.new(resource: resource, root_url: root_url)
+          @manifest_path = package.create_manifest
         end
+
+        it 'builds a manifest' do
+
+          actual = File.read(manifest_path)
+
+          # generated stash-wrapper.xml has today's date & so has different hash
+          generated_stash_wrapper = "#{public_system}/#{resource.id}/stash-wrapper.xml"
+          stash_wrapper_md5 = Digest::MD5.file(generated_stash_wrapper).to_s
+          expected = File.read('spec/data/manifest.checkm').sub('17c28364d528eed4805d6b87afa88749', stash_wrapper_md5)
+
+          expect(actual).to eq(expected)
+        end
+
         describe 'public/system' do
-          it 'writes mrt-dataone-manifest.txt'
-          it 'writes stash-wrapper.xml'
-          it 'writes mrt-datacite.xml'
-          it 'writes mrt-oaidc.xml'
-          describe 'mrt-embargo.txt' do
-            it 'includes the embargo end date if present'
-            it 'sets end date to none if no end date present'
+          it 'writes mrt-dataone-manifest.txt' do
+            actual = File.read("#{public_system}/#{resource.id}/mrt-dataone-manifest.txt")
+            expected = File.read('spec/data/archive/mrt-dataone-manifest.txt')
+            expect(actual).to eq(expected)
           end
-          it 'writes mrt-delete.xml if needed'
+
+          it 'writes stash-wrapper.xml' do
+            actual = File.read("#{public_system}/#{resource.id}/stash-wrapper.xml")
+            expected = File.read('spec/data/archive/stash-wrapper.xml')
+
+            # ignore changed dates, trust that we've tested their accuracy elsewhere
+            [actual, expected].each { |xml| xml.gsub!(/20[0-9][0-9]-[0-9][0-9]-[0-9][0-9]Z/, '') }
+
+            expect(actual).to be_xml(expected)
+          end
+
+          it 'writes mrt-datacite.xml' do
+            actual = File.read("#{public_system}/#{resource.id}/mrt-datacite.xml")
+            expected = File.read('spec/data/archive/mrt-datacite.xml')
+            expect(actual).to be_xml(expected)
+          end
+
+          it 'writes mrt-oaidc.xml' do
+            actual = File.read("#{public_system}/#{resource.id}/mrt-oaidc.xml")
+            expected = File.read('spec/data/archive/mrt-oaidc.xml')
+            expect(actual).to be_xml(expected)
+          end
+
+          describe 'mrt-embargo.txt' do
+            it 'sets end date to none if no end date present' do
+              actual = File.read("#{public_system}/#{resource.id}/mrt-embargo.txt")
+              expect(actual.strip).to eq('embargoEndDate:none')
+            end
+
+            it 'includes the embargo end date if present' do
+              end_date = Time.new(2020, 1, 1, 0, 0, 1, '+12:45')
+              resource.embargo = StashEngine::Embargo.new(end_date: end_date)
+              @package = ObjectManifestPackage.new(resource: resource, root_url: root_url)
+              @manifest_path = package.create_manifest
+              actual = File.read("#{public_system}/#{resource.id}/mrt-embargo.txt")
+              expect(actual.strip).to eq('embargoEndDate:2019-12-31T11:15:01Z')
+            end
+          end
+
+          it 'writes mrt-delete.txt if needed' do
+            deleted = []
+            resource.file_uploads.each_with_index do |upload, index|
+              next unless index.even?
+              upload.file_state = 'deleted'
+              upload.save
+              deleted << upload.upload_file_name
+            end
+
+            @package = ObjectManifestPackage.new(resource: resource, root_url: root_url)
+            @manifest_path = package.create_manifest
+
+            manifest = File.read(manifest_path)
+            expect(manifest).to include('https://stash.example.edu/mrt-delete.txt')
+            mrt_delete = File.read("#{public_system}/#{resource.id}/mrt-delete.txt")
+            deleted.each do |filename|
+              expect(mrt_delete).to include(filename)
+              expect(manifest).not_to include(filename)
+            end
+          end
         end
       end
     end
