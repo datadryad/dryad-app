@@ -24,7 +24,7 @@ module Stash
             body: '<entry xmlns="http://www.w3.org/2005/Atom"><id>http://merritt.cdlib.org/sword/v2/object/ark:/99999/fk4t157x4p</id><author><name>ucb_dash_submitter</name></author><generator uri="http://www.swordapp.org/" version="2.0" /><link href="http://merritt.cdlib.org/sword/v2/object/ark:/99999/fk4t157x4p" rel="edit" /><link href="http://merritt.cdlib.org/sword/v2/object/ark:/99999/fk4t157x4p" rel="http://purl.org/net/sword/terms/add" /><link href="http://merritt.cdlib.org/sword/v2/object/ark:/99999/fk4t157x4p" rel="edit-media" /><treatment xmlns="http://purl.org/net/sword/terms/">no treatment information available</treatment></entry>'
           )
 
-          client.create(zipfile: zipfile, doi: doi)
+          client.create(payload: zipfile, doi: doi)
 
           md5 = Digest::MD5.file(zipfile).to_s
 
@@ -50,7 +50,38 @@ module Stash
           end
         end
 
-        it 'allows Packaging to be overridden'
+        it 'allows Packaging to be overridden' do
+          authorized_uri = collection_uri.sub('http://', "http://#{username}:#{password}@")
+
+          stub_request(:post, authorized_uri).to_return(
+            body: '<entry xmlns="http://www.w3.org/2005/Atom"><id>http://merritt.cdlib.org/sword/v2/object/ark:/99999/fk4t157x4p</id><author><name>ucb_dash_submitter</name></author><generator uri="http://www.swordapp.org/" version="2.0" /><link href="http://merritt.cdlib.org/sword/v2/object/ark:/99999/fk4t157x4p" rel="edit" /><link href="http://merritt.cdlib.org/sword/v2/object/ark:/99999/fk4t157x4p" rel="http://purl.org/net/sword/terms/add" /><link href="http://merritt.cdlib.org/sword/v2/object/ark:/99999/fk4t157x4p" rel="edit-media" /><treatment xmlns="http://purl.org/net/sword/terms/">no treatment information available</treatment></entry>'
+          )
+
+          client.create(payload: manifest, doi: doi, packaging: Packaging::BINARY)
+
+          md5 = Digest::MD5.file(manifest).to_s
+
+          actual_headers = nil
+          expect(a_request(:post, authorized_uri).with do |req|
+            actual_headers = req.headers
+          end).to have_been_made
+
+          expected_disposition = 'attachment'
+
+          aggregate_failures('request headers') do
+            {
+              'On-Behalf-Of' => on_behalf_of,
+              'Packaging' => 'http://purl.org/net/sword/package/Binary',
+              'Slug' => doi,
+              'Content-Disposition' => "#{expected_disposition}; filename=manifest.checkm",
+              'Content-MD5' => md5,
+              'Content-Length' => /[0-9]+/,
+              'Content-Type' => 'application/octet-stream'
+            }.each do |k, v|
+              expect(actual_headers).to include_header(k, v)
+            end
+          end
+        end
 
         it "gets the entry from the Edit-IRI in the Location: header if it isn't returned in the body" do
           authorized_uri = collection_uri.sub('http://', "http://#{username}:#{password}@")
@@ -61,7 +92,7 @@ module Stash
             body: '<entry xmlns="http://www.w3.org/2005/Atom"><id>http://merritt.cdlib.org/sword/v2/object/ark:/99999/fk4t157x4p</id><author><name>ucb_dash_submitter</name></author><generator uri="http://www.swordapp.org/" version="2.0" /><link href="http://merritt.cdlib.org/sword/v2/object/ark:/99999/fk4t157x4p" rel="edit" /><link href="http://merritt.cdlib.org/sword/v2/object/ark:/99999/fk4t157x4p" rel="http://purl.org/net/sword/terms/add" /><link href="http://merritt.cdlib.org/sword/v2/object/ark:/99999/fk4t157x4p" rel="edit-media" /><treatment xmlns="http://purl.org/net/sword/terms/">no treatment information available</treatment></entry>'
           )
 
-          receipt = client.create(zipfile: zipfile, doi: doi)
+          receipt = client.create(payload: zipfile, doi: doi)
           expect(receipt).to be_a(DepositReceipt)
         end
 
@@ -71,13 +102,13 @@ module Stash
         it 'forwards a 4xx error' do
           authorized_uri = collection_uri.sub('http://', "http://#{username}:#{password}@")
           stub_request(:post, authorized_uri).to_return(status: [403, 'Forbidden'])
-          expect { client.create(zipfile: zipfile, doi: doi) }.to raise_error(RestClient::Forbidden)
+          expect { client.create(payload: zipfile, doi: doi) }.to raise_error(RestClient::Forbidden)
         end
 
         it 'forwards a 5xx error' do
           authorized_uri = collection_uri.sub('http://', "http://#{username}:#{password}@")
           stub_request(:post, authorized_uri).to_return(status: [500, 'Internal Server Error'])
-          expect { client.create(zipfile: zipfile, doi: doi) }.to raise_error(RestClient::InternalServerError)
+          expect { client.create(payload: zipfile, doi: doi) }.to raise_error(RestClient::InternalServerError)
         end
 
         it 'forwards an internal exception'

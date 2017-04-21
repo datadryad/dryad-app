@@ -27,6 +27,10 @@ module Stash
           @resource_id = resource_id
         end
 
+        def mime_type
+          MIME::Types['text/xml'].first
+        end
+
         def contents # rubocop:disable Metrics/MethodLength
           Nokogiri::XML::Builder.new do |xml|
             xml.qualifieddc(ROOT_ATTRIBUTES) do

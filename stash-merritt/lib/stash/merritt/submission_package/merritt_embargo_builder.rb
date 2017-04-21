@@ -11,6 +11,10 @@ module Stash
           @embargo_end_date = embargo_end_date
         end
 
+        def mime_type
+          MIME::Types['text/plain'].first
+        end
+
         def contents
           end_date_str = (embargo_end_date && embargo_end_date.iso8601)
           "embargoEndDate:#{end_date_str || 'none'}"

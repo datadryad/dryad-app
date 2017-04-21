@@ -15,6 +15,10 @@ module Stash
           @resource ||= StashEngine::Resource.find(resource_id)
         end
 
+        def mime_type
+          MIME::Types['text/plain'].first
+        end
+
         def contents
           del_files = resource.file_uploads.deleted
           del_files.blank? ? nil : del_files.map(&:upload_file_name).join("\n")

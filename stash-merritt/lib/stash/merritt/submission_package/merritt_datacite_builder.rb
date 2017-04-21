@@ -13,6 +13,10 @@ module Stash
           @factory = factory
         end
 
+        def mime_type
+          MIME::Types['text/xml'].first
+        end
+
         def contents
           factory.build_datacite_xml(datacite_3: true)
         end

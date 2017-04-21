@@ -99,7 +99,7 @@ module Stash
             it 'submits the zipfile' do
               package = Stash::Merritt::ZipPackage.new(resource: resource)
               helper = SwordHelper.new(package: package)
-              expect(sword_client).to receive(:create).with(doi: doi, zipfile: package.zipfile)
+              expect(sword_client).to receive(:create).with(doi: doi, payload: package.zipfile)
               helper.submit!
             end
 
@@ -108,7 +108,7 @@ module Stash
             it 'sets the update and download URIs' do
               package = Stash::Merritt::ZipPackage.new(resource: resource)
               helper = SwordHelper.new(package: package)
-              expect(sword_client).to receive(:create).with(doi: doi, zipfile: package.zipfile).and_return(receipt)
+              expect(sword_client).to receive(:create).with(doi: doi, payload: package.zipfile).and_return(receipt)
               helper.submit!
               expect(resource.download_uri).to eq(download_uri)
               expect(resource.update_uri).to eq(update_uri)
@@ -140,7 +140,7 @@ module Stash
             it 'submits the zipfile' do
               package = Stash::Merritt::ZipPackage.new(resource: resource)
               helper = SwordHelper.new(package: package)
-              expect(sword_client).to receive(:update).with(edit_iri: update_uri, zipfile: package.zipfile).and_return(200)
+              expect(sword_client).to receive(:update).with(edit_iri: update_uri, payload: package.zipfile).and_return(200)
               helper.submit!
             end
 

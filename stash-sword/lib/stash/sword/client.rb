@@ -36,30 +36,32 @@ module Stash
         @log          = logger || default_logger
       end
 
-      # Creates a new resource for the specified DOI with the specified zipfile
+      # Creates a new resource for the specified DOI with the specified payload
       #
       # @param doi [String] the DOI
-      # @param zipfile [String] the zipfile path
+      # @param payload [String] the payload path
+      # @param packaging [Packaging] the packaging (defaults to {Packaging::SIMPLE_ZIP})
       # @return [DepositReceipt] the deposit receipt
-      def create(doi:, zipfile:, packaging: Packaging::SIMPLE_ZIP)
-        log.debug("Stash::Sword::Client.create(doi: #{doi}, zipfile: #{zipfile})")
+      def create(doi:, payload:, packaging: Packaging::SIMPLE_ZIP)
+        log.debug("Stash::Sword::Client.create(doi: #{doi}, payload: #{payload})")
         uri = collection_uri.to_s
-        response = do_post(uri, zipfile, create_request_headers(zipfile, doi))
+        response = do_post(uri, payload, create_request_headers(payload, doi, packaging))
         receipt_from(response)
       rescue => e
         log_error(e)
         raise
       end
 
-      # Updates a resource with a new zipfile
+      # Updates a resource with a new payload
       #
       # @param edit_iri [URI, String] the Atom Edit-IRI
-      # @param zipfile [String] the zipfile path
+      # @param payload [String] the payload path
+      # @param packaging [Packaging] the packaging (defaults to {Packaging::SIMPLE_ZIP})
       # @return [Integer] the response code (if the request succeeds)
-      def update(edit_iri:, zipfile:, packaging: Packaging::SIMPLE_ZIP)
-        log.debug("Stash::Sword::Client.update(edit_iri: #{edit_iri}, zipfile: #{zipfile})")
+      def update(edit_iri:, payload:, packaging: Packaging::SIMPLE_ZIP)
+        log.debug("Stash::Sword::Client.update(edit_iri: #{edit_iri}, payload: #{payload})")
         uri = to_uri(edit_iri).to_s
-        response = do_put(uri, zipfile)
+        response = do_put(uri, payload)
         log.debug(to_log_msg(response))
         response.code # TODO: what if anything should we return here?
       rescue => e
@@ -96,15 +98,15 @@ module Stash
         DepositReceipt.parse_xml(body)
       end
 
-      def do_post(uri, zipfile, headers)
-        File.open(zipfile, 'rb') do |file|
+      def do_post(uri, payload, headers)
+        File.open(payload, 'rb') do |file|
           return helper.post(uri: uri, payload: file, headers: headers)
         end
       end
 
-      def do_put(uri, zipfile)
+      def do_put(uri, payload)
         boundary        = "========#{Time.now.to_i}=="
-        stream          = stream_for(zipfile: File.open(zipfile, 'rb'), boundary: boundary)
+        stream          = stream_for(payload: File.open(payload, 'rb'), boundary: boundary)
         begin
           return helper.put(uri: uri, headers: update_request_headers(stream, boundary), payload: stream)
         ensure
@@ -112,13 +114,13 @@ module Stash
         end
       end
 
-      def stream_for(zipfile:, boundary:)
+      def stream_for(payload:, boundary:)
         content = []
         # strictly speaking, do we need an Atom <entry/> first?
         content << "--#{boundary}#{EOL}"
-        update_mime_headers(zipfile).each { |k, v| content << "#{k}: #{v}#{EOL}" }
+        update_mime_headers(payload).each { |k, v| content << "#{k}: #{v}#{EOL}" }
         content << EOL
-        content << zipfile
+        content << payload
         content << EOL
         content << "--#{boundary}--#{EOL}"
 

@@ -11,6 +11,10 @@ module Stash
           Rails.public_path.join('system')
         end
 
+        def mime_type
+          MIME::Type.new('text/checkm')
+        end
+
       end
     end
   end

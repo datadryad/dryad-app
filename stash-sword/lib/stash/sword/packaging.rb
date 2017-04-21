@@ -16,6 +16,10 @@ module Stash
           @content_type ||= 'application/zip'
         end
       end
+
+      def header
+        value.to_s
+      end
     end
   end
 end

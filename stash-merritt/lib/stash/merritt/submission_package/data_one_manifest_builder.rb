@@ -14,6 +14,10 @@ module Stash
           @uploads = uploads
         end
 
+        def mime_type
+          MIME::Types['text/plain'].first
+        end
+
         def contents
           files = uploads.map do |upload|
             OpenStruct.new(file_name: upload.upload_file_name, mime_type: upload.upload_content_type)

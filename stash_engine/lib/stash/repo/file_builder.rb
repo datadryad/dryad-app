@@ -1,4 +1,5 @@
 require 'fileutils'
+require 'mime-types'
 
 module Stash
   module Repo
@@ -23,6 +24,12 @@ module Stash
       # @return [String, nil] the contents, or nil if the file should not be written.
       def contents
         raise NoMethodError, "#{self.class} should override #file_contents to build a file, but it doesn't"
+      end
+
+      # Override to provide the MIME type of the file.
+      # @return [MIME::Type] the MIME type of the file
+      def mime_type
+        raise NoMethodError, "#{self.class} should override #mime_type to return the MIME type, but it doesn't"
       end
 
       # Whether the file is binary. Defaults to false.

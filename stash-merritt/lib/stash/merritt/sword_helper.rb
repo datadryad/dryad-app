@@ -44,13 +44,13 @@ module Stash
       end
 
       def do_create
-        receipt = sword_client.create(doi: identifier_str, zipfile: zipfile)
+        receipt = sword_client.create(doi: identifier_str, payload: zipfile)
         resource.download_uri = receipt.em_iri
         resource.update_uri = receipt.edit_iri
       end
 
       def do_update(update_uri)
-        sword_client.update(edit_iri: update_uri, zipfile: zipfile)
+        sword_client.update(edit_iri: update_uri, payload: zipfile)
       end
 
     end

@@ -183,7 +183,7 @@ module Stash
           @package_str = package.to_s
         end
         it 'includes the class name' do
-          expect(package_str).to include(ZipPackage.class.name)
+          expect(package_str).to include(ZipPackage.name)
         end
         it 'includes the resource ID' do
           expect(package_str).to include(resource.id.to_s)

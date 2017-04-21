@@ -19,6 +19,10 @@ module Stash
           @embargo_end_date = date_or_nil(embargo_end_date)
         end
 
+        def mime_type
+          MIME::Types['text/xml'].first
+        end
+
         def contents # rubocop:disable Metrics/AbcSize
           StashWrapper.new(
             identifier: to_sw_identifier(dcs_resource.identifier),
