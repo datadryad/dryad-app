@@ -61,7 +61,7 @@ module Stash
       def update(edit_iri:, payload:, packaging: Packaging::SIMPLE_ZIP)
         log.debug("Stash::Sword::Client.update(edit_iri: #{edit_iri}, payload: #{payload})")
         uri = to_uri(edit_iri).to_s
-        response = do_put(uri, payload)
+        response = do_put(uri, payload, packaging)
         log.debug(to_log_msg(response))
         response.code # TODO: what if anything should we return here?
       rescue => e
@@ -104,9 +104,9 @@ module Stash
         end
       end
 
-      def do_put(uri, payload)
+      def do_put(uri, payload, packaging)
         boundary        = "========#{Time.now.to_i}=="
-        stream          = stream_for(payload: File.open(payload, 'rb'), boundary: boundary)
+        stream          = stream_for(payload: File.open(payload, 'rb'), boundary: boundary, packaging: packaging)
         begin
           return helper.put(uri: uri, headers: update_request_headers(stream, boundary), payload: stream)
         ensure
@@ -114,11 +114,11 @@ module Stash
         end
       end
 
-      def stream_for(payload:, boundary:)
+      def stream_for(payload:, boundary:, packaging:)
         content = []
         # strictly speaking, do we need an Atom <entry/> first?
         content << "--#{boundary}#{EOL}"
-        update_mime_headers(payload).each { |k, v| content << "#{k}: #{v}#{EOL}" }
+        update_mime_headers(payload, packaging).each { |k, v| content << "#{k}: #{v}#{EOL}" }
         content << EOL
         content << payload
         content << EOL

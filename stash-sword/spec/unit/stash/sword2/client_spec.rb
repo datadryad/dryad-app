@@ -51,6 +51,8 @@ module Stash
         end
 
         it 'allows Packaging to be overridden' do
+          manifest = 'spec/data/manifest.checkm'
+
           authorized_uri = collection_uri.sub('http://', "http://#{username}:#{password}@")
 
           stub_request(:post, authorized_uri).to_return(
@@ -121,7 +123,7 @@ module Stash
 
           stub_request(:put, authorized_uri)
 
-          code = client.update(edit_iri: edit_iri, zipfile: zipfile)
+          code = client.update(edit_iri: edit_iri, payload: zipfile)
           expect(code).to eq(200)
 
           md5 = Digest::MD5.file(zipfile).to_s
@@ -168,7 +170,7 @@ module Stash
           redirect_url = 'http://www.example.org/'
           stub_request(:put, authorized_uri).to_return(status: 303, headers: { 'Location' => redirect_url })
           stub_request(:get, redirect_url.sub('http://', "http://#{username}:#{password}@")).to_return(status: 200)
-          code = client.update(edit_iri: edit_iri, zipfile: zipfile)
+          code = client.update(edit_iri: edit_iri, payload: zipfile)
           expect(code).to eq(200)
         end
 
@@ -176,14 +178,14 @@ module Stash
           edit_iri = "http://merritt.cdlib.org/sword/v2/object/#{doi}"
           authorized_uri = edit_iri.sub('http://', "http://#{username}:#{password}@")
           stub_request(:put, authorized_uri).to_return(status: [403, 'Forbidden'])
-          expect { client.update(edit_iri: edit_iri, zipfile: zipfile) }.to raise_error(RestClient::Forbidden)
+          expect { client.update(edit_iri: edit_iri, payload: zipfile) }.to raise_error(RestClient::Forbidden)
         end
 
         it 'forwards a 5xx error' do
           edit_iri = "http://merritt.cdlib.org/sword/v2/object/#{doi}"
           authorized_uri = edit_iri.sub('http://', "http://#{username}:#{password}@")
           stub_request(:put, authorized_uri).to_return(status: [500, 'Internal Server Error'])
-          expect { client.update(edit_iri: edit_iri, zipfile: zipfile) }.to raise_error(RestClient::InternalServerError)
+          expect { client.update(edit_iri: edit_iri, payload: zipfile) }.to raise_error(RestClient::InternalServerError)
         end
 
         it 'forwards an internal exception'
