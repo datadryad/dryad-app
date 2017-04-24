@@ -162,7 +162,52 @@ module Stash
           end
         end
 
-        it 'allows Packaging to be overridden'
+        it 'allows Packaging to be overridden' do
+          manifest = 'spec/data/manifest.checkm'
+
+          edit_iri = "http://merritt.cdlib.org/sword/v2/object/#{doi}"
+          authorized_uri = edit_iri.sub('http://', "http://#{username}:#{password}@")
+
+          stub_request(:put, authorized_uri)
+
+          code = client.update(edit_iri: edit_iri, payload: manifest, packaging: Packaging::BINARY)
+          expect(code).to eq(200)
+
+          md5 = Digest::MD5.file(manifest).to_s
+
+          actual_body = nil
+          actual_headers = nil
+          expect(a_request(:put, authorized_uri).with do |req|
+            actual_body = req.body
+            actual_headers = req.headers
+          end).to have_been_made
+
+          aggregate_failures('request headers') do
+            {
+              'Content-Length' => /[0-9]+/,
+              'Content-Type' => %r{multipart/related; type="application/atom\+xml"; boundary=.*},
+              'On-Behalf-Of' => on_behalf_of
+            }.each do |k, v|
+              expect(actual_headers).to include_header(k, v)
+            end
+          end
+
+          expected_disposition = 'attachment'
+
+          mime_headers = {
+            'Packaging' => 'http://purl.org/net/sword/package/Binary',
+            'Content-Disposition' => "#{expected_disposition}; name=\"payload\"; filename=\"manifest.checkm\"",
+            'Content-Type' => 'application/octet-stream',
+            'Content-MD5' => md5
+          }
+
+          aggregate_failures('MIME headers') do
+            mime_headers.each do |k, v|
+              closest_match = actual_body[/#{k}[^\n]+/m].strip
+              expect(actual_body).to include("#{k}: #{v}"), "expected '#{k}: #{v}'; closest match was '#{closest_match}'"
+            end
+          end
+        end
 
         it 'follows redirects' do
           edit_iri = "http://merritt.cdlib.org/sword/v2/object/#{doi}"
