@@ -9,7 +9,8 @@ require 'logger'
 module Stash
   module Sword
     class Client
-      include HeaderUtils, LogUtils
+      include HeaderUtils
+      include LogUtils
 
       EOL = "\r\n".freeze
 
