@@ -3,7 +3,7 @@ require 'httpclient'
 module StashEngine
   class UrlValidator
 
-    attr_reader :mime_type, :size, :url, :status_code, :redirected_to
+    attr_reader :mime_type, :size, :url, :status_code, :redirected_to, :filename
     def initialize(url:)
       @url = url
       @mime_type = ''
@@ -36,6 +36,9 @@ module StashEngine
         if @redirected
           @redirected_to = response.previous.header['Location'].first
         end
+        # get the filename from either the 1) content disposition, 2) redirected url (if avail) or 3) url
+        @filename = filename_from_content_disposition(response.header['Content-Disposition']) ||
+                      filename_from_url(@redirected_to) || filename_from_url(@url)
         return true
           #Socketerror seems to mean a domain that is down or unavailable, tried http://macgyver.com
           # https://carpark.com seems to timeout
@@ -75,6 +78,27 @@ module StashEngine
       #clnt.send_timeout = 15
       #clnt.receive_timeout = 15
       clnt
+    end
+
+    def filename_from_content_disposition(disposition)
+      return nil if disposition.blank?
+      if match = disposition.match(/filename=([^;$]+)/) #set the match and check for filename
+        # this is a simple case that checks for ascii filenames in content disposition and removes surrounding quotes, if any
+        my_match = match[1].strip
+        my_match = my_match [1..-2] if my_match[0] == my_match[-1] && "\"'".include?(my_match[0])
+        return my_match
+      elsif match = disposition.match(/filename\*=\S+'\S*'([^;$]+)/)
+        my_match = match[1].strip
+        my_match = my_match [1..-2] if my_match[0] == my_match[-1] && "\"'".include?(my_match[0])
+        return CGI.unescape(my_match)
+      end
+      nil
+    end
+
+    def filename_from_url(url)
+      return nil if url.blank?
+      u = URI.parse(url)
+      File.basename(u.path)
     end
 
   end
