@@ -16,11 +16,11 @@ class FileRecord < Stash::Harvester::HarvestedRecord
   end
 end
 
-records = %w(
+records = %w[
   wrapped-datacite-all-geodata.xml
   wrapped-datacite-no-geodata.xml
   wrapped-datacite-place-only.xml
-).map { |source| FileRecord.new(source) }
+].map { |source| FileRecord.new(source) }
 
 mapper = Stash::Indexer::DataciteGeoblacklight::Mapper.new
 records.each do |r|

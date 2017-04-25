@@ -62,7 +62,7 @@ module Stash
         end
 
         def description
-          params_desc = [:source_uri, :metadata_prefix, :set, :seconds_granularity].map do |p|
+          params_desc = %i[source_uri metadata_prefix set seconds_granularity].map do |p|
             param_value = send(p)
             "#{p}: #{param_value}" if param_value
           end.compact.join(', ')

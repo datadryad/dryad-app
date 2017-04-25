@@ -3,7 +3,7 @@ module Stash
     module Models
       # TODO: Merge with Indexer::IndexStatus?
       module Status
-        ALL = [:pending, :in_progress, :completed, :failed].freeze
+        ALL = %i[pending in_progress completed failed].freeze
 
         PENDING = ALL.index(:pending)
         IN_PROGRESS = ALL.index(:in_progress)
