@@ -66,31 +66,34 @@ module Stash
           expect(desc_elem).to be_an(REXML::Element)
 
           expected_xml =
-              '<dcs:resource xmlns:dcs="http://datacite.org/schema/kernel-3"
-                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                  xsi:schemaLocation="http://datacite.org/schema/kernel-3
-                                http://schema.datacite.org/meta/kernel-3/metadata.xsd">
-                <dcs:identifier identifierType="DOI">10.12345/1234567890</dcs:identifier>
-                <dcs:creators>
-                  <dcs:creator>
-                    <dcs:creatorName>Abrams, Stephen</dcs:creatorName>
-                  </dcs:creator>
-                </dcs:creators>
-                <dcs:titles>
-                  <dcs:title>My dataset</dcs:title>
-                </dcs:titles>
-                <dcs:publisher>UC Office of the President</dcs:publisher>
-                <dcs:publicationYear>2016</dcs:publicationYear>
-                <dcs:subjects>
-                  <dcs:subject>Data literacy</dcs:subject>
-                </dcs:subjects>
-                <dcs:resourceType resourceTypeGeneral="Dataset">Spreadsheet</dcs:resourceType>
-                <dcs:descriptions>
-                  <dcs:description descriptionType="Abstract">
-                    Lorum ipsum.
-                  </dcs:description>
-                </dcs:descriptions>
-              </dcs:resource>'
+            '<dcs:resource xmlns:dcs="http://datacite.org/schema/kernel-3"
+                xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                xsi:schemaLocation="http://datacite.org/schema/kernel-3 http://schema.datacite.org/meta/kernel-3/metadata.xsd">
+              <dcs:identifier identifierType="DOI">10.12345/1234567890</dcs:identifier>
+              <dcs:creators>
+                <dcs:creator>
+                  <dcs:creatorName>Abrams, Stephen</dcs:creatorName>
+                </dcs:creator>
+              </dcs:creators>
+              <dcs:titles>
+                <dcs:title>My dataset</dcs:title>
+              </dcs:titles>
+              <dcs:publisher>UC Office of the President</dcs:publisher>
+              <dcs:publicationYear>2016</dcs:publicationYear>
+              <dcs:subjects>
+                <dcs:subject>Data literacy</dcs:subject>
+              </dcs:subjects>
+              <dcs:resourceType resourceTypeGeneral="Dataset">Spreadsheet</dcs:resourceType>
+              <dcs:descriptions>
+                <dcs:description descriptionType="Abstract">Lorum ipsum.</dcs:description>
+              </dcs:descriptions>
+            </dcs:resource>'
+
+          now = Time.now.to_i
+          path = 'dcs.xml'
+          FileUtils.mkdir('tmp') unless File.directory?('tmp')
+          File.open("tmp/#{now}-expected-#{path}", 'w') { |f| f.write(expected_xml) }
+          File.open("tmp/#{now}-actual-#{path}", 'w') { |f| f.write(desc_elem) }
 
           expect(desc_elem).to be_xml(expected_xml)
         end
@@ -121,7 +124,8 @@ module Stash
             inventory: Inventory.new(
               files: [
                 StashFile.new(pathname: 'HSRC_MasterSampleII.dat', size_bytes: 12_345, mime_type: 'text/plain')
-              ]),
+              ]
+            ),
             descriptive_elements: []
           }
         end
@@ -187,7 +191,7 @@ module Stash
             data = File.read('spec/data/wrapper/wrapper-2.xml')
             wrapper = StashWrapper.parse_xml(data)
 
-            expected = %w(
+            expected = %w[
               HSRC_MasterSampleII.dat
               HSRC_MasterSampleII.csv
               HSRC_MasterSampleII.sas7bdat
@@ -198,7 +202,7 @@ module Stash
               HSRC_MasterSampleII.dta
               HSRC_MasterSampleII.dct
               HSRC_MasterSampleII.do
-            )
+            ]
             expect(wrapper.file_names).to eq(expected)
           end
 
@@ -223,7 +227,8 @@ module Stash
             inventory: Inventory.new(
               files: [
                 StashFile.new(pathname: 'HSRC_MasterSampleII.dat', size_bytes: 12_345, mime_type: 'text/plain')
-              ]),
+              ]
+            ),
             descriptive_elements: []
           )
           embargo = wrapper.embargo
@@ -248,7 +253,8 @@ module Stash
               inventory: Inventory.new(
                 files: [
                   StashFile.new(pathname: 'HSRC_MasterSampleII.dat', size_bytes: 12_345, mime_type: 'text/plain')
-                ]),
+                ]
+              ),
               # Note: the recursive asserts only work because descriptive_elements is empty
               descriptive_elements: []
             )
@@ -316,7 +322,8 @@ module Stash
                 StashFile.new(pathname: 'HSRC_MasterSampleII.dta', size_bytes: 81_920, mime_type: 'application/x-dta'),
                 StashFile.new(pathname: 'HSRC_MasterSampleII.dct', size_bytes: 212_223, mime_type: 'application/x-dct'),
                 StashFile.new(pathname: 'HSRC_MasterSampleII.do', size_bytes: 242_526, mime_type: 'application/x-do')
-              ]),
+              ]
+            ),
             descriptive_elements: [payload_xml]
           )
 

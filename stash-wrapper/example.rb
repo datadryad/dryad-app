@@ -35,7 +35,8 @@ inventory = Inventory.new(
     StashFile.new(
       pathname: 'HSRC_MasterSampleII.sas7bdat', size_bytes: 123_456, mime_type: 'application/x-sas-data'
     )
-  ])
+  ]
+)
 
 datacite_file = 'spec/data/wrapper/wrapper-2-payload.xml'
 datacite_root = REXML::Document.new(File.read(datacite_file)).root

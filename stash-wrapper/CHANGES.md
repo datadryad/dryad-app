@@ -1,6 +1,7 @@
 # 0.1.12 (next)
 
 - Update to Ruby 2.2.5
+- Update to Rubocop 0.47
 
 # 0.1.11.1 (5 August 2016)
 
