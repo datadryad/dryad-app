@@ -53,7 +53,7 @@ module Stash
         )
         @tenant = double(StashEngine::Tenant)
         allow(tenant).to receive(:identifier_service).and_return(shoulder: 'doi:10.15146/R3',
-          id_scheme: 'doi')
+                                                                 id_scheme: 'doi')
         allow(tenant).to receive(:tenant_id).and_return('dataone')
         allow(tenant).to receive(:short_name).and_return('DataONE')
         allow(tenant).to receive(:landing_url) { |path| "https://stash-dev.example.edu/#{path}" }

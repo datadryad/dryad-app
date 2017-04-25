@@ -26,7 +26,7 @@ module Stash
             embargo = wrapper.embargo
 
             none = Stash::Wrapper::Embargo.none
-            [:type, :period, :start_date, :end_date].each do |field|
+            %i[type period start_date end_date].each do |field|
               expect(embargo.send(field)).to eq(none.send(field))
             end
           end

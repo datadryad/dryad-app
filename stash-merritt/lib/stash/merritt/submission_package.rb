@@ -46,7 +46,7 @@ module Stash
       end
 
       def new_uploads
-        resource.new_file_uploads.select { |upload| upload.file_state != 'deleted' }
+        resource.new_file_uploads.reject { |upload| upload.file_state == 'deleted' }
       end
 
       def builders # rubocop:disable Metrics/AbcSize
