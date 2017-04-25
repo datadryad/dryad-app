@@ -99,7 +99,7 @@ module Stash
             it 'submits the zipfile' do
               package = Stash::Merritt::ZipPackage.new(resource: resource)
               helper = SwordHelper.new(package: package)
-              expect(sword_client).to receive(:create).with(doi: doi, payload: package.zipfile)
+              expect(sword_client).to receive(:create).with(doi: doi, payload: package.zipfile, packaging: Stash::Sword::Packaging::SIMPLE_ZIP)
               helper.submit!
             end
 
@@ -142,8 +142,6 @@ module Stash
               helper.submit!
             end
 
-            it 'sets Packaging: http://purl.org/net/sword/package/SimpleZip'
-
             it 'sets the version zipfile' do
               package = Stash::Merritt::ZipPackage.new(resource: resource)
               SwordHelper.new(package: package).submit!
@@ -165,8 +163,6 @@ module Stash
           describe 'create' do
             it 'submits the manifest'
 
-            it 'sets Packaging: http://purl.org/net/sword/package/Binary'
-
             it 'sets the version "zipfile"'
 
             it 'forwards errors'
@@ -174,8 +170,6 @@ module Stash
 
           describe 'update' do
             it 'submits the manifest'
-
-            it 'sets Packaging: http://purl.org/net/sword/package/Binary'
 
             it 'sets the version "zipfile"'
 
