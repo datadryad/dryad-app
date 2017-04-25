@@ -71,7 +71,7 @@ module StashEngine
         end
 
         it 'reflects state changes' do
-          %w(processing error submitted).each do |state_value|
+          %w[processing error submitted].each do |state_value|
             resource.current_state = state_value
             new_state = resource.current_resource_state
             expect(new_state.resource_state).to eq(state_value)
@@ -79,7 +79,7 @@ module StashEngine
         end
 
         it 'is not copied or clobbered in Amoeba duplication' do
-          %w(processing error submitted).each do |state_value|
+          %w[processing error submitted].each do |state_value|
             resource.current_state = state_value
             new_resource = resource.amoeba_dup
             new_resource.save!
@@ -102,7 +102,7 @@ module StashEngine
         end
         it 'returns false otherwise' do
           expect(resource.published?).to eq(false)
-          %w(in_progress processing error).each do |state_value|
+          %w[in_progress processing error].each do |state_value|
             resource.current_state = state_value
             expect(resource.published?).to eq(false)
           end
@@ -116,7 +116,7 @@ module StashEngine
         end
         it 'returns false otherwise' do
           expect(resource.processing?).to eq(false)
-          %w(in_progress submitted error).each do |state_value|
+          %w[in_progress submitted error].each do |state_value|
             resource.current_state = state_value
             expect(resource.processing?).to eq(false)
           end
@@ -126,7 +126,7 @@ module StashEngine
       describe '#current_state' do
         it 'returns the value of the current state' do
           expect(resource.current_state).to eq('in_progress')
-          %w(processing error submitted).each do |state_value|
+          %w[processing error submitted].each do |state_value|
             resource.current_state = state_value
             expect(resource.current_state).to eq(state_value)
           end
@@ -455,7 +455,7 @@ module StashEngine
         end
 
         it 'doesn\'t count non-published datasets' do
-          %w(in_progress processing error).each_with_index do |state, index|
+          %w[in_progress processing error].each_with_index do |state, index|
             resource = Resource.create(user_id: user.id)
             resource.ensure_identifier("10.123/#{index}")
             resource.current_state = state
@@ -464,7 +464,7 @@ module StashEngine
           expect(Resource.submitted_dataset_count).to eq(0)
         end
         it 'doesn\'t count non-current states' do
-          %w(in_progress processing error).each_with_index do |state, index|
+          %w[in_progress processing error].each_with_index do |state, index|
             resource = Resource.create(user_id: user.id)
             resource.ensure_identifier("10.123/#{index}")
             resource.current_state = 'submitted'

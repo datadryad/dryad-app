@@ -40,5 +40,4 @@ describe FixInProgressVersions do
       expect(v.merritt_version).to eq(2) # just to be sure
     end
   end
-
 end

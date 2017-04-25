@@ -35,13 +35,13 @@ ActiveRecord::Base.raise_in_transactional_callbacks = true
 stash_engine_path = Gem::Specification.find_by_name('stash_engine').gem_dir
 require "#{stash_engine_path}/config/initializers/hash_to_ostruct.rb"
 require "#{stash_engine_path}/config/initializers/inflections.rb"
-%w(
+%w[
   app/models/stash_engine
   app/mailers
   app/mailers/stash_engine
   app/jobs/stash_engine
   lib/stash_engine
-).each do |dir|
+].each do |dir|
   Dir.glob("#{stash_engine_path}/#{dir}/**/*.rb").sort.each(&method(:require))
 end
 
@@ -50,12 +50,12 @@ module StashDatacite
 end
 
 stash_datacite_path = Gem::Specification.find_by_name('stash_datacite').gem_dir
-%w(
+%w[
   app/models/stash_datacite
   app/models/stash_datacite/resource
   lib/stash_datacite
   lib
-).each do |dir|
+].each do |dir|
   Dir.glob("#{stash_datacite_path}/#{dir}/**/*.rb").sort.each(&method(:require))
 end
 

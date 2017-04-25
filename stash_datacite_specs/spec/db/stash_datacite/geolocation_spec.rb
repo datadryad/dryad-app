@@ -128,7 +128,7 @@ module StashDatacite
         expect(loc.datacite_mapping_box).to eq(expected)
       end
 
-      %i(sw_latitude sw_longitude ne_latitude ne_longitude).each do |coord|
+      %i[sw_latitude sw_longitude ne_latitude ne_longitude].each do |coord|
         it "returns nil if #{coord} is missing" do
           box.send("#{coord}=", nil)
           expect(loc.datacite_mapping_box).to be_nil

@@ -67,7 +67,7 @@ module StashEngine
       it 'ignores "in progress" resources' do
         in_progress = []
         other = []
-        %w(submitted processing).each_with_index do |state, index|
+        %w[submitted processing].each_with_index do |state, index|
           doi_value = "10.123/#{index}"
           res1 = Resource.create(user_id: user.id)
           res1.ensure_identifier(doi_value)

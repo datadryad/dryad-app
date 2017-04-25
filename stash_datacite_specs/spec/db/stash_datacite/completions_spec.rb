@@ -105,7 +105,6 @@ module StashDatacite
       end
 
       describe('#author_email') do
-
       end
 
       describe('#abstract') do
@@ -154,7 +153,7 @@ module StashDatacite
 
         it 'counts if affiliation is missing' do
           resource.authors.flat_map(&:affiliations).each(&:destroy)
-          expect(completions.required_completed).to  eq(REQUIRED_COUNT - 1)
+          expect(completions.required_completed).to eq(REQUIRED_COUNT - 1)
         end
 
         it 'triple-counts (author, name, and email) if author is missing' do

@@ -38,13 +38,13 @@ require "#{stash_engine_path}/config/initializers/inflections.rb"
 # Note: Even if we're not doing any database work, ActiveRecord callbacks will still raise warnings
 ActiveRecord::Base.raise_in_transactional_callbacks = true
 
-%w(
+%w[
   app/models/stash_engine
   app/mailers
   app/mailers/stash_engine
   app/jobs/stash_engine
   lib/stash_engine
-).each do |dir|
+].each do |dir|
   Dir.glob("#{stash_engine_path}/#{dir}/**/*.rb").sort.each(&method(:require))
 end
 

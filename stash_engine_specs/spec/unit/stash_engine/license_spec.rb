@@ -13,7 +13,7 @@ module StashEngine
 
     describe '#by_id' do
       it 'finds all the licenses' do
-        %w(cc0 cc_by).each do |id|
+        %w[cc0 cc_by].each do |id|
           lic = License.by_id(id)
           expect(lic).to be_a(Hash)
           expected_uri = uris_by_id[id.to_sym]
@@ -24,7 +24,7 @@ module StashEngine
 
     describe '#find' do
       it 'finds all the licenses' do
-        %w(cc0 cc_by).each do |id|
+        %w[cc0 cc_by].each do |id|
           lic = License.find(id)
           expect(lic).to be_a(Hash)
           expected_uri = uris_by_id[id.to_sym]
