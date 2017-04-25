@@ -14,7 +14,7 @@ module Stash
       # Creates a new {Size}
       # @param bytes [Integer] the size in bytes
       def initialize(bytes:)
-        fail ArgumentError, "specified file size does not appear to be an integer byte count: #{bytes || 'nil'}" unless bytes.respond_to?(:to_i) && bytes.to_i == bytes
+        raise ArgumentError, "specified file size does not appear to be an integer byte count: #{bytes || 'nil'}" unless bytes.respond_to?(:to_i) && bytes.to_i == bytes
         self.size = bytes
         self.unit = SizeUnit::BYTE
       end

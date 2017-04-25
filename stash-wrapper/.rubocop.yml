@@ -1,3 +1,7 @@
+AllCops:
+  # Suppress complaints about post-2.0 syntax
+  TargetRubyVersion: 2.2
+
 # Disable compact style check for example.rb
 Style/ClassAndModuleChildren:
   Exclude:

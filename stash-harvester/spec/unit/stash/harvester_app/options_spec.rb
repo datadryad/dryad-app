@@ -27,7 +27,7 @@ module Stash
         end
 
         it 'takes an array' do
-          options = Options.new(%w(-c elvis))
+          options = Options.new(%w[-c elvis])
           expect(options.config_file).to eq('elvis')
         end
 
@@ -75,17 +75,17 @@ module Stash
         end
 
         it 'parses a date' do
-          options = Options.new(%w(--from 2015-01-01))
+          options = Options.new(%w[--from 2015-01-01])
           expect(options.from_time).to be_time(Time.utc(2015, 1, 1))
         end
 
         it 'parses a datetime' do
-          options = Options.new(%w(--from 2015-01-01T12:34:56Z))
+          options = Options.new(%w[--from 2015-01-01T12:34:56Z])
           expect(options.from_time).to be_time(Time.utc(2015, 1, 1, 12, 34, 56))
         end
 
         it 'gives a sensible error if no value provided' do
-          %w(-f --from).each do |opt|
+          %w[-f --from].each do |opt|
             expect { Options.new([opt]) }.to raise_error do |error|
               expect(error).to be_an(OptionParser::MissingArgument)
               expect(error.message).to include(opt)
@@ -116,17 +116,17 @@ module Stash
         end
 
         it 'parses a date' do
-          options = Options.new(%w(--until 2015-01-01))
+          options = Options.new(%w[--until 2015-01-01])
           expect(options.until_time).to be_time(Time.utc(2015, 1, 1))
         end
 
         it 'parses a datetime' do
-          options = Options.new(%w(--until 2015-01-01T12:34:56Z))
+          options = Options.new(%w[--until 2015-01-01T12:34:56Z])
           expect(options.until_time).to be_time(Time.utc(2015, 1, 1, 12, 34, 56))
         end
 
         it 'gives a sensible error if no value provided' do
-          %w(-u --until).each do |opt|
+          %w[-u --until].each do |opt|
             expect { Options.new([opt]) }.to raise_error do |error|
               expect(error).to be_an(OptionParser::MissingArgument)
               expect(error.message).to include(opt)
@@ -157,7 +157,7 @@ module Stash
         end
 
         it 'gives a sensible error if no value provided' do
-          %w(-c --config).each do |opt|
+          %w[-c --config].each do |opt|
             expect { Options.new([opt]) }.to raise_error do |error|
               expect(error).to be_an(OptionParser::MissingArgument)
               expect(error.message).to include(opt)
@@ -180,7 +180,7 @@ module Stash
         end
 
         it 'gives a sensible error if no value provided' do
-          %w(-s --stop-file).each do |opt|
+          %w[-s --stop-file].each do |opt|
             expect { Options.new([opt]) }.to raise_error do |error|
               expect(error).to be_an(OptionParser::MissingArgument)
               expect(error.message).to include(opt)
@@ -238,14 +238,14 @@ module Stash
 
       describe '#do_exit' do
         it 'returns true for help' do
-          %w(-h --help).each do |arg|
+          %w[-h --help].each do |arg|
             options = Options.new(arg)
             expect(options.do_exit).to be_truthy
           end
         end
 
         it 'returns true for version' do
-          %w(-v --version).each do |arg|
+          %w[-v --version].each do |arg|
             options = Options.new(arg)
             expect(options.do_exit).to be_truthy
           end
@@ -265,8 +265,8 @@ module Stash
         end
 
         it 'returns true for help and version together' do
-          %w(-h --help).each do |h|
-            %w(-v --version).each do |v|
+          %w[-h --help].each do |h|
+            %w[-v --version].each do |v|
               [[h, v], [v, h]].each do |args|
                 options = Options.new(args)
                 expect(options.do_exit).to be_truthy

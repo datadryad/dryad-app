@@ -13,7 +13,8 @@ module Stash
           inventory: Inventory.new(
             files: [
               StashFile.new(pathname: 'HSRC_MasterSampleII.dat', size_bytes: 12_345, mime_type: 'text/plain')
-            ])
+            ]
+          )
         }
       end
 

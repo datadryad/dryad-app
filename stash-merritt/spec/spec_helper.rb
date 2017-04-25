@@ -47,13 +47,13 @@ require "#{stash_engine_path}/config/initializers/inflections.rb"
 
 require 'stash_engine'
 
-%w(
+%w[
   app/models/stash_engine
   app/mailers
   app/mailers/stash_engine
   app/jobs/stash_engine
   lib/stash_engine
-).each do |dir|
+].each do |dir|
   Dir.glob("#{stash_engine_path}/#{dir}/**/*.rb").sort.each(&method(:require))
 end
 
@@ -70,12 +70,12 @@ require 'stash_datacite'
 
 # TODO: do we need all of these?
 stash_datacite_path = Gem::Specification.find_by_name('stash_datacite').gem_dir
-%w(
+%w[
   app/models/stash_datacite
   app/models/stash_datacite/resource
   lib/stash_datacite
   lib
-).each do |dir|
+].each do |dir|
   Dir.glob("#{stash_datacite_path}/#{dir}/**/*.rb").sort.each(&method(:require))
 end
 StashDatacite::ResourcePatch.associate_with_resource(StashEngine::Resource)

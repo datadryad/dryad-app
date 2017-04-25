@@ -8,7 +8,7 @@ module Stash
         raise ArgumentError, "Invalid #{Application}.config; expected a #{Config}, got #{config ? config : 'nil'}" unless config && config.is_a?(Config)
         @config = config
 
-        [:persistence_config, :source_config, :index_config, :metadata_mapper].each do |c|
+        %i[persistence_config source_config index_config metadata_mapper].each do |c|
           sub_config = config.send(c)
           log.debug("#{c}: #{sub_config ? sub_config.description : 'nil'}")
         end

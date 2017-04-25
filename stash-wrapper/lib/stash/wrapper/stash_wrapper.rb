@@ -36,7 +36,7 @@ module Stash
       # @param descriptive_elements [Array<REXML::Element>] the encapsulated
       #   XML metadata
       def initialize(identifier:, version:, license:, embargo: nil, inventory: nil, descriptive_elements:) # rubocop:disable Metrics/ParameterLists
-        fail ArgumentError, "identifier does not appear to be an Identifier object: #{identifier || 'nil'}" unless identifier.is_a?(Identifier)
+        raise ArgumentError, "identifier does not appear to be an Identifier object: #{identifier || 'nil'}" unless identifier.is_a?(Identifier)
 
         self.identifier = identifier
         self.stash_administrative = StashAdministrative.new(

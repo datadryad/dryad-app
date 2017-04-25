@@ -1,10 +1,25 @@
+require 'stash/merritt/builders'
+
 module Stash
   module Merritt
-    module SubmissionPackage
-      Dir.glob(File.expand_path('../submission_package/*.rb', __FILE__)).sort.each(&method(:require))
+    class SubmissionPackage
+      include Builders
 
-      def resource
-        raise NoMethodError, "#{self.class} should override #resource to return the resource, but it doesn't"
+      attr_reader :resource
+      attr_reader :packaging
+
+      # @param resource [StashEngine::Resource]
+      # @param packaging [Stash::Sword::Packaging]
+      def initialize(resource:, packaging:)
+        raise ArgumentError, 'No resource provided' unless resource
+        raise ArgumentError, "Resource (#{resource.id}) must have an identifier before submission" unless resource.identifier_str
+        @resource = resource
+        @packaging = packaging
+      end
+
+      # @return [String] the path to the payload file
+      def payload
+        raise NoMethodError, "#{self.class} should override #packaging to return the payload, but it doesn't"
       end
 
       def resource_id
@@ -46,7 +61,7 @@ module Stash
       end
 
       def new_uploads
-        resource.new_file_uploads.select { |upload| upload.file_state != 'deleted' }
+        resource.new_file_uploads.reject { |upload| upload.file_state == 'deleted' }
       end
 
       def builders # rubocop:disable Metrics/AbcSize

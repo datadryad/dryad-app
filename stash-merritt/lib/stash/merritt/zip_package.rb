@@ -8,16 +8,17 @@ require 'stash/merritt/submission_package'
 
 module Stash
   module Merritt
-    class ZipPackage
-      include SubmissionPackage
+    class ZipPackage < SubmissionPackage
 
-      attr_reader :resource
       attr_reader :zipfile
 
       def initialize(resource:)
-        raise ArgumentError, "Resource (#{resource.id}) must have an identifier before submission" unless resource.identifier_str
-        @resource = resource
+        super(resource: resource, packaging: Stash::Sword::Packaging::SIMPLE_ZIP)
         @zipfile = create_zipfile
+      end
+
+      def payload
+        zipfile
       end
 
       def dc3_xml

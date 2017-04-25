@@ -23,10 +23,10 @@ module Stash
       #   with the current date as start and end.
       # @param inventory [Inventory, nil] the (optional) file inventory
       def initialize(version:, license:, embargo: nil, inventory: nil) # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
-        fail ArgumentError, "version does not appear to be a Version object: #{version || 'nil'}" unless version.is_a?(Version)
-        fail ArgumentError, "license does not appear to be a License object: #{license || 'nil'}" unless license.is_a?(License)
-        fail ArgumentError, "embargo does not appear to be an Embargo object: #{embargo || 'nil'}" if embargo unless embargo.is_a?(Embargo)
-        fail ArgumentError, "inventory does not appear to be an Inventory object: #{inventory || 'nil'}" if inventory unless inventory.is_a?(Inventory)
+        raise ArgumentError, "version does not appear to be a Version object: #{version || 'nil'}" unless version.is_a?(Version)
+        raise ArgumentError, "license does not appear to be a License object: #{license || 'nil'}" unless license.is_a?(License)
+        raise ArgumentError, "embargo does not appear to be an Embargo object: #{embargo || 'nil'}" unless embargo.is_a?(Embargo) || !embargo
+        raise ArgumentError, "inventory does not appear to be an Inventory object: #{inventory || 'nil'}" unless inventory.is_a?(Inventory) || !inventory
 
         self.version = version
         self.license = license

@@ -29,8 +29,7 @@
   <st:stash_descriptive>
     <dcs:resource xmlns:dcs="http://datacite.org/schema/kernel-3"
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                  xsi:schemaLocation="http://datacite.org/schema/kernel-3
-                                http://schema.datacite.org/meta/kernel-3/metadata.xsd">
+                  xsi:schemaLocation="http://datacite.org/schema/kernel-3 http://schema.datacite.org/meta/kernel-3/metadata.xsd">
       <dcs:identifier identifierType="DOI">10.12345/1234567890</dcs:identifier>
       <dcs:creators>
         <dcs:creator>
@@ -47,9 +46,7 @@
       </dcs:subjects>
       <dcs:resourceType resourceTypeGeneral="Dataset">Spreadsheet</dcs:resourceType>
       <dcs:descriptions>
-        <dcs:description descriptionType="Abstract">
-          Lorum ipsum.
-        </dcs:description>
+        <dcs:description descriptionType="Abstract">Lorum ipsum.</dcs:description>
       </dcs:descriptions>
     </dcs:resource>
   </st:stash_descriptive>

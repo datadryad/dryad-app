@@ -10,7 +10,7 @@ puts "Using database #{db_config['database']} on host #{db_config['host']} with 
 
 stash_engine_path = Gem::Specification.find_by_name('stash_engine').gem_dir
 stash_datacite_path = Gem::Specification.find_by_name('stash_datacite').gem_dir
-migration_paths = %W(#{stash_engine_path}/db/migrate #{stash_datacite_path}/db/migrate)
+migration_paths = %W[#{stash_engine_path}/db/migrate #{stash_datacite_path}/db/migrate]
 
 ActiveRecord::Base.establish_connection(db_config)
 ActiveRecord::Migration.verbose = true

@@ -4,7 +4,7 @@ require 'typesafe_enum'
 module Stash
   module Indexer
     class IndexStatus < TypesafeEnum::Base
-      [:COMPLETED, :FAILED].each { |s| new s }
+      %i[COMPLETED FAILED].each { |s| new s }
     end
   end
 end

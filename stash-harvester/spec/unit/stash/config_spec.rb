@@ -87,7 +87,7 @@ module Stash
         bad_value = "'I am not a valid hostname'"
         good_values.each do |good_value|
           bad_yml = File.read('spec/data/stash-harvester.yml').sub(good_value, bad_value)
-          env = ::Config::Factory::Environments.load_hash(YAML.load(bad_yml))[:test]
+          env = ::Config::Factory::Environments.load_hash(YAML.load(bad_yml))[:test] # rubocop:disable Security/YAMLLoad
           expect { Config.from_env(env) }.to raise_error do |e|
             expect(e.cause).to be_a URI::InvalidURIError
             expect(e.message).to include(bad_value)
@@ -97,7 +97,7 @@ module Stash
 
       it 'provides appropriate error message for invalid source protocol' do
         bad_yml = File.read('spec/data/stash-harvester.yml').sub(/OAI/, 'BadProtocol')
-        env = ::Config::Factory::Environments.load_hash(YAML.load(bad_yml))[:test]
+        env = ::Config::Factory::Environments.load_hash(YAML.load(bad_yml))[:test] # rubocop:disable Security/YAMLLoad
         expect { Config.from_env(env) }.to raise_error do |e|
           expect(e).to be_an ArgumentError
           expect(e.message).to include('BadProtocol')
@@ -106,7 +106,7 @@ module Stash
 
       it 'provides appropriate error message for invalid index adapter' do
         bad_yml = File.read('spec/data/stash-harvester.yml').sub(/Solr/, 'BadAdapter')
-        env = ::Config::Factory::Environments.load_hash(YAML.load(bad_yml))[:test]
+        env = ::Config::Factory::Environments.load_hash(YAML.load(bad_yml))[:test] # rubocop:disable Security/YAMLLoad
         expect { Config.from_env(env) }.to raise_error do |e|
           expect(e).to be_an ArgumentError
           expect(e.message).to include('BadAdapter')
@@ -115,7 +115,7 @@ module Stash
 
       it 'provides appropriate error message for invalid metadata mapper' do
         bad_yml = File.read('spec/data/stash-harvester.yml').sub(/datacite_geoblacklight/, 'bad_mapper')
-        env = ::Config::Factory::Environments.load_hash(YAML.load(bad_yml))[:test]
+        env = ::Config::Factory::Environments.load_hash(YAML.load(bad_yml))[:test] # rubocop:disable Security/YAMLLoad
         expect { Config.from_env(env) }.to raise_error do |e|
           expect(e).to be_an ArgumentError
           expect(e.message).to include('bad_mapper')

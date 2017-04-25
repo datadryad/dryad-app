@@ -53,7 +53,7 @@ module Stash
         )
         @tenant = double(StashEngine::Tenant)
         allow(tenant).to receive(:identifier_service).and_return(shoulder: 'doi:10.15146/R3',
-          id_scheme: 'doi')
+                                                                 id_scheme: 'doi')
         allow(tenant).to receive(:tenant_id).and_return('dataone')
         allow(tenant).to receive(:short_name).and_return('DataONE')
         allow(tenant).to receive(:landing_url) { |path| "https://stash-dev.example.edu/#{path}" }
@@ -99,16 +99,14 @@ module Stash
             it 'submits the zipfile' do
               package = Stash::Merritt::ZipPackage.new(resource: resource)
               helper = SwordHelper.new(package: package)
-              expect(sword_client).to receive(:create).with(doi: doi, payload: package.zipfile)
+              expect(sword_client).to receive(:create).with(doi: doi, payload: package.zipfile, packaging: Stash::Sword::Packaging::SIMPLE_ZIP)
               helper.submit!
             end
-
-            it 'sets Packaging: http://purl.org/net/sword/package/SimpleZip'
 
             it 'sets the update and download URIs' do
               package = Stash::Merritt::ZipPackage.new(resource: resource)
               helper = SwordHelper.new(package: package)
-              expect(sword_client).to receive(:create).with(doi: doi, payload: package.zipfile).and_return(receipt)
+              expect(sword_client).to receive(:create).with(doi: doi, payload: package.zipfile, packaging: Stash::Sword::Packaging::SIMPLE_ZIP).and_return(receipt)
               helper.submit!
               expect(resource.download_uri).to eq(download_uri)
               expect(resource.update_uri).to eq(update_uri)
@@ -140,11 +138,9 @@ module Stash
             it 'submits the zipfile' do
               package = Stash::Merritt::ZipPackage.new(resource: resource)
               helper = SwordHelper.new(package: package)
-              expect(sword_client).to receive(:update).with(edit_iri: update_uri, payload: package.zipfile).and_return(200)
+              expect(sword_client).to receive(:update).with(edit_iri: update_uri, payload: package.zipfile, packaging: Stash::Sword::Packaging::SIMPLE_ZIP).and_return(200)
               helper.submit!
             end
-
-            it 'sets Packaging: http://purl.org/net/sword/package/SimpleZip'
 
             it 'sets the version zipfile' do
               package = Stash::Merritt::ZipPackage.new(resource: resource)
@@ -167,8 +163,6 @@ module Stash
           describe 'create' do
             it 'submits the manifest'
 
-            it 'sets Packaging: http://purl.org/net/sword/package/Binary'
-
             it 'sets the version "zipfile"'
 
             it 'forwards errors'
@@ -176,8 +170,6 @@ module Stash
 
           describe 'update' do
             it 'submits the manifest'
-
-            it 'sets Packaging: http://purl.org/net/sword/package/Binary'
 
             it 'sets the version "zipfile"'
 

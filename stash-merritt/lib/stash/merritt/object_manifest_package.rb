@@ -8,24 +8,24 @@ require 'stash/merritt/submission_package'
 
 module Stash
   module Merritt
-    class ObjectManifestPackage
-      include SubmissionPackage
+    class ObjectManifestPackage < SubmissionPackage
 
-      attr_reader :resource
       attr_reader :root_url
 
       def initialize(resource:, root_url:)
-        raise ArgumentError, 'No resource provided' unless resource
-        raise ArgumentError, "Resource (#{resource.id}) must have an identifier before submission" unless resource.identifier_str
+        super(resource: resource, packaging: Stash::Sword::Packaging::BINARY)
         raise URI::InvalidURIError, "No root URL provided: #{root_url ? "'#{root_url}'" : 'nil'}" if root_url.blank?
         @resource = resource
         @root_url = to_uri(root_url)
+        @manifest = create_manifest
+      end
+
+      def payload
+        manifest
       end
 
       def create_manifest
         StashDatacite::PublicationYear.ensure_pub_year(resource)
-        data_files = new_uploads.map { |upload| entry_for(upload) }
-        system_files = builders.map { |builder| write_to_public(builder) }.compact
         manifest = ::Merritt::Manifest::Object.new(files: (system_files + data_files))
         manifest_path = workdir_path.join("#{resource_id}-manifest.checkm").to_s
         File.open(manifest_path, 'w') { |f| manifest.write_to(f) }
@@ -37,6 +37,14 @@ module Stash
       end
 
       private
+
+      def data_files
+        new_uploads.map { |upload| entry_for(upload) }
+      end
+
+      def system_files
+        builders.map { |builder| write_to_public(builder) }.compact
+      end
 
       def entry_for(upload)
         upload_file_name = upload.upload_file_name
