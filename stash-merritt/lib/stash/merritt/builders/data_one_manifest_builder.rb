@@ -4,7 +4,7 @@ require 'merritt'
 
 module Stash
   module Merritt
-    module SubmissionPackage
+    module Builders
       class DataONEManifestBuilder < Stash::Repo::FileBuilder
         attr_reader :uploads
 

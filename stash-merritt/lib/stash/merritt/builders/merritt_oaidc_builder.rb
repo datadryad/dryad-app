@@ -2,7 +2,7 @@ require 'stash/repo/file_builder'
 
 module Stash
   module Merritt
-    module SubmissionPackage
+    module Builders
       class MerrittOAIDCBuilder < Stash::Repo::FileBuilder # rubocop:disable Metrics/ClassLength
         ROOT_ATTRIBUTES = {
           'xmlns:xsi' => 'http://www.w3.org/2001/XMLSchema-instance',

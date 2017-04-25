@@ -3,7 +3,7 @@ require 'stash/repo/file_builder'
 
 module Stash
   module Merritt
-    module SubmissionPackage
+    module Builders
       class StashWrapperBuilder < Stash::Repo::FileBuilder
         include Stash::Wrapper
         attr_reader :dcs_resource
