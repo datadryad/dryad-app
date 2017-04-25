@@ -2,7 +2,7 @@ require 'db_spec_helper'
 
 module Stash
   module Merritt
-    module SubmissionPackage
+    module Builders
       describe MerrittOAIDCBuilder do
         attr_reader :resource
         attr_reader :tenant

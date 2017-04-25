@@ -2,7 +2,7 @@ require 'db_spec_helper'
 
 module Stash
   module Merritt
-    module SubmissionPackage
+    module Builders
       describe StashWrapperBuilder do
         attr_reader :dc4_resource
 

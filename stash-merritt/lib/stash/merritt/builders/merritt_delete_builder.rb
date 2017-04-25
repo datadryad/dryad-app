@@ -2,7 +2,7 @@ require 'stash/repo/file_builder'
 
 module Stash
   module Merritt
-    module SubmissionPackage
+    module Builders
       class MerrittDeleteBuilder < Stash::Repo::FileBuilder
         attr_reader :resource_id
 
