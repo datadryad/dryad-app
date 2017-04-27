@@ -8,4 +8,9 @@ module Blacklight::Controller
     url_for opts
   end
 
+  # Hack to avoid reading from/writing to search table;
+  # see also app/decorators/search_context_decorator.rb
+  def searches_from_history
+    []
+  end
 end
