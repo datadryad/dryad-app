@@ -3,13 +3,13 @@ PATH
   specs:
     stash-merritt (0.2.0)
       datacite-mapping (~> 0.2, >= 0.2.5)
+      ezid-client (~> 1.5)
       merritt-manifest (~> 0.1, >= 0.1.1)
       rubyzip (~> 1.1)
       stash-sword
       stash-wrapper
       stash_datacite
       stash_engine
-      stash_ezid_datacite (~> 0.1)
     stash-sword (0.1.6)
       rest-client (~> 2.0, = 2.0.0)
       typesafe_enum (~> 0.1, >= 0.1.7)
@@ -27,7 +27,6 @@ PATH
       stash-wrapper
       stash_discovery
       stash_engine
-      stash_ezid_datacite (~> 0.1)
     stash_discovery (0.0.2)
       blacklight (~> 6.5.0)
       config
@@ -391,8 +390,6 @@ GEM
     sshkit (1.13.1)
       net-scp (>= 1.1.2)
       net-ssh (>= 2.8.0)
-    stash_ezid_datacite (0.1.5)
-      ezid-client (~> 1.5)
     therubyracer (0.12.3)
       libv8 (~> 3.16.14.15)
       ref
