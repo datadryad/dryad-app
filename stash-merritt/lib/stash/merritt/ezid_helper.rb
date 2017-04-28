@@ -1,4 +1,4 @@
-require 'stash_ezid/client'
+require 'ezid/client'
 
 module Stash
   module Merritt
