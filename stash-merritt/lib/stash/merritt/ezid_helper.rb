@@ -14,9 +14,9 @@ module Stash
         ezid_client.mint_id
       end
 
-      def update_metadata(dc3_xml:, landing_page_url:)
+      def update_metadata(dc4_xml:, landing_page_url:)
         identifier_str = resource.identifier_str
-        ezid_client.update_metadata(identifier_str, dc3_xml, landing_page_url)
+        ezid_client.update_metadata(identifier_str, dc4_xml, landing_page_url)
       end
 
       private

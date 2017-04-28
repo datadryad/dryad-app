@@ -21,8 +21,8 @@ module Stash
         zipfile
       end
 
-      def dc3_xml
-        @dc3_xml ||= datacite_xml_factory.build_datacite_xml(datacite_3: true)
+      def dc4_xml
+        @dc4_xml ||= datacite_xml_factory.build_datacite_xml
       end
 
       def create_zipfile

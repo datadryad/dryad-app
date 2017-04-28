@@ -60,7 +60,7 @@ module Stash
 
       describe :update_metadata do
         it 'updates the metadata and landing page' do
-          dc3_xml = '<resource/>'
+          dc4_xml = '<resource/>'
 
           ezid_client = instance_double(::Ezid::Client)
           allow(::Ezid::Client).to receive(:new)
@@ -69,14 +69,14 @@ module Stash
 
           expect(ezid_client).to receive(:modify_identifier).with(
             identifier_str,
-            datacite: dc3_xml,
+            datacite: dc4_xml,
             target: landing_page_url,
             status: 'public',
             owner: 'stash_admin'
           )
 
           expect(resource).to receive(:identifier_str).and_return(identifier_str)
-          helper.update_metadata(dc3_xml: dc3_xml, landing_page_url: landing_page_url)
+          helper.update_metadata(dc4_xml: dc4_xml, landing_page_url: landing_page_url)
         end
       end
     end

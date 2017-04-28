@@ -5,7 +5,7 @@ module Datacite
   module Mapping
     describe DataciteXMLFactory do
       attr_reader :resource
-      attr_reader :dc3_xml
+      attr_reader :dc4_xml
       attr_reader :dcs_resource
       attr_reader :xml_factory
 
@@ -16,8 +16,8 @@ module Datacite
         doi_value = '10.15146/R3RG6G'
         total_size_bytes = 3_286_679
 
-        @dc3_xml = File.read('spec/data/archive/mrt-datacite.xml')
-        @dcs_resource = Datacite::Mapping::Resource.parse_xml(dc3_xml)
+        @dc4_xml = File.read('spec/data/archive/mrt-datacite.xml')
+        @dcs_resource = Datacite::Mapping::Resource.parse_xml(dc4_xml)
 
         user = StashEngine::User.create(
           uid: 'lmuckenhaupt-example@example.edu',
@@ -43,8 +43,9 @@ module Datacite
       end
 
       it 'generates DC3' do
+        expected = File.read('spec/data/dc3.xml')
         actual = xml_factory.build_datacite_xml(datacite_3: true)
-        expect(actual).to be_xml(dc3_xml)
+        expect(actual).to be_xml(expected)
       end
 
       it 'generates DC4' do

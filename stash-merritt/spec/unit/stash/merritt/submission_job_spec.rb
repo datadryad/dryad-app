@@ -56,7 +56,7 @@ module Stash
 
         @package = instance_double(ZipPackage)
         allow(ZipPackage).to receive(:new).with(resource: resource).and_return(package)
-        allow(package).to receive(:dc3_xml)
+        allow(package).to receive(:dc4_xml)
         allow(package).to receive(:cleanup!)
 
         @sword_helper = instance_double(SwordHelper)
@@ -85,9 +85,9 @@ module Stash
           end
 
           it 'updates the metadata' do
-            dc3_xml = '<resource/>'
-            expect(package).to receive(:dc3_xml).and_return(dc3_xml)
-            expect(ezid_helper).to receive(:update_metadata).with(dc3_xml: dc3_xml, landing_page_url: landing_page_url)
+            dc4_xml = '<resource/>'
+            expect(package).to receive(:dc4_xml).and_return(dc4_xml)
+            expect(ezid_helper).to receive(:update_metadata).with(dc4_xml: dc4_xml, landing_page_url: landing_page_url)
             job.submit!
           end
 
@@ -114,9 +114,9 @@ module Stash
           end
 
           it 'updates the metadata' do
-            dc3_xml = '<resource/>'
-            expect(package).to receive(:dc3_xml).and_return(dc3_xml)
-            expect(ezid_helper).to receive(:update_metadata).with(dc3_xml: dc3_xml, landing_page_url: landing_page_url)
+            dc4_xml = '<resource/>'
+            expect(package).to receive(:dc4_xml).and_return(dc4_xml)
+            expect(ezid_helper).to receive(:update_metadata).with(dc4_xml: dc4_xml, landing_page_url: landing_page_url)
             job.submit!
           end
 

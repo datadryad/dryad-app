@@ -36,7 +36,7 @@ module Stash
       def do_submit!
         package = create_package
         submit(package)
-        update_metadata(package.dc3_xml)
+        update_metadata(package.dc4_xml)
         cleanup(package)
         Stash::Repo::SubmissionResult.success(resource_id: resource_id, request_desc: description, message: 'Success')
       end
@@ -78,9 +78,9 @@ module Stash
         sword_helper.submit!
       end
 
-      def update_metadata(dc3_xml)
+      def update_metadata(dc4_xml)
         log.info("#{Time.now.xmlschema} #{self.class}: updating identifier landing page (#{landing_page_url}) and metadata for resource #{resource_id} (#{resource.identifier_str})")
-        ezid_helper.update_metadata(dc3_xml: dc3_xml, landing_page_url: landing_page_url)
+        ezid_helper.update_metadata(dc4_xml: dc4_xml, landing_page_url: landing_page_url)
       end
 
       def cleanup(package)

@@ -18,7 +18,7 @@ module Stash
         end
 
         def contents
-          factory.build_datacite_xml(datacite_3: true)
+          factory.build_datacite_xml
         end
       end
     end
