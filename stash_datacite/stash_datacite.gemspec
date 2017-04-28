@@ -30,9 +30,6 @@ Gem::Specification.new do |s|
   s.add_dependency 'stash_engine'
   s.add_dependency 'stash_discovery'
 
-  # TODO: remove this once the EZID calls are out of StashDatacite
-  s.add_dependency 'stash_ezid_datacite', '~> 0.1'
-
   s.add_development_dependency 'mysql2', '~> 0.3'
 
   s.add_development_dependency 'rspec', '~> 3.5'
