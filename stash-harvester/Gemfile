@@ -2,5 +2,5 @@ source 'https://rubygems.org'
 
 gemspec
 
-gem 'standalone_migrations', git: 'https://github.com/dmolesUC3/standalone-migrations.git', ref: 'f1cbfc9'
+gem 'standalone_migrations', git: 'https://github.com/thuss/standalone-migrations.git', ref: 'de391a69e4ed'
 gem 'stash-wrapper', path: '../stash-wrapper'

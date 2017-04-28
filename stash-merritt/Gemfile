@@ -2,8 +2,12 @@ source 'https://rubygems.org'
 
 gemspec
 
-gem 'stash-sword', path: '../stash-sword'
-gem 'stash-wrapper', path: '../stash-wrapper'
-gem 'stash_datacite', path: '../stash_datacite'
-gem 'stash_discovery', path: '../stash_discovery'
-gem 'stash_engine', path: '../stash_engine'
+gem 'standalone_migrations', git: 'https://github.com/thuss/standalone-migrations.git', ref: 'de391a69e4ed'
+
+path '..' do
+  gem 'stash-sword'
+  gem 'stash-wrapper'
+  gem 'stash_datacite'
+  gem 'stash_discovery'
+  gem 'stash_engine'
+end
