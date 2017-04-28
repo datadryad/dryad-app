@@ -53,7 +53,7 @@ module Stash
       end
 
       def ezid_client
-        @ezid_client ||=  ::Ezid::Client.new(user: account, password: password)
+        @ezid_client ||= ::Ezid::Client.new(user: account, password: password)
       end
 
     end
