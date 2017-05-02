@@ -47,6 +47,6 @@ Gem::Specification.new do |spec| # rubocop:disable Metrics/BlockLength
   spec.add_development_dependency 'diffy', '~> 3.1'
   spec.add_development_dependency 'equivalent-xml', '~> 0.6.0'
   spec.add_development_dependency 'mysql2', '~> 0.3'
-  spec.add_development_dependency 'webmock', '~> 1.24'
+  spec.add_development_dependency 'webmock', '~> 3.0'
 
 end
