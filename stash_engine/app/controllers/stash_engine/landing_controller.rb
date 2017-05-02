@@ -62,5 +62,30 @@ module StashEngine
         }
       end
     end
+
+    # PATCH /dataset/doi:10.xyz/abc
+    def update
+      id_param = params[:id]
+      render(nothing: true, status: 400) && return if id_param.blank?
+
+      record_identifier = params[:record_identifier]
+      render(nothing: true, status: 400) && return if record_identifier.blank?
+
+      type, id = id_param.split(':', 2)
+      identifiers = Identifier.where(identifier_type: type).where(identifier: id)
+
+      # TODO: should this be a 5xx?
+      render(nothing: true, status: 404) && return if identifiers.count < 1
+      id = identifiers.first
+
+      resource = id.processing_resource
+      render(nothing: true, status: 404) && return if resource.blank?
+
+      repo = StashEngine::repository
+      repo.harvested(resource: resource, record_identifier: record_identifier)
+
+      # success but no content, see RFC 5789 sec. 2.1
+      render(nothing: true, status: 204)
+    end
   end
 end
