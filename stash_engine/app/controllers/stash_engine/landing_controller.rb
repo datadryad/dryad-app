@@ -65,6 +65,10 @@ module StashEngine
 
     # PATCH /dataset/doi:10.xyz/abc
     def update
+      # TODO: is this right?
+      params.require(:id)
+      params.require(:record_identifier)
+
       id_param = params[:id]
       render(nothing: true, status: 400) && return if id_param.blank?
 
