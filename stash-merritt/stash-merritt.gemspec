@@ -26,9 +26,10 @@ Gem::Specification.new do |spec| # rubocop:disable Metrics/BlockLength
   spec.require_paths = ['lib']
 
   spec.add_dependency 'datacite-mapping', '~> 0.2', '>= 0.2.5'
-  spec.add_dependency 'rubyzip', '~> 1.1'
   spec.add_dependency 'ezid-client', '~> 1.5'
   spec.add_dependency 'merritt-manifest', '~> 0.1', '>= 0.1.1'
+  spec.add_dependency 'rest-client', '~> 2.0'
+  spec.add_dependency 'rubyzip', '~> 1.1'
 
   spec.add_dependency 'stash-sword'
   spec.add_dependency 'stash-wrapper'

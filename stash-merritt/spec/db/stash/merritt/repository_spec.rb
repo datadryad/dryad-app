@@ -56,15 +56,25 @@ module Stash
       describe :download_uri_for do
         it 'determines the download URI' do
           expected_uri = 'http://merritt.cdlib.org/d/ark%3A%2F99999%2Ffk43f5119b'
-          actual_uri = repo.download_uri_for(resource_id: resource.id, record_identifier: record_identifier)
+          actual_uri = repo.download_uri_for(resource: resource, record_identifier: record_identifier)
           expect(actual_uri).to eq(expected_uri)
         end
       end
+
       describe :update_uri_for do
         it 'determines the update URI' do
           expected_uri = 'http://uc3-mrtsword-prd.cdlib.org:39001/mrtsword/edit/dataone_dash/doi%3A10.15146%2FR3RG6G'
-          actual_uri = repo.update_uri_for(resource_id: resource.id, record_identifier: record_identifier)
+          actual_uri = repo.update_uri_for(resource: resource, record_identifier: record_identifier)
           expect(actual_uri).to eq(expected_uri)
+        end
+      end
+
+      describe :harvested do
+        it 'sets the download URI, update URI, and status' do
+          repo.harvested(resource: resource, record_identifier: record_identifier)
+          expect(resource.download_uri).to eq('http://merritt.cdlib.org/d/ark%3A%2F99999%2Ffk43f5119b')
+          expect(resource.update_uri).to eq('http://uc3-mrtsword-prd.cdlib.org:39001/mrtsword/edit/dataone_dash/doi%3A10.15146%2FR3RG6G')
+          expect(resource.current_state).to eq('submitted')
         end
       end
     end

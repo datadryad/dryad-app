@@ -22,17 +22,17 @@ module Stash
 
       # Determines the download URI for the specified resource. Called after the record is harvested
       # for discovery.
-      # @param resource_id [Integer] the database ID of the resource
+      # @param resource [StashEngine::Resource] the resource
       # @param record_identifier [String] the harvested record identifier (repository- or protocol-dependent)
-      def download_uri_for(resource_id:, record_identifier:) # rubocop:disable Lint/UnusedMethodArgument
+      def download_uri_for(resource:, record_identifier:) # rubocop:disable Lint/UnusedMethodArgument
         raise NoMethodError, "#{self.class} should override #download_uri_for to determine the download URI"
       end
 
       # Determines the update URI for the specified resource. Called after the record is harvested
       # for discovery.
-      # @param resource_id [Integer] the database ID of the resource
+      # @param resource [StashEngine::Resource] the resource
       # @param record_identifier [String] the harvested record identifier (repository- or protocol-dependent)
-      def update_uri_for(resource_id:, record_identifier:) # rubocop:disable Lint/UnusedMethodArgument
+      def update_uri_for(resource:, record_identifier:) # rubocop:disable Lint/UnusedMethodArgument
         raise NoMethodError, "#{self.class} should override #update_uri_for to determine the update URI"
       end
 
@@ -58,6 +58,17 @@ module Stash
         promise.rescue do |reason|
           handle_failure(SubmissionResult.new(resource_id: resource_id, request_desc: submission_job.description, error: reason))
         end
+      end
+
+      def harvested(resource:, record_identifier:)
+        # TODO: do we need to do any validation here? If so & validation fails, we should return a 422 or 409 (see RFC 5789 sec. 2.2)
+        download_uri = download_uri_for(resource: resource, record_identifier: record_identifier)
+        update_uri = update_uri_for(resource: resource, record_identifier: record_identifier)
+
+        resource.download_uri = download_uri
+        resource.update_uri = update_uri
+        resource.current_state = 'submitted'
+        resource.save
       end
 
       private

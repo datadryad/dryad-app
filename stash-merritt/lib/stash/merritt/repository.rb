@@ -16,42 +16,32 @@ module Stash
         SubmissionJob.new(resource_id: resource_id, url_helpers: url_helpers)
       end
 
-      def download_uri_for(resource_id:, record_identifier:)
-        merritt_host = merritt_host_for(resource_id)
+      def download_uri_for(resource:, record_identifier:)
+        merritt_host = merritt_host_for(resource)
         ark = ark_from(record_identifier)
         "http://#{merritt_host}/d/#{ERB::Util.url_encode(ark)}"
       end
 
-      def update_uri_for(resource_id:, record_identifier:) # rubocop:disable Lint/UnusedMethodArgument
-        sword_endpoint = sword_endpoint_for(resource_id)
-        doi = doi_for(resource_id)
+      def update_uri_for(resource:, record_identifier:) # rubocop:disable Lint/UnusedMethodArgument
+        sword_endpoint = sword_endpoint_for(resource)
+        doi = resource.identifier_str
         edit_uri_base = sword_endpoint.sub('/collection/', '/edit/')
         "#{edit_uri_base}/#{ERB::Util.url_encode(doi)}"
       end
 
       private
 
-      def merritt_host_for(resource_id)
-        repo_params_for(resource_id).domain
+      def merritt_host_for(resource)
+        repo_params_for(resource).domain
       end
 
-      def sword_endpoint_for(resource_id)
-        repo_params_for(resource_id).endpoint
+      def sword_endpoint_for(resource)
+        repo_params_for(resource).endpoint
       end
 
-      def repo_params_for(resource_id)
-        tenant = tenant_for(resource_id)
+      def repo_params_for(resource)
+        tenant = resource.tenant
         tenant.repository
-      end
-
-      def tenant_for(resource_id)
-        resource = StashEngine::Resource.find(resource_id)
-        resource.tenant
-      end
-
-      def doi_for(resource_id)
-        resource = StashEngine::Resource.find(resource_id)
-        resource.identifier_str
       end
 
       def ark_from(record_identifier)
