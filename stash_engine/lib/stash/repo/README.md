@@ -20,11 +20,17 @@ This is the repository abstraction for Stash.
    [concurrent-ruby](https://github.com/ruby-concurrency/concurrent-ruby)'s
    [global I/O executor](https://ruby-concurrency.github.io/concurrent-ruby/root/Concurrent.html#global_io_executor-class_method).
 5. When the job completes
-   - **successfully**: `Repository` sets the resource state to `published` 
-     and sends a confirmation email to the resource author.
+   - **successfully**: `Repository` sends a confirmation email to the resource author.
+     - **ᴛᴏ ᴅᴏ:** should we put this off till after harvesting, below?
    - **unsuccessfully**: `Repository` sets the resource state to `error`
      and sends a notification to the resource author, as well as to
      the configured feedback email address.
+6. Stash harvests the submitted resource from the repository, confirming that the
+   repository has finished any post-submit processing
+7. `Repository` sets the resource state to `submitted` and sets the download and 
+    update URIs for the resource
+    - **ᴛᴏ ᴅᴏ:** should we send the confirmation email (or another "processing 
+      completed" email) at this point?
      
 ## Implementation responsibilities
 
@@ -36,6 +42,18 @@ Your subclass of `Stash::Repo::Repository` should override:
 
 Returns an instance of `Stash::Repo::SubmissionJob` that will assign an identifier to
 and submit the resource.
+
+#### `#download_uri_for(resource_id:, record_identifier:)`
+
+Determines the download URI for the resource, given the repository-specific harvested
+record identifier (e.g. OAI-PMH record header identifier). Note that the primary identifier
+(e.g. DOI) should already be in the database, and can be retrieved based on the resource ID.
+
+#### `#update_uri_for(resource_id:, record_identifier:)`
+
+Determines the update URI for the resource, given the repository-specific harvested
+record identifier (e.g. OAI-PMH record header identifier). Note that the primary identifier
+(e.g. DOI) should already be in the database, and can be retrieved based on the resource ID.
 
 ### `Stash::Repo::SubmissionJob`
 

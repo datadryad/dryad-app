@@ -3,7 +3,6 @@ require 'fileutils'
 
 module Stash
   module Repo
-
     # Abstraction for a repository
     class Repository
       attr_reader :url_helpers
@@ -19,6 +18,22 @@ module Stash
       # @return [SubmissionJob] a job that will submit that resource
       def create_submission_job(resource_id:) # rubocop:disable Lint/UnusedMethodArgument
         raise NoMethodError, "#{self.class} should override #create_submission_job to return one or more submission tasks"
+      end
+
+      # Determines the download URI for the specified resource. Called after the record is harvested
+      # for discovery.
+      # @param resource_id [Integer] the database ID of the resource
+      # @param record_identifier [String] the harvested record identifier (repository- or protocol-dependent)
+      def download_uri_for(resource_id:, record_identifier:) # rubocop:disable Lint/UnusedMethodArgument
+        raise NoMethodError, "#{self.class} should override #download_uri_for to determine the download URI"
+      end
+
+      # Determines the update URI for the specified resource. Called after the record is harvested
+      # for discovery.
+      # @param resource_id [Integer] the database ID of the resource
+      # @param record_identifier [String] the harvested record identifier (repository- or protocol-dependent)
+      def update_uri_for(resource_id:, record_identifier:) # rubocop:disable Lint/UnusedMethodArgument
+        raise NoMethodError, "#{self.class} should override #update_uri_for to determine the update URI"
       end
 
       # Returns a logger

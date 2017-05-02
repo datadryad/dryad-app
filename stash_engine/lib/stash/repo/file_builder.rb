@@ -50,7 +50,7 @@ module Stash
         mode = binary? ? 'wb' : 'w'
         File.open(outfile, mode) do |f|
           f.write(file_contents)
-          f.write("\n") unless (binary? || file_contents.end_with?("\n"))
+          f.write("\n") unless binary? || file_contents.end_with?("\n")
         end
         outfile
       end
