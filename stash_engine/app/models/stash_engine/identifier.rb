@@ -28,13 +28,24 @@ module StashEngine
       submitted.by_version.first
     end
 
+    # @return Resource the current 'processing' resource
+    def processing_resource
+      processing = resources.processing
+      processing.by_version_desc.first
+    end
+
+    # @return true if there's a 'processing' version
+    def processing?
+      resources.processing.count > 0
+    end
+
     # @return Resource the current in-progress resource
     def in_progress_version # TODO rename to in_progress_resource
       in_progress = resources.in_progress
       in_progress.first
     end
 
-    # returns true if there is an in progress version
+    # @return true if there is an in progress version
     def in_progress?
       resources.in_progress.count > 0
     end
