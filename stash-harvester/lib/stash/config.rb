@@ -26,11 +26,16 @@ module Stash
     #   subclass of `MetadataMapper` for the specified mapping)
     attr_reader :metadata_mapper
 
-    def initialize(persistence_config:, source_config:, index_config:, metadata_mapper:)
+    # The update URI
+    # @return [URI, nil] the update URI, if configured
+    attr_reader :update_uri
+
+    def initialize(persistence_config:, source_config:, index_config:, metadata_mapper:, update_uri: nil)
       @persistence_config = persistence_config
       @source_config = source_config
       @index_config = index_config
       @metadata_mapper = metadata_mapper
+      @update_uri = update_uri
     end
 
     # Reads the specified file and creates a new `Config` from it.
@@ -57,7 +62,10 @@ module Stash
       source_config = Harvester::SourceConfig.for_environment(env, :source)
       index_config = Indexer::IndexConfig.for_environment(env, :index)
       metadata_mapper = Indexer::MetadataMapper.for_environment(env, :mapper)
-      Config.new(persistence_config: persistence_config, source_config: source_config, index_config: index_config, metadata_mapper: metadata_mapper)
+      update_url = env.args_for(:update_uri)
+      update_uri = update_url && URI.parse(update_url)
+
+      Config.new(persistence_config: persistence_config, source_config: source_config, index_config: index_config, metadata_mapper: metadata_mapper, update_uri: update_uri)
     end
 
     # Private methods

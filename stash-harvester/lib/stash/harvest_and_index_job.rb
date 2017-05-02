@@ -14,11 +14,12 @@ module Stash
     attr_reader :index_uri
     attr_reader :persistence_mgr
 
-    def initialize(source_config:, index_config:, metadata_mapper:, persistence_manager:, from_time: nil, until_time: nil) # rubocop:disable Metrics/ParameterLists
+    def initialize(source_config:, index_config:, metadata_mapper:, persistence_manager:, update_uri: nil, from_time: nil, until_time: nil) # rubocop:disable Metrics/ParameterLists
       @harvest_task = source_config.create_harvest_task(from_time: from_time, until_time: until_time)
       @indexer = index_config.create_indexer(metadata_mapper)
       @index_uri = index_config.uri
       @persistence_mgr = persistence_manager
+      @update_uri = update_uri
     end
 
     def harvest_and_index(&block)

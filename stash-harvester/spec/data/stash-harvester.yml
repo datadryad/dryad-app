@@ -23,6 +23,7 @@ test:
     database: ':memory:'
     pool: 5
     timeout: 5000
+  update_uri: http://stash-test.example.org/stash/datasets/
 
 development:
   <<: *defaults
@@ -30,6 +31,7 @@ development:
     adapter: sqlite3
     database: development.sqlite3
     pool: 5
+  update_uri: http://stash-dev.example.org/stash/datasets/
 
 production:
   <<: *defaults
@@ -37,3 +39,4 @@ production:
     adapter: sqlite3
     database: production.sqlite3
     pool: 5
+  update_uri: http://stash.example.org/stash/datasets/

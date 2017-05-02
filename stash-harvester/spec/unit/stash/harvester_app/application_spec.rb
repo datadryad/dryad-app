@@ -1,5 +1,6 @@
 require 'spec_helper'
 require 'stash/harvester_app'
+require 'webmock/rspec'
 
 require 'tmpdir'
 require 'fileutils'
@@ -26,33 +27,41 @@ module Stash
     describe Application do
 
       attr_reader :config
+      attr_reader :update_uri
+
+      before(:all) do
+        WebMock.disable_net_connect!
+      end
 
       before(:each) do
         @config = Config.allocate
 
+        @update_uri = URI('http://stash.example.org/stash/datasets/')
+        allow(config).to receive(:update_uri).and_return(update_uri)
+
         @persistence_config = instance_double(PersistenceConfig).as_null_object
-        allow(config).to receive(:persistence_config) { @persistence_config }
+        allow(config).to receive(:persistence_config).and_return(@persistence_config)
 
         @persistence_mgr = instance_double(PersistenceManager).as_null_object
-        allow(@persistence_config).to receive(:create_manager) { @persistence_mgr }
+        allow(@persistence_config).to receive(:create_manager).and_return(@persistence_mgr)
 
         @source_config = instance_double(SourceConfig).as_null_object
-        allow(config).to receive(:source_config) { @source_config }
+        allow(config).to receive(:source_config).and_return(@source_config)
 
         @index_config = instance_double(Indexer::IndexConfig).as_null_object
-        allow(config).to receive(:index_config) { @index_config }
+        allow(config).to receive(:index_config).and_return(@index_config)
 
         @metadata_mapper = instance_double(Indexer::MetadataMapper).as_null_object
-        allow(config).to receive(:metadata_mapper) { @metadata_mapper }
+        allow(config).to receive(:metadata_mapper).and_return(@metadata_mapper)
       end
 
       describe '#with_config_file' do
         before :each do
           @wd = '/stash/apps/stash-harvester'
-          allow(Dir).to receive(:pwd) { @wd }
+          allow(Dir).to receive(:pwd).and_return(@wd)
 
           @home = '/home/stash'
-          allow(Dir).to receive(:home) { @home }
+          allow(Dir).to receive(:home).and_return(@home)
         end
 
         after :each do
@@ -183,6 +192,7 @@ module Stash
 
           job = instance_double(HarvestAndIndexJob)
           expect(HarvestAndIndexJob).to receive(:new).with(
+            update_uri: update_uri,
             source_config: @source_config,
             index_config: @index_config,
             metadata_mapper: @metadata_mapper,
@@ -202,11 +212,12 @@ module Stash
         it 'logs failure exceptions in a sort-friendly way'
 
         it 'accepts nil start and from times' do
-          expect(@persistence_mgr).to receive(:find_oldest_failed_timestamp) { nil }
-          expect(@persistence_mgr).to receive(:find_newest_indexed_timestamp) { nil }
+          expect(@persistence_mgr).to receive(:find_oldest_failed_timestamp).and_return(nil)
+          expect(@persistence_mgr).to receive(:find_newest_indexed_timestamp).and_return(nil)
 
           job = instance_double(HarvestAndIndexJob)
           expect(HarvestAndIndexJob).to receive(:new).with(
+            update_uri: update_uri,
             source_config: @source_config,
             index_config: @index_config,
             metadata_mapper: @metadata_mapper,
@@ -222,11 +233,12 @@ module Stash
 
         it 'sets the datestamp of the latest success as the next start, if no failures' do
           newest_indexed = Time.utc(2016, 4, 18, 1, 2, 3)
-          expect(@persistence_mgr).to receive(:find_oldest_failed_timestamp) { nil }
-          expect(@persistence_mgr).to receive(:find_newest_indexed_timestamp) { newest_indexed }
+          expect(@persistence_mgr).to receive(:find_oldest_failed_timestamp).and_return(nil)
+          expect(@persistence_mgr).to receive(:find_newest_indexed_timestamp).and_return(newest_indexed)
 
           job = instance_double(HarvestAndIndexJob)
           expect(HarvestAndIndexJob).to receive(:new).with(
+            update_uri: update_uri,
             source_config: @source_config,
             index_config: @index_config,
             metadata_mapper: @metadata_mapper,
@@ -242,13 +254,14 @@ module Stash
 
         it 'sets the datestamp of the earliest failure as the next start' do
           newest_indexed = Time.utc(2016, 4, 18, 1, 2, 3)
-          allow(@persistence_mgr).to receive(:find_newest_indexed_timestamp) { newest_indexed }
+          allow(@persistence_mgr).to receive(:find_newest_indexed_timestamp).and_return(newest_indexed)
 
           oldest_failed = Time.utc(1952, 2, 6, 10, 11, 12)
-          expect(@persistence_mgr).to receive(:find_oldest_failed_timestamp) { oldest_failed }
+          expect(@persistence_mgr).to receive(:find_oldest_failed_timestamp).and_return(oldest_failed)
 
           job = instance_double(HarvestAndIndexJob)
           expect(HarvestAndIndexJob).to receive(:new).with(
+            update_uri: update_uri,
             source_config: @source_config,
             index_config: @index_config,
             metadata_mapper: @metadata_mapper,

@@ -1,5 +1,6 @@
 require 'spec_helper'
 require 'stash/harvest_and_index_job'
+require 'webmock/rspec'
 
 module Stash
   describe HarvestAndIndexJob do
@@ -47,6 +48,10 @@ module Stash
       harvest_task.query_uri
     end
 
+    before(:all) do
+      WebMock.disable_net_connect!
+    end
+
     before(:each) do
       # Mock persistence
       persistence_config = instance_double(PersistenceConfig)
@@ -64,9 +69,11 @@ module Stash
       # Mock OAI
       @wrappers = []
       @arks = []
-      oai_records = ['spec/data/wrapped_datacite/wrapped-datacite-all-geodata.xml',
-                     'spec/data/wrapped_datacite/wrapped-datacite-no-geodata.xml',
-                     'spec/data/wrapped_datacite/wrapped-datacite-place-only.xml'].map do |xml|
+      oai_records = %w[
+        spec/data/wrapped_datacite/wrapped-datacite-all-geodata.xml
+        spec/data/wrapped_datacite/wrapped-datacite-no-geodata.xml
+        spec/data/wrapped_datacite/wrapped-datacite-place-only.xml
+      ].map do |xml|
         stash_wrapper = Stash::Wrapper::StashWrapper.parse_xml(File.read(xml))
         @wrappers << stash_wrapper
         ark = "http://n2t.net/ark:/#{Digest::MD5.hexdigest(stash_wrapper.id_value)}"
@@ -107,6 +114,7 @@ module Stash
       @from_time = Time.utc(1914, 8, 4, 23)
       @until_time = Time.utc(2018, 11, 11, 10)
       @job = HarvestAndIndexJob.new(
+        update_uri: URI('http://stash-test.example.org/stash/datasets/'),
         source_config: source_config,
         index_config: index_config,
         metadata_mapper: metadata_mapper,
@@ -277,6 +285,11 @@ module Stash
           expect(logged).to include(harvest_job_id.to_s)
           expect(logged).to include(Indexer::IndexStatus::FAILED.value.to_s)
         end
+      end
+
+      describe '#post_update' do
+        it 'posts an update for each record, if an update URI is configured'
+        it "doesn't try to post an update if no update URI is configured"
       end
     end
 

@@ -82,6 +82,10 @@ module Stash
         config.metadata_mapper
       end
 
+      def update_uri
+        config.update_uri
+      end
+
       def persistence_manager
         @persistence_mgr ||= config.persistence_config.create_manager
       end
@@ -105,6 +109,7 @@ module Stash
 
       def create_job(from_time = nil, until_time = nil)
         HarvestAndIndexJob.new(
+          update_uri: update_uri,
           source_config: source_config,
           index_config: index_config,
           metadata_mapper: metadata_mapper,

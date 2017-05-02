@@ -39,13 +39,14 @@ Gem::Specification.new do |spec| # rubocop:disable Metrics/BlockLength
 
   spec.add_development_dependency 'bundler', '~> 1.7'
   spec.add_development_dependency 'equivalent-xml', '~> 0.6.0'
+  spec.add_development_dependency 'github-markup', '~> 1.4'
   spec.add_development_dependency 'rake', '~> 12.0'
+  spec.add_development_dependency 'redcarpet', '~> 3.3'
   spec.add_development_dependency 'rspec', '~> 3.2'
+  spec.add_development_dependency 'rubocop', '~> 0.37'
   spec.add_development_dependency 'simplecov', '~> 0.9.2'
   spec.add_development_dependency 'simplecov-console', '~> 0.2.0'
-  spec.add_development_dependency 'rubocop', '~> 0.37'
-  spec.add_development_dependency 'redcarpet', '~> 3.3'
-  spec.add_development_dependency 'github-markup', '~> 1.4'
+  spec.add_development_dependency 'webmock', '~> 3.0'
   spec.add_development_dependency 'yard', '~> 0.8'
 
 end
