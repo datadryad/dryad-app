@@ -60,7 +60,10 @@ module Stash
         end
       end
 
-      def harvested(resource:, record_identifier:)
+      def harvested(identifier:, record_identifier:)
+        resource = identifier.processing_resource
+        return unless resource # harvester could be re-harvesting stuff we already have
+
         # TODO: do we need to do any validation here? If so & validation fails, we should return a 422 or 409 (see RFC 5789 sec. 2.2)
         download_uri = download_uri_for(resource: resource, record_identifier: record_identifier)
         update_uri = update_uri_for(resource: resource, record_identifier: record_identifier)

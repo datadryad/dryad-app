@@ -5,6 +5,7 @@ module Stash
     describe Repository do
 
       attr_reader :resource
+      attr_reader :identifier
       attr_reader :doi_value
       attr_reader :record_identifier
       attr_reader :repo
@@ -43,6 +44,7 @@ module Stash
           upload_date: stash_wrapper.version_date
         ).build
         resource.current_state = 'processing'
+        @identifier = resource.identifier
 
         @doi_value = '10.15146/R3RG6G'
         expect(resource.identifier_value).to eq(doi_value) # just to be sure
@@ -71,7 +73,8 @@ module Stash
 
       describe :harvested do
         it 'sets the download URI, update URI, and status' do
-          repo.harvested(resource: resource, record_identifier: record_identifier)
+          repo.harvested(identifier: identifier, record_identifier: record_identifier)
+          resource.reload
           expect(resource.download_uri).to eq('http://merritt.cdlib.org/d/ark%3A%2F99999%2Ffk43f5119b')
           expect(resource.update_uri).to eq('http://uc3-mrtsword-prd.cdlib.org:39001/mrtsword/edit/dataone_dash/doi%3A10.15146%2FR3RG6G')
           expect(resource.current_state).to eq('submitted')
