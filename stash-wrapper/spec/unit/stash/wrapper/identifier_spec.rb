@@ -57,6 +57,28 @@ module Stash
         end
 
       end
+
+      describe :formatted do
+        it 'formats an ARK' do
+          ident = Identifier.new(type: IdentifierType::ARK, value: '/99999/fk43f5119b')
+          expect(ident.formatted).to eq('ark:/99999/fk43f5119b')
+        end
+
+        it 'formats a DOI' do
+          ident = Identifier.new(type: IdentifierType::DOI, value: '10.15146/R3RG6G')
+          expect(ident.formatted).to eq("doi:10.15146/R3RG6G")
+        end
+
+        it 'leaves a URL alone' do
+          ident = Identifier.new(type: IdentifierType::URL, value: 'http://example.org/')
+          expect(ident.formatted).to eq('http://example.org/')
+        end
+
+        it 'leaves a Handle alone' do
+          ident = Identifier.new(type: IdentifierType::HANDLE, value: '20.1000/100')
+          expect(ident.formatted).to eq('20.1000/100')
+        end
+      end
     end
 
   end

@@ -17,6 +17,10 @@ module Stash
         self.type = type
         self.value = value
       end
+
+      def formatted
+        type.format(value)
+      end
     end
 
   end
