@@ -1,5 +1,6 @@
 require 'stash/harvester'
 require 'stash/indexer'
+require 'rest-client'
 
 module Stash
   class HarvestAndIndexJob # rubocop:disable Metrics/ClassLength:
@@ -12,6 +13,7 @@ module Stash
     attr_reader :harvest_task
     attr_reader :indexer
     attr_reader :index_uri
+    attr_reader :update_uri
     attr_reader :persistence_mgr
 
     def initialize(source_config:, index_config:, metadata_mapper:, persistence_manager:, update_uri: nil, from_time: nil, until_time: nil) # rubocop:disable Metrics/ParameterLists
@@ -65,6 +67,7 @@ module Stash
       count = 0
       indexer.index(harvested_records) do |result|
         harvested_record = result.record
+        post_update(harvested_record) if result.success?
         harvested_record_id = record_harvested(harvested_record, harvest_job_id)
         record_indexed(index_job_id, harvested_record, harvested_record_id, result.status)
         count += 1
@@ -80,6 +83,13 @@ module Stash
         until_time: task.until_time,
         query_url: task.query_uri
       )
+    end
+
+    # TODO: handle/log errors
+    def post_update(harvested_record)
+      return unless update_uri
+      payload = { 'record_identifier' => harvested_record.identifier }.to_json
+      RestClient.patch("#{update_uri}/#{harvested_record.wrapped_identifier}", payload, content_type: :json)
     end
 
     def record_harvested(harvested_record, harvest_job_id)
