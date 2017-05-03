@@ -80,6 +80,7 @@ module StashEngine
 
     private
 
+    # TODO: use this in #show and #data_paper
     def identifier_from(params)
       id_param = params[:id]
       type, id = id_param.split(':', 2)
