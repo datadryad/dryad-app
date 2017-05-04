@@ -63,12 +63,13 @@ module StashEngine
       end
     end
 
+    protect_from_forgery(except: [:update])
     # PATCH /dataset/doi:10.xyz/abc
     def update
       params.require(:id)
       params.require(:record_identifier)
 
-      identifier = identifier_from(id_param)
+      identifier = identifier_from(params)
       render(nothing: true, status: 404) && return unless identifier
 
       repo = StashEngine::repository
