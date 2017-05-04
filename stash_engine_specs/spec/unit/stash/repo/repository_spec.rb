@@ -116,9 +116,9 @@ module Stash
             expect(File.exist?(res_upload_dir)).to be_falsey
           end
 
-          it 'sets the state to submitted' do
+          it 'leaves the state as "processing"' do
             expect(resource).to receive(:current_state=).with('processing')
-            expect(resource).to receive(:current_state=).with('submitted')
+            expect(resource).not_to receive(:current_state=).with('submitted')
             submit_resource
           end
 
@@ -155,9 +155,9 @@ module Stash
               expect(File.exist?(res_upload_dir)).to be_truthy
             end
 
-            it 'sets the state to submitted' do
+            it 'leaves the state as "processing"' do
               expect(resource).to receive(:current_state=).with('processing')
-              expect(resource).to receive(:current_state=).with('submitted')
+              expect(resource).not_to receive(:current_state=).with('submitted')
               submit_resource
             end
 
@@ -186,9 +186,9 @@ module Stash
               expect(msg).to include('No such file or directory')
             end
 
-            it 'sets the state to submitted' do
+            it 'leaves the state as "processing"' do
               expect(resource).to receive(:current_state=).with('processing')
-              expect(resource).to receive(:current_state=).with('submitted')
+              expect(resource).not_to receive(:current_state=).with('submitted')
               submit_resource
             end
 

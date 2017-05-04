@@ -67,6 +67,9 @@ module Stash
         download_uri = get_download_uri(resource, record_identifier)
         update_uri = get_update_uri(resource, record_identifier)
 
+        log.debug("Setting download_uri for #{resource.id} to #{download_uri}")
+        log.debug("Setting update_uri for #{resource.id} to #{update_uri}")
+
         resource.download_uri = download_uri
         resource.update_uri = update_uri
         resource.current_state = 'submitted'
@@ -90,7 +93,7 @@ module Stash
       def handle_success(result)
         result.log_to(log)
         resource = StashEngine::Resource.find(result.resource_id)
-        resource.current_state = 'submitted'
+        # resource.current_state = 'submitted'
         update_submission_log(result)
         StashEngine::UserMailer.submission_succeeded(resource).deliver_now
         cleanup_files(resource)

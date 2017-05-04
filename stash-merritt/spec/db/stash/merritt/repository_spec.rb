@@ -53,6 +53,10 @@ module Stash
 
         url_helpers = double(Module) # yes, apparently URL helpers are an anonymous module
         @repo = Repository.new(url_helpers: url_helpers)
+
+        log = instance_double(Logger)
+        allow(log).to receive(:debug)
+        allow(Rails).to receive(:logger).and_return(log)
       end
 
       describe :download_uri_for do
