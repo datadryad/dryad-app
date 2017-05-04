@@ -87,11 +87,11 @@ module Stash
         datestamp = stash_wrapper.version_date.to_time.utc.xmlschema
 
         record = REXML::Document.new(['<record>',
-                                      '  <header> ',
-                                      "   <identifier>#{ark}</identifier>",
-                                      "   <datestamp>#{datestamp}</datestamp>",
-                                      '  </header> ',
-                                      '</record>'].join("\n")).root
+          '  <header> ',
+          "   <identifier>#{ark}</identifier>",
+          "   <datestamp>#{datestamp}</datestamp>",
+          '  </header> ',
+          '</record>'].join("\n")).root
 
         metadata = REXML::Element.new('metadata')
         metadata.add_element(stash_wrapper.save_to_xml)
@@ -291,6 +291,39 @@ module Stash
           expect(logged).to include(harvest_job_id.to_s)
           expect(logged).to include(Indexer::IndexStatus::FAILED.value.to_s)
         end
+
+        it 'logs :post_update failures' do
+          update_uri_base = 'http://stash-test.example.org/stash/datasets/'
+          job = HarvestAndIndexJob.new(
+            update_uri: URI(update_uri_base),
+            source_config: source_config,
+            index_config: index_config,
+            metadata_mapper: metadata_mapper,
+            persistence_manager: @persistence_mgr,
+            from_time: from_time,
+            until_time: until_time
+          )
+
+          stubs = []
+          expected_uris = []
+          dois.each_with_index do |doi, i|
+            ark = arks[i]
+            expected_uri = "#{update_uri_base}/#{doi}"
+            expected_payload = { 'record_identifier' => ark }.to_json
+            stubs << stub_request(:patch, expected_uri)
+              .with(body: expected_payload)
+              .to_timeout
+            expected_uris << expected_uri
+          end
+
+          job.harvest_and_index
+
+          expected_uris.each_with_index do |uri, i|
+            expect(logged).to include(uri)
+            expect(logged).to include(arks[i])
+            expect(logged.downcase).to include('timed out')
+          end
+        end
       end
 
       describe '#post_update' do
@@ -310,7 +343,7 @@ module Stash
           dois.each_with_index do |doi, i|
             ark = arks[i]
             expected_uri = "#{update_uri_base}/#{doi}"
-            expected_payload = {'record_identifier' => ark}.to_json
+            expected_payload = { 'record_identifier' => ark }.to_json
             stubs << stub_request(:patch, expected_uri).with(body: expected_payload)
           end
 

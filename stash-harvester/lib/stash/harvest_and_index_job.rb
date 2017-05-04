@@ -85,11 +85,16 @@ module Stash
       )
     end
 
-    # TODO: handle/log errors
     def post_update(harvested_record)
       return unless update_uri
-      payload = { 'record_identifier' => harvested_record.identifier }.to_json
-      RestClient.patch("#{update_uri}/#{harvested_record.wrapped_identifier}", payload, content_type: :json)
+      patch_uri = "#{update_uri}/#{harvested_record.wrapped_identifier}"
+      record_identifier = harvested_record.identifier
+      begin
+        payload = { 'record_identifier' => record_identifier }.to_json
+        RestClient.patch(patch_uri, payload, content_type: :json)
+      rescue => e
+        log.warn("Error PATCHing #{patch_uri || 'nil'} with {'record_identifier': #{record_identifier || 'nil'}'}: #{e}")
+      end
     end
 
     def record_harvested(harvested_record, harvest_job_id)
