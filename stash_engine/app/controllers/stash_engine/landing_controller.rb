@@ -72,10 +72,14 @@ module StashEngine
       render(nothing: true, status: 404) && return unless identifier
 
       repo = StashEngine::repository
-      repo.harvested(identifier: identifier, record_identifier: params[:record_identifier])
-
-      # success but no content, see RFC 5789 sec. 2.1
-      render(nothing: true, status: 204)
+      begin
+        repo.harvested(identifier: identifier, record_identifier: params[:record_identifier])
+        # success but no content, see RFC 5789 sec. 2.1
+        render(nothing: true, status: 204)
+      rescue ArgumentError => e
+        logger.debug(e)
+        render(nothing: true, status: 422) # 422 Unprocessable Entity, see RFC 5789 sec. 2.2
+      end
     end
 
     private
