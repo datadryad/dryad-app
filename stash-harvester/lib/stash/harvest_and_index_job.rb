@@ -93,7 +93,7 @@ module Stash
         payload = { 'record_identifier' => record_identifier }.to_json
         RestClient.patch(patch_uri, payload, content_type: :json)
       rescue => e
-        log.warn("Error PATCHing #{patch_uri || 'nil'} with {'record_identifier': #{record_identifier || 'nil'}'}: #{e}")
+        log.warn("Error PATCHing #{patch_uri || 'nil'} with {'record_identifier': '#{record_identifier || 'nil'}'}: #{e}")
       end
     end
 
