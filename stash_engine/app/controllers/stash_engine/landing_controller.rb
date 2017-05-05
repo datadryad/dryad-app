@@ -87,9 +87,13 @@ module StashEngine
 
     # TODO: use this in #show and #data_paper
     def identifier_from(params)
-      id_param = params[:id]
+      id_param = params[:id].upcase
       type, id = id_param.split(':', 2)
+      logger.error("Can't parse identifier from id_param '#{id_param}'") && return unless id
+
       identifiers = Identifier.where(identifier_type: type).where(identifier: id)
+      logger.warn("Identifier '#{id}' not found (id_param was: '#{id_param}')") if identifiers.empty?
+
       identifiers.first
     end
   end
