@@ -117,7 +117,7 @@ class CatalogController < ApplicationController
     # # config.add_index_field 'Area', :label => 'Area:'
     # config.add_index_field Settings.FIELDS.SUBJECT, :label => 'Keywords:'
     config.add_index_field Settings.FIELDS.YEAR
-    # config.add_index_field Settings.FIELDS.CREATOR
+    config.add_index_field Settings.FIELDS.CREATOR
     config.add_index_field Settings.FIELDS.DESCRIPTION, helper_method: :snippit
     config.add_index_field Settings.FIELDS.PUBLISHER
 
@@ -129,7 +129,7 @@ class CatalogController < ApplicationController
     # item_prop: [String] property given to span with Schema.org item property
     # link_to_search: [Boolean] that can be passed to link to a facet search
     # helper_method: [Symbol] method that can be used to render the value
-    # config.add_show_field Settings.FIELDS.CREATOR, label: 'Author(s)', itemprop: 'author'
+    config.add_show_field Settings.FIELDS.CREATOR, label: 'Author(s)', itemprop: 'author'
     config.add_show_field Settings.FIELDS.DESCRIPTION, label: 'Description', itemprop: 'description', helper_method: :render_value_as_truncate_abstract
     config.add_show_field Settings.FIELDS.PUBLISHER, label: 'Institution', itemprop: 'publisher'
     config.add_show_field Settings.FIELDS.PART_OF, label: 'Collection', itemprop: 'isPartOf'
