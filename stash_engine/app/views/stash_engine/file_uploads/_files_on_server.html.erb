@@ -1,0 +1,51 @@
+<!-- manifest workflow -->
+<%= form_for file, url: path, remote: true, html: { id: 'url_validate' } do |f| %>
+  <%= f.hidden_field :resource_id %>
+	<%= f.text_area :url, cols: 40, rows: 15, id: 'location_urls', placeholder: 'List file location URLs here'	%>
+
+	<p>Separate URLs with commas or place each URL on a new line.</p>
+
+	<div class="actions" id="post_submit_before_spinner">
+    <%= f.submit 'Validate Files', id: 'validate_files', class: 'o-button__submit' %>
+  </div>
+<% end %>
+
+<h2 class="t-upload__choose-heading">Step 2: Validation Status</h2>
+<div class="spinner" id="post_submit_spinner">
+  	<%= image_tag 'stash_engine/spinner.gif', size: '80x60', alt: 'Loading spinner', id: 'post_submit_spinner'  %>
+</div>
+<% if messages.present? %>
+  <div class="js-alert c-alert--error" role="alert">
+    <div class="c-alert__text">
+      <strong><%= messages.join("<br>").html_safe %></strong>
+    </div>
+    <button aria-label="close" class="js-alert__close o-button__close c-alert__close"></button>
+  </div>
+<% else %>
+  <%= '' %>
+<% end %>
+
+<div class="c-upload">
+	<div>
+		<h2 class="t-upload__choose-heading--active">Uploaded Files</h2>
+    <% if @resource.file_uploads.where.not(url: [nil, '']).count < 1 %>
+      <span id="no_chosen">No files chosen</span>
+    <% else %>
+      <%= render partial: "stash_engine/file_uploads/uploaded_file_from_server", collection: @uploads_from_server, as: :uploaded_file %>
+    <% end %>
+  </div>
+</div>
+
+<script type="text/javascript">
+$(function () {
+  return $('#post_submit_spinner').hide();
+});
+
+validateFileUrl();
+
+$(function () {
+  $("#post_submit_before_spinner").click(function() {
+    $('#post_submit_spinner').show();
+  });
+});
+</script>

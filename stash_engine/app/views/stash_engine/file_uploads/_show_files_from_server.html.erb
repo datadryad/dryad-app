@@ -1,4 +1,5 @@
-<% unless file_uploads.where(url: [nil, '']).nil? %>
+<!-- manifest workflow -->
+<% unless file_uploads.where.not(url: [nil, '']).nil? %>
   <ul class="c-review-files__list">
   <% file_uploads.each do |file_upload| %>
     <div class="<%= 'strike-deleted' if file_upload.file_state == 'deleted' %>">
@@ -8,4 +9,3 @@
   <% end %>
   </ul>
 <% end %>
-

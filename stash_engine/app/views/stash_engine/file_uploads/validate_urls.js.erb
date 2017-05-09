@@ -1,0 +1,6 @@
+// manifest workflow
+$('#file_location_select').val("On a Server");
+$('.files_on_server').show();
+$('.files_on_server').replaceWith("<%= escape_javascript(render partial: 'stash_engine/file_uploads/files_on_server', locals: { file: @file, messages: @messages, path: stash_engine.file_uploads_validate_urls_path(@resource.id) }) %>");
+$('.files_on_computer').hide();
+selectFileLocation();
