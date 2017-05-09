@@ -101,7 +101,7 @@ module StashEngine
 
     # gets the latest files that are not deleted in db, current files for this version
     def current_file_uploads
-      subquery = FileUpload.where(resource_id: id).where("file_state <> 'deleted'")
+      subquery = FileUpload.where(resource_id: id).where("file_state <> 'deleted' AND url IS NULL")
                            .select('max(id) last_id, upload_file_name').group(:upload_file_name)
       FileUpload.joins("INNER JOIN (#{subquery.to_sql}) sub on id = sub.last_id").order(upload_file_name: :asc)
     end
@@ -115,13 +115,41 @@ module StashEngine
 
     # the states of the latest files of the same name in the resource (version), included deleted
     def latest_file_states
-      subquery = FileUpload.where(resource_id: id)
+      subquery = FileUpload.where(resource_id: id, url: nil)
                            .select('max(id) last_id, upload_file_name').group(:upload_file_name)
       FileUpload.joins("INNER JOIN (#{subquery.to_sql}) sub on id = sub.last_id").order(upload_file_name: :asc)
     end
 
     # the size of this resource (created + copied files)
     def size
+      file_uploads.where(file_state: ['copied', 'created']).sum(:upload_file_size)
+    end
+
+    # ----------------------------   ## FILES UPLOADED FROM SERVER --------------------------------#
+
+    # gets the latest files that are not deleted in db, current files for this version
+    def current_file_from_server_uploads
+      subquery = FileUpload.where(resource_id: id).where("file_state <> 'deleted'").where.not(url: [nil, ''])
+                           .select('max(id) last_id, upload_file_name').group(:upload_file_name)
+      FileUpload.joins("INNER JOIN (#{subquery.to_sql}) sub on id = sub.last_id").order(upload_file_name: :asc)
+    end
+
+    # gets new files in this version
+    def new_file_from_server_uploads
+      subquery = FileUpload.where(resource_id: id).where("file_state = 'created'").where.not(url: [nil, ''])
+                     .select('max(id) last_id, upload_file_name').group(:upload_file_name)
+      FileUpload.joins("INNER JOIN (#{subquery.to_sql}) sub on id = sub.last_id").order(upload_file_name: :asc)
+    end
+
+    ## the states of the latest files of the same name in the resource (version),
+    def latest_files_from_server_states
+      subquery = FileUpload.where(resource_id: id).where.not(url: [nil, ''])
+                           .select('max(id) last_id, upload_file_name').group(:upload_file_name)
+      FileUpload.joins("INNER JOIN (#{subquery.to_sql}) sub on id = sub.last_id").order(upload_file_name: :asc)
+    end
+
+    # the size of this resource (created + copied files)
+    def file_from_server_size
       file_uploads.where(file_state: ['copied', 'created']).sum(:upload_file_size)
     end
 
