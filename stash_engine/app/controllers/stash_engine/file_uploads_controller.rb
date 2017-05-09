@@ -108,7 +108,7 @@ module StashEngine
                                               upload_content_type: validated_url.mime_type,
                                               upload_file_size: validated_url.size,
                                               file_state: 'created')
-            @messages << ""
+            @messages << "The given #{validated_url.url} has been uploaded successfully."
           elsif validated_url.validate == true && validated_url.status_code != 200
             @file = FileUpload.create( resource_id: @resource.id,
                                               url: validated_url.url,
