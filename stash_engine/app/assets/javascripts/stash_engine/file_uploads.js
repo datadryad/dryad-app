@@ -5,7 +5,6 @@
 function validateFileUrl(){
   $('#validate_files').on('click', function(){
     var location_urls = $('#location_urls').val();
-    alert(location_urls);
     var form = $(this).parents('form');
     $(form).trigger('submit.rails');
     $('#location_urls').val('');
