@@ -9,72 +9,22 @@
   <%= link_to "contact us", contact_us_url, class: 'o-link__primary' %>.
 </p>
 
-<h2 class="t-upload__choose-heading--active">Step 1: Choose your files</h2>
+<h2 class="t-upload__choose-heading--active">Step 1: Choose files to Upload</h2>
 <div>
-  <%= form_for @file, html: {multipart: true, id: 'fileupload'} do |f| %>
-    <div class="c-choose">
-      <%= f.hidden_field :resource_id %>
-      <div id="upload_bg" class="c-choose__drop o-drop">
-        Drag and drop files here
-      </div>
-      <div class="c-choose__or">or</div>
-      <div class="c-choose__label">
-        <%= label_tag(:upload_upload, "Choose Files", class: 'c-input__file-label') %>
-        <%= file_field_tag 'upload[upload]', multiple: true, class: 'c-input__file' %>
-      </div>
-    </div>
-  <% end %>
+  <strong>Where are your files located?</strong>
+  <%= select_tag "file_location", options_for_select([ "On this Computer", "On a Server" ]), id: 'file_location_select' %>
 </div>
-<div class="t-upload__container">
-  <h2 class="t-upload__choose-heading" id="upload_tweaker_head">Step 2: Upload your files</h2>
-  <%= button_to 'undo all changes', revert_file_upload_path(resource_id: @resource.id), method: :patch, remote: true,
-                class: "o-button__undo", form_class: 'o-button__inline-form', id: 'revert_all' %>
-</div>
-<div class="c-upload">
-  <div id="upload_list">
-    <% if @resource.file_uploads.count < 1 %>
-      <span id="no_chosen">No files chosen</span>
-    <% else %>
-      <%= render partial: "stash_engine/file_uploads/uploaded_file", collection: @uploads %>
-    <% end %>
-  </div>
+<br/>
 
-  <div id="upload_total">
-    <span id="upload_total_all">Total:</span><br/><br/>
-    <span id="upload_in_version">In this version:</span>
-  </div>
-
-  <div class="c-upload__upload-complete-text" id="upload_complete" style="display: none;">Upload complete.</div>
-
-  <div class="bad_upload" id="over_single_size"></div>
-
-  <div class="bad_upload" id="over_upload_size" style="display: none;">
-    <p>
-      The files you've added are larger than <%= filesize(current_tenant.max_submission_size) %> which is the upload
-      limit for a single submission.  Please remove some files to bring your upload size under this limit.
-    </p>
-  </div>
-  <div class="bad_upload" id="over_files_size" style="display: none;">
-    <p>
-      Your file size is over <%= filesize(current_tenant.max_total_version_size) %>. You must remove some files to bring your
-      total under this limit before you can upload these files.
-    </p>
-  </div>
-
-  <div>
-    <p id="confirm_text_upload" style="display: none;"><span><%= check_box_tag 'confirm_to_upload', 'yes', false, id: 'confirm_to_upload' %></span><strong style="color: red;"> *</strong> I confirm that no Personal Health Information or Sensitive Data are being uploaded with this submission.</p>
-    <button id="upload_all" type="button" disabled class="o-button__submit confirm_upload" style="display: none;">Upload</button>
-    <button id="cancel_all" type="button" class="o-button__submit" style="display: none;" >Cancel all</button>
-  </div>
-
-  <div id="revert_all">
-    <%# button_to 'undo all changes', revert_file_upload_path(resource_id: @resource.id), method: :patch, remote: true,
-                  class: "o-button__plain-text2", form_class: 'o-button__inline-form' %>
-    <!-- <button id="revert_all" type="button" class="o-button__plain-text2">Revert all files</button> -->
-  </div>
+<!-- manifest workflow -->
+<div class="files_on_server" style="display: none;">
+  <%= render partial: 'stash_engine/file_uploads/files_on_server', locals: { file: @file, messages: @messages, path: stash_engine.file_uploads_validate_urls_path(@resource.id) } %>
 </div>
 
-<%= render partial: 'stash_engine/file_uploads/dropped_file' %>
+<div class="files_on_computer" style="display: none;">
+  <%= render partial: 'stash_engine/file_uploads/files_on_computer', locals: { file: @file } %>
+</div>
+<!-- manifest workflow -->
 
 <div class="o-dataset-nav">
   <%= link_to 'Back to Describe Dataset', metadata_entry_pages_find_or_create_path(resource_id: params[:id]), class: 'o-button__icon-left', role: 'button', id: 'describe_back' %>
@@ -123,4 +73,11 @@
   }
 
   updateButtonLinkStates();
+
+  $(function () {
+    $('#file_location_select').val('On this Computer');
+    $('.files_on_computer').show();
+    $('#post_submit_spinner').hide();
+    selectFileLocation();
+  });
 </script>
