@@ -14,21 +14,15 @@
 <div class="spinner" id="post_submit_spinner">
   	<%= image_tag 'stash_engine/spinner.gif', size: '80x60', alt: 'Loading spinner', id: 'post_submit_spinner'  %>
 </div>
-<% if messages.present? %>
-  <div class="js-alert c-alert--error" role="alert">
-    <div class="c-alert__text">
-      <strong><%= messages.join("<br>").html_safe %></strong>
-    </div>
-    <button aria-label="close" class="js-alert__close o-button__close c-alert__close"></button>
-  </div>
-<% else %>
-  <%= '' %>
+
+<% unless messages.blank? %>
+  <strong><%= messages.join("<br>").html_safe %></strong>
 <% end %>
 
 <div class="c-upload">
 	<div>
 		<h2 class="t-upload__choose-heading--active">Uploaded Files</h2>
-    <% if @resource.file_uploads.where.not(url: [nil, '']).count < 1 %>
+    <% if @resource.file_uploads.where.not(url: [nil, ''], upload_file_name: [nil, '']).count < 1 %>
       <span id="no_chosen">No files chosen</span>
     <% else %>
       <%= render partial: "stash_engine/file_uploads/uploaded_file_from_server", collection: @uploads_from_server, as: :uploaded_file %>

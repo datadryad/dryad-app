@@ -17,7 +17,7 @@ StashEngine::Engine.routes.draw do
       patch 'restore'
     end
   end
-  match 'file_uploads/validate_urls/:resource_id', to: 'file_uploads#validate_urls', as: 'file_uploads_validate_urls', via: [:get, :post]
+  match 'file_uploads/validate_urls/:resource_id', to: 'file_uploads#validate_urls', as: 'file_uploads_validate_urls', via: [:get, :post, :put]
 
   resource :file_upload do
     member do
