@@ -1,8 +1,10 @@
 require 'spec_helper'
+require 'webmock/rspec'
 
 module StashEngine
   describe UrlValidator do
     before(:each) do
+      WebMock.disable_net_connect!
     end
 
     it 'retrieves a url' do

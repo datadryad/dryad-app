@@ -25,7 +25,7 @@ Gem::Specification.new do |spec| # rubocop:disable Metrics/BlockLength
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths = ['lib']
 
-  spec.add_dependency 'rest-client', '~> 2.0', '2.0.0'
+  spec.add_dependency 'rest-client', '~> 2.0'
   spec.add_dependency 'typesafe_enum', '~> 0.1', '>= 0.1.7'
   spec.add_dependency 'xml-mapping_extensions', '~> 0.4', '>= 0.4.1'
 
@@ -37,6 +37,6 @@ Gem::Specification.new do |spec| # rubocop:disable Metrics/BlockLength
   spec.add_development_dependency 'simplecov', '~> 0.9.2'
   spec.add_development_dependency 'simplecov-console', '~> 0.2.0'
   spec.add_development_dependency 'rubocop', '~> 0.47'
-  spec.add_development_dependency 'webmock', '~> 1.24'
+  spec.add_development_dependency 'webmock', '~> 3.0'
   spec.add_development_dependency 'yard', '~> 0.8'
 end

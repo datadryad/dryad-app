@@ -22,6 +22,7 @@ test:
     database: ':memory:'
     pool: 5
     timeout: 5000
+  update_uri: http://localhost:3000/stash/dataset
 
 development:
   <<: *defaults
@@ -29,6 +30,7 @@ development:
     adapter: sqlite3
     database: db/development.sqlite3
     pool: 5
+  update_uri: http://localhost:3000/stash/dataset
 
 production:
   <<: *defaults

@@ -74,6 +74,9 @@ module StashEngine
     scope :submitted, (lambda do
       joins(:current_resource_state).where(stash_engine_resource_states: { resource_state:  [:submitted, :processing, :error] })
     end)
+    scope :processing, (lambda do
+      joins(:current_resource_state).where(stash_engine_resource_states: { resource_state:  [:processing] })
+    end)
     scope :by_version_desc, -> { joins(:stash_version).order('stash_engine_versions.version DESC') }
     scope :by_version, -> { joins(:stash_version).order('stash_engine_versions.version ASC') }
 

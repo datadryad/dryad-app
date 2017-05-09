@@ -48,6 +48,10 @@ module Stash
         self.stash_descriptive = descriptive_elements
       end
 
+      def id_type
+        identifier.type
+      end
+
       def id_value
         identifier.value
       end

@@ -29,6 +29,7 @@ Gem::Specification.new do |spec| # rubocop:disable Metrics/BlockLength
   spec.add_dependency 'config-factory', '~> 0.0', '>= 0.0.8'
   spec.add_dependency 'factory_girl', '~> 4.0'
   spec.add_dependency 'oai', '~> 0.3', '>= 0.3.1'
+  spec.add_dependency 'rest-client', '~> 2.0'
   spec.add_dependency 'resync-client', '~> 0.4', '>= 0.4.6'
   spec.add_dependency 'rsolr', '~> 1.1'
   spec.add_dependency 'sqlite3', '~> 1.3', '>= 1.3.10'
@@ -39,13 +40,14 @@ Gem::Specification.new do |spec| # rubocop:disable Metrics/BlockLength
 
   spec.add_development_dependency 'bundler', '~> 1.7'
   spec.add_development_dependency 'equivalent-xml', '~> 0.6.0'
+  spec.add_development_dependency 'github-markup', '~> 1.4'
   spec.add_development_dependency 'rake', '~> 12.0'
+  spec.add_development_dependency 'redcarpet', '~> 3.3'
   spec.add_development_dependency 'rspec', '~> 3.2'
+  spec.add_development_dependency 'rubocop', '~> 0.37'
   spec.add_development_dependency 'simplecov', '~> 0.9.2'
   spec.add_development_dependency 'simplecov-console', '~> 0.2.0'
-  spec.add_development_dependency 'rubocop', '~> 0.37'
-  spec.add_development_dependency 'redcarpet', '~> 3.3'
-  spec.add_development_dependency 'github-markup', '~> 1.4'
+  spec.add_development_dependency 'webmock', '~> 3.0'
   spec.add_development_dependency 'yard', '~> 0.8'
 
 end

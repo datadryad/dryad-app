@@ -81,6 +81,29 @@ module StashEngine
           expect(identifier.in_progress?).to eq(false)
         end
       end
+
+      describe '#processing_resource' do
+        before(:each) do
+          res2.current_state = 'processing'
+        end
+
+        it 'returns the "processing" version' do
+          pv = identifier.processing_resource
+          expect(pv.id).to eq(res2.id)
+        end
+      end
+
+      describe '#processing?' do
+        it 'returns false if no "processing" version exists' do
+          expect(identifier.processing?).to eq(false)
+        end
+
+        it 'returns true if a "processing" version exists' do
+          res2.current_state = 'processing'
+          expect(identifier.processing?).to eq(true)
+        end
+      end
+
     end
   end
 end

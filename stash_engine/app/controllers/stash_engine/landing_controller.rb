@@ -62,5 +62,39 @@ module StashEngine
         }
       end
     end
+
+    protect_from_forgery(except: [:update])
+    # PATCH /dataset/doi:10.xyz/abc
+    def update
+      params.require(:id)
+      params.require(:record_identifier)
+
+      identifier = identifier_from(params)
+      render(nothing: true, status: 404) && return unless identifier
+
+      repo = StashEngine::repository
+      begin
+        repo.harvested(identifier: identifier, record_identifier: params[:record_identifier])
+        # success but no content, see RFC 5789 sec. 2.1
+        render(nothing: true, status: 204)
+      rescue ArgumentError => e
+        logger.debug(e)
+        render(nothing: true, status: 422) # 422 Unprocessable Entity, see RFC 5789 sec. 2.2
+      end
+    end
+
+    private
+
+    # TODO: use this in #show and #data_paper
+    def identifier_from(params)
+      id_param = params[:id].upcase
+      type, id = id_param.split(':', 2)
+      logger.error("Can't parse identifier from id_param '#{id_param}'") && return unless id
+
+      identifiers = Identifier.where(identifier_type: type).where(identifier: id)
+      logger.warn("Identifier '#{id}' not found (id_param was: '#{id_param}')") if identifiers.empty?
+
+      identifiers.first
+    end
   end
 end

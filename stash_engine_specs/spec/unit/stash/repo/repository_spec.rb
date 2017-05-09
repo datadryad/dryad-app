@@ -7,9 +7,10 @@ module Stash
     describe Repository do
       attr_reader :repo
       attr_reader :logger
+      attr_reader :url_helpers
 
       before(:each) do
-        url_helpers = double(Module) # yes, apparently URL helpers are an anonymous module
+        @url_helpers = double(Module) # yes, apparently URL helpers are an anonymous module
         @repo = Repository.new(url_helpers: url_helpers)
 
         @logger = instance_double(Logger)
@@ -115,9 +116,9 @@ module Stash
             expect(File.exist?(res_upload_dir)).to be_falsey
           end
 
-          it 'sets the state to submitted' do
+          it 'leaves the state as "processing"' do
             expect(resource).to receive(:current_state=).with('processing')
-            expect(resource).to receive(:current_state=).with('submitted')
+            expect(resource).not_to receive(:current_state=).with('submitted')
             submit_resource
           end
 
@@ -154,9 +155,9 @@ module Stash
               expect(File.exist?(res_upload_dir)).to be_truthy
             end
 
-            it 'sets the state to submitted' do
+            it 'leaves the state as "processing"' do
               expect(resource).to receive(:current_state=).with('processing')
-              expect(resource).to receive(:current_state=).with('submitted')
+              expect(resource).not_to receive(:current_state=).with('submitted')
               submit_resource
             end
 
@@ -185,9 +186,9 @@ module Stash
               expect(msg).to include('No such file or directory')
             end
 
-            it 'sets the state to submitted' do
+            it 'leaves the state as "processing"' do
               expect(resource).to receive(:current_state=).with('processing')
-              expect(resource).to receive(:current_state=).with('submitted')
+              expect(resource).not_to receive(:current_state=).with('submitted')
               submit_resource
             end
 
@@ -296,6 +297,42 @@ module Stash
               submit_resource
             end
           end
+        end
+      end
+
+      describe :harvested do
+        attr_reader :identifier
+        attr_reader :record_identifier
+
+        before(:each) do
+          resource = double(StashEngine::Resource)
+          allow(resource).to receive(:id).and_return(17)
+
+          @identifier = double(StashEngine::Identifier)
+          allow(identifier).to receive(:processing_resource).and_return(resource)
+
+          @record_identifier = "ark:/1234/567"
+
+          def repo.update_uri_for(_)
+            'http://example.org/'
+          end
+          def repo.download_uri_for(_)
+            'http://example.org/'
+          end
+        end
+
+        it 'wraps download URI errors as ArgumentError' do
+          def repo.download_uri_for(_)
+            raise IndexError
+          end
+          expect { repo.harvested(identifier: identifier, record_identifier: record_identifier) }.to raise_error(ArgumentError, /.*download.*#{Regexp.quote(record_identifier)}.*IndexError/)
+        end
+
+        it 'wraps update URI errors as ArgumentError' do
+          def repo.update_uri_for(_)
+            raise IndexError
+          end
+          expect { repo.harvested(identifier: identifier, record_identifier: record_identifier) }.to raise_error(ArgumentError, /.*update.*#{Regexp.quote(record_identifier)}.*IndexError/)
         end
       end
     end

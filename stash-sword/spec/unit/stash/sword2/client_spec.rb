@@ -18,9 +18,7 @@ module Stash
 
       describe '#create' do
         it 'POSTs with the correct headers' do
-          authorized_uri = collection_uri.sub('http://', "http://#{username}:#{password}@")
-
-          stub_request(:post, authorized_uri).to_return(
+          stub_request(:post, collection_uri).with(basic_auth: [username, password]).to_return(
             body: '<entry xmlns="http://www.w3.org/2005/Atom"><id>http://merritt.cdlib.org/sword/v2/object/ark:/99999/fk4t157x4p</id><author><name>ucb_dash_submitter</name></author><generator uri="http://www.swordapp.org/" version="2.0" /><link href="http://merritt.cdlib.org/sword/v2/object/ark:/99999/fk4t157x4p" rel="edit" /><link href="http://merritt.cdlib.org/sword/v2/object/ark:/99999/fk4t157x4p" rel="http://purl.org/net/sword/terms/add" /><link href="http://merritt.cdlib.org/sword/v2/object/ark:/99999/fk4t157x4p" rel="edit-media" /><treatment xmlns="http://purl.org/net/sword/terms/">no treatment information available</treatment></entry>'
           )
 
@@ -29,7 +27,7 @@ module Stash
           md5 = Digest::MD5.file(zipfile).to_s
 
           actual_headers = nil
-          expect(a_request(:post, authorized_uri).with do |req|
+          expect(a_request(:post, collection_uri).with do |req|
             actual_headers = req.headers
           end).to have_been_made
 
@@ -52,10 +50,7 @@ module Stash
 
         it 'allows Packaging to be overridden' do
           manifest = 'spec/data/manifest.checkm'
-
-          authorized_uri = collection_uri.sub('http://', "http://#{username}:#{password}@")
-
-          stub_request(:post, authorized_uri).to_return(
+          stub_request(:post, collection_uri).with(basic_auth: [username, password]).to_return(
             body: '<entry xmlns="http://www.w3.org/2005/Atom"><id>http://merritt.cdlib.org/sword/v2/object/ark:/99999/fk4t157x4p</id><author><name>ucb_dash_submitter</name></author><generator uri="http://www.swordapp.org/" version="2.0" /><link href="http://merritt.cdlib.org/sword/v2/object/ark:/99999/fk4t157x4p" rel="edit" /><link href="http://merritt.cdlib.org/sword/v2/object/ark:/99999/fk4t157x4p" rel="http://purl.org/net/sword/terms/add" /><link href="http://merritt.cdlib.org/sword/v2/object/ark:/99999/fk4t157x4p" rel="edit-media" /><treatment xmlns="http://purl.org/net/sword/terms/">no treatment information available</treatment></entry>'
           )
 
@@ -64,7 +59,7 @@ module Stash
           md5 = Digest::MD5.file(manifest).to_s
 
           actual_headers = nil
-          expect(a_request(:post, authorized_uri).with do |req|
+          expect(a_request(:post, collection_uri).with do |req|
             actual_headers = req.headers
           end).to have_been_made
 
@@ -86,11 +81,9 @@ module Stash
         end
 
         it "gets the entry from the Edit-IRI in the Location: header if it isn't returned in the body" do
-          authorized_uri = collection_uri.sub('http://', "http://#{username}:#{password}@")
-
           redirect_url = 'http://www.example.org/'
-          stub_request(:post, authorized_uri).to_return(status: 201, headers: { 'Location' => redirect_url })
-          stub_request(:get, redirect_url.sub('http://', "http://#{username}:#{password}@")).to_return(
+          stub_request(:post, collection_uri).with(basic_auth: [username, password]).to_return(status: 201, headers: { 'Location' => redirect_url })
+          stub_request(:get, redirect_url).with(basic_auth: [username, password]).to_return(
             body: '<entry xmlns="http://www.w3.org/2005/Atom"><id>http://merritt.cdlib.org/sword/v2/object/ark:/99999/fk4t157x4p</id><author><name>ucb_dash_submitter</name></author><generator uri="http://www.swordapp.org/" version="2.0" /><link href="http://merritt.cdlib.org/sword/v2/object/ark:/99999/fk4t157x4p" rel="edit" /><link href="http://merritt.cdlib.org/sword/v2/object/ark:/99999/fk4t157x4p" rel="http://purl.org/net/sword/terms/add" /><link href="http://merritt.cdlib.org/sword/v2/object/ark:/99999/fk4t157x4p" rel="edit-media" /><treatment xmlns="http://purl.org/net/sword/terms/">no treatment information available</treatment></entry>'
           )
 
@@ -102,14 +95,12 @@ module Stash
         it 'forwards a success response'
 
         it 'forwards a 4xx error' do
-          authorized_uri = collection_uri.sub('http://', "http://#{username}:#{password}@")
-          stub_request(:post, authorized_uri).to_return(status: [403, 'Forbidden'])
+          stub_request(:post, collection_uri).with(basic_auth: [username, password]).to_return(status: [403, 'Forbidden'])
           expect { client.create(payload: zipfile, doi: doi) }.to raise_error(RestClient::Forbidden)
         end
 
         it 'forwards a 5xx error' do
-          authorized_uri = collection_uri.sub('http://', "http://#{username}:#{password}@")
-          stub_request(:post, authorized_uri).to_return(status: [500, 'Internal Server Error'])
+          stub_request(:post, collection_uri).with(basic_auth: [username, password]).to_return(status: [500, 'Internal Server Error'])
           expect { client.create(payload: zipfile, doi: doi) }.to raise_error(RestClient::InternalServerError)
         end
 
@@ -119,9 +110,7 @@ module Stash
       describe '#update' do
         it 'PUTs with the correct headers' do
           edit_iri = "http://merritt.cdlib.org/sword/v2/object/#{doi}"
-          authorized_uri = edit_iri.sub('http://', "http://#{username}:#{password}@")
-
-          stub_request(:put, authorized_uri)
+          stub_request(:put, edit_iri).with(basic_auth: [username, password])
 
           code = client.update(edit_iri: edit_iri, payload: zipfile)
           expect(code).to eq(200)
@@ -130,7 +119,7 @@ module Stash
 
           actual_body = nil
           actual_headers = nil
-          expect(a_request(:put, authorized_uri).with do |req|
+          expect(a_request(:put, edit_iri).with do |req|
             actual_body = req.body
             actual_headers = req.headers
           end).to have_been_made
@@ -166,9 +155,7 @@ module Stash
           manifest = 'spec/data/manifest.checkm'
 
           edit_iri = "http://merritt.cdlib.org/sword/v2/object/#{doi}"
-          authorized_uri = edit_iri.sub('http://', "http://#{username}:#{password}@")
-
-          stub_request(:put, authorized_uri)
+          stub_request(:put, edit_iri).with(basic_auth: [username, password])
 
           code = client.update(edit_iri: edit_iri, payload: manifest, packaging: Packaging::BINARY)
           expect(code).to eq(200)
@@ -177,7 +164,7 @@ module Stash
 
           actual_body = nil
           actual_headers = nil
-          expect(a_request(:put, authorized_uri).with do |req|
+          expect(a_request(:put, edit_iri).with do |req|
             actual_body = req.body
             actual_headers = req.headers
           end).to have_been_made
@@ -211,25 +198,22 @@ module Stash
 
         it 'follows redirects' do
           edit_iri = "http://merritt.cdlib.org/sword/v2/object/#{doi}"
-          authorized_uri = edit_iri.sub('http://', "http://#{username}:#{password}@")
           redirect_url = 'http://www.example.org/'
-          stub_request(:put, authorized_uri).to_return(status: 303, headers: { 'Location' => redirect_url })
-          stub_request(:get, redirect_url.sub('http://', "http://#{username}:#{password}@")).to_return(status: 200)
+          stub_request(:put, edit_iri).with(basic_auth: [username, password]).to_return(status: 303, headers: { 'Location' => redirect_url })
+          stub_request(:get, redirect_url).with(basic_auth: [username, password]).to_return(status: 200)
           code = client.update(edit_iri: edit_iri, payload: zipfile)
           expect(code).to eq(200)
         end
 
         it 'forwards a 4xx error' do
           edit_iri = "http://merritt.cdlib.org/sword/v2/object/#{doi}"
-          authorized_uri = edit_iri.sub('http://', "http://#{username}:#{password}@")
-          stub_request(:put, authorized_uri).to_return(status: [403, 'Forbidden'])
+          stub_request(:put, edit_iri).with(basic_auth: [username, password]).to_return(status: [403, 'Forbidden'])
           expect { client.update(edit_iri: edit_iri, payload: zipfile) }.to raise_error(RestClient::Forbidden)
         end
 
         it 'forwards a 5xx error' do
           edit_iri = "http://merritt.cdlib.org/sword/v2/object/#{doi}"
-          authorized_uri = edit_iri.sub('http://', "http://#{username}:#{password}@")
-          stub_request(:put, authorized_uri).to_return(status: [500, 'Internal Server Error'])
+          stub_request(:put, edit_iri).with(basic_auth: [username, password]).to_return(status: [500, 'Internal Server Error'])
           expect { client.update(edit_iri: edit_iri, payload: zipfile) }.to raise_error(RestClient::InternalServerError)
         end
 

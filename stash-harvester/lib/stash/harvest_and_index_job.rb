@@ -1,5 +1,6 @@
 require 'stash/harvester'
 require 'stash/indexer'
+require 'rest-client'
 
 module Stash
   class HarvestAndIndexJob # rubocop:disable Metrics/ClassLength:
@@ -12,13 +13,15 @@ module Stash
     attr_reader :harvest_task
     attr_reader :indexer
     attr_reader :index_uri
+    attr_reader :update_uri
     attr_reader :persistence_mgr
 
-    def initialize(source_config:, index_config:, metadata_mapper:, persistence_manager:, from_time: nil, until_time: nil) # rubocop:disable Metrics/ParameterLists
+    def initialize(source_config:, index_config:, metadata_mapper:, persistence_manager:, update_uri: nil, from_time: nil, until_time: nil) # rubocop:disable Metrics/ParameterLists
       @harvest_task = source_config.create_harvest_task(from_time: from_time, until_time: until_time)
       @indexer = index_config.create_indexer(metadata_mapper)
       @index_uri = index_config.uri
       @persistence_mgr = persistence_manager
+      @update_uri = update_uri
     end
 
     def harvest_and_index(&block)
@@ -64,6 +67,7 @@ module Stash
       count = 0
       indexer.index(harvested_records) do |result|
         harvested_record = result.record
+        post_update(harvested_record) if result.success?
         harvested_record_id = record_harvested(harvested_record, harvest_job_id)
         record_indexed(index_job_id, harvested_record, harvested_record_id, result.status)
         count += 1
@@ -79,6 +83,18 @@ module Stash
         until_time: task.until_time,
         query_url: task.query_uri
       )
+    end
+
+    def post_update(harvested_record)
+      return unless update_uri
+      patch_uri = "#{update_uri}/#{harvested_record.wrapped_identifier}"
+      record_identifier = harvested_record.identifier
+      begin
+        payload = { 'record_identifier' => record_identifier }.to_json
+        RestClient.patch(patch_uri, payload, content_type: :json)
+      rescue => e
+        log.warn("Error PATCHing #{patch_uri || 'nil'} with {'record_identifier': '#{record_identifier || 'nil'}'}: #{e}")
+      end
     end
 
     def record_harvested(harvested_record, harvest_job_id)

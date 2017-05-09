@@ -43,7 +43,12 @@ module Stash
       # The content of this record, parsed as a `StashWrapper`
       # @return [Stash::Wrapper::StashWrapper] the parsed content
       def as_wrapper
-        Stash::Wrapper::StashWrapper.parse_xml(content)
+        @wrapper ||= Stash::Wrapper::StashWrapper.parse_xml(content)
+      end
+
+      def wrapped_identifier
+        ident = as_wrapper.identifier
+        ident.formatted
       end
 
       # Visibility modifiers

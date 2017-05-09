@@ -59,12 +59,11 @@ module Stash
           password = 'presley'
           helper   = HTTPHelper.new(user_agent: user_agent, username: username, password: password)
 
-          uri            = URI('http://example.org/')
-          authorized_uri = URI(uri.to_s.sub('http://', "http://#{username}:#{password}@"))
-          stub_request(:post, authorized_uri)
+          uri = URI('http://example.org/')
+          stub_request(:post, uri.to_s).with(basic_auth: [username, password])
 
           helper.post(uri: uri, payload: 'the payload')
-          expect(a_request(:post, authorized_uri)).to have_been_made
+          expect(a_request(:post, uri.to_s)).to have_been_made
         end
 
         it 'sets other specified headers' do

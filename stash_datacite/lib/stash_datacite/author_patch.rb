@@ -1,4 +1,6 @@
 module StashDatacite
+  # Ensure Author-Affiliation relation & related methods
+  # invoked from StashDatacite::Resource::Completions when first needed
   module AuthorPatch
     def self.patch!
       StashEngine::Author.instance_eval do

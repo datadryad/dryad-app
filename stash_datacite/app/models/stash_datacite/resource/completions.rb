@@ -13,6 +13,8 @@ class TrueClass
   end
 end
 
+require 'stash_datacite/author_patch'
+
 module StashDatacite
   module Resource
     # TODO: is this class really necessary? as with Review, seems like we could just patch Resource
@@ -20,6 +22,9 @@ module StashDatacite
     class Completions
       def initialize(resource)
         @resource = resource
+
+        # After dev mode autoreloading, ensure Author-Affiliation relation & related methods
+        StashDatacite::AuthorPatch.patch! unless StashEngine::Author.method_defined?(:affiliation)
       end
 
       # these are the required ones and return true/false if completed

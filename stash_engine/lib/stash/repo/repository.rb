@@ -3,7 +3,6 @@ require 'fileutils'
 
 module Stash
   module Repo
-
     # Abstraction for a repository
     class Repository
       attr_reader :url_helpers
@@ -19,6 +18,22 @@ module Stash
       # @return [SubmissionJob] a job that will submit that resource
       def create_submission_job(resource_id:) # rubocop:disable Lint/UnusedMethodArgument
         raise NoMethodError, "#{self.class} should override #create_submission_job to return one or more submission tasks"
+      end
+
+      # Determines the download URI for the specified resource. Called after the record is harvested
+      # for discovery.
+      # @param resource [StashEngine::Resource] the resource
+      # @param record_identifier [String] the harvested record identifier (repository- or protocol-dependent)
+      def download_uri_for(resource:, record_identifier:) # rubocop:disable Lint/UnusedMethodArgument
+        raise NoMethodError, "#{self.class} should override #download_uri_for to determine the download URI"
+      end
+
+      # Determines the update URI for the specified resource. Called after the record is harvested
+      # for discovery.
+      # @param resource [StashEngine::Resource] the resource
+      # @param record_identifier [String] the harvested record identifier (repository- or protocol-dependent)
+      def update_uri_for(resource:, record_identifier:) # rubocop:disable Lint/UnusedMethodArgument
+        raise NoMethodError, "#{self.class} should override #update_uri_for to determine the update URI"
       end
 
       # Returns a logger
@@ -45,12 +60,40 @@ module Stash
         end
       end
 
+      def harvested(identifier:, record_identifier:)
+        resource = identifier.processing_resource
+        return unless resource # harvester could be re-harvesting stuff we already have
+
+        download_uri = get_download_uri(resource, record_identifier)
+        update_uri = get_update_uri(resource, record_identifier)
+
+        log.debug("Setting download_uri for #{resource.id} to #{download_uri}")
+        log.debug("Setting update_uri for #{resource.id} to #{update_uri}")
+
+        resource.download_uri = download_uri
+        resource.update_uri = update_uri
+        resource.current_state = 'submitted'
+        resource.save
+      end
+
       private
+
+      def get_download_uri(resource, record_identifier)
+        download_uri_for(resource: resource, record_identifier: record_identifier)
+      rescue => e
+        raise ArgumentError, "Unable to determine download URI for resource #{resource.id} from record identifier #{record_identifier}: #{e}"
+      end
+
+      def get_update_uri(resource, record_identifier)
+        update_uri_for(resource: resource, record_identifier: record_identifier)
+      rescue => e
+        raise ArgumentError, "Unable to determine update URI for resource #{resource.id} from record identifier #{record_identifier}: #{e}"
+      end
 
       def handle_success(result)
         result.log_to(log)
         resource = StashEngine::Resource.find(result.resource_id)
-        resource.current_state = 'submitted'
+        # resource.current_state = 'submitted'
         update_submission_log(result)
         StashEngine::UserMailer.submission_succeeded(resource).deliver_now
         cleanup_files(resource)

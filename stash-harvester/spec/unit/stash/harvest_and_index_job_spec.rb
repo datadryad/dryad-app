@@ -1,5 +1,7 @@
 require 'spec_helper'
 require 'stash/harvest_and_index_job'
+require 'rest-client'
+require 'webmock/rspec'
 
 module Stash
   describe HarvestAndIndexJob do
@@ -17,6 +19,7 @@ module Stash
     attr_reader :solr
     attr_reader :wrappers
     attr_reader :arks
+    attr_reader :dois
     attr_reader :job
 
     def source_config
@@ -47,6 +50,10 @@ module Stash
       harvest_task.query_uri
     end
 
+    before(:all) do
+      WebMock.disable_net_connect!
+    end
+
     before(:each) do
       # Mock persistence
       persistence_config = instance_double(PersistenceConfig)
@@ -64,21 +71,27 @@ module Stash
       # Mock OAI
       @wrappers = []
       @arks = []
-      oai_records = ['spec/data/wrapped_datacite/wrapped-datacite-all-geodata.xml',
-                     'spec/data/wrapped_datacite/wrapped-datacite-no-geodata.xml',
-                     'spec/data/wrapped_datacite/wrapped-datacite-place-only.xml'].map do |xml|
+      @dois = []
+      oai_records = %w[
+        spec/data/wrapped_datacite/wrapped-datacite-all-geodata.xml
+        spec/data/wrapped_datacite/wrapped-datacite-no-geodata.xml
+        spec/data/wrapped_datacite/wrapped-datacite-place-only.xml
+      ].map do |xml|
         stash_wrapper = Stash::Wrapper::StashWrapper.parse_xml(File.read(xml))
         @wrappers << stash_wrapper
-        ark = "http://n2t.net/ark:/#{Digest::MD5.hexdigest(stash_wrapper.id_value)}"
+        id_value = stash_wrapper.id_value
+        ark = "http://n2t.net/ark:/#{Digest::MD5.hexdigest(id_value)}"
         @arks << ark
+        doi = "doi:#{id_value}"
+        @dois << doi
         datestamp = stash_wrapper.version_date.to_time.utc.xmlschema
 
         record = REXML::Document.new(['<record>',
-                                      '  <header> ',
-                                      "   <identifier>#{ark}</identifier>",
-                                      "   <datestamp>#{datestamp}</datestamp>",
-                                      '  </header> ',
-                                      '</record>'].join("\n")).root
+          '  <header> ',
+          "   <identifier>#{ark}</identifier>",
+          "   <datestamp>#{datestamp}</datestamp>",
+          '  </header> ',
+          '</record>'].join("\n")).root
 
         metadata = REXML::Element.new('metadata')
         metadata.add_element(stash_wrapper.save_to_xml)
@@ -107,6 +120,7 @@ module Stash
       @from_time = Time.utc(1914, 8, 4, 23)
       @until_time = Time.utc(2018, 11, 11, 10)
       @job = HarvestAndIndexJob.new(
+        update_uri: nil,
         source_config: source_config,
         index_config: index_config,
         metadata_mapper: metadata_mapper,
@@ -276,6 +290,68 @@ module Stash
           expect { job.harvest_and_index }.to raise_error(e)
           expect(logged).to include(harvest_job_id.to_s)
           expect(logged).to include(Indexer::IndexStatus::FAILED.value.to_s)
+        end
+
+        it 'logs :post_update failures' do
+          update_uri_base = 'http://stash-test.example.org/stash/datasets/'
+          job = HarvestAndIndexJob.new(
+            update_uri: URI(update_uri_base),
+            source_config: source_config,
+            index_config: index_config,
+            metadata_mapper: metadata_mapper,
+            persistence_manager: @persistence_mgr,
+            from_time: from_time,
+            until_time: until_time
+          )
+
+          stubs = []
+          expected_uris = []
+          dois.each_with_index do |doi, i|
+            ark = arks[i]
+            expected_uri = "#{update_uri_base}/#{doi}"
+            expected_payload = { 'record_identifier' => ark }.to_json
+            stubs << stub_request(:patch, expected_uri)
+              .with(body: expected_payload)
+              .to_timeout
+            expected_uris << expected_uri
+          end
+
+          job.harvest_and_index
+
+          expected_uris.each_with_index do |uri, i|
+            expect(logged).to include(uri)
+            expect(logged).to include(arks[i])
+            expect(logged.downcase).to include('timed out')
+          end
+        end
+      end
+
+      describe '#post_update' do
+        it 'posts an update for each record, if an update URI is configured' do
+          update_uri_base = 'http://stash-test.example.org/stash/datasets/'
+          job = HarvestAndIndexJob.new(
+            update_uri: URI(update_uri_base),
+            source_config: source_config,
+            index_config: index_config,
+            metadata_mapper: metadata_mapper,
+            persistence_manager: @persistence_mgr,
+            from_time: from_time,
+            until_time: until_time
+          )
+
+          stubs = []
+          dois.each_with_index do |doi, i|
+            ark = arks[i]
+            expected_uri = "#{update_uri_base}/#{doi}"
+            expected_payload = { 'record_identifier' => ark }.to_json
+            stubs << stub_request(:patch, expected_uri).with(body: expected_payload)
+          end
+
+          job.harvest_and_index
+
+          aggregate_failures('updates') do
+            stubs.each { |stub| expect(stub).to have_been_requested }
+          end
         end
       end
     end

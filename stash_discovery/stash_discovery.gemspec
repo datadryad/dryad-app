@@ -17,6 +17,9 @@ Gem::Specification.new do |s|
   s.files = Dir['{app,config,db,lib}/**/*', 'MIT-LICENSE', 'Rakefile', 'README.rdoc']
   s.test_files = Dir['test/**/*']
 
+  # TODO: remove once we're on Rails 5, probably
+  s.add_dependency 'thor', '0.19.1' # hack to get around https://github.com/erikhuda/thor/issues/538
+
   s.add_dependency 'rails', '~> 4.2'
   s.add_dependency 'geoblacklight', '~> 1.1.2'
   s.add_dependency 'blacklight', '~> 6.5.0'

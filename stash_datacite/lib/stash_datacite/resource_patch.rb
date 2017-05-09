@@ -14,7 +14,7 @@ module StashDatacite
     # class in the configuration.  As it is, it's problematic to change the class until being
     # certain that the configuration is loaded and so the resource class is defined.  We could
     # probably make it straight forward if we didn't allow the shared resource class to be user-configurable.
-    # TODO: just hard-code the resource class and call this from initializers/patches.rb (cf. AuthorPatch)
+    # TODO: just hard-code the resource class and call this when first needed (cf. AuthorPatch)
     def self.associate_with_resource(resource_class)
       resource_class.instance_eval do
         has_many :descriptions, class_name: 'StashDatacite::Description', dependent: :destroy #optional

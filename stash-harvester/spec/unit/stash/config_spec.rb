@@ -82,6 +82,11 @@ module Stash
         expect(metadata_mapper).to be_a(Indexer::DataciteGeoblacklight::Mapper)
       end
 
+      it 'extracts the update URI' do
+        update_uri = @config.update_uri
+        expect(update_uri).to eq(URI('http://stash-test.example.org/stash/datasets/'))
+      end
+
       it 'provides appropriate error messages for bad config sections' do
         good_values = [/oai.example.org/, /solr.example.org/, /proxy.example.com/]
         bad_value = "'I am not a valid hostname'"

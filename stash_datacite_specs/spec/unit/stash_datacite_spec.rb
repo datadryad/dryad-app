@@ -19,13 +19,13 @@ describe StashDatacite do
 
   describe '#resource_class=' do
     it 'sets the resource class' do
-      # TODO: just hard-code the resource class and call this from initializers/patches.rb (cf. AuthorPatch)
+      # TODO: just hard-code the resource class
       StashDatacite.resource_class = 'StashEngine::Resource'
       expect(StashDatacite.resource_class).to eq(StashEngine::Resource)
     end
 
     it 'associates the resource patch' do
-      # TODO: just hard-code the resource class and call this from initializers/patches.rb (cf. AuthorPatch)
+      # TODO: just hard-code the resource class
       expect(StashDatacite::ResourcePatch).to receive(:associate_with_resource).with(StashEngine::Resource)
       StashDatacite.resource_class = 'StashEngine::Resource'
     end

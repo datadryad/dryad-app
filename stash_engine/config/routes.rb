@@ -55,6 +55,7 @@ StashEngine::Engine.routes.draw do
   get 'dataset/*id', :to => 'landing#show', as: 'show', :constraints => { :id => /\S+/ }
   get 'data_paper/*id', :to => 'landing#data_paper', as: 'data_paper', :constraints => { :id => /\S+/ }
   get '404', :to => 'pages#app_404', as: 'app_404'
+  patch 'dataset/*id', :to => 'landing#update', :constraints => { :id => /\S+/ }
 
   get 'embargoes/new', to: 'embargoes#new'
   post 'embargoes/create', to: 'embargoes#create'
