@@ -5,7 +5,7 @@ module StashEngine
   class FileUploadsController < ApplicationController
     before_action :require_login
     before_action :set_file_info, only: [:destroy, :remove, :restore]
-    before_action :require_file_owner, except: [:create, :destroy, :remove, :restore, :revert]
+    before_action :require_file_owner, except: [:create, :destroy, :remove, :restore, :revert, :validate_urls]
     before_action :set_create_prerequisites, only: [:create]
 
     # this is a newly uploaded file and we're deleting it
@@ -14,7 +14,10 @@ module StashEngine
         format.js do
           fn = @file.upload_file_name
           res_id = @file.resource_id
-          File.delete(@file.temp_file_path) if File.exist?(@file.temp_file_path)
+          temp_file_path = @file.temp_file_path
+          if temp_file_path.present?
+            File.delete(@file.temp_file_path)
+          end
           @file_id = @file.id
           @file.destroy
           @extra_files = FileUpload.where(resource_id: res_id, upload_file_name: fn)
@@ -88,6 +91,39 @@ module StashEngine
       end
     end
 
+    ##manifest workflow
+    def validate_urls
+      respond_to do |format|
+        @resource = Resource.where(id: params[:resource_id]).first
+        @uploads_from_server = @resource.latest_files_from_server_states
+        urls_array = params[:file_upload][:url].split(/[\s,]+/).delete_if(&:blank?)
+        @messages = []
+        urls_array.each do |url|
+          validated_url =  StashEngine::UrlValidator.new(url: url)
+          if validated_url.validate == true && validated_url.status_code == 200
+            @file = FileUpload.create( resource_id: @resource.id,
+                                              url: validated_url.url,
+                                              status_code: validated_url.status_code,
+                                              upload_file_name: validated_url.filename,
+                                              upload_content_type: validated_url.mime_type,
+                                              upload_file_size: validated_url.size,
+                                              file_state: 'created')
+            @messages << ""
+          elsif validated_url.validate == true && validated_url.status_code != 200
+            @file = FileUpload.create( resource_id: @resource.id,
+                                              url: validated_url.url,
+                                              status_code: validated_url.status_code,
+                                              file_state: 'created')
+            @messages << display_error_messages(validated_url)
+          else
+            @file = FileUpload.new(resource_id: @resource.id) ##apparently required for the upload page partials to load
+            @messages << display_error_messages(validated_url)
+          end
+          format.js
+        end
+      end
+    end
+
     private
 
     def require_file_owner
@@ -125,6 +161,35 @@ module StashEngine
         file_state: 'created'
       )
       @my_file.save
+    end
+
+    ##manifest workflow
+    def display_error_messages(validated_url)
+      # display the correct error message based on the url status code
+      unless validated_url.blank?
+        error_messages = []
+        case validated_url.status_code
+        when 300...400
+          error_messages << "The requrest is being redirected to #{url.redirected_to}."
+        when 400
+          error_messages << "The request cannot be fulfilled due to bad syntax for the given URL #{validated_url.url}."
+        when 401
+          error_messages << "The given URL #{validated_url.url} is unauthorized."
+        when 403 || 404
+          error_messages << "The requested resource could not be found but may be available again in the future for the given URL #{validated_url.url}."
+        when 410
+          error_messages << "The requested page is no longer available for the given URL #{validated_url.url}."
+        when 414
+          error_messages << "The server will not accept the request, because the URL #{validated_url.url} is too long."
+        when 408 || 499
+          error_messages << "The server timed out waiting for the request for the given URL #{validated_url.url}."
+        when 500...511
+          error_messages << "The server encountered an unexpected error which prevented it from fulfilling the request for the given URL #{validated_url.url}."
+        else
+          error_messages << "The given URL #{validated_url.url} is invalid. Please check the URL and resubmit"
+        end
+        return error_messages
+      end
     end
 
     def correct_existing_for_overwrite(resource_id, file_upload)
