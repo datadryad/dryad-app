@@ -50,6 +50,7 @@
 
     <div class="c-review-files">
       <%= render partial: "stash_engine/file_uploads/show", locals: { file_uploads:  @review.file_uploads } %>
+      <%= render partial: "stash_engine/file_uploads/show_files_from_server", locals: { file_uploads:  @review.file_from_server_uploads } %>
       <%= link_to 'Edit Files', stash_engine.upload_resource_path(@resource), id: 'upload_path',
                   class: 'c-review-files-button o-button__icon-left', role: 'button' %>
     </div>
