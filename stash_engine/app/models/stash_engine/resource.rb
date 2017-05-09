@@ -128,6 +128,13 @@ module StashEngine
       file_uploads.where(file_state: ['copied', 'created']).sum(:upload_file_size)
     end
 
+    # returns the upload type either :files, :manifest, :unknown (unknown if no files are started for this version yet)
+    def upload_type
+      return :manifest if file_uploads.newly_created.url_submission.count > 0
+      return :files if file_uploads.newly_created.file_submission.count > 0
+      return :unknown
+    end
+
     # ----------------------------   ## FILES UPLOADED FROM SERVER --------------------------------#
 
     # gets the latest files that are not deleted in db, current files for this version

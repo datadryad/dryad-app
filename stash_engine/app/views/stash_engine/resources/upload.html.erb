@@ -12,7 +12,9 @@
 <h2 class="t-upload__choose-heading--active">Step 1: Choose files to Upload</h2>
 <div>
   <strong>Where are your files located?</strong>
-  <%= select_tag "file_location", options_for_select([ "On this Computer", "On a Server" ]), id: 'file_location_select' %>
+  <%= select_tag "file_location", options_for_select([ ['On this Computer', 'files'], ['On a Server', 'manifest'] ],
+             selected: ([:files, :unknown].include?(@resource.upload_type) ? 'files': 'manifest') ),
+             id: 'file_location_select', disabled: (@resource.upload_type != :unknown) %>
 </div>
 <br/>
 
@@ -75,8 +77,7 @@
   updateButtonLinkStates();
 
   $(function () {
-    $('#file_location_select').val('On this Computer');
-    $('.files_on_computer').show();
+    showFilesOrManifest(); // decides to either show files or manifest uploads based on select list state
     $('#post_submit_spinner').hide();
     selectFileLocation();
   });

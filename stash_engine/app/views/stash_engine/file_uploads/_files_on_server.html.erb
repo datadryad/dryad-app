@@ -1,7 +1,7 @@
 <!-- manifest workflow -->
 <%= form_for file, url: path, remote: true, html: { id: 'url_validate' } do |f| %>
   <%= f.hidden_field :resource_id %>
-	<%= f.text_area :url, cols: 40, rows: 15, id: 'location_urls', placeholder: 'List file location URLs here'	%>
+	<%= f.text_area :url, cols: 80, rows: 15, id: 'location_urls', placeholder: 'List file location URLs here'	%>
 
 	<p>Separate URLs with commas or place each URL on a new line.</p>
 

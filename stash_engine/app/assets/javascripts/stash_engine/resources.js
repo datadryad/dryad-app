@@ -3,9 +3,9 @@
 
 // this function triggered when dropped, but also continues the upload function
 
-// *******************************
-// Begin Javascript for FileUpload
-// *******************************
+// ********************************************************************************
+// Begin Javascript for FileUpload page.  This section only for FILES, not MANIFEST
+// ********************************************************************************
 $(function () {
   // only do this stuff on the file upload page.
   if($('body.resources_upload').length < 1){
@@ -288,6 +288,19 @@ function undoConfirmUpload() {
   $('#upload_all').attr('disabled', true);
 }
 
-// *****************************
-// end Javascript for FileUpload
-// *****************************
+// **********************************************************************************
+// end Javascript for FileUpload page.  This section was only for FILES, not MANIFEST
+// **********************************************************************************
+
+// hides files vs manifest sections based on drop-down choice
+function showFilesOrManifest(){
+  var mySelect = $('#file_location_select').val();
+  if (mySelect == "files") {
+    $('.files_on_computer').show();
+    $('.files_on_server').hide();
+  }
+  else {
+    $('.files_on_server').show();
+    $('.files_on_computer').hide();
+  }
+}

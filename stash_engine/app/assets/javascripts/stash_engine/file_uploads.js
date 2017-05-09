@@ -15,13 +15,6 @@ function validateFileUrl(){
 
 function selectFileLocation(){
   $('#file_location_select').on('change', function() {
-    if ($(this).val() == "On this Computer") {
-      $('.files_on_computer').show();
-      $('.files_on_server').hide();
-    }
-    else {
-      $('.files_on_server').show();
-      $('.files_on_computer').hide();
-    }
+    showFilesOrManifest();
   });
 }
