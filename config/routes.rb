@@ -66,6 +66,9 @@ Rails.application.routes.draw do
   #     resources :products
   #   end
 
+  # this is a rack way of showing a 404 for some crazy old/speculative link that Google has stuck in its craw
+  get '/search/facet/dc_creator_sm', to: proc { [404, {}, ['']] }
+
   mount StashEngine::Engine, at: APP_CONFIG.stash_mount
   mount StashDatacite::Engine, at: '/stash_datacite'
 
