@@ -1,0 +1,10 @@
+<% #takes local variable of resource %>
+<div>
+  <h2 class="t-upload__choose-heading--active">Uploaded Files</h2>
+  <% if resource.file_uploads.where.not(url: [nil, ''], upload_file_name: [nil, '']).count < 1 %>
+    <span id="no_chosen">No files have been uploaded.</span>
+  <% else %>
+    <%= render partial: "stash_engine/file_uploads/uploaded_file_from_server",
+               collection: resource.latest_files_from_server_states, as: :uploaded_file %>
+  <% end %>
+</div>

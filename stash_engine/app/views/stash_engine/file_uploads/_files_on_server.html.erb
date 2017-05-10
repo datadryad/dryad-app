@@ -3,7 +3,7 @@
   <%= f.hidden_field :resource_id %>
 	<%= f.text_area :url, cols: 80, rows: 15, id: 'location_urls', placeholder: 'List file location URLs here'	%>
 
-	<p>Separate URLs with commas or place each URL on a new line.</p>
+	<p>Place each URL on a new line.</p>
 
 	<div class="actions" id="post_submit_before_spinner">
     <%= f.submit 'Validate Files', id: 'validate_files', class: 'o-button__submit' %>
@@ -15,19 +15,12 @@
   	<%= image_tag 'stash_engine/spinner.gif', size: '80x60', alt: 'Loading spinner', id: 'post_submit_spinner'  %>
 </div>
 
-<% unless messages.blank? %>
-  <strong><%= messages.join("<br>").html_safe %></strong>
-<% end %>
+<div id="validated_errors">
+  <%= render partial: 'stash_engine/file_uploads/validated_errors', locals: {resource: @resource} %>
+</div>
 
-<div class="c-upload">
-	<div>
-		<h2 class="t-upload__choose-heading--active">Uploaded Files</h2>
-    <% if @resource.file_uploads.where.not(url: [nil, ''], upload_file_name: [nil, '']).count < 1 %>
-      <span id="no_chosen">No files chosen</span>
-    <% else %>
-      <%= render partial: "stash_engine/file_uploads/uploaded_file_from_server", collection: @uploads_from_server, as: :uploaded_file %>
-    <% end %>
-  </div>
+<div class="c-upload" id="validated_files">
+	<%= render partial: 'stash_engine/file_uploads/validated_files', locals: {resource: @resource} %>
 </div>
 
 <script type="text/javascript">

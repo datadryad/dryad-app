@@ -1,6 +1,12 @@
 // manifest workflow
-$('#file_location_select').val("On a Server");
-$('.files_on_server').show();
-$('.files_on_server').replaceWith("<%= escape_javascript(render partial: 'stash_engine/file_uploads/files_on_server', locals: { file: @file, messages: @messages, path: stash_engine.file_uploads_validate_urls_path(@resource.id) }) %>");
-$('.files_on_computer').hide();
-selectFileLocation();
+$('#validated_errors').html("<%= escape_javascript(
+          render partial: 'stash_engine/file_uploads/validated_errors', locals: {resource: @resource}) %>");
+$('#validated_files').html("<%= escape_javascript(
+          render partial: 'stash_engine/file_uploads/validated_files', locals: {resource: @resource}) %>");
+$('#post_submit_spinner').hide();
+// disable or enable the drop-down depending if there are any files there.
+<% if @resource.upload_type != :unknown %>
+  $('#file_location_select').prop('disabled', true);
+<% else %>
+  $('#file_location_select').prop('disabled', false);
+<% end %>

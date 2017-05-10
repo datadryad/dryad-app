@@ -1,0 +1,6 @@
+<% #takes local variable of resource %>
+<% if resource.file_uploads.newly_created.errors.count > 0 %>
+  <% resource.file_uploads.newly_created.errors.each do |fu| %>
+    <p><%= fu.url %> <%= fu.error_message %></p>
+  <% end %>
+<% end %>
