@@ -96,28 +96,27 @@ module StashEngine
       respond_to do |format|
         @resource = Resource.where(id: params[:resource_id]).first
         @uploads_from_server = @resource.latest_files_from_server_states
-        urls_array = params[:file_upload][:url].split(/[\s,]+/).delete_if(&:blank?)
+        urls_array = params[:file_upload][:url].split(/[\r\n]+/).delete_if(&:blank?)
         @messages = []
         urls_array.each do |url|
-          validated_url =  StashEngine::UrlValidator.new(url: url)
-          if validated_url.validate == true && validated_url.status_code == 200
+          validator =  StashEngine::UrlValidator.new(url: url)
+          val_result = validator.validate
+
+          if val_result == true && validator.status_code == 200
             @file = FileUpload.create( resource_id: @resource.id,
-                                              url: validated_url.url,
-                                              status_code: validated_url.status_code,
-                                              upload_file_name: validated_url.filename,
-                                              upload_content_type: validated_url.mime_type,
-                                              upload_file_size: validated_url.size,
+                                              url: validator.url,
+                                              status_code: validator.status_code,
+                                              upload_file_name: validator.filename,
+                                              upload_content_type: validator.mime_type,
+                                              upload_file_size: validator.size,
                                               file_state: 'created')
-            @messages << "The given #{validated_url.url} has been uploaded successfully."
-          elsif validated_url.validate == true && validated_url.status_code != 200
-            @file = FileUpload.create( resource_id: @resource.id,
-                                              url: validated_url.url,
-                                              status_code: validated_url.status_code,
-                                              file_state: 'created')
-            @messages << display_error_messages(validated_url)
+            @messages << "The given #{validator.url} has been uploaded successfully."
           else
-            @file = FileUpload.new(resource_id: @resource.id) ##apparently required for the upload page partials to load
-            @messages << display_error_messages(validated_url)
+            @file = FileUpload.create( resource_id: @resource.id,
+                                              url: validator.url,
+                                              status_code: validator.status_code,
+                                              file_state: 'created')
+            @messages << display_error_messages(validator)
           end
           format.js
         end
@@ -164,29 +163,29 @@ module StashEngine
     end
 
     ##manifest workflow
-    def display_error_messages(validated_url)
+    def display_error_messages(v)
       # display the correct error message based on the url status code
-      unless validated_url.blank?
+      unless v.blank?
         error_messages = []
-        case validated_url.status_code
-        when 300...400
-          error_messages << "The requrest is being redirected to #{url.redirected_to}."
+        case v.status_code
+        when 300..399
+          error_messages << "The requrest is being redirected to #{v.redirected_to}."
         when 400
-          error_messages << "The request cannot be fulfilled due to bad syntax for the given URL #{validated_url.url}."
+          error_messages << "The request cannot be fulfilled due to bad syntax for the given URL #{v.url}."
         when 401
-          error_messages << "The given URL #{validated_url.url} is unauthorized."
-        when 403 || 404
-          error_messages << "The requested resource could not be found but may be available again in the future for the given URL #{validated_url.url}."
+          error_messages << "The given URL #{v.url} is unauthorized."
+        when 403..404
+          error_messages << "The requested resource could not be found but may be available again in the future for the given URL #{v.url}."
         when 410
-          error_messages << "The requested page is no longer available for the given URL #{validated_url.url}."
+          error_messages << "The requested page is no longer available for the given URL #{v.url}."
         when 414
-          error_messages << "The server will not accept the request, because the URL #{validated_url.url} is too long."
-        when 408 || 499
-          error_messages << "The server timed out waiting for the request for the given URL #{validated_url.url}."
-        when 500...511
-          error_messages << "The server encountered an unexpected error which prevented it from fulfilling the request for the given URL #{validated_url.url}."
+          error_messages << "The server will not accept the request, because the URL #{v.url} is too long."
+        when 408, 499
+          error_messages << "The server timed out waiting for the request for the given URL #{v.url}."
+        when 500..511
+          error_messages << "The server encountered an unexpected error which prevented it from fulfilling the request for the given URL #{v.url}."
         else
-          error_messages << "The given URL #{validated_url.url} is invalid. Please check the URL and resubmit"
+          error_messages << "The given URL #{v.url} is invalid. Please check the URL and resubmit"
         end
         return error_messages
       end
