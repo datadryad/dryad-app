@@ -74,6 +74,10 @@ module StashEngine
 
       # this callback allows following redirects from http to https or opposite, otherwise it will not follow them
       clnt.redirect_uri_callback = ->(uri, res) { res.header['location'][0] }
+      clnt.connect_timeout = 5
+      clnt.send_timeout = 5
+      clnt.receive_timeout = 5
+      clnt.keep_alive_timeout = 5
       clnt.ssl_config.verify_mode = OpenSSL::SSL::VERIFY_NONE
       #clnt.send_timeout = 15
       #clnt.receive_timeout = 15

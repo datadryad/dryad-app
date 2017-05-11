@@ -25,11 +25,11 @@ module StashEngine
         when 414
           "The server will not accept the request, because the URL #{url} is too long."
         when 408, 499
-          "The server timed out waiting for the request for the given URL #{url}."
+          "The server timed out waiting for the request to complete."
         when 500..511
-          "The server encountered an unexpected error which prevented it from fulfilling the request for the given URL #{url}."
+          "Encountered a remote server error while retrieving the request."
         else
-          "The given URL #{url} is invalid. Please check the URL and resubmit."
+          "The given URL is invalid. Please check the URL and resubmit."
       end
     end
   end
