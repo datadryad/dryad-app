@@ -129,6 +129,7 @@ module Stash
       end
 
       def remove_if_exists(file)
+        return if file.blank?
         FileUtils.remove_entry_secure(file) if File.exist?(file)
       end
 
