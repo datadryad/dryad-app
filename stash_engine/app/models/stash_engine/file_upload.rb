@@ -15,13 +15,13 @@ module StashEngine
       return '' if url.nil? || status_code == 200
       case status_code
         when 400
-          "The request cannot be fulfilled due to bad syntax for the given URL #{url}."
+          "The URL was not entered correctly. Be sure to use http:// or https:// to start all URLS"
         when 401
-          "The given URL #{v.url} is unauthorized."
+          "The URL was not authorized for download."
         when 403..404
-          "The requested resource could not be found but may be available again in the future for the given URL #{url}."
+          "The URL was not found."
         when 410
-          "The requested page is no longer available for the given URL #{url}."
+          "The requested URL is no longer available."
         when 414
           "The server will not accept the request, because the URL #{url} is too long."
         when 408, 499

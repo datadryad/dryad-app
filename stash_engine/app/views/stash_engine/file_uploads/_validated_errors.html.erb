@@ -1,6 +1,14 @@
 <% #takes local variable of resource %>
-<% if resource.file_uploads.newly_created.errors.count > 0 %>
-  <% resource.file_uploads.newly_created.errors.each do |fu| %>
-    <p><%= fu.url %> <%= fu.error_message %></p>
-  <% end %>
-<% end %>
+<div class="c-manifest">
+  <div id="manifest_errors">
+    <% if resource.file_uploads.newly_created.errors.count > 0 %>
+      <% resource.file_uploads.newly_created.errors.each do |fu| %>
+        <div class="c-manifest__item">
+          <div class="c-manifest__url"><%= fu.url %></div>
+          <div class="c-manifest__error"><%= fu.error_message %></div>
+          <div class="c-manifest__action">Delete</div>
+        </div>
+      <% end %>
+    <% end %>
+  </div>
+</div>
