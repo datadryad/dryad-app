@@ -1,0 +1,3 @@
+// redraw the validated errors
+$('#validated_errors').html("<%= escape_javascript(
+          render partial: 'stash_engine/file_uploads/validated_errors', locals: {resource: @resource}) %>");

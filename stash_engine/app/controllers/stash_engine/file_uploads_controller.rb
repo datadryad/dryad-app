@@ -4,8 +4,9 @@ require 'fileutils'
 module StashEngine
   class FileUploadsController < ApplicationController
     before_action :require_login
-    before_action :set_file_info, only: [:destroy, :remove, :restore]
-    before_action :require_file_owner, except: [:create, :destroy, :remove, :restore, :revert, :validate_urls]
+    before_action :set_file_info, only: [:destroy, :remove, :restore, :destroy_error]
+    #TODO check that the following before action really should be ignored on these
+    before_action :require_file_owner, except: [:create, :destroy, :remove, :restore, :revert, :validate_urls, :destroy_error]
     before_action :set_create_prerequisites, only: [:create]
 
     # this is a newly uploaded file and we're deleting it
@@ -24,6 +25,16 @@ module StashEngine
           @extra_files.each do |my_f|
             my_f.update_attribute(:file_state, 'deleted') if my_f.file_state == 'copied'
           end
+        end
+      end
+    end
+
+    # this is a validated manifest URI that doesn't pass validation and we're deleting it from the DB
+    def destroy_error
+      respond_to do |format|
+        format.js do
+          @resource = @file.resource
+          @file.destroy
         end
       end
     end
@@ -116,7 +127,6 @@ module StashEngine
                                               url: validator.url,
                                               status_code: validator.status_code,
                                               file_state: 'created')
-            @messages << display_error_messages(validator)
           end
           format.js
         end
@@ -160,35 +170,6 @@ module StashEngine
         file_state: 'created'
       )
       @my_file.save
-    end
-
-    ##manifest workflow
-    def display_error_messages(v)
-      # display the correct error message based on the url status code
-      unless v.blank?
-        error_messages = []
-        case v.status_code
-        when 300..399
-          error_messages << "The requrest is being redirected to #{v.redirected_to}."
-        when 400
-          error_messages << "The request cannot be fulfilled due to bad syntax for the given URL #{v.url}."
-        when 401
-          error_messages << "The given URL #{v.url} is unauthorized."
-        when 403..404
-          error_messages << "The requested resource could not be found but may be available again in the future for the given URL #{v.url}."
-        when 410
-          error_messages << "The requested page is no longer available for the given URL #{v.url}."
-        when 414
-          error_messages << "The server will not accept the request, because the URL #{v.url} is too long."
-        when 408, 499
-          error_messages << "The server timed out waiting for the request for the given URL #{v.url}."
-        when 500..511
-          error_messages << "The server encountered an unexpected error which prevented it from fulfilling the request for the given URL #{v.url}."
-        else
-          error_messages << "The given URL #{v.url} is invalid. Please check the URL and resubmit"
-        end
-        return error_messages
-      end
     end
 
     def correct_existing_for_overwrite(resource_id, file_upload)

@@ -2,11 +2,15 @@
 <div class="c-manifest">
   <div id="manifest_errors">
     <% if resource.file_uploads.newly_created.errors.count > 0 %>
+      <h2 class="t-upload__choose-heading--active">Validation Errors</h2>
       <% resource.file_uploads.newly_created.errors.each do |fu| %>
         <div class="c-manifest__item">
           <div class="c-manifest__url"><%= fu.url %></div>
           <div class="c-manifest__error"><%= fu.error_message %></div>
-          <div class="c-manifest__action">Delete</div>
+          <div class="c-manifest__action">
+            <%= button_to 'Delete', destroy_error_file_upload_path(fu), method: :patch, remote: true, class: "c-upload__button",
+                          form_class: 'o-button__inline-form' %>
+          </div>
         </div>
       <% end %>
     <% end %>

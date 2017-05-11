@@ -153,7 +153,7 @@ module StashEngine
 
     ## the states of the latest files of the same name in the resource (version),
     def latest_files_from_server_states
-      subquery = FileUpload.where(resource_id: id).where.not(url: [nil, ''])
+      subquery = FileUpload.where(resource_id: id).where.not(url: [nil, ''], upload_file_name: [nil, ''])
                            .select('max(id) last_id, upload_file_name').group(:upload_file_name)
       FileUpload.joins("INNER JOIN (#{subquery.to_sql}) sub on id = sub.last_id").order(upload_file_name: :asc)
     end
