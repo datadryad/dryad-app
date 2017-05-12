@@ -4,6 +4,7 @@ $('#validated_errors').html("<%= escape_javascript(
 $('#validated_files').html("<%= escape_javascript(
           render partial: 'stash_engine/file_uploads/validated_files', locals: {resource: @resource}) %>");
 $('#post_submit_spinner').hide();
+$("#validate_files").show();
 // disable or enable the drop-down depending if there are any files there.
 <% if @resource.upload_type != :unknown %>
   $('#file_location_select').prop('disabled', true);

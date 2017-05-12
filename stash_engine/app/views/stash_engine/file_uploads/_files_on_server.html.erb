@@ -8,12 +8,12 @@
 	<div class="actions" id="post_submit_before_spinner">
     <%= f.submit 'Validate Files', id: 'validate_files', class: 'o-button__submit' %>
   </div>
+  <div class="spinner" id="post_submit_spinner">
+    <%= image_tag 'stash_engine/spinner.gif', size: '80x60', alt: 'Loading spinner', id: 'post_submit_spinner'  %>
+  </div>
 <% end %>
 
-<h2 class="t-upload__choose-heading">Step 2: Validation Status</h2>
-<div class="spinner" id="post_submit_spinner">
-  	<%= image_tag 'stash_engine/spinner.gif', size: '80x60', alt: 'Loading spinner', id: 'post_submit_spinner'  %>
-</div>
+<h2 class="t-upload__choose-heading--active">Step 2: Validation Status</h2>
 
 <div id="validated_errors">
   <%= render partial: 'stash_engine/file_uploads/validated_errors', locals: {resource: @resource} %>
@@ -25,13 +25,14 @@
 
 <script type="text/javascript">
 $(function () {
-  return $('#post_submit_spinner').hide();
+  $('#post_submit_spinner').hide();
 });
 
 validateFileUrl();
 
 $(function () {
-  $("#post_submit_before_spinner").click(function() {
+  $("#validate_files").click(function() {
+    $("#validate_files").hide();
     $('#post_submit_spinner').show();
   });
 });
