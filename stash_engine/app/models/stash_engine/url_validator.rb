@@ -39,6 +39,7 @@ module StashEngine
         # get the filename from either the 1) content disposition, 2) redirected url (if avail) or 3) url
         @filename = filename_from_content_disposition(response.header['Content-Disposition']) ||
                       filename_from_url(@redirected_to) || filename_from_url(@url)
+        @filename = last_resort_filename if @filename == '' or @filename == '/'
         return true
           #Socketerror seems to mean a domain that is down or unavailable, tried http://macgyver.com
           # https://carpark.com seems to timeout
@@ -65,6 +66,8 @@ module StashEngine
     def correctly_formatted_url?
       u = URI.parse(@url)
       u.kind_of?(URI::HTTP)
+    rescue URI::InvalidURIError => ex
+      false
     end
 
     private
@@ -105,6 +108,15 @@ module StashEngine
       return nil if url.blank?
       u = URI.parse(url)
       File.basename(u.path)
+    end
+
+    # generate a filename as a last resort
+    def last_resort_filename
+      if correctly_formatted_url?
+        URI.parse(@url).host
+      else
+        nil
+      end
     end
 
   end

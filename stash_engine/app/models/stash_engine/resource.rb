@@ -135,6 +135,21 @@ module StashEngine
       return :unknown
     end
 
+    # returns the list of duplicate filenames in created state where we shouldn't have any
+    def duplicate_filenames
+      sql = <<-eos
+        SELECT *
+        FROM stash_engine_file_uploads AS a
+        JOIN (SELECT upload_file_name
+          FROM stash_engine_file_uploads
+          WHERE resource_id = ? AND (file_state IS NULL OR file_state = 'created')
+          GROUP BY upload_file_name HAVING count(*) >= 2) AS b
+        ON a.upload_file_name = b.upload_file_name
+        WHERE a.resource_id = ?
+      eos
+      FileUpload.find_by_sql([sql, id, id])
+    end
+
     # ----------------------------   ## FILES UPLOADED FROM SERVER --------------------------------#
 
     # gets the latest files that are not deleted in db, current files for this version
