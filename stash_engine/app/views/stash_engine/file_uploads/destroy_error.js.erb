@@ -1,3 +1,11 @@
 // redraw the validated errors
 $('#validated_errors').html("<%= escape_javascript(
           render partial: 'stash_engine/file_uploads/validated_errors', locals: {resource: @resource}) %>");
+<% if params[:edit] == 'true' %>
+  var addon = '';
+  if($('#location_urls').val()){ addon = "\r\n"; }
+  $('#location_urls').val($('#location_urls').val()+ addon + '<%= escape_javascript(@url) %>');
+  $('html, body').animate({
+    scrollTop: $("#location_urls").offset().top
+  }, 500);
+<% end %>

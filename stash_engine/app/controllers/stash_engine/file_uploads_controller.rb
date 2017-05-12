@@ -33,6 +33,7 @@ module StashEngine
     def destroy_error
       respond_to do |format|
         format.js do
+          @url = @file.url
           @resource = @file.resource
           @file.destroy
         end
@@ -107,7 +108,7 @@ module StashEngine
       respond_to do |format|
         @resource = Resource.where(id: params[:resource_id]).first
         return if params[:file_upload][:url].strip.blank?
-        urls_array = params[:file_upload][:url].split(/[\r\n]+/).delete_if(&:blank?).map(&strip)
+        urls_array = params[:file_upload][:url].split(/[\r\n]+/).map(&:strip).delete_if(&:blank?)
         urls_array.each do |url|
           validator =  StashEngine::UrlValidator.new(url: url)
           val_result = validator.validate
@@ -120,7 +121,6 @@ module StashEngine
                                               upload_content_type: validator.mime_type,
                                               upload_file_size: validator.size,
                                               file_state: 'created')
-            @messages << "The given #{validator.url} has been uploaded successfully."
           else
             @file = FileUpload.create( resource_id: @resource.id,
                                               url: validator.url,
