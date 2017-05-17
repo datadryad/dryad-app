@@ -70,7 +70,7 @@ module Stash
         ensure_identifier
         log.info("#{Time.now.xmlschema} #{self.class}: creating package for resource #{resource_id} (#{resource.identifier_str})")
         if resource.upload_type == :manifest
-          ObjectManifestPackage(resource: resource)
+          ObjectManifestPackage.new(resource: resource)
         else
           ZipPackage.new(resource: resource)
         end
