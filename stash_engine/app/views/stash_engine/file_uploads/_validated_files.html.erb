@@ -5,6 +5,6 @@
     <span id="no_chosen">No files have been uploaded.</span>
   <% else %>
     <%= render partial: "stash_engine/file_uploads/uploaded_file_from_server",
-               collection: resource.latest_files_from_server_states, as: :uploaded_file %>
+               collection: resource.latest_file_states, as: :uploaded_file %>
   <% end %>
 </div>
