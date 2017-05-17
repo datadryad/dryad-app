@@ -12,11 +12,12 @@ module Stash
 
       attr_reader :root_url
 
-      def initialize(resource:, root_url:)
+      def initialize(resource: )
         super(resource: resource, packaging: Stash::Sword::Packaging::BINARY)
-        raise URI::InvalidURIError, "No root URL provided: #{root_url ? "'#{root_url}'" : 'nil'}" if root_url.blank?
+        #raise URI::InvalidURIError, "No root URL provided: #{root_url ? "'#{root_url}'" : 'nil'}" if root_url.blank?
         @resource = resource
-        @root_url = to_uri(root_url)
+        @root_url = to_uri("https://#{@resource.tenant.full_domain}/system/#{@resource.id}/")
+        # @root_url = to_uri(root_url)
         @manifest = create_manifest
       end
 

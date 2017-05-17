@@ -17,6 +17,7 @@ module Stash
         @zipfile = create_zipfile
       end
 
+      # returns the path to the payload
       def payload
         zipfile
       end
