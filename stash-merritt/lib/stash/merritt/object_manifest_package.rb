@@ -10,7 +10,7 @@ module Stash
   module Merritt
     class ObjectManifestPackage < SubmissionPackage
 
-      attr_reader :root_url
+      attr_reader :root_url, :manifest
 
       def initialize(resource: )
         super(resource: resource, packaging: Stash::Sword::Packaging::BINARY)
@@ -31,6 +31,11 @@ module Stash
         manifest_path = workdir_path.join("#{resource_id}-manifest.checkm").to_s
         File.open(manifest_path, 'w') { |f| manifest.write_to(f) }
         manifest_path
+      end
+
+      def cleanup!
+        # TODO: I'm not sure this is the right place to cleanup since we want to wait to cleanup the files
+        # we've exposed to Merritt until after it has finished processing, but required to keep contract with SubmissionJob
       end
 
       def to_s
