@@ -201,6 +201,10 @@ module StashEngine
         core_name = File.basename(k, ext)
         counter = 1
         @resource.file_uploads.newly_created.where(upload_file_name: k).order(:created_at).each do |upload|
+          if counter == 1
+            counter += 1
+            next
+          end
           target_fn = ''
           begin
             target_fn = "#{core_name} (#{counter})#{ext}"
