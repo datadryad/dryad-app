@@ -35,7 +35,6 @@ module Stash
 
       def do_submit!
         package = create_package
-        sleep 10 # see if this is some kind of race condition and it needs some time to register the files on the server
         submit(package)
         update_metadata(package.dc4_xml)
         cleanup(package)
