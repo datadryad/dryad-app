@@ -127,8 +127,9 @@ module StashEngine
                                               status_code: validator.status_code,
                                               file_state: 'created')
           end
-          format.js
         end
+        make_created_filenames_unique
+        format.js
       end
     end
 
@@ -154,10 +155,12 @@ module StashEngine
       @file = FileUpload.find(params[:id])
     end
 
+    # write a chunk to the file.
     def add_to_file(fn, fileupload)
       File.open(fn, 'ab') { |f| f.write(fileupload.read) }
     end
 
+    # for standard uploads, create standard file in DB before moving on to chunks.
     def create_db_file(new_fn)
       @my_file = FileUpload.new(
         upload_file_name: @file_upload.original_filename,
@@ -187,5 +190,27 @@ module StashEngine
         end
       end
     end
+
+    # makes created filenames unique by putting numbers in them
+    def make_created_filenames_unique
+      dups = @resource.file_uploads.newly_created.with_filename.select(:upload_file_name).
+          group(:upload_file_name).having("count(*) > 1").count
+      # returns like {"change.js"=>3, "decode.js"=>3, "encode.js"=>2, "msflxgrd.ocx"=>2}
+      dups.each_pair do |k, v|
+        ext = File.extname(k)
+        core_name = File.basename(k, ext)
+        counter = 1
+        @resource.file_uploads.newly_created.where(upload_file_name: k).order(:created_at).each do |upload|
+          target_fn = ''
+          begin
+            target_fn = "#{core_name} (#{counter})#{ext}"
+            counter += 1
+          end while @resource.file_uploads.newly_created.where(upload_file_name: target_fn).count > 0
+          upload.upload_file_name = target_fn
+          upload.save!
+        end
+      end
+    end
+
   end
 end

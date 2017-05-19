@@ -7,6 +7,7 @@ module StashEngine
     scope :newly_created, -> { where("file_state = 'created' OR file_state IS NULL") }
     scope :url_submission, -> { where("url IS NOT NULL") }
     scope :file_submission, -> { where("url IS NULL") }
+    scope :with_filename, -> { where("upload_file_name IS NOT NULL") }
     scope :errors, -> { where('url IS NOT NULL AND status_code <> 200') }
     enum file_state: %w(created copied deleted).map { |i| [i.to_sym, i] }.to_h
 
