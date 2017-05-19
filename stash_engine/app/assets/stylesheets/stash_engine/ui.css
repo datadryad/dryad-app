@@ -3128,7 +3128,7 @@ button.o-button__calendar:focus {
 .o-heading__level1-home {
   text-align: center; }
 
-.o-heading__level2, .o-heading__level2-sharing-steps, .o-heading__level2-why-side {
+.o-heading__level2, .o-heading__level2-why-share, .o-heading__level2-sharing-steps, .o-heading__level2-why-side {
   margin: 0 0 20px;
   color: #005581;
   font-size: 1.3em;
@@ -4744,6 +4744,85 @@ html.svg .c-facet__check-label {
   background-color: transparent;
   color: #005581;
   font-weight: bold; }
+
+.o-heading__level2-why-share {
+  font-size: 1.6em; }
+  @media (min-width: 870px) {
+    .o-heading__level2-why-share {
+      text-align: center; } }
+
+.t-home__why-share-group {
+  padding-top: 20px; }
+
+.c-why-share {
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-flow: row wrap;
+      flex-flow: row wrap; }
+
+.c-why-share__icon {
+  color: #005581;
+  text-align: center; }
+  @media (min-width: 480px) {
+    .c-why-share__icon {
+      width: 80px;
+      height: 120px;
+      float: left;
+      clear: left;
+      text-align: center; } }
+  @media (min-width: 870px) {
+    .c-why-share__icon {
+      width: 100%;
+      height: auto;
+      margin: 30px 0 40px;
+      float: none; } }
+
+.c-why-share__halo {
+  position: relative;
+  top: -18px;
+  width: 100%;
+  height: 16px;
+  text-align: center; }
+
+.c-why-share__user {
+  position: relative;
+  top: -15px;
+  width: 100%;
+  height: 32px;
+  text-align: center; }
+
+.c-why-share__icon-squish {
+  display: block;
+  clear: both;
+  transform: scale(1, 0.3);
+  /* W3C */ }
+
+@media (min-width: 480px) {
+  .c-why-share__info {
+    /* one column */
+    margin-bottom: 12px; } }
+
+@media (min-width: 870px) {
+  .c-why-share__info {
+    /* three column */
+    -ms-flex: 1 0 26%;
+        flex: 1 0 26%;
+    margin-bottom: 40px; }
+    .c-why-share__info:nth-of-type(3n+2) .c-why-share__text-group {
+      border-right: 1px dashed #e65722;
+      border-left: 1px dashed #e65722; } }
+
+@media (min-width: 480px) {
+  .c-why-share__text-group div {
+    font-size: 1.1em;
+    line-height: 1.5em; } }
+
+@media (min-width: 870px) {
+  .c-why-share__text-group {
+    padding: 0 40px; }
+    .c-why-share__text-group div {
+      font-size: 1.3em;
+      line-height: 1.5em; } }
 
 .c-why-use__group {
   width: 100%;
