@@ -6,7 +6,7 @@ module StashDatacite
     class DatasetPresenter
       attr_reader :resource
 
-      delegate :created_at, :updated_at, to: :resource
+      delegate :updated_at, to: :resource
 
       def initialize(resource)
         @resource = resource
@@ -63,6 +63,10 @@ module StashDatacite
 
       def publication_date
         @resource.publication_date
+      end
+
+      def created_at
+        @resource.identifier.try(:created_at) || @resource.created_at
       end
     end
   end
