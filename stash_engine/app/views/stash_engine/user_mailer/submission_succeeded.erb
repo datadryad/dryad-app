@@ -14,8 +14,7 @@
 </p>
 
 <% if @embargo_date %>
-  The public will not be able to download this dataset until the embargo you set on it
-  expires on <%= @embargo_date.strftime("%B %e, %Y") %>.
+  The dataset will be private for peer review until <%= @embargo_date.strftime("%B %e, %Y") %>.
 <% end %>
 
 <p>
