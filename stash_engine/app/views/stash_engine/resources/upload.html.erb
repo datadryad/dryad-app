@@ -31,8 +31,7 @@
 <div class="files_on_computer" style="display: none;">
   <p>
     Size limits: <%= filesize(current_tenant.max_file_size) %> per file,
-    <%= filesize(current_tenant.max_total_version_size) %> in total. To upload larger datasets,
-    <%= link_to "contact us", contact_us_url, class: 'o-link__primary' %>.
+    <%= filesize(current_tenant.max_total_version_size) %> in total.
   </p>
   <h2 class="t-upload__choose-heading--active">Step 2: Choose Files</h2>
   <%= render partial: 'stash_engine/file_uploads/files_on_computer', locals: { file: @file } %>
