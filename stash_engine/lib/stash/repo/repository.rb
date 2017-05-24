@@ -74,6 +74,8 @@ module Stash
         resource.update_uri = update_uri
         resource.current_state = 'submitted'
         resource.save
+
+        cleanup_files(resource)
       end
 
       private
@@ -96,7 +98,6 @@ module Stash
         # resource.current_state = 'submitted'
         update_submission_log(result)
         StashEngine::UserMailer.submission_succeeded(resource).deliver_now
-        cleanup_files(resource)
       rescue => e
         # errors here don't constitute a submission failure, so we don't change the resource state
         log_error(e)
@@ -122,6 +123,9 @@ module Stash
         resource.file_uploads.map(&:temp_file_path).each { |file| remove_if_exists(file) }
         res_upload_dir = StashEngine::Resource.upload_dir_for(resource.id)
         remove_if_exists(res_upload_dir)
+
+        res_public_dir = Rails.public_path.join('system').join(resource.id.to_s)
+        remove_if_exists(res_public_dir)
       rescue => e
         msg = "An unexpected error occurred when cleaning up files for resource #{resource.id}: "
         msg << to_msg(e)
@@ -130,7 +134,7 @@ module Stash
 
       def remove_if_exists(file)
         return if file.blank?
-        FileUtils.remove_entry_secure(file) if File.exist?(file)
+        FileUtils.remove_entry_secure(file, true) if File.exist?(file)
       end
 
       def to_msg(error)

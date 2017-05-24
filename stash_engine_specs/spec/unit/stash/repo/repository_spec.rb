@@ -8,6 +8,12 @@ module Stash
       attr_reader :repo
       attr_reader :logger
       attr_reader :url_helpers
+      attr_reader :resource_id
+      attr_reader :resource
+      attr_reader :res_upload_dir
+      attr_reader :uploads
+      attr_reader :rails_root
+      attr_reader :public_system
 
       before(:each) do
         @url_helpers = double(Module) # yes, apparently URL helpers are an anonymous module
@@ -17,6 +23,13 @@ module Stash
         allow(Rails).to receive(:logger).and_return(logger)
         allow(logger).to receive(:info)
 
+        @rails_root = Dir.mktmpdir('rails_root')
+        root_path = Pathname.new(rails_root)
+        allow(Rails).to receive(:root).and_return(root_path)
+
+        public_path = Pathname.new("#{rails_root}/public")
+        allow(Rails).to receive(:public_path).and_return(public_path)
+
         immediate_executor = Concurrent::ImmediateExecutor.new
         allow(Concurrent).to receive(:global_io_executor).and_return(immediate_executor)
 
@@ -25,12 +38,31 @@ module Stash
         allow(pool).to receive(:with_connection).and_yield
 
         allow_any_instance_of(ActionMailer::MessageDelivery).to receive(:deliver_now)
+
+        @resource_id = 53
+        @resource = double(StashEngine::Resource)
+        allow(resource).to receive(:id).and_return(resource_id)
+        allow(resource).to receive(:current_state=)
+        allow(StashEngine::Resource).to receive(:find).with(resource_id).and_return(resource)
+
+        @res_upload_dir = Dir.mktmpdir
+        allow(StashEngine::Resource).to receive(:upload_dir_for).with(resource_id).and_return(res_upload_dir)
+
+        @uploads = Array.new(3) do |index|
+          upload = double(StashEngine::FileUpload)
+          temp_file_path = File.join(res_upload_dir, "file-#{index}.bin")
+          FileUtils.touch(temp_file_path)
+          allow(upload).to receive(:temp_file_path).and_return(temp_file_path)
+          upload
+        end
+        allow(resource).to receive(:file_uploads).and_return(uploads)
       end
 
       after(:each) do
         allow_any_instance_of(ActionMailer::MessageDelivery).to receive(:deliver_now).and_call_original
         allow(Concurrent).to receive(:global_io_executor).and_call_original
         allow(Rails).to receive(:logger).and_call_original
+        FileUtils.remove_dir(rails_root)
       end
 
       describe :create_submission_job do
@@ -40,30 +72,9 @@ module Stash
       end
 
       describe :submit do
-        attr_reader :resource_id
-        attr_reader :resource
-        attr_reader :res_upload_dir
-        attr_reader :uploads
         attr_reader :job
 
         before(:each) do
-          @resource_id = 53
-          @resource = double(StashEngine::Resource)
-          allow(resource).to receive(:id).and_return(resource_id)
-          allow(resource).to receive(:current_state=)
-          allow(StashEngine::Resource).to receive(:find).with(resource_id).and_return(resource)
-
-          @res_upload_dir = Dir.mktmpdir
-          allow(StashEngine::Resource).to receive(:upload_dir_for).with(resource_id).and_return(res_upload_dir)
-
-          @uploads = Array.new(3) do |index|
-            upload = double(StashEngine::FileUpload)
-            temp_file_path = File.join(res_upload_dir, "file-#{index}.bin")
-            FileUtils.touch(temp_file_path)
-            allow(upload).to receive(:temp_file_path).and_return(temp_file_path)
-            upload
-          end
-          allow(resource).to receive(:file_uploads).and_return(uploads)
 
           @request_host = 'stash.example.org'
           @request_port = 80
@@ -98,22 +109,6 @@ module Stash
             expect(StashEngine::UserMailer).to receive(:submission_succeeded).with(resource).and_return(message)
             expect(message).to receive(:deliver_now)
             submit_resource
-          end
-
-          it 'removes uploaded files on success' do
-            expect(logger).not_to receive(:warn)
-            expect(logger).not_to receive(:error)
-            submit_resource
-            uploads.each do |upload|
-              expect(File.exist?(upload.temp_file_path)).to be_falsey
-            end
-          end
-
-          it 'removes the uploads dir on success' do
-            expect(logger).not_to receive(:warn)
-            expect(logger).not_to receive(:error)
-            submit_resource
-            expect(File.exist?(res_upload_dir)).to be_falsey
           end
 
           it 'leaves the state as "processing"' do
@@ -153,37 +148,6 @@ module Stash
             it 'leaves the uploads dir in place on failure' do
               submit_resource
               expect(File.exist?(res_upload_dir)).to be_truthy
-            end
-
-            it 'leaves the state as "processing"' do
-              expect(resource).to receive(:current_state=).with('processing')
-              expect(resource).not_to receive(:current_state=).with('submitted')
-              submit_resource
-            end
-
-            it 'updates the submission log table' do
-              expect(StashEngine::SubmissionLog).to receive(:create).with(
-                resource_id: resource_id,
-                archive_submission_request: 'test',
-                archive_response: 'whee!'
-              )
-              submit_resource
-            end
-          end
-
-          describe 'file cleanup errors' do
-            before(:each) do
-              allow(FileUtils).to receive(:remove_entry_secure).and_raise(Errno::ENOENT)
-            end
-            after(:each) do
-              allow(FileUtils).to receive(:remove_entry_secure).and_call_original
-            end
-            it 'logs the error' do
-              msg = nil
-              expect(logger).to(receive(:warn)).once { |m| msg = m }
-              submit_resource
-              expect(msg).to include(resource_id.to_s)
-              expect(msg).to include('No such file or directory')
             end
 
             it 'leaves the state as "processing"' do
@@ -301,24 +265,44 @@ module Stash
       end
 
       describe :harvested do
+        attr_reader :resource
         attr_reader :identifier
         attr_reader :record_identifier
 
         before(:each) do
-          resource = double(StashEngine::Resource)
-          allow(resource).to receive(:id).and_return(17)
-
           @identifier = double(StashEngine::Identifier)
           allow(identifier).to receive(:processing_resource).and_return(resource)
 
           @record_identifier = "ark:/1234/567"
 
           def repo.update_uri_for(_)
-            'http://example.org/'
+            'http://example.org/edit/ark:/1234/567'
           end
           def repo.download_uri_for(_)
-            'http://example.org/'
+            'http://example.org/d/ark:/1234/567'
           end
+
+          allow(logger).to receive(:debug)
+          allow(resource).to receive(:update_uri=)
+          allow(resource).to receive(:download_uri=)
+          allow(resource).to receive(:save)
+          allow(resource).to receive(:file_uploads).and_return([])
+        end
+
+        it 'sets the download and update URIs' do
+          expect(resource).to receive(:update_uri=).with('http://example.org/edit/ark:/1234/567')
+          expect(resource).to receive(:download_uri=).with('http://example.org/d/ark:/1234/567')
+          repo.harvested(identifier: identifier, record_identifier: record_identifier)
+        end
+
+        it 'sets the state' do
+          expect(resource).to receive(:current_state=).with('submitted')
+          repo.harvested(identifier: identifier, record_identifier: record_identifier)
+        end
+
+        it 'saves the resource' do
+          expect(resource).to receive(:save)
+          repo.harvested(identifier: identifier, record_identifier: record_identifier)
         end
 
         it 'wraps download URI errors as ArgumentError' do
@@ -333,6 +317,38 @@ module Stash
             raise IndexError
           end
           expect { repo.harvested(identifier: identifier, record_identifier: record_identifier) }.to raise_error(ArgumentError, /.*update.*#{Regexp.quote(record_identifier)}.*IndexError/)
+        end
+
+        it 'removes uploaded files on success' do
+          expect(logger).not_to receive(:warn)
+          expect(logger).not_to receive(:error)
+          repo.harvested(identifier: identifier, record_identifier: record_identifier)
+          uploads.each do |upload|
+            expect(File.exist?(upload.temp_file_path)).to be_falsey
+          end
+        end
+
+        it 'removes the uploads dir on success' do
+          expect(logger).not_to receive(:warn)
+          expect(logger).not_to receive(:error)
+          repo.harvested(identifier: identifier, record_identifier: record_identifier)
+          expect(File.exist?(res_upload_dir)).to be_falsey
+        end
+
+        describe 'file cleanup errors' do
+          before(:each) do
+            allow(FileUtils).to receive(:remove_entry_secure).and_raise(Errno::ENOENT)
+          end
+          after(:each) do
+            allow(FileUtils).to receive(:remove_entry_secure).and_call_original
+          end
+          it 'logs the error' do
+            msg = nil
+            expect(logger).to(receive(:warn)).once { |m| msg = m }
+            repo.harvested(identifier: identifier, record_identifier: record_identifier)
+            expect(msg).to include(resource_id.to_s)
+            expect(msg).to include('No such file or directory')
+          end
         end
       end
     end

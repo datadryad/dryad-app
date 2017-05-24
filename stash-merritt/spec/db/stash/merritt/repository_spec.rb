@@ -9,8 +9,20 @@ module Stash
       attr_reader :doi_value
       attr_reader :record_identifier
       attr_reader :repo
+      attr_reader :rails_root
+      attr_reader :public_system
 
       before(:each) do
+        @rails_root = Dir.mktmpdir('rails_root')
+        root_path = Pathname.new(rails_root)
+        allow(Rails).to receive(:root).and_return(root_path)
+
+        public_path = Pathname.new("#{rails_root}/public")
+        allow(Rails).to receive(:public_path).and_return(public_path)
+
+        @public_system = public_path.join('system').to_s
+        FileUtils.mkdir_p(public_system)
+
         user = StashEngine::User.create(
           uid: 'lmuckenhaupt-example@example.edu',
           first_name: 'Lisa',
@@ -59,6 +71,10 @@ module Stash
         allow(Rails).to receive(:logger).and_return(log)
       end
 
+      after(:each) do
+        FileUtils.remove_dir(rails_root)
+      end
+
       describe :download_uri_for do
         it 'determines the download URI' do
           expected_uri = 'http://merritt.cdlib.org/d/ark%3A%2F99999%2Ffk43f5119b'
@@ -82,6 +98,22 @@ module Stash
           expect(resource.download_uri).to eq('http://merritt.cdlib.org/d/ark%3A%2F99999%2Ffk43f5119b')
           expect(resource.update_uri).to eq('http://uc3-mrtsword-prd.cdlib.org:39001/mrtsword/edit/dataone_dash/doi%3A10.15146%2FR3RG6G')
           expect(resource.current_state).to eq('submitted')
+        end
+
+        it 'cleans up public/system files' do
+          resource_public = "#{public_system}/#{resource.id}"
+          FileUtils.mkdir(resource_public)
+          stash_wrapper = "#{resource_public}/stash-wrapper.xml"
+          some_other_file = "#{resource_public}/foo.bar"
+
+          FileUtils.touch(stash_wrapper)
+          FileUtils.touch(some_other_file)
+
+          repo.harvested(identifier: identifier, record_identifier: record_identifier)
+
+          [resource_public, stash_wrapper, some_other_file].each do |f|
+            expect(File.exist?(f)).to be_falsey
+          end
         end
       end
     end
