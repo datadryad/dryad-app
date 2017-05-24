@@ -1,7 +1,7 @@
 PATH
   remote: ..
   specs:
-    stash-sword (0.1.6)
+    stash-sword (0.1.7)
       rest-client (~> 2.0)
       typesafe_enum (~> 0.1, >= 0.1.7)
       xml-mapping_extensions (~> 0.4, >= 0.4.1)
