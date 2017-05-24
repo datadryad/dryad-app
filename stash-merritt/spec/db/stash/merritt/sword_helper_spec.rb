@@ -43,6 +43,9 @@ module Stash
         FileUtils.mkdir_p("#{rails_root}/tmp")
         allow(Rails).to receive(:root).and_return(rails_root)
 
+        public_path = Pathname.new("#{rails_root}/public")
+        allow(Rails).to receive(:public_path).and_return(public_path)
+
         @user = StashEngine::User.create(
           uid: 'lmuckenhaupt-example@example.edu',
           first_name: 'Lisa',
@@ -59,6 +62,7 @@ module Stash
         allow(tenant).to receive(:landing_url) { |path| "https://stash-dev.example.edu/#{path}" }
         allow(tenant).to receive(:sword_params).and_return(sword_params)
         allow(StashEngine::Tenant).to receive(:find).with('dataone').and_return(tenant)
+        allow(tenant).to receive(:full_domain).and_return('stash.example.edu')
 
         stash_wrapper = Stash::Wrapper::StashWrapper.parse_xml(File.read('spec/data/archive/stash-wrapper.xml'))
         @resource = StashDatacite::ResourceBuilder.new(
@@ -95,17 +99,25 @@ module Stash
 
       describe :submit! do
         describe "with #{Stash::Merritt::ZipPackage}" do
+          before(:each) do
+            allow(resource).to receive(:upload_type).and_return(:files)
+          end
+
           describe 'create' do
+            attr_reader :package
+            attr_reader :helper
+
+            before(:each) do
+              @package = Stash::Merritt::ZipPackage.new(resource: resource)
+              @helper = SwordHelper.new(package: package)
+            end
+
             it 'submits the zipfile' do
-              package = Stash::Merritt::ZipPackage.new(resource: resource)
-              helper = SwordHelper.new(package: package)
               expect(sword_client).to receive(:create).with(doi: doi, payload: package.zipfile, packaging: Stash::Sword::Packaging::SIMPLE_ZIP)
               helper.submit!
             end
 
             it 'sets the update and download URIs' do
-              package = Stash::Merritt::ZipPackage.new(resource: resource)
-              helper = SwordHelper.new(package: package)
               expect(sword_client).to receive(:create).with(doi: doi, payload: package.zipfile, packaging: Stash::Sword::Packaging::SIMPLE_ZIP).and_return(receipt)
               helper.submit!
               expect(resource.download_uri).to eq(download_uri)
@@ -113,46 +125,43 @@ module Stash
             end
 
             it 'sets the version zipfile' do
-              package = Stash::Merritt::ZipPackage.new(resource: resource)
-              SwordHelper.new(package: package).submit!
+              helper.submit!
               version = resource.stash_version
               zipfile = File.basename(package.zipfile)
               expect(version.zip_filename).to eq(zipfile)
             end
 
             it 'forwards errors' do
-              package = Stash::Merritt::ZipPackage.new(resource: resource)
-              helper = SwordHelper.new(package: package)
               expect(sword_client).to receive(:create).and_raise(RestClient::RequestFailed)
               expect { helper.submit! }.to raise_error(RestClient::RequestFailed)
             end
           end
 
           describe 'update' do
+            attr_reader :package
+            attr_reader :helper
+
             before(:each) do
               resource.update_uri = update_uri
               resource.download_uri = download_uri
               resource.save
+              @package = Stash::Merritt::ZipPackage.new(resource: resource)
+              @helper = SwordHelper.new(package: package)
             end
 
             it 'submits the zipfile' do
-              package = Stash::Merritt::ZipPackage.new(resource: resource)
-              helper = SwordHelper.new(package: package)
               expect(sword_client).to receive(:update).with(edit_iri: update_uri, payload: package.zipfile, packaging: Stash::Sword::Packaging::SIMPLE_ZIP).and_return(200)
               helper.submit!
             end
 
             it 'sets the version zipfile' do
-              package = Stash::Merritt::ZipPackage.new(resource: resource)
-              SwordHelper.new(package: package).submit!
+              helper.submit!
               version = resource.stash_version
               zipfile = File.basename(package.zipfile)
               expect(version.zip_filename).to eq(zipfile)
             end
 
             it 'forwards errors' do
-              package = Stash::Merritt::ZipPackage.new(resource: resource)
-              helper = SwordHelper.new(package: package)
               expect(sword_client).to receive(:update).and_raise(RestClient::RequestFailed)
               expect { helper.submit! }.to raise_error(RestClient::RequestFailed)
             end
@@ -160,20 +169,86 @@ module Stash
         end
 
         describe "with #{Stash::Merritt::ObjectManifestPackage}" do
+
+          before(:each) do
+            resource.new_file_uploads.find_each do |upload|
+              upload_file_name = upload.upload_file_name
+              filename_encoded = ERB::Util.url_encode(upload_file_name)
+              filename_decoded = URI.decode(filename_encoded)
+              expect(filename_decoded).to eq(upload_file_name) # just to be sure
+              upload.url = "http://example.org/uploads/#{filename_encoded}"
+              upload.save
+            end
+            allow(resource).to receive(:upload_type).and_return(:manifest)
+          end
+
           describe 'create' do
-            it 'submits the manifest'
+            attr_reader :package
+            attr_reader :helper
 
-            it 'sets the version "zipfile"'
+            before(:each) do
+              @package = Stash::Merritt::ObjectManifestPackage.new(resource: resource)
+              @helper = SwordHelper.new(package: package)
+            end
 
-            it 'forwards errors'
+            it 'submits the manifest' do
+              expect(sword_client).to receive(:create)
+                .with(
+                  doi: doi,
+                  payload: package.manifest,
+                  packaging: Stash::Sword::Packaging::BINARY
+                ).and_return(receipt)
+              helper.submit!
+              expect(resource.download_uri).to eq(download_uri)
+              expect(resource.update_uri).to eq(update_uri)
+            end
+
+            it 'sets the version "zipfile"' do
+              helper.submit!
+              version = resource.stash_version
+              manifest = File.basename(package.manifest)
+              expect(version.zip_filename).to eq(manifest)
+            end
+
+            it 'forwards errors' do
+              expect(sword_client).to receive(:create).and_raise(RestClient::RequestFailed)
+              expect { helper.submit! }.to raise_error(RestClient::RequestFailed)
+            end
           end
 
           describe 'update' do
-            it 'submits the manifest'
+            attr_reader :package
+            attr_reader :helper
 
-            it 'sets the version "zipfile"'
+            before(:each) do
+              resource.update_uri = update_uri
+              resource.download_uri = download_uri
+              resource.save
+              @package = Stash::Merritt::ObjectManifestPackage.new(resource: resource)
+              @helper = SwordHelper.new(package: package)
+            end
 
-            it 'forwards errors'
+            it 'submits the manifest' do
+              expect(sword_client).to receive(:update)
+                .with(
+                  edit_iri: update_uri,
+                  payload: package.manifest,
+                  packaging: Stash::Sword::Packaging::BINARY
+                ).and_return(200)
+              helper.submit!
+            end
+
+            it 'sets the version "zipfile"' do
+              helper.submit!
+              version = resource.stash_version
+              manifest = File.basename(package.manifest)
+              expect(version.zip_filename).to eq(manifest)
+            end
+
+            it 'forwards errors' do
+              expect(sword_client).to receive(:update).and_raise(RestClient::RequestFailed)
+              expect { helper.submit! }.to raise_error(RestClient::RequestFailed)
+            end
           end
         end
       end

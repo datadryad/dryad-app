@@ -17,7 +17,7 @@ module Stash
         else
           do_create
         end
-        resource.version_zipfile = zipfile
+        resource.version_zipfile = File.basename(package.payload)
         resource.save!
       end
 
@@ -35,9 +35,6 @@ module Stash
         resource.identifier_str
       end
 
-      def zipfile
-        package.zipfile
-      end
 
       def sword_client
         @sword_client ||= Stash::Sword::Client.new(logger: logger, **tenant.sword_params)
