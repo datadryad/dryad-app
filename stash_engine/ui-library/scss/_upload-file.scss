@@ -36,10 +36,10 @@
 }
 
 .c-upload__filename {
-	margin: 0 10px 0 0;
-	text-overflow: ellipsis;
-	white-space: nowrap;
+  margin: 0 10px 0 0;
   overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .c-upload__filesize {

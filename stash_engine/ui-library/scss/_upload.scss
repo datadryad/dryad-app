@@ -26,3 +26,18 @@
 	@extend %t-upload__choose-heading;
 	color: $design-dark-blue-color;
 }
+
+.t-upload__method-section {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.t-uploads__method-choice {
+  margin: 0 2em 0 0;
+}
+
+.t-uploads__method-input {
+  margin: 0 1ex 0 0;
+}

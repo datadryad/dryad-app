@@ -6,21 +6,33 @@
 
 
 <h2 class="t-upload__choose-heading--active">Step 1: Choose File Upload Technique</h2>
-<p>You may upload data via two mechanisms: directly from your computer, or from a URL on an external server
-  (i.e. <a href="http://www.amnh.org/content/download/54311/811935/version/1/file/sampledatados.zip">
-  http://www.amnh.org/content/download/54311/811935/version/1/file/sampledatados.zip</a>). Please note that
-  for this version of your submission you may only use one of these two upload mechanisms.
+<p>You may upload data via two mechanisms: directly from your computer, or from a URL on an external server.
+  Please note that for this version of your submission you may only use one of these two upload mechanisms.
 </p>
 <div>
-  <strong>Where are your files located?</strong>
-  <%= select_tag "file_location", options_for_select([ ['On this Computer', 'files'], ['On a Server', 'manifest'] ],
+
+  <div class="t-upload__method-section">
+    <div class="t-uploads__method-choice">
+      <input type="radio" name="file_location" value="files" id="files_from_computer" class="t-uploads__method-input"
+             <%= raw([:files, :unknown].include?(@resource.upload_type) ? 'checked="checked"': '') %>
+      />
+      <label for="files_from_computer">Drag and drop or choose files from your computer</label>
+    </div>
+    <div class="t-uploads__method-choice">
+      <input type="radio" name="file_location" value="manifest" id="files_from_manifest" class="t-uploads__method-input"
+            <%= raw(@resource.upload_type == :manifest ? 'checked="checked"' : '') %>
+      />
+      <label for="files_from_manifest">Enter URLs of file locations</label>
+    </div>
+  </div>
+  <%# select_tag "file_location", options_for_select([ ['On this Computer', 'files'], ['On a Server', 'manifest'] ],
              selected: ([:files, :unknown].include?(@resource.upload_type) ? 'files': 'manifest') ),
              id: 'file_location_select', disabled: (@resource.upload_type != :unknown) %>
 </div>
 
 
 <!-- manifest workflow -->
-<div class="files_on_server" style="display: none;">
+<div class="files_on_server" style="display: none;" class="limits_and_part_2">
   <p>
     Size limits: up to 1,000 files and <%= filesize(current_tenant.max_submission_size) %>
   </p>
