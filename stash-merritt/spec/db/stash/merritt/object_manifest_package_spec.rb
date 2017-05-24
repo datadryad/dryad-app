@@ -34,6 +34,7 @@ module Stash
         allow(tenant).to receive(:short_name).and_return('DataONE')
         allow(tenant).to receive(:landing_url) { |path_to_landing| URI::HTTPS.build(host: 'stash.example.edu', path: path_to_landing).to_s }
         allow(tenant).to receive(:sword_params).and_return(collection_uri: 'http://sword.example.edu/stash-dev')
+        allow(tenant).to receive(:full_domain).and_return('stash.example.edu')
         allow(StashEngine::Tenant).to receive(:find).with('dataone').and_return(tenant)
 
         stash_wrapper_xml = File.read('spec/data/archive/stash-wrapper.xml')
@@ -67,26 +68,14 @@ module Stash
 
       describe :initialize do
         it 'sets the root URL' do
-          package = ObjectManifestPackage.new(resource: resource, root_url: root_url)
-          expect(package.root_url).to eq(URI('https://stash.example.edu/'))
-        end
-
-        it 'fails if root_url is nil' do
-          expect { ObjectManifestPackage.new(resource: resource, root_url: nil) }.to raise_error(URI::InvalidURIError)
-        end
-
-        it 'fails if root_url is blank' do
-          expect { ObjectManifestPackage.new(resource: resource, root_url: ' ') }.to raise_error(URI::InvalidURIError)
-        end
-
-        it 'fails if root_url is not a URL' do
-          expect { ObjectManifestPackage.new(resource: resource, root_url: 'I am not a URL') }.to raise_error(URI::InvalidURIError)
+          package = ObjectManifestPackage.new(resource: resource)
+          expect(package.root_url).to eq(URI("https://stash.example.edu/system/#{resource.id}/"))
         end
 
         it 'fails if the resource doesn\'t have an identifier' do
           resource.identifier = nil
           resource.save!
-          expect { ObjectManifestPackage.new(resource: resource, root_url: root_url) }.to raise_error(ArgumentError)
+          expect { ObjectManifestPackage.new(resource: resource) }.to raise_error(ArgumentError)
         end
 
         it 'fails if the resource has no URL "uploads"'
@@ -98,7 +87,7 @@ module Stash
         attr_reader :manifest_path
 
         before(:each) do
-          @package = ObjectManifestPackage.new(resource: resource, root_url: root_url)
+          @package = ObjectManifestPackage.new(resource: resource)
           @manifest_path = package.create_manifest
         end
 
@@ -109,7 +98,9 @@ module Stash
           # generated stash-wrapper.xml has today's date & so has different hash
           generated_stash_wrapper = "#{public_system}/#{resource.id}/stash-wrapper.xml"
           stash_wrapper_md5 = Digest::MD5.file(generated_stash_wrapper).to_s
-          expected = File.read('spec/data/manifest.checkm').sub('17c28364d528eed4805d6b87afa88749', stash_wrapper_md5)
+          expected = File.read('spec/data/manifest.checkm')
+            .sub('17c28364d528eed4805d6b87afa88749', stash_wrapper_md5)
+            .gsub('{resource_id}', "#{resource.id}")
 
           expect(actual).to eq(expected)
         end
@@ -152,7 +143,7 @@ module Stash
             it 'includes the embargo end date if present' do
               end_date = Time.new(2020, 1, 1, 0, 0, 1, '+12:45')
               resource.embargo = StashEngine::Embargo.new(end_date: end_date)
-              @package = ObjectManifestPackage.new(resource: resource, root_url: root_url)
+              @package = ObjectManifestPackage.new(resource: resource)
               @manifest_path = package.create_manifest
               actual = File.read("#{public_system}/#{resource.id}/mrt-embargo.txt")
               expect(actual.strip).to eq('embargoEndDate:2019-12-31T11:15:01Z')
@@ -168,11 +159,11 @@ module Stash
               deleted << upload.upload_file_name
             end
 
-            @package = ObjectManifestPackage.new(resource: resource, root_url: root_url)
+            @package = ObjectManifestPackage.new(resource: resource)
             @manifest_path = package.create_manifest
 
             manifest = File.read(manifest_path)
-            expect(manifest).to include('https://stash.example.edu/mrt-delete.txt')
+            expect(manifest).to include("https://stash.example.edu/system/#{resource.id}/mrt-delete.txt")
             mrt_delete = File.read("#{public_system}/#{resource.id}/mrt-delete.txt")
             deleted.each do |filename|
               expect(mrt_delete).to include(filename)
