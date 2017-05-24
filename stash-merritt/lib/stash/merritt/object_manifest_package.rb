@@ -25,6 +25,10 @@ module Stash
         manifest
       end
 
+      def dc4_xml
+        @dc4_xml ||= datacite_xml_factory.build_datacite_xml
+      end
+
       def create_manifest
         StashDatacite::PublicationYear.ensure_pub_year(resource)
         manifest = ::Merritt::Manifest::Object.new(files: (system_files + data_files))
