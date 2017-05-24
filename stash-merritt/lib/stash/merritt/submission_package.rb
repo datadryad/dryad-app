@@ -22,6 +22,10 @@ module Stash
         raise NoMethodError, "#{self.class} should override #packaging to return the payload, but it doesn't"
       end
 
+      def dc4_xml
+        @dc4_xml ||= datacite_xml_factory.build_datacite_xml
+      end
+
       def resource_id
         resource.id
       end

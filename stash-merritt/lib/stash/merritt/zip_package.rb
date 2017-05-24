@@ -22,10 +22,6 @@ module Stash
         zipfile
       end
 
-      def dc4_xml
-        @dc4_xml ||= datacite_xml_factory.build_datacite_xml
-      end
-
       def create_zipfile
         StashDatacite::PublicationYear.ensure_pub_year(resource)
         zipfile_path = File.join(workdir, "#{resource_id}_archive.zip")

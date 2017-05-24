@@ -4,6 +4,7 @@ require 'pathname'
 module Stash
   module Merritt
     describe ObjectManifestPackage do
+      attr_reader :datacite_xml
       attr_reader :rails_root
       attr_reader :public_system
       attr_reader :resource
@@ -40,7 +41,7 @@ module Stash
         stash_wrapper_xml = File.read('spec/data/archive/stash-wrapper.xml')
         stash_wrapper = Stash::Wrapper::StashWrapper.parse_xml(stash_wrapper_xml)
 
-        datacite_xml = File.read('spec/data/archive/mrt-datacite.xml')
+        @datacite_xml = File.read('spec/data/archive/mrt-datacite.xml')
         dcs_resource = Datacite::Mapping::Resource.parse_xml(datacite_xml)
 
         @resource = StashDatacite::ResourceBuilder.new(
@@ -172,6 +173,28 @@ module Stash
           end
         end
       end
+
+      describe :dc4_xml do
+        it 'builds Datacite 4 XML' do
+          package = ObjectManifestPackage.new(resource: resource)
+          expect(package.dc4_xml).to be_xml(datacite_xml)
+        end
+      end
+
+      describe :to_s do
+        attr_reader :package_str
+        before(:each) do
+          package = ObjectManifestPackage.new(resource: resource)
+          @package_str = package.to_s
+        end
+        it 'includes the class name' do
+          expect(package_str).to include(ObjectManifestPackage.name)
+        end
+        it 'includes the resource ID' do
+          expect(package_str).to include(resource.id.to_s)
+        end
+      end
+
     end
   end
 end

@@ -158,7 +158,7 @@ module Stash
         end
       end
 
-      describe :dc3_xml do
+      describe :dc4_xml do
         it 'builds Datacite 4 XML' do
           package = ZipPackage.new(resource: resource)
           expect(package.dc4_xml).to be_xml(datacite_xml)
