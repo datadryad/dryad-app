@@ -71,6 +71,11 @@ module Stash
       end
 
       describe :submit! do
+
+        before(:each) do
+          allow(resource).to receive(:upload_type).and_return(:files)
+        end
+
         describe 'create' do
           it 'mints an ID if needed' do
             expect(resource).to receive(:identifier).and_return(nil)
