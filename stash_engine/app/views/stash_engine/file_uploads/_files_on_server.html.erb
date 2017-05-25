@@ -13,11 +13,13 @@
   </div>
 <% end %>
 
-<h2 class="t-upload__choose-heading--active">Validation Results</h2>
+
 
 <div id="validated_errors">
   <%= render partial: 'stash_engine/file_uploads/validated_errors', locals: {resource: @resource} %>
 </div>
+
+<h2 class="t-upload__choose-heading--active">Uploaded Files</h2>
 
 <div class="c-upload" id="validated_files">
 	<%= render partial: 'stash_engine/file_uploads/validated_files', locals: {resource: @resource} %>

@@ -1,9 +1,37 @@
 <% #takes local variable of resource %>
+
+<style>
+  .manifest-table {
+    width: 100%;
+    border: 1px solid black;
+    border-collapse: collapse;
+  }
+
+  .manifest-table__head>th {
+    padding: 8px;
+    font-weight: bold;
+    border: 1px solid black;
+    border-collapse: collapse;
+    text-align: left;
+  }
+
+  .manifest-table__row>td {
+    font-weight: normal;
+    padding: 8px;
+    border: 1px solid black;
+    border-collapse: collapse;
+  }
+</style>
 <div>
   <% if resource.file_uploads.where.not(url: [nil, ''], upload_file_name: [nil, '']).count < 1 %>
     <span id="no_chosen">No files have been uploaded.</span>
   <% else %>
-    <%= render partial: "stash_engine/file_uploads/uploaded_file_from_server",
+    <table class="manifest-table">
+      <tr class="manifest-table__head">
+        <th>Filename</th><th>URL</th><th>Size</th><th>Version</th><th>Actions</th>
+      </tr>
+      <%= render partial: "stash_engine/file_uploads/uploaded_file_from_server",
                collection: resource.latest_file_states, as: :uploaded_file %>
+    </table>
   <% end %>
 </div>
