@@ -14,9 +14,11 @@ module Stash
       end
 
       def contents
-        xml = build_xml
-        return xml unless do_validate?
-        validate(xml)
+        @contents ||= begin
+          xml = build_xml
+          validate(xml) if do_validate?
+          xml
+        end
       end
 
       def validate(xml)

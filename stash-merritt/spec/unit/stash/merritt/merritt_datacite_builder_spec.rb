@@ -5,19 +5,21 @@ module Stash
     module Builders
       describe MerrittDataciteBuilder do
         attr_reader :dc4_xml
+        attr_reader :resource
         attr_reader :factory
         attr_reader :builder
 
         before(:each) do
           @dc4_xml = File.read('spec/data/archive/mrt-datacite.xml')
+          @resource = Datacite::Mapping::Resource.parse_xml(dc4_xml)
           @factory = instance_double(Datacite::Mapping::DataciteXMLFactory)
           @builder = MerrittDataciteBuilder.new(factory)
         end
 
         describe :build_xml do
           it 'builds the XML' do
-            allow(factory).to receive(:build_datacite_xml).and_return(dc4_xml)
-            expect(builder.build_xml).to eq(dc4_xml)
+            allow(factory).to receive(:build_resource).and_return(resource)
+            expect(builder.build_xml).to be_xml(dc4_xml)
           end
         end
 

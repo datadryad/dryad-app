@@ -23,7 +23,14 @@ module Stash
       end
 
       def dc4_xml
-        @dc4_xml ||= datacite_xml_factory.build_datacite_xml
+        @dc4_xml ||= dc4_builder.contents
+      end
+
+      def dc4_builder
+        @dc4_builder ||= begin
+          datacite_xml_factory = Datacite::Mapping::DataciteXMLFactory.new(doi_value: resource.identifier_value, se_resource_id: resource_id, total_size_bytes: total_size_bytes, version: version_number)
+          MerrittDataciteBuilder.new(datacite_xml_factory)
+        end
       end
 
       def resource_id
@@ -35,10 +42,6 @@ module Stash
           primary_title = resource.titles.where(title_type: nil).first
           primary_title.title.to_s if primary_title
         end
-      end
-
-      def datacite_xml_factory
-        @datacite_xml_factory ||= Datacite::Mapping::DataciteXMLFactory.new(doi_value: resource.identifier_value, se_resource_id: resource_id, total_size_bytes: total_size_bytes, version: version_number)
       end
 
       def total_size_bytes
@@ -53,7 +56,7 @@ module Stash
       end
 
       def dc4_resource
-        @dc4_resource ||= datacite_xml_factory.build_resource
+        @dc4_resource ||= Datacite::Mapping::Resource.parse_xml(dc4_xml)
       end
 
       def uploads
@@ -71,7 +74,7 @@ module Stash
       def builders # rubocop:disable Metrics/AbcSize
         @builders ||= [
           StashWrapperBuilder.new(dcs_resource: dc4_resource, version_number: version_number, uploads: uploads, embargo_end_date: embargo_end_date),
-          MerrittDataciteBuilder.new(datacite_xml_factory),
+          dc4_builder,
           MerrittOAIDCBuilder.new(resource_id: resource_id),
           DataONEManifestBuilder.new(uploads),
           MerrittDeleteBuilder.new(resource_id: resource_id),

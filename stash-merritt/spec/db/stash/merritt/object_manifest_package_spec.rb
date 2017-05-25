@@ -96,12 +96,15 @@ module Stash
 
           actual = File.read(manifest_path)
 
-          # generated stash-wrapper.xml has today's date & so has different hash
+          # generated stash-wrapper.xml has today's date & so has different hash, file size
           generated_stash_wrapper = "#{public_system}/#{resource.id}/stash-wrapper.xml"
           stash_wrapper_md5 = Digest::MD5.file(generated_stash_wrapper).to_s
+          stash_wrapper_size = File.size(generated_stash_wrapper)
           expected = File.read('spec/data/manifest.checkm')
-            .sub('17c28364d528eed4805d6b87afa88749', stash_wrapper_md5)
-            .gsub('{resource_id}', "#{resource.id}")
+            .sub(
+              '17c28364d528eed4805d6b87afa88749 | 9838',
+              "#{stash_wrapper_md5} | #{stash_wrapper_size}"
+            ).gsub('{resource_id}', "#{resource.id}")
 
           expect(actual).to eq(expected)
         end

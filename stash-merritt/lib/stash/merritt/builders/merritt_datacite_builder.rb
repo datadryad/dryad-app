@@ -24,11 +24,17 @@ module Stash
         end
 
         def build_xml
-          factory.build_datacite_xml
+          dc4_resource.write_xml
         end
 
         def schema
           MerrittDataciteBuilder.dc4_schema
+        end
+
+        private
+
+        def dc4_resource
+          @dc4_resource ||= factory.build_resource
         end
       end
     end
