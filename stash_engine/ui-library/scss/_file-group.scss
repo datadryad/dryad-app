@@ -17,10 +17,10 @@
   padding: 0 0 0 20px;
 
   &::before {
+    content: inline('../images/icon_thin-right-arrow.svg');
     position: absolute;
     top: 0;
     left: 0;
-    content: inline('../images/icon_thin-right-arrow.svg');
   }
 
 }

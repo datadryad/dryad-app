@@ -8,7 +8,7 @@ module StashEngine
                       :metadata_render_path, :stash_url_helpers, :discovery_url_helpers, :landing_url,  :field_suffix,
                       :logo_path, :contact_us_url, :display_br, :display_id, :display_id_plain,
                       :formatted_date, :can_display_embargoed?, :file_content_dump, :display_author_orcid,
-                      :english_list
+                      :english_list, :shorten_linked_url
     end
 
     def metadata_url_helpers
@@ -173,6 +173,10 @@ module StashEngine
       # Nokogiri::HTML.parse(escaped).text will give unescaped
 
       my_str.html_safe
+    end
+
+    def shorten_linked_url(url:, length: 80)
+      "<a href=\"#{url}\" title=\"#{ERB::Util.html_escape(url)}\">#{ERB::Util.html_escape(url.ellipsisize(length))}</a>".html_safe
     end
 
     # Dumps the content of a path from an engine's root (source code) out as a string

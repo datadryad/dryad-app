@@ -3,11 +3,11 @@
 .o-banner {
   display: flex;
   position: relative;
+  z-index: 0;
   flex-flow: column nowrap;
   align-items: center;
   padding: 10px 0;
   background-color: $design-light-blue-color;
-  z-index: 0;
 
 	// 'background-image: none' needs to override the inline background-image style in the HTML at small screen:
 
@@ -26,13 +26,13 @@
 		// Blue, semi-transparent bar over banner image:
 
 	  &::before {
+        content: '';
   		position: absolute;
   		top: 0;
   		right: 0;
   		bottom: 0;
   		left: 0;
-			background: linear-gradient(transparent 8vw, rgba($design-dark-blue-color, 0.6) 8vw, rgba($design-dark-blue-color, 0.6) 25vw, transparent 25vw);
-			content: '';
+        background: linear-gradient(transparent 8vw, rgba($design-dark-blue-color, 0.6) 8vw, rgba($design-dark-blue-color, 0.6) 25vw, transparent 25vw);
   	}
 
   }
@@ -58,10 +58,10 @@ html.no-multiplebgs .o-banner {
 }
 
 .o-banner__tagline {
-	margin: 0 0 10px;
-	color: $design-white-color;
-	font-size: 1.7em;
-	z-index: 1;
+  z-index: 1;
+  margin: 0 0 10px;
+  color: $design-white-color;
+  font-size: 1.7em;
 
 	@include bp(screen1) {
 		margin: 0 0 2vw;
@@ -85,11 +85,11 @@ html.no-multiplebgs .o-banner {
 
 .o-banner__button {
 	display: inline-block;
+    z-index: 1;
 	padding: 6px 12px;
 	background-color: $design-white-color;
 	color: $design-dark-blue-color;
 	text-decoration: none;
-	z-index: 1;
 
 	@include bp(screen1) {
 		padding: 6px 2vw;

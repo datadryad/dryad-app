@@ -46,13 +46,12 @@
     display: none;
   }
 
-  &::after {
+  &::after {content: '';
     position: absolute; // to %c-facet__toggle-button
     top: 10px;
     right: 10px;
     padding: 10px; // reveals icon
     background: inline('../images/icon_right-white-arrow.svg') center no-repeat;
-    content: '';
   }
 
 }

@@ -256,14 +256,14 @@
   border-radius: 8px;
   background: $design-white-color inline('../images/icon_orcid.png') left 5px center no-repeat;
   background-color: #fff;
+  box-shadow: 1px 1px 3px #999;
   color: #999;
   font-size: .8em;
   font-weight: bold;
   line-height: 24px;
   text-decoration: none;
-  box-shadow: 1px 1px 3px #999;
-  cursor: pointer;
   vertical-align: right;
+  cursor: pointer;
 }
 
 .o-button__connect-orcid:hover {

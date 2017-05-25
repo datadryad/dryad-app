@@ -35,6 +35,7 @@
 
 .c-getting-started-heading__button {
   display: inline-block;
+  z-index: 1;
   height: 45px;
   margin: 10px;
   padding: 6px 12px;
@@ -43,7 +44,6 @@
   color: $design-white-color;
   font-size: 1.1em;
   text-decoration: none;
-  z-index: 1;
 
   @include bp(screen1) {
     padding: 6px 2vw;

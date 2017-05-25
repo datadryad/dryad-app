@@ -58,16 +58,16 @@
   }
 
   &::after {
+    content: inline('../images/icon_right-white-arrow.svg');
     position: absolute;
     right: $spacing-body + 5px;
     transform: rotate(90deg);
-    content: inline('../images/icon_right-white-arrow.svg');
 
     @include bp(screen3) {
+      content: inline('../images/icon_down-blue-arrow.svg');
       display: inline-block;
       right: 0;
       transform: rotate(0deg);
-      content: inline('../images/icon_down-blue-arrow.svg');
     }
 
   }
@@ -113,10 +113,10 @@
   }
 
   &::before {
+    content: '\2219';
     display: inline-block;
     margin: 0 0.4em 0 0;
     font-size: 1.2em;
-    content: '\2219';
   }
 
 }

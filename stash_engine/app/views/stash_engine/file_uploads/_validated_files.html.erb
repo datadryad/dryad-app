@@ -1,13 +1,13 @@
 <% #takes local variable of resource %>
 
 <style>
-  .manifest-table {
+  .c-manifest-table {
     width: 100%;
     border: 1px solid black;
     border-collapse: collapse;
   }
 
-  .manifest-table__head>th {
+  .c-manifest-table__head>th {
     padding: 8px;
     font-weight: bold;
     border: 1px solid black;
@@ -15,20 +15,48 @@
     text-align: left;
   }
 
-  .manifest-table__row>td {
+  .c-manifest-table__row>td {
     font-weight: normal;
     padding: 8px;
     border: 1px solid black;
     border-collapse: collapse;
+  }
+
+  .c-manifest-table__td-size, .c-manifest-table__td-version {
+    text-align: right;
+  }
+
+  .c-manifest-table__filename-col {
+    width: 23%;
+  }
+
+  .c-manifest-table__url-col {
+    width: 45%;
+  }
+
+  .c-manifest-table__size-col {
+    width: 10%;
+  }
+
+  .c-manifest-table__version-col {
+    width: 5%;
+  }
+
+  .c-manifest-table__actions-col {
+    width: 17%;
   }
 </style>
 <div>
   <% if resource.file_uploads.where.not(url: [nil, ''], upload_file_name: [nil, '']).count < 1 %>
     <span id="no_chosen">No files have been uploaded.</span>
   <% else %>
-    <table class="manifest-table">
-      <tr class="manifest-table__head">
-        <th>Filename</th><th>URL</th><th>Size</th><th>Version</th><th>Actions</th>
+    <table class="c-manifest-table">
+      <tr class="c-manifest-table__head">
+        <th class="c-manifest-table__filename-col">Filename</th>
+        <th class="c-manifest-table__url-col">URL</th>
+        <th class="c-manifest-table__size-col">Size</th>
+        <th class="c-manifest-table__version-col">Version</th>
+        <th class="c-manifest-table__actions-col">Actions</th>
       </tr>
       <%= render partial: "stash_engine/file_uploads/uploaded_file_from_server",
                collection: resource.latest_file_states, as: :uploaded_file %>

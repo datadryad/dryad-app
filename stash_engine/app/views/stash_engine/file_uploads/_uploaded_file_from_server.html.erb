@@ -1,10 +1,10 @@
 <!-- manifest workflow -->
 <% f = uploaded_file %>
-<tr id="manifest_file_<%= f.id %>" class="manifest-table__row">
-  <td><%= f.upload_file_name %></td>
-  <td><%= f.url %></td>
-  <td><%= filesize(f.upload_file_size) %><%# f.upload_file_size %></td>
-  <td><%= f.resource.version_number %></td>
+<tr id="manifest_file_<%= f.id %>" class="c-manifest-table__row">
+  <td><span title="<%= f.upload_file_name %>"><%= truncate(f.upload_file_name, length: 30) %></span></td>
+  <td><%= shorten_linked_url(url: f.url, length: 60) %></td>
+  <td class="c-manifest-table__td-size"><%= filesize(f.upload_file_size) %><%# f.upload_file_size %></td>
+  <td class="c-manifest-table__td-version"><%= f.resource.version_number %></td>
   <td>
     <%= button_to 'Delete', f, method: :delete, remote: true, class: "c-upload__button",
                     form_class: 'o-button__inline-form' %>

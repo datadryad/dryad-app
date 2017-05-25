@@ -7,10 +7,10 @@
   @include bp(screen3) {
     display: flex;
     position: relative;
+    z-index: 1; /* positioning is so that dd-menu goes in a higher order and context than some other parts of page */
     justify-content: space-between;
     padding-bottom: 10px;
     border-bottom: 1px solid $design-dark-gray-color;
-    z-index: 1; /* positioning is so that dd-menu goes in a higher order and context than some other parts of page */
   }
 
 }
@@ -41,11 +41,10 @@
 // The SVG height properties below also set the header height, in addition to the c-header__logos margin property above.
 
 .c-header__dash-logo-svg {
-  height: 30px;
-  padding: 5px 0;
-
   /* Blacklight/geoblacklight resets */
   box-sizing: content-box;
+  height: 30px;
+  padding: 5px 0;
 
   @include bp(screen3) {
     height: 40px;
@@ -101,9 +100,9 @@
   flex-flow: column nowrap;
 
   @include bp(screen3) {
+    z-index: 1;
     flex-flow: row nowrap;
     justify-content: space-between;
-    z-index: 1;
   }
 
 }

@@ -36,13 +36,13 @@
 	color: $design-white-color;
 
 	@include bp(screen3) {
-		margin: 0 0 0 10px;
-		padding: 0;
-		background-color: transparent;
-		color: $design-black-color;
-  	text-align: right;
-  	text-overflow: ellipsis; // truncate text if too long
-  	overflow: hidden;
+      margin: 0 0 0 10px;
+	  padding: 0;
+      overflow: hidden;
+	  background-color: transparent;
+	  color: $design-black-color;
+  	  text-align: right;
+  	  text-overflow: ellipsis; // truncate text if too long
 	}
 
 }

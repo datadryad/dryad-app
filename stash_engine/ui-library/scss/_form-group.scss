@@ -24,10 +24,10 @@
   font-size: 1.3em;
 
   &::after {
+    content: inline('../images/icon_right-white-arrow.svg');
     position: absolute;
     right: $spacing-body;
     transform: rotate(90deg);
-    content: inline('../images/icon_right-white-arrow.svg');
 
     @include bp(screen1) {
       right: $spacing-body + $spacing-sm;

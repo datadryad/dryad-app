@@ -36,12 +36,13 @@
   }
 
   &::after {
+    content: '>';
     margin: 0 0 0 0.25em;
     font-size: 1.2em;
-    content: '>';
 
     // Right angle arrow using borders:
     @include bp(screen1) {
+      content: '';
       position: absolute;
       top: 4px;
       right: -13px;
@@ -51,7 +52,6 @@
       border-top-style: solid;
       border-right-style: solid;
       border-color: $design-dark-gray-color;
-      content: '';
     }
 
   }

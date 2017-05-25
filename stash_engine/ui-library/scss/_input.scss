@@ -36,8 +36,8 @@
 	@extend %c-input__label;
 
 	&::after {
-		color: $design-orange-color;
-		content: ' *';
+      content: ' *';
+      color: $design-orange-color;
 	}
 
 }
@@ -48,8 +48,8 @@
 
 %c-input__element {
 	@extend %fcontrol-focus;
+    box-sizing: border-box;
 	border: 1px solid $design-dark-gray-color;
-	box-sizing: border-box;
 }
 
 .c-input__text {
@@ -62,9 +62,9 @@
 	@extend %c-input__element;
 	height: $input-height + 50px;
 	padding: 3px 5px;
-  overflow-wrap: break-word;
-  word-wrap: break-word;
-  word-break: break-all;
+    word-wrap: break-word;
+    word-break: break-all;
+    overflow-wrap: break-word;
 }
 
 .c-input__select {
@@ -107,8 +107,8 @@
 	margin: 0 0 $spacing-md;
 
 	&::before {
-		color: $design-orange-color;
-		content: '* ';
+      content: '* ';
+	  color: $design-orange-color;
 	}
 
 }
