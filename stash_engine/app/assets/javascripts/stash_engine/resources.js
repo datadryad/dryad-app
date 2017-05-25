@@ -292,7 +292,9 @@ function undoConfirmUpload() {
 // end Javascript for FileUpload page.  This section was only for FILES, not MANIFEST
 // **********************************************************************************
 
-// hides files vs manifest sections based on radio button choice
+// **********************************************************************************
+// The items for  showing only upload method or manifest method
+// **********************************************************************************
 function showFilesOrManifest(){
   if ($('#files_from_computer').prop('checked')) {
     $('.files_on_computer').show();
@@ -325,3 +327,61 @@ function enableUploadMethod(){
   $('#files_from_server').attr('disabled', false);
   $('#files_from_computer').attr('disabled', false);
 }
+
+function addSelectUploadTypeEvent(){
+  $('#files_from_computer, #files_from_manifest').on('change', function() {
+    showFilesOrManifest();
+  });
+}
+
+// **********************************************************************************
+// END The items for showing only upload method or manifest method
+// **********************************************************************************
+
+// **********************************************************************************
+// The methods for the manifest workflow only
+// **********************************************************************************
+
+function addEventFewManyRows(){
+  $('#show_10_files').click( function(e){
+    e.preventDefault();
+    $('#table_hider').hide();
+    $('#show_10_files').hide();
+    $('#show_all_files').show();
+  });
+  $('#show_all_files').click( function(e){
+    e.preventDefault();
+    $('#table_hider').show();
+    $('#show_10_files').show();
+    $('#show_all_files').hide();
+  });
+}
+
+function hideLinksForFewRows(){
+  if($('.c-manifest-table__row').length < 11){
+    $('#show_10_files').hide();
+    $('#show_all_files').hide();
+  }
+}
+
+// takes the show10 and showAll visibility (t/f)
+function tableStateRestorer(show10, showAll){
+  console.log('show10: ' + show10);
+  console.log('showAll: ' + showAll);
+  if(showAll){
+    $('#show_all_files').show();
+    $('#table_hider').hide();
+  }else{
+    $('#show_all_files').hide();
+  }
+  if(show10){
+    $('#show_10_files').show();
+  }else{
+    $('#show_10_files').hide();
+  }
+  hideLinksForFewRows();
+}
+
+// **********************************************************************************
+// END The methods for the manifest workflow only
+// **********************************************************************************

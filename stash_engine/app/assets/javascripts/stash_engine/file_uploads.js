@@ -12,9 +12,3 @@ function validateFileUrl(){
     $
   });
 }
-
-function selectFileLocation(){
-  $('#files_from_computer, #files_from_manifest').on('change', function() {
-    showFilesOrManifest();
-  });
-}

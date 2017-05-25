@@ -1,0 +1,20 @@
+// manifest workflow
+// determine visiblity of links
+var showAll = $('#show_all_files').is(":visible");
+var show10 = $('#show_10_files').is(":visible");
+
+// reload page if they're down to no files to reset things well
+<% if @resource.upload_type == :unknown %>
+  location.reload();
+<% end %>
+
+// redraw table
+$('#validated_files').html("<%= escape_javascript(
+          render partial: 'stash_engine/file_uploads/validated_files', locals: {resource: @resource}) %>");
+
+// reset method lockout & add events to few/many rows again
+setUploadMethodLockout('<%= @resource.upload_type %>');
+addEventFewManyRows();
+
+// set link states again to what they were for few/many files
+tableStateRestorer(show10, showAll);

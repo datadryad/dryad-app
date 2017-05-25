@@ -16,6 +16,7 @@ StashEngine::Engine.routes.draw do
       patch 'remove'
       patch 'restore'
       patch 'destroy_error' #destroy an errored file in manifest upload
+      patch 'destroy_manifest' #destroy file from manifest method
     end
   end
   match 'file_uploads/validate_urls/:resource_id', to: 'file_uploads#validate_urls', as: 'file_uploads_validate_urls', via: [:get, :post, :put]

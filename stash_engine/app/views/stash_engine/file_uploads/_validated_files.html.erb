@@ -1,53 +1,7 @@
 <% #takes local variable of resource %>
 
-<style>
-  .c-manifest-table {
-    width: 100%;
-    border: 1px solid black;
-    border-collapse: collapse;
-  }
-
-  .c-manifest-table__head>th {
-    padding: 8px;
-    font-weight: bold;
-    border: 1px solid black;
-    border-collapse: collapse;
-    text-align: left;
-  }
-
-  .c-manifest-table__row>td {
-    font-weight: normal;
-    padding: 8px;
-    border: 1px solid black;
-    border-collapse: collapse;
-  }
-
-  .c-manifest-table__td-size, .c-manifest-table__td-version {
-    text-align: right;
-  }
-
-  .c-manifest-table__filename-col {
-    width: 23%;
-  }
-
-  .c-manifest-table__url-col {
-    width: 45%;
-  }
-
-  .c-manifest-table__size-col {
-    width: 10%;
-  }
-
-  .c-manifest-table__version-col {
-    width: 5%;
-  }
-
-  .c-manifest-table__actions-col {
-    width: 17%;
-  }
-</style>
 <div>
-  <% if resource.file_uploads.where.not(url: [nil, ''], upload_file_name: [nil, '']).count < 1 %>
+  <% if resource.file_uploads.validated_table.count < 1 %>
     <span id="no_chosen">No files have been uploaded.</span>
   <% else %>
     <table class="c-manifest-table">
@@ -59,7 +13,12 @@
         <th class="c-manifest-table__actions-col">Actions</th>
       </tr>
       <%= render partial: "stash_engine/file_uploads/uploaded_file_from_server",
-               collection: resource.latest_file_states, as: :uploaded_file %>
+               collection: resource.file_uploads.validated_table, as: :uploaded_file %>
+      <% if resource.latest_file_states.count > 10 %>
+        </tbody> <!-- closing tbody which shows/hides rows greater than 10 -->
+      <% end %>
     </table>
+    <p id="show_all_files"><a href="#">Show all files</a></p>
+    <p id="show_10_files"><a href="#">Show 10 files</a></p>
   <% end %>
 </div>

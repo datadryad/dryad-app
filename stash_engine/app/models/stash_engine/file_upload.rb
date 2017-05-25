@@ -5,10 +5,13 @@ module StashEngine
 
     scope :deleted_from_version, -> { where(file_state: :deleted) }
     scope :newly_created, -> { where("file_state = 'created' OR file_state IS NULL") }
+    scope :present_files, -> { where("file_state = 'created' OR file_state IS NULL OR file_state = 'copied'") }
     scope :url_submission, -> { where("url IS NOT NULL") }
     scope :file_submission, -> { where("url IS NULL") }
     scope :with_filename, -> { where("upload_file_name IS NOT NULL") }
     scope :errors, -> { where('url IS NOT NULL AND status_code <> 200') }
+    scope :validated, -> { where('(url IS NOT NULL AND status_code = 200) OR url IS NULL') }
+    scope :validated_table, -> { present_files.validated.order(created_at: :desc) }
     enum file_state: %w(created copied deleted).map { |i| [i.to_sym, i] }.to_h
 
     # display the correct error message based on the url status code

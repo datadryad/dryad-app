@@ -4,7 +4,7 @@ require 'fileutils'
 module StashEngine
   class FileUploadsController < ApplicationController
     before_action :require_login
-    before_action :set_file_info, only: [:destroy, :remove, :restore, :destroy_error]
+    before_action :set_file_info, only: [:destroy, :remove, :restore, :destroy_error, :destroy_manifest]
     #TODO check that the following before action really should be ignored on these
     before_action :require_file_owner, except: [:create, :destroy, :remove, :restore, :revert, :validate_urls, :destroy_error]
     before_action :set_create_prerequisites, only: [:create]
@@ -36,6 +36,22 @@ module StashEngine
           @url = @file.url
           @resource = @file.resource
           @file.destroy
+        end
+      end
+    end
+
+    # destroy a file from the manifest table deletion action
+    def destroy_manifest
+      respond_to do |format|
+        format.js do
+          @resource = @file.resource
+          @file_id = @file.id
+          if @file.file_state == 'copied'
+            @file.file_state = 'deleted'
+            @file.save!
+          elsif @file.file_state == 'created'
+            @file.destroy
+          end
         end
       end
     end
