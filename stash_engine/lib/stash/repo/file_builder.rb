@@ -6,6 +6,10 @@ module Stash
     class FileBuilder
       attr_reader :file_name
 
+      def log
+        Rails.logger
+      end
+
       # @param file_name [String] the default file name, or nil if overriding #file_name
       def initialize(file_name: nil)
         @file_name = file_name

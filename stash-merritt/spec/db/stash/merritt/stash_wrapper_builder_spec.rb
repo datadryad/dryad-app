@@ -116,6 +116,45 @@ module Stash
             end.to raise_error(ArgumentError)
           end
         end
+
+        describe 'validate' do
+          attr_reader :builder
+          attr_reader :logger
+
+          before(:each) do
+            @builder = StashWrapperBuilder.new(
+              dcs_resource: dc4_resource,
+              version_number: 1,
+              uploads: [],
+              embargo_end_date: nil
+            )
+
+            def builder.do_validate?
+              true
+            end
+
+            @logger = instance_double(Logger)
+            allow(Rails).to receive(:logger).and_return(logger)
+          end
+
+          after(:each) do
+            allow(Rails).to receive(:logger).and_call_original
+          end
+
+          it 'validates the XML' do
+            xml = builder.build_xml
+            expect(logger).not_to receive(:error)
+            builder.validate(xml)
+          end
+
+          it 'raises for invalid XML' do
+            xml = File.read('spec/data/bad-stash-wrapper.xml')
+            allow(logger).to receive(:error) do |e|
+              expect(e).to include('bad_xml')
+            end
+            expect { builder.validate(xml) }.to raise_error(Nokogiri::XML::SyntaxError)
+          end
+        end
       end
     end
   end
