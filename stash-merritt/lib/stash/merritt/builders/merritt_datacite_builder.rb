@@ -4,7 +4,17 @@ require 'stash/repo/file_builder'
 module Stash
   module Merritt
     module Builders
-      class MerrittDataciteBuilder < Stash::Repo::FileBuilder
+      class MerrittDataciteBuilder < Stash::Repo::ValidatingXMLBuilder
+
+        class << self
+          def dc4_schema
+            @dc4_schema ||= begin
+              schema_file = File.dirname(__FILE__) + '/schemas/datacite/metadata.xsd'
+              Nokogiri::XML::Schema(File.open(schema_file))
+            end
+          end
+        end
+
         attr_reader :factory
 
         # @param factory [DataciteXMLFactory] the Datacite XML factory
@@ -13,16 +23,12 @@ module Stash
           @factory = factory
         end
 
-        def contents
-          build_xml
-        end
-
-        def mime_type
-          MIME::Types['text/xml'].first
-        end
-
         def build_xml
           factory.build_datacite_xml
+        end
+
+        def schema
+          MerrittDataciteBuilder.dc4_schema
         end
       end
     end
