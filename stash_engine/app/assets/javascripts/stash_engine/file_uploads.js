@@ -14,7 +14,7 @@ function validateFileUrl(){
 }
 
 function selectFileLocation(){
-  $('#file_location_select').on('change', function() {
+  $('#files_from_computer, #files_from_manifest').on('change', function() {
     showFilesOrManifest();
   });
 }

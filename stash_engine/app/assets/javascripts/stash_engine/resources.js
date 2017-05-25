@@ -27,7 +27,7 @@ $(function () {
           $('.js-remove_link').click( function(e){
             e.preventDefault();
             e.target.parentNode.parentNode.remove();
-            updateButtonLinkStates();
+            updateButtonLinkStates(); // for file upload method
           });
 
           // binding upload link click event
@@ -51,20 +51,20 @@ $(function () {
             if(uploadInProgress) {
               $('.js-upload-it:first').click();
             };
-            updateButtonLinkStates();
+            updateButtonLinkStates(); // for file upload method
           });
-          updateButtonLinkStates();
+          updateButtonLinkStates(); // for file upload method
         },
         progress: function (e, data) {
           progress = parseInt(data.loaded / data.total * 100, 10);
           data.context.find('.js-bar').attr("value", progress)
         },
         done: function (e, data) {
-          updateButtonLinkStates();
+          updateButtonLinkStates(); // for file upload method
         }
     });
 
-  updateButtonLinkStates();
+  updateButtonLinkStates(); // for file upload method
   $('#cancel_all').click(function() {
     uploadInProgress = false;
     $('.js-cancel:visible').click();
@@ -86,7 +86,7 @@ $(function () {
     }
     uploadInProgress = true;
     $('.js-upload-it:lt(3)').click();
-    updateButtonLinkStates();
+    updateButtonLinkStates(); // for file upload method
   });
 });
 
@@ -292,10 +292,9 @@ function undoConfirmUpload() {
 // end Javascript for FileUpload page.  This section was only for FILES, not MANIFEST
 // **********************************************************************************
 
-// hides files vs manifest sections based on drop-down choice
+// hides files vs manifest sections based on radio button choice
 function showFilesOrManifest(){
-  var mySelect = $('#file_location_select').val();
-  if (mySelect == "files") {
+  if ($('#files_from_computer').prop('checked')) {
     $('.files_on_computer').show();
     $('.files_on_server').hide();
   }
@@ -303,4 +302,26 @@ function showFilesOrManifest(){
     $('.files_on_server').show();
     $('.files_on_computer').hide();
   }
+}
+
+function setUploadMethodLockout(resourceUploadType){
+  if(resourceUploadType == 'unknown') {
+    enableUploadMethod();
+  }else{
+    disableUploadMethod()
+  }
+}
+
+function disableUploadMethod(){
+  if ($('#files_from_computer').prop('checked')) {
+    $('#files_from_server').attr('disabled', true);
+  }
+  else {
+    $('#files_from_computer').attr('disabled', true);
+  }
+}
+
+function enableUploadMethod(){
+  $('#files_from_server').attr('disabled', false);
+  $('#files_from_computer').attr('disabled', false);
 }

@@ -6,8 +6,5 @@ $('#validated_files').html("<%= escape_javascript(
 $('#post_submit_spinner').hide();
 $("#validate_files").show();
 // disable or enable the drop-down depending if there are any files there.
-<% if @resource.upload_type != :unknown %>
-  $('#file_location_select').prop('disabled', true);
-<% else %>
-  $('#file_location_select').prop('disabled', false);
-<% end %>
+setUploadMethodLockout('<%= @resource.upload_type %>');
+

@@ -25,9 +25,6 @@
       <label for="files_from_manifest">Enter URLs of file locations</label>
     </div>
   </div>
-  <%# select_tag "file_location", options_for_select([ ['On this Computer', 'files'], ['On a Server', 'manifest'] ],
-             selected: ([:files, :unknown].include?(@resource.upload_type) ? 'files': 'manifest') ),
-             id: 'file_location_select', disabled: (@resource.upload_type != :unknown) %>
 </div>
 
 
@@ -96,11 +93,12 @@
     return <%= @resource.version_number %>;
   }
 
-  updateButtonLinkStates();
+  updateButtonLinkStates(); // for file upload method
 
   $(function () {
     showFilesOrManifest(); // decides to either show files or manifest uploads based on select list state
     $('#post_submit_spinner').hide();
     selectFileLocation();
+    setUploadMethodLockout('<%= @resource.upload_type %>');
   });
 </script>
