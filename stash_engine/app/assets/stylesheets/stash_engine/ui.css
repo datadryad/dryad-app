@@ -4654,9 +4654,9 @@ html.svg .c-facet__check-label {
 
 .c-upload__filename {
   margin: 0 10px 0 0;
+  overflow: hidden;
   text-overflow: ellipsis;
-  white-space: nowrap;
-  overflow: hidden; }
+  white-space: nowrap; }
 
 .c-upload__filesize {
   margin: 0 0 0 0.25em; }
@@ -5162,6 +5162,22 @@ html.svg .c-facet__check-label {
 
 .t-upload__choose-heading--active {
   color: #005581; }
+
+.t-upload__method-section {
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-direction: row;
+      flex-direction: row;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+  -ms-flex-align: center;
+      align-items: center; }
+
+.t-uploads__method-choice {
+  margin: 0 2em 0 0; }
+
+.t-uploads__method-input {
+  margin: 0 1ex 0 0; }
 
 .c-category__globe {
   display: inline-block;

@@ -10,6 +10,6 @@ if(to_upload_buttons.length && uploadInProgress){
   // all are done, so stop the upload process
   uploadInProgress = false;
   $('#cancel_all').hide();
-  updateButtonLinkStates();
+  updateButtonLinkStates(); // for file upload method
   $('#upload_complete').show(0).delay(5000).fadeOut(1000)
 }

@@ -3,7 +3,7 @@
 <div class="c-manifest">
   <div id="manifest_errors">
     <% if resource.file_uploads.newly_created.errors.count > 0 || dups.count > 0 %>
-      <h2 class="t-upload__choose-heading--active">Validation Errors</h2>
+      <h2 class="t-upload__choose-heading--active">Validation Status</h2>
       <% resource.file_uploads.newly_created.errors.each do |fu| %>
         <div class="c-manifest__item">
           <div class="c-manifest__url"><%= fu.url %></div>
