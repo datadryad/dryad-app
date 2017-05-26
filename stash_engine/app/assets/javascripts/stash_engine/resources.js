@@ -364,10 +364,15 @@ function hideLinksForFewRows(){
   }
 }
 
-// takes the show10 and showAll visibility (t/f)
+// takes the show10 and showAll visibility (t/f), be careful tricky since these are the links which have backwards
+// logic.  ie.  show10 shows up when the table is showing all and showAll link shows when it's showing 10.
 function tableStateRestorer(show10, showAll){
-  console.log('show10: ' + show10);
-  console.log('showAll: ' + showAll);
+  if(show10 == showAll) {
+    $('#show_10_files').hide();
+    $('#show_all_files').show();
+    show10 = false;
+    showAll = true;
+  }
   if(showAll){
     $('#show_all_files').show();
     $('#table_hider').hide();

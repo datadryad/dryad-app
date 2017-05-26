@@ -1,10 +1,18 @@
 // manifest workflow
+// determine visiblity of links show 10/all links
+var show10 = $('#show_10_files').is(":visible");
+var showAll = $('#show_all_files').is(":visible");
+
 $('#validated_errors').html("<%= escape_javascript(
           render partial: 'stash_engine/file_uploads/validated_errors', locals: {resource: @resource}) %>");
 $('#validated_files').html("<%= escape_javascript(
           render partial: 'stash_engine/file_uploads/validated_files', locals: {resource: @resource}) %>");
 $('#post_submit_spinner').hide();
 $("#validate_files").show();
-// disable or enable the drop-down depending if there are any files there.
+
+// disable or enable the upload method radio buttons
 setUploadMethodLockout('<%= @resource.upload_type %>');
 
+addEventFewManyRows();
+// set link states again to what they were for few/many files
+tableStateRestorer(show10, showAll);
