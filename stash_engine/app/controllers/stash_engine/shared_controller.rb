@@ -176,6 +176,7 @@ module StashEngine
     end
 
     def shorten_linked_url(url:, length: 80)
+      return '' if url.blank?
       "<a href=\"#{url}\" title=\"#{ERB::Util.html_escape(url)}\">#{ERB::Util.html_escape(url.ellipsisize(length))}</a>".html_safe
     end
 
