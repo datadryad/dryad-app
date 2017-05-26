@@ -334,6 +334,19 @@ function addSelectUploadTypeEvent(){
   });
 }
 
+function confirmToValidate(){
+  // bind the upload button to the check box
+  $('#confirm_to_validate').bind( "click", function() {
+    //check if checkbox is checked
+    if ($(this).is(':checked')) {
+      $('#validate_files').removeAttr('disabled'); //enable input
+    }
+    else {
+      $('#validate_files').attr('disabled', true); //disable input
+    }
+  });
+}
+
 // **********************************************************************************
 // END The items for showing only upload method or manifest method
 // **********************************************************************************
