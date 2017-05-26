@@ -45,7 +45,8 @@ module StashEngine
           # https://carpark.com seems to timeout
           # http://poodle.com -- keep alive disconnected
 
-      rescue SocketError, HTTPClient::KeepAliveDisconnected, HTTPClient::BadResponseError, ArgumentError => ex
+      rescue SocketError, HTTPClient::KeepAliveDisconnected, HTTPClient::BadResponseError, ArgumentError,
+          Errno::ECONNREFUSED => ex
         retry if @tries > 0
         @status_code = 499
       rescue HTTPClient::TimeoutError => ex
