@@ -3,9 +3,10 @@
 var showAll = $('#show_all_files').is(":visible");
 var show10 = $('#show_10_files').is(":visible");
 
-// reload page if they're down to no files to reset things well
+// they're down to no files, so reset the file (not manifest) upload list also in case it has some files in it
 <% if @resource.upload_type == :unknown %>
-  location.reload();
+  $('#upload_list').empty();
+  updateButtonLinkStates();
 <% end %>
 
 // redraw table
