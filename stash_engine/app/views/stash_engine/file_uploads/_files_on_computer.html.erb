@@ -51,10 +51,16 @@
 </div>
 
 <div>
-  <p id="confirm_text_upload" style="display: none;"><span><%= check_box_tag 'confirm_to_upload', 'yes', false, id: 'confirm_to_upload' %></span><strong style="color: red;"> *</strong> I confirm that no Personal Health Information or Sensitive Data are being uploaded with this submission.</p>
+  <p id="confirm_text_upload" style="display: none;">
+    <span><%= check_box_tag 'confirm_to_upload', 'yes', false, id: 'confirm_to_upload' %></span>
+    <strong style="color: red;"> *</strong>
+    I confirm that no Personal Health Information or Sensitive Data are being uploaded with this submission.
+  </p>
   <button id="upload_all" type="button" disabled class="o-button__submit confirm_upload" style="display: none;">Upload</button>
   <button id="cancel_all" type="button" class="o-button__submit" style="display: none;" >Cancel all</button>
+  <p>&nbsp;</p>
 </div>
+
 <div id="revert_all">
   <%# button_to 'undo all changes', revert_file_upload_path(resource_id: @resource.id), method: :patch, remote: true,
                 class: "o-button__plain-text2", form_class: 'o-button__inline-form' %>
