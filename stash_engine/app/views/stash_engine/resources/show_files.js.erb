@@ -5,6 +5,12 @@ $('#upload_list').html("<%= escape_javascript(render partial: 'stash_engine/file
           locals: {resource: @resource, uploads: @uploads } ) %>");
 
 // redraw manifest table
+var show10 = $('#show_10_files').is(":visible");
+var showAll = $('#show_all_files').is(":visible");
+
 $('#validated_files').html("<%= escape_javascript(
           render partial: 'stash_engine/file_uploads/validated_files', locals: {resource: @resource}) %>");
+
+// set link states again to what they were for few/many files
+tableStateRestorer(show10, showAll);
 
