@@ -20,11 +20,7 @@
 </div>
 <div class="c-upload">
   <div id="upload_list">
-    <% if @resource.file_uploads.count < 1 %>
-      <span id="no_chosen">No files chosen</span>
-    <% else %>
-      <%= render partial: "stash_engine/file_uploads/uploaded_file", collection: @uploads %>
-    <% end %>
+    <%= render partial: 'stash_engine/file_uploads/files_on_computer_list', locals: {resource: @resource, uploads: @uploads} %>
   </div>
 </div>
 

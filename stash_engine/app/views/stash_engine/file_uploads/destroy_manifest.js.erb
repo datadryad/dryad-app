@@ -3,9 +3,9 @@
 var show10 = $('#show_10_files').is(":visible");
 var showAll = $('#show_all_files').is(":visible");
 
-// they're down to no files, so reset the file (not manifest) upload list also in case it has some files in it
+// they're down to no modified files, so reset both the file tables for switching back and forth between the two
 <% if @resource.upload_type == :unknown %>
-  $('#upload_list').empty();
+  resetFileTablesToDbState();
   updateButtonLinkStates();
 <% end %>
 

@@ -4,7 +4,7 @@ module StashEngine
   class ResourcesController < ApplicationController
     before_action :require_login, except: [:increment_downloads, :data_paper]
 
-    before_action :set_resource, only: [:show, :edit, :update, :destroy, :review, :upload, :increment_downloads]
+    before_action :set_resource, only: [:show, :edit, :update, :destroy, :review, :upload, :increment_downloads, :show_files]
 
     before_action :require_resource_owner, except: [:index, :new, :increment_downloads, :data_paper]
 
@@ -21,6 +21,14 @@ module StashEngine
       respond_to do |format|
         format.xml { render template: '/stash_datacite/resources/show' }
         format.json {}
+      end
+    end
+
+    # the show_files is for refreshing the files lists to their default states for the resource
+    def show_files
+      @uploads = @resource.latest_file_states
+      respond_to do |format|
+        format.js
       end
     end
 

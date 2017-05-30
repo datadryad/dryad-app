@@ -1,0 +1,11 @@
+// refresh the file lists by ajax
+
+// redraw standard files upload table
+$('#upload_list').html("<%= escape_javascript(render partial: 'stash_engine/file_uploads/files_on_computer_list',
+          locals: {resource: @resource, uploads: @uploads } ) %>");
+
+// redraw manifest table
+$('#validated_files').html("<%= escape_javascript(
+          render partial: 'stash_engine/file_uploads/validated_files', locals: {resource: @resource}) %>");
+
+<%= render partial: 'stash_engine/file_uploads/files_on_computer_list', locals: {resource: @resource, uploads: @uploads} %>

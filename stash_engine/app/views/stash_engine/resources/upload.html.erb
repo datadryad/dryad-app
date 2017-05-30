@@ -37,6 +37,7 @@
   <%= render partial: 'stash_engine/file_uploads/files_on_server', locals: { file: @file, messages: @messages, path: stash_engine.file_uploads_validate_urls_path(@resource.id) } %>
 </div>
 
+<!-- file upload workflow -->
 <div class="files_on_computer" style="display: none;">
   <p>
     Size limits: <%= filesize(current_tenant.max_file_size) %> per file,
@@ -91,6 +92,14 @@
 
   function versionNumber(){
     return <%= @resource.version_number %>;
+  }
+
+  function resourceId(){
+    return <%= @resource.id %>;
+  }
+
+  function showFilesResourcePath(){
+    return "<%= show_files_resource_path @resource %>";
   }
 
   updateButtonLinkStates(); // for file upload method

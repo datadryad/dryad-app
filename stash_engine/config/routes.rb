@@ -8,6 +8,7 @@ StashEngine::Engine.routes.draw do
       get 'upload'
       get 'submission'
       put 'increment_downloads'
+      get 'show_files'
     end
   end
   resources :tenants, only: [:index, :show]
@@ -21,7 +22,7 @@ StashEngine::Engine.routes.draw do
   end
   match 'file_uploads/validate_urls/:resource_id', to: 'file_uploads#validate_urls', as: 'file_uploads_validate_urls', via: [:get, :post, :put]
 
-  resource :file_upload do
+  resource :file_upload do  # TODO: this is wacky since it's using a resource id rather than a file id maybe this belongs in resource.
     member do
       patch 'revert'
     end

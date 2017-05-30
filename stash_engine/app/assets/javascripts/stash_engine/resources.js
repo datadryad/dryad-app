@@ -199,6 +199,14 @@ function largestSize(){
 
 // updates the size and other UI state updates after changes to the file list
 function updateUiStates(){
+
+  // lock/unlock the manifest/file upload radio buttons depending if any modified files listed
+  if($(".js-created_file,.js-deleted_file,.js-unuploaded").length > 0){
+    disableUploadMethod();
+  }else{
+    enableUploadMethod();
+    resetFileTablesToDbState();
+  }
   $('#upload_total_all').text("Total: " + formatSizeUnits(totalSize()));
   $('#upload_in_version').text("New in this version: " + formatSizeUnits(uploadSize()));
 
@@ -292,6 +300,26 @@ function undoConfirmUpload() {
 // end Javascript for FileUpload page.  This section was only for FILES, not MANIFEST
 // **********************************************************************************
 
+// ********
+// Functions for both file and manifest sections
+// ********
+
+// sets both HTML file tables (manifest & upload) back to the DB state
+function resetFileTablesToDbState(){
+  $.ajax({
+    url: showFilesResourcePath(),
+    type: 'GET',
+    dataType: 'script',
+    data: {
+      // authenticity_token: '<%= form_authenticity_token %>',
+      format: 'js'
+    }
+  });
+}
+// ********
+// END Functions for both file and manifest sections
+// ********
+
 // **********************************************************************************
 // The items for  showing only upload method or manifest method
 // **********************************************************************************
@@ -316,7 +344,7 @@ function setUploadMethodLockout(resourceUploadType){
 
 function disableUploadMethod(){
   if ($('#files_from_computer').prop('checked')) {
-    $('#files_from_server').attr('disabled', true);
+    $('#files_from_manifest').attr('disabled', true);
   }
   else {
     $('#files_from_computer').attr('disabled', true);
@@ -324,7 +352,7 @@ function disableUploadMethod(){
 }
 
 function enableUploadMethod(){
-  $('#files_from_server').attr('disabled', false);
+  $('#files_from_manifest').attr('disabled', false);
   $('#files_from_computer').attr('disabled', false);
 }
 
