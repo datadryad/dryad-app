@@ -5,7 +5,6 @@ var to_upload_buttons = $('.js-unuploaded .js-remove_link:visible').closest('.js
 
 if(to_upload_buttons.length && uploadInProgress){
   to_upload_buttons.first().click();
-  console.log("Should've started another");
 }else if($('.js-upload-it').length < 1 && uploadInProgress){
   // all are done, so stop the upload process
   uploadInProgress = false;

@@ -221,7 +221,7 @@ function updateUiStates(){
     disableUploadMethod();
   }else{
     enableUploadMethod();
-    resetFileTablesToDbState();
+    // resetFileTablesToDbState();
   }
   $('#upload_total_all').text("Total: " + formatSizeUnits(totalSize()));
   $('#upload_in_version').text("New in this version: " + formatSizeUnits(uploadSize()));
@@ -370,6 +370,7 @@ function disableUploadMethod(){
 function enableUploadMethod(){
   $('#files_from_manifest').attr('disabled', false);
   $('#files_from_computer').attr('disabled', false);
+  resetFileTablesToDbState();
 }
 
 function addSelectUploadTypeEvent(){
