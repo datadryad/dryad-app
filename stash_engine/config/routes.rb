@@ -15,6 +15,7 @@ StashEngine::Engine.routes.draw do
   resources :file_uploads do
     member do
       patch 'remove'
+      patch 'remove_unuploaded'
       patch 'restore'
       patch 'destroy_error' #destroy an errored file in manifest upload
       patch 'destroy_manifest' #destroy file from manifest method

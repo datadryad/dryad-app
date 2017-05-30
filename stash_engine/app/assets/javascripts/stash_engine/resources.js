@@ -26,8 +26,24 @@ $(function () {
           // binding remove link action
           $('.js-remove_link').click( function(e){
             e.preventDefault();
-            e.target.parentNode.parentNode.remove();
-            updateButtonLinkStates(); // for file upload method
+            // $('.js-remove_link').parent().parent().find('.js-filename').text()
+            var fn = $(e.target).parent().parent().find('.js-filename').text();
+            var row = $(e.target).closest('.js-unuploaded').attr('id');
+            // e.target.parentNode.parentNode.remove();
+
+            // maybe restore the old file if it is there and was overwritten
+            $.ajax({
+              url: removeUnuploadedFileUploadPath(),
+              type: 'POST',
+              dataType: 'script',
+              data: {
+                _method: 'PATCH',
+                filename: fn,
+                row_id: row,
+                // authenticity_token: '<%= form_authenticity_token %>',
+                format: 'js'
+              }
+            });
           });
 
           // binding upload link click event

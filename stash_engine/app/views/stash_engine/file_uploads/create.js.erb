@@ -1,4 +1,4 @@
-$('#not_uploaded_file_<%= @temp_id%>').replaceWith("<%= escape_javascript(render(partial: 'stash_engine/file_uploads/uploaded_file', object: @my_file)) %>")
+$('#not_uploaded_file_<%= @temp_id%>').replaceWith("<%= escape_javascript(render(partial: 'stash_engine/file_uploads/uploaded_file', object: @my_file)) %>");
 
 // these are the upload buttons for items with the remove link visible, so upload hasn't started
 var to_upload_buttons = $('.js-unuploaded .js-remove_link:visible').closest('.js-unuploaded').find('.js-upload-it');

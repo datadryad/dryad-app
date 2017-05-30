@@ -6,7 +6,7 @@ module StashEngine
     before_action :require_login
     before_action :set_file_info, only: [:destroy, :remove, :restore, :destroy_error, :destroy_manifest]
     #TODO check that the following before action really should be ignored on these
-    before_action :require_file_owner, except: [:create, :destroy, :remove, :restore, :revert, :validate_urls, :destroy_error]
+    before_action :require_file_owner, except: [:create, :destroy, :remove, :restore, :revert, :validate_urls, :destroy_error, :remove_unuploaded]
     before_action :set_create_prerequisites, only: [:create]
 
     # this is a newly uploaded file and we're deleting it
@@ -62,6 +62,19 @@ module StashEngine
         format.js do
           @file.update_attribute(:file_state, 'deleted')
           @file.reload
+        end
+      end
+    end
+
+    # This is a file that hasn't been uploaded, but we might need to restore a previous version that was in the db.
+    # note this is taking a resource_id instead of a file_id since there isn't one yet.
+    def remove_unuploaded
+      respond_to do |format|
+        format.js do
+          @resource = Resource.find(params[:id])
+          @fn = params[:filename]
+          @row_id = params[:row_id]
+          @dup_files = @resource.file_uploads.where(upload_file_name: @fn)
         end
       end
     end

@@ -102,6 +102,10 @@
     return "<%= show_files_resource_path @resource %>";
   }
 
+  function removeUnuploadedFileUploadPath(){
+    return "<%= remove_unuploaded_file_upload_path @resource %>";
+  }
+
   updateButtonLinkStates(); // for file upload method
 
   $(function () {
