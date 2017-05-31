@@ -146,7 +146,7 @@ module StashEngine
             @file = FileUpload.create( resource_id: @resource.id,
                                               url: validator.url,
                                               status_code: validator.status_code,
-                                              upload_file_name: validator.filename,
+                                              upload_file_name: make_unique(validator.filename),
                                               upload_content_type: validator.mime_type,
                                               upload_file_size: validator.size,
                                               file_state: 'created')
@@ -157,7 +157,6 @@ module StashEngine
                                               file_state: 'created')
           end
         end
-        make_created_filenames_unique
         format.js
       end
     end
@@ -220,30 +219,16 @@ module StashEngine
       end
     end
 
-    # makes created filenames unique by putting numbers in them
-    def make_created_filenames_unique
-      dups = @resource.file_uploads.newly_created.with_filename.select(:upload_file_name).
-          group(:upload_file_name).having("count(*) > 1").count
-      # returns like {"change.js"=>3, "decode.js"=>3, "encode.js"=>2, "msflxgrd.ocx"=>2}
-      dups.each_pair do |k, v|
-        ext = File.extname(k)
-        core_name = File.basename(k, ext)
-        counter = 1
-        @resource.file_uploads.newly_created.where(upload_file_name: k).order(:created_at).each do |upload|
-          if counter == 1
-            counter += 1
-            next
-          end
-          target_fn = ''
-          begin
-            target_fn = "#{core_name} (#{counter})#{ext}"
-            counter += 1
-          end while @resource.file_uploads.newly_created.where(upload_file_name: target_fn).count > 0
-          upload.upload_file_name = target_fn
-          upload.save!
-        end
+    def make_unique(fn)
+      dups = @resource.file_uploads.present_files.where(upload_file_name: fn)
+      return fn unless dups.count > 0
+      ext = File.extname(fn)
+      core_name = File.basename(fn, ext)
+      counter = 1
+      while @resource.file_uploads.present_files.where(upload_file_name: "#{core_name}-#{counter}#{ext}").count > 0
+        counter += 1
       end
+      "#{core_name}-#{counter}#{ext}"
     end
-
   end
 end
