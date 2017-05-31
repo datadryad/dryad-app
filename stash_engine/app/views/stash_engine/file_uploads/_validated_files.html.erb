@@ -20,9 +20,20 @@
     </table>
     <p id="show_all_files"><a href="#">Show all files</a></p>
     <p id="show_10_files"><a href="#">Show 10 files</a></p>
-    <p id="display_size"></p>
+    <p id="display_size">Total: <%= filesize(@resource.file_uploads.present_files.sum(:upload_file_size)) %></p>
+    <div class="bad_upload">
+      <% if @resource.file_uploads.present_files.sum(:upload_file_size) > current_tenant.max_submission_size %>
+        <p id="over_manifest_size">
+          Your file size is over <%= filesize(current_tenant.max_submission_size) %>. You must remove some files to
+          bring your total under this limit before you can upload these files.
+        </p>
+      <% end %>
+      <% if @resource.file_uploads.present_files.count > current_tenant.max_files %>
+        <p id="over_manifest_count">
+          The number of files you added is more than <%= number_with_delimiter(current_tenant.max_files, :delimiter => ',') %>.
+          In order to submit your dataset you must remove some files.
+        </p>
+      <% end %>
+    </div>
   <% end %>
-  <script>
-    $('#display_size').html('Total: ' + formatSizeUnits(totalSize('#validated_files')));
-  </script>
 </div>

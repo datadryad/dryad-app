@@ -31,7 +31,7 @@
 <!-- manifest workflow -->
 <div class="files_on_server" style="display: none;" class="limits_and_part_2">
   <p>
-    Size limits: up to 1,000 files and <%= filesize(current_tenant.max_submission_size) %>
+    Size limits: up to <%= number_with_delimiter(current_tenant.max_files, :delimiter => ',') %> files and <%= filesize(current_tenant.max_submission_size) %>
   </p>
   <h2 class="t-upload__choose-heading--active">Step 2: Enter Files</h2>
   <%= render partial: 'stash_engine/file_uploads/files_on_server', locals: { file: @file, messages: @messages, path: stash_engine.file_uploads_validate_urls_path(@resource.id) } %>
@@ -106,6 +106,10 @@
     return "<%= remove_unuploaded_file_upload_path @resource %>";
   }
 
+  function maxFiles(){
+    return <%= current_tenant.max_files %>;
+  }
+
   updateButtonLinkStates(); // for file upload method
 
   $(function () {
@@ -120,4 +124,11 @@
     addEventFewManyRows();
     confirmToValidate(); // add event to require checking acceptance before validating
   });
+
+  $( document ).ready(function() {
+    $('#files_from_computer').click(function(){
+      updateUiStates();
+    });
+  });
+
 </script>

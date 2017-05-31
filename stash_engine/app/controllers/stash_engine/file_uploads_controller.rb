@@ -224,7 +224,7 @@ module StashEngine
       return fn unless dups.count > 0
       ext = File.extname(fn)
       core_name = File.basename(fn, ext)
-      counter = 1
+      counter = 2
       while @resource.file_uploads.present_files.where(upload_file_name: "#{core_name}-#{counter}#{ext}").count > 0
         counter += 1
       end
