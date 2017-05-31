@@ -16,7 +16,7 @@ $(function () {
         dataType: 'script',
         add: function (e, data) {
           // what happens when added
-          $('#no_chosen').hide();
+          $('#no_chosen1').hide();
           data.files[0]['id'] = generateQuickId();
           data.context = $(tmpl("upload-line", data.files[0]));
           removeDuplicateFilename(data.files[0].name); // removes existing duplicate before adding again
@@ -140,9 +140,11 @@ function formatSizeUnits(bytes) {
 
    Total size would be copied, un-uploaded (drag'n'dropped) and created files, assuming only one of each unique filename.
  */
-function totalSize(){
-  nums = $('div.js-created_file .js-hidden_bytes,div.js-copied_file .js-hidden_bytes,div.js-unuploaded .js-hidden_bytes')
-      .map(function(){ return parseInt(this.innerHTML); });
+function totalSize(pre){
+  pre = typeof pre !== 'undefined' ? pre : '#upload_list'; // set the default jquery prefix for this table
+  nums = $(pre + ' .js-created_file .js-hidden_bytes,' +
+          pre + ' .js-copied_file .js-hidden_bytes,' +
+          pre + ' .js-unuploaded .js-hidden_bytes').map(function(){ return parseInt(this.innerHTML); });
   var total = 0;
   $.each(nums, function( index, value ) {
     total += value;
@@ -151,9 +153,10 @@ function totalSize(){
 }
 
 // Just the new stuff to be uploaded into this version
-function uploadSize(){
-  nums = $('div.js-created_file .js-hidden_bytes,div.js-unuploaded .js-hidden_bytes')
-      .map(function(){ return parseInt(this.innerHTML); });
+function uploadSize(pre){
+  pre = typeof pre !== 'undefined' ? pre : '#upload_list'; // set the default jquery prefix for this table
+  nums = $(pre + ' .js-created_file .js-hidden_bytes,' +
+          pre + ' .js-unuploaded .js-hidden_bytes').map(function(){ return parseInt(this.innerHTML); });
   var total = 0;
   $.each(nums, function( index, value ) {
     total += value;
