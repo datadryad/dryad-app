@@ -1,7 +1,7 @@
 # Miscellaneous
 
 # github-markdown-preview previews
-*.md.html
+**/*.md.html
 
 # Stop fights between Scott's rbenv/RubyMine environment and David's rvm/IntelliJ environment
 
