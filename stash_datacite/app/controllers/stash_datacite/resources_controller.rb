@@ -5,6 +5,10 @@ require_dependency 'stash_datacite/application_controller'
 module StashDatacite
   # this is a class for composite (AJAX/UJS?) views starting at the resource or resources
   class ResourcesController < ApplicationController
+
+    include StashEngine::ApplicationHelper
+    include ActionView::Helpers::NumberHelper
+
     before_action :ajax_require_current_user, only: [:user_in_progress]
     before_action :set_page_info
     # get resources and composite information for in-progress table view
@@ -79,6 +83,27 @@ module StashDatacite
     def main_title(resource)
       title = resource.titles.where(title_type: nil).first
       title.try(:title)
+    end
+
+    def check_required_fields(resource)
+      @completions = Resource::Completions.new(resource)
+      # required fields are Title, Institution, Data type, Data author(s), Abstract
+      #unless @completions.required_completed == @completions.required_total
+        @data = []
+        @data << 'Add a dataset title' unless @completions.title
+        @data << 'Add an abstract' unless @completions.abstract
+        @data << 'You must have at least one author name and they need to be complete' unless @completions.author_name
+        @data << 'At least one author must have an email supplied' unless @completions.author_email
+        @data << 'Authors must have affiliations' unless @completions.author_affiliation
+        @data << 'Fix or remove upload URLs that were unable to validate' unless @completions.urls_validated?
+        if @completions.over_manifest_file_size?(current_tenant.max_submission_size.to_i)
+          @data << "Remove some files until you have a smaller dataset size than #{filesize(current_tenant.max_submission_size)}"
+        end
+        if @completions.over_manifest_file_count?(current_tenant.max_files.to_i)
+          @data << "Remove some files until you have a smaller file count than #{number_with_delimiter(current_tenant.max_files, :delimiter => ',')} files"
+        end
+        # return @data.join(', ').split(/\W+/)
+      #end
     end
 
   end

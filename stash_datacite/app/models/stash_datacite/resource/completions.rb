@@ -69,6 +69,22 @@ module StashDatacite
         title.to_i + author_affiliation.to_i + author_name.to_i + abstract.to_i + author_email.to_i
       end
 
+      def urls_validated?
+        if @resource.upload_type == :manifest && @resource.file_uploads.newly_created.errors.count > 0
+          false
+        else
+          true
+        end
+      end
+
+      def over_manifest_file_size?(size)
+        @resource.file_uploads.present_files.sum(:upload_file_size) > size
+      end
+
+      def over_manifest_file_count?(count)
+        @resource.file_uploads.present_files.count > count
+      end
+
       def required_total
         5
       end

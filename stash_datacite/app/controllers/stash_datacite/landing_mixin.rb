@@ -12,7 +12,7 @@ module StashDatacite
     def setup_show_variables(resource_id)
       @resource = StashDatacite.resource_class.find(resource_id)
       ds_presenter = StashDatacite::ResourcesController::DatasetPresenter.new(@resource)
-      @data = check_required_fields(@resource)
+      # @data = check_required_fields(@resource)
       @review = StashDatacite::Resource::Review.new(@resource)
 
       @schema_org_ds = StashDatacite::Resource::SchemaDataset.new(resource: @resource, citation: plain_citation,
@@ -26,20 +26,6 @@ module StashDatacite
     end
 
     private
-
-    def check_required_fields(resource)
-      @completions = Resource::Completions.new(resource)
-      # required fields are Title, Institution, Data type, Data author(s), Abstract
-      unless @completions.required_completed == @completions.required_total
-        @data = []
-        @data << 'Title' unless @completions.title
-        @data << 'Abstract' unless @completions.abstract
-        @data << 'Author(s) Name' unless @completions.author_name
-        @data << 'Author Email' unless @completions.author_email
-        @data << 'Author Affiliation' unless @completions.author_affiliation
-        return @data.join(', ').split(/\W+/)
-      end
-    end
 
     def plain_citation
       citation(
