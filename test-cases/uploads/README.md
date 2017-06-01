@@ -11,6 +11,6 @@ Workflow ([PDF version here](new-dataset-workflow.pdf)):
 
 ## Updating existing datasets
 
-- Updating a dataset with local files
+- [Updating a dataset with local files](updated-dataset-local-files.md)
 - Updating a dataset with a URL manifest
 
