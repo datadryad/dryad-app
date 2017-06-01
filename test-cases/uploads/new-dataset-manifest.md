@@ -10,6 +10,7 @@
 1. enter the following (good) URLs:
    - http://web.mit.edu/ajb/www/tdwarf/tdwarf_data.txt
    - http://mypage.siu.edu/lhartman/phono/source.txt
+   - http://user.engineering.uiowa.edu/~xwu3/epsii/Lecture20/source.txt
 1. enter the following (bad) URLs:
    - http://httpstat.us/403
    - http://httpstat.us/404
@@ -27,7 +28,10 @@
        | Filename | URL | Size | Version | Actions |
        | -------- | --- | ---- | ------- | ------- |
        | source.txt | http://mypage.siu.edu/lhartman/phono/source.txt | 708.25 kB | 1 | <u>Delete</u> |
+       | source-2.txt | http://user.engineering.uiowa.edu/~xwu3/epsii/Lecture20/source.txt | 357 B | 1 | <u>Delete</u> |
        | tdwarf_data.txt | http://web.mit.edu/ajb/www/tdwarf/tdwarf_data.txt | 12.14 kB | 1 | <u>Delete</u> |
+
+   - ✓ check that the second `source.txt` has been renamed to `source-2.txt`, as above
 
 1. click **Proceed to Review** or **Review and Submit**
    - ✓ check that only the good files appear under **Review Data Files**
