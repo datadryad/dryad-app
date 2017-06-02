@@ -64,6 +64,10 @@
       //maxFileSize: 1048576 ,// 1MB,
       limitMultiFileUploadSize: <%= current_tenant.max_submission_size %>
     });
+    $('#upload_all').click(function(){
+      $('#upload_complete').hide();
+      $('#over_single_size').empty();
+    });
   });
 
   function maxTotalSize(){
