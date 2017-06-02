@@ -6,5 +6,5 @@ services:
   - mysql
 
 script:
-  - ./travis-build.sh
+  - ./travis-build.rb
 
