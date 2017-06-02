@@ -19,7 +19,7 @@
    - ✓ check that the total size is correct
 1. click **Proceed to Review** or **Review and Submit**
    - ✓ check that both new and old files appear under **review Data Files**
-1. tick the **By checking this box, I agree...** (CC-BY) box
+   - ✓ check that the **By checking this box, I agree...** (CC-BY) box is already ticked
 1. click **Submit**
 1. wait for the dataset’s status to apepar as **published**
 1. on the dataset landing page:
