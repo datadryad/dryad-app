@@ -1,5 +1,7 @@
 # Updating a dataset with local files
 
+> ##### TODO: remove previously uploaded file
+
 1. log in
 1. select **My Datasets**
 1. select an existing, **published** dataset
