@@ -143,13 +143,21 @@ module StashEngine
           val_result = validator.validate
 
           if val_result == true && validator.status_code == 200
-            @file = FileUpload.create( resource_id: @resource.id,
+            if @resource.url_in_version?(validator.url)
+              # don't allow duplicate URLs that have already been put into this version this time
+              @file = FileUpload.create( resource_id: @resource.id,
+                                         url: validator.url,
+                                         status_code: 498,
+                                         file_state: 'created')
+            else
+              @file = FileUpload.create( resource_id: @resource.id,
                                               url: validator.url,
                                               status_code: validator.status_code,
                                               upload_file_name: make_unique(validator.filename),
                                               upload_content_type: validator.mime_type,
                                               upload_file_size: validator.size,
                                               file_state: 'created')
+            end
           else
             @file = FileUpload.create( resource_id: @resource.id,
                                               url: validator.url,
