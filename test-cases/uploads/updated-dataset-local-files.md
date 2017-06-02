@@ -1,7 +1,5 @@
 # Updating a dataset with local files
 
-> ##### TODO: remove previously uploaded file
-
 1. log in
 1. select **My Datasets**
 1. select an existing, **published** dataset
@@ -31,7 +29,11 @@
      - *(Note: It may then disappear, for some reason.`¯\_(ツ)_/¯`—DM)*
 1. click **Remove** on the file with the same name, and:
    - ✓ check that the old file reappears (w/checkmark and old size)
-1. click **Remove** on one or more files
+1. click **Remove** on one or more of the old files
+   - for each file:
+     - ✓ check that the removed file disappears from the list
+     - ✓ check that the **Total** size is adjusted correctly
+1. click **Remove** on one or more of the newly added files
    - for each file:
      - ✓ check that the removed file disappears from the list
      - ✓ check that the **Total** size is adjusted correctly
