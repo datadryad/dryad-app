@@ -1,0 +1,10 @@
+language: ruby
+rvm:
+  - 2.2
+
+services:
+  - mysql
+
+script:
+  - ./travis-build.sh
+
