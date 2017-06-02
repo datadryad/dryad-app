@@ -32,13 +32,13 @@
        | tdwarf_data.txt | http://web.mit.edu/ajb/www/tdwarf/tdwarf_data.txt | 12.14 kB | 1 | <u>Delete</u> |
 
    - ✓ check that the second `source.txt` has been renamed to `source-2.txt`, as above
-
+   - ✓ check that the total size is correct
 1. click **Proceed to Review** or **Review and Submit**
    - ✓ check that only the good files appear under **Review Data Files**
      - *(Q: Should we show the bad files as errors that need to be corrected? —DM)*
 1. click **Upload Files** to return to the upload page
    - ✓ check that the **Enter Files** box and **Validation Status** are empty
-     - *(Note: Not sure this behavior is good —DM)*
+     - *(Note: Not sure this behavior is good; should we still show old/bad URLs? —DM)*
 1. Reenter the bad URLs above and click **Validate files** again
 1. on the first bad URL in the **Validation Status** table, click **Edit**
    - ✓ check that the URL disappears from the table
