@@ -289,9 +289,9 @@ function removeDuplicateFilename(fn){
     dups.parents('.js-copied_file,.js-unuploaded,.js-created_file,.js-deleted_file').remove();
     $('#over_single_size').append("<p>Your previous file <strong>" + fn +
         "</strong> has been replaced in your upload list with a newer file with the same name.</p>");
-    setTimeout(function () {
+    /* setTimeout(function () {
       $('#over_single_size').empty();
-    }, 20000);
+    }, 20000); */
     $('#confirm_text_upload, #upload_all').show();
     confirmToUpload();
   }

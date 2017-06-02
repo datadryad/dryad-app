@@ -151,6 +151,10 @@ module StashEngine
       FileUpload.find_by_sql([sql, id, id])
     end
 
+    def url_in_version?(url)
+      file_uploads.where(url: url).where(file_state: 'created').where(status_code: 200).count > 0
+    end
+
     # ------------------------------------------------------------
     # Special merritt download URLs
 
