@@ -87,11 +87,11 @@ module Stash
         datestamp = stash_wrapper.version_date.to_time.utc.xmlschema
 
         record = REXML::Document.new(['<record>',
-          '  <header> ',
-          "   <identifier>#{ark}</identifier>",
-          "   <datestamp>#{datestamp}</datestamp>",
-          '  </header> ',
-          '</record>'].join("\n")).root
+                                      '  <header> ',
+                                      "   <identifier>#{ark}</identifier>",
+                                      "   <datestamp>#{datestamp}</datestamp>",
+                                      '  </header> ',
+                                      '</record>'].join("\n")).root
 
         metadata = REXML::Element.new('metadata')
         metadata.add_element(stash_wrapper.save_to_xml)
@@ -311,8 +311,8 @@ module Stash
             expected_uri = "#{update_uri_base}/#{doi}"
             expected_payload = { 'record_identifier' => ark }.to_json
             stubs << stub_request(:patch, expected_uri)
-              .with(body: expected_payload)
-              .to_timeout
+                     .with(body: expected_payload)
+                     .to_timeout
             expected_uris << expected_uri
           end
 
