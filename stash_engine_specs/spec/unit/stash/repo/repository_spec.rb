@@ -75,7 +75,6 @@ module Stash
         attr_reader :job
 
         before(:each) do
-
           @request_host = 'stash.example.org'
           @request_port = 80
 
@@ -273,11 +272,12 @@ module Stash
           @identifier = double(StashEngine::Identifier)
           allow(identifier).to receive(:processing_resource).and_return(resource)
 
-          @record_identifier = "ark:/1234/567"
+          @record_identifier = 'ark:/1234/567'
 
           def repo.update_uri_for(_)
             'http://example.org/edit/ark:/1234/567'
           end
+
           def repo.download_uri_for(_)
             'http://example.org/d/ark:/1234/567'
           end

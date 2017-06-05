@@ -71,7 +71,7 @@ module Stash
         resource.new_file_uploads.reject { |upload| upload.file_state == 'deleted' }
       end
 
-      def builders # rubocop:disable Metrics/AbcSize
+      def builders
         @builders ||= [
           StashWrapperBuilder.new(dcs_resource: dc4_resource, version_number: version_number, uploads: uploads, embargo_end_date: embargo_end_date),
           dc4_builder,

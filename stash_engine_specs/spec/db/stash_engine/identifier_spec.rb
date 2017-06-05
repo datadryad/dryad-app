@@ -103,7 +103,6 @@ module StashEngine
           expect(identifier.processing?).to eq(true)
         end
       end
-
     end
   end
 end

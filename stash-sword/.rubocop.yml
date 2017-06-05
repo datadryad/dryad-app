@@ -12,14 +12,14 @@ Metrics/LineLength:
 Style/Documentation:
   Enabled: false
 
-# Allow one line around class body (Style/EmptyLines will still disallow two or more)
-Style/EmptyLinesAroundClassBody:
+# Allow one line around class body (Layout/EmptyLines will still disallow two or more)
+Layout/EmptyLinesAroundClassBody:
   Enabled: false
 
-# Allow one line around module body (Style/EmptyLines will still disallow two or more)
-Style/EmptyLinesAroundModuleBody:
+# Allow one line around module body (Layout/EmptyLines will still disallow two or more)
+Layout/EmptyLinesAroundModuleBody:
   Enabled: false
 
-# Allow one line around block body (Style/EmptyLines will still disallow two or more)
-Style/EmptyLinesAroundBlockBody:
+# Allow one line around block body (Layout/EmptyLines will still disallow two or more)
+Layout/EmptyLinesAroundBlockBody:
   Enabled: false

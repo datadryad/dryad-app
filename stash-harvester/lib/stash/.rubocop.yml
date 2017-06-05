@@ -4,7 +4,7 @@ Lint/UnusedMethodArgument:
   Exclude:
     - 'no_op_persistence_config.rb'
 
-Style/EmptyLineBetweenDefs:
+Layout/EmptyLineBetweenDefs:
   Exclude:
     - 'no_op_persistence_config.rb'
 

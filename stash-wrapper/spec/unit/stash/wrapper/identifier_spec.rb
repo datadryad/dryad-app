@@ -66,7 +66,7 @@ module Stash
 
         it 'formats a DOI' do
           ident = Identifier.new(type: IdentifierType::DOI, value: '10.15146/R3RG6G')
-          expect(ident.formatted).to eq("doi:10.15146/R3RG6G")
+          expect(ident.formatted).to eq('doi:10.15146/R3RG6G')
         end
 
         it 'leaves a URL alone' do

@@ -66,7 +66,7 @@ module Stash
         resource.ensure_identifier(ezid_helper.mint_id)
       end
 
-      def create_package
+      def create_package # rubocop:disable Metrics/AbcSize
         ensure_identifier
         log.info("#{Time.now.xmlschema} #{self.class}: creating package for resource #{resource_id} (#{resource.identifier_str})")
         if resource.upload_type == :manifest

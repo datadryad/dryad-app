@@ -314,7 +314,7 @@ module StashDatacite
 
     def email_from(dcs_name_identifier)
       return unless dcs_name_identifier
-      return unless 'email' == dcs_name_identifier.scheme
+      return unless dcs_name_identifier.scheme == 'email'
       value = dcs_name_identifier.value
       return unless value
       value.to_s.strip.sub('mailto:', '')
@@ -322,7 +322,7 @@ module StashDatacite
 
     def orcid_from(dcs_name_identifier)
       return unless dcs_name_identifier
-      return unless 'ORCID' == dcs_name_identifier.scheme
+      return unless dcs_name_identifier.scheme == 'ORCID'
       value = dcs_name_identifier.value
       return unless value
       value.to_s.strip

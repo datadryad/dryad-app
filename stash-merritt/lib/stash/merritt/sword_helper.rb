@@ -35,7 +35,6 @@ module Stash
         resource.identifier_str
       end
 
-
       def sword_client
         @sword_client ||= Stash::Sword::Client.new(logger: logger, **tenant.sword_params)
       end
