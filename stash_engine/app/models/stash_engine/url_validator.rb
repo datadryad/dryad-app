@@ -91,6 +91,7 @@ module StashEngine
     # the content disposition filename is ugly and there are some variations for ascii vs other encodings such
     # as utf8 and percent encoding of content
     def filename_from_content_disposition(disposition)
+      disposition = disposition.first if disposition.class == Array
       return nil if disposition.blank?
       if match = disposition.match(/filename=([^;$]+)/) #set the match and check for filename, this single equals is on purpose
         # this is a simple case that checks for ascii filenames in content disposition and removes surrounding quotes, if any
