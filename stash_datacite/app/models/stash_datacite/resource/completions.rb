@@ -77,12 +77,12 @@ module StashDatacite
         end
       end
 
-      def over_manifest_file_size?(size)
-        @resource.file_uploads.present_files.sum(:upload_file_size) > size
+      def over_manifest_file_size?(size_limit)
+        @resource.file_uploads.present_files.sum(:upload_file_size) > size_limit
       end
 
-      def over_manifest_file_count?(count)
-        @resource.file_uploads.present_files.count > count
+      def over_manifest_file_count?(count_limit)
+        @resource.file_uploads.present_files.count > count_limit
       end
 
       def required_total
