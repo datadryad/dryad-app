@@ -170,6 +170,7 @@ module Stash
           wrapper = StashWrapper.parse_xml(data)
 
           expect(wrapper.id_value).to eq('10.12345/1234567890')
+          expect(wrapper.id_type).to eq(IdentifierType::DOI)
           expect(wrapper.version_number).to eq(1)
           expect(wrapper.version_date).to eq(Date.new(2015, 9, 8))
           expect(wrapper.license_name).to eq('Creative Commons Attribution 4.0 International (CC BY 4.0)')
