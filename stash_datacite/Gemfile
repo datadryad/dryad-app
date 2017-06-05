@@ -14,11 +14,9 @@ gem 'kaminari'
 gem 'rubyzip', '>= 1.0.0' # will load new rubyzip version
 gem 'parallel_tests', group: [:development, :test]
 
-group :development, :test do
-  path '..' do
-    gem 'stash-sword'
-    gem 'stash-wrapper'
-    gem 'stash_discovery'
-    gem 'stash_engine'
-  end
+path '..' do
+  gem 'stash-sword'
+  gem 'stash-wrapper'
+  gem 'stash_discovery'
+  gem 'stash_engine'
 end
