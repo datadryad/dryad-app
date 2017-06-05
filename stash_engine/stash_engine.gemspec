@@ -50,7 +50,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'capybara'
   s.add_development_dependency 'selenium-webdriver'
   s.add_development_dependency 'chromedriver-helper'
-  s.add_development_dependency 'rubocop'
+  s.add_development_dependency 'rubocop', '~> 0.49'
   s.add_development_dependency 'scss_lint'
   s.add_development_dependency 'simplecov', '~> 0.12'
   s.add_development_dependency 'simplecov-console', '~> 0.3.0'

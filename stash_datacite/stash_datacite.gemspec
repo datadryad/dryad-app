@@ -30,13 +30,15 @@ Gem::Specification.new do |s|
   s.add_dependency 'stash_engine'
   s.add_dependency 'stash_discovery'
 
-  s.add_development_dependency 'mysql2', '~> 0.3'
-
-  s.add_development_dependency 'rspec', '~> 3.5'
-  s.add_development_dependency 'rspec-rails', '~> 3.5'
   s.add_development_dependency 'capybara'
-  s.add_development_dependency 'selenium-webdriver'
   s.add_development_dependency 'chromedriver-helper'
   s.add_development_dependency 'database_cleaner', '~> 1.5'
+  s.add_development_dependency 'mysql2', '~> 0.3'
+  s.add_development_dependency 'rspec', '~> 3.5'
+  s.add_development_dependency 'rspec-rails', '~> 3.5'
+  s.add_development_dependency 'rubocop', '~> 0.49'
   s.add_development_dependency 'sauce_whisk'
+  s.add_development_dependency 'selenium-webdriver'
+  s.add_development_dependency 'simplecov', '~> 0.12'
+  s.add_development_dependency 'simplecov-console', '~> 0.3.0'
 end
