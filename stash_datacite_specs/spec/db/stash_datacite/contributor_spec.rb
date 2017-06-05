@@ -13,8 +13,30 @@ module StashDatacite
       @contrib = Contributor.create(
         resource_id: resource.id,
         contributor_name: 'Elvis Presley',
-        contributor_type: 'supervisor'
+        contributor_type: 'projectleader'
       )
+    end
+
+    describe 'contributor type' do
+      describe :contributor_type_friendly do
+        it 'returns the Datacite::Mapping value' do
+          expect(contrib.contributor_type_friendly).to eq('ProjectLeader')
+        end
+      end
+
+      describe :contributor_type_mapping_obj do
+        it 'returns the Datacite::Mapping enum instance' do
+          expect(contrib.contributor_type_mapping_obj).to be(Datacite::Mapping::ContributorType::PROJECT_LEADER)
+        end
+        it 'maps nil to nil' do
+          expect(Contributor.contributor_type_mapping_obj(nil)).to be_nil
+        end
+        it 'maps Datacite::Mapping values to enum instance' do
+          Datacite::Mapping::ContributorType.each do |ct|
+            expect(Contributor.contributor_type_mapping_obj(ct.value)).to be(ct)
+          end
+        end
+      end
     end
 
     describe 'affiliations' do

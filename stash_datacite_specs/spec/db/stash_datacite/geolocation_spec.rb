@@ -111,6 +111,66 @@ module StashDatacite
       end
     end
 
+    describe '#datacite_mapping_place' do
+      it 'returns the place' do
+        loc = Geolocation.new_geolocation(
+          resource_id: resource.id,
+          place: 'Los Angeles',
+          point: [34.2635, -118.2955],
+          box: [32.8007, -118.9448, 34.8233, -117.6462]
+        )
+        expect(loc.datacite_mapping_place).to eq('Los Angeles')
+      end
+
+      it 'returns nil for no place' do
+        loc = Geolocation.new_geolocation(
+          resource_id: resource.id,
+          point: [34.2635, -118.2955],
+          box: [32.8007, -118.9448, 34.8233, -117.6462]
+        )
+        expect(loc.datacite_mapping_place).to be_nil
+      end
+    end
+
+    describe 'datacite_mapping_point' do
+      it 'returns the point' do
+        loc = Geolocation.new_geolocation(
+          resource_id: resource.id,
+          place: 'Los Angeles',
+          point: [34.2635, -118.2955],
+          box: [32.8007, -118.9448, 34.8233, -117.6462]
+        )
+        dc_point = loc.datacite_mapping_point
+        expect(dc_point).not_to be_nil
+        expect(dc_point).latitude to eq(34.2635)
+        expect(dc_point).longitude to eq(-118.2955)
+      end
+
+      it 'returns nil for missing points' do
+        loc = Geolocation.new_geolocation(
+          resource_id: resource.id,
+          place: 'Los Angeles',
+          box: [32.8007, -118.9448, 34.8233, -117.6462]
+        )
+        dc_point = loc.datacite_mapping_point
+        expect(dc_point).to be_nil
+      end
+
+      it 'returns nil for bad points' do
+        points = [[34.2635, nil], [nil, -118.2955]]
+        points.each do |pt|
+          loc = Geolocation.new_geolocation(
+            resource_id: resource.id,
+            place: 'Los Angeles',
+            point: pt,
+            box: [32.8007, -118.9448, 34.8233, -117.6462]
+          )
+          dc_point = loc.datacite_mapping_point
+          expect(dc_point).to be_nil
+        end
+      end
+    end
+
     describe '#datacite_mapping_box' do
       attr_reader :loc
       attr_reader :box

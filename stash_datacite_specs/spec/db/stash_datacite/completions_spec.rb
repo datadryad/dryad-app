@@ -39,7 +39,7 @@ module StashDatacite
         @completions = Completions.new(resource)
       end
 
-      describe '#title' do
+      describe :title do
         it 'passes for resources with titles' do
           expect(completions.title).to be_truthy
         end
@@ -50,7 +50,7 @@ module StashDatacite
         end
       end
 
-      describe('#institution') do
+      describe :institution do
         it 'passes for resources with author affiliations' do
           expect(completions.institution).to be_truthy
         end
@@ -61,7 +61,7 @@ module StashDatacite
         end
       end
 
-      describe('#data_type') do
+      describe :data_type do
         it 'passes for resources with a type' do
           expect(completions.data_type).to be_truthy
         end
@@ -72,7 +72,7 @@ module StashDatacite
         end
       end
 
-      describe('#author_name') do
+      describe :author_name do
         it 'passes if all authors have first names' do
           expect(completions.author_name).to be_truthy
         end
@@ -88,7 +88,7 @@ module StashDatacite
         end
       end
 
-      describe('#author_affiliation') do
+      describe :author_affiliation do
         it 'fails if author is missing' do
           resource.authors.each(&:destroy)
           expect(completions.author_affiliation).to be_falsey
@@ -104,10 +104,10 @@ module StashDatacite
         end
       end
 
-      describe('#author_email') do
+      describe :author_email do
       end
 
-      describe('#abstract') do
+      describe :abstract do
         it 'passes for resources with abstracts' do
           expect(completions.abstract).to be_truthy
         end
@@ -135,13 +135,114 @@ module StashDatacite
         end
       end
 
-      describe('#required_total') do
+      describe :urls_validated do
+        describe ':manifest uploads' do
+          before(:each) do
+            resource.file_uploads.find_each do |upload|
+              upload.url = "http://example.org/#{upload.upload_file_name}"
+              upload.save!
+            end
+          end
+
+          it 'returns true when no files are newly created' do
+            new_files = resource.file_uploads.newly_created
+            new_files.find_each do |upload|
+              upload.file_state = :copied
+              upload.save!
+            end
+            expect(new_files).to be_empty # just to be sure
+            expect(completions.urls_validated?).to eq(true)
+          end
+
+          it 'returns true when all newly created files are valid' do
+            resource.file_uploads.newly_created.find_each do |upload|
+              upload.status_code = 200
+              upload.save!
+            end
+            expect(completions.urls_validated?).to eq(true)
+          end
+
+          it 'returns false when at least one newly created file has an error' do
+            upload = resource.file_uploads.take
+            upload.status_code = 403
+            upload.save!
+            expect(completions.urls_validated?).to eq(false)
+          end
+        end
+
+        describe 'file uploads' do
+          it 'returns true for non-manifest uploads' do
+            expect(completions.urls_validated?).to eq(true)
+          end
+        end
+      end
+
+      describe :over_manifest_file_size? do
+        attr_reader :actual_size
+
+        before(:each) do
+          @actual_size = resource
+                         .file_uploads
+                         .present_files
+                         .inject(0) { |sum, f| sum + f.upload_file_size }
+        end
+
+        it 'returns true if file size > limit' do
+          limit = actual_size - 1
+          expect(completions.over_manifest_file_size?(limit)).to eq(true)
+        end
+
+        it 'returns false if file size <= limit' do
+          limit = actual_size
+          expect(completions.over_manifest_file_size?(limit)).to eq(false)
+        end
+
+        it 'counts copied files as well as new uploads' do
+          resource.file_uploads.present_files.to_a.each_with_index do |f, index|
+            if index.even?
+              f.file_state = :copied
+              f.save!
+            end
+            limit = actual_size - 1
+            expect(completions.over_manifest_file_size?(limit)).to eq(true)
+          end
+        end
+      end
+
+      describe :over_manifest_file_count? do
+        attr_reader :actual_count
+        before(:each) do
+          @actual_count = resource.file_uploads.present_files.count
+        end
+        it 'returns true if file count > limit' do
+          limit = actual_count - 1
+          expect(completions.over_manifest_file_count?(limit)).to eq(true)
+        end
+
+        it 'returns false if file count <= limit' do
+          limit = actual_count
+          expect(completions.over_manifest_file_count?(limit)).to eq(false)
+        end
+
+        it 'counts copied files as well as new uploads' do
+          resource.file_uploads.present_files.to_a.each_with_index do |f, index|
+            if index.even?
+              f.file_state = :copied
+              f.save!
+            end
+            limit = actual_count - 1
+            expect(completions.over_manifest_file_count?(limit)).to eq(true)
+          end
+        end
+      end
+
+      describe :required_total do
         it "counts all of: #{REQUIRED_FIELDS.join(', ')}" do
           expect(completions.required_total).to eq(REQUIRED_COUNT)
         end
       end
 
-      describe('#required_completed') do
+      describe :required_completed do
         it "returns a full count for resources with all of: #{REQUIRED_FIELDS.join(', ')}" do
           expect(completions.required_completed).to eq(REQUIRED_COUNT)
         end
@@ -195,7 +296,7 @@ module StashDatacite
         end
       end
 
-      describe('#date') do
+      describe :date do
         it 'passes if resource has a date' do
           expect(completions.date).to be_truthy
         end
@@ -205,7 +306,7 @@ module StashDatacite
         end
       end
 
-      describe('#keyword') do
+      describe :keyword do
         it 'passes if resource has subjects' do
           expect(completions.keyword).to be_truthy
         end
@@ -229,7 +330,7 @@ module StashDatacite
         end
       end
 
-      describe('#method') do
+      describe :method do
         before(:each) do
           Description.create(
             description: 'some methods',
@@ -264,7 +365,7 @@ module StashDatacite
         end
       end
 
-      describe '#citation' do
+      describe :citation do
         it 'passes if resource has related identifiers' do
           expect(completions.citation).to be_truthy
         end
@@ -288,13 +389,13 @@ module StashDatacite
         end
       end
 
-      describe('#optional_total') do
+      describe :optional_total do
         it "counts all of: #{OPTIONAL_FIELDS.join(', ')}" do
           expect(completions.optional_total).to eq(OPTIONAL_COUNT)
         end
       end
 
-      describe('#optional_completed') do
+      describe :optional_completed do
         before(:each) do
           Description.create(
             description: 'some methods',
