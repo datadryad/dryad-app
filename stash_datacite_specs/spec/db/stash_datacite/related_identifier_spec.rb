@@ -76,7 +76,6 @@ module StashDatacite
           rel_id = RelatedIdentifier.create(
             resource_id: resource.id,
             related_identifier_type: rel_type,
-            related_identifier_type: 'doi',
             related_identifier: related_doi_value
           )
           rel_id_type_friendly = rel_id.related_identifier_type_friendly

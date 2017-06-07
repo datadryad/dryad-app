@@ -35,6 +35,5 @@ module StashDatacite
         end
       end
     end
-
   end
 end

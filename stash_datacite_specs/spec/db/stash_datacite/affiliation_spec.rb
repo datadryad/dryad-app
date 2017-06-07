@@ -13,15 +13,15 @@ module StashDatacite
 
     describe :smart_name do
       it 'returns empty string for nameless afiliations' do
-        affil =  StashDatacite::Affiliation.create
+        affil = StashDatacite::Affiliation.create
         expect(affil.smart_name).to eq('')
       end
       it 'prefers the short name' do
-        affil =  StashDatacite::Affiliation.create(short_name: 'BMG', long_name: 'Bertelsmann Music Group')
+        affil = StashDatacite::Affiliation.create(short_name: 'BMG', long_name: 'Bertelsmann Music Group')
         expect(affil.smart_name).to eq('BMG')
       end
       it 'falls back to the long name' do
-        affil =  StashDatacite::Affiliation.create(long_name: 'Bertelsmann Music Group')
+        affil = StashDatacite::Affiliation.create(long_name: 'Bertelsmann Music Group')
         expect(affil.smart_name).to eq('Bertelsmann Music Group')
       end
     end
