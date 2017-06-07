@@ -37,6 +37,10 @@ module StashDatacite
         expect(review.title).to eq(resource.titles.where(title_type: nil).first)
       end
 
+      it 'extracts the title string' do
+        expect(review.title_str).to eq('A Zebrafish Model for Studies on Esophageal Epithelial Biology')
+      end
+
       it 'extracts the resource type' do
         expect(review.resource_type).to eq(resource.resource_type)
       end
