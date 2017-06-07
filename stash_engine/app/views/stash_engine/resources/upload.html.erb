@@ -11,17 +11,12 @@
 <!-- manifest workflow -->
 <div class="manifest_upload" style="display: none;" class="limits_and_part_2">
   <%= render partial: 'stash_engine/file_uploads/manifest_upload',
-       locals: { file: @file, resource: @resource } %>
+       locals: { resource: @resource } %>
 </div>
 
 <!-- file upload workflow -->
-<div class="files_on_computer" style="display: none;">
-  <p>
-    Size limits: <%= filesize(current_tenant.max_file_size) %> per file,
-    <%= filesize(current_tenant.max_total_version_size) %> in total.
-  </p>
-  <h2 class="t-upload__choose-heading--active">Step 2: Choose Files</h2>
-  <%= render partial: 'stash_engine/file_uploads/files_on_computer', locals: { file: @file } %>
+<div class="files_upload" style="display: none;">
+  <%= render partial: 'stash_engine/file_uploads/files_upload', locals: { file: @file, resource: @resource, uploads: @uploads } %>
 </div>
 
 <div class="o-dataset-nav">
