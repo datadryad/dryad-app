@@ -1,5 +1,5 @@
 <?xml version='1.0'?>
-<st:stash_wrapper xsi:schemaLocation='http://dash.cdlib.org/stash_wrapper/ http://dash.cdlib.org/stash_wrapper/stash_wrapper.xsd' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xmlns:st='http://dash.cdlib.org/stash_wrapper/'>
+<st:stash_wrapper xsi:schemaLocation='https://dash.ucop.edu/stash_wrapper/ https://dash.ucop.edu/stash_wrapper/stash_wrapper.xsd' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xmlns:st='https://dash.ucop.edu/stash_wrapper/'>
   <st:identifier type='DOI'>10.15146/R3RG6G</st:identifier>
   <st:stash_administrative>
     <st:version>
