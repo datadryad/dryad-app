@@ -345,10 +345,10 @@ function resetFileTablesToDbState(){
 function showFilesOrManifest(){
   if ($('#files_from_computer').prop('checked')) {
     $('.files_on_computer').show();
-    $('.files_on_server').hide();
+    $('.manifest_upload').hide();
   }
   else {
-    $('.files_on_server').show();
+    $('.manifest_upload').show();
     $('.files_on_computer').hide();
   }
 }

@@ -1,5 +1,15 @@
-<!-- manifest workflow -->
-<%= form_for file, url: path, remote: true, html: { id: 'url_validate' } do |f| %>
+<%# locals: file, resource %>
+<p>
+  Size limits: up to <%= number_with_delimiter(current_tenant.max_files, :delimiter => ',') %> files and
+  <%= filesize(current_tenant.max_submission_size) %>
+</p>
+<h2 class="t-upload__choose-heading--active">Step 2: Enter Files</h2>
+
+<% #TODO  This file object isn't really being used for anything but to pass a resource id in and nothing in the form is
+  # specific to the file.  It's files for the resource.  This is extra cruft that isn't needed %>
+
+<%= form_for file, url: stash_engine.file_uploads_validate_urls_path(resource.id),
+             remote: true, html: { id: 'url_validate' } do |f| %>
   <%= f.hidden_field :resource_id %>
 	<%= f.text_area :url, cols: 80, rows: 15, id: 'location_urls', placeholder: 'List file location URLs here'	%>
 
@@ -22,13 +32,13 @@
 
 
 <div id="validated_errors">
-  <%= render partial: 'stash_engine/file_uploads/validated_errors', locals: {resource: @resource} %>
+  <%= render partial: 'stash_engine/file_uploads/validated_errors', locals: {resource: resource} %>
 </div>
 
 <h2 class="t-upload__choose-heading--active">Uploaded Files</h2>
 
 <div class="c-upload" id="validated_files">
-	<%= render partial: 'stash_engine/file_uploads/validated_files', locals: {resource: @resource} %>
+	<%= render partial: 'stash_engine/file_uploads/validated_files', locals: {resource: resource} %>
 </div>
 
 <script type="text/javascript">
