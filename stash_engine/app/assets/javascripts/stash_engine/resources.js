@@ -342,17 +342,6 @@ function resetFileTablesToDbState(){
 // **********************************************************************************
 // The items for  showing only upload method or manifest method
 // **********************************************************************************
-function showFilesOrManifest(){
-  if ($('#files_from_computer').prop('checked')) {
-    $('.files_upload').show();
-    $('.manifest_upload').hide();
-  }
-  else {
-    $('.manifest_upload').show();
-    $('.files_upload').hide();
-  }
-}
-
 function setUploadMethodLockout(resourceUploadType){
   if(resourceUploadType == 'unknown') {
     enableUploadMethod();
@@ -374,12 +363,6 @@ function enableUploadMethod(){
   $('#files_from_manifest').attr('disabled', false);
   $('#files_from_computer').attr('disabled', false);
   resetFileTablesToDbState();
-}
-
-function addSelectUploadTypeEvent(){
-  $('#files_from_computer, #files_from_manifest').on('change', function() {
-    showFilesOrManifest();
-  });
 }
 
 function confirmToValidate(){

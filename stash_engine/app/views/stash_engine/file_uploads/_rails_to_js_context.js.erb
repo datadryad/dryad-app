@@ -1,0 +1,55 @@
+<%# locals: resource %>
+
+function addUploadTypeChangeEvent(){
+  $('#files_from_computer, #files_from_manifest').on('change', function() {
+    if($('#files_from_manifest').is(':checked')){
+      window.location.href='<%= upload_manifest_resource_path %>';
+    }else{
+      window.location.href='<%= upload_resource_path %>';
+    }
+  });
+}
+
+function maxTotalSize(){
+  return <%= current_tenant.max_total_version_size %>;
+}
+
+function maxSubmissionSize(){
+  return <%= current_tenant.max_submission_size %>;
+}
+
+function maxFileSize(){
+  return <%= current_tenant.max_file_size %>;
+}
+
+function overTotalSize(mySize){
+  return (mySize > maxTotalSize());
+}
+
+function overSubmissionSize(mySize){
+  return (mySize > maxSubmissionSize());
+}
+
+function overFileSize(mySize){
+  return (mySize > maxFileSize());
+}
+
+function versionNumber(){
+  return <%= resource.version_number %>;
+}
+
+function resourceId(){
+  return <%= resource.id %>;
+}
+
+function showFilesResourcePath(){
+  return "<%= show_files_resource_path resource %>";
+}
+
+function removeUnuploadedFileUploadPath(){
+  return "<%= remove_unuploaded_file_upload_path resource %>";
+}
+
+function maxFiles(){
+  return <%= current_tenant.max_files %>;
+}
