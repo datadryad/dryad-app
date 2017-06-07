@@ -1,4 +1,4 @@
-<%# locals: file, resource %>
+<%# locals: resource %>
 <p>
   Size limits: up to <%= number_with_delimiter(current_tenant.max_files, :delimiter => ',') %> files and
   <%= filesize(current_tenant.max_submission_size) %>
@@ -8,10 +8,10 @@
 <% #TODO  This file object isn't really being used for anything but to pass a resource id in and nothing in the form is
   # specific to the file.  It's files for the resource.  This is extra cruft that isn't needed %>
 
-<%= form_for file, url: stash_engine.file_uploads_validate_urls_path(resource.id),
-             remote: true, html: { id: 'url_validate' } do |f| %>
-  <%= f.hidden_field :resource_id %>
-	<%= f.text_area :url, cols: 80, rows: 15, id: 'location_urls', placeholder: 'List file location URLs here'	%>
+<%= form_tag stash_engine.file_uploads_validate_urls_path(resource.id),
+             remote: true, html: { id: 'url_validate' } do  %>
+  <%= hidden_field_tag :resource_id, resource.id %>
+	<%= text_area_tag :url, '', cols: 80, rows: 15, id: 'location_urls', placeholder: 'List file location URLs here'	%>
 
 	<p>Place each URL on a new line.</p>
 
@@ -22,7 +22,7 @@
   </p>
 
 	<div class="actions" id="post_submit_before_spinner">
-    <%= f.submit 'Validate Files', id: 'validate_files', class: 'o-button__submit', disabled: true %>
+    <%= submit_tag 'Validate Files', id: 'validate_files', class: 'o-button__submit', disabled: true %>
   </div>
   <div class="spinner" id="post_submit_spinner">
     <%= image_tag 'stash_engine/spinner.gif', size: '80x60', alt: 'Loading spinner', id: 'post_submit_spinner' %>

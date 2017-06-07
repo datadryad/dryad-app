@@ -4,7 +4,7 @@ module StashEngine
   class ResourcesController < ApplicationController
     before_action :require_login, except: [:increment_downloads, :data_paper]
 
-    before_action :set_resource, only: [:show, :edit, :update, :destroy, :review, :upload, :increment_downloads, :show_files]
+    before_action :set_resource, only: [:show, :edit, :update, :destroy, :review, :upload, :upload_manifest, :increment_downloads, :show_files]
 
     before_action :require_resource_owner, except: [:index, :new, :increment_downloads, :data_paper]
 
@@ -90,6 +90,12 @@ module StashEngine
       #@resource.clean_uploads # might want this back cleans database to match existing files on file system
       @file = FileUpload.new(resource_id: @resource.id) #this is apparanty needed for the upload control
       @uploads = @resource.latest_file_states
+      render 'upload_manifest' if @resource.upload_type == :manifest
+    end
+
+    # upload by manifest view for resource
+    def upload_manifest
+      (redirect_to upload_resource_path(@resource) && return) if @resource.upload_type == :files
     end
 
     # PATCH/PUT /resources/1/increment_downloads

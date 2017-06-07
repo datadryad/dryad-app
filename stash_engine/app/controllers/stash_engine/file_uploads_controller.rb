@@ -136,8 +136,8 @@ module StashEngine
     def validate_urls
       respond_to do |format|
         @resource = Resource.where(id: params[:resource_id]).first
-        return if params[:file_upload][:url].strip.blank?
-        urls_array = params[:file_upload][:url].split(/[\r\n]+/).map(&:strip).delete_if(&:blank?)
+        return if params[:url].strip.blank?
+        urls_array = params[:url].split(/[\r\n]+/).map(&:strip).delete_if(&:blank?)
         urls_array.each do |url|
           validator =  StashEngine::UrlValidator.new(url: url)
           val_result = validator.validate

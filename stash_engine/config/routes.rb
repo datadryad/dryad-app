@@ -6,6 +6,7 @@ StashEngine::Engine.routes.draw do
     member do
       get 'review'
       get 'upload'
+      get 'upload_manifest'
       get 'submission'
       put 'increment_downloads'
       get 'show_files'

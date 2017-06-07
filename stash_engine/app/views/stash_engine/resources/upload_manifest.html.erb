@@ -4,12 +4,13 @@
 <h1 class="o-heading__level1">Upload Your Files <span class="t-upload__heading-optional">(optional)</span></h1>
 
 <div id="choose_method">
-  <%= render partial: 'stash_engine/file_uploads/choose_upload_method', locals: { resource: @resource, upload_method: :files} %>
+  <%= render partial: 'stash_engine/file_uploads/choose_upload_method', locals: { resource: @resource, upload_method: :manifest} %>
 </div>
 
-<!-- file upload workflow -->
-<div class="files_upload">
-  <%= render partial: 'stash_engine/file_uploads/files_upload', locals: { file: @file, resource: @resource, uploads: @uploads } %>
+<!-- manifest workflow -->
+<div class="manifest_upload" class="limits_and_part_2">
+  <%= render partial: 'stash_engine/file_uploads/manifest_upload',
+       locals: { resource: @resource } %>
 </div>
 
 <div class="o-dataset-nav">
@@ -19,43 +20,27 @@
 
 
 <script type="text/javascript" charset="utf-8">
-  var uploadInProgress = false;
-  $(function () {
-    // Initialize the jQuery File Upload widget:
-    $('#fileupload').fileupload({
-      maxChunkSize: 1048576,
-      //acceptFileTypes: /(\.|\/)(gif|jpe?g|png|tif?f)$/i
-      maxFileSize: <%= current_tenant.max_file_size %>,// 2GB,
-      //maxFileSize: 1048576 ,// 1MB,
-      limitMultiFileUploadSize: <%= current_tenant.max_submission_size %>
-    });
-    $('#upload_all').click(function(){
-      $('#upload_complete').hide();
-      $('#over_single_size').empty();
-    });
-  });
 
   <%= render partial: 'stash_engine/file_uploads/rails_to_js_context.js', locals: { resource: @resource} %>
   addUploadTypeChangeEvent();
-
-  updateButtonLinkStates(); // for file upload method
 
   $(function () {
     // set up initial page loaded state
     // showFilesOrManifest(); // decides to either show files or manifest uploads based on select list state
     // addSelectUploadTypeEvent();  // adds change event for switching files vs manifest
     setUploadMethodLockout('<%= @resource.upload_type %>'); // set lockout so you can't change view if you have files already
-    // $('#table_hider').hide(); // hides > 10 rows of manifest table if it's long
-    // $('#show_10_files').hide(); // hide link to only show 10 files
-    // hideLinksForFewRows(); // hide both links if fewer than 10 files total
-    // addEventFewManyRows();
+    $('#post_submit_spinner').hide(); // hide the submit spinner for manifest uploads
+    $('#table_hider').hide(); // hides > 10 rows of manifest table if it's long
+    $('#show_10_files').hide(); // hide link to only show 10 files
+    hideLinksForFewRows(); // hide both links if fewer than 10 files total
+    addEventFewManyRows();
     confirmToValidate(); // add event to require checking acceptance before validating
   });
 
-  $( document ).ready(function() {
+  /* $( document ).ready(function() {
     $('#files_from_computer').click(function(){
       updateUiStates();
     });
-  });
+  }); */
 
 </script>
