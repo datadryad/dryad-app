@@ -21,5 +21,29 @@ module StashDatacite
         end
       end
     end
+
+    describe 'resource_type_general_mapping_obj' do
+      it 'returns nil for nil' do
+        expect(ResourceType.resource_type_general_mapping_obj(nil)).to be_nil
+      end
+      it 'maps type values to enum instances' do
+        Datacite::Mapping::ResourceTypeGeneral.each do |type|
+          value_str = type.value
+          expect(ResourceType.resource_type_general_mapping_obj(value_str)).to be(type)
+        end
+      end
+      it 'returns the enum instance for a model object' do
+        ResourceType::ResourceTypesGeneralStrToFull.keys.each do |resource_type_general|
+          resource_type = ResourceType.create(
+            resource_id: resource.id,
+            resource_type: 'Conscriptio super monstruosum vitulum extraneissimum',
+            resource_type_general: resource_type_general
+          )
+          resource_type_general_friendly = resource_type.resource_type_general_friendly
+          enum_instance = Datacite::Mapping::ResourceTypeGeneral.find_by_value(resource_type_general_friendly)
+          expect(resource_type.resource_type_general_mapping_obj).to be(enum_instance)
+        end
+      end
+    end
   end
 end
