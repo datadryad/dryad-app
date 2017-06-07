@@ -42,5 +42,29 @@ module StashDatacite
         expect(resource.primary_title).to eq(primary_title.title)
       end
     end
+
+    describe 'title_type_mapping_obj' do
+      it 'returns nil for nil' do
+        expect(Title.title_type_mapping_obj(nil)).to be_nil
+      end
+      it 'maps type values to enum instances' do
+        Datacite::Mapping::TitleType.each do |type|
+          value_str = type.value
+          expect(Title.title_type_mapping_obj(value_str)).to be(type)
+        end
+      end
+      it 'returns the enum instance for a model object' do
+        Title::TitleTypesStrToFull.keys.each do |title_type|
+          title = Title.create(
+            resource_id: resource.id,
+            title: 'Conscriptio super monstruosum vitulum extraneissimum',
+            title_type: title_type
+          )
+          title_type_friendly = title.title_type_friendly
+          enum_instance = Datacite::Mapping::TitleType.find_by_value(title_type_friendly)
+          expect(title.title_type_mapping_obj).to be(enum_instance)
+        end
+      end
+    end
   end
 end
