@@ -10,12 +10,12 @@
     <div class="c-choose">
       <%= f.hidden_field :resource_id %>
       <div id="upload_bg" class="c-choose__drop o-drop">
-        Drag and drop files here
-      </div>
-      <div class="c-choose__or">or</div>
-      <div class="c-choose__label">
+        Drag and drop files here<br/><br/>
+        or<br/><br/>
         <%= label_tag(:upload_upload, "Choose Files", class: 'c-input__file-label') %>
         <%= file_field_tag 'upload[upload]', multiple: true, class: 'c-input__file' %>
+      </div>
+      <div class="c-choose__label">
       </div>
     </div>
   <% end %>
