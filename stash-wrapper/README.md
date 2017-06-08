@@ -6,7 +6,7 @@
 [![Gem Version](https://img.shields.io/gem/v/stash-wrapper.svg)](https://github.com/CDLUC3/stash-wrapper/releases)
 
 Gem for working with the [Stash](https://github.com/CDLUC3/stash)
-[XML wrapper format](https://dash.cdlib.org/stash_wrapper/stash_wrapper.xsd).
+[XML wrapper format](https://dash.ucop.edu/stash_wrapper/stash_wrapper.xsd).
 
 The `StashWrapper` object graph mostly mirrors the `stash_wrapper` schema, though some
 simpler elements have been collapsed into object attributes. Also, some classes and
@@ -126,7 +126,7 @@ to be nonsensical.
 ### Single file to standard output
 ```
 % gen_stash_wrapper_sample
-<st:stash_wrapper xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:schemaLocation='http://dash.cdlib.org/stash_wrapper/ http://dash.cdlib.org/stash_wrapper/stash_wrapper.xsd' xmlns:st='http://dash.cdlib.org/stash_wrapper/'>
+<st:stash_wrapper xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:schemaLocation='https://dash.ucop.edu/stash_wrapper/ https://dash.ucop.edu/stash_wrapper/stash_wrapper.xsd' xmlns:st='https://dash.ucop.edu/stash_wrapper/'>
   <st:identifier type='DOI'>10.21585/def1000001</st:identifier>
   <st:stash_administrative>
     <st:version>

@@ -110,6 +110,18 @@ module Stash
           expect(wrapper.embargo_type).to eq(EmbargoType::NONE)
           expect(wrapper.embargo_end_date).to eq(Date.new(2012, 8, 17))
         end
+
+        it 'works with the old (cdlib.org) schema location' do
+          xml_str_old_schema_location = File.read('spec/data/wrapper/mrtoai-wrapper-old-schema-location.xml')
+          expect(xml_str_old_schema_location).not_to include('ucop.edu') # just to be sure
+
+          wrapper = StashWrapper.parse_xml(xml_str_old_schema_location)
+          roundtrip_xml = wrapper.write_xml
+
+          xml_str_new_schema_location = File.read('spec/data/wrapper/mrtoai-wrapper.xml')
+          expect(xml_str_new_schema_location).not_to include('cdlib.org') # just to be sure
+          expect(roundtrip_xml).to be_xml(xml_str_new_schema_location)
+        end
       end
 
       describe '#initialize' do
@@ -265,7 +277,7 @@ module Stash
           it 'sets the correct namespace' do
             assert_st = lambda do |elem|
               actual = elem.namespace
-              expected = 'http://dash.cdlib.org/stash_wrapper/'
+              expected = 'https://dash.ucop.edu/stash_wrapper/'
               expect(actual).to eq(expected), "expected '#{expected}', got '#{actual}': #{elem}"
               elem.each_element { |e| assert_st.call(e) }
             end
@@ -285,7 +297,7 @@ module Stash
           it 'maps the namespace to the prefix' do
             assert_st = lambda do |elem|
               actual = elem.namespace('st')
-              expected = 'http://dash.cdlib.org/stash_wrapper/'
+              expected = 'https://dash.ucop.edu/stash_wrapper/'
               expect(actual).to eq(expected), "expected '#{expected}', got '#{actual}': #{elem}"
               elem.each_element { |e| assert_st.call(e) }
             end

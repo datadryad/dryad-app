@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <st:stash_wrapper xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                  xsi:schemaLocation="http://dash.cdlib.org/stash_wrapper/ http://dash.cdlib.org/stash_wrapper/stash_wrapper.xsd"
-                  xmlns:st="http://dash.cdlib.org/stash_wrapper/">
+                  xsi:schemaLocation="https://dash.ucop.edu/stash_wrapper/ https://dash.ucop.edu/stash_wrapper/stash_wrapper.xsd"
+                  xmlns:st="https://dash.ucop.edu/stash_wrapper/">
   <st:identifier type="DOI">10.12345/1234567890</st:identifier>
   <st:stash_administrative>
     <st:version>
