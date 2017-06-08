@@ -1,7 +1,10 @@
 # 0.1.12 (next)
 
+- Change stash-wrapper namespace URI to https://dash.ucop.edu/stash_wrapper/ and schema location to 
+  https://dash.ucop.edu/stash_wrapper/stash_wrapper.xsd (formerly both URLs were http://dash.cdlib.org/)
 - Update to Ruby 2.2.5
-- Update to Rubocop 0.47
+- Update to Rubocop 0.49
+
 
 # 0.1.11.1 (5 August 2016)
 

@@ -12,8 +12,8 @@ module Stash
 
       namespace ::XML::MappingExtensions::Namespace.new(
         prefix: 'st',
-        uri: 'http://dash.cdlib.org/stash_wrapper/',
-        schema_location: 'http://dash.cdlib.org/stash_wrapper/stash_wrapper.xsd'
+        uri: 'https://dash.ucop.edu/stash_wrapper/',
+        schema_location: 'https://dash.ucop.edu/stash_wrapper/stash_wrapper.xsd'
       )
 
       root_element_name 'stash_wrapper'
@@ -106,7 +106,7 @@ module Stash
       #   xml = super(options)
       #   xml.add_namespace(NAMESPACE)
       #   xml.add_namespace('xsi', 'http://www.w3.org/2001/XMLSchema-instance')
-      #   xml.add_attribute('xsi:schemaLocation', 'http://dash.cdlib.org/stash_wrapper/ http://dash.cdlib.org/stash_wrapper/stash_wrapper.xsd')
+      #   xml.add_attribute('xsi:schemaLocation', 'https://dash.ucop.edu/stash_wrapper/ https://dash.ucop.edu/stash_wrapper/stash_wrapper.xsd')
       #   xml
       # end
       #

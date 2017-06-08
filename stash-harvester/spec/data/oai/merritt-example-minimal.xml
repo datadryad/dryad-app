@@ -10,51 +10,51 @@
                 <setSpec>dash_cdl</setSpec>
             </header>
             <metadata>
-                <st:stash_wrapper xmlns:st="http://dash.cdlib.org/stash_wrapper/"
+                <st:stash_wrapper xmlns:st="https://dash.ucop.edu/stash_wrapper/"
                                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                                  xsi:schemaLocation="http://dash.cdlib.org/stash_wrapper/ http://dash.cdlib.org/stash_wrapper/stash_wrapper.xsd">
-                    <st:identifier xmlns:st="http://dash.cdlib.org/stash_wrapper/" type="DOI">10.14749/1407399498
+                                  xsi:schemaLocation="https://dash.ucop.edu/stash_wrapper/ https://dash.ucop.edu/stash_wrapper/stash_wrapper.xsd">
+                    <st:identifier xmlns:st="https://dash.ucop.edu/stash_wrapper/" type="DOI">10.14749/1407399498
                     </st:identifier>
-                    <st:stash_administrative xmlns:st="http://dash.cdlib.org/stash_wrapper/">
-                        <st:version xmlns:st="http://dash.cdlib.org/stash_wrapper/">
-                            <st:version_number xmlns:st="http://dash.cdlib.org/stash_wrapper/">2</st:version_number>
-                            <st:date xmlns:st="http://dash.cdlib.org/stash_wrapper/">2016-08-26Z</st:date>
-                            <st:note xmlns:st="http://dash.cdlib.org/stash_wrapper/">Sample wrapped Datacite document
+                    <st:stash_administrative xmlns:st="https://dash.ucop.edu/stash_wrapper/">
+                        <st:version xmlns:st="https://dash.ucop.edu/stash_wrapper/">
+                            <st:version_number xmlns:st="https://dash.ucop.edu/stash_wrapper/">2</st:version_number>
+                            <st:date xmlns:st="https://dash.ucop.edu/stash_wrapper/">2016-08-26Z</st:date>
+                            <st:note xmlns:st="https://dash.ucop.edu/stash_wrapper/">Sample wrapped Datacite document
                             </st:note>
                         </st:version>
-                        <st:license xmlns:st="http://dash.cdlib.org/stash_wrapper/">
-                            <st:name xmlns:st="http://dash.cdlib.org/stash_wrapper/">Creative Commons Attribution 4.0
+                        <st:license xmlns:st="https://dash.ucop.edu/stash_wrapper/">
+                            <st:name xmlns:st="https://dash.ucop.edu/stash_wrapper/">Creative Commons Attribution 4.0
                                 International (CC BY 4.0)
                             </st:name>
-                            <st:uri xmlns:st="http://dash.cdlib.org/stash_wrapper/">
+                            <st:uri xmlns:st="https://dash.ucop.edu/stash_wrapper/">
                                 https://creativecommons.org/licenses/by/4.0/
                             </st:uri>
                         </st:license>
-                        <st:embargo xmlns:st="http://dash.cdlib.org/stash_wrapper/">
-                            <st:type xmlns:st="http://dash.cdlib.org/stash_wrapper/">none</st:type>
-                            <st:period xmlns:st="http://dash.cdlib.org/stash_wrapper/">none</st:period>
-                            <st:start xmlns:st="http://dash.cdlib.org/stash_wrapper/">2016-08-26Z</st:start>
-                            <st:end xmlns:st="http://dash.cdlib.org/stash_wrapper/">2016-08-26Z</st:end>
+                        <st:embargo xmlns:st="https://dash.ucop.edu/stash_wrapper/">
+                            <st:type xmlns:st="https://dash.ucop.edu/stash_wrapper/">none</st:type>
+                            <st:period xmlns:st="https://dash.ucop.edu/stash_wrapper/">none</st:period>
+                            <st:start xmlns:st="https://dash.ucop.edu/stash_wrapper/">2016-08-26Z</st:start>
+                            <st:end xmlns:st="https://dash.ucop.edu/stash_wrapper/">2016-08-26Z</st:end>
                         </st:embargo>
-                        <st:inventory xmlns:st="http://dash.cdlib.org/stash_wrapper/" num_files="3">
-                            <st:file xmlns:st="http://dash.cdlib.org/stash_wrapper/">
-                                <st:pathname xmlns:st="http://dash.cdlib.org/stash_wrapper/">1.txt</st:pathname>
-                                <st:size xmlns:st="http://dash.cdlib.org/stash_wrapper/" unit="B">1</st:size>
-                                <st:mime_type xmlns:st="http://dash.cdlib.org/stash_wrapper/">text/plain</st:mime_type>
+                        <st:inventory xmlns:st="https://dash.ucop.edu/stash_wrapper/" num_files="3">
+                            <st:file xmlns:st="https://dash.ucop.edu/stash_wrapper/">
+                                <st:pathname xmlns:st="https://dash.ucop.edu/stash_wrapper/">1.txt</st:pathname>
+                                <st:size xmlns:st="https://dash.ucop.edu/stash_wrapper/" unit="B">1</st:size>
+                                <st:mime_type xmlns:st="https://dash.ucop.edu/stash_wrapper/">text/plain</st:mime_type>
                             </st:file>
-                            <st:file xmlns:st="http://dash.cdlib.org/stash_wrapper/">
-                                <st:pathname xmlns:st="http://dash.cdlib.org/stash_wrapper/">2.txt</st:pathname>
-                                <st:size xmlns:st="http://dash.cdlib.org/stash_wrapper/" unit="B">1</st:size>
-                                <st:mime_type xmlns:st="http://dash.cdlib.org/stash_wrapper/">text/plain</st:mime_type>
+                            <st:file xmlns:st="https://dash.ucop.edu/stash_wrapper/">
+                                <st:pathname xmlns:st="https://dash.ucop.edu/stash_wrapper/">2.txt</st:pathname>
+                                <st:size xmlns:st="https://dash.ucop.edu/stash_wrapper/" unit="B">1</st:size>
+                                <st:mime_type xmlns:st="https://dash.ucop.edu/stash_wrapper/">text/plain</st:mime_type>
                             </st:file>
-                            <st:file xmlns:st="http://dash.cdlib.org/stash_wrapper/">
-                                <st:pathname xmlns:st="http://dash.cdlib.org/stash_wrapper/">4.txt</st:pathname>
-                                <st:size xmlns:st="http://dash.cdlib.org/stash_wrapper/" unit="B">1</st:size>
-                                <st:mime_type xmlns:st="http://dash.cdlib.org/stash_wrapper/">text/plain</st:mime_type>
+                            <st:file xmlns:st="https://dash.ucop.edu/stash_wrapper/">
+                                <st:pathname xmlns:st="https://dash.ucop.edu/stash_wrapper/">4.txt</st:pathname>
+                                <st:size xmlns:st="https://dash.ucop.edu/stash_wrapper/" unit="B">1</st:size>
+                                <st:mime_type xmlns:st="https://dash.ucop.edu/stash_wrapper/">text/plain</st:mime_type>
                             </st:file>
                         </st:inventory>
                     </st:stash_administrative>
-                    <st:stash_descriptive xmlns:st="http://dash.cdlib.org/stash_wrapper/">
+                    <st:stash_descriptive xmlns:st="https://dash.ucop.edu/stash_wrapper/">
                         <resource xmlns="http://datacite.org/schema/kernel-3"
                                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                                   xsi:schemaLocation="http://datacite.org/schema/kernel-3 http://schema.datacite.org/meta/kernel-3/metadata.xsd">
@@ -114,41 +114,41 @@
                 <setSpec>dash_ucb</setSpec>
             </header>
             <metadata>
-                <st:stash_wrapper xmlns:st="http://dash.cdlib.org/stash_wrapper/"
+                <st:stash_wrapper xmlns:st="https://dash.ucop.edu/stash_wrapper/"
                                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                                  xsi:schemaLocation="http://dash.cdlib.org/stash_wrapper/ http://dash.cdlib.org/stash_wrapper/stash_wrapper.xsd">
-                    <st:identifier xmlns:st="http://dash.cdlib.org/stash_wrapper/" type="DOI">10.14749/1407399498
+                                  xsi:schemaLocation="https://dash.ucop.edu/stash_wrapper/ https://dash.ucop.edu/stash_wrapper/stash_wrapper.xsd">
+                    <st:identifier xmlns:st="https://dash.ucop.edu/stash_wrapper/" type="DOI">10.14749/1407399498
                     </st:identifier>
-                    <st:stash_administrative xmlns:st="http://dash.cdlib.org/stash_wrapper/">
-                        <st:version xmlns:st="http://dash.cdlib.org/stash_wrapper/">
-                            <st:version_number xmlns:st="http://dash.cdlib.org/stash_wrapper/">1</st:version_number>
-                            <st:date xmlns:st="http://dash.cdlib.org/stash_wrapper/">2016-09-23Z</st:date>
-                            <st:note xmlns:st="http://dash.cdlib.org/stash_wrapper/">Sample wrapped Datacite document
+                    <st:stash_administrative xmlns:st="https://dash.ucop.edu/stash_wrapper/">
+                        <st:version xmlns:st="https://dash.ucop.edu/stash_wrapper/">
+                            <st:version_number xmlns:st="https://dash.ucop.edu/stash_wrapper/">1</st:version_number>
+                            <st:date xmlns:st="https://dash.ucop.edu/stash_wrapper/">2016-09-23Z</st:date>
+                            <st:note xmlns:st="https://dash.ucop.edu/stash_wrapper/">Sample wrapped Datacite document
                             </st:note>
                         </st:version>
-                        <st:license xmlns:st="http://dash.cdlib.org/stash_wrapper/">
-                            <st:name xmlns:st="http://dash.cdlib.org/stash_wrapper/">Creative Commons Attribution 4.0
+                        <st:license xmlns:st="https://dash.ucop.edu/stash_wrapper/">
+                            <st:name xmlns:st="https://dash.ucop.edu/stash_wrapper/">Creative Commons Attribution 4.0
                                 International (CC BY 4.0)
                             </st:name>
-                            <st:uri xmlns:st="http://dash.cdlib.org/stash_wrapper/">
+                            <st:uri xmlns:st="https://dash.ucop.edu/stash_wrapper/">
                                 https://creativecommons.org/licenses/by/4.0/
                             </st:uri>
                         </st:license>
-                        <st:embargo xmlns:st="http://dash.cdlib.org/stash_wrapper/">
-                            <st:type xmlns:st="http://dash.cdlib.org/stash_wrapper/">none</st:type>
-                            <st:period xmlns:st="http://dash.cdlib.org/stash_wrapper/">none</st:period>
-                            <st:start xmlns:st="http://dash.cdlib.org/stash_wrapper/">2016-09-23Z</st:start>
-                            <st:end xmlns:st="http://dash.cdlib.org/stash_wrapper/">2016-09-23Z</st:end>
+                        <st:embargo xmlns:st="https://dash.ucop.edu/stash_wrapper/">
+                            <st:type xmlns:st="https://dash.ucop.edu/stash_wrapper/">none</st:type>
+                            <st:period xmlns:st="https://dash.ucop.edu/stash_wrapper/">none</st:period>
+                            <st:start xmlns:st="https://dash.ucop.edu/stash_wrapper/">2016-09-23Z</st:start>
+                            <st:end xmlns:st="https://dash.ucop.edu/stash_wrapper/">2016-09-23Z</st:end>
                         </st:embargo>
-                        <st:inventory xmlns:st="http://dash.cdlib.org/stash_wrapper/" num_files="1">
-                            <st:file xmlns:st="http://dash.cdlib.org/stash_wrapper/">
-                                <st:pathname xmlns:st="http://dash.cdlib.org/stash_wrapper/">4.txt</st:pathname>
-                                <st:size xmlns:st="http://dash.cdlib.org/stash_wrapper/" unit="B">1</st:size>
-                                <st:mime_type xmlns:st="http://dash.cdlib.org/stash_wrapper/">text/plain</st:mime_type>
+                        <st:inventory xmlns:st="https://dash.ucop.edu/stash_wrapper/" num_files="1">
+                            <st:file xmlns:st="https://dash.ucop.edu/stash_wrapper/">
+                                <st:pathname xmlns:st="https://dash.ucop.edu/stash_wrapper/">4.txt</st:pathname>
+                                <st:size xmlns:st="https://dash.ucop.edu/stash_wrapper/" unit="B">1</st:size>
+                                <st:mime_type xmlns:st="https://dash.ucop.edu/stash_wrapper/">text/plain</st:mime_type>
                             </st:file>
                         </st:inventory>
                     </st:stash_administrative>
-                    <st:stash_descriptive xmlns:st="http://dash.cdlib.org/stash_wrapper/">
+                    <st:stash_descriptive xmlns:st="https://dash.ucop.edu/stash_wrapper/">
                         <resource xmlns="http://datacite.org/schema/kernel-3"
                                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                                   xsi:schemaLocation="http://datacite.org/schema/kernel-3 http://schema.datacite.org/meta/kernel-3/metadata.xsd">

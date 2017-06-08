@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xs:schema targetNamespace="http://dash.cdlib.org/stash_wrapper/"
-           xmlns="http://dash.cdlib.org/stash_wrapper/"
+<xs:schema targetNamespace="https://dash.ucop.edu/stash_wrapper/"
+           xmlns="https://dash.ucop.edu/stash_wrapper/"
            xmlns:xs="http://www.w3.org/2001/XMLSchema"
            xmlns:vc="http://www.w3.org/2007/XMLSchema-versioning/XMLSchema-versioning.xsd" elementFormDefault="qualified"
            attributeFormDefault="unqualified" vc:minVersion="1.0" vc:maxVersion="1.1">
