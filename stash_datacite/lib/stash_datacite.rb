@@ -8,10 +8,6 @@ module StashDatacite
     end
   end
 
-  def self.resource_class
-    StashEngine::Resource
-  end
-
   class Engine < ::Rails::Engine
     isolate_namespace StashDatacite
 
