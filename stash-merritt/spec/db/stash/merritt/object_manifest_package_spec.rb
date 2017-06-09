@@ -59,6 +59,7 @@ module Stash
           filename_decoded = URI.decode(filename_encoded)
           expect(filename_decoded).to eq(upload_file_name) # just to be sure
           upload.url = "http://example.org/uploads/#{filename_encoded}"
+          upload.status_code = 200
           upload.save
         end
       end
@@ -93,7 +94,6 @@ module Stash
         end
 
         it 'builds a manifest' do
-
           actual = File.read(manifest_path)
 
           # generated stash-wrapper.xml has today's date & so has different hash, file size
