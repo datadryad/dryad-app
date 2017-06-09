@@ -5,7 +5,7 @@ var showAll = $('#show_all_files').is(":visible");
 
 // they're down to no modified files, so reset both the file tables for switching back and forth between the two
 <% if @resource.upload_type == :unknown %>
-  resetFileTablesToDbState();
+  // resetFileTablesToDbState();
   updateButtonLinkStates();
 <% end %>
 

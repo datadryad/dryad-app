@@ -6,8 +6,17 @@ module StashEngine
     before_action :require_login
     before_action :set_file_info, only: [:destroy, :remove, :restore, :destroy_error, :destroy_manifest]
     #TODO check that the following before action really should be ignored on these
-    before_action :require_file_owner, except: [:create, :destroy, :remove, :restore, :revert, :validate_urls, :destroy_error, :remove_unuploaded]
+    before_action :require_file_owner, except: [:create, :destroy, :remove, :restore, :revert, :validate_urls, :destroy_error, :remove_unuploaded, :index]
     before_action :set_create_prerequisites, only: [:create]
+
+    # show the list of files for resource
+    def index
+      respond_to do |format|
+        format.js do
+          @resource = Resource.find(params[:resource_id])
+        end
+      end
+    end
 
     # this is a newly uploaded file and we're deleting it
     def destroy
@@ -106,7 +115,8 @@ module StashEngine
           correct_existing_for_overwrite(params[:resource_id], @file_upload)
 
           FileUtils.mv(@accum_file, new_fn) # moves the file from the original unique_id fn to the final one
-          create_db_file(new_fn) # no files exist for this so new "created" file
+          create_db_file(new_fn) # no files exist for this so new "created" file and sets some variables like @my_file
+          @resource = @my_file.resource
         end
       end
     end

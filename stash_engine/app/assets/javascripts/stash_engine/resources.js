@@ -324,6 +324,7 @@ function undoConfirmUpload() {
 // ********
 
 // sets both HTML file tables (manifest & upload) back to the DB state
+/*
 function resetFileTablesToDbState(){
   $.ajax({
     url: showFilesResourcePath(),
@@ -334,7 +335,7 @@ function resetFileTablesToDbState(){
       format: 'js'
     }
   });
-}
+} */
 // ********
 // END Functions for both file and manifest sections
 // ********
@@ -362,7 +363,7 @@ function disableUploadMethod(){
 function enableUploadMethod(){
   $('#files_from_manifest').attr('disabled', false);
   $('#files_from_computer').attr('disabled', false);
-  resetFileTablesToDbState();
+  // resetFileTablesToDbState();
 }
 
 function confirmToValidate(){
