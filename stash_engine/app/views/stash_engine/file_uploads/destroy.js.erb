@@ -1,5 +1,1 @@
-$('#uploaded_file_<%= @file_id %>').remove();
-<% @extra_files.each do |my_f| %>
-  $('#upload_list').append("<%= escape_javascript(render(partial: 'stash_engine/file_uploads/uploaded_file', object: my_f)) %>")
-<% end %>
-updateButtonLinkStates(); // for file upload method
+<%= render partial: 'stash_engine/file_uploads/redraw_files_table.js', locals: { resource: @resource} %>

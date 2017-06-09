@@ -11,9 +11,4 @@ $('#validated_errors').html("<%= escape_javascript(
   }, 500);
 <% end %>
 
-// they're down to no files, so reset the file (not manifest) upload list also in case it has some files in it
-<% if @resource.upload_type == :unknown %>
-  $('#upload_list').empty();
-  updateButtonLinkStates();
-  setUploadMethodLockout('<%= @resource.upload_type %>');
-<% end %>
+setUploadMethodLockout('<%= resource.upload_type %>');
