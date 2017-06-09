@@ -113,14 +113,13 @@ module StashEngine
 
           @resource = Resource.find(params[:resource_id])
 
-          new_fn = File.join(@upload_dir, @file_upload.original_filename)
+          unique_fn = make_unique(@file_upload.original_filename)
 
+          new_path_and_fn = File.join(@upload_dir, unique_fn)
           #correct_existing_for_overwrite(params[:resource_id], @file_upload)
 
-          new_fn = make_unique(new_fn)
-
-          FileUtils.mv(@accum_file, new_fn) # moves the file from the original unique_id fn to the final one
-          create_db_file(new_fn) # no files exist for this so new "created" file and sets some variables like @my_file
+          FileUtils.mv(@accum_file, new_path_and_fn) # moves the file from the original unique_id fn to the final one
+          create_db_file(path: new_path_and_fn, filename: unique_fn) # no files exist for this so new "created" file and sets some variables like @my_file
 
         end
       end
@@ -212,12 +211,12 @@ module StashEngine
     end
 
     # for standard uploads, create standard file in DB before moving on to chunks.
-    def create_db_file(new_fn)
+    def create_db_file(path:, filename:)
       @my_file = FileUpload.new(
-        upload_file_name: @file_upload.original_filename,
-        temp_file_path: new_fn,
+        upload_file_name: filename,
+        temp_file_path: path,
         upload_content_type: @file_upload.content_type,
-        upload_file_size: File.size(new_fn),
+        upload_file_size: File.size(path),
         resource_id: params[:resource_id],
         upload_updated_at: Time.new.utc,
         file_state: 'created'

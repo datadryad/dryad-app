@@ -19,7 +19,6 @@ $(function () {
           $('#no_chosen1').hide();
           data.files[0]['id'] = generateQuickId();
           data.context = $(tmpl("upload-line", data.files[0]));
-          removeDuplicateFilename(data.files[0].name); // removes existing duplicate before adding again
           $('#upload_list').append(data.context);
           $('#confirm_text_upload, #upload_all').show();
           confirmToUpload();
@@ -274,26 +273,6 @@ function updateUiStates(){
       $('#confirm_text_upload, #upload_all').show();
       confirmToUpload();
     }
-  }
-}
-
-/*  Function called when a new file is dropped and rids list of existing names that are exactly the same
-    and issues warning that the previous file has been replaced.
- */
-function removeDuplicateFilename(fn){
-  dups = $('.js-filename').filter(function( index ) {
-    return (fn == $(this).text());
-  });
-  // get row element with these classes and delete it.
-  if(dups.length > 0) {
-    dups.parents('.js-copied_file,.js-unuploaded,.js-created_file,.js-deleted_file').remove();
-    $('#over_single_size').append("<p>Your previous file <strong>" + fn +
-        "</strong> has been replaced in your upload list with a newer file with the same name.</p>");
-    /* setTimeout(function () {
-      $('#over_single_size').empty();
-    }, 20000); */
-    $('#confirm_text_upload, #upload_all').show();
-    confirmToUpload();
   }
 }
 
