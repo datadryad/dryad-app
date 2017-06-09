@@ -26,6 +26,10 @@ Layout/EmptyLinesAroundBlockBody:
 Style/SingleLineBlockParams:
   Enabled: false
 
+# Make indents consistent regardless of the lengths of variables and method names and whatnot
+Layout/MultilineMethodCallIndentation:
+  EnforcedStyle: indented
+
 # These 'set' methods aren't conventional accessors, but Rubocop doesn't know that
 Style/AccessorMethodName:
   Exclude:

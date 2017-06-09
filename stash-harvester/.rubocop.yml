@@ -28,6 +28,10 @@ Layout/EmptyLinesAroundModuleBody:
 Layout/EmptyLinesAroundBlockBody:
   Enabled: false
 
+# Make indents consistent regardless of the lengths of variables and method names and whatnot
+Layout/MultilineMethodCallIndentation:
+  EnforcedStyle: indented
+
 # Suppress complaints about binaries not being named .rb
 Style/FileName:
   Exclude:
