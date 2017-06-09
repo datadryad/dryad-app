@@ -79,10 +79,12 @@ module StashDatacite
         geolocation_points.empty? && geolocation_places.empty? && geolocation_boxes.empty? ? true : false
       end
 
+      # TODO: is this actually used? it doesn't look like it
       def embargo
         if @resource.embargo.present?
           @embargo = @resource.embargo
         else
+          # TODO: and this looks especially fishy
           @embargo = StashEngine::Embargo.new
         end
       end
