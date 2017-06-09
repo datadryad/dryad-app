@@ -21,7 +21,7 @@ module StashDatacite
           # to sort on calculated fields for display we'll need to calculate all values, sort and use the array pager
           # form of kaminari instead (which will likely be slower).
           @resources = StashDatacite.resource_class.where(user_id: session[:user_id]).in_progress
-                                    .order(updated_at: :desc).page(@page).per(@page_size)
+            .order(updated_at: :desc).page(@page).per(@page_size)
           @in_progress_lines = @resources.map { |resource| DatasetPresenter.new(resource) }
         end
       end
@@ -32,7 +32,7 @@ module StashDatacite
         format.js do
           # @resources = StashDatacite.resource_class.where(user_id: session[:user_id]).submitted.
           @resources = current_user.latest_completed_resource_per_identifier.order(updated_at: :desc)
-                                   .page(@page).per(@page_size)
+            .page(@page).per(@page_size)
           @submitted_lines = @resources.map { |resource| DatasetPresenter.new(resource) }
         end
       end
