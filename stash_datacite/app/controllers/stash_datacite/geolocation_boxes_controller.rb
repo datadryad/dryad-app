@@ -22,7 +22,7 @@ module StashDatacite
     def map_coordinates
       loc = find_or_create_geolocation(params)
       respond_to do |format|
-        @resource = StashDatacite.resource_class.find(params[:resource_id])
+        @resource = StashEngine::Resource.find(params[:resource_id])
         @geolocation_boxes = GeolocationBox.only_geo_bbox(params[:resource_id])
         @geolocation_box = loc.geolocation_box
         format.js { render template: 'stash_datacite/geolocation_boxes/create.js.erb' }
@@ -34,7 +34,7 @@ module StashDatacite
       @geolocation = find_or_create_geolocation(params)
       @geolocation_box = @geolocation.geolocation_box
       respond_to do |format|
-        @resource = StashDatacite.resource_class.find(params[:resource_id])
+        @resource = StashEngine::Resource.find(params[:resource_id])
         @geolocation_boxes = GeolocationBox.only_geo_bbox(params[:resource_id])
         format.js
       end
@@ -48,7 +48,7 @@ module StashDatacite
       @ne_longitude = @geolocation_box.ne_longitude
       @geolocation_box.try(:geolocation).try(:destroy_box)
 
-      @resource = StashDatacite.resource_class.find(params[:resource_id])
+      @resource = StashEngine::Resource.find(params[:resource_id])
       @geolocation_boxes = GeolocationBox.only_geo_bbox(params[:resource_id])
       respond_to { |format| format.js }
     end

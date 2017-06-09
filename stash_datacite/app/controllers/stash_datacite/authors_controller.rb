@@ -42,7 +42,7 @@ module StashDatacite
     def delete
       unless params[:id] == 'new'
         @author = StashEngine::Author.find(params[:id])
-        @resource = StashDatacite.resource_class.find(@author.resource_id)
+        @resource = StashEngine::Resource.find(@author.resource_id)
         @if_orcid = check_for_orcid(@author)
         @author.destroy
       end

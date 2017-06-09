@@ -7,7 +7,7 @@ module StashDatacite
     def index
       respond_to do |format|
         @geolocation_points = GeolocationPoint.only_geo_points(params[:resource_id])
-        @resource = StashDatacite.resource_class.find(params[:resource_id])
+        @resource = StashEngine::Resource.find(params[:resource_id])
         format.js
       end
     end
@@ -47,7 +47,7 @@ module StashDatacite
     def create
       loc = find_or_create_geolocation(params[:geolocation_point])
       @geolocation_point = loc.geolocation_point
-      @resource = StashDatacite.resource_class.find(params[:resource_id])
+      @resource = StashEngine::Resource.find(params[:resource_id])
       respond_to do |format|
         @geolocation_points = GeolocationPoint.only_geo_points(params[:resource_id])
         format.js
@@ -59,7 +59,7 @@ module StashDatacite
       @latitude = @geolocation_point.latitude
       @longitude = @geolocation_point.longitude
       @geolocation_point.try(:geolocation).try(:destroy_point)
-      @resource = StashDatacite.resource_class.find(params[:resource_id])
+      @resource = StashEngine::Resource.find(params[:resource_id])
       @geolocation_points = GeolocationPoint.only_geo_points(params[:resource_id])
       respond_to { |format| format.js }
     end

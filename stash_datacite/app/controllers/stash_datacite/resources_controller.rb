@@ -20,7 +20,7 @@ module StashDatacite
           # only a page of objects needs calculations for display rather than all objects in list.  However if we need
           # to sort on calculated fields for display we'll need to calculate all values, sort and use the array pager
           # form of kaminari instead (which will likely be slower).
-          @resources = StashDatacite.resource_class.where(user_id: session[:user_id]).in_progress
+          @resources = StashEngine::Resource.where(user_id: session[:user_id]).in_progress
             .order(updated_at: :desc).page(@page).per(@page_size)
           @in_progress_lines = @resources.map { |resource| DatasetPresenter.new(resource) }
         end
@@ -30,7 +30,7 @@ module StashDatacite
     def user_submitted
       respond_to do |format|
         format.js do
-          # @resources = StashDatacite.resource_class.where(user_id: session[:user_id]).submitted.
+          # @resources = StashEngine::Resource.where(user_id: session[:user_id]).submitted.
           @resources = current_user.latest_completed_resource_per_identifier.order(updated_at: :desc)
             .page(@page).per(@page_size)
           @submitted_lines = @resources.map { |resource| DatasetPresenter.new(resource) }
@@ -50,7 +50,7 @@ module StashDatacite
     def review
       respond_to do |format|
         format.js do
-          @resource = StashDatacite.resource_class.find(params[:id])
+          @resource = StashEngine::Resource.find(params[:id])
           check_required_fields(@resource)
           @review = Resource::Review.new(@resource)
           @resource.has_geolocation = @review.has_geolocation_data
@@ -64,8 +64,8 @@ module StashDatacite
       resource_id = params[:resource_id]
       StashEngine.repository.submit(resource_id: resource_id)
 
-      # TODO: hard-code StashEngine::Resource everywhere instead of StashDatacite.resource_class
-      resource = StashDatacite.resource_class.find(resource_id)
+      # TODO: hard-code StashEngine::Resource everywhere instead of StashEngine::Resource
+      resource = StashEngine::Resource.find(resource_id)
 
       redirect_to(stash_url_helpers.dashboard_path, notice: resource_submitted_message(resource))
     end
@@ -94,13 +94,13 @@ module StashDatacite
       @data = warnings
     end
 
-    def file_count_warning_message(max_file_count)
-      format_count = number_with_delimiter(max_file_count, delimiter: ',')
+    def file_count_warning_message(count)
+      format_count = number_with_delimiter(count, delimiter: ',')
       "Remove some files until you have a smaller file count than #{format_count} files"
     end
 
-    def submission_size_warning_message(max_submission_size)
-      "Remove some files until you have a smaller dataset size than #{filesize(max_submission_size)}"
+    def submission_size_warning_message(size)
+      "Remove some files until you have a smaller dataset size than #{filesize(size)}"
     end
 
     def resource_submitted_message(resource)

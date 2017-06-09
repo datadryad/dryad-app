@@ -9,7 +9,7 @@ module StashDatacite
     # in to set variables for the view.
     # @resource, @data, @review, @schema_org_ds
     def setup_show_variables(resource_id)
-      @resource = StashDatacite.resource_class.find(resource_id)
+      @resource = StashEngine::Resource.find(resource_id)
       @review = StashDatacite::Resource::Review.new(@resource)
       @resource.has_geolocation = @review.has_geolocation_data
       @resource.save!

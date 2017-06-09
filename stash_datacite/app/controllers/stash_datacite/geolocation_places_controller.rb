@@ -34,7 +34,7 @@ module StashDatacite
     private
 
     def format_js(format, params)
-      @resource = StashDatacite.resource_class.find(params[:resource_id])
+      @resource = StashEngine::Resource.find(params[:resource_id])
       @geolocation_places = GeolocationPlace.from_resource_id(params[:resource_id])
       format.js
     end

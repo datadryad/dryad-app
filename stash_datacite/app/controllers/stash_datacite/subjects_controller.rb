@@ -37,7 +37,7 @@ module StashDatacite
 
     # get subjects/landing(?params), for display of "keywords" on landing page
     def landing
-      @resource = StashDatacite.resource_class.find(params[:resource_id])
+      @resource = StashEngine::Resource.find(params[:resource_id])
       respond_to { |format| format.js }
     end
 

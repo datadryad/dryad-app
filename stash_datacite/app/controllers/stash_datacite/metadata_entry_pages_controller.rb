@@ -15,7 +15,7 @@ module StashDatacite
     private
 
     def find_resource
-      @resource = StashDatacite.resource_class.find(params[:resource_id].to_i) unless params[:resource_id].blank?
+      @resource = StashEngine::Resource.find(params[:resource_id].to_i) unless params[:resource_id].blank?
     end
   end
 end

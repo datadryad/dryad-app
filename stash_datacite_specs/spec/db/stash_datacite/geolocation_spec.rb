@@ -142,8 +142,8 @@ module StashDatacite
         )
         dc_point = loc.datacite_mapping_point
         expect(dc_point).not_to be_nil
-        expect(dc_point).latitude to eq(34.2635)
-        expect(dc_point).longitude to eq(-118.2955)
+        expect(dc_point.latitude).to eq(34.2635)
+        expect(dc_point.longitude).to eq(-118.2955)
       end
 
       it 'returns nil for missing points' do
