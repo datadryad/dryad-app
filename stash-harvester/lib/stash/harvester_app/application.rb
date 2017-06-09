@@ -5,8 +5,7 @@ module Stash
       attr_reader :config
 
       def initialize(config:)
-        raise ArgumentError, "Invalid #{Application}.config; expected a #{Config}, got #{config ? config : 'nil'}" unless config && config.is_a?(Config)
-        @config = config
+        @config = validate_config(config)
 
         %i[persistence_config source_config index_config metadata_mapper].each do |c|
           sub_config = config.send(c)
@@ -92,7 +91,6 @@ module Stash
 
       def self.ensure_config_file(config_file)
         config_file ||= default_config_file
-        raise ArgumentError, "No configuration file provided, and none found in default locations #{Application.config_file_defaults.join(' or ')}" unless config_file
         config_file
       end
 
@@ -102,7 +100,7 @@ module Stash
         Application.config_file_defaults.each do |cf|
           return cf if File.exist?(cf)
         end
-        nil
+        raise ArgumentError, "No configuration file provided, and none found in default locations #{Application.config_file_defaults.join(' or ')}"
       end
 
       private_class_method :default_config_file
@@ -130,6 +128,11 @@ module Stash
           log.debug('No start timestamp provided, and no previous harvest found; harvesting all records')
         end
         from_time
+      end
+
+      def validate_config(config)
+        return config if config && config.is_a?(Config)
+        raise ArgumentError, "Invalid #{Application}.config; expected a #{Config}, got #{config ? config : 'nil'}"
       end
     end
   end

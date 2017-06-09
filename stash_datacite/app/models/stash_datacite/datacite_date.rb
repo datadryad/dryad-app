@@ -1,14 +1,14 @@
 module StashDatacite
   class DataciteDate < ActiveRecord::Base
     self.table_name = 'dcs_dates'
-    belongs_to :resource, class_name: StashDatacite.resource_class.to_s
+    belongs_to :resource, class_name: StashEngine::Resource.to_s
 
     # the valid method causes errors because it tries to add methods for enum and there is already valid method
     # so need to make it valid_date for symbol for rails not to error!
     DateTypes = Datacite::Mapping::DateType.map(&:value)
 
     DateTypesEnum = DateTypes.map { |i| [i.downcase.to_sym, i.downcase] }.to_h
-                             .reject { |k, _v| k == :valid }.merge(valid_date: 'valid')
+      .reject { |k, _v| k == :valid }.merge(valid_date: 'valid')
     DateTypesStrToFull = DateTypes.map { |i| [i.downcase, i] }.to_h
 
     enum date_type: DateTypesEnum

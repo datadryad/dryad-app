@@ -17,17 +17,10 @@ describe StashDatacite do
     allow(app_config).to(receive(:to_prepare)) { |&block| block.call }
   end
 
-  describe '#resource_class=' do
-    it 'sets the resource class' do
-      # TODO: just hard-code the resource class
-      StashDatacite.resource_class = 'StashEngine::Resource'
-      expect(StashDatacite.resource_class).to eq(StashEngine::Resource)
-    end
-
+  describe '#config_resource_patch' do
     it 'associates the resource patch' do
-      # TODO: just hard-code the resource class
       expect(StashDatacite::ResourcePatch).to receive(:associate_with_resource).with(StashEngine::Resource)
-      StashDatacite.resource_class = 'StashEngine::Resource'
+      StashDatacite.config_resource_patch
     end
   end
 

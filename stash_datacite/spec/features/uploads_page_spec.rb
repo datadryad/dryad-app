@@ -2,7 +2,7 @@ require 'rails_helper'
 
 feature 'User lands on Uploads page and navigates through it' do
   background do
-    @tenant = ::StashEngine::Tenant.find(tenant_id = 'dataone')
+    @tenant = ::StashEngine::Tenant.find('dataone')
     @user = ::StashEngine::User.create(first_name: 'test', last_name: 'user', email: 'testuser.ucop@gmail.com', tenant_id: @tenant.tenant_id)
     # @image_path = File.join(StashDatacite::Engine.root.to_s, 'spec', 'dummy', 'public', 'books.jpeg')
     # @large_file_path = File.join(StashDatacite::Engine.root.to_s, 'spec', 'dummy', 'public', 'test_100mb_file.pdf')

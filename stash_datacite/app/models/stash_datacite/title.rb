@@ -1,7 +1,7 @@
 module StashDatacite
   class Title < ActiveRecord::Base
     self.table_name = 'dcs_titles'
-    belongs_to :resource, class_name: StashDatacite.resource_class.to_s
+    belongs_to :resource, class_name: StashEngine::Resource.to_s
 
     TitleTypes = Datacite::Mapping::TitleType.map(&:value)
 

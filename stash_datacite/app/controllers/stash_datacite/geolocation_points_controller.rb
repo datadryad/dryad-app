@@ -7,7 +7,7 @@ module StashDatacite
     def index
       respond_to do |format|
         @geolocation_points = GeolocationPoint.only_geo_points(params[:resource_id])
-        @resource = StashDatacite.resource_class.find(params[:resource_id])
+        @resource = StashEngine::Resource.find(params[:resource_id])
         format.js
       end
     end
@@ -16,7 +16,7 @@ module StashDatacite
     def points_coordinates
       respond_to do |format|
         @geolocation_points = GeolocationPoint.select(:resource_id, :id, :latitude, :longitude)
-                                              .only_geo_points(params[:resource_id])
+          .only_geo_points(params[:resource_id])
         format.html
         format.json { render json: @geolocation_points }
       end
@@ -24,12 +24,8 @@ module StashDatacite
 
     # POST Leaflet AJAX create
     def map_coordinates
-      geo = geolocation_by_point(params)
-      unless geo
-        geo = Geolocation.new_geolocation(point: [params[:latitude], params[:longitude]],
-                                          resource_id: params[:resource_id])
-      end
-      @geolocation_point = geo.geolocation_point
+      loc = find_or_create_geolocation(params)
+      @geolocation_point = loc.geolocation_point
       respond_to do |format|
         format.json { render json: @geolocation_point.id }
       end
@@ -37,10 +33,9 @@ module StashDatacite
 
     # POST Leaflet AJAX update
     def update_coordinates
-      @geolocation_point = GeolocationPoint.where(id: params[:id]).from_resource_id(params[:resource_id]).first
-      p = params.except(:controller, :action)
+      @geolocation_point = find_point_from(params)
       respond_to do |format|
-        if @geolocation_point.update(latitude: p[:latitude], longitude: p[:longitude])
+        if update_point(@geolocation_point, params)
           format.json { render json: @geolocation_point.id }
         else
           format.html { render :new }
@@ -50,14 +45,9 @@ module StashDatacite
 
     # POST /geolocation_points
     def create
-      geo = geolocation_by_point(params[:geolocation_point])
-      unless geo
-        pt_params = params[:geolocation_point]
-        geo = Geolocation.new_geolocation(point: [pt_params[:latitude], pt_params[:longitude]],
-                                          resource_id: params[:resource_id])
-      end
-      @geolocation_point = geo.geolocation_point
-      @resource = StashDatacite.resource_class.find(params[:resource_id])
+      loc = find_or_create_geolocation(params[:geolocation_point])
+      @geolocation_point = loc.geolocation_point
+      @resource = StashEngine::Resource.find(params[:resource_id])
       respond_to do |format|
         @geolocation_points = GeolocationPoint.only_geo_points(params[:resource_id])
         format.js
@@ -69,20 +59,38 @@ module StashDatacite
       @latitude = @geolocation_point.latitude
       @longitude = @geolocation_point.longitude
       @geolocation_point.try(:geolocation).try(:destroy_point)
-      @resource = StashDatacite.resource_class.find(params[:resource_id])
+      @resource = StashEngine::Resource.find(params[:resource_id])
       @geolocation_points = GeolocationPoint.only_geo_points(params[:resource_id])
-      respond_to do |format|
-        format.js
-      end
+      respond_to { |format| format.js }
     end
 
     private
 
+    def find_point_from(params)
+      GeolocationPoint.where(id: params[:id]).from_resource_id(params[:resource_id]).first
+    end
+
+    def update_point(point, params)
+      point.update(latitude: params[:latitude], longitude: params[:longitude])
+    end
+
+    def find_or_create_geolocation(pt_params)
+      existing = find_geolocation_by_point(pt_params)
+      return existing if existing
+      Geolocation.new_geolocation(
+        point: [
+          pt_params[:latitude],
+          pt_params[:longitude]
+        ],
+        resource_id: pt_params[:resource_id]
+      )
+    end
+
     # geolocation exists with params resource_id, latitude, longitude
-    def geolocation_by_point(object_params)
-      pt_params = object_params
-      points = GeolocationPoint.only_geo_points(params[:resource_id])
-                               .where(latitude: pt_params[:latitude], longitude: pt_params[:longitude])
+    def find_geolocation_by_point(object_params)
+      points = GeolocationPoint
+        .only_geo_points(params[:resource_id])
+        .where(latitude: object_params[:latitude], longitude: object_params[:longitude])
       return nil if points.empty?
       points.first.geolocation
     end

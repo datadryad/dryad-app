@@ -1,7 +1,7 @@
 module StashDatacite
   class PublicationYear < ActiveRecord::Base
     self.table_name = 'dcs_publication_years'
-    belongs_to :resource, class_name: StashDatacite.resource_class.to_s
+    belongs_to :resource, class_name: StashEngine::Resource.to_s
 
     def self.ensure_pub_year(resource)
       return if resource.publication_years.exists?

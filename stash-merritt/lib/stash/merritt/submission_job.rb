@@ -62,13 +62,13 @@ module Stash
 
       def ensure_identifier
         return if resource.identifier
-        log.info("#{Time.now.xmlschema} #{self.class}: minting new identifier for resource #{resource_id}")
+        log_info("minting new identifier for resource #{resource_id}")
         resource.ensure_identifier(ezid_helper.mint_id)
       end
 
-      def create_package # rubocop:disable Metrics/AbcSize
+      def create_package
         ensure_identifier
-        log.info("#{Time.now.xmlschema} #{self.class}: creating package for resource #{resource_id} (#{resource.identifier_str})")
+        log_info("creating package for resource #{resource_id} (#{resource.identifier_str})")
         if resource.upload_type == :manifest
           ObjectManifestPackage.new(resource: resource)
         else
@@ -77,18 +77,18 @@ module Stash
       end
 
       def submit(package)
-        log.info("#{Time.now.xmlschema} #{self.class}: submitting resource #{resource_id} (#{resource.identifier_str})")
+        log_info("submitting resource #{resource_id} (#{resource.identifier_str})")
         sword_helper = SwordHelper.new(package: package, logger: log)
         sword_helper.submit!
       end
 
       def update_metadata(dc4_xml)
-        log.info("#{Time.now.xmlschema} #{self.class}: updating identifier landing page (#{landing_page_url}) and metadata for resource #{resource_id} (#{resource.identifier_str})")
+        log_info("updating identifier landing page (#{landing_page_url}) and metadata for resource #{resource_id} (#{resource.identifier_str})")
         ezid_helper.update_metadata(dc4_xml: dc4_xml, landing_page_url: landing_page_url)
       end
 
       def cleanup(package)
-        log.info("#{Time.now.xmlschema} #{self.class}: cleaning up temporary files for resource #{resource_id} (#{resource.identifier_str})")
+        log_info("cleaning up temporary files for resource #{resource_id} (#{resource.identifier_str})")
         package.cleanup!
       end
 
@@ -100,6 +100,10 @@ module Stash
                  "posting new object to #{resource.tenant.sword_params[:collection_uri]}"
                end
         msg << " (tenant: #{resource.tenant_id})"
+      end
+
+      def log_info(message)
+        log.info("#{Time.now.xmlschema} #{self.class}: #{message}")
       end
     end
   end

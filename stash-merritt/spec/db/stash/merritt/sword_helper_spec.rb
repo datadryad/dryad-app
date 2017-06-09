@@ -118,7 +118,9 @@ module Stash
             end
 
             it 'sets the update and download URIs' do
-              expect(sword_client).to receive(:create).with(doi: doi, payload: package.zipfile, packaging: Stash::Sword::Packaging::SIMPLE_ZIP).and_return(receipt)
+              expect(sword_client).to receive(:create)
+                .with(doi: doi, payload: package.zipfile, packaging: Stash::Sword::Packaging::SIMPLE_ZIP)
+                .and_return(receipt)
               helper.submit!
               expect(resource.download_uri).to eq(download_uri)
               expect(resource.update_uri).to eq(update_uri)
@@ -150,7 +152,9 @@ module Stash
             end
 
             it 'submits the zipfile' do
-              expect(sword_client).to receive(:update).with(edit_iri: update_uri, payload: package.zipfile, packaging: Stash::Sword::Packaging::SIMPLE_ZIP).and_return(200)
+              expect(sword_client).to receive(:update)
+                .with(edit_iri: update_uri, payload: package.zipfile, packaging: Stash::Sword::Packaging::SIMPLE_ZIP)
+                .and_return(200)
               helper.submit!
             end
 

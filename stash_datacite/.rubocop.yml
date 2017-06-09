@@ -1,7 +1,4 @@
 AllCops:
-  Include:
-    - '**/Rakefile'
-    - '**/config.ru'
   Exclude:
     - 'bin/**/*'
     - 'config/**/*'
@@ -21,15 +18,14 @@ Documentation:
     - 'app/controllers/**/*'
     - 'app/helpers/**/*'
     - 'app/models/**/*'
-    - 'test/controllers/**/*'
+    - 'spec/**/*'
+    - 'test/**/*'
     - 'lib/stash_datacite/**/*'
     - 'lib/stash_datacite.rb'
-    - 'spec/**/*'
 
-
-# Disable line-length check; it's too easy for the cure to be worse than the disease
+# Reasonable line-length check; it's too easy for the cure to be worse than the disease
 Metrics/LineLength:
-  Enabled: False
+  Max: 150
 
 # Disable problematic module documentation check (see https://github.com/bbatsov/rubocop/issues/947)
 Style/Documentation:
@@ -50,3 +46,7 @@ Layout/EmptyLinesAroundBlockBody:
 # Unclear why it's a good idea to give parameters semantically meaningless names
 Style/SingleLineBlockParams:
   Enabled: false
+
+# Make indents consistent regardless of the lengths of variables and method names and whatnot
+Layout/MultilineMethodCallIndentation:
+  EnforcedStyle: indented

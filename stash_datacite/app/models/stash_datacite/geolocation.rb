@@ -3,7 +3,7 @@ require 'datacite/mapping'
 module StashDatacite
   class Geolocation < ActiveRecord::Base
     self.table_name = 'dcs_geo_locations'
-    belongs_to :resource, class_name: StashDatacite.resource_class.to_s
+    belongs_to :resource, class_name: StashEngine::Resource.to_s
     belongs_to :geolocation_place, class_name: 'StashDatacite::GeolocationPlace', foreign_key: 'place_id'
     belongs_to :geolocation_point, class_name: 'StashDatacite::GeolocationPoint', foreign_key: 'point_id'
     belongs_to :geolocation_box, class_name: 'StashDatacite::GeolocationBox', foreign_key: 'box_id'
@@ -116,7 +116,7 @@ module StashDatacite
     end
 
     def set_geolocation_flag
-      resource = StashDatacite.resource_class.where(id: resource_id).first
+      resource = StashEngine::Resource.where(id: resource_id).first
       return unless resource && resource.has_geolocation == false
       resource.has_geolocation = true
       resource.save!

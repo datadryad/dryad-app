@@ -10,18 +10,12 @@ module StashDatacite
     # POST /subjects
     def create
       @resource = StashEngine::Resource.find(params[:resource_id])
-      subjects_array = subject_params[:subject].split(/\s*,\s*/).delete_if(&:blank?)
-      subjects_array.each do |sub|
-        Subject.create(subject: sub) unless Subject.where('subject LIKE ?', sub).exists?
-        @subject = Subject.where('subject LIKE ?', sub).first
-        unless @resource.subjects.exists?(@subject)
-          @resource.subjects << @subject
-        end
-      end
+      params[:subject]
+        .split(/\s*,\s*/)
+        .delete_if(&:blank?)
+        .each { |s| ensure_subject(s) }
       @subjects = @resource.subjects
-      respond_to do |format|
-        format.js
-      end
+      respond_to { |format| format.js }
     end
 
     # DELETE /subjects/1
@@ -43,22 +37,27 @@ module StashDatacite
 
     # get subjects/landing(?params), for display of "keywords" on landing page
     def landing
-      @resource = StashDatacite.resource_class.find(params[:resource_id])
-      respond_to do |format|
-        format.js
-      end
+      @resource = StashEngine::Resource.find(params[:resource_id])
+      respond_to { |format| format.js }
     end
 
     private
 
-    # Use callbacks to share common setup or constraints between actions.
-    def set_subject
-      @subject = Subject.find(subject_params[:id])
+    def ensure_subject(subject_str)
+      subject = find_or_create_subject(subject_str)
+      subjects = @resource.subjects
+      return if subjects.exists?(subject)
+      subjects << subject
     end
 
-    # Only allow a trusted parameter "white list" through.
-    def subject_params
-      params
+    def find_or_create_subject(subject)
+      existing = Subject.where('subject LIKE ?', subject).first
+      return existing if existing
+      Subject.create(subject: subject)
+    end
+
+    def set_subject
+      @subject = Subject.find(params[:id])
     end
   end
 end

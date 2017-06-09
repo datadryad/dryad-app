@@ -4,7 +4,7 @@ $LOAD_PATH.push File.expand_path('../lib', __FILE__)
 require 'stash_datacite/version'
 
 # Describe your gem and declare its dependencies:
-Gem::Specification.new do |s|
+Gem::Specification.new do |s| # rubocop:disable Metrics/BlockLength
   s.name        = 'stash_datacite'
   s.version     = StashDatacite::VERSION
   s.authors     = ['sfisher']

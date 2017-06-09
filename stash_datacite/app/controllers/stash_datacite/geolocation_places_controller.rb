@@ -15,48 +15,52 @@ module StashDatacite
 
     # POST Leaflet AJAX create
     def map_coordinates
-      geo = geolocation_by_place
-      unless geo
-        p = params.except(:controller, :action)
-        geo = Geolocation.new_geolocation(place: p[:geo_location_place],
-                                          point: [p[:latitude], p[:longitude]],
-                                          box: p[:bbox].try(:reverse),
-                                          resource_id: params[:resource_id])
-      end
-      @geolocation_place = geo.geolocation_place
+      loc = find_or_create_geolocation(params)
+      @geolocation_place = loc.geolocation_place
       respond_to do |format|
-        if @geolocation_place.save
-          @resource = StashDatacite.resource_class.find(params[:resource_id])
-          @geolocation_places = GeolocationPlace.from_resource_id(params[:resource_id])
-          format.js
-        else
-          format.html { render :new }
-        end
+        @geolocation_place.save ? format_js(format, params) : format.html { render :new }
       end
     end
 
     # DELETE /geolocation_places/1
     def delete
-      # @latitude = @geolocation_place.latitude
-      # @longitude = @geolocation_place.longitude
       geo = @geolocation_place.try(:geolocation)
       geo.destroy_place
       geo.destroy_box
       geo.destroy_point
-      @resource = StashDatacite.resource_class.find(params[:resource_id])
-      @geolocation_places = GeolocationPlace.from_resource_id(params[:resource_id])
-      respond_to do |format|
-        format.js
-      end
+      respond_to { |format| format_js(format, params) }
     end
 
     private
 
-    # Use callbacks to share common setup or constraints between actions.
-    def geolocation_by_place
-      place_params = params.except(:controller, :action)
-      places = GeolocationPlace.from_resource_id(params[:resource_id])
-                               .where(geo_location_place: place_params[:geo_location_place])
+    def format_js(format, params)
+      @resource = StashEngine::Resource.find(params[:resource_id])
+      @geolocation_places = GeolocationPlace.from_resource_id(params[:resource_id])
+      format.js
+    end
+
+    def find_or_create_geolocation(params)
+      existing = find_geolocation_by_place(params)
+      return existing if existing
+      new_geolocation_from(params)
+    end
+
+    def new_geolocation_from(params)
+      Geolocation.new_geolocation(
+        place: params[:geo_location_place],
+        point: [
+          params[:latitude],
+          params[:longitude]
+        ],
+        box: params[:bbox].try(:reverse),
+        resource_id: params[:resource_id]
+      )
+    end
+
+    def find_geolocation_by_place(params)
+      places = GeolocationPlace
+        .from_resource_id(params[:resource_id])
+        .where(geo_location_place: params[:geo_location_place])
       return nil if places.empty?
       places.first.geolocation
     end

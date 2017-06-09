@@ -1,7 +1,7 @@
 module StashDatacite
   class Description < ActiveRecord::Base
     self.table_name = 'dcs_descriptions'
-    belongs_to :resource, class_name: StashDatacite.resource_class.to_s
+    belongs_to :resource, class_name: StashEngine::Resource.to_s
 
     DescriptionTypes = Datacite::Mapping::DescriptionType.map(&:value)
 

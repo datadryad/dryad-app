@@ -185,7 +185,9 @@ module Stash
       describe 'persistence' do
 
         it 'begins/ends a harvest job' do
-          expect(persistence_mgr).to receive(:begin_harvest_job).with(from_time: from_time, until_time: until_time, query_url: query_url).and_return(harvest_job_id)
+          expect(persistence_mgr).to receive(:begin_harvest_job)
+            .with(from_time: from_time, until_time: until_time, query_url: query_url)
+            .and_return(harvest_job_id)
           expect(persistence_mgr).to receive(:end_harvest_job).with(harvest_job_id: harvest_job_id, status: Indexer::IndexStatus::COMPLETED)
           job.harvest_and_index
         end

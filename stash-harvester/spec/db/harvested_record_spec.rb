@@ -12,7 +12,13 @@ module Stash
           @harvest_job_completed = create(:indexed_harvest_job, record_count: @record_count, from_time: nil, start_time: Time.utc(2015, 7, 1))
           @harvested_records_completed = @harvest_job_completed.harvested_records
 
-          @harvest_job_failed = create(:indexed_harvest_job, record_count: @record_count + 1, from_time: Time.utc(2015, 7, 1, 10), start_time: Time.utc(2015, 8, 1), index_record_status: :failed)
+          @harvest_job_failed = create(
+            :indexed_harvest_job,
+            record_count: @record_count + 1,
+            from_time: Time.utc(2015, 7, 1, 10),
+            start_time: Time.utc(2015, 8, 1),
+            index_record_status: :failed
+          )
           @harvested_records_failed = @harvest_job_failed.harvested_records
         end
 

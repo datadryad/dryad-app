@@ -100,7 +100,7 @@ module StashDatacite
 
       def method
         @resource.descriptions.where(description_type: 'methods').where
-                 .not(description: [nil, '']).count > 0
+          .not(description: [nil, '']).count > 0
       end
 
       # TODO: why is this called 'citation'?
@@ -114,6 +114,17 @@ module StashDatacite
 
       def optional_total
         4
+      end
+
+      def all_warnings
+        messages = []
+        messages << 'Add a dataset title' unless title
+        messages << 'Add an abstract' unless abstract
+        messages << 'You must have at least one author name and they need to be complete' unless author_name
+        messages << 'At least one author must have an email supplied' unless author_email
+        messages << 'Authors must have affiliations' unless author_affiliation
+        messages << 'Fix or remove upload URLs that were unable to validate' unless urls_validated?
+        messages
       end
     end
   end

@@ -2,11 +2,15 @@
 Metrics/BlockLength:
   Enabled: False
 
-# Disable line-length check; it's too easy for the cure to be worse than the disease
+# Reasonable line-length check; it's too easy for the cure to be worse than the disease
 Metrics/LineLength:
-  Enabled: False
+  Max: 150
 
 # These 'set' methods aren't conventional accessors, but Rubocop doesn't know that
 Style/AccessorMethodName:
   Exclude:
     - 'spec/util/resource_builder.rb'
+
+# Make indents consistent regardless of the lengths of variables and method names and whatnot
+Layout/MultilineMethodCallIndentation:
+  EnforcedStyle: indented

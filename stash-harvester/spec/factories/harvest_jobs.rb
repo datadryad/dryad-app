@@ -18,8 +18,11 @@ FactoryGirl.define do
 
       from_time Time.utc(2012, 1, 1)
       until_time { from_time + record_count.minutes if from_time }
-      # query_url { "http://oai.datacite.org/oai?verb=ListRecords&metadataPrefix=oai_dc&from_time=#{from_time.utc.xmlschema}&until_time=#{until_time.utc.xmlschema}" }
-      query_url { "http://oai.datacite.org/oai?verb=ListRecords&metadataPrefix=oai_dc#{'&from_time=' + from_time.utc.xmlschema if from_time}#{'&until_time=' + until_time.utc.xmlschema if until_time}" }
+      query_url do
+        from_time_param = ('&from_time=' + from_time.utc.xmlschema if from_time)
+        until_time_param = ('&until_time=' + until_time.utc.xmlschema if until_time)
+        "http://oai.datacite.org/oai?verb=ListRecords&metadataPrefix=oai_dc#{from_time_param}#{until_time_param}"
+      end
       start_time Time.utc(2015, 1, 1)
       end_time { start_time + record_count.minutes }
 

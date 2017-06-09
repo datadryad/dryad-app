@@ -32,10 +32,6 @@ module Stash
         @id_params ||= tenant.identifier_service
       end
 
-      def scheme
-        id_params.scheme
-      end
-
       def owner
         id_params.owner
       end
