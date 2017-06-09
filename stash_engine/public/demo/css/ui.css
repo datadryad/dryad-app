@@ -3526,14 +3526,16 @@ html.no-details .o-showhide__summary {
 .c-autosave__text {
   margin: 0 0 0 1em; }
 
-@media (min-width: 480px) {
-  .c-choose {
-    display: -ms-flexbox;
-    display: flex;
-    -ms-flex-align: center;
-        align-items: center;
-    -ms-flex-pack: justify;
-        justify-content: space-between; } }
+.c-choose {
+  font-size: 85%; }
+  @media (min-width: 480px) {
+    .c-choose {
+      display: -ms-flexbox;
+      display: flex;
+      -ms-flex-align: center;
+          align-items: center;
+      -ms-flex-pack: justify;
+          justify-content: space-between; } }
 
 .c-choose__drop {
   display: none; }
@@ -4075,7 +4077,7 @@ html.svg .c-facet__check-label {
   display: inline-block;
   padding: 10px 20px;
   background-color: #9fc7d8;
-  font-size: 1.1em;
+  font-size: 75%;
   cursor: pointer; }
 
 .c-keywords {

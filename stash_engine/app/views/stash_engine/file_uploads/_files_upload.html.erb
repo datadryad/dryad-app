@@ -10,25 +10,42 @@
     <div class="c-choose">
       <%= f.hidden_field :resource_id %>
       <div id="upload_bg" class="c-choose__drop o-drop">
-        Drag and drop files here
-      </div>
-      <div class="c-choose__or">or</div>
-      <div class="c-choose__label">
+        Drag and drop files here<br/><br/>
+        or<br/><br/>
         <%= label_tag(:upload_upload, "Choose Files", class: 'c-input__file-label') %>
         <%= file_field_tag 'upload[upload]', multiple: true, class: 'c-input__file' %>
+      </div>
+      <div class="c-choose__label">
       </div>
     </div>
   <% end %>
 </div>
 <div class="t-upload__container">
-  <h2 class="t-upload__choose-heading" id="upload_tweaker_head">Step 3: Upload Files</h2>
-  <%= button_to 'undo all changes', revert_file_upload_path(resource_id: resource.id), method: :patch, remote: true,
+  <h2 class="t-upload__choose-heading" id="upload_tweaker_head">Step 3: Upload New Files</h2>
+  <%# button_to 'undo all changes', revert_file_upload_path(resource_id: resource.id), method: :patch, remote: true,
                 class: "o-button__undo", form_class: 'o-button__inline-form', id: 'revert_all' %>
 </div>
 <div class="c-upload">
   <div id="upload_list">
-    <%= render partial: 'stash_engine/file_uploads/files_upload_line', locals: {resource: resource, uploads: uploads} %>
+    <%# render partial: 'stash_engine/file_uploads/files_upload_line', locals: {resource: resource, uploads: uploads} %>
   </div>
+</div>
+
+<div>
+  <p id="confirm_text_upload" style="display: none;">
+    <span><%= check_box_tag 'confirm_to_upload', 'yes', false, id: 'confirm_to_upload' %></span>
+    <strong style="color: red;"> *</strong>
+    I confirm that no Personal Health Information or Sensitive Data are being uploaded with this submission.
+  </p>
+  <button id="upload_all" type="button" disabled class="o-button__submit confirm_upload">Upload</button>
+  <button id="cancel_all" type="button" class="o-button__submit" style="display: none;" >Cancel all</button>
+  <p>&nbsp;</p>
+</div>
+
+<h2 class="t-upload__choose-heading--active">Uploaded Files</h2>
+
+<div class="c-upload" id="validated_files">
+  <%= render partial: 'stash_engine/file_uploads/validated_files', locals: {resource: @resource} %>
 </div>
 
 <div id="upload_total">
@@ -51,23 +68,6 @@
     Your file size is over <%= filesize(current_tenant.max_total_version_size) %>. You must remove some files to bring your
     total under this limit before you can upload these files.
   </p>
-</div>
-
-<div>
-  <p id="confirm_text_upload" style="display: none;">
-    <span><%= check_box_tag 'confirm_to_upload', 'yes', false, id: 'confirm_to_upload' %></span>
-    <strong style="color: red;"> *</strong>
-    I confirm that no Personal Health Information or Sensitive Data are being uploaded with this submission.
-  </p>
-  <button id="upload_all" type="button" disabled class="o-button__submit confirm_upload" style="display: none;">Upload</button>
-  <button id="cancel_all" type="button" class="o-button__submit" style="display: none;" >Cancel all</button>
-  <p>&nbsp;</p>
-</div>
-
-<div id="revert_all">
-  <%# button_to 'undo all changes', revert_file_upload_path(resource_id: resource.id), method: :patch, remote: true,
-                class: "o-button__plain-text2", form_class: 'o-button__inline-form' %>
-  <!-- <button id="revert_all" type="button" class="o-button__plain-text2">Revert all files</button> -->
 </div>
 
 <%= render partial: 'stash_engine/file_uploads/dropped_file' %>
