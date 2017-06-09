@@ -28,7 +28,12 @@ module Stash
 
       def dc4_builder
         @dc4_builder ||= begin
-          datacite_xml_factory = Datacite::Mapping::DataciteXMLFactory.new(doi_value: resource.identifier_value, se_resource_id: resource_id, total_size_bytes: total_size_bytes, version: version_number)
+          datacite_xml_factory = Datacite::Mapping::DataciteXMLFactory.new(
+            doi_value: resource.identifier_value,
+            se_resource_id: resource_id,
+            total_size_bytes: total_size_bytes,
+            version: version_number
+          )
           MerrittDataciteBuilder.new(datacite_xml_factory)
         end
       end
