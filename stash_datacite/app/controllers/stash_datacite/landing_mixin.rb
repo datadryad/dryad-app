@@ -10,18 +10,10 @@ module StashDatacite
     # @resource, @data, @review, @schema_org_ds
     def setup_show_variables(resource_id)
       @resource = StashDatacite.resource_class.find(resource_id)
-      ds_presenter = StashDatacite::ResourcesController::DatasetPresenter.new(@resource)
-      # @data = check_required_fields(@resource)
       @review = StashDatacite::Resource::Review.new(@resource)
-
-      @schema_org_ds = StashDatacite::Resource::SchemaDataset.new(resource: @resource, citation: plain_citation,
-                                                                  landing: stash_url_helpers.show_url(ds_presenter.external_identifier, host: request.host)).generate
-      @schema_org_ds = JSON.pretty_generate(@schema_org_ds).html_safe
-
-      if @review.no_geolocation_data == true
-        @resource.has_geolocation = false
-        @resource.save!
-      end
+      @resource.has_geolocation = @review.has_geolocation_data
+      @resource.save!
+      @schema_org_ds = schema_org_json_for(@resource)
     end
 
     private
@@ -31,21 +23,22 @@ module StashDatacite
         @review.authors,
         @review.title,
         @review.resource_type,
-        @resource.stash_version.nil? ? 'v0' : "v#{@review.version.version}",
-        @resource.identifier.nil? ? 'DOI' : @review.identifier.identifier.to_s,
+        version_string_for(@resource, @review),
+        identifier_string_for(@resource, @review),
         @review.publisher.to_s,
         @resource.publication_years
       )
     end
 
-    def citation(authors, title, resource_type, version, identifier, publisher, publication_years)
-      publication_year = publication_years.try(:first).try(:publication_year) || Time.now.year
-      title = title.try(:title)
-      publisher = publisher.try(:publisher)
-      resource_type_general = resource_type.try(:resource_type_general_friendly)
-      ["#{author_citation_format(authors)} (#{publication_year})", title,
-       (version == 'v1' ? nil : version), publisher, resource_type_general,
-       "https://doi.org/#{identifier}"].reject(&:blank?).join(', ')
+    def citation(authors, title, resource_type, version, identifier, publisher, publication_years) # rubocop:disable Metrics/ParameterLists
+      citation = []
+      citation << "#{author_citation_format(authors)} (#{pub_year_from(publication_years)})"
+      citation << title.try(:title)
+      citation << (version == 'v1' ? nil : version)
+      citation << publisher.try(:publisher)
+      citation << resource_type.try(:resource_type_general_friendly)
+      citation << "https://doi.org/#{identifier}"
+      citation.reject(&:blank?).join(', ')
     end
 
     def author_citation_format(authors)
@@ -55,5 +48,31 @@ module StashDatacite
       return "#{str_author.first} et al." if str_author.length > 4
       str_author.join('; ')
     end
+
+    def pub_year_from(publication_years)
+      publication_years.try(:first).try(:publication_year) || Time.now.year
+    end
+
+    def schema_org_json_for(resource)
+      ds_presenter = StashDatacite::ResourcesController::DatasetPresenter.new(resource)
+      landing_page_url = stash_url_helpers.show_url(ds_presenter.external_identifier, host: request.host)
+      schema_dataset = StashDatacite::Resource::SchemaDataset.new(
+        resource: resource,
+        citation: plain_citation,
+        landing: landing_page_url
+      ).generate
+      JSON.pretty_generate(schema_dataset).html_safe
+    end
+
+    def identifier_string_for(resource, review)
+      return 'DOI' unless resource.identifier
+      review.identifier.identifier.to_s
+    end
+
+    def version_string_for(resource, review)
+      return 'v0' unless resource.stash_version
+      "v#{review.version.version}"
+    end
+
   end
 end

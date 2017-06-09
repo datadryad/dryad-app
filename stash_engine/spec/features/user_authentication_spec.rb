@@ -2,7 +2,7 @@ require 'rails_helper'
 feature 'User Authentication' do
 
   background do
-    @tenant = StashEngine::Tenant.find(tenant_id = "dataone")
+    @tenant = StashEngine::Tenant.find("dataone")
     @user = StashEngine::User.create(first_name: 'test', last_name: 'user', email: 'testuser.ucop@gmail.com', tenant_id: @tenant.tenant_id)
   end
 

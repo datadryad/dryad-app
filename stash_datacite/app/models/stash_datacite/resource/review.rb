@@ -76,7 +76,11 @@ module StashDatacite
       end
 
       def no_geolocation_data
-        geolocation_points.empty? && geolocation_places.empty? && geolocation_boxes.empty? ? true : false
+        !has_geolocation_data
+      end
+
+      def has_geolocation_data
+        geolocation_points.exists? || geolocation_places.exists? || geolocation_boxes.exists?
       end
 
       # TODO: is this actually used? it doesn't look like it

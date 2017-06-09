@@ -1,16 +1,13 @@
 require 'rails_helper'
 
 def handle_popups
-  if page.driver.class == Capybara::Selenium::Driver
-    page.driver.browser.switch_to.alert.accept
-  else
-    raise 'Unsupported driver'
-  end
+  raise 'Unsupported driver' unless page.driver.class == Capybara::Selenium::Driver
+  page.driver.browser.switch_to.alert.accept
 end
 
 feature 'User updates and submits a published dataset' do
   background do
-    @tenant = ::StashEngine::Tenant.find(tenant_id = 'dataone')
+    @tenant = ::StashEngine::Tenant.find('dataone')
     @user = ::StashEngine::User.create(first_name: 'test', last_name: 'user', email: 'testuser.ucop@gmail.com', tenant_id: @tenant.tenant_id)
     # @image_path = File.join(StashDatacite::Engine.root.to_s, 'spec', 'dummy', 'public', 'books.jpeg')
     @image_path = '/bin/ls'
@@ -115,7 +112,12 @@ feature 'User updates and submits a published dataset' do
     handle_popups
 
     expect(page).to have_current_path('/stash/dashboard')
-    expect(page).to have_content 'Test Dataset - Best practices for creating unique datasets submitted . There may be a delay for processing before the item is available.'
+
+    expected_content = [
+      'Test Dataset - Best practices for creating unique datasets submitted .',
+      'There may be a delay for processing before the item is available.'
+    ].join(' ')
+    expect(page).to have_content expected_content
 
     click_link 'Test Dataset - Best practices for creating unique datasets'
     expect(page).to have_content 'The dataset you are trying to view is not available.'

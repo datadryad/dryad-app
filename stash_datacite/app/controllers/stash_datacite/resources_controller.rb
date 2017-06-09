@@ -53,10 +53,8 @@ module StashDatacite
           @resource = StashDatacite.resource_class.find(params[:id])
           check_required_fields(@resource)
           @review = Resource::Review.new(@resource)
-          if @review.no_geolocation_data
-            @resource.has_geolocation = false
-            @resource.save!
-          end
+          @resource.has_geolocation = @review.has_geolocation_data
+          @resource.save!
         end
       end
     end
@@ -69,15 +67,18 @@ module StashDatacite
       # TODO: hard-code StashEngine::Resource everywhere instead of StashDatacite.resource_class
       resource = StashDatacite.resource_class.find(resource_id)
 
-      notice = []
-      notice << "#{resource.primary_title || '(unknown title)'} submitted"
-      identifier_uri = resource.identifier_uri
-      notice << (identifier_uri ? "with DOI #{identifier_uri}." : '.')
-      notice << 'There may be a delay for processing before the item is available.'
-      redirect_to stash_url_helpers.dashboard_path, notice: notice.join(' ')
+      redirect_to(stash_url_helpers.dashboard_path, notice: resource_submitted_message(resource))
     end
 
     private
+
+    def max_submission_size
+      current_tenant.max_submission_size.to_i
+    end
+
+    def max_file_count
+      current_tenant.max_files.to_i
+    end
 
     def main_title(resource)
       title = resource.titles.where(title_type: nil).first
@@ -85,24 +86,31 @@ module StashDatacite
     end
 
     def check_required_fields(resource)
-      @completions = Resource::Completions.new(resource)
-      # required fields are Title, Institution, Data type, Data author(s), Abstract
-      # unless @completions.required_completed == @completions.required_total
-      @data = []
-      @data << 'Add a dataset title' unless @completions.title
-      @data << 'Add an abstract' unless @completions.abstract
-      @data << 'You must have at least one author name and they need to be complete' unless @completions.author_name
-      @data << 'At least one author must have an email supplied' unless @completions.author_email
-      @data << 'Authors must have affiliations' unless @completions.author_affiliation
-      @data << 'Fix or remove upload URLs that were unable to validate' unless @completions.urls_validated?
-      if @completions.over_manifest_file_size?(current_tenant.max_submission_size.to_i)
-        @data << "Remove some files until you have a smaller dataset size than #{filesize(current_tenant.max_submission_size)}"
-      end
-      if @completions.over_manifest_file_count?(current_tenant.max_files.to_i)
-        @data << "Remove some files until you have a smaller file count than #{number_with_delimiter(current_tenant.max_files, delimiter: ',')} files"
-      end
-      # return @data.join(', ').split(/\W+/)
-      # end
+      completions = Resource::Completions.new(resource)
+      warnings = completions.all_warnings
+      warnings << submission_size_warning_message(max_submission_size) if completions.over_manifest_file_size?(max_submission_size)
+      warnings << file_count_warning_message(max_file_count) if completions.over_manifest_file_count?(max_file_count)
+      @completions = completions
+      @data = warnings
     end
+
+    def file_count_warning_message(max_file_count)
+      format_count = number_with_delimiter(max_file_count, delimiter: ',')
+      "Remove some files until you have a smaller file count than #{format_count} files"
+    end
+
+    def submission_size_warning_message(max_submission_size)
+      "Remove some files until you have a smaller dataset size than #{filesize(max_submission_size)}"
+    end
+
+    def resource_submitted_message(resource)
+      identifier_uri = resource.identifier_uri
+      msg = []
+      msg << "#{resource.primary_title || '(unknown title)'} submitted"
+      msg << (identifier_uri ? "with DOI #{identifier_uri}." : '.')
+      msg << 'There may be a delay for processing before the item is available.'
+      msg.join(' ')
+    end
+
   end
 end
