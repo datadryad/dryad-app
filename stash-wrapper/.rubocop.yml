@@ -7,9 +7,9 @@ Style/ClassAndModuleChildren:
   Exclude:
     - 'example.rb'
 
-# Disable line-length check; it's too easy for the cure to be worse than the disease
+# Reasonable line-length check; it's too easy for the cure to be worse than the disease
 Metrics/LineLength:
-  Enabled: False
+  Max: 150
 
 # Disable problematic module documentation check (see https://github.com/bbatsov/rubocop/issues/947)
 Style/Documentation:
