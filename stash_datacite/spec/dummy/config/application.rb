@@ -1,15 +1,15 @@
 require File.expand_path('../boot', __FILE__)
 
 # Pick the frameworks you want:
-require "active_record/railtie"
-require "action_controller/railtie"
-require "action_mailer/railtie"
-require "action_view/railtie"
-require "sprockets/railtie"
+require 'active_record/railtie'
+require 'action_controller/railtie'
+require 'action_mailer/railtie'
+require 'action_view/railtie'
+require 'sprockets/railtie'
 # require "rails/test_unit/railtie"
 
 Bundler.require(*Rails.groups)
-require "stash_datacite"
+require 'stash_datacite'
 
 module Dummy
   class Application < Rails::Application
@@ -30,4 +30,3 @@ module Dummy
     config.generators.javascript_engine = :js
   end
 end
-

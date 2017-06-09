@@ -1,7 +1,6 @@
 module StashDatacite
   class ResourcesController
     class PdfMetadata
-
       # include StashDatacite::ResourcesHelper
       attr_reader :resource, :identifier
 
@@ -29,6 +28,7 @@ module StashDatacite
       end
 
       private
+
       def h(item)
         ERB::Util.html_escape(item)
       end

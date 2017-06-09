@@ -1,9 +1,8 @@
 require 'rails_helper'
 
-feature "User lands on Uploads page and navigates through it" do
-
+feature 'User lands on Uploads page and navigates through it' do
   background do
-    @tenant = ::StashEngine::Tenant.find(tenant_id = "dataone")
+    @tenant = ::StashEngine::Tenant.find(tenant_id = 'dataone')
     @user = ::StashEngine::User.create(first_name: 'test', last_name: 'user', email: 'testuser.ucop@gmail.com', tenant_id: @tenant.tenant_id)
     # @image_path = File.join(StashDatacite::Engine.root.to_s, 'spec', 'dummy', 'public', 'books.jpeg')
     # @large_file_path = File.join(StashDatacite::Engine.root.to_s, 'spec', 'dummy', 'public', 'test_100mb_file.pdf')
@@ -11,7 +10,7 @@ feature "User lands on Uploads page and navigates through it" do
     @image_path = '/bin/ls'
   end
 
-  it "Logged in user fills metadata entry page", js: true do
+  it 'Logged in user fills metadata entry page', js: true do
     visit "http://#{@tenant.full_domain}/stash/auth/developer"
 
     within('form') do
@@ -25,32 +24,32 @@ feature "User lands on Uploads page and navigates through it" do
 
     expect(page).to have_content 'Describe Your Datasets'
 
-    #Data Type
+    # Data Type
     select 'Multiple Types', from: 'Type of Data'
 
-    #Title
+    # Title
     fill_in 'Title', with: 'Test Dataset - Updating practices for creating unique datasets'
 
-    #Author
+    # Author
     fill_in 'First Name', with: 'Test 2'
     fill_in 'Last Name', with: 'User 2'
     fill_in 'Institutional Affiliation', with: 'UCOP'
     click_link 'Add Author'
 
-    #Abstract
-    fill_in 'Abstract', with: "Lorem ipsum dolor sit amet, consectetur"\
-    "adipiscing elit. Maecenas posuere quis ligula eu luctus."\
-    "Donec laoreet sit amet lacus ut efficitur. Donec mauris erat,"\
-    "aliquet eu finibus id, lobortis at ligula. Donec iaculis orci nisl,"\
-    "quis vulputate orci efficitur nec. Proin imperdiet in lorem eget sodales."\
-    "Etiam blandit eget quam nec tristique. In hac habitasse platea dictumst."\
-    "Integer id nunc in purus sagittis dapibus sed ac augue. Aenean eu lobortis turpis."\
+    # Abstract
+    fill_in 'Abstract', with: 'Lorem ipsum dolor sit amet, consectetur'\
+    'adipiscing elit. Maecenas posuere quis ligula eu luctus.'\
+    'Donec laoreet sit amet lacus ut efficitur. Donec mauris erat,'\
+    'aliquet eu finibus id, lobortis at ligula. Donec iaculis orci nisl,'\
+    'quis vulputate orci efficitur nec. Proin imperdiet in lorem eget sodales.'\
+    'Etiam blandit eget quam nec tristique. In hac habitasse platea dictumst.'\
+    'Integer id nunc in purus sagittis dapibus sed ac augue. Aenean eu lobortis turpis.'\
 
     click_link 'Proceed to Upload'
 
     # trying the sauce labs pre-uploaded file
-    page.attach_file('upload_upload', @image_path, :visible => false, wait: Capybara.default_max_wait_time)
-    page.find('#upload_all', :visible => false).click
+    page.attach_file('upload_upload', @image_path, visible: false, wait: Capybara.default_max_wait_time)
+    page.find('#upload_all', visible: false).click
     # expect(page).to have_content 'books.jpeg'
     expect(page).to have_content 'ls'
 

@@ -12,7 +12,7 @@ module StashDatacite
       GeolocationPlace.from_resource_id(resource_id).map do |place|
         geo_hash = { geolocation_place: place.geo_location_place }
         point = (loc = place.geolocation) && loc.geolocation_point
-        point ? geo_hash.merge({ latitude: point.latitude, longitude: point.longitude }) : geo_hash
+        point ? geo_hash.merge(latitude: point.latitude, longitude: point.longitude) : geo_hash
       end
     end
 

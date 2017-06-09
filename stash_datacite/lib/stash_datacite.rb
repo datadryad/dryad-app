@@ -1,7 +1,7 @@
 require 'stash_datacite/engine'
 require 'stash_datacite/resource_patch'
 module StashDatacite
-  #mattr_writer :resource_class
+  # mattr_writer :resource_class
 
   def self.resource_class
     @@resource_class.constantize

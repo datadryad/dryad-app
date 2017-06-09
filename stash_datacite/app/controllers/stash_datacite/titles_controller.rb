@@ -2,7 +2,7 @@ require_dependency 'stash_datacite/application_controller'
 
 module StashDatacite
   class TitlesController < ApplicationController
-    before_action :set_title, only: [:update, :destroy]
+    before_action :set_title, only: %i[update destroy]
 
     respond_to :json
 

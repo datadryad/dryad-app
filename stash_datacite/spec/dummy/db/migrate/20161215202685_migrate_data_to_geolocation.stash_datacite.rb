@@ -1,8 +1,7 @@
 # This migration comes from stash_datacite (originally 20160919234251)
 class MigrateDataToGeolocation < ActiveRecord::Migration
   def self.up
-
-    #move places into new Geolocation table
+    # move places into new Geolocation table
     StashDatacite::GeolocationPlace.where('resource_id IS NOT NULL').each do |place|
       point = nil
       if place.latitude && place.longitude
@@ -16,7 +15,7 @@ class MigrateDataToGeolocation < ActiveRecord::Migration
       StashDatacite::Geolocation.create(resource_id: point.resource_id, point_id: point.id)
     end
 
-    #move boxes into Geolocation table
+    # move boxes into Geolocation table
     StashDatacite::GeolocationBox.where('resource_id IS NOT NULL').each do |box|
       StashDatacite::Geolocation.create(resource_id: box.resource_id, box_id: box.id)
     end
@@ -26,8 +25,8 @@ class MigrateDataToGeolocation < ActiveRecord::Migration
     remove_column :dcs_geo_location_places, :longitude
     remove_column :dcs_geo_location_points, :resource_id
     remove_column :dcs_geo_location_boxes, :resource_id
-
   end
+
   def self.down
     raise ActiveRecord::IrreversibleMigration
   end

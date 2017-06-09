@@ -2,7 +2,7 @@ require_dependency 'stash_datacite/application_controller'
 
 module StashDatacite
   class GeolocationPointsController < ApplicationController
-    before_action :set_geolocation_point, only: [:edit, :update, :delete]
+    before_action :set_geolocation_point, only: %i[edit update delete]
 
     def index
       respond_to do |format|
@@ -18,7 +18,7 @@ module StashDatacite
         @geolocation_points = GeolocationPoint.select(:resource_id, :id, :latitude, :longitude)
                                               .only_geo_points(params[:resource_id])
         format.html
-        format.json { render json:  @geolocation_points }
+        format.json { render json: @geolocation_points }
       end
     end
 

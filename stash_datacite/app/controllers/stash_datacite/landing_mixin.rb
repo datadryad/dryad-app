@@ -1,6 +1,5 @@
 module StashDatacite
   module LandingMixin
-
     def self.included(c)
       c.helper_method :citation
     end
@@ -29,13 +28,14 @@ module StashDatacite
 
     def plain_citation
       citation(
-          @review.authors,
-          @review.title,
-          @review.resource_type,
-          @resource.stash_version.nil? ? 'v0' : "v#{@review.version.version }",
-          @resource.identifier.nil? ? 'DOI' : "#{@review.identifier.identifier }",
-          "#{@review.publisher}",
-          @resource.publication_years)
+        @review.authors,
+        @review.title,
+        @review.resource_type,
+        @resource.stash_version.nil? ? 'v0' : "v#{@review.version.version}",
+        @resource.identifier.nil? ? 'DOI' : @review.identifier.identifier.to_s,
+        @review.publisher.to_s,
+        @resource.publication_years
+      )
     end
 
     def citation(authors, title, resource_type, version, identifier, publisher, publication_years)
@@ -55,6 +55,5 @@ module StashDatacite
       return "#{str_author.first} et al." if str_author.length > 4
       str_author.join('; ')
     end
-
   end
 end

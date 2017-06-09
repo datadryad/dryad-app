@@ -40,7 +40,11 @@ module StashDatacite
       duplicate_affiliation = Affiliation.where('long_name LIKE ? OR short_name LIKE ?',
                                                 params[:affiliation].to_s, params[:affiliation].to_s).first
       respond_to do |format|
-        unless duplicate_affiliation.present?
+        if duplicate_affiliation.present?
+          @author.update(author_params)
+          @author.affiliation = duplicate_affiliation
+          @author.save
+        else
           @author.update(author_params)
           @author.reload
           if params[:affiliation].present?
@@ -50,10 +54,6 @@ module StashDatacite
           else
             ''
           end
-        else
-          @author.update(author_params)
-          @author.affiliation = duplicate_affiliation
-          @author.save
         end
         format.js { render template: 'stash_datacite/shared/update.js.erb' }
       end
@@ -82,7 +82,7 @@ module StashDatacite
     # Only allow a trusted parameter "white list" through.
     def author_params
       params.require(:author).permit(:id, :author_first_name, :author_last_name, :author_middle_name, :author_email,
-                                      :affiliation_id, :resource_id, :author_orcid)
+                                     :affiliation_id, :resource_id, :author_orcid)
     end
 
     def check_for_orcid(author)

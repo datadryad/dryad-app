@@ -71,6 +71,6 @@ StashDatacite::Engine.routes.draw do
   get 'resources/user_submitted', to: 'resources#user_submitted'
   get 'metadata_entry_pages/find_or_create', to: 'metadata_entry_pages#find_or_create'
   get 'resources/review', to: 'resources#review'
-  match 'resources/submission' => 'resources#submission', as: :resources_submission, via: [:get, :post]
+  match 'resources/submission' => 'resources#submission', as: :resources_submission, via: %i[get post]
   get 'resources/show', to: 'resources#show'
 end
