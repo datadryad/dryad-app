@@ -14,6 +14,10 @@ module StashEngine
       StashEngine.tenants.values.map { |h| new(h) if h['enabled'] && h['enabled'] == true }.compact.sort_by(&:short_name)
     end
 
+    def max_files
+      @ostruct.max_files || 1000
+    end
+
     #gets the Tenant class to respond to the keys so you can call hash like methods
     def method_missing(m) #, *args, &block
       @ostruct.send(m)
