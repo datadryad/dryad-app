@@ -16,45 +16,24 @@ module StashDatacite
 
     # POST /authors
     def create
-      duplicate_affiliation = Affiliation.where('long_name LIKE ? OR short_name LIKE ?',
-                                                params[:affiliation].to_s, params[:affiliation].to_s).first
       @author = StashEngine::Author.new(author_params)
       respond_to do |format|
+        @affiliation = find_or_create_affiliation(params[:affiliation])
+        @author.affiliation_id = @affiliation.id if @affiliation
         @author.save
         @author.reload
-        unless duplicate_affiliation.present?
-          if params[:affiliation].present?
-            @affiliation = Affiliation.create(long_name: params[:affiliation])
-            @author.affiliation_id = @affiliation.id
-            @author.save
-          else
-            ''
-          end
-        end
         format.js
       end
     end
 
     # PATCH/PUT /authors/1
     def update
-      duplicate_affiliation = Affiliation.where('long_name LIKE ? OR short_name LIKE ?',
-                                                params[:affiliation].to_s, params[:affiliation].to_s).first
       respond_to do |format|
-        if duplicate_affiliation.present?
-          @author.update(author_params)
-          @author.affiliation = duplicate_affiliation
-          @author.save
-        else
-          @author.update(author_params)
-          @author.reload
-          if params[:affiliation].present?
-            @affiliation = Affiliation.create(long_name: params[:affiliation])
-            @author.affiliation = @affiliation
-            @author.save
-          else
-            ''
-          end
-        end
+        @author.update(author_params)
+        @affiliation = find_or_create_affiliation(params[:affiliation])
+        @author.affiliation_id = @affiliation.id if @affiliation
+        @author.save
+        @author.reload
         format.js { render template: 'stash_datacite/shared/update.js.erb' }
       end
     end
@@ -87,6 +66,14 @@ module StashDatacite
 
     def check_for_orcid(author)
       author.author_orcid ? true : false
+    end
+
+    def find_or_create_affiliation(affiliation_param)
+      return unless affiliation_param && affiliation_param.present?
+      affiliation_str = affiliation_param.to_s
+      existing = Affiliation.where('long_name LIKE ? OR short_name LIKE ?', affiliation_str, affiliation_str).first
+      return existing if existing
+      Affiliation.create(long_name: affiliation_str)
     end
   end
 end
