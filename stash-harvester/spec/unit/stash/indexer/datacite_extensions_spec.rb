@@ -13,9 +13,11 @@ module Datacite
     end
 
     describe 'Description' do
+      desc_value = 'Data were created with funding from the Ministry of Magic under grant 319995.'
+
       describe '#funding?' do
         it 'returns true for funding and false for other descriptions' do
-          funding_desc = Description.new(type: DescriptionType::OTHER, value: 'Data were created with funding from the Ministry of Magic under grant 319995.')
+          funding_desc = Description.new(type: DescriptionType::OTHER, value: desc_value)
           expect(funding_desc.funding?).to eq(true)
           usage_desc = Description.new(type: DescriptionType::OTHER, value: 'Some other value')
           expect(usage_desc.funding?).to eq(false)
@@ -26,7 +28,7 @@ module Datacite
 
       describe '#usage?' do
         it 'returns true for usage and false otherwise' do
-          funding_desc = Description.new(type: DescriptionType::OTHER, value: 'Data were created with funding from the Ministry of Magic under grant 319995.')
+          funding_desc = Description.new(type: DescriptionType::OTHER, value: desc_value)
           expect(funding_desc.usage?).to eq(false)
           usage_desc = Description.new(type: DescriptionType::OTHER, value: 'Some other value')
           expect(usage_desc.usage?).to eq(true)

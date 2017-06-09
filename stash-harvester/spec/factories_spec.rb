@@ -27,7 +27,12 @@ describe 'FactoryGirl factories' do
       harvest_job = Stash::Harvester::Models::HarvestJob.first
       expect(harvest_job.from_time).to eq(Time.utc(2013, 1, 1))
       expect(harvest_job.until_time).to eq(Time.utc(2013, 1, 1, 0, count))
-      expect(harvest_job.query_url).to eq("http://oai.datacite.org/oai?verb=ListRecords&metadataPrefix=oai_dc&from_time=#{harvest_job.from_time.xmlschema}&until_time=#{harvest_job.until_time.xmlschema}")
+
+      from_time_iso = harvest_job.from_time.xmlschema
+      until_time_iso = harvest_job.until_time.xmlschema
+      expected_url = "http://oai.datacite.org/oai?verb=ListRecords&metadataPrefix=oai_dc&from_time=#{from_time_iso}&until_time=#{until_time_iso}"
+
+      expect(harvest_job.query_url).to eq(expected_url)
       expect(harvest_job.start_time).to eq(Time.utc(2015, 1, 1))
       expect(harvest_job.end_time).to eq(Time.utc(2015, 1, 1, 0, count))
       expect(harvest_job.completed?).to be true

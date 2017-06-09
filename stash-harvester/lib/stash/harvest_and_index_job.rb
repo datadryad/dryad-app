@@ -16,7 +16,7 @@ module Stash
     attr_reader :update_uri
     attr_reader :persistence_mgr
 
-    def initialize(source_config:, index_config:, metadata_mapper:, persistence_manager:, update_uri: nil, from_time: nil, until_time: nil) # rubocop:disable Metrics/ParameterLists
+    def initialize(source_config:, index_config:, metadata_mapper:, persistence_manager:, update_uri: nil, from_time: nil, until_time: nil) # rubocop:disable Metrics/ParameterLists, Metrics/LineLength
       @harvest_task = source_config.create_harvest_task(from_time: from_time, until_time: until_time)
       @indexer = index_config.create_indexer(metadata_mapper)
       @index_uri = index_config.uri

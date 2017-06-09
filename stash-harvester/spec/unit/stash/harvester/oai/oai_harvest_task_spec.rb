@@ -104,33 +104,52 @@ module Stash
             task.harvest_records
           end
 
-          it 'sends a "from" datestamp if one is specified' do
-            time = Time.new.utc
-            task = OAIHarvestTask.new(config: OAISourceConfig.new(oai_base_url: @uri, seconds_granularity: true), from_time: time)
-            expect(@oai_client).to receive(:list_records).with(from: time, metadata_prefix: 'oai_dc')
-            task.harvest_records
-          end
+          describe :seconds_granularity do
 
-          it 'sends an "until" datestamp if one is specified' do
-            time = Time.new.utc
-            task = OAIHarvestTask.new(config: OAISourceConfig.new(oai_base_url: @uri, seconds_granularity: true), until_time: time)
-            expect(@oai_client).to receive(:list_records).with(until: time, metadata_prefix: 'oai_dc')
-            task.harvest_records
-          end
+            attr_reader :config
 
-          it 'sends both datestamps if both are specified' do
-            start_time = Time.new.utc
-            end_time = Time.new.utc
-            task = OAIHarvestTask.new(config: OAISourceConfig.new(oai_base_url: @uri, seconds_granularity: true), from_time: start_time, until_time: end_time)
-            expect(@oai_client).to receive(:list_records).with(from: start_time, until: end_time, metadata_prefix: 'oai_dc')
-            task.harvest_records
+            before(:each) do
+              @config = OAISourceConfig.new(oai_base_url: @uri, seconds_granularity: true)
+            end
+
+            it 'sends a "from" datestamp if one is specified' do
+              time = Time.new.utc
+              task = OAIHarvestTask.new(config: config, from_time: time)
+              expect(@oai_client).to receive(:list_records).with(from: time, metadata_prefix: 'oai_dc')
+              task.harvest_records
+            end
+
+            it 'sends an "until" datestamp if one is specified' do
+              time = Time.new.utc
+              task = OAIHarvestTask.new(config: config, until_time: time)
+              expect(@oai_client).to receive(:list_records).with(until: time, metadata_prefix: 'oai_dc')
+              task.harvest_records
+            end
+
+            it 'sends both datestamps if both are specified' do
+              start_time = Time.new.utc
+              end_time = Time.new.utc
+              task = OAIHarvestTask.new(config: config, from_time: start_time, until_time: end_time)
+              expect(@oai_client).to receive(:list_records).with(from: start_time, until: end_time, metadata_prefix: 'oai_dc')
+              task.harvest_records
+            end
+
+            it 'accepts Dates as well as Times for seconds granularity' do
+              start_date = Date.new(2014, 1, 1)
+              end_date = Date.new(2015, 1, 1)
+              task = OAIHarvestTask.new(config: config, from_time: start_date, until_time: end_date)
+              expect(@oai_client).to receive(:list_records)
+                .with(from: Time.utc(2014, 1, 1), until: Time.utc(2015, 1, 1), metadata_prefix: 'oai_dc')
+              task.harvest_records
+            end
           end
 
           it 'sends datestamps at day granularity unless otherwise specified' do
             start_time = Time.new.utc
             end_time = Time.new.utc
             task = OAIHarvestTask.new(config: OAISourceConfig.new(oai_base_url: @uri), from_time: start_time, until_time: end_time)
-            expect(@oai_client).to receive(:list_records).with(from: start_time.strftime('%Y-%m-%d'), until: end_time.strftime('%Y-%m-%d'), metadata_prefix: 'oai_dc')
+            expect(@oai_client).to receive(:list_records)
+              .with(from: start_time.strftime('%Y-%m-%d'), until: end_time.strftime('%Y-%m-%d'), metadata_prefix: 'oai_dc')
             task.harvest_records
           end
 
@@ -139,16 +158,8 @@ module Stash
             end_date = Date.new(2015, 1, 1)
             config = OAISourceConfig.new(oai_base_url: @uri, seconds_granularity: false)
             task = OAIHarvestTask.new(config: config, from_time: start_date, until_time: end_date)
-            expect(@oai_client).to receive(:list_records).with(from: start_date.strftime('%Y-%m-%d'), until: end_date.strftime('%Y-%m-%d'), metadata_prefix: 'oai_dc')
-            task.harvest_records
-          end
-
-          it 'accepts Dates as well as Times for seconds granularity' do
-            start_date = Date.new(2014, 1, 1)
-            end_date = Date.new(2015, 1, 1)
-            config = OAISourceConfig.new(oai_base_url: @uri, seconds_granularity: true)
-            task = OAIHarvestTask.new(config: config, from_time: start_date, until_time: end_date)
-            expect(@oai_client).to receive(:list_records).with(from: Time.utc(2014, 1, 1), until: Time.utc(2015, 1, 1), metadata_prefix: 'oai_dc')
+            expect(@oai_client).to receive(:list_records)
+              .with(from: start_date.strftime('%Y-%m-%d'), until: end_date.strftime('%Y-%m-%d'), metadata_prefix: 'oai_dc')
             task.harvest_records
           end
 

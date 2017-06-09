@@ -13,7 +13,8 @@ module Stash
       # @!attribute [r] set
       #   @return [String, nil] the colon-separated path to the set requested for selective harvesting.
       # @!attribute seconds_granularity [r]
-      #   @return [Boolean] whether to include the full time out to the second in the from / until time range. (Defaults to false, i.e., days granularity.)
+      #   @return [Boolean] whether to include the full time out to the second in the from / until time range.
+      #      (Defaults to false, i.e., days granularity.)
       class OAISourceConfig < SourceConfig
 
         # ------------------------------------------------------------

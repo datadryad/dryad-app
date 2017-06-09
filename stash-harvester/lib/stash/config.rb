@@ -58,14 +58,15 @@ module Stash
     #
     # @param env [Config::Factory::Environment] the configuration environment.
     def self.from_env(env)
-      persistence_config = PersistenceConfig.for_environment(env, :db)
-      source_config = Harvester::SourceConfig.for_environment(env, :source)
-      index_config = Indexer::IndexConfig.for_environment(env, :index)
-      metadata_mapper = Indexer::MetadataMapper.for_environment(env, :mapper)
       update_url = env.args_for(:update_uri)
       update_uri = update_url && URI.parse(update_url)
-
-      Config.new(persistence_config: persistence_config, source_config: source_config, index_config: index_config, metadata_mapper: metadata_mapper, update_uri: update_uri)
+      Config.new(
+        persistence_config: PersistenceConfig.for_environment(env, :db),
+        source_config: Harvester::SourceConfig.for_environment(env, :source),
+        index_config: Indexer::IndexConfig.for_environment(env, :index),
+        metadata_mapper: Indexer::MetadataMapper.for_environment(env, :mapper),
+        update_uri: update_uri
+      )
     end
 
     # Private methods

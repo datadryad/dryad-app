@@ -97,7 +97,9 @@ module Stash
 
         def to_date(time_or_date)
           date_str = time_or_date.strftime(DATE_FORMAT)
-          Harvester.log.warn("time '#{time_or_date}' converted to date '#{date_str}' to match configuration seconds_granularity: false") if time_or_date.respond_to?(:sec)
+          if time_or_date.respond_to?(:sec)
+            Harvester.log.warn("time '#{time_or_date}' converted to date '#{date_str}' to match configuration seconds_granularity: false")
+          end
           date_str
         end
 
