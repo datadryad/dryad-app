@@ -4,9 +4,10 @@ module StashDatacite
   class AffiliationsController < ApplicationController
     # GET /affiliations/autocomplete
     def autocomplete
-      @affiliations = Affiliation.where('long_name LIKE ? OR short_name LIKE ? OR abbreviation LIKE ?',
-                                        "%#{params[:term]}%", "%#{params[:term]}%", "%#{params[:term]}%") unless
-                                      params[:term].blank?
+      unless params[:term].blank?
+        @affiliations = Affiliation.where('long_name LIKE ? OR short_name LIKE ? OR abbreviation LIKE ?',
+                                          "%#{params[:term]}%", "%#{params[:term]}%", "%#{params[:term]}%")
+      end
       list = map_affiliation_for_autocomplete(@affiliations)
       render json: list
     end

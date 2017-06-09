@@ -10,15 +10,14 @@ module StashDatacite
 
     amoeba do
       enable
-      customize(lambda do |orig_geo, new_geo|
+      customize(lambda do |_orig_geo, new_geo|
         # this duplicates any non-null associated places, points, boxes and associtaes them with the new record
-        items = {:place_id= => :geolocation_place, :point_id= => :geolocation_point, :box_id= => :geolocation_box}
+        items = { :place_id= => :geolocation_place, :point_id= => :geolocation_point, :box_id= => :geolocation_box }
         items.each_pair do |my_id, my_association|
-          if new_geo.send(my_association) # if it's associated, duplicate it and reset id to new one
-            newone = new_geo.send(my_association).dup
-            newone.save
-            new_geo.send(my_id, newone.id) # set the id for duplicated item in the geolocation record
-          end
+          next unless new_geo.send(my_association) # if it's associated, duplicate it and reset id to new one
+          newone = new_geo.send(my_association).dup
+          newone.save
+          new_geo.send(my_id, newone.id) # set the id for duplicated item in the geolocation record
         end
       end)
     end
@@ -35,10 +34,13 @@ module StashDatacite
       point_obj = nil
       box_obj = nil
       place_obj = GeolocationPlace.create(geo_location_place: place) unless place.blank?
-      point_obj = GeolocationPoint.create(
-          latitude: point[0].try(:to_d), longitude: point[1].try(:to_d)) unless point.blank?
+      unless point.blank?
+        point_obj = GeolocationPoint.create(
+          latitude: point[0].try(:to_d), longitude: point[1].try(:to_d)
+        )
+      end
       unless box.blank? || box.flatten.length != 4
-        sides = box.flatten.map{|i| i.try(:to_d)}
+        sides = box.flatten.map { |i| i.try(:to_d) }
         s_lat = sides[0]
         n_lat = sides[2]
         s_lat, n_lat = n_lat, s_lat if s_lat > n_lat
@@ -80,29 +82,28 @@ module StashDatacite
       destroy_if_empty
     end
 
-    #handles creating datacite mapping which might be nil or have other complexities
+    # handles creating datacite mapping which might be nil or have other complexities
     def datacite_mapping_place
       try(:geolocation_place).try(:geo_location_place)
     end
 
-    #handles creating datacite mapping which might be nil or have other complexities
+    # handles creating datacite mapping which might be nil or have other complexities
     def datacite_mapping_point
       return nil unless geolocation_point
       return nil if geolocation_point.latitude.blank? || geolocation_point.longitude.blank?
       Datacite::Mapping::GeoLocationPoint.new(geolocation_point.latitude, geolocation_point.longitude)
     end
 
-    #handles creating datacite mapping which might be nil or have other complexities
+    # handles creating datacite mapping which might be nil or have other complexities
     def datacite_mapping_box
       return nil unless geolocation_box
       if geolocation_box.sw_latitude.blank? || geolocation_box.sw_longitude.blank? ||
-        geolocation_box.ne_latitude.blank? || geolocation_box.ne_longitude.blank?
+         geolocation_box.ne_latitude.blank? || geolocation_box.ne_longitude.blank?
         return nil
       end
       Datacite::Mapping::GeoLocationBox.new(geolocation_box.sw_latitude, geolocation_box.sw_longitude,
                                             geolocation_box.ne_latitude, geolocation_box.ne_longitude)
     end
-
 
     private
 
@@ -126,6 +127,5 @@ module StashDatacite
       GeolocationPoint.destroy(point_id) unless point_id.nil? || GeolocationPoint.where(id: point_id).count < 1
       GeolocationBox.destroy(box_id) unless box_id.nil? || GeolocationBox.where(id: box_id).count < 1
     end
-
   end
 end

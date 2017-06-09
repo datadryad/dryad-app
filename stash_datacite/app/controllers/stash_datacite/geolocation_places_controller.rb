@@ -2,7 +2,7 @@ require_dependency 'stash_datacite/application_controller'
 
 module StashDatacite
   class GeolocationPlacesController < ApplicationController
-    before_action :set_geolocation_place, only: [:edit, :update, :delete]
+    before_action :set_geolocation_place, only: %i[edit update delete]
 
     # GET /geolocation_places/
     def places_coordinates
@@ -37,8 +37,8 @@ module StashDatacite
 
     # DELETE /geolocation_places/1
     def delete
-      #@latitude = @geolocation_place.latitude
-      #@longitude = @geolocation_place.longitude
+      # @latitude = @geolocation_place.latitude
+      # @longitude = @geolocation_place.longitude
       geo = @geolocation_place.try(:geolocation)
       geo.destroy_place
       geo.destroy_box

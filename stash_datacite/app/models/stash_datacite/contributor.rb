@@ -5,7 +5,7 @@ module StashDatacite
     belongs_to :name_identifier
     has_and_belongs_to_many :affiliations, class_name: 'StashDatacite::Affiliation'
 
-    scope :completed, ->  { where("TRIM(IFNULL(contributor_name, '')) > ''") } # only non-null & blank
+    scope :completed, -> { where("TRIM(IFNULL(contributor_name, '')) > ''") } # only non-null & blank
     # scope :completed, ->  { where("TRIM(IFNULL(award_number, '')) > '' AND TRIM(IFNULL(contributor_name, '')) > ''") } # only non-null & blank
 
     ContributorTypes = Datacite::Mapping::ContributorType.map(&:value)
@@ -43,23 +43,23 @@ module StashDatacite
       Contributor.contributor_type_mapping_obj(contributor_type_friendly)
     end
 
-    #this is to simulate the bad old structure where a user can only have one affiliation
+    # this is to simulate the bad old structure where a user can only have one affiliation
     def affiliation_id=(affil_id)
       self.affiliation_ids = affil_id
     end
 
-    #this is to simulate the bad old structure where a user can only have one affiliation
+    # this is to simulate the bad old structure where a user can only have one affiliation
     def affiliation_id
       affiliation_ids.try(:first)
     end
 
-    #this is to simulate the bad old structure where a user can only have one affiliation
+    # this is to simulate the bad old structure where a user can only have one affiliation
     def affiliation=(affil)
       affiliations.clear
       affiliations << affil
     end
 
-    #this is to simulate the bad old structure where a user can only have one affiliation
+    # this is to simulate the bad old structure where a user can only have one affiliation
     def affiliation
       affiliations.try(:first)
     end

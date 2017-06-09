@@ -49,11 +49,11 @@ module StashDatacite
     # TODO: EMBARGO: do we care about published vs. embargoed in this report?
     # this is a report of related identifiers in tsv
     def report
-      @resources = StashEngine::Resource.joins(:related_identifiers).joins(:current_resource_state).
-          joins(:identifier).joins(:stash_version).order('stash_engine_identifiers.identifier').
-          where(stash_engine_resource_states: { resource_state:  :submitted }).distinct
+      @resources = StashEngine::Resource.joins(:related_identifiers).joins(:current_resource_state)
+                                        .joins(:identifier).joins(:stash_version).order('stash_engine_identifiers.identifier')
+                                        .where(stash_engine_resource_states: { resource_state: :submitted }).distinct
       respond_to do |format|
-        format.tsv { }
+        format.tsv {}
       end
     end
 

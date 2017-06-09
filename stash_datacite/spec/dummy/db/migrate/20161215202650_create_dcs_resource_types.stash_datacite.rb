@@ -12,4 +12,3 @@ class CreateDcsResourceTypes < ActiveRecord::Migration
     end
   end
 end
-

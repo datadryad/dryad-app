@@ -110,6 +110,56 @@ module StashDatacite
         @review = Review.new(resource)
         expect(review.no_geolocation_data).to eq(true)
       end
+
+      # TODO: figure out why
+      it 'returns an unsaved embargo for resources with no embargo' do
+        embargo = review.embargo
+        expect(embargo).not_to be_nil
+        expect(embargo.resource_id).to be_nil
+        expect(embargo.persisted?).to eq(false)
+      end
+
+      it 'returns the resource embargo, if present' do
+        embargo = StashEngine::Embargo.create(resource_id: resource.id, end_date: Date.today)
+        resource.reload
+        expect(review.embargo).to eq(embargo)
+      end
+
+      it 'returns a saved, resource-linked share for resources with no share' do
+        share = review.share
+        expect(share).not_to be_nil
+        expect(share.resource_id).to eq(resource.id)
+        expect(share.persisted?).to eq(true)
+      end
+
+      it 'returns the resource share, if present' do
+        expect(resource.share).to be_nil # just to be sure
+        share = StashEngine::Share.create(resource_id: resource.id)
+        resource.reload
+        expect(review.share).to eq(share)
+      end
+
+      describe :pdf_filename do
+        it 'includes author name and title' do
+          pdf_filename = review.pdf_filename
+          expect(pdf_filename).to include('Chen')
+          expect(pdf_filename).to include('Zebrafish')
+        end
+
+        it 'includes publication year' do
+          expect(review.pdf_filename).to include('2016')
+        end
+
+        it 'does not actually end in PDF' do # TODO: why not?
+          expect(review.pdf_filename).not_to include('.pdf')
+        end
+
+        it 'adds "et al" for multi-author datasets' do
+          StashEngine::Author.create(resource_id: resource.id, author_first_name: 'Elvis', author_last_name: 'Presley')
+          resource.reload
+          expect(review.pdf_filename).to include('Chen_et_al')
+        end
+      end
     end
   end
 end

@@ -15,24 +15,24 @@ module StashDatacite
           SQL
         }
 
-        #this is to simulate the bad old structure where a user can only have one affiliation
+        # this is to simulate the bad old structure where a user can only have one affiliation
         def affiliation_id=(affil_id)
           affiliations.clear
           self.affiliation_ids = affil_id
         end
 
-        #this is to simulate the bad old structure where a user can only have one affiliation
+        # this is to simulate the bad old structure where a user can only have one affiliation
         def affiliation_id
           affiliation_ids.try(:first)
         end
 
-        #this is to simulate the bad old structure where a user can only have one affiliation
+        # this is to simulate the bad old structure where a user can only have one affiliation
         def affiliation=(affil)
           affiliations.clear
           affiliations << affil
         end
 
-        #this is to simulate the bad old structure where a user can only have one affiliation
+        # this is to simulate the bad old structure where a user can only have one affiliation
         def affiliation
           affiliations.try(:first)
         end

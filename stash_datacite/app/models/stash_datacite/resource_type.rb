@@ -11,7 +11,7 @@ module StashDatacite
     # odd ones out here are Spreadsheet, Video, Multiple Types and are only for UI display
 
     ResourceTypesGeneralLimited = { Spreadsheet: 'dataset', Image: 'image', Sound: 'sound', Video: 'audiovisual',
-                             Text: 'text', Software: 'software', "Multiple Types": 'collection', Other: 'other' }.freeze
+                                    Text: 'text', Software: 'software', "Multiple Types": 'collection', Other: 'other' }.freeze
 
     enum resource_type_general: ResourceTypeGeneralEnum
 

@@ -14,7 +14,7 @@ module StashDatacite
                               .where('dcs_geo_locations.place_id IS NULL AND dcs_geo_locations.point_id IS NULL')
                           }
 
-    #returns a bounding box string for use with Javascript
+    # returns a bounding box string for use with Javascript
     def bounding_box_str
       return nil unless sw_longitude && sw_latitude && ne_longitude && ne_latitude
       "#{sw_longitude} #{sw_latitude} #{ne_longitude} #{ne_latitude}"

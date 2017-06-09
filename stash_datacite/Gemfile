@@ -3,8 +3,8 @@ source 'https://rubygems.org'
 
 gemspec
 
-gem 'byebug', group: [:development, :test]
-gem 'parallel_tests', group: [:development, :test]
+gem 'byebug', group: %i[development test]
+gem 'parallel_tests', group: %i[development test]
 
 path '..' do
   gem 'stash-sword'

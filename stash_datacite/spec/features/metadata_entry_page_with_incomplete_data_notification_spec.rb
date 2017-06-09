@@ -1,13 +1,12 @@
 require 'rails_helper'
 
-feature "User lands on metadata entry page and navigates through it" do
-
+feature 'User lands on metadata entry page and navigates through it' do
   background do
-    @tenant = ::StashEngine::Tenant.find(tenant_id = "dataone")
+    @tenant = ::StashEngine::Tenant.find(tenant_id = 'dataone')
     @user = ::StashEngine::User.create(first_name: 'test', last_name: 'user', email: 'testuser.ucop@gmail.com', tenant_id: @tenant.tenant_id)
   end
 
-  it "Logged in user fills metadata entry page", js: true do
+  it 'Logged in user fills metadata entry page', js: true do
     visit "http://#{@tenant.full_domain}/stash/auth/developer"
 
     within('form') do
@@ -19,10 +18,9 @@ feature "User lands on metadata entry page and navigates through it" do
 
     click_button 'Start New Dataset'
 
-
     expect(page).to have_content 'Describe Your Datasets'
 
-    #Data Type
+    # Data Type
     select 'Image', from: 'Type of Data'
 
     # #Title
@@ -33,16 +31,16 @@ feature "User lands on metadata entry page and navigates through it" do
     fill_in 'Last Name', with: 'User'
     click_link 'Add Author'
 
-    #Abstract
-    fill_in 'Abstract', with: "Lorem ipsum dolor sit amet, consectetur"\
-    "adipiscing elit. Maecenas posuere quis ligula eu luctus."\
-    "Donec laoreet sit amet lacus ut efficitur. Donec mauris erat,"\
-    "aliquet eu finibus id, lobortis at ligula. Donec iaculis orci nisl,"\
-    "quis vulputate orci efficitur nec. Proin imperdiet in lorem eget sodales."\
-    "Etiam blandit eget quam nec tristique. In hac habitasse platea dictumst."\
-    "Integer id nunc in purus sagittis dapibus sed ac augue. Aenean eu lobortis turpis."\
+    # Abstract
+    fill_in 'Abstract', with: 'Lorem ipsum dolor sit amet, consectetur'\
+    'adipiscing elit. Maecenas posuere quis ligula eu luctus.'\
+    'Donec laoreet sit amet lacus ut efficitur. Donec mauris erat,'\
+    'aliquet eu finibus id, lobortis at ligula. Donec iaculis orci nisl,'\
+    'quis vulputate orci efficitur nec. Proin imperdiet in lorem eget sodales.'\
+    'Etiam blandit eget quam nec tristique. In hac habitasse platea dictumst.'\
+    'Integer id nunc in purus sagittis dapibus sed ac augue. Aenean eu lobortis turpis.'\
 
-    find('summary', text: "Data Description (optional)").click
+    find('summary', text: 'Data Description (optional)').click
 
     # #Keywords
     fill_in 'Keywords', with: 'testing all, possible options'

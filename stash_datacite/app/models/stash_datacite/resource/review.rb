@@ -79,20 +79,22 @@ module StashDatacite
         geolocation_points.empty? && geolocation_places.empty? && geolocation_boxes.empty? ? true : false
       end
 
+      # TODO: is this actually used? it doesn't look like it
       def embargo
-        if @resource.embargo.present?
-          @embargo = @resource.embargo
-        else
-          @embargo = StashEngine::Embargo.new
-        end
+        @embargo = if @resource.embargo.present?
+                     @resource.embargo
+                   else
+                     # TODO: and this looks especially fishy
+                     StashEngine::Embargo.new
+                   end
       end
 
       def share
-        if @resource.share.present?
-          @share = @resource.share
-        else
-          @share = StashEngine::Share.create(resource_id: @resource.id)
-        end
+        @share = if @resource.share.present?
+                   @resource.share
+                 else
+                   StashEngine::Share.create(resource_id: @resource.id)
+                 end
       end
 
       def pdf_filename
@@ -100,11 +102,11 @@ module StashDatacite
         # where “surname” is the surname of the first author, “date” is the publication year, and
         # “first_five_title_words” are the first five whitespace-separated words of the dataset title.
         author = ''
-        if authors.length > 1
-          author = "#{authors.first.author_last_name}_et_al"
-        else
-          author = "#{authors.try(:first).try(:author_last_name)}"
-        end
+        author = if authors.length > 1
+                   "#{authors.first.author_last_name}_et_al"
+                 else
+                   authors.try(:first).try(:author_last_name).to_s
+                 end
         pub_year = @resource.try(:publication_years).try(:first).try(:publication_year) || ''
 
         shorter_title = title_str.split(' ')[0..4].join('_')

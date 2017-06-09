@@ -8,13 +8,13 @@ module StashDatacite
     DateTypes = Datacite::Mapping::DateType.map(&:value)
 
     DateTypesEnum = DateTypes.map { |i| [i.downcase.to_sym, i.downcase] }.to_h
-                             .select { |k, _v| k != :valid }.merge(valid_date: 'valid')
+                             .reject { |k, _v| k == :valid }.merge(valid_date: 'valid')
     DateTypesStrToFull = DateTypes.map { |i| [i.downcase, i] }.to_h
 
     enum date_type: DateTypesEnum
 
     # with enum the types are automatically scopes such as available
-    #scope :available, -> { where(date_type: 'available')}
+    # scope :available, -> { where(date_type: 'available')}
 
     # these are hacks around rails method problems.
     def date_type_friendly=(type)
@@ -24,7 +24,7 @@ module StashDatacite
 
     def date_type_friendly
       return nil if date_type.blank?
-      return 'Valid' if date_type == 'valid_date' #exception for bad method names
+      return 'Valid' if date_type == 'valid_date' # exception for bad method names
       DateTypesStrToFull[date_type]
     end
 

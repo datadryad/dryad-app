@@ -10,4 +10,3 @@ class CreateDcsDates < ActiveRecord::Migration
     end
   end
 end
-

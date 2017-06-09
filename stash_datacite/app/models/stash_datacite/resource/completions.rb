@@ -51,7 +51,7 @@ module StashDatacite
         num_authors = @resource.authors.count
         return false if num_authors < 1
         author = @resource.authors.order(created_at: :asc).first
-        return author.author_email.present?  ? true : false
+        author.author_email.present? ? true : false
       end
 
       def author_affiliation
