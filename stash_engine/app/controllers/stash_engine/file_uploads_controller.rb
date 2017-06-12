@@ -6,28 +6,38 @@ module StashEngine
     before_action :require_login
     before_action :set_file_info, only: [:destroy, :remove, :restore, :destroy_error, :destroy_manifest]
     #TODO check that the following before action really should be ignored on these
-    before_action :require_file_owner, except: [:create, :destroy, :remove, :restore, :revert, :validate_urls, :destroy_error, :remove_unuploaded]
+    before_action :require_file_owner, except: [:create, :destroy, :remove, :restore, :revert, :validate_urls, :destroy_error, :remove_unuploaded, :index]
     before_action :set_create_prerequisites, only: [:create]
 
-    # this is a newly uploaded file and we're deleting it
-    def destroy
+    # show the list of files for resource
+    def index
       respond_to do |format|
         format.js do
-          fn = @file.upload_file_name
-          res_id = @file.resource_id
-          temp_file_path = @file.temp_file_path
-          if temp_file_path.present?
-            File.delete(@file.temp_file_path)
-          end
-          @file_id = @file.id
-          @file.destroy
-          @extra_files = FileUpload.where(resource_id: res_id, upload_file_name: fn)
-          @extra_files.each do |my_f|
-            my_f.update_attribute(:file_state, 'deleted') if my_f.file_state == 'copied'
-          end
+          @resource = Resource.find(params[:resource_id])
         end
       end
     end
+
+    # this is a newly uploaded file and we're deleting it, for files
+    #def destroy
+    #  respond_to do |format|
+    #    format.js do
+    #      fn = @file.upload_file_name
+    #      @resource = @file.resource
+    #      temp_file_path = @file.temp_file_path
+    #      if temp_file_path.present?
+    #        File.delete(@file.temp_file_path)
+    #      end
+    #      @file_id = @file.id
+    #      @file.destroy
+    #      @extra_files = FileUpload.where(resource_id: @resource.id, upload_file_name: fn)
+    #      # files that had a file overriding them, put the original copied file back
+    #      @extra_files.each do |my_f|
+    #        my_f.update_attribute(:file_state, 'deleted') if my_f.file_state == 'copied'
+    #      end
+    #      end
+    #end
+    #end
 
     # this is a validated manifest URI that doesn't pass validation and we're deleting it from the DB
     def destroy_error
@@ -57,37 +67,37 @@ module StashEngine
     end
 
     # this is a file from a previous version and we're marking it for deletion
-    def remove
-      respond_to do |format|
-        format.js do
-          @file.update_attribute(:file_state, 'deleted')
-          @file.reload
-        end
-      end
-    end
+    #def remove
+    #  respond_to do |format|
+    #    format.js do
+    #      @file.update_attribute(:file_state, 'deleted')
+    #      @file.reload
+    #    end
+    #  end
+    #end
 
     # This is a file that hasn't been uploaded, but we might need to restore a previous version that was in the db.
     # note this is taking a resource_id instead of a file_id since there isn't one yet.
-    def remove_unuploaded
-      respond_to do |format|
-        format.js do
-          @resource = Resource.find(params[:id])
-          @fn = params[:filename]
-          @row_id = params[:row_id]
-          @dup_files = @resource.file_uploads.where(upload_file_name: @fn)
-        end
-      end
-    end
+    #def remove_unuploaded
+    #  respond_to do |format|
+    #    format.js do
+    #      @resource = Resource.find(params[:id])
+    #      @fn = params[:filename]
+    #      @row_id = params[:row_id]
+    #      @dup_files = @resource.file_uploads.where(upload_file_name: @fn)
+    #    end
+    #  end
+    #end
 
     # this is a file from a previous version marked as deleted and we're unmarking it for deletion
-    def restore
-      respond_to do |format|
-        format.js do
-          @file.update_attribute(:file_state, 'copied')
-          @file.reload
-        end
-      end
-    end
+    #def restore
+    #  respond_to do |format|
+    #    format.js do
+    #      @file.update_attribute(:file_state, 'copied')
+    #      @file.reload
+    #    end
+    #  end
+    #end
 
     # a file being uploaded (chunk by chunk)
     def create
@@ -101,36 +111,40 @@ module StashEngine
             return
           end
 
-          new_fn = File.join(@upload_dir, @file_upload.original_filename)
+          @resource = Resource.find(params[:resource_id])
 
-          correct_existing_for_overwrite(params[:resource_id], @file_upload)
+          unique_fn = make_unique(@file_upload.original_filename)
 
-          FileUtils.mv(@accum_file, new_fn) # moves the file from the original unique_id fn to the final one
-          create_db_file(new_fn) # no files exist for this so new "created" file
+          new_path_and_fn = File.join(@upload_dir, unique_fn)
+          #correct_existing_for_overwrite(params[:resource_id], @file_upload)
+
+          FileUtils.mv(@accum_file, new_path_and_fn) # moves the file from the original unique_id fn to the final one
+          create_db_file(path: new_path_and_fn, filename: unique_fn) # no files exist for this so new "created" file and sets some variables like @my_file
+
         end
       end
     end
 
-    def revert
-      respond_to do |format|
-        format.js do
-          # in here we need to remove the files from filesystem and database except the 'copied' state files
-          @resource = Resource.where(id: params[:resource_id])
-          raise ActionController::RoutingError, 'Not Found' if @resource.empty? ||
-                                                               @resource.first.user_id != session[:user_id]
-          @resource = @resource.first
-          @resource.file_uploads.each do |fu|
-            if fu.file_state == 'created'
-              File.delete(fu.temp_file_path) if File.exist?(fu.temp_file_path)
-              fu.destroy
-            else
-              fu.update_attribute(:file_state, 'copied')
-            end
-          end
-          @uploads = @resource.latest_file_states
-        end
-      end
-    end
+    # def revert
+    #   respond_to do |format|
+    #     format.js do
+    #       # in here we need to remove the files from filesystem and database except the 'copied' state files
+    #       @resource = Resource.where(id: params[:resource_id])
+    #       raise ActionController::RoutingError, 'Not Found' if @resource.empty? ||
+    #                                                            @resource.first.user_id != session[:user_id]
+    #       @resource = @resource.first
+    #       @resource.file_uploads.each do |fu|
+    #         if fu.file_state == 'created'
+    #           File.delete(fu.temp_file_path) if File.exist?(fu.temp_file_path)
+    #           fu.destroy
+    #         else
+    #           fu.update_attribute(:file_state, 'copied')
+    #         end
+    #       end
+    #       @uploads = @resource.latest_file_states
+    #     end
+    #   end
+    # end
 
     ##manifest workflow
     def validate_urls
@@ -197,12 +211,12 @@ module StashEngine
     end
 
     # for standard uploads, create standard file in DB before moving on to chunks.
-    def create_db_file(new_fn)
+    def create_db_file(path:, filename:)
       @my_file = FileUpload.new(
-        upload_file_name: @file_upload.original_filename,
-        temp_file_path: new_fn,
+        upload_file_name: filename,
+        temp_file_path: path,
         upload_content_type: @file_upload.content_type,
-        upload_file_size: File.size(new_fn),
+        upload_file_size: File.size(path),
         resource_id: params[:resource_id],
         upload_updated_at: Time.new.utc,
         file_state: 'created'

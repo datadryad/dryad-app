@@ -1,21 +1,2 @@
-// manifest workflow
-// determine visiblity of links
-var show10 = $('#show_10_files').is(":visible");
-var showAll = $('#show_all_files').is(":visible");
-
-// they're down to no modified files, so reset both the file tables for switching back and forth between the two
-<% if @resource.upload_type == :unknown %>
-  resetFileTablesToDbState();
-  updateButtonLinkStates();
-<% end %>
-
-// redraw table
-$('#validated_files').html("<%= escape_javascript(
-          render partial: 'stash_engine/file_uploads/validated_files', locals: {resource: @resource}) %>");
-
-// reset method lockout & add events to few/many rows again
-setUploadMethodLockout('<%= @resource.upload_type %>');
-addEventFewManyRows();
-
 // set link states again to what they were for few/many files
-tableStateRestorer(show10, showAll);
+<%= render partial: 'stash_engine/file_uploads/redraw_files_table.js', locals: { resource: @resource} %>
