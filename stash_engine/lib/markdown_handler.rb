@@ -14,7 +14,7 @@ module MarkdownHandler
       tables: true,
       highlight: true,
       footnotes: true,
-      link_attributes: {rel: 'nofollow', target: "_blank"}
+      link_attributes: { rel: 'nofollow', target: '_blank' }
     }
 
     compiled_source = erb.call(template)

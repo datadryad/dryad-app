@@ -1,22 +1,21 @@
 module StashDatacite
   module ResourcesHelper
-    def citation(authors, title, resource_type, version, identifier, publisher, publication_years)
-      publication_year = publication_years.try(:first).try(:publication_year) || Time.now.year
-      title = title.try(:title)
-      publisher = publisher.try(:publisher)
-      resource_type_general = resource_type.try(:resource_type_general_friendly)
-      ["#{author_citation_format(authors)} (#{publication_year})", h(title),
-       (version == 'v1' ? nil : h(version)), h(publisher), h(resource_type_general),
-       target_url(identifier)].reject(&:blank?).join(', ').html_safe
+    def citation(authors, title, resource_type, version, identifier, publisher, publication_years) # rubocop:disable Metrics/ParameterLists
+      [
+        "#{author_citation_format(authors)} (#{pub_year_from(publication_years)})",
+        escape_title(title),
+        escape_version(version),
+        escape_publisher(publisher),
+        escape_resource_type(resource_type),
+        doi_link(identifier)
+      ].reject(&:blank?).join(', ').html_safe
     end
 
-    def target_url(identifier)
-      if identifier
-        "#{link_to("https://doi.org/#{identifier}", "https://doi.org/#{identifier}", target: '_blank')}"\
-        '(opens in a new window)'
-      else
-        'https://doi.org/placeholderDOI'
-      end
+    def doi_link(identifier)
+      return 'https://doi.org/placeholderDOI' unless identifeir
+      target_url = "https://doi.org/#{identifier}"
+      doi_link = link_to(target_url, target_url, target: '_blank')
+      "#{doi_link} (opens in a new window)"
     end
 
     def author_citation_format(authors)
@@ -26,5 +25,28 @@ module StashDatacite
       return "#{str_author.first} et al." if str_author.length > 4
       str_author.join('; ')
     end
+
+    private
+
+    def pub_year_from(publication_years)
+      publication_years.try(:first).try(:publication_year) || Time.now.year
+    end
+
+    def escape_title(title)
+      html_escape(title.try(:title))
+    end
+
+    def escape_version(version)
+      (version == 'v1' ? nil : html_escape(version))
+    end
+
+    def escape_publisher(publisher)
+      html_escape(publisher.try(:publisher))
+    end
+
+    def escape_resource_type(resource_type)
+      html_escape(resource_type.try(:resource_type_general_friendly))
+    end
+
   end
 end

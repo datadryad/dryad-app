@@ -14,12 +14,12 @@ module StashEngine
       render('not_available') && return if @resource.blank?
       @resource_id = @resource.id
       @resource.increment_views
-      setup_show_variables(@resource_id) #sets up the specific metadata view variables from <meta_engine>::LandingMixin
+      setup_show_variables(@resource_id) # sets up the specific metadata view variables from <meta_engine>::LandingMixin
       @page_title = @review.title.title
     end
 
     def data_paper
-      #request.format = 'pdf'
+      # request.format = 'pdf'
       render('not_available') && return if params[:id].blank?
       @type, @id = params[:id].split(':', 2)
 
@@ -41,25 +41,27 @@ module StashEngine
       # https://github.com/mileszs/wicked_pdf
       my_debug = params[:debug] ? true : false
       respond_to do |format|
-        format.any(:html, :pdf){
+        format.any(:html, :pdf) do
           render pdf: @review.pdf_filename,
                  page_size: 'Letter',
                  title: @review.title_str,
                  javascript_delay: 3000,
-                 #'use_xserver' => true,
+                 # 'use_xserver' => true,
                  margin: { top: 20, bottom: 20, left: 20, right: 20 },
                  header: {
-                    left: pdf_meta.top_left,
-                    right: pdf_meta.top_right,
-                    font_size: 9,
-                    spacing: 5},
+                   left: pdf_meta.top_left,
+                   right: pdf_meta.top_right,
+                   font_size: 9,
+                   spacing: 5
+                 },
                  footer: {
-                     left: pdf_meta.bottom_left,
-                     right: pdf_meta.bottom_right,
-                     font_size: 9,
-                     spacing: 5},
+                   left: pdf_meta.bottom_left,
+                   right: pdf_meta.bottom_right,
+                   font_size: 9,
+                   spacing: 5
+                 },
                  show_as_html: my_debug
-        }
+        end
       end
     end
 
@@ -72,7 +74,7 @@ module StashEngine
       identifier = identifier_from(params)
       render(nothing: true, status: 404) && return unless identifier
 
-      repo = StashEngine::repository
+      repo = StashEngine.repository
       begin
         repo.harvested(identifier: identifier, record_identifier: params[:record_identifier])
         # success but no content, see RFC 5789 sec. 2.1

@@ -7,26 +7,27 @@ module StashEngine
     before_action :resource_and_fn
 
     NAMES_AND_METHODS = {
-        'stash-wrapper'           =>  :stash_wrapper, #xml
-        'mrt-datacite'            =>  :datacite, #xml
-        'mrt-oaidc'               =>  :oaidc, #xml
-        'mrt-dataone-manifest'    =>  :dataone, #txt
-        'mrt-delete'              =>  :mrt_delete, #txt
-        'mrt-embargo'             =>  :mrt_embargo #txt
-    }
+      'stash-wrapper' => :stash_wrapper, # xml
+      'mrt-datacite'            =>  :datacite, # xml
+      'mrt-oaidc'               =>  :oaidc, # xml
+      'mrt-dataone-manifest'    =>  :dataone, # txt
+      'mrt-delete'              =>  :mrt_delete, # txt
+      'mrt-embargo'             =>  :mrt_embargo # txt
+    }.freeze
 
     def show
       unless NAMES_AND_METHODS.keys.include?(@fn)
-        render plain: 'not found', :status => 404 and return false
+        render(plain: 'not found', status: 404) && (return false)
       end
 
       respond_to do |format|
-        format.xml { render xml: self.send(NAMES_AND_METHODS[@fn]) }
-        format.text { render plain: self.send(NAMES_AND_METHODS[@fn]) }
+        format.xml { render xml: send(NAMES_AND_METHODS[@fn]) }
+        format.text { render plain: send(NAMES_AND_METHODS[@fn]) }
       end
     end
 
     private
+
     def resource_and_fn
       @resource = Resource.find(params[:id])
       @fn = params[:filename]
@@ -35,7 +36,7 @@ module StashEngine
     def stash_wrapper
       sp = Stash::Merritt::SubmissionPackage.new(resource: @resource, packaging: nil)
       b = Stash::Merritt::Builders::StashWrapperBuilder.new(dcs_resource: sp.dc4_resource,
-                  version_number: sp.version_number, uploads: sp.uploads, embargo_end_date: sp.embargo_end_date)
+                                                            version_number: sp.version_number, uploads: sp.uploads, embargo_end_date: sp.embargo_end_date)
       b.contents
     end
 
@@ -58,7 +59,7 @@ module StashEngine
 
     def mrt_delete
       b = Stash::Merritt::Builders::MerrittDeleteBuilder.new(resource_id: @resource.id)
-      "#{b.contents}"
+      b.contents.to_s
     end
 
     def mrt_embargo

@@ -14,31 +14,34 @@ module StashEngine
       if @resource.under_embargo?
         # if you're the owner do streaming download
         if current_user && current_user.id == @resource.user_id
-          setup_async_download_variable #which may redirect to different page in certain circumstances
+          setup_async_download_variable # which may redirect to different page in certain circumstances
           if @async_download
             redirect_to landing_show_path(
-                      id: "#{@resource.identifier.identifier_type.downcase}:#{@resource.identifier.identifier}",
-                      big: 'showme')
+              id: "#{@resource.identifier.identifier_type.downcase}:#{@resource.identifier.identifier}",
+              big: 'showme'
+            )
           else
             stream_response(@resource.merritt_producer_download_uri,
-              @resource.tenant.repository.username,
-              @resource.tenant.repository.password)
+                            @resource.tenant.repository.username,
+                            @resource.tenant.repository.password)
           end
         else # no user is logged in for this embargoed item
-          flash[:alert] = "This dataset is embargoed and may not be downloaded."
-          redirect_to landing_show_path(
-                          id: "#{@resource.identifier.identifier_type.downcase}:#{@resource.identifier.identifier}") and return
+          flash[:alert] = 'This dataset is embargoed and may not be downloaded.'
+          redirect_to(landing_show_path(
+                        id: "#{@resource.identifier.identifier_type.downcase}:#{@resource.identifier.identifier}"
+          )) && return
         end
       else
         # not under embargo and public
         # redirect to the producer file download link
-        setup_async_download_variable #which may redirect to different page in certain circumstances
+        setup_async_download_variable # which may redirect to different page in certain circumstances
         if @async_download
           redirect_to landing_show_path(
-                          id: "#{@resource.identifier.identifier_type.downcase}:#{@resource.identifier.identifier}",
-                          big: 'showme')
+            id: "#{@resource.identifier.identifier_type.downcase}:#{@resource.identifier.identifier}",
+            big: 'showme'
+          )
         else
-          redirect_to @resource.merritt_producer_download_uri and return
+          redirect_to(@resource.merritt_producer_download_uri) && return
         end
       end
     end
@@ -49,8 +52,8 @@ module StashEngine
       session[:saved_email] = @email
       respond_to do |format|
         format.js do
-          if !@resource.under_embargo? || ( current_user && current_user.id == @resource.user_id) ||
-              ( params[:secret_id] == @resource.share.secret_id )
+          if !@resource.under_embargo? || (current_user && current_user.id == @resource.user_id) ||
+              (params[:secret_id] == @resource.share.secret_id)
             api_async_download(resource: @resource, email: @email)
             @resource.increment_downloads
             @message = "Dash will send an email with a download link to #{@email} when your requested dataset is ready."
@@ -68,13 +71,14 @@ module StashEngine
 
       @resource = @shares.first.resource
       if @resource.under_embargo?
-        setup_async_download_variable #which may redirect to different page in certain circumstances
+        setup_async_download_variable # which may redirect to different page in certain circumstances
 
         if @async_download
-          #redirect to the form for filling in their email address to get an email
+          # redirect to the form for filling in their email address to get an email
           redirect_to landing_show_path(
-                          id: "#{@resource.identifier.identifier_type.downcase}:#{@resource.identifier.identifier}",
-                          big: 'showme', secret_id: params[:id])
+            id: "#{@resource.identifier.identifier_type.downcase}:#{@resource.identifier.identifier}",
+            big: 'showme', secret_id: params[:id]
+          )
         else
           @resource.increment_downloads
           stream_response(@resource.merritt_producer_download_uri,
@@ -83,8 +87,9 @@ module StashEngine
         end
       else
         redirect_to landing_show_path(
-          id: "#{@resource.identifier.identifier_type.downcase}:#{@resource.identifier.identifier}"),
-          notice: 'The dataset is now published, please use the download button on the right side.'
+          id: "#{@resource.identifier.identifier_type.downcase}:#{@resource.identifier.identifier}"
+        ),
+                    notice: 'The dataset is now published, please use the download button on the right side.'
       end
     end
 
@@ -99,11 +104,12 @@ module StashEngine
       rescue StashEngine::MerrittResponseError => ex
         # do something with this exception ex and redirect if it's a recent submission
         if @resource.updated_at > Time.new - 2.hours
-          #recently updated, so display a "hold your horses" message
-          flash[:notice] = "This dataset was recently submitted and downloads are not yet available. " +
-              "Downloads generally become available in less than 2 hours."
+          # recently updated, so display a "hold your horses" message
+          flash[:notice] = 'This dataset was recently submitted and downloads are not yet available. ' \
+              'Downloads generally become available in less than 2 hours.'
           redirect_to landing_show_path(
-                          id: "#{@resource.identifier.identifier_type.downcase}:#{@resource.identifier.identifier}")
+            id: "#{@resource.identifier.identifier_type.downcase}:#{@resource.identifier.identifier}"
+          )
         else
           raise ex
         end
@@ -130,7 +136,7 @@ module StashEngine
                'version'            =>  resource.stash_version.merritt_version,
                'user_agent_email'   =>  email,
                'uDownload'          =>  'true',
-               'commit'             =>  'Submit'}
+               'commit'             =>  'Submit' }
 
       # from actual merritt form these are the items being submitted:
       # utf8=%E2%9C%93
@@ -144,7 +150,7 @@ module StashEngine
       res = clnt.post(url, body, follow_redirect: true)
       # this is sketchy validation, but their form would redirect to that location if it's successful
       unless res.http_header['Location'] && res.http_header['Location'].first.include?("#{domain}/m/#{local_id}")
-        raise "Invalid response from Merritt"
+        raise 'Invalid response from Merritt'
       end
     end
 
@@ -157,9 +163,9 @@ module StashEngine
       res = http_client_w_basic_auth(username: username, password: password).get(url, follow_redirect: true)
 
       if res.status_code == 406
-        return false  #406 is synchronous
+        return false # 406 is synchronous
       elsif res.status_code == 200
-        return true #200 is code for asyncronous
+        return true # 200 is code for asyncronous
       else
         raise StashEngine::MerrittResponseError,
               "undefined api status code #{res.status_code} obtained while determining if #{url} was an async download from Merritt"
@@ -172,12 +178,12 @@ module StashEngine
       username = resource.tenant.repository.username
       password = resource.tenant.repository.password
       url = "#{domain}/asyncd/#{local_id}/#{resource.stash_version.merritt_version}"
-      params = { user_agent_email: email, userFriendly: true}
+      params = { user_agent_email: email, userFriendly: true }
 
       res = http_client_w_basic_auth(username: username, password: password).get(url, query: params, follow_redirect: true)
 
       unless res.status_code == 200
-        raise "There was a problem making an async download request to Merritt"
+        raise 'There was a problem making an async download request to Merritt'
       end
     end
 
@@ -186,7 +192,7 @@ module StashEngine
       clnt = HTTPClient.new
 
       # this callback allows following redirects from http to https, otherwise it will not
-      clnt.redirect_uri_callback = ->(uri, res) {
+      clnt.redirect_uri_callback = ->(_uri, res) {
         res.header['location'][0]
       }
 
@@ -212,10 +218,10 @@ module StashEngine
 
       filename = File.basename(URI.parse(url).path)
 
-      response.headers["Content-Type"] = content_type if content_type
+      response.headers['Content-Type'] = content_type if content_type
       # response.headers["Content-Disposition"] = "inline; filename=\"#{filename}.zip\""
-      response.headers["Content-Disposition"] = content_disposition || "inline; filename=\"#{filename}.zip\""
-      response.headers["Content-Length"] = content_length || ''
+      response.headers['Content-Disposition'] = content_disposition || "inline; filename=\"#{filename}.zip\""
+      response.headers['Content-Length'] = content_length || ''
       response.headers['Last-Modified'] = Time.now.httpdate
       self.response_body = Stash::Streamer.new(clnt, url)
     end

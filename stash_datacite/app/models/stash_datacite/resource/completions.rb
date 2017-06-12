@@ -116,7 +116,7 @@ module StashDatacite
         4
       end
 
-      def all_warnings
+      def all_warnings # rubocop:disable Metrics/CyclomaticComplexity
         messages = []
         messages << 'Add a dataset title' unless title
         messages << 'Add an abstract' unless abstract

@@ -22,8 +22,9 @@ module StashEngine
         my_str.gsub('.00', '') # clean up decimal points if not needed, library doesn't have many formatting options
       else
         matches = my_str.match(/^([0-9\.]+) (\D+)/)
-        number, units = matches[1].to_f, matches[2]
-        ("%0.#{decimal_points}f" % number) + " #{units}"
+        number = matches[1].to_f
+        units = matches[2]
+        format("%0.#{decimal_points}f", number) + " #{units}"
       end
     end
 

@@ -18,8 +18,8 @@ module StashEngine
       @ostruct.max_files || 1000
     end
 
-    #gets the Tenant class to respond to the keys so you can call hash like methods
-    def method_missing(m) #, *args, &block
+    # gets the Tenant class to respond to the keys so you can call hash like methods
+    def method_missing(m) # , *args, &block
       @ostruct.send(m)
     end
 
@@ -30,10 +30,10 @@ module StashEngine
     # generate login path for shibboleth & omniauth, this is unusual since we have multi-institution login, so have to
     # hack around limitations in the normal omniauth/shibboleth by directly addressing shibboleth.sso
     def shibboleth_login_path
-      #"/stash/auth/shibboleth?entityid=#{CGI.escape(authentication.entity_id)}"
+      # "/stash/auth/shibboleth?entityid=#{CGI.escape(authentication.entity_id)}"
 
       # I think the following is incorrect and we should go to the domain for each host directly
-      #"https://#{StashEngine.app.shib_sp_host}/Shibboleth.sso/Login?" \
+      # "https://#{StashEngine.app.shib_sp_host}/Shibboleth.sso/Login?" \
       #    "target=#{CGI.escape("https://#{StashEngine.app.shib_sp_host}" \
       #    "#{StashEngine.app.stash_mount}/auth/shibboleth/callback")}" \
       #    "&entityID=#{CGI.escape(authentication.entity_id)}"
@@ -45,7 +45,7 @@ module StashEngine
     end
 
     def google_login_path
-      #"#{StashEngine.app.stash_mount}/auth/google_oauth2"
+      # "#{StashEngine.app.stash_mount}/auth/google_oauth2"
       "https://#{full_domain}/#{StashEngine.app.stash_mount}/auth/google_oauth2"
     end
 

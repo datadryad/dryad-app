@@ -5,7 +5,7 @@ module StashEngine
 
     def self.included(c)
       c.helper_method :current_tenant, :current_tenant_simple, :current_user, :metadata_engine, :metadata_url_helpers,
-                      :metadata_render_path, :stash_url_helpers, :discovery_url_helpers, :landing_url,  :field_suffix,
+                      :metadata_render_path, :stash_url_helpers, :discovery_url_helpers, :landing_url, :field_suffix,
                       :logo_path, :contact_us_url, :display_br, :display_id, :display_id_plain,
                       :formatted_date, :can_display_embargoed?, :file_content_dump, :display_author_orcid,
                       :english_list, :shorten_linked_url
@@ -18,7 +18,7 @@ module StashEngine
     def formatted_date(t)
       return 'Not available' if t.blank?
       t = t.to_time if t.class == String
-      t.strftime("%B %e, %Y")
+      t.strftime('%B %e, %Y')
     end
 
     # generate a render path in the metadata engine
@@ -134,7 +134,7 @@ module StashEngine
     def display_id(type:, my_id:)
       result = StashEngine::LinkGenerator.create_link(type: type, value: my_id)
       if result.class == Array
-        view_context.link_to(result.first, result[1], {target: '_blank'})
+        view_context.link_to(result.first, result[1], target: '_blank')
       else
         "#{type}: #{result}"
       end
@@ -149,24 +149,24 @@ module StashEngine
       end
     end
 
-    #function to take a string and make it into html_safe string as paragraphs
-    #expanded to also make html links, but really we should be doing this a different
-    #way in the long term by having people enter html formatting and then displaying
-    #what they actually want instead of guessing at things they typed and trying to
-    #display magic html tags based on their textual, non-html.  We could strip it out if something hates html.
+    # function to take a string and make it into html_safe string as paragraphs
+    # expanded to also make html links, but really we should be doing this a different
+    # way in the long term by having people enter html formatting and then displaying
+    # what they actually want instead of guessing at things they typed and trying to
+    # display magic html tags based on their textual, non-html.  We could strip it out if something hates html.
     def display_br(str)
       return nil if str.nil?
 
       # add the awful paragraph junk for BRs and encode since we need to encode manually if we're saying html is safe
       str_arr = str.split(/\< *br *[\/]{0,1} *\>/).reject(&:blank?)
-      my_str = str_arr.map{|i| ERB::Util.html_escape(i) }.join(' </p><p> ')
+      my_str = str_arr.map { |i| ERB::Util.html_escape(i) }.join(' </p><p> ')
 
       # kludge in some linking of random URLs they pooped into their text.
       my_str.gsub!(/https?:\/\/\S+/) do |m|
         full_url = Nokogiri::HTML.parse(m).text
         end_punctuation = full_url.match(/[\(\)\.\?\!]+$/).to_s
-        full_url = full_url[0..-end_punctuation.length-1]
-        "<a href=\"#{full_url}\" title=\"#{full_url}\">" +
+        full_url = full_url[0..-end_punctuation.length - 1]
+        "<a href=\"#{full_url}\" title=\"#{full_url}\">" \
             "#{ActionController::Base.helpers.truncate(m)}</a>#{ERB::Util.html_escape(end_punctuation)}"
       end
 
@@ -188,21 +188,21 @@ module StashEngine
     end
 
     def display_author_orcid(author)
-      if StashEngine.app.site == "https://sandbox.orcid.org/"
+      if StashEngine.app.site == 'https://sandbox.orcid.org/'
         view_context.link_to("https://sandbox.orcid.org/#{author.author_orcid}",
-                "https://sandbox.orcid.org/#{author.author_orcid}",
-                target: '_blank', class: 'c-orcid__id').html_safe
+                             "https://sandbox.orcid.org/#{author.author_orcid}",
+                             target: '_blank', class: 'c-orcid__id').html_safe
       else
         view_context.link_to("https://orcid.org/#{author.author_orcid}",
-                "https://orcid.org/#{author.author_orcid}",
-                target: '_blank', class: 'c-orcid__id').html_safe
+                             "https://orcid.org/#{author.author_orcid}",
+                             target: '_blank', class: 'c-orcid__id').html_safe
       end
     end
 
     # an english list of items with the conjunction between the final pair, if needed.  Conjunction would be 'and' or
     # 'or' usually
     def english_list(array:, conjunction:)
-      return '' if array.length < 1
+      return '' if array.empty?
       return array.first if array.length == 1
       "#{array[0..-2].join(', ')} #{conjunction} #{array.last}"
     end

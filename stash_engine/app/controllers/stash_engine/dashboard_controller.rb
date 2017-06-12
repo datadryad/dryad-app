@@ -18,18 +18,15 @@ module StashEngine
     def show
       unless current_user.resources.present?
         redirect_to stash_url_helpers.dashboard_getting_started_path
-        return false
+        false
       end
     end
 
-    def metadata_basics
-    end
+    def metadata_basics; end
 
-    def preparing_to_submit
-    end
+    def preparing_to_submit; end
 
-    def upload_basics
-    end
+    def upload_basics; end
 
     # an AJAX wait to allow in-progress items to complete before continuing.
     def ajax_wait

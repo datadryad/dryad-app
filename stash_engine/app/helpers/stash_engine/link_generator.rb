@@ -1,12 +1,12 @@
 module StashEngine
   module LinkGenerator
 
-    def self.create_link(type:, value: )
+    def self.create_link(type:, value:)
       # get [link_text, href] back from the id so we can create normal <a href link>
-      self.send(type.downcase, value)
+      send(type.downcase, value)
     end
 
-    def self.method_missing(method_name, *arguments, &block)
+    def self.method_missing(_method_name, *arguments)
       arguments.first
     end
 
@@ -15,7 +15,7 @@ module StashEngine
       # example reference: doi:10.5061/DRYAD.VN88Q
       # example url: http://doi.org/10.5061/DRYAD.VN88Q
       item = Fixolator.new(id_value: value, target_prefix: 'doi:', resolver_prefix: 'https://doi.org/').text_and_link
-      [ item[1], item[1] ]
+      [item[1], item[1]]
     end
 
     def self.ark(value)
@@ -109,10 +109,10 @@ module StashEngine
 
       def bare_id
         if has_correct_prefix?
-          #remove the prefix and give bare id
+          # remove the prefix and give bare id
           @id_value[@target_prefix.strip.length..-1].strip
         else
-          #they must've given it as a bare id if it didn't have the prefix (and isn't a URL)
+          # they must've given it as a bare id if it didn't have the prefix (and isn't a URL)
           @id_value.strip
         end
       end

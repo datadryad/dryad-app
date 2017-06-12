@@ -1,16 +1,16 @@
-require "rails_helper"
+require 'rails_helper'
 
-describe "test controller routing", :type => :routing do
+describe 'test controller routing', type: :routing do
   routes { StashEngine::Engine.routes }
 
-  it "routes to the list of all resources" do
-    expect(:get =>  StashEngine::Engine.routes.url_helpers.resources_path).
-      to route_to(:controller => "stash_engine/resources", :action => "index")
+  it 'routes to the list of all resources' do
+    expect(get: StashEngine::Engine.routes.url_helpers.resources_path)
+      .to route_to(controller: 'stash_engine/resources', action: 'index')
   end
 
-  it "routes a named route" do
-    expect(:get =>  StashEngine::Engine.routes.url_helpers.new_resource_path).
-      to route_to(:controller => "stash_engine/resource/new", :action => "new")
+  it 'routes a named route' do
+    expect(get: StashEngine::Engine.routes.url_helpers.new_resource_path)
+      .to route_to(controller: 'stash_engine/resource/new', action: 'new')
   end
 end
 
