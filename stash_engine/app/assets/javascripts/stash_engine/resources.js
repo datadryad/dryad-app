@@ -24,14 +24,16 @@ $(function () {
           $('#upload_complete').hide();
           confirmToUpload();
 
-          // binding remove link action
+          // remove -- binding this link action
           $('#not_uploaded_file_' + data.files[0]['id'] + ' .js-remove_link' ).click( function(e){
             e.preventDefault();
             $('#not_uploaded_file_' + data.files[0]['id']).remove();
+            updateButtonLinkStates();
+            // updateWaitingSize();
             $('#upload_complete').hide();
           });
 
-          // binding upload link click event
+          // upload -- binding this link action for upload
           $('#up_button_' + data.files[0].id ).click(function (e) {
             e.preventDefault();
             var inputs = data.context.find(':input');
@@ -43,7 +45,7 @@ $(function () {
           });
 
 
-          // binding cancel link click event
+          // cancel -- binding actions for click event
           $('#cancel_' + data.files[0].id ).click(function (e) {
             e.preventDefault();
             data.abort();
@@ -57,10 +59,12 @@ $(function () {
           updateButtonLinkStates(); // for file upload method
         },
         progress: function (e, data) {
+          // this is what we do for a progress update
           progress = parseInt(data.loaded / data.total * 100, 10);
           data.context.find('.js-bar').attr("value", progress)
         },
         done: function (e, data) {
+          // this is what we do when a file is done uploading
           updateButtonLinkStates(); // for file upload method
         }
     });
@@ -80,47 +84,11 @@ $(function () {
   });
 });
 
-function generateQuickId() {
-    return Math.random().toString(36).substring(2, 15) +
-        Math.random().toString(36).substring(2, 15);
-}
-
-function formatSizeUnits(bytes) {
-    if (bytes == 1){
-        return '1 byte';
-    }else if (bytes < 1000){
-        return bytes + ' bytes';
-    }
-
-    var units = ['bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
-    for (i = 0; i < units.length; i++) {
-        if(bytes/Math.pow(10, 3*(i+1)) < 1){
-            return (bytes/Math.pow(10, 3*i)).toFixed(2) + " " + units[i];
-        }
-    }
-}
-
-/* .js-unuploaded     --    A file dropped but does not exist on server side and hasn't been uploaded yet
-   all other types are not needed on the JavaScript side because they're now handled on server with AJAX call.
-   It's a separate table and we don't need to total it all in js now.
- */
-function uploadSize(pre){
-  pre = typeof pre !== 'undefined' ? pre : '#upload_list'; // set the default jquery prefix for this table
-  nums = $(pre + ' .js-unuploaded .js-hidden_bytes').map(function(){ return parseInt(this.innerHTML); });
-  var total = 0;
-  $.each(nums, function( index, value ) {
-    total += value;
-  });
-  return total;
-}
-
 // update the waiting size in the staging list
 function updateWaitingSize(){
-  $('#size_in_upload').text('hi');
-}
-
-function filesWaitingForUpload(){
-  return ($("div[id^='not_uploaded_file_']").length > 0);
+  var mySize = uploadSize();
+  $('#size_in_upload').html('<p>' + formatSizeUnits(mySize) + ' pending upload</p>');
+  if(mySize == 0){ $('#size_in_upload').hide(); }else{ $('#size_in_upload').show(); }
 }
 
 // update the button and navigation link states based on pending upload files
@@ -149,12 +117,13 @@ function updateButtonLinkStates(){
 // updates the size and other UI state updates after changes to the file list
 function updateUiStates(){
   // lock/unlock the manifest/file upload radio buttons depending if any modified files listed
-  if($(".js-created_file,.js-deleted_file,.js-unuploaded").length > 0){
+  if($(".js-unuploaded").length > 0){
     disableUploadMethod();
   }else{
     enableUploadMethod();
     // resetFileTablesToDbState();
   }
+  updateWaitingSize();
 }
 
 function confirmToUpload(){
@@ -176,7 +145,7 @@ function confirmToUpload(){
 
 
 // **********************************************************************************
-// The items for  showing only upload method or manifest method
+// The items for showing only upload method or manifest method
 // **********************************************************************************
 function setUploadMethodLockout(resourceUploadType){
   if(resourceUploadType == 'unknown') {
@@ -270,3 +239,50 @@ function tableStateRestorer(show10, showAll){
 // **********************************************************************************
 // END The methods for the manifest workflow only
 // **********************************************************************************
+
+
+// ********************************************************************************
+// Begin Javascript for informational and utility functions for file upload
+// ********************************************************************************
+
+function generateQuickId() {
+  return Math.random().toString(36).substring(2, 15) +
+      Math.random().toString(36).substring(2, 15);
+}
+
+function formatSizeUnits(bytes) {
+  if (bytes == 1){
+    return '1 byte';
+  }else if (bytes < 1000){
+    return bytes + ' bytes';
+  }
+
+  var units = ['bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+  for (i = 0; i < units.length; i++) {
+    if(bytes/Math.pow(10, 3*(i+1)) < 1){
+      return (bytes/Math.pow(10, 3*i)).toFixed(2) + " " + units[i];
+    }
+  }
+}
+
+/* .js-unuploaded     --    A file dropped but does not exist on server side and hasn't been uploaded yet
+ all other types are not needed on the JavaScript side because they're now handled on server with AJAX call.
+ It's a separate table and we don't need to total it all in js now.
+ */
+function uploadSize(pre){
+  pre = typeof pre !== 'undefined' ? pre : '#upload_list'; // set the default jquery prefix for this table
+  nums = $(pre + ' .js-unuploaded .js-hidden_bytes').map(function(){ return parseInt(this.innerHTML); });
+  var total = 0;
+  $.each(nums, function( index, value ) {
+    total += value;
+  });
+  return total;
+}
+
+function filesWaitingForUpload(){
+  return ($("div[id^='not_uploaded_file_']").length > 0);
+}
+
+// ********************************************************************************
+// END Javascript for informational and utility functions for file upload
+// ********************************************************************************
