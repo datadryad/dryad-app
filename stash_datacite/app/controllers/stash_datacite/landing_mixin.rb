@@ -11,7 +11,7 @@ module StashDatacite
     def setup_show_variables(resource_id)
       @resource = StashEngine::Resource.find(resource_id)
       @review = StashDatacite::Resource::Review.new(@resource)
-      @resource.has_geolocation = @review.has_geolocation_data
+      @resource.has_geolocation = @review.geolocation_data?
       @resource.save!
       @schema_org_ds = schema_org_json_for(@resource)
     end

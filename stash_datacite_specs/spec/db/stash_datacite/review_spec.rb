@@ -102,15 +102,13 @@ module StashDatacite
       end
 
       it 'identifies the presence of geolocation data' do
-        expect(review.has_geolocation_data).to eq(true)
-        expect(review.no_geolocation_data).to eq(false)
+        expect(review.geolocation_data?).to eq(true)
       end
 
       it 'identifies the absence of geolocation data' do
         resource.geolocations.to_a.each(&:destroy)
         @review = Review.new(resource)
-        expect(review.has_geolocation_data).to eq(false)
-        expect(review.no_geolocation_data).to eq(true)
+        expect(review.geolocation_data?).to eq(false)
       end
 
       # TODO: figure out why

@@ -4,7 +4,23 @@ module StashDatacite
     # this class creates a schema.org dataset structure that can be output as json+ld or others
     # https://developers.google.com/search/docs/data-types/datasets
     # https://schema.org/Dataset
-    class SchemaDataset
+    class SchemaDataset # rubocop:disable Metrics/ClassLength
+      ITEMS_TO_ADD = {
+        'name' => :names,
+        'description' => :descriptions,
+        'url' => :url,
+        'sameAs' => :same_as,
+        'version' => :version,
+        'keywords' => :keywords,
+        'creator' => :authors,
+        'includedInDataCatalog' => :included_in_data_catalog,
+        'distribution' => :distribution,
+        'temporalCoverage' => :temporal_coverages,
+        'spatialCoverage' => :spatial_coverages,
+        'citation' => :citation,
+        'license' => :license
+      }.freeze
+
       def initialize(resource:, citation:, landing:)
         @resource = resource
         @citation = citation
@@ -12,38 +28,21 @@ module StashDatacite
       end
 
       def generate
-        items_to_add = {
-          'name' => :names,
-          'description'             => :descriptions,
-          'url'                     => :url,
-          'sameAs'                  => :same_as,
-          'version'                 => :version,
-          'keywords'                => :keywords,
-          'creator'                 => :authors,
-          'includedInDataCatalog'   => :included_in_data_catalog,
-          'distribution'            => :distribution,
-          'temporalCoverage'        => :temporal_coverages,
-          'spatialCoverage'         => :spatial_coverages,
-          'citation'                => :citation,
-          'license'                 => :license
-        }
         structure = { '@context' => 'http://schema.org', '@type' => 'dataset' }
-        items_to_add.each_pair do |k, v|
-          result = send(v)
-          if result.class == Array
-            if result.length == 1
-              structure[k] = result.first
-            elsif result.length > 1
-              structure[k] = result
-            end
-          else
-            structure[k] = result if result
-          end
+        ITEMS_TO_ADD.each_pair do |k, v|
+          item = to_item(send(v))
+          structure[k] = item if item
         end
         structure
       end
 
       private
+
+      def to_item(value)
+        return unless value
+        return value unless value.class == Array
+        value.length == 1 ? value.first : value
+      end
 
       def names
         return [] unless @resource.titles
@@ -104,24 +103,34 @@ module StashDatacite
           points << geo.geolocation_point
           boxes << geo.geolocation_box
         end
+        (convert_places(places) + convert_points(points) + convert_boxes(boxes))
+      end
+
+      def convert_places(places)
+        places.compact.map(&:geo_location_place)
+      end
+
+      def convert_boxes(boxes)
         # must use this form instead of compact! since it returns nil in that form sometimes
-        places = places.compact.map(&:geo_location_place)
-        points = points.compact.map do |point|
+        boxes.compact.map do |box|
           { '@type' => 'Place',
             'geo' => {
-              '@type'     => 'GeoCoordinates',
-              'latitude'  => point.latitude,
-              'longitude' => point.longitude
-            } }
-        end
-        boxes = boxes.compact.map do |box|
-          { '@type' => 'Place',
-            'geo' => {
-              '@type'     => 'GeoShape',
+              '@type' => 'GeoShape',
               'box' => "#{box.ne_latitude} #{box.ne_longitude} #{box.sw_latitude} #{box.sw_longitude}"
             } }
         end
-        (places + points + boxes)
+      end
+
+      def convert_points(points)
+        # must use this form instead of compact! since it returns nil in that form sometimes
+        points.compact.map do |point|
+          { '@type' => 'Place',
+            'geo' => {
+              '@type' => 'GeoCoordinates',
+              'latitude' => point.latitude,
+              'longitude' => point.longitude
+            } }
+        end
       end
 
       attr_reader :citation

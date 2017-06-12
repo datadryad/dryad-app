@@ -53,7 +53,7 @@ module StashDatacite
           @resource = StashEngine::Resource.find(params[:id])
           check_required_fields(@resource)
           @review = Resource::Review.new(@resource)
-          @resource.has_geolocation = @review.has_geolocation_data
+          @resource.has_geolocation = @review.geolocation_data?
           @resource.save!
         end
       end

@@ -10,7 +10,7 @@ module StashDatacite
 
     amoeba do
       enable
-      customize(lambda do |_orig_geo, new_geo|
+      customize(->(_orig_geo, new_geo) do
         # this duplicates any non-null associated places, points, boxes and associtaes them with the new record
         items = { :place_id= => :geolocation_place, :point_id= => :geolocation_point, :box_id= => :geolocation_box }
         items.each_pair do |my_id, my_association|

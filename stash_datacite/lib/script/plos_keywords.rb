@@ -12,6 +12,21 @@ module Script
     end
 
     def populate
+      keywords = read_keywords
+      keywords.each do |k|
+        next if StashDatacite::Subject.where(subject: k).exists?
+        StashDatacite::Subject.create(
+          subject: k,
+          subject_scheme: 'PLOS Subject Area Thesaurus',
+          scheme_URI: 'https://github.com/PLOS/plos-thesaurus'
+        )
+        puts "Adding: #{k}"
+      end
+    end
+
+    private
+
+    def read_keywords
       keywords = []
       File.open(@fn, 'r') do |f|
         all = f.read.strip
@@ -21,14 +36,7 @@ module Script
           keywords.push(my_line) unless my_line.start_with?("Item1\t")
         end
       end
-      keywords.uniq!
-      keywords.each do |k|
-        c = StashDatacite::Subject.where(subject: k).count
-        next if c > 0
-        StashDatacite::Subject.create(subject: k, subject_scheme: 'PLOS Subject Area Thesaurus',
-                                      scheme_URI: 'https://github.com/PLOS/plos-thesaurus')
-        puts "Adding: #{k}"
-      end
+      keywords.uniq
     end
   end
 end

@@ -28,7 +28,7 @@
   <%= render partial: "stash_datacite/related_identifiers/show",
              locals: { related_identifiers: @review.related_identifiers } %>
 
-  <% if @review.no_geolocation_data == false %>
+  <% if @review.geolocation_data? %>
     <h3 class="o-heading__level2">Location</h3>
     <div id="map_review" class="o-map"></div>
     <div class="c-locations">

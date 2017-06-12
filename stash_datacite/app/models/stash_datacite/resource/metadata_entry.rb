@@ -8,7 +8,9 @@ module StashDatacite
       end
 
       def resource_type
-        @resource_type = ResourceType.create_with(resource_id: @resource.id, resource_type: 'dataset', resource_type_general: 'dataset').find_or_create_by(resource_id: @resource.id)
+        @resource_type = ResourceType
+          .create_with(resource_id: @resource.id, resource_type: 'dataset', resource_type_general: 'dataset')
+          .find_or_create_by(resource_id: @resource.id)
       end
 
       def title
@@ -89,20 +91,14 @@ module StashDatacite
       private
 
       def ensure_license(tenant)
-        if @resource.rights.empty?
-          license = StashEngine::License.by_id(tenant.default_license)
-          @resource.rights.create(rights: license[:name],
-                                  rights_uri: license[:uri])
-        end
+        return unless @resource.rights.empty?
+        license = StashEngine::License.by_id(tenant.default_license)
+        @resource.rights.create(rights: license[:name], rights_uri: license[:uri])
       end
 
       def create_publisher(tenant)
         publisher = Publisher.where(resource_id: @resource.id).first
-        @publisher = if publisher.present?
-                       publisher
-                     else
-                       Publisher.create(publisher: tenant.short_name, resource_id: @resource.id)
-                     end
+        @publisher = publisher.present? ? publisher : Publisher.create(publisher: tenant.short_name, resource_id: @resource.id)
       end
     end
   end
