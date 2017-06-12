@@ -1,7 +1,7 @@
 require 'datacite/mapping'
 
 module StashDatacite
-  class Geolocation < ActiveRecord::Base
+  class Geolocation < ActiveRecord::Base # rubocop:disable Metrics/ClassLength
     self.table_name = 'dcs_geo_locations'
     belongs_to :resource, class_name: StashEngine::Resource.to_s
     belongs_to :geolocation_place, class_name: 'StashDatacite::GeolocationPlace', foreign_key: 'place_id'
@@ -30,32 +30,12 @@ module StashDatacite
     # place is string, point is [lat long] and box is [[ lat, long], [lat, long]] (or [lat, long, lat, long] )
     def self.new_geolocation(place: nil, point: nil, box: nil, resource_id:)
       return unless place || point || box
-      place_obj = nil
-      point_obj = nil
-      box_obj = nil
-      place_obj = GeolocationPlace.create(geo_location_place: place) unless place.blank?
-      unless point.blank?
-        point_obj = GeolocationPoint.create(
-          latitude: point[0].try(:to_d), longitude: point[1].try(:to_d)
-        )
-      end
-      unless box.blank? || box.flatten.length != 4
-        sides = box.flatten.map { |i| i.try(:to_d) }
-        s_lat = sides[0]
-        n_lat = sides[2]
-        s_lat, n_lat = n_lat, s_lat if s_lat > n_lat
-
-        e_long = sides[1]
-        w_long = sides[3]
-        e_long, w_long = w_long, e_long if w_long > e_long
-
-        box_obj = GeolocationBox.create(sw_latitude: s_lat, ne_latitude: n_lat,
-                                        sw_longitude: w_long, ne_longitude: e_long)
-      end
-      Geolocation.create(place_id: place_obj.try(:id),
-                         point_id: point_obj.try(:id),
-                         box_id: box_obj.try(:id),
-                         resource_id: resource_id)
+      Geolocation.create(
+        place_id: place_id_from(place),
+        point_id: point_id_from(point),
+        box_id: box_id_from(box),
+        resource_id: resource_id
+      )
     end
 
     def destroy_place
@@ -97,12 +77,14 @@ module StashDatacite
     # handles creating datacite mapping which might be nil or have other complexities
     def datacite_mapping_box
       return nil unless geolocation_box
-      if geolocation_box.sw_latitude.blank? || geolocation_box.sw_longitude.blank? ||
-         geolocation_box.ne_latitude.blank? || geolocation_box.ne_longitude.blank?
-        return nil
-      end
-      Datacite::Mapping::GeoLocationBox.new(geolocation_box.sw_latitude, geolocation_box.sw_longitude,
-                                            geolocation_box.ne_latitude, geolocation_box.ne_longitude)
+      coords = [
+        geolocation_box.sw_latitude,
+        geolocation_box.sw_longitude,
+        geolocation_box.ne_latitude,
+        geolocation_box.ne_longitude
+      ]
+      return if coords.any?(&:blank?)
+      Datacite::Mapping::GeoLocationBox.new(*coords)
     end
 
     private
@@ -122,10 +104,49 @@ module StashDatacite
       resource.save!
     end
 
-    def destroy_place_point_box
+    def destroy_place_point_box # rubocop:disable Metrics/CyclomaticComplexity, Metrics/AbcSize
       GeolocationPlace.destroy(place_id) unless place_id.nil? || GeolocationPlace.where(id: place_id).count < 1
       GeolocationPoint.destroy(point_id) unless point_id.nil? || GeolocationPoint.where(id: point_id).count < 1
       GeolocationBox.destroy(box_id) unless box_id.nil? || GeolocationBox.where(id: box_id).count < 1
     end
+
+    def self.place_id_from(place)
+      return if place.blank?
+      GeolocationPlace.create(geo_location_place: place).id
+    end
+    private_class_method :place_id_from
+
+    def self.point_id_from(point)
+      return if point.blank?
+      latitude = point[0].try(:to_d)
+      longitude = point[1].try(:to_d)
+      GeolocationPoint.create(latitude: latitude, longitude: longitude).id
+    end
+    private_class_method :point_id_from
+
+    def self.box_id_from(box)
+      return if box.blank? || box.flatten.length != 4
+      sides = box.flatten.map { |i| i.try(:to_d) }
+      n_lat, e_long, s_lat, w_long = coords_from(sides)
+      GeolocationBox.create(
+        sw_latitude: s_lat,
+        ne_latitude: n_lat,
+        sw_longitude: w_long,
+        ne_longitude: e_long
+      ).id
+    end
+    private_class_method :box_id_from
+
+    def self.coords_from(sides)
+      s_lat = sides[0]
+      e_long = sides[1]
+      n_lat = sides[2]
+      w_long = sides[3]
+      s_lat, n_lat = n_lat, s_lat if s_lat > n_lat
+      e_long, w_long = w_long, e_long if w_long > e_long
+
+      [n_lat, e_long, s_lat, w_long]
+    end
+    private_class_method :coords_from
   end
 end
