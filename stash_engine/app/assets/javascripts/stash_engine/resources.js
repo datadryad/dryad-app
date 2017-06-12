@@ -20,29 +20,15 @@ $(function () {
           data.files[0]['id'] = generateQuickId();
           data.context = $(tmpl("upload-line", data.files[0]));
           $('#upload_list').append(data.context);
-          $('#confirm_text_upload, #upload_all').show();
+          $('#confirm_text_upload, #upload_all, #upload_tweaker_head').show();
+          $('#upload_complete').hide();
           confirmToUpload();
-          // binding remove link action
-          $('.js-remove_link').click( function(e){
-            e.preventDefault();
-            // $('.js-remove_link').parent().parent().find('.js-filename').text()
-            var fn = $(e.target).parent().parent().find('.js-filename').text();
-            var row = $(e.target).closest('.js-unuploaded').attr('id');
-            // e.target.parentNode.parentNode.remove();
 
-            // maybe restore the old file if it is there and was overwritten
-            $.ajax({
-              url: removeUnuploadedFileUploadPath(),
-              type: 'POST',
-              dataType: 'script',
-              data: {
-                _method: 'PATCH',
-                filename: fn,
-                row_id: row,
-                // authenticity_token: '<%= form_authenticity_token %>',
-                format: 'js'
-              }
-            });
+          // binding remove link action
+          $('#not_uploaded_file_' + data.files[0]['id'] + ' .js-remove_link' ).click( function(e){
+            e.preventDefault();
+            $('#not_uploaded_file_' + data.files[0]['id']).remove();
+            $('#upload_complete').hide();
           });
 
           // binding upload link click event
@@ -88,17 +74,6 @@ $(function () {
 
   // start first js-upload-it line
   $('#upload_all').click( function(e){
-    if(overTotalSize(totalSize())){
-      e.preventDefault();
-      alert('You are attempting to create a version with more than ' + formatSizeUnits(maxTotalSize()) +
-          '.  Please remove some files to get under this limit for total size.');
-      return false;
-    }
-    if(overFileSize(largestSize())) {
-      e.preventDefault();
-      alert('You are attempting to upload a file larger than ' + formatSizeUnits(maxFileSize()) + '.  Please remove any files larger than this limit and try again.');
-      return false;
-    }
     uploadInProgress = true;
     $('.js-upload-it:lt(3)').click();
     updateButtonLinkStates(); // for file upload method
@@ -125,25 +100,13 @@ function formatSizeUnits(bytes) {
     }
 }
 
-/* The size is complicated since we are showing rows in many states in the same table with div classes around rows:
-   .js-copied_file    --    A file previously uploaded from an earlier version of dataset with entry in database
-   .js-unuploaded     --    A file dropped but does not exist on server side and hasn't been uploaded yet
-   .js-created_file   --    A file that has been dropped and uploaded to the server in this version
-   .js-deleted_file   --    A file the user wants to remove from this version but existed previously
-              Note that files newly uploaded (or not uploaded yet) and deleted disappear from the table forever
-
-   I believe files dropped and that match a file already in the table will make the previous file disappear since
-   we cannot have duplicate filenames and it would be very confusing to list two files with same names.  There
-   may need special handling after uploading for these files which are replacements.  Not sure how deletion of
-   these files works.
-
-   Total size would be copied, un-uploaded (drag'n'dropped) and created files, assuming only one of each unique filename.
+/* .js-unuploaded     --    A file dropped but does not exist on server side and hasn't been uploaded yet
+   all other types are not needed on the JavaScript side because they're now handled on server with AJAX call.
+   It's a separate table and we don't need to total it all in js now.
  */
-function totalSize(pre){
+function uploadSize(pre){
   pre = typeof pre !== 'undefined' ? pre : '#upload_list'; // set the default jquery prefix for this table
-  nums = $(pre + ' .js-created_file .js-hidden_bytes,' +
-          pre + ' .js-copied_file .js-hidden_bytes,' +
-          pre + ' .js-unuploaded .js-hidden_bytes').map(function(){ return parseInt(this.innerHTML); });
+  nums = $(pre + ' .js-unuploaded .js-hidden_bytes').map(function(){ return parseInt(this.innerHTML); });
   var total = 0;
   $.each(nums, function( index, value ) {
     total += value;
@@ -151,16 +114,9 @@ function totalSize(pre){
   return total;
 }
 
-// Just the new stuff to be uploaded into this version
-function uploadSize(pre){
-  pre = typeof pre !== 'undefined' ? pre : '#upload_list'; // set the default jquery prefix for this table
-  nums = $(pre + ' .js-created_file .js-hidden_bytes,' +
-          pre + ' .js-unuploaded .js-hidden_bytes').map(function(){ return parseInt(this.innerHTML); });
-  var total = 0;
-  $.each(nums, function( index, value ) {
-    total += value;
-  });
-  return total;
+// update the waiting size in the staging list
+function updateWaitingSize(){
+  $('#size_in_upload').text('hi');
 }
 
 function filesWaitingForUpload(){
@@ -171,7 +127,6 @@ function filesWaitingForUpload(){
 function updateButtonLinkStates(){
   if (filesWaitingForUpload()){
     // if files are waiting for upload
-    $('#upload_tweaker_head').removeClass('t-upload__choose-heading').addClass('t-upload__choose-heading--active');
     $("a[class^='c-progress__tab'], #describe_back, #proceed_review").unbind( "click" );
     $("a[class^='c-progress__tab'], #describe_back, #proceed_review").click(function(e) {
       e.preventDefault();
@@ -179,100 +134,26 @@ function updateButtonLinkStates(){
     });
     if(uploadInProgress) {
       $('#cancel_all').show();
-      undoConfirmUpload();
       $('#confirm_text_upload, #upload_all').hide();
-      $('#revert_all').hide();
     }
   }else{
     // files are already uploaded or there are none
     $('#cancel_all').hide();
-    $('#upload_tweaker_head').removeClass('t-upload__choose-heading--active').addClass('t-upload__choose-heading');
-    undoConfirmUpload();
-    $('#confirm_text_upload, #upload_all').hide();
+    $('#confirm_text_upload, #upload_all, #upload_tweaker_head').hide();
     $("a[class^='c-progress__tab'], #describe_back, #proceed_review").unbind( "click" );
     uploadInProgress = false;
-    updateRevertState();
   }
   updateUiStates();
 }
 
-function updateRevertState(){
-  // console.log((new Date()).toISOString() + ' updating revert button state');
-  but = $('#revert_all')
-  if(versionNumber() == 1){
-    but.hide();
-  }else if($(".js-created_file,.js-deleted_file,.js-unuploaded").length > 0){
-    but.show().prop("disabled", false).addClass('o-button__undo').removeClass('o-button__undo-disabled');
-  }else{
-    but.show().prop("disabled", true).addClass('o-button__undo-disabled').removeClass('o-button__undo');
-  }
-}
-
-function largestSize(){
-  nums = $('.js-hidden_bytes').map(function(){ return parseInt(this.innerHTML); });
-  if(nums.length < 1){ return 0 };
-  var sorted = nums.sort(function(a, b){return b-a});
-  return sorted[0];
-}
-
 // updates the size and other UI state updates after changes to the file list
 function updateUiStates(){
-
   // lock/unlock the manifest/file upload radio buttons depending if any modified files listed
   if($(".js-created_file,.js-deleted_file,.js-unuploaded").length > 0){
     disableUploadMethod();
   }else{
     enableUploadMethod();
     // resetFileTablesToDbState();
-  }
-  $('#upload_total_all').text("Total: " + formatSizeUnits(totalSize()));
-  $('#upload_in_version').text("New in this version: " + formatSizeUnits(uploadSize()));
-
-  if(overTotalSize(totalSize()) || overFileSize(largestSize()) || overSubmissionSize(uploadSize())){
-    $('#upload_total').removeClass().addClass('c-upload__total-size--warning');
-  }else{
-    $('#upload_total').removeClass().addClass('c-upload__total-size');
-  }
-  updateRevertState();
-  // remove and notify if over size.
-  if(overFileSize(largestSize())){
-    // UI design says delete the large items automatically and swat the user with a rolled up newspaper.
-    $("div[id^='not_uploaded_file_']").each(function( index ) {
-      if(overFileSize($( this ).find('.js-hidden_bytes').text())){
-        var name = $( this ).find('.js-filename').text();
-        $('#over_single_size').append("<p>The file " + name  + " has been removed from your upload list since it is" +
-            "larger than " + formatSizeUnits(maxFileSize()) + ".</p>");
-        $( this ).remove();
-        setTimeout(function(){
-          $('#over_single_size').empty();
-        }, 20000);
-        updateUiStates();
-      }
-    });
-  }
-
-  if(overTotalSize(totalSize())){
-    $('#over_files_size').show();
-    undoConfirmUpload();
-    $('#confirm_text_upload, #upload_all').hide();
-  }else{
-    $('#over_files_size').hide();
-    if(!uploadInProgress && filesWaitingForUpload()) {
-      $('#confirm_text_upload, #upload_all').show();
-      confirmToUpload();
-    }
-  }
-
-  if(overSubmissionSize(uploadSize())){
-    $('#over_upload_size').show();
-    undoConfirmUpload();
-    $('#confirm_text_upload, #upload_all').hide();
-  }else{
-    $('#over_upload_size').hide();
-    if(!uploadInProgress && filesWaitingForUpload()) {
-      $('#confirm_text_upload, #upload_all').show();
-      confirmToUpload();
-    }
   }
 }
 
@@ -289,35 +170,10 @@ function confirmToUpload(){
   });
 }
 
-function undoConfirmUpload() {
-  $('#confirm_to_upload').attr('checked', false);
-  $('#upload_all').attr('disabled', true);
-}
-
 // **********************************************************************************
 // end Javascript for FileUpload page.  This section was only for FILES, not MANIFEST
 // **********************************************************************************
 
-// ********
-// Functions for both file and manifest sections
-// ********
-
-// sets both HTML file tables (manifest & upload) back to the DB state
-/*
-function resetFileTablesToDbState(){
-  $.ajax({
-    url: showFilesResourcePath(),
-    type: 'GET',
-    dataType: 'script',
-    data: {
-      // authenticity_token: '<%= form_authenticity_token %>',
-      format: 'js'
-    }
-  });
-} */
-// ********
-// END Functions for both file and manifest sections
-// ********
 
 // **********************************************************************************
 // The items for  showing only upload method or manifest method

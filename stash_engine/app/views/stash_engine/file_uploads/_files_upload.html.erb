@@ -21,7 +21,7 @@
   <% end %>
 </div>
 <div class="t-upload__container">
-  <h2 class="t-upload__choose-heading" id="upload_tweaker_head">Step 3: Upload New Files</h2>
+  <h2 class="t-upload__choose-heading--active" id="upload_tweaker_head">Step 3: Upload New Files</h2>
   <%# button_to 'undo all changes', revert_file_upload_path(resource_id: resource.id), method: :patch, remote: true,
                 class: "o-button__undo", form_class: 'o-button__inline-form', id: 'revert_all' %>
 </div>
@@ -32,14 +32,16 @@
 </div>
 
 <div>
-  <p id="confirm_text_upload" style="display: none;">
-    <span><%= check_box_tag 'confirm_to_upload', 'yes', false, id: 'confirm_to_upload' %></span>
-    <strong style="color: red;"> *</strong>
-    I confirm that no Personal Health Information or Sensitive Data are being uploaded with this submission.
-  </p>
+  <div id="confirm_text_upload" style="display: none;">
+    <div id="size_in_upload"></div>
+    <p>
+      <span><%= check_box_tag 'confirm_to_upload', 'yes', false, id: 'confirm_to_upload' %></span>
+      <strong style="color: red;"> *</strong>
+      I confirm that no Personal Health Information or Sensitive Data are being uploaded with this submission.
+    </p>
+  </div>
   <button id="upload_all" type="button" disabled class="o-button__submit confirm_upload">Upload</button>
   <button id="cancel_all" type="button" class="o-button__submit" style="display: none;" >Cancel all</button>
-  <p>&nbsp;</p>
 </div>
 
 <h2 class="t-upload__choose-heading--active">Uploaded Files</h2>
@@ -49,26 +51,9 @@
     <%= image_tag 'stash_engine/spinner.gif', size: '80x60', alt: 'Loading spinner' %>
 </div>
 
-<div id="upload_total">
-  <span id="upload_total_all">Total:</span><br/><br/>
-  <span id="upload_in_version">In this version:</span>
+<div class="c-upload__upload-complete-text" id="upload_complete" style="display: none;">
+  <p>Upload complete.</p>
 </div>
 
-<div class="c-upload__upload-complete-text" id="upload_complete" style="display: none;">Upload complete.</div>
-
-<div class="bad_upload" id="over_single_size"></div>
-
-<div class="bad_upload" id="over_upload_size" style="display: none;">
-  <p>
-    The files you've added are larger than <%= filesize(current_tenant.max_submission_size) %> which is the upload
-    limit for a single submission.  Please remove some files to bring your upload size under this limit.
-  </p>
-</div>
-<div class="bad_upload" id="over_files_size" style="display: none;">
-  <p>
-    Your file size is over <%= filesize(current_tenant.max_total_version_size) %>. You must remove some files to bring your
-    total under this limit before you can upload these files.
-  </p>
-</div>
-
+<%# this gets put in the page as a JS template that jquery file upload uses to show things in process %>
 <%= render partial: 'stash_engine/file_uploads/dropped_file' %>
