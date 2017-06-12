@@ -1,3 +1,5 @@
+inherit_from: ../.rubocop.yml
+
 AllCops:
   Exclude:
     - 'bin/**/*'
@@ -7,46 +9,23 @@ AllCops:
     - 'spec/dummy/db/**/*'
     - 'test/dummy/db/**/*'
     - 'vendor/**/*'
-    - 'app/models/stash_datacite/resource/resource_file_generation.rb'
   # Suppress complaints about post-2.0 syntax
   TargetRubyVersion: 2.2
 
-# documentation
-Documentation:
+# These files are just inherently long lists of things
+Metrics/MethodLength:
   Exclude:
-    - 'db/**/*'
-    - 'app/controllers/**/*'
-    - 'app/helpers/**/*'
-    - 'app/models/**/*'
-    - 'spec/**/*'
-    - 'test/**/*'
-    - 'lib/stash_datacite/**/*'
-    - 'lib/stash_datacite.rb'
+    - lib/stash_datacite/resource_patch.rb
+    - lib/stash_datacite/author_patch.rb
 
-# Reasonable line-length check; it's too easy for the cure to be worse than the disease
-Metrics/LineLength:
-  Max: 150
+# These files are just inherently long lists of things
+Metrics/BlockLength:
+  Exclude:
+    - lib/stash_datacite/resource_patch.rb
+    - lib/stash_datacite/author_patch.rb
 
-# Disable problematic module documentation check (see https://github.com/bbatsov/rubocop/issues/947)
-Style/Documentation:
-  Enabled: false
-
-# Allow one line around class body (Layout/EmptyLines will still disallow two or more)
-Layout/EmptyLinesAroundClassBody:
-  Enabled: false
-
-# Allow one line around module body (Layout/EmptyLines will still disallow two or more)
-Layout/EmptyLinesAroundModuleBody:
-  Enabled: false
-
-# Allow one line around block body (Layout/EmptyLines will still disallow two or more)
-Layout/EmptyLinesAroundBlockBody:
-  Enabled: false
-
-# Unclear why it's a good idea to give parameters semantically meaningless names
-Style/SingleLineBlockParams:
-  Enabled: false
-
-# Make indents consistent regardless of the lengths of variables and method names and whatnot
-Layout/MultilineMethodCallIndentation:
-  EnforcedStyle: indented
+# These files are just inherently long lists of things
+Metrics/AbcSize:
+  Exclude:
+    - lib/stash_datacite/resource_patch.rb
+    - lib/stash_datacite/author_patch.rb

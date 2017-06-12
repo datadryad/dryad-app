@@ -1,7 +1,10 @@
-# Reasonable line-length check; it's too easy for the cure to be worse than the disease
-Metrics/LineLength:
-  Max: 150
+inherit_from: ../.rubocop.yml
 
-# Make indents consistent regardless of the lengths of variables and method names and whatnot
-Layout/MultilineMethodCallIndentation:
-  EnforcedStyle: indented
+Metrics/MethodLength:
+  Enabled: false
+
+Metrics/ModuleLength:
+  Enabled: false
+
+Metrics/BlockLength:
+  Enabled: false
