@@ -4,9 +4,9 @@ require 'fileutils'
 module StashEngine
   class FileUploadsController < ApplicationController
     before_action :require_login
-    before_action :set_file_info, only: [:destroy, :remove, :restore, :destroy_error, :destroy_manifest]
-    #TODO check that the following before action really should be ignored on these
-    before_action :require_file_owner, except: [:create, :destroy, :remove, :restore, :revert, :validate_urls, :destroy_error, :remove_unuploaded, :index]
+    before_action :set_file_info, only: %i[destroy remove restore destroy_error destroy_manifest]
+    # TODO: check that the following before action really should be ignored on these
+    before_action :require_file_owner, except: %i[create destroy remove restore revert validate_urls destroy_error remove_unuploaded index]
     before_action :set_create_prerequisites, only: [:create]
 
     # show the list of files for resource
@@ -19,7 +19,7 @@ module StashEngine
     end
 
     # this is a newly uploaded file and we're deleting it, for files
-    #def destroy
+    # def destroy
     #  respond_to do |format|
     #    format.js do
     #      fn = @file.upload_file_name
@@ -36,8 +36,8 @@ module StashEngine
     #        my_f.update_attribute(:file_state, 'deleted') if my_f.file_state == 'copied'
     #      end
     #      end
-    #end
-    #end
+    # end
+    # end
 
     # this is a validated manifest URI that doesn't pass validation and we're deleting it from the DB
     def destroy_error
@@ -67,18 +67,18 @@ module StashEngine
     end
 
     # this is a file from a previous version and we're marking it for deletion
-    #def remove
+    # def remove
     #  respond_to do |format|
     #    format.js do
     #      @file.update_attribute(:file_state, 'deleted')
     #      @file.reload
     #    end
     #  end
-    #end
+    # end
 
     # This is a file that hasn't been uploaded, but we might need to restore a previous version that was in the db.
     # note this is taking a resource_id instead of a file_id since there isn't one yet.
-    #def remove_unuploaded
+    # def remove_unuploaded
     #  respond_to do |format|
     #    format.js do
     #      @resource = Resource.find(params[:id])
@@ -87,17 +87,17 @@ module StashEngine
     #      @dup_files = @resource.file_uploads.where(upload_file_name: @fn)
     #    end
     #  end
-    #end
+    # end
 
     # this is a file from a previous version marked as deleted and we're unmarking it for deletion
-    #def restore
+    # def restore
     #  respond_to do |format|
     #    format.js do
     #      @file.update_attribute(:file_state, 'copied')
     #      @file.reload
     #    end
     #  end
-    #end
+    # end
 
     # a file being uploaded (chunk by chunk)
     def create
@@ -116,7 +116,7 @@ module StashEngine
           unique_fn = make_unique(@file_upload.original_filename)
 
           new_path_and_fn = File.join(@upload_dir, unique_fn)
-          #correct_existing_for_overwrite(params[:resource_id], @file_upload)
+          # correct_existing_for_overwrite(params[:resource_id], @file_upload)
 
           FileUtils.mv(@accum_file, new_path_and_fn) # moves the file from the original unique_id fn to the final one
           create_db_file(path: new_path_and_fn, filename: unique_fn) # no files exist for this so new "created" file and sets some variables like @my_file
@@ -146,7 +146,7 @@ module StashEngine
     #   end
     # end
 
-    ##manifest workflow
+    # #manifest workflow
     def validate_urls
       respond_to do |format|
         @resource = Resource.where(id: params[:resource_id]).first
@@ -156,28 +156,28 @@ module StashEngine
           validator =  StashEngine::UrlValidator.new(url: url)
           val_result = validator.validate
 
-          if val_result == true && validator.status_code == 200
-            if @resource.url_in_version?(validator.url)
-              # don't allow duplicate URLs that have already been put into this version this time
-              @file = FileUpload.create( resource_id: @resource.id,
-                                         url: validator.url,
-                                         status_code: 498,
-                                         file_state: 'created')
-            else
-              @file = FileUpload.create( resource_id: @resource.id,
-                                              url: validator.url,
-                                              status_code: validator.status_code,
-                                              upload_file_name: make_unique(validator.filename),
-                                              upload_content_type: validator.mime_type,
-                                              upload_file_size: validator.size,
-                                              file_state: 'created')
-            end
-          else
-            @file = FileUpload.create( resource_id: @resource.id,
-                                              url: validator.url,
-                                              status_code: validator.status_code,
-                                              file_state: 'created')
-          end
+          @file = if val_result == true && validator.status_code == 200
+                    if @resource.url_in_version?(validator.url)
+                      # don't allow duplicate URLs that have already been put into this version this time
+                      FileUpload.create(resource_id: @resource.id,
+                                        url: validator.url,
+                                        status_code: 498,
+                                        file_state: 'created')
+                    else
+                      FileUpload.create(resource_id: @resource.id,
+                                        url: validator.url,
+                                        status_code: validator.status_code,
+                                        upload_file_name: make_unique(validator.filename),
+                                        upload_content_type: validator.mime_type,
+                                        upload_file_size: validator.size,
+                                        file_state: 'created')
+                            end
+                  else
+                    FileUpload.create(resource_id: @resource.id,
+                                      url: validator.url,
+                                      status_code: validator.status_code,
+                                      file_state: 'created')
+                  end
         end
         format.js
       end
@@ -226,8 +226,8 @@ module StashEngine
 
     def correct_existing_for_overwrite(resource_id, file_upload)
       existing_files = FileUpload
-                       .where(resource_id: resource_id)
-                       .where(upload_file_name: file_upload.original_filename)
+        .where(resource_id: resource_id)
+        .where(upload_file_name: file_upload.original_filename)
 
       existing_files.each do |old_f|
         if old_f.file_state == 'created' || old_f.file_state.blank?

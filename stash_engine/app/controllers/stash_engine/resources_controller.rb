@@ -2,11 +2,11 @@ require_dependency 'stash_engine/application_controller'
 
 module StashEngine
   class ResourcesController < ApplicationController
-    before_action :require_login, except: [:increment_downloads, :data_paper]
+    before_action :require_login, except: %i[increment_downloads data_paper]
 
-    before_action :set_resource, only: [:show, :edit, :update, :destroy, :review, :upload, :upload_manifest, :increment_downloads, :show_files]
+    before_action :set_resource, only: %i[show edit update destroy review upload upload_manifest increment_downloads show_files]
 
-    before_action :require_resource_owner, except: [:index, :new, :increment_downloads, :data_paper]
+    before_action :require_resource_owner, except: %i[index new increment_downloads data_paper]
 
     # GET /resources
     # GET /resources.json
@@ -38,8 +38,7 @@ module StashEngine
     end
 
     # GET /resources/1/edit
-    def edit
-    end
+    def edit; end
 
     # POST /resources
     # POST /resources.json
@@ -78,17 +77,15 @@ module StashEngine
     end
 
     # Review responds as a get request to review the resource before saving
-    def review
-    end
+    def review; end
 
     # Submission of the resource to the repository
-    def submission
-    end
+    def submission; end
 
     # Upload files view for resource
     def upload
-      #@resource.clean_uploads # might want this back cleans database to match existing files on file system
-      @file = FileUpload.new(resource_id: @resource.id) #this is apparanty needed for the upload control
+      # @resource.clean_uploads # might want this back cleans database to match existing files on file system
+      @file = FileUpload.new(resource_id: @resource.id) # this is apparanty needed for the upload control
       @uploads = @resource.latest_file_states
       render 'upload_manifest' if @resource.upload_type == :manifest
     end

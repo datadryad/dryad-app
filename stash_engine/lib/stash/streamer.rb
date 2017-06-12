@@ -10,9 +10,9 @@ module Stash
     end
 
     def each
-      @http_client.get_content(@url) { |chunk|
+      @http_client.get_content(@url) do |chunk|
         yield chunk
-      }
+      end
     end
   end
 end

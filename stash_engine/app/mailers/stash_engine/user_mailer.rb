@@ -8,7 +8,7 @@ module StashEngine
     # helper :formatted_date
 
     default from: "Dash Notifications <#{APP_CONFIG['feedback_email_from']}>",
-      return_path: (APP_CONFIG['feedback_email_from']).to_s
+            return_path: (APP_CONFIG['feedback_email_from']).to_s
 
     def error_report(resource, error)
       warn("Unable to report update error #{error}; nil resource") unless resource
@@ -86,7 +86,7 @@ module StashEngine
 
     # TODO: look at Rails standard ways to report/format backtrace
     def to_backtrace(e)
-      backtrace = (e.respond_to?(:backtrace) && e.backtrace) ? e.backtrace.join("\n") : ''
+      backtrace = e.respond_to?(:backtrace) && e.backtrace ? e.backtrace.join("\n") : ''
       "#{e.class}: #{e}\n#{backtrace}"
     end
   end

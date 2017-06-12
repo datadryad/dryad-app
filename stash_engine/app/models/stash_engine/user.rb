@@ -5,7 +5,7 @@ module StashEngine
       where(uid: auth[:uid]).first_or_initialize.tap do |user|
         user.provider = auth.provider
         user.uid = auth.uid
-        user.email = auth.info.email.split(';').first #because ucla has two values separated by ;
+        user.email = auth.info.email.split(';').first # because ucla has two values separated by ;
         # name is kludgy and many places do not provide them broken out
         user.first_name, user.last_name = split_name(auth.info.name) if auth.info.name
         user.oauth_token = auth.credentials.token
@@ -25,7 +25,7 @@ module StashEngine
       Tenant.find(tenant_id)
     end
 
-    #gets the latest completed resources by user, a lot of SQL since this becomes complicated
+    # gets the latest completed resources by user, a lot of SQL since this becomes complicated
     def latest_completed_resource_per_identifier
       # Joining on version is messy, so we just assume the latest version in a
       # group is the one with the highest resource_id.

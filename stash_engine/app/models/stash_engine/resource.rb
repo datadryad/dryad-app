@@ -20,7 +20,7 @@ module StashEngine
       include_association :authors
       include_association :embargo
       include_association :file_uploads
-      customize(lambda do |_, new_resource|
+      customize(->(_, new_resource) do
         # you'd think 'include_association :current_resource_state' would do the right thing and deep-copy
         # the resource state, but instead it keeps the reference to the old one, so we need to clear it and
         # let init_version do its job
@@ -68,13 +68,13 @@ module StashEngine
     # ------------------------------------------------------------
     # Scopes
 
-    scope :in_progress, (lambda do
+    scope :in_progress, (-> do
       joins(:current_resource_state).where(stash_engine_resource_states: { resource_state:  :in_progress })
     end)
-    scope :submitted, (lambda do
-      joins(:current_resource_state).where(stash_engine_resource_states: { resource_state:  [:submitted, :processing, :error] })
+    scope :submitted, (-> do
+      joins(:current_resource_state).where(stash_engine_resource_states: { resource_state:  %i[submitted processing error] })
     end)
-    scope :processing, (lambda do
+    scope :processing, (-> do
       joins(:current_resource_state).where(stash_engine_resource_states: { resource_state:  [:processing] })
     end)
     scope :by_version_desc, -> { joins(:stash_version).order('stash_engine_versions.version DESC') }
@@ -104,36 +104,36 @@ module StashEngine
 
     # gets the latest files that are not deleted in db, current files for this version
     def current_file_uploads
-      subquery = FileUpload.where(resource_id: id).where("file_state <> 'deleted' AND " +
-                                         "(url IS NULL OR (url IS NOT NULL AND status_code = 200))")
-                           .select('max(id) last_id, upload_file_name').group(:upload_file_name)
+      subquery = FileUpload.where(resource_id: id).where("file_state <> 'deleted' AND " \
+                                         '(url IS NULL OR (url IS NOT NULL AND status_code = 200))')
+        .select('max(id) last_id, upload_file_name').group(:upload_file_name)
       FileUpload.joins("INNER JOIN (#{subquery.to_sql}) sub on id = sub.last_id").order(upload_file_name: :asc)
     end
 
     # gets new files in this version
     def new_file_uploads
       subquery = FileUpload.where(resource_id: id).where("file_state = 'created'")
-                     .select('max(id) last_id, upload_file_name').group(:upload_file_name)
+        .select('max(id) last_id, upload_file_name').group(:upload_file_name)
       FileUpload.joins("INNER JOIN (#{subquery.to_sql}) sub on id = sub.last_id").order(upload_file_name: :asc)
     end
 
     # the states of the latest files of the same name in the resource (version), included deleted
     def latest_file_states
       subquery = FileUpload.where(resource_id: id)
-                           .select('max(id) last_id, upload_file_name').group(:upload_file_name)
+        .select('max(id) last_id, upload_file_name').group(:upload_file_name)
       FileUpload.joins("INNER JOIN (#{subquery.to_sql}) sub on id = sub.last_id").order(upload_file_name: :asc)
     end
 
     # the size of this resource (created + copied files)
     def size
-      file_uploads.where(file_state: ['copied', 'created']).sum(:upload_file_size)
+      file_uploads.where(file_state: %w[copied created]).sum(:upload_file_size)
     end
 
     # returns the upload type either :files, :manifest, :unknown (unknown if no files are started for this version yet)
     def upload_type
       return :manifest if file_uploads.newly_created.url_submission.count > 0
       return :files if file_uploads.newly_created.file_submission.count > 0
-      return :unknown
+      :unknown
     end
 
     # returns the list of duplicate filenames in created state where we shouldn't have any
@@ -163,7 +163,7 @@ module StashEngine
     # TODO: this knows about merritt specifics transforming the sword url into a merritt url, needs to be elsewhere
     def merritt_producer_download_uri
       return nil if download_uri.nil?
-      return nil unless download_uri.match(/^https*:\/\/[^\/]+\/d\/\S+$/)
+      return nil unless download_uri =~ /^https*:\/\/[^\/]+\/d\/\S+$/
       version_number = stash_version.merritt_version
       "#{download_uri.sub('/d/', '/u/')}/#{version_number}"
     end
@@ -174,7 +174,7 @@ module StashEngine
     # returns two parts the protocol_and_domain part of the URL (with no trailing slash) and the local_id
     def merritt_protodomain_and_local_id
       return nil if download_uri.nil?
-      return nil unless download_uri.match(/^https*:\/\/[^\/]+\/d\/\S+$/)
+      return nil unless download_uri =~ /^https*:\/\/[^\/]+\/d\/\S+$/
       matches = download_uri.match(/^(https*:\/\/[^\/]+)\/d\/(\S+)$/)
       [matches[1], matches[2]]
     end
@@ -230,7 +230,7 @@ module StashEngine
       ident = identifier
       return unless ident
       ident_type = ident.identifier_type
-      raise TypeError, "Unsupported identifier type #{ident_type}" unless 'DOI' == ident_type
+      raise TypeError, "Unsupported identifier type #{ident_type}" unless ident_type == 'DOI'
       "https://doi.org/#{ident.identifier}"
     end
 
@@ -311,13 +311,13 @@ module StashEngine
     # TODO: EMBARGO: do we care about published vs. embargoed in this count?
     # total count of submitted datasets
     def self.submitted_dataset_count
-      sql = %q(
+      sql = "
         SELECT COUNT(DISTINCT r.identifier_id)
           FROM stash_engine_resources r
           JOIN stash_engine_resource_states rs
             ON r.current_resource_state_id = rs.id
          WHERE rs.resource_state = 'submitted'
-      )
+      "
       connection.execute(sql).first[0]
     end
 
@@ -345,4 +345,3 @@ module StashEngine
     end
   end
 end
-

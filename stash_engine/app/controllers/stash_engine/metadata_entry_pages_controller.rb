@@ -14,9 +14,9 @@ module StashEngine
       end
     end
 
-    #create a new version of this resource before editing with find or create
+    # create a new version of this resource before editing with find or create
     def new_version
-      #create new version deep copy of most items
+      # create new version deep copy of most items
       @resource = Resource.find(params[:resource_id])
       identifier = @resource.identifier
       in_progress_version = identifier && identifier.in_progress_version
@@ -26,7 +26,7 @@ module StashEngine
       @new_res = @resource.amoeba_dup
       @new_res.save!
 
-      #redirect to find or create path
+      # redirect to find or create path
       redirect_to metadata_entry_pages_find_or_create_path(resource_id: @new_res.id)
     end
 

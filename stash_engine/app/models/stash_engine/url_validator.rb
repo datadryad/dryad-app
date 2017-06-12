@@ -29,7 +29,7 @@ module StashEngine
 
         @status_code = response.status_code
         @mime_type = response.header['Content-Type'].first unless response.header['Content-Type'].blank?
-        @mime_type = @mime_type[/^\S*;/][0..-2] if @mime_type.match(/^\S*;/) # mimetype and not charset stuff after ';'
+        @mime_type = @mime_type[/^\S*;/][0..-2] if @mime_type =~ /^\S*;/ # mimetype and not charset stuff after ';'
         @size = response.header['Content-Length'].first.to_i unless response.header['Content-Length'].blank?
         @timed_out = false
         @redirected = !response.previous.nil?
@@ -39,14 +39,13 @@ module StashEngine
         # get the filename from either the 1) content disposition, 2) redirected url (if avail) or 3) url
         @filename = filename_from_content_disposition(response.header['Content-Disposition']) ||
                       filename_from_url(@redirected_to) || filename_from_url(@url)
-        @filename = last_resort_filename if @filename == '' or @filename == '/'
+        @filename = last_resort_filename if @filename == '' || @filename == '/'
         return true
-          #Socketerror seems to mean a domain that is down or unavailable, tried http://macgyver.com
-          # https://carpark.com seems to timeout
-          # http://poodle.com -- keep alive disconnected
-
+      # Socketerror seems to mean a domain that is down or unavailable, tried http://macgyver.com
+      # https://carpark.com seems to timeout
+      # http://poodle.com -- keep alive disconnected
       rescue SocketError, HTTPClient::KeepAliveDisconnected, HTTPClient::BadResponseError, ArgumentError,
-          Errno::ECONNREFUSED => ex
+             Errno::ECONNREFUSED => ex
         retry if @tries > 0
         @status_code = 499
       rescue HTTPClient::TimeoutError => ex
@@ -66,7 +65,7 @@ module StashEngine
 
     def correctly_formatted_url?
       u = URI.parse(@url)
-      u.kind_of?(URI::HTTP)
+      u.is_a?(URI::HTTP)
     rescue URI::InvalidURIError => ex
       false
     end
@@ -77,14 +76,14 @@ module StashEngine
       clnt = HTTPClient.new
 
       # this callback allows following redirects from http to https or opposite, otherwise it will not follow them
-      clnt.redirect_uri_callback = ->(uri, res) { res.header['location'][0] }
+      clnt.redirect_uri_callback = ->(_uri, res) { res.header['location'][0] }
       clnt.connect_timeout = 5
       clnt.send_timeout = 5
       clnt.receive_timeout = 5
       clnt.keep_alive_timeout = 5
       clnt.ssl_config.verify_mode = OpenSSL::SSL::VERIFY_NONE
-      #clnt.send_timeout = 15
-      #clnt.receive_timeout = 15
+      # clnt.send_timeout = 15
+      # clnt.receive_timeout = 15
       clnt
     end
 
@@ -93,7 +92,7 @@ module StashEngine
     def filename_from_content_disposition(disposition)
       disposition = disposition.first if disposition.class == Array
       return nil if disposition.blank?
-      if match = disposition.match(/filename=([^;$]+)/) #set the match and check for filename, this single equals is on purpose
+      if match = disposition.match(/filename=([^;$]+)/) # set the match and check for filename, this single equals is on purpose
         # this is a simple case that checks for ascii filenames in content disposition and removes surrounding quotes, if any
         my_match = match[1].strip
         my_match = my_match [1..-2] if my_match[0] == my_match[-1] && "\"'".include?(my_match[0])
@@ -114,11 +113,7 @@ module StashEngine
 
     # generate a filename as a last resort
     def last_resort_filename
-      if correctly_formatted_url?
-        URI.parse(@url).host
-      else
-        nil
-      end
+      URI.parse(@url).host if correctly_formatted_url?
     end
 
   end

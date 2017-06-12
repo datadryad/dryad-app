@@ -1,16 +1,14 @@
-require_dependency "stash_engine/application_controller"
+require_dependency 'stash_engine/application_controller'
 
 module StashEngine
   class SharesController < ApplicationController
     # before_action :set_share, only: [:edit, :update, :delete]
 
     # GET /shares/1/edit
-    def edit
-    end
+    def edit; end
 
     # POST /shares
-    def create
-    end
+    def create; end
 
     # PATCH/PUT /shares/1
     def update
@@ -33,14 +31,15 @@ module StashEngine
     end
 
     private
-      # Use callbacks to share common setup or constraints between actions.
-      # def set_share
-      #   @share = Share.find(params[:id])
-      # end
 
-      # Only allow a trusted parameter "white list" through.
-      def share_params
-        params.require(:share).permit(:id, :secret_id, :resource_id)
-      end
+    # Use callbacks to share common setup or constraints between actions.
+    # def set_share
+    #   @share = Share.find(params[:id])
+    # end
+
+    # Only allow a trusted parameter "white list" through.
+    def share_params
+      params.require(:share).permit(:id, :secret_id, :resource_id)
+    end
   end
 end

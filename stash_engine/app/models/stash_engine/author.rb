@@ -23,8 +23,8 @@ module StashEngine
     end
 
     def author_html_email_string
-      author_email.blank? ? nil : "<a href=\"mailto:#{CGI::escapeHTML(author_email.strip)}\">" +
-          "#{CGI::escapeHTML(author_standard_name.strip) }</a>"
+      author_email.blank? ? nil : "<a href=\"mailto:#{CGI.escapeHTML(author_email.strip)}\">" \
+          "#{CGI.escapeHTML(author_standard_name.strip)}</a>"
     end
 
     private

@@ -29,12 +29,12 @@ module StashEngine
       @embargo = Embargo.where(resource_id: embargo_params[:resource_id]).first
       @resource = Resource.find(embargo_params[:resource_id])
       respond_to do |format|
-        unless embargo_params[:end_date].to_date == Date.today.to_date
-          @embargo.update(embargo_params)
-          format.js { render template: 'stash_datacite/shared/update.js.erb' }
-        else
+        if embargo_params[:end_date].to_date == Date.today.to_date
           @embargo.destroy
           format.js { render 'delete' }
+        else
+          @embargo.update(embargo_params)
+          format.js { render template: 'stash_datacite/shared/update.js.erb' }
         end
       end
     end
@@ -51,7 +51,7 @@ module StashEngine
     # and using the rest methods in this case is overly complicated and annoying
     def changed
       respond_to do |format|
-        format.js {
+        format.js do
           @resource = Resource.find(params[:resource_id])
           @embargo = @resource.embargo
           @messages = []
@@ -61,12 +61,14 @@ module StashEngine
             r = Regexp.new(/^\d+$/)
             # all numbers
             if params['mmEmbargo'].match(r) && params['ddEmbargo'].match(r) && params['yyyyEmbargo'].match(r)
-              mm, dd, yyyy = params['mmEmbargo'].to_i, params['ddEmbargo'].to_i, params['yyyyEmbargo'].to_i
+              mm = params['mmEmbargo'].to_i
+              dd = params['ddEmbargo'].to_i
+              yyyy = params['yyyyEmbargo'].to_i
               if !valid_date_parts?(yyyy, mm, dd)
                 @messages += ['Please enter a valid month / day / year for your date.']
               elsif !valid_range?(yyyy, mm, dd)
-                @messages += [ 'Please enter a date between now and ' +
-                      "#{(Time.new + APP_CONFIG.max_review_days.to_i.days).strftime("%-m/%-d/%Y")}." ]
+                @messages += ['Please enter a date between now and ' \
+                      "#{(Time.new + APP_CONFIG.max_review_days.to_i.days).strftime('%-m/%-d/%Y')}."]
               else
                 @embargo.end_date = Time.new(yyyy, mm, dd)
                 @embargo.save
@@ -75,10 +77,10 @@ module StashEngine
               @messages += ['Please enter numeric values for the month / day / year.']
             end
           else
-            #publish now, not later.  Destroy embargo
+            # publish now, not later.  Destroy embargo
             @embargo.destroy if @embargo
           end
-        }
+        end
       end
     end
 
