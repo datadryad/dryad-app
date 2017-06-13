@@ -80,7 +80,7 @@ module StashEngine
     end
 
     def require_resource_owner
-      return if current_user.id == resource.user_id
+      return if current_user.id == @resource.user_id
       flash[:alert] = 'You do not have permission to modify this dataset.'
       redirect_to stash_engine.dashboard_path
     end
