@@ -22,14 +22,9 @@ module StashEngine
       respond_to do |format|
         format.xml do
           my_tenant = current_tenant
-          identifs = Identifier.select(:id, :identifier, :identifier_type, :updated_at).distinct
-            .joins('INNER JOIN stash_engine_resources ON ' \
-                    'stash_engine_identifiers.id = stash_engine_resources.identifier_id ' \
-                    'INNER JOIN stash_engine_users ON stash_engine_resources.user_id = stash_engine_users.id')
-            .where('stash_engine_users.tenant_id = ?', my_tenant.tenant_id)
-          puts identifs.length
+          identifiers = find_identifiers(my_tenant)
 
-          render text: gen_xml_from_identifiers(identifs, my_tenant), layout: false
+          render text: gen_xml_from_identifiers(identifiers, my_tenant), layout: false
         end
       end
     end
@@ -41,18 +36,33 @@ module StashEngine
 
     private
 
+    def find_identifiers(my_tenant)
+      join_conditions = <<-SQL
+          INNER JOIN stash_engine_resources
+                  ON stash_engine_identifiers.id = stash_engine_resources.identifier_id
+          INNER JOIN stash_engine_users
+                  ON stash_engine_resources.user_id = stash_engine_users.id
+      SQL
+
+      Identifier.select(:id, :identifier, :identifier_type, :updated_at).distinct
+        .joins(join_conditions)
+        .where('stash_engine_users.tenant_id = ?', my_tenant.tenant_id)
+    end
+
     def gen_xml_from_identifiers(ar_identifiers, my_tenant)
       builder = Nokogiri::XML::Builder.new do |xml|
         xml.urlset(xmlns: 'http://www.sitemaps.org/schemas/sitemap/0.9') do
-          ar_identifiers.each do |iden|
-            xml.url do
-              xml.loc "https://#{my_tenant.full_domain}#{APP_CONFIG.stash_mount}/dataset/#{iden}"
-              xml.lastmod iden.updated_at.strftime('%Y-%m-%d')
-            end
-          end
+          ar_identifiers.each { |iden| add_url(xml, my_tenant, iden) }
         end
       end
       builder.to_xml
+    end
+
+    def add_url(xml, my_tenant, identifier)
+      xml.url do
+        xml.loc "https://#{my_tenant.full_domain}#{APP_CONFIG.stash_mount}/dataset/#{identifier}"
+        xml.lastmod identifier.updated_at.strftime('%Y-%m-%d')
+      end
     end
   end
 end
