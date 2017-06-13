@@ -1,32 +1,44 @@
 module StashDatacite
-  module LandingMixin
-    def self.included(c)
-      c.helper_method :citation
+  # StashDatacite specific accessors for landing page
+  module LandingMixin # rubocop:disable Metrics/ModuleLength
+    def self.included(landing_controller)
+      landing_controller.helper_method :citation
+      landing_controller.helper_method :review
+      landing_controller.helper_method :schema_org_ds
+      landing_controller.helper_method :page_title
     end
 
-    # this method doesn't have a view but is to set up variables needed for page rendering of the dashboard/review
-    # it will be mixed into the appropriate controller class since we need it to work in the context where it is mixed
-    # in to set variables for the view.
-    # @resource, @data, @review, @schema_org_ds
-    def setup_show_variables(resource_id)
-      @resource = StashEngine::Resource.find(resource_id)
-      @review = StashDatacite::Resource::Review.new(@resource)
-      @resource.has_geolocation = @review.geolocation_data?
-      @resource.save!
-      @schema_org_ds = schema_org_json_for(@resource)
+    def has_geolocation?
+      review.geolocation_data?
+    end
+
+    def review
+      @review ||= StashDatacite::Resource::Review.new(resource)
+    end
+
+    def page_title # TODO: is this used?
+      @page_title ||= review.title.title
+    end
+
+    def schema_org_ds
+      @schema_org_ds ||= schema_org_json_for(resource)
+    end
+
+    def pdf_meta
+      @pdf_meta ||= StashDatacite::ResourcesController::PdfMetadata.new(resource, id, plain_citation)
     end
 
     private
 
     def plain_citation
       citation(
-        @review.authors,
-        @review.title,
-        @review.resource_type,
-        version_string_for(@resource, @review),
-        identifier_string_for(@resource, @review),
-        @review.publisher.to_s,
-        @resource.publication_years
+        review.authors,
+        review.title,
+        review.resource_type,
+        version_string_for(resource, review),
+        identifier_string_for(resource, review),
+        review.publisher.to_s,
+        resource.publication_years
       )
     end
 

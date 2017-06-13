@@ -15,7 +15,7 @@ module StashEngine
     enum file_state: %w[created copied deleted].map { |i| [i.to_sym, i] }.to_h
 
     # display the correct error message based on the url status code
-    def error_message
+    def error_message # rubocop:disable Metrics/MethodLength, Metrics/CyclomaticComplexity
       return '' if url.nil? || status_code == 200
       case status_code
       when 400
@@ -40,7 +40,7 @@ module StashEngine
     end
 
     # returns the latest version number in which this filename was created
-    def version_file_created_in
+    def version_file_created_in # rubocop:disable Metrics/MethodLength
       return resource.stash_version if file_state == 'created' || file_state.blank?
       sql = <<-EOS
         SELECT v.* FROM

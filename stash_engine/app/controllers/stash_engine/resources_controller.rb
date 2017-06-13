@@ -27,9 +27,7 @@ module StashEngine
     # the show_files is for refreshing the files lists to their default states for the resource
     def show_files
       @uploads = @resource.latest_file_states
-      respond_to do |format|
-        format.js
-      end
+      respond_to { |format| format.js }
     end
 
     # GET /resources/new
@@ -68,11 +66,10 @@ module StashEngine
       respond_to do |format|
         if current_user.resources.present?
           format.html { redirect_to dashboard_path, notice: 'Dataset was successfully deleted.' }
-          format.json { head :no_content }
         else
           format.html { redirect_to dashboard_getting_started_path }
-          format.json { head :no_content }
         end
+        format.json { head :no_content }
       end
     end
 

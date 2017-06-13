@@ -9,9 +9,8 @@ module StashEngine
     # GET/POST/PUT  /generals/find_or_create
     def find_or_create
       @resource = Resource.find(params[:resource_id])
-      if @resource.published?
-        redirect_to(metadata_entry_pages_new_version_path(resource_id: params[:resource_id])) && return
-      end
+      return unless @resource.published?
+      redirect_to(metadata_entry_pages_new_version_path(resource_id: params[:resource_id]))
     end
 
     # create a new version of this resource before editing with find or create
@@ -30,18 +29,16 @@ module StashEngine
       redirect_to metadata_entry_pages_find_or_create_path(resource_id: @new_res.id)
     end
 
-    def metadata_callback
+    def metadata_callback # rubocop:disable Metrics/AbcSize
       auth_hash = request.env['omniauth.auth']
       params = request.env['omniauth.params']
-      path = request.env['omniauth.origin']
-      author = StashEngine::Author.new(
+      StashEngine::Author.create(
         resource_id: params['resource_id'],
         author_first_name: auth_hash.info.first_name,
         author_last_name: auth_hash.info.last_name,
         author_orcid: auth_hash.uid
       )
-      author.save
-      redirect_to path
+      redirect_to request.env['omniauth.origin']
     end
 
     private
@@ -52,10 +49,9 @@ module StashEngine
     end
 
     def require_resource_owner
-      if current_user.id != @resource.user_id
-        flash[:alert] = 'You do not have permission to modify this dataset.'
-        redirect_to stash_engine.dashboard_path
-      end
+      return if current_user.id == @resource.user_id
+      flash[:alert] = 'You do not have permission to modify this dataset.'
+      redirect_to stash_engine.dashboard_path
     end
   end
 end
