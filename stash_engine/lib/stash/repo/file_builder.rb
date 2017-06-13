@@ -21,7 +21,7 @@ module Stash
       # @return [String] the filename
       def file_name
         return @file_name if @file_name
-        raise NoMethodError, "#{self.class} should either provide :file_name in the initializer, or override #file_name to return a filename; but it doesn't"
+        raise NoMethodError, "#{self.class} should either provide :file_name in the initializer, or override #file_name; but it doesn't"
       end
 
       # Override to provide the contents of the file.
