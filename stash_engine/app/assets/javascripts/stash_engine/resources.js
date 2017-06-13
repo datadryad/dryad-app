@@ -28,7 +28,6 @@ $(function () {
             e.preventDefault();
             $('#not_uploaded_file_' + data.files[0]['id']).remove();
             updateButtonLinkStates();
-            // updateWaitingSize();
             $('#upload_complete').hide();
           });
 
