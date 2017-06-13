@@ -22,7 +22,6 @@ module StashEngine
       # request.format = 'pdf'
       render('not_available') && return if params[:id].blank?
       @type, @id = params[:id].split(':', 2)
-
       @identifiers = Identifier.where(identifier_type: @type).where(identifier: @id)
       render('not_available') && return if @identifiers.count < 1
       @id = @identifiers.first
@@ -39,35 +38,17 @@ module StashEngine
       # lots of problems getting all styles and javascript to load with wicked pdf
       # https://github.com/mileszs/wicked_pdf/issues/257
       # https://github.com/mileszs/wicked_pdf
-      my_debug = params[:debug] ? true : false
+      show_as_html = params[:debug] ? true : false
       respond_to do |format|
         format.any(:html, :pdf) do
-          render pdf: @review.pdf_filename,
-                 page_size: 'Letter',
-                 title: @review.title_str,
-                 javascript_delay: 3000,
-                 # 'use_xserver' => true,
-                 margin: { top: 20, bottom: 20, left: 20, right: 20 },
-                 header: {
-                   left: pdf_meta.top_left,
-                   right: pdf_meta.top_right,
-                   font_size: 9,
-                   spacing: 5
-                 },
-                 footer: {
-                   left: pdf_meta.bottom_left,
-                   right: pdf_meta.bottom_right,
-                   font_size: 9,
-                   spacing: 5
-                 },
-                 show_as_html: my_debug
+          render_pdf(pdf_meta, show_as_html)
         end
       end
     end
 
     protect_from_forgery(except: [:update])
     # PATCH /dataset/doi:10.xyz/abc
-    def update
+    def update # rubocop:disable Metrics/MethodLength
       params.require(:id)
       params.require(:record_identifier)
 
@@ -86,6 +67,30 @@ module StashEngine
     end
 
     private
+
+    def render_pdf(pdf_meta, show_as_html) # rubocop:disable Metrics/MethodLength
+      render(
+        pdf: @review.pdf_filename,
+        page_size: 'Letter',
+        title: @review.title_str,
+        javascript_delay: 3000,
+        # 'use_xserver' => true,
+        margin: { top: 20, bottom: 20, left: 20, right: 20 },
+        header: {
+          left: pdf_meta.top_left,
+          right: pdf_meta.top_right,
+          font_size: 9,
+          spacing: 5
+        },
+        footer: {
+          left: pdf_meta.bottom_left,
+          right: pdf_meta.bottom_right,
+          font_size: 9,
+          spacing: 5
+        },
+        show_as_html: show_as_html
+      )
+    end
 
     # TODO: use this in #show and #data_paper
     def identifier_from(params)
