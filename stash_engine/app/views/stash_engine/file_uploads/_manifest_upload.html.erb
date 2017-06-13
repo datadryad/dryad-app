@@ -5,9 +5,6 @@
 </p>
 <h2 class="t-upload__choose-heading--active">Step 2: Enter Files</h2>
 
-<% #TODO  This file object isn't really being used for anything but to pass a resource id in and nothing in the form is
-  # specific to the file.  It's files for the resource.  This is extra cruft that isn't needed %>
-
 <%= form_tag stash_engine.file_uploads_validate_urls_path(resource.id),
              remote: true, html: { id: 'url_validate' } do  %>
   <%= hidden_field_tag :resource_id, resource.id %>
