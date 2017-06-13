@@ -61,7 +61,6 @@ StashEngine::Engine.routes.draw do
   get 'data_paper/*id', :to => 'landing#data_paper', as: 'data_paper', :constraints => { :id => /\S+/ }
   get '404', :to => 'pages#app_404', as: 'app_404'
 
-  get 'manifests/:id/:filename', to: 'manifests#show'
   patch 'dataset/*id', :to => 'landing#update', :constraints => { :id => /\S+/ }
 
   get 'embargoes/new', to: 'embargoes#new'
