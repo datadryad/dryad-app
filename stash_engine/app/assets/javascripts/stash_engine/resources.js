@@ -22,7 +22,6 @@ $(function () {
           $('#upload_list').append(data.context);
           $('#confirm_text_upload, #upload_all, #upload_tweaker_head').show();
           $('#upload_complete').hide();
-          confirmToUpload();
 
           // remove -- binding this link action
           $('#not_uploaded_file_' + data.files[0]['id'] + ' .js-remove_link' ).click( function(e){
@@ -91,7 +90,7 @@ function updateWaitingSize(){
   if(mySize == 0){ $('#size_in_upload').hide(); }else{ $('#size_in_upload').show(); }
 }
 
-// update the button and navigation link states based on pending upload files
+// update the button and navigation link states based on pending upload files, don't allow navigation away if pending
 function updateButtonLinkStates(){
   if (filesWaitingForUpload()){
     // if files are waiting for upload
@@ -170,6 +169,14 @@ function enableUploadMethod(){
   // resetFileTablesToDbState();
 }
 
+// **********************************************************************************
+// END The items for showing only upload method or manifest method
+// **********************************************************************************
+
+// **********************************************************************************
+// The methods for the manifest workflow only
+// **********************************************************************************
+
 function confirmToValidate(){
   // bind the upload button to the check box
   $('#confirm_to_validate').bind( "click", function() {
@@ -181,59 +188,6 @@ function confirmToValidate(){
       $('#validate_files').attr('disabled', true); //disable input
     }
   });
-}
-
-// **********************************************************************************
-// END The items for showing only upload method or manifest method
-// **********************************************************************************
-
-// **********************************************************************************
-// The methods for the manifest workflow only
-// **********************************************************************************
-
-function addEventFewManyRows(){
-  $('#show_10_files').click( function(e){
-    e.preventDefault();
-    $('#table_hider').hide();
-    $('#show_10_files').hide();
-    $('#show_all_files').show();
-  });
-  $('#show_all_files').click( function(e){
-    e.preventDefault();
-    $('#table_hider').show();
-    $('#show_10_files').show();
-    $('#show_all_files').hide();
-  });
-}
-
-function hideLinksForFewRows(){
-  if($('.c-manifest-table__row').length < 11){
-    $('#show_10_files').hide();
-    $('#show_all_files').hide();
-  }
-}
-
-// takes the show10 and showAll visibility (t/f), be careful tricky since these are the links which have backwards
-// logic.  ie.  show10 shows up when the table is showing all and showAll link shows when it's showing 10.
-function tableStateRestorer(show10, showAll){
-  if(show10 == showAll) {
-    $('#show_10_files').hide();
-    $('#show_all_files').show();
-    show10 = false;
-    showAll = true;
-  }
-  if(showAll){
-    $('#show_all_files').show();
-    $('#table_hider').hide();
-  }else{
-    $('#show_all_files').hide();
-  }
-  if(show10){
-    $('#show_10_files').show();
-  }else{
-    $('#show_10_files').hide();
-  }
-  hideLinksForFewRows();
 }
 
 // **********************************************************************************
@@ -281,6 +235,16 @@ function uploadSize(pre){
 
 function filesWaitingForUpload(){
   return ($("div[id^='not_uploaded_file_']").length > 0);
+}
+
+// it's hard to figure out the correct table view to show with a delete because client side state and server side link generation
+// we have two in there (one for all files and one for page) and just need to show one
+function showCorrectDelete(myId){
+ if($('#show_10_files').length > 0){
+   $('#destroy_all_' + myId).show();
+ }else{
+   $('#destroy_10_' + myId).show();
+ }
 }
 
 // ********************************************************************************

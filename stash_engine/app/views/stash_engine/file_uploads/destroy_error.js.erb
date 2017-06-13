@@ -11,4 +11,4 @@ $('#validated_errors').html("<%= escape_javascript(
   }, 500);
 <% end %>
 
-setUploadMethodLockout('<%= resource.upload_type %>');
+setUploadMethodLockout('<%= @resource.upload_type %>');

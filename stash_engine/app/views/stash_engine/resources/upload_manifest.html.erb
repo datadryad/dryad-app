@@ -26,21 +26,9 @@
 
   $(function () {
     // set up initial page loaded state
-    // showFilesOrManifest(); // decides to either show files or manifest uploads based on select list state
-    // addSelectUploadTypeEvent();  // adds change event for switching files vs manifest
     setUploadMethodLockout('<%= @resource.upload_type %>'); // set lockout so you can't change view if you have files already
     $('#post_submit_spinner').hide(); // hide the submit spinner for manifest uploads
-    $('#table_hider').hide(); // hides > 10 rows of manifest table if it's long
-    $('#show_10_files').hide(); // hide link to only show 10 files
-    hideLinksForFewRows(); // hide both links if fewer than 10 files total
-    addEventFewManyRows();
+    console.log('should be adding confirm to validate button');
     confirmToValidate(); // add event to require checking acceptance before validating
   });
-
-  /* $( document ).ready(function() {
-    $('#files_from_computer').click(function(){
-      updateUiStates();
-    });
-  }); */
-
 </script>

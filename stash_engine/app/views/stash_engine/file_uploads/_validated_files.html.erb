@@ -1,4 +1,7 @@
-<% #takes local variable of resource %>
+<% #takes locals: resource, rows: (<number>) %>
+<% rows = 10 if rows.blank?
+  rows = rows.to_i
+%>
 
 <div>
   <% if resource.file_uploads.validated_table.count < 1 %>
@@ -13,13 +16,22 @@
         <th class="c-manifest-table__actions-col">Actions</th>
       </tr>
       <%= render partial: "stash_engine/file_uploads/manifest_upload_line",
-               collection: resource.file_uploads.validated_table, as: :uploaded_file %>
+               collection: resource.file_uploads.validated_table.limit(rows), as: :uploaded_file %>
       <% if resource.latest_file_states.count > 10 %>
         </tbody> <!-- closing tbody which shows/hides rows greater than 10 -->
       <% end %>
     </table>
-    <p id="show_all_files"><a href="#">Show all files</a></p>
-    <p id="show_10_files"><a href="#">Show 10 files</a></p>
+    <% if resource.file_uploads.validated_table.count > 10 %>
+      <% if rows == 10 %>
+        <p id="show_all_files">
+          <%= link_to 'Show all files', file_uploads_path(resource_id: @resource.id, rows: 99999), format: 'js', remote: true %>
+        </p>
+      <% else %>
+        <p id="show_10_files">
+          <%= link_to 'Show 10 files', file_uploads_path(resource_id: @resource.id, rows: 10), format: 'js', remote: true %>
+        </p>
+      <% end %>
+    <% end %>
     <p id="display_size">Total: <%= filesize(@resource.file_uploads.present_files.sum(:upload_file_size)) %></p>
     <div class="bad_upload">
       <% if @resource.file_uploads.present_files.sum(:upload_file_size) > current_tenant.max_submission_size %>
