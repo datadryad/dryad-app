@@ -97,7 +97,6 @@ module StashEngine
       )
     end
 
-    # TODO: use this in #show and #data_paper
     def identifier_from(params)
       params.require(:id)
       id_param = params[:id].upcase
