@@ -4,6 +4,11 @@ module StashEngine
   class EmbargoesController < ApplicationController
     before_action :set_embargo, only: [:delete]
 
+    def messages
+      @messages ||= []
+    end
+    helper_method :messages
+
     # GET /embargos/new
     def new
       @embargo = Embargo.new(resource_id: params[:resource_id])
@@ -25,7 +30,7 @@ module StashEngine
     end
 
     # PATCH/PUT /embargos/1
-    def update
+    def update # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
       @embargo = Embargo.where(resource_id: embargo_params[:resource_id]).first
       @resource = Resource.find(embargo_params[:resource_id])
       respond_to do |format|
@@ -49,36 +54,16 @@ module StashEngine
 
     # this is a generic action to handle all create/modify/delete actions for an embargo since it's just one form
     # and using the rest methods in this case is overly complicated and annoying
-    def changed
+    def changed # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
       respond_to do |format|
         format.js do
           @resource = Resource.find(params[:resource_id])
-          @embargo = @resource.embargo
-          @messages = []
-          return if @resource.user.id != current_user.id
+          return unless @resource.user.id == current_user.id
+
           if params['when-to-publish'] == 'in_future'
-            @embargo = Embargo.new(resource_id: @resource.id) unless @embargo
-            r = Regexp.new(/^\d+$/)
-            # all numbers
-            if params['mmEmbargo'].match(r) && params['ddEmbargo'].match(r) && params['yyyyEmbargo'].match(r)
-              mm = params['mmEmbargo'].to_i
-              dd = params['ddEmbargo'].to_i
-              yyyy = params['yyyyEmbargo'].to_i
-              if !valid_date_parts?(yyyy, mm, dd)
-                @messages += ['Please enter a valid month / day / year for your date.']
-              elsif !valid_range?(yyyy, mm, dd)
-                @messages += ['Please enter a date between now and ' \
-                      "#{(Time.new + APP_CONFIG.max_review_days.to_i.days).strftime('%-m/%-d/%Y')}."]
-              else
-                @embargo.end_date = Time.new(yyyy, mm, dd)
-                @embargo.save
-              end
-            else
-              @messages += ['Please enter numeric values for the month / day / year.']
-            end
-          else
-            # publish now, not later.  Destroy embargo
-            @embargo.destroy if @embargo
+            set_embargo_end_date(params['yyyyEmbargo'], params['mmEmbargo'], params['ddEmbargo'])
+          elsif (@embargo = @resource.embargo)
+            @embargo.destroy
           end
         end
       end
@@ -86,21 +71,46 @@ module StashEngine
 
     private
 
-    def valid_date_parts?(yyyy, mm, dd)
-      begin
-        Time.new(yyyy, mm, dd)
-      rescue ArgumentError => ex
-        return false
-      end
-      true
+    def set_embargo_end_date(year, month, day)
+      end_time = parse(year, month, day)
+      return unless end_time
+      @embargo = Embargo.find_or_create_by(resource_id: @resource.id)
+      @embargo.end_date = end_time
+      @embargo.save
     end
 
-    def valid_range?(yyyy, mm, dd)
-      t = Time.new
-      today = Time.new(t.year, t.month, t.day)
-      max_day = Time.new + APP_CONFIG.max_review_days.to_i.days
-      my_day = Time.new(yyyy, mm, dd)
-      (my_day >= today) && (my_day < max_day)
+    def parse(year, month, day)
+      if can_parse(year, month, day)
+        end_time = try_parse(year, month, day)
+        return end_time if end_time_in_range?(end_time)
+        messages << "Please enter a date between now and #{max_end_time.strftime('%-m/%-d/%Y')}."
+      else
+        messages << 'Please enter numeric values for the month / day / year.'
+      end
+      nil
+    end
+
+    def try_parse(year, month, day)
+      Time.new(year.to_i, month.to_i, day.to_i)
+    rescue ArgumentError
+      messages << 'Please enter a valid month / day / year for your date.'
+      nil
+    end
+
+    def can_parse(year, month, day)
+      [year, month, day].all? { |p| p.match(Regexp.new(/^\d+$/)) }
+    end
+
+    def end_time_in_range?(end_date)
+      (end_date >= today_time) && (end_date < max_end_time)
+    end
+
+    def max_end_time
+      @max_end_time ||= today_time + APP_CONFIG.max_review_days.to_i.days
+    end
+
+    def today_time
+      @today ||= Date.today.to_time
     end
 
     # Use callbacks to share common setup or constraints between actions.
