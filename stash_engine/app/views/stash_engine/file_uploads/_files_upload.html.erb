@@ -1,8 +1,5 @@
 <%# locals: file, resource, uploads %>
-<p>
-  Size limits: <%= filesize(current_tenant.max_file_size) %> per file,
-  <%= filesize(current_tenant.max_total_version_size) %> in total.
-</p>
+<%= render 'stash_engine/file_uploads/file_size_text' %>
 <h2 class="t-upload__choose-heading--active">Step 2: Choose Files</h2>
 
 <div>
