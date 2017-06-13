@@ -2,38 +2,35 @@ require_dependency 'stash_engine/application_controller'
 
 module StashEngine
   class LandingController < ApplicationController
+    # LandingMixin should provide:
+    # - has_geolocation?
+    # - pdf_meta
     include StashEngine.app.metadata_engine.constantize::LandingMixin
 
+    def id
+      @id ||= identifier_from(params)
+    end
+    helper_method :id
+
+    def resource
+      @resource ||= id.last_submitted_resource
+    end
+    helper_method :resource
+
+    def resource_id
+      resource.id
+    end
+    helper_method :resource_id
+
     def show
-      render('not_available') && return if params[:id].blank?
-      @type, @id = params[:id].split(':', 2)
-      @identifiers = Identifier.where(identifier_type: @type).where(identifier: @id)
-      render('not_available') && return if @identifiers.count < 1
-      @id = @identifiers.first
-      @resource = @id.last_submitted_resource
-      render('not_available') && return if @resource.blank?
-      @resource_id = @resource.id
-      @resource.increment_views
-      setup_show_variables(@resource_id) # sets up the specific metadata view variables from <meta_engine>::LandingMixin
-      @page_title = @review.title.title
+      render 'not_available' && return unless id && resource
+      resource.increment_views
+      ensure_has_geolocation!
     end
 
     def data_paper
-      # request.format = 'pdf'
-      render('not_available') && return if params[:id].blank?
-      @type, @id = params[:id].split(':', 2)
-      @identifiers = Identifier.where(identifier_type: @type).where(identifier: @id)
-      render('not_available') && return if @identifiers.count < 1
-      @id = @identifiers.first
-      @resource = @id.last_submitted_resource
-      render('not_available') && return if @resource.blank?
-      @resource_id = @resource.id
-
-      # sets up the specific metadata view variables from <meta_engine>::LandingMixin
-      # @resource, @review, @schema_org_ds
-      setup_show_variables(@resource_id)
-      # TODO: we need to fix the way we mixin/set up variables and the citation is too complicated to deal with
-      pdf_meta = metadata_engine::ResourcesController::PdfMetadata.new(@resource, @id, plain_citation)
+      render 'not_available' && return unless id
+      ensure_has_geolocation!
 
       # lots of problems getting all styles and javascript to load with wicked pdf
       # https://github.com/mileszs/wicked_pdf/issues/257
@@ -49,7 +46,6 @@ module StashEngine
     protect_from_forgery(except: [:update])
     # PATCH /dataset/doi:10.xyz/abc
     def update # rubocop:disable Metrics/MethodLength
-      params.require(:id)
       params.require(:record_identifier)
 
       identifier = identifier_from(params)
@@ -68,11 +64,20 @@ module StashEngine
 
     private
 
+    def ensure_has_geolocation!
+      old_value = resource.has_geolocation
+      new_value = has_geolocation?
+      return unless old_value != new_value
+
+      resource.has_geolocation = new_value
+      resource.save!
+    end
+
     def render_pdf(pdf_meta, show_as_html) # rubocop:disable Metrics/MethodLength
       render(
-        pdf: @review.pdf_filename,
+        pdf: review.pdf_filename,
         page_size: 'Letter',
-        title: @review.title_str,
+        title: review.title_str,
         javascript_delay: 3000,
         # 'use_xserver' => true,
         margin: { top: 20, bottom: 20, left: 20, right: 20 },
@@ -94,6 +99,7 @@ module StashEngine
 
     # TODO: use this in #show and #data_paper
     def identifier_from(params)
+      params.require(:id)
       id_param = params[:id].upcase
       type, id = id_param.split(':', 2)
       logger.error("Can't parse identifier from id_param '#{id_param}'") && return unless id

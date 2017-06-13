@@ -1,47 +1,47 @@
 <script type="application/ld+json">
-  <%= @schema_org_ds %>
+  <%= schema_org_ds %>
 </script>
-  <%= render partial: "stash_datacite/titles/show", locals: { title: @review.title } %>
+  <%= render partial: "stash_datacite/titles/show", locals: { title: review.title } %>
   <div class="t-landing__metadata o-metadata">
-    <%= render partial: "stash_datacite/authors/show", locals: { authors: @review.authors } %>
-    <%= render partial: "stash_datacite/publishers/publication_info", locals: {resource: @resource } %>
+    <%= render partial: "stash_datacite/authors/show", locals: { authors: review.authors } %>
+    <%= render partial: "stash_datacite/publishers/publication_info", locals: {resource: resource } %>
   </div>
 
   <section class="o-section">
   <%= render partial: "stash_datacite/shared/citations",
-             locals: { authors: @review.authors, title: @review.title,
-                       resource_type: @review.resource_type,
-                       version: @resource.stash_version.nil? ? 'v0' : "v#{@review.version.version }",
-                       identifier: @resource.identifier.nil? ? 'DOI' : "#{@review.identifier.identifier }",
-                       publisher: "#{@review.publisher}",
-                       publication_years: @resource.publication_years } %>
+             locals: { authors: review.authors, title: review.title,
+                       resource_type: review.resource_type,
+                       version: resource.stash_version.nil? ? 'v0' : "v#{review.version.version }",
+                       identifier: resource.identifier.nil? ? 'DOI' : "#{review.identifier.identifier }",
+                       publisher: "#{review.publisher}",
+                       publication_years: resource.publication_years } %>
   </section>
-  <%= render partial: "stash_datacite/descriptions/show", locals: { abstract: @review.abstract,
-                                                                    methods: @review.methods, other: @review.other } %>
+  <%= render partial: "stash_datacite/descriptions/show", locals: { abstract: review.abstract,
+                                                                    methods: review.methods, other: review.other } %>
 
-  <% if current_user && @resource.user_id == current_user.id && @resource.under_embargo? %>
+  <% if current_user && resource.user_id == current_user.id && resource.under_embargo? %>
     <h3 class="o-heading__level2">Reviewer URL</h3>
-    <%= render partial: "stash_datacite/shares/show", locals: { share: @review.share } %>
+    <%= render partial: "stash_datacite/shares/show", locals: { share: review.share } %>
   <% end %>
 
-  <%= render partial: "stash_datacite/contributors/show", locals: { contributors: @review.contributors } %>
+  <%= render partial: "stash_datacite/contributors/show", locals: { contributors: review.contributors } %>
   <%= render partial: "stash_datacite/related_identifiers/show",
-             locals: { related_identifiers: @review.related_identifiers } %>
+             locals: { related_identifiers: review.related_identifiers } %>
 
-  <% if @review.geolocation_data? %>
+  <% if review.geolocation_data? %>
     <h3 class="o-heading__level2">Location</h3>
     <div id="map_review" class="o-map"></div>
     <div class="c-locations">
       <%= render partial: "stash_datacite/geolocation_points/show",
-                 locals: { geolocation_points: @review.geolocation_points } %>
+                 locals: { geolocation_points: review.geolocation_points } %>
       <%= render partial: "stash_datacite/geolocation_boxes/show",
-                 locals: { geolocation_boxes: @review.geolocation_boxes } %>
+                 locals: { geolocation_boxes: review.geolocation_boxes } %>
       <%= render partial: "stash_datacite/geolocation_places/show",
-                 locals: { geolocation_places: @review.geolocation_places } %>
+                 locals: { geolocation_places: review.geolocation_places } %>
     </div>
   <% end %>
 
 <script>
-  $( document ).ready( loadReviewMap(<%=@resource.id%>) );
+  $( document ).ready( loadReviewMap(<%=resource.id%>) );
 </script>
   <%# render partial: "stash_datacite/licenses/review" %>
