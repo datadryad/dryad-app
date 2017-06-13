@@ -1,8 +1,0 @@
-<% if @dup_files.count > 0 %>
-  // js to replace row with the previous one
-  $('#<%= @row_id %>').replaceWith("<%= escape_javascript(render(partial: 'stash_engine/file_uploads/uploaded_file', object: @dup_files.first)) %>");
-<% else %>
-  // js to remove that removed row from the table
-  $('#<%= @row_id %>').remove();
-<% end %>
-updateButtonLinkStates();

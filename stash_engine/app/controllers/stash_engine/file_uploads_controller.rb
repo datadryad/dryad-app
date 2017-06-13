@@ -4,9 +4,9 @@ require 'fileutils'
 module StashEngine
   class FileUploadsController < ApplicationController # rubocop:disable Metrics/ClassLength
     before_action :require_login
-    before_action :set_file_info, only: %i[destroy remove restore destroy_error destroy_manifest]
+    before_action :set_file_info, only: %i[destroy destroy_error destroy_manifest]
     # TODO: check that the following before action really should be ignored on these
-    before_action :require_file_owner, except: %i[create destroy remove restore revert validate_urls destroy_error remove_unuploaded index]
+    before_action :require_file_owner, except: %i[create revert validate_urls destroy_error index]
     before_action :set_create_prerequisites, only: [:create]
 
     attr_reader :resource
@@ -32,7 +32,7 @@ module StashEngine
       end
     end
 
-    # destroy a file from the manifest table deletion action
+    # This used to be only for manifests, but now destroys both manifest and upload files
     def destroy_manifest
       respond_to do |format|
         format.js do
@@ -83,6 +83,8 @@ module StashEngine
         file.file_state = 'deleted'
         file.save!
       elsif file.file_state == 'created'
+        temp_file_path = file.temp_file_path
+        File.delete(temp_file_path) if !temp_file_path.blank? && temp_file_path.present?
         file.destroy
       end
     end
