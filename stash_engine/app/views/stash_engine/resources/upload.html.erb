@@ -25,13 +25,12 @@
     $('#fileupload').fileupload({
       maxChunkSize: 1048576,
       //acceptFileTypes: /(\.|\/)(gif|jpe?g|png|tif?f)$/i
-      maxFileSize: <%= current_tenant.max_file_size %>,// 2GB,
+      // maxFileSize: <%= current_tenant.max_file_size %>,// 2GB,
       //maxFileSize: 1048576 ,// 1MB,
       limitMultiFileUploadSize: <%= current_tenant.max_submission_size %>
     });
     $('#upload_all').click(function(){
       $('#upload_complete').hide();
-      $('#over_single_size').empty();
     });
   });
 
@@ -41,14 +40,7 @@
   updateButtonLinkStates(); // for file upload method
 
   $(function () {
-    // set up initial page loaded state
-    // showFilesOrManifest(); // decides to either show files or manifest uploads based on select list state
-    // addSelectUploadTypeEvent();  // adds change event for switching files vs manifest
     setUploadMethodLockout('<%= @resource.upload_type %>'); // set lockout so you can't change view if you have files already
-    // $('#table_hider').hide(); // hides > 10 rows of manifest table if it's long
-    // $('#show_10_files').hide(); // hide link to only show 10 files
-    // hideLinksForFewRows(); // hide both links if fewer than 10 files total
-    // addEventFewManyRows();
     confirmToValidate(); // add event to require checking acceptance before validating
   });
 
