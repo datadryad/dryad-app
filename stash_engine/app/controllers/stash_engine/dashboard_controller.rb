@@ -16,10 +16,8 @@ module StashEngine
     end
 
     def show
-      unless current_user.resources.present?
-        redirect_to stash_url_helpers.dashboard_getting_started_path
-        false
-      end
+      return if current_user.resources.present?
+      redirect_to stash_url_helpers.dashboard_getting_started_path
     end
 
     def metadata_basics; end
