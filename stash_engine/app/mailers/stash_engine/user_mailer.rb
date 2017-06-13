@@ -14,53 +14,48 @@ module StashEngine
       warn("Unable to report update error #{error}; nil resource") unless resource
       return unless resource
 
+      init_from(resource)
+
       user = resource.user
-      @user_name = "#{user.first_name} #{user.last_name}"
-      @user_email = user.email
-      @title = resource.primary_title
-      @identifier_uri = resource.identifier_uri
-      @identifier_value = resource.identifier_value
+      tenant = user.tenant
+
       @backtrace = to_backtrace(error)
 
       to_address = to_address_list(APP_CONFIG['support_team_email'])
-      tenant = user.tenant
       bcc_address = to_address_list(tenant.manager_email)
       mail(to: to_address, bcc: bcc_address,
            subject: "#{rails_env}Submitting dataset \"#{@title}\" (doi:#{@identifier_value}) failed")
     end
 
-    def submission_succeeded(resource)
+    def submission_succeeded(resource) # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
       warn('Unable to report successful submission; nil resource') unless resource
       return unless resource
 
+      init_from(resource)
+      @to_name = @user_name
+
       user = resource.user
-      @to_name = "#{user.first_name} #{user.last_name}"
-      @title = resource.primary_title
-      @identifier_uri = resource.identifier_uri
-      @identifier_value = resource.identifier_value
+      tenant = user.tenant
+      @host = tenant.full_domain
 
       @embargo_date = nil
       @embargo_date = resource.embargo.end_date if resource.embargo
 
-      tenant = user.tenant
-      @host = tenant.full_domain
-
-      to_address = to_address_list(user.email)
+      @to_name = @user_name
+      to_address = to_address_list(@user_email)
       bcc_address = to_address_list(tenant.manager_email)
       mail(to: to_address, bcc: bcc_address,
            subject: "#{rails_env}Dataset \"#{@title}\" (doi:#{@identifier_value}) submitted")
     end
 
-    def submission_failed(resource, error)
+    def submission_failed(resource, error) # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
       warn("Unable to report submission failure #{error}; nil resource") unless resource
       return unless resource
 
-      user = resource.user
-      @to_name = "#{user.first_name} #{user.last_name}"
-      @title = resource.primary_title
-      @identifier_uri = resource.identifier_uri
-      @identifier_value = resource.identifier_value
+      init_from(resource)
+      @to_name = @user_name
 
+      user = resource.user
       tenant = user.tenant
       @host = tenant.full_domain
 
@@ -73,6 +68,15 @@ module StashEngine
     end
 
     private
+
+    def init_from(resource)
+      user = resource.user
+      @user_name = "#{user.first_name} #{user.last_name}"
+      @user_email = user.email
+      @title = resource.primary_title
+      @identifier_uri = resource.identifier_uri
+      @identifier_value = resource.identifier_value
+    end
 
     def to_address_list(addresses)
       addresses = [addresses] unless addresses.respond_to?(:join)

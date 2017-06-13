@@ -10,13 +10,9 @@ module StashEngine
       reset_session
       return head(:forbidden) unless auth_hash_good
 
-      if @auth_hash[:provider] == 'developer'
-        session[:test_domain] = @auth_hash['info']['test_domain']
-        @auth_hash[:uid] = mangle_uid_with_tenant(@auth_hash[:uid], current_tenant.tenant_id)
-      end
-      session[:user_id] = nil
-      user = User.from_omniauth(@auth_hash, current_tenant.tenant_id)
-      session[:user_id] = user.id
+      check_developer_login!
+
+      session[:user_id] = User.from_omniauth(@auth_hash, current_tenant.tenant_id).id
       redirect_to dashboard_getting_started_path
     end
 
@@ -48,6 +44,12 @@ module StashEngine
       sp.push('bad-email-domain.com') if sp.length == 1
       sp = ['bad', 'bad-email-domain.com'] if sp.blank? || sp.length > 2
       "#{sp.first}-#{tenant_id}@#{sp.last}"
+    end
+
+    def check_developer_login!
+      return unless @auth_hash[:provider] == 'developer'
+      session[:test_domain] = @auth_hash['info']['test_domain']
+      @auth_hash[:uid] = mangle_uid_with_tenant(@auth_hash[:uid], current_tenant.tenant_id)
     end
   end
 end

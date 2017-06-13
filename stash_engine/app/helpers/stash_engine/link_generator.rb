@@ -86,29 +86,29 @@ module StashEngine
         @target_prefix = target_prefix
         @resolver_prefix = resolver_prefix
         if id_value.nil?
-          @is_url = false
-          @has_correct_prefix = false
+          @is_http_url = false
+          @prefix_correct = false
         else
-          @is_url = id_value.strip.downcase.start_with?('http')
-          @has_correct_prefix = id_value.strip.downcase.start_with?(target_prefix.strip.downcase)
+          @is_http_url = id_value.strip.downcase.start_with?('http')
+          @prefix_correct = id_value.strip.downcase.start_with?(target_prefix.strip.downcase)
         end
       end
 
-      def is_url?
-        @is_url
+      def http_url?
+        @is_http_url
       end
 
-      def has_correct_prefix?
-        @has_correct_prefix
+      def prefix_correct?
+        @prefix_correct
       end
 
       def reference_form
-        return @id_value if is_url?
+        return @id_value if http_url?
         "#{@target_prefix}#{bare_id}"
       end
 
       def bare_id
-        if has_correct_prefix?
+        if prefix_correct?
           # remove the prefix and give bare id
           @id_value[@target_prefix.strip.length..-1].strip
         else
@@ -119,7 +119,7 @@ module StashEngine
 
       # returns text and link for creating a URL
       def text_and_link
-        return [@id_value, @id_value] if is_url?
+        return [@id_value, @id_value] if http_url?
         [reference_form, "#{@resolver_prefix}#{bare_id}"]
       end
     end

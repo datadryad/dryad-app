@@ -1,5 +1,5 @@
 module StashEngine
-  module SharedController
+  module SharedController # rubocop:disable Metrics/ModuleLength
     require 'uri'
     require 'securerandom'
 
@@ -80,10 +80,9 @@ module StashEngine
     end
 
     def require_resource_owner
-      if current_user.id != @resource.user_id
-        flash[:alert] = 'You do not have permission to modify this dataset.'
-        redirect_to stash_engine.dashboard_path
-      end
+      return if current_user.id == resource.user_id
+      flash[:alert] = 'You do not have permission to modify this dataset.'
+      redirect_to stash_engine.dashboard_path
     end
 
     def can_display_embargoed?(resource)
@@ -158,21 +157,21 @@ module StashEngine
       return nil if str.nil?
 
       # add the awful paragraph junk for BRs and encode since we need to encode manually if we're saying html is safe
-      str_arr = str.split(/\< *br *[\/]{0,1} *\>/).reject(&:blank?)
+      str_arr = str.split(%r{\< *br *[/]{0,1} *\>}).reject(&:blank?)
       my_str = str_arr.map { |i| ERB::Util.html_escape(i) }.join(' </p><p> ')
+      link_urls!(my_str)
+      my_str.html_safe
+    end
 
-      # kludge in some linking of random URLs they pooped into their text.
-      my_str.gsub!(/https?:\/\/\S+/) do |m|
+    # kludge in some linking of random URLs they pooped into their text.
+    def link_urls!(my_str)
+      my_str.gsub!(%r{https?://\S+}) do |m|
         full_url = Nokogiri::HTML.parse(m).text
         end_punctuation = full_url.match(/[\(\)\.\?\!]+$/).to_s
         full_url = full_url[0..-end_punctuation.length - 1]
         "<a href=\"#{full_url}\" title=\"#{full_url}\">" \
             "#{ActionController::Base.helpers.truncate(m)}</a>#{ERB::Util.html_escape(end_punctuation)}"
       end
-
-      # Nokogiri::HTML.parse(escaped).text will give unescaped
-
-      my_str.html_safe
     end
 
     def shorten_linked_url(url:, length: 80)
