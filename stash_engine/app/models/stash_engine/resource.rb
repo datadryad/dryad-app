@@ -345,9 +345,15 @@ module StashEngine
 
     # -----------------------------------------------------------
     # Embargoes
-    def under_embargo?
-      return false if embargo.nil? || embargo.end_date.nil?
-      Time.new < embargo.end_date
+
+    def private?
+      !public?
+    end
+
+    def public?
+      end_date = embargo && embargo.end_date
+      return true unless end_date
+      Time.now >= end_date
     end
 
     private
