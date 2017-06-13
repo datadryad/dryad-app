@@ -14,7 +14,7 @@ There are currently seven live instances of Dash:
 - [ONEshare](https://oneshare.cdlib.org/) (in partnership with [DataONE](http://dataone.org/))
 
 
-##Architecture and Implementation
+## Architecture and Implementation
 
 Dash is completely open source.  Our code is made publicly available on GitHub (http://cdluc3.github.io/dash/).  Dash is based on an underlying Ruby-on-Rails data publication platform called Stash. Stash encompasses three main functional components: Store, Harvest, and Share.
 
