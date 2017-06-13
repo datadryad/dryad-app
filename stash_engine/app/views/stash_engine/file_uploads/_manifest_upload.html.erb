@@ -1,8 +1,5 @@
 <%# locals: resource %>
-<p>
-  Size limits: up to <%= number_with_delimiter(current_tenant.max_files, :delimiter => ',') %> files and
-  <%= filesize(current_tenant.max_submission_size) %>
-</p>
+<%= render 'stash_engine/file_uploads/file_size_text' %>
 <h2 class="t-upload__choose-heading--active">Step 2: Enter Files</h2>
 
 <%= form_tag stash_engine.file_uploads_validate_urls_path(resource.id),
