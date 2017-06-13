@@ -4,7 +4,7 @@ require 'fileutils'
 module Stash
   module Repo
     # Abstraction for a repository
-    class Repository
+    class Repository # rubocop:disable Metrics/ClassLength
       attr_reader :url_helpers
 
       # Initializes this repository
@@ -64,14 +64,8 @@ module Stash
         resource = identifier.processing_resource
         return unless resource # harvester could be re-harvesting stuff we already have
 
-        download_uri = get_download_uri(resource, record_identifier)
-        update_uri = get_update_uri(resource, record_identifier)
-
-        log.debug("Setting download_uri for #{resource.id} to #{download_uri}")
-        log.debug("Setting update_uri for #{resource.id} to #{update_uri}")
-
-        resource.download_uri = download_uri
-        resource.update_uri = update_uri
+        resource.download_uri = get_download_uri(resource, record_identifier)
+        resource.update_uri = get_update_uri(resource, record_identifier)
         resource.current_state = 'submitted'
         resource.save
 
@@ -120,12 +114,9 @@ module Stash
       end
 
       def cleanup_files(resource)
-        resource.file_uploads.map(&:temp_file_path).each { |file| remove_if_exists(file) }
-        res_upload_dir = StashEngine::Resource.upload_dir_for(resource.id)
-        remove_if_exists(res_upload_dir)
-
-        res_public_dir = Rails.public_path.join('system').join(resource.id.to_s)
-        remove_if_exists(res_public_dir)
+        remove_file_uploads(resource)
+        remove_upload_dir(resource)
+        remove_public_dir(resource)
       rescue => e
         msg = "An unexpected error occurred when cleaning up files for resource #{resource.id}: "
         msg << to_msg(e)
@@ -135,6 +126,20 @@ module Stash
       def remove_if_exists(file)
         return if file.blank?
         FileUtils.remove_entry_secure(file, true) if File.exist?(file)
+      end
+
+      def remove_file_uploads(resource)
+        resource.file_uploads.map(&:temp_file_path).each { |file| remove_if_exists(file) }
+      end
+
+      def remove_upload_dir(resource)
+        res_upload_dir = StashEngine::Resource.upload_dir_for(resource.id)
+        remove_if_exists(res_upload_dir)
+      end
+
+      def remove_public_dir(resource)
+        res_public_dir = Rails.public_path.join('system').join(resource.id.to_s)
+        remove_if_exists(res_public_dir)
       end
 
       def to_msg(error)

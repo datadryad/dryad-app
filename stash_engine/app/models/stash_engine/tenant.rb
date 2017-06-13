@@ -19,7 +19,7 @@ module StashEngine
     end
 
     # gets the Tenant class to respond to the keys so you can call hash like methods
-    def method_missing(m) # , *args, &block
+    def method_missing(m) # rubocop:disable Style/MethodMissing
       @ostruct.send(m)
     end
 

@@ -1,5 +1,5 @@
 module StashEngine
-  class Resource < ActiveRecord::Base
+  class Resource < ActiveRecord::Base # rubocop:disable Metrics/ClassLength
     # ------------------------------------------------------------
     # Relations
 
@@ -137,7 +137,7 @@ module StashEngine
     end
 
     # returns the list of duplicate filenames in created state where we shouldn't have any
-    def duplicate_filenames
+    def duplicate_filenames # rubocop:disable Metrics/MethodLength
       sql = <<-eos
         SELECT *
         FROM stash_engine_file_uploads AS a
@@ -163,7 +163,7 @@ module StashEngine
     # TODO: this knows about merritt specifics transforming the sword url into a merritt url, needs to be elsewhere
     def merritt_producer_download_uri
       return nil if download_uri.nil?
-      return nil unless download_uri =~ /^https*:\/\/[^\/]+\/d\/\S+$/
+      return nil unless download_uri =~ %r{^https*://[^/]+/d/\S+$}
       version_number = stash_version.merritt_version
       "#{download_uri.sub('/d/', '/u/')}/#{version_number}"
     end
@@ -174,8 +174,8 @@ module StashEngine
     # returns two parts the protocol_and_domain part of the URL (with no trailing slash) and the local_id
     def merritt_protodomain_and_local_id
       return nil if download_uri.nil?
-      return nil unless download_uri =~ /^https*:\/\/[^\/]+\/d\/\S+$/
-      matches = download_uri.match(/^(https*:\/\/[^\/]+)\/d\/(\S+)$/)
+      return nil unless download_uri =~ %r{^https*://[^/]+/d/\S+$}
+      matches = download_uri.match(%r{^(https*://[^/]+)/d/(\S+)$})
       [matches[1], matches[2]]
     end
 
@@ -240,25 +240,24 @@ module StashEngine
     end
 
     def ensure_identifier(doi)
-      doi_value = doi.start_with?('doi:') ? doi.split(':', 2)[1] : doi
       current_id_value = identifier_value
+      doi_value = doi.start_with?('doi:') ? doi.split(':', 2)[1] : doi
       return if current_id_value == doi_value
-      if current_id_value
-        raise ArgumentError, "Resource #{id} already has an identifier #{current_id_value}; can't set new value #{doi_value}"
-      end
+      raise ArgumentError, "Resource #{id} already has an identifier #{current_id_value}; can't set new value #{doi_value}" if current_id_value
+      ensure_identifier_and_version(doi_value)
+    end
 
+    def ensure_identifier_and_version(doi_value)
       existing_identifier = Identifier.find_by(identifier: doi_value, identifier_type: 'DOI')
       if existing_identifier
         self.identifier = existing_identifier
-        version_record = stash_version
-        version_record.version = next_version_number
-        version_record.merritt_version = next_merritt_version
-        version_record.save!
+        increment_version!
       else
         self.identifier = Identifier.create(identifier: doi_value, identifier_type: 'DOI')
       end
       save!
     end
+    private :ensure_identifier_and_version
 
     # ------------------------------------------------------------
     # Versioning
@@ -290,9 +289,22 @@ module StashEngine
 
     def init_version
       # we probably don't have an identifier at this point so the version and merritt_version will probably always be 1, but you never know
-      self.stash_version = StashEngine::Version.create(resource_id: id, version: next_version_number, merritt_version: next_merritt_version, zip_filename: nil)
+      self.stash_version = StashEngine::Version.create(
+        resource_id: id,
+        version: next_version_number,
+        merritt_version: next_merritt_version,
+        zip_filename: nil
+      )
     end
     private :init_version
+
+    def increment_version!
+      version_record = stash_version
+      version_record.version = next_version_number
+      version_record.merritt_version = next_merritt_version
+      version_record.save!
+    end
+    private :increment_version!
 
     # ------------------------------------------------------------
     # Ownership

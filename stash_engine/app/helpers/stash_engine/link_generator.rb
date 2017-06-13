@@ -6,7 +6,7 @@ module StashEngine
       send(type.downcase, value)
     end
 
-    def self.method_missing(_method_name, *arguments)
+    def self.method_missing(_method_name, *arguments) # rubocop:disable Style/MethodMissing
       arguments.first
     end
 

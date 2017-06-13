@@ -1,8 +1,5 @@
 module StashEngine
   class License
-    @@licenses_by_uri =
-      Hash[::LICENSES.map { |k, v| [v['uri'], v.merge(id: k)] }].with_indifferent_access
-
     def self.by_id(id)
       ::LICENSES[id]
     end
@@ -12,7 +9,11 @@ module StashEngine
     end
 
     def self.by_uri(uri)
-      @@licenses_by_uri[uri]
+      licenses_by_uri[uri]
+    end
+
+    def self.licenses_by_uri
+      @licenses_by_uri ||= Hash[::LICENSES.map { |k, v| [v['uri'], v.merge(id: k)] }].with_indifferent_access
     end
   end
 end
