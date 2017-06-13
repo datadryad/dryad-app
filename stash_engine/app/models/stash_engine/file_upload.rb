@@ -30,7 +30,7 @@ module StashEngine
         "The server will not accept the request, because the URL #{url} is too long."
       when 408, 499
         'The server timed out waiting for the request to complete.'
-      when 498
+      when 409
         "You've already added this URL in this version."
       when 500..511
         'Encountered a remote server error while retrieving the request.'
