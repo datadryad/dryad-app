@@ -61,10 +61,9 @@ module Stash
 
           it 'allows an explicit embargo' do
             embargo = Embargo.new(type: EmbargoType::DOWNLOAD,
-              period: 'a year and a day',
-              start_date: Date.new(2015, 1, 1),
-              end_date: Date.new(2016, 1, 1)
-            )
+                                  period: 'a year and a day',
+                                  start_date: Date.new(2015, 1, 1),
+                                  end_date: Date.new(2016, 1, 1))
             params[:embargo] = embargo
             admin = StashAdministrative.new(params)
             expect(admin.embargo).to be(embargo)
@@ -90,7 +89,7 @@ module Stash
           end
 
           it 'requires inventory to be an inventory' do
-            params[:inventory] = [{pathname: 'HSRC_MasterSampleII.dat', size_bytes: 12_345, mime_type: 'text/plain'}]
+            params[:inventory] = [{ pathname: 'HSRC_MasterSampleII.dat', size_bytes: 12_345, mime_type: 'text/plain' }]
             expect { StashAdministrative.new(params) }.to raise_error(ArgumentError)
           end
         end
