@@ -19,6 +19,17 @@ module StashEngine
       expect(uv.status_code).to eq(200)
     end
 
+    describe :mime_type_from do
+      it 'extracts mime-types from content-type with charset' do
+        content_type = 'text/plain; charset=us-ascii'
+        headers = instance_double(HTTP::Message::Headers)
+        allow(headers).to receive(:[]).with('Content-Type').and_return([content_type])
+        response = instance_double(HTTP::Message)
+        allow(response).to receive(:header).and_return(headers)
+        expect(uv.send(:mime_type_from, response)).to eq('text/plain')
+      end
+    end
+
     describe :validate do
 
       attr_reader :client
