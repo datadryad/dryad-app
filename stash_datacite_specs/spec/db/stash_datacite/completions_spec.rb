@@ -484,9 +484,12 @@ module StashDatacite
         end
 
         it 'warns on unvalidated URLs' do
-          @resource.upload_type = :manifest
           @resource.file_uploads.newly_created.find_each do |upload|
+            upload_file_name = upload.upload_file_name
+            filename_encoded = ERB::Util.url_encode(upload_file_name)
+            upload.url = "http://example.org/uploads/#{filename_encoded}"
             upload.status_code = '403'
+            upload.save!
           end
           warnings = completions.all_warnings
           expect(warnings[0]).to include('valid')
