@@ -441,6 +441,57 @@ module StashDatacite
           expect(completions.optional_completed).to eq(OPTIONAL_COUNT - 1)
         end
       end
+
+      describe :all_warnings do
+
+        before(:each) do
+          expect(completions.required_completed).to eq(REQUIRED_COUNT) # just to be sure
+        end
+
+        it 'warns on missing title' do
+          resource.titles.destroy_all
+          warnings = completions.all_warnings
+          expect(warnings[0]).to include('title')
+        end
+
+        it 'warns on missing abstract' do
+          @resource.descriptions.where(description_type: 'abstract').destroy_all
+          warnings = completions.all_warnings
+          expect(warnings[0]).to include('abstract')
+        end
+
+        it 'warns on missing author' do
+          @resource.authors.destroy_all
+          warnings = completions.all_warnings
+          expect(warnings[0]).to include('author')
+        end
+
+        it 'warns on missing author email' do
+          @resource.authors.find_each do |author|
+            author.author_email = nil
+            author.save!
+          end
+          warnings = completions.all_warnings
+          expect(warnings[0]).to include('email')
+        end
+
+        it 'warns on missing author affiliation' do
+          @resource.authors.find_each do |author|
+            author.affiliations.destroy_all
+          end
+          warnings = completions.all_warnings
+          expect(warnings[0]).to include('affiliation')
+        end
+
+        it 'warns on unvalidated URLs' do
+          @resource.upload_type = :manifest
+          @resource.file_uploads.newly_created.find_each do |upload|
+            upload.status_code = '403'
+          end
+          warnings = completions.all_warnings
+          expect(warnings[0]).to include('valid')
+        end
+      end
     end
   end
 end
