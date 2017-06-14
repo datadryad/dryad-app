@@ -15,6 +15,45 @@ module StashEngine
       )
     end
 
+    describe :primary_title do
+      it 'is abstract' do
+        resource = Resource.create(user_id: user.id)
+        expect { resource.primary_title }.to raise_error(NameError)
+      end
+    end
+
+    describe :ensure_state_and_version do
+      attr_reader :resource
+      attr_reader :orig_state_id
+      attr_reader :orig_version
+      before(:each) do
+        @resource = Resource.create(user_id: user.id)
+        @orig_state_id = resource.current_resource_state_id
+        @orig_version = resource.stash_version
+      end
+
+      it 'inits version if not present' do
+        resource.stash_version.delete
+        resource.stash_version = nil
+        resource.ensure_state_and_version
+
+        expect(resource.current_resource_state_id).to eq(orig_state_id) # shouldn't change
+
+        expect(resource.stash_version).not_to be_nil
+        expect(resource.stash_version).not_to eq(orig_version)
+      end
+
+      it 'inits state if not present' do
+        resource.current_resource_state_id = nil
+        resource.ensure_state_and_version
+
+        expect(resource.stash_version).to eq(orig_version) # shouldn't change
+
+        expect(resource.current_resource_state_id).not_to be_nil
+        expect(resource.current_resource_state_id).not_to eq(orig_state_id)
+      end
+    end
+
     describe 'author' do
       attr_reader :resource
       before(:each) do
