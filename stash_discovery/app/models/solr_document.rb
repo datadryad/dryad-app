@@ -1,5 +1,6 @@
-#is this necessary?  THis was included in the geoblacklight example app that kind of worked.
+# is this necessary?  THis was included in the geoblacklight example app that kind of worked.
 # frozen_string_literal: true
+
 class SolrDocument
   include Blacklight::Solr::Document
   include Geoblacklight::SolrDocument

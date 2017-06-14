@@ -1,1 +1,23 @@
 inherit_from: ../.rubocop.yml
+
+AllCops:
+  Exclude:
+    - 'bin/**/*'
+    - 'config/**/*'
+    - 'db/**/*'
+    - 'test/dummy/db/**/*'
+    - 'vendor/**/*'
+  # Suppress complaints about post-2.0 syntax
+  TargetRubyVersion: 2.2
+
+Metrics/LineLength:
+  Exclude:
+    - 'app/controllers/catalog_controller.rb'
+
+Metrics/BlockLength:
+  Exclude:
+    - 'app/controllers/catalog_controller.rb'
+
+Style/PredicateName:
+  Exclude:
+    - 'app/controllers/catalog_controller.rb'
