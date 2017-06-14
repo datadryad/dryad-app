@@ -182,9 +182,9 @@ module StashDatacite
 
         before(:each) do
           @actual_size = resource
-                         .file_uploads
-                         .present_files
-                         .inject(0) { |sum, f| sum + f.upload_file_size }
+            .file_uploads
+            .present_files
+            .inject(0) { |sum, f| sum + f.upload_file_size }
         end
 
         it 'returns true if file size > limit' do
