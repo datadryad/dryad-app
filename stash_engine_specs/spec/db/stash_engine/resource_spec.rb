@@ -146,7 +146,7 @@ module StashEngine
         @state = ResourceState.find_by(resource_id: resource.id)
       end
 
-      describe '#init_state' do
+      describe :init_state do
         it 'initializes the state to in_progress' do
           expect(state.resource_state).to eq('in_progress')
         end
@@ -155,7 +155,7 @@ module StashEngine
         end
       end
 
-      describe '#current_state=' do
+      describe :current_state= do
         it 'sets the state' do
           new_state_value = 'submitted'
           resource.current_state = new_state_value
@@ -187,7 +187,7 @@ module StashEngine
         end
       end
 
-      describe '#current_resource_state' do
+      describe :current_resource_state do
         it 'returns the initial state' do
           expect(state).not_to be_nil # just to be sure
           expect(resource.current_resource_state).to eq(state)
@@ -218,7 +218,7 @@ module StashEngine
         end
       end
 
-      describe '#published?' do
+      describe :published? do
         it 'returns true if the current state is published' do
           resource.current_state = 'submitted'
           expect(resource.published?).to eq(true)
@@ -232,7 +232,7 @@ module StashEngine
         end
       end
 
-      describe '#processing?' do
+      describe :processing? do
         it 'returns true if the current state is processing' do
           resource.current_state = 'processing'
           expect(resource.processing?).to eq(true)
@@ -246,7 +246,7 @@ module StashEngine
         end
       end
 
-      describe '#current_state' do
+      describe :current_state do
         it 'returns the value of the current state' do
           expect(resource.current_state).to eq('in_progress')
           %w[processing error submitted].each do |state_value|
@@ -262,17 +262,17 @@ module StashEngine
         before(:each) do
           allow(Rails).to receive(:root).and_return('/apps/stash/stash_engine')
         end
-        describe '#uploads_dir' do
+        describe :uploads_dir do
           it 'returns the uploads directory' do
             expect(Resource.uploads_dir).to eq('/apps/stash/stash_engine/uploads')
           end
         end
-        describe '#upload_dir_for' do
+        describe :upload_dir_for do
           it 'returns a separate directory by resource ID' do
             expect(Resource.upload_dir_for(17)).to eq('/apps/stash/stash_engine/uploads/17')
           end
         end
-        describe '#upload_dir' do
+        describe :upload_dir do
           it 'returns the upload directory for this resource' do
             resource = Resource.create
             expect(resource.upload_dir).to eq("/apps/stash/stash_engine/uploads/#{resource.id}")
@@ -280,7 +280,7 @@ module StashEngine
         end
       end
 
-      describe '#current_file_uploads' do
+      describe :current_file_uploads do
         attr_reader :res1
         attr_reader :created_files
         attr_reader :copied_files
@@ -333,7 +333,7 @@ module StashEngine
         end
       end
 
-      describe '#file_uploads' do
+      describe :file_uploads do
         attr_reader :temp_file_paths
         attr_reader :uploads
         attr_reader :resource
@@ -355,7 +355,7 @@ module StashEngine
           end
         end
 
-        describe '#latest_file_states' do
+        describe :latest_file_states do
           it 'finds the latest version of each file' do
             new_latest = uploads.each_with_index.map do |upload, i|
               FileUpload.create(
@@ -371,7 +371,7 @@ module StashEngine
           end
         end
 
-        describe '#clean_uploads' do
+        describe :clean_uploads do
           it 'removes all upload records without files' do
             (0...3).each { |i| FileUpload.create(resource_id: resource.id, temp_file_path: "/missing-file-#{i}.bin", file_state: :created) }
             expect(FileUpload.where(resource_id: resource.id).count).to eq(6) # just to be sure
@@ -379,6 +379,8 @@ module StashEngine
             expect(FileUpload.where(resource_id: resource.id).count).to eq(3)
           end
         end
+
+
       end
     end
 
@@ -388,25 +390,25 @@ module StashEngine
         @resource = Resource.create
       end
 
-      describe '#stash_version' do
+      describe :stash_version do
         it 'is initialized' do
           expect(resource.stash_version).not_to be_nil
         end
       end
 
-      describe '#version_number' do
+      describe :version_number do
         it 'defaults to 1' do
           expect(resource.version_number).to eq(1)
         end
       end
 
-      describe '#merritt_version' do
+      describe :merritt_version do
         it 'defaults to 1' do
           expect(resource.merritt_version).to eq(1)
         end
       end
 
-      describe '#version_zipfile=' do
+      describe :version_zipfile= do
         it 'creates the first version' do
           zipfile = '/apps/stash/stash_engine/uploads/17-archive.zip'
           resource.version_zipfile = zipfile
@@ -426,7 +428,7 @@ module StashEngine
           resource.version_zipfile = "#{resource.id}-archive.zip"
         end
 
-        describe '#version_number' do
+        describe :version_number do
           it 'still defaults to 1' do
             expect(resource.version_number).to eq(1)
           end
@@ -447,7 +449,7 @@ module StashEngine
           end
         end
 
-        describe '#merritt_version' do
+        describe :merritt_version do
           it 'still defaults to 1' do
             expect(resource.merritt_version).to eq(1)
           end
@@ -464,13 +466,13 @@ module StashEngine
           end
         end
 
-        describe '#next_version_number' do
+        describe :next_version_number do
           it 'is based on the last submitted version' do
             expect(resource.next_version_number).to eq(2)
           end
         end
 
-        describe '#next_merritt_version' do
+        describe :next_merritt_version do
           it 'is based on the last submitted version' do
             expect(resource.next_merritt_version).to eq(2)
           end
@@ -484,7 +486,7 @@ module StashEngine
         @resource = Resource.create(user_id: user.id)
       end
 
-      describe '#ensure_identifier' do
+      describe :ensure_identifier do
         it 'defaults to nil' do
           expect(resource.identifier).to be_nil
         end
@@ -526,7 +528,7 @@ module StashEngine
         end
       end
 
-      describe '#identifier_str' do
+      describe :identifier_str do
         it 'defaults to nil' do
           expect(resource.identifier_str).to be_nil
         end
@@ -549,7 +551,7 @@ module StashEngine
     end
 
     describe 'statistics' do
-      describe '#submitted_dataset_count' do
+      describe :submitted_dataset_count do
         it 'defaults to zero' do
           expect(Resource.submitted_dataset_count).to eq(0)
         end
@@ -598,7 +600,7 @@ module StashEngine
         end
       end
 
-      describe '#resource_usage' do
+      describe :resource_usage do
         attr_reader :resource
 
         def usage
@@ -611,19 +613,19 @@ module StashEngine
         it 'defaults to nil' do
           expect(usage).to be_nil
         end
-        describe '#increment_views' do
+        describe :increment_views do
           it 'increments views' do
             resource.increment_views
             expect(usage.views).to eq(1)
           end
         end
-        describe '#increment_downloads' do
+        describe :increment_downloads do
           it 'increments downloads' do
             resource.increment_downloads
             expect(usage.downloads).to eq(1)
           end
         end
-        describe '#amoeba_duplication' do
+        describe :amoeba_duplication do
           it 'doesn\'t duplicate usage' do
             resource.increment_views
             resource.increment_downloads
