@@ -71,6 +71,18 @@ module Stash
         end
       end
 
+      describe :download_uri_for do
+        it 'is abstract' do
+          expect { repo.download_uri_for(resource: resource, record_identifier: 'ark:/1234/567') }.to raise_error(NoMethodError)
+        end
+      end
+
+      describe :update_uri_for do
+        it 'is abstract' do
+          expect { repo.update_uri_for(resource: resource, record_identifier: 'ark:/1234/567') }.to raise_error(NoMethodError)
+        end
+      end
+
       describe :submit do
         attr_reader :job
 
