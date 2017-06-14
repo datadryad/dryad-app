@@ -14,18 +14,18 @@ class LatestController < ApplicationController
   configure_blacklight do |config|
     ## Default parameters to send to solr for all search-like requests. See also SolrHelper#solr_search_params
     config.default_solr_params = {
-        :start => 0,
-        :rows => 20,
-        'q.alt' => '*:*',
-        :sort => 'timestamp desc'
+      :start => 0,
+      :rows => 20,
+      'q.alt' => '*:*',
+      :sort => 'timestamp desc'
     }
 
     ## Default parameters to send on single-document requests to Solr. These settings are the Blackligt defaults (see SolrHelper#solr_doc_params) or
     ## parameters included in the Blacklight-jetty document requestHandler.
     #
     config.default_document_solr_params = {
-        :qt => 'document',
-        :q => '{!raw f=uuid v=$id}'
+      qt: 'document',
+      q: '{!raw f=uuid v=$id}'
     }
 
     config.search_builder_class = Geoblacklight::SearchBuilder
@@ -43,8 +43,6 @@ class LatestController < ApplicationController
     # Custom GeoBlacklight fields which currently map to GeoBlacklight-Schema
     # v0.3.2
     config.wxs_identifier_field = 'layer_id_s'
-
-
 
     # solr fields to be displayed in the show (single result) view
     #  The ordering of the field names is the order of the display
@@ -70,18 +68,18 @@ class LatestController < ApplicationController
 
     respond_to do |format|
       format.html { store_preferred_view }
-      format.rss  { render :layout => false }
-      format.atom { render :layout => false }
+      format.rss  { render layout: false }
+      format.atom { render layout: false }
       format.js
       format.json do
         render json: render_search_results_as_json
-        #@presenter = Blacklight::JsonPresenter.new(@response,
+        # @presenter = Blacklight::JsonPresenter.new(@response,
         #                                           @document_list,
         #                                           facets_from_request,
         #                                           blacklight_config)
       end
-      #additional_response_formats(format)
-      #document_export_formats(format)
+      # additional_response_formats(format)
+      # document_export_formats(format)
     end
   end
 
@@ -94,7 +92,7 @@ class LatestController < ApplicationController
   def set_cached_latest
     key = "#{floor_stamp(Time.new)}_latest_datasets"
     unless Rails.cache.exist?(key)
-      Rails.cache.write(key, search_results(params) )
+      Rails.cache.write(key, search_results(params))
     end
     (@response, @document_list) = Rails.cache.fetch(key)
   end

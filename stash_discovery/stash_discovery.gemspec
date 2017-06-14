@@ -1,4 +1,4 @@
-$:.push File.expand_path('../lib', __FILE__)
+$LOAD_PATH.push File.expand_path('../lib', __FILE__)
 
 # Maintain your gem's version:
 require 'stash_discovery/version'
@@ -34,5 +34,5 @@ Gem::Specification.new do |s|
   s.add_dependency 'devise-guests', '~> 0.5'
 
   s.add_development_dependency 'sqlite3'
+  s.add_development_dependency 'rubocop', '~> 0.49'
 end
-

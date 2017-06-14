@@ -1,4 +1,5 @@
 # -*- encoding : utf-8 -*-
+
 require 'blacklight/catalog'
 
 class CatalogController < ApplicationController
@@ -11,7 +12,7 @@ class CatalogController < ApplicationController
   helper StashEngine::ApplicationHelper
   include StashEngine::SharedController
 
-  #layout 'blacklight'
+  # layout 'blacklight'
   layout 'stash_engine/application'
 
   configure_blacklight do |config|
@@ -26,8 +27,8 @@ class CatalogController < ApplicationController
     ## parameters included in the Blacklight-jetty document requestHandler.
     #
     config.default_document_solr_params = {
-     :qt => 'document',
-     :q => '{!raw f=layer_slug_s v=$id}'
+      qt: 'document',
+      q: '{!raw f=layer_slug_s v=$id}'
     }
 
     # solr field configuration for search results/index views
@@ -79,20 +80,17 @@ class CatalogController < ApplicationController
     #    :years_25 => { :label => 'within 25 Years', :fq => "pub_date:[#{Time.now.year - 25 } TO *]" }
     # }
 
-    #config.add_facet_field Settings.FIELDS.PROVENANCE, label: 'Institution', limit: 8, partial: "icon_facet"
-    #config.add_facet_field Settings.FIELDS.CREATOR, :label => 'Author', :limit => 8
-    config.add_facet_field 'dc_type_s', :label => 'Type', :limit => 8
-    config.add_facet_field Settings.FIELDS.PUBLISHER, :label => 'Institution', :limit => 8
-    config.add_facet_field Settings.FIELDS.YEAR, :label => 'Year', :limit => 10
-    config.add_facet_field Settings.FIELDS.SUBJECT, :label => 'Subject Area', :limit => 8
-    config.add_facet_field Settings.FIELDS.SPATIAL_COVERAGE, :label => 'Geographical Location', :limit => 8
-    config.add_facet_field Settings.FIELDS.PART_OF, :label => 'Collection', :limit => 8
+    # config.add_facet_field Settings.FIELDS.PROVENANCE, label: 'Institution', limit: 8, partial: "icon_facet"
+    # config.add_facet_field Settings.FIELDS.CREATOR, :label => 'Author', :limit => 8
+    config.add_facet_field 'dc_type_s', label: 'Type', limit: 8
+    config.add_facet_field Settings.FIELDS.PUBLISHER, label: 'Institution', limit: 8
+    config.add_facet_field Settings.FIELDS.YEAR, label: 'Year', limit: 10
+    config.add_facet_field Settings.FIELDS.SUBJECT, label: 'Subject Area', limit: 8
+    config.add_facet_field Settings.FIELDS.SPATIAL_COVERAGE, label: 'Geographical Location', limit: 8
+    config.add_facet_field Settings.FIELDS.PART_OF, label: 'Collection', limit: 8
 
-
-
-    #config.add_facet_field Settings.FIELDS.RIGHTS, label: 'Access', limit: 8, partial: "icon_facet"
-    #config.add_facet_field Settings.FIELDS.GEOM_TYPE, label: 'Data type', limit: 8, partial: "icon_facet"
-
+    # config.add_facet_field Settings.FIELDS.RIGHTS, label: 'Access', limit: 8, partial: "icon_facet"
+    # config.add_facet_field Settings.FIELDS.GEOM_TYPE, label: 'Data type', limit: 8, partial: "icon_facet"
 
     # Have BL send all facet field names to Solr, which has been the default
     # previously. Simply remove these lines if you'd rather use Solr request
@@ -120,8 +118,6 @@ class CatalogController < ApplicationController
     config.add_index_field Settings.FIELDS.CREATOR
     config.add_index_field Settings.FIELDS.DESCRIPTION, helper_method: :snippit
     config.add_index_field Settings.FIELDS.PUBLISHER
-
-
 
     # solr fields to be displayed in the show (single result) view
     #  The ordering of the field names is the order of the display
@@ -210,10 +206,10 @@ class CatalogController < ApplicationController
     # label in pulldown is followed by the name of the SOLR field to sort by and
     # whether the sort is ascending or descending (it must be asc or desc
     # except in the relevancy case).
-    config.add_sort_field 'score desc, dc_title_sort asc', :label => 'relevance'
-    config.add_sort_field "#{Settings.FIELDS.YEAR} desc, dc_title_sort asc", :label => 'year'
-    config.add_sort_field "#{Settings.FIELDS.PUBLISHER} asc, dc_title_sort asc", :label => 'institution'
-    config.add_sort_field 'dc_title_sort asc', :label => 'title'
+    config.add_sort_field 'score desc, dc_title_sort asc', label: 'relevance'
+    config.add_sort_field "#{Settings.FIELDS.YEAR} desc, dc_title_sort asc", label: 'year'
+    config.add_sort_field "#{Settings.FIELDS.PUBLISHER} asc, dc_title_sort asc", label: 'institution'
+    config.add_sort_field 'dc_title_sort asc', label: 'title'
 
     # If there are more than this many search results, no spelling ("did you
     # mean") suggestion is offered.
@@ -234,8 +230,8 @@ class CatalogController < ApplicationController
     config.basemap_provider = 'positron'
 
     # Configuration for autocomplete suggestor
-    #config.autocomplete_enabled = true
-    #config.autocomplete_path = 'suggest'
+    # config.autocomplete_enabled = true
+    # config.autocomplete_path = 'suggest'
   end
 
   ##
@@ -247,7 +243,5 @@ class CatalogController < ApplicationController
   def has_search_parameters?
     !params[:q].nil? || super
   end
-
-
 
 end
