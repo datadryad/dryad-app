@@ -209,6 +209,27 @@ module StashDatacite
         end
       end
 
+      describe :over_version_size? do
+        attr_reader :actual_size
+
+        before(:each) do
+          @actual_size = resource
+            .file_uploads
+            .present_files
+            .inject(0) { |sum, f| sum + f.upload_file_size }
+        end
+
+        it 'returns true if file size > limit' do
+          limit = actual_size - 1
+          expect(completions.over_version_size?(limit)).to eq(true)
+        end
+
+        it 'returns false if file size <= limit' do
+          limit = actual_size
+          expect(completions.over_version_size?(limit)).to eq(false)
+        end
+      end
+
       describe :over_manifest_file_count? do
         attr_reader :actual_count
         before(:each) do
