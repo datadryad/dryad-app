@@ -15,10 +15,147 @@ module StashEngine
       )
     end
 
+    describe :tenant do
+      it 'returns the user tenant' do
+        tenant = instance_double(Tenant)
+        allow(Tenant).to receive(:find).with('ucop').and_return(tenant)
+
+        resource = Resource.create(user_id: user.id)
+        expect(resource.tenant).to eq(tenant)
+      end
+    end
+
+    describe :tenant_id do
+      it 'returns the user tenant ID' do
+        resource = Resource.create(user_id: user.id)
+        expect(resource.tenant_id).to eq('ucop')
+      end
+    end
+
     describe :primary_title do
       it 'is abstract' do
         resource = Resource.create(user_id: user.id)
         expect { resource.primary_title }.to raise_error(NameError)
+      end
+    end
+
+    describe 'Merrit-specific URL shenanigans' do
+      describe :merritt_producer_download_uri do
+        it 'returns the producer download URI' do
+          download_uri = 'https://merritt.example.edu/d/ark%3A%2Fb5072%2Ffk2736st5z'
+          resource = Resource.create(user_id: user.id)
+          resource.download_uri = download_uri
+          expect(resource.merritt_producer_download_uri).to eq('https://merritt.example.edu/u/ark%3A%2Fb5072%2Ffk2736st5z/1')
+        end
+      end
+
+      # TODO: this shouldn't be in StashEngine
+      describe :merritt_protodomain_and_local_id do
+        it 'returns the merritt protocol and domain and local ID' do
+          download_uri = 'https://merritt.example.edu/d/ark%3A%2Fb5072%2Ffk2736st5z'
+          resource = Resource.create(user_id: user.id)
+          resource.download_uri = download_uri
+
+          merritt_protodomain, local_id = resource.merritt_protodomain_and_local_id
+          expect(merritt_protodomain).to eq('https://merritt.example.edu')
+          expect(local_id).to eq('ark%3A%2Fb5072%2Ffk2736st5z')
+        end
+      end
+    end
+
+    describe :publication_date do
+      it 'defaults to updated_at' do
+        resource = Resource.create(user_id: user.id)
+        expect(resource.publication_date).to eq(resource.updated_at)
+      end
+
+      it 'returns the embargo end date if present' do
+        end_date = Date.new(2015, 5, 18)
+        resource = Resource.create(user_id: user.id)
+        StashEngine::Embargo.create(resource_id: resource.id, end_date: end_date)
+        resource.reload
+        expect(resource.publication_date).to eq(end_date)
+      end
+    end
+
+    describe :public? do
+      it 'defaults to true' do
+        resource = Resource.create(user_id: user.id)
+        expect(resource.public?).to eq(true)
+      end
+
+      it 'returns true for expired embargoes' do
+        resource = Resource.create(user_id: user.id)
+        StashEngine::Embargo.create(resource_id: resource.id, end_date: Date.new(2015, 5, 18))
+        resource.reload
+        expect(resource.public?).to eq(true)
+      end
+
+      it 'returns false for in-force embargoes' do
+        today = Date.today
+        future_date = Date.new(today.year + 1, today.month, today.day + 1)
+        resource = Resource.create(user_id: user.id)
+        StashEngine::Embargo.create(resource_id: resource.id, end_date: future_date)
+        resource.reload
+        expect(resource.public?).to eq(false)
+      end
+    end
+
+    describe :private? do
+      it 'defaults to false' do
+        resource = Resource.create(user_id: user.id)
+        expect(resource.private?).to eq(false)
+      end
+
+      it 'returns false for expired embargoes' do
+        resource = Resource.create(user_id: user.id)
+        StashEngine::Embargo.create(resource_id: resource.id, end_date: Date.new(2015, 5, 18))
+        resource.reload
+        expect(resource.private?).to eq(false)
+      end
+
+      it 'returns true for in-force embargoes' do
+        today = Date.today
+        future_date = Date.new(today.year + 1, today.month, today.day + 1)
+        resource = Resource.create(user_id: user.id)
+        StashEngine::Embargo.create(resource_id: resource.id, end_date: future_date)
+        resource.reload
+        expect(resource.private?).to eq(true)
+      end
+    end
+
+    describe :embargoed? do
+      it 'defaults to false' do
+        resource = Resource.create(user_id: user.id)
+        resource.current_state = 'submitted'
+        expect(resource.embargoed?).to eq(false)
+      end
+
+      it 'returns false for un-submitted resources even if otherwise private' do
+        today = Date.today
+        future_date = Date.new(today.year + 1, today.month, today.day + 1)
+        resource = Resource.create(user_id: user.id)
+        StashEngine::Embargo.create(resource_id: resource.id, end_date: future_date)
+        resource.reload
+        expect(resource.embargoed?).to eq(false)
+      end
+
+      it 'returns false for expired embargoes' do
+        resource = Resource.create(user_id: user.id)
+        StashEngine::Embargo.create(resource_id: resource.id, end_date: Date.new(2015, 5, 18))
+        resource.current_state = 'submitted'
+        resource.reload
+        expect(resource.embargoed?).to eq(false)
+      end
+
+      it 'returns true for in-force embargoes' do
+        today = Date.today
+        future_date = Date.new(today.year + 1, today.month, today.day + 1)
+        resource = Resource.create(user_id: user.id)
+        StashEngine::Embargo.create(resource_id: resource.id, end_date: future_date)
+        resource.current_state = 'submitted'
+        resource.reload
+        expect(resource.embargoed?).to eq(true)
       end
     end
 
@@ -288,9 +425,30 @@ module StashEngine
         before(:each) do
           @res1 = Resource.create(user_id: user.id)
 
-          @created_files = Array.new(3) { |i| FileUpload.create(resource: res1, file_state: 'created', upload_file_name: "created#{i}.bin") }
-          @copied_files = Array.new(3) { |i| FileUpload.create(resource: res1, file_state: 'copied', upload_file_name: "copied#{i}.bin") }
-          @deleted_files = Array.new(3) { |i| FileUpload.create(resource: res1, file_state: 'deleted', upload_file_name: "deleted#{i}.bin") }
+          @created_files = Array.new(3) do |i|
+            FileUpload.create(
+              resource: res1,
+              file_state: 'created',
+              upload_file_name: "created#{i}.bin",
+              upload_file_size: i * 3
+            )
+          end
+          @copied_files = Array.new(3) do |i|
+            FileUpload.create(
+              resource: res1,
+              file_state: 'copied',
+              upload_file_name: "copied#{i}.bin",
+              upload_file_size: i * 5
+            )
+          end
+          @deleted_files = Array.new(3) do |i|
+            FileUpload.create(
+              resource: res1,
+              file_state: 'deleted',
+              upload_file_name: "deleted#{i}.bin",
+              upload_file_size: i * 7
+            )
+          end
         end
 
         it 'defaults to empty' do
@@ -329,6 +487,49 @@ module StashEngine
 
           it 'doesn\'t copy deleted files' do
             expect(res2.file_uploads.deleted).to be_empty
+          end
+        end
+
+        describe :size do
+          it 'includes all copied and created' do
+            created_size = created_files.inject(0) { |sum, f| sum + f.upload_file_size }
+            copied_size = copied_files.inject(0) { |sum, f| sum + f.upload_file_size }
+            expected_size = created_size + copied_size
+            expect(res1.size).to eq(expected_size)
+          end
+        end
+
+        describe :upload_type do
+          it 'returns :unknown for no uploads' do
+            res1.file_uploads.delete_all
+            expect(res1.upload_type).to eq(:unknown)
+          end
+
+          it 'returns :files for files' do
+            expect(res1.upload_type).to eq(:files)
+          end
+
+          it 'returns :manifest if at least one new file has a URL' do
+            a_file = created_files[2]
+            a_file.url = 'http://example.org/foo.bar'
+            a_file.status_code = 200
+            a_file.save
+
+            expect(res1.upload_type).to eq(:manifest)
+          end
+        end
+
+        describe :new_file_uploads do
+          it 'defaults to empty' do
+            res2 = Resource.create(user_id: user.id)
+            expect(res2.new_file_uploads).to be_empty
+          end
+
+          it 'includes only created' do
+            new = res1.new_file_uploads
+            created_files.each { |f| expect(new).to include(f) }
+            copied_files.each { |f| expect(new).not_to include(f) }
+            deleted_files.each { |f| expect(new).not_to include(f) }
           end
         end
       end
@@ -380,7 +581,37 @@ module StashEngine
           end
         end
 
+        describe :duplicate_filenames do
+          it 'identifies duplicate files' do
+            original = uploads[0]
+            file_name = original.upload_file_name
+            duplicate = FileUpload.create(
+              resource_id: resource.id,
+              upload_file_name: file_name,
+              temp_file_path: temp_file_paths[0].sub('.bin', '-1.bin'),
+              file_state: :created
+            )
+            duplicates = resource.duplicate_filenames
+            expect(duplicates.count).to eq(2)
+            expect(duplicates).to include(original)
+            expect(duplicates).to include(duplicate)
+          end
+        end
 
+        describe :url_in_version? do
+          it 'returns false if not present' do
+            expect(resource.url_in_version?('http://example.org/')).to eq(false)
+          end
+
+          it 'returns true if present' do
+            upload = uploads[0]
+            upload.url = 'http://example.org/'
+            upload.status_code = 200
+            upload.save
+
+            expect(resource.url_in_version?('http://example.org/')).to eq(true)
+          end
+        end
       end
     end
 
@@ -537,6 +768,18 @@ module StashEngine
           doi_value = '10.123/456'
           resource.ensure_identifier(doi_value)
           expect(resource.identifier_str).to eq("doi:#{doi_value}")
+        end
+      end
+
+      describe :identifier_uri do
+        it 'defaults to nil' do
+          expect(resource.identifier_uri).to be_nil
+        end
+
+        it 'returns the doi.org URL' do
+          doi_value = '10.123/456'
+          resource.ensure_identifier(doi_value)
+          expect(resource.identifier_uri).to eq("https://doi.org/#{doi_value}")
         end
       end
 

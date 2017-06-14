@@ -136,7 +136,7 @@ module StashEngine
       :unknown
     end
 
-    # returns the list of duplicate filenames in created state where we shouldn't have any
+    # returns the list of fileuploads with duplicate names in created state where we shouldn't have any
     def duplicate_filenames # rubocop:disable Metrics/MethodLength
       sql = <<-eos
         SELECT *
@@ -192,7 +192,8 @@ module StashEngine
     end
 
     def embargoed?
-      current_state == 'submitted' && (embargo && embargo.end_date > Time.now)
+      return false if current_state != 'submitted'
+      private?
     end
 
     def current_state
