@@ -275,7 +275,7 @@ module Stash
           end
 
           it 'sets the correct namespace' do
-            assert_st = lambda do |elem|
+            assert_st = ->(elem) do
               actual = elem.namespace
               expected = 'https://dash.ucop.edu/stash_wrapper/'
               expect(actual).to eq(expected), "expected '#{expected}', got '#{actual}': #{elem}"
@@ -285,7 +285,7 @@ module Stash
           end
 
           it 'sets the correct namespace prefix' do
-            assert_st = lambda do |elem|
+            assert_st = ->(elem) do
               actual = elem.prefix
               expected = 'st'
               expect(actual).to eq(expected), "expected '#{expected}', got '#{actual}': #{elem}"
@@ -295,7 +295,7 @@ module Stash
           end
 
           it 'maps the namespace to the prefix' do
-            assert_st = lambda do |elem|
+            assert_st = ->(elem) do
               actual = elem.namespace('st')
               expected = 'https://dash.ucop.edu/stash_wrapper/'
               expect(actual).to eq(expected), "expected '#{expected}', got '#{actual}': #{elem}"
@@ -305,7 +305,7 @@ module Stash
           end
 
           it 'includes the prefix in the name' do
-            assert_st = lambda do |elem|
+            assert_st = ->(elem) do
               expect(elem.to_s).to start_with('<st:')
               elem.each_element { |e| assert_st.call(e) }
             end

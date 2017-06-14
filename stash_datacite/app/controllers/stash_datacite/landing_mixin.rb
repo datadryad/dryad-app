@@ -1,6 +1,6 @@
 module StashDatacite
   # StashDatacite specific accessors for landing page
-  module LandingMixin # rubocop:disable Metrics/ModuleLength
+  module LandingMixin
     def self.included(landing_controller)
       landing_controller.helper_method :citation
       landing_controller.helper_method :review
@@ -8,7 +8,7 @@ module StashDatacite
       landing_controller.helper_method :page_title
     end
 
-    def has_geolocation?
+    def geolocation_data?
       review.geolocation_data?
     end
 
@@ -30,7 +30,7 @@ module StashDatacite
 
     private
 
-    def plain_citation
+    def plain_citation # rubocop:disable Metrics/AbcSize
       citation(
         review.authors,
         review.title,

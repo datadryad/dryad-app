@@ -89,7 +89,7 @@ module StashDatacite
       title.try(:title)
     end
 
-    def check_required_fields(resource)
+    def check_required_fields(resource) # rubocop:disable Metrics/AbcSize
       completions = Resource::Completions.new(resource)
       warnings = completions.all_warnings
       warnings << submission_size_warning_message(max_submission_size) if completions.over_manifest_file_size?(max_submission_size)

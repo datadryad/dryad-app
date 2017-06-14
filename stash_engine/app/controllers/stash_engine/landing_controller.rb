@@ -66,7 +66,7 @@ module StashEngine
 
     def ensure_has_geolocation!
       old_value = resource.has_geolocation
-      new_value = has_geolocation?
+      new_value = geolocation_data?
       return unless old_value != new_value
 
       resource.has_geolocation = new_value

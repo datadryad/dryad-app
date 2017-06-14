@@ -101,10 +101,10 @@ module Stash
           stash_wrapper_md5 = Digest::MD5.file(generated_stash_wrapper).to_s
           stash_wrapper_size = File.size(generated_stash_wrapper)
           expected = File.read('spec/data/manifest.checkm')
-                         .sub(
-                           '17c28364d528eed4805d6b87afa88749 | 9838',
-                           "#{stash_wrapper_md5} | #{stash_wrapper_size}"
-                         ).gsub('{resource_id}', resource.id.to_s)
+            .sub(
+              '17c28364d528eed4805d6b87afa88749 | 9838',
+              "#{stash_wrapper_md5} | #{stash_wrapper_size}"
+            ).gsub('{resource_id}', resource.id.to_s)
 
           expect(actual).to eq(expected)
         end
