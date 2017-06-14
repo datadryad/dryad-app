@@ -37,7 +37,7 @@ module Stash
       # @param redirect_limit [Integer] the number of redirects to follow before erroring out
       #   (defaults to {DEFAULT_MAX_REDIRECTS})
       # @param logger [Logger, nil] the logger to use, or nil to use a default logger
-      def initialize(user_agent:, username: nil, password: nil, redirect_limit: DEFAULT_MAX_REDIRECTS, timeout: DEFAULT_TIMEOUT, logger: nil) # rubocop:disable Metrics/ParameterLists
+      def initialize(user_agent:, username: nil, password: nil, redirect_limit: DEFAULT_MAX_REDIRECTS, timeout: DEFAULT_TIMEOUT, logger: nil) # rubocop:disable Metrics/ParameterLists, Metrics/LineLength
         @user_agent = user_agent
         @redirect_limit = redirect_limit
         @timeout = timeout
