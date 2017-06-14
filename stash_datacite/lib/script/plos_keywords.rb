@@ -13,15 +13,18 @@ module Script
 
     def populate
       keywords = read_keywords
+      count = 0
       keywords.each do |k|
         next if StashDatacite::Subject.where(subject: k).exists?
+        count += 1
         StashDatacite::Subject.create(
           subject: k,
           subject_scheme: 'PLOS Subject Area Thesaurus',
           scheme_URI: 'https://github.com/PLOS/plos-thesaurus'
         )
-        puts "Adding: #{k}"
+        # puts "Adding: #{k}"
       end
+      puts "Added #{count} of #{keywords.length} keywords (#{keywords.length - count} existing)"
     end
 
     private
