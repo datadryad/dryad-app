@@ -18,14 +18,9 @@ module Stash
       # @param period [String] The embargo period
       # @param start_date [Date] The embargo start date
       # @param end_date [Date] The embargo end date
-      def initialize(type:, period:, start_date:, end_date:) # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
-        raise ArgumentError, "Specified type does not appear to be an EmbargoType: #{type || 'nil'}" unless type && type.is_a?(EmbargoType)
-        raise ArgumentError, "Specified embargo period does not appear to be a non-empty string: #{period.inspect}" if period.to_s.strip.empty?
-        raise ArgumentError, "Specified start date does not appear to be a date: #{start_date || 'nil'}" unless start_date && start_date.respond_to?(:iso8601)
-        raise ArgumentError, "Specified end date does not appear to be a date: #{end_date || 'nil'}" unless end_date && end_date.respond_to?(:iso8601)
-
-        self.type = type
-        self.period = period.to_s
+      def initialize(type:, period:, start_date:, end_date:)
+        self.type = valid_type(type)
+        self.period = valid_period(period)
         self.start_date, self.end_date = valid_range(start_date, end_date)
       end
 
@@ -38,9 +33,27 @@ module Stash
 
       private
 
+      def valid_type(type)
+        return type if type && type.is_a?(EmbargoType)
+        raise ArgumentError, "Specified type does not appear to be an EmbargoType: #{type || 'nil'}"
+      end
+
+      def valid_period(period)
+        period_str = period.to_s
+        return period_str unless period_str.strip.empty?
+        raise ArgumentError, "Specified embargo period does not appear to be a non-empty string: #{period.inspect}"
+      end
+
       def valid_range(start_date, end_date)
-        raise RangeError, "start_date #{start_date} must be <= end_date #{end_date}" if start_date > end_date
-        [start_date.to_date, end_date.to_date]
+        sd = valid_date(start_date)
+        ed = valid_date(end_date)
+        raise RangeError, "start_date #{sd} must be <= end_date #{ed}" if sd > ed
+        [sd.to_date, ed.to_date]
+      end
+
+      def valid_date(date)
+        return date if date && date.respond_to?(:iso8601)
+        raise ArgumentError, "Specified date does not appear to be a date: #{date || 'nil'}"
       end
     end
   end
