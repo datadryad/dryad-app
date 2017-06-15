@@ -30,10 +30,10 @@ module StashEngine
         response = client.head(@url, follow_redirect: true)
         init_from(response)
         return true
-      rescue HTTPClient::TimeoutError => ex
+      rescue HTTPClient::TimeoutError
         @timed_out = true
         @status_code = 408
-      rescue SocketError, HTTPClient::KeepAliveDisconnected, HTTPClient::BadResponseError, ArgumentError, Errno::ECONNREFUSED => ex
+      rescue SocketError, HTTPClient::KeepAliveDisconnected, HTTPClient::BadResponseError, ArgumentError, Errno::ECONNREFUSED
         # Socketerror seems to mean a domain that is down or unavailable, tried http://macgyver.com
         # https://carpark.com seems to timeout
         # http://poodle.com -- keep alive disconnected
