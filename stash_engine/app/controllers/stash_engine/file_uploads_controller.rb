@@ -1,5 +1,6 @@
 require_dependency 'stash_engine/application_controller'
 require 'fileutils'
+require 'stash/url_translator'
 
 module StashEngine
   class FileUploadsController < ApplicationController # rubocop:disable Metrics/ClassLength
@@ -68,8 +69,9 @@ module StashEngine
         @resource = Resource.find(params[:resource_id])
 
         urls_from(url_param).each do |url|
-          validator = StashEngine::UrlValidator.new(url: url)
-          FileUpload.create(upload_attributes_from(validator))
+          url_translator = Stash::UrlTranslator.new(url)
+          validator = StashEngine::UrlValidator.new(url: url_translator.direct_download || url)
+          FileUpload.create(upload_attributes_from(validator: validator, translator: url_translator))
         end
 
         format.js
@@ -108,13 +110,15 @@ module StashEngine
       url_param.split(/[\r\n]+/).map(&:strip).delete_if(&:blank?)
     end
 
-    def upload_attributes_from(validator) # rubocop:disable Metrics/MethodLength
+    def upload_attributes_from(validator:, translator:) # rubocop:disable Metrics/MethodLength
       valid = validator.validate
       upload_attributes = {
         resource_id: @resource.id,
         url: validator.url,
         status_code: validator.status_code,
-        file_state: 'created'
+        file_state: 'created',
+        original_url: (translator.direct_download.nil? ? nil : translator.original_url),
+        cloud_service: translator.service
       }
       return upload_attributes unless valid && validator.status_code == 200
 

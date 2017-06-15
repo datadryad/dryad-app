@@ -19,11 +19,11 @@ module Stash
     DROPBOX = /^https:\/\/www\.dropbox\.com\/s\/(\S+)\/([^\/]+)(?:\?dl=[0-9]+)$/
     BOX = /^https:\/\/([^\/]+box\.com)\/s\/(\S+)$/
 
-    attr_reader :service, :direct_download
+    attr_reader :service, :direct_download, :original_url
 
-    def initialize(url)
-      @url = url
-      service = nil
+    def initialize(original_url)
+      @original_url = original_url
+      @service = nil
 
       %w{google_drive google_doc google_presentation google_sheet dropbox box}.each do |m|
         if @direct_download = send(m)
@@ -37,32 +37,32 @@ module Stash
     private
     # these returns are supposed to be assignment, and not equality (==) because I want to check and assign at once
     def google_drive
-      return nil unless m = GOOGLE_DRIVE.match(@url)
+      return nil unless m = GOOGLE_DRIVE.match(@original_url)
       "https://drive.google.com/uc?export=download&id=#{m[1]}"
     end
 
     def google_doc
-      return nil unless m = GOOGLE_DOC.match(@url)
+      return nil unless m = GOOGLE_DOC.match(@original_url)
       "https://docs.google.com/document/d/#{m[1]}/export?format=doc"
     end
 
     def google_presentation
-      return nil unless m = GOOGLE_PRESENTATION.match(@url)
+      return nil unless m = GOOGLE_PRESENTATION.match(@original_url)
       "https://docs.google.com/presentation/d/#{m[1]}/export/pptx"
     end
 
     def google_sheet
-      return nil unless m = GOOGLE_SHEET.match(@url)
+      return nil unless m = GOOGLE_SHEET.match(@original_url)
       "https://docs.google.com/spreadsheets/d/#{m[1]}/export?format=xlsx"
     end
 
     def dropbox
-      return nil unless m = DROPBOX.match(@url)
+      return nil unless m = DROPBOX.match(@original_url)
       "https://dl.dropboxusercontent.com/s/#{m[1]}/#{m[2]}"
     end
 
     def box
-      return nil unless m = BOX.match(@url)
+      return nil unless m = BOX.match(@original_url)
       "https://#{m[1]}/shared/static/#{m[2]}"
     end
 
