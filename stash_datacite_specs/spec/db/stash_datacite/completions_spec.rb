@@ -182,9 +182,9 @@ module StashDatacite
 
         before(:each) do
           @actual_size = resource
-                         .file_uploads
-                         .present_files
-                         .inject(0) { |sum, f| sum + f.upload_file_size }
+            .file_uploads
+            .present_files
+            .inject(0) { |sum, f| sum + f.upload_file_size }
         end
 
         it 'returns true if file size > limit' do
@@ -206,6 +206,27 @@ module StashDatacite
             limit = actual_size - 1
             expect(completions.over_manifest_file_size?(limit)).to eq(true)
           end
+        end
+      end
+
+      describe :over_version_size? do
+        attr_reader :actual_size
+
+        before(:each) do
+          @actual_size = resource
+            .file_uploads
+            .present_files
+            .inject(0) { |sum, f| sum + f.upload_file_size }
+        end
+
+        it 'returns true if file size > limit' do
+          limit = actual_size - 1
+          expect(completions.over_version_size?(limit)).to eq(true)
+        end
+
+        it 'returns false if file size <= limit' do
+          limit = actual_size
+          expect(completions.over_version_size?(limit)).to eq(false)
         end
       end
 
@@ -439,6 +460,60 @@ module StashDatacite
             methods.save
           end
           expect(completions.optional_completed).to eq(OPTIONAL_COUNT - 1)
+        end
+      end
+
+      describe :all_warnings do
+
+        before(:each) do
+          expect(completions.required_completed).to eq(REQUIRED_COUNT) # just to be sure
+        end
+
+        it 'warns on missing title' do
+          resource.titles.destroy_all
+          warnings = completions.all_warnings
+          expect(warnings[0]).to include('title')
+        end
+
+        it 'warns on missing abstract' do
+          @resource.descriptions.where(description_type: 'abstract').destroy_all
+          warnings = completions.all_warnings
+          expect(warnings[0]).to include('abstract')
+        end
+
+        it 'warns on missing author' do
+          @resource.authors.destroy_all
+          warnings = completions.all_warnings
+          expect(warnings[0]).to include('author')
+        end
+
+        it 'warns on missing author email' do
+          @resource.authors.find_each do |author|
+            author.author_email = nil
+            author.save!
+          end
+          warnings = completions.all_warnings
+          expect(warnings[0]).to include('email')
+        end
+
+        it 'warns on missing author affiliation' do
+          @resource.authors.find_each do |author|
+            author.affiliations.destroy_all
+          end
+          warnings = completions.all_warnings
+          expect(warnings[0]).to include('affiliation')
+        end
+
+        it 'warns on unvalidated URLs' do
+          @resource.file_uploads.newly_created.find_each do |upload|
+            upload_file_name = upload.upload_file_name
+            filename_encoded = ERB::Util.url_encode(upload_file_name)
+            upload.url = "http://example.org/uploads/#{filename_encoded}"
+            upload.status_code = '403'
+            upload.save!
+          end
+          warnings = completions.all_warnings
+          expect(warnings[0]).to include('valid')
         end
       end
     end

@@ -22,10 +22,26 @@ module Stash
         end
       end
 
+      describe :log do
+        it 'returns the Rails logger' do
+          logger = instance_double(Logger)
+          allow(Rails).to receive(:logger).and_return(logger)
+          builder = FileBuilder.new
+          expect(builder.log).to be(logger)
+        end
+      end
+
       describe :contents do
         it 'is abstract' do
           builder = FileBuilder.new(file_name: 'qux.txt')
           expect { builder.contents }.to raise_error(NoMethodError)
+        end
+      end
+
+      describe :mime_type do
+        it 'is abstract' do
+          builder = FileBuilder.new(file_name: 'qux.txt')
+          expect { builder.mime_type }.to raise_error(NoMethodError)
         end
       end
 

@@ -17,9 +17,28 @@ module Stash
       end
 
       describe '#create' do
+
+        attr_reader :body_xml
+
+        before(:each) do
+          @body_xml = <<-XML
+            <entry xmlns="http://www.w3.org/2005/Atom">
+              <id>http://merritt.cdlib.org/sword/v2/object/ark:/99999/fk4t157x4p</id>
+              <author>
+                <name>ucb_dash_submitter</name>
+              </author>
+              <generator uri="http://www.swordapp.org/" version="2.0" />
+              <link href="http://merritt.cdlib.org/sword/v2/object/ark:/99999/fk4t157x4p" rel="edit" />
+              <link href="http://merritt.cdlib.org/sword/v2/object/ark:/99999/fk4t157x4p" rel="http://purl.org/net/sword/terms/add" />
+              <link href="http://merritt.cdlib.org/sword/v2/object/ark:/99999/fk4t157x4p" rel="edit-media" />
+              <treatment xmlns="http://purl.org/net/sword/terms/">no treatment information available</treatment>
+            </entry>
+          XML
+        end
+
         it 'POSTs with the correct headers' do
           stub_request(:post, collection_uri).with(basic_auth: [username, password]).to_return(
-            body: '<entry xmlns="http://www.w3.org/2005/Atom"><id>http://merritt.cdlib.org/sword/v2/object/ark:/99999/fk4t157x4p</id><author><name>ucb_dash_submitter</name></author><generator uri="http://www.swordapp.org/" version="2.0" /><link href="http://merritt.cdlib.org/sword/v2/object/ark:/99999/fk4t157x4p" rel="edit" /><link href="http://merritt.cdlib.org/sword/v2/object/ark:/99999/fk4t157x4p" rel="http://purl.org/net/sword/terms/add" /><link href="http://merritt.cdlib.org/sword/v2/object/ark:/99999/fk4t157x4p" rel="edit-media" /><treatment xmlns="http://purl.org/net/sword/terms/">no treatment information available</treatment></entry>'
+            body: body_xml
           )
 
           client.create(payload: zipfile, doi: doi)
@@ -51,7 +70,7 @@ module Stash
         it 'allows Packaging to be overridden' do
           manifest = 'spec/data/manifest.checkm'
           stub_request(:post, collection_uri).with(basic_auth: [username, password]).to_return(
-            body: '<entry xmlns="http://www.w3.org/2005/Atom"><id>http://merritt.cdlib.org/sword/v2/object/ark:/99999/fk4t157x4p</id><author><name>ucb_dash_submitter</name></author><generator uri="http://www.swordapp.org/" version="2.0" /><link href="http://merritt.cdlib.org/sword/v2/object/ark:/99999/fk4t157x4p" rel="edit" /><link href="http://merritt.cdlib.org/sword/v2/object/ark:/99999/fk4t157x4p" rel="http://purl.org/net/sword/terms/add" /><link href="http://merritt.cdlib.org/sword/v2/object/ark:/99999/fk4t157x4p" rel="edit-media" /><treatment xmlns="http://purl.org/net/sword/terms/">no treatment information available</treatment></entry>'
+            body: body_xml
           )
 
           client.create(payload: manifest, doi: doi, packaging: Packaging::BINARY)
@@ -84,7 +103,7 @@ module Stash
           redirect_url = 'http://www.example.org/'
           stub_request(:post, collection_uri).with(basic_auth: [username, password]).to_return(status: 201, headers: { 'Location' => redirect_url })
           stub_request(:get, redirect_url).with(basic_auth: [username, password]).to_return(
-            body: '<entry xmlns="http://www.w3.org/2005/Atom"><id>http://merritt.cdlib.org/sword/v2/object/ark:/99999/fk4t157x4p</id><author><name>ucb_dash_submitter</name></author><generator uri="http://www.swordapp.org/" version="2.0" /><link href="http://merritt.cdlib.org/sword/v2/object/ark:/99999/fk4t157x4p" rel="edit" /><link href="http://merritt.cdlib.org/sword/v2/object/ark:/99999/fk4t157x4p" rel="http://purl.org/net/sword/terms/add" /><link href="http://merritt.cdlib.org/sword/v2/object/ark:/99999/fk4t157x4p" rel="edit-media" /><treatment xmlns="http://purl.org/net/sword/terms/">no treatment information available</treatment></entry>'
+            body: body_xml
           )
 
           receipt = client.create(payload: zipfile, doi: doi)

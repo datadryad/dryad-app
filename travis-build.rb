@@ -68,13 +68,19 @@ PROJECTS.each do |p|
   exit(1) unless bundle_ok
 end
 
-build_failures = []
+build_succeeded = []
+build_failed = []
 PROJECTS.each do |p|
   build_ok = build(root + p)
-  build_failures << p unless build_ok
+  build_succeeded << p if build_ok
+  build_failed << p unless build_ok
 end
 
-unless build_failures.empty?
-  $stderr.puts("The following projects failed to build: #{build_failures.join(', ')}")
+unless build_succeeded.empty?
+  $stderr.puts("The following projects built successfully: #{build_succeeded.join(', ')}")
+end
+
+unless build_failed.empty?
+  $stderr.puts("The following projects failed to build: #{build_failed.join(', ')}")
   exit(1)
 end

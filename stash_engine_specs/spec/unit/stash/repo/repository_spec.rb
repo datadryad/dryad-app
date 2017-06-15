@@ -71,6 +71,18 @@ module Stash
         end
       end
 
+      describe :download_uri_for do
+        it 'is abstract' do
+          expect { repo.download_uri_for(resource: resource, record_identifier: 'ark:/1234/567') }.to raise_error(NoMethodError)
+        end
+      end
+
+      describe :update_uri_for do
+        it 'is abstract' do
+          expect { repo.update_uri_for(resource: resource, record_identifier: 'ark:/1234/567') }.to raise_error(NoMethodError)
+        end
+      end
+
       describe :submit do
         attr_reader :job
 
@@ -174,14 +186,18 @@ module Stash
           end
           it 'sends a "submission failed" email' do
             message = instance_double(ActionMailer::MessageDelivery)
-            expect(StashEngine::UserMailer).to receive(:submission_failed).with(resource, kind_of(ActiveRecord::ConnectionTimeoutError)).and_return(message)
+            expect(StashEngine::UserMailer).to receive(:submission_failed)
+              .with(resource, kind_of(ActiveRecord::ConnectionTimeoutError))
+              .and_return(message)
             expect(message).to receive(:deliver_now)
             submit_resource
           end
 
           it 'sends an error report email' do
             message = instance_double(ActionMailer::MessageDelivery)
-            expect(StashEngine::UserMailer).to receive(:error_report).with(resource, kind_of(ActiveRecord::ConnectionTimeoutError)).and_return(message)
+            expect(StashEngine::UserMailer).to receive(:error_report)
+              .with(resource, kind_of(ActiveRecord::ConnectionTimeoutError))
+              .and_return(message)
             expect(message).to receive(:deliver_now)
             submit_resource
           end
@@ -309,14 +325,18 @@ module Stash
           def repo.download_uri_for(_)
             raise IndexError
           end
-          expect { repo.harvested(identifier: identifier, record_identifier: record_identifier) }.to raise_error(ArgumentError, /.*download.*#{Regexp.quote(record_identifier)}.*IndexError/)
+          expect { repo.harvested(identifier: identifier, record_identifier: record_identifier) }.to raise_error(
+            ArgumentError, /.*download.*#{Regexp.quote(record_identifier)}.*IndexError/
+          )
         end
 
         it 'wraps update URI errors as ArgumentError' do
           def repo.update_uri_for(_)
             raise IndexError
           end
-          expect { repo.harvested(identifier: identifier, record_identifier: record_identifier) }.to raise_error(ArgumentError, /.*update.*#{Regexp.quote(record_identifier)}.*IndexError/)
+          expect { repo.harvested(identifier: identifier, record_identifier: record_identifier) }.to raise_error(
+            ArgumentError, /.*update.*#{Regexp.quote(record_identifier)}.*IndexError/
+          )
         end
 
         it 'removes uploaded files on success' do

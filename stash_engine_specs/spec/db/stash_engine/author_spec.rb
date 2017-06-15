@@ -21,6 +21,9 @@ module StashEngine
         expect(author.author_last_name).to eq('Meitner')
         expect(author.author_email).to eq('lmeitner@example.edu')
         expect(author.author_orcid).to eq('0000-0003-4293-0137')
+        expect(author.author_full_name).to eq('Meitner, Lise')
+        expect(author.author_standard_name).to eq('Lise Meitner')
+        expect(author.author_html_email_string).to eq('<a href="mailto:lmeitner@example.edu">Lise Meitner</a>')
       end
 
       describe :author_email do

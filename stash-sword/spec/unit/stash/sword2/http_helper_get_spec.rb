@@ -32,7 +32,7 @@ module Stash
           allow(Net::HTTP).to receive(:new).and_return(@http)
           allow(@http).to receive(:start).and_yield(@http)
           @success = Net::HTTPOK.allocate
-          @body    = 'I am the body of the response'
+          @body = 'I am the body of the response'
           allow(@success).to receive(:body).and_return(@body)
         end
 
@@ -51,7 +51,7 @@ module Stash
         end
 
         it 'sets the User-Agent header' do
-          agent  = 'Not Elvis'
+          agent = 'Not Elvis'
           helper = HTTPHelper.new(user_agent: agent)
           expect(@http).to receive(:request).with(request.with_method('GET').with_headers('User-Agent' => agent)).and_yield(@success)
           helper.get(uri: URI('http://example.org/'))
@@ -72,32 +72,38 @@ module Stash
         end
 
         it 're-requests on receiving a 1xx' do
-          uri   = URI('http://example.org/')
+          uri = URI('http://example.org/')
           @info = Net::HTTPContinue.allocate
 
           expected = [@info, @success]
-          expect(@http).to receive(:request).twice.with(request.with_method('GET').with_uri(uri).with_headers('User-Agent' => user_agent)) do |&block|
-            block.call(expected.shift)
-          end
+          expect(@http).to(receive(:request).twice.with(
+                             request.with_method('GET').with_uri(uri).with_headers('User-Agent' => user_agent)
+          )) { |&block| block.call(expected.shift) }
 
           expect(helper.get(uri: uri)).to be(@body)
         end
 
         it 'redirects on receiving a 3xx' do
-          uri       = URI('http://example.org/')
-          uri2      = URI('http://example.org/new')
+          uri = URI('http://example.org/')
+          uri2 = URI('http://example.org/new')
           @redirect = Net::HTTPMovedPermanently.allocate
           allow(@redirect).to receive(:[]).with('location').and_return(uri2.to_s)
-          expect(@http).to receive(:request).with(request.with_method('GET').with_uri(uri).with_headers('User-Agent' => user_agent)).and_yield(@redirect)
-          expect(@http).to receive(:request).with(request.with_method('GET').with_uri(uri2).with_headers('User-Agent' => user_agent)).and_yield(@success)
+          expect(@http).to receive(:request).with(
+            request.with_method('GET').with_uri(uri).with_headers('User-Agent' => user_agent)
+          ).and_yield(@redirect)
+          expect(@http).to receive(:request).with(
+            request.with_method('GET').with_uri(uri2).with_headers('User-Agent' => user_agent)
+          ).and_yield(@success)
           expect(helper.get(uri: uri)).to be(@body)
         end
 
         it 'only redirects a limited number of times' do
-          uri       = URI('http://example.org/')
+          uri = URI('http://example.org/')
           @redirect = Net::HTTPMovedPermanently.allocate
           allow(@redirect).to receive(:[]).with('location').and_return(uri.to_s)
-          expect(@http).to receive(:request).with(request.with_method('GET').with_uri(uri).with_headers('User-Agent' => user_agent)).exactly(HTTPHelper::DEFAULT_MAX_REDIRECTS).times.and_yield(@redirect)
+          expect(@http).to receive(:request).with(
+            request.with_method('GET').with_uri(uri).with_headers('User-Agent' => user_agent)
+          ).exactly(HTTPHelper::DEFAULT_MAX_REDIRECTS).times.and_yield(@redirect)
           expect { helper.get(uri: uri) }.to raise_error do |e|
             expect(e.message).to match(/Redirect limit.*exceeded.*#{uri.to_s}/)
           end

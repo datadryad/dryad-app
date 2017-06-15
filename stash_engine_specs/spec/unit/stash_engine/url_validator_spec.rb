@@ -19,6 +19,87 @@ module StashEngine
       expect(uv.status_code).to eq(200)
     end
 
+    describe :mime_type_from do
+      it 'extracts mime-types from content-type with charset' do
+        content_type = 'text/plain; charset=us-ascii'
+        headers = instance_double(HTTP::Message::Headers)
+        allow(headers).to receive(:[]).with('Content-Type').and_return([content_type])
+        response = instance_double(HTTP::Message)
+        allow(response).to receive(:header).and_return(headers)
+        expect(uv.send(:mime_type_from, response)).to eq('text/plain')
+      end
+    end
+
+    describe :validate do
+
+      attr_reader :client
+
+      before(:each) do
+        @client = instance_double(HTTPClient)
+        allow(HTTPClient).to receive(:new).and_return(client)
+
+        ssl_config = instance_double(HTTPClient::SSLConfig)
+        allow(ssl_config).to receive(:verify_mode=)
+        allow(client).to receive(:ssl_config).and_return(ssl_config)
+
+        messages = %i[
+          redirect_uri_callback=
+          connect_timeout=
+          send_timeout=
+          receive_timeout=
+          keep_alive_timeout=
+        ].map { |k| [k, nil] }.to_h
+
+        allow(client).to receive_messages(messages)
+      end
+
+      after(:each) do
+        allow(HTTPClient).to receive(:new).and_call_original
+      end
+
+      it 'returns false/400 for a bad url' do
+        uv = UrlValidator.new(url: 'I am not a URL')
+        expect(uv.validate).to eq(false)
+        expect(uv.status_code).to eq(400)
+      end
+
+      it 'returns false/408 for a timeout' do
+        expect(client).to receive(:head).and_raise(HTTPClient::TimeoutError)
+        expect(uv.validate).to eq(false)
+        expect(uv.timed_out?).to eq(true)
+        expect(uv.status_code).to eq(408)
+      end
+
+      it 'returns 409 for too many retries' do
+        expect(client).to receive(:head).exactly(3).times.and_raise(Errno::ECONNREFUSED)
+        expect(uv.validate).to eq(false)
+        expect(uv.status_code).to eq(499)
+      end
+
+      it 'records redirects' do
+        headers = instance_double(HTTP::Message::Headers)
+        allow(headers).to receive(:[]).and_return([])
+
+        response = instance_double(HTTP::Message)
+        allow(response).to receive(:header).and_return(headers)
+        allow(response).to receive(:status_code).and_return(200)
+
+        prev_headers = instance_double(HTTP::Message::Headers)
+        redirect_url = 'http://example.org/foo.bar'
+        allow(prev_headers).to receive(:[]).with('Location').and_return([redirect_url])
+
+        previous = instance_double(HTTP::Message)
+        allow(previous).to receive(:header).and_return(prev_headers)
+        allow(response).to receive(:previous).and_return(previous)
+
+        expect(client).to receive(:head).and_return(response)
+        expect(uv.validate).to eq(true) # just to be sure
+        expect(uv.redirected?).to eq(true)
+        expect(uv.redirected_to).to eq(redirect_url)
+      end
+
+    end
+
     describe :filename_from_content_disposition do
       it 'returns nil when no filename present' do
         disposition = 'attachment'
@@ -38,8 +119,6 @@ module StashEngine
         # expect(filename).to eq("\u{1F984}.txt")
         expect(filename).to eq('🦄.txt')
       end
-
     end
-
   end
 end

@@ -81,7 +81,8 @@ RSpec::Matchers.define :request do
     failures << "Expected method #{@method}, got: #{actual.method}" if bad_method(actual)
     failures << "Expected uri #{@expected_uri}, got: #{actual.uri}" if bad_uri(actual)
     failures << "Expected headers #{expected_headers}, got: #{actual.to_hash}" if bad_headers(actual)
-    failures << "Expected Authorization header #{@expected_auth}, got: #{value_for(key: 'Authorization', in_hash: actual.to_hash) || 'nil'}" if bad_auth(actual)
+    auth_value = value_for(key: 'Authorization', in_hash: actual.to_hash)
+    failures << "Expected Authorization header #{@expected_auth}, got: #{auth_value || 'nil'}" if bad_auth(actual)
     failures
   end
 
