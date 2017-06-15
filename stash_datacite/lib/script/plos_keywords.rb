@@ -7,6 +7,9 @@
 
 module Script
   class PlosKeywords
+    SCHEME = 'PLOS Subject Area Thesaurus'.freeze
+    SCHEME_URI = 'https://github.com/PLOS/plos-thesaurus'.freeze
+
     def initialize(filename_of_tsv = '/Users/scottfisher/Desktop/plosthes.2016-3.full.txt') # should be full path
       @fn = filename_of_tsv
     end
@@ -17,12 +20,7 @@ module Script
       keywords.each do |k|
         next if StashDatacite::Subject.where(subject: k).exists?
         count += 1
-        StashDatacite::Subject.create(
-          subject: k,
-          subject_scheme: 'PLOS Subject Area Thesaurus',
-          scheme_URI: 'https://github.com/PLOS/plos-thesaurus'
-        )
-        # puts "Adding: #{k}"
+        StashDatacite::Subject.create(subject: k, subject_scheme: SCHEME, scheme_URI: SCHEME_URI)
       end
       puts "Added #{count} of #{keywords.length} keywords (#{keywords.length - count} existing)"
     end
