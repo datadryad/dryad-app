@@ -45,5 +45,5 @@ end
 # ------------------------------------------------------------
 # Defaults
 
-desc 'Run unit tests, check test coverage, run acceptance tests, check code style'
+desc 'Run unit tests, check test coverage, check code style'
 task default: %i[coverage rubocop]
