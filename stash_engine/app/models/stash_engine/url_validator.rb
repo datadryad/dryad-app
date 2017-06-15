@@ -1,4 +1,5 @@
 require 'httpclient'
+require 'net/http'
 
 module StashEngine
   class UrlValidator # rubocop:disable Metrics/ClassLength
@@ -29,6 +30,8 @@ module StashEngine
         @timed_out = false
         response = client.head(@url, follow_redirect: true)
         init_from(response)
+        # the follow is for google drive which doesn't respond to head requests correctly
+        fix_by_get_request(redirected_to || url) if status_code == 503
         return true
       rescue HTTPClient::TimeoutError
         @timed_out = true
@@ -99,13 +102,14 @@ module StashEngine
 
     def size_from(response)
       content_length = response.header['Content-Length']
-      content_length.first.to_i unless content_length.blank?
+      content_length = content_length.first if content_length.class == Array && !content_length.blank?
+      content_length.to_i unless content_length.blank?
     end
 
     def mime_type_from(response)
       content_type = response.header['Content-Type']
       return if content_type.blank?
-      mime_type = content_type.first
+      mime_type = (content_type.class == Array ? content_type.first : content_type)
       return mime_type unless mime_type =~ /^\S*;/ # mimetype and not charset stuff after ';'
       mime_type[/^\S*;/][0..-2]
     end
@@ -135,5 +139,24 @@ module StashEngine
       my_match[1..-2]
     end
 
+    def fix_by_get_request(u)
+      # supposed to work, but returns connection reset by peer always
+      #url = URI.parse(u)
+      #http = Net::HTTP.new(url.host, url.port)
+      #http.read_timeout = 5
+      #http.open_timeout = 5
+      #http.start() {|http| http.get(url.path) }
+
+      url = URI.parse(u)
+      resp = Net::HTTP.get_response(url)
+
+      if resp.code == '200'
+        h = resp.to_hash
+        @status_code = 200
+        @mime_type = mime_type_from(resp)
+        @size = size_from(resp)
+        @filename = filename_from(resp, u, u)
+      end
+    end
   end
 end
