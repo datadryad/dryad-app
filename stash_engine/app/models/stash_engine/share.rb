@@ -7,7 +7,7 @@ module StashEngine
     before_create :generate_secret_id
 
     def tenant
-      resource.try(:tenant)
+      resource.tenant
     end
 
     def sharing_link
