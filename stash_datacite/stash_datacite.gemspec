@@ -24,7 +24,6 @@ Gem::Specification.new do |s| # rubocop:disable Metrics/BlockLength
   s.add_dependency 'rubyzip', '>= 1.0.0'
 
   s.add_dependency 'datacite-mapping', '~> 0.2', '>= 0.2.5'
-
   # TODO: do these need versions?
   s.add_dependency 'stash-wrapper'
   s.add_dependency 'stash_engine'

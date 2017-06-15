@@ -4,7 +4,7 @@ $LOAD_PATH.push File.expand_path('../lib', __FILE__)
 require 'stash_discovery/version'
 
 # Describe your gem and declare its dependencies:
-Gem::Specification.new do |s|
+Gem::Specification.new do |s| # rubocop:disable Metrics/BlockLength
   s.name        = 'stash_discovery'
   s.version     = StashDiscovery::VERSION
   s.authors     = ['David Moles']
@@ -34,5 +34,8 @@ Gem::Specification.new do |s|
   s.add_dependency 'devise-guests', '~> 0.5'
 
   s.add_development_dependency 'sqlite3'
+  s.add_development_dependency 'rspec', '~> 3.2'
+  s.add_development_dependency 'simplecov', '~> 0.9.2'
+  s.add_development_dependency 'simplecov-console', '~> 0.2.0'
   s.add_development_dependency 'rubocop', '~> 0.49'
 end
