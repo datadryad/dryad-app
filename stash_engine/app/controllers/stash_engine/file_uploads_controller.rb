@@ -65,20 +65,19 @@ module StashEngine
       respond_to do |format|
         url_param = params[:url]
         return if url_param.strip.blank?
-
         @resource = Resource.find(params[:resource_id])
-
-        urls_from(url_param).each do |url|
-          url_translator = Stash::UrlTranslator.new(url)
-          validator = StashEngine::UrlValidator.new(url: url_translator.direct_download || url)
-          FileUpload.create(upload_attributes_from(validator: validator, translator: url_translator))
-        end
-
+        urls_from(url_param).each { |url| create_upload(url) }
         format.js
       end
     end
 
     private
+
+    def create_upload(url)
+      url_translator = Stash::UrlTranslator.new(url)
+      validator = StashEngine::UrlValidator.new(url: url_translator.direct_download || url)
+      FileUpload.create(upload_attributes_from(validator: validator, translator: url_translator))
+    end
 
     def delete_or_destroy(file)
       if file.file_state == 'copied'
@@ -110,7 +109,7 @@ module StashEngine
       url_param.split(/[\r\n]+/).map(&:strip).delete_if(&:blank?)
     end
 
-    def upload_attributes_from(validator:, translator:) # rubocop:disable Metrics/MethodLength
+    def upload_attributes_from(validator:, translator:) # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
       valid = validator.validate
       upload_attributes = {
         resource_id: @resource.id,
