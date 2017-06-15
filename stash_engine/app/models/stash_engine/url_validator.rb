@@ -102,13 +102,14 @@ module StashEngine
 
     def size_from(response)
       content_length = response.header['Content-Length']
-      content_length.first.to_i unless content_length.blank?
+      content_length = content_length.first if content_length.class == Array && !content_length.blank?
+      content_length.to_i unless content_length.blank?
     end
 
     def mime_type_from(response)
       content_type = response.header['Content-Type']
       return if content_type.blank?
-      mime_type = content_type.first
+      mime_type = (content_type.class == Array ? content_type.first : content_type)
       return mime_type unless mime_type =~ /^\S*;/ # mimetype and not charset stuff after ';'
       mime_type[/^\S*;/][0..-2]
     end
