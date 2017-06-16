@@ -1,65 +1,50 @@
 # stash
 
-### Introduction
+[![Build Status](https://travis-ci.org/CDLUC3/stash.svg?branch=development)](https://travis-ci.org/CDLUC3/stash) 
 
-**Stash** is a **UC3** application framework for storing and sharing research data.  [Dash v2](https://github.com/CDLUC3/dashv2), is a replacement for UC3’s Dash v1 service (UC3, 2015) and is an implementation of the Stash framework.  Dash v2 is a simple self-service repository overlay layer for submission and discovery of research datasets.  Stash is intended to be applicable to any standards-compliant repository that supports the SWORD protocol for deposit and the OAI-PMH protocol for metadata harvesting.  Stash enables individual scholars to:
+## Introduction
 
-1. Prepare datasets for curation by reviewing best practice guidance for the creation or acquisition of research data.
-2. Select data for curation through local file browse or drag-and-drop operation.
+**Stash** is an application framework for research data publication and
+preservation. Stash enables individual scholarsto:
+
+1. Prepare datasets for curation by reviewing best practice guidance for
+   the creation or acquisition of research data.
+2. Select data for curation through local file browse or drag-and-drop
+   operation.
 3. Describe data in terms of scientifically-meaning metadata.
 4. Identify datasets for persistent citation, reference, and retrieval.
 5. Preserve, manage, and share data in an appropriate data repository.
 6. Discover, retrieve, and reuse data through faceted search and browse.
 
-By alleviating many of the barriers that have historically precluded wider adoption of open data principles, Stash empowers individual scholars to assert active curation control over their research outputs; encourages more widespread data preservation, publication, sharing, and reuse; and promotes open scholarly inquiry and advancement.
+By alleviating many of the barriers that have historically precluded wider
+adoption of open data principles, Stash empowers individual scholars to
+assert active curation control over their research outputs; encourages more
+widespread data preservation, publication, sharing, and reuse; and promotes
+open scholarly inquiry and advancement.
 
-### Stash Architecture
-<img src="https://raw.githubusercontent.com/CDLUC3/dash/gh-pages/docs/stash_architecture.png" width="720" alt="Architecture">
+[Dash](https://dash.ucop.edu/) is the
+[UC Curation Center](http://www.cdlib.org/uc3/)'s implementation of Dash.
+For the Dash source code, see the [dashv2](https://github.com/CDLUC3/dashv2)
+repository.
 
+## Architecture
 
-#This is a work in progress.
+Stash is intended to be applicable to any standards-compliant repository
+that supports the
+[SWORD 2](https://swordapp.github.io/SWORDv2-Profile/SWORDProfile.html)
+protocol for deposit and [OAI-PMH](https://www.openarchives.org/pmh/) or
+[ResourceSync](http://www.openarchives.org/rs/1.1/resourcesync) protocols
+for metadata harvesting.
 
+![Stash architecture](https://raw.githubusercontent.com/CDLUC3/dash/gh-pages/docs/stash_architecture.png)
 
+## Contributing
 
-* Ruby version ruby 2.2.0p0
-* Rails version Rails 4.2.0
-* RSpec-Rails testing framework.
+For individual projects, `bundle exec rake` will run unit tests, check test
+coverage, and check code style. Use `bundle exec rubocop -a` to identify
+code style problems and auto-fix any that can be auto-fixed. In general,
+all projects follow the top-level [`rubocop.yml`](rubocop.yml) code style
+configuration, with judicious exceptions.
 
-### Useful Links
-
-#### [Travis continuous integration](https://travis-ci.org/CDLUC3/dashv2)
-
----------------------------------------------------------
-
-### Installation 
-
-Notes for installing the Dash v2 application are described [here](https://github.com/CDLUC3/dashv2/blob/development/documentation/dash2_install.md).
-
----------------------------------------------------------
-
-### Deployment, Operations and Utility Tasks (work in progress)
-
-When using Rails with Capistrano, it is typical to have some deploy tasks as part of the application. These tasks
-address our deployment and operational needs such as using Phusion Passenger Standalone (with Apache in front) and
-some of our development needs. They may be less useful to others with different set ups.
-
-#### Quick Cheat Sheet
-
-* Deploying with Capistrano (leave off branch and you'll be prompted)
-```ruby
-cap <capistrano-deploy-environment> deploy BRANCH="<branch-or-tag-name>"
-```
-
-* Symlink in tenant and other config files by checking out repo of configuration at same directory level as the this app
-directory and then run `./symlink_config.sh`.
-
-* To do development across engines concurrently with this app, create a directory called stash_engines at the same level
-as the app and clone the engines inside that directory (stash_datacite, stash_discovery, stash_engine).  They
-will be included as local engines by the Gemfile which is our current default for development.
-
-* The rake app_data:clear task will clear most database and SOLR data.  It can be useful to run before testing data
-import and transformation from our previous version of the app.  It will not erase data in the production environment
-or until it gets confirmation that you really want to erase the data.
-```ruby
-bundle exec rake app_data:clear RAILS_ENV=<rails-environment>
-```
+Run [`travis-build.rb`](travis-build.rb) in the top-level `stash` directory
+to bundle, test, and style-check all projects.

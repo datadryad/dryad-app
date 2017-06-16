@@ -144,24 +144,20 @@ module StashEngine
     end
 
     def fix_by_get_request(u)
-      url = URI.parse(u)
-      #resp = Net::HTTP.get_response(url)
+      response = get_without_download(URI.parse(u))
+      return unless response.code == '200'
+      @status_code = 200
+      @mime_type = mime_type_from(response)
+      @size = size_from(response)
+      @filename = filename_from(response, u, u)
+    end
 
+    def get_without_download(url)
       # this is supposed to NOT download the whole file
-      resp = nil
-      Net::HTTP.start(url.host, url.port, :use_ssl => (url.scheme == 'https')) do |conn|
-        conn.request_get(url) do |r|
-          resp = r
-        end
-      end
-
-      if resp.code == '200'
-        h = resp.to_hash
-        @status_code = 200
-        @mime_type = mime_type_from(resp)
-        @size = size_from(resp)
-        @filename = filename_from(resp, u, u)
+      Net::HTTP.start(url.host, url.port, use_ssl: (url.scheme == 'https')) do |conn|
+        conn.request_get(url) { |response| return response }
       end
     end
+
   end
 end
