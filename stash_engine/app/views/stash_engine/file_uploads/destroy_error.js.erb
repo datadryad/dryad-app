@@ -5,10 +5,11 @@ $('#validated_errors').html("<%= escape_javascript(
 <% if params[:edit] == 'true' %>
   var addon = '';
   if($('#location_urls').val()){ addon = "\r\n"; }
-  $('#location_urls').val($('#location_urls').val()+ addon + '<%= escape_javascript(@url) %>');
+  $('#location_urls').val($('#location_urls').val()+ addon + '<%== escape_javascript(@url) %>');
   $('html, body').animate({
     scrollTop: $("#location_urls").offset().top
   }, 500);
+  $('#location_urls').effect("pulsate", { times:1 }, 1000);
 <% end %>
 
 setUploadMethodLockout('<%= @resource.upload_type %>');
