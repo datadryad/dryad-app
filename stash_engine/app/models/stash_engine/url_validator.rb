@@ -103,7 +103,11 @@ module StashEngine
     def size_from(response)
       content_length = response.header['Content-Length']
       content_length = content_length.first if content_length.class == Array && !content_length.blank?
-      content_length.to_i unless content_length.blank?
+      if content_length.blank?
+        0
+      else
+        content_length.to_i
+      end
     end
 
     def mime_type_from(response)
