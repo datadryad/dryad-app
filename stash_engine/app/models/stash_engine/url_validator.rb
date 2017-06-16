@@ -6,6 +6,8 @@ module StashEngine
 
     attr_reader :mime_type, :size, :url, :status_code, :redirected_to, :filename
 
+    TIMEOUT = 15
+
     def initialize(url:)
       @url = url
       @mime_type = ''
@@ -81,13 +83,11 @@ module StashEngine
 
       # this callback allows following redirects from http to https or opposite, otherwise it will not follow them
       clnt.redirect_uri_callback = ->(_uri, res) { res.header['location'][0] }
-      clnt.connect_timeout = 5
-      clnt.send_timeout = 5
-      clnt.receive_timeout = 5
-      clnt.keep_alive_timeout = 5
+      clnt.connect_timeout = TIMEOUT
+      clnt.send_timeout = TIMEOUT
+      clnt.receive_timeout = TIMEOUT
+      clnt.keep_alive_timeout = TIMEOUT
       clnt.ssl_config.verify_mode = OpenSSL::SSL::VERIFY_NONE
-      # clnt.send_timeout = 15
-      # clnt.receive_timeout = 15
       clnt
     end
 
@@ -103,7 +103,11 @@ module StashEngine
     def size_from(response)
       content_length = response.header['Content-Length']
       content_length = content_length.first if content_length.class == Array && !content_length.blank?
-      content_length.to_i unless content_length.blank?
+      if content_length.blank?
+        0
+      else
+        content_length.to_i
+      end
     end
 
     def mime_type_from(response)
@@ -140,15 +144,16 @@ module StashEngine
     end
 
     def fix_by_get_request(u)
-      # supposed to work, but returns connection reset by peer always
-      #url = URI.parse(u)
-      #http = Net::HTTP.new(url.host, url.port)
-      #http.read_timeout = 5
-      #http.open_timeout = 5
-      #http.start() {|http| http.get(url.path) }
-
       url = URI.parse(u)
-      resp = Net::HTTP.get_response(url)
+      #resp = Net::HTTP.get_response(url)
+
+      # this is supposed to NOT download the whole file
+      resp = nil
+      Net::HTTP.start(url.host, url.port, :use_ssl => (url.scheme == 'https')) do |conn|
+        conn.request_get(url) do |r|
+          resp = r
+        end
+      end
 
       if resp.code == '200'
         h = resp.to_hash

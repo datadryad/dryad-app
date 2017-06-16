@@ -1,0 +1,322 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema targetNamespace="https://dash.ucop.edu/stash_wrapper/"
+           xmlns="https://dash.ucop.edu/stash_wrapper/"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:vc="http://www.w3.org/2007/XMLSchema-versioning/XMLSchema-versioning.xsd" elementFormDefault="qualified"
+           attributeFormDefault="unqualified" vc:minVersion="1.0" vc:maxVersion="1.1">
+
+    <xs:annotation>
+        <xs:documentation xml:lang="en">
+            Stash wrapper schema, version 1.0
+            Copyright 2015 The Regents of the University of California
+            This document is available under the terms of the Creative Commons Atribution
+            4.0 International (CC-BY) license,https://creativecommons.org/licenses/by/4.0/.
+            This schema wraps specific Stash administrative properties needed for the
+            Stash discovery environment that cannot be assumed to available via the
+            configured descriptive schema, and that descriptive schema.
+        </xs:documentation>
+    </xs:annotation>
+
+    <xs:element name="stash_wrapper" type="stash_wrapper_type">
+        <xs:annotation>
+            <xs:documentation xml:lang="en">Stash wrapper parent element</xs:documentation>
+        </xs:annotation>
+    </xs:element>
+
+    <xs:complexType name="stash_wrapper_type">
+        <xs:sequence>
+            <xs:element name="identifier" type="identifier_type" minOccurs="1"
+                        maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">
+                        Typed dataset identifier.  Identifier types are drawn from the
+                        DataCite schema list.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+
+            <xs:element name="stash_administrative" type="stash_administrative_type"
+                        minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">
+                        Stash administrative metadata wrapper.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+
+            <xs:element name="stash_descriptive" type="stash_descriptive_type" minOccurs="1"
+                        maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">
+                        Stash descriptive metadata wrapper.  It contains arbitrary
+                        well-formed XML conforming to the configured native descriptive
+                        schema.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="identifier_type">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute name="type">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="en">
+                            Identifier type, drawn from the list defined by the DataCite
+                            schema.
+                        </xs:documentation>
+                    </xs:annotation>
+                    <xs:simpleType>
+                        <xs:restriction base="xs:string">
+                            <xs:enumeration value="ARK"/>
+                            <xs:enumeration value="DOI"/>
+                            <xs:enumeration value="Handle"/>
+                            <xs:enumeration value="URL"/>
+                        </xs:restriction>
+                    </xs:simpleType>
+                </xs:attribute>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="stash_administrative_type">
+        <xs:annotation>
+            <xs:documentation xml:lang="en">
+                Stash administrative metadata wrapper type.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="version" type="version_type" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">
+                        Dataset version.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="license" type="license_type" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">
+                        Dataset license.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="embargo" type="embargo_type" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">
+                        Dataset embargo.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="inventory" type="inventory_type" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">
+                        File inventory of the dataset submission package.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="version_type">
+        <xs:annotation>
+            <xs:documentation xml:lang="en">
+                Dataset version type.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="version_number" type="xs:positiveInteger" minOccurs="1"
+                        maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">
+                        Dataset version number.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="date" type="xs:date" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">
+                        Dataset version date, YYYY-MM-DD.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="note" type="xs:string" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">
+                        Optional dataset version note describing the conditions leading
+                        to the creation of version.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="license_type">
+        <xs:annotation>
+            <xs:documentation xml:lang="en">
+                Dataset license type.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="name" type="xs:string" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">
+                        Dataset license name.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="uri" type="xs:anyURI" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">
+                        Dataset license URI.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="embargo_type">
+        <xs:annotation>
+            <xs:documentation xml:lang="en">
+                Dataset embargo type.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="type" type="embargo_type_type" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">
+                        Dataset embargo type.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="period" type="xs:string" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">
+                        Dataset emabargo period, i.e., a textual description of the
+                        period, e.g., "6 months".  If the embargo type is "none", this
+                        value is ignored, but should be set to "none".
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="start" type="xs:date" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">
+                        Dataset embargo start date.  This should be set to the date
+                        at which the embargo (and Stash wrapper instance document) is
+                        created.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="end" type="xs:date" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">
+                        Dataset embargo end date.  If the embargo type is "none", this
+                        value is ignored, but should be set to the start date.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:simpleType name="embargo_type_type">
+        <xs:annotation>
+            <xs:documentation xml:lang="en">
+                Dataset embargo type: none, download, description.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="none"/>
+            <xs:enumeration value="download"/>
+            <xs:enumeration value="description"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:complexType name="inventory_type">
+        <xs:annotation>
+            <xs:documentation xml:lang="en">
+                Dataset file inventory type.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="file" type="file_type" minOccurs="0" maxOccurs="unbounded">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">
+                        Dataset submission package file.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+        <xs:attribute name="num_files" type="xs:nonNegativeInteger">
+            <xs:annotation>
+                <xs:documentation xml:lang="en">
+                    Number of files in the submission package inventory.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+    </xs:complexType>
+
+    <xs:complexType name="file_type">
+        <xs:annotation>
+            <xs:documentation xml:lang="en">
+                Dataset inventory file type.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="pathname" type="xs:string" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">
+                        Dataset file pathname.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+
+            <xs:element name="size" type="size_type" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">
+                        Dataset file size, as an integer.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+
+            <xs:element name="mime_type" type="xs:string" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">
+                        Dataset file MIME type.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="size_type">
+        <xs:annotation>
+            <xs:documentation xml:lang="en">
+                Dataset file size type.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:simpleContent>
+            <xs:extension base="xs:nonNegativeInteger">
+                <xs:attribute name="unit">
+                    <xs:simpleType>
+                        <xs:restriction base="xs:string">
+                            <xs:enumeration value="B"/>
+                        </xs:restriction>
+                    </xs:simpleType>
+                </xs:attribute>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="stash_descriptive_type">
+        <xs:annotation>
+            <xs:documentation xml:lang="en">
+                Stash descriptive metadata wrapper type.  This contains arbitrary well-formed
+                XML conforming to the configured descriptive schema.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:any namespace="##any" processContents="lax" minOccurs="0"
+                    maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+</xs:schema>
