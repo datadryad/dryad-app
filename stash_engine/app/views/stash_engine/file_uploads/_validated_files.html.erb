@@ -33,6 +33,13 @@
       <% end %>
     <% end %>
     <p id="display_size">Total: <%= filesize(resource.file_uploads.present_files.sum(:upload_file_size)) %></p>
+    <% services = resource.file_uploads.newly_created.where.not(cloud_service: nil).select(:cloud_service).distinct(:cloud_service) %>
+    <% if services.count > 0 %>
+      <p>You have added sharing URLs from
+        <%= english_list(array: services.map{|i| i.cloud_service.capitalize }, conjunction: 'and') %>.
+        These URLs have been modified so they can be downloaded directly.
+      </p>
+    <% end %>
     <div class="bad_upload">
       <% if resource.file_uploads.present_files.sum(:upload_file_size) > current_tenant.max_submission_size %>
         <p id="over_manifest_size">
