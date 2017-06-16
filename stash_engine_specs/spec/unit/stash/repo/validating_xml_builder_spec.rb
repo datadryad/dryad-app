@@ -68,7 +68,7 @@ module Stash
         end
       end
 
-      describe "validation" do
+      describe 'validation' do
         attr_reader :xml
         before(:each) do
           @xml = File.read('spec/data/archive/stash-wrapper.xml')
