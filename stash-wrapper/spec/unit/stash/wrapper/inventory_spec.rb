@@ -45,7 +45,7 @@ module Stash
         end
 
         it 'rejects File objects' do
-          File.new('spec/data/wrapper/wrapper-2-payload.xml') do |f|
+          File.open('spec/data/wrapper/wrapper-2-payload.xml') do |f|
             params[:files] = f
             expect { Inventory.new(params) }.to raise_error(ArgumentError)
           end
