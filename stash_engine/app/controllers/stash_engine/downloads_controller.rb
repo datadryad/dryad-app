@@ -18,6 +18,11 @@ module StashEngine
       else
         unavailable_for_download
       end
+    rescue StashEngine::MerrittResponseError => ex
+      # if it's a recent submission, suggest they try again later; otherwise fail
+      raise ex unless @resource.updated_at > Time.new - 2.hours
+      # recently updated, so display a "hold your horses" message
+      flash_download_unavailable
     end
 
     def async_request # rubocop:disable Metrics/MethodLength
@@ -53,7 +58,7 @@ module StashEngine
     private
 
     def download_public
-      setup_async_download_variable # which may redirect to different page in certain circumstances
+      setup_async_download_variable
       if @async_download
         redirect_to landing_show_path(id: @resource.identifier_str, big: 'showme')
       else
@@ -62,7 +67,7 @@ module StashEngine
     end
 
     def download_as_owner
-      setup_async_download_variable # which may redirect to different page in certain circumstances
+      setup_async_download_variable
       if @async_download
         redirect_to landing_show_path(id: @resource.identifier_str, big: 'showme')
       else
@@ -84,7 +89,7 @@ module StashEngine
     end
 
     def download_embargoed
-      setup_async_download_variable # which may redirect to different page in certain circumstances
+      setup_async_download_variable
       if @async_download
         # redirect to the form for filling in their email address to get an email
         show_email_form
@@ -112,15 +117,7 @@ module StashEngine
     # this sets up the async download variable which it determines from Merritt and handles any exceptions with
     # possible redirect to tell people to wait for submission to complete
     def setup_async_download_variable
-      @async_download = nil
-      begin
-        @async_download = merritt_async_download?(resource: @resource)
-      rescue StashEngine::MerrittResponseError => ex
-        # if it's a recent submission, suggest they try again later; otherwise fail
-        raise ex unless @resource.updated_at > Time.new - 2.hours
-        # recently updated, so display a "hold your horses" message
-        flash_download_unavailable
-      end
+      @async_download = merritt_async_download?(resource: @resource)
     end
 
     def flash_download_unavailable
@@ -141,10 +138,10 @@ module StashEngine
       url = "#{domain}/lostorage"
 
       body = { 'object' => local_id,
-               'version' => resource.stash_version.merritt_version,
-               'user_agent_email' => email,
-               'uDownload' => 'true',
-               'commit' => 'Submit' }
+        'version' => resource.stash_version.merritt_version,
+        'user_agent_email' => email,
+        'uDownload' => 'true',
+        'commit' => 'Submit' }
 
       # from actual merritt form these are the items being submitted:
       # utf8=%E2%9C%93
