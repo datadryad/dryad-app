@@ -13,5 +13,5 @@ before_install:
   - bundler --version
 
 script:
-  - ./travis-build.rb
+  - travis_wait ./travis-build.rb
 
