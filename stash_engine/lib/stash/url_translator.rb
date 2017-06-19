@@ -21,7 +21,14 @@ module Stash
     attr_reader :service, :direct_download, :original_url
 
     def initialize(original_url)
-      @original_url = original_url
+
+      u = URI(original_url)
+      if u.fragment
+        # ignore the ridiculous fragment/anchor part of the URL which doens't get sent to server, anyway
+        @original_url = original_url[0..-(u.fragment.length+2)]
+      else
+        @original_url = original_url
+      end
       @service = nil
 
       %w[google_drive google_doc google_presentation google_sheet dropbox box].each do |m|
