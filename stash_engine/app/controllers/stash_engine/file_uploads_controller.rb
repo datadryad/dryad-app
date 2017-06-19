@@ -85,7 +85,7 @@ module StashEngine
         file.save!
       elsif file.file_state == 'created'
         temp_file_path = file.temp_file_path
-        File.delete(temp_file_path) if !temp_file_path.blank? && temp_file_path.present?
+        File.delete(temp_file_path) if !temp_file_path.blank? && File.exists?(temp_file_path)
         file.destroy
       end
     end
