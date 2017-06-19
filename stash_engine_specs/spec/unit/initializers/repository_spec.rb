@@ -6,7 +6,7 @@ module StashEngine
 
     before(:each) do
       @logger = instance_double(Logger)
-      allow(logger).to receive(:debug) { |msg| puts(msg) }
+      allow(logger).to receive(:debug)
       allow(Rails).to receive(:logger).and_return(logger)
     end
 

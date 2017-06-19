@@ -16,10 +16,10 @@ module Stash
 
       before(:each) do
         @logger = instance_double(Logger)
-        allow(logger).to receive(:debug) { |msg| puts "debug: #{msg}" }
-        allow(logger).to receive(:info) { |msg| puts "info: #{msg}" }
-        allow(logger).to receive(:warn) { |msg| puts "warn: #{msg}" }
-        allow(logger).to receive(:error) { |msg| puts "error: #{msg}" }
+        allow(logger).to receive(:debug)
+        allow(logger).to receive(:info)
+        allow(logger).to receive(:warn)
+        allow(logger).to receive(:error)
 
         @rails_logger = Rails.logger
         Rails.logger = logger

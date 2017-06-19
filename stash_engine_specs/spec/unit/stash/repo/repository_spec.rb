@@ -182,7 +182,7 @@ module Stash
           before(:each) do
             allow(job).to receive(:submit!).and_raise(ActiveRecord::ConnectionTimeoutError)
             allow(job).to receive(:description).and_return('test')
-            allow(logger).to receive(:error) { |m| $stderr.puts(m) }
+            allow(logger).to receive(:error)
           end
           it 'sends a "submission failed" email' do
             message = instance_double(ActionMailer::MessageDelivery)

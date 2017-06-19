@@ -254,7 +254,7 @@ module Stash
             end
 
             after(:each) do
-              logged.each_line { |l| puts l }
+              # logged.each_line { |l| puts l }
               Harvester.log_device = $stdout
             end
 
