@@ -22,7 +22,7 @@ def exec_command(command, log_file)
   if /(darwin|bsd)/ =~ RUBY_PLATFORM
     system("script -q #{log_file} #{command} > /dev/null")
   else
-    system("script -q -e #{log_file} #{command} > /dev/null")
+    system("script -q -e #{log_file} -c #{command} > /dev/null")
   end
 
 end
