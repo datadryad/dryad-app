@@ -18,7 +18,13 @@ PROJECTS = %w(
 
 def exec_command(command, log_file)
   # preserve ANSI colors, see https://stackoverflow.com/a/27399198/27358
-  system("script -q #{log_file} #{command} > /dev/null")
+
+  if /(darwin|bsd)/ =~ RUBY_PLATFORM
+    system("script -q #{log_file} #{command} > /dev/null")
+  else
+    system("script -q -e #{log_file} #{command} > /dev/null")
+  end
+
 end
 
 root = Pathname.new(__dir__)
