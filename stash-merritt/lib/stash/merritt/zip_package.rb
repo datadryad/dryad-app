@@ -33,6 +33,7 @@ module Stash
       end
 
       def cleanup!
+        return unless File.exists?(workdir)
         FileUtils.remove_dir(workdir)
         @zipfile = nil
       end
