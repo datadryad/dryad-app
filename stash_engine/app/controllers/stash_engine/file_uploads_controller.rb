@@ -64,7 +64,7 @@ module StashEngine
     def validate_urls
       respond_to do |format|
         url_param = params[:url]
-        return if url_param.strip.blank?
+        return if url_param.blank?
         @resource = Resource.find(params[:resource_id])
         urls_from(url_param).each { |url| create_upload(url) }
         format.js
