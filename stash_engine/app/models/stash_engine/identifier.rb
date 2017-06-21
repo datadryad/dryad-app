@@ -40,7 +40,7 @@ module StashEngine
     end
 
     # @return Resource the current in-progress resource
-    def in_progress_version # TODO rename to in_progress_resource
+    def in_progress_resource
       in_progress = resources.in_progress
       in_progress.first
     end

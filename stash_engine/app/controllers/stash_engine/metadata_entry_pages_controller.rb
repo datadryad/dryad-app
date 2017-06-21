@@ -18,9 +18,9 @@ module StashEngine
       # create new version deep copy of most items
       @resource = Resource.find(params[:resource_id])
       identifier = @resource.identifier
-      in_progress_version = identifier && identifier.in_progress_version
-      if in_progress_version
-        redirect_to(metadata_entry_pages_find_or_create_path(resource_id: in_progress_version.id)) && return
+      in_progress_resource = identifier && identifier.in_progress_resource
+      if in_progress_resource
+        redirect_to(metadata_entry_pages_find_or_create_path(resource_id: in_progress_resource.id)) && return
       end
       @new_res = @resource.amoeba_dup
       @new_res.save!
