@@ -79,12 +79,6 @@ module StashEngine
       redirect_to current_tenant.try(:omniauth_login_path)
     end
 
-    def require_resource_owner
-      return if current_user.id == @resource.user_id
-      flash[:alert] = 'You do not have permission to modify this dataset.'
-      redirect_to stash_engine.dashboard_path
-    end
-
     def can_display_embargoed?(resource)
       !resource.private? || (current_user && current_user.id == resource.user_id)
     end

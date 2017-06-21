@@ -6,9 +6,14 @@ module StashEngine
     before_action :resource_exist, except: [:metadata_callback]
     before_action :require_resource_owner, except: [:metadata_callback]
 
+    def resource
+      @resource ||= Resource.find(params[:resource_id])
+    end
+    helper_method :resource
+
     # GET/POST/PUT  /generals/find_or_create
     def find_or_create
-      @resource = Resource.find(params[:resource_id])
+
       return unless @resource.published?
       redirect_to(metadata_entry_pages_new_version_path(resource_id: params[:resource_id]))
     end
@@ -18,9 +23,9 @@ module StashEngine
       # create new version deep copy of most items
       @resource = Resource.find(params[:resource_id])
       identifier = @resource.identifier
-      in_progress_version = identifier && identifier.in_progress_version
-      if in_progress_version
-        redirect_to(metadata_entry_pages_find_or_create_path(resource_id: in_progress_version.id)) && return
+      in_progress_resource = identifier && identifier.in_progress_resource
+      if in_progress_resource
+        redirect_to(metadata_entry_pages_find_or_create_path(resource_id: in_progress_resource.id)) && return
       end
       @new_res = @resource.amoeba_dup
       @new_res.save!
@@ -44,12 +49,16 @@ module StashEngine
     private
 
     def resource_exist
-      @resource = Resource.find(params[:resource_id])
-      redirect_to root_path, notice: 'The dataset you are looking for does not exist.' if @resource.nil?
+      resource = Resource.find(params[:resource_id])
+      redirect_to root_path, notice: 'The dataset you are looking for does not exist.' if resource.nil?
     end
 
     def require_resource_owner
-      return if current_user.id == @resource.user_id
+      resource_user_id = resource.user_id
+      current_user_id = current_user.id
+      return if resource_user_id == current_user_id
+
+      Rails.logger.warn("Resource #{resource ? resource.id : 'nil'}: user ID is #{resource_user_id || 'nil'} but current user is #{current_user_id || 'nil'}")
       flash[:alert] = 'You do not have permission to modify this dataset.'
       redirect_to stash_engine.dashboard_path
     end

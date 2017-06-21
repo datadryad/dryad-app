@@ -65,9 +65,9 @@ module StashEngine
         end
       end
 
-      describe '#in_progress_version' do
+      describe '#in_progress_resource' do
         it 'returns the in-progress version' do
-          ipv = identifier.in_progress_version
+          ipv = identifier.in_progress_resource
           expect(ipv.id).to eq(res3.id)
         end
       end

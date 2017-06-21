@@ -63,9 +63,10 @@ module StashEngine
     # manifest workflow
     def validate_urls
       respond_to do |format|
-        url_param = params[:url]
-        return if url_param.strip.blank?
         @resource = Resource.find(params[:resource_id])
+        return unless resource
+        url_param = params[:url]
+        return if url_param.blank?
         urls_from(url_param).each { |url| create_upload(url) }
         format.js
       end
