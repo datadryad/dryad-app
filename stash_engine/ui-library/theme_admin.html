@@ -36,19 +36,60 @@
     }
 
     .c-admin-left-head {
+      min-width: 250px;
+      height: 8em;
+      margin-right: 20px;
+      padding: 10px 10px;
+      border: 1px solid #999;
+    }
+
+    .c-admin-right-head {
+      flex-grow: 1;
+      height: 8em;
+      padding: 10px 10px;
+      border: 1px solid #999;
+    }
+
+    .c-admin-left {
       background-color: #f7ecb5;
       min-width: 250px;
-      height: 10em;
       margin-right: 20px;
       padding: 10px 10px;
     }
 
-    .c-admin-right-head {
+    .c-admin-right {
       background-color: orange;
       flex-grow: 1;
-      height: 10em;
       padding: 10px 10px;
     }
+
+    .c-facet-panel {
+      margin-bottom: 0;
+      border-radius: 4px;
+      border-color: #ddd;
+    }
+
+    #c-facet-panel__collapse {
+      padding-left: 0;
+      padding-right: 0;
+      border-top: 0;
+      box-shadow: none;
+      max-height: none;
+    }
+
+    .c-facet-panel-group{
+      margin-bottom: 20px;
+    }
+
+    .c-facet-title:after {
+      font-family: 'Glyphicons Halflings';
+      content: "\e114";
+      float: right;
+      color: grey;
+      font-size: .8em;
+      line-height: normal;
+    }
+
   </style>
 
   <div class="c-admin-container">
@@ -63,6 +104,21 @@
       308 MB added<br/>
       3 datasets started<br/>
       7 datasets submitted
+    </div>
+  </div>
+
+  <div class="c-admin-container">
+    <div class="c-admin-left">
+      <div class="c-facet-title">Some stuff heading</div>
+      <ul>
+        <li>Item 1</li>
+        <li>Item 2</li>
+        <li>Item 3</li>
+        <li>Item 4</li>
+      </ul>
+    </div>
+    <div class="c-admin-right">
+      A table can go here
     </div>
   </div>
 

@@ -14,6 +14,7 @@
     "moment": "^2.13.0"
   },
   "dependencies": {
-    "font-awesome": "fontawesome#^4.6.3"
+    "font-awesome": "fontawesome#^4.6.3",
+    "glyphicons": "^0.0.2"
   }
 }
