@@ -6,9 +6,14 @@ module StashEngine
     before_action :resource_exist, except: [:metadata_callback]
     before_action :require_resource_owner, except: [:metadata_callback]
 
+    def resource
+      @resource ||= Resource.find(params[:resource_id])
+    end
+    helper_method :resource
+
     # GET/POST/PUT  /generals/find_or_create
     def find_or_create
-      @resource = Resource.find(params[:resource_id])
+
       return unless @resource.published?
       redirect_to(metadata_entry_pages_new_version_path(resource_id: params[:resource_id]))
     end
@@ -44,12 +49,16 @@ module StashEngine
     private
 
     def resource_exist
-      @resource = Resource.find(params[:resource_id])
-      redirect_to root_path, notice: 'The dataset you are looking for does not exist.' if @resource.nil?
+      resource = Resource.find(params[:resource_id])
+      redirect_to root_path, notice: 'The dataset you are looking for does not exist.' if resource.nil?
     end
 
     def require_resource_owner
-      return if current_user.id == @resource.user_id
+      resource_user_id = resource.user_id
+      current_user_id = current_user.id
+      return if resource_user_id == current_user_id
+
+      Rails.logger.warn("Resource #{resource ? resource.id : 'nil'}: user ID is #{resource_user_id || 'nil'} but current user is #{current_user_id || 'nil'}")
       flash[:alert] = 'You do not have permission to modify this dataset.'
       redirect_to stash_engine.dashboard_path
     end
