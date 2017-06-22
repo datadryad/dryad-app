@@ -411,6 +411,7 @@ DEPENDENCIES
   chromedriver-helper
   database_cleaner (~> 1.5)
   mysql2 (~> 0.3)
+  nokogiri (~> 1.8)
   parallel_tests
   rspec (~> 3.5)
   rspec-rails (~> 3.5)
@@ -426,4 +427,4 @@ DEPENDENCIES
   stash_engine!
 
 BUNDLED WITH
-   1.14.6
+   1.15.1
