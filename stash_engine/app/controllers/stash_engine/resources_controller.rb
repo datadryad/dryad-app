@@ -51,6 +51,7 @@ module StashEngine
 
     # PATCH/PUT /resources/1
     # PATCH/PUT /resources/1.json
+    # rubocop:disable Metrics/AbcSize
     def update
       respond_to do |format|
         if resource.update(resource_params)

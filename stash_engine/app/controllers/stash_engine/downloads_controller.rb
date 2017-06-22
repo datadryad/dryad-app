@@ -9,6 +9,8 @@ module StashEngine
 
   class DownloadsController < ApplicationController # rubocop:disable Metrics/ClassLength
 
+    # rubocop:disable Metrics/AbcSize
+    # rubocop:disable Metrics/MethodLength
     def download_resource
       @resource = Resource.find(params[:resource_id])
       if @resource.public?
@@ -21,12 +23,7 @@ module StashEngine
     rescue StashEngine::MerrittResponseError => e
       # if it's a recent submission, suggest they try again later; otherwise fail
       raise e unless @resource.updated_at > Time.new - 2.hours
-
-      if Rails.env.development?
-        msg = "MerrittResponseError checking sync/async download for resource #{@resource.id} updated at #{@resource.updated_at}"
-        backtrace = e.respond_to?(:backtrace) && e.backtrace ? e.backtrace.join("\n") : ''
-        logger.warn("#{msg}: #{e.class}: #{e}\n#{backtrace}")
-      end
+      log_warning_if_needed(e)
 
       # recently updated, so display a "hold your horses" message
       flash_download_unavailable
@@ -227,6 +224,13 @@ module StashEngine
       response.headers['Content-Length'] = content_length
       response.headers['Last-Modified'] = Time.now.httpdate
       self.response_body = Stash::Streamer.new(client, url)
+    end
+
+    def log_warning_if_needed(e)
+      return unless Rails.env.development?
+      msg = "MerrittResponseError checking sync/async download for resource #{@resource.id} updated at #{@resource.updated_at}"
+      backtrace = e.respond_to?(:backtrace) && e.backtrace ? e.backtrace.join("\n") : ''
+      logger.warn("#{msg}: #{e.class}: #{e}\n#{backtrace}")
     end
 
     def disposition_from(url)
