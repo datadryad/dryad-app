@@ -77,7 +77,7 @@ module StashEngine
           expect(identifier.in_progress?).to eq(true)
         end
         it 'returns false if no in-progress version exists' do
-          res3.current_state = 'error'
+          res3.current_state = 'submitted'
           expect(identifier.in_progress?).to eq(false)
         end
       end
