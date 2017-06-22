@@ -252,12 +252,12 @@
 .o-button__connect-orcid {
   display: inline-block;
   padding: 5px 5px 5px 25px;
-  border: 1px solid #D3D3D3;
+  border: 1px solid $design-extra-light-gray-color;
   border-radius: 8px;
   background: $design-white-color inline('../images/icon_orcid.png') left 5px center no-repeat;
-  background-color: #fff;
-  box-shadow: 1px 1px 3px #999;
-  color: #999;
+  background-color: $design-white-color;
+  box-shadow: 1px 1px 3px $design-light-gray-color;
+  color: $design-light-gray-color;
   font-size: .8em;
   font-weight: bold;
   line-height: 24px;
@@ -267,8 +267,8 @@
 }
 
 .o-button__connect-orcid:hover {
-  border: 1px solid #338caf;
-  color: #338caf;
+  border: 1px solid $bhavis-random-color;
+  color: $bhavis-random-color;
 }
 
 .o-button__help {

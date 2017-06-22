@@ -29,106 +29,15 @@
 
   <h1 class="o-heading__level1">Manage Users</h1>
 
-  <style>
-    .c-facet-title--open, .c-facet-title--closed {
-      margin: 5px 0 5px 0;
-      padding: 10px 10px;
-      color: inherit;
-      cursor: pointer;
-      background-color: #f5f5f5;
-      border-color: #ddd;
-    }
-
-    .js-title-toggle>a:link, .js-title-toggle>a:visited, .js-title-toggle>a:hover, .js-title-toggle>a:active {
-      color: black;
-      text-decoration: none;
-    }
-
-    /* open drop-down */
-    .c-facet-title--open:after {
-      font-family: 'Glyphicons Halflings';
-      content: "\e114";
-      float: right;
-      color: grey;
-      font-size: .8em;
-      line-height: normal;
-    }
-
-    /* this one is closed */
-    .c-facet-title--closed:after {
-      font-family: 'Glyphicons Halflings';
-      content: "\e080";
-      float: right;
-      color: grey;
-      font-size: .8em;
-      line-height: normal;
-    }
-
-    .c-facet-list {
-      margin: 10px 5px;
-      list-style: none;
-      padding: 0;
-    }
-
-    .c-facet-list li {
-      margin: 10px 0 10px 10px;
-    }
-
-
-  </style>
-
   <!--#include file="includes/admin-head.html" -->
 
   <div class="o-admin-container">
     <div class="o-admin-left">
-      <h3 class="c-facet-title--closed js-title-toggle"><a data-no-turbolink="true" href="#">Institution</a></h3>
-      <div class="js-hideshow">
-        <ul class="c-facet-list">
-          <li><a href="#">UC Berkeley</a></li>
-          <li><a href="#">UC Davis</a></li>
-          <li><a href="#">UC Los Angeles</a></li>
-          <li><a href="#">UC San Diego</a></li>
-        </ul>
-      </div>
 
-      <h3 class="c-facet-title--closed js-title-toggle"><a data-no-turbolink="true" href="#">Person</a></h3>
-      <div class="js-hideshow">
-        <ul class="c-facet-list">
-          <li><a href="#">Scott Fisher</a></li>
-          <li><a href="#">Daniella Lowenberg</a></li>
-          <li><a href="#">David Moles</a></li>
-          <li><a href="#">Marisa Strong</a></li>
-        </ul>
-      </div>
+      <!--#include file="includes/admin-facet1.html" -->
+      <!--#include file="includes/admin-facet2.html" -->
 
     </div>
-
-    <script>
-      $( document ).ready(function() {
-        $('.js-hideshow').hide();
-      });
-      $( ".js-title-toggle" ).click(function(event) {
-        // alert($(this).attr('id'));
-        toggleMenu($(this));
-      });
-      $( ".js-title-toggle a").click(function(event) {
-        event.preventDefault();
-      });
-
-      function toggleMenu(t){
-        var el = t.next('.js-hideshow');
-        if(el.is(':visible')){
-          el.slideUp();
-          t.removeClass('c-facet-title--open');
-          t.addClass('c-facet-title--closed');
-        }else{
-          el.slideDown();
-          t.addClass('c-facet-title--open');
-          t.removeClass('c-facet-title--closed');
-        }
-      }
-    </script>
-
 
     <div class="c-admin-right">
       A table can go here
@@ -142,6 +51,32 @@
   <script src="js/details-polyfill.js"></script>
   <script src="js/main.js"></script>
   <!-- endbuild -->
-	
+
+
+  <!-- javascript for the facet open/close -->
+  <script>
+    $( document ).ready(function() {
+      $('.js-hideshow').hide();
+    });
+    $( ".js-title-toggle" ).click(function(event) {
+      toggleMenu($(this));
+    });
+    $( ".js-title-toggle a").click(function(event) {
+      event.preventDefault();
+    });
+
+    function toggleMenu(t){
+      var el = t.next('.js-hideshow');
+      if(el.is(':visible')){
+        el.slideUp();
+        t.removeClass('c-facet-title--open');
+        t.addClass('c-facet-title--closed');
+      }else{
+        el.slideDown();
+        t.addClass('c-facet-title--open');
+        t.removeClass('c-facet-title--closed');
+      }
+    }
+  </script>
 </body>
 </html>
