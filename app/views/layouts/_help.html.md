@@ -1,21 +1,16 @@
 ## Submission Basics
-Use this checklist to prepare your dataset for submission. See our FAQs section below for more information.
+We have some general reminders and suggestions for publishign your data in general and on Dash:
+- We accept all file formats, although it is good practice to share data using open formats. See the [UK Data Archive](http://www.data-archive.ac.uk/create-manage/format/formats-table) for a list of optimal file formats
+- Include any files that may help others to use your data. This includes readme files, formal metadata files, or other critical information
+- Any data submitted will be under the [CC-BY 4.0](https://creativecommons.org/licenses/by/4.0/). We do not currently support any other license types, nor do we allow for restrictions on data access or use
+- It is your responsibility to ensure your data are being shared responsibly and ethically. Please be careful of sharing sensitive data and ensure you are complying with institutional and governmental regulations
+- Inform your dataset co-creators that you plan to publish the dataset
+- Ensure that all governmental and institutional regulations regarding the handling of sensitive data are addressed
+- Prepare or obtain the most up-to-date and complete version of dataset. This includes relevant explanatory documents necessary for the re-use and replication of your dataset (e.g., readme.txt files, formal metadata records, or other critical information, etc.)
+- Gather all metadata to be entered in the first page of the submission form. See Metadata Basics section below for more information.
 
-1.  Inform your dataset co-creators that you plan to publish the dataset
-2.  Ensure that all governmental and institutional regulations regarding the handling of sensitive data are addressed
-3.  Prepare or obtain the most up-to-date and complete version of dataset
-4.  Prepare or obtain relevant explanatory documents related to the dataset (e.g., readme.txt files, formal metadata records, or other critical information, etc.)
-5.  Gather the following information, to be entered as metadata (see Metadata Basics section below for more information):
-  * Dataset title (make sure to be as descriptive as possible)
-  * Full names of all dataset co-creators (or better yet, include ORCIDs for each creator)
-  * Keywords for the dataset (use discipline-specific controlled vocabularies whenever possible)
-  * Abstract (this is a description describing the dataset you are submitting)
-  * Methods (description of the methods used to collect the data)
-  * Usage Notes (instructions for other researchers to use or explore the data)
-  * Funding Information : Name of the funding organization that supported creation of the resource, including applicable grant number(s)
-  * Related Works including grant numbers, publications using the dataset, and other related datasets
 
-## Metadata Basics
+## Metadata
 Comprehensive data documentation (i.e. metadata) is the key to future understanding of data. Without a thorough description of the context of the data file, the context in which the data were collected, the measurements that were made, and the quality of the data, it is unlikely that the data can be easily discovered, understood, or effectively used. Metadata is important not only to help people understand and make proper use of a data resource, but metadata also makes the resource discoverable (for example through internet searches or data indexing services). Read more about metadata in the [DataONE Primer on Data Management Best Practices](http://www.dataone.org/sites/all/documents/DataONE_BP_Primer_020212.pdf)
 (PDF).
 
@@ -24,31 +19,29 @@ A complete list of our default metadata fields is below. Additional metadata can
 Required Fields:
 
 - Title : Title of the dataset. Make sure to be as descriptive as possible
-- Author(s) or Data Creator(s) : Name and institutional affliation of main researcher(s) involved in producing the data.  If you include your [ORCID](http://orcid.org), we will request the ORCID registry auto-populate this publication on your ORCID profile
-- Data type : Type of data. This entry is constrained to a list from the DOI issuing agency, DataCite.  Choose one that closest associated with your data
+- Author(s) or Data Creator(s) : Name, email address, institutional affliation of main researcher(s) involved in producing the data.  If you include your [ORCID](http://orcid.org), we will request the ORCID registry auto-populate this publication on your ORCID profile
+- Abstract: Short description of dataset
 
 Optional Fields (the more you describe your dataset, the wider the reach):
 
 - Keyword(s) : Descriptive words that may help others discover your dataset. We recommend that you determine whether your discipline has an existing controlled vocabulary from which to choose your keywords. Please enter as many keywords as applicable
-- Abstract : An abstract or general description of the dataset
-- Methods : Any technical or methodological information that may help others to understand how the data were generated
-- Usage Notes : Any technical or methodological information that may help others determine how the data may be properly reused
+- Methods : Any technical or methodological information that may help others to understand how the data were generated (i.e. equipment/tools/reagents used, or procedures followed)
+- Usage Notes : Any technical or methodological information that may help others determine how the data may be properly re-used, replicated, or re-analyzed
 - Funding Information : Name of the funding organization that supported creation of the resource, including applicable grant number(s)
-- Related Works : Use this field to indicate other resources that are associated with the data. Examples include publications, other datasets, etc.
+- Related Works : Use this field to indicate other resources that are associated with the data. Examples include publications, other datasets, code etc.
 -  Location information : Include the geo-coordinates or name of the location where your data were generated or the location that is the focus of your research
 
-##  Upload Basics
-Here is some basic information on uploading datasets. See FAQs section below for more details.
+## Upload Methods
+We have two different options for uploading your data. 
+- Upload directly from your computer: by using drag and drop or the upload button. We allow for 10gb of data per DOI to be uploaded this way. 
+- Upload from a server or the cloud: by entering the URL of the location where data are held on a server, or the sharing link for Box, Dropbox, or Google Drive. We allow for 100gb of data per DOI to be validated and uploaded this way.
 
-- We accept all file formats, although it is good practice to share data using open formats. See the [UK Data Archive](http://www.data-archive.ac.uk/create-manage/format/formats-table) for a list of optimal file formats
-- Include any files that may help others to use your data. This includes readme files, formal metadata files, or other critical information
-- Any data submitted will be under the [CC-BY 4.0](https://creativecommons.org/licenses/by/4.0/). We do not currently support any other license types, nor do we allow for restrictions on data access or use
-- It is your responsibility to ensure your data are being shared responsibly and ethically. Please be careful of sharing sensitive data and ensure you are complying with institutional and governmental regulations
+Please note that you may only use one of these two upload methods per version, but you may do subsequent versions of your data publication and utilize different methods of upload this way.
 
-
-
-
-
+## Publication and Citation
+- We do allow for you to delay the publication of your data if for the purposes of having a related article under peer review. If you do choose to utilize this feature we allow for up to a maximum of 180 days to delay publication. 
+- As soon as your data publication is public we recommend citing and publicizing your work with your given DOI. 
+- If you have edits, additional data, or subsequent related work we recommend versioning your data by using the "update" link. Your subsequent versions will appear on the same landing page that your DOI directs to.
 
 ##  Frequently Asked Questions
 You are accessing a self-service data publication service developed by the California Digital Library.  This service is branded under different names: Dash, datashare, and ONEshare.  Don't worry, each of these brands offer the same product and features.  Below are FAQs.  Unless otherwise mentioned, all infomration below covers all instances of our service.
