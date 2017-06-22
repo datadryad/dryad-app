@@ -29,6 +29,7 @@ Gem::Specification.new do |s| # rubocop:disable Metrics/BlockLength
   s.add_dependency 'stash_engine'
   s.add_dependency 'stash_discovery'
 
+  s.add_development_dependency 'nokogiri', '~> 1.8'
   s.add_development_dependency 'capybara'
   s.add_development_dependency 'chromedriver-helper'
   s.add_development_dependency 'database_cleaner', '~> 1.5'
