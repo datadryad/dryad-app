@@ -69,7 +69,7 @@ module StashEngine
     # Scopes
 
     scope :in_progress, (-> do
-      joins(:current_resource_state).where(stash_engine_resource_states: { resource_state:  %i(in_progress error) })
+      joins(:current_resource_state).where(stash_engine_resource_states: { resource_state:  %i[in_progress error] })
     end)
     scope :submitted, (-> do
       joins(:current_resource_state).where(stash_engine_resource_states: { resource_state:  %i[submitted processing] })

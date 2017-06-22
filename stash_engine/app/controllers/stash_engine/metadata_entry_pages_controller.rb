@@ -13,7 +13,6 @@ module StashEngine
 
     # GET/POST/PUT  /generals/find_or_create
     def find_or_create
-
       return unless @resource.published?
       redirect_to(metadata_entry_pages_new_version_path(resource_id: params[:resource_id]))
     end
@@ -58,7 +57,8 @@ module StashEngine
       current_user_id = current_user.id
       return if resource_user_id == current_user_id
 
-      Rails.logger.warn("Resource #{resource ? resource.id : 'nil'}: user ID is #{resource_user_id || 'nil'} but current user is #{current_user_id || 'nil'}")
+      Rails.logger.warn("Resource #{resource ? resource.id : 'nil'}: user ID is #{resource_user_id || 'nil'} but " \
+                        "current user is #{current_user_id || 'nil'}")
       flash[:alert] = 'You do not have permission to modify this dataset.'
       redirect_to stash_engine.dashboard_path
     end

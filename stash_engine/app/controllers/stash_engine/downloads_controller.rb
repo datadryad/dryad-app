@@ -143,11 +143,11 @@ module StashEngine
       domain, local_id = resource.merritt_protodomain_and_local_id
       url = "#{domain}/lostorage"
 
-      body = { 'object' => local_id,
-        'version' => resource.stash_version.merritt_version,
-        'user_agent_email' => email,
-        'uDownload' => 'true',
-        'commit' => 'Submit' }
+      body = {  'object' => local_id,
+                'version' => resource.stash_version.merritt_version,
+                'user_agent_email' => email,
+                'uDownload' => 'true',
+                'commit' => 'Submit' }
 
       # from actual merritt form these are the items being submitted:
       # utf8=%E2%9C%93
