@@ -8,9 +8,7 @@ services:
 
 before_install:
   - gem update --system
-  - gem --version
   - gem install bundler
-  - bundler --version
 
 script:
   - ./travis-build.rb

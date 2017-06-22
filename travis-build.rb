@@ -51,6 +51,10 @@ def green(text)
   colorize(text, 32)
 end
 
+def yellow(text)
+  colorize(text, 33)
+end
+
 def tmp_path
   @tmp_path ||= begin
     tmp_path = STASH_ROOT + 'builds' + Time.now.utc.iso8601
@@ -87,7 +91,8 @@ end
 def redirect_to(shell_command, log_file)
   script_command = script_command(shell_command, log_file)
   working_path = Pathname.getwd.relative_path_from(STASH_ROOT)
-  puts "#{working_path}: #{shell_command} > #{log_file}"
+  log_file_path = log_file.relative_path_from(STASH_ROOT)
+  puts "#{working_path}: #{yellow(shell_command)} > #{log_file_path}"
   system(script_command)
 rescue => ex
   $stderr.puts("#{shell_command} failed: #{ex}")
