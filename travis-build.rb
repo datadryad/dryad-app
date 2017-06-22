@@ -63,8 +63,17 @@ def tmp_path
   end
 end
 
+def working_path
+  Pathname.getwd.relative_path_from(STASH_ROOT)
+end
+
 def run_task(task_name, shell_command)
-  return travis_fold(task_name) { system(shell_command) } if IN_TRAVIS
+  if IN_TRAVIS
+    travis_fold(task_name) do
+      puts "#{working_path}: #{yellow(shell_command)}"
+      return system(shell_command)
+    end
+  end
 
   log_file = tmp_path + "#{task_name}.out"
   build_ok = redirect_to(shell_command, log_file)
@@ -90,7 +99,6 @@ end
 
 def redirect_to(shell_command, log_file)
   script_command = script_command(shell_command, log_file)
-  working_path = Pathname.getwd.relative_path_from(STASH_ROOT)
   log_file_path = log_file.relative_path_from(STASH_ROOT)
   puts "#{working_path}: #{yellow(shell_command)} > #{log_file_path}"
   system(script_command)
