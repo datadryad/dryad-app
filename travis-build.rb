@@ -179,4 +179,6 @@ build_all
 
 $stderr.puts("The following projects built successfully: #{successful_builds.map(&method(:green)).join(', ')}") unless successful_builds.empty?
 exit(0) if failed_builds.empty?
+
 $stderr.puts("The following projects failed to build: #{failed_builds.map(&method(:red)).join(', ')}")
+exit(1)
