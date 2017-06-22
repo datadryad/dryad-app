@@ -1,13 +1,9 @@
 ## Submission Basics
-We have some general reminders and suggestions for publishign your data in general and on Dash:
+We have some general reminders and suggestions for publishing your data with Dash:
 - We accept all file formats, although it is good practice to share data using open formats. See the [UK Data Archive](http://www.data-archive.ac.uk/create-manage/format/formats-table) for a list of optimal file formats
-- Include any files that may help others to use your data. This includes readme files, formal metadata files, or other critical information
 - Any data submitted will be under the [CC-BY 4.0](https://creativecommons.org/licenses/by/4.0/). We do not currently support any other license types, nor do we allow for restrictions on data access or use
 - It is your responsibility to ensure your data are being shared responsibly and ethically. Please be careful of sharing sensitive data and ensure you are complying with institutional and governmental regulations
-- Inform your dataset co-creators that you plan to publish the dataset
-- Ensure that all governmental and institutional regulations regarding the handling of sensitive data are addressed
-- Prepare or obtain the most up-to-date and complete version of dataset. This includes relevant explanatory documents necessary for the re-use and replication of your dataset (e.g., readme.txt files, formal metadata records, or other critical information, etc.)
-- Gather all metadata to be entered in the first page of the submission form. See Metadata Basics section below for more information.
+- When preparing your complete version of a dataset, remember to collate all relevant explantory documents and metadata. This includes relevant documentation necessary for the re-use and replication of your dataset (e.g., readme.txt files, formal metadata records, or other critical information, etc.)
 
 
 ## Metadata
@@ -44,10 +40,6 @@ Please note that you may only use one of these two upload methods per version, b
 - If you have edits, additional data, or subsequent related work we recommend versioning your data by using the "update" link. Your subsequent versions will appear on the same landing page that your DOI directs to.
 
 ##  Frequently Asked Questions
-You are accessing a self-service data publication service developed by the California Digital Library.  This service is branded under different names: Dash, datashare, and ONEshare.  Don't worry, each of these brands offer the same product and features.  Below are FAQs.  Unless otherwise mentioned, all infomration below covers all instances of our service.
-
-
-### Who can use?
 
 #### Who can publish data?
 
@@ -67,8 +59,7 @@ Contact [uc3@ucop.edu](mailto:uc3@ucop.edu) for more information.
 
 #### Can I use if my campus is not listed?
 
-Anyone can search, view and download datasets. However, for each campus-specific website, data submission is limited to individuals
-affiliated with that campus.  Contact [uc3@ucop.edu](mailto:uc3@ucop.edu) for more information.
+Anyone can search, view and download datasets. However, for each campus-specific website, data submission is limited to individuals affiliated with that campus.  Contact [uc3@ucop.edu](mailto:uc3@ucop.edu) for more information.
 
 #### What is ONEshare?
 ONEshare is a service, operated by CDL in collaboration with the
