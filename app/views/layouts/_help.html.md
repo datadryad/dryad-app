@@ -51,7 +51,7 @@ You are accessing a self-service data publication service developed by the Calif
 
 #### Who can publish data?
 
-This site is targeted for use by members of the University of California community. Researchers in any field from participating UC campuses can use their campus credentials to deposit data in their campus-specific website. The following seven campuses currently participate:
+This site is targeted for use by members of the University of California and DataONE communities. Researchers in any field from participating UC campuses (with exception, see Davis below) can use their campus credentials to deposit data in their campus-specific website. The following nine institutions currently participate:
 
 - [UC Berkeley](https://dash.berkeley.edu/)
 - [UC Irvine](https://dash.lib.uci.edu/)
@@ -60,6 +60,8 @@ This site is targeted for use by members of the University of California communi
 - [UC Riverside](https://dash.ucr.edu/)
 - [UC Santa Cruz](https://dash.library.ucsc.edu/)
 - [UC San Francisco](https://datashare.ucsf.edu/)
+- UC Davis College of Engineering (https://dash.ucdavis.edu)
+- DataONE ONEShare (https://oneshare.cdlib.org/)
 
 Contact [uc3@ucop.edu](mailto:uc3@ucop.edu) for more information.
 
@@ -74,104 +76,25 @@ ONEshare is a service, operated by CDL in collaboration with the
 [ONEshare](https://oneshare.cdlib.org/). Contact uc3@ucop.edu for more
 information.
 
-### What content is appropriate?
-
 #### What type of data is within scope?
 
-All fields of scholarship. All types of research artifacts. However, this service is
-intended for complete, final research datasets and all content must not violate
+All fields of scholarship. All types of research data. However, this service is
+intended for complete, re-usable, open research datasets and all content must not violate
 privacy or copyright, or breach confidentiality or nondisclosure for data
 collected from human subjects.
 
-#### How should I prepare to submit data?
-Here is some basic information on submitting datasets. See the Submission Basics section above for more details.
-
-- Obtain permission from the appropriate Principal Investigators(s) and
-  inform any dataset co-creators that you plan to deposit the dataset
-- Take care when sharing sensitive data, and be certain to comply with
-  institutional and governmental regulations. It is your responsibility to
-  share your data responsibly and ethically
-- Collect the files comprising the data set. Name files systematically and
-  use open file formats whenever possible (see the UK Data Archive for a
-  [list of optimal file formats](http://www.data-archive.ac.uk/create-manage/format/formats-table))
-  Gather the following information to fully describe the dataset:
- - Dataset title - be as specific as possible
- - Full names and institutional affiliations of all dataset co-creators
- - Keywords for the dataset (use discipline-specific controlled vocabularies
-  whenever possible)
- - Abstract briefly describing the dataset you are submitting– What is the
-  data? Why was it collected?
- - Description of the methods used to collect the data
- - Related works and associated materials, including grant numbers, publications
-  using the dataset, and other related datasets
- - If relevant, information about where the data was collected (e.g., the
-  placename or lat/long coordinates)
- - Any other information that you would want to relay to someone analyzing
-  your data
-
-For generic data management help, see the
-[DataONE Primer on Data Management Best Practices](http://www.dataone.org/sites/all/documents/DataONE_BP_Primer_020212.pdf)
-(PDF).
-
-#### What are the file format requirements?
-
-We accept files in any format for deposit. However, we recommend using
-non-proprietary/open file types to make the data readable by more
-researchers over a longer span of time. (See the UK Data Archive for a
-[list of optimal file formats](http://www.data-archive.ac.uk/create-manage/format/formats-table).)
-If you have files of a specialized or proprietary nature, be sure they are
-accompanied by any pertinent information that would allow the proper
-viewing and/or usage of the file. This information can be included in the
-"Methods" or “Usage Notes” section of the description, or as a separate
-readme.txt file archived alongside the dataset files.
-
 #### What are the size limits?
 
-There is a limit of <%= filesize(current_tenant.max_file_size) %> per file and
-<%= filesize(current_tenant.max_total_version_size) %> per dataset. All data files are
-stored in the Merritt Repository. More information about the Merritt
+There is a limit of 100gb per data publication. All data files are
+stored and preserved in the Merritt Repository. More information about the Merritt
 Repository Service is available in the white paper
 "[UC3, Merritt and Long-term Preservation](https://merritt.cdlib.org/d/ark%3A%2F13030%2Fm52f7p63/2/producer%2FUC3-Merritt-preservation-latest.pdf)."
-Contact [uc3@ucop.edu](mailto:uc3@ucop.edu) for information on submitting
-larger datasets.
-
-### What features do you offer?
-
-#### What feature do you offer to make my dataset have the broadest reach?
-
-Comprehensive documentation (i.e. metadata) is the key for dicoverability as well as ensuring future researchers understand the data. Without thorough metadata (description of the context of the data file, the context in which
-the data were collected, the measurements that were made, and the quality
-of the data), the data cannot be found through internet searches or data
-indexing services, understood by fellow researchers, or effectively used. Read more about
-metadata in the
-[DataONE Primer on Data Management](http://www.dataone.org/sites/all/documents/DataONE_BP_Primer_020212.pdf)
-(PDF).
-
-We require a few key pieces of metadata. Additional information can be
-included in the “Usage Notes” section of the description, or as a separate
-readme.txt file archived alongside the dataset files. The metadata entry
-form is based on fields from the
-[DataCite schema](http://schema.datacite.org/meta/kernel-3/index.html) and is broadly applicable to data from any field.
 
 #### Does the data have to be associated with a publication?
 
-No. We accept all quality data, regardless of whether they have been
-used to publish a paper.
+No. We encourage and accept all quality data, regardless of whether they have been
+used to publish a paper to be deposited, shared, and preserved.
 
-#### Can I obtain a DOI (Digital Object Identifier) before I upload my data?
-
-Yes. To obtain a DOI, you must submit a minimal amount of required
-description, but you can return later to upload the data files.
-
-#### Do you support data embargoes or restricted access?
-
-Not at this time. We do have plans to expand the functionality to
-include both. If you have specific requests for functionality, please add
-them to our [GitHub Issues page](http://github.com/cdluc3/dash/issues).
-
-Note: You are free to stage your dataset publications. Your data will not be exposed to the public until you click "Submit".
-
-### Who will find my data?
 
 #### How are the datasets discoverable?
 
@@ -211,15 +134,24 @@ supports the advancement of knowledge. Read the
 [Panton Principles for Open Data in Science](http://pantonprinciples.org/)
 for more information.
 
-#### Do I need to log in to access published datasets?
 
-No. Users can download data without logging in.
+#### What feature do you offer to make my dataset have the broadest reach?
 
-### How can I use published datasets?
+Comprehensive documentation (i.e. metadata) is the key for dicoverability as well as ensuring future researchers understand the data. Without thorough metadata (description of the context of the data file, the context in which
+the data were collected, the measurements that were made, and the quality
+of the data), the data cannot be found through internet searches or data
+indexing services, understood by fellow researchers, or effectively used. 
+
+We require a few key pieces of metadata. Additional information can be
+included in the “Usage Notes” section of the description, or as a separate
+readme.txt file archived alongside the dataset files. The metadata entry
+form is based on fields from the
+[DataCite schema](http://schema.datacite.org/meta/kernel-3/index.html) and is broadly applicable to data from any field.
+
 
 #### Do I have to pay to download/reuse published datasets?
 
-No. These data are made publicly available free of charge.
+No. These data are made publicly available free of charge under the CCBY 4.0 license.
 
 #### What are my obligations if I use the data in a publication?
 
@@ -237,7 +169,6 @@ You have no legal obligations, but we do ask that you cite the data
 formally when practical to acknowledge the creators and to make your own
 research more reproducible.
 
-### What guarantees do you give?
 
 #### For how long will the data be available?
 
@@ -272,14 +203,11 @@ undergone formal review.
 All information is provided "as-is" and the user shall hold the California
 Digital Library, UC Campus, and any information provider supplying data free and harmless in connection with the use of such information.
 
-### Can I update or remove?
-
 #### Can I update my data?
 
 Yes, you can update both the description and the data files. All versions
 of a dataset will be accessible and kept in the Merritt Repository, but the
-dataset DOI will always resolve to the newest version. Contact
-[uc3@ucop.edu](mailto:uc3@ucop.edu) for more information.
+dataset DOI will always resolve to the newest version. 
 
 #### Can I delete my data?
 
