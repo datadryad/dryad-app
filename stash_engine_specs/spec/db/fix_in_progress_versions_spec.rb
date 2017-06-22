@@ -3,7 +3,7 @@ require 'db_spec_helper'
 stash_engine_path = Gem::Specification.find_by_name('stash_engine').gem_dir
 require "#{stash_engine_path}/db/migrate/20170329190235_fix_in_progress_resources.rb"
 
-describe FixInProgressVersions do
+describe FixInProgressResources do
   attr_reader :in_progress_resources
 
   before(:each) do
@@ -32,7 +32,7 @@ describe FixInProgressVersions do
   end
 
   it 'fixes all in-progress versions' do
-    fix = FixInProgressVersions.new
+    fix = FixInProgressResources.new
     fix.change
     in_progress_resources.each do |v|
       v.reload

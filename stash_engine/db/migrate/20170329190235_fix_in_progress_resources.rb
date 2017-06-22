@@ -1,4 +1,4 @@
-class FixInProgressVersions < ActiveRecord::Migration
+class FixInProgressResources < ActiveRecord::Migration
   def change
     StashEngine::Identifier.find_each do |identifier|
       last_submitted = identifier.last_submitted_resource

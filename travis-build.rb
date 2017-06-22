@@ -4,7 +4,10 @@ require 'bundler'
 require 'pathname'
 require 'time'
 
-PROJECTS = %w(
+# ########################################
+# Constants
+
+PROJECTS = %w[
   stash-wrapper
   stash-harvester
   stash-sword
@@ -14,94 +17,168 @@ PROJECTS = %w(
   stash_discovery
   stash_datacite
   stash_datacite_specs
-)
+].freeze
 
-def exec_command(command, log_file)
-  # preserve ANSI colors, see https://stackoverflow.com/a/27399198/27358
+STASH_ROOT = Pathname.new(__dir__).realpath
 
-  if /(darwin|bsd)/ =~ RUBY_PLATFORM
-    system("script -q #{log_file} #{command} > /dev/null")
-  else
-    system("script -q -e #{log_file} -c #{command} > /dev/null")
-  end
+TRAVIS_PREP_SH = 'travis-prep.sh'.freeze
 
+IN_TRAVIS = ENV['TRAVIS'] == 'true' ? true : false
+
+# ########################################
+# Accessors
+
+def successful_builds
+  @successful_builds ||= []
 end
 
-root = Pathname.new(__dir__)
+def failed_builds
+  @failed_builds ||= []
+end
 
-def bundle(project_dir, bundle_out)
-  puts "bundling #{project_dir}"
-  Dir.chdir(project_dir) do
-    Bundler.with_clean_env do
-      bundle_ok = exec_command('bundle install', bundle_out)
-      $stderr.puts("bundle failed: #{project_dir}") unless bundle_ok
-      system("cat #{bundle_out}") unless bundle_ok
-      return bundle_ok
+# ########################################
+# Helper methods
+
+def colorize(text, color_code)
+  "\e[#{color_code}m#{text}\e[0m"
+end
+
+def red(text)
+  colorize(text, 31)
+end
+
+def green(text)
+  colorize(text, 32)
+end
+
+def yellow(text)
+  colorize(text, 33)
+end
+
+def tmp_path
+  @tmp_path ||= begin
+    tmp_path = STASH_ROOT + 'builds' + Time.now.utc.iso8601
+    tmp_path.mkpath
+    tmp_path
+  end
+end
+
+def working_path
+  Pathname.getwd.relative_path_from(STASH_ROOT)
+end
+
+def run_task(task_name, shell_command)
+  if IN_TRAVIS
+    travis_fold(task_name) do
+      puts "#{working_path}: #{yellow(shell_command)}"
+      return system(shell_command)
     end
   end
+
+  log_file = tmp_path + "#{task_name}.out"
+  build_ok = redirect_to(shell_command, log_file)
+  return build_ok if build_ok
+
+  $stderr.puts("#{shell_command} failed")
+  system("cat #{log_file}")
+
+  false
 end
 
-def prepare(project_dir, prep_out)
-  prep_script = project_dir + 'travis-prep.sh'
-  return true unless prep_script.exist?
-
-  puts "preparing: #{prep_script}"
-  unless FileTest.executable?(prep_script.to_s)
-    $stderr.puts("prepare failed: #{prep_script} is not executable")
-    return false
-  end
-
-  prep_ok = exec_command(prep_script, prep_out)
-  $stderr.puts("prepare failed: #{prep_script}") unless prep_ok
-  system("cat #{prep_out}") unless prep_ok
-  prep_ok
+def travis_fold(task_name)
+  puts "travis_fold:start:#{task_name}"
+  yield
+ensure
+  puts "travis_fold:end:#{task_name}"
 end
 
-def build(project_dir, build_out)
-  Dir.chdir(project_dir) do
-    begin
-      prep_out = build_out.sub('-build', '-prep')
-      prep_ok = prepare(project_dir, prep_out)
-      return false unless prep_ok
+def script_command(shell_command, log_file)
+  return "script -q #{log_file} #{shell_command} > /dev/null" if /(darwin|bsd)/ =~ RUBY_PLATFORM
+  "script -q -c'#{shell_command}' -e #{log_file} > /dev/null"
+end
 
-      puts "building #{project_dir}"
-      Bundler.with_clean_env do
-        build_ok = exec_command('bundle exec rake', build_out)
-        $stderr.puts("build failed: #{project_dir}") unless build_ok
-        system("cat #{build_out}") unless build_ok
-        return build_ok
-      end
-    rescue => e
-      $stderr.puts(e)
-      return false
+def redirect_to(shell_command, log_file)
+  script_command = script_command(shell_command, log_file)
+  log_file_path = log_file.relative_path_from(STASH_ROOT)
+  puts "#{working_path}: #{yellow(shell_command)} > #{log_file_path}"
+  system(script_command)
+rescue => ex
+  $stderr.puts("#{shell_command} failed: #{ex}")
+  false
+end
+
+def dir_for(project)
+  STASH_ROOT + project
+end
+
+def in_project(project)
+  Dir.chdir(dir_for(project)) { yield }
+end
+
+# ########################################
+# Build steps
+
+def bundle(project)
+  Bundler.with_clean_env do
+    in_project(project) do
+      run_task("bundle-#{project}", 'bundle install')
     end
   end
+rescue => e
+  $stderr.puts(e)
+  return false
 end
 
-tmpdir = File.absolute_path("builds/#{Time.now.utc.iso8601}")
-FileUtils.mkdir_p(tmpdir)
-puts "logging build output to #{tmpdir}"
-tmp_path = Pathname.new(tmpdir)
-PROJECTS.each do |p|
-  bundle_out = tmp_path + ("#{p}-bundle.out")
-  bundle_ok = bundle(root + p, bundle_out)
-  exit(1) unless bundle_ok
+def prepare(project)
+  in_project(project) do
+    travis_prep_sh = "./#{TRAVIS_PREP_SH}"
+    return true unless File.exist?(travis_prep_sh)
+    run_task("prepare-#{project}", travis_prep_sh)
+  end
+rescue => e
+  $stderr.puts(e)
+  return false
 end
 
-build_succeeded = []
-build_failed = []
-PROJECTS.each do |p|
-  build_out = tmp_path + ("#{p}-build.out")
-  build_ok = build(root + p, build_out)
-  build_succeeded << p if build_ok
-  build_failed << p unless build_ok
+def build(project)
+  in_project(project) do
+    run_task("build-#{project}", 'bundle exec rake')
+  end
+rescue => e
+  $stderr.puts(e)
+  return false
 end
 
-unless build_succeeded.empty?
-  $stderr.puts("The following projects built successfully: #{build_succeeded.join(', ')}")
+def bundle_all
+  PROJECTS.each do |p|
+    bundle_ok = bundle(p)
+    $stderr.puts(red("#{p} bundle failed")) unless bundle_ok
+    exit(1) unless bundle_ok
+  end
+  true
 end
 
-unless build_failed.empty?
-  $stderr.puts("The following projects failed to build: #{build_failed.join(', ')}")
-  exit(1)
+def build_all
+  PROJECTS.each do |p|
+    prep_ok = prepare(p)
+    $stderr.puts(red("#{p} prep failed")) unless prep_ok
+    next unless prep_ok
+
+    build_ok = build(p)
+    (build_ok ? successful_builds : failed_builds) << p
+    $stderr.puts(red("#{p} build failed")) unless build_ok
+  end
 end
+
+# ########################################
+# Build commands
+
+bundle_all
+
+build_all
+
+$stderr.puts("The following projects built successfully: #{successful_builds.map(&method(:green)).join(', ')}") unless successful_builds.empty?
+exit(0) if failed_builds.empty?
+
+$stderr.puts("The following projects failed to build: #{failed_builds.map(&method(:red)).join(', ')}")
+exit(1)
