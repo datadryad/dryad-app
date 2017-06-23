@@ -5,7 +5,7 @@
 ## Introduction
 
 **Stash** is an application framework for research data publication and
-preservation. Stash enables individual scholarsto:
+preservation. Stash enables individual scholars to:
 
 1. Prepare datasets for curation by reviewing best practice guidance for
    the creation or acquisition of research data.
@@ -23,7 +23,7 @@ widespread data preservation, publication, sharing, and reuse; and promotes
 open scholarly inquiry and advancement.
 
 [Dash](https://dash.ucop.edu/) is the
-[UC Curation Center](http://www.cdlib.org/uc3/)'s implementation of Dash.
+[UC Curation Center](http://www.cdlib.org/uc3/)'s implementation of Stash.
 For the Dash source code, see the [dashv2](https://github.com/CDLUC3/dashv2)
 repository.
 
