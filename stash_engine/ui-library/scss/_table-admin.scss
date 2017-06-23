@@ -1,0 +1,37 @@
+.c-space-paginator {
+  margin: 15px 0;
+}
+
+.c-admin-table__user-campus {
+  width: 25%;
+}
+
+.c-admin-table__user-name {
+  width: 30%;
+}
+
+.c-admin-table__user-role {
+  width: 10%;
+}
+
+.c-admin-table__user-last-login {
+  width: 35%;
+}
+
+.c-admin-table__sort-asc:after {
+  content: '\e151';
+  float: right;
+  color: $design-dark-gray-color;
+  font-family: 'Glyphicons Halflings';
+  font-size: 1em;
+  line-height: normal;
+}
+
+.c-admin-table__sort-desc:after {
+  content: '\e152';
+  float: right;
+  color: $design-dark-gray-color;
+  font-family: 'Glyphicons Halflings';
+  font-size: 1em;
+  line-height: normal;
+}

@@ -3698,35 +3698,37 @@ html.no-details .o-showhide__summary {
   color: inherit;
   cursor: pointer; }
 
-.js-title-toggle > a:link, .js-title-toggle > a:visited, .js-title-toggle > a:hover, .js-title-toggle > a:active {
+.js-title-toggle > a:link,
+.js-title-toggle > a:visited,
+.js-title-toggle > a:hover,
+.js-title-toggle > a:active {
   color: black;
   text-decoration: none; }
 
 /* open drop-down */
 .c-facet-title--open:after {
-  font-family: 'Glyphicons Halflings';
-  content: "\e114";
+  content: '\e114';
   float: right;
-  color: grey;
+  color: #7c7e7f;
+  font-family: 'Glyphicons Halflings';
   font-size: .8em;
   line-height: normal; }
 
 /* this one is closed */
 .c-facet-title--closed:after {
-  font-family: 'Glyphicons Halflings';
-  content: "\e080";
+  content: '\e080';
   float: right;
-  color: grey;
+  color: #7c7e7f;
+  font-family: 'Glyphicons Halflings';
   font-size: .8em;
   line-height: normal; }
 
 .c-facet-list {
   margin: 10px 5px;
-  list-style: none;
-  padding: 0; }
-
-.c-facet-list li {
-  margin: 10px 0 10px 10px; }
+  padding: 0;
+  list-style: none; }
+  .c-facet-list li {
+    margin: 10px 0 10px 10px; }
 
 .c-fieldset {
   padding: 15px 0 0;
@@ -4704,19 +4706,19 @@ html.no-details .o-showhide__summary {
   color: #005581;
   font-weight: bold; }
 
-.c-manifest-table {
+.c-lined-table {
   width: 100%;
   border-collapse: collapse;
   border: 1px solid #7c7e7f; }
 
-.c-manifest-table__head > th {
+.c-lined-table__head > th {
   padding: 8px;
   border-collapse: collapse;
   border: 1px solid #7c7e7f;
   font-weight: bold;
   text-align: left; }
 
-.c-manifest-table__row > td {
+.c-lined-table__row > td {
   padding: 8px;
   border-collapse: collapse;
   border: 1px solid #7c7e7f;
@@ -5083,8 +5085,8 @@ html.no-details .o-showhide__summary {
   position: relative;
   width: 25px;
   margin: 5px;
-  border: 1px solid #ddd;
-  background: #eee;
+  border: 1px solid lightgray;
+  background: lightgray;
   cursor: pointer; }
 
 .t-review__doi {
