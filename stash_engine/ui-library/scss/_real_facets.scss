@@ -17,22 +17,22 @@
 }
 
 /* open drop-down */
-.c-facet-title--open:after {
-  content: '\e114';
+.c-facet-title--closed:after {
+  content: '\f105';
   float: right;
   color: $design-dark-gray-color;
-  font-family: 'Glyphicons Halflings';
-  font-size: .8em;
+  font-family: 'FontAwesome';
+  font-size: 1em;
   line-height: normal;
 }
 
 /* this one is closed */
-.c-facet-title--closed:after {
-  content: '\e080';
+.c-facet-title--open:after {
+  content: '\f107';
   float: right;
   color: $design-dark-gray-color;
-  font-family: 'Glyphicons Halflings';
-  font-size: .8em;
+  font-family: 'FontAwesome';
+  font-size: 1em;
   line-height: normal;
 }
 

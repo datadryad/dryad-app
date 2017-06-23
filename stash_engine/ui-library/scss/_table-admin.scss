@@ -19,19 +19,19 @@
 }
 
 .c-admin-table__sort-asc:after {
-  content: '\e151';
+  content: '\f15d';
   float: right;
   color: $design-dark-gray-color;
-  font-family: 'Glyphicons Halflings';
+  font-family: 'FontAwesome';
   font-size: 1em;
   line-height: normal;
 }
 
 .c-admin-table__sort-desc:after {
-  content: '\e152';
+  content: '\f15e';
   float: right;
   color: $design-dark-gray-color;
-  font-family: 'Glyphicons Halflings';
+  font-family: 'FontAwesome';
   font-size: 1em;
   line-height: normal;
 }

@@ -3710,16 +3710,16 @@ html.no-details .o-showhide__summary {
 
 /* open drop-down */
 .c-facet-title--open:after {
-  content: '\e114';
+  content: '\f105';
   float: right;
   color: #7c7e7f;
-  font-family: 'Glyphicons Halflings';
+  font-family: 'FontAwesome';
   font-size: .8em;
   line-height: normal; }
 
 /* this one is closed */
 .c-facet-title--closed:after {
-  content: '\e080';
+  content: '\f107';
   float: right;
   color: #7c7e7f;
   font-family: 'Glyphicons Halflings';
