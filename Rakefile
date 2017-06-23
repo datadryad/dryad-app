@@ -22,8 +22,8 @@ RuboCop::RakeTask.new
 # ------------------------------------------------------------
 # Defaults
 
-# # Let's be explicit
-# Rake::Task[:default].clear
+# clear rspec/rails default :spec task in favor of :coverage
+Rake::Task[:default].clear
 
 desc 'Run unit tests, check test coverage, check code style'
 task default: %i[coverage rubocop]
