@@ -39,6 +39,7 @@ gem 'capistrano-passenger'
 gem 'capistrano-rails', '~> 1.1'
 gem 'httparty'
 gem 'passenger'
+gem 'rubocop'
 
 # run DelayedJob jobs in the background
 gem 'daemons'
@@ -50,7 +51,6 @@ group :development do
 end
 
 group :test do
-  gem 'rubocop', '~> 0.49'
   gem 'simplecov', '~> 0.9.2'
   gem 'simplecov-console', '~> 0.2.0'
 end
