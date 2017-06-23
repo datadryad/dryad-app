@@ -4496,8 +4496,17 @@ html.no-details .o-showhide__summary {
 .c-admin-table__user-role {
   width: 10%; }
 
+.c-admin-table__role-edit {
+  width: 5%; }
+
 .c-admin-table__user-last-login {
-  width: 35%; }
+  width: 30%; }
+
+.c-lined-table__row > td.c-admin-hide-border-right {
+  border-right: none; }
+
+.c-lined-table__row > td.c-admin-hide-border-left {
+  border-left: none; }
 
 .c-admin-table__sort-asc:after {
   content: '\f15d';
@@ -4514,6 +4523,14 @@ html.no-details .o-showhide__summary {
   font-family: 'FontAwesome';
   font-size: 1em;
   line-height: normal; }
+
+.c-admin-edit-icon {
+  float: right;
+  border: none;
+  background: none; }
+
+.c-admin-edit-icon:focus {
+  outline: 0; }
 
 .c-table-heading {
   display: -ms-flexbox;
