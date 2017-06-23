@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170413223709) do
+ActiveRecord::Schema.define(version: 20170614183802) do
 
   create_table "bookmarks", force: :cascade do |t|
     t.integer  "user_id",       limit: 4,   null: false
@@ -307,6 +307,8 @@ ActiveRecord::Schema.define(version: 20170413223709) do
     t.text     "url",                 limit: 65535
     t.integer  "status_code",         limit: 4
     t.boolean  "timed_out",                         default: false
+    t.text     "original_url",        limit: 65535
+    t.string   "cloud_service",       limit: 255
   end
 
   add_index "stash_engine_file_uploads", ["file_state"], name: "index_stash_engine_file_uploads_on_file_state", using: :btree
