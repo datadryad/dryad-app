@@ -3501,16 +3501,19 @@ html.no-details .o-showhide__summary {
   border: 1px solid #9d9fa2; }
 
 .o-admin-left {
-  min-width: 260px;
-  margin: 20px 20px 0 0;
-  padding: 5px; }
+  min-width: 252px;
+  margin-right: 20px;
+  padding: 10px;
+  /* margin: 20px 20px 0 0;
+  padding: 5px; */ }
 
 .o-admin-right {
   -ms-flex-positive: 1;
       flex-grow: 1;
-  margin: 25px 0 0;
   padding: 10px;
-  background-color: orange; }
+  /*margin: 25px 0 0;
+  padding: 10px;
+  background-color: orange; */ }
 
 .c-alert--success, .c-alert--informational, .c-alert--error {
   display: -ms-flexbox;
@@ -4480,6 +4483,37 @@ html.no-details .o-showhide__summary {
   color: white;
   font-size: 1.3em;
   font-weight: normal; }
+
+.c-space-paginator {
+  margin: 15px 0; }
+
+.c-admin-table__user-campus {
+  width: 25%; }
+
+.c-admin-table__user-name {
+  width: 30%; }
+
+.c-admin-table__user-role {
+  width: 10%; }
+
+.c-admin-table__user-last-login {
+  width: 35%; }
+
+.c-admin-table__sort-asc:after {
+  content: '\e151';
+  float: right;
+  color: #7c7e7f;
+  font-family: 'Glyphicons Halflings';
+  font-size: 1em;
+  line-height: normal; }
+
+.c-admin-table__sort-desc:after {
+  content: '\e152';
+  float: right;
+  color: #7c7e7f;
+  font-family: 'Glyphicons Halflings';
+  font-size: 1em;
+  line-height: normal; }
 
 .c-table-heading {
   display: -ms-flexbox;
