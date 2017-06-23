@@ -4,9 +4,7 @@
 	<meta charset="UTF-8">
 	<title>Metadata Entry Theme</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-	<!-- build:css css/ui.css -->
-	<link rel="stylesheet" href="css/main.css">
-	<!-- endbuild -->
+	<link rel="stylesheet" href="css/ui.css">
 	<style>
 		/* styles for this page only */
 	</style>
@@ -24,18 +22,84 @@
   </div>
 
 	<!-- Begin Header Component -->
-	<!--#include file="includes/header.html" -->
+	
+<header class="c-header">
+	<div class="c-header__logos">
+		<button aria-label="mobile menu" class="o-button__menu c-header__menu-button js-header__menu-button"></button>
+		<a href="" class="c-header__dash-logo-link">
+			<img class="c-header__dash-logo-svg" src="images/logo_ucop.svg" alt="UCOP logo">
+			<img class="c-header__dash-logo-svg" src="images/logo_dash.svg" alt="Dash logo">
+		</a>
+	</div>
+	<nav class="c-header__nav js-header__nav">
+		<div class="o-global-search c-header__global-search">
+			<label class="o-global-search__label" for="search-field-input1">Search</label>
+			<input class="o-global-search__input" id="search-field-input1" type="search" name="[name]" placeholder="Search">
+			<button aria-label="Submit" class="o-global-search__submit-button"></button>
+		</div>
+		<div class="c-header__nav-group">
+			<a href="" class="c-header__nav-item">Home</a>
+			<a href="" class="c-header__nav-item--active">Explore Data</a>
+			<a href="" class="c-header__nav-item">Help</a>
+			
+<div class="o-sites">
+	<details class="o-showhide o-sites__details" role="group">
+		<summary class="o-showhide__summary o-sites__summary">More Dash Sites</summary>
+		<div class="o-sites__group">
+			<span class="o-sites__group-heading">Participating UC Campuses</span>
+			<a href="" class="o-sites__group-item">dash site 1</a>
+			<a href="" class="o-sites__group-item">dash site 2</a>
+			<a href="" class="o-sites__group-item">dash site 3</a>
+		</div>
+	</details>
+	<a href="" class="o-sites__login">Login</a>
+</div>
+
+		</div>
+	</nav>
+</header>
+
 	<!-- End Header Component -->
 
   <h1 class="o-heading__level1">Manage Users</h1>
 
-  <!--#include file="includes/admin-head.html" -->
+  <div class="o-admin-container">
+  <div class="o-admin-left-head">
+    <div class="o-heading__level3">At a glance</div>
+    23 Users<br/>
+    402 Datasets<br/>
+  </div>
+  <div class="o-admin-right-head">
+    <div class="o-heading__level3">Activity in the last 7 days</div>
+    12 users added<br/>
+    308 MB added<br/>
+    3 datasets started<br/>
+    7 datasets submitted
+  </div>
+</div>
 
   <div class="o-admin-container">
     <div class="o-admin-left">
       <h2>Filters</h2>
-      <!--#include file="includes/admin-facet1.html" -->
-      <!--#include file="includes/admin-facet2.html" -->
+      <h3 class="c-facet-title--closed js-title-toggle"><a data-no-turbolink="true" href="#">Institution</a></h3>
+<div class="js-hideshow">
+  <ul class="c-facet-list">
+    <li><a href="#">UC Berkeley</a></li>
+    <li><a href="#">UC Davis</a></li>
+    <li><a href="#">UC Los Angeles</a></li>
+    <li><a href="#">UC San Diego</a></li>
+  </ul>
+</div>
+
+      <h3 class="c-facet-title--closed js-title-toggle"><a data-no-turbolink="true" href="#">Person</a></h3>
+<div class="js-hideshow">
+  <ul class="c-facet-list">
+    <li><a href="#">Scott Fisher</a></li>
+    <li><a href="#">Daniella Lowenberg</a></li>
+    <li><a href="#">David Moles</a></li>
+    <li><a href="#">Marisa Strong</a></li>
+  </ul>
+</div>
 
     </div>
 
@@ -125,13 +189,42 @@
     </div>
   </div>
 
-	<!--#include file="includes/footer.html" -->
+	
+<footer class="c-footer">
+	<div class="c-footer__link-group">
+		<div class="c-footer__nav-group">
+			<a href="" class="c-footer__nav-item">Explore Data</a>
+			<a href="" class="c-footer__nav-item">Help</a>
+			<a href="" class="c-footer__nav-item">My Datasets</a>
+			<div class="c-footer__logged-in-or-out">
+			
+<div class="o-sites">
+	<details class="o-showhide o-sites__details" role="group">
+		<summary class="o-showhide__summary o-sites__summary">More Dash Sites</summary>
+		<div class="o-sites__group">
+			<span class="o-sites__group-heading">Participating UC Campuses</span>
+			<a href="" class="o-sites__group-item">dash site 1</a>
+			<a href="" class="o-sites__group-item">dash site 2</a>
+			<a href="" class="o-sites__group-item">dash site 3</a>
+		</div>
+	</details>
+	<a href="" class="o-sites__login">Login</a>
+</div>
 
-	<!-- build:js js/ui.js -->
-  <script src="js/modernizr-custombuild.js"></script>
-  <script src="js/details-polyfill.js"></script>
-  <script src="js/main.js"></script>
-  <!-- endbuild -->
+			</div>
+		</div>
+		<div class="c-footer__policy-group">
+			<a href="">Terms of Use</a>
+			<a href="">Privacy Policy</a>
+			<a href="">Accessibility Policy</a>
+		</div>
+	</div>
+	<p>Dash is a collaborative project between X and the UC Curation Center of the <a href="http://www.cdlib.org" class="o-link__primary">California Digital Library</a></p>
+	<p>© The Regents of the University of California</p>
+</footer>
+
+
+	<script src="js/ui.js"></script>
 
 
   <!-- javascript for the facet open/close -->

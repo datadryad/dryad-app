@@ -54,13 +54,13 @@
 	font-weight: bold;
 }
 
-.c-manifest-table {
+.c-lined-table {
   width: 100%;
   border-collapse: collapse;
   border: 1px solid $design-dark-gray-color;
 }
 
-.c-manifest-table__head>th {
+.c-lined-table__head>th {
   padding: 8px;
   border-collapse: collapse;
   border: 1px solid $design-dark-gray-color;
@@ -68,7 +68,7 @@
   text-align: left;
 }
 
-.c-manifest-table__row>td {
+.c-lined-table__row>td {
   padding: 8px;
   border-collapse: collapse;
   border: 1px solid $design-dark-gray-color;

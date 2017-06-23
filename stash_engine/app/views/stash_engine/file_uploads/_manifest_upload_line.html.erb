@@ -4,7 +4,7 @@
 <% if i == 11 %>
   <tbody id="table_hider">
 <% end %>
-<tr id="manifest_file_<%= f.id %>" class="c-manifest-table__row <%= f.file_state == 'copied' ? 'js-copied_file' : 'js-created_file' %>">
+<tr id="manifest_file_<%= f.id %>" class="c-lined-table__row <%= f.file_state == 'copied' ? 'js-copied_file' : 'js-created_file' %>">
   <td>
     <span title="<%= f.upload_file_name %>"><%= truncate(f.upload_file_name, length: 30) %></span>
     <span class="js-filename" style="display: none;"><%= f.upload_file_name %></span>

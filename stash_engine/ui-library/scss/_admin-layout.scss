@@ -20,14 +20,17 @@
 }
 
 .o-admin-left {
-  min-width: 260px;
-  margin: 20px 20px 0 0;
-  padding: 5px;
+  min-width: 252px;
+  margin-right: 20px;
+  padding: 10px;
+  /* margin: 20px 20px 0 0;
+  padding: 5px; */
 }
 
 .o-admin-right {
   flex-grow: 1;
-  margin: 25px 0 0;
   padding: 10px;
-  background-color: orange;
+  /*margin: 25px 0 0;
+  padding: 10px;
+  background-color: orange; */
 }
