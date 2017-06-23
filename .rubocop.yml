@@ -1,4 +1,10 @@
 AllCops:
+  Exclude:
+    - 'bin/**/*'
+    - 'config/**/*'
+    - 'db/**/*'
+    - 'script/**/*'
+    - 'vendor/**/*'
   # Suppress complaints about post-2.0 syntax
   TargetRubyVersion: 2.2
 
@@ -44,4 +50,8 @@ Style/SingleLineBlockParams:
 
 # Confusing and weird
 Style/VariableNumber:
-  Enabled: False
+  Enabled: false
+
+# Allow some special handling for engines
+Bundler/OrderedGems:
+  TreatCommentsAsGroupSeparators: true

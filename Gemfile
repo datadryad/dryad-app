@@ -65,5 +65,6 @@ path '../stash' do
   gem 'stash_datacite'
   gem 'stash_discovery'
   gem 'stash_engine'
-  gem 'stash-merritt' # needs engines to load first
+  # needs engines to load first
+  gem 'stash-merritt'
 end
