@@ -25,6 +25,7 @@ gem 'capistrano', '~> 3.4.1'
 gem 'capistrano-passenger'
 gem 'capistrano-rails', '~> 1.1'
 gem 'passenger'
+gem 'rubocop', '~> 0.49'
 
 # ############################################################
 # UI
@@ -57,7 +58,6 @@ end
 group :test do
   gem 'capybara', '~> 2.14'
   gem 'chromedriver-helper', '~> 1.1'
-  gem 'rubocop', '~> 0.49'
   gem 'selenium-webdriver', '~> 3.4'
   gem 'simplecov', '~> 0.9.2'
   gem 'simplecov-console', '~> 0.2.0'
