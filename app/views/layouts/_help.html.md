@@ -15,7 +15,7 @@ A complete list of our default metadata fields is below. Additional metadata can
 Required Fields:
 
 - Title : Title of the dataset. Make sure to be as descriptive as possible
-- Author(s) or Data Creator(s) : Name, email address, institutional affliation of main researcher(s) involved in producing the data.  If you include your [ORCID](http://orcid.org), we will request the ORCID registry auto-populate this publication on your ORCID profile
+- Author(s): Name, email address, institutional affliation of main researcher(s) involved in producing the data.  If you include your [ORCID](http://orcid.org), we will request the ORCID registry auto-populate this publication on your ORCID profile
 - Abstract: Short description of dataset
 
 Optional Fields (the more you describe your dataset, the wider the reach):
@@ -37,13 +37,13 @@ Please note that you may only use one of these two upload methods per version, b
 ## Publication and Citation
 - We do allow for you to delay the publication of your data if for the purposes of having a related article under peer review. If you do choose to utilize this feature we allow for up to a maximum of 180 days to delay publication. 
 - As soon as your data publication is public we recommend citing and publicizing your work with your given DOI. 
-- If you have edits, additional data, or subsequent related work we recommend versioning your data by using the "update" link. Your subsequent versions will appear on the same landing page that your DOI directs to.
+- If you have edits, additional data, or subsequent related work we recommend versioning your data by using the "update" link. All versions of a dataset will be accessible and kept in the Merritt Repository, but the dataset DOI will always resolve to the newest version. 
 
 ##  Frequently Asked Questions
 
 #### Who can publish data?
 
-This site is targeted for use by members of the University of California and DataONE communities. Researchers in any field from participating UC campuses (with exception, see Davis below) can use their campus credentials to deposit data in their campus-specific website. The following nine institutions currently participate:
+This site is targeted for use by members of the University of California and DataONE communities. Researchers in any field from participating UC campuses (with exception, see Davis below) can use their campus credentials to deposit data in their campus-specific website. Anyone in the world can search, view, and download datasets. The following nine institutions currently participate in publishing data in Dash:
 
 - [UC Berkeley](https://dash.berkeley.edu/)
 - [UC Irvine](https://dash.lib.uci.edu/)
@@ -54,18 +54,6 @@ This site is targeted for use by members of the University of California and Dat
 - [UC San Francisco](https://datashare.ucsf.edu/)
 - UC Davis College of Engineering (https://dash.ucdavis.edu)
 - DataONE ONEShare (https://oneshare.cdlib.org/)
-
-Contact [uc3@ucop.edu](mailto:uc3@ucop.edu) for more information.
-
-#### Can I use if my campus is not listed?
-
-Anyone can search, view and download datasets. However, for each campus-specific website, data submission is limited to individuals affiliated with that campus.  Contact [uc3@ucop.edu](mailto:uc3@ucop.edu) for more information.
-
-#### What is ONEshare?
-ONEshare is a service, operated by CDL in collaboration with the
-[DataONE project](http://dataone.org/). Anyone can deposit Environmental and Earth observation data within
-[ONEshare](https://oneshare.cdlib.org/). Contact uc3@ucop.edu for more
-information.
 
 #### What type of data is within scope?
 
@@ -140,27 +128,6 @@ form is based on fields from the
 [DataCite schema](http://schema.datacite.org/meta/kernel-3/index.html) and is broadly applicable to data from any field.
 
 
-#### Do I have to pay to download/reuse published datasets?
-
-No. These data are made publicly available free of charge under the CCBY 4.0 license.
-
-#### What are my obligations if I use the data in a publication?
-
-Except for some legacy datasets that were released with custom use
-agreements, data is released under the terms of the
-[Creative Commons Attribution license ](http://creativecommons.org/licenses/by/4.0/)(CC-BY-4.0).
-This means that you can use the data for any purpose, but you must give
-proper attribution to the creators. To do so, we ask that you cite the data
-formally in the reference section of your publication. Each dataset’s
-landing page includes a suggested citation.
-
-Note: datasets in ONEshare are in the public domain under a
-[Creative Commons Universal waiver ](http://creativecommons.org/publicdomain/zero/1.0/)(CC0).
-You have no legal obligations, but we do ask that you cite the data
-formally when practical to acknowledge the creators and to make your own
-research more reproducible.
-
-
 #### For how long will the data be available?
 
 Data deposited are permanently archived and available through the
@@ -184,21 +151,7 @@ Preservation policy details include:
   current cycle time of approximately two months.
 - **Succession plans**: In case of closure of the repository, reasonable
   efforts will be made to integrate all content into suitable alternative
-  institutional and/or subject based repositories.
-
-#### Do you check to ensure the quality of the data?
-
-No. Data found in this service is self-deposited by researchers and may or may not have
-undergone formal review.
-
-All information is provided "as-is" and the user shall hold the California
-Digital Library, UC Campus, and any information provider supplying data free and harmless in connection with the use of such information.
-
-#### Can I update my data?
-
-Yes, you can update both the description and the data files. All versions
-of a dataset will be accessible and kept in the Merritt Repository, but the
-dataset DOI will always resolve to the newest version. 
+  institutional and/or subject based repositories. 
 
 #### Can I delete my data?
 
@@ -208,11 +161,3 @@ action which normally should be requested and fully justified by the
 original contributor (e.g., if sensitive human subject data was not
 properly de-identified). If your data must be deleted, contact
 [uc3@ucop.edu](mailto:uc3@ucop.edu).
-
-#### Can a DOI (Digital Object Identifier) be revoked?
-
-Content not considered to fall under the scope of the repository will be
-removed and associated DOIs issued revoked. Please signal promptly
-any suspected policy violations, ideally no later than 24 hours from
-upload. User access may be revoked on violation of
-[Terms of Use](http://www.cdlib.org/about/terms.html).
