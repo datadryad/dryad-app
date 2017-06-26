@@ -21,7 +21,6 @@ Selector pattern using above mixin:
 }
 
 */
-@import url(../bower_components/glyphicons/styles/glyphicons.css);
 @media (min-width: 480px) {
   .o-section, .c-footer, .c-header, .c-upload__item, .c-upload__item--complete, .c-manifest__item {
     margin: 0 -10px;

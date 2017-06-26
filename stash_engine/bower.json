@@ -15,7 +15,6 @@
   },
   "dependencies": {
     "font-awesome": "fontawesome#^4.6.3",
-    "glyphicons": "^0.0.2",
     "jquery-ui": "^1.12.1"
   }
 }
