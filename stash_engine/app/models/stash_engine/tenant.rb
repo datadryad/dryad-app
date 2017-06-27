@@ -69,6 +69,10 @@ module StashEngine
       nil
     end
 
+    def self.exists?(tenant_id)
+      StashEngine.tenants.key?(tenant_id)
+    end
+
     def self.find(tenant_id)
       new(StashEngine.tenants[tenant_id])
     end

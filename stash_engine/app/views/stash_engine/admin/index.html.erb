@@ -10,6 +10,7 @@
   <div class="o-admin-right">
     <h2>User Administration</h2>
     <!-- table and paging here -->
+    <%= render partial: 'stash_engine/users/admin_table', locals: { users: @users } %>
   </div>
 </div>
 

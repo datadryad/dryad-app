@@ -1,0 +1,29 @@
+<%# locals: users %>
+<table class="c-lined-table">
+  <tr class="c-lined-table__head">
+    <th class="c-admin-table__user-campus"><a href="#">Institution</a></th>
+    <th class="c-admin-table__user-name c-admin-table__sort-asc"><a href="#">Name</a></th>
+    <th class="c-admin-table__user-role" colspan="2"><a href="#">Role</a></th>
+    <th class="c-admin-table__user-last-login"><a href="#">Last login</a></th>
+  </tr>
+
+  <% users.each do |u| %>
+    <% unless u.tenant_id.blank? %>
+      <tr class="c-lined-table__row">
+        <% logger.debug "tenant_id: #{u.tenant_id}" %>
+        <% byebug %>
+        <td><%= StashEngine::Tenant.find(u.tenant_id).short_name %></td>
+        <td><a href="#">Cornelia Hassengrab</a></td>
+        <td class="c-admin-hide-border-right">
+          Admin
+        </td>
+        <td class="c-admin-hide-border-left">
+          <button class="c-admin-edit-icon" aria-label="Edit user role" alt="Edit user role" style="vertical-align: middle;">
+            <i class="fa fa-pencil" aria-hidden="true"></i>
+          </button>
+        </td>
+        <td>03/18/2017 17:24:36</td>
+      </tr>
+    <% end %>
+  <% end %>
+</table>
