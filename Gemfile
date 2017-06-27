@@ -58,6 +58,7 @@ end
 group :test do
   gem 'capybara', '~> 2.14'
   gem 'chromedriver-helper', '~> 1.1'
+  gem 'solr_wrapper', '~> 1.1'
   gem 'selenium-webdriver', '~> 3.4'
   gem 'simplecov', '~> 0.9.2'
   gem 'simplecov-console', '~> 0.2.0'

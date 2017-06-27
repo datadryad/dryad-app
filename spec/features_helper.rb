@@ -23,5 +23,27 @@ end
 RSpec.configure do |config|
   # Treat specs in features/ as feature specs
   config.infer_spec_type_from_file_location!
+
+  # TODO: figure out how to move some of this to stash_discovery
+  require 'solr_wrapper'
+  config.before(:all) do
+    @solr = SolrWrapper.instance(port: '8983')
+    @solr.start
+    begin
+      @collection = @solr.create(dir: 'spec/config/solr/conf', name: 'geoblacklight')
+    rescue => ex
+      puts ex
+      @solr.stop
+      @solr = nil
+    end
+  end
+
+  config.after(:all) do
+    begin
+      @solr.delete(@collection) if @collection
+    ensure
+      @solr.stop if @solr
+    end
+  end
 end
 
