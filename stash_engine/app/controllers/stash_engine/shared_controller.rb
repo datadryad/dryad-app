@@ -7,7 +7,7 @@ module StashEngine
       c.helper_method :current_tenant, :current_tenant_simple, :current_user, :metadata_engine, :metadata_url_helpers,
                       :metadata_render_path, :stash_url_helpers, :discovery_url_helpers, :landing_url, :field_suffix,
                       :logo_path, :contact_us_url, :display_br, :display_id, :display_id_plain,
-                      :formatted_date, :can_display_embargoed?, :file_content_dump, :display_author_orcid,
+                      :formatted_date, :formatted_datetime, :can_display_embargoed?, :file_content_dump, :display_author_orcid,
                       :english_list, :shorten_linked_url
     end
 
@@ -19,6 +19,12 @@ module StashEngine
       return 'Not available' if t.blank?
       t = t.to_time if t.class == String
       t.strftime('%B %e, %Y')
+    end
+
+    def formatted_datetime(t)
+      return 'Not available' if t.blank?
+      t = t.to_time if t.class == String
+      t.strftime('%m/%d/%Y %H:%M:%S')
     end
 
     # generate a render path in the metadata engine

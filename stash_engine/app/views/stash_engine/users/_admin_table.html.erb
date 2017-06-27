@@ -11,16 +11,16 @@
     <% if StashEngine::Tenant.exists?(u.tenant_id) %>
       <tr class="c-lined-table__row">
         <td><%= StashEngine::Tenant.find(u.tenant_id).short_name %></td>
-        <td><a href="#">Cornelia Hassengrab</a></td>
+        <td><a href="#"><%= u.first_name %> <%= u.last_name %></a></td>
         <td class="c-admin-hide-border-right">
-          Admin
+          <%= u.role.capitalize %>
         </td>
         <td class="c-admin-hide-border-left">
-          <button class="c-admin-edit-icon" aria-label="Edit user role" alt="Edit user role" style="vertical-align: middle;">
+          <button class="c-admin-edit-icon" aria-label="Edit user role" alt="Edit user role">
             <i class="fa fa-pencil" aria-hidden="true"></i>
           </button>
         </td>
-        <td>03/18/2017 17:24:36</td>
+        <td><%= formatted_datetime(u.last_login) %></td>
       </tr>
     <% end %>
   <% end %>
