@@ -42,7 +42,27 @@
   list-style: none;
 
   li {
+    display: block;
     margin: 10px 0 10px 10px;
   }
+
+  a:visited,
+  a:link,
+  a:hover { color: $design-light-blue-color; }
+}
+
+.c-facet-li__selected {
+  font-size: 110%;
+  font-weight: bold;
+}
+
+.c-facet-remove {
+  color: $design-red-color;
+}
+
+.c-facet-remove-link {
+  display: block;
+  float: right;
+  text-decoration: none;
 }
 

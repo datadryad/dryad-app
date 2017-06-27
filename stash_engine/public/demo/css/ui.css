@@ -3730,7 +3730,24 @@ html.no-details .o-showhide__summary {
   padding: 0;
   list-style: none; }
   .c-facet-list li {
+    display: block;
     margin: 10px 0 10px 10px; }
+  .c-facet-list a:visited,
+  .c-facet-list a:link,
+  .c-facet-list a:hover {
+    color: #4891af; }
+
+.c-facet-li__selected {
+  font-size: 110%;
+  font-weight: bold; }
+
+.c-facet-remove {
+  color: #d12c1d; }
+
+.c-facet-remove-link {
+  display: block;
+  float: right;
+  text-decoration: none; }
 
 .c-fieldset {
   padding: 15px 0 0;
