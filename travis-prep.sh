@@ -11,15 +11,16 @@ PROJECT_ROOT=`pwd`
 if [ ! -d ../stash ]; then
   BRANCH=${TRAVIS_PULL_REQUEST_BRANCH:-$TRAVIS_BRANCH}
 
-  echo "Cloning https://github.com/CDLUC3/stash"
+  echo "Cloning https://github.com/CDLUC3/stash:"
+  set -x
   cd .. && \
     git clone https://github.com/CDLUC3/stash && \
     cd stash && \
     git checkout ${BRANCH}
+  { set +x; } 2>/dev/null
 
   SE_REVISION=$(git rev-parse HEAD)
-  echo "  Checked out stash branch ${BRANCH}, revision ${SE_REVISION}"
-  echo ""
+  echo "Checked out stash branch ${BRANCH}, revision ${SE_REVISION}"
 
   cd ${PROJECT_ROOT}
 fi
@@ -29,22 +30,25 @@ fi
 # Test database
 
 echo "Initializing database:"
-echo "  mysql -u travis -e 'CREATE DATABASE IF NOT EXISTS dashv2_test'"
+set -x
 mysql -u travis -e 'CREATE DATABASE IF NOT EXISTS dashv2_test'
-echo ""
+{ set +x; } 2>/dev/null
 
 # ############################################################
 # Configuration
 
 echo "Copying configuration files:"
 cd .config-travis
-for f in `find . -type f | sed "s|^\./||"`; do
-  if [ -f ${PROJECT_ROOT}/config/${f} ]; then
-    echo "  config/${f} already exists; ignoring .config-travis/${f}"
+CONFIG_FILES=$(find . -type f | sed "s|^\./||")
+cd ${PROJECT_ROOT}
+for CONFIG_FILENAME in ${CONFIG_FILES}; do
+  SOURCE_FILE=.config-travis/${CONFIG_FILENAME}
+  DEST_FILE=config/${CONFIG_FILENAME}
+  if [ -f ${DEST_FILE} ]; then
+    echo "  skipping existing file ${DEST_FILE}"
   else
-    echo "  cp .config-travis/${f} config/${f}"
-    cp ${f} ${PROJECT_ROOT}/config/${f}
+    set -x
+    cp ${SOURCE_FILE} ${DEST_FILE}
+    { set +x; } 2>/dev/null
   fi
 done
-cd ${PROJECT_ROOT}
-echo ""
