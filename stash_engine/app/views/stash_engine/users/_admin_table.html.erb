@@ -1,10 +1,10 @@
 <%# locals: users %>
 <table class="c-lined-table">
   <tr class="c-lined-table__head">
-    <th class="c-admin-table__user-campus"><a href="#">Institution</a></th>
-    <th class="c-admin-table__user-name c-admin-table__sort-asc"><a href="#">Name</a></th>
-    <th class="c-admin-table__user-role" colspan="2"><a href="#">Role</a></th>
-    <th class="c-admin-table__user-last-login"><a href="#">Last login</a></th>
+    <th class="c-admin-table__user-campus"><%= sort_by 'tenant_id', title: 'Institution', current_column: @sort_column %></th>
+    <th class="c-admin-table__user-name c-admin-table__sort-asc"><%= sort_by 'name', title: 'Name', current_column: @sort_column %></th>
+    <th class="c-admin-table__user-role" colspan="2"><%= sort_by 'role', title: 'Role', current_column: @sort_column %></th>
+    <th class="c-admin-table__user-last-login"><%= sort_by 'last_login', title: 'Last login', current_column: @sort_column %></th>
   </tr>
 
   <% users.each do |u| %>

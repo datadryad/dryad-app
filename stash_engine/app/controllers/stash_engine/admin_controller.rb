@@ -8,9 +8,23 @@ module StashEngine
       setup_superuser_facets
       @users = User.all
       add_institution_filter!
+      @sort_column = sort_column
+      @users = @users.order(@sort_column.order)
     end
 
     private
+
+    # this sets up the sortable-table gem
+    def sort_column
+      institution_sort = SortableTable::SortColumnDefinition.new('tenant_id')
+      name_sort = SortableTable::SortColumnCustomDefinition.new('name',
+                                                                asc: 'last_name asc, first_name asc',
+                                                                desc: 'last_name desc, first_name desc')
+      role_sort = SortableTable::SortColumnDefinition.new('role')
+      login_time_sort = SortableTable::SortColumnDefinition.new('last_login')
+      sort_table = SortableTable::SortTable.new([name_sort, institution_sort, role_sort, login_time_sort])
+      sort_table.sort_column(params[:sort], params[:direction])
+    end
 
     def setup_superuser_stats
       @stats =
