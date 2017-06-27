@@ -1,0 +1,6 @@
+test:
+  metadata_engine: StashDatacite
+  shared_resource_model: StashEngine::Resource
+  repository: Stash::Merritt::Repository
+  stash_mount: /stash
+  max_review_days: 180
