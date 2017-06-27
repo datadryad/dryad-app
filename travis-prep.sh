@@ -43,7 +43,7 @@ for f in `find . -type f | sed "s|^\./||"`; do
     echo "  config/${f} already exists; ignoring .config-travis/${f}"
   else
     echo "  cp .config-travis/${f} config/${f}"
-    cp .config-travis/${f} ${PROJECT_ROOT}/config/${f}
+    cp ${f} ${PROJECT_ROOT}/config/${f}
   fi
 done
 cd ${PROJECT_ROOT}
