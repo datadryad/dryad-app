@@ -131,5 +131,12 @@ module StashEngine
         expect(tenant.landing_url('/doi:10.123/456')).to eq('https://stash-dev.example.edu/doi:10.123/456')
       end
     end
+
+    describe '#exists?' do
+      it 'checks if a tenant exists' do
+        expect(Tenant.exists?('exemplia')).to be true
+        expect(Tenant.exists?('pustule')).to be false
+      end
+    end
   end
 end
