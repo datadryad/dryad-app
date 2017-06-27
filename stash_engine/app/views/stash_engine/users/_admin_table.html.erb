@@ -8,10 +8,8 @@
   </tr>
 
   <% users.each do |u| %>
-    <% unless u.tenant_id.blank? %>
+    <% if StashEngine::Tenant.exists?(u.tenant_id) %>
       <tr class="c-lined-table__row">
-        <% logger.debug "tenant_id: #{u.tenant_id}" %>
-        <% byebug %>
         <td><%= StashEngine::Tenant.find(u.tenant_id).short_name %></td>
         <td><a href="#">Cornelia Hassengrab</a></td>
         <td class="c-admin-hide-border-right">
