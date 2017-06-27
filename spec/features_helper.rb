@@ -27,10 +27,12 @@ RSpec.configure do |config|
   # TODO: figure out how to move some of this to stash_discovery
   require 'solr_wrapper'
   config.before(:all) do
-    @solr = SolrWrapper.instance(port: '8983')
+    @solr = SolrWrapper.instance(port: '8983', version: '5.2.1')
     @solr.start
+    puts 'Solr 5.2.1 started on port 8983'
     begin
       @collection = @solr.create(dir: 'spec/config/solr/conf', name: 'geoblacklight')
+      puts 'geoblacklight collection created'
     rescue => ex
       puts ex
       @solr.stop
@@ -46,4 +48,3 @@ RSpec.configure do |config|
     end
   end
 end
-

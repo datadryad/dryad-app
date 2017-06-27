@@ -4,8 +4,8 @@ require File.join(File.dirname(__FILE__), 'lib', 'bundler_help.rb')
 # ############################################################
 # Rails
 
-gem 'rails', '4.2.7.1'
 gem 'mysql2', '~> 0.3.18'
+gem 'rails', '4.2.7.1'
 
 # ############################################################
 # Local engines
@@ -45,8 +45,8 @@ gem 'yui-compressor'
 # Misc
 
 gem 'exception_notification'
-gem 'jbuilder', '~> 2.0'
 gem 'httparty'
+gem 'jbuilder', '~> 2.0'
 
 # ############################################################
 # Development and testing
@@ -58,10 +58,10 @@ end
 group :test do
   gem 'capybara', '~> 2.14'
   gem 'chromedriver-helper', '~> 1.1'
-  gem 'solr_wrapper', '~> 1.1'
   gem 'selenium-webdriver', '~> 3.4'
   gem 'simplecov', '~> 0.9.2'
   gem 'simplecov-console', '~> 0.2.0'
+  gem 'solr_wrapper', '~> 1.1'
 end
 
 group :development, :test do
@@ -69,4 +69,3 @@ group :development, :test do
   gem 'rspec-rails', '~> 3.0'
   gem 'spring'
 end
-
