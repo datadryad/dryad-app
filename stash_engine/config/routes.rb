@@ -73,4 +73,7 @@ StashEngine::Engine.routes.draw do
   patch 'shares/update', to: 'shares#update'
   delete 'shares/:id/delete', to: 'shares#delete'
 
+  # admin area
+  get 'admin', to: 'admin#index'
+
 end

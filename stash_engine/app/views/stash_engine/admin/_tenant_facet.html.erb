@@ -1,0 +1,9 @@
+<%# takes tenants as local: facets %>
+<h3 class="<%= ( params[:institution] ? 'c-facet-title--open' : 'c-facet-title--closed' ) %> js-title-toggle"><a data-no-turbolink="true" href="#">Institution</a></h3>
+<div class="js-hideshow">
+  <ul class="c-facet-list">
+    <% facets.each do |f| %>
+      <li><%= link_to f.short_name, params.merge(institution: f.tenant_id) %></li>
+    <% end %>
+  </ul>
+</div>
