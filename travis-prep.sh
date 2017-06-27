@@ -12,11 +12,12 @@ if [ ! -d ../stash ]; then
   BRANCH=${TRAVIS_PULL_REQUEST_BRANCH:-$TRAVIS_BRANCH}
 
   echo "Cloning https://github.com/CDLUC3/stash:"
+  cd ..
+
   set -x
-  cd .. && \
-    git clone https://github.com/CDLUC3/stash && \
-    cd stash && \
-    git checkout ${BRANCH}
+  git clone https://github.com/CDLUC3/stash
+  cd stash
+  git checkout ${BRANCH}
   { set +x; } 2>/dev/null
 
   SE_REVISION=$(git rev-parse HEAD)
