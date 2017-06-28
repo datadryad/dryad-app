@@ -1,11 +1,11 @@
 require 'simplecov-console'
 
-# Up one level to include stash local dependencies
-WORKDIR = File.expand_path(File.join(File.dirname(__FILE__), '..'))
+# Up one level to include stash
+COVERAGE_ROOT = File.expand_path(File.join(File.dirname(__FILE__), '..'))
 
 # Hack for SimpleCov #5 https://github.com/chetan/simplecov-console/issues/5
-Module::ROOT = WORKDIR
-SimpleCov::Formatter::Console::ROOT = WORKDIR
+SimpleCov::Formatter::Console::ROOT = COVERAGE_ROOT
+Module::ROOT = COVERAGE_ROOT
 
 # Filter out third-party code
 class VendorFilter < SimpleCov::Filter
@@ -17,10 +17,10 @@ class VendorFilter < SimpleCov::Filter
   end
 end
 
-SimpleCov.start do
+SimpleCov.configure do
   filters.clear
   add_filter '/spec/'
-  add_filter VendorFilter.new(WORKDIR)
+  add_filter VendorFilter.new(COVERAGE_ROOT)
   SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter[
     SimpleCov::Formatter::HTMLFormatter,
     SimpleCov::Formatter::Console,

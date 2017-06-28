@@ -4,14 +4,11 @@
 require File.expand_path('../config/application', __FILE__)
 Rails.application.load_tasks
 
-task default: [:about]
-
 # ------------------------------------------------------------
 # Coverage
 
 desc 'Run all unit tests with coverage'
 task :coverage do
-  require 'simplecov'
   ENV['COVERAGE'] = 'true'
   Rake::Task['spec'].execute
 end
