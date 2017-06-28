@@ -54,7 +54,6 @@ module StashEngine
 
     def setup_superuser_facets
       @tenant_facets = StashEngine::Tenant.all.sort_by(&:short_name)
-      @user_facets = User.all.order(last_name: :asc)
     end
 
     def add_institution_filter!
