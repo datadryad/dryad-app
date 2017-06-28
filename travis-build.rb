@@ -1,6 +1,7 @@
 #!/usr/bin/env ruby
 
 require 'bundler'
+require 'colorize'
 require 'pathname'
 require 'time'
 
@@ -39,20 +40,8 @@ end
 # ########################################
 # Helper methods
 
-def colorize(text, color_code)
-  "\e[#{color_code}m#{text}\e[0m"
-end
-
-def red(text)
-  colorize(text, 31)
-end
-
-def green(text)
-  colorize(text, 32)
-end
-
-def yellow(text)
-  colorize(text, 33)
+def warn(msg)
+  $stderr.puts(msg.to_s.red)
 end
 
 def tmp_path
@@ -67,19 +56,21 @@ def working_path
   Pathname.getwd.relative_path_from(STASH_ROOT)
 end
 
-def run_task(task_name, shell_command)
-  if IN_TRAVIS
-    travis_fold(task_name) do
-      puts "#{working_path}: #{yellow(shell_command)}"
-      return system(shell_command)
-    end
+def run_folded(shell_command, task_name)
+  travis_fold(task_name) do
+    puts "#{working_path}: #{shell_command.yellow}"
+    return system(shell_command)
   end
+end
+
+def run_task(task_name, shell_command)
+  return run_folded(shell_command, task_name) if IN_TRAVIS
 
   log_file = tmp_path + "#{task_name}.out"
   build_ok = redirect_to(shell_command, log_file)
   return build_ok if build_ok
 
-  $stderr.puts("#{shell_command} failed")
+  warn("#{shell_command} failed")
   system("cat #{log_file}")
 
   false
@@ -100,10 +91,10 @@ end
 def redirect_to(shell_command, log_file)
   script_command = script_command(shell_command, log_file)
   log_file_path = log_file.relative_path_from(STASH_ROOT)
-  puts "#{working_path}: #{yellow(shell_command)} > #{log_file_path}"
+  puts "#{working_path}: #{shell_command.yellow} > #{log_file_path}"
   system(script_command)
 rescue => ex
-  $stderr.puts("#{shell_command} failed: #{ex}")
+  warn("#{shell_command} failed: #{ex}")
   false
 end
 
@@ -125,7 +116,7 @@ def bundle(project)
     end
   end
 rescue => e
-  $stderr.puts(e)
+  warn(e)
   return false
 end
 
@@ -136,7 +127,7 @@ def prepare(project)
     run_task("prepare-#{project}", travis_prep_sh)
   end
 rescue => e
-  $stderr.puts(e)
+  warn(e)
   return false
 end
 
@@ -145,14 +136,14 @@ def build(project)
     run_task("build-#{project}", 'bundle exec rake')
   end
 rescue => e
-  $stderr.puts(e)
+  warn(e)
   return false
 end
 
 def bundle_all
   PROJECTS.each do |p|
     bundle_ok = bundle(p)
-    $stderr.puts(red("#{p} bundle failed")) unless bundle_ok
+    warn("#{p} bundle failed") unless bundle_ok
     exit(1) unless bundle_ok
   end
   true
@@ -161,12 +152,12 @@ end
 def build_all
   PROJECTS.each do |p|
     prep_ok = prepare(p)
-    $stderr.puts(red("#{p} prep failed")) unless prep_ok
+    warn("#{p} prep failed") unless prep_ok
     next unless prep_ok
 
     build_ok = build(p)
     (build_ok ? successful_builds : failed_builds) << p
-    $stderr.puts(red("#{p} build failed")) unless build_ok
+    warn("#{p} build failed") unless build_ok
   end
 end
 
@@ -177,8 +168,8 @@ bundle_all
 
 build_all
 
-$stderr.puts("The following projects built successfully: #{successful_builds.map(&method(:green)).join(', ')}") unless successful_builds.empty?
+puts("The following projects built successfully: #{successful_builds.join(', ').green}") unless successful_builds.empty?
 exit(0) if failed_builds.empty?
 
-$stderr.puts("The following projects failed to build: #{failed_builds.map(&method(:red)).join(', ')}")
+warn("The following projects failed to build: #{failed_builds.join(', ').red}")
 exit(1)
