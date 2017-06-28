@@ -59,6 +59,7 @@ PATH
       omniauth-shibboleth (~> 1.2.1)
       rails (~> 4.2.4)
       redcarpet (~> 3.3)
+      sortable-table
       thor (= 0.19.1)
       wicked_pdf (~> 1.1.0)
       wkhtmltopdf-binary (~> 0.12.3.1)
@@ -402,6 +403,9 @@ GEM
       retriable
       ruby-progressbar
       rubyzip
+    sortable-table (0.1.1)
+      actionpack (>= 3.0.0)
+      activesupport (>= 3.0.0)
     spring (2.0.2)
       activesupport (>= 4.2)
     sprockets (3.7.1)
