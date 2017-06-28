@@ -1,6 +1,6 @@
 <% # local: user %>
 <div class="o-admin-dialog">
-  <p>Choose <%= "#{user.first_name} #{user.last_name}" %>&apos;s Role</p>
+  <p>Choose <%= "#{user.first_name} #{user.last_name}".strip %>&apos;s Role</p>
 
   <%= form_tag(admin_set_role_path(user.id), method: :post, remote: true) do -%>
     <% [ ['user', 'User'], ['admin', 'Administrator'], ['superuser', 'Superuser'] ].each do |role| %>
