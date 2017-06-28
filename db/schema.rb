@@ -364,7 +364,7 @@ ActiveRecord::Schema.define(version: 20170627163421) do
     t.datetime "updated_at",              null: false
   end
 
-  add_index "stash_engine_shares", ["secret_id"], name: "index_stash_engine_shares_on_secret_id", using: :btree
+  add_index "stash_engine_shares", ["secret_id"], name: "index_stash_engine_shares_on_secret_id", length: {"secret_id"=>50}, using: :btree
 
   create_table "stash_engine_submission_logs", force: :cascade do |t|
     t.integer  "resource_id",                limit: 4
@@ -407,9 +407,9 @@ ActiveRecord::Schema.define(version: 20170627163421) do
   add_index "stash_engine_versions", ["resource_id"], name: "index_stash_engine_versions_on_resource_id", using: :btree
 
   create_table "users", force: :cascade do |t|
-    t.string   "email",                  limit: 255, default: "",    null: false
+    t.string   "email",                  limit: 191, default: "",    null: false
     t.string   "encrypted_password",     limit: 255, default: "",    null: false
-    t.string   "reset_password_token",   limit: 255
+    t.string   "reset_password_token",   limit: 191
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
     t.integer  "sign_in_count",          limit: 4,   default: 0,     null: false
