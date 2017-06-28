@@ -1,3 +1,7 @@
+sudo: required
+
+dist: trusty
+
 language: ruby
 
 rvm:
@@ -7,9 +11,17 @@ services:
   - mysql
 
 before_install:
-  - gem update --system
-  - gem install bundler
-  - ./travis-prep.sh
+ - sudo apt-get update
+ - sudo apt-get install chromium-chromedriver
+ - gem update --system
+ - gem install bundler
+ - ./travis-prep.sh
+
+before_script:
+  - "export DISPLAY=:99.0"
+  - "sh -e /etc/init.d/xvfb start"
+  # give xvfb some time to start
+  - "while [ ! -e /tmp/.X11-unix/X99 ]; do sleep 1; done"
 
 
 
