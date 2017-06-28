@@ -26,6 +26,11 @@ module StashEngine
     # set's the user role (admin/user)
     def set_role
       @user = User.find(params[:id])
+      @user.role = params[:role]
+      @user.save!
+      respond_to do |format|
+        format.js
+      end
     end
 
     private
