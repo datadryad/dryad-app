@@ -75,5 +75,7 @@ StashEngine::Engine.routes.draw do
 
   # admin area
   get 'admin', to: 'admin#index'
+  get 'admin/popup/:id', to: 'admin#popup', as: 'popup_admin'
+  post 'admin/set_role/:id', to: 'admin#set_role', as: 'admin_set_role'
 
 end

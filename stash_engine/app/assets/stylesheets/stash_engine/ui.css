@@ -3514,6 +3514,9 @@ html.no-details .o-showhide__summary {
   padding: 10px;
   background-color: orange; */ }
 
+.o-admin-dialog {
+  padding: 5px 15px 25px; }
+
 .c-alert--success, .c-alert--informational, .c-alert--error {
   display: -ms-flexbox;
   display: flex;
@@ -4523,6 +4526,10 @@ html.no-details .o-showhide__summary {
 
 .c-lined-table__row > td.c-admin-hide-border-left {
   border-left: none; }
+
+.c-lined-table__head a:link,
+.c-lined-table__head a:visited {
+  color: #00e; }
 
 .c-admin-table__sort-asc:after {
   content: '\f15d';

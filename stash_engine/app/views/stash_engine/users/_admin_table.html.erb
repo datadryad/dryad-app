@@ -24,9 +24,11 @@
           <%= u.role.capitalize %>
         </td>
         <td class="c-admin-hide-border-left">
-          <button class="c-admin-edit-icon" aria-label="Edit user role" alt="Edit user role">
-            <i class="fa fa-pencil" aria-hidden="true"></i>
-          </button>
+          <%= form_tag(popup_admin_path(u.id), method: :get, remote: true) do -%>
+            <button class="c-admin-edit-icon" aria-label="Edit user role" alt="Edit user role">
+              <i class="fa fa-pencil" aria-hidden="true"></i>
+            </button>
+          <% end %>
         </td>
         <td><%= formatted_datetime(u.last_login) %></td>
       </tr>

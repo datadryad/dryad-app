@@ -1,3 +1,4 @@
+<% @page_title = "Manage Users" %>
 <h1 class="o-heading__level1">Manage Users</h1>
 
 <%= render partial: 'admin_head', locals: { stats: @stats} %>
@@ -16,6 +17,10 @@
     </div>
   </div>
 </div>
+
+<div id="change_user_dialog" style="display:none;">
+</div>
+
 
 <!-- javascript for the facet open/close -->
 <script>

@@ -5,6 +5,7 @@ module StashEngine
 
     before_action :set_admin_page_info
 
+    # the admin main page showing users and stats
     def index
       setup_superuser_stats
       setup_superuser_facets
@@ -12,6 +13,19 @@ module StashEngine
       add_institution_filter!
       @sort_column = sort_column
       @users = @users.order(@sort_column.order).page(@page).per(@page_size)
+    end
+
+    # popup a dialog with the user's admin info for changing
+    def popup
+      @user = User.find(params[:id])
+      respond_to do |format|
+        format.js
+      end
+    end
+
+    # set's the user role (admin/user)
+    def set_role
+      @user = User.find(params[:id])
     end
 
     private
