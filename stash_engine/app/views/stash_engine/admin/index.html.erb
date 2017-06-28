@@ -11,6 +11,9 @@
     <h2>User Administration</h2>
     <!-- table and paging here -->
     <%= render partial: 'stash_engine/users/admin_table', locals: { users: @users } %>
+    <div class="c-space-paginator">
+      <%= paginate @users, params: {page_size: @page_size} %>
+    </div>
   </div>
 </div>
 

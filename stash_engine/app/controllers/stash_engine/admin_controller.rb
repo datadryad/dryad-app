@@ -3,16 +3,24 @@ require_dependency 'stash_engine/application_controller'
 module StashEngine
   class AdminController < ApplicationController
 
+    before_action :set_admin_page_info
+
     def index
       setup_superuser_stats
       setup_superuser_facets
       @users = User.all
       add_institution_filter!
       @sort_column = sort_column
-      @users = @users.order(@sort_column.order)
+      @users = @users.order(@sort_column.order).page(@page).per(@page_size)
     end
 
     private
+
+    # this sets up the page variables for use with kaminari paging
+    def set_admin_page_info
+      @page = params[:page] || '1'
+      @page_size = (params[:page_size].blank? || params[:page_size] != '1000000' ? '10' : '1000000')
+    end
 
     # this sets up the sortable-table gem
     def sort_column

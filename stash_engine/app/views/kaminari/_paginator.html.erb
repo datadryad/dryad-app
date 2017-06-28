@@ -7,11 +7,11 @@
     paginator:     the paginator that renders the pagination tags inside
 -%>
 <% if per_page == 1000000 %>
-  <%= link_to 'Show pages', params.merge(page_size: 5, page: 1, format: :js), remote: remote %>
+  <%= link_to 'Show pages', params.merge(page_size: 5, page: 1), remote: remote %>
 <% end %>
 <%= paginator.render do -%>
   <nav class="pagination">
-    <%= link_to 'Show all', params.merge(page_size: '1000000', page: 1, format: :js), remote: remote %>
+    <%= link_to 'Show all', params.merge(page_size: '1000000', page: 1), remote: remote %>
 
     <%= first_page_tag unless current_page.first? %>
     <%= prev_page_tag unless current_page.first? %>
