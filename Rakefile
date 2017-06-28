@@ -11,6 +11,7 @@ task default: [:about]
 
 desc 'Run all unit tests with coverage'
 task :coverage do
+  require 'simplecov'
   ENV['COVERAGE'] = 'true'
   Rake::Task['spec'].execute
 end
