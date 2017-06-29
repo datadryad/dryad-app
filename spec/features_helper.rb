@@ -15,7 +15,7 @@ Capybara.javascript_driver = :chrome
 Capybara.configure do |config|
   config.default_max_wait_time = 10
   config.default_driver = :selenium
-  config.server_port = 33000
+  config.server_port = 33_000
   config.app_host = 'http://localhost:33000'
 end
 
@@ -36,15 +36,8 @@ RSpec.configure do |config|
   # Mock OmniAuth login
   config.before(:all) do
     OmniAuth.config.test_mode = true
-    OmniAuth.config.add_mock(:shibboleth, {
-      uid: 'test@example.edu',
-      info: {
-        email: 'test@example.edu',
-        name: 'S. Testy McTestface',
-        test_domain: 'localhost'
-      }
-    })
-    OmniAuth.config.add_mock(:google_oauth2, {
+    OmniAuth.config.add_mock(
+      :google_oauth2,
       uid: '555555555555555555555',
       credentials: {
         token: 'ya29.Ry4gVGVzdHkgTWNUZXN0ZmFjZQ'
@@ -54,7 +47,7 @@ RSpec.configure do |config|
         name: 'G. Testy McTestface',
         test_domain: 'localhost'
       }
-    })
+    )
   end
 
   # Stop Solr when we're done
