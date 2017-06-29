@@ -3,7 +3,8 @@ require_dependency 'stash_engine/application_controller'
 module StashEngine
   class AdminController < ApplicationController
 
-    before_action :set_admin_page_info
+    before_action :require_admin
+    before_action :set_admin_page_info, only: %i[index]
 
     # the admin main page showing users and stats
     def index
@@ -34,6 +35,11 @@ module StashEngine
     end
 
     private
+
+    def require_admin
+      return if current_user && %w[admin superuser].include?(current_user.role)
+      render nothing: true, status: :unauthorized
+    end
 
     # this sets up the page variables for use with kaminari paging
     def set_admin_page_info
