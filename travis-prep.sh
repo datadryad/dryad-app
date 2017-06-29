@@ -50,8 +50,8 @@ cd ${PROJECT_ROOT}
 for CONFIG_FILENAME in ${CONFIG_FILES}; do
   SOURCE_FILE=.config-travis/${CONFIG_FILENAME}
   DEST_FILE=config/${CONFIG_FILENAME}
-  if [ -f ${DEST_FILE} ]; then
-    echo "  skipping existing file ${DEST_FILE}"
+  if [ -L ${DEST_FILE} ]; then
+    echo "  skipping symlink ${DEST_FILE}"
   else
     set -x
     cp ${SOURCE_FILE} ${DEST_FILE}
