@@ -11,7 +11,7 @@ describe 'GET /' do
 
   it 'is the home page' do
     home_html_erb = File.read("#{STASH_ENGINE_PATH}/app/views/stash_engine/pages/home.html.erb")
-    title = home_html_erb[%r{page_title = '([^']+)'}, 1]
+    title = home_html_erb[/page_title = '([^']+)'/, 1]
     expect(page).to have_title(title)
   end
 end
