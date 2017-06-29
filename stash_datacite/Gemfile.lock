@@ -39,6 +39,7 @@ PATH
       omniauth-shibboleth (~> 1.2.1)
       rails (~> 4.2.4)
       redcarpet (~> 3.3)
+      sortable-table
       thor (= 0.19.1)
       wicked_pdf (~> 1.1.0)
       wkhtmltopdf-binary (~> 0.12.3.1)
@@ -234,8 +235,8 @@ GEM
     netrc (0.11.0)
     nokogiri (1.8.0)
       mini_portile2 (~> 2.2.0)
-    oauth2 (1.3.1)
-      faraday (>= 0.8, < 0.12)
+    oauth2 (1.4.0)
+      faraday (>= 0.8, < 0.13)
       jwt (~> 1.0)
       multi_json (~> 1.3)
       multi_xml (~> 0.5)
@@ -363,6 +364,9 @@ GEM
       retriable
       ruby-progressbar
       rubyzip
+    sortable-table (0.1.1)
+      actionpack (>= 3.0.0)
+      activesupport (>= 3.0.0)
     sprockets (3.7.1)
       concurrent-ruby (~> 1.0)
       rack (> 1, < 3)
