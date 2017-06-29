@@ -1,4 +1,6 @@
 require 'spec_helper'
+require 'tmpdir'
+require 'fileutils'
 
 module StashEngine
   describe Tenant do
@@ -48,7 +50,7 @@ module StashEngine
       expect(auth.entity_domain).to eq('.example.edu')
     end
 
-    describe '#initialize' do
+    describe :initialize do
       it 'creates a tenant' do
         tenant_hash = StashEngine.tenants['exemplia']
         tenant = Tenant.new(tenant_hash)
@@ -56,14 +58,14 @@ module StashEngine
       end
     end
 
-    describe '#find' do
+    describe :find do
       it 'finds the tenant' do
         tenant = Tenant.find('exemplia')
         expect_exemplia(tenant)
       end
     end
 
-    describe '#by_domain' do
+    describe :by_domain do
       it 'finds the tenant' do
         tenant = Tenant.by_domain('example.edu')
         expect_exemplia(tenant)
@@ -74,7 +76,7 @@ module StashEngine
       end
     end
 
-    describe '#by_domain_w_nil' do
+    describe :by_domain_w_nil do
       it 'finds the tenant' do
         tenant = Tenant.by_domain_w_nil('example.edu')
         expect_exemplia(tenant)
@@ -85,7 +87,7 @@ module StashEngine
       end
     end
 
-    describe '#omniauth_login_path' do
+    describe :omniauth_login_path do
       it 'delegates to the auth strategy' do
         tenant = Tenant.by_domain('example.edu')
         login_path = tenant.omniauth_login_path
@@ -94,7 +96,29 @@ module StashEngine
       end
     end
 
-    describe '#shibboleth_login_path' do
+    describe :logo_file do
+      it 'returns the tenant file if it exists' do
+        tenant = Tenant.by_domain('example.edu')
+        logo_filename = "logo_#{tenant.tenant_id}.jpg"
+        Dir.mktmpdir('rails_root') do |rails_root|
+          allow(Rails).to receive(:root).and_return(rails_root)
+          tenant_images = File.join(rails_root, 'app', 'assets', 'images', 'tenants')
+          FileUtils.mkdir_p(tenant_images)
+          FileUtils.touch(File.join(tenant_images, logo_filename))
+          expect(tenant.logo_file).to eq(logo_filename)
+        end
+      end
+
+      it 'defaults if no tenant file exists' do
+        tenant = Tenant.by_domain('example.edu')
+        Dir.mktmpdir('rails_root') do |rails_root|
+          allow(Rails).to receive(:root).and_return(rails_root)
+          expect(tenant.logo_file).to eq(Tenant::DEFAULT_LOGO_FILE)
+        end
+      end
+    end
+
+    describe :shibboleth_login_path do
       it 'returns the login path' do
         tenant = Tenant.by_domain('example.edu')
         login_path = tenant.shibboleth_login_path
@@ -103,17 +127,16 @@ module StashEngine
       end
     end
 
-    describe '#google_login_path' do
+    describe :google_login_path do
       it 'returns the login path' do
         tenant = Tenant.by_domain('example.edu')
         login_path = tenant.google_login_path
         # TODO: don't hard-code the expected value
-        # TODO: fix double slash
-        expect(login_path).to eq('https://stash-dev.example.edu//stash/auth/google_oauth2')
+        expect(login_path).to eq('https://stash-dev.example.edu/stash/auth/google_oauth2')
       end
     end
 
-    describe '#sword_params' do
+    describe :sword_params do
       it 'returns the Stash::Sword::Client parameter hash' do
         tenant = Tenant.by_domain('example.edu')
         expected = {
@@ -125,14 +148,14 @@ module StashEngine
       end
     end
 
-    describe '#landing_url' do
+    describe :landing_url do
       it 'builds a relative URL from the full_domain' do
         tenant = Tenant.by_domain('example.edu')
         expect(tenant.landing_url('/doi:10.123/456')).to eq('https://stash-dev.example.edu/doi:10.123/456')
       end
     end
 
-    describe '#exists?' do
+    describe :exists? do
       it 'checks if a tenant exists' do
         expect(Tenant.exists?('exemplia')).to be true
         expect(Tenant.exists?('pustule')).to be false
