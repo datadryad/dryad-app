@@ -5,8 +5,10 @@
 
 <div class="o-admin-container">
   <div class="o-admin-left">
-    <h2>Filters</h2>
-    <%= render partial: 'tenant_facet', locals: { facets: @tenant_facets } %>
+    <% if current_user.role == 'superuser' %>
+      <h2>Filters</h2>
+      <%= render partial: 'tenant_facet', locals: { facets: @tenant_facets } %>
+    <% end %>
   </div>
   <div class="o-admin-right">
     <h2>User Administration</h2>

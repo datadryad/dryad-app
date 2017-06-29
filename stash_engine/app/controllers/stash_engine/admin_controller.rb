@@ -8,10 +8,10 @@ module StashEngine
 
     # the admin main page showing users and stats
     def index
-      setup_superuser_stats
+      setup_stats
       setup_superuser_facets
       @users = User.all
-      add_institution_filter!
+      add_institution_filter! # if they chose a facet or are only an admin
       @sort_column = sort_column
       @users = @users.order(@sort_column.order).page(@page).per(@page_size)
     end
@@ -59,22 +59,36 @@ module StashEngine
       sort_table.sort_column(params[:sort], params[:direction])
     end
 
-    def setup_superuser_stats
-      @stats =
-        {
-          user_count: User.all.count,
-          dataset_count: Identifier.all.count, user_7days: User.where(['created_at > ?', Time.new - 7.days]).count
-        }
-      setup_7_day_stats
+    def setup_stats
+      setup_superuser_stats
+      limit_to_tenant! if current_user.role == 'admin'
+      @stats.each { |k, v| @stats[k] = v.count }
     end
 
-    def setup_7_day_stats
-      @stats.merge!(
-        dataset_started_7days: Resource.joins(:current_resource_state)
-          .where(stash_engine_resource_states: { resource_state: %i[in_progress] })
-          .where(['stash_engine_resources.created_at > ?', Time.new - 7.days]).count,
-        dataset_submitted_7days: Identifier.where(['created_at > ?', Time.new - 7.days]).count
-      )
+    # TODO: move into models or elsewhere for queries, but can't get tests to run right now so holding off
+    def setup_superuser_stats # rubocop:disable Metrics/AbcSize
+      @stats =
+        {
+          user_count: User.all,
+          dataset_count: Identifier.all,
+          user_7days: User.where(['stash_engine_users.created_at > ?', Time.new - 7.days]),
+          dataset_started_7days: Resource.joins(:current_resource_state)
+            .where(stash_engine_resource_states: { resource_state: %i[in_progress] })
+            .where(['stash_engine_resources.created_at > ?', Time.new - 7.days]),
+          dataset_submitted_7days: Identifier.where(['stash_engine_identifiers.created_at > ?', Time.new - 7.days])
+        }
+    end
+
+    # TODO: move into models or elsewhere for queries, but can't get tests to run right now so holding off
+    def limit_to_tenant! # rubocop:disable Metrics/AbcSize
+      @stats[:user_count] = @stats[:user_count].where(tenant_id: current_user.tenant_id)
+      @stats[:dataset_count] = @stats[:dataset_count].joins(resources: :user)
+        .where(['stash_engine_users.tenant_id = ?', current_user.tenant_id]).distinct
+      @stats[:user_7days] = @stats[:user_7days].where(tenant_id: current_user.tenant_id)
+      @stats[:dataset_started_7days] = @stats[:dataset_started_7days].joins(:user)
+        .where(['stash_engine_users.tenant_id = ?', current_user.tenant_id])
+      @stats[:dataset_submitted_7days] = @stats[:dataset_submitted_7days].joins(resources: :user)
+        .where(['stash_engine_users.tenant_id = ?', current_user.tenant_id]).distinct
     end
 
     def setup_superuser_facets
@@ -82,8 +96,11 @@ module StashEngine
     end
 
     def add_institution_filter!
-      return unless params[:institution]
-      @users = @users.where(tenant_id: params[:institution])
+      if current_user.role == 'admin'
+        @users = @users.where(tenant_id: current_user.tenant_id)
+      elsif params[:institution]
+        @users = @users.where(tenant_id: params[:institution])
+      end
     end
   end
 end
