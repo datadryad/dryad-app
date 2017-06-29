@@ -1,6 +1,10 @@
 require 'ostruct'
 module StashEngine
   class Tenant
+
+    # TODO: Don't assume existince of UCOP logo
+    DEFAULT_LOGO_FILE = 'logo_ucop.svg'.freeze
+
     # This was originally designed differently and I had to change it to create some instances on the fly because
     # testing loads things twice and didn't work correctly to create instances up front on engine initialization
     # in the test environment.  :-(
@@ -19,8 +23,19 @@ module StashEngine
       @ostruct.send(m)
     end
 
+    def logo_file
+      @logo_file ||= begin
+        tenant_images_path = File.join(Rails.root, 'app', 'assets', 'images', 'tenants')
+        logo_filenames = %w[svg png jpg].lazy.map { |ext| "logo_#{tenant_id}.#{ext}" }
+        logo_filenames.find do |filename|
+          image_file = File.join(tenant_images_path, filename)
+          File.exist?(image_file)
+        end || DEFAULT_LOGO_FILE
+      end
+    end
+
     def omniauth_login_path
-      send("#{authentication.strategy}_login_path".intern)
+      @omniauth_login_path ||= send("#{authentication.strategy}_login_path".intern)
     end
 
     # generate login path for shibboleth & omniauth, this is unusual since we have multi-institution login, so have to
@@ -41,8 +56,10 @@ module StashEngine
     end
 
     def google_login_path
-      # "#{StashEngine.app.stash_mount}/auth/google_oauth2"
-      "https://#{full_domain}/#{StashEngine.app.stash_mount}/auth/google_oauth2"
+      # note that StashEngine.app.stash_mount includes a leading slash
+      path = "https://#{full_domain}#{StashEngine.app.stash_mount}/auth/google_oauth2"
+      return path unless tenant_id == 'localhost'
+      path.sub('https', 'http') # HACK: for testing
     end
 
     def sword_params
