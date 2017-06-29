@@ -122,7 +122,6 @@ module StashEngine
       it 'returns the login path' do
         tenant = Tenant.by_domain('example.edu')
         login_path = tenant.shibboleth_login_path
-        # TODO: don't hard-code the expected value
         expect(login_path).to eq('https://stash-dev.example.edu/Shibboleth.sso/Login?target=https%3A%2F%2Fstash-dev.example.edu%2Fstash%2Fauth%2Fshibboleth%2Fcallback&entityID=urn%3Amace%3Aincommon%3Aexample.edu')
       end
     end
@@ -131,8 +130,14 @@ module StashEngine
       it 'returns the login path' do
         tenant = Tenant.by_domain('example.edu')
         login_path = tenant.google_login_path
-        # TODO: don't hard-code the expected value
         expect(login_path).to eq('https://stash-dev.example.edu/stash/auth/google_oauth2')
+      end
+
+      it 'returns http if domain is localhost' do
+        tenant = Tenant.by_domain('example.edu')
+        allow(tenant).to receive(:full_domain).and_return('localhost:12345')
+        login_path = tenant.google_login_path
+        expect(login_path).to eq('http://localhost:12345/stash/auth/google_oauth2')
       end
     end
 
