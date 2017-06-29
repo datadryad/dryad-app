@@ -9,7 +9,7 @@ default: &default
   abbreviation: "LH"
   short_name: "Localhost"
   long_name: "Localhost"
-  full_domain: "localhost"
+  full_domain: "localhost:33000"
   domain_regex: "localhost$"
   tenant_id: localhost
   identifier_service:
@@ -21,7 +21,7 @@ default: &default
   authentication:
     strategy: google
   default_license: cc_by
-  stash_logo_after_tenant: true
+  stash_logo_after_tenant: false
 
 development:
   <<: *default
