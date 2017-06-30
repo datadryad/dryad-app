@@ -77,5 +77,6 @@ StashEngine::Engine.routes.draw do
   get 'admin', to: 'admin#index'
   get 'admin/popup/:id', to: 'admin#popup', as: 'popup_admin'
   post 'admin/set_role/:id', to: 'admin#set_role', as: 'admin_set_role'
+  get 'admin/user_dashboard/:id', to: 'admin#user_dashboard', as: 'admin_user_dashboard'
 
 end

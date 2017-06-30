@@ -19,7 +19,7 @@
     <% if StashEngine::Tenant.exists?(u.tenant_id) %>
       <tr class="c-lined-table__row">
         <td><%= StashEngine::Tenant.find(u.tenant_id).short_name %></td>
-        <td><a href="#"><%= u.first_name %> <%= u.last_name %></a></td>
+        <td><%= link_to "#{u.first_name} #{u.last_name}".strip, admin_user_dashboard_path(u) %></td>
         <td class="c-admin-hide-border-right" id="user_role_<%= u.id %>">
           <%= u.role.capitalize %>
         </td>
