@@ -35,7 +35,7 @@ module StashEngine
     end
 
     def user_dashboard
-      # stuff to come here
+      @progress_count = Resource.in_progress.where(user_id: @user.id).count
     end
 
     private
