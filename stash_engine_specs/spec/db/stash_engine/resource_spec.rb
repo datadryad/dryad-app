@@ -4,6 +4,13 @@ module StashEngine
   describe Resource do
     attr_reader :user
 
+    attr_reader :future_date
+
+    before(:all) do
+      tomorrow = Date.today + 1
+      @future_date = Date.new(tomorrow.year + 1, tomorrow.month, tomorrow.day)
+    end
+
     before(:each) do
       @user = StashEngine::User.create(
         uid: 'lmuckenhaupt-ucop@ucop.edu',
@@ -29,13 +36,6 @@ module StashEngine
       it 'returns the user tenant ID' do
         resource = Resource.create(user_id: user.id)
         expect(resource.tenant_id).to eq('ucop')
-      end
-    end
-
-    describe :primary_title do
-      it 'is abstract' do
-        resource = Resource.create(user_id: user.id)
-        expect { resource.primary_title }.to raise_error(NameError)
       end
     end
 
@@ -92,8 +92,6 @@ module StashEngine
       end
 
       it 'returns false for in-force embargoes' do
-        today = Date.today
-        future_date = Date.new(today.year + 1, today.month, today.day + 1)
         resource = Resource.create(user_id: user.id)
         StashEngine::Embargo.create(resource_id: resource.id, end_date: future_date)
         resource.reload
@@ -115,8 +113,6 @@ module StashEngine
       end
 
       it 'returns true for in-force embargoes' do
-        today = Date.today
-        future_date = Date.new(today.year + 1, today.month, today.day + 1)
         resource = Resource.create(user_id: user.id)
         StashEngine::Embargo.create(resource_id: resource.id, end_date: future_date)
         resource.reload
@@ -132,8 +128,6 @@ module StashEngine
       end
 
       it 'returns false for un-submitted resources even if otherwise private' do
-        today = Date.today
-        future_date = Date.new(today.year + 1, today.month, today.day + 1)
         resource = Resource.create(user_id: user.id)
         StashEngine::Embargo.create(resource_id: resource.id, end_date: future_date)
         resource.reload
@@ -149,8 +143,6 @@ module StashEngine
       end
 
       it 'returns true for in-force embargoes' do
-        today = Date.today
-        future_date = Date.new(today.year + 1, today.month, today.day + 1)
         resource = Resource.create(user_id: user.id)
         StashEngine::Embargo.create(resource_id: resource.id, end_date: future_date)
         resource.current_state = 'submitted'
