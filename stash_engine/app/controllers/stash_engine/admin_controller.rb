@@ -3,6 +3,7 @@ require_dependency 'stash_engine/application_controller'
 module StashEngine
   class AdminController < ApplicationController
 
+    before_action :load_user, only: %i[popup set_role user_dashboard]
     before_action :require_admin
     before_action :set_admin_page_info, only: %i[index]
 
@@ -18,20 +19,23 @@ module StashEngine
 
     # popup a dialog with the user's admin info for changing
     def popup
-      @user = User.find(params[:id])
       respond_to do |format|
         format.js
       end
     end
 
-    # set's the user role (admin/user)
+    # sets the user role (admin/user)
     def set_role
-      @user = User.find(params[:id])
+      render nothing: true, status: :unauthorized && return if params[:role] == 'superuser' && current_user.role != 'superuser'
       @user.role = params[:role]
       @user.save!
       respond_to do |format|
         format.js
       end
+    end
+
+    def user_dashboard
+      # stuff to come here
     end
 
     private
@@ -45,6 +49,10 @@ module StashEngine
     def set_admin_page_info
       @page = params[:page] || '1'
       @page_size = (params[:page_size].blank? || params[:page_size] != '1000000' ? '10' : '1000000')
+    end
+
+    def load_user
+      @user = User.find(params[:id])
     end
 
     # this sets up the sortable-table gem

@@ -19,12 +19,12 @@
     <% if StashEngine::Tenant.exists?(u.tenant_id) %>
       <tr class="c-lined-table__row">
         <td><%= StashEngine::Tenant.find(u.tenant_id).short_name %></td>
-        <td><a href="#"><%= u.first_name %> <%= u.last_name %></a></td>
+        <td><%= link_to "#{u.first_name} #{u.last_name}".strip, admin_user_dashboard_path(u) %></td>
         <td class="c-admin-hide-border-right" id="user_role_<%= u.id %>">
           <%= u.role.capitalize %>
         </td>
         <td class="c-admin-hide-border-left">
-          <% unless current_user.role == 'admin' && u.role == 'superuser' # don't let admins demote superusers %>
+          <% if current_user.role == 'superuser' %>
             <%= form_tag(popup_admin_path(u.id), method: :get, remote: true) do -%>
               <button class="c-admin-edit-icon" aria-label="Edit user role" alt="Edit user role">
                 <i class="fa fa-pencil" aria-hidden="true"></i>
