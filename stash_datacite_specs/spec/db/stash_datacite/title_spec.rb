@@ -37,12 +37,6 @@ module StashDatacite
       end
     end
 
-    describe 'Resource.primary_title' do
-      it 'returns the primary title' do
-        expect(resource.primary_title).to eq(primary_title.title)
-      end
-    end
-
     describe 'title_type_mapping_obj' do
       it 'returns nil for nil' do
         expect(Title.title_type_mapping_obj(nil)).to be_nil
