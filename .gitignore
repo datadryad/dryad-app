@@ -10,6 +10,8 @@ builds
 
 .idea
 **/*.iml
+**/.generators
+**/.rakeTasks
 
 #### joe made this: http://goel.io/joe
 
