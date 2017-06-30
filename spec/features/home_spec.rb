@@ -1,5 +1,6 @@
 require 'features_helper'
 
+# TODO: switch to Capybara scenario style
 describe 'home' do
   before(:each) do
     visit('/')
