@@ -25,5 +25,5 @@ RuboCop::RakeTask.new
 # clear rspec/rails default :spec task in favor of :coverage
 Rake::Task[:default].clear if Rake::Task.task_defined?(:default)
 
-desc 'Run unit tests, check code style'
-task default: %i[spec rubocop]
+desc 'Load database schema, run unit tests, check code style'
+task default: %i[db:schema:load spec rubocop]
