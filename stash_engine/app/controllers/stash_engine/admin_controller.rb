@@ -27,6 +27,7 @@ module StashEngine
     # set's the user role (admin/user)
     def set_role
       @user = User.find(params[:id])
+      render nothing: true, status: :unauthorized && return if params[:role] == 'superuser' && current_user.role != 'superuser'
       @user.role = params[:role]
       @user.save!
       respond_to do |format|
