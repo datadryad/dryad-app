@@ -58,7 +58,7 @@ module StashEngine
     def google_login_path
       # note that StashEngine.app.stash_mount includes a leading slash
       path = "https://#{full_domain}#{StashEngine.app.stash_mount}/auth/google_oauth2"
-      return path unless tenant_id == 'localhost'
+      return path unless full_domain =~ /^localhost(:[0-9]+)?$/
       path.sub('https', 'http') # HACK: for testing
     end
 
