@@ -34,7 +34,7 @@ RSpec.configure do |config|
   config.infer_spec_type_from_file_location!
 
   # Mock OmniAuth login
-  config.before(:all) do
+  config.before(:suite) do
     OmniAuth.config.test_mode = true
     OmniAuth.config.add_mock(
       :google_oauth2,
@@ -51,5 +51,15 @@ RSpec.configure do |config|
   end
 
   # Stop Solr when we're done
-  config.after(:all) { SolrHelper.stop }
+  config.after(:suite) { SolrHelper.stop }
+end
+
+# ------------------------------------------------------------
+# Misc. helper methods
+
+def home_page_title
+  @home_page_title ||= begin
+    home_html_erb = File.read("#{STASH_ENGINE_PATH}/app/views/stash_engine/pages/home.html.erb")
+    home_html_erb[/page_title = '([^']+)'/, 1]
+  end
 end

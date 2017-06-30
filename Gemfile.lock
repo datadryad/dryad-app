@@ -172,6 +172,7 @@ GEM
     config (1.4.0)
       activesupport (>= 3.0)
       deep_merge (~> 1.1.1)
+    database_cleaner (1.6.1)
     datacite-mapping (0.2.5)
       typesafe_enum (~> 0.1, >= 0.1.7)
       xml-mapping_extensions (~> 0.4, >= 0.4.7)
@@ -471,6 +472,7 @@ DEPENDENCIES
   capybara (~> 2.14)
   chromedriver-helper (~> 1.1)
   coffee-rails (~> 4.1.0)
+  database_cleaner (~> 1.5)
   exception_notification
   httparty
   jbuilder (~> 2.0)
