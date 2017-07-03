@@ -34,8 +34,11 @@ module StashEngine
       end
     end
 
+    # dashboard for a user showing stats and datasets
     def user_dashboard
       @progress_count = Resource.in_progress.where(user_id: @user.id).count
+      # it seems that some of these things are calculated values for display that aren't stored
+      @presenters = @user.latest_completed_resource_per_identifier.map{|res| StashDatacite::ResourcesController::DatasetPresenter.new(res) }
     end
 
     private

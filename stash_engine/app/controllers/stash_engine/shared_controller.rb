@@ -1,5 +1,7 @@
 module StashEngine
   module SharedController # rubocop:disable Metrics/ModuleLength
+    DEFAULT_TZ = 'America/Los_Angeles'.freeze
+
     require 'uri'
     require 'securerandom'
 
@@ -8,7 +10,7 @@ module StashEngine
                       :metadata_render_path, :stash_url_helpers, :discovery_url_helpers, :landing_url, :field_suffix,
                       :logo_path, :contact_us_url, :display_br, :display_id, :display_id_plain,
                       :formatted_date, :formatted_datetime, :can_display_embargoed?, :file_content_dump, :display_author_orcid,
-                      :english_list, :shorten_linked_url
+                      :english_list, :shorten_linked_url, :default_date, :local_time
     end
 
     def metadata_url_helpers
@@ -25,6 +27,15 @@ module StashEngine
       return 'Not available' if t.blank?
       t = t.to_time if t.class == String
       t.strftime('%m/%d/%Y %H:%M:%S')
+    end
+
+    def local_time(t)
+      tz = TZInfo::Timezone.get(DEFAULT_TZ)
+      tz.utc_to_local(t)
+    end
+
+    def default_date(t)
+      local_time(t).strftime('%m/%d/%y')
     end
 
     # generate a render path in the metadata engine
