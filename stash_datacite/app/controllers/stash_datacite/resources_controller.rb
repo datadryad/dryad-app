@@ -84,11 +84,6 @@ module StashDatacite
       current_tenant.max_files.to_i
     end
 
-    def main_title(resource)
-      title = resource.titles.where(title_type: nil).first
-      title.try(:title)
-    end
-
     def check_required_fields(resource) # rubocop:disable Metrics/AbcSize
       completions = Resource::Completions.new(resource)
       warnings = completions.all_warnings
@@ -115,7 +110,7 @@ module StashDatacite
     def resource_submitted_message(resource)
       identifier_uri = resource.identifier_uri
       msg = []
-      msg << "#{resource.primary_title || '(unknown title)'} submitted"
+      msg << "#{resource.title || '(unknown title)'} submitted"
       msg << (identifier_uri ? "with DOI #{identifier_uri}." : '.')
       msg << 'There may be a delay for processing before the item is available.'
       msg.join(' ')

@@ -45,8 +45,8 @@ module StashDatacite
       end
 
       def names
-        return [] unless @resource.titles
-        @resource.titles.map(&:title).compact
+        return [] if @resource.title.blank?
+        [ @resource.title ]
       end
 
       def descriptions

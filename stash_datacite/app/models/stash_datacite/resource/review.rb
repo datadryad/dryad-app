@@ -7,12 +7,8 @@ module StashDatacite
         @resource = resource
       end
 
-      def title
-        @resource.titles.where(title_type: nil).first
-      end
-
       def title_str
-        title.title
+        @resource.title
       end
 
       def resource_type

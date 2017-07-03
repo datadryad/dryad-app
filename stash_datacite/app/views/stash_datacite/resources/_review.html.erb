@@ -4,14 +4,14 @@
     <%= link_to "Edit Description",
                 stash_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: @resource.id),
                 class: 't-review__edit-button-top o-button__icon-left', role: 'button' %>
-    <%= render partial: "stash_datacite/titles/show", locals: { title: @review.title } %>
+    <%= render partial: "stash_datacite/titles/show", locals: { title: @review.title_str } %>
     <div class="o-metadata__group2">
       <%= render partial: "stash_datacite/authors/show", locals: { authors: @review.authors } %>
       <%= render partial: "stash_datacite/publishers/publication_info", locals: {resource: @resource } %>
     </div>
 
     <section class="o-section">
-    <%= render partial: "stash_datacite/shared/citations", locals: { authors: @review.authors, title: @review.title,
+    <%= render partial: "stash_datacite/shared/citations", locals: { authors: @review.authors, title: @review.title_str,
                          resource_type: @review.resource_type, version: "v#{@resource.version_number}",
                          identifier: @resource.identifier.nil? ? nil : "#{@review.identifier.identifier}",
                          publisher: @review.publisher,

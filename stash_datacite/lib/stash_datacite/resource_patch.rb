@@ -30,7 +30,6 @@ module StashDatacite
         has_many :sizes, class_name: 'StashDatacite::Size', dependent: :destroy # optional
         has_and_belongs_to_many :subjects, class_name: 'StashDatacite::Subject',
                                            through: 'StashDatacite::ResourceSubject', dependent: :destroy # optional
-        has_many :titles, class_name: 'StashDatacite::Title', dependent: :destroy # required
         has_one :language, class_name: 'StashDatacite::Language', dependent: :destroy # required
         has_many :alternate_identifiers, class_name: 'StashDatacite::AlternateIdentifier', dependent: :destroy # optional
         has_many :formats, class_name: 'StashDatacite::Format', dependent: :destroy # optional
@@ -41,16 +40,15 @@ module StashDatacite
           # can't just pass the array to include_association() or it clobbers the ones defined in stash_engine
           %i[contributors datacite_dates descriptions geolocations
              publication_years publisher related_identifiers resource_type rights sizes
-             subjects titles].each do |assoc|
+             subjects].each do |assoc|
             include_association assoc
           end
         end
       end
 
-      resource_class.class_eval do
+      resource_class.class_eval do  # TODO: can probably get rid of primary title
         def primary_title
-          dcs_title = titles.where(title_type: nil).first
-          dcs_title && dcs_title.title.to_s
+          title
         end
       end
     end

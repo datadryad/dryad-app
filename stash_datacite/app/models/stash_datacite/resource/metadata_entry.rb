@@ -14,7 +14,7 @@ module StashDatacite
       end
 
       def title
-        @title = Title.where(resource_id: @resource.id).first_or_initialize
+        @title = @resource.title
       end
 
       def new_author

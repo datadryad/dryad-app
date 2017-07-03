@@ -1,4 +1,6 @@
 // this changes the parts of the form that need to be changed so it converts it to a patch action (POST)
+
+/* I don't think this is needed anymore  TODO: remove if the title works
 <% form_id = unique_form_id(@title) %>
 var form = $('#<%= params[:form_id] %>');
 form.attr('id', '<%= form_id %>');
@@ -10,4 +12,4 @@ $('<input>').attr({
   type: 'hidden',
   name: '_method',
   value: 'patch'
-}).appendTo(form);
+}).appendTo(form); */

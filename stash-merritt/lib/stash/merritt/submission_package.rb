@@ -43,10 +43,7 @@ module Stash
       end
 
       def resource_title
-        @resource_title = begin
-          primary_title = resource.titles.where(title_type: nil).first
-          primary_title.title.to_s if primary_title
-        end
+        resource.title
       end
 
       def total_size_bytes
