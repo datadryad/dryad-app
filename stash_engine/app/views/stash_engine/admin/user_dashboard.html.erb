@@ -11,5 +11,9 @@
     <h2>Datasets</h2>
     <!-- table and paging here -->
     <%= render partial: 'stash_engine/admin/user_datasets', locals: { presenters: @presenters } %>
+
+    <div class="c-space-paginator">
+      <%= paginate @presenters, params: {page_size: @page_size} %>
+    </div>
   </div>
 </div>
