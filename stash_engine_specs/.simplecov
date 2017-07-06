@@ -24,8 +24,8 @@ SimpleCov.start do
   add_filter '/spec/'
   stash_engine_path = Gem::Specification.find_by_name('stash_engine').gem_dir
   add_filter StashEngineFilter.new(stash_engine_path)
-  SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter[
+  SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter.new [
       SimpleCov::Formatter::HTMLFormatter,
-      SimpleCov::Formatter::Console,
+      SimpleCov::Formatter::Console
   ]
 end
