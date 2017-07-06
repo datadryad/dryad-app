@@ -1,0 +1,38 @@
+<%# locals: presenters (array of StashDatacite::ResourcesController::DatasetPresenter) %>
+<table class="c-lined-table">
+  <tr class="c-lined-table__head">
+    <th>
+      Dataset Title
+      <%# sort_by 'title', title: 'Dataset Title', current_column: @sort_column %>
+    </th>
+    <th>
+      Publication Date
+      <%# sort_by 'publication_date', title: 'Publication Date', current_column: @sort_column %>
+    </th>
+    <th>
+      Created
+      <%# sort_by 'created_at', title: 'Created', current_column: @sort_column %>
+    </th>
+    <th>
+      Last Modified
+      <%# sort_by 'updated_at', title: 'Last Modified', current_column: @sort_column %>
+    </th>
+  </tr>
+
+  <% presenters.each do |p| %>
+    <tr class="c-lined-table__row">
+      <td>
+        <span title="<%= p.title %>"><%= truncate(p.title) %></span>
+      </td>
+      <td>
+        <%= default_date(p.publication_date) %>
+      </td>
+      <td>
+        <%= default_date(p.created_at) %>
+      </td>
+      <td>
+        <%= default_date(p.updated_at) %>
+      </td>
+    </tr>
+  <% end %>
+</table>

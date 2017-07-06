@@ -1,4 +1,4 @@
-<%= render partial: "stash_datacite/titles/show", locals: { title: @review.title } %>
+<%= render partial: "stash_datacite/titles/show", locals: { title: @review.title_str } %>
 <div class="t-landing__metadata o-metadata">
   <%= render partial: "stash_datacite/authors/show", locals: { authors: @review.authors } %>
   <%= render partial: "stash_datacite/publishers/publication_info_pdf", locals: {resource: @resource } %>
@@ -6,7 +6,7 @@
 
 <section class="o-section">
   <%= render partial: "stash_datacite/shared/citations_pdf",
-             locals: { authors: @review.authors, title: @review.title,
+             locals: { authors: @review.authors, title: @review.title_str,
                        resource_type: @review.resource_type,
                        version: @resource.stash_version.nil? ? 'v0' : "v#{@review.version.version }",
                        identifier: @resource.identifier.nil? ? 'DOI' : "#{@review.identifier.identifier }",

@@ -29,7 +29,7 @@ module StashDatacite
 
       # these are the required ones and return true/false if completed
       def title
-        @resource.titles.where.not(title: [nil, '']).count > 0
+        !@resource.title.blank?
       end
 
       def institution

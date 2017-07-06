@@ -33,7 +33,7 @@ module StashDatacite
     end
 
     def escape_title(title)
-      html_escape(title.try(:title))
+      html_escape(title)
     end
 
     def escape_version(version)

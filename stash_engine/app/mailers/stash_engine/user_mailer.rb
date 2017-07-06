@@ -73,7 +73,7 @@ module StashEngine
       user = resource.user
       @user_name = "#{user.first_name} #{user.last_name}"
       @user_email = user.email
-      @title = resource.primary_title
+      @title = resource.title
       @identifier_uri = resource.identifier_uri
       @identifier_value = resource.identifier_value
     end

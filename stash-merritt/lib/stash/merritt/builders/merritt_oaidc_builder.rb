@@ -72,7 +72,7 @@ module Stash
         end
 
         def add_title(xml)
-          xml.send(:'dc:title', resource.titles.where(title_type: nil).first.title.to_s)
+          xml.send(:'dc:title', resource.title)
         end
 
         def add_contributors(xml)

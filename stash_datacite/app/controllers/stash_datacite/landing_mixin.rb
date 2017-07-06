@@ -17,7 +17,7 @@ module StashDatacite
     end
 
     def page_title # TODO: is this used?
-      @page_title ||= review.title.title
+      @page_title ||= review.title_str
     end
 
     def schema_org_ds
@@ -33,7 +33,7 @@ module StashDatacite
     def plain_citation # rubocop:disable Metrics/AbcSize
       citation(
         review.authors,
-        review.title,
+        review.title_str,
         review.resource_type,
         version_string_for(resource, review),
         identifier_string_for(resource, review),
@@ -45,7 +45,7 @@ module StashDatacite
     def citation(authors, title, resource_type, version, identifier, publisher, publication_years) # rubocop:disable Metrics/ParameterLists
       citation = []
       citation << "#{author_citation_format(authors)} (#{pub_year_from(publication_years)})"
-      citation << title.try(:title)
+      citation << title
       citation << (version == 'v1' ? nil : version)
       citation << publisher.try(:publisher)
       citation << resource_type.try(:resource_type_general_friendly)

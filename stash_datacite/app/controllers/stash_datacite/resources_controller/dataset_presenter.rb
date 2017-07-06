@@ -14,8 +14,8 @@ module StashDatacite
       end
 
       def title
-        return '[No title supplied]' if @resource.titles.count < 1
-        @resource.titles.first.title
+        return '[No title supplied]' if @resource.title.blank?
+        @resource.title
       end
 
       def status

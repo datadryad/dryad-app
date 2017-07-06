@@ -9,7 +9,7 @@
 <%=
     "#{res.identifier.identifier_type.downcase}:#{res.identifier.identifier}\t#{res.stash_version.version}\t"\
     "#{res.id}\t"\
-    "#{res.titles.try(:first).try(:title)}\t#{ri.relation_name_english}\t"\
+    "#{res.title}\t#{ri.relation_name_english}\t"\
     "#{result[0]}\t#{result[1]}"
 %>
   <% end -%>
