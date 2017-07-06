@@ -46,7 +46,7 @@ module StashDatacite
 
       def names
         return [] if @resource.title.blank?
-        [ @resource.title ]
+        [@resource.title]
       end
 
       def descriptions
