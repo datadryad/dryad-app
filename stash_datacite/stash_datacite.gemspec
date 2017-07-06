@@ -39,6 +39,6 @@ Gem::Specification.new do |s| # rubocop:disable Metrics/BlockLength
   s.add_development_dependency 'rubocop', '~> 0.49'
   s.add_development_dependency 'sauce_whisk'
   s.add_development_dependency 'selenium-webdriver'
-  s.add_development_dependency 'simplecov', '~> 0.12'
-  s.add_development_dependency 'simplecov-console', '~> 0.3.0'
+  s.add_development_dependency 'simplecov', '~> 0.14'
+  s.add_development_dependency 'simplecov-console', '~> 0.4'
 end

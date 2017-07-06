@@ -54,7 +54,7 @@ Gem::Specification.new do |s| # rubocop:disable Metrics/BlockLength
   s.add_development_dependency 'chromedriver-helper'
   s.add_development_dependency 'rubocop', '~> 0.49'
   s.add_development_dependency 'scss_lint'
-  s.add_development_dependency 'simplecov', '~> 0.12'
-  s.add_development_dependency 'simplecov-console', '~> 0.3.0'
+  s.add_development_dependency 'simplecov', '~> 0.14'
+  s.add_development_dependency 'simplecov-console', '~> 0.4'
   # you cannot add specific code repo to gemspec so it must just go in the Gemfile instead if for internal use
 end
