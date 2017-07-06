@@ -36,7 +36,7 @@ module Datacite
               affiliations: c.affiliations.map(&:smart_name)
             )
           end,
-          titles: [ Title.new(value: se_resource.title, type: nil) ],
+          titles: [Title.new(value: se_resource.title, type: nil)],
           publisher: to_dcs_publisher(se_resource.publisher),
           publication_year: to_dcs_pub_year(pub_year)
         )
