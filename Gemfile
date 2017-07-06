@@ -60,8 +60,8 @@ group :test do
   gem 'chromedriver-helper', '~> 1.1'
   gem 'database_cleaner', '~> 1.5'
   gem 'selenium-webdriver', '~> 3.4'
-  gem 'simplecov', '~> 0.9.2'
-  gem 'simplecov-console', '~> 0.2.0'
+  gem 'simplecov', '~> 0.14'
+  gem 'simplecov-console', '~> 0.4'
   gem 'solr_wrapper', '~> 1.1'
 end
 
