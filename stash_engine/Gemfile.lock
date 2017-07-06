@@ -1,11 +1,3 @@
-GIT
-  remote: git://github.com/caselle/sortable-table.git
-  revision: a9953325741b846f488929109d1a3bb0101c8347
-  specs:
-    sortable-table (0.1.1)
-      actionpack (>= 3.0.0)
-      activesupport (>= 3.0.0)
-
 PATH
   remote: ../stash-sword
   specs:
@@ -280,6 +272,9 @@ GEM
       hirb
       simplecov
     simplecov-html (0.10.1)
+    sortable-table (0.1.1)
+      actionpack (>= 3.0.0)
+      activesupport (>= 3.0.0)
     sprockets (3.7.1)
       concurrent-ruby (~> 1.0)
       rack (> 1, < 3)
@@ -329,7 +324,7 @@ DEPENDENCIES
   selenium-webdriver
   simplecov (~> 0.14)
   simplecov-console (~> 0.4)
-  sortable-table!
+  sortable-table (~> 0.1)
   stash-sword!
   stash_engine!
 
