@@ -38,13 +38,6 @@ module StashEngine
     end
 
     # ------------------------------------------------------------
-    # Patch points
-
-    def primary_title # TODO: do we still need primary_title?
-      raise NoMethodError, 'Metadata engine should patch Resource to implement :primary_title'
-    end
-
-    # ------------------------------------------------------------
     # Callbacks
 
     def init_state_and_version
