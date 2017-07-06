@@ -45,12 +45,6 @@ module StashDatacite
           end
         end
       end
-
-      resource_class.class_eval do # TODO: can probably get rid of primary title
-        def primary_title
-          title
-        end
-      end
     end
   end
 end

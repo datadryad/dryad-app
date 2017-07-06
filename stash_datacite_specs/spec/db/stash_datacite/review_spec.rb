@@ -34,7 +34,7 @@ module StashDatacite
       end
 
       it 'extracts the main title' do
-        expect(review.title).to eq(resource.titles.where(title_type: nil).first)
+        expect(review.title_str).to eq(resource.title)
       end
 
       it 'extracts the title string' do

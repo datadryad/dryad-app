@@ -64,7 +64,7 @@ module StashDatacite
 
       describe '#title' do
         it 'extracts the main title' do
-          expect(metadata_entry.title).to eq(resource.titles.where(title_type: nil).first)
+          expect(metadata_entry.title).to eq(resource.title)
         end
       end
 

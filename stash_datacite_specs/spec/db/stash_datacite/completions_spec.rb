@@ -45,7 +45,7 @@ module StashDatacite
         end
 
         it 'fails if title is missing' do
-          resource.titles.each(&:destroy)
+          resource.title = ''
           expect(completions.title).to be_falsey
         end
       end
@@ -269,7 +269,7 @@ module StashDatacite
         end
 
         it 'counts if title is missing' do
-          resource.titles.each(&:destroy)
+          resource.title = ''
           expect(completions.required_completed).to eq(REQUIRED_COUNT - 1)
         end
 
@@ -470,7 +470,7 @@ module StashDatacite
         end
 
         it 'warns on missing title' do
-          resource.titles.destroy_all
+          resource.title = nil
           warnings = completions.all_warnings
           expect(warnings[0]).to include('title')
         end
