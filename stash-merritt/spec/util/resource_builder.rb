@@ -108,12 +108,9 @@ module StashDatacite
     end
 
     def add_sd_title(dcs_title)
-      title_type = dcs_title.type
-      Title.create(
-        title: dcs_title.value && dcs_title.value.strip,
-        title_type_friendly: (title_type.value if title_type),
-        resource_id: se_resource_id
-      )
+      # now throwing away datacite info on title and only using one main title in stash_engine.resource
+      return if dcs_title.type
+      se_resource.title = dcs_title && dcs_title.value.strip
     end
 
     def set_sd_publisher(dcs_publisher)
