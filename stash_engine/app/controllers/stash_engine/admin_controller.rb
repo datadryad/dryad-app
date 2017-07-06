@@ -1,7 +1,8 @@
 require_dependency 'stash_engine/application_controller'
 
+# TODO: maybe should move this around and move the index into a user's controller since it's mostly (but not all) about users.
 module StashEngine
-  class AdminController < ApplicationController
+  class AdminController < ApplicationController # rubocop:disable Metrics/ClassLength
 
     before_action :load_user, only: %i[popup set_role user_dashboard]
     before_action :require_admin
@@ -86,9 +87,9 @@ module StashEngine
     def manual_sort!(array)
       c = @sort_column.column
       if @sort_column && @sort_column.direction == 'desc'
-        array.sort!{|x, y| y.send(c) <=> x.send(c)}
+        array.sort! { |x, y| y.send(c) <=> x.send(c) }
       else
-        array.sort!{|x, y| x.send(c) <=> y.send(c)}
+        array.sort! { |x, y| x.send(c) <=> y.send(c) }
       end
     end
 
