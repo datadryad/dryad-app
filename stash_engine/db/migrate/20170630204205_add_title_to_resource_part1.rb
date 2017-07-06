@@ -1,12 +1,6 @@
 class AddTitleToResourcePart1 < ActiveRecord::Migration
   def up
     add_utf8mb4('stash_engine_resources', 'title')
-    execute <<-SQL
-      UPDATE stash_engine_resources r
-      LEFT JOIN  dcs_titles t
-      ON t.resource_id = r.id
-      SET r.title = COALESCE(t.title, '');
-    SQL
   end
 
   def down
