@@ -53,7 +53,7 @@ module StashDatacite
       set_sd_identifier(dcs_resource.identifier)
       stash_files.each { |stash_file| add_stash_file(stash_file) }
       dcs_resource.creators.each { |dcs_creator| add_se_author(dcs_creator) }
-      dcs_resource.titles.each { |dcs_title| add_sd_title(dcs_title) }
+      dcs_resource.titles.each { |dcs_title| add_se_title(dcs_title) }
       set_sd_publisher(dcs_resource.publisher)
       set_sd_pubyear(dcs_resource.publication_year)
       dcs_resource.subjects.each { |dcs_subject| add_sd_subject(dcs_subject) }
@@ -107,7 +107,7 @@ module StashDatacite
       se_author
     end
 
-    def add_sd_title(dcs_title)
+    def add_se_title(dcs_title)
       # now throwing away datacite info on title and only using one main title in stash_engine.resource
       return if dcs_title.type
       se_resource.title = dcs_title && dcs_title.value.strip
