@@ -53,6 +53,7 @@ gem 'jbuilder', '~> 2.0'
 
 group :development do
   gem 'web-console', '~> 2.0'
+  gem 'colorize', '~> 0.8'
 end
 
 group :test do

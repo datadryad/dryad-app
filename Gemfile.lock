@@ -168,6 +168,7 @@ GEM
       coffee-script-source
       execjs
     coffee-script-source (1.12.2)
+    colorize (0.8.1)
     concurrent-ruby (1.0.5)
     config (1.4.0)
       activesupport (>= 3.0)
@@ -472,6 +473,7 @@ DEPENDENCIES
   capybara (~> 2.14)
   chromedriver-helper (~> 1.1)
   coffee-rails (~> 4.1.0)
+  colorize (~> 0.8)
   database_cleaner (~> 1.5)
   exception_notification
   httparty
