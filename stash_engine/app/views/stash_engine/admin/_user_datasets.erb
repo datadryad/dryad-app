@@ -1,21 +1,17 @@
 <%# locals: presenters (array of StashDatacite::ResourcesController::DatasetPresenter) %>
 <table class="c-lined-table">
   <tr class="c-lined-table__head">
-    <th>
-      Dataset Title
-      <%# sort_by 'title', title: 'Dataset Title', current_column: @sort_column %>
+    <th class="<%= sort_display('title', @sort_column) %>">
+      <%= sort_by 'title', title: 'Dataset Title', current_column: @sort_column %>
     </th>
-    <th>
-      Publication Date
-      <%# sort_by 'publication_date', title: 'Publication Date', current_column: @sort_column %>
+    <th class="<%= sort_display('publication_date', @sort_column) %>">
+      <%= sort_by 'publication_date', title: 'Publication Date', current_column: @sort_column %>
     </th>
-    <th>
-      Created
-      <%# sort_by 'created_at', title: 'Created', current_column: @sort_column %>
+    <th class="<%= sort_display('created_at', @sort_column) %>">
+      <%= sort_by 'created_at', title: 'Created', current_column: @sort_column %>
     </th>
-    <th>
-      Last Modified
-      <%# sort_by 'updated_at', title: 'Last Modified', current_column: @sort_column %>
+    <th class="<%= sort_display('updated_at', @sort_column) %>">
+      <%= sort_by 'updated_at', title: 'Last Modified', current_column: @sort_column %>
     </th>
   </tr>
 

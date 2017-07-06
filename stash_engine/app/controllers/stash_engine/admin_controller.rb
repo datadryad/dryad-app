@@ -13,7 +13,7 @@ module StashEngine
       setup_superuser_facets
       @users = User.all
       add_institution_filter! # if they chose a facet or are only an admin
-      @sort_column = sort_column
+      @sort_column = user_sort_column
       @users = @users.order(@sort_column.order).page(@page).per(@page_size)
     end
 
@@ -39,6 +39,8 @@ module StashEngine
       @progress_count = Resource.in_progress.where(user_id: @user.id).count
       # it seems that some of these things are calculated values for display that aren't stored
       presenters = @user.latest_completed_resource_per_identifier.map { |res| StashDatacite::ResourcesController::DatasetPresenter.new(res) }
+      @sort_column = dataset_sort_column
+      manual_sort!(presenters)
       @presenters = Kaminari.paginate_array(presenters).page(@page).per(@page_size)
     end
 
@@ -59,8 +61,8 @@ module StashEngine
       @user = User.find(params[:id])
     end
 
-    # this sets up the sortable-table gem
-    def sort_column
+    # this sets up the sortable-table gem for users table
+    def user_sort_column
       institution_sort = SortableTable::SortColumnDefinition.new('tenant_id')
       name_sort = SortableTable::SortColumnCustomDefinition.new('name',
                                                                 asc: 'last_name asc, first_name asc',
@@ -69,6 +71,25 @@ module StashEngine
       login_time_sort = SortableTable::SortColumnDefinition.new('last_login')
       sort_table = SortableTable::SortTable.new([name_sort, institution_sort, role_sort, login_time_sort])
       sort_table.sort_column(params[:sort], params[:direction])
+    end
+
+    def dataset_sort_column
+      title = SortableTable::SortColumnDefinition.new('title')
+      pub_date = SortableTable::SortColumnDefinition.new('publication_date')
+      created_at = SortableTable::SortColumnDefinition.new('created_at')
+      updated_at = SortableTable::SortColumnDefinition.new('updated_at')
+      sort_table = SortableTable::SortTable.new([title, pub_date, created_at, updated_at])
+      sort_table.sort_column(params[:sort], params[:direction])
+    end
+
+    # the @sort_column should be set and sorts manually by the method and asc/desc
+    def manual_sort!(array)
+      c = @sort_column.column
+      if @sort_column && @sort_column.direction == 'desc'
+        array.sort!{|x, y| y.send(c) <=> x.send(c)}
+      else
+        array.sort!{|x, y| x.send(c) <=> y.send(c)}
+      end
     end
 
     def setup_stats
