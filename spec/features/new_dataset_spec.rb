@@ -18,7 +18,7 @@ describe 'new dataset' do
 
     it 'starts a new dataset' do
       expect(page).to have_content('Describe Your Dataset')
-      title_field = find_field('Title')
+      title_field = find_field('title')
       expect(title_field.value).to be_blank
     end
   end
