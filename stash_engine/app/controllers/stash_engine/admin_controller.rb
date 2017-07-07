@@ -38,8 +38,9 @@ module StashEngine
     # dashboard for a user showing stats and datasets
     def user_dashboard
       @progress_count = Resource.in_progress.where(user_id: @user.id).count
-      # it seems that some of these things are calculated values for display that aren't stored
-      presenters = @user.latest_completed_resource_per_identifier.map { |res| StashDatacite::ResourcesController::DatasetPresenter.new(res) }
+      # some of these columns are calculated values for display that aren't stored (publication date)
+      @resources = Resource.where(user_id: @user.id).latest_per_dataset
+      presenters = @resources.map { |res| StashDatacite::ResourcesController::DatasetPresenter.new(res) }
       @sort_column = dataset_sort_column
       manual_sort!(presenters)
       @presenters = Kaminari.paginate_array(presenters).page(@page).per(@page_size)

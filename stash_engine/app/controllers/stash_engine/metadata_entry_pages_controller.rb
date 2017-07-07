@@ -13,7 +13,7 @@ module StashEngine
 
     # GET/POST/PUT  /generals/find_or_create
     def find_or_create
-      return unless @resource.published?
+      return unless @resource.submitted?
       redirect_to(metadata_entry_pages_new_version_path(resource_id: params[:resource_id]))
     end
 

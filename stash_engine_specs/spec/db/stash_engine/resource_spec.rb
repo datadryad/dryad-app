@@ -347,16 +347,16 @@ module StashEngine
         end
       end
 
-      describe :published? do
+      describe :submitted? do
         it 'returns true if the current state is published' do
           resource.current_state = 'submitted'
-          expect(resource.published?).to eq(true)
+          expect(resource.submitted?).to eq(true)
         end
         it 'returns false otherwise' do
-          expect(resource.published?).to eq(false)
+          expect(resource.submitted?).to eq(false)
           %w[in_progress processing error].each do |state_value|
             resource.current_state = state_value
-            expect(resource.published?).to eq(false)
+            expect(resource.submitted?).to eq(false)
           end
         end
       end

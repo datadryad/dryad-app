@@ -185,8 +185,7 @@ module StashEngine
     # ------------------------------------------------------------
     # Current resource state
 
-    # TODO: EMBARGO: change this to :submitted? or exclude embargoed?
-    def published?
+    def submitted?
       current_state == 'submitted'
     end
 
