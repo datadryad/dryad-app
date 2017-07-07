@@ -1,13 +1,13 @@
 class ClearData
 
   def self.clear
-    to_truncate = %w(bookmarks dcs_affiliations_contributors dcs_affiliations_creators
-      dcs_alternate_identifiers dcs_contributors dcs_creators dcs_dates dcs_descriptions dcs_embargoes
+    to_truncate = %w(bookmarks dcs_affiliations_contributors
+      dcs_alternate_identifiers dcs_contributors dcs_dates dcs_descriptions dcs_embargoes
       dcs_formats dcs_geo_location_boxes dcs_geo_location_places dcs_geo_location_points dcs_geo_locations
       dcs_languages dcs_name_identifiers dcs_publication_years dcs_publishers dcs_related_identifiers
       dcs_resource_types dcs_rights dcs_sizes dcs_subjects dcs_subjects_stash_engine_resources
-      dcs_titles dcs_versions searches stash_engine_file_uploads stash_engine_identifiers stash_engine_resource_states
-      stash_engine_resource_usages stash_engine_resources stash_engine_submission_logs
+      dcs_versions searches stash_engine_embargoes stash_engine_file_uploads stash_engine_identifiers
+      stash_engine_resource_states stash_engine_resource_usages stash_engine_resources stash_engine_submission_logs
       stash_engine_versions users)
 
     to_truncate.each do |t|
