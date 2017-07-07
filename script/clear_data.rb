@@ -2,7 +2,7 @@ class ClearData
 
   def self.clear
     to_truncate = %w(bookmarks dcs_affiliations_contributors
-      dcs_alternate_identifiers dcs_contributors dcs_dates dcs_descriptions dcs_embargoes
+      dcs_alternate_identifiers dcs_contributors dcs_dates dcs_descriptions
       dcs_formats dcs_geo_location_boxes dcs_geo_location_places dcs_geo_location_points dcs_geo_locations
       dcs_languages dcs_name_identifiers dcs_publication_years dcs_publishers dcs_related_identifiers
       dcs_resource_types dcs_rights dcs_sizes dcs_subjects dcs_subjects_stash_engine_resources
