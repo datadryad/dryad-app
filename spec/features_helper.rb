@@ -30,9 +30,6 @@ SolrHelper.start
 # RSpec
 
 RSpec.configure do |config|
-  # Treat specs in features/ as feature specs
-  config.infer_spec_type_from_file_location!
-
   # Mock OmniAuth login
   config.before(:suite) do
     OmniAuth.config.test_mode = true
