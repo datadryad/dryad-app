@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170706174001) do
+ActiveRecord::Schema.define(version: 20170707170420) do
 
   create_table "bookmarks", force: :cascade do |t|
     t.integer  "user_id",       limit: 4,   null: false
@@ -244,16 +244,6 @@ ActiveRecord::Schema.define(version: 20170706174001) do
 
   add_index "dcs_subjects_stash_engine_resources", ["resource_id"], name: "index_dcs_subjects_stash_engine_resources_on_resource_id", using: :btree
   add_index "dcs_subjects_stash_engine_resources", ["subject_id"], name: "index_dcs_subjects_stash_engine_resources_on_subject_id", using: :btree
-
-  create_table "dcs_titles", force: :cascade do |t|
-    t.text     "title",       limit: 65535
-    t.string   "title_type",  limit: 16
-    t.integer  "resource_id", limit: 4
-    t.datetime "created_at",                null: false
-    t.datetime "updated_at",                null: false
-  end
-
-  add_index "dcs_titles", ["resource_id"], name: "index_dcs_titles_on_resource_id", using: :btree
 
   create_table "dcs_versions", force: :cascade do |t|
     t.string   "version",     limit: 255
