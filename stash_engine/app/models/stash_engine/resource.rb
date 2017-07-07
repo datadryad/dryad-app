@@ -73,6 +73,16 @@ module StashEngine
     scope :by_version_desc, -> { joins(:stash_version).order('stash_engine_versions.version DESC') }
     scope :by_version, -> { joins(:stash_version).order('stash_engine_versions.version ASC') }
 
+    # gets the latest version per dataset and includes items that haven't been assigned an identifer yet but are initially in progress
+    scope :latest_per_dataset, (-> do
+      subquery = <<-eos
+        SELECT max(id) AS id FROM stash_engine_resources WHERE identifier_id IS NOT NULL GROUP BY identifier_id
+        UNION
+        SELECT id FROM stash_engine_resources WHERE identifier_id IS NULL
+      eos
+      joins("INNER JOIN (#{subquery}) sub ON stash_engine_resources.id = sub.id ")
+    end)
+
     # ------------------------------------------------------------
     # File upload utility methods
 

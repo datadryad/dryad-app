@@ -700,6 +700,14 @@ module StashEngine
             expect(resource.next_merritt_version).to eq(2)
           end
         end
+
+        describe :latest_per_dataset do
+          it 'only returns latest resources and new resources' do
+            resource.dup.save
+            Resource.create
+            expect(Resource.latest_per_dataset.count).to eq(2)
+          end
+        end
       end
     end
 
