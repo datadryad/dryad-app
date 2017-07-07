@@ -21,8 +21,8 @@ SimpleCov.configure do
   filters.clear
   add_filter '/spec/'
   add_filter VendorFilter.new(COVERAGE_ROOT)
-  SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter[
+  SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter.new [
     SimpleCov::Formatter::HTMLFormatter,
-    SimpleCov::Formatter::Console,
+    SimpleCov::Formatter::Console
   ]
 end
