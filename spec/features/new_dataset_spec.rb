@@ -1,6 +1,5 @@
 require 'features_helper'
 
-# TODO: switch to Capybara scenario style
 describe 'new dataset' do
   attr_reader :start_new_dataset
 
