@@ -103,7 +103,7 @@ describe 'new dataset' do
 
       select 'continues', from: 'related_identifier[relation_type]'
       select 'DOI', from: 'related_identifier[related_identifier_type]'
-      related_identifier = find_blank_field('related_identifier')
+      related_identifier = find_blank_field('related_identifier[related_identifier]')
       fill_in related_identifier[:id], with: 'doi:10.1098/rstl.1665.0007' # TODO: is this the preferred format?
 
     end
