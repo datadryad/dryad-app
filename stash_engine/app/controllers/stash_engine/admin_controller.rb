@@ -77,10 +77,11 @@ module StashEngine
 
     def dataset_sort_column
       title = SortableTable::SortColumnDefinition.new('title')
+      status = SortableTable::SortColumnDefinition.new('embargo_status')
       pub_date = SortableTable::SortColumnDefinition.new('publication_date')
       created_at = SortableTable::SortColumnDefinition.new('created_at')
       updated_at = SortableTable::SortColumnDefinition.new('updated_at')
-      sort_table = SortableTable::SortTable.new([title, pub_date, created_at, updated_at])
+      sort_table = SortableTable::SortTable.new([title, status, pub_date, created_at, updated_at])
       sort_table.sort_column(params[:sort], params[:direction])
     end
 

@@ -4,8 +4,8 @@
     <th class="<%= sort_display('title', @sort_column) %>">
       <%= sort_by 'title', title: 'Dataset Title', current_column: @sort_column %>
     </th>
-    <th>
-      Status
+    <th class="<%= sort_display('embargo_status', @sort_column) %>">
+      <%= sort_by 'embargo_status', title: 'Status', current_column: @sort_column %>
     </th>
     <th class="<%= sort_display('publication_date', @sort_column) %>">
       <%= sort_by 'publication_date', title: 'Publication Date', current_column: @sort_column %>
