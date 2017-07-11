@@ -1,4 +1,5 @@
 require 'rails_helper'
+require 'solr_helper'
 require 'capybara/dsl'
 require 'capybara/rails'
 require 'capybara/rspec'
@@ -7,7 +8,11 @@ require 'capybara/rspec'
 # Capybara
 
 Capybara.register_driver(:selenium) do |app|
-  Capybara::Selenium::Driver.new(app, browser: :chrome, args: ['--incognito'])
+  Capybara::Selenium::Driver.new(
+    app,
+    browser: :chrome,
+    options: Selenium::WebDriver::Chrome::Options.new(args: ['--incognito'])
+  )
 end
 
 Capybara.javascript_driver = :chrome
@@ -20,11 +25,23 @@ Capybara.configure do |config|
 end
 
 # ------------------------------------------------------------
-# Solr
+# OmniAuth
 
-require 'solr_helper'
-
-SolrHelper.start
+def mock_omniauth!
+  OmniAuth.config.test_mode = true
+  OmniAuth.config.add_mock(
+    :google_oauth2,
+    uid: '555555555555555555555',
+    credentials: {
+      token: 'ya29.Ry4gVGVzdHkgTWNUZXN0ZmFjZQ'
+    },
+    info: {
+      email: 'test@example.edu.test-google-a.com',
+      name: 'G. Testy McTestface',
+      test_domain: 'localhost'
+    }
+  )
+end
 
 # ------------------------------------------------------------
 # RSpec
@@ -32,19 +49,8 @@ SolrHelper.start
 RSpec.configure do |config|
   # Mock OmniAuth login
   config.before(:suite) do
-    OmniAuth.config.test_mode = true
-    OmniAuth.config.add_mock(
-      :google_oauth2,
-      uid: '555555555555555555555',
-      credentials: {
-        token: 'ya29.Ry4gVGVzdHkgTWNUZXN0ZmFjZQ'
-      },
-      info: {
-        email: 'test@example.edu.test-google-a.com',
-        name: 'G. Testy McTestface',
-        test_domain: 'localhost'
-      }
-    )
+    SolrHelper.start
+    mock_omniauth!
   end
 
   # Stop Solr when we're done
