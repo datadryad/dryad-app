@@ -20,7 +20,9 @@
     <%= line.embargo_status %>
   </td>
   <td>
-    <%= default_date(line.publication_date) %>
+    <% if %w(private published).include?(line.embargo_status) %>
+      <%= default_date(line.publication_date) %>
+    <% end %>
   </td>
   <td>
       <%= button_to 'Update', stash_url_helpers.metadata_entry_pages_new_version_path(resource_id: line.resource.id),
