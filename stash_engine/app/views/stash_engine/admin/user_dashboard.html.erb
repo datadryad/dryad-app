@@ -5,7 +5,8 @@
 
 <div class="o-admin-container">
   <div class="o-admin-left">
-    <!-- <h2>Filters</h2> -->
+    <h2>Filters</h2>
+    <%= render partial: 'status_facet', locals: { facets: @status_facets } %>
   </div>
   <div class="o-admin-right">
     <h2>Datasets</h2>
