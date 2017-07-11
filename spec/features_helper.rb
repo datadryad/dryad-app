@@ -28,6 +28,8 @@ end
 # OmniAuth
 
 def mock_omniauth!
+  raise "No tenant with id 'localhost'; did you run travis-prep.sh?" unless StashEngine::Tenant.exists?('localhost')
+
   OmniAuth.config.test_mode = true
   OmniAuth.config.add_mock(
     :google_oauth2,
@@ -49,8 +51,8 @@ end
 RSpec.configure do |config|
   # Mock OmniAuth login
   config.before(:suite) do
-    SolrHelper.start
     mock_omniauth!
+    SolrHelper.start
   end
 
   # Stop Solr when we're done
