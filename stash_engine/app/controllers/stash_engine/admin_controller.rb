@@ -40,10 +40,8 @@ module StashEngine
       @progress_count = Resource.in_progress.where(user_id: @user.id).count
       # some of these columns are calculated values for display that aren't stored (publication date)
       @resources = Resource.where(user_id: @user.id).latest_per_dataset
-      presenters = @resources.map { |res| StashDatacite::ResourcesController::DatasetPresenter.new(res) }
-      @sort_column = dataset_sort_column
-      manual_sort!(presenters)
-      @presenters = Kaminari.paginate_array(presenters).page(@page).per(@page_size)
+      sort_and_paginate_datasets
+      setup_ds_status_facets
     end
 
     private
@@ -83,6 +81,13 @@ module StashEngine
       updated_at = SortableTable::SortColumnDefinition.new('updated_at')
       sort_table = SortableTable::SortTable.new([title, status, pub_date, created_at, updated_at])
       sort_table.sort_column(params[:sort], params[:direction])
+    end
+
+    def sort_and_paginate_datasets
+      @presenters = @resources.map { |res| StashDatacite::ResourcesController::DatasetPresenter.new(res) }
+      @sort_column = dataset_sort_column
+      manual_sort!(@presenters)
+      @page_presenters = Kaminari.paginate_array(@presenters).page(@page).per(@page_size)
     end
 
     # the @sort_column should be set and sorts manually by the method and asc/desc
@@ -130,6 +135,8 @@ module StashEngine
     def setup_superuser_facets
       @tenant_facets = StashEngine::Tenant.all.sort_by(&:short_name)
     end
+
+    def setup_ds_status_facets; end
 
     def add_institution_filter!
       if current_user.role == 'admin'

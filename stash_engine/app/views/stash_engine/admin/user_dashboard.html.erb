@@ -10,10 +10,10 @@
   <div class="o-admin-right">
     <h2>Datasets</h2>
     <!-- table and paging here -->
-    <%= render partial: 'stash_engine/admin/user_datasets', locals: { presenters: @presenters } %>
+    <%= render partial: 'stash_engine/admin/user_datasets', locals: { presenters: @page_presenters } %>
 
     <div class="c-space-paginator">
-      <%= paginate @presenters, params: {page_size: @page_size} %>
+      <%= paginate @page_presenters, params: {page_size: @page_size} %>
     </div>
   </div>
 </div>
