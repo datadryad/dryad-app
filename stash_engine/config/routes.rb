@@ -30,7 +30,6 @@ StashEngine::Engine.routes.draw do
     end
   end
 
-  get 'dashboard/getting_started', to: 'dashboard#getting_started'
   get 'dashboard', to: 'dashboard#show', as: 'dashboard'
   get 'ajax_wait', to: 'dashboard#ajax_wait', as: 'ajax_wait'
   get 'metadata_basics', to: 'dashboard#metadata_basics', as: 'metadata_basics'
