@@ -1,10 +1,11 @@
 <div>
   <p>
-    <% unless @resource.version_number > 1 %>
-      <span><%= check_box_tag 'agree_to_license', 'yes', false, class: 't-review__agree-to-license' %></span>By checking this box, I agree to the license
+    <% if @resource.version_number > 1 %>
+      <span><%= check_box_tag 'agree_to_license', 'yes', true, class: 't-review__agree-to-license' %></span>
+      <label for="agree_to_license">By checking this box, I agree to the license
     <% else %>
-      <span><%= check_box_tag 'agree_to_license', 'yes', true, class: 't-review__agree-to-license' %></span>By
-      checking this box, I agree to the license
+      <span><%= check_box_tag 'agree_to_license', 'yes', false, class: 't-review__agree-to-license' %></span>
+      <label for="agree_to_license">By checking this box, I agree to the license
     <% end %>
 
     <% if @resource.rights.blank? %>
@@ -16,6 +17,7 @@
             {license: StashEngine::License.by_uri(r.rights_uri), right: r } %>
       <% end %>
     <% end %>
+    </label>
   </p>
 </div>
 
