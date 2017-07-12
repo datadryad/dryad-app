@@ -58,7 +58,6 @@
           <%= link_to 'My Datasets', stash_url_helpers.dashboard_path, class: 'c-header__nav-item' %>
           <%= render partial: "stash_engine/shared/logout" %>
         <% else %>
-          <%= link_to 'My Datasets', stash_url_helpers.dashboard_getting_started_path, class: 'c-header__nav-item' %>
           <%= render partial: "stash_engine/shared/sites" %>
         <% end %>
       </div>
