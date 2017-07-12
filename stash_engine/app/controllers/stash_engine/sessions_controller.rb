@@ -13,7 +13,7 @@ module StashEngine
       check_developer_login!
 
       session[:user_id] = User.from_omniauth(@auth_hash, current_tenant.tenant_id).id
-      redirect_to stash_url_helpers.dashboard_path
+      redirect_to dashboard_path
     end
 
     # destroy the session (ie, log out)
