@@ -54,6 +54,7 @@ StashEngine::Engine.routes.draw do
   get 'sessions/destroy', :to => 'sessions#destroy'
 
   get 'help', :to => 'pages#help'
+  get 'faq', :to => 'pages#faq'
   get 'about', :to => 'pages#about'
   get 'search', :to => 'searches#index'
   get 'dataset/*id', :to => 'landing#show', as: 'show', :constraints => { :id => /\S+/ }

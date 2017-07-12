@@ -13,6 +13,10 @@ module StashEngine
     # Perhaps specific views would override it in the base application.
     def help; end
 
+    # The help controller uses the standard app layout, so the default is here.
+    # Perhaps specific views would override it in the base application.
+    def faq; end
+
     # The about controller uses the standard app layout, so the default is here.
     # Perhaps specific views would override it in the base application.
     def about; end
