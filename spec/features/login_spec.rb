@@ -1,4 +1,5 @@
 require 'features_helper'
+require 'byebug'
 
 # TODO: switch to Capybara scenario style
 describe 'login/logout' do
@@ -10,8 +11,8 @@ describe 'login/logout' do
   end
 
   describe 'Login' do
-    it 'goes to Getting Started when no datasets exist' do
-      expect(page).to have_content('My Datasets: Getting Started')
+    it 'goes to My Datasets page when no datasets exist' do
+      expect(page).to have_content('My Datasets')
     end
   end
 
