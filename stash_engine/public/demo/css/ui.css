@@ -4822,6 +4822,12 @@ html.no-details .o-showhide__summary {
   @media (min-width: 870px) {
     .o-heading__level2-why-share {
       text-align: center; } }
+  .o-heading__level2-why-share a:link,
+  .o-heading__level2-why-share a:visited,
+  .o-heading__level2-why-share a:hover,
+  .o-heading__level2-why-share a:active {
+    color: #005581;
+    text-decoration: none; }
 
 .t-home__why-share-group {
   padding-top: 20px; }

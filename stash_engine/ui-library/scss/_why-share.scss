@@ -7,6 +7,14 @@
   @include bp(screen3) {
     text-align: center;
   }
+
+  a:link,
+  a:visited,
+  a:hover,
+  a:active {
+    color: $design-dark-blue-color;
+    text-decoration: none;
+  }
 }
 
 .t-home__why-share-group {
