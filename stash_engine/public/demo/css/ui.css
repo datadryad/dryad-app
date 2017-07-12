@@ -2772,12 +2772,12 @@ th {
         right: 0;
         bottom: 0;
         left: 0;
-        background: linear-gradient(transparent 8vw, rgba(0, 85, 129, 0.6) 8vw, rgba(0, 85, 129, 0.6) 25vw, transparent 25vw); } }
+        background: linear-gradient(transparent 8vw, rgba(0, 85, 129, 0.6) 8vw, rgba(0, 85, 129, 0.6) 15vw, transparent 15vw); } }
   @media (min-width: 760px) {
     .o-banner {
       padding: 75px 0 0; }
       .o-banner::before {
-        background: linear-gradient(transparent 60px, rgba(0, 85, 129, 0.6) 60px, rgba(0, 85, 129, 0.6) 190px, transparent 190px); } }
+        background: linear-gradient(transparent 60px, rgba(0, 85, 129, 0.6) 60px, rgba(0, 85, 129, 0.6) 130px, transparent 130px); } }
   @media (min-width: 1280px) {
     .o-banner {
       height: 345px; } }

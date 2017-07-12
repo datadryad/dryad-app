@@ -1,11 +1,6 @@
 <% @page_title = 'Home - Publish and Preserve your Data' %>
 <div class="t-home__banner o-banner" style="background-image: url(<%= asset_path 'stash_engine/bg_drawer-of-bugs.jpg' %>)">
   <div class="o-banner__tagline">An easy-to-use data publication service</div>
-  <% if current_user %>
-    <%= link_to 'Get Started', dashboard_getting_started_path, class: "o-banner__button", role: 'button' %>
-  <% else %>
-    <%= link_to 'Get Started', current_tenant_simple.try(:omniauth_login_path), class: "o-banner__button", role: 'button' %>
-  <% end %>
 </div>
 <div class="t-home__quote-search-group">
   <div class="t-home__quote o-quote">
