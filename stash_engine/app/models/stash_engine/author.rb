@@ -27,6 +27,18 @@ module StashEngine
       "<a href=\"mailto:#{CGI.escapeHTML(author_email.strip)}\">#{CGI.escapeHTML(author_standard_name.strip)}</a>"
     end
 
+    # NOTE: this ONLY works b/c we assume that only the resource-owning
+    # user can set their own ORCiD
+    def init_user_orcid
+      return unless author_orcid
+      return unless (user = resource.user)
+      return if user.orcid
+
+      user.orcid = author_orcid
+      user.save
+    end
+    after_save :init_user_orcid
+
     private
 
     def strip_whitespace

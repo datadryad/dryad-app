@@ -50,5 +50,110 @@ module StashEngine
         end
       end
     end
+
+    describe :init_user_orcid do
+      before(:each) do
+        user = StashEngine::User.create(
+          uid: 'lmuckenhaupt-ucop@ucop.edu',
+          first_name: 'Lisa',
+          last_name: 'Muckenhaupt',
+          email: 'lmuckenhaupt@ucop.edu',
+          provider: 'developer',
+          tenant_id: 'ucop'
+        )
+        resource.user = user
+        resource.save
+      end
+
+      describe 'with no user ORCiD' do
+        it 'sets the user ORCiD on create' do
+          author = Author.create(
+            resource_id: resource.id,
+            author_first_name: 'E.L.',
+            author_last_name: 'Muckenhaupt',
+            author_orcid: '8078-2361-3000-0000'
+          )
+
+          user = User.find(resource.user_id)
+          expect(user.orcid).to eq(author.author_orcid)
+        end
+
+        it 'sets the user ORCiD on save' do
+          author = Author.create(
+            resource_id: resource.id,
+            author_first_name: 'E.L.',
+            author_last_name: 'Muckenhaupt'
+          )
+
+          author.author_orcid = '8078-2361-3000-0000'
+          author.save
+
+          user = User.find(resource.user_id)
+          expect(user.orcid).to eq(author.author_orcid)
+        end
+      end
+
+      describe 'with existing user ORCiD' do
+        attr_reader :orcid
+        before(:each) do
+          @orcid = '8078-2361-3000-0000'
+          user = User.find(resource.user_id)
+          user.orcid = orcid
+          user.save
+        end
+
+        describe 'with author ORCiD' do
+          it 'leaves the user ORCiD alone on create' do
+            Author.create(
+              resource_id: resource.id,
+              author_first_name: 'Lise',
+              author_last_name: 'Meitner',
+              author_orcid: '0000-0003-4293-0137'
+            )
+            user = User.find(resource.user_id)
+            expect(user.orcid).to eq(orcid)
+          end
+
+          it 'leaves the user ORCiD alone on save' do
+            author = Author.create(
+              resource_id: resource.id,
+              author_first_name: 'Lise',
+              author_last_name: 'Meitner'
+            )
+            author.author_orcid = '0000-0003-4293-0137'
+            author.save
+
+            user = User.find(resource.user_id)
+            expect(user.orcid).to eq(orcid)
+          end
+        end
+
+        describe 'without author ORCiD' do
+          it 'leaves the user ORCiD alone on create' do
+            Author.create(
+              resource_id: resource.id,
+              author_first_name: 'Lise',
+              author_last_name: 'Meitner'
+            )
+
+            user = User.find(resource.user_id)
+            expect(user.orcid).to eq(orcid)
+          end
+
+          it 'leaves the user ORCiD alone on save' do
+            author = Author.create(
+              resource_id: resource.id,
+              author_first_name: 'Lise',
+              author_last_name: 'Meitner'
+            )
+            author.save
+
+            user = User.find(resource.user_id)
+            expect(user.orcid).to eq(orcid)
+          end
+        end
+
+      end
+    end
   end
 end
