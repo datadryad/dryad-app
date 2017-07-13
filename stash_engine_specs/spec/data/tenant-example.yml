@@ -25,6 +25,9 @@ default: &default
     entity_domain: .example.edu
   default_license: cc_by
   stash_logo_after_tenant: true
+  login_whitelist:
+    - Carnuba.Wax@example.COm
+    - extra.crumbles@example.com
 
 development:
   <<: *default
