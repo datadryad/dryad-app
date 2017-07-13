@@ -49,17 +49,7 @@ module StashEngine
 
     def init_author_from_user
       return unless (user_orcid = user && user.orcid)
-
-      existing = StashEngine::Author.where(author_orcid: user_orcid).last
-
-      first_name, last_name =
-        if existing
-          [existing.author_first_name, existing.author_last_name]
-        else
-          [user.first_name, user.last_name]
-        end
-
-      StashEngine::Author.create(resource_id: id, author_orcid: user_orcid, author_first_name: first_name, author_last_name: last_name)
+      init_author_with_orcid(user_orcid)
     end
     after_create :init_author_from_user
 
@@ -362,6 +352,28 @@ module StashEngine
       resource_usage.increment(:views).save
     end
 
+    def ensure_resource_usage
+      create_resource_usage(downloads: 0, views: 0) if resource_usage.nil?
+    end
+    private :ensure_resource_usage
+
+    # -----------------------------------------------------------
+    # Authors
+
+    def init_author_with_orcid(user_orcid)
+      return if authors.exists?(author_orcid: user_orcid) # in case of Amoeba duplication
+      existing = StashEngine::Author.where(author_orcid: user_orcid).last
+      first_name, last_name =
+        if existing
+          [existing.author_first_name, existing.author_last_name]
+        else
+          [user.first_name, user.last_name]
+        end
+
+      StashEngine::Author.create(resource_id: id, author_orcid: user_orcid, author_first_name: first_name, author_last_name: last_name)
+    end
+    private :init_author_with_orcid
+
     # -----------------------------------------------------------
     # Embargoes
 
@@ -373,12 +385,6 @@ module StashEngine
       end_date = embargo && embargo.end_date
       return true unless end_date
       Time.now >= end_date
-    end
-
-    private
-
-    def ensure_resource_usage
-      create_resource_usage(downloads: 0, views: 0) if resource_usage.nil?
     end
   end
 end
