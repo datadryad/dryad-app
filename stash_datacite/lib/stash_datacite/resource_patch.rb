@@ -16,6 +16,28 @@ module StashDatacite
     # probably make it straight forward if we didn't allow the shared resource class to be user-configurable.
     # TODO: just hard-code the resource class and call this when first needed (cf. AuthorPatch)
     def self.associate_with_resource(resource_class)
+      resource_class.class_eval do
+        def init_author_from_user
+          return unless (user_orcid = user.orcid)
+
+          existing = StashEngine::Author.where(author_orcid: user_orcid).last
+
+          first_name, last_name =
+            if existing
+              [existing.author_first_name, existing.author_last_name]
+            else
+              [user.first_name, user.last_name]
+            end
+
+          StashEngine::Author.create(
+            resource_id: id,
+            author_orcid: user_orcid,
+            author_first_name: first_name,
+            author_last_name: last_name
+          )
+        end
+      end
+
       resource_class.instance_eval do
         has_many :descriptions, class_name: 'StashDatacite::Description', dependent: :destroy # optional
         has_many :contributors, class_name: 'StashDatacite::Contributor', dependent: :destroy # optional
@@ -28,8 +50,7 @@ module StashDatacite
         has_one :resource_type, class_name: 'StashDatacite::ResourceType', dependent: :destroy # optional
         has_many :rights, class_name: 'StashDatacite::Right', dependent: :destroy # optional
         has_many :sizes, class_name: 'StashDatacite::Size', dependent: :destroy # optional
-        has_and_belongs_to_many :subjects, class_name: 'StashDatacite::Subject',
-                                           through: 'StashDatacite::ResourceSubject', dependent: :destroy # optional
+        has_and_belongs_to_many :subjects, class_name: 'StashDatacite::Subject', through: 'StashDatacite::ResourceSubject', dependent: :destroy # optional
         has_one :language, class_name: 'StashDatacite::Language', dependent: :destroy # required
         has_many :alternate_identifiers, class_name: 'StashDatacite::AlternateIdentifier', dependent: :destroy # optional
         has_many :formats, class_name: 'StashDatacite::Format', dependent: :destroy # optional
@@ -44,6 +65,8 @@ module StashDatacite
             include_association assoc
           end
         end
+
+        after_create :init_author_from_user
       end
     end
   end
