@@ -30,7 +30,6 @@ StashEngine::Engine.routes.draw do
     end
   end
 
-  get 'dashboard/getting_started', to: 'dashboard#getting_started'
   get 'dashboard', to: 'dashboard#show', as: 'dashboard'
   get 'ajax_wait', to: 'dashboard#ajax_wait', as: 'ajax_wait'
   get 'metadata_basics', to: 'dashboard#metadata_basics', as: 'metadata_basics'
@@ -55,6 +54,7 @@ StashEngine::Engine.routes.draw do
   get 'sessions/destroy', :to => 'sessions#destroy'
 
   get 'help', :to => 'pages#help'
+  get 'faq', :to => 'pages#faq'
   get 'about', :to => 'pages#about'
   get 'search', :to => 'searches#index'
   get 'dataset/*id', :to => 'landing#show', as: 'show', :constraints => { :id => /\S+/ }

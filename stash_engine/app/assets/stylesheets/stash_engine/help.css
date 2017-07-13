@@ -14,22 +14,22 @@
  *= require_self
  */
 
-.pages_help h1 {
+.markdown_styles h1 {
   color: #e65722;
 }
-.pages_help h3 {
+.markdown_styles h3 {
   font-size: 1.19em;
   color: #e65722;
 }
-.pages_help h2 {
+.markdown_styles h2 {
   color: #005581;
 }
-.pages_help h4 {
+.markdown_styles h4 {
   color: #005581;
 }
-.pages_help ul {
+.markdown_styles ul {
   list-style: circle outside;
 }
-.pages_help li {
+.markdown_styles li {
   padding: 5px;
 }
