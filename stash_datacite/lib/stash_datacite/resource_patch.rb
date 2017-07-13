@@ -16,28 +16,6 @@ module StashDatacite
     # probably make it straight forward if we didn't allow the shared resource class to be user-configurable.
     # TODO: just hard-code the resource class and call this when first needed (cf. AuthorPatch)
     def self.associate_with_resource(resource_class)
-      resource_class.class_eval do
-        def init_author_from_user
-          return unless (user_orcid = user && user.orcid)
-
-          existing = StashEngine::Author.where(author_orcid: user_orcid).last
-
-          first_name, last_name =
-            if existing
-              [existing.author_first_name, existing.author_last_name]
-            else
-              [user.first_name, user.last_name]
-            end
-
-          StashEngine::Author.create(
-            resource_id: id,
-            author_orcid: user_orcid,
-            author_first_name: first_name,
-            author_last_name: last_name
-          )
-        end
-      end
-
       resource_class.instance_eval do
 
         # required relations
@@ -69,8 +47,6 @@ module StashDatacite
             include_association assoc
           end
         end
-
-        after_create :init_author_from_user
       end
     end
   end

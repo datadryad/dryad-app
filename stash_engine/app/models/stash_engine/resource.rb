@@ -47,6 +47,22 @@ module StashEngine
     end
     after_create :init_state_and_version
 
+    def init_author_from_user
+      return unless (user_orcid = user && user.orcid)
+
+      existing = StashEngine::Author.where(author_orcid: user_orcid).last
+
+      first_name, last_name =
+        if existing
+          [existing.author_first_name, existing.author_last_name]
+        else
+          [user.first_name, user.last_name]
+        end
+
+      StashEngine::Author.create(resource_id: id, author_orcid: user_orcid, author_first_name: first_name, author_last_name: last_name)
+    end
+    after_create :init_author_from_user
+
     # shouldn't be necessary but we have some stale data floating around
     def ensure_state_and_version
       return if stash_version && current_resource_state_id
