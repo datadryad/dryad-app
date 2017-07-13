@@ -18,7 +18,7 @@ module StashDatacite
     def self.associate_with_resource(resource_class)
       resource_class.class_eval do
         def init_author_from_user
-          return unless (user_orcid = user.orcid)
+          return unless (user_orcid = user && user.orcid)
 
           existing = StashEngine::Author.where(author_orcid: user_orcid).last
 
