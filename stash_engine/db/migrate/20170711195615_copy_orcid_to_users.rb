@@ -44,14 +44,12 @@ class CopyOrcidToUsers < ActiveRecord::Migration
            AND a.author_orcid IS NOT NULL
       ORDER BY user_id, author_orcid
     SQL
+    return if unmatched.empty?
 
-    unless unmatched.empty?
-      say 'WARNING: Possible ORCiDs were found for the following users, but could not be definitively assigned due to name mismatch:'
-      say(unmatched.columns.join("\t"), true)
-      unmatched.each do |row|
-        say(row.values.join("\t"), true)
-      end
+    say 'WARNING: Possible ORCiDs were found for the following users, but could not be definitively assigned due to name mismatch:'
+    say(unmatched.columns.join("\t"), true)
+    unmatched.each do |row|
+      say(row.values.join("\t"), true)
     end
-
   end
 end
