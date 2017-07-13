@@ -166,5 +166,19 @@ module StashEngine
         expect(Tenant.exists?('pustule')).to be false
       end
     end
+
+    describe :whitelist do
+      it 'checks whitelist is not case sensitive' do
+        tenant = Tenant.by_domain('example.edu')
+        expect(tenant.whitelist.include?('carnuba.wax@example.com')).to be true
+      end
+
+      it 'checks whitelist is correct' do
+        tenant = Tenant.by_domain('example.edu')
+        expect(tenant.whitelisted?('carNuBa.waX@eXample.com')).to be true
+        expect(tenant.whitelisted?('extra.crumbles@example.com')).to be true
+        expect(tenant.whitelisted?('noodles.the.cat@example.com')).to be false
+      end
+    end
   end
 end

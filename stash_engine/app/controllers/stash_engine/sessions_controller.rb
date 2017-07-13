@@ -5,13 +5,14 @@ module StashEngine
     skip_before_action :verify_authenticity_token, only: [:callback]
 
     # this is the place omniauth calls back when logging in
+    # rubocop:disable Metrics/AbcSize
     def callback
       @auth_hash = request.env['omniauth.auth']
       reset_session
       return head(:forbidden) unless auth_hash_good
 
       check_developer_login!
-
+      return unless passes_whitelist?
       session[:user_id] = User.from_omniauth(@auth_hash, current_tenant.tenant_id).id
       redirect_to dashboard_path
     end
@@ -50,6 +51,12 @@ module StashEngine
       return unless @auth_hash[:provider] == 'developer'
       session[:test_domain] = @auth_hash['info']['test_domain']
       @auth_hash[:uid] = mangle_uid_with_tenant(@auth_hash[:uid], current_tenant.tenant_id)
+    end
+
+    def passes_whitelist?
+      return true if current_tenant.whitelisted?(@auth_hash.info.email)
+      redirect_to root_path, flash: { alert: 'You were not authorized to log in' } unless current_tenant.whitelisted?(@auth_hash.info.email)
+      false
     end
   end
 end
