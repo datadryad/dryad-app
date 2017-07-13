@@ -23,7 +23,10 @@ module StashEngine
     helper_method :resource_id
 
     def show
-      render 'not_available' && return unless id && resource
+      unless id && resource
+        render 'not_available'
+        return
+      end
       resource.increment_views
       ensure_has_geolocation!
     end
