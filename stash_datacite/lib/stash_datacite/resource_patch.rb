@@ -39,26 +39,30 @@ module StashDatacite
       end
 
       resource_class.instance_eval do
-        has_many :descriptions, class_name: 'StashDatacite::Description', dependent: :destroy # optional
-        has_many :contributors, class_name: 'StashDatacite::Contributor', dependent: :destroy # optional
-        has_many :datacite_dates, class_name: 'StashDatacite::DataciteDate', dependent: :destroy # optional
-        has_many :descriptions, class_name: 'StashDatacite::Description', dependent: :destroy # optional
-        has_many :geolocations, class_name: 'StashDatacite::Geolocation', dependent: :destroy
-        has_many :publication_years, class_name: 'StashDatacite::PublicationYear', dependent: :destroy # required
-        has_one :publisher, class_name: 'StashDatacite::Publisher', dependent: :destroy # required
-        has_many :related_identifiers, class_name: 'StashDatacite::RelatedIdentifier', dependent: :destroy # optional
-        has_one :resource_type, class_name: 'StashDatacite::ResourceType', dependent: :destroy # optional
-        has_many :rights, class_name: 'StashDatacite::Right', dependent: :destroy # optional
-        has_many :sizes, class_name: 'StashDatacite::Size', dependent: :destroy # optional
-        has_and_belongs_to_many :subjects, class_name: 'StashDatacite::Subject', through: 'StashDatacite::ResourceSubject', dependent: :destroy # optional
-        has_one :language, class_name: 'StashDatacite::Language', dependent: :destroy # required
-        has_many :alternate_identifiers, class_name: 'StashDatacite::AlternateIdentifier', dependent: :destroy # optional
-        has_many :formats, class_name: 'StashDatacite::Format', dependent: :destroy # optional
-        has_one :version, class_name: 'StashDatacite::Version', dependent: :destroy # optional
 
-        # this enables deep copying of the resource
+        # required relations
+        has_many :publication_years, class_name: 'StashDatacite::PublicationYear', dependent: :destroy
+        has_one :publisher, class_name: 'StashDatacite::Publisher', dependent: :destroy
+        has_one :language, class_name: 'StashDatacite::Language', dependent: :destroy
+
+        # optional relations
+        has_many :descriptions, class_name: 'StashDatacite::Description', dependent: :destroy
+        has_many :contributors, class_name: 'StashDatacite::Contributor', dependent: :destroy
+        has_many :datacite_dates, class_name: 'StashDatacite::DataciteDate', dependent: :destroy
+        has_many :descriptions, class_name: 'StashDatacite::Description', dependent: :destroy
+        has_many :geolocations, class_name: 'StashDatacite::Geolocation', dependent: :destroy
+        has_many :related_identifiers, class_name: 'StashDatacite::RelatedIdentifier', dependent: :destroy
+        has_one :resource_type, class_name: 'StashDatacite::ResourceType', dependent: :destroy
+        has_many :rights, class_name: 'StashDatacite::Right', dependent: :destroy
+        has_many :sizes, class_name: 'StashDatacite::Size', dependent: :destroy
+        has_and_belongs_to_many :subjects, class_name: 'StashDatacite::Subject', through: 'StashDatacite::ResourceSubject', dependent: :destroy
+        has_many :alternate_identifiers, class_name: 'StashDatacite::AlternateIdentifier', dependent: :destroy
+        has_many :formats, class_name: 'StashDatacite::Format', dependent: :destroy
+        has_one :version, class_name: 'StashDatacite::Version', dependent: :destroy
+
         amoeba do
           # can't just pass the array to include_association() or it clobbers the ones defined in stash_engine
+          # see https://github.com/amoeba-rb/amoeba/issues/76
           %i[contributors datacite_dates descriptions geolocations
              publication_years publisher related_identifiers resource_type rights sizes
              subjects].each do |assoc|
