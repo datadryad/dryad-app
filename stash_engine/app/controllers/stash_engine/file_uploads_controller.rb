@@ -135,7 +135,7 @@ module StashEngine
 
     def require_file_owner
       return if current_user.id == @file.resource.user_id
-      redirect_to tenants_path && return
+      redirect_to tenants_path
     end
 
     def set_create_prerequisites

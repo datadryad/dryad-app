@@ -7,32 +7,40 @@ module StashEngine
     # - pdf_meta
     include StashEngine.app.metadata_engine.constantize::LandingMixin
 
+    before_action :require_identifier, except: [:update]
+    before_action :require_submitted_resource, except: [:update]
+    protect_from_forgery(except: [:update])
+
+    # ############################################################
+    # Helper methods
+
     def id
       @id ||= identifier_from(params)
     end
+
     helper_method :id
 
     def resource
       @resource ||= id.last_submitted_resource
     end
+
     helper_method :resource
 
     def resource_id
       resource.id
     end
+
     helper_method :resource_id
 
+    # ############################################################
+    # Actions
+
     def show
-      unless id && resource
-        render 'not_available'
-        return
-      end
       resource.increment_views
       ensure_has_geolocation!
     end
 
     def data_paper
-      render 'not_available' && return unless id
       ensure_has_geolocation!
 
       # lots of problems getting all styles and javascript to load with wicked pdf
@@ -46,26 +54,34 @@ module StashEngine
       end
     end
 
-    protect_from_forgery(except: [:update])
     # PATCH /dataset/doi:10.xyz/abc
-    def update # rubocop:disable Metrics/MethodLength
-      params.require(:record_identifier)
+    def update
+      return render(nothing: true, status: 404) unless id
 
-      identifier = identifier_from(params)
-      render(nothing: true, status: 404) && return unless identifier
+      record_identifier = params[:record_identifier]
+      return render(nothing: true, status: 400) unless record_identifier
 
-      repo = StashEngine.repository
-      begin
-        repo.harvested(identifier: identifier, record_identifier: params[:record_identifier])
-        # success but no content, see RFC 5789 sec. 2.1
-        render(nothing: true, status: 204)
-      rescue ArgumentError => e
-        logger.debug(e)
-        render(nothing: true, status: 422) # 422 Unprocessable Entity, see RFC 5789 sec. 2.2
-      end
+      StashEngine.repository.harvested(identifier: id, record_identifier: record_identifier)
+
+      # success but no content, see RFC 5789 sec. 2.1
+      render(nothing: true, status: 204)
+    rescue ArgumentError => e
+      logger.debug(e)
+      render(nothing: true, status: 422) # 422 Unprocessable Entity, see RFC 5789 sec. 2.2
     end
 
+    # ############################################################
+    # Private
+
     private
+
+    def require_identifier
+      render('not_available', status: 404) unless id
+    end
+
+    def require_submitted_resource
+      render('not_available', status: 404) unless resource
+    end
 
     def ensure_has_geolocation!
       old_value = resource.has_geolocation
