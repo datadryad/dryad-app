@@ -9,12 +9,11 @@ This site is targeted for use by members of the University of California and Dat
 - [UC Riverside](https://dash.ucr.edu/)
 - [UC Santa Cruz](https://dash.library.ucsc.edu/)
 - [UC San Francisco](https://datashare.ucsf.edu/)
-- UC Davis College of Engineering (https://dash.ucdavis.edu)
 - DataONE ONEShare (https://oneshare.cdlib.org/)
 
 ## What type of data is within scope?
 
-All fields of scholarship. All types of research data. However, this service is
+All types of research data. However, this service is
 intended for complete, re-usable, open research datasets and all content must not violate
 privacy or copyright, or breach confidentiality or nondisclosure for data
 collected from human subjects.
