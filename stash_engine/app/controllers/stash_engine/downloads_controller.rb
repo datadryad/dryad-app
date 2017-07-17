@@ -140,8 +140,9 @@ module StashEngine
       domain, local_id = resource.merritt_protodomain_and_local_id
       url = "#{domain}/lostorage"
 
+      version = resource.stash_version.merritt_version
       body = {  'object' => local_id,
-                'version' => resource.stash_version.merritt_version,
+                'version' => version,
                 'user_agent_email' => email,
                 'uDownload' => 'true',
                 'commit' => 'Submit' }
@@ -162,7 +163,9 @@ module StashEngine
       location = res.http_header['Location']
       return if location && location.first.include?("#{domain}/m/#{local_id}")
 
-      raise 'Invalid response from Merritt'
+      query_string = HTTP::Message.create_query_part_str(body)
+      details = location ? "redirected to bad location #{location}" : 'failed to redirect'
+      raise_merritt_error("Merritt async form post with body #{query_string}", details, resource.id, url)
     end
 
     def merritt_async_download?(resource:)
@@ -175,7 +178,7 @@ module StashEngine
       return true if status == 200 # async download OK
       return false if status == 406 # 406 Not Acceptable means only synchronous download allowed
 
-      raise StashEngine::MerrittResponseError, "Unknown status code #{status} checking for async download #{url}"
+      raise_merritt_error('Merritt async download check', "unexpected status #{status}", resource.id, url)
     end
 
     def api_async_download(resource:, email:)
@@ -186,9 +189,11 @@ module StashEngine
       params = { user_agent_email: email, userFriendly: true }
 
       res = http_client_w_basic_auth(tenant).get(url, query: params, follow_redirect: true)
-      return if res.status_code == 200
+      status = res.status_code
+      return if status == 200
 
-      raise 'There was a problem making an async download request to Merritt'
+      query_string = HTTP::Message.create_query_part_str(params)
+      raise_merritt_error('Merritt async download request', "unexpected status #{status}", resource.id, "#{url}?#{query_string}")
     end
 
     # encapsulates all the settings to make basic auth with a get request work correctly for Merritt
@@ -237,5 +242,8 @@ module StashEngine
       "inline; filename=\"#{File.basename(URI.parse(url).path)}.zip\""
     end
 
+    def raise_merritt_error(operation, details, resource_id, uri)
+      raise StashEngine::MerrittResponseError, "#{operation}: #{details} for resource ID #{resource_id}, URL #{uri}"
+    end
   end
 end
