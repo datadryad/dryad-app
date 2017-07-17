@@ -2,7 +2,7 @@
 We have some general reminders and suggestions for publishing your data with Dash:
 
 - We accept all file formats, although it is good practice to share data using open formats. See the [UK Data Archive](http://www.data-archive.ac.uk/create-manage/format/formats-table) for a list of optimal file formats
-- Any data submitted will be under the [CC-BY 4.0](https://creativecommons.org/licenses/by/4.0/). We do not currently support any other license types, nor do we allow for restrictions on data access or use
+- Any data submitted will be under the [CC-BY 4.0](https://creativecommons.org/licenses/by/4.0/) or CC0 license. We do not currently support any other license types, nor do we allow for restrictions on data access or use
 - It is your responsibility to ensure your data are being shared responsibly and ethically. Please be careful of sharing sensitive data and ensure you are complying with institutional and governmental regulations
 - When preparing your complete version of a dataset, remember to collate all relevant explantory documents and metadata. This includes relevant documentation necessary for the re-use and replication of your dataset (e.g., readme.txt files, formal metadata records, or other critical information, etc.)
 
