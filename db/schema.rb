@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170707170420) do
+ActiveRecord::Schema.define(version: 20170718230450) do
 
   create_table "bookmarks", force: :cascade do |t|
     t.integer  "user_id",       limit: 4,   null: false
@@ -277,6 +277,15 @@ ActiveRecord::Schema.define(version: 20170707170420) do
   add_index "stash_engine_authors", ["author_orcid"], name: "index_stash_engine_authors_on_author_orcid", length: {"author_orcid"=>20}, using: :btree
   add_index "stash_engine_authors", ["resource_id"], name: "index_stash_engine_authors_on_resource_id", using: :btree
 
+  create_table "stash_engine_edit_histories", force: :cascade do |t|
+    t.integer  "resource_id",  limit: 4
+    t.text     "user_comment", limit: 65535
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
+  end
+
+  add_index "stash_engine_edit_histories", ["resource_id"], name: "index_stash_engine_edit_histories_on_resource_id", using: :btree
+
   create_table "stash_engine_embargoes", force: :cascade do |t|
     t.datetime "end_date"
     t.integer  "resource_id", limit: 4
@@ -344,8 +353,10 @@ ActiveRecord::Schema.define(version: 20170707170420) do
     t.integer  "identifier_id",             limit: 4
     t.text     "update_uri",                limit: 65535
     t.text     "title",                     limit: 65535
+    t.integer  "current_editor_id",         limit: 4
   end
 
+  add_index "stash_engine_resources", ["current_editor_id"], name: "index_stash_engine_resources_on_current_editor_id", using: :btree
   add_index "stash_engine_resources", ["identifier_id"], name: "index_stash_engine_resources_on_identifier_id", using: :btree
 
   create_table "stash_engine_shares", force: :cascade do |t|
@@ -377,9 +388,9 @@ ActiveRecord::Schema.define(version: 20170707170420) do
     t.datetime "created_at",                                 null: false
     t.datetime "updated_at",                                 null: false
     t.text     "tenant_id",   limit: 65535
-    t.boolean  "orcid",                     default: false
     t.datetime "last_login"
     t.string   "role",        limit: 9,     default: "user"
+    t.string   "orcid",       limit: 255
   end
 
   add_index "stash_engine_users", ["email"], name: "index_stash_engine_users_on_email", length: {"email"=>50}, using: :btree
