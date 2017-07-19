@@ -26,8 +26,7 @@ module StashEngine
       if in_progress_resource
         redirect_to(metadata_entry_pages_find_or_create_path(resource_id: in_progress_resource.id)) && return
       end
-      @new_res = @resource.amoeba_dup
-      @new_res.save!
+      duplicate_resource
 
       # redirect to find or create path
       redirect_to metadata_entry_pages_find_or_create_path(resource_id: @new_res.id)
@@ -50,6 +49,12 @@ module StashEngine
     def resource_exist
       resource = Resource.find(params[:resource_id])
       redirect_to root_path, notice: 'The dataset you are looking for does not exist.' if resource.nil?
+    end
+
+    def duplicate_resource
+      @new_res = @resource.amoeba_dup
+      @new_res.current_editor_id = current_user.id
+      @new_res.save!
     end
 
     def require_resource_owner

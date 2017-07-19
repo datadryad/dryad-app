@@ -62,6 +62,7 @@ module StashDatacite
     # TODO: move this to StashEngine
     def submission
       resource_id = params[:resource_id]
+      StashEngine::EditHistory.create(resource_id: resource_id, user_comment: nil) # TODO: update with user comment once it's available in form
       StashEngine.repository.submit(resource_id: resource_id)
 
       # TODO: hard-code StashEngine::Resource everywhere instead of StashEngine::Resource
