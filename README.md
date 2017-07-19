@@ -46,6 +46,13 @@ At the same level as the `dashv2` directory:
   ./symlink_config.sh
   ```
 
+#### Running integration/feature tests locally
+
+In the `dashv2` directory:
+
+- run `travis-prep.sh`
+- run `bundle exec rake`
+
 #### Capistrano deployment
 
 To deploy the latest (committed) code from GitHub:
