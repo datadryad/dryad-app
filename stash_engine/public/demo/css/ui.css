@@ -3422,6 +3422,7 @@ html.no-details .o-showhide__summary {
   text-align: center; }
   @media (min-width: 870px) {
     .o-sites__login {
+      margin-left: 1em;
       padding: 0;
       background-color: transparent;
       color: #005581;
@@ -3974,8 +3975,8 @@ html.no-details .o-showhide__summary {
       color: black; }
       .c-header__nav-item:hover, .c-header__nav-item--active:hover, .c-header__nav-item:focus, .c-header__nav-item--active:focus {
         color: #4891af; }
-      .c-header__nav-item:not(:first-of-type), .c-header__nav-item--active:not(:first-of-type) {
-        border-left: 1px dotted #e65722; } }
+      .c-header__nav-item:not(:last-of-type), .c-header__nav-item--active:not(:last-of-type) {
+        border-right: 1px dotted #e65722; } }
 
 .c-header__nav-item--active {
   color: black; }

@@ -56,10 +56,9 @@
         <%= link_to 'Help', stash_url_helpers.help_path, class: 'c-header__nav-item' %>
         <% if current_user %>
           <%= link_to 'My Datasets', stash_url_helpers.dashboard_path, class: 'c-header__nav-item' %>
-          <%= render partial: "stash_engine/shared/logout" %>
-        <% else %>
-          <%= render partial: "stash_engine/shared/sites" %>
         <% end %>
+        <%= render partial: 'stash_engine/shared/log_in_out' %>
+        <%= render partial: "stash_engine/shared/sites" %>
       </div>
     </nav>
   </header>
