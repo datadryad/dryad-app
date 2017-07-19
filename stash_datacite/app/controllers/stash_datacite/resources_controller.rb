@@ -8,7 +8,7 @@ module StashDatacite
     include StashEngine::ApplicationHelper
     include ActionView::Helpers::NumberHelper
 
-    before_action :ajax_require_current_user, only: [:user_in_progress]
+    before_action :ajax_require_current_user, only: %i[user_in_progress user_submitted]
     before_action :set_page_info
     # get resources and composite information for in-progress table view
 
