@@ -1,7 +1,7 @@
 <%# locals: presenters (array of StashDatacite::ResourcesController::DatasetPresenter) %>
 <table class="c-lined-table">
   <tr class="c-lined-table__head">
-    <th class="<%= sort_display('title', @sort_column) %>">
+    <th class="<%= sort_display('title', @sort_column) %>" colspan="2">
       <%= sort_by 'title', title: 'Dataset Title', current_column: @sort_column %>
     </th>
     <th class="<%= sort_display('embargo_status', @sort_column) %>">
@@ -16,12 +16,36 @@
     <th class="<%= sort_display('updated_at', @sort_column) %>">
       <%= sort_by 'updated_at', title: 'Last Modified', current_column: @sort_column %>
     </th>
+    <th class="<%= sort_display('edited_by_name', @sort_column) %>" colspan="2">
+      <%= sort_by 'edited_by_name', title: 'Edited By', current_column: @sort_column %>
+    </th>
   </tr>
+
+  <style>
+    .name{
+      display: inline-block;
+      float:  left;
+      vertical-align: middle;
+    }
+    .number{
+      width: 30px;
+      display: inline-block;
+      text-align: right;
+      float: right;
+    }
+  </style>
 
   <% presenters.each do |p| %>
     <tr class="c-lined-table__row">
-      <td>
-        <span title="<%= p.title %>"><%= truncate(p.title) %></span>
+      <td class="c-admin-hide-border-right">
+        <span class="name" title="<%= p.title %>"><%= truncate(p.title) %></span>
+      </td>
+      <td class="c-admin-hide-border-left">
+        <% if p.resource.submitted? %>
+          <span class="number">
+            <button class="c-admin-edit-icon" title="Edit Dataset"><i class="fa fa-pencil" aria-hidden="true"></i></button>
+          </span>
+        <% end %>
       </td>
       <td>
         <%= p.embargo_status.gsub('_', ' ') %>
@@ -36,6 +60,13 @@
       </td>
       <td>
         <%= default_date(p.updated_at) %>
+      </td>
+      <td class="c-admin-hide-border-right">
+        <%= p.edited_by_name %>
+        <% if p.edited_by_id != p.user_id %>(Admin)<% end %>
+      </td>
+      <td class="c-admin-hide-border-left">
+        <button class="c-admin-edit-icon" title="See History"><i class="fa fa-history" aria-hidden="true"></i></button>
       </td>
     </tr>
   <% end %>
