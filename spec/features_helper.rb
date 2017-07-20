@@ -3,6 +3,8 @@ require 'solr_helper'
 require 'capybara/dsl'
 require 'capybara/rails'
 require 'capybara/rspec'
+require 'uri'
+require 'cgi'
 
 # ------------------------------------------------------------
 # Capybara
@@ -62,9 +64,31 @@ end
 # ------------------------------------------------------------
 # Misc. helper methods
 
+def find_blank_field_id(name_or_id)
+  field = find_field(name_or_id)
+  expect(field.value).to be_blank
+  field[:id]
+end
+
 def home_page_title
   @home_page_title ||= begin
     home_html_erb = File.read("#{STASH_ENGINE_PATH}/app/views/stash_engine/pages/home.html.erb")
     home_html_erb[/page_title = '([^']+)'/, 1]
+  end
+end
+
+def current_query_parameters
+  query_string = current_url && URI(current_url).query
+  query_string && CGI.parse(query_string)
+end
+
+def current_resource_id
+  current_query_parameters['resource_id']
+end
+
+# From https://robots.thoughtbot.com/automatically-wait-for-ajax-with-capybara
+def wait_for_ajax!
+  Timeout.timeout(Capybara.default_max_wait_time) do
+    loop until page.evaluate_script('jQuery.active').zero?
   end
 end
