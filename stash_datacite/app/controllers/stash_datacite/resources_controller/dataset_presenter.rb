@@ -73,7 +73,7 @@ module StashDatacite
 
       def edited_by_name
         users = StashEngine::User.where(id: edited_by_id)
-        return '' if users.length < 1 || (users.first.first_name.blank? && users.first.last_name.blank?)
+        return '' if users.empty? || (users.first.first_name.blank? && users.first.last_name.blank?)
         "#{users.first.first_name} #{users.first.last_name}"
       end
 
