@@ -82,7 +82,7 @@ module StashDatacite
           pt_params[:latitude],
           pt_params[:longitude]
         ],
-        resource_id: pt_params[:resource_id]
+        resource_id: params[:resource_id]
       )
     end
 
