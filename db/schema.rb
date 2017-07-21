@@ -11,10 +11,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170718230450) do
+ActiveRecord::Schema.define(version: 20170721000032) do
 
   create_table "bookmarks", force: :cascade do |t|
-    t.integer  "user_id",       limit: 4,   null: false
+    t.integer  "user_id",       liqmit: 4,   null: false
     t.string   "user_type",     limit: 255
     t.string   "document_id",   limit: 255
     t.string   "title",         limit: 255
@@ -354,6 +354,7 @@ ActiveRecord::Schema.define(version: 20170718230450) do
     t.text     "update_uri",                limit: 65535
     t.text     "title",                     limit: 65535
     t.integer  "current_editor_id",         limit: 4
+    t.datetime "publication_date"
   end
 
   add_index "stash_engine_resources", ["current_editor_id"], name: "index_stash_engine_resources_on_current_editor_id", using: :btree
