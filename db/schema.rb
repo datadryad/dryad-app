@@ -14,7 +14,7 @@
 ActiveRecord::Schema.define(version: 20170721000032) do
 
   create_table "bookmarks", force: :cascade do |t|
-    t.integer  "user_id",       liqmit: 4,   null: false
+    t.integer  "user_id",       limit: 4,   null: false
     t.string   "user_type",     limit: 255
     t.string   "document_id",   limit: 255
     t.string   "title",         limit: 255
