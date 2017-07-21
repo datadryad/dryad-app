@@ -62,12 +62,46 @@ RSpec.configure do |config|
 end
 
 # ------------------------------------------------------------
-# Misc. helper methods
+# Capybara helpers
+
+def find_field_id(name_or_id)
+  field = find_field(name_or_id)
+  field[:id]
+end
 
 def find_blank_field_id(name_or_id)
   field = find_field(name_or_id)
   expect(field.value).to be_blank
   field[:id]
+end
+
+def current_query_parameters
+  query_string = current_url && URI(current_url).query
+  query_string && CGI.parse(query_string)
+end
+
+# From https://robots.thoughtbot.com/automatically-wait-for-ajax-with-capybara
+def wait_for_ajax!
+  Timeout.timeout(Capybara.default_max_wait_time) do
+    loop until page.evaluate_script('jQuery.active').zero?
+  end
+end
+
+# ------------------------------------------------------------
+# Application state helpers
+
+def current_resource_id
+  query_params = current_query_parameters
+  resource_id_param = query_params && query_params['resource_id']
+  return resource_id_param if resource_id_param
+
+  match_data = current_url.match(%r{/resources/([0-9]+)/})
+  match_data && match_data[1]
+end
+
+def current_resource
+  resource_id = current_resource_id
+  resource_id && StashEngine::Resource.find(resource_id)
 end
 
 def home_page_title
@@ -77,18 +111,41 @@ def home_page_title
   end
 end
 
-def current_query_parameters
-  query_string = current_url && URI(current_url).query
-  query_string && CGI.parse(query_string)
-end
+# ------------------------------------------------------------
+# Metadata helpers
 
-def current_resource_id
-  current_query_parameters['resource_id']
-end
+def fill_required_fields! # rubocop:disable Metrics/AbcSize
+  # make sure we're on the right page
+  expect(page).to have_content('Describe Your Dataset')
 
-# From https://robots.thoughtbot.com/automatically-wait-for-ajax-with-capybara
-def wait_for_ajax!
-  Timeout.timeout(Capybara.default_max_wait_time) do
-    loop until page.evaluate_script('jQuery.active').zero?
-  end
+  # ##############################
+  # Title
+
+  title = find_blank_field_id('title')
+  fill_in title, with: 'Of a peculiar Lead-Ore of Germany, and the Use thereof'
+
+  # ##############################
+  # Author
+
+  author_first_name = find_blank_field_id('author[author_first_name]')
+  fill_in author_first_name, with: 'Robert'
+  author_last_name = find_blank_field_id('author[author_last_name]')
+  fill_in author_last_name, with: 'Boyle'
+  author_affiliation = find_blank_field_id('affiliation') # TODO: make consistent with other author fields
+  fill_in author_affiliation, with: 'Hogwarts'
+  author_email = find_blank_field_id('author[author_email]')
+  fill_in author_email, with: 'boyle@hogwarts.edu'
+
+  # TODO: additional author(s)
+
+  # ##############################
+  # Abstract
+
+  abstract = find_blank_field_id('description_abstract')
+  fill_in abstract, with: <<-ABSTRACT
+        There was, not long since, sent hither out of Germany from
+        an inquisitive Physician, a List of several Minerals and Earths
+        of that Country, and of Hungary, together with a Specimen of each
+        of them.
+  ABSTRACT
 end

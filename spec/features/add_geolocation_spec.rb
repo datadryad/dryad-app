@@ -2,8 +2,6 @@ require 'features_helper'
 
 describe 'add geolocation' do
 
-  attr_reader :start_new_dataset
-
   before(:each) do
     visit('/')
     first(:link_or_button, 'Login').click
