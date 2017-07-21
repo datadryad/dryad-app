@@ -13,9 +13,6 @@
     <th class="<%= sort_display('created_at', @sort_column) %>">
       <%= sort_by 'created_at', title: 'Created', current_column: @sort_column %>
     </th>
-    <th class="<%= sort_display('updated_at', @sort_column) %>">
-      <%= sort_by 'updated_at', title: 'Last Modified', current_column: @sort_column %>
-    </th>
     <th class="<%= sort_display('edited_by_name', @sort_column) %>" colspan="2">
       <%= sort_by 'edited_by_name', title: 'Edited By', current_column: @sort_column %>
     </th>
@@ -32,7 +29,7 @@
         <% end %>
       </td>
       <td>
-        <%= p.embargo_status.gsub('_', ' ') %>
+        <%= p.embargo_status_pretty %>
       </td>
       <td>
         <% if p.resource.submitted? %>
@@ -41,9 +38,6 @@
       </td>
       <td>
         <%= default_date(p.created_at) %>
-      </td>
-      <td>
-        <%= default_date(p.updated_at) %>
       </td>
       <td class="c-admin-hide-border-right">
         <%= p.edited_by_name_w_role %>

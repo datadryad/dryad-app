@@ -81,9 +81,8 @@ module StashEngine
       status = SortableTable::SortColumnDefinition.new('embargo_status')
       pub_date = SortableTable::SortColumnDefinition.new('publication_date')
       created_at = SortableTable::SortColumnDefinition.new('created_at')
-      updated_at = SortableTable::SortColumnDefinition.new('updated_at')
       edited_by = SortableTable::SortColumnDefinition.new('edited_by_name')
-      sort_table = SortableTable::SortTable.new([title, status, pub_date, created_at, updated_at, edited_by])
+      sort_table = SortableTable::SortTable.new([title, status, pub_date, created_at, edited_by])
       sort_table.sort_column(params[:sort], params[:direction])
     end
 
@@ -95,18 +94,8 @@ module StashEngine
 
     def sort_and_paginate_datasets
       @sort_column = dataset_sort_column
-      manual_sort!(@presenters)
+      manual_sort!(@presenters, @sort_column)
       @page_presenters = Kaminari.paginate_array(@presenters).page(@page).per(@page_size)
-    end
-
-    # the @sort_column should be set and sorts manually by the method and asc/desc
-    def manual_sort!(array)
-      c = @sort_column.column
-      if @sort_column && @sort_column.direction == 'desc'
-        array.sort! { |x, y| y.send(c) <=> x.send(c) }
-      else
-        array.sort! { |x, y| x.send(c) <=> y.send(c) }
-      end
     end
 
     def setup_stats

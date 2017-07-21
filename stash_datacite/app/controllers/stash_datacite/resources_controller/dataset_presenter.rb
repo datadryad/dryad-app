@@ -61,6 +61,10 @@ module StashDatacite
         resource.current_state
       end
 
+      def embargo_status_pretty
+        embargo_status.tr('_', ' ')
+      end
+
       def publication_date
         @resource.notional_publication_date
       end
@@ -82,14 +86,18 @@ module StashDatacite
       end
 
       def version
-        return 1 if @resource.version.nil?
-        @resource.version.version
+        return 1 if @resource.stash_version.nil?
+        @resource.stash_version.version
       end
 
       # edit history comment, only one per resource (v) right now, but may have more history per version if/when we expand event we track
       def comment
         return '' if @resource.edit_histories.empty?
-        @resource.edit_histories.first.user_comment
+        @resource.edit_histories.first.user_comment.to_s
+      end
+
+      def resource_created_at
+        @resource.created_at
       end
 
       def created_at

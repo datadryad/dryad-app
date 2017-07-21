@@ -17,7 +17,7 @@
     <%= line.file_count %>
   </td>
   <td>
-    <%= line.embargo_status %>
+    <%= line.embargo_status_pretty %>
   </td>
   <td>
     <% if %w(private published).include?(line.embargo_status) %>

@@ -15,7 +15,7 @@
     <%= line.file_count %>
   </td>
   <td>
-    <%= line.embargo_status.gsub('_', ' ') %>
+    <%= line.embargo_status_pretty %>
   </td>
   <td>
     <%= default_date(line.created_at) %>

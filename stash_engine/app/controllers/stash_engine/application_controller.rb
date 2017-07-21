@@ -18,6 +18,16 @@ module StashEngine
       redirect_to(redirect_url_for(request.original_url, host, port))
     end
 
+    # the sort_column should be set by sortable_table gem and sorts manually by sort column object from sortable_table
+    def manual_sort!(array, sort_column)
+      c = sort_column.column
+      if sort_column && sort_column.direction == 'desc'
+        array.sort! { |x, y| y.send(c) <=> x.send(c) }
+      else
+        array.sort! { |x, y| x.send(c) <=> y.send(c) }
+      end
+    end
+
     private
 
     def host_and_port_match?(request, host, port)
