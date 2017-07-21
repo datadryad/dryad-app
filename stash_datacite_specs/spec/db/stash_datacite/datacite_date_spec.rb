@@ -35,5 +35,39 @@ module StashDatacite
         end
       end
     end
+
+    describe 'set_date_available' do
+
+      it 'does nothing if the resource has no publication date' do
+        date_available = DataciteDate.set_date_available(resource_id: resource.id)
+        expect(date_available).to be_nil
+        expect(resource.datacite_dates).to be_empty
+      end
+
+      it 'creates an "available" date based on the publication date' do
+        pub_date = resource.update_publication_date!
+        resource.save
+
+        date_available = DataciteDate.set_date_available(resource_id: resource.id)
+        expect(resource.datacite_dates.first).to eq(date_available)
+        expect(date_available.date).to eq(pub_date.iso8601)
+        expect(date_available.date_type).to eq('available')
+      end
+
+      it 'updates an existing "available" date when the publication date changes' do
+        resource.update_publication_date!
+        resource.save
+        date_available = DataciteDate.set_date_available(resource_id: resource.id)
+
+        new_date = Time.utc(2017, 8, 14)
+        resource.publication_date = new_date
+        resource.save
+
+        DataciteDate.set_date_available(resource_id: resource.id)
+
+        date_available.reload
+        expect(date_available.date).to eq(new_date.iso8601)
+      end
+    end
   end
 end

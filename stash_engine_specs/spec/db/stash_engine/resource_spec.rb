@@ -63,10 +63,17 @@ module StashEngine
       end
     end
 
-    describe :publication_date do
+    describe :notional_publication_date do
       it 'defaults to updated_at' do
         resource = Resource.create(user_id: user.id)
-        expect(resource.publication_date).to eq(resource.updated_at)
+        expect(resource.notional_publication_date).to eq(resource.updated_at)
+      end
+
+      it 'returns the real publication date, if any' do
+        resource = Resource.create(user_id: user.id)
+        pub_date = Date.new(2015, 5, 18)
+        resource.publication_date = pub_date
+        expect(resource.notional_publication_date).to eq(resource.publication_date)
       end
 
       it 'returns the embargo end date if present' do
@@ -74,7 +81,53 @@ module StashEngine
         resource = Resource.create(user_id: user.id)
         StashEngine::Embargo.create(resource_id: resource.id, end_date: end_date)
         resource.reload
+        expect(resource.notional_publication_date).to eq(end_date)
+      end
+    end
+
+    describe :publication_date do
+      it 'defaults to nil' do
+        resource = Resource.create(user_id: user.id)
+        expect(resource.publication_date).to be_nil
+      end
+
+      it 'is copied by amoeba duplication' do
+        pub_date = Time.new(2015, 5, 18, 13, 25, 30)
+        r1 = Resource.create(user_id: user.id, publication_date: pub_date)
+        r2 = r1.amoeba_dup
+        expect(r2.publication_date).to eq(pub_date)
+      end
+    end
+
+    describe :update_publication_date! do
+      it 'sets the publication date based on the embargo end date' do
+        end_date = Date.new(2015, 5, 18)
+        resource = Resource.create(user_id: user.id)
+        StashEngine::Embargo.create(resource_id: resource.id, end_date: end_date)
+        resource.reload
+
+        expect(resource.publication_date).to be_nil # just to be sure
+        resource.update_publication_date!
         expect(resource.publication_date).to eq(end_date)
+      end
+
+      it 'overrides an existing publication date with a new embargo end date' do
+        old_pub_date = Date.new(2015, 5, 18)
+        resource = Resource.create(user_id: user.id, publication_date: old_pub_date)
+
+        end_date = Date.new(2018, 5, 18)
+        StashEngine::Embargo.create(resource_id: resource.id, end_date: end_date)
+        resource.reload
+        expect(resource.publication_date).to eq(old_pub_date) # just to be sure
+
+        resource.update_publication_date!
+        expect(resource.publication_date).to eq(end_date)
+      end
+
+      it 'falls back to the date updated' do
+        resource = Resource.create(user_id: user.id)
+        resource.update_publication_date!
+        expect(resource.publication_date).to eq(resource.updated_at)
       end
     end
 

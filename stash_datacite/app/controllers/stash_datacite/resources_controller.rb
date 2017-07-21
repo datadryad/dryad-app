@@ -59,14 +59,22 @@ module StashDatacite
       end
     end
 
-    # TODO: move this to StashEngine
+    # TODO: move code to StashEngine::Resource?
     def submission
       resource_id = params[:resource_id]
+      resource = StashEngine::Resource.find(resource_id)
+
+      # TODO: put this somewhere more reliable
+      resource.update_publication_date!
+      resource.save
+
+      # TODO: put this somewhere more reliable
+      StashDatacite::DataciteDate.set_date_available(resource_id: resource_id)
+
       StashEngine::EditHistory.create(resource_id: resource_id, user_comment: nil) # TODO: update with user comment once it's available in form
       StashEngine.repository.submit(resource_id: resource_id)
 
-      # TODO: hard-code StashEngine::Resource everywhere instead of StashEngine::Resource
-      resource = StashEngine::Resource.find(resource_id)
+      resource.reload
 
       redirect_to(stash_url_helpers.dashboard_path, notice: resource_submitted_message(resource))
     end

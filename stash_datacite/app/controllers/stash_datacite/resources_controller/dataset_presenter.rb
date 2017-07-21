@@ -62,8 +62,7 @@ module StashDatacite
       end
 
       def publication_date
-        return @resource.publication_date if @resource.submitted?
-        Time.new(1970)
+        @resource.notional_publication_date
       end
 
       def edited_by_id

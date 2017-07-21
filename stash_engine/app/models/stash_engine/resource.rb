@@ -218,10 +218,6 @@ module StashEngine
       my_state.save
     end
 
-    def publication_date
-      (embargo && embargo.end_date) || updated_at
-    end
-
     def init_state
       self.current_resource_state_id = ResourceState.create(resource_id: id, resource_state: 'in_progress', user_id: user_id).id
     end
@@ -387,6 +383,23 @@ module StashEngine
       end_date = embargo && embargo.end_date
       return true unless end_date
       Time.now >= end_date
+    end
+
+    # -----------------------------------------------------------
+    # Dates
+
+    # What the publication date would be, if the resource was
+    # submitted right now. Use this when you don't know/care
+    # whether the resource has been submitted or not.
+    def notional_publication_date
+      embargo_end_date = embargo && embargo.end_date
+      existing_pub_date = publication_date
+      embargo_end_date || existing_pub_date || updated_at
+    end
+
+    # Called on submit
+    def update_publication_date!
+      self.publication_date = notional_publication_date
     end
   end
 end
