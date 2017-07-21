@@ -21,30 +21,14 @@
     </th>
   </tr>
 
-  <style>
-    .name{
-      display: inline-block;
-      float:  left;
-      vertical-align: middle;
-    }
-    .number{
-      width: 30px;
-      display: inline-block;
-      text-align: right;
-      float: right;
-    }
-  </style>
-
   <% presenters.each do |p| %>
     <tr class="c-lined-table__row">
       <td class="c-admin-hide-border-right">
-        <span class="name" title="<%= p.title %>"><%= truncate(p.title) %></span>
+        <span title="<%= p.title %>"><%= truncate(p.title) %></span>
       </td>
       <td class="c-admin-hide-border-left">
         <% if p.resource.submitted? %>
-          <span class="number">
-            <button class="c-admin-edit-icon" title="Edit Dataset"><i class="fa fa-pencil" aria-hidden="true"></i></button>
-          </span>
+          <button class="c-admin-edit-icon" title="Edit Dataset"><i class="fa fa-pencil" aria-hidden="true"></i></button>
         <% end %>
       </td>
       <td>
@@ -62,11 +46,13 @@
         <%= default_date(p.updated_at) %>
       </td>
       <td class="c-admin-hide-border-right">
-        <%= p.edited_by_name %>
-        <% if p.edited_by_id != p.user_id %>(Admin)<% end %>
+        <%= p.edited_by_name_w_role %>
       </td>
       <td class="c-admin-hide-border-left">
-        <button class="c-admin-edit-icon" title="See History"><i class="fa fa-history" aria-hidden="true"></i></button>
+        <%= form_tag(edit_histories_path, method: :get) do -%>
+          <%= hidden_field_tag :resource_id, p.resource.id %>
+          <button class="c-admin-edit-icon" title="See History"><i class="fa fa-history" aria-hidden="true"></i></button>
+        <% end %>
       </td>
     </tr>
   <% end %>

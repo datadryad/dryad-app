@@ -5,7 +5,7 @@ module StashEngine
 
     has_many :authors, class_name: 'StashEngine::Author', dependent: :destroy
     has_many :file_uploads, class_name: 'StashEngine::FileUpload', dependent: :destroy
-    has_many :edit_histories, class_name: 'StashEngine::EditHistories'
+    has_many :edit_histories, class_name: 'StashEngine::EditHistory'
     has_one :stash_version, class_name: 'StashEngine::Version'
     belongs_to :identifier, class_name: 'StashEngine::Identifier', foreign_key: 'identifier_id'
     has_one :resource_usage, class_name: 'StashEngine::ResourceUsage'
@@ -16,6 +16,7 @@ module StashEngine
             class_name: 'StashEngine::ResourceState',
             primary_key: 'current_resource_state_id',
             foreign_key: 'id'
+    has_one :editor, class_name: 'StashEngine::User', primary_key: 'current_editor_id', foreign_key: 'id'
 
     amoeba do
       include_association :authors

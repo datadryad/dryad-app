@@ -26,7 +26,7 @@ module StashEngine
     def formatted_datetime(t)
       return 'Not available' if t.blank?
       t = t.to_time if t.class == String
-      t.strftime('%m/%d/%Y %H:%M:%S')
+      t.in_time_zone('Pacific Time (US & Canada)').strftime('%m/%d/%Y %H:%M:%S')
     end
 
     def local_time(t)

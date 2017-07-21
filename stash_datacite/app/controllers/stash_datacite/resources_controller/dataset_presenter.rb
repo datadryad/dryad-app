@@ -72,9 +72,25 @@ module StashDatacite
       end
 
       def edited_by_name
-        users = StashEngine::User.where(id: edited_by_id)
-        return '' if users.empty? || (users.first.first_name.blank? && users.first.last_name.blank?)
-        "#{users.first.first_name} #{users.first.last_name}"
+        u = resource.editor
+        u = resource.user if u.nil?
+        "#{u.first_name} #{u.last_name}"
+      end
+
+      def edited_by_name_w_role
+        return edited_by_name if resource.current_editor_id.nil? || resource.user_id == resource.current_editor_id
+        "#{edited_by_name} (admin)"
+      end
+
+      def version
+        return 1 if @resource.version.nil?
+        @resource.version.version
+      end
+
+      # edit history comment, only one per resource (v) right now, but may have more history per version if/when we expand event we track
+      def comment
+        return '' if @resource.edit_histories.empty?
+        @resource.edit_histories.first.user_comment
       end
 
       def created_at

@@ -1,0 +1,4 @@
+<% @page_title = "Submission history for #{@resource.title}" %>
+<h1 class="o-heading__level1">Submission history for <%= @resource.title %></h1>
+
+<%= render partial: 'edits', locals: {presenters: @presenters} %>

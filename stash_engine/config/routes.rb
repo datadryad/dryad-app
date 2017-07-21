@@ -22,6 +22,8 @@ StashEngine::Engine.routes.draw do
       patch 'destroy_manifest' #destroy file from manifest method
     end
   end
+
+  resources :edit_histories, only: [:index]
   match 'file_uploads/validate_urls/:resource_id', to: 'file_uploads#validate_urls', as: 'file_uploads_validate_urls', via: [:get, :post, :put]
 
   resource :file_upload do  # TODO: this is wacky since it's using a resource id rather than a file id maybe this belongs in resource.
