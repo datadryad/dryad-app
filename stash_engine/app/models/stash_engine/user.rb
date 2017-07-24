@@ -11,6 +11,10 @@ module StashEngine
       end
     end
 
+    def name
+      "#{first_name} #{last_name}".strip
+    end
+
     def self.split_name(name)
       first = name.split(' ').first
       last = ''

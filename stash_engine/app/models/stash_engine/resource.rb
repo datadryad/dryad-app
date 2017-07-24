@@ -396,6 +396,12 @@ module StashEngine
       nil
     end
 
+    # calculated current editor name, ignores nils
+    def dataset_in_progress_editor
+      return user if dataset_in_progress_editor_id.nil?
+      User.where(id: dataset_in_progress_editor_id).first
+    end
+
     # -----------------------------------------------------------
     # Dates
 
