@@ -12,6 +12,8 @@ Gem::Specification.new do |s| # rubocop:disable Metrics/BlockLength
   s.description = 'Core Stash application functionality independent of repository, metadata schema, or customization'
   s.license     = 'MIT'
 
+  s.required_ruby_version = '~> 2.2'
+
   s.files         = `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(test|spec|features)/}) }
   s.bindir        = 'exe'
   s.executables   = s.files.grep(%r{^exe/}) { |f| File.basename(f) }

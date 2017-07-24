@@ -14,6 +14,8 @@ Gem::Specification.new do |s| # rubocop:disable Metrics/BlockLength
   s.description = 'GeoBlacklight-based discovery module for Stash'
   s.license     = 'MIT'
 
+  s.required_ruby_version = '~> 2.2'
+
   s.files = Dir['{app,config,db,lib}/**/*', 'MIT-LICENSE', 'Rakefile', 'README.rdoc']
   s.test_files = Dir['test/**/*']
 
