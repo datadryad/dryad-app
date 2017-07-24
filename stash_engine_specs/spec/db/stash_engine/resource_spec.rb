@@ -131,6 +131,27 @@ module StashEngine
       end
     end
 
+    describe :dataset_in_progress_editor_id do
+      it 'defaults to current_editor for no identifier' do
+        resource = Resource.create(user_id: user.id, current_editor_id: 1)
+        expect(resource.dataset_in_progress_editor_id).to eq(1)
+      end
+
+      it 'gives editor of in progress version' do
+        identifier = Identifier.create(identifier: 'cat/dog', identifier_type: 'DOI')
+        resource1 = Resource.create(user_id: user.id, identifier_id: identifier.id, current_editor_id: 1)
+        resource2 = Resource.create(user_id: user.id, identifier_id: identifier.id, current_editor_id: 2)
+        state1 = ResourceState.create(user_id: 1, resource_state: 'submitted', resource_id: resource1.id)
+        state2 = ResourceState.create(user_id: 2, resource_state: 'in_progress', resource_id: resource2.id)
+        resource1.update(current_resource_state_id: state1.id)
+        resource2.update(current_resource_state_id: state2.id)
+        expect(resource1.dataset_in_progress_editor_id).to eq(2) # gives the in progress dataset's editor_id even though this one isn't in progress
+        expect(resource2.dataset_in_progress_editor_id).to eq(2)
+        resource2.delete
+        expect(resource1.dataset_in_progress_editor_id).to eq(nil) # no in-progress should return a nil
+      end
+    end
+
     describe :public? do
       it 'defaults to true' do
         resource = Resource.create(user_id: user.id)
