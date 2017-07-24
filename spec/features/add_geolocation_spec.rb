@@ -3,10 +3,7 @@ require 'features_helper'
 describe 'add geolocation' do
 
   before(:each) do
-    visit('/')
-    first(:link_or_button, 'Login').click
-    first(:link_or_button, 'Start New Dataset').click
-
+    start_new_dataset!
     location_divider = find('summary', text: 'Location Information (optional)')
     location_divider.click
   end

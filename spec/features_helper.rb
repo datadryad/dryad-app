@@ -114,6 +114,23 @@ end
 # ------------------------------------------------------------
 # Metadata helpers
 
+def log_in!
+  visit('/')
+  first(:link_or_button, 'Login').click
+end
+
+def start_new_dataset!
+  visit('/')
+  first(:link_or_button, 'Login').click
+  first(:link_or_button, 'Start New Dataset').click
+  expect(page).to have_content('Describe Your Dataset')
+end
+
+def navigate_to_review!
+  first(:link_or_button, 'Review and Submit').click
+  expect(page).to have_content('Finalize Submission')
+end
+
 def fill_required_fields! # rubocop:disable Metrics/AbcSize
   # make sure we're on the right page
   expect(page).to have_content('Describe Your Dataset')

@@ -3,11 +3,9 @@ require 'features_helper'
 describe 'timed publication' do
 
   before(:each) do
-    visit('/')
-    first(:link_or_button, 'Login').click
-    first(:link_or_button, 'Start New Dataset').click
+    start_new_dataset!
     fill_required_fields!
-    first(:link_or_button, 'Review and Submit').click
+    navigate_to_review!
   end
 
   it 'sets the embargo end date' do

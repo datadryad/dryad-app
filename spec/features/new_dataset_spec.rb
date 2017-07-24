@@ -4,8 +4,7 @@ describe 'new dataset' do
   attr_reader :start_new_dataset
 
   before(:each) do
-    visit('/')
-    first(:link_or_button, 'Login').click
+    log_in!
     @start_new_dataset = first(:link_or_button, 'Start New Dataset')
     expect(start_new_dataset).not_to be_nil
   end
