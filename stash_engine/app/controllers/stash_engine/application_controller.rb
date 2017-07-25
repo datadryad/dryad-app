@@ -46,8 +46,8 @@ module StashEngine
     end
 
     def display_authorization_failure
-      Rails.logger.warn("Resource #{resource ? resource.id : 'nil'}: user ID is #{resource_user_id || 'nil'} but " \
-                        "current user is #{current_user_id || 'nil'}")
+      Rails.logger.warn("Resource #{resource ? resource.id : 'nil'}: user ID is #{resource.user_id || 'nil'} but " \
+                        "current user is #{current_user.id || 'nil'}")
       flash[:alert] = 'You do not have permission to modify this dataset.'
       redirect_to stash_engine.dashboard_path
     end
