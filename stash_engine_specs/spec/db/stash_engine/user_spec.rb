@@ -103,6 +103,13 @@ module StashEngine
         user2 = User.create(first_name: 'Bob', last_name: nil)
         expect(user2.name).to eq('Bob')
       end
+
+      it 'returns if user is a superuser' do
+        user = User.create(role: 'superuser')
+        expect(user.superuser?).to be_truthy
+        user2 = User.create(role: 'user')
+        expect(user2.superuser?).to be_falsey
+      end
     end
   end
 end

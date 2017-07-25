@@ -31,12 +31,13 @@ module StashEngine
     end
 
     def require_modify_permission
-      return if owner? || current_user.role == 'superuser' || admin?
+      return if owner? || current_user.superuser? || admin?
       display_authorization_failure
     end
 
     private
 
+    # these owner/admin need to be in controller since they address the current_user from session, not easily available from model
     def owner?
       resource.user_id == current_user.id
     end

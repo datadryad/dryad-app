@@ -15,6 +15,10 @@ module StashEngine
       "#{first_name} #{last_name}".strip
     end
 
+    def superuser?
+      role == 'superuser'
+    end
+
     def self.split_name(name)
       first = name.split(' ').first
       last = ''
