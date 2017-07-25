@@ -394,7 +394,7 @@ module StashEngine
     def notional_publication_date
       embargo_end_date = embargo && embargo.end_date
       existing_pub_date = publication_date
-      embargo_end_date || existing_pub_date || updated_at
+      embargo_end_date || existing_pub_date || Time.now
     end
 
     # Called on submit
