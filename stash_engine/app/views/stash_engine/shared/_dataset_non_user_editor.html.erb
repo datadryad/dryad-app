@@ -1,6 +1,12 @@
 <% # takes resource as local %>
 <% unless current_user.id == resource.user_id %>
-  <div style="width: 100%; background-color: orange;">
-    You are editing <%= resource.user.name %>'s dataset.
+  <div class="c-admin-editing-banner">
+    <div class="o-div__placeholder"></div>
+    <div class="o-div__editing_msg">
+      You are editing <%= resource.user.name %>'s dataset.
+    </div>
+    <div>
+      <button class="o-button__cancel-edit">Cancel and Discard Changes</button>
+    </div>
   </div>
 <% end %>
