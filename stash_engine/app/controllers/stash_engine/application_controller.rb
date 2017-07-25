@@ -35,6 +35,12 @@ module StashEngine
       display_authorization_failure
     end
 
+    # only someone who has created the dataset in progress can edit it.  Other users can't until they're finished
+    def require_in_progress_editor
+      return if resource.dataset_in_progress_editor.id == current_user.id
+      display_authorization_failure
+    end
+
     private
 
     # these owner/admin need to be in controller since they address the current_user from session, not easily available from model
