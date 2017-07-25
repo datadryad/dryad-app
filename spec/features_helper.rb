@@ -126,6 +126,11 @@ def start_new_dataset!
   expect(page).to have_content('Describe Your Dataset')
 end
 
+def navigate_to_metadata!
+  first(:link_or_button, 'Describe Dataset').click
+  expect(page).to have_content('Describe Your Dataset')
+end
+
 def navigate_to_review!
   first(:link_or_button, 'Review and Submit').click
   expect(page).to have_content('Finalize Submission')
@@ -165,4 +170,18 @@ def fill_required_fields! # rubocop:disable Metrics/AbcSize
         of that Country, and of Hungary, together with a Specimen of each
         of them.
   ABSTRACT
+end
+
+def fill_in_future_pub_date(end_date)
+  # make sure we're on the right page
+  expect(page).to have_content('Finalize Submission')
+
+  month_field = find_field_id('mmEmbargo')
+  fill_in month_field, with: end_date.month
+
+  day_field = find_field_id('ddEmbargo')
+  fill_in day_field, with: end_date.day
+
+  year_field = find_field_id('yyyyEmbargo')
+  fill_in year_field, with: end_date.year
 end

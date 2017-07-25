@@ -21,14 +21,7 @@ describe 'timed publication' do
 
     end_date = Date.today + 3.months
 
-    month_field = find_field_id('mmEmbargo')
-    fill_in month_field, with: end_date.month
-
-    day_field = find_field_id('ddEmbargo')
-    fill_in day_field, with: end_date.day
-
-    year_field = find_field_id('yyyyEmbargo')
-    fill_in year_field, with: end_date.year
+    fill_in_future_pub_date(end_date)
 
     # force focus change
     find_by_id('agree_to_license').click
