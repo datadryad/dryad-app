@@ -5,6 +5,7 @@ module StashEngine
     before_action :require_login
     before_action :resource_exist, except: [:metadata_callback]
     before_action :require_modify_permission, except: [:metadata_callback]
+    before_action :require_in_progress_editor, only: %i[find_or_create]
 
     def resource
       @resource ||= Resource.find(params[:resource_id])
@@ -13,7 +14,7 @@ module StashEngine
 
     # GET/POST/PUT  /generals/find_or_create
     def find_or_create
-      return unless @resource.submitted?
+      return unless @resource.submitted? # create a new version if this is a submitted version
       redirect_to(metadata_entry_pages_new_version_path(resource_id: params[:resource_id]))
     end
 
