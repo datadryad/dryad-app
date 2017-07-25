@@ -29,18 +29,26 @@ module StashEngine
     end
 
     def require_modify_permission
-      resource_user_id = resource.user_id
-      current_user_id = current_user.id
-      return if resource_user_id == current_user_id #if owner, nothing to see here
-      return if current_user.role == 'superuser' || (current_user.tenant_id == resource.user.tenant_id && current_user.role == 'admin')
+      return if is_owner? || current_user.role == 'superuser' || is_admin?
+      display_authorization_failure
+    end
 
+    private
+
+    def owner?
+      resource.user_id == current_user.id
+    end
+
+    def admin?
+      (current_user.tenant_id == resource.user.tenant_id && current_user.role == 'admin')
+    end
+
+    def display_authorization_failure
       Rails.logger.warn("Resource #{resource ? resource.id : 'nil'}: user ID is #{resource_user_id || 'nil'} but " \
                         "current user is #{current_user_id || 'nil'}")
       flash[:alert] = 'You do not have permission to modify this dataset.'
       redirect_to stash_engine.dashboard_path
     end
-
-    private
 
     def host_and_port_match?(request, host, port)
       request.host == host && (port.nil? || request.port == port.to_i)
