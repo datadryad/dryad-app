@@ -64,9 +64,9 @@ module StashEngine
     end
 
     describe :notional_publication_date do
-      it 'defaults to updated_at' do
+      it 'defaults to today' do
         resource = Resource.create(user_id: user.id)
-        expect(resource.notional_publication_date).to eq(resource.updated_at)
+        expect(resource.notional_publication_date).to be_time(Time.now)
       end
 
       it 'returns the real publication date, if any' do
@@ -124,10 +124,10 @@ module StashEngine
         expect(resource.publication_date).to eq(end_date)
       end
 
-      it 'falls back to the date updated' do
+      it 'falls back to the current time' do
         resource = Resource.create(user_id: user.id)
         resource.update_publication_date!
-        expect(resource.publication_date).to eq(resource.updated_at)
+        expect(resource.publication_date).to be_time(Time.now)
       end
     end
 
