@@ -96,6 +96,20 @@ module StashEngine
         latest = user.latest_completed_resource_per_identifier
         expect(latest).to contain_exactly(resources.last)
       end
+
+      it 'returns a user\'s name' do
+        user = User.create(first_name: 'Johann', last_name: 'Jones')
+        expect(user.name).to eq('Johann Jones')
+        user2 = User.create(first_name: 'Bob', last_name: nil)
+        expect(user2.name).to eq('Bob')
+      end
+
+      it 'returns if user is a superuser' do
+        user = User.create(role: 'superuser')
+        expect(user.superuser?).to be_truthy
+        user2 = User.create(role: 'user')
+        expect(user2.superuser?).to be_falsey
+      end
     end
   end
 end

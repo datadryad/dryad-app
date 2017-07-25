@@ -386,6 +386,23 @@ module StashEngine
     end
 
     # -----------------------------------------------------------
+    # editor
+
+    # gets the in progress editor, if any, for the whole dataset
+    # nil means no in progress dataset or the owner is the one in progress
+    def dataset_in_progress_editor_id
+      return current_editor_id if identifier.nil? # no identifier, has to be in progress
+      return identifier.in_progress_resource.current_editor_id if identifier.in_progress?
+      nil
+    end
+
+    # calculated current editor name, ignores nils
+    def dataset_in_progress_editor
+      return user if dataset_in_progress_editor_id.nil?
+      User.where(id: dataset_in_progress_editor_id).first
+    end
+
+    # -----------------------------------------------------------
     # Dates
 
     # What the publication date would be, if the resource was

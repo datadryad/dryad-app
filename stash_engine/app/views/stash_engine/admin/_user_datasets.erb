@@ -24,7 +24,7 @@
         <span title="<%= p.title %>"><%= truncate(p.title) %></span>
       </td>
       <td class="c-admin-hide-border-left">
-        <% if p.resource.submitted? %>
+        <% if p.resource.submitted? || p.resource.dataset_in_progress_editor.id == current_user.id %>
           <button class="c-admin-edit-icon" title="Edit Dataset"><i class="fa fa-pencil" aria-hidden="true"></i></button>
         <% end %>
       </td>

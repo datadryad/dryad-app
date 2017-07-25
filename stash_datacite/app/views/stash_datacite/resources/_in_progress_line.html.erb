@@ -24,7 +24,11 @@
     <%= default_date(line.updated_at) %>
   </td>
   <td>
-    <%= button_to 'Resume', stash_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: line.resource.id), form_class: 'o-button__inline-form', class: 'o-button__plain-text6' %>
-    <%= button_to 'Delete', stash_url_helpers.resource_path(line.resource), method: :delete, data: { confirm: 'Are you sure?' }, form_class: 'o-button__inline-form', class: 'o-button__plain-text7' %>
+    <% if line.resource.dataset_in_progress_editor.id == current_user.id %>
+      <%= button_to 'Resume', stash_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: line.resource.id), form_class: 'o-button__inline-form', class: 'o-button__plain-text6' %>
+      <%= button_to 'Delete', stash_url_helpers.resource_path(line.resource), method: :delete, data: { confirm: 'Are you sure?' }, form_class: 'o-button__inline-form', class: 'o-button__plain-text7' %>
+    <% else %>
+      Dataset edited by <%= line.resource.dataset_in_progress_editor.name %>
+    <% end %>
   </td>
 </tr>
