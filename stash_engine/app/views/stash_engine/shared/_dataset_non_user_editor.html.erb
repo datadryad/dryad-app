@@ -6,7 +6,8 @@
       You are editing <%= resource.user.name %>'s dataset.
     </div>
     <div>
-      <button class="o-button__cancel-edit">Cancel and Discard Changes</button>
+      <%= button_to 'Cancel and Discard Changes', stash_url_helpers.resource_path(resource), method: :delete, data: { confirm: 'Are you sure?' },
+          form_class: 'o-button__inline-form', class: 'o-button__cancel-edit' %>
     </div>
   </div>
 <% end %>

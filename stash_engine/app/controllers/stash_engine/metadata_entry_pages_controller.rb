@@ -20,6 +20,7 @@ module StashEngine
 
     # create a new version of this resource before editing with find or create
     def new_version
+      set_return_to_path_from_referrer # needed for dropping into edit (and back) from various places in the ui
       # create new version deep copy of most items
       @resource = Resource.find(params[:resource_id])
       identifier = @resource.identifier

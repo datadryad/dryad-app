@@ -68,7 +68,7 @@ module StashEngine
     def destroy
       resource.destroy
       respond_to do |format|
-        format.html { redirect_to dashboard_path, notice: 'Dataset was successfully deleted.' }
+        format.html { redirect_to return_to_path_or(dashboard_path), notice: 'The in-progress version was successfully deleted.' }
         format.json { head :no_content }
       end
     end

@@ -41,6 +41,18 @@ module StashEngine
       display_authorization_failure
     end
 
+    # returns the :return_to_path set in the session or else goes back to the path supplied
+    def return_to_path_or(default_path)
+      return session.delete(:return_to_path) if session[:return_to_path]
+      default_path
+    end
+
+    # rubocop:disable Metrics/AbcSize
+    def set_return_to_path_from_referrer
+      session[:return_to_path] = request.env['HTTP_REFERER'] if request.env['HTTP_REFERER'].present? &&
+          request.env['HTTP_REFERER'] != request.env['REQUEST_URI']
+    end
+
     private
 
     # these owner/admin need to be in controller since they address the current_user from session, not easily available from model
