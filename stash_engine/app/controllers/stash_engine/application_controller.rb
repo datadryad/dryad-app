@@ -5,6 +5,8 @@ require 'uri'
 module StashEngine
   class ApplicationController < ::ApplicationController
 
+    helper_method :owner?, :admin?
+
     include SharedController
 
     prepend_view_path("#{Rails.application.root}/app/views")
@@ -29,7 +31,7 @@ module StashEngine
     end
 
     def require_modify_permission
-      return if is_owner? || current_user.role == 'superuser' || is_admin?
+      return if owner? || current_user.role == 'superuser' || admin?
       display_authorization_failure
     end
 
