@@ -3,7 +3,7 @@ require_dependency 'stash_engine/application_controller'
 module StashEngine
   class ResourcesController < ApplicationController
     before_action :require_login, except: %i[increment_downloads data_paper]
-    before_action :require_resource_owner, except: %i[index new increment_downloads data_paper]
+    before_action :require_modify_permission, except: %i[index new increment_downloads data_paper]
 
     attr_writer :resource
 
@@ -106,17 +106,6 @@ module StashEngine
     # Never trust parameters from the scary internet, only allow the white list through.
     def resource_params
       params.require(:resource).permit(:user_id, :current_resource_state_id)
-    end
-
-    def require_resource_owner
-      resource_user_id = resource.user_id
-      current_user_id = current_user.id
-      return if resource_user_id == current_user_id
-
-      Rails.logger.warn("Resource #{resource ? resource.id : 'nil'}: user ID is #{resource_user_id || 'nil'} but " \
-                    "current user is #{current_user_id || 'nil'}")
-      flash[:alert] = 'You do not have permission to modify this dataset.'
-      redirect_to stash_engine.dashboard_path
     end
 
   end

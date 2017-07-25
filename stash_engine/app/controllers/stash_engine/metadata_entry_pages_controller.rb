@@ -4,7 +4,7 @@ module StashEngine
   class MetadataEntryPagesController < ApplicationController
     before_action :require_login
     before_action :resource_exist, except: [:metadata_callback]
-    before_action :require_resource_owner, except: [:metadata_callback]
+    before_action :require_modify_permission, except: [:metadata_callback]
 
     def resource
       @resource ||= Resource.find(params[:resource_id])
@@ -57,15 +57,5 @@ module StashEngine
       @new_res.save!
     end
 
-    def require_resource_owner
-      resource_user_id = resource.user_id
-      current_user_id = current_user.id
-      return if resource_user_id == current_user_id
-
-      Rails.logger.warn("Resource #{resource ? resource.id : 'nil'}: user ID is #{resource_user_id || 'nil'} but " \
-                        "current user is #{current_user_id || 'nil'}")
-      flash[:alert] = 'You do not have permission to modify this dataset.'
-      redirect_to stash_engine.dashboard_path
-    end
   end
 end
