@@ -56,5 +56,18 @@ describe 'review ' do
       expect(submit).not_to be_nil
       expect(submit).not_to be_disabled
     end
+
+    it 'submits' do
+      # get these now since they're only on the edit pages
+      resource_id = current_resource_id
+      resource = current_resource
+
+      expect(StashEngine.repository).to receive(:submit).with(resource_id: resource_id)
+      submit = find_button('submit_dataset', disabled: :all)
+      submit.click
+
+      expect(page).to have_content('My Datasets')
+      expect(page).to have_content resource.title
+    end
   end
 end
