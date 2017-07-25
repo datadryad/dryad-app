@@ -50,7 +50,7 @@ module StashDatacite
 
         date_available = DataciteDate.set_date_available(resource_id: resource.id)
         expect(resource.datacite_dates.first).to eq(date_available)
-        expect(date_available.date).to eq(pub_date.iso8601)
+        expect(date_available.date).to eq(pub_date.utc.iso8601)
         expect(date_available.date_type).to eq('available')
       end
 
@@ -66,7 +66,7 @@ module StashDatacite
         DataciteDate.set_date_available(resource_id: resource.id)
 
         date_available.reload
-        expect(date_available.date).to eq(new_date.iso8601)
+        expect(date_available.date).to eq(new_date.utc.iso8601)
       end
     end
   end
