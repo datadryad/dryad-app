@@ -4413,14 +4413,16 @@ html.no-details .o-showhide__summary {
 
 .c-progress__tab1,
 .c-progress__tab2, .c-progress__tab1--active,
-.c-progress__tab2--active, .c-progress__tab3, .c-progress__tab3--active {
+.c-progress__tab2--active, .c-progress__tab1--inactive,
+.c-progress__tab2--inactive, .c-progress__tab3, .c-progress__tab3--active {
   color: black;
   text-decoration: none;
   white-space: nowrap; }
   @media (min-width: 480px) {
     .c-progress__tab1,
     .c-progress__tab2, .c-progress__tab1--active,
-    .c-progress__tab2--active, .c-progress__tab3, .c-progress__tab3--active {
+    .c-progress__tab2--active, .c-progress__tab1--inactive,
+    .c-progress__tab2--inactive, .c-progress__tab3, .c-progress__tab3--active {
       display: -ms-flexbox;
       display: flex;
       position: relative;
@@ -4436,20 +4438,23 @@ html.no-details .o-showhide__summary {
 @media (min-width: 480px) {
   .c-progress__tab1,
   .c-progress__tab2, .c-progress__tab1--active,
-  .c-progress__tab2--active {
+  .c-progress__tab2--active, .c-progress__tab1--inactive,
+  .c-progress__tab2--inactive {
     margin: 0 5vw 0 0;
     border-right: none; } }
 
 .c-progress__tab1::after,
 .c-progress__tab2::after, .c-progress__tab1--active::after,
-.c-progress__tab2--active::after {
+.c-progress__tab2--active::after, .c-progress__tab1--inactive::after,
+.c-progress__tab2--inactive::after {
   content: '>';
   margin: 0 0 0 0.25em;
   font-size: 1.2em; }
   @media (min-width: 480px) {
     .c-progress__tab1::after,
     .c-progress__tab2::after, .c-progress__tab1--active::after,
-    .c-progress__tab2--active::after {
+    .c-progress__tab2--active::after, .c-progress__tab1--inactive::after,
+    .c-progress__tab2--inactive::after {
       content: '';
       position: absolute;
       top: 4px;
@@ -4467,10 +4472,21 @@ html.no-details .o-showhide__summary {
   border-color: #e65722;
   color: #e65722; }
 
+.c-progress__tab1--inactive,
+.c-progress__tab2--inactive {
+  border-width: 2px;
+  border-color: #9d9fa2;
+  color: #9d9fa2; }
+
 .c-progress__tab1--active::after,
 .c-progress__tab2--active::after {
   border-width: 2px;
   border-color: #e65722; }
+
+.c-progress__tab1--inactive::after,
+.c-progress__tab2--inactive::after {
+  border-width: 2px;
+  border-color: #9d9fa2; }
 
 .c-pubdate__release-date-input {
   -ms-flex-item-align: start;

@@ -75,6 +75,13 @@
   color: $design-orange-color;
 }
 
+%c-progress__tab--inactive {
+  @extend %c-progress__tab-base;
+  border-width: 2px;
+  border-color: $design-light-gray-color;
+  color: $design-light-gray-color;
+}
+
 .c-progress__tab1--active,
 .c-progress__tab2--active {
   @extend %c-progress__tab-arrow;
@@ -83,6 +90,18 @@
   &::after {
     border-width: 2px;
     border-color: $design-orange-color;
+  }
+
+}
+
+.c-progress__tab1--inactive,
+.c-progress__tab2--inactive {
+  @extend %c-progress__tab-arrow;
+  @extend %c-progress__tab--inactive;
+
+  &::after {
+    border-width: 2px;
+    border-color: $design-light-gray-color;
   }
 
 }
