@@ -1,1 +1,1 @@
-Rails.application.config.assets.precompile += %w[stash_datacite/]
+Rails.application.config.assets.precompile += %w[stash_datacite/] if Rails.application
