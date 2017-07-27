@@ -17,7 +17,6 @@ PROJECTS = %w[
   stash_engine_specs
   stash_discovery
   stash_datacite
-  stash_datacite_specs
 ].freeze
 
 STASH_ROOT = Pathname.new(__dir__).realpath

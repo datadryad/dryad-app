@@ -5,16 +5,27 @@ require 'rspec/core'
 require 'rspec/core/rake_task'
 
 namespace :spec do
-  desc 'Run unit and database tests as single suite (for coverage)'
-  task :unified do
-    puts "TODO: unit & db specs for #{File.basename(__dir__)}"
+  desc 'Run all unit tests'
+  RSpec::Core::RakeTask.new(:unit) do |task|
+    task.rspec_opts = %w[--color --format documentation --order default]
+    task.pattern = 'unit/**/*_spec.rb'
   end
 
-  desc 'Run Selenium feature tests'
-  task :feature do
-    puts "TODO: feature specs for #{File.basename(__dir__)}"
+  desc 'Run all database tests'
+  RSpec::Core::RakeTask.new(:db) do |task|
+    task.rspec_opts = %w[--color --format documentation --order default]
+    task.pattern = 'db/**/*_spec.rb'
+  end
+
+  desc 'Run unit and database tests as single suite (for coverage)'
+  RSpec::Core::RakeTask.new(:unified) do |task|
+    task.rspec_opts = %w[--color --format documentation --order default]
+    task.pattern = '{db,unit}/**/*_spec.rb'
   end
 end
+
+desc 'Run all tests'
+task spec: %w[spec:unit spec:db]
 
 # ------------------------------------------------------------
 # Coverage
@@ -32,36 +43,14 @@ require 'rubocop/rake_task'
 RuboCop::RakeTask.new
 
 # ------------------------------------------------------------
+# Miscellaneous
+
+task :debug_load_path do
+  puts $LOAD_PATH
+end
+
+# ------------------------------------------------------------
 # Defaults
 
-desc 'Run unit tests, check test coverage, check code style, run feature tests'
-task default: %i[coverage rubocop spec:feature]
-
-# require 'rubygems'
-# begin
-#   require 'bundler/setup'
-# rescue LoadError
-#   puts 'You must `gem install bundler` and `bundle install` to run rake tasks'
-# end
-# require 'rdoc/task'
-# require 'rake'
-# require 'rspec/core/rake_task'
-#
-# RDoc::Task.new(:rdoc) do |rdoc|
-#   rdoc.rdoc_dir = 'rdoc'
-#   rdoc.title    = 'StashDatacite'
-#   rdoc.options << '--line-numbers'
-#   rdoc.rdoc_files.include('README.rdoc')
-#   rdoc.rdoc_files.include('lib/**/*.rb')
-# end
-#
-# APP_RAKEFILE = File.expand_path('../spec/dummy/Rakefile', __FILE__)
-# load 'rails/tasks/engine.rake'
-# load 'rails/tasks/statistics.rake'
-# Bundler::GemHelper.install_tasks
-#
-# RSpec::Core::RakeTask.new(:spec) do |t|
-#   t.pattern = Dir.glob('spec/**/*_spec.rb')
-#   t.rspec_opts = '--format documentation'
-# end
-# task default: :spec
+desc 'Run unit & database tests, check test coverage, check code style'
+task default: %i[coverage rubocop]
