@@ -36,3 +36,9 @@ $(document).ready(function(){
   });
 });
 </script>
+
+<% if current_user.id != @resource.user_id %>
+  <script>
+    $('#agree_to_license').prop('disabled', true);
+  </script>
+<% end %>
