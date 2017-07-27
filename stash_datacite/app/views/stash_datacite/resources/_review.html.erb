@@ -76,8 +76,10 @@
       <%= hidden_field_tag :resource_id, @resource.id %>
       <%= check_box_tag 'all_filled',  1, true, :style => "display: none;", class: 'all_filled' %>
       <div>
-        <%= text_field_tag :user_comment, @resource.edit_histories.first.try(:user_comment), size: 50,
+        <% if current_user.id != @resource.user_id # only show to admins %>
+          <%= text_field_tag :user_comment, @resource.edit_histories.first.try(:user_comment), size: 50,
               placeholder: 'Describe edits made (required)', class: 't-review__user-comment' %>
+        <% end %>
         <%= button_tag("Submit", disabled: (@resource.version_number < 2),
                     class: 'o-button__submit js-submission', id: 'submit_dataset') %>
       </div>
@@ -88,7 +90,26 @@
 </div>
 
 <script type="text/javascript">
-<% flash.each do |type, message| %>
-  $("#flash_messages").html("<%= type.to_s.humanize %>: <%= message.html_safe %>")
-<% end %>
+  // display some flash messages, (why do we need this?, ajax?)
+  <% flash.each do |type, message| %>
+    $("#flash_messages").html("<%= type.to_s.humanize %>: <%= message.html_safe %>")
+  <% end %>
+
+  // handle the events for user_comment box & submit if it is present
+  updateSubmitCommentDisabled();
+  if($('#user_comment').length){
+    $('#user_comment').on('input propertychange paste', function() {
+      updateSubmitCommentDisabled();
+    });
+  }
+
+  function updateSubmitCommentDisabled(){
+    if($('#all_filled').length && $('#user_comment').val().length > 0){
+      $('#submit_dataset').prop('disabled', false);
+    }else{
+      $('#submit_dataset').prop('disabled', true);
+    }
+  }
 </script>
+
+
