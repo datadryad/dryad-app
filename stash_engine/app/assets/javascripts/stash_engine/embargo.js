@@ -58,6 +58,14 @@ function loadDatepicker(days) {
   */
 };
 
+function disableDatepicker(){
+  $('#ddEmbargo').prop('disabled', true);
+  $('#mmEmbargo').prop('disabled', true);
+  $('#yyyyEmbargo').prop('disabled', true);
+  $('.c-pubdate__radio').prop('disabled', true);
+  $('#datepicker').prop('disabled', true);
+}
+
 // switch the mm/dd/yyy to readonly and back, probably not needed.
 function setEmbargoState(){
   if($('#today_button').is(':checked')){

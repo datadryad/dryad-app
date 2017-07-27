@@ -58,3 +58,9 @@
   loadDatepicker(<%= APP_CONFIG.max_review_days %>);
 </script>
 
+<% if current_user.id != @resource.user_id %>
+  <script>
+    disableDatepicker();
+  </script>
+<% end %>
+
