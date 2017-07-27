@@ -1,1 +1,0 @@
-../../../../stash_engine_specs/spec//db/stash_engine/resource_spec.rb

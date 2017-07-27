@@ -1,4 +1,5 @@
 require 'db_spec_helper'
+require 'script/plos_keywords'
 
 module Script
   describe PlosKeywords do
