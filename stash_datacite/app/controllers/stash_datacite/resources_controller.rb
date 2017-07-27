@@ -63,15 +63,8 @@ module StashDatacite
     def submission
       resource_id = params[:resource_id]
       resource = StashEngine::Resource.find(resource_id)
+      update_submission_resource_info(resource)
 
-      # TODO: put this somewhere more reliable
-      resource.update_publication_date!
-      resource.save
-
-      # TODO: put this somewhere more reliable
-      StashDatacite::DataciteDate.set_date_available(resource_id: resource_id)
-
-      StashEngine::EditHistory.create(resource_id: resource_id, user_comment: nil) # TODO: update with user comment once it's available in form
       StashEngine.repository.submit(resource_id: resource_id)
 
       resource.reload
@@ -80,6 +73,17 @@ module StashDatacite
     end
 
     private
+
+    def update_submission_resource_info(resource)
+      # TODO: put this somewhere more reliable
+      resource.update_publication_date!
+      resource.save
+
+      # TODO: put this somewhere more reliable
+      StashDatacite::DataciteDate.set_date_available(resource_id: resource.id)
+
+      StashEngine::EditHistory.create(resource_id: resource.id, user_comment: params[:user_comment])
+    end
 
     def max_submission_size
       current_tenant.max_submission_size.to_i
