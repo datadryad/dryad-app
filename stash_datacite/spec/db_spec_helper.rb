@@ -5,12 +5,6 @@ require 'colorize'
 # ------------------------------------------------------------
 # ActiveRecord: database setup/teardown
 
-if (env = ENV['RAILS_ENV'])
-  abort("Can't run tests in environment #{env}") if env != 'test'
-else
-  ENV['RAILS_ENV'] = 'test'
-end
-
 # Always load the schema: https://relishapp.com/rspec/rspec-rails/docs/upgrade#pending-migration-checks
 # TODO: do we need this if we're explicitly running migrations?
 ActiveRecord::Migration.maintain_test_schema!
@@ -59,22 +53,6 @@ RSpec.configure do |config|
 end
 
 # ------------------------------------------------------------
-# Stash
+# Misc. utils
 
-# TODO: cleanly separate test-safe and test-unsafe initializers
-stash_engine_path = ENGINES['stash_engine']
-%w[hash_to_ostruct inflections].each do |initializer|
-  require "#{stash_engine_path}/config/initializers/#{initializer}.rb"
-end
-
-LICENSES = YAML.load_file(File.expand_path('../config/licenses.yml', __FILE__)).with_indifferent_access
-
-# TODO: stop needing to do this
-module StashDatacite
-  @@resource_class = 'StashEngine::Resource' # rubocop:disable Style/ClassVars
-end
-
-# TODO: stop needing to do these things
-stash_datacite_path = ENGINES['stash_datacite']
-require "#{stash_datacite_path}/config/initializers/patches.rb"
-StashDatacite::ResourcePatch.associate_with_resource(StashEngine::Resource)
+Dir.glob(File.expand_path('../util/*.rb', __FILE__)).sort.each(&method(:require))

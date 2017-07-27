@@ -14,6 +14,15 @@ end
 require 'rspec_custom_matchers'
 
 # ------------------------------------------------------------
+# Rails
+
+if (env = ENV['RAILS_ENV'])
+  abort("Can't run tests in environment #{env}") if env != 'test'
+else
+  ENV['RAILS_ENV'] = 'test'
+end
+
+# ------------------------------------------------------------
 # Stash
 
 ENV['STASH_ENV'] = 'test'
@@ -36,7 +45,23 @@ ENGINES.each do |engine_name, engine_path|
   Dir.glob("#{models_path}/**/*.rb").sort.each(&method(:require))
 end
 
-# ------------------------------------------------------------
-# Misc. utils
+stash_engine_path = ENGINES['stash_engine']
+%w[
+  hash_to_ostruct
+  inflections
+  repository
+].each do |initializer|
+  require "#{stash_engine_path}/config/initializers/#{initializer}.rb"
+end
 
-Dir.glob(File.expand_path('../util/*.rb', __FILE__)).sort.each(&method(:require))
+LICENSES = YAML.load_file(File.expand_path('../config/licenses.yml', __FILE__)).with_indifferent_access
+
+# TODO: stop needing to do this
+module StashDatacite
+  @@resource_class = 'StashEngine::Resource' # rubocop:disable Style/ClassVars
+end
+
+# TODO: stop needing to do these things
+stash_datacite_path = ENGINES['stash_datacite']
+require "#{stash_datacite_path}/config/initializers/patches.rb"
+StashDatacite::ResourcePatch.associate_with_resource(StashEngine::Resource)
