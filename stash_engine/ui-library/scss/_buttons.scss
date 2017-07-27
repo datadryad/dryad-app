@@ -87,11 +87,12 @@
   border: 1px solid $design-light-gray-color;
   border-radius: 0;
   color: $design-black-color;
-  text-decoration: none;
 }
 
 %o-button__icon-left {
   @extend %o-button__icon;
+  display: flex;
+  align-items: center;
   padding-right: 12px;
   padding-left: 35px;
   background: $design-white-color inline('../images/icon_left-blue-arrow.svg') left 10px center no-repeat;

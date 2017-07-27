@@ -71,11 +71,17 @@
                 class: 'o-button__icon-left', role: 'button', id: 'describe_back' %>
   <% end %>
 
-  <% if @data.blank? %>
-    <%= check_box_tag 'all_filled',  1, true, :style => "display: none;", class: 'all_filled' %>
-    <%= button_to("Submit", stash_datacite.resources_submission_path(resource_id: @resource.id),
-                  disabled: (@resource.version_number < 2),
-                  class: 'o-button__submit js-submission', id: 'submit_dataset') %>
+  <% if @data.blank? # valid data %>
+    <%= form_tag stash_datacite.resources_submission_path do -%>
+      <%= hidden_field_tag :resource_id, @resource.id %>
+      <%= check_box_tag 'all_filled',  1, true, :style => "display: none;", class: 'all_filled' %>
+      <div>
+        <%= text_field_tag :user_comment, @resource.edit_histories.first.try(:user_comment), size: 50,
+              placeholder: 'Describe edits made (required)', class: 't-review__user-comment' %>
+        <%= button_tag("Submit", disabled: (@resource.version_number < 2),
+                    class: 'o-button__submit js-submission', id: 'submit_dataset') %>
+      </div>
+    <% end -%>
   <% else %>
     <%= button_to("Submit", '#', disabled: true, class: 'o-button__submit js-submission', id: 'submit_dataset') %>
   <% end %>
