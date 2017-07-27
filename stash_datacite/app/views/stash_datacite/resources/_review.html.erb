@@ -71,12 +71,11 @@
                 class: 'o-button__icon-left', role: 'button', id: 'describe_back' %>
   <% end %>
 
-  <% if @data.blank? && (@resource.version_number < 2) %>
+  <% if @data.blank? %>
     <%= check_box_tag 'all_filled',  1, true, :style => "display: none;", class: 'all_filled' %>
-    <%= button_to("Submit", stash_datacite.resources_submission_path(resource_id: @resource.id), disabled: true, class: 'o-button__submit js-submission', id: 'submit_dataset') %>
-  <% elsif @data.blank? && (@resource.version_number >= 2) %>
-    <%= check_box_tag 'all_filled',  1, true, :style => "display: none;", class: 'all_filled' %>
-    <%= button_to("Submit", stash_datacite.resources_submission_path(resource_id: @resource.id), class: 'o-button__submit js-submission', id: 'submit_dataset') %>
+    <%= button_to("Submit", stash_datacite.resources_submission_path(resource_id: @resource.id),
+                  disabled: (@resource.version_number < 2),
+                  class: 'o-button__submit js-submission', id: 'submit_dataset') %>
   <% else %>
     <%= button_to("Submit", '#', disabled: true, class: 'o-button__submit js-submission', id: 'submit_dataset') %>
   <% end %>
