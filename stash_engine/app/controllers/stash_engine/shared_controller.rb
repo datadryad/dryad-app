@@ -6,11 +6,16 @@ module StashEngine
     require 'securerandom'
 
     def self.included(c)
-      c.helper_method :current_tenant, :current_tenant_simple, :current_user, :metadata_engine, :metadata_url_helpers,
-                      :metadata_render_path, :stash_url_helpers, :discovery_url_helpers, :landing_url, :field_suffix,
-                      :logo_path, :contact_us_url, :display_br, :display_id, :display_id_plain,
-                      :formatted_date, :formatted_datetime, :can_display_embargoed?, :display_author_orcid,
-                      :english_list, :shorten_linked_url, :default_date, :local_time
+      c.helper_method \
+        %i[
+          metadata_url_helpers metadata_render_path stash_url_helpers contact_us_url logo_path
+          formatted_date formatted_datetime local_time default_date
+          current_tenant current_tenant_display current_tenant_simple current_user
+          can_display_embargoed?
+          field_suffix shorten_linked_url english_list
+          display_id display_id_plain display_author_orcid
+          display_br link_urls!
+        ]
     end
 
     # ----------------------
@@ -36,11 +41,6 @@ module StashEngine
 
     def stash_url_helpers
       StashEngine::Engine.routes.url_helpers
-    end
-
-    # discovery engine isn't namespaced because of blacklight/geoblackight, so "main_app" will also work for it.
-    def discovery_url_helpers
-      StashDiscovery::Engine.routes.url_helpers
     end
 
     # helper to generate URL for landing page for an identifier with currently logged-in tenant
