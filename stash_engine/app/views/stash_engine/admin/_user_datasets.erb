@@ -21,7 +21,7 @@
   <% presenters.each do |p| %>
     <tr class="c-lined-table__row">
       <td class="c-admin-hide-border-right">
-        <span title="<%= p.title %>"><%= truncate(p.title) %></span>
+        <span title="<%= p.title %>"><%= link_to truncate(p.title), edit_histories_path(resource_id: p.resource.id)  %></span>
       </td>
       <td class="c-admin-hide-border-left">
         <% if p.resource.submitted? || p.resource.dataset_in_progress_editor.id == current_user.id %>
