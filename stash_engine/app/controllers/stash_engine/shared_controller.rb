@@ -9,13 +9,58 @@ module StashEngine
       c.helper_method :current_tenant, :current_tenant_simple, :current_user, :metadata_engine, :metadata_url_helpers,
                       :metadata_render_path, :stash_url_helpers, :discovery_url_helpers, :landing_url, :field_suffix,
                       :logo_path, :contact_us_url, :display_br, :display_id, :display_id_plain,
-                      :formatted_date, :formatted_datetime, :can_display_embargoed?, :file_content_dump, :display_author_orcid,
+                      :formatted_date, :formatted_datetime, :can_display_embargoed?, :display_author_orcid,
                       :english_list, :shorten_linked_url, :default_date, :local_time
     end
+
+    # ----------------------
+    # Overall Configuration
+    # ----------------------
+
+    def metadata_engine
+      StashEngine.app.metadata_engine.constantize
+    end
+
+    # ----------------------
+    # URL/Path generation
+    # ----------------------
 
     def metadata_url_helpers
       metadata_engine::Engine.routes.url_helpers
     end
+
+    # generate a render path in the metadata engine
+    def metadata_render_path(*args)
+      File.join(metadata_engine::Engine.root.to_s.split(File::SEPARATOR).last, args)
+    end
+
+    def stash_url_helpers
+      StashEngine::Engine.routes.url_helpers
+    end
+
+    # discovery engine isn't namespaced because of blacklight/geoblackight, so "main_app" will also work for it.
+    def discovery_url_helpers
+      StashDiscovery::Engine.routes.url_helpers
+    end
+
+    # helper to generate URL for landing page for an identifier with currently logged-in tenant
+    def landing_url(identifier)
+      current_tenant.landing_url(stash_url_helpers.show_path(identifier))
+    end
+
+    # contact us url
+    def contact_us_url
+      StashEngine.try(:app).try(:contact_us_uri)
+    end
+
+    # make logo_string for image_tag per tenant
+    def logo_path(hsh)
+      view_context.image_tag "tenants/#{current_tenant.logo_file}", hsh.merge(alt: "#{current_tenant.short_name} logo")
+    end
+
+    # ----------------------
+    # Formatted Date/Times
+    # ----------------------
 
     def formatted_date(t)
       return 'Not available' if t.blank?
@@ -38,20 +83,9 @@ module StashEngine
       local_time(t).strftime('%m/%d/%y')
     end
 
-    # generate a render path in the metadata engine
-    def metadata_render_path(*args)
-      File.join(metadata_engine::Engine.root.to_s.split(File::SEPARATOR).last, args)
-    end
-
-    def stash_url_helpers
-      StashEngine::Engine.routes.url_helpers
-    end
-
-    def discovery_url_helpers
-      StashDiscovery::Engine.routes.url_helpers
-    end
-
-    # discovery engine isn't namespaced because of blacklight/geoblackight, so "main_app" will work for it.
+    # ----------------------
+    # Current state: tenant & user
+    # ----------------------
 
     # get the current tenant for submission
     def current_tenant
@@ -82,22 +116,18 @@ module StashEngine
       @current_user ||= User.find_by_id(session[:user_id]) if session[:user_id]
     end
 
-    def metadata_engine
-      StashEngine.app.metadata_engine.constantize
-    end
-
     def clear_user
       @current_user = nil
     end
+
+    # ----------------------
+    # Before Action: security & other setup for controllers
+    # ----------------------
 
     def require_login
       return if current_user
       flash[:alert] = 'You must be logged in.'
       redirect_to current_tenant.try(:omniauth_login_path)
-    end
-
-    def can_display_embargoed?(resource)
-      !resource.private? || (current_user && current_user.id == resource.user_id)
     end
 
     def ajax_require_current_user
@@ -110,12 +140,19 @@ module StashEngine
       @page_size = params[:page_size] || '5'
     end
 
-    # helper to generate URL for landing page for an identifier with currently logged-in tenant
-    def landing_url(identifier)
-      current_tenant.landing_url(stash_url_helpers.show_path(identifier))
+    # ----------------------
+    # Security Information methods
+    # ----------------------
+
+    def can_display_embargoed?(resource)
+      !resource.private? || (current_user && current_user.id == resource.user_id)
     end
 
-    # make suffix number making ids in html forms
+    # ----------------------
+    # Generation of items for use in HTML pages (only?)
+    # ----------------------
+
+    # make unique id for an object to be used in html
     def field_suffix(object)
       if object && object.id
         "_#{object.id}"
@@ -124,16 +161,25 @@ module StashEngine
       end
     end
 
-    # contact us url
-    def contact_us_url
-      StashEngine.try(:app).try(:contact_us_uri)
+    # Make URLs short and pretty
+    def shorten_linked_url(url:, length: 80)
+      return '' if url.blank?
+      "<a href=\"#{url}\" title=\"#{ERB::Util.html_escape(url)}\">#{ERB::Util.html_escape(url.ellipsisize(length))}</a>".html_safe
     end
 
-    # make logo_string for image_tag per tenant
-    def logo_path(hsh)
-      view_context.image_tag "tenants/#{current_tenant.logo_file}", hsh.merge(alt: "#{current_tenant.short_name} logo")
+    # an english list of items with the conjunction between the final pair, if needed.  Conjunction would be 'and' or
+    # 'or' usually
+    def english_list(array:, conjunction:)
+      return '' if array.empty?
+      return array.first if array.length == 1
+      "#{array[0..-2].join(', ')} #{conjunction} #{array.last}"
     end
 
+    # ----------------------
+    # Displaying identifiers in many different and annoying ways
+    # ----------------------
+
+    # try to display identifiers linked, but if if not, then just display what you can
     def display_id(type:, my_id:)
       result = StashEngine::LinkGenerator.create_link(type: type, value: my_id)
       if result.class == Array
@@ -143,6 +189,7 @@ module StashEngine
       end
     end
 
+    # display some random identifier in plan text, not linked
     def display_id_plain(type:, my_id:)
       result = StashEngine::LinkGenerator.create_link(type: type, value: my_id)
       if result.class == Array
@@ -151,6 +198,23 @@ module StashEngine
         result
       end
     end
+
+    # Pretty orcids based on sandbox or not?
+    def display_author_orcid(author)
+      if StashEngine.app.site == 'https://sandbox.orcid.org/'
+        view_context.link_to("https://sandbox.orcid.org/#{author.author_orcid}",
+                             "https://sandbox.orcid.org/#{author.author_orcid}",
+                             target: '_blank', class: 'c-orcid__id').html_safe
+      else
+        view_context.link_to("https://orcid.org/#{author.author_orcid}",
+                             "https://orcid.org/#{author.author_orcid}",
+                             target: '_blank', class: 'c-orcid__id').html_safe
+      end
+    end
+
+    # ----------------------
+    # Paragraph kludging and URL auto-linking for poopy plain text that has delusions of grandeur
+    # ----------------------
 
     # function to take a string and make it into html_safe string as paragraphs
     # expanded to also make html links, but really we should be doing this a different
@@ -176,38 +240,6 @@ module StashEngine
         "<a href=\"#{full_url}\" title=\"#{full_url}\">" \
             "#{ActionController::Base.helpers.truncate(m)}</a>#{ERB::Util.html_escape(end_punctuation)}"
       end
-    end
-
-    def shorten_linked_url(url:, length: 80)
-      return '' if url.blank?
-      "<a href=\"#{url}\" title=\"#{ERB::Util.html_escape(url)}\">#{ERB::Util.html_escape(url.ellipsisize(length))}</a>".html_safe
-    end
-
-    # Dumps the content of a path from an engine's root (source code) out as a string
-    # It seems we have to do this because the PDF library needs either included code or
-    # an absolute path and  wicked_pdf_stylesheet_link_tag didn't work
-    def file_content_dump(engine_root, path)
-      File.open(File.join(engine_root, path), 'rb').read
-    end
-
-    def display_author_orcid(author)
-      if StashEngine.app.site == 'https://sandbox.orcid.org/'
-        view_context.link_to("https://sandbox.orcid.org/#{author.author_orcid}",
-                             "https://sandbox.orcid.org/#{author.author_orcid}",
-                             target: '_blank', class: 'c-orcid__id').html_safe
-      else
-        view_context.link_to("https://orcid.org/#{author.author_orcid}",
-                             "https://orcid.org/#{author.author_orcid}",
-                             target: '_blank', class: 'c-orcid__id').html_safe
-      end
-    end
-
-    # an english list of items with the conjunction between the final pair, if needed.  Conjunction would be 'and' or
-    # 'or' usually
-    def english_list(array:, conjunction:)
-      return '' if array.empty?
-      return array.first if array.length == 1
-      "#{array[0..-2].join(', ')} #{conjunction} #{array.last}"
     end
 
   end

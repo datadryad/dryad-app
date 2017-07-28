@@ -30,6 +30,7 @@ module StashEngine
       end
     end
 
+    # this requires a method called resource in the controller that returns the current resource (usually @resource)
     def require_modify_permission
       return if owner? || current_user.superuser? || admin?
       display_authorization_failure
