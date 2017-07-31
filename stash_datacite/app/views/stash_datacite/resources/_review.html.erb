@@ -96,8 +96,8 @@
   <% end %>
 
   // handle the events for user_comment box & submit if it is present
-  updateSubmitCommentDisabled();
   if($('#user_comment').length){
+    updateSubmitCommentDisabled();
     $('#user_comment').on('input propertychange paste', function() {
       updateSubmitCommentDisabled();
     });
