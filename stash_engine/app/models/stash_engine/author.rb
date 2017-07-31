@@ -1,5 +1,8 @@
 module StashEngine
   class Author < ActiveRecord::Base
+
+    include StashEngine::Concerns::ResourceUpdated
+
     belongs_to :resource, class_name: 'StashEngine::Resource'
 
     EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z\d\-]+)*\.[a-z]+\z/i

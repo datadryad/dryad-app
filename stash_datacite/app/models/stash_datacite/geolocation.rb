@@ -7,6 +7,7 @@ module StashDatacite
     belongs_to :geolocation_place, class_name: 'StashDatacite::GeolocationPlace', foreign_key: 'place_id'
     belongs_to :geolocation_point, class_name: 'StashDatacite::GeolocationPoint', foreign_key: 'point_id'
     belongs_to :geolocation_box, class_name: 'StashDatacite::GeolocationBox', foreign_key: 'box_id'
+    include StashEngine::Concerns::ResourceUpdated
 
     amoeba do
       enable

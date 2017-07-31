@@ -2,6 +2,7 @@
 # Simplecov
 
 require 'simplecov' if ENV['COVERAGE']
+require 'byebug'
 
 # ------------------------------------------------------------
 # Rspec configuration
@@ -42,7 +43,9 @@ end.to_h
 ENGINES.each do |engine_name, engine_path|
   models_path = "#{engine_path}/app/models/#{engine_name}"
   $LOAD_PATH.unshift(models_path) if File.directory?(models_path)
-  Dir.glob("#{models_path}/**/*.rb").sort.each(&method(:require))
+  tmp = Dir.glob("#{models_path}/**/*.rb").sort
+  tmp.sort! { |x, y| y.include?('/concerns/').to_s <=> x.include?('/concerns/').to_s } # sort concerns first
+  tmp.each(&method(:require))
 end
 
 stash_engine_path = ENGINES['stash_engine']

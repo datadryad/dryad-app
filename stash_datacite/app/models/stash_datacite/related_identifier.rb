@@ -2,8 +2,9 @@ module StashDatacite
   class RelatedIdentifier < ActiveRecord::Base
     self.table_name = 'dcs_related_identifiers'
     belongs_to :resource, class_name: StashEngine::Resource.to_s
+    include StashEngine::Concerns::ResourceUpdated
 
-    scope :completed, ->  { where("TRIM(IFNULL(related_identifier, '')) > ''") } # only non-null & blank
+    scope :completed, -> { where("TRIM(IFNULL(related_identifier, '')) > ''") } # only non-null & blank
 
     RelationTypes = Datacite::Mapping::RelationType.map(&:value)
 
