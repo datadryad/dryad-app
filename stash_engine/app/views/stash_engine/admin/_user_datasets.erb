@@ -11,7 +11,7 @@
       <%= sort_by 'publication_date', title: 'Publication Date', current_column: @sort_column %>
     </th>
     <th class="<%= sort_display('updated_at', @sort_column) %>">
-      <%= sort_by 'updated_at', title: 'Updated', current_column: @sort_column %>
+      <%= sort_by 'updated_at', title: 'Last Modified', current_column: @sort_column %>
     </th>
     <th class="<%= sort_display('edited_by_name', @sort_column) %>" colspan="2">
       <%= sort_by 'edited_by_name', title: 'Edited By', current_column: @sort_column %>
