@@ -3,7 +3,7 @@
   <% if @resource.identifier && @resource.identifier.identifier %>
     <%= link_to @resource.title, stash_url_helpers.show_path(@resource.identifier.to_s), class: 'o-link__primary' %></h1>
   <% else %>
-    <%= @resource.title %>
+    <%= @resource.title %></h1>
   <% end %>
 
 <%= render partial: 'edits', locals: {presenters: @presenters} %>
