@@ -54,7 +54,9 @@ require 'stash_engine'
   app/jobs/stash_engine
   lib/stash_engine
 ].each do |dir|
-  Dir.glob("#{stash_engine_path}/#{dir}/**/*.rb").sort.each(&method(:require))
+  tmp = Dir.glob("#{stash_engine_path}/#{dir}/**/*.rb").sort
+  tmp.sort! { |x, y| y.include?('/concerns/').to_s <=> x.include?('/concerns/').to_s } # sort concerns first
+  tmp.each(&method(:require))
 end
 
 $LOAD_PATH.unshift("#{stash_engine_path}/app/models")
