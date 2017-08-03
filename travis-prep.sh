@@ -20,6 +20,9 @@ if [ ! -d ../stash ]; then
 
   set -x
   git clone https://github.com/CDLUC3/stash
+
+  echo "Checking out stash branch ${BRANCH}"
+
   cd stash
   git checkout ${BRANCH}
   { set +x; } 2>/dev/null
