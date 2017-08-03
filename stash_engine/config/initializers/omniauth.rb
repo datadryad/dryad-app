@@ -26,7 +26,7 @@ Rails.application.config.middleware.use OmniAuth::Builder do
   provider :orcid, StashEngine.app.orcid_key, StashEngine.app.orcid_secret,
     :member => StashEngine.app.member,
     :sandbox => StashEngine.app.sandbox,
-    :callback_url => '/stash/auth/orcid/callback',
+    :callback_path => '/stash/auth/orcid/callback',
     # :callback_url  => "#{request.base_url}/stash/auth/orcid/callback",
     :path_prefix    => '/stash/auth',
     :authorize_params => {
