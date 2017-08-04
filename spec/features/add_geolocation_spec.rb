@@ -41,10 +41,10 @@ describe 'add geolocation' do
 
       s_latitude = '37.8086'
       w_longitude = '-122.3511'
-      
+
       n_latitude = '47.6572'
       e_longitude = '-122.2674'
-      
+
       sw_latitude = find_blank_field_id('geolocation_box[sw_latitude]')
       fill_in sw_latitude, with: s_latitude
 
