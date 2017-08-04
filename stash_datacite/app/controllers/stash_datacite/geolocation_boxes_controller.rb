@@ -31,7 +31,7 @@ module StashDatacite
 
     # POST /geolocation_boxes
     def create
-      @geolocation = find_or_create_geolocation(params)
+      @geolocation = find_or_create_geolocation(params[:geolocation_box])
       @geolocation_box = @geolocation.geolocation_box
       respond_to do |format|
         @resource = StashEngine::Resource.find(params[:resource_id])
@@ -86,11 +86,11 @@ module StashDatacite
                                               :ne_longitude, :resource_id)
     end
 
-    def find_or_create_geolocation(params)
-      existing = find_geolocation_by_box(params)
+    def find_or_create_geolocation(box_params)
+      existing = find_geolocation_by_box(box_params)
       return existing if existing
-      Geolocation.new_geolocation(box: [params[:ne_latitude], params[:ne_longitude],
-                                        params[:sw_latitude], params[:sw_longitude]],
+      Geolocation.new_geolocation(box: [box_params[:ne_latitude], box_params[:ne_longitude],
+                                        box_params[:sw_latitude], box_params[:sw_longitude]],
                                   resource_id: params[:resource_id])
     end
   end
