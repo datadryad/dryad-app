@@ -13,14 +13,14 @@ class FixPublishers < ActiveRecord::Migration
 
     query = <<-SQL
       SELECT *
-        FROM dcs_publishers p
-       WHERE p.publisher = ?
+        FROM dcs_publishers
+       WHERE publisher = ?
     SQL
 
     update = <<-SQL
-      UPDATE dcs_publishers p
-         SET p.publisher = ?
-       WHERE p.publisher = ?
+      UPDATE dcs_publishers
+         SET publisher = ?
+       WHERE publisher = ?
     SQL
 
     client = ActiveRecord::Base.connection.raw_connection
@@ -32,7 +32,7 @@ class FixPublishers < ActiveRecord::Migration
       expected = result.count
 
       say("Updating '#{bad}' => '#{good}' (#{expected} rows)")
-      update_stmt.execute(bad, good)
+      update_stmt.execute(good, bad) # note argument order
       actual = update_stmt.affected_rows
       say("\t#{actual} rows affected")
 
