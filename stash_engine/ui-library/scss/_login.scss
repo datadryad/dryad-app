@@ -1,0 +1,44 @@
+.t-login__box {
+  width: 400px;
+  margin: 20px auto;
+  padding: 50px 0;
+  border-width: 1px;
+  border-style: solid;
+  border-color: $design-light-gray-color;
+  text-align: center;
+}
+
+.t-login__or-box {
+  width: 100px;
+  margin: 0 auto;
+}
+
+.t-login__orcid {
+  display: block;
+  width: 300px;
+  height: 90px;
+  margin-right: auto;
+  margin-left: auto;
+  background: inline('../images/logo_orcid.svg') center no-repeat;
+}
+
+.t-login__selector {
+  display: inline-block;
+  padding: 35px 0 0;
+  text-align: center;
+}
+
+.o-heading__level2-login-with {
+  @extend %o-heading__level2;
+  margin-bottom: 0;
+  font-size: 1.6em;
+  text-align: center;
+
+  a:link,
+  a:visited,
+  a:hover,
+  a:active {
+    color: $design-dark-blue-color;
+    text-decoration: none;
+  }
+}

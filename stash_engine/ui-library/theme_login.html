@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+<head>
+  <meta charset="UTF-8">
+  <title>Home Page Theme</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <!-- build:css css/ui.css -->
+  <link rel="stylesheet" href="css/main.css">
+  <!-- endbuild -->
+  <style>
+    /* styles for this page only */
+
+  </style>
+  <script
+        src="https://code.jquery.com/jquery-2.2.3.min.js"
+        integrity="sha256-a23g1Nt4dtEYOj7bR+vTu7+T8VP13humZFBJNIYoEJo="
+        crossorigin="anonymous"></script>
+</head>
+<body>
+
+<div class="ui-library-header">
+  <h1><a href="index.html">Dash UI Library</a></h1>
+  <h2>Login Page Theme</h2>
+</div>
+
+<!-- Begin Header Component -->
+<header class="t-home__header c-header">
+  <div class="c-header__logos">
+    <button aria-label="mobile menu" class="o-button__menu c-header__menu-button js-header__menu-button"></button>
+    <a href="" class="c-header__dash-logo-link">
+      <img class="c-header__dash-logo-svg" src="images/logo_dash.svg" alt="University of California, Dash. Data sharing made easy.">
+    </a>
+  </div>
+  <nav class="c-header__nav js-header__nav">
+    <div class="o-global-search c-header__global-search">
+      <label class="o-global-search__label" for="search-field-input1">Search</label>
+      <input class="o-global-search__input" id="search-field-input1" type="search" name="[name]" placeholder="Search">
+      <button aria-label="Submit" class="o-global-search__submit-button"></button>
+    </div>
+    <div class="c-header__nav-group">
+      <a href="" class="c-header__nav-item">Home</a>
+      <a href="" class="c-header__nav-item--active">Browse Data</a>
+      <a href="" class="c-header__nav-item">Help</a>
+      <a href="" class="c-header__nav-item">My Datasets</a>
+      <!--##include file="includes/sites.html" -->
+    </div>
+  </nav>
+</header>
+<!-- End Header Component -->
+
+
+
+
+
+<div class="t-login__box">
+  <h2 class="o-heading__level2-login-with">Login using</h2>
+  <a class="t-login__orcid" href="#" title="Login with ORCID" id="orcid_login"></a>
+</div>
+
+<div class="o-heading__level2-login-with">- or -</div>
+
+<div class="t-login__box">
+  <h2 class="o-heading__level2-login-with">Login using Single Sign-on</h2>
+  <div class="t-login__selector">
+    <select name="sign_in">
+      <option value="">DataONE</option>
+      <option value="">UC Berkeley</option>
+      <option value="">UC Davis</option>
+      <option value="">UC Irvine</option>
+      <option value="">UC Merced</option>
+      <option value="">UC Office of the President</option>
+      <option value="">UC Riverside</option>
+      <option value="">UC San Francisco</option>
+      <option value="">UC Santa Cruz</option>
+      <option value="">Developer login</option>
+    </select>
+    <input type="submit"/>
+  </div>
+</div>
+
+
+
+<!--#include file="includes/footer.html" -->
+
+<!-- build:js js/ui.js -->
+<script src="js/modernizr-custombuild.js"></script>
+<script src="js/details-polyfill.js"></script>
+<script src="js/main.js"></script>
+<!-- endbuild -->
+
+</body>
+</html>
