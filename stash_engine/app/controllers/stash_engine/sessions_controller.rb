@@ -26,6 +26,18 @@ module StashEngine
       redirect_to root_path
     end
 
+    def choose_login; end
+
+    def choose_sso
+      return unless params[:tenant_id].blank?
+      if params[:tenant_id] == 'developer'
+        redirect_to '/stash/auth/developer'
+      else
+        t = StashEngine::Tenant.find(params[:tenant_id])
+        redirect_to t.try(:omniauth_login_path)
+      end
+    end
+
     private
 
     def set_session

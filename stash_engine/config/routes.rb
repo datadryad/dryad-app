@@ -54,6 +54,8 @@ StashEngine::Engine.routes.draw do
   match 'auth/:provider/callback', :to => 'sessions#callback', :via => [:get, :post]
   get 'auth/failure', :to => redirect('/')
   get 'sessions/destroy', :to => 'sessions#destroy'
+  get 'sessions/choose_login', to: 'sessions#choose_login', as: 'choose_login'
+  get 'sessions/choose_sso', to: 'sessions#choose_sso', as: 'choose_sso'
 
   get 'help', :to => 'pages#help'
   get 'faq', :to => 'pages#faq'

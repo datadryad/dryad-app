@@ -1,0 +1,11 @@
+<div class="t-login__box">
+  <h2 class="o-heading__level2-login-with">Login using Single Sign-on</h2>
+  <div class="t-login__selector">
+    <%= form_tag({controller: 'sessions', action: 'choose_sso'}, method: :get) do %>
+      <% options = StashEngine::Tenant.all.map { |t| [ t.short_name, t.tenant_id ] } %>
+      <% options.push(['Developer Login', 'developer']) if ['development', 'test'].include?(Rails.env) %>
+      <%= select_tag(:tenant_id, options_for_select(options, current_tenant) ) %>
+      <%= submit_tag('Submit') %>
+    <% end %>
+  </div>
+</div>
