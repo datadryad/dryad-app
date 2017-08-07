@@ -48,6 +48,9 @@
       </form>
 
       <div class="c-header__nav-group">
+        <% if current_user && %w[development test].include?(Rails.env) %>
+          <span class="c-header__nav-item" title="<%= current_user.email %>" style="color: blue;">[<%= current_user.name %>@<%= current_tenant.tenant_id %>]</span>
+        <% end %>
         <% if current_user && %w[admin superuser].include?(current_user.role) %>
           <%= link_to 'Admin', stash_url_helpers.admin_path, class: 'c-header__nav-item' %>
         <% end %>
