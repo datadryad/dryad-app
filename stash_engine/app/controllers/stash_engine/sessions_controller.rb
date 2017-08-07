@@ -29,7 +29,7 @@ module StashEngine
     def choose_login; end
 
     def choose_sso
-      return unless params[:tenant_id].blank?
+      return if params[:tenant_id].blank?
       if params[:tenant_id] == 'developer'
         redirect_to '/stash/auth/developer'
       else
