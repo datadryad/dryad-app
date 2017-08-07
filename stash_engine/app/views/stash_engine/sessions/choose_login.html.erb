@@ -1,3 +1,23 @@
 <%= render partial: 'orcid_section' %>
 <div class="o-heading__level2-login-with">- or -</div>
 <%= render partial: 'sso_section' %>
+
+<% if ['development', 'test'].include?(Rails.env) %>
+  <div style="width: 300px; margin: auto; text-align: center;" id="other_sites_clicker">
+    <a href="#">Other Dash sites</a><br/>(shown in development/test only)
+  </div>
+  <div style="width: 300px; margin: auto; text-align: center; display: none;" id="other_sites">
+  <p>
+    <% StashEngine::Tenant.all.each do |t| %>
+      <%= link_to t.short_name, "https://#{t.full_domain}" %>&nbsp;&nbsp;
+    <% end %>
+  </p>
+  </div>
+  <script>
+    $('#other_sites_clicker').click(function(e){
+      e.preventDefault();
+      $('#other_sites').show();
+    });
+  </script>
+
+<% end %>
