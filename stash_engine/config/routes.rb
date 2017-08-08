@@ -50,7 +50,8 @@ StashEngine::Engine.routes.draw do
 
   # root 'sessions#index'
   root 'pages#home'
-  match 'auth/orcid/callback', :to => 'metadata_entry_pages#metadata_callback', :via => [:get, :post]
+  match 'auth/orcid/callback', :to => 'sessions#orcid_callback', :via => [:get, :post]
+  match 'auth/developer/callback', to: 'sessions#developer_callback', :via => [:get, :post]
   match 'auth/:provider/callback', :to => 'sessions#callback', :via => [:get, :post]
   get 'auth/failure', :to => redirect('/')
   get 'sessions/destroy', :to => 'sessions#destroy'

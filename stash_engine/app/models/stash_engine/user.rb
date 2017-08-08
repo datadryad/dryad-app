@@ -2,11 +2,12 @@ module StashEngine
   class User < ActiveRecord::Base
     has_many :resources
 
-    def self.from_omniauth(auth, tenant_id)
+    def self.from_omniauth(auth, tenant_id, orcid)
       where(uid: auth[:uid]).first_or_initialize.tap do |user|
         init_user_from_auth(user, auth)
         user.tenant_id = tenant_id
         user.last_login = Time.new
+        user.orcid = orcid if orcid
         user.save!
       end
     end

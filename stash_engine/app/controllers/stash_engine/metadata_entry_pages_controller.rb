@@ -34,18 +34,6 @@ module StashEngine
       redirect_to metadata_entry_pages_find_or_create_path(resource_id: @new_res.id)
     end
 
-    def metadata_callback # rubocop:disable Metrics/AbcSize
-      auth_hash = request.env['omniauth.auth']
-      params = request.env['omniauth.params']
-      StashEngine::Author.create(
-        resource_id: params['resource_id'],
-        author_first_name: auth_hash.info.first_name,
-        author_last_name: auth_hash.info.last_name,
-        author_orcid: auth_hash.uid
-      )
-      redirect_to request.env['omniauth.origin']
-    end
-
     private
 
     def resource_exist

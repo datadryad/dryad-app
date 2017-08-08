@@ -5,6 +5,7 @@
       <% options = StashEngine::Tenant.all.map { |t| [ t.short_name, t.tenant_id ] } %>
       <% options.push(['Developer Login', 'developer']) if ['development', 'test'].include?(Rails.env) %>
       <%= select_tag(:tenant_id, options_for_select(options, current_tenant) ) %>
+      <%= hidden_field_tag(:orcid, params[:orcid]) %>
       <%= submit_tag('Submit') %>
     <% end %>
   </div>

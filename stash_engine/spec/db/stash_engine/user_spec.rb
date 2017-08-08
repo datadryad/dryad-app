@@ -17,7 +17,7 @@ module StashEngine
             token: '1234567890'
           }
         }.to_ostruct
-        user = User.from_omniauth(auth, 'ucop')
+        user = User.from_omniauth(auth, 'ucop', '1234-5678-9012-3456')
         expect(user).to be_a(User)
         expect(user).to be_persisted
         expect(user.uid).to eq('lmuckenhaupt-ucop@ucop.edu')
@@ -27,6 +27,7 @@ module StashEngine
         expect(user.provider).to eq('google_oauth2')
         expect(user.tenant_id).to eq('ucop')
         expect(user.oauth_token).to eq('1234567890')
+        expect(user.orcid).to eq('1234-5678-9012-3456')
       end
     end
 
