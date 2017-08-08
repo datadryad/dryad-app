@@ -6,11 +6,10 @@ module StashEngine
     before_action :callback_basics, only: %i[callback developer_callback]
     before_action :orcid_shenanigans, only: [:orcid_callback] # do not go to action if it's just a metadata set, not a login
 
-    # this is the place omniauth calls back when logging in
+    # this is the place omniauth calls back for shibboleth/google logins
     def callback
       return unless passes_whitelist?
-      session[:user_id] = User.from_omniauth(@auth_hash, current_tenant.tenant_id,
-                                             request.env['omniauth.params']['orcid'] || params[:orcid]).id
+      session[:user_id] = User.from_omniauth(@auth_hash, current_tenant.tenant_id, unmangle_orcid).id
       redirect_to dashboard_path
     end
 
@@ -18,7 +17,7 @@ module StashEngine
       # this has orcid: request.env['omniauth.params']['orcid']
       check_developer_login!
       return unless passes_whitelist?
-      session[:user_id] = User.from_omniauth(@auth_hash, current_tenant.tenant_id, request.env['omniauth.params']['orcid']).id
+      session[:user_id] = User.from_omniauth(@auth_hash, current_tenant.tenant_id, unmangle_orcid).id
       redirect_to dashboard_path
     end
 
@@ -101,6 +100,17 @@ module StashEngine
         return false
       end
       reset_session
+    end
+
+    # every different login method has different ways of persisting state
+    # shibboleth has you make it part of the callback URL you give it (so it shows as one of the normal params in the callback here)
+    # omniauth claims to preserve it for certain login types (developer/facebook) in the request.env['omniauth.params']
+    # google's oauth2 only passes along things in their special 'state' parameter which then has to have things CGI encoded within it.
+    def unmangle_orcid
+      return request.env['omniauth.params'][:orcid] if request.env['omniauth.params'][:orcid]
+      return params[:orcid] if params[:orcid]
+      return Rack::Utils.parse_nested_query(params[:state])['orcid'] if params[:state]
+      nil
     end
 
     # this gets called from metadata entry form and is for adding an author, not for logging in.
