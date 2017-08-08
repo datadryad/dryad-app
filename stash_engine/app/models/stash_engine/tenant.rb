@@ -51,7 +51,8 @@ module StashEngine
       # note that StashEngine.app.stash_mount includes a leading slash
       # you must extra params in state param https://stackoverflow.com/questions/7722062/google-oauth2-redirect-uri-with-several-parameters
       state_param_val = CGI.escape((params ? params.to_param : ''))
-      path = "#{callback_path_begin}google_oauth2?state=#{state_param_val}"
+      qs = (state_param_val.blank? ? '' : "?state=#{state_param_val}")
+      path = "#{callback_path_begin}google_oauth2#{qs}"
       return path unless full_domain =~ /^localhost(:[0-9]+)?$/
       path.sub('https', 'http') # HACK: for testing
     end
