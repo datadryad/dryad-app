@@ -41,16 +41,21 @@ module StashEngine
     # generate login path for shibboleth & omniauth, this is unusual since we have multi-institution login, so have to
     # hack around limitations in the normal omniauth/shibboleth by directly addressing shibboleth.sso
     def shibboleth_login_path(params = nil)
+      extra_params = (params ? "?#{params.to_param}" : '')
       "https://#{full_domain}/Shibboleth.sso/Login?" \
-          "target=#{CGI.escape("https://#{full_domain}#{StashEngine.app.stash_mount}/auth/shibboleth/callback#{(params ? "?#{params.to_param})" : '')}")}" \
+          "target=#{CGI.escape("#{callback_path_begin}shibboleth/callback#{extra_params}")}" \
           "&entityID=#{CGI.escape(authentication.entity_id)}"
     end
 
     def google_login_path(params = nil)
       # note that StashEngine.app.stash_mount includes a leading slash
-      path = "https://#{full_domain}#{StashEngine.app.stash_mount}/auth/google_oauth2#{(params ? "?#{params.to_param}" : '')}"
+      path = "#{callback_path_begin}google_oauth2#{(params ? "?#{params.to_param}" : '')}"
       return path unless full_domain =~ /^localhost(:[0-9]+)?$/
       path.sub('https', 'http') # HACK: for testing
+    end
+
+    def callback_path_begin
+      "https://#{full_domain}#{StashEngine.app.stash_mount}/auth/"
     end
 
     def sword_params
