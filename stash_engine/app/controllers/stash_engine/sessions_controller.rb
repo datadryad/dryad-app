@@ -47,7 +47,7 @@ module StashEngine
         redirect_to "/stash/auth/developer?#{{ orcid: params[:orcid] }.to_param}"
       else
         t = StashEngine::Tenant.find(params[:tenant_id])
-        redirect_to t.omniauth_login_path(orcid: params[:orcid])
+        redirect_to t.omniauth_login_path #(orcid: params[:orcid])
       end
     end
 
