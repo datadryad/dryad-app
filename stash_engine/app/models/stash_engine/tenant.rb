@@ -41,18 +41,8 @@ module StashEngine
     # generate login path for shibboleth & omniauth, this is unusual since we have multi-institution login, so have to
     # hack around limitations in the normal omniauth/shibboleth by directly addressing shibboleth.sso
     def shibboleth_login_path(params = nil)
-
-      # this one seems broken and gives a discofeed something
-      #"https://#{full_domain}/Shibboleth.sso/Login?" \
-      #    "target=#{CGI.escape("https://#{full_domain}" \
-      #    "#{StashEngine.app.stash_mount}/auth/shibboleth/callback")}" \
-      #    "?entityID=#{CGI.escape(authentication.entity_id)}" \
-      #    "#{(params ? "&#{params.to_param}" : '')}"
-
-      # this is the old one which I think works
       "https://#{full_domain}/Shibboleth.sso/Login?" \
-          "target=#{CGI.escape("https://#{full_domain}" \
-          "#{StashEngine.app.stash_mount}/auth/shibboleth/callback")}" \
+          "target=#{CGI.escape("https://#{full_domain}#{StashEngine.app.stash_mount}/auth/shibboleth/callback#{(params ? "?#{params.to_param})" : '')}")}" \
           "&entityID=#{CGI.escape(authentication.entity_id)}"
     end
 
