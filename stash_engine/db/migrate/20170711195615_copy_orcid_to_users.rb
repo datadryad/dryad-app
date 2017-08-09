@@ -15,8 +15,8 @@ class CopyOrcidToUsers < ActiveRecord::Migration
                     GROUP BY author_id
                   ) AS o
                ON u.id         = o.user_id
-              AND u.first_name = o.author_first_name
-              AND u.last_name  = o.author_last_name
+              AND u.first_name = o.author_first_name COLLATE utf8mb4_general_ci
+              AND u.last_name  = o.author_last_name COLLATE utf8mb4_general_ci
               SET u.orcid = o.author_orcid;
     SQL
 
