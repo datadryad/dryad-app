@@ -14,7 +14,7 @@ module StashEngine
     end
 
     def developer_callback
-      # this has orcid: request.env['omniauth.params']['orcid']
+      return if check_developer_orcid!
       check_developer_login!
       return unless passes_whitelist?
       session[:user_id] = User.from_omniauth(@auth_hash, current_tenant.tenant_id, unmangle_orcid).id
@@ -24,16 +24,7 @@ module StashEngine
     # takes the orcid logins (which can come from a login or from a metadata entry page), origin=login is main login page
     # the metadata page
     def orcid_callback
-      @users = User.where(orcid: @orcid)
-
-      case @users.count
-      when 1
-        login_from_orcid
-      else
-        # either none or multiple users with one ORCID reset those duplicates and make them validate their tenant again
-        @users.each { |u| u.update_column(:orcid, nil) } # reset them since there should be only one and make them validate again
-        render :choose_sso
-      end
+      orcid_choose_tenant_or_login!
     end
 
     # destroy the session (ie, log out)
@@ -92,6 +83,14 @@ module StashEngine
       @auth_hash[:uid] = mangle_uid_with_tenant(@auth_hash[:uid], current_tenant.tenant_id)
     end
 
+    # if only orcid filled in then act like it's an orcid login.  Either log in or redirect to choose tenant
+    def check_developer_orcid!
+      return false unless params[:name].blank? && params[:email].blank? && params[:test_domain].blank? && !params[:orcid].blank?
+      @orcid = params[:orcid]
+      orcid_choose_tenant_or_login!
+      true
+    end
+
     def passes_whitelist?
       return true if current_tenant.whitelisted?(@auth_hash.info.email)
       redirect_to root_path, flash: { alert: 'You were not authorized to log in' } unless current_tenant.whitelisted?(@auth_hash.info.email)
@@ -114,6 +113,19 @@ module StashEngine
       return true if @orcid
       head(:forbidden)
       false
+    end
+
+    def orcid_choose_tenant_or_login!
+      @users = User.where(orcid: @orcid)
+
+      case @users.count
+      when 1
+        login_from_orcid
+      else
+        # either none or multiple users with one ORCID reset those duplicates and make them validate their tenant again
+        @users.each { |u| u.update_column(:orcid, nil) } # reset them since there should be only one and make them validate again
+        render :choose_sso
+      end
     end
 
     def login_from_orcid
