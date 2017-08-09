@@ -34,7 +34,7 @@ module Stash
         }.freeze
         allow(tenant).to receive(:sword_params).and_return(sword_params)
         allow(tenant).to receive(:id).and_return('example_u')
-        allow(tenant).to receive(:landing_url) { |path_to_landing| URI::HTTPS.build(host: 'stash.example.edu', path: path_to_landing).to_s }
+        allow(tenant).to receive(:full_url) { |path_to_landing| URI::HTTPS.build(host: 'stash.example.edu', path: path_to_landing).to_s }
 
         @resource_id = 37
         @resource = double(StashEngine::Resource)

@@ -34,7 +34,7 @@ module Stash
         }
         allow(tenant).to receive(:identifier_service).and_return(OpenStruct.new(id_params))
         allow(tenant).to receive(:tenant_id).and_return('dataone')
-        allow(tenant).to receive(:landing_url).with(path_to_landing).and_return(landing_page_url)
+        allow(tenant).to receive(:full_url).with(path_to_landing).and_return(landing_page_url)
         allow(resource).to receive(:tenant).and_return(tenant)
 
         @helper = EzidHelper.new(resource: resource)

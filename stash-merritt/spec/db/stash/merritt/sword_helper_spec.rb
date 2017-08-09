@@ -59,7 +59,7 @@ module Stash
                                                                  id_scheme: 'doi')
         allow(tenant).to receive(:tenant_id).and_return('dataone')
         allow(tenant).to receive(:short_name).and_return('DataONE')
-        allow(tenant).to receive(:landing_url) { |path| "https://stash-dev.example.edu/#{path}" }
+        allow(tenant).to receive(:full_url) { |path| "https://stash-dev.example.edu/#{path}" }
         allow(tenant).to receive(:sword_params).and_return(sword_params)
         allow(StashEngine::Tenant).to receive(:find).with('dataone').and_return(tenant)
         allow(tenant).to receive(:full_domain).and_return('stash.example.edu')
