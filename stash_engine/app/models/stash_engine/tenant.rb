@@ -93,8 +93,8 @@ module StashEngine
       new(StashEngine.tenants[tenant_id])
     end
 
-    def landing_url(path_to_landing)
-      URI::HTTPS.build(host: full_domain, path: path_to_landing).to_s
+    def full_url(path)
+      URI::HTTPS.build(host: full_domain, path: path).to_s
     end
 
     def whitelist

@@ -45,7 +45,7 @@ module StashEngine
 
     # helper to generate URL for landing page for an identifier with currently logged-in tenant
     def landing_url(identifier)
-      current_tenant.landing_url(stash_url_helpers.show_path(identifier))
+      current_tenant.full_url(stash_url_helpers.show_path(identifier))
     end
 
     # contact us url

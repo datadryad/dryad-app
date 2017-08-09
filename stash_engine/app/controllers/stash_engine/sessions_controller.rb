@@ -1,7 +1,7 @@
 require_dependency 'stash_engine/application_controller'
 
 module StashEngine
-  class SessionsController < ApplicationController
+  class SessionsController < ApplicationController # rubocop:disable Metrics/ClassLength
     skip_before_action :verify_authenticity_token, only: %i[callback developer_callback orcid_callback]
     before_action :callback_basics, only: %i[callback developer_callback]
     before_action :orcid_shenanigans, only: [:orcid_callback] # do not go to action if it's just a metadata set, not a login
@@ -24,9 +24,16 @@ module StashEngine
     # takes the orcid logins (which can come from a login or from a metadata entry page), origin=login is main login page
     # the metadata page
     def orcid_callback
-      # redirect_to choose_sso_path(orcid: @auth_hash.uid)
-      params[:orcid] = @auth_hash.uid
-      render :choose_sso
+      @users = User.where(orcid: @orcid)
+
+      case @users.count
+      when 1
+        login_from_orcid
+      else
+        # either none or multiple users with one ORCID reset those duplicates and make them validate their tenant again
+        @users.each { |u| u.update_column(:orcid, nil) } # reset them since there should be only one and make them validate again
+        render :choose_sso
+      end
     end
 
     # destroy the session (ie, log out)
@@ -99,7 +106,21 @@ module StashEngine
         metadata_callback
         return false
       end
-      reset_session
+      setup_orcid
+    end
+
+    def setup_orcid
+      @orcid = @auth_hash.uid
+      return true if @orcid
+      head(:forbidden)
+      false
+    end
+
+    def login_from_orcid
+      user = @users.first
+      session[:user_id] = user.id
+      tenant = Tenant.find(user.tenant_id)
+      redirect_to tenant.full_url(dashboard_path)
     end
 
     # every different login method has different ways of persisting state

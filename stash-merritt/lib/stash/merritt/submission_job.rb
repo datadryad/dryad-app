@@ -52,7 +52,7 @@ module Stash
       def landing_page_url
         @landing_page_url ||= begin
           path_to_landing = url_helpers.show_path(resource.identifier_str)
-          tenant.landing_url(path_to_landing)
+          tenant.full_url(path_to_landing)
         end
       end
 

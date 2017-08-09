@@ -153,10 +153,10 @@ module StashEngine
       end
     end
 
-    describe :landing_url do
-      it 'builds a relative URL from the full_domain' do
+    describe :full_url do
+      it 'builds a full URL from a tenant' do
         tenant = Tenant.by_domain('example.edu')
-        expect(tenant.landing_url('/doi:10.123/456')).to eq('https://stash-dev.example.edu/doi:10.123/456')
+        expect(tenant.full_url('/doi:10.123/456')).to eq('https://stash-dev.example.edu/doi:10.123/456')
       end
     end
 
