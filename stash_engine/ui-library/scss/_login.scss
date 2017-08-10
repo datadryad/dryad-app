@@ -13,6 +13,13 @@
   margin: 0 auto;
 }
 
+.t-login__more-messages {
+  display: flex;
+  align-items: center;
+  width: 300px;
+  margin: 0 auto;
+}
+
 .t-login__orcid {
   display: block;
   width: 300px;
@@ -20,6 +27,13 @@
   margin-right: auto;
   margin-left: auto;
   background: inline('../images/logo_orcid.svg') center no-repeat;
+}
+
+.t-login__orcid-small {
+  display: inline-block;
+  width: 80px;
+  height: 30px;
+  background: inline('../images/logo_orcid.svg') center / 80px no-repeat;
 }
 
 .t-login__selector {
