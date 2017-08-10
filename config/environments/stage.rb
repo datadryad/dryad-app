@@ -86,7 +86,7 @@ Rails.application.configure do
     # :deliver_with => :deliver, # Rails >= 4.2.1 do not need this option since it defaults to :deliver_now
     :email_prefix => "[Dash2 Exception]",
     :sender_address => %{"Dash2 Notifier" <no-reply-dash2-stg@ucop.edu>},
-    :exception_recipients => %w{david.moles@ucop.edu marisa.strong@ucop.edu scott.fisher@ucop.edu bhavi.vedula@ucop.edu}
+    :exception_recipients => %w{marisa.strong@ucop.edu scott.fisher@ucop.edu bhavi.vedula@ucop.edu}
   }
 
   config.action_mailer.delivery_method = :sendmail
