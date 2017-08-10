@@ -63,6 +63,9 @@ module StashDatacite
     def submission
       resource_id = params[:resource_id]
       resource = StashEngine::Resource.find(resource_id)
+
+      return if processing?(resource)
+
       update_submission_resource_info(resource)
 
       StashEngine.repository.submit(resource_id: resource_id)
@@ -127,6 +130,14 @@ module StashDatacite
       msg << (identifier_uri ? "with DOI #{identifier_uri}." : '.')
       msg << 'There may be a delay for processing before the item is available.'
       msg.join(' ')
+    end
+
+    def processing?(resource)
+      if resource && resource.identifier && resource.identifier.processing?
+        redirect_to :back, notice: 'Your previous dataset is still being processed, please wait until it completes before submitting again'
+        return true
+      end
+      false
     end
 
   end
