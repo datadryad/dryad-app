@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170803225617) do
+ActiveRecord::Schema.define(version: 20170811214704) do
 
   create_table "bookmarks", force: :cascade do |t|
     t.integer  "user_id",       limit: 4,   null: false
@@ -296,7 +296,7 @@ ActiveRecord::Schema.define(version: 20170803225617) do
   create_table "stash_engine_file_uploads", force: :cascade do |t|
     t.text     "upload_file_name",    limit: 65535
     t.text     "upload_content_type", limit: 65535
-    t.integer  "upload_file_size",    limit: 4
+    t.integer  "upload_file_size",    limit: 8
     t.integer  "resource_id",         limit: 4
     t.datetime "upload_updated_at"
     t.datetime "created_at",                                        null: false
