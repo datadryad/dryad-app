@@ -25,6 +25,7 @@ module Stash
       def create_zipfile
         StashDatacite::PublicationYear.ensure_pub_year(resource)
         zipfile_path = File.join(workdir, "#{resource_id}_archive.zip")
+        Zip.write_zip64_support = true
         Zip::File.open(zipfile_path, Zip::File::CREATE) do |zipfile|
           builders.each { |builder| write_to_zipfile(zipfile, builder) }
           new_uploads.each { |upload| add_to_zipfile(zipfile, upload) }
