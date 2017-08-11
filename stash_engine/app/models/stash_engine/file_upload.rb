@@ -59,5 +59,20 @@ module StashEngine
 
       Version.find_by_sql([sql, resource.identifier_id, upload_file_name]).first
     end
+
+    # makes list of directories with numbers. not modified for > 7 days, and whose corresponding resource has been successfully submitted
+    # this could be handy for doing cleanup and keeping old files around for a little while in case of submission problems
+    # currently not used since it would make sense to cron this or something similar
+    def self.cleanup_dir_list(uploads_dir = Resource.uploads_dir)
+      my_dirs = older_resource_named_dirs(uploads_dir)
+      return [] if my_dirs.empty?
+      Resource.joins(:current_resource_state).where(id: my_dirs)
+        .where("stash_engine_resource_states.resource_state = 'submitted'").pluck(:id)
+    end
+
+    def self.older_resource_named_dirs(uploads_dir)
+      Dir.glob(File.join(uploads_dir, '*')).select { |i| %r{/\d+$}.match(i) }
+        .select { |i| File.directory?(i) }.select { |i| File.mtime(i) + 7.days < Time.new }.map { |i| File.basename(i) }
+    end
   end
 end
