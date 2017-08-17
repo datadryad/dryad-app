@@ -14,7 +14,7 @@ module Stash
       DEFAULT_MAX_REDIRECTS = 5
 
       # The default number of seconds to allow before timing out. Defaults to 10 minutes.
-      DEFAULT_TIMEOUT = 86400 # a day
+      DEFAULT_TIMEOUT = 86_400 # a day
 
       # @return [String] the User-Agent string to send when making requests
       attr_accessor :user_agent
