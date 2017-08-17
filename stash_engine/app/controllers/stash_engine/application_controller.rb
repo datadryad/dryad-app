@@ -38,7 +38,7 @@ module StashEngine
 
     # only someone who has created the dataset in progress can edit it.  Other users can't until they're finished
     def require_in_progress_editor
-      return if resource.dataset_in_progress_editor.id == current_user.id
+      return if resource.dataset_in_progress_editor.id == current_user.id || current_user.superuser?
       display_authorization_failure
     end
 
