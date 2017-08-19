@@ -182,18 +182,26 @@ module StashEngine
     end
 
     def api_async_download(resource:, email:)
-      domain, local_id = resource.merritt_protodomain_and_local_id
+      url = merritt_friendly_async_url(resource: resource)
 
-      tenant = resource.tenant
-      url = "#{domain}/asyncd/#{local_id}/#{resource.stash_version.merritt_version}"
-      params = { user_agent_email: email, userFriendly: true }
+      email_from = [current_tenant.contact_email].flatten.first
+      email_subject = "Your download for #{resource.title} is ready"
+      email_body = File.read(File.join(StashEngine::Engine.root, 'app', 'views', 'stash_engine', 'downloads', 'async_email.txt.erb'))
 
-      res = http_client_w_basic_auth(tenant).get(url, query: params, follow_redirect: true)
+      params = { user_agent_email: email, userFriendly: true, losFrom: email_from, losSubject: email_subject, losBody: email_body }
+
+      res = http_client_w_basic_auth(resource.tenant).get(url, query: params, follow_redirect: true)
       status = res.status_code
       return if status == 200
 
       query_string = HTTP::Message.create_query_part_str(params)
       raise_merritt_error('Merritt async download request', "unexpected status #{status}", resource.id, "#{url}?#{query_string}")
+    end
+
+    # TODO: move this into a merritt-specific module
+    def merritt_friendly_async_url(resource:)
+      domain, local_id = resource.merritt_protodomain_and_local_id
+      "#{domain}/asyncd/#{local_id}/#{resource.stash_version.merritt_version}"
     end
 
     # encapsulates all the settings to make basic auth with a get request work correctly for Merritt
