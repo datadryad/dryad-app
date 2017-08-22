@@ -26,10 +26,14 @@ module Stash
         StashDatacite::PublicationYear.ensure_pub_year(resource)
         zipfile_path = File.join(workdir, "#{resource_id}_archive.zip")
         Zip.write_zip64_support = true
+        GC.start()
         Zip::File.open(zipfile_path, Zip::File::CREATE) do |zipfile|
-          builders.each { |builder| write_to_zipfile(zipfile, builder) }
-          new_uploads.each { |upload| add_to_zipfile(zipfile, upload) }
+          GC.start()
+          builders.each { |builder| write_to_zipfile(zipfile, builder); GC.start() }
+          new_uploads.each { |upload| add_to_zipfile(zipfile, upload); GC.start() }
+          GC.start()
         end
+        GC.start()
         zipfile_path
       end
 
@@ -60,7 +64,7 @@ module Stash
         @workdir ||= begin
           path = resource.upload_dir
           FileUtils.mkdir_p(path)
-          tmpdir = Dir.mktmpdir('uploads', path)
+          tmpdir = Dir.mktmpdir('uploads', path) # tmpdir needs to be persisted ? since tempfiles/directories are garbage collected when they go out of scope
           File.absolute_path(tmpdir)
         end
       end
