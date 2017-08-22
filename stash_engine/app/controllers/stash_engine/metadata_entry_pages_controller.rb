@@ -45,7 +45,7 @@ module StashEngine
       set_return_to_path_from_referrer # needed for dropping into edit (and back) from various places in the ui
 
       if @identifier.in_progress_only?
-        redirect_to(metadata_entry_pages_find_or_create_path(resource_id: in_progress_resource.id))
+        redirect_to(metadata_entry_pages_find_or_create_path(resource_id: @identifier.in_progress_resource.id))
         false
       elsif @identifier.processing? || @identifier.error?
         redirect_to dashboard_path, alert: 'You may not create a new version of the dataset until processing completes or any errors are resolved'
