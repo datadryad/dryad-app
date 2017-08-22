@@ -6,6 +6,7 @@ module StashEngine
     before_action :resource_exist, except: [:metadata_callback]
     before_action :require_modify_permission, except: [:metadata_callback]
     before_action :require_in_progress_editor, only: %i[find_or_create]
+    before_action :require_can_duplicate, only: :new_version
 
     def resource
       @resource ||= Resource.find(params[:resource_id])
@@ -20,14 +21,6 @@ module StashEngine
 
     # create a new version of this resource before editing with find or create
     def new_version
-      set_return_to_path_from_referrer # needed for dropping into edit (and back) from various places in the ui
-      # create new version deep copy of most items
-      @resource = Resource.find(params[:resource_id])
-      identifier = @resource.identifier
-      in_progress_resource = identifier && identifier.in_progress_resource
-      if in_progress_resource
-        redirect_to(metadata_entry_pages_find_or_create_path(resource_id: in_progress_resource.id)) && return
-      end
       duplicate_resource
 
       # redirect to find or create path
@@ -45,6 +38,19 @@ module StashEngine
       @new_res = @resource.amoeba_dup
       @new_res.current_editor_id = current_user.id
       @new_res.save!
+    end
+
+    def require_can_duplicate
+      return false unless (@identifier = resource.identifier)
+      set_return_to_path_from_referrer # needed for dropping into edit (and back) from various places in the ui
+
+      if @identifier.in_progress_only?
+        redirect_to(metadata_entry_pages_find_or_create_path(resource_id: in_progress_resource.id))
+        false
+      elsif @identifier.processing? || @identifier.error?
+        redirect_to dashboard_path, alert: 'You may not create a new version of the dataset until processing completes or any errors are resolved'
+        false
+      end
     end
 
   end

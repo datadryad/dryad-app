@@ -103,6 +103,30 @@ module StashEngine
           expect(identifier.processing?).to eq(true)
         end
       end
+
+      describe '#error?' do
+        it 'returns false if no "error" version exists' do
+          expect(identifier.error?).to eq(false)
+        end
+
+        it 'returns true if a "error" version exists' do
+          res2.current_state = 'error'
+          expect(identifier.error?).to eq(true)
+        end
+      end
+
+      # TODO: in progress is just the in-progress state itself of the group of in_progress states.  We need to fix our terminology.
+      describe '#in_progress_only?' do
+        it 'returns false if no "in_progress_only" version exists' do
+          res3.current_state = 'submitted'
+          expect(identifier.in_progress_only?).to eq(false)
+        end
+
+        it 'returns true if a "in_progress_only" version exists' do
+          res2.current_state = 'error'
+          expect(identifier.in_progress_only?).to eq(true)
+        end
+      end
     end
   end
 end

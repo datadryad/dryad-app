@@ -4,6 +4,7 @@ module StashEngine
   class ResourcesController < ApplicationController
     before_action :require_login, except: %i[increment_downloads data_paper]
     before_action :require_modify_permission, except: %i[index new increment_downloads data_paper]
+    before_action :require_in_progress, only: %i[upload review upload_manifest]
 
     attr_writer :resource
 
@@ -106,6 +107,11 @@ module StashEngine
     # Never trust parameters from the scary internet, only allow the white list through.
     def resource_params
       params.require(:resource).permit(:user_id, :current_resource_state_id)
+    end
+
+    def require_in_progress
+      redirect_to dashboard_path, alert: 'You may only edit the current version of the dataset' unless resource.current_state == 'in_progress'
+      false
     end
 
   end
