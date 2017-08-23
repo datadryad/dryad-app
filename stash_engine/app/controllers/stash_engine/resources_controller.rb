@@ -5,6 +5,7 @@ module StashEngine
     before_action :require_login, except: %i[increment_downloads data_paper]
     before_action :require_modify_permission, except: %i[index new increment_downloads data_paper]
     before_action :require_in_progress, only: %i[upload review upload_manifest]
+    before_action :lockout_incompatible_uploads, only: %i[upload upload_manifest]
 
     attr_writer :resource
 
@@ -83,15 +84,13 @@ module StashEngine
     # Upload files view for resource
     def upload
       # @resource.clean_uploads # might want this back cleans database to match existing files on file system
-      @file = FileUpload.new(resource_id: resource.id) # this is apparanty needed for the upload control
+      @file = FileUpload.new(resource_id: resource.id) # this is apparantly needed for the upload control
       @uploads = resource.latest_file_states
       render 'upload_manifest' if resource.upload_type == :manifest
     end
 
     # upload by manifest view for resource
-    def upload_manifest
-      (redirect_to upload_resource_path(resource) && return) if resource.upload_type == :files
-    end
+    def upload_manifest; end
 
     # PATCH/PUT /resources/1/increment_downloads
     def increment_downloads
@@ -114,5 +113,14 @@ module StashEngine
       false
     end
 
+    def lockout_incompatible_uploads
+      if request[:action] == 'upload' && resource.upload_type == :manifest
+        redirect_to upload_manifest_resource_path(resource)
+        false
+      elsif request[:action] == 'upload_manifest' && resource.upload_type == :files
+        redirect_to upload_resource_path(resource)
+        false
+      end
+    end
   end
 end
