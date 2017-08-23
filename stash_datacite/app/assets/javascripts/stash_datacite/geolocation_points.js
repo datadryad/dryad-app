@@ -49,7 +49,7 @@ function isLatitude(lat) {
 
 function isLongitude(lng) {
   if(isFinite(lng) && Math.abs(lng) <= 180){
-    return lat;
+    return lng;
   }
   else {
     alert("Please enter a valid longitude value.The valid range is -180 to +180 degrees from the prime meridian.")
