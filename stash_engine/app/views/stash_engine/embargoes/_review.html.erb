@@ -55,7 +55,9 @@
   </div>
 <% end %>
 <script>
-  loadDatepicker(<%= APP_CONFIG.max_review_days %>);
+  $( document ).ready(function() {
+    loadDatepicker(<%= APP_CONFIG.max_review_days %>);
+  });
 </script>
 
 <% if current_user.id != @resource.user_id %>
