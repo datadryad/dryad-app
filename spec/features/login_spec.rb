@@ -8,6 +8,8 @@ describe 'login/logout' do
     login = first(:link_or_button, 'Login')
     expect(login).not_to be_nil
     login.click
+    select('Localhost', from: 'tenant_id')
+    first(:link_or_button, 'Submit').click
   end
 
   describe 'Login' do

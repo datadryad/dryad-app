@@ -24,6 +24,9 @@ describe 'review ' do
       end_date = Date.today + 3.months
       fill_in_future_pub_date(end_date)
 
+      page.find("body").click # maybe needed if selenium doesn't trigger blur correctly
+
+
       navigate_to_metadata!
       navigate_to_review!
 

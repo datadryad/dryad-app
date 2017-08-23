@@ -57,7 +57,7 @@ describe 'add geolocation' do
       ne_longitude = find_blank_field_id('geolocation_box[ne_longitude]')
       fill_in ne_longitude, with: e_longitude
 
-      add_geo_box_button = first(:link_or_button, 'add_geo_point') # yes, this button is still 'point'
+      add_geo_box_button = first(:link_or_button, 'add_geo_box')
       add_geo_box_button.click
 
       wait_for_ajax!

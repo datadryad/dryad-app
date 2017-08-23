@@ -5,6 +5,7 @@ require 'capybara/rails'
 require 'capybara/rspec'
 require 'uri'
 require 'cgi'
+require 'fileutils'
 
 # ------------------------------------------------------------
 # Capybara
@@ -47,6 +48,13 @@ def mock_omniauth!
   )
 end
 
+# if you have precompiled assets, the tests will use them without telling you and they might be out of date
+# this burned me with out of date and non-working javascript for an entire afternoon of aggravating debugging.  :evil-asset-pipeline:
+def kill_precompiled_assets!
+  dir = File.join(Rails.root, 'public', 'assets')
+  FileUtils.rm_rf(dir) if Dir.exist?(dir)
+end
+
 # ------------------------------------------------------------
 # RSpec
 
@@ -55,6 +63,7 @@ RSpec.configure do |config|
   config.before(:suite) do
     mock_omniauth!
     SolrHelper.start
+    kill_precompiled_assets!
   end
 
   # Stop Solr when we're done
@@ -116,12 +125,14 @@ end
 
 def log_in!
   visit('/')
-  first(:link_or_button, 'Login').click
+  login = first(:link_or_button, 'Login')
+  login.click
+  select('Localhost', from: 'tenant_id')
+  first(:link_or_button, 'Submit').click
 end
 
 def start_new_dataset!
-  visit('/')
-  first(:link_or_button, 'Login').click
+  log_in!
   first(:link_or_button, 'Start New Dataset').click
   expect(page).to have_content('Describe Your Dataset')
 end
@@ -133,6 +144,7 @@ end
 
 def navigate_to_review!
   first(:link_or_button, 'Review and Submit').click
+  wait_for_ajax!
   expect(page).to have_content('Finalize Submission')
 end
 
