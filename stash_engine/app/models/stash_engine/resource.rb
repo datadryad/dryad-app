@@ -72,11 +72,17 @@ module StashEngine
     scope :in_progress, (-> do
       joins(:current_resource_state).where(stash_engine_resource_states: { resource_state:  %i[in_progress error] })
     end)
+    scope :in_progress_only, (-> do
+      joins(:current_resource_state).where(stash_engine_resource_states: { resource_state:  %i[in_progress] })
+    end)
     scope :submitted, (-> do
       joins(:current_resource_state).where(stash_engine_resource_states: { resource_state:  %i[submitted processing] })
     end)
     scope :processing, (-> do
       joins(:current_resource_state).where(stash_engine_resource_states: { resource_state:  [:processing] })
+    end)
+    scope :error, (-> do
+      joins(:current_resource_state).where(stash_engine_resource_states: { resource_state:  [:error] })
     end)
     scope :by_version_desc, -> { joins(:stash_version).order('stash_engine_versions.version DESC') }
     scope :by_version, -> { joins(:stash_version).order('stash_engine_versions.version ASC') }

@@ -39,6 +39,15 @@ module StashEngine
       resources.processing.count > 0
     end
 
+    # return true if there's an 'error' version
+    def error?
+      resources.error.count > 0
+    end
+
+    def in_progress_only?
+      resources.in_progress_only.count > 0
+    end
+
     # @return Resource the current in-progress resource
     def in_progress_resource
       in_progress = resources.in_progress

@@ -60,7 +60,8 @@ module Stash
         @workdir ||= begin
           path = resource.upload_dir
           FileUtils.mkdir_p(path)
-          tmpdir = Dir.mktmpdir('uploads', path)
+          tmpdir = File.join(path, Dir::Tmpname.make_tmpname('work-', nil)) # Creating a tempdir had a disappearance with RubyZip in which it couldn't access it
+          FileUtils.mkdir_p(tmpdir) # this will need to be removed by the cleanup script
           File.absolute_path(tmpdir)
         end
       end
