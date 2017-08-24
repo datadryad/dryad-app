@@ -1,0 +1,36 @@
+raw_attributes:
+  id: 1
+  resource_id: 1
+  user_comment:
+  created_at: &3 2017-08-24 21:06:21.000000000 Z
+  updated_at: &4 2017-08-24 21:06:21.000000000 Z
+
+  id: 2
+  resource_id: 2
+  user_comment:
+  created_at: &3 2017-08-24 21:11:20.000000000 Z
+  updated_at: &4 2017-08-24 21:11:20.000000000 Z
+
+  id: 3
+  resource_id: 3
+  user_comment:
+  created_at: &3 2017-08-24 21:13:40.000000000 Z
+  updated_at: &4 2017-08-24 21:13:40.000000000 Z
+
+  id: 4
+  resource_id: 4
+  user_comment:
+  created_at: &3 2017-08-24 21:18:30.000000000 Z
+  updated_at: &4 2017-08-24 21:18:30.000000000 Z
+
+  id: 5
+  resource_id: 4
+  user_comment:
+  created_at: &3 2017-08-24 21:20:41.000000000 Z
+  updated_at: &4 2017-08-24 21:20:41.000000000 Z
+
+  id: 6
+  resource_id: 4
+  user_comment:
+  created_at: &3 2017-08-24 21:23:13.000000000 Z
+  updated_at: &4 2017-08-24 21:23:13.000000000 Z

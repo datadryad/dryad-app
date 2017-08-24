@@ -1,0 +1,16 @@
+raw_attributes:
+  id: 1
+  sw_latitude: !ruby/object:BigDecimal 18:0.37040928e2
+  ne_latitude: !ruby/object:BigDecimal 18:0.37058465e2
+  sw_longitude: !ruby/object:BigDecimal 18:-0.76340303e2
+  ne_longitude: !ruby/object:BigDecimal 18:-0.76315756e2
+  created_at: &3 2017-08-24 21:04:29.000000000 Z
+  updated_at: &4 2017-08-24 21:04:29.000000000 Z
+
+  id: 2
+  sw_latitude: !ruby/object:BigDecimal 18:0.37040928e2
+  ne_latitude: !ruby/object:BigDecimal 18:0.37058465e2
+  sw_longitude: !ruby/object:BigDecimal 18:-0.76340303e2
+  ne_longitude: !ruby/object:BigDecimal 18:-0.76315756e2
+  created_at: &3 2017-08-24 21:10:18.000000000 Z
+  updated_at: &4 2017-08-24 21:10:18.000000000 Z
