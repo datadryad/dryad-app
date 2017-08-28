@@ -55,7 +55,6 @@ module StashEngine
       @auth_hash = request.env['omniauth.auth']
       reset_session
       head(:forbidden) unless auth_hash_good
-      false
     end
 
     def set_session
@@ -112,7 +111,6 @@ module StashEngine
       @orcid = @auth_hash.uid
       return true if @orcid
       head(:forbidden)
-      false
     end
 
     def orcid_choose_tenant_or_login!

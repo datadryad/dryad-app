@@ -38,8 +38,9 @@ module StashEngine
       @omniauth_login_path ||= send("#{authentication.strategy}_login_path".intern, params)
     end
 
-    # generate login path for shibboleth & omniauth, this is unusual since we have multi-institution login, so have to
-    # hack around limitations in the normal omniauth/shibboleth by directly addressing shibboleth.sso
+    # generate login path for shibboleth & omniauth, this is unusual since we have multi-institution login,
+    # so have to hack around limitations in the normal omniauth/shibboleth by directly addressing
+    # shibboleth.sso
     def shibboleth_login_path(params = nil)
       extra_params = (params ? "?#{params.to_param}" : '')
       "https://#{full_domain}/Shibboleth.sso/Login?" \
@@ -49,7 +50,7 @@ module StashEngine
 
     def google_login_path(params = nil)
       # note that StashEngine.app.stash_mount includes a leading slash
-      # you must extra params in state param https://stackoverflow.com/questions/7722062/google-oauth2-redirect-uri-with-several-parameters
+      # you must add extra params in state param https://stackoverflow.com/questions/7722062/google-oauth2-redirect-uri-with-several-parameters
       state_param_val = CGI.escape((params ? params.to_param : ''))
       qs = (state_param_val.blank? ? '' : "?state=#{state_param_val}")
       path = "#{callback_path_begin}google_oauth2#{qs}"

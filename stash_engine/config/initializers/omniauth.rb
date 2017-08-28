@@ -11,7 +11,6 @@ Rails.application.config.middleware.use OmniAuth::Builder do
            }
 
   unless Rails.env.production? || Rails.env.stage?
-
     provider :developer,
              :callback_path => '/stash/auth/developer/callback',
              :path_prefix => '/stash/auth',
@@ -28,7 +27,6 @@ Rails.application.config.middleware.use OmniAuth::Builder do
            :sandbox => StashEngine.app.sandbox,
            :callback_path  => '/stash/auth/orcid/callback',
            :path_prefix    => '/stash/auth',
-           :full_host => 'https://noodles.example.com',
            :authorize_params => {
                :scope => '/authenticate'
            },
