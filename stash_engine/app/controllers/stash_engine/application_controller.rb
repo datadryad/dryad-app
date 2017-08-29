@@ -1,6 +1,7 @@
 require 'stash/streamer'
 require 'httpclient'
 require 'uri'
+require 'error/error_handler'
 
 module StashEngine
   class ApplicationController < ::ApplicationController
@@ -10,6 +11,8 @@ module StashEngine
     include SharedController
 
     prepend_view_path("#{Rails.application.root}/app/views")
+
+    include Error::ErrorHandler
 
     def force_to_domain
       return if session[:test_domain]
