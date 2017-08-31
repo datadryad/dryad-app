@@ -1,4 +1,4 @@
-@resoumodule StashEngine
+module StashEngine
   class Resource < ActiveRecord::Base # rubocop:disable Metrics/ClassLength
     # ------------------------------------------------------------
     # Relations
