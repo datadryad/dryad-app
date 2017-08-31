@@ -217,7 +217,7 @@ module StashEngine
       client.force_basic_auth = true
       client.set_basic_auth(nil, tenant.repository.username, tenant.repository.password)
       # TODO: remove this once Merritt has fixed their certs on their stage server.
-      client.ssl_config.verify_mode = OpenSSL::SSL::VERIFY_NONE if Rails.env == 'stage'
+      client.ssl_config.verify_mode = OpenSSL::SSL::VERIFY_NONE # TODO: remove for extra security once Merritt gets real certs
       client.ssl_config.set_trust_ca(APP_CONFIG.ssl_cert_file) if APP_CONFIG.ssl_cert_file
       client
     end
