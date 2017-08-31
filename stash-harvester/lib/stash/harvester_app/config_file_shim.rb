@@ -26,7 +26,9 @@ module Stash
 
       def setup_configs
         @settings = YAML.load_file(@config_file)[ENV['STASH_ENV']]
+        Stash::HarvesterApp.logger.info(@settings)
         unless @settings['source'] && @settings['source']['sets']
+          Stash::HarvesterApp.logger.info("It thinks sets don't exist")
           @configs = [config_file]
           return
         end
@@ -34,6 +36,7 @@ module Stash
       end
 
       def make_new_configs
+        Stash::HarvesterApp.logger.info('in make_new_configs')
         sets = @settings['source']['sets']
         sets.map! do |set|
           tmp = Marshal.load(Marshal.dump(@settings)) # deep clone
@@ -45,6 +48,7 @@ module Stash
       end
 
       def make_tempfiles(confs)
+        Stash::HarvesterApp.logger.info('in_make_tempfiles')
         @tempfiles = confs.map do |conf|
           tf = Tempfile.new('harvest')
           tf.write conf.to_yaml
