@@ -49,12 +49,6 @@ module StashEngine
     end
     after_create :init_state_and_version
 
-    def init_author_from_user
-      return if user.orcid.blank?
-      init_author_with_orcid(user.orcid)
-    end
-    after_create :init_author_from_user
-
     # shouldn't be necessary but we have some stale data floating around
     def ensure_state_and_version
       return if stash_version && current_resource_state_id
@@ -62,9 +56,9 @@ module StashEngine
       init_state unless current_resource_state_id
       save
     end
-    # TODO: we may want to disable this if/when we don't need it since it really kills performance for finding a long
+    # We want to disable this when we don't need it since it really kills performance for finding a long
     # list of resources.  For example in the rails console, resource.all does another query for each item in the list
-    after_find :ensure_state_and_version
+    # after_find :ensure_state_and_version
 
     # ------------------------------------------------------------
     # Scopes
@@ -364,19 +358,16 @@ module StashEngine
     # -----------------------------------------------------------
     # Authors
 
-    def init_author_with_orcid(user_orcid)
-      return if authors.exists?(author_orcid: user_orcid) # in case of Amoeba duplication
-      existing = StashEngine::Author.where(author_orcid: user_orcid).last
-      first_name, last_name =
-        if existing
-          [existing.author_first_name, existing.author_last_name]
-        else
-          [user.first_name, user.last_name]
-        end
-
-      StashEngine::Author.create(resource_id: id, author_orcid: user_orcid, author_first_name: first_name, author_last_name: last_name)
+    def fill_blank_author!
+      return if authors.count > 0 || user.blank? # already has some authors filled in or no user to know about
+      fill_author_from_user!
     end
-    private :init_author_with_orcid
+
+    def fill_author_from_user!
+      f_name, l_name, orcid, email = user.first_name, user.last_name, (user.orcid.blank? ? nil : user.orcid), user.email
+      author = StashEngine::Author.create(resource_id: id, author_orcid: orcid, author_first_name: f_name, author_last_name: l_name, email: email)
+      author.set_affiliation_by_name(user.try(:tenant).try(:short_name))
+    end
 
     # -----------------------------------------------------------
     # Embargoes

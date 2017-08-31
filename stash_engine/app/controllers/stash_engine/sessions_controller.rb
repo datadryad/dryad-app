@@ -147,12 +147,15 @@ module StashEngine
     # this gets called from metadata entry form and is for adding an author, not for logging in.
     def metadata_callback
       params = request.env['omniauth.params']
-      StashEngine::Author.create(
+      author = StashEngine::Author.create(
         resource_id: params['resource_id'],
         author_first_name: @auth_hash.info.first_name,
         author_last_name: @auth_hash.info.last_name,
+        author_email: current_user.email,
         author_orcid: @auth_hash.uid
       )
+      author.set_affiliation_by_name(current_tenant.short_name)
+      current_user.update(orcid: @auth_hash.uid)
       redirect_to metadata_entry_pages_find_or_create_path(resource_id: @params['resource_id'])
     end
   end

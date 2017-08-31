@@ -14,7 +14,7 @@
   </div>
   <div class="c-input">
     <%= f.label "affiliation_id_#{my_suffix}", "Institutional Affiliation", class: 'c-input__label required' %>
-    <%= text_field_tag(:affiliation, author.affiliation.try(:smart_name), id: "author_affiliation_id_#{my_suffix}", class: 'c-input__text js-affiliation') %>
+    <%= text_field_tag(:affiliation, author.try(:affiliation).try(:smart_name), id: "author_affiliation_id_#{my_suffix}", class: 'c-input__text js-affiliation') %>
   </div>
   <div class="c-input">
   <%= f.label "author_email", "Author Email", class: 'c-input__label js-author_label' %>
