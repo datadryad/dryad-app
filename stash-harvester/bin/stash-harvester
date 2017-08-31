@@ -6,8 +6,13 @@ require 'ar_persistence_config'
 module Stash
   module HarvesterApp
     def self.start_application(options)
-      app = Application.with_config_file(options.config_file)
-      app.start(from_time: options.from_time, until_time: options.until_time)
+      # shim for harvesting multiple sets of OAIPMH (with a 'sets' in YAML) as though we have multiple configs for each set (OAI-PMH sucks)
+      cfs = ConfigFileShim.new(options.config_file)
+      cfs.configs.each do |cf|
+        app = Application.with_config_file(cf)
+        app.start(from_time: options.from_time, until_time: options.until_time)
+      end
+      cfs.cleanup
     end
 
     begin
