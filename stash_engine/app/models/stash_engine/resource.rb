@@ -1,4 +1,4 @@
-module StashEngine
+@resoumodule StashEngine
   class Resource < ActiveRecord::Base # rubocop:disable Metrics/ClassLength
     # ------------------------------------------------------------
     # Relations
@@ -50,8 +50,8 @@ module StashEngine
     after_create :init_state_and_version
 
     def init_author_from_user
-      return unless (user_orcid = user && user.orcid)
-      init_author_with_orcid(user_orcid)
+      return if user.orcid.blank?
+      init_author_with_orcid(user.orcid)
     end
     after_create :init_author_from_user
 
