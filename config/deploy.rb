@@ -78,7 +78,7 @@ namespace :deploy do
   task :update_config do
     on roles(:app) do
       my_branch = fetch(:branch, 'development')
-      my_branch = "origin/#{my_branch}" unless my_branch.match(/^[v\d\.]+$/) #git acts differently with branch vs tag
+      my_branch = "origin/#{my_branch}" unless my_branch.match(/^[v\d\.]{3,}-?.*.$/) #git acts differently with tags (regex for version #s)
       execute "cd #{deploy_to}/shared; git fetch --tags; git fetch --all; git reset --hard #{my_branch}"
     end
   end
