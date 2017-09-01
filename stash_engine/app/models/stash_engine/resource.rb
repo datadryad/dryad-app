@@ -365,8 +365,8 @@ module StashEngine
 
     def fill_author_from_user!
       f_name, l_name, orcid, email = user.first_name, user.last_name, (user.orcid.blank? ? nil : user.orcid), user.email
-      author = StashEngine::Author.create(resource_id: id, author_orcid: orcid, author_first_name: f_name, author_last_name: l_name, email: email)
-      author.set_affiliation_by_name(user.try(:tenant).try(:short_name))
+      author = StashEngine::Author.create(resource_id: id, author_orcid: orcid, author_first_name: f_name, author_last_name: l_name, author_email: email)
+      author.set_affiliation_by_name(user.tenant.short_name) if user.try(:tenant)
     end
 
     # -----------------------------------------------------------

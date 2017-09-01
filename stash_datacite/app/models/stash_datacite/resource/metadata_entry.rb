@@ -5,6 +5,7 @@ module StashDatacite
         @resource = resource
         create_publisher(tenant)
         ensure_license(tenant)
+        @resource.fill_blank_author!
       end
 
       def resource_type
