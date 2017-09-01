@@ -30,13 +30,14 @@ module StashEngine
       "<a href=\"mailto:#{CGI.escapeHTML(author_email.strip)}\">#{CGI.escapeHTML(author_standard_name.strip)}</a>"
     end
 
-    def set_affiliation_by_name(name)
+    def affiliation_by_name(name)
       affils = StashDatacite::Affiliation.where(['short_name = ? OR long_name = ? or abbreviation = ?', name, name, name])
-      if affils.count > 0
-        affil = affils.first
-      else
-        affil = StashDatacite::Affiliation.create(long_name: name)
-      end
+      affil =
+        if affils.count > 0
+          affils.first
+        else
+          StashDatacite::Affiliation.create(long_name: name)
+        end
       # yikes, affiliations is very unreliable, wtf?
       affiliations << affil if defined? affiliations
     end

@@ -145,6 +145,7 @@ module StashEngine
     end
 
     # this gets called from metadata entry form and is for adding an author, not for logging in.
+    # rubocop:disable Metrics/MethodLength
     def metadata_callback
       params = request.env['omniauth.params']
       author = StashEngine::Author.create(
@@ -154,7 +155,7 @@ module StashEngine
         author_email: current_user.email,
         author_orcid: @auth_hash.uid
       )
-      author.set_affiliation_by_name(current_tenant.short_name)
+      author.affiliation_by_name(current_tenant.short_name)
       current_user.update(orcid: @auth_hash.uid)
       redirect_to metadata_entry_pages_find_or_create_path(resource_id: @params['resource_id'])
     end
