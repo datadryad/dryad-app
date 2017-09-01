@@ -155,19 +155,19 @@ def fill_required_fields! # rubocop:disable Metrics/AbcSize
   # ##############################
   # Title
 
-  title = find_blank_field_id('title')
+  title = find_field_id('title')
   fill_in title, with: 'Of a peculiar Lead-Ore of Germany, and the Use thereof'
 
   # ##############################
   # Author
 
-  author_first_name = find_blank_field_id('author[author_first_name]')
+  author_first_name = find_field_id('author[author_first_name]')
   fill_in author_first_name, with: 'Robert'
-  author_last_name = find_blank_field_id('author[author_last_name]')
+  author_last_name = find_field_id('author[author_last_name]')
   fill_in author_last_name, with: 'Boyle'
-  author_affiliation = find_blank_field_id('affiliation') # TODO: make consistent with other author fields
+  author_affiliation = find_field_id('affiliation') # TODO: make consistent with other author fields
   fill_in author_affiliation, with: 'Hogwarts'
-  author_email = find_blank_field_id('author[author_email]')
+  author_email = find_field_id('author[author_email]')
   fill_in author_email, with: 'boyle@hogwarts.edu'
 
   # TODO: additional author(s)
