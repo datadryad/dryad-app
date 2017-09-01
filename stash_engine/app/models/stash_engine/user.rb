@@ -7,7 +7,7 @@ module StashEngine
         init_user_from_auth(user, auth)
         user.tenant_id = tenant_id
         user.last_login = Time.new
-        user.orcid = orcid if orcid
+        user.orcid = orcid unless orcid.blank?
         user.save!
       end
     end
