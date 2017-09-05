@@ -1,7 +1,8 @@
 require_dependency 'stash_engine/application_controller'
+require 'securerandom'
 
 module StashEngine
-  class LandingController < ApplicationController
+  class LandingController < ApplicationController # rubocop:disable Metrics/ClassLength
     # LandingMixin should provide:
     # - has_geolocation?
     # - pdf_meta
@@ -64,6 +65,7 @@ module StashEngine
       StashEngine.repository.harvested(identifier: id, record_identifier: record_identifier)
 
       # success but no content, see RFC 5789 sec. 2.1
+      deliver_invitations! # delivers invitations for people to add orcids
       render(nothing: true, status: 204)
     rescue ArgumentError => e
       logger.debug(e)
@@ -126,6 +128,29 @@ module StashEngine
       logger.warn("Identifier '#{id}' not found (id_param was: '#{id_param}')") if identifiers.empty?
 
       identifiers.first
+    end
+
+    # --- These are for delivering orcid invitations when we get the callback that an item has been processed
+
+    def deliver_invitations! # rubocop:disable Metrics/AbcSize
+      authors = resource.authors.where.not(author_email: nil)
+      authors.each do |author|
+        next if author.author_email.blank? || StashEngine::OrcidInvitation.where(email: author.author_email)
+            .where(identifier_id: id.id).count > 0
+        invite = create_invite(author)
+        StashEngine::UserMailer.orcid_invitation(invite).deliver_now
+      end
+    end
+
+    def create_invite(author)
+      StashEngine::OrcidInvitation.create(
+        email: author.author_email,
+        identifier_id: id.id,
+        first_name: author.author_first_name,
+        last_name: author.author_last_name,
+        secret: SecureRandom.hex(16),
+        invited_at: Time.new
+      )
     end
   end
 end
