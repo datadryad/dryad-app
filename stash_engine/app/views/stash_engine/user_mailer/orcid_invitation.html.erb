@@ -6,6 +6,7 @@
 <body>
 
 <% lp = show_path(@invite.identifier.to_s) %>
+<% lps = show_path(@invite.identifier.to_s, invitation: @invite.secret) %>
 
 <p>Dear <%= "#{@invite.first_name} #{@invite.last_name}".strip %>:</p>
 
@@ -17,7 +18,7 @@
 <p>We encourage you to register your ORCID researcher information
 for this dataset by following the URL below:</p>
 
-<p><%= link_to(@invite.register_orcid(lp), @invite.register_orcid(lp))%></p>
+<p><%= link_to(@invite.landing(lps), @invite.landing(lps))%></p>
 
 <p>Please do not reply to this email.</p>
 
