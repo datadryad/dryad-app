@@ -1,3 +1,5 @@
+include StashEngine::Engine.routes.url_helpers
+
 module StashEngine
 
   # Mails users about submissions
@@ -65,6 +67,12 @@ module StashEngine
       bcc_address = to_address_list([APP_CONFIG['support_team_email']].flatten + [tenant.manager_email].flatten)
       mail(to: to_address, bcc: bcc_address,
            subject: "#{rails_env}Submitting dataset \"#{@title}\" (doi:#{@identifier_value}) failed")
+    end
+
+    def orcid_invitation(orcid_invite)
+      @invite = orcid_invite
+      mail(to: @invite.email,
+           subject: "#{rails_env}Please add your ORCID Author information for your dataset")
     end
 
     private

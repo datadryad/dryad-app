@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta content='text/html; charset=UTF-8' http-equiv='Content-Type'/>
+</head>
+<body>
+
+<% lp = show_path(@invite.identifier.to_s) %>
+
+<p>Dear <%= "#{@invite.first_name} #{@invite.last_name}".strip %>:</p>
+
+<p>The dataset &ldquo;<%= @invite.resource.title %>&rdquo;
+  (<%= link_to(@invite.landing(lp), @invite.landing(lp))%>)
+  has been submitted to Dash and you are one of the authors for this dataset.
+</p>
+
+<p>We encourage you to register your ORCID researcher information
+for this dataset by following the URL below:</p>
+
+<p><%= link_to(@invite.register_orcid(lp), @invite.register_orcid(lp))%></p>
+
+<p>Please do not reply to this email.</p>
+
+</body>
+</html>
