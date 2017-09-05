@@ -60,7 +60,7 @@ module StashEngine
       self.author_first_name = author_first_name.strip if author_first_name
       self.author_last_name = author_last_name.strip if author_last_name
       self.author_email = author_email.strip if author_email
-      self.author_orcid = author_orcid.strip if author_orcid
+      self.author_orcid = nil if author_orcid.blank?
     end
   end
 end
