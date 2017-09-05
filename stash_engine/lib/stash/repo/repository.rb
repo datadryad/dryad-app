@@ -1,5 +1,4 @@
 require 'stash/repo/submission_job'
-require 'stash/repo/orcid_sender'
 require 'fileutils'
 
 module Stash
