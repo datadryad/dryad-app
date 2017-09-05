@@ -6,7 +6,11 @@
 <body>
 
 <% lp = show_path(@invite.identifier.to_s) %>
-<% lps = show_path(@invite.identifier.to_s, invitation: @invite.secret) %>
+<%
+  # UGGH. Adding a parameter causes Rails to barf when inside the emailer, but only when calling from some places and impossible to trace.
+  # so hacking together my own query string and tacking it on to a manually generated URL because link_to or something else barfs.
+  qs = {invitation: @invite.secret}.to_param
+%>
 
 <p>Dear <%= "#{@invite.first_name} #{@invite.last_name}".strip %>:</p>
 
@@ -18,7 +22,7 @@
 <p>We encourage you to register your ORCID researcher information
 for this dataset by following the URL below:</p>
 
-<p><%= link_to(@invite.landing(lps), @invite.landing(lps))%></p>
+<p><a href="<%= "#{@invite.landing(lp)}?#{qs}" %>"><%= "#{@invite.landing(lp)}&#{qs}" %></a></p>
 
 <p>Please do not reply to this email.</p>
 

@@ -1,4 +1,5 @@
 require 'stash/repo/submission_job'
+require 'stash/repo/orcid_sender'
 require 'fileutils'
 
 module Stash
@@ -92,6 +93,8 @@ module Stash
         # resource.current_state = 'submitted'
         update_submission_log(result)
         StashEngine::UserMailer.submission_succeeded(resource).deliver_now
+        orcid_sender = OrcidSender.new(resource)
+        orcid_sender.deliver_invitations!
       rescue => e
         # errors here don't constitute a submission failure, so we don't change the resource state
         log_error(e)
