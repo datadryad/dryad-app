@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170901205048) do
+ActiveRecord::Schema.define(version: 20170905173054) do
 
   create_table "bookmarks", force: :cascade do |t|
     t.integer  "user_id",       limit: 4,   null: false
@@ -325,12 +325,14 @@ ActiveRecord::Schema.define(version: 20170901205048) do
   add_index "stash_engine_identifiers", ["identifier"], name: "index_stash_engine_identifiers_on_identifier", length: {"identifier"=>50}, using: :btree
 
   create_table "stash_engine_orcid_invitations", force: :cascade do |t|
-    t.string  "email",         limit: 191
-    t.integer "identifier_id", limit: 4
-    t.string  "first_name",    limit: 191
-    t.string  "last_name",     limit: 191
-    t.string  "secret",        limit: 191
-    t.string  "orcid",         limit: 191
+    t.string   "email",         limit: 191
+    t.integer  "identifier_id", limit: 4
+    t.string   "first_name",    limit: 191
+    t.string   "last_name",     limit: 191
+    t.string   "secret",        limit: 191
+    t.string   "orcid",         limit: 191
+    t.datetime "invited_at",                null: false
+    t.datetime "accepted_at"
   end
 
   create_table "stash_engine_resource_states", force: :cascade do |t|
