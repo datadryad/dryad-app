@@ -1,8 +1,10 @@
+<%# takes local: identifier_id %>
 <div id="orcid_modal_dialog" style="display: none;">
   <p>You are a co-author for this dataset.</p>
 
   <p style="text-align: center;">
-    <%= link_to "Connect your ORCID iD", "/stash/auth/orcid?#{{invitation: params[:invitation] }.to_param}", class: "js-add_my_Orcid_ID t-describe__add-button o-button__connect-orcid" %>
+    <%= link_to "Connect your ORCID iD", "/stash/auth/orcid?#{{invitation: params[:invitation], identifier_id: identifier_id }.to_param}",
+                class: "js-add_my_Orcid_ID t-describe__add-button o-button__connect-orcid" %>
   </p>
 
 </div>

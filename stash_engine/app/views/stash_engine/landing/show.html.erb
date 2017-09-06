@@ -16,5 +16,5 @@
     locals: { resource: @resource }%>
 
 <% unless @invitations.blank? %>
-  <%= render partial: 'orcid_invite' %>
+  <%= render partial: 'orcid_invite', locals: {identifier_id: id.id} %>
 <% end %>

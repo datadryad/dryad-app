@@ -96,13 +96,14 @@ module StashEngine
       false
     end
 
-    # we are using one controller for multiple orcid login actions (set metadata, log in, so decide which it is before running controller)
+    # using one controller for multiple orcid login actions (set metadata, log in, orcid_invite so decide which it is before controller)
     def orcid_shenanigans
       @auth_hash = request.env['omniauth.auth']
       @params = request.env['omniauth.params']
       if @params['origin'] == 'metadata'
         metadata_callback
-        return false
+      elsif @params['invitation'] && @params['identifier_id']
+        orcid_invitation
       end
       setup_orcid
     end
@@ -158,6 +159,12 @@ module StashEngine
       author.affiliation_by_name(current_tenant.short_name)
       current_user.update(orcid: @auth_hash.uid)
       redirect_to metadata_entry_pages_find_or_create_path(resource_id: @params['resource_id'])
+    end
+
+    # this is for orcid invitations to add co-authors
+    def orcid_invitation
+      identifier = Identifier.find(@params['identifier_id'])
+      redirect_to stash_url_helpers.show_path(identifier.to_s), flash: { info: "Your ORCID #{@auth_hash.uid} has been added for this dataset." }
     end
   end
 end
