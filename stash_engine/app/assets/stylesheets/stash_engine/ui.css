@@ -3001,6 +3001,7 @@ html.no-multiplebgs .o-banner {
   padding: 5px 5px 5px 25px;
   border: 1px solid lightgray;
   border-radius: 8px;
+  outline: none;
   background: white url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQBAMAAADt3eJSAAAALVBMVEUAAACmzjmmzjmmzjmmzjmmzjmSwCmmzjms0UW82mvT55ze7bXj8MH0+eb///+6+Cf8AAAABnRSTlMAIGC/z+8mlFLTAAAAY0lEQVQI12NgYFAuLzdiAAKRciBwZGBgDH+VXl5eKsDAUg5ilDswqJenpZe3lxcxmJe/ynv3pr2YoRzISJ+7vRzCqHwOZZQ/RxIxh6gpBmoH6yoCGggGDkArQDTQCrilMGcAAEhYNmj1RSttAAAAAElFTkSuQmCC') left 5px center no-repeat;
   background-color: white;
   box-shadow: 1px 1px 3px #9d9fa2;
