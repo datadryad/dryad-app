@@ -8,7 +8,7 @@ module Stash
   module HarvesterApp
 
     def self.logger
-      @@logger ||= Logger.new(STDOUT)
+      @logger ||= Logger.new(STDOUT)
     end
 
     def self.start_application(options)
