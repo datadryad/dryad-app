@@ -72,7 +72,7 @@ module StashEngine
     def orcid_invitation(orcid_invite)
       @invite = orcid_invite
       mail(to: @invite.email,
-           subject: "#{rails_env}Please add your ORCID Author information for your dataset")
+           subject: "#{rails_env}Your dataset \"#{@invite.resource.title}\" has been published")
     end
 
     private
