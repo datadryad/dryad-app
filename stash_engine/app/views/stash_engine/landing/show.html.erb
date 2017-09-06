@@ -15,31 +15,6 @@
 <%= render partial: 'stash_engine/downloads/modal_capture_email',
     locals: { resource: @resource }%>
 
-<% if params[:invitation] %>
-
-  <div id="orcid_modal_dialog" style="display: none;">
-    <p>You are a co-author for this dataset.</p>
-
-    <p style="text-align: center;">
-      <%= link_to "Connect your ORCID iD", "/stash/auth/orcid?#{{invitation: params[:invitation] }.to_param}", class: "js-add_my_Orcid_ID t-describe__add-button o-button__connect-orcid" %>
-    </p>
-
-  </div>
-
-  <script>
-    $("#orcid_modal_dialog").dialog({
-      title: 'Connect your ORCID',
-      autoOpen: true,
-      height: 'auto',
-      width: 'auto',
-      modal: true,
-      close: function() {
-        // gets rid of the extra junk on the URL so it doesn't reload the invitation popup with a browser page reload
-        if (history.pushState) {
-          window.history.pushState({}, null, window.location.pathname);
-        }
-      }
-    });
-  </script>
-
+<% unless @invitations.blank? %>
+  <%= render partial: 'orcid_invite' %>
 <% end %>

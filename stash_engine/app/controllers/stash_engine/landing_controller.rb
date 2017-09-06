@@ -39,6 +39,7 @@ module StashEngine
     def show
       resource.increment_views
       ensure_has_geolocation!
+      @invitations = (params[:invitation] ? OrcidInvitation.where(secret: params[:invitation]).where(identifier_id: id.id) : nil)
     end
 
     def data_paper
