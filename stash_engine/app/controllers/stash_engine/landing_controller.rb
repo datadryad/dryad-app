@@ -148,7 +148,7 @@ module StashEngine
         identifier_id: id.id,
         first_name: author.author_first_name,
         last_name: author.author_last_name,
-        secret: SecureRandom.hex(16),
+        secret: SecureRandom.urlsafe_base64,
         invited_at: Time.new
       )
     end
