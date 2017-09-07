@@ -163,8 +163,37 @@ module StashEngine
 
     # this is for orcid invitations to add co-authors
     def orcid_invitation
+      invitations = OrcidInvitation.where(identifier_id: @params['identifier_id']).where(secret: @params['invitation'])
       identifier = Identifier.find(@params['identifier_id'])
+      if invitations.empty?
+        redirect_to stash_url_helpers.show_path(identifier.to_s)
+        return
+      end
+      invitation = invitations.first
+      if invitation.accepted_at
+        redirect_to stash_url_helpers.show_path(identifier.to_s), flash: { info: "You've already added your ORCID to this dataset" }
+        return
+      end
+      update_author_orcid(invitation)
+      update_identifier_metadata(invitation)
       redirect_to stash_url_helpers.show_path(identifier.to_s), flash: { info: "Your ORCID #{@auth_hash.uid} has been added for this dataset." }
+    end
+
+    def update_author_orcid(invitation)
+      invitation.update(orcid: @auth_hash['uid'], accepted_at: Time.new)
+      last_submitted_resource = invitation.resource
+      resources = invitation.identifier.resources.where(['id >= ?', last_submitted_resource.id])
+      # updates all orcids for last submitted resource and resources after, even in-progress, error ... whatever
+      resources.each do |resource|
+        authors = resource.authors.where(author_email: invitation.email)
+        authors.update_all(author_orcid: @auth_hash['uid'])
+      end
+    end
+
+    def update_identifier_metadata(invitation)
+      repo = StashEngine.repository
+      job = repo.create_submission_job(resource_id: invitation.resource.id)
+      job.update_identifier_metadata!
     end
   end
 end
