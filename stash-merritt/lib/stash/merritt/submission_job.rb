@@ -31,6 +31,16 @@ module Stash
         end
       end
 
+      # :nocov:
+      # TODO: couldn't figure out how to test this, maybe ask David when he gets back
+      def update_identifier_metadata!
+        resource = StashEngine::Resource.find(@resource_id)
+        sp = Stash::Merritt::SubmissionPackage.new(resource: resource, packaging: nil)
+        dc4_xml = sp.dc4_builder.contents
+        update_metadata(dc4_xml)
+      end
+      # :nocov:
+
       private
 
       def do_submit!
