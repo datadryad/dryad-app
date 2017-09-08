@@ -1,5 +1,5 @@
 require_dependency 'stash_engine/application_controller'
-require 'rest-client'
+# require 'rest-client'
 
 # TODO: how downloads are handled depend heavily on the repository in use, needs moving elsewhere to be flexible
 module StashEngine
@@ -156,7 +156,7 @@ module StashEngine
       # &version=
       # &commit=Submit
 
-      client = http_client_w_basic_auth(resource.tenant)
+      client = Stash::Repo::HttpClient.new(tenant: resource.tenant, cert_file: APP_CONFIG.ssl_cert_file).client
       res = client.post(url, body, follow_redirect: true)
 
       # this is sketchy validation, but their form would redirect to that location if it's successful
@@ -172,7 +172,7 @@ module StashEngine
       domain, local_id = resource.merritt_protodomain_and_local_id
       url = "#{domain}/async/#{local_id}/#{resource.stash_version.merritt_version}"
 
-      res = http_client_w_basic_auth(resource.tenant).get(url, follow_redirect: true)
+      res = Stash::Repo::HttpClient.new(tenant: resource.tenant, cert_file: APP_CONFIG.ssl_cert_file).client.get(url, follow_redirect: true)
       status = res.status_code
 
       return true if status == 200 # async download OK
@@ -190,7 +190,7 @@ module StashEngine
 
       params = { user_agent_email: email, userFriendly: true, losFrom: email_from, losSubject: email_subject, losBody: email_body }
 
-      res = http_client_w_basic_auth(resource.tenant).get(url, query: params, follow_redirect: true)
+      res = Stash::Repo::HttpClient.new(tenant: resource.tenant, cert_file: APP_CONFIG.ssl_cert_file).client.get(url, query: params, follow_redirect: true)
       status = res.status_code
       return if status == 200
 
@@ -204,28 +204,10 @@ module StashEngine
       "#{domain}/asyncd/#{local_id}/#{resource.stash_version.merritt_version}"
     end
 
-    # encapsulates all the settings to make basic auth with a get request work correctly for Merritt
-    def http_client_w_basic_auth(tenant) # rubocop:disable Metrics/AbcSize
-      client = HTTPClient.new
-
-      # this callback allows following redirects from http to https, otherwise it will not
-      client.redirect_uri_callback = ->(_uri, res) {
-        res.header['location'][0]
-      }
-
-      # ran into problems like https://github.com/nahi/httpclient/issues/181 so forcing basic auth
-      client.force_basic_auth = true
-      client.set_basic_auth(nil, tenant.repository.username, tenant.repository.password)
-      # TODO: remove this once Merritt has fixed their certs on their stage server.
-      client.ssl_config.verify_mode = OpenSSL::SSL::VERIFY_NONE # TODO: remove for extra security once Merritt gets real certs
-      client.ssl_config.set_trust_ca(APP_CONFIG.ssl_cert_file) if APP_CONFIG.ssl_cert_file
-      client
-    end
-
     # to stream the response through this UI instead of redirecting, keep login and other stuff private
     def stream_response(url, tenant) # rubocop:disable Metrics/AbcSize
       # get original header info from http headers
-      client = http_client_w_basic_auth(tenant)
+      client = Stash::Repo::HttpClient.new(tenant: tenant, cert_file: APP_CONFIG.ssl_cert_file).client
 
       headers = client.head(url, follow_redirect: true)
 
