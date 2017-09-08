@@ -190,7 +190,8 @@ module StashEngine
 
       params = { user_agent_email: email, userFriendly: true, losFrom: email_from, losSubject: email_subject, losBody: email_body }
 
-      res = Stash::Repo::HttpClient.new(tenant: resource.tenant, cert_file: APP_CONFIG.ssl_cert_file).client.get(url, query: params, follow_redirect: true)
+      res = Stash::Repo::HttpClient.new(tenant: resource.tenant, cert_file: APP_CONFIG.ssl_cert_file)
+        .client.get(url, query: params, follow_redirect: true)
       status = res.status_code
       return if status == 200
 
