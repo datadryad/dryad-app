@@ -67,6 +67,7 @@ module StashEngine
 
       # success but no content, see RFC 5789 sec. 2.1
       deliver_invitations! # delivers invitations for people to add orcids
+      update_size!
       render(nothing: true, status: 204)
     rescue ArgumentError => e
       logger.debug(e)
@@ -141,6 +142,11 @@ module StashEngine
         invite = create_invite(author)
         StashEngine::UserMailer.orcid_invitation(invite).deliver_now
       end
+    end
+
+    def update_size!
+      ds_info = Stash::Repo::DatasetInfo.new(id)
+      id.update(storage_size: ds_info.dataset_size)
     end
 
     def create_invite(author)
