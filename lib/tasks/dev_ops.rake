@@ -14,4 +14,17 @@ namespace :dev_ops do
     end
   end
 
+  desc 'update unfilled sizes'
+  task fill_size: :environment do
+    unless ENV['RAILS_ENV']
+      puts 'RAILS_ENV must be explicitly set before running this script'
+      next
+    end
+    StashEngine::Identifier.where(storage_size: nil).each do |i|
+      puts "Adding size to #{i.to_s}"
+      ds_info = Stash::Repo::DatasetInfo.new(i)
+      i.update(storage_size: ds_info.dataset_size)
+    end
+  end
+
 end
