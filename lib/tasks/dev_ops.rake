@@ -21,7 +21,7 @@ namespace :dev_ops do
       next
     end
     StashEngine::Identifier.where(storage_size: nil).each do |i|
-      puts "Adding size to #{i.to_s}"
+      puts "Adding size to #{i}"
       ds_info = Stash::Repo::DatasetInfo.new(i)
       i.update(storage_size: ds_info.dataset_size)
     end
