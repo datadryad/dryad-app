@@ -91,6 +91,7 @@ module StashEngine
     end
 
     def self.find(tenant_id)
+      return nil unless StashEngine.tenants[tenant_id]
       new(StashEngine.tenants[tenant_id])
     end
 

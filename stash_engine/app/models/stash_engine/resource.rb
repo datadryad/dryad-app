@@ -317,10 +317,12 @@ module StashEngine
     # Ownership
 
     def tenant
+      return nil unless tenant_id
       Tenant.find(tenant_id)
     end
 
     def tenant_id
+      return nil unless user
       user.tenant_id
     end
 
