@@ -8,7 +8,8 @@ module Stash
 
       # takes an activerecord identifier object
       def initialize(identifier)
-        @resource, @tenant = nil, nil
+        @resource = nil
+        @tenant = nil
         @identifier = identifier
         @resource = identifier.last_submitted_resource
         @tenant = @resource.tenant if @resource
@@ -23,6 +24,7 @@ module Stash
         return nil unless resp.http_header.status_code == 200
         @manifest = resp.body
       rescue SocketError => ex
+        puts ex
         nil
       end
 
