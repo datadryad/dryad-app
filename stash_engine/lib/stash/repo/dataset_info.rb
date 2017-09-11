@@ -8,13 +8,15 @@ module Stash
 
       # takes an activerecord identifier object
       def initialize(identifier)
+        @resource, @tenant = nil, nil
         @identifier = identifier
         @resource = identifier.last_submitted_resource
-        @tenant = @resource.tenant
+        @tenant = @resource.tenant if @resource
       end
 
       def manifest
         return @manifest if @manifest
+        return nil unless @resource && @tenant
         protodomain, id = @resource.merritt_protodomain_and_local_id
         url = "#{protodomain}/dm/#{id}"
         resp = HttpClient.new(tenant: tenant).client.get(url, follow_redirect: true)
