@@ -81,8 +81,9 @@ module StashEngine
       status = SortableTable::SortColumnDefinition.new('embargo_status')
       pub_date = SortableTable::SortColumnDefinition.new('publication_date')
       updated_at = SortableTable::SortColumnDefinition.new('updated_at')
+      size = SortableTable::SortColumnDefinition.new('size')
       edited_by = SortableTable::SortColumnDefinition.new('edited_by_name')
-      sort_table = SortableTable::SortTable.new([title, status, pub_date, updated_at, edited_by])
+      sort_table = SortableTable::SortTable.new([title, status, pub_date, updated_at, size, edited_by])
       sort_table.sort_column(params[:sort], params[:direction])
     end
 

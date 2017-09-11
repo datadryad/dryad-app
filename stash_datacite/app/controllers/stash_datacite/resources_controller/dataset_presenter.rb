@@ -46,6 +46,12 @@ module StashDatacite
         @resource.current_file_uploads.count
       end
 
+      # size is the size of the whole dataset, all versions
+      def size
+        return 0 if @resource.identifier_id.blank?
+        @resource.identifier.storage_size || 0
+      end
+
       def external_identifier
         id = @resource.identifier
         if id.blank?
