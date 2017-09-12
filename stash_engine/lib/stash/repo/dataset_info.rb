@@ -23,7 +23,7 @@ module Stash
         resp = HttpClient.new(tenant: tenant).client.get(url, follow_redirect: true)
         return nil unless resp.http_header.status_code == 200
         @manifest = resp.body
-      rescue SocketError => ex
+      rescue SocketError, HTTPClient::ReceiveTimeoutError => ex
         puts ex
         nil
       end
