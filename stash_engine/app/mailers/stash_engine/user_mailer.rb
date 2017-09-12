@@ -1,5 +1,3 @@
-include StashEngine::Engine.routes.url_helpers
-
 module StashEngine
 
   # Mails users about submissions
@@ -72,7 +70,7 @@ module StashEngine
     def orcid_invitation(orcid_invite)
       @invite = orcid_invite
       # need to calculate url here because url helpers work erratically in the mailer template itself
-      @url = @invite.landing(show_path(@invite.identifier.to_s, invitation: @invite.secret))
+      @url = @invite.landing(StashEngine::Engine.routes.url_helpers.show_path(@invite.identifier.to_s, invitation: @invite.secret))
       mail(to: @invite.email,
            subject: "#{rails_env}Your dataset \"#{@invite.resource.title}\" has been published")
     end
