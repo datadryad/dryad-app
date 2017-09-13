@@ -1,3 +1,6 @@
+require 'rails_rinku'
+require 'nokogiri'
+
 module StashEngine
   module SharedController # rubocop:disable Metrics/ModuleLength
     DEFAULT_TZ = 'America/Los_Angeles'.freeze
@@ -227,19 +230,23 @@ module StashEngine
       # add the awful paragraph junk for BRs and encode since we need to encode manually if we're saying html is safe
       str_arr = str.split(%r{\< *br *[/]{0,1} *\>}).reject(&:blank?)
       my_str = str_arr.map { |i| ERB::Util.html_escape(i) }.join(' </p><p> ')
-      link_urls!(my_str)
+      my_str = link_urls(my_str)
       my_str.html_safe
     end
 
     # kludge in some linking of random URLs they pooped into their text.
-    def link_urls!(my_str)
-      my_str.gsub!(%r{https?://\S+}) do |m|
-        full_url = Nokogiri::HTML.parse(m).text
-        end_punctuation = full_url.match(/[\(\)\.\?\!]+$/).to_s
-        full_url = full_url[0..-end_punctuation.length - 1]
-        "<a href=\"#{full_url}\" title=\"#{full_url}\">" \
-            "#{ActionController::Base.helpers.truncate(m)}</a>#{ERB::Util.html_escape(end_punctuation)}"
+    def link_urls(my_str)
+      out = ActionController::Base.helpers.auto_link(my_str, html: { target: '_blank' }) do |text|
+        ActionController::Base.helpers.truncate(text, length: 60)
+        # text.ellipsisize(80)
       end
+      # We need to add the title attribute with the full URL so people can see the full url with hover on most browser if they like
+      # unfortunately, rinku doesn't allow a dynamic title attribute to be easily added that is based on the href value, so Nokogiri
+      doc = Nokogiri::HTML::DocumentFragment.parse(out)
+      doc.css('a').each do |link|
+        link['title'] = link.attributes['href'].value
+      end
+      doc.to_s
     end
 
   end

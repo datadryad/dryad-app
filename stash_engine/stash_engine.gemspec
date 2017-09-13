@@ -44,6 +44,7 @@ Gem::Specification.new do |s| # rubocop:disable Metrics/BlockLength
   s.add_dependency 'httpclient', '~> 2.8.3'
   s.add_dependency 'zeroclipboard-rails'
   s.add_dependency 'sortable-table'
+  s.add_dependency 'rinku'
 
   s.add_development_dependency 'byebug'
   s.add_development_dependency 'chromedriver-helper'
