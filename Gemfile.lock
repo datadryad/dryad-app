@@ -59,6 +59,7 @@ PATH
       omniauth-shibboleth (~> 1.2.1)
       rails (~> 4.2.4)
       redcarpet (~> 3.3)
+      rinku
       sortable-table
       thor (= 0.19.1)
       wicked_pdf (~> 1.1.0)
@@ -354,6 +355,7 @@ GEM
       mime-types (>= 1.16, < 4.0)
       netrc (~> 0.8)
     retriable (3.0.2)
+    rinku (2.0.3)
     rsolr (1.1.2)
       builder (>= 2.1.2)
     rspec-core (3.6.0)
