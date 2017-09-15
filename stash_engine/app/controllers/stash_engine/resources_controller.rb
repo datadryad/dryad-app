@@ -77,7 +77,9 @@ module StashEngine
     end
 
     # Review responds as a get request to review the resource before saving
-    def review; end
+    def review
+      flash.now[:info] = [ flash.now[:info] ].flatten.compact.push(current_tenant.usage_disclaimer) unless current_tenant.usage_disclaimer.blank?
+    end
 
     # Submission of the resource to the repository
     def submission; end
