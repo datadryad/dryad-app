@@ -19,8 +19,8 @@ preservation. Stash enables individual scholars to:
 By alleviating many of the barriers that have historically precluded wider
 adoption of open data principles, Stash empowers individual scholars to
 assert active curation control over their research outputs; encourages more
-widespread data preservation, publication, sharing, and reuse; and promotes
-open scholarly inquiry and advancement.
+widespread data preservation, publication, sharing, and reuse;
+and promotes open scholarly inquiry and advancement.
 
 [Dash](https://dash.ucop.edu/) is the
 [UC Curation Center](http://www.cdlib.org/uc3/)'s implementation of Stash.
