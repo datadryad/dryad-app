@@ -40,5 +40,5 @@ Gem::Specification.new do |s| # rubocop:disable Metrics/BlockLength
   s.add_development_dependency 'rspec', '~> 3.2'
   s.add_development_dependency 'simplecov', '~> 0.14'
   s.add_development_dependency 'simplecov-console', '~> 0.4'
-  s.add_development_dependency 'rubocop', '~> 0.49'
+  s.add_development_dependency 'rubocop', '0.49.1'
 end
