@@ -316,7 +316,7 @@ DEPENDENCIES
   nokogiri (~> 1.8)
   rspec (~> 3.5)
   rspec-rails (~> 3.5)
-  rubocop (~> 0.49)
+  rubocop (= 0.49.1)
   scss_lint
   simplecov (~> 0.14)
   simplecov-console (~> 0.4)
