@@ -66,8 +66,10 @@ module StashEngine
       StashEngine.repository.harvested(identifier: id, record_identifier: record_identifier)
 
       # success but no content, see RFC 5789 sec. 2.1
-      deliver_invitations! # delivers invitations for people to add orcids
-      update_size!
+      if resource
+        deliver_invitations! # delivers invitations for people to add orcids
+        update_size!
+      end
       render(nothing: true, status: 204)
     rescue ArgumentError => e
       logger.debug(e)
