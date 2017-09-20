@@ -66,10 +66,8 @@ module StashEngine
       StashEngine.repository.harvested(identifier: id, record_identifier: record_identifier)
 
       # success but no content, see RFC 5789 sec. 2.1
-      if resource
-        deliver_invitations! # delivers invitations for people to add orcids
-        update_size!
-      end
+      deliver_invitations! # delivers invitations for people to add orcids
+      update_size!
       render(nothing: true, status: 204)
     rescue ArgumentError => e
       logger.debug(e)
@@ -137,6 +135,7 @@ module StashEngine
     # --- These are for delivering orcid invitations when we get the callback that an item has been processed
 
     def deliver_invitations! # rubocop:disable Metrics/AbcSize
+      return unless resource
       authors = resource.authors.where.not(author_email: nil)
       authors.each do |author|
         next if author.author_email.blank? || StashEngine::OrcidInvitation.where(email: author.author_email)
@@ -147,6 +146,7 @@ module StashEngine
     end
 
     def update_size!
+      return unless resource
       ds_info = Stash::Repo::DatasetInfo.new(id)
       id.update(storage_size: ds_info.dataset_size)
     end
