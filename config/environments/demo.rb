@@ -81,13 +81,17 @@ Rails.application.configure do
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
 
-  Rails.application.config.middleware.use ExceptionNotification::Rack,
-  :email => {
-    # :deliver_with => :deliver, # Rails >= 4.2.1 do not need this option since it defaults to :deliver_now
-    :email_prefix => "[Dash2 Exception]",
-    :sender_address => %{"Dash2 Notifier" <no-reply-dash2-stg@ucop.edu>},
-    :exception_recipients => %w{marisa.strong@ucop.edu scott.fisher@ucop.edu bhavi.vedula@ucop.edu}
-  }
+  #this is obnovious because the initializers haven't run yet, so have to duplicate code to read config
+  ac = YAML.load_file(File.join(Rails.root, 'config', 'app_config.yml'))[Rails.env]
+  unless ac['support_team_email'].blank?
+    Rails.application.config.middleware.use ExceptionNotification::Rack,
+      :email => {
+          # :deliver_with => :deliver, # Rails >= 4.2.1 do not need this option since it defaults to :deliver_now
+          :email_prefix => "[Dash Exception]",
+          :sender_address => %{"Dash Notifier" <no-reply-dash2@ucop.edu>},
+          :exception_recipients => ac['support_team_email']
+      }
+  end
 
   config.action_mailer.delivery_method = :sendmail
   config.action_mailer.perform_deliveries = true

@@ -14,7 +14,7 @@ Rails.application.configure do
   config.eager_load = true
 
   # Full error reports are disabled and caching is turned on.
-  config.consider_all_requests_local       = false
+  config.consider_all_requests_local = false
   config.action_controller.perform_caching = true
 
   # Enable Rack::Cache to put a simple HTTP cache in front of your application
@@ -80,14 +80,17 @@ Rails.application.configure do
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
 
-  # Exception Notification settings in Production
-  Rails.application.config.middleware.use ExceptionNotification::Rack,
-  :email => {
-    # :deliver_with => :deliver, # Rails >= 4.2.1 do not need this option since it defaults to :deliver_now
-    :email_prefix => "[Dash Exception]",
-    :sender_address => %{"Dash Notifier" <no-reply-dash2@ucop.edu>},
-    :exception_recipients => %w{marisa.strong@ucop.edu scott.fisher@ucop.edu bhavi.vedula@ucop.edu}
-  }
+  #this is obnovious because the initializers haven't run yet, so have to duplicate code to read config
+  ac = YAML.load_file(File.join(Rails.root, 'config', 'app_config.yml'))[Rails.env]
+  unless ac['support_team_email'].blank?
+    Rails.application.config.middleware.use ExceptionNotification::Rack,
+      :email => {
+          # :deliver_with => :deliver, # Rails >= 4.2.1 do not need this option since it defaults to :deliver_now
+          :email_prefix => "[Dash Exception]",
+          :sender_address => %{"Dash Notifier" <no-reply-dash2@ucop.edu>},
+          :exception_recipients => ac['support_team_email']
+      }
+  end
 
   config.action_mailer.delivery_method = :sendmail
   config.action_mailer.perform_deliveries = true
