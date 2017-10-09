@@ -6,9 +6,9 @@ module StashEngine
     has_many :authors, class_name: 'StashEngine::Author', dependent: :destroy
     has_many :file_uploads, class_name: 'StashEngine::FileUpload', dependent: :destroy
     has_many :edit_histories, class_name: 'StashEngine::EditHistory'
-    has_one :stash_version, class_name: 'StashEngine::Version'
+    has_one :stash_version, class_name: 'StashEngine::Version', dependent: :destroy
     belongs_to :identifier, class_name: 'StashEngine::Identifier', foreign_key: 'identifier_id'
-    has_one :resource_usage, class_name: 'StashEngine::ResourceUsage'
+    has_one :resource_usage, class_name: 'StashEngine::ResourceUsage', dependent: :destroy
     has_one :embargo, class_name: 'StashEngine::Embargo', dependent: :destroy
     has_one :share, class_name: 'StashEngine::Share', dependent: :destroy
     belongs_to :user, class_name: 'StashEngine::User'

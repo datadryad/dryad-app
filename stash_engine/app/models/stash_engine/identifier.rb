@@ -1,7 +1,8 @@
 module StashEngine
   class Identifier < ActiveRecord::Base
-    has_many :resources, class_name: 'StashEngine::Resource'
-    has_many :orcid_invitations, class_name: 'StashEngine::OrcidInvitation'
+    has_many :resources, class_name: 'StashEngine::Resource', dependent: :destroy
+    has_many :orcid_invitations, class_name: 'StashEngine::OrcidInvitation', dependent: :destroy
+
     def view_count
       ResourceUsage.joins(resource: :identifier)
         .where('stash_engine_identifiers.identifier = ? AND stash_engine_identifiers.identifier_type = ?',
