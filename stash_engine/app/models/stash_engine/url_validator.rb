@@ -112,7 +112,7 @@ module StashEngine
 
     def mime_type_from(response)
       content_type = response.header['Content-Type']
-      return if content_type.blank?
+      return 'application/octet-stream' if content_type.blank?
       mime_type = (content_type.class == Array ? content_type.first : content_type)
       return mime_type unless mime_type =~ /^\S*;/ # mimetype and not charset stuff after ';'
       mime_type[/^\S*;/][0..-2]
