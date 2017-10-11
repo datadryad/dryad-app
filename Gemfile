@@ -31,6 +31,7 @@ gem 'rubocop', '~> 0.49'
 # UI
 
 # TODO: why do we have uglifier AND yui-compressor?
+# asset pipeline problems with Joel's pre-minified CSS/JS caused errors with uglifier and had to revert to yui-compressor
 
 gem 'coffee-rails', '~> 4.1.0'
 gem 'jquery-rails'
