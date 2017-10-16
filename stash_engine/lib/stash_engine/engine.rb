@@ -1,6 +1,7 @@
 require 'kaminari'
 require 'wicked_pdf'
 require 'sortable-table' # this is required here rather than in controller, otherwise helpers don't work :-(
+require 'ckeditor'
 
 module StashEngine
   class Engine < ::Rails::Engine

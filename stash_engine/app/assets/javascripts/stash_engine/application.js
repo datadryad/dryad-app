@@ -17,4 +17,5 @@
 //= require jquery-ui
 //= require jquery-fileupload/basic
 //= require jquery-fileupload/vendor/tmpl
+//= require ckeditor/init
 //= require_tree .
