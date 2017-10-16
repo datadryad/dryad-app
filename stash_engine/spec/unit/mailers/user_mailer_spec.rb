@@ -26,6 +26,7 @@ module StashEngine
       allow(tenant).to receive(:contact_email).and_return(%w[contact1@example.edu contact2@example.edu])
       allow(tenant).to receive(:full_domain).and_return(request_host)
       allow(tenant).to receive(:manager_email).and_return('alan.smithee@example.edu')
+      allow(tenant).to receive(:campus_contacts).and_return(%w[gorgath@example.edu lajuana@example.edu])
 
       @user = double(User)
       allow(user).to receive(:first_name).and_return('Jane')
@@ -81,7 +82,7 @@ module StashEngine
           'Return-Path' => sender_address,
           'From' => "Dash Notifications <#{sender_address}>",
           'To' => user.email,
-          'Bcc' => 'alan.smithee@example.edu',
+          'Bcc' => 'alan.smithee@example.edu,gorgath@example.edu,lajuana@example.edu',
           'Subject' => "[#{ENV['RAILS_ENV']}] Dataset \"#{title}\" (#{doi}) submitted"
         }
 

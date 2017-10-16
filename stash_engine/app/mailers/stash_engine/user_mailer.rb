@@ -21,8 +21,8 @@ module StashEngine
 
       @backtrace = to_backtrace(error)
 
-      to_address = to_address_list(APP_CONFIG['submission_error_email'])
-      bcc_address = to_address_list(tenant.manager_email)
+      to_address = address_list(APP_CONFIG['submission_error_email'])
+      bcc_address = address_list(tenant.manager_email)
       mail(to: to_address, bcc: bcc_address,
            subject: "#{rails_env}Submitting dataset \"#{@title}\" (doi:#{@identifier_value}) failed")
     end
@@ -42,8 +42,8 @@ module StashEngine
       @embargo_date = resource.embargo.end_date if resource.embargo
 
       @to_name = @user_name
-      to_address = to_address_list(@user_email)
-      bcc_address = to_address_list(tenant.manager_email)
+      to_address = address_list(@user_email)
+      bcc_address = address_list([tenant.manager_email] + [tenant.campus_contacts])
       mail(to: to_address, bcc: bcc_address,
            subject: "#{rails_env}Dataset \"#{@title}\" (doi:#{@identifier_value}) submitted")
     end
@@ -61,8 +61,8 @@ module StashEngine
 
       @backtrace = to_backtrace(error)
 
-      to_address = to_address_list(user.email)
-      bcc_address = to_address_list([APP_CONFIG['submission_error_email']].flatten + [tenant.manager_email].flatten)
+      to_address = address_list(user.email)
+      bcc_address = address_list([APP_CONFIG['submission_error_email']].flatten + [tenant.manager_email].flatten)
       mail(to: to_address, bcc: bcc_address,
            subject: "#{rails_env}Submitting dataset \"#{@title}\" (doi:#{@identifier_value}) failed")
     end
@@ -86,9 +86,9 @@ module StashEngine
       @identifier_value = resource.identifier_value
     end
 
-    def to_address_list(addresses)
+    def address_list(addresses)
       addresses = [addresses] unless addresses.respond_to?(:join)
-      addresses.reject { |i| i.nil? || i.blank? }.join(',')
+      addresses.flatten.reject(&:blank?).join(',')
     end
 
     def rails_env
