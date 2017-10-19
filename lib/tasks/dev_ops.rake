@@ -37,7 +37,7 @@ namespace :dev_ops do
     if response.strip.casecmp('YES').zero?
       StashDatacite::Description.all.each do |desc|
         item = Script::HtmlizeDescriptions.new(desc.description)
-        next if item.html?
+        next if item.html? || desc.description.blank?
         out_html = item.text_as_html
         desc.update(description: out_html)
         puts "Updated description id: #{desc.id}"
@@ -48,7 +48,7 @@ namespace :dev_ops do
     else
       StashDatacite::Description.all.each do |desc|
         item = Script::HtmlizeDescriptions.new(desc.description)
-        next if item.html?
+        next if item.html? || desc.description.blank?
         puts desc.resource.id
         puts item.text_as_html
         puts ''
