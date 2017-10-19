@@ -13,8 +13,10 @@ module StashDatacite
 
     # PATCH/PUT /descriptions/1
     def update
+      items = description_params
+      items[:description] = Loofah.fragment(items[:description]).scrub!(:strip).to_s
       respond_to do |format|
-        if @description.update(description_params)
+        if @description.update(items)
           format.js { render template: 'stash_datacite/shared/update.js.erb' }
         else
           format.html { render :edit }

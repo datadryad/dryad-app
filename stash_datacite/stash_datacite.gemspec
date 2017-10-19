@@ -24,6 +24,7 @@ Gem::Specification.new do |s| # rubocop:disable Metrics/BlockLength
   s.add_dependency 'leaflet-rails'
   s.add_dependency 'kaminari'
   s.add_dependency 'rubyzip', '>= 1.0.0'
+  s.add_dependency 'loofah'
 
   s.add_dependency 'datacite-mapping', '~> 0.2', '>= 0.2.5'
   # TODO: do these need versions?

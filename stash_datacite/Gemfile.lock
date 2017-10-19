@@ -54,6 +54,7 @@ PATH
       datacite-mapping (~> 0.2, >= 0.2.5)
       kaminari
       leaflet-rails
+      loofah
       rails (~> 4.2.4)
       responders (~> 2.0)
       rubyzip (>= 1.0.0)
