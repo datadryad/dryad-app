@@ -1,3 +1,4 @@
+# rubocop:disable Metrics/BlockLength
 namespace :dev_ops do
 
   # use like: bundle exec rake dev_ops:processing RAILS_ENV=development
@@ -24,6 +25,34 @@ namespace :dev_ops do
       puts "Adding size to #{i}"
       ds_info = Stash::Repo::DatasetInfo.new(i)
       i.update(storage_size: ds_info.dataset_size)
+    end
+  end
+
+  desc 'Update the description fields to have html content (generated from text)'
+  task htmlize: :environment do
+    require 'script/htmlize_descriptions'
+
+    puts "Are you sure you want to update desciption text to html in #{Rails.env}?  (Type 'yes' to proceed, 'no' to preview.)"
+    response = STDIN.gets
+    if response.strip.casecmp('YES').zero?
+      StashDatacite::Description.all.each do |desc|
+        item = Script::HtmlizeDescriptions.new(desc.description)
+        next if item.html?
+        out_html = item.text_as_html
+        desc.update(description: out_html)
+        puts "Updated description id: #{desc.id}"
+        puts out_html
+        puts ''
+      end
+
+    else
+      StashDatacite::Description.all.each do |desc|
+        item = Script::HtmlizeDescriptions.new(desc.description)
+        next if item.html?
+        puts desc.resource.id
+        puts item.text_as_html
+        puts ''
+      end
     end
   end
 
