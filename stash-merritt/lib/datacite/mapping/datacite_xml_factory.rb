@@ -1,4 +1,5 @@
 require 'datacite/mapping'
+require 'action_controller'
 
 module Datacite
   module Mapping
@@ -86,7 +87,7 @@ module Datacite
         se_resource.descriptions.where.not(description: nil).each do |d|
           next if d.description.blank?
           dcs_resource.descriptions << Description.new(
-            value: d.description,
+            value: ActionController::Base.helpers.strip_tags(d.description),
             type: d.description_type_mapping_obj
           )
         end
