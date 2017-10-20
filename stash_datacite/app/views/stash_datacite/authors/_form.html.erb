@@ -48,7 +48,7 @@
 var disable;
   $(function () {
     // $('.js-affiliation').unbind('blur');
-    $('.js-affiliation')
+    $('<%= "##{form_id}" %> .js-affiliation')
       // don't navigate away from the field on tab when selecting an item
       .bind( "keydown", function( event ) {
         if ( event.keyCode === $.ui.keyCode.TAB &&
@@ -81,7 +81,7 @@ var disable;
           return false;
         },
         select: function (event, ui) {
-          $(".js-affiliation_id").val(ui.item.id); // set hidden field id
+          $('<%= "##{form_id}" %> .js-affiliation_id').val(ui.item.id); // set hidden field id
         },
         open: function (event, ui) {
           disable = true
