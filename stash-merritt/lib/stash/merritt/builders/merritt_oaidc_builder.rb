@@ -1,4 +1,5 @@
 require 'stash/repo/file_builder'
+require 'action_controller'
 
 module Stash
   module Merritt
@@ -117,7 +118,7 @@ module Stash
 
         def strip_desc_linefeeds(xml)
           resource.descriptions.each do |d|
-            desc_text = d.description.to_s.delete("\r")
+            desc_text = ActionController::Base.helpers.strip_tags(d.description.to_s).delete("\r") # gsub(/(\r\n?|\n)/, '')
             xml.send(:'dc:description', desc_text.to_s) unless desc_text.blank?
           end
         end
