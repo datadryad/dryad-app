@@ -1,3 +1,5 @@
+require 'loofah'
+
 module StashDatacite
   # StashDatacite specific accessors for landing page
   module LandingMixin
@@ -31,26 +33,28 @@ module StashDatacite
     private
 
     def plain_citation # rubocop:disable Metrics/AbcSize
-      citation(
-        review.authors,
-        review.title_str,
-        review.resource_type,
-        version_string_for(resource, review),
-        identifier_string_for(resource, review),
-        review.publisher.to_s,
-        resource.publication_years
-      )
+      ActionController::Base.helpers.strip_tags(citation(
+                                                  review.authors,
+                                                  review.title_str,
+                                                  review.resource_type,
+                                                  version_string_for(resource, review),
+                                                  identifier_string_for(resource, review),
+                                                  review.publisher,
+                                                  resource.publication_years
+      ))
     end
 
-    def citation(authors, title, resource_type, version, identifier, publisher, publication_years) # rubocop:disable Metrics/ParameterLists
+    # rubocop:disable Metrics/ParameterLists, Metrics/AbcSize
+    def citation(authors, title, resource_type, version, identifier, publisher, publication_years)
       citation = []
-      citation << "#{author_citation_format(authors)} (#{pub_year_from(publication_years)})"
-      citation << title
-      citation << (version == 'v1' ? nil : version)
-      citation << publisher.try(:publisher)
-      citation << resource_type.try(:resource_type_general_friendly)
-      citation << "https://doi.org/#{identifier}"
-      citation.reject(&:blank?).join(', ')
+      citation << h("#{author_citation_format(authors)} (#{pub_year_from(publication_years)})")
+      citation << h(title)
+      citation << h(version == 'v1' ? '' : version)
+      citation << h("#{publisher.try(:publisher)} Dash")
+      citation << h(resource_type.try(:resource_type_general_friendly))
+      id_str = "https://doi.org/#{identifier}"
+      citation << "<a href=\"#{id_str}\">#{h(id_str)}</a>"
+      citation.reject(&:blank?).join(', ').html_safe
     end
 
     def author_citation_format(authors)
@@ -84,6 +88,10 @@ module StashDatacite
     def version_string_for(resource, review)
       return 'v0' unless resource.stash_version
       "v#{review.version.version}"
+    end
+
+    def h(str)
+      ERB::Util.html_escape(str)
     end
 
   end
