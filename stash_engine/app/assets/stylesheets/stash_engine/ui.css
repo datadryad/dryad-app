@@ -3133,7 +3133,7 @@ button.o-button__calendar:focus {
   text-align: center; }
 
 .o-heading__level2, .o-heading__level2-login-with, .o-heading__level2-why-share, .o-heading__level2-sharing-steps, .o-heading__level2-why-side {
-  margin: 0 0 20px;
+  margin: 12px 0 20px;
   color: #005581;
   font-size: 1.3em;
   font-weight: normal; }
