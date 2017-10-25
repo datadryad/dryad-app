@@ -49,7 +49,7 @@ namespace :dev_ops do
       StashDatacite::Description.all.each do |desc|
         item = Script::HtmlizeDescriptions.new(desc.description)
         next if item.html? || desc.description.blank?
-        puts desc.resource.id
+        puts desc.resource.id if desc.resource
         puts item.text_as_html
         puts ''
       end
