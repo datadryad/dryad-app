@@ -61,6 +61,7 @@ StashEngine::Engine.routes.draw do
   get 'help', :to => 'pages#help'
   get 'faq', :to => 'pages#faq'
   get 'about', :to => 'pages#about'
+  get 'dda', :to => 'pages#dda' #data deposit agreement
   get 'search', :to => 'searches#index'
   get 'editor', :to => 'pages#editor'
   get 'dataset/*id', :to => 'landing#show', as: 'show', :constraints => { :id => /\S+/ }

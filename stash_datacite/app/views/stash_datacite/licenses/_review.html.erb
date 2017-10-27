@@ -1,10 +1,10 @@
 <div>
   <p>
     <% if @resource.version_number > 1 %>
-      <span><%= check_box_tag 'agree_to_license', 'yes', true, class: 't-review__agree-to-license' %></span>
+      <span><%= check_box_tag 'agree_to_license', 'yes', true, class: 't-review__agree-to-license js-agrees' %></span>
       <label for="agree_to_license">By checking this box, I agree to the license
     <% else %>
-      <span><%= check_box_tag 'agree_to_license', 'yes', false, class: 't-review__agree-to-license' %></span>
+      <span><%= check_box_tag 'agree_to_license', 'yes', false, class: 't-review__agree-to-license js-agrees' %></span>
       <label for="agree_to_license">By checking this box, I agree to the license
     <% end %>
 
@@ -19,15 +19,32 @@
     <% end %>
     </label>
   </p>
+
+  <% if current_tenant.data_deposit_agreement? %>
+    <p>
+      <span><%= check_box_tag 'agree_to_dda', 'yes', false, class: 't-review__agree-to-license js-agrees' %></span>
+      <label for="agree_to_dda">
+        By checking this box, I agree to the
+        <%= link_to 'Data Deposit Agreement', stash_url_helpers.dda_path, target: '_blank' %>
+      </label>
+    </p>
+  <% end %>
 </div>
 
 
 <script type="text/javascript">
 $(document).ready(function(){
-  $('.t-review__agree-to-license').bind( "click", function() {
-    //check if checkbox is checked
-    if ($(this).is(':checked') && $('.all_filled').is(':checked') ) {
+  $('.js-agrees').bind( "click", function() {
 
+    allChecked = true;
+
+    //check if each checkbox is checked
+    $('.js-agrees:enabled').each(function( index ) {
+      allChecked = allChecked && $( this ).is(':checked');
+      // console.log( index + ": " + $( this ).text() );
+    });
+
+    if (allChecked) {
         $('.js-submission').attr('disabled', false); //enable input
 
     } else {
@@ -39,6 +56,6 @@ $(document).ready(function(){
 
 <% if current_user.id != @resource.user_id %>
   <script>
-    $('#agree_to_license').prop('disabled', true);
+    $('#agree_to_license, #agree_to_dda').prop('disabled', true);
   </script>
 <% end %>

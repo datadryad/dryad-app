@@ -34,6 +34,11 @@ module StashEngine
       end
     end
 
+    def data_deposit_agreement?
+      dda = File.join(Rails.root, 'app', 'views', 'tenants', tenant_id, '_dda.html.erb')
+      File.exist?(dda)
+    end
+
     def omniauth_login_path(params = nil)
       @omniauth_login_path ||= send("#{authentication.strategy}_login_path".intern, params)
     end

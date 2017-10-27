@@ -59,7 +59,7 @@
       <%= render partial: "stash_engine/embargoes/review", locals: { embargo: @review.embargo } %>
     </div>
 
-  <h2 class="o-heading__page-span">Agree to License</h2>
+  <h2 class="o-heading__page-span">Agree to Terms</h2>
     <%= render partial: "stash_datacite/licenses/review" %>
 
 <div class="o-dataset-nav">
@@ -74,7 +74,7 @@
   <% if @data.blank? # valid data %>
     <%= form_tag stash_datacite.resources_submission_path do -%>
       <%= hidden_field_tag :resource_id, @resource.id %>
-      <%= check_box_tag 'all_filled',  1, true, :style => "display: none;", class: 'all_filled' %>
+      <%= check_box_tag 'all_filled',  1, true, :style => "display: none;", class: 'all_filled js-agrees' %>
       <div>
         <% if current_user.id != @resource.user_id # only show to admins %>
           <%= text_field_tag :user_comment, @resource.edit_histories.first.try(:user_comment), size: 50,
@@ -85,6 +85,7 @@
       </div>
     <% end -%>
   <% else %>
+    <%= check_box_tag 'all_filled',  1, false, :style => "display: none;", class: 'all_filled js-agrees' %>
     <%= button_to("Submit", '#', disabled: true, class: 'o-button__submit js-submission', id: 'submit_dataset') %>
   <% end %>
 </div>
