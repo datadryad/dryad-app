@@ -59,6 +59,16 @@ module StashEngine
       end
     end
 
+    # download private dataset's file (need to stream) by owner (for now)
+    def file_stream
+      file_upload = FileUpload.find(params[:file_id])
+      if current_user.id == file_upload.resource.user_id
+        stream_response(file_upload.merritt_url, current_user.tenant)
+      else
+        render status: 403, text: 'You are not authorized to view this file until it has been published.'
+      end
+    end
+
     private
 
     def download_public
