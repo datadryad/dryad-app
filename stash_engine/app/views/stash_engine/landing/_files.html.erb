@@ -1,0 +1,22 @@
+<%# takes local variable of dataset_identifier %>
+<div class="c-sidebox">
+  <h3 class="c-sidebox__heading">Data Files</h3>
+  <% dataset_identifier.resources.submitted.by_version.each do |resource| %>
+    <details class="c-file-group" role="group">
+      <summary class="o-showhide__summary c-file-group__summary">
+        Version <%= resource.stash_version.version %></summary>
+      <ul class="c-file-group__list">
+        <% resource.current_file_uploads.each do |fu| %>
+          <li>
+            <%# url like http://merritt-dev.cdlib.org/d/ark%3A%2Fb5072%2Ffk2b859v7q/1/producer%2FScreen%20Shot%202017-09-01%20at%2011.17.26%20AM.png
+              # http://<merritt-url>/d/<ark>/<version>/<encoded-fn> %>
+            <%= link_to fu.upload_file_name.ellipsisize(22), fu.merritt_url,
+                        title: fu.upload_file_name, target: '_blank' %>
+            <!-- <span title="<%= fu.upload_file_name %>"><%= fu.upload_file_name.ellipsisize(22) %></span> -->
+            <div style="float: right;"><%= filesize(fu.upload_file_size) %></div>
+          </li>
+        <% end %>
+      </ul>
+    </details>
+  <% end %>
+</div>

@@ -5,31 +5,10 @@
     <%= button_to "Download Data Publication (PDF)", data_paper_path(params[:id]), class: 'o-download__docs', method: 'get' %>
   </div>
 
-  <div class="c-sidebox">
-    <h3 class="c-sidebox__heading">Data Files</h3>
-    <% @id.resources.submitted.by_version.each do |resource| %>
-      <details class="c-file-group" role="group">
-        <summary class="o-showhide__summary c-file-group__summary">
-        Version <%= resource.stash_version.version %></summary>
-        <ul class="c-file-group__list">
-      <% resource.current_file_uploads.each do |fu| %>
-        <li><%= fu.upload_file_name %>&nbsp;<%= filesize(fu.upload_file_size) %></li>
-      <% end %>
-        </ul>
-      </details>
-    <% end %>
-  </div>
+  <%= render partial: 'stash_engine/landing/files', locals: {dataset_identifier: @id} %>
+
 <% else %>
-  <div class="c-sidebox">
-    <h3 class="c-sidebox__heading">Data Files</h3>
-    <p>
-      This dataset is private for peer review and will be released on <%= formatted_date(@resource.embargo.end_date) %>.
-      Please contact
-      <%= raw(english_list(array: @resource.authors.map(&:author_html_email_string).compact, conjunction: 'or')) %>
-      with any questions.
-    </p>
-    <p>Lists of files and downloads will become available on the release date.</p>
-  </div>
+  <%= render partial: 'stash_engine/landing/files_embargoed', locals: {resource: @resource} %>
 <% end %>
 
 <div class="c-sidebox">

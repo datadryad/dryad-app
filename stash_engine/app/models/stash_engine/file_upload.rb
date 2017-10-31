@@ -60,6 +60,14 @@ module StashEngine
       Version.find_by_sql([sql, resource.identifier_id, upload_file_name]).first
     end
 
+    # TODO: merritt-specifics, where does this belong?
+    # http://<merritt-url>/d/<ark>/<version>/<encoded-fn> is an example of the URLs Merritt takes
+    def merritt_url
+      domain, ark = resource.merritt_protodomain_and_local_id
+      return '' if domain.nil?
+      "#{domain}/d/#{ark}/#{resource.stash_version.merritt_version}/#{ERB::Util.url_encode(upload_file_name)}"
+    end
+
     # makes list of directories with numbers. not modified for > 7 days, and whose corresponding resource has been successfully submitted
     # this could be handy for doing cleanup and keeping old files around for a little while in case of submission problems
     # currently not used since it would make sense to cron this or something similar

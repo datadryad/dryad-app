@@ -1,0 +1,11 @@
+<%# takes local variable of resource %>
+<div class="c-sidebox">
+  <h3 class="c-sidebox__heading">Data Files</h3>
+  <p>
+    This dataset is private for peer review and will be released on <%= formatted_date(@resource.embargo.end_date) %>.
+    Please contact
+    <%= raw(english_list(array: @resource.authors.map(&:author_html_email_string).compact, conjunction: 'or')) %>
+    with any questions.
+  </p>
+  <p>Lists of files and downloads will become available on the release date.</p>
+</div>
