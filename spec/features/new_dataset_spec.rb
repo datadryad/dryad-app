@@ -1,4 +1,5 @@
 require 'features_helper'
+require 'byebug'
 
 describe 'new dataset' do
   attr_reader :start_new_dataset
@@ -40,8 +41,12 @@ describe 'new dataset' do
       # ##############################
       # Abstract
 
-      abstract = find_blank_field_id('description_abstract')
-      fill_in abstract, with: <<-ABSTRACT
+      # CKEditor is made up of two parts.  A hidden textarea that will contain the value of the input after changes are made
+      # and an iFrame where the actual editing takes place (in addition to controls and other things)
+
+      abstract = find_blank_ckeditor_id('description_abstract')
+
+      fill_in_ckeditor abstract, with: <<-ABSTRACT
         There was, not long since, sent hither out of Germany from
         an inquisitive Physician, a List of several Minerals and Earths
         of that Country, and of Hungary, together with a Specimen of each
@@ -74,8 +79,9 @@ describe 'new dataset' do
       # ##############################
       # Methods
 
-      methods = find_blank_field_id('description_methods')
-      fill_in methods, with: <<-METHODS
+      methods = find_blank_ckeditor_id('description_methods')
+
+      fill_in_ckeditor methods, with: <<-METHODS
         The Stone, according to the Letter of Mr. David Thomas, who sent this account
         to Mr. Boyle, is with Doctor Haughteyn of Salisbury, to whom he also referreth
         for further information.
@@ -84,8 +90,9 @@ describe 'new dataset' do
       # ##############################
       # Usage
 
-      usage_notes = find_blank_field_id('description_other') # TODO: rename field
-      fill_in usage_notes, with: <<-USAGE
+      usage_notes = find_blank_ckeditor_id('description_other')
+
+      fill_in_ckeditor usage_notes, with: <<-USAGE
         'Tis found in the Upper Palatinate, at a place called Freyung, and there are
         two sorts of it, whereof one is a kind of Crystalline Stone, and almost all
         good Leads the other not so rich, and more farinaceous.

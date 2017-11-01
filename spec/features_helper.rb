@@ -6,6 +6,7 @@ require 'capybara/rspec'
 require 'uri'
 require 'cgi'
 require 'fileutils'
+require 'byebug'
 
 # ------------------------------------------------------------
 # Capybara
@@ -80,6 +81,16 @@ end
 
 def find_blank_field_id(name_or_id)
   field = find_field(name_or_id)
+  expect(field.value).to be_blank
+  field[:id]
+end
+
+def find_ckeditor_id(id)
+  find("##{id}", visible: false)
+end
+
+def find_blank_ckeditor_id(id)
+  field = find_ckeditor_id(id)
   expect(field.value).to be_blank
   field[:id]
 end
@@ -175,13 +186,15 @@ def fill_required_fields! # rubocop:disable Metrics/AbcSize
   # ##############################
   # Abstract
 
-  abstract = find_blank_field_id('description_abstract')
-  fill_in abstract, with: <<-ABSTRACT
+  abstract = find_blank_ckeditor_id('description_abstract')
+
+  fill_in_ckeditor abstract, with: <<-ABSTRACT
         There was, not long since, sent hither out of Germany from
         an inquisitive Physician, a List of several Minerals and Earths
         of that Country, and of Hungary, together with a Specimen of each
         of them.
   ABSTRACT
+  wait_for_ajax!
 end
 
 def fill_in_future_pub_date(end_date)
@@ -196,4 +209,22 @@ def fill_in_future_pub_date(end_date)
 
   year_field = find_field_id('yyyyEmbargo')
   fill_in year_field, with: end_date.year
+end
+
+# fill in the ckeditor
+def fill_in_ckeditor(locator, opts = {})
+  id = find_ckeditor_id(locator)
+  id = id[:id] if id
+
+  # Fill the editor content
+  content = opts.fetch(:with).to_json
+  script_text = <<-SCRIPT
+      var ckeditor = CKEDITOR.instances.#{id};
+      ckeditor.setData(#{content});
+      ckeditor.focusManager.focus();
+      ckeditor.focusManager.blur( true );
+      // ckeditor.updateElement();
+  SCRIPT
+  # the blur() above is needed because capybara behaves oddly. https://makandracards.com/makandra/12661-how-to-solve-selenium-focus-issues
+  page.execute_script script_text
 end
