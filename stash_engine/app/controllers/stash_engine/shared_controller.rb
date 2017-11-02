@@ -125,18 +125,8 @@ module StashEngine
     end
 
     # ----------------------
-    # Before Action: security & other setup for controllers
+    # Before Action: basic setup for controllers
     # ----------------------
-
-    def require_login
-      return if current_user
-      flash[:alert] = 'You must be logged in.'
-      redirect_to current_tenant.try(:omniauth_login_path)
-    end
-
-    def ajax_require_current_user
-      return false unless @current_user
-    end
 
     # this sets up the page variables for use with kaminari paging
     def set_page_info
@@ -144,13 +134,16 @@ module StashEngine
       @page_size = params[:page_size] || '5'
     end
 
+    # gets the resource if @resource has been set or params[:resource_id] is present, used many places
+    # if we need to set something else as resource, set the @resource first in filters
+    def default_resource
+      return nil unless @resource || params[:resource_id]
+      @resource ||= StashEngine::Resource.find(params[:resource_id])
+    end
+
     # ----------------------
     # Security Information methods
     # ----------------------
-
-    def can_display_embargoed?(resource)
-      !resource.private? || (current_user && current_user.id == resource.user_id)
-    end
 
     # ----------------------
     # Generation of items for use in HTML pages (only?)

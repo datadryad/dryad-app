@@ -5,9 +5,8 @@ require 'uri'
 module StashEngine
   class ApplicationController < ::ApplicationController
 
-    helper_method :owner?, :admin?
-
     include SharedController
+    include SharedSecurityController
 
     prepend_view_path("#{Rails.application.root}/app/views")
 
@@ -30,18 +29,6 @@ module StashEngine
       end
     end
 
-    # this requires a method called resource in the controller that returns the current resource (usually @resource)
-    def require_modify_permission
-      return if owner? || current_user.superuser? || admin?
-      display_authorization_failure
-    end
-
-    # only someone who has created the dataset in progress can edit it.  Other users can't until they're finished
-    def require_in_progress_editor
-      return if resource.dataset_in_progress_editor.id == current_user.id || current_user.superuser?
-      display_authorization_failure
-    end
-
     # returns the :return_to_path set in the session or else goes back to the path supplied
     def return_to_path_or(default_path)
       return session.delete(:return_to_path) if session[:return_to_path]
@@ -55,15 +42,6 @@ module StashEngine
     end
 
     private
-
-    # these owner/admin need to be in controller since they address the current_user from session, not easily available from model
-    def owner?
-      resource.user_id == current_user.id
-    end
-
-    def admin?
-      (current_user.tenant_id == resource.user.tenant_id && current_user.role == 'admin')
-    end
 
     def display_authorization_failure
       Rails.logger.warn("Resource #{resource ? resource.id : 'nil'}: user ID is #{resource.user_id || 'nil'} but " \

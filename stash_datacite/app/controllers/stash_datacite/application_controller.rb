@@ -3,5 +3,7 @@ module StashDatacite
     helper StashEngine::ApplicationHelper
 
     include StashEngine::SharedController
+    include StashEngine::SharedSecurityController
+
   end
 end

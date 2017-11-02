@@ -2,7 +2,8 @@ require_dependency 'stash_datacite/application_controller'
 
 module StashDatacite
   class AuthorsController < ApplicationController
-    before_action :set_author, only: [:update]
+    before_action :set_author, only: [:update, :delete]
+    before_action :ajax_require_modifiable, only: [:update, :create, :delete]
 
     respond_to :json
 
@@ -41,7 +42,6 @@ module StashDatacite
     # DELETE /authors/1
     def delete
       unless params[:id] == 'new'
-        @author = StashEngine::Author.find(params[:id])
         @resource = StashEngine::Resource.find(@author.resource_id)
         @if_orcid = check_for_orcid(@author)
         @author.destroy
@@ -53,9 +53,19 @@ module StashDatacite
 
     private
 
+    def resource
+      @resource ||=
+          if params[:author] && params[:author][:resource_id]
+            StashEngine::Resource.find(params[:author][:resource_id])
+          else
+            @author.resource
+          end
+    end
+
     # Use callbacks to share common setup or constraints between actions.
     def set_author
-      @author = StashEngine::Author.find(author_params[:id])
+      return if params[:id] == 'new'
+      @author = StashEngine::Author.find((params[:author] ? author_params[:id] : params[:id]))
     end
 
     # Only allow a trusted parameter "white list" through.
