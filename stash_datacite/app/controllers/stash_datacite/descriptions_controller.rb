@@ -3,6 +3,7 @@ require_dependency 'stash_datacite/application_controller'
 module StashDatacite
   class DescriptionsController < ApplicationController
     before_action :set_description, only: %i[update destroy]
+    before_action :ajax_require_modifiable, only: [:update, :destroy]
 
     respond_to :json
 
@@ -35,6 +36,11 @@ module StashDatacite
     # Use callbacks to share common setup or constraints between actions.
     def set_description
       @description = Description.find(description_params[:id])
+      return ajax_blocked unless resource.id == @description.resource_id
+    end
+
+    def resource
+      @resource ||= (params[:description] ? StashEngine::Resource.find(description_params[:resource_id]) : @description.resource)
     end
 
     # Only allow a trusted parameter "white list" through.
