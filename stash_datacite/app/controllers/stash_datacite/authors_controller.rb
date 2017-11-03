@@ -79,7 +79,7 @@ module StashDatacite
     end
 
     def find_or_create_affiliation(affiliation_param)
-      return unless affiliation_param && affiliation_param.present?
+      return nil unless affiliation_param && affiliation_param.present?
       affiliation_str = affiliation_param.to_s
       existing = Affiliation.where('long_name LIKE ? OR short_name LIKE ?', affiliation_str, affiliation_str).first
       return existing if existing

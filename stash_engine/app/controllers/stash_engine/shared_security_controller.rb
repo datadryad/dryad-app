@@ -32,10 +32,10 @@ module StashEngine
     end
 
     def ajax_require_modifiable
-      return true if params[:id] == 'new' # a new unsaved model, not affecting the DB
-      return false unless current_user && resource  # must have a current user and a resource method defined in controller
-      return false unless owner? || current_user.superuser? || admin?
-      return false unless resource.dataset_in_progress_editor.id == current_user.id || current_user.superuser?
+      return if params[:id] == 'new' # a new unsaved model, not affecting the DB
+      return ajax_blocked unless current_user && resource  # must have a current user and a resource method defined in controller
+      return ajax_blocked unless owner? || current_user.superuser? || admin? # ok permisisons
+      return ajax_blocked unless resource.dataset_in_progress_editor.id == current_user.id || current_user.superuser? # must be editor
     end
 
     def can_display_embargoed?(resource)
@@ -49,6 +49,11 @@ module StashEngine
 
     def admin?
       (current_user.tenant_id == resource.user.tenant_id && current_user.role == 'admin')
+    end
+
+    def ajax_blocked
+      render nothing: true, status: 403
+      false
     end
 
   end
