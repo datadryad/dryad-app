@@ -2,7 +2,8 @@ require_dependency 'stash_datacite/application_controller'
 
 module StashDatacite
   class ContributorsController < ApplicationController
-    before_action :set_contributor, only: [:update]
+    before_action :set_contributor, only: [:update, :delete]
+    before_action :ajax_require_modifiable, only: [:update, :create, :delete]
 
     # GET /contributors/new
     def new
@@ -48,9 +49,15 @@ module StashDatacite
 
     private
 
+    def resource
+      @resource ||= (params[:contributor] ? StashEngine::Resource.find(contributor_params[:resource_id]) : @contributor.resource)
+    end
+
     # Use callbacks to share common setup or constraints between actions.
     def set_contributor
-      @contributor = Contributor.find(contributor_params[:id])
+      return if params[:id] == 'new'
+      @contributor = Contributor.find((params[:contributor] ? contributor_params[:id] : params[:id]))
+      return ajax_blocked unless resource.id == @contributor.resource_id
     end
 
     # Only allow a trusted parameter "white list" through.

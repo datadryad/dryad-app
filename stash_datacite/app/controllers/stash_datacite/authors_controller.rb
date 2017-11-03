@@ -54,18 +54,14 @@ module StashDatacite
     private
 
     def resource
-      @resource ||=
-          if params[:author] && params[:author][:resource_id]
-            StashEngine::Resource.find(params[:author][:resource_id])
-          else
-            @author.resource
-          end
+      @resource ||= (params[:author] ? StashEngine::Resource.find(author_params[:resource_id]) : @author.resource)
     end
 
     # Use callbacks to share common setup or constraints between actions.
     def set_author
       return if params[:id] == 'new'
       @author = StashEngine::Author.find((params[:author] ? author_params[:id] : params[:id]))
+      return ajax_blocked unless resource.id == @author.resource_id # don't let people play games with changing author ids
     end
 
     # Only allow a trusted parameter "white list" through.
