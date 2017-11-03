@@ -2,6 +2,10 @@ require_dependency 'stash_datacite/application_controller'
 
 module StashDatacite
   class SubjectsController < ApplicationController
+
+    before_action :set_subject, only: [:delete]
+    before_action :ajax_require_modifiable, only: [:create, :delete]
+
     # GET /subjects/new
     def new
       @subject = Subject.new
@@ -9,21 +13,18 @@ module StashDatacite
 
     # POST /subjects
     def create
-      @resource = StashEngine::Resource.find(params[:resource_id])
       params[:subject]
         .split(/\s*,\s*/)
         .delete_if(&:blank?)
         .each { |s| ensure_subject(s) }
-      @subjects = @resource.subjects
+      @subjects = resource.subjects
       respond_to { |format| format.js }
     end
 
     # DELETE /subjects/1
     def delete
-      @subject = Subject.find(params[:id])
-      @resource = StashEngine::Resource.find(params[:resource_id])
-      @subjects = @resource.subjects
-      @resource.subjects.delete(@subject)
+      @subjects = resource.subjects
+      resource.subjects.delete(@subject)
       respond_to do |format|
         format.js
       end
@@ -57,7 +58,13 @@ module StashDatacite
     end
 
     def set_subject
+      return if params[:id] == 'new'
       @subject = Subject.find(params[:id])
+      return ajax_blocked unless @subject.resources.map(&:id).include?(resource.id)
+    end
+
+    def resource
+      @resource ||= StashEngine::Resource.find(params[:resource_id])
     end
   end
 end
