@@ -2,8 +2,8 @@ require_dependency 'stash_datacite/application_controller'
 
 module StashDatacite
   class RelatedIdentifiersController < ApplicationController
-    before_action :set_related_identifier, only: [:update, :delete]
-    before_action :ajax_require_modifiable, only: [:update, :create, :delete]
+    before_action :set_related_identifier, only: %i[update delete]
+    before_action :ajax_require_modifiable, only: %i[update create delete]
 
     # GET /related_identifiers/new
     def new
@@ -38,9 +38,7 @@ module StashDatacite
 
     # DELETE /related_identifiers/1
     def delete
-      unless params[:id] == 'new'
-        @related_identifier.destroy
-      end
+      @related_identifier.destroy unless params[:id] == 'new'
       respond_to do |format|
         format.js
       end
@@ -60,7 +58,7 @@ module StashDatacite
     private
 
     # Use callbacks to share common setup or constraints between actions.
-    def set_related_identifier
+    def set_related_identifier # rubocop:disable Metrics/AbcSize
       return if params[:id] == 'new'
       @related_identifier = RelatedIdentifier.find((params[:related_identifier] ? related_identifier_params[:id] : params[:id]))
       return ajax_blocked unless resource.id == @related_identifier.resource_id

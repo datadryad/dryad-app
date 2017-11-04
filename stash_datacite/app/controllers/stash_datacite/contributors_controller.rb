@@ -2,8 +2,8 @@ require_dependency 'stash_datacite/application_controller'
 
 module StashDatacite
   class ContributorsController < ApplicationController
-    before_action :set_contributor, only: [:update, :delete]
-    before_action :ajax_require_modifiable, only: [:update, :create, :delete]
+    before_action :set_contributor, only: %i[update delete]
+    before_action :ajax_require_modifiable, only: %i[update create delete]
 
     # GET /contributors/new
     def new
@@ -54,7 +54,7 @@ module StashDatacite
     end
 
     # Use callbacks to share common setup or constraints between actions.
-    def set_contributor
+    def set_contributor # rubocop:disable Metrics/AbcSize
       return if params[:id] == 'new'
       @contributor = Contributor.find((params[:contributor] ? contributor_params[:id] : params[:id]))
       return ajax_blocked unless resource.id == @contributor.resource_id

@@ -2,8 +2,8 @@ require_dependency 'stash_datacite/application_controller'
 
 module StashDatacite
   class AuthorsController < ApplicationController
-    before_action :set_author, only: [:update, :delete]
-    before_action :ajax_require_modifiable, only: [:update, :create, :delete]
+    before_action :set_author, only: %i[update delete]
+    before_action :ajax_require_modifiable, only: %i[update create delete]
 
     respond_to :json
 
@@ -58,7 +58,7 @@ module StashDatacite
     end
 
     # Use callbacks to share common setup or constraints between actions.
-    def set_author
+    def set_author # rubocop:disable Metrics/AbcSize
       return if params[:id] == 'new'
       @author = StashEngine::Author.find((params[:author] ? author_params[:id] : params[:id]))
       return ajax_blocked unless resource.id == @author.resource_id # don't let people play games with changing author ids

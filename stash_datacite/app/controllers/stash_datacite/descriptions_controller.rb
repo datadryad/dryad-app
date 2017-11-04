@@ -3,7 +3,7 @@ require_dependency 'stash_datacite/application_controller'
 module StashDatacite
   class DescriptionsController < ApplicationController
     before_action :set_description, only: %i[update destroy]
-    before_action :ajax_require_modifiable, only: [:update, :destroy]
+    before_action :ajax_require_modifiable, only: %i[update destroy]
 
     respond_to :json
 
