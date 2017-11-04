@@ -2,7 +2,8 @@ require_dependency 'stash_datacite/application_controller'
 
 module StashDatacite
   class RelatedIdentifiersController < ApplicationController
-    before_action :set_related_identifier, only: [:update]
+    before_action :set_related_identifier, only: [:update, :delete]
+    before_action :ajax_require_modifiable, only: [:update, :create, :delete]
 
     # GET /related_identifiers/new
     def new
@@ -38,7 +39,6 @@ module StashDatacite
     # DELETE /related_identifiers/1
     def delete
       unless params[:id] == 'new'
-        @related_identifier = RelatedIdentifier.find(params[:id])
         @related_identifier.destroy
       end
       respond_to do |format|
@@ -61,7 +61,13 @@ module StashDatacite
 
     # Use callbacks to share common setup or constraints between actions.
     def set_related_identifier
-      @related_identifier = RelatedIdentifier.find(related_identifier_params[:id])
+      return if params[:id] == 'new'
+      @related_identifier = RelatedIdentifier.find((params[:related_identifier] ? related_identifier_params[:id] : params[:id]))
+      return ajax_blocked unless resource.id == @related_identifier.resource_id
+    end
+
+    def resource
+      @resource ||= (params[:related_identifier] ? StashEngine::Resource.find(related_identifier_params[:resource_id]) : @related_identifier.resource)
     end
 
     # Only allow a trusted parameter "white list" through.
