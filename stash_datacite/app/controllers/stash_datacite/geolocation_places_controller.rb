@@ -3,6 +3,7 @@ require_dependency 'stash_datacite/application_controller'
 module StashDatacite
   class GeolocationPlacesController < ApplicationController
     before_action :set_geolocation_place, only: %i[edit update delete]
+    before_action :ajax_require_modifiable, only: %i[map_coordinates delete]
 
     # GET /geolocation_places/
     def places_coordinates
@@ -32,6 +33,14 @@ module StashDatacite
     end
 
     private
+
+    def resource
+      @resource ||= if params[:action] == 'delete'
+                      GeolocationPlace.find(params[:id]).geolocation.resource # ignore the resource_id supplied since we can infer it
+                    else
+                      StashEngine::Resource.find(params[:resource_id])
+                    end
+    end
 
     def format_js(format, params)
       @resource = StashEngine::Resource.find(params[:resource_id])
