@@ -57,4 +57,9 @@ CKEDITOR.editorConfig = function( config )
     // { name: 'insert', items: [ 'Image', 'Table', 'HorizontalRule', 'SpecialChar' ] }
     { name: 'insert', items: [ 'Table', 'HorizontalRule', 'SpecialChar' ] }
   ];
+
+  config.pasteFromWordRemoveFontStyles = true;
+  config.pasteFromWordRemoveStyles = true;
+
+  config.removePlugins = 'font';
 };
