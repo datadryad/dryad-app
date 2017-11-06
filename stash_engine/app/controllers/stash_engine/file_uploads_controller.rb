@@ -6,18 +6,18 @@ module StashEngine
   class FileUploadsController < ApplicationController # rubocop:disable Metrics/ClassLength
     before_action :require_login
     before_action :set_file_info, only: %i[destroy destroy_error destroy_manifest]
-    # TODO: check that the following before action really should be ignored on these
-    before_action :require_file_owner, except: %i[create revert validate_urls destroy_error index]
+    # before_action :require_file_owner, except: %i[create revert validate_urls destroy_error index]
+    before_action :ajax_require_modifiable, only: %i[destroy_error destroy_manifest create validate_urls]
     before_action :set_create_prerequisites, only: [:create]
 
-    attr_reader :resource
+    # attr_reader :resource
     helper_method :resource
 
     # show the list of files for resource
     def index
       respond_to do |format|
         format.js do
-          @resource = Resource.find(params[:resource_id])
+          resource
         end
       end
     end
@@ -27,7 +27,6 @@ module StashEngine
       respond_to do |format|
         format.js do
           @url = @file.url
-          @resource = @file.resource
           @file.destroy
         end
       end
@@ -37,7 +36,6 @@ module StashEngine
     def destroy_manifest
       respond_to do |format|
         format.js do
-          @resource = @file.resource
           @file_id = @file.id
           delete_or_destroy(@file)
         end
@@ -45,7 +43,7 @@ module StashEngine
     end
 
     # a file being uploaded (chunk by chunk)
-    def create # rubocop:disable Metrics/MethodLength
+    def create
       respond_to do |format|
         format.js do
           add_to_file(@accum_file, @file_upload) # this accumulates bytes into file for chunked uploads
@@ -54,7 +52,6 @@ module StashEngine
             head :ok, content_type: 'application/javascript'
             return
           end
-          @resource = Resource.find(params[:resource_id])
           @my_file = save_final_file
         end
       end
@@ -63,7 +60,6 @@ module StashEngine
     # manifest workflow
     def validate_urls
       respond_to do |format|
-        @resource = Resource.find(params[:resource_id])
         return unless resource
         url_param = params[:url]
         return if url_param.blank?
@@ -73,6 +69,15 @@ module StashEngine
     end
 
     private
+
+    # set the resource correctly per action
+    def resource
+      @resource ||= if %w[destroy_error destroy_manifest].include?(params[:action])
+                      FileUpload.find(params[:id]).resource
+                    else
+                      Resource.find(params[:resource_id])
+                    end
+    end
 
     def create_upload(url)
       url_translator = Stash::UrlTranslator.new(url)
@@ -113,7 +118,7 @@ module StashEngine
     def upload_attributes_from(validator:, translator:) # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
       valid = validator.validate
       upload_attributes = {
-        resource_id: @resource.id,
+        resource_id: resource.id,
         url: validator.url,
         status_code: validator.status_code,
         file_state: 'created',
@@ -124,7 +129,7 @@ module StashEngine
 
       # don't allow duplicate URLs that have already been put into this version this time
       # (duplicate indicated with 409 Conflict)
-      return upload_attributes.merge(status_code: 409) if @resource.url_in_version?(validator.url)
+      return upload_attributes.merge(status_code: 409) if resource.url_in_version?(validator.url)
 
       upload_attributes.merge(
         upload_file_name: make_unique(validator.filename),
@@ -201,13 +206,13 @@ module StashEngine
       original.update_attribute(:file_state, 'copied')
     end
 
-    def make_unique(fn)
-      dups = @resource.file_uploads.present_files.where(upload_file_name: fn)
+    def make_unique(fn) # rubocop:disable Metrics/AbcSize
+      dups = resource.file_uploads.present_files.where(upload_file_name: fn)
       return fn unless dups.count > 0
       ext = File.extname(fn)
       core_name = File.basename(fn, ext)
       counter = 2
-      while @resource.file_uploads.present_files.where(upload_file_name: "#{core_name}-#{counter}#{ext}").count > 0
+      while resource.file_uploads.present_files.where(upload_file_name: "#{core_name}-#{counter}#{ext}").count > 0
         counter += 1
       end
       "#{core_name}-#{counter}#{ext}"
