@@ -3,6 +3,7 @@ require_dependency 'stash_datacite/application_controller'
 module StashDatacite
   class GeolocationBoxesController < ApplicationController
     before_action :set_geolocation_box, only: %i[show edit update delete]
+    before_action :ajax_require_modifiable, only: %i[map_coordinates create delete]
 
     # # GET /geolocation_boxes/
     def boxes_coordinates
@@ -22,8 +23,7 @@ module StashDatacite
     def map_coordinates
       loc = find_or_create_geolocation(params)
       respond_to do |format|
-        @resource = StashEngine::Resource.find(params[:resource_id])
-        @geolocation_boxes = GeolocationBox.only_geo_bbox(params[:resource_id])
+        @geolocation_boxes = GeolocationBox.only_geo_bbox(resource.id)
         @geolocation_box = loc.geolocation_box
         format.js { render template: 'stash_datacite/geolocation_boxes/create.js.erb' }
       end
@@ -34,26 +34,32 @@ module StashDatacite
       @geolocation = find_or_create_geolocation(params[:geolocation_box])
       @geolocation_box = @geolocation.geolocation_box
       respond_to do |format|
-        @resource = StashEngine::Resource.find(params[:resource_id])
-        @geolocation_boxes = GeolocationBox.only_geo_bbox(params[:resource_id])
+        @geolocation_boxes = GeolocationBox.only_geo_bbox(resource.id)
         format.js
       end
     end
 
     # DELETE /geolocation_boxes/1
-    def delete # rubocop:disable Metrics/AbcSize
+    def delete
       @sw_latitude = @geolocation_box.sw_latitude
       @sw_longitude = @geolocation_box.sw_longitude
       @ne_latitude = @geolocation_box.ne_latitude
       @ne_longitude = @geolocation_box.ne_longitude
       @geolocation_box.try(:geolocation).try(:destroy_box)
 
-      @resource = StashEngine::Resource.find(params[:resource_id])
-      @geolocation_boxes = GeolocationBox.only_geo_bbox(params[:resource_id])
+      @geolocation_boxes = GeolocationBox.only_geo_bbox(resource.id)
       respond_to { |format| format.js }
     end
 
     private
+
+    def resource
+      @resource ||= if params[:action] == 'delete'
+                      GeolocationBox.find(params[:id]).geolocation.resource # ignore the resource_id supplied since we can infer it
+                    else
+                      StashEngine::Resource.find(params[:resource_id])
+                    end
+    end
 
     # geolocation exists with params resource_id, latitude, longitude
     def find_geolocation_by_box(object_params)
