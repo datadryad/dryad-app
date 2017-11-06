@@ -3,6 +3,7 @@ require_dependency 'stash_datacite/application_controller'
 module StashDatacite
   class GeolocationPointsController < ApplicationController
     before_action :set_geolocation_point, only: %i[edit update delete]
+    before_action :ajax_require_modifiable, only: %i[map_coordinates update_coordinates create delete]
 
     def index
       respond_to do |format|
@@ -33,6 +34,7 @@ module StashDatacite
 
     # POST Leaflet AJAX update
     def update_coordinates
+      # this already blocks access since this find_point_from checks both id and resource
       @geolocation_point = find_point_from(params)
       respond_to do |format|
         if update_point(@geolocation_point, params)
@@ -59,12 +61,20 @@ module StashDatacite
       @latitude = @geolocation_point.latitude
       @longitude = @geolocation_point.longitude
       @geolocation_point.try(:geolocation).try(:destroy_point)
-      @resource = StashEngine::Resource.find(params[:resource_id])
-      @geolocation_points = GeolocationPoint.only_geo_points(params[:resource_id])
+      # @resource = StashEngine::Resource.find(params[:resource_id])
+      @geolocation_points = GeolocationPoint.only_geo_points(resource.id)
       respond_to { |format| format.js }
     end
 
     private
+
+    def resource
+      @resource ||= if params[:action] == 'delete'
+                      GeolocationPoint.find(params[:id]).geolocation.resource # ignore the resource_id supplied since we can infer it
+                    else
+                      StashEngine::Resource.find(params[:resource_id])
+                    end
+    end
 
     def find_point_from(params)
       GeolocationPoint.where(id: params[:id]).from_resource_id(params[:resource_id]).first
@@ -100,7 +110,7 @@ module StashDatacite
       @geolocation_point = GeolocationPoint.find(params[:id])
     end
 
-    # Only allow a trusted parameter "white list" through.
+    # Only allow a trusted parameter white list" through.
     def geolocation_point_params
       params.require(:geolocation_point).permit(:id, :latitude, :longitude, :resource_id)
     end
