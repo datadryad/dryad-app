@@ -7,7 +7,7 @@ module StashEngine
     before_action :require_modify_permission, except: [:metadata_callback]
     before_action :require_in_progress_editor, only: %i[find_or_create]
     before_action :require_can_duplicate, only: :new_version
-    before_action :ajax_require_modifiable, only: %i[reject_agreement]
+    before_action :ajax_require_modifiable, only: %i[reject_agreement accept_agreement]
 
     def resource
       @resource ||= Resource.find(params[:resource_id])
@@ -32,6 +32,15 @@ module StashEngine
       respond_to do |format|
         format.js do
           resource.destroy if resource.title.nil? && resource.descriptions.first.description.nil?
+        end
+      end
+    end
+
+    def accept_agreement
+      respond_to do |format|
+        format.json do
+          resource.update(accepted_agreement: true)
+          render json: resource
         end
       end
     end

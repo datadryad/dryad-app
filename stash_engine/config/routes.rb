@@ -49,6 +49,7 @@ StashEngine::Engine.routes.draw do
   match 'metadata_entry_pages/find_or_create' => 'metadata_entry_pages#find_or_create', via: [:get, :post, :put]
   match 'metadata_entry_pages/new_version' => 'metadata_entry_pages#new_version', via: [:post, :get]
   match 'metadata_entry_pages/reject_agreement' => 'metadata_entry_pages#reject_agreement', via: [:delete]
+  match 'metadata_entry_pages/accept_agreement' => 'metadata_entry_pages#accept_agreement', via: [:post]
 
   # root 'sessions#index'
   root 'pages#home'

@@ -6,36 +6,4 @@
   <%= image_tag 'stash_engine/spinner.gif', size: '80x60', alt: 'Loading spinner' %>
 </div>
 
-<div id="modal_poop" style="display:none;">
-</div>
-
-<% if current_tenant.intrusive_data_deposit_agreement? %>
-  <script>
-    $('#modal_poop').html("<%= escape_javascript(
-                                         render partial: "tenants/#{current_tenant.tenant_id}/dda", locals: { resource: @resource }) %>");
-    $(function() {
-
-      $("#modal_poop").dialog({
-        autoOpen: true,
-        height: 'auto',
-        width: $(window).width() - 300,
-        modal: true,
-        open: function(event, ui) {
-          $(".ui-dialog-titlebar-close", ui.dialog | ui).hide();
-        },
-        'buttons':
-          {"Accept": function () { $(this).dialog('close'); },
-          "Reject": function () {
-            $.ajax({
-              url: '<%= metadata_entry_pages_reject_agreement_path(resource_id: params[:resource_id] ) %>',
-              type: 'DELETE',
-              dataType: 'script',
-              /* success: function(result) {
-                // Do something with the result
-              } */
-            });
-          } }
-      });
-    });
-  </script>
-<% end %>
+<%= render partial: 'stash_engine/metadata_entry_pages/agreement_popup', locals: {resource: @resource} %>
