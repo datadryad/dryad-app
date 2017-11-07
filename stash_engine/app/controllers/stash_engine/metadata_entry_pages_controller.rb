@@ -7,6 +7,7 @@ module StashEngine
     before_action :require_modify_permission, except: [:metadata_callback]
     before_action :require_in_progress_editor, only: %i[find_or_create]
     before_action :require_can_duplicate, only: :new_version
+    before_action :ajax_require_modifiable, only: %i[reject_agreement]
 
     def resource
       @resource ||= Resource.find(params[:resource_id])
@@ -25,6 +26,14 @@ module StashEngine
 
       # redirect to find or create path
       redirect_to metadata_entry_pages_find_or_create_path(resource_id: @new_res.id)
+    end
+
+    def reject_agreement
+      respond_to do |format|
+        format.js do
+          resource.destroy if resource.title.nil? && resource.descriptions.first.description.nil?
+        end
+      end
     end
 
     private
