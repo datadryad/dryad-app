@@ -36,7 +36,12 @@ module StashEngine
 
     def data_deposit_agreement?
       dda = File.join(Rails.root, 'app', 'views', 'tenants', tenant_id, '_dda.html.erb')
-      File.exist?(dda)
+      File.exist?(dda) && data_deposit_agreement
+    end
+
+    def intrusive_data_deposit_agreement?
+      dda = File.join(Rails.root, 'app', 'views', 'tenants', tenant_id, '_dda.html.erb')
+      File.exist?(dda) && intrusive_data_deposit_agreement
     end
 
     def omniauth_login_path(params = nil)
