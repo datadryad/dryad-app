@@ -5,3 +5,13 @@
     data-load="<%= metadata_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: params[:resource_id], format: :js) %>">
   <%= image_tag 'stash_engine/spinner.gif', size: '80x60', alt: 'Loading spinner' %>
 </div>
+
+<div id="modal_poop">
+</div>
+
+<% if current_tenant.intrusive_data_deposit_agreement? %>
+  <script>
+    $('#modal_poop').html("<%= escape_javascript(
+                                         render partial: "tenants/#{current_tenant.tenant_id}/dda", locals: { blah: nil }) %>");
+  </script>
+<% end %>
