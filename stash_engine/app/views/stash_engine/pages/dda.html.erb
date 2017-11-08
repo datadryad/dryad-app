@@ -1,10 +1,4 @@
 <% @page_title = 'Data Deposit Agreement - Publish and Preserve your Data' %>
-<style>
-  ol li {
-    margin-bottom: 1em;
-    line-height: 125%;
-  }
-</style>
 
 <% if current_tenant.data_deposit_agreement? %>
   <%= render partial: "tenants/#{current_tenant.tenant_id}/dda" %>

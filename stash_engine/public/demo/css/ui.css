@@ -5416,6 +5416,11 @@ summary::-webkit-details-marker {
 p {
   line-height: 150%; }
 
+ol li,
+ul li {
+  margin-bottom: 1em;
+  line-height: 125%; }
+
 body {
   max-width: 1220px;
   margin: 0 auto;
