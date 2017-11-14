@@ -40,3 +40,14 @@ Please note that you may only use one of these two upload methods per version, b
 - As soon as your data publication is public we recommend citing and publicizing your work with your given DOI. 
 - If you have edits, additional data, or subsequent related work we recommend versioning your data by using the "update" link. All versions of a dataset will be accessible and kept in the Merritt Repository, but the dataset DOI will always resolve to the newest version. 
 - For more details about publication with Dash see our [Frequently Asked Questions (FAQ)](/stash/faq/)
+
+## Institution, Organization, and Publisher Resources
+
+UC Davis (https://www.library.ucdavis.edu/service/data-management/)
+UC Berkeley (http://researchdata.berkeley.edu/)
+UC San Francisco (https://www.library.ucsf.edu/data-science/data/)
+UC Merced (http://library.ucmerced.edu/digital-curation-and-scholarship)
+UC Santa Cruz (http://guides.library.ucsc.edu/datamanagement/)
+UC Irvine (https://www.lib.uci.edu/dss/data-curation, http://guides.lib.uci.edu/datamanagement)
+UC Riverside (https://library.ucr.edu/research-services/managing-your-data)
+
