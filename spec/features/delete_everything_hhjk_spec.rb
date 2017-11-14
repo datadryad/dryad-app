@@ -16,12 +16,12 @@ describe 'solr sanitization' do
   end
 
   def record_count
-    response = solr.get('select', params: { :q => '*:*' })['response']
+    response = solr.get('select', params: { q: '*:*' })['response']
     response['numFound']
   end
 
   before(:each) do
-    solr.add({ uuid: uuid })
+    solr.add(uuid: uuid)
     solr.commit
     expect(record_count).to eq(1)
   end
