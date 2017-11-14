@@ -11,8 +11,8 @@ There are currently ten live instances of Dash:
 - [UC Riverside](https://dash.ucr.edu/)
 - [UC Santa Cruz](https://dash.library.ucsc.edu/)
 - [UC San Francisco](https://datashare.ucsf.edu/)
-- [UC Davis] (https://dash.ucdavis.edu)
-- [UC Press] (https://dash.ucpress.edu)
+- [UC Davis](https://dash.ucdavis.edu/)
+- [UC Press](https://dash.ucpress.edu/)
 - [ONEshare](https://oneshare.cdlib.org/) (in partnership with [DataONE](http://dataone.org/))
 
 
