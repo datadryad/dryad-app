@@ -3,7 +3,7 @@ Dash is an open source, community driven project that takes a unique approach to
 
 Dash is based at the [University of California Curation Center](http://www.cdlib.org/uc3) (UC3), a program at [California Digital Library](http://www.cdlib.org) (CDL) that aims to develop interdisciplinary research data infrastructure. Dash employs a multi-tenancy user interface providing partners with extensive opportunities for local branding and customization, use of existing campus login credentials, and, importantly, offering the Dash service under a tenant-specific URL, an important consideration helping to drive adoption. We welcome collaborations with other organizations wishing to provide a simple, intuitive data publication service on top of more cumbersome legacy systems.
 
-There are currently seven live instances of Dash:
+There are currently ten live instances of Dash:
 - [UC Berkeley](https://dash.berkeley.edu/)
 - [UC Irvine](https://dash.lib.uci.edu/)
 - [UC Merced](https://dash.ucmerced.edu/)
@@ -11,6 +11,8 @@ There are currently seven live instances of Dash:
 - [UC Riverside](https://dash.ucr.edu/)
 - [UC Santa Cruz](https://dash.library.ucsc.edu/)
 - [UC San Francisco](https://datashare.ucsf.edu/)
+- [UC Davis] (https://dash.ucdavis.edu)
+- [UC Press] (https://dash.ucpress.edu)
 - [ONEshare](https://oneshare.cdlib.org/) (in partnership with [DataONE](http://dataone.org/))
 
 
