@@ -43,11 +43,11 @@ Please note that you may only use one of these two upload methods per version, b
 
 ## Institution, Organization, and Publisher Resources
 
-UC Davis (https://www.library.ucdavis.edu/service/data-management/)
-UC Berkeley (http://researchdata.berkeley.edu/)
-UC San Francisco (https://www.library.ucsf.edu/data-science/data/)
-UC Merced (http://library.ucmerced.edu/digital-curation-and-scholarship)
-UC Santa Cruz (http://guides.library.ucsc.edu/datamanagement/)
-UC Irvine (https://www.lib.uci.edu/dss/data-curation, http://guides.lib.uci.edu/datamanagement)
-UC Riverside (https://library.ucr.edu/research-services/managing-your-data)
+- UC Davis (https://www.library.ucdavis.edu/service/data-management/)
+- UC Berkeley (http://researchdata.berkeley.edu/)
+- UC San Francisco (https://www.library.ucsf.edu/data-science/data/)
+- UC Merced (http://library.ucmerced.edu/digital-curation-and-scholarship)
+- UC Santa Cruz (http://guides.library.ucsc.edu/datamanagement/)
+- UC Irvine (https://www.lib.uci.edu/dss/data-curation, http://guides.lib.uci.edu/datamanagement)
+- UC Riverside (https://library.ucr.edu/research-services/managing-your-data)
 
