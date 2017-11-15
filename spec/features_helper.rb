@@ -228,3 +228,9 @@ def fill_in_ckeditor(locator, opts = {})
   # the blur() above is needed because capybara behaves oddly. https://makandracards.com/makandra/12661-how-to-solve-selenium-focus-issues
   page.execute_script script_text
 end
+
+def submit!
+  expect(StashEngine.repository).to receive(:submit).with(resource_id: resource_id)
+  submit = find_button('submit_dataset', disabled: :all)
+  submit.click
+end

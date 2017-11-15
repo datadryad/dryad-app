@@ -4,12 +4,12 @@ require 'uri'
 
 # TODO: figure out how to move some of this to stash_discovery
 module SolrHelper
-  class << self
+  SOLR_VERSION = '5.2.1'.freeze
+  CONF_DIR = 'spec/config/solr/conf'.freeze
+  BLACKLIGHT_YML = 'config/blacklight.yml'.freeze
+  COLLECTION_NAME = 'geoblacklight'.freeze
 
-    SOLR_VERSION = '5.2.1'.freeze
-    CONF_DIR = 'spec/config/solr/conf'.freeze
-    BLACKLIGHT_YML = 'config/blacklight.yml'.freeze
-    COLLECTION_NAME = 'geoblacklight'.freeze
+  class << self
 
     def start
       return if solr_instance
@@ -39,6 +39,17 @@ module SolrHelper
     attr_accessor :solr_instance
     attr_accessor :collection
 
+    def solr_env
+      # For macOS local development, run Solr under Java 8 even if Java 9 is the default
+      @solr_env ||= begin
+        return ENV unless ENV['JAVA_HOME']
+        return ENV unless ENV['JAVA_HOME'].include?('jdk-9')
+        mac_jdk8_home ||= `[[ -f /usr/libexec/java_home && -x /usr/libexec/java_home ]] && /usr/libexec/java_home -v 1.8`.strip!
+        return ENV unless mac_jdk8_home
+        ENV.to_h.merge!('JAVA_HOME' => mac_jdk8_home)
+      end
+    end
+
     def create_collection
       info "Creating collection #{COLLECTION_NAME} from configuration #{CONF_DIR}"
       new_collection = solr_instance.create(dir: CONF_DIR, name: COLLECTION_NAME)
@@ -47,8 +58,8 @@ module SolrHelper
     end
 
     def start_new_instance
-      info "Starting Solr #{SOLR_VERSION} on port #{port}"
-      instance = SolrWrapper.instance(verbose: true, port: port, version: SOLR_VERSION)
+      info "Starting Solr #{SOLR_VERSION} on port #{port} with JAVA_HOME=#{solr_env['JAVA_HOME']}"
+      instance = SolrWrapper.instance(verbose: true, port: port, version: SOLR_VERSION, env: solr_env)
       instance.start
       info 'Solr started'
       instance
