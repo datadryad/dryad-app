@@ -50,4 +50,5 @@ Please note that you may only use one of these two upload methods per version, b
 - [UC Santa Cruz](http://guides.library.ucsc.edu/datamanagement/)
 - [UC Irvine](http://guides.lib.uci.edu/datamanagement/)
 - [UC Riverside](https://library.ucr.edu/research-services/managing-your-data/)
+- [UC Press: Elementa](https://www.elementascience.org/about/data-guidelines/#deposit-of-primary-data/)
 
