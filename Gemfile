@@ -58,10 +58,10 @@ group :development do
 end
 
 group :test do
-  gem 'capybara', '~> 2.14'
+  gem 'capybara', '~> 2.16'
   gem 'chromedriver-helper', '~> 1.1'
   gem 'database_cleaner', '~> 1.5'
-  gem 'selenium-webdriver', '~> 3.4'
+  gem 'selenium-webdriver', '~> 3.7'
   gem 'simplecov', '~> 0.14'
   gem 'simplecov-console', '~> 0.4'
   gem 'solr_wrapper', '~> 1.1'
