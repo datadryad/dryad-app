@@ -45,4 +45,22 @@ describe 'admin' do
     expect(page).to have_css('input#user_comment')
   end
 
+  it 'allows changing user role as a superuser' do
+    user = StashEngine::User.where(email: 'test@example.edu.test-google-a.com').first
+    user.update(role: 'superuser')
+    visit('/stash/admin')
+    expect(page).to have_link('Grolinda Nagios')
+    first('button.c-admin-edit-icon').click
+    wait_for_ajax!
+
+    expect(page).to have_css('input#role_admin')
+    first('input#role_admin').click
+    within(:css, 'div.o-admin-dialog') do
+      find('input[name=commit]').click
+    end
+    wait_for_ajax!
+
+    expect(page.find('#user_role_2')).to have_text('Admin')
+  end
+
 end
