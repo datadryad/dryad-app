@@ -48,8 +48,8 @@ describe 'admin' do
   it 'allows changing user role as a superuser' do
     user = StashEngine::User.where(email: 'test@example.edu.test-google-a.com').first
     user.update(role: 'superuser')
+    sleep(1000) # wtf, the users don't seem to exist on Travis, but works locally
     visit('/stash/admin')
-    sleep 100
     expect(page).to have_link('Grolinda Nagios')
     first('button.c-admin-edit-icon').click
     wait_for_ajax!
