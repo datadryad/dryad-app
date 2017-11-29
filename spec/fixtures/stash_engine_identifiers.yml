@@ -1,0 +1,23 @@
+ident1:
+  id: 1
+  identifier: 10.5072/FK2WW7F97Z
+  identifier_type: DOI
+  storage_size: 234553
+  created_at: 2017-08-24 21:06:24.000000000 Z
+  updated_at: 2017-08-24 21:06:24.000000000 Z
+
+ident2:
+  id: 2
+  identifier: 10.5072/FK2S46QH43
+  identifier_type: DOI
+  storage_size: 2114553
+  created_at: 2017-08-24 21:13:40.000000000 Z
+  updated_at: 2017-08-24 21:13:40.000000000 Z
+
+ident3:
+  id: 3
+  identifier: 10.5072/FK2NC60Q0S
+  identifier_type: DOI
+  storage_size: 2345533
+  created_at: 2017-08-24 21:18:32.000000000 Z
+  updated_at: 2017-08-24 21:18:32.000000000 Z
