@@ -54,6 +54,9 @@ describe 'admin' do
 
     it 'allows changing user role as a superuser' do
       visit('/stash/admin')
+      file_path = Rails.root.join("test-reports/superuser_screenshot.png").to_s
+      page.save_screenshot file_path
+
       expect(page).to have_link('Grolinda Nagios')
       first('button.c-admin-edit-icon').click
       wait_for_ajax!
