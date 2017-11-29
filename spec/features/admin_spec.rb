@@ -49,6 +49,7 @@ describe 'admin' do
     user = StashEngine::User.where(email: 'test@example.edu.test-google-a.com').first
     user.update(role: 'superuser')
     visit('/stash/admin')
+    sleep 100
     expect(page).to have_link('Grolinda Nagios')
     first('button.c-admin-edit-icon').click
     wait_for_ajax!
