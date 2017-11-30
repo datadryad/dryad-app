@@ -25,4 +25,4 @@ before_script:
   - "while [ ! -e /tmp/.X11-unix/X99 ]; do sleep 1; done"
 
 after_failure:
-  - echo "message body" | mutt -s "test_screenshot" -a test-reports/superuser_screenshot.png -- scott.fisher@ucop.edu
+  - echo "message body" | mutt -s "test_screenshot" -a /home/travis/build/CDLUC3/dashv2/test-reports/superuser_screenshot.png -- scott.fisher@ucop.edu
