@@ -50,6 +50,7 @@ describe 'admin' do
     before(:each) do
       user = StashEngine::User.where(email: 'test@example.edu.test-google-a.com').first
       user.update(role: 'superuser')
+      user.reload
     end
 
     it 'allows changing user role as a superuser' do
@@ -59,7 +60,7 @@ describe 'admin' do
       puts file_path
       page.save_screenshot file_path
 
-      expect(page).to have_link('Grolinda Nagios')
+      expect(page).to have_link('Leroy Jones')
       first('button.c-admin-edit-icon').click
       wait_for_ajax!
 
