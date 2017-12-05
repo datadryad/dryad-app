@@ -1,0 +1,17 @@
+{
+  "_links": {
+    "self": {
+      "href": "/"
+    },
+    "stash:datasets": {
+      "href": "datasets"
+    },
+    "curies": [
+      {
+        "name": "stash",
+        "href": "https://github.com/dmolesUC3/stash_api/blob/master/link-relations.md#stash{rel}",
+        "templated": "true"
+      }
+    ]
+  }
+}

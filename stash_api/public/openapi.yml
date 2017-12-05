@@ -1,0 +1,441 @@
+openapi: 3.0.0
+info:
+  title: stash-api
+  description: >-
+    API for the [Stash](https://github.com/CDLUC3/stash) data publication and
+    preservation platform.
+  version: 0.0.1
+paths:
+  /:
+    get:
+      summary: The root of the API
+      responses:
+        '200':
+          description: The root of the API
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/root'
+          examples:
+            application/json:
+              $ref: api/docs/examples/root.json
+  /datasets:
+    get:
+      summary: Get all datasets
+      responses:
+        '200':
+          description: A list of datasets
+          content:
+            application/json:
+              schema:
+                type: object
+                allOf:
+                  - $ref: '#/components/schemas/hal_paged_response'
+                  - type: object
+                    properties:
+                      _embedded:
+                        type: object
+                        properties:
+                          'stash:datasets':
+                            type: array
+                            items:
+                              $ref: '#/components/schemas/dataset'
+          examples:
+            application/json:
+              $ref: api/docs/examples/datasets.json
+  '/datasets/{doi}':
+    get:
+      summary: Get a dataset
+      responses:
+        '200':
+          description: A dataset
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dataset'
+          examples:
+            application/json:
+              $ref: api/docs/examples/dataset.json
+  '/datasets/{doi}/versions':
+    get:
+      summary: Get all versions of a dataset
+      responses:
+        '200':
+          description: A list of a dataset's versions
+          content:
+            application/json:
+              schema:
+                type: object
+                allOf:
+                  - $ref: '#/components/schemas/hal_paged_response'
+                  - type: object
+                    properties:
+                      _embedded:
+                        type: object
+                        properties:
+                          'stash:versions':
+                            type: array
+                            items:
+                              $ref: '#/components/schemas/version'
+  '/versions/{id}':
+    get:
+      summary: The version of the dataset with the id
+      responses:
+        '200':
+          description: The version of the dataset
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/version'
+          examples:
+            application/json:
+              $ref: api/docs/examples/version.json
+  '/versions/{id}/files':
+    get:
+      summary: Get the files in a dataset
+      responses:
+        '200':
+          description: A list of the files in the version
+          content:
+            application/json:
+              schema:
+                type: object
+                allOf:
+                  - $ref: '#/components/schemas/hal_paged_response'
+                  - type: object
+                    properties:
+                      _embedded:
+                        type: object
+                        properties:
+                          'stash:files':
+                            type: array
+                            items:
+                              $ref: '#/components/schemas/file'
+          examples:
+            application/json:
+              $ref: api/docs/examples/files.json
+  '/versions/{id}/files/{pathname}':
+    get:
+      summary: Get a specific file in a dataset
+      responses:
+        '200':
+          description: A single file
+          content:
+            application/json:
+              schema:
+                type: object
+              content:
+                application/json:
+                  schema:
+                    $ref: '#/components/schemas/file'
+              examples:
+                application/json:
+                  $ref: api/docs/examples/file.json
+  '/users/{id}':
+    get:
+      summary: Get a specific user
+      responses:
+        '200':
+          description: get the user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/user'
+          #examples:
+          #  application/json:
+          #    $ref: api/docs/examples/dataset.json
+  '/users/{id}/datasets':
+    get:
+      summary: Get the datasets for this user
+      responses:
+        '200':
+          description: get the datasets for this user
+          content:
+            application/json:
+              schema:
+                type: object
+                allOf:
+                  - $ref: '#/components/schemas/hal_paged_response'
+                  - type: object
+                    properties:
+                      _embedded:
+                        type: object
+                        properties:
+                          'stash:datasets':
+                            type: array
+                            items:
+                              $ref: '#/components/schemas/dataset'
+  '/tenants':
+    get:
+      summary: Get information about the tenant/institution
+      responses:
+        '200':
+          description: get the tenant information of institutions hosted by Dash
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/tenant'
+  '/tenants/{id}':
+    get:
+      summary: Get information about the tenant/institution by id
+      responses:
+        '200':
+          description: get the information about tenant hosted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/tenant'
+          #examples:
+          #  application/json:
+          #    $ref: api/docs/examples/dataset.json
+
+components:
+  schemas:
+    root:
+      type: object
+      properties:
+        _links:
+          $ref: '#/components/schemas/hal_links'
+      required:
+        - _links
+    user:
+      type: object
+      properties:
+        id:
+          type: integer
+        firstName:
+          type: string
+        lastName:
+          type: string
+        email:
+          type: string
+        uid:
+          type: string
+        tenant_id:
+          type: string
+        orcid:
+          type: string
+    dataset:
+      allOf:
+        - $ref: '#/components/schemas/dc_metadata'
+        - $ref: '#/components/schemas/embargo'
+        - type: object
+          properties:
+            owner_id:
+              type: integer
+            _links:
+              $ref: '#/components/schemas/hal_links'
+          required:
+            - _links
+    version:
+      allOf:
+        - type: object
+          properties:
+            id:
+              type: integer
+            versionNo:
+              type: integer
+        - $ref: '#/components/schemas/dc_metadata'
+        - type: object
+          properties:
+            _links:
+              $ref: '#/components/schemas/hal_links'
+            required:
+              - _links
+    dc_metadata:
+      type: object
+      properties:
+        title:
+          type: string
+        authors:
+          type: array
+          items:
+            $ref: '#/components/schemas/author'
+        abstract:
+          type: string
+        funders:
+          type: array
+          items:
+            $ref: '#/components/schemas/funder'
+        keywords:
+          type: array
+          items:
+            type: string
+        methods:
+          type: string
+        usageNotes:
+          type: string
+        locations:
+          type: array
+          items:
+            $ref: '#/components/schemas/geolocation'
+        relatedWorks:
+          type: array
+          items:
+            $ref: '#/components/schemas/relatedWork'
+      required:
+        - title
+        - authors
+        - abstract
+    file:
+      type: object
+      properties:
+        _links:
+          $ref: '#/components/schemas/hal_links'
+        pathname:
+          description: the pathname of the file.
+          type: string
+        size:
+          description: 'the size of the file, in bytes.'
+          type: integer
+          format: int64
+        mimeType:
+          description: the MIME type of the file.
+          type: string
+      required:
+        - _links
+        - pathname
+        - size
+    author:
+      properties:
+        firstName:
+          type: string
+        lastName:
+          type: string
+        email:
+          type: string
+        affiliation:
+          type: string
+        orcid:
+          type: string
+    funder:
+      properties:
+        organization:
+          type: string
+        awardNumber:
+          type: string
+    relatedWork:
+      properties:
+        relationship:
+          type: string
+        identifierType:
+          type: string
+        identifier:
+          type: string
+    geolocation:
+      properties:
+        place:
+          description: a place name.
+          type: string
+        box:
+          $ref: '#/components/schemas/geolocationBox'
+          description: a bounding box.
+        point:
+          $ref: '#/components/schemas/geolocationPoint'
+          description: a coordinate point.
+    geolocationBox:
+      properties:
+        swLongitude:
+          description: the longitude of the southwest corner of the box.
+          type: number
+        swLatitude:
+          description: the latitude of the southwest corner of the box.
+          type: number
+        neLongitude:
+          description: the longitude of the northeast corner of the box.
+          type: number
+        neLatitude:
+          description: the latitude of the northeast corner of the box.
+          type: number
+    geolocationPoint:
+      type: object
+      properties:
+        latitude:
+          description: the latitude of the point.
+          type: number
+        longitude:
+          description: the longitude of the point.
+          type: number
+    embargo:
+      type: object
+      properties:
+        endDate:
+          format: date
+          description: the end date of the embargo.
+          type: string
+    tenant:
+      type: object
+      properties:
+        id:
+          format: string
+        abbreviation:
+          format: string
+        shortName:
+          format: string
+        longName:
+          format: string
+        domainName:
+          format: string
+    hal_paged_response:
+      properties:
+        _links:
+          type: object
+          properties:
+            self:
+              $ref: '#/components/schemas/hal_link'
+            first:
+              $ref: '#/components/schemas/hal_link'
+            last:
+              $ref: '#/components/schemas/hal_link'
+            prev:
+              $ref: '#/components/schemas/hal_link'
+            next:
+              $ref: '#/components/schemas/hal_link'
+            curies:
+              type: array
+              items:
+                $ref: '#/components/schemas/hal_curie'
+          required:
+            - self
+            - first
+            - last
+        count:
+          type: integer
+        total:
+          type: integer
+      required:
+        - _links
+        - count
+        - total
+    hal_links:
+      properties:
+        self:
+          $ref: '#/components/schemas/hal_link'
+        curies:
+          type: array
+          items:
+            $ref: '#/components/schemas/hal_curie'
+      required:
+        - self
+    hal_link:
+      properties:
+        href:
+          type: string
+          format: uri
+      required:
+        - href
+    hal_curie:
+      properties:
+        name:
+          type: string
+        href:
+          type: string
+          format: uri
+        templated:
+          type: boolean
+      required:
+        - name
+        - href
+        - templated

@@ -1,0 +1,23 @@
+{
+  "_links": {
+    "self": {
+      "href": "/datasets/doi:10.5072/FK2XS5RZ7J/files/librarysymbol.pdf"
+    },
+    "stash:dataset": {
+      "href": "/datasets/doi:10.5072/FK2XS5RZ7J"
+    },
+    "stash:download": {
+      "href": "/stash/downloads/file_stream/378"
+    },
+    "curies": [
+      {
+        "name": "stash",
+        "href": "https://github.com/dmolesUC3/stash_api/blob/master/link-relations.md#stash{rel}",
+        "templated": "true"
+      }
+    ]
+  },
+  "pathname": "librarysymbol.pdf",
+  "size": 2473,
+  "mimeType": "application/pdf"
+}
