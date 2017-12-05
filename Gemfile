@@ -14,6 +14,7 @@ path '../stash' do
   gem 'stash_datacite'
   gem 'stash_discovery'
   gem 'stash_engine'
+  gem 'stash_api'
   # needs engines to load first
   gem 'stash-merritt'
 end
