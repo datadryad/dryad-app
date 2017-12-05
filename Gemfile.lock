@@ -19,6 +19,8 @@ PATH
       thor (= 0.19.1)
       typesafe_enum (~> 0.1, >= 0.1.7)
       xml-mapping_extensions (~> 0.4, >= 0.4.2)
+    stash_api (0.0.1)
+      rails (~> 4.2.8)
     stash_datacite (0.0.5)
       datacite-mapping (~> 0.2, >= 0.2.5)
       kaminari
@@ -507,6 +509,7 @@ DEPENDENCIES
   solr_wrapper (~> 1.1)
   spring
   stash-merritt!
+  stash_api!
   stash_datacite!
   stash_discovery!
   stash_engine!
