@@ -4,7 +4,7 @@ module Stash
     NAME = 'stash-harvester'.freeze
 
     # The version of this gem
-    VERSION = '0.0.2'.freeze
+    VERSION = '0.0.3'.freeze
 
     # The copyright notice for this gem
     COPYRIGHT = 'Copyright (c) 2015 The Regents of the University of California'.freeze
