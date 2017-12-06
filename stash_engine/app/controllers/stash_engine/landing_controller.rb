@@ -56,17 +56,19 @@ module StashEngine
       end
     end
 
+    # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
     # PATCH /dataset/doi:10.xyz/abc
     def update
       return render(nothing: true, status: 404) unless id
 
       record_identifier = params[:record_identifier]
       return render(nothing: true, status: 400) unless record_identifier
+      resource = identifier.processing_resource
 
       StashEngine.repository.harvested(identifier: id, record_identifier: record_identifier)
 
       # success but no content, see RFC 5789 sec. 2.1
-      deliver_invitations! # delivers invitations for people to add orcids
+      deliver_invitations! if resource # delivers invitations for people to add orcids if it's processing now, don't invite if a reprocessing job
       update_size!
       render(nothing: true, status: 204)
     rescue ArgumentError => e
