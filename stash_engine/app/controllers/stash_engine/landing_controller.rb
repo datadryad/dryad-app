@@ -63,7 +63,7 @@ module StashEngine
 
       record_identifier = params[:record_identifier]
       return render(nothing: true, status: 400) unless record_identifier
-      resource = identifier.processing_resource
+      resource = id.processing_resource
 
       StashEngine.repository.harvested(identifier: id, record_identifier: record_identifier)
 
