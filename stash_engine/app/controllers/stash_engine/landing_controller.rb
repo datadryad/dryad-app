@@ -68,8 +68,10 @@ module StashEngine
       StashEngine.repository.harvested(identifier: id, record_identifier: record_identifier)
 
       # success but no content, see RFC 5789 sec. 2.1
-      deliver_invitations! if resource # delivers invitations for people to add orcids if it's processing now, don't invite if a reprocessing job
-      update_size!
+      if resource # does processing stuff only if it is processing now and is thus actually changing state. Don't redo stuff for Harvester re-solring
+        deliver_invitations!
+        update_size!
+      end
       render(nothing: true, status: 204)
     rescue ArgumentError => e
       logger.debug(e)
