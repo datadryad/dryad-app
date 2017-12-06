@@ -39,6 +39,7 @@ module Stash
           tmp = Marshal.load(Marshal.dump(@settings)) # deep clone
           tmp['source'].delete('sets')
           tmp['source']['set'] = set
+          tmp['db']['database'] = "db/#{set}.sqlite3"
           { ENV['STASH_ENV'] => tmp }
         end
         make_tempfiles(sets)
