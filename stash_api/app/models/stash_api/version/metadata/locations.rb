@@ -13,6 +13,8 @@ module StashApi
           end
         end
 
+        private
+
         def placename(geolocation)
           p = geolocation.geolocation_place
           return {place: p.geo_location_place} unless p.blank?
