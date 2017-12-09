@@ -16,7 +16,8 @@ module StashApi
             methods: Methods.new(resource: @resource).value,
             usageNotes: UsageNotes.new(resource: @resource).value,
             locations: Locations.new(resource: @resource).value,
-            relatedWorks: RelatedWorks.new(resource: @resource).value
+            relatedWorks: RelatedWorks.new(resource: @resource).value,
+            versionStatus: @resource.current_state
         }
       end
     end

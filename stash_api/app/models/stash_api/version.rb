@@ -1,6 +1,7 @@
 module StashApi
   class Version
 
+    attr_reader :resource
     def initialize(resource_id:)
       @resource = StashEngine::Resource.find(resource_id)
     end
