@@ -41,10 +41,13 @@ module StashApi
           '_links' => paging_hash(result_count: all_count),
           count: results_count,
           total: all_count,
-          'stash:datasets' => results
+          '_embedded' => {'stash:datasets' => results}
       }
     end
 
+    def versions_hash
+      {'stash:versions' => [ '' ]}
+    end
 
   end
 end

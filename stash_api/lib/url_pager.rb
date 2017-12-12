@@ -1,10 +1,11 @@
 class UrlPager
 
-  def initialize(current_url:, result_count:, current_page:, page_size:)
+  def initialize(current_url:, result_count:, current_page:, page_size:, path_only: true)
     @current_url_str = current_url
     @result_count = result_count
     @current_page = current_page
     @page_size = page_size
+    @path_only = path_only
     @current_uri = URI.parse(current_url)
     @current_uri.fragment = nil
     @qs_hash = Rack::Utils.parse_nested_query(@current_uri.query)
@@ -12,17 +13,18 @@ class UrlPager
   end
 
   def paging_hash
-    {
+    hsh = {
         self: self_url,
         first: first_url,
         last: last_url,
         prev: prev_url,
         next: next_url
     }.compact
+    hsh.map{|k,v| [k, {href: v }]}.to_h
   end
 
   def self_url
-    @current_url_str
+    uri_output(URI.parse(@current_url_str))
   end
 
   def first_url
@@ -58,6 +60,15 @@ class UrlPager
   def make_url(page:)
     bu = @current_uri.clone
     bu.query = make_querystring(@qs_hash.merge(page: page))
-    bu.to_s
+    uri_output(bu)
+  end
+
+  # takes a URI
+  def uri_output(u)
+    if @path_only
+      "#{u.path}#{u.query ? "?#{u.query}": ''}"
+    else
+      u.to_s
+    end
   end
 end

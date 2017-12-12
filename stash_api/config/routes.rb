@@ -1,5 +1,7 @@
 StashApi::Engine.routes.draw do
 
-  resources :datasets, :id => /[^\s\/]+?/, :format => /json|xml|yaml/
+  resources :datasets, shallow: true, id: /[^\s\/]+?/, format: /json|xml|yaml/ do
+    resources :versions
+  end
 
 end
