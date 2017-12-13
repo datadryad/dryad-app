@@ -14,13 +14,13 @@ class UrlPager
 
   def paging_hash
     hsh = {
-        self: self_url,
-        first: first_url,
-        last: last_url,
-        prev: prev_url,
-        next: next_url
+      self: self_url,
+      first: first_url,
+      last: last_url,
+      prev: prev_url,
+      next: next_url
     }.compact
-    hsh.map{|k,v| [k, {href: v }]}.to_h
+    hsh.map { |k, v| [k, { href: v }] }.to_h
   end
 
   def self_url
@@ -66,7 +66,7 @@ class UrlPager
   # takes a URI
   def uri_output(u)
     if @path_only
-      "#{u.path}#{u.query ? "?#{u.query}": ''}"
+      "#{u.path}#{u.query ? "?#{u.query}" : ''}"
     else
       u.to_s
     end

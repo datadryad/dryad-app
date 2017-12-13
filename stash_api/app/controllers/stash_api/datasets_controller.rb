@@ -1,4 +1,4 @@
-require_dependency "stash_api/application_controller"
+require_dependency 'stash_api/application_controller'
 
 module StashApi
   class DatasetsController < ApplicationController
@@ -26,20 +26,20 @@ module StashApi
     private
 
     def all_datasets
-      {'stash:datasets' =>
-          StashEngine::Identifier.all.map {|i| Dataset.new(identifier: "#{i.identifier_type}:#{i.identifier}").metadata } }
+      { 'stash:datasets' =>
+          StashEngine::Identifier.all.map { |i| Dataset.new(identifier: "#{i.identifier_type}:#{i.identifier}").metadata } }
     end
 
     def paged_datasets
       all_count = StashEngine::Identifier.all.count
       results = StashEngine::Identifier.all.limit(page_size).offset(page_size * (page - 1))
       results_count = results.count
-      results = results.map {|i| Dataset.new(identifier: "#{i.identifier_type}:#{i.identifier}").metadata }
+      results = results.map { |i| Dataset.new(identifier: "#{i.identifier_type}:#{i.identifier}").metadata }
       {
-          '_links' => paging_hash(result_count: all_count),
-          count: results_count,
-          total: all_count,
-          '_embedded' => {'stash:datasets' => results}
+        '_links' => paging_hash(result_count: all_count),
+        count: results_count,
+        total: all_count,
+        '_embedded' => { 'stash:datasets' => results }
       }
     end
 

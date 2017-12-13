@@ -4,9 +4,7 @@ module StashApi
       class Methods < MetadataItem
 
         def value
-          items = @resource.descriptions.type_methods.map do |desc|
-            desc.description
-          end
+          items = @resource.descriptions.type_methods.map(&:description)
           return items.first unless items.blank?
           nil
         end

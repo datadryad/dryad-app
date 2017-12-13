@@ -8,11 +8,11 @@ module StashApi
 
     def metadata
       m = Metadata.new(resource: @resource)
-      m.value.delete_if { |k, v| v.blank? }
+      m.value.delete_if { |_k, v| v.blank? }
     end
 
     def metadata_with_links
-      {'_links': links}.merge(metadata)
+      { '_links': links }.merge(metadata)
     end
 
     def parent_dataset
@@ -25,17 +25,17 @@ module StashApi
 
     def links
       {
-          self: {href: self_path},
-          'stash:dataset': {href: parent_dataset.self_path},
-          'stash:files': {href: ''},
-          'stash:download': {href: @resource.merritt_producer_download_uri},
-          'curies': [
-              {
-                  name: 'stash',
-                  href: 'http://some.bogus.url',
-                  templated: 'true'
-              }
-          ]
+        self: { href: self_path },
+        'stash:dataset': { href: parent_dataset.self_path },
+        'stash:files': { href: '' },
+        'stash:download': { href: @resource.merritt_producer_download_uri },
+        'curies': [
+          {
+            name: 'stash',
+            href: 'http://some.bogus.url',
+            templated: 'true'
+          }
+        ]
       }
     end
   end

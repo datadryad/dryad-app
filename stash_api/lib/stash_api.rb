@@ -1,4 +1,4 @@
-require "stash_api/engine"
+require 'stash_api/engine'
 
 module StashApi
 end

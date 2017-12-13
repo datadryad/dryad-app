@@ -17,24 +17,26 @@ module StashApi
 
         def placename(geolocation)
           p = geolocation.geolocation_place
-          return {place: p.geo_location_place} unless p.blank?
+          return { place: p.geo_location_place } unless p.blank?
           nil
         end
 
         def box(geolocation)
           b = geolocation.geolocation_box
-          return { box: {
+          unless b.blank?
+            return { box: {
               'swLongitude': b.sw_longitude,
               'swLatitude': b.sw_latitude,
               'neLongitude': b.ne_longitude,
               'neLatitude': b.ne_latitude
-          } } unless b.blank?
+            } }
+          end
           nil
         end
 
         def point(geolocation)
           p = geolocation.geolocation_point
-          return { point: {latitude: p.latitude, longitude: p.longitude}} unless p.blank?
+          return { point: { latitude: p.latitude, longitude: p.longitude } } unless p.blank?
           nil
         end
 

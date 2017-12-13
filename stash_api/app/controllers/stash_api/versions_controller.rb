@@ -1,4 +1,4 @@
-require_dependency "stash_api/application_controller"
+require_dependency 'stash_api/application_controller'
 
 module StashApi
   class VersionsController < ApplicationController
@@ -26,12 +26,12 @@ module StashApi
       all_count = id.resources.count
       results = id.resources.limit(page_size).offset(page_size * (page - 1))
       results_count = results.count
-      results = results.map {|i| Version.new(resource_id: i.id).metadata_with_links }
+      results = results.map { |i| Version.new(resource_id: i.id).metadata_with_links }
       {
-          '_links' => paging_hash(result_count: all_count),
-          count: results_count,
-          total: all_count,
-          '_embedded' => {'stash:versions' => results}
+        '_links' => paging_hash(result_count: all_count),
+        count: results_count,
+        total: all_count,
+        '_embedded' => { 'stash:versions' => results }
       }
     end
 

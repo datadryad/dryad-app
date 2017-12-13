@@ -1,0 +1,15 @@
+inherit_from: ../.rubocop.yml
+
+AllCops:
+  Exclude:
+    - 'bin/**/*'
+    - 'config/**/*'
+    - 'db/**/*'
+    - 'script/**/*'
+    - 'spec/dummy/db/**/*'
+    - 'test/dummy/db/**/*'
+    - 'vendor/**/*'
+    - 'ui-library/**/*'
+    - 'node_modules/**/*'
+  # Suppress complaints about post-2.0 syntax
+  TargetRubyVersion: 2.2

@@ -4,9 +4,7 @@ module StashApi
       class Abstract < MetadataItem
 
         def value
-          items = @resource.descriptions.type_abstract.map do |desc|
-            desc.description
-          end
+          items = @resource.descriptions.type_abstract.map(&:description)
           return items.first unless items.blank?
           nil
         end
