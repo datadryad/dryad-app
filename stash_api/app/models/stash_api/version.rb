@@ -8,7 +8,7 @@ module StashApi
 
     def metadata
       m = Metadata.new(resource: @resource)
-      m.value
+      m.value.delete_if { |k, v| v.blank? }
     end
 
     def metadata_with_links
@@ -28,6 +28,7 @@ module StashApi
           self: {href: self_path},
           'stash:dataset': {href: parent_dataset.self_path},
           'stash:files': {href: ''},
+          'stash:download': {href: @resource.merritt_producer_download_uri},
           'curies': [
               {
                   name: 'stash',

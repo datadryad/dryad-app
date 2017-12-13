@@ -17,6 +17,7 @@ module StashApi
             usageNotes: UsageNotes.new(resource: @resource).value,
             locations: Locations.new(resource: @resource).value,
             relatedWorks: RelatedWorks.new(resource: @resource).value,
+            versionNumber: @resource.try(:stash_version).try(:version),
             versionStatus: @resource.current_state
         }
       end

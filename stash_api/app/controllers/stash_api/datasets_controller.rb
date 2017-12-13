@@ -43,9 +43,5 @@ module StashApi
       }
     end
 
-    def versions_hash
-      {'stash:versions' => [ '' ]}
-    end
-
   end
 end

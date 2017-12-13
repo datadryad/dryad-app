@@ -3,6 +3,12 @@ module StashEngine
     has_many :resources, class_name: 'StashEngine::Resource', dependent: :destroy
     has_many :orcid_invitations, class_name: 'StashEngine::OrcidInvitation', dependent: :destroy
 
+    # finds by an ID that is full id, not the broken apart stuff
+    def self.find_with_id(full_id)
+      prefix, i = CGI.unescape(full_id).split(':', 2)
+      Identifier.where(identifier_type: prefix, identifier: i).try(:first)
+    end
+
     def view_count
       ResourceUsage.joins(resource: :identifier)
         .where('stash_engine_identifiers.identifier = ? AND stash_engine_identifiers.identifier_type = ?',
