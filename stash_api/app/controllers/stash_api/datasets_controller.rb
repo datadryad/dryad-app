@@ -3,8 +3,6 @@ require_dependency "stash_api/application_controller"
 module StashApi
   class DatasetsController < ApplicationController
 
-    UNACCEPTABLE_MSG = '406 - unacceptable: please set your Content-Type and Accept headers for application/json'
-
     # get /datasets/<id>
     def show
       ds = Dataset.new(identifier: params[:id])
