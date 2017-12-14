@@ -37,7 +37,6 @@ class UrlPager
 
   def prev_url
     return nil if @current_page < 2
-    prev_page = @current_page - 1
     make_url(page: @current_page - 1)
   end
 

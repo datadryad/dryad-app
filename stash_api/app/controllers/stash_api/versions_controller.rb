@@ -21,6 +21,8 @@ module StashApi
       end
     end
 
+    private
+
     def paged_versions_for_dataset
       id = StashEngine::Identifier.find_with_id(params[:dataset_id])
       all_count = id.resources.count

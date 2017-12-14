@@ -1,5 +1,6 @@
 module StashApi
   class Version
+    include StashApi::Presenter
 
     attr_reader :resource
     def initialize(resource_id:)
@@ -20,14 +21,18 @@ module StashApi
     end
 
     def self_path
-      StashApi::Engine.routes.url_helpers.version_path(@resource.id)
+      api_url_helper.version_path(@resource.id)
+    end
+
+    def files_path
+      api_url_helper.version_files_path(@resource.id)
     end
 
     def links
       {
         self: { href: self_path },
         'stash:dataset': { href: parent_dataset.self_path },
-        'stash:files': { href: '' },
+        'stash:files': { href: files_path },
         'stash:download': { href: @resource.merritt_producer_download_uri },
         'curies': [
           {

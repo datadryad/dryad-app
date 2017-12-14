@@ -1,5 +1,6 @@
 module StashApi
   class Dataset
+    include StashApi::Presenter
 
     def initialize(identifier:)
       id_type, iden = identifier.split(':', 2)
@@ -29,13 +30,13 @@ module StashApi
 
     def versions_path
       # rails will not encode an id wish slashes automatically, and encoding it results in double-encoding
-      path = StashApi::Engine.routes.url_helpers.dataset_versions_path('foobar')
+      path = api_url_helper.dataset_versions_path('foobar')
       path.gsub('foobar', CGI.escape(@se_identifier.to_s))
     end
 
     def self_path
       # rails will not encode an id wish slashes automatically, and encoding it results in double-encoding
-      path = StashApi::Engine.routes.url_helpers.dataset_path('foobar')
+      path = api_url_helper.dataset_path('foobar')
       path.gsub('foobar', CGI.escape(@se_identifier.to_s))
     end
 
