@@ -34,6 +34,11 @@ module StashApi
       path.gsub('foobar', CGI.escape(@se_identifier.to_s))
     end
 
+    def version_path
+      return nil unless last_version
+      api_url_helper.version_path(last_version.resource.id)
+    end
+
     def self_path
       # rails will not encode an id wish slashes automatically, and encoding it results in double-encoding
       path = api_url_helper.dataset_path('foobar')
@@ -49,6 +54,7 @@ module StashApi
       {
         self: { href: self_path },
         'stash:versions': { href: versions_path },
+        'stash:version': { href: version_path },
         'stash:download': { href: download_uri },
         'curies': [
           {
