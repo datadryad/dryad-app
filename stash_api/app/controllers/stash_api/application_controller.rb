@@ -21,5 +21,20 @@ module StashApi
       up.paging_hash
     end
 
+    def require_stash_identifier(doi:)
+      @stash_identifier = StashEngine::Identifier.find_with_id(doi)
+      render :json => {:error => "not-found"}.to_json, :status => 404 if @stash_identifier.blank?
+    end
+
+    def require_resource_id(resource_id:)
+      @stash_resources = StashEngine::Resource.where(id: resource_id)
+      render :json => {:error => "not-found"}.to_json, :status => 404 if @stash_resources.count < 1
+    end
+
+    def require_file_id(file_id:)
+      @stash_files = StashEngine::FileUpload.where(id: file_id)
+      render :json => {:error => "not-found"}.to_json, :status => 404 if @stash_files.count < 1
+    end
+
   end
 end

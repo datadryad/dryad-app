@@ -3,6 +3,9 @@ require_dependency 'stash_api/application_controller'
 module StashApi
   class DatasetsController < ApplicationController
 
+    before_action only: [:show] { require_stash_identifier(doi: params[:id]) }
+    before_action only: [:index] { require_file}
+
     # get /datasets/<id>
     def show
       ds = Dataset.new(identifier: params[:id])

@@ -3,7 +3,10 @@ require_dependency 'stash_api/application_controller'
 module StashApi
   class FilesController < ApplicationController
 
-    # get /versions/<id>
+    before_action only: [:index] { require_resource_id(resource_id: params[:version_id]) }
+    before_action only: [:show] { require_file_id(file_id: params[:id])}
+
+    # get /files/<id>
     def show
       file = StashApi::File.new(file_id: params[:id])
       respond_to do |format|
@@ -12,7 +15,7 @@ module StashApi
       end
     end
 
-    # get /datasets/<dataset-id>/versions
+    # get /versions/<version-id>/files
     def index
       files = paged_files_for_version
       respond_to do |format|

@@ -3,6 +3,9 @@ require_dependency 'stash_api/application_controller'
 module StashApi
   class VersionsController < ApplicationController
 
+    before_action only: [:index] { require_stash_identifier(doi: params[:dataset_id]) }
+    before_action only: [:show] { require_resource_id(resource_id: params[:id]) }
+
     # get /versions/<id>
     def show
       v = Version.new(resource_id: params[:id])
