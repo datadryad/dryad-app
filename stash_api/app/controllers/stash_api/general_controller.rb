@@ -7,7 +7,7 @@ module StashApi
     def index
       respond_to do |format|
         format.json { render json: output }
-        format.html { render text: UNACCEPTABLE_MSG, status: 406 }
+        format.html { }
       end
     end
 

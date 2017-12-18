@@ -1,7 +1,11 @@
 require 'url_pager'
 
 module StashApi
-  class ApplicationController < ActionController::Base
+  # class ApplicationController < ActionController::Base
+    class ApplicationController < ::StashEngine::ApplicationController
+
+    layout 'layouts/stash_engine/application'
+
     protect_from_forgery with: :exception
 
     PAGE_SIZE = 10
