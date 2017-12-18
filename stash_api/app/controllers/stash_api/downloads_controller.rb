@@ -3,7 +3,7 @@ require_dependency 'stash_api/application_controller'
 module StashApi
   class DownloadsController < ApplicationController
 
-    before_action only: [:show] { require_file_id(file_id: params[:id])}
+    before_action only: [:show] { require_file_id(file_id: params[:id]) }
 
     # get /download/<id>
     def show

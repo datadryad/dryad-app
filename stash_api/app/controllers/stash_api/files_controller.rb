@@ -4,7 +4,7 @@ module StashApi
   class FilesController < ApplicationController
 
     before_action only: [:index] { require_resource_id(resource_id: params[:version_id]) }
-    before_action only: [:show] { require_file_id(file_id: params[:id])}
+    before_action only: [:show] { require_file_id(file_id: params[:id]) }
 
     # get /files/<id>
     def show
