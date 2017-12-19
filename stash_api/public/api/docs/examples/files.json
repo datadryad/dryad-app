@@ -18,7 +18,7 @@
     "curies": [
       {
         "name": "stash",
-        "href": "https://github.com/dmolesUC3/stash_api/blob/master/link-relations.md#stash{rel}",
+        "href": "https://github.com/CDLUC3/stash/blob/development/stash_api/link-relations.md",
         "templated": "true"
       }
     ]
