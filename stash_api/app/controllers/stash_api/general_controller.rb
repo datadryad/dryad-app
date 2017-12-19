@@ -25,7 +25,7 @@ module StashApi
           curies: [
             {
               name: 'stash',
-              href: 'https://my.bogus.url',
+              href: 'https://github.com/CDLUC3/stash/blob/development/stash_api/link-relations.md',
               templated: 'true'
             }
           ]
