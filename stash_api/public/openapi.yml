@@ -15,7 +15,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/root'
+                $ref: '#/components/schemas/root_links'
           examples:
             application/json:
               $ref: api/docs/examples/root.json
@@ -193,11 +193,12 @@ paths:
 
 components:
   schemas:
+
     root:
       type: object
       properties:
         _links:
-          $ref: '#/components/schemas/hal_links'
+          $ref: '#/components/schemas/root_links'
       required:
         - _links
     user:
@@ -409,6 +410,7 @@ components:
         - _links
         - count
         - total
+    # TODO: hal_links should be purged because it's too generic and doesn't express real link structure
     hal_links:
       properties:
         self:
@@ -419,7 +421,21 @@ components:
             $ref: '#/components/schemas/hal_curie'
       required:
         - self
+    root_links:
+      type: object
+      properties:
+        self:
+          $ref: '#/components/schemas/hal_link'
+        "stash:datasets":
+          $ref: '#/components/schemas/hal_link'
+        curies:
+          type: array
+          items:
+            $ref: '#/components/schemas/hal_curie'
+      required:
+        - self
     hal_link:
+      type: object
       properties:
         href:
           type: string
@@ -427,6 +443,7 @@ components:
       required:
         - href
     hal_curie:
+      type: object
       properties:
         name:
           type: string
