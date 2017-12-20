@@ -6,6 +6,8 @@ info:
     preservation platform.
   version: 0.0.1
 paths:
+
+# --- root uri ----
   /:
     get:
       summary: The root of the API
@@ -19,6 +21,8 @@ paths:
           examples:
             application/json:
               $ref: api/docs/examples/root.json
+
+# --- datasets uris ---
   /datasets:
     get:
       summary: Get all datasets
@@ -30,7 +34,7 @@ paths:
               schema:
                 type: object
                 allOf:
-                  - $ref: '#/components/schemas/hal_paged_response'
+                  - $ref: '#/components/schemas/datasets_links'
                   - type: object
                     properties:
                       _embedded:
@@ -43,6 +47,7 @@ paths:
           examples:
             application/json:
               $ref: api/docs/examples/datasets.json
+
   '/datasets/{doi}':
     get:
       summary: Get a dataset
@@ -56,6 +61,7 @@ paths:
           examples:
             application/json:
               $ref: api/docs/examples/dataset.json
+
   '/datasets/{doi}/versions':
     get:
       summary: Get all versions of a dataset
@@ -77,6 +83,8 @@ paths:
                             type: array
                             items:
                               $ref: '#/components/schemas/version'
+
+# --- versions uris ---
   '/versions/{id}':
     get:
       summary: The version of the dataset with the id
@@ -90,6 +98,7 @@ paths:
           examples:
             application/json:
               $ref: api/docs/examples/version.json
+
   '/versions/{id}/files':
     get:
       summary: Get the files in a dataset
@@ -131,69 +140,12 @@ paths:
               examples:
                 application/json:
                   $ref: api/docs/examples/file.json
-  '/users/{id}':
-    get:
-      summary: Get a specific user
-      responses:
-        '200':
-          description: get the user
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/user'
-          #examples:
-          #  application/json:
-          #    $ref: api/docs/examples/dataset.json
-  '/users/{id}/datasets':
-    get:
-      summary: Get the datasets for this user
-      responses:
-        '200':
-          description: get the datasets for this user
-          content:
-            application/json:
-              schema:
-                type: object
-                allOf:
-                  - $ref: '#/components/schemas/hal_paged_response'
-                  - type: object
-                    properties:
-                      _embedded:
-                        type: object
-                        properties:
-                          'stash:datasets':
-                            type: array
-                            items:
-                              $ref: '#/components/schemas/dataset'
-  '/tenants':
-    get:
-      summary: Get information about the tenant/institution
-      responses:
-        '200':
-          description: get the tenant information of institutions hosted by Dash
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/tenant'
-  '/tenants/{id}':
-    get:
-      summary: Get information about the tenant/institution by id
-      responses:
-        '200':
-          description: get the information about tenant hosted
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/tenant'
-          #examples:
-          #  application/json:
-          #    $ref: api/docs/examples/dataset.json
 
+# ------------------
+# --- components ---
+# ------------------
 components:
   schemas:
-
     root:
       type: object
       properties:
@@ -201,23 +153,7 @@ components:
           $ref: '#/components/schemas/root_links'
       required:
         - _links
-    user:
-      type: object
-      properties:
-        id:
-          type: integer
-        firstName:
-          type: string
-        lastName:
-          type: string
-        email:
-          type: string
-        uid:
-          type: string
-        tenant_id:
-          type: string
-        orcid:
-          type: string
+
     dataset:
       allOf:
         - $ref: '#/components/schemas/dc_metadata'
@@ -379,48 +315,8 @@ components:
           format: string
         domainName:
           format: string
-    hal_paged_response:
-      properties:
-        _links:
-          type: object
-          properties:
-            self:
-              $ref: '#/components/schemas/hal_link'
-            first:
-              $ref: '#/components/schemas/hal_link'
-            last:
-              $ref: '#/components/schemas/hal_link'
-            prev:
-              $ref: '#/components/schemas/hal_link'
-            next:
-              $ref: '#/components/schemas/hal_link'
-            curies:
-              type: array
-              items:
-                $ref: '#/components/schemas/hal_curie'
-          required:
-            - self
-            - first
-            - last
-        count:
-          type: integer
-        total:
-          type: integer
-      required:
-        - _links
-        - count
-        - total
-    # TODO: hal_links should be purged because it's too generic and doesn't express real link structure
-    hal_links:
-      properties:
-        self:
-          $ref: '#/components/schemas/hal_link'
-        curies:
-          type: array
-          items:
-            $ref: '#/components/schemas/hal_curie'
-      required:
-        - self
+
+# --- specific link section for different resources ---
     root_links:
       type: object
       properties:
@@ -434,6 +330,29 @@ components:
             $ref: '#/components/schemas/hal_curie'
       required:
         - self
+
+    datasets_links:
+      allOf:
+        - properties:
+          self:
+            $ref: '#/components/schemas/hal_link'
+        - $ref: '#/components/schemas/hal_paged_response'
+
+
+
+# --- generic linking methods that give links for boilerplate junk used everywhere ---
+    # TODO: hal_links should be purged because it's too generic and doesn't express real link structure
+    hal_links:
+      properties:
+        self:
+          $ref: '#/components/schemas/hal_link'
+        curies:
+          type: array
+          items:
+            $ref: '#/components/schemas/hal_curie'
+      required:
+        - self
+
     hal_link:
       type: object
       properties:
@@ -442,6 +361,7 @@ components:
           format: uri
       required:
         - href
+
     hal_curie:
       type: object
       properties:
@@ -456,3 +376,32 @@ components:
         - name
         - href
         - templated
+
+    hal_paged_response:
+      properties:
+        self:
+          $ref: '#/components/schemas/hal_link'
+        first:
+          $ref: '#/components/schemas/hal_link'
+        last:
+          $ref: '#/components/schemas/hal_link'
+        prev:
+          $ref: '#/components/schemas/hal_link'
+        next:
+          $ref: '#/components/schemas/hal_link'
+        curies:
+          type: array
+          items:
+            $ref: '#/components/schemas/hal_curie'
+        #required:
+        #  - self
+        #  - first
+        #  - last
+        #count:
+        #  type: integer
+        #total:
+        #  type: integer
+      #required:
+      #  - _links
+      #  - count
+      #  - total

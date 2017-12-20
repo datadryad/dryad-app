@@ -11,5 +11,16 @@ module StashApi
       self.class.api_url_helper
     end
 
+    def stash_curie
+      { 'curies': [
+          {
+              name: 'stash',
+              href: 'https://github.com/CDLUC3/stash/blob/development/stash_api/link-relations.md#{rel}',
+              templated: 'true'
+          }
+      ] }
+    end
+
+
   end
 end

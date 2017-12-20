@@ -8,6 +8,12 @@ module StashApi
           return items.first unless items.blank?
           nil
         end
+
+        def open_api_yaml
+          <<-EOS
+
+          EOS
+        end
       end
     end
   end

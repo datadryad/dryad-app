@@ -34,14 +34,7 @@ module StashApi
         'stash:dataset': { href: parent_dataset.self_path },
         'stash:files': { href: files_path },
         'stash:download': { href: @resource.merritt_producer_download_uri },
-        'curies': [
-          {
-            name: 'stash',
-            href: 'https://github.com/CDLUC3/stash/blob/development/stash_api/link-relations.md',
-            templated: 'true'
-          }
-        ]
-      }
+      }.merge(stash_curie)
     end
   end
 end
