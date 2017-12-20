@@ -22,7 +22,7 @@ module StashApi
         'stash:files': { href: parent_version.files_path },
         'stash:download': ({ href: api_url_helper.download_path(@se_file_upload.id) } if @se_file_upload.resource.submitted? &&
             !@se_file_upload.resource.embargoed?)
-      }.compact
+      }.compact.merge(stash_curie)
     end
 
     def parent_version

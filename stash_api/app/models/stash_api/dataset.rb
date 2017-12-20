@@ -13,9 +13,16 @@ module StashApi
       Version.new(resource_id: res_id)
     end
 
+    def last_submitted
+      return nil unless @se_identifier.resources.count > 0
+      res_id = @se_identifier.last_submitted_resource
+      return nil if res_id.nil?
+      Version.new(resource_id: res_id)
+    end
+
     def metadata
       # gets descriptive metadata together
-      lv = last_version
+      lv = last_submitted
       return simple_identifier if lv.nil?
       metadata = {
         id: @se_identifier.to_s,
@@ -35,8 +42,8 @@ module StashApi
     end
 
     def version_path
-      return nil unless last_version
-      api_url_helper.version_path(last_version.resource.id)
+      return nil unless last_submitted
+      api_url_helper.version_path(last_submitted.resource.id)
     end
 
     def self_path
@@ -55,15 +62,8 @@ module StashApi
         self: { href: self_path },
         'stash:versions': { href: versions_path },
         'stash:version': { href: version_path },
-        'stash:download': { href: download_uri },
-        'curies': [
-          {
-            name: 'stash',
-            href: 'https://github.com/CDLUC3/stash/blob/development/stash_api/link-relations.md',
-            templated: 'true'
-          }
-        ]
-      }
+        'stash:download': { href: download_uri }
+      }.merge(stash_curie)
     end
 
     private
