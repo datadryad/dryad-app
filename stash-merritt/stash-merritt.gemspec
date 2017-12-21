@@ -45,7 +45,7 @@ Gem::Specification.new do |s| # rubocop:disable Metrics/BlockLength
   s.add_development_dependency 'simplecov', '~> 0.14'
   s.add_development_dependency 'simplecov-console', '~> 0.4'
   s.add_development_dependency 'rubocop', '0.49.1'
-  s.add_development_dependency 'yard', '~> 0.8'
+  s.add_development_dependency 'yard', '~> 0.9'
 
   s.add_development_dependency 'database_cleaner', '~> 1.5'
   s.add_development_dependency 'diffy', '~> 3.1'
