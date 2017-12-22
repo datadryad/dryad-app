@@ -32,18 +32,18 @@ paths:
           content:
             application/json:
               schema:
-#                type: object
-                allOf:
-                  - $ref: '#/components/schemas/datasets_links'
-                  - type: object
-                    properties:
-                      _embedded:
-                        type: object
-                        properties:
-                          'stash:datasets':
-                            type: array
-                            items:
-                              $ref: '#/components/schemas/dataset'
+                $ref: '#/components/schemas/datasets'
+#                allOf:
+#                  - $ref: '#/components/schemas/datasets'
+#                  - type: object
+#                    properties:
+#                      _embedded:
+#                        type: object
+#                        properties:
+#                          'stash:datasets':
+#                            type: array
+#                            items:
+#                              $ref: '#/components/schemas/dataset'
           examples:
             application/json:
               $ref: api/docs/examples/datasets.json
@@ -173,12 +173,29 @@ components:
 # --- Dataset(s) ---
 
     # plural
+    datasets:
+      allOf:
+        - $ref: '#/components/schemas/datasets_links'
+        - $ref: '#/components/schemas/paging_counts'
+        - $ref: '#/components/schemas/embedded_datasets'
+
     datasets_links:
       properties:
         _links:
           allOf:
             - $ref: '#/components/schemas/hal_self_link'
             - $ref: '#/components/schemas/hal_page_links'
+
+    embedded_datasets:
+      type: object
+      properties:
+        _embedded:
+          type: object
+          properties:
+            'stash:datasets':
+              type: array
+              items:
+                $ref: '#/components/schemas/dataset'
 
     #singular
     dataset:
@@ -189,13 +206,7 @@ components:
               type: string
             storage_size:
               type: number
-        - $ref: '#/components/schemas/dc_metadata'
-        - $ref: '#/components/schemas/embargo'
-        - properties:
-            versionNumber:
-              type: integer
-            status:
-              type: string
+        - $ref: '#/components/schemas/version'
 
     dataset_links:
       properties:
@@ -415,6 +426,13 @@ components:
           $ref: '#/components/schemas/hal_link'
         next:
           $ref: '#/components/schemas/hal_link'
+
+    paging_counts:
+      properties:
+        count:
+          type: integer
+        total:
+          type: integer
 
     hal_link:
       type: object
