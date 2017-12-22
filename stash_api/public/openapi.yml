@@ -33,17 +33,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/datasets'
-#                allOf:
-#                  - $ref: '#/components/schemas/datasets'
-#                  - type: object
-#                    properties:
-#                      _embedded:
-#                        type: object
-#                        properties:
-#                          'stash:datasets':
-#                            type: array
-#                            items:
-#                              $ref: '#/components/schemas/dataset'
           examples:
             application/json:
               $ref: api/docs/examples/datasets.json
@@ -175,16 +164,8 @@ components:
     # plural
     datasets:
       allOf:
-        - $ref: '#/components/schemas/datasets_links'
-        - $ref: '#/components/schemas/paging_counts'
+        - $ref: '#/components/schemas/hal_paged_response'
         - $ref: '#/components/schemas/embedded_datasets'
-
-    datasets_links:
-      properties:
-        _links:
-          allOf:
-            - $ref: '#/components/schemas/hal_self_link'
-            - $ref: '#/components/schemas/hal_page_links'
 
     embedded_datasets:
       type: object
@@ -229,6 +210,24 @@ components:
             $ref: '#/components/schemas/hal_curie'
 
 # --- Version(s) ---
+    # plural
+    versions:
+      allOf:
+        - $ref: '#/components/schemas/hal_paged_response'
+        - $ref: '#/components/schemas/embedded_versions'
+
+    embedded_versions:
+      type: object
+      properties:
+        _embedded:
+          type: object
+          properties:
+            'stash:versions':
+              type: array
+              items:
+                $ref: '#/components/schemas/version'
+
+    # singular
     version:
       allOf:
         - $ref: '#/components/schemas/version_links'
@@ -459,30 +458,10 @@ components:
         - templated
 
     hal_paged_response:
-      properties:
-        self:
-          $ref: '#/components/schemas/hal_link'
-        first:
-          $ref: '#/components/schemas/hal_link'
-        last:
-          $ref: '#/components/schemas/hal_link'
-        prev:
-          $ref: '#/components/schemas/hal_link'
-        next:
-          $ref: '#/components/schemas/hal_link'
-        curies:
-          type: array
-          items:
-            $ref: '#/components/schemas/hal_curie'
-        #required:
-        #  - self
-        #  - first
-        #  - last
-        #count:
-        #  type: integer
-        #total:
-        #  type: integer
-      #required:
-      #  - _links
-      #  - count
-      #  - total
+      allOf:
+        - properties:
+            _links:
+              allOf:
+                - $ref: '#/components/schemas/hal_self_link'
+                - $ref: '#/components/schemas/hal_page_links'
+        - $ref: '#/components/schemas/paging_counts'
