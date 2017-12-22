@@ -32,7 +32,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
+#                type: object
                 allOf:
                   - $ref: '#/components/schemas/datasets_links'
                   - type: object
@@ -168,19 +168,14 @@ components:
             - _links
     version:
       allOf:
-        - type: object
-          properties:
-            id:
-              type: integer
-            versionNo:
-              type: integer
+        - $ref: '#/components/schemas/version_links'
         - $ref: '#/components/schemas/dc_metadata'
-        - type: object
-          properties:
-            _links:
-              $ref: '#/components/schemas/hal_links'
-            required:
-              - _links
+        - properties:
+            versionNumber:
+              type: integer
+            versionStatus:
+              type: string
+
     dc_metadata:
       type: object
       properties:
@@ -332,12 +327,19 @@ components:
         - self
 
     datasets_links:
-      allOf:
-        - properties:
-          self:
-            $ref: '#/components/schemas/hal_link'
-        - $ref: '#/components/schemas/hal_paged_response'
+      properties:
+        _links:
+          allOf:
+            - $ref: '#/components/schemas/hal_self_link'
+            - $ref: '#/components/schemas/hal_page_links'
 
+
+    version_links:
+      properties:
+        _links:
+          allOf:
+            - $ref: '#/components/schemas/hal_self_link'
+            - $ref: '#/components/schemas/hal_version_links'
 
 
 # --- generic linking methods that give links for boilerplate junk used everywhere ---
@@ -352,6 +354,36 @@ components:
             $ref: '#/components/schemas/hal_curie'
       required:
         - self
+
+    hal_self_link:
+      type: object
+      properties:
+        self:
+          $ref: '#/components/schemas/hal_link'
+
+    hal_page_links:
+      properties:
+        first:
+          $ref: '#/components/schemas/hal_link'
+        last:
+          $ref: '#/components/schemas/hal_link'
+        prev:
+          $ref: '#/components/schemas/hal_link'
+        next:
+          $ref: '#/components/schemas/hal_link'
+
+    hal_version_links:
+      properties:
+        'stash:dataset':
+          $ref: '#/components/schemas/hal_link'
+        'stash:files':
+          $ref: '#/components/schemas/hal_link'
+        'stash:download':
+          $ref: '#/components/schemas/hal_link'
+        curies:
+          type: array
+          items:
+            $ref: '#/components/schemas/hal_curie'
 
     hal_link:
       type: object
