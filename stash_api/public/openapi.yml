@@ -1,12 +1,15 @@
 openapi: 3.0.0
+servers:
+  - url: /api/
+
 info:
   title: stash-api
   description: >-
     API for the [Stash](https://github.com/CDLUC3/stash) data publication and
     preservation platform.
   version: 0.0.1
-paths:
 
+paths:
 # --- root uri ----
   /:
     get:
