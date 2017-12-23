@@ -1,191 +1,78 @@
 {
   "_links": {
     "self": {
-      "href": "/datasets/doi:10.5072/FK2XS5RZ7J/files?page=3"
+      "href": "/api/versions/32/files"
     },
     "first": {
-      "href": "/datasets/doi:10.5072/FK2XS5RZ7J/files"
+      "href": "/api/versions/32/files"
     },
     "last": {
-      "href": "/datasets/doi:10.5072/FK2XS5RZ7J/files?page=6"
-    },
-    "prev": {
-      "href": "/datasets/doi:10.5072/FK2XS5RZ7J/files?page=2"
-    },
-    "next": {
-      "href": "/datasets/doi:10.5072/FK2XS5RZ7J/files?page=4"
-    },
-    "curies": [
-      {
-        "name": "stash",
-        "href": "https://github.com/CDLUC3/stash/blob/development/stash_api/link-relations.md",
-        "templated": "true"
-      }
-    ]
+      "href": "/api/versions/32/files?page=1"
+    }
   },
-  "count": 10,
-  "total": 53,
+  "count": 2,
+  "total": 2,
   "_embedded": {
     "stash:files": [
       {
         "_links": {
           "self": {
-            "href": "/datasets/doi:10.5072/FK2XS5RZ7J/files/eq_36_141.267_36.767_41.780"
+            "href": "/api/files/66"
           },
           "stash:dataset": {
-            "href": "/datasets/doi:10.5072/FK2XS5RZ7J"
+            "href": "/api/datasets/doi%3A10.5072%2FFK2MK6CD6D"
+          },
+          "stash:version": {
+            "href": "/api/versions/32"
+          },
+          "stash:files": {
+            "href": "/api/versions/32/files"
           },
           "stash:download": {
-            "stash:download": "/stash/downloads/file_stream/408"
-          }
+            "href": "/api/downloads/66"
+          },
+          "curies": [
+            {
+              "name": "stash",
+              "href": "https://github.com/CDLUC3/stash/blob/development/stash_api/link-relations.md#{rel}",
+              "templated": "true"
+            }
+          ]
         },
-        "pathname": "eq_36_141.267_36.767_41.780",
-        "size": 382620,
-        "mimeType": "application/octet-stream"
+        "path": "I0006475A.jpg",
+        "size": 218594,
+        "mimeType": "image/jpeg",
+        "status": "copied"
       },
       {
         "_links": {
           "self": {
-            "href": "/datasets/doi:10.5072/FK2XS5RZ7J/files/eq_37_140.633_38.285_12.380"
+            "href": "/api/files/67"
           },
           "stash:dataset": {
-            "href": "/datasets/doi:10.5072/FK2XS5RZ7J"
+            "href": "/api/datasets/doi%3A10.5072%2FFK2MK6CD6D"
+          },
+          "stash:version": {
+            "href": "/api/versions/32"
+          },
+          "stash:files": {
+            "href": "/api/versions/32/files"
           },
           "stash:download": {
-            "stash:download": "/stash/downloads/file_stream/409"
-          }
+            "href": "/api/downloads/67"
+          },
+          "curies": [
+            {
+              "name": "stash",
+              "href": "https://github.com/CDLUC3/stash/blob/development/stash_api/link-relations.md#{rel}",
+              "templated": "true"
+            }
+          ]
         },
-        "pathname": "eq_37_140.633_38.285_12.380",
-        "size": 369705,
-        "mimeType": "application/octet-stream"
-      },
-      {
-        "_links": {
-          "self": {
-            "href": "/datasets/doi:10.5072/FK2XS5RZ7J/files/eq_38_144.695_43.697_6.030"
-          },
-          "stash:dataset": {
-            "href": "/datasets/doi:10.5072/FK2XS5RZ7J"
-          },
-          "stash:download": {
-            "stash:download": "/stash/downloads/file_stream/410"
-          }
-        },
-        "pathname": "eq_38_144.695_43.697_6.030",
-        "size": 361200,
-        "mimeType": "application/octet-stream"
-      },
-      {
-        "_links": {
-          "self": {
-            "href": "/datasets/doi:10.5072/FK2XS5RZ7J/files/eq_39_139.308_41.958_9.490"
-          },
-          "stash:dataset": {
-            "href": "/datasets/doi:10.5072/FK2XS5RZ7J"
-          },
-          "stash:download": {
-            "stash:download": "/stash/downloads/file_stream/411"
-          }
-        },
-        "pathname": "eq_39_139.308_41.958_9.490",
-        "size": 356895,
-        "mimeType": "application/octet-stream"
-      },
-      {
-        "_links": {
-          "self": {
-            "href": "/datasets/doi:10.5072/FK2XS5RZ7J/files/eq_3_133.317_35.316_9.260"
-          },
-          "stash:dataset": {
-            "href": "/datasets/doi:10.5072/FK2XS5RZ7J"
-          },
-          "stash:download": {
-            "stash:download": "/stash/downloads/file_stream/412"
-          }
-        },
-        "pathname": "eq_3_133.317_35.316_9.260",
-        "size": 2913540,
-        "mimeType": "application/octet-stream"
-      },
-      {
-        "_links": {
-          "self": {
-            "href": "/datasets/doi:10.5072/FK2XS5RZ7J/files/eq_40_141.790_37.357_36.930"
-          },
-          "stash:dataset": {
-            "href": "/datasets/doi:10.5072/FK2XS5RZ7J"
-          },
-          "stash:download": {
-            "stash:download": "/stash/downloads/file_stream/413"
-          }
-        },
-        "pathname": "eq_40_141.790_37.357_36.930",
-        "size": 340305,
-        "mimeType": "application/octet-stream"
-      },
-      {
-        "_links": {
-          "self": {
-            "href": "/datasets/doi:10.5072/FK2XS5RZ7J/files/eq_41_135.930_35.479_11.570"
-          },
-          "stash:dataset": {
-            "href": "/datasets/doi:10.5072/FK2XS5RZ7J"
-          },
-          "stash:download": {
-            "stash:download": "/stash/downloads/file_stream/414"
-          }
-        },
-        "pathname": "eq_41_135.930_35.479_11.570",
-        "size": 310170,
-        "mimeType": "application/octet-stream"
-      },
-      {
-        "_links": {
-          "self": {
-            "href": "/datasets/doi:10.5072/FK2XS5RZ7J/files/eq_42_138.465_34.832_20.460"
-          },
-          "stash:dataset": {
-            "href": "/datasets/doi:10.5072/FK2XS5RZ7J"
-          },
-          "stash:download": {
-            "stash:download": "/stash/downloads/file_stream/415"
-          }
-        },
-        "pathname": "eq_42_138.465_34.832_20.460",
-        "size": 297885,
-        "mimeType": "application/octet-stream"
-      },
-      {
-        "_links": {
-          "self": {
-            "href": "/datasets/doi:10.5072/FK2XS5RZ7J/files/eq_43_142.660_39.661_29.650"
-          },
-          "stash:dataset": {
-            "href": "/datasets/doi:10.5072/FK2XS5RZ7J"
-          },
-          "stash:download": {
-            "stash:download": "/stash/downloads/file_stream/416"
-          }
-        },
-        "pathname": "eq_43_142.660_39.661_29.650",
-        "size": 288855,
-        "mimeType": "application/octet-stream"
-      },
-      {
-        "_links": {
-          "self": {
-            "href": "/datasets/doi:10.5072/FK2XS5RZ7J/files/eq_44_132.689_33.481_34.600"
-          },
-          "stash:dataset": {
-            "href": "/datasets/doi:10.5072/FK2XS5RZ7J"
-          },
-          "stash:download": {
-            "stash:download": "/stash/downloads/file_stream/417"
-          }
-        },
-        "pathname": "eq_44_132.689_33.481_34.600",
-        "size": 272790,
-        "mimeType": "application/octet-stream"
+        "path": "admin_editing2.jpg",
+        "size": 185621,
+        "mimeType": "image/jpeg",
+        "status": "created"
       }
     ]
   }

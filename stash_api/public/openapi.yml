@@ -60,18 +60,10 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                allOf:
-                  - $ref: '#/components/schemas/hal_paged_response'
-                  - type: object
-                    properties:
-                      _embedded:
-                        type: object
-                        properties:
-                          'stash:versions':
-                            type: array
-                            items:
-                              $ref: '#/components/schemas/version'
+                $ref: '#/components/schemas/versions'
+          examples:
+            application/json:
+              $ref: api/docs/examples/versions.json
 
 # --- versions uris ---
   '/versions/{id}':
@@ -97,22 +89,11 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                allOf:
-                  - $ref: '#/components/schemas/hal_paged_response'
-                  - type: object
-                    properties:
-                      _embedded:
-                        type: object
-                        properties:
-                          'stash:files':
-                            type: array
-                            items:
-                              $ref: '#/components/schemas/file'
+                $ref: '#/components/schemas/files'
           examples:
             application/json:
               $ref: api/docs/examples/files.json
-  '/versions/{id}/files/{pathname}':
+  '/files/{id}':
     get:
       summary: Get a specific file in a dataset
       responses:
@@ -121,11 +102,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-              content:
-                application/json:
-                  schema:
-                    $ref: '#/components/schemas/file'
+                $ref: '#/components/schemas/file'
               examples:
                 application/json:
                   $ref: api/docs/examples/file.json
@@ -258,6 +235,62 @@ components:
           items:
             $ref: '#/components/schemas/hal_curie'
 
+# --- file(s) ---
+
+    # plural
+    files:
+      allOf:
+        - $ref: '#/components/schemas/hal_paged_response'
+        - $ref: '#/components/schemas/embedded_files'
+
+    embedded_files:
+      type: object
+      properties:
+        _embedded:
+          type: object
+          properties:
+            'stash:files':
+              type: array
+              items:
+                $ref: '#/components/schemas/file'
+
+    # singular
+    file:
+      allOf:
+        - $ref: '#/components/schemas/file_links'
+        - properties:
+            path:
+              type: string
+            size:
+              type: integer
+            mimeType:
+              type: string
+            status:
+              type: string
+
+    file_links:
+      properties:
+        _links:
+          allOf:
+            - $ref: '#/components/schemas/hal_self_link'
+            - $ref: '#/components/schemas/hal_file_links'
+
+    hal_file_links:
+      properties:
+        'stash:dataset':
+          $ref: '#/components/schemas/hal_link'
+        'stash:version':
+          $ref: '#/components/schemas/hal_link'
+        'stash:files':
+          $ref: '#/components/schemas/hal_link'
+        'stash:download':
+          $ref: '#/components/schemas/hal_link'
+        curies:
+          type: array
+          items:
+            $ref: '#/components/schemas/hal_curie'
+
+
     dc_metadata:
       type: object
       properties:
@@ -293,25 +326,7 @@ components:
         - title
         - authors
         - abstract
-    file:
-      type: object
-      properties:
-        _links:
-          $ref: '#/components/schemas/hal_links'
-        pathname:
-          description: the pathname of the file.
-          type: string
-        size:
-          description: 'the size of the file, in bytes.'
-          type: integer
-          format: int64
-        mimeType:
-          description: the MIME type of the file.
-          type: string
-      required:
-        - _links
-        - pathname
-        - size
+
     author:
       properties:
         firstName:
@@ -324,6 +339,7 @@ components:
           type: string
         orcid:
           type: string
+
     funder:
       properties:
         organization:

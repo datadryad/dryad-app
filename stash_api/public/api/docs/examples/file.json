@@ -1,23 +1,30 @@
 {
   "_links": {
     "self": {
-      "href": "/datasets/doi:10.5072/FK2XS5RZ7J/files/librarysymbol.pdf"
+      "href": "/api/files/66"
     },
     "stash:dataset": {
-      "href": "/datasets/doi:10.5072/FK2XS5RZ7J"
+      "href": "/api/datasets/doi%3A10.5072%2FFK2MK6CD6D"
+    },
+    "stash:version": {
+      "href": "/api/versions/32"
+    },
+    "stash:files": {
+      "href": "/api/versions/32/files"
     },
     "stash:download": {
-      "href": "/stash/downloads/file_stream/378"
+      "href": "/api/downloads/66"
     },
     "curies": [
       {
         "name": "stash",
-        "href": "https://github.com/CDLUC3/stash/blob/development/stash_api/link-relations.md",
+        "href": "https://github.com/CDLUC3/stash/blob/development/stash_api/link-relations.md#{rel}",
         "templated": "true"
       }
     ]
   },
-  "pathname": "librarysymbol.pdf",
-  "size": 2473,
-  "mimeType": "application/pdf"
+  "path": "I0006475A.jpg",
+  "size": 218594,
+  "mimeType": "image/jpeg",
+  "status": "copied"
 }
