@@ -46,6 +46,10 @@ Style/SingleLineBlockParams:
 Naming/VariableNumber:
   Enabled: False
 
+# Seriously?
+Style/CommentedKeyword:
+  Enabled: False
+
 # Adding more line noise to format strings will not improve them
 Style/FormatStringToken:
   Enabled: false

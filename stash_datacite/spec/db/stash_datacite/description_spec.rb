@@ -23,7 +23,7 @@ module StashDatacite
         end
       end
       it 'returns the enum instance for a model object' do
-        Description::DescriptionTypesStrToFull.keys.each do |description_type|
+        Description::DescriptionTypesStrToFull.each_key do |description_type|
           description = Description.create(
             resource_id: resource.id,
             description: 'Conscriptio super monstruosum vitulum extraneissimum',

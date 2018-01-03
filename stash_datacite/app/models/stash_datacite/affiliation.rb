@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module StashDatacite
   class Affiliation < ActiveRecord::Base
     self.table_name = 'dcs_affiliations'

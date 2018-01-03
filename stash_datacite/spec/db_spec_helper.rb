@@ -25,7 +25,7 @@ def run_migrations!
   check_connection_config!
 
   paths = []
-  ENGINES.values.each do |engine_path|
+  ENGINES.each_value do |engine_path|
     migration_path = "#{engine_path}/db/migrate"
     paths << migration_path if File.directory?(migration_path)
   end

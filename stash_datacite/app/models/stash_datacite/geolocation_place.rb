@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module StashDatacite
   class GeolocationPlace < ActiveRecord::Base
     self.table_name = 'dcs_geo_location_places'

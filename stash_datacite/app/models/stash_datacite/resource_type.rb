@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module StashDatacite
   class ResourceType < ActiveRecord::Base
     self.table_name = 'dcs_resource_types'

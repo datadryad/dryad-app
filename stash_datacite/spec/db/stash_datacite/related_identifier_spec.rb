@@ -15,7 +15,7 @@ module StashDatacite
 
     describe '#to_s' do
       it 'provides a reader-friendly description' do
-        RelatedIdentifier::RelationTypesLimited.values.each do |rel_type|
+        RelatedIdentifier::RelationTypesLimited.each_value do |rel_type|
           related_doi_value = "10.5555/#{Time.now.nsec}"
           rel_id = RelatedIdentifier.create(
             resource_id: resource.id,
@@ -45,7 +45,7 @@ module StashDatacite
         end
       end
       it 'returns the enum instance for a model object' do
-        RelatedIdentifier::RelationTypesLimited.values.each do |rel_type|
+        RelatedIdentifier::RelationTypesLimited.each_value do |rel_type|
           related_doi_value = "10.5555/#{Time.now.nsec}"
           rel_id = RelatedIdentifier.create(
             resource_id: resource.id,
@@ -71,7 +71,7 @@ module StashDatacite
         end
       end
       it 'returns the enum instance for a model object' do
-        RelatedIdentifier::RelatedIdentifierTypesLimited.values.each do |rel_type|
+        RelatedIdentifier::RelatedIdentifierTypesLimited.each_value do |rel_type|
           related_doi_value = "10.5555/#{Time.now.nsec}"
           rel_id = RelatedIdentifier.create(
             resource_id: resource.id,

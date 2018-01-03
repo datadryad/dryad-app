@@ -23,7 +23,7 @@ module StashDatacite
         end
       end
       it 'returns the enum instance for a model object' do
-        DataciteDate::DateTypesStrToFull.keys.each do |date_type|
+        DataciteDate::DateTypesStrToFull.each_key do |date_type|
           date = DataciteDate.create(
             resource_id: resource.id,
             date: 'Conscriptio super monstruosum vitulum extraneissimum',
