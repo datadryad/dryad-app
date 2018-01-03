@@ -32,7 +32,8 @@ module StashDatacite
 
     private
 
-    def plain_citation # rubocop:disable Metrics/AbcSize
+    # rubocop:disable Metrics/AbcSize
+    def plain_citation
       ActionController::Base.helpers.strip_tags(citation(
                                                   review.authors,
                                                   review.title_str,
@@ -43,6 +44,7 @@ module StashDatacite
                                                   resource.publication_years
       ))
     end
+    # rubocop:enable Metrics/AbcSize
 
     # rubocop:disable Metrics/ParameterLists, Metrics/AbcSize
     def citation(authors, title, resource_type, version, identifier, publisher, publication_years)
@@ -56,6 +58,7 @@ module StashDatacite
       citation << "<a href=\"#{id_str}\">#{h(id_str)}</a>"
       citation.reject(&:blank?).join(', ').html_safe
     end
+    # rubocop:enable Metrics/ParameterLists, Metrics/AbcSize
 
     def author_citation_format(authors)
       return '' if authors.blank?

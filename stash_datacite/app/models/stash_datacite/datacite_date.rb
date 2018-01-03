@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module StashDatacite
   class DataciteDate < ActiveRecord::Base
     self.table_name = 'dcs_dates'
@@ -39,7 +41,7 @@ module StashDatacite
       DataciteDate.date_type_mapping_obj(date_type_friendly)
     end
 
-    def self.set_date_available(resource_id:) # rubocop:disable Style/AccessorMethodName
+    def self.set_date_available(resource_id:) # rubocop:disable Naming/AccessorMethodName
       resource = StashEngine::Resource.find(resource_id)
       publication_date = resource.publication_date
       return unless publication_date

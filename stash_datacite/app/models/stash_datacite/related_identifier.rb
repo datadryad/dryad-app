@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module StashDatacite
   class RelatedIdentifier < ActiveRecord::Base
     self.table_name = 'dcs_related_identifiers'

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # TODO: delete
 module StashDatacite
   class NameIdentifier < ActiveRecord::Base

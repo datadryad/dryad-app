@@ -33,7 +33,7 @@ module StashDatacite
         end
       end
       it 'returns the enum instance for a model object' do
-        ResourceType::ResourceTypesGeneralStrToFull.keys.each do |resource_type_general|
+        ResourceType::ResourceTypesGeneralStrToFull.each_key do |resource_type_general|
           resource_type = ResourceType.create(
             resource_id: resource.id,
             resource_type: 'Conscriptio super monstruosum vitulum extraneissimum',

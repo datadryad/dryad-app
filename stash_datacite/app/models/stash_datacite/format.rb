@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module StashDatacite
   class Format < ActiveRecord::Base
     self.table_name = 'dcs_formats'

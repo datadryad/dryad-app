@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module StashDatacite
   class AlternateIdentifier < ActiveRecord::Base
     self.table_name = 'dcs_alternate_identifiers'
