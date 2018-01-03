@@ -2,7 +2,7 @@ PATH
   remote: ../stash
   specs:
     stash-merritt (0.2.1)
-      datacite-mapping (~> 0.2, >= 0.2.5)
+      datacite-mapping (~> 0.3)
       ezid-client (~> 1.5)
       merritt-manifest (~> 0.1, >= 0.1.1)
       rest-client (~> 2.0)
@@ -13,16 +13,16 @@ PATH
       stash_engine
     stash-sword (0.1.7)
       rest-client (~> 2.0)
-      typesafe_enum (~> 0.1, >= 0.1.7)
-      xml-mapping_extensions (~> 0.4, >= 0.4.1)
+      typesafe_enum (~> 0.1, >= 0.1.8)
+      xml-mapping_extensions (~> 0.4, >= 0.4.9)
     stash-wrapper (0.1.12)
       thor (= 0.19.1)
-      typesafe_enum (~> 0.1, >= 0.1.7)
-      xml-mapping_extensions (~> 0.4, >= 0.4.2)
+      typesafe_enum (~> 0.1, >= 0.1.8)
+      xml-mapping_extensions (~> 0.4, >= 0.4.9)
     stash_api (0.0.1)
       rails (~> 4.2.8)
     stash_datacite (0.0.5)
-      datacite-mapping (~> 0.2, >= 0.2.5)
+      datacite-mapping (~> 0.3)
       kaminari
       leaflet-rails
       loofah
@@ -184,7 +184,7 @@ GEM
       activesupport (>= 3.0)
       deep_merge (~> 1.1.1)
     database_cleaner (1.6.1)
-    datacite-mapping (0.2.5)
+    datacite-mapping (0.3.0)
       typesafe_enum (~> 0.1, >= 0.1.7)
       xml-mapping_extensions (~> 0.4, >= 0.4.7)
     debug_inspector (0.0.3)
@@ -451,7 +451,7 @@ GEM
       actionpack (>= 3.1)
       jquery-rails
       railties (>= 3.1)
-    typesafe_enum (0.1.7)
+    typesafe_enum (0.1.8)
     tzinfo (1.2.3)
       thread_safe (~> 0.1)
     uglifier (3.0.4)
@@ -470,9 +470,9 @@ GEM
     wicked_pdf (1.1.0)
     wkhtmltopdf-binary (0.12.3.1)
     xml-mapping (0.10.0)
-    xml-mapping_extensions (0.4.8)
+    xml-mapping_extensions (0.4.9)
       mime-types (~> 3.0)
-      typesafe_enum (~> 0.1, >= 0.1.5)
+      typesafe_enum (~> 0.1, >= 0.1.8)
       xml-mapping (~> 0.10)
     xpath (2.1.0)
       nokogiri (~> 1.3)
