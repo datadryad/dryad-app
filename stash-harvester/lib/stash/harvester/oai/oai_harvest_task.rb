@@ -44,7 +44,7 @@ module Stash
         # @return [Enumerator::Lazy<OAIRecord>] A lazy enumerator of the harvested records
         def harvest_records
           do_harvest
-        rescue => e
+        rescue StandardError => e
           log.error(e)
           log.debug(e.backtrace.join("\n")) if e.backtrace
           raise e

@@ -7,6 +7,10 @@ AllCops:
   TargetRubyVersion: 2.2
 
 # Suppress complaints about binaries not being named .rb
-Style/FileName:
+Naming/FileName:
   Exclude:
    - 'bin/*'
+
+# Adding more line noise to format strings will not improve them
+Style/FormatStringToken:
+  Enabled: false

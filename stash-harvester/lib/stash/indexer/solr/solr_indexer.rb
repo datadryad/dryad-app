@@ -24,7 +24,7 @@ module Stash
             begin
               r.deleted? ? delete_record(r, solr) : index_record(r, solr)
               yield IndexResult.success(r) if block_given?
-            rescue => e
+            rescue StandardError => e
               yield IndexResult.failure(r, [e]) if block_given?
             end
           end
@@ -41,7 +41,7 @@ module Stash
           wrapped_metadata = r.as_wrapper
           index_document = metadata_mapper.to_index_document(wrapped_metadata)
           solr.add index_document
-        rescue => e
+        rescue StandardError => e
           identifier = r.identifier if r
           log.error("Error adding record with identifier #{identifier}: #{e}")
           log.debug(e.backtrace.join("\n")) if e.backtrace
@@ -50,7 +50,7 @@ module Stash
 
         def delete_record(r, solr)
           solr.delete_by_id r.identifier
-        rescue => e
+        rescue StandardError => e
           identifier = r.identifier if r
           log.error("Error deleting record with identifier #{identifier}: #{e}")
           log.debug(e.backtrace.join("\n")) if e.backtrace

@@ -49,9 +49,7 @@ module Stash
 
         def check_opts(opts)
           SUSPICIOUS_OPTS.each do |k, v|
-            if opts.include?(k)
-              Indexer.log.warn("#{SolrIndexConfig} initialized with #{k.inspect} => #{opts[k].inspect}. Did you mean #{v.inspect}?")
-            end
+            Indexer.log.warn("#{SolrIndexConfig} initialized with #{k.inspect} => #{opts[k].inspect}. Did you mean #{v.inspect}?") if opts.include?(k)
           end
         end
 

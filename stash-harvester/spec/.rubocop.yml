@@ -8,3 +8,6 @@ Metrics/ModuleLength:
 
 Metrics/BlockLength:
   Enabled: false
+
+Style/DateTime:
+  Enabled: false

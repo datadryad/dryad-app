@@ -184,7 +184,7 @@ module Stash
           ex_with_backtrace = nil
           begin
             raise 'oops #2'
-          rescue => e
+          rescue StandardError => e
             ex_with_backtrace = e
           end
 

@@ -28,7 +28,7 @@ module Stash
       puts Options::HELP if options.show_help
       log.info(options.stop_file_message) if options.stop_file_present
       start_application(options) unless options.do_exit
-    rescue => e
+    rescue StandardError => e
       warn e
       warn e.backtrace
       if e.cause
