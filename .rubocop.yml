@@ -43,5 +43,5 @@ Style/SingleLineBlockParams:
   Enabled: false
 
 # Confusing and weird
-Style/VariableNumber:
+Naming/VariableNumber:
   Enabled: False
