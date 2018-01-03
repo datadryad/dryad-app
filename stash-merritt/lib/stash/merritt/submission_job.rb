@@ -17,7 +17,7 @@ module Stash
       def submit!
         log.info("#{Time.now.xmlschema} #{description}")
         do_submit!
-      rescue => e
+      rescue StandardError => e
         Stash::Repo::SubmissionResult.failure(resource_id: resource_id, request_desc: description, error: e)
       end
 
@@ -25,7 +25,7 @@ module Stash
         @description ||= begin
           resource = StashEngine::Resource.find(resource_id)
           description_for(resource)
-        rescue => e
+        rescue StandardError => e
           log.error("Can't find resource #{resource_id}: #{e}\n#{e.backtrace.join("\n")}")
           "#{self.class} for missing resource #{resource_id}"
         end

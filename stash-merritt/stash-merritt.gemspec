@@ -1,5 +1,3 @@
-# coding: utf-8
-
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 
@@ -27,7 +25,7 @@ Gem::Specification.new do |s| # rubocop:disable Metrics/BlockLength
   s.test_files    = s.files.grep(%r{^(test|spec|features)/})
   s.require_paths = ['lib']
 
-  s.add_dependency 'datacite-mapping', '~> 0.2', '>= 0.2.5'
+  s.add_dependency 'datacite-mapping', '~> 0.3'
   s.add_dependency 'ezid-client', '~> 1.5'
   s.add_dependency 'merritt-manifest', '~> 0.1', '>= 0.1.1'
   s.add_dependency 'rest-client', '~> 2.0'
@@ -38,13 +36,13 @@ Gem::Specification.new do |s| # rubocop:disable Metrics/BlockLength
   s.add_dependency 'stash_datacite'
   s.add_dependency 'stash_engine' # TODO: should stash_datacite export this?
 
-  s.add_development_dependency 'nokogiri', '~> 1.8'
   s.add_development_dependency 'bundler', '~> 1.7'
+  s.add_development_dependency 'nokogiri', '~> 1.8'
   s.add_development_dependency 'rake', '~> 12.0'
   s.add_development_dependency 'rspec', '~> 3.2'
+  s.add_development_dependency 'rubocop', '0.52'
   s.add_development_dependency 'simplecov', '~> 0.14'
   s.add_development_dependency 'simplecov-console', '~> 0.4'
-  s.add_development_dependency 'rubocop', '0.49.1'
   s.add_development_dependency 'yard', '~> 0.9'
 
   s.add_development_dependency 'database_cleaner', '~> 1.5'
