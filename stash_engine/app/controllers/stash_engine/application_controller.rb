@@ -40,6 +40,7 @@ module StashEngine
       session[:return_to_path] = request.env['HTTP_REFERER'] if request.env['HTTP_REFERER'].present? &&
           request.env['HTTP_REFERER'] != request.env['REQUEST_URI']
     end
+    # rubocop:enable Metrics/AbcSize
 
     private
 

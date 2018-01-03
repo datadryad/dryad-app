@@ -1,5 +1,3 @@
-# encoding: utf-8
-
 module StashEngine
   # File uploader to configure carrierwave
   class FileUploader < CarrierWave::Uploader::Base

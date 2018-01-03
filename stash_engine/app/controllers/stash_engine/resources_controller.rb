@@ -25,7 +25,7 @@ module StashEngine
     def show
       respond_to do |format|
         format.xml { render template: '/stash_datacite/resources/show' }
-        format.json {}
+        format.json{}
       end
     end
 
@@ -65,6 +65,7 @@ module StashEngine
         end
       end
     end
+    # rubocop:enable Metrics/AbcSize
 
     # DELETE /resources/1
     # DELETE /resources/1.json
@@ -116,6 +117,7 @@ module StashEngine
       false
     end
 
+    # rubocop:disable Metrics/AbcSize
     def lockout_incompatible_uploads
       if request[:action] == 'upload' && resource.upload_type == :manifest
         redirect_to upload_manifest_resource_path(resource)
@@ -125,5 +127,6 @@ module StashEngine
         false
       end
     end
+    # rubocop:enable Metrics/AbcSize
   end
 end

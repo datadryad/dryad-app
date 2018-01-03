@@ -77,6 +77,7 @@ module StashEngine
       logger.debug(e)
       render(nothing: true, status: 422) # 422 Unprocessable Entity, see RFC 5789 sec. 2.2
     end
+    # rubocop:enable Metrics/MethodLength, Metrics/AbcSize
 
     # ############################################################
     # Private

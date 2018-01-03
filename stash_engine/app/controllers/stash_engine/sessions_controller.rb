@@ -48,6 +48,7 @@ module StashEngine
         redirect_to t.omniauth_login_path(orcid: params[:orcid])
       end
     end
+    # rubocop:enable Metrics/AbcSize
 
     private
 
@@ -83,12 +84,14 @@ module StashEngine
     end
 
     # if only orcid filled in then act like it's an orcid login.  Either log in or redirect to choose tenant
+    # rubocop:disable Metrics/AbcSize
     def check_developer_orcid!
       return false unless params[:name].blank? && params[:email].blank? && params[:test_domain].blank? && !params[:orcid].blank?
       @orcid = params[:orcid]
       orcid_choose_tenant_or_login!
       true
     end
+    # rubocop:enable Metrics/AbcSize
 
     def passes_whitelist?
       return true if current_tenant.whitelisted?(@auth_hash.info.email)
@@ -138,15 +141,17 @@ module StashEngine
     # shibboleth has you make it part of the callback URL you give it (so it shows as one of the normal params in the callback here)
     # omniauth claims to preserve it for certain login types (developer/facebook) in the request.env['omniauth.params']
     # google's oauth2 only passes along things in their special 'state' parameter which then has to have things CGI encoded within it.
+    # rubocop:disable Metrics/AbcSize
     def unmangle_orcid
       return request.env['omniauth.params'][:orcid] if request.env['omniauth.params'][:orcid]
       return params[:orcid] if params[:orcid]
       return Rack::Utils.parse_nested_query(params[:state])['orcid'] if params[:state]
       nil
     end
+    # rubocop:enable Metrics/AbcSize
 
     # this gets called from metadata entry form and is for adding an author, not for logging in.
-    # rubocop:disable Metrics/MethodLength
+    # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
     def metadata_callback
       params = request.env['omniauth.params']
       author = StashEngine::Author.create(
@@ -160,8 +165,10 @@ module StashEngine
       current_user.update(orcid: @auth_hash.uid)
       redirect_to metadata_entry_pages_find_or_create_path(resource_id: @params['resource_id'])
     end
+    # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
 
     # this is for orcid invitations to add co-authors
+    # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
     def orcid_invitation
       invitations = OrcidInvitation.where(identifier_id: @params['identifier_id']).where(secret: @params['invitation'])
       identifier = Identifier.find(@params['identifier_id'])
@@ -178,6 +185,7 @@ module StashEngine
       update_identifier_metadata(invitation)
       redirect_to stash_url_helpers.show_path(identifier.to_s), flash: { info: "Your ORCID #{@auth_hash.uid} has been added for this dataset." }
     end
+    # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
 
     def update_author_orcid(invitation)
       invitation.update(orcid: @auth_hash['uid'], accepted_at: Time.new)

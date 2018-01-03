@@ -4,8 +4,6 @@ require 'mime-types'
 module Stash
   module Repo
     class FileBuilder
-      attr_reader :file_name
-
       def log
         Rails.logger
       end

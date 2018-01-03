@@ -212,9 +212,7 @@ module StashEngine
       ext = File.extname(fn)
       core_name = File.basename(fn, ext)
       counter = 2
-      while resource.file_uploads.present_files.where(upload_file_name: "#{core_name}-#{counter}#{ext}").count > 0
-        counter += 1
-      end
+      counter += 1 while resource.file_uploads.present_files.where(upload_file_name: "#{core_name}-#{counter}#{ext}").count > 0
       "#{core_name}-#{counter}#{ext}"
     end
   end
