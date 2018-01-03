@@ -32,14 +32,18 @@ module StashApi
           StashEngine::Identifier.all.map { |i| Dataset.new(identifier: "#{i.identifier_type}:#{i.identifier}").metadata } }
     end
 
+    # rubocop:disable Metrics/AbcSize
     def paged_datasets
       all_count = StashEngine::Identifier.all.count
       results = StashEngine::Identifier.all.limit(page_size).offset(page_size * (page - 1))
-      results_count = results.count
       results = results.map { |i| Dataset.new(identifier: "#{i.identifier_type}:#{i.identifier}").metadata }
+      paging_hash_results(all_count, results)
+    end
+
+    def paging_hash_results(all_count, results)
       {
         '_links' => paging_hash(result_count: all_count),
-        count: results_count,
+        count: results.count,
         total: all_count,
         '_embedded' => { 'stash:datasets' => results }
       }

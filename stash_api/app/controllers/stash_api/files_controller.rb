@@ -26,16 +26,20 @@ module StashApi
 
     private
 
+    # rubocop:disable Metrics/AbcSize
     def paged_files_for_version
       resource = StashEngine::Resource.find(params[:version_id]) # version_id is really resource_id
       visible = resource.file_uploads.present_files
       all_count = visible.count
       file_uploads = visible.limit(page_size).offset(page_size * (page - 1))
-      results_count = file_uploads.count
       results = file_uploads.map { |i| StashApi::File.new(file_id: i.id).metadata }
+      files_output(all_count, results)
+    end
+
+    def files_output(all_count, results)
       {
         '_links' => paging_hash(result_count: all_count),
-        count: results_count,
+        count: results.count,
         total: all_count,
         '_embedded' => { 'stash:files' => results }
       }

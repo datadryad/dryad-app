@@ -26,19 +26,22 @@ module StashApi
 
     private
 
+    # rubocop:disable Metrics/AbcSize
     def paged_versions_for_dataset
       id = StashEngine::Identifier.find_with_id(params[:dataset_id])
       all_count = id.resources.count
       results = id.resources.limit(page_size).offset(page_size * (page - 1))
-      results_count = results.count
       results = results.map { |i| Version.new(resource_id: i.id).metadata_with_links }
+      page_output(all_count, results)
+    end
+
+    def page_output(all_count, results)
       {
         '_links' => paging_hash(result_count: all_count),
-        count: results_count,
+        count: results.count,
         total: all_count,
         '_embedded' => { 'stash:versions' => results }
       }
     end
-
   end
 end

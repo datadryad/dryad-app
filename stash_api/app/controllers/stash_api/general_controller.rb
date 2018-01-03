@@ -16,21 +16,29 @@ module StashApi
     def output
       {
         '_links': {
-          'self': {
-            href: root_path
-          },
+          'self': root_self,
           'stash:datasets': {
             href: datasets_path
           },
-          curies: [
-            {
-              name: 'stash',
-              href: 'https://github.com/CDLUC3/stash/blob/development/stash_api/link-relations.md#{rel}',
-              templated: 'true'
-            }
-          ]
+          curies: curies
         }
       }
+    end
+
+    def root_self
+      {
+        href: root_path
+      }
+    end
+
+    def curies
+      [
+        {
+          name: 'stash',
+          href: 'https://github.com/CDLUC3/stash/blob/development/stash_api/link-relations.md#{rel}',
+          templated: 'true'
+        }
+      ]
     end
 
   end
