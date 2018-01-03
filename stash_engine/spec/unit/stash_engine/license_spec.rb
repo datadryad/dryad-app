@@ -35,7 +35,7 @@ module StashEngine
 
     describe '#by_uri' do
       it 'finds all the licenses' do
-        uris_by_id.values.each do |uri|
+        uris_by_id.each_value do |uri|
           lic = License.by_uri(uri)
           expect(lic).to be_a(Hash)
           expect(lic[:uri]).to eq(uri)

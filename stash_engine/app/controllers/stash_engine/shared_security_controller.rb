@@ -31,15 +31,14 @@ module StashEngine
       return false unless @current_user
     end
 
-    # rubocop:disable Metrics/AbcSize
-    # rubocop:disable Metrics/CyclomaticComplexity
-    # rubocop:disable Metrics/PerceivedComplexity
+    # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
     def ajax_require_modifiable
       return if params[:id] == 'new' # a new unsaved model, not affecting the DB
       return ajax_blocked unless (current_user && resource) && # must have a current user and a resource method defined in controller
           (owner? || current_user.superuser? || admin?) && # ok permisisons for person editing
           (resource.dataset_in_progress_editor.id == current_user.id || current_user.superuser?) # must be current editor or super
     end
+    # rubocop:enable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
 
     def can_display_embargoed?(resource)
       !resource.private? || (current_user && current_user.id == resource.user_id)

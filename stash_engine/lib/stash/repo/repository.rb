@@ -76,13 +76,13 @@ module Stash
 
       def get_download_uri(resource, record_identifier)
         download_uri_for(resource: resource, record_identifier: record_identifier)
-      rescue => e
+      rescue StandardError => e
         raise ArgumentError, "Unable to determine download URI for resource #{resource.id} from record identifier #{record_identifier}: #{e}"
       end
 
       def get_update_uri(resource, record_identifier)
         update_uri_for(resource: resource, record_identifier: record_identifier)
-      rescue => e
+      rescue StandardError => e
         raise ArgumentError, "Unable to determine update URI for resource #{resource.id} from record identifier #{record_identifier}: #{e}"
       end
 
@@ -92,7 +92,7 @@ module Stash
         # resource.current_state = 'submitted'
         update_submission_log(result)
         StashEngine::UserMailer.submission_succeeded(resource).deliver_now
-      rescue => e
+      rescue StandardError => e
         # errors here don't constitute a submission failure, so we don't change the resource state
         log_error(e)
       end
@@ -103,7 +103,7 @@ module Stash
         resource = StashEngine::Resource.find(result.resource_id)
         StashEngine::UserMailer.error_report(resource, result.error).deliver_now
         StashEngine::UserMailer.submission_failed(resource, result.error).deliver_now
-      rescue => e
+      rescue StandardError => e
         log_error(e)
       ensure
         resource.current_state = 'error' if resource
@@ -117,7 +117,7 @@ module Stash
         remove_file_uploads(resource)
         remove_upload_dir(resource)
         remove_public_dir(resource)
-      rescue => e
+      rescue StandardError => e
         msg = "An unexpected error occurred when cleaning up files for resource #{resource.id}: "
         msg << to_msg(e)
         log.warn(msg)

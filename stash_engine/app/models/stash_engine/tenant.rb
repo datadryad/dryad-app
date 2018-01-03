@@ -88,7 +88,7 @@ module StashEngine
     end
 
     def self.by_domain_w_nil(domain)
-      StashEngine.tenants.values.each do |v|
+      StashEngine.tenants.each_value do |v|
         if v['enabled'] && v['enabled'] == true
           return new(v) if Regexp.new(v['domain_regex']).match(domain)
         end

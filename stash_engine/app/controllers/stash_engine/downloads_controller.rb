@@ -9,8 +9,7 @@ module StashEngine
 
   class DownloadsController < ApplicationController # rubocop:disable Metrics/ClassLength
 
-    # rubocop:disable Metrics/AbcSize
-    # rubocop:disable Metrics/MethodLength
+    # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
     def download_resource
       @resource = Resource.find(params[:resource_id])
       if @resource.public?
@@ -28,8 +27,10 @@ module StashEngine
       # recently updated, so display a "hold your horses" message
       flash_download_unavailable
     end
+    # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
 
-    def async_request # rubocop:disable Metrics/MethodLength
+    # rubocop:disable Metrics/MethodLength
+    def async_request
       @resource = Resource.find(params[:resource_id])
       @email = params[:email]
       session[:saved_email] = @email
@@ -45,6 +46,7 @@ module StashEngine
         end
       end
     end
+    # rubocop:enable Metrics/MethodLength
 
     # method to download by the secret sharing link, must match the string they generated to look up and download
     def share
@@ -145,7 +147,8 @@ module StashEngine
     # post an async form, right now @resource and @email should be set correctly before calling
     # ---
     # note, it seems as though this has been deprecated and Mark has created an API call for it now
-    def post_async_form(resource:, email:) # rubocop:disable Metrics/MethodLength
+    # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
+    def post_async_form(resource:, email:)
       # set up all needed parameters
       domain, local_id = resource.merritt_protodomain_and_local_id
       url = "#{domain}/lostorage"
@@ -177,6 +180,7 @@ module StashEngine
       details = location ? "redirected to bad location #{location}" : 'failed to redirect'
       raise_merritt_error("Merritt async form post with body #{query_string}", details, resource.id, url)
     end
+    # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
 
     def merritt_async_download?(resource:)
       domain, local_id = resource.merritt_protodomain_and_local_id
@@ -191,6 +195,7 @@ module StashEngine
       raise_merritt_error('Merritt async download check', "unexpected status #{status}", resource.id, url)
     end
 
+    # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
     def api_async_download(resource:, email:)
       url = merritt_friendly_async_url(resource: resource)
 
@@ -208,6 +213,7 @@ module StashEngine
       query_string = HTTP::Message.create_query_part_str(params)
       raise_merritt_error('Merritt async download request', "unexpected status #{status}", resource.id, "#{url}?#{query_string}")
     end
+    # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
 
     # TODO: move this into a merritt-specific module
     def merritt_friendly_async_url(resource:)
@@ -216,7 +222,8 @@ module StashEngine
     end
 
     # to stream the response through this UI instead of redirecting, keep login and other stuff private
-    def stream_response(url, tenant) # rubocop:disable Metrics/AbcSize
+    # rubocop:disable Metrics/AbcSize
+    def stream_response(url, tenant)
       # get original header info from http headers
       client = Stash::Repo::HttpClient.new(tenant: tenant, cert_file: APP_CONFIG.ssl_cert_file).client
 
@@ -231,6 +238,7 @@ module StashEngine
       response.headers['Last-Modified'] = Time.now.httpdate
       self.response_body = Stash::Streamer.new(client, url)
     end
+    # rubocop:enable Metrics/AbcSize
 
     def log_warning_if_needed(e)
       return unless Rails.env.development?

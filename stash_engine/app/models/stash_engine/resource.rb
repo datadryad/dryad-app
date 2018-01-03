@@ -83,11 +83,11 @@ module StashEngine
 
     # gets the latest version per dataset and includes items that haven't been assigned an identifer yet but are initially in progress
     scope :latest_per_dataset, (-> do
-      subquery = <<-eos
+      subquery = <<-SQL
         SELECT max(id) AS id FROM stash_engine_resources WHERE identifier_id IS NOT NULL GROUP BY identifier_id
         UNION
         SELECT id FROM stash_engine_resources WHERE identifier_id IS NULL
-      eos
+      SQL
       joins("INNER JOIN (#{subquery}) sub ON stash_engine_resources.id = sub.id ")
     end)
 
@@ -148,8 +148,9 @@ module StashEngine
     end
 
     # returns the list of fileuploads with duplicate names in created state where we shouldn't have any
-    def duplicate_filenames # rubocop:disable Metrics/MethodLength
-      sql = <<-eos
+    # rubocop:disable Metrics/MethodLength
+    def duplicate_filenames
+      sql = <<-SQL
         SELECT *
         FROM stash_engine_file_uploads AS a
         JOIN (SELECT upload_file_name
@@ -158,9 +159,10 @@ module StashEngine
           GROUP BY upload_file_name HAVING count(*) >= 2) AS b
         ON a.upload_file_name = b.upload_file_name
         WHERE a.resource_id = ?
-      eos
+      SQL
       FileUpload.find_by_sql([sql, id, id])
     end
+    # rubocop:enable Metrics/MethodLength
 
     def url_in_version?(url)
       file_uploads.where(url: url).where(file_state: 'created').where(status_code: 200).count > 0
