@@ -48,7 +48,7 @@ module Stash
         uri = collection_uri.to_s
         response = do_post(uri, payload, create_request_headers(payload, doi, packaging))
         receipt_from(response)
-      rescue => e
+      rescue StandardError => e
         log_error(e)
         raise
       end
@@ -65,7 +65,7 @@ module Stash
         response = do_put(uri, payload, packaging)
         log.debug(to_log_msg(response))
         response.code # TODO: what if anything should we return here?
-      rescue => e
+      rescue StandardError => e
         log_error(e)
         raise
       end
