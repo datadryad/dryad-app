@@ -8,9 +8,9 @@ module Stash
 
       # See `XML::Mapping::SingleAttributeNode#initialize`
       def initialize(*args)
-        path, *args = super(*args)
+        path, *myargs = super(*args)
         @path = ::XML::XXPath.new(path)
-        args
+        myargs # rubocop:disable Lint/Void
       end
 
       # Extracts the children of this element as an array.
