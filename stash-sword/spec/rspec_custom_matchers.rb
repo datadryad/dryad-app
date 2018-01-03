@@ -8,9 +8,7 @@ class RSpec::Mocks::ErrorGenerator # rubocop:disable Style/ClassAndModuleChildre
     def default_error_message(expectation, expected_args, actual_args)
       failures = [_default_error_message(expectation, expected_args, actual_args)]
       expectation.expected_args.each do |expected|
-        if expected.respond_to?(:failure_message)
-          failures << expected.failure_message
-        end
+        failures << expected.failure_message if expected.respond_to?(:failure_message)
       end
       failures.join("\n  ")
     end

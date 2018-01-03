@@ -69,7 +69,7 @@ module Stash
         backtrace = nil
         begin
           raise RestClient::ExceptionWithResponse.new(nil, 999)
-        rescue => e
+        rescue StandardError => e
           backtrace = e.backtrace
           log_utils.log_error(e)
         end
