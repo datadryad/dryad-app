@@ -27,7 +27,6 @@ module StashApi
     end
 
     def require_stash_identifier(doi:)
-      doi = CGI.unescape(doi) # sorry, hacky, since Apache randomly encodes/escapes some characters crazily, shouldn't usually matter
       @stash_identifier = StashEngine::Identifier.find_with_id(doi)
       render json: { error: 'not-found' }.to_json, status: 404 if @stash_identifier.blank?
     end
