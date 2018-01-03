@@ -30,7 +30,7 @@ module Stash
               expect(logged).to include(proxy_url)
               expect(logged).to include(':proxy_url')
               expect(logged).to include(':proxy')
-            rescue
+            rescue StandardError
               Stash::Indexer.log_device = $stdout
             end
           end
@@ -46,7 +46,7 @@ module Stash
               expect(logged).to include(proxy_url)
               expect(logged).to include(':proxy_uri')
               expect(logged).to include(':proxy')
-            rescue
+            rescue StandardError
               Stash::Indexer.log_device = $stdout
             end
           end

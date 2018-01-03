@@ -49,7 +49,7 @@ module Stash
         from_env(env)
       rescue IOError
         raise
-      rescue => e
+      rescue StandardError => e
         raise IOError, "Error parsing specified config file #{path}: #{e.message}"
       end
     end

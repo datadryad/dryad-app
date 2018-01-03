@@ -130,9 +130,7 @@ module Datacite
       def dct_temporal_dates # rubocop:disable Metrics/AbcSize
         items = dates.map(&:to_s).compact
         year_range_items = dates.map do |i|
-          if i.range_start && i.range_end && i.range_start.year && i.range_end.year
-            (i.range_start.year..i.range_end.year).to_a.map(&:to_s)
-          end
+          (i.range_start.year..i.range_end.year).to_a.map(&:to_s) if i.range_start && i.range_end && i.range_start.year && i.range_end.year
         end
         (items + year_range_items).compact.flatten.uniq
       end

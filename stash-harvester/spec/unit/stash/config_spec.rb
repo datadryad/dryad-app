@@ -26,7 +26,7 @@ module Stash
           source_config: instance_double(Harvester::SourceConfig),
           index_config: instance_double(Indexer::IndexConfig)
         }
-        args.each do |k, _v|
+        args.each_key do |k|
           args_copy = args.clone
           args_copy.delete(k)
           expect do
