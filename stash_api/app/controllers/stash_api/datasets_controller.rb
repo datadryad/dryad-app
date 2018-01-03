@@ -7,6 +7,7 @@ module StashApi
 
     # get /datasets/<id>
     def show
+      logger.debug "\r\n\r\n rails id from params=#{params[:id]}\r\n\r\n"
       ds = Dataset.new(identifier: params[:id])
       respond_to do |format|
         format.json { render json: ds.metadata }
