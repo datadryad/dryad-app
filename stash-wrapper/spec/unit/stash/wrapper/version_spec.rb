@@ -43,6 +43,15 @@ module Stash
           expect(xml).to include('<date>2001-02-03Z</date>')
         end
 
+        it 'accepts a Time as the date' do
+          date = Time.new(2001, 2, 3, 4, 5, 6)
+          params[:date] = date
+          version = Version.new(params)
+          expect(version.date).to eq(date)
+          xml = version.write_xml
+          expect(xml).to include('<date>2001-02-03Z</date>')
+        end
+
         it 'rejects a nil number' do
           params.delete(:number)
           expect { Version.new(params) }.to raise_error(ArgumentError)

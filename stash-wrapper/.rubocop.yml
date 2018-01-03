@@ -1,6 +1,10 @@
 inherit_from: ../.rubocop.yml
 
-# Disable compact style check for example.rb
+# Disable various checks for sample code
 Style/ClassAndModuleChildren:
+  Exclude:
+    - 'example.rb'
+
+Style/MixinUsage:
   Exclude:
     - 'example.rb'
