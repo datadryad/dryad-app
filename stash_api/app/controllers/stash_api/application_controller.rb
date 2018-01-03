@@ -41,5 +41,5 @@ module StashApi
       render json: { error: 'not-found' }.to_json, status: 404 if @stash_files.count < 1
     end
 
-end
+  end
 end

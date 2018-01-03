@@ -24,14 +24,11 @@ module StashApi
       # gets descriptive metadata together
       lv = last_submitted
       return simple_identifier if lv.nil?
-      metadata = {
-        id: @se_identifier.to_s,
-        storage_size: @se_identifier.storage_size
-      }.merge(lv.metadata)
-      metadata[:embargoEndDate] = lv.resource.embargo.end_date.strftime('%Y-%m-%d') unless lv.resource.embargo.nil?
+      metadata = id_and_size_hash.merge(lv.metadata)
+      add_embargo_date!(metadata, lv)
       metadata.delete_if { |_k, v| v.blank? }
 
-      # gives the furries and links to nearby objects
+      # gives the links to nearby objects
       { '_links': links }.merge(metadata)
     end
 
@@ -74,6 +71,17 @@ module StashApi
         id: @se_identifier.to_s,
         message: 'identifier is missing required elements'
       }
+    end
+
+    def id_and_size_hash
+      {
+        id: @se_identifier.to_s,
+        storage_size: @se_identifier.storage_size
+      }
+    end
+
+    def add_embargo_date!(hsh, version)
+      hsh[:embargoEndDate] = version.resource.embargo.end_date.strftime('%Y-%m-%d') unless version.resource.embargo.nil?
     end
 
   end

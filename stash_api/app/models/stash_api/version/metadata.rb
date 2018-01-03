@@ -6,7 +6,7 @@ module StashApi
         @resource = resource
       end
 
-      def value
+      def value # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
         {
           title: @resource.title,
           authors: Authors.new(resource: @resource).value,
