@@ -14,7 +14,7 @@ module StashApi
     end
 
     def last_submitted
-      return nil unless @se_identifier.resources.count > 0
+      return nil if @se_identifier.blank? || @se_identifier.resources.count < 1
       res_id = @se_identifier.last_submitted_resource
       return nil if res_id.nil?
       Version.new(resource_id: res_id)
