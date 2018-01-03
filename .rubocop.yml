@@ -45,3 +45,7 @@ Style/SingleLineBlockParams:
 # Confusing and weird
 Naming/VariableNumber:
   Enabled: False
+
+# Adding more line noise to format strings will not improve them
+Style/FormatStringToken:
+  Enabled: false
