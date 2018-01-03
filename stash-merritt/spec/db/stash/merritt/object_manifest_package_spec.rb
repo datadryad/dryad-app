@@ -55,8 +55,8 @@ module Stash
 
         resource.new_file_uploads.find_each do |upload|
           upload_file_name = upload.upload_file_name
-          filename_encoded = ERB::Util.url_encode(upload_file_name)
-          filename_decoded = URI.decode(filename_encoded)
+          filename_encoded = URI.encode_www_form_component(upload_file_name)
+          filename_decoded = URI.decode_www_form_component(filename_encoded)
           expect(filename_decoded).to eq(upload_file_name) # just to be sure
           upload.url = "http://example.org/uploads/#{filename_encoded}"
           upload.status_code = 200
