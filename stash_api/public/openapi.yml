@@ -3,9 +3,9 @@ servers:
   - url: /api/
 
 info:
-  title: stash-api
+  title: dash-api
   description: >-
-    API for the [Stash](https://github.com/CDLUC3/stash) data publication and
+    API for the [Dash](https://github.com/CDLUC3/dashv2) data publication and
     preservation platform.
   version: 0.0.1
 
