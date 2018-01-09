@@ -49,7 +49,8 @@ module Stash
       end
 
       def ezid_client
-        @ezid_client ||= ::Ezid::Client.new(user: account, password: password)
+        @ezid_client ||= ::Ezid::Client.new(host: StashEngine.app.ezid.host, port: StashEngine.app.ezid.port,
+                                            user: account, password: password)
       end
 
     end

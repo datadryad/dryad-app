@@ -1,3 +1,4 @@
+# TODO: would be good to only monkeypatch here or in the rails app, but not both places.
 require 'ostruct'
 
 class OpenStruct
