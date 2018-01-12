@@ -1,5 +1,5 @@
 require 'stash/repo'
-require 'stash/merritt/ezid_helper'
+require 'stash/merritt/id_gen'
 require 'stash/merritt/submission_package'
 require 'stash/merritt/sword_helper'
 
@@ -66,14 +66,14 @@ module Stash
         end
       end
 
-      def ezid_helper
-        @ezid_helper ||= EzidHelper.new(resource: resource)
+      def id_helper
+        @id_helper ||= IdGen.make_instance(resource: resource)
       end
 
       def ensure_identifier
         return if resource.identifier
         log_info("minting new identifier for resource #{resource_id}")
-        resource.ensure_identifier(ezid_helper.mint_id)
+        resource.ensure_identifier(id_helper.mint_id)
       end
 
       def create_package
@@ -94,7 +94,7 @@ module Stash
 
       def update_metadata(dc4_xml)
         log_info("updating identifier landing page (#{landing_page_url}) and metadata for resource #{resource_id} (#{resource.identifier_str})")
-        ezid_helper.update_metadata(dc4_xml: dc4_xml, landing_page_url: landing_page_url)
+        id_helper.update_metadata(dc4_xml: dc4_xml, landing_page_url: landing_page_url)
       end
 
       def cleanup(package)

@@ -1,13 +1,9 @@
 require 'ezid/client'
+#require_relative 'id_gen'
 
 module Stash
   module Merritt
-    class EzidHelper
-      attr_reader :resource
-
-      def initialize(resource:)
-        @resource = resource
-      end
+    class EzidGen < IdGen
 
       # @return [String] the identifier (DOI, ARK, or URN)
       def mint_id
@@ -23,26 +19,6 @@ module Stash
       end
 
       private
-
-      def tenant
-        resource.tenant
-      end
-
-      def id_params
-        @id_params ||= tenant.identifier_service
-      end
-
-      def owner
-        id_params.owner
-      end
-
-      def password
-        id_params.password
-      end
-
-      def account
-        id_params.account
-      end
 
       def shoulder
         id_params.shoulder
