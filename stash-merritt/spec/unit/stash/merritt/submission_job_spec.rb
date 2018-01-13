@@ -32,6 +32,15 @@ module Stash
           username: 'elvis',
           password: 'presley'
         }.freeze
+        id_params = {
+            provider: 'ezid',
+            shoulder: 'doi:10.15146/R3',
+            account: 'stash',
+            password: '3cc9d3fbd9788148c6a32a1415fa673a',
+            id_scheme: 'doi',
+            owner: 'stash_admin'
+        }
+        allow(tenant).to receive(:identifier_service).and_return(id_params.to_ostruct)
         allow(tenant).to receive(:sword_params).and_return(sword_params)
         allow(tenant).to receive(:id).and_return('example_u')
         allow(tenant).to receive(:full_url) { |path_to_landing| URI::HTTPS.build(host: 'stash.example.edu', path: path_to_landing).to_s }
@@ -50,8 +59,8 @@ module Stash
         @url_helpers = double(Module) # yes, apparently URL helpers are an anonymous module
         allow(url_helpers).to(receive(:show_path)) { |identifier_str| "/stash/#{identifier_str}" }
 
-        @ezid_helper = instance_double(EzidHelper)
-        allow(EzidHelper).to receive(:new).with(resource: resource).and_return(ezid_helper)
+        @ezid_helper = instance_double(EzidGen)
+        allow(EzidGen).to receive(:new).with(resource: resource).and_return(ezid_helper)
         allow(ezid_helper).to receive(:update_metadata)
 
         @package = instance_double(ZipPackage)
