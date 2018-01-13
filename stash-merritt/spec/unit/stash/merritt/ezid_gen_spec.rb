@@ -3,7 +3,7 @@ require 'ostruct'
 
 module Stash
   module Merritt
-    describe EzidHelper do
+    describe EzidGen do
       attr_reader :resource_id
       attr_reader :resource
       attr_reader :identifier_str
@@ -26,18 +26,21 @@ module Stash
 
         @tenant = double(StashEngine::Tenant)
         id_params = {
+          provider: 'ezid',
           shoulder: 'doi:10.15146/R3',
-          owner: 'stash_admin',
           account: 'stash',
           password: '3cc9d3fbd9788148c6a32a1415fa673a',
-          id_scheme: 'doi'
+          id_scheme: 'doi',
+          owner: 'stash_admin'
         }
         allow(tenant).to receive(:identifier_service).and_return(OpenStruct.new(id_params))
         allow(tenant).to receive(:tenant_id).and_return('dataone')
         allow(tenant).to receive(:full_url).with(path_to_landing).and_return(landing_page_url)
         allow(resource).to receive(:tenant).and_return(tenant)
 
-        @helper = EzidHelper.new(resource: resource)
+        allow(StashEngine).to receive(:app).and_return({ ezid: { host: 'ezid.cdlib.org', port: 80 } }.to_ostruct)
+
+        @helper = EzidGen.new(resource: resource)
       end
 
       describe :mint_id do
@@ -47,7 +50,7 @@ module Stash
 
           ezid_client = instance_double(::Ezid::Client)
           allow(::Ezid::Client).to receive(:new)
-            .with(user: 'stash', password: '3cc9d3fbd9788148c6a32a1415fa673a')
+            .with(host: 'ezid.cdlib.org', port: 80, user: 'stash', password: '3cc9d3fbd9788148c6a32a1415fa673a')
             .and_return(ezid_client)
 
           expect(ezid_client).to receive(:mint_identifier)
@@ -64,7 +67,7 @@ module Stash
 
           ezid_client = instance_double(::Ezid::Client)
           allow(::Ezid::Client).to receive(:new)
-            .with(user: 'stash', password: '3cc9d3fbd9788148c6a32a1415fa673a')
+            .with(host: 'ezid.cdlib.org', port: 80, user: 'stash', password: '3cc9d3fbd9788148c6a32a1415fa673a')
             .and_return(ezid_client)
 
           expect(ezid_client).to receive(:modify_identifier).with(
