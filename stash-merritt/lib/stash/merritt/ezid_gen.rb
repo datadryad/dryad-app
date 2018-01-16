@@ -1,5 +1,5 @@
 require 'ezid/client'
-#require_relative 'id_gen'
+# require_relative 'id_gen'
 
 module Stash
   module Merritt

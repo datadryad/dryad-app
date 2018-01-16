@@ -1,5 +1,6 @@
 require 'spec_helper'
 require 'ostruct'
+require_relative '../../../../lib/stash/merritt/id_gen'
 
 module Stash
   module Merritt
@@ -36,8 +37,9 @@ module Stash
         allow(tenant).to receive(:tenant_id).and_return('dataone')
         allow(tenant).to receive(:full_url).with(path_to_landing).and_return(landing_page_url)
         allow(resource).to receive(:tenant).and_return(tenant)
+        allow(resource).to receive(:identifier_str).and_return(@identifier_str)
 
-        #allow(StashEngine).to receive(:app).and_return({ ezid: { host: 'ezid.cdlib.org', port: 80 } }.to_ostruct)
+        # allow(StashEngine).to receive(:app).and_return({ ezid: { host: 'ezid.cdlib.org', port: 80 } }.to_ostruct)
 
         @helper = DataciteGen.new(resource: resource)
       end
@@ -48,34 +50,36 @@ module Stash
           allow(datac).to receive(:encode_doi).with('10.5072').and_return('10.5072/1234-5678')
 
           allow(Cirneco::DataCenter).to receive(:new)
-              .with(prefix: '10.5072', username: 'stash', password: '3cc9d3fbd9788148c6a32a1415fa673a')
-              .and_return(datac)
+            .with(prefix: '10.5072', username: 'stash', password: '3cc9d3fbd9788148c6a32a1415fa673a')
+            .and_return(datac)
 
           expect(helper.mint_id).to eq(identifier_str)
         end
       end
 
-      #describe :update_metadata do
-      #  it 'updates the metadata and landing page' do
-      #    dc4_xml = '<resource/>'
-      #
-      #    ezid_client = instance_double(::Ezid::Client)
-      #    allow(::Ezid::Client).to receive(:new)
-      #      .with(host: 'ezid.cdlib.org', port: 80, user: 'stash', password: '3cc9d3fbd9788148c6a32a1415fa673a')
-      #      .and_return(ezid_client)
+      describe :update_metadata do
+        it 'updates the metadata and landing page' do
+          dc4_xml = '<resource/>'
 
-      #    expect(ezid_client).to receive(:modify_identifier).with(
-      #      identifier_str,
-      #      datacite: dc4_xml,
-      #      target: landing_page_url,
-      #      status: 'public',
-      #      owner: 'stash_admin'
-      #    )
+          # took off instance_double
+          dc_gen = Stash::Merritt::DataciteGen.new(resource: resource)
 
-      #    expect(resource).to receive(:identifier_str).and_return(identifier_str)
-      #    helper.update_metadata(dc4_xml: dc4_xml, landing_page_url: landing_page_url)
-      #  end
-      #end
+          allow(dc_gen).to receive(:post_metadata)
+            .with(dc4_xml, username: 'stash', password: '3cc9d3fbd9788148c6a32a1415fa673a', sandbox: true)
+            .and_return({ status: 201 }.to_ostruct)
+
+          allow(dc_gen).to receive(:put_doi)
+            .with('10.5072/1234-5678', username: 'stash', password: '3cc9d3fbd9788148c6a32a1415fa673a', sandbox: true, url: 'http://example.com')
+            .and_return({ status: 201 }.to_ostruct)
+
+          expect(dc_gen
+            .update_metadata(dc4_xml: dc4_xml, landing_page_url: 'http://example.com'))
+            .to eq(nil)
+
+          # make sure it selects this class in the IdGen parent class
+          expect(IdGen.make_instance(resource: resource).class).to eq(Stash::Merritt::DataciteGen)
+        end
+      end
     end
   end
 end
