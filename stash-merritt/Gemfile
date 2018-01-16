@@ -2,8 +2,10 @@ source 'https://rubygems.org'
 
 gemspec
 
+group :test, :development do
+  gem 'byebug'
+end
 gem 'standalone_migrations', git: 'https://github.com/thuss/standalone-migrations.git', ref: 'de391a69e4ed'
-gem 'byebug'
 
 path '..' do
   gem 'stash-sword'

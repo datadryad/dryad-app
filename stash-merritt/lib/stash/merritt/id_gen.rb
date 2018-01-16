@@ -1,7 +1,7 @@
 # instantiate IdGen with make_class and
 # call mint_id and update_metadata for it to choose and mint the right types of ids based on tenant config
-#require_relative 'datacite_gen'
-#require_relative 'ezid_gen'
+# require_relative 'datacite_gen'
+# require_relative 'ezid_gen'
 
 module Stash
   module Merritt

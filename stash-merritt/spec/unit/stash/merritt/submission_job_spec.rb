@@ -33,12 +33,12 @@ module Stash
           password: 'presley'
         }.freeze
         id_params = {
-            provider: 'ezid',
-            shoulder: 'doi:10.15146/R3',
-            account: 'stash',
-            password: '3cc9d3fbd9788148c6a32a1415fa673a',
-            id_scheme: 'doi',
-            owner: 'stash_admin'
+          provider: 'ezid',
+          shoulder: 'doi:10.15146/R3',
+          account: 'stash',
+          password: '3cc9d3fbd9788148c6a32a1415fa673a',
+          id_scheme: 'doi',
+          owner: 'stash_admin'
         }
         allow(tenant).to receive(:identifier_service).and_return(id_params.to_ostruct)
         allow(tenant).to receive(:sword_params).and_return(sword_params)
