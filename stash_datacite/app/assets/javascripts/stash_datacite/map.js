@@ -25,7 +25,8 @@ function loadMap(bounds) { // bounds is optional
   // -------------------------------- //
 
   // MAPZEN autocomplete search and save to db
-  mapzen();
+  // mapzen();
+  mapGeosearch(map);
 
   // Get Point BBox and Place Coordinates from db and load on map
   var resource_id = $.urlParam('resource_id');
