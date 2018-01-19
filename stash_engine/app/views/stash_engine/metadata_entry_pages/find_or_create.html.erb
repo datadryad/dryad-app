@@ -1,6 +1,11 @@
 <% @page_title = 'Describe Your Datasets - Publish and Preserve your Data' %>
 <%= render partial: 'stash_engine/shared/dataset_non_user_editor', locals: {resource: @resource} %>
 <%= render partial: 'stash_engine/shared/dataset_steps_nav' %>
+<script>
+  function googleMapsApiKey() {
+    return "<%= APP_CONFIG.google_maps_api_key %>";
+  }
+</script>
 <div id="find_or_create"
     data-load="<%= metadata_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: params[:resource_id], format: :js) %>">
   <%= image_tag 'stash_engine/spinner.gif', size: '80x60', alt: 'Loading spinner' %>
