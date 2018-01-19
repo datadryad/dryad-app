@@ -57,3 +57,4 @@ namespace :dev_ops do
   end
 
 end
+# rubocop:enable Metrics/BlockLength
