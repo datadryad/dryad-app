@@ -27,18 +27,6 @@ function mapGeosearch(map){
   $('.leaflet-control-geosearch.bar').css('margin', '10px auto 0 0').css('left', '10px');
 
   map.on('geosearch/showlocation', function(e) {
-    // $('.glass').val('');
-    console.log(e);
-    console.log('location.label:');
-    console.log(e.location.label);
-    console.log('location.bounds:');
-    console.log(e.location.bounds);
-    console.log('location x and y');
-    console.log(e.location.x);
-    console.log(e.location.y);
-    console.log('centroid: ' + getCentroid(e.location.bounds));
-    console.log(e.location.raw);
-
     // add marker on map
     location_name =  e.location.label;
     lat = e.location.y;
@@ -57,10 +45,4 @@ function mapGeosearch(map){
     });
 
   });
-}
-
-var getCentroid = function (arr) {
-  return arr.reduce(function (x,y) {
-    return [x[0] + y[0]/arr.length, x[1] + y[1]/arr.length]
-  }, [0,0])
 }
