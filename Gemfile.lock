@@ -390,6 +390,7 @@ GEM
     merritt-manifest (0.1.2)
       mime-types (~> 3.1)
       typesafe_enum (~> 0.1.7)
+    method_source (0.9.0)
     mime-types (3.1)
       mime-types-data (~> 3.2015)
     mime-types-data (3.2016.0521)
@@ -442,6 +443,14 @@ GEM
       nokogiri (>= 1.6.1, < 1.9)
       public_suffix (>= 2.0.0, < 2.1)
     powerpack (0.1.1)
+    pry (0.11.3)
+      coderay (~> 1.1.0)
+      method_source (~> 0.9.0)
+    pry-rails (0.3.6)
+      pry (>= 0.10.4)
+    pry-remote (0.1.8)
+      pry (~> 0.9)
+      slop (~> 3.0)
     public_suffix (2.0.5)
     rack (1.6.8)
     rack-test (0.6.3)
@@ -559,6 +568,7 @@ GEM
       hirb
       simplecov
     simplecov-html (0.10.2)
+    slop (3.6.0)
     solr_wrapper (1.2.0)
       faraday
       retriable
@@ -630,6 +640,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  binding_of_caller
   byebug
   capistrano (~> 3.4.1)
   capistrano-passenger
@@ -645,6 +656,9 @@ DEPENDENCIES
   jquery-rails
   mysql2 (~> 0.4)
   passenger
+  pry
+  pry-rails
+  pry-remote
   rails (= 4.2.9)
   rspec-rails (~> 3.0)
   rubocop (~> 0.49)

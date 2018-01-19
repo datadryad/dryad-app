@@ -1,4 +1,5 @@
 require 'features_helper'
+require 'pry'
 
 describe 'add geolocation' do
 
@@ -72,6 +73,17 @@ describe 'add geolocation' do
       expect(new_box.sw_longitude).to eq(w_longitude.to_f)
       expect(new_box.ne_latitude).to eq(n_latitude.to_f)
       expect(new_box.ne_longitude).to eq(e_longitude.to_f)
+    end
+  end
+
+  describe 'google_geocoding' do
+    it 'adds a place by name' do
+      item = find('div.leaflet-control-geosearch input.glass')
+      item.set("Oakland, CA, USA\n")
+      wait_for_ajax!
+      # this triggers the leaflet map move and display but the 'geosearch/showlocation' event doesn't always trigger by geosearch library
+      # binding.pry
+      expect(find('div.geolocation_places').has_content?('Oakland, CA, USA')).to eq(true)
     end
   end
 end
