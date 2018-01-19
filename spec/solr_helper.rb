@@ -15,7 +15,7 @@ module SolrHelper
       return if solr_instance
       self.solr_instance = start_new_instance
       self.collection = create_collection
-    rescue => ex
+    rescue StandardError => ex
       warn(ex)
       stop
       raise

@@ -49,7 +49,7 @@ Style/SingleLineBlockParams:
   Enabled: false
 
 # Confusing and weird
-Style/VariableNumber:
+Naming/VariableNumber:
   Enabled: false
 
 # Allow some special handling for engines

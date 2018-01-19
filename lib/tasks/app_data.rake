@@ -4,8 +4,6 @@ namespace :app_data do
   task clear: :environment do
     puts "Are you sure you want to clear the data in the environment #{Rails.env}?  (Type 'yes' to proceed.)"
     response = STDIN.gets
-    if response.strip.casecmp('YES').zero? && Rails.env != 'production'
-      ClearData.clear
-    end
+    ClearData.clear if response.strip.casecmp('YES').zero? && Rails.env != 'production'
   end
 end
