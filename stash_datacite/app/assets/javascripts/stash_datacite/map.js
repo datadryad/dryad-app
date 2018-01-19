@@ -23,9 +23,7 @@ function loadMap(bounds) { // bounds is optional
           detectRetina: false
         }).addTo(map);
   // -------------------------------- //
-
-  // MAPZEN autocomplete search and save to db
-  // mapzen();
+  
   mapGeosearch(map);
 
   // Get Point BBox and Place Coordinates from db and load on map
