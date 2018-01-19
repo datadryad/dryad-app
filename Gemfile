@@ -69,7 +69,11 @@ group :test do
 end
 
 group :development, :test do
+  gem 'binding_of_caller'
   gem 'byebug'
+  gem 'pry'
+  gem 'pry-rails'
+  gem 'pry-remote'
   gem 'rspec-rails', '~> 3.0'
   gem 'spring'
 end
