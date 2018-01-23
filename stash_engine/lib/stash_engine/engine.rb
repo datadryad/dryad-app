@@ -2,6 +2,7 @@ require 'kaminari'
 require 'wicked_pdf'
 require 'sortable-table' # this is required here rather than in controller, otherwise helpers don't work :-(
 require 'ckeditor'
+require_relative('counter_log')
 
 module StashEngine
   class Engine < ::Rails::Engine
@@ -20,6 +21,10 @@ module StashEngine
 
   class << self
     mattr_accessor :app, :tenants
+
+    def counter_log(*items)
+      StashEngine::CounterLog.log(items)
+    end
   end
 
   # this function maps the vars from your app into your engine
