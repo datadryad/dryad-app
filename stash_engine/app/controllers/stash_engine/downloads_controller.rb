@@ -62,16 +62,27 @@ module StashEngine
     end
 
     # download private dataset's file (need to stream) by owner (for now)
+    # rubocop:disable Metrics/AbcSize
     def file_stream
-      file_upload = FileUpload.find(params[:file_id])
       if current_user.id == file_upload.resource.user_id
+        CounterLogger.file_download_hit(request: request, file: file_upload)
         stream_response(file_upload.merritt_url, current_user.tenant)
       else
         render status: 403, text: 'You are not authorized to view this file until it has been published.'
       end
     end
+    # rubocop:enable Metrics/AbcSize
+
+    def file_download
+      CounterLogger.file_download_hit(request: request, file: file_upload)
+      redirect_to file_upload.merritt_url
+    end
 
     private
+
+    def file_upload
+      @file_upload ||= FileUpload.find(params[:file_id])
+    end
 
     def download_public
       setup_async_download_variable
@@ -142,45 +153,6 @@ module StashEngine
       ].join(' ')
       redirect_to landing_show_path(id: @resource.identifier_str)
     end
-
-    # TODO: specific to Merritt and hacky
-    # post an async form, right now @resource and @email should be set correctly before calling
-    # ---
-    # note, it seems as though this has been deprecated and Mark has created an API call for it now
-    # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
-    def post_async_form(resource:, email:)
-      # set up all needed parameters
-      domain, local_id = resource.merritt_protodomain_and_local_id
-      url = "#{domain}/lostorage"
-
-      version = resource.stash_version.merritt_version
-      body = {  'object' => local_id,
-                'version' => version,
-                'user_agent_email' => email,
-                'uDownload' => 'true',
-                'commit' => 'Submit' }
-
-      # from actual merritt form these are the items being submitted:
-      # utf8=%E2%9C%93
-      # &authenticity_token=9RYZsKa%2F2bZU7Wp52lotk7Oh6CZMGBUx4EjO0IGbIQk%3D
-      # &user_agent_email=scott.fisher%40ucop.edu
-      # &uDownload=true
-      # &object=ark%253A%252Fb5072%252Ffk2pv6hw34
-      # &version=
-      # &commit=Submit
-
-      client = Stash::Repo::HttpClient.new(tenant: resource.tenant, cert_file: APP_CONFIG.ssl_cert_file).client
-      res = client.post(url, body, follow_redirect: true)
-
-      # this is sketchy validation, but their form would redirect to that location if it's successful
-      location = res.http_header['Location']
-      return if location && location.first.include?("#{domain}/m/#{local_id}")
-
-      query_string = HTTP::Message.create_query_part_str(body)
-      details = location ? "redirected to bad location #{location}" : 'failed to redirect'
-      raise_merritt_error("Merritt async form post with body #{query_string}", details, resource.id, url)
-    end
-    # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
 
     def merritt_async_download?(resource:)
       domain, local_id = resource.merritt_protodomain_and_local_id
