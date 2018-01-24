@@ -16,7 +16,6 @@ module StashEngine
 
       init_from(resource)
 
-      user = resource.user
       tenant = resource.tenant
 
       @backtrace = to_backtrace(error)
@@ -34,7 +33,6 @@ module StashEngine
       init_from(resource)
       @to_name = @user_name
 
-      user = resource.user
       tenant = resource.tenant
       @host = tenant.full_domain
 
