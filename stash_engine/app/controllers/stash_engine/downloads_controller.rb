@@ -40,6 +40,7 @@ module StashEngine
             api_async_download(resource: @resource, email: @email)
             @resource.increment_downloads
             @message = "Dash will send an email with a download link to #{@email} when your requested dataset is ready."
+            CounterLogger.version_download_hit(request: request, resource: @resource)
           else
             @message = 'You do not have the permission to download the dataset.'
           end
@@ -89,6 +90,7 @@ module StashEngine
       if @async_download
         redirect_to landing_show_path(id: @resource.identifier_str, big: 'showme')
       else
+        CounterLogger.version_download_hit(request: request, resource: @resource)
         redirect_to(@resource.merritt_producer_download_uri)
       end
     end
@@ -98,6 +100,7 @@ module StashEngine
       if @async_download
         redirect_to landing_show_path(id: @resource.identifier_str, big: 'showme')
       else
+        CounterLogger.version_download_hit(request: request, resource: @resource)
         stream_response(@resource.merritt_producer_download_uri, @resource.tenant)
       end
     end
@@ -134,6 +137,7 @@ module StashEngine
 
     def stream_download
       @resource.increment_downloads
+      CounterLogger.version_download_hit(request: request, resource: @resource)
       stream_response(@resource.merritt_producer_download_uri, @resource.tenant)
     end
 
