@@ -69,7 +69,8 @@ module Stash
           user_id: user.id,
           dcs_resource: Datacite::Mapping::Resource.parse_xml(File.read('spec/data/archive/mrt-datacite.xml')),
           stash_files: stash_wrapper.inventory.files,
-          upload_date: stash_wrapper.version_date
+          upload_date: stash_wrapper.version_date,
+          tenant_id: 'dataone'
         ).build
 
         # TODO: move this to ResourceBuilder

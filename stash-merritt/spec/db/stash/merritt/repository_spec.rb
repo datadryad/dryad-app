@@ -53,7 +53,8 @@ module Stash
           user_id: user.id,
           dcs_resource: dcs_resource,
           stash_files: stash_wrapper.inventory.files,
-          upload_date: stash_wrapper.version_date
+          upload_date: stash_wrapper.version_date,
+          tenant_id: 'dataone'
         ).build
         resource.current_state = 'processing'
         @identifier = resource.identifier
