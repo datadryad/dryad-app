@@ -46,7 +46,7 @@ module StashEngine
     # POST /resources
     # POST /resources.json
     def create
-      resource = Resource.create(user_id: current_user.id, current_editor_id: current_user.id)
+      resource = Resource.create(user_id: current_user.id, current_editor_id: current_user.id, tenant_id: current_user.tenant_id)
       resource.fill_blank_author!
       redirect_to metadata_entry_pages_find_or_create_path(resource_id: resource.id)
     end
