@@ -43,6 +43,8 @@ module StashEngine
       allow(resource).to receive(:identifier_value).and_return(doi_value)
       allow(resource).to receive(:title).and_return(title)
       allow(resource).to receive(:embargo).and_return(embargo)
+      allow(resource).to receive(:tenant_id).and_return('ucop')
+      allow(resource).to receive(:tenant).and_return(@tenant)
 
       @delivery_method = ActionMailer::Base.delivery_method
       ActionMailer::Base.delivery_method = :test
