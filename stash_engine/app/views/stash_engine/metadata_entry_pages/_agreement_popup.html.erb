@@ -2,7 +2,7 @@
 <div id="modal_poop" style="display:none;">
 </div>
 
-<% if current_tenant.intrusive_data_deposit_agreement? && !resource.accepted_agreement? %>
+<% if resource.tenant.intrusive_data_deposit_agreement? && !resource.accepted_agreement? %>
   <script>
     $('#modal_poop').html("<%= escape_javascript(
                                          render partial: "tenants/#{current_tenant.tenant_id}/dda", locals: { resource: resource }) %>");

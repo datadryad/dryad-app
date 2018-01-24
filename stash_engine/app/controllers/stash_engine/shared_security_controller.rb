@@ -50,7 +50,7 @@ module StashEngine
     end
 
     def admin?
-      (current_user.tenant_id == resource.user.tenant_id && current_user.role == 'admin')
+      (current_user.tenant_id == resource.tenant_id && current_user.role == 'admin')
     end
 
     def ajax_blocked
