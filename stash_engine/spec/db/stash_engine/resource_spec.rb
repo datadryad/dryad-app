@@ -23,18 +23,18 @@ module StashEngine
     end
 
     describe :tenant do
-      it 'returns the user tenant' do
+      it 'returns the resource tenant' do
         tenant = instance_double(Tenant)
         allow(Tenant).to receive(:find).with('ucop').and_return(tenant)
 
-        resource = Resource.create(user_id: user.id)
+        resource = Resource.create(tenant_id: 'ucop')
         expect(resource.tenant).to eq(tenant)
       end
     end
 
     describe :tenant_id do
       it 'returns the user tenant ID' do
-        resource = Resource.create(user_id: user.id)
+        resource = Resource.create(tenant_id: 'ucop')
         expect(resource.tenant_id).to eq('ucop')
       end
     end
