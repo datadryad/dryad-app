@@ -10,15 +10,17 @@ module StashDatacite
     DESCRIPTION_TYPE = Datacite::Mapping::DescriptionType
 
     attr_reader :user_id
+    attr_reader :tenant_id
     attr_reader :dcs_resource
     attr_reader :stash_files
     attr_reader :upload_time
 
-    def initialize(user_id:, dcs_resource:, stash_files:, upload_date:)
+    def initialize(user_id:, dcs_resource:, stash_files:, upload_date:, tenant_id: 'dataone')
       @user_id = user_id
       @dcs_resource = ResourceBuilder.dcs_resource(dcs_resource)
       @stash_files = ResourceBuilder.stash_files(stash_files)
       @upload_time = upload_date.to_time
+      @tenant_id = tenant_id
     end
 
     def self.dcs_resource(dcs_resource)
@@ -42,7 +44,7 @@ module StashDatacite
     private
 
     def se_resource
-      @se_resource ||= StashEngine::Resource.create(user_id: user_id)
+      @se_resource ||= StashEngine::Resource.create(user_id: user_id, tenant_id: tenant_id)
     end
 
     def se_resource_id
