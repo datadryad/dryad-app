@@ -323,11 +323,6 @@ module StashEngine
       Tenant.find(tenant_id)
     end
 
-    def tenant_id
-      return nil unless user
-      user.tenant_id
-    end
-
     # ------------------------------------------------------------
     # Usage and statistics
 

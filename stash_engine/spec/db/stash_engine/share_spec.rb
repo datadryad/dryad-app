@@ -8,15 +8,7 @@ module StashEngine
     attr_reader :share
 
     before(:each) do
-      @user = StashEngine::User.create(
-        uid: 'lmuckenhaupt-ucop@ucop.edu',
-        first_name: 'Lisa',
-        last_name: 'Muckenhaupt',
-        email: 'lmuckenhaupt@ucop.edu',
-        provider: 'developer',
-        tenant_id: 'ucop'
-      )
-      @resource = Resource.create(user_id: user.id)
+      @resource = Resource.create(tenant_id: 'ucop')
       @tenant = double(Tenant)
       allow(Tenant).to receive(:find).with('ucop').and_return(tenant)
 
