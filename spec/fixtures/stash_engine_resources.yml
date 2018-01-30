@@ -11,6 +11,7 @@ resource1:
   title: Deconstructing the Lookaside Buffer
   current_editor_id: 1
   publication_date: 2017-08-24 21:06:21.000000000 Z
+  tenant_id: localhost
 
 resource2:
   id: 2
@@ -25,6 +26,7 @@ resource2:
   title: Deconstructing the Lookaside Buffer
   current_editor_id: 1
   publication_date: 2017-08-24 21:06:21.000000000 Z
+  tenant_id: localhost
 
 resource3:
   id: 3
@@ -40,6 +42,7 @@ resource3:
     Digital-to-Analog Converters
   current_editor_id: 1
   publication_date: 2017-08-24 21:13:40.000000000 Z
+  tenant_id: localhost
 
 resource4:
   id: 4
@@ -54,6 +57,7 @@ resource4:
   title: Evaluating Linked Lists and Web Services
   current_editor_id: 2
   publication_date: 2017-08-24 21:18:30.000000000 Z
+  tenant_id: localhost
 
 resource5:
   id: 5
@@ -68,3 +72,4 @@ resource5:
   title: Evaluating Linked Lists and Web Services
   current_editor_id: 2
   publication_date: 2017-08-24 21:18:30.000000000 Z
+  tenant_id: localhost
