@@ -35,6 +35,5 @@ module StashEngine
               resource.stash_version.version, file.upload_file_name, file.upload_file_size, request.user_agent]
       StashEngine.counter_log(line)
     end
-
   end
 end
