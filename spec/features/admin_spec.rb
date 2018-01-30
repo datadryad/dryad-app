@@ -1,5 +1,4 @@
 require 'features_helper'
-require 'byebug'
 
 describe 'admin' do
   fixtures :stash_engine_users, :stash_engine_resources, :stash_engine_identifiers, :stash_engine_resource_states,
