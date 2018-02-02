@@ -34,11 +34,26 @@ module Stash
       end
       # rubocop:enable Metrics/MethodLength
 
+      def nokogiri_doc
+        return @nokogiri_doc if @nokogiri_doc
+        @nokogiri_doc = Nokogiri(manifest)
+        @nokogiri_doc.remove_namespaces!
+        @nokogiri_doc
+      end
+
       def dataset_size
         return nil unless manifest
-        doc = Nokogiri(manifest)
-        doc.remove_namespaces!
-        elements = doc.xpath('/objectInfo/object/actualSize')
+        elements = nokogiri_doc.xpath('/objectInfo/object/actualSize')
+        return nil if elements.blank?
+        element = elements.first
+        element.content.to_i
+      end
+
+      def file_size(filename)
+        return 0 unless manifest
+        ick = xpath_escape_quotes("producer/#{filename}")
+        xp = "/objectInfo/versions/version[@id='#{@resource.stash_version.merritt_version}']/manifest/file[@id=#{ick}]/size"
+        elements = nokogiri_doc.xpath(xp)
         return nil if elements.blank?
         element = elements.first
         element.content.to_i
@@ -49,6 +64,14 @@ module Stash
         client.send_timeout = TIMEOUT
         client.receive_timeout = TIMEOUT
         client.keep_alive_timeout = TIMEOUT
+      end
+
+      private
+
+      def xpath_escape_quotes(fn)
+        return "\"#{fn}\"" unless fn.include?('"') # just double quote it unless it contains a double quote
+        # otherwise do this crazy replacement to make sure every type of quote is enclosed in its opposite and makes an XPATH contact function
+        "concat('" + fn.gsub(/['\"]/){|i| (i == '"' ? %{', '"', '} : %{', "'", '}) } + "')"
       end
 
     end
