@@ -152,10 +152,19 @@ module StashEngine
       end
     end
 
+    # updates the total size & call to update zero sizes for individual files
     def update_size!
       return unless resource
       ds_info = Stash::Repo::DatasetInfo.new(id)
       id.update(storage_size: ds_info.dataset_size)
+      update_zero_sizes!(ds_info)
+    end
+
+    def update_zero_sizes!(ds_info_obj)
+      return unless resource
+      resource.file_uploads.where(upload_file_size: 0).where(file_state: 'created').each do |f|
+        f.update(upload_file_size: ds_info_obj.file_size(f.upload_file_name))
+      end
     end
 
     def create_invite(author)
