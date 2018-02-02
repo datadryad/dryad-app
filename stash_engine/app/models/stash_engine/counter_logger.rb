@@ -18,7 +18,6 @@ module StashEngine
     # - other ids ?????????
     # -
 
-
     def self.landing_hit(request:, resource:)
       basic_non_file(request: request, resource: resource, type: 'investigation')
     end
@@ -32,7 +31,7 @@ module StashEngine
     end
 
     def self.version_download_hit(request:, resource:)
-      size = "#{resource.size}"
+      size = resource.size.to_s
       basic_non_file(request: request, resource: resource, type: 'request:version', size: size)
     end
 

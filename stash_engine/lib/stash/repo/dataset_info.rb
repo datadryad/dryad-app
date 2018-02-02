@@ -71,7 +71,7 @@ module Stash
       def xpath_escape_quotes(fn)
         return "\"#{fn}\"" unless fn.include?('"') # just double quote it unless it contains a double quote
         # otherwise do this crazy replacement to make sure every type of quote is enclosed in its opposite and makes an XPATH contact function
-        "concat('" + fn.gsub(/['\"]/){|i| (i == '"' ? %{', '"', '} : %{', "'", '}) } + "')"
+        "concat('" + fn.gsub(/['\"]/) { |i| (i == '"' ? %(', '"', ') : %(', "'", ')) } + "')"
       end
 
     end
