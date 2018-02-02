@@ -1,6 +1,24 @@
 module StashEngine
   class CounterLogger
 
+    # this logs the following items in TSV format, we may need to encode tabs and/or pipes (for metadata separators) in some cases
+    # - IP Address
+    # - session ID
+    # - type of hit [investigation, investigation:datapaper, request:dataset, request:version, request:file]
+    # - URL (this may soon replace  type of hit and we'll have to figure it all out from the URL in processing)
+    # - Filename (if applicable) -- we need to encode tabs in the filename if present
+    # - size
+    # - user-agent
+    # - title (resource.title)
+    # - publisher (resource.publisher.publisher)
+    # - publisher id ????????
+    # - creators (r.authors.map{|a| "#{a.author_first_name} #{a.author_last_name}" }.join('%7c'))
+    # - publication_date (r.publication_date)
+    # - dataset_version (r.stash_version.version)
+    # - other ids ?????????
+    # -
+
+
     def self.landing_hit(request:, resource:)
       basic_non_file(request: request, resource: resource, type: 'investigation')
     end
@@ -14,7 +32,7 @@ module StashEngine
     end
 
     def self.version_download_hit(request:, resource:)
-      size = "#{resource.size}*"
+      size = "#{resource.size}"
       basic_non_file(request: request, resource: resource, type: 'request:version', size: size)
     end
 
