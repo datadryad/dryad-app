@@ -28,6 +28,22 @@ namespace :dev_ops do
     end
   end
 
+  desc 'fill missing file sizes'
+  task fill_file_size: :environment do
+    unless ENV['RAILS_ENV']
+      puts 'RAILS_ENV must be explicitly set before running this script'
+      next
+    end
+    fus = StashEngine::FileUpload.where(upload_file_size: [0, nil])
+    fus.each do |file_upload|
+      resource = file_upload.resource
+      next unless resource && resource.current_resource_state && resource.current_resource_state.resource_state == 'submitted'
+      puts "updating resource #{resource.id} & #{resource.identifier.to_s}"
+      ds_info = Stash::Repo::DatasetInfo.new(resource.identifier)
+      file_upload.update(upload_file_size: ds_info.file_size(file_upload.upload_file_name))
+    end
+  end
+
   desc 'Update the description fields to have html content (generated from text)'
   task htmlize: :environment do
     require 'script/htmlize_descriptions'
