@@ -419,5 +419,11 @@ module StashEngine
     def update_publication_date!
       self.publication_date = notional_publication_date
     end
+
+    # notional_publication_year, as a string(!)
+    def notional_publication_year
+      return notional_publication_date.year.to_s if publication_years.blank?
+      publication_years.first.publication_year
+    end
   end
 end
