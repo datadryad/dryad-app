@@ -4,7 +4,7 @@ module StashEngine
     # this logs the following items in TSV format, we may need to encode tabs and/or pipes (for metadata separators) in some cases
     # - IP Address
     # - session ID
-    # - type of hit [investigation, investigation:datapaper, request:dataset, request:version, request:file]
+    # - GONE type of hit [investigation, investigation:datapaper, request:dataset, request:version, request:file]
     # - URL (this may soon replace  type of hit and we'll have to figure it all out from the URL in processing)
     # - Filename (if applicable) -- we need to encode tabs in the filename if present
     # - size
@@ -20,38 +20,56 @@ module StashEngine
     # - YOP (year of publication) resource.notional_publication_year
 
     def self.landing_hit(request:, resource:)
-      basic_non_file(request: request, resource: resource, type: 'investigation')
+      log_line(request: request, resource: resource) # type: 'investigation'
     end
 
     def self.landing_datapaper_hit(request:, resource:)
-      basic_non_file(request: request, resource: resource, type: 'investigation:datapaper')
+      log_line(request: request, resource: resource) # type: 'investigation:datapaper'
     end
 
     def self.file_download_hit(request:, file:)
-      basic_file_dl(request: request, file: file, type: 'request:file')
+      log_line(request: request, resource: file.resource, filename: file.upload_file_name, size: file.upload_file_size) # type: 'request:file'
     end
 
     def self.version_download_hit(request:, resource:)
-      size = resource.size.to_s
-      basic_non_file(request: request, resource: resource, type: 'request:version', size: size)
+      log_line(request: request, resource: resource, size: resource.size) # 'request:version'
     end
 
-    # these are helper methods for the main ones
+    #
+    # these are helper methods
+    #
 
-    def self.basic_non_file(request:, resource:, type:, size: '')
-      # IP Address, Session ID, Type of query
-      # [investigation, investigation:datapaper, request:dataset, request:version, request:file],
-      # filename (if applicable), size, user-agent
-      line = [request.remote_ip, request.session_options[:id], type, resource.identifier.to_s,
-              resource.stash_version.version, '', size, request.user_agent]
+    def self.log_line(request:, resource:, filename: nil, size: nil)
+      line = log_array(request: request, resource: resource, filename: filename, size: size)
       StashEngine.counter_log(line)
     end
 
-    def self.basic_file_dl(request:, file:, type:)
-      resource = file.resource
-      line = [request.remote_ip, request.session_options[:id], type, resource.identifier.to_s,
-              resource.stash_version.version, file.upload_file_name, file.upload_file_size, request.user_agent]
-      StashEngine.counter_log(line)
+    def self.log_array(request:, resource:, filename:, size:)
+      [
+        request.remote_ip, # user's IP Address
+        request.session_options[:id], # Session ID
+        request.original_url, # the URL the user is requesting
+        filename, # the filename they requested for download if any
+        size, # the size of the download (for a file, if any)
+        request.user_agent # the agent sent by the client
+      ].concat(log_metadata_array(resource: resource))
     end
+
+    # rubocop:disable Metrics/MethodLength
+    def self.log_metadata_array(resource:)
+      [
+        resource.title,
+        resource.try(:publisher).try(:publisher),
+        '????', # - publisher id ????????  This may be assigned to us and configured somewhere?
+        resource.authors.map { |a| a.author_standard_name.gsub('|', '%7c') }.join('|'), # - creators, escape any pipes in author names
+        resource.publication_date,
+        resource.try(:stash_version).try(:version),
+        '????', # - other ids ?????????  not sure what this would be
+        resource.try(:identifier).try(:target), # The landing page url with correct domain and all
+        resource.notional_publication_year
+      ]
+    end
+    # rubocop:enable Metrics/MethodLength
+
   end
 end
