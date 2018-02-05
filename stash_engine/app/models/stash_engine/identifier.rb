@@ -25,10 +25,11 @@ module StashEngine
       (lsv = last_submitted_resource) && lsv.version_number
     end
 
-    # this returns a resource object for the last version
+    # this returns a resource object for the last version, caching in instance variable for repeated calls
     def last_submitted_resource
+      return @last_submitted_resource unless @last_submitted_resource.blank?
       submitted = resources.submitted
-      submitted.by_version_desc.first
+      @last_submitted_resource = submitted.by_version_desc.first
     end
 
     def first_submitted_resource
@@ -70,6 +71,19 @@ module StashEngine
     def to_s
       # TODO: Make sure this is correct for all identifier types
       "#{identifier_type.downcase}:#{identifier}"
+    end
+
+    # the landing URL seems like a view component, but really it's given to people as data outside the view by way of
+    # logging, APIs as a target
+    #
+    # also couldn't calculate this easily in the past because url had some problems with user calculations for tenant
+    # but now tenant gets tied to the dataset (resource) for easier and consistent lookup of the domain.
+    #
+    # TODO: modify all code that calculates the target to use this method if possible/feasible.
+    def target
+      return @target unless @target.blank?
+      tenant = last_submitted_resource.tenant
+      @target = tenant.full_url(StashEngine::Engine.routes.url_helpers.show_path(to_s))
     end
   end
 end

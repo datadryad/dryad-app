@@ -16,7 +16,8 @@ module StashEngine
     # - publication_date (r.publication_date)
     # - dataset_version (r.stash_version.version)
     # - other ids ?????????
-    # -
+    # - URI (resource.identifier.target)
+    # - YOP (year of publication) resource.notional_publication_year
 
     def self.landing_hit(request:, resource:)
       basic_non_file(request: request, resource: resource, type: 'investigation')
