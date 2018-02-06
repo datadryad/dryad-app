@@ -10,7 +10,8 @@ module StashEngine
         @@logger ||= ActiveSupport::Logger.new(path)
       else
         @@logger = ActiveSupport::Logger.new(path) # create a new logger for the first log event of the new day
-        self.add_headers(mdy)
+        add_headers(mdy)
+        @@logger
       end
     end
     # rubocop:enable Style/ClassVars
@@ -26,7 +27,7 @@ module StashEngine
     def self.add_headers(date_string)
       l = @@logger
       l.info('#Version: 0.0.1')
-      l.info("#Fields: event_time\tclient_ip\tsession_id\trequest_url\tfilename\tsize\tuser-agent\t" +
+      l.info("#Fields: event_time\tclient_ip\tsession_id\trequest_url\tidentifier\tfilename\tsize\tuser-agent\t" \
             "title\tpublisher\tpublisher_id\tauthors\tpublication_date\tversion\tother_ids\ttarget_url\tpublication_year")
       l.info('#Software: Dash')
       l.info("#Start-Date: #{Time.parse(date_string).iso8601}")
