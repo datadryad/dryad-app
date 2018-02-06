@@ -6,6 +6,7 @@ module StashEngine
     # - session ID
     # - GONE type of hit [investigation, investigation:datapaper, request:dataset, request:version, request:file]
     # - URL (this may soon replace  type of hit and we'll have to figure it all out from the URL in processing)
+    # - identifier for the dataset
     # - Filename (if applicable) -- we need to encode tabs in the filename if present
     # - size
     # - user-agent
@@ -49,6 +50,7 @@ module StashEngine
         request.remote_ip, # user's IP Address
         request.session_options[:id], # Session ID
         request.original_url, # the URL the user is requesting
+        resource.identifier.to_s, # the identifier for the dataset
         filename, # the filename they requested for download if any
         size, # the size of the download (for a file, if any)
         request.user_agent # the agent sent by the client
