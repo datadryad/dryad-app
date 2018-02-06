@@ -4,11 +4,13 @@ module StashEngine
 
     # rubocop:disable Style/ClassVars
     def self.logger
-      path = File.join(Rails.root, 'log', "counter_#{Time.new.strftime('%Y-%m-%d')}.log")
+      mdy = Time.new.strftime('%Y-%m-%d')
+      path = File.join(Rails.root, 'log', "counter_#{mdy}.log")
       if File.file?(path)
         @@logger ||= ActiveSupport::Logger.new(path)
       else
-        @@logger = ActiveSupport::Logger.new(path) # create a new logger for the first log even of the new day
+        @@logger = ActiveSupport::Logger.new(path) # create a new logger for the first log event of the new day
+        self.add_headers(mdy)
       end
     end
     # rubocop:enable Style/ClassVars
@@ -17,7 +19,18 @@ module StashEngine
       items.flatten!
       items.unshift(Time.new)
       items.map! { |i| (i.respond_to?(:iso8601) ? i.iso8601 : i.to_s) }
+      items.map! { |i| (i.blank? ? '-' : i) }
       logger.info(items.join("\t"))
+    end
+
+    def self.add_headers(date_string)
+      l = @@logger
+      l.info('#Version: 0.0.1')
+      l.info("#Fields: event_time\tclient_ip\tsession_id\trequest_url\tfilename\tsize\tuser-agent\t" +
+            "title\tpublisher\tpublisher_id\tauthors\tpublication_date\tversion\tother_ids\ttarget_url\tpublication_year")
+      l.info('#Software: Dash')
+      l.info("#Start-Date: #{Time.parse(date_string).iso8601}")
+      l.info("#End-Date: #{(Time.parse(date_string) + 24.hours).iso8601}")
     end
   end
 end
