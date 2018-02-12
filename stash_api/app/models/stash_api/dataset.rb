@@ -10,7 +10,7 @@ module StashApi
     end
 
     def last_version
-      return nil unless @se_identifier.resources.count > 0
+      return nil unless @se_identifier.resources.count.positive?
       res_id = @se_identifier.resources.joins(:stash_version).order('version DESC').first.id
       Version.new(resource_id: res_id)
     end

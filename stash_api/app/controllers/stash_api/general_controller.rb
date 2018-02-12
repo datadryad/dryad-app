@@ -37,7 +37,7 @@ module StashApi
       [
         {
           name: 'stash',
-          href: 'https://github.com/CDLUC3/stash/blob/development/stash_api/link-relations.md#{rel}',
+          href: 'https://github.com/CDLUC3/stash/blob/development/stash_api/link-relations.md#{rel}', # rubocop:disable Lint/InterpolationCheck
           templated: 'true'
         }
       ]
