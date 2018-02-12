@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'url_pager'
 require 'cgi'
 
@@ -11,7 +13,7 @@ module StashApi
 
     PAGE_SIZE = 10
 
-    UNACCEPTABLE_MSG = '406 - unacceptable: please set your Content-Type and Accept headers for application/json'.freeze
+    UNACCEPTABLE_MSG = '406 - unacceptable: please set your Content-Type and Accept headers for application/json'
 
     def page
       @page ||= (params[:page].to_i > 0 ? params[:page].to_i : 1)

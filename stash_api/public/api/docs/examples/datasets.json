@@ -32,7 +32,7 @@
             "href": "/api/versions/11"
           },
           "stash:download": {
-            "href": "http://merritt-dev.cdlib.org/d/ark%3A%2Fb5072%2Ffk2hm58q3s"
+            "href": "/api/datasets/doi%3A10.5072%2FFK2HM58Q3S/download"
           },
           "curies": [
             {
@@ -70,7 +70,7 @@
             "href": "/api/versions/28"
           },
           "stash:download": {
-            "href": "http://merritt-dev.cdlib.org/d/ark%3A%2Fb5072%2Ffk2474dx0j"
+            "href": "/api/datasets/doi%3A10.5072%2FFK2474DX0J/download"
           },
           "curies": [
             {
@@ -196,7 +196,7 @@
             "href": "/api/versions/16"
           },
           "stash:download": {
-            "href": "http://merritt-dev.cdlib.org/d/ark%3A%2Fb5072%2Ffk28w3g720"
+            "href": "/api/datasets/doi%3A10.5072%2FFK28W3G720/download"
           },
           "curies": [
             {
@@ -243,7 +243,7 @@
             "href": "/api/versions/32"
           },
           "stash:download": {
-            "href": "http://merritt-dev.cdlib.org/d/ark%3A%2Fb5072%2Ffk2mk6cd6d"
+            "href": "/api/datasets/doi%3A10.5072%2FFK2MK6CD6D/download"
           },
           "curies": [
             {
@@ -285,7 +285,7 @@
             "href": "/api/versions/68"
           },
           "stash:download": {
-            "href": "http://merritt-dev.cdlib.org/d/ark%3A%2Fb5072%2Ffk24t6n929"
+            "href": "/api/datasets/doi%3A10.5072%2FFK24T6N929/download"
           },
           "curies": [
             {
@@ -342,7 +342,7 @@
             "href": "/api/versions/27"
           },
           "stash:download": {
-            "href": "http://merritt-dev.cdlib.org/d/ark%3A%2Fb5072%2Ffk2qj7g49h"
+            "href": "/api/datasets/doi%3A10.5072%2FFK2QJ7G49H/download"
           },
           "curies": [
             {
@@ -400,7 +400,7 @@
             "href": "/api/versions/53"
           },
           "stash:download": {
-            "href": "http://merritt-dev.cdlib.org/d/ark%3A%2Fb5072%2Ffk2j966h3b"
+            "href": "/api/datasets/doi%3A10.5072%2FFK2J966H3B/download"
           },
           "curies": [
             {
@@ -438,7 +438,7 @@
             "href": "/api/versions/54"
           },
           "stash:download": {
-            "href": "http://merritt-dev.cdlib.org/d/ark%3A%2Fb5072%2Ffk2t151w7s"
+            "href": "/api/datasets/doi%3A10.5072%2FFK2T151W7S/download"
           },
           "curies": [
             {

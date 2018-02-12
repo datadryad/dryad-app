@@ -10,7 +10,7 @@
       "href": "/api/versions/231/files"
     },
     "stash:download": {
-      "href": "http://merritt-dev.cdlib.org/u/ark%3A%2F99999%2Ffk4rv0w46g/1"
+      "href": "/api/versions/231/download"
     },
     "curies": [
       {

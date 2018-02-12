@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module StashApi
   class Engine < ::Rails::Engine
     isolate_namespace StashApi

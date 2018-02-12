@@ -4,7 +4,7 @@ module StashApi
   class VersionsController < ApplicationController
 
     before_action only: [:index] { require_stash_identifier(doi: params[:dataset_id]) }
-    before_action only: [:show] { require_resource_id(resource_id: params[:id]) }
+    before_action only: %i[show download] { require_resource_id(resource_id: params[:id]) }
 
     # get /versions/<id>
     def show
@@ -24,9 +24,18 @@ module StashApi
       end
     end
 
-    private
+    # get /versions/<id>/download
+    def download
+      # @stash_resources
+      if @stash_resources.length == 1
+        res = @stash_resources.first
+        redirect_to res.merritt_producer_download_uri
+      else
+        render text: 'download for this version is unavailable', status: 404
+      end
+    end
 
-    # rubocop:disable Metrics/AbcSize
+    private
     def paged_versions_for_dataset
       id = StashEngine::Identifier.find_with_id(params[:dataset_id])
       all_count = id.resources.count
