@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class UrlPager
 
   def initialize(current_url:, result_count:, current_page:, page_size:, path_only: true)

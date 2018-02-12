@@ -26,7 +26,7 @@
             "href": "/api/versions/18/files"
           },
           "stash:download": {
-            "href": "http://merritt-dev.cdlib.org/u/ark%3A%2Fb5072%2Ffk2mk6cd6d/1"
+            "href": "/api/versions/18/download"
           },
           "curies": [
             {
@@ -62,7 +62,7 @@
             "href": "/api/versions/32/files"
           },
           "stash:download": {
-            "href": "http://merritt-dev.cdlib.org/u/ark%3A%2Fb5072%2Ffk2mk6cd6d/2"
+            "href": "/api/versions/32/download"
           },
           "curies": [
             {
@@ -98,7 +98,7 @@
             "href": "/api/versions/69/files"
           },
           "stash:download": {
-            "href": "http://merritt-dev.cdlib.org/u/ark%3A%2Fb5072%2Ffk2mk6cd6d/3"
+            "href": "/api/versions/69/download"
           },
           "curies": [
             {

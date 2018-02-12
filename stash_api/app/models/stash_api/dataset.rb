@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module StashApi
   class Dataset
     include StashApi::Presenter
@@ -50,8 +52,11 @@ module StashApi
     end
 
     def download_uri
+      # rails will not encode an id wish slashes automatically, and encoding it results in double-encoding
+      # @se_identifier.last_submitted_resource.download_uri
       return nil unless @se_identifier.last_submitted_resource
-      @se_identifier.last_submitted_resource.download_uri
+      path = api_url_helper.download_dataset_path('foobar')
+      path.gsub('foobar', CGI.escape(@se_identifier.to_s))
     end
 
     def links
