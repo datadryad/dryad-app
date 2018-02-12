@@ -16,7 +16,7 @@ module StashApi
     UNACCEPTABLE_MSG = '406 - unacceptable: please set your Content-Type and Accept headers for application/json'
 
     def page
-      @page ||= (params[:page].to_i > 0 ? params[:page].to_i : 1)
+      @page ||= (params[:page].to_i.positive? ? params[:page].to_i : 1)
     end
 
     def page_size

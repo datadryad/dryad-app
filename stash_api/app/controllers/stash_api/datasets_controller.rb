@@ -1,9 +1,13 @@
+# frozen_string_literal: true
+
 require_dependency 'stash_api/application_controller'
 
 module StashApi
   class DatasetsController < ApplicationController
 
-    before_action only: %i[show download] { require_stash_identifier(doi: params[:id]) }
+    before_action only: %i[show download] do
+      require_stash_identifier(doi: params[:id])
+    end
 
     # get /datasets/<id>
     def show
@@ -28,7 +32,7 @@ module StashApi
     # get /datasets/<id>/download
     def download
       res = @stash_identifier.last_submitted_resource
-      if res && res.download_uri
+      if res&.download_uri
         redirect_to res.merritt_producer_download_uri # latest version, friendly download because that's what we do in UI for object
       else
         render text: 'download for this dataset is unavailable', status: 404
@@ -41,7 +45,8 @@ module StashApi
       { 'stash:datasets' =>
           StashEngine::Identifier.all.map { |i| Dataset.new(identifier: "#{i.identifier_type}:#{i.identifier}").metadata } }
     end
-    def paged_datasets
+
+    def paged_datasets # rubocop:disable Metrics/AbcSize
       all_count = StashEngine::Identifier.all.count
       results = StashEngine::Identifier.all.limit(page_size).offset(page_size * (page - 1))
       results = results.map { |i| Dataset.new(identifier: "#{i.identifier_type}:#{i.identifier}").metadata }
