@@ -20,20 +20,20 @@ module StashEngine
     # - URI (resource.identifier.target)
     # - YOP (year of publication) resource.notional_publication_year
 
-    def self.landing_hit(request:, resource:)
-      log_line(request: request, resource: resource) # type: 'investigation'
-    end
-
-    def self.landing_datapaper_hit(request:, resource:)
-      log_line(request: request, resource: resource) # type: 'investigation:datapaper'
-    end
-
-    def self.file_download_hit(request:, file:)
-      log_line(request: request, resource: file.resource, filename: file.upload_file_name, size: file.upload_file_size) # type: 'request:file'
+    def self.general_hit(request:, resource: nil, file: nil)
+      # request and resource are required for all and identifier, version and much info can be obtained from resource
+      filename = nil
+      size = nil
+      if file
+        filename = file.upload_file_name
+        size = file.upload_file_size
+        resource = file.resource
+      end
+      log_line(request: request, resource: resource, filename: filename, size: size)
     end
 
     def self.version_download_hit(request:, resource:)
-      log_line(request: request, resource: resource, size: resource.size) # 'request:version'
+      log_line(request: request, resource: resource, size: resource.size)
     end
 
     #

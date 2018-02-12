@@ -66,7 +66,7 @@ module StashEngine
     # rubocop:disable Metrics/AbcSize
     def file_stream
       if current_user.id == file_upload.resource.user_id
-        CounterLogger.file_download_hit(request: request, file: file_upload)
+        CounterLogger.general_hit(request: request, file: file_upload)
         stream_response(file_upload.merritt_url, current_user.tenant)
       else
         render status: 403, text: 'You are not authorized to view this file until it has been published.'
@@ -75,7 +75,7 @@ module StashEngine
     # rubocop:enable Metrics/AbcSize
 
     def file_download
-      CounterLogger.file_download_hit(request: request, file: file_upload)
+      CounterLogger.general_hit(request: request, file: file_upload)
       redirect_to file_upload.merritt_url
     end
 
