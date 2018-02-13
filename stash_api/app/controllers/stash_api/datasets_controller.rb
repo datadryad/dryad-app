@@ -9,6 +9,7 @@ module StashApi
       require_stash_identifier(doi: params[:id])
     end
 
+    # rubocop:disable Metrics/AbcSize
     # get /datasets/<id>
     def show
       ds = Dataset.new(identifier: @stash_identifier.to_s)
@@ -16,8 +17,11 @@ module StashApi
         format.json { render json: ds.metadata }
         format.xml { render xml: ds.metadata.to_xml(root: 'dataset') }
         format.html { render text: UNACCEPTABLE_MSG, status: 406 }
+        res = @stash_identifier.last_submitted_resource
+        StashEngine::CounterLogger.general_hit(request: request, resource: res) if res
       end
     end
+    # rubocop:enable Metrics/AbcSize
 
     # get /datasets
     def index
@@ -33,6 +37,8 @@ module StashApi
     def download
       res = @stash_identifier.last_submitted_resource
       if res&.download_uri
+        res = @stash_identifier.last_submitted_resource
+        StashEngine::CounterLogger.version_download_hit(request: request, resource: res) if res
         redirect_to res.merritt_producer_download_uri # latest version, friendly download because that's what we do in UI for object
       else
         render text: 'download for this dataset is unavailable', status: 404

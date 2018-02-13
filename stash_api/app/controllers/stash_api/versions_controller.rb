@@ -16,6 +16,8 @@ module StashApi
       respond_to do |format|
         format.json { render json: v.metadata_with_links }
         format.html { render text: UNACCEPTABLE_MSG, status: 406 }
+        res = @stash_resources.first
+        StashEngine::CounterLogger.general_hit(request: request, resource: res) if res
       end
     end
 
@@ -33,6 +35,7 @@ module StashApi
       # @stash_resources
       if @stash_resources.length == 1
         res = @stash_resources.first
+        StashEngine::CounterLogger.version_download_hit(request: request, resource: res)
         redirect_to res.merritt_producer_download_uri
       else
         render text: 'download for this version is unavailable', status: 404
