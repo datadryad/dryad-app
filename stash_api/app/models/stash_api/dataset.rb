@@ -17,9 +17,9 @@ module StashApi
 
     def last_submitted
       return nil if @se_identifier.blank? || @se_identifier.resources.count < 1
-      res_id = @se_identifier.last_submitted_resource
-      return nil if res_id.nil?
-      Version.new(resource_id: res_id)
+      res = @se_identifier.last_submitted_resource
+      return nil if res.nil?
+      Version.new(resource_id: res.id)
     end
 
     def metadata

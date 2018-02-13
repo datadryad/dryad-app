@@ -12,6 +12,7 @@ module StashApi
       f = StashEngine::FileUpload.find(params[:id])
       respond_to do |format|
         format.html do
+          StashEngine::CounterLogger.general_hit(request: request, file: f)
           redirect_to f.merritt_url
         end
       end
