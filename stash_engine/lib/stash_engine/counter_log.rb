@@ -27,7 +27,7 @@ module StashEngine
     def self.add_headers(date_string)
       l = @@logger
       l.info('#Version: 0.0.1')
-      l.info("#Fields: event_time\tclient_ip\tsession_id\trequest_url\tidentifier\tfilename\tsize\tuser-agent\t" \
+      l.info("#Fields: event_time\tclient_ip\tsession_cookie_id\tuser_cookie_id\tuser_id\trequest_url\tidentifier\tfilename\tsize\tuser-agent\t" \
             "title\tpublisher\tpublisher_id\tauthors\tpublication_date\tversion\tother_ids\ttarget_url\tpublication_year")
       l.info('#Software: Dash')
       l.info("#Start-Date: #{Time.parse(date_string).iso8601}")

@@ -1,24 +1,10 @@
+require 'byebug'
+
 module StashEngine
   class CounterLogger
 
     # this logs the following items in TSV format, we may need to encode tabs and/or pipes (for metadata separators) in some cases
-    # - IP Address
-    # - session ID
-    # - GONE type of hit [investigation, investigation:datapaper, request:dataset, request:version, request:file]
-    # - URL (this may soon replace  type of hit and we'll have to figure it all out from the URL in processing)
-    # - identifier for the dataset
-    # - Filename (if applicable) -- we need to encode tabs in the filename if present
-    # - size
-    # - user-agent
-    # - title (resource.title)
-    # - publisher (resource.publisher.publisher)
-    # - publisher id ????????
-    # - creators (r.authors.map{|a| "#{a.author_first_name} #{a.author_last_name}" }.join('%7c'))
-    # - publication_date (r.publication_date)
-    # - dataset_version (r.stash_version.version)
-    # - other ids ?????????
-    # - URI (resource.identifier.target)
-    # - YOP (year of publication) resource.notional_publication_year
+    # see below for what we're logging and in what order
 
     def self.general_hit(request:, resource: nil, file: nil)
       # request and resource are required for all and identifier, version and much info can be obtained from resource
@@ -48,7 +34,9 @@ module StashEngine
     def self.log_array(request:, resource:, filename:, size:)
       [
         request.remote_ip, # user's IP Address
-        request.session_options[:id], # Session ID
+        nil, # we don't track a session cookie (that expires when a user closes the browser as indicated online as a definition of a session cookie)
+        request.session_options[:id], # Session ID (this is a user's session id that references a cookie)
+        request.session['user_id'], # this is a user's id number from our database (if they happen to be logged in, rarely the case)
         request.original_url, # the URL the user is requesting
         resource.identifier.to_s, # the identifier for the dataset
         filename, # the filename they requested for download if any
