@@ -3806,6 +3806,7 @@ html.no-details .o-showhide__summary {
     left: 0; }
 
 .c-file-group__list {
+  padding-left: 15px;
   list-style: none; }
   .c-file-group__list li {
     margin: 0 0 0.3em; }
