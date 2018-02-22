@@ -127,6 +127,20 @@ module StashEngine
           expect(identifier.in_progress_only?).to eq(true)
         end
       end
+
+      describe '#resources_with_file_changes' do
+        before(:each) do
+          FileUpload.create(resource_id: res1.id, upload_file_name: 'cat', file_state: 'created')
+          FileUpload.create(resource_id: res2.id, upload_file_name: 'cat', file_state: 'copied')
+          FileUpload.create(resource_id: res3.id, upload_file_name: 'cat', file_state: 'copied')
+        end
+
+        it 'returns the version that changed' do
+          resources = identifier.resources_with_file_changes
+          expect(resources.first.id).to eq(res1.id)
+          expect(resources.count).to eq(1)
+        end
+      end
     end
   end
 end
