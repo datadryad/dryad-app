@@ -21,6 +21,12 @@ module StashEngine
                identifier, identifier_type).sum(:downloads)
     end
 
+    def resources_with_file_changes
+      Resource.distinct.where(identifier_id: id)
+        .joins(:file_uploads)
+        .where(stash_engine_file_uploads: { file_state: %w[created deleted] })
+    end
+
     def last_submitted_version_number
       (lsv = last_submitted_resource) && lsv.version_number
     end

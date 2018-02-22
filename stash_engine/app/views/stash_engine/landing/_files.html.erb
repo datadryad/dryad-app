@@ -1,10 +1,10 @@
 <%# takes local variable of dataset_identifier and resource %>
 <div class="c-sidebox">
-  <h3 class="c-sidebox__heading">Data Files</h3>
-  <% dataset_identifier.resources.submitted.by_version.each do |res| %>
+  <h3 class="c-sidebox__heading">Data File Versions</h3>
+  <% dataset_identifier.resources_with_file_changes.submitted.by_version.each do |res| %>
     <details class="c-file-group" role="group">
       <summary class="o-showhide__summary c-file-group__summary">
-        Version <%= res.stash_version.version %></summary>
+        <%= formatted_date(resource.notional_publication_date) %></summary>
       <ul class="c-file-group__list">
         <% res.current_file_uploads.each do |fu| %>
           <li>
