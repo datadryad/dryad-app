@@ -2,7 +2,7 @@
 <% resources = dataset_identifier.resources_with_file_changes.submitted.by_version %>
 <% if resources.count.positive? %>
   <div class="c-sidebox">
-    <h3 class="c-sidebox__heading">Data File Versions</h3>
+    <h3 class="c-sidebox__heading">Versions</h3>
     <% resources.each do |res| %>
       <details class="c-file-group" role="group">
         <summary class="o-showhide__summary c-file-group__summary">
