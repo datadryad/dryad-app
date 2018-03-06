@@ -50,11 +50,11 @@ module StashEngine
       [
         resource.title,
         resource.try(:publisher).try(:publisher),
-        '????', # - publisher id ????????  This may be assigned to us and configured somewhere?
+        resource.tenant.publisher_id, # - publisher id, we're using grid ids
         resource.authors.map { |a| a.author_standard_name.gsub('|', '%7c') }.join('|'), # - creators, escape any pipes in author names
         resource.publication_date,
         resource.try(:stash_version).try(:version),
-        '????', # - other ids ?????????  not sure what this would be
+        '', # - other ids
         resource.try(:identifier).try(:target), # The landing page url with correct domain and all
         resource.notional_publication_year
       ]
