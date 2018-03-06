@@ -45,7 +45,7 @@ module StashEngine
     end
     # rubocop:enable Metrics/MethodLength
 
-    # rubocop:disable Metrics/MethodLength
+    # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
     def self.log_metadata_array(resource:)
       [
         resource.title,
@@ -59,7 +59,7 @@ module StashEngine
         resource.notional_publication_year
       ]
     end
-    # rubocop:enable Metrics/MethodLength
+    # rubocop:enable Metrics/MethodLength, Metrics/AbcSize
 
   end
 end
