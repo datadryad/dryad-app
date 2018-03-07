@@ -54,7 +54,7 @@ module StashEngine
         resource.authors.map { |a| a.author_standard_name.gsub('|', '%7c') }.join('|'), # - creators, escape any pipes in author names
         resource.publication_date,
         resource.try(:stash_version).try(:version),
-        '', # - other ids
+        '', # - other id
         resource.try(:identifier).try(:target), # The landing page url with correct domain and all
         resource.notional_publication_year
       ]
