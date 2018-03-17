@@ -1,11 +1,16 @@
 # frozen_string_literal: true
 
+# https://github.com/doorkeeper-gem/doorkeeper/issues/212
+# this gem is a buggy PoS in an Engine
+require 'doorkeeper'
+StashApi::Doorkeeper = ::Doorkeeper
+
 module StashApi
-  class Engine < ::Rails::Engine
+  class Engine < Rails::Engine
     isolate_namespace StashApi
 
     config.generators do |g|
-      g.test_framework :rspec
+      g.test_framework :rspec, :view_specs => false
     end
 
     # Initializer to combine this engines static assets with the static assets of the hosting site.
