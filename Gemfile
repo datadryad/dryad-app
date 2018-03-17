@@ -5,7 +5,7 @@ require File.join(File.dirname(__FILE__), 'lib', 'bundler_help.rb')
 # Rails
 
 gem 'mysql2', '~> 0.4'
-gem 'rails', '4.2.9'
+gem 'rails', '4.2.10'
 
 # ############################################################
 # Local engines
