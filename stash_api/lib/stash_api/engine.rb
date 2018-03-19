@@ -10,7 +10,7 @@ module StashApi
     isolate_namespace StashApi
 
     config.generators do |g|
-      g.test_framework :rspec, :view_specs => false
+      g.test_framework :rspec, view_specs: false
     end
 
     # Initializer to combine this engines static assets with the static assets of the hosting site.

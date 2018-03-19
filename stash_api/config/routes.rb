@@ -1,7 +1,6 @@
 StashApi::Engine.routes.draw do
 
-  use_doorkeeper
-  use_doorkeeper
+  # use_doorkeeper
 
   root to: 'general#index'
 
