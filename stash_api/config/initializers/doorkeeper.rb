@@ -56,7 +56,17 @@ Doorkeeper.configure do
   # Optional parameter confirmation: true (default false) if you want to enforce ownership of
   # a registered application
   # Note: you must also run the rails g doorkeeper:application_owner generator to provide the necessary support
-  # enable_application_owner confirmation: false
+  # see https://github.com/doorkeeper-gem/doorkeeper/wiki/Associate-users-to-OAuth-applications-%28ownership%29
+  # for an example.  We need to set this up to automagically get an owner for the application key.
+  # right now only the owner can add/modify their own datasets.
+
+  # use code like the following three lines to add the application owner manually, (but from a rails console, not here)
+  # u = StashEngine::User.find(10)
+  # app = Doorkeeper::Application.find(1)
+  # app.owner = u
+  # app.save
+
+  enable_application_owner confirmation: false
 
   # Define access token scopes for your provider
   # For more information go to
