@@ -27,8 +27,6 @@ module StashApi
     end
 
     private
-
-    # rubocop:disable Metrics/AbcSize
     def paged_files_for_version
       resource = StashEngine::Resource.find(params[:version_id]) # version_id is really resource_id
       visible = resource.file_uploads.present_files

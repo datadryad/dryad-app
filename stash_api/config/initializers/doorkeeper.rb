@@ -1,3 +1,7 @@
+# see https://stackoverflow.com/questions/21506831/using-doorkeeper-inside-rails-engine
+# what a pain in the butt to get this engine gem working inside the API
+# Doorkeeper::ApplicationController.send(:include, StashApi::Engine.routes.url_helpers)
+
 Doorkeeper.configure do
   # Change the ORM that doorkeeper will use (needs plugins)
   orm :active_record
@@ -8,14 +12,16 @@ Doorkeeper.configure do
     # Put your resource owner authentication logic here.
     # Example implementation:
     #   User.find_by_id(session[:user_id]) || redirect_to(new_user_session_url)
+    # We don't need this because we are not enabling UI app authentication for outside apps (resource credentials grant?)
   end
 
   # If you want to restrict access to the web interface for adding oauth authorized applications, you need to declare the block below.
-  # admin_authenticator do
+  admin_authenticator do
   #   # Put your admin authentication logic here.
   #   # Example implementation:
   #   Admin.find_by_id(session[:admin_id]) || redirect_to(new_admin_session_url)
-  # end
+    current_user && (current_user.role == 'superuser')
+  end
 
   # Authorization Code expiration time (default 10 minutes).
   # authorization_code_expires_in 10.minutes
@@ -37,6 +43,7 @@ Doorkeeper.configure do
   # Defaults to ActionController::Base.
   # https://github.com/doorkeeper-gem/doorkeeper#custom-base-controller
   # base_controller 'ApplicationController'
+  base_controller 'StashApi::ApplicationController'
 
   # Reuse access token for the same resource owner within an application (disabled by default)
   # Rationale: https://github.com/doorkeeper-gem/doorkeeper/issues/383
@@ -114,7 +121,7 @@ Doorkeeper.configure do
   #   http://tools.ietf.org/html/rfc6819#section-4.4.2
   #   http://tools.ietf.org/html/rfc6819#section-4.4.3
   #
-  # grant_flows %w[authorization_code client_credentials]
+  grant_flows %w[client_credentials] # authorization_code
 
   # Hook into the strategies' request & response life-cycle in case your
   # application needs advanced customization or logging:

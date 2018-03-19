@@ -43,8 +43,6 @@ module StashApi
     end
 
     private
-
-    # rubocop:disable Metrics/AbcSize
     def paged_versions_for_dataset
       id = StashEngine::Identifier.find_with_id(params[:dataset_id])
       all_count = id.resources.count

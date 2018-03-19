@@ -27,9 +27,9 @@ Gem::Specification.new do |s|
   s.test_files    = s.files.grep(%r{^(test|spec|features)/})
   s.require_paths = ['lib']
 
-  s.add_dependency 'rails', '~> 4.2.8'
   s.add_dependency 'doorkeeper'
-  s.add_development_dependency 'rubocop', '0.49.1'
+  s.add_dependency 'rails', '~> 4.2.8'
   s.add_development_dependency 'byebug'
   s.add_development_dependency 'combustion'
+  s.add_development_dependency 'rubocop', '0.49.1'
 end
