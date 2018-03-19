@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180316234058) do
+ActiveRecord::Schema.define(version: 20180319234429) do
 
   create_table "bookmarks", force: :cascade do |t|
     t.integer  "user_id",       limit: 4,   null: false
@@ -293,8 +293,11 @@ ActiveRecord::Schema.define(version: 20180316234058) do
     t.string   "scopes",       limit: 191,   default: "", null: false
     t.datetime "created_at",                              null: false
     t.datetime "updated_at",                              null: false
+    t.integer  "owner_id",     limit: 4
+    t.string   "owner_type",   limit: 191
   end
 
+  add_index "oauth_applications", ["owner_id", "owner_type"], name: "index_oauth_applications_on_owner_id_and_owner_type", using: :btree
   add_index "oauth_applications", ["uid"], name: "index_oauth_applications_on_uid", unique: true, using: :btree
 
   create_table "searches", force: :cascade do |t|
