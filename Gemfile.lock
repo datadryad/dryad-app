@@ -374,7 +374,7 @@ GEM
     leaflet-rails (0.7.7)
     libv8 (3.16.14.19)
     link_header (0.0.8)
-    loofah (2.2.0)
+    loofah (2.2.1)
       crass (~> 1.0.2)
       nokogiri (>= 1.5.9)
     mail (2.7.0)
