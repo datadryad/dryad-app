@@ -5,10 +5,23 @@ require_dependency 'stash_api/application_controller'
 module StashApi
   class GeneralController < ApplicationController
 
+    before_action -> { doorkeeper_authorize! }, only: :test
+    # before_action -> { doorkeeper_authorize! :public }, only: :test
+
     # get /datasets
     def index
       respond_to do |format|
         format.json { render json: output }
+        format.html {}
+      end
+    end
+
+    # post /test
+    # see if you can do a post request and connect with the key you've obtained
+    def test
+      @user = doorkeeper_token.application.owner
+      respond_to do |format|
+        format.json { render json: {message: "Welcome application owner #{@user.name}", user_id: @user.id} }
         format.html {}
       end
     end

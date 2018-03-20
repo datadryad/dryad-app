@@ -138,6 +138,7 @@ GEM
     config (1.4.0)
       activesupport (>= 3.0)
       deep_merge (~> 1.1.1)
+    crass (1.0.3)
     database_cleaner (1.6.1)
     datacite-mapping (0.3.0)
       typesafe_enum (~> 0.1, >= 0.1.7)
@@ -214,7 +215,8 @@ GEM
       kaminari-core (= 1.0.1)
     kaminari-core (1.0.1)
     leaflet-rails (0.7.7)
-    loofah (2.0.3)
+    loofah (2.2.1)
+      crass (~> 1.0.2)
       nokogiri (>= 1.5.9)
     mail (2.6.5)
       mime-types (>= 1.16, < 4)
@@ -413,4 +415,4 @@ DEPENDENCIES
   stash_engine!
 
 BUNDLED WITH
-   1.16.0
+   1.16.1
