@@ -21,7 +21,7 @@ module StashApi
     def test
       @user = doorkeeper_token.application.owner
       respond_to do |format|
-        format.json { render json: {message: "Welcome application owner #{@user.name}", user_id: @user.id} }
+        format.json { render json: { message: "Welcome application owner #{@user.name}", user_id: @user.id } }
         format.html {}
       end
     end

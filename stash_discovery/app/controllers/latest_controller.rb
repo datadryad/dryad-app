@@ -1,5 +1,3 @@
-# -*- encoding : utf-8 -*-
-
 class LatestController < ApplicationController
   helper StashEngine::ApplicationHelper
   include StashEngine::SharedController
@@ -91,9 +89,7 @@ class LatestController < ApplicationController
 
   def set_cached_latest
     key = "#{floor_stamp(Time.new)}_latest_datasets"
-    unless Rails.cache.exist?(key)
-      Rails.cache.write(key, search_results(params))
-    end
+    Rails.cache.write(key, search_results(params)) unless Rails.cache.exist?(key)
     (@response, @document_list) = Rails.cache.fetch(key)
   end
 end

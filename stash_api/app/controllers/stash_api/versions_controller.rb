@@ -5,10 +5,8 @@ require_dependency 'stash_api/application_controller'
 module StashApi
   class VersionsController < ApplicationController
 
-    before_action only: [:index] { require_stash_identifier(doi: params[:dataset_id]) }
-    before_action only: %i[show download] do
-      require_resource_id(resource_id: params[:id])
-    end
+    before_action -> { require_stash_identifier(doi: params[:dataset_id]) }, only: [:index]
+    before_action -> { require_resource_id(resource_id: params[:id]) }, only: %i[show download]
 
     # get /versions/<id>
     def show
@@ -43,6 +41,8 @@ module StashApi
     end
 
     private
+
+    # rubocop:disable Metrics/AbcSize
     def paged_versions_for_dataset
       id = StashEngine::Identifier.find_with_id(params[:dataset_id])
       all_count = id.resources.count

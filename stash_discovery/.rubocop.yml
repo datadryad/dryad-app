@@ -18,6 +18,6 @@ Metrics/BlockLength:
   Exclude:
     - 'app/controllers/catalog_controller.rb'
 
-Style/PredicateName:
+Naming/PredicateName:
   Exclude:
     - 'app/controllers/catalog_controller.rb'

@@ -12,7 +12,7 @@ module Stash
     before(:each) do
       oai_client = instance_double(OAI::Client)
       allow(oai_client).to receive(:list_records) {
-        OAI::ListRecordsResponse.new(oai_doc){} # empty resumption block
+        OAI::ListRecordsResponse.new(oai_doc) {} # empty resumption block
       }
       allow(oai_client).to receive(:build_uri).and_return('http://oaipmh.example.org/ListRecords')
       allow(OAI::Client).to receive(:new).and_return(oai_client)

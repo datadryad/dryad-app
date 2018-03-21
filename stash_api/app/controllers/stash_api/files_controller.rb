@@ -5,8 +5,8 @@ require_dependency 'stash_api/application_controller'
 module StashApi
   class FilesController < ApplicationController
 
-    before_action only: [:index] { require_resource_id(resource_id: params[:version_id]) }
-    before_action only: [:show] { require_file_id(file_id: params[:id]) }
+    before_action -> { require_resource_id(resource_id: params[:version_id]) }, only: [:index]
+    before_action -> { require_file_id(file_id: params[:id]) }, only: [:show]
 
     # get /files/<id>
     def show
@@ -27,6 +27,8 @@ module StashApi
     end
 
     private
+
+    # rubocop:disable Metrics/AbcSize
     def paged_files_for_version
       resource = StashEngine::Resource.find(params[:version_id]) # version_id is really resource_id
       visible = resource.file_uploads.present_files
