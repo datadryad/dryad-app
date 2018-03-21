@@ -45,7 +45,7 @@ Gem::Specification.new do |s| # rubocop:disable Metrics/BlockLength
   s.add_development_dependency 'rake', '~> 12.0'
   s.add_development_dependency 'redcarpet', '~> 3.3'
   s.add_development_dependency 'rspec', '~> 3.2'
-  s.add_development_dependency 'rubocop', '0.52'
+  s.add_development_dependency 'rubocop', '0.52.1'
   s.add_development_dependency 'simplecov', '~> 0.14'
   s.add_development_dependency 'simplecov-console', '~> 0.4'
   s.add_development_dependency 'webmock', '~> 3.0'

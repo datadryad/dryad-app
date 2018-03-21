@@ -103,7 +103,7 @@ GEM
       activerecord (>= 3.2.6)
     ansi (1.5.0)
     arel (6.0.4)
-    ast (2.3.0)
+    ast (2.4.0)
     autoprefixer-rails (7.1.1)
       execjs
     bcrypt (3.1.11)
@@ -257,8 +257,8 @@ GEM
     parallel (1.11.2)
     parallel_tests (2.14.1)
       parallel
-    parser (2.4.0.2)
-      ast (~> 2.3)
+    parser (2.5.0.4)
+      ast (~> 2.4.0)
     powerpack (0.1.1)
     rack (1.6.8)
     rack-test (0.6.3)
@@ -322,7 +322,7 @@ GEM
       rspec-mocks (~> 3.6.0)
       rspec-support (~> 3.6.0)
     rspec-support (3.6.0)
-    rubocop (0.52.0)
+    rubocop (0.52.1)
       parallel (~> 1.10)
       parser (>= 2.4.0.2, < 3.0)
       powerpack (~> 0.1)
@@ -405,7 +405,7 @@ DEPENDENCIES
   parallel_tests
   rspec (~> 3.5)
   rspec-rails (~> 3.5)
-  rubocop (= 0.52)
+  rubocop (= 0.52.1)
   simplecov (~> 0.14)
   simplecov-console (~> 0.4)
   stash-sword!
