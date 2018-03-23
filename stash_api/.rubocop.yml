@@ -13,3 +13,5 @@ AllCops:
     - 'node_modules/**/*'
   # Suppress complaints about post-2.0 syntax
   TargetRubyVersion: 2.4
+Style/FrozenStringLiteralComment:
+  Enabled: false
