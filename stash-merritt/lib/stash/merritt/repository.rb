@@ -1,6 +1,7 @@
 require 'stash/repo'
 require 'stash/merritt/submission_job'
 require 'erb'
+require 'byebug'
 
 module Stash
   module Merritt
@@ -27,6 +28,11 @@ module Stash
         doi = resource.identifier_str
         edit_uri_base = sword_endpoint.sub('/collection/', '/edit/')
         "#{edit_uri_base}/#{ERB::Util.url_encode(doi)}"
+      end
+
+      def mint_id(resource:)
+        id_gen = IdGen.make_instance(resource: resource)
+        id_gen.mint_id
       end
 
       private

@@ -16,15 +16,23 @@ module StashApi
     end
 
     def last_submitted
+      guard_version(get_version_method: :last_submitted_resource)
+    end
+
+    def in_progress
+      guard_version(get_version_method: :in_progress_resource)
+    end
+
+    def guard_version(get_version_method: nil)
       return nil if @se_identifier.blank? || @se_identifier.resources.count < 1
-      res = @se_identifier.last_submitted_resource
+      res = @se_identifier.send(get_version_method)
       return nil if res.nil?
       Version.new(resource_id: res.id)
     end
 
     def metadata
       # gets descriptive metadata together
-      lv = last_submitted
+      lv = last_submitted || in_progress
       return simple_identifier if lv.nil?
       metadata = id_and_size_hash.merge(lv.metadata)
       add_embargo_date!(metadata, lv)

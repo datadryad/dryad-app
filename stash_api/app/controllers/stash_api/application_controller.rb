@@ -9,7 +9,9 @@ module StashApi
 
     layout 'layouts/stash_engine/application'
 
-    protect_from_forgery with: :exception
+    # protect_from_forgery with: :exception
+
+    protect_from_forgery with: :null_session
 
     PAGE_SIZE = 10
 

@@ -1,4 +1,5 @@
 require 'db_spec_helper'
+require 'byebug'
 
 module Stash
   module Merritt
@@ -11,6 +12,7 @@ module Stash
       attr_reader :repo
       attr_reader :rails_root
       attr_reader :public_system
+      attr_reader :tenant
 
       before(:each) do
         @rails_root = Dir.mktmpdir('rails_root')
@@ -37,10 +39,10 @@ module Stash
           endpoint: 'http://uc3-mrtsword-prd.cdlib.org:39001/mrtsword/collection/dataone_dash'
         )
 
-        tenant = double(StashEngine::Tenant)
-        allow(tenant).to receive(:tenant_id).and_return('dataone')
-        allow(tenant).to receive(:short_name).and_return('DataONE')
-        allow(tenant).to receive(:repository).and_return(repo_config)
+        @tenant = double(StashEngine::Tenant)
+        allow(@tenant).to receive(:tenant_id).and_return('dataone')
+        allow(@tenant).to receive(:short_name).and_return('DataONE')
+        allow(@tenant).to receive(:repository).and_return(repo_config)
         allow(StashEngine::Tenant).to receive(:find).with('dataone').and_return(tenant)
 
         stash_wrapper_xml = File.read('spec/data/archive/stash-wrapper.xml')
@@ -74,6 +76,26 @@ module Stash
 
       after(:each) do
         FileUtils.remove_dir(rails_root)
+      end
+
+      describe :mint_id do
+        it 'needs to allow minting separately for API' do
+          id_params = {
+            provider: 'datacite',
+            prefix: '10.5072',
+            account: 'stash',
+            password: '3cc9d3fbd9788148c6a32a1415fa673a',
+            sandbox: true
+          }
+
+          identifier_str = 'doi:10.5072/1234-5678'
+          path_to_landing = "/stash/#{identifier_str}"
+          landing_page_url = URI::HTTPS.build(host: 'stash.example.edu', path: path_to_landing).to_s
+          allow(@tenant).to receive(:identifier_service).and_return(OpenStruct.new(id_params))
+          allow(@tenant).to receive(:tenant_id).and_return('dataone')
+          allow(@tenant).to receive(:full_url).with(path_to_landing).and_return(landing_page_url)
+          expect(repo.mint_id(resource: resource)).to be_a_kind_of(String)
+        end
       end
 
       describe :download_uri_for do
