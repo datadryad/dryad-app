@@ -5,6 +5,8 @@ module StashDatacite
   def self.config_resource_patch
     Rails.application.config.to_prepare do
       StashDatacite::ResourcePatch.associate_with_resource(StashEngine::Resource)
+      # Authorpatch also has to be here, otherwise there were places it wasn't patching before use, resulting in errors
+      StashDatacite::AuthorPatch.patch! unless StashEngine::Author.method_defined?(:affiliation)
     end
   end
 
