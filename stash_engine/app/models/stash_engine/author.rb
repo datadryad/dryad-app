@@ -38,8 +38,7 @@ module StashEngine
         else
           StashDatacite::Affiliation.create(long_name: name)
         end
-      # yikes, affiliations is very unreliable, wtf?
-      affiliations << affil if defined? affiliations
+      affiliations << affil
     end
 
     # NOTE: this ONLY works b/c we assume that only the resource-owning
