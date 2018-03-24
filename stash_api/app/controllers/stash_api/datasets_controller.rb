@@ -30,7 +30,7 @@ module StashApi
           dp = DatasetParser.new(hash: params['dataset'], id: nil, user: user)
           @stash_identifier = dp.parse
           ds = Dataset.new(identifier: @stash_identifier.to_s)
-          render json: ds.metadata
+          render json: ds.metadata, status: 201
         end
       end
     end

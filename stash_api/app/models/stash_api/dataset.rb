@@ -36,10 +36,10 @@ module StashApi
       return simple_identifier if lv.nil?
       metadata = id_and_size_hash.merge(lv.metadata)
       add_embargo_date!(metadata, lv)
-      metadata.delete_if { |_k, v| v.blank? }
+      # metadata.compact!
 
       # gives the links to nearby objects
-      { '_links': links }.merge(metadata)
+      ({ '_links': links }.merge(metadata)).recursive_compact
     end
 
     def versions_path
@@ -49,8 +49,9 @@ module StashApi
     end
 
     def version_path
-      return nil unless last_submitted
-      api_url_helper.version_path(last_submitted.resource.id)
+      item = last_submitted || last_version
+      return nil unless item
+      api_url_helper.version_path(item.resource.id)
     end
 
     def self_path
