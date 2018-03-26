@@ -44,12 +44,13 @@ paths:
         - bearerAuth: []
       summary: start a new dataset, requires oauth bearer token
       requestBody:
-        description: json needed for creating a new dataset
+        description: "json needed for creating a new dataset: example doesn't show because OpenAPI is broken it seems"
         required: true
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/simple_dc_metadata'
+            # https://github.com/swagger-api/swagger-ui/issues/3771 -- examples don't work
             example:
               $ref: api/docs/examples/dataset_post_request.json
       responses:
