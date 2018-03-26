@@ -25,6 +25,26 @@ paths:
             application/json:
               $ref: api/docs/examples/root.json
 
+# --- test for bearer authentication ---
+  /test:
+    get:
+      security:
+        - bearerAuth: []
+      summary: test out the bearer authentication
+      responses:
+        '200':
+          description: a welcome message if successful
+          content:
+            application/json:
+              schema:
+                properties:
+                  message:
+                    type: string
+                    example: "Welcome Brenda Ngrulu"
+                  user_id:
+                    type: integer
+                    example: 10
+
 # --- datasets uris ---
   /datasets:
     get:
