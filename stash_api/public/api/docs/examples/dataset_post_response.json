@@ -1,0 +1,39 @@
+{
+  "_links": {
+    "self": {
+      "href": "/api/datasets/doi%3A10.5072%2FFK2QV3KZ2K"
+    },
+    "stash:versions": {
+      "href": "/api/datasets/doi%3A10.5072%2FFK2QV3KZ2K/versions"
+    },
+    "stash:version": {
+      "href": "/api/versions/302"
+    },
+    "curies": [
+      {
+        "name": "stash",
+        "href": "https://github.com/CDLUC3/stash/blob/development/stash_api/link-relations.md#{rel}",
+        "templated": "true"
+      }
+    ]
+  },
+  "id": "doi:10.5072/FK2QV3KZ2K",
+  "title": "A Study of Red-Black Trees with Weight",
+  "authors": [
+    {
+      "firstName": "Scott",
+      "lastName": "Fisher",
+      "email": "Scott.Fisher@ucop.edu",
+      "affiliation": "UC Office of the President"
+    },
+    {
+      "firstName": "Norah",
+      "lastName": "Moraga",
+      "email": "Norah.Moraga@example.com",
+      "affiliation": "UC Davis"
+    }
+  ],
+  "abstract": "<p>Information theorists agree that \"fuzzy\" models are an interesting new topic in the field of machine learning, and hackers worldwide concur. In fact, few electrical engineers would disagree with the emulation of replication, which embodies the compelling principles of cryptoanalysis. Weight, our new method for journaling file systems, is the solution to all of these grand challenges.</p>\r\n",
+  "versionNumber": 1,
+  "versionStatus": "in_progress"
+}

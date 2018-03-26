@@ -39,6 +39,29 @@ paths:
           examples:
             application/json:
               $ref: api/docs/examples/datasets.json
+    post:
+      security:
+        - bearerAuth: []
+      summary: start a new dataset, requires oauth bearer token
+      requestBody:
+        description: json needed for creating a new dataset
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/simple_dc_metadata'
+            example:
+              $ref: api/docs/examples/dataset_post_request.json
+      responses:
+        '201':
+          description: response showing dataset info that has been saved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/datasets'
+          examples:
+            application/json:
+              $ref: api/docs/examples/dataset_post_response.json
 
   '/datasets/{doi}':
     get:
@@ -169,6 +192,9 @@ components:
               type: number
         - $ref: '#/components/schemas/version'
 
+    dataset_post:
+      $ref: '#/components/schemas/simple_version'
+
     dataset_links:
       properties:
         _links:
@@ -238,6 +264,10 @@ components:
           items:
             $ref: '#/components/schemas/hal_curie'
 
+    simple_version:
+      allOf:
+        - $ref: '#/components/schemas/dc_metadata'
+
 # --- file(s) ---
 
     # plural
@@ -293,6 +323,21 @@ components:
           items:
             $ref: '#/components/schemas/hal_curie'
 
+    simple_dc_metadata:
+      type: object
+      properties:
+        title:
+          type: string
+        authors:
+          type: array
+          items:
+            $ref: '#/components/schemas/simple_author'
+        abstract:
+          type: string
+        required:
+          - title
+          - authors
+          - abstract
 
     dc_metadata:
       type: object
@@ -342,7 +387,16 @@ components:
           type: string
         orcid:
           type: string
-
+    simple_author:
+      properties:
+        firstName:
+          type: string
+        lastName:
+          type: string
+        email:
+          type: string
+        affiliation:
+          type: string
     funder:
       properties:
         organization:
@@ -484,3 +538,9 @@ components:
                 - $ref: '#/components/schemas/hal_self_link'
                 - $ref: '#/components/schemas/hal_page_links'
         - $ref: '#/components/schemas/paging_counts'
+
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
