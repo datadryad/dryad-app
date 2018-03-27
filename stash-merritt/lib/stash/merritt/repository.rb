@@ -1,7 +1,6 @@
 require 'stash/repo'
 require 'stash/merritt/submission_job'
 require 'erb'
-require 'byebug'
 
 module Stash
   module Merritt
