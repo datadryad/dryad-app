@@ -5,15 +5,24 @@ require 'rspec/core'
 require 'rspec/core/rake_task'
 
 namespace :spec do
-  desc 'Run all unit tests'
-  RSpec::Core::RakeTask.new(:unit) do |task|
+  desc 'Run all model tests'
+  RSpec::Core::RakeTask.new(:models) do |task|
     task.rspec_opts = %w[--color --format documentation --order default]
-    task.pattern = 'unit/**/*_spec.rb'
+    task.pattern = 'models/**/*_spec.rb'
   end
 end
 
-desc 'Run all tests'
-task spec: %w[spec:unit]
+# ------------------------------------------------------------
+# Coverage
+
+desc 'Run all unit tests with coverage'
+task :coverage do
+  ENV['COVERAGE'] = 'true'
+  Rake::Task['spec:models'].execute
+end
+
+# desc 'Run all tests'
+# task spec: %w[spec:unit]
 
 # APP_RAKEFILE = File.expand_path("../spec/dummy/Rakefile", __FILE__)
 # load 'rails/tasks/engine.rake'
@@ -28,4 +37,4 @@ RuboCop::RakeTask.new
 # Defaults
 
 desc 'Run unit & database tests, check test coverage, check code style'
-task default: %i[rubocop]
+task default: %i[coverage rubocop]
