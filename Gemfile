@@ -26,7 +26,7 @@ gem 'capistrano', '~> 3.4.1'
 gem 'capistrano-passenger'
 gem 'capistrano-rails', '~> 1.1'
 gem 'passenger'
-gem 'rubocop', '~> 0.49'
+gem 'rubocop', '~> 0.52.1'
 
 # ############################################################
 # UI
