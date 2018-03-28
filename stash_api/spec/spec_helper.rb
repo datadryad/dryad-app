@@ -1,5 +1,4 @@
-# require 'rspec/rails'
-# require 'rails/all'
+require 'byebug'
 # ------------------------------------------------------------
 # Rspec configuration
 
@@ -27,10 +26,12 @@ require 'stash_api'
 APP_CONFIG = OpenStruct.new(YAML.load_file(File.expand_path('../config/app_config.yml', __FILE__))['test'])
 
 ENGINE_PATH = Gem::Specification.find_by_name('stash_api').gem_dir
+
+# need to fix this so it loads first before other things inheriting from it
 %W[
-#{ENGINE_PATH}/app/models/stash_api/version/metadata
-  #{ENGINE_PATH}/app/models/stash_api/version
   #{ENGINE_PATH}/app/models/stash_api
+  #{ENGINE_PATH}/app/models/stash_api/version
+  #{ENGINE_PATH}/app/models/stash_api/version/metadata
 ].each do |path|
   $LOAD_PATH.unshift(path) if File.directory?(path)
   Dir.glob("#{path}/**/*.rb").sort.each(&method(:require))
