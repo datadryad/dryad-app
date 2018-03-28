@@ -1,4 +1,5 @@
 require 'byebug'
+require 'rails/all'
 # ------------------------------------------------------------
 # Rspec configuration
 
@@ -20,7 +21,8 @@ end
 # Stash
 
 ENV['STASH_ENV'] = 'test'
-
+# require 'stash_engine'
+# require 'stash_datacite'
 require 'stash_api'
 
 APP_CONFIG = OpenStruct.new(YAML.load_file(File.expand_path('../config/app_config.yml', __FILE__))['test'])
@@ -38,7 +40,6 @@ ENGINE_PATH = Gem::Specification.find_by_name('stash_api').gem_dir
 end
 
 %w[
-  doorkeeper
   monkey_patches
 ].each do |initializer|
   require "#{ENGINE_PATH}/config/initializers/#{initializer}.rb"
@@ -51,4 +52,3 @@ ActiveRecord::Base.raise_in_transactional_callbacks = true
 # Mocks
 
 # require 'mocks/mock_repository'
-
