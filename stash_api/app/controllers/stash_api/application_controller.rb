@@ -45,5 +45,17 @@ module StashApi
       render json: { error: 'not-found' }.to_json, status: 404 if @stash_files.count < 1
     end
 
+    def require_api_user
+      @user = doorkeeper_token.application.owner if doorkeeper_token
+      render json: { error: 'Unauthorized, must have current bearer token' }.to_json, status: 401 if @user.blank?
+    end
+
+    def require_in_progress_resource
+      unless @stash_identifier.in_progress?
+        render json: { error: 'You must have an in_progress version to perform this operation' }.to_json, status: 403
+      end
+      @resource = @stash_identifier.in_progress_resource
+    end
+
   end
 end

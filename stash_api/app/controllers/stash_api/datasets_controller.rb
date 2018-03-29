@@ -6,7 +6,8 @@ module StashApi
   class DatasetsController < ApplicationController
 
     before_action -> { require_stash_identifier(doi: params[:id]) }, only: %i[show download]
-    before_action -> { doorkeeper_authorize! }, only: :create
+    before_action :doorkeeper_authorize!, only: :create
+    before_action :require_api_user, only: :create
 
     # rubocop:disable Metrics/AbcSize
     # get /datasets/<id>
@@ -24,10 +25,9 @@ module StashApi
 
     # post /datasets
     def create
-      user = doorkeeper_token.application.owner
       respond_to do |format|
         format.json do
-          dp = DatasetParser.new(hash: params['dataset'], id: nil, user: user)
+          dp = DatasetParser.new(hash: params['dataset'], id: nil, user: @user)
           @stash_identifier = dp.parse
           ds = Dataset.new(identifier: @stash_identifier.to_s)
           render json: ds.metadata, status: 201
