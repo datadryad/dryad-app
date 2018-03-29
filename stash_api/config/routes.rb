@@ -15,4 +15,6 @@ StashApi::Engine.routes.draw do
       end
     end
   end
+  # this one doesn't follow the pattern since it gloms filename on the end, so manual route
+  post 'datasets/:id/files/:filename', id: /[^\s\/]+?/, filename: /[^\s\/]+?/, to: 'files#create', as: 'dataset_file', format: false
 end
