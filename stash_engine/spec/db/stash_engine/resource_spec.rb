@@ -32,6 +32,48 @@ module StashEngine
       end
     end
 
+    describe :can_edit do
+      it 'returns false if editing by someone else' do
+        identifier = Identifier.create(identifier: 'cat/dog', identifier_type: 'DOI')
+        resource = Resource.create(user_id: user.id, identifier_id: identifier.id, current_editor_id: @user.id + 1, tenant_id: 'ucop')
+        ResourceState.create(user_id: @user.id + 1, resource_state: 'in_progress', resource_id: resource.id)
+        User.create(uid: 't-ucop@ucop.edu',
+                    first_name: 'L',
+                    last_name: 'Mu',
+                    email: 'lm@ucop.edu',
+                    provider: 'developer',
+                    tenant_id: 'ucop',
+                    role: 'user')
+        expect(resource.can_edit?(user: @user)).to eq(false)
+      end
+    end
+
+    describe :permission_to_edit do
+      it 'returns false if not owner' do
+        resource = Resource.create(user_id: @user.id + 1, tenant_id: 'ucb')
+        expect(resource.permission_to_edit?(user: @user)).to eq(false)
+      end
+
+      it 'returns true if superuser' do
+        resource = Resource.create(user_id: @user.id + 1, tenant_id: 'ucb')
+        @user.role = 'superuser'
+        expect(resource.permission_to_edit?(user: @user)).to eq(true)
+      end
+
+      it 'returns false if admin for different tenant' do
+        resource = Resource.create(user_id: @user.id + 1, tenant_id: 'ucb')
+        @user.role = 'admin'
+        expect(resource.permission_to_edit?(user: @user)).to eq(false)
+      end
+
+      it 'returns true if admin for same tenant' do
+        resource = Resource.create(user_id: @user.id + 1, tenant_id: 'ucop')
+        @user.role = 'admin'
+        expect(resource.permission_to_edit?(user: @user)).to eq(true)
+      end
+
+    end
+
     describe :tenant_id do
       it 'returns the user tenant ID' do
         resource = Resource.create(tenant_id: 'ucop')

@@ -33,7 +33,6 @@ LICENSES = YAML.load_file(File.expand_path('../config/licenses.yml', __FILE__)).
 APP_CONFIG = OpenStruct.new(YAML.load_file(File.expand_path('../config/app_config.yml', __FILE__))['test'])
 
 ENGINE_PATH = Gem::Specification.find_by_name('stash_engine').gem_dir
-require ''
 %W[
   #{ENGINE_PATH}/app/models/stash_engine/concerns
   #{ENGINE_PATH}/app/models/stash_engine
