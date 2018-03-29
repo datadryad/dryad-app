@@ -323,6 +323,21 @@ module StashEngine
       Tenant.find(tenant_id)
     end
 
+    # -----------------------------------------------------------
+    # Permissions
+
+    # can edit means they are not locked out because edits in progress and have permission
+    def can_edit?(user:)
+      permission_to_edit?(user: user) && (dataset_in_progress_editor.id == user.id || user.superuser?)
+    end
+
+    # have the permission to edit
+    def permission_to_edit?(user:)
+      return false unless user
+      # superuser, dataset owner or admin for the same tenant
+      user.superuser? || user_id == user.id || (user.tenant_id == tenant_id && user.role == 'admin')
+    end
+
     # ------------------------------------------------------------
     # Usage and statistics
 

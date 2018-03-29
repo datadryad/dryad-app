@@ -88,7 +88,8 @@ module StashEngine
     # TODO: modify all code that calculates the target to use this method if possible/feasible.
     def target
       return @target unless @target.blank?
-      tenant = last_submitted_resource.tenant
+      r = resources.by_version_desc.first
+      tenant = r.tenant
       @target = tenant.full_url(StashEngine::Engine.routes.url_helpers.show_path(to_s))
     end
   end
