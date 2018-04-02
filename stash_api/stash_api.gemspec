@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-$LOAD_PATH.push File.expand_path('../lib', __FILE__)
+$LOAD_PATH.push ::File.expand_path('../lib', __FILE__)
 
 # Maintain your gem's version:
 require 'stash_api/version'
@@ -22,7 +22,7 @@ Gem::Specification.new do |s|
   s.homepage = URI::HTTP.build(host: origin_uri.host, path: origin_uri.path.chomp('.git')).to_s
 
   s.files         = `git ls-files -z`.split("\x0")
-  s.executables   = s.files.grep(%r{^bin/}) { |f| File.basename(f) }
+  s.executables   = s.files.grep(%r{^bin/}) { |f| ::File.basename(f) }
 
   s.test_files    = s.files.grep(%r{^(test|spec|features)/})
   s.require_paths = ['lib']

@@ -140,6 +140,11 @@ module StashEngine
       file_uploads.where(file_state: %w[copied created]).sum(:upload_file_size)
     end
 
+    # just the size of the new files
+    def new_size
+      file_uploads.where(file_state: %w[created]).sum(:upload_file_size)
+    end
+
     # returns the upload type either :files, :manifest, :unknown (unknown if no files are started for this version yet)
     def upload_type
       return :manifest if file_uploads.newly_created.url_submission.count > 0
