@@ -112,6 +112,31 @@ paths:
             application/json:
               $ref: api/docs/examples/versions.json
 
+# --- upload a file in body with filename in url ---
+  '/datasets/{doi}/files/{filename}':
+    put:
+      security:
+        - bearerAuth: []
+      requestBody:
+        description: a binary file with content-type set
+        required: true
+        content:
+          "*/*":
+            schema:
+              type: string
+              format: binary
+      summary: upload a file for an in-progress dataset
+      responses:
+        '201':
+          description: file was created on the server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/file'
+          examples:
+            application/json:
+              $ref: api/docs/examples/file.json
+
 # --- versions uris ---
   '/versions/{id}':
     get:
@@ -150,9 +175,9 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/file'
-              examples:
-                application/json:
-                  $ref: api/docs/examples/file.json
+          examples:
+            application/json:
+              $ref: api/docs/examples/file.json
 
 # ------------------
 # --- components ---
