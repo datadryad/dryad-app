@@ -48,7 +48,7 @@ module StashDatacite
 
       # size is the size of the whole dataset, all versions
       def size
-        return 0 if @resource.identifier_id.blank?
+        return 0 if @resource.identifier.nil?
         @resource.identifier.storage_size || 0
       end
 
