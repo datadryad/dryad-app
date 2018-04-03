@@ -13,10 +13,10 @@ module StashApi
     before_action -> { require_resource_id(resource_id: params[:version_id]) }, only: [:index]
     before_action -> { require_file_id(file_id: params[:id]) }, only: [:show]
 
-    before_action -> { require_stash_identifier(doi: params[:id]) }, only: %i[create]
-    before_action :doorkeeper_authorize!, only: :create
-    before_action :require_api_user, only: :create
-    before_action :require_in_progress_resource, only: :create
+    before_action -> { require_stash_identifier(doi: params[:id]) }, only: %i[update]
+    before_action :doorkeeper_authorize!, only: :update
+    before_action :require_api_user, only: :update
+    before_action :require_in_progress_resource, only: :update
 
     # GET /files/<id>
     def show
@@ -37,7 +37,7 @@ module StashApi
     end
 
     # POST /versions/<version-id>/files/<encoded file name>
-    def create
+    def update
       # lots of checks and setup before creating the file (also see the before_actions above)
       pre_upload_checks { return }
       ::File.open(@file_path, 'wb') do |output_stream|
