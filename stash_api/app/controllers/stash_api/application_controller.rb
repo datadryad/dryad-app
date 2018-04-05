@@ -57,5 +57,14 @@ module StashApi
       @resource = @stash_identifier.in_progress_resource
     end
 
+    # call this like return_error(messages: 'blah', status: 400) { yield }
+    def return_error(messages:, status:)
+      if messages.class == String
+        (render json: { error: message }.to_json, status: status) && yield
+      elsif messages.class == Array
+        (render json: messages.map { |e| { error: e } }.to_json, status: status) && yield
+      end
+    end
+
   end
 end
