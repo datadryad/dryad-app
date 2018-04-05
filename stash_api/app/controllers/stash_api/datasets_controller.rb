@@ -1,9 +1,12 @@
 # frozen_string_literal: true
 
 require_dependency 'stash_api/application_controller'
+require_relative 'datasets/submission_mixin'
 
 module StashApi
   class DatasetsController < ApplicationController
+
+    include SubmissionMixin
 
     before_action -> { require_stash_identifier(doi: params[:id]) }, only: %i[show download update]
     before_action :doorkeeper_authorize!, only: %i[create update]
@@ -50,7 +53,7 @@ module StashApi
     # PUT will be to update/replace the dataset metadata
     # put/patch /datasets/<id>
     def update
-      do_patch { return } #check if patch and do that and return if it is
+      do_patch { return } # check if patch and do that and return if it is
     end
 
     # get /datasets/<id>/download
@@ -71,37 +74,12 @@ module StashApi
       return unless request.headers['content-type'] == 'application/json-patch+json' # if not a json-patch then try the update, not patch
       check_patch_prerequisites { yield }
       check_dataset_completions { yield }
-
+      pre_submission_updates
+      StashEngine.repository.submit(resource_id: @resource.id)
+      # render something
+      ds = Dataset.new(identifier: @stash_identifier.to_s)
+      render json: ds.metadata, status: 202
       yield
-    end
-
-    def check_patch_prerequisites
-      begin
-        @json = JSON.parse(request.raw_post)
-      rescue JSON::ParserError => ex
-        (render json: { error: 'You must send a json patch request with a valid JSON operation to publish this dataset' }.to_json,
-               status: 400) && yield
-      end
-      if @json.length != 1 || @json.first['op'] != 'replace' || @json.first['path'] != '/versionStatus' || @json.first['value'] != 'submitted'
-        (render json: { error: "You must issue a json operation of 'replace', path: '/versionStatus', value: 'submitted' to publish." }.to_json,
-               status: 400) && yield
-      end
-    end
-
-    def check_dataset_completions
-      completions = StashDatacite::Resource::Completions.new(@resource)
-      errors = completions.all_warnings
-      if @resource.new_size > @resource.tenant.max_total_version_size && @resource.size > @resource.tenant.max_submission_size
-        errors.push('The files for this dataset are larger than the allowed version or total object size')
-      end
-      if errors.length.positive?
-        (render json: errors.map{|e| { error: e } }.to_json,
-                status: 403) && yield
-      end
-    end
-
-    def valid_patch_prerequisites
-
     end
 
     def all_datasets
