@@ -28,6 +28,7 @@ module StashApi
       id_type, id_text = my_id.split(':', 2)
       ident = StashEngine::Identifier.create(identifier: id_text, identifier_type: id_type.upcase)
       ident.resources << @resource
+      add_default_values # for license, publisher, resource type
     end
 
     def add_author(json_author: author)
@@ -38,6 +39,30 @@ module StashApi
         resource_id: @resource.id
       )
       a.affiliation_by_name(json_author[:affiliation]) unless json_author[:affiliation].blank?
+    end
+
+    # certain things need setting up on initialization based on tenant
+    def add_default_values
+      ensure_license
+      ensure_publisher
+      ensure_resource_type
+    end
+
+    def ensure_license
+      return unless @resource.rights.blank?
+      license = StashEngine::License.by_id(@resource.tenant.default_license)
+      @resource.rights.create(rights: license[:name], rights_uri: license[:uri])
+    end
+
+    def ensure_publisher
+      return unless @resource.publisher.blank?
+      publisher = StashDatacite::Publisher.where(resource_id: @resource.id).first
+      StashDatacite::Publisher.create(publisher: @resource.tenant.short_name, resource_id: @resource.id)
+    end
+
+    def ensure_resource_type
+      return unless @resource.resource_type.blank?
+      StashDatacite::ResourceType.create(resource_type_general: 'dataset', resource_type: 'dataset', resource_id: @resource.id)
     end
 
   end
