@@ -59,7 +59,7 @@ You should see a 200 response and some information something like:
 
 {"message" => "Welcome application owner &lt;name&gt;", "user_id" => &lt;number&gt;}
 
-##Create a new in-progress dataset
+## Create a new in-progress dataset
 
 The first real step is to create a new in-progress dataset.  Currently, only minimal required DataCite metadata is supported and fuller support will be added soon.  See the example below for example metadata supported.
 
