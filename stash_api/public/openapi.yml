@@ -97,6 +97,29 @@ paths:
           examples:
             application/json:
               $ref: api/docs/examples/dataset.json
+    patch:
+      security:
+        - bearerAuth: []
+      summary: update the versionStatus to submitted to indicate a submission
+      requestBody:
+        description: json for patching the versionStatus to a 'submitted' state
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/dataset_submission'
+      responses:
+        '202':
+          description: Submission taking place, watch the dataset versionStatus for changes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dataset'
+          examples:
+            application/json:
+              $ref: api/docs/examples/dataset.json
 
   '/datasets/{doi}/versions':
     get:
@@ -111,31 +134,6 @@ paths:
           examples:
             application/json:
               $ref: api/docs/examples/versions.json
-
-# --- upload a file in body with filename in url ---
-  '/datasets/{doi}/files/{filename}':
-    put:
-      security:
-        - bearerAuth: []
-      requestBody:
-        description: a binary file with content-type set
-        required: true
-        content:
-          "*/*":
-            schema:
-              type: string
-              format: binary
-      summary: upload a file for an in-progress dataset
-      responses:
-        '201':
-          description: file was created on the server
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/file'
-          examples:
-            application/json:
-              $ref: api/docs/examples/file.json
 
 # --- versions uris ---
   '/versions/{id}':
@@ -171,6 +169,31 @@ paths:
       responses:
         '200':
           description: A single file
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/file'
+          examples:
+            application/json:
+              $ref: api/docs/examples/file.json
+
+  # --- upload a file in body with filename in url ---
+  '/datasets/{doi}/files/{filename}':
+    put:
+      security:
+        - bearerAuth: []
+      requestBody:
+        description: a binary file with content-type set
+        required: true
+        content:
+          "*/*":
+            schema:
+              type: string
+              format: binary
+      summary: upload a file for an in-progress dataset
+      responses:
+        '201':
+          description: file was created on the server
           content:
             application/json:
               schema:
@@ -238,9 +261,6 @@ components:
               type: number
         - $ref: '#/components/schemas/version'
 
-    dataset_post:
-      $ref: '#/components/schemas/simple_version'
-
     dataset_links:
       properties:
         _links:
@@ -260,6 +280,21 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/hal_curie'
+
+    dataset_submission:
+      properties:
+        op:
+          type: string
+          enum: ['replace']
+          example: replace
+        path:
+          type: string
+          enum: ['/versionStatus']
+          example: "/versionStatus"
+        value:
+          type: string
+          enum: ['submitted']
+          example: submitted
 
 # --- Version(s) ---
     # plural
