@@ -97,6 +97,30 @@ paths:
           examples:
             application/json:
               $ref: api/docs/examples/dataset.json
+    put:
+      security:
+        - bearerAuth: []
+      summary: update metadata for in-progress dataset, requires oauth bearer token
+      requestBody:
+        description: "json needed for updating a new dataset: example doesn't show because OpenAPI is broken it seems"
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/simple_dc_metadata'
+            # https://github.com/swagger-api/swagger-ui/issues/3771 -- examples don't work
+            example:
+              $ref: api/docs/examples/dataset_post_request.json
+      responses:
+        '200':
+          description: response showing dataset info that has been saved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/datasets'
+          examples:
+            application/json:
+              $ref: api/docs/examples/dataset_post_response.json
     patch:
       security:
         - bearerAuth: []
