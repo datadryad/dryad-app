@@ -4,6 +4,7 @@ source 'https://rubygems.org'
 gemspec
 
 gem 'byebug', group: %i[development test]
+gem 'mysql2', '< 0.5x', '>= 0.3.13'
 gem 'parallel_tests', group: %i[development test]
 
 path '..' do

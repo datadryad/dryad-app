@@ -2,5 +2,7 @@ source 'https://rubygems.org'
 
 gemspec
 
+gem 'mysql2', '< 0.5x', '>= 0.3.13'
+
 gem 'sortable-table', '~> 0.1'
 gem 'stash-sword', path: '../stash-sword'
