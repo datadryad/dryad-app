@@ -53,7 +53,16 @@ module StashApi
     # PUT will be to update/replace the dataset metadata
     # put/patch /datasets/<id>
     def update
-      do_patch { return } # check if patch and do that and return if it is
+      do_patch { return } # check if patch and do that and return early if it is a patch (submission)
+      # otherwise this is a PUT of the dataset metadata
+      respond_to do |format|
+        format.json do
+          dp = DatasetParser.new(hash: params['dataset'], id: @resource.identifier, user: @user)
+          @stash_identifier = dp.parse
+          ds = Dataset.new(identifier: @stash_identifier.to_s) # sets up display objects
+          render json: ds.metadata, status: 200
+        end
+      end
     end
 
     # get /datasets/<id>/download
