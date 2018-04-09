@@ -5,11 +5,16 @@ module StashApi
       @hash = hash
       @id = id
       @user = user
-      @resource = nil
+      @resource = @id.in_progress_resource
+      @previous_orcids = {}
     end
 
     def parse
-      create_dataset if @resource.nil?
+      if @resource.nil?
+        create_dataset
+      else
+        clear_previous_metadata
+      end
       @resource.update(title: @hash['title'])
       # probably want to clear and re-add authors for data updates
       @hash[:authors].each { |author| add_author(json_author: author) }
@@ -18,6 +23,13 @@ module StashApi
     end
 
     private
+
+    def clear_previous_metadata
+      @resource.update(title: '')
+      @resource.authors.each { |au| @previous_orcids["#{au.author_first_name} #{au.author_last_name}"] = au.author_orcid }
+      @resource.authors.destroy_all
+      @resource.descriptions.type_abstract.destroy_all
+    end
 
     def create_dataset
       @resource = StashEngine::Resource.create(
@@ -36,6 +48,7 @@ module StashApi
         author_first_name: json_author[:firstName],
         author_last_name: json_author[:lastName],
         author_email: json_author[:email],
+        author_orcid: @previous_orcids["#{json_author[:firstName]} #{json_author[:lastName]}"],
         resource_id: @resource.id
       )
       a.affiliation_by_name(json_author[:affiliation]) unless json_author[:affiliation].blank?
