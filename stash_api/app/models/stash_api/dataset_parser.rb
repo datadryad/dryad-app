@@ -5,7 +5,7 @@ module StashApi
       @hash = hash
       @id = id
       @user = user
-      @resource = @id.in_progress_resource
+      @resource = @id.in_progress_resource if @id
       @previous_orcids = {}
     end
 
