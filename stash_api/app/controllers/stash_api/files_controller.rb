@@ -67,7 +67,7 @@ module StashApi
     def setup_file_path
       @file_path = ::File.expand_path(params[:filename], @resource.upload_dir)
       (render json: { error: 'No file shenanigans' }.to_json, status: 403) && yield unless @file_path.start_with?(@resource.upload_dir)
-      FileUtils.mkdir_p(File.dirname(@file_path))
+      FileUtils.mkdir_p(::File.dirname(@file_path))
     end
 
     # rubocop:disable Metrics/AbcSize
