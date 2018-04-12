@@ -11,7 +11,8 @@ module StashApi
     before_action -> { require_stash_identifier(doi: params[:id]) }, only: %i[show download update]
     before_action :doorkeeper_authorize!, only: %i[create update]
     before_action :require_api_user, only: %i[create update]
-    before_action :require_in_progress_resource, only: :update
+    before_action :set_last_resource, only: :update
+    # before_action :require_in_progress_resource, only: :update
     before_action :require_permission, only: :update
 
     # rubocop:disable Metrics/AbcSize
@@ -54,7 +55,7 @@ module StashApi
     # PUT will be to update/replace the dataset metadata
     # put/patch /datasets/<id>
     def update
-      do_patch { return } # check if patch and do that and return early if it is a patch (submission)
+      do_patch { return } # check if patch and do submission and return early if it is a patch (submission)
       # otherwise this is a PUT of the dataset metadata
       respond_to do |format|
         format.json do
@@ -80,8 +81,8 @@ module StashApi
 
     private
 
-    def do_patch
-      return unless request.method == 'PATCH' && request.headers['content-type'] == 'application/json-patch+json' # if not a json-patch then try the update, not patch
+    def do_patch # rubocop:disable Metrics/AbcSize
+      return unless request.method == 'PATCH' && request.headers['content-type'] == 'application/json-patch+json'
       check_patch_prerequisites { yield }
       check_dataset_completions { yield }
       pre_submission_updates
