@@ -35,6 +35,10 @@ module StashApi
       render json: { error: 'not-found' }.to_json, status: 404 if @stash_identifier.blank?
     end
 
+    def set_last_resource
+      @resource = @stash_identifier.resources.by_version_desc.first
+    end
+
     def require_resource_id(resource_id:)
       @stash_resources = StashEngine::Resource.where(id: resource_id)
       render json: { error: 'not-found' }.to_json, status: 404 if @stash_resources.count < 1
@@ -65,7 +69,7 @@ module StashApi
     # call this like return_error(messages: 'blah', status: 400) { yield }
     def return_error(messages:, status:)
       if messages.class == String
-        (render json: { error: message }.to_json, status: status) && yield
+        (render json: { error: messages }.to_json, status: status) && yield
       elsif messages.class == Array
         (render json: messages.map { |e| { error: e } }.to_json, status: status) && yield
       end

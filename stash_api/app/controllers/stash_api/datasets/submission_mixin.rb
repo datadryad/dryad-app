@@ -3,6 +3,7 @@ module SubmissionMixin
   private
 
   def check_patch_prerequisites # rubocop:disable Metrics/AbcSize
+    ensure_in_progress { yield }
     begin
       @json = JSON.parse(request.raw_post)
     rescue JSON::ParserError
@@ -11,6 +12,11 @@ module SubmissionMixin
     return if @json.length == 1 && @json.first['op'] == 'replace' && @json.first['path'] == '/versionStatus' && @json.first['value'] == 'submitted'
     return_error(messages: "You must issue a json operation of 'replace', path: '/versionStatus', value: 'submitted' to publish.",
                  status: 400) { yield }
+  end
+
+  def ensure_in_progress
+    return if @stash_identifier.in_progress?
+    return_error(messages: 'You must have an in_progress version to perform this operation', status: 400) { yield }
   end
 
   def check_dataset_completions # rubocop:disable Metrics/AbcSize
