@@ -17,6 +17,7 @@ module StashApi
     before_action :doorkeeper_authorize!, only: :update
     before_action :require_api_user, only: :update
     before_action :require_in_progress_resource, only: :update
+    before_action :require_permission, only: :update
 
     # GET /files/<id>
     def show

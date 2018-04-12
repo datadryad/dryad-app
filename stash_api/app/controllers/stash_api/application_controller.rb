@@ -57,6 +57,11 @@ module StashApi
       @resource = @stash_identifier.in_progress_resource
     end
 
+    # based on user and resource set in "require_api_user" and 'require_resource_in_progress'
+    def require_permission
+      render json: { error: 'unauthorized' }.to_json, status: 401 unless @resource.can_edit?(user: @user)
+    end
+
     # call this like return_error(messages: 'blah', status: 400) { yield }
     def return_error(messages:, status:)
       if messages.class == String
