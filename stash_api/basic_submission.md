@@ -65,6 +65,13 @@ The first real step is to create a new in-progress dataset.  Currently, only min
 
 After a successful dataset POST, you should see the dataset created with your metadata, an id (DOI identifier) and a versionStatus of 'in_progress'
 
+For the cURL example, create a file called my_metadata.json that contains your json for the descriptive metadata to send with cURL.
+
+```bash
+curl --data "@my_metadata.json" -i -X POST https://<domain-name>/api/datasets -H "Authorization: Bearer <token>" -H "Content-Type: application/json"
+```
+Or
+
 ```ruby
 # the Ruby example builds on previous examples and assumes those previous variables are defined
 metadata_hash =
@@ -100,6 +107,12 @@ doi_encoded = CGI.escape(doi)
 Find a file on your file system to upload, get its path and determine its Content-Type.  You would send it to the server like the example below by changing the file\_path and content\_type values.
 
 You may upload multiple files for your dataset.
+
+```bash
+curl --data-binary "@</path/to/my/file>" -i -X PUT "https://<domain-name>/api/datasets/<encoded-doi>/files/<encoded-file-name>" -H "Authorization: Bearer <token>" -H "Content-Type: <mime-type>" -H "Accept: application/json"
+```
+
+Or
 
 ```ruby
 # The Ruby example builds on previous examples and assumes those previous variables are defined
@@ -139,6 +152,13 @@ Publication is accomplished by sending a PATCH request to /api/datasets/&lt;enco
 ]
 ```
 You also need to set the Content-Type header to 'application/json-patch+json'
+
+For the cURL example, please save a file called my_patch.json with the patch content shown above.
+
+```bash
+curl --data "@my_patch.json" -i -X PATCH "https://<domain-name>/api/datasets/<encoded-doi>" -H "Authorization: Bearer <token>" -H "Content-Type: application/json-patch+json" -H "Accept: application/json"
+```
+Or
 
 ```ruby
 # The Ruby example builds on previous examples and assumes those previous variables are defined
