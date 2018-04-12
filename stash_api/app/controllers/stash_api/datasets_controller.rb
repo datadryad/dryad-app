@@ -57,6 +57,7 @@ module StashApi
     def update
       do_patch { return } # check if patch and do submission and return early if it is a patch (submission)
       # otherwise this is a PUT of the dataset metadata
+      check_status { return } # check it's in progress, clone a submitted or raise an error
       respond_to do |format|
         format.json do
           dp = DatasetParser.new(hash: params['dataset'], id: @resource.identifier, user: @user)
@@ -91,6 +92,20 @@ module StashApi
       ds = Dataset.new(identifier: @stash_identifier.to_s)
       render json: ds.metadata, status: 202
       yield
+    end
+
+    def check_status
+      state = @resource.current_resource_state.try(:resource_state)
+      return if state == 'in_progress'
+      return_error(messages: 'Your dataset cannot be updated now', status: 403) { yield } if state != 'submitted'
+      duplicate_resource # because we're starting a new version
+    end
+
+    def duplicate_resource
+      nr = @resource.amoeba_dup
+      nr.current_editor_id = @user.id
+      nr.save!
+      @resource = nr
     end
 
     def all_datasets
