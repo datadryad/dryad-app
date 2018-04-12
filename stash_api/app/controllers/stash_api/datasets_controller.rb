@@ -12,6 +12,7 @@ module StashApi
     before_action :doorkeeper_authorize!, only: %i[create update]
     before_action :require_api_user, only: %i[create update]
     before_action :require_in_progress_resource, only: :update
+    before_action :require_permission, only: :update
 
     # rubocop:disable Metrics/AbcSize
     # get /datasets/<id>
@@ -80,7 +81,7 @@ module StashApi
     private
 
     def do_patch
-      return unless request.headers['content-type'] == 'application/json-patch+json' # if not a json-patch then try the update, not patch
+      return unless request.method == 'PATCH' && request.headers['content-type'] == 'application/json-patch+json' # if not a json-patch then try the update, not patch
       check_patch_prerequisites { yield }
       check_dataset_completions { yield }
       pre_submission_updates
