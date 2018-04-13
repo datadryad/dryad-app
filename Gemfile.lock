@@ -129,7 +129,6 @@ GEM
       builder (~> 3.2, >= 3.2.2)
       loofah (~> 2.0, >= 2.0.3)
       multi_json (~> 1.12)
-      nokogiri (~> 1.6, >= 1.6.8)
       oj (>= 2.8.3)
       pandoc-ruby (~> 2.0, >= 2.0.0)
       safe_yaml (~> 1.0, >= 1.0.4)
