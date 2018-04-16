@@ -1,6 +1,9 @@
 module StashApi
   # takes a dataset hash, parses it out and saves it to the appropriate places in the database
   class DatasetParser
+
+    TO_PARSE = %w[Funders].freeze
+
     def initialize(hash: nil, id: nil, user:)
       @hash = hash
       @id = id
@@ -9,6 +12,7 @@ module StashApi
       @previous_orcids = {}
     end
 
+    # this is the basic required metadata
     def parse
       if @resource.nil?
         create_dataset
@@ -19,10 +23,17 @@ module StashApi
       # probably want to clear and re-add authors for data updates
       @hash[:authors].each { |author| add_author(json_author: author) }
       StashDatacite::Description.create(description: @hash[:abstract], description_type: 'abstract', resource_id: @resource.id)
+      TO_PARSE.each { |item| dynamic_parse(my_class: item) }
       @resource.identifier
     end
 
     private
+
+    def dynamic_parse(my_class:)
+      c = Object.const_get("StashApi::DatasetParser::#{my_class}")
+      parse_instance = c.new(resource: @resource, hash: @hash)
+      parse_instance.parse
+    end
 
     def clear_previous_metadata
       @resource.update(title: '')
