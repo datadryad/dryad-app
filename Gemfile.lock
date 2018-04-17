@@ -5,7 +5,7 @@ PATH
       cirneco (~> 0.9.16)
       datacite-mapping (~> 0.3)
       ezid-client (~> 1.5)
-      merritt-manifest (~> 0.1, >= 0.1.3)
+      merritt-manifest (~> 0.1, = 0.1.2)
       rest-client (~> 2.0)
       rubyzip (~> 1.1)
       stash-sword
@@ -390,7 +390,7 @@ GEM
       multi_json (~> 1.12)
       nokogiri (~> 1.8.1)
       oj (>= 2.8.3)
-    merritt-manifest (0.1.3)
+    merritt-manifest (0.1.2)
       mime-types (~> 3.1)
       typesafe_enum (~> 0.1.7)
     method_source (0.9.0)
