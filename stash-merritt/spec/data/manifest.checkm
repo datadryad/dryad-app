@@ -6,7 +6,7 @@
 https://stash.example.edu/system/{resource_id}/stash-wrapper.xml | md5 | 17c28364d528eed4805d6b87afa88749 | 9838 |  | stash-wrapper.xml | text/xml
 https://stash.example.edu/system/{resource_id}/mrt-datacite.xml | md5 | cfe0378a6c8990877fa12ea03f27949f | 5724 |  | mrt-datacite.xml | text/xml
 https://stash.example.edu/system/{resource_id}/mrt-oaidc.xml | md5 | d355279abcd705e8cfce43d510532626 | 3050 |  | mrt-oaidc.xml | text/xml
-https://stash.example.edu/system/{resource_id}/mrt-dataone-manifest.txt | md5 | 413ca58f89bfa493a1a388d73d415e9c | 3404 |  | mrt-dataone-manifest.txt | text/plain
+https://stash.example.edu/system/{resource_id}/mrt-dataone-manifest.txt | md5 | e9d8bebd2f87e5a39315a72629dcf2b9 | 3378 |  | mrt-dataone-manifest.txt | text/plain
 https://stash.example.edu/system/{resource_id}/mrt-embargo.txt | md5 | eabcae2cf6a1bb92e0ac0ad78ba0c172 | 20 |  | mrt-embargo.txt | text/plain
 http://example.org/uploads/Laney_300394_Exempt_Determination_Letter.pdf |  |  | 42686 |  | Laney_300394_Exempt_Determination_Letter.pdf
 http://example.org/uploads/Laney_IRBProposal.docx |  |  | 1097848 |  | Laney_IRBProposal.docx
