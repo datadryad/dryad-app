@@ -3,6 +3,8 @@ class LatestController < ApplicationController
   helper StashEngine::ApplicationHelper
   include StashEngine::SharedController
 
+  skip_before_filter :verify_authenticity_token, only: :index
+
   # these were in application controller for sample app
   include Blacklight::Controller
   # this was in the catalog controller of sample app
