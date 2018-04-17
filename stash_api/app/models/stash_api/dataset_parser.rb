@@ -2,7 +2,7 @@ module StashApi
   # takes a dataset hash, parses it out and saves it to the appropriate places in the database
   class DatasetParser
 
-    TO_PARSE = %w[Funders Methods].freeze
+    TO_PARSE = %w[Funders Methods UsageNotes].freeze
 
     def initialize(hash: nil, id: nil, user:)
       @hash = hash
