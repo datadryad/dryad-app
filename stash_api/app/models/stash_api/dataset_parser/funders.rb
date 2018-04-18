@@ -1,11 +1,6 @@
 module StashApi
   class DatasetParser
-    class Funders
-
-      def initialize(resource:, hash:)
-        @resource = resource
-        @hash = hash
-      end
+    class Funders < StashApi::DatasetParser::BaseParser
 
       # funders hash looks like this
       # "funders": [

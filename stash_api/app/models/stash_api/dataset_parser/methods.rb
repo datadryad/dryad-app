@@ -1,11 +1,6 @@
 module StashApi
   class DatasetParser
-    class Methods
-
-      def initialize(resource:, hash:)
-        @resource = resource
-        @hash = hash
-      end
+    class Methods < StashApi::DatasetParser::BaseParser
 
       # methods looks like this
       # "methods": "<p><br>\r\nMany mathematicians would agree that, had it not been for systems," +
