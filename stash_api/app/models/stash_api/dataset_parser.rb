@@ -2,7 +2,7 @@ module StashApi
   # takes a dataset hash, parses it out and saves it to the appropriate places in the database
   class DatasetParser
 
-    TO_PARSE = %w[Funders Methods UsageNotes].freeze
+    TO_PARSE = %w[Funders Methods UsageNotes Keywords].freeze
 
     def initialize(hash: nil, id: nil, user:)
       @hash = hash
@@ -21,7 +21,7 @@ module StashApi
       end
       @resource.update(title: @hash['title'])
       # probably want to clear and re-add authors for data updates
-      @hash[:authors].each { |author| add_author(json_author: author) } if @hash[:authors]
+      @hash[:authors]&.each { |author| add_author(json_author: author) }
       StashDatacite::Description.create(description: @hash[:abstract], description_type: 'abstract', resource_id: @resource.id)
       TO_PARSE.each { |item| dynamic_parse(my_class: item) }
       @resource.identifier
