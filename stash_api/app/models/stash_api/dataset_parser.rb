@@ -21,7 +21,7 @@ module StashApi
       end
       @resource.update(title: @hash['title'])
       # probably want to clear and re-add authors for data updates
-      @hash[:authors].each { |author| add_author(json_author: author) }
+      @hash[:authors].each { |author| add_author(json_author: author) } if @hash[:authors]
       StashDatacite::Description.create(description: @hash[:abstract], description_type: 'abstract', resource_id: @resource.id)
       TO_PARSE.each { |item| dynamic_parse(my_class: item) }
       @resource.identifier
