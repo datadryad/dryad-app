@@ -1,11 +1,6 @@
 module StashApi
   class DatasetParser
-    class Keywords
-
-      def initialize(resource:, hash:)
-        @resource = resource
-        @hash = hash
-      end
+    class Keywords < StashApi::DatasetParser::BaseParser
 
       # keywords looks like this
       # "keywords": [

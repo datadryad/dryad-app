@@ -1,11 +1,6 @@
 module StashApi
   class DatasetParser
-    class UsageNotes
-
-      def initialize(resource:, hash:)
-        @resource = resource
-        @hash = hash
-      end
+    class UsageNotes < StashApi::DatasetParser::BaseParser
 
       # methods looks like this
       # "usageNotes": 'Use carefully and parse results underwater.'
