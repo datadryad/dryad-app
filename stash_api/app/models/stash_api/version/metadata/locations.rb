@@ -2,6 +2,9 @@
 
 require_relative 'metadata_item'
 
+# bigdecimal is crappy and changes to strings https://github.com/rails/rails/issues/25017
+# if we want them to appear like numbers then we have to to_f them.
+
 module StashApi
   class Version
     class Metadata
@@ -29,10 +32,10 @@ module StashApi
           b = geolocation.geolocation_box
           unless b.blank?
             return { box: {
-              'swLongitude': b.sw_longitude,
-              'swLatitude': b.sw_latitude,
-              'neLongitude': b.ne_longitude,
-              'neLatitude': b.ne_latitude
+              'swLongitude': b&.sw_longitude&.to_f,
+              'swLatitude': b&.sw_latitude&.to_f,
+              'neLongitude': b&.ne_longitude&.to_f,
+              'neLatitude': b&.ne_latitude&.to_f
             } }
           end
           nil
@@ -40,7 +43,7 @@ module StashApi
 
         def point(geolocation)
           p = geolocation.geolocation_point
-          return { point: { latitude: p.latitude, longitude: p.longitude } } unless p.blank?
+          return { point: { latitude: p&.latitude&.to_f, longitude: p&.longitude&.to_f } } unless p.blank?
           nil
         end
 
