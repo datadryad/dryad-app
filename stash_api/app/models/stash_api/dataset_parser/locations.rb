@@ -21,6 +21,7 @@ module StashApi
 
       def parse
         clear
+        return if @hash['locations'].blank?
         @hash['locations'].each do |location|
           data_maker(location)
         end

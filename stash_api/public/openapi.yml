@@ -100,7 +100,7 @@ paths:
     put:
       security:
         - bearerAuth: []
-      summary: update metadata for in-progress dataset, requires oauth bearer token
+      summary: update metadata for in-progress dataset or create a new in-progress version, requires oauth bearer token
       requestBody:
         description: "json needed for updating a new dataset: example doesn't show because OpenAPI is broken it seems"
         required: true
