@@ -1,7 +1,7 @@
 # Doing a basic submission and an version update with the Dash API
 The Dash API now enables submission.  For authentication, it uses an OAuth2 client credentials grant (see [A Guide To OAuth 2.0 Grants](https://alexbilbie.com/guide-to-oauth-2-grants/)).
 
-This document gives practical information for working with the API in order to submit a dataset and [fuller API documentation is available](/api/docs/index.html).
+This document gives practical information for working with the API in order to submit a dataset and [fuller API documentation is available](https://dash.ucop.edu/api/docs/index.html).
 
 ## Log in to Dash and request a an application id and secret
 
