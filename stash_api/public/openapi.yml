@@ -69,7 +69,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/simple_dc_metadata'
+              $ref: '#/components/schemas/dc_metadata'
             # https://github.com/swagger-api/swagger-ui/issues/3771 -- examples don't work
             example:
               $ref: api/docs/examples/dataset_post_request.json
@@ -82,7 +82,7 @@ paths:
                 $ref: '#/components/schemas/datasets'
           examples:
             application/json:
-              $ref: api/docs/examples/dataset_post_response.json
+              $ref: api/docs/examples/dataset.json
 
   '/datasets/{doi}':
     get:
@@ -107,7 +107,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/simple_dc_metadata'
+              $ref: '#/components/schemas/dc_metadata'
             # https://github.com/swagger-api/swagger-ui/issues/3771 -- examples don't work
             example:
               $ref: api/docs/examples/dataset_post_request.json
@@ -120,7 +120,7 @@ paths:
                 $ref: '#/components/schemas/datasets'
           examples:
             application/json:
-              $ref: api/docs/examples/dataset_post_response.json
+              $ref: api/docs/examples/dataset.json
     patch:
       security:
         - bearerAuth: []
@@ -427,22 +427,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/hal_curie'
-
-    simple_dc_metadata:
-      type: object
-      properties:
-        title:
-          type: string
-        authors:
-          type: array
-          items:
-            $ref: '#/components/schemas/simple_author'
-        abstract:
-          type: string
-        required:
-          - title
-          - authors
-          - abstract
 
     dc_metadata:
       type: object
