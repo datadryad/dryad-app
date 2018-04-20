@@ -1,5 +1,5 @@
-# Doing a basic submission with the Dash API
-The Dash API now enables basic submission.  More full-featured submission will be coming soon. For authentication, it uses an OAuth2 client credentials grant (see [A Guide To OAuth 2.0 Grants](https://alexbilbie.com/guide-to-oauth-2-grants/)).
+# Doing a basic submission and an version update with the Dash API
+The Dash API now enables basic submission.  For authentication, it uses an OAuth2 client credentials grant (see [A Guide To OAuth 2.0 Grants](https://alexbilbie.com/guide-to-oauth-2-grants/)).
 
 This document gives practical information for working with the API in order to submit a dataset.
 
@@ -99,7 +99,7 @@ return_hash = JSON.parse(resp)
 
 # we'll use the DOI later
 doi = return_hash['id']
-doi_encoded = CGI.escape(doi)
+doi_encoded = URI.escape(doi)
 ```
 
 ## Add data file(s) to your dataset
@@ -125,7 +125,7 @@ Or
 # you may do so.
 
 file_path = '/Users/my_user/Desktop/red_stapler.gif'
-file_name = CGI.escape(File.basename(file_path))
+file_name = URI.escape(File.basename(file_path))
 content_type = 'image/gif'
 
 resp = RestClient.put(
@@ -177,3 +177,97 @@ resp = RestClient.patch(
 
 return_hash = JSON.parse(resp)
 ```
+
+## Revise your metadata in a new version
+
+After you've successfully submitted your dataset and seen the dataset become available ('submitted' value for the versionStatus), you decide to expanded your metadata like the following set.
+
+```ruby
+metadata_hash =
+    {
+        "title": "Visualizing Congestion Control Using Self-Learning Epistemologies",
+        "authors": [
+            {
+                "firstName": "Wanda",
+                "lastName": "Jackson",
+                "email": "wanda.jackson@example.com",
+                "affiliation": "University of the Example"
+            }
+        ],
+        "abstract": "Cyberneticists agree that concurrent models are an interesting new topic in the field of machine learning, and security experts concur.",
+        "funders": [
+            {
+                "organization": "Savannah River Operations Office, U.S. Department of Energy",
+                "awardNumber": "12345"
+            },
+            {
+                "organization": "The Cat Chronicles",
+                "awardNumber": "cat383"
+            }
+        ],
+        'methods': "My cat will help you to discover why you can't get the data to work.",
+        "usageNotes": 'Use carefully and parse results underwater.',
+        "keywords": [
+            "Abnormal bleeding",
+            "Cat",
+            "Host",
+            "Computer",
+            "Log",
+            "Noodlecast",
+            "Intercropping"
+        ],
+        "relatedWorks": [
+            {
+                "relationship": "Cites",
+                "identifierType": "URL",
+                "identifier": "http://example.org/cats"
+            },
+            {
+                "relationship": "isNewVersionOf",
+                "identifierType": "URL",
+                "identifier": "http://thedog.example.org/cats"
+            }],
+        "locations": [
+            {
+                "place": "Grogan's Mill, USA",
+                "point": {
+                    "latitude": "30.130379",
+                    "longitude": "-95.402929"
+                },
+                "box": {
+                    "swLongitude": "-95.527852",
+                    "swLatitude": "30.049326",
+                    "neLongitude": "-95.32743",
+                    "neLatitude": "30.164696"
+                }
+            },
+            {
+                "point": {
+                    "latitude": "37.0",
+                    "longitude": "-122.0"
+                }
+            },
+            {
+                "box": {
+                    "swLongitude": "-122.0",
+                    "swLatitude": "37.0",
+                    "neLongitude": "-121.0",
+                    "neLatitude": "38.0"
+                }
+            }
+        ]
+    }
+```
+
+To modify your dataset you'll do a PUT request to the /datasets/<encoded-doi> URL for this dataset.
+
+```ruby
+# this example continues the ones from above and asumes you already have variables defined
+
+resp = RestClient.put "https://#{domain_name}/api/datasets/#{doi_encoded}", metadata_hash.to_json, headers
+# You will see a 200 response code if all is well.
+```
+
+Once staging is complete and to publish the changes to your dataset, please follow the "Publish your dataset" instructions again from the section above to publish this new version of your dataset.
+
+In addition to changing your metadata, you could've added additional files before re-publishing this updated version of your dataset.
