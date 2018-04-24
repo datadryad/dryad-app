@@ -6,7 +6,7 @@ We have some general reminders and suggestions for publishing your data with Das
 - It is your responsibility to ensure your data are being shared responsibly and ethically. Please be careful of sharing sensitive data and ensure you are complying with institutional and governmental regulations
 - When preparing your complete version of a dataset, remember to collate all relevant explantory documents and metadata. This includes relevant documentation necessary for the re-use and replication of your dataset (e.g., readme.txt files, formal metadata records, or other critical information, etc.)
 
-Dash has a REST API that allows for download and submission of data. Check out our documentation at https://dash.ucop.edu/api/docs/index.html as well as our How-To guide at https://github.com/CDLUC3/stash/blob/development/stash_api/basic_submission.md
+Dash has a REST API that allows for download and submission of data. Check out our [documentation](https://dash.ucop.edu/api/docs/index.html) as well as our [How-To Guide](https://github.com/CDLUC3/stash/blob/development/stash_api/basic_submission.md)
 
 
 ## Metadata
