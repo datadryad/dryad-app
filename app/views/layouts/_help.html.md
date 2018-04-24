@@ -6,6 +6,8 @@ We have some general reminders and suggestions for publishing your data with Das
 - It is your responsibility to ensure your data are being shared responsibly and ethically. Please be careful of sharing sensitive data and ensure you are complying with institutional and governmental regulations
 - When preparing your complete version of a dataset, remember to collate all relevant explantory documents and metadata. This includes relevant documentation necessary for the re-use and replication of your dataset (e.g., readme.txt files, formal metadata records, or other critical information, etc.)
 
+Dash has a REST API that allows for download and submission of data. Check out our documentation at https://dash.ucop.edu/api/docs/index.html as well as our How-To guide at https://github.com/CDLUC3/stash/blob/development/stash_api/basic_submission.md
+
 
 ## Metadata
 Comprehensive data documentation (i.e. metadata) is the key to future understanding of data. Without a thorough description of the context of the data file, the context in which the data were collected, the measurements that were made, and the quality of the data, it is unlikely that the data can be easily discovered, understood, or effectively used. Metadata is important not only to help people understand and make proper use of a data resource, but metadata also makes the resource discoverable (for example through internet searches or data indexing services). Read more about metadata in the [DataONE Primer on Data Management Best Practices](http://www.dataone.org/sites/all/documents/DataONE_BP_Primer_020212.pdf)
