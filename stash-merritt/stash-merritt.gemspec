@@ -28,7 +28,7 @@ Gem::Specification.new do |s| # rubocop:disable Metrics/BlockLength
   s.add_dependency 'cirneco', '~> 0.9.16'
   s.add_dependency 'datacite-mapping', '~> 0.3'
   s.add_dependency 'ezid-client', '~> 1.5'
-  s.add_dependency 'merritt-manifest', '~> 0.1', '= 0.1.2'
+  s.add_dependency 'merritt-manifest', '~> 0.1', '>= 0.1.3'
   s.add_dependency 'rest-client', '~> 2.0'
   s.add_dependency 'rubyzip', '~> 1.1'
 
