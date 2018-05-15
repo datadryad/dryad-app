@@ -57,6 +57,7 @@ for CONFIG_FILENAME in ${CONFIG_FILES}; do
     echo "  skipping symlink ${DEST_FILE}"
   else
     set -x
+    mkdir -p $(dirname ${DEST_FILE})  
     cp ${SOURCE_FILE} ${DEST_FILE}
     { set +x; } 2>/dev/null
   fi
