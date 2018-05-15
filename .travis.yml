@@ -2,6 +2,9 @@ sudo: required
 
 dist: trusty
 
+addons:
+  chrome: stable
+
 language: ruby
 
 rvm:
@@ -12,7 +15,6 @@ services:
 
 before_install:
  - sudo apt-get update
- - sudo apt-get install chromium-chromedriver
  - sudo apt-get install mutt
  - gem update --system
  - gem install bundler
