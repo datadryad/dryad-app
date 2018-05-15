@@ -7,6 +7,7 @@ describe 'add geolocation' do
     start_new_dataset!
     location_divider = find('summary', text: 'Location Information (optional)')
     location_divider.click
+    wait_for_ajax!
   end
 
   describe 'points' do
