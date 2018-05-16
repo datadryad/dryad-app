@@ -1,7 +1,6 @@
 require 'features_helper'
 require 'byebug'
 
-# TODO: switch to Capybara scenario style
 describe 'login/logout' do
   before(:each) do
     visit('/')
