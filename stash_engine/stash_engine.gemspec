@@ -1,4 +1,4 @@
-$LOAD_PATH.push File.expand_path('../lib', __FILE__)
+$LOAD_PATH.push File.expand_path('lib', __dir__)
 
 require 'stash_engine/version'
 
@@ -21,7 +21,7 @@ Gem::Specification.new do |s| # rubocop:disable Metrics/BlockLength
   s.test_files = Dir['spec/**/*']
 
   # TODO: remove once we're on Rails 5, probably
-  s.add_dependency 'thor', '0.19.1' # hack to get around https://github.com/erikhuda/thor/issues/538
+  s.add_dependency 'thor', '0.19.1' # HACK: to get around https://github.com/erikhuda/thor/issues/538
 
   s.add_dependency 'amoeba', '~> 3.0.0'
   s.add_dependency 'carrierwave', '~> 0.10.0'

@@ -6,11 +6,10 @@ module Stash
     class Citations
       include Stash::EventData
 
-      DOMAIN = 'https://query.eventdata.crossref.org'
-      EMAIL = 'scott.fisher@ucop.edu'
-      DATACITE_INCLUDE = %w[is_cited_by is_supplement_to is_referenced_by is_compiled_by is_source_of is_required_by]
-      CROSSREF_INCLUDE = %w[cites is_supplemented_by compiles requires references]
-
+      DOMAIN = 'https://query.eventdata.crossref.org'.freeze
+      EMAIL = 'scott.fisher@ucop.edu'.freeze
+      DATACITE_INCLUDE = %w[is_cited_by is_supplement_to is_referenced_by is_compiled_by is_source_of is_required_by].freeze
+      CROSSREF_INCLUDE = %w[cites is_supplemented_by compiles requires references].freeze
 
       def initialize(doi:)
         @doi = doi

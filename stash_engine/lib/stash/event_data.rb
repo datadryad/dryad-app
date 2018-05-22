@@ -3,34 +3,30 @@
 # of doing it a database where it is probably easier and more efficient.
 module Stash
   module EventData
-    Dir.glob(File.expand_path('../event_data/*.rb', __FILE__)).sort.each(&method(:require))
+    Dir.glob(File.expand_path('event_data/*.rb', __dir__)).sort.each(&method(:require))
 
     # These methods are mixed in to citations and usage classes
     protected
 
     def generic_query(filters:)
       hash = {
-          'mailto'  =>      @email,
-          'filter'  =>      filters,
-          'rows'    =>      10_000
+        'mailto' => @email,
+        'filter'  =>      filters,
+        'rows'    =>      10_000
       }
-      response = make_reliable{ RestClient.get "#{@domain}/events", {params: hash} }
+      response = make_reliable { RestClient.get "#{@domain}/events", params: hash }
       JSON.parse(response.body)
     end
 
     def make_reliable
       retries = 5
-      delay = 0.6
       begin
         yield
       rescue RestClient::InternalServerError => ex
-        if retries > 0
-          retries -= 1
-          sleep delay
-          retry
-        else
-          raise ex
-        end
+        raise ex if retries < 1
+        retries -= 1
+        sleep 0.6
+        retry
       end
     end
   end
