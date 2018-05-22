@@ -29,8 +29,8 @@ ENV['STASH_ENV'] = 'test'
 
 require 'stash_engine'
 
-LICENSES = YAML.load_file(File.expand_path('../config/licenses.yml', __FILE__)).with_indifferent_access
-APP_CONFIG = OpenStruct.new(YAML.load_file(File.expand_path('../config/app_config.yml', __FILE__))['test'])
+LICENSES = YAML.load_file(File.expand_path('config/licenses.yml', __dir__)).with_indifferent_access
+APP_CONFIG = OpenStruct.new(YAML.load_file(File.expand_path('config/app_config.yml', __dir__))['test'])
 
 ENGINE_PATH = Gem::Specification.find_by_name('stash_engine').gem_dir
 %W[
