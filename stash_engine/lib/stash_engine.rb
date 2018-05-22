@@ -19,6 +19,7 @@ require 'zeroclipboard-rails'
 
 require 'stash_engine/engine'
 require 'stash/repo'
+require 'stash/event_data'
 
 module StashEngine
   class Engine < ::Rails::Engine
