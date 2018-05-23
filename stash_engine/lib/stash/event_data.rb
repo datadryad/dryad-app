@@ -5,6 +5,10 @@ module Stash
   module EventData
     Dir.glob(File.expand_path('event_data/*.rb', __dir__)).sort.each(&method(:require))
 
+    def logger
+      Rails.logger
+    end
+
     # These methods are mixed in to citations and usage classes
     protected
 
