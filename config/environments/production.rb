@@ -81,7 +81,7 @@ Rails.application.configure do
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
 
-  #this is obnovious because the initializers haven't run yet, so have to duplicate code to read config
+  #this is obnoxious because the initializers haven't run yet, so have to duplicate code to read config
   ac = YAML.load_file(File.join(Rails.root, 'config', 'app_config.yml'))[Rails.env]
   unless ac['page_error_email'].blank?
     Rails.application.config.middleware.use ExceptionNotification::Rack,
@@ -90,7 +90,9 @@ Rails.application.configure do
           :email_prefix => "[Dash Exception]",
           :sender_address => %{"Dash Notifier" <no-reply-dash2@ucop.edu>},
           :exception_recipients => ac['page_error_email']
-      }
+      },
+      :error_grouping => true,
+      :error_grouping_period => 3.hours
   end
 
   config.action_mailer.delivery_method = :sendmail
