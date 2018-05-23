@@ -87,7 +87,9 @@ Rails.application.configure do
     :email_prefix => "[Dash2 Exception]",
     :sender_address => %{"Dash2 Notifier" <no-reply-dash2-stg@ucop.edu>},
     :exception_recipients => %w{marisa.strong@ucop.edu scott.fisher@ucop.edu bhavi.vedula@ucop.edu}
-  }
+  },
+  :error_grouping => true,
+  :error_grouping_period => 3.hours
 
   config.action_mailer.delivery_method = :sendmail
   config.action_mailer.perform_deliveries = true
