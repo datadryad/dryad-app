@@ -4,6 +4,7 @@
 # symlinked config files
 /config/*.yml
 /config/tenants/*.yml
+.config-secret/
 
 # MacOS noise
 .DS_Store
