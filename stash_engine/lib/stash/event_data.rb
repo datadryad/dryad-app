@@ -12,13 +12,12 @@ module Stash
     # These methods are mixed in to citations and usage classes
     protected
 
-    def generic_query(filters:)
+    def generic_query(params:)
       hash = {
-        'mailto' => @email,
-        'filter'  =>      filters,
-        'rows'    =>      10_000
+        'mailto'  =>  @email,
+        'rows'    =>  10_000, # this one for crossref
       }
-      response = make_reliable { RestClient.get "#{@domain}/events", params: hash }
+      response = make_reliable { RestClient.get @base_url, params: hash.merge(params) }
       JSON.parse(response.body)
     end
 
