@@ -580,8 +580,6 @@ GEM
     sortable-table (0.1.1)
       actionpack (>= 3.0.0)
       activesupport (>= 3.0.0)
-    spring (2.0.2)
-      activesupport (>= 4.2)
     sprockets (3.7.1)
       concurrent-ruby (~> 1.0)
       rack (> 1, < 3)
@@ -670,7 +668,6 @@ DEPENDENCIES
   simplecov (~> 0.14)
   simplecov-console (~> 0.4)
   solr_wrapper (~> 1.1)
-  spring
   stash-merritt!
   stash_api!
   stash_datacite!
