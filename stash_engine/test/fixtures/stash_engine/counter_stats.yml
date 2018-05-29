@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  identifier: 
+  citation_count: 
+  unique_investigation_count: 
+  unique_request_count: 1
+
+two:
+  identifier: 
+  citation_count: 
+  unique_investigation_count: 
+  unique_request_count: 1

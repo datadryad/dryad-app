@@ -2,6 +2,15 @@ module StashEngine
   class Identifier < ActiveRecord::Base
     has_many :resources, class_name: 'StashEngine::Resource', dependent: :destroy
     has_many :orcid_invitations, class_name: 'StashEngine::OrcidInvitation', dependent: :destroy
+    has_one :counter_stat, class_name: 'StashEngine::CounterStat', dependent: :destroy
+    # before_create :build_associations
+
+    # used to build counter stat if needed, trickery to be sure one always exists to begin with
+    # https://stackoverflow.com/questions/3808782/rails-best-practice-how-to-create-dependent-has-one-relations
+    def counter_stat
+      super || build_counter_stat(citation_count: 0, unique_investigation_count: 0, unique_request_count: 0,
+                                  created_at: Time.new - 1.day, updated_at: Time.new - 1.day)
+    end
 
     # finds by an ID that is full id, not the broken apart stuff
     def self.find_with_id(full_id)
@@ -92,5 +101,12 @@ module StashEngine
       tenant = r.tenant
       @target = tenant.full_url(StashEngine::Engine.routes.url_helpers.show_path(to_s))
     end
+
+    # private
+
+    # it's ok ot defer adding this unless someone asks for the counter_stat
+    # def build_associations
+    #   counter_stat || true
+    # end
   end
 end
