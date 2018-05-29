@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180319234429) do
+ActiveRecord::Schema.define(version: 20180529171320) do
 
   create_table "bookmarks", force: :cascade do |t|
     t.integer  "user_id",       limit: 4,   null: false
@@ -322,6 +322,15 @@ ActiveRecord::Schema.define(version: 20180319234429) do
 
   add_index "stash_engine_authors", ["author_orcid"], name: "index_stash_engine_authors_on_author_orcid", length: {"author_orcid"=>20}, using: :btree
   add_index "stash_engine_authors", ["resource_id"], name: "index_stash_engine_authors_on_resource_id", using: :btree
+
+  create_table "stash_engine_counter_stats", force: :cascade do |t|
+    t.integer  "identifier_id",              limit: 4
+    t.integer  "citation_count",             limit: 4
+    t.integer  "unique_investigation_count", limit: 4
+    t.integer  "unique_request_count",       limit: 4
+    t.datetime "created_at",                           null: false
+    t.datetime "updated_at",                           null: false
+  end
 
   create_table "stash_engine_edit_histories", force: :cascade do |t|
     t.integer  "resource_id",  limit: 4
