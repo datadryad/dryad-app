@@ -3276,14 +3276,13 @@ button.o-button__calendar:focus {
   margin-bottom: 0.5em; }
 
 .o-metrics {
-  display: -ms-flexbox;
-  display: flex;
-  -ms-flex-pack: distribute;
-      justify-content: space-around; }
+  /* display: flex;
+	justify-content: space-around; */ }
 
 .o-metrics__metric {
-  display: -ms-flexbox;
-  display: flex; }
+  display: block;
+  padding: 17px 0;
+  clear: both; }
 
 .o-metrics__group {
   display: -ms-flexbox;
@@ -3291,14 +3290,17 @@ button.o-button__calendar:focus {
   -ms-flex-flow: column nowrap;
       flex-flow: column nowrap;
   -ms-flex-align: center;
-      align-items: center; }
+      align-items: center;
+  width: 6em;
+  float: left; }
 
 .o-metrics__icon {
-  width: 30px;
+  width: 39px;
   height: 30px; }
 
 .o-metrics__number {
-  margin: 7px 0 0;
+  margin: 7px 0 0 8px;
+  float: left;
   font-size: 1.3em; }
 
 .o-quote {
