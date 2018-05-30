@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180529171320) do
+ActiveRecord::Schema.define(version: 20180530184143) do
 
   create_table "bookmarks", force: :cascade do |t|
     t.integer  "user_id",       limit: 4,   null: false
@@ -406,14 +406,6 @@ ActiveRecord::Schema.define(version: 20180529171320) do
 
   add_index "stash_engine_resource_states", ["resource_state"], name: "index_stash_engine_resource_states_on_resource_state", using: :btree
   add_index "stash_engine_resource_states", ["user_id"], name: "index_stash_engine_resource_states_on_user_id", using: :btree
-
-  create_table "stash_engine_resource_usages", force: :cascade do |t|
-    t.integer "resource_id", limit: 4
-    t.integer "downloads",   limit: 4
-    t.integer "views",       limit: 4
-  end
-
-  add_index "stash_engine_resource_usages", ["resource_id"], name: "index_stash_engine_resource_usages_on_resource_id", using: :btree
 
   create_table "stash_engine_resources", force: :cascade do |t|
     t.integer  "user_id",                   limit: 4
