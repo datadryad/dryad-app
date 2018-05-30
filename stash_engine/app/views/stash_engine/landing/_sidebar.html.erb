@@ -16,30 +16,24 @@
   <div class="o-metrics">
     <div class="o-metrics__metric">
       <div class="o-metrics__group">
-        <%= image_tag 'stash_engine/icon_views.svg', class: 'o-metrics__icon', alt: '' %>
+        <img class="o-metrics__icon" src="images/icon_views.svg" alt="">
         <span class="o-metrics__label">views</span>
       </div>
-      <span class="o-metrics__number"><%= @id.view_count %></span>
+      <div class="o-metrics__number"><%= @id.view_count %></div>
     </div>
-  </div>
-
-  <div class="o-metrics">
     <div class="o-metrics__metric">
       <div class="o-metrics__group">
-        <%= image_tag 'stash_engine/icon_downloads.svg', class: 'o-metrics__icon', alt: '' %>
+        <img class="o-metrics__icon" src="images/icon_downloads.svg" alt="">
         <span class="o-metrics__label">downloads</span>
       </div>
-      <span class="o-metrics__number" id="current_download_count"><%= @id.download_count %></span>
+      <div class="o-metrics__number"><%= @id.download_count %></div>
     </div>
-  </div>
-
-  <div class="o-metrics">
     <div class="o-metrics__metric">
       <div class="o-metrics__group">
-        <%= image_tag 'stash_engine/icon_cites.svg', class: 'o-metrics__icon', alt: '' %>
+        <img class="o-metrics__icon" src="images/icon_cites.svg" alt="">
         <span class="o-metrics__label">citations</span>
       </div>
-      <span class="o-metrics__number" id="current_download_count"><%= @id.download_count %></span>
+      <div class="o-metrics__number"><%= @id.download_count %></div>
     </div>
   </div>
 </div>
