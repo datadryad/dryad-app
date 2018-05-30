@@ -14,23 +14,6 @@ module StashEngine
       @res1 = Resource.create(identifier_id: identifier.id)
       @res2 = Resource.create(identifier_id: identifier.id)
       @res3 = Resource.create(identifier_id: identifier.id)
-
-      @usage1 = ResourceUsage.create(resource_id: res1.id, downloads: 3, views: 7)
-      @usage2 = ResourceUsage.create(resource_id: res2.id, downloads: 8, views: 6)
-    end
-
-    describe '#download_count' do
-      it 'returns the download count' do
-        download_count = usage1.downloads + usage2.downloads
-        expect(identifier.download_count).to eq(download_count)
-      end
-    end
-
-    describe '#view_count' do
-      it 'returns the view count' do
-        view_count = usage1.views + usage2.views
-        expect(identifier.view_count).to eq(view_count)
-      end
     end
 
     describe '#to_s' do
