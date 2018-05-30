@@ -6,6 +6,8 @@ module Stash
   module EventData
     class Citations
       include Stash::EventData
+
+      attr_reader :doi
       # This first domain worked earlier this week though with intermittant 500 errors
       # DOMAIN = 'https://query.eventdata.crossref.org'.freeze
 
