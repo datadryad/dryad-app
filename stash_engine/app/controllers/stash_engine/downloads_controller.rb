@@ -38,7 +38,6 @@ module StashEngine
         format.js do
           if can_download?
             api_async_download(resource: @resource, email: @email)
-            @resource.increment_downloads
             @message = "Dash will send an email with a download link to #{@email} when your requested dataset is ready."
             CounterLogger.version_download_hit(request: request, resource: @resource)
           else
@@ -136,7 +135,6 @@ module StashEngine
     end
 
     def stream_download
-      @resource.increment_downloads
       CounterLogger.version_download_hit(request: request, resource: @resource)
       stream_response(@resource.merritt_producer_download_uri, @resource.tenant)
     end

@@ -2,8 +2,8 @@ require_dependency 'stash_engine/application_controller'
 
 module StashEngine
   class ResourcesController < ApplicationController
-    before_action :require_login, except: %i[increment_downloads data_paper]
-    before_action :require_modify_permission, except: %i[index new increment_downloads data_paper]
+    before_action :require_login, except: %i[data_paper]
+    before_action :require_modify_permission, except: %i[index new data_paper]
     before_action :require_in_progress, only: %i[upload review upload_manifest]
     before_action :lockout_incompatible_uploads, only: %i[upload upload_manifest]
 
@@ -95,15 +95,6 @@ module StashEngine
 
     # upload by manifest view for resource
     def upload_manifest; end
-
-    # PATCH/PUT /resources/1/increment_downloads
-    def increment_downloads
-      respond_to do |format|
-        format.js do
-          resource.increment_downloads
-        end
-      end
-    end
 
     private
 
