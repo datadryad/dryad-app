@@ -7,6 +7,8 @@ module Stash
     class Usage
       include Stash::EventData
 
+      attr_reader :doi
+
       # BASE_URL = 'https://api.test.datacite.org/events'.freeze
       BASE_URL = 'https://api.datacite.org/events'.freeze
       EMAIL = 'scott.fisher@ucop.edu'.freeze
