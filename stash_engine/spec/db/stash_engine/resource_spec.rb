@@ -974,41 +974,6 @@ module StashEngine
           expect(Resource.submitted_dataset_count).to eq(0)
         end
       end
-
-      describe :resource_usage do
-        attr_reader :resource
-
-        def usage
-          resource.resource_usage
-        end
-
-        before(:each) do
-          @resource = Resource.create(user_id: user.id)
-        end
-        it 'defaults to nil' do
-          expect(usage).to be_nil
-        end
-        describe :increment_views do
-          it 'increments views' do
-            resource.increment_views
-            expect(usage.views).to eq(1)
-          end
-        end
-        describe :increment_downloads do
-          it 'increments downloads' do
-            resource.increment_downloads
-            expect(usage.downloads).to eq(1)
-          end
-        end
-        describe :amoeba_duplication do
-          it 'doesn\'t duplicate usage' do
-            resource.increment_views
-            resource.increment_downloads
-            res2 = resource.amoeba_dup
-            expect(res2.resource_usage).to(be_nil)
-          end
-        end
-      end
     end
   end
 end

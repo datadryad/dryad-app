@@ -38,7 +38,6 @@ module StashEngine
 
     def show
       CounterLogger.general_hit(request: request, resource: resource)
-      resource.increment_views
       ensure_has_geolocation!
       @invitations = (params[:invitation] ? OrcidInvitation.where(secret: params[:invitation]).where(identifier_id: id.id) : nil)
     end
