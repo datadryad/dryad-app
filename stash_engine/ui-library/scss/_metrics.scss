@@ -1,22 +1,26 @@
 // ##### Metrics Object ##### //
 
 .o-metrics {
-	display: flex;
-	justify-content: space-around;
+	/* display: flex;
+	justify-content: space-around; */
 }
 
 .o-metrics__metric {
-	display: flex;
+    display: block;
+    padding: 17px 0;
+    clear: both;
 }
 
 .o-metrics__group {
-	display: flex;
-	flex-flow: column nowrap;
-	align-items: center;
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: center;
+    width: 6em;
+    float: left;
 }
 
 .o-metrics__icon {
-	width: 30px;
+	width: 39px;
 	height: 30px;
 }
 
@@ -25,6 +29,7 @@
 }
 
 .o-metrics__number {
-	margin: 7px 0 0;
+    margin: 7px 0 0 8px;
+    float: left;
 	font-size: 1.3em;
 }
