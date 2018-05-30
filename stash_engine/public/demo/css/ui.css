@@ -3281,7 +3281,7 @@ button.o-button__calendar:focus {
 
 .o-metrics__metric {
   display: block;
-  padding: 17px 0;
+  padding: 10px 0 45px;
   clear: both; }
 
 .o-metrics__group {
@@ -3291,7 +3291,7 @@ button.o-button__calendar:focus {
       flex-flow: column nowrap;
   -ms-flex-align: center;
       align-items: center;
-  width: 6em;
+  width: 45px;
   float: left; }
 
 .o-metrics__icon {
