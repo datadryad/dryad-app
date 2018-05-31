@@ -160,14 +160,48 @@ def build_all
 end
 
 # ########################################
+# Options
+
+require 'optparse'
+options = {}
+OptionParser.new do |opts|
+  opts.banner = "Usage: travis-build.rb [options]"
+  opts.on('-h', '--help', 'Show help and exit') do
+    puts opts
+    exit(0)
+  end
+  opts.on('-b', '--bundle-only', 'Bundle all subprojects but do not build') do
+    puts 'Bundling only'
+    options[:bundle_only] = true
+  end
+end.parse!
+
+# ########################################
 # Build commands
+
+# ####################
+# Bundle all projects
 
 bundle_all
 
+if options[:bundle_only]
+  exit(0)
+end
+
+# ####################
+# Build all projects
+
 build_all
 
-puts("The following projects built successfully: #{successful_builds.join(', ').green}") unless successful_builds.empty?
-exit(0) if failed_builds.empty?
+# ####################
+# Report results
 
-warn("The following projects failed to build: #{failed_builds.join(', ').red}")
-exit(1)
+unless successful_builds.empty?
+  puts("The following projects built successfully: #{successful_builds.join(', ').green}")
+end
+
+unless failed_builds.empty?
+  warn("The following projects failed to build: #{failed_builds.join(', ').red}")
+  exit(1)
+end
+
