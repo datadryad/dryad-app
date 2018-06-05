@@ -33,7 +33,6 @@ module Stash
         crossref_results.merge(datacite_results).values
       end
 
-      # zoiks, the API seems sketchy as hell, sometimes 500 error, sometimes 200.
       # response.code == 200
       # response.headers -- includes :content_type=>"application/json;charset=UTF-8"
 
