@@ -5,7 +5,7 @@
     <% if cite_html[:html].blank? %>
       <%= "Citation metadata for #{cite_html[:doi]} was not available from DataCite." %>
     <% else %>
-      <%= cite_html[:html] %><br/>The doi: <%= cite_html[:doi] %>
+      <%= cite_html[:html] %><!-- The doi: <%= cite_html[:doi] %> -->
     <% end %>
   </p>
 <% end %>
