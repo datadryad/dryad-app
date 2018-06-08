@@ -64,6 +64,7 @@ module Stash
     end
 
     def html_citation
+      return nil if raw_metadata.nil?
       # html_safe when concatenated with other stuff makes non-html-safe escaped
       ''.html_safe + "#{author_names} (#{year_published}), #{title}, #{publisher}, #{resource_type}, " +
           "<a href=\"#{doi_link}\" target=\"_blank\">#{doi_link}</a>".html_safe

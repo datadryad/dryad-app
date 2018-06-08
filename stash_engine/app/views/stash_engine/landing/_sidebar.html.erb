@@ -33,7 +33,13 @@
         <%= image_tag 'stash_engine/icon_cites.svg', class: 'o-metrics__icon', alt: '' %>
         <!-- <span class="o-metrics__label">citations</span> -->
       </div>
-      <div class="o-metrics__number"><%= @id.counter_stat.citation_count %> citations</div>
+      <div class="o-metrics__number">
+        <% if @id.counter_stat.citation_count > 0 %>
+          <%= link_to "#{@id.counter_stat.citation_count} citations", stash_url_helpers.show_citations_path(identifier_id: @id.id), remote: true %>
+        <% else %>
+          <%= @id.counter_stat.citation_count %> citations
+        <% end %>
+      </div>
     </div>
   </div>
 
