@@ -1,6 +1,6 @@
 <%# takes a local identifier AR object #%>
 <h3>Works Referencing This Dataset</h3>
-<% identifier.counter_stat.html_citations.each do |cite_html| %>
+<% identifier.citations.each do |cite_html| %>
   <p>
     <% if cite_html[:html].blank? %>
       <%= "Citation metadata for #{cite_html[:doi]} was not available from DataCite." %>

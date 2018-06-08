@@ -3,6 +3,7 @@ module StashEngine
     has_many :resources, class_name: 'StashEngine::Resource', dependent: :destroy
     has_many :orcid_invitations, class_name: 'StashEngine::OrcidInvitation', dependent: :destroy
     has_one :counter_stat, class_name: 'StashEngine::CounterStat', dependent: :destroy
+    has_many :counter_citations, class_name: 'StashEngine::CounterCitation', dependent: :destroy
     # before_create :build_associations
 
     # used to build counter stat if needed, trickery to be sure one always exists to begin with
@@ -10,6 +11,11 @@ module StashEngine
     def counter_stat
       super || build_counter_stat(citation_count: 0, unique_investigation_count: 0, unique_request_count: 0,
                                   created_at: Time.new - 1.day, updated_at: Time.new - 1.day)
+    end
+
+    # gets citations for this identifier w/ citation class
+    def citations
+      CounterCitation.citations(doi: identifier)
     end
 
     # finds by an ID that is full id, not the broken apart stuff
