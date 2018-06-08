@@ -8,8 +8,8 @@ module StashEngine
     # - pdf_meta
     include StashEngine.app.metadata_engine.constantize::LandingMixin
 
-    before_action :require_identifier, except: [:update]
-    before_action :require_submitted_resource, except: [:update]
+    before_action :require_identifier, except: %i[update citations]
+    before_action :require_submitted_resource, except: %i[update citations]
     protect_from_forgery(except: [:update])
 
     # ############################################################
@@ -54,6 +54,13 @@ module StashEngine
         format.any(:html, :pdf) do
           render_pdf(pdf_meta, show_as_html)
         end
+      end
+    end
+
+    def citations
+      @identifier = Identifier.find(params[:identifier_id])
+      respond_to do |format|
+        format.js
       end
     end
 

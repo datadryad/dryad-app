@@ -20,6 +20,17 @@ module StashEngine
       read_attribute(:citation_count)
     end
 
+    # gets a list of the actual citation HTML for displaying
+    def html_citations
+      cite_events = Stash::EventData::Citations.new(doi: identifier.identifier)
+      cite_events.results.map do |citation_event|
+        # which is the DOI varies between datacite vs crossref events
+        the_doi = (citation_event['source_id'] == 'datacite' ? citation_event['obj_id'] : citation_event['subj_id'])
+        datacite_metadata = Stash::DataciteMetadata.new(doi: the_doi)
+        { doi: the_doi, html: (datacite_metadata.raw_metadata.nil? ? nil : datacite_metadata.html_citation) }
+      end
+    end
+
     # try this doi, at least on test 10.7291/d1q94r
     # or how about this one? doi:10.7272/Q6Z60KZD
     # or this one has machine hits, I think.  doi:10.6086/D1H59V
@@ -30,7 +41,7 @@ module StashEngine
       # only update stats if it's after the date of the last updated date for record
       return unless updated_at.nil? || Time.new.localtime.to_date > updated_at.localtime.to_date
       update_usage!
-      update_citations!
+      update_citation_count!
 
       self.updated_at = Time.new # seem to need this for some reason
 
@@ -43,7 +54,7 @@ module StashEngine
       self.unique_request_count = usage.unique_dataset_requests_count
     end
 
-    def update_citations!
+    def update_citation_count!
       cites = Stash::EventData::Citations.new(doi: identifier.identifier)
       self.citation_count = cites.results.count
     end
