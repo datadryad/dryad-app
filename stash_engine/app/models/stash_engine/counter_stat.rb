@@ -20,17 +20,6 @@ module StashEngine
       read_attribute(:citation_count)
     end
 
-    # gets a list of the actual citation HTML for displaying
-    def html_citations
-      cite_events = Stash::EventData::Citations.new(doi: identifier.identifier)
-      cite_events.results.map do |citation_event|
-        # which is the DOI varies between datacite vs crossref events
-        the_doi = (citation_event['source_id'] == 'datacite' ? citation_event['obj_id'] : citation_event['subj_id'])
-        datacite_metadata = Stash::DataciteMetadata.new(doi: the_doi)
-        { doi: the_doi, html: (datacite_metadata.raw_metadata.nil? ? nil : datacite_metadata.html_citation) }
-      end
-    end
-
     # try this doi, at least on test 10.7291/d1q94r
     # or how about this one? doi:10.7272/Q6Z60KZD
     # or this one has machine hits, I think.  doi:10.6086/D1H59V
