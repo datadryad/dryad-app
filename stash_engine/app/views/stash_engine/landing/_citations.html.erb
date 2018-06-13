@@ -1,11 +1,11 @@
 <%# takes a local identifier AR object #%>
 <h3>Works Referencing This Dataset</h3>
-<% identifier.citations.each do |cite_html| %>
+<% identifier.citations.each do |cite| %>
   <p>
-    <% if cite_html[:html].blank? %>
-      <%= "Citation metadata for #{cite_html[:doi]} was not available from DataCite." %>
+    <% if cite.citation.blank? %>
+      <%= "Citation metadata for #{cite.doi} was not available from DataCite." %>
     <% else %>
-      <%= cite_html[:html] %><!-- The doi: <%= cite_html[:doi] %> -->
+      <%= cite.citation.html_safe %><!-- The doi: <%= cite.doi %> -->
     <% end %>
   </p>
 <% end %>
