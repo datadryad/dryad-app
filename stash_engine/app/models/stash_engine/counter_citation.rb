@@ -3,6 +3,7 @@ module StashEngine
     # belongs_to :identifier, class_name: 'StashEngine::Identifier'
 
     # this class caches the counter_citations so it doesn't take so long to get them all from DataCite
+    # but it still retrieves the DOIs for the citations to display from Crossref :-/
 
     def self.citations(stash_identifier:)
       cite_events = Stash::EventData::Citations.new(doi: stash_identifier.identifier)
@@ -14,7 +15,7 @@ module StashEngine
       end
     end
 
-    # this may indicate having a crossref_event class
+    # this may imply we need a crossref_event class
     def self.citation(crossref_event:)
       the_doi = citing_doi(crossref_event: crossref_event)
       citation_metadata(doi: the_doi)

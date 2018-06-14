@@ -33,12 +33,16 @@
         <%= image_tag 'stash_engine/icon_cites.svg', class: 'o-metrics__icon', alt: '' %>
         <!-- <span class="o-metrics__label">citations</span> -->
       </div>
-      <div class="o-metrics__number">
+      <div class="o-metrics__number" id="metrics_citation_count">
         <% if @id.counter_stat.citation_count > 0 %>
-          <%= link_to "#{@id.counter_stat.citation_count} citations", stash_url_helpers.show_citations_path(identifier_id: @id.id), remote: true %>
+          <%= link_to "#{@id.counter_stat.citation_count} citations", stash_url_helpers.show_citations_path(identifier_id: @id.id),
+                      id: 'citation_link', remote: true %>
         <% else %>
           <%= @id.counter_stat.citation_count %> citations
         <% end %>
+      </div>
+      <div class="o-metrics__number" id="metrics_citation_spinner" style="display: none;">
+        <%= image_tag 'stash_engine/spinner.gif', size: '80x60', alt: 'Loading spinner' %>
       </div>
     </div>
   </div>
@@ -61,3 +65,10 @@
     <%= image_tag 'stash_engine/spinner.gif', size: '80x60', alt: 'Loading spinner' %>
   </div>
 </div>
+
+<script>
+  $( "#citation_link" ).click(function() {
+    $('#metrics_citation_spinner').show();
+    $('#metrics_citation_count').hide();
+  });
+</script>
