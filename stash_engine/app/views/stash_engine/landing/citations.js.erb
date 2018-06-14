@@ -5,6 +5,9 @@ if($("#citation_dialog").length == 0) {
 $('#citation_dialog').html("<%= escape_javascript(
           render partial: 'stash_engine/landing/citations', locals: { identifier: @identifier }) %>");
 
+$('#metrics_citation_spinner').hide();
+$('#metrics_citation_count').show();
+
 // alert('using javascript for citations');
 
 // now open a jquery ui modal dialog
