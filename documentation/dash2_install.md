@@ -74,6 +74,9 @@ sudo service mysql start
 # connect to mysql, note the <username> is probably root in a new installation
 mysql -u <username> -p
 
+# if the above doesn't work, try
+sudo mysql -u root
+
 # create the dash database
 CREATE DATABASE dash CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
