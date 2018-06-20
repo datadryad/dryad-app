@@ -53,6 +53,7 @@ Your config files are currently in a seperate directory from your application. I
 
 ```
 cd dashv2
+mkdir config/tenants
 ./symlink_config.sh
 ```
 
