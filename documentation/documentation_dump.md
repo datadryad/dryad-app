@@ -42,11 +42,11 @@ Our demo instance of Dash is available at [https://dashdemo.ucop.edu](https://da
 
     * "dcs" means DataCite Schema
 
-* [Dataset submission flow](https://docs.google.com/document/d/1acESCNsrpAE_jxe-CTE8cysiArWdvJAtgew-o5E8kDc/edit), one of our longest and more complicated flows.  (Login is also quite complicated, but people don’t spend a lot of time doing it.)
+* [Dataset submission flow](documentation/submission_flow.md), one of our longest and more complicated flows.  (Login is also somewhat complicated, but people don’t spend a lot of time doing it.)
 
 * The UI Library from the UX team and how to integrate CSS and major UI changes into the Dash application.  [https://github.com/CDLUC3/stash/blob/development/stash_engine/ui-library/README.md](https://github.com/CDLUC3/stash/blob/development/stash_engine/ui-library/README.md)
 
-* TODO: add information about testing
+* Please see [how to set up and run tests locally](documentation/local_testing_setup.md) so you can add tests and run current tests to be sure nothing breaks.
 
 ## Merritt
 
