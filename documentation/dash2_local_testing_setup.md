@@ -56,6 +56,11 @@ cd stash/stash_engine
 # travis_prep only needs to be done the first time you use a database and sets it up for testing this component
 ./travis_prep.sh
 
+# bundle install if the bundle is not up to date
+bundle install
+
+# note, I had some weird errors after setting up my gems initially and had to reload my shell to get things working
+
 # this command runs the default rake task, which will run all tests for the component
 bundle exec rake
 ```
