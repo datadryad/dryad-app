@@ -28,7 +28,7 @@ Our demo instance of Dash is available at [https://dashdemo.ucop.edu](https://da
 
 ## Documentation
 
-* We have an [installation guide](documentation/dash2_install.md) for installing the user-interface part of Dash along with some of the basic depedencies.  Sorry, this is a bit out of date and probably needs to be updated but much of the information is still useful.
+* We have an [installation guide](dash2_install.md) for installing the user-interface part of Dash along with some of the basic depedencies.  Sorry, this is a bit out of date and probably needs to be updated but much of the information is still useful.
 
 * A basic generalized introduction to Dash is available at [https://dash.ucop.edu/stash/about](https://dash.ucop.edu/stash/about) .
 
@@ -36,17 +36,17 @@ Our demo instance of Dash is available at [https://dashdemo.ucop.edu](https://da
 
 * API documentation: [https://github.com/CDLUC3/stash/blob/development/stash_api/basic_submission.md](https://github.com/CDLUC3/stash/blob/development/stash_api/basic_submission.md) and [https://dash.ucop.edu/api/docs/](https://dash.ucop.edu/api/docs/) 
 
-* A database [Entity-Relationship diagram](documentation/other_files/dash_er_2018-06.pdf).  
+* A database [Entity-Relationship diagram](other_files/dash_er_2018-06.pdf).  
 
     * Note most things are related to stash_engine_resources if you have trouble following all the lines.  stash_engine_identifiers has many resources.
 
     * "dcs" means DataCite Schema
 
-* [Dataset submission flow](documentation/submission_flow.md), one of our longest and more complicated flows.  (Login is also somewhat complicated, but people don’t spend a lot of time doing it.)
+* [Dataset submission flow](submission_flow.md), one of our longest and more complicated flows.  (Login is also somewhat complicated, but people don’t spend a lot of time doing it.)
 
 * The UI Library from the UX team and how to integrate CSS and major UI changes into the Dash application.  [https://github.com/CDLUC3/stash/blob/development/stash_engine/ui-library/README.md](https://github.com/CDLUC3/stash/blob/development/stash_engine/ui-library/README.md)
 
-* Please see [how to set up and run tests locally](documentation/local_testing_setup.md) so you can add tests and run current tests to be sure nothing breaks.
+* Please see [how to set up and run tests locally](local_testing_setup.md) so you can add tests and run current tests to be sure nothing breaks.
 
 ## Merritt
 
