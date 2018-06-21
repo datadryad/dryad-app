@@ -53,13 +53,14 @@ Your config files are currently in a seperate directory from your application. I
 
 ```
 cd dashv2
+mkdir config/tenantsmkd
 ./symlink_config.sh
 ```
 
 After you add or remove any configuration file, such as a yml file in the tenants directory, you will want to run the script above again update symlinks to config in the application.
 
-##Installing MySQL and Solr
-###MySQL
+## Installing MySQL and Solr
+### MySQL
 
 The procedure to install MySQL and Solr vary from one operating system to another, but this guide shows a way to configure it in Ubuntu linux:
 
@@ -72,6 +73,9 @@ sudo service mysql start
 
 # connect to mysql, note the <username> is probably root in a new installation
 mysql -u <username> -p
+
+# if the above doesn't work, try# i
+sudo mysql -u root
 
 # create the dash database
 CREATE DATABASE dash CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -89,7 +93,7 @@ FLUSH PRIVILEGES;
 
 Now edit the dash2-config/config/database.yml file to fill in the *dashuser* and password you set above in the development environment for that configuration file.
 
-###Solr
+### Solr
 Solr requires a Java runtime.  Try *java -version* and if it says that "java can be found in the following packages" rather than giving you a version you probably need to install java with a command like *sudo apt-get install default-jre* .
 
 ```
@@ -174,6 +178,9 @@ source ../dash2-config/sample_data/sample_record.sql;
 
 # To exit the MySQL client, type *exit* or press ctrl-d
 ```
+
+
+To configure where the search enterface draws its data from, modify the dashv2 app config/blacklight.yml to change the endpoint for the development server.  When running locally, the default server is development.
 
 ## Testing basic functionality
 
