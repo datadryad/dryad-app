@@ -36,7 +36,7 @@ Our demo instance of Dash is available at [https://dashdemo.ucop.edu](https://da
 
 * API documentation: [https://github.com/CDLUC3/stash/blob/development/stash_api/basic_submission.md](https://github.com/CDLUC3/stash/blob/development/stash_api/basic_submission.md) and [https://dash.ucop.edu/api/docs/](https://dash.ucop.edu/api/docs/) 
 
-* A database [Entity-Relationship diagram](https://drive.google.com/open?id=1XBor7U_a1nLSUg-YJL6UqWNATyZofAMu).  
+* A database [Entity-Relationship diagram](documentation/other_files/dash_er_2018-06.pdf).  
 
     * Note most things are related to stash_engine_resources if you have trouble following all the lines.  stash_engine_identifiers has many resources.
 
