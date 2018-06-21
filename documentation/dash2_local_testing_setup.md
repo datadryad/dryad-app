@@ -63,8 +63,28 @@ bundle exec rake
 ## Notes about Rubocop, .ruby-version, Bundler and Rake
 
 One component of the test suite runs Rubocop which is a style and convention checker.  It uses a configuration
-file to allow modifications to its generally very strict checking.  It also makes changes to its software and
-configuration on a fairly frequent basis.  Different versions of Rubocop or for different target Ruby versions
-will bring up different suggestions.
+file to allow modifications to its generally very strict (and sometimes unintelligent) checking.  It also
+makes changes to its software and configuration on a fairly frequent basis.  Different versions
+of Rubocop or for different target Ruby versions
+will bring up different suggestions or even bring in Rubocop configuration syntax changes.  We've also tried
+to keep rubocop versions the same across different components as there is some inheritance of settings.
 
-Because it
+You will probably want to run Rubocop outside of the test suite but use the same environment settings as used
+by the test suite.  It's very common to run *rubocop -a* which will auto-fix (mostly) clear-cut conventions such as
+spacing irregularities or similar items.  It's also nice to be able to fix problems and re-run rubocop
+separately from running the tests, iterating until all style suggestions are fixed or acknowledged.
+
+By appending *bundle exec* to a Ruby command in context of an application (or gem or engine), it runs that command
+in the environment defined for use by that application.  It uses the external gems (libraries) and versions indicated in
+the Gemfile, pulled in by dependencies and locked in place by the Gemfile.lock.  It should keep some random problems
+from occuring because of version differences between a gem locally instaled on the computer and an
+application-specific gem.
+
+The hidden .ruby-version file in the root of an application (or engine or gem) does something a little similar to Bundler
+but instead of locking a known set of gems and versions in place, it tells the version of Ruby that the application
+expects to use.  Software such as rbenv or rvm will read this file and can do things such as automatically switching
+to using that version of Ruby when cd-ing to that directory (or prompting to install the expected version of Ruby).
+Also, some IDEs will look at the file for tailoring suggestions to a specific version of Ruby.
+
+Rake is a way to define utility or other tasks that might be run (note the similar name to Make).  The default task for our
+components is to run tests.  You can define other rake tasks and specify a task when running Rake to do other things.
