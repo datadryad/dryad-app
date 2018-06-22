@@ -13,7 +13,7 @@ Gem::Specification.new do |s| # rubocop:disable Metrics/BlockLength
   s.description   = 'Packaging and SWORD deposit module for submitting Stash datasets to Merritt'
   s.license       = 'MIT'
 
-  s.required_ruby_version = '~> 2.2'
+  s.required_ruby_version = '~> 2.4'
 
   origin = `git config --get remote.origin.url`.chomp
   origin_uri = origin.start_with?('http') ? URI(origin) : URI(origin.gsub(%r{git@([^:]+)(.com|.org)[^\/]+}, 'http://\1\2'))
@@ -41,7 +41,7 @@ Gem::Specification.new do |s| # rubocop:disable Metrics/BlockLength
   s.add_development_dependency 'nokogiri', '~> 1.8'
   s.add_development_dependency 'rake', '~> 12.0'
   s.add_development_dependency 'rspec', '~> 3.2'
-  s.add_development_dependency 'rubocop', '0.52.1'
+  s.add_development_dependency 'rubocop', '0.57.2'
   s.add_development_dependency 'simplecov', '~> 0.14'
   s.add_development_dependency 'simplecov-console', '~> 0.4'
   s.add_development_dependency 'yard', '~> 0.9'
