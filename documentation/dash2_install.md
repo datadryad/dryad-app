@@ -1,6 +1,3 @@
-<<<<<<< HEAD
-This document [has moved here](https://github.com/CDLUC3/dashv2/blob/development/documentation/dash2_install.md).
-=======
 # Dash2 installation (v0.0.1)
 
 The Dash2 application is made of a number of parts intended to keep it more flexible and to separate concerns so that parts can be replaced with new metadata and other engines to customize it.  Some basic information about the project and architechiture is available at [the Dash Website](https://dash.ucop.edu/stash/about), but this document focuses on getting Dash up and running for development.
@@ -241,5 +238,3 @@ repository: # change me: you'll probably have to change all the following indent
     id_scheme: doi
     owner: null
 ```
-
->>>>>>> Updates to the installation instructions
