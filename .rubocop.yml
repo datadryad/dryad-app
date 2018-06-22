@@ -57,3 +57,7 @@ Style/FormatStringToken:
 # Putting '# frozen_string_literal: true' everywhere does not make the world a better place
 Style/FrozenStringLiteralComment:
   Enabled: false
+
+# The semantics of `foo&.bar` are a lot less interchangeable with `foo && foo.bar` than RuboCop thinks
+Style/SafeNavigation:
+  Enabled: false
