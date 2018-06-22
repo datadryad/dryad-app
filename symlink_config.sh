@@ -4,7 +4,12 @@ mydir="../dash2-config"
 len=$((${#mydir} + 1))
 CURRENTDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
+cd $CURRENTDIR
+
 echo $CURRENTDIR
+
+mkdir -p config/tenants
+
 
 find "$mydir" -name '*.yml' | while read -r line
 do
