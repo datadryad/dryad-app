@@ -1,6 +1,6 @@
 AllCops:
   # Suppress complaints about post-2.0 syntax
-  TargetRubyVersion: 2.2
+  TargetRubyVersion: 2.4
 
 # Allow one line around block body (Layout/EmptyLines will still disallow two or more)
 Layout/EmptyLinesAroundBlockBody:
@@ -52,4 +52,8 @@ Style/CommentedKeyword:
 
 # Adding more line noise to format strings will not improve them
 Style/FormatStringToken:
+  Enabled: false
+
+# Putting '# frozen_string_literal: true' everywhere does not make the world a better place
+Style/FrozenStringLiteralComment:
   Enabled: false
