@@ -45,7 +45,7 @@ module Stash
       rescue RestClient::ExceptionWithResponse => err
         logger.error("#{Time.new} Could not get response from CrossRef for DataCite event data source:datacite,subj-id:#{@doi}")
         logger.error("#{Time.new} #{err}")
-        return []
+        []
       end
 
       # can test with '10.13140/RG.2.1.1350.3122'
@@ -56,7 +56,7 @@ module Stash
       rescue RestClient::ExceptionWithResponse => err
         logger.error("#{Time.new} Could not get response from CrossRef for CrossRef event data source:crossref,obj-id:#{@doi}")
         logger.error("#{Time.new} #{err}")
-        return []
+        []
       end
     end
   end

@@ -23,12 +23,12 @@ module Stash
       return @metadata unless @metadata.nil?
       return nil if @metadata == false
       response = RestClient.get "#{DATACITE_BASE}#{CGI.escape(@doi)}", accept: 'application/citeproc+json'
-      return @metadata = JSON.parse(response.body)
+      @metadata = JSON.parse(response.body)
     rescue RestClient::Exception => ex
       logger.error("#{Time.new} Could not get response from DataCite for metadata lookcup #{@doi}")
       logger.error("#{Time.new} #{ex}")
       @metadata = false
-      return nil
+      nil
     end
 
     def author_names
