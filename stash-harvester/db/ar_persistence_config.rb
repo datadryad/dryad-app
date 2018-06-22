@@ -6,7 +6,7 @@ module Stash
   # Configuration for ActiveRecord persistence.
   class ARPersistenceConfig < PersistenceConfig
 
-    MIGRATION_PATH = File.expand_path('../migrate', __FILE__)
+    MIGRATION_PATH = File.expand_path('migrate', __dir__)
 
     can_build_if { |config| config.key?(:adapter) }
 
