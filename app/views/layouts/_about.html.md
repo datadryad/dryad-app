@@ -30,7 +30,12 @@ Dash is completely open source.  Our code is made publicly available on GitHub (
 
 Individual dataset landing pages are formatted as an online version of a data paper, presenting all appropriate descriptive and administrative metadata in a form that can be downloaded as an individual PDF file, or as part of the complete dataset download package, incorporating all data files for all versions.
 
-To facilitate flexible configuration and future enhancement, all support for the various external service providers and repository protocols are fully encapsulated into pluggable modules. Metadata modules are available for the DataCite and Dublin Core14 metadata schemas. Protocol modules are available for the SWORD 2.0 deposit protocol15 and the OAI-PMH16 and ResourceSync17 harvesting protocols. Authentication modules are available for InCommon/Shibboleth18 and Google/OAuth19 identity providers (IdPs).
+To facilitate flexible configuration and future enhancement, all support for the various external service providers and
+repository protocols are fully encapsulated into pluggable modules. Metadata modules are available for the DataCite and
+Dublin Core metadata schemas. Protocol modules are available for the SWORD 2.0 deposit protocol and the OAI-PMH and
+ResourceSync harvesting protocols. Authentication modules are available for InCommon/Shibboleth18 and Google/OAuth
+identity providers (IdPs).
+
 We welcome collaborations to develop additional modules for additional metadata schemas and repository protocols.  Please email UC3 (uc3 at ucop dot edu) or visit GitHub (http://cdluc3.github.io/dash/) for more information.
 
 
