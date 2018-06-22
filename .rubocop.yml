@@ -69,6 +69,10 @@ Style/SafeNavigation:
 Style/NumericPredicate:
   Enabled: false
 
+# Do what's readable in the context you're in
+Style/AccessModifierDeclarations:
+  Enabled: false
+
 # ############################################################
 # Specs
 
