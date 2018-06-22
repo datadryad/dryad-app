@@ -2,9 +2,6 @@ AllCops:
   # Suppress complaints about post-2.0 syntax
   TargetRubyVersion: 2.4
 
-# ############################################################
-# General
-
 # Allow one line around block body (Layout/EmptyLines will still disallow two or more)
 Layout/EmptyLinesAroundBlockBody:
   Enabled: false
@@ -29,12 +26,40 @@ Layout/MultilineOperationIndentation:
 Metrics/LineLength:
   Max: 150
 
+# Confusing and weird
+Naming/VariableNumber:
+  Enabled: False
+
+# Do what's readable in the context you're in
+Style/AccessModifierDeclarations:
+  Enabled: false
+
 # 👎 to cultural imperialism
 Style/AsciiComments:
   Enabled: false
 
+# Seriously?
+Style/CommentedKeyword:
+  Enabled: False
+
 # Disable problematic module documentation check (see https://github.com/bbatsov/rubocop/issues/947)
 Style/Documentation:
+  Enabled: false
+
+# Adding more line noise to format strings will not improve them
+Style/FormatStringToken:
+  Enabled: false
+
+# Putting '# frozen_string_literal: true' everywhere does not make the world a better place
+Style/FrozenStringLiteralComment:
+  Enabled: false
+
+# `foo.positive?` is cute, but it's not actually more readable than `foo > 0`
+Style/NumericPredicate:
+  Enabled: false
+
+# The semantics of `foo&.bar` are a lot less interchangeable with `foo && foo.bar` than RuboCop thinks
+Style/SafeNavigation:
   Enabled: false
 
 # Requiring the lambda() method just makes wordy calls wordier
@@ -45,38 +70,10 @@ Style/Lambda:
 Style/SingleLineBlockParams:
   Enabled: false
 
-# Confusing and weird
-Naming/VariableNumber:
-  Enabled: False
-
-# Seriously?
-Style/CommentedKeyword:
-  Enabled: False
-
-# Adding more line noise to format strings will not improve them
-Style/FormatStringToken:
-  Enabled: false
-
-# Putting '# frozen_string_literal: true' everywhere does not make the world a better place
-Style/FrozenStringLiteralComment:
-  Enabled: false
-
-# The semantics of `foo&.bar` are a lot less interchangeable with `foo && foo.bar` than RuboCop thinks
-Style/SafeNavigation:
-  Enabled: false
-
-# `foo.positive?` is cute, but it's not actually more readable than `foo > 0`
-Style/NumericPredicate:
-  Enabled: false
-
-# Do what's readable in the context you're in
-Style/AccessModifierDeclarations:
-  Enabled: false
-
 # ############################################################
-# Specs
+# Special cases for specs
 
-Metrics/MethodLength:
+Metrics/BlockLength:
   Exclude:
     - '**/spec/**/*.rb'
 
@@ -84,7 +81,10 @@ Metrics/ModuleLength:
   Exclude:
     - '**/spec/**/*.rb'
 
-Metrics/BlockLength:
+Metrics/MethodLength:
   Exclude:
     - '**/spec/**/*.rb'
 
+Naming/UncommunicativeMethodParamName:
+  Exclude:
+    - '**/spec/**/*.rb'
