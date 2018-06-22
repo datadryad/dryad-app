@@ -1,5 +1,10 @@
 inherit_from: ../.rubocop.yml
 
+# NOTE:
+#   We can't depend on the top-level (Method|Module|Block)Length
+#   spec-directory disables because the engine-level .rubocop.yml
+#   (that is, ../.rubocop-yml) overrides those declarations
+
 Metrics/MethodLength:
   Enabled: false
 
