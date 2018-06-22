@@ -76,9 +76,13 @@ module Stash
           @info = Net::HTTPContinue.allocate
 
           expected = [@info, @success]
-          expect(@http).to(receive(:request).twice.with(
-                             request.with_method('GET').with_uri(uri).with_headers('User-Agent' => user_agent)
-          )) { |&block| block.call(expected.shift) }
+          expect(@http).to(
+            receive(:request).twice.with(
+              request.with_method('GET').with_uri(uri).with_headers('User-Agent' => user_agent)
+            )
+          ) do |&block|
+            block.call(expected.shift)
+          end
 
           expect(helper.get(uri: uri)).to be(@body)
         end

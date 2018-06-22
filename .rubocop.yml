@@ -30,6 +30,14 @@ Metrics/LineLength:
 Naming/VariableNumber:
   Enabled: False
 
+# We meant to do that
+Naming/MemoizedInstanceVariableName:
+  Enabled: False
+
+# It works in context, trust us
+Naming/UncommunicativeMethodParamName:
+  Enabled: False
+
 # Do what's readable in the context you're in
 Style/AccessModifierDeclarations:
   Enabled: false
@@ -82,9 +90,5 @@ Metrics/ModuleLength:
     - '**/spec/**/*.rb'
 
 Metrics/MethodLength:
-  Exclude:
-    - '**/spec/**/*.rb'
-
-Naming/UncommunicativeMethodParamName:
   Exclude:
     - '**/spec/**/*.rb'
