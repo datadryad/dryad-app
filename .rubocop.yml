@@ -2,17 +2,8 @@ AllCops:
   # Suppress complaints about post-2.0 syntax
   TargetRubyVersion: 2.4
 
-Metrics/MethodLength:
-  Exclude:
-    - '**/spec/**/*.rb'
-
-Metrics/ModuleLength:
-  Exclude:
-    - '**/spec/**/*.rb'
-
-Metrics/BlockLength:
-  Exclude:
-    - '**/spec/**/*.rb'
+# ############################################################
+# General
 
 # Allow one line around block body (Layout/EmptyLines will still disallow two or more)
 Layout/EmptyLinesAroundBlockBody:
@@ -73,3 +64,23 @@ Style/FrozenStringLiteralComment:
 # The semantics of `foo&.bar` are a lot less interchangeable with `foo && foo.bar` than RuboCop thinks
 Style/SafeNavigation:
   Enabled: false
+
+# `foo.positive?` is cute, but it's not actually more readable than `foo > 0`
+Style/NumericPredicate:
+  Enabled: false
+
+# ############################################################
+# Specs
+
+Metrics/MethodLength:
+  Exclude:
+    - '**/spec/**/*.rb'
+
+Metrics/ModuleLength:
+  Exclude:
+    - '**/spec/**/*.rb'
+
+Metrics/BlockLength:
+  Exclude:
+    - '**/spec/**/*.rb'
+
