@@ -1,4 +1,4 @@
-$LOAD_PATH.push File.expand_path('../lib', __FILE__)
+$LOAD_PATH.push File.expand_path('lib', __dir__)
 
 # Maintain your gem's version:
 require 'stash_discovery/version'
@@ -20,7 +20,7 @@ Gem::Specification.new do |s| # rubocop:disable Metrics/BlockLength
   s.test_files = Dir['test/**/*']
 
   # TODO: remove once we're on Rails 5, probably
-  s.add_dependency 'thor', '0.19.1' # hack to get around https://github.com/erikhuda/thor/issues/538
+  s.add_dependency 'thor', '0.19.1' # see https://github.com/erikhuda/thor/issues/538
 
   s.add_dependency 'blacklight', '~> 6.5.0'
   s.add_dependency 'config'

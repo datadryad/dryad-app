@@ -55,4 +55,4 @@ end
 # ------------------------------------------------------------
 # Misc. utils
 
-Dir.glob(File.expand_path('../util/*.rb', __FILE__)).sort.each(&method(:require))
+Dir.glob(File.expand_path('util/*.rb', __dir__)).sort.each(&method(:require))
