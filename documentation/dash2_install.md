@@ -53,7 +53,7 @@ Your config files are currently in a seperate directory from your application. I
 
 ```
 cd dashv2
-mkdir config/tenantsmkd
+mkdir config/tenants
 ./symlink_config.sh
 ```
 
@@ -74,7 +74,7 @@ sudo service mysql start
 # connect to mysql, note the <username> is probably root in a new installation
 mysql -u <username> -p
 
-# if the above doesn't work, try# i
+# if the above doesn't work, try
 sudo mysql -u root
 
 # create the dash database
@@ -113,7 +113,7 @@ bin/solr create -c geoblacklight
 
 # download and copy the geoblacklight schema to the core
 mkdir tmp && cd tmp
-wget https://github.com/geoblacklight/geoblacklight-schema/archive/v0.3.2.tar.gz
+wget -L https://github.com/geoblacklight/geoblacklight-schema/archive/v0.3.2.tar.gz
 tar zxvf v0.3.2.tar.gz
 cp geoblacklight-schema-0.3.2/conf/* ../server/solr/geoblacklight/conf
 
@@ -130,7 +130,7 @@ Verify Solr is set up correctly from the Admin UI:
 
 2. You can then click the *query* sidebar tab and scroll down to the bottom of the form to submit a blank query.  While the document will not return any results yet because there are no documents in SOLR, you should see it execute and you can verify that Solr queries are running.<br>![query test](images/solr3.png)
 
-<br>(Optional, but recommended) Add a sample record to match the sample database record from earlier.
+<br>(Optional, but recommended) Add a sample record to match the sample database record (see below).
 
 1. Click the *Documents* tab on the left side.<br>![Documents](images/solr4.png)
 
@@ -141,7 +141,9 @@ Verify Solr is set up correctly from the Admin UI:
 
 ## Getting the Rails application running
 
-I'd *strongly* recommend installing [rbenv](https://github.com/rbenv/rbenv) for a local development asenvironment as a way to manage Ruby versions.  Follow the installation instructions given on the rbenv site to install it. Install the [Ruby build plugin](https://github.com/rbenv/ruby-build#readme) to make it easy to install different Ruby versions as needed.
+I'd *strongly* recommend installing [rbenv](https://github.com/rbenv/rbenv) for a local development asenvironment as a way to manage Ruby versions.  Follow the installation instructions given on the rbenv site to install it, but make sure the `rbenv init` command is run in every shell (e.g., add it to .bashrc). Install the [Ruby build plugin](https://github.com/rbenv/ruby-build#readme) to make it easy to install different Ruby versions as needed.
+
+*Note for OSX:* Ensure the command-line XCode utilities are installed. `xcode-select --install`
 
 ```
 # make sure some basic libraries are installed that are probably required later (Ubuntu example)
@@ -178,7 +180,6 @@ source ../dash2-config/sample_data/sample_record.sql;
 
 # To exit the MySQL client, type *exit* or press ctrl-d
 ```
-
 
 To configure where the search enterface draws its data from, modify the dashv2 app config/blacklight.yml to change the endpoint for the development server.  When running locally, the default server is development.
 
@@ -237,4 +238,3 @@ repository: # change me: you'll probably have to change all the following indent
     id_scheme: doi
     owner: null
 ```
-
