@@ -1,0 +1,18 @@
+# this file has license information starting with an identifier for the license
+# and then uri and name
+
+cc0:
+  uri: https://creativecommons.org/publicdomain/zero/1.0/
+  name: CC0 1.0 Universal (CC0 1.0) Public Domain Dedication
+  explanation: >
+    This releases your work to the public domain for any use.
+  badge: icon_cc-zero.svg
+
+
+cc_by:
+  uri: https://creativecommons.org/licenses/by/4.0/
+  name: Creative Commons Attribution 4.0 International (CC BY 4.0)
+  explanation: >
+    This license lets others distribute, modify, and build upon your work, even commercially, as
+    long as they credit you for the original creation.
+  badge: icon_cc-by.svg

@@ -1,0 +1,57 @@
+AllCops:
+  Exclude:
+    - 'bin/**/*'
+    - 'config/**/*'
+    - 'db/**/*'
+    - 'script/**/*'
+    - 'vendor/**/*'
+  # Suppress complaints about post-2.0 syntax
+  TargetRubyVersion: 2.2
+
+# Allow one line around block body (Layout/EmptyLines will still disallow two or more)
+Layout/EmptyLinesAroundBlockBody:
+  Enabled: false
+
+# Allow one line around class body (Layout/EmptyLines will still disallow two or more)
+Layout/EmptyLinesAroundClassBody:
+  Enabled: false
+
+# Allow one line around module body (Layout/EmptyLines will still disallow two or more)
+Layout/EmptyLinesAroundModuleBody:
+  Enabled: false
+
+# Make indents consistent regardless of the lengths of variables and method names and whatnot
+Layout/MultilineMethodCallIndentation:
+  EnforcedStyle: indented
+
+# Produces monsters
+Layout/MultilineOperationIndentation:
+  Enabled: false
+
+# Reasonable line-length check; it's too easy for the cure to be worse than the disease
+Metrics/LineLength:
+  Max: 150
+
+# 👎 to cultural imperialism
+Style/AsciiComments:
+  Enabled: false
+
+# Disable problematic module documentation check (see https://github.com/bbatsov/rubocop/issues/947)
+Style/Documentation:
+  Enabled: false
+
+# Requiring the lambda() method just makes wordy calls wordier
+Style/Lambda:
+  EnforcedStyle: literal
+
+# Unclear why it's a good idea to give parameters semantically meaningless names
+Style/SingleLineBlockParams:
+  Enabled: false
+
+# Confusing and weird
+Naming/VariableNumber:
+  Enabled: false
+
+# Allow some special handling for engines
+Bundler/OrderedGems:
+  TreatCommentsAsGroupSeparators: true

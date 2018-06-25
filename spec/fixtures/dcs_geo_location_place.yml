@@ -1,0 +1,10 @@
+raw_attributes:
+  id: 1
+  geo_location_place: City of Hampton, VA, USA
+  created_at: &2 2017-08-24 21:03:57.000000000 Z
+  updated_at: &3 2017-08-24 21:03:57.000000000 Z
+
+  id: 2
+  geo_location_place: City of Hampton, VA, USA
+  created_at: &2 2017-08-24 21:10:18.000000000 Z
+  updated_at: &3 2017-08-24 21:10:18.000000000 Z

@@ -1,32 +1,77 @@
-# stash
+# Dash
 
-### Introduction
+[![Build Status](https://travis-ci.org/CDLUC3/dashv2.svg?branch=development)](https://travis-ci.org/CDLUC3/dashv2)
 
-**Stash** is a **UC3** service for storing and sharing research data.  Stash, a replacement for UC3’s current Dash service (UC3, 2015), is simple self-service repository overlay layer for submission and discovery of research datasets.  Stash is intended to be applicable to any standards-compliant repository that supports the SWORD protocol for deposit and the OAI-PMH protocol for metadata harvesting.  Stash enables individual scholars to:
+## Introduction
 
-1. Prepare datasets for curation by reviewing best practice guidance for the creation or acquisition of research data.
-2. Select data for curation through local file browse or drag-and-drop operation.
-3. Describe data in terms of scientifically-meaning metadata.
-4. Identify datasets for persistent citation, reference, and retrieval.
-5. Preserve, manage, and share data in an appropriate data repository.
-6. Discover, retrieve, and reuse data through faceted search and browse.
+**Dash** is the [UC Curation Center](http://www.cdlib.org/uc3/)'s
+implementation of the [Stash](https://github.com/CDLUC3/stash) application
+framework for research data publication and preservation, based on the
+[DataCite Metadata Schema](https://schema.datacite.org/) and the University
+of California’s [Merritt](https://merritt.cdlib.org/) repository service.
 
-By alleviating many of the barriers that have historically precluded wider adoption of open data principles, Stash empowers individual scholars to assert active curation control over their research outputs; encourages more widespread data preservation, publication, sharing, and reuse; and promotes open scholarly inquiry and advancement.
+- [About Dash](app/views/layouts/_about.html.md)
 
-### Stash Architecture
-<img src="https://raw.githubusercontent.com/CDLUC3/dash/gh-pages/docs/stash_architecture.png" width="720" alt="Architecture">
+## Development
 
-#This is a work in progress.
+### Installation
 
+See
+[Dash2 Installation](https://github.com/CDLUC3/dashv2/blob/development/documentation/dash2_install.md)
+for installation notes.
 
+### Quick Cheat Sheet
 
-* Ruby version ruby 2.2.0p0
-* Rails version Rails 4.2.0
-* RSpec-Rails testing framework.
+#### Development environment setup
 
-### Useful Links
+At the same level as the `dashv2` directory:
 
-#### [Travis continuous integration](https://travis-ci.org/CDLUC3/dashv2)
+- Clone the [Stash](https://github.com/CDLUC3/stash) repository (public):
 
----------------------------------------------------------
+  ```
+  git clone https://github.com/CDLUC3/stash.git
+  ```
 
+- Clone the [dash2-config](https://github.com/cdlib/dash2-config/) repository
+  (private to CDL developers):
+
+  ```
+  git clone git@github.com:cdlib/dash2-config.git
+  ```
+
+- Symlink configuration files from `dash2-config` into the `dashv2`
+  `config` directory:
+
+  ```
+  ./symlink_config.sh
+  ```
+
+#### Running integration/feature tests locally
+
+In the `dashv2` directory:
+
+- run `travis-prep.sh`
+- run `bundle exec rake`
+
+#### Capistrano deployment
+
+To deploy the latest (committed) code from GitHub:
+
+```
+bundle exec cap <environment> deploy [BRANCH="<branch-or-tag-name>"]
+```
+
+The `$BRANCH` environment variable is optional; if it’s omitted, the
+deploy script will prompt you.
+
+#### Miscellaneous tasks
+
+- The `rake app_data:clear` task will clear most database and SOLR data. It
+  can be useful to run before testing data import and transformation from our
+  previous version of the app. It will not erase data in the production
+  environment or until it gets confirmation that you really want to erase the
+  data. 
+
+  ```
+  bundle exec rake app_data:clear RAILS_ENV=<rails-environment>
+  ```

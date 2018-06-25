@@ -1,0 +1,29 @@
+default: &default
+  adapter: mysql2
+  database: dash
+  username:
+  password: blank
+  port: 3306
+  encoding: utf8
+
+development:
+  <<: *default
+  host: examplehost
+  password: examplepass
+
+test:
+  host: localhost
+  adapter: mysql2
+  database: dashv2_test
+  username: travis
+  encoding: utf8mb4
+
+stage:
+  <<: *default
+  host: stage
+  password: stage
+
+production:
+  <<: *default
+  host: prod
+  password: prod
