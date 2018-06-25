@@ -1,0 +1,49 @@
+author1:
+  id: 1
+  author_first_name: Mary
+  author_last_name: McCormick
+  author_email: mary.mccormick.the.great@mailinator.com
+  author_orcid: 1234-5878-1234-5678
+  resource_id: 1
+  created_at: 2017-08-24 21:00:44.000000000 Z
+  updated_at: 2017-08-24 21:01:45.000000000 Z
+
+author2:
+  id: 2
+  author_first_name: Mary
+  author_last_name: McCormick
+  author_email: mary.mccormick.the.great@mailinator.com
+  author_orcid: 1234-5878-1234-5678
+  resource_id: 2
+  created_at: 2017-08-24 21:10:18.000000000 Z
+  updated_at: 2017-08-24 21:10:18.000000000 Z
+
+author3:
+  id: 3
+  author_first_name: Mary
+  author_last_name: McCormick
+  author_email: mary.mccormick.the.great@mailinator.com
+  author_orcid: 1234-5878-1234-5678
+  resource_id: 3
+  created_at: 2017-08-24 21:12:10.000000000 Z
+  updated_at: 2017-08-24 21:13:01.000000000 Z
+
+author4:
+  id: 4
+  author_first_name: Leroy
+  author_last_name: Jones
+  author_email: leroy.jones.1234@mailinator.com
+  author_orcid: ''
+  resource_id: 4
+  created_at: 2017-08-24 21:15:49.000000000 Z
+  updated_at: 2017-08-24 21:16:40.000000000 Z
+
+author5:
+  id: 5
+  author_first_name: Leroy
+  author_last_name: Jones
+  author_email: leroy.jones.1234@mailinator.com
+  author_orcid: ''
+  resource_id: 5
+  created_at: 2017-08-24 21:29:13.000000000 Z
+  updated_at: 2017-08-24 21:29:13.000000000 Z

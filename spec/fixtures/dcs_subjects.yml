@@ -1,0 +1,21 @@
+raw_attributes:
+  id: 1
+  subject: Noggin
+  subject_scheme:
+  scheme_URI:
+  created_at: &3 2017-08-24 21:02:29.000000000 Z
+  updated_at: &4 2017-08-24 21:02:29.000000000 Z
+
+  id: 2
+  subject: Produce
+  subject_scheme:
+  scheme_URI:
+  created_at: &3 2017-08-24 21:02:35.000000000 Z
+  updated_at: &4 2017-08-24 21:02:35.000000000 Z
+
+  id: 3
+  subject: Ogre
+  subject_scheme:
+  scheme_URI:
+  created_at: &3 2017-08-24 21:02:42.000000000 Z
+  updated_at: &4 2017-08-24 21:02:42.000000000 Z

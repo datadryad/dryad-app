@@ -1,0 +1,22 @@
+raw_attributes:
+  id: 1
+  related_identifier: http://example.com
+  related_identifier_type: url
+  relation_type: cites
+  related_metadata_scheme:
+  scheme_URI:
+  scheme_type:
+  resource_id: 1
+  created_at: &4 2017-08-24 21:03:36.000000000 Z
+  updated_at: &5 2017-08-24 21:03:36.000000000 Z
+
+  id: 2
+  related_identifier: http://example.com
+  related_identifier_type: url
+  relation_type: cites
+  related_metadata_scheme:
+  scheme_URI:
+  scheme_type:
+  resource_id: 2
+  created_at: &4 2017-08-24 21:10:18.000000000 Z
+  updated_at: &5 2017-08-24 21:10:18.000000000 Z

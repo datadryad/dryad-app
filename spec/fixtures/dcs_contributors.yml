@@ -1,0 +1,18 @@
+raw_attributes:
+  id: 1
+  contributor_name: Or Yarok Association
+  contributor_type: funder
+  name_identifier_id:
+  resource_id: 1
+  created_at: &4 2017-08-24 21:02:09.000000000 Z
+  updated_at: &5 2017-08-24 21:02:19.000000000 Z
+  award_number: yarok298
+
+  id: 2
+  contributor_name: Or Yarok Association
+  contributor_type: funder
+  name_identifier_id:
+  resource_id: 2
+  created_at: &4 2017-08-24 21:10:18.000000000 Z
+  updated_at: &5 2017-08-24 21:10:18.000000000 Z
+  award_number: yarok298

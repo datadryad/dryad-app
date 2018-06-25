@@ -1,0 +1,96 @@
+raw_attributes:
+  id: 1
+  upload_file_name: 65f897b9-9d7d-4480-adb0-6e124f002c75.jpg
+  upload_content_type: image/jpeg
+  upload_file_size: 505168
+  resource_id: 1
+  upload_updated_at: &4 2017-08-24 21:05:13.000000000 Z
+  created_at: &5 2017-08-24 21:05:13.000000000 Z
+  updated_at: &6 2017-08-24 21:05:13.000000000 Z
+  temp_file_path: "/Users/scottfisher/workspace/dashv2/uploads/1/65f897b9-9d7d-4480-adb0-6e124f002c75.jpg"
+  file_state: created
+  url:
+  status_code:
+  timed_out: 0
+  original_url:
+  cloud_service:
+
+  id: 2
+  upload_file_name: 65f897b9-9d7d-4480-adb0-6e124f002c75.jpg
+  upload_content_type: image/jpeg
+  upload_file_size: 505168
+  resource_id: 2
+  upload_updated_at: &4 2017-08-24 21:05:13.000000000 Z
+  created_at: &5 2017-08-24 21:10:18.000000000 Z
+  updated_at: &6 2017-08-24 21:10:18.000000000 Z
+  temp_file_path: "/Users/scottfisher/workspace/dashv2/uploads/1/65f897b9-9d7d-4480-adb0-6e124f002c75.jpg"
+  file_state: copied
+  url:
+  status_code:
+  timed_out: 0
+  original_url:
+  cloud_service:
+
+  id: 3
+  upload_file_name: admin_editing1.jpg
+  upload_content_type: image/jpeg
+  upload_file_size: 111067
+  resource_id: 2
+  upload_updated_at: &4 2017-08-24 21:11:06.000000000 Z
+  created_at: &5 2017-08-24 21:11:06.000000000 Z
+  updated_at: &6 2017-08-24 21:11:06.000000000 Z
+  temp_file_path: "/Users/scottfisher/workspace/dashv2/uploads/2/admin_editing1.jpg"
+  file_state: created
+  url:
+  status_code:
+  timed_out: 0
+  original_url:
+  cloud_service:
+
+  id: 4
+  upload_file_name: admin_editing2.jpg
+  upload_content_type: image/jpeg
+  upload_file_size: 185621
+  resource_id: 3
+  upload_updated_at: &4 2017-08-24 21:13:33.000000000 Z
+  created_at: &5 2017-08-24 21:13:33.000000000 Z
+  updated_at: &6 2017-08-24 21:13:33.000000000 Z
+  temp_file_path: "/Users/scottfisher/workspace/dashv2/uploads/3/admin_editing2.jpg"
+  file_state: created
+  url:
+  status_code:
+  timed_out: 0
+  original_url:
+  cloud_service:
+
+  id: 9
+  upload_file_name: stash-harvester-annotated-erd.pdf
+  upload_content_type: application/pdf
+  upload_file_size: 177988
+  resource_id: 4
+  upload_updated_at: &4 2017-08-24 21:23:02.000000000 Z
+  created_at: &5 2017-08-24 21:23:02.000000000 Z
+  updated_at: &6 2017-08-24 21:23:02.000000000 Z
+  temp_file_path: "/Users/scottfisher/workspace/dashv2/uploads/4/stash-harvester-annotated-erd.pdf"
+  file_state: created
+  url:
+  status_code:
+  timed_out: 0
+  original_url:
+  cloud_service:
+
+  id: 10
+  upload_file_name: stash-harvester-annotated-erd.pdf
+  upload_content_type: application/pdf
+  upload_file_size: 177988
+  resource_id: 5
+  upload_updated_at: &4 2017-08-24 21:23:02.000000000 Z
+  created_at: &5 2017-08-24 21:29:13.000000000 Z
+  updated_at: &6 2017-08-24 21:29:13.000000000 Z
+  temp_file_path: "/Users/scottfisher/workspace/dashv2/uploads/4/stash-harvester-annotated-erd.pdf"
+  file_state: copied
+  url:
+  status_code:
+  timed_out: 0
+  original_url:
+  cloud_service:
