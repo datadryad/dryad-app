@@ -17,7 +17,7 @@ of California’s [Merritt](https://merritt.cdlib.org/) repository service.
 ### Installation
 
 See
-[Dash2 Installation](https://github.com/CDLUC3/dashv2/blob/development/documentation/dash2_install.md)
+[Dash2 Installation](https://github.com/CDLUC3/dashv2/blob/master/documentation/dash2_install.md)
 for installation notes.
 
 ### Quick Cheat Sheet

@@ -18,7 +18,7 @@ The basic flow of this model would be to:
 # for example
 git remote add upstream https://github.com/CDLUC3/dashv2.git
 git fetch upstream
-git merge upstream/development
+git merge upstream/master
 ```
   
   - Make all needed changes and push them to your fork.
@@ -46,7 +46,7 @@ Changes to database schemas or model classes
 
 Changes to views
 
-- Did you add major UI changes such as new layouts, css styles or images to the [UI library](https://github.com/CDLUC3/stash/tree/development/stash_engine/ui-library) ?
+- Did you add major UI changes such as new layouts, css styles or images to the [UI library](https://github.com/CDLUC3/stash/tree/master/stash_engine/ui-library) ?
 - Are feature tests (browser automation) added or modified in order to test the change?
 
 
