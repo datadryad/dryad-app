@@ -1,11 +1,24 @@
-.t-login__box {
-  width: 400px;
-  margin: 20px auto;
-  padding: 50px 0;
-  border-width: 1px;
-  border-style: solid;
-  border-color: $design-light-gray-color;
+.t-login__section {
+  display: flex;
+  flex-direction: row;
   text-align: center;
+}
+
+.t-login__box {
+  flex-basis: 20em;
+
+  a:link,
+  a:visited,
+  a:hover,
+  a:active {
+    color: $design-dark-blue-color;
+    text-decoration: none;
+  }
+}
+
+.t-login__info {
+  flex-basis: 30em;
+  text-align: left;
 }
 
 .t-login__or-box {
@@ -29,12 +42,28 @@
   background: inline('../images/logo_orcid.svg') center no-repeat;
 }
 
+.t-login__orcid-big {
+  display: block;
+  width: 10em;
+  height: 10em;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.t-login__orcid-small {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  vertical-align: middle;
+}
+
+/*
 .t-login__orcid-small {
   display: inline-block;
   width: 80px;
   height: 30px;
   background: inline('../images/logo_orcid.svg') center / 80px no-repeat;
-}
+}*/
 
 .t-login__selector {
   display: inline-block;
