@@ -15,7 +15,7 @@ There are currently ten live instances of Dash:
 - [UC Press](https://dash.ucpress.edu/)
 - [ONEshare](https://oneshare.cdlib.org/) (in partnership with [DataONE](http://dataone.org/))
 
-For information about Submission to Dash check out our [guidance here](https://github.com/CDLUC3/dashv2/blob/development/app/views/layouts/_help.html.md)
+For information about Submission to Dash check out our [guidance here](https://github.com/CDLUC3/dashv2/blob/master/app/views/layouts/_help.html.md)
 
 
 ## Architecture and Implementation

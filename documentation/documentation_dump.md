@@ -34,7 +34,7 @@ Our demo instance of Dash is available at [https://dashdemo.ucop.edu](https://da
 
 * Operations information (private) [https://confluence.ucop.edu/display/UC3/Stash+Operations](https://confluence.ucop.edu/display/UC3/Stash+Operations) 
 
-* API documentation: [https://github.com/CDLUC3/stash/blob/development/stash_api/basic_submission.md](https://github.com/CDLUC3/stash/blob/development/stash_api/basic_submission.md) and [https://dash.ucop.edu/api/docs/](https://dash.ucop.edu/api/docs/) 
+* API documentation: [https://github.com/CDLUC3/stash/blob/master/stash_api/basic_submission.md](https://github.com/CDLUC3/stash/blob/master/stash_api/basic_submission.md) and [https://dash.ucop.edu/api/docs/](https://dash.ucop.edu/api/docs/) 
 
 * A database [Entity-Relationship diagram](other_files/dash_er_2018-06.pdf).  
 
@@ -44,7 +44,7 @@ Our demo instance of Dash is available at [https://dashdemo.ucop.edu](https://da
 
 * [Dataset submission flow](submission_flow.md), one of our longest and more complicated flows.  (Login is also somewhat complicated, but people don’t spend a lot of time doing it.)
 
-* The UI Library from the UX team and how to integrate CSS and major UI changes into the Dash application.  [https://github.com/CDLUC3/stash/blob/development/stash_engine/ui-library/README.md](https://github.com/CDLUC3/stash/blob/development/stash_engine/ui-library/README.md)
+* The UI Library from the UX team and how to integrate CSS and major UI changes into the Dash application.  [https://github.com/CDLUC3/stash/blob/master/stash_engine/ui-library/README.md](https://github.com/CDLUC3/stash/blob/master/stash_engine/ui-library/README.md)
 
 * Please see [how to set up and run tests locally](local_testing_setup.md) so you can add tests and run current tests to be sure nothing breaks.
 
