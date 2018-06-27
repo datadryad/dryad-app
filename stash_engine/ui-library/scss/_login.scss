@@ -5,16 +5,28 @@
 }
 
 .t-login__box {
-  flex-basis: 20em;
+  flex-basis: 25em;
 
   a:link,
   a:visited,
   a:hover,
   a:active {
-    color: $design-dark-blue-color;
+    color: $design-black-color;
     text-decoration: none;
   }
 }
+
+.t-login__buttonlink {
+  padding: 10px 30px;
+  border: thin solid $design-orange-color;
+  background-color: $design-super-extra-light-gray-color;
+}
+
+.t-login__buttonlink:hover {
+  border: thin solid $design-orange-color;
+  background-color: $design-extra-light-gray-color;
+}
+
 
 .t-login__info {
   flex-basis: 30em;
@@ -46,7 +58,7 @@
   display: block;
   width: 10em;
   height: 10em;
-  margin: 0 auto;
+  margin: 0 auto 2em;
   padding: 20px;
 }
 
