@@ -4380,14 +4380,23 @@ html.no-details .o-showhide__summary {
   text-align: center; }
 
 .t-login__box {
-  -ms-flex-preferred-size: 20em;
-      flex-basis: 20em; }
+  -ms-flex-preferred-size: 25em;
+      flex-basis: 25em; }
   .t-login__box a:link,
   .t-login__box a:visited,
   .t-login__box a:hover,
   .t-login__box a:active {
-    color: #005581;
+    color: black;
     text-decoration: none; }
+
+.t-login__buttonlink {
+  padding: 10px 30px;
+  border: thin solid #e65722;
+  background-color: #ebebeb; }
+
+.t-login__buttonlink:hover {
+  border: thin solid #e65722;
+  background-color: lightgray; }
 
 .t-login__info {
   -ms-flex-preferred-size: 30em;
@@ -4418,7 +4427,7 @@ html.no-details .o-showhide__summary {
   display: block;
   width: 10em;
   height: 10em;
-  margin: 0 auto;
+  margin: 0 auto 2em;
   padding: 20px; }
 
 .t-login__orcid-small {
