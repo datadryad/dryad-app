@@ -2,7 +2,7 @@
 lock '3.4.1'
 
 set :application, 'dashv2'
-set :repo_url, 'https://github.com/CDLUC3/dashv2.git'
+set :repo_url, 'https://github.com/CDL-Dryad/dryad.git'
 
 # Default branch is :master -- uncomment this to prompt for branch name
 ask :branch, `git rev-parse --abbrev-ref HEAD`.chomp unless ENV['BRANCH']
@@ -105,7 +105,7 @@ namespace :deploy do
   task :clone_engines do
     on roles(:app) do
       unless test("[ -d #{deploy_to}/releases/stash ]")
-        execute "cd #{deploy_to}/releases; git clone https://github.com/CDLUC3/stash.git"
+        execute "cd #{deploy_to}/releases; git clone https://github.com/CDL-Dryad/dryad.git"
       end
     end
   end
