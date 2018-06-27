@@ -1,15 +1,15 @@
-# Dash2 installation (v0.0.1)
+# Dryad installation (v0.0.2)
 
-The Dash2 application is made of a number of parts intended to keep it more flexible and to separate concerns so that parts can be replaced with new metadata and other engines to customize it.  Some basic information about the project and architechiture is available at [the Dash Website](https://dash.ucop.edu/stash/about), but this document focuses on getting Dash up and running for development.
+The Dryad application is made of a number of parts intended to keep it more flexible and to separate concerns so that parts can be replaced with new metadata and other engines to customize it.  Some basic information about the project and architechiture is available at [the Dash Website](https://dash.ucop.edu/stash/about), but this document focuses on getting Dash up and running for development.
 
 ## The ingredients
 
 You'll need the following parts installed and configured on a (local) UI development server to do development on the full UI application.  Don't worry, there are more detailed installation instructions in other sections below and this is meant to give an overview of the larger dependencies to configure.
 
 - (Recommended) A ruby version manager such as [rbenv](https://github.com/rbenv/rbenv) or [rvm](https://rvm.io/)
-- The [bare dashv2 application](https://github.com/CDLUC3/dashv2) cloned from github
-- The [stash](https://github.com/CDLUC3/stash) repository cloned from github
-- A separate directory of configuration files called *dash2-config* which you can start by cloning [dash2-config-example](https://github.com/CDLUC3/dash2-config-example) and modifying to fit your settings.
+- The [bare Drayd application](https://github.com/CDL-Dryad/dryad) cloned from github
+- The [stash](https://github.com/CDL-Dryad/stash) repository cloned from github
+- A separate directory of configuration files called *dryad-config* which you can start by cloning [dryad-config-example](https://github.com/CDL-Dryad/dryad-config-example) and modifying to fit your settings.
 
 You'll also need the following components installed either on the same server or on separate servers for all the application features to work:
 
@@ -29,16 +29,16 @@ The application also requires some means to log in outside of a development envi
 Open a (bash) shell and type these commands inside a directory where you want to work with this code. These will clone the development code and an example config.
 
 ```
-git clone https://github.com/CDLUC3/dashv2
-git clone https://github.com/CDLUC3/stash
-git clone https://github.com/CDLUC3/dash2-config-example.git dash2-config
+git clone https://github.com/CDL-Dryad/dryad
+git clone https://github.com/CDL-Dryad/stash
+git clone https://github.com/CDL-Dryad/dryad-config-example.git dryad-config
 ```
 
 You should end up with a directory structure that looks like this one.
 
 ```
-├── dash2-config
-├── dashv2
+├── dryad-config
+├── dryad
 └── stash
     ├── stash-harvester
     ├── stash-merritt
@@ -52,7 +52,7 @@ You should end up with a directory structure that looks like this one.
 Your config files are currently in a seperate directory from your application. It can be handy to keep them apart from the application so that you can back them up or commit them to a private repository for configuration separate from the application.  The application will need to have these configuration files symlinked into the application. to symlink the files in using a bash shell, type these commands:
 
 ```
-cd dashv2
+cd dryad
 mkdir config/tenants
 ./symlink_config.sh
 ```
@@ -91,7 +91,7 @@ FLUSH PRIVILEGES;
 
 ```
 
-Now edit the dash2-config/config/database.yml file to fill in the *dashuser* and password you set above in the development environment for that configuration file.
+Now edit the dryad-config/config/database.yml file to fill in the *dashuser* and password you set above in the development environment for that configuration file.
 
 ### Solr
 Solr requires a Java runtime.  Try *java -version* and if it says that "java can be found in the following packages" rather than giving you a version you probably need to install java with a command like *sudo apt-get install default-jre* .
@@ -134,7 +134,7 @@ Verify Solr is set up correctly from the Admin UI:
 
 1. Click the *Documents* tab on the left side.<br>![Documents](images/solr4.png)
 
-2. Find the file *dash2-config/sample\_data/sample\_record.json* in the dash2-config repo.  Open the file in a text editor, select all the text and copy it.
+2. Find the file *dryad-config/sample\_data/sample\_record.json* in the dryad-config repo.  Open the file in a text editor, select all the text and copy it.
 
 3. Paste the text into the *Document(s)* box on the page.<br>![json pasted](images/solr5.png)
 4. Click *Submit Document* and be sure it shows a status of success.<br>![success status](images/solr6.png)
@@ -176,7 +176,7 @@ mysql -u <username> -p
 
 # Use the following two lines.
 USE dash;
-source ../dash2-config/sample_data/sample_record.sql;
+source ../dryad-config/sample_data/sample_record.sql;
 
 # To exit the MySQL client, type *exit* or press ctrl-d
 ```
@@ -216,12 +216,12 @@ We have enabled submission to a SWORD-enabled Merritt repository, but have only 
 
 ### Repository and identifier service configuration
 
-The Stash platform requires an implementation of the [Stash::Repo](https://github.com/CDLUC3/stash/tree/master/lib/stash/repo)
+The Stash platform requires an implementation of the [Stash::Repo](https://github.com/CDL-Dryad/stash/tree/master/lib/stash/repo)
 API for identifier assignment and submission to repositories.
 
-Dash2 uses CDL's EZID service for identifier assignment and stores datasets in the [Merritt](https://merritt.cdlib.org/) repository.
+Dryad uses CDL's EZID service for identifier assignment and stores datasets in the [Merritt](https://merritt.cdlib.org/) repository.
 The Stash::Repo implementation is provided by the [stash-merritt](https://github.com/CDLUC3/stash-merritt) gem, which is included in the application [Gemfile](../../Gemfile)
-and declared by the `repository:` key in [`app_config.yml`](https://github.com/CDLUC3/dash2-config-example/blob/development/config/app_config.yml).
+and declared by the `repository:` key in [`app_config.yml`](https://github.com/CDL-Drayd/dryad-config-example/blob/development/config/app_config.yml).
 EZID and Merritt/SWORD must be configured for each tenant in the apporpriate `tenants/*.yml` file, e.g.
 
 ```yaml
