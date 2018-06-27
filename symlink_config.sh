@@ -1,6 +1,6 @@
 #!/bin/bash
 
-mydir="../dash2-config"
+mydir="../dryad-config"
 len=$((${#mydir} + 1))
 CURRENTDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
