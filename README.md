@@ -32,14 +32,14 @@ At the same level as the `dashv2` directory:
   git clone https://github.com/CDLUC3/stash.git
   ```
 
-- Clone the [dash2-config](https://github.com/cdlib/dash2-config/) repository
+- Clone the [dryad-config](https://github.com/cdlib/dryad-config/) repository
   (private to CDL developers):
 
   ```
-  git clone git@github.com:cdlib/dash2-config.git
+  git clone git@github.com:cdlib/dryad-config.git
   ```
 
-- Symlink configuration files from `dash2-config` into the `dashv2`
+- Symlink configuration files from `dryad-config` into the `dashv2`
   `config` directory:
 
   ```
