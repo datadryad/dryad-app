@@ -15,11 +15,11 @@ set -e
 if [ ! -d ../stash ]; then
   BRANCH=${TRAVIS_PULL_REQUEST_BRANCH:-$TRAVIS_BRANCH}
 
-  echo "Cloning https://github.com/CDLUC3/stash:"
+  echo "Cloning https://github.com/CDL-Dryad/stash:"
   cd ..
 
   set -x
-  git clone https://github.com/CDLUC3/stash
+  git clone https://github.com/CDL-Dryad/stash
 
   echo "Checking out stash branch ${BRANCH}"
 

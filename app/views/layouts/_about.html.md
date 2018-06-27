@@ -15,12 +15,12 @@ There are currently ten live instances of Dash:
 - [UC Press](https://dash.ucpress.edu/)
 - [ONEshare](https://oneshare.cdlib.org/) (in partnership with [DataONE](http://dataone.org/))
 
-For information about Submission to Dash check out our [guidance here](https://github.com/CDLUC3/dashv2/blob/master/app/views/layouts/_help.html.md)
+For information about Submission to Dryad check out our [guidance here](https://github.com/CDL-Dryad/dryad/blob/master/app/views/layouts/_help.html.md)
 
 
 ## Architecture and Implementation
 
-Dash is completely open source.  Our code is made publicly available on GitHub (http://cdluc3.github.io/dash/).  Dash is based on an underlying Ruby-on-Rails data publication platform called Stash. Stash encompasses three main functional components: Store, Harvest, and Share.
+Dryad is completely open source.  Our code is made publicly available on GitHub (http://cdluc3.github.io/dash/). Dryad is based on an underlying Ruby-on-Rails data publication platform called Stash. Stash encompasses three main functional components: Store, Harvest, and Share.
 
 - Store: The Store component is responsible for the selection of datasets; their description in terms of configurable metadata schemas, including specification of ORCID and Fundref identifiers for researcher and funder disambiguation; the assignment of DOIs for stable citation and retrieval; designation of an optional limited time embargo; and packaging and submission to the integrated repository
 - Harvest: The Harvest component is responsible for retrieval of descriptive metadata from that repository for inclusion into a Solr search index
