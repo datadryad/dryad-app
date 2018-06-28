@@ -2,7 +2,7 @@ require_dependency 'stash_engine/application_controller'
 
 module StashEngine
   class SessionsController < ApplicationController # rubocop:disable Metrics/ClassLength
-    skip_before_action :verify_authenticity_token, only: %i[callback developer_callback orcid_callback]
+    skip_before_action :verify_authenticity_token, only: %i[callback developer_callback orcid_callback] # omniauth takes care of this differently
     before_action :callback_basics, only: %i[callback developer_callback]
     before_action :orcid_shenanigans, only: [:orcid_callback] # do not go to action if it's just a metadata set, not a login
 
@@ -121,9 +121,9 @@ module StashEngine
       @users = User.where(orcid: @orcid)
 
       case @users.count
-      when 1
-        login_from_orcid
-      else
+        when 1
+          login_from_orcid
+        else
         # either none or multiple users with one ORCID reset those duplicates and make them validate their tenant again
         @users.each { |u| u.update_column(:orcid, nil) } # reset them since there should be only one and make them validate again
         render :choose_sso
@@ -133,8 +133,8 @@ module StashEngine
     def login_from_orcid
       user = @users.first
       session[:user_id] = user.id
-      tenant = Tenant.find(user.tenant_id)
-      redirect_to tenant.full_url(dashboard_path)
+      # tenant = Tenant.find(user.tenant_id) # this was used to redirect to correct tenant, now not needed
+      redirect_to dashboard_path
     end
 
     # every different login method has different ways of persisting state
