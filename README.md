@@ -1,6 +1,6 @@
 # stash
 
-[![Build Status](https://travis-ci.org/CDLUC3/stash.svg?branch=development)](https://travis-ci.org/CDLUC3/stash) 
+[![Build Status](https://travis-ci.org/CDL-Dryad/stash.svg?branch=master)](https://travis-ci.org/CDL-Dryad/stash) 
 
 ## Introduction
 
@@ -26,6 +26,10 @@ and promotes open scholarly inquiry and advancement.
 [UC Curation Center](http://www.cdlib.org/uc3/)'s implementation of Stash.
 For the Dash source code, see the [dashv2](https://github.com/CDLUC3/dashv2)
 repository.
+
+The next generation of [Dryad](https://datadryad.org) is being rebuilt
+with the Stash core. For the Dryad source code, see the
+[dryad](https://github.com/CDL-Dryad/dryad) repository.
 
 ## Architecture
 

@@ -9,7 +9,7 @@ Gem::Specification.new do |s| # rubocop:disable Metrics/BlockLength
   s.version     = StashDiscovery::VERSION
   s.authors     = ['David Moles']
   s.email       = ['david.moles@ucop.edu']
-  s.homepage    = 'https://github.com/CDLUC3/stash_discovery'
+  s.homepage    = 'https://github.com/CDL-Dryad/stash'
   s.summary     = 'The discovery module for Stash'
   s.description = 'GeoBlacklight-based discovery module for Stash'
   s.license     = 'MIT'
