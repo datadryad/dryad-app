@@ -7,7 +7,7 @@ Gem::Specification.new do |s| # rubocop:disable Metrics/BlockLength
   s.version     = StashEngine::VERSION
   s.authors     = ['sfisher']
   s.email       = ['scott.fisher@ucop.edu']
-  s.homepage    = 'https://github.com/CDLUC3/stash_engine' # TODO, modify this section with better info
+  s.homepage    = 'https://github.com/CDL-Dryad/stash
   s.summary     = 'Metadata- and repository-agnostic core Stash functionality'
   s.description = 'Core Stash application functionality independent of repository, metadata schema, or customization'
   s.license     = 'MIT'

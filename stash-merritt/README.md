@@ -1,13 +1,13 @@
 # Stash::Merritt
 
-[![Build Status](https://travis-ci.org/CDLUC3/stash-merritt.svg)](https://travis-ci.org/CDLUC3/stash-merritt)
-[![Code Climate](https://codeclimate.com/github/CDLUC3/stash-merritt.svg)](https://codeclimate.com/github/CDLUC3/stash-merritt)
-[![Inline docs](http://inch-ci.org/github/CDLUC3/stash-merritt.svg)](http://inch-ci.org/github/CDLUC3/stash-merritt)
+[![Build Status](https://travis-ci.org/CDL-Dryad/stash-merritt.svg)](https://travis-ci.org/CDL-Dryad/stash-merritt)
+[![Code Climate](https://codeclimate.com/github/CDL-Dryad/stash-merritt.svg)](https://codeclimate.com/github/CDL-Dryad/stash-merritt)
+[![Inline docs](http://inch-ci.org/github/CDL-Dryad/stash-merritt.svg)](http://inch-ci.org/github/CDL-Dryad/stash-merritt)
 
 Packaging and
 [SWORD 2.0](http://swordapp.github.io/SWORDv2-Profile/SWORDProfile.html)
 deposit module for submitting
-[Stash](https://github.com/CDLUC3/stash_engine) datasets to
+[Stash](https://github.com/CDL-Dryad/stash_engine) datasets to
 [Merritt](http://www.cdlib.org/uc3/merritt/).
 
 ## Submission process
@@ -21,7 +21,7 @@ The `Stash::Merritt::SubmissionJob` class does the following:
 
    | filename | purpose |
    | -------- | ------- |
-   | `stash-wrapper.xml` | [Stash wrapper](https://github.com/CDLUC3/stash-wrapper), including [Datacite 4](https://schema.datacite.org/meta/kernel-4.0/) XML |
+   | `stash-wrapper.xml` | [Stash wrapper](https://github.com/CDL-Dryad/stash-wrapper), including [Datacite 4](https://schema.datacite.org/meta/kernel-4.0/) XML |
    | `mrt-datacite.xml` | [Datacite 3](https://schema.datacite.org/meta/kernel-3/) XML, for Merritt internal use. |
    | `mrt-oaidc.xml` | Dublin Core metadata, packaged in [oai_dc](https://www.openarchives.org/OAI/openarchivesprotocol.html#dublincore) format for [OAI-PMH](https://www.openarchives.org/OAI/openarchivesprotocol.html) compliance |
    | `mrt-dataone-manifest.txt` | legacy [DataONE manifest](http://cdluc3.github.io/dash/release-criteria/)* |

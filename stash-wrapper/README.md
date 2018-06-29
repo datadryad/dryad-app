@@ -1,11 +1,11 @@
 # stash-wrapper
 
-[![Build Status](https://travis-ci.org/CDLUC3/stash-wrapper.svg?branch=master)](https://travis-ci.org/CDLUC3/stash-wrapper)
-[![Code Climate](https://codeclimate.com/github/CDLUC3/stash-wrapper.svg)](https://codeclimate.com/github/CDLUC3/stash-wrapper)
-[![Inline docs](http://inch-ci.org/github/CDLUC3/stash-wrapper.svg)](http://inch-ci.org/github/CDLUC3/stash-wrapper)
-[![Gem Version](https://img.shields.io/gem/v/stash-wrapper.svg)](https://github.com/CDLUC3/stash-wrapper/releases)
+[![Build Status](https://travis-ci.org/CDL-Dryad/stash-wrapper.svg?branch=master)](https://travis-ci.org/CDL-Dryad/stash-wrapper)
+[![Code Climate](https://codeclimate.com/github/CDL-Dryad/stash-wrapper.svg)](https://codeclimate.com/github/CDL-Dryad/stash-wrapper)
+[![Inline docs](http://inch-ci.org/github/CDL-Dryad/stash-wrapper.svg)](http://inch-ci.org/github/CDL-Dryad/stash-wrapper)
+[![Gem Version](https://img.shields.io/gem/v/stash-wrapper.svg)](https://github.com/CDL-Dryad/stash-wrapper/releases)
 
-Gem for working with the [Stash](https://github.com/CDLUC3/stash)
+Gem for working with the [Stash](https://github.com/CDL-Dryad/stash)
 [XML wrapper format](https://dash.ucop.edu/stash_wrapper/stash_wrapper.xsd).
 
 The `StashWrapper` object graph mostly mirrors the `stash_wrapper` schema, though some
