@@ -2,51 +2,37 @@ require_dependency 'stash_engine/application_controller'
 
 module StashEngine
   class SessionsController < ApplicationController # rubocop:disable Metrics/ClassLength
-    skip_before_action :verify_authenticity_token, only: %i[callback developer_callback orcid_callback] # omniauth takes care of this differently
-    before_action :callback_basics, only: %i[callback developer_callback]
-    before_action :orcid_shenanigans, only: [:orcid_callback] # do not go to action if it's just a metadata set, not a login
+    skip_before_action :verify_authenticity_token, only: %i[callback orcid_callback] # omniauth takes care of this differently
+    before_action :callback_basics, only: %i[callback]
+    before_action :orcid_preprocessor, only: [:orcid_callback] # do not go to main action if it's just a metadata set, not a login
 
     # this is the place omniauth calls back for shibboleth/google logins
     def callback
-      return unless passes_whitelist?
       session[:user_id] = User.from_omniauth(@auth_hash, current_tenant.tenant_id, unmangle_orcid).id
       redirect_to dashboard_path
     end
 
-    def developer_callback
-      return if check_developer_orcid!
-      check_developer_login!
-      return unless passes_whitelist?
-      session[:user_id] = User.from_omniauth(@auth_hash, current_tenant.tenant_id, unmangle_orcid).id
-      redirect_to dashboard_path
-    end
-
-    # takes the orcid logins (which can come from a login or from a metadata entry page), origin=login is main login page
-    # the metadata page
+    # would only get here if the pre-processor decides this is an actual login and not just an orcid validation (by login)
     def orcid_callback
-      orcid_choose_tenant_or_login!
+      emails = orcid_api_emails(orcid: @auth_hash[:uid], bearer_token: @auth_hash[:credentials][:token])
+      user = User.from_omniauth_orcid(auth_hash: @auth_hash, emails: emails)
+      session[:user_id] = user.id
+      redirect_to dashboard_path
     end
 
     # destroy the session (ie, log out)
     def destroy
-      test_domain = session[:test_domain]
       reset_session
       clear_user
-      session[:test_domain] = test_domain
       redirect_to root_path
     end
 
     def choose_login; end
 
-    # rubocop:disable Metrics/AbcSize
     def choose_sso
       return if params[:tenant_id].blank?
-      if params[:tenant_id] == 'developer'
-        redirect_to "/stash/auth/developer?#{{ orcid: params[:orcid] }.to_param}"
-      else
-        t = StashEngine::Tenant.find(params[:tenant_id])
-        redirect_to t.omniauth_login_path(orcid: params[:orcid])
-      end
+      t = StashEngine::Tenant.find(params[:tenant_id])
+      redirect_to t.omniauth_login_path(orcid: params[:orcid])
     end
     # rubocop:enable Metrics/AbcSize
 
@@ -62,45 +48,14 @@ module StashEngine
       session.merge!(email:    @auth_hash['info']['email'],
                      name:     @auth_hash['info']['name'],
                      provider: @auth_hash['provider'])
-      session[:test_domain] = @auth_hash['info']['test_domain'] if session[:provider] == 'developer'
     end
 
     def auth_hash_good
       @auth_hash && @auth_hash['info'] && @auth_hash['info']['email'] && @auth_hash['uid']
     end
 
-    # get uid and mangle it with the tenant_id and return it, this is for the developer login to make unique per tenant
-    def mangle_uid_with_tenant(uid, tenant_id)
-      sp = uid.split('@')
-      sp.push('bad-email-domain.com') if sp.length == 1
-      sp = ['bad', 'bad-email-domain.com'] if sp.blank? || sp.length > 2
-      "#{sp.first}-#{tenant_id}@#{sp.last}"
-    end
-
-    def check_developer_login!
-      return unless @auth_hash[:provider] == 'developer'
-      session[:test_domain] = @auth_hash['info']['test_domain']
-      @auth_hash[:uid] = mangle_uid_with_tenant(@auth_hash[:uid], current_tenant.tenant_id)
-    end
-
-    # if only orcid filled in then act like it's an orcid login.  Either log in or redirect to choose tenant
-    # rubocop:disable Metrics/AbcSize
-    def check_developer_orcid!
-      return false unless params[:name].blank? && params[:email].blank? && params[:test_domain].blank? && !params[:orcid].blank?
-      @orcid = params[:orcid]
-      orcid_choose_tenant_or_login!
-      true
-    end
-    # rubocop:enable Metrics/AbcSize
-
-    def passes_whitelist?
-      return true if current_tenant.whitelisted?(@auth_hash.info.email)
-      redirect_to root_path, flash: { alert: 'You were not authorized to log in' } unless current_tenant.whitelisted?(@auth_hash.info.email)
-      false
-    end
-
     # using one controller for multiple orcid login actions (set metadata, log in, orcid_invite so decide which it is before controller)
-    def orcid_shenanigans
+    def orcid_preprocessor
       @auth_hash = request.env['omniauth.auth']
       @params = request.env['omniauth.params']
       if @params['origin'] == 'metadata'
@@ -121,9 +76,9 @@ module StashEngine
       @users = User.where(orcid: @orcid)
 
       case @users.count
-        when 1
-          login_from_orcid
-        else
+      when 1
+        login_from_orcid
+      else
         # either none or multiple users with one ORCID reset those duplicates and make them validate their tenant again
         @users.each { |u| u.update_column(:orcid, nil) } # reset them since there should be only one and make them validate again
         render :choose_sso
@@ -135,6 +90,17 @@ module StashEngine
       session[:user_id] = user.id
       # tenant = Tenant.find(user.tenant_id) # this was used to redirect to correct tenant, now not needed
       redirect_to dashboard_path
+    end
+
+    # get orcid emails as returned by API
+    def orcid_api_emails(orcid:, bearer_token:)
+      resp = RestClient.get "https://api.sandbox.orcid.org/v2.1/#{orcid}/email",
+                            'Content-type' => 'application/vnd.orcid+json', 'Authorization' => "Bearer #{bearer_token}"
+      my_info = JSON.parse(resp.body)
+      my_info['email'].map { |item| (item['verified'] ? item['email'] : nil) }.compact
+    rescue RestClient::Exception => e
+      logger.error(e)
+      return []
     end
 
     # every different login method has different ways of persisting state
