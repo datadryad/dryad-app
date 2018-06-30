@@ -15,12 +15,12 @@ ActiveRecord::Schema.define(version: 20180613162616) do
 
   create_table "bookmarks", force: :cascade do |t|
     t.integer  "user_id",       limit: 4,   null: false
-    t.string   "user_type",     limit: 255
-    t.string   "document_id",   limit: 255
-    t.string   "title",         limit: 255
+    t.string   "user_type",     limit: 191
+    t.string   "document_id",   limit: 191
+    t.string   "title",         limit: 191
     t.datetime "created_at",                null: false
     t.datetime "updated_at",                null: false
-    t.string   "document_type", limit: 255
+    t.string   "document_type", limit: 191
   end
 
   add_index "bookmarks", ["user_id"], name: "index_bookmarks_on_user_id", using: :btree
@@ -80,7 +80,7 @@ ActiveRecord::Schema.define(version: 20180613162616) do
   add_index "dcs_contributors", ["resource_id"], name: "index_dcs_contributors_on_resource_id", using: :btree
 
   create_table "dcs_dates", force: :cascade do |t|
-    t.string   "date",        limit: 255
+    t.string   "date",        limit: 191
     t.string   "date_type",   limit: 11
     t.integer  "resource_id", limit: 4
     t.datetime "created_at",              null: false
@@ -164,7 +164,7 @@ ActiveRecord::Schema.define(version: 20180613162616) do
   add_index "dcs_name_identifiers", ["name_identifier"], name: "index_dcs_name_identifiers_on_name_identifier", length: {"name_identifier"=>50}, using: :btree
 
   create_table "dcs_publication_years", force: :cascade do |t|
-    t.string   "publication_year", limit: 255
+    t.string   "publication_year", limit: 191
     t.integer  "resource_id",      limit: 4
     t.datetime "created_at",                   null: false
     t.datetime "updated_at",                   null: false
@@ -246,7 +246,7 @@ ActiveRecord::Schema.define(version: 20180613162616) do
   add_index "dcs_subjects_stash_engine_resources", ["subject_id"], name: "index_dcs_subjects_stash_engine_resources_on_subject_id", using: :btree
 
   create_table "dcs_versions", force: :cascade do |t|
-    t.string   "version",     limit: 255
+    t.string   "version",     limit: 191
     t.integer  "resource_id", limit: 4
     t.datetime "created_at",              null: false
     t.datetime "updated_at",              null: false
@@ -303,7 +303,7 @@ ActiveRecord::Schema.define(version: 20180613162616) do
   create_table "searches", force: :cascade do |t|
     t.text     "query_params", limit: 65535
     t.integer  "user_id",      limit: 4
-    t.string   "user_type",    limit: 255
+    t.string   "user_type",    limit: 191
     t.datetime "created_at",                 null: false
     t.datetime "updated_at",                 null: false
   end
@@ -311,10 +311,10 @@ ActiveRecord::Schema.define(version: 20180613162616) do
   add_index "searches", ["user_id"], name: "index_searches_on_user_id", using: :btree
 
   create_table "stash_engine_authors", force: :cascade do |t|
-    t.string   "author_first_name", limit: 255
-    t.string   "author_last_name",  limit: 255
-    t.string   "author_email",      limit: 255
-    t.string   "author_orcid",      limit: 255
+    t.string   "author_first_name", limit: 191
+    t.string   "author_last_name",  limit: 191
+    t.string   "author_email",      limit: 191
+    t.string   "author_orcid",      limit: 191
     t.integer  "resource_id",       limit: 4
     t.datetime "created_at",                    null: false
     t.datetime "updated_at",                    null: false
@@ -371,7 +371,7 @@ ActiveRecord::Schema.define(version: 20180613162616) do
     t.integer  "status_code",         limit: 4
     t.boolean  "timed_out",                         default: false
     t.text     "original_url",        limit: 65535
-    t.string   "cloud_service",       limit: 255
+    t.string   "cloud_service",       limit: 191
   end
 
   add_index "stash_engine_file_uploads", ["file_state"], name: "index_stash_engine_file_uploads_on_file_state", using: :btree
@@ -436,7 +436,7 @@ ActiveRecord::Schema.define(version: 20180613162616) do
   add_index "stash_engine_resources", ["identifier_id"], name: "index_stash_engine_resources_on_identifier_id", using: :btree
 
   create_table "stash_engine_shares", force: :cascade do |t|
-    t.string   "secret_id",   limit: 255
+    t.string   "secret_id",   limit: 191
     t.integer  "resource_id", limit: 4
     t.datetime "created_at",              null: false
     t.datetime "updated_at",              null: false
@@ -466,7 +466,7 @@ ActiveRecord::Schema.define(version: 20180613162616) do
     t.text     "tenant_id",   limit: 65535
     t.datetime "last_login"
     t.string   "role",        limit: 9,     default: "user"
-    t.string   "orcid",       limit: 255
+    t.string   "orcid",       limit: 191
   end
 
   add_index "stash_engine_users", ["email"], name: "index_stash_engine_users_on_email", length: {"email"=>50}, using: :btree
@@ -486,15 +486,15 @@ ActiveRecord::Schema.define(version: 20180613162616) do
 
   create_table "users", force: :cascade do |t|
     t.string   "email",                  limit: 191, default: "",    null: false
-    t.string   "encrypted_password",     limit: 255, default: "",    null: false
+    t.string   "encrypted_password",     limit: 191, default: "",    null: false
     t.string   "reset_password_token",   limit: 191
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
     t.integer  "sign_in_count",          limit: 4,   default: 0,     null: false
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
-    t.string   "current_sign_in_ip",     limit: 255
-    t.string   "last_sign_in_ip",        limit: 255
+    t.string   "current_sign_in_ip",     limit: 191
+    t.string   "last_sign_in_ip",        limit: 191
     t.datetime "created_at",                                         null: false
     t.datetime "updated_at",                                         null: false
     t.boolean  "guest",                              default: false
