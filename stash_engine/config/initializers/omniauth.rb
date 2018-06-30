@@ -10,25 +10,13 @@ Rails.application.config.middleware.use OmniAuth::Builder do
                :identity_provider   => 'shib_identity_provider'
            }
 
-  unless Rails.env.production? || Rails.env.stage?
-    provider :developer,
-             :callback_path => '/stash/auth/developer/callback',
-             :path_prefix => '/stash/auth',
-             :fields => [:name, :email, :test_domain, :orcid],
-             :uid_field => :email
-  end
-
-  provider :google_oauth2, StashEngine.app.google_client_id, StashEngine.app.google_client_secret,
-           :callback_path  => '/stash/auth/google_oauth2/callback',
-           :path_prefix    => '/stash/auth'
-
   provider :orcid, StashEngine.app.orcid_key, StashEngine.app.orcid_secret,
            :member => StashEngine.app.member,
            :sandbox => StashEngine.app.sandbox,
            :callback_path  => '/stash/auth/orcid/callback',
            :path_prefix    => '/stash/auth',
            :authorize_params => {
-               :scope => '/authenticate'
+               :scope => '/read-limited'
            },
            :client_options => {
                :site => StashEngine.app.orcid_site,
