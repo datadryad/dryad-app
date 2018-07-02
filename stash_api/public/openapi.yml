@@ -5,7 +5,7 @@ servers:
 info:
   title: dash-api
   description: >-
-    API for the [Dash](https://github.com/CDLUC3/dashv2) data publication and
+    API for the [Dash](https://github.com/CDL-Dryad/dryad) data publication and
     preservation platform.
   version: 0.0.1
 

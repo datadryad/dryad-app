@@ -9,7 +9,7 @@ Gem::Specification.new do |s| # rubocop:disable Metrics/BlockLength
   s.version     = StashDatacite::VERSION
   s.authors     = ['sfisher']
   s.email       = ['scott.fisher@ucop.edu']
-  s.homepage    = 'https://github.com/CDLUC3/stash_datacite'
+  s.homepage    = 'https://github.com/CDL-Dryad/stash'
   s.summary     = 'An engine for working with the DataCite schema in Stash.'
   s.description = 'An engine for working with the DataCite schema in Stash.'
   s.license     = 'MIT'
