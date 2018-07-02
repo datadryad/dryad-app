@@ -1,8 +1,8 @@
 # Stash::Harvester 
 
-[![Build Status](https://travis-ci.org/CDLUC3/stash-harvester.svg?branch=master)](https://travis-ci.org/CDLUC3/stash-harvester) 
-[![Code Climate](https://codeclimate.com/github/CDLUC3/stash-harvester.svg)](https://codeclimate.com/github/CDLUC3/stash-harvester) 
-[![Inline docs](http://inch-ci.org/github/CDLUC3/stash-harvester.svg)](http://inch-ci.org/github/CDLUC3/stash-harvester)
+[![Build Status](https://travis-ci.org/CDL-Dryad/stash-harvester.svg?branch=master)](https://travis-ci.org/CDL-Dryad/stash-harvester) 
+[![Code Climate](https://codeclimate.com/github/CDL-Dryad/stash-harvester.svg)](https://codeclimate.com/github/CDL-Dryad/stash-harvester) 
+[![Inline docs](http://inch-ci.org/github/CDL-Dryad/stash-harvester.svg)](http://inch-ci.org/github/CDL-Dryad/stash-harvester)
 
 Harvests metadata from a digital repository into
 [Solr](http://lucene.apache.org/solr/) for indexing.
