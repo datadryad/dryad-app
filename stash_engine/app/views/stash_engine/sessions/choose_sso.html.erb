@@ -1,2 +1,20 @@
-<div class="t-login__more-messages"><div class="t-login__orcid-small"></div><div style="padding-top: 10px;">&nbsp;login was successful.</div></div>
-<%= render partial: 'sso_section', locals: {replace_text: 'Please verify your identity using Single Sign-on'} %>
+<% @page_title = "Choose Partner Institution" %>
+<h1>Partner Institution Affiliation</h1>
+
+<p>You have successfully logged in with ORCID</p>
+
+<p>If you are affiliated with any of the following partner institutions, please click its name to verify your affiliation.</p>
+
+<% tenants = StashEngine::Tenant.partner_list %>
+
+<div class="c-institution__container">
+  <% tenants.each_slice((tenants.count / 3.0).ceil).to_a.each do |tenant_column| %>
+    <div class="c-institution__column">
+      <% tenant_column.each do |t| %>
+        <%= link_to t.short_name, t.omniauth_login_path %><br/>
+      <% end %>
+    </div>
+  <% end %>
+</div>
+
+<%= button_to 'I am not affiliated with any of these institutions', no_partner_path, class: 'c-institution__button' %>

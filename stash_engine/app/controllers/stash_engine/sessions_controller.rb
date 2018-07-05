@@ -17,7 +17,11 @@ module StashEngine
       emails = orcid_api_emails(orcid: @auth_hash[:uid], bearer_token: @auth_hash[:credentials][:token])
       user = User.from_omniauth_orcid(auth_hash: @auth_hash, emails: emails)
       session[:user_id] = user.id
-      redirect_to dashboard_path
+      if user.tenant_id
+        redirect_to dashboard_path
+      else
+        redirect_to choose_sso_path
+      end
     end
 
     # destroy the session (ie, log out)
@@ -29,12 +33,14 @@ module StashEngine
 
     def choose_login; end
 
-    def choose_sso
-      return if params[:tenant_id].blank?
-      t = StashEngine::Tenant.find(params[:tenant_id])
-      redirect_to t.omniauth_login_path(orcid: params[:orcid])
+    def choose_sso; end
+
+    # no partner, so set as generic dryad tenant without membership benefits
+    def no_partner
+      current_user.tenant_id = 'dryad'
+      current_user.save!
+      redirect_to dashboard_path
     end
-    # rubocop:enable Metrics/AbcSize
 
     private
 
@@ -70,19 +76,6 @@ module StashEngine
       @orcid = @auth_hash.uid
       return true if @orcid
       head(:forbidden)
-    end
-
-    def orcid_choose_tenant_or_login!
-      @users = User.where(orcid: @orcid)
-
-      case @users.count
-      when 1
-        login_from_orcid
-      else
-        # either none or multiple users with one ORCID reset those duplicates and make them validate their tenant again
-        @users.each { |u| u.update_column(:orcid, nil) } # reset them since there should be only one and make them validate again
-        render :choose_sso
-      end
     end
 
     def login_from_orcid

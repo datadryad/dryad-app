@@ -79,9 +79,8 @@ module StashEngine
     end
 
     def self.create_user_with_orcid(auth_hash:, email:)
-      # TODO: we need to remove the ucop default for tenant_id and instead nil and then prompt for institution (or dryad) before continuing
       User.create(first_name: auth_hash[:extra][:raw_info][:first_name], last_name: auth_hash[:extra][:raw_info][:last_name],
-                  email: email, tenant_id: 'ucop', last_login: Time.new, role: 'user', orcid: auth_hash[:uid])
+                  email: email, tenant_id: nil, last_login: Time.new, role: 'user', orcid: auth_hash[:uid])
     end
   end
 end
