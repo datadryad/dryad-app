@@ -19,7 +19,7 @@ module StashEngine
     end
 
     def self.partner_list
-      all.delete_if {|t| t.partner_display == false }
+      all.delete_if { |t| t.partner_display == false }
     end
 
     # gets the Tenant class to respond to the keys so you can call hash like methods
