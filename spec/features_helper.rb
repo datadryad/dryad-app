@@ -36,7 +36,7 @@ def mock_omniauth!
 
   OmniAuth.config.test_mode = true
   OmniAuth.config.add_mock(
-    :google_oauth2,
+    :orcid,
     uid: '555555555555555555555',
     credentials: {
       token: 'ya29.Ry4gVGVzdHkgTWNUZXN0ZmFjZQ'
@@ -45,6 +45,12 @@ def mock_omniauth!
       email: 'test@example.edu.test-google-a.com',
       name: 'G. Testy McTestface',
       test_domain: 'localhost'
+    },
+    extra: {
+      raw_info: {
+        first_name: 'G. Testy',
+        last_name: 'McTestface'
+      }
     }
   )
 end
@@ -136,10 +142,9 @@ end
 
 def log_in!
   visit('/')
-  login = first(:link_or_button, 'Login')
-  login.click
-  select('Localhost', from: 'tenant_id')
-  first(:link_or_button, 'Submit').click
+  first(:link_or_button, 'Login').click
+  first(:link_or_button, 'Create or log in with your ORCID ID').click
+  first(:link_or_button, 'I am not affiliated with any of these institutions').click
 end
 
 def start_new_dataset!
