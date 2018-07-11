@@ -10,15 +10,6 @@ module StashEngine
 
     prepend_view_path("#{Rails.application.root}/app/views")
 
-    def force_to_domain
-      return if session[:test_domain]
-
-      host, port = tenant_host_and_port(current_tenant_display)
-      return if host_and_port_match?(request, host, port)
-
-      redirect_to(redirect_url_for(request.original_url, host, port))
-    end
-
     # the sort_column should be set by sortable_table gem and sorts manually by sort column object from sortable_table
     def manual_sort!(array, sort_column)
       c = sort_column.column
