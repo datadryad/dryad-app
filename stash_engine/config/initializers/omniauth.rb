@@ -28,7 +28,7 @@ Rails.application.config.middleware.use OmniAuth::Builder do
   OmniAuth.config.full_host = -> (env) do
     # "omniauth.strategy"=>#<OmniAuth::Strategies::ORCID> might be helpful if we need to know if strategy is ORCID
     u = URI.parse("http://#{env['HTTP_X_FORWARDED_HOST'] || env['HTTP_HOST']}")
-    u.scheme = 'https' if env['omniauth.strategy'].to_s.include?('ORCID') && !u.host.include?('localhost')
+    u.scheme = 'https' if env['omniauth.strategy'].to_s.include?('ORCID') && !u.host[/(localhost)|(daisiedash\.datadryad\.org)/]
     "#{u.scheme}://#{u.host}#{(u.port == 80 ? '' : ":#{u.port}" )}" # only add port if it's not 80
   end
 
