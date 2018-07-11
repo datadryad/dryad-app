@@ -4,31 +4,43 @@ module StashEngine
   describe User do
     attr_reader :user
 
-    describe '#from_omniauth' do
-      it 'creates a user' do
-        auth = {
-          provider: 'google_oauth2',
-          uid: 'lmuckenhaupt-ucop@ucop.edu',
+    describe '#from_omniauth_orcid' do
+
+      before(:each) do
+        @auth = {
+          provider: 'orcid',
+          uid: '12345-678',
           info: {
             email: 'lmuckenhaupt@ucop.edu',
-            name: 'Lisa Muckenhaupt'
+            name: 'Morta McWhorter'
           },
-          credentials: {
-            token: '1234567890'
+          extra: {
+            raw_info: {
+              first_name: 'Morta',
+              last_name:  'McWhorter'
+            }
           }
         }.to_ostruct
-        user = User.from_omniauth(auth, 'ucop', '1234-5678-9012-3456')
+      end
+
+      it 'creates a user' do
+        user = User.from_omniauth_orcid(auth_hash: @auth, emails: ['lmuckenhaupt@ucop.edu'])
         expect(user).to be_a(User)
         expect(user).to be_persisted
-        expect(user.uid).to eq('lmuckenhaupt-ucop@ucop.edu')
-        expect(user.first_name).to eq('Lisa')
-        expect(user.last_name).to eq('Muckenhaupt')
+        expect(user.orcid).to eq('12345-678')
+        expect(user.first_name).to eq('Morta')
+        expect(user.last_name).to eq('McWhorter')
         expect(user.email).to eq('lmuckenhaupt@ucop.edu')
-        expect(user.provider).to eq('google_oauth2')
-        expect(user.tenant_id).to eq('ucop')
-        expect(user.oauth_token).to eq('1234567890')
-        expect(user.orcid).to eq('1234-5678-9012-3456')
       end
+
+      it "finds by email and updates a user's orcid" do
+        # this creates the user, as tested above
+        User.from_omniauth_orcid(auth_hash: @auth, emails: ['lmuckenhaupt@ucop.edu'])
+        @auth[:uid] = '987-654-321'
+        user2 = User.from_omniauth_orcid(auth_hash: @auth, emails: ['lmuckenhaupt@ucop.edu'])
+        expect(user2.orcid).to eq('987-654-321')
+      end
+
     end
 
     describe '#tenant' do
@@ -111,6 +123,48 @@ module StashEngine
         user2 = User.create(role: 'user')
         expect(user2.superuser?).to be_falsey
       end
+    end
+
+    describe 'find_by_orcid_or_emails' do
+      before(:each) do
+        User.create(
+          email: 'lmuckenhaupt@ucop.edu'
+        )
+        User.create(
+          orcid: '12345678'
+        )
+        User.create(
+          email: 'grover@example.org',
+          orcid: '87654321'
+        )
+      end
+
+      it 'finds by the orcid only' do
+        users = User.find_by_orcid_or_emails(orcid: '12345678', emails: [])
+        expect(users.count).to eq(1)
+      end
+
+      it 'finds by emails only' do
+        users = User.find_by_orcid_or_emails(orcid: nil, emails: ['lmuckenhaupt@ucop.edu', 'grover@example.org'])
+        expect(users.count).to eq(2)
+      end
+
+      it 'ignores nils and blanks in emails' do
+        users = User.find_by_orcid_or_emails(orcid: nil, emails: nil)
+        expect(users.count).to eq(0)
+
+        users = User.find_by_orcid_or_emails(orcid: nil, emails: [nil, nil])
+        expect(users.count).to eq(0)
+
+        users = User.find_by_orcid_or_emails(orcid: nil, emails: ['', ''])
+        expect(users.count).to eq(0)
+      end
+
+      it 'combines results for orcids and emails' do
+        users = User.find_by_orcid_or_emails(orcid: '12345678', emails: ['lmuckenhaupt@ucop.edu', 'grover@example.org'])
+        expect(users.count).to eq(3)
+      end
+
     end
   end
 end

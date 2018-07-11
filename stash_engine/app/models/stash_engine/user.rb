@@ -2,14 +2,19 @@ module StashEngine
   class User < ActiveRecord::Base
     has_many :resources
 
-    def self.from_omniauth(auth, tenant_id, orcid)
-      where(uid: auth[:uid]).first_or_initialize.tap do |user|
-        init_user_from_auth(user, auth)
-        user.tenant_id = tenant_id
-        user.last_login = Time.new
-        user.orcid = orcid unless orcid.blank?
-        user.save!
-      end
+    def self.from_omniauth_orcid(auth_hash:, emails:)
+      users = find_by_orcid_or_emails(orcid: auth_hash[:uid], emails: emails)
+      raise 'More than one user matches the ID or email returned by ORCID' if users.count > 1
+
+      return users.first.update_user_orcid(orcid: auth_hash[:uid]) if users.count == 1
+
+      create_user_with_orcid(auth_hash: auth_hash, email: emails.try(:first))
+    end
+
+    def self.find_by_orcid_or_emails(orcid:, emails:)
+      emails = Array.wrap(emails)
+      emails = emails.delete_if(&:blank?)
+      User.where(['orcid = ? or email IN ( ? )', orcid, emails])
     end
 
     def name
@@ -66,5 +71,17 @@ module StashEngine
       user.oauth_token = auth.credentials.token
     end
     private_class_method :init_user_from_auth
+
+    # convenience method for updating and returning user
+    def update_user_orcid(orcid:)
+      update(last_login: Time.new, orcid: orcid)
+      self
+    end
+
+    def self.create_user_with_orcid(auth_hash:, email:)
+      # TODO: we need to remove the ucop default for tenant_id and instead nil and then prompt for institution (or dryad) before continuing
+      User.create(first_name: auth_hash[:extra][:raw_info][:first_name], last_name: auth_hash[:extra][:raw_info][:last_name],
+                  email: email, tenant_id: 'ucop', last_login: Time.new, role: 'user', orcid: auth_hash[:uid])
+    end
   end
 end

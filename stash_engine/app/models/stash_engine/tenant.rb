@@ -109,15 +109,5 @@ module StashEngine
       URI::HTTPS.build(host: full_domain, path: path).to_s
     end
 
-    def whitelist
-      return nil unless login_whitelist
-      @whitelist ||= login_whitelist.map(&:downcase)
-    end
-
-    # give me an email address and I'll tell you if it's whitelisted
-    def whitelisted?(email_address)
-      return true if whitelist.nil?
-      whitelist.include?(email_address.downcase)
-    end
   end
 end

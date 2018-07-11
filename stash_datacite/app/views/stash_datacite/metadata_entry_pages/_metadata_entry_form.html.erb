@@ -21,13 +21,6 @@
       <% end %>
     </div>
     <%= link_to "Add Author", stash_datacite.authors_new_path( resource_id: @resource.id ), remote: :true, class: 't-describe__add-button o-button__add' %>
-    <div class="t-describe__add-orcid">
-      <div class="js-add_orcid_link">
-        <% if current_user.id == @resource.user_id %>
-          <%= render partial: "stash_datacite/authors/add_orcid_link", locals: { resource: @resource } %>
-        <% end %>
-      </div>
-    </div>
   </fieldset>
 
     <%= label_tag :description, "Abstract", class: 'c-input__label required', for: 'description_abstract' %>
