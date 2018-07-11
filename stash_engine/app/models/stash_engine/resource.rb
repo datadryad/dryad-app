@@ -34,7 +34,11 @@ module StashEngine
             file.save
           end
         end
-        new_resource.file_uploads.where(file_state: 'deleted').delete_all
+
+        # for some reason a where clause will not work with AR in this instance
+        # new_resource.file_uploads.where(file_state: 'deleted').delete_all
+        resources = new_resource.file_uploads.select { |ar_record| ar_record.file_state == 'deleted' }
+        resources.each(&:delete)
       end)
     end
 
