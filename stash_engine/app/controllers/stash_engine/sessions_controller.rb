@@ -94,7 +94,7 @@ module StashEngine
 
     # get orcid emails as returned by API
     def orcid_api_emails(orcid:, bearer_token:)
-      resp = RestClient.get "https://api.sandbox.orcid.org/v2.1/#{orcid}/email",
+      resp = RestClient.get "#{StashEngine.app.orcid.api}/v2.1/#{orcid}/email",
                             'Content-type' => 'application/vnd.orcid+json', 'Authorization' => "Bearer #{bearer_token}"
       my_info = JSON.parse(resp.body)
       my_info['email'].map { |item| (item['verified'] ? item['email'] : nil) }.compact

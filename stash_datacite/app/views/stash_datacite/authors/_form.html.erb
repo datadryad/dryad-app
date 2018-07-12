@@ -31,7 +31,7 @@
   <div class="c-orcid">
     <% unless author.blank? || author.author_orcid.blank? %>
       <%= link_to '', "http://orcid.org", class: 'c-orcid__icon', title: 'orcid_website' %>
-      <% if StashEngine.app.site == "https://sandbox.orcid.org/" %>
+      <% if StashEngine.app.orcid.site == "https://sandbox.orcid.org/" %>
         <%= link_to "https://sandbox.orcid.org/#{author.author_orcid}", "https://sandbox.orcid.org/#{author.author_orcid}",target: '_blank', class: 'c-orcid__id' %>
       <% else %>
         <%= link_to "https://orcid.org/#{author.author_orcid}", "https://orcid.org/#{author.author_orcid}",target: '_blank', class: 'c-orcid__id' %>
