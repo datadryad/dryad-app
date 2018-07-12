@@ -3,7 +3,6 @@ $('.remove_record').bind('ajax:success', function() {
     <% unless @resource.nil? %>
       <% if @if_orcid == true %>
         $('.c-orcid').hide();
-        $('.js-add_orcid_link').replaceWith('<%= j render partial: "stash_datacite/authors/add_orcid_link", locals: {  resource: @resource } %>')
       <% end %>
     <% end %>
   hideRemoveLinkAuthors();
