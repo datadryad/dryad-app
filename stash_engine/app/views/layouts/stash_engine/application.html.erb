@@ -32,11 +32,7 @@
         <%
           dash_logo = image_tag('stash_engine/logo_dash.svg', class: 'c-header__dash-logo-svg', alt: 'Dash logo')
         tenant_logo = logo_path(class: "c-header__dash-logo-svg") %>
-        <% if current_tenant.dash_logo_after_tenant %>
-          <%= tenant_logo %><%= dash_logo %>
-        <% else %>
-          <%= dash_logo %><%= tenant_logo %>
-        <% end %>
+        <%= dash_logo %><%= tenant_logo %>
       <% end %>
     </div>
     <nav class="c-header__nav js-header__nav">
