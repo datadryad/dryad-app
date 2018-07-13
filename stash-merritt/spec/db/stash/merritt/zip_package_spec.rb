@@ -19,11 +19,9 @@ module Stash
         allow(Rails).to receive(:root).and_return(rails_root)
 
         @user = StashEngine::User.create(
-          uid: 'lmuckenhaupt-example@example.edu',
           first_name: 'Lisa',
           last_name: 'Muckenhaupt',
           email: 'lmuckenhaupt@example.edu',
-          provider: 'developer',
           tenant_id: 'dataone'
         )
         @tenant = double(StashEngine::Tenant)

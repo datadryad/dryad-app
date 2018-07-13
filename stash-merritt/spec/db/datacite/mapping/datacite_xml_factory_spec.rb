@@ -20,11 +20,9 @@ module Datacite
         @dcs_resource = Datacite::Mapping::Resource.parse_xml(dc4_xml)
 
         user = StashEngine::User.create(
-          uid: 'lmuckenhaupt-example@example.edu',
           first_name: 'Lisa',
           last_name: 'Muckenhaupt',
           email: 'lmuckenhaupt@example.edu',
-          provider: 'developer',
           tenant_id: 'dataone'
         )
         @resource = StashDatacite::ResourceBuilder.new(
