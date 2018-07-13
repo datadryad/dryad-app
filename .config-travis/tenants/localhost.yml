@@ -5,14 +5,15 @@ default: &default
     endpoint: "http://localhost:39001/sword/collection/stash"
     username: "stash_submitter"
     password: "correct​horse​battery​staple"
-  contact_email: ["contact1@example.edu", "contact2@example.edu"]
   abbreviation: "LH"
   short_name: "Localhost"
   long_name: "Localhost"
+  publisher_id: grid.1234567890
   full_domain: "localhost:33000"
   domain_regex: "localhost$"
   tenant_id: localhost
   identifier_service:
+    provider: ezid
     shoulder: "doi:10.555/5555"
     account: stash
     password: stash
@@ -21,7 +22,8 @@ default: &default
   authentication:
     strategy: google
   default_license: cc_by
-  stash_logo_after_tenant: false
+  campus_contacts: ["morgan@example.org"]
+  data_deposit_agreement: false
 
 development:
   <<: *default

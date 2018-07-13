@@ -5,3 +5,5 @@ test:
   repository: Stash::MockRepository
   stash_mount: /stash
   max_review_days: 180
+  submission_bc_emails: [""]
+  contact_email: ["contact1@example.edu", "contact2@example.edu"]
