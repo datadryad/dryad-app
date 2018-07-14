@@ -35,11 +35,9 @@ module StashEngine
         identifier = Identifier.create(identifier: 'cat/dog', identifier_type: 'DOI')
         resource = Resource.create(user_id: user.id, identifier_id: identifier.id, current_editor_id: @user.id + 1, tenant_id: 'ucop')
         ResourceState.create(user_id: @user.id + 1, resource_state: 'in_progress', resource_id: resource.id)
-        User.create(uid: 't-ucop@ucop.edu',
-                    first_name: 'L',
+        User.create(first_name: 'L',
                     last_name: 'Mu',
                     email: 'lm@ucop.edu',
-                    provider: 'developer',
                     tenant_id: 'ucop',
                     role: 'user')
         expect(resource.can_edit?(user: @user)).to eq(false)
@@ -192,8 +190,8 @@ module StashEngine
       end
 
       it 'gives editor of in progress version' do
-        user1 = User.create(uid: 'lmuckenhaupt-ucop@ucop.edu', tenant_id: 'ucop', first_name: 'Laura', last_name: 'Muckenhaupt')
-        user2 = User.create(uid: 'crabhat-ucop@ucop.edu', tenant_id: 'ucop', first_name: 'Gopher', last_name: 'Jones')
+        user1 = User.create(tenant_id: 'ucop', first_name: 'Laura', last_name: 'Muckenhaupt')
+        user2 = User.create(tenant_id: 'ucop', first_name: 'Gopher', last_name: 'Jones')
         identifier = Identifier.create(identifier: 'cat/dog', identifier_type: 'DOI')
         resource1 = Resource.create(user_id: user1.id, identifier_id: identifier.id, current_editor_id: user1.id)
         resource2 = Resource.create(user_id: user1.id, identifier_id: identifier.id, current_editor_id: user2.id)

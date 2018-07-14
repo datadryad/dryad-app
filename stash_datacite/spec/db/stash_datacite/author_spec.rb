@@ -6,7 +6,6 @@ module StashEngine # TODO: are we testing Author or Affiliation? (Or AuthorPatch
     attr_reader :author
     before(:each) do
       user = User.create(
-        uid: 'lmuckenhaupt-example@example.edu',
         email: 'lmuckenhaupt@example.edu',
         tenant_id: 'dataone'
       )
