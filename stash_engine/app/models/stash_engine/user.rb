@@ -63,12 +63,9 @@ module StashEngine
     end
 
     def self.init_user_from_auth(user, auth)
-      user.provider = auth.provider
-      user.uid = auth.uid
       user.email = auth.info.email.split(';').first # because ucla has two values separated by ;
       # name is kludgy and many places do not provide them broken out
       user.first_name, user.last_name = split_name(auth.info.name) if auth.info.name
-      user.oauth_token = auth.credentials.token
     end
     private_class_method :init_user_from_auth
 
