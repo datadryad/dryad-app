@@ -3,9 +3,6 @@ mary_mccormick:
   first_name: Mary
   last_name: McCormick
   email: mary.mccormick.the.great@mailinator.com
-  uid: mary.mccormick.the.great-ucb@mailinator.com
-  provider: developer
-  oauth_token:
   created_at: 2017-08-24 21:00:08.000000000 Z
   updated_at: 2017-08-24 21:00:08.000000000 Z
   tenant_id: localhost
@@ -18,9 +15,6 @@ leroy_jones:
   first_name: Leroy
   last_name: Jones
   email: leroy.jones.1234@mailinator.com
-  uid: leroy.jones.1234-ucop@mailinator.com
-  provider: developer
-  oauth_token:
   created_at: 2017-08-24 21:15:46.000000000 Z
   updated_at: 2017-08-24 21:15:46.000000000 Z
   tenant_id: localhost
@@ -33,9 +27,6 @@ grolinda_nagios:
   first_name: Grolinda
   last_name: Nagios
   email: grolinda.nagios@mailinator.com
-  uid: grolinda.nagios-ucop@mailinator.com
-  provider: developer
-  oauth_token:
   created_at: 2017-08-24 21:32:22.000000000 Z
   updated_at: 2017-08-24 21:32:22.000000000 Z
   tenant_id: ucop
@@ -48,9 +39,6 @@ lolinda_myadmin:
   first_name: Lolinda
   last_name: MyAdmin
   email: lolinda.myadmin@mailinator.com
-  uid: lolinda.myadmin-ucop@mailinator.com
-  provider: developer
-  oauth_token:
   created_at: 2017-08-24 21:32:22.000000000 Z
   updated_at: 2017-08-24 21:32:22.000000000 Z
   tenant_id: ucop
