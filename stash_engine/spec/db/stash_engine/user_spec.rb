@@ -47,7 +47,7 @@ module StashEngine
       it 'finds the tenant' do
         tenant = instance_double(Tenant)
         allow(Tenant).to receive(:find).with('ucop').and_return(tenant)
-        user = User.create(uid: 'lmuckenhaupt-ucop@ucop.edu', tenant_id: 'ucop')
+        user = User.create(tenant_id: 'ucop')
         expect(user.tenant).to eq(tenant)
       end
     end
@@ -57,11 +57,9 @@ module StashEngine
 
       before(:each) do
         @user = User.create(
-          uid: 'lmuckenhaupt-ucop@ucop.edu',
           first_name: 'Lisa',
           last_name: 'Muckenhaupt',
           email: 'lmuckenhaupt@ucop.edu',
-          provider: 'developer',
           tenant_id: 'ucop'
         )
       end

@@ -151,8 +151,8 @@ module StashEngine
       end
 
       it 'gives editor of in progress version' do
-        user1 = User.create(uid: 'lmuckenhaupt-ucop@ucop.edu', tenant_id: 'ucop', first_name: 'Laura', last_name: 'Muckenhaupt')
-        user2 = User.create(uid: 'crabhat-ucop@ucop.edu', tenant_id: 'ucop', first_name: 'Gopher', last_name: 'Jones')
+        user1 = User.create(tenant_id: 'ucop', first_name: 'Laura', last_name: 'Muckenhaupt')
+        user2 = User.create(tenant_id: 'ucop', first_name: 'Gopher', last_name: 'Jones')
         identifier = Identifier.create(identifier: 'cat/dog', identifier_type: 'DOI')
         resource1 = Resource.create(user_id: user1.id, identifier_id: identifier.id, current_editor_id: user1.id)
         resource2 = Resource.create(user_id: user1.id, identifier_id: identifier.id, current_editor_id: user2.id)

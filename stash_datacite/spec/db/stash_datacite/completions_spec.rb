@@ -17,7 +17,6 @@ module StashDatacite
       attr_reader :completions
       before(:all) do
         @user = StashEngine::User.create(
-          uid: 'lmuckenhaupt-example@example.edu',
           email: 'lmuckenhaupt@example.edu',
           tenant_id: 'dataone'
         )
