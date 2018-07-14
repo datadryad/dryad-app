@@ -13,11 +13,9 @@ module StashEngine
 
     before(:each) do
       @user = StashEngine::User.create(
-        uid: 'lmuckenhaupt-ucop@ucop.edu',
         first_name: 'Lisa',
         last_name: 'Muckenhaupt',
         email: 'lmuckenhaupt@ucop.edu',
-        provider: 'developer',
         tenant_id: 'ucop'
       )
     end
