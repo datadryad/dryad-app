@@ -91,7 +91,7 @@ module StashEngine
         tenant = Tenant.by_domain('example.edu')
         login_path = tenant.omniauth_login_path
         # TODO: don't hard-code this
-        expect(login_path).to eq('https://stash-dev.example.edu/Shibboleth.sso/Login?target=https%3A%2F%2Fstash-dev.example.edu%2Fstash%2Fauth%2Fshibboleth%2Fcallback&entityID=urn%3Amace%3Aincommon%3Aexample.edu')
+        expect(login_path).to eq('https://stash-dev.example.edu/Shibboleth.sso/Login?target=https%3A%2F%2Fstash-dev.example.edu%2Fstash%2Fauth%2Fshibboleth%2Fcallback&entityID=urn%3Amace%3Aincommon%3Aexample.edu&tenant_id=exemplia')
       end
     end
 
@@ -121,7 +121,7 @@ module StashEngine
       it 'returns the login path' do
         tenant = Tenant.by_domain('example.edu')
         login_path = tenant.shibboleth_login_path
-        expect(login_path).to eq('https://stash-dev.example.edu/Shibboleth.sso/Login?target=https%3A%2F%2Fstash-dev.example.edu%2Fstash%2Fauth%2Fshibboleth%2Fcallback&entityID=urn%3Amace%3Aincommon%3Aexample.edu')
+        expect(login_path).to eq('https://stash-dev.example.edu/Shibboleth.sso/Login?target=https%3A%2F%2Fstash-dev.example.edu%2Fstash%2Fauth%2Fshibboleth%2Fcallback&entityID=urn%3Amace%3Aincommon%3Aexample.edu&tenant_id=exemplia')
       end
     end
 
