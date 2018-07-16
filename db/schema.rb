@@ -462,8 +462,8 @@ ActiveRecord::Schema.define(version: 20180713205424) do
     t.datetime "updated_at",                                null: false
     t.text     "tenant_id",  limit: 65535
     t.datetime "last_login"
-    t.string   "role",        limit: 9,     default: "user"
-    t.string   "orcid",       limit: 191
+	t.string   "role",       limit: 9,     default: "user"
+    t.string   "orcid",      limit: 191
   end
 
   add_index "stash_engine_users", ["email"], name: "index_stash_engine_users_on_email", length: {"email"=>50}, using: :btree
