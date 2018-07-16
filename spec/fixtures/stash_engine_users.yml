@@ -5,7 +5,7 @@ mary_mccormick:
   email: mary.mccormick.the.great@mailinator.com
   created_at: 2017-08-24 21:00:08.000000000 Z
   updated_at: 2017-08-24 21:00:08.000000000 Z
-  tenant_id: localhost
+  tenant_id: dryad
   last_login: 2017-08-24 21:00:08.000000000 Z
   role: user
   orcid: 1234-5878-1234-5678
@@ -17,7 +17,7 @@ leroy_jones:
   email: leroy.jones.1234@mailinator.com
   created_at: 2017-08-24 21:15:46.000000000 Z
   updated_at: 2017-08-24 21:15:46.000000000 Z
-  tenant_id: localhost
+  tenant_id: dryad
   last_login: 2017-08-24 21:15:46.000000000 Z
   role: user
   orcid: ''

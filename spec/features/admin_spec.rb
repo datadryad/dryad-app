@@ -6,7 +6,7 @@ describe 'admin' do
 
   before(:each) do
     log_in!
-    user = StashEngine::User.where(email: 'test@example.edu.test-google-a.com').first
+    user = StashEngine::User.where(orcid: '555555555555555555555').first
     user.update(role: 'admin')
   end
 
@@ -47,7 +47,7 @@ describe 'admin' do
   describe 'superuser' do
 
     before(:each) do
-      user = StashEngine::User.where(email: 'test@example.edu.test-google-a.com').first
+      user = StashEngine::User.where(orcid: '555555555555555555555').first
       user.update(role: 'superuser')
       user.reload
     end
