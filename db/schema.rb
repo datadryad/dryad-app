@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180613162616) do
+ActiveRecord::Schema.define(version: 20180713205424) do
 
   create_table "bookmarks", force: :cascade do |t|
     t.integer  "user_id",       limit: 4,   null: false
@@ -455,23 +455,19 @@ ActiveRecord::Schema.define(version: 20180613162616) do
   add_index "stash_engine_submission_logs", ["resource_id"], name: "index_stash_engine_submission_logs_on_resource_id", using: :btree
 
   create_table "stash_engine_users", force: :cascade do |t|
-    t.text     "first_name",  limit: 65535
-    t.text     "last_name",   limit: 65535
-    t.text     "email",       limit: 65535
-    t.text     "uid",         limit: 65535
-    t.text     "provider",    limit: 65535
-    t.text     "oauth_token", limit: 65535
-    t.datetime "created_at",                                 null: false
-    t.datetime "updated_at",                                 null: false
-    t.text     "tenant_id",   limit: 65535
+    t.text     "first_name", limit: 65535
+    t.text     "last_name",  limit: 65535
+    t.text     "email",      limit: 65535
+    t.datetime "created_at",                                null: false
+    t.datetime "updated_at",                                null: false
+    t.text     "tenant_id",  limit: 65535
     t.datetime "last_login"
-    t.string   "role",        limit: 9,     default: "user"
-    t.string   "orcid",       limit: 191
+    t.string   "role",       limit: 9,     default: "user"
+    t.string   "orcid",      limit: 191
   end
 
   add_index "stash_engine_users", ["email"], name: "index_stash_engine_users_on_email", length: {"email"=>50}, using: :btree
   add_index "stash_engine_users", ["tenant_id"], name: "index_stash_engine_users_on_tenant_id", length: {"tenant_id"=>50}, using: :btree
-  add_index "stash_engine_users", ["uid"], name: "index_stash_engine_users_on_uid", length: {"uid"=>50}, using: :btree
 
   create_table "stash_engine_versions", force: :cascade do |t|
     t.integer  "version",         limit: 4
