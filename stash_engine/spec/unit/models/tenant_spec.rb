@@ -29,7 +29,6 @@ module StashEngine
       expect(tenant.long_name).to eq('University of Exemplia')
       expect(tenant.full_domain).to eq('stash-dev.example.edu')
       expect(tenant.domain_regex).to eq('example.edu$')
-      expect(tenant.contact_email).to eq(%w[contact1@example.edu contact2@example.edu])
       expect(tenant.default_license).to eq('cc_by')
       expect(tenant.stash_logo_after_tenant).to eq(true)
       repo = tenant.repository

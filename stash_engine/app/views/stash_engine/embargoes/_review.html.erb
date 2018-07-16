@@ -10,8 +10,8 @@
   A private reviewer URL will be available for sharing until your dataset is public. Your permanent DOI
   for citation use will be available upon submission on the data landing page. If you would like to
   preserve data privately for longer than six months for non-peer review purposes, please contact us at
-  <a href="mailto:<%= [current_tenant.contact_email].flatten.first %>">
-    <%= [current_tenant.contact_email].flatten.first %></a>.
+  <a href="mailto:<%= [APP_CONFIG['contact_email']].flatten.first %>">
+    <%= [APP_CONFIG['contact_email']].flatten.first %></a>.
 </p>
 
 
