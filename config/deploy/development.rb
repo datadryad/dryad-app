@@ -11,7 +11,7 @@ set :rails_env, "development"
 
 # To override the default host, set $SERVER_HOST, e.g.
 #    $ SERVER_HOST='localhost' bundle exec cap development deploy
-set :server_host, ENV["SERVER_HOST"] || 'uc3-dash2-dev.cdlib.org'
+set :server_host, ENV["SERVER_HOST"] || 'uc3-dryad-dev.cdlib.org'
 server fetch(:server_host), user: 'dash2', roles: %w{web app db}
 
 #on roles(:all) do |host|

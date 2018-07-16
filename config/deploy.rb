@@ -1,7 +1,7 @@
 # config valid only for current version of Capistrano
 lock '3.4.1'
 
-set :application, 'dashv2'
+set :application, 'dryad'
 set :repo_url, 'https://github.com/CDL-Dryad/dryad.git'
 
 # Default branch is :master -- uncomment this to prompt for branch name
@@ -9,7 +9,7 @@ ask :branch, `git rev-parse --abbrev-ref HEAD`.chomp unless ENV['BRANCH']
 set :branch, ENV['BRANCH'] if ENV['BRANCH']
 
 # Default deploy_to directory is /var/www/my_app_name
-set :deploy_to, '/apps/dash2/apps/ui'
+set :deploy_to, '/apps/dryad/apps/ui'
 
 # Default value for :scm is :git
 set :scm, :git
@@ -33,7 +33,7 @@ set :linked_dirs, fetch(:linked_dirs, []).push('log', 'tmp/pids', 'tmp/cache', '
 
 # Default value for default_env is {}
 # set :default_env, { path: '/apps/dash2/local/bin:$PATH', 'LOCAL_ENGINES' => 'false' }
-set :default_env, { path: '/apps/dash2/local/bin:$PATH' }
+set :default_env, { path: '/apps/dryad/local/bin:$PATH' }
 
 # Default value for keep_releases is 5
 set :keep_releases, 5
