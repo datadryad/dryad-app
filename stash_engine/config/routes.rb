@@ -60,6 +60,7 @@ StashEngine::Engine.routes.draw do
   get 'sessions/destroy', :to => 'sessions#destroy'
   get 'sessions/choose_login', to: 'sessions#choose_login', as: 'choose_login'
   get 'sessions/choose_sso', to: 'sessions#choose_sso', as: 'choose_sso'
+  post 'sessions/no_partner', to: 'sessions#no_partner', as: 'no_partner'
 
   get 'help', :to => 'pages#help'
   get 'faq', :to => 'pages#faq'

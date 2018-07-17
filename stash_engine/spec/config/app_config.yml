@@ -3,3 +3,5 @@ test:
   submission_error_email: [stash-dev@example.edu, stash-ops@example.edu]
   feedback_email_from: stash-noreply@example.edu
   repository: Stash::MockRepository
+  submission_bc_emails: ["alan.smithee@example.edu"]
+  contact_email: ["contact1@example.edu", "contact2@example.edu"]

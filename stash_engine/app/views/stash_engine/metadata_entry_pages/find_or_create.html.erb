@@ -10,5 +10,3 @@
     data-load="<%= metadata_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: params[:resource_id], format: :js) %>">
   <%= image_tag 'stash_engine/spinner.gif', size: '80x60', alt: 'Loading spinner' %>
 </div>
-
-<%= render partial: 'stash_engine/metadata_entry_pages/agreement_popup', locals: {resource: @resource} %>

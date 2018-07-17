@@ -18,6 +18,10 @@ module StashEngine
       StashEngine.tenants.values.map { |h| new(h) if h['enabled'] && h['enabled'] == true }.compact.sort_by(&:short_name)
     end
 
+    def self.partner_list
+      all.delete_if { |t| t.partner_display == false }
+    end
+
     # gets the Tenant class to respond to the keys so you can call hash like methods
     def method_missing(m) # rubocop:disable Style/MethodMissing
       @ostruct.send(m)
@@ -39,11 +43,6 @@ module StashEngine
       File.exist?(dda) && data_deposit_agreement
     end
 
-    def intrusive_data_deposit_agreement?
-      dda = File.join(Rails.root, 'app', 'views', 'tenants', tenant_id, '_dda.html.erb')
-      File.exist?(dda) && intrusive_data_deposit_agreement
-    end
-
     def omniauth_login_path(params = nil)
       @omniauth_login_path ||= send("#{authentication.strategy}_login_path".intern, params)
     end
@@ -55,7 +54,7 @@ module StashEngine
       extra_params = (params ? "?#{params.to_param}" : '')
       "https://#{full_domain}/Shibboleth.sso/Login?" \
           "target=#{CGI.escape("#{callback_path_begin}shibboleth/callback#{extra_params}")}" \
-          "&entityID=#{CGI.escape(authentication.entity_id)}"
+          "&entityID=#{CGI.escape(authentication.entity_id)}&tenant_id=#{CGI.escape(tenant_id)}"
     end
 
     def google_login_path(params = nil)
