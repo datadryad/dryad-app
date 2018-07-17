@@ -83,6 +83,22 @@
   text-align: center;
 }
 
+.c-institution__container {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  margin: 0 0 1em 5em;
+}
+
+.c-institution__column {
+  margin-right: 5em;
+}
+
+.c-institution__button {
+  margin-top: 1em;
+  padding: 10px;
+}
+
 .o-heading__level2-login-with {
   @extend %o-heading__level2;
   margin-bottom: 0;

@@ -173,7 +173,7 @@ module StashEngine
     def api_async_download(resource:, email:)
       url = merritt_friendly_async_url(resource: resource)
 
-      email_from = [current_tenant.contact_email].flatten.first
+      email_from = [APP_CONFIG['contact_email']].flatten.first
       email_subject = "Your download for #{resource.title} is ready"
       email_body = File.read(File.join(StashEngine::Engine.root, 'app', 'views', 'stash_engine', 'downloads', 'async_email.txt.erb'))
 
