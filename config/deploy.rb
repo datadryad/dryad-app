@@ -59,9 +59,9 @@ namespace :deploy do
   desc 'Get list of linked files for capistrano'
   task :my_linked_files do
     on roles(:app) do
-      res1 = capture "ls /apps/dash2/apps/ui/shared/config/*.yml -1"
+      res1 = capture "ls /apps/dryad/apps/ui/shared/config/*.yml -1"
       res1 = res1.split("\n").map{|i| i.match(/config\/[^\/]+$/).to_s }
-      res2 = capture "ls /apps/dash2/apps/ui/shared/config/tenants/*.yml -1"
+      res2 = capture "ls /apps/dryad/apps/ui/shared/config/tenants/*.yml -1"
       res2 = res2.split("\n").map{|i| i.match(/config\/tenants\/[^\/]+$/).to_s }
       set :linked_files, (res1 + res2)
     end
