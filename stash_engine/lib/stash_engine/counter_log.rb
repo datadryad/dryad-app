@@ -8,11 +8,13 @@ module StashEngine
       path = File.join(Rails.root, 'log', "counter_#{mdy}.log")
       if File.file?(path)
         @@logger ||= ActiveSupport::Logger.new(path)
+        # the following line resets the filename to new day if it's not the current day's logger, even though the old-day logger exists
+        @@logger = ActiveSupport::Logger.new(path) if @@logger.instance_values['logdev'].filename != path
       else
         @@logger = ActiveSupport::Logger.new(path) # create a new logger for the first log event of the new day
         add_headers(mdy)
-        @@logger
       end
+      @@logger
     end
     # rubocop:enable Style/ClassVars
 
