@@ -7,7 +7,7 @@ The Dryad application is made of a number of parts intended to keep it more flex
 You'll need the following parts installed and configured on a (local) UI development server to do development on the full UI application.  Don't worry, there are more detailed installation instructions in other sections below and this is meant to give an overview of the larger dependencies to configure.
 
 - (Recommended) A ruby version manager such as [rbenv](https://github.com/rbenv/rbenv) or [rvm](https://rvm.io/)
-- The [bare Drayd application](https://github.com/CDL-Dryad/dryad) cloned from github
+- The [bare Dryad application](https://github.com/CDL-Dryad/dryad) cloned from github
 - The [stash](https://github.com/CDL-Dryad/stash) repository cloned from github
 - A separate directory of configuration files called *dryad-config* which you can start by cloning [dryad-config-example](https://github.com/CDL-Dryad/dryad-config-example) and modifying to fit your settings.
 
