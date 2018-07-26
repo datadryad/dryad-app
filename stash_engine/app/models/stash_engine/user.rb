@@ -6,9 +6,9 @@ module StashEngine
       users = find_by_orcid_or_emails(orcid: auth_hash[:uid], emails: emails)
       raise 'More than one user matches the ID or email returned by ORCID' if users.count > 1
 
-      return users.first.update_user_orcid(orcid: auth_hash[:uid]) if users.count == 1
+      return users.first.update_user_orcid(orcid: auth_hash[:uid], temp_email: emails.try(:first)) if users.count == 1
 
-      create_user_with_orcid(auth_hash: auth_hash, email: emails.try(:first))
+      create_user_with_orcid(auth_hash: auth_hash, temp_email: emails.try(:first))
     end
 
     def self.find_by_orcid_or_emails(orcid:, emails:)
@@ -70,14 +70,15 @@ module StashEngine
     private_class_method :init_user_from_auth
 
     # convenience method for updating and returning user
-    def update_user_orcid(orcid:)
+    def update_user_orcid(orcid:, temp_email:)
       update(last_login: Time.new, orcid: orcid)
+      update(email: temp_email) if temp_email && email.nil?
       self
     end
 
-    def self.create_user_with_orcid(auth_hash:, email:)
+    def self.create_user_with_orcid(auth_hash:, temp_email:)
       User.create(first_name: auth_hash[:extra][:raw_info][:first_name], last_name: auth_hash[:extra][:raw_info][:last_name],
-                  email: email, tenant_id: nil, last_login: Time.new, role: 'user', orcid: auth_hash[:uid])
+                  email: temp_email, tenant_id: nil, last_login: Time.new, role: 'user', orcid: auth_hash[:uid])
     end
   end
 end
