@@ -7,7 +7,7 @@ The Dryad application is made of a number of parts intended to keep it more flex
 You'll need the following parts installed and configured on a (local) UI development server to do development on the full UI application.  Don't worry, there are more detailed installation instructions in other sections below and this is meant to give an overview of the larger dependencies to configure.
 
 - (Recommended) A ruby version manager such as [rbenv](https://github.com/rbenv/rbenv) or [rvm](https://rvm.io/)
-- The [bare Drayd application](https://github.com/CDL-Dryad/dryad) cloned from github
+- The [bare Dryad application](https://github.com/CDL-Dryad/dryad) cloned from github
 - The [stash](https://github.com/CDL-Dryad/stash) repository cloned from github
 - A separate directory of configuration files called *dryad-config* which you can start by cloning [dryad-config-example](https://github.com/CDL-Dryad/dryad-config-example) and modifying to fit your settings.
 
@@ -149,7 +149,7 @@ I'd *strongly* recommend installing [rbenv](https://github.com/rbenv/rbenv) for 
 # make sure some basic libraries are installed that are probably required later (Ubuntu example)
 sudo apt-get install libxml2 libxml2-dev patch curl
 
-cd dashv2
+cd dryad
 rbenv install $(cat .ruby-version) # installs the ruby-version set in the .ruby-version file
 
 # update your rubygems version
@@ -181,7 +181,7 @@ source ../dryad-config/sample_data/sample_record.sql;
 # To exit the MySQL client, type *exit* or press ctrl-d
 ```
 
-To configure where the search enterface draws its data from, modify the dashv2 app config/blacklight.yml to change the endpoint for the development server.  When running locally, the default server is development.
+To configure where the search enterface draws its data from, modify the dryad app config/blacklight.yml to change the endpoint for the development server.  When running locally, the default server is development.
 
 ## Testing basic functionality
 
