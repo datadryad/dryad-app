@@ -8,7 +8,7 @@
         <!-- Logout -->
         <%= link_to 'Logout', stash_url_helpers.sessions_destroy_path, class: 'c-footer__nav-item' %>
       <% else %>
-        <%= link_to 'Login', current_tenant_simple.try(:omniauth_login_path), class: 'c-footer__nav-item' %>
+        <%= link_to 'Login', stash_url_helpers.choose_login_path, class: 'c-footer__nav-item' %>
         <div class="c-footer__logged-in-or-out">
           <div class="o-sites">
             <details class="o-showhide o-sites__details" role="group">
