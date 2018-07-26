@@ -9,8 +9,8 @@
 
 set :rails_env, 'production'
 
-set :server_host, ENV["SERVER_HOST"] || 'uc3-dash2-prd.cdlib.org'
-server fetch(:server_host), user: 'dash2', roles: %w{web app db}
+set :server_host, ENV["SERVER_HOST"] || 'uc3-dryad-prd.cdlib.org'
+server fetch(:server_host), user: 'dryad', roles: %w{web app db}
 
 # role-based syntax
 # ==================
