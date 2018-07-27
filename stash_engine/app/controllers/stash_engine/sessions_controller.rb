@@ -90,7 +90,7 @@ module StashEngine
       resp = RestClient.get "#{StashEngine.app.orcid.api}/v2.1/#{orcid}/email",
                             'Content-type' => 'application/vnd.orcid+json', 'Authorization' => "Bearer #{bearer_token}"
       my_info = JSON.parse(resp.body)
-      my_info['email'].map { |item| (item['verified'] ? item['email'] : nil) }.compact
+      my_info['email'].map { |item| ( item['email'].blank? ? nil : item['email'] ) }.compact
     rescue RestClient::Exception => e
       logger.error(e)
       return []
