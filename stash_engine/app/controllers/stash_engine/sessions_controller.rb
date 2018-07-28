@@ -9,6 +9,8 @@ module StashEngine
 
     # this is the place omniauth calls back for shibboleth/google logins
     def callback
+      logger.debug("tenant_id: #{params[:tenant_id]}")
+      logger.debug("params: #{params}")
       current_user.update(tenant_id: params[:tenant_id])
       redirect_to dashboard_path
     end
