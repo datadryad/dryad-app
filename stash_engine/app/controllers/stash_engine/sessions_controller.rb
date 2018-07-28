@@ -9,8 +9,6 @@ module StashEngine
 
     # this is the place omniauth calls back for shibboleth/google logins
     def callback
-      logger.debug("shibboleth callback: #{current_user.inspect}")
-      logger.debug("session user_id: #{session[:user_id]}")
       current_user.update(tenant_id: params[:tenant_id])
       redirect_to dashboard_path
     end
@@ -36,9 +34,7 @@ module StashEngine
 
     def choose_login; end
 
-    def choose_sso
-      logger.debug(current_user.inspect)
-    end
+    def choose_sso; end
 
     # no partner, so set as generic dryad tenant without membership benefits
     def no_partner
@@ -51,7 +47,6 @@ module StashEngine
 
     def callback_basics
       @auth_hash = request.env['omniauth.auth']
-      reset_session
       head(:forbidden) unless auth_hash_good
     end
 
