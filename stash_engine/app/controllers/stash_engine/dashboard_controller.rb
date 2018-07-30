@@ -16,7 +16,7 @@ module StashEngine
       current_user.old_dryad_email = params[:email]
       current_user.set_migration_token
       current_user.save
-      StashEngine::MigrationMailer.migration_email(email: current_user.old_dryad_email, code: current_user.migration_token).deliver_now
+      StashEngine::MigrationMailer.migration_email(email: current_user.old_dryad_email, code: current_user.migration_token, url: auth_migrate_code_url).deliver_now
     end
 
     def migrate_data
