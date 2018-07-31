@@ -16,15 +16,15 @@ module StashEngine
       current_user.old_dryad_email = params[:email]
       current_user.set_migration_token
       current_user.save
-      StashEngine::MigrationMailer.migration_email(email: current_user.old_dryad_email, code: current_user.migration_token, url: auth_migrate_code_url).deliver_now
+      StashEngine::MigrationMailer.migration_email(email: current_user.old_dryad_email,
+                                                   code: current_user.migration_token,
+                                                   url: auth_migrate_code_url).deliver_now
     end
 
     def migrate_data
-      unless User.find_by_migration_token(params[:code]).nil?
-        if User.find_by_migration_token(params[:code]).id == current_user.id
-          render 'stash_engine/dashboard/migrate_successful'
-        end
-      end
+      return unless User.find_by_migration_token(params[:code])
+      return unless User.find_by_migration_token(params[:code]).id == current_user.id
+      render 'stash_engine/dashboard/migrate_successful'
     end
 
     def migrate_successful; end

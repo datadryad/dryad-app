@@ -28,20 +28,17 @@ module StashEngine
     end
 
     def set_migration_token
-      if self.migration_token.nil?
-        i = generate_migration_token
-        unless User.find_by(migration_token: i).nil?
-          i = generate_migration_token
-        end
-        self.migration_token = i
-        self.save
-      end
+      return unless migration_token.nil?
+      i = generate_migration_token
+      i = generate_migration_token while User.find_by(migration_token: i)
+      self.migration_token = i
+      save
     end
 
     def generate_migration_token
-      i = ""
+      i = ''
       6.times do
-        i += "%d" % rand(10)
+        i += format('%d', rand(10))
       end
       i
     end
