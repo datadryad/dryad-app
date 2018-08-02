@@ -2,6 +2,8 @@ module StashEngine
   class User < ActiveRecord::Base
     has_many :resources
 
+    after_find :set_migration_token
+
     def self.from_omniauth_orcid(auth_hash:, emails:)
       users = find_by_orcid_or_emails(orcid: auth_hash[:uid], emails: emails)
       raise 'More than one user matches the ID or email returned by ORCID' if users.count > 1
@@ -23,6 +25,22 @@ module StashEngine
 
     def superuser?
       role == 'superuser'
+    end
+
+    def set_migration_token
+      return unless migration_token.nil?
+      i = generate_migration_token
+      i = generate_migration_token while User.find_by(migration_token: i)
+      self.migration_token = i
+      save
+    end
+
+    def generate_migration_token
+      i = ''
+      6.times do
+        i += format('%d', rand(10))
+      end
+      i
     end
 
     def self.split_name(name)
