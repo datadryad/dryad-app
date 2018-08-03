@@ -170,7 +170,8 @@ to the Rails asset pipeline in **app/assets**.
 
 3. Optionally, validate your build HTML via the Gulp toolkit.
 
-4. Review your build from the local Rails server on your machine at /demo.
+4. Review your build from the local Rails server on your machine at **/demo/**. 
+**Note:** the trailing slash is required; otherwise you'll just get the unstyled static pages.
 
 5. Integrate the HTML of the elements you created or modified within the UI library into the same elements in Rails.
 
