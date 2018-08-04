@@ -4,7 +4,9 @@ module StashEngine
   class DashboardController < ApplicationController
     before_action :require_login, only: [:show]
 
-    def show; end
+    def show
+      session[:show_migrate] = !current_user.migration_complete?
+    end
 
     def metadata_basics; end
 
