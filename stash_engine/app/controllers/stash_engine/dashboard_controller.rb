@@ -15,6 +15,7 @@ module StashEngine
     def upload_basics; end
 
     def migrate_data_mail
+      return unless params[:email]
       current_user.old_dryad_email = params[:email]
       current_user.set_migration_token
       current_user.save
@@ -24,8 +25,12 @@ module StashEngine
     end
 
     def migrate_data
-      return unless User.find_by_migration_token(params[:code])
-      return unless User.find_by_migration_token(params[:code]).id == current_user.id
+      return if params[:code].nil?
+      if User.find_by_migration_token(params[:code]).nil? || User.find_by_migration_token(params[:code]).id != current_user.id
+        flash[:error] = 'Incorrect code.'
+        redirect_to auth_migrate_mail_path
+        return
+      end
       current_user.migration_complete
       render 'stash_engine/dashboard/migrate_successful'
     end
@@ -34,7 +39,7 @@ module StashEngine
 
     def migrate_no
       current_user.migration_complete
-      redirect_to '/stash/dashboard'
+      redirect_to dashboard_path
     end
 
     # an AJAX wait to allow in-progress items to complete before continuing.
