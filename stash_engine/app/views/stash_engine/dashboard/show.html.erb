@@ -12,13 +12,13 @@
 
 <div class="c-datasets-heading">
 	<h1 class="c-datasets-heading__heading o-heading__level1">My Datasets</h1>
-	<div>
-		Are you missing data from your old Dryad or DASH account?
-		<%= button_to 'Yes. Migrate my data.', auth_migrate_code_path, method: :get %>
-	</div>
-	<%= button_to 'Start New Dataset', new_resource_path, class: 'c-datasets-heading__button', form_class: 'o-button__inline-form', method: :get %>
+  <%= button_to 'Start New Dataset', new_resource_path, class: 'c-datasets-heading__button', form_class: 'o-button__inline-form', method: :get %>
 </div>
 
+  <div class="js-alert c-alert--informational" role="alert">
+    <div class="c-alert__text">Are you missing data from your old Dryad or DASH account?</div>
+    <%= button_to 'Yes. Migrate my data.', auth_migrate_code_path, class: 'o-button__plain-text5', method: :get %>
+  </div>
 <div class="c-table-heading">
 	<div class="c-table-heading__text">
 		In Progress
