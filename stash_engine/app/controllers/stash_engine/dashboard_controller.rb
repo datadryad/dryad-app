@@ -24,6 +24,7 @@ module StashEngine
     def migrate_data
       return unless User.find_by_migration_token(params[:code])
       return unless User.find_by_migration_token(params[:code]).id == current_user.id
+      current_user.migration_complete
       render 'stash_engine/dashboard/migrate_successful'
     end
 
