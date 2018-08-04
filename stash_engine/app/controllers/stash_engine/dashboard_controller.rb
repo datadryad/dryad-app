@@ -29,6 +29,11 @@ module StashEngine
 
     def migrate_successful; end
 
+    def migrate_no
+      current_user.migration_complete
+      redirect_to '/stash/dashboard'
+    end
+
     # an AJAX wait to allow in-progress items to complete before continuing.
     def ajax_wait
       respond_to do |format|
