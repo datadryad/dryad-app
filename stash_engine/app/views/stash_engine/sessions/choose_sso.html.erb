@@ -11,7 +11,7 @@
   <% tenants.each_slice((tenants.count / 3.0).ceil).to_a.each do |tenant_column| %>
     <div class="c-institution__column">
       <% tenant_column.each do |t| %>
-        <%= link_to t.short_name, t.omniauth_login_path %><br/>
+        <%= link_to t.short_name, t.omniauth_login_path({tenant_id: t.tenant_id}) %><br/>
       <% end %>
     </div>
   <% end %>
