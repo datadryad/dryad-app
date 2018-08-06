@@ -12,7 +12,7 @@ module StashEngine
     def require_login
       return if current_user
       flash[:alert] = 'You must be logged in.'
-      redirect_to current_tenant.try(:omniauth_login_path)
+      redirect_to stash_url_helpers.choose_login_path
     end
 
     # this requires a method called resource in the controller that returns the current resource (usually @resource)
