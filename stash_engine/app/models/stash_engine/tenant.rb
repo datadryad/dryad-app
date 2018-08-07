@@ -54,7 +54,7 @@ module StashEngine
       extra_params = (params ? "?#{params.to_param}" : '')
       "https://#{full_domain}/Shibboleth.sso/Login?" \
           "target=#{CGI.escape("#{callback_path_begin}shibboleth/callback#{extra_params}")}" \
-          "&entityID=#{CGI.escape(authentication.entity_id)}&tenant_id=#{CGI.escape(tenant_id)}"
+          "&entityID=#{CGI.escape(authentication.entity_id)}"
     end
 
     def google_login_path(params = nil)
