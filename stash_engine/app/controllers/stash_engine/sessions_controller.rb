@@ -2,13 +2,14 @@ require_dependency 'stash_engine/application_controller'
 
 module StashEngine
   class SessionsController < ApplicationController # rubocop:disable Metrics/ClassLength
+    before_action :require_login, only: %i[callback]
     skip_before_action :verify_authenticity_token, only: %i[callback orcid_callback] # omniauth takes care of this differently
     before_action :callback_basics, only: %i[callback]
     before_action :orcid_preprocessor, only: [:orcid_callback] # do not go to main action if it's just a metadata set, not a login
 
     # this is the place omniauth calls back for shibboleth/google logins
     def callback
-      session[:user_id] = User.from_omniauth(@auth_hash, current_tenant.tenant_id, unmangle_orcid).id
+      current_user.update(tenant_id: params[:tenant_id])
       redirect_to dashboard_path
     end
 
@@ -46,7 +47,6 @@ module StashEngine
 
     def callback_basics
       @auth_hash = request.env['omniauth.auth']
-      reset_session
       head(:forbidden) unless auth_hash_good
     end
 
