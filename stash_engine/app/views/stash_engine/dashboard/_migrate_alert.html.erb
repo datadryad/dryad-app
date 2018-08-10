@@ -1,0 +1,10 @@
+<% both_nil = current_user.email.nil? && current_user.old_dryad_email.nil? %>
+<% if (both_nil || current_user.email != current_user.old_dryad_email) && current_user.resources.count < 1 %>
+  <div class="js-alert c-alert--notification" role="alert">
+    <div class="c-migrate-banner__text"">
+      Are you missing data from your old Dryad or Dash account?
+    </div>
+      <%= button_to 'Yes. Migrate my data.', auth_migrate_code_path, method: :get, class: 'c-migrate-banner__button' %>
+    <button aria-label="close" class="js-alert__close o-button__close c-alert__close flash_button"></button>
+  </div>
+<% end %>
