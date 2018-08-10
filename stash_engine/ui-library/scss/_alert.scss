@@ -26,6 +26,12 @@
 	background-image: inline('../images/icon_info.svg');
 }
 
+.c-alert--notification {
+  @extend %c-alert;
+  background-color: $design-slate-color;
+  background-image: inline('../images/icon_info.svg');
+}
+
 .c-alert--error {
 	@extend %c-alert;
 	background-color: $design-red-color;

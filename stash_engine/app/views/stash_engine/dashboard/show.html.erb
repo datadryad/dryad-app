@@ -10,12 +10,10 @@
 <% end %>
 -->
 
+<%= render partial: 'migrate_alert' %>
+
 <div class="c-datasets-heading">
 	<h1 class="c-datasets-heading__heading o-heading__level1">My Datasets</h1>
-	<div>
-		Are you missing data from your old Dryad or DASH account?
-		<%= button_to 'Yes. Migrate my data.', auth_migrate_code_path, method: :get %>
-	</div>
 	<%= button_to 'Start New Dataset', new_resource_path, class: 'c-datasets-heading__button', form_class: 'o-button__inline-form', method: :get %>
 </div>
 
