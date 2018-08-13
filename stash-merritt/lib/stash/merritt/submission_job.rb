@@ -33,11 +33,12 @@ module Stash
 
       # :nocov:
       # TODO: couldn't figure out how to test this, maybe ask David when he gets back
+      # This is currently only used for updating metadata from ORCIDs for co-authors outside a Merritt submission
       def update_identifier_metadata!
         resource = StashEngine::Resource.find(@resource_id)
         sp = Stash::Merritt::SubmissionPackage.new(resource: resource, packaging: nil)
         dc4_xml = sp.dc4_builder.contents
-        update_metadata(dc4_xml)
+        update_metadata(dc4_xml) unless resource.skip_datacite_update
       end
       # :nocov:
 
@@ -46,7 +47,7 @@ module Stash
       def do_submit!
         package = create_package
         submit(package)
-        update_metadata(package.dc4_xml)
+        update_metadata(package.dc4_xml) unless resource.skip_datacite_update
         cleanup(package)
         Stash::Repo::SubmissionResult.success(resource_id: resource_id, request_desc: description, message: 'Success')
       end
