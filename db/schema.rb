@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180718223728) do
+ActiveRecord::Schema.define(version: 20180808233937) do
 
   create_table "bookmarks", force: :cascade do |t|
     t.integer  "user_id",       limit: 4,   null: false
@@ -430,6 +430,7 @@ ActiveRecord::Schema.define(version: 20180718223728) do
     t.datetime "publication_date"
     t.boolean  "accepted_agreement"
     t.string   "tenant_id",                 limit: 100
+    t.boolean  "skip_datacite_update",                    default: false
   end
 
   add_index "stash_engine_resources", ["current_editor_id"], name: "index_stash_engine_resources_on_current_editor_id", using: :btree
