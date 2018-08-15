@@ -96,6 +96,11 @@ pickle-email-*.html
 # TODO Comment out this rule if you are OK with secrets being uploaded to the repo
 config/initializers/secret_token.rb
 
+# We hope to avoid lots of extra commits when database schemas change in engines and get propagated into the app schema.rb.
+# if this becomes a problem we can un-ignore it.  We think rake db:migrate will just update this file based on the migration history and
+# it may not be needed except as a convenience.
+db/schema.rb
+
 # Only include if you have production secrets in this file, which is no longer a Rails default
 # config/secrets.yml
 
