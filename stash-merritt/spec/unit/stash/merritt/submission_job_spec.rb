@@ -52,6 +52,7 @@ module Stash
         allow(resource).to receive(:update_uri).and_return(nil)
         allow(resource).to receive(:tenant).and_return(tenant)
         allow(resource).to receive(:tenant_id).and_return('example_u')
+        allow(resource).to receive(:skip_datacite_update).and_return(false)
 
         identifier = double(StashEngine::Identifier)
         allow(resource).to receive(:identifier).and_return(identifier)
@@ -102,6 +103,13 @@ module Stash
             dc4_xml = '<resource/>'
             expect(package).to receive(:dc4_xml).and_return(dc4_xml)
             expect(ezid_helper).to receive(:update_metadata).with(dc4_xml: dc4_xml, landing_page_url: landing_page_url)
+            job.submit!
+          end
+
+          it 'does not update datacite if flagged to skip updates' do
+            allow(resource).to receive(:skip_datacite_update).and_return(true)
+            dc4_xml = '<resource/>'
+            expect(ezid_helper).not_to receive(:update_metadata).with(dc4_xml: dc4_xml, landing_page_url: landing_page_url)
             job.submit!
           end
 
