@@ -70,9 +70,13 @@ build-iPhoneSimulator/
 
 # for a library or gem, you might want to ignore these files since the code is
 # intended to run in multiple environments; otherwise, check them in:
-# Gemfile.lock
 # .ruby-version
 # .ruby-gemset
+
+# If you need to run a bundle update for incompatibility reasons, 
+# do a force add: `git add -f Gemfile.lock`
+# Otherwise, your local changes to your own Gemfile.lock will be ignored.
+Gemfile.lock
 
 # unless supporting rvm < 1.11.0 or doing something fancy, ignore this:
 .rvmrc
