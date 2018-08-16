@@ -58,6 +58,7 @@ StashEngine::Engine.routes.draw do
   match 'auth/:provider/callback', :to => 'sessions#callback', :via => [:get, :post]
   match 'auth/migrate/mail', :to => 'dashboard#migrate_data_mail', :via => [:get]
   match 'auth/migrate/code', :to => 'dashboard#migrate_data', :via => [:get]
+  match 'auth/migrate/no', :to => 'dashboard#migrate_no', :via => [:get]
 
   get 'auth/failure', :to => redirect('/')
   get 'sessions/destroy', :to => 'sessions#destroy'

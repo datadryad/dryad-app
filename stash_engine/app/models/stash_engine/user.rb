@@ -27,6 +27,17 @@ module StashEngine
       role == 'superuser'
     end
 
+    NO_MIGRATE_STRING = 'xxxxxx'.freeze
+
+    def migration_complete?
+      migration_token == NO_MIGRATE_STRING
+    end
+
+    def migration_complete
+      self.migration_token = NO_MIGRATE_STRING
+      save
+    end
+
     def set_migration_token
       return unless migration_token.nil?
       i = generate_migration_token
