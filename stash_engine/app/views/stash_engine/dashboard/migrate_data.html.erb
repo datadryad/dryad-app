@@ -1,6 +1,6 @@
 <h1>Migrate Your Data</h1>
 
-<p>To migrate your data from your old Dryad account,
+<p>To migrate your data from your old Dryad or Dash account,
   please enter the email address you used for that account.
   An email containing a six-digit code will be sent shortly. If you have any questions please get
   in touch at <a href="mailto:help@datadryad.org">help@datadryad.org</a>.
@@ -21,7 +21,7 @@
 
   <%= form_tag auth_migrate_code_path, class: "c-input__inline", method: "get" do %>
     <div class="c-input__emailcode-text">
-      <%= label_tag("Enter code", nil, {:class=>"c-input__label"})%>
+      <%= label_tag("Validation code", nil, {:class=>"c-input__label"})%>
       <%= text_field_tag(:code, nil, {:class=>"c-input__text"}) %>
       <%= hidden_field_tag(:email, params[:email]) %>
     </div>
