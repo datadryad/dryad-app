@@ -33,7 +33,7 @@ module StashEngine
       migration_token == NO_MIGRATE_STRING
     end
 
-    def migration_complete
+    def migration_complete!
       self.migration_token = NO_MIGRATE_STRING
       save
     end

@@ -5,6 +5,8 @@ module StashEngine
     before_action :require_login, only: [:show]
     after_filter -> { flash.discard }, only: [:migrate_data_mail]
 
+    MAX_VALIDATION_TRIES = 5
+
     def show
       session[:show_migrate] = !current_user.migration_complete?
     end
@@ -35,21 +37,33 @@ module StashEngine
         flash[:info] = 'Please enter your 6-digit code to migrate your data'
         return
       end
-      if User.find_by_migration_token(params[:code]).nil? || User.find_by_migration_token(params[:code]).id != current_user.id
-        flash[:error] = 'Incorrect code.'
-        redirect_to auth_migrate_mail_path
+      token_user = User.find_by_migration_token(params[:code])
+      if token_user.nil? || token_user.id != current_user.id
+        current_user.increment!(:validation_tries)
+        flash[:alert] = 'The code you entered is incorrect.'
+        flash[:alert] = "You've had too many incorrect code validation attempts.  Please contact us to resolve this problem." if current_user.validation_tries > MAX_VALIDATION_TRIES
+        redirect_to auth_migrate_mail_path(email: params[:email])
         return
       end
-      current_user.migration_complete
+
+      if current_user.validation_tries > MAX_VALIDATION_TRIES
+        flash[:alert] = 'The code you entered is incorrect.'
+        redirect_to auth_migrate_mail_path(email: params[:email])
+        return
+      end
+      create_missing_email_address
+      do_data_migration
       render 'stash_engine/dashboard/migrate_successful'
     end
 
-    def migrate_successful; end
-
-    def migrate_no
-      current_user.migration_complete
-      redirect_to dashboard_path
+    def migration_complete
+      current_user.migration_complete!
+      respond_to do |format|
+        format.js
+      end
     end
+
+    def migrate_successful; end
 
     # an AJAX wait to allow in-progress items to complete before continuing.
     def ajax_wait
@@ -60,5 +74,22 @@ module StashEngine
         end
       end
     end
+
+    # methods below are private
+    private
+
+    def create_missing_email_address
+      current_user.update(email: current_user.old_dryad_email) if current_user.email.blank? && !current_user.old_dryad_email.blank?
+    end
+
+    # it's not clear the full mechanics of this yet, yet it's likely to be close to these:
+    # 1) find the old user record for the previous account
+    # 2) update the resource.user_id (owner) for resources from the old user_id to the new user_id so this new user now owns them
+    # 3) update any resource.current_editor_ids using the old user_id to the new user_id
+    # 4) remove or disable the old user account after migration since their datasets have been moved to their new login
+    def do_data_migration
+      current_user.migration_complete!
+    end
+
   end
 end
