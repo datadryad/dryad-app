@@ -9,6 +9,8 @@ mary_mccormick:
   last_login: 2017-08-24 21:00:08.000000000 Z
   role: user
   orcid: 1234-5878-1234-5678
+  migration_token: 123456
+  old_dryad_email: grog.the.grog@mailinator.com
 
 leroy_jones:
   id: 2
@@ -20,7 +22,7 @@ leroy_jones:
   tenant_id: dryad
   last_login: 2017-08-24 21:15:46.000000000 Z
   role: user
-  orcid: ''
+  orcid: '1234-5878-1234-5601'
 
 grolinda_nagios:
   id: 3
@@ -32,7 +34,7 @@ grolinda_nagios:
   tenant_id: ucop
   last_login: 2017-08-24 21:32:22.000000000 Z
   role: superuser
-  orcid: ''
+  orcid: '1234-5878-1234-5602'
 
 lolinda_myadmin:
   id: 4
@@ -44,4 +46,4 @@ lolinda_myadmin:
   tenant_id: ucop
   last_login: 2017-08-24 21:32:22.000000000 Z
   role: admin
-  orcid: ''
+  orcid: '1234-5878-1234-5603'
