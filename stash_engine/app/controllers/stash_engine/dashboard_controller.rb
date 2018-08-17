@@ -2,8 +2,7 @@ require_dependency 'stash_engine/application_controller'
 
 module StashEngine
   class DashboardController < ApplicationController
-    before_action :require_login, only: [:show]
-    after_filter -> { flash.discard }, only: [:migrate_data_mail]
+    before_action :require_login, only: %i[show migrate_data_mail migrate_data]
 
     MAX_VALIDATION_TRIES = 5
 
@@ -18,39 +17,20 @@ module StashEngine
     def upload_basics; end
 
     def migrate_data_mail
-      if params[:email].nil? || !params[:email][/^.+\@.+\..+$/]
-        flash[:info] = 'Please fill in a correct email address' if params[:commit]
-        render 'migrate_data'
-        return
-      end
+      return unless validate_form_email
       current_user.old_dryad_email = params[:email]
       current_user.set_migration_token
-      current_user.save
       StashEngine::MigrationMailer.migration_email(email: current_user.old_dryad_email,
                                                    code: current_user.migration_token,
                                                    url: auth_migrate_code_url).deliver_now
-      redirect_to auth_migrate_code_path(email: params[:email])
+      flash.now[:info] = 'An email with your code has been sent to your email address.'
+      render 'migrate_data'
     end
 
     def migrate_data
-      if params[:email] && (params[:code].nil? || !params[:code][/^\d{6}$/])
-        flash[:info] = 'Please enter your 6-digit code to migrate your data'
-        return
-      end
-      token_user = User.find_by_migration_token(params[:code])
-      if token_user.nil? || token_user.id != current_user.id
-        current_user.increment!(:validation_tries)
-        flash[:alert] = 'The code you entered is incorrect.'
-        flash[:alert] = "You've had too many incorrect code validation attempts.  Please contact us to resolve this problem." if current_user.validation_tries > MAX_VALIDATION_TRIES
-        redirect_to auth_migrate_mail_path(email: params[:email])
-        return
-      end
+      return unless validate_form_token_format
+      return unless validate_form_token
 
-      if current_user.validation_tries > MAX_VALIDATION_TRIES
-        flash[:alert] = 'The code you entered is incorrect.'
-        redirect_to auth_migrate_mail_path(email: params[:email])
-        return
-      end
       create_missing_email_address
       do_data_migration
       render 'stash_engine/dashboard/migrate_successful'
@@ -63,7 +43,7 @@ module StashEngine
       end
     end
 
-    def migrate_successful; end
+    # def migrate_successful; end
 
     # an AJAX wait to allow in-progress items to complete before continuing.
     def ajax_wait
@@ -77,6 +57,35 @@ module StashEngine
 
     # methods below are private
     private
+
+    def validate_form_email
+      if params[:email].nil? || !params[:email][/^.+\@.+\..+$/]
+        flash.now[:info] = 'Please fill in a correct email address' if params[:commit]
+        render 'migrate_data'
+        return false
+      end
+      true
+    end
+
+    def validate_form_token_format
+      if params[:code].nil? || !params[:code][/^\d{6}$/]
+        flash.now[:info] = 'Please enter your 6-digit code to migrate your data' if params[:commit] == 'Migrate data'
+        return false
+      end
+      true
+    end
+
+    def validate_form_token
+      token_user = User.find_by_migration_token(params[:code])
+
+      if token_user.nil? || token_user.id != current_user.id
+        current_user.increment!(:validation_tries)
+        flash.now[:alert] = 'The code you entered is incorrect.'
+        flash.now[:alert] = "You've had too many incorrect code validation attempts.  Please contact us to resolve this problem." if current_user.validation_tries > MAX_VALIDATION_TRIES
+        return false
+      end
+      true
+    end
 
     def create_missing_email_address
       current_user.update(email: current_user.old_dryad_email) if current_user.email.blank? && !current_user.old_dryad_email.blank?

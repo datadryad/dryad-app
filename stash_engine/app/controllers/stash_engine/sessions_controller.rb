@@ -18,6 +18,7 @@ module StashEngine
       emails = orcid_api_emails(orcid: @auth_hash[:uid], bearer_token: @auth_hash[:credentials][:token])
       user = User.from_omniauth_orcid(auth_hash: @auth_hash, emails: emails)
       session[:user_id] = user.id
+      user.set_migration_token
       if user.tenant_id
         redirect_to dashboard_path
       else
