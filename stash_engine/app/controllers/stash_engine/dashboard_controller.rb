@@ -18,22 +18,17 @@ module StashEngine
 
     def migrate_data_mail
       return unless validate_form_email
-      current_user.old_dryad_email = params[:email]
-      current_user.set_migration_token
-      StashEngine::MigrationMailer.migration_email(email: current_user.old_dryad_email,
-                                                   code: current_user.migration_token,
-                                                   url: auth_migrate_code_url).deliver_now
+      email_code
       flash.now[:info] = 'An email with your code has been sent to your email address.'
       render 'migrate_data'
     end
 
     def migrate_data
-      return unless validate_form_token_format
-      return unless validate_form_token
+      return unless validate_form_token_format && validate_form_token
 
       create_missing_email_address
       do_data_migration
-      render 'stash_engine/dashboard/migrate_successful'
+      render 'migrate_successful'
     end
 
     def migration_complete
@@ -58,6 +53,14 @@ module StashEngine
     # methods below are private
     private
 
+    def email_code
+      current_user.update(old_dryad_email: params[:email])
+      current_user.set_migration_token
+      StashEngine::MigrationMailer.migration_email(email: current_user.old_dryad_email,
+                                                   code: current_user.migration_token,
+                                                   url: auth_migrate_code_url).deliver_now
+    end
+
     def validate_form_email
       if params[:email].nil? || !params[:email][/^.+\@.+\..+$/]
         flash.now[:info] = 'Please fill in a correct email address' if params[:commit]
@@ -75,17 +78,21 @@ module StashEngine
       true
     end
 
+    # rubocop:disable Metrics/AbcSize
     def validate_form_token
       token_user = User.find_by_migration_token(params[:code])
 
       if token_user.nil? || token_user.id != current_user.id
         current_user.increment!(:validation_tries)
         flash.now[:alert] = 'The code you entered is incorrect.'
-        flash.now[:alert] = "You've had too many incorrect code validation attempts.  Please contact us to resolve this problem." if current_user.validation_tries > MAX_VALIDATION_TRIES
+        if current_user.validation_tries > MAX_VALIDATION_TRIES
+          flash.now[:alert] = "You've had too many incorrect code validation attempts.  Please contact us to resolve this problem."
+        end
         return false
       end
       true
     end
+    # rubocop:enable Metrics/AbcSize
 
     def create_missing_email_address
       current_user.update(email: current_user.old_dryad_email) if current_user.email.blank? && !current_user.old_dryad_email.blank?
