@@ -27,7 +27,7 @@ default: &default
   max_files: 1000
   campus_contacts: [""] # for testing
   data_deposit_agreement: false
-  partner_display: false
+  partner_display: true
 
 development:
   <<: *default
