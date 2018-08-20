@@ -126,3 +126,21 @@
 .c-input__file {
 	@extend %hide;
 }
+
+// ***** Email Code ***** //
+
+.c-input__emailcode-text {
+	@extend %c-input;
+	flex: 2 1;
+}
+
+.c-input__emailcode-button {
+	@extend %c-input;
+	flex: 1 1;
+}
+
+.c-input__emailcode-spacer {
+	@extend %c-input;
+	flex: 1 1;
+}
+
