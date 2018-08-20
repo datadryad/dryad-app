@@ -2,8 +2,6 @@ module StashEngine
   class User < ActiveRecord::Base
     has_many :resources
 
-    after_find :set_migration_token
-
     def self.from_omniauth_orcid(auth_hash:, emails:)
       users = find_by_orcid_or_emails(orcid: auth_hash[:uid], emails: emails)
       raise 'More than one user matches the ID or email returned by ORCID' if users.count > 1
@@ -25,6 +23,17 @@ module StashEngine
 
     def superuser?
       role == 'superuser'
+    end
+
+    NO_MIGRATE_STRING = 'xxxxxx'.freeze
+
+    def migration_complete?
+      migration_token == NO_MIGRATE_STRING
+    end
+
+    def migration_complete!
+      self.migration_token = NO_MIGRATE_STRING
+      save
     end
 
     def set_migration_token
