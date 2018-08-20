@@ -72,7 +72,7 @@ module StashEngine
 
     def validate_form_token_format
       if params[:code].nil? || !params[:code][/^\d{6}$/]
-        flash.now[:info] = 'Please enter your 6-digit code to migrate your data' if params[:commit] == 'Migrate data'
+        flash.now[:info] = 'Please enter your correct 6-digit code to migrate your data' if params[:commit] == 'Migrate data'
         return false
       end
       true

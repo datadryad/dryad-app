@@ -1,6 +1,6 @@
 <% unless current_user.migration_complete? %>
   <div class="js-alert c-alert--notification" role="alert" id="migrator_box">
-    <div class="c-migrate-banner__text"">
+    <div class="c-migrate-banner__text">
       Are you missing data from your old Dryad or Dash account?
     </div>
       <%= button_to 'Yes. Migrate my data.', auth_migrate_mail_path, method: :get, class: 'c-migrate-banner__button' %>
