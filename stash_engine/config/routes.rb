@@ -46,38 +46,38 @@ StashEngine::Engine.routes.draw do
   get 'share/:id', to: 'downloads#share', as: 'share'
 
 
-  match 'metadata_entry_pages/find_or_create' => 'metadata_entry_pages#find_or_create', via: [:get, :post, :put]
-  match 'metadata_entry_pages/new_version' => 'metadata_entry_pages#new_version', via: [:post, :get]
-  match 'metadata_entry_pages/reject_agreement' => 'metadata_entry_pages#reject_agreement', via: [:delete]
-  match 'metadata_entry_pages/accept_agreement' => 'metadata_entry_pages#accept_agreement', via: [:post]
+  match 'metadata_entry_pages/find_or_create', to: 'metadata_entry_pages#find_or_create', via: [:get, :post, :put]
+  match 'metadata_entry_pages/new_version', to: 'metadata_entry_pages#new_version', via: [:post, :get]
+  match 'metadata_entry_pages/reject_agreement', to: 'metadata_entry_pages#reject_agreement', via: [:delete]
+  match 'metadata_entry_pages/accept_agreement', to: 'metadata_entry_pages#accept_agreement', via: [:post]
 
   # root 'sessions#index'
   root 'pages#home'
-  match 'auth/orcid/callback', :to => 'sessions#orcid_callback', :via => [:get, :post]
-  match 'auth/developer/callback', to: 'sessions#developer_callback', :via => [:get, :post]
-  match 'auth/:provider/callback', :to => 'sessions#callback', :via => [:get, :post]
-  match 'auth/migrate/mail', :to => 'dashboard#migrate_data_mail', :via => [:get]
-  match 'auth/migrate/code', :to => 'dashboard#migrate_data', :via => [:get]
+  match 'auth/orcid/callback', to: 'sessions#orcid_callback', via: [:get, :post]
+  match 'auth/developer/callback', to: 'sessions#developer_callback', via: [:get, :post]
+  match 'auth/:provider/callback', to: 'sessions#callback', via: [:get, :post]
+  match 'auth/migrate/mail',  to: 'dashboard#migrate_data_mail', via: [:get]
+  match 'auth/migrate/code', to: 'dashboard#migrate_data', via: [:get]
   match 'auth/migrate/done', to: 'dashboard#migration_complete', via: [:get]
 
-  get 'auth/failure', :to => redirect('/')
-  get 'sessions/destroy', :to => 'sessions#destroy'
+  get 'auth/failure', to: redirect('/')
+  get 'sessions/destroy', to: 'sessions#destroy'
   get 'sessions/choose_login', to: 'sessions#choose_login', as: 'choose_login'
   get 'sessions/choose_sso', to: 'sessions#choose_sso', as: 'choose_sso'
   post 'sessions/no_partner', to: 'sessions#no_partner', as: 'no_partner'
 
-  get 'help', :to => 'pages#help'
-  get 'faq', :to => 'pages#faq'
-  get 'about', :to => 'pages#about'
-  get 'dda', :to => 'pages#dda' #data deposit agreement
-  get 'search', :to => 'searches#index'
-  get 'editor', :to => 'pages#editor'
-  get 'dataset/*id', :to => 'landing#show', as: 'show', :constraints => { :id => /\S+/ }
-  get 'data_paper/*id', :to => 'landing#data_paper', as: 'data_paper', :constraints => { :id => /\S+/ }
+  get 'help', to: 'pages#help'
+  get 'faq', to: 'pages#faq'
+  get 'about', to: 'pages#about'
+  get 'dda', to: 'pages#dda' #data deposit agreement
+  get 'search', to: 'searches#index'
+  get 'editor', to: 'pages#editor'
+  get 'dataset/*id', to: 'landing#show', as: 'show', constraints: { id: /\S+/ }
+  get 'data_paper/*id', to: 'landing#data_paper', as: 'data_paper', constraints: { id: /\S+/ }
   get 'landing/citations/:identifier_id', to: 'landing#citations', as: 'show_citations'
-  get '404', :to => 'pages#app_404', as: 'app_404'
+  get '404', to: 'pages#app_404', as: 'app_404'
 
-  patch 'dataset/*id', :to => 'landing#update', :constraints => { :id => /\S+/ }
+  patch 'dataset/*id', to: 'landing#update', constraints: { id: /\S+/ }
 
   get 'embargoes/new', to: 'embargoes#new'
   post 'embargoes/create', to: 'embargoes#create'
