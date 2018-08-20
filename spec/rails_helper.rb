@@ -8,9 +8,6 @@ else
   ENV['RAILS_ENV'] = 'test'
 end
 
-puts("THE FILE: #{__FILE__}")
-puts("THE FILE PATH: #{File.expand_path('../../config/environment', __FILE__)}")
-
 require File.expand_path('../../config/environment', __FILE__)
 require 'rspec/rails'
 require 'database_cleaner'
