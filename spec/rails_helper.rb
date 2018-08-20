@@ -1,11 +1,15 @@
 require 'spec_helper'
 require 'colorize'
+require 'byebug'
 
 if (env = ENV['RAILS_ENV'])
   abort("Can't run tests in environment #{env}") if env != 'test'
 else
   ENV['RAILS_ENV'] = 'test'
 end
+
+puts("THE FILE: #{__FILE__}")
+puts("THE FILE PATH: #{File.expand_path('../../config/environment', __FILE__)}")
 
 require File.expand_path('../../config/environment', __FILE__)
 require 'rspec/rails'
