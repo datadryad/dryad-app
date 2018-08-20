@@ -32,7 +32,7 @@ describe 'migrate_data ' do
     visit('/stash/auth/migrate/mail')
     fill_in 'code', with: 'yack'
     first(:link_or_button, 'Migrate data').click
-    expect(page).to have_text('Please enter your 6-digit code to migrate your data')
+    expect(page).to have_text('Please enter your correct 6-digit code to migrate your data')
   end
 
   it 'errors with a bad code' do
