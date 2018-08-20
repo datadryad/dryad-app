@@ -7,3 +7,13 @@ test:
   max_review_days: 180
   submission_bc_emails: [""]
   contact_email: ["contact1@example.edu", "contact2@example.edu"]
+  # sandbox orcid credentials
+  orcid:
+    site: https://sandbox.orcid.org/
+    authorize_url: https://sandbox.orcid.org/oauth/authorize
+    token_url: https://api.sandbox.orcid.org/oauth/token
+    key:  APP-I07IMI2NJTMP9Z6G
+    secret: 12345
+    member: true
+    sandbox: true
+    api: https://api.sandbox.orcid.org
