@@ -17,3 +17,4 @@ test:
     member: true
     sandbox: true
     api: https://api.sandbox.orcid.org
+  default_tenant: localhost
