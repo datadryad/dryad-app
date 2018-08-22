@@ -5,7 +5,7 @@
 
 # Make sure we know where we are
 PROJECT_ROOT=`pwd`
-GITHUB_USER=`git config --get remote.origin.url | sed 's/https:\/\/github\.com\///' | sed 's/\/.*$//'
+GITHUB_USER=`git config --get remote.origin.url | sed 's/https:\/\/github\.com\///' | sed 's/\/.*$//'`
 
 # Fail fast
 set -e
