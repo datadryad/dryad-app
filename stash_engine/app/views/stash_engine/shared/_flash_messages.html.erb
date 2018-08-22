@@ -1,4 +1,5 @@
-<% flash.each do |type, message|
+<%
+flash.each do |type, message|
   message = [ message ] if message.class == String
   message.each do |m| %>
 
@@ -28,10 +29,14 @@
   <% end %>
 <% end %>
 
+<% # once displayed, get rid of them, may be set by previous action or this one in some circumstances
+  # %w[alert notice info].each {|i| flash.delete(i)}
+%>
+
 <script type="text/javascript">
-$(document).ready(function() {
+$(document).ready(function(e) {
     $('.flash_button').click(function() {
-      $('.js-alert').remove();
+      $( this ).parent().remove();
     });
 });
 </script>

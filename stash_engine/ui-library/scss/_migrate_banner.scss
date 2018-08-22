@@ -1,0 +1,22 @@
+.c-migrate-banner__button {
+  display: block;
+  align-self: center;
+  height: 35px;
+  margin-left: 1em;
+  padding: 0 40px;
+  float: right;
+  border: none;
+  background: $design-light-blue-color;
+  color: $design-white-color;
+  font-size: 1.1em;
+}
+
+.c-migrate-banner__text {
+  display: block;
+  align-self: center;
+  min-height: 35px;
+  padding: 0 40px;
+  float: left;
+  font-size: 1.1em;
+  line-height: 35px;
+}
