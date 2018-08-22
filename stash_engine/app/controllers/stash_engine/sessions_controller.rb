@@ -39,7 +39,7 @@ module StashEngine
 
     # no partner, so set as generic dryad tenant without membership benefits
     def no_partner
-      current_user.tenant_id = 'dryad'
+      current_user.tenant_id = APP_CONFIG.default_tenant
       current_user.save!
       redirect_to dashboard_path
     end
