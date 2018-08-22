@@ -8,7 +8,7 @@ describe 'solr sanitization' do
   end
 
   def solr_url
-    @solr_url ||= YAML.safe_load(File.read(SolrHelper::BLACKLIGHT_YML))['test']['url']
+    @solr_url ||= YAML.safe_load(File.read(SolrHelper::BLACKLIGHT_YML), [], [], true)['test']['url']
   end
 
   def solr
