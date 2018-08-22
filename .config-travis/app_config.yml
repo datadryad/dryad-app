@@ -1,3 +1,7 @@
+# NOTE: if you change this config, please also change the one in the config
+# repository so that the test section of that app_config.yml matches. In the future
+# it would be nice to be able to import this section into that one by some automated means,
+# but it's complicated.
 test:
   metadata_engine: StashDatacite
   shared_resource_model: StashEngine::Resource
