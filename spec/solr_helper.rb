@@ -71,7 +71,8 @@ module SolrHelper
 
     def config
       @config ||= begin
-        blacklight_config = YAML.safe_load(File.read(BLACKLIGHT_YML))['test']
+        # apparently have to do the true to enable aliases with safe_load
+        blacklight_config = YAML.safe_load(File.read(BLACKLIGHT_YML), [], [], true)['test']
         solr_uri = URI.parse(blacklight_config['url'])
         {
           port: solr_uri.port,
