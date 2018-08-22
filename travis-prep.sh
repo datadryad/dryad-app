@@ -5,6 +5,7 @@
 
 # Make sure we know where we are
 PROJECT_ROOT=`pwd`
+GITHUB_USER=`git config --get remote.origin.url | sed 's/https:\/\/github\.com\///' | sed 's/\/.*$//'
 
 # Fail fast
 set -e
@@ -15,11 +16,11 @@ set -e
 if [ ! -d ../stash ]; then
   BRANCH=${TRAVIS_PULL_REQUEST_BRANCH:-$TRAVIS_BRANCH}
 
-  echo "Cloning https://github.com/CDL-Dryad/stash:"
+  echo "Cloning https://github.com/$GITHUB_USER/stash:"
   cd ..
 
   set -x
-  git clone https://github.com/CDL-Dryad/stash
+  git clone https://github.com/$GITHUB_USER/stash
 
   echo "Checking out stash branch ${BRANCH}"
 
