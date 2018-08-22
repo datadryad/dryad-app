@@ -1,5 +1,4 @@
 require 'features_helper'
-require 'byebug'
 
 describe 'review ' do
   before(:each) do

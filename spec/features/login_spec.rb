@@ -1,5 +1,4 @@
 require 'features_helper'
-require 'byebug'
 
 describe 'login/logout' do
   before(:each) do
