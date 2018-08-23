@@ -1,3 +1,7 @@
+# NOTE: if you change this config, please also change the one in the config
+# repository so that the test section of that app_config.yml matches. In the future
+# it would be nice to be able to import this section into that one by some automated means,
+# but it's complicated.
 test:
   metadata_engine: StashDatacite
   shared_resource_model: StashEngine::Resource
@@ -7,3 +11,14 @@ test:
   max_review_days: 180
   submission_bc_emails: [""]
   contact_email: ["contact1@example.edu", "contact2@example.edu"]
+  # sandbox orcid credentials
+  orcid:
+    site: https://sandbox.orcid.org/
+    authorize_url: https://sandbox.orcid.org/oauth/authorize
+    token_url: https://api.sandbox.orcid.org/oauth/token
+    key:  APP-I07IMI2NJTMP9Z6G
+    secret: 12345
+    member: true
+    sandbox: true
+    api: https://api.sandbox.orcid.org
+  default_tenant: localhost
