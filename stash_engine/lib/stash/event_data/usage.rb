@@ -62,7 +62,7 @@ module Stash
           { 'source-id' => 'datacite-usage', 'doi' => @doi, 'page[size]' => 0,
             'relation-type-id' => (UNIQUE_INVESTIGATIONS + UNIQUE_REQUESTS).join(',') })
 
-        query_result['meta']['relation-types']
+        query_result['meta']['relation-types'] || []
       rescue RestClient::ExceptionWithResponse => err
         logger.error('DataCite event-data error')
         logger.error("#{Time.new} Could not get response from DataCite event data source-id=datacite-usage&doi=#{CGI.escape(@doi)}")
