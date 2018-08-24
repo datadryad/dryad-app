@@ -5,6 +5,9 @@ module StashEngine
     # this class wraps around some database accessors to cache them so we don't query the same stats more than once
     # per day because that is the max time that we update stats
 
+    # these override the default ActiveRecord readers for these fields so it updates
+    # the cache if necessary before reading (the read_attribute in the method, gets the
+    # AR field instead of re-calling the same named method)
     def unique_investigation_count
       update_if_necessary
       read_attribute(:unique_investigation_count)
@@ -28,7 +31,7 @@ module StashEngine
     def update_if_necessary
       # we should have a counter stat already if it got to this class
       # only update stats if it's after the date of the last updated date for record
-      return unless updated_at.nil? || Time.new.localtime.to_date > updated_at.localtime.to_date
+      return unless new_record? || updated_at.nil? || Time.new.localtime.to_date > updated_at.localtime.to_date
       update_usage!
       update_citation_count!
 

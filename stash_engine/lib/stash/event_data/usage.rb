@@ -39,14 +39,35 @@ module Stash
 
       def unique_dataset_investigations_count
         stats.inject(0) do |sum, item|
-          sum + (UNIQUE_INVESTIGATIONS.include?(item['attributes']['relation-type-id']) ? item['attributes']['total'] : 0)
+          if UNIQUE_INVESTIGATIONS.include?(item['id'])
+            sum + item['year-months'].inject(0) { |sum2, x| sum2 + x['sum'] }.to_i
+          else
+            sum
+          end
         end
       end
 
       def unique_dataset_requests_count
         stats.inject(0) do |sum, item|
-          sum + (UNIQUE_REQUESTS.include?(item['attributes']['relation-type-id']) ? item['attributes']['total'] : 0)
+          if UNIQUE_REQUESTS.include?(item['id'])
+            sum + item['year-months'].inject(0) { |sum2, x| sum2 + x['sum'] }.to_i
+          else
+            sum
+          end
         end
+      end
+
+      def query
+        query_result = generic_query(params:
+          { 'source-id' => 'datacite-usage', 'doi' => @doi, 'page[size]' => 0,
+            'relation-type-id' => (UNIQUE_INVESTIGATIONS + UNIQUE_REQUESTS).join(',') })
+
+        query_result['meta']['relation-types']
+      rescue RestClient::ExceptionWithResponse => err
+        logger.error('DataCite event-data error')
+        logger.error("#{Time.new} Could not get response from DataCite event data source-id=datacite-usage&doi=#{CGI.escape(@doi)}")
+        logger.error("#{Time.new} #{err}")
+        return []
       end
 
       # try this doi, at least on test 10.7291/d1q94r
@@ -55,10 +76,12 @@ module Stash
 
       # can't set large page sizes so have to keep following ['links']['next'] until no more to follow
       # and they currently don't allow us to query totals
-      def query # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
+
+      # this is the old query, going through pages, they changed their api
+      def old_query # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
         data = []
 
-        query_result = generic_query(params: { 'source-id': 'datacite-usage', 'obj-id': @doi })
+        query_result = generic_query(params: { 'source-id': 'datacite-usage', 'doi': @doi })
         data += query_result['data'] if query_result['data']
 
         while query_result['links']['next']
