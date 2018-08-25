@@ -34,3 +34,9 @@ do
 		ln -s "$fullfn" "$shortfn"
 	fi
 done
+
+# make sure that localhost tenant gets into the dryad-config, if it's not there
+if [ ! -e $CONFIGDIR/config/tenants/localhost.yml ]; then
+	echo "adding localhost back to tenants"
+	cp $CURRENTDIR/dryad-config-example/tenants/localhost.yml $CONFIGDIR/config/tenants/localhost.yml
+fi
