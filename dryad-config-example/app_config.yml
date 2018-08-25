@@ -4,17 +4,12 @@ defaults: &DEFAULTS
   repository: Stash::Merritt::Repository
   stash_mount: /stash
   max_review_days: 180
-  ezid:
-    host: ezid.cdlib.org
-    port: 443
-  google_maps_api_key: <add_key_here>
-  contact_us_uri: http://www.cdlib.org/services/uc3/contact.html
   orcid:
     site: https://sandbox.orcid.org/
     authorize_url: https://sandbox.orcid.org/oauth/authorize
     token_url: https://api.sandbox.orcid.org/oauth/token
-    key:  <fill-me-in>
-    secret: <fill-me-in>
+    key:  APP-I07IMI2NJTMP9Z6G
+    secret: 12345
     member: true
     sandbox: true
     api: https://api.sandbox.orcid.org
@@ -24,6 +19,11 @@ defaults: &DEFAULTS
 
 development: &DEVELOPMENT
   <<: *DEFAULTS
+  ezid:
+    host: ezid.cdlib.org
+    port: 443
+  google_maps_api_key: <add_key_here>
+  contact_us_uri: http://www.cdlib.org/services/uc3/contact.html
   shib_sp_host: <fill-me-in>
   page_error_email: ~
   submission_error_email: [emailme@example.org]
