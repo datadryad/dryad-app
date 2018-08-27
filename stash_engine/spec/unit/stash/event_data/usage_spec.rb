@@ -7,16 +7,37 @@ module Stash
       before(:each) do
         @usage = Usage.new(doi: 'doi:54321/09876')
 
-        fake_results = [
-          { 'attributes' => { 'relation-type-id' => 'total-dataset-investigations-regular', 'total' => 1 } },
-          { 'attributes' => { 'relation-type-id' => 'total-dataset-investigations-machine', 'total' => 2 } },
-          { 'attributes' => { 'relation-type-id' => 'total-dataset-requests-regular', 'total' => 4 } },
-          { 'attributes' => { 'relation-type-id' => 'total-dataset-requests-machine', 'total' => 8 } },
-          { 'attributes' => { 'relation-type-id' => 'unique-dataset-investigations-regular', 'total' => 16 } },
-          { 'attributes' => { 'relation-type-id' => 'unique-dataset-investigations-machine', 'total' => 32 } },
-          { 'attributes' => { 'relation-type-id' => 'unique-dataset-requests-regular', 'total' => 64 } },
-          { 'attributes' => { 'relation-type-id' => 'unique-dataset-requests-machine', 'total' => 128 } }
-        ]
+        fake_results =
+          [
+            {
+              'id' => 'unique-dataset-investigations-regular', # 16 count
+              'year-months' => [
+                { 'id' => '2018-07', 'sum' => 3 },
+                { 'id' => '2018-08', 'sum' => 13 }
+              ]
+            },
+            {
+              'id' => 'unique-dataset-investigations-machine', # 32 count
+              'year-months' => [
+                { 'id' => '2018-07', 'sum' => 5 },
+                { 'id' => '2018-08', 'sum' => 27 }
+              ]
+            },
+            {
+              'id' => 'unique-dataset-requests-regular', # 64 count
+              'year-months' => [
+                { 'id' => '2018-07', 'sum' => 11 },
+                { 'id' => '2018-08', 'sum' => 53 }
+              ]
+            },
+            {
+              'id' => 'unique-dataset-requests-machine', # 128 count
+              'year-months' => [
+                { 'id' => '2018-07', 'sum' => 37 },
+                { 'id' => '2018-08', 'sum' => 91 }
+              ]
+            }
+          ]
 
         allow(@usage).to receive(:query).and_return(fake_results)
       end
