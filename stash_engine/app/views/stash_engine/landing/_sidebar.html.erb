@@ -19,7 +19,9 @@
         <%= image_tag 'stash_engine/icon_views.svg', class: 'o-metrics__icon', alt: '' %>
         <!-- <span class="o-metrics__label">views</span> -->
       </div>
-      <div class="o-metrics__number"><%= @id.counter_stat.unique_investigation_count %> views</div>
+      <div class="o-metrics__number">
+        <%= @id.counter_stat.unique_investigation_count - @id.counter_stat.unique_request_count %> views
+      </div>
     </div>
     <div class="o-metrics__metric">
       <div class="o-metrics__group">
