@@ -1,0 +1,46 @@
+# Logos for a tenant are kept at app/assets/images/tenants and may be a svg, png or jpg file
+# with the name logo_<tenant_id>.<ext> .
+
+# Similarly, the about and help pages may be customized by adding files to app/views/tenants/<tenant_id>/ .
+# The files are in Markdown format and named such as _about.html.md and _help.html.md
+
+default: &default
+  enabled: true
+  repository:
+    domain: merritt.repository.domain.here
+    endpoint: "http://merritt.repository.domain.here/mrtsword/collection/demo_open_context"
+    username: "submitter.username"
+    password: "submitter.password"
+  abbreviation: "DataONE"
+  short_name: "DataONE"
+  long_name: "DataONE"
+  publisher_id: isni:0000000404085195
+  full_domain: "oneshare-dev.cdlib.org"
+  domain_regex: "oneshare-dev.cdlib.org$"
+  tenant_id: dataone
+  identifier_service:
+    provider: datacite
+    prefix: "10.5072"
+    account: my.account
+    password: "my.password"
+    sandbox: true
+  authentication:
+    strategy: google
+  default_license: cc0
+  ## maximum total size (default 100 GB for now)
+  max_submission_size: 100000000000
+  max_total_version_size: 10000000000
+  max_files: 1000
+  campus_contacts: ["norah.sliger@example.org"]
+  data_deposit_agreement: false
+
+development:
+  <<: *default
+  #Add any items that need to override the defaults here
+
+local:
+  <<: *default
+  
+test:
+  <<: *default
+  #Add any items that need to override the defaults here

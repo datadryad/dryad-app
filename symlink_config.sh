@@ -1,25 +1,42 @@
 #!/bin/bash
 
 mydir="../dryad-config"
-len=$((${#mydir} + 1))
 CURRENTDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 cd $CURRENTDIR
 
-echo $CURRENTDIR
+if [ ! -d $mydir ]; then
+	echo "Copying configuration files:"
+	mkdir -p $mydir/config
+	rsync -av $CURRENTDIR/dryad-config-example/ $mydir/config
+fi
 
-mkdir -p config/tenants
+echo "Symlinking..."
 
+cd $mydir
+CONFIGDIR="$( pwd )"
+len=$((${#CONFIGDIR} + 1))
+cd $CURRENTDIR
 
-find "$mydir" -name '*.yml' | while read -r line
+if [ ! -e $CURRENTDIR/config/tenants ]; then
+	echo "symlinking tenants"
+	ln -s $CONFIGDIR/config/tenants/ $CURRENTDIR/config/tenants
+fi
+
+ls $CONFIGDIR/config/*.yml | while read -r line
 do
-	shortfn=${line:len}
-        fullfn="$CURRENTDIR/$line"
+    shortfn=${line:len}
+    fullfn="$line"
 	if [ -h $shortfn ]; then
-               echo "file $shortfn is already symlinked" 
-            else
-               echo "symlinking $shortfn"
-               ln -s "$fullfn" "$shortfn"
-            fi
+		echo "file $shortfn is already symlinked" 
+	else
+		echo "symlinking $shortfn"
+		ln -s "$fullfn" "$shortfn"
+	fi
 done
-	
+
+# make sure that localhost tenant gets into the dryad-config, if it's not there
+if [ ! -e $CONFIGDIR/config/tenants/localhost.yml ]; then
+	echo "adding localhost back to tenants"
+	cp $CURRENTDIR/dryad-config-example/tenants/localhost.yml $CONFIGDIR/config/tenants/localhost.yml
+fi
