@@ -1,0 +1,50 @@
+# Logos for a tenant are kept at app/assets/images/tenants and may be a svg, png or jpg file
+# with the name logo_<tenant_id>.<ext> .
+
+# Similarly, the about and help pages may be customized by adding files to app/views/tenants/<tenant_id>/ .
+# The files are in Markdown format and named such as _about.html.md and _help.html.md
+
+default: &default
+  enabled: true
+  repository:
+    domain: merritt.repository.domain.here
+    endpoint: "http://merritt.repository.domain.here/mrtsword/collection/dash_cdl"
+    username: "submitter.username"
+    password: "submitter.password"
+  abbreviation: "UC"
+  short_name: "UC Office of the President"
+  long_name: "University of California, Office of the President"
+  publisher_id: grid.30389.31
+  full_domain: "dash-dev.ucop.edu"
+  domain_regex: "ucop.edu$"
+  tenant_id: ucop
+  identifier_service:
+    provider: ezid
+    shoulder: "doi:10.5072/FK2"
+    account: account_name
+    password: account_password
+    id_scheme: doi
+    owner: null
+  authentication:
+    strategy: shibboleth
+    entity_id: urn:mace:incommon:ucop.edu
+    entity_domain: .ucop.edu
+  default_license: cc_by
+  ## maximum total size (default 100 GB for now)
+  max_submission_size: 100000000000
+  max_total_version_size: 10000000000
+  max_files: 1000
+  campus_contacts: ["quaren@example.org"] # for testing
+  data_deposit_agreement: false
+
+development:
+  <<: *default
+  #Add any items that need to override the defaults here
+
+local:
+  <<: *default
+  #Add any items that need to override the defaults here
+
+test:
+  <<: *default
+  #Add any items that need to override the defaults here
