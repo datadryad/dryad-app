@@ -1,16 +1,16 @@
-# Doing a basic submission and an version update with the Dash API
-The Dash API now enables submission.  For authentication, it uses an OAuth2 client credentials grant (see [A Guide To OAuth 2.0 Grants](https://alexbilbie.com/guide-to-oauth-2-grants/)).
+# Doing a basic submission and an version update with the Dryad API
+The Dryad API now enables submission.  For authentication, it uses an OAuth2 client credentials grant (see [A Guide To OAuth 2.0 Grants](https://alexbilbie.com/guide-to-oauth-2-grants/)).
 
 This document gives practical information for working with the API in order to submit a dataset and [fuller API documentation is available](https://dash.ucop.edu/api/docs/index.html).
 
-## Log in to Dash and request a an application id and secret
+## Log in to Dryad and request a an application id and secret
 
-Before you can submit from the API, you need to log in to Dash at least once to create a user record.  You may log in to your associated campus/organization or use the DataONE login with your Google login credentials.
+Before you can submit from the API, you need to log in to Dryad at least once to create a user record.  You may log in to your associated campus/organization or use the DataONE login with your Google login credentials.
 
 To request access, please [contact us](mailto:uc3@ucop.edu).
 
 ## Get a token for making requests for secure parts of the API
-Before making secure requests to the Dash API, you'll need a token.  Currently our tokens last 10 hours and a token will need to be renewed if it expires.  You may get a token using these examples from a few programming environments.  Replace &lt;bracketed&gt; items with the values you were given.  For testing, you may choose to use a bash shell, a programming environment or a tool such as Postman.
+Before making secure requests to the Dryad API, you'll need a token.  Currently our tokens last 10 hours and a token will need to be renewed if it expires.  You may get a token using these examples from a few programming environments.  Replace &lt;bracketed&gt; items with the values you were given.  For testing, you may choose to use a bash shell, a programming environment or a tool such as Postman.
 
 
 ```bash
