@@ -15,6 +15,12 @@ module StashEngine
       redirect_to stash_url_helpers.choose_login_path
     end
 
+    def require_terms_accepted
+      return if current_user.terms_accepted_at
+      flash[:alert] = 'You must accept the terms of service.'
+      redirect_to stash_url_helpers.terms_view_path
+    end
+
     # this requires a method called resource in the controller that returns the current resource (usually @resource)
     def require_modify_permission
       return if current_user && resource.permission_to_edit?(user: current_user)
