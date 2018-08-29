@@ -27,6 +27,7 @@ if [ ! -d ../stash ]; then
   cd stash
   git checkout ${BRANCH}
   if [ $? -ne 0 ]; then
+    echo "No such branch ${BRANCH}, checking out master"
     git checkout master
   fi
   
