@@ -22,14 +22,20 @@ if [ ! -d ../stash ]; then
   set -x
   git clone https://github.com/$GITHUB_USER/stash
 
-  echo "Checking out stash branch ${BRANCH}"
 
   cd stash
-  git checkout ${BRANCH}
+  
+  if git checkout ${BRANCH}; then
+    echo "Checking out stash branch ${BRANCH}"
+  else 
+    echo "No branch ${BRANCH}, checking out master"
+    git checkout master
+  fi
+  
   { set +x; } 2>/dev/null
 
   SE_REVISION=$(git rev-parse HEAD)
-  echo "Checked out stash branch ${BRANCH}, revision ${SE_REVISION}"
+  echo "Checked out stash revision ${SE_REVISION}"
 
   cd ${PROJECT_ROOT}
 fi
