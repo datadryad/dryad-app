@@ -26,10 +26,14 @@ if [ ! -d ../stash ]; then
 
   cd stash
   git checkout ${BRANCH}
+  if [ $? -ne 0 ]; then
+    git checkout master
+  fi
+  
   { set +x; } 2>/dev/null
 
   SE_REVISION=$(git rev-parse HEAD)
-  echo "Checked out stash branch ${BRANCH}, revision ${SE_REVISION}"
+  echo "Checked out stash revision ${SE_REVISION}"
 
   cd ${PROJECT_ROOT}
 fi
