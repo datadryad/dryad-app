@@ -22,12 +22,13 @@ if [ ! -d ../stash ]; then
   set -x
   git clone https://github.com/$GITHUB_USER/stash
 
-  echo "Checking out stash branch ${BRANCH}"
 
   cd stash
-  git checkout ${BRANCH}
-  if [ $? -ne 0 ]; then
-    echo "No such branch ${BRANCH}, checking out master"
+  
+  if git checkout ${BRANCH}; then
+    echo "Checking out stash branch ${BRANCH}"
+  else 
+    echo "No branch ${BRANCH}, checking out master"
     git checkout master
   fi
   
