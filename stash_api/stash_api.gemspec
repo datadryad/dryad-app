@@ -32,4 +32,6 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'byebug'
   s.add_development_dependency 'combustion'
   s.add_development_dependency 'rubocop', '0.52.1'
+  s.add_dependency 'stash_engine'
+  s.add_dependency 'stash_datacite'
 end
