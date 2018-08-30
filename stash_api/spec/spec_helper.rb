@@ -36,6 +36,12 @@ ENGINES = %w[stash_engine stash_datacite stash_api].map do |engine_name|
   [engine_name, engine_path]
 end.to_h
 
+# This would be one way to get all paths where .rb files might live, not used now
+# my_models_path = "#{ENGINES['stash_api']}/app/models/stash_api"
+# $LOAD_PATH.unshift(*(Dir.glob("#{my_models_path}/**/*.rb").map{|i| File.dirname(i) }.uniq))
+
+$LOAD_PATH << '../lib'
+
 # "autoload" these models in engines, pretending to be rails in a hacky way
 ENGINES.each do |engine_name, engine_path|
   models_path = "#{engine_path}/app/models/#{engine_name}"
@@ -69,27 +75,6 @@ require "#{stash_datacite_path}/config/initializers/patches.rb"
 StashDatacite::ResourcePatch.associate_with_resource(StashEngine::Resource)
 
 APP_CONFIG = OpenStruct.new(YAML.load_file(::File.expand_path('../config/app_config.yml', __FILE__))['test'])
-
-# These are from StashDatacite and some hack to get things to load because not autoloading like normal rails application
-
-
-ENGINE_PATH = Gem::Specification.find_by_name('stash_api').gem_dir
-
-# need to fix this so it loads first before other things inheriting from it
-#%W[
-#  #{ENGINE_PATH}/app/models/stash_api
-#  #{ENGINE_PATH}/app/models/stash_api/version
-#  #{ENGINE_PATH}/app/models/stash_api/version/metadata
-#].each do |path|
-#  $LOAD_PATH.unshift(path) if ::File.directory?(path)
-#  Dir.glob("#{path}/**/*.rb").sort.each(&method(:require))
-#end
-
-#%w[
-#  monkey_patches
-#].each do |initializer|
-#  require "#{ENGINE_PATH}/config/initializers/#{initializer}.rb"
-#end
 
 # Note: Even if we're not doing any database work, ActiveRecord callbacks will still raise warnings
 ActiveRecord::Base.raise_in_transactional_callbacks = true
