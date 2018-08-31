@@ -136,6 +136,7 @@ GEM
     cocaine (0.6.0)
       terrapin (= 0.6.0)
     coderay (1.1.2)
+    colorize (0.8.1)
     combustion (0.9.1)
       activesupport (>= 3.0.0)
       railties (>= 3.0.0)
@@ -146,6 +147,7 @@ GEM
       deep_merge (~> 1.2.1)
       dry-validation (>= 0.10.4)
     crass (1.0.4)
+    database_cleaner (1.7.0)
     datacite-mapping (0.3.0)
       typesafe_enum (~> 0.1, >= 0.1.7)
       xml-mapping_extensions (~> 0.4, >= 0.4.7)
@@ -422,7 +424,9 @@ PLATFORMS
 
 DEPENDENCIES
   byebug
+  colorize (~> 0.8)
   combustion
+  database_cleaner (~> 1.5)
   doorkeeper
   rspec-rails
   rubocop (= 0.52.1)
