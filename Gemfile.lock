@@ -21,13 +21,16 @@ PATH
       typesafe_enum (~> 0.1, >= 0.1.8)
       xml-mapping_extensions (~> 0.4, >= 0.4.9)
     stash_api (0.0.1)
-      doorkeeper
+      doorkeeper (~> 4.4.2)
       rails (~> 4.2.8)
+      stash_datacite
+      stash_engine
     stash_datacite (0.0.5)
       datacite-mapping (~> 0.3)
       kaminari
       leaflet-rails
       loofah
+      mysql2
       rails (~> 4.2.4)
       responders (~> 2.0)
       rubyzip (>= 1.0.0)
@@ -66,6 +69,7 @@ PATH
       omniauth-shibboleth (~> 1.2.1)
       rails (~> 4.2.4)
       redcarpet (~> 3.3)
+      rest-client
       rinku
       sortable-table
       thor (= 0.19.1)
