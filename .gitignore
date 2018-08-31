@@ -3,6 +3,7 @@
 
 # symlinked config files
 /config/*.yml
+/config/tenants
 /config/tenants/*.yml
 .config-secret/
 
