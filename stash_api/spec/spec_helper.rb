@@ -30,6 +30,8 @@ class ApplicationController < ActionController::Base
   # HACK: to get around the fact we're not running in an app
 end
 
+ENGINE_PATH = Gem::Specification.find_by_name('stash_api').gem_dir
+
 # get hash of engine name and path for these
 ENGINES = %w[stash_engine stash_datacite stash_api].map do |engine_name|
   engine_path = Gem::Specification.find_by_name(engine_name).gem_dir
@@ -37,8 +39,10 @@ ENGINES = %w[stash_engine stash_datacite stash_api].map do |engine_name|
 end.to_h
 
 # This would be one way to get all paths where .rb files might live, not used now
-# my_models_path = "#{ENGINES['stash_api']}/app/models/stash_api"
-# $LOAD_PATH.unshift(*(Dir.glob("#{my_models_path}/**/*.rb").map{|i| File.dirname(i) }.uniq))
+my_models_path = "#{ENGINE_PATH}/app/models"
+dirs_with_rb_files = Dir.glob("#{my_models_path}/**/*.rb").map { |i| File.dirname(i) }.uniq
+
+$LOAD_PATH.unshift(*dirs_with_rb_files) # add dirs with .rb files to front of search path
 
 $LOAD_PATH << '../lib'
 
