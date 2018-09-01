@@ -17,6 +17,11 @@ gem 'doorkeeper'
 # To use a debugger
 # gem 'byebug', group: [:development, :test]
 
+path '..' do
+  gem 'stash_datacite'
+  gem 'stash_engine'
+end
+
 group :development, :test do
   gem 'rspec-rails'
 end
