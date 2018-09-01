@@ -24,15 +24,10 @@ def run_migrations!
   ActiveRecord::Base.establish_connection(db_config)
   check_connection_config!
 
-  paths = []
-  ENGINES.each_value do |engine_path|
-    migration_path = "#{engine_path}/db/migrate"
-    paths << migration_path if File.directory?(migration_path)
-  end
-
-  puts "Executing migrations from:\n\t#{paths.join("\n\t")}"
+  migration_path = "#{ENGINE_PATH}/db/migrate"
+  puts "Executing migrations from:\n\t#{migration_path}"
   ActiveRecord::Migration.verbose = true
-  ActiveRecord::Migrator.up paths
+  ActiveRecord::Migrator.up [migration_path]
 end
 
 # ------------------------------------------------------------
