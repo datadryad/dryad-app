@@ -53,6 +53,7 @@ StashEngine::Engine.routes.draw do
 
   # root 'sessions#index'
   root 'pages#home'
+
   match 'auth/orcid/callback', to: 'sessions#orcid_callback', via: [:get, :post]
   match 'auth/developer/callback', to: 'sessions#developer_callback', via: [:get, :post]
   match 'auth/:provider/callback', to: 'sessions#callback', via: [:get, :post]
@@ -60,8 +61,11 @@ StashEngine::Engine.routes.draw do
   match 'auth/migrate/code', to: 'dashboard#migrate_data', via: [:get]
   match 'auth/migrate/done', to: 'dashboard#migration_complete', via: [:get]
 
+  match 'terms/view', :to => 'dashboard#view_terms', :via => [:get, :post]
+  match 'terms/accept', :to => 'dashboard#accept_terms', :via => [:get, :post]
+
   get 'auth/failure', to: redirect('/')
-  get 'sessions/destroy', to: 'sessions#destroy'
+  match 'sessions/destroy', to: 'sessions#destroy', :via => [:get, :post]
   get 'sessions/choose_login', to: 'sessions#choose_login', as: 'choose_login'
   get 'sessions/choose_sso', to: 'sessions#choose_sso', as: 'choose_sso'
   post 'sessions/no_partner', to: 'sessions#no_partner', as: 'no_partner'
