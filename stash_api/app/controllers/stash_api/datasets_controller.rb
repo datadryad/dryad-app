@@ -8,10 +8,10 @@ module StashApi
 
     include SubmissionMixin
 
-    before_action -> { require_stash_identifier(doi: params[:id]) }, only: %i[show download update]
+    before_action -> { require_stash_identifier(doi: params[:id]) }, only: %i[show download]
+    before_action :setup_identifier_and_resource_for_put, only: %i[update]
     before_action :doorkeeper_authorize!, only: %i[create update]
     before_action :require_api_user, only: %i[create update]
-    before_action :set_last_resource, only: :update
     # before_action :require_in_progress_resource, only: :update
     before_action :require_permission, only: :update
 
@@ -54,13 +54,20 @@ module StashApi
     # we are using PATCH only to update the versionStatus=submitted
     # PUT will be to update/replace the dataset metadata
     # put/patch /datasets/<id>
+    # we are also allowing UPSERT with a PUT as in the pattern at
+    # https://www.safaribooksonline.com/library/view/restful-web-services/9780596809140/ch01s09.html or
+    # https://stackoverflow.com/questions/18470588/in-rest-is-post-or-put-best-suited-for-upsert-operation
     def update
       do_patch { return } # check if patch and do submission and return early if it is a patch (submission)
       # otherwise this is a PUT of the dataset metadata
       check_status { return } # check it's in progress, clone a submitted or raise an error
       respond_to do |format|
         format.json do
-          dp = DatasetParser.new(hash: params['dataset'], id: @resource.identifier, user: @user)
+          if @resource
+            dp = DatasetParser.new(hash: params['dataset'], id: @resource.identifier, user: @user) # update dataset
+          else
+            dp = DatasetParser.new(hash: params['dataset'], user: @user, id_string: params[:id]) # upsert dataset with identifier
+          end
           @stash_identifier = dp.parse
           ds = Dataset.new(identifier: @stash_identifier.to_s) # sets up display objects
           render json: ds.metadata, status: 200
@@ -82,6 +89,20 @@ module StashApi
 
     private
 
+    def setup_identifier_and_resource_for_put
+      id_type, id_text = params[:id].split(':', 2)
+      if id_type.upcase != 'DOI' || !id_text.match(/^10\.\S+\/\S+$/)
+        render json: { error: 'incorrect DOI format' }.to_json, status: 404
+      end
+      ids = StashEngine::Identifier.where(identifier_type: id_type.upcase).where(identifier: id_text )
+      if ids.count == 1
+        @stash_identifier = ids.first
+        @resource = @stash_identifier.resources.by_version_desc.first
+      else
+        @stash_identifier, @resource = nil, nil
+      end
+    end
+
     def do_patch # rubocop:disable Metrics/AbcSize
       return unless request.method == 'PATCH' && request.headers['content-type'] == 'application/json-patch+json'
       check_patch_prerequisites { yield }
@@ -94,7 +115,9 @@ module StashApi
       yield
     end
 
+    # checks the status for allowing a dataset PUT request that is an update
     def check_status
+      return if @stash_identifier.nil? || @resource.nil?
       state = @resource.current_resource_state.try(:resource_state)
       return if state == 'in_progress'
       return_error(messages: 'Your dataset cannot be updated now', status: 403) { yield } if state != 'submitted'

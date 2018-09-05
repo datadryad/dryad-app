@@ -9,9 +9,7 @@ module StashApi
 
     layout 'layouts/stash_engine/application'
 
-    # protect_from_forgery with: :exception
-
-    protect_from_forgery with: :null_session
+    skip_before_action :verify_authenticity_token
 
     PAGE_SIZE = 10
 
@@ -33,10 +31,6 @@ module StashApi
     def require_stash_identifier(doi:)
       @stash_identifier = StashEngine::Identifier.find_with_id(doi)
       render json: { error: 'not-found' }.to_json, status: 404 if @stash_identifier.blank?
-    end
-
-    def set_last_resource
-      @resource = @stash_identifier.resources.by_version_desc.first
     end
 
     def require_resource_id(resource_id:)
@@ -63,6 +57,7 @@ module StashApi
 
     # based on user and resource set in "require_api_user" and 'require_resource_in_progress'
     def require_permission
+      return if @resource.nil? # this not needed for dataset upsert with identifier
       render json: { error: 'unauthorized' }.to_json, status: 401 unless @resource.can_edit?(user: @user)
     end
 
