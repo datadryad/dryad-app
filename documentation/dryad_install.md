@@ -9,7 +9,6 @@ You'll need the following parts installed and configured on a (local) UI develop
 - (Recommended) A ruby version manager such as [rbenv](https://github.com/rbenv/rbenv) or [rvm](https://rvm.io/)
 - The [bare Dryad application](https://github.com/CDL-Dryad/dryad) cloned from github
 - The [stash](https://github.com/CDL-Dryad/stash) repository cloned from github
-- A separate directory of configuration files called *dryad-config* which you can start by cloning [dryad-config-example](https://github.com/CDL-Dryad/dryad-config-example) and modifying to fit your settings.
 
 You'll also need the following components installed either on the same server or on separate servers for all the application features to work:
 
@@ -31,7 +30,6 @@ Open a (bash) shell and type these commands inside a directory where you want to
 ```
 git clone https://github.com/CDL-Dryad/dryad
 git clone https://github.com/CDL-Dryad/stash
-git clone https://github.com/CDL-Dryad/dryad-config-example.git dryad-config
 ```
 
 You should end up with a directory structure that looks like this one.
@@ -53,7 +51,6 @@ Your config files are currently in a seperate directory from your application. I
 
 ```
 cd dryad
-mkdir config/tenants
 ./symlink_config.sh
 ```
 
