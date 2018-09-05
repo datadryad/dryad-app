@@ -68,20 +68,22 @@ sudo apt-get install mysql-server mysql-client libmysqlclient-dev
 # make sure MySQL is started
 sudo service mysql start
 
-# connect to mysql, note the <username> is probably root in a new installation
+# connect to mysql, note the <username> is probably root in a new installation, and the password is probably blank
 mysql -u <username> -p
 
 # if the above doesn't work, try
 sudo mysql -u root
 
+
+
 # create the dash database
-CREATE DATABASE dash CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+CREATE DATABASE dryad CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 # add a user to the database
-CREATE USER 'dashuser'@'%' IDENTIFIED BY '<my-password>';
+CREATE USER 'travis'@'%';
 
-# grant the user privileges on dash database
-GRANT ALL PRIVILEGES ON dash . * TO 'dashuser'@'%';
+# grant the user privileges
+GRANT ALL PRIVILEGES ON dryad . * TO 'travis'@'%';
 FLUSH PRIVILEGES;
 
 # To exit the MySQL client, type *exit* or press ctrl-d
