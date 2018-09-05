@@ -9,7 +9,6 @@ You'll need the following parts installed and configured on a (local) UI develop
 - (Recommended) A ruby version manager such as [rbenv](https://github.com/rbenv/rbenv) or [rvm](https://rvm.io/)
 - The [bare Dryad application](https://github.com/CDL-Dryad/dryad) cloned from github
 - The [stash](https://github.com/CDL-Dryad/stash) repository cloned from github
-- A separate directory of configuration files called *dryad-config* which you can start by cloning [dryad-config-example](https://github.com/CDL-Dryad/dryad-config-example) and modifying to fit your settings.
 
 You'll also need the following components installed either on the same server or on separate servers for all the application features to work:
 
@@ -31,14 +30,21 @@ Open a (bash) shell and type these commands inside a directory where you want to
 ```
 git clone https://github.com/CDL-Dryad/dryad
 git clone https://github.com/CDL-Dryad/stash
-git clone https://github.com/CDL-Dryad/dryad-config-example.git dryad-config
 ```
 
+Your config files will be stored in a separate directory from your application. It can be handy to keep them apart from the application so that you can back them up or commit them to a private repository for configuration separate from the application.  The application will need to have these configuration files symlinked into the application. To copy the example config to an external directory and symlink the files in using a bash shell, type these commands:
+
+```
+cd dryad
+./symlink_config.sh
+```
 You should end up with a directory structure that looks like this one.
 
 ```
-├── dryad-config
+├── dryad-config (contains actual config files)
 ├── dryad
+|   ├── config (with symlinks to dryad-config above)
+|   └── dryad-config-example
 └── stash
     ├── stash-harvester
     ├── stash-merritt
@@ -49,15 +55,9 @@ You should end up with a directory structure that looks like this one.
     └── stash_engine
 ```
 
-Your config files are currently in a seperate directory from your application. It can be handy to keep them apart from the application so that you can back them up or commit them to a private repository for configuration separate from the application.  The application will need to have these configuration files symlinked into the application. to symlink the files in using a bash shell, type these commands:
-
-```
-cd dryad
-mkdir config/tenants
-./symlink_config.sh
-```
-
-After you add or remove any configuration file, such as a yml file in the tenants directory, you will want to run the script above again update symlinks to config in the application.
+Most of the configuration can be left as default. Items to check before first launch:
+1. dryad-config/database.yml
+2. dryad-config/app_config.yml, particularly the ORCID key and secret
 
 ## Installing MySQL and Solr
 ### MySQL
@@ -71,20 +71,22 @@ sudo apt-get install mysql-server mysql-client libmysqlclient-dev
 # make sure MySQL is started
 sudo service mysql start
 
-# connect to mysql, note the <username> is probably root in a new installation
+# connect to mysql, note the <username> is probably root in a new installation, and the password is probably blank
 mysql -u <username> -p
 
 # if the above doesn't work, try
 sudo mysql -u root
 
+
+
 # create the dash database
-CREATE DATABASE dash CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+CREATE DATABASE dryad CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 # add a user to the database
-CREATE USER 'dashuser'@'%' IDENTIFIED BY '<my-password>';
+CREATE USER 'travis'@'%';
 
-# grant the user privileges on dash database
-GRANT ALL PRIVILEGES ON dash . * TO 'dashuser'@'%';
+# grant the user privileges
+GRANT ALL PRIVILEGES ON dryad . * TO 'travis'@'%';
 FLUSH PRIVILEGES;
 
 # To exit the MySQL client, type *exit* or press ctrl-d
