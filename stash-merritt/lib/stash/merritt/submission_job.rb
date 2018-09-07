@@ -72,7 +72,11 @@ module Stash
       end
 
       def ensure_identifier
-        return if resource.identifier
+        if resource.identifier && resource.identifier.identifier
+          return if resource.skip_datacite_update
+          log_info("ensuring identifier is reserved for resource #{resource_id}, ident: #{resource.identifier.to_s}")
+          return id_helper.reserve_id(doi: resource.identifier.to_s)
+        end
         log_info("minting new identifier for resource #{resource_id}")
         resource.ensure_identifier(id_helper.mint_id)
       end
