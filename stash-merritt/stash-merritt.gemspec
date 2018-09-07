@@ -25,7 +25,7 @@ Gem::Specification.new do |s| # rubocop:disable Metrics/BlockLength
   s.test_files    = s.files.grep(%r{^(test|spec|features)/})
   s.require_paths = ['lib']
 
-  s.add_dependency 'cirneco', '~> 0.9.16'
+  s.add_dependency 'cirneco', '~> 0.9.20' # higher versions cause dependency hell with faraday from Martin's Gems
   s.add_dependency 'datacite-mapping', '~> 0.3'
   s.add_dependency 'ezid-client', '~> 1.5'
   s.add_dependency 'merritt-manifest', '~> 0.1', '>= 0.1.3'
