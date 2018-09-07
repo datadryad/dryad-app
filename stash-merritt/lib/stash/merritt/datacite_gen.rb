@@ -16,6 +16,12 @@ module Stash
         "doi:#{base_id}"
       end
 
+      # reserve DOI in string format like "doi:xx.xxx/yyyyy" and return ID string after reserving it.
+      # I don't believe DataCite does the reserving thing like EZID, goes nowhere, does nothing.
+      def reserve_id(doi:)
+        doi
+      end
+
       def update_metadata(dc4_xml:, landing_page_url:)
         # the doi apparently is known from the DC xml document
         response = post_metadata(dc4_xml, username: account, password: password, sandbox: sandbox)
