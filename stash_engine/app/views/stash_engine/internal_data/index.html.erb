@@ -1,0 +1,19 @@
+<p id="notice"><%= notice %></p>
+
+<table>
+  <thead>
+  <tr>
+    <th>Data type</th>
+    <th>Value</th>
+  </tr>
+  </thead>
+
+  <tbody>
+  <% @internal_data.each do |internal_datum| %>
+    <tr>
+      <td><%= internal_datum.data_type %></td>
+      <td><%= internal_datum.value %></td>
+    </tr>
+  <% end %>
+  </tbody>
+</table>
