@@ -28,6 +28,7 @@ Gem::Specification.new do |s|
   s.require_paths = ['lib']
 
   s.add_dependency 'doorkeeper', '~> 4.4.2'
+  s.add_dependency 'mysql2'
   s.add_dependency 'rails', '~> 4.2.8'
   s.add_development_dependency 'byebug'
   s.add_development_dependency 'colorize', '~> 0.8'
