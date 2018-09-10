@@ -22,6 +22,7 @@ PATH
       xml-mapping_extensions (~> 0.4, >= 0.4.9)
     stash_api (0.0.1)
       doorkeeper (~> 4.4.2)
+      mysql2
       rails (~> 4.2.8)
       stash_datacite
       stash_engine
