@@ -33,7 +33,7 @@ module Stash
           MIME::Types['text/xml'].first
         end
 
-        def build_xml # rubocop:disable Metrics/AbcSize
+        def build_xml
           StashWrapper.new(
             identifier: to_sw_identifier(dcs_resource.identifier),
             version: Version.new(number: version_number, date: Date.today),

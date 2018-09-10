@@ -2,7 +2,7 @@ module SubmissionMixin
 
   private
 
-  def check_patch_prerequisites # rubocop:disable Metrics/AbcSize
+  def check_patch_prerequisites
     ensure_in_progress { yield }
     begin
       @json = JSON.parse(request.raw_post)
@@ -19,7 +19,7 @@ module SubmissionMixin
     return_error(messages: 'You must have an in_progress version to perform this operation', status: 400) { yield }
   end
 
-  def check_dataset_completions # rubocop:disable Metrics/AbcSize
+  def check_dataset_completions
     completions = StashDatacite::Resource::Completions.new(@resource)
     errors = completions.all_warnings
     if @resource.new_size > @resource.tenant.max_total_version_size && @resource.size > @resource.tenant.max_submission_size
