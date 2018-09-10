@@ -47,6 +47,7 @@ module Stash
         it 'mints a new identifier' do
           identifier = instance_double(::Ezid::MintIdentifierResponse)
           allow(identifier).to receive(:id).and_return(identifier_str)
+          allow(@resource).to receive(:identifier).and_return(nil)
 
           ezid_client = instance_double(::Ezid::Client)
           allow(::Ezid::Client).to receive(:new)
