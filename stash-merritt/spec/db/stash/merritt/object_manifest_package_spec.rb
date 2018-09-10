@@ -28,8 +28,6 @@ module Stash
           tenant_id: 'dataone'
         )
 
-
-
         tenant = double(StashEngine::Tenant)
         allow(tenant).to receive(:tenant_id).and_return('dataone')
         allow(tenant).to receive(:short_name).and_return('DataONE')
@@ -37,7 +35,7 @@ module Stash
         allow(tenant).to receive(:sword_params).and_return(collection_uri: 'http://sword.example.edu/stash-dev')
         allow(tenant).to receive(:full_domain).and_return('stash.example.edu')
         allow(tenant).to receive(:identifier_service).and_return(
-            { provider: 'ezid', shoulder: 'doi:10.5072/FK2', account: 'brog', password: 'new', id_scheme: 'doi', owner: nil }.to_ostruct
+          { provider: 'ezid', shoulder: 'doi:10.5072/FK2', account: 'brog', password: 'new', id_scheme: 'doi', owner: nil }.to_ostruct
         )
 
         allow(StashEngine::Tenant).to receive(:find).with('dataone').and_return(tenant)

@@ -55,6 +55,8 @@ module Stash
         allow(resource).to receive(:skip_datacite_update).and_return(false)
 
         identifier = double(StashEngine::Identifier)
+        allow(identifier).to receive(:identifier_type).and_return('DOI')
+        allow(identifier).to receive(:identifier).and_return('10.123/456')
         allow(resource).to receive(:identifier).and_return(identifier)
 
         @url_helpers = double(Module) # yes, apparently URL helpers are an anonymous module
@@ -63,6 +65,8 @@ module Stash
         @ezid_helper = instance_double(EzidGen)
         allow(EzidGen).to receive(:new).with(resource: resource).and_return(ezid_helper)
         allow(ezid_helper).to receive(:update_metadata)
+        allow(ezid_helper).to receive(:'id_exists?').and_return(true)
+        allow(ezid_helper).to receive(:reserve_id).and_return(identifier.identifier)
 
         @package = instance_double(ZipPackage)
         allow(ZipPackage).to receive(:new).with(resource: resource).and_return(package)
