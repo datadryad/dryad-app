@@ -75,6 +75,14 @@ module StashApi
         expect(des.description).to eq(@basic_metadata[:abstract])
         expect(des.description_type).to eq('abstract')
       end
+
+      it 'allows an identifier to be specified for a new parsed dataset' do
+        # override typical parsing and instead, set a DOI
+        dp = DatasetParser.new(hash: @basic_metadata, user: @user, id_string: 'doi:9876/4321')
+        @stash_identifier = dp.parse
+        expect(@stash_identifier.identifier).to eq('9876/4321')
+        expect(@stash_identifier.in_progress_resource.title).to eq(@basic_metadata[:title])
+      end
     end
   end
 end
