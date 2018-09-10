@@ -71,14 +71,12 @@ module StashApi
       FileUtils.mkdir_p(::File.dirname(@file_path))
     end
 
-    # rubocop:disable Metrics/AbcSize
     def check_header_file_size
       return if request.headers['CONTENT-LENGTH'].blank? || request.headers['CONTENT-LENGTH'].to_i <= @resource.tenant.max_total_version_size
       (render json: { error:
                          "Your file size is larger than the maximum submission size of #{resource.tenant.max_total_version_size} bytes" }.to_json,
               status: 403) && yield
     end
-    # rubocop:enable Metrics/AbcSize
 
     def check_file_size
       return if ::File.size(@file_path) <= @resource.tenant.max_total_version_size
@@ -120,7 +118,6 @@ module StashApi
               status: 403) && yield
     end
 
-    # rubocop:disable Metrics/AbcSize
     def paged_files_for_version
       resource = StashEngine::Resource.find(params[:version_id]) # version_id is really resource_id
       visible = resource.file_uploads.present_files

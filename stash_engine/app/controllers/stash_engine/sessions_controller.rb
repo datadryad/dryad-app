@@ -101,14 +101,12 @@ module StashEngine
     # shibboleth has you make it part of the callback URL you give it (so it shows as one of the normal params in the callback here)
     # omniauth claims to preserve it for certain login types (developer/facebook) in the request.env['omniauth.params']
     # google's oauth2 only passes along things in their special 'state' parameter which then has to have things CGI encoded within it.
-    # rubocop:disable Metrics/AbcSize
     def unmangle_orcid
       return request.env['omniauth.params'][:orcid] if request.env['omniauth.params'][:orcid]
       return params[:orcid] if params[:orcid]
       return Rack::Utils.parse_nested_query(params[:state])['orcid'] if params[:state]
       nil
     end
-    # rubocop:enable Metrics/AbcSize
 
     # this gets called from metadata entry form and is for adding an author, not for logging in.
     # rubocop:disable Metrics/AbcSize, Metrics/MethodLength

@@ -32,7 +32,6 @@ module StashDatacite
 
     private
 
-    # rubocop:disable Metrics/AbcSize
     def plain_citation
       ActionController::Base.helpers.strip_tags(citation(
                                                   review.authors,

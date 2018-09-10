@@ -83,7 +83,7 @@ module StashApi
         nil
       end
 
-      def make_box(location) # rubocop:disable Metrics/AbcSize
+      def make_box(location)
         if valid_box?(location['box'])
           return StashDatacite::GeolocationBox.create(
             sw_latitude: Float(location['box']['swLatitude']),

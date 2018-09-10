@@ -73,7 +73,7 @@ RSpec::Matchers.define :request do
     # value_for(key: 'Authorization', in_hash: actual.to_hash) == @expected_auth ? true : false
   end
 
-  def failures_for(actual) # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity
+  def failures_for(actual) # rubocop:disable Metrics/CyclomaticComplexity
     return ["Expected Net::HTTPRequest, got: #{actual.class}"] unless actual.is_a?(Net::HTTPRequest)
     failures = []
     failures << "Expected method #{@method}, got: #{actual.method}" if bad_method(actual)
