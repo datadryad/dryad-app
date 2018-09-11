@@ -34,7 +34,7 @@ module StashApi
 
     def metadata
       # gets descriptive metadata together
-      lv = last_submitted || in_progress
+      lv = in_progress || last_submitted
       return simple_identifier if lv.nil?
       metadata = id_and_size_hash.merge(lv.metadata)
       add_embargo_date!(metadata, lv)

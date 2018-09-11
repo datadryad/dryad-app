@@ -4,7 +4,12 @@ module StashApi
 
     TO_PARSE = %w[Funders Methods UsageNotes Keywords RelatedWorks Locations].freeze
 
-    def initialize(hash: nil, id: nil, user:)
+    # If  id_string is set, then populate the desired (doi) into the identifier in format like doi:xxxxx/yyyyy for new dataset.
+    # the id is a stash_engine_identifier object and indicates an already existing object.  May not set both.
+    # On final submission, updating the DOI may fail if it's wrong, unauthorized or not in the right format.
+    def initialize(hash: nil, id: nil, user:, id_string: nil)
+      raise 'You may not specify an identifier string with an existing identifier' if id && id_string
+      @id_string = id_string
       @hash = hash
       @id = id
       @user = user
@@ -15,7 +20,7 @@ module StashApi
     # this is the basic required metadata
     def parse
       if @resource.nil?
-        create_dataset
+        create_dataset(doi_string: @id_string) # @id string will be nil if not specified, so minted, otherwise to be created
       else
         clear_previous_metadata
       end
@@ -42,15 +47,17 @@ module StashApi
       @resource.descriptions.type_abstract.destroy_all
     end
 
-    def create_dataset
+    def create_dataset(doi_string: nil)
+      # resource needs to be created early, since minting an ID is based on the resource's tenant, add identifier afterward
       @resource = StashEngine::Resource.create(
-        user_id: @user.id, current_editor_id: @user.id, identifier_id: nil, title: '', tenant_id: @user.tenant_id
+        user_id: @user.id, current_editor_id: @user.id, title: '', tenant_id: @user.tenant_id
       )
-      # creating a new resource automatically creates an in-progress status and a version
-      my_id = StashEngine.repository.mint_id(resource: @resource)
+
+      my_id = doi_string || StashEngine.repository.mint_id(resource: @resource)
       id_type, id_text = my_id.split(':', 2)
       ident = StashEngine::Identifier.create(identifier: id_text, identifier_type: id_type.upcase)
-      ident.resources << @resource
+
+      ident.resources << @resource # add resource to identifier
       add_default_values # for license, publisher, resource type
     end
 

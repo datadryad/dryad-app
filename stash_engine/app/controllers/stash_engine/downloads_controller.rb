@@ -9,7 +9,7 @@ module StashEngine
 
   class DownloadsController < ApplicationController # rubocop:disable Metrics/ClassLength
 
-    # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
+    # rubocop:disable Metrics/MethodLength
     def download_resource
       @resource = Resource.find(params[:resource_id])
       if @resource.public?
@@ -27,7 +27,7 @@ module StashEngine
       # recently updated, so display a "hold your horses" message
       flash_download_unavailable
     end
-    # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
+    # rubocop:enable Metrics/MethodLength
 
     # rubocop:disable Metrics/MethodLength
     def async_request
@@ -62,7 +62,6 @@ module StashEngine
     end
 
     # download private dataset's file (need to stream) by owner (for now)
-    # rubocop:disable Metrics/AbcSize
     def file_stream
       if current_user.id == file_upload.resource.user_id
         CounterLogger.general_hit(request: request, file: file_upload)
@@ -71,7 +70,6 @@ module StashEngine
         render status: 403, text: 'You are not authorized to view this file until it has been published.'
       end
     end
-    # rubocop:enable Metrics/AbcSize
 
     def file_download
       CounterLogger.general_hit(request: request, file: file_upload)
@@ -169,7 +167,7 @@ module StashEngine
       raise_merritt_error('Merritt async download check', "unexpected status #{status}", resource.id, url)
     end
 
-    # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
+    # rubocop:disable Metrics/MethodLength
     def api_async_download(resource:, email:)
       url = merritt_friendly_async_url(resource: resource)
 
@@ -187,7 +185,7 @@ module StashEngine
       query_string = HTTP::Message.create_query_part_str(params)
       raise_merritt_error('Merritt async download request', "unexpected status #{status}", resource.id, "#{url}?#{query_string}")
     end
-    # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
+    # rubocop:enable Metrics/MethodLength
 
     # TODO: move this into a merritt-specific module
     def merritt_friendly_async_url(resource:)

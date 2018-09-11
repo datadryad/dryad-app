@@ -71,11 +71,17 @@ module Stash
         @id_helper ||= IdGen.make_instance(resource: resource)
       end
 
+      # rubocop:disable Metrics/AbcSize
+      # The method reserves a DOI if needed (EZID), either by a specified DOI or minting one from the pool
       def ensure_identifier
-        return if resource.identifier
+        if resource.identifier && resource.identifier.identifier # if identifier has value
+          log_info("ensuring identifier is reserved for resource #{resource_id}, ident: #{resource.identifier}")
+          return id_helper.reserve_id(doi: resource.identifier.to_s) # reserve_id is smart and doesn't reserve again if it already exists
+        end
         log_info("minting new identifier for resource #{resource_id}")
         resource.ensure_identifier(id_helper.mint_id)
       end
+      # rubocop:enable Metrics/AbcSize
 
       def create_package
         ensure_identifier

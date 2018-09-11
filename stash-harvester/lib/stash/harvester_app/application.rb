@@ -36,7 +36,8 @@ module Stash
         with_config(config)
       end
 
-      def start(from_time: nil, until_time: nil) # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
+      # rubocop:disable Metrics/MethodLength
+      def start(from_time: nil, until_time: nil)
         from_time = Util.utc_or_nil(from_time)
         until_time = Util.utc_or_nil(until_time)
 
@@ -53,6 +54,7 @@ module Stash
           end
         end
       end
+      # rubocop:enable Metrics/MethodLength
 
       def self.config_file_defaults
         [File.expand_path('stash-harvester.yml', Dir.pwd),
@@ -117,7 +119,7 @@ module Stash
         )
       end
 
-      def determine_from_time(from_time) # rubocop:disable Metrics/AbcSize
+      def determine_from_time(from_time)
         if from_time
           log.debug("Starting harvest from provided timestamp #{from_time.utc.xmlschema}")
         elsif (from_time = persistence_manager.find_oldest_failed_timestamp)

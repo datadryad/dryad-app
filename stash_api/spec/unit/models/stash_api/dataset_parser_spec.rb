@@ -1,4 +1,5 @@
 require 'db_spec_helper'
+require 'byebug'
 
 module StashApi
   RSpec.describe DatasetParser do
@@ -28,6 +29,20 @@ module StashApi
         ],
         'abstract' =>
               'Cyberneticists agree that concurrent models are an interesting new topic in the field of machine learning.'
+      }.with_indifferent_access
+
+      @update_metadata = {
+        'title' => 'Changed my Dataset Title',
+        'authors' => [
+          {
+            'firstName' => 'Grok',
+            'lastName' => 'Snorville',
+            'email' => 'grok.snorville@example.com',
+            'affiliation' => 'University of Real Estate Purchases'
+          }
+        ],
+        'abstract' =>
+              'We are a for-profit university.'
       }.with_indifferent_access
 
       @user = StashEngine::User.create(
@@ -74,6 +89,43 @@ module StashApi
         des = resource.descriptions.first
         expect(des.description).to eq(@basic_metadata[:abstract])
         expect(des.description_type).to eq('abstract')
+      end
+
+      it 'allows an identifier to be specified for a new parsed dataset' do
+        # override typical parsing and instead, set a DOI
+        dp = DatasetParser.new(hash: @basic_metadata, user: @user, id_string: 'doi:9876/4321')
+        @stash_identifier = dp.parse
+        expect(@stash_identifier.identifier).to eq('9876/4321')
+        expect(@stash_identifier.in_progress_resource.title).to eq(@basic_metadata[:title])
+      end
+
+      it 'updates an existing dataset with a new in-progress version' do
+        resource = @stash_identifier.in_progress_resource
+        resource.current_state = 'submitted' # make it look like the first was successfully submitted, so this next will be new version
+
+        # this is what happens in the controller if an update to an existing identifier that has last successfully submitted (completed) version
+        # I can imagine, that this might be incorporated into the DatasetParser object instead
+        new_resource = resource.amoeba_dup
+        new_resource.current_editor_id = @user.id
+        new_resource.save!
+        @resource = new_resource
+
+        dp = DatasetParser.new(hash: @update_metadata, id: @stash_identifier, user: @user)
+        @stash_identifier = dp.parse
+        expect(@stash_identifier.resources.count).to eq(2)
+
+        editing_resource = @stash_identifier.in_progress_resource
+
+        expect(editing_resource.title).to eq(@update_metadata[:title])
+        expect(@user.id).to eq(editing_resource.user_id)
+
+        author = editing_resource.authors.first
+        expect(author.author_first_name).to eq(@update_metadata[:authors].first['firstName'])
+        expect(author.author_last_name).to eq(@update_metadata[:authors].first['lastName'])
+        expect(author.author_email).to eq(@update_metadata[:authors].first['email'])
+
+        des = editing_resource.descriptions.first
+        expect(des.description).to eq(@update_metadata[:abstract])
       end
     end
   end

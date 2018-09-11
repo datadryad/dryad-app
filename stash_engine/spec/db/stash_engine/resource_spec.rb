@@ -165,7 +165,9 @@ module StashEngine
       it 'falls back to the current time' do
         resource = Resource.create(user_id: user.id)
         resource.update_publication_date!
-        expect(resource.publication_date).to be_time(Time.now)
+        # the following was bad since it made time to the millisecond, which caused failures, so truncating milliseconds
+        # to give better tolerance and prevent more occasional random failures
+        expect(resource.publication_date.change(usec: 0)).to be_time(Time.now.change(usec: 0))
       end
     end
 
