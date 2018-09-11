@@ -14,9 +14,7 @@ module StashApi
     # GET /internal_data/{id}
     def show
       @internal_data = StashEngine::InternalDatum.where(resource_id: params[:id])
-      if params.has_key?(:data_type)
-        @internal_data = @internal_data.data_type(params[:data_type])
-      end
+      @internal_data = @internal_data.data_type(params[:data_type]) if params.key?(:data_type)
       respond_to do |format|
         format.json { render json: @internal_data }
       end
