@@ -5,7 +5,9 @@ set :application, 'dryad'
 set :repo_url, 'https://github.com/CDL-Dryad/dryad.git'
 
 # Default branch is :master -- uncomment this to prompt for branch name
-ask :branch, `git rev-parse --abbrev-ref HEAD`.chomp unless ENV['BRANCH']
+# ask :branch, `git rev-parse --abbrev-ref HEAD`.chomp unless ENV['BRANCH']
+# Actually, use development for default branch
+set :branch, 'development'
 set :branch, ENV['BRANCH'] if ENV['BRANCH']
 
 # Default deploy_to directory is /var/www/my_app_name
