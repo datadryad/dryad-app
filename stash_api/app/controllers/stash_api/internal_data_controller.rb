@@ -10,7 +10,7 @@ module StashApi
         format.json { render json: @internal_data }
       end
     end
-    
+
     # GET /internal_data/{id}
     def show
       @internal_data = StashEngine::InternalDatum.where(resource_id: params[:id])
