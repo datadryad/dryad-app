@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+# rubocop:disable Metrics/ClassLength
+
 require_dependency 'stash_api/application_controller'
 require_relative 'datasets/submission_mixin'
 
@@ -8,14 +10,13 @@ module StashApi
 
     include SubmissionMixin
 
-    before_action -> { require_stash_identifier(doi: params[:id]) }, only: %i[show download update]
+    before_action -> { require_stash_identifier(doi: params[:id]) }, only: %i[show download]
+    before_action :setup_identifier_and_resource_for_put, only: %i[update]
     before_action :doorkeeper_authorize!, only: %i[create update]
     before_action :require_api_user, only: %i[create update]
-    before_action :set_last_resource, only: :update
     # before_action :require_in_progress_resource, only: :update
     before_action :require_permission, only: :update
 
-    # rubocop:disable Metrics/AbcSize
     # get /datasets/<id>
     def show
       ds = Dataset.new(identifier: @stash_identifier.to_s)
@@ -54,19 +55,28 @@ module StashApi
     # we are using PATCH only to update the versionStatus=submitted
     # PUT will be to update/replace the dataset metadata
     # put/patch /datasets/<id>
+    # we are also allowing UPSERT with a PUT as in the pattern at
+    # https://www.safaribooksonline.com/library/view/restful-web-services/9780596809140/ch01s09.html or
+    # https://stackoverflow.com/questions/18470588/in-rest-is-post-or-put-best-suited-for-upsert-operation
+    # rubocop:disable Metrics/MethodLength
     def update
       do_patch { return } # check if patch and do submission and return early if it is a patch (submission)
       # otherwise this is a PUT of the dataset metadata
       check_status { return } # check it's in progress, clone a submitted or raise an error
       respond_to do |format|
         format.json do
-          dp = DatasetParser.new(hash: params['dataset'], id: @resource.identifier, user: @user)
+          dp = if @resource
+                 DatasetParser.new(hash: params['dataset'], id: @resource.identifier, user: @user) # update dataset
+               else
+                 DatasetParser.new(hash: params['dataset'], user: @user, id_string: params[:id]) # upsert dataset with identifier
+               end
           @stash_identifier = dp.parse
           ds = Dataset.new(identifier: @stash_identifier.to_s) # sets up display objects
           render json: ds.metadata, status: 200
         end
       end
     end
+    # rubocop:enable Metrics/MethodLength
 
     # get /datasets/<id>/download
     def download
@@ -82,7 +92,22 @@ module StashApi
 
     private
 
-    def do_patch # rubocop:disable Metrics/AbcSize
+    # rubocop:disable Metrics/AbcSize
+    def setup_identifier_and_resource_for_put
+      id_type, id_text = params[:id].split(':', 2)
+      render json: { error: 'incorrect DOI format' }.to_json, status: 404 if !id_type.casecmp('DOI').zero? || !id_text.match(%r{^10\.\S+/\S+$})
+      ids = StashEngine::Identifier.where(identifier_type: id_type.upcase).where(identifier: id_text)
+      if ids.count == 1
+        @stash_identifier = ids.first
+        @resource = @stash_identifier.resources.by_version_desc.first
+      else
+        @stash_identifier = nil
+        @resource = nil
+      end
+    end
+    # rubocop:enable Metrics/AbcSize
+
+    def do_patch
       return unless request.method == 'PATCH' && request.headers['content-type'] == 'application/json-patch+json'
       check_patch_prerequisites { yield }
       check_dataset_completions { yield }
@@ -94,7 +119,9 @@ module StashApi
       yield
     end
 
+    # checks the status for allowing a dataset PUT request that is an update
     def check_status
+      return if @stash_identifier.nil? || @resource.nil?
       state = @resource.current_resource_state.try(:resource_state)
       return if state == 'in_progress'
       return_error(messages: 'Your dataset cannot be updated now', status: 403) { yield } if state != 'submitted'
@@ -113,7 +140,7 @@ module StashApi
           StashEngine::Identifier.all.map { |i| Dataset.new(identifier: "#{i.identifier_type}:#{i.identifier}").metadata } }
     end
 
-    def paged_datasets # rubocop:disable Metrics/AbcSize
+    def paged_datasets
       all_count = StashEngine::Identifier.all.count
       results = StashEngine::Identifier.all.limit(page_size).offset(page_size * (page - 1))
       results = results.map { |i| Dataset.new(identifier: "#{i.identifier_type}:#{i.identifier}").metadata }
@@ -131,3 +158,5 @@ module StashApi
 
   end
 end
+
+# rubocop:enable Metrics/ClassLength

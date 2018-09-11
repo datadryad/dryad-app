@@ -106,7 +106,7 @@ module StashEngine
     end
 
     # TODO: move into models or elsewhere for queries, but can't get tests to run right now so holding off
-    def setup_superuser_stats # rubocop:disable Metrics/AbcSize
+    def setup_superuser_stats
       @stats =
         {
           user_count: User.all,

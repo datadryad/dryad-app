@@ -58,7 +58,7 @@ module StashDatacite
     end
 
     # Use callbacks to share common setup or constraints between actions.
-    def set_author # rubocop:disable Metrics/AbcSize
+    def set_author
       return if params[:id] == 'new'
       @author = StashEngine::Author.find((params[:author] ? author_params[:id] : params[:id]))
       return ajax_blocked unless resource.id == @author.resource_id # don't let people play games with changing author ids

@@ -26,6 +26,10 @@ Layout/MultilineOperationIndentation:
 Metrics/LineLength:
   Max: 150
 
+# AbcSize is very low at 15 and often catches perfectly readable methods because of two small if statements
+Metrics/AbcSize:
+  Max: 20
+
 # 👎 to cultural imperialism
 Style/AsciiComments:
   Enabled: false

@@ -206,7 +206,7 @@ module StashEngine
       original.update_attribute(:file_state, 'copied')
     end
 
-    def make_unique(fn) # rubocop:disable Metrics/AbcSize
+    def make_unique(fn)
       dups = resource.file_uploads.present_files.where(upload_file_name: fn)
       return fn unless dups.count > 0
       ext = File.extname(fn)

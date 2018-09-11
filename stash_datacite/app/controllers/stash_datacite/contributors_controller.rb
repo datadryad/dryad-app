@@ -54,7 +54,7 @@ module StashDatacite
     end
 
     # Use callbacks to share common setup or constraints between actions.
-    def set_contributor # rubocop:disable Metrics/AbcSize
+    def set_contributor
       return if params[:id] == 'new'
       @contributor = Contributor.find((params[:contributor] ? contributor_params[:id] : params[:id]))
       return ajax_blocked unless resource.id == @contributor.resource_id

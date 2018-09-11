@@ -34,6 +34,10 @@ module Stash
         allow(tenant).to receive(:full_url) { |path_to_landing| URI::HTTPS.build(host: 'stash.example.edu', path: path_to_landing).to_s }
         allow(tenant).to receive(:sword_params).and_return(collection_uri: 'http://sword.example.edu/stash-dev')
         allow(tenant).to receive(:full_domain).and_return('stash.example.edu')
+        allow(tenant).to receive(:identifier_service).and_return(
+          { provider: 'ezid', shoulder: 'doi:10.5072/FK2', account: 'brog', password: 'new', id_scheme: 'doi', owner: nil }.to_ostruct
+        )
+
         allow(StashEngine::Tenant).to receive(:find).with('dataone').and_return(tenant)
 
         stash_wrapper_xml = File.read('spec/data/archive/stash-wrapper.xml')
@@ -205,6 +209,7 @@ module Stash
             allow(Rails).to receive(:logger).and_return(logger)
 
             job = SubmissionJob.new(resource_id: resource.id, url_helpers: double(Module))
+            allow(job).to receive(:ensure_identifier).and_return(nil)
             package = job.send(:create_package)
             expect(package).to be_an(ObjectManifestPackage)
           end

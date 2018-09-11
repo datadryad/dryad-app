@@ -85,7 +85,6 @@ module StashEngine
       true
     end
 
-    # rubocop:disable Metrics/AbcSize
     def validate_form_token
       token_user = User.find_by_migration_token(params[:code])
 
@@ -99,7 +98,6 @@ module StashEngine
       end
       true
     end
-    # rubocop:enable Metrics/AbcSize
 
     def create_missing_email_address
       current_user.update(email: current_user.old_dryad_email) if current_user.email.blank? && !current_user.old_dryad_email.blank?

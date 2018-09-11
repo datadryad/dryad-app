@@ -26,12 +26,10 @@ module StashEngine
       default_path
     end
 
-    # rubocop:disable Metrics/AbcSize
     def set_return_to_path_from_referrer
       session[:return_to_path] = request.env['HTTP_REFERER'] if request.env['HTTP_REFERER'].present? &&
           request.env['HTTP_REFERER'] != request.env['REQUEST_URI']
     end
-    # rubocop:enable Metrics/AbcSize
 
     private
 

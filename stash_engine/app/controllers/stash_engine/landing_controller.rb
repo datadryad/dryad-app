@@ -64,7 +64,7 @@ module StashEngine
       end
     end
 
-    # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
+    # rubocop:disable Metrics/MethodLength
     # PATCH /dataset/doi:10.xyz/abc
     def update
       return render(nothing: true, status: 404) unless id
@@ -85,7 +85,7 @@ module StashEngine
       logger.debug(e)
       render(nothing: true, status: 422) # 422 Unprocessable Entity, see RFC 5789 sec. 2.2
     end
-    # rubocop:enable Metrics/MethodLength, Metrics/AbcSize
+    # rubocop:enable Metrics/MethodLength
 
     # ############################################################
     # Private
@@ -147,7 +147,7 @@ module StashEngine
 
     # --- These are for delivering orcid invitations when we get the callback that an item has been processed
 
-    def deliver_invitations! # rubocop:disable Metrics/AbcSize
+    def deliver_invitations!
       return unless resource
       authors = resource.authors.where.not(author_email: nil)
       authors.each do |author|

@@ -24,7 +24,7 @@ module StashEngine
            subject: "#{rails_env}Submitting dataset \"#{@title}\" (doi:#{@identifier_value}) failed")
     end
 
-    def submission_succeeded(resource) # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
+    def submission_succeeded(resource) # rubocop:disable Metrics/MethodLength
       warn('Unable to report successful submission; nil resource') unless resource
       return unless resource
 
@@ -44,7 +44,7 @@ module StashEngine
            subject: "#{rails_env}Dataset \"#{@title}\" (doi:#{@identifier_value}) submitted")
     end
 
-    def submission_failed(resource, error) # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
+    def submission_failed(resource, error) # rubocop:disable Metrics/MethodLength
       warn("Unable to report submission failure #{error}; nil resource") unless resource
       return unless resource
 

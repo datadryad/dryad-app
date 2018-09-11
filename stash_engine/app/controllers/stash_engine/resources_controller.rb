@@ -53,7 +53,6 @@ module StashEngine
 
     # PATCH/PUT /resources/1
     # PATCH/PUT /resources/1.json
-    # rubocop:disable Metrics/AbcSize
     def update
       respond_to do |format|
         if resource.update(resource_params)
@@ -65,7 +64,6 @@ module StashEngine
         end
       end
     end
-    # rubocop:enable Metrics/AbcSize
 
     # DELETE /resources/1
     # DELETE /resources/1.json
@@ -106,7 +104,6 @@ module StashEngine
       false
     end
 
-    # rubocop:disable Metrics/AbcSize
     def lockout_incompatible_uploads
       if request[:action] == 'upload' && resource.upload_type == :manifest
         redirect_to upload_manifest_resource_path(resource)
