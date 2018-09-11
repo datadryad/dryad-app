@@ -10,7 +10,7 @@ StashApi::Engine.routes.draw do
     get 'download', on: :member
     resources :versions, shallow: true do
       get 'download', on: :member
-      resources :internal_data, shallow: true
+      resources :internal_data
       resources :files, shallow: true do
         resources :downloads
       end
