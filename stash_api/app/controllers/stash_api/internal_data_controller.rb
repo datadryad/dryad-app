@@ -24,20 +24,21 @@ module StashApi
     def create
       params.permit!
       @datum = StashEngine::InternalDatum.new(params[:internal_datum])
+      @datum.update(resource_id: params[:version_id])
       logger.debug @datum.save!
       render json: @datum
     end
 
     def update
       params.permit!
-      @internal_data = StashEngine::InternalDatum.update(params[:internal_datum][:id], params[:internal_datum])
+      @internal_data = StashEngine::InternalDatum.update(params[:id], params[:internal_datum])
       respond_to do |format|
         format.json { render json: @internal_data }
       end
     end
 
     def destroy
-      StashEngine::InternalDatum.destroy(params[:internal_datum][:id])
+      StashEngine::InternalDatum.destroy(params[:id])
       index
     end
   end
