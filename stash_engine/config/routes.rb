@@ -10,6 +10,7 @@ StashEngine::Engine.routes.draw do
       get 'submission'
       get 'show_files'
     end
+    resources :internal_data
   end
   resources :tenants, only: [:index, :show]
   resources :file_uploads do
