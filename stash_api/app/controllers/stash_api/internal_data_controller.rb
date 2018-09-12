@@ -4,6 +4,13 @@ module StashApi
   class InternalDataController < ApplicationController
     before_action :doorkeeper_authorize!
 
+    def show
+      @internal_data = StashEngine::InternalDatum.where(id: params[:id])
+      respond_to do |format|
+        format.json { render json: @internal_data }
+      end
+    end
+
     # GET /versions/{id}/internal_data
     def index
       @internal_data = StashEngine::InternalDatum.where(resource_id: params[:version_id])
