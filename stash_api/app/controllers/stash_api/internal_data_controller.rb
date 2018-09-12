@@ -31,7 +31,7 @@ module StashApi
 
     def update
       params.permit!
-      @internal_data = StashEngine::InternalDatum.update(params[:internal_datum][:id], params[:internal_datum])
+      @internal_data = StashEngine::InternalDatum.update(params[:id], params[:internal_datum])
       respond_to do |format|
         format.json { render json: @internal_data }
       end
