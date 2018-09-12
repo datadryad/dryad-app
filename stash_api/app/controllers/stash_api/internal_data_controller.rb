@@ -23,7 +23,7 @@ module StashApi
     # POST /internal_data
     def create
       params.permit!
-      @datum = StashEngine::InternalDatum.new(params[:internal_datum], resource_id: params[:version_id])
+      @datum = StashEngine::InternalDatum.new(params[:internal_datum]).update(resource_id: params[:version_id])
       logger.debug @datum.save!
       render json: @datum
     end
