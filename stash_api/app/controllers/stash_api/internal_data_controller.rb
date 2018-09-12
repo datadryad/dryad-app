@@ -38,7 +38,7 @@ module StashApi
     end
 
     def destroy
-      StashEngine::InternalDatum.destroy(params[:internal_datum][:id])
+      StashEngine::InternalDatum.destroy(params[:id])
       index
     end
   end
