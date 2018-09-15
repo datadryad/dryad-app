@@ -6,8 +6,16 @@ module StashEngine
       send(type.downcase, value)
     end
 
-    def self.method_missing(_method_name, *arguments) # rubocop:disable Style/MethodMissing
+    # This *should* only be called from #create_link, and if we reach it,
+    # it's because the identifier type is one that we didn't know how to handle,
+    # in which case we just return the identifier as-is.
+    def self.method_missing(_method_name, *arguments) # rubocop:disable Style/MethodMissingSuper
       arguments.first
+    end
+
+    # (see #method_missing)
+    def self.respond_to_missing?(*_args)
+      true
     end
 
     # all these return [link_text, url]

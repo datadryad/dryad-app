@@ -7,8 +7,8 @@ Geoblacklight::SolrDocument.class_eval do
     e = Regexp.last_match(2)
     n = Regexp.last_match(3)
     s = Regexp.last_match(4)
-    return "#{w} #{s} #{e} #{n}"
+    "#{w} #{s} #{e} #{n}"
   rescue KeyError
-    return ''
+    ''
   end
 end
