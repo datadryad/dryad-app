@@ -131,8 +131,8 @@ module Stash
       end
 
       def validate_config(config)
-        return config if config && config.is_a?(Config)
-        raise ArgumentError, "Invalid #{Application}.config; expected a #{Config}, got #{config ? config : 'nil'}"
+        return config if config.is_a?(Config)
+        raise ArgumentError, "Invalid #{Application}.config; expected a #{Config}, got #{config || 'nil'}"
       end
     end
   end

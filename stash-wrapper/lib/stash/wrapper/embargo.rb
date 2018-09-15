@@ -34,7 +34,7 @@ module Stash
       private
 
       def valid_type(type)
-        return type if type && type.is_a?(EmbargoType)
+        return type if type.is_a?(EmbargoType)
         raise ArgumentError, "Specified type does not appear to be an EmbargoType: #{type || 'nil'}"
       end
 
