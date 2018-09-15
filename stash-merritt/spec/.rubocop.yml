@@ -1,14 +1,5 @@
 inherit_from: ../.rubocop.yml
 
-Metrics/MethodLength:
-  Enabled: false
-
-Metrics/ModuleLength:
-  Enabled: false
-
-Metrics/BlockLength:
-  Enabled: false
-
 # These 'set' methods aren't conventional accessors, but Rubocop doesn't know that
 Naming/AccessorMethodName:
   Exclude:

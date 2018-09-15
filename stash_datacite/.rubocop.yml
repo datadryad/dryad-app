@@ -9,8 +9,6 @@ AllCops:
     - 'spec/dummy/db/**/*'
     - 'test/dummy/db/**/*'
     - 'vendor/**/*'
-  # Suppress complaints about post-2.0 syntax
-  TargetRubyVersion: 2.2
 
 # These files are just inherently long lists of things
 Metrics/MethodLength:

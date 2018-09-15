@@ -7,8 +7,6 @@ AllCops:
     - 'db/**/*'
     - 'test/dummy/db/**/*'
     - 'vendor/**/*'
-  # Suppress complaints about post-2.0 syntax
-  TargetRubyVersion: 2.2
 
 Metrics/LineLength:
   Exclude:

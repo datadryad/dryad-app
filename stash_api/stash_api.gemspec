@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-$LOAD_PATH.push ::File.expand_path('../lib', __FILE__)
+$LOAD_PATH.push ::File.expand_path('lib', __dir__)
 
 # Maintain your gem's version:
 require 'stash_api/version'
@@ -34,7 +34,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'colorize', '~> 0.8'
   s.add_development_dependency 'combustion'
   s.add_development_dependency 'database_cleaner', '~> 1.5'
-  s.add_development_dependency 'rubocop', '0.52.1'
+  s.add_development_dependency 'rubocop', '0.57.2'
   s.add_dependency 'stash_datacite'
   s.add_dependency 'stash_engine'
 end

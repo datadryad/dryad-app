@@ -8,7 +8,7 @@ module Stash
 
     mattr_writer :log
 
-    Dir.glob(File.expand_path('../harvester/*.rb', __FILE__)).sort.each(&method(:require))
+    Dir.glob(File.expand_path('harvester/*.rb', __dir__)).sort.each(&method(:require))
 
     def self.log
       @log ||= new_logger(logdev: $stdout)

@@ -4,7 +4,6 @@ inherit_from: ../.rubocop.yml
 AllCops:
   Exclude:
     - 'db/schema.rb'
-  TargetRubyVersion: 2.2
 
 # Suppress complaints about binaries not being named .rb
 Naming/FileName:
