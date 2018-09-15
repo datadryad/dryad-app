@@ -67,7 +67,7 @@ module Stash
         logger.error('DataCite event-data error')
         logger.error("#{Time.new} Could not get response from DataCite event data source-id=datacite-usage&doi=#{CGI.escape(@doi)}")
         logger.error("#{Time.new} #{err}")
-        return []
+        []
       end
 
       # try this doi, at least on test 10.7291/d1q94r
