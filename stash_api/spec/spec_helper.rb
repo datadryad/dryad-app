@@ -25,7 +25,7 @@ ENV['STASH_ENV'] = 'test'
 # require 'stash_datacite'
 require 'stash_api'
 
-APP_CONFIG = OpenStruct.new(YAML.load_file(::File.expand_path('../config/app_config.yml', __FILE__))['test'])
+APP_CONFIG = OpenStruct.new(YAML.load_file(::File.expand_path('config/app_config.yml', __dir__))['test'])
 
 ENGINE_PATH = Gem::Specification.find_by_name('stash_api').gem_dir
 

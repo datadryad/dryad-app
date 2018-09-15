@@ -90,11 +90,11 @@ module Stash
           data += query_result['data'] if query_result['data']
         end
 
-        return data
+        data
       rescue RestClient::ExceptionWithResponse => err
         logger.error("#{Time.new} Could not get response from DataCite event data source-id=datacite-usage&doi=#{CGI.escape(@doi)}")
         logger.error("#{Time.new} #{err}")
-        return []
+        []
       end
 
     end
