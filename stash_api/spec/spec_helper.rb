@@ -66,7 +66,7 @@ stash_engine_path = ENGINES['stash_engine']
 end
 
 # some fun with licenses
-LICENSES = YAML.load_file(File.expand_path('../config/licenses.yml', __FILE__)).with_indifferent_access
+LICENSES = YAML.load_file(File.expand_path('config/licenses.yml', __dir__)).with_indifferent_access
 
 # TODO: stop needing to do this
 module StashDatacite

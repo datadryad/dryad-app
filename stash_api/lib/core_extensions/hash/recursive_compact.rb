@@ -31,7 +31,7 @@ module CoreExtensions
         end
       end
 
-      # rubocop:enable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/MethodLength, Metrics/PerceivedComplexity
+      # rubocop:enable Metrics/CyclomaticComplexity, Metrics/MethodLength, Metrics/PerceivedComplexity
       def helper_array_compact(arr)
         new_arr = arr.map do |i|
           if i.class == [].class
@@ -44,7 +44,7 @@ module CoreExtensions
         end
         new_arr.delete_if { |i| i.nil? || ([[].class, {}.class].include?(i.class) && i.empty?) }
       end
-      # rubocop:enable Metrics/AbcSize
+
     end
   end
 end
