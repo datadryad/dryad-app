@@ -36,7 +36,7 @@ module StashApi
       def number?(item)
         return true if Float(item)
       rescue ArgumentError, TypeError
-        return false
+        false
       end
 
       def valid_latitude?(item)

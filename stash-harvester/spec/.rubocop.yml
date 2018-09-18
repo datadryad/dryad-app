@@ -1,13 +1,4 @@
 inherit_from: ../.rubocop.yml
 
-Metrics/MethodLength:
-  Enabled: false
-
-Metrics/ModuleLength:
-  Enabled: false
-
-Metrics/BlockLength:
-  Enabled: false
-
 Style/DateTime:
   Enabled: false

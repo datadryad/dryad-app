@@ -1,4 +1,3 @@
-
 module StashEngine
   module SharedSecurityController
 

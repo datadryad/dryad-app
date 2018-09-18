@@ -221,6 +221,7 @@ GEM
     httpclient (2.8.3)
     i18n (0.9.5)
       concurrent-ruby (~> 1.0)
+    jaro_winkler (1.5.1)
     jquery-fileupload-rails (0.4.7)
       actionpack (>= 3.1)
       railties (>= 3.1)
@@ -350,9 +351,10 @@ GEM
       rspec-mocks (~> 3.8.0)
       rspec-support (~> 3.8.0)
     rspec-support (3.8.0)
-    rubocop (0.52.1)
+    rubocop (0.57.2)
+      jaro_winkler (~> 1.5.1)
       parallel (~> 1.10)
-      parser (>= 2.4.0.2, < 3.0)
+      parser (>= 2.5)
       powerpack (~> 0.1)
       rainbow (>= 2.2.2, < 4.0)
       ruby-progressbar (~> 1.7)
@@ -428,7 +430,7 @@ DEPENDENCIES
   doorkeeper
   mysql2 (< 0.5)
   rspec-rails
-  rubocop (= 0.52.1)
+  rubocop (= 0.57.2)
   stash_api!
   stash_datacite!
   stash_engine!

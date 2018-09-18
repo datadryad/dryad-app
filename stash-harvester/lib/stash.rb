@@ -1,7 +1,7 @@
 require 'logger'
 
 module Stash
-  Dir.glob(File.expand_path('../stash/*.rb', __FILE__)).sort.each(&method(:require))
+  Dir.glob(File.expand_path('stash/*.rb', __dir__)).sort.each(&method(:require))
 
   def self.in_test?
     'test'.casecmp(ENV['STASH_ENV'].to_s).zero?
