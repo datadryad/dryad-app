@@ -8,7 +8,8 @@ module StashApi
         @resource = resource
       end
 
-      def value # rubocop:disable Metrics/MethodLength
+      # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
+      def value
         {
           title: @resource.title,
           authors: Authors.new(resource: @resource).value,
@@ -24,6 +25,7 @@ module StashApi
           skipDataciteUpdate: @resource.skip_datacite_update
         }
       end
+      # rubocop:enable Metrics/MethodLength, Metrics/AbcSize
     end
   end
 end
