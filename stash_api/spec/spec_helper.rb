@@ -6,6 +6,7 @@ require 'rails/all'
 RSpec.configure do |config|
   config.raise_errors_for_deprecations!
   config.mock_with :rspec
+  config.full_backtrace = true
 end
 
 # ------------------------------------------------------------

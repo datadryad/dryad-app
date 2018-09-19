@@ -1,0 +1,11 @@
+--- !omap
+cat_fleas:
+  id: 1
+  user_id: juanita
+  current_resource_state_id:
+  has_geolocation: 0
+  identifier_id: id_basic
+  title: My Cats Have Fleas
+  current_editor_id: juanita
+  tenant_id: exemplia
+  skip_datacite_update: false
