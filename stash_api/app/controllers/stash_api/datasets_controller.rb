@@ -29,7 +29,6 @@ module StashApi
         StashEngine::CounterLogger.general_hit(request: request, resource: res) if res
       end
     end
-    # rubocop:enable Metrics/AbcSize
 
     # post /datasets
     def create
