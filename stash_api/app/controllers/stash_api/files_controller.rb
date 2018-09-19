@@ -126,7 +126,6 @@ module StashApi
       results = file_uploads.map { |i| StashApi::File.new(file_id: i.id).metadata }
       files_output(all_count, results)
     end
-    # rubocop:enable Metrics/AbcSize
 
     def files_output(all_count, results)
       {
