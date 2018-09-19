@@ -1,0 +1,7 @@
+--- !omap
+one_in_progress:
+  id: 1
+  user_id: juanita
+  resource_state: in_progress
+  resource_id: cat_fleas
+
