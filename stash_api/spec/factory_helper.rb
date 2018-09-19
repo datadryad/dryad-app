@@ -6,6 +6,8 @@ require 'byebug'
 # It likes to load factories multiple times or never and had to require in individual spec files and
 # use FactoryBot.find_definitions in the spec files where it is needed
 
+# see also https://stackoverflow.com/questions/9300231/factory-already-registered-user-factorygirlduplicatedefinitionerror for more fun
+
 # for a while it was having trouble finding the path for our definitions, this helped, may need again later.
 # base_path = File.join(StashApi::Engine.root, 'spec/factories')
 # definition_paths = [base_path] + Pathname.new(base_path).children.select(&:directory?).map(&:to_s)
