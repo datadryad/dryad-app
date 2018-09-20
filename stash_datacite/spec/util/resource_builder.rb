@@ -158,7 +158,7 @@ module StashDatacite
       dcs_resource_type_general = dcs_resource_type.resource_type_general
       dcs_resource_type_value = dcs_resource_type.value
       se_resource_type = dcs_resource_type_general.value.downcase
-      resource_type_friendly = (ResourceType::ResourceTypesGeneralLimited.values.include?(se_resource_type) ? se_resource_type : 'other')
+      resource_type_friendly = (ResourceType::ResourceTypesGeneralLimited.value?(se_resource_type) ? se_resource_type : 'other')
 
       ResourceType.create(
         resource_id: se_resource_id,
@@ -166,7 +166,7 @@ module StashDatacite
         resource_type: dcs_resource_type_value
       )
 
-      # resource_type_friendly = (ResourceType::ResourceTypesGeneralLimited.values.include?(se_resource_type) ? se_resource_type : 'other')
+      # resource_type_friendly = (ResourceType::ResourceTypesGeneralLimited.value?(se_resource_type) ? se_resource_type : 'other')
       # ResourceType.create(
       #   resource_id: se_resource_id,
       #   resource_type_friendly: resource_type_friendly
@@ -332,7 +332,7 @@ module StashDatacite
       sd_name_ident = StashDatacite::NameIdentifier.find_or_create_by(
         name_identifier: value.to_s.strip,
         name_identifier_scheme: dcs_name_identifier.scheme,
-        scheme_URI: (scheme_uri if scheme_uri)
+        scheme_URI: (scheme_uri.to_s if scheme_uri)
       )
       sd_name_ident.id
     end
@@ -341,9 +341,9 @@ module StashDatacite
       return nil unless dcs_subject
       scheme_uri = dcs_subject.scheme_uri
       StashDatacite::Subject.find_or_create_by(
-        subject: dcs_subject.value && dcs_subject.value.strip,
+        subject: dcs_subject.value.to_s.strip,
         subject_scheme: dcs_subject.scheme,
-        scheme_URI: (scheme_uri if scheme_uri)
+        scheme_URI: (scheme_uri.to_s if scheme_uri)
       ).id
     end
   end
