@@ -20,7 +20,8 @@ module StashApi
           locations: Locations.new(resource: @resource).value,
           relatedWorks: RelatedWorks.new(resource: @resource).value,
           versionNumber: @resource.try(:stash_version).try(:version),
-          versionStatus: @resource.current_state
+          versionStatus: @resource.current_state,
+          userId: @resource.user_id
         }
       end
     end
