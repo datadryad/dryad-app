@@ -91,6 +91,9 @@ module StashApi
         expect(des.description_type).to eq('abstract')
       end
 
+    end
+
+    describe 'identifier handling' do
       it 'allows an identifier to be specified for a new parsed dataset' do
         # override typical parsing and instead, set a DOI
         dp = DatasetParser.new(hash: @basic_metadata, user: @user, id_string: 'doi:9876/4321')
@@ -126,6 +129,22 @@ module StashApi
 
         des = editing_resource.descriptions.first
         expect(des.description).to eq(@update_metadata[:abstract])
+      end
+    end
+
+    describe 'skip datacite update' do
+      it 'defaults to false' do
+        dp = DatasetParser.new(hash: {}, user: @user, id_string: 'doi:10.231/jkhaha')
+        stash_identifier = dp.parse
+        resource = stash_identifier.in_progress_resource
+        expect(resource.skip_datacite_update).to eq(false)
+      end
+
+      it 'will set it to true' do
+        dp = DatasetParser.new(hash: { 'skipDataciteUpdate' => true }, user: @user, id_string: 'doi:10.231/jkhaha')
+        stash_identifier = dp.parse
+        resource = stash_identifier.in_progress_resource
+        expect(resource.skip_datacite_update).to eq(true)
       end
     end
   end

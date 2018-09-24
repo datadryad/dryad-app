@@ -94,7 +94,7 @@ module StashEngine
       my_info['email'].map { |item| (item['email'].blank? ? nil : item['email']) }.compact
     rescue RestClient::Exception => e
       logger.error(e)
-      return []
+      []
     end
 
     # every different login method has different ways of persisting state

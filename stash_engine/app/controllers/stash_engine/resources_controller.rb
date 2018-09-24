@@ -113,6 +113,6 @@ module StashEngine
         false
       end
     end
-    # rubocop:enable Metrics/AbcSize
+
   end
 end
