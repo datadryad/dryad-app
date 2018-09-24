@@ -21,6 +21,6 @@ module Stash
   module HarvesterApp
     include Harvester
 
-    Dir.glob(File.expand_path('../harvester_app/*.rb', __FILE__)).sort.each(&method(:require))
+    Dir.glob(File.expand_path('harvester_app/*.rb', __dir__)).sort.each(&method(:require))
   end
 end

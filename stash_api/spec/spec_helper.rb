@@ -6,6 +6,7 @@ require 'rails/all'
 RSpec.configure do |config|
   config.raise_errors_for_deprecations!
   config.mock_with :rspec
+  config.full_backtrace = true
 end
 
 # ------------------------------------------------------------
@@ -65,8 +66,11 @@ stash_engine_path = ENGINES['stash_engine']
   require "#{stash_engine_path}/config/initializers/#{initializer}.rb"
 end
 
+# require initializers for stash api engine
+require "#{ENGINES['stash_api']}/config/initializers/monkey_patches.rb"
+
 # some fun with licenses
-LICENSES = YAML.load_file(File.expand_path('../config/licenses.yml', __FILE__)).with_indifferent_access
+LICENSES = YAML.load_file(File.expand_path('config/licenses.yml', __dir__)).with_indifferent_access
 
 # TODO: stop needing to do this
 module StashDatacite

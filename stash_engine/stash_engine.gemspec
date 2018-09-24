@@ -12,7 +12,7 @@ Gem::Specification.new do |s| # rubocop:disable Metrics/BlockLength
   s.description = 'Core Stash application functionality independent of repository, metadata schema, or customization'
   s.license     = 'MIT'
 
-  s.required_ruby_version = '~> 2.2'
+  s.required_ruby_version = '~> 2.4'
 
   s.files         = `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(test|spec|features)/}) }
   s.bindir        = 'exe'
@@ -58,7 +58,7 @@ Gem::Specification.new do |s| # rubocop:disable Metrics/BlockLength
   s.add_development_dependency 'nokogiri', '~> 1.8'
   s.add_development_dependency 'rspec', '~> 3.5'
   s.add_development_dependency 'rspec-rails', '~> 3.5'
-  s.add_development_dependency 'rubocop', '0.52.1'
+  s.add_development_dependency 'rubocop', '0.57.2'
   s.add_development_dependency 'scss_lint'
   s.add_development_dependency 'simplecov', '~> 0.14'
   s.add_development_dependency 'simplecov-console', '~> 0.4'

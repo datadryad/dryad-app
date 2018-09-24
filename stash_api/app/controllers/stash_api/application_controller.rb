@@ -61,6 +61,11 @@ module StashApi
       render json: { error: 'unauthorized' }.to_json, status: 401 unless @resource.can_edit?(user: @user)
     end
 
+    def require_superuser
+      return if @user.role == 'superuser'
+      render json: { error: 'unauthorized' }.to_json, status: 401
+    end
+
     # call this like return_error(messages: 'blah', status: 400) { yield }
     def return_error(messages:, status:)
       if messages.class == String
