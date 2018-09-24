@@ -24,7 +24,7 @@ module StashApi
       else
         clear_previous_metadata
       end
-      @resource.update(title: @hash['title'])
+      @resource.update(title: @hash['title'], skip_datacite_update: @hash['skipDataciteUpdate'] || false)
       # probably want to clear and re-add authors for data updates
       @hash[:authors]&.each { |author| add_author(json_author: author) }
       StashDatacite::Description.create(description: @hash[:abstract], description_type: 'abstract', resource_id: @resource.id)
