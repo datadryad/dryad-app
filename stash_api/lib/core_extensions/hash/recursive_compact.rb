@@ -30,8 +30,8 @@ module CoreExtensions
 
         end
       end
-
       # rubocop:enable Metrics/CyclomaticComplexity, Metrics/MethodLength, Metrics/PerceivedComplexity
+
       def helper_array_compact(arr)
         new_arr = arr.map do |i|
           if i.class == [].class

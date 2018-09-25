@@ -16,6 +16,7 @@ module StashApi
     before_action :require_api_user, only: %i[create update]
     # before_action :require_in_progress_resource, only: :update
     before_action :require_permission, only: :update
+    before_action :lock_down_admin_only_params, only: %i[create update]
 
     # get /datasets/<id>
     def show
@@ -126,6 +127,19 @@ module StashApi
       return_error(messages: 'Your dataset cannot be updated now', status: 403) { yield } if state != 'submitted'
       duplicate_resource # because we're starting a new version
     end
+
+    # some parameters would be locked down for only admins or superusers to set, right now the skipDataciteUpdate would
+    # only be able to set to true for those that are admins or superusers.
+    # rubocop:disable Metrics/CyclomaticComplexity
+    def lock_down_admin_only_params
+      skip_dc_update = params['skipDataciteUpdate']
+      unless skip_dc_update.nil? || skip_dc_update.class == TrueClass || skip_dc_update.class == FalseClass
+        render json: { error: 'Bad Request: skipDataciteUpdate must be true or false' }.to_json, status: 400
+      end
+      return if %w[admin superuser].include?(@user.role) || skip_dc_update == false || skip_dc_update.nil?
+      render json: { error: 'Unauthorized: only administrative roles may skip updating their DataCite metadata' }.to_json, status: 401
+    end
+    # rubocop:enable Metrics/CyclomaticComplexity
 
     def duplicate_resource
       nr = @resource.amoeba_dup
