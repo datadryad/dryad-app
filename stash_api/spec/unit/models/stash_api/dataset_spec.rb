@@ -4,7 +4,7 @@ require 'byebug'
 # require 'test_helper'
 
 # something wacky about our setup requires this here.  It seems to be either a) never requiring them or b) requiring them 1000 times otherwise
-FactoryBot.find_definitions
+# FactoryBot.find_definitions
 
 module StashApi
   RSpec.describe Dataset do

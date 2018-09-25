@@ -26,5 +26,6 @@ RSpec.configure do |config|
   #   FactoryBot.reload
   # end
   config.include FactoryBot::Syntax::Methods
-
+  FactoryBot.reload # this seems to fix the FactoryBot find_definitions problem about stuff already loaded
+  # otherwise if we need to load the definitions, maybe could catch the error instead and ignore reloading them
 end
