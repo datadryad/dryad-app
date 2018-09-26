@@ -17,6 +17,22 @@ module StashApi
         tenants
       end
 
+      @user = StashEngine::User.create(
+        first_name: 'Lisa',
+        last_name: 'Muckenhaupt',
+        email: 'lmuckenhaupt@ucop.edu',
+        tenant_id: 'exemplia',
+        orcid: '1234-5678-9876-5432'
+      )
+
+      @user2 = StashEngine::User.create(
+        first_name: 'Gordon',
+        last_name: 'Madsen',
+        email: 'gmadsen@example.org',
+        tenant_id: 'exemplia',
+        orcid: '555-1212'
+      )
+
       @basic_metadata = {
         'title' => 'Visualizing Congestion Control Using Self-Learning Epistemologies',
         'authors' => [
@@ -28,7 +44,8 @@ module StashApi
           }
         ],
         'abstract' =>
-              'Cyberneticists agree that concurrent models are an interesting new topic in the field of machine learning.'
+              'Cyberneticists agree that concurrent models are an interesting new topic in the field of machine learning.',
+        'userId' => @user2.id
       }.with_indifferent_access
 
       @update_metadata = {
@@ -44,14 +61,6 @@ module StashApi
         'abstract' =>
               'We are a for-profit university.'
       }.with_indifferent_access
-
-      @user = StashEngine::User.create(
-        first_name: 'Lisa',
-        last_name: 'Muckenhaupt',
-        email: 'lmuckenhaupt@ucop.edu',
-        tenant_id: 'exemplia',
-        orcid: '1234-5678-9876-5432'
-      )
 
       # mock doubles for the repo
       repo = double('some repo')
@@ -72,7 +81,6 @@ module StashApi
         expect(@stash_identifier.resources.count).to eq(1)
         resource = @stash_identifier.resources.first
         expect(resource.title).to eq(@basic_metadata[:title])
-        expect(@user.id).to eq(resource.user_id)
       end
 
       it 'creates the author as specified' do
@@ -89,6 +97,12 @@ module StashApi
         des = resource.descriptions.first
         expect(des.description).to eq(@basic_metadata[:abstract])
         expect(des.description_type).to eq('abstract')
+      end
+
+      it 'sets the owner' do
+        resource = @stash_identifier.resources.first
+        expect(resource.user_id). to eq(@user2.id)
+        expect(resource.current_editor_id).to eq(@user2.id)
       end
 
     end
