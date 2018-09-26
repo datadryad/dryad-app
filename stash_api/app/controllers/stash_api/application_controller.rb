@@ -29,7 +29,9 @@ module StashApi
     end
 
     def require_stash_identifier(doi:)
-      @stash_identifier = StashEngine::Identifier.find_with_id(doi)
+      # check to see if the identifier is actually an id and not a DOI first
+      @stash_identifier = StashEngine::Identifier.where(id: doi).first
+      @stash_identifier = StashEngine::Identifier.find_with_id(doi) if @stash_identifier.blank?
       render json: { error: 'not-found' }.to_json, status: 404 if @stash_identifier.blank?
     end
 
