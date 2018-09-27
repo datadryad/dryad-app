@@ -15,6 +15,7 @@ StashApi::Engine.routes.draw do
         resources :downloads
       end
     end
+    resources :urls, shallow: true, only: [:create]
   end
   # this one doesn't follow the pattern since it gloms filename on the end, so manual route
   # This should be PUT, not POST because of filename, see https://stackoverflow.com/questions/630453/put-vs-post-in-rest for example
