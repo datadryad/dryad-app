@@ -93,7 +93,14 @@ module StashApi
     private
 
     # rubocop:disable Metrics/AbcSize
+    # rubocop:disable Metrics/MethodLength
     def setup_identifier_and_resource_for_put
+      # check to see if the identifier is actually an id and not a DOI first
+      if params[:id].match?(/\d+/)
+        @stash_identifier = StashEngine::Identifier.where(id: params[:id]).first
+        @resource = @stash_identifier.resources.by_version_desc.first
+        return
+      end
       id_type, id_text = params[:id].split(':', 2)
       render json: { error: 'incorrect DOI format' }.to_json, status: 404 if !id_type.casecmp('DOI').zero? || !id_text.match(%r{^10\.\S+/\S+$})
       ids = StashEngine::Identifier.where(identifier_type: id_type.upcase).where(identifier: id_text)
@@ -105,6 +112,7 @@ module StashApi
         @resource = nil
       end
     end
+    # rubocop:enable Metrics/MethodLength
     # rubocop:enable Metrics/AbcSize
 
     def do_patch
