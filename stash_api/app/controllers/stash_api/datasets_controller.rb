@@ -92,7 +92,8 @@ module StashApi
 
     private
 
-    # rubocop:disable Metrics/AbcSize Metrics/MethodLength
+    # rubocop:disable Metrics/AbcSize
+    # rubocop:disable Metrics/MethodLength
     def setup_identifier_and_resource_for_put
       # check to see if the identifier is actually an id and not a DOI first
       if params[:id].match?(/\d+/)
@@ -111,7 +112,8 @@ module StashApi
         @resource = nil
       end
     end
-    # rubocop:enable Metrics/AbcSize Metrics/MethodLength
+    # rubocop:enable Metrics/MethodLength
+    # rubocop:enable Metrics/AbcSize
 
     def do_patch
       return unless request.method == 'PATCH' && request.headers['content-type'] == 'application/json-patch+json'
