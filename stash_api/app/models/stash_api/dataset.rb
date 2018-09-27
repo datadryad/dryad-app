@@ -84,14 +84,16 @@ module StashApi
     # a simple identifier without any versions, shouldn't be happening but it did on dev at least
     def simple_identifier
       {
-        id: @se_identifier.to_s,
+        identifier: @se_identifier.to_s,
+        id: @se_identifier.id,
         message: 'identifier is missing required elements'
       }
     end
 
     def id_and_size_hash
       {
-        id: @se_identifier.to_s,
+        identifier: @se_identifier.to_s,
+        id: @se_identifier.id,
         storage_size: @se_identifier.storage_size
       }
     end
