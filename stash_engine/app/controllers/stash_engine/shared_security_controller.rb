@@ -14,6 +14,18 @@ module StashEngine
       redirect_to stash_url_helpers.choose_login_path
     end
 
+    def require_curator
+      return if current_user && %w[superuser].include?(current_user.role)
+      flash[:alert] = 'You must be a curator to view this information.'
+      redirect_to stash_engine.dashboard_path
+    end
+
+    def require_admin
+      return if current_user && %w[admin superuser].include?(current_user.role)
+      flash[:alert] = 'You must be an administrator to view this information.'
+      redirect_to stash_engine.dashboard_path
+    end
+
     def require_terms_accepted
       return if current_user.terms_accepted_at
       flash[:alert] = 'You must accept the terms of service.'
