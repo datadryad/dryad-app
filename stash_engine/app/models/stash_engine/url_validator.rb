@@ -1,5 +1,8 @@
 require 'httpclient'
 require 'net/http'
+require 'fileutils'
+
+# getting cert errors, maybe https://www.engineyard.com/blog/ruby-ssl-error-certificate-verify-failed fixes it ?
 
 module StashEngine
   class UrlValidator # rubocop:disable Metrics/ClassLength
@@ -16,6 +19,16 @@ module StashEngine
       @timed_out = nil
       @redirected = nil
       @redirected_to = nil
+    end
+
+    def self.make_unique(resource:, filename:)
+      dups = resource.file_uploads.present_files.where(upload_file_name: filename)
+      return filename unless dups.count > 0
+      ext = File.extname(filename)
+      core_name = File.basename(filename, ext)
+      counter = 2
+      counter += 1 while resource.file_uploads.present_files.where(upload_file_name: "#{core_name}-#{counter}#{ext}").count > 0
+      "#{core_name}-#{counter}#{ext}"
     end
 
     # this method does the magic and checks the URL
@@ -47,6 +60,32 @@ module StashEngine
       end
       false
     end
+
+    # need to give make_unique method may need moving
+    # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
+    def upload_attributes_from(translator:, resource:)
+      valid = validate
+      upload_attributes = {
+          resource_id: resource.id,
+          url: url,
+          status_code: status_code,
+          file_state: 'created',
+          original_url: (translator.direct_download.nil? ? nil : original_url),
+          cloud_service: translator.service
+      }
+      return upload_attributes unless valid && status_code == 200
+
+      # don't allow duplicate URLs that have already been put into this version this time
+      # (duplicate indicated with 409 Conflict)
+      return upload_attributes.merge(status_code: 409) if resource.url_in_version?(url)
+
+      upload_attributes.merge(
+          upload_file_name: UrlValidator.make_unique(resource: resource, filename: filename),
+          upload_content_type: mime_type,
+          upload_file_size: size
+      )
+    end
+    # rubocop:enable Metrics/MethodLength, Metrics/AbcSize
 
     def timed_out?
       @timed_out

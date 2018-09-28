@@ -82,7 +82,7 @@ module StashEngine
     def create_upload(url)
       url_translator = Stash::UrlTranslator.new(url)
       validator = StashEngine::UrlValidator.new(url: url_translator.direct_download || url)
-      FileUpload.create(upload_attributes_from(validator: validator, translator: url_translator))
+      FileUpload.create(validator.upload_attributes_from(translator: url_translator, resource: resource))
     end
 
     def delete_or_destroy(file)
@@ -107,35 +107,12 @@ module StashEngine
     end
 
     def unique_upload_path(original_filename)
-      filename = make_unique(original_filename)
+      filename = UrlValidator.make_unique(original_filename)
       File.join(@upload_dir, filename)
     end
 
     def urls_from(url_param)
       url_param.split(/[\r\n]+/).map(&:strip).delete_if(&:blank?)
-    end
-
-    def upload_attributes_from(validator:, translator:) # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
-      valid = validator.validate
-      upload_attributes = {
-        resource_id: resource.id,
-        url: validator.url,
-        status_code: validator.status_code,
-        file_state: 'created',
-        original_url: (translator.direct_download.nil? ? nil : translator.original_url),
-        cloud_service: translator.service
-      }
-      return upload_attributes unless valid && validator.status_code == 200
-
-      # don't allow duplicate URLs that have already been put into this version this time
-      # (duplicate indicated with 409 Conflict)
-      return upload_attributes.merge(status_code: 409) if resource.url_in_version?(validator.url)
-
-      upload_attributes.merge(
-        upload_file_name: make_unique(validator.filename),
-        upload_content_type: validator.mime_type,
-        upload_file_size: validator.size
-      )
     end
 
     def require_file_owner
@@ -204,16 +181,6 @@ module StashEngine
     # set back to 'copied' since this is really just a new version of this old file with same name
     def reset_to_copied(original)
       original.update_attribute(:file_state, 'copied')
-    end
-
-    def make_unique(fn)
-      dups = resource.file_uploads.present_files.where(upload_file_name: fn)
-      return fn unless dups.count > 0
-      ext = File.extname(fn)
-      core_name = File.basename(fn, ext)
-      counter = 2
-      counter += 1 while resource.file_uploads.present_files.where(upload_file_name: "#{core_name}-#{counter}#{ext}").count > 0
-      "#{core_name}-#{counter}#{ext}"
     end
   end
 end

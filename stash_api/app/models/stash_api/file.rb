@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'presenter'
+require_relative 'presenter'
 
 module StashApi
   class File
