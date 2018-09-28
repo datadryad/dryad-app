@@ -52,7 +52,7 @@ module StashApi
       end
 
       it 'shows an appropriate string identifier under id' do
-        expect(@metadata[:id]).to eq('doi:138/238/2238')
+        expect(@metadata[:identifier]).to eq('doi:138/238/2238')
       end
 
       it 'shows correct title' do
