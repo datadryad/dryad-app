@@ -16,8 +16,7 @@ module StashApi
                                 url: @se_file_upload.url,
                                 size: @se_file_upload.upload_file_size,
                                 mimeType: @se_file_upload.upload_content_type,
-                                status: @se_file_upload.file_state,
-                                )
+                                status: @se_file_upload.file_state)
     end
 
     def links
