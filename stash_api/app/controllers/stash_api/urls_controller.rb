@@ -8,6 +8,7 @@ module StashApi
     before_action :doorkeeper_authorize!, only: :create
     before_action :require_api_user, only: :create
     before_action :require_in_progress_resource, only: :create
+    before_action :require_url_current_uploads, only: :create
     before_action :require_permission, only: :create
     before_action :require_correctly_formatted_url, only: :create
 
@@ -24,9 +25,9 @@ module StashApi
                          else
                            validate_url(params[:url]) { return } # return will be called if rendered and error and yielded: no double-rendering
                          end
-      # TODO: check over total size or over file size allowed
-      fu = StashEngine::FileUpload.create(file_upload_hash)
-      file = StashApi::File.new(file_id: fu.id)
+      fu = StashEngine::FileUpload.create(file_upload_hash) # add the url to files
+      check_file_size(file_upload: fu) { return } # check sizes
+      file = StashApi::File.new(file_id: fu.id) # parse file display object
       respond_to do |format|
         format.json { render json: file.metadata, status: 201 }
         format.html { render text: UNACCEPTABLE_MSG, status: 406 }
@@ -74,6 +75,21 @@ module StashApi
       u.is_a?(URI::HTTP)
     rescue URI::InvalidURIError
       false
+    end
+
+    def check_file_size(file_upload:)
+      return if @resource.size <= @resource.tenant.max_submission_size
+      file_upload.destroy # because this item won't fit
+      (render json: { error:
+                          'This file would make your submission size larger than the maximum of ' \
+                          "#{view_context.filesize(@resource.tenant.max_submission_size)}" }.to_json, status: 403) && yield
+    end
+
+    # only allow to proceed if no other current uploads or only other url-type uploads
+    def require_url_current_uploads
+      the_type = @resource.upload_type
+      return if %i[manifest unknown].include?(the_type)
+      render json: { error: 'You may not submit a URL in the same version when you have submitted files by direct file upload' }.to_json, status: 409
     end
 
   end
