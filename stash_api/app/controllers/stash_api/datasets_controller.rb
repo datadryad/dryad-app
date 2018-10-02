@@ -136,18 +136,37 @@ module StashApi
       duplicate_resource # because we're starting a new version
     end
 
-    # some parameters would be locked down for only admins or superusers to set, right now the skipDataciteUpdate would
-    # only be able to set to true for those that are admins or superusers.
-    # rubocop:disable Metrics/CyclomaticComplexity
+    # some parameters would be locked down for only admins or superusers to set
     def lock_down_admin_only_params
+      # all this bogus return false stuff is to prevent double render errors in some circumstances
+      return if check_skip_datacite_update_permission == false
+      return if check_may_set_user_id == false
+    end
+
+    # rubocop:disable Metrics/CyclomaticComplexity
+    def check_skip_datacite_update_permission
       skip_dc_update = params['skipDataciteUpdate']
       unless skip_dc_update.nil? || skip_dc_update.class == TrueClass || skip_dc_update.class == FalseClass
         render json: { error: 'Bad Request: skipDataciteUpdate must be true or false' }.to_json, status: 400
+        return false
       end
       return if %w[admin superuser].include?(@user.role) || skip_dc_update == false || skip_dc_update.nil?
       render json: { error: 'Unauthorized: only administrative roles may skip updating their DataCite metadata' }.to_json, status: 401
+      false
     end
     # rubocop:enable Metrics/CyclomaticComplexity
+
+    def check_may_set_user_id
+      return if params['userId'].nil?
+      unless @user.role == 'superuser' || params['userId'].to_i == @user.id # or it is your own user
+        render json: { error: 'Unauthorized: only superuser roles may set a specific user' }.to_json, status: 401
+        return false
+      end
+      users = StashEngine::User.where(id: params['userId'])
+      return if users.count == 1
+      render(json: { error: 'Bad Request: the userId you chose is invalid' }.to_json, status: 400)
+      false
+    end
 
     def duplicate_resource
       nr = @resource.amoeba_dup

@@ -18,19 +18,23 @@ module StashApi
     end
 
     # this is the basic required metadata
+    # rubocop:disable Metrics/MethodLength
     def parse
       if @resource.nil?
         create_dataset(doi_string: @id_string) # @id string will be nil if not specified, so minted, otherwise to be created
       else
         clear_previous_metadata
       end
-      @resource.update(title: @hash['title'], skip_datacite_update: @hash['skipDataciteUpdate'] || false)
+      skip_dc_update = @hash['skipDataciteUpdate'] || false
+      user_id = @hash['userId'] || @user.id
+      @resource.update(title: @hash['title'], skip_datacite_update: skip_dc_update, user_id: user_id, current_editor_id: user_id)
       # probably want to clear and re-add authors for data updates
       @hash[:authors]&.each { |author| add_author(json_author: author) }
       StashDatacite::Description.create(description: @hash[:abstract], description_type: 'abstract', resource_id: @resource.id)
       TO_PARSE.each { |item| dynamic_parse(my_class: item) }
       @resource.identifier
     end
+    # rubocop:enable Metrics/MethodLength
 
     private
 
