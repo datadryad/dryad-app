@@ -107,7 +107,7 @@ module StashEngine
     end
 
     def unique_upload_path(original_filename)
-      filename = UrlValidator.make_unique(original_filename)
+      filename = UrlValidator.make_unique(resource: resource, filename: original_filename)
       File.join(@upload_dir, filename)
     end
 
