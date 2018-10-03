@@ -62,16 +62,16 @@ module StashEngine
     end
 
     # need to give make_unique method may need moving
-    # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
+    # rubocop:disable Metrics/MethodLength
     def upload_attributes_from(translator:, resource:)
       valid = validate
       upload_attributes = {
-          resource_id: resource.id,
-          url: url,
-          status_code: status_code,
-          file_state: 'created',
-          original_url: (translator.direct_download.nil? ? nil : original_url),
-          cloud_service: translator.service
+        resource_id: resource.id,
+        url: url,
+        status_code: status_code,
+        file_state: 'created',
+        original_url: (translator.direct_download.nil? ? nil : original_url),
+        cloud_service: translator.service
       }
       return upload_attributes unless valid && status_code == 200
 
@@ -80,12 +80,12 @@ module StashEngine
       return upload_attributes.merge(status_code: 409) if resource.url_in_version?(url)
 
       upload_attributes.merge(
-          upload_file_name: UrlValidator.make_unique(resource: resource, filename: filename),
-          upload_content_type: mime_type,
-          upload_file_size: size
+        upload_file_name: UrlValidator.make_unique(resource: resource, filename: filename),
+        upload_content_type: mime_type,
+        upload_file_size: size
       )
     end
-    # rubocop:enable Metrics/MethodLength, Metrics/AbcSize
+    # rubocop:enable Metrics/MethodLength
 
     def timed_out?
       @timed_out
