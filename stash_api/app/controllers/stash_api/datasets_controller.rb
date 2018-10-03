@@ -113,7 +113,6 @@ module StashApi
       end
     end
     # rubocop:enable Metrics/AbcSize
-    # rubocop:enable Metrics/MethodLength
 
     def do_patch
       return unless request.method == 'PATCH' && request.headers['content-type'] == 'application/json-patch+json'
