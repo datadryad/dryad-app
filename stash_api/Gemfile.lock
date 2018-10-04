@@ -163,6 +163,7 @@ GEM
     devise-guests (0.6.1)
       devise
     diff-lcs (1.3)
+    diffy (3.2.1)
     domain_name (0.5.20180417)
       unf (>= 0.0.5, < 1.0.0)
     doorkeeper (4.4.2)
@@ -432,6 +433,7 @@ DEPENDENCIES
   colorize (~> 0.8)
   combustion
   database_cleaner (~> 1.5)
+  diffy (~> 3.1)
   doorkeeper
   factory_bot_rails
   mysql2 (< 0.5)
