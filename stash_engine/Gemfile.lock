@@ -111,6 +111,11 @@ GEM
     equivalent-xml (0.6.0)
       nokogiri (>= 1.4.3)
     erubis (2.7.0)
+    factory_bot (4.11.1)
+      activesupport (>= 3.0.0)
+    factory_bot_rails (4.11.1)
+      factory_bot (~> 4.11.1)
+      railties (>= 3.0.0)
     faraday (0.12.2)
       multipart-post (>= 1.2, < 3)
     ffi (1.9.25)
@@ -332,10 +337,11 @@ DEPENDENCIES
   database_cleaner (~> 1.5)
   diffy (~> 3.1)
   equivalent-xml (~> 0.6.0)
+  factory_bot_rails
   mysql2 (>= 0.3.13, < 0.5x)
   nokogiri (~> 1.8)
   rspec (~> 3.5)
-  rspec-rails (~> 3.5)
+  rspec-rails
   rubocop (= 0.57.2)
   scss_lint
   simplecov (~> 0.14)
