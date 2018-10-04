@@ -1,0 +1,27 @@
+<p id="notice"><%= notice %></p>
+<div class="c-datasets-heading">
+  <h1 class="c-datasets-heading__heading o-heading__level1">Curation Activity Log for <%= link_to @ident.identifier,show_path(@ident.identifier) %></h1>
+</div>
+<table class="o-table">
+  <thead>
+  <tr>
+    <th>Timestamp</th>
+    <th>Status</th>
+    <th>Action Taken By</th>
+    <th>Note</th>
+    <th>Keywords</th>
+  </tr>
+  </thead>
+
+  <tbody>
+  <% @curation_activities.each do |curation_activity| %>
+    <tr>
+      <td><%= curation_activity.created_at %></td>
+      <td><%= curation_activity.status %></td>
+      <td><%= curation_activity.user.name %></td>
+      <td><%= curation_activity.note %></td>
+      <td><%= curation_activity.keywords %></td>
+    </tr>
+  <% end %>
+  </tbody>
+</table>
