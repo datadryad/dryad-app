@@ -25,7 +25,7 @@ RSpec.configure do |config|
   config.mock_with :rspec
 end
 
-require 'rspec_custom_matchers'
+require_relative '../../spec_helpers/rspec_custom_matchers'
 
 # ------------------------------------------------------------
 # Code under test
