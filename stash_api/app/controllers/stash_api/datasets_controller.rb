@@ -90,28 +90,25 @@ module StashApi
       end
     end
 
+    def get_stash_identifier(id)
+      # check to see if the identifier is actually an id and not a DOI first
+      return StashEngine::Identifier.where(id: id).first if id.match?(/^\d+$/)
+      id_type, id_text = id.split(':', 2)
+      render json: { error: 'incorrect DOI format' }.to_json, status: 404 if !id_type.casecmp('DOI').zero? || !id_text.match(%r{^10\.\S+/\S+$})
+      StashEngine::Identifier.where(identifier_type: id_type.upcase).where(identifier: id_text).first
+    end
+
+    def initialize_stash_identifier(id)
+      @stash_identifier = get_stash_identifier(id)
+      render json: { error: 'cannot find dataset with identifier ' + id }.to_json, status: 404 if @stash_identifier.blank?
+    end
+
     private
 
-    # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
     def setup_identifier_and_resource_for_put
-      # check to see if the identifier is actually an id and not a DOI first
-      if params[:id].match?(/\d+/)
-        @stash_identifier = StashEngine::Identifier.where(id: params[:id]).first
-        @resource = @stash_identifier.resources.by_version_desc.first
-        return
-      end
-      id_type, id_text = params[:id].split(':', 2)
-      render json: { error: 'incorrect DOI format' }.to_json, status: 404 if !id_type.casecmp('DOI').zero? || !id_text.match(%r{^10\.\S+/\S+$})
-      ids = StashEngine::Identifier.where(identifier_type: id_type.upcase).where(identifier: id_text)
-      if ids.count == 1
-        @stash_identifier = ids.first
-        @resource = @stash_identifier.resources.by_version_desc.first
-      else
-        @stash_identifier = nil
-        @resource = nil
-      end
+      @stash_identifier = get_stash_identifier(params[:id])
+      @resource = @stash_identifier.resources.by_version_desc.first unless @stash_identifier.blank?
     end
-    # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
 
     def do_patch
       return unless request.method == 'PATCH' && request.headers['content-type'] == 'application/json-patch+json'
