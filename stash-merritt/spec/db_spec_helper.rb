@@ -13,7 +13,7 @@ stash_datacite_path = Gem::Specification.find_by_name('stash_datacite').gem_dir
 migration_paths = %W[#{stash_engine_path}/db/migrate #{stash_datacite_path}/db/migrate]
 
 ActiveRecord::Base.establish_connection(db_config)
-ActiveRecord::Migration.verbose = true
+ActiveRecord::Migration.verbose = false
 puts "Executing migrations from #{migration_paths.join(':')}"
 ActiveRecord::Migrator.up migration_paths
 

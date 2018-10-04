@@ -68,6 +68,11 @@ module StashApi
       render json: { error: 'unauthorized' }.to_json, status: 401
     end
 
+    def require_curator
+      return if @user.role == 'superuser'
+      render json: { error: 'unauthorized' }.to_json, status: 401
+    end
+
     # call this like return_error(messages: 'blah', status: 400) { yield }
     def return_error(messages:, status:)
       if messages.class == String

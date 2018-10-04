@@ -24,6 +24,10 @@ module StashEngine
       Identifier.where(identifier_type: prefix, identifier: i).try(:first)
     end
 
+    def identifier_id
+      id
+    end
+
     def view_count
       ResourceUsage.joins(resource: :identifier)
         .where('stash_engine_identifiers.identifier = ? AND stash_engine_identifiers.identifier_type = ?',
