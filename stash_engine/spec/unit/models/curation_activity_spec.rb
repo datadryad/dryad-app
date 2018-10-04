@@ -23,7 +23,6 @@ module StashEngine
         @identifier = create(:identifier)
         @curation_activity = create(:curation_activity)
         @curation_activity.update(identifier_id: @identifier.id)
-        # @curation_activity.update(user: @user.id)
       end
 
       it 'shows the appropriate dataset identifier' do
