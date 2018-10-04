@@ -6,6 +6,7 @@ $LOAD_PATH.push ::File.expand_path('lib', __dir__)
 require 'stash_api/version'
 
 # Describe your gem and declare its dependencies:
+# rubocop:disable Metrics/BlockLength
 Gem::Specification.new do |s|
   s.name        = 'stash_api'
   s.version     = StashApi::VERSION
@@ -34,7 +35,9 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'colorize', '~> 0.8'
   s.add_development_dependency 'combustion'
   s.add_development_dependency 'database_cleaner', '~> 1.5'
+  s.add_development_dependency 'diffy', '~> 3.1'
   s.add_development_dependency 'rubocop', '0.57.2'
   s.add_dependency 'stash_datacite'
   s.add_dependency 'stash_engine'
 end
+# rubocop:enable Metrics/BlockLength
