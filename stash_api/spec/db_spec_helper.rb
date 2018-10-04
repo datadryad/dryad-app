@@ -31,7 +31,7 @@ def run_migrations!
   end
 
   puts "Executing migrations from:\n\t#{paths.join("\n\t")}"
-  ActiveRecord::Migration.verbose = true
+  ActiveRecord::Migration.verbose = false
   ActiveRecord::Migrator.up paths
 end
 
