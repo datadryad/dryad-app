@@ -3,6 +3,7 @@ require_dependency 'stash_engine/application_controller'
 # TODO: maybe should move this around and move the index into a user's controller since it's mostly (but not all) about users.
 module StashEngine
   class AdminController < ApplicationController # rubocop:disable Metrics/ClassLength
+    include SharedSecurityController
 
     before_action :load_user, only: %i[popup set_role user_dashboard]
     before_action :require_admin
@@ -48,11 +49,6 @@ module StashEngine
     end
 
     private
-
-    def require_admin
-      return if current_user && %w[admin superuser].include?(current_user.role)
-      render nothing: true, status: :unauthorized
-    end
 
     # this sets up the page variables for use with kaminari paging
     def set_admin_page_info

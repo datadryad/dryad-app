@@ -26,7 +26,7 @@ def run_migrations!
 
   migration_path = "#{ENGINE_PATH}/db/migrate"
   puts "Executing migrations from:\n\t#{migration_path}"
-  ActiveRecord::Migration.verbose = true
+  ActiveRecord::Migration.verbose = false
   ActiveRecord::Migrator.up [migration_path]
 end
 

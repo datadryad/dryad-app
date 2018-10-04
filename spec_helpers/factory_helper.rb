@@ -13,18 +13,6 @@ require 'byebug'
 # definition_paths = [base_path] + Pathname.new(base_path).children.select(&:directory?).map(&:to_s)
 
 RSpec.configure do |config|
-  # FactoryBot.definition_file_paths = definition_paths
-
-  # supposedly will pick up the definitions when they're not found, it loaded them multiple times, instead
-  # FactoryBot.find_definitions
-  # config.before(:suite) do
-  #  FactoryBot.find_definitions
-  # end
-
-  # supposedly needed if spring is running, but didn't fix our problems
-  # config.before(:all) do
-  #   FactoryBot.reload
-  # end
   config.include FactoryBot::Syntax::Methods
   FactoryBot.reload # this seems to fix the FactoryBot find_definitions problem about stuff already loaded
   # otherwise if we need to load the definitions, maybe could catch the error instead and ignore reloading them
