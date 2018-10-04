@@ -13,7 +13,6 @@ module StashEngine
                                          'Versioned'],
                                     message: '%{value} is not a valid status' }
     validates :status, presence: true
-    validates :user_id, presence: true
 
     def user
       @user = StashEngine::User.find(user_id)
