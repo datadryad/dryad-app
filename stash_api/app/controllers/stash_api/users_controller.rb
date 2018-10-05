@@ -3,6 +3,7 @@ require_dependency 'stash_api/application_controller'
 module StashApi
   class UsersController < ApplicationController
 
+    before_action :require_json_headers
     before_action :doorkeeper_authorize!, only: %i[show index]
     before_action :require_api_user, only: %i[show index]
     before_action :require_superuser, only: %i[show index]
@@ -20,7 +21,6 @@ module StashApi
       user = User.new(user_id: user)
       respond_to do |format|
         format.json { render json: user.metadata }
-        format.html { render text: UNACCEPTABLE_MSG, status: 406 }
       end
     end
 
