@@ -30,7 +30,8 @@ module StashApi
 
     def require_json_headers
       accept = request.headers['accept']
-      return if request.headers['content-type'] == 'application/json' && (accept.nil? || accept.include?('*/*') || accept.include?('application/json'))
+      return if request.headers['content-type'] == 'application/json' && (accept.nil? || accept.include?('*/*') ||
+          accept.include?('application/json'))
       render json: { error: UNACCEPTABLE_MSG }.to_json, status: 406
     end
 
