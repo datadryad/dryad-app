@@ -10,6 +10,7 @@ require_dependency 'stash_api/application_controller'
 module StashApi
   class FilesController < ApplicationController
 
+    before_action :require_json_headers, only: %i[show index]
     before_action -> { require_resource_id(resource_id: params[:version_id]) }, only: [:index]
     before_action -> { require_file_id(file_id: params[:id]) }, only: [:show]
 
@@ -17,6 +18,7 @@ module StashApi
     before_action :doorkeeper_authorize!, only: :update
     before_action :require_api_user, only: :update
     before_action :require_in_progress_resource, only: :update
+    before_action :require_file_current_uploads, only: :update
     before_action :require_permission, only: :update
 
     # GET /files/<id>
@@ -24,7 +26,6 @@ module StashApi
       file = StashApi::File.new(file_id: params[:id])
       respond_to do |format|
         format.json { render json: file.metadata }
-        format.html { render text: UNACCEPTABLE_MSG, status: 406 }
       end
     end
 
@@ -33,7 +34,6 @@ module StashApi
       files = paged_files_for_version
       respond_to do |format|
         format.json { render json: files }
-        format.html { render text: UNACCEPTABLE_MSG, status: 406 }
       end
     end
 
@@ -48,7 +48,6 @@ module StashApi
       file = StashApi::File.new(file_id: @file.id)
       respond_to do |format|
         format.json { render json: file.metadata, status: 201 }
-        format.html { render text: UNACCEPTABLE_MSG, status: 406 }
       end
     end
 
@@ -65,10 +64,19 @@ module StashApi
       check_total_size_violations { yield }
     end
 
+    # prevent people doing badness like filenames like ../../../foobar
     def setup_file_path
       @file_path = ::File.expand_path(params[:filename], @resource.upload_dir)
       (render json: { error: 'No file shenanigans' }.to_json, status: 403) && yield unless @file_path.start_with?(@resource.upload_dir)
       FileUtils.mkdir_p(::File.dirname(@file_path))
+    end
+
+    # only allow to proceed if no other current uploads or only other url-type uploads
+    def require_file_current_uploads
+      the_type = @resource.upload_type
+      return if %i[files unknown].include?(the_type)
+      render json: { error:
+          'You may not submit a file by direct upload in the same version when you have submitted files by URL' }.to_json, status: 409
     end
 
     def check_header_file_size
@@ -81,7 +89,7 @@ module StashApi
     def check_file_size
       return if ::File.size(@file_path) <= @resource.tenant.max_total_version_size
       (render json: { error:
-                          "Your file size is larger than the maximum submission size of #{resource.tenant.max_total_version_size} bytes" }.to_json,
+          "Your file size is larger than the maximum submission size of #{view_context.filesize(resource.tenant.max_total_version_size)}" }.to_json,
               status: 403) && yield
     end
 
