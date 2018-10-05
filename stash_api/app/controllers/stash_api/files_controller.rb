@@ -10,6 +10,7 @@ require_dependency 'stash_api/application_controller'
 module StashApi
   class FilesController < ApplicationController
 
+    before_action :require_json_headers, only: %i[show index]
     before_action -> { require_resource_id(resource_id: params[:version_id]) }, only: [:index]
     before_action -> { require_file_id(file_id: params[:id]) }, only: [:show]
 
@@ -25,7 +26,6 @@ module StashApi
       file = StashApi::File.new(file_id: params[:id])
       respond_to do |format|
         format.json { render json: file.metadata }
-        format.html { render text: UNACCEPTABLE_MSG, status: 406 }
       end
     end
 
@@ -34,7 +34,6 @@ module StashApi
       files = paged_files_for_version
       respond_to do |format|
         format.json { render json: files }
-        format.html { render text: UNACCEPTABLE_MSG, status: 406 }
       end
     end
 
@@ -49,7 +48,6 @@ module StashApi
       file = StashApi::File.new(file_id: @file.id)
       respond_to do |format|
         format.json { render json: file.metadata, status: 201 }
-        format.html { render text: UNACCEPTABLE_MSG, status: 406 }
       end
     end
 

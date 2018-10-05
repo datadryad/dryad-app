@@ -4,6 +4,7 @@ require 'stash/url_translator'
 module StashApi
   class UrlsController < ApplicationController
 
+    before_action :require_json_headers
     before_action -> { require_stash_identifier(doi: params[:dataset_id]) }, only: %i[create]
     before_action :doorkeeper_authorize!, only: :create
     before_action :require_api_user, only: :create
@@ -30,7 +31,6 @@ module StashApi
       file = StashApi::File.new(file_id: fu.id) # parse file display object
       respond_to do |format|
         format.json { render json: file.metadata, status: 201 }
-        format.html { render text: UNACCEPTABLE_MSG, status: 406 }
       end
     end
     # rubocop:enable Metrics/MethodLength
