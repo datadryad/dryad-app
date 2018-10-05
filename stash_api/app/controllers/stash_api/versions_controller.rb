@@ -5,6 +5,7 @@ require_dependency 'stash_api/application_controller'
 module StashApi
   class VersionsController < ApplicationController
 
+    before_action :require_json_headers, only: %i[show index]
     before_action -> { require_stash_identifier(doi: params[:dataset_id]) }, only: [:index]
     before_action -> { require_resource_id(resource_id: params[:id]) }, only: %i[show download]
 
@@ -13,7 +14,6 @@ module StashApi
       v = Version.new(resource_id: params[:id])
       respond_to do |format|
         format.json { render json: v.metadata_with_links }
-        format.html { render text: UNACCEPTABLE_MSG, status: 406 }
         res = @stash_resources.first
         StashEngine::CounterLogger.general_hit(request: request, resource: res) if res
       end
@@ -24,7 +24,6 @@ module StashApi
       versions = paged_versions_for_dataset
       respond_to do |format|
         format.json { render json: versions }
-        format.html { render text: UNACCEPTABLE_MSG, status: 406 }
       end
     end
 
