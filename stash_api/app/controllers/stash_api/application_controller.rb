@@ -28,6 +28,13 @@ module StashApi
       up.paging_hash
     end
 
+    def require_json_headers
+      accept = request.headers['accept']
+      return if request.headers['content-type'] == 'application/json' && (accept.nil? || accept.include?('*/*') ||
+          accept.include?('application/json'))
+      render json: { error: UNACCEPTABLE_MSG }.to_json, status: 406
+    end
+
     def require_stash_identifier(doi:)
       # check to see if the identifier is actually an id and not a DOI first
       @stash_identifier = StashEngine::Identifier.where(id: doi).first

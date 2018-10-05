@@ -10,6 +10,7 @@ module StashApi
 
     include SubmissionMixin
 
+    before_action :require_json_headers, only: %i[show create index update]
     before_action -> { require_stash_identifier(doi: params[:id]) }, only: %i[show download]
     before_action :setup_identifier_and_resource_for_put, only: %i[update]
     before_action :doorkeeper_authorize!, only: %i[create update]
@@ -23,8 +24,6 @@ module StashApi
       ds = Dataset.new(identifier: @stash_identifier.to_s)
       respond_to do |format|
         format.json { render json: ds.metadata }
-        format.xml { render xml: ds.metadata.to_xml(root: 'dataset') }
-        format.html { render text: UNACCEPTABLE_MSG, status: 406 }
         res = @stash_identifier.last_submitted_resource
         StashEngine::CounterLogger.general_hit(request: request, resource: res) if res
       end
@@ -47,8 +46,6 @@ module StashApi
       datasets = paged_datasets
       respond_to do |format|
         format.json { render json: datasets }
-        format.xml { render xml: datasets.to_xml(root: 'datasets') }
-        format.html { render text: UNACCEPTABLE_MSG, status: 406 }
       end
     end
 
