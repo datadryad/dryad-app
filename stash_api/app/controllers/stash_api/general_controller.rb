@@ -5,6 +5,7 @@ require_dependency 'stash_api/application_controller'
 module StashApi
   class GeneralController < ApplicationController
 
+    before_action :require_json_headers
     before_action :doorkeeper_authorize!, only: :test
     before_action :require_api_user, only: :test
 
@@ -12,7 +13,6 @@ module StashApi
     def index
       respond_to do |format|
         format.json { render json: output }
-        format.html {}
       end
     end
 
@@ -21,7 +21,6 @@ module StashApi
     def test
       respond_to do |format|
         format.json { render json: { message: "Welcome application owner #{@user.name}", user_id: @user.id } }
-        format.html {}
       end
     end
 

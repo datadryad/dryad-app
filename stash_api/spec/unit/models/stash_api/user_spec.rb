@@ -31,37 +31,37 @@ module StashApi
     describe :basic_user_view do
 
       before(:each) do
-        @user = User.new(user_id: @user.id)
-        @metadata = @user.metadata
+        @api_user = User.new(user_id: @user.id)
+        @metadata = @api_user.metadata
       end
 
       it 'has a valid name' do
-        expect(@metadata[:firstName]).to eq('Juanita')
-        expect(@metadata[:lastName]).to eq('Collins')
+        expect(@metadata[:firstName]).to eq(@user.first_name)
+        expect(@metadata[:lastName]).to eq(@user.last_name)
       end
 
       it 'has a valid email' do
-        expect(@metadata[:email]).to eq('juanita.collins@example.org')
+        expect(@metadata[:email]).to eq(@user.email)
       end
 
       it 'has a valid tenantId' do
-        expect(@metadata[:tenantId]).to eq('exemplia')
+        expect(@metadata[:tenantId]).to eq(@user.tenant_id)
       end
 
       it 'has a valid role' do
-        expect(@metadata[:role]).to eq('user')
+        expect(@metadata[:role]).to eq(@user.role)
       end
 
       it 'has a valid orcid' do
-        expect(@metadata[:orcid]).to eq('1098-415-1212')
+        expect(@metadata[:orcid]).to eq(@user.orcid)
       end
 
       it 'has a valid oldDryadEmail' do
-        expect(@metadata[:oldDryadEmail]).to eq('lolinda@example.com')
+        expect(@metadata[:oldDryadEmail]).to eq(@user.old_dryad_email)
       end
 
       it 'has a valid ePersonId' do
-        expect(@metadata[:ePersonId]).to eq(37)
+        expect(@metadata[:ePersonId]).to eq(@user.eperson_id)
       end
 
       it 'has a valid created time' do
