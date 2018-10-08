@@ -14,12 +14,12 @@ module StashEngine
                                     message: '%{value} is not a valid status' }
     validates :status, presence: true
 
-    def self.current_status(my_stash_id)
+    def self.curation_status(my_stash_id)
       curation_activities = CurationActivity.where(stash_identifier: my_stash_id).order(updated_at: :desc)
       curation_activities.each do |activity|
         return activity.status unless activity.status == 'Status Unchanged'
       end
-      @current_status = 'Unsubmitted'
+      @curation_status = 'Unsubmitted'
     end
 
     def as_json(*)
