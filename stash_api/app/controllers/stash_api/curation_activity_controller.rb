@@ -25,6 +25,7 @@ module StashApi
       @curation_activity = StashEngine::CurationActivity.where(identifier_id: @stash_identifier.id)
       @curation_activity = @curation_activity.where(status: params[:status]) if params.key?(:status)
       @curation_activity = @curation_activity.where(user_id: @user.id) if params.key?(:user_id)
+      @curation_activity = @curation_activity.order(updated_at: :desc)
       respond_to do |format|
         format.json { render json: @curation_activity }
       end

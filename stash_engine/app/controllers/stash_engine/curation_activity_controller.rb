@@ -9,7 +9,7 @@ module StashEngine
     # GET /resources/{id}/curation_activities
     def index
       @ident = Identifier.find_with_id(Resource.find_by!(id: params[:resource_id]).identifier_str)
-      @curation_activities = CurationActivity.where(identifier_id: @ident.identifier_id) unless @ident.blank?
+      @curation_activities = CurationActivity.where(identifier_id: @ident.identifier_id).order(created_at: :desc) unless @ident.blank?
       respond_to do |format|
         format.html
         format.json { render json: @curation_activities }
