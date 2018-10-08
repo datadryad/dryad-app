@@ -167,21 +167,19 @@ module StashApi
       @resource = nr
     end
 
-    def all_datasets
-      { 'stash:datasets' =>
-          StashEngine::Identifier.all.map { |i| Dataset.new(identifier: "#{i.identifier_type}:#{i.identifier}").metadata } }
+    def datasets_with_mapped_metadata(datasets_to_map)
+      datasets_to_map.map { |i| Dataset.new(identifier: "#{i.identifier_type}:#{i.identifier}").metadata }
     end
 
-    def paged_datasets
-      all_count = StashEngine::Identifier.all.count
-      results = StashEngine::Identifier.all.limit(page_size).offset(page_size * (page - 1))
-      results = results.map { |i| Dataset.new(identifier: "#{i.identifier_type}:#{i.identifier}").metadata }
-      paging_hash_results(all_count, results)
+    def paged_datasets(datasets_to_page)
+      all_count = datasets_to_page.count
+      results = datasets_to_page.slice(page_size * (page - 1), page_size)
+      paging_hash_results(all_count, datasets_with_mapped_metadata(results))
     end
 
     def paging_hash_results(all_count, results)
       {
-        '_links' => paging_hash(result_count: all_count),
+        '_links' => paging_hash(result_count: results.count),
         count: results.count,
         total: all_count,
         '_embedded' => { 'stash:datasets' => results }
