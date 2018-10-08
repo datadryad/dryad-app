@@ -36,8 +36,10 @@ module StashApi
       # gets descriptive metadata together
       lv = in_progress || last_submitted
       return simple_identifier if lv.nil?
-      metadata = id_and_size_hash.merge(lv.metadata)
+      id_size_hsh = id_and_size_hash
+      metadata = id_size_hsh.merge(lv.metadata)
       add_embargo_date!(metadata, lv)
+      add_curation_status(metadata, id_size_hsh[:id])
       # metadata.compact!
 
       # gives the links to nearby objects
@@ -100,6 +102,10 @@ module StashApi
 
     def add_embargo_date!(hsh, version)
       hsh[:embargoEndDate] = version.resource.embargo.end_date.strftime('%Y-%m-%d') unless version.resource.embargo.nil?
+    end
+
+    def add_curation_status(hsh, id)
+      hsh[:curationStatus] = StashEngine::CurationActivity.current_status(id)
     end
 
   end
