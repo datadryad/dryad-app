@@ -105,7 +105,7 @@ module StashApi
     end
 
     def add_curation_status(hsh, id)
-      hsh[:curationStatus] = StashEngine::CurationActivity.current_status(id)
+      hsh[:curationStatus] = StashEngine::CurationActivity.curation_status(id)
     end
 
   end
