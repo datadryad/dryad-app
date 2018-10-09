@@ -41,13 +41,25 @@ module StashApi
       end
     end
 
+    # rubocop:disable Metrics/MethodLength
     # get /datasets
     def index
-      datasets = paged_datasets
+      query_hash = {}
+      query_hash['stash_engine_curation_activities.status'] = params['curationStatus'] if params.key?('curationStatus')
+      if params.key?('publicationISSN')
+        query_hash['stash_engine_internal_data.data_type'] = 'publicationISSN'
+        query_hash['stash_engine_internal_data.value'] = params['publicationISSN']
+      end
+      @datasets = StashEngine::Identifier.select('stash_engine_curation_activities.*, stash_engine_internal_data.*, stash_engine_identifiers.*')
+        .joins(:curation_activities, :internal_data)
+        .where(query_hash)
+      @datasets = StashEngine::Identifier.where(id: @datasets.map(&:id))
+      @datasets = paged_datasets(@datasets)
       respond_to do |format|
-        format.json { render json: datasets }
+        format.json { render json: @datasets }
       end
     end
+    # rubocop:enable Metrics/MethodLength
 
     # we are using PATCH only to update the versionStatus=submitted
     # PUT will be to update/replace the dataset metadata
@@ -178,6 +190,7 @@ module StashApi
     end
 
     def paging_hash_results(all_count, results)
+      return if results.nil?
       {
         '_links' => paging_hash(result_count: results.count),
         count: results.count,
