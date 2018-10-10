@@ -44,6 +44,7 @@ module StashApi
       ::File.open(@file_path, 'wb') do |output_stream|
         IO.copy_stream(request.body, output_stream)
       end
+      byebug
       after_upload_processing { return }
       file = StashApi::File.new(file_id: @file.id)
       respond_to do |format|
@@ -107,7 +108,8 @@ module StashApi
         upload_updated_at: Time.new.utc,
         file_state: 'created',
         digest: md5,
-        digest_type: 'md5'
+        digest_type: 'md5',
+        description: request.env['HTTP_CONTENT_DESCRIPTION']
       )
     end
     # rubocop:enable Metrics/MethodLength
