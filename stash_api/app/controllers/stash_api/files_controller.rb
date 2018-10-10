@@ -95,6 +95,7 @@ module StashApi
 
     # rubocop:disable Metrics/MethodLength
     def save_file_to_db
+      md5 = Digest::MD5.file(@file_path).hexdigest
       just_user_fn = @file_path[@resource.upload_dir.length..-1].gsub(%r{^/+}, '') # just user fn and remove any leading slashes
       handle_previous_duplicates(upload_filename: just_user_fn)
       StashEngine::FileUpload.create(
@@ -104,7 +105,9 @@ module StashApi
         upload_file_size: ::File.size(@file_path),
         resource_id: @resource.id,
         upload_updated_at: Time.new.utc,
-        file_state: 'created'
+        file_state: 'created',
+        digest: md5,
+        digest_type: 'md5'
       )
     end
     # rubocop:enable Metrics/MethodLength
