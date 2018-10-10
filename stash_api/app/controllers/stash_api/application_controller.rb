@@ -30,7 +30,7 @@ module StashApi
 
     def require_json_headers
       accept = request.headers['accept']
-      content_type = request_headers['content-type']
+      content_type = request.headers['content-type']
       # check that content_type and accept headers are as expected
       ct_ok = !content_type.nil? || content_type.start_with?('application/json')
       accept_ok = !accept.nil? && (accept.include?('*/*') || accept.include?('application/json'))
