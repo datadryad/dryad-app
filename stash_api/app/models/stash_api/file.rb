@@ -19,7 +19,7 @@ module StashApi
                                 status: @se_file_upload.file_state,
                                 digest: @se_file_upload.digest,
                                 digestType: @se_file_upload.digest_type,
-                                description: @se_file_upload.description)
+                                description: @se_file_upload.description).recursive_compact
     end
 
     def links
