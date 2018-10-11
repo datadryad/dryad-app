@@ -44,7 +44,6 @@ module StashApi
       ::File.open(@file_path, 'wb') do |output_stream|
         IO.copy_stream(request.body, output_stream)
       end
-      byebug
       after_upload_processing { return }
       file = StashApi::File.new(file_id: @file.id)
       respond_to do |format|
