@@ -12,5 +12,8 @@ FactoryBot.define do
     timed_out { 0 }
     original_url { nil }
     cloud_service { nil }
+    digest { '7597d11c020ee3d160a8b55a44471aff' }
+    digest_type { 'md5' }
+    description { 'We motivate the need for gigabit switches with this log.' }
   end
 end
