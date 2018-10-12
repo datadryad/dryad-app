@@ -114,6 +114,10 @@ module StashDatacite
         @resource.related_identifiers.where.not(related_identifier: [nil, '']).count > 0
       end
 
+      def temporal_coverage
+        TemporalCoverage.where(resource_id: @resource.id).count > 0
+      end
+
       def optional_completed
         date.to_i + keyword.to_i + method.to_i + citation.to_i
       end
