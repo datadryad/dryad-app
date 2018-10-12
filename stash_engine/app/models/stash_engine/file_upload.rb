@@ -61,6 +61,10 @@ module StashEngine
       Version.find_by_sql([sql, resource.identifier_id, upload_file_name]).first
     end
 
+    def digest?
+      !digest.blank? && !digest_type.nil?
+    end
+
     # TODO: merritt-specifics, where does this belong?
     # http://<merritt-url>/d/<ark>/<version>/<encoded-fn> is an example of the URLs Merritt takes
     def merritt_url

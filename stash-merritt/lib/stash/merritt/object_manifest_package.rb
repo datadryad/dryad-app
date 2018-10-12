@@ -61,7 +61,9 @@ module Stash
         OpenStruct.new(
           file_url: upload_url,
           file_size: (upload_file_size if upload_file_size > 0),
-          file_name: upload_file_name
+          file_name: upload_file_name,
+          hash_algorithm: (upload.digest_type if upload.digest?),
+          hash_value: (upload.digest if upload.digest?)
         )
       end
 
