@@ -52,6 +52,7 @@ module Stash
         builders.map { |builder| write_to_public(builder) }.compact
       end
 
+      # rubocop:disable Metrics/MethodLength
       def entry_for(upload)
         upload_file_name = upload.upload_file_name
         upload_url = upload.url
@@ -66,6 +67,7 @@ module Stash
           hash_value: (upload.digest if upload.digest?)
         )
       end
+      # rubocop:enable Metrics/MethodLength
 
       def write_to_public(builder)
         return unless (path = builder.write_file(workdir))
