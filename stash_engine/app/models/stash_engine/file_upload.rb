@@ -14,6 +14,7 @@ module StashEngine
     scope :validated, -> { where('(url IS NOT NULL AND status_code = 200) OR url IS NULL') }
     scope :validated_table, -> { present_files.validated.order(created_at: :desc) }
     enum file_state: %w[created copied deleted].map { |i| [i.to_sym, i] }.to_h
+    enum digest_type: %w[adler-32 crc-32 md2 md5 sha-1 sha-256 sha-384 sha-512].map { |i| [i.to_sym, i] }.to_h
 
     # display the correct error message based on the url status code
     def error_message # rubocop:disable Metrics/MethodLength, Metrics/CyclomaticComplexity
@@ -58,6 +59,10 @@ module StashEngine
       SQL
 
       Version.find_by_sql([sql, resource.identifier_id, upload_file_name]).first
+    end
+
+    def digest?
+      !digest.blank? && !digest_type.nil?
     end
 
     # TODO: merritt-specifics, where does this belong?
