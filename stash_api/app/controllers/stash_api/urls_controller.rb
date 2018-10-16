@@ -20,6 +20,8 @@ module StashApi
     #   size: 18288,
     #   mimeType: 'application/pdf' }
     # rubocop:disable Metrics/MethodLength
+
+    # POST /datasets/<encoded-doi>/url
     def create
       file_upload_hash = if params['skipValidation'] == true
                            skipped_validation_hash(params) { return }
