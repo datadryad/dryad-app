@@ -52,7 +52,12 @@ module StashApi
 
     def require_file_id(file_id:)
       @stash_files = StashEngine::FileUpload.where(id: file_id)
-      render json: { error: 'not-found' }.to_json, status: 404 if @stash_files.count < 1
+      if @stash_files.count < 1
+        render json: { error: 'not-found' }.to_json, status: 404
+      else
+        @stash_file = @stash_files.first
+        @resource = @stash_file.resource # for require_permission to use
+      end
     end
 
     def require_api_user
