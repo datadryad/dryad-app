@@ -108,7 +108,8 @@ module StashApi
     end
 
     def do_patch
-      return unless request.method == 'PATCH' && request.headers['content-type'] == 'application/json-patch+json'
+      content_type = request.headers['content-type']
+      return unless request.method == 'PATCH' && content_type && content_type.start_with?('application/json-patch+json')
       check_patch_prerequisites { yield }
       check_dataset_completions { yield }
       pre_submission_updates
