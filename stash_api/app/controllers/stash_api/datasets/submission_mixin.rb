@@ -9,7 +9,7 @@ module SubmissionMixin
     rescue JSON::ParserError
       return_error(messages: 'You must send a json patch request with a valid JSON operation to publish this dataset', status: 400) { yield }
     end
-    return if @json.length.positive? && @json.include?({"op"=>"replace", "path"=>"/versionStatus", "value"=>"submitted"})
+    return if @json.length.positive? && @json.include?('op' => 'replace', 'path' => '/versionStatus', 'value' => 'submitted')
     return_error(messages: "You must issue a json operation of 'replace', path: '/versionStatus', value: 'submitted' to publish.",
                  status: 400) { yield }
   end
@@ -20,12 +20,7 @@ module SubmissionMixin
   end
 
   def check_dataset_completions
-    completions = StashDatacite::Resource::Completions.new(@resource)
-    if @json.include?({"op"=>"add", "path"=>"/relaxValidation", "value"=>true}) && @user.superuser?
-      errors = completions.relaxed_warnings
-    else
-      errors = completions.all_warnings
-    end
+    errors = errors_for_completions
     if @resource.new_size > @resource.tenant.max_total_version_size && @resource.size > @resource.tenant.max_submission_size
       errors.push('The files for this dataset are larger than the allowed version or total object size')
     end
@@ -34,6 +29,15 @@ module SubmissionMixin
     end
     return unless errors.length.positive?
     return_error(messages: errors, status: 403) { yield }
+  end
+
+  def errors_for_completions
+    completions = StashDatacite::Resource::Completions.new(@resource)
+    if @json.include?('op' => 'add', 'path' => '/relaxValidation', 'value' => true) && @user.superuser?
+      completions.relaxed_warnings
+    else
+      completions.all_warnings
+    end
   end
 
   def pre_submission_updates

@@ -10,6 +10,8 @@ module StashApi
 
       # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
       def value
+        # setting some false values to nil because they get compacted.  Don't really want to advertise these options for
+        # use by others besides ourselves because we don't want others to use them.
         {
           title: @resource.title,
           authors: Authors.new(resource: @resource).value,
@@ -23,7 +25,9 @@ module StashApi
           versionNumber: @resource.try(:stash_version).try(:version),
           versionStatus: @resource.current_state,
           userId: @resource.user_id,
-          skipDataciteUpdate: @resource.skip_datacite_update
+          skipDataciteUpdate: @resource.skip_datacite_update || nil,
+          skipEmails: @resource.skip_emails || nil,
+          loosenValidation: @resource.loosen_validation || nil
         }
       end
       # rubocop:enable Metrics/MethodLength, Metrics/AbcSize
