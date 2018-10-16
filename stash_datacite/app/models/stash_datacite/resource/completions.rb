@@ -132,6 +132,15 @@ module StashDatacite
         messages << 'Fix or remove upload URLs that were unable to validate' unless urls_validated?
         messages
       end
+
+      def relaxed_warnings
+        messages = []
+        messages << 'Add a dataset title' unless title
+        messages << 'Add an abstract' unless abstract
+        messages << 'You must have at least one author name and they need to be complete' unless author_name
+        messages << 'Fix or remove upload URLs that were unable to validate' unless urls_validated?
+        messages
+      end
     end
   end
 end
