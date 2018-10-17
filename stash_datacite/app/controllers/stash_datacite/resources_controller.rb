@@ -82,6 +82,8 @@ module StashDatacite
       resource.update_publication_date!
       resource.save
 
+      resource.update(skip_datacite_update: false, skip_emails: false, loosen_validation: false) # these are only for API superusers to choose
+
       # TODO: put this somewhere more reliable
       StashDatacite::DataciteDate.set_date_available(resource_id: resource.id)
 
