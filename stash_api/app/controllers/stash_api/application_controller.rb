@@ -32,7 +32,7 @@ module StashApi
       accept = request.headers['accept']
       content_type = request.headers['content-type']
       # check that content_type and accept headers are as expected
-      ct_ok = !content_type.nil? || content_type.start_with?('application/json')
+      ct_ok = !content_type.nil? && content_type.start_with?('application/json')
       accept_ok = !accept.nil? && (accept.include?('*/*') || accept.include?('application/json'))
       return if ct_ok && accept_ok
       render json: { error: UNACCEPTABLE_MSG }.to_json, status: 406
@@ -52,7 +52,12 @@ module StashApi
 
     def require_file_id(file_id:)
       @stash_files = StashEngine::FileUpload.where(id: file_id)
-      render json: { error: 'not-found' }.to_json, status: 404 if @stash_files.count < 1
+      if @stash_files.count < 1
+        render json: { error: 'not-found' }.to_json, status: 404
+      else
+        @stash_file = @stash_files.first
+        @resource = @stash_file.resource # for require_permission to use
+      end
     end
 
     def require_api_user

@@ -10,16 +10,16 @@ require_dependency 'stash_api/application_controller'
 module StashApi
   class FilesController < ApplicationController
 
-    before_action :require_json_headers, only: %i[show index]
+    before_action :require_json_headers, only: %i[show index destroy]
     before_action -> { require_resource_id(resource_id: params[:version_id]) }, only: [:index]
-    before_action -> { require_file_id(file_id: params[:id]) }, only: [:show]
+    before_action -> { require_file_id(file_id: params[:id]) }, only: %i[show destroy]
 
     before_action -> { require_stash_identifier(doi: params[:id]) }, only: %i[update]
-    before_action :doorkeeper_authorize!, only: :update
-    before_action :require_api_user, only: :update
-    before_action :require_in_progress_resource, only: :update
+    before_action :doorkeeper_authorize!, only: %i[update destroy]
+    before_action :require_api_user, only: %i[update destroy]
+    before_action :require_in_progress_resource, only: %i[update]
     before_action :require_file_current_uploads, only: :update
-    before_action :require_permission, only: :update
+    before_action :require_permission, only: %i[update destroy]
 
     # GET /files/<id>
     def show
@@ -37,7 +37,7 @@ module StashApi
       end
     end
 
-    # POST /versions/<version-id>/files/<encoded file name>
+    # PUT /datasets/<encoded-doi>/files/<encoded-file-name>
     def update
       # lots of checks and setup before creating the file (also see the before_actions above)
       pre_upload_checks { return }
@@ -48,6 +48,20 @@ module StashApi
       file = StashApi::File.new(file_id: @file.id)
       respond_to do |format|
         format.json { render json: file.metadata, status: 201 }
+      end
+    end
+
+    # DELETE /files/<id>
+    # has set @stash_file and @resource and checked user would be able to edit this resource (permission), but not that it's in-progress
+    # HATEOAS seems to allow a response with links and other fun stuff.
+    def destroy
+      unless @resource.current_state == 'in_progress'
+        render json: { error: 'This file must be part of an an in-progress version' }.to_json, status: 403
+        return
+      end
+      file_hash = make_deleted(file_upload: @stash_file)
+      respond_to do |format|
+        format.json { render json: file_hash, status: 200 }
       end
     end
 
@@ -95,6 +109,7 @@ module StashApi
 
     # rubocop:disable Metrics/MethodLength
     def save_file_to_db
+      md5 = Digest::MD5.file(@file_path).hexdigest
       just_user_fn = @file_path[@resource.upload_dir.length..-1].gsub(%r{^/+}, '') # just user fn and remove any leading slashes
       handle_previous_duplicates(upload_filename: just_user_fn)
       StashEngine::FileUpload.create(
@@ -104,7 +119,10 @@ module StashApi
         upload_file_size: ::File.size(@file_path),
         resource_id: @resource.id,
         upload_updated_at: Time.new.utc,
-        file_state: 'created'
+        file_state: 'created',
+        digest: md5,
+        digest_type: 'md5',
+        description: request.env['HTTP_CONTENT_DESCRIPTION']
       )
     end
     # rubocop:enable Metrics/MethodLength
@@ -142,6 +160,19 @@ module StashApi
         total: all_count,
         '_embedded' => { 'stash:files' => results }
       }
+    end
+
+    # make a file deleted and return the hash for what it looks like after with HATEOAS
+    def make_deleted(file_upload:)
+      case file_upload.file_state
+      when 'created' # delete from db since it's new in this version
+        my_hate = { '_links': StashApi::File.new(file_id: file_upload.id).links.except(:self) }
+        file_upload.destroy
+        return my_hate
+      when 'copied' # make 'deleted' which will remove in this version on next submission
+        file_upload.update!(file_state: 'deleted')
+      end
+      StashApi::File.new(file_id: file_upload.id).metadata
     end
   end
 end
