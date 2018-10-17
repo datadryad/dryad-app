@@ -147,6 +147,7 @@ module StashEngine
 
     # --- These are for delivering orcid invitations when we get the callback that an item has been processed
 
+    # rubocop:disable Metrics/AbcSize
     def deliver_invitations!
       return if resource.nil? || resource.skip_emails
       authors = resource.authors.where.not(author_email: nil)
@@ -157,6 +158,7 @@ module StashEngine
         StashEngine::UserMailer.orcid_invitation(invite).deliver_now
       end
     end
+    # rubocop:enable Metrics/AbcSize
 
     # updates the total size & call to update zero sizes for individual files
     def update_size!
