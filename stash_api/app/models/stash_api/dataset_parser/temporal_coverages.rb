@@ -5,7 +5,7 @@ module StashApi
       def parse
         clear
         return if @hash['temporalCoverages'].nil?
-        @hash['temporalCoverages'].each { |temp| @resource.descriptions << StashDatacite::TemporalCoverage.create(description: temp)}
+        @hash['temporalCoverages'].each { |temp| @resource.descriptions << StashDatacite::TemporalCoverage.create(description: temp) }
       end
 
       def clear
