@@ -91,6 +91,14 @@ module StashDatacite
         @geolocation_places = GeolocationPlace.from_resource_id(@resource.id)
       end
 
+      def new_temporal_coverage
+        @temporal_coverage = TemporalCoverage.new(resource_id: @resource.id)
+      end
+
+      def temporal_coverages
+        @temporal_coverage = TemporalCoverage.where(resource_id: @resource.id)
+      end
+
       private
 
       def ensure_license(tenant)
