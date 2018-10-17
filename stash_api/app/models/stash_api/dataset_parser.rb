@@ -2,7 +2,7 @@ module StashApi
   # takes a dataset hash, parses it out and saves it to the appropriate places in the database
   class DatasetParser
 
-    TO_PARSE = %w[Funders Methods UsageNotes Keywords RelatedWorks Locations].freeze
+    TO_PARSE = %w[Funders Methods UsageNotes Keywords RelatedWorks Locations TemporalCoverages].freeze
 
     # If  id_string is set, then populate the desired (doi) into the identifier in format like doi:xxxxx/yyyyy for new dataset.
     # the id is a stash_engine_identifier object and indicates an already existing object.  May not set both.
