@@ -148,7 +148,7 @@ module StashEngine
     # --- These are for delivering orcid invitations when we get the callback that an item has been processed
 
     def deliver_invitations!
-      return unless resource
+      return if resource.nil? || resource.skip_emails
       authors = resource.authors.where.not(author_email: nil)
       authors.each do |author|
         next if author.author_email.blank? || StashEngine::OrcidInvitation.where(email: author.author_email)
