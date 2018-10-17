@@ -77,6 +77,10 @@ module StashDatacite
         geolocation_points.exists? || geolocation_places.exists? || geolocation_boxes.exists?
       end
 
+      def temporal_coverages
+        @temporal_coverages = TemporalCoverage.where(resource_id: @resource.id)
+      end
+
       # TODO: is this actually used? it doesn't look like it
       def embargo
         @embargo = if @resource.embargo.present?

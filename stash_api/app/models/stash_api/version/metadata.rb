@@ -19,6 +19,7 @@ module StashApi
           methods: Methods.new(resource: @resource).value,
           usageNotes: UsageNotes.new(resource: @resource).value,
           locations: Locations.new(resource: @resource).value,
+          temporalCoverages: TemporalCoverages.new(resource: @resource).value,
           relatedWorks: RelatedWorks.new(resource: @resource).value,
           versionNumber: @resource.try(:stash_version).try(:version),
           versionStatus: @resource.current_state,
