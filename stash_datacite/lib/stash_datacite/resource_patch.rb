@@ -42,7 +42,7 @@ module StashDatacite
         amoeba do
           # can't just pass the array to include_association() or it clobbers the ones defined in stash_engine
           # see https://github.com/amoeba-rb/amoeba/issues/76
-          %i[contributors datacite_dates descriptions geolocations temporal_coverages 
+          %i[contributors datacite_dates descriptions geolocations temporal_coverages
              publication_years publisher related_identifiers resource_type rights sizes
              subjects].each do |assoc|
             include_association assoc
