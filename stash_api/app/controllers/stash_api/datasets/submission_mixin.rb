@@ -33,7 +33,7 @@ module SubmissionMixin
 
   def errors_for_completions
     completions = StashDatacite::Resource::Completions.new(@resource)
-    if @json.include?('op' => 'add', 'path' => '/relaxValidation', 'value' => true) && @user.superuser?
+    if @resource.loosen_validation && @user.superuser?
       completions.relaxed_warnings
     else
       completions.all_warnings
