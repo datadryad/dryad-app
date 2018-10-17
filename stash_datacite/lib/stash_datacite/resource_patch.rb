@@ -29,6 +29,7 @@ module StashDatacite
         has_many :datacite_dates, class_name: 'StashDatacite::DataciteDate', dependent: :destroy
         has_many :descriptions, class_name: 'StashDatacite::Description', dependent: :destroy
         has_many :geolocations, class_name: 'StashDatacite::Geolocation', dependent: :destroy
+        has_many :temporal_coverages, class_name: 'StashDatacite::TemporalCoverage', dependent: :destroy
         has_many :related_identifiers, class_name: 'StashDatacite::RelatedIdentifier', dependent: :destroy
         has_one :resource_type, class_name: 'StashDatacite::ResourceType', dependent: :destroy
         has_many :rights, class_name: 'StashDatacite::Right', dependent: :destroy
@@ -41,7 +42,7 @@ module StashDatacite
         amoeba do
           # can't just pass the array to include_association() or it clobbers the ones defined in stash_engine
           # see https://github.com/amoeba-rb/amoeba/issues/76
-          %i[contributors datacite_dates descriptions geolocations
+          %i[contributors datacite_dates descriptions geolocations temporal_coverages 
              publication_years publisher related_identifiers resource_type rights sizes
              subjects].each do |assoc|
             include_association assoc
