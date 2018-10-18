@@ -185,14 +185,14 @@ module StashApi
 
     def paged_datasets(datasets_to_page)
       all_count = datasets_to_page.count
-      results = datasets_to_page.slice(page_size * (page - 1), page_size)
+      results = datasets_to_page.limit(page_size).offset(page_size * (page - 1))
       paging_hash_results(all_count, datasets_with_mapped_metadata(results))
     end
 
     def paging_hash_results(all_count, results)
       return if results.nil?
       {
-        '_links' => paging_hash(result_count: results.count),
+        '_links' => paging_hash(result_count: all_count),
         count: results.count,
         total: all_count,
         '_embedded' => { 'stash:datasets' => results }
