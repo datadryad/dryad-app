@@ -43,6 +43,7 @@ module Stash
         @resource = double(StashEngine::Resource)
         allow(resource).to receive(:id).and_return(resource_id)
         allow(resource).to receive(:current_state=)
+        allow(resource).to receive(:skip_emails).and_return(false)
         allow(StashEngine::Resource).to receive(:find).with(resource_id).and_return(resource)
 
         @res_upload_dir = Dir.mktmpdir
