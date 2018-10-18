@@ -8,5 +8,7 @@ FactoryBot.define do
     current_editor_id { nil }
     tenant_id { 'exemplia' }
     skip_datacite_update { false }
+    skip_emails { false }
+    loosen_validation { false }
   end
 end
