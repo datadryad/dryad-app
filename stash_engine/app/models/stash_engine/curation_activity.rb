@@ -17,14 +17,6 @@ module StashEngine
     after_create :update_identifier_state
     after_update :update_identifier_state
 
-    def self.current_status(my_stash_id)
-      curation_activities = CurationActivity.where(stash_identifier: my_stash_id).order(updated_at: :desc)
-      curation_activities.each do |activity|
-        return activity.status unless activity.status == 'Status Unchanged'
-      end
-      @current_status = 'Unsubmitted'
-    end
-
     def as_json(*)
       # {"id":11,"identifier_id":1,"status":"Submitted","user_id":1,"note":"hello hello ssdfs2232343","keywords":null}
       {
