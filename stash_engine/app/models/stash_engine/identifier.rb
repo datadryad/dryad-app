@@ -3,8 +3,11 @@ module StashEngine
     has_many :resources, class_name: 'StashEngine::Resource', dependent: :destroy
     has_many :orcid_invitations, class_name: 'StashEngine::OrcidInvitation', dependent: :destroy
     has_one :counter_stat, class_name: 'StashEngine::CounterStat', dependent: :destroy
-    has_many :curation_activities, :class_name => 'StashEngine::CurationActivity'
-    has_many :internal_data, :class_name => 'StashEngine::InternalDatum'
+    has_many :curation_activities, class_name: 'StashEngine::CurationActivity'
+    has_many :internal_data, class_name: 'StashEngine::InternalDatum', dependent: :destroy
+    has_one :identifier_state, class_name: 'StashEngine::IdentifierState', dependent: :destroy
+    after_create :create_or_get_identifier_state
+    after_update :create_or_get_identifier_state
     # has_many :counter_citations, class_name: 'StashEngine::CounterCitation', dependent: :destroy
     # before_create :build_associations
 
@@ -114,7 +117,12 @@ module StashEngine
       @target = tenant.full_url(StashEngine::Engine.routes.url_helpers.show_path(to_s))
     end
 
-    # private
+    def create_or_get_identifier_state
+      return identifier_state unless identifier_state.nil?
+      c_a = CurationActivity.create(status: 'Unsubmitted', stash_identifier: self)
+      c_a.save!
+      @identifier_state = IdentifierState.create_identifier_state(self, c_a)
+    end
 
     # it's ok ot defer adding this unless someone asks for the counter_stat
     # def build_associations
