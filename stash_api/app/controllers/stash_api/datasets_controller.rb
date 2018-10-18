@@ -44,17 +44,25 @@ module StashApi
     # rubocop:disable Metrics/MethodLength
     # get /datasets
     def index
-      query_hash = {}
-      query_hash['stash_engine_curation_activities.status'] = params['curationStatus'] if params.key?('curationStatus')
+      # if a publicationISSN is specified, we want to make sure that we're only working with those:
       if params.key?('publicationISSN')
+        query_hash = {}
         query_hash['stash_engine_internal_data.data_type'] = 'publicationISSN'
         query_hash['stash_engine_internal_data.value'] = params['publicationISSN']
+        ds_query = StashEngine::Identifier
+          .joins('LEFT JOIN stash_engine_internal_data ON stash_engine_identifiers.id = stash_engine_internal_data.identifier_id')
+          .where(query_hash)
+      else
+        ds_query = StashEngine::Identifier.all
       end
-      @datasets = StashEngine::Identifier.select('stash_engine_curation_activities.*, stash_engine_internal_data.*, stash_engine_identifiers.*')
-        .joins(:curation_activities, :internal_data)
-        .where(query_hash)
-      @datasets = StashEngine::Identifier.where(id: @datasets.map(&:id))
-      @datasets = paged_datasets(@datasets)
+
+      # now, if a curationStatus is specified, narrow down the previous result.
+      unless params['curationStatus'].nil?
+        ds_query = ds_query
+          .joins('LEFT JOIN stash_engine_identifier_states ON stash_engine_identifiers.id = stash_engine_identifier_states.identifier_id')
+          .where('stash_engine_identifier_states.current_curation_status': params['curationStatus'])
+      end
+      @datasets = paged_datasets(ds_query)
       respond_to do |format|
         format.json { render json: @datasets }
       end
