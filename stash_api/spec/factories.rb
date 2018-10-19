@@ -18,7 +18,11 @@ FactoryBot.define do
     identifier { '138/238/2238' }
     identifier_type { 'DOI' }
   end
-  
+
+  factory(:curation_activity, class: StashEngine::CurationActivity) do
+    status { 'Submitted' }
+  end
+
   factory(:resource_state, class: StashEngine::ResourceState) do
     user_id { nil }
     resource_state { 'in_progress' }
