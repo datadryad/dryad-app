@@ -60,5 +60,26 @@ module StashEngine
         expect(new_file_record.version_file_created_in).to eq(original_version)
       end
     end
+
+    describe :digests do
+      it 'identifies item without digest' do
+        expect(@upload.digest?).to be false
+      end
+
+      it 'identifies item without digest type' do
+        @upload.update(digest: '12345')
+        expect(@upload.digest?).to be false
+      end
+
+      it 'identifies item without digest' do
+        @upload.update(digest_type: 'md5')
+        expect(@upload.digest?).to be false
+      end
+
+      it 'identifies item with complete digest info' do
+        @upload.update(digest_type: 'md5', digest: '12345')
+        expect(@upload.digest?).to be true
+      end
+    end
   end
 end

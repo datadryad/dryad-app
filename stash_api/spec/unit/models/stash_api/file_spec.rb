@@ -51,6 +51,18 @@ module StashApi
       it 'has a url' do
         expect(@metadata[:url]).to eq(@file_upload.url)
       end
+
+      it 'shows the correct digest' do
+        expect(@metadata[:digest]).to eq(@file_upload.digest)
+      end
+
+      it 'shows the correct digestType' do
+        expect(@metadata[:digestType]).to eq(@file_upload.digest_type)
+      end
+
+      it 'shows the correct description' do
+        expect(@metadata[:description]).to eq(@file_upload.description)
+      end
     end
 
   end

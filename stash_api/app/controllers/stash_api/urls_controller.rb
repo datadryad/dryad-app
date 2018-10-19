@@ -13,29 +13,27 @@ module StashApi
     before_action :require_permission, only: :create
     before_action :require_correctly_formatted_url, only: :create
 
-    # { url: 'https://crackpot.com',
-    #   skipValidation: true/false (only available to superusers),
-    #   if not validated then the following items need to be supplied
-    #   path: 'Overview.html',
-    #   size: 18288,
-    #   mimeType: 'application/pdf' }
-    # rubocop:disable Metrics/MethodLength
-
-    # POST /datasets/<encoded-doi>/url
+    # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
     def create
       file_upload_hash = if params['skipValidation'] == true
-                           skipped_validation_hash(params) { return }
+                           skipped_validation_hash(params) { return } # return will be yielded to if error is rendered, so it returns here
                          else
-                           validate_url(params[:url]) { return } # return will be called if rendered and error and yielded: no double-rendering
+                           validate_url(params[:url]) { return }
                          end
-      fu = StashEngine::FileUpload.create(file_upload_hash) # add the url to files
-      check_file_size(file_upload: fu) { return } # check sizes
+      validate_digest_type { return }
+
+      # merge additional params
+      file_upload_hash[:digest_type] = params[:digestType] if params[:digestType]
+      file_upload_hash.merge!(params.slice(:digest, :description))
+
+      fu = StashEngine::FileUpload.create(file_upload_hash)
+      check_file_size(file_upload: fu) { return }
       file = StashApi::File.new(file_id: fu.id) # parse file display object
       respond_to do |format|
         format.json { render json: file.metadata, status: 201 }
       end
     end
-    # rubocop:enable Metrics/MethodLength
+    # rubocop:enable Metrics/MethodLength, Metrics/AbcSize
 
     private
 
@@ -48,7 +46,7 @@ module StashApi
       (render json: { error: 'Socket, connection or response error.' }.to_json, status: 403) && yield if validation_hash[:status_code] == 499
       unless validation_hash[:status_code].between?(200, 299)
         (render json: { error:
-                            "An error occurred validating your file with http status code #{validation_hash[:status_code]}" }.to_json,
+                            "An error occurred validating your url with http status code #{validation_hash[:status_code]}" }.to_json,
                 status: 403) && yield
       end
       validation_hash
@@ -92,6 +90,13 @@ module StashApi
       the_type = @resource.upload_type
       return if %i[manifest unknown].include?(the_type)
       render json: { error: 'You may not submit a URL in the same version when you have submitted files by direct file upload' }.to_json, status: 409
+    end
+
+    def validate_digest_type
+      digest_types = StashEngine::FileUpload.digest_types.keys
+      return if params[:digestType].nil? || digest_types.include?(params[:digestType])
+      (render json: { error:
+          "digestType should be one of the values in this list: #{digest_types.join(', ')}" }.to_json, status: 403) && yield
     end
 
   end
