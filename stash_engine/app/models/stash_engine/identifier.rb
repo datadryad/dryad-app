@@ -122,6 +122,8 @@ module StashEngine
       c_a = CurationActivity.create(status: 'Unsubmitted', stash_identifier: self)
       c_a.save!
       @identifier_state = IdentifierState.create_identifier_state(self, c_a)
+      reload
+      @identifier_state
     end
 
     # it's ok ot defer adding this unless someone asks for the counter_stat
