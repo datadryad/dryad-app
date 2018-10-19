@@ -96,7 +96,7 @@ module StashApi
       digest_types = StashEngine::FileUpload.digest_types.keys
       return if params[:digestType].nil? || digest_types.include?(params[:digestType])
       (render json: { error:
-          "digestType would be one of the values in this list: #{digest_types.join(', ')}" }.to_json, status: 403) && yield
+          "digestType should be one of the values in this list: #{digest_types.join(', ')}" }.to_json, status: 403) && yield
     end
 
   end
