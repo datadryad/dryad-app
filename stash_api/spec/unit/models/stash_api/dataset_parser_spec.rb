@@ -92,6 +92,31 @@ module StashApi
         expect(author.author_email).to eq(@basic_metadata[:authors].first['email'])
       end
 
+      it 'allows bad (not blank, but invalid) emails' do
+        @basic_metadata = {
+          'title' => 'Visualizing Congestion Control Using Self-Learning Epistemologies',
+          'authors' => [
+            {
+              'firstName' => 'Wanda',
+              'lastName' => 'Jackson',
+              'email' => 'grog-to-drink',
+              'affiliation' => 'never'
+            }
+          ],
+          'abstract' =>
+                'Cyberneticists agree that concurrent models are an interesting new topic in the field of machine learning.',
+          'userId' => @user2.id
+        }.with_indifferent_access
+
+        dp = DatasetParser.new(hash: @basic_metadata, id: nil, user: @user)
+        @stash_identifier = dp.parse
+        resource = @stash_identifier.resources.first
+        author = resource.authors.first
+        expect(author.author_first_name).to eq(@basic_metadata[:authors].first['firstName'])
+        expect(author.author_last_name).to eq(@basic_metadata[:authors].first['lastName'])
+        expect(author.author_email).to eq(@basic_metadata[:authors].first['email'])
+      end
+
       it 'creates the abstract' do
         resource = @stash_identifier.resources.first
         des = resource.descriptions.first
