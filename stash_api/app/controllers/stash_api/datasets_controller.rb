@@ -128,7 +128,8 @@ module StashApi
     end
 
     def do_patch
-      return unless request.method == 'PATCH' && request.headers['content-type'] == 'application/json-patch+json'
+      content_type = request.headers['content-type']
+      return unless request.method == 'PATCH' && content_type && content_type.start_with?('application/json-patch+json')
       check_patch_prerequisites { yield }
       check_dataset_completions { yield }
       pre_submission_updates
@@ -151,22 +152,25 @@ module StashApi
     # some parameters would be locked down for only admins or superusers to set
     def lock_down_admin_only_params
       # all this bogus return false stuff is to prevent double render errors in some circumstances
-      return if check_skip_datacite_update_permission == false
+      return if check_superuser_restricted_params == false
       return if check_may_set_user_id == false
     end
 
-    # rubocop:disable Metrics/CyclomaticComplexity
-    def check_skip_datacite_update_permission
-      skip_dc_update = params['skipDataciteUpdate']
-      unless skip_dc_update.nil? || skip_dc_update.class == TrueClass || skip_dc_update.class == FalseClass
-        render json: { error: 'Bad Request: skipDataciteUpdate must be true or false' }.to_json, status: 400
-        return false
+    # rubocop:disable Metrics/MethodLength
+    def check_superuser_restricted_params
+      %w[skipDataciteUpdate skipEmails loosenValidation].each do |attr|
+        item_value = params[attr]
+        unless item_value.nil? || item_value.class == TrueClass || item_value.class == FalseClass
+          render json: { error: "Bad Request: #{attr} must be true or false" }.to_json, status: 400
+          return false
+        end
+        if item_value.class == TrueClass && @user.role != 'superuser'
+          render json: { error: "Unauthorized: only superusers may set #{attr} to true" }.to_json, status: 401
+          return false
+        end
       end
-      return if %w[admin superuser].include?(@user.role) || skip_dc_update == false || skip_dc_update.nil?
-      render json: { error: 'Unauthorized: only administrative roles may skip updating their DataCite metadata' }.to_json, status: 401
-      false
     end
-    # rubocop:enable Metrics/CyclomaticComplexity
+    # rubocop:enable Metrics/MethodLength
 
     def check_may_set_user_id
       return if params['userId'].nil?

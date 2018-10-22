@@ -4,6 +4,7 @@ require_dependency 'stash_datacite/application_controller'
 
 module StashDatacite
   # this is a class for composite (AJAX/UJS?) views starting at the resource or resources
+  # rubocop:disable Metrics/ClassLength
   class ResourcesController < ApplicationController
     include StashEngine::ApplicationHelper
     include ActionView::Helpers::NumberHelper
@@ -82,6 +83,8 @@ module StashDatacite
       resource.update_publication_date!
       resource.save
 
+      resource.update(skip_datacite_update: false, skip_emails: false, loosen_validation: false) # these are only for API superusers to choose
+
       # TODO: put this somewhere more reliable
       StashDatacite::DataciteDate.set_date_available(resource_id: resource.id)
 
@@ -141,4 +144,5 @@ module StashDatacite
     end
 
   end
+  # rubocop:enable Metrics/ClassLength
 end
