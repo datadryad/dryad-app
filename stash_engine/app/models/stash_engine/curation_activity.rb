@@ -2,7 +2,8 @@ module StashEngine
   class CurationActivity < ActiveRecord::Base
     belongs_to :stash_identifier, class_name: 'StashEngine::Identifier', foreign_key: 'identifier_id'
     belongs_to :user, class_name: 'StashEngine::User', foreign_key: 'user_id'
-    validates :status, inclusion: { in: ['Submitted',
+    validates :status, inclusion: { in: ['Unsubmitted',
+                                         'Submitted',
                                          'Private for Peer Review',
                                          'Curation',
                                          'Author Action Required',
@@ -13,6 +14,8 @@ module StashEngine
                                          'Versioned'],
                                     message: '%{value} is not a valid status' }
     validates :status, presence: true
+    after_create :update_identifier_state
+    after_update :update_identifier_state
 
     def self.curation_status(my_stash_id)
       curation_activities = CurationActivity.where(stash_identifier: my_stash_id).order(updated_at: :desc)
@@ -34,6 +37,15 @@ module StashEngine
         created_at: created_at,
         updated_at: updated_at
       }
+    end
+
+    private
+
+    def update_identifier_state
+      return if status == 'Status Unchanged'
+      return if stash_identifier.nil?
+      return if stash_identifier.identifier_state.nil?
+      stash_identifier.identifier_state.update_identifier_state(self)
     end
   end
 end
