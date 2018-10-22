@@ -91,7 +91,7 @@ module Stash
         resource = StashEngine::Resource.find(result.resource_id)
         # resource.current_state = 'submitted'
         update_submission_log(result)
-        StashEngine::UserMailer.submission_succeeded(resource).deliver_now
+        StashEngine::UserMailer.submission_succeeded(resource).deliver_now unless resource&.skip_emails
       rescue StandardError => e
         # errors here don't constitute a submission failure, so we don't change the resource state
         log_error(e)
@@ -102,7 +102,7 @@ module Stash
         update_submission_log(result)
         resource = StashEngine::Resource.find(result.resource_id)
         StashEngine::UserMailer.error_report(resource, result.error).deliver_now
-        StashEngine::UserMailer.submission_failed(resource, result.error).deliver_now
+        StashEngine::UserMailer.submission_failed(resource, result.error).deliver_now unless resource&.skip_emails
       rescue StandardError => e
         log_error(e)
       ensure

@@ -67,8 +67,37 @@ module StashApi
         expect(@metadata[:versionStatus]).to eq('in_progress')
       end
 
-      it 'shows skipDataciteUpdate' do
-        expect(@metadata[:skipDataciteUpdate]).to eq(false)
+      it 'hides skipDataciteUpdate if false' do
+        expect(@metadata[:skipDataciteUpdate]).to eq(nil)
+      end
+
+      it 'hides skipEmails if false' do
+        expect(@metadata[:skipEmails]).to eq(nil)
+      end
+
+      it 'hides loosenValidation if false' do
+        expect(@metadata[:loosenValidation]).to eq(nil)
+      end
+
+      it 'shows skipDataciteUpdate when true' do
+        @identifier.in_progress_resource.update(skip_datacite_update: true)
+        @dataset = Dataset.new(identifier: @identifier.to_s)
+        @metadata = @dataset.metadata
+        expect(@metadata[:skipDataciteUpdate]).to eq(true)
+      end
+
+      it 'shows skipEmails when true' do
+        @identifier.in_progress_resource.update(skip_emails: true)
+        @dataset = Dataset.new(identifier: @identifier.to_s)
+        @metadata = @dataset.metadata
+        expect(@metadata[:skipEmails]).to eq(true)
+      end
+
+      it 'shows loosenValidation when true' do
+        @identifier.in_progress_resource.update(loosen_validation: true)
+        @dataset = Dataset.new(identifier: @identifier.to_s)
+        @metadata = @dataset.metadata
+        expect(@metadata[:loosenValidation]).to eq(true)
       end
 
       it 'shows Unsubmitted curationStatus' do
