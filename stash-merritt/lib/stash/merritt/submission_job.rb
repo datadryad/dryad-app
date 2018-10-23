@@ -76,6 +76,7 @@ module Stash
       def ensure_identifier
         if resource.identifier && resource.identifier.identifier # if identifier has value
           log_info("ensuring identifier is reserved for resource #{resource_id}, ident: #{resource.identifier}")
+          return resource.identifier.to_s if resource.skip_datacite_update
           return id_helper.reserve_id(doi: resource.identifier.to_s) # reserve_id is smart and doesn't reserve again if it already exists
         end
         log_info("minting new identifier for resource #{resource_id}")
