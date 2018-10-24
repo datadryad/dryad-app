@@ -20,10 +20,10 @@ module IdentifierRakeFunctions
     id_type, id_text = my_id.split(':', 2)
     if resource.identifier.nil?
       # create record for identifier and add it to resource
-      db_id_obj = StashEngine::Identifier.create(identifier: id_text, identifier_type: id_type.upcase)
+      db_id_obj = StashEngine::Identifier.create!(identifier: id_text, identifier_type: id_type.upcase)
       resource.update!(identifier_id: db_id_obj.id)
       return
     end
-    resource.identifier.update!(identifier_id: db_id_obj.id)
+    resource.identifier.update!(identifier: id_text, identifier_type: id_type.upcase)
   end
 end
