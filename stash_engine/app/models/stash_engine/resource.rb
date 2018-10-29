@@ -50,7 +50,15 @@ module StashEngine
       init_version
       save
     end
-    after_create :init_state_and_version
+
+    def update_stash_identifier_last_resource
+      byebug
+      return if identifier.nil?
+      identifier.update(latest_resource_id: id) # set to my resource_id
+    end
+
+    after_create :init_state_and_version, :update_stash_identifier_last_resource
+    after_update :update_stash_identifier_last_resource
 
     # shouldn't be necessary but we have some stale data floating around
     def ensure_state_and_version
