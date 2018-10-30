@@ -8,7 +8,7 @@ end
 desc "Update identifiers latest resource if they don't have one"
 task add_latest_resource: :environment do
   StashEngine::Identifier.where(latest_resource_id: nil).each do |se_identifier|
-    puts "Updating identifier #{se_identifier.id}: #{se_identifier.to_s}"
+    puts "Updating identifier #{se_identifier.id}: #{se_identifier}"
     res = StashEngine::Resource.where(identifier_id: se_identifier.id).order(created_at: :desc).first
     if res.nil?
       se_identifier.destroy! # useless orphan identifier with no contents which should be deleted

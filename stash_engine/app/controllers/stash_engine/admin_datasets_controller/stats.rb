@@ -2,7 +2,7 @@
 class AdminDatasetsController
   class Stats
 
-    PREHISTORIC_TIME = Time.new(-60000, 1, 1)
+    PREHISTORIC_TIME = Time.new(-60_000, 1, 1)
 
     # leave tenant_id blank if you want stats for all
     def initialize(tenant_id: nil, since: PREHISTORIC_TIME)
@@ -16,17 +16,11 @@ class AdminDatasetsController
       @user_count = @user_count.count
     end
 
-    def dataset_count
+    def dataset_count; end
 
-    end
+    def datasets_started_count; end
 
-    def datasets_started_count
-
-    end
-
-    def datasets_submitted_count
-
-    end
+    def datasets_submitted_count; end
 
   end
 end
