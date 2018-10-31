@@ -112,9 +112,13 @@ The above settings get carried with a dataset into future API submissions, but t
 
 ## Add data file(s) to your dataset
 
+You may upload multiple files for your dataset. Only all direct file uploads or all URLs may be used within a single submission. But you may create a new version of the submission with another batch of files to use a different method of getting them into the system.
+
+### Direct file upload
+
 Find a file on your file system to upload, get its path and determine its Content-Type.  You would send it to the server like the example below by changing the file\_path and content\_type values.
 
-You may upload multiple files for your dataset.
+For direct file uploads, do a PUT to {{url-domain-name}}/api/datasets/{{doi_encoded}}/files/{{filename-encoded}} and the body being sent would be the binary file.  Set the HTTP "Content-Description" header to add a short description.  Set the HTTP Content-Type appropriately for the file type (for example image/jpeg).
 
 ```bash
 curl --data-binary "@</path/to/my/file>" -i -X PUT "https://<domain-name>/api/datasets/<encoded-doi>/files/<encoded-file-name>" -H "Authorization: Bearer <token>" -H "Content-Type: <mime-type>" -H "Accept: application/json"
@@ -147,6 +151,26 @@ resp = RestClient.put(
 
 return_hash = JSON.parse(resp)
 ```
+
+After a file upload you will get a digest and digestType back in the JSON.  You can check this against your local file to be certain it was uploaded correctly if you wish.
+The other method is adding by URL.  You can do a POST to {{url-domain-name}}/api/datasets/{{doi_encoded}}/urls with json something like the following:
+
+### Upload by URL reference
+
+To upload a file that is referenced by URL, do a POST to `{{url-domain-name}}/api/datasets/{{doi_encoded}}/urls` with json something like the following:
+
+```
+{
+    "url": "https://raw.githubusercontent.com/CDL-Dryad/dryad/master/documentation/api_submission.md",
+    "digest": "<your-digest>",
+    "digestType": "md5",
+    "description": "<your-description>"
+}
+```
+
+This will add entries to the database with the information you specify.  A `digest` and `digestType` are not required, but if they are added then they will be passed as part of the ingest manifest to Merritt.
+
+If the digest doesn't match when Merritt downloads the files from the internet, then Merritt will cause an error on ingesting and you'll need to check/fix it.
 
 ## Publish your dataset
 
