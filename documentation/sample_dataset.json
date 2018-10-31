@@ -22,7 +22,7 @@
 	       }
 	      ],
  "methods": "My cat will help you to discover why you can't get the data to work.",
- "usageNotes": 'Use carefully and parse results underwater.',
+ "usageNotes": "Use carefully and parse results underwater.",
  "keywords": [
 	      "Abnormal bleeding",
 	      "Cat",
@@ -59,7 +59,7 @@
 			 "neLatitude": "38.0"
 			 }
 		 }
-		]
+		],
  "skipDataciteUpdate" : true,
  "skipEmails" : true,
  "loosenValidation" : true
