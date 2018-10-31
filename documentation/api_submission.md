@@ -99,6 +99,14 @@ return_hash = JSON.parse(resp)
 doi = return_hash['id']
 doi_encoded = URI.escape(doi)
 ```
+## Dataset options
+
+To see the dataset fields and option in use, see the [Sample Dataset Object](https://github.com/CDL-Dryad/dryad/blob/master/documentation/sample_dataset.json).
+
+Useful options that control a dataset's behavior:
+- `skipDataciteUpdate` - If true, doesn't send any requests to DataCite when registering the dataset. This is useful when the dataset already has a DOI, which is present in the metadata being submitted.
+- `skipEmails` - If true, email will not be sent to the submitter when the dataset is processed.
+- `loosenValidation` - Allows a dataset to be processed even if author information is incomplete (e.g., missing affiliations), or if the abstract is missing.
 
 ## Add data file(s) to your dataset
 
