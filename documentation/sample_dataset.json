@@ -1,0 +1,66 @@
+{
+ "identifier" : "doi:10.5061/dryad.20",
+ "title" : "rr2 Data from: Testing for unequal rates of morphological diversification in the absence of a detailed phylogeny: case study from characiform fishes",
+ "abstract" : "This study develops the random phylogenies rate test (RAPRATE), a likelihood method that simulates morphological evolution along randomly generated phylogenies, and uses it to determine whether a considerable difference in morphological diversity between two sister clades of South American fishes should be taken as evidence of differing rates of morphological change or lineage turnover. Despite identical ages of origin, similar species richness, and sympatric geographic distributions, the morphological and ecological diversity of the superfamily Anostomoidea exceeds that of the Curimatoidea. The test shows with 90% confidence (using variance among species as the measure of morphological diversity) or 99% confidence (using volume of occupied morphospace) that the rate of morphological change per unit time in the Anostomoidea likely exceeded that of the Curimatoidea. Variation in the rate of lineage turnover (speciation and extinction rates) is not found to affect greatly the morphological diversity of simulated clades and is not a likely explanation of the observed difference in morphological diversity in this case study. Though a 17% or greater delay in the onset of diversification in the Curimatoidea remains a possible alternative explanation of unequal morphological diversification, further simulations suggest that two clades drawn from the possible treespace of the Anostomoidea and Curimatoidea will rarely differ so greatly in the onset of diversification. Several uniquely derived morphological and ecological features of the Anostomoidea and Curimatoidea may have accelerated or decelerated their rate of morphological change, including a marked lengthening of the quadrate that may have relaxed structural constraints on the evolution of the anostomoid jaw.",
+ "userID" : 1,
+ "relatedWorks" : [ {
+		     "relationship" : "IsCitedBy",
+		     "identifierType" : "DOI",
+		     "identifier" : "10.1111/j.1558-5646.2007.00022.x"
+		     } ],
+ "authors" : [ {
+		"firstName" : "Brian",
+		"lastName" : "Sidlauskas"
+		} ],
+ "funders": [ {
+	       "organization": "Savannah River Operations Office, U.S. Department of Energy",
+	       "awardNumber": "12345"
+	       },
+	      {
+	       "organization": "The Cat Chronicles",
+	       "awardNumber": "cat383"
+	       }
+	      ],
+ "methods": "My cat will help you to discover why you can't get the data to work.",
+ "usageNotes": "Use carefully and parse results underwater.",
+ "keywords": [
+	      "Abnormal bleeding",
+	      "Cat",
+	      "Host",
+	      "Computer",
+	      "Log",
+	      "Noodlecast",
+	      "Intercropping"
+	      ],
+ "locations": [ {
+		 "place": "Grogan's Mill, USA",
+		 "point": {
+			   "latitude": "30.130379",
+			   "longitude": "-95.402929"
+			   },
+		 "box": {
+			 "swLongitude": "-95.527852",
+			 "swLatitude": "30.049326",
+			 "neLongitude": "-95.32743",
+			 "neLatitude": "30.164696"
+			 }
+		 },
+		{
+		 "point": {
+			   "latitude": "37.0",
+			   "longitude": "-122.0"
+			   }
+		 },
+		{
+		 "box": {
+			 "swLongitude": "-122.0",
+			 "swLatitude": "37.0",
+			 "neLongitude": "-121.0",
+			 "neLatitude": "38.0"
+			 }
+		 }
+		],
+ "skipDataciteUpdate" : true,
+ "skipEmails" : true,
+ "loosenValidation" : true
+}
