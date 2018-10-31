@@ -1,0 +1,19 @@
+.c-horizontal-form {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  margin: 1em 0;
+}
+
+.c-horizontal-form__input {
+  display: inline-block;
+  margin-right: 2em;
+}
+
+.c-horizontal-form__input--search {
+  @extend %c-horizontal-form__input;
+  width: 20px;
+  margin-right: 15em;
+  background-color: purple;
+}
