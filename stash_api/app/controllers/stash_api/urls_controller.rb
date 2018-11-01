@@ -23,7 +23,7 @@ module StashApi
       validate_digest_type { return }
 
       # merge additional params as translated from API (value) to database field (key)
-      { digest_type: :'digestType', upload_file_name: :path, upload_content_type: :'mimeType', digest: :digest, description: :description }.each do |k, v|
+      { digest_type: :digestType, upload_file_name: :path, upload_content_type: :mimeType, digest: :digest, description: :description }.each do |k, v|
         file_upload_hash[k] = params[v] if params[v]
       end
 
