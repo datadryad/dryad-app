@@ -165,10 +165,14 @@ To upload a file that is referenced by URL, do a POST to `{{url-domain-name}}/ap
     "digest": "<your-digest>",
     "digestType": "md5",
     "description": "<your-description>"
+    "path": "cat_submission.md",
+    "mimeType": "text/catdown"
 }
 ```
 
-This will add entries to the database with the information you specify.  A `digest` and `digestType` are not required, but if they are added then they will be passed as part of the ingest manifest to Merritt.
+This will add entries to the database with the information you specify.  Only the `url` is required, but if any other fields are added then they will be passed as part of the ingest manifest to Merritt. 
+
+The `path` may contain either a single filename, or a filename within a hierarchy, as in `mydir/cat_submission.md`. If the `path` is not present, the filename and hierarchy will be inferred from the URL.
 
 If the digest doesn't match when Merritt downloads the files from the internet, then Merritt will cause an error on ingesting and you'll need to check/fix it.
 
