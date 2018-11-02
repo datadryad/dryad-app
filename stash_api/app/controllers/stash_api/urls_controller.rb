@@ -22,9 +22,10 @@ module StashApi
                          end
       validate_digest_type { return }
 
-      # merge additional params
-      file_upload_hash[:digest_type] = params[:digestType] if params[:digestType]
-      file_upload_hash.merge!(params.slice(:digest, :description))
+      # merge additional params as translated from API (value) to database field (key)
+      { digest_type: :digestType, upload_file_name: :path, upload_content_type: :mimeType, digest: :digest, description: :description }.each do |k, v|
+        file_upload_hash[k] = params[v] if params[v]
+      end
 
       fu = StashEngine::FileUpload.create(file_upload_hash)
       check_file_size(file_upload: fu) { return }
