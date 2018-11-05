@@ -5238,7 +5238,8 @@ html.no-details .o-showhide__summary {
 .c-lined-table {
   width: 100%;
   border-collapse: collapse;
-  border: 1px solid #7c7e7f; }
+  border: 1px solid #7c7e7f;
+  margin: 1em 0; }
 
 .c-lined-table__head > th {
   padding: 8px;

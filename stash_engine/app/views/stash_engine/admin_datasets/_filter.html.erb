@@ -1,14 +1,14 @@
 <% # takes locals of institution_list, status_list %>
-  <form>
+  <%= form_tag({ controller: '/stash_engine/admin_datasets', action: 'index' }, method: 'get' ) do -%>
     <div class="c-horizontal-form__input--filter-by">Filter by:</div>
-    <select class="c-horizontal-form__input">
-      <option>Institution</option>
-
-    </select>
-    <select class="c-horizontal-form__input--status">
-      <option>Status</option>
-
-    </select>
+    <%= select_tag(:tenant, options_for_select( [['Institution', '']] + institution_select, params[:tenant]),
+                   class: 'c-horizontal-form__input', onchange: "this.form.submit();" ) %>
+    <%= select_tag(:curation_status, options_for_select( [['Status', '']] + status_select, params[:curation_status]),
+                   class: 'c-horizontal-form__input--status', onchange: "this.form.submit();" ) %>
     <a href="#" class="c-horizontal-form__input">Reset all filters</a>
-  </form>
+
+    <% params.except(:controller, :action, :tenant, :curation_status, :commit).each_pair do |k,v| %>
+      <%= hidden_field_tag k, v %>
+    <% end %>
+  <% end -%>
 </div>
