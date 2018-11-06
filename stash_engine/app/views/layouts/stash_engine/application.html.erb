@@ -48,7 +48,8 @@
           <span class="c-header__nav-item" title="<%= current_user.email %>" style="color: blue;">[<%= current_user.name %>@<%= current_tenant.tenant_id %>]</span>
         <% end %>
         <% if current_user && %w[admin superuser].include?(current_user.role) %>
-          <%= link_to 'Admin', stash_url_helpers.admin_path, class: 'c-header__nav-item' %>
+          <%= link_to 'Admin', stash_url_helpers.url_for(controller: 'stash_engine/admin_datasets', action: 'index', only_path: true),
+                      class: 'c-header__nav-item' %>
         <% end %>
         <%# link_to 'Home', stash_url_helpers.root_path, class: 'c-header__nav-item' %>
         <%= link_to 'Explore Data', '/search', class: 'c-header__nav-item' %>

@@ -6,6 +6,11 @@ module StashEngine
     has_many :curation_activities, class_name: 'StashEngine::CurationActivity'
     has_many :internal_data, class_name: 'StashEngine::InternalDatum', dependent: :destroy
     has_one :identifier_state, class_name: 'StashEngine::IdentifierState', dependent: :destroy
+    has_one :latest_resource,
+            class_name: 'StashEngine::Resource',
+            primary_key: 'latest_resource_id',
+            foreign_key: 'id'
+
     after_create :create_or_get_identifier_state
     after_update :create_or_get_identifier_state
     # has_many :counter_citations, class_name: 'StashEngine::CounterCitation', dependent: :destroy
