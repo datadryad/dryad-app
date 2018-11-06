@@ -1,0 +1,70 @@
+<%# locals: ds_identifier %>
+<table class="c-lined-table">
+  <tr class="c-lined-table__head">
+    <th class="c-admin-table" colspan="2">
+      Title
+    </th>
+    <th class="c-admin-table" colspan="2">
+      Status
+    </th>
+    <th class="c-admin-table">
+      Author
+    </th>
+    <th class="c-admin-table">
+      DOI
+    </th>
+    <th class="c-admin-table" colspan="2">
+      Last modified
+    </th>
+    <th class="c-admin-table">
+      Last modified by
+    </th>
+    <th class="c-admin-table">
+      Size
+    </th>
+    <th class="c-admin-table" colspan="2">
+      Publication date
+    </th>
+  </tr>
+
+  <% 5.times do %>
+    <tr class="c-lined-table__row">
+      <td class="c-admin-hide-border-right">
+        My Title
+      </td>
+      <td class="c-admin-hide-border-left">
+        <button class="c-admin-edit-icon" aria-label="Edit user role" alt="Edit user role">
+          <i class="fa fa-pencil" aria-hidden="true"></i>
+        </button>
+      </td>
+      <td class="c-admin-hide-border-right">
+        My Status
+      </td>
+      <td class="c-admin-hide-border-left">
+        <button class="c-admin-edit-icon" aria-label="Edit user role" alt="Edit user role">
+          <i class="fa fa-pencil" aria-hidden="true"></i>
+        </button>
+      </td>
+      <td>My Author</td>
+      <td>My DOI</td>
+      <td class="c-admin-hide-border-right">
+        My last modified
+      </td>
+      <td class="c-admin-hide-border-left">
+        <button class="c-admin-edit-icon" aria-label="Edit user role" alt="Edit user role">
+          <i class="fa fa-pencil" aria-hidden="true"></i>
+        </button>
+      </td>
+      <td>My Last modified by</td>
+      <td>My Size</td>
+      <td class="c-admin-hide-border-right">
+        My last modified
+      </td>
+      <td class="c-admin-hide-border-left">
+        <button class="c-admin-edit-icon" aria-label="Edit user role" alt="Edit user role">
+          <i class="fa fa-pencil" aria-hidden="true"></i>
+        </button>
+      </td>
+    </tr>
+  <% end %>
+</table>
