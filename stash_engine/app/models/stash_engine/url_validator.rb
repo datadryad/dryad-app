@@ -44,6 +44,7 @@ module StashEngine
         @tries -= 1
         @timed_out = false
         response = client.head(@url, follow_redirect: true)
+        byebug
         init_from(response)
         # the follow is for google drive which doesn't respond to head requests correctly
         fix_by_get_request(redirected_to || url) if status_code == 503

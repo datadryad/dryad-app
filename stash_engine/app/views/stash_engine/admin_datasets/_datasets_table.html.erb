@@ -1,4 +1,4 @@
-<%# locals: ds_identifier %>
+<%# locals: ds_identifiers %>
 <table class="c-lined-table">
   <tr class="c-lined-table__head">
     <th class="c-admin-table" colspan="2">
@@ -27,10 +27,10 @@
     </th>
   </tr>
 
-  <% 5.times do %>
+  <% ds_identifiers.each do |i| %>
     <tr class="c-lined-table__row">
       <td class="c-admin-hide-border-right">
-        My Title
+        <%= i&.latest_resource&.title %>
       </td>
       <td class="c-admin-hide-border-left">
         <button class="c-admin-edit-icon" aria-label="Edit user role" alt="Edit user role">
@@ -38,25 +38,25 @@
         </button>
       </td>
       <td class="c-admin-hide-border-right">
-        My Status
+        <%= i&.identifier_state&.current_curation_status %>
       </td>
       <td class="c-admin-hide-border-left">
         <button class="c-admin-edit-icon" aria-label="Edit user role" alt="Edit user role">
           <i class="fa fa-pencil" aria-hidden="true"></i>
         </button>
       </td>
-      <td>My Author</td>
-      <td>My DOI</td>
+      <td><%= i&.latest_resource&.user&.name %></td>
+      <td><%= i.identifier %></td>
       <td class="c-admin-hide-border-right">
-        My last modified
+        <%= formatted_datetime(i&.identifier_state&.curation_activity&.updated_at) %>
       </td>
       <td class="c-admin-hide-border-left">
         <button class="c-admin-edit-icon" aria-label="Edit user role" alt="Edit user role">
           <i class="fa fa-pencil" aria-hidden="true"></i>
         </button>
       </td>
-      <td>My Last modified by</td>
-      <td>My Size</td>
+      <td><%= i&.identifier_state&.curation_activity&.user&.name %></td>
+      <td><%= filesize(i.storage_size) %></td>
       <td class="c-admin-hide-border-right">
         My last modified
       </td>

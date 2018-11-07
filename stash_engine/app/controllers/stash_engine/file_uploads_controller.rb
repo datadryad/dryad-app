@@ -81,6 +81,7 @@ module StashEngine
 
     def create_upload(url)
       url_translator = Stash::UrlTranslator.new(url)
+      byebug
       validator = StashEngine::UrlValidator.new(url: url_translator.direct_download || url)
       FileUpload.create(validator.upload_attributes_from(translator: url_translator, resource: resource))
     end
