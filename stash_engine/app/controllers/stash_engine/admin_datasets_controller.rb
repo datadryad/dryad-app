@@ -24,12 +24,12 @@ module StashEngine
 
     def build_table_query
       ds_identifiers = base_table_join
-      ds_identifiers = ds_identifiers.where("stash_engine_resources.tenant_id = ?", current_user.tenant_id) if current_user.role != 'superuser'
+      ds_identifiers = ds_identifiers.where('stash_engine_resources.tenant_id = ?', current_user.tenant_id) if current_user.role != 'superuser'
       ds_identifiers.page(@page).per(@page_size)
     end
 
     def base_table_join
-      Identifier.joins([ { latest_resource: :user }, { identifier_state: { curation_activity: :user } } ] )
+      Identifier.joins([{ latest_resource: :user }, { identifier_state: { curation_activity: :user } }])
     end
   end
 end
