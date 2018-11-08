@@ -5,6 +5,7 @@ module StashEngine
     include SharedSecurityController
     before_action :require_admin
     before_action :setup_paging
+    before_action :setup_ds_sorting
 
     # the admin datasets main page showing users and stats, but slightly different in scope for superusers vs tenant admins
     def index
@@ -20,6 +21,18 @@ module StashEngine
     def setup_paging
       @page = params[:page] || '1'
       @page_size = (params[:page_size].blank? || params[:page_size] != '1000000' ? '10' : '1000000')
+    end
+
+    def setup_ds_sorting
+      title_sort = SortableTable::SortColumnCustomDefinition.new('name',
+                                                                asc: 'stash_engine_resources.title asc',
+                                                                desc: 'stash_engine_resources.title desc')
+      # role_sort = SortableTable::SortColumnDefinition.new('role')
+      # login_time_sort = SortableTable::SortColumnDefinition.new('last_login')
+      # sort_table = SortableTable::SortTable.new([name_sort, institution_sort, role_sort, login_time_sort])
+      # sort_table.sort_column(params[:sort], params[:direction])
+      sort_table = SortableTable::SortTable.new([title_sort])
+      @sort_column = sort_table.sort_column(params[:sort], params[:direction])
     end
 
     def build_table_query

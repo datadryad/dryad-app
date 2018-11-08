@@ -1,8 +1,8 @@
 <%# locals: ds_identifiers %>
 <table class="c-lined-table">
   <tr class="c-lined-table__head">
-    <th class="c-admin-table" colspan="2">
-      Title
+    <th class="c-admin-table <%= sort_display('title', @sort_column) %>" colspan="2">
+      <%= sort_by 'title', title: 'Title', current_column: @sort_column %>
     </th>
     <th class="c-admin-table" colspan="2">
       Status
