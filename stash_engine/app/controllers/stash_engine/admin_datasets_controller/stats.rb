@@ -20,7 +20,7 @@ module StashEngine
 
       def dataset_count
         ident_query = Identifier.where(['stash_engine_identifiers.created_at > ?', @since])
-        ident_query = ident_query.joins(:latest_resource).where(['stash_engine_resource.tenant_id = ?', @tenant_id]) if @tenant_id
+        ident_query = ident_query.joins(:latest_resource).where(['stash_engine_resources.tenant_id = ?', @tenant_id]) if @tenant_id
         ident_query.count
       end
 
@@ -36,7 +36,7 @@ module StashEngine
 
       def datasets_with_status_count(status:)
         ident_query = Identifier.where(['stash_engine_identifiers.created_at > ?', @since]).joins(latest_resource: :current_resource_state)
-        ident_query = ident_query.where(['stash_engine_resource.tenant_id = ?', @tenant_id]) if @tenant_id
+        ident_query = ident_query.where(['stash_engine_resources.tenant_id = ?', @tenant_id]) if @tenant_id
         ident_query = ident_query.where(['stash_engine_resource_states.resource_state = ?', status])
         ident_query.count
       end
