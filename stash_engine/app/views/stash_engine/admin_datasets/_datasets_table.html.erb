@@ -4,26 +4,26 @@
     <th class="c-admin-table <%= sort_display('title', @sort_column) %>" colspan="2">
       <%= sort_by 'title', title: 'Title', current_column: @sort_column %>
     </th>
-    <th class="c-admin-table" colspan="2">
-      Status
+    <th class="c-admin-table <%= sort_display('status', @sort_column) %>" colspan="2">
+      <%= sort_by 'status', title: 'Status', current_column: @sort_column %>
     </th>
-    <th class="c-admin-table">
-      Author
+    <th class="c-admin-table <%= sort_display('author', @sort_column) %>">
+      <%= sort_by 'author', title: 'Author', current_column: @sort_column %>
     </th>
-    <th class="c-admin-table">
-      DOI
+    <th class="c-admin-table <%= sort_display('doi', @sort_column) %>">
+      <%= sort_by 'doi', title: 'DOI', current_column: @sort_column %>
     </th>
-    <th class="c-admin-table" colspan="2">
-      Last modified
+    <th class="c-admin-table <%= sort_display('last_modified', @sort_column) %>" colspan="2">
+      <%= sort_by 'last_modified', title: 'Last Modified', current_column: @sort_column %>
     </th>
-    <th class="c-admin-table">
-      Last modified by
+    <th class="c-admin-table <%= sort_display('modified_by', @sort_column) %>">
+      <%= sort_by 'modified_by', title: 'Last modified by', current_column: @sort_column %>
     </th>
-    <th class="c-admin-table">
-      Size
+    <th class="c-admin-table <%= sort_display('size', @sort_column) %>">
+      <%= sort_by 'size', title: 'Size', current_column: @sort_column %>
     </th>
-    <th class="c-admin-table" colspan="2">
-      Publication date
+    <th class="c-admin-table <%= sort_display('publication_date', @sort_column) %>" colspan="2">
+      <%= sort_by 'publication_date', title: 'Publication Date', current_column: @sort_column %>
     </th>
   </tr>
 
