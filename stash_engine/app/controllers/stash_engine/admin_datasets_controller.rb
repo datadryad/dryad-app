@@ -7,6 +7,9 @@ module StashEngine
     before_action :setup_paging
     before_action :setup_ds_sorting
 
+    TENANT_IDS = Tenant.all.map{|i| i.tenant_id }
+    CURATION_STATUSES = CurationActivity.validators_on(:status).first.options[:in]
+
     # the admin datasets main page showing users and stats, but slightly different in scope for superusers vs tenant admins
     def index
       my_tenant_id = (current_user.role == 'admin' ? current_user.tenant_id : nil)
@@ -50,14 +53,16 @@ module StashEngine
     def build_table_query
       ds_identifiers = base_table_join
       ds_identifiers = ds_identifiers.where('stash_engine_resources.tenant_id = ?', current_user.tenant_id) if current_user.role != 'superuser'
+      ds_identifiers = add_filters(query_obj: ds_identifiers)
       ds_identifiers.order(@sort_column.order).page(@page).per(@page_size)
     end
 
     def base_table_join
-      # the following works, but then sorting becomes ambiguous because user joined twice
+      # the following simpler ActiveRecord works, but then sorting becomes ambiguous because user joined twice
       # also the joins aren't quite right because of the way itentifier state is set up and the associations
       # Identifier.joins([{ latest_resource: :user }, { identifier_state: { curation_activity: :user } }])
-      # using these table abbreviations: user1, user2
+
+      # using these table aliases user1, user2 for the two different users
       Identifier.joins('INNER JOIN `stash_engine_resources` ' \
         'ON `stash_engine_identifiers`.`latest_resource_id` = `stash_engine_resources`.`id` ' \
         'INNER JOIN `stash_engine_users` user1 ' \
@@ -69,5 +74,17 @@ module StashEngine
         'INNER JOIN `stash_engine_users` user2 ' \
         'ON `stash_engine_curation_activities`.`user_id` = user2.`id`')
     end
+
+    def add_filters(query_obj:)
+      if TENANT_IDS.include?(params[:tenant]) && current_user.role == 'superuser'
+        query_obj = query_obj.where("stash_engine_resources.tenant_id = ?", params[:tenant])
+      end
+      if CURATION_STATUSES.include?(params[:curation_status])
+        query_obj = query_obj.where("stash_engine_identifier_states.current_curation_status = ?", params[:curation_status])
+      end
+      query_obj
+    end
+
+
   end
 end
