@@ -7,7 +7,15 @@ StashApi::Engine.routes.draw do
   match '/test', to: 'general#test', via: [:get, :post]
 
   resources :datasets, shallow: true, id: /[^\s\/]+?/, format: /json|xml|yaml/ do
-    get 'download', on: :member
+    member do
+      get 'download'
+    end
+    member do
+      post 'set_internal_datum'
+    end
+    member do
+      post 'add_internal_datum'
+    end
     resources :internal_data, shallow: true
     resources :curation_activity, shallow: false
     resources :versions, shallow: true do
