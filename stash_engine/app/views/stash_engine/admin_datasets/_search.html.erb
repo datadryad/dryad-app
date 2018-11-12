@@ -1,0 +1,11 @@
+<div class="c-horizontal-form">
+  <%= form_tag({ controller: '/stash_engine/admin_datasets', action: 'index' }, method: 'get' ) do %>
+    <%= search_field_tag(:q, params[:q], class: 'c-horizontal-form__input--search', placeholder: 'enter search terms' ) %>
+    <%= submit_tag('Search', class: 'c-horizontal-form__input' ) %>
+    <a href="#" class="c-horizontal-form__input">Clear Search</a>
+
+    <% params.except(:controller, :action, :q, :commit).each_pair do |k,v| %>
+        <%= hidden_field_tag k, v %>
+    <% end %>
+  <% end %>
+</div>
