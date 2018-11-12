@@ -50,7 +50,24 @@ module StashEngine
       init_version
       save
     end
-    after_create :init_state_and_version
+
+    def update_stash_identifier_last_resource
+      return if identifier.nil?
+      identifier.update(latest_resource_id: id) # set to my resource_id
+    end
+
+    def remove_identifier_with_no_resources
+      # if no more resources after a removal for a StashEngine::Identifier then there is no remaining content for that Identifier
+      # only in-progress resources are destroyed, but there may be earlier submitted ones
+      return if identifier_id.nil?
+      res_count = Resource.where(identifier_id: identifier_id).count
+      return if res_count.positive?
+      Identifier.destroy(identifier_id)
+    end
+
+    after_create :init_state_and_version, :update_stash_identifier_last_resource
+    after_update :update_stash_identifier_last_resource
+    after_destroy :remove_identifier_with_no_resources
 
     # shouldn't be necessary but we have some stale data floating around
     def ensure_state_and_version
