@@ -71,7 +71,7 @@ module StashEngine
         'ON `stash_engine_identifiers`.`id` = `stash_engine_identifier_states`.`identifier_id` ' \
         'INNER JOIN `stash_engine_curation_activities` ' \
         'ON `stash_engine_identifier_states`.`curation_activity_id` = `stash_engine_curation_activities`.`id` ' \
-        'INNER JOIN `stash_engine_users` user2 ' \
+        'LEFT JOIN `stash_engine_users` user2 ' \
         'ON `stash_engine_curation_activities`.`user_id` = user2.`id`')
     end
 
