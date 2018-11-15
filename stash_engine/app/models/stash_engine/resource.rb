@@ -16,6 +16,9 @@ module StashEngine
             primary_key: 'current_resource_state_id',
             foreign_key: 'id'
     has_one :editor, class_name: 'StashEngine::User', primary_key: 'current_editor_id', foreign_key: 'id'
+    has_many :submission_logs, class_name: 'StashEngine::SubmissionLog', dependent: :destroy
+    has_many :resource_states, class_name: 'StashEngine::ResourceState', dependent: :destroy
+    has_many :edit_histories, class_name: 'StashEngine::EditHistory', dependent: :destroy
 
     amoeba do
       include_association :authors
