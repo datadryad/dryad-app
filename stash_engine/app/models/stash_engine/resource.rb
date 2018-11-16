@@ -68,9 +68,14 @@ module StashEngine
       Identifier.destroy(identifier_id)
     end
 
+    def update_search_words
+      identifier&.update_search_words! if title_changed? # this method is some activerecord magic
+    end
+
     after_create :init_state_and_version, :update_stash_identifier_last_resource
     after_update :update_stash_identifier_last_resource
     after_destroy :remove_identifier_with_no_resources
+    after_save :update_search_words
 
     # shouldn't be necessary but we have some stale data floating around
     def ensure_state_and_version
