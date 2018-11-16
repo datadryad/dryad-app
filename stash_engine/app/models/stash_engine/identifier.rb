@@ -131,7 +131,25 @@ module StashEngine
       @identifier_state
     end
 
-    # it's ok ot defer adding this unless someone asks for the counter_stat
+    # the search words is a special MySQL search field that concatenates the following fields required to be searched over
+    # https://github.com/CDL-Dryad/dryad-product-roadmap/issues/125
+    # doi (from this model), latest_resource.title, latest_resource.authors (names, emails, orcids), dcs_descriptions of type abstract
+    def update_search_words
+      my_string = to_s
+      if latest_resource
+        my_string << " #{latest_resource.title}"
+        my_string << ' ' << latest_resource.authors.map do |author|
+          "#{author.author_first_name} #{author.author_last_name} #{author.author_email} #{author.author_orcid}"
+        end.join(' ')
+        my_string << ' ' << latest_resource.descriptions.where(description_type: 'abstract').map do |description|
+          ActionView::Base.full_sanitizer.sanitize(description.description)
+        end.join(' ')
+      end
+      # this updates without futher callbacks on me
+      update_column :search_words, my_string
+    end
+
+    # it's ok to defer adding this unless someone asks for the counter_stat
     # def build_associations
     #   counter_stat || true
     # end
