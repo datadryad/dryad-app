@@ -310,7 +310,18 @@ Once staging is complete and to publish the changes to your dataset, please foll
 
 In addition to changing your metadata, you could've added additional files before re-publishing this updated version of your dataset.
 
-## Changing internal metadata fields
+## Internal metadata fields
+
+### As an aggregate
+
+The internal metadata can be manipulated using either the internal id of a resource, or a dataset id:
+- GET /internal_data/{id}
+- PUT /internal_data/{id}
+- DELETE /internal_data/{id}
+- GET /datasets/{dataset_id}/internal_data
+- POST /datasets/{dataset_id}/internal_data
+
+### As individual fields
 
 You can POST request to either `api/datasets/<id>/add_internal_datum` or `api/datasets/<id>/set_internal_datum`, depending on the type of data. The body should be JSON in the form of `{"data_type":"mismatchedDOI","value":"223342”}`
 
@@ -322,3 +333,10 @@ Field that allow multiple values (add_internal_datum):
 - mismatchedDOI
 - formerManuscriptNumber
 - duplicateItem
+
+## Curation status information
+
+- GET /resources/{id}/curation_activity
+
+Curation activity does lock down a few fields: the identifier_id is set by the dataset_id on creation and can’t be modified by PUT. Similarly, the user_id is set to the api user that creates the record and can’t be modified by PUT.
+
