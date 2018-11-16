@@ -9,5 +9,16 @@ module StashEngine
     def self.data_type(type)
       where('data_type = ?', type)
     end
+
+    def self.allows_multiple(type)
+      case type
+      when 'manuscriptNumber', 'publicationISSN'
+        false
+      when 'mismatchedDOI', 'duplicateItem', 'formerManuscriptNumber'
+        true
+      else
+        false
+      end
+    end
   end
 end
