@@ -113,6 +113,7 @@ module StashApi
     def set_internal_datum
       if StashEngine::InternalDatum.allows_multiple(params[:data_type])
         render json: { error: params[:data_type] + ' allows multiple entries, use add_internal_datum' }.to_json, status: 404
+        return
       else
         @datum = StashEngine::InternalDatum.where(data_type: params[:data_type], identifier_id: @stash_identifier.id).first
         @datum = StashEngine::InternalDatum.create(data_type: params[:data_type], stash_identifier: @stash_identifier, value: params[:value]) if @datum.nil?
@@ -124,7 +125,10 @@ module StashApi
 
     # post /datasets/<id>/add_internal_datum
     def add_internal_datum
-      render json: { error: params[:data_type] + ' does not allow multiple entries, use set_internal_datum' }.to_json, status: 404 unless StashEngine::InternalDatum.allows_multiple(params[:data_type])
+      unless StashEngine::InternalDatum.allows_multiple(params[:data_type])
+        render json: { error: params[:data_type] + ' does not allow multiple entries, use set_internal_datum' }.to_json, status: 404
+        return
+      end
       @datum = StashEngine::InternalDatum.create(data_type: params[:data_type], stash_identifier: @stash_identifier, value: params[:value])
       render json: @datum, status: 200
     end
