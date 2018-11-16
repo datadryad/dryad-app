@@ -19,11 +19,11 @@ namespace :identifiers do
     end
   end
 
-  desc "Add searchable field contents for any identifiers missing it"
+  desc 'Add searchable field contents for any identifiers missing it'
   task add_search: :environment do
     StashEngine::Identifier.where(search_words: nil).each do |se_identifier|
-      puts "Updating identifier #{se_identifier.to_s} for search"
-      se_identifier.update_search_words
+      puts "Updating identifier #{se_identifier} for search"
+      se_identifier.update_search_words!
     end
   end
 end
