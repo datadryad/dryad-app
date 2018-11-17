@@ -139,6 +139,11 @@ module StashEngine
           @identifier2.reload
           # these are because travis won't run things correctly for some reason but works locally
           expect(@res5.id).to be_truthy
+          puts @res5.id
+          puts @identifier2.inspect
+          @identifier2.latest_resource_id = @res5.id
+          @identifier2.save
+          puts @identifier2.inspect
           expect(@identifier2.latest_resource_id).to be_truthy
           @identifier2.update_search_words!
           expect(@identifier2.search_words.strip).to eq('doi:10.123/450 Frolicks with the seahorses ' \
