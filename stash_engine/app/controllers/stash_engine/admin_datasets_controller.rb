@@ -53,11 +53,13 @@ module StashEngine
     def build_table_query
       ds_identifiers = base_table_join
       ds_identifiers = ds_identifiers.where('stash_engine_resources.tenant_id = ?', current_user.tenant_id) if current_user.role != 'superuser'
-      # doing plusses and boolean mode to require all words, otherwise it does an OR query which returns many results with
-      # common words.  I think we want this to be more like filtering than ranked searching from a long list because of
-      # all the other crap on the page in this one table.
-      pq = plussed_query
-      ds_identifiers = ds_identifiers.where('MATCH(search_words) AGAINST(? IN BOOLEAN MODE)', pq) unless pq.blank?
+      # This search interface is insane and we can't sort by relevance because of the other dumb sorts, so limiting score so we don't
+      # get basically an OR of any document that contains any one of the words and it would make it harder for people to narrow
+      # down to anything useful without the limit on relevance score.
+      #
+      # We'll have to play with this search to get it to be reasonable with the insane interface so that it narrows to a small enough
+      # set so that it is useful to people for finding something and a large enough set to have what they want without hunting too long.
+      ds_identifiers = ds_identifiers.where('MATCH(search_words) AGAINST(?) > 0.5', params[:q]) unless params[:q].blank?
       ds_identifiers = add_filters(query_obj: ds_identifiers)
       ds_identifiers.order(@sort_column.order).page(@page).per(@page_size)
     end
@@ -88,11 +90,6 @@ module StashEngine
         query_obj = query_obj.where('stash_engine_identifier_states.current_curation_status = ?', params[:curation_status])
       end
       query_obj
-    end
-
-    def plussed_query
-      return nil if params[:q].blank?
-      params[:q].split.map { |item| "+#{item}*" unless %w[+ - *].include?(item[0]) }.compact.join(' ')
     end
 
   end
