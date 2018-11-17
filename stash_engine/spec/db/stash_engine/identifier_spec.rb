@@ -129,6 +129,7 @@ module StashEngine
         before(:each) do
           @identifier.update(latest_resource_id: res3.id)
           @identifier.reload
+          sleep(1) # what the hell is wrong with travis?
           res = @identifier.latest_resource
           res.update(title: 'Frolicks with the seahorses')
           Author.create(author_first_name: 'Joanna', author_last_name: 'Jones', author_orcid: '33-22-4838-3322', resource_id: res.id)
