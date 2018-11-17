@@ -7,7 +7,7 @@ module StashEngine
     before_action :setup_paging
     before_action :setup_ds_sorting
 
-    TENANT_IDS = Tenant.all.map{|i| i.tenant_id }
+    TENANT_IDS = Tenant.all.map(&:tenant_id)
     CURATION_STATUSES = CurationActivity.validators_on(:status).first.options[:in]
 
     # the admin datasets main page showing users and stats, but slightly different in scope for superusers vs tenant admins
@@ -77,14 +77,13 @@ module StashEngine
 
     def add_filters(query_obj:)
       if TENANT_IDS.include?(params[:tenant]) && current_user.role == 'superuser'
-        query_obj = query_obj.where("stash_engine_resources.tenant_id = ?", params[:tenant])
+        query_obj = query_obj.where('stash_engine_resources.tenant_id = ?', params[:tenant])
       end
       if CURATION_STATUSES.include?(params[:curation_status])
-        query_obj = query_obj.where("stash_engine_identifier_states.current_curation_status = ?", params[:curation_status])
+        query_obj = query_obj.where('stash_engine_identifier_states.current_curation_status = ?', params[:curation_status])
       end
       query_obj
     end
-
 
   end
 end
