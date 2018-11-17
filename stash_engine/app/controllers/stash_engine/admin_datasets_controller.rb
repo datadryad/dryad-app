@@ -92,7 +92,7 @@ module StashEngine
 
     def plussed_query
       return nil if params[:q].blank?
-      params[:q].split.map { |item| "+#{item}" unless %w[+ - *].include?(item[0]) }.compact.join(' ')
+      params[:q].split.map { |item| "+#{item}*" unless %w[+ - *].include?(item[0]) }.compact.join(' ')
     end
 
   end
