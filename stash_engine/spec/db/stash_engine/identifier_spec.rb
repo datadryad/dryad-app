@@ -137,7 +137,6 @@ module StashEngine
         it 'has concatenated all the search fields' do
           @identifier2.reload
           @identifier2.update_search_words!
-          @identifier2.reload
           expect(@identifier2.search_words.strip).to eq('doi:10.123/450 Frolicks with the seahorses ' \
             'Joanna Jones  33-22-4838-3322 Marcus Lee  88-11-1138-2233')
         end
