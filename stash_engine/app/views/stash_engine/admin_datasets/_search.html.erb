@@ -4,7 +4,7 @@
     <%= submit_tag('Search', class: 'c-horizontal-form__input' ) %>
     <a href="#" id="clear_search" class="c-horizontal-form__input">Clear Search</a>
 
-    <% params.except(:controller, :action, :q, :commit).each_pair do |k,v| %>
+    <% params.except(:controller, :action, :q, :commit, :page, :page_size, :show_all).each_pair do |k,v| %>
         <%= hidden_field_tag k, v %>
     <% end %>
   <% end %>
