@@ -128,11 +128,10 @@ module StashEngine
       describe '#update_search_words!' do
         before(:each) do
           @identifier.update!(latest_resource_id: res3.id)
-          @identifier = Identifier.find(@identifier.id) # why won't travis reload this record?
-          res = @identifier.latest_resource
-          res.update(title: 'Frolicks with the seahorses')
-          Author.create(author_first_name: 'Joanna', author_last_name: 'Jones', author_orcid: '33-22-4838-3322', resource_id: res.id)
-          Author.create(author_first_name: 'Marcus', author_last_name: 'Lee', author_orcid: '88-11-1138-2233', resource_id: res.id)
+          @identifier.reload
+          res3.update!(title: 'Frolicks with the seahorses')
+          Author.create(author_first_name: 'Joanna', author_last_name: 'Jones', author_orcid: '33-22-4838-3322', resource_id: res3.id)
+          Author.create(author_first_name: 'Marcus', author_last_name: 'Lee', author_orcid: '88-11-1138-2233', resource_id: res3.id)
         end
 
         it 'has concatenated all the search fields' do
