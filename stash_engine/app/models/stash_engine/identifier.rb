@@ -145,6 +145,7 @@ module StashEngine
         end.join(' ')
         my_string << abstracts
       end
+      self.search_words = my_string
       # this updates without futher callbacks on me
       update_column :search_words, my_string
     end
