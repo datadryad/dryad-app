@@ -1,4 +1,5 @@
 module StashEngine
+  # rubocop:disable Metrics/ClassLength
   class Identifier < ActiveRecord::Base
     has_many :resources, class_name: 'StashEngine::Resource', dependent: :destroy
     has_many :orcid_invitations, class_name: 'StashEngine::OrcidInvitation', dependent: :destroy
@@ -15,6 +16,7 @@ module StashEngine
     after_update :create_or_get_identifier_state
     # has_many :counter_citations, class_name: 'StashEngine::CounterCitation', dependent: :destroy
     # before_create :build_associations
+    after_save :update_search_words!, unless: :search_words
 
     # used to build counter stat if needed, trickery to be sure one always exists to begin with
     # https://stackoverflow.com/questions/3808782/rails-best-practice-how-to-create-dependent-has-one-relations
@@ -105,7 +107,7 @@ module StashEngine
 
     def to_s
       # TODO: Make sure this is correct for all identifier types
-      "#{identifier_type.downcase}:#{identifier}"
+      "#{identifier_type&.downcase}:#{identifier}"
     end
 
     # the landing URL seems like a view component, but really it's given to people as data outside the view by way of
@@ -131,9 +133,35 @@ module StashEngine
       @identifier_state
     end
 
-    # it's ok ot defer adding this unless someone asks for the counter_stat
+    # the search words is a special MySQL search field that concatenates the following fields required to be searched over
+    # https://github.com/CDL-Dryad/dryad-product-roadmap/issues/125
+    # doi (from this model), latest_resource.title, latest_resource.authors (names, emails, orcids), dcs_descriptions of type abstract
+    def update_search_words!
+      my_string = to_s
+      if latest_resource
+        my_string << " #{latest_resource.title}"
+        my_string << ' ' << latest_resource.authors.map do |author|
+          "#{author.author_first_name} #{author.author_last_name} #{author.author_email} #{author.author_orcid}"
+        end.join(' ')
+        my_string << abstracts
+      end
+      # this updates without futher callbacks on me
+      update_column :search_words, my_string
+    end
+
+    private
+
+    def abstracts
+      return '' unless latest_resource.respond_to?(:descriptions)
+      ' ' << latest_resource.descriptions.where(description_type: 'abstract').map do |description|
+        ActionView::Base.full_sanitizer.sanitize(description.description)
+      end.join(' ')
+    end
+
+    # it's ok to defer adding this unless someone asks for the counter_stat
     # def build_associations
     #   counter_stat || true
     # end
   end
+  # rubocop:enable Metrics/ClassLength
 end
