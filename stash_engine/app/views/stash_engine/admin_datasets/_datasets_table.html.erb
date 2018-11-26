@@ -30,7 +30,7 @@
   <% ds_identifiers.each do |i| %>
     <tr class="c-lined-table__row">
       <td class="c-admin-hide-border-right">
-        <%= i&.latest_resource&.title %>
+        <%= link_to i&.latest_resource&.title, landing_show_path(id: i.to_s), target: :blank %>
       </td>
       <td class="c-admin-hide-border-left">
         <button class="c-admin-edit-icon" aria-label="Edit user role" alt="Edit user role">
