@@ -1,0 +1,14 @@
+<% # local: identifier %>
+<div class="o-admin-dialog">
+  <p>Change Status</p>
+
+  <%= form_tag(resource_curation_activity_index_path(identifier.id), method: :post, remote: true) do -%>
+    <%= select_tag(:curation_status, options_for_select( status_select, identifier&.identifier_state&.current_curation_status),
+                   class: 'c-horizontal-form__input--status', onchange: "this.form.submit();" ) %>
+
+    <br/>
+    <%= submit_tag 'Submit' %>
+    <%= button_tag 'Cancel', type: 'button', id: 'cancel_dialog' %>
+
+  <% end %>
+</div>
