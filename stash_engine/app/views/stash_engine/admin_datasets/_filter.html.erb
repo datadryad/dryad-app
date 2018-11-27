@@ -1,17 +1,15 @@
-<% # takes locals of institution_list, status_list %>
-  <%= form_tag({ controller: '/stash_engine/admin_datasets', action: 'index' }, method: 'get', id: 'filter_form' ) do -%>
-    <div class="c-horizontal-form__input--filter-by">Filter by:</div>
-    <%= select_tag(:tenant, options_for_select( [['Institution', '']] + institution_select, params[:tenant]),
-                   class: 'c-horizontal-form__input', onchange: "this.form.submit();" ) %>
-    <%= select_tag(:curation_status, options_for_select( [['Status', '']] + status_select, params[:curation_status]),
-                   class: 'c-horizontal-form__input--status', onchange: "this.form.submit();" ) %>
-    <a href="#" class="c-horizontal-form__input" id="filter_resetter">Reset all filters</a>
+<%= form_tag({ controller: '/stash_engine/admin_datasets', action: 'index' }, method: 'get', id: 'filter_form' ) do -%>
+  <div class="c-horizontal-form__input--filter-by">Filter by:</div>
+  <%= select_tag(:tenant, options_for_select( [['Institution', '']] + institution_select, params[:tenant]),
+                 class: 'c-horizontal-form__input', onchange: "this.form.submit();" ) %>
+  <%= select_tag(:curation_status, options_for_select( [['Status', '']] + status_select, params[:curation_status]),
+                 class: 'c-horizontal-form__input--status', onchange: "this.form.submit();" ) %>
+  <a href="#" class="c-horizontal-form__input" id="filter_resetter">Reset all filters</a>
 
-    <% params.except(:controller, :action, :tenant, :curation_status, :commit, :page, :page_size, :show_all).each_pair do |k,v| %>
-      <%= hidden_field_tag k, v %>
-    <% end %>
-  <% end -%>
-</div>
+  <% params.except(:controller, :action, :tenant, :curation_status, :commit, :page, :page_size, :show_all).each_pair do |k,v| %>
+    <%= hidden_field_tag k, v %>
+  <% end %>
+<% end -%>
 
 <script>
   // put this in here because it goes along with this form only
