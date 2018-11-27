@@ -15,5 +15,11 @@ module StashEngine
         format.json { render json: @curation_activities }
       end
     end
+
+    # POST /curation_activity
+    def create
+
+    end
+
   end
 end
