@@ -28,14 +28,18 @@
   </tr>
 
   <% ds_identifiers.each do |i| %>
+    <% latest_resource = i&.latest_resource %>
     <tr class="c-lined-table__row">
       <td class="c-admin-hide-border-right">
-        <%= link_to i&.latest_resource&.title, landing_show_path(id: i.to_s), target: :blank %>
+        <%= link_to latest_resource&.title, landing_show_path(id: i.to_s), target: :blank %>
       </td>
       <td class="c-admin-hide-border-left">
-        <button class="c-admin-edit-icon" aria-label="Edit user role" alt="Edit user role">
-          <i class="fa fa-pencil" aria-hidden="true"></i>
-        </button>
+        <% if latest_resource&.submitted? || latest_resource&.dataset_in_progress_editor&.id == current_user.id %>
+          <%= form_tag(metadata_entry_pages_new_version_path, method: :post) do -%>
+            <button class="c-admin-edit-icon" title="Edit Dataset"><i class="fa fa-pencil" aria-hidden="true"></i></button>
+            <%= hidden_field_tag :resource_id, latest_resource.id %>
+          <% end %>
+        <% end %>
       </td>
       <td class="c-admin-hide-border-right">
         <%= i&.identifier_state&.current_curation_status %>
