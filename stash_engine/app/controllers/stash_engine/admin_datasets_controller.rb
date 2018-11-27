@@ -23,9 +23,7 @@ module StashEngine
     def status_popup
       respond_to do |format|
         @identifier = Identifier.find(params[:id])
-        format.js do
-          byebug
-        end
+        format.js
       end
     end
 
