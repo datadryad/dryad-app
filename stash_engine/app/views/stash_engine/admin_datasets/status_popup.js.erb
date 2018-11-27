@@ -1,10 +1,9 @@
 // replace dialog div with contents of dialog text from partial
-console.log('Does this work?');
-alert('hi');
-
 
 $('#popup_dialog').html("<%= escape_javascript(
           render partial: 'stash_engine/admin_datasets/curation_state_popup', locals: { identifier: @identifier }) %>");
+
+$('.selectorUsedToCreateTheDialog').dialog('option', 'title', 'My New title');
 
 
 // now open a jquery ui modal dialog
@@ -13,8 +12,9 @@ $(function() {
     $("#popup_dialog").dialog({
         autoOpen: true,
         height: 'auto',
-        width: 'auto',
+        width: '500px',
         modal: true,
+        title: 'Change Status'
     });
 
     // make the cancel button in the dialog hide the dialog
