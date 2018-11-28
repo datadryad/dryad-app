@@ -6,11 +6,14 @@
 <div>
   <h2>Datasets</h2>
   <%= render partial: 'search' %>
-  <%= render partial: 'filter', locals: { institution_list: @institution_list, status_list: @status_list } %>
+  <%= render partial: 'filter' %>
 
   <%= render partial: 'datasets_table', locals: { ds_identifiers: @ds_identifiers } %>
 
   <div class="c-space-paginator">
     <%= paginate @ds_identifiers, params: { page_size: @page_size, show_all: false } %>
   </div>
+</div>
+
+<div id="popup_dialog" style="display:none;">
 </div>

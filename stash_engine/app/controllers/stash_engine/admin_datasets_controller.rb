@@ -4,8 +4,8 @@ module StashEngine
   class AdminDatasetsController < ApplicationController
     include SharedSecurityController
     before_action :require_admin
-    before_action :setup_paging
-    before_action :setup_ds_sorting
+    before_action :setup_paging, only: [:index]
+    before_action :setup_ds_sorting, only: [:index]
 
     TENANT_IDS = Tenant.all.map(&:tenant_id)
     CURATION_STATUSES = CurationActivity.validators_on(:status).first.options[:in]
@@ -17,6 +17,14 @@ module StashEngine
       @seven_day_stats = Stats.new(tenant_id: my_tenant_id, since: (Time.new - 7.days))
 
       @ds_identifiers = build_table_query
+    end
+
+    # Unobtrusive Javascript (UJS) to do AJAX by running javascript
+    def status_popup
+      respond_to do |format|
+        @identifier = Identifier.find(params[:id])
+        format.js
+      end
     end
 
     private
