@@ -23,7 +23,7 @@ module StashEngine
     def status_change
       respond_to do |format|
         format.js do
-          @activity = CurationActivity.create(identifier_id: params[:id], status: params[:status] , user_id: current_user.id,
+          @activity = CurationActivity.create(identifier_id: params[:id], status: params[:status], user_id: current_user.id,
                                               note: params[:note])
         end
       end
