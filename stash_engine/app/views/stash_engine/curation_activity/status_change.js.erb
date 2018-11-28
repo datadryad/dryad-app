@@ -1,4 +1,7 @@
 <% unless params[:status] == 'Status Unchanged' %>
   $("#js-curation-state-<%= params[:id] %>").html("<%= @activity.status %>");
 <% end %>
+<% if params[:log_page] == 'true' %>
+  alert('from the log page');
+<% end %>
 $("#popup_dialog").dialog("close");
