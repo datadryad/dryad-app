@@ -20,6 +20,10 @@ module StashEngine
       redirect_to stash_engine.dashboard_path
     end
 
+    def ajax_require_curator
+      return false unless current_user && %w[superuser].include?(current_user.role)
+    end
+
     def require_admin
       return if current_user && %w[admin superuser].include?(current_user.role)
       flash[:alert] = 'You must be an administrator to view this information.'
