@@ -16,3 +16,13 @@ On the DSpace system:
 `/opt/dryad/bin/dspace dash-service doi:10.5072/fzpe-zz40`
 
 You may login to the Dash server and view the item.
+
+## Implementation details
+
+The DSpace implementation lives in these Java files:
+
+- DryadDataPackage, DryadDataFile, DryadBitstream, Author, and Package = serialization of a Dryad package into Dash-formatted JSON
+- DashService = API communications with Dash
+- TransferToDash = curation task that manages bulk transfer of packages to Dash
+
+The DASH implementation lives primarily in the [DASH submission API](https://github.com/CDL-Dryad/dryad/blob/master/documentation/api_submission.md).
