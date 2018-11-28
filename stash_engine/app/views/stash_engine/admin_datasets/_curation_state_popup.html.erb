@@ -1,7 +1,7 @@
 <% # local: identifier %>
 <div class="o-admin-dialog">
 
-  <%= form_tag(resource_curation_activity_index_path(identifier.id), method: :post, remote: true) do -%>
+  <%= form_tag(curation_status_change_path(identifier.id), method: :post, remote: true) do -%>
     <div class="c-input">
       <%= select_tag(:status, options_for_select( status_select, identifier&.identifier_state&.current_curation_status) ) %>
     </div>

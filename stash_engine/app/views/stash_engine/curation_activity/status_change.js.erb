@@ -1,0 +1,4 @@
+<% unless params[:status] == 'Status Unchanged' %>
+  $("#js-curation-state-<%= params[:id] %>").html("<%= @activity.status %>");
+<% end %>
+$("#popup_dialog").dialog("close");

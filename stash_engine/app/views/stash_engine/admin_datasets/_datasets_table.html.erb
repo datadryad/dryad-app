@@ -41,14 +41,16 @@
           <% end %>
         <% end %>
       </td>
-      <td class="c-admin-hide-border-right">
+      <td class="c-admin-hide-border-right" id="js-curation-state-<%= i&.id %>">
         <%= i&.identifier_state&.current_curation_status %>
       </td>
       <td class="c-admin-hide-border-left">
-        <%= form_tag({ controller: '/stash_engine/admin_datasets', action: 'status_popup', id: i.id }, method: :get, remote: true) do -%>
-          <button class="c-admin-edit-icon" aria-label="Update status" alt="Update status">
-            <i class="fa fa-pencil" aria-hidden="true"></i>
-          </button>
+        <% if current_user.role == 'superuser' %>
+          <%= form_tag({ controller: '/stash_engine/admin_datasets', action: 'status_popup', id: i.id }, method: :get, remote: true) do -%>
+            <button class="c-admin-edit-icon" aria-label="Update status" alt="Update status">
+              <i class="fa fa-pencil" aria-hidden="true"></i>
+            </button>
+          <% end %>
         <% end %>
       </td>
       <td><%= i&.latest_resource&.user&.name %></td>
