@@ -162,19 +162,21 @@ To upload a file that is referenced by URL, do a POST to `{{url-domain-name}}/ap
 ```
 {
     "url": "https://raw.githubusercontent.com/CDL-Dryad/dryad/master/documentation/api_submission.md",
-    "digest": "<your-digest>",
+    "digest": "aca3032d20c829a6060f1b90afda6d14",
     "digestType": "md5",
-    "description": "<your-description>"
-    "path": "cat_submission.md",
-    "mimeType": "text/catdown"
+    "description": "This is the best file ever!",
+    "size": 1234,
+    "path": "api_submission.md",
+    "mimeType": "text/plain",
+    "skipValidation": true
 }
 ```
 
-This will add entries to the database with the information you specify.  Only the `url` is required, but if any other fields are added then they will be passed as part of the ingest manifest to Merritt. 
+This will add entries to the database with the information you specify.  Only the `url` is required. Other fields, which are optional, are described below:
 
-The `path` may contain either a single filename, or a filename within a hierarchy, as in `mydir/cat_submission.md`. If the `path` is not present, the filename and hierarchy will be inferred from the URL.
-
-If the digest doesn't match when Merritt downloads the files from the internet, then Merritt will cause an error on ingesting and you'll need to check/fix it.
+- `path` can provide a filename when the name is not specified in the URL (this is common when the URL is using an identifier string rather than a file name)
+- `digest` and `digestType` are not required, but if they are added then they will be passed as part of the ingest manifest to Merritt. If the digest doesn't match when Merritt downloads the files from the internet, then Merritt will cause an error on ingesting and you'll need to check/fix it.
+- `skipValidation`, if true, will tell DASH to skip the step of validating the existence of the file
 
 ## Publish your dataset
 
