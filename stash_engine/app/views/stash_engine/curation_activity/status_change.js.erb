@@ -1,7 +1,13 @@
 <% unless params[:status] == 'Status Unchanged' %>
   $("#js-curation-state-<%= params[:id] %>").html("<%= @activity.status %>");
 <% end %>
-<% if params[:log_page] == 'true' %>
-  alert('from the log page');
-<% end %>
 $("#popup_dialog").dialog("close");
+<% if params[:log_page] == 'true' %>
+  if($("#curation_table .c-admin-table__sort-asc").length > 0){
+      $('.c-lined-table__row:last').after("<%= escape_javascript(
+          render partial: 'stash_engine/admin_datasets/activity_log_row', locals: { curation_activity: @activity }) %>");
+  }else{
+      $('.c-lined-table__head').after("<%= escape_javascript(
+          render partial: 'stash_engine/admin_datasets/activity_log_row', locals: { curation_activity: @activity }) %>");
+  }
+<% end %>

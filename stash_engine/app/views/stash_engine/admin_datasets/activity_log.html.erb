@@ -10,7 +10,7 @@
   </div>
   <div style="clear: both";>&nbsp;</div>
 
-  <table class="c-lined-table">
+  <table class="c-lined-table" id="curation_table">
     <tr class="c-lined-table__head">
       <th class="c-admin-table <%= sort_display('created_at', @sort_column) %>">
         <%= sort_by 'created_at', title: 'Timestamp', current_column: @sort_column %>
@@ -29,13 +29,7 @@
       </th>
     </tr>
     <% @curation_activities.each do |ca| %>
-    <tr class="c-lined-table__row">
-      <td><%= formatted_datetime(ca.created_at) %></td>
-      <td><%= ca.status %></td>
-      <td><%= ca&.user&.name %></td>
-      <td><%= ca.note %></td>
-      <td><%= ca.keywords %></td>
-    </tr>
+      <%= render partial: 'activity_log_row', locals: { curation_activity: ca} %>
     <% end %>
   </table>
 </div>
