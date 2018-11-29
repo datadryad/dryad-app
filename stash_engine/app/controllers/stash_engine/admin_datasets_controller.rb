@@ -27,6 +27,23 @@ module StashEngine
       end
     end
 
+    # Unobtrusive Javascript (UJS) to do AJAX by running javascript
+    def note_popup
+      respond_to do |format|
+        @identifier = Identifier.find(params[:id])
+        format.js
+      end
+    end
+
+    # show curation activities for this item
+    def activity_log
+      @identifier = Identifier.find(params[:id])
+      created_at = SortableTable::SortColumnDefinition.new('created_at')
+      sort_table = SortableTable::SortTable.new([created_at])
+      @sort_column = sort_table.sort_column(params[:sort], params[:direction])
+      @curation_activities = @identifier.curation_activities.order(@sort_column.order)
+    end
+
     private
 
     def setup_paging
