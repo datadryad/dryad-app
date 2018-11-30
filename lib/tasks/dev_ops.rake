@@ -22,6 +22,8 @@ namespace :dev_ops do
       next
     end
     StashEngine::Identifier.where(storage_size: nil).each do |i|
+      lsr = i.last_submitted_resource
+      next if lsr.nil? || lsr.download_uri.blank? || lsr.update_uri.blank?
       puts "Adding size to #{i}"
       ds_info = Stash::Repo::DatasetInfo.new(i)
       i.update(storage_size: ds_info.dataset_size)
