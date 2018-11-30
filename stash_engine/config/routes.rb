@@ -11,8 +11,11 @@ StashEngine::Engine.routes.draw do
       get 'show_files'
     end
     resources :internal_data
+    # TODO: curation_activity is a bit weird because it nests inside the resource in the routes but it is really related to
+    # stash_engine_identifiers, not stash_engine_resources
     resources :curation_activity
   end
+  post 'curation_status_change/:id', to: 'curation_activity#status_change', as: 'curation_status_change'
   resources :tenants, only: [:index, :show]
   resources :file_uploads do
     member do

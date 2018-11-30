@@ -1,11 +1,20 @@
 <div class="c-horizontal-form">
-  <%= form_tag({ controller: '/stash_engine/admin_datasets', action: 'index' }, method: 'get' ) do %>
+  <%= form_tag({ controller: '/stash_engine/admin_datasets', action: 'index' }, method: 'get', id: 'search_form' ) do %>
     <%= search_field_tag(:q, params[:q], class: 'c-horizontal-form__input--search', placeholder: 'enter search terms' ) %>
     <%= submit_tag('Search', class: 'c-horizontal-form__input' ) %>
-    <a href="#" class="c-horizontal-form__input">Clear Search</a>
+    <a href="#" id="clear_search" class="c-horizontal-form__input">Clear Search</a>
 
-    <% params.except(:controller, :action, :q, :commit).each_pair do |k,v| %>
+    <% params.except(:controller, :action, :q, :commit, :page, :page_size, :show_all).each_pair do |k,v| %>
         <%= hidden_field_tag k, v %>
     <% end %>
   <% end %>
 </div>
+
+<script>
+  // put this in here because it goes along with this form only
+  $("#clear_search").click(function(e) {
+    e.preventDefault();
+    $('#q').val("");
+    $("#search_form").submit();
+  });
+</script>
