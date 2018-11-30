@@ -4,8 +4,8 @@ module StashEngine
   class AdminDatasetsController < ApplicationController
     include SharedSecurityController
     before_action :require_admin
-    before_action :setup_paging
-    before_action :setup_ds_sorting
+    before_action :setup_paging, only: [:index]
+    before_action :setup_ds_sorting, only: [:index]
 
     TENANT_IDS = Tenant.all.map(&:tenant_id)
     CURATION_STATUSES = CurationActivity.validators_on(:status).first.options[:in]
@@ -17,6 +17,31 @@ module StashEngine
       @seven_day_stats = Stats.new(tenant_id: my_tenant_id, since: (Time.new - 7.days))
 
       @ds_identifiers = build_table_query
+    end
+
+    # Unobtrusive Javascript (UJS) to do AJAX by running javascript
+    def status_popup
+      respond_to do |format|
+        @identifier = Identifier.find(params[:id])
+        format.js
+      end
+    end
+
+    # Unobtrusive Javascript (UJS) to do AJAX by running javascript
+    def note_popup
+      respond_to do |format|
+        @identifier = Identifier.find(params[:id])
+        format.js
+      end
+    end
+
+    # show curation activities for this item
+    def activity_log
+      @identifier = Identifier.find(params[:id])
+      created_at = SortableTable::SortColumnDefinition.new('created_at')
+      sort_table = SortableTable::SortTable.new([created_at])
+      @sort_column = sort_table.sort_column(params[:sort], params[:direction])
+      @curation_activities = @identifier.curation_activities.order(@sort_column.order)
     end
 
     private
@@ -53,6 +78,11 @@ module StashEngine
     def build_table_query
       ds_identifiers = base_table_join
       ds_identifiers = ds_identifiers.where('stash_engine_resources.tenant_id = ?', current_user.tenant_id) if current_user.role != 'superuser'
+
+      # We'll have to play with this search to get it to be reasonable with the insane interface so that it narrows to a small enough
+      # set so that it is useful to people for finding something and a large enough set to have what they want without hunting too long.
+      # It doesn't really support sorting by relevance because of the other sorts.
+      ds_identifiers = ds_identifiers.where('MATCH(search_words) AGAINST(?) > 0.5', params[:q]) unless params[:q].blank?
       ds_identifiers = add_filters(query_obj: ds_identifiers)
       ds_identifiers.order(@sort_column.order).page(@page).per(@page_size)
     end
