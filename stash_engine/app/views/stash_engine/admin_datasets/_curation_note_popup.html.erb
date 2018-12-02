@@ -1,0 +1,14 @@
+<% # local: identifier %>
+<div class="o-admin-dialog">
+
+  <%= form_tag(curation_status_change_path(identifier.id), method: :post, remote: true) do -%>
+    <%= hidden_field_tag :status, 'Status Unchanged'%>
+    <%= hidden_field_tag :log_page, 'true' %>
+    <div class="c-input">
+      <label class="c-input__label">Notes</label>
+      <%= text_area_tag(:note, nil, class: 'c-input__textarea') %>
+    </div>
+    <%= submit_tag 'Submit' %>
+    <%= button_tag 'Cancel', type: 'button', id: 'cancel_dialog' %>
+  <% end %>
+</div>
