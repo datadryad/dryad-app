@@ -53,5 +53,11 @@ module StashDatacite
       return nil if description_type_friendly.nil?
       Description.description_type_mapping_obj(description_type_friendly)
     end
+
+    def update_search_words
+      resource&.identifier&.update_search_words! if description_type == 'abstract' && description_changed?
+    end
+
+    after_save :update_search_words
   end
 end

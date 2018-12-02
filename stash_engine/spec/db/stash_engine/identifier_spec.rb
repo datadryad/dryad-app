@@ -124,6 +124,30 @@ module StashEngine
           expect(resources.count).to eq(1)
         end
       end
+
+      describe '#update_search_words!' do
+        before(:each) do
+          @identifier2 = Identifier.create(identifier_type: 'DOI', identifier: '10.123/450')
+          @res5 = Resource.create(identifier_id: @identifier2.id, title: 'Frolicks with the seahorses')
+          @identifier2.latest_resource_id = @res5.id
+          @identifier2.save!
+          Author.create(author_first_name: 'Joanna', author_last_name: 'Jones', author_orcid: '33-22-4838-3322', resource_id: @res5.id)
+          Author.create(author_first_name: 'Marcus', author_last_name: 'Lee', author_orcid: '88-11-1138-2233', resource_id: @res5.id)
+        end
+
+        it 'has concatenated all the search fields' do
+          @identifier2.reload
+          # these are because travis won't run things correctly for some reason but works locally
+          expect(@res5.id).to be_truthy
+          # for some reason I have to do this again in here even though I did it already in before block for travis to work, but works locally
+          @identifier2.latest_resource_id = @res5.id
+          @identifier2.save
+          expect(@identifier2.latest_resource_id).to be_truthy
+          @identifier2.update_search_words!
+          expect(@identifier2.search_words.strip).to eq('doi:10.123/450 Frolicks with the seahorses ' \
+            'Joanna Jones  33-22-4838-3322 Marcus Lee  88-11-1138-2233')
+        end
+      end
     end
   end
 end

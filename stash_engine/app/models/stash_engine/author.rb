@@ -53,6 +53,14 @@ module StashEngine
     end
     after_save :init_user_orcid
 
+    def update_search_words(force: false)
+      # intersection of two arrays to see if anything changed in the list that we care about
+      intersect = changed & %w[author_first_name author_last_name author_email author_orcid]
+      resource&.identifier&.update_search_words! if intersect.length.positive? || force == true
+    end
+    after_save :update_search_words
+    after_destroy -> { update_search_words(force: true) }
+
     private
 
     def strip_whitespace
