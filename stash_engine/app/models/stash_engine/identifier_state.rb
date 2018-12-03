@@ -11,7 +11,7 @@ module StashEngine
 
     def update_identifier_state(c_a)
       return if c_a.status.equal?('Status Unchanged')
-      return if c_a.created_at < curation_activity.created_at
+      return if !curation_activity.nil? && c_a.created_at < curation_activity.created_at
       update(curation_activity: c_a, current_curation_status: c_a.status)
     end
   end
