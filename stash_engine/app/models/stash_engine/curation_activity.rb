@@ -31,7 +31,7 @@ module StashEngine
         id: id,
         dataset: stash_identifier.to_s,
         status: status,
-        action_taken_by: user.name,
+        action_taken_by: user_name,
         note: note,
         keywords: keywords,
         created_at: created_at,
@@ -46,6 +46,11 @@ module StashEngine
       return if stash_identifier.nil?
       return if stash_identifier.identifier_state.nil?
       stash_identifier.identifier_state.update_identifier_state(self)
+    end
+
+    def user_name
+      return user.name unless user.nil?
+      'System'
     end
   end
 end
