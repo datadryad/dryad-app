@@ -37,6 +37,7 @@ module StashApi
       params.permit!
       @curation_activity = StashEngine::CurationActivity.new(params[:curation_activity].except(:identifier_id, :user_id, :dataset))
       @curation_activity.update!(user_id: @user.id, identifier_id: @stash_identifier.id)
+      @curation_activity.update!(user_id: nil) if params[:user_id].nil?
       render json: @curation_activity
     end
 
@@ -45,6 +46,7 @@ module StashApi
       params.permit!
       @curation_activity = StashEngine::CurationActivity.find(params[:id])
       @curation_activity.update!(params[:curation_activity].except(:identifier_id, :user_id, :dataset))
+      @curation_activity.update!(user_id: nil) if params[:user_id].nil?
       respond_to do |format|
         format.json { render json: @curation_activity }
       end
