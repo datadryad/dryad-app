@@ -38,7 +38,7 @@ module StashEngine
         logo_filenames.find do |filename|
           image_file = File.join(tenant_images_path, filename)
           File.exist?(image_file)
-        end || DEFAULT_LOGO_FILE
+        end || ''
       end
     end
 
