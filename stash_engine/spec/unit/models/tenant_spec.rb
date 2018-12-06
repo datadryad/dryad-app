@@ -112,7 +112,7 @@ module StashEngine
         tenant = Tenant.by_domain('example.edu')
         Dir.mktmpdir('rails_root') do |rails_root|
           allow(Rails).to receive(:root).and_return(rails_root)
-          expect(tenant.logo_file).to eq(Tenant::DEFAULT_LOGO_FILE)
+          expect(tenant.logo_file).to eq('') # no longer want to display a default and ignored by ui code if unavailable
         end
       end
     end
