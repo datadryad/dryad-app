@@ -4,9 +4,5 @@
 </div>
 <div class="o-dataset-nav">
   <%= link_to 'Back to My Datasets', stash_engine.dashboard_path , id: 'dashboard_path', class: 'o-button__icon-left', role: 'button' %>
-  <% if current_user.id == @resource.user_id %>
-    <%= link_to 'Proceed to Upload', stash_engine.upload_resource_path(@resource), id: 'upload_path', class: 'o-button__icon-right', role: 'button' %>
-  <% else %>
-    <%= link_to 'Proceed to Review', stash_engine.review_resource_path(params[:resource_id]), class: 'o-button__icon-right', role: 'button', id: 'proceed_review' %>
-  <% end %>
+  <%= link_to 'Proceed to Upload', stash_engine.upload_resource_path(@resource), id: 'upload_path', class: 'o-button__icon-right', role: 'button' %>
 </div>
