@@ -42,6 +42,7 @@ module StashEngine
       sort_table = SortableTable::SortTable.new([created_at])
       @sort_column = sort_table.sort_column(params[:sort], params[:direction])
       @curation_activities = @identifier.curation_activities.order(@sort_column.order)
+      @internal_data = InternalDatum.where(identifier_id: @identifier.id)
     end
 
     private

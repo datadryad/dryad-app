@@ -34,5 +34,28 @@
   </table>
 </div>
 
+<div id="internal_data">
+  <table class="c-lined-table" id="activity_log_table">
+    <tr class="c-lined-table__head">
+      <th class="c-admin-table">
+        Date
+      </th>
+      <th class="c-admin-table">
+        Type
+      </th>
+      <th class="c-admin-table">
+        Value
+      </th>
+    </tr>
+    <% @internal_data.each do |item| %>
+      <tr class="c-lined-table__row">
+        <td><%= formatted_datetime(item.updated_at) %></td>
+        <td><%= item.data_type %></td>
+        <td><%= item.value %></td>
+      </tr>
+    <% end %>
+  </table>
+</div>
+
 <div id="popup_dialog" style="display:none;">
 </div>
