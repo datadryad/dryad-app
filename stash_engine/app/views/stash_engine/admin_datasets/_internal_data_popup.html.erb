@@ -1,0 +1,18 @@
+<% # local: identifier %>
+<div class="o-admin-dialog">
+  <% my_select = StashEngine::InternalDatum.validators_on(:data_type).first.options[:in] %>
+
+  <% # param[:sub_method] %>
+  <%= form_for(@internal_datum, url: identifier_internal_data_path(@identifier), remote: true ) do |f| -%>
+    <div class="c-input">
+      <%= f.select(:data_type, options_for_select( my_select, @internal_datum.data_type) ) %>
+    </div>
+    <div class="c-input">
+      <label class="c-input__label">Value</label>
+      <%= f.text_area(:value, class: 'c-input__textarea') %>
+    </div>
+    <%= f.submit 'Submit' %>
+    <%= f.button 'Cancel', type: 'button', id: 'cancel_dialog' %>
+
+  <% end %>
+</div>

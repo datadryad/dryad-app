@@ -35,6 +35,16 @@ module StashEngine
       end
     end
 
+    def data_popup
+      respond_to do |format|
+        @identifier = Identifier.find(params[:id])
+        @internal_datum = ( params[:internal_datum_id] ?
+                                InternalDatum.find(params[:internal_datum_id]) :
+                                InternalDatum.new(identifier_id: @identifier.id) )
+        format.js
+      end
+    end
+
     # show curation activities for this item
     def activity_log
       @identifier = Identifier.find(params[:id])
