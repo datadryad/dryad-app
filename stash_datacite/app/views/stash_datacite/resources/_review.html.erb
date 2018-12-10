@@ -63,13 +63,8 @@
     <%= render partial: "stash_datacite/licenses/review" %>
 
 <div class="o-dataset-nav">
-  <% if current_user.id == @resource.user_id %>
-    <%= link_to 'Back to Upload Files', stash_url_helpers.upload_resource_path(@resource), id: 'dashboard_path',
-              class: 'o-button__icon-left', role: 'button' %>
-  <% else %>
-    <%= link_to 'Back to Describe Dataset', stash_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: params[:id]),
-                class: 'o-button__icon-left', role: 'button', id: 'describe_back' %>
-  <% end %>
+  <%= link_to 'Back to Upload Files', stash_url_helpers.upload_resource_path(@resource), id: 'dashboard_path',
+            class: 'o-button__icon-left', role: 'button' %>
 
   <% if @data.blank? # valid data %>
     <%= form_tag stash_datacite.resources_submission_path do -%>
