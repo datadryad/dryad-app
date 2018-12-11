@@ -1,6 +1,7 @@
 require_dependency 'stash_engine/application_controller'
 
 module StashEngine
+  # rubocop:disable Metrics/ClassLength
   class AdminDatasetsController < ApplicationController
     include SharedSecurityController
     before_action :require_admin
@@ -35,6 +36,19 @@ module StashEngine
       end
     end
 
+    def data_popup
+      respond_to do |format|
+        @identifier = Identifier.find(params[:id])
+        @internal_datum = if params[:internal_datum_id]
+                            InternalDatum.find(params[:internal_datum_id])
+                          else
+                            InternalDatum.new(identifier_id: @identifier.id)
+                          end
+        setup_internal_data_list
+        format.js
+      end
+    end
+
     # show curation activities for this item
     def activity_log
       @identifier = Identifier.find(params[:id])
@@ -42,6 +56,7 @@ module StashEngine
       sort_table = SortableTable::SortTable.new([created_at])
       @sort_column = sort_table.sort_column(params[:sort], params[:direction])
       @curation_activities = @identifier.curation_activities.order(@sort_column.order)
+      @internal_data = InternalDatum.where(identifier_id: @identifier.id)
     end
 
     private
@@ -115,5 +130,20 @@ module StashEngine
       query_obj
     end
 
+    # this sets up the select list for internal data and will not offer options for items that are only allowed once and one is present
+    def setup_internal_data_list
+      @options = StashEngine::InternalDatum.validators_on(:data_type).first.options[:in].dup
+      return if params[:internal_datum_id] # do not winnow list if doing update since it's read-only and just changes the value on update
+
+      # Get options that are only allow one item rather than multiple
+      only_one_options = @options.dup
+      only_one_options.delete_if { |i| StashEngine::InternalDatum.allows_multiple(i) }
+
+      StashEngine::InternalDatum.where(identifier_id: @internal_datum.identifier_id).where(data_type: only_one_options).each do |existing_item|
+        @options.delete(existing_item.data_type)
+      end
+    end
+
   end
+  # rubocop:enable Metrics/ClassLength
 end
