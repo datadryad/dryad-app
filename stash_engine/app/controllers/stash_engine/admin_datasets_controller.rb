@@ -38,9 +38,11 @@ module StashEngine
     def data_popup
       respond_to do |format|
         @identifier = Identifier.find(params[:id])
-        @internal_datum = ( params[:internal_datum_id] ?
-                                InternalDatum.find(params[:internal_datum_id]) :
-                                InternalDatum.new(identifier_id: @identifier.id) )
+        @internal_datum = if params[:internal_datum_id]
+                            InternalDatum.find(params[:internal_datum_id])
+                          else
+                            InternalDatum.new(identifier_id: @identifier.id)
+                          end
         format.js
       end
     end

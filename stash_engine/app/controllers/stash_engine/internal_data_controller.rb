@@ -25,7 +25,7 @@ module StashEngine
         format.js do
           # right now, the only way to add is by ajax, UJS, so Javascript from the dataset admin area
           InternalDatum.create(identifier_id: @identifier.id, data_type: params[:internal_datum][:data_type],
-                                                 value: params[:internal_datum][:value])
+                               value: params[:internal_datum][:value])
           @internal_data = InternalDatum.where(identifier_id: @identifier.id)
         end
       end
