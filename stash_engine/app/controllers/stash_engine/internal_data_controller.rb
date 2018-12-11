@@ -30,5 +30,31 @@ module StashEngine
         end
       end
     end
+
+    # PUT /internal_data/:id
+    def update
+      @internal_datum = InternalDatum.find(params[:id])
+      @identifier = @internal_datum.stash_identifier
+      respond_to do |format|
+        format.js do
+          # right now, the only way to add is by ajax, UJS, so Javascript from the dataset admin area
+          @internal_datum.update(value: params[:internal_datum][:value]) # can not change type or identifier, just the value after creating
+          @internal_data = InternalDatum.where(identifier_id: @identifier.id)
+        end
+      end
+    end
+
+    # DELETE /internal_data/:id
+    def destroy
+      @internal_datum = InternalDatum.find(params[:id])
+      @identifier_id = @internal_datum.identifier_id
+      respond_to do |format|
+        format.js do
+          @internal_datum.destroy
+          @internal_data = InternalDatum.where(identifier_id: @identifier_id)
+        end
+      end
+    end
+
   end
 end
