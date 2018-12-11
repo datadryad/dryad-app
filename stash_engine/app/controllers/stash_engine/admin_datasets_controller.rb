@@ -1,6 +1,7 @@
 require_dependency 'stash_engine/application_controller'
 
 module StashEngine
+  # rubocop:disable Metrics/ClassLength
   class AdminDatasetsController < ApplicationController
     include SharedSecurityController
     before_action :require_admin
@@ -43,6 +44,7 @@ module StashEngine
                           else
                             InternalDatum.new(identifier_id: @identifier.id)
                           end
+        setup_internal_data_list
         format.js
       end
     end
@@ -128,5 +130,20 @@ module StashEngine
       query_obj
     end
 
+    # this sets up the select list for internal data and will not offer options for items that are only allowed once and one is present
+    def setup_internal_data_list
+      @options = StashEngine::InternalDatum.validators_on(:data_type).first.options[:in].dup
+      return if params[:internal_datum_id] # do not winnow list if doing update since it's read-only and just changes the value on update
+
+      # Get options that are only allow one item rather than multiple
+      only_one_options = @options.dup
+      only_one_options.delete_if { |i| StashEngine::InternalDatum.allows_multiple(i) }
+
+      StashEngine::InternalDatum.where(identifier_id: @internal_datum.identifier_id).where(data_type: only_one_options).each do |existing_item|
+        @options.delete(existing_item.data_type)
+      end
+    end
+
   end
+  # rubocop:enable Metrics/ClassLength
 end
