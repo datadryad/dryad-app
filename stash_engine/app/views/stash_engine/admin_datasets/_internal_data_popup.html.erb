@@ -3,9 +3,14 @@
   <% my_select = StashEngine::InternalDatum.validators_on(:data_type).first.options[:in] %>
 
   <% # param[:sub_method] %>
-  <%= form_for(@internal_datum, url: identifier_internal_data_path(@identifier), remote: true ) do |f| -%>
+  <% if params[:sub_method] != 'put'
+    my_path = identifier_internal_data_path(@identifier)
+  else
+    my_path = internal_datum_path(@internal_datum)
+  end %>
+  <%= form_for(@internal_datum, url: my_path, method: params[:sub_method], remote: true ) do |f| -%>
     <div class="c-input">
-      <%= f.select(:data_type, options_for_select( my_select, @internal_datum.data_type) ) %>
+      <%= f.select(:data_type, options_for_select( my_select, @internal_datum.data_type), {}, { disabled: ( params[:sub_method] == 'put' ) } ) %>
     </div>
     <div class="c-input">
       <label class="c-input__label">Value</label>
