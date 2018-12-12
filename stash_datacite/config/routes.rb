@@ -24,6 +24,7 @@ StashDatacite::Engine.routes.draw do
   post 'publications/create', to: 'publications#create'
   patch 'publications/update', to: 'publications#update'
   delete 'publications/:id/delete', to: 'publications#delete', as: 'publications_delete'
+  post 'publications/autofill/:id', to: 'publications#autofill_data', as: 'publications_autofill_data'
 
   get 'resource_types/new', to: 'resource_types#new'
   post 'resource_types/create', to: 'resource_types#create'
