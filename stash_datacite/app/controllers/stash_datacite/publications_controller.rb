@@ -5,7 +5,7 @@ module StashDatacite
   class PublicationsController < ApplicationController
     include HTTParty
 
-    # PATCH/PUT /publications/1
+    # rubocop:disable Metrics/AbcSize
     def update
       @se_id = StashEngine::Identifier.find(params[:internal_datum][:identifier_id])
       @pub_issn = StashEngine::InternalDatum.find_by(stash_identifier: @se_id, data_type: 'publicationISSN')
@@ -19,6 +19,7 @@ module StashDatacite
       end
     end
 
+    # rubocop:disable Metrics/MethodLength
     def autofill_data
       @id = params[:id]
       @se_id = StashEngine::Identifier.find(StashEngine::Resource.find(params[:id]).identifier_id)
@@ -32,8 +33,10 @@ module StashDatacite
                               query: { access_token: APP_CONFIG.old_dryad_access_token },
                               body: body,
                               headers: { 'Content-Type' => 'application/json' })
-        redirect_to :back
+      redirect_to :back
     end
+    # rubocop:enable Metrics/AbcSize
+    # rubocop:enable Metrics/MethodLength
+
   end
 end
-
