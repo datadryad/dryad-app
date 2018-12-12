@@ -6,6 +6,9 @@
 </div>
 
 <h3 class="o-heading__page-span">Basic Information</h3>
+  <div class="js-contributors_form">
+    <%= render partial: "stash_datacite/metadata_entry_pages/publication", locals: { publication: @publication, resource: @resource } %>
+  </div>
 
   <%= render partial: "stash_datacite/titles/form", locals: { resource: @resource } %><br/>
 
