@@ -3,6 +3,7 @@
 		<%= f.label "journal_name", 'Journal Name', class: 'c-input__label' %>
 		<%= f.text_field :publication_name, value: @publication.value, class: "js-publications c-input__text" %>
     <%= f.hidden_field :identifier_id, value: @resource.identifier_id %>
+    <%= f.hidden_field :resource_id, value: @resource.id %>
     <%= f.hidden_field :publication_issn, value: @publication.value %>
   </div>
   <div class="c-input">
@@ -10,3 +11,4 @@
     <%= f.text_field :msid, value: @msid.value, class: "js-msid c-input__text" %>
   </div>
 <% end %>
+<%= link_to "Add Manuscript Metadata", publications_autofill_data_path( id: @resource.id ), method: :post, class: 'o-button__add' %>
