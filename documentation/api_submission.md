@@ -7,7 +7,7 @@ This document gives practical information for working with the API in order to s
 
 Before you can submit from the API, you need to log in to Dryad at least once to create a user record.  You may log in to your associated campus/organization or use the DataONE login with your Google login credentials.
 
-To request access, please [contact us](mailto:uc3@ucop.edu).
+To request access, please [contact us](mailto:uc3@ucop.edu). (Developers see [Adding a New API Account](https://confluence.ucop.edu/pages/viewpage.action?spaceKey=Stash&title=Dryad+Operations#DryadOperations-AddingaNewAPIAccountforSubmission))
 
 ## Get a token for making requests for secure parts of the API
 Before making secure requests to the Dryad API, you'll need a token.  Currently our tokens last 10 hours and a token will need to be renewed if it expires.  You may get a token using these examples from a few programming environments.  Replace &lt;bracketed&gt; items with the values you were given.  For testing, you may choose to use a bash shell, a programming environment or a tool such as Postman.
