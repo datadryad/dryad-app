@@ -69,7 +69,7 @@ function loadPublications() {
             });
     });
 
-    $( '.js-publications' ).on('focus', function () {
+    $( '.js-msid' ).on('focus', function () {
         previous_value = this.value;
         // console.log('previous value:' + previous_value );
     }).change(function() {
