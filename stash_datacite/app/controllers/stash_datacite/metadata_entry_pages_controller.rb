@@ -11,6 +11,8 @@ module StashDatacite
       @publication = StashEngine::InternalDatum.find_by(stash_identifier: se_id, data_type: 'publicationISSN')
       @publication = StashEngine::InternalDatum.new(stash_identifier: se_id, data_type: 'publicationISSN') if @publication.nil?
 
+      @msid = StashEngine::InternalDatum.find_by(stash_identifier: se_id, data_type: 'manuscriptNumber')
+      @msid = StashEngine::InternalDatum.new(stash_identifier: se_id, data_type: 'manuscriptNumber') if @msid.nil?
       respond_to do |format|
         format.js
       end

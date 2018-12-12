@@ -5,4 +5,8 @@
     <%= f.hidden_field :identifier_id, value: @resource.identifier_id %>
     <%= f.hidden_field :publication_issn, value: @publication.value %>
   </div>
+  <div class="c-input">
+    <%= f.label "msid", 'Manuscript Number', class: 'c-input__label' %>
+    <%= f.text_field :msid, value: @msid.value, class: "js-msid c-input__text" %>
+  </div>
 <% end %>
