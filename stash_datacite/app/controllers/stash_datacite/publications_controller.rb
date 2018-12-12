@@ -31,12 +31,7 @@ module StashDatacite
                               query: { access_token: APP_CONFIG.old_dryad_access_token },
                               body: body,
                               headers: { 'Content-Type' => 'application/json' })
-      render plain: @results.to_s
-      #   redirect_to :back
-      # render template: 'stash_datacite/metadata_entry_pages/find_or_create'
-        # respond_to do |format|
-      #   format.json { render template: 'stash_datacite/shared/update.js.erb' }
-      # end
+        redirect_to :back
     end
   end
 end
