@@ -538,11 +538,13 @@ $(document).ready(function(){
         // $('details div.o-sites__group').show();
         modernizeIt();
         joelsReady();
+        trapNavigation();
         $(this).unbind("ajaxStop"); // required since it fires everytime ajax stops after that, otherwise!
       });
     }else{
       modernizeIt();
       joelsReady();
+      trapNavigation();
     }
   }, 30);
 });
