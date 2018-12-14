@@ -2,14 +2,13 @@
 <h1 class="o-heading__level1">Activity Log for <%= @identifier&.latest_resource&.title %></h1>
 
 <div>
-  <div style="float: left;"><%= @identifier.to_s %></div>
+  <div style="float: left;"><br/><%= @identifier.to_s %></div>
   <div style="float: right;">
     <%= form_tag({ controller: '/stash_engine/admin_datasets', action: 'note_popup', id: @identifier.id }, method: :get, remote: true) do -%>
       <button class="o-button__submit">Add Note</button>
     <% end %>
   </div>
   <div style="clear: both";>&nbsp;</div>
-
   <table class="c-lined-table" id="curation_table">
     <tr class="c-lined-table__head">
       <th class="c-admin-table <%= sort_display('created_at', @sort_column) %>">
@@ -32,6 +31,20 @@
       <%= render partial: 'activity_log_row', locals: { curation_activity: ca} %>
     <% end %>
   </table>
+</div>
+
+<div id="internal_data">
+  <div style="float: left"><h2>Internal Data</h2></div>
+  <div style="float: right">
+    <br/>
+    <%= form_tag({ controller: '/stash_engine/admin_datasets', action: 'data_popup', id: @identifier.id, sub_method: 'post' }, method: :get, remote: true) do -%>
+      <button class="o-button__submit">Add Data</button>
+    <% end %>
+  </div>
+
+  <div id="internal_data_table" style="clear: both">
+    <%= render partial: 'stash_engine/internal_data/table' %>
+  </div>
 </div>
 
 <div id="popup_dialog" style="display:none;">
