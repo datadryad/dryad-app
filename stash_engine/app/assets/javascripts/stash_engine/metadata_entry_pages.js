@@ -7,7 +7,8 @@ function trapNavigation() {
 
         // blocks until all ajax connections are closed
         var waitAjax = function () {
-            if ($.ajax.active < 1) {
+            // apparantly this changes with versions of jQuery
+            if (( $.ajax.active === undefined ? $.active : $.ajax.active) < 1) {
                 return;
             } else {
                 setTimeout(waitAjax, 100); // check again in 100 ms
