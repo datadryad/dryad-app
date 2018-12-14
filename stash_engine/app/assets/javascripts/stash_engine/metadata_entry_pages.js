@@ -7,26 +7,29 @@ function trapNavigation() {
 
         // blocks until all ajax connections are closed
         var waitAjax = function () {
-            if ($.active < 1) {
+            if ($.ajax.active < 1) {
                 return;
             } else {
                 setTimeout(waitAjax, 100); // check again in 100 ms
             }
         }
 
-        var waitForMyAjaxClicks = function () {
-            $.ajax({
-                type: 'GET',
-                async: false,
-                url: '/stash/ajax_wait'
-            }).done(function () {
-                waitAjax();
-            });
-        };
+        /* trap the click event for the simple links that navigate away (have .js-nav-out class), wait briefly,
+        wait for any ajax to stop, and then navigate manually with the window.location. */
+        $('.js-nav-out').on('click', function(e) {
+            e.preventDefault();
+            my_target = e.target.href;
 
-        $('a, #dashboard_path, #upload_path').on('click', waitForMyAjaxClicks);
+            setTimeout(
+                function(e) {
+                    // alert( my_target );
+                    waitAjax();
+                    window.location = my_target;
+                }, 500);
+        });
     });
 }
 
 // see https://stackoverflow.com/questions/7610871/how-to-trigger-an-event-after-using-event-preventdefault
 // may need to use in the future.
+

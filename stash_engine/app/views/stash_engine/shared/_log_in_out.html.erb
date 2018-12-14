@@ -1,5 +1,5 @@
 <% if current_user %>
-  <%= link_to 'Logout', stash_url_helpers.sessions_destroy_path, class: 'c-header__nav-item' %>
+  <%= link_to 'Logout', stash_url_helpers.sessions_destroy_path, class: 'c-header__nav-item js-nav-out' %>
 <% else %>
-  <%= link_to 'Login', stash_url_helpers.choose_login_path, class: 'c-header__nav-item' %>
+  <%= link_to 'Login', stash_url_helpers.choose_login_path, class: 'c-header__nav-item js-nav-out' %>
 <% end %>
