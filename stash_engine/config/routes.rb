@@ -104,6 +104,5 @@ StashEngine::Engine.routes.draw do
 
   # admin_datasets, this routes actions to ds_admin with a possible id without having to define for each get action, default is index
   get 'ds_admin/(:action(/:id))', to: 'admin_datasets'
-  get 'related_journal/(:action(/:id))', to: 'related_journal'
 
 end

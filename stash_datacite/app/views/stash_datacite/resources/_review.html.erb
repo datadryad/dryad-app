@@ -54,12 +54,6 @@
                   class: 'c-review-files-button o-button__icon-left', role: 'button' %>
     </div>
 
-    <h2 class="o-heading__page-span">Related Article Journal Information</h2>
-
-    <div id="related_journal" data-load="<%= stash_url_helpers.url_for( controller: '/stash_engine/related_journal', action: 'show', format: :js, only_path: true) %>">
-      <p>coming soon</p>
-    </div>
-
   <h2 class="o-heading__page-span">Agree to Terms</h2>
     <%= render partial: "stash_datacite/licenses/review" %>
 
