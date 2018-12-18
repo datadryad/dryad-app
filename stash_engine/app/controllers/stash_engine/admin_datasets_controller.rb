@@ -65,6 +65,11 @@ module StashEngine
     private
 
     def setup_paging
+      if request.format.tsv?
+        @page = 1
+        @page_size = 2_000
+        return
+      end
       @page = params[:page] || '1'
       @page_size = (params[:page_size].blank? || params[:page_size] != '1000000' ? '10' : '1000000')
     end
@@ -102,11 +107,7 @@ module StashEngine
       # It doesn't really support sorting by relevance because of the other sorts.
       ds_identifiers = ds_identifiers.where('MATCH(search_words) AGAINST(?) > 0.5', params[:q]) unless params[:q].blank?
       ds_identifiers = add_filters(query_obj: ds_identifiers)
-      if request.format.tsv?
-        ds_identifiers.order(@sort_column.order).page(1).per(2_000)
-      else
-        ds_identifiers.order(@sort_column.order).page(@page).per(@page_size)
-      end
+      ds_identifiers.order(@sort_column.order).page(@page).per(@page_size)
     end
 
     def base_table_join
