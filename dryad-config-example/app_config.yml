@@ -4,6 +4,7 @@ defaults: &DEFAULTS
   repository: Stash::Merritt::Repository
   stash_mount: /stash
   max_review_days: 180
+  default_tenant: dryad
   orcid:
     site: https://sandbox.orcid.org/
     authorize_url: https://sandbox.orcid.org/oauth/authorize
