@@ -92,12 +92,6 @@ StashEngine::Engine.routes.draw do
 
   patch 'dataset/*id', to: 'landing#update', constraints: { id: /\S+/ }
 
-  get 'embargoes/new', to: 'embargoes#new'
-  post 'embargoes/create', to: 'embargoes#create'
-  patch 'embargoes/update', to: 'embargoes#update'
-  delete 'embargoes/:id/delete', to: 'embargoes#delete'
-  post 'embargoes/:resource_id/changed/', to: 'embargoes#changed', as: 'embargoes_changed'
-
   post 'shares/create', to: 'shares#create'
   patch 'shares/update', to: 'shares#update'
   delete 'shares/:id/delete', to: 'shares#delete'
@@ -110,5 +104,6 @@ StashEngine::Engine.routes.draw do
 
   # admin_datasets, this routes actions to ds_admin with a possible id without having to define for each get action, default is index
   get 'ds_admin/(:action(/:id))', to: 'admin_datasets'
+  get 'related_journal/(:action(/:id))', to: 'related_journal'
 
 end
