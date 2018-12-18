@@ -1,7 +1,15 @@
-<%= "Title\tStatus\tAuthor(s)\tDOI\tLast modified\tLast modified by\tSize\tPublication date" %>
-<% @ds_identifiers.each do |i| %>
-  <% # nothing
-  -%>
-  <%= "hi"
-  %>
+<%= "Title\tStatus\tAuthor\tDOI\tLast modified\tLast modified by\tSize\tPublication date" %>
+<% @ds_identifiers.each do |i| -%>
+<%
+    latest_resource = i&.latest_resource
+    row = [ latest_resource&.title || '[no title set]',
+            i&.identifier_state&.current_curation_status,
+            latest_resource&.user&.name,
+            i.identifier,
+            formatted_datetime(i&.identifier_state&.curation_activity&.updated_at),
+            i&.identifier_state&.curation_activity&.user&.name,
+            i.storage_size,
+            "My last modified"
+    ]
+-%><%= row.join("\t") %>
 <% end -%>

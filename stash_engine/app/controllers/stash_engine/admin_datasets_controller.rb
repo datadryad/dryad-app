@@ -102,7 +102,11 @@ module StashEngine
       # It doesn't really support sorting by relevance because of the other sorts.
       ds_identifiers = ds_identifiers.where('MATCH(search_words) AGAINST(?) > 0.5', params[:q]) unless params[:q].blank?
       ds_identifiers = add_filters(query_obj: ds_identifiers)
-      ds_identifiers.order(@sort_column.order).page(@page).per(@page_size)
+      if request.format.tsv?
+        ds_identifiers.order(@sort_column.order).page(1).per(2_000)
+      else
+        ds_identifiers.order(@sort_column.order).page(@page).per(@page_size)
+      end
     end
 
     def base_table_join
