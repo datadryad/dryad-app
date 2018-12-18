@@ -16,8 +16,11 @@ module StashEngine
       my_tenant_id = (current_user.role == 'admin' ? current_user.tenant_id : nil)
       @all_stats = Stats.new
       @seven_day_stats = Stats.new(tenant_id: my_tenant_id, since: (Time.new - 7.days))
-
       @ds_identifiers = build_table_query
+      respond_to do |format|
+        format.html
+        format.tsv
+      end
     end
 
     # Unobtrusive Javascript (UJS) to do AJAX by running javascript
@@ -99,7 +102,11 @@ module StashEngine
       # It doesn't really support sorting by relevance because of the other sorts.
       ds_identifiers = ds_identifiers.where('MATCH(search_words) AGAINST(?) > 0.5', params[:q]) unless params[:q].blank?
       ds_identifiers = add_filters(query_obj: ds_identifiers)
-      ds_identifiers.order(@sort_column.order).page(@page).per(@page_size)
+      if request.format.tsv?
+        ds_identifiers.order(@sort_column.order).page(1).per(2_000)
+      else
+        ds_identifiers.order(@sort_column.order).page(@page).per(@page_size)
+      end
     end
 
     def base_table_join
