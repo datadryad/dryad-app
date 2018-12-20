@@ -28,7 +28,7 @@
   <% end %>
     <div class="c-header__logos">
       <button aria-label="mobile menu" class="o-button__menu c-header__menu-button js-header__menu-button"></button>
-      <%= link_to(stash_url_helpers.root_path, class: 'c-header__dash-logo-link') do %>
+      <%= link_to(stash_url_helpers.root_path, class: 'c-header__dash-logo-link js-nav-out') do %>
         <%
           dash_logo = image_tag('stash_engine/logo_dryad.png', class: 'c-header__dash-logo-svg', alt: 'Dash logo')
         tenant_logo = ( current_tenant.logo_file.blank? ? '' : logo_path(class: "c-header__dash-logo-svg") ) %>
@@ -52,10 +52,10 @@
                       class: 'c-header__nav-item' %>
         <% end %>
         <%# link_to 'Home', stash_url_helpers.root_path, class: 'c-header__nav-item' %>
-        <%= link_to 'Explore Data', '/search', class: 'c-header__nav-item' %>
-        <%= link_to 'Help', stash_url_helpers.help_path, class: 'c-header__nav-item' %>
+        <%= link_to 'Explore Data', '/search', class: 'c-header__nav-item js-nav-out' %>
+        <%= link_to 'Help', stash_url_helpers.help_path, class: 'c-header__nav-item js-nav-out' %>
         <% if current_user %>
-          <%= link_to 'My Datasets', stash_url_helpers.dashboard_path, class: 'c-header__nav-item' %>
+          <%= link_to 'My Datasets', stash_url_helpers.dashboard_path, class: 'c-header__nav-item js-nav-out' %>
         <% end %>
         <%= render partial: 'stash_engine/shared/log_in_out' %>
         <%# render partial: "stash_engine/shared/sites" %>
