@@ -16,8 +16,11 @@ module StashEngine
       my_tenant_id = (current_user.role == 'admin' ? current_user.tenant_id : nil)
       @all_stats = Stats.new
       @seven_day_stats = Stats.new(tenant_id: my_tenant_id, since: (Time.new - 7.days))
-
       @ds_identifiers = build_table_query
+      respond_to do |format|
+        format.html
+        format.tsv
+      end
     end
 
     # Unobtrusive Javascript (UJS) to do AJAX by running javascript
@@ -62,6 +65,11 @@ module StashEngine
     private
 
     def setup_paging
+      if request.format.tsv?
+        @page = 1
+        @page_size = 2_000
+        return
+      end
       @page = params[:page] || '1'
       @page_size = (params[:page_size].blank? || params[:page_size] != '1000000' ? '10' : '1000000')
     end

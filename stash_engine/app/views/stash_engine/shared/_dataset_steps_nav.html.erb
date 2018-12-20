@@ -1,10 +1,10 @@
 <div class="c-progress">
   <%= link_to 'Describe Dataset', {controller: 'metadata_entry_pages', action: 'find_or_create', resource_id: @resource.id},
-              class: "c-progress__tab1#{ (params[:controller].end_with?('metadata_entry_pages') && params[:action] == 'find_or_create' ? '--active' : '' )}" %>
+              class: "c-progress__tab1#{ (params[:controller].end_with?('metadata_entry_pages') && params[:action] == 'find_or_create' ? '--active' : '' )} js-nav-out" %>
 
   <%= link_to 'Upload Files', stash_engine.upload_resource_path(@resource.id),
-            class: "c-progress__tab2#{ (params[:controller].end_with?('resources') && params[:action] == 'upload' ? '--active' : '') }" %>
+            class: "c-progress__tab2#{ (params[:controller].end_with?('resources') && params[:action] == 'upload' ? '--active' : '') } js-nav-out" %>
 
   <%= link_to 'Review and Submit', stash_engine.review_resource_path(@resource.id),
-              class: "c-progress__tab3#{ (params[:controller].end_with?('resources') && params[:action] == 'review' ? '--active' : '') }" %>
+              class: "c-progress__tab3#{ (params[:controller].end_with?('resources') && params[:action] == 'review' ? '--active' : '') } js-nav-out" %>
 </div>
