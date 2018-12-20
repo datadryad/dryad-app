@@ -11,4 +11,4 @@
     <%= f.text_field :msid, value: @msid.value, class: "js-msid c-input__text" %>
   </div>
 <% end %>
-<%= link_to "Add Manuscript Metadata", publications_autofill_data_path( id: @resource.id ), method: :post, class: 'o-button__add' %>
+<%= link_to "Add Manuscript Metadata", publications_autofill_data_path( id: @resource.id ), method: :post, class: 't-describe__add-button o-button__add' %>
