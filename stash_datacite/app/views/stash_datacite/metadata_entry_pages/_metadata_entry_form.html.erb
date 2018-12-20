@@ -1,15 +1,16 @@
 
 <div class="c-autosave-header">
-  <h1 class="o-heading__level1">Describe Your Datasets</h1>
+  <h1 class="o-heading__level1">Describe Your Dataset</h1>
   <div class="c-autosave__text saving_text" style="display: none;">Saving&hellip;</div>
   <div class="c-autosave__text saved_text" style="display: none;">All Progress Saved.</div>
 </div>
 
-<h3 class="o-heading__page-span">Basic Information</h3>
+<h3 class="o-heading__page-span">Related Journal Article Information</h3>
   <div class="js-contributors_form">
     <%= render partial: "stash_datacite/metadata_entry_pages/publication", locals: { publication: @publication, resource: @resource } %>
   </div>
 
+<h3 class="o-heading__page-span">Dataset: Basic Information</h3>
   <%= render partial: "stash_datacite/titles/form", locals: { resource: @resource } %><br/>
 
   <fieldset class="c-fieldset">
