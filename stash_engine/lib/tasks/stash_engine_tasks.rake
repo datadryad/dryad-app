@@ -1,5 +1,6 @@
 require_relative 'identifier_rake_functions'
 
+# rubocop:disable Metrics/BlockLength
 namespace :identifiers do
   desc 'Give resources missing a stash_engine_identifier one (run from main app, not engine)'
   task fix_missing: :environment do # loads rails environment
@@ -37,3 +38,4 @@ namespace :identifiers do
     end
   end
 end
+# rubocop:enable Metrics/BlockLength
