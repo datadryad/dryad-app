@@ -1,14 +1,14 @@
 <footer class="c-footer">
   <div class="c-footer__link-group">
     <div class="c-footer__nav-group">
-      <%= link_to 'Explore Data', '/search', class: 'c-footer__nav-item' %>
-      <%= link_to 'About Dash', stash_url_helpers.about_path, class: 'c-footer__nav-item' %>
+      <%= link_to 'Explore Data', '/search', class: 'c-footer__nav-item js-nav-out' %>
+      <%= link_to 'About Dash', stash_url_helpers.about_path, class: 'c-footer__nav-item js-nav-out' %>
       <% if current_user %>
-        <%= link_to 'My Datasets', stash_url_helpers.dashboard_path, class: 'c-footer__nav-item' %>
+        <%= link_to 'My Datasets', stash_url_helpers.dashboard_path, class: 'c-footer__nav-item js-nav-out' %>
         <!-- Logout -->
-        <%= link_to 'Logout', stash_url_helpers.sessions_destroy_path, class: 'c-footer__nav-item' %>
+        <%= link_to 'Logout', stash_url_helpers.sessions_destroy_path, class: 'c-footer__nav-item js-nav-out' %>
       <% else %>
-        <%= link_to 'Login', stash_url_helpers.choose_login_path, class: 'c-footer__nav-item' %>
+        <%= link_to 'Login', stash_url_helpers.choose_login_path, class: 'c-footer__nav-item js-nav-out' %>
         <div class="c-footer__logged-in-or-out">
           <div class="o-sites">
             <details class="o-showhide o-sites__details" role="group">
@@ -22,14 +22,15 @@
           </div>
         </div>
       <% end %>
-      <%= link_to 'Help', stash_url_helpers.help_path, class: 'c-footer__nav-item' %>
+      <%= link_to 'Help', stash_url_helpers.help_path, class: 'c-footer__nav-item js-nav-out' %>
     </div>
     <div class="c-footer__policy-group">
-      <a href="http://www.cdlib.org/about/terms.html">Terms of Use</a>
-      <a href="http://www.cdlib.org/about/privacy.html">Privacy Policy</a>
-      <a href="http://www.cdlib.org/about/accessibility.html">Accessibility Policy</a>
+      <a href="http://www.cdlib.org/about/terms.html" class="js-nav-out">Terms of Use</a>
+      <a href="http://www.cdlib.org/about/privacy.html" class="js-nav-out">Privacy Policy</a>
+      <a href="http://www.cdlib.org/about/accessibility.html" class="js-nav-out">Accessibility Policy</a>
     </div>
   </div>
-  <p>Dash is a collaborative project between your UC campus and <a href="http://www.cdlib.org" class="o-link__primary">California Digital Library</a></p>
+  <p>Dash is a collaborative project between your UC campus and
+    <a href="http://www.cdlib.org" class="o-link__primary js-nav-out">California Digital Library</a></p>
   <p>© The Regents of the University of California</p>
 </footer>
