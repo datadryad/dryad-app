@@ -1,4 +1,5 @@
 <div>
+  <h3>License and Terms of Service</h3>
   <p>
     <span><%= check_box_tag 'agree_to_license', 'yes', (@resource.version_number > 1), class: 't-review__agree-to-license js-agrees' %></span>
     <label for="agree_to_license">By checking this box, I agree to the license
@@ -12,7 +13,7 @@
             {license: StashEngine::License.by_uri(r.rights_uri), right: r } %>
       <% end %>
     <% end %>
-      and <a href="">Dryad's Terms of Service</a>
+      and <%= link_to "Dryad's Terms of Service", stash_url_helpers.terms_view_path, target: '_blank' %>
     </label>
   </p>
 
@@ -25,6 +26,29 @@
       </label>
     </p>
   <% end %>
+</div>
+
+<div>
+  <h3>Payment</h3>
+  <p>
+    Dryad charges a fee for data publication that covers curation and preservation of published datasets. Upon
+    publication of your dataset, you will receive an invoice for $120 (or more if larger than 20GB). If you have a
+    fee waiver, are at an institution that is a Dryad member, or are publishing at journal that is a Dryad member,
+    you will not receive this invoice. Read more about our business model and payment terms.</p>
+
+    <span><%= check_box_tag 'agree_to_payment', 'yes', (@resource.version_number > 1), class: 't-review__agree-to-license js-agrees' %></span>
+    <label for="agree_to_payment">I agree to Dryad's payment terms</label>
+</div>
+
+<div>
+  <h3>Privacy Policy</h3>
+
+  <p>
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean euismod bibendum laoreet. Proin gravida dolor sit amet
+    lacus accumsan et viverra justo commodo. Proin sodales pulvinar sic tempor. Sociis natoque penatibus et magnis dis
+    parturient montes, nascetur ridiculus mus. Nam fermentum, nulla luctus pharetra vulputate, felis tellus mollis orci,
+    sed rhoncus pronin sapien nunc accuan eget.
+  </p>
 </div>
 
 

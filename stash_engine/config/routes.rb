@@ -71,7 +71,6 @@ StashEngine::Engine.routes.draw do
   match 'auth/migrate/done', to: 'dashboard#migration_complete', via: [:get]
 
   match 'terms/view', :to => 'dashboard#view_terms', :via => [:get, :post]
-  match 'terms/accept', :to => 'dashboard#accept_terms', :via => [:get, :post]
 
   get 'auth/failure', to: redirect('/')
   match 'sessions/destroy', to: 'sessions#destroy', :via => [:get, :post]
