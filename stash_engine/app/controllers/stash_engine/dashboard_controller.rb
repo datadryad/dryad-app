@@ -3,18 +3,11 @@ require_dependency 'stash_engine/application_controller'
 module StashEngine
   class DashboardController < ApplicationController
     before_action :require_login, only: %i[show migrate_data_mail migrate_data]
-    before_action :require_terms_accepted, only: [:show]
 
     MAX_VALIDATION_TRIES = 5
 
     def show
       session[:show_migrate] = !current_user.migration_complete?
-    end
-
-    def accept_terms
-      current_user.terms_accepted_at = Time.new
-      current_user.save
-      render 'stash_engine/dashboard/show'
     end
 
     def metadata_basics; end
