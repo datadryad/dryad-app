@@ -2,7 +2,7 @@ require 'ezid/client'
 # require_relative 'id_gen'
 
 module Stash
-  module Merritt
+  module Doi
     class EzidGen < IdGen
 
       # @return [String] the identifier (DOI, ARK, or URN)
