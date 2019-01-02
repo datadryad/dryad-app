@@ -13,6 +13,10 @@
   <div class="c-space-paginator">
     <%= paginate @ds_identifiers, params: { page_size: @page_size, show_all: false } %>
   </div>
+
+  <div>
+    <%= link_to 'Get Tab Separated Values (TSV) for import into Excel', params.merge(format: :tsv) %>
+  </div>
 </div>
 
 <div id="popup_dialog" style="display:none;">

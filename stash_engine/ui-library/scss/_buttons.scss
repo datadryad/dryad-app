@@ -237,6 +237,15 @@
 
 }
 
+.o-button__jane-random {
+  @extend %o-button__add-remove;
+  margin: 0 0 20px;
+  padding: 5px 8px;
+  border: 1px solid $design-lighter-blue-color;
+  background-color: $design-lighter-blue-color;
+  color: $design-black-color;
+}
+
 .o-button__remove {
   @extend %o-button__add-remove;
   padding: 2px 0;

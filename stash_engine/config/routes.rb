@@ -71,7 +71,6 @@ StashEngine::Engine.routes.draw do
   match 'auth/migrate/done', to: 'dashboard#migration_complete', via: [:get]
 
   match 'terms/view', :to => 'dashboard#view_terms', :via => [:get, :post]
-  match 'terms/accept', :to => 'dashboard#accept_terms', :via => [:get, :post]
 
   get 'auth/failure', to: redirect('/')
   match 'sessions/destroy', to: 'sessions#destroy', :via => [:get, :post]
@@ -91,12 +90,6 @@ StashEngine::Engine.routes.draw do
   get '404', to: 'pages#app_404', as: 'app_404'
 
   patch 'dataset/*id', to: 'landing#update', constraints: { id: /\S+/ }
-
-  get 'embargoes/new', to: 'embargoes#new'
-  post 'embargoes/create', to: 'embargoes#create'
-  patch 'embargoes/update', to: 'embargoes#update'
-  delete 'embargoes/:id/delete', to: 'embargoes#delete'
-  post 'embargoes/:resource_id/changed/', to: 'embargoes#changed', as: 'embargoes_changed'
 
   post 'shares/create', to: 'shares#create'
   patch 'shares/update', to: 'shares#update'
