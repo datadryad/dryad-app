@@ -4,13 +4,12 @@
 # require_relative 'ezid_gen'
 
 module Stash
-  module Merritt
+  module Doi
     class IdGen
       attr_reader :resource
 
       # this is to take the place of the normal initialize to create a class of the correct type
       def self.make_instance(resource:)
-        # right now, only EZID, but would change which is created by tenant config
         id_svc = resource.tenant.identifier_service
         if id_svc.provider == 'ezid'
           EzidGen.new(resource: resource)

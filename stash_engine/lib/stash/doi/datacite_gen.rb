@@ -2,7 +2,7 @@
 require 'cirneco'
 
 module Stash
-  module Merritt
+  module Doi
     class DataciteError < StandardError; end
 
     class DataciteGen < IdGen
