@@ -1,5 +1,4 @@
 require 'ezid/client'
-# require_relative 'id_gen'
 
 module Stash
   module Doi

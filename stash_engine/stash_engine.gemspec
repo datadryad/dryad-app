@@ -25,8 +25,10 @@ Gem::Specification.new do |s| # rubocop:disable Metrics/BlockLength
 
   s.add_dependency 'amoeba', '~> 3.0.0'
   s.add_dependency 'carrierwave', '~> 0.10.0'
+  s.add_dependency 'cirneco', '~> 0.9.20' # higher versions cause dependency hell with faraday from Martin's Gems
   s.add_dependency 'ckeditor'
   s.add_dependency 'concurrent-ruby', '~> 1.0'
+  s.add_dependency 'ezid-client', '~> 1.5'
   s.add_dependency 'filesize', '~> 0.1.1'
   s.add_dependency 'font-awesome-rails'
   s.add_dependency 'httpclient', '~> 2.8.3'

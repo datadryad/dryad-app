@@ -1,4 +1,3 @@
-# require_relative 'id_gen'
 require 'cirneco'
 
 module Stash
