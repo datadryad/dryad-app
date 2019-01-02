@@ -72,13 +72,14 @@ module StashApi
     end
 
     def add_author(json_author: author)
-      a = StashEngine::Author.create(
+      a = StashEngine::Author.new(
         author_first_name: json_author[:firstName],
         author_last_name: json_author[:lastName],
         author_email: json_author[:email],
         author_orcid: @previous_orcids["#{json_author[:firstName]} #{json_author[:lastName]}"],
         resource_id: @resource.id
       )
+      a.save(validate: false) # we can validate on submission, keeps from saving otherwise
       a.affiliation_by_name(json_author[:affiliation]) unless json_author[:affiliation].blank?
     end
 
@@ -91,7 +92,7 @@ module StashApi
 
     def ensure_license
       return unless @resource.rights.blank?
-      license = StashEngine::License.by_id(@resource.tenant.default_license)
+      license = StashEngine::License.by_id(@resource.identifier.license_id)
       @resource.rights.create(rights: license[:name], rights_uri: license[:uri])
     end
 
