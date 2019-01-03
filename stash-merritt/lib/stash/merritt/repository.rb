@@ -1,5 +1,6 @@
 require 'stash/repo'
 require 'stash/merritt/submission_job'
+require 'stash/doi/id_gen'
 require 'erb'
 
 module Stash
@@ -30,7 +31,7 @@ module Stash
       end
 
       def mint_id(resource:)
-        id_gen = IdGen.make_instance(resource: resource)
+        id_gen = Stash::Doi::IdGen.make_instance(resource: resource)
         id_gen.mint_id
       end
 
