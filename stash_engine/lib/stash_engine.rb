@@ -26,7 +26,7 @@ module StashEngine
   class Engine < ::Rails::Engine
     isolate_namespace StashEngine
 
-    config.autoload_paths << File.expand_path('../lib/stash/doi', __FILE__)
+    config.autoload_paths << File.expand_path('lib/stash/doi', __dir__)
 
     # :nocov:
     initializer :append_migrations do |app|
