@@ -11,3 +11,4 @@ AllCops:
     - 'vendor/**/*'
     - 'ui-library/**/*'
     - 'node_modules/**/*'
+    - 'app/models/stash_engine/lock.rb'
