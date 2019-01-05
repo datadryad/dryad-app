@@ -24,6 +24,7 @@ PATH
       jquery-turbolinks (~> 2.1.0)
       jquery-ui-rails
       kaminari
+      noid (~> 0.9.0)
       omniauth (~> 1.8.1)
       omniauth-orcid (~> 2.1.1)
       omniauth-shibboleth (~> 1.2.1)
@@ -275,6 +276,7 @@ GEM
     mysql2 (0.4.10)
     namae (1.0.1)
     netrc (0.11.0)
+    noid (0.9.0)
     nokogiri (1.8.5)
       mini_portile2 (~> 2.3.0)
     oauth2 (1.4.1)
