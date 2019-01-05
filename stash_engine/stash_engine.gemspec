@@ -37,6 +37,7 @@ Gem::Specification.new do |s| # rubocop:disable Metrics/BlockLength
   s.add_dependency 'jquery-turbolinks', '~> 2.1.0'
   s.add_dependency 'jquery-ui-rails'
   s.add_dependency 'kaminari'
+  s.add_dependency 'noid', '~> 0.9.0'
   s.add_dependency 'omniauth', '~> 1.8.1'
   # s.add_dependency 'omniauth-google-oauth2', '~> 0.5.3' no longer used and causes problems with faraday and cirneco
   s.add_dependency 'omniauth-orcid', '~> 2.1.1'
