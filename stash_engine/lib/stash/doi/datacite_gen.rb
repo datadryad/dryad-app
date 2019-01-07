@@ -10,8 +10,8 @@ module Stash
 
       # @return [String] the identifier (DOI, ARK, or URN)
       def mint_id
-        datacenter = Cirneco::DataCenter.new(prefix: prefix, username: account, password: password)
-        base_id = datacenter.encode_doi(prefix)
+        # datacenter = Cirneco::DataCenter.new(prefix: prefix, username: account, password: password)
+        base_id = "#{prefix}/dryad.#{StashEngine::NoidState.mint}"
         "doi:#{base_id}"
       end
 
