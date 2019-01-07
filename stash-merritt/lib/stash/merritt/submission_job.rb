@@ -68,7 +68,7 @@ module Stash
       end
 
       def id_helper
-        @id_helper ||= IdGen.make_instance(resource: resource)
+        @id_helper ||= Stash::Doi::IdGen.make_instance(resource: resource)
       end
 
       # rubocop:disable Metrics/AbcSize
