@@ -1,5 +1,6 @@
 require_relative 'identifier_rake_functions'
 
+# rubocop:disable Metrics/BlockLength
 namespace :identifiers do
   desc 'Give resources missing a stash_engine_identifier one (run from main app, not engine)'
   task fix_missing: :environment do # loads rails environment
@@ -26,4 +27,15 @@ namespace :identifiers do
       se_identifier.update_search_words!
     end
   end
+
+  desc 'update dataset license from tenant settings'
+  task write_licenses: :environment do
+    StashEngine::Identifier.all.each do |se_identifier|
+      license = se_identifier&.latest_resource&.tenant&.default_license
+      next if license.blank? || license == se_identifier.license_id
+      puts "Updating license to #{license} for #{se_identifier}"
+      se_identifier.update(license_id: license)
+    end
+  end
 end
+# rubocop:enable Metrics/BlockLength

@@ -6,7 +6,7 @@ module StashDatacite
       def initialize(resource, tenant)
         @resource = resource
         create_publisher(tenant)
-        ensure_license(tenant)
+        ensure_license
         @resource.fill_blank_author!
       end
 
@@ -101,9 +101,9 @@ module StashDatacite
 
       private
 
-      def ensure_license(tenant)
+      def ensure_license
         return unless @resource.rights.empty?
-        license = StashEngine::License.by_id(tenant.default_license)
+        license = StashEngine::License.by_id(@resource.identifier.license_id)
         @resource.rights.create(rights: license[:name], rights_uri: license[:uri])
       end
 
