@@ -37,7 +37,7 @@ Gem::Specification.new do |s| # rubocop:disable Metrics/BlockLength
   s.add_dependency 'stash_datacite'
   s.add_dependency 'stash_engine' # TODO: should stash_datacite export this?
 
-  s.add_development_dependency 'bundler', '~> 1.7'
+  s.add_development_dependency 'bundler', '~> 2.0.1'
   s.add_development_dependency 'nokogiri', '~> 1.8'
   s.add_development_dependency 'rake', '~> 12.0'
   s.add_development_dependency 'rspec', '~> 3.2'
