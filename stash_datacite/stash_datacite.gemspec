@@ -23,7 +23,7 @@ Gem::Specification.new do |s| # rubocop:disable Metrics/BlockLength
   s.add_dependency 'leaflet-rails'
   s.add_dependency 'loofah'
   s.add_dependency 'mysql2'
-  s.add_dependency 'rails', '~> 4.2.10'
+  s.add_dependency 'rails', '~> 4.2.11'
   s.add_dependency 'responders', '~> 2.0'
   s.add_dependency 'rubyzip', '>= 1.0.0'
 
