@@ -303,7 +303,6 @@ GEM
       activemodel (= 4.2.10)
       activerecord (= 4.2.10)
       activesupport (= 4.2.10)
-      bundler (>= 1.3.0, < 2.0)
       railties (= 4.2.10)
       sprockets-rails
     rails-deprecated_sanitizer (1.0.3)
