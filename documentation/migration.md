@@ -1,6 +1,10 @@
 
 # Migrating content from a DSpace-based Dryad system to a DASH-based Dryad system
 
+On the DASH system:
+
+1. Ensure you have created an API account for the DSpace system to use, as described in [Adding a New API Account for Submission](https://confluence.ucop.edu/pages/viewpage.action?spaceKey=Stash&title=Dryad+Operations#DryadOperations-AddingaNewAPIAccountforSubmission).
+
 On the DSpace system:
 
 1. Ensure your maven settings file has appropriate values for the variables:
