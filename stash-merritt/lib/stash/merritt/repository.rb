@@ -30,11 +30,6 @@ module Stash
         "#{edit_uri_base}/#{ERB::Util.url_encode(doi)}"
       end
 
-      def mint_id(resource:)
-        id_gen = Stash::Doi::IdGen.make_instance(resource: resource)
-        id_gen.mint_id
-      end
-
       private
 
       def merritt_host_for(resource)

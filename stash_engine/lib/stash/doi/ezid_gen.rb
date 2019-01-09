@@ -5,6 +5,7 @@ module Stash
     class EzidGen < IdGen
 
       # @return [String] the identifier (DOI, ARK, or URN)
+      # TODO: this seems wrong to me, where is doi set?
       def mint_id
         if id_exists?
           # :nocov: I'm not going to jump through crazy hoops to test a fake simulation of an external library
