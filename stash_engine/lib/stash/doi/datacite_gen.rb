@@ -18,11 +18,9 @@ module Stash
       # reserve DOI in string format like "doi:xx.xxx/yyyyy" and return ID string after reserving it.
       # I don't believe DataCite does the reserving thing like EZID.  This goes nowhere and does nothing and just
       # to keep the interface consistent between DataCite and EZID.
-      # :nocov:  not worth writing tests for returning the thing passed in.
       def reserve_id(doi:)
         doi
       end
-      # :nocov:
 
       def update_metadata(dc4_xml:, landing_page_url:)
         # the doi apparently is known from the DC xml document

@@ -10,8 +10,6 @@ module Stash
     class IdGen
       attr_reader :resource
 
-      delegate :url_helpers, to: 'Rails.application.routes'
-
       # this is to take the place of the normal initialize to create a class of the correct type
       def self.make_instance(resource:)
         id_svc = resource.tenant.identifier_service
@@ -29,33 +27,31 @@ module Stash
       end
 
       # rubocop:disable Metrics/AbcSize
-      # The method reserves a DOI if needed for a specified DOI or minting one from the pool
-      # TODO: I don't see this used anywhere.  Delete if it's not used.  Seems to be resource.ensure_identifier, instead?  Or maybe not.
+      # The method reserves a DOI if needed for a specified DOI or minting one from the pool.  (formerly?) used by Merritt
+      # submission to be sure a (minted if needed) stash_engine_identifier exists with the ID filled in before doing fun stuff
       def ensure_identifier
         # ensure an existing identifier is reserved (if needed for EZID)
         if resource.identifier && resource.identifier.identifier # if identifier has value
-          log_info("ensuring identifier is reserved for resource #{resource.id}, ident: #{resource.identifier}")
+          log_info("ensuring identifier is reserved for resource #{resource.id}, ident: #{resource.identifier_str}")
           return resource.identifier.to_s if resource.skip_datacite_update
           return reserve_id(doi: resource.identifier.to_s) # reserve_id is smart and doesn't reserve again if it already exists
         end
         # otherwise create a new one
         log_info("minting new identifier for resource #{resource.id}")
+        # this ensures it has a stash_engine_identifier for the resource, mint_id is either EZID or DC mint method
         resource.ensure_identifier(mint_id)
       end
       # rubocop:enable Metrics/AbcSize
 
       def update_identifier_metadata!
-        log_info("updating identifier landing page (#{landing_page_url}) and metadata for resource #{resource_id} (#{resource.identifier_str})")
+        log_info("updating identifier landing page (#{landing_page_url}) and metadata for resource #{resource.id} (#{resource.identifier_str})")
         sp = Stash::Merritt::SubmissionPackage.new(resource: resource, packaging: nil)
         dc4_xml = sp.dc4_builder.contents
         update_metadata(dc4_xml: dc4_xml, landing_page_url: landing_page_url) unless resource.skip_datacite_update
       end
 
       def landing_page_url
-        @landing_page_url ||= begin
-          path_to_landing = url_helpers.show_path(resource.identifier_str)
-          tenant.full_url(path_to_landing)
-        end
+        @landing_page_url ||= StashEngine::Engine.routes.url_helpers.show_url(resource.identifier_str)
       end
 
       def initialize(resource:)
@@ -88,7 +84,6 @@ module Stash
       def account
         id_params.account
       end
-
     end
   end
 end

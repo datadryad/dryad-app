@@ -16,7 +16,7 @@ module IdentifierRakeFunctions
   private_class_method
 
   def self.make_identifier(resource:)
-    my_id = StashEngine.repository.mint_id(resource: resource)
+    my_id = Stash::Doi::IdGen.mint_id(resource: resource)
     id_type, id_text = my_id.split(':', 2)
     if resource.identifier.nil?
       # create record for identifier and add it to resource
