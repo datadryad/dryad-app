@@ -31,7 +31,7 @@ Gem::Specification.new do |s| # rubocop:disable Metrics/BlockLength
   s.add_dependency 'typesafe_enum', '~> 0.1', '>= 0.1.8'
   s.add_dependency 'xml-mapping_extensions', '~> 0.4', '>= 0.4.9'
 
-  s.add_development_dependency 'bundler', '~> 2.0.0'
+  s.add_development_dependency 'bundler', '~> 1.17.3'
   s.add_development_dependency 'diffy', '~> 3.1'
   s.add_development_dependency 'equivalent-xml', '~> 0.6.0'
   s.add_development_dependency 'nokogiri', '~> 1.8'
