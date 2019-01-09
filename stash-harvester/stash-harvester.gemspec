@@ -38,7 +38,7 @@ Gem::Specification.new do |s| # rubocop:disable Metrics/BlockLength
   s.add_dependency 'datacite-mapping', '~> 0.3'
   s.add_dependency 'stash-wrapper'
 
-  s.add_development_dependency 'bundler', '~> 2.0.1'
+  s.add_development_dependency 'bundler', '~> 2.0.0'
   s.add_development_dependency 'diffy', '~> 3.1'
   s.add_development_dependency 'equivalent-xml', '~> 0.6.0'
   s.add_development_dependency 'github-markup', '~> 1.4'
