@@ -36,8 +36,8 @@ module Stash
       def do_submit!
         package = create_package
         submit(package)
-        # byebye, we don't update DataCite here now and only when embargoing or releasing datasets from curation
-        # update_metadata(package.dc4_xml) unless resource.skip_datacite_update
+        # We don't update DataCite here now and only when embargoing or releasing datasets from curation
+        # TODO: We should remove this cleanup and only cleanup once the harvester has called us back and Merritt was successful
         cleanup(package)
         Stash::Repo::SubmissionResult.success(resource_id: resource_id, request_desc: description, message: 'Success')
       end
@@ -54,10 +54,8 @@ module Stash
         @id_helper ||= Stash::Doi::IdGen.make_instance(resource: resource)
       end
 
-
-
       def create_package
-        ensure_identifier
+        id_helper.ensure_identifier
         log_info("creating package for resource #{resource_id} (#{resource.identifier_str})")
         if resource.upload_type == :manifest
           ObjectManifestPackage.new(resource: resource)

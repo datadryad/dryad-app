@@ -140,7 +140,7 @@ module StashEngine
         return
       end
       update_author_orcid(invitation)
-      update_identifier_metadata(invitation)
+      update_identifier_metadata(invitation) # TODO: This needs to be more selective and only update if DS is public or embargoed
       redirect_to stash_url_helpers.show_path(identifier.to_s), flash: { info: "Your ORCID #{@auth_hash.uid} has been added for this dataset." }
     end
     # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
@@ -157,9 +157,8 @@ module StashEngine
     end
 
     def update_identifier_metadata(invitation)
-      repo = StashEngine.repository
-      job = repo.create_submission_job(resource_id: invitation.resource.id)
-      job.update_identifier_metadata!
+      id_svc = Stash::Doi::IdGen.make_instance(resource: invitation.resource)
+      id_svc.update_identifier_metadata!
     end
   end
 end
