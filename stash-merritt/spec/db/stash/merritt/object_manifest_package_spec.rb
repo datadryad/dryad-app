@@ -209,7 +209,8 @@ module Stash
             allow(Rails).to receive(:logger).and_return(logger)
 
             job = SubmissionJob.new(resource_id: resource.id, url_helpers: double(Module))
-            allow(job).to receive(:ensure_identifier).and_return(nil)
+            allow(job).to receive(:id_helper).and_return(OpenStruct.new(ensure_identifier: 'meow'))
+            # allow(job).to receive(:ensure_identifier).and_return(nil)
             package = job.send(:create_package)
             expect(package).to be_an(ObjectManifestPackage)
           end
