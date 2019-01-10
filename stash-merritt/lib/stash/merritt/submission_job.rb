@@ -46,9 +46,11 @@ module Stash
         @resource ||= StashEngine::Resource.find(resource_id)
       end
 
+      # :nocov:
       def tenant
         @tenant ||= resource.tenant
       end
+      # :nocov:
 
       def id_helper
         @id_helper ||= Stash::Doi::IdGen.make_instance(resource: resource)
@@ -69,8 +71,6 @@ module Stash
         sword_helper = SwordHelper.new(package: package, logger: log)
         sword_helper.submit!
       end
-
-
 
       def cleanup(package)
         log_info("cleaning up temporary files for resource #{resource_id} (#{resource.identifier_str})")

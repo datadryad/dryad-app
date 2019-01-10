@@ -62,12 +62,6 @@ module Stash
         @url_helpers = double(Module) # yes, apparently URL helpers are an anonymous module
         allow(url_helpers).to(receive(:show_path)) { |identifier_str| "/stash/#{identifier_str}" }
 
-        @ezid_helper = instance_double(EzidGen)
-        allow(EzidGen).to receive(:new).with(resource: resource).and_return(ezid_helper)
-        allow(ezid_helper).to receive(:update_metadata)
-        allow(ezid_helper).to receive(:'id_exists?').and_return(true)
-        allow(ezid_helper).to receive(:reserve_id).and_return(identifier.identifier)
-
         @package = instance_double(ZipPackage)
         allow(ZipPackage).to receive(:new).with(resource: resource).and_return(package)
         allow(package).to receive(:dc4_xml)
@@ -78,6 +72,7 @@ module Stash
         allow(sword_helper).to receive(:submit!)
 
         @job = SubmissionJob.new(resource_id: resource_id, url_helpers: url_helpers)
+        allow(@job).to receive(:id_helper).and_return(OpenStruct.new(ensure_identifier: 'xxx'))
       end
 
       after(:each) do
@@ -91,22 +86,8 @@ module Stash
         end
 
         describe 'create' do
-          it 'mints an ID if needed' do
-            expect(resource).to receive(:identifier).and_return(nil)
-            expect(ezid_helper).to receive(:mint_id).and_return('doi:10.123/456')
-            expect(resource).to receive(:ensure_identifier).with('doi:10.123/456')
-            job.submit!
-          end
-
           it 'submits the package' do
             expect(sword_helper).to receive(:submit!)
-            job.submit!
-          end
-
-          it 'updates the metadata' do
-            dc4_xml = '<resource/>'
-            expect(package).to receive(:dc4_xml).and_return(dc4_xml)
-            expect(ezid_helper).to receive(:update_metadata).with(dc4_xml: dc4_xml, landing_page_url: landing_page_url)
             job.submit!
           end
 
@@ -139,13 +120,6 @@ module Stash
             job.submit!
           end
 
-          it 'updates the metadata' do
-            dc4_xml = '<resource/>'
-            expect(package).to receive(:dc4_xml).and_return(dc4_xml)
-            expect(ezid_helper).to receive(:update_metadata).with(dc4_xml: dc4_xml, landing_page_url: landing_page_url)
-            job.submit!
-          end
-
           it 'cleans up the package' do
             expect(package).to receive(:cleanup!)
             job.submit!
@@ -166,20 +140,9 @@ module Stash
             expect(job.submit!.error).to be_a(ActiveRecord::RecordNotFound)
           end
 
-          it 'fails on an ID minting error' do
-            expect(resource).to receive(:identifier).and_return(nil)
-            expect(ezid_helper).to receive(:mint_id).and_raise(Ezid::NotAllowedError)
-            expect(job.submit!.error).to be_a(Ezid::NotAllowedError)
-          end
-
           it 'fails on a SWORD submission error' do
             expect(sword_helper).to receive(:submit!).and_raise(RestClient::RequestFailed)
             expect(job.submit!.error).to be_a(RestClient::RequestFailed)
-          end
-
-          it 'fails on a metadata update error' do
-            expect(ezid_helper).to receive(:update_metadata).and_raise(Ezid::IdentifierNotFoundError)
-            expect(job.submit!.error).to be_a(Ezid::IdentifierNotFoundError)
           end
 
           it 'fails on a package cleanup error' do
