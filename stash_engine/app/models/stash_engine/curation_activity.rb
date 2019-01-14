@@ -14,8 +14,8 @@ module StashEngine
                                          'Versioned'],
                                     message: '%{value} is not a valid status' }
     validates :status, presence: true
-    after_create :update_identifier_state
-    after_update :update_identifier_state
+    after_create :update_identifier_state, :submit_to_datacite
+    after_update :update_identifier_state, :submit_to_datacite
 
     def self.curation_status(my_stash_id)
       curation_activities = CurationActivity.where(stash_identifier: my_stash_id).order(updated_at: :desc)
@@ -46,6 +46,16 @@ module StashEngine
       return if stash_identifier.nil?
       return if stash_identifier.identifier_state.nil?
       stash_identifier.identifier_state.update_identifier_state(self)
+    end
+
+    def submit_to_datacite
+      return unless status_changed? && ( status == 'Published' || status == 'Embargoed' )
+      last_merritt_version = stash_identifier&.last_submitted_version_number
+      return if last_merritt_version.nil? # don't submit random crap to DataCite unless it's preserved in Merritt
+      # only do UPDATEs with DOIs in production because ID updates like to fail in test EZID/DataCite because they delete their identifiers at random
+      return if last_merritt_version > 1 && Rails.env != 'production'
+      idg = Stash::Doi::IdGen.make_instance(resource: stash_identifier.last_submitted_resource)
+      idg.update_identifier_metadata!
     end
 
     def user_name
