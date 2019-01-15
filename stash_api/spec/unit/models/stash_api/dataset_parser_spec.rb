@@ -74,7 +74,7 @@ module StashApi
     describe :parses_basics do
 
       it 'creates a stash_engine_identifier' do
-        expect(@stash_identifier.identifier).to eq('12345/67890')
+        expect(@stash_identifier.identifier).to match(%r{10.5072/dryad\..{8}})
       end
 
       it 'creates a resource with correct information' do

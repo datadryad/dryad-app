@@ -66,6 +66,16 @@ stash_engine_path = ENGINES['stash_engine']
   require "#{stash_engine_path}/config/initializers/#{initializer}.rb"
 end
 
+# require stash_engine libs
+stash_engine_lib = File.join(stash_engine_path, 'lib')
+$LOAD_PATH << stash_engine_lib
+require 'stash/doi/id_gen'
+require 'stash/doi/ezid_gen'
+require 'stash/doi/datacite_gen'
+
+# tmp = Dir.glob("#{stash_engine_lib}/**/*.rb").sort
+# tmp.each(&method(:require))  # this barfs because doesn't require them in the right order
+
 # require initializers for stash api engine
 require "#{ENGINES['stash_api']}/config/initializers/monkey_patches.rb"
 
