@@ -13,11 +13,11 @@ default: &default
   domain_regex: "example.edu$"
   tenant_id: exemplia
   identifier_service:
-    shoulder: "doi:10.5072/5555"
-    account: stash
-    password: stash
-    id_scheme: doi
-    owner: null
+    provider: datacite
+    prefix: "10.5072"
+    account: DRYAD.CDL
+    password: "***REMOVED***"
+    sandbox: true
   authentication:
     strategy: shibboleth
     entity_id: urn:mace:incommon:example.edu
