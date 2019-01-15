@@ -39,6 +39,12 @@ module StashEngine
       }
     end
 
+    def submit_to_datacite
+      return unless should_update_doi?
+      idg = Stash::Doi::IdGen.make_instance(resource: stash_identifier.last_submitted_resource)
+      idg.update_identifier_metadata!
+    end
+
     private
 
     def update_identifier_state
@@ -48,15 +54,19 @@ module StashEngine
       stash_identifier.identifier_state.update_identifier_state(self)
     end
 
-    def submit_to_datacite
-      return unless status_changed? && ( status == 'Published' || status == 'Embargoed' )
+    # rubocop:disable Metrics/CyclomaticComplexity
+    def should_update_doi?
+      # only update if status changed or newly published or embargoed
+      return false unless status_changed? && (status == 'Published' || status == 'Embargoed')
+
       last_merritt_version = stash_identifier&.last_submitted_version_number
-      return if last_merritt_version.nil? # don't submit random crap to DataCite unless it's preserved in Merritt
+      return false if last_merritt_version.nil? # don't submit random crap to DataCite unless it's preserved in Merritt
+
       # only do UPDATEs with DOIs in production because ID updates like to fail in test EZID/DataCite because they delete their identifiers at random
-      return if last_merritt_version > 1 && Rails.env != 'production'
-      idg = Stash::Doi::IdGen.make_instance(resource: stash_identifier.last_submitted_resource)
-      idg.update_identifier_metadata!
+      return false if last_merritt_version > 1 && Rails.env != 'production'
+      true
     end
+    # rubocop:enable Metrics/CyclomaticComplexity
 
     def user_name
       return user.name unless user.nil?
