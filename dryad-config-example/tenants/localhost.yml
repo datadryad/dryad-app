@@ -13,12 +13,11 @@ default: &default
   domain_regex: "localhost:33000$"
   tenant_id: localhost
   identifier_service:
-    provider: ezid
-    shoulder: "doi:10.555/5555"
-    account: stash
-    password: stash
-    id_scheme: doi
-    owner: null
+    provider: datacite
+    prefix: "10.5072"
+    account: my.account
+    password: "my.password"
+    sandbox: true
   authentication:
     strategy: none
   default_license: cc0
