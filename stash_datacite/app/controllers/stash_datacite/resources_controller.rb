@@ -79,11 +79,9 @@ module StashDatacite
     private
 
     def update_submission_resource_info(resource)
-      # TODO: put this somewhere more reliable
       resource.update_publication_date!
       resource.save
 
-      # TODO: when we revise the way we submit to DataCite, remove this.  Until then it just causes occasional errors
       resource.update(skip_datacite_update: false, skip_emails: false, loosen_validation: false) # these are mostly for API superusers to choose
 
       # TODO: put this somewhere more reliable
