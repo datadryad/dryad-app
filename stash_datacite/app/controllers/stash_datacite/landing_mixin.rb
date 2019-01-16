@@ -55,7 +55,7 @@ module StashDatacite
       citation << h("#{author_citation_format(authors)} (#{pub_year_from(publication_years)})")
       citation << h(title)
       citation << h(version == 'v1' ? '' : version)
-      citation << h("#{publisher.try(:publisher)} Dash")
+      citation << h("#{publisher.try(:publisher)}")
       citation << h(resource_type.try(:resource_type_general_friendly))
       id_str = "https://doi.org/#{identifier}"
       citation << "<a href=\"#{id_str}\">#{h(id_str)}</a>"
