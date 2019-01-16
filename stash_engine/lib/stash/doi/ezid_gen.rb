@@ -5,7 +5,6 @@ module Stash
     class EzidGen < IdGen
 
       # @return [String] the identifier (DOI, ARK, or URN)
-      # TODO: this seems wrong to me, where is doi set?
       def mint_id
         if id_exists?
           ezid_client.create_identifier(doi, status: 'reserved', profile: 'datacite')
