@@ -1,8 +1,9 @@
 require 'spec_helper'
 require 'ostruct'
+require_relative '../../../../lib/stash/doi/ezid_gen'
 
 module Stash
-  module Merritt
+  module Doi
     describe EzidGen do
       attr_reader :resource_id
       attr_reader :resource

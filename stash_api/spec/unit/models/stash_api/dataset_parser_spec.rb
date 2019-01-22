@@ -74,7 +74,7 @@ module StashApi
     describe :parses_basics do
 
       it 'creates a stash_engine_identifier' do
-        expect(@stash_identifier.identifier).to eq('12345/67890')
+        expect(@stash_identifier.identifier).to match(%r{10.5072/dryad\..{8}})
       end
 
       it 'creates a resource with correct information' do
@@ -86,6 +86,31 @@ module StashApi
       it 'creates the author as specified' do
         resource = @stash_identifier.resources.first
         expect(resource.authors.count).to eq(1)
+        author = resource.authors.first
+        expect(author.author_first_name).to eq(@basic_metadata[:authors].first['firstName'])
+        expect(author.author_last_name).to eq(@basic_metadata[:authors].first['lastName'])
+        expect(author.author_email).to eq(@basic_metadata[:authors].first['email'])
+      end
+
+      it 'allows bad (not blank, but invalid) emails' do
+        @basic_metadata = {
+          'title' => 'Visualizing Congestion Control Using Self-Learning Epistemologies',
+          'authors' => [
+            {
+              'firstName' => 'Wanda',
+              'lastName' => 'Jackson',
+              'email' => 'grog-to-drink',
+              'affiliation' => 'never'
+            }
+          ],
+          'abstract' =>
+                'Cyberneticists agree that concurrent models are an interesting new topic in the field of machine learning.',
+          'userId' => @user2.id
+        }.with_indifferent_access
+
+        dp = DatasetParser.new(hash: @basic_metadata, id: nil, user: @user)
+        @stash_identifier = dp.parse
+        resource = @stash_identifier.resources.first
         author = resource.authors.first
         expect(author.author_first_name).to eq(@basic_metadata[:authors].first['firstName'])
         expect(author.author_last_name).to eq(@basic_metadata[:authors].first['lastName'])

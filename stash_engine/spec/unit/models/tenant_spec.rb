@@ -38,11 +38,10 @@ module StashEngine
       expect(repo.username).to eq('stash_submitter')
       expect(repo.password).to eq('correct​horse​battery​staple')
       ident = tenant.identifier_service
-      expect(ident.shoulder).to eq('doi:10.5072/5555')
-      expect(ident.account).to eq('stash')
-      expect(ident.password).to eq('stash')
-      expect(ident.id_scheme).to eq('doi')
-      expect(ident.owner).to be_nil
+      expect(ident.prefix).to eq('10.5072')
+      expect(ident.account).to eq('DRYAD.CDL')
+      expect(ident.password).to eq('***REMOVED***')
+      expect(ident.sandbox).to eq(true)
       auth = tenant.authentication
       expect(auth.strategy).to eq('shibboleth')
       expect(auth.entity_id).to eq('urn:mace:incommon:example.edu')

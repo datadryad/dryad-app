@@ -1,8 +1,7 @@
-# require_relative 'id_gen'
 require 'cirneco'
 
 module Stash
-  module Merritt
+  module Doi
     class DataciteError < StandardError; end
 
     class DataciteGen < IdGen
@@ -11,19 +10,17 @@ module Stash
 
       # @return [String] the identifier (DOI, ARK, or URN)
       def mint_id
-        datacenter = Cirneco::DataCenter.new(prefix: prefix, username: account, password: password)
-        base_id = datacenter.encode_doi(prefix)
+        # datacenter = Cirneco::DataCenter.new(prefix: prefix, username: account, password: password)
+        base_id = "#{prefix}/dryad.#{StashEngine::NoidState.mint}"
         "doi:#{base_id}"
       end
 
       # reserve DOI in string format like "doi:xx.xxx/yyyyy" and return ID string after reserving it.
       # I don't believe DataCite does the reserving thing like EZID.  This goes nowhere and does nothing and just
       # to keep the interface consistent between DataCite and EZID.
-      # :nocov:  not worth writing tests for returning the thing passed in.
       def reserve_id(doi:)
         doi
       end
-      # :nocov:
 
       def update_metadata(dc4_xml:, landing_page_url:)
         # the doi apparently is known from the DC xml document
