@@ -8,8 +8,8 @@ module Stash
     require_relative 'merritt/submission_job'
     require_relative 'merritt/sword_helper'
     require_relative 'merritt/zip_package'
-    require_relative 'merritt/id_gen'
-    require_relative 'merritt/ezid_gen'
-    require_relative 'merritt/datacite_gen'
+    require 'stash/doi/id_gen'
+    require 'stash/doi/ezid_gen'
+    require 'stash/doi/datacite_gen'
   end
 end

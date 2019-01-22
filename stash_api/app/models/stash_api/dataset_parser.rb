@@ -63,7 +63,7 @@ module StashApi
         user_id: @user.id, current_editor_id: @user.id, title: '', tenant_id: @user.tenant_id
       )
 
-      my_id = doi_string || StashEngine.repository.mint_id(resource: @resource)
+      my_id = doi_string || Stash::Doi::IdGen.mint_id(resource: @resource)
       id_type, id_text = my_id.split(':', 2)
       ident = StashEngine::Identifier.create(identifier: id_text, identifier_type: id_type.upcase)
 
@@ -72,13 +72,14 @@ module StashApi
     end
 
     def add_author(json_author: author)
-      a = StashEngine::Author.create(
+      a = StashEngine::Author.new(
         author_first_name: json_author[:firstName],
         author_last_name: json_author[:lastName],
         author_email: json_author[:email],
         author_orcid: @previous_orcids["#{json_author[:firstName]} #{json_author[:lastName]}"],
         resource_id: @resource.id
       )
+      a.save(validate: false) # we can validate on submission, keeps from saving otherwise
       a.affiliation_by_name(json_author[:affiliation]) unless json_author[:affiliation].blank?
     end
 

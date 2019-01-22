@@ -1,9 +1,10 @@
 require 'spec_helper'
 require 'ostruct'
-require_relative '../../../../lib/stash/merritt/id_gen'
+require_relative '../../../../lib/stash/doi/id_gen'
+require_relative '../../../../lib/stash/doi/datacite_gen'
 
 module Stash
-  module Merritt
+  module Doi
     describe DataciteGen do
       attr_reader :resource_id
       attr_reader :resource
@@ -44,25 +45,12 @@ module Stash
         @helper = DataciteGen.new(resource: resource)
       end
 
-      describe :mint_id do
-        it 'mints a new identifier' do
-          datac = instance_double(Cirneco::DataCenter)
-          allow(datac).to receive(:encode_doi).with('10.5072').and_return('10.5072/1234-5678')
-
-          allow(Cirneco::DataCenter).to receive(:new)
-            .with(prefix: '10.5072', username: 'stash', password: '3cc9d3fbd9788148c6a32a1415fa673a')
-            .and_return(datac)
-
-          expect(helper.mint_id).to eq(identifier_str)
-        end
-      end
-
       describe :update_metadata do
         it 'updates the metadata and landing page' do
           dc4_xml = '<resource/>'
 
           # took off instance_double
-          dc_gen = Stash::Merritt::DataciteGen.new(resource: resource)
+          dc_gen = Stash::Doi::DataciteGen.new(resource: resource)
 
           allow(dc_gen).to receive(:post_metadata)
             .with(dc4_xml, username: 'stash', password: '3cc9d3fbd9788148c6a32a1415fa673a', sandbox: true)
@@ -77,7 +65,7 @@ module Stash
             .to eq(nil)
 
           # make sure it selects this class in the IdGen parent class
-          expect(IdGen.make_instance(resource: resource).class).to eq(Stash::Merritt::DataciteGen)
+          expect(IdGen.make_instance(resource: resource).class).to eq(Stash::Doi::DataciteGen)
         end
       end
     end

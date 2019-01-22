@@ -25,8 +25,10 @@ Gem::Specification.new do |s| # rubocop:disable Metrics/BlockLength
 
   s.add_dependency 'amoeba', '~> 3.0.0'
   s.add_dependency 'carrierwave', '~> 0.10.0'
+  s.add_dependency 'cirneco', '~> 0.9.20' # higher versions cause dependency hell with faraday from Martin's Gems
   s.add_dependency 'ckeditor'
   s.add_dependency 'concurrent-ruby', '~> 1.0'
+  s.add_dependency 'ezid-client', '~> 1.5'
   s.add_dependency 'filesize', '~> 0.1.1'
   s.add_dependency 'font-awesome-rails'
   s.add_dependency 'httpclient', '~> 2.8.3'
@@ -35,6 +37,7 @@ Gem::Specification.new do |s| # rubocop:disable Metrics/BlockLength
   s.add_dependency 'jquery-turbolinks', '~> 2.1.0'
   s.add_dependency 'jquery-ui-rails'
   s.add_dependency 'kaminari'
+  s.add_dependency 'noid', '~> 0.9.0'
   s.add_dependency 'omniauth', '~> 1.8.1'
   # s.add_dependency 'omniauth-google-oauth2', '~> 0.5.3' no longer used and causes problems with faraday and cirneco
   s.add_dependency 'omniauth-orcid', '~> 2.1.1'
