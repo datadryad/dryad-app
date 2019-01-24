@@ -1,0 +1,43 @@
+GEM
+  remote: https://rubygems.org/
+  specs:
+    activesupport (4.2.11)
+      i18n (~> 0.7)
+      minitest (~> 5.1)
+      thread_safe (~> 0.3, >= 0.3.4)
+      tzinfo (~> 1.1)
+    builder (3.2.3)
+    byebug (10.0.2)
+    concurrent-ruby (1.1.4)
+    faraday (0.15.4)
+      multipart-post (>= 1.2, < 3)
+    faraday_middleware (0.12.2)
+      faraday (>= 0.7.4, < 1.0)
+    httpclient (2.8.3)
+    i18n (0.9.5)
+      concurrent-ruby (~> 1.0)
+    mini_portile2 (2.4.0)
+    minitest (5.11.3)
+    multipart-post (2.0.0)
+    nokogiri (1.10.1)
+      mini_portile2 (~> 2.4.0)
+    oai (0.4.0)
+      builder (>= 3.1.0)
+      faraday
+      faraday_middleware
+    thread_safe (0.3.6)
+    tzinfo (1.2.5)
+      thread_safe (~> 0.1)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  activesupport (~> 4.2.11)
+  byebug
+  httpclient
+  nokogiri
+  oai (>= 0.3.1)
+
+BUNDLED WITH
+   1.17.3
