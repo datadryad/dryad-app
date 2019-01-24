@@ -25,7 +25,8 @@ class DatasetRecord
     # get the set
     client = ::OAI::Client.new(Config.oai_base_url)
     begin
-      url = "#{Config.oai_base_url}?#{opts.to_query}"
+      url = self.oai_debugging_url(base_url: Config.oai_base_url, opts: opts)
+      # url = "#{Config.oai_base_url}?#{opts.to_query}"
       Config.logger.info("Checking OAI feed for #{opts[:set]} -- #{url}")
       client.list_records(opts)
     rescue OAI::Exception => ex
@@ -49,12 +50,22 @@ class DatasetRecord
     @timestamp = Time.parse(oai_record.header.datestamp)
     @merritt_id = oai_record.header.identifier
     @doi = nokogiri_doc.xpath("/metadata/stash_wrapper/identifier[@type='DOI'][1]").text.strip
+    # this version is the stash version number, not the merritt one.
     @version = nokogiri_doc.xpath("/metadata/stash_wrapper/stash_administrative/version/version_number[1]").text.strip
     @title = nokogiri_doc.xpath("/metadata/stash_wrapper/stash_descriptive/resource/titles/title[1]").text.strip
   end
 
   def deleted?
     @deleted
+  end
+
+  def self.oai_debugging_url(base_url:, opts:)
+    # # http://uc3-mrtoai-stg.cdlib.org:37001/mrtoai/oai/v2?verb=ListRecords&from=2018-11-01T18%3A19%3A17Z&metadataPrefix=stash_wrapper&set=cdl_dryaddev&until=2019-01-24T18%3A44%3A29Z
+    my_opts = opts.clone
+    my_opts[:verb] = 'ListRecords'
+    my_opts['metadataPrefix'] = my_opts[:metadata_prefix]
+    my_opts.delete(:metadata_prefix)
+    "#{base_url}?#{my_opts.to_query}"
   end
 
 end
