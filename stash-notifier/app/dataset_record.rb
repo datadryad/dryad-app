@@ -14,18 +14,18 @@ class DatasetRecord
 
     # retrieve oai records
     opts = { 'metadata_prefix': 'stash_wrapper', from: start_time, until: end_time, set: set }.compact
-    oai_record_response = self.get_oai_response(opts)
+    oai_record_response = get_oai_response(opts)
     return [] unless oai_record_response.class == OAI::ListRecordsResponse
 
     # convert to datset record objects for things we care about
-    self.make_ds_record_array(oai_record_response)
+    make_ds_record_array(oai_record_response)
   end
 
   def self.get_oai_response(opts)
     # get the set
     client = ::OAI::Client.new(Config.oai_base_url)
     begin
-      url = self.oai_debugging_url(base_url: Config.oai_base_url, opts: opts)
+      url = oai_debugging_url(base_url: Config.oai_base_url, opts: opts)
       # url = "#{Config.oai_base_url}?#{opts.to_query}"
       Config.logger.info("Checking OAI feed for #{opts[:set]} -- #{url}")
       client.list_records(opts)
@@ -39,7 +39,7 @@ class DatasetRecord
   end
 
   def self.make_ds_record_array(oai_response)
-    oai_response.map {|oai_record| DatasetRecord.new(oai_record) }
+    oai_response.map { |oai_record| DatasetRecord.new(oai_record) }
   end
 
   def initialize(oai_record)
@@ -51,8 +51,8 @@ class DatasetRecord
     @merritt_id = oai_record.header.identifier
     @doi = nokogiri_doc.xpath("/metadata/stash_wrapper/identifier[@type='DOI'][1]").text.strip
     # this version is the stash version number, not the merritt one.
-    @version = nokogiri_doc.xpath("/metadata/stash_wrapper/stash_administrative/version/version_number[1]").text.strip
-    @title = nokogiri_doc.xpath("/metadata/stash_wrapper/stash_descriptive/resource/titles/title[1]").text.strip
+    @version = nokogiri_doc.xpath('/metadata/stash_wrapper/stash_administrative/version/version_number[1]').text.strip
+    @title = nokogiri_doc.xpath('/metadata/stash_wrapper/stash_descriptive/resource/titles/title[1]').text.strip
   end
 
   def deleted?
