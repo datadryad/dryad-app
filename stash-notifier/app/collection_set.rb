@@ -1,6 +1,7 @@
 # require "active_support/core_ext/hash/indifferent_access"
 require 'active_support/core_ext/hash'
-require_relative './config'
+require_relative 'config'
+require_relative 'dataset_record'
 require 'time'
 
 class CollectionSet
@@ -23,6 +24,32 @@ class CollectionSet
     # changes array of hashes (see above) into key = :doi and value is hash of the rest of hash
     @retry_hash = Hash[ *r.map{ |i| [ i[:doi], i.except(:doi) ] }.flatten ]
     @retry_hash.each { |_, v| v[:time] = Time.iso8601(v[:time]) } # convert times from iso8601 strings to ruby times
+  end
+
+  # main loop for retrying errors
+  def retry_errored_dryad_notifications
+    # get errored notifications and try them again
+    retry_list.each do |item|
+      Config.logger.info("Retrying notification of dryad for doi:#{item[:doi]}, merritt_id: #{item[:merritt_id]}")
+      dn = DryadNotifier.new(doi: item[:doi], merritt_id: item[:merritt_id])
+      remove_retry_item(doi: item[:doi]) if dn.notify == true
+    end
+  end
+
+  # main loop for notifying from OAI-PMH feed
+  def notify_dryad
+    records = DatasetRecord.find(start_time: last_retrieved, end_time: Time.new.utc, set: name)
+    new_last_retrieved = last_retrieved  # default to old value for no records in set
+    records.each do |record|
+      next if record.deleted?
+      Config.logger.info("Notifying Dryad of status for doi:#{record.doi} ---- #{record.title} (#{record.timestamp.iso8601})")
+      new_last_retrieved = record.timestamp
+
+      # send status updates to Dryad for merritt state and add any failed items to the retry list
+      dn = DryadNotifier.new(doi: record.doi, merritt_id: record.merritt_id)
+      add_retry_item(doi: record.doi, merritt_id: record.merritt_id) unless dn.notify
+    end
+    self.last_retrieved = new_last_retrieved
   end
 
   def dois_to_retry
