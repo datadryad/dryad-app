@@ -55,4 +55,18 @@ module State
     self.save_state_hash(hash: my_hash)
   end
 
+  # ensures a PID file on running
+  def self.create_pid
+    @@pid_file = File.expand_path(File.join(File.dirname(__FILE__),  '..', 'state', "#{Config.environment}.pid") )
+    if File.file?(@@pid_file)
+      Config.logger.error("Couldn't run notifier -- already in progress or state/<environment>.pid file not removed")
+      abort("Exiting: pid file already exists #{@@pid_file}")
+    end
+    File.open(@@pid_file, 'w') {|f| f.write(Process.pid) }
+  end
+
+  def self.remove_pid
+    File.delete(@@pid_file)
+  end
+
 end

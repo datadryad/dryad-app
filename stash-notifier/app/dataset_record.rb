@@ -32,7 +32,7 @@ class DatasetRecord
       Config.logger.info("No new records were found from OAI query: #{url}")
       return nil
     rescue Faraday::ConnectionFailed
-      Config.logger.warn("Unable to connect to #{url}")
+      Config.logger.error("Unable to connect to #{url}")
       return nil
     end
   end

@@ -13,7 +13,7 @@ module Config
 
   def self.initialize(environment: 'development')
     proj_root = File.expand_path(File.join(File.dirname(__FILE__), '..'))
-    path = File.join(proj_root, 'config', 'notifier.yaml')
+    path = File.join(proj_root, 'config', 'notifier.yml')
     @@settings = ActiveSupport::HashWithIndifferentAccess.new(YAML.load_file(path)[environment])
     @@environment = environment
 

@@ -8,12 +8,9 @@ Bundler.require(:default)
 
 Config.initialize(environment: ENV['RAILS_ENV'] || 'development')
 
-pid_file = File.expand_path(File.join(File.dirname(__FILE__),  'state', "#{Config.environment}.pid") )
-if File.file?(pid_file)
-  Config.logger.error("Couldn't run notifier -- already in progress or state/<environment>.pid file not removed")
-  abort("Exiting: pid file already exists #{pid_file}")
-end
-File.open(pid_file, 'w') {|f| f.write(Process.pid) }
+State.create_pid
+
+byebug
 
 Config.logger.info("Starting notifier run for #{Config.environment} environment")
 
@@ -27,8 +24,6 @@ State.sets.each do |set|
     dn = DryadNotifier.new(doi: item[:doi], merritt_id: item[:merritt_id])
     set.remove_retry_item(doi: item[:doi]) if dn.notify == true
   end
-
-
 
   # get new records from OAI
   records = DatasetRecord.find(start_time: set.last_retrieved, end_time: Time.new.utc, set: set.name)
@@ -48,4 +43,5 @@ State.sets.each do |set|
 end
 
 Config.logger.info("Finished notifier run for #{Config.environment} environment\n\n")
-File.delete(pid_file)
+
+State.remove_pid
