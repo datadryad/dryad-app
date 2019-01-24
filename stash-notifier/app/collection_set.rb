@@ -22,7 +22,7 @@ class CollectionSet
     r = settings[:retry_status_update]
 
     # changes array of hashes (see above) into key = :doi and value is hash of the rest of hash
-    @retry_hash = Hash[ *r.map{ |i| [ i[:doi], i.except(:doi) ] }.flatten ]
+    @retry_hash = Hash[*r.map { |i| [i[:doi], i.except(:doi)] }.flatten]
     @retry_hash.each { |_, v| v[:time] = Time.iso8601(v[:time]) } # convert times from iso8601 strings to ruby times
   end
 
@@ -39,7 +39,7 @@ class CollectionSet
   # main loop for notifying from OAI-PMH feed
   def notify_dryad
     records = DatasetRecord.find(start_time: last_retrieved, end_time: Time.new.utc, set: name)
-    new_last_retrieved = last_retrieved  # default to old value for no records in set
+    new_last_retrieved = last_retrieved # default to old value for no records in set
     records.each do |record|
       next if record.deleted?
       Config.logger.info("Notifying Dryad of status for doi:#{record.doi}, version: #{record.version} ---- #{record.title} (#{record.timestamp.iso8601})")
@@ -74,15 +74,14 @@ class CollectionSet
 
   def hash_serialized
     { last_retrieved: last_retrieved.utc.iso8601,
-      retry_status_update: retry_list
-    }
+      retry_status_update: retry_list }
   end
 
   # gives a list of items like {doi: '2072/387....', merritt_id: 'http://n2t.net/jsk...', version: "1", time: '2019-02-21....'}
   def retry_list
     arr = []
     @retry_hash.each do |k, v|
-      arr.push({ doi: k, merritt_id: v[:merritt_id], version: v[:version], time: v[:time].utc.iso8601 } )
+      arr.push(doi: k, merritt_id: v[:merritt_id], version: v[:version], time: v[:time].utc.iso8601)
     end
     arr
   end
