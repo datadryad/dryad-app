@@ -12,8 +12,8 @@ class CollectionSet
   # The settings hash that is passed in looks like this
   # { last_retrieved: '2019-01-23T00:41:43Z',
   #   retry_status_update:
-  #     [ { doi: '1245/6332', merritt_id: 'http://n2t.net/klj/2344', time: '2019-01-21T04:43:19Z'},
-  #       { doi: '348574/38483', merritt_id: 'http://n2t.net/klksj/843', time: '2019-01-07T23:59:39Z'} ]
+  #     [ { doi: '1245/6332', merritt_id: 'http://n2t.net/klj/2344', version: '1', time: '2019-01-21T04:43:19Z'},
+  #       { doi: '348574/38483', merritt_id: 'http://n2t.net/klksj/843', version: '2', time: '2019-01-07T23:59:39Z'} ]
   # }
 
   def initialize(name:, settings:)
@@ -31,7 +31,7 @@ class CollectionSet
     # get errored notifications and try them again
     retry_list.each do |item|
       Config.logger.info("Retrying notification of dryad for doi:#{item[:doi]}, merritt_id: #{item[:merritt_id]}")
-      dn = DryadNotifier.new(doi: item[:doi], merritt_id: item[:merritt_id])
+      dn = DryadNotifier.new(doi: item[:doi], merritt_id: item[:merritt_id], version: item[:version])
       remove_retry_item(doi: item[:doi]) if dn.notify == true
     end
   end
@@ -46,8 +46,8 @@ class CollectionSet
       new_last_retrieved = record.timestamp
 
       # send status updates to Dryad for merritt state and add any failed items to the retry list
-      dn = DryadNotifier.new(doi: record.doi, merritt_id: record.merritt_id)
-      add_retry_item(doi: record.doi, merritt_id: record.merritt_id) unless dn.notify
+      dn = DryadNotifier.new(doi: record.doi, merritt_id: record.merritt_id, version: record.version)
+      add_retry_item(doi: record.doi, merritt_id: record.merritt_id, version: record.version) unless dn.notify
     end
     self.last_retrieved = new_last_retrieved
   end
@@ -57,8 +57,8 @@ class CollectionSet
   end
 
   # add a retry item to the list
-  def add_retry_item(doi:, merritt_id:)
-    @retry_hash[doi] = { merritt_id: merritt_id, time: Time.new.utc }
+  def add_retry_item(doi:, merritt_id:, version:)
+    @retry_hash[doi] = { merritt_id: merritt_id, version: version, time: Time.new.utc }
   end
 
   # remove a retry item from the list
@@ -78,11 +78,11 @@ class CollectionSet
     }
   end
 
-  # gives a list of items like {doi: '2072/387....', merritt_id: 'http://n2t.net/jsk...', time: '2019-02-21....'}
+  # gives a list of items like {doi: '2072/387....', merritt_id: 'http://n2t.net/jsk...', version: "1", time: '2019-02-21....'}
   def retry_list
     arr = []
     @retry_hash.each do |k, v|
-      arr.push({ doi: k, merritt_id: v[:merritt_id], time: v[:time].utc.iso8601 } )
+      arr.push({ doi: k, merritt_id: v[:merritt_id], version: v[:version], time: v[:time].utc.iso8601 } )
     end
     arr
   end

@@ -19,6 +19,10 @@ State.sets.each do |set|
   set.retry_errored_dryad_notifications
   set.notify_dryad
 
+  # If something has been retried every 5 minutes for 30 days and Dryad doesn't know about it, then it was probably deleted
+  # from Dryad and not from Merritt and it's time to stop retrying.  We have logs of this stuff if people care to clean up.
+  set.clean_retry_items!(days: 30)
+
   # save the state to the file after each set has run
   State.save_sets_state
 end

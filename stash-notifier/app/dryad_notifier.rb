@@ -2,9 +2,10 @@ require 'httpclient'
 
 class DryadNotifier
 
-  def initialize(doi:, merritt_id:)
+  def initialize(doi:, merritt_id:, version:)
     @doi = doi
     @merritt_id = merritt_id
+    @version = version
   end
 
   def notify
@@ -17,7 +18,7 @@ class DryadNotifier
     }
 
     begin
-      body = { 'record_identifier' => @merritt_id }
+      body = { 'record_identifier' => @merritt_id, 'stash_version' => @version }
       resp = client.patch(url, body, follow_redirect: true)
     rescue Errno::ECONNREFUSED, HTTPClient::ReceiveTimeoutError => ex
       Config.logger.error(ex.to_s)
