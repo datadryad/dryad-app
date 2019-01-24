@@ -30,7 +30,7 @@ class CollectionSet
   def retry_errored_dryad_notifications
     # get errored notifications and try them again
     retry_list.each do |item|
-      Config.logger.info("Retrying notification of dryad for doi:#{item[:doi]}, merritt_id: #{item[:merritt_id]}")
+      Config.logger.info("Retrying notification of dryad for doi:#{item[:doi]}, version: #{item[:version]}, merritt_id: #{item[:merritt_id]}")
       dn = DryadNotifier.new(doi: item[:doi], merritt_id: item[:merritt_id], version: item[:version])
       remove_retry_item(doi: item[:doi]) if dn.notify == true
     end
@@ -42,7 +42,7 @@ class CollectionSet
     new_last_retrieved = last_retrieved  # default to old value for no records in set
     records.each do |record|
       next if record.deleted?
-      Config.logger.info("Notifying Dryad of status for doi:#{record.doi} ---- #{record.title} (#{record.timestamp.iso8601})")
+      Config.logger.info("Notifying Dryad of status for doi:#{record.doi}, version: #{record.version} ---- #{record.title} (#{record.timestamp.iso8601})")
       new_last_retrieved = record.timestamp
 
       # send status updates to Dryad for merritt state and add any failed items to the retry list
