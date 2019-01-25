@@ -5,6 +5,7 @@ require 'json'
 require 'time'
 require_relative './collection_set'
 
+# rubocop:disable Style/ClassVars
 module State
 
   @@sets = nil
@@ -70,3 +71,4 @@ module State
   end
 
 end
+# rubocop:enable Style/ClassVars

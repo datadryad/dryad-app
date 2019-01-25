@@ -21,6 +21,7 @@ class DatasetRecord
     make_ds_record_array(oai_record_response)
   end
 
+  # rubocop:disable Metrics/MethodLength
   def self.get_oai_response(opts)
     # get the set
     client = ::OAI::Client.new(Config.oai_base_url)
@@ -29,7 +30,7 @@ class DatasetRecord
       # url = "#{Config.oai_base_url}?#{opts.to_query}"
       Config.logger.info("Checking OAI feed for #{opts[:set]} -- #{url}")
       client.list_records(opts)
-    rescue OAI::Exception => ex
+    rescue OAI::Exception
       Config.logger.info("No new records were found from OAI query: #{url}")
       return nil
     rescue Faraday::ConnectionFailed
@@ -37,11 +38,13 @@ class DatasetRecord
       return nil
     end
   end
+  # rubocop:enable Metrics/MethodLength
 
   def self.make_ds_record_array(oai_response)
     oai_response.map { |oai_record| DatasetRecord.new(oai_record) }
   end
 
+  # rubocop:disable Metrics/AbcSize
   def initialize(oai_record)
     @raw_xml = oai_record.metadata.to_s
     nokogiri_doc = Nokogiri(@raw_xml)
@@ -54,6 +57,7 @@ class DatasetRecord
     @version = nokogiri_doc.xpath('/metadata/stash_wrapper/stash_administrative/version/version_number[1]').text.strip
     @title = nokogiri_doc.xpath('/metadata/stash_wrapper/stash_descriptive/resource/titles/title[1]').text.strip
   end
+  # rubocop:enable Metrics/AbcSize
 
   def deleted?
     @deleted

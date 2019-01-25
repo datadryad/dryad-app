@@ -3,6 +3,7 @@
 
 require 'rspec/core'
 require 'rspec/core/rake_task'
+require 'rubocop/rake_task'
 
 namespace :spec do
   desc 'Run all unit tests'

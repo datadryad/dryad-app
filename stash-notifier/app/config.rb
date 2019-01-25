@@ -5,6 +5,7 @@ require 'active_support/core_ext/hash/indifferent_access'
 require 'active_support/core_ext/module/attribute_accessors'
 require 'logger'
 
+# rubocop:disable Style/ClassVars
 # this is a mostly(?) read-only module to supply the simple config to everywhere that needs it and some common methods
 module Config
 
@@ -24,3 +25,4 @@ module Config
   end
 
 end
+# rubocop:enable Style/ClassVars
