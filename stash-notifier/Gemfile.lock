@@ -6,6 +6,7 @@ GEM
       minitest (~> 5.1)
       thread_safe (~> 0.3, >= 0.3.4)
       tzinfo (~> 1.1)
+    ast (2.4.0)
     builder (3.2.3)
     byebug (10.0.2)
     concurrent-ruby (1.1.4)
@@ -17,6 +18,7 @@ GEM
     httpclient (2.8.3)
     i18n (0.9.5)
       concurrent-ruby (~> 1.0)
+    jaro_winkler (1.5.2)
     mini_portile2 (2.4.0)
     minitest (5.11.3)
     multipart-post (2.0.0)
@@ -26,6 +28,12 @@ GEM
       builder (>= 3.1.0)
       faraday
       faraday_middleware
+    parallel (1.12.1)
+    parser (2.5.3.0)
+      ast (~> 2.4.0)
+    powerpack (0.1.2)
+    rainbow (3.0.0)
+    rake (12.3.2)
     rspec (3.8.0)
       rspec-core (~> 3.8.0)
       rspec-expectations (~> 3.8.0)
@@ -39,9 +47,19 @@ GEM
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.8.0)
     rspec-support (3.8.0)
+    rubocop (0.57.2)
+      jaro_winkler (~> 1.5.1)
+      parallel (~> 1.10)
+      parser (>= 2.5)
+      powerpack (~> 0.1)
+      rainbow (>= 2.2.2, < 4.0)
+      ruby-progressbar (~> 1.7)
+      unicode-display_width (~> 1.0, >= 1.0.1)
+    ruby-progressbar (1.10.0)
     thread_safe (0.3.6)
     tzinfo (1.2.5)
       thread_safe (~> 0.1)
+    unicode-display_width (1.4.1)
 
 PLATFORMS
   ruby
@@ -52,7 +70,9 @@ DEPENDENCIES
   httpclient
   nokogiri
   oai (>= 0.3.1)
+  rake
   rspec
+  rubocop
 
 BUNDLED WITH
    1.17.3
