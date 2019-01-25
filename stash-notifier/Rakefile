@@ -27,4 +27,4 @@ RuboCop::RakeTask.new
 # Defaults
 
 desc 'Run unit tests, check code style'
-task default: %i[rubocop]
+task default: %i[spec rubocop]
