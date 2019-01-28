@@ -64,7 +64,7 @@ module StashEngine
       end
     end
 
-    # rubocop:disable Metrics/MethodLength
+    # rubocop:disable Metrics/MethodLength, Metrics/AbcSize, Metrics/CyclomaticComplexity
     # PATCH /dataset/doi:10.xyz/abc
     def update
       return render(nothing: true, status: 404) unless id
@@ -73,7 +73,7 @@ module StashEngine
       return render(nothing: true, status: 400) unless record_identifier
 
       # get this exact resource by id and version number
-      resources = id.resources.joins(:stash_version).where(["stash_engine_versions.version = ? ",  params[:stash_version] ])
+      resources = id.resources.joins(:stash_version).where(['stash_engine_versions.version = ? ', params[:stash_version]])
 
       return render(nothing: true, status: 404) unless resources.count == 1
       resource = resources.first
@@ -92,7 +92,7 @@ module StashEngine
       logger.debug(e)
       render(nothing: true, status: 422) # 422 Unprocessable Entity, see RFC 5789 sec. 2.2
     end
-    # rubocop:enable Metrics/MethodLength
+    # rubocop:enable Metrics/MethodLength, Metrics/AbcSize, Metrics/CyclomaticComplexity
 
     # ############################################################
     # Private
