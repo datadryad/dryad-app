@@ -4,6 +4,9 @@ defaults: &DEFAULTS
   repository: Stash::Merritt::Repository
   stash_mount: /stash
   max_review_days: 180
+  ezid:
+    host: ezid.cdlib.org
+    port: 443
   default_tenant: dryad
   orcid:
     site: https://sandbox.orcid.org/

@@ -19,12 +19,11 @@ default: &default
   domain_regex: "ucop.edu$"
   tenant_id: ucop
   identifier_service:
-    provider: ezid
-    shoulder: "doi:10.5072/FK2"
-    account: account_name
-    password: account_password
-    id_scheme: doi
-    owner: null
+    provider: datacite
+    prefix: "10.5072"
+    account: my.account
+    password: "my.password"
+    sandbox: true
   authentication:
     strategy: shibboleth
     entity_id: urn:mace:incommon:ucop.edu
