@@ -1,0 +1,29 @@
+defaults: &defaults
+  update_base_url: http://localhost:3000/stash/dataset
+  oai_base_url: http://uc3-mrtoai-stg.cdlib.org:37001/mrtoai/oai/v2
+
+test:
+  <<: *defaults
+  sets:
+    - test1
+
+localhost:
+  <<: *defaults
+  sets:
+    - cdl_dryaddev
+
+development:
+  <<: *defaults
+  update_base_url: https://dryad-dev.cdlib.org/stash/dataset
+  oai_base_url: http://uc3-mrtoai-stg.cdlib.org:37001/mrtoai/oai/v2
+  sets:
+    - cdl_dryaddev
+
+stage:
+  <<: *defaults
+  update_base_url: https://dryad-stg.cdlib.org/stash/dataset
+  oai_base_url: http://uc3-mrtoai-stg.cdlib.org:37001/mrtoai/oai/v2
+  sets:
+    - cdl_dryadstg
+    - ucsf_dryadstg
+    - ucsb_dryadstg
