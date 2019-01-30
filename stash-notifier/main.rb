@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 
-Dir.chdir(File.expand_path(File.dirname(__FILE__))) # gets bundler.require(:default) working from any directory
+Dir.chdir(__dir__) # gets bundler.require(:default) working from any directory
 
 require 'rubygems'
 require 'bundler/setup'
