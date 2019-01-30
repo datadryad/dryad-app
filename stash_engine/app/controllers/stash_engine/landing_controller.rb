@@ -64,28 +64,35 @@ module StashEngine
       end
     end
 
-    # rubocop:disable Metrics/MethodLength
+    # rubocop:disable Metrics/MethodLength, Metrics/AbcSize, Metrics/CyclomaticComplexity
     # PATCH /dataset/doi:10.xyz/abc
     def update
       return render(nothing: true, status: 404) unless id
 
       record_identifier = params[:record_identifier]
       return render(nothing: true, status: 400) unless record_identifier
-      resource = id.processing_resource
 
+      # get this exact resource by id and version number
+      resources = id.resources.joins(:stash_version).where(['stash_engine_versions.version = ? ', params[:stash_version]])
+
+      return render(nothing: true, status: 404) unless resources.count == 1
+      resource = resources.first
+      my_state = resource.current_resource_state.resource_state
+      return render(nothing: true, status: 204) if my_state == 'submitted'  # already switched state, don't do more than once, but give happy response
+      return render(nothing: true, status: 400) if my_state != 'processing' # only change processing items to submitted
+
+      # lib/stash/repo/repository calls stash-merritt/lib/stash/merritt/repository.rb and this populates download and update URIs into the db
       StashEngine.repository.harvested(identifier: id, record_identifier: record_identifier)
 
       # success but no content, see RFC 5789 sec. 2.1
-      if resource # does processing stuff only if it is processing now and is thus actually changing state. Don't redo stuff for Harvester re-solring
-        deliver_invitations!
-        update_size!
-      end
+      deliver_invitations!
+      update_size!
       render(nothing: true, status: 204)
     rescue ArgumentError => e
       logger.debug(e)
       render(nothing: true, status: 422) # 422 Unprocessable Entity, see RFC 5789 sec. 2.2
     end
-    # rubocop:enable Metrics/MethodLength
+    # rubocop:enable Metrics/MethodLength, Metrics/AbcSize, Metrics/CyclomaticComplexity
 
     # ############################################################
     # Private
