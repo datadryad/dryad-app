@@ -1,4 +1,5 @@
 require_dependency 'stash_engine/application_controller'
+require 'logger'
 
 module StashEngine
   class SessionsController < ApplicationController # rubocop:disable Metrics/ClassLength
@@ -8,12 +9,19 @@ module StashEngine
 
     # this is the place omniauth calls back for shibboleth/google logins
     def callback
+      my_logger.info('entered callback method')
       return unless passes_whitelist?
+      my_logger.info('passed whitelist')
+      my_logger.info("@auth_hash= #{@auth_hash}")
+      my_logger.info("tenant_id: #{current_tenant.tenant_id}")
+      my_logger.info( "unmangle_orcid: #{unmangle_orcid}")
       session[:user_id] = User.from_omniauth(@auth_hash, current_tenant.tenant_id, unmangle_orcid).id
+      my_logger.info( 'should redirect to dashboard path')
       redirect_to dashboard_path
     end
 
     def developer_callback
+      my_logger.info(request)
       return if check_developer_orcid!
       check_developer_login!
       return unless passes_whitelist?
@@ -53,6 +61,7 @@ module StashEngine
     private
 
     def callback_basics
+      my_logger.info('Entered callback basics')
       @auth_hash = request.env['omniauth.auth']
       reset_session
       head(:forbidden) unless auth_hash_good
@@ -202,6 +211,10 @@ module StashEngine
       repo = StashEngine.repository
       job = repo.create_submission_job(resource_id: invitation.resource.id)
       job.update_identifier_metadata!
+    end
+
+    def my_logger
+      @my_logger ||= Logger.new(File.join(Rails.root, 'log', 'login.log'))
     end
   end
 end
