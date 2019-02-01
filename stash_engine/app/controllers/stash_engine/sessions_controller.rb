@@ -214,7 +214,10 @@ module StashEngine
     end
 
     def my_logger
-      @my_logger ||= Logger.new(File.join(Rails.root, 'log', 'login.log'))
+      return @my_logger if @my_logger
+      @my_logger = Logger.new(File.join(Rails.root, 'log', 'login.log'))
+      @my_logger.level = Logger::DEBUG
+      @my_logger
     end
   end
 end
