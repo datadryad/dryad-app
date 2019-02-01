@@ -36,7 +36,7 @@ Gem::Specification.new do |s| # rubocop:disable Metrics/BlockLength
   s.add_dependency 'jquery-ui-rails'
   s.add_dependency 'kaminari'
   s.add_dependency 'omniauth', '~> 1.6.1'
-  s.add_dependency 'omniauth-google-oauth2', '~> 0.5.2'
+  s.add_dependency 'omniauth-google-oauth2', '~> 0.6.0'
   s.add_dependency 'omniauth-orcid', '~> 2.0.2'
   s.add_dependency 'omniauth-shibboleth', '~> 1.2.1'
   s.add_dependency 'rails', '~> 4.2.4'
