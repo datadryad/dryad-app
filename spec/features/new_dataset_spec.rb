@@ -12,6 +12,7 @@ describe 'new dataset' do
 
   describe 'Start New Dataset' do
     before(:each) do
+      mock_ezid_minting!
       start_new_dataset.click
     end
 
