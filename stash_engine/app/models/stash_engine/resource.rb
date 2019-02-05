@@ -262,6 +262,12 @@ module StashEngine
     private :init_state
 
     # ------------------------------------------------------------
+    # Curation helpers
+    def curatable?
+      submitted?
+    end
+
+    # ------------------------------------------------------------
     # Identifiers
 
     def identifier_str

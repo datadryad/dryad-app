@@ -45,7 +45,7 @@
         <%= i&.identifier_state&.current_curation_status %>
       </td>
       <td class="c-admin-hide-border-left">
-        <% if current_user.role == 'superuser' %>
+        <% if current_user.role == 'superuser' && latest_resource.curatable? %>
           <%= form_tag({ controller: '/stash_engine/admin_datasets', action: 'status_popup', id: i.id }, method: :get, remote: true) do -%>
             <button class="c-admin-edit-icon" aria-label="Update status" alt="Update status">
               <i class="fa fa-pencil" aria-hidden="true"></i>

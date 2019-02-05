@@ -973,5 +973,35 @@ module StashEngine
         end
       end
     end
+
+    describe 'curation helpers' do
+      describe :curatable? do
+
+        it 'is false when current_resource_state != "submitted"' do
+          resource = Resource.create(user_id: user.id)
+          resource.current_state = 'in_progress'
+          expect(resource.curatable?).to eql(false)
+          resource.current_state = 'processing'
+          expect(resource.curatable?).to eql(false)
+          resource.current_state = 'error'
+          expect(resource.curatable?).to eql(false)
+        end
+
+        it 'is false even when current curation state is Submitted' do
+          identifier = Identifier.create(identifier_type: 'DOI', identifier: '10.999/999')
+          resource = Resource.create(user_id: user.id, identifier_id: identifier.id)
+          CurationActivity.create(identifier_id: identifier.id, status: 'Submitted')
+          resource.reload
+          expect(resource.curatable?).to eql(false)
+        end
+
+        it 'is true when current_resource_state == "submitted"' do
+          resource = Resource.create(user_id: user.id)
+          resource.current_state = 'submitted'
+          expect(resource.curatable?).to eql(true)
+        end
+
+      end
+    end
   end
 end
