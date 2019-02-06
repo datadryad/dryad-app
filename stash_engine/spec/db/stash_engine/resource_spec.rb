@@ -990,7 +990,7 @@ module StashEngine
         it 'is false even when current curation state is Submitted' do
           identifier = Identifier.create(identifier_type: 'DOI', identifier: '10.999/999')
           resource = Resource.create(user_id: user.id, identifier_id: identifier.id)
-          CurationActivity.create(identifier_id: identifier.id, status: 'Submitted')
+          CurationActivity.create(identifier_id: identifier.id, status: 'submitted')
           resource.reload
           expect(resource.curatable?).to eql(false)
         end
