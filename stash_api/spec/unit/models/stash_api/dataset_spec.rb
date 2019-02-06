@@ -31,6 +31,10 @@ module StashApi
           r.tenant_id = @user.tenant_id
         end
       end
+
+      # briley - TODO remove this once the Resource is properly initializing it
+      create(:curation_activity, identifier: @identifier, resource: @identifier.resources.last)
+
       create(:version) do |v|
         v.resource = @identifier.resources.first
       end
@@ -98,18 +102,6 @@ module StashApi
         @dataset = Dataset.new(identifier: @identifier.to_s)
         @metadata = @dataset.metadata
         expect(@metadata[:loosenValidation]).to eq(true)
-      end
-
-      it 'shows Unsubmitted curationStatus' do
-        expect(@metadata[:curationStatus]).to eq('Unsubmitted')
-      end
-
-      it 'shows Submitted curationStatus' do
-        @c_a = create(:curation_activity)
-        @c_a.update(identifier_id: @identifier.id)
-        @dataset = Dataset.new(identifier: @identifier.to_s)
-        @metadata = @dataset.metadata
-        expect(@metadata[:curationStatus]).to eq('Submitted')
       end
 
     end
