@@ -48,9 +48,8 @@ On the DSpace system:
    `/opt/dryad/bin/dspace curate -v -t dashstats -i 10255/3 -r - >dashStats.log`
 2. Separate the log file into monthly files:
    `~/dryad-utils/dash-migration/sort_dash_stats.sh`
-3. Any "nonstandard" lines from the dashStats.log will be collected in a file called "counter_". This file can be deleted.
-4. Ensure the counter-processor is installed and configured as described at https://github.com/CDLUC3/counter-processor
-5. Process the monthly files with the counter-processor:
-   `python3 main.py`
+3. Ensure the counter-processor is installed and configured as described at https://github.com/CDLUC3/counter-processor
+4. Process the monthly files with the counter-processor, e.g.:
+   `YEAR_MONTH=2014-01 LOG_NAME_PATTERN="/path/to/my/log/counter_2014-01.log" ./main.py`
    
    
