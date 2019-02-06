@@ -19,6 +19,7 @@ module StashEngine
     has_many :submission_logs, class_name: 'StashEngine::SubmissionLog', dependent: :destroy
     has_many :resource_states, class_name: 'StashEngine::ResourceState', dependent: :destroy
     has_many :edit_histories, class_name: 'StashEngine::EditHistory', dependent: :destroy
+    has_many :curation_activities, class_name: 'StashEngine::CurationActivity', dependent: :destroy
 
     amoeba do
       include_association :authors
@@ -90,6 +91,11 @@ module StashEngine
     # We want to disable this when we don't need it since it really kills performance for finding a long
     # list of resources.  For example in the rails console, resource.all does another query for each item in the list
     # after_find :ensure_state_and_version
+
+    def init_curation_activity_and_identifier_state
+      curation_activities << CurationActivity.create(identifier_id: identifier_id, user_id: user_id)
+      save!
+    end
 
     # ------------------------------------------------------------
     # Scopes

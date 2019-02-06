@@ -37,5 +37,37 @@ namespace :identifiers do
       se_identifier.update(license_id: license)
     end
   end
+
+  desc 'seed curation activities'
+  task seed_curation_activities: :environment do
+    StashEngine::Identifier.includes(:curation_activities, :resources, :internal_data).all.each do |se_identifier|
+      next if se_identifier.curation_activities.empty?
+      # Create an initial curation activity for each identifier
+      #
+      # Using the latest resource and its state (for user_id)
+      #
+      #   if the resource_state == 'submitted' then the curation status should be :submitted
+      #   if the resource_state != 'submitted' then the curation status should be :in_progress
+      #   if the resource_state == 'submitted' && the identifier has associated internal_data
+      #                                               then the status should be :peer_review
+      #
+      se_resource = se_identifier.resources.includes(:resource_state).by_version_desc.first
+      se_resource_state = se_resource.resource_states.order(updated_at: :desc).first
+
+      status = if se_resource_state.resource_state == 'submitted'
+                 se_identifier.has_journal? ? CurationActivity.peer_review : CurationActivity.submitted
+               else
+                 CurationActivity.in_progress
+               end
+
+      CurationActivity.create(
+        identifier_id: se_identifier.id,
+        resource_id: se_resource.id,
+        user_id: se_resource_state.user_id,
+        staus: status
+      )
+    end
+  end
+
 end
 # rubocop:enable Metrics/BlockLength

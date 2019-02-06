@@ -21,7 +21,7 @@ FactoryBot.define do
   end
 
   factory(:curation_activity, class: StashEngine::CurationActivity) do
-    status { 'Unsubmitted' }
+    status { 'in_progress' }
     note { 'article was published' }
     keywords { 'foo bar' }
   end
