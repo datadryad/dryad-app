@@ -975,6 +975,16 @@ module StashEngine
     end
 
     describe 'curation helpers' do
+
+      describe :init_curation_status do
+
+        it 'has a curation activity record when created' do
+          resource = Resource.create(user_id: user.id)
+          expect(resource.curation_activities.empty?).to eql(false)
+        end
+
+      end
+
       describe :curatable? do
 
         it 'is false when current_resource_state != "submitted"' do
@@ -990,7 +1000,7 @@ module StashEngine
         it 'is false even when current curation state is Submitted' do
           identifier = Identifier.create(identifier_type: 'DOI', identifier: '10.999/999')
           resource = Resource.create(user_id: user.id, identifier_id: identifier.id)
-          CurationActivity.create(identifier_id: identifier.id, status: 'submitted')
+          CurationActivity.create(resource_id: resource.id, status: 'submitted')
           resource.reload
           expect(resource.curatable?).to eql(false)
         end
@@ -999,6 +1009,21 @@ module StashEngine
           resource = Resource.create(user_id: user.id)
           resource.current_state = 'submitted'
           expect(resource.curatable?).to eql(true)
+        end
+
+      end
+
+      describe :latest_curation_status do
+
+        it 'testing latest curation retrieval' do
+          resource = Resource.create
+          ca = CurationActivity.create(status: 'curation', resource_id: resource.id)
+          expect(resource.latest_curation_status).to eql(ca)
+
+          p Resource.first.inspect
+          p "------------------------------"
+          p Resource.includes(:curation_status).first.inspect
+
         end
 
       end

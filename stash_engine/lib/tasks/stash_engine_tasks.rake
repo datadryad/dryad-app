@@ -53,7 +53,7 @@ namespace :identifiers do
   desc 'seed curation activities'
   task seed_curation_activities: :environment do
     StashEngine::Identifier.includes(:curation_activities, :resources, :internal_data).all.each do |se_identifier|
-      next if se_identifier.curation_activities.empty?
+      next unless se_identifier.curation_activities.empty?
       # Create an initial curation activity for each identifier
       #
       # Using the latest resource and its state (for user_id)
