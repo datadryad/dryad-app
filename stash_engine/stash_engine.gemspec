@@ -46,6 +46,7 @@ Gem::Specification.new do |s| # rubocop:disable Metrics/BlockLength
   s.add_dependency 'redcarpet', '~> 3.3'
   s.add_dependency 'rest-client'
   s.add_dependency 'rinku'
+  s.add_dependency 'rsolr', '~> 1.1.2'
   s.add_dependency 'sortable-table'
   s.add_dependency 'wicked_pdf', '~> 1.1.0'
   s.add_dependency 'wkhtmltopdf-binary', '~> 0.12.3.1'
