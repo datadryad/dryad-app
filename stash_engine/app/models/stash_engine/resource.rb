@@ -52,6 +52,7 @@ module StashEngine
     def init_state_and_version
       init_state
       init_version
+      init_curation_status
       save
     end
 
@@ -86,6 +87,7 @@ module StashEngine
       return if stash_version && current_resource_state_id
       init_version unless stash_version
       init_state unless current_resource_state_id
+      init_curation_status if curation_activities.empty?
       save
     end
     # We want to disable this when we don't need it since it really kills performance for finding a long
@@ -272,6 +274,15 @@ module StashEngine
     def curatable?
       submitted?
     end
+
+    def latest_curation_status
+      CurationActivity.latest(id)
+    end
+
+    def init_curation_status
+      curation_activities << CurationActivity.new
+    end
+    private :init_curation_status
 
     # ------------------------------------------------------------
     # Identifiers

@@ -33,7 +33,7 @@ module StashApi
       end
 
       # briley - TODO remove this once the Resource is properly initializing it
-      create(:curation_activity, identifier: @identifier, resource: @identifier.resources.last)
+      create(:curation_activity, resource: @identifier.resources.last)
 
       create(:version) do |v|
         v.resource = @identifier.resources.first

@@ -105,7 +105,7 @@ module StashApi
     end
 
     def add_curation_status(hsh)
-      hsh[:curationStatus] = @se_identifier.curation_activities.order(updated_at: :desc).first&.readable_status
+      hsh[:curationStatus] = StashEngine::CurationActivity.latest(@se_identifier.latest_resource&.id)&.readable_status
     end
 
   end

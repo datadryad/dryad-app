@@ -90,7 +90,7 @@ module StashEngine
       #   e.g. Check the status flags on this object unless we're storing a boolean
       #        somewhere that records that we've already charged them.
       #   `return unless identifier.has_journal? && self.published?`
-      return unless resource.identifier.chargeable?
+      return unless resource.identifier&.chargeable?
       # Call the stripe API
     end
 
