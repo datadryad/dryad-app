@@ -1,0 +1,34 @@
+require 'rsolr'
+
+module Stash
+  module Indexer
+    class SolrIndexer
+
+      def initialize(solr_url: )
+        # rsolr gives lots of other config options, but this is probably all we need for now
+        @solr = RSolr.connect(url: solr_url, retry_503: 3, retry_after_limit: 1, read_timeout: 20, open_timeout: 20)
+      end
+
+      def index_document(solr_hash:)
+        result = @solr.add(solr_hash)
+        return true if result['responseHeader']['status'] == 0
+        false
+      rescue StandardError => e
+        Rails.logger.error("Error adding record with hash #{solr_hash || 'nil'}: #{e}")
+        Rails.logger.debug(e.backtrace.join("\n")) if e.backtrace
+        false
+      end
+
+      def delete_document(doi:)
+        result = @solr.delete_by_id(doi)
+        return true if result['responseHeader']['status'] == 0
+        false
+      rescue StandardError => e
+        Rails.logger.error("Error deleting record with identifier #{doi || 'nil'}: #{e}")
+        Rails.logger.debug(e.backtrace.join("\n")) if e.backtrace
+        false
+      end
+
+    end
+  end
+end
