@@ -44,10 +44,37 @@ end
 module Stash
   module Indexer
     class IndexingResource
+
+      DESCRIPTION_TYPES_TO_DB = { Datacite::Mapping::DescriptionType::ABSTRACT => 'abstract',
+                                  Datacite::Mapping::DescriptionType::METHODS => 'methods',
+                                  Datacite::Mapping::DescriptionType::OTHER => 'other' }.freeze
+
       # takes a database resource object.
       def initialize(resource:)
         @resource = resource
       end
+
+      # this is really what we want to get out of this for solr indexing, the rest is for compatibility with old indexing
+      def to_index_document # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
+        {
+            uuid: doi,
+            dc_identifier_s: doi,
+            dc_title_s: default_title,
+            dc_creator_sm: creator_names.map { |i| i.strip },
+            dc_type_s: type,
+            dc_description_s: description_text_for(Datacite::Mapping::DescriptionType::ABSTRACT).to_s.strip,
+            dc_subject_sm: subjects,
+            dct_spatial_sm: geo_location_places,
+            georss_box_s: calc_bounding_box,
+            solr_geom: bounding_box_envelope,
+            solr_year_i: publication_year,
+            dct_issued_dt: issued_date,
+            dc_rights_s: license_name,
+            dc_publisher_s: publisher,
+            dct_temporal_sm: dct_temporal_dates
+        }
+      end
+      # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
 
       def default_title
         @resource&.title&.strip
@@ -59,12 +86,39 @@ module Stash
 
       def type
         # This is something like 'Software'
-        # general_type.value.to_s.strip if general_type
+        @resource&.resource_type&.resource_type_general_friendly
       end
 
       def general_type
-        # This is something of Datacite::Mapping::ResourceTypeGeneral
-        # resource_type.resource_type_general if resource_type
+        # This is class like Datacite::Mapping::ResourceTypeGeneral
+        @resource&.resource_type&.resource_type_general_mapping_obj
+      end
+
+      def creator_names
+        authors = @resource.authors
+        return [] if authors.empty?
+        authors.map(&:author_full_name).reject(&:blank?)
+      end
+
+      def subjects
+        @resource.subjects.map{|s| s.subject&.strip}.reject(&:blank?)
+      end
+
+      def publication_year
+        @resource.publication_years&.first&.publication_year&.to_i
+      end
+
+      def issued_date
+        @resource&.publication_date&.iso8601
+      end
+
+      def license_name
+        # we could make this call nicer by adding an association (or simulating one) on identifier
+        StashEngine::License.by_id(@resource.identifier.license_id)[:name]
+      end
+
+      def publisher
+        @resource&.publisher&.publisher
       end
 
       def grant_number
@@ -72,14 +126,15 @@ module Stash
       end
 
       def usage_notes
-        @resource.descriptions.type_other.map(&:description).reject(&:blank?).map{|i| Loofah.fragment(i).text.strip }.join("\r")
+        description_text_for(Datacite::Mapping::DescriptionType::OTHER)
       end
 
       # called like resource.description_text_for(DescriptionType::ABSTRACT).to_s.strip
       # I believe this returns the test for things besides usage notes
       def description_text_for(type)
-        desc = descriptions.find { |d| d.type = type }
-        desc.value if desc
+        the_type = DESCRIPTION_TYPES_TO_DB[type]
+        return nil unless the_type
+        @resource.descriptions.where(description_type: the_type).map(&:description).reject(&:blank?).map{|i| Loofah.fragment(i).text.strip }.join("\r")
       end
 
       # gives array of names
@@ -97,7 +152,8 @@ module Stash
       end
 
       def self.datacite?(elem)
-        elem.name == 'resource' && Datacite::Mapping.datacite_namespace?(elem)
+        true
+        # elem.name == 'resource' && Datacite::Mapping.datacite_namespace?(elem)
       end
 
       def calc_bounding_box # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
@@ -114,7 +170,7 @@ module Stash
           long_min = [long_min, box.west_longitude, box.east_longitude].compact.min
           long_max = [long_max, box.west_longitude, box.east_longitude].compact.max
         end
-        GeoLocationBox.new(lat_min, long_min, lat_max, long_max) if lat_min && long_min && lat_max && long_max
+        Datacite::Mapping::GeoLocationBox.new(lat_min, long_min, lat_max, long_max) if lat_min && long_min && lat_max && long_max
       end
 
       # converts to DublinCore Terms, temporal, see http://journal.code4lib.org/articles/9710 or
@@ -124,11 +180,16 @@ module Stash
       # method takes the values supplied and also adds every year for a range so people can search for
       # any of those years which may not be explicitly named
       def dct_temporal_dates # rubocop:disable Metrics/AbcSize
-        items = dates.map(&:to_s).compact
-        year_range_items = dates.map do |i|
-          (i.range_start.year..i.range_end.year).to_a.map(&:to_s) if i.range_start && i.range_end && i.range_start.year && i.range_end.year
-        end
-        (items + year_range_items).compact.flatten.uniq
+        items = @resource.datacite_dates.map(&:date).reject(&:blank?)
+        items.map!{ |dt| Date.iso8601(dt).strftime('%Y-%m-%d') }
+        return items
+
+        # the below is the old stuff.  We don't have ranges in our dates.
+        # items = dates.map(&:to_s).compact
+        # year_range_items = dates.map do |i|
+        #   (i.range_start.year..i.range_end.year).to_a.map(&:to_s) if i.range_start && i.range_end && i.range_start.year && i.range_end.year
+        # end
+        # (items + year_range_items).compact.flatten.uniq
       end
 
       def bounding_box_envelope
@@ -140,15 +201,15 @@ module Stash
       # helpers to convert to datacite mapping
       def db_box_to_dc_mapping(db_box:)
         return nil unless db_box.sw_latitude && db_box.ne_latitude && db_box.sw_longitude && db_box.ne_longitude
-        Datacite::Mapping::GeolocationBox.new(south_latitude: db_box.sw_latitude,
-                                              west_longitude: db_box.sw_longitude,
-                                              north_latitude: db_box.ne_latitude,
-                                              east_longitude: db_box.ne_longitude)
+        Datacite::Mapping::GeoLocationBox.new(south_latitude: db_box.sw_latitude.to_f,
+                                              west_longitude: db_box.sw_longitude.to_f,
+                                              north_latitude: db_box.ne_latitude.to_f,
+                                              east_longitude: db_box.ne_longitude.to_f)
       end
 
       def db_point_to_dc_mapping(db_point:)
-        return nil unless db_point.lattitude && db_point.longitude
-        Datacite::Mapping::GeolocationPoint.new(latitude: db_point.latitude, longitude: db_point.longitude)
+        return nil unless db_point.latitude && db_point.longitude
+        Datacite::Mapping::GeoLocationPoint.new(latitude: db_point.latitude.to_f, longitude: db_point.longitude.to_f)
       end
     end
   end
