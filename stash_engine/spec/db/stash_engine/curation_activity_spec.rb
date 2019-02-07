@@ -10,24 +10,35 @@ module StashEngine
 
     context :new do
       it 'defaults status to :in_progress' do
-        activity = CurationActivity.new(identifier: @identifier, resource: @resource)
+        activity = CurationActivity.new(resource: @resource)
         expect(activity.status).to eql('in_progress')
       end
 
-      it 'requires an identifier' do
-        activity = CurationActivity.new(resource: @resource)
+      it 'requires a resource' do
+        activity = CurationActivity.new(resource: nil)
         expect(activity.valid?).to eql(false)
       end
+    end
 
-      it 'requires a resource' do
-        activity = CurationActivity.new(identifier: @identifier)
-        expect(activity.valid?).to eql(false)
+    context :latest do
+      before(:each) do
+        @ca = CurationActivity.create(resource_id: @resource.id)
+      end
+
+      it 'returns the most recent activity' do
+        ca2 = CurationActivity.create(resource_id: @resource.id, status: 'peer_review')
+        expect(CurationActivity.latest(@resource)).to eql(ca2)
+      end
+
+      it 'it ignores unchanged statuses' do
+        CurationActivity.create(resource_id: @resource.id, status: 'unchanged')
+        expect(CurationActivity.latest(@resource)).to eql(@ca)
       end
     end
 
     context :readable_status do
       before(:each) do
-        @ca = CurationActivity.create(identifier_id: @identifier.id, resource_id: @resource.id)
+        @ca = CurationActivity.create(resource_id: @resource.id)
       end
 
       it 'returns a readable version of :peer_review' do
@@ -57,25 +68,25 @@ module StashEngine
 
     context :callbacks do
       it 'calls submit_to_stripe method after creating a new CurationActivity' do
-        ca = CurationActivity.new(identifier_id: @identifier.id, resource_id: @resource.id)
+        ca = CurationActivity.new(resource_id: @resource.id)
         expect(ca).to receive(:submit_to_stripe)
         ca.save
       end
 
       it 'calls submit_to_stripe method after updating a CurationActivity' do
-        ca = CurationActivity.create(identifier_id: @identifier.id, resource_id: @resource.id)
+        ca = CurationActivity.create(resource_id: @resource.id)
         expect(ca).to receive(:submit_to_stripe)
         ca.update(status: CurationActivity.curation)
       end
 
       it 'calls submit_to_datacite method after creating a new CurationActivity' do
-        ca = CurationActivity.new(identifier_id: @identifier.id, resource_id: @resource.id)
+        ca = CurationActivity.new(resource_id: @resource.id)
         expect(ca).to receive(:submit_to_datacite)
         ca.save
       end
 
       it 'calls submit_to_datacite method after updating a CurationActivity' do
-        ca = CurationActivity.create(identifier_id: @identifier.id, resource_id: @resource.id)
+        ca = CurationActivity.create(resource_id: @resource.id)
         expect(ca).to receive(:submit_to_datacite)
         ca.update(status: CurationActivity.curation)
       end

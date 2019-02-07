@@ -23,14 +23,14 @@ module StashEngine
         @user = create(:user)
         @identifier = create(:identifier)
         @resource = create(:resource, identifier_id: @identifier.id)
-        @curation_activity = create(:curation_activity, identifier: @identifier, resource: @resource)
+        @curation_activity = create(:curation_activity, resource: @resource)
         @mock_idgen = double('idgen')
         allow(@mock_idgen).to receive('update_identifier_metadata!'.intern).and_raise('submitted DOI')
         allow(Stash::Doi::IdGen).to receive(:make_instance).and_return(@mock_idgen)
       end
 
       it 'shows the appropriate dataset identifier' do
-        expect(@curation_activity.identifier.to_s).to eq(@identifier.to_s)
+        expect(@curation_activity.resource.identifier.to_s).to eq(@identifier.to_s)
       end
     end
 
@@ -67,7 +67,7 @@ module StashEngine
       it "doesn't submit when a status besides Embargoed or Published is set" do
         submitted = false
         begin
-          CurationActivity.create(identifier_id: @identifier.id, status: 'curation')
+          CurationActivity.create(resource_id: @resource.id, status: 'curation')
         rescue RuntimeError => ex
           expect(ex.to_s).to eq('submitted DOI')
           submitted = true
@@ -76,9 +76,9 @@ module StashEngine
       end
 
       it "doesn't submit when status isn't changed" do
-        CurationActivity.skip_callback(:create, :after, :submit_to_datacite)
-        item = CurationActivity.create(identifier_id: @identifier.id, status: 'published')
-        CurationActivity.set_callback(:create, :after, :submit_to_datacite)
+        CurationActivity.skip_callback(:save, :after, :submit_to_datacite)
+        item = CurationActivity.create(resource_id: @resource.id, status: 'published')
+        CurationActivity.set_callback(:save, :after, :submit_to_datacite)
         submitted = false
         begin
           item.update(status: 'published')
@@ -93,7 +93,7 @@ module StashEngine
         @resource_state.update(resource_state: 'in_progress')
         submitted = false
         begin
-          CurationActivity.create(identifier_id: @identifier.id, status: 'published')
+          CurationActivity.create(resource_id: @resource.id, status: 'published')
         rescue RuntimeError => ex
           expect(ex.to_s).to eq('submitted DOI')
           submitted = true
@@ -103,9 +103,9 @@ module StashEngine
 
       it "doesn't submit if no version number" do
         @version.update!(version: nil, merritt_version: nil)
-        my_cur = CurationActivity.create(identifier_id: @identifier.id, status: 'in_progress')
+        my_cur = CurationActivity.create(resource_id: @resource.id, status: 'in_progress')
         # this is kind of crazy, but doing without nesting somehow caches everything and can't get it to update in test
-        my_cur.identifier.resources.first.stash_version.update(version: nil, merritt_version: nil)
+        my_cur.resource.stash_version.update(version: nil, merritt_version: nil)
         submitted = false
         begin
           my_cur.update(status: 'published')
@@ -123,7 +123,7 @@ module StashEngine
         @version2 = create(:version, resource_id: @resource2.id, version: 2, merritt_version: 2)
         submitted = false
         begin
-          CurationActivity.create(identifier_id: @identifier.id, status: 'published')
+          CurationActivity.create(resource_id: @resource2.id, status: 'published')
         rescue RuntimeError => ex
           expect(ex.to_s).to eq('submitted DOI')
           submitted = true
