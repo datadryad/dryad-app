@@ -6,7 +6,6 @@ module StashEngine
 
     # Associations
     # ------------------------------------------
-    belongs_to :identifier, class_name: 'StashEngine::Identifier', foreign_key: 'identifier_id'
     belongs_to :resource, class_name: 'StashEngine::Resource', foreign_key: 'resource_id'
     belongs_to :user, class_name: 'StashEngine::User', foreign_key: 'user_id'
 
@@ -39,12 +38,17 @@ module StashEngine
 
     # Validations
     # ------------------------------------------
-    validates :identifier, presence: true
     validates :resource, presence: true
+
+    # Scopes
+    # ------------------------------------------
+    scope :latest, ->(resource_id) {
+      where(resource_id: resource_id).where.not(status: 'unchanged').order(id: :desc).first
+    }
 
     # Callbacks
     # ------------------------------------------
-    after_save :sync_identifier_status, :submit_to_stripe, :submit_to_datacite
+    after_save :submit_to_stripe, :submit_to_datacite
 
     # Instance methods
     # ------------------------------------------
@@ -52,7 +56,7 @@ module StashEngine
       # {"id":11,"identifier_id":1,"status":"Submitted","user_id":1,"note":"hello hello ssdfs2232343","keywords":null}
       {
         id: id,
-        dataset: stash_identifier.to_s,
+        dataset: resource.identifier.to_s,
         status: readable_status,
         action_taken_by: user_name,
         note: note,
@@ -81,23 +85,18 @@ module StashEngine
 
     # Callbacks
     # ------------------------------------------
-    def sync_identifier_status
-      # We should ultimately remove this. CurationActivity now lives on the Resource
-      IdentifierState.create_identifier_state(identifier, self)
-    end
-
     def submit_to_stripe
       # Should also check the statuses in the line below so we don't resubmit charges!
       #   e.g. Check the status flags on this object unless we're storing a boolean
       #        somewhere that records that we've already charged them.
       #   `return unless identifier.has_journal? && self.published?`
-      return unless identifier.chargeable?
+      return unless resource.identifier.chargeable?
       # Call the stripe API
     end
 
     def submit_to_datacite
       return unless should_update_doi?
-      idg = Stash::Doi::IdGen.make_instance(resource: identifier.last_submitted_resource)
+      idg = Stash::Doi::IdGen.make_instance(resource: resource)
       idg.update_identifier_metadata!
     end
 
@@ -109,7 +108,7 @@ module StashEngine
       # only update if status changed or newly published or embargoed
       return false unless status_changed? && (published? || embargoed?)
 
-      last_merritt_version = identifier&.last_submitted_version_number
+      last_merritt_version = resource.identifier&.last_submitted_version_number
       return false if last_merritt_version.nil? # don't submit random crap to DataCite unless it's preserved in Merritt
 
       # only do UPDATEs with DOIs in production because ID updates like to fail in test EZID/DataCite because they delete their identifiers at random

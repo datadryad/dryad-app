@@ -4,7 +4,6 @@ module StashEngine
     has_many :resources, class_name: 'StashEngine::Resource', dependent: :destroy
     has_many :orcid_invitations, class_name: 'StashEngine::OrcidInvitation', dependent: :destroy
     has_one :counter_stat, class_name: 'StashEngine::CounterStat', dependent: :destroy
-    has_many :curation_activities, class_name: 'StashEngine::CurationActivity', dependent: :destroy
     has_many :internal_data, class_name: 'StashEngine::InternalDatum', dependent: :destroy
     has_one :identifier_state, class_name: 'StashEngine::IdentifierState', dependent: :destroy
     has_one :latest_resource,
