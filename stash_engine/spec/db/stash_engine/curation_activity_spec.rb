@@ -46,7 +46,7 @@ module StashEngine
       end
 
       it 'returns a default readable version of the remaining statuses' do
-        CurationActivity.statuses.keys.each do |s|
+        CurationActivity.statuses.each do |s|
           unless %w[peer_review action_required unchanged].include?(s)
             @ca.send("#{s}!")
             expect(@ca.readable_status).to eql(s.humanize)

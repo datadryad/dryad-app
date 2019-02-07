@@ -38,6 +38,18 @@ namespace :identifiers do
     end
   end
 
+  desc 'convert old curation activity statuses to new enum format'
+  task convert_curation_statuses: :environment do
+    StashEngine::CurationActivity.where(status: 'Author Action Required').update_all(status: 'action_required')
+    StashEngine::CurationActivity.where(status: 'Private for Peer Review').update_all(status: 'peer_review')
+    StashEngine::CurationActivity.where(status: 'Status Unchanged').update_all(status: 'unchanged')
+    StashEngine::CurationActivity.where(status: 'Versioned').update_all(status: 'in_progress')
+    StashEngine::CurationActivity.where(status: 'Unsubmitted').update_all(status: 'in_progress')
+    StashEngine::CurationActivity.all.each do |ca|
+      ca.update(status: ca.status.downcase)
+    end
+  end
+
   desc 'seed curation activities'
   task seed_curation_activities: :environment do
     StashEngine::Identifier.includes(:curation_activities, :resources, :internal_data).all.each do |se_identifier|

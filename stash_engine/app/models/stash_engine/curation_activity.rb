@@ -1,5 +1,8 @@
 module StashEngine
+
   class CurationActivity < ActiveRecord::Base
+
+    include StashEngine::StringEnum
 
     # Associations
     # ------------------------------------------
@@ -21,7 +24,7 @@ module StashEngine
     #                  has reached maturity
     #  :unchanged   <-- Automatically set when a Curator adds a note to on the Admin
     #                   activity page
-    enum status: %i[
+    enum_vals = %w[
       in_progress
       submitted
       peer_review
@@ -32,6 +35,7 @@ module StashEngine
       withdrawn
       unchanged
     ]
+    string_enum('status', enum_vals, 'in_progress', false)
 
     # Validations
     # ------------------------------------------
