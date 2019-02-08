@@ -28,6 +28,7 @@ Gem::Specification.new do |s| # rubocop:disable Metrics/BlockLength
   s.add_dependency 'cirneco', '~> 0.9.20' # higher versions cause dependency hell with faraday from Martin's Gems
   s.add_dependency 'ckeditor'
   s.add_dependency 'concurrent-ruby', '~> 1.0'
+  s.add_dependency 'datacite-mapping', '~> 0.3'
   s.add_dependency 'ezid-client', '~> 1.5'
   s.add_dependency 'filesize', '~> 0.1.1'
   s.add_dependency 'font-awesome-rails'
