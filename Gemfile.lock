@@ -72,6 +72,7 @@ PATH
       redcarpet (~> 3.3)
       rest-client
       rinku
+      rsolr (~> 1.1.2)
       sortable-table
       thor (= 0.19.1)
       wicked_pdf (~> 1.1.0)
@@ -207,7 +208,7 @@ GEM
     chromedriver-helper (1.2.0)
       archive-zip (~> 0.10)
       nokogiri (~> 1.8)
-    cirneco (0.9.26)
+    cirneco (0.9.27)
       activesupport (>= 4.2.5, < 6)
       base32-url (~> 0.5)
       bergamasco (~> 0.3)
@@ -397,7 +398,7 @@ GEM
       nokogiri (>= 1.5.9)
     mail (2.7.1)
       mini_mime (>= 0.1.1)
-    maremma (4.1.1)
+    maremma (4.2.1)
       activesupport (>= 4.2.5, < 6)
       addressable (>= 2.3.6)
       builder (~> 3.2, >= 3.2.2)
