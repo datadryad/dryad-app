@@ -2,7 +2,7 @@ module StashEngine
 
   class CurationActivity < ActiveRecord::Base
 
-    include StashEngine::StringEnum
+    include StashEngine::Concerns::StringEnum
 
     # Associations
     # ------------------------------------------

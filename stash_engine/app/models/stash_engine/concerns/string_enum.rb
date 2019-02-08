@@ -4,54 +4,58 @@ require 'active_support/concern'
 # This can be dropped in Rails 5
 module StashEngine
 
-  module StringEnum
+  module Concerns
 
-    extend ActiveSupport::Concern
+    module StringEnum
 
-    class_methods do
+      extend ActiveSupport::Concern
 
-      # Disabling rubocop here because we reasonably abstract this into callable methods
-      # due to the
+      class_methods do
 
-      def string_enum(col, vals = [], default_val = nil, allow_nil = true)
-        values = vals.map(&:to_s)
+        # Disabling rubocop here because we reasonably abstract this into callable methods
+        # due to the
 
-        values.each do |val|
-          # Add a scope that returns all records for the given enum value
-          scope val, -> { where(col: val) } unless respond_to?(val)
-          # Add a getter and setter for the val
-          define_getter_setter(col, val)
+        def string_enum(col, vals = [], default_val = nil, allow_nil = true)
+          values = vals.map(&:to_s)
+
+          values.each do |val|
+            # Add a scope that returns all records for the given enum value
+            scope val, -> { where(col: val) } unless respond_to?(val)
+            # Add a getter and setter for the val
+            define_getter_setter(col, val)
+          end
+
+          # Always initialize the model with the default (or first) enum value
+          define_callbacks(col, default_val || vals.first)
+
+          # Add a singleton method that returns the values
+          define_singleton_method col.to_s.pluralize do
+            values
+          end
+
+          # Add a nil validation if specified
+          validates col, allow_nil: true if allow_nil
         end
 
-        # Always initialize the model with the default (or first) enum value
-        define_callbacks(col, default_val || vals.first)
+        def define_getter_setter(col, val)
+          # Add a boolean method for each value
+          define_method "#{val}?" do
+            read_attribute(col) == val
+          end
 
-        # Add a singleton method that returns the values
-        define_singleton_method col.to_s.pluralize do
-          values
+          # Add a method that sets the status to the value
+          define_method "#{val}!" do
+            send("#{col}=", val)
+          end
         end
 
-        # Add a nil validation if specified
-        validates col, allow_nil: true if allow_nil
-      end
-
-      def define_getter_setter(col, val)
-        # Add a boolean method for each value
-        define_method "#{val}?" do
-          read_attribute(col) == val
+        def define_callbacks(col, default_val)
+          # Add a callback to set the col to the default
+          after_initialize do
+            send("#{col}=", default_val) unless try(col)
+          end
         end
 
-        # Add a method that sets the status to the value
-        define_method "#{val}!" do
-          send("#{col}=", val)
-        end
-      end
-
-      def define_callbacks(col, default_val)
-        # Add a callback to set the col to the default
-        after_initialize do
-          send("#{col}=", default_val) unless try(col)
-        end
       end
 
     end
