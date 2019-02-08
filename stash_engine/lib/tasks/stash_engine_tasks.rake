@@ -38,47 +38,39 @@ namespace :identifiers do
     end
   end
 
-  desc 'convert old curation activity statuses to new enum format'
-  task convert_curation_statuses: :environment do
-    StashEngine::CurationActivity.where(status: 'Author Action Required').update_all(status: 'action_required')
-    StashEngine::CurationActivity.where(status: 'Private for Peer Review').update_all(status: 'peer_review')
-    StashEngine::CurationActivity.where(status: 'Status Unchanged').update_all(status: 'unchanged')
-    StashEngine::CurationActivity.where(status: 'Versioned').update_all(status: 'in_progress')
-    StashEngine::CurationActivity.where(status: 'Unsubmitted').update_all(status: 'in_progress')
-    StashEngine::CurationActivity.update_all('status = LOWER(status)')
-  end
-
-  desc 'seed curation activities'
+  desc 'seed curation activities (warning: deletes all existing curation activities!)'
   task seed_curation_activities: :environment do
-    StashEngine::Resource.includes(:curation_activities, identifier: :internal_data).all.each do |resource|
-      next unless resource.curation_activities.empty?
-      # Create an initial curation activity for each identifier
-      #
-      # Using the latest resource and its state (for user_id)
+    # Delete all existing curation activity
+    StashEngine::CurationActivity.destroy_all
+
+    StashEngine::Resource.includes(identifier: :internal_data).all
+                         .order(:identifier_id, :id).each do |resource|
+
+      # Create an initial 'in_progress' curation activity for each identifier
+      activity = StashEngine::CurationActivity.create(
+        resource_id: resource.id,
+        user_id: resource.user_id,
+        created_at: resource.created_at,
+        updated_at: resource.created_at
+      )
+
+      # Using the latest resource and its state, add another activity if the
+      # resource's resource_state is 'submitted'
       #
       #   if the resource_state == 'submitted' then the curation status should be :submitted
-      #   if the resource_state != 'submitted' then the curation status should be :in_progress
       #   if the resource_state == 'submitted' && the identifier has associated internal_data
       #                                               then the status should be :peer_review
       #
-      status = if resource.current_state == 'submitted'
-                 resource.identifier.chargeable? ? 'peer_review' : 'submitted'
-               else
-                 'in_progress'
-               end
-
-      StashEngine::CurationActivity.create(
-        resource_id: resource.id,
-        user_id: resource.current_editor_id,
-        status: status
-      )
+      if resource.current_state == 'submitted'
+        activity = StashEngine::CurationActivity.create(
+          resource_id: resource.id,
+          user_id: resource.user_id,
+          status: resource.identifier.chargeable? ? 'peer_review' : 'submitted',
+          created_at: resource.updated_at,
+          updated_at: resource.updated_at
+        )
+      end
     end
-
-    StashEngine::Resource.includes(:curation_activities, identifier: :internal_data).all.each do |resource|
-      next unless resource.current_curation_activity_id.nil?
-      resource.update(current_curation_activity_id: resource.latest_curation_status.id)
-    end
-
   end
 
 end

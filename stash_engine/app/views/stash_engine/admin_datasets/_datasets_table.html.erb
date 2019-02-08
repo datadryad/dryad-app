@@ -44,11 +44,11 @@
         <% end %>
       </td>
       <td class="c-admin-hide-border-right" id="js-curation-state-<%= identifier.id %>">
-        <%= latest_curation_activity.status %>
+        <%= latest_curation_activity.readable_status %>
       </td>
       <td class="c-admin-hide-border-left">
         <% if current_user.role == 'superuser' && resource.curatable? %>
-          <%= form_tag({ controller: '/stash_engine/admin_datasets', action: 'status_popup', id: identifier.id }, method: :get, remote: true) do -%>
+          <%= form_tag({ controller: '/stash_engine/admin_datasets', action: 'status_popup', id: resource.id }, method: :get, remote: true) do -%>
             <button class="c-admin-edit-icon" aria-label="Update status" alt="Update status">
               <i class="fa fa-pencil" aria-hidden="true"></i>
             </button>

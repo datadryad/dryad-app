@@ -52,6 +52,22 @@ module StashEngine
     after_create :update_resource_reference
     before_destroy :remove_resource_reference
 
+    # Class methods
+    # ------------------------------------------
+    # Translates the enum value to a human readable status
+    def self.readable_status(status)
+      case status
+      when 'peer_review'
+        'Private for Peer Review'
+      when 'action_required'
+        'Author Action Required'
+      when 'unchanged'
+        'Status Unchanged'
+      else
+        status.humanize.split.map(&:capitalize).join(' ')
+      end
+    end
+
     # Instance methods
     # ------------------------------------------
     def as_json(*)
@@ -68,17 +84,10 @@ module StashEngine
       }
     end
 
-    # Translates the enum value to a human readable status
+    # Local instance method that sends the current status to the class method
+    # for translation
     def readable_status
-      if peer_review?
-        'Private for Peer Review'
-      elsif action_required?
-        'Author Action Required'
-      elsif unchanged?
-        'Status Unchanged'
-      else
-        status.humanize
-      end
+      CurationActivity.readable_status(status)
     end
 
     # Private methods
@@ -95,7 +104,7 @@ module StashEngine
       # Reverts the current_curation_activity pointer on Resource to the prior activity
       prior = CurationActivity.where(resource_id: resource_id).where.not(id: id)
                               .order(updated_at: :desc).first
-      Resource.find(resource_id).update(current_curation_activity_id: prior.id)
+      Resource.find(resource_id).update(current_curation_activity_id: prior.id) if prior.present?
     end
 
     def submit_to_stripe

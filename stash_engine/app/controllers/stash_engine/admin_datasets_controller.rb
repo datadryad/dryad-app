@@ -26,7 +26,11 @@ module StashEngine
     # Unobtrusive Javascript (UJS) to do AJAX by running javascript
     def status_popup
       respond_to do |format|
-        @identifier = Identifier.find(params[:id])
+        resource = Resource.includes(:identifier, :current_curation_activity).find(params[:id])
+        @curation_activity = CurationActivity.new(
+          resource_id: resource.id,
+          status: resource.current_curation_activity.status
+        )
         format.js
       end
     end
@@ -58,7 +62,9 @@ module StashEngine
       created_at = SortableTable::SortColumnDefinition.new('created_at')
       sort_table = SortableTable::SortTable.new([created_at])
       @sort_column = sort_table.sort_column(params[:sort], params[:direction])
-      @curation_activities = @identifier.curation_activities.order(@sort_column.order)
+      resource_ids = @identifier.resources.collect(&:id)
+      @curation_activities = CurationActivity.where(resource_id: resource_ids)
+                                             .order(@sort_column.order, id: :asc)
       @internal_data = InternalDatum.where(identifier_id: @identifier.id)
     end
 
