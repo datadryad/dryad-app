@@ -6,7 +6,7 @@ module StashEngine
     end
 
     def status_select
-      CurationActivity.validators_on(:status).first.options[:in]
+      CurationActivity.statuses
     end
 
   end

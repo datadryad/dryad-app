@@ -45,15 +45,13 @@ namespace :identifiers do
     StashEngine::CurationActivity.where(status: 'Status Unchanged').update_all(status: 'unchanged')
     StashEngine::CurationActivity.where(status: 'Versioned').update_all(status: 'in_progress')
     StashEngine::CurationActivity.where(status: 'Unsubmitted').update_all(status: 'in_progress')
-    StashEngine::CurationActivity.all.each do |ca|
-      ca.update(status: ca.status.downcase)
-    end
+    StashEngine::CurationActivity.update_all('status = LOWER(status)')
   end
 
   desc 'seed curation activities'
   task seed_curation_activities: :environment do
-    StashEngine::Identifier.includes(:curation_activities, :resources, :internal_data).all.each do |se_identifier|
-      next unless se_identifier.curation_activities.empty?
+    StashEngine::Resource.includes(:curation_activities, identifier: :internal_data).all.each do |resource|
+      next unless resource.curation_activities.empty?
       # Create an initial curation activity for each identifier
       #
       # Using the latest resource and its state (for user_id)
@@ -63,22 +61,24 @@ namespace :identifiers do
       #   if the resource_state == 'submitted' && the identifier has associated internal_data
       #                                               then the status should be :peer_review
       #
-      se_resource = se_identifier.resources.includes(:resource_state).by_version_desc.first
-      se_resource_state = se_resource.resource_states.order(updated_at: :desc).first
-
-      status = if se_resource_state.resource_state == 'submitted'
-                 se_identifier.has_journal? ? CurationActivity.peer_review : CurationActivity.submitted
+      status = if resource.current_state == 'submitted'
+                 resource.identifier.chargeable? ? 'peer_review' : 'submitted'
                else
-                 CurationActivity.in_progress
+                 'in_progress'
                end
 
-      CurationActivity.create(
-        identifier_id: se_identifier.id,
-        resource_id: se_resource.id,
-        user_id: se_resource_state.user_id,
-        staus: status
+      StashEngine::CurationActivity.create(
+        resource_id: resource.id,
+        user_id: resource.current_editor_id,
+        status: status
       )
     end
+
+    StashEngine::Resource.includes(:curation_activities, identifier: :internal_data).all.each do |resource|
+      next unless resource.current_curation_activity_id.nil?
+      resource.update(current_curation_activity_id: resource.latest_curation_status.id)
+    end
+
   end
 
 end

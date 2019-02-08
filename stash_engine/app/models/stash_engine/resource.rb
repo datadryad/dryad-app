@@ -20,6 +20,10 @@ module StashEngine
     has_many :resource_states, class_name: 'StashEngine::ResourceState', dependent: :destroy
     has_many :edit_histories, class_name: 'StashEngine::EditHistory', dependent: :destroy
     has_many :curation_activities, class_name: 'StashEngine::CurationActivity', dependent: :destroy
+    has_one :current_curation_activity,
+            class_name: 'StashEngine::CurationActivity',
+            primary_key: 'current_curation_activity_id',
+            foreign_key: 'id'
 
     amoeba do
       include_association :authors
@@ -30,6 +34,7 @@ module StashEngine
         # the resource state, but instead it keeps the reference to the old one, so we need to clear it and
         # let init_version do its job
         new_resource.current_resource_state_id = nil
+        new_resource.current_curation_activity_id = nil
 
         new_resource.file_uploads.each do |file|
           raise "Expected #{new_resource.id}, was #{file.resource_id}" unless file.resource_id == new_resource.id
