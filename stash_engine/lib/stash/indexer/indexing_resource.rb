@@ -1,5 +1,15 @@
 require 'datacite/mapping'
 
+# This file and classes are based on David's stash-harvester class and mostly the 'datacite_extensions.rb' which is
+# most of the funcationality we need, but we need it to come from the database instead of the returned stash-wrapper.xml
+# file which we give to Merritt and it gives back to us.
+#
+# The methods are the same names for duck-typing should we ever need it (most likely we won't).  I also added a few
+# additional methods for some missing fields that needed very little translation in the old code.  Also the to_index_document
+# came from another class, but it's the only method we need from that class.
+#
+# The Datacite::Mapping patches extra methods into an external gem David wrote to make classes for every enum and they
+# are used to special-sauce output for SOLR and geoblacklight's schema.
 
 # these patch datacite mapping modules for some extra stuff David added
 module Datacite
@@ -41,6 +51,7 @@ module Datacite
   end
 end
 
+# rubocop:disable Metrics/ClassLength
 module Stash
   module Indexer
     class IndexingResource
@@ -55,26 +66,26 @@ module Stash
       end
 
       # this is really what we want to get out of this for solr indexing, the rest is for compatibility with old indexing
-      def to_index_document # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
+      def to_index_document # rubocop:disable Metrics/MethodLength
         {
-            uuid: doi,
-            dc_identifier_s: doi,
-            dc_title_s: default_title,
-            dc_creator_sm: creator_names.map { |i| i.strip },
-            dc_type_s: type,
-            dc_description_s: description_text_for(Datacite::Mapping::DescriptionType::ABSTRACT).to_s.strip,
-            dc_subject_sm: subjects,
-            dct_spatial_sm: geo_location_places,
-            georss_box_s: calc_bounding_box,
-            solr_geom: bounding_box_envelope,
-            solr_year_i: publication_year,
-            dct_issued_dt: issued_date,
-            dc_rights_s: license_name,
-            dc_publisher_s: publisher,
-            dct_temporal_sm: dct_temporal_dates
+          uuid: doi,
+          dc_identifier_s: doi,
+          dc_title_s: default_title,
+          dc_creator_sm: creator_names.map(&:strip),
+          dc_type_s: type,
+          dc_description_s: description_text_for(Datacite::Mapping::DescriptionType::ABSTRACT).to_s.strip,
+          dc_subject_sm: subjects,
+          dct_spatial_sm: geo_location_places,
+          georss_box_s: calc_bounding_box,
+          solr_geom: bounding_box_envelope,
+          solr_year_i: publication_year,
+          dct_issued_dt: issued_date,
+          dc_rights_s: license_name,
+          dc_publisher_s: publisher,
+          dct_temporal_sm: dct_temporal_dates
         }
       end
-      # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
+      # rubocop:enable
 
       def default_title
         @resource&.title&.strip
@@ -101,7 +112,7 @@ module Stash
       end
 
       def subjects
-        @resource.subjects.map{|s| s.subject&.strip}.reject(&:blank?)
+        @resource.subjects.map { |s| s.subject&.strip }.reject(&:blank?)
       end
 
       def publication_year
@@ -134,7 +145,8 @@ module Stash
       def description_text_for(type)
         the_type = DESCRIPTION_TYPES_TO_DB[type]
         return nil unless the_type
-        @resource.descriptions.where(description_type: the_type).map(&:description).reject(&:blank?).map{|i| Loofah.fragment(i).text.strip }.join("\r")
+        @resource.descriptions.where(description_type: the_type).map(&:description)
+          .reject(&:blank?).map { |i| Loofah.fragment(i).text.strip }.join("\r")
       end
 
       # gives array of names
@@ -144,14 +156,14 @@ module Stash
 
       # using the icky datacite mapping objects
       def geo_location_boxes
-        @resource.geolocations.map(&:geolocation_box).compact.map{|i| db_box_to_dc_mapping(db_box: i)}.compact
+        @resource.geolocations.map(&:geolocation_box).compact.map { |i| db_box_to_dc_mapping(db_box: i) }.compact
       end
 
       def geo_location_points
-        @resource.geolocations.map(&:geolocation_point).compact.map{|i| db_point_to_dc_mapping(db_point: i)}.compact
+        @resource.geolocations.map(&:geolocation_point).compact.map { |i| db_point_to_dc_mapping(db_point: i) }.compact
       end
 
-      def self.datacite?(elem)
+      def self.datacite?(_elem)
         true
         # elem.name == 'resource' && Datacite::Mapping.datacite_namespace?(elem)
       end
@@ -179,10 +191,10 @@ module Stash
       #
       # method takes the values supplied and also adds every year for a range so people can search for
       # any of those years which may not be explicitly named
-      def dct_temporal_dates # rubocop:disable Metrics/AbcSize
+      def dct_temporal_dates
         items = @resource.datacite_dates.map(&:date).reject(&:blank?)
-        items.map!{ |dt| Date.iso8601(dt).strftime('%Y-%m-%d') }
-        return items
+        items.map! { |dt| Date.iso8601(dt).strftime('%Y-%m-%d') }
+        items
 
         # the below is the old stuff.  We don't have ranges in our dates.
         # items = dates.map(&:to_s).compact
@@ -214,3 +226,4 @@ module Stash
     end
   end
 end
+# rubocop:enable Metrics/ClassLength
