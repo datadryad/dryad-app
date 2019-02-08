@@ -18,22 +18,15 @@ module StashApi
 
       allow(Dataset).to receive(:api_url_helper).and_return(generic_path)
 
-      # These are the factories for test data and create a basic identifier and resource
-      resource_state = create(:resource_state)
-
       @user = create(:user)
       @identifier = create(:identifier) do |identifier|
         identifier.resources.create do |r|
           r.user = @user
-          r.current_resource_state_id = resource_state
           r.current_editor_id = @user.id
           r.title = 'My Cats Have Fleas'
           r.tenant_id = @user.tenant_id
         end
       end
-
-      # briley - TODO remove this once the Resource is properly initializing it
-      create(:curation_activity, resource: @identifier.resources.last)
 
       create(:version) do |v|
         v.resource = @identifier.resources.first

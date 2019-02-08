@@ -976,11 +976,16 @@ module StashEngine
 
     describe 'curation helpers' do
 
+      before(:each) do
+        @identifier = Identifier.create
+      end
+
       describe :init_curation_status do
 
         it 'has a curation activity record when created' do
-          resource = Resource.create(user_id: user.id)
+          resource = Resource.create(identifier: @identifier, user_id: user.id)
           expect(resource.curation_activities.empty?).to eql(false)
+          expect(resource.latest_curation_status.id).to eql(resource.curation_activities.first.id)
         end
 
       end
@@ -1015,15 +1020,16 @@ module StashEngine
 
       describe :latest_curation_status do
 
-        it 'testing latest curation retrieval' do
+        it 'should return the most recent curation activity' do
           resource = Resource.create
           ca = CurationActivity.create(status: 'curation', resource_id: resource.id)
-          expect(resource.latest_curation_status).to eql(ca)
+          expect(resource.latest_curation_status.id).to eql(ca.id)
+        end
 
-          p Resource.first.inspect
-          p "------------------------------"
-          p Resource.includes(:curation_status).first.inspect
-
+        it 'should ignore curation activities with a status of "unchanged"' do
+          resource = Resource.create
+          CurationActivity.create(status: 'unchanged', resource_id: resource.id)
+          expect(resource.latest_curation_status.id).to eql(resource.curation_activities.order(:id).first.id)
         end
 
       end
