@@ -27,46 +27,48 @@
     </th>
   </tr>
 
-  <% ds_identifiers.each do |i| %>
-    <% latest_resource = i&.latest_resource %>
+  <% resources.each do |resource| %>
+    <% identifier = resource.identifier %>
+    <% latest_curation_activity = resource.current_curation_activity %>
+
     <tr class="c-lined-table__row">
       <td class="c-admin-hide-border-right">
-        <%= link_to latest_resource&.title, show_path(id: i.to_s), target: :blank %>
+        <%= link_to resource.title, show_path(id: identifier.id.to_s), target: :blank %>
       </td>
       <td class="c-admin-hide-border-left">
-        <% if latest_resource&.submitted? || latest_resource&.dataset_in_progress_editor&.id == current_user.id %>
+        <% if resource&.submitted? || resource&.dataset_in_progress_editor&.id == current_user.id %>
           <%= form_tag(metadata_entry_pages_new_version_path, method: :post) do -%>
             <button class="c-admin-edit-icon" title="Edit Dataset"><i class="fa fa-pencil" aria-hidden="true"></i></button>
-            <%= hidden_field_tag :resource_id, latest_resource.id %>
+            <%= hidden_field_tag :resource_id, resource.id %>
           <% end %>
         <% end %>
       </td>
-      <td class="c-admin-hide-border-right" id="js-curation-state-<%= i&.id %>">
-        <%= i&.identifier_state&.current_curation_status %>
+      <td class="c-admin-hide-border-right" id="js-curation-state-<%= identifier.id %>">
+        <%= latest_curation_activity.status %>
       </td>
       <td class="c-admin-hide-border-left">
-        <% if current_user.role == 'superuser' && latest_resource.curatable? %>
-          <%= form_tag({ controller: '/stash_engine/admin_datasets', action: 'status_popup', id: i.id }, method: :get, remote: true) do -%>
+        <% if current_user.role == 'superuser' && resource.curatable? %>
+          <%= form_tag({ controller: '/stash_engine/admin_datasets', action: 'status_popup', id: identifier.id }, method: :get, remote: true) do -%>
             <button class="c-admin-edit-icon" aria-label="Update status" alt="Update status">
               <i class="fa fa-pencil" aria-hidden="true"></i>
             </button>
           <% end %>
         <% end %>
       </td>
-      <td><%= i&.latest_resource&.user&.name %></td>
-      <td><%= i.identifier %></td>
+      <td><%= resource&.user&.name %></td>
+      <td><%= identifier.identifier %></td>
       <td class="c-admin-hide-border-right">
-        <%= formatted_datetime(i&.identifier_state&.curation_activity&.updated_at) %>
+        <%= formatted_datetime(latest_curation_activity.updated_at) %>
       </td>
       <td class="c-admin-hide-border-left">
-        <%= form_tag({ controller: '/stash_engine/admin_datasets', action: 'activity_log', id: i.id }, method: :get) do -%>
+        <%= form_tag({ controller: '/stash_engine/admin_datasets', action: 'activity_log', id: identifier.id }, method: :get) do -%>
           <button class="c-admin-edit-icon" aria-label="View Activity Log" alt="View Activity Log">
             <i class="fa fa-clock-o" aria-hidden="true"></i>
           </button>
         <% end %>
       </td>
-      <td><%= i&.identifier_state&.curation_activity&.user&.name %></td>
-      <td><%= filesize(i.storage_size) %></td>
+      <td><%= latest_curation_activity.user&.name %></td>
+      <td><%= filesize(identifier.storage_size) %></td>
       <td class="c-admin-hide-border-right">
         My last modified
       </td>

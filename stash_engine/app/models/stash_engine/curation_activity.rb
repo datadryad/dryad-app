@@ -49,6 +49,8 @@ module StashEngine
     # Callbacks
     # ------------------------------------------
     after_save :submit_to_stripe, :submit_to_datacite
+    after_create :update_resource_reference
+    before_destroy :remove_resource_reference
 
     # Instance methods
     # ------------------------------------------
@@ -85,6 +87,17 @@ module StashEngine
 
     # Callbacks
     # ------------------------------------------
+    def update_resource_reference
+      Resource.find(resource_id).update(current_curation_activity_id: id)
+    end
+
+    def remove_resource_reference
+      # Reverts the current_curation_activity pointer on Resource to the prior activity
+      prior = CurationActivity.where(resource_id: resource_id).where.not(id: id)
+                              .order(updated_at: :desc).first
+      Resource.find(resource_id).update(current_curation_activity_id: prior.id)
+    end
+
     def submit_to_stripe
       # Should also check the statuses in the line below so we don't resubmit charges!
       #   e.g. Check the status flags on this object unless we're storing a boolean

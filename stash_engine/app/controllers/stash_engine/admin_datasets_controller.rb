@@ -15,7 +15,8 @@ module StashEngine
       my_tenant_id = (current_user.role == 'admin' ? current_user.tenant_id : nil)
       @all_stats = Stats.new
       @seven_day_stats = Stats.new(tenant_id: my_tenant_id, since: (Time.new - 7.days))
-      @ds_identifiers = build_table_query
+
+      @resources = build_table_query
       respond_to do |format|
         format.html
         format.tsv
@@ -97,42 +98,38 @@ module StashEngine
     end
     # rubocop:enable Metrics/MethodLength
 
-    def build_table_query
-      ds_identifiers = base_table_join
-      ds_identifiers = ds_identifiers.where('stash_engine_resources.tenant_id = ?', current_user.tenant_id) if current_user.role != 'superuser'
 
+    def build_table_query
+      # Retrieve the ids of the all the latest Resources
+      resource_ids = Resource.latest_per_dataset.pluck(:id)
+
+      resources = Resource.joins(:identifier, :user, :current_resource_state, :current_curation_activity)
+                          .includes(:identifier, :user, :current_resource_state, :current_curation_activity)
+                          .where(stash_engine_resources: { id: resource_ids })
+
+      # If the user is not a super_admin restrict their access to their tenant
+      resources = resources.where(stash_engine_resources: { tenant_id: current_user.tenant_id }) unless current_user.role == 'superuser'
+
+      # Add any filters, sorots, searches and pagination
+      resources = add_searches(query_obj: resources)
+      resources = add_filters(query_obj: resources)
+      resources.order(@sort_column.order).page(@page).per(@page_size)
+    end
+
+    def add_searches(query_obj:)
       # We'll have to play with this search to get it to be reasonable with the insane interface so that it narrows to a small enough
       # set so that it is useful to people for finding something and a large enough set to have what they want without hunting too long.
       # It doesn't really support sorting by relevance because of the other sorts.
-      ds_identifiers = ds_identifiers.where('MATCH(search_words) AGAINST(?) > 0.5', params[:q]) unless params[:q].blank?
-      ds_identifiers = add_filters(query_obj: ds_identifiers)
-      ds_identifiers.order(@sort_column.order).page(@page).per(@page_size)
-    end
-
-    def base_table_join
-      # the following simpler ActiveRecord works, but then sorting becomes ambiguous because user joined twice
-      # also the joins aren't quite right because of the way itentifier state is set up and the associations
-      # Identifier.joins([{ latest_resource: :user }, { identifier_state: { curation_activity: :user } }])
-
-      # using these table aliases user1, user2 for the two different users
-      Identifier.joins('INNER JOIN `stash_engine_resources` ' \
-        'ON `stash_engine_identifiers`.`latest_resource_id` = `stash_engine_resources`.`id` ' \
-        'INNER JOIN `stash_engine_users` user1 ' \
-        'ON `stash_engine_resources`.`user_id` = user1.`id` ' \
-        'INNER JOIN `stash_engine_identifier_states` ' \
-        'ON `stash_engine_identifiers`.`id` = `stash_engine_identifier_states`.`identifier_id` ' \
-        'INNER JOIN `stash_engine_curation_activities` ' \
-        'ON `stash_engine_identifier_states`.`curation_activity_id` = `stash_engine_curation_activities`.`id` ' \
-        'LEFT JOIN `stash_engine_users` user2 ' \
-        'ON `stash_engine_curation_activities`.`user_id` = user2.`id`')
+      query_obj = query_obj.where('MATCH(stash_engine.identifiers.search_words) AGAINST(?) > 0.5', params[:q]) unless params[:q].blank?
+      query_obj
     end
 
     def add_filters(query_obj:)
       if TENANT_IDS.include?(params[:tenant]) && current_user.role == 'superuser'
-        query_obj = query_obj.where('stash_engine_resources.tenant_id = ?', params[:tenant])
+        query_obj = query_obj.where(stash_engine_resources: { tenant_id: params[:tenant] })
       end
       if CurationActivity.statuses.include?(params[:curation_status])
-        query_obj = query_obj.where('stash_engine_identifier_states.current_curation_status = ?', params[:curation_status])
+        query_obj = query_obj.where(stash_engine_curation_activities: { status: params[:curation_status] })
       end
       query_obj
     end
