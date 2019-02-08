@@ -73,27 +73,18 @@ module StashEngine
         :customer => resource.user.customer_id,
         :amount => 12000,
         :currency => "usd",
-        :description => "Data Processing Charge for " + stash_identifier.to_s
+        :description => "Data Processing Charge"
       )
         
       invoice = Stripe::Invoice.create(
-        :customer => resource.user.customer_id
+        :customer => resource.user.customer_id,
+        :description => "Dryad deposit " + stash_identifier.to_s + ", " + resource.title,
+        :metadata => {'curator' => user.name},
       )
-      invoice.auto_advance = true
-      invoice.finalize_invoice
       stash_identifier.invoice_id = invoice.id
       stash_identifier.save
-    
-      # TODO
-      # get the stripe key from config file
-
-      # create an invoiceitem for the Identifier
-      # - append any other info that is in the ticket
-      # - what if there are follow-up fees? can we have related transactions?
-      #   - may need to store them in the resource if there are extra fees?
-      #   - or at least, create a secondary invoice in Stripe that references the original invoice in a metadata field
-      # replace fixed DPC with a config parameter
-
+      invoice.auto_advance = true
+      invoice.finalize_invoice
     end
 
     def submit_to_datacite
