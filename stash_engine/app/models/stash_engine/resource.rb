@@ -52,7 +52,6 @@ module StashEngine
     def init_state_and_version
       init_state
       init_version
-      init_curation_status
       save
     end
 
@@ -76,6 +75,7 @@ module StashEngine
       identifier&.update_search_words! if title_changed? # this method is some activerecord magic
     end
 
+    before_create :init_curation_status
     after_create :init_state_and_version, :update_stash_identifier_last_resource
     # for some reason, after_create not working, so had to add after_update
     after_update :update_stash_identifier_last_resource
@@ -93,11 +93,6 @@ module StashEngine
     # We want to disable this when we don't need it since it really kills performance for finding a long
     # list of resources.  For example in the rails console, resource.all does another query for each item in the list
     # after_find :ensure_state_and_version
-
-    def init_curation_activity_and_identifier_state
-      curation_activities << CurationActivity.create(identifier_id: identifier_id, user_id: user_id)
-      save!
-    end
 
     # ------------------------------------------------------------
     # Scopes
@@ -276,11 +271,12 @@ module StashEngine
     end
 
     def latest_curation_status
-      CurationActivity.latest(id)
+      StashEngine::CurationActivity.latest(id)
     end
 
+    # Create the initial CurationActivity and add its id to latest_curation_activity_id
     def init_curation_status
-      curation_activities << CurationActivity.new
+      curation_activities << StashEngine::CurationActivity.new
     end
     private :init_curation_status
 
