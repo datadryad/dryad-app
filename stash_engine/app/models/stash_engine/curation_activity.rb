@@ -14,9 +14,11 @@ module StashEngine
                                          'Versioned'],
                                     message: '%{value} is not a valid status' }
     validates :status, presence: true
-    after_create :update_identifier_state, :submit_to_datacite
-    after_update :update_identifier_state, :submit_to_datacite
 
+    # Callbacks
+    # ------------------------------------------
+    after_save :submit_to_stripe, :submit_to_datacite
+    
     def self.curation_status(my_stash_id)
       curation_activities = CurationActivity.where(stash_identifier: my_stash_id).order(updated_at: :desc)
       curation_activities.each do |activity|
@@ -37,6 +39,60 @@ module StashEngine
         created_at: created_at,
         updated_at: updated_at
       }
+    end
+
+    # Callbacks
+    # ------------------------------------------
+    def submit_to_stripe
+      # Should also check the statuses in the line below so we don't resubmit charges!
+      #   e.g. Check the status flags on this object unless we're storing a boolean
+      #        somewhere that records that we've already charged them.
+      #   `return unless identifier.has_journal? && self.published?`
+
+      #TODO
+      #return unless resource.identifier&.chargeable?
+
+      resource = stash_identifier.resources.first
+
+      Stripe.api_key = "sk_test_fX9EovHjWMI7pR7saJuJ6Cka"
+
+      # only ask for payment if there is no previous invoice
+      if resource.invoice_id.nil?
+        # ensure a Stripe customer_id exists
+        if resource.user.customer_id.nil?
+          customer = Stripe::Customer.create(
+            :description => resource.user.name,
+            :email => resource.user.email,
+          )
+          resource.user.customer_id = customer.id
+          resource.user.save
+        end
+
+        invoice_item = Stripe::InvoiceItem.create(
+          :customer => resource.user.customer_id,
+          :amount => 12000,
+          :currency => "usd",
+          :description => "Data Processing Charge for " + resource.identifier.to_s
+        )
+        
+        invoice = Stripe::Invoice.create(
+          :customer => resource.user.customer_id
+        )
+        invoice.auto_advance = true
+        invoice.finalize_invoice
+        resource.invoice_id = invoice.id
+        resource.save
+      end
+      # TODO
+      # get the stripe key from config file
+
+      # create an invoiceitem for the Identifier
+      # - append any other info that is in the ticket
+      # - what if there are follow-up fees? can we have related transactions?
+      #   - may need to store them in the resource if there are extra fees?
+      #   - or at least, create a secondary invoice in Stripe that references the original invoice in a metadata field
+      # replace fixed DPC with a config parameter
+
     end
 
     def submit_to_datacite
