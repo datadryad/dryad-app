@@ -63,8 +63,7 @@ module StashEngine
       sort_table = SortableTable::SortTable.new([created_at])
       @sort_column = sort_table.sort_column(params[:sort], params[:direction])
       resource_ids = @identifier.resources.collect(&:id)
-      @curation_activities = CurationActivity.where(resource_id: resource_ids)
-                                             .order(@sort_column.order, id: :asc)
+      @curation_activities = CurationActivity.where(resource_id: resource_ids).order(@sort_column.order, id: :asc)
       @internal_data = InternalDatum.where(identifier_id: @identifier.id)
     end
 
@@ -104,14 +103,13 @@ module StashEngine
     end
     # rubocop:enable Metrics/MethodLength
 
-
     def build_table_query
       # Retrieve the ids of the all the latest Resources
       resource_ids = Resource.latest_per_dataset.pluck(:id)
 
       resources = Resource.joins(:identifier, :user, :current_resource_state, :current_curation_activity)
-                          .includes(:identifier, :user, :current_resource_state, :current_curation_activity)
-                          .where(stash_engine_resources: { id: resource_ids })
+        .includes(:identifier, :user, :current_resource_state, :current_curation_activity)
+        .where(stash_engine_resources: { id: resource_ids })
 
       # If the user is not a super_admin restrict their access to their tenant
       resources = resources.where(stash_engine_resources: { tenant_id: current_user.tenant_id }) unless current_user.role == 'superuser'
