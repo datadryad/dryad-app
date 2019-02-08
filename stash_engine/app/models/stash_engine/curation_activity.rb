@@ -49,40 +49,41 @@ module StashEngine
       #        somewhere that records that we've already charged them.
       #   `return unless identifier.has_journal? && self.published?`
 
-      #TODO
+      #TODO -- re-enable this with the chargeable logic
       #return unless resource.identifier&.chargeable?
 
-      resource = stash_identifier.resources.first
-
-      Stripe.api_key = "sk_test_fX9EovHjWMI7pR7saJuJ6Cka"
-
-      # only ask for payment if there is no previous invoice
-      if resource.invoice_id.nil?
-        # ensure a Stripe customer_id exists
-        if resource.user.customer_id.nil?
-          customer = Stripe::Customer.create(
-            :description => resource.user.name,
-            :email => resource.user.email,
-          )
-          resource.user.customer_id = customer.id
-          resource.user.save
-        end
-
-        invoice_item = Stripe::InvoiceItem.create(
-          :customer => resource.user.customer_id,
-          :amount => 12000,
-          :currency => "usd",
-          :description => "Data Processing Charge for " + resource.identifier.to_s
-        )
+      # only ask for payment if there is no previous invoice and
+      # if the stats has been changed to a published status
+      return unless stash_identifier.invoice_id.nil? && (status == 'Published' || status == 'Embargoed')
         
-        invoice = Stripe::Invoice.create(
-          :customer => resource.user.customer_id
+      Stripe.api_key = "sk_test_fX9EovHjWMI7pR7saJuJ6Cka"
+      resource = stash_identifier.resources.first
+      
+      # ensure a Stripe customer_id exists
+      if resource.user.customer_id.nil?
+        customer = Stripe::Customer.create(
+          :description => resource.user.name,
+          :email => resource.user.email,
         )
-        invoice.auto_advance = true
-        invoice.finalize_invoice
-        resource.invoice_id = invoice.id
-        resource.save
+        resource.user.customer_id = customer.id
+        resource.user.save
       end
+
+      invoice_item = Stripe::InvoiceItem.create(
+        :customer => resource.user.customer_id,
+        :amount => 12000,
+        :currency => "usd",
+        :description => "Data Processing Charge for " + stash_identifier.to_s
+      )
+        
+      invoice = Stripe::Invoice.create(
+        :customer => resource.user.customer_id
+      )
+      invoice.auto_advance = true
+      invoice.finalize_invoice
+      stash_identifier.invoice_id = invoice.id
+      stash_identifier.save
+    
       # TODO
       # get the stripe key from config file
 
