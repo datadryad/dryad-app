@@ -60,7 +60,7 @@ module StashEngine
         CurationActivity.statuses.each do |s|
           unless %w[peer_review action_required unchanged].include?(s)
             @ca.send("#{s}!")
-            expect(@ca.readable_status).to eql(s.humanize)
+            expect(@ca.readable_status).to eql(s.humanize.split.map(&:capitalize).join(' '))
           end
         end
       end

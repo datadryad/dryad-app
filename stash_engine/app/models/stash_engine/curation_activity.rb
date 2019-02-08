@@ -102,8 +102,7 @@ module StashEngine
 
     def remove_resource_reference
       # Reverts the current_curation_activity pointer on Resource to the prior activity
-      prior = CurationActivity.where(resource_id: resource_id).where.not(id: id)
-                              .order(updated_at: :desc).first
+      prior = CurationActivity.where(resource_id: resource_id).where.not(id: id).order(updated_at: :desc).first
       Resource.find(resource_id).update(current_curation_activity_id: prior.id) if prior.present?
     end
 
