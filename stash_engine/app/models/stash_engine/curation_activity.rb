@@ -49,14 +49,17 @@ module StashEngine
       #        somewhere that records that we've already charged them.
       #   `return unless identifier.has_journal? && self.published?`
 
-      #TODO -- re-enable this with the chargeable logic
-      #return unless resource.identifier&.chargeable?
 
       # only ask for payment if there is no previous invoice and
       # if the stats has been changed to a published status
-      return unless stash_identifier.invoice_id.nil? && (status == 'Published' || status == 'Embargoed')
-        
-      Stripe.api_key = "sk_test_fX9EovHjWMI7pR7saJuJ6Cka"
+      return unless stash_identifier.invoice_id.nil? &&
+                    (status == 'Published' || status == 'Embargoed') &&
+                    StashEngine.app.payments.service == 'stripe'      
+
+      #TODO -- re-enable this with the chargeable logic 
+      #return unless resource.identifier&.chargeable?
+      
+      Stripe.api_key = StashEngine.app.payments.key
       resource = stash_identifier.resources.first
       
       # ensure a Stripe customer_id exists
@@ -71,7 +74,7 @@ module StashEngine
 
       invoice_item = Stripe::InvoiceItem.create(
         :customer => resource.user.customer_id,
-        :amount => 12000,
+        :amount => StashEngine.app.payments.data_processing_charge,
         :currency => "usd",
         :description => "Data Processing Charge"
       )
