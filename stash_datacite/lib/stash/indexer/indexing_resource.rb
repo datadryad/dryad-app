@@ -163,7 +163,7 @@ module Stash
         @resource.geolocations.map(&:geolocation_point).compact.map { |i| db_point_to_dc_mapping(db_point: i) }.compact
       end
 
-      def self.datacite?(_elem)
+      def self.datacite?
         true
         # elem.name == 'resource' && Datacite::Mapping.datacite_namespace?(elem)
       end
