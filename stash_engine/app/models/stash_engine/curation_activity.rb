@@ -36,6 +36,7 @@ module StashEngine
     # Validations
     # ------------------------------------------
     validates :resource, presence: true
+    validates :status, presence: true, inclusion: { in: enum_vals }
 
     # Scopes
     # ------------------------------------------
@@ -46,8 +47,8 @@ module StashEngine
     # Callbacks
     # ------------------------------------------
     after_save :submit_to_stripe, :submit_to_datacite
-    after_create :update_resource_reference
-    before_destroy :remove_resource_reference
+    after_create :update_resource_reference!
+    after_destroy :remove_resource_reference!
 
     # Class methods
     # ------------------------------------------
@@ -91,14 +92,14 @@ module StashEngine
 
     # Callbacks
     # ------------------------------------------
-    def update_resource_reference
-      Resource.find(resource_id).update(current_curation_activity_id: id)
+    def update_resource_reference!
+      StashEngine::Resource.find(resource_id).update(current_curation_activity_id: id)
     end
 
-    def remove_resource_reference
+    def remove_resource_reference!
       # Reverts the current_curation_activity pointer on Resource to the prior activity
       prior = CurationActivity.where(resource_id: resource_id).where.not(id: id).order(updated_at: :desc).first
-      Resource.find(resource_id).update(current_curation_activity_id: prior.id) if prior.present?
+      StashEngine::Resource.find(resource_id).update(current_curation_activity_id: prior&.id || '')
     end
 
     def submit_to_stripe

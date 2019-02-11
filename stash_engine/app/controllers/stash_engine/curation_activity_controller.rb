@@ -26,30 +26,24 @@ module StashEngine
     # in list for identifier, which is the ID that is passed in.  It does ajax mumbo-jumbo for admin area.
     # this isn't RESTful
     # def create
+    # rubocop:disable Metrics/MethodLength
     def status_change
       respond_to do |format|
         format.js do
           # If the user was only adding a note, NOT changing the status, then retrieve
-          # the last curation status and use it
-          if curation_activity_params[:status].blank?
-            resource = StashEngine::Resource.includes(:current_curation_activity).find(curation_activity_params[:resource_id])
-            @activity = CurationActivity.create(
-              resource_id: resource.id,
-              status: resource.current_curation_activity.status,
-              user_id: current_user.id,
-              note: curation_activity_params[:note]
-            )
-          else
-            @activity = CurationActivity.create(
-              resource_id: curation_activity_params[:resource_id],
-              status: curation_activity_params[:status],
-              user_id: current_user.id,
-              note: curation_activity_params[:note]
-            )
-          end
+          # the last curation status and use that
+          status = if curation_activity_params[:status].blank?
+                     StashEngine::Resource.find(curation_activity_params[:resource_id]).current_curation_status
+                   else
+                     curation_activity_params[:status]
+                   end
+          @activity = CurationActivity.create(resource_id: curation_activity_params[:resource_id],
+                                              note: curation_activity_params[:note],
+                                              status: status, user_id: current_user.id)
         end
       end
     end
+    # rubocop:enable Metrics/MethodLength
 
     private
 

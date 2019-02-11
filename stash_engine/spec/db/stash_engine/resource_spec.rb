@@ -984,8 +984,9 @@ module StashEngine
 
         it 'has a curation activity record when created' do
           resource = Resource.create(identifier: @identifier, user_id: user.id)
+          resource.reload
           expect(resource.curation_activities.empty?).to eql(false)
-          expect(resource.latest_curation_status.id).to eql(resource.curation_activities.first.id)
+          expect(resource.current_curation_activity_id).to eql(resource.curation_activities.first.id)
         end
 
       end
@@ -995,11 +996,11 @@ module StashEngine
         it 'is false when current_resource_state != "submitted"' do
           resource = Resource.create(user_id: user.id)
           resource.current_state = 'in_progress'
-          expect(resource.curatable?).to eql(false)
+          expect(resource.reload.curatable?).to eql(false)
           resource.current_state = 'processing'
-          expect(resource.curatable?).to eql(false)
+          expect(resource.reload.curatable?).to eql(false)
           resource.current_state = 'error'
-          expect(resource.curatable?).to eql(false)
+          expect(resource.reload.curatable?).to eql(false)
         end
 
         it 'is false even when current curation state is Submitted' do
@@ -1013,23 +1014,22 @@ module StashEngine
         it 'is true when current_resource_state == "submitted"' do
           resource = Resource.create(user_id: user.id)
           resource.current_state = 'submitted'
-          expect(resource.curatable?).to eql(true)
+          expect(resource.reload.curatable?).to eql(true)
         end
 
       end
 
-      describe :latest_curation_status do
+      describe :current_curation_activity do
 
         it 'should return the most recent curation activity' do
           resource = Resource.create
           ca = CurationActivity.create(status: 'curation', resource_id: resource.id)
-          expect(resource.latest_curation_status.id).to eql(ca.id)
+          expect(resource.reload.current_curation_activity_id).to eql(ca.id)
         end
 
-        it 'should ignore curation activities with a status of "unchanged"' do
+        it 'should have a value when the record is created' do
           resource = Resource.create
-          CurationActivity.create(status: 'unchanged', resource_id: resource.id)
-          expect(resource.latest_curation_status.id).to eql(resource.curation_activities.order(:id).first.id)
+          expect(resource.reload.current_curation_activity_id.present?).to eql(true)
         end
 
       end
