@@ -1,4 +1,5 @@
 require 'datacite/mapping'
+require 'cgi'
 
 # This file and classes are based on David's stash-harvester class and mostly the 'datacite_extensions.rb' which is
 # most of the funcationality we need, but we need it to come from the database instead of the returned stash-wrapper.xml
@@ -147,7 +148,7 @@ module Stash
         the_type = DESCRIPTION_TYPES_TO_DB[type]
         return nil unless the_type
         @resource.descriptions.where(description_type: the_type).map(&:description)
-          .reject(&:blank?).map { |i| Loofah.fragment(i).text.strip }.join("\r")
+          .reject(&:blank?).map { |i| fix_html(i) }.join("\r")
       end
 
       # gives array of names
@@ -223,6 +224,10 @@ module Stash
       def db_point_to_dc_mapping(db_point:)
         return nil unless db_point.latitude && db_point.longitude
         Datacite::Mapping::GeoLocationPoint.new(latitude: db_point.latitude.to_f, longitude: db_point.longitude.to_f)
+      end
+
+      def fix_html(my_str)
+        CGI.unescapeHTML(Loofah.fragment(my_str).text.strip)
       end
     end
   end
