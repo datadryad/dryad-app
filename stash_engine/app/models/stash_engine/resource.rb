@@ -275,6 +275,10 @@ module StashEngine
       submitted?
     end
 
+    def current_curation_status
+      current_curation_activity.status
+    end
+
     def latest_curation_status
       StashEngine::CurationActivity.latest(id)
     end

@@ -8,7 +8,7 @@ module StashEngine
     def status_select(statuses = [])
       statuses = StashEngine::CurationActivity.statuses if statuses.empty?
       statuses.map do |status|
-        StashEngine::CurationActivity.readable_status(status)
+        [StashEngine::CurationActivity.readable_status(status), status]
       end
     end
 
@@ -22,7 +22,7 @@ module StashEngine
       when 'withdrawn'
         statuses = statuses.select { |s| %w[published embargoed].include?(s) }
       else
-        unavailable = %w[in_progress submitted peer_review unchanged]
+        unavailable = %w[in_progress submitted peer_review]
         unavailable << current_status
         statuses = statuses.reject { |s| unavailable.include?(s) }
       end

@@ -29,12 +29,24 @@ module StashEngine
     def status_change
       respond_to do |format|
         format.js do
-          @activity = CurationActivity.create(
-            resource_id: curation_activity_params[:resource_id],
-            status: curation_activity_params[:status],
-            user_id: current_user.id,
-            note: curation_activity_params[:note]
-          )
+          # If the user was only adding a note, NOT changing the status, then retrieve
+          # the last curation status and use it
+          if curation_activity_params[:status].blank?
+            resource = StashEngine::Resource.includes(:current_curation_activity).find(curation_activity_params[:resource_id])
+            @activity = CurationActivity.create(
+              resource_id: resource.id,
+              status: resource.current_curation_activity.status,
+              user_id: current_user.id,
+              note: curation_activity_params[:note]
+            )
+          else
+            @activity = CurationActivity.create(
+              resource_id: curation_activity_params[:resource_id],
+              status: curation_activity_params[:status],
+              user_id: current_user.id,
+              note: curation_activity_params[:note]
+            )
+          end
         end
       end
     end
