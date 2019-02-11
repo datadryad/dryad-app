@@ -4,7 +4,9 @@ module Stash
   module Indexer
     class SolrIndexer
 
-      ADD_ATTRIBUTES = { :commitWithin => 10 }.freeze  # means it won't take forever to commit
+      attr_reader :solr
+
+      ADD_ATTRIBUTES = { commitWithin: 10 }.freeze # means it won't take forever to commit
 
       def initialize(solr_url:)
         # rsolr gives lots of other config options, but this is probably all we need for now
