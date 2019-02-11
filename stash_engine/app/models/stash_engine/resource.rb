@@ -275,15 +275,12 @@ module StashEngine
       submitted?
     end
 
+    # Shortcut to the current curation activity's status
     def current_curation_status
       current_curation_activity.status
     end
 
-    def latest_curation_status
-      StashEngine::CurationActivity.latest(id)
-    end
-
-    # Create the initial CurationActivity and add its id to latest_curation_activity_id
+    # Create the initial CurationActivity
     def init_curation_status
       curation_activities << StashEngine::CurationActivity.new
     end

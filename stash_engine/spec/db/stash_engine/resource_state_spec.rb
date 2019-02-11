@@ -15,7 +15,7 @@ module StashEngine
         original.update(resource_state: 'submitted')
         @resource.reload
         expect(@resource.curation_activities.length).to eql(2)
-        expect(@resource.latest_curation_status.status).to eql('submitted')
+        expect(@resource.current_curation_status).to eql('submitted')
       end
 
       it 'creates a CurationActivity when the resource_state is "in_progress"' do
@@ -24,7 +24,7 @@ module StashEngine
         ResourceState.create(resource_id: @resource.id, resource_state: 'in_progress')
         @resource.reload
         expect(@resource.curation_activities.length).to eql(3)
-        expect(@resource.latest_curation_status.status).to eql('in_progress')
+        expect(@resource.current_curation_status).to eql('in_progress')
       end
 
       it 'cadoes NOT create a CurationActivity record when resource_state is "error" or "processing"' do
@@ -32,13 +32,13 @@ module StashEngine
         original.update(resource_state: 'error')
         @resource.reload
         expect(@resource.curation_activities.length).to eql(1)
-        expect(@resource.latest_curation_status.status).to eql('in_progress')
+        expect(@resource.current_curation_status).to eql('in_progress')
 
         original = @resource.current_resource_state
         original.update(resource_state: 'processing')
         @resource.reload
         expect(@resource.curation_activities.length).to eql(1)
-        expect(@resource.latest_curation_status.status).to eql('in_progress')
+        expect(@resource.current_curation_status).to eql('in_progress')
       end
 
     end
