@@ -67,6 +67,7 @@ module Stash
 
       # this is really what we want to get out of this for solr indexing, the rest is for compatibility with old indexing
       def to_index_document # rubocop:disable Metrics/MethodLength
+        georss = calc_bounding_box
         {
           uuid: doi,
           dc_identifier_s: doi,
@@ -76,7 +77,7 @@ module Stash
           dc_description_s: description_text_for(Datacite::Mapping::DescriptionType::ABSTRACT).to_s.strip,
           dc_subject_sm: subjects,
           dct_spatial_sm: geo_location_places,
-          georss_box_s: calc_bounding_box,
+          georss_box_s: (georss ? georss.to_s : nil),
           solr_geom: bounding_box_envelope,
           solr_year_i: publication_year,
           dct_issued_dt: issued_date,

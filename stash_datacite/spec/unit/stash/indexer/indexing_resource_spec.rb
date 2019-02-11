@@ -260,6 +260,32 @@ module Stash
           expect(@ir.bounding_box_envelope).to eql('ENVELOPE(-128.671875, -95.888672, 43.612217, 34.270836)')
         end
       end
+
+      describe '#to_index_document' do
+        it 'creates the correct mega-hash for SOLR' do
+          # all these attributes were created by other methods with minimal transformation by this method and mostly
+          # just assembled into the mega-hash for SOLR
+          mega_hash = @ir.to_index_document
+          expected_mega_hash = {
+            uuid: 'doi:10.1072/FK2something',
+            dc_identifier_s: 'doi:10.1072/FK2something',
+            dc_title_s: 'My test factory',
+            dc_creator_sm: ['McVie, Gargcelia', 'Liu, Horace'],
+            dc_type_s: 'Dataset',
+            dc_description_s: 'Cat belowsquared',
+            dc_subject_sm: ['freshwater cats', 'parsimonious'],
+            dct_spatial_sm: %w[Oakland Timbuktu Greenland],
+            georss_box_s: '34.270836 -128.671875 43.612217 -95.888672',
+            solr_geom: 'ENVELOPE(-128.671875, -95.888672, 43.612217, 34.270836)',
+            solr_year_i: 2018,
+            dct_issued_dt: '2008-09-15T15:53:00Z',
+            dc_rights_s: 'CC0 1.0 Universal (CC0 1.0) Public Domain Dedication',
+            dc_publisher_s: 'Dryad',
+            dct_temporal_sm: ['2018-11-14']
+          }
+          expect(mega_hash).to eql(expected_mega_hash)
+        end
+      end
       # Note: private methods in this class end up being tested through other methods
     end
   end
