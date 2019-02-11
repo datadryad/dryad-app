@@ -12,9 +12,6 @@ module StashEngine
 
       class_methods do
 
-        # Disabling rubocop here because we reasonably abstract this into callable methods
-        # due to the
-
         def string_enum(col, vals = [], default_val = nil, allow_nil = true)
           values = vals.map(&:to_s)
 
