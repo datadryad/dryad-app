@@ -186,6 +186,12 @@ module Stash
           expect(@ir.geo_location_boxes.first.class).to eql(Datacite::Mapping::GeoLocationBox)
         end
 
+        it 'should give the right value for a box' do
+          ir_box = @ir.geo_location_boxes.second
+          box = Datacite::Mapping::GeoLocationBox.new(37.0, -117.0, 38.0, -116.0)
+          expect(ir_box).to eq(box)
+        end
+
         # we can check actual values in the main output of the solr conversion much easier because it becomes a simple type
         # so deferring it to that method to check
       end
@@ -199,8 +205,11 @@ module Stash
           expect(@ir.geo_location_points.first.class).to eql(Datacite::Mapping::GeoLocationPoint)
         end
 
-        # we can check actual values in the main output of the solr conversion much easier because it becomes a simple type
-        # so deferring it to that method to check
+        it 'gives correct values for a point' do
+          ir_point = @ir.geo_location_points.second
+          point = Datacite::Mapping::GeoLocationPoint.new(41.23, -122.31)
+          expect(ir_point).to eq(point)
+        end
       end
 
       describe '#datacite?' do
@@ -210,11 +219,34 @@ module Stash
       end
 
       describe '#calc_bounding_box' do
-        it 'calculates a bounding box for for displaying blobs on the map' do
+        it 'calculates a bounding box with a Datacite::Mapping object' do
           expect(@ir.calc_bounding_box.class).to eql(Datacite::Mapping::GeoLocationBox)
         end
 
-        # again we can check actual values more easily in the overall solr output since they are not wrapped in crazy objects
+        it 'should calculate the bounding box of a box as itself' do
+          @resource.geolocations.each_with_index { |obj, index| obj.destroy if index != 0 } # delete all but first item
+          @resource.geolocations.first.geolocation_point.destroy # destroy the point coordinates for this
+          @resource.reload
+
+          temp_ir = IndexingResource.new(resource: @resource)
+
+          box = Datacite::Mapping::GeoLocationBox.new(34.270836, -128.671875, 43.612217, -95.888672)
+          expect(temp_ir.calc_bounding_box).to eq(box)
+        end
+
+        it 'should calculate the bounding box of a set of points' do
+          @resource.geolocations.each { |item| item.geolocation_box.destroy if item.geolocation_box }
+          @resource.reload
+
+          temp_ir = IndexingResource.new(resource: @resource)
+          box = Datacite::Mapping::GeoLocationBox.new(37.0, -122.31, 41.23, -122.0)
+          expect(temp_ir.calc_bounding_box).to eq(box)
+        end
+
+        it 'should calculate the bounding box of a combination of points and boxes' do
+          box = Datacite::Mapping::GeoLocationBox.new(34.270836, -128.671875, 43.612217, -95.888672)
+          expect(@ir.calc_bounding_box).to eq(box)
+        end
       end
 
       describe '#dct_temporal_dates' do
@@ -228,83 +260,7 @@ module Stash
           expect(@ir.bounding_box_envelope).to eql('ENVELOPE(-128.671875, -95.888672, 43.612217, 34.270836)')
         end
       end
-
-      # --    ---- --------------------------------
-
-      describe '#usage_notes?' do
-        xit 'extracts the usage notes' do
-          usage_desc = Description.new(type: DescriptionType::OTHER, value: 'Some other value')
-          @resource.descriptions << usage_desc
-          expect(@resource.usage_notes).to eq(usage_desc.value)
-        end
-      end
-
-      describe 'geo_location helpers' do
-        describe '#geo_location_boxes' do
-          xit 'should extract the boxes' do
-            expect(@resource.geo_location_boxes).to eq([@box1, @box2])
-          end
-        end
-
-        describe '#geo_location_points' do
-          xit 'should extract the points' do
-            expect(@resource.geo_location_points).to contain_exactly(@point1, @point2, @place_point1, @place_point2)
-          end
-        end
-
-        describe '#geo_location_places' do
-          xit 'should extract the places' do
-            expect(@resource.geo_location_places).to eq([@place1, @place2])
-          end
-        end
-      end
-
-      describe '#calc_bounding_box' do
-        xit 'should calculate the bounding box of a box as itself' do
-          box = GeoLocationBox.new(16.31591, 73.480431, 22.672657, 83.068985)
-          allow(@resource).to receive(:geo_locations) { [GeoLocation.new(box: box)] }
-          expect(@resource.calc_bounding_box).to eq(box)
-        end
-
-        xit 'should calculate the bounding box of a set of points' do
-          box = GeoLocationBox.new(16.31591, 73.480431, 22.672657, 83.068985)
-          points = [
-            GeoLocationPoint.new(16.31591, 80),
-            GeoLocationPoint.new(20, 73.480431),
-            GeoLocationPoint.new(22.672657, 78),
-            GeoLocationPoint.new(18, 83.068985)
-          ]
-          allow(@resource).to receive(:geo_locations) do
-            points.map { |point| GeoLocation.new(point: point) }
-          end
-          expect(@resource.calc_bounding_box).to eq(box)
-        end
-
-        xit 'should calculate the bounding box of a combination of points and boxes' do
-          allow(@resource).to receive(:geo_locations) do
-            [
-              GeoLocation.new(point: GeoLocationPoint.new(16.31591, 80)),
-              GeoLocation.new(point: GeoLocationPoint.new(20, 83.068985)),
-              GeoLocation.new(box: GeoLocationBox.new(18, 73.480431, 22.672657, 78))
-            ]
-          end
-          box = GeoLocationBox.new(16.31591, 73.480431, 22.672657, 83.068985)
-          expect(@resource.calc_bounding_box).to eq(box)
-        end
-
-        xit 'should include place points and boxes' do
-          allow(@resource).to receive(:geo_locations) do
-            [
-              GeoLocation.new(point: GeoLocationPoint.new(16.31591, 80)),
-              GeoLocation.new(place: 'Pacific Ocean', point: GeoLocationPoint.new(-48.8767, -123.3933)),
-              GeoLocation.new(point: GeoLocationPoint.new(20, 83.068985)),
-              GeoLocation.new(place: 'Ouagadougou', box: GeoLocationBox.new(18, 73.480431, 22.672657, 78))
-            ]
-          end
-          box = GeoLocationBox.new(-48.8767, -123.3933, 22.672657, 83.068985)
-          expect(@resource.calc_bounding_box).to eq(box)
-        end
-      end
+      # Note: private methods in this class end up being tested through other methods
     end
   end
 end
