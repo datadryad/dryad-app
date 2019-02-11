@@ -38,7 +38,11 @@ module StashEngine
     # Unobtrusive Javascript (UJS) to do AJAX by running javascript
     def note_popup
       respond_to do |format|
-        @identifier = Identifier.find(params[:id])
+        resource = Resource.includes(:identifier, :current_curation_activity).find(params[:id])
+        @curation_activity = CurationActivity.new(
+          resource_id: resource.id,
+          status: resource.current_curation_activity.status
+        )
         format.js
       end
     end
@@ -83,9 +87,8 @@ module StashEngine
     def setup_ds_sorting
       title_sort = SortableTable::SortColumnCustomDefinition.new('title', asc: 'stash_engine_resources.title asc',
                                                                           desc: 'stash_engine_resources.title desc')
-      status_sort = SortableTable::SortColumnCustomDefinition.new('status',
-                                                                  asc: 'stash_engine_identifier_states.current_curation_status asc',
-                                                                  desc: 'stash_engine_identifier_states.current_curation_status desc')
+      status_sort = SortableTable::SortColumnCustomDefinition.new('status', asc: 'stash_engine_curation_activities.status asc',
+                                                                            desc: 'stash_engine_curation_activities.status desc')
       author_sort = SortableTable::SortColumnCustomDefinition.new('author', asc: 'user1.last_name asc, user1.first_name asc',
                                                                             desc: 'user1.last_name desc, user1.first_name desc')
       doi_sort = SortableTable::SortColumnCustomDefinition.new('doi', asc: 'stash_engine_identifiers.identifier asc',
@@ -124,7 +127,7 @@ module StashEngine
       # We'll have to play with this search to get it to be reasonable with the insane interface so that it narrows to a small enough
       # set so that it is useful to people for finding something and a large enough set to have what they want without hunting too long.
       # It doesn't really support sorting by relevance because of the other sorts.
-      query_obj = query_obj.where('MATCH(stash_engine.identifiers.search_words) AGAINST(?) > 0.5', params[:q]) unless params[:q].blank?
+      query_obj = query_obj.where('MATCH(stash_engine_identifiers.search_words) AGAINST(?) > 0.5', params[:q]) unless params[:q].blank?
       query_obj
     end
 

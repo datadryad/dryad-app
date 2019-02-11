@@ -21,8 +21,6 @@ module StashEngine
     #
     #  :published   <-- Is also automatically set when the Embargo's publication_date
     #                  has reached maturity
-    #  :unchanged   <-- Automatically set when a Curator adds a note to on the Admin
-    #                   activity page
     enum_vals = %w[
       in_progress
       submitted
@@ -32,7 +30,6 @@ module StashEngine
       embargoed
       published
       withdrawn
-      unchanged
     ]
     string_enum('status', enum_vals, 'in_progress', false)
 
@@ -43,7 +40,7 @@ module StashEngine
     # Scopes
     # ------------------------------------------
     scope :latest, ->(resource_id) {
-      where(resource_id: resource_id).where.not(status: 'unchanged').order(updated_at: :desc, id: :desc).first
+      where(resource_id: resource_id).order(updated_at: :desc, id: :desc).first
     }
 
     # Callbacks
@@ -61,8 +58,6 @@ module StashEngine
         'Private for Peer Review'
       when 'action_required'
         'Author Action Required'
-      when 'unchanged'
-        'Status Unchanged'
       else
         status.humanize.split.map(&:capitalize).join(' ')
       end

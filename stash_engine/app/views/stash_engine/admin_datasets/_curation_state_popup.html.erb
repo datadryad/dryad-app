@@ -6,7 +6,8 @@
         remote: true do |f| %>
 
     <div class="c-input">
-      <%= f.select :status, options_for_select(filter_status_select(curation_activity.status), curation_activity.status) %>
+      <label class="c-input__label">Status</label>
+      <%= f.select :status, options_for_select(filter_status_select(curation_activity.status)), include_blank: true %>
     </div>
     <div class="c-input">
       <label class="c-input__label">Notes</label>
