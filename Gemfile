@@ -49,6 +49,7 @@ gem 'yui-compressor'
 gem 'exception_notification'
 gem 'httparty'
 gem 'jbuilder', '~> 2.0'
+gem 'stripe'
 
 # ############################################################
 # Development and testing

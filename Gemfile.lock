@@ -242,6 +242,7 @@ GEM
       activesupport (>= 3.0)
       deep_merge (~> 1.2.1)
       dry-validation (>= 0.12.2)
+    connection_pool (2.2.2)
     crass (1.0.4)
     csl (1.5.0)
       namae (~> 1.0)
@@ -425,6 +426,8 @@ GEM
     multipart-post (2.0.0)
     mysql2 (0.4.10)
     namae (1.0.1)
+    net-http-persistent (3.0.0)
+      connection_pool (~> 2.2)
     net-scp (1.2.1)
       net-ssh (>= 2.6.5)
     net-ssh (5.1.0)
@@ -611,6 +614,9 @@ GEM
     sshkit (1.18.0)
       net-scp (>= 1.1.2)
       net-ssh (>= 2.8.0)
+    stripe (4.8.0)
+      faraday (~> 0.13)
+      net-http-persistent (~> 3.0)
     sxp (1.0.1)
       rdf (>= 2.2, < 4.0)
     temple (0.8.0)
@@ -696,6 +702,7 @@ DEPENDENCIES
   stash_datacite!
   stash_discovery!
   stash_engine!
+  stripe
   therubyracer
   turbolinks
   uglifier (~> 3.0.4)
