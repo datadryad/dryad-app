@@ -41,7 +41,7 @@ namespace :identifiers do
   desc 'seed curation activities (warning: deletes all existing curation activities!)'
   task seed_curation_activities: :environment do
     # Delete all existing curation activity
-    StashEngine::CurationActivity.destroy_all
+    StashEngine::CurationActivity.delete_all
 
     StashEngine::Resource.includes(identifier: :internal_data).all.order(:identifier_id, :id).each do |resource|
 
