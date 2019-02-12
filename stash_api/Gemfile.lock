@@ -36,6 +36,7 @@ PATH
       cirneco (~> 0.9.20)
       ckeditor
       concurrent-ruby (~> 1.0)
+      datacite-mapping (~> 0.3)
       ezid-client (~> 1.5)
       filesize (~> 0.1.1)
       font-awesome-rails
@@ -53,6 +54,7 @@ PATH
       redcarpet (~> 3.3)
       rest-client
       rinku
+      rsolr (~> 1.1.2)
       sortable-table
       thor (= 0.19.1)
       wicked_pdf (~> 1.1.0)
@@ -437,7 +439,7 @@ GEM
     rb-fsevent (0.10.3)
     rb-inotify (0.10.0)
       ffi (~> 1.0)
-    rdf (3.0.9)
+    rdf (3.0.10)
       hamster (~> 3.0)
       link_header (~> 0.0, >= 0.0.8)
     rdf-aggregate-repo (2.2.1)
@@ -467,7 +469,7 @@ GEM
       mime-types (>= 1.16, < 4.0)
       netrc (~> 0.8)
     retriable (3.1.2)
-    rinku (2.0.4)
+    rinku (2.0.5)
     rsolr (1.1.2)
       builder (>= 2.1.2)
     rspec-core (3.8.0)

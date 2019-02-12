@@ -13,6 +13,7 @@ module StashEngine
         email: 'lmuckenhaupt@ucop.edu',
         tenant_id: 'ucop'
       )
+
       @resource = Resource.create(user_id: user.id)
       resource.ensure_identifier('10.123/456')
       @upload = FileUpload.create(
