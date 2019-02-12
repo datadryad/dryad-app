@@ -64,6 +64,7 @@ module StashDatacite
     def submission
       resource_id = params[:resource_id]
       resource = StashEngine::Resource.find(resource_id)
+      resource.identifier.update_search_words!
 
       return if processing?(resource)
 
