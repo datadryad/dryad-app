@@ -1025,5 +1025,66 @@ module StashEngine
         end
       end
     end
+
+    describe 'curation helpers' do
+
+      before(:each) do
+        @identifier = Identifier.create
+      end
+
+      describe :init_curation_status do
+
+        it 'has a curation activity record when created' do
+          resource = Resource.create(identifier: @identifier, user_id: user.id)
+          resource.reload
+          expect(resource.curation_activities.empty?).to eql(false)
+          expect(resource.current_curation_activity_id).to eql(resource.curation_activities.first.id)
+        end
+
+      end
+
+      describe :curatable? do
+
+        it 'is false when current_resource_state != "submitted"' do
+          resource = Resource.create(user_id: user.id)
+          resource.current_state = 'in_progress'
+          expect(resource.reload.curatable?).to eql(false)
+          resource.current_state = 'processing'
+          expect(resource.reload.curatable?).to eql(false)
+          resource.current_state = 'error'
+          expect(resource.reload.curatable?).to eql(false)
+        end
+
+        it 'is false even when current curation state is Submitted' do
+          identifier = Identifier.create(identifier_type: 'DOI', identifier: '10.999/999')
+          resource = Resource.create(user_id: user.id, identifier_id: identifier.id)
+          CurationActivity.create(resource_id: resource.id, status: 'submitted')
+          resource.reload
+          expect(resource.curatable?).to eql(false)
+        end
+
+        it 'is true when current_resource_state == "submitted"' do
+          resource = Resource.create(user_id: user.id)
+          resource.current_state = 'submitted'
+          expect(resource.reload.curatable?).to eql(true)
+        end
+
+      end
+
+      describe :current_curation_activity do
+
+        it 'should return the most recent curation activity' do
+          resource = Resource.create
+          ca = CurationActivity.create(status: 'curation', resource_id: resource.id)
+          expect(resource.reload.current_curation_activity_id).to eql(ca.id)
+        end
+
+        it 'should have a value when the record is created' do
+          resource = Resource.create
+          expect(resource.reload.current_curation_activity_id.present?).to eql(true)
+        end
+
+      end
+    end
   end
 end

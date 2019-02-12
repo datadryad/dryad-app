@@ -20,7 +20,7 @@ FactoryBot.define do
   end
 
   factory(:curation_activity, class: StashEngine::CurationActivity) do
-    status { 'Submitted' }
+    status { 'submitted' }
   end
 
   factory(:resource_state, class: StashEngine::ResourceState) do
