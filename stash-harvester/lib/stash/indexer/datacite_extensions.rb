@@ -49,7 +49,7 @@ module Datacite
         "doi:#{value}"
       end
     end
-#poo
+    # poo
     class Resource
 
       def default_title
