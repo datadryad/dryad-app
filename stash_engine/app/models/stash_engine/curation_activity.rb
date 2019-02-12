@@ -1,36 +1,77 @@
 module StashEngine
-  class CurationActivity < ActiveRecord::Base
-    belongs_to :stash_identifier, class_name: 'StashEngine::Identifier', foreign_key: 'identifier_id'
-    belongs_to :user, class_name: 'StashEngine::User', foreign_key: 'user_id'
-    validates :status, inclusion: { in: ['Unsubmitted',
-                                         'Submitted',
-                                         'Private for Peer Review',
-                                         'Curation',
-                                         'Author Action Required',
-                                         'Embargoed',
-                                         'Published',
-                                         'Withdrawn',
-                                         'Status Unchanged',
-                                         'Versioned'],
-                                    message: '%{value} is not a valid status' }
-    validates :status, presence: true
-    after_create :update_identifier_state, :submit_to_datacite
-    after_update :update_identifier_state, :submit_to_datacite
 
-    def self.curation_status(my_stash_id)
-      curation_activities = CurationActivity.where(stash_identifier: my_stash_id).order(updated_at: :desc)
-      curation_activities.each do |activity|
-        return activity.status unless activity.status == 'Status Unchanged'
+  class CurationActivity < ActiveRecord::Base
+
+    include StashEngine::Concerns::StringEnum
+
+    # Associations
+    # ------------------------------------------
+    belongs_to :resource, class_name: 'StashEngine::Resource', foreign_key: 'resource_id'
+    belongs_to :user, class_name: 'StashEngine::User', foreign_key: 'user_id'
+
+    # Explanation of statuses
+    #  :in_progress <-- When the resource's current resource_state != 'submitted'
+    #                  This is the initial default value set on initialize
+    #
+    #  :submitted   <-- When the resource's current resource_state == 'submitted'
+    #                  This is set by a callback on ResourceState.save
+    #
+    #  :curation, :action_required, :embargoed, :published and :withdrawn are
+    #  all manually set by the Curator on the Admin page.
+    #
+    #  :published   <-- Is also automatically set when the Embargo's publication_date
+    #                  has reached maturity
+    enum_vals = %w[
+      in_progress
+      submitted
+      peer_review
+      curation
+      action_required
+      embargoed
+      published
+      withdrawn
+    ]
+    string_enum('status', enum_vals, 'in_progress', false)
+
+    # Validations
+    # ------------------------------------------
+    validates :resource, presence: true
+    validates :status, presence: true, inclusion: { in: enum_vals }
+
+    # Scopes
+    # ------------------------------------------
+    scope :latest, ->(resource_id) {
+      where(resource_id: resource_id).order(updated_at: :desc, id: :desc).first
+    }
+
+    # Callbacks
+    # ------------------------------------------
+    after_save :submit_to_stripe, :submit_to_datacite
+    after_create :update_resource_reference!
+    after_destroy :remove_resource_reference!
+
+    # Class methods
+    # ------------------------------------------
+    # Translates the enum value to a human readable status
+    def self.readable_status(status)
+      case status
+      when 'peer_review'
+        'Private for Peer Review'
+      when 'action_required'
+        'Author Action Required'
+      else
+        status.humanize.split.map(&:capitalize).join(' ')
       end
-      @curation_status = 'Unsubmitted'
     end
 
+    # Instance methods
+    # ------------------------------------------
     def as_json(*)
       # {"id":11,"identifier_id":1,"status":"Submitted","user_id":1,"note":"hello hello ssdfs2232343","keywords":null}
       {
         id: id,
-        dataset: stash_identifier.to_s,
-        status: status,
+        dataset: resource.identifier.to_s,
+        status: readable_status,
         action_taken_by: user_name,
         note: note,
         keywords: keywords,
@@ -39,27 +80,52 @@ module StashEngine
       }
     end
 
+    # Local instance method that sends the current status to the class method
+    # for translation
+    def readable_status
+      CurationActivity.readable_status(status)
+    end
+
+    # Private methods
+    # ------------------------------------------
+    private
+
+    # Callbacks
+    # ------------------------------------------
+    def update_resource_reference!
+      StashEngine::Resource.find(resource_id).update(current_curation_activity_id: id)
+    end
+
+    def remove_resource_reference!
+      # Reverts the current_curation_activity pointer on Resource to the prior activity
+      prior = CurationActivity.where(resource_id: resource_id).where.not(id: id).order(updated_at: :desc).first
+      StashEngine::Resource.find(resource_id).update(current_curation_activity_id: prior&.id || '')
+    end
+
+    def submit_to_stripe
+      # Should also check the statuses in the line below so we don't resubmit charges!
+      #   e.g. Check the status flags on this object unless we're storing a boolean
+      #        somewhere that records that we've already charged them.
+      #   `return unless identifier.has_journal? && self.published?`
+      return unless resource.identifier&.chargeable?
+      # Call the stripe API
+    end
+
     def submit_to_datacite
       return unless should_update_doi?
-      idg = Stash::Doi::IdGen.make_instance(resource: stash_identifier.last_submitted_resource)
+      idg = Stash::Doi::IdGen.make_instance(resource: resource)
       idg.update_identifier_metadata!
     end
 
-    private
-
-    def update_identifier_state
-      return if status == 'Status Unchanged'
-      return if stash_identifier.nil?
-      return if stash_identifier.identifier_state.nil?
-      stash_identifier.identifier_state.update_identifier_state(self)
-    end
+    # Helper methods
+    # ------------------------------------------
 
     # rubocop:disable Metrics/CyclomaticComplexity
     def should_update_doi?
       # only update if status changed or newly published or embargoed
-      return false unless status_changed? && (status == 'Published' || status == 'Embargoed')
+      return false unless status_changed? && (published? || embargoed?)
 
-      last_merritt_version = stash_identifier&.last_submitted_version_number
+      last_merritt_version = resource.identifier&.last_submitted_version_number
       return false if last_merritt_version.nil? # don't submit random crap to DataCite unless it's preserved in Merritt
 
       # only do UPDATEs with DOIs in production because ID updates like to fail in test EZID/DataCite because they delete their identifiers at random

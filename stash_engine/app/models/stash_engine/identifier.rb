@@ -4,7 +4,6 @@ module StashEngine
     has_many :resources, class_name: 'StashEngine::Resource', dependent: :destroy
     has_many :orcid_invitations, class_name: 'StashEngine::OrcidInvitation', dependent: :destroy
     has_one :counter_stat, class_name: 'StashEngine::CounterStat', dependent: :destroy
-    has_many :curation_activities, class_name: 'StashEngine::CurationActivity'
     has_many :internal_data, class_name: 'StashEngine::InternalDatum', dependent: :destroy
     has_one :identifier_state, class_name: 'StashEngine::IdentifierState', dependent: :destroy
     has_one :latest_resource,
@@ -12,8 +11,6 @@ module StashEngine
             primary_key: 'latest_resource_id',
             foreign_key: 'id'
 
-    after_create :create_or_get_identifier_state
-    after_update :create_or_get_identifier_state
     # has_many :counter_citations, class_name: 'StashEngine::CounterCitation', dependent: :destroy
     # before_create :build_associations
     after_save :update_search_words!, unless: :search_words
@@ -124,15 +121,6 @@ module StashEngine
       @target = tenant.full_url(StashEngine::Engine.routes.url_helpers.show_path(to_s))
     end
 
-    def create_or_get_identifier_state
-      return identifier_state unless identifier_state.nil?
-      c_a = CurationActivity.create(status: 'Unsubmitted', stash_identifier: self)
-      c_a.save!
-      @identifier_state = IdentifierState.create_identifier_state(self, c_a)
-      reload
-      @identifier_state
-    end
-
     # the search words is a special MySQL search field that concatenates the following fields required to be searched over
     # https://github.com/CDL-Dryad/dryad-product-roadmap/issues/125
     # doi (from this model), latest_resource.title, latest_resource.authors (names, emails, orcids), dcs_descriptions of type abstract
@@ -148,6 +136,12 @@ module StashEngine
       self.search_words = my_string
       # this updates without futher callbacks on me
       update_column :search_words, my_string
+    end
+
+    # Method to check if the identifier is associated with a journal/publisher and
+    # thus chargeable
+    def chargeable?
+      !internal_data.empty?
     end
 
     private
