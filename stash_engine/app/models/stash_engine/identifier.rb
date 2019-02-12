@@ -12,7 +12,10 @@ module StashEngine
 
     # has_many :counter_citations, class_name: 'StashEngine::CounterCitation', dependent: :destroy
     # before_create :build_associations
-    after_save :update_search_words!, unless: :search_words
+
+    # TODO: commenting out to fix tests. We are going to only update the search_words
+    # on submission to Merritt
+    # after_save :update_search_words!, unless: :search_words
 
     # used to build counter stat if needed, trickery to be sure one always exists to begin with
     # https://stackoverflow.com/questions/3808782/rails-best-practice-how-to-create-dependent-has-one-relations
