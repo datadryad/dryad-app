@@ -1,5 +1,8 @@
 require 'db_spec_helper'
 
+# briley - TODO StashEngine tests should live in stash_engine/spec. We should
+#          not be testing functionality of other engines!
+
 module StashEngine
   describe Resource do
     attr_reader :user
@@ -125,8 +128,7 @@ module StashEngine
 
       it 'falls back to the current time' do
         resource = Resource.create(user_id: user.id)
-        resource.update_publication_date!
-        expect(resource.publication_date).to be_time(Time.now)
+        expect(resource.notional_publication_date).to be_time(Time.now)
       end
     end
 

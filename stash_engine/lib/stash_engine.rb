@@ -27,6 +27,7 @@ module StashEngine
     isolate_namespace StashEngine
 
     config.autoload_paths << File.expand_path('lib/stash/doi', __dir__)
+    config.autoload_paths << File.expand_path('lib/stash/indexer', __dir__)
 
     # :nocov:
     initializer :append_migrations do |app|

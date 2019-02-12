@@ -4,7 +4,7 @@
 <div>
   <div style="float: left;"><br/><%= @identifier.to_s %></div>
   <div style="float: right;">
-    <%= form_tag({ controller: '/stash_engine/admin_datasets', action: 'note_popup', id: @identifier.id }, method: :get, remote: true) do -%>
+    <%= form_tag({ controller: '/stash_engine/admin_datasets', action: 'note_popup', id: @identifier&.latest_resource.id }, method: :get, remote: true) do -%>
       <button class="o-button__submit">Add Note</button>
     <% end %>
   </div>

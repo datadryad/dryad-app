@@ -8,10 +8,9 @@ module StashApi
 
       # put the setup before the mocks (I think) and then metadata call at the end
       identifier = create(:identifier)
-      resource_state = create(:resource_state)
       user = create(:user)
-      resource = create(:resource, identifier_id: identifier.id, current_resource_state_id: resource_state.id,
-                                   user_id: user.id)
+      resource = create(:resource, identifier_id: identifier.id, user_id: user.id)
+      create(:resource_state, resource: resource, user: user)
       create(:version, resource_id: resource.id)
 
       @file_upload = create(:file_upload, resource_id: resource.id)

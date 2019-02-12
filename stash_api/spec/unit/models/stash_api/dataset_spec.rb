@@ -18,19 +18,16 @@ module StashApi
 
       allow(Dataset).to receive(:api_url_helper).and_return(generic_path)
 
-      # These are the factories for test data and create a basic identifier and resource
-      resource_state = create(:resource_state)
-
       @user = create(:user)
       @identifier = create(:identifier) do |identifier|
         identifier.resources.create do |r|
           r.user = @user
-          r.current_resource_state_id = resource_state
           r.current_editor_id = @user.id
           r.title = 'My Cats Have Fleas'
           r.tenant_id = @user.tenant_id
         end
       end
+
       create(:version) do |v|
         v.resource = @identifier.resources.first
       end
@@ -98,18 +95,6 @@ module StashApi
         @dataset = Dataset.new(identifier: @identifier.to_s)
         @metadata = @dataset.metadata
         expect(@metadata[:loosenValidation]).to eq(true)
-      end
-
-      it 'shows Unsubmitted curationStatus' do
-        expect(@metadata[:curationStatus]).to eq('Unsubmitted')
-      end
-
-      it 'shows Submitted curationStatus' do
-        @c_a = create(:curation_activity)
-        @c_a.update(identifier_id: @identifier.id)
-        @dataset = Dataset.new(identifier: @identifier.to_s)
-        @metadata = @dataset.metadata
-        expect(@metadata[:curationStatus]).to eq('Submitted')
       end
 
     end

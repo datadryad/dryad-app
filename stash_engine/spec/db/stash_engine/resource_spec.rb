@@ -208,6 +208,58 @@ module StashEngine
       end
     end
 
+    describe 'solr fun' do
+      before(:each) do
+        blacklight_hash = { solr_url: 'http://test.com/blah/geoblacklight' }
+        @identifier = Identifier.create(identifier: 'cat/dog', identifier_type: 'DOI')
+        @resource = Resource.create(user_id: user.id, identifier_id: @identifier.id)
+
+        @my_indexer = instance_double('SolrIndexer')
+        allow(@my_indexer).to receive(:index_document).and_return(true)
+        allow(Stash::Indexer::SolrIndexer).to receive(:new).and_return(@my_indexer)
+
+        @my_indexing_resource = instance_double('IndexingResource')
+        allow(@my_indexing_resource).to receive(:to_index_document).and_return({})
+        allow(Stash::Indexer::IndexingResource).to receive(:new).and_return(@my_indexing_resource)
+
+        object_double('Blacklight').as_stubbed_const
+        allow(Blacklight).to receive(:connection_config).and_return(blacklight_hash)
+      end
+
+      describe '#submit_to_solr' do
+        it 'saves true for solr_indexed if submission worked' do
+          @resource.submit_to_solr
+          expect(@resource.solr_indexed).to be(true)
+        end
+
+        it 'leaves false for solr_indexed if submission failed' do
+          allow(@my_indexer).to receive(:index_document).and_return(false)
+          @resource.submit_to_solr
+          expect(@resource.solr_indexed).to be(false)
+        end
+      end
+
+      describe '#delete_from_solr' do
+
+        before(:each) do
+          allow(Stash::Indexer::SolrIndexer).to receive(:new).and_return(@my_indexer)
+          @resource.update(solr_indexed: true)
+        end
+
+        it 'saves false for solr_indexed if deletion worked' do
+          allow(@my_indexer).to receive(:delete_document).and_return(true)
+          @resource.delete_from_solr
+          expect(@resource.solr_indexed).to be(false)
+        end
+
+        it 'leaves true if for solr_indexed if delete failed' do
+          allow(@my_indexer).to receive(:delete_document).and_return(false)
+          @resource.delete_from_solr
+          expect(@resource.solr_indexed).to be(true)
+        end
+      end
+    end
+
     describe :public? do
       it 'defaults to true' do
         resource = Resource.create(user_id: user.id)
@@ -971,6 +1023,67 @@ module StashEngine
           end
           expect(Resource.submitted_dataset_count).to eq(0)
         end
+      end
+    end
+
+    describe 'curation helpers' do
+
+      before(:each) do
+        @identifier = Identifier.create
+      end
+
+      describe :init_curation_status do
+
+        it 'has a curation activity record when created' do
+          resource = Resource.create(identifier: @identifier, user_id: user.id)
+          resource.reload
+          expect(resource.curation_activities.empty?).to eql(false)
+          expect(resource.current_curation_activity_id).to eql(resource.curation_activities.first.id)
+        end
+
+      end
+
+      describe :curatable? do
+
+        it 'is false when current_resource_state != "submitted"' do
+          resource = Resource.create(user_id: user.id)
+          resource.current_state = 'in_progress'
+          expect(resource.reload.curatable?).to eql(false)
+          resource.current_state = 'processing'
+          expect(resource.reload.curatable?).to eql(false)
+          resource.current_state = 'error'
+          expect(resource.reload.curatable?).to eql(false)
+        end
+
+        it 'is false even when current curation state is Submitted' do
+          identifier = Identifier.create(identifier_type: 'DOI', identifier: '10.999/999')
+          resource = Resource.create(user_id: user.id, identifier_id: identifier.id)
+          CurationActivity.create(resource_id: resource.id, status: 'submitted')
+          resource.reload
+          expect(resource.curatable?).to eql(false)
+        end
+
+        it 'is true when current_resource_state == "submitted"' do
+          resource = Resource.create(user_id: user.id)
+          resource.current_state = 'submitted'
+          expect(resource.reload.curatable?).to eql(true)
+        end
+
+      end
+
+      describe :current_curation_activity do
+
+        it 'should return the most recent curation activity' do
+          resource = Resource.create
+          ca = CurationActivity.create(status: 'curation', resource_id: resource.id)
+          expect(resource.reload.current_curation_activity_id).to eql(ca.id)
+        end
+
+        it 'should have a value when the record is created' do
+          resource = Resource.create
+          expect(resource.reload.current_curation_activity_id.present?).to eql(true)
+        end
+
       end
     end
   end

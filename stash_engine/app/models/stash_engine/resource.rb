@@ -1,3 +1,8 @@
+# require 'stash/indexer/indexing_resource'
+require 'stash/indexer/solr_indexer'
+# the following is required to make our wonky tests work and may break if we move stuff around
+require_relative '../../../../stash_datacite/lib/stash/indexer/indexing_resource'
+
 module StashEngine
   class Resource < ActiveRecord::Base # rubocop:disable Metrics/ClassLength
     # ------------------------------------------------------------
@@ -19,6 +24,11 @@ module StashEngine
     has_many :submission_logs, class_name: 'StashEngine::SubmissionLog', dependent: :destroy
     has_many :resource_states, class_name: 'StashEngine::ResourceState', dependent: :destroy
     has_many :edit_histories, class_name: 'StashEngine::EditHistory', dependent: :destroy
+    has_many :curation_activities, class_name: 'StashEngine::CurationActivity', dependent: :destroy
+    has_one :current_curation_activity,
+            class_name: 'StashEngine::CurationActivity',
+            primary_key: 'current_curation_activity_id',
+            foreign_key: 'id'
 
     amoeba do
       include_association :authors
@@ -29,6 +39,7 @@ module StashEngine
         # the resource state, but instead it keeps the reference to the old one, so we need to clear it and
         # let init_version do its job
         new_resource.current_resource_state_id = nil
+        new_resource.current_curation_activity_id = nil
 
         new_resource.file_uploads.each do |file|
           raise "Expected #{new_resource.id}, was #{file.resource_id}" unless file.resource_id == new_resource.id
@@ -74,6 +85,7 @@ module StashEngine
       identifier&.update_search_words! if title_changed? # this method is some activerecord magic
     end
 
+    before_create :init_curation_status
     after_create :init_state_and_version, :update_stash_identifier_last_resource
     # for some reason, after_create not working, so had to add after_update
     after_update :update_stash_identifier_last_resource
@@ -85,6 +97,7 @@ module StashEngine
       return if stash_version && current_resource_state_id
       init_version unless stash_version
       init_state unless current_resource_state_id
+      init_curation_status if curation_activities.empty?
       save
     end
     # We want to disable this when we don't need it since it really kills performance for finding a long
@@ -262,6 +275,23 @@ module StashEngine
     private :init_state
 
     # ------------------------------------------------------------
+    # Curation helpers
+    def curatable?
+      submitted?
+    end
+
+    # Shortcut to the current curation activity's status
+    def current_curation_status
+      current_curation_activity.status
+    end
+
+    # Create the initial CurationActivity
+    def init_curation_status
+      curation_activities << StashEngine::CurationActivity.new
+    end
+    private :init_curation_status
+
+    # ------------------------------------------------------------
     # Identifiers
 
     def identifier_str
@@ -437,6 +467,22 @@ module StashEngine
     def dataset_in_progress_editor
       return user if dataset_in_progress_editor_id.nil?
       User.where(id: dataset_in_progress_editor_id).first
+    end
+
+    # -----------------------------------------------------------
+    # SOLR actions for this resource
+
+    def submit_to_solr
+      solr_indexer = Stash::Indexer::SolrIndexer.new(solr_url: Blacklight.connection_config[:url])
+      ir = Stash::Indexer::IndexingResource.new(resource: self)
+      result = solr_indexer.index_document(solr_hash: ir.to_index_document) # returns true/false for success of operation
+      update(solr_indexed: true) if result
+    end
+
+    def delete_from_solr
+      solr_indexer = Stash::Indexer::SolrIndexer.new(solr_url: Blacklight.connection_config[:url])
+      result = solr_indexer.delete_document(doi: identifier.to_s) # returns true/false for success of operation
+      update(solr_indexed: false) if result
     end
 
     # -----------------------------------------------------------

@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<st:stash_wrapper
+    xsi:schemaLocation='https://dash.ucop.edu/stash_wrapper/ https://dash.ucop.edu/stash_wrapper/stash_wrapper.xsd'
+    xmlns:st='https://dash.ucop.edu/stash_wrapper/' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'>
+  <st:identifier type='DOI'>10.5072/example-full</st:identifier>
+  <st:stash_administrative>
+    <st:version>
+      <st:version_number>4</st:version_number>
+      <st:date>2014-10-17Z</st:date>
+      <st:note>Full DataCite 3.1 XML Example accessed 2014-01-06</st:note>
+    </st:version>
+    <st:license>
+      <st:name>CC0 1.0 Universal</st:name>
+      <st:uri>http://creativecommons.org/publicdomain/zero/1.0/</st:uri>
+    </st:license>
+    <st:embargo>
+      <st:type>download</st:type>
+      <st:period>1 year</st:period>
+      <st:start>2014-10-17Z</st:start>
+      <st:end>2015-10-17Z</st:end>
+    </st:embargo>
+    <st:inventory num_files='1'>
+      <st:file>
+        <st:pathname>datacite-example-full-v3.1.xml</st:pathname>
+        <st:size unit='B'>3072</st:size>
+        <st:mime_type>application/xml</st:mime_type>
+      </st:file>
+    </st:inventory>
+  </st:stash_administrative>
+  <st:stash_descriptive>
+    <resource
+        xsi:schemaLocation='http://datacite.org/schema/kernel-3 http://schema.datacite.org/meta/kernel-3/metadata.xsd'
+        xmlns='http://datacite.org/schema/kernel-3' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'>
+      <identifier identifierType='DOI'>10.5072/example-full</identifier>
+      <creators>
+        <creator>
+          <creatorName>Miller, Elizabeth</creatorName>
+          <nameIdentifier nameIdentifierScheme='ORCID' schemeURI='http://orcid.org/'>0000-0001-5000-0007
+          </nameIdentifier>
+          <affiliation>DataCite</affiliation>
+        </creator>
+      </creators>
+      <titles>
+        <title xml:lang='en-us'>Full DataCite XML Example</title>
+        <title xml:lang='en-us' titleType='Subtitle'>Demonstration of DataCite Properties.</title>
+      </titles>
+      <publisher>DataCite</publisher>
+      <publicationYear>2014</publicationYear>
+      <subjects>
+        <subject xml:lang='en-us' schemeURI='http://dewey.info/' subjectScheme='dewey'>000 computer science</subject>
+      </subjects>
+      <contributors>
+        <contributor contributorType='ProjectLeader'>
+          <contributorName>Starr, Joan</contributorName>
+          <nameIdentifier nameIdentifierScheme='ORCID' schemeURI='http://orcid.org/'>0000-0002-7285-027X
+          </nameIdentifier>
+          <affiliation>California Digital Library</affiliation>
+        </contributor>
+      </contributors>
+      <dates>
+        <date dateType='Updated'>2014-10-17</date>
+      </dates>
+      <language>en-us</language>
+      <resourceType resourceTypeGeneral='Software'>XML</resourceType>
+      <alternateIdentifiers>
+        <alternateIdentifier alternateIdentifierType='URL'>
+          http://schema.datacite.org/schema/meta/kernel-3.1/example/datacite-example-full-v3.1.xml
+        </alternateIdentifier>
+      </alternateIdentifiers>
+      <relatedIdentifiers>
+        <relatedIdentifier relatedIdentifierType='URL' relatedMetadataScheme='citeproc+json' relationType='HasMetadata'
+                           schemeURI='https://github.com/citation-style-language/schema/raw/master/csl-data.json'>
+          http://data.datacite.org/application/citeproc+json/10.5072/example-full
+        </relatedIdentifier>
+        <relatedIdentifier relatedIdentifierType='arXiv' relationType='IsReviewedBy'>arXiv:0706.0001</relatedIdentifier>
+      </relatedIdentifiers>
+      <sizes>
+        <size>3KB</size>
+      </sizes>
+      <formats>
+        <format>application/xml</format>
+      </formats>
+      <version>3.1</version>
+      <rightsList>
+        <rights rightsURI='http://creativecommons.org/publicdomain/zero/1.0/'>CC0 1.0 Universal</rights>
+      </rightsList>
+      <descriptions>
+        <description descriptionType='Abstract' xml:lang='en-us'>
+          XML example of all DataCite Metadata Schema v3.1 properties.
+        </description>
+      </descriptions>
+      <geoLocations>
+        <geoLocation>
+          <geoLocationPoint>31.233 -67.302</geoLocationPoint>
+          <geoLocationBox>41.090 -71.032 42.893 -68.211</geoLocationBox>
+          <geoLocationPlace>Atlantic Ocean</geoLocationPlace>
+        </geoLocation>
+      </geoLocations>
+    </resource>
+  </st:stash_descriptive>
+</st:stash_wrapper>

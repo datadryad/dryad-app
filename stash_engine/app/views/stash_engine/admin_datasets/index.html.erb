@@ -8,10 +8,10 @@
   <%= render partial: 'search' %>
   <%= render partial: 'filter' %>
 
-  <%= render partial: 'datasets_table', locals: { ds_identifiers: @ds_identifiers } %>
+  <%= render partial: 'datasets_table', locals: { resources: @resources } %>
 
   <div class="c-space-paginator">
-    <%= paginate @ds_identifiers, params: { page_size: @page_size, show_all: false } %>
+    <%= paginate @resources, params: { page_size: @page_size, show_all: false } %>
   </div>
 
   <div>
