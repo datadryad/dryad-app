@@ -1,5 +1,4 @@
 module StashEngine
-  # rubocop:disable Metrics/ClassLength
   class Identifier < ActiveRecord::Base
     has_many :resources, class_name: 'StashEngine::Resource', dependent: :destroy
     has_many :orcid_invitations, class_name: 'StashEngine::OrcidInvitation', dependent: :destroy
@@ -160,5 +159,4 @@ module StashEngine
     #   counter_stat || true
     # end
   end
-  # rubocop:enable Metrics/ClassLength
 end
