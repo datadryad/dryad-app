@@ -55,6 +55,7 @@ PATH
       cirneco (~> 0.9.20)
       ckeditor
       concurrent-ruby (~> 1.0)
+      datacite-mapping (~> 0.3)
       ezid-client (~> 1.5)
       filesize (~> 0.1.1)
       font-awesome-rails
