@@ -60,6 +60,32 @@ module StashEngine
       end
     end
 
+    def embargo_popup
+      respond_to do |format|
+        @resource = Resource.includes(:identifier, :current_curation_activity).find(params[:id])
+        @curation_activity = CurationActivity.new(
+          resource_id: @resource.id,
+          status: 'embargoed'
+        )
+        format.js
+      end
+    end
+
+    def embargo_change
+      respond_to do |format|
+        format.js do
+          return unless params[:curation_activity][:note] || params[:publication_date]
+          @resource = Resource.find(params[:curation_activity][:resource_id])
+          unless @resource.current_curation_status == 'embargoed'
+            @resource.update(publication_date: params[:publication_date])
+          end
+          @activity = CurationActivity.create(resource_id: @resource.id,
+                                              note: params[:curation_activity][:note],
+                                               status: 'embargoed', user_id: current_user.id)
+        end
+      end
+    end
+
     # show curation activities for this item
     def activity_log
       @identifier = Identifier.find(params[:id])
