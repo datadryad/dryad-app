@@ -208,6 +208,58 @@ module StashEngine
       end
     end
 
+    describe 'solr fun' do
+      before(:each) do
+        blacklight_hash = { solr_url: 'http://test.com/blah/geoblacklight' }
+        @identifier = Identifier.create(identifier: 'cat/dog', identifier_type: 'DOI')
+        @resource = Resource.create(user_id: user.id, identifier_id: @identifier.id)
+
+        @my_indexer = instance_double('SolrIndexer')
+        allow(@my_indexer).to receive(:index_document).and_return(true)
+        allow(Stash::Indexer::SolrIndexer).to receive(:new).and_return(@my_indexer)
+
+        @my_indexing_resource = instance_double('IndexingResource')
+        allow(@my_indexing_resource).to receive(:to_index_document).and_return({})
+        allow(Stash::Indexer::IndexingResource).to receive(:new).and_return(@my_indexing_resource)
+
+        object_double('Blacklight').as_stubbed_const
+        allow(Blacklight).to receive(:connection_config).and_return(blacklight_hash)
+      end
+
+      describe '#submit_to_solr' do
+        it 'saves true for solr_indexed if submission worked' do
+          @resource.submit_to_solr
+          expect(@resource.solr_indexed).to be(true)
+        end
+
+        it 'leaves false for solr_indexed if submission failed' do
+          allow(@my_indexer).to receive(:index_document).and_return(false)
+          @resource.submit_to_solr
+          expect(@resource.solr_indexed).to be(false)
+        end
+      end
+
+      describe '#delete_from_solr' do
+
+        before(:each) do
+          allow(Stash::Indexer::SolrIndexer).to receive(:new).and_return(@my_indexer)
+          @resource.update(solr_indexed: true)
+        end
+
+        it 'saves false for solr_indexed if deletion worked' do
+          allow(@my_indexer).to receive(:delete_document).and_return(true)
+          @resource.delete_from_solr
+          expect(@resource.solr_indexed).to be(false)
+        end
+
+        it 'leaves true if for solr_indexed if delete failed' do
+          allow(@my_indexer).to receive(:delete_document).and_return(false)
+          @resource.delete_from_solr
+          expect(@resource.solr_indexed).to be(true)
+        end
+      end
+    end
+
     describe :public? do
       it 'defaults to true' do
         resource = Resource.create(user_id: user.id)

@@ -1,3 +1,8 @@
+# require 'stash/indexer/indexing_resource'
+require 'stash/indexer/solr_indexer'
+# the following is required to make our wonky tests work and may break if we move stuff around
+require_relative '../../../../stash_datacite/lib/stash/indexer/indexing_resource'
+
 module StashEngine
   class Resource < ActiveRecord::Base # rubocop:disable Metrics/ClassLength
     # ------------------------------------------------------------
@@ -462,6 +467,22 @@ module StashEngine
     def dataset_in_progress_editor
       return user if dataset_in_progress_editor_id.nil?
       User.where(id: dataset_in_progress_editor_id).first
+    end
+
+    # -----------------------------------------------------------
+    # SOLR actions for this resource
+
+    def submit_to_solr
+      solr_indexer = Stash::Indexer::SolrIndexer.new(solr_url: Blacklight.connection_config[:url])
+      ir = Stash::Indexer::IndexingResource.new(resource: self)
+      result = solr_indexer.index_document(solr_hash: ir.to_index_document) # returns true/false for success of operation
+      update(solr_indexed: true) if result
+    end
+
+    def delete_from_solr
+      solr_indexer = Stash::Indexer::SolrIndexer.new(solr_url: Blacklight.connection_config[:url])
+      result = solr_indexer.delete_document(doi: identifier.to_s) # returns true/false for success of operation
+      update(solr_indexed: false) if result
     end
 
     # -----------------------------------------------------------
