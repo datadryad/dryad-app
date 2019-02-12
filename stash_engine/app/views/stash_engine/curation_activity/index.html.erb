@@ -17,7 +17,7 @@
   <% @curation_activities.each do |curation_activity| %>
     <tr>
       <td><%= curation_activity.created_at %></td>
-      <td><%= curation_activity.status %></td>
+      <td><%= curation_activity.readable_status %></td>
       <td><%= curation_activity.user.name %></td>
       <td><%= curation_activity.note %></td>
       <td><%= curation_activity.keywords %></td>

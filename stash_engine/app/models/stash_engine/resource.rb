@@ -19,6 +19,11 @@ module StashEngine
     has_many :submission_logs, class_name: 'StashEngine::SubmissionLog', dependent: :destroy
     has_many :resource_states, class_name: 'StashEngine::ResourceState', dependent: :destroy
     has_many :edit_histories, class_name: 'StashEngine::EditHistory', dependent: :destroy
+    has_many :curation_activities, class_name: 'StashEngine::CurationActivity', dependent: :destroy
+    has_one :current_curation_activity,
+            class_name: 'StashEngine::CurationActivity',
+            primary_key: 'current_curation_activity_id',
+            foreign_key: 'id'
 
     amoeba do
       include_association :authors
@@ -29,6 +34,7 @@ module StashEngine
         # the resource state, but instead it keeps the reference to the old one, so we need to clear it and
         # let init_version do its job
         new_resource.current_resource_state_id = nil
+        new_resource.current_curation_activity_id = nil
 
         new_resource.file_uploads.each do |file|
           raise "Expected #{new_resource.id}, was #{file.resource_id}" unless file.resource_id == new_resource.id
@@ -74,6 +80,7 @@ module StashEngine
       identifier&.update_search_words! if title_changed? # this method is some activerecord magic
     end
 
+    before_create :init_curation_status
     after_create :init_state_and_version, :update_stash_identifier_last_resource
     # for some reason, after_create not working, so had to add after_update
     after_update :update_stash_identifier_last_resource
@@ -85,6 +92,7 @@ module StashEngine
       return if stash_version && current_resource_state_id
       init_version unless stash_version
       init_state unless current_resource_state_id
+      init_curation_status if curation_activities.empty?
       save
     end
     # We want to disable this when we don't need it since it really kills performance for finding a long
@@ -260,6 +268,23 @@ module StashEngine
       self.current_resource_state_id = ResourceState.create(resource_id: id, resource_state: 'in_progress', user_id: user_id).id
     end
     private :init_state
+
+    # ------------------------------------------------------------
+    # Curation helpers
+    def curatable?
+      submitted?
+    end
+
+    # Shortcut to the current curation activity's status
+    def current_curation_status
+      current_curation_activity.status
+    end
+
+    # Create the initial CurationActivity
+    def init_curation_status
+      curation_activities << StashEngine::CurationActivity.new
+    end
+    private :init_curation_status
 
     # ------------------------------------------------------------
     # Identifiers
