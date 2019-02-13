@@ -74,11 +74,9 @@ module StashEngine
     def embargo_change
       respond_to do |format|
         format.js do
-          return unless params[:curation_activity][:note] || params[:publication_date]
+          return unless params[:curation_activity][:note].present? || params[:publication_date].present?
           @resource = Resource.find(params[:curation_activity][:resource_id])
-          unless @resource.current_curation_status == 'embargoed'
-            @resource.update(publication_date: params[:publication_date])
-          end
+          @resource.update(publication_date: params[:publication_date])
           @activity = CurationActivity.create(resource_id: @resource.id,
                                               note: params[:curation_activity][:note],
                                                status: 'embargoed', user_id: current_user.id)
