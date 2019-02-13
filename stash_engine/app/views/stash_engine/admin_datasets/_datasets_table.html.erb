@@ -70,7 +70,7 @@
       <td><%= latest_curation_activity.user&.name %></td>
       <td><%= filesize(identifier.storage_size) %></td>
       <td class="c-admin-hide-border-right" id="js-embargo-state-<%= identifier.id %>">
-        <%= formatted_datetime(resource&.publication_date) %>
+        <%= formatted_date(resource&.publication_date) %>
       </td>
       <td class="c-admin-hide-border-left">
         <% if current_user.role == 'superuser' && resource.curatable? %>
