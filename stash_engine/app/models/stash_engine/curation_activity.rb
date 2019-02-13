@@ -102,13 +102,53 @@ module StashEngine
       StashEngine::Resource.find(resource_id).update(current_curation_activity_id: prior&.id || '')
     end
 
+    # Callbacks
+    # ------------------------------------------
     def submit_to_stripe
       # Should also check the statuses in the line below so we don't resubmit charges!
       #   e.g. Check the status flags on this object unless we're storing a boolean
       #        somewhere that records that we've already charged them.
       #   `return unless identifier.has_journal? && self.published?`
-      return unless resource.identifier&.chargeable?
-      # Call the stripe API
+
+
+      # only ask for payment if there is no previous invoice and
+      # if the stats has been changed to a published status
+      return unless !resource.identifier.nil? &&
+                    resource.identifier.invoice_id.nil? &&
+                    (status == 'Published' || status == 'Embargoed') &&
+                    StashEngine.app.payments.service == 'stripe'      
+
+      #TODO -- re-enable this with the chargeable logic 
+      #return unless resource.identifier&.chargeable?
+      
+      Stripe.api_key = StashEngine.app.payments.key
+      
+      # ensure a Stripe customer_id exists
+      if resource.user.customer_id.nil?
+        customer = Stripe::Customer.create(
+          :description => resource.user.name,
+          :email => resource.user.email,
+        )
+        resource.user.customer_id = customer.id
+        resource.user.save
+      end
+
+      invoice_item = Stripe::InvoiceItem.create(
+        :customer => resource.user.customer_id,
+        :amount => StashEngine.app.payments.data_processing_charge,
+        :currency => "usd",
+        :description => "Data Processing Charge"
+      )
+        
+      invoice = Stripe::Invoice.create(
+        :customer => resource.user.customer_id,
+        :description => "Dryad deposit " + resource.identifier.to_s + ", " + resource.title,
+        :metadata => {'curator' => user.name},
+      )
+      resource.identifier.invoice_id = invoice.id
+      resource.identifier.save
+      invoice.auto_advance = true
+      invoice.finalize_invoice
     end
 
     def submit_to_datacite
