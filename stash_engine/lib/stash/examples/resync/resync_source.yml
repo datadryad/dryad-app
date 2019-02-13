@@ -1,2 +1,0 @@
-protocol: Resync # Stash::Harvester::Resync::ResyncSourceConfig
-capability_list_url: http://localhost:8888/capabilitylist.xml
