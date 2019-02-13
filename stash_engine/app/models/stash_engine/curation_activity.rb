@@ -115,7 +115,7 @@ module StashEngine
       # if the stats has been changed to a published status
       return unless !resource.identifier.nil? &&
                     resource.identifier.invoice_id.nil? &&
-                    (status == 'Published' || status == 'Embargoed') &&
+                    (status == 'published' || status == 'embargoed') &&
                     StashEngine.app.payments.service == 'stripe'      
 
       #TODO -- re-enable this with the chargeable logic 
