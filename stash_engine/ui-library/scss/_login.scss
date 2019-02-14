@@ -12,19 +12,24 @@
   a:hover,
   a:active {
     color: $design-black-color;
+    font-weight: bold;
     text-decoration: none;
+  }
+
+  h1 {
+    color: $design-orange-color;
   }
 }
 
 .t-login__buttonlink {
-  padding: 10px 30px;
-  border: thin solid $design-orange-color;
-  background-color: $design-super-extra-light-gray-color;
+  padding: 15px 20px;
+  border: 2px solid $design-orange-color;
+  background-color: $design-white-color;
 }
 
 .t-login__buttonlink:hover {
-  border: thin solid $design-orange-color;
-  background-color: $design-extra-light-gray-color;
+  border: 2px solid $design-orange-color;
+  background-color: $design-white-color;
 }
 
 
@@ -64,8 +69,8 @@
 
 .t-login__orcid-small {
   display: inline-block;
-  width: 1em;
-  height: 1em;
+  width: 1.5em;
+  height: 1.5em;
   vertical-align: middle;
 }
 
