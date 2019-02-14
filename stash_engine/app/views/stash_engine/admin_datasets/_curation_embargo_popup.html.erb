@@ -6,7 +6,7 @@
         remote: true do |f| %>
 
     <div class="c-input">
-      <%= date_field_tag :publication_date, @resource.publication_date %>
+      <%= date_field_tag :publication_date, formatted_html5_date(@resource.publication_date) %>
     </div>
     <div class="c-input">
       <label class="c-input__label">Notes</label>
@@ -18,3 +18,7 @@
     <%= button_tag 'Cancel', type: 'button', id: 'cancel_dialog' %>
   <% end %>
 </div>
+
+<script type="text/javascript">
+  initDatePicker();
+</script>
