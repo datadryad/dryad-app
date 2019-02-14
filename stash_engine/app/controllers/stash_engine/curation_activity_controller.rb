@@ -30,16 +30,27 @@ module StashEngine
     def status_change
       respond_to do |format|
         format.js do
+          @resource = StashEngine::Resource.find(curation_activity_params[:resource_id])
+
           # If the user was only adding a note, NOT changing the status, then retrieve
           # the last curation status and use that
           status = if curation_activity_params[:status].blank?
-                     StashEngine::Resource.find(curation_activity_params[:resource_id]).current_curation_status
+                     @resource.current_curation_status
                    else
                      curation_activity_params[:status]
                    end
-          @activity = CurationActivity.create(resource_id: curation_activity_params[:resource_id],
+          @activity = CurationActivity.create(resource_id: @resource.id,
                                               note: curation_activity_params[:note],
                                               status: status, user_id: current_user.id)
+          # If the user published the resource then set its publication_date to today
+          if status == 'published'
+            @resource.update(publication_date: formatted_html5_date(Date.today))
+
+          # If the user embargoed the resource and there is no future publication date then
+          # default the publication_date to 1 year out
+          elsif status == 'embargoed' && (!@resource.publication_date.present? || @resource.publication_date < formatted_html5_date(Date.today))
+            @resource.update(publication_date: formatted_html5_date(Date.today + 1.year))
+          end
         end
       end
     end
