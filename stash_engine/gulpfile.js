@@ -176,13 +176,12 @@ function jsLintTask(cb) {
 };
 
 function buildTask(cb) {
-  cb(
-    gulp(
-      cleanTask,
-      [scssLintTask, jsLintTask, sassTask, userefTask, iconsTask, copyImagesTask, copyFontsTask],
-      copyToAssetsTask
-    )
+  series(
+    cleanTask,
+    [scssLintTask, jsLintTask, sassTask, userefTask, iconsTask, copyImagesTask, copyFontsTask],
+    copyToAssetsTask
   );
+  cb();
 };
 
 
