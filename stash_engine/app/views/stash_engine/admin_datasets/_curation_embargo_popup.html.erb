@@ -6,7 +6,8 @@
         remote: true do |f| %>
 
     <div class="c-input">
-      <%= date_field_tag :publication_date, formatted_html5_date(@resource.publication_date) %>
+      <%= date_field_tag :publication_date, formatted_html5_date(@resource.publication_date),
+                          min: formatted_html5_date(Date.today) %>
     </div>
     <div class="c-input">
       <label class="c-input__label">Notes</label>
