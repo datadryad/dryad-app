@@ -28,6 +28,7 @@
     "gulp-useref": "",
     "gulp-w3cjs": "",
     "jshint": "",
+    "node-sass": "^4.11.0",
     "path": "",
     "postcss-assets": "",
     "run-sequence": ""
