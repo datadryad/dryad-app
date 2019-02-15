@@ -1084,27 +1084,48 @@ module StashEngine
           expect(resource.reload.current_curation_activity_id.present?).to eql(true)
         end
 
+        it 'should default publication_date to today when publish!' do
+          resource = Resource.create
+          resource.publish!(user.id)
+          resource.reload
+          expect(resource.publication_date.to_date.to_s).to eql(Date.today.to_s)
+        end
+
+        it 'should default publication_date to 1 year from today when embargo!' do
+          resource = Resource.create
+          resource.embargo!(user.id)
+          resource.reload
+          expect(resource.publication_date.to_date.to_s).to eql((Date.today + 1.year).to_s)
+        end
+
         it 'should set publication_date when publish!' do
           resource = Resource.create
-          date = Date.new('2019-01-01')
+          date = Date.parse('2019-01-01 00:00:00 UTC')
           resource.publish!(user.id, date)
           resource.reload
-          expect(Date.new(resource.publication_date)).to eql(date)
+          expect(resource.publication_date.to_s).to eql('2019-01-01 00:00:00 UTC')
         end
 
         it 'should set publication_date when embargo!' do
-
+          resource = Resource.create
+          date = Date.parse('2019-01-01 00:00:00 UTC')
+          resource.embargo!(user.id, date)
+          resource.reload
+          expect(resource.publication_date.to_s).to eql('2019-01-01 00:00:00 UTC')
         end
 
         it 'should add new curation_activity when publish!' do
           resource = Resource.create
-          resource.publish!(user.id, Date.new('2019-01-01'))
+          resource.publish!(user.id, Date.today)
           resource.reload
           expect(resource.current_curation_status).to eql('published')
         end
 
         it 'should add new curation_activity when embargo!' do
-
+          resource = Resource.create
+          resource.embargo!(user.id, Date.today)
+          resource.reload
+          expect(resource.current_curation_status).to eql('embargoed')
         end
 
       end

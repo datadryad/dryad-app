@@ -26,50 +26,15 @@ module StashEngine
     # in list for identifier, which is the ID that is passed in.  It does ajax mumbo-jumbo for admin area.
     # this isn't RESTful
     # def create
-    # rubocop:disable Metrics/MethodLength
     def status_change
       respond_to do |format|
         format.js do
           @resource = StashEngine::Resource.find(curation_activity_params[:resource_id])
-
-          args = {
-            user_id: current_user.id,
-            note: curation_activity_params[:note]
-          }
-
-          case status
-          when 'published'
-            args = args.merge({ publication_date: formatted_html5_date(Date.today) })
-            @activity = @resource.publish!(args)
-          when 'embargoed'
-            args = args.merge({ publication_date: formatted_html5_date(Date.today + 1.year) })
-            @activity = @resource.embargo!(args)
-          else
-            args = args.merge({ resource_id: @resource.id, status: curation_activity_params[:status] })
-            @activity = CurationActivity.create(args)
-          end
-
-          # If the user was only adding a note, NOT changing the status, then retrieve
-          # the last curation status and use that
-          status = if curation_activity_params[:status].blank?
-                     @resource.current_curation_status
-                   else
-                     curation_activity_params[:status]
-                   end
-          @activity =
-          # If the user published the resource then set its publication_date to today
-          if status == 'published'
-
-
-          # If the user embargoed the resource and there is no future publication date then
-          # default the publication_date to 1 year out
-          elsif status == 'embargoed' && (!@resource.publication_date.present? || @resource.publication_date < formatted_html5_date(Date.today))
-            @resource.update(publication_date: )
-          end
+          handle_status(@resource)
+          @activity = @resource.reload.current_curation_activity
         end
       end
     end
-    # rubocop:enable Metrics/MethodLength
 
     private
 
@@ -77,13 +42,20 @@ module StashEngine
       params.require(:curation_activity).permit(:resource_id, :status, :note)
     end
 
-    def publish_resource(resource)
-
+    # Publish, embargo or simply change the status
+    # rubocop:disable Metrics/AbcSize
+    def handle_status(resource)
+      case curation_activity_params[:status]
+      when 'published'
+        resource.publish!(current_user.id, Date.today, curation_activity_params[:note])
+      when 'embargoed'
+        resource.embargo!(current_user.id, Date.today + 1.year, curation_activity_params[:note])
+      else
+        CurationActivity.create(resource_id: @resource.id, user_id: current_user.id,
+                                status: curation_activity_params[:status], note: curation_activity_params[:note])
+      end
     end
-
-    def embargo_resource(resource)
-
-    end
+    # rubocop:enable Metrics/AbcSize
 
   end
 end
