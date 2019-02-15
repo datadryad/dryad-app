@@ -71,18 +71,18 @@ module StashEngine
       end
     end
 
+    # rubocop:disable Metrics/AbcSize
     def embargo_change
       respond_to do |format|
         format.js do
           return unless params[:curation_activity][:note].present? || params[:publication_date].present?
           @resource = Resource.find(params[:curation_activity][:resource_id])
-          @resource.update(publication_date: params[:publication_date])
-          @activity = CurationActivity.create(resource_id: @resource.id,
-                                              note: params[:curation_activity][:note],
-                                               status: 'embargoed', user_id: current_user.id)
+          @resource.embargo!(current_user.id, params[:publication_date], params[:curation_activity][:note])
+          @resource.reload
         end
       end
     end
+    # rubocop:enable Metrics/AbcSize
 
     # show curation activities for this item
     def activity_log
