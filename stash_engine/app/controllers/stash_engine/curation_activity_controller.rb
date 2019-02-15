@@ -32,6 +32,23 @@ module StashEngine
         format.js do
           @resource = StashEngine::Resource.find(curation_activity_params[:resource_id])
 
+          args = {
+            user_id: current_user.id,
+            note: curation_activity_params[:note]
+          }
+
+          case status
+          when 'published'
+            args = args.merge({ publication_date: formatted_html5_date(Date.today) })
+            @activity = @resource.publish!(args)
+          when 'embargoed'
+            args = args.merge({ publication_date: formatted_html5_date(Date.today + 1.year) })
+            @activity = @resource.embargo!(args)
+          else
+            args = args.merge({ resource_id: @resource.id, status: curation_activity_params[:status] })
+            @activity = CurationActivity.create(args)
+          end
+
           # If the user was only adding a note, NOT changing the status, then retrieve
           # the last curation status and use that
           status = if curation_activity_params[:status].blank?
@@ -39,17 +56,15 @@ module StashEngine
                    else
                      curation_activity_params[:status]
                    end
-          @activity = CurationActivity.create(resource_id: @resource.id,
-                                              note: curation_activity_params[:note],
-                                              status: status, user_id: current_user.id)
+          @activity =
           # If the user published the resource then set its publication_date to today
           if status == 'published'
-            @resource.update(publication_date: formatted_html5_date(Date.today))
+
 
           # If the user embargoed the resource and there is no future publication date then
           # default the publication_date to 1 year out
           elsif status == 'embargoed' && (!@resource.publication_date.present? || @resource.publication_date < formatted_html5_date(Date.today))
-            @resource.update(publication_date: formatted_html5_date(Date.today + 1.year))
+            @resource.update(publication_date: )
           end
         end
       end
@@ -60,6 +75,14 @@ module StashEngine
 
     def curation_activity_params
       params.require(:curation_activity).permit(:resource_id, :status, :note)
+    end
+
+    def publish_resource(resource)
+
+    end
+
+    def embargo_resource(resource)
+
     end
 
   end

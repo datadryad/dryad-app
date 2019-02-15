@@ -280,6 +280,16 @@ module StashEngine
       current_curation_activity.status
     end
 
+    def publish!(user_id, date, note = '')
+      update!(publication_date: date)
+      CurationActivity.create(resource_id: id, note: note, user_id: user_id, status: 'published')
+    end
+
+    def embargo!(user_id, date, note = '')
+      update!(publication_date: date)
+      CurationActivity.create(resource_id: id, note: note, user_id: user_id, status: 'embargoed')
+    end
+
     # Create the initial CurationActivity
     def init_curation_status
       curation_activities << StashEngine::CurationActivity.new
