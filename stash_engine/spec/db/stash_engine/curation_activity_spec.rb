@@ -99,12 +99,6 @@ module StashEngine
         expect(ca).to receive(:submit_to_datacite)
         ca.save
       end
-
-      it 'calls submit_to_datacite method after updating a CurationActivity' do
-        ca = CurationActivity.create(resource_id: @resource.id)
-        expect(ca).to receive(:submit_to_datacite)
-        ca.update(status: 'curation')
-      end
     end
 
   end
