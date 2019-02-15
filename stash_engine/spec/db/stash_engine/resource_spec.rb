@@ -1084,6 +1084,29 @@ module StashEngine
           expect(resource.reload.current_curation_activity_id.present?).to eql(true)
         end
 
+        it 'should set publication_date when publish!' do
+          resource = Resource.create
+          date = Date.new('2019-01-01')
+          resource.publish!(user.id, date)
+          resource.reload
+          expect(Date.new(resource.publication_date)).to eql(date)
+        end
+
+        it 'should set publication_date when embargo!' do
+
+        end
+
+        it 'should add new curation_activity when publish!' do
+          resource = Resource.create
+          resource.publish!(user.id, Date.new('2019-01-01'))
+          resource.reload
+          expect(resource.current_curation_status).to eql('published')
+        end
+
+        it 'should add new curation_activity when embargo!' do
+
+        end
+
       end
     end
   end

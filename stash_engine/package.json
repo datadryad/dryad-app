@@ -21,7 +21,6 @@
     "gulp-lb-include": "",
     "gulp-modernizr": "",
     "gulp-postcss": "",
-    "gulp-sass": "",
     "gulp-scss-lint": "",
     "gulp-shell": "",
     "gulp-sourcemaps": "",
@@ -33,5 +32,8 @@
     "postcss-assets": "",
     "run-sequence": ""
   },
-  "dependencies": {}
+  "dependencies": {
+    "gulp-sass": "^4.0.2",
+    "node-sass": "^4.11.0"
+  }
 }
