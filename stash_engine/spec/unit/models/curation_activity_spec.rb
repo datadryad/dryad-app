@@ -45,90 +45,84 @@ module StashEngine
 
         # @curation_activity = create(:curation_activity)
         # @curation_activity.update(identifier_id: @identifier.id)
-        @mock_idgen = double('idgen')
-        allow(@mock_idgen).to receive('update_identifier_metadata!'.intern).and_raise('submitted DOI')
+        @mock_idgen = spy('idgen')
+        # allow(@mock_idgen).to receive('update_identifier_metadata!'.intern).and_raise('submitted DOI')
+        allow(@mock_idgen).to receive('update_identifier_metadata!'.intern) # .and_return('called make metadata')
         allow(Stash::Doi::IdGen).to receive(:make_instance).and_return(@mock_idgen)
-      end
 
-      it 'submits when created/changed if it is Published, is versioned and is in Merritt' do
-        # rubocop:disable Layout/CommentIndentation
-        # submitted = false
-        # begin
-          # CurationActivity.create(identifier_id: @identifier.id, status: 'published')
-        # rescue RuntimeError => ex
-          # expect(ex.to_s).to eq('submitted DOI')
-          # submitted = true
-        # end
-        # briley - commented out because this should never pass since Rails.env == 'test'
-        # expect(submitted).to eq(true)
-        # rubocop:enable Layout/CommentIndentation
+        # get rid of callbacks for adding one and testing
+        CurationActivity.skip_callback(:create, :after, :submit_to_datacite)
+        CurationActivity.skip_callback(:create, :after, :update_solr)
+        CurationActivity.skip_callback(:save, :after, :submit_to_stripe)
+        @curation_activity1 = create(:curation_activity, resource: @resource)
+        CurationActivity.set_callback(:create, :after, :submit_to_datacite)
+        # these two never need to fire to test this example
+        # CurationActivity.set_callback(:create, :after, :update_solr)
+        # CurationActivity.set_callback(:save, :after, :submit_to_stripe)
+
       end
 
       it "doesn't submit when a status besides Embargoed or Published is set" do
-        submitted = false
-        begin
-          CurationActivity.create(resource_id: @resource.id, status: 'curation')
-        rescue RuntimeError => ex
-          expect(ex.to_s).to eq('submitted DOI')
-          submitted = true
-        end
-        expect(submitted).to eq(false)
+        CurationActivity.create(resource_id: @resource.id, status: 'curation')
+        expect(@mock_idgen).to_not have_received(:update_identifier_metadata)
       end
 
       it "doesn't submit when status isn't changed" do
-        CurationActivity.skip_callback(:save, :after, :submit_to_datacite)
-        item = CurationActivity.create(resource_id: @resource.id, status: 'published')
-        CurationActivity.set_callback(:save, :after, :submit_to_datacite)
-        submitted = false
-        begin
-          item.update(status: 'published')
-        rescue RuntimeError => ex
-          expect(ex.to_s).to eq('submitted DOI')
-          submitted = true
-        end
-        expect(submitted).to eq(false)
+        CurationActivity.skip_callback(:create, :after, :submit_to_datacite)
+        @curation_activity2 = create(:curation_activity, resource: @resource, status: 'published')
+        CurationActivity.set_callback(:create, :after, :submit_to_datacite)
+
+        CurationActivity.create(resource_id: @resource.id, status: 'published')
+        expect(@mock_idgen).to_not have_received(:update_identifier_metadata)
       end
 
       it "doesn't submit if never sent to Merritt" do
         @resource_state.update(resource_state: 'in_progress')
-        submitted = false
-        begin
-          CurationActivity.create(resource_id: @resource.id, status: 'published')
-        rescue RuntimeError => ex
-          expect(ex.to_s).to eq('submitted DOI')
-          submitted = true
-        end
-        expect(submitted).to eq(false)
+        CurationActivity.create(resource_id: @resource.id, status: 'published')
+        expect(@mock_idgen).to_not have_received(:update_identifier_metadata)
       end
 
       it "doesn't submit if no version number" do
         @version.update!(version: nil, merritt_version: nil)
-        my_cur = CurationActivity.create(resource_id: @resource.id, status: 'in_progress')
-        # this is kind of crazy, but doing without nesting somehow caches everything and can't get it to update in test
-        my_cur.resource.stash_version.update(version: nil, merritt_version: nil)
-        submitted = false
-        begin
-          my_cur.update(status: 'published')
-        rescue RuntimeError => ex
-          expect(ex.to_s).to eq('submitted DOI')
-          submitted = true
-        end
-        expect(submitted).to eq(false)
+        CurationActivity.create(resource_id: @resource.id, status: 'published')
+        expect(@mock_idgen).to_not have_received(:update_identifier_metadata)
       end
 
       it "doesn't submit non-production (test) identifiers after first version" do
         @resource2 = create(:resource, identifier_id: @identifier.id)
         @resource_state2 = create(:resource_state, resource_id: @resource2.id)
-        @resource2.update(current_resource_state_id: @resource_state2.id)
         @version2 = create(:version, resource_id: @resource2.id, version: 2, merritt_version: 2)
-        submitted = false
-        begin
-          CurationActivity.create(resource_id: @resource2.id, status: 'published')
-        rescue RuntimeError => ex
-          expect(ex.to_s).to eq('submitted DOI')
-          submitted = true
-        end
-        expect(submitted).to eq(false)
+        CurationActivity.skip_callback(:create, :after, :submit_to_datacite)
+        CurationActivity.create(resource: @resource2, status: 'published')
+        CurationActivity.set_callback(:create, :after, :submit_to_datacite)
+        expect(@mock_idgen).to_not have_received(:update_identifier_metadata)
+      end
+    end
+
+    describe '#latest_curation_status_changed?' do
+
+      before(:each) do
+        @user = create(:user)
+        @identifier = create(:identifier)
+        @resource = create(:resource, identifier_id: @identifier.id)
+      end
+
+      it 'considers things changed if there is only one curation status for this resource' do
+        StashEngine::CurationActivity.destroy_all
+        @curation_activity = create(:curation_activity, resource: @resource)
+        expect(@curation_activity.latest_curation_status_changed?).to be true
+      end
+
+      it 'considers changed to be true if the last two curation statuses are unequal' do
+        @curation_activity1 = create(:curation_activity, status: 'in_progress', resource: @resource)
+        @curation_activity2 = create(:curation_activity, status: 'embargoed', resource: @resource)
+        expect(@curation_activity2.latest_curation_status_changed?).to be true
+      end
+
+      it 'considers changed to be false if the last two curation statuses are equal' do
+        @curation_activity1 = create(:curation_activity, status: :embargoed, resource: @resource)
+        @curation_activity2 = create(:curation_activity, status: :embargoed, resource: @resource, note: 'We need more about cats')
+        expect(@curation_activity2.latest_curation_status_changed?).to be false
       end
     end
   end

@@ -46,8 +46,8 @@ module StashEngine
 
     # Callbacks
     # ------------------------------------------
-    after_save :submit_to_stripe, :submit_to_datacite
-    after_create :update_resource_reference!
+    after_save :submit_to_stripe
+    after_create :update_resource_reference!, :submit_to_datacite, :update_solr
     after_destroy :remove_resource_reference!
 
     # Class methods
@@ -86,6 +86,14 @@ module StashEngine
       CurationActivity.readable_status(status)
     end
 
+    # don't think the status_changed? method is right since it only detects a change in the same
+    # activerecord row.  We're adding a new row for each item, so a create, not a change in value.
+    def latest_curation_status_changed?
+      last_two_statuses = CurationActivity.where(resource_id: resource_id).order(updated_at: :desc, id: :desc).limit(2)
+      return true if last_two_statuses.count < 2 # no second-to-last status for this resource, it should be new to this resource
+      last_two_statuses.first.status != last_two_statuses.second.status
+    end
+
     # Private methods
     # ------------------------------------------
     private
@@ -117,13 +125,18 @@ module StashEngine
       idg.update_identifier_metadata!
     end
 
+    def update_solr
+      return unless (published? || embargoed?) && latest_curation_status_changed?
+      resource.submit_to_solr
+    end
+
     # Helper methods
     # ------------------------------------------
 
     # rubocop:disable Metrics/CyclomaticComplexity
     def should_update_doi?
       # only update if status changed or newly published or embargoed
-      return false unless status_changed? && (published? || embargoed?)
+      return false unless latest_curation_status_changed? && (published? || embargoed?)
 
       last_merritt_version = resource.identifier&.last_submitted_version_number
       return false if last_merritt_version.nil? # don't submit random crap to DataCite unless it's preserved in Merritt
