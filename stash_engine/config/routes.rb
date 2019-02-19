@@ -20,6 +20,7 @@ StashEngine::Engine.routes.draw do
   end
 
   post 'curation_status_change/:id', to: 'curation_activity#status_change', as: 'curation_status_change'
+  post 'curation_embargo_change/:id', to: 'admin_datasets#embargo_change', as: 'curation_embargo_change'
   resources :tenants, only: [:index, :show]
   resources :file_uploads do
     member do
