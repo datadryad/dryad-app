@@ -77,7 +77,12 @@ module StashEngine
         format.js do
           return unless params[:curation_activity][:note].present? || params[:publication_date].present?
           @resource = Resource.find(params[:curation_activity][:resource_id])
-          @resource.embargo!(current_user.id, params[:publication_date], params[:curation_activity][:note])
+          # If the date is less than or equal to today its published otherwise its embargoed!
+          if params[:publication_date] <= Date.today.to_s
+            @resource.publish!(current_user.id, params[:publication_date], params[:curation_activity][:note])
+          else
+            @resource.embargo!(current_user.id, params[:publication_date], params[:curation_activity][:note])
+          end
           @resource.reload
         end
       end
