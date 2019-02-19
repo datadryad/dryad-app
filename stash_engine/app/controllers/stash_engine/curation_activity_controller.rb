@@ -26,30 +26,36 @@ module StashEngine
     # in list for identifier, which is the ID that is passed in.  It does ajax mumbo-jumbo for admin area.
     # this isn't RESTful
     # def create
-    # rubocop:disable Metrics/MethodLength
     def status_change
       respond_to do |format|
         format.js do
-          # If the user was only adding a note, NOT changing the status, then retrieve
-          # the last curation status and use that
-          status = if curation_activity_params[:status].blank?
-                     StashEngine::Resource.find(curation_activity_params[:resource_id]).current_curation_status
-                   else
-                     curation_activity_params[:status]
-                   end
-          @activity = CurationActivity.create(resource_id: curation_activity_params[:resource_id],
-                                              note: curation_activity_params[:note],
-                                              status: status, user_id: current_user.id)
+          @resource = StashEngine::Resource.find(curation_activity_params[:resource_id])
+          handle_status(@resource)
+          @activity = @resource.reload.current_curation_activity
         end
       end
     end
-    # rubocop:enable Metrics/MethodLength
 
     private
 
     def curation_activity_params
       params.require(:curation_activity).permit(:resource_id, :status, :note)
     end
+
+    # Publish, embargo or simply change the status
+    # rubocop:disable Metrics/AbcSize
+    def handle_status(resource)
+      case curation_activity_params[:status]
+      when 'published'
+        resource.publish!(current_user.id, Date.today, curation_activity_params[:note])
+      when 'embargoed'
+        resource.embargo!(current_user.id, Date.today + 1.year, curation_activity_params[:note])
+      else
+        CurationActivity.create(resource_id: @resource.id, user_id: current_user.id,
+                                status: curation_activity_params[:status], note: curation_activity_params[:note])
+      end
+    end
+    # rubocop:enable Metrics/AbcSize
 
   end
 end
