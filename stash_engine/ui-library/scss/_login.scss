@@ -6,6 +6,8 @@
 
 .t-login__box {
   flex-basis: 25em;
+  padding-right: 25px;
+  border-right: 1px solid $design-orange-color;
 
   a:link,
   a:visited,
@@ -17,24 +19,58 @@
   }
 
   h1 {
+    margin-bottom: 45px;
     color: $design-orange-color;
+  }
+
+  p {
+    margin-top: 45px;
+  }
+}
+
+.t-login__choose {
+  flex-basis: 25em;
+  padding-right: 25px;
+  border-right: 1px solid $design-orange-color;
+  text-align: left;
+
+  a:link,
+  a:visited,
+  a:hover,
+  a:active {
+    color: $design-black-color;
+    font-weight: bold;
+    text-decoration: none;
+  }
+
+  h1 {
+    margin-bottom: 45px;
+    color: $design-orange-color;
+    text-align: center;
+  }
+
+  p {
+    margin-top: 45px;
   }
 }
 
 .t-login__buttonlink {
-  padding: 15px 20px;
+  padding: 10px 15px;
   border: 2px solid $design-orange-color;
+  border-radius: 35px;
   background-color: $design-white-color;
 }
 
 .t-login__buttonlink:hover {
   border: 2px solid $design-orange-color;
+  border-radius: 35px;
   background-color: $design-white-color;
 }
 
 
 .t-login__info {
   flex-basis: 30em;
+  padding-left: 25px;
   text-align: left;
 }
 
