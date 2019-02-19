@@ -261,29 +261,33 @@ module StashEngine
     end
 
     describe :public? do
+
+      before(:each) do
+        @resource = Resource.create(user_id: user.id)
+        allow(@resource).to receive(:submit_to_solr).and_return(true)
+      end
+
       it 'defaults to true' do
-        resource = Resource.create(user_id: user.id)
-        expect(resource.public?).to eq(true)
+        expect(@resource.public?).to eq(true)
       end
 
       it 'returns true for expired embargoes' do
-        resource = Resource.create(user_id: user.id)
-        StashEngine::Embargo.create(resource_id: resource.id, end_date: Date.new(2015, 5, 18))
-        resource.reload
-        expect(resource.public?).to eq(true)
+        StashEngine::Embargo.create(resource_id: @resource.id, end_date: Date.new(2015, 5, 18))
+        @resource.reload
+        expect(@resource.public?).to eq(true)
       end
 
       it 'returns false for in-force embargoes' do
-        resource = Resource.create(user_id: user.id)
-        StashEngine::Embargo.create(resource_id: resource.id, end_date: future_date)
-        resource.reload
-        expect(resource.public?).to eq(false)
+        StashEngine::Embargo.create(resource_id: @resource.id, end_date: future_date)
+        @resource.reload
+        expect(@resource.public?).to eq(false)
       end
     end
 
     describe :private? do
       it 'defaults to false' do
         resource = Resource.create(user_id: user.id)
+        allow(resource).to receive(:submit_to_solr).and_return(true)
         expect(resource.private?).to eq(false)
       end
 
@@ -1073,61 +1077,57 @@ module StashEngine
 
       describe :current_curation_activity do
 
+        before(:each) do
+          allow_any_instance_of(CurationActivity).to receive(:update_solr).and_return(true)
+          @resource = Resource.create
+        end
+
         it 'should return the most recent curation activity' do
-          resource = Resource.create
-          ca = CurationActivity.create(status: 'curation', resource_id: resource.id)
-          expect(resource.reload.current_curation_activity_id).to eql(ca.id)
+          ca = CurationActivity.create(status: 'curation', resource_id: @resource.id)
+          expect(@resource.reload.current_curation_activity_id).to eql(ca.id)
         end
 
         it 'should have a value when the record is created' do
-          resource = Resource.create
-          expect(resource.reload.current_curation_activity_id.present?).to eql(true)
+          expect(@resource.reload.current_curation_activity_id.present?).to eql(true)
         end
 
         it 'should default publication_date to today when publish!' do
-          resource = Resource.create
-          resource.publish!(user.id)
-          resource.reload
-          expect(resource.publication_date.to_date.to_s).to eql(Date.today.to_s)
+          @resource.publish!(user.id)
+          @resource.reload
+          expect(@resource.publication_date.to_date.to_s).to eql(Date.today.to_s)
         end
 
         it 'should default publication_date to 1 year from today when embargo!' do
-          resource = Resource.create
-          resource.embargo!(user.id)
-          resource.reload
-          expect(resource.publication_date.to_date.to_s).to eql((Date.today + 1.year).to_s)
+          @resource.embargo!(user.id)
+          @resource.reload
+          expect(@resource.publication_date.to_date.to_s).to eql((Date.today + 1.year).to_s)
         end
 
         it 'should set publication_date when publish!' do
-          resource = Resource.create
           date = Date.parse('2019-01-01 00:00:00 UTC')
-          resource.publish!(user.id, date)
-          resource.reload
-          expect(resource.publication_date.to_s).to eql('2019-01-01 00:00:00 UTC')
+          @resource.publish!(user.id, date)
+          @resource.reload
+          expect(@resource.publication_date.to_s).to eql('2019-01-01 00:00:00 UTC')
         end
 
         it 'should set publication_date when embargo!' do
-          resource = Resource.create
           date = Date.parse('2019-01-01 00:00:00 UTC')
-          resource.embargo!(user.id, date)
-          resource.reload
-          expect(resource.publication_date.to_s).to eql('2019-01-01 00:00:00 UTC')
+          @resource.embargo!(user.id, date)
+          @resource.reload
+          expect(@resource.publication_date.to_s).to eql('2019-01-01 00:00:00 UTC')
         end
 
         it 'should add new curation_activity when publish!' do
-          resource = Resource.create
-          resource.publish!(user.id, Date.today)
-          resource.reload
-          expect(resource.current_curation_status).to eql('published')
+          @resource.publish!(user.id, Date.today)
+          @resource.reload
+          expect(@resource.current_curation_status).to eql('published')
         end
 
         it 'should add new curation_activity when embargo!' do
-          resource = Resource.create
-          resource.embargo!(user.id, Date.today)
-          resource.reload
-          expect(resource.current_curation_status).to eql('embargoed')
+          @resource.embargo!(user.id, Date.today)
+          @resource.reload
+          expect(@resource.current_curation_status).to eql('embargoed')
         end
-
       end
     end
   end
