@@ -12,7 +12,7 @@
     "browser-sync": "",
     "browsersync-ssi": "",
     "del": "",
-    "gulp": "",
+    "gulp": "~> 4.0",
     "gulp-autoprefixer": "",
     "gulp-clean-css": "",
     "gulp-if": "",
@@ -29,6 +29,7 @@
     "gulp-useref": "",
     "gulp-w3cjs": "",
     "jshint": "",
+    "node-sass": "^4.11.0",
     "path": "",
     "postcss-assets": "",
     "run-sequence": ""
