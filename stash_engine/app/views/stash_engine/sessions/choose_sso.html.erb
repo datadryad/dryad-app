@@ -1,22 +1,28 @@
-<% @page_title = "Choose Partner Institution" %>
-<h1>Partner Institution Affiliation</h1>
+<div class="t-login__section">
+  <div class="t-login__choose">
+    <h1>Login</h1>
+    <p><%= image_tag('stash_engine/icon_orcid', class: 't-login__orcid-small', alt: 'ORCID logo') %> <strong>ORCID login successful</strong></p>
 
-<p>You have successfully logged in with ORCID</p>
+    <% tenants = StashEngine::Tenant.partner_list %>
 
-<p>If you are affiliated with any of the following partner institutions, please click its name to verify your affiliation.</p>
+    <% unless tenants.empty? %>
+      <h2>Your institution may be a member* of Dryad.</h2>
 
-<% tenants = StashEngine::Tenant.partner_list %>
+      <div class="c-institution__container">
+        <%= select_tag :tenant_id, tenants %>
 
-<div class="c-institution__container">
-  <% unless tenants.count < 1 %>
-    <% tenants.each_slice((tenants.count / 3.0).ceil).to_a.each do |tenant_column| %>
-      <div class="c-institution__column">
-        <% tenant_column.each do |t| %>
+        <% tenants.each do |t| %>
           <%= link_to t.short_name, t.omniauth_login_path({tenant_id: t.tenant_id}) %><br/>
         <% end %>
       </div>
     <% end %>
-  <% end %>
-</div>
 
-<%= button_to 'I am not affiliated with any of these institutions', no_partner_path, class: 'c-institution__button' %>
+    <p>My institution is not a Dryad member</p>
+    <%= link_to dashboard_path, class: 't-login__buttonlink' do %>
+      Continue to My Datasets
+    <% end %>
+
+    <p>* Member institutions cover the fees for their researchers to use Dryad.</p>
+  </div>
+  <%= render partial: 'login_info' %>
+</div>

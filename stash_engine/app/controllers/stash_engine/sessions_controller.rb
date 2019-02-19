@@ -19,7 +19,7 @@ module StashEngine
       user = User.from_omniauth_orcid(auth_hash: @auth_hash, emails: emails)
       session[:user_id] = user.id
       user.set_migration_token
-      if user.tenant_id
+      if user.tenant_id.present?
         redirect_to dashboard_path
       else
         redirect_to choose_sso_path
