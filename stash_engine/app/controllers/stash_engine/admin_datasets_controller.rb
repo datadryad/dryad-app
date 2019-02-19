@@ -60,6 +60,37 @@ module StashEngine
       end
     end
 
+    def embargo_popup
+      respond_to do |format|
+        @resource = Resource.includes(:identifier, :current_curation_activity).find(params[:id])
+        @curation_activity = CurationActivity.new(
+          resource_id: @resource.id,
+          status: 'embargoed'
+        )
+        format.js
+      end
+    end
+
+    # rubocop:disable Metrics/AbcSize
+    # rubocop:disable Metrics/MethodLength
+    def embargo_change
+      respond_to do |format|
+        format.js do
+          return unless params[:curation_activity][:note].present? || params[:publication_date].present?
+          @resource = Resource.find(params[:curation_activity][:resource_id])
+          # If the date is less than or equal to today its published otherwise its embargoed!
+          if params[:publication_date] <= Date.today.to_s
+            @resource.publish!(current_user.id, params[:publication_date], params[:curation_activity][:note])
+          else
+            @resource.embargo!(current_user.id, params[:publication_date], params[:curation_activity][:note])
+          end
+          @resource.reload
+        end
+      end
+    end
+    # rubocop:enable Metrics/AbcSize
+    # rubocop:enable Metrics/MethodLength
+
     # show curation activities for this item
     def activity_log
       @identifier = Identifier.find(params[:id])

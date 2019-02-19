@@ -13,7 +13,7 @@ module StashEngine
       c.helper_method \
         %i[
           metadata_url_helpers metadata_render_path stash_url_helpers contact_us_url logo_path
-          formatted_date formatted_datetime local_time default_date
+          formatted_date formatted_datetime formatted_html5_date local_time default_date
           current_tenant current_tenant_display current_tenant_simple current_user
           can_display_embargoed?
           field_suffix shorten_linked_url english_list
@@ -76,6 +76,12 @@ module StashEngine
       return 'Not available' if t.blank?
       t = t.to_time if t.class == String
       t.in_time_zone('Pacific Time (US & Canada)').strftime('%m/%d/%Y %H:%M:%S')
+    end
+
+    def formatted_html5_date(t)
+      return 'Not available' if t.blank?
+      t = t.to_time if t.class == String
+      t.strftime('%Y-%m-%d')
     end
 
     def local_time(t)
