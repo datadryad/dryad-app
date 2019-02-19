@@ -35,20 +35,20 @@ module StashApi
     # POST /datasets/{dataset_id}/curation_activity
     def create
       params.permit!
-      @curation_activity = StashEngine::CurationActivity.new(params[:curation_activity].except(:identifier_id, :user_id, :dataset))
-      @curation_activity.update!(user_id: @user.id, identifier_id: @stash_identifier.id)
-      @curation_activity.update!(user_id: nil) if params[:user_id].nil?
-      render json: @curation_activity
+      resource = StashEngine::Identifier.find(params[:dataset_id]).latest_resource
+      create_curation_activity(resource)
+      respond_to do |format|
+        format.json { render json: resource&.reload&.current_curation_activity }
+      end
     end
 
     # PUT /curation_activity/{id}
     def update
       params.permit!
-      @curation_activity = StashEngine::CurationActivity.find(params[:id])
-      @curation_activity.update!(params[:curation_activity].except(:identifier_id, :user_id, :dataset))
-      @curation_activity.update!(user_id: nil) if params[:user_id].nil?
+      resource = StashEngine::Identifier.find(params[:dataset_id]).latest_resource
+      create_curation_activity(resource)
       respond_to do |format|
-        format.json { render json: @curation_activity }
+        format.json { render json: resource&.reload&.current_curation_activity }
       end
     end
 
@@ -63,5 +63,27 @@ module StashApi
       @stash_identifier = ds.get_stash_identifier(id)
       render json: { error: 'cannot find dataset with identifier ' + id }.to_json, status: 404 if @stash_identifier.nil?
     end
+
+    private
+
+    # Publish, embargo or simply change the status
+    # rubocop:disable Metrics/AbcSize
+    # rubocop:disable Metrics/MethodLength
+    def create_curation_activity(resource)
+      user = params[:user_id] || @user.id
+      return unless resource.present?
+      case params[:curation_activity][:status]
+      when 'published'
+        resource.publish!(user, Date.today, params[:curation_activity][:note])
+      when 'embargoed'
+        resource.embargo!(user, Date.today + 1.year, params[:curation_activity][:note])
+      else
+        StashEngine::CurationActivity.create(resource_id: resource.id, user_id: user, status: params[:curation_activity][:status],
+                                             note: params[:curation_activity][:note])
+      end
+    end
+    # rubocop:enable Metrics/MethodLength
+    # rubocop:enable Metrics/AbcSize
+
   end
 end
