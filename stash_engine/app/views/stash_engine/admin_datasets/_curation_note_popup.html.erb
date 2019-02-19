@@ -10,6 +10,7 @@
       <%= f.text_area(:note, class: 'c-input__textarea') %>
     </div>
     <%= f.hidden_field :resource_id %>
+    <%= f.hidden_field :status %>
     <%= submit_tag 'Submit' %>
     <%= button_tag 'Cancel', type: 'button', id: 'cancel_dialog' %>
   <% end %>

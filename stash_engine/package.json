@@ -21,7 +21,6 @@
     "gulp-lb-include": "",
     "gulp-modernizr": "",
     "gulp-postcss": "",
-    "gulp-sass": "",
     "gulp-scss-lint": "",
     "gulp-shell": "",
     "gulp-sourcemaps": "",

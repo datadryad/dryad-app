@@ -13,6 +13,9 @@ builds
 **/.generators
 **/.rakeTasks
 
+# Random things to gitignore
+node_modules/*
+
 #### joe made this: http://goel.io/joe
 
 #####=== Ruby ===#####
