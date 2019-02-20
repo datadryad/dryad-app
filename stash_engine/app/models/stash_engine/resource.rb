@@ -120,13 +120,11 @@ module StashEngine
     scope :by_version_desc, -> { joins(:stash_version).order('stash_engine_versions.version DESC') }
     scope :by_version, -> { joins(:stash_version).order('stash_engine_versions.version ASC') }
 
-
     # ------------------------------------------------------------
     # Scopes for curation status, which is now how we know about public display (and should imply successful Merritt submission status)
     scope :with_public_metadata, (-> do
-      joins(:current_curation_activity).where(stash_engine_curation_activities: { status: [:published, :embargoed] })
+      joins(:current_curation_activity).where(stash_engine_curation_activities: { status: %i[published embargoed] })
     end)
-
 
     # gets the latest version per dataset and includes items that haven't been assigned an identifer yet but are initially in progress
     # NOTE.  We've now changed it so everything gets an identifier upon creation, so we may be able to simplify this somehow.
