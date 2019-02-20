@@ -254,6 +254,7 @@ module StashEngine
       current_state == 'processing'
     end
 
+    # TODO: change this
     def embargoed?
       return false if current_state != 'submitted'
       private?
@@ -454,14 +455,13 @@ module StashEngine
     # -----------------------------------------------------------
     # Embargoes
 
-    def private?
-      !public?
+    def files_private?
+      !files_public?
     end
 
-    def public?
-      end_date = embargo && embargo.end_date
-      return true unless end_date
-      Time.now >= end_date
+    def files_public?
+      current_curation_activity.status == 'published' ||
+          ( current_curation_activity.status == 'embargoed' && Time.new > publication_date )
     end
 
     # -----------------------------------------------------------

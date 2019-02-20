@@ -54,7 +54,7 @@ module StashEngine
       raise ActionController::RoutingError, 'Not Found' if @shares.count < 1
 
       @resource = @shares.first.resource
-      if @resource.private?
+      if @resource.files_private?
         download_embargoed
       else
         redirect_to_public
