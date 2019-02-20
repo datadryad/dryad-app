@@ -29,7 +29,7 @@
 }
 
 .t-login__choose {
-  flex-basis: 25em;
+  flex-basis: 35em;
   padding-right: 25px;
   border-right: 1px solid $design-orange-color;
   text-align: left;
@@ -51,6 +51,16 @@
 
   p {
     margin-top: 45px;
+  }
+
+  .c-institution__container {
+    margin-bottom: 25px;
+    margin-left: 0;
+
+    select {
+      width: 20rem;
+      margin-right: 10px;
+    }
   }
 }
 
