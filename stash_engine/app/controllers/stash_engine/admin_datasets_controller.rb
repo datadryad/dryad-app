@@ -116,24 +116,16 @@ module StashEngine
 
     # rubocop:disable Metrics/MethodLength
     def setup_ds_sorting
-      title_sort = SortableTable::SortColumnCustomDefinition.new('title', asc: 'stash_engine_resources.title asc',
-                                                                          desc: 'stash_engine_resources.title desc')
-      status_sort = SortableTable::SortColumnCustomDefinition.new('status', asc: 'stash_engine_curation_activities.status asc',
-                                                                            desc: 'stash_engine_curation_activities.status desc')
-      author_sort = SortableTable::SortColumnCustomDefinition.new('author', asc: 'stash_engine_authors.author_last_name asc, stash_engine_authors.author_first_name asc',
-                                                                            desc: 'stash_engine_authors.author_last_name desc, stash_engine_authors.author_first_name desc')
-      doi_sort = SortableTable::SortColumnCustomDefinition.new('doi', asc: 'stash_engine_identifiers.identifier asc',
-                                                                      desc: 'stash_engine_identifiers.identifier desc')
-      last_modified_sort = SortableTable::SortColumnCustomDefinition.new('last_modified',
-                                                                         asc: 'stash_engine_curation_activities.updated_at asc',
-                                                                         desc: 'stash_engine_curation_activities.updated_at desc')
-      modified_by_sort = SortableTable::SortColumnCustomDefinition.new('modified_by',
-                                                                       asc: 'stash_engine_users.last_name asc, stash_engine_users.first_name asc',
-                                                                       desc: 'stash_engine_users.last_name desc, stash_engine_users.first_name desc')
-      size_sort = SortableTable::SortColumnCustomDefinition.new('size', asc: 'storage_size asc', desc: 'storage_size desc')
-      publiication_date_sort = SortableTable::SortColumnCustomDefinition.new('publication_date', asc: 'stash_engine_resources.publication_date asc', desc: 'stash_engine_resources.publication_date desc')
-
-      sort_table = SortableTable::SortTable.new([title_sort, status_sort, author_sort, doi_sort, last_modified_sort, modified_by_sort, size_sort, publiication_date_sort])
+      sort_table = SortableTable::SortTable.new(
+        [build_sort('title', 'stash_engine_resources', %w[title]),
+         build_sort('status', 'stash_engine_curation_activities', %w[status]),
+         build_sort('author', 'stash_engine_authors', %w[author_last_name author_first_name]),
+         build_sort('doi', 'stash_engine_identifiers', %w[identifier]),
+         build_sort('last_modified', 'stash_engine_curation_activities', %w[updated_at]),
+         build_sort('modified_by', 'stash_engine_users', %w[last_name first_name]),
+         build_sort('size', 'stash_engine_identifiers', %w[storage_size]),
+         build_sort('publication_date', 'stash_engine_resources', %w[publication_date])]
+      )
       @sort_column = sort_table.sort_column(params[:sort], params[:direction])
     end
     # rubocop:enable Metrics/MethodLength
@@ -185,6 +177,14 @@ module StashEngine
       StashEngine::InternalDatum.where(identifier_id: @internal_datum.identifier_id).where(data_type: only_one_options).each do |existing_item|
         @options.delete(existing_item.data_type)
       end
+    end
+
+    def build_sort(id, table, cols)
+      SortableTable::SortColumnCustomDefinition.new(
+        id,
+        asc: cols.map { |c| "#{table}.#{c} asc" }.join(', '),
+        desc: cols.map { |c| "#{table}.#{c} desc" }.join(', ')
+      )
     end
 
   end
