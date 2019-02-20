@@ -4643,8 +4643,8 @@ html.no-details .o-showhide__summary {
     margin-top: 45px; }
 
 .t-login__choose {
-  -ms-flex-preferred-size: 25em;
-      flex-basis: 25em;
+  -ms-flex-preferred-size: 35em;
+      flex-basis: 35em;
   padding-right: 25px;
   border-right: 1px solid #e65722;
   text-align: left; }
@@ -4661,6 +4661,12 @@ html.no-details .o-showhide__summary {
     text-align: center; }
   .t-login__choose p {
     margin-top: 45px; }
+  .t-login__choose .c-institution__container {
+    margin-bottom: 25px;
+    margin-left: 0; }
+    .t-login__choose .c-institution__container select {
+      width: 20rem;
+      margin-right: 10px; }
 
 .t-login__buttonlink {
   padding: 10px 15px;

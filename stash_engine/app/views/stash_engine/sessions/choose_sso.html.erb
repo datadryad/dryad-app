@@ -3,22 +3,17 @@
     <h1>Login</h1>
     <p><%= image_tag('stash_engine/icon_orcid', class: 't-login__orcid-small', alt: 'ORCID logo') %> <strong>ORCID login successful</strong></p>
 
-    <% tenants = StashEngine::Tenant.partner_list %>
+    <h2>Your institution may be a member* of Dryad.</h2>
+    <div class="c-institution__container">
+      <%= form_tag 'sso/', method: :post do %>
+        <%= select_tag :tenant_id, options_from_collection_for_select(@tenants, "id", "name"), class: '.o-select' %>
+        <%= submit_tag 'Login to verify' %>
+      <% end %>
+    </div>
+    <br>
 
-    <% unless tenants.empty? %>
-      <h2>Your institution may be a member* of Dryad.</h2>
-
-      <div class="c-institution__container">
-        <%= select_tag :tenant_id, tenants %>
-
-        <% tenants.each do |t| %>
-          <%= link_to t.short_name, t.omniauth_login_path({tenant_id: t.tenant_id}) %><br/>
-        <% end %>
-      </div>
-    <% end %>
-
-    <p>My institution is not a Dryad member</p>
-    <%= link_to dashboard_path, class: 't-login__buttonlink' do %>
+    <h2>Your institution is not a Dryad member</h2>
+    <%= link_to no_partner_path, class: 't-login__buttonlink', method: :post do %>
       Continue to My Datasets
     <% end %>
 

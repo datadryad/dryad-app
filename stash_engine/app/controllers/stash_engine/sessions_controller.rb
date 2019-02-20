@@ -9,8 +9,9 @@ module StashEngine
 
     # this is the place omniauth calls back for shibboleth/google logins
     def callback
-      current_user.update(tenant_id: params[:tenant_id])
-      redirect_to dashboard_path
+      tenant = StashEngine::Tenant.find(params[:tenant_id])
+      current_user.update(tenant_id: tenant.tenant_id)
+      redirect_to dashboard_path, info: "Your account is now linked to #{tenant.short_name}"
     end
 
     # would only get here if the pre-processor decides this is an actual login and not just an orcid validation (by login)
@@ -35,13 +36,35 @@ module StashEngine
 
     def choose_login; end
 
-    def choose_sso; end
+    def choose_sso
+      tenants = [OpenStruct.new(id: '', name: '')]
+      tenants << StashEngine::Tenant.partner_list.map do |t|
+        OpenStruct.new(id: t.tenant_id, name: t.short_name)
+      end
+
+      # If no tenants are defined redirect to the no_parter path
+      if tenants.empty?
+        redirect_to :no_partner, method: :post
+      else
+        @tenants = tenants.flatten
+      end
+    end
 
     # no partner, so set as generic dryad tenant without membership benefits
     def no_partner
       current_user.tenant_id = APP_CONFIG.default_tenant
       current_user.save!
       redirect_to dashboard_path
+    end
+
+    # send the user to the tenant's SSO url
+    def sso
+      tenant = StashEngine::Tenant.find(params[:tenant_id])
+      if tenant.present?
+        redirect_to tenant.omniauth_login_path(tenant.tenant_id)
+      else
+        render :choose_sso, alert: 'You must select a partner institution from the list.'
+      end
     end
 
     private
