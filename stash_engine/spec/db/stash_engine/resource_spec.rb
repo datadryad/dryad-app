@@ -281,24 +281,24 @@ module StashEngine
       end
     end
 
-    describe :private? do
+    describe :files_private? do
       it 'defaults to false' do
         resource = Resource.create(user_id: user.id)
-        expect(resource.private?).to eq(false)
+        expect(resource.files_private?).to eq(false)
       end
 
       it 'returns false for expired embargoes' do
         resource = Resource.create(user_id: user.id)
         StashEngine::Embargo.create(resource_id: resource.id, end_date: Date.new(2015, 5, 18))
         resource.reload
-        expect(resource.private?).to eq(false)
+        expect(resource.files_private?).to eq(false)
       end
 
       it 'returns true for in-force embargoes' do
         resource = Resource.create(user_id: user.id)
         StashEngine::Embargo.create(resource_id: resource.id, end_date: future_date)
         resource.reload
-        expect(resource.private?).to eq(true)
+        expect(resource.files_private?).to eq(true)
       end
     end
 
