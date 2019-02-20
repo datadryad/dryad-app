@@ -86,7 +86,7 @@ module StashEngine
 
     def self.by_domain(domain)
       i = by_domain_w_nil(domain)
-      return all.first if i.nil?
+      return all.first if i.blank?
       i
     end
 
