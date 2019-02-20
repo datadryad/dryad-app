@@ -9,9 +9,8 @@ module StashEngine
 
     # this is the place omniauth calls back for shibboleth/google logins
     def callback
-      tenant = StashEngine::Tenant.find(params[:tenant_id])
-      current_user.update(tenant_id: tenant.tenant_id)
-      redirect_to dashboard_path, info: "Your account is now linked to #{tenant.short_name}"
+      current_user.update(tenant_id: params[:tenant_id])
+      redirect_to dashboard_path
     end
 
     # would only get here if the pre-processor decides this is an actual login and not just an orcid validation (by login)
