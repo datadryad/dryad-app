@@ -28,8 +28,12 @@ module StashEngine
     # For logged in curators (role: 'superuser'), they get to see the latest version, no matter what state
     # if the param '?show_latest=true' is stuck on the URL.
     def resource
-      @resource ||= id.latest_resource_with_public_metadata
-      # stash_id.resources.by_version_desc.first # this gets the last of any resources for this item
+      @resource ||=
+        if params[:latest] == 'true' && current_user.superuser? # let superusers see the latest, unpublished if they wish
+          id.resources.by_version_desc.first
+        else # everyone else only gets to see published or embargoed metadata latest version
+          id.latest_resource_with_public_metadata
+        end
     end
 
     helper_method :resource
