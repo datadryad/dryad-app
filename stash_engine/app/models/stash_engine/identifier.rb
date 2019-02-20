@@ -56,7 +56,7 @@ module StashEngine
       (lsv = last_submitted_resource) && lsv.version_number
     end
 
-    # this returns a resource object for the last version, caching in instance variable for repeated calls
+    # this returns a resource object for the last version in Merritt, caching in instance variable for repeated calls
     def last_submitted_resource
       return @last_submitted_resource unless @last_submitted_resource.blank?
       submitted = resources.submitted

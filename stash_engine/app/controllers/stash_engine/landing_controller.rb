@@ -21,8 +21,15 @@ module StashEngine
 
     helper_method :id
 
+    # -- gets the resource for display from the identifier --
+    # This gets more complicated because we are displaying the latest curation state of
+    # 'published' or 'embargoed' if it's to the public.
+    #
+    # For logged in curators (role: 'superuser'), they get to see the latest version, no matter what state
+    # if the param '?show_latest=true' is stuck on the URL.
     def resource
-      @resource ||= id.last_submitted_resource
+      @resource ||= id.resources.with_public_metadata.by_version_desc.first # this gets last public metadata
+      # stash_id.resources.by_version_desc.first # this gets the last of any resources for this item
     end
 
     helper_method :resource
