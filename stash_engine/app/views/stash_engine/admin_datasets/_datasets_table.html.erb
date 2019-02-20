@@ -55,7 +55,7 @@
           <% end %>
         <% end %>
       </td>
-      <td><%= resource&.user&.name %></td>
+      <td><%= resource&.authors.first&.author_standard_name %></td>
       <td><%= identifier.identifier %></td>
       <td class="c-admin-hide-border-right">
         <%= formatted_datetime(latest_curation_activity.updated_at) %>
