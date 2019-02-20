@@ -1,35 +1,14 @@
-<h1>Log in</h1>
-
 <div class="t-login__section">
   <div class="t-login__box">
-    <%= link_to image_tag('stash_engine/icon_orcid'), '/stash/auth/orcid?origin=login',
-                {class: 't-login__orcid-big', alt: 'ORCID logo'} %>
+    <h1>Login</h1>
 
     <%= link_to '/stash/auth/orcid?origin=login', class: 't-login__buttonlink' do %>
       <%= image_tag('stash_engine/icon_orcid', class: 't-login__orcid-small', alt: 'ORCID logo') %>
-      Create or log in with your ORCID ID
+      Login or create your ORCID iD
     <% end %>
 
+    <p>Dryad uses ORCID as its primary login method.<br>Please use your ORCID login credentials to login to Dryad.</p>
   </div>
-  <div class="t-login__info">
-    <h2>First Steps</h2>
 
-    <p>
-      Dryad uses ORCID as its primary login method. <a href="">Please log in</a> using your ORCID account.  If you do
-      not have an account, you'll have an opportunity to create one.
-    </p>
-
-    <p>
-      If you are a former Dryad or Dash user you will have the opportunity to migrate your data if it does
-      not appear automatically after logging in.
-    </p>
-
-    <h2>Why ORCID?</h2>
-
-    <p>
-      ORCID provides a persistent identifier, an ORCID ID, that distinguishes you from other
-      researchers. It provides a mechanism for linking your research outputs and activities to your ID.
-      Learn more at <a href="http://orcid.org">orcid.org</a>.
-    </p>
-  </div>
+  <%= render partial: 'login_info' %>
 </div>

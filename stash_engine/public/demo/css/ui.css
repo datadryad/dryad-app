@@ -4622,31 +4622,71 @@ html.no-details .o-showhide__summary {
   -webkit-box-direction: normal;
       -ms-flex-direction: row;
           flex-direction: row;
+  -webkit-box-align: baseline;
+      -ms-flex-align: baseline;
+          align-items: baseline;
+  -webkit-box-pack: space-evenly;
+      -ms-flex-pack: space-evenly;
+          justify-content: space-evenly;
+  width: 100%;
   text-align: center; }
 
 .t-login__box {
-  -ms-flex-preferred-size: 25em;
-      flex-basis: 25em; }
+  padding-right: 25px; }
   .t-login__box a:link,
   .t-login__box a:visited,
   .t-login__box a:hover,
   .t-login__box a:active {
     color: black;
+    font-weight: bold;
     text-decoration: none; }
+  .t-login__box h1 {
+    margin-bottom: 45px;
+    color: #e65722; }
+  .t-login__box p {
+    margin-top: 45px; }
+
+.t-login__choose {
+  padding-right: 25px;
+  text-align: left; }
+  .t-login__choose a:link,
+  .t-login__choose a:visited,
+  .t-login__choose a:hover,
+  .t-login__choose a:active {
+    color: black;
+    text-decoration: none; }
+  .t-login__choose h1 {
+    margin-bottom: 45px;
+    color: #e65722;
+    text-align: center; }
+  .t-login__choose p {
+    margin-top: 45px; }
+  .t-login__choose .c-institution__container {
+    margin-bottom: 25px;
+    margin-left: 0; }
+    .t-login__choose .c-institution__container select {
+      width: 20rem;
+      margin-right: 10px; }
 
 .t-login__buttonlink {
-  padding: 10px 30px;
-  border: thin solid #e65722;
-  background-color: #ebebeb; }
+  padding: 10px 15px;
+  border: 2px solid #e65722;
+  border-radius: 35px;
+  background-color: white; }
 
 .t-login__buttonlink:hover {
-  border: thin solid #e65722;
-  background-color: lightgray; }
+  border: 2px solid #e65722;
+  border-radius: 35px;
+  background-color: white; }
 
 .t-login__info {
-  -ms-flex-preferred-size: 30em;
-      flex-basis: 30em;
+  -ms-flex-preferred-size: 35rem;
+      flex-basis: 35rem;
+  padding-left: 35px;
+  border-left: 1px solid #e65722;
   text-align: left; }
+  .t-login__info h3 {
+    margin-top: 35px; }
 
 .t-login__or-box {
   width: 100px;
@@ -4679,8 +4719,8 @@ html.no-details .o-showhide__summary {
 
 .t-login__orcid-small {
   display: inline-block;
-  width: 1em;
-  height: 1em;
+  width: 1.5em;
+  height: 1.5em;
   vertical-align: middle; }
 
 /*
