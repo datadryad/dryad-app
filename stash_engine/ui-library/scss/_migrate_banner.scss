@@ -6,7 +6,8 @@
   padding: 0 40px;
   float: right;
   border: none;
-  background: $design-light-blue-color;
+  border-radius: 15px;
+  background: $design-dark-blue-color;
   color: $design-white-color;
   font-size: 1.1em;
 }
@@ -17,6 +18,7 @@
   min-height: 35px;
   padding: 0 40px;
   float: left;
+  color: design-dark-blue-color;
   font-size: 1.1em;
   line-height: 35px;
 }

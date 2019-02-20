@@ -45,3 +45,15 @@
 .c-alert__close {
 	margin: 0 0 0 12px;
 }
+
+.c-alert--migration {
+  @extend %c-alert;
+  border: thin solid $design-dark-blue-color;
+  background-color: $design-white-color;
+  background-image: inline('../images/icon_info-blue.png');
+  color: $design-dark-blue-color;
+
+  .c-alert__close {
+		background: transparent inline('../images/icon_close-blue.png') center / 15px no-repeat;
+  }
+}
