@@ -1,13 +1,14 @@
 .t-login__section {
   display: flex;
   flex-direction: row;
+  align-items: baseline;
+  justify-content: space-evenly;
+  width: 100%;
   text-align: center;
 }
 
 .t-login__box {
-  flex-basis: 25em;
   padding-right: 25px;
-  border-right: 1px solid $design-orange-color;
 
   a:link,
   a:visited,
@@ -29,9 +30,7 @@
 }
 
 .t-login__choose {
-  flex-basis: 35em;
   padding-right: 25px;
-  border-right: 1px solid $design-orange-color;
   text-align: left;
 
   a:link,
@@ -39,7 +38,6 @@
   a:hover,
   a:active {
     color: $design-black-color;
-    font-weight: bold;
     text-decoration: none;
   }
 
@@ -79,9 +77,14 @@
 
 
 .t-login__info {
-  flex-basis: 30em;
-  padding-left: 25px;
+  flex-basis: 35rem;
+  padding-left: 35px;
+  border-left: 1px solid $design-orange-color;
   text-align: left;
+
+  h3 {
+    margin-top: 35px;
+  }
 }
 
 .t-login__or-box {
