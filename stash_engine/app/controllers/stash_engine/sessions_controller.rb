@@ -60,7 +60,7 @@ module StashEngine
     def sso
       tenant = StashEngine::Tenant.find(params[:tenant_id])
       if tenant.present?
-        redirect_to tenant.omniauth_login_path(tenant.tenant_id)
+        redirect_to tenant.omniauth_login_path(tenant_id: tenant.tenant_id)
       else
         render :choose_sso, alert: 'You must select a partner institution from the list.'
       end
