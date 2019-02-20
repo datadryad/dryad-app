@@ -125,6 +125,41 @@ module StashEngine
         end
       end
 
+      describe '#latest_resource_with_public_metadata' do
+        before(:each) do
+          @user = User.new
+          allow_any_instance_of(CurationActivity).to receive(:update_solr).and_return(true)
+          allow_any_instance_of(CurationActivity).to receive(:submit_to_stripe).and_return(true)
+          allow_any_instance_of(CurationActivity).to receive(:submit_to_datacite).and_return(true)
+        end
+
+        it 'finds the last published resource' do
+          @res1.curation_activities << CurationActivity.create(status: 'curation', user: @user)
+          @res1.curation_activities << CurationActivity.create(status: 'published', user: @user)
+          @res2.curation_activities << CurationActivity.create(status: 'curation', user: @user)
+          @res2.curation_activities << CurationActivity.create(status: 'published', user: @user)
+          @res3.curation_activities << CurationActivity.create(status: 'curation', user: @user)
+          expect(@identifier.latest_resource_with_public_metadata).to eql(@res2)
+        end
+
+        it 'finds embargoed published resource' do
+          @res1.curation_activities << CurationActivity.create(status: 'curation', user: @user)
+          @res1.curation_activities << CurationActivity.create(status: 'published', user: @user)
+          @res2.curation_activities << CurationActivity.create(status: 'curation', user: @user)
+          @res2.curation_activities << CurationActivity.create(status: 'embargoed', user: @user)
+          @res3.curation_activities << CurationActivity.create(status: 'curation', user: @user)
+          expect(@identifier.latest_resource_with_public_metadata).to eql(@res2)
+        end
+
+        it 'finds no published resource' do
+          @res1.curation_activities << CurationActivity.create(status: 'curation', user: @user)
+          @res2.curation_activities << CurationActivity.create(status: 'curation', user: @user)
+          @res3.curation_activities << CurationActivity.create(status: 'curation', user: @user)
+          expect(@identifier.latest_resource_with_public_metadata).to eql(nil)
+        end
+
+      end
+
       describe '#update_search_words!' do
         before(:each) do
           @identifier2 = Identifier.create(identifier_type: 'DOI', identifier: '10.123/450')

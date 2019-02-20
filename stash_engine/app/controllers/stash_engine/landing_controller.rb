@@ -28,7 +28,7 @@ module StashEngine
     # For logged in curators (role: 'superuser'), they get to see the latest version, no matter what state
     # if the param '?show_latest=true' is stuck on the URL.
     def resource
-      @resource ||= id.resources.with_public_metadata.by_version_desc.first # this gets last public metadata
+      @resource ||= id.latest_resource_with_public_metadata
       # stash_id.resources.by_version_desc.first # this gets the last of any resources for this item
     end
 
