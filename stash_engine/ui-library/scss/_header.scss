@@ -127,9 +127,10 @@
       color: $design-light-blue-color;
     }
 
-    &:not(:last-of-type) {
-      border-right: 1px dotted $design-orange-color;
+    &:not(:last-child) {
+      border-right: 1px solid $design-orange-color;
     }
+
   }
 }
 
