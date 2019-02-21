@@ -19,7 +19,7 @@ module StashEngine
       @resources = build_table_query
       respond_to do |format|
         format.html
-        format.tsv
+        format.csv
       end
     end
 
