@@ -1,11 +1,37 @@
 .t-login__section {
   display: flex;
   flex-direction: row;
+  align-items: baseline;
+  justify-content: space-evenly;
+  width: 100%;
   text-align: center;
 }
 
 .t-login__box {
-  flex-basis: 25em;
+  padding-right: 25px;
+
+  a:link,
+  a:visited,
+  a:hover,
+  a:active {
+    color: $design-black-color;
+    font-weight: bold;
+    text-decoration: none;
+  }
+
+  h1 {
+    margin-bottom: 45px;
+    color: $design-orange-color;
+  }
+
+  p {
+    margin-top: 45px;
+  }
+}
+
+.t-login__choose {
+  padding-right: 25px;
+  text-align: left;
 
   a:link,
   a:visited,
@@ -14,23 +40,51 @@
     color: $design-black-color;
     text-decoration: none;
   }
+
+  h1 {
+    margin-bottom: 45px;
+    color: $design-orange-color;
+    text-align: center;
+  }
+
+  p {
+    margin-top: 45px;
+  }
+
+  .c-institution__container {
+    margin-bottom: 25px;
+    margin-left: 0;
+
+    select {
+      width: 20rem;
+      margin-right: 10px;
+    }
+  }
 }
 
 .t-login__buttonlink {
-  padding: 10px 30px;
-  border: thin solid $design-orange-color;
-  background-color: $design-super-extra-light-gray-color;
+  padding: 10px 15px;
+  border: 2px solid $design-orange-color;
+  border-radius: 35px;
+  background-color: $design-white-color;
 }
 
 .t-login__buttonlink:hover {
-  border: thin solid $design-orange-color;
-  background-color: $design-extra-light-gray-color;
+  border: 2px solid $design-orange-color;
+  border-radius: 35px;
+  background-color: $design-white-color;
 }
 
 
 .t-login__info {
-  flex-basis: 30em;
+  flex-basis: 35rem;
+  padding-left: 35px;
+  border-left: 1px solid $design-orange-color;
   text-align: left;
+
+  h3 {
+    margin-top: 35px;
+  }
 }
 
 .t-login__or-box {
@@ -64,8 +118,8 @@
 
 .t-login__orcid-small {
   display: inline-block;
-  width: 1em;
-  height: 1em;
+  width: 1.5em;
+  height: 1.5em;
   vertical-align: middle;
 }
 
