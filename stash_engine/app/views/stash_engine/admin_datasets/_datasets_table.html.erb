@@ -33,7 +33,7 @@
 
     <tr class="c-lined-table__row">
       <td class="c-admin-hide-border-right">
-        <%= link_to resource.title, show_path(id: identifier.id.to_s), target: :blank %>
+        <%= link_to resource.title, show_path(id: identifier.to_s, latest: true), target: :blank %>
       </td>
       <td class="c-admin-hide-border-left">
         <% if resource&.submitted? || resource&.dataset_in_progress_editor&.id == current_user.id %>

@@ -15,7 +15,6 @@ module StashEngine
           metadata_url_helpers metadata_render_path stash_url_helpers contact_us_url logo_path
           formatted_date formatted_datetime formatted_html5_date local_time default_date
           current_tenant current_tenant_display current_tenant_simple current_user
-          can_display_embargoed?
           field_suffix shorten_linked_url english_list
           display_id display_id_plain display_author_orcid
           display_br link_urls!

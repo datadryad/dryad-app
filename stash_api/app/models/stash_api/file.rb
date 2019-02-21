@@ -45,7 +45,7 @@ module StashApi
 
     def add_download!(hsh)
       hsh['stash:download'] = { href: api_url_helper.download_path(@se_file_upload.id) } if @se_file_upload.resource.submitted? &&
-          !@se_file_upload.resource.embargoed?
+          @se_file_upload.resource.files_public?
     end
 
   end

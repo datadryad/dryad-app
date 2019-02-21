@@ -1,4 +1,5 @@
 module StashEngine
+  # rubocop:disable Metrics/ClassLength
   class Identifier < ActiveRecord::Base
     has_many :resources, class_name: 'StashEngine::Resource', dependent: :destroy
     has_many :orcid_invitations, class_name: 'StashEngine::OrcidInvitation', dependent: :destroy
@@ -52,11 +53,16 @@ module StashEngine
         .where(stash_engine_file_uploads: { file_state: %w[created deleted] })
     end
 
+    # these are items that are embargoed or published and can show metadata
+    def latest_resource_with_public_metadata
+      resources.with_public_metadata.by_version_desc.first
+    end
+
     def last_submitted_version_number
       (lsv = last_submitted_resource) && lsv.version_number
     end
 
-    # this returns a resource object for the last version, caching in instance variable for repeated calls
+    # this returns a resource object for the last version in Merritt, caching in instance variable for repeated calls
     def last_submitted_resource
       return @last_submitted_resource unless @last_submitted_resource.blank?
       submitted = resources.submitted
@@ -155,4 +161,5 @@ module StashEngine
     #   counter_stat || true
     # end
   end
+  # rubocop:enable Metrics/ClassLength
 end
