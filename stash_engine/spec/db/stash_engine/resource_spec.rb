@@ -18,6 +18,9 @@ module StashEngine
         email: 'lmuckenhaupt@ucop.edu',
         tenant_id: 'ucop'
       )
+      allow_any_instance_of(CurationActivity).to receive(:update_solr).and_return(true)
+      allow_any_instance_of(CurationActivity).to receive(:submit_to_stripe).and_return(true)
+      allow_any_instance_of(CurationActivity).to receive(:submit_to_datacite).and_return(true)
     end
 
     describe :tenant do
@@ -260,80 +263,84 @@ module StashEngine
       end
     end
 
-    describe :public? do
+    describe :files_public? do
 
       before(:each) do
         @resource = Resource.create(user_id: user.id)
-        allow(@resource).to receive(:submit_to_solr).and_return(true)
       end
 
-      it 'defaults to true' do
-        expect(@resource.public?).to eq(true)
+      it 'defaults to false' do
+        expect(@resource.files_public?).to eql(false)
       end
 
       it 'returns true for expired embargoes' do
-        StashEngine::Embargo.create(resource_id: @resource.id, end_date: Date.new(2015, 5, 18))
+        @resource.update(publication_date: Time.new - 1.year)
+        @resource.curation_activities << CurationActivity.new(status: 'embargoed')
         @resource.reload
-        expect(@resource.public?).to eq(true)
+        expect(@resource.files_public?).to eq(true)
       end
 
       it 'returns false for in-force embargoes' do
-        StashEngine::Embargo.create(resource_id: @resource.id, end_date: future_date)
+        @resource.update(publication_date: Time.new + 1.year)
+        @resource.curation_activities << CurationActivity.new(status: 'embargoed')
         @resource.reload
-        expect(@resource.public?).to eq(false)
+        expect(@resource.files_public?).to eq(false)
+      end
+
+      it 'returns true for published status' do
+        @resource.curation_activities << CurationActivity.new(status: 'published')
+        @resource.reload
+        expect(@resource.files_public?).to eq(true)
+      end
+
+      it 'returns false for other random status' do
+        @resource.curation_activities << CurationActivity.new(status: 'curation')
+        @resource.reload
+        expect(@resource.files_public?).to eq(false)
       end
     end
 
-    describe :private? do
-      it 'defaults to false' do
-        resource = Resource.create(user_id: user.id)
-        allow(resource).to receive(:submit_to_solr).and_return(true)
-        expect(resource.private?).to eq(false)
+    describe :files_private? do
+      before(:each) do
+        @resource = Resource.create(user_id: user.id)
       end
 
-      it 'returns false for expired embargoes' do
-        resource = Resource.create(user_id: user.id)
-        StashEngine::Embargo.create(resource_id: resource.id, end_date: Date.new(2015, 5, 18))
-        resource.reload
-        expect(resource.private?).to eq(false)
-      end
+      it 'is the opposite of files_public?' do
+        allow(@resource).to receive(:files_public?).and_return(false)
+        expect(@resource.files_private?).to eq(true)
 
-      it 'returns true for in-force embargoes' do
-        resource = Resource.create(user_id: user.id)
-        StashEngine::Embargo.create(resource_id: resource.id, end_date: future_date)
-        resource.reload
-        expect(resource.private?).to eq(true)
+        allow(@resource).to receive(:files_public?).and_return(true)
+        expect(@resource.files_private?).to eq(false)
       end
     end
 
-    describe :embargoed? do
+    describe :metadata_public? do
+
+      before(:each) do
+        @resource = Resource.create(user_id: user.id)
+      end
+
       it 'defaults to false' do
-        resource = Resource.create(user_id: user.id)
-        resource.current_state = 'submitted'
-        expect(resource.embargoed?).to eq(false)
+        expect(@resource.metadata_public?).to eql(false)
       end
 
-      it 'returns false for un-submitted resources even if otherwise private' do
-        resource = Resource.create(user_id: user.id)
-        StashEngine::Embargo.create(resource_id: resource.id, end_date: future_date)
-        resource.reload
-        expect(resource.embargoed?).to eq(false)
+      it 'returns true for embargoed' do
+        @resource.update(publication_date: Time.new + 1.year)
+        @resource.curation_activities << CurationActivity.new(status: 'embargoed')
+        @resource.reload
+        expect(@resource.metadata_public?).to eq(true)
       end
 
-      it 'returns false for expired embargoes' do
-        resource = Resource.create(user_id: user.id)
-        StashEngine::Embargo.create(resource_id: resource.id, end_date: Date.new(2015, 5, 18))
-        resource.current_state = 'submitted'
-        resource.reload
-        expect(resource.embargoed?).to eq(false)
+      it 'returns true for published' do
+        @resource.curation_activities << CurationActivity.new(status: 'published')
+        @resource.reload
+        expect(@resource.metadata_public?).to eq(true)
       end
 
-      it 'returns true for in-force embargoes' do
-        resource = Resource.create(user_id: user.id)
-        StashEngine::Embargo.create(resource_id: resource.id, end_date: future_date)
-        resource.current_state = 'submitted'
-        resource.reload
-        expect(resource.embargoed?).to eq(true)
+      it 'returns false for other random status' do
+        @resource.curation_activities << CurationActivity.new(status: 'curation')
+        @resource.reload
+        expect(@resource.metadata_public?).to eq(false)
       end
     end
 
