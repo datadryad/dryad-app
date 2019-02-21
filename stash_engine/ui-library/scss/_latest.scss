@@ -32,7 +32,7 @@
 		padding: 20px 20px 0;
 
 		&:nth-of-type(even) {
-			border-left: 1px dashed $design-orange-color;
+			border-left: 1px solid $design-orange-color;
 		}
 	}
 }

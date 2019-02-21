@@ -2,12 +2,10 @@
 
 .o-sites {
 
+  width: 60px;
+
   @include bp(screen3) {
-    display: flex;
     position: relative; // to .o-sites__group
-    flex-flow: row-reverse nowrap;
-    justify-content: space-between;
-    width: $global-search-width;
   }
 
 }
@@ -15,6 +13,9 @@
 // Rotate icon when details open:
 
 .o-sites__details {
+
+  position: absolute;
+  width: auto;
 
   &[open] .o-sites__summary {
 
@@ -76,10 +77,11 @@
 
 .o-sites__group {
 
+  width: 200px;
+
   @include bp(screen3) {
     position: absolute; // to .o-sites
-    right: 0;
-    left: 0;
+    right: -15px;
     margin: 10px 0 0;
   }
 
@@ -111,14 +113,6 @@
     }
 
   }
-
-  &::before {
-    content: '\2219';
-    display: inline-block;
-    margin: 0 0.4em 0 0;
-    font-size: 1.2em;
-  }
-
 }
 
 .o-sites__login {

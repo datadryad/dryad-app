@@ -1,29 +1,7 @@
 <p class="c-pubdate__randomstrong">Make my dataset publicly available:</p>
 
-<div class="c-input o-select__input">
-
+<div class="c-input">
   <span style="white-space:nowrap">
-    <label class=c-pubdate__radio-label" for="today_button">
-      <input type="radio" class="c-pubdate__radio" id="today_button" name="when-to-publish" value="today" checked/>
-      Today
-    </label>
+    <input class="hasDatepicker" id="publication_date" min="javascript(Date.new());" name="publication_date" type="date">
   </span>
-
-
-  <span style="white-space:nowrap">
-    <label class="c-pubdate__radio-label" for="future_button">
-      <input type="radio" class="c-pubdate__radio" id="future_button" name="when-to-publish" value="in_future"/>
-      On
-      <input type="text" pattern="[0-9]{1,2}" maxlength="2" id="mmEmbargo" class="c-pubdate__twodigit js-embargo-select"/>
-      /
-      <input type="text" pattern="[0-9]{1,2}" maxlength="2" id="ddEmbargo" class="c-pubdate__twodigit js-embargo-select"/>
-      /
-      <input type="text" pattern="[0-9]{4}" maxlength="4" id="yyyyEmbargo"
-             class="c-pubdate__fourdigit js-embargo-select"/>
-      <button aria-label="open calendar" class="o-button__calendar js-embargo-select"></button>
-    </label>
-  </span>
-
-  <div class="c-pubdate__warning-visible">Please enter dates in numeric month / day / year format.</div>
-
 </div>
