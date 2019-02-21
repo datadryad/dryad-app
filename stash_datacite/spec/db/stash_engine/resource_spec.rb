@@ -169,48 +169,6 @@ module StashEngine
       end
     end
 
-    describe :public? do
-      it 'defaults to true' do
-        resource = Resource.create(user_id: user.id)
-        expect(resource.public?).to eq(true)
-      end
-
-      it 'returns true for expired embargoes' do
-        resource = Resource.create(user_id: user.id)
-        StashEngine::Embargo.create(resource_id: resource.id, end_date: Date.new(2015, 5, 18))
-        resource.reload
-        expect(resource.public?).to eq(true)
-      end
-
-      it 'returns false for in-force embargoes' do
-        resource = Resource.create(user_id: user.id)
-        StashEngine::Embargo.create(resource_id: resource.id, end_date: future_date)
-        resource.reload
-        expect(resource.public?).to eq(false)
-      end
-    end
-
-    describe :files_private? do
-      it 'defaults to false' do
-        resource = Resource.create(user_id: user.id)
-        expect(resource.files_private?).to eq(false)
-      end
-
-      it 'returns false for expired embargoes' do
-        resource = Resource.create(user_id: user.id)
-        StashEngine::Embargo.create(resource_id: resource.id, end_date: Date.new(2015, 5, 18))
-        resource.reload
-        expect(resource.files_private?).to eq(false)
-      end
-
-      it 'returns true for in-force embargoes' do
-        resource = Resource.create(user_id: user.id)
-        StashEngine::Embargo.create(resource_id: resource.id, end_date: future_date)
-        resource.reload
-        expect(resource.files_private?).to eq(true)
-      end
-    end
-
     describe :ensure_state_and_version do
       attr_reader :resource
       attr_reader :orig_state_id
