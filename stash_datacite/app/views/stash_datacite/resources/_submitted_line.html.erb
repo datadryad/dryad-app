@@ -4,7 +4,7 @@
     <% if line.resource && line.resource.has_geolocation == true %>
       <span class="c-category__globe"></span>
     <% end %>
-    <% if ['published', 'private'].include?(line.embargo_status) %>
+    <% if ['published', 'embargoed'].include?(line.embargo_status) %>
       <%= link_to line.title, stash_url_helpers.show_path(line.external_identifier), class: 'o-link__primary' %>
     <% else %>
       <%= line.title %>

@@ -51,10 +51,6 @@ module StashEngine
       return ajax_blocked unless (current_user && resource) && resource.can_edit?(user: current_user)
     end
 
-    def can_display_embargoed?(resource)
-      !resource.files_private? || (current_user && current_user.id == resource.user_id)
-    end
-
     # these owner/admin need to be in controller since they address the current_user from session, not easily available from model
     def owner?
       resource.user_id == current_user.id
