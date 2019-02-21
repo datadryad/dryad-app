@@ -1,4 +1,4 @@
-<%= "Title\tStatus\tAuthor\tDOI\tLast modified\tLast modified by\tSize\tPublication date" %>
+<%= "Title,Status,Author,DOI,Last modified,Last modified by,Size,Publication date" %>
 <% @resources.each do |resource| -%>
 <%
     row = [ resource&.title || '[no title set]',
@@ -8,7 +8,7 @@
             formatted_datetime(resource&.current_curation_activity&.updated_at),
             resource&.current_curation_activity&.user&.name,
             resource.identifier.storage_size,
-            "My last modified"
+            formatted_datetime(resource&.publication_date)
     ]
--%><%= row.join("\t") %>
+-%><%= row.to_csv(row_sep: nil).html_safe %>
 <% end -%>
