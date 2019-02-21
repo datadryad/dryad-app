@@ -7,6 +7,7 @@
   justify-content: center;
   height: 150px;
   background: linear-gradient(rgba($design-light-gray-color, 0.85) 150px, transparent 0), inline('../images/bg_ramon-y-cajal.png') 0 0 / cover no-repeat;
+  text-align: center;
 }
 
 html.no-multiplebgs .o-quote {
@@ -14,15 +15,15 @@ html.no-multiplebgs .o-quote {
 }
 
 .o-quote__quote {
-	width: 320px;
+	width: 380px;
 	margin: 0 0 15px;
 	color: $design-white-color;
-	font-size: 24px;
+	font-size: 18px;
 	line-height: 1.3em;
 }
 
 .o-quote__author {
-	width: 320px;
+	width: 380px;
 	color: $design-white-color;
 	text-align: right;
 }
