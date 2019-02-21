@@ -126,8 +126,14 @@ module StashEngine
       joins(:current_curation_activity).where(stash_engine_curation_activities: { status: %i[published embargoed] })
     end)
 
+    # calculates published as a published status or an embargo that is past its publication date
+    scope :published, (-> do
+      joins(:current_curation_activity).where(["stash_engine_curation_activities.status = 'published' OR " \
+          "(stash_engine_curation_activities.status = 'embargoed' AND stash_engine_resources.publication_date < ?)", Time.new])
+    end)
+
     # gets the latest version per dataset and includes items that haven't been assigned an identifer yet but are initially in progress
-    # NOTE.  We've now changed it so everything gets an identifier upon creation, so we may be able to simplify this somehow.
+    # NOTE.  We've now changed it so everything gets an identifier upon creation, so we may be able to simplify or get rid of this.
     scope :latest_per_dataset, (-> do
       subquery = <<-SQL
         SELECT max(id) AS id FROM stash_engine_resources WHERE identifier_id IS NOT NULL GROUP BY identifier_id
@@ -252,12 +258,6 @@ module StashEngine
 
     def processing?
       current_state == 'processing'
-    end
-
-    # TODO: change this
-    def embargoed?
-      return false if current_state != 'submitted'
-      private?
     end
 
     def current_state
@@ -462,6 +462,10 @@ module StashEngine
     def files_public?
       current_curation_activity.status == 'published' ||
           ( current_curation_activity.status == 'embargoed' && Time.new > publication_date )
+    end
+
+    def metadata_public?
+      %w[published embargoed].include?(current_curation_activity&.status)
     end
 
     # -----------------------------------------------------------

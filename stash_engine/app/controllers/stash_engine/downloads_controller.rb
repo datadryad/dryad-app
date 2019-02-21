@@ -12,7 +12,7 @@ module StashEngine
     # rubocop:disable Metrics/MethodLength
     def download_resource
       @resource = Resource.find(params[:resource_id])
-      if @resource.public?
+      if @resource.files_public?
         download_public
       elsif owner?
         download_as_owner
