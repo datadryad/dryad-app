@@ -98,7 +98,7 @@ module StashEngine
 
     # get the current tenant for submission
     def current_tenant
-      if current_user && current_user.tenant_id
+      if current_user && current_user.tenant_id.present?
         StashEngine::Tenant.find(current_user.tenant_id)
       else
         StashEngine::Tenant.by_domain(request.host)

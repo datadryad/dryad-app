@@ -460,8 +460,8 @@ module StashEngine
     end
 
     def files_public?
-      current_curation_activity.status == 'published' ||
-          ( current_curation_activity.status == 'embargoed' && Time.new > publication_date )
+      current_curation_activity&.status == 'published' ||
+          (current_curation_activity&.status == 'embargoed' && Time.new > publication_date)
     end
 
     def metadata_public?

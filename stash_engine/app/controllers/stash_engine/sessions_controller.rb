@@ -19,7 +19,7 @@ module StashEngine
       user = User.from_omniauth_orcid(auth_hash: @auth_hash, emails: emails)
       session[:user_id] = user.id
       user.set_migration_token
-      if user.tenant_id
+      if user.tenant_id.present?
         redirect_to dashboard_path
       else
         redirect_to choose_sso_path
@@ -35,13 +35,35 @@ module StashEngine
 
     def choose_login; end
 
-    def choose_sso; end
+    def choose_sso
+      tenants = [OpenStruct.new(id: '', name: '')]
+      tenants << StashEngine::Tenant.partner_list.map do |t|
+        OpenStruct.new(id: t.tenant_id, name: t.short_name)
+      end
+
+      # If no tenants are defined redirect to the no_parter path
+      if tenants.empty?
+        redirect_to :no_partner, method: :post
+      else
+        @tenants = tenants.flatten
+      end
+    end
 
     # no partner, so set as generic dryad tenant without membership benefits
     def no_partner
       current_user.tenant_id = APP_CONFIG.default_tenant
       current_user.save!
       redirect_to dashboard_path
+    end
+
+    # send the user to the tenant's SSO url
+    def sso
+      tenant = StashEngine::Tenant.find(params[:tenant_id])
+      if tenant.present?
+        redirect_to tenant.omniauth_login_path(tenant_id: tenant.tenant_id)
+      else
+        render :choose_sso, alert: 'You must select a partner institution from the list.'
+      end
     end
 
     private
