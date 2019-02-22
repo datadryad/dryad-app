@@ -19,7 +19,10 @@ defaults: &DEFAULTS
     api: https://api.sandbox.orcid.org
   submission_bc_emails: [""]
   contact_email: ["changeme@example.org"]
-
+  payments:
+    service: stripe
+    key: <REPLACE-ME>
+    data_processing_charge: 12000 #charge in cents
 
 development: &DEVELOPMENT
   <<: *DEFAULTS
