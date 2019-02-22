@@ -55,6 +55,11 @@ def mock_omniauth!
   )
 end
 
+def mock_ezid_minting!
+  # require 'stash/stash_engine/lib/stash/doi/ezid_gen.rb'
+  allow_any_instance_of(Stash::Doi::EzidGen).to receive(:mint_id).and_return('doi:12234/38575')
+end
+
 # if you have precompiled assets, the tests will use them without telling you and they might be out of date
 # this burned me with out of date and non-working javascript for an entire afternoon of aggravating debugging.  :evil-asset-pipeline:
 def kill_precompiled_assets!
@@ -149,6 +154,7 @@ end
 
 def start_new_dataset!
   log_in!
+  mock_ezid_minting!
   first(:link_or_button, 'Start New Dataset').click
   expect(page).to have_content('Describe Your Dataset')
 end
