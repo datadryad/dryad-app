@@ -35,32 +35,9 @@
         <%= dash_logo %><%= tenant_logo %>
       <% end %>
     </div>
-    <nav class="c-header__nav js-header__nav">
-      <form class="o-global-search c-header__global-search" action="/search" accept-charset="UTF-8" method="get">
-        <input name="utf8" value="✓" type="hidden">
-        <label class="o-global-search__label" for="search-field-input1">Search</label>
-        <input class="o-global-search__input" id="search-field-input1" type="search" name="q" placeholder="Search">
-        <button aria-label="Submit" class="o-global-search__submit-button" type="submit" id="search"></button>
-      </form>
 
-      <div class="c-header__nav-group">
-        <% if current_user && %w[development test].include?(Rails.env) %>
-          <span class="c-header__nav-item" title="<%= current_user.email %>" style="color: blue;">[<%= current_user.name %>@<%= current_tenant.tenant_id %>]</span>
-        <% end %>
-        <% if current_user && %w[admin superuser].include?(current_user.role) %>
-          <%= link_to 'Admin', stash_url_helpers.url_for(controller: 'stash_engine/admin_datasets', action: 'index', only_path: true),
-                      class: 'c-header__nav-item' %>
-        <% end %>
-        <%# link_to 'Home', stash_url_helpers.root_path, class: 'c-header__nav-item' %>
-        <%= link_to 'Explore Data', '/search', class: 'c-header__nav-item js-nav-out' %>
-        <%= link_to 'Help', stash_url_helpers.help_path, class: 'c-header__nav-item js-nav-out' %>
-        <% if current_user %>
-          <%= link_to 'My Datasets', stash_url_helpers.dashboard_path, class: 'c-header__nav-item js-nav-out' %>
-        <% end %>
-        <%= render partial: 'stash_engine/shared/log_in_out' %>
-        <%# render partial: "stash_engine/shared/sites" %>
-      </div>
-    </nav>
+    <%= render partial: "stash_engine/pages/nav" %>
+
   </header>
   <%= render partial: "stash_engine/shared/flash_messages" %>
 <%= yield %>
