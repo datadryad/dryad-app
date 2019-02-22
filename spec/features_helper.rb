@@ -148,8 +148,8 @@ end
 def log_in!
   visit('/')
   first(:link_or_button, 'Login').click
-  first(:link_or_button, 'Create or log in with your ORCID ID').click
-  first(:link_or_button, 'I am not affiliated with any of these institutions').click
+  first(:link_or_button, 'Login or create your ORCID iD').click
+  first(:link_or_button, 'Continue to My Datasets').click
 end
 
 def start_new_dataset!
