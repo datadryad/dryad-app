@@ -24,7 +24,7 @@
 .c-why-share {
   display: flex;
   flex-flow: row wrap;
-  align-items: baseline;
+  align-items: stretch;
   height: 100%;
 }
 
@@ -81,6 +81,7 @@
   @include bp(screen3) {
     /* four column */
     flex: 1 0 24%;
+    height: auto;
     margin-bottom: 40px;
 
     &:not(:last-child) {

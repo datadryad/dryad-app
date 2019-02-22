@@ -34,15 +34,15 @@ function modernizeIt(){
     $('summary').click(function () {
       if ($(this).parent().is('[open]')) {
         $(this).parent().attr('aria-expanded', 'false');
+
       } else {
+        // Close any other menu items before displaying the one clicked
+        closeSiblings(this);
         $(this).parent().attr('aria-expanded', 'true');
       }
     });
-
   } else {
-
     // Details element not supported:
-
     $('details').attr('aria-expanded', 'false');
     $('summary').attr('role', 'button');
     $('summary').siblings().hide();
@@ -54,15 +54,28 @@ function modernizeIt(){
 
     // unbind('click') removed
     $('summary').on("click", function () {
-      $(this).siblings().toggle();
+      $(this).parents().siblings().toggle();
 
       if ($(this).parent().is('[open]')) {
         $(this).parent().removeAttr('open');
         $(this).parent().attr('aria-expanded', 'false');
       } else {
+        // Close any other menu items before displaying the one clicked
+        closeSiblings(this);
         $(this).parent().attr('open', '');
         $(this).parent().attr('aria-expanded', 'true');
       }
     });
   }
-  }
+}
+
+function closeSiblings(selector) {
+  // Close any other menu items before displaying the selector
+  $(selector).closest('.c-header__nav-item').siblings().each(function(idx, sibling) {
+    var details = $(sibling).find('details');
+    if (details && details.is('[open]')) {
+      details.attr('aria-expanded', 'false');
+      details.removeAttr('open');
+    }
+  });
+}

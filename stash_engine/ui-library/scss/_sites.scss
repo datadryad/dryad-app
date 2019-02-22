@@ -14,20 +14,22 @@
 
 .o-sites__details {
 
-  position: absolute;
-  width: auto;
+  @include bp(screen3) {
+    position: absolute;
+    width: auto;
 
-  &[open] .o-sites__summary {
+    &[open] .o-sites__summary {
 
-    &::after {
-      transform: rotate(-90deg);
+      &::after {
+        transform: rotate(-90deg);
 
-      @include bp(screen3) {
-        transform: rotate(-180deg);
+        @include bp(screen3) {
+          transform: rotate(-180deg);
+        }
+
       }
 
     }
-
   }
 
 }
@@ -51,18 +53,18 @@
 .o-sites__summary {
   @extend %o-sites__item;
   position: relative;
+  padding: 0 20px 0 0;
 
   @include bp(screen3) {
-    padding: 0 20px 0 0;
     background-color: transparent;
     text-align: right; // if browser text size is increased beyond normal size
   }
 
   &::after {
-    content: inline('../images/icon_right-white-arrow.svg');
+    // content: inline('../images/icon_right-white-arrow.svg');
     position: absolute;
-    right: $spacing-body + 5px;
-    transform: rotate(90deg);
+    // right: 0;
+    // transform: rotate(90deg);
 
     @include bp(screen3) {
       content: inline('../images/icon_down-blue-arrow.svg');

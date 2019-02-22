@@ -27,6 +27,10 @@
   @extend %o-heading__level2;
 }
 
+.o-heading__level2-why-share {
+  text-align: center;
+}
+
 %o-heading__level3 {
   margin: 0 0 $spacing-md;
   color: $design-black-color;
