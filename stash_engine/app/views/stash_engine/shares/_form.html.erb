@@ -1,39 +1,21 @@
+<%# Removed ZeroClipboard for Rails since the copy/paste was broken from it.  Also depended on Flash which is soon obsolete.
+  # There are also many browser security restrictions for accessing the clipboard, so probably hard to do dependably. %>
+
 <div class="sharing_form">
   <p>
-    You can share this dataset with others using the url below.
+    You can share this version of your dataset files with others using the url below.
   </p>
-  <%# the local variable 'share' should be passed in to this partial when there are multiple per page %>
-  <%= form_for(share, remote: true, authenticity_token: true, html: { class: 'c-input' }) do |f| %>
-      <div>
-        <%= text_field_tag :sharing_link, share.sharing_link,  id: 'sharing_link', class: 'c-input__text', disabled: true,
-                         style: 'width:700px; display: inline-block;' %>
-        <%= f.hidden_field(:secret_id) %>
-        <input type="image" src="<%= image_path('stash_engine/icon_clipboard') %>"
-                data-clipboard-target='sharing_link'
-                data-clipboard-text='Default clipboard text from attribute'
-                id='d_clip_button'
-                title='Click me to copy to clipboard.'
-                style='width:30px; height:30px;'>
-        </input>
-      </div>
 
-    <%= f.hidden_field :resource_id %>
-    <%= f.hidden_field :id %>
-  <% end %>
-</div>
+  <p>Click the <em>Select Text</em> button and then copy and paste the URL.</p>
 
+
+  <input type="text" name="sharing_link" id="sharing_link" value="<%= share.sharing_link %>"
+         class="c-input__text" style="width:700px; display: inline-block;" readonly="readonly">
+
+  <button id="select_url" class="o-button__plain-text2">Select Text</button>
 
 <script>
-  $(document).ready(function() {
-    var clip = new ZeroClipboard($("#d_clip_button"))
-  });
-
-  $('#d_clip_button').click(function(event) {
-    event.preventDefault();
-    $(this).attr('src', '<%= image_path('stash_engine/icon_clipboard2') %>');
-    $(this).fadeOut(20).fadeIn(200);
-    setTimeout(function() {
-      $('#d_clip_button').attr('src', '<%= image_path('stash_engine/icon_clipboard') %>');
-    }, 500);
+  $('#select_url').click(function() {
+      $('#sharing_link').select();
   });
 </script>

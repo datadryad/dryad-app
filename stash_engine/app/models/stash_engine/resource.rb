@@ -82,7 +82,7 @@ module StashEngine
     end
 
     before_create :init_curation_status
-    after_create :init_state_and_version, :update_stash_identifier_last_resource
+    after_create :init_state_and_version, :update_stash_identifier_last_resource, :create_share
     # for some reason, after_create not working, so had to add after_update
     after_update :update_stash_identifier_last_resource
     after_destroy :remove_identifier_with_no_resources, :update_stash_identifier_last_resource
@@ -95,9 +95,13 @@ module StashEngine
       init_curation_status if curation_activities.empty?
       save
     end
-    # We want to disable this when we don't need it since it really kills performance for finding a long
-    # list of resources.  For example in the rails console, resource.all does another query for each item in the list
-    # after_find :ensure_state_and_version
+
+    # creates a share for this resource if not present
+    def create_share
+      unless share.present?
+        StashEngine::Share.create(resource_id: id)
+      end
+    end
 
     # ------------------------------------------------------------
     # Scopes for Merritt status, which used to be the only status we had
