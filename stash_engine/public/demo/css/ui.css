@@ -3191,6 +3191,9 @@ button.o-button__calendar:focus {
   font-size: 1.3em;
   font-weight: normal; }
 
+.o-heading__level2-why-share {
+  text-align: center; }
+
 .o-heading__level3 {
   margin: 0 0 20px;
   color: black;
@@ -3422,13 +3425,14 @@ html.no-details .o-showhide__summary {
     .o-sites {
       position: relative; } }
 
-.o-sites__details {
-  position: absolute;
-  width: auto; }
-  .o-sites__details[open] .o-sites__summary::after {
-    -webkit-transform: rotate(-90deg);
-            transform: rotate(-90deg); }
-    @media (min-width: 870px) {
+@media (min-width: 870px) {
+  .o-sites__details {
+    position: absolute;
+    width: auto; }
+    .o-sites__details[open] .o-sites__summary::after {
+      -webkit-transform: rotate(-90deg);
+              transform: rotate(-90deg); } }
+    @media (min-width: 870px) and (min-width: 870px) {
       .o-sites__details[open] .o-sites__summary::after {
         -webkit-transform: rotate(-180deg);
                 transform: rotate(-180deg); } }
@@ -3447,18 +3451,14 @@ html.no-details .o-showhide__summary {
       color: black; } }
 
 .o-sites__summary {
-  position: relative; }
+  position: relative;
+  padding: 0 20px 0 0; }
   @media (min-width: 870px) {
     .o-sites__summary {
-      padding: 0 20px 0 0;
       background-color: transparent;
       text-align: right; } }
   .o-sites__summary::after {
-    content: url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%229.608%22%20height%3D%2215.283%22%20viewBox%3D%220%200%209.608%2015.283%22%3E%3Cpath%20fill%3D%22%23FFF%22%20d%3D%22M0%200v15.283l9.608-7.639L0%200zm0%200%22%2F%3E%3C%2Fsvg%3E');
-    position: absolute;
-    right: 15px;
-    -webkit-transform: rotate(90deg);
-            transform: rotate(90deg); }
+    position: absolute; }
     @media (min-width: 870px) {
       .o-sites__summary::after {
         content: url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2213.754%22%20height%3D%228.647%22%20viewBox%3D%220%200%2013.754%208.647%22%3E%3Cpath%20fill%3D%22%23005581%22%20d%3D%22M4354.754%2038H4341l6.873%208.647%206.881-8.647zm-4341-38H0l6.873%208.647L13.754%200zm0%200%22%2F%3E%3C%2Fsvg%3E');
@@ -5343,9 +5343,9 @@ html.no-details .o-showhide__summary {
   -webkit-box-direction: normal;
       -ms-flex-flow: row wrap;
           flex-flow: row wrap;
-  -webkit-box-align: baseline;
-      -ms-flex-align: baseline;
-          align-items: baseline;
+  -webkit-box-align: stretch;
+      -ms-flex-align: stretch;
+          align-items: stretch;
   height: 100%; }
 
 .c-why-share__icon {
@@ -5397,6 +5397,7 @@ html.no-details .o-showhide__summary {
     -webkit-box-flex: 1;
         -ms-flex: 1 0 24%;
             flex: 1 0 24%;
+    height: auto;
     margin-bottom: 40px; }
     .c-why-share__info:not(:last-child) {
       border-right: 1px solid #e65722; } }
