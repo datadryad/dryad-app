@@ -98,9 +98,7 @@ module StashEngine
 
     # creates a share for this resource if not present
     def create_share
-      unless share.present?
-        StashEngine::Share.create(resource_id: id)
-      end
+      StashEngine::Share.create(resource_id: id) unless share.present?
     end
 
     # ------------------------------------------------------------
