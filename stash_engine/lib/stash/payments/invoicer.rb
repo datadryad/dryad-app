@@ -3,11 +3,11 @@ module Stash
     class Invoicer
       attr_reader :resource, :curator
 
-      def initialize (resource:, curator:)
+      def initialize(resource:, curator:)
         @resource = resource
         @curator = curator
       end
-            
+
       def charge_via_invoice
         Stripe.api_key = StashEngine.app.payments.key
         add_dpc
@@ -21,7 +21,7 @@ module Stash
       # Helper methods
       # ------------------------------------------
       private
-      
+
       def add_dpc
         Stripe::InvoiceItem.create(
           customer: stripe_customer_id,
@@ -30,7 +30,7 @@ module Stash
           description: 'Data Processing Charge'
         )
       end
-      
+
       def create_invoice
         Stripe::Invoice.create(
           customer: resource.user.customer_id,
@@ -38,12 +38,12 @@ module Stash
           metadata: { 'curator' => curator.name }
         )
       end
-      
+
       def stripe_customer_id
         ensure_customer_id_exists
         resource.user.customer_id
       end
-      
+
       def ensure_customer_id_exists
         return unless resource.user.customer_id.nil?
         customer = Stripe::Customer.create(
@@ -53,7 +53,7 @@ module Stash
         resource.user.customer_id = customer.id
         resource.user.save
       end
-      
+
     end
   end
 end
