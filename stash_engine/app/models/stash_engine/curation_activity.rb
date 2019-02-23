@@ -2,12 +2,11 @@ require 'stash/doi/id_gen'
 require 'stash/payments/invoicer'
 
 module StashEngine
-  
+
   class CurationActivity < ActiveRecord::Base
 
     include StashEngine::Concerns::StringEnum
 
-    
     # Associations
     # ------------------------------------------
     belongs_to :resource, class_name: 'StashEngine::Resource', foreign_key: 'resource_id'
