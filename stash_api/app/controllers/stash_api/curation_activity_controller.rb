@@ -80,7 +80,7 @@ module StashApi
       when 'embargoed'
         resource.embargo!(user, Date.today + 1.year, params[:curation_activity][:note])
       else
-        logger.debug("brand new activity")
+        logger.debug('brand new activity')
         logger.debug("resource_id #{resource.id}")
         logger.debug("user_id #{user}")
         logger.debug("status #{params[:curation_activity][:status]}")
