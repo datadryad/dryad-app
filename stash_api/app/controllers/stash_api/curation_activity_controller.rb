@@ -79,10 +79,10 @@ module StashApi
       when 'embargoed'
         resource.embargo!(user, Date.today + 1.year, params[:curation_activity][:note])
       else
-        cact_id = StashEngine::CurationActivity.create(resource_id: resource.id,
-                                                       user_id: user,
-                                                       status: params[:curation_activity][:status],
-                                                       note: params[:curation_activity][:note])
+        StashEngine::CurationActivity.create(resource_id: resource.id,
+                                             user_id: user,
+                                             status: params[:curation_activity][:status],
+                                             note: params[:curation_activity][:note])
       end
     end
     # rubocop:enable Metrics/MethodLength
