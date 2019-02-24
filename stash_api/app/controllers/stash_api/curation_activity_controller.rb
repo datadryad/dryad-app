@@ -36,7 +36,6 @@ module StashApi
     def create
       params.permit!
       resource = StashEngine::Identifier.find_with_id(params[:dataset_id]).latest_resource
-      logger.debug("Adding curation activity to Resource #{resource.id}")
       create_curation_activity(resource)
       respond_to do |format|
         format.json { render json: resource&.reload&.current_curation_activity }
@@ -80,16 +79,10 @@ module StashApi
       when 'embargoed'
         resource.embargo!(user, Date.today + 1.year, params[:curation_activity][:note])
       else
-        logger.debug('brand new activity')
-        logger.debug("resource_id #{resource.id}")
-        logger.debug("user_id #{user}")
-        logger.debug("status #{params[:curation_activity][:status]}")
-        logger.debug("note #{params[:curation_activity][:note]}")
         cact_id = StashEngine::CurationActivity.create(resource_id: resource.id,
                                                        user_id: user,
                                                        status: params[:curation_activity][:status],
                                                        note: params[:curation_activity][:note])
-        logger.debug("cact_id=#{cact_id}")
       end
     end
     # rubocop:enable Metrics/MethodLength
