@@ -6,8 +6,8 @@ describe 'login/logout' do
     login = first(:link_or_button, 'Login')
     expect(login).not_to be_nil
     login.click
-    first(:link_or_button, 'Create or log in with your ORCID ID').click
-    first(:link_or_button, 'I am not affiliated with any of these institutions').click
+    first(:link_or_button, 'Login or create your ORCID iD').click
+    first(:link_or_button, 'Continue to My Datasets').click
   end
 
   describe 'Login' do
