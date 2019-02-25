@@ -27,14 +27,22 @@ module StashEngine
     #
     # For logged in curators (role: 'superuser'), they get to see the latest version, no matter what state
     # if the param '?show_latest=true' is stuck on the URL.
+    #
+    # For admins or logged in owners, they get to see the latest version submitted to Merritt
+    #
+    # For everyone else they just get to see what is accepted by curation
+    # rubocop:disable Metrics/AbcSize
     def resource
       @resource ||=
         if params[:latest] == 'true' && current_user.superuser? # let superusers see the latest, unpublished if they wish
           id.resources.by_version_desc.first
+        elsif current_user.id == id.resources.submitted.by_version_desc.first.user_id || current_user.superuser?
+          id.resources.submitted.by_version_desc.first
         else # everyone else only gets to see published or embargoed metadata latest version
           id.latest_resource_with_public_metadata
         end
     end
+    # rubocop:enable Metrics/AbcSize
 
     helper_method :resource
 
