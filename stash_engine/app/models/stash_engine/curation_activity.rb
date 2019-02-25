@@ -1,3 +1,6 @@
+require 'stash/doi/id_gen'
+require 'stash/payments/invoicer'
+
 module StashEngine
 
   class CurationActivity < ActiveRecord::Base
@@ -110,13 +113,15 @@ module StashEngine
       StashEngine::Resource.find(resource_id).update(current_curation_activity_id: prior&.id || '')
     end
 
+    # Callbacks
+    # ------------------------------------------
     def submit_to_stripe
-      # Should also check the statuses in the line below so we don't resubmit charges!
-      #   e.g. Check the status flags on this object unless we're storing a boolean
-      #        somewhere that records that we've already charged them.
-      #   `return unless identifier.has_journal? && self.published?`
-      return unless resource.identifier&.chargeable?
-      # Call the stripe API
+      return unless ready_for_payment?
+
+      # TODO: -- re-enable this with the chargeable logic
+      # return unless resource.identifier&.chargeable?
+      inv = Stash::Payments::Invoicer.new(resource: resource, curator: user)
+      inv.charge_via_invoice
     end
 
     def submit_to_datacite
@@ -132,6 +137,14 @@ module StashEngine
 
     # Helper methods
     # ------------------------------------------
+
+    def ready_for_payment?
+      !StashEngine.app.nil? &&
+        StashEngine.app.payments.service == 'stripe' &&
+        !resource.identifier.nil? &&
+        resource.identifier.invoice_id.nil? &&
+        (status == 'published' || status == 'embargoed')
+    end
 
     # rubocop:disable Metrics/CyclomaticComplexity
     def should_update_doi?
