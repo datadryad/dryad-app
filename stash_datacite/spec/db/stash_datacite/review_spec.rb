@@ -124,20 +124,6 @@ module StashDatacite
         expect(review.embargo).to eq(embargo)
       end
 
-      it 'returns a saved, resource-linked share for resources with no share' do
-        share = review.share
-        expect(share).not_to be_nil
-        expect(share.resource_id).to eq(resource.id)
-        expect(share.persisted?).to eq(true)
-      end
-
-      it 'returns the resource share, if present' do
-        expect(resource.share).to be_nil # just to be sure
-        share = StashEngine::Share.create(resource_id: resource.id)
-        resource.reload
-        expect(review.share).to eq(share)
-      end
-
       describe :pdf_filename do
         it 'includes author name and title' do
           pdf_filename = review.pdf_filename

@@ -15,7 +15,6 @@ require 'filesize'
 require 'kaminari'
 require 'amoeba'
 require 'font-awesome-rails' # perhaps not needed because of way Joel did his integration
-require 'zeroclipboard-rails'
 
 require 'stash_engine/engine'
 require 'stash/repo'
