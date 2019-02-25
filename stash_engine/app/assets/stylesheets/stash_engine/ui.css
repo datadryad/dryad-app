@@ -56,17 +56,17 @@ Selector pattern using above mixin:
   position: absolute;
   left: -9999px; }
 
-.o-global-search__input:focus, .c-input__text:focus, .c-input__textarea:focus, .c-input__select:focus, .c-location__input:focus {
+.o-global-search__input:focus, .c-input__text:focus, .c-input__text--copypaste:focus, .c-input__textarea:focus, .c-input__select:focus, .c-location__input:focus {
   border-width: 2px;
   border-color: #e65722;
   outline: 0; }
-  .o-global-search__input:focus::-webkit-input-placeholder, .c-input__text:focus::-webkit-input-placeholder, .c-input__textarea:focus::-webkit-input-placeholder, .c-input__select:focus::-webkit-input-placeholder, .c-location__input:focus::-webkit-input-placeholder {
+  .o-global-search__input:focus::-webkit-input-placeholder, .c-input__text:focus::-webkit-input-placeholder, .c-input__text--copypaste:focus::-webkit-input-placeholder, .c-input__textarea:focus::-webkit-input-placeholder, .c-input__select:focus::-webkit-input-placeholder, .c-location__input:focus::-webkit-input-placeholder {
     opacity: 0.5; }
-  .o-global-search__input:focus:-ms-input-placeholder, .c-input__text:focus:-ms-input-placeholder, .c-input__textarea:focus:-ms-input-placeholder, .c-input__select:focus:-ms-input-placeholder, .c-location__input:focus:-ms-input-placeholder {
+  .o-global-search__input:focus:-ms-input-placeholder, .c-input__text:focus:-ms-input-placeholder, .c-input__text--copypaste:focus:-ms-input-placeholder, .c-input__textarea:focus:-ms-input-placeholder, .c-input__select:focus:-ms-input-placeholder, .c-location__input:focus:-ms-input-placeholder {
     opacity: 0.5; }
-  .o-global-search__input:focus::-ms-input-placeholder, .c-input__text:focus::-ms-input-placeholder, .c-input__textarea:focus::-ms-input-placeholder, .c-input__select:focus::-ms-input-placeholder, .c-location__input:focus::-ms-input-placeholder {
+  .o-global-search__input:focus::-ms-input-placeholder, .c-input__text:focus::-ms-input-placeholder, .c-input__text--copypaste:focus::-ms-input-placeholder, .c-input__textarea:focus::-ms-input-placeholder, .c-input__select:focus::-ms-input-placeholder, .c-location__input:focus::-ms-input-placeholder {
     opacity: 0.5; }
-  .o-global-search__input:focus::placeholder, .c-input__text:focus::placeholder, .c-input__textarea:focus::placeholder, .c-input__select:focus::placeholder, .c-location__input:focus::placeholder {
+  .o-global-search__input:focus::placeholder, .c-input__text:focus::placeholder, .c-input__text--copypaste:focus::placeholder, .c-input__textarea:focus::placeholder, .c-input__select:focus::placeholder, .c-location__input:focus::placeholder {
     opacity: 0.5; }
 
 /* ==========================================================================
@@ -4210,7 +4210,7 @@ html.no-details .o-showhide__summary {
 .c-input__hint {
   font-weight: normal; }
 
-.c-input__text, .c-input__textarea, .c-input__select {
+.c-input__text, .c-input__text--copypaste, .c-input__textarea, .c-input__select {
   -webkit-box-sizing: border-box;
           box-sizing: border-box;
   border: 1px solid #7c7e7f; }
@@ -4218,6 +4218,11 @@ html.no-details .o-showhide__summary {
 .c-input__text {
   height: 30px;
   padding: 0 5px; }
+
+.c-input__text--copypaste {
+  display: inline-block;
+  width: 80%;
+  margin-bottom: 1rem; }
 
 .c-input__textarea {
   height: 80px;

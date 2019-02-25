@@ -34,5 +34,7 @@
     "postcss-assets": "",
     "run-sequence": ""
   },
-  "dependencies": {}
+  "dependencies": {
+    "bower": "^1.8.8"
+  }
 }
