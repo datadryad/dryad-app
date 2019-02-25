@@ -30,6 +30,10 @@ Metrics/LineLength:
 Metrics/AbcSize:
   Max: 20
 
+# The default MethodLength can flag methods which essentially do nothing, simply because they invoke another method with several parameters
+Metrics/MethodLength:
+  Max: 20
+
 # Confusing and weird
 Naming/VariableNumber:
   Enabled: False
