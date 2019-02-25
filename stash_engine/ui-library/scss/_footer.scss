@@ -16,78 +16,32 @@
 }
 
 .c-footer__link-group {
-
-  @include bp(screen3) {
-    display: flex;
-  }
-
-}
-
-.c-footer__nav-group {
   display: flex;
-  flex-flow: column nowrap;
-  margin: 0 0 $spacing-md;
-
-  @include bp(screen3) {
-    flex-flow: row nowrap;
-    margin: 0;
-  }
-
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 10px;
 }
 
-.c-footer__logged-in-or-out {
-
-  @include bp(screen3) { // hide sites and logout components at large screen
-    display: none;
-  }
-
-}
-
-.c-footer__nav-item {
-  margin: 0 0 2px;
-  padding: 10px;
-  background-color: $design-dark-blue-color;
-  color: $design-white-color;
-  text-decoration: none;
-
-  @include bp(screen3) {
-    margin: 0;
-    padding: 0 10px 0 0;
-    background-color: $design-white-color;
-    color: $design-dark-blue-color;
-
-    &:hover {
-      text-decoration: underline;
-    }
-
-    &:not(:first-of-type) {
-      padding: 0 10px;
-      border-left: 1px solid $design-black-color;
-    }
-
-  }
-
-}
-
-.c-footer__policy-group {
-  text-align: center;
-
-  @include bp(screen3) {
-    text-align: left;
-  }
+.c-footer__policy-group,
+.c-footer__social-group {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  text-align: left;
 
   a {
     @extend %o-link__primary;
-    padding: 0 10px;
 
-    @include bp(screen3) {
-      border-left: 1px solid $design-black-color;
+    .fa {
+      vertical-align: middle;
     }
+  }
 
-    &:not(:first-of-type) {
-      border-left: 1px solid $design-black-color;
-    }
-
+  a:not(:last-child) {
+    padding: 0 20px 0 0;
   }
 
 }
