@@ -23,7 +23,7 @@ module StashApi
 
     # GET /datasets/{dataset_id}/curation_activity
     def index
-      @curation_activity = StashEngine::CurationActivity.where(identifier_id: @stash_identifier.id)
+      @curation_activity = StashEngine::CurationActivity.where(resource_id: @stash_identifier.latest_resource.id)
       @curation_activity = @curation_activity.where(status: params[:status]) if params.key?(:status)
       @curation_activity = @curation_activity.where(user_id: @user.id) if params.key?(:user_id)
       @curation_activity = @curation_activity.order(updated_at: :desc)
@@ -35,7 +35,7 @@ module StashApi
     # POST /datasets/{dataset_id}/curation_activity
     def create
       params.permit!
-      resource = StashEngine::Identifier.find(params[:dataset_id]).latest_resource
+      resource = StashEngine::Identifier.find_with_id(params[:dataset_id]).latest_resource
       create_curation_activity(resource)
       respond_to do |format|
         format.json { render json: resource&.reload&.current_curation_activity }
@@ -72,13 +72,16 @@ module StashApi
     def create_curation_activity(resource)
       user = params[:user_id] || @user.id
       return unless resource.present?
+      logger.debug("Adding curation activity with status #{params[:curation_activity][:status]}")
       case params[:curation_activity][:status]
       when 'published'
         resource.publish!(user, Date.today, params[:curation_activity][:note])
       when 'embargoed'
         resource.embargo!(user, Date.today + 1.year, params[:curation_activity][:note])
       else
-        StashEngine::CurationActivity.create(resource_id: resource.id, user_id: user, status: params[:curation_activity][:status],
+        StashEngine::CurationActivity.create(resource_id: resource.id,
+                                             user_id: user,
+                                             status: params[:curation_activity][:status],
                                              note: params[:curation_activity][:note])
       end
     end
