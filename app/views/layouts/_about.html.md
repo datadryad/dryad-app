@@ -1,3 +1,28 @@
+# About Dryad
+
+## [Our Mission](#mission)
+
+Here is some information about Dryad's mission
+
+## [Our Community](#community)
+
+Here is some information about Dryad's community
+
+## [Our Governance](#governance)
+
+Here is some information about Dryad's governance
+
+## [Our Staff](#staff)
+
+Here is some information about Dryad's staff
+
+## [Our Platform](#platform)
+
+Here is some information about Dryad's platform
+
+---
+
+## Old About page content - Delete after writing content for each section above!
 
 Dash is an open source, community driven project that takes a unique approach to data publication and digital preservation. Dash focuses on search, presentation, and discovery and delegates the responsibility for the data preservation function to the underlying repository with which it is integrated.
 
