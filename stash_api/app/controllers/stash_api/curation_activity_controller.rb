@@ -23,7 +23,7 @@ module StashApi
 
     # GET /datasets/{dataset_id}/curation_activity
     def index
-      @curation_activity = StashEngine::CurationActivity.where(identifier_id: @stash_identifier.id)
+      @curation_activity = StashEngine::CurationActivity.where(resource_id: @stash_identifier.latest_resource.id)
       @curation_activity = @curation_activity.where(status: params[:status]) if params.key?(:status)
       @curation_activity = @curation_activity.where(user_id: @user.id) if params.key?(:user_id)
       @curation_activity = @curation_activity.order(updated_at: :desc)
