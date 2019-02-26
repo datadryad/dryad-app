@@ -56,7 +56,8 @@ module StashEngine
 
     # some people seem to get to the dashboard without having their tenant set.
     def ensure_tenant
-      redirect_to choose_sso_path, alert: "You must choose if you are associated with an institution before continuing" if current_user.tenant_id.blank?
+      return unless current_user.tenant_id.blank?
+      redirect_to choose_sso_path, alert: 'You must choose if you are associated with an institution before continuing'
     end
 
     def email_code
