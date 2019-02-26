@@ -141,10 +141,28 @@ module StashEngine
       update_column :search_words, my_string
     end
 
-    # Method to check if the identifier is associated with a journal/publisher and
-    # thus chargeable
-    def chargeable?
-      !internal_data.empty?
+    # Check if the user must pay for this identifier, or if payment is
+    # otherwise covered
+    def user_must_pay?
+      logger.debug("journal pay? #{journal_will_pay?}")
+      logger.debug("institution pay? #{institution_will_pay?}")
+      logger.debug("waiver pay? #{fee_waiver_country?}")
+
+      !journal_will_pay? &&
+        !institution_will_pay? &&
+        !fee_waiver_country?
+    end
+
+    def journal_will_pay?
+      false
+    end
+
+    def institution_will_pay?
+      latest_resource&.tenant&.covers_dpc == true
+    end
+
+    def fee_waiver_country?
+      false
     end
 
     private
