@@ -66,7 +66,7 @@ module StashDatacite
       end
 
       def embargo_status_pretty
-        embargo_status.tr('_', ' ')
+        embargo_status&.tr('_', ' ')
       end
 
       def publication_date
