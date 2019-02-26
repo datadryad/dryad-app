@@ -3,7 +3,7 @@
 <% if current_tenant %>
     <div class="toc">
       <!-- Since the content is same for all tenants currently, the partial layouts/about will be the commom part. -->
-      <%= render "layouts/about", toc: true %>
+      <%#= render "layouts/about", toc: true %>
       <!-- The content specific to the tenant can come form the partial below -->
       <%#= render "tenants/#{current_tenant.tenant_id}/about", toc: true %>
     </div>
