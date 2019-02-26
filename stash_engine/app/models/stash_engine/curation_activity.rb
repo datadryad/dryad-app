@@ -116,10 +116,8 @@ module StashEngine
     # Callbacks
     # ------------------------------------------
     def submit_to_stripe
-      return unless ready_for_payment?
-
-      # TODO: -- re-enable this with the chargeable logic
-      # return unless resource.identifier&.chargeable?
+      return unless ready_for_payment? &&
+                    resource.identifier&.user_must_pay?
       inv = Stash::Payments::Invoicer.new(resource: resource, curator: user)
       inv.charge_via_invoice
     end
@@ -139,10 +137,8 @@ module StashEngine
     # ------------------------------------------
 
     def ready_for_payment?
-      !StashEngine.app.nil? &&
-        StashEngine.app.payments.service == 'stripe' &&
-        !resource.identifier.nil? &&
-        resource.identifier.invoice_id.nil? &&
+      StashEngine.app&.payments&.service == 'stripe' &&
+        resource&.identifier&.invoice_id.nil? &&
         (status == 'published' || status == 'embargoed')
     end
 
