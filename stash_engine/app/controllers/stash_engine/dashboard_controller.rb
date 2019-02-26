@@ -3,6 +3,7 @@ require_dependency 'stash_engine/application_controller'
 module StashEngine
   class DashboardController < ApplicationController
     before_action :require_login, only: %i[show migrate_data_mail migrate_data]
+    before_action :ensure_tenant, only: :show
 
     MAX_VALIDATION_TRIES = 5
 
@@ -52,6 +53,12 @@ module StashEngine
 
     # methods below are private
     private
+
+    # some people seem to get to the dashboard without having their tenant set.
+    def ensure_tenant
+      return unless current_user.tenant_id.blank?
+      redirect_to choose_sso_path, alert: 'You must choose if you are associated with an institution before continuing'
+    end
 
     def email_code
       current_user.update(old_dryad_email: params[:email])
