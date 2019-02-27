@@ -1,7 +1,6 @@
 require_dependency 'stash_engine/application_controller'
 # require 'rest-client'
 
-# TODO: how downloads are handled depend heavily on the repository in use, needs moving elsewhere to be flexible
 module StashEngine
 
   class MerrittResponseError < StandardError
@@ -9,13 +8,12 @@ module StashEngine
 
   class DownloadsController < ApplicationController # rubocop:disable Metrics/ClassLength
 
+    # for downloading the full version
     # rubocop:disable Metrics/MethodLength
     def download_resource
       @resource = Resource.find(params[:resource_id])
-      if @resource.files_public?
-        download_public
-      elsif owner?
-        download_as_owner
+      if @resource.files_public? || owner?
+        download_as_stream
       else
         unavailable_for_download
       end
@@ -29,6 +27,7 @@ module StashEngine
     end
     # rubocop:enable Metrics/MethodLength
 
+    # handles a large dataset that may only be downloaded asynchronously from Merritt because of size limits for immediate downloads
     # rubocop:disable Metrics/MethodLength
     def async_request
       @resource = Resource.find(params[:resource_id])
@@ -55,10 +54,17 @@ module StashEngine
 
       @resource = @shares.first.resource
       if @resource.files_private?
-        download_embargoed
+        download_private
       else
         redirect_to_public
       end
+    end
+
+    # shows the form for private async.  Usually part of the landing page for dataset, but page may not exist for public
+    # anymore because of curation so we create a new page to host the form
+    def private_async_form
+      @share = Share.where(secret_id: params[:secret_id])&.first
+      @resource = @share.resource
     end
 
     # download private dataset's file (need to stream) by owner (for now)
@@ -82,17 +88,7 @@ module StashEngine
       @file_upload ||= FileUpload.find(params[:file_id])
     end
 
-    def download_public
-      setup_async_download_variable
-      if @async_download
-        redirect_to landing_show_path(id: @resource.identifier_str, big: 'showme')
-      else
-        CounterLogger.version_download_hit(request: request, resource: @resource)
-        redirect_to(@resource.merritt_producer_download_uri)
-      end
-    end
-
-    def download_as_owner
+    def download_as_stream
       setup_async_download_variable
       if @async_download
         redirect_to landing_show_path(id: @resource.identifier_str, big: 'showme')
@@ -115,11 +111,11 @@ module StashEngine
       current_user && current_user.id == @resource.user_id
     end
 
-    def download_embargoed
+    def download_private
       setup_async_download_variable
       if @async_download
         # redirect to the form for filling in their email address to get an email
-        show_email_form
+        redirect_to private_async_form_path(id: @resource.identifier_str, big: 'showme', secret_id: params[:id])
       else
         stream_download
       end
@@ -135,10 +131,6 @@ module StashEngine
     def stream_download
       CounterLogger.version_download_hit(request: request, resource: @resource)
       stream_response(@resource.merritt_producer_download_uri, @resource.tenant)
-    end
-
-    def show_email_form
-      redirect_to landing_show_path(id: @resource.identifier_str, big: 'showme', secret_id: params[:id])
     end
 
     # this sets up the async download variable which it determines from Merritt
