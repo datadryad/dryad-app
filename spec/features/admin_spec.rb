@@ -28,10 +28,8 @@ describe 'admin' do
 
   it "shows a user's version history for a dataset" do
     visit('/stash/edit_histories?resource_id=1')
-
-p page.body
-
-    expect(page).to have_text('1 (in progress)')
+    expect(page).to have_text('1 (In Progress)')
+    expect(page).to have_text('1 (Submitted)')
   end
 
   it 'allows editing a dataset' do
