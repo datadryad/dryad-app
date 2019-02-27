@@ -1,7 +1,7 @@
 require 'features_helper'
 
 describe 'admin' do
-  fixtures :stash_engine_users, :stash_engine_resources, :stash_engine_identifiers, :stash_engine_resource_states,
+  fixtures :stash_engine_users, :stash_engine_resources, :stash_engine_identifiers, :stash_engine_resource_states, :stash_engine_curation_activities,
            :stash_engine_versions, :stash_engine_authors, :dcs_descriptions, :dcs_affiliations_authors, :dcs_affiliations
 
   before(:each) do
@@ -27,8 +27,11 @@ describe 'admin' do
   end
 
   it "shows a user's version history for a dataset" do
-    visit('/stash/edit_histories?resource_id=5')
-    expect(page).to have_text('2 (in progress)')
+    visit('/stash/edit_histories?resource_id=1')
+
+p page.body
+
+    expect(page).to have_text('1 (in progress)')
   end
 
   it 'allows editing a dataset' do

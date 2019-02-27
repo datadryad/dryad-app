@@ -12,6 +12,7 @@ resource1:
   current_editor_id: 1
   publication_date: 2017-08-24 21:06:21.000000000 Z
   tenant_id: localhost
+  current_curation_activity_id: 1
 
 resource2:
   id: 2
@@ -27,6 +28,7 @@ resource2:
   current_editor_id: 1
   publication_date: 2017-08-24 21:06:21.000000000 Z
   tenant_id: localhost
+  current_curation_activity_id: 2
 
 resource3:
   id: 3
@@ -43,6 +45,7 @@ resource3:
   current_editor_id: 1
   publication_date: 2017-08-24 21:13:40.000000000 Z
   tenant_id: localhost
+  current_curation_activity_id: 3
 
 resource4:
   id: 4
@@ -58,6 +61,7 @@ resource4:
   current_editor_id: 2
   publication_date: 2017-08-24 21:18:30.000000000 Z
   tenant_id: localhost
+  current_curation_activity_id: 4
 
 resource5:
   id: 5
@@ -73,3 +77,4 @@ resource5:
   current_editor_id: 2
   publication_date: 2017-08-24 21:18:30.000000000 Z
   tenant_id: localhost
+  current_curation_activity_id: 5
