@@ -24,10 +24,7 @@
         <%= p.edited_by_name_w_role %>
       </td>
       <td>
-        <%= p.version %>
-        <% unless p.resource.submitted? %>
-          (<%= p.embargo_status_pretty %>)
-        <% end %>
+        <%= p.version %> (<%= p.embargo_status_pretty %>)
       </td>
       <td>
         <%= p.comment %>
