@@ -106,13 +106,13 @@ module StashEngine
       end
 
       it 'replaces spaces with underscores' do
-        expect(StashEngine::FileUpload.sanitize_file_name("abc 123")).to eql('abc_123')
-        expect(StashEngine::FileUpload.sanitize_file_name("abc  123 ")).to eql('abc_123')
+        expect(StashEngine::FileUpload.sanitize_file_name('abc 123')).to eql('abc_123')
+        expect(StashEngine::FileUpload.sanitize_file_name('abc  123')).to eql('abc_123')
       end
 
       it 'removes trailing and leading spaces' do
-        expect(StashEngine::FileUpload.sanitize_file_name("  abc123")).to eql('abc123')
-        expect(StashEngine::FileUpload.sanitize_file_name("abc123  ")).to eql('abc123')
+        expect(StashEngine::FileUpload.sanitize_file_name('  abc123')).to eql('abc123')
+        expect(StashEngine::FileUpload.sanitize_file_name('abc123  ')).to eql('abc123')
       end
 
       %w[| / \\ : ; " ' < > , ?].each do |chr|
