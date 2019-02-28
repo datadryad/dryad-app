@@ -13,7 +13,7 @@ module StashEngine
     def download_resource
       @resource = Resource.find(params[:resource_id])
       if @resource.files_public? || owner?
-        download_as_stream
+        download_as_stream{ redirect_to landing_show_path(id: @resource.identifier_str, big: 'showme') }
       else
         unavailable_for_download
       end
@@ -54,7 +54,7 @@ module StashEngine
 
       @resource = @shares.first.resource
       if @resource.files_private?
-        download_private
+        download_as_stream { redirect_to private_async_form_path(id: @resource.identifier_str, big: 'showme', secret_id: params[:id]) }
       else
         redirect_to_public
       end
@@ -88,10 +88,12 @@ module StashEngine
       @file_upload ||= FileUpload.find(params[:file_id])
     end
 
+    # this downloads a full version as a stream from Merritt and takes a block with a redirect for
+    # the place to go for an asynchronous download from Merritt
     def download_as_stream
       setup_async_download_variable
       if @async_download
-        redirect_to landing_show_path(id: @resource.identifier_str, big: 'showme')
+        yield
       else
         CounterLogger.version_download_hit(request: request, resource: @resource)
         stream_response(@resource.merritt_producer_download_uri, @resource.tenant)
@@ -109,16 +111,6 @@ module StashEngine
 
     def owner?
       current_user && current_user.id == @resource.user_id
-    end
-
-    def download_private
-      setup_async_download_variable
-      if @async_download
-        # redirect to the form for filling in their email address to get an email
-        redirect_to private_async_form_path(id: @resource.identifier_str, big: 'showme', secret_id: params[:id])
-      else
-        stream_download
-      end
     end
 
     def redirect_to_public
