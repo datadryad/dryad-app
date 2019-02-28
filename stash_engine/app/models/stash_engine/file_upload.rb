@@ -1,3 +1,5 @@
+require 'zaru'
+
 module StashEngine
   class FileUpload < ActiveRecord::Base
     belongs_to :resource, class_name: 'StashEngine::Resource'
@@ -86,6 +88,16 @@ module StashEngine
     def self.older_resource_named_dirs(uploads_dir)
       Dir.glob(File.join(uploads_dir, '*')).select { |i| %r{/\d+$}.match(i) }
         .select { |i| File.directory?(i) }.select { |i| File.mtime(i) + 7.days < Time.new }.map { |i| File.basename(i) }
+    end
+
+    def self.sanitize_file_name(name)
+      # remove invalid characters from the filename: https://github.com/madrobby/zaru
+      sanitized = Zaru.sanitize!(name)
+
+      # remove the delete control character
+      # remove some extra characters that Zaru does not remove by default
+      # replace spaces with underscores
+      sanitized.gsub(/,|;|'|"|\u007F/, '').strip.gsub(/\s+/, '_')
     end
   end
 end
