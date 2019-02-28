@@ -51,6 +51,7 @@ Gem::Specification.new do |s| # rubocop:disable Metrics/BlockLength
   s.add_dependency 'sortable-table'
   s.add_dependency 'wicked_pdf', '~> 1.1.0'
   s.add_dependency 'wkhtmltopdf-binary', '~> 0.12.3.1'
+  s.add_dependency 'zaru', '~> 0.3'
 
   s.add_development_dependency 'byebug'
   s.add_development_dependency 'chromedriver-helper'
