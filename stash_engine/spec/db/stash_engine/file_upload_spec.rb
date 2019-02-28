@@ -90,7 +90,7 @@ module StashEngine
           expect(StashEngine::FileUpload.sanitize_file_name("#{i.chr}abc123")).to eql('abc123')
           expect(StashEngine::FileUpload.sanitize_file_name("abc123#{i.chr}")).to eql('abc123')
 
-          if (9..13).include?(i)
+          if (9..13).cover?(i)
             expect(StashEngine::FileUpload.sanitize_file_name("abc#{i.chr}123")).to eql('abc 123')
           else
             expect(StashEngine::FileUpload.sanitize_file_name("abc#{i.chr}123")).to eql('abc123')

@@ -94,7 +94,9 @@ module StashEngine
       # remove invalid characters from the filename: https://github.com/madrobby/zaru
       sanitized = Zaru.sanitize!(name)
       # remove the delete control character
+      # rubocop:disable Performance/StringReplacement
       sanitized = sanitized.gsub(/\u007F/, '')
+      # rubocop:enable Performance/StringReplacement
       # remove some extra characters that Zaru does not remove by default
       sanitized.gsub(/,|;|'|"/, '')
     end

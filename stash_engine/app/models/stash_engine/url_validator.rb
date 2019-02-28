@@ -63,6 +63,7 @@ module StashEngine
 
     # need to give make_unique method may need moving
     # rubocop:disable Metrics/MethodLength
+    # rubocop:disable Metrics/AbcSize
     def upload_attributes_from(translator:, resource:)
       valid = validate
       upload_attributes = {
@@ -88,6 +89,7 @@ module StashEngine
         upload_file_size: size
       )
     end
+    # rubocop:enable Metrics/AbcSize
     # rubocop:enable Metrics/MethodLength
 
     def timed_out?
