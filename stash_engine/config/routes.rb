@@ -52,8 +52,7 @@ StashEngine::Engine.routes.draw do
   match 'downloads/async_request/:resource_id', to: 'downloads#async_request', as: 'download_async_request', via: [:get, :post]
   get 'downloads/private_async_form', to: 'downloads#private_async_form', as: 'private_async_form'
   match 'downloads/capture_email/:resource_id', to: 'downloads#capture_email', as: 'download_capture_email', via: [:get, :post]
-  get 'downloads/file_stream/:file_id', to: 'downloads#file_stream', as: 'download_file_stream'
-  get 'downloads/file_download/:file_id', to: 'downloads#file_download', as: 'download_file'
+  get 'downloads/file_stream/:file_id', to: 'downloads#file_stream', as: 'download_stream'
   get 'share/:id', to: 'downloads#share', as: 'share'
 
 
