@@ -78,6 +78,7 @@ PATH
       thor (= 0.19.1)
       wicked_pdf (~> 1.1.0)
       wkhtmltopdf-binary (~> 0.12.3.1)
+      zaru (~> 0.3)
 
 GEM
   remote: https://rubygems.org/
@@ -269,7 +270,7 @@ GEM
       unf (>= 0.0.5, < 1.0.0)
     doorkeeper (4.4.3)
       railties (>= 4.2)
-    dotenv (2.7.0)
+    dotenv (2.7.1)
     dry-configurable (0.7.0)
       concurrent-ruby (~> 1.0)
     dry-container (0.6.0)
@@ -662,6 +663,7 @@ GEM
     xpath (3.2.0)
       nokogiri (~> 1.8)
     yui-compressor (0.12.0)
+    zaru (0.3.0)
 
 PLATFORMS
   ruby
