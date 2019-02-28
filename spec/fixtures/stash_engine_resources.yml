@@ -2,6 +2,7 @@ resource1:
   id: 1
   user_id: 1
   current_resource_state_id: 1
+  current_curation_activity_id: 1
   created_at: 2017-08-24 21:00:44.000000000 Z
   updated_at: 2017-08-24 21:06:42.000000000 Z
   has_geolocation: 1
@@ -17,6 +18,7 @@ resource2:
   id: 2
   user_id: 1
   current_resource_state_id: 2
+  current_curation_activity_id: 2
   created_at: 2017-08-24 21:10:18.000000000 Z
   updated_at: 2017-08-24 21:11:20.000000000 Z
   has_geolocation: 1
@@ -32,6 +34,7 @@ resource3:
   id: 3
   user_id: 1
   current_resource_state_id: 3
+  current_curation_activity_id: 3
   created_at: 2017-08-24 21:12:10.000000000 Z
   updated_at: 2017-08-24 21:13:53.000000000 Z
   has_geolocation: 0
@@ -48,6 +51,7 @@ resource4:
   id: 4
   user_id: 2
   current_resource_state_id: 4
+  current_curation_activity_id: 4
   created_at: 2017-08-24 21:15:49.000000000 Z
   updated_at: 2017-08-24 21:23:22.000000000 Z
   has_geolocation: 0
@@ -63,6 +67,7 @@ resource5:
   id: 5
   user_id: 2
   current_resource_state_id: 5
+  current_curation_activity_id: 5
   created_at: 2017-08-24 21:29:13.000000000 Z
   updated_at: 2017-08-24 21:29:13.000000000 Z
   has_geolocation: 0
