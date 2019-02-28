@@ -78,6 +78,7 @@ PATH
       thor (= 0.19.1)
       wicked_pdf (~> 1.1.0)
       wkhtmltopdf-binary (~> 0.12.3.1)
+      zaru (~> 0.3)
 
 GEM
   remote: https://rubygems.org/
@@ -662,6 +663,7 @@ GEM
     xpath (3.2.0)
       nokogiri (~> 1.8)
     yui-compressor (0.12.0)
+    zaru (0.3.0)
 
 PLATFORMS
   ruby
