@@ -263,8 +263,15 @@ module StashEngine
       end
     end
 
-    describe :files_public? do
+    describe :may_download? do
 
+      before(:each) do
+        @resource = Resource.create(user_id: user.id)
+      end
+
+    end
+
+    describe :files_public? do
       before(:each) do
         @resource = Resource.create(user_id: user.id)
       end
@@ -297,20 +304,6 @@ module StashEngine
         @resource.curation_activities << CurationActivity.new(status: 'curation')
         @resource.reload
         expect(@resource.files_public?).to eq(false)
-      end
-    end
-
-    describe :files_private? do
-      before(:each) do
-        @resource = Resource.create(user_id: user.id)
-      end
-
-      it 'is the opposite of files_public?' do
-        allow(@resource).to receive(:files_public?).and_return(false)
-        expect(@resource.files_private?).to eq(true)
-
-        allow(@resource).to receive(:files_public?).and_return(true)
-        expect(@resource.files_private?).to eq(false)
       end
     end
 
