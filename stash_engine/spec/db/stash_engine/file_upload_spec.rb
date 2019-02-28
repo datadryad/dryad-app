@@ -82,5 +82,36 @@ module StashEngine
         expect(@upload.digest?).to be true
       end
     end
+
+    describe :sanitize_file_name do
+      # Ensure that non-printable ACII control characters < 32 are sanitized
+      it 'removes ASCII Control characters (0-31)' do
+        (0..31).each do |i|
+          expect(StashEngine::FileUpload.sanitize_file_name("#{i.chr}abc123")).to eql('abc123')
+          expect(StashEngine::FileUpload.sanitize_file_name("abc123#{i.chr}")).to eql('abc123')
+
+          if (9..13).include?(i)
+            expect(StashEngine::FileUpload.sanitize_file_name("abc#{i.chr}123")).to eql('abc 123')
+          else
+            expect(StashEngine::FileUpload.sanitize_file_name("abc#{i.chr}123")).to eql('abc123')
+          end
+        end
+      end
+
+      it 'removes ASCII Delete character (127)' do
+        expect(StashEngine::FileUpload.sanitize_file_name("#{127.chr}abc123")).to eql('abc123')
+        expect(StashEngine::FileUpload.sanitize_file_name("abc123#{127.chr}")).to eql('abc123')
+        expect(StashEngine::FileUpload.sanitize_file_name("abc#{127.chr}123")).to eql('abc123')
+      end
+
+      %w[| / \\ : ; " ' < > , ?].each do |chr|
+        it "removes #{chr}" do
+          expect(StashEngine::FileUpload.sanitize_file_name("#{chr}abc123")).to eql('abc123')
+          expect(StashEngine::FileUpload.sanitize_file_name("abc#{chr}123")).to eql('abc123')
+          expect(StashEngine::FileUpload.sanitize_file_name("abc123#{chr}")).to eql('abc123')
+        end
+      end
+
+    end
   end
 end

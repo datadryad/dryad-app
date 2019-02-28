@@ -463,6 +463,7 @@ GEM
       mime-types (~> 3.0)
       typesafe_enum (~> 0.1, >= 0.1.8)
       xml-mapping (~> 0.10)
+    zaru (0.3.0)
 
 PLATFORMS
   ruby
@@ -487,6 +488,7 @@ DEPENDENCIES
   stash-sword!
   stash_engine!
   webmock (~> 3.0)
+  zaru (~> 0.1)
 
 BUNDLED WITH
    1.17.3
