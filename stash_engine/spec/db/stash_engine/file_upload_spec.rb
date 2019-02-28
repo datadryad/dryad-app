@@ -90,8 +90,9 @@ module StashEngine
           expect(StashEngine::FileUpload.sanitize_file_name("#{i.chr}abc123")).to eql('abc123')
           expect(StashEngine::FileUpload.sanitize_file_name("abc123#{i.chr}")).to eql('abc123')
 
+          # Zaru replaces characters 9-13 with a space
           if (9..13).cover?(i)
-            expect(StashEngine::FileUpload.sanitize_file_name("abc#{i.chr}123")).to eql('abc 123')
+            expect(StashEngine::FileUpload.sanitize_file_name("abc#{i.chr}123")).to eql('abc_123')
           else
             expect(StashEngine::FileUpload.sanitize_file_name("abc#{i.chr}123")).to eql('abc123')
           end
@@ -104,12 +105,30 @@ module StashEngine
         expect(StashEngine::FileUpload.sanitize_file_name("abc#{127.chr}123")).to eql('abc123')
       end
 
+      it 'replaces spaces with underscores' do
+        expect(StashEngine::FileUpload.sanitize_file_name("abc 123")).to eql('abc_123')
+        expect(StashEngine::FileUpload.sanitize_file_name("abc  123 ")).to eql('abc_123')
+      end
+
+      it 'removes trailing and leading spaces' do
+        expect(StashEngine::FileUpload.sanitize_file_name("  abc123")).to eql('abc123')
+        expect(StashEngine::FileUpload.sanitize_file_name("abc123  ")).to eql('abc123')
+      end
+
       %w[| / \\ : ; " ' < > , ?].each do |chr|
         it "removes #{chr}" do
           expect(StashEngine::FileUpload.sanitize_file_name("#{chr}abc123")).to eql('abc123')
           expect(StashEngine::FileUpload.sanitize_file_name("abc#{chr}123")).to eql('abc123')
           expect(StashEngine::FileUpload.sanitize_file_name("abc123#{chr}")).to eql('abc123')
         end
+      end
+
+      it 'does not remove foreign characters' do
+        expect(StashEngine::FileUpload.sanitize_file_name('abc𠝹Ѭμ123')).to eql('abc𠝹Ѭμ123')
+      end
+
+      it 'does not remove emoji characters' do
+        expect(StashEngine::FileUpload.sanitize_file_name('abc😂123')).to eql('abc😂123')
       end
 
     end
