@@ -69,17 +69,11 @@ module StashEngine
 
     # download private dataset's file (need to stream) by owner (for now)
     def file_stream
-      if current_user.id == file_upload.resource.user_id
-        CounterLogger.general_hit(request: request, file: file_upload)
-        stream_response(file_upload.merritt_url, current_user.tenant)
-      else
-        render status: 403, text: 'You are not authorized to view this file until it has been published.'
-      end
-    end
-
-    def file_download
       CounterLogger.general_hit(request: request, file: file_upload)
-      redirect_to file_upload.merritt_url
+      merritt_ui_stream_response(file_upload.merritt_url, current_user.tenant)
+      # else
+      #  render status: 403, text: 'You are not authorized to view this file until it has been published.'
+      #end
     end
 
     private
@@ -96,7 +90,7 @@ module StashEngine
         yield
       else
         CounterLogger.version_download_hit(request: request, resource: @resource)
-        stream_response(@resource.merritt_producer_download_uri, @resource.tenant)
+        merritt_ui_stream_response(@resource.merritt_producer_download_uri, @resource.tenant)
       end
     end
 
@@ -122,7 +116,7 @@ module StashEngine
 
     def stream_download
       CounterLogger.version_download_hit(request: request, resource: @resource)
-      stream_response(@resource.merritt_producer_download_uri, @resource.tenant)
+      merritt_ui_stream_response(@resource.merritt_producer_download_uri, @resource.tenant)
     end
 
     # this sets up the async download variable which it determines from Merritt
@@ -179,7 +173,7 @@ module StashEngine
 
     # to stream the response through this UI instead of redirecting, keep login and other stuff private
     # rubocop:disable Metrics/AbcSize
-    def stream_response(url, tenant)
+    def merritt_ui_stream_response(url, tenant)
       # get original header info from http headers
       client = Stash::Repo::HttpClient.new(tenant: tenant, cert_file: APP_CONFIG.ssl_cert_file).client
 
