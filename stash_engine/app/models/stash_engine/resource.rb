@@ -419,6 +419,20 @@ module StashEngine
       user.superuser? || user_id == user.id || (user.tenant_id == tenant_id && user.role == 'admin')
     end
 
+    # Checks if someone may download files for this resource
+    # 1. Merritt's status, resource_state = 'submitted', meaning they are available to download from Merritt
+    # 2. Curation state of files_public? means anyone may download
+    # 3. if not public then the author can still download: resource.user_id = current_user.id
+    # 4. if not public then the current user has the 'superuser' role for seeing all files
+    # Note: the special download links mean anyone with that link may download and this doesn't apply
+    def may_download?(user:)
+      return false unless current_resource_state&.resource_state == 'submitted' # merritt state available
+      return true if files_public? # curation state of public or embargoed and expired
+      return true if !user_id.nil? && user&.id == user_id # owner viewing
+      return true if user.role == 'superuser' # superuser viewing
+      false # nope
+    end
+
     # ------------------------------------------------------------
     # Usage and statistics
 
@@ -457,17 +471,13 @@ module StashEngine
     # -----------------------------------------------------------
     # Embargoes
 
-    def files_private?
-      !files_public?
+    def metadata_public?
+      %w[published embargoed].include?(current_curation_activity&.status)
     end
 
     def files_public?
       current_curation_activity&.status == 'published' ||
           (current_curation_activity&.status == 'embargoed' && Time.new > publication_date)
-    end
-
-    def metadata_public?
-      %w[published embargoed].include?(current_curation_activity&.status)
     end
 
     # -----------------------------------------------------------
