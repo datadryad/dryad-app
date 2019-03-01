@@ -13,7 +13,7 @@ module StashEngine
     def download_resource
       @resource = Resource.find(params[:resource_id])
       if @resource.may_download?(user: current_user)
-        download_as_stream{ redirect_to landing_show_path(id: @resource.identifier_str, big: 'showme') }
+        download_full_version{ redirect_to landing_show_path(id: @resource.identifier_str, big: 'showme') }
       else
         unavailable_for_download
       end
@@ -53,7 +53,7 @@ module StashEngine
 
       @resource = @shares.first.resource
       unless @resource.files_public?
-        download_as_stream { redirect_to private_async_form_path(id: @resource.identifier_str, big: 'showme', secret_id: params[:id]) }
+        download_full_version { redirect_to private_async_form_path(id: @resource.identifier_str, big: 'showme', secret_id: params[:id]) }
       else
         redirect_to_public
       end
@@ -83,7 +83,7 @@ module StashEngine
 
     # this downloads a full version as a stream from Merritt UI and takes a block with a redirect for
     # the place to go for an asynchronous download from Merritt
-    def download_as_stream
+    def download_full_version
       setup_async_download_variable
       if @async_download
         yield
@@ -127,6 +127,7 @@ module StashEngine
       redirect_to landing_show_path(id: @resource.identifier_str)
     end
 
+    # TODO: Move into separate class, all stuff below this (I think)
     def merritt_async_download?(resource:)
       domain, local_id = resource.merritt_protodomain_and_local_id
       url = "#{domain}/async/#{local_id}/#{resource.stash_version.merritt_version}"
