@@ -1,9 +1,8 @@
-require_relative '../download'
+require_relative 'base'
 
 module Stash
   module Download
-    class File
-      extend Download #puts in class methods, this may change
+    class File < Base
 
     end
   end

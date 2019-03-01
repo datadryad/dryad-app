@@ -1,5 +1,8 @@
 require_dependency 'stash_engine/application_controller'
+require 'stash/download/file'
+require 'stash/download/version'
 # require 'rest-client'
+
 
 module StashEngine
 
@@ -7,6 +10,14 @@ module StashEngine
   end
 
   class DownloadsController < ApplicationController # rubocop:disable Metrics/ClassLength
+
+    before_action :setup_streaming
+
+    # set up the Merritt file & version objects so they have access to the controller context for returning responses, setting headers, etc
+    def setup_streaming
+      @version_streamer = Stash::Download::Version.new(controller_context: self)
+      @file_streamer = Stash::Download::File.new(controller_context: self)
+    end
 
     # for downloading the full version
     # rubocop:disable Metrics/MethodLength
@@ -69,7 +80,7 @@ module StashEngine
     def file_stream
       if file_upload&.resource&.may_download?(user: current_user)
         CounterLogger.general_hit(request: request, file: file_upload)
-        merritt_ui_stream_response(file_upload.merritt_url, current_user.tenant)
+        @file_streamer.stream_response(url: file_upload.merritt_url, tenant: current_user.tenant)
       else
         render status: 403, text: 'You are not authorized to download this file until it has been published.'
       end
@@ -89,7 +100,7 @@ module StashEngine
         yield
       else
         CounterLogger.version_download_hit(request: request, resource: @resource)
-        merritt_ui_stream_response(@resource.merritt_producer_download_uri, @resource.tenant)
+        @version_streamer.stream_response(url: @resource.merritt_producer_download_uri, tenant: @resource.tenant)
       end
     end
 
@@ -111,12 +122,12 @@ module StashEngine
 
     def stream_download
       CounterLogger.version_download_hit(request: request, resource: @resource)
-      merritt_ui_stream_response(@resource.merritt_producer_download_uri, @resource.tenant)
+      Stash::Download::Version.stream_response(url: @resource.merritt_producer_download_uri, tenant: @resource.tenant)
     end
 
     # this sets up the async download variable which it determines from Merritt
     def setup_async_download_variable
-      @async_download = merritt_async_download?(resource: @resource)
+      @async_download = @version_streamer.merritt_async_download?(resource: @resource)
     end
 
     def flash_download_unavailable
@@ -128,18 +139,6 @@ module StashEngine
     end
 
     # TODO: Move into separate class, all stuff below this (I think)
-    def merritt_async_download?(resource:)
-      domain, local_id = resource.merritt_protodomain_and_local_id
-      url = "#{domain}/async/#{local_id}/#{resource.stash_version.merritt_version}"
-
-      res = Stash::Repo::HttpClient.new(tenant: resource.tenant, cert_file: APP_CONFIG.ssl_cert_file).client.get(url, follow_redirect: true)
-      status = res.status_code
-
-      return true if status == 200 # async download OK
-      return false if status == 406 # 406 Not Acceptable means only synchronous download allowed
-
-      raise_merritt_error('Merritt async download check', "unexpected status #{status}", resource.id, url)
-    end
 
     # rubocop:disable Metrics/MethodLength
     def api_async_download(resource:, email:)
@@ -166,25 +165,6 @@ module StashEngine
       domain, local_id = resource.merritt_protodomain_and_local_id
       "#{domain}/asyncd/#{local_id}/#{resource.stash_version.merritt_version}"
     end
-
-    # to stream the response through this UI instead of redirecting, keep login and other stuff private
-    # rubocop:disable Metrics/AbcSize
-    def merritt_ui_stream_response(url, tenant)
-      # get original header info from http headers
-      client = Stash::Repo::HttpClient.new(tenant: tenant, cert_file: APP_CONFIG.ssl_cert_file).client
-
-      headers = client.head(url, follow_redirect: true)
-
-      content_type = headers.http_header['Content-Type'].try(:first)
-      content_length = headers.http_header['Content-Length'].try(:first) || ''
-      content_disposition = headers.http_header['Content-Disposition'].try(:first) || disposition_from(url)
-      response.headers['Content-Type'] = content_type if content_type
-      response.headers['Content-Disposition'] = content_disposition
-      response.headers['Content-Length'] = content_length
-      response.headers['Last-Modified'] = Time.now.httpdate
-      self.response_body = Stash::Streamer.new(client, url)
-    end
-    # rubocop:enable Metrics/AbcSize
 
     def log_warning_if_needed(e)
       return unless Rails.env.development?
