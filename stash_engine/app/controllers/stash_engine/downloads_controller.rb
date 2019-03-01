@@ -34,7 +34,7 @@ module StashEngine
       session[:saved_email] = @email
       respond_to do |format|
         format.js do
-          if can_download?
+          if can_download? # local method that checks if user may download or if their secret matches
             api_async_download(resource: @resource, email: @email)
             @message = "Dash will send an email with a download link to #{@email} when your requested dataset is ready."
             CounterLogger.version_download_hit(request: request, resource: @resource)
@@ -81,7 +81,7 @@ module StashEngine
       @file_upload ||= FileUpload.find(params[:file_id])
     end
 
-    # this downloads a full version as a stream from Merritt and takes a block with a redirect for
+    # this downloads a full version as a stream from Merritt UI and takes a block with a redirect for
     # the place to go for an asynchronous download from Merritt
     def download_as_stream
       setup_async_download_variable
@@ -100,10 +100,6 @@ module StashEngine
 
     def can_download?
       @resource.may_download?(user: current_user) || (params[:secret_id] == @resource.share.secret_id)
-    end
-
-    def owner?
-      current_user && current_user.id == @resource.user_id
     end
 
     def redirect_to_public
