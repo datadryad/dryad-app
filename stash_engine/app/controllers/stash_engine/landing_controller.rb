@@ -8,8 +8,7 @@ module StashEngine
     # - pdf_meta
     include StashEngine.app.metadata_engine.constantize::LandingMixin
 
-    before_action :require_identifier, except: %i[update citations]
-    before_action :require_submitted_resource, except: %i[update citations]
+    before_action :require_identifier_and_resource, only: %i[show data_paper]
     protect_from_forgery(except: [:update])
 
     # ############################################################
@@ -34,9 +33,9 @@ module StashEngine
     # rubocop:disable Metrics/AbcSize
     def resource
       @resource ||=
-        if params[:latest] == 'true' && current_user.superuser? # let superusers see the latest, unpublished if they wish
+        if params[:latest] == 'true' && current_user&.superuser? # let superusers see the latest, unpublished if they wish
           id.resources.by_version_desc.first
-        elsif current_user.id == id.resources.submitted.by_version_desc.first.user_id || current_user.superuser?
+        elsif current_user&.id == id.resources.submitted.by_version_desc.first.user_id || current_user&.superuser?
           id.resources.submitted.by_version_desc.first
         else # everyone else only gets to see published or embargoed metadata latest version
           id.latest_resource_with_public_metadata
@@ -121,12 +120,8 @@ module StashEngine
 
     private
 
-    def require_identifier
-      render('not_available', status: 404) unless id
-    end
-
-    def require_submitted_resource
-      render('not_available', status: 404) unless resource
+    def require_identifier_and_resource
+      render('not_available', status: 404) unless id && resource
     end
 
     def ensure_has_geolocation!
