@@ -21,7 +21,6 @@ module StashEngine
       # if it's a recent submission, suggest they try again later; otherwise fail
       raise e unless @resource.updated_at > Time.new - 2.hours
       log_warning_if_needed(e)
-
       # recently updated, so display a "hold your horses" message
       flash_download_unavailable
     end
@@ -67,13 +66,13 @@ module StashEngine
       @resource = @share.resource
     end
 
-    # download private dataset's file (need to stream) by owner (for now)
     def file_stream
-      CounterLogger.general_hit(request: request, file: file_upload)
-      merritt_ui_stream_response(file_upload.merritt_url, current_user.tenant)
-      # else
-      #  render status: 403, text: 'You are not authorized to view this file until it has been published.'
-      #end
+      if file_upload&.resource&.may_download?(user: current_user)
+        CounterLogger.general_hit(request: request, file: file_upload)
+        merritt_ui_stream_response(file_upload.merritt_url, current_user.tenant)
+      else
+        render status: 403, text: 'You are not authorized to download this file until it has been published.'
+      end
     end
 
     private
@@ -100,7 +99,7 @@ module StashEngine
     end
 
     def can_download?
-      @resource.public? || owner? || (params[:secret_id] == @resource.share.secret_id)
+      @resource.may_download?(user: current_user) || (params[:secret_id] == @resource.share.secret_id)
     end
 
     def owner?
@@ -110,7 +109,7 @@ module StashEngine
     def redirect_to_public
       redirect_to(
         landing_show_path(id: @resource.identifier_str),
-        notice: 'The dataset is now published, please use the download button on the right side.'
+        notice: 'This dataset is now published, please use the download button on the right side.'
       )
     end
 

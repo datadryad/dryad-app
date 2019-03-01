@@ -428,7 +428,8 @@ module StashEngine
     def may_download?(user:)
       return false unless current_resource_state&.resource_state == 'submitted' # merritt state available
       return true if files_public? # curation state of public or embargoed and expired
-      return true if !user_id.nil? && user&.id == user_id # owner viewing
+      return false if user.blank? # the rest require users
+      return true if user.id == user_id # owner viewing
       return true if user.role == 'superuser' # superuser viewing
       false # nope
     end
