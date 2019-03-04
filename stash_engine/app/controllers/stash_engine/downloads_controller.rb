@@ -4,7 +4,7 @@ require 'stash/download/version'
 # require 'rest-client'
 
 module StashEngine
-  class DownloadsController < ApplicationController # rubocop:disable Metrics/ClassLength
+  class DownloadsController < ApplicationController
     before_action :setup_streaming
 
     # set up the Merritt file & version objects so they have access to the controller context before continuing
@@ -27,7 +27,7 @@ module StashEngine
     rescue Stash::Download::MerrittResponseError => e
       # if it's a recent submission, suggest they try again later; otherwise fail
       raise e unless @resource.updated_at > Time.new - 2.hours
-      Stash::Download::Base.log_warning_if_needed(e)
+      Stash::Download::Base.log_warning_if_needed(error: e, resource: @resource)
       # recently updated, so display a "hold your horses" message
       flash_download_unavailable
     end
@@ -132,7 +132,8 @@ module StashEngine
       return if status == 200
 
       query_string = HTTP::Message.create_query_part_str(params)
-      Stash::Download::Version.raise_merritt_error('Merritt async download request', "unexpected status #{status}", resource.id, "#{url}?#{query_string}")
+      Stash::Download::Version.raise_merritt_error('Merritt async download request',
+                                                   "unexpected status #{status}", resource.id, "#{url}?#{query_string}")
     end
     # rubocop:enable Metrics/MethodLength
   end
