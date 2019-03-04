@@ -17,7 +17,7 @@ module StashEngine
     # rubocop:disable Metrics/MethodLength
     def download_resource
       @resource = Resource.find(params[:resource_id])
-      if @resource.may_download?(user: current_user)
+      if @resource.may_download?(ui_user: current_user)
         @version_streamer.download(resource: @resource) do
           redirect_to landing_show_path(id: @resource.identifier_str, big: 'showme') # if it's an async
         end
@@ -77,7 +77,7 @@ module StashEngine
 
     def file_stream
       file_upload = FileUpload.find(params[:file_id])
-      if file_upload&.resource&.may_download?(user: current_user)
+      if file_upload&.resource&.may_download?(ui_user: current_user)
         CounterLogger.general_hit(request: request, file: file_upload)
         @file_streamer.stream_response(url: file_upload.merritt_url, tenant: current_user.tenant)
       else
@@ -93,7 +93,7 @@ module StashEngine
     end
 
     def can_download?
-      @resource.may_download?(user: current_user) || (params[:secret_id] == @resource.share.secret_id)
+      @resource.may_download?(ui_user: current_user) || (params[:secret_id] == @resource.share.secret_id)
     end
 
     def redirect_to_public

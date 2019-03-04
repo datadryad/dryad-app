@@ -425,13 +425,12 @@ module StashEngine
     # 3. if not public then the author can still download: resource.user_id = current_user.id
     # 4. if not public then the current user has the 'superuser' role for seeing all files
     # Note: the special download links mean anyone with that link may download and this doesn't apply
-    def may_download?(user:)
+    def may_download?(ui_user: nil) # doing this to avoid collision with the association called user
       return false unless current_resource_state&.resource_state == 'submitted' # merritt state available
       return true if files_public? # curation state of public or embargoed and expired
-      return false if user.blank? # the rest require users
-      return true if user.id == user_id # owner viewing
-      return true if user.role == 'superuser' # superuser viewing
-      false # nope
+      return false if ui_user.blank? # the rest of the cases require users
+      return true if ui_user.id == user_id || ui_user.role == 'superuser' # owner viewing or superuser viewing
+      false # nope. Not sure if it would ever get here, though
     end
 
     # ------------------------------------------------------------
