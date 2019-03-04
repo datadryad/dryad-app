@@ -15,7 +15,7 @@ module Stash
       end
 
       # to stream the response through this UI instead of redirecting, keep login and other stuff private
-      # rubocop:disable Metrics/AbcSize
+      # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
       def stream_response(url:, tenant:)
         # get original header info from http headers
         client = Stash::Repo::HttpClient.new(tenant: tenant, cert_file: APP_CONFIG.ssl_cert_file).client
@@ -32,17 +32,17 @@ module Stash
         cc.response.headers['Last-Modified'] = Time.now.httpdate
         cc.response_body = Stash::Streamer.new(client, url)
       end
-      # rubocop:enable Metrics/AbcSize
+      # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
 
       def disposition_from(url)
         "inline; filename=\"#{File.basename(URI.parse(url).path)}.zip\""
       end
 
-      def self.log_warning_if_needed(e)
+      def self.log_warning_if_needed(error:, resource:)
         return unless Rails.env.development?
-        msg = "MerrittResponseError checking sync/async download for resource #{@resource.id} updated at #{@resource.updated_at}"
-        backtrace = e.respond_to?(:backtrace) && e.backtrace ? e.backtrace.join("\n") : ''
-        Rails.logger.warn("#{msg}: #{e.class}: #{e}\n#{backtrace}")
+        msg = "MerrittResponseError checking sync/async download for resource #{resource.id} updated at #{resource.updated_at}"
+        backtrace = error.respond_to?(:backtrace) && error.backtrace ? error.backtrace.join("\n") : ''
+        Rails.logger.warn("#{msg}: #{error.class}: #{error}\n#{backtrace}")
       end
 
     end
