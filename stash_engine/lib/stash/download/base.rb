@@ -44,7 +44,6 @@ module Stash
         backtrace = error.respond_to?(:backtrace) && error.backtrace ? error.backtrace.join("\n") : ''
         Rails.logger.warn("#{msg}: #{error.class}: #{error}\n#{backtrace}")
       end
-
     end
   end
 end

@@ -264,9 +264,53 @@ module StashEngine
     end
 
     describe :may_download? do
-
       before(:each) do
         @resource = Resource.create(user_id: user.id)
+        @merritt_state = ResourceState.create(user_id: @resource.user.id, resource_state: 'submitted', resource_id: @resource.id)
+        @resource.update(current_resource_state_id: @merritt_state.id)
+      end
+
+      # Checks if someone may download files for this resource
+      # 1. Merritt's status, resource_state = 'submitted', meaning they are available to download from Merritt
+      # 2. Curation state of files_public? means anyone may download
+      # 3. if not public then the author can still download: resource.user_id = current_user.id
+      # 4. if not public then the current user has the 'superuser' role for seeing all files
+      # Note: the special download links mean anyone with that link may download and this doesn't apply
+
+      it 'returns false if no curation state' do
+        expect(@resource.may_download?(ui_user: nil)).to be false
+      end
+
+      it 'returns false if not successfully in Merritt' do
+        @merritt_state.update(resource_state: 'in_progress')
+        @resource.curation_activities << CurationActivity.new(status: 'published')
+        @resource.reload
+        user2 = User.create(tenant_id: 'ucop', first_name: 'Gopher', last_name: 'Jones', role: 'superuser')
+        expect(@resource.may_download?(ui_user: user2)).to be false
+      end
+
+      it 'returns true if published' do
+        @resource.curation_activities << CurationActivity.new(status: 'published')
+        @resource.reload
+        expect(@resource.may_download?(ui_user: nil)).to be true
+      end
+
+      it 'returns false if not published' do
+        @resource.curation_activities << CurationActivity.new(status: 'curation')
+        @resource.reload
+        expect(@resource.may_download?(ui_user: nil)).to be false
+      end
+
+      it 'returns true if unpublished, but if viewing user is the owner' do
+        @resource.curation_activities << CurationActivity.new(status: 'curation')
+        @resource.reload
+        expect(@resource.may_download?(ui_user: @resource.user)).to be true
+      end
+
+      it 'returns true if being viewed by a superuser' do
+        @resource.curation_activities << CurationActivity.new(status: 'curation')
+        @resource.reload
+        expect(@resource.may_download?(ui_user: @resource.user)).to be true
       end
 
     end
