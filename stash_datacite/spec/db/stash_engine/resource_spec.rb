@@ -66,19 +66,19 @@ module StashEngine
     end
 
     describe :notional_publication_date do
-      it 'defaults to today' do
+      xit 'defaults to today' do
         resource = Resource.create(user_id: user.id)
         expect(resource.notional_publication_date).to be_time(Time.now)
       end
 
-      it 'returns the real publication date, if any' do
+      xit 'returns the real publication date, if any' do
         resource = Resource.create(user_id: user.id)
         pub_date = Date.new(2015, 5, 18)
         resource.publication_date = pub_date
         expect(resource.notional_publication_date).to eq(resource.publication_date)
       end
 
-      it 'returns the embargo end date if present' do
+      xit 'returns the embargo end date if present' do
         end_date = Date.new(2015, 5, 18)
         resource = Resource.create(user_id: user.id)
         StashEngine::Embargo.create(resource_id: resource.id, end_date: end_date)
@@ -102,7 +102,7 @@ module StashEngine
     end
 
     describe :update_publication_date! do
-      it 'sets the publication date based on the embargo end date' do
+      xit 'sets the publication date based on the embargo end date' do
         end_date = Date.new(2015, 5, 18)
         resource = Resource.create(user_id: user.id)
         StashEngine::Embargo.create(resource_id: resource.id, end_date: end_date)
@@ -113,7 +113,7 @@ module StashEngine
         expect(resource.publication_date).to eq(end_date)
       end
 
-      it 'overrides an existing publication date with a new embargo end date' do
+      xit 'overrides an existing publication date with a new embargo end date' do
         old_pub_date = Date.new(2015, 5, 18)
         resource = Resource.create(user_id: user.id, publication_date: old_pub_date)
 
@@ -126,7 +126,7 @@ module StashEngine
         expect(resource.publication_date).to eq(end_date)
       end
 
-      it 'falls back to the current time' do
+      xit 'falls back to the current time' do
         resource = Resource.create(user_id: user.id)
         expect(resource.notional_publication_date).to be_time(Time.now)
       end
