@@ -48,7 +48,9 @@
       </td>
       <td class="c-admin-hide-border-left">
         <% if current_user.role == 'superuser' && resource.curatable? %>
-          <%= form_tag({ controller: '/stash_engine/admin_datasets', action: 'status_popup', id: resource.id }, method: :get, remote: true) do -%>
+          <%= form_tag({ controller: '/stash_engine/admin_datasets',
+                         action: 'curation_activity_popup', id: resource.id },
+                         method: :get, remote: true) do -%>
             <button class="c-admin-edit-icon" aria-label="Update status" alt="Update status">
               <i class="fa fa-pencil" aria-hidden="true"></i>
             </button>
@@ -57,7 +59,7 @@
       </td>
       <td><%= resource&.authors.first&.author_standard_name %></td>
       <td><%= identifier.identifier %></td>
-      <td class="c-admin-hide-border-right">
+      <td class="c-admin-hide-border-right" id="js-curation-activity-date-<%= identifier.id %>">
         <%= formatted_datetime(latest_curation_activity.updated_at) %>
       </td>
       <td class="c-admin-hide-border-left">
@@ -67,19 +69,10 @@
           </button>
         <% end %>
       </td>
-      <td><%= latest_curation_activity.user&.name %></td>
+      <td id="js-curation-activity-user-<%= identifier.id %>"><%= latest_curation_activity.user&.name %></td>
       <td><%= filesize(identifier.storage_size) %></td>
-      <td class="c-admin-hide-border-right" id="js-embargo-state-<%= identifier.id %>">
+      <td class="c-admin" id="js-embargo-state-<%= identifier.id %>">
         <%= formatted_date(resource&.publication_date) %>
-      </td>
-      <td class="c-admin-hide-border-left">
-        <% if current_user.role == 'superuser' && resource.curatable? %>
-          <%= form_tag({ controller: '/stash_engine/admin_datasets', action: 'embargo_popup', id: resource.id }, method: :get, remote: true) do -%>
-            <button class="c-admin-edit-icon" aria-label="Update publication date" alt="Update publication date">
-              <i class="fa fa-pencil" aria-hidden="true"></i>
-            </button>
-          <% end %>
-        <% end %>
       </td>
     </tr>
   <% end %>

@@ -80,9 +80,6 @@ module StashDatacite
     private
 
     def update_submission_resource_info(resource)
-      resource.update_publication_date!
-      resource.save
-
       resource.update(skip_datacite_update: false, skip_emails: false, loosen_validation: false) # these are mostly for API superusers to choose
 
       # TODO: put this somewhere more reliable

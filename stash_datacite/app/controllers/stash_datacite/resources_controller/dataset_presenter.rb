@@ -70,7 +70,7 @@ module StashDatacite
       end
 
       def publication_date
-        @resource.notional_publication_date
+        @resource.publication_date
       end
 
       def edited_by_id

@@ -71,5 +71,28 @@ namespace :identifiers do
     end
   end
 
+  desc 'publish datasets based on their publication_date'
+  task publish_datasets: :environment do
+    now = Date.today
+    p "Publishing resources whose publication_date <= '#{now}'"
+    StashEngine::Resource.joins(:current_curation_activity)
+      .includes(:current_curation_activity)
+      .where('stash_engine_curation_activities.status != ?', 'published')
+      .where('stash_engine_resources.publication_date <= ?', now).each do |r|
+
+      begin
+        p "Publishing: Identifier: #{r.identifier_id}, Resource: #{r.id}"
+        StashEngine::CurationActivity.create(
+          resource_id: r.id,
+          user_id: r.current_curation_activity.user_id,
+          status: 'published',
+          note: 'reached the publiction date'
+        )
+      rescue StandardError => e
+        p "    Exception! #{e.message}"
+      end
+    end
+  end
+
 end
 # rubocop:enable Metrics/BlockLength

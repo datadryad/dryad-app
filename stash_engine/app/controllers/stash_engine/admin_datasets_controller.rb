@@ -3,7 +3,10 @@ require_dependency 'stash_engine/application_controller'
 module StashEngine
   # rubocop:disable Metrics/ClassLength
   class AdminDatasetsController < ApplicationController
+
     include SharedSecurityController
+    include StashEngine::Concerns::Sortable
+
     before_action :require_admin
     before_action :setup_paging, only: [:index]
     before_action :setup_ds_sorting, only: [:index]
@@ -24,13 +27,15 @@ module StashEngine
     end
 
     # Unobtrusive Javascript (UJS) to do AJAX by running javascript
-    def status_popup
+    def data_popup
       respond_to do |format|
-        resource = Resource.includes(:identifier, :current_curation_activity).find(params[:id])
-        @curation_activity = CurationActivity.new(
-          resource_id: resource.id,
-          status: resource.current_curation_activity.status
-        )
+        @identifier = Identifier.find(params[:id])
+        @internal_datum = if params[:internal_datum_id]
+                            InternalDatum.find(params[:internal_datum_id])
+                          else
+                            InternalDatum.new(identifier_id: @identifier.id)
+                          end
+        setup_internal_data_list
         format.js
       end
     end
@@ -47,49 +52,27 @@ module StashEngine
       end
     end
 
-    def data_popup
-      respond_to do |format|
-        @identifier = Identifier.find(params[:id])
-        @internal_datum = if params[:internal_datum_id]
-                            InternalDatum.find(params[:internal_datum_id])
-                          else
-                            InternalDatum.new(identifier_id: @identifier.id)
-                          end
-        setup_internal_data_list
-        format.js
-      end
-    end
-
-    def embargo_popup
+    # Unobtrusive Javascript (UJS) to do AJAX by running javascript
+    def curation_activity_popup
       respond_to do |format|
         @resource = Resource.includes(:identifier, :current_curation_activity).find(params[:id])
-        @curation_activity = CurationActivity.new(
-          resource_id: @resource.id,
-          status: 'embargoed'
-        )
+        @curation_activity = StashEngine::CurationActivity.new(resource_id: @resource.id)
         format.js
       end
     end
 
-    # rubocop:disable Metrics/AbcSize
-    # rubocop:disable Metrics/MethodLength
-    def embargo_change
+    def curation_activity_change
       respond_to do |format|
         format.js do
-          return unless params[:curation_activity][:note].present? || params[:publication_date].present?
-          @resource = Resource.find(params[:curation_activity][:resource_id])
-          # If the date is less than or equal to today its published otherwise its embargoed!
-          if params[:publication_date] <= Date.today.to_s
-            @resource.publish!(current_user.id, params[:publication_date], params[:curation_activity][:note])
-          else
-            @resource.embargo!(current_user.id, params[:publication_date], params[:curation_activity][:note])
-          end
+          @resource = Resource.find(params[:id])
+          decipher_curation_activity
+          @resource.update(publication_date: @pub_date)
+          CurationActivity.create(resource_id: @resource.id, user_id: current_user.id,
+                                  status: @status, note: params[:resource][:curation_activity][:note])
           @resource.reload
         end
       end
     end
-    # rubocop:enable Metrics/AbcSize
-    # rubocop:enable Metrics/MethodLength
 
     # show curation activities for this item
     def activity_log
@@ -105,7 +88,7 @@ module StashEngine
     private
 
     def setup_paging
-      if request.format.tsv?
+      if request.format.csv?
         @page = 1
         @page_size = 2_000
         return
@@ -117,14 +100,14 @@ module StashEngine
     # rubocop:disable Metrics/MethodLength
     def setup_ds_sorting
       sort_table = SortableTable::SortTable.new(
-        [build_sort('title', 'stash_engine_resources', %w[title]),
-         build_sort('status', 'stash_engine_curation_activities', %w[status]),
-         build_sort('author', 'stash_engine_authors', %w[author_last_name author_first_name]),
-         build_sort('doi', 'stash_engine_identifiers', %w[identifier]),
-         build_sort('last_modified', 'stash_engine_curation_activities', %w[updated_at]),
-         build_sort('modified_by', 'stash_engine_users', %w[last_name first_name]),
-         build_sort('size', 'stash_engine_identifiers', %w[storage_size]),
-         build_sort('publication_date', 'stash_engine_resources', %w[publication_date])]
+        [sort_column_definition('title', 'stash_engine_resources', %w[title]),
+         sort_column_definition('status', 'stash_engine_curation_activities', %w[status]),
+         sort_column_definition('author', 'stash_engine_authors', %w[author_last_name author_first_name]),
+         sort_column_definition('doi', 'stash_engine_identifiers', %w[identifier]),
+         sort_column_definition('last_modified', 'stash_engine_curation_activities', %w[updated_at]),
+         sort_column_definition('modified_by', 'stash_engine_users', %w[last_name first_name]),
+         sort_column_definition('size', 'stash_engine_identifiers', %w[storage_size]),
+         sort_column_definition('publication_date', 'stash_engine_resources', %w[publication_date])]
       )
       @sort_column = sort_table.sort_column(params[:sort], params[:direction])
     end
@@ -179,12 +162,36 @@ module StashEngine
       end
     end
 
-    def build_sort(id, table, cols)
-      SortableTable::SortColumnCustomDefinition.new(
-        id,
-        asc: cols.map { |c| "#{table}.#{c} asc" }.join(', '),
-        desc: cols.map { |c| "#{table}.#{c} desc" }.join(', ')
-      )
+    # rubocop:disable Metrics/MethodLength
+    def decipher_curation_activity
+      @status = params[:resource][:curation_activity][:status]
+      @pub_date = params[:resource][:publication_date]
+      # If the status was nil then we are just adding a note so get the prior status
+      @status = @resource.current_curation_activity.status unless @status.present?
+      case @status
+      when 'published'
+        publish
+      when 'embargoed'
+        embargo
+      else
+        # The user selected a different status so clear the publication date
+        @pub_date = nil
+      end
+    end
+    # rubocop:enable Metrics/MethodLength
+
+    def publish
+      # If the user selected published but the publication date is in the future
+      # revert to embargoed status. The item will publish when the date is reached
+      @status = 'embargoed' if @pub_date.present? && @pub_date > Date.today.to_s
+      # If the user published but did not provide a publication date then default to today
+      @pub_date = Date.today.to_s unless @pub_date.present?
+    end
+
+    def embargo
+      # If the user also provided a publication date and the date is today then
+      # revert to published status
+      @status = 'published' if publication_date.present? && publication_date <= Date.today.to_s
     end
 
   end

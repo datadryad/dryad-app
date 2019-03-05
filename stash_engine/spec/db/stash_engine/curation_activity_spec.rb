@@ -82,21 +82,27 @@ module StashEngine
         expect(@resource.reload.current_curation_activity_id).to eql(nil)
       end
 
-      it 'calls submit_to_stripe method after creating a new CurationActivity' do
-        ca = CurationActivity.new(resource_id: @resource.id)
-        expect(ca).to receive(:submit_to_stripe)
-        ca.save
-      end
-
-      it 'calls submit_to_stripe method after updating a CurationActivity' do
-        ca = CurationActivity.create(resource_id: @resource.id)
+      it 'calls submit_to_stripe method after creating a CurationActivity with a status of published' do
+        ca = CurationActivity.create(resource_id: @resource.id, status: 'published')
         expect(ca).to receive(:submit_to_stripe)
         ca.update(status: 'curation')
       end
 
-      it 'calls submit_to_datacite method after creating a new CurationActivity' do
-        ca = CurationActivity.new(resource_id: @resource.id)
+      it 'calls submit_to_datacite method after creating a new CurationActivity with a status of published' do
+        ca = CurationActivity.new(resource_id: @resource.id, status: 'published')
         expect(ca).to receive(:submit_to_datacite)
+        ca.save
+      end
+
+      it 'does not call submit_to_stripe method after creating a CurationActivity when its not published ' do
+        ca = CurationActivity.create(resource_id: @resource.id, status: 'curation')
+        expect(ca).not_to receive(:submit_to_stripe)
+        ca.save
+      end
+
+      it 'does not call submit_to_datacite method after creating a new CurationActivity when its not published' do
+        ca = CurationActivity.new(resource_id: @resource.id, status: 'action_required')
+        expect(ca).not_to receive(:submit_to_datacite)
         ca.save
       end
     end

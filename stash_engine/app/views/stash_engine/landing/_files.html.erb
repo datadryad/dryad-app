@@ -10,7 +10,7 @@
         <ul class="c-file-group__list">
           <% res.current_file_uploads.each do |fu| %>
             <li>
-              <% if resource.files_public? %>
+              <% if resource.files_published? %>
                 <%= link_to fu.upload_file_name.ellipsisize(20), download_file_path(fu.id),
                           title: fu.upload_file_name, target: '_blank' %>
               <% else %>
