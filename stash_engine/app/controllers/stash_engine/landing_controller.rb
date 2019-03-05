@@ -108,6 +108,8 @@ module StashEngine
       # success but no content, see RFC 5789 sec. 2.1
       deliver_invitations!
       update_size!
+      # now that the OAI-PMH feed has confirmed it's in Merritt then cleanup, but not before
+      ::StashEngine.repository.cleanup_files(@resource)
       render(nothing: true, status: 204)
     rescue ArgumentError => e
       logger.debug(e)
