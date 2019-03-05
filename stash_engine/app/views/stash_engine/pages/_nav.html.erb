@@ -22,11 +22,11 @@
         <details class="o-showhide o-sites__details" role="group">
           <summary class="o-showhide__summary o-sites__summary">About</summary>
           <div class="o-sites__group">
-            <%= link_to 'Our Mission', "#{about_path(anchor: 'mission')}", class: 'o-sites__group-item' %>
-            <%= link_to 'Our Member Community', "#{about_path(anchor: 'community')}", class: 'o-sites__group-item' %>
-            <%= link_to 'Our Governance', "#{about_path(anchor: 'governance')}", class: 'o-sites__group-item' %>
-            <%= link_to 'Our Staff', "#{about_path(anchor: 'staff')}", class: 'o-sites__group-item' %>
-            <%= link_to 'Our Platform', "#{about_path(anchor: 'platform')}", class: 'o-sites__group-item' %>
+            <%= link_to 'Our Mission', "#{stash_url_helpers.about_path(anchor: 'mission')}", class: 'o-sites__group-item' %>
+            <%= link_to 'Our Member Community', "#{stash_url_helpers.about_path(anchor: 'community')}", class: 'o-sites__group-item' %>
+            <%= link_to 'Our Governance', "#{stash_url_helpers.about_path(anchor: 'governance')}", class: 'o-sites__group-item' %>
+            <%= link_to 'Our Staff', "#{stash_url_helpers.about_path(anchor: 'staff')}", class: 'o-sites__group-item' %>
+            <%= link_to 'Our Platform', "#{stash_url_helpers.about_path(anchor: 'platform')}", class: 'o-sites__group-item' %>
           </div>
         </details>
       </div>
@@ -37,10 +37,10 @@
         <details class="o-showhide o-sites__details" role="group">
           <summary class="o-showhide__summary o-sites__summary">Help</summary>
           <div class="o-sites__group">
-            <%= link_to 'Why Use Dryad?', "#{help_path(anchor: 'why_use')}", class: 'o-sites__group-item' %>
-            <%= link_to 'Submission Information', "#{help_path(anchor: 'submission')}", class: 'o-sites__group-item' %>
-            <%= link_to 'Data Processing Charges', "#{help_path(anchor: 'fees')}", class: 'o-sites__group-item' %>
-            <%= link_to 'Fequently Asked Questions', faq_path, class: 'o-sites__group-item' %>
+            <%= link_to 'Why Use Dryad?', "#{stash_url_helpers.help_path(anchor: 'why_use')}", class: 'o-sites__group-item' %>
+            <%= link_to 'Submission Information', "#{stash_url_helpers.help_path(anchor: 'submission')}", class: 'o-sites__group-item' %>
+            <%= link_to 'Data Processing Charges', "#{stash_url_helpers.help_path(anchor: 'fees')}", class: 'o-sites__group-item' %>
+            <%= link_to 'Fequently Asked Questions', stash_url_helpers.faq_path, class: 'o-sites__group-item' %>
           </div>
         </details>
       </div>
