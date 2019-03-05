@@ -133,7 +133,7 @@ module StashEngine
     end
 
     def update_solr
-      return unless published? && latest_curation_status_changed?
+      return unless (published? || embargoed?) && latest_curation_status_changed?
       resource.submit_to_solr
     end
 
