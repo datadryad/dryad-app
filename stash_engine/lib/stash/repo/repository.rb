@@ -69,7 +69,20 @@ module Stash
         resource.current_state = 'submitted'
         resource.save
 
-        cleanup_files(resource)
+        # Keep files until they've been successfully confirmed in the OAI-PMH feed, don't aggressively clean up until then
+        # cleanup_files(resource)
+      end
+
+      # this will now be called after Merritt confirms successful ingest by OAI-PMH feed to prevent deleting files
+      # before we know they're really good in Merritt for a good safety net.
+      def cleanup_files(resource)
+        remove_file_uploads(resource)
+        remove_upload_dir(resource)
+        remove_public_dir(resource)
+      rescue StandardError => e
+        msg = "An unexpected error occurred when cleaning up files for resource #{resource.id}: "
+        msg << to_msg(e)
+        log.warn(msg)
       end
 
       private
@@ -111,16 +124,6 @@ module Stash
 
       def log_error(error)
         log.error(to_msg(error))
-      end
-
-      def cleanup_files(resource)
-        remove_file_uploads(resource)
-        remove_upload_dir(resource)
-        remove_public_dir(resource)
-      rescue StandardError => e
-        msg = "An unexpected error occurred when cleaning up files for resource #{resource.id}: "
-        msg << to_msg(e)
-        log.warn(msg)
       end
 
       def remove_if_exists(file)

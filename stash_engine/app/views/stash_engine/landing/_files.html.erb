@@ -1,5 +1,6 @@
 <%# takes local variable of dataset_identifier and resource %>
-<% resources = dataset_identifier.resources_with_file_changes.published.by_version %>
+<% resources = dataset_identifier.resources_with_file_changes.by_version
+   resources.to_a.keep_if { |i| i.may_download?(ui_user: current_user) } %>
 <% if resources.count.positive? %>
   <div class="c-sidebox">
     <h3 class="c-sidebox__heading">Versions</h3>
@@ -10,13 +11,8 @@
         <ul class="c-file-group__list">
           <% res.current_file_uploads.each do |fu| %>
             <li>
-              <% if resource.files_public? %>
-                <%= link_to fu.upload_file_name.ellipsisize(20), download_file_path(fu.id),
-                          title: fu.upload_file_name, target: '_blank' %>
-              <% else %>
-                <%= link_to fu.upload_file_name.ellipsisize(20), download_file_stream_path(fu.id),
-                            title: fu.upload_file_name, target: '_blank' %>
-              <% end %>
+              <%= link_to fu.upload_file_name.ellipsisize(20), download_stream_path(fu.id),
+                        title: fu.upload_file_name, target: '_blank' %>
               <div style="float: right;"><%= filesize(fu.upload_file_size) %></div>
             </li>
           <% end %>
