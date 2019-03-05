@@ -12,7 +12,7 @@ module StashEngine
     # rubocop:disable Metrics/MethodLength
     def download_resource
       @resource = Resource.find(params[:resource_id])
-      if @resource.files_public?
+      if @resource.files_published?
         download_public
       elsif owner?
         download_as_owner
@@ -54,7 +54,7 @@ module StashEngine
       raise ActionController::RoutingError, 'Not Found' if @shares.count < 1
 
       @resource = @shares.first.resource
-      if @resource.files_private?
+      if !@resource.files_published?
         download_embargoed
       else
         redirect_to_public
