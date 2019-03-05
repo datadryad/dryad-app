@@ -13,7 +13,6 @@ module Stash
         expect(item.cc).to eql('blah')
       end
 
-      # hard to test in a meaningful way
       describe '#stream_response' do
 
         before(:each) do
