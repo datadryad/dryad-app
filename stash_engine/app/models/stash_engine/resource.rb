@@ -13,7 +13,8 @@ module StashEngine
     has_many :edit_histories, class_name: 'StashEngine::EditHistory'
     has_one :stash_version, class_name: 'StashEngine::Version', dependent: :destroy
     belongs_to :identifier, class_name: 'StashEngine::Identifier', foreign_key: 'identifier_id'
-    has_one :embargo, class_name: 'StashEngine::Embargo', dependent: :destroy
+    # TODO: this will go away soon in Brian's PR, but missing from DB
+    # has_one :embargo, class_name: 'StashEngine::Embargo', dependent: :destroy
     has_one :share, class_name: 'StashEngine::Share', dependent: :destroy
     belongs_to :user, class_name: 'StashEngine::User'
     has_one :current_resource_state,
@@ -32,7 +33,8 @@ module StashEngine
 
     amoeba do
       include_association :authors
-      include_association :embargo
+      # TODO: This will go away in Brian's PR
+      # include_association :embargo
       include_association :file_uploads
       customize(->(_, new_resource) do
         # you'd think 'include_association :current_resource_state' would do the right thing and deep-copy
@@ -520,9 +522,10 @@ module StashEngine
     # submitted right now. Use this when you don't know/care
     # whether the resource has been submitted or not.
     def notional_publication_date
-      embargo_end_date = embargo && embargo.end_date
-      existing_pub_date = publication_date
-      embargo_end_date || existing_pub_date || Time.now
+      # TODO: this will change with Brian's PR, commenting out for now
+      # embargo_end_date = embargo && embargo.end_date
+      # existing_pub_date = publication_date
+      # embargo_end_date || existing_pub_date || Time.now
     end
 
     # Called on submit
