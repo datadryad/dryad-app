@@ -63,6 +63,7 @@ module StashEngine
 
     # need to give make_unique method may need moving
     # rubocop:disable Metrics/MethodLength
+    # rubocop:disable Metrics/AbcSize
     def upload_attributes_from(translator:, resource:)
       valid = validate
       upload_attributes = {
@@ -79,12 +80,16 @@ module StashEngine
       # (duplicate indicated with 409 Conflict)
       return upload_attributes.merge(status_code: 409) if resource.url_in_version?(url)
 
+      sanitized_filename = StashEngine::FileUpload.sanitize_file_name(UrlValidator.make_unique(resource: resource, filename: filename))
+
       upload_attributes.merge(
-        upload_file_name: UrlValidator.make_unique(resource: resource, filename: filename),
+        upload_file_name: sanitized_filename,
+        original_filename: UrlValidator.make_unique(resource: resource, filename: filename),
         upload_content_type: mime_type,
         upload_file_size: size
       )
     end
+    # rubocop:enable Metrics/AbcSize
     # rubocop:enable Metrics/MethodLength
 
     def timed_out?
