@@ -80,9 +80,16 @@ module StashApi
 
     # prevent people doing badness like filenames like ../../../foobar
     def setup_file_path
-      @file_path = ::File.expand_path(params[:filename], @resource.upload_dir)
+      sanitized = sanitize_filename(params[:filename])
+      @file_path = ::File.expand_path(sanitized, @resource.upload_dir)
       (render json: { error: 'No file shenanigans' }.to_json, status: 403) && yield unless @file_path.start_with?(@resource.upload_dir)
       FileUtils.mkdir_p(::File.dirname(@file_path))
+    end
+
+    # prevent people from sending bad filenames
+    def sanitize_filename(filename)
+      @original_filename = filename
+      StashEngine::FileUpload.sanitize_file_name(filename)
     end
 
     # only allow to proceed if no other current uploads or only other url-type uploads
@@ -113,7 +120,7 @@ module StashApi
       just_user_fn = @file_path[@resource.upload_dir.length..-1].gsub(%r{^/+}, '') # just user fn and remove any leading slashes
       handle_previous_duplicates(upload_filename: just_user_fn)
       StashEngine::FileUpload.create(
-        upload_file_name: just_user_fn,
+        upload_file_name: sanitized,
         temp_file_path: @file_path,
         upload_content_type: request.headers['CONTENT-TYPE'],
         upload_file_size: ::File.size(@file_path),
@@ -122,7 +129,8 @@ module StashApi
         file_state: 'created',
         digest: md5,
         digest_type: 'md5',
-        description: request.env['HTTP_CONTENT_DESCRIPTION']
+        description: request.env['HTTP_CONTENT_DESCRIPTION'],
+        original_filename: @original_filename || just_user_fn
       )
     end
     # rubocop:enable Metrics/MethodLength
