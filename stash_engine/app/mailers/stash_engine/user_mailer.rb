@@ -34,7 +34,7 @@ module StashEngine
       tenant = resource.tenant
       @host = tenant.full_domain
 
-      @embargo_date = resource.publication_date unless resource.published?
+      @embargo_date = resource.publication_date if resource.present? && !resource.files_published?
 
       @to_name = @user_name
       to_address = address_list(@user_email)
