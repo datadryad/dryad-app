@@ -16,7 +16,9 @@ module StashEngine
     # TODO: this will go away soon in Brian's PR, but missing from DB
     # has_one :embargo, class_name: 'StashEngine::Embargo', dependent: :destroy
     # This should simulate embargo for many purposes
-    def embargo;nil;end
+    def embargo
+      nil
+    end
     has_one :share, class_name: 'StashEngine::Share', dependent: :destroy
     belongs_to :user, class_name: 'StashEngine::User'
     has_one :current_resource_state,
