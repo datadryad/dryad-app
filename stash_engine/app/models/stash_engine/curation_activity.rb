@@ -51,10 +51,10 @@ module StashEngine
     # Callbacks
     # ------------------------------------------
     # When the status is published send to Stripe and DataCite
-    after_save :submit_to_stripe, if: :published?
-    after_create :submit_to_datacite, if: :published?
+    after_save :submit_to_stripe, if: :ready_for_payment?
+    after_create :submit_to_datacite, :update_solr, if: :published? || :embargoed?
 
-    after_create :update_resource_reference!, :update_solr
+    after_create :update_resource_reference!
     after_destroy :remove_resource_reference!
 
     # Class methods
@@ -118,8 +118,6 @@ module StashEngine
     end
 
     def submit_to_stripe
-      return unless ready_for_payment?
-
       # TODO: -- re-enable this with the chargeable logic
       # return unless resource.identifier&.chargeable?
       inv = Stash::Payments::Invoicer.new(resource: resource, curator: user)
