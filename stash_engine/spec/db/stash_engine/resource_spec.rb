@@ -234,9 +234,31 @@ module StashEngine
       end
 
       it 'returns true if published' do
+        @resource.update(publication_date: Date.today.to_s)
         @resource.curation_activities << CurationActivity.new(status: 'published')
         @resource.reload
         expect(@resource.may_download?(ui_user: nil)).to be true
+      end
+
+      it 'returns true if embargoed but the publication_date has been reached' do
+        @resource.update(publication_date: (Date.today - 1.days).to_s)
+        @resource.curation_activities << CurationActivity.new(status: 'embargoed')
+        @resource.reload
+        expect(@resource.may_download?(ui_user: nil)).to be true
+      end
+
+      it 'returns false if embargoed with a future publication_date' do
+        @resource.update(publication_date: (Date.today + 2.days).to_s)
+        @resource.curation_activities << CurationActivity.new(status: 'embargoed')
+        @resource.reload
+        expect(@resource.may_download?(ui_user: nil)).to be false
+      end
+
+      it 'returns false if embargoed with a nil publication_date' do
+        @resource.update(publication_date: nil)
+        @resource.curation_activities << CurationActivity.new(status: 'embargoed')
+        @resource.reload
+        expect(@resource.may_download?(ui_user: nil)).to be false
       end
 
       it 'returns false if not published' do
