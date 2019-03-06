@@ -100,7 +100,9 @@ module Stash
           expect(resource.update_uri).to eq('http://uc3-mrtsword-prd.cdlib.org:39001/mrtsword/edit/dataone_dash/doi%3A10.15146%2FR3RG6G')
           expect(resource.current_state).to eq('submitted')
         end
+      end
 
+      describe :cleanup_files do
         it 'cleans up public/system files' do
           resource_public = "#{public_system}/#{resource.id}"
           FileUtils.mkdir(resource_public)
@@ -110,7 +112,7 @@ module Stash
           FileUtils.touch(stash_wrapper)
           FileUtils.touch(some_other_file)
 
-          repo.harvested(identifier: identifier, record_identifier: record_identifier)
+          repo.cleanup_files(resource)
 
           [resource_public, stash_wrapper, some_other_file].each do |f|
             expect(File.exist?(f)).to be_falsey
