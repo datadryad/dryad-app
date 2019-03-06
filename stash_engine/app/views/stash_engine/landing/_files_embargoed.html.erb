@@ -2,10 +2,12 @@
 <div class="c-sidebox">
   <h3 class="c-sidebox__heading">Data Files</h3>
   <p>
-    This dataset is private for peer review and will be released on <%= formatted_date(@resource.publication_date) %>.
+    This dataset is private for peer review<% if @resource.publication_date > Time.new -%>
+      and will be released on <%= formatted_date(@resource.publication_date) %>
+    <% end -%>.
     Please contact
     <%= raw(english_list(array: @resource.authors.map(&:author_html_email_string).compact, conjunction: 'or')) %>
     with any questions.
   </p>
-  <p>Lists of files and downloads will become available on the release date.</p>
+  <p>Lists of files and downloads will become available to the public when released.</p>
 </div>

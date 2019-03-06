@@ -43,7 +43,7 @@ module StashDatacite
         expect(resource.datacite_dates).to be_empty
       end
 
-      it 'creates an "available" date based on the publication date' do
+      xit 'creates an "available" date based on the publication date' do
         pub_date = resource.update_publication_date!
         resource.save
 
@@ -53,7 +53,7 @@ module StashDatacite
         expect(date_available.date_type).to eq('available')
       end
 
-      it 'updates an existing "available" date when the publication date changes' do
+      xit 'updates an existing "available" date when the publication date changes' do
         resource.update_publication_date!
         resource.save
         date_available = DataciteDate.set_date_available(resource_id: resource.id)

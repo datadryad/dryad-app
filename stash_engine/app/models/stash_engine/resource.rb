@@ -13,7 +13,12 @@ module StashEngine
     has_many :edit_histories, class_name: 'StashEngine::EditHistory'
     has_one :stash_version, class_name: 'StashEngine::Version', dependent: :destroy
     belongs_to :identifier, class_name: 'StashEngine::Identifier', foreign_key: 'identifier_id'
-    has_one :embargo, class_name: 'StashEngine::Embargo', dependent: :destroy
+    # TODO: this will go away soon in Brian's PR, but missing from DB
+    # has_one :embargo, class_name: 'StashEngine::Embargo', dependent: :destroy
+    # This should simulate embargo for many purposes
+    def embargo
+      nil
+    end
     has_one :share, class_name: 'StashEngine::Share', dependent: :destroy
     belongs_to :user, class_name: 'StashEngine::User'
     has_one :current_resource_state,
@@ -32,7 +37,8 @@ module StashEngine
 
     amoeba do
       include_association :authors
-      include_association :embargo
+      # TODO: This will go away in Brian's PR
+      # include_association :embargo
       include_association :file_uploads
       customize(->(_, new_resource) do
         # you'd think 'include_association :current_resource_state' would do the right thing and deep-copy
@@ -419,6 +425,20 @@ module StashEngine
       user.superuser? || user_id == user.id || (user.tenant_id == tenant_id && user.role == 'admin')
     end
 
+    # Checks if someone may download files for this resource
+    # 1. Merritt's status, resource_state = 'submitted', meaning they are available to download from Merritt
+    # 2. Curation state of files_public? means anyone may download
+    # 3. if not public then the author can still download: resource.user_id = current_user.id
+    # 4. if not public then the current user has the 'superuser' role for seeing all files
+    # Note: the special download links mean anyone with that link may download and this doesn't apply
+    def may_download?(ui_user: nil) # doing this to avoid collision with the association called user
+      return false unless current_resource_state&.resource_state == 'submitted' # merritt state available
+      return true if files_public? # curation state of public or embargoed and expired
+      return false if ui_user.blank? # the rest of the cases require users
+      return true if ui_user.id == user_id || ui_user.role == 'superuser' # owner viewing or superuser viewing
+      false # nope. Not sure if it would ever get here, though
+    end
+
     # ------------------------------------------------------------
     # Usage and statistics
 
@@ -457,17 +477,13 @@ module StashEngine
     # -----------------------------------------------------------
     # Embargoes
 
-    def files_private?
-      !files_public?
+    def metadata_public?
+      %w[published embargoed].include?(current_curation_activity&.status)
     end
 
     def files_public?
       current_curation_activity&.status == 'published' ||
           (current_curation_activity&.status == 'embargoed' && Time.new > publication_date)
-    end
-
-    def metadata_public?
-      %w[published embargoed].include?(current_curation_activity&.status)
     end
 
     # -----------------------------------------------------------
@@ -510,9 +526,10 @@ module StashEngine
     # submitted right now. Use this when you don't know/care
     # whether the resource has been submitted or not.
     def notional_publication_date
-      embargo_end_date = embargo && embargo.end_date
-      existing_pub_date = publication_date
-      embargo_end_date || existing_pub_date || Time.now
+      # TODO: this will change with Brian's PR, commenting out for now
+      # embargo_end_date = embargo && embargo.end_date
+      # existing_pub_date = publication_date
+      # embargo_end_date || existing_pub_date || Time.now
     end
 
     # Called on submit
