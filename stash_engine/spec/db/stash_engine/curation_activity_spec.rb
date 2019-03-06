@@ -64,6 +64,11 @@ module StashEngine
     end
 
     context :callbacks do
+
+      before(:each) do
+        allow_any_instance_of(StashEngine::Resource).to receive(:submit_to_solr).and_return(true)
+      end
+
       it 'updates the resources.current_curation_activity_id when creating a new record' do
         ca = CurationActivity.create(resource_id: @resource.id)
         expect(@resource.reload.current_curation_activity_id).to eql(ca.id)
