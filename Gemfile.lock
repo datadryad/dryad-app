@@ -121,7 +121,6 @@ GEM
       public_suffix (>= 2.0.2, < 4.0)
     amoeba (3.0.0)
       activerecord (>= 3.2.6)
-    ansi (1.5.0)
     archive-zip (0.11.0)
       io-like (~> 0.3.0)
     arel (6.0.4)
@@ -199,6 +198,9 @@ GEM
       rack (>= 1.0.0)
       rack-test (>= 0.5.4)
       xpath (>= 2.0, < 4.0)
+    capybara-screenshot (1.0.22)
+      capybara (>= 1.0, < 4)
+      launchy
     carrierwave (0.10.0)
       activemodel (>= 3.2.0)
       activesupport (>= 3.2.0)
@@ -243,6 +245,8 @@ GEM
       deep_merge (~> 1.2.1)
       dry-validation (>= 0.12.2)
     connection_pool (2.2.2)
+    crack (0.4.3)
+      safe_yaml (~> 1.0.0)
     crass (1.0.4)
     csl (1.5.0)
       namae (~> 1.0)
@@ -265,7 +269,6 @@ GEM
     devise-guests (0.6.1)
       devise
     diff-lcs (1.3)
-    docile (1.3.1)
     domain_name (0.5.20180417)
       unf (>= 0.0.5, < 1.0.0)
     doorkeeper (4.4.3)
@@ -342,8 +345,8 @@ GEM
       tilt
     hamster (3.0.0)
       concurrent-ruby (~> 1.0)
+    hashdiff (0.3.8)
     hashie (3.5.7)
-    hirb (0.7.3)
     htmlentities (4.3.4)
     http-cookie (1.0.3)
       domain_name (~> 0.5)
@@ -392,6 +395,8 @@ GEM
       kaminari-core (= 1.1.1)
     kaminari-core (1.1.1)
     latex-decode (0.3.1)
+    launchy (2.4.3)
+      addressable (~> 2.3)
     leaflet-rails (0.7.7)
     libv8 (3.16.14.19)
     link_header (0.0.8)
@@ -586,15 +591,12 @@ GEM
     selenium-webdriver (3.141.0)
       childprocess (~> 0.5)
       rubyzip (~> 1.2, >= 1.2.2)
-    simplecov (0.16.1)
-      docile (~> 1.1)
-      json (>= 1.8, < 3)
-      simplecov-html (~> 0.10.0)
-    simplecov-console (0.4.2)
-      ansi
-      hirb
-      simplecov
-    simplecov-html (0.10.2)
+    shoulda (3.6.0)
+      shoulda-context (~> 1.0, >= 1.0.1)
+      shoulda-matchers (~> 3.0)
+    shoulda-context (1.2.2)
+    shoulda-matchers (3.1.3)
+      activesupport (>= 4.0.0)
     slop (3.6.0)
     solr_wrapper (1.2.0)
       faraday
@@ -653,6 +655,10 @@ GEM
       binding_of_caller (>= 0.7.2)
       railties (>= 4.0)
       sprockets-rails (>= 2.0, < 4.0)
+    webmock (3.5.1)
+      addressable (>= 2.3.6)
+      crack (>= 0.3.2)
+      hashdiff
     wicked_pdf (1.1.0)
     wkhtmltopdf-binary (0.12.3.1)
     xml-mapping (0.10.1)
@@ -674,11 +680,12 @@ DEPENDENCIES
   capistrano (~> 3.4.1)
   capistrano-passenger
   capistrano-rails (~> 1.1)
-  capybara (~> 2.16)
-  chromedriver-helper (~> 1.1)
+  capybara
+  capybara-screenshot
+  chromedriver-helper (>= 1.2)
   coffee-rails (~> 4.1.0)
   colorize (~> 0.8)
-  database_cleaner (~> 1.5)
+  database_cleaner
   exception_notification
   httparty
   jbuilder (~> 2.0)
@@ -692,10 +699,8 @@ DEPENDENCIES
   rspec-rails (~> 3.0)
   rubocop (~> 0.52.1)
   sass-rails (~> 5.0)
-  selenium-webdriver (~> 3.7)
-  simplecov (~> 0.14)
-  simplecov-console (~> 0.4)
-  solr_wrapper (~> 1.1)
+  selenium-webdriver (~> 3.14)
+  shoulda
   stash-merritt!
   stash_api!
   stash_datacite!
@@ -706,6 +711,7 @@ DEPENDENCIES
   turbolinks
   uglifier (~> 3.0.4)
   web-console (~> 2.0)
+  webmock
   yui-compressor
 
 BUNDLED WITH

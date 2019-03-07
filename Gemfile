@@ -60,13 +60,13 @@ group :development do
 end
 
 group :test do
-  gem 'capybara', '~> 2.16'
-  gem 'chromedriver-helper', '~> 1.1'
-  gem 'database_cleaner', '~> 1.5'
-  gem 'selenium-webdriver', '~> 3.7'
-  gem 'simplecov', '~> 0.14'
-  gem 'simplecov-console', '~> 0.4'
-  gem 'solr_wrapper', '~> 1.1'
+  gem 'webmock'
+  gem 'database_cleaner', require: false
+  gem 'shoulda'
+  gem 'capybara'
+  gem 'capybara-screenshot'
+  gem 'selenium-webdriver', '~> 3.14'
+  gem 'chromedriver-helper', '>= 1.2'
 end
 
 group :development, :test do
