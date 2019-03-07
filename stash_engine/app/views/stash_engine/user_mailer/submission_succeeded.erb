@@ -13,7 +13,7 @@
   before the dataset is available.
 </p>
 
-<% if @embargo_date %>
+<% if @embargo_date.present? %>
   The dataset will be private for peer review until <%= @embargo_date.strftime("%B %e, %Y") %>.
 <% end %>
 

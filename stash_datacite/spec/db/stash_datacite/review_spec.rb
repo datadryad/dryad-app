@@ -110,16 +110,9 @@ module StashDatacite
         expect(review.geolocation_data?).to eq(false)
       end
 
-      # TODO: figure out why
-      it 'returns an unsaved embargo for resources with no embargo' do
-        embargo = review.embargo
-        expect(embargo).not_to be_nil
-        expect(embargo.resource_id).to be_nil
-        expect(embargo.persisted?).to eq(false)
-      end
-
-      xit 'returns the resource embargo, if present' do
-        embargo = StashEngine::Embargo.create(resource_id: resource.id, end_date: Date.today)
+      it 'returns the resource embargo, if present' do
+        embargo = Date.today.to_s
+        resource.update(publication_date: embargo)
         resource.reload
         expect(review.embargo).to eq(embargo)
       end
