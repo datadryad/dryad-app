@@ -51,8 +51,7 @@ module StashEngine
     # Callbacks
     # ------------------------------------------
     # When the status is published send to Stripe and DataCite
-    after_save :submit_to_stripe, if: :ready_for_payment?
-    after_create :submit_to_datacite, :update_solr, if: :published? || :embargoed?
+    after_create :submit_to_datacite, :update_solr, submit_to_stripe, if: :published? || :embargoed?
 
     after_create :update_resource_reference!
     after_destroy :remove_resource_reference!
