@@ -59,7 +59,7 @@ module StashEngine
       raise ActionController::RoutingError, 'Not Found' if @shares.count < 1
 
       @resource = @shares.first.resource
-      unless @resource.files_public?
+      unless @resource.files_published?
         @version_streamer.download(resource: @resource) do
           redirect_to private_async_form_path(id: @resource.identifier_str, big: 'showme', secret_id: params[:id]) # for async
           return
