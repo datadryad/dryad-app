@@ -104,28 +104,6 @@ module StashEngine
       end
     end
 
-    describe :notional_publication_date do
-      xit 'defaults to today' do
-        resource = Resource.create(user_id: user.id)
-        expect(resource.notional_publication_date).to be_time(Time.now)
-      end
-
-      xit 'returns the real publication date, if any' do
-        resource = Resource.create(user_id: user.id)
-        pub_date = Date.new(2015, 5, 18)
-        resource.publication_date = pub_date
-        expect(resource.notional_publication_date).to eq(resource.publication_date)
-      end
-
-      xit 'returns the embargo end date if present' do
-        end_date = Date.new(2015, 5, 18)
-        resource = Resource.create(user_id: user.id)
-        StashEngine::Embargo.create(resource_id: resource.id, end_date: end_date)
-        resource.reload
-        expect(resource.notional_publication_date).to eq(end_date)
-      end
-    end
-
     describe :publication_date do
       it 'defaults to nil' do
         resource = Resource.create(user_id: user.id)
@@ -137,40 +115,6 @@ module StashEngine
         r1 = Resource.create(user_id: user.id, publication_date: pub_date)
         r2 = r1.amoeba_dup
         expect(r2.publication_date).to eq(pub_date)
-      end
-    end
-
-    describe :update_publication_date! do
-      xit 'sets the publication date based on the embargo end date' do
-        end_date = Date.new(2015, 5, 18)
-        resource = Resource.create(user_id: user.id)
-        StashEngine::Embargo.create(resource_id: resource.id, end_date: end_date)
-        resource.reload
-
-        expect(resource.publication_date).to be_nil # just to be sure
-        resource.update_publication_date!
-        expect(resource.publication_date).to eq(end_date)
-      end
-
-      xit 'overrides an existing publication date with a new embargo end date' do
-        old_pub_date = Date.new(2015, 5, 18)
-        resource = Resource.create(user_id: user.id, publication_date: old_pub_date)
-
-        end_date = Date.new(2018, 5, 18)
-        StashEngine::Embargo.create(resource_id: resource.id, end_date: end_date)
-        resource.reload
-        expect(resource.publication_date).to eq(old_pub_date) # just to be sure
-
-        resource.update_publication_date!
-        expect(resource.publication_date).to eq(end_date)
-      end
-
-      xit 'falls back to the current time' do
-        resource = Resource.create(user_id: user.id)
-        resource.update_publication_date!
-        # the following was bad since it made time to the millisecond, which caused failures, so truncating milliseconds
-        # to give better tolerance and prevent more occasional random failures
-        expect(resource.publication_date.change(usec: 0)).to be_time(Time.now.change(usec: 0))
       end
     end
 
@@ -290,9 +234,31 @@ module StashEngine
       end
 
       it 'returns true if published' do
+        @resource.update(publication_date: Date.today.to_s)
         @resource.curation_activities << CurationActivity.new(status: 'published')
         @resource.reload
         expect(@resource.may_download?(ui_user: nil)).to be true
+      end
+
+      it 'returns true if embargoed but the publication_date has been reached' do
+        @resource.update(publication_date: (Date.today - 1.days).to_s)
+        @resource.curation_activities << CurationActivity.new(status: 'embargoed')
+        @resource.reload
+        expect(@resource.may_download?(ui_user: nil)).to be true
+      end
+
+      it 'returns false if embargoed with a future publication_date' do
+        @resource.update(publication_date: (Date.today + 2.days).to_s)
+        @resource.curation_activities << CurationActivity.new(status: 'embargoed')
+        @resource.reload
+        expect(@resource.may_download?(ui_user: nil)).to be false
+      end
+
+      it 'returns false if embargoed with a nil publication_date' do
+        @resource.update(publication_date: nil)
+        @resource.curation_activities << CurationActivity.new(status: 'embargoed')
+        @resource.reload
+        expect(@resource.may_download?(ui_user: nil)).to be false
       end
 
       it 'returns false if not published' do
@@ -315,69 +281,86 @@ module StashEngine
 
     end
 
-    describe :files_public? do
+    describe :files_published? do
+
       before(:each) do
         @resource = Resource.create(user_id: user.id)
       end
 
       it 'defaults to false' do
-        expect(@resource.files_public?).to eql(false)
+        expect(@resource.files_published?).to eql(false)
       end
 
       it 'returns true for expired embargoes' do
         @resource.update(publication_date: Time.new - 1.year)
         @resource.curation_activities << CurationActivity.new(status: 'embargoed')
         @resource.reload
-        expect(@resource.files_public?).to eq(true)
+        expect(@resource.files_published?).to eq(true)
       end
 
       it 'returns false for in-force embargoes' do
         @resource.update(publication_date: Time.new + 1.year)
         @resource.curation_activities << CurationActivity.new(status: 'embargoed')
         @resource.reload
-        expect(@resource.files_public?).to eq(false)
+        expect(@resource.files_published?).to eq(false)
       end
 
       it 'returns true for published status' do
+        @resource.update(publication_date: Time.new - 1.day)
         @resource.curation_activities << CurationActivity.new(status: 'published')
         @resource.reload
-        expect(@resource.files_public?).to eq(true)
+        expect(@resource.files_published?).to eq(true)
+      end
+
+      it 'returns false for embargoes with no publication_date' do
+        @resource.update(publication_date: nil)
+        @resource.curation_activities << CurationActivity.new(status: 'embargoed')
+        @resource.reload
+        expect(@resource.files_published?).to eq(false)
       end
 
       it 'returns false for other random status' do
         @resource.curation_activities << CurationActivity.new(status: 'curation')
         @resource.reload
-        expect(@resource.files_public?).to eq(false)
+        expect(@resource.files_published?).to eq(false)
+      end
+
+      it 'returns false for other random status with a publication_date' do
+        # This scenario should technically never happen
+        @resource.update(publication_date: Time.new - 1.day)
+        @resource.curation_activities << CurationActivity.new(status: 'curation')
+        @resource.reload
+        expect(@resource.files_published?).to eq(false)
       end
     end
 
-    describe :metadata_public? do
+    describe :metadata_published? do
 
       before(:each) do
         @resource = Resource.create(user_id: user.id)
       end
 
       it 'defaults to false' do
-        expect(@resource.metadata_public?).to eql(false)
+        expect(@resource.metadata_published?).to eql(false)
       end
 
       it 'returns true for embargoed' do
         @resource.update(publication_date: Time.new + 1.year)
         @resource.curation_activities << CurationActivity.new(status: 'embargoed')
         @resource.reload
-        expect(@resource.metadata_public?).to eq(true)
+        expect(@resource.metadata_published?).to eq(true)
       end
 
       it 'returns true for published' do
         @resource.curation_activities << CurationActivity.new(status: 'published')
         @resource.reload
-        expect(@resource.metadata_public?).to eq(true)
+        expect(@resource.metadata_published?).to eq(true)
       end
 
       it 'returns false for other random status' do
         @resource.curation_activities << CurationActivity.new(status: 'curation')
         @resource.reload
-        expect(@resource.metadata_public?).to eq(false)
+        expect(@resource.metadata_published?).to eq(false)
       end
     end
 
@@ -1135,43 +1118,6 @@ module StashEngine
           expect(@resource.reload.current_curation_activity_id.present?).to eql(true)
         end
 
-        it 'should default publication_date to today when publish!' do
-          @resource.publish!(user.id)
-          @resource.reload
-          expect(@resource.publication_date.to_date.to_s).to eql(Date.today.to_s)
-        end
-
-        it 'should default publication_date to 1 year from today when embargo!' do
-          @resource.embargo!(user.id)
-          @resource.reload
-          expect(@resource.publication_date.to_date.to_s).to eql((Date.today + 1.year).to_s)
-        end
-
-        it 'should set publication_date when publish!' do
-          date = Date.parse('2019-01-01 00:00:00 UTC')
-          @resource.publish!(user.id, date)
-          @resource.reload
-          expect(@resource.publication_date.to_s).to eql('2019-01-01 00:00:00 UTC')
-        end
-
-        it 'should set publication_date when embargo!' do
-          date = Date.parse('2019-01-01 00:00:00 UTC')
-          @resource.embargo!(user.id, date)
-          @resource.reload
-          expect(@resource.publication_date.to_s).to eql('2019-01-01 00:00:00 UTC')
-        end
-
-        it 'should add new curation_activity when publish!' do
-          @resource.publish!(user.id, Date.today)
-          @resource.reload
-          expect(@resource.current_curation_status).to eql('published')
-        end
-
-        it 'should add new curation_activity when embargo!' do
-          @resource.embargo!(user.id, Date.today)
-          @resource.reload
-          expect(@resource.current_curation_status).to eql('embargoed')
-        end
       end
     end
   end

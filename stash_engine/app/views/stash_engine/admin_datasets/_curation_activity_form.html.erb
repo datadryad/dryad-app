@@ -1,0 +1,36 @@
+<% # local: resource, curation_activity %>
+<div class="o-admin-dialog">
+
+  <%= form_for :resource, url: curation_activity_change_path(resource.id), method: :post, remote: true do |f| %>
+
+    <%# Users cannot change the status or publication date once the files are published %>
+    <% unless resource.files_published? %>
+      <%= f.fields_for :curation_activity, curation_activity do |ca| %>
+        <div class="c-input">
+          <label class="c-input__label">Status</label>
+          <%= ca.select :status, options_for_select(filter_status_select(@resource.current_curation_activity.status)), include_blank: true %>
+        </div>
+      <% end %>
+
+      <%# User can change the publication date If the resource is published or embargoed %>
+      <div class="c-input" id="c-input_publication_date">
+        <label class="c-input__label">Publication Date</label>
+        <%= f.date_field :publication_date %>
+      </div>
+
+    <% end %>
+
+    <%# User can always add a note %>
+    <%= f.fields_for :curation_activity, curation_activity do |ca| %>
+      <div class="c-input">
+        <label class="c-input__label">Notes</label>
+        <%= ca.text_area :note, class: 'c-input__textarea' %>
+      </div>
+    <% end %>
+
+    <%= submit_tag 'Submit' %>
+    <%= button_tag 'Cancel', type: 'button', id: 'cancel_dialog' %>
+
+  <% end %>
+
+</div>
