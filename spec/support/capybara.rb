@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-require_relative "helpers/capybara_helper"
-require_relative "helpers/session_helper"
+require_relative 'helpers/capybara_helper'
+require_relative 'helpers/session_helper'
 
-SCREEN_SIZE = [2400, 1350]
+SCREEN_SIZE = [2400, 1350].freeze
 DIMENSION   = Selenium::WebDriver::Dimension.new(*SCREEN_SIZE)
 
 Capybara.default_driver = :rack_test

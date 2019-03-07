@@ -1,47 +1,34 @@
 module SessionsHelper
 
-  def sign_in(user = :user)
+  include Mocks::Omniauth
+
+  def sign_in(user = :user, with_shib = false)
     case user
     when StashEngine::User
-      sign_in_as_user(user)
+      sign_in_as_user(user, with_shib)
     when Symbol
-      sign_in_as_user(create(:user))
+      sign_in_as_user(create(:user), with_shib)
     else
       raise ArgumentError, "Invalid argument user: #{user}"
     end
   end
 
-  def sign_in_as_user(user)
-    clear_cookies!
-    mock_omniauth!(user)
-    visit '/'
-    first(:link_or_button, 'Login').click
-    first(:link_or_button, 'Login or create your ORCID iD').click
-    first(:link_or_button, 'Continue to My Datasets').click
-  end
-
-  def mock_omniauth!(user)
-    raise "No tenant with id 'localhost'; did you run travis-prep.sh?" unless StashEngine::Tenant.exists?('localhost')
-
+  def sign_in_as_user(user, with_shib)
     OmniAuth.config.test_mode = true
-    OmniAuth.config.add_mock(
-      :orcid,
-      uid: user.orcid || '555555555555',
-      credentials: {
-        token: 'ya29.Ry4gVGVzdHkgTWNUZXN0ZmFjZQ'
-      },
-      info: {
-        email: user.email,
-        name: user.name,
-        test_domain: user.tenant_id || 'localhost'
-      },
-      extra: {
-        raw_info: {
-          first_name: user.first_name,
-          last_name: user.last_name
-        }
-      }
-    )
+    mock_orcid!(user)
+
+    visit root_path
+    click_link 'Login'
+    click_link 'Login or create your ORCID iD'
+
+    if with_shib
+      # TODO: get the shib login working
+      # mock_shibboleth!(user)
+      # select 'ucop', from: 'tenant_id'
+      # click_button 'Login to verify'
+    elsif user.tenant_id.blank?
+      click_link 'Continue to My Datasets'
+    end
   end
 
 end

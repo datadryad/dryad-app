@@ -60,9 +60,16 @@ group :development do
 end
 
 group :test do
-  gem 'webmock'
   gem 'database_cleaner', require: false
+  gem 'factory_bot_rails'
+
+  # Easily generate fake data (https://github.com/stympy/faker)
+  gem 'faker'
+  # RSpec progress bar formatter (https://github.com/thekompanee/fuubar)
+  gem 'fuubar'
+  gem 'webmock'
   gem 'shoulda'
+
   gem 'capybara'
   gem 'capybara-screenshot'
   gem 'selenium-webdriver', '~> 3.14'
