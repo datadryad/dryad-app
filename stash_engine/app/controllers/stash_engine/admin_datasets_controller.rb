@@ -191,7 +191,7 @@ module StashEngine
     def embargo
       # If the user also provided a publication date and the date is today then
       # revert to published status
-      @status = 'published' if publication_date.present? && publication_date <= Date.today.to_s
+      @status = 'published' if @pub_date.present? && @pub_date <= Date.today.to_s
     end
 
   end
