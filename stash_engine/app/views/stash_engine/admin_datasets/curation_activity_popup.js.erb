@@ -1,0 +1,43 @@
+// replace dialog div with contents of dialog text from partial
+<% title = @resource.title.html_safe %>
+
+$('#popup_dialog').html("<%= escape_javascript(
+          render partial: 'stash_engine/admin_datasets/curation_activity_form', locals: {
+            resource: @resource, curation_activity: @curation_activity }) %>");
+
+// now open a jquery ui modal dialog
+$(function() {
+
+  $("#popup_dialog").dialog({
+    autoOpen: true,
+    height: 'auto',
+    width: '500px',
+    modal: true,
+    title: '<%= title %>'
+  });
+
+  // make the cancel button in the dialog hide the dialog
+  $("#cancel_dialog").click(function (e) {
+    e.preventDefault();
+    $('#popup_dialog').dialog('close');
+  });
+
+  // Publication Date should only show when the user sets the status to Complete
+  function togglePublicationDate(selector) {
+console.log($('#resource_publication_date').val());
+    if ($(selector).find('option:selected').val() === 'published' ||
+        $(selector).find('option:selected').val() === 'embargoed' ||
+        $('#resource_publication_date').val()) {
+      $('#c-input_publication_date').show();
+    } else {
+      $('#c-input_publication_date').hide();
+    }
+  }
+
+  $('#resource_curation_activity_status').change(function (e) {
+    togglePublicationDate(e.currentTarget);
+  });
+
+  initDatePicker();
+  togglePublicationDate();
+});

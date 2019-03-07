@@ -20,7 +20,7 @@ module StashEngine
       when 'submitted', 'peer_review'
         statuses = statuses.select { |s| %w[curation withdrawn].include?(s) }
       when 'withdrawn'
-        statuses = statuses.select { |s| %w[published embargoed].include?(s) }
+        statuses = statuses.select { |s| %w[curation].include?(s) }
       else
         unavailable = %w[in_progress submitted peer_review]
         unavailable << current_status

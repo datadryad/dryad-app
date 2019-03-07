@@ -1,3 +1,0 @@
-$("#js-curation-state-<%= params[:id] %>").html("<%= @resource.current_curation_activity.readable_status %>");
-$("#js-embargo-state-<%= params[:id] %>").html("<%= formatted_date(@resource.publication_date) %>");
-$("#popup_dialog").dialog("close");

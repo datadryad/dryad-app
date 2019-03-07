@@ -1,0 +1,5 @@
+$("#js-curation-state-<%= @resource.identifier.id %>").html("<%= @resource.current_curation_activity.readable_status %>");
+$("#js-embargo-state-<%= @resource.identifier.id %>").html("<%= formatted_date(@resource.publication_date) %>");
+$("#js-curation-activity-date-<%= @resource.identifier.id %>").html("<%= formatted_datetime(@resource.current_curation_activity&.created_at) %>");
+$("#js-curation-activity-user-<%= @resource.identifier.id %>").html("<%= @resource.current_curation_activity.user&.name %>");
+$("#popup_dialog").dialog("close");
