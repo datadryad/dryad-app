@@ -34,10 +34,8 @@ module StashEngine
         allow(routes).to receive(:url_helpers).and_return(url_helpers)
         allow(StashEngine::Engine).to receive(:routes).and_return(routes)
 
-        full_domain = 'example.org'
-        allow(tenant).to receive(:full_domain).and_return(full_domain)
         sharing_url = 'https://example.org/1234'
-        expect(url_helpers).to receive(:share_url).with(host: full_domain, protocol: 'https', id: share.secret_id).and_return(sharing_url)
+        expect(url_helpers).to receive(:share_url).with(protocol: 'https', id: share.secret_id).and_return(sharing_url)
         expect(share.sharing_link).to eq(sharing_url)
       end
     end

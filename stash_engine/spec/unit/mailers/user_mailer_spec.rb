@@ -23,7 +23,6 @@ module StashEngine
       @request_port = 80
 
       @tenant = double(Tenant)
-      allow(tenant).to receive(:full_domain).and_return(request_host)
       allow(tenant).to receive(:campus_contacts).and_return(%w[gorgath@example.edu lajuana@example.edu])
 
       @user = double(User)

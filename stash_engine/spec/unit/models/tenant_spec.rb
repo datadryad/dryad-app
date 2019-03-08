@@ -27,8 +27,6 @@ module StashEngine
       expect(tenant.abbreviation).to eq('EX')
       expect(tenant.short_name).to eq('Exemplia')
       expect(tenant.long_name).to eq('University of Exemplia')
-      expect(tenant.full_domain).to eq('stash-dev.example.edu')
-      expect(tenant.domain_regex).to eq('example.edu$')
       expect(tenant.default_license).to eq('cc_by')
       expect(tenant.stash_logo_after_tenant).to eq(true)
       repo = tenant.repository
@@ -60,28 +58,6 @@ module StashEngine
       it 'finds the tenant' do
         tenant = Tenant.find('exemplia')
         expect_exemplia(tenant)
-      end
-    end
-
-    describe :by_domain do
-      it 'finds the tenant' do
-        tenant = Tenant.by_domain('example.edu')
-        expect_exemplia(tenant)
-      end
-      it 'returns the default for bad domains' do
-        tenant = Tenant.by_domain('example.org')
-        expect_exemplia(tenant)
-      end
-    end
-
-    describe :by_domain_w_nil do
-      it 'finds the tenant' do
-        tenant = Tenant.by_domain_w_nil('example.edu')
-        expect_exemplia(tenant)
-      end
-      it 'returns nil for bad domains' do
-        tenant = Tenant.by_domain_w_nil('example.org')
-        expect(tenant).to be_nil
       end
     end
 
@@ -132,8 +108,6 @@ module StashEngine
       end
 
       it 'returns http if domain is localhost' do
-        tenant = Tenant.by_domain('example.edu')
-        allow(tenant).to receive(:full_domain).and_return('localhost:12345')
         login_path = tenant.google_login_path
         expect(login_path).to eq('http://localhost:12345/stash/auth/google_oauth2')
       end

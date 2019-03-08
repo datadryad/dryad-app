@@ -32,7 +32,7 @@ module StashEngine
       @to_name = @user_name
 
       tenant = resource.tenant
-      @host = tenant.full_domain
+      @host = Rails.application.default_url_options[:host]
 
       @embargo_date = nil
       @embargo_date = resource.embargo.end_date if resource.embargo
@@ -53,7 +53,7 @@ module StashEngine
 
       user = resource.user
       tenant = resource.tenant
-      @host = tenant.full_domain
+      @host = Rails.application.default_url_options[:host]
 
       @backtrace = to_backtrace(error)
 
