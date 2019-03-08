@@ -1,4 +1,5 @@
 module CapybaraHelper
+
   def clear_cookies!
     browser = Capybara.current_session.driver.browser
     if browser.respond_to?(:clear_cookies)
@@ -11,4 +12,5 @@ module CapybaraHelper
       raise 'Don\'t know how to clear cookies. Bad driver?'
     end
   end
+
 end

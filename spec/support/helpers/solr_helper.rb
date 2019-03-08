@@ -4,6 +4,7 @@ require 'uri'
 
 # TODO: figure out how to move some of this to stash_discovery
 module SolrHelper
+
   SOLR_VERSION = '5.2.1'.freeze
   CONF_DIR = 'spec/config/solr/conf'.freeze
   BLACKLIGHT_YML = 'config/blacklight.yml'.freeze
@@ -51,10 +52,10 @@ module SolrHelper
     end
 
     def create_collection
+      solr_instance.delete(COLLECTION_NAME)
       info "Creating collection #{COLLECTION_NAME} from configuration #{CONF_DIR}"
       new_collection = solr_instance.create(dir: CONF_DIR, name: COLLECTION_NAME)
       info 'Collection created'
-      new_collection
     end
 
     def start_new_instance
@@ -88,5 +89,7 @@ module SolrHelper
     def warn(msg)
       puts msg.to_s.colorize(:red)
     end
+
   end
+
 end
