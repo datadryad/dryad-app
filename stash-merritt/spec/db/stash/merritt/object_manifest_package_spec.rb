@@ -1,5 +1,6 @@
 require 'db_spec_helper'
 require 'pathname'
+require 'ostruct'
 
 module Stash
   module Merritt
@@ -17,6 +18,8 @@ module Stash
 
         public_path = Pathname.new("#{rails_root}/public")
         allow(Rails).to receive(:public_path).and_return(public_path)
+
+        allow(Rails).to receive(:application).and_return(OpenStruct.new(default_url_options: { host: 'stash.example.edu' }))
 
         @public_system = public_path.join('system').to_s
         FileUtils.mkdir_p(public_system)
