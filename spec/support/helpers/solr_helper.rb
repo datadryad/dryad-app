@@ -52,7 +52,7 @@ module SolrHelper
     end
 
     def create_collection
-      solr_instance.delete(COLLECTION_NAME)
+      #solr_instance.delete(COLLECTION_NAME)
       info "Creating collection #{COLLECTION_NAME} from configuration #{CONF_DIR}"
       new_collection = solr_instance.create(dir: CONF_DIR, name: COLLECTION_NAME)
       info 'Collection created'
