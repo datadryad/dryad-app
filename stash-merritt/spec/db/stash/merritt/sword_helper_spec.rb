@@ -60,7 +60,6 @@ module Stash
         allow(tenant).to receive(:full_url) { |path| "https://stash-dev.example.edu/#{path}" }
         allow(tenant).to receive(:sword_params).and_return(sword_params)
         allow(StashEngine::Tenant).to receive(:find).with('dataone').and_return(tenant)
-        allow(tenant).to receive(:full_domain).and_return('stash.example.edu')
 
         stash_wrapper = Stash::Wrapper::StashWrapper.parse_xml(File.read('spec/data/archive/stash-wrapper.xml'))
         @resource = StashDatacite::ResourceBuilder.new(

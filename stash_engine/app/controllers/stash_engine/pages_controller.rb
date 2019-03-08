@@ -64,7 +64,7 @@ module StashEngine
 
     def add_url(xml, my_tenant, identifier)
       xml.url do
-        xml.loc "https://#{my_tenant.full_domain}#{APP_CONFIG.stash_mount}/dataset/#{identifier}"
+        xml.loc "https://#{Rails.application.default_url_options[:host]}#{APP_CONFIG.stash_mount}/dataset/#{identifier}"
         xml.lastmod identifier.updated_at.strftime('%Y-%m-%d')
       end
     end
