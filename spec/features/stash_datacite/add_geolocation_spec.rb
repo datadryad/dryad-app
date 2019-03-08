@@ -1,17 +1,15 @@
 require 'rails_helper'
 require 'pry'
 
+# rubocop:disable Metrics/BlockLength
 RSpec.feature 'Add Geolocation to Dataset', type: :feature do
 
   include DatasetHelper
   include SolrHelper
 
   before(:all) do
+    # Start Solr - shutdown is handled globally when all tests have finished
     SolrHelper.start
-  end
-
-  after(:all) do
-    SolrHelper.stop
   end
 
   context 'dataset', js: true do
@@ -91,3 +89,4 @@ RSpec.feature 'Add Geolocation to Dataset', type: :feature do
   end
 
 end
+# rubocop:enable Metrics/BlockLength
