@@ -98,4 +98,6 @@ RSpec.configure do |config|
   # as the one that triggered the failure.
   Kernel.srand config.seed
 
+  # Stop Solr if its running once we are done
+  config.after(:suite) { SolrHelper.stop }
 end

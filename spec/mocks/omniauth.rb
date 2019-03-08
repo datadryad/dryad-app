@@ -2,6 +2,7 @@ module Mocks
 
   module Omniauth
 
+    # rubocop:disable Metrics/MethodLength
     def mock_shibboleth!(user)
       # Mocks the Omniauth response from Shibboleth
       raise 'No tenant with id "localhost"; did you run travis-prep.sh?' unless StashEngine::Tenant.exists?('ucop')
@@ -17,6 +18,7 @@ module Mocks
         }
       )
     end
+    # rubocop:enable Metrics/MethodLength
 
     # rubocop:disable Metrics/MethodLength
     def mock_orcid!(user)

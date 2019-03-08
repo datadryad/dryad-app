@@ -16,7 +16,6 @@ Capybara.javascript_driver = :chrome
 # This adds the --no-sandbox flag to fix TravisCI as described here:
 # https://docs.travis-ci.com/user/chrome#sandboxing
 Capybara.register_driver :selenium_chrome_headless do |app|
-  #Capybara::Selenium::Driver.load_selenium
   browser_options = ::Selenium::WebDriver::Chrome::Options.new
   browser_options.args << '--headless'
   browser_options.args << '--no-sandbox'
