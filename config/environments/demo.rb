@@ -98,7 +98,7 @@ Rails.application.configure do
   config.action_mailer.delivery_method = :sendmail
   config.action_mailer.perform_deliveries = true
   config.action_mailer.raise_delivery_errors = true
-  Rails.application.routes.default_url_options[:host] = 'dryad-stg.cdlib.org'
-  config.action_mailer.default_url_options = { :host => "https://dryad-stg.cdlib.org/stash" }
+  Rails.application.default_url_options = { host: 'dryad-demo.cdlib.org' }
+  config.action_mailer.default_url_options = { host: 'dryad-demo.cdlib.org' }
 
 end

@@ -15,8 +15,6 @@ default: &default
   short_name: "DataONE"
   long_name: "DataONE"
   publisher_id: isni:0000000404085195
-  full_domain: "oneshare-dev.cdlib.org"
-  domain_regex: "oneshare-dev.cdlib.org$"
   tenant_id: dataone
   identifier_service:
     provider: datacite
