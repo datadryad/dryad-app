@@ -11,6 +11,8 @@ require 'rspec/rails'
 
 # Conveniently places a screenshot of the page into the tmp/ dir if a failure happens
 require 'capybara-screenshot/rspec'
+# Clear all of the screenshots from old tests
+Dir[Rails.root.join('tmp/capybara/*')].each { |f| File.delete(f) }
 
 # Requires supporting ruby files with custom matchers and macros, etc, in
 # spec/support/ and its subdirectories. Files matching `spec/**/*_spec.rb` are
@@ -30,6 +32,11 @@ require 'capybara-screenshot/rspec'
 Dir[Rails.root.join('spec/mocks/*.rb')].each { |f| require f }
 Dir[Rails.root.join('spec/support/**/*.rb')].each { |f| require f }
 Dir[Rails.root.join('spec/mixins/*.rb')].each { |f| require f }
+
+# if you have precompiled assets, the tests will use them without telling you and they might be out of date
+# this burned me with out of date and non-working javascript for an entire afternoon of aggravating debugging.  :evil-asset-pipeline:
+dir = Rails.root.join('public/assets/')
+FileUtils.rm_rf(dir) if Dir.exist?(dir)
 
 # Checks for pending migrations and applies them before tests are run.
 # If you are not using ActiveRecord, you can remove these lines.

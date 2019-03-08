@@ -2,11 +2,13 @@
 
 require_relative 'helpers/capybara_helper'
 require_relative 'helpers/session_helper'
+require_relative 'helpers/ajax_helper'
 
 SCREEN_SIZE = [2400, 1350].freeze
 DIMENSION   = Selenium::WebDriver::Dimension.new(*SCREEN_SIZE)
 
 Capybara.default_driver = :rack_test
+Capybara.javascript_driver = :chrome
 
 # This is a customisation of the default :selenium_chrome_headless config in:
 # https://github.com/teamcapybara/capybara/blob/master/lib/capybara.rb
@@ -14,7 +16,7 @@ Capybara.default_driver = :rack_test
 # This adds the --no-sandbox flag to fix TravisCI as described here:
 # https://docs.travis-ci.com/user/chrome#sandboxing
 Capybara.register_driver :selenium_chrome_headless do |app|
-  Capybara::Selenium::Driver.load_selenium
+  #Capybara::Selenium::Driver.load_selenium
   browser_options = ::Selenium::WebDriver::Chrome::Options.new
   browser_options.args << '--headless'
   browser_options.args << '--no-sandbox'
@@ -39,9 +41,12 @@ Capybara.configure do |config|
   config.default_max_wait_time = 5 # seconds
   config.server                = :webrick
   config.raise_server_errors   = true
+  config.server_port = 33_000
+  config.app_host = 'http://localhost:33000'
 end
 
 RSpec.configure do |config|
   config.include(CapybaraHelper, type: :feature)
   config.include(SessionsHelper, type: :feature)
+  config.include(AjaxHelper, type: :feature)
 end
