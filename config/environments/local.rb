@@ -42,6 +42,6 @@ Rails.application.configure do
   config.action_mailer.delivery_method = :sendmail
   config.action_mailer.perform_deliveries = true
   config.action_mailer.raise_delivery_errors = true
-  Rails.application.routes.default_url_options[:host] = 'localhost:3000'
-  config.action_mailer.default_url_options = { :host => "https://localhost:3000/stash" }
+  config.action_mailer.default_url_options = { host: 'localhost:3000' }
+  Rails.application.default_url_options = { host: 'localhost:3000' }
 end
