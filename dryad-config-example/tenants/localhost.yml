@@ -9,8 +9,6 @@ default: &default
   short_name: "Localhost"
   long_name: "Localhost"
   publisher_id: grid.1234567890
-  full_domain: "localhost:33000"
-  domain_regex: "localhost:33000$"
   tenant_id: localhost
   identifier_service:
     provider: datacite
