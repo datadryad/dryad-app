@@ -100,4 +100,5 @@ RSpec.configure do |config|
 
   # Stop Solr if its running once we are done
   config.after(:suite) { SolrHelper.stop }
+
 end
