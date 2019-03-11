@@ -3,6 +3,8 @@ module SessionsHelper
   include Mocks::Omniauth
 
   def sign_in(user = :user, with_shib = false)
+    sign_out if have_text('Logout')
+
     case user
     when StashEngine::User
       sign_in_as_user(user, with_shib)
@@ -11,6 +13,10 @@ module SessionsHelper
     else
       raise ArgumentError, "Invalid argument user: #{user}"
     end
+  end
+
+  def sign_out
+    visit stash_url_helpers.sessions_destroy_path
   end
 
   def sign_in_as_user(user, with_shib)
