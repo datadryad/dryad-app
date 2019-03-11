@@ -12,7 +12,7 @@ StashEngine::Engine.routes.draw do
     end
     # TODO: curation_activity is a bit weird because it nests inside the resource in the routes but it is really related to
     # stash_engine_identifiers, not stash_engine_resources
-    resources :curation_activity
+    #resources :curation_activity
   end
 
   resources :identifiers do
@@ -20,7 +20,7 @@ StashEngine::Engine.routes.draw do
   end
 
   post 'curation_status_change/:id', to: 'curation_activity#status_change', as: 'curation_status_change'
-  post 'curation_embargo_change/:id', to: 'admin_datasets#embargo_change', as: 'curation_embargo_change'
+  post 'curation_activity_change/:id', to: 'admin_datasets#curation_activity_change', as: 'curation_activity_change'
   resources :tenants, only: [:index, :show]
   resources :file_uploads do
     member do
@@ -50,9 +50,9 @@ StashEngine::Engine.routes.draw do
   # download related
   match 'downloads/download_resource/:resource_id', to: 'downloads#download_resource', as: 'download_resource', via: [:get, :post]
   match 'downloads/async_request/:resource_id', to: 'downloads#async_request', as: 'download_async_request', via: [:get, :post]
+  get 'downloads/private_async_form', to: 'downloads#private_async_form', as: 'private_async_form'
   match 'downloads/capture_email/:resource_id', to: 'downloads#capture_email', as: 'download_capture_email', via: [:get, :post]
-  get 'downloads/file_stream/:file_id', to: 'downloads#file_stream', as: 'download_file_stream'
-  get 'downloads/file_download/:file_id', to: 'downloads#file_download', as: 'download_file'
+  get 'downloads/file_stream/:file_id', to: 'downloads#file_stream', as: 'download_stream'
   get 'share/:id', to: 'downloads#share', as: 'share'
 
 

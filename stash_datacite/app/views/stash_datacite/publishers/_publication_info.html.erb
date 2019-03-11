@@ -1,5 +1,5 @@
 <div class="o-metadata__group2">
-  <div class="o-metadata__group2-item">Publication date: <%= formatted_date(resource.notional_publication_date) %></div>
+  <div class="o-metadata__group2-item">Publication date: <%= formatted_date(resource.publication_date) %></div>
   <div class="o-metadata__group2-item">Publisher: <%= resource.try(:publisher).try(:publisher) %></div>
   <% if resource.identifier %>
     <div class="o-metadata__group2-item">

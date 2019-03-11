@@ -339,38 +339,6 @@ module Stash
             ArgumentError, /.*update.*#{Regexp.quote(record_identifier)}.*IndexError/
           )
         end
-
-        it 'removes uploaded files on success' do
-          expect(logger).not_to receive(:warn)
-          expect(logger).not_to receive(:error)
-          repo.harvested(identifier: identifier, record_identifier: record_identifier)
-          uploads.each do |upload|
-            expect(File.exist?(upload.temp_file_path)).to be_falsey
-          end
-        end
-
-        it 'removes the uploads dir on success' do
-          expect(logger).not_to receive(:warn)
-          expect(logger).not_to receive(:error)
-          repo.harvested(identifier: identifier, record_identifier: record_identifier)
-          expect(File.exist?(res_upload_dir)).to be_falsey
-        end
-
-        describe 'file cleanup errors' do
-          before(:each) do
-            allow(FileUtils).to receive(:remove_entry_secure).and_raise(Errno::ENOENT)
-          end
-          after(:each) do
-            allow(FileUtils).to receive(:remove_entry_secure).and_call_original
-          end
-          it 'logs the error' do
-            msg = nil
-            expect(logger).to(receive(:warn)).once { |m| msg = m }
-            repo.harvested(identifier: identifier, record_identifier: record_identifier)
-            expect(msg).to include(resource_id.to_s)
-            expect(msg).to include('No such file or directory')
-          end
-        end
       end
     end
   end
