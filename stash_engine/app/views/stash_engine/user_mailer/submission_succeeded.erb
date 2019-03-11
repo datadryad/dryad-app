@@ -13,6 +13,10 @@
   and review before further actions are taken.
 </p>
 
+<% if @embargo_date.present? %>
+  The dataset will be private for peer review until <%= @embargo_date.strftime("%B %e, %Y") %>.
+<% end %>
+
 <p>
   To see the status of your dataset, visit your
   <%= link_to 'My Datasets', url_for(protocol: 'https', controller: 'stash_engine/dashboard', action: 'show') %>

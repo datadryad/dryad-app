@@ -64,9 +64,23 @@ module StashEngine
     end
 
     context :callbacks do
+
+      before(:each) do
+        allow_any_instance_of(StashEngine::Resource).to receive(:submit_to_solr).and_return(true)
+        allow_any_instance_of(Stash::Doi::IdGen).to receive(:make_instance).and_return(true)
+        allow_any_instance_of(Stash::Doi::IdGen).to receive(:update_identifier_metadata).and_return(true)
+        allow_any_instance_of(Stash::Payments::Invoicer).to receive(:new).and_return(true)
+        allow_any_instance_of(Stash::Payments::Invoicer).to receive(:charge_via_invoice).and_return(true)
+      end
+
       it 'updates the resources.current_curation_activity_id when creating a new record' do
         ca = CurationActivity.create(resource_id: @resource.id)
         expect(@resource.reload.current_curation_activity_id).to eql(ca.id)
+      end
+
+      it 'removes the resources.current_curation_activity_id when the record is deleted and no prior curation activity exists' do
+        @resource.current_curation_activity.destroy
+        expect(@resource.reload.current_curation_activity_id).to eql(nil)
       end
 
       it 'updates the resources.current_curation_activity_id to the prior curation activity when the record is removed' do
@@ -77,28 +91,80 @@ module StashEngine
         expect(@resource.reload.current_curation_activity_id).to eql(original)
       end
 
-      it 'removes the resources.current_curation_activity_id when the record is deleted and no prior curation activity exists' do
-        @resource.current_curation_activity.destroy
-        expect(@resource.reload.current_curation_activity_id).to eql(nil)
+      context :update_solr do
+
+        it 'calls update_solr when published' do
+          @resource.update(publication_date: Date.today.to_s)
+          ca = CurationActivity.new(resource_id: @resource.id, status: 'published')
+          expect(ca).to receive(:update_solr)
+          ca.save
+        end
+
+        it 'calls update_solr when embargoed' do
+          @resource.update(publication_date: (Date.today + 1.day).to_s)
+          ca = CurationActivity.new(resource_id: @resource.id, status: 'embargoed')
+          expect(ca).to receive(:update_solr)
+          ca.save
+        end
+
+        it 'does not call update_solr if not published' do
+          @resource.update(publication_date: Date.today.to_s)
+          ca = CurationActivity.new(resource_id: @resource.id, status: 'action_required')
+          expect(ca).not_to receive(:update_solr)
+          ca.save
+        end
+
       end
 
-      it 'calls submit_to_stripe method after creating a new CurationActivity' do
-        ca = CurationActivity.new(resource_id: @resource.id)
-        expect(ca).to receive(:submit_to_stripe)
-        ca.save
+      context :submit_to_datacite do
+
+        it 'calls submit_to_datacite when published' do
+          @resource.update(publication_date: Date.today.to_s)
+          ca = CurationActivity.new(resource_id: @resource.id, status: 'published')
+          expect(ca).to receive(:submit_to_datacite)
+          ca.save
+        end
+
+        it 'calls submit_to_datacite when embargoed' do
+          ca = CurationActivity.new(resource_id: @resource.id, status: 'embargoed')
+          expect(ca).to receive(:submit_to_datacite)
+          ca.save
+        end
+
+        it 'does not call submit_to_datacite if not published' do
+          @resource.update(publication_date: Date.today.to_s)
+          ca = CurationActivity.new(resource_id: @resource.id, status: 'action_required')
+          expect(ca).not_to receive(:submit_to_datacite)
+          ca.save
+        end
+
       end
 
-      it 'calls submit_to_stripe method after updating a CurationActivity' do
-        ca = CurationActivity.create(resource_id: @resource.id)
-        expect(ca).to receive(:submit_to_stripe)
-        ca.update(status: 'curation')
+      context :submit_to_stripe do
+
+        it 'calls submit_to_stripe when published' do
+          allow_any_instance_of(StashEngine::CurationActivity).to receive(:ready_for_payment?).and_return(true)
+          ca = CurationActivity.new(resource_id: @resource.id, status: 'published')
+          expect(ca).to receive(:submit_to_stripe)
+          ca.save
+        end
+
+        it 'calls submit_to_stripe when embargoed' do
+          allow_any_instance_of(StashEngine::CurationActivity).to receive(:ready_for_payment?).and_return(true)
+          ca = CurationActivity.new(resource_id: @resource.id, status: 'embargoed')
+          expect(ca).to receive(:submit_to_stripe)
+          ca.save
+        end
+
+        it 'does not call submit_to_stripe if not ready_for_payment' do
+          allow_any_instance_of(StashEngine::CurationActivity).to receive(:ready_for_payment?).and_return(false)
+          ca = CurationActivity.new(resource_id: @resource.id, status: 'submitted')
+          expect(ca).not_to receive(:submit_to_stripe)
+          ca.save
+        end
+
       end
 
-      it 'calls submit_to_datacite method after creating a new CurationActivity' do
-        ca = CurationActivity.new(resource_id: @resource.id)
-        expect(ca).to receive(:submit_to_datacite)
-        ca.save
-      end
     end
 
   end

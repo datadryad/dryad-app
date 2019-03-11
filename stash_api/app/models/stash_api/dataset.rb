@@ -101,7 +101,7 @@ module StashApi
     end
 
     def add_embargo_date!(hsh, version)
-      hsh[:embargoEndDate] = version.resource.embargo.end_date.strftime('%Y-%m-%d') unless version.resource.embargo.nil?
+      hsh[:embargoEndDate] = version.resource.publication_date.strftime('%Y-%m-%d') unless version.resource.publication_date.nil?
     end
 
     def add_curation_status(hsh)

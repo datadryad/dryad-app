@@ -42,6 +42,7 @@ module StashEngine
       allow(resource).to receive(:embargo).and_return(embargo)
       allow(resource).to receive(:tenant_id).and_return('ucop')
       allow(resource).to receive(:tenant).and_return(@tenant)
+      allow(resource).to receive(:files_published?).and_return(true)
 
       @delivery_method = ActionMailer::Base.delivery_method
       ActionMailer::Base.delivery_method = :test
@@ -77,7 +78,7 @@ module StashEngine
 
     describe '#submission_succeeded' do
       it 'sends a success email' do
-        UserMailer.submission_succeeded(resource).deliver_now
+        UserMailer.submission_succeeded(@resource).deliver_now
         deliveries = ActionMailer::Base.deliveries
         expect(deliveries.size).to eq(1)
         delivery = deliveries[0]
@@ -117,7 +118,7 @@ module StashEngine
     describe '#submission_failed' do
       it 'sends a failure email' do
         error = ArgumentError.new
-        UserMailer.submission_failed(resource, error).deliver_now
+        UserMailer.submission_failed(@resource, error).deliver_now
         deliveries = ActionMailer::Base.deliveries
         expect(deliveries.size).to eq(1)
         delivery = deliveries[0]

@@ -19,20 +19,21 @@ module StashEngine
     #  :submitted   <-- When the resource's current resource_state == 'submitted'
     #                  This is set by a callback on ResourceState.save
     #
-    #  :curation, :action_required, :embargoed, :published and :withdrawn are
-    #  all manually set by the Curator on the Admin page.
+    #  :curation, :action_required, :published, :embargoed and :withdrawn are all manually
+    #  set by the Curator on the Admin page.
     #
-    #  :published   <-- Is also automatically set when the Embargo's publication_date
-    #                  has reached maturity
+    #  :published   <-- Is set by the Curator via the UI OR automatically set when the
+    #                   Resource's publication_date has reached maturity
+    #
     enum_vals = %w[
       in_progress
       submitted
       peer_review
       curation
       action_required
+      withdrawn
       embargoed
       published
-      withdrawn
     ]
     string_enum('status', enum_vals, 'in_progress', false)
 
@@ -49,8 +50,11 @@ module StashEngine
 
     # Callbacks
     # ------------------------------------------
-    after_save :submit_to_stripe
-    after_create :update_resource_reference!, :submit_to_datacite, :update_solr
+    # When the status is published send to Stripe and DataCite
+    after_create :submit_to_datacite, :update_solr, :submit_to_stripe,
+                 if: proc { |ca| ca.published? || ca.embargoed? }
+
+    after_create :update_resource_reference!
     after_destroy :remove_resource_reference!
 
     # Class methods
@@ -113,11 +117,7 @@ module StashEngine
       StashEngine::Resource.find(resource_id).update(current_curation_activity_id: prior&.id || '')
     end
 
-    # Callbacks
-    # ------------------------------------------
     def submit_to_stripe
-      return unless ready_for_payment?
-
       # TODO: -- re-enable this with the chargeable logic
       # return unless resource.identifier&.chargeable?
       inv = Stash::Payments::Invoicer.new(resource: resource, curator: user)
@@ -142,15 +142,10 @@ module StashEngine
       !StashEngine.app.nil? &&
         StashEngine.app.payments.service == 'stripe' &&
         !resource.identifier.nil? &&
-        resource.identifier.invoice_id.nil? &&
-        (status == 'published' || status == 'embargoed')
+        resource.identifier.invoice_id.nil?
     end
 
-    # rubocop:disable Metrics/CyclomaticComplexity
     def should_update_doi?
-      # only update if status changed or newly published or embargoed
-      return false unless latest_curation_status_changed? && (published? || embargoed?)
-
       last_merritt_version = resource.identifier&.last_submitted_version_number
       return false if last_merritt_version.nil? # don't submit random crap to DataCite unless it's preserved in Merritt
 
@@ -158,7 +153,6 @@ module StashEngine
       return false if last_merritt_version > 1 && Rails.env != 'production'
       true
     end
-    # rubocop:enable Metrics/CyclomaticComplexity
 
     def user_name
       return user.name unless user.nil?
