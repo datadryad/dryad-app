@@ -34,8 +34,7 @@ module StashEngine
       tenant = resource.tenant
       @host = Rails.application.default_url_options[:host]
 
-      @embargo_date = nil
-      @embargo_date = resource.embargo.end_date if resource.embargo
+      # embargo dates are now not set when submitting to Merritt, removing
 
       @to_name = @user_name
       to_address = address_list(@user_email)
