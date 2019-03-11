@@ -100,6 +100,13 @@ module StashEngine
           ca.save
         end
 
+        it 'calls update_solr when embargoed' do
+          @resource.update(publication_date: (Date.today + 1.day).to_s)
+          ca = CurationActivity.new(resource_id: @resource.id, status: 'embargoed')
+          expect(ca).to receive(:update_solr)
+          ca.save
+        end
+
         it 'does not call update_solr if not published' do
           @resource.update(publication_date: Date.today.to_s)
           ca = CurationActivity.new(resource_id: @resource.id, status: 'action_required')
@@ -118,6 +125,12 @@ module StashEngine
           ca.save
         end
 
+        it 'calls submit_to_datacite when embargoed' do
+          ca = CurationActivity.new(resource_id: @resource.id, status: 'embargoed')
+          expect(ca).to receive(:submit_to_datacite)
+          ca.save
+        end
+
         it 'does not call submit_to_datacite if not published' do
           @resource.update(publication_date: Date.today.to_s)
           ca = CurationActivity.new(resource_id: @resource.id, status: 'action_required')
@@ -129,14 +142,21 @@ module StashEngine
 
       context :submit_to_stripe do
 
-        it 'calls submit_to_datacite when ready_for_payment' do
+        it 'calls submit_to_stripe when published' do
           allow_any_instance_of(StashEngine::CurationActivity).to receive(:ready_for_payment?).and_return(true)
-          ca = CurationActivity.new(resource_id: @resource.id, status: 'submitted')
+          ca = CurationActivity.new(resource_id: @resource.id, status: 'published')
           expect(ca).to receive(:submit_to_stripe)
           ca.save
         end
 
-        it 'does not call submit_to_datacite if not ready_for_payment' do
+        it 'calls submit_to_stripe when embargoed' do
+          allow_any_instance_of(StashEngine::CurationActivity).to receive(:ready_for_payment?).and_return(true)
+          ca = CurationActivity.new(resource_id: @resource.id, status: 'embargoed')
+          expect(ca).to receive(:submit_to_stripe)
+          ca.save
+        end
+
+        it 'does not call submit_to_stripe if not ready_for_payment' do
           allow_any_instance_of(StashEngine::CurationActivity).to receive(:ready_for_payment?).and_return(false)
           ca = CurationActivity.new(resource_id: @resource.id, status: 'submitted')
           expect(ca).not_to receive(:submit_to_stripe)

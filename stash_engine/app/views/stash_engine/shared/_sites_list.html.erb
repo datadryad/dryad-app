@@ -1,6 +1,0 @@
-<% StashEngine::Tenant.all.each do |t| %>
-  <%= link_to t.short_name, "https://#{t.full_domain}", class: 'o-sites__group-item' %>
-<% end %>
-<% if ['development', 'test'].include?(Rails.env) %>
-  <a href="/stash/auth/developer" class="o-sites__group-item">developer login (only development)</a>
-<% end %>

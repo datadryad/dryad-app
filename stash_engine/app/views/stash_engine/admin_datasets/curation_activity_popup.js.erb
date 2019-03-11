@@ -24,7 +24,6 @@ $(function() {
 
   // Publication Date should only show when the user sets the status to Complete
   function togglePublicationDate(selector) {
-console.log($('#resource_publication_date').val());
     if ($(selector).find('option:selected').val() === 'published' ||
         $(selector).find('option:selected').val() === 'embargoed' ||
         $('#resource_publication_date').val()) {
