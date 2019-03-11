@@ -83,12 +83,7 @@ module StashDatacite
 
       # TODO: is this actually used? it doesn't look like it
       def embargo
-        @embargo = if @resource.embargo.present?
-                     @resource.embargo
-                   else
-                     # TODO: and this looks especially fishy
-                     StashEngine::Embargo.new
-                   end
+        @embargo = @resource.publication_date
       end
 
       def share

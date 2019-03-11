@@ -56,7 +56,7 @@ module StashEngine
         resource.try(:stash_version).try(:version),
         '', # - other id
         resource.try(:identifier).try(:target), # The landing page url with correct domain and all
-        resource.notional_publication_year
+        resource.publication_date
       ]
     end
     # rubocop:enable Metrics/MethodLength

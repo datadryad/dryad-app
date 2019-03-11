@@ -139,9 +139,9 @@ module Stash
         end
 
         describe 'mrt-embargo.txt' do
-          xit 'includes the embargo end date if present' do
+          it 'includes the embargo end date if present' do
             end_date = Time.new(2020, 1, 1, 0, 0, 1, '+12:45')
-            resource.embargo = StashEngine::Embargo.new(end_date: end_date)
+            resource.publication_date = end_date.to_s
             package = ZipPackage.new(resource: resource)
             @zipfile_path = package.zipfile
             mrt_embargo = zip_entry('mrt-embargo.txt')

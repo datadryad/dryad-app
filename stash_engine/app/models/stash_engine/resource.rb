@@ -13,12 +13,6 @@ module StashEngine
     has_many :edit_histories, class_name: 'StashEngine::EditHistory'
     has_one :stash_version, class_name: 'StashEngine::Version', dependent: :destroy
     belongs_to :identifier, class_name: 'StashEngine::Identifier', foreign_key: 'identifier_id'
-    # TODO: this will go away soon in Brian's PR, but missing from DB
-    # has_one :embargo, class_name: 'StashEngine::Embargo', dependent: :destroy
-    # This should simulate embargo for many purposes
-    def embargo
-      nil
-    end
     has_one :share, class_name: 'StashEngine::Share', dependent: :destroy
     belongs_to :user, class_name: 'StashEngine::User'
     has_one :current_resource_state,
@@ -35,10 +29,10 @@ module StashEngine
             primary_key: 'current_curation_activity_id',
             foreign_key: 'id'
 
+    accepts_nested_attributes_for :curation_activities
+
     amoeba do
       include_association :authors
-      # TODO: This will go away in Brian's PR
-      # include_association :embargo
       include_association :file_uploads
       customize(->(_, new_resource) do
         # you'd think 'include_association :current_resource_state' would do the right thing and deep-copy
@@ -134,7 +128,7 @@ module StashEngine
       joins(:current_curation_activity).where(stash_engine_curation_activities: { status: %i[published embargoed] })
     end)
 
-    # calculates published as a published status or an embargo that is past its publication date
+    # calculates published as a published status or embargoed and past its publication date
     scope :published, (-> do
       joins(:current_curation_activity).where(["stash_engine_curation_activities.status = 'published' OR " \
           "(stash_engine_curation_activities.status = 'embargoed' AND stash_engine_resources.publication_date < ?)", Time.new])
@@ -288,22 +282,12 @@ module StashEngine
     # ------------------------------------------------------------
     # Curation helpers
     def curatable?
-      submitted?
+      submitted? && !files_published?
     end
 
     # Shortcut to the current curation activity's status
     def current_curation_status
       current_curation_activity.status
-    end
-
-    def publish!(user_id, date = Date.today, note = '')
-      update!(publication_date: date)
-      CurationActivity.create(resource_id: id, note: note, user_id: user_id, status: 'published')
-    end
-
-    def embargo!(user_id, date = (Date.today + 1.year), note = '')
-      update!(publication_date: date)
-      CurationActivity.create(resource_id: id, note: note, user_id: user_id, status: 'embargoed')
     end
 
     # Create the initial CurationActivity
@@ -433,7 +417,7 @@ module StashEngine
     # Note: the special download links mean anyone with that link may download and this doesn't apply
     def may_download?(ui_user: nil) # doing this to avoid collision with the association called user
       return false unless current_resource_state&.resource_state == 'submitted' # merritt state available
-      return true if files_public? # curation state of public or embargoed and expired
+      return true if files_published? # curation state of public or embargoed and expired
       return false if ui_user.blank? # the rest of the cases require users
       return true if ui_user.id == user_id || ui_user.role == 'superuser' # owner viewing or superuser viewing
       false # nope. Not sure if it would ever get here, though
@@ -442,7 +426,6 @@ module StashEngine
     # ------------------------------------------------------------
     # Usage and statistics
 
-    # TODO: EMBARGO: do we care about published vs. embargoed in this count?
     # total count of submitted datasets
     def self.submitted_dataset_count
       sql = "
@@ -475,15 +458,15 @@ module StashEngine
     end
 
     # -----------------------------------------------------------
-    # Embargoes
-
-    def metadata_public?
-      %w[published embargoed].include?(current_curation_activity&.status)
+    # Publication
+    # Files are published when the publication date has been reached
+    def files_published?
+      metadata_published? && publication_date.present? && Date.today.to_s >= publication_date
     end
 
-    def files_public?
-      current_curation_activity&.status == 'published' ||
-          (current_curation_activity&.status == 'embargoed' && Time.new > publication_date)
+    # Metadata is published when the curator sets the status to published or embargoed
+    def metadata_published?
+      current_curation_activity.present? && (current_curation_activity.published? || current_curation_activity.embargoed?)
     end
 
     # -----------------------------------------------------------
@@ -519,28 +502,5 @@ module StashEngine
       update(solr_indexed: false) if result
     end
 
-    # -----------------------------------------------------------
-    # Dates
-
-    # What the publication date would be, if the resource was
-    # submitted right now. Use this when you don't know/care
-    # whether the resource has been submitted or not.
-    def notional_publication_date
-      # TODO: this will change with Brian's PR, commenting out for now
-      # embargo_end_date = embargo && embargo.end_date
-      # existing_pub_date = publication_date
-      # embargo_end_date || existing_pub_date || Time.now
-    end
-
-    # Called on submit
-    def update_publication_date!
-      self.publication_date = notional_publication_date
-    end
-
-    # notional_publication_year, as a string(!)
-    def notional_publication_year
-      return notional_publication_date.year.to_s if publication_years.blank?
-      publication_years.first.publication_year
-    end
   end
 end

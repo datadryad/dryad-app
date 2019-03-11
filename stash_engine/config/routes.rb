@@ -12,7 +12,7 @@ StashEngine::Engine.routes.draw do
     end
     # TODO: curation_activity is a bit weird because it nests inside the resource in the routes but it is really related to
     # stash_engine_identifiers, not stash_engine_resources
-    resources :curation_activity
+    #resources :curation_activity
   end
 
   resources :identifiers do
@@ -20,7 +20,7 @@ StashEngine::Engine.routes.draw do
   end
 
   post 'curation_status_change/:id', to: 'curation_activity#status_change', as: 'curation_status_change'
-  post 'curation_embargo_change/:id', to: 'admin_datasets#embargo_change', as: 'curation_embargo_change'
+  post 'curation_activity_change/:id', to: 'admin_datasets#curation_activity_change', as: 'curation_activity_change'
   resources :tenants, only: [:index, :show]
   resources :file_uploads do
     member do

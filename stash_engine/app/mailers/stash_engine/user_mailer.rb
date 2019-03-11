@@ -34,7 +34,7 @@ module StashEngine
       tenant = resource.tenant
       @host = Rails.application.default_url_options[:host]
 
-      # embargo dates are now not set when submitting to Merritt, removing
+      @embargo_date = resource.publication_date if resource.present? && !resource.files_published?
 
       @to_name = @user_name
       to_address = address_list(@user_email)
