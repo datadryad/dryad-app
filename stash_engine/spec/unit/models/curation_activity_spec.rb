@@ -68,7 +68,7 @@ module StashEngine
       end
 
       it "doesn't submit when status isn't changed" do
-        CurationActivity.skip_callback(:create, :after, :submit_to_datacite)
+        CurationActivity.skip_callback(:create, :after, :submit_to_datacite, :submit_to_stripe)
         @curation_activity2 = create(:curation_activity, resource: @resource, status: 'published')
         CurationActivity.set_callback(:create, :after, :submit_to_datacite)
 
