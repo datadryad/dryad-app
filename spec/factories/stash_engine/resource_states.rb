@@ -22,10 +22,6 @@ FactoryBot.define do
       resource_state { 'submitted' }
     end
 
-    after(:create) do |resource_state, evaluator|
-      resource_state.resource.update(current_resource_state_id: resource_state.id)
-    end
-
   end
 
 end

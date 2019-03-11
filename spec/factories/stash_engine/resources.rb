@@ -2,6 +2,7 @@ FactoryBot.define do
 
   factory :resource, class: StashEngine::Resource do
     identifier
+    user
 
     has_geolocation { false }
     title { Faker::Lorem.sentence }
@@ -13,44 +14,44 @@ FactoryBot.define do
     end
 
     after(:create) do |resource, evaluator|
-      if resource.resource_states.empty?
-        create(:resource_state, :in_progress, user: resource.user, resource: resource)
-      end
-      resource.identifier.latest_resource_id = resource.id
-    end
-
-    transient do
-      resource_states { 0 }
-      curation_activities { 0 }
-      editor { 0 }
-      user { 0 }
+      create(:author, resource: resource)
+      create(:description, resource_id: resource.id)
     end
 
     trait :submitted do
       after(:create) do |resource, evaluator|
-        create(:resource_state, :submitted, user: resource.user, resource: resource)
-        current_curation_activity_id = create(:curation_activity, :submitted, user: resource.user, resource: resource).id
+        resource.current_resource_state_id = create(:resource_state, :submitted, user: resource.user, resource: resource).id
+        resource.save
+        resource.reload
       end
     end
 
-    trait :embargoed do
-      publication_date = (Date.today + 2.days).to_s
-      after(:create) do |resource, evaluator|
-        create(:resource_state, :submitted, user: resource.user, resource: resource)
-        create(:curation_activity, :submitted, user: resource.user, resource: resource)
-        create(:curation_activity, :curation, user: resource.user, resource: resource)
-        current_curation_activity_id = create(:curation_activity, :embargoed, user: resource.user, resource: resource).id
-      end
+  end
+
+  # Create a resource that has reached the embargoed curation status
+  factory :resource_embargoed, parent: :resource, class: StashEngine::Resource do
+
+    publication_date = (Date.today + 2.days).to_s
+
+    after(:create) do |resource, evaluator|
+      create(:curation_activity, :curation, user: resource.user, resource: resource)
+      current_curation_activity_id = create(:curation_activity, :embargoed, resource: resource,
+                                            user: create(:user, role: 'admin',
+                                                         tenant_id: resource.user.tenant_id)).id
     end
 
-    trait :published do
-      publication_date = Date.today.to_s
-      after(:create) do |resource, evaluator|
-        create(:resource_state, :submitted, user: resource.user, resource: resource)
-        create(:curation_activity, :submitted, user: resource.user, resource: resource)
-        create(:curation_activity, :curation, user: resource.user, resource: resource)
-        current_curation_activity_id = create(:curation_activity, :published, user: resource.user, resource: resource).id
-      end
+  end
+
+  # Create a resource that has reached the published curation status
+  factory :resource_published, parent: :resource, class: StashEngine::Resource do
+
+    publication_date = Date.today.to_s
+
+    after(:create) do |resource, evaluator|
+      create(:curation_activity, :curation, user: resource.user, resource: resource)
+      current_curation_activity_id = create(:curation_activity, :published, resource: resource,
+                                            user: create(:user, role: 'admin',
+                                                         tenant_id: resource.user.tenant_id)).id
     end
 
   end

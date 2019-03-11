@@ -1,9 +1,9 @@
 FactoryBot.define do
 
   factory :curation_activity, class: StashEngine::CurationActivity do
-    user
     resource
 
+    user { create(:user) }
     status { 'in_progress' }
     note { Faker::Lorem.sentence }
 
@@ -16,15 +16,15 @@ FactoryBot.define do
     end
 
     trait :peer_review do
-      status { 'perr_review' }
+      status { 'peer_review' }
     end
 
     trait :curation do
       status { 'curation' }
     end
 
-    trait :acvtion_required do
-      status { 'acvtion_required' }
+    trait :action_required do
+      status { 'action_required' }
     end
 
     trait :withdrawn do
@@ -37,10 +37,6 @@ FactoryBot.define do
 
     trait :published do
       status { 'published' }
-    end
-
-    after(:create) do |curation_activity, evaluator|
-      curation_activity.resource.update(latest_curation_activity_id: curation_activity.id)
     end
 
   end
