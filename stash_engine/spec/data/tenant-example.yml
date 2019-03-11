@@ -9,8 +9,6 @@ default: &default
   abbreviation: "EX"
   short_name: "Exemplia"
   long_name: "University of Exemplia"
-  full_domain: "stash-dev.example.edu"
-  domain_regex: "example.edu$"
   tenant_id: exemplia
   identifier_service:
     provider: datacite
@@ -41,7 +39,6 @@ stage:
     endpoint: "http://repo-stg.example.edu:39001/sword/collection/stash"
     username: "stash_submitter"
     password: "correct​horse​battery​staple"
-  full_domain: "stash-stg.example.edu"
 
 production:
   <<: *default
@@ -52,7 +49,6 @@ production:
     endpoint: "http://repo-prd.example.edu:39001/sword/collection/stash"
     username: "stash_submitter"
     password: "correct​horse​battery​staple"
-  full_domain: "stash.example.edu"
   identifier_service:
     shoulder: "doi:10.5072/9999"
     account: stash

@@ -40,16 +40,6 @@ module StashEngine
       redirect_to stash_engine.dashboard_path
     end
 
-    def host_and_port_match?(request, host, port)
-      request.host == host && (port.nil? || request.port == port.to_i)
-    end
-
-    def tenant_host_and_port(tenant)
-      full_domain = tenant.full_domain
-      host, port = full_domain.split(':')
-      [host, port]
-    end
-
     def redirect_url_for(original_url, host, port)
       uri = URI(original_url)
       uri.host = host

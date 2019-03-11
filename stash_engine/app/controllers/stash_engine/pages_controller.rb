@@ -22,6 +22,7 @@ module StashEngine
     def about; end
 
     # produces a sitemap for the domain name/tenant listing the released datasets
+    # TODO: change page to display all that are embargoed or published, not merritt status and cache the doc so it's not too heavy
     def sitemap
       respond_to do |format|
         format.xml do
@@ -40,6 +41,7 @@ module StashEngine
 
     private
 
+    # TODO: need to change query so it's not tenant-specific
     def find_identifiers(my_tenant)
       join_conditions = <<-SQL
           INNER JOIN stash_engine_resources
@@ -53,18 +55,18 @@ module StashEngine
         .where('stash_engine_users.tenant_id = ?', my_tenant.tenant_id)
     end
 
-    def gen_xml_from_identifiers(ar_identifiers, my_tenant)
+    def gen_xml_from_identifiers(ar_identifiers)
       builder = Nokogiri::XML::Builder.new do |xml|
         xml.urlset(xmlns: 'http://www.sitemaps.org/schemas/sitemap/0.9') do
-          ar_identifiers.each { |iden| add_url(xml, my_tenant, iden) }
+          ar_identifiers.each { |iden| add_url(xml, iden) }
         end
       end
       builder.to_xml
     end
 
-    def add_url(xml, my_tenant, identifier)
+    def add_url(xml, identifier)
       xml.url do
-        xml.loc "https://#{my_tenant.full_domain}#{APP_CONFIG.stash_mount}/dataset/#{identifier}"
+        xml.loc "https://#{Rails.application.default_url_options[:host]}#{APP_CONFIG.stash_mount}/dataset/#{identifier}"
         xml.lastmod identifier.updated_at.strftime('%Y-%m-%d')
       end
     end
