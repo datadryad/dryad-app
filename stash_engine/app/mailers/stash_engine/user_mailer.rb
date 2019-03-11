@@ -51,7 +51,6 @@ module StashEngine
       @to_name = @user_name
 
       user = resource.user
-      tenant = resource.tenant
       @host = Rails.application.default_url_options[:host]
 
       @backtrace = to_backtrace(error)

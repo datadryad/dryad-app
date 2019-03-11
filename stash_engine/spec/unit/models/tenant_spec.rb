@@ -16,6 +16,11 @@ module StashEngine
       app = double(Rails::Application)
       allow(app).to receive(:stash_mount).and_return('/stash')
       allow(StashEngine).to receive(:app).and_return(app)
+
+      # this rails_root stuff is required when faking Rails like david did and using the mailer since it seems to call it
+      rails_root = Dir.mktmpdir('rails_root')
+      allow(Rails).to receive(:root).and_return(rails_root)
+      allow(Rails).to receive(:application).and_return(OpenStruct.new(default_url_options: { host: 'stash-dev.example.edu' }))
     end
 
     after(:each) do
@@ -63,7 +68,7 @@ module StashEngine
 
     describe :omniauth_login_path do
       it 'delegates to the auth strategy' do
-        tenant = Tenant.by_domain('example.edu')
+        tenant = Tenant.find('exemplia')
         login_path = tenant.omniauth_login_path
         # TODO: don't hard-code this
         expect(login_path).to eq('https://stash-dev.example.edu/Shibboleth.sso/Login?target=https%3A%2F%2Fstash-dev.example.edu%2Fstash%2Fauth%2Fshibboleth%2Fcallback&entityID=urn%3Amace%3Aincommon%3Aexample.edu')
@@ -72,7 +77,7 @@ module StashEngine
 
     describe :logo_file do
       it 'returns the tenant file if it exists' do
-        tenant = Tenant.by_domain('example.edu')
+        tenant = Tenant.find('exemplia')
         logo_filename = "logo_#{tenant.tenant_id}.jpg"
         Dir.mktmpdir('rails_root') do |rails_root|
           allow(Rails).to receive(:root).and_return(rails_root)
@@ -84,7 +89,7 @@ module StashEngine
       end
 
       it 'defaults if no tenant file exists' do
-        tenant = Tenant.by_domain('example.edu')
+        tenant = Tenant.find('exemplia')
         Dir.mktmpdir('rails_root') do |rails_root|
           allow(Rails).to receive(:root).and_return(rails_root)
           expect(tenant.logo_file).to eq('') # no longer want to display a default and ignored by ui code if unavailable
@@ -94,7 +99,7 @@ module StashEngine
 
     describe :shibboleth_login_path do
       it 'returns the login path' do
-        tenant = Tenant.by_domain('example.edu')
+        tenant = Tenant.find('exemplia')
         login_path = tenant.shibboleth_login_path
         expect(login_path).to eq('https://stash-dev.example.edu/Shibboleth.sso/Login?target=https%3A%2F%2Fstash-dev.example.edu%2Fstash%2Fauth%2Fshibboleth%2Fcallback&entityID=urn%3Amace%3Aincommon%3Aexample.edu')
       end
@@ -102,12 +107,14 @@ module StashEngine
 
     describe :google_login_path do
       it 'returns the login path' do
-        tenant = Tenant.by_domain('example.edu')
+        tenant = Tenant.find('exemplia')
         login_path = tenant.google_login_path
         expect(login_path).to eq('https://stash-dev.example.edu/stash/auth/google_oauth2')
       end
 
       it 'returns http if domain is localhost' do
+        allow(Rails).to receive(:application).and_return(OpenStruct.new(default_url_options: { host: 'localhost:12345' }))
+        tenant = Tenant.find('exemplia')
         login_path = tenant.google_login_path
         expect(login_path).to eq('http://localhost:12345/stash/auth/google_oauth2')
       end
@@ -115,7 +122,7 @@ module StashEngine
 
     describe :sword_params do
       it 'returns the Stash::Sword::Client parameter hash' do
-        tenant = Tenant.by_domain('example.edu')
+        tenant = Tenant.find('exemplia')
         expected = {
           collection_uri: 'http://repo-dev.example.edu:39001/sword/collection/stash',
           username: 'stash_submitter',
@@ -127,7 +134,7 @@ module StashEngine
 
     describe :full_url do
       it 'builds a full URL from a tenant' do
-        tenant = Tenant.by_domain('example.edu')
+        tenant = Tenant.find('exemplia')
         expect(tenant.full_url('/doi:10.123/456')).to eq('https://stash-dev.example.edu/doi:10.123/456')
       end
     end
