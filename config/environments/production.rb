@@ -99,6 +99,6 @@ Rails.application.configure do
   config.action_mailer.perform_deliveries = true
   config.action_mailer.raise_delivery_errors = true
 
-  Rails.application.routes.default_url_options[:host] = 'datadryad.org'
-  config.action_mailer.default_url_options = { :host => "https://datadryad.org/stash" }
+  config.action_mailer.default_url_options = { host: 'datadryad.org' }
+  Rails.application.default_url_options = { host: 'datadryad.org' }
 end
