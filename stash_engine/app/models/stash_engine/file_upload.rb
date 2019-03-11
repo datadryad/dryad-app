@@ -1,3 +1,5 @@
+require 'zaru'
+
 module StashEngine
   class FileUpload < ActiveRecord::Base
     belongs_to :resource, class_name: 'StashEngine::Resource'
@@ -65,13 +67,20 @@ module StashEngine
       !digest.blank? && !digest_type.nil?
     end
 
-    # TODO: merritt-specifics, where does this belong?
     # http://<merritt-url>/d/<ark>/<version>/<encoded-fn> is an example of the URLs Merritt takes
     def merritt_url
       domain, ark = resource.merritt_protodomain_and_local_id
       return '' if domain.nil?
       "#{domain}/d/#{ark}/#{resource.stash_version.merritt_version}/#{ERB::Util.url_encode(upload_file_name)}"
     end
+
+    # CHANGEME for Merritt express when/if we get to that.
+    # http://<merritt-express-url>/dl/<ark>/<version>/<encoded-fn> is an example of the URLs Merritt takes
+    # def merritt_url
+    #   domain, ark = resource.merritt_protodomain_and_local_id
+    #   return '' if domain.nil?
+    #   "#{domain}/d/#{ark}/#{resource.stash_version.merritt_version}/#{ERB::Util.url_encode(upload_file_name)}"
+    # end
 
     # makes list of directories with numbers. not modified for > 7 days, and whose corresponding resource has been successfully submitted
     # this could be handy for doing cleanup and keeping old files around for a little while in case of submission problems
@@ -86,6 +95,16 @@ module StashEngine
     def self.older_resource_named_dirs(uploads_dir)
       Dir.glob(File.join(uploads_dir, '*')).select { |i| %r{/\d+$}.match(i) }
         .select { |i| File.directory?(i) }.select { |i| File.mtime(i) + 7.days < Time.new }.map { |i| File.basename(i) }
+    end
+
+    def self.sanitize_file_name(name)
+      # remove invalid characters from the filename: https://github.com/madrobby/zaru
+      sanitized = Zaru.sanitize!(name)
+
+      # remove the delete control character
+      # remove some extra characters that Zaru does not remove by default
+      # replace spaces with underscores
+      sanitized.gsub(/,|;|'|"|\u007F/, '').strip.gsub(/\s+/, '_')
     end
   end
 end

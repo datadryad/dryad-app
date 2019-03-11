@@ -66,7 +66,7 @@ module Stash
       end
 
       def embargo_end_date
-        @embargo_end_date ||= (embargo = resource.embargo) && embargo.end_date
+        @embargo_end_date ||= resource.publication_date
       end
 
       def new_uploads

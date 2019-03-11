@@ -8,8 +8,7 @@ module StashEngine
     # - pdf_meta
     include StashEngine.app.metadata_engine.constantize::LandingMixin
 
-    before_action :require_identifier, except: %i[update citations]
-    before_action :require_submitted_resource, except: %i[update citations]
+    before_action :require_identifier_and_resource, only: %i[show data_paper]
     protect_from_forgery(except: [:update])
 
     # ############################################################
@@ -34,9 +33,9 @@ module StashEngine
     # rubocop:disable Metrics/AbcSize
     def resource
       @resource ||=
-        if params[:latest] == 'true' && current_user.superuser? # let superusers see the latest, unpublished if they wish
+        if params[:latest] == 'true' && current_user&.superuser? # let superusers see the latest, unpublished if they wish
           id.resources.by_version_desc.first
-        elsif current_user.id == id.resources.submitted.by_version_desc.first.user_id || current_user.superuser?
+        elsif current_user&.id == id.resources.submitted.by_version_desc.first.user_id || current_user&.superuser?
           id.resources.submitted.by_version_desc.first
         else # everyone else only gets to see published or embargoed metadata latest version
           id.latest_resource_with_public_metadata
@@ -95,7 +94,10 @@ module StashEngine
       resources = id.resources.joins(:stash_version).where(['stash_engine_versions.version = ? ', params[:stash_version]])
 
       return render(nothing: true, status: 404) unless resources.count == 1
-      resource = resources.first
+
+      # set the @resource variable which is returned by the caching method "resource" if @resource is set
+      @resource = resources.first
+
       my_state = resource.current_resource_state.resource_state
       return render(nothing: true, status: 204) if my_state == 'submitted'  # already switched state, don't do more than once, but give happy response
       return render(nothing: true, status: 400) if my_state != 'processing' # only change processing items to submitted
@@ -106,6 +108,8 @@ module StashEngine
       # success but no content, see RFC 5789 sec. 2.1
       deliver_invitations!
       update_size!
+      # now that the OAI-PMH feed has confirmed it's in Merritt then cleanup, but not before
+      ::StashEngine.repository.cleanup_files(@resource)
       render(nothing: true, status: 204)
     rescue ArgumentError => e
       logger.debug(e)
@@ -118,12 +122,8 @@ module StashEngine
 
     private
 
-    def require_identifier
-      render('not_available', status: 404) unless id
-    end
-
-    def require_submitted_resource
-      render('not_available', status: 404) unless resource
+    def require_identifier_and_resource
+      render('not_available', status: 404) unless id && resource
     end
 
     def ensure_has_geolocation!

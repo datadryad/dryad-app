@@ -66,11 +66,11 @@ module StashDatacite
       end
 
       def embargo_status_pretty
-        embargo_status.tr('_', ' ')
+        @resource&.current_curation_activity&.readable_status
       end
 
       def publication_date
-        @resource.notional_publication_date
+        @resource.publication_date
       end
 
       def edited_by_id
