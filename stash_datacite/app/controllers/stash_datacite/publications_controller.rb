@@ -23,8 +23,8 @@ module StashDatacite
     def autofill_data
       @id = params[:id]
       @se_id = StashEngine::Identifier.find(StashEngine::Resource.find(params[:id]).identifier_id)
-      @pub_issn = StashEngine::InternalDatum.find_by(stash_identifier: @se_id, data_type: 'publicationISSN').value
-      @msid = StashEngine::InternalDatum.find_by(stash_identifier: @se_id, data_type: 'manuscriptNumber').value
+      @pub_issn = StashEngine::InternalDatum.find_by(identifier_id: @se_id, data_type: 'publicationISSN').value
+      @msid = StashEngine::InternalDatum.find_by(identifier_id: @se_id, data_type: 'manuscriptNumber').value
       body = { dryadDOI: 'doi:' + @se_id.identifier,
                dashUserID: current_user.id,
                manuscriptNumber: @msid }.to_json
