@@ -167,10 +167,6 @@ module StashEngine
         plan_type == 'DEFERRED'
     end
 
-    def results
-      @results
-    end
-    
     def institution_will_pay?
       latest_resource&.tenant&.covers_dpc == true
     end
