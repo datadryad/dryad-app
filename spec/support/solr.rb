@@ -68,8 +68,10 @@ class SolrInstance
 
   def start_solr
     info "Starting Solr #{SOLR_VERSION} on port #{port} with JAVA_HOME=#{solr_env['JAVA_HOME']}"
+    # WebMock.allow_net_connect!
     @solr_instance = SolrWrapper.instance(verbose: true, port: port, version: SOLR_VERSION, env: solr_env)
     @solr_instance.start
+    # WebMock.disable_net_connect!(allow_localhost: true)
     info 'Solr started'
     $solr_running = true
   end

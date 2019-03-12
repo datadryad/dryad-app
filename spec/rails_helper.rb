@@ -14,6 +14,11 @@ require 'capybara-screenshot/rspec'
 # Clear all of the screenshots from old tests
 Dir[Rails.root.join('tmp/capybara/*')].each { |f| File.delete(f) }
 
+# Mock all calls to external sites/apis
+# allow any traffic to the sites listed in the whitelist (e.g. Solr)
+#require 'webmock/rspec'
+#WebMock.disable_net_connect!(allow_localhost: true)
+
 # Requires supporting ruby files with custom matchers and macros, etc, in
 # spec/support/ and its subdirectories. Files matching `spec/**/*_spec.rb` are
 # run as spec files by default. This means that files in spec/support that end

@@ -1,10 +1,11 @@
 # frozen_string_literal: true
 
 require_relative 'solr'
-require_relative 'helpers/capybara_helper'
-require_relative 'helpers/session_helper'
 require_relative 'helpers/ajax_helper'
+require_relative 'helpers/capybara_helper'
+require_relative 'helpers/ckeditor_helper'
 require_relative 'helpers/routes_helper'
+require_relative 'helpers/session_helper'
 
 SCREEN_SIZE = [2400, 1350].freeze
 DIMENSION   = Selenium::WebDriver::Dimension.new(*SCREEN_SIZE)
@@ -47,8 +48,9 @@ Capybara.configure do |config|
 end
 
 RSpec.configure do |config|
-  config.include(CapybaraHelper, type: :feature)
-  config.include(SessionsHelper, type: :feature)
   config.include(AjaxHelper, type: :feature)
+  config.include(CapybaraHelper, type: :feature)
+  config.include(CkeditorHelper, type: :feature)
   config.include(RoutesHelper, type: :feature)
+  config.include(SessionsHelper, type: :feature)
 end
