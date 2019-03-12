@@ -14,6 +14,7 @@ module CkeditorHelper
   end
 
   # fill in the ckeditor
+  # rubocop:disable Metrics/MethodLength
   def fill_in_ckeditor(locator, opts = {})
     id = find_ckeditor_id(locator)
     id = id[:id] if id
@@ -31,5 +32,6 @@ module CkeditorHelper
     page.execute_script script_text
     wait_for_ajax
   end
+  # rubocop:enable Metrics/MethodLength
 
 end

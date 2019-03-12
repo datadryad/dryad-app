@@ -12,9 +12,7 @@ RSpec.feature 'Tenant', type: :feature do
         expect(page).to have_css('img[alt="Dryad logo"]')
         # If the tenant_id is not dryad or localhost then expect to
         # see the institution's logo
-        unless %w[localhost dryad].include?(hash[:tenant_id])
-          expect(page).to have_css("img[alt=\"#{hash[:short_name]} logo\"]")
-        end
+        expect(page).to have_css("img[alt=\"#{hash[:short_name]} logo\"]") unless %w[localhost dryad].include?(hash[:tenant_id])
       end
     end
 

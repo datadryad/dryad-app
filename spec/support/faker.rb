@@ -7,7 +7,6 @@ RSpec.configure do |config|
     Faker::Name.unique.clear
     Faker::UniqueGenerator.clear
   end
-
 end
 
 module Faker
@@ -25,12 +24,11 @@ module Faker
 
       def orcid
         # Example: 0000-0001-1234-1234
-        "#{4.times.map { rand(4 ** 4).to_s.rjust(4,'0') }.join('-')}"
+        Array.new(4) { rand(4**4).to_s.rjust(4, '0') }.join('-')
       end
 
     end
 
   end
-
 
 end

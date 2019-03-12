@@ -7,9 +7,6 @@ require_relative 'helpers/ckeditor_helper'
 require_relative 'helpers/routes_helper'
 require_relative 'helpers/session_helper'
 
-SCREEN_SIZE = [2400, 1350].freeze
-DIMENSION   = Selenium::WebDriver::Dimension.new(*SCREEN_SIZE)
-
 Capybara.default_driver = :rack_test
 Capybara.javascript_driver = :chrome
 
@@ -22,6 +19,7 @@ Capybara.register_driver :selenium_chrome_headless do |app|
   browser_options = ::Selenium::WebDriver::Chrome::Options.new
   browser_options.args << '--headless'
   browser_options.args << '--no-sandbox'
+  browser_options.args << '--window-size=1280,1024'
   browser_options.args << '--disable-gpu' if Gem.win_platform?
   Capybara::Selenium::Driver.new(app, browser: :chrome, options: browser_options)
 end
@@ -34,7 +32,6 @@ RSpec.configure do |config|
 
   config.before(:each, type: :feature, js: true) do
     Capybara.current_driver = :selenium_chrome_headless
-    Capybara.page.driver.browser.manage.window.size = DIMENSION
   end
 
 end

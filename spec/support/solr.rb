@@ -26,11 +26,9 @@ class SolrInstance
   end
 
   def stop
-    begin
-      delete_collection
-    ensure
-      stop_solr
-    end
+    delete_collection
+  ensure
+    stop_solr
   end
 
   private
@@ -50,8 +48,9 @@ class SolrInstance
     begin
       @solr_instance.delete(COLLECTION_NAME)
       info "Collection #{COLLECTION_NAME} already exists ... deleted stale collection"
-    rescue
+    rescue StandardError => ex
       # We don't care if this fails, its just ensuring that the collection is fresh
+      warn("Attempting to delete #{COLLECTION_NAME} ... #{ex}")
     end
     info "Creating collection #{COLLECTION_NAME} from configuration #{CONF_DIR}"
     @collection = @solr_instance.create(dir: CONF_DIR, name: COLLECTION_NAME)
@@ -73,14 +72,17 @@ class SolrInstance
     @solr_instance.start
     # WebMock.disable_net_connect!(allow_localhost: true)
     info 'Solr started'
+    # rubocop:disable Style/GlobalVars
     $solr_running = true
+    # rubocop:enable Style/GlobalVars
   end
 
   def stop_solr
     info 'Stopping Solr'
     @solr_instance.stop
-    instance = nil
+    # rubocop:disable Style/GlobalVars
     $solr_running = false
+    # rubocop:enable Style/GlobalVars
   end
 
   def port

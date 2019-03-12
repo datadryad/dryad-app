@@ -9,7 +9,7 @@ FactoryBot.define do
     author_email { Faker::Internet.unique.safe_email }
     author_orcid { Faker::Pid.unique.orcid }
 
-    before(:create) do |author, evaluator|
+    before(:create) do |author|
       author.affiliations << create(:affiliation)
     end
 

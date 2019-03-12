@@ -1,5 +1,6 @@
 require 'rails_helper'
 
+# rubocop:disable Metrics/BlockLength
 RSpec.feature 'NewDataset', type: :feature do
 
   include DatasetHelper
@@ -24,10 +25,7 @@ RSpec.feature 'NewDataset', type: :feature do
 
       # ##############################
       # Author
-      fill_in 'author[author_first_name]', with: Faker::Name.first_name
-      fill_in 'author[author_last_name]', with: Faker::Name.last_name
-      fill_in 'affiliation', with: Faker::Educator.university
-      fill_in 'author[author_email]', with: Faker::Internet.email
+      fill_in_author
 
       # TODO: additional author(s)
 
@@ -50,17 +48,15 @@ RSpec.feature 'NewDataset', type: :feature do
 
       # ##############################
       # Keywords
-      fill_in 'subject', with: "#{3.times.map{ Faker::Lorem.word }.join(' ')}"
+      fill_in 'subject', with: Array.new(3) { Faker::Lorem.word }.join(' ')
 
       # ##############################
       # Methods
-      #methods = find_blank_ckeditor_id('description_methods')
       methods = find_blank_ckeditor_id('description_methods')
       fill_in_ckeditor methods, with: Faker::Lorem.paragraph
 
       # ##############################
       # Usage
-      #usage_notes = find_blank_ckeditor_id('description_other')
       usage_notes = find_blank_ckeditor_id('description_other')
       fill_in_ckeditor usage_notes, with: Faker::Lorem.paragraph
 
@@ -74,3 +70,4 @@ RSpec.feature 'NewDataset', type: :feature do
   end
 
 end
+# rubocop:enable Metrics/BlockLength
