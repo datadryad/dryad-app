@@ -3,27 +3,32 @@ module DatasetHelper
   include Mocks::Ezid
 
   def start_new_dataset
-    sign_in
     mock_minting!
     click_button 'Start New Dataset'
-    expect(page).to have_content('Describe Your Dataset')
+    expect(page).to have_content('Describe Dataset')
+    navigate_to_metadata
   end
 
   def navigate_to_metadata
     click_link 'Describe Dataset'
-    expect(page).to have_content('Describe Your Dataset')
+
+    expect(page).to have_content('Dataset: Basic Information', wait: 10)
+  end
+
+  def navigate_to_upload
+    click_link 'Upload Files'
+    expect(page).to have_content('Step 2: Choose Files', wait: 10)
   end
 
   def navigate_to_review
     click_link 'Review and Submit'
-    wait_for_ajax
-    expect(page).to have_content('Finalize Submission')
+    expect(page).to have_content('Review Description', wait: 10)
   end
 
   # rubocop:disable Metrics/AbcSize
   def fill_required_fields
     # make sure we're on the right page
-    expect(page).to have_content('Describe Your Dataset')
+    navigate_to_metadata
 
     # ##############################
     # Title
@@ -44,6 +49,10 @@ module DatasetHelper
     # Abstract
     fill_in_ckeditor 'description_abstract', with: Faker::Lorem.paragraph
     wait_for_ajax
+
+    navigate_to_review
+    find('#agree_to_license').click
+    find('#agree_to_payment').click
   end
   # rubocop:enable Metrics/AbcSize
 

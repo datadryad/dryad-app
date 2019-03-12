@@ -9,12 +9,19 @@ module SolrHelper
   BLACKLIGHT_YML = 'config/blacklight.yml'.freeze
   COLLECTION_NAME = 'geoblacklight'.freeze
 
+  @@solr_instance = nil
+  @@collection = nil
+
   class << self
 
+    def instance
+      @@solr_instance
+    end
+
     def start
-      return if solr_instance
-      self.solr_instance = start_new_instance
-      self.collection = create_collection
+      return if @@solr_instance.present
+      @@solr_instance = start_new_instance
+      @@collection = create_collection
     rescue StandardError => ex
       warn(ex)
       stop
@@ -22,22 +29,19 @@ module SolrHelper
     end
 
     def stop
-      return unless solr_instance
+      return unless @@solr_instance.present?
       begin
-        info "Deleting collection #{collection}" if collection
-        solr_instance.delete(collection) if collection
-        self.collection = nil
+        info "Deleting collection #{@@collection}" if @@collection.present?
+        @@solr_instance.delete(@@collection) if @@collection.present?
+        @@collection = nil
       ensure
         info 'Stopping Solr'
-        solr_instance.stop
-        self.solr_instance = nil
+        @@solr_instance.stop
+        @@solr_instance = nil
       end
     end
 
     private
-
-    attr_accessor :solr_instance
-    attr_accessor :collection
 
     def solr_env
       # For macOS local development, run Solr under Java 8 even if Java 9 is the default
@@ -52,7 +56,7 @@ module SolrHelper
 
     def create_collection
       info "Creating collection #{COLLECTION_NAME} from configuration #{CONF_DIR}"
-      new_collection = solr_instance.create(dir: CONF_DIR, name: COLLECTION_NAME)
+      new_collection = @@solr_instance.create(dir: CONF_DIR, name: COLLECTION_NAME)
       info 'Collection created'
       new_collection
     end

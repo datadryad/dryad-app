@@ -2,8 +2,6 @@ require 'rails_helper'
 
 RSpec.feature 'MigrateData', type: :feature do
 
-  include SolrHelper
-
   before(:each) do
     @user = create(:user, migration_token: Faker::Lorem.word)
     create(:resource, :submitted, user: @user, identifier: create(:identifier))
@@ -28,7 +26,8 @@ RSpec.feature 'MigrateData', type: :feature do
   context :clicked_yes do
 
     before(:all) do
-      SolrHelper.start
+      # Start Solr - shutdown is handled globally when all tests have finished
+      SolrInstance.instance
     end
 
     it 'goes to migration if clicking yes in migrate banner dialog' do
