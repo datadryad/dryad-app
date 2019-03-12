@@ -144,23 +144,37 @@ module StashEngine
     # Check if the user must pay for this identifier, or if payment is
     # otherwise covered
     def user_must_pay?
-      logger.debug("journal pay? #{journal_will_pay?}")
-      logger.debug("institution pay? #{institution_will_pay?}")
-      logger.debug("waiver pay? #{fee_waiver_country?}")
-
       !journal_will_pay? &&
         !institution_will_pay? &&
         !fee_waiver_country?
     end
 
+    def publication_issn
+      StashEngine::InternalDatum.find_by(identifier_id: id, data_type: 'publicationISSN')&.value
+    end
+    
     def journal_will_pay?
-      false
+      logger.debug("journal is '#{publication_issn}'")
+      return false if publication_issn.nil?
+      url = APP_CONFIG.old_dryad_url + '/api/v1/journals/' + publication_issn
+      results = HTTParty.get(url,
+                             query: { access_token: APP_CONFIG.old_dryad_access_token },
+                             headers: { 'Content-Type' => 'application/json' })
+      plan_type = results.parsed_response["paymentPlanType"]
+      logger.debug("plan = '#{plan_type}'")
+      plan_type == 'SUBSCRIPTION' ||
+        plan_type == 'PREPAID' ||
+        plan_type == 'DEFERRED'
     end
 
+    def results
+      @results
+    end
+    
     def institution_will_pay?
       latest_resource&.tenant&.covers_dpc == true
     end
-
+    
     def fee_waiver_country?
       false
     end
