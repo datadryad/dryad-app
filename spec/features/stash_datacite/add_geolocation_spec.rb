@@ -5,11 +5,10 @@ require 'pry'
 RSpec.feature 'Add Geolocation to Dataset', type: :feature do
 
   include DatasetHelper
-  include SolrHelper
 
   before(:all) do
     # Start Solr - shutdown is handled globally when all tests have finished
-    SolrHelper.start
+    SolrInstance.instance
   end
 
   context 'dataset', js: true do
@@ -19,6 +18,7 @@ RSpec.feature 'Add Geolocation to Dataset', type: :feature do
       @s_lat = 37.7044
       @w_lng = -122.3711
 
+      sign_in
       start_new_dataset
       @resource_id = page.first('#resource_id', visible: false).value
       find('#location_opener').click

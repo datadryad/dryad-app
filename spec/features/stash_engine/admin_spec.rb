@@ -3,11 +3,11 @@ require 'rails_helper'
 # rubocop:disable Metrics/BlockLength
 RSpec.feature 'Admin', type: :feature do
 
-  include SolrHelper
   include Mocks::Stripe
 
   before(:all) do
-    SolrHelper.start
+    # Start Solr - shutdown is handled globally when all tests have finished
+    SolrInstance.instance
   end
 
   before(:each) do

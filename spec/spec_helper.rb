@@ -99,6 +99,7 @@ RSpec.configure do |config|
   Kernel.srand config.seed
 
   # Stop Solr if its running once we are done
-  config.after(:suite) { SolrHelper.stop }
+  $solr_running = false
+  config.after(:suite) { SolrInstance.instance.stop if $solr_running }
 
 end

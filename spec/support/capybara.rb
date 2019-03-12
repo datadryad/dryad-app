@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require_relative 'solr'
 require_relative 'helpers/capybara_helper'
 require_relative 'helpers/session_helper'
 require_relative 'helpers/ajax_helper'
