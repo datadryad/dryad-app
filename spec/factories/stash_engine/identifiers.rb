@@ -12,8 +12,8 @@ FactoryBot.define do
     end
 
     # Make sure the latest_resource_id is updated
-    after(:create) do |identifier, evaluator|
-      identifier.latest_resource_id = identifier.resources.last.id unless identifier.resources.empty?
+    after(:create) do |identifier|
+      identifier.latest_resource_id { identifier.resources.last.id } unless identifier.resources.empty?
     end
 
   end

@@ -1,5 +1,6 @@
 require 'rails_helper'
 
+# rubocop:disable Metrics/BlockLength
 RSpec.feature 'CurationActivity', type: :feature do
 
   include Mocks::Stripe
@@ -37,9 +38,9 @@ RSpec.feature 'CurationActivity', type: :feature do
       before(:each) do
         mock_stripe!
         # Create a user, identifier and 2 resources for each tenant
-        ['ucop', 'dryad'].each do |tenant|
+        %w[ucop dryad].each do |tenant|
           user = create(:user, tenant_id: tenant)
-          2.times.each do |i|
+          2.times.each do
             identifier = create(:identifier)
             create(:resource, :submitted, user: user, identifier: identifier)
           end
@@ -87,3 +88,4 @@ RSpec.feature 'CurationActivity', type: :feature do
   end
 
 end
+# rubocop:enable Metrics/BlockLength

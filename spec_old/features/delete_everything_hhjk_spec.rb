@@ -1,6 +1,7 @@
 require 'features_helper'
 require 'rsolr'
 
+# rubocop:disable Metrics/BlockLength
 describe 'solr sanitization' do
 
   def uuid
@@ -38,3 +39,4 @@ describe 'solr sanitization' do
     # TODO: see http://mail-archives.apache.org/mod_mbox/lucene-dev/201710.mbox/%3CCAJEmKoC%2BeQdP-E6BKBVDaR_43fRs1A-hOLO3JYuemmUcr1R%2BTA%40mail.gmail.com%3E
   end
 end
+# rubocop:enable Metrics/BlockLength

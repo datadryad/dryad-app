@@ -8,12 +8,14 @@ module Mocks
       "doi:#{Faker::Number.number(5)}/#{Faker::Number.number(5)}"
     end
 
+    # rubocop:disable Metrics/AbcSize
     def mock_repository!
       allow_any_instance_of(Stash::Repo::Repository).to receive(:create_submission_job).and_return('doi:12234/38575')
       allow_any_instance_of(Stash::Repo::Repository).to receive(:download_uri_for).and_return('doi:12234/38575')
       allow_any_instance_of(Stash::Repo::Repository).to receive(:update_uri_for).and_return('doi:12234/38575')
       allow_any_instance_of(Stash::Repo::Repository).to receive(:submit).and_return(mint_id)
     end
+    # rubocop:enable Metrics/AbcSize
 
     class Repository < Stash::Repo::Repository
 

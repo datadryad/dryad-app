@@ -30,7 +30,6 @@ module DatasetHelper
     expect(page).to have_content('Review Description', wait: 10)
   end
 
-  # rubocop:disable Metrics/AbcSize
   def fill_required_fields
     # make sure we're on the right page
     navigate_to_metadata
@@ -41,11 +40,7 @@ module DatasetHelper
 
     # ##############################
     # Author
-    fill_in 'author[author_first_name]', with: Faker::Name.unique.first_name
-    fill_in 'author[author_last_name]', with: Faker::Name.unique.last_name
-    # TODO: make consistent with other author fields
-    fill_in 'affiliation', with: Faker::Educator.university
-    fill_in 'author[author_email]', with: Faker::Internet.safe_email
+    fill_in_author
 
     # TODO: additional author(s)
 
@@ -54,10 +49,23 @@ module DatasetHelper
     abstract = find_blank_ckeditor_id('description_abstract')
     fill_in_ckeditor abstract, with: Faker::Lorem.paragraph
 
+    # ##############################
+    # LICENSE/PAYMENT AGREEMENTS
+    agree_to_everything
+  end
+
+  def fill_in_author
+    fill_in 'author[author_first_name]', with: Faker::Name.unique.first_name
+    fill_in 'author[author_last_name]', with: Faker::Name.unique.last_name
+    # TODO: make consistent with other author fields
+    fill_in 'affiliation', with: Faker::Educator.university
+    fill_in 'author[author_email]', with: Faker::Internet.safe_email
+  end
+
+  def agree_to_everything
     navigate_to_review
     find('#agree_to_license').click
     find('#agree_to_payment').click
   end
-  # rubocop:enable Metrics/AbcSize
 
 end
