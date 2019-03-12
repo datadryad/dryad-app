@@ -152,15 +152,14 @@ module StashEngine
     def publication_issn
       StashEngine::InternalDatum.find_by(identifier_id: id, data_type: 'publicationISSN')&.value
     end
-    
+
     def journal_will_pay?
-      logger.debug("journal is '#{publication_issn}'")
       return false if publication_issn.nil?
       url = APP_CONFIG.old_dryad_url + '/api/v1/journals/' + publication_issn
       results = HTTParty.get(url,
                              query: { access_token: APP_CONFIG.old_dryad_access_token },
                              headers: { 'Content-Type' => 'application/json' })
-      plan_type = results.parsed_response["paymentPlanType"]
+      plan_type = results.parsed_response['paymentPlanType']
       logger.debug("plan = '#{plan_type}'")
       plan_type == 'SUBSCRIPTION' ||
         plan_type == 'PREPAID' ||
@@ -170,7 +169,7 @@ module StashEngine
     def institution_will_pay?
       latest_resource&.tenant&.covers_dpc == true
     end
-    
+
     def fee_waiver_country?
       false
     end

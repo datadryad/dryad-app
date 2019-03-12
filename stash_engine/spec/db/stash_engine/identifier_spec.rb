@@ -15,7 +15,7 @@ module StashEngine
       @res2 = Resource.create(identifier_id: identifier.id)
       @res3 = Resource.create(identifier_id: identifier.id)
     end
-    
+
     describe '#to_s' do
       it 'returns something useful' do
         expect(identifier.to_s).to eq('doi:10.123/456')
@@ -29,10 +29,10 @@ module StashEngine
 
       it 'does not make user pay when journal pays' do
         # TODO: set an associated article for the identifer that has a paying journal
-        expect(identifier.user_must_pay?).to eq(false)        
+        expect(identifier.user_must_pay?).to eq(false)
       end
     end
-    
+
     describe 'versioning' do
       before(:each) do
         res1.current_state = 'submitted'
@@ -170,7 +170,7 @@ module StashEngine
         end
 
       end
-      
+
       describe '#update_search_words!' do
         before(:each) do
           @identifier2 = Identifier.create(identifier_type: 'DOI', identifier: '10.123/450')
