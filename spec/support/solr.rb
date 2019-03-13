@@ -50,7 +50,7 @@ class SolrInstance
       info "Collection #{COLLECTION_NAME} already exists ... deleted stale collection"
     rescue StandardError => ex
       # We don't care if this fails, its just ensuring that the collection is fresh
-      warn("Attempting to delete #{COLLECTION_NAME} ... #{ex}")
+      info("Attempting to delete #{COLLECTION_NAME} ... #{COLLECTION_NAME} not found")
     end
     info "Creating collection #{COLLECTION_NAME} from configuration #{CONF_DIR}"
     @collection = @solr_instance.create(dir: CONF_DIR, name: COLLECTION_NAME)
