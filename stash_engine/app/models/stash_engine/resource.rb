@@ -63,6 +63,10 @@ module StashEngine
       init_state
       init_version
       save
+      # Need to reload self here because some of the associated dependencies
+      # update back on this object when they save (e.g. current_curation_activity,
+      # current_resource_state, etc.)
+      reload
     end
 
     def update_stash_identifier_last_resource
@@ -292,7 +296,7 @@ module StashEngine
 
     # Create the initial CurationActivity
     def init_curation_status
-      curation_activities << StashEngine::CurationActivity.new
+      curation_activities << StashEngine::CurationActivity.new(user: user)
     end
     private :init_curation_status
 
