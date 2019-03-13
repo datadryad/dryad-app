@@ -2,7 +2,7 @@ require 'db_spec_helper'
 require 'webmock/rspec'
 
 module StashEngine
-  
+
   describe Identifier do
     attr_reader :identifier
     attr_reader :usage1
@@ -19,13 +19,13 @@ module StashEngine
 
       WebMock.disable_net_connect!
     end
-        
+
     describe '#to_s' do
       it 'returns something useful' do
         expect(identifier.to_s).to eq('doi:10.123/456')
       end
     end
-    
+
     describe 'versioning' do
       before(:each) do
         res1.current_state = 'submitted'
@@ -56,11 +56,10 @@ module StashEngine
 
       describe '#latest_resource' do
         it 'returns the latest resource' do
-          #expect(identifier.latest_resource).to eq(1)
+          # expect(identifier.latest_resource).to eq(1)
         end
       end
 
-      
       describe '#in_progress_resource' do
         it 'returns the in-progress version' do
           ipv = identifier.in_progress_resource
@@ -200,11 +199,11 @@ module StashEngine
         fake_issn = 'some-bogus-value'
         int_datum = InternalDatum.new(identifier_id: identifier.id, data_type: 'publicationISSN', value: fake_issn)
         int_datum.save!
-        stub_request(:any, /journals\/#{fake_issn}/).
-          to_return(body: '{"paymentPlanType":"SUBSCRIPTION"}',
-                    status: 200,
-                    headers: {"Content-Type"=> "application/json"})
-        
+        stub_request(:any, %r(/journals/#{fake_issn}))
+          .to_return(body: '{"paymentPlanType":"SUBSCRIPTION"}',
+                     status: 200,
+                     headers: { 'Content-Type' => 'application/json' })
+
         expect(identifier.journal_will_pay?).to eq(true)
         expect(identifier.user_must_pay?).to eq(false)
       end
@@ -213,22 +212,22 @@ module StashEngine
         fake_issn = 'some-bogus-value2'
         int_datum = InternalDatum.new(identifier_id: identifier.id, data_type: 'publicationISSN', value: fake_issn)
         int_datum.save!
-        stub_request(:any, /journals\/#{fake_issn}/).
-          to_return(body: '{"paymentPlanType":"NONE"}',
-                    status: 200,
-                    headers: {"Content-Type"=> "application/json"})
-        
+        stub_request(:any, %r(/journals/#{fake_issn}))
+          .to_return(body: '{"paymentPlanType":"NONE"}',
+                     status: 200,
+                     headers: { 'Content-Type' => 'application/json' })
+
         expect(identifier.journal_will_pay?).to eq(false)
         expect(identifier.user_must_pay?).to eq(true)
       end
 
       it 'does not make user pay when institution pays' do
-#        res1.current_state = 'submitted'
-#        Version.create(resource_id: res1.id, version: 1)
-#        res1.save!
-        
-#        expect(identifier.institution_will_pay?).to eq(true)
-#        expect(identifier.user_must_pay?).to eq(false)
+        #        res1.current_state = 'submitted'
+        #        Version.create(resource_id: res1.id, version: 1)
+        #        res1.save!
+
+        #        expect(identifier.institution_will_pay?).to eq(true)
+        #        expect(identifier.user_must_pay?).to eq(false)
       end
     end
 
