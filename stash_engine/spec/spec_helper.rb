@@ -1,3 +1,4 @@
+
 # ------------------------------------------------------------
 # Simplecov
 
@@ -58,3 +59,4 @@ ActiveRecord::Base.raise_in_transactional_callbacks = true
 # Mocks
 
 require 'mocks/mock_repository'
+require 'webmock/rspec'

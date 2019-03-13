@@ -5,6 +5,8 @@ test:
   repository: Stash::MockRepository
   submission_bc_emails: ["alan.smithee@example.edu"]
   contact_email: ["contact1@example.edu", "contact2@example.edu"]
+  old_dryad_access_token: "this-is-not-a-real-token"
+  old_dryad_url: http://ryan-vm.datadryad.org
   payments:
     service: stripe
     key: travis_test_key
