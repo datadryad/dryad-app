@@ -13,9 +13,12 @@ module StashEngine
 
     before(:each) do
       @identifier = Identifier.create(identifier_type: 'DOI', identifier: '10.123/456')
-      @res1 = Resource.create(identifier_id: identifier.id)
-      @res2 = Resource.create(identifier_id: identifier.id)
-      @res3 = Resource.create(identifier_id: identifier.id)
+      @res1 = Resource.create(identifier_id: @identifier.id)
+      @res2 = Resource.create(identifier_id: @identifier.id)
+      @res3 = Resource.create(identifier_id: @identifier.id)
+
+      # re-load the identifier from the DB to ensure latest_resource is set properly
+      @identifier = Identifier.find(@identifier.id)
 
       WebMock.disable_net_connect!
     end
@@ -23,7 +26,7 @@ module StashEngine
     after(:each) do
       WebMock.allow_net_connect!
     end
-    
+
     describe '#to_s' do
       it 'returns something useful' do
         expect(identifier.to_s).to eq('doi:10.123/456')
@@ -40,8 +43,6 @@ module StashEngine
 
         res3.current_state = 'in_progress'
         Version.create(resource_id: res3.id, version: 3)
-
-        identifier.save!
       end
 
       describe '#first_submitted_resource' do
@@ -60,7 +61,7 @@ module StashEngine
 
       describe '#latest_resource' do
         it 'returns the latest resource' do
-          # expect(identifier.latest_resource).to eq(1)
+          expect(identifier.latest_resource_id).to eq(res3.id)
         end
       end
 
@@ -226,12 +227,16 @@ module StashEngine
       end
 
       it 'does not make user pay when institution pays' do
-        #        res1.current_state = 'submitted'
-        #        Version.create(resource_id: res1.id, version: 1)
-        #        res1.save!
+        tenant = class_double(Tenant)
+        allow(Tenant).to receive(:find).with('paying-institution').and_return(tenant)
+        allow(Tenant).to receive(:covers_dpc).and_return(true)
+        allow(tenant).to receive(:covers_dpc).and_return(true)
+        ident = Identifier.create
+        Resource.create(tenant_id: 'paying-institution', identifier_id: ident.id)
+        ident = Identifier.find(ident.id) # need to reload ident from the DB to update latest_resource
 
-        #        expect(identifier.institution_will_pay?).to eq(true)
-        #        expect(identifier.user_must_pay?).to eq(false)
+        expect(ident.institution_will_pay?).to eq(true)
+        expect(ident.user_must_pay?).to eq(false)
       end
     end
 
