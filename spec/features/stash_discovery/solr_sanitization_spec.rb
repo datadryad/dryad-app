@@ -1,7 +1,6 @@
 require 'rails_helper'
 require 'rsolr'
 
-# rubocop:disable Metrics/BlockLength
 RSpec.feature 'SolrSanitization', type: :feature do
 
   before(:all) do
@@ -35,4 +34,3 @@ RSpec.feature 'SolrSanitization', type: :feature do
   end
 
 end
-# rubocop:enable Metrics/BlockLength

@@ -48,7 +48,7 @@ class SolrInstance
     begin
       @solr_instance.delete(COLLECTION_NAME)
       info "Collection #{COLLECTION_NAME} already exists ... deleted stale collection"
-    rescue StandardError => ex
+    rescue StandardError
       # We don't care if this fails, its just ensuring that the collection is fresh
       info("Attempting to delete #{COLLECTION_NAME} ... #{COLLECTION_NAME} not found")
     end
