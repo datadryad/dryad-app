@@ -1,3 +1,5 @@
+require 'httparty'
+
 module StashEngine
   # rubocop:disable Metrics/ClassLength
   class Identifier < ActiveRecord::Base
@@ -160,7 +162,6 @@ module StashEngine
                              query: { access_token: APP_CONFIG.old_dryad_access_token },
                              headers: { 'Content-Type' => 'application/json' })
       plan_type = results.parsed_response['paymentPlanType']
-      logger.debug("plan = '#{plan_type}'")
       plan_type == 'SUBSCRIPTION' ||
         plan_type == 'PREPAID' ||
         plan_type == 'DEFERRED'
