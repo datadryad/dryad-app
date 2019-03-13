@@ -20,6 +20,10 @@ module StashEngine
       WebMock.disable_net_connect!
     end
 
+    after(:each) do
+      WebMock.allow_net_connect!
+    end
+    
     describe '#to_s' do
       it 'returns something useful' do
         expect(identifier.to_s).to eq('doi:10.123/456')
@@ -199,7 +203,7 @@ module StashEngine
         fake_issn = 'some-bogus-value'
         int_datum = InternalDatum.new(identifier_id: identifier.id, data_type: 'publicationISSN', value: fake_issn)
         int_datum.save!
-        stub_request(:any, %r(/journals/#{fake_issn}))
+        stub_request(:any, %r{/journals/#{fake_issn}})
           .to_return(body: '{"paymentPlanType":"SUBSCRIPTION"}',
                      status: 200,
                      headers: { 'Content-Type' => 'application/json' })
@@ -212,7 +216,7 @@ module StashEngine
         fake_issn = 'some-bogus-value2'
         int_datum = InternalDatum.new(identifier_id: identifier.id, data_type: 'publicationISSN', value: fake_issn)
         int_datum.save!
-        stub_request(:any, %r(/journals/#{fake_issn}))
+        stub_request(:any, %r{/journals/#{fake_issn}})
           .to_return(body: '{"paymentPlanType":"NONE"}',
                      status: 200,
                      headers: { 'Content-Type' => 'application/json' })
