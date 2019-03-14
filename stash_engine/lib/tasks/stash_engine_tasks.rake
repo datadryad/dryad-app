@@ -64,7 +64,7 @@ namespace :identifiers do
       StashEngine::CurationActivity.create(
         resource_id: resource.id,
         user_id: resource.user_id,
-        status: resource.identifier.chargeable? ? 'peer_review' : 'submitted',
+        status: resource.identifier.internal_data.empty? ? 'submitted' : 'peer_review',
         created_at: resource.updated_at,
         updated_at: resource.updated_at
       )
