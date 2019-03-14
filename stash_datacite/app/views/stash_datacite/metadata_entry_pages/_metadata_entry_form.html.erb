@@ -33,7 +33,20 @@
   <p class="c-input__required-note">required fields</p>
 
   <details class="c-fgroup" role="group">
-    <summary class="o-showhide__summary c-fgroup__summary">Data Description (optional)</summary>
+    <summary class="o-showhide__summary c-fgroup__summary">Data Description</summary>
+
+    <% if @metadata_entry.subjects.empty? %>
+    <%= render partial: "stash_datacite/subjects/form", locals: { subject: @metadata_entry.new_subject, resource_id: @resource.id } %>
+    <% else %>
+    <%= render partial: "stash_datacite/subjects/form", locals: { resource_id: @resource.id } %>
+    <% end %>
+
+    <%= label_tag :description, "Methods:", class: 'c-input__label', for: 'description_methods' %>&nbsp;&nbsp;How was this dataset collected? How has it been processed?
+    <%= render partial: "stash_datacite/descriptions/form", locals: { description: @metadata_entry.methods, description_type: :methods } %>
+
+    <%= label_tag :description, "Usage Notes:", class: 'c-input__label', for: 'description_other' %>&nbsp;&nbsp;What else would someone need to know to use this dataset? Are there any missing values? Please upload any files necessary for re-use (i.e. ReadMe files) and note them.
+    <%= render partial: "stash_datacite/descriptions/form", locals: { description: @metadata_entry.other, description_type: :other } %>
+
     <fieldset class="c-fieldset">
     <legend class="c-fieldset__legend">Funding</legend>
     <div class="js-contributors_form">
@@ -47,18 +60,6 @@
     </div>
     <%= link_to "add another funder", stash_datacite.contributors_new_path( resource_id: @resource.id ), remote: :true, class: 't-describe__add-funder-button o-button__add', role: 'button' %>
     </fieldset>
-
-    <% if @metadata_entry.subjects.empty? %>
-    <%= render partial: "stash_datacite/subjects/form", locals: { subject: @metadata_entry.new_subject, resource_id: @resource.id } %>
-    <% else %>
-    <%= render partial: "stash_datacite/subjects/form", locals: { resource_id: @resource.id } %>
-    <% end %>
-
-    <%= label_tag :description, "Methods:", class: 'c-input__label', for: 'description_methods' %>&nbsp;&nbsp;How was this dataset collected? How has it been processed?
-    <%= render partial: "stash_datacite/descriptions/form", locals: { description: @metadata_entry.methods, description_type: :methods } %>
-
-    <%= label_tag :description, "Usage Notes:", class: 'c-input__label', for: 'description_other' %>&nbsp;&nbsp;What else would someone need to know to use this dataset? Are there any missing values? Please upload any files necessary for re-use (i.e. ReadMe files) and note them.
-    <%= render partial: "stash_datacite/descriptions/form", locals: { description: @metadata_entry.other, description_type: :other } %>
 
     <fieldset class="c-fieldset">
     <legend class="c-fieldset__legend">Related Work(s): <span class="c-input__hint">Are there any articles (posted or published), datasets, or code that are related to this Data Publication? Please choose the relation type and identifier type from the drop downs and enter your unique permanent identifier below.</span></legend>
