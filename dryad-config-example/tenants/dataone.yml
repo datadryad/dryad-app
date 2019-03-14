@@ -25,7 +25,6 @@ default: &default
   authentication:
     strategy: google
   default_license: cc0
-  ## maximum total size (default 100 GB for now)
   max_submission_size: 100000000000
   max_total_version_size: 10000000000
   max_files: 1000
@@ -38,7 +37,7 @@ development:
 
 local:
   <<: *default
-  
+
 test:
   <<: *default
   #Add any items that need to override the defaults here
