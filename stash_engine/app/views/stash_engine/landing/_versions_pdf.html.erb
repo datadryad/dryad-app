@@ -1,6 +1,6 @@
 <% resources = @id.resources_with_file_changes.submitted.by_version %>
 <% if resources.count.positive? %>
-<h3 class="o-heading__level2">Versions</h3>
+<h3 class="o-heading__level2">Data Files</h3>
 <table class="t-landing__pdftable">
   <% resources.each do |resource| %>
     <tr>

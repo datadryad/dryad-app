@@ -11,7 +11,7 @@ module StashEngine
 
     before_save :strip_whitespace
 
-    scope :names_filled, -> { where("TRIM(IFNULL(author_first_name,'')) <> ''") }
+    scope :names_filled, -> { where("TRIM(IFNULL(author_first_name,'')) <> '' AND TRIM(IFNULL(author_last_name,'')) <> ''") }
 
     amoeba do
       enable

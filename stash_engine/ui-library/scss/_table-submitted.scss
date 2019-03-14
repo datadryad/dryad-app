@@ -6,12 +6,6 @@
 
 @include bp(screen2) {
 
-  .c-table-submitted th:last-of-type {
-    // hide (same as %hide):
-    position: absolute;
-    left: -9999px;
-  }
-
   .c-table-submitted td:nth-of-type(1) {
     font-size: 1.1em;
   }
