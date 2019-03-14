@@ -1,5 +1,6 @@
 require 'db_spec_helper'
 require 'pathname'
+require 'ostruct'
 
 module Stash
   module Merritt
@@ -18,6 +19,8 @@ module Stash
         public_path = Pathname.new("#{rails_root}/public")
         allow(Rails).to receive(:public_path).and_return(public_path)
 
+        allow(Rails).to receive(:application).and_return(OpenStruct.new(default_url_options: { host: 'stash.example.edu' }))
+
         @public_system = public_path.join('system').to_s
         FileUtils.mkdir_p(public_system)
 
@@ -33,7 +36,6 @@ module Stash
         allow(tenant).to receive(:short_name).and_return('DataONE')
         allow(tenant).to receive(:full_url) { |path_to_landing| URI::HTTPS.build(host: 'stash.example.edu', path: path_to_landing).to_s }
         allow(tenant).to receive(:sword_params).and_return(collection_uri: 'http://sword.example.edu/stash-dev')
-        allow(tenant).to receive(:full_domain).and_return('stash.example.edu')
         allow(tenant).to receive(:identifier_service).and_return(
           { provider: 'ezid', shoulder: 'doi:10.5072/FK2', account: 'brog', password: 'new', id_scheme: 'doi', owner: nil }.to_ostruct
         )

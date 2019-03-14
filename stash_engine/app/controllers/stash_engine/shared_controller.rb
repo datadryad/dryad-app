@@ -14,7 +14,7 @@ module StashEngine
         %i[
           metadata_url_helpers metadata_render_path stash_url_helpers contact_us_url logo_path
           formatted_date formatted_datetime formatted_html5_date local_time default_date
-          current_tenant current_tenant_display current_tenant_simple current_user
+          current_tenant current_user
           field_suffix shorten_linked_url english_list
           display_id display_id_plain display_author_orcid
           display_br link_urls!
@@ -102,22 +102,8 @@ module StashEngine
       if current_user && current_user.tenant_id.present?
         StashEngine::Tenant.find(current_user.tenant_id)
       else
-        StashEngine::Tenant.by_domain(request.host)
+        StashEngine::Tenant.find(APP_CONFIG.default_tenant)
       end
-    end
-
-    # get the current tenant for display elements, only, ignores logged in
-    def current_tenant_display
-      if session[:test_domain]
-        StashEngine::Tenant.by_domain(session[:test_domain])
-      else
-        StashEngine::Tenant.by_domain(request.host)
-      end
-    end
-
-    # get current tenant, only based on the domain
-    def current_tenant_simple
-      StashEngine::Tenant.by_domain_w_nil(request.host)
     end
 
     def current_user

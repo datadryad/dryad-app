@@ -9,6 +9,7 @@ require 'simplecov' if ENV['COVERAGE']
 RSpec.configure do |config|
   config.raise_errors_for_deprecations!
   config.mock_with :rspec
+  config.full_backtrace = false
 end
 
 require_relative '../../spec_helpers/rspec_custom_matchers'

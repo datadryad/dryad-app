@@ -3,6 +3,7 @@ require 'db_spec_helper'
 require 'fileutils'
 require 'pathname'
 require 'webmock'
+require 'ostruct'
 
 module Stash
   module Merritt
@@ -45,6 +46,7 @@ module Stash
 
         public_path = Pathname.new("#{rails_root}/public")
         allow(Rails).to receive(:public_path).and_return(public_path)
+        allow(Rails).to receive(:application).and_return(OpenStruct.new(default_url_options: { host: 'stash.example.edu' }))
 
         @user = StashEngine::User.create(
           first_name: 'Lisa',
@@ -60,7 +62,6 @@ module Stash
         allow(tenant).to receive(:full_url) { |path| "https://stash-dev.example.edu/#{path}" }
         allow(tenant).to receive(:sword_params).and_return(sword_params)
         allow(StashEngine::Tenant).to receive(:find).with('dataone').and_return(tenant)
-        allow(tenant).to receive(:full_domain).and_return('stash.example.edu')
 
         stash_wrapper = Stash::Wrapper::StashWrapper.parse_xml(File.read('spec/data/archive/stash-wrapper.xml'))
         @resource = StashDatacite::ResourceBuilder.new(

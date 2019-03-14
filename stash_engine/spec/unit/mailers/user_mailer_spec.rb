@@ -23,7 +23,6 @@ module StashEngine
       @request_port = 80
 
       @tenant = double(Tenant)
-      allow(tenant).to receive(:full_domain).and_return(request_host)
       allow(tenant).to receive(:campus_contacts).and_return(%w[gorgath@example.edu lajuana@example.edu])
 
       @user = double(User)
@@ -65,6 +64,11 @@ module StashEngine
         .with(kind_of(Hash)) do |_, url_params|
         "http://#{url_params[:host]}:#{url_params[:port]}/#{url_params[:controller]}"
       end
+
+      # this rails_root stuff is required when faking Rails like david did and using the mailer since it seems to call it
+      rails_root = Dir.mktmpdir('rails_root')
+      allow(Rails).to receive(:root).and_return(rails_root)
+      allow(Rails).to receive(:application).and_return(OpenStruct.new(default_url_options: { host: 'stash.example.edu' }))
     end
 
     after(:each) do

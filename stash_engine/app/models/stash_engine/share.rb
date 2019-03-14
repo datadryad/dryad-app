@@ -12,8 +12,7 @@ module StashEngine
 
     def sharing_link
       return nil unless tenant
-      StashEngine::Engine.routes.url_helpers.share_url(host: tenant.full_domain, protocol: 'https', id: secret_id)
-      # URI::HTTPS.build(host: tenant.full_domain, path: "/stash/share/#{ERB::Util.url_encode(secret_id)}").to_s
+      StashEngine::Engine.routes.url_helpers.share_url(protocol: 'https', id: secret_id)
     end
 
     def generate_secret_id
