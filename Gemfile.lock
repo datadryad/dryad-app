@@ -59,7 +59,6 @@ PATH
       ezid-client (~> 1.5)
       filesize (~> 0.1.1)
       font-awesome-rails
-      httparty (~> 0.16.4)
       httpclient (~> 2.8.3)
       jquery-fileupload-rails (~> 0.4.6)
       jquery-rails
