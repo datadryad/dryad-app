@@ -28,6 +28,17 @@
   <% end %>
 </div>
 
+<% if @resource.identifier.journal_will_pay? %>
+<div>
+  <h3>Payment</h3>	
+  <p>Your journal's membership with Dryad covers all data archiving costs.</p>
+</div>
+<% elsif @resource.identifier.institution_will_pay? %>
+<div>
+  <h3>Payment</h3>	
+  <p>Your institution's membership with Dryad covers all data archiving costs.</p>
+</div>
+<% elsif @resource.identifier.user_must_pay? %>
 <div>
   <h3>Payment</h3>
   <p>
@@ -39,6 +50,7 @@
     <span><%= check_box_tag 'agree_to_payment', 'yes', (@resource.version_number > 1), class: 't-review__agree-to-license js-agrees' %></span>
     <label for="agree_to_payment">I agree to Dryad's payment terms</label>
 </div>
+<% end %>
 
 <br>
 

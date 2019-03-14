@@ -1,6 +1,8 @@
 require 'db_spec_helper'
+require 'webmock/rspec'
 
 module StashEngine
+
   describe Identifier do
     attr_reader :identifier
     attr_reader :usage1
@@ -11,9 +13,16 @@ module StashEngine
 
     before(:each) do
       @identifier = Identifier.create(identifier_type: 'DOI', identifier: '10.123/456')
-      @res1 = Resource.create(identifier_id: identifier.id)
-      @res2 = Resource.create(identifier_id: identifier.id)
-      @res3 = Resource.create(identifier_id: identifier.id)
+      @res1 = Resource.create(identifier_id: @identifier.id)
+      @res2 = Resource.create(identifier_id: @identifier.id)
+      @res3 = Resource.create(identifier_id: @identifier.id)
+      @identifier.reload
+
+      WebMock.disable_net_connect!
+    end
+
+    after(:each) do
+      WebMock.allow_net_connect!
     end
 
     describe '#to_s' do
@@ -45,6 +54,12 @@ module StashEngine
         it 'returns the last submitted version' do
           lsv = identifier.last_submitted_resource
           expect(lsv.id).to eq(res2.id)
+        end
+      end
+
+      describe '#latest_resource' do
+        it 'returns the latest resource' do
+          expect(identifier.latest_resource_id).to eq(res3.id)
         end
       end
 
@@ -177,5 +192,51 @@ module StashEngine
         end
       end
     end
+
+    describe '#payment' do
+      it 'defaults to user pay' do
+        expect(identifier.user_must_pay?).to eq(true)
+      end
+
+      it 'does not make user pay when journal pays' do
+        fake_issn = 'some-bogus-value'
+        int_datum = InternalDatum.new(identifier_id: identifier.id, data_type: 'publicationISSN', value: fake_issn)
+        int_datum.save!
+        stub_request(:any, %r{/journals/#{fake_issn}})
+          .to_return(body: '{"paymentPlanType":"SUBSCRIPTION"}',
+                     status: 200,
+                     headers: { 'Content-Type' => 'application/json' })
+
+        expect(identifier.journal_will_pay?).to eq(true)
+        expect(identifier.user_must_pay?).to eq(false)
+      end
+
+      it 'makes the user pay when journal does not pay' do
+        fake_issn = 'some-bogus-value2'
+        int_datum = InternalDatum.new(identifier_id: identifier.id, data_type: 'publicationISSN', value: fake_issn)
+        int_datum.save!
+        stub_request(:any, %r{/journals/#{fake_issn}})
+          .to_return(body: '{"paymentPlanType":"NONE"}',
+                     status: 200,
+                     headers: { 'Content-Type' => 'application/json' })
+
+        expect(identifier.journal_will_pay?).to eq(false)
+        expect(identifier.user_must_pay?).to eq(true)
+      end
+
+      it 'does not make user pay when institution pays' do
+        tenant = class_double(Tenant)
+        allow(Tenant).to receive(:find).with('paying-institution').and_return(tenant)
+        allow(Tenant).to receive(:covers_dpc).and_return(true)
+        allow(tenant).to receive(:covers_dpc).and_return(true)
+        ident = Identifier.create
+        Resource.create(tenant_id: 'paying-institution', identifier_id: ident.id)
+        ident.reload
+
+        expect(ident.institution_will_pay?).to eq(true)
+        expect(ident.user_must_pay?).to eq(false)
+      end
+    end
+
   end
 end
