@@ -196,16 +196,6 @@ The *Explore Data* link will allow you to search and view your dataset, if you i
 ![Search Results](images/explore2.png)<br><br>
 ![Dataset Page](images/explore3.png)
 
-### Use the developer login
-
-Until a tenant is configured and login methods are set up you can use the developer login to access password protected parts of the application for testing or development. The developer login is only available in the development and test environments and is a useful way to test functionality and tenant configuration without having to have a new domain name registered for each tenant (very useful on a local or development machine).  It is also useful for pre-testing a tenant and submitting test records for that tenant into a repository without having to obtain an account for the authentication method (such as Shibboleth with a campus account) that a tenant normally uses.
-
-To use the developer login:
-
-1. Click the *More Dash Sites* drop-down menu and then click *developer login (only development)*.<br>![More Dash Sites](images/dev_login1.png)<br><br>
-2. In the login screen enter a name, email address and a domain name.  The domain name should allow the *domain_regex* regular expression from one of your tenant configurations to match the string you enter as the test domain.<br>![Developer Login Page](images/dev_login2.png).
-3. Until you log in again or your cookies expire, the user interface will display items specific to the tenant you entered the domain name for (such as the logo, help and other things configured for that tenant). It will also act as that tenant when submitting data to a configured repository.
-
 ### Enter dataset metadata, upload files and preview the landing page
 
 After you log in, you will be able to start entering metadata and uploading files for a dataset by clicking the *My Datasets* menu link.
