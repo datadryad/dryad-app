@@ -310,6 +310,11 @@ Once staging is complete and to publish the changes to your dataset, please foll
 
 In addition to changing your metadata, you could've added additional files before re-publishing this updated version of your dataset.
 
+## Renewing Your Token
+
+Tokens are only valid for a limited amount of time.  See documentation
+about [retrying_requests made with expired tokens](renew_api/retrying_expired.md) for more information.
+
 ## Internal metadata fields
 
 ### As an aggregate
