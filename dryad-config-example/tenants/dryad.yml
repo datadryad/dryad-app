@@ -15,8 +15,6 @@ default: &default
   short_name: "Dryad"
   long_name: "Dryad Digital Repository"
   publisher_id: isni:0000000446638050
-  full_domain: "dryad-dev.cdlib.org"
-  domain_regex: "cdlib.org$"
   tenant_id: dryad
   identifier_service:
     provider: datacite
