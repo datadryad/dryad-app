@@ -32,6 +32,7 @@ Gem::Specification.new do |s| # rubocop:disable Metrics/BlockLength
   s.add_dependency 'ezid-client', '~> 1.5'
   s.add_dependency 'filesize', '~> 0.1.1'
   s.add_dependency 'font-awesome-rails'
+  s.add_dependency 'httparty', '~> 0.16.4'
   s.add_dependency 'httpclient', '~> 2.8.3'
   s.add_dependency 'jquery-fileupload-rails', '~> 0.4.6'
   s.add_dependency 'jquery-rails'

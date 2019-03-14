@@ -1,3 +1,5 @@
+require 'httparty'
+
 module StashEngine
   # rubocop:disable Metrics/ClassLength
   class Identifier < ActiveRecord::Base
@@ -141,10 +143,37 @@ module StashEngine
       update_column :search_words, my_string
     end
 
-    # Method to check if the identifier is associated with a journal/publisher and
-    # thus chargeable
-    def chargeable?
-      !internal_data.empty?
+    # Check if the user must pay for this identifier, or if payment is
+    # otherwise covered
+    def user_must_pay?
+      !journal_will_pay? &&
+        !institution_will_pay? &&
+        !fee_waiver_country?
+    end
+
+    def publication_issn
+      StashEngine::InternalDatum.find_by(identifier_id: id, data_type: 'publicationISSN')&.value
+    end
+
+    def journal_will_pay?
+      return false if publication_issn.nil?
+      url = APP_CONFIG.old_dryad_url + '/api/v1/journals/' + publication_issn
+      results = HTTParty.get(url,
+                             query: { access_token: APP_CONFIG.old_dryad_access_token },
+                             headers: { 'Content-Type' => 'application/json' })
+      plan_type = results.parsed_response['paymentPlanType']
+      # logger.debug("payment plan type = #{plan_type}")
+      plan_type == 'SUBSCRIPTION' ||
+        plan_type == 'PREPAID' ||
+        plan_type == 'DEFERRED'
+    end
+
+    def institution_will_pay?
+      latest_resource&.tenant&.covers_dpc == true
+    end
+
+    def fee_waiver_country?
+      false
     end
 
     private
