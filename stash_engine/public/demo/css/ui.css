@@ -5069,9 +5069,6 @@ html.no-details .o-showhide__summary {
       font-weight: normal; } }
 
 @media (min-width: 760px) {
-  .c-table-progress th:last-of-type {
-    position: absolute;
-    left: -9999px; }
   .c-table-progress td:nth-of-type(1) {
     font-size: 1.1em; }
   .c-table-progress td:nth-of-type(2) {
@@ -5109,9 +5106,6 @@ html.no-details .o-showhide__summary {
     font-size: 1.2em; } }
 
 @media (min-width: 760px) {
-  .c-table-submitted th:last-of-type {
-    position: absolute;
-    left: -9999px; }
   .c-table-submitted td:nth-of-type(1) {
     font-size: 1.1em; }
   .c-table-submitted td:nth-of-type(2) {
