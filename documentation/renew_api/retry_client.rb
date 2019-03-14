@@ -22,7 +22,6 @@ class RetryClient
     else
       RestClient.send(method, url_for(args[0]), args[1], combine(args[2]))
     end
-
   rescue RestClient::Unauthorized => ex
     raise ex unless get_token # refreshes token if successful
     retry if (retries += 1) < 2
@@ -30,11 +29,10 @@ class RetryClient
   end
 
   def get_token
-    response = RestClient.post "#{scheme_host_port}/oauth/token", {
-        grant_type: 'client_credentials',
-        client_id: app_id,
-        client_secret: secret
-    }
+    response = RestClient.post "#{scheme_host_port}/oauth/token",
+                               grant_type: 'client_credentials',
+                               client_id: app_id,
+                               client_secret: secret
     @token = JSON.parse(response)['access_token']
   end
 
