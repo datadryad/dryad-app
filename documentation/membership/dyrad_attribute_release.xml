@@ -1,0 +1,16 @@
+<!-- 
+Dryad stage server
+currently defined as an endpoint of the dash-stage SP 
+-->
+<AttributeFilterPolicy id="Dryad-Stage">
+	<PolicyRequirementRule xsi:type="basic:AttributeRequesterString"
+	value="https://dash-stg.cdlib.org/shibboleth" />
+
+	<AttributeRule attributeID="eduPersonPrincipalName">
+		<PermitValueRule xsi:type="basic:ANY" />
+	</AttributeRule>
+	<AttributeRule attributeID="mail">
+		<PermitValueRule xsi:type="basic:ANY" />
+	</AttributeRule>
+</AttributeFilterPolicy>
+

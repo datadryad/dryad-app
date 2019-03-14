@@ -7,15 +7,17 @@
 default: &default
   enabled: true
   repository:
-    domain: localhost
-    endpoint: "http://localhost:39001/sword/collection/stash"
-    username: "stash_submitter"
-    password: "correct​horse​battery​staple"
-  abbreviation: "LH"
-  short_name: "Localhost"
-  long_name: "Localhost"
-  publisher_id: grid.1234567890
-  tenant_id: localhost
+    domain: merritt.repository.domain.here
+    endpoint: "http://merritt.repository.domain.here/mrtsword/collection/demo_open_context"
+    username: "submitter.username"
+    password: "submitter.password"
+  abbreviation: "dryad"
+  short_name: "Dryad"
+  long_name: "Dryad Digital Repository"
+  publisher_id: isni:0000000446638050
+  full_domain: "dryad-dev.cdlib.org"
+  domain_regex: "cdlib.org$"
+  tenant_id: dryad
   identifier_service:
     provider: datacite
     prefix: "10.5072"
@@ -28,12 +30,17 @@ default: &default
   max_submission_size: 100000000000
   max_total_version_size: 10000000000
   max_files: 1000
-  campus_contacts: [""] # for testing
+  campus_contacts: ["norah.sliger@example.org"]
   data_deposit_agreement: false
   partner_display: false
 
 development:
   <<: *default
+  #Add any items that need to override the defaults here
+
+local:
+  <<: *default
 
 test:
   <<: *default
+  #Add any items that need to override the defaults here
