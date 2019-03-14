@@ -1,4 +1,4 @@
 <div class="o-download">
-  <%= button_to "Download the dataset ~ #{filesize(@resource.size, 0)}", download_resource_path(@resource.id),
+  <%= button_to "Download complete dataset ~ #{filesize(@resource.size, 0)}", download_resource_path(@resource.id),
                 class: 'o-download__files js-download', id: "dl_res_#{@resource.id}" %>
 </div>
