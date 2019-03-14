@@ -28,7 +28,7 @@
     <% if line.resource.dataset_in_progress_editor.id == current_user.id %>
       <%= button_to 'Update', stash_url_helpers.metadata_entry_pages_new_version_path(resource_id: line.resource.id),
                     class: 'o-button__plain-text7',
-                    disabled: (line.resource.identifier && ( line.resource.identifier.in_progress? || line.resource.processing? ) ) %>
+                    disabled: (line.resource.identifier && ( line.resource.identifier.in_progress? || line.resource.processing? || line.resource.current_curation_status == 'curation') ) %>
     <% else %>
       Dataset being edited by <%= line.resource.dataset_in_progress_editor.name %>
     <% end %>
