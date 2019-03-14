@@ -36,7 +36,7 @@ RSpec.feature 'NewDataset', type: :feature do
 
       # ##############################
       # Optional fields
-      description_divider = find('summary', text: 'Data Description (optional)')
+      description_divider = find('summary', text: 'Data Description')
       description_divider.click
 
       # ##############################
