@@ -56,7 +56,7 @@ module StashEngine
     # shibboleth.sso
     def shibboleth_login_path(params = nil)
       extra_params = (params ? "?#{params.to_param}" : '')
-      "https://#{full_domain}/Shibboleth.sso/Login?" \
+      "https://#{Rails.application.default_url_options[:host]}/Shibboleth.sso/Login?" \
           "target=#{CGI.escape("#{callback_path_begin}shibboleth/callback#{extra_params}")}" \
           "&entityID=#{CGI.escape(authentication.entity_id)}"
     end
@@ -67,12 +67,12 @@ module StashEngine
       state_param_val = CGI.escape((params ? params.to_param : ''))
       qs = (state_param_val.blank? ? '' : "?state=#{state_param_val}")
       path = "#{callback_path_begin}google_oauth2#{qs}"
-      return path unless full_domain =~ /^localhost(:[0-9]+)?$/
+      return path unless Rails.application.default_url_options[:host] =~ /^localhost(:[0-9]+)?$/
       path.sub('https', 'http') # HACK: for testing
     end
 
     def callback_path_begin
-      "https://#{full_domain}#{StashEngine.app.stash_mount}/auth/"
+      "https://#{Rails.application.default_url_options[:host]}#{StashEngine.app.stash_mount}/auth/"
     end
 
     def sword_params
@@ -82,21 +82,6 @@ module StashEngine
         username: repository.username,
         password: repository.password
       }
-    end
-
-    def self.by_domain(domain)
-      i = by_domain_w_nil(domain)
-      return all.first if i.blank?
-      i
-    end
-
-    def self.by_domain_w_nil(domain)
-      StashEngine.tenants.each_value do |v|
-        if v['enabled'] && v['enabled'] == true
-          return new(v) if Regexp.new(v['domain_regex']).match(domain)
-        end
-      end
-      nil
     end
 
     def self.exists?(tenant_id)
@@ -109,7 +94,7 @@ module StashEngine
     end
 
     def full_url(path)
-      URI::HTTPS.build(host: full_domain, path: path).to_s
+      URI::HTTPS.build(host: Rails.application.default_url_options[:host], path: path).to_s
     end
 
   end

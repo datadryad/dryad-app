@@ -32,7 +32,7 @@ module StashEngine
       @to_name = @user_name
 
       tenant = resource.tenant
-      @host = tenant.full_domain
+      @host = Rails.application.default_url_options[:host]
 
       @embargo_date = resource.publication_date if resource.present? && !resource.files_published?
 
@@ -51,8 +51,7 @@ module StashEngine
       @to_name = @user_name
 
       user = resource.user
-      tenant = resource.tenant
-      @host = tenant.full_domain
+      @host = Rails.application.default_url_options[:host]
 
       @backtrace = to_backtrace(error)
 
