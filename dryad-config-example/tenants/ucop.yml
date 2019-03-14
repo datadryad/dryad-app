@@ -15,8 +15,6 @@ default: &default
   short_name: "UC Office of the President"
   long_name: "University of California, Office of the President"
   publisher_id: grid.30389.31
-  full_domain: "dash-dev.ucop.edu"
-  domain_regex: "ucop.edu$"
   tenant_id: ucop
   identifier_service:
     provider: datacite
