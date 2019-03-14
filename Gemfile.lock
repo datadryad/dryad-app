@@ -121,7 +121,6 @@ GEM
       public_suffix (>= 2.0.2, < 4.0)
     amoeba (3.0.0)
       activerecord (>= 3.2.6)
-    ansi (1.5.0)
     archive-zip (0.11.0)
       io-like (~> 0.3.0)
     arel (6.0.4)
@@ -199,6 +198,9 @@ GEM
       rack (>= 1.0.0)
       rack-test (>= 0.5.4)
       xpath (>= 2.0, < 4.0)
+    capybara-screenshot (1.0.22)
+      capybara (>= 1.0, < 4)
+      launchy
     carrierwave (0.10.0)
       activemodel (>= 3.2.0)
       activesupport (>= 3.2.0)
@@ -243,6 +245,8 @@ GEM
       deep_merge (~> 1.2.1)
       dry-validation (>= 0.12.2)
     connection_pool (2.2.2)
+    crack (0.4.3)
+      safe_yaml (~> 1.0.0)
     crass (1.0.4)
     csl (1.5.0)
       namae (~> 1.0)
@@ -312,6 +316,13 @@ GEM
     ezid-client (1.8.0)
       hashie (~> 3.4, >= 3.4.3)
       nokogiri
+    factory_bot (5.0.2)
+      activesupport (>= 4.2.0)
+    factory_bot_rails (5.0.1)
+      factory_bot (~> 5.0.0)
+      railties (>= 4.2.0)
+    faker (1.9.3)
+      i18n (>= 0.7)
     faraday (0.15.4)
       multipart-post (>= 1.2, < 3)
     faraday-encoding (0.0.5)
@@ -322,6 +333,10 @@ GEM
     filesize (0.1.1)
     font-awesome-rails (4.7.0.4)
       railties (>= 3.2, < 6.0)
+    formatador (0.2.5)
+    fuubar (2.3.2)
+      rspec-core (~> 3.0)
+      ruby-progressbar (~> 1.4)
     gender_detector (0.1.2)
       unicode_utils (>= 1.3.0)
     geoblacklight (1.1.2)
@@ -337,13 +352,27 @@ GEM
     geoblacklight-icons (1.3.1)
     globalid (0.4.1)
       activesupport (>= 4.2.0)
+    guard (2.15.0)
+      formatador (>= 0.2.4)
+      listen (>= 2.7, < 4.0)
+      lumberjack (>= 1.0.12, < 2.0)
+      nenv (~> 0.1)
+      notiffany (~> 0.0)
+      pry (>= 0.9.12)
+      shellany (~> 0.0)
+      thor (>= 0.18.1)
+    guard-compat (1.2.1)
+    guard-rspec (4.7.3)
+      guard (~> 2.1)
+      guard-compat (~> 1.1)
+      rspec (>= 2.99.0, < 4.0)
     haml (5.0.4)
       temple (>= 0.8.0)
       tilt
     hamster (3.0.0)
       concurrent-ruby (~> 1.0)
+    hashdiff (0.3.8)
     hashie (3.5.7)
-    hirb (0.7.3)
     htmlentities (4.3.4)
     http-cookie (1.0.3)
       domain_name (~> 0.5)
@@ -392,12 +421,19 @@ GEM
       kaminari-core (= 1.1.1)
     kaminari-core (1.1.1)
     latex-decode (0.3.1)
+    launchy (2.4.3)
+      addressable (~> 2.3)
     leaflet-rails (0.7.7)
     libv8 (3.16.14.19)
     link_header (0.0.8)
+    listen (3.1.5)
+      rb-fsevent (~> 0.9, >= 0.9.4)
+      rb-inotify (~> 0.9, >= 0.9.7)
+      ruby_dep (~> 1.2)
     loofah (2.2.3)
       crass (~> 1.0.2)
       nokogiri (>= 1.5.9)
+    lumberjack (1.0.13)
     mail (2.7.1)
       mini_mime (>= 0.1.1)
     maremma (4.2.1)
@@ -414,6 +450,7 @@ GEM
     merritt-manifest (0.1.3)
       mime-types (~> 3.1)
       typesafe_enum (~> 0.1.7)
+    metaclass (0.0.4)
     method_source (0.9.2)
     mime-types (3.2.2)
       mime-types-data (~> 3.2015)
@@ -421,11 +458,14 @@ GEM
     mini_mime (1.0.1)
     mini_portile2 (2.3.0)
     minitest (5.11.3)
+    mocha (1.8.0)
+      metaclass (~> 0.0.1)
     multi_json (1.13.1)
     multi_xml (0.6.0)
     multipart-post (2.0.0)
     mysql2 (0.4.10)
     namae (1.0.1)
+    nenv (0.3.0)
     net-http-persistent (3.0.0)
       connection_pool (~> 2.2)
     net-scp (1.2.1)
@@ -435,6 +475,9 @@ GEM
     noid (0.9.0)
     nokogiri (1.8.5)
       mini_portile2 (~> 2.3.0)
+    notiffany (0.1.1)
+      nenv (~> 0.1)
+      shellany (~> 0.0)
     oauth2 (1.4.1)
       faraday (>= 0.8, < 0.16.0)
       jwt (>= 1.0, < 3.0)
@@ -541,6 +584,12 @@ GEM
     rinku (2.0.5)
     rsolr (1.1.2)
       builder (>= 2.1.2)
+    rspec (3.8.0)
+      rspec-core (~> 3.8.0)
+      rspec-expectations (~> 3.8.0)
+      rspec-mocks (~> 3.8.0)
+    rspec-collection_matchers (1.1.3)
+      rspec-expectations (>= 2.99.0.beta1)
     rspec-core (3.8.0)
       rspec-support (~> 3.8.0)
     rspec-expectations (3.8.2)
@@ -566,6 +615,7 @@ GEM
       ruby-progressbar (~> 1.7)
       unicode-display_width (~> 1.0, >= 1.0.1)
     ruby-progressbar (1.10.0)
+    ruby_dep (1.5.0)
     ruby_dig (0.0.2)
     rubyzip (1.2.2)
     safe_yaml (1.0.5)
@@ -586,14 +636,17 @@ GEM
     selenium-webdriver (3.141.0)
       childprocess (~> 0.5)
       rubyzip (~> 1.2, >= 1.2.2)
+    shellany (0.0.1)
+    shoulda (3.6.0)
+      shoulda-context (~> 1.0, >= 1.0.1)
+      shoulda-matchers (~> 3.0)
+    shoulda-context (1.2.2)
+    shoulda-matchers (3.1.3)
+      activesupport (>= 4.0.0)
     simplecov (0.16.1)
       docile (~> 1.1)
       json (>= 1.8, < 3)
       simplecov-html (~> 0.10.0)
-    simplecov-console (0.4.2)
-      ansi
-      hirb
-      simplecov
     simplecov-html (0.10.2)
     slop (3.6.0)
     solr_wrapper (1.2.0)
@@ -604,6 +657,10 @@ GEM
     sortable-table (0.1.1)
       actionpack (>= 3.0.0)
       activesupport (>= 3.0.0)
+    spring (2.0.2)
+      activesupport (>= 4.2)
+    spring-commands-rspec (1.0.4)
+      spring (>= 0.9.1)
     sprockets (3.7.2)
       concurrent-ruby (~> 1.0)
       rack (> 1, < 3)
@@ -653,6 +710,10 @@ GEM
       binding_of_caller (>= 0.7.2)
       railties (>= 4.0)
       sprockets-rails (>= 2.0, < 4.0)
+    webmock (3.5.1)
+      addressable (>= 2.3.6)
+      crack (>= 0.3.2)
+      hashdiff
     wicked_pdf (1.1.0)
     wkhtmltopdf-binary (0.12.3.1)
     xml-mapping (0.10.1)
@@ -674,28 +735,37 @@ DEPENDENCIES
   capistrano (~> 3.4.1)
   capistrano-passenger
   capistrano-rails (~> 1.1)
-  capybara (~> 2.16)
-  chromedriver-helper (~> 1.1)
+  capybara
+  capybara-screenshot
+  chromedriver-helper (>= 1.2)
   coffee-rails (~> 4.1.0)
   colorize (~> 0.8)
-  database_cleaner (~> 1.5)
+  database_cleaner
   exception_notification
+  factory_bot_rails
+  faker
+  fuubar
+  guard
+  guard-rspec
   httparty
   jbuilder (~> 2.0)
   jquery-rails
+  mocha
   mysql2 (~> 0.4.10)
   passenger
   pry
   pry-rails
   pry-remote
   rails (= 4.2.11)
+  rspec-collection_matchers
   rspec-rails (~> 3.0)
   rubocop (~> 0.52.1)
   sass-rails (~> 5.0)
-  selenium-webdriver (~> 3.7)
-  simplecov (~> 0.14)
-  simplecov-console (~> 0.4)
-  solr_wrapper (~> 1.1)
+  selenium-webdriver (~> 3.14)
+  shoulda
+  simplecov
+  spring
+  spring-commands-rspec
   stash-merritt!
   stash_api!
   stash_datacite!
@@ -706,6 +776,7 @@ DEPENDENCIES
   turbolinks
   uglifier (~> 3.0.4)
   web-console (~> 2.0)
+  webmock
   yui-compressor
 
 BUNDLED WITH
