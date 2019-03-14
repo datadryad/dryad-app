@@ -16,9 +16,7 @@ module StashEngine
       @res1 = Resource.create(identifier_id: @identifier.id)
       @res2 = Resource.create(identifier_id: @identifier.id)
       @res3 = Resource.create(identifier_id: @identifier.id)
-
-      # re-load the identifier from the DB to ensure latest_resource is set properly
-      @identifier = Identifier.find(@identifier.id)
+      @identifier.reload
 
       WebMock.disable_net_connect!
     end
@@ -233,7 +231,7 @@ module StashEngine
         allow(tenant).to receive(:covers_dpc).and_return(true)
         ident = Identifier.create
         Resource.create(tenant_id: 'paying-institution', identifier_id: ident.id)
-        ident = Identifier.find(ident.id) # need to reload ident from the DB to update latest_resource
+        ident.reload
 
         expect(ident.institution_will_pay?).to eq(true)
         expect(ident.user_must_pay?).to eq(false)
