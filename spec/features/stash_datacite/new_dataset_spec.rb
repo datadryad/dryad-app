@@ -13,10 +13,38 @@ RSpec.feature 'NewDataset', type: :feature do
   before(:each) do
     @user = create(:user)
     sign_in(@user)
-    start_new_dataset
+  end
+
+  context :doi_generation do
+
+    before(:each) do
+      @identifier_count = StashEngine::Identifier.all.length
+      @resource_count = StashEngine::Resource.all.length
+    end
+
+    it 'displays an error message if unable to mint a new DOI/ARK' do
+      allow(Stash::Doi::IdGen).to receive(:make_instance).and_raise(Ezid::Error.new)
+      click_button 'Start New Dataset'
+      expect(page).to have_text('My Datasets')
+      expect(page).to have_text('Unable to register a DOI at this time. Please contact help@datadryad.org for assistance.')
+      expect(StashEngine::Identifier.all.length).to eql(@identifier_count)
+      expect(StashEngine::Resource.all.length).to eql(@resource_count)
+    end
+
+    it 'successfully mints a new DOI/ARK' do
+      click_button 'Start New Dataset'
+      expect(page).to have_text('Describe Dataset')
+      expect(StashEngine::Identifier.all.length).to eql(@identifier_count + 1)
+      expect(StashEngine::Resource.all.length).to eql(@resource_count + 1)
+    end
+
   end
 
   context :form_submission do
+
+    before(:each) do
+      start_new_dataset
+    end
 
     it 'submits if all requirements are met', js: true do
       # ##############################
