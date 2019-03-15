@@ -1,4 +1,11 @@
 // switch do_import hidden value back to false in case form needs to be played with some more
 $('#internal_datum_do_import').val('false');
-// reload the page
-location.reload(true);
+
+<% if @results.code > 199 && @results.code < 300 %>
+  // reload the page
+  location.reload(true);
+<% else %>
+  // populate and display warning
+  $( '#population-warnings' ).text("Could not retrieve manuscript data.  Please re-check the journal and manuscript number.");
+  $( "#population-warnings" ).show();
+<% end %>
