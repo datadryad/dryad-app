@@ -16,6 +16,9 @@ module StashEngine
       @res1 = Resource.create(identifier_id: @identifier.id)
       @res2 = Resource.create(identifier_id: @identifier.id)
       @res3 = Resource.create(identifier_id: @identifier.id)
+      @fake_issn = 'bogus-issn-value'
+      int_datum = InternalDatum.new(identifier_id: @identifier.id, data_type: 'publicationISSN', value: @fake_issn)
+      int_datum.save!
       @identifier.reload
 
       WebMock.disable_net_connect!
@@ -193,16 +196,39 @@ module StashEngine
       end
     end
 
+    describe '#journal-metadata' do
+      before(:each) do
+        @fake_journal_name = 'Fake Journal'
+        stub_request(:any, %r{/journals/#{@fake_issn}})
+          .to_return(body: '{"fullName":"' + @fake_journal_name + '",
+                             "issn":"' + @fake_issn + '",
+                             "website":"http://onlinelibrary.wiley.com/journal/10.1111/(ISSN)1365-294X",
+                             "description":"Molecular Ecology publishes papers that utilize molecular genetic techniques..."}',
+                     status: 200,
+                     headers: { 'Content-Type' => 'application/json' })
+      end
+
+      it 'retrieves the publication_issn' do
+        expect(identifier.publication_issn).to eq(@fake_issn)
+      end
+
+      it 'retrieves the publication_name' do
+        expect(identifier.publication_name).to eq(@fake_journal_name)
+      end
+    end
+
     describe '#payment' do
       it 'defaults to user pay' do
+        stub_request(:any, %r{/journals/#{@fake_issn}})
+          .to_return(body: '{}',
+                     status: 200,
+                     headers: { 'Content-Type' => 'application/json' })
+
         expect(identifier.user_must_pay?).to eq(true)
       end
 
       it 'does not make user pay when journal pays' do
-        fake_issn = 'some-bogus-value'
-        int_datum = InternalDatum.new(identifier_id: identifier.id, data_type: 'publicationISSN', value: fake_issn)
-        int_datum.save!
-        stub_request(:any, %r{/journals/#{fake_issn}})
+        stub_request(:any, %r{/journals/#{@fake_issn}})
           .to_return(body: '{"paymentPlanType":"SUBSCRIPTION"}',
                      status: 200,
                      headers: { 'Content-Type' => 'application/json' })
@@ -212,10 +238,7 @@ module StashEngine
       end
 
       it 'makes the user pay when journal does not pay' do
-        fake_issn = 'some-bogus-value2'
-        int_datum = InternalDatum.new(identifier_id: identifier.id, data_type: 'publicationISSN', value: fake_issn)
-        int_datum.save!
-        stub_request(:any, %r{/journals/#{fake_issn}})
+        stub_request(:any, %r{/journals/#{@fake_issn}})
           .to_return(body: '{"paymentPlanType":"NONE"}',
                      status: 200,
                      headers: { 'Content-Type' => 'application/json' })

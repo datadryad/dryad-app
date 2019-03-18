@@ -151,18 +151,25 @@ module StashEngine
         !fee_waiver_country?
     end
 
-    def publication_issn
-      StashEngine::InternalDatum.find_by(identifier_id: id, data_type: 'publicationISSN')&.value
-    end
-
-    def journal_will_pay?
-      return false if publication_issn.nil?
+    def publication_data(field_name)
+      return nil if publication_issn.nil?
       url = APP_CONFIG.old_dryad_url + '/api/v1/journals/' + publication_issn
       results = HTTParty.get(url,
                              query: { access_token: APP_CONFIG.old_dryad_access_token },
                              headers: { 'Content-Type' => 'application/json' })
-      plan_type = results.parsed_response['paymentPlanType']
-      # logger.debug("payment plan type = #{plan_type}")
+      results.parsed_response[field_name]
+    end
+
+    def publication_issn
+      StashEngine::InternalDatum.find_by(identifier_id: id, data_type: 'publicationISSN')&.value
+    end
+
+    def publication_name
+      publication_data('fullName')
+    end
+
+    def journal_will_pay?
+      plan_type = publication_data('paymentPlanType')
       plan_type == 'SUBSCRIPTION' ||
         plan_type == 'PREPAID' ||
         plan_type == 'DEFERRED'
