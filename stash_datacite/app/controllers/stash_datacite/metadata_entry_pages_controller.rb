@@ -8,11 +8,9 @@ module StashDatacite
       @metadata_entry = Resource::MetadataEntry.new(@resource, current_tenant)
       @metadata_entry.resource_type
       se_id = StashEngine::Identifier.find(@resource.identifier_id)
-      @publication = StashEngine::InternalDatum.find_by(stash_identifier: se_id, data_type: 'publicationISSN')
-      @publication = StashEngine::InternalDatum.new(stash_identifier: se_id, data_type: 'publicationISSN') if @publication.nil?
+      @publication = StashEngine::InternalDatum.find_or_create_by(stash_identifier: se_id, data_type: 'publicationISSN')
+      @msid = StashEngine::InternalDatum.find_or_create_by(stash_identifier: se_id, data_type: 'manuscriptNumber')
 
-      @msid = StashEngine::InternalDatum.find_by(stash_identifier: se_id, data_type: 'manuscriptNumber')
-      @msid = StashEngine::InternalDatum.new(stash_identifier: se_id, data_type: 'manuscriptNumber') if @msid.nil?
       respond_to do |format|
         format.js
       end

@@ -80,4 +80,10 @@ function loadPublications() {
             $(form).trigger('submit.rails');
         }
     });
+    // trap the submit button, change hidden 'do_import' = 'true' and then submit when this button is clicked
+    $('.js-import-ms').click(function(e){
+        e.preventDefault();
+        $('#internal_datum_do_import').val('true');
+        $(this).closest("form").submit();
+    });
 };
