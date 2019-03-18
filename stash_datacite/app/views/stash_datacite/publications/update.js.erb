@@ -1,0 +1,12 @@
+// switch do_import hidden value back to false in case form needs to be played with some more
+$('#internal_datum_do_import').val('false');
+
+<% if @results.code > 199 && @results.code < 300 %>
+  // get data into DB somehow and reload the page to show the pretty new data, which also resets this form to defaults
+  location.reload(true);
+<% else %>
+  // populate and display warning
+  $( '#population-warnings' ).text("Could not retrieve manuscript data.  Please re-check the journal and manuscript number.");
+  $( "#population-warnings" ).show();
+  $('#internal_datum_do_import').val('false');  // reset the import to false again, to be changed back by js with submit button click event
+<% end %>
