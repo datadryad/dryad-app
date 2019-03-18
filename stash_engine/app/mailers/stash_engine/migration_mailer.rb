@@ -1,6 +1,7 @@
 module StashEngine
   class MigrationMailer < ApplicationMailer
-    default from: 'help@datadryad.org'
+    @help = 'help@datadryad.org'
+    default from: @help
     def migration_email(user)
       @email = user[:email]
       @code = user[:code]
