@@ -1,8 +1,16 @@
-Welcome to the new Dryad Digital Repository, <%= @email %>
+<!DOCTYPE html>
+<html>
+<head>
+  <meta content='text/html; charset=UTF-8' http-equiv='Content-Type'/>
+</head>
+<body>
+  <p>Welcome to the new Dryad Digital Repository, <%= @email %></p>
 
-To migrate your old datasets to your new dashboard, please go to <%= @url %> and enter the following code: <%= @code %>.
+  <p>To migrate your old datasets to your new dashboard, please go to <a href="<%= url %>" title="Migrate your datasets"><%= @url %></a> and enter the following code: <%= @code %>.</p>
 
-If you have any questions, please message us at <%= @help %>. Thank you for joining the Dryad community!
+  <p>If you have any questions, please message us at <a href="mailto:<%= @help %>"><%= @help %></a>. Thank you for joining the Dryad community!</p>
 
-The Dryad Team
-www.datadryad.org
+  <p>The Dryad Team</p>
+  <p><a href="www.datadryad.org" title="Dryad">www.datadryad.org</a></p>
+</body>
+</html>
