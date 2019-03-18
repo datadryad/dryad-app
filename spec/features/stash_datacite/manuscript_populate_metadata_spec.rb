@@ -1,7 +1,6 @@
 require 'rails_helper'
 require 'pry'
 require 'webmock/rspec'
-WebMock.disable_net_connect!(allow: ['127.0.0.1', 'api.sandbox.orcid.org'])
 
 RSpec.feature 'Populate manuscript metadata from journal and manuscript id', type: :feature do
 
@@ -11,17 +10,23 @@ RSpec.feature 'Populate manuscript metadata from journal and manuscript id', typ
     # Start Solr - shutdown is handled globally when all tests have finished
     # SolrInstance.instance
     #
-    # This requests stubs solr so we don't have to run it just for the home page with the latest datasets shown
-    stub_request(:get, 'http://127.0.0.1:8983/solr/geoblacklight/select?q=*:*&q.alt=*:*&rows=10&sort=timestamp%20desc&start=0&wt=ruby')
-      .to_return(status: 200, body: '', headers: {})
-
-    # TODO: we probably need to figure out how to stub ORCID login/api for the entire application instead of relying on sandbox
   end
 
-  context 'dataset', js: true do
+  context 'journal-metadata-autofill', js: true do
     before(:each) do
+      # TODO: we probably need to figure out how to stub ORCID login/api for the entire application instead of relying on sandbox
+      WebMock.disable_net_connect!(allow: ['127.0.0.1', 'api.sandbox.orcid.org'])
+
+      # This requests stubs solr so we don't have to run it just for the home page with the latest datasets shown
+      stub_request(:get, 'http://127.0.0.1:8983/solr/geoblacklight/select?q=*:*&q.alt=*:*&rows=10&sort=timestamp%20desc&start=0&wt=ruby')
+          .to_return(status: 200, body: '', headers: {})
+
       sign_in
       start_new_dataset
+    end
+
+    after(:each) do
+      WebMock.disable!
     end
 
     it 'gives warning for bad dataset info' do
