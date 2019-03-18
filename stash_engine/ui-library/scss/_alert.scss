@@ -50,7 +50,6 @@
   @extend %c-alert;
   border: thin solid $design-dark-blue-color;
   background-color: $design-white-color;
-  background-image: inline('../images/icon_info-blue.png');
   color: $design-dark-blue-color;
 
   .c-alert__close {
