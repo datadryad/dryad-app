@@ -45,15 +45,20 @@ module StashEngine
 
     # POST /resources
     # POST /resources.json
+    # rubocop:disable Metrics/AbcSize
     def create
-      resource = Resource.create(user_id: current_user.id, current_editor_id: current_user.id, tenant_id: current_user.tenant_id)
+      resource = Resource.new(user_id: current_user.id, current_editor_id: current_user.id, tenant_id: current_user.tenant_id)
       my_id = Stash::Doi::IdGen.mint_id(resource: resource)
       id_type, id_text = my_id.split(':', 2)
       db_id_obj = Identifier.create(identifier: id_text, identifier_type: id_type.upcase)
-      resource.update!(identifier_id: db_id_obj.id)
+      resource.identifier_id = db_id_obj.id
+      resource.save
       resource.fill_blank_author!
       redirect_to metadata_entry_pages_find_or_create_path(resource_id: resource.id)
+    rescue StandardError
+      redirect_to dashboard_path, alert: 'Unable to register a DOI at this time. Please contact help@datadryad.org for assistance.'
     end
+    # rubocop:enable Metrics/AbcSize
 
     # PATCH/PUT /resources/1
     # PATCH/PUT /resources/1.json
