@@ -3,7 +3,7 @@
    resources.to_a.keep_if { |i| i.may_download?(ui_user: current_user) } %>
 <% if resources.count.positive? %>
   <div class="c-sidebox">
-    <h3 class="c-sidebox__heading">Versions</h3>
+    <h3 class="c-sidebox__heading">Data Files</h3>
     <% resources.each do |res| %>
       <details class="c-file-group" role="group">
         <summary class="o-showhide__summary c-file-group__summary">
