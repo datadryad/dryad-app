@@ -19,6 +19,8 @@ defaults: &DEFAULTS
     api: https://api.sandbox.orcid.org
   submission_bc_emails: [""]
   contact_email: ["changeme@example.org"]
+  old_dryad_access_token: <REPLACE-ME>
+  old_dryad_url: https://api.datadryad.org
   payments:
     service: stripe
     key: <REPLACE-ME>

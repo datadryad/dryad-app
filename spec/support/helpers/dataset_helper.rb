@@ -54,6 +54,11 @@ module DatasetHelper
     agree_to_everything
   end
 
+  def fill_article_info(name:, msid:)
+    fill_in 'internal_datum[publication_name]', with: name
+    fill_in 'internal_datum[msid]', with: msid
+  end
+
   def fill_in_author
     fill_in 'author[author_first_name]', with: Faker::Name.unique.first_name
     fill_in 'author[author_last_name]', with: Faker::Name.unique.last_name
