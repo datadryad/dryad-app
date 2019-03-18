@@ -31,12 +31,12 @@
 <% if @resource.identifier.journal_will_pay? %>
 <div>
   <h3>Payment</h3>	
-  <p>Your journal's membership with Dryad covers all data archiving costs.</p>
+  <p>Payment for this deposit is sponsored by <b><%= @resource.identifier.publication_name %></b>.</p>
 </div>
 <% elsif @resource.identifier.institution_will_pay? %>
 <div>
   <h3>Payment</h3>	
-  <p>Your institution's membership with Dryad covers all data archiving costs.</p>
+  <p>Payment for this deposit is sponsored by <b><%= @resource.tenant.long_name %></b>.</p>
 </div>
 <% elsif @resource.identifier.user_must_pay? %>
 <div>
