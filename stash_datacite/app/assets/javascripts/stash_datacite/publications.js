@@ -84,6 +84,6 @@ function loadPublications() {
     $('.js-import-ms').click(function(e){
         e.preventDefault();
         $('#internal_datum_do_import').val('true');
-        $('#new_internal_datum').submit();
+        $(this).closest("form").submit();
     });
 };
