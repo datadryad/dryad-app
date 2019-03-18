@@ -6,7 +6,7 @@ module StashDatacite
   class PublicationsController < ApplicationController
     # include HTTParty
 
-    # rubocop:disable Metrics/AbcSize
+    # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
     def update
       @se_id = StashEngine::Identifier.find(params[:internal_datum][:identifier_id])
       @pub_issn = StashEngine::InternalDatum.find_or_create_by(stash_identifier: @se_id, data_type: 'publicationISSN')
@@ -16,7 +16,7 @@ module StashDatacite
       @pub_issn.update(value: issn) unless issn.blank?
       @msid.update(value: msid) unless msid.blank?
       respond_to do |format|
-        format.js {
+        format.js do
           if params[:internal_datum][:do_import] == 'true'
             # take action to do the actual import and reload the page with javascript
             update_metadata
@@ -24,11 +24,11 @@ module StashDatacite
           else
             render template: 'stash_datacite/shared/update.js.erb'
           end
-        }
+        end
       end
     end
+    # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
 
-    # rubocop:disable Metrics/MethodLength
     def update_metadata
       pub_issn_only = @pub_issn.value
       msid_only = @msid.value
@@ -41,8 +41,5 @@ module StashDatacite
                               body: body,
                               headers: { 'Content-Type' => 'application/json' })
     end
-    # rubocop:enable Metrics/AbcSize
-    # rubocop:enable Metrics/MethodLength
-
   end
 end
