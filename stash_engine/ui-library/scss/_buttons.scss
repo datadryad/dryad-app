@@ -237,10 +237,12 @@
 
 }
 
-.o-button__jane-random {
+.o-button__import-manuscript {
   @extend %o-button__add-remove;
+  display: block;
   margin: 0 0 20px;
   padding: 5px 8px;
+  clear: both;
   border: 1px solid $design-lighter-blue-color;
   background-color: $design-lighter-blue-color;
   color: $design-black-color;

@@ -3003,11 +3003,11 @@ html.no-multiplebgs .o-banner {
   border: none;
   background: transparent url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20width%3D%22512%22%20height%3D%22512%22%3E%3Cpath%20d%3D%22M16.043%2011.667L22.609%205.1a2.484%202.484%200%200%200%200-3.502l-.875-.875a2.482%202.482%200%200%200-3.502%200L11.666%207.29%205.099.723a2.482%202.482%200%200%200-3.501%200l-.876.875a2.485%202.485%200%200%200%200%203.502l6.566%206.566-6.566%206.567a2.484%202.484%200%200%200%200%203.501l.876.875a2.482%202.482%200%200%200%203.501%200l6.567-6.565%206.566%206.565a2.484%202.484%200%200%200%203.502%200l.875-.875a2.482%202.482%200%200%200%200-3.501l-6.566-6.566z%22%20fill%3D%22%23FFF%22%2F%3E%3C%2Fsvg%3E') center/15px no-repeat; }
 
-.o-button__add, .o-button__jane-random, .o-button__remove {
+.o-button__add, .o-button__import-manuscript, .o-button__remove {
   display: inline-block;
   text-align: left;
   text-decoration: none; }
-  .o-button__add::before, .o-button__jane-random::before, .o-button__remove::before {
+  .o-button__add::before, .o-button__import-manuscript::before, .o-button__remove::before {
     margin: 0 0.25em 0 0; }
 
 .o-button__add {
@@ -3018,9 +3018,11 @@ html.no-multiplebgs .o-banner {
   .o-button__add::before {
     content: '+'; }
 
-.o-button__jane-random {
+.o-button__import-manuscript {
+  display: block;
   margin: 0 0 20px;
   padding: 5px 8px;
+  clear: both;
   border: 1px solid #9fc7d8;
   background-color: #9fc7d8;
   color: black; }
@@ -3341,6 +3343,11 @@ button.o-button__calendar:focus {
 
 .o-metadata__group2-item {
   margin-bottom: 0.5em; }
+
+.o-metadata__autopopulate-message {
+  display: block;
+  margin: 0 0 0.5rem;
+  color: #e65722; }
 
 .o-metrics {
   /* display: flex;
