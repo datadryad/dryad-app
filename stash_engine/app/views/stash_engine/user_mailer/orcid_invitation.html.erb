@@ -1,20 +1,9 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <meta content='text/html; charset=UTF-8' http-equiv='Content-Type'/>
-</head>
-<body>
+<p>Dear @user.name,</p>
 
-<p>Dear <%= "#{@invite.first_name} #{@invite.last_name}".strip %>:</p>
+<p>You are a listed author of a recently published dataset &ldquo;<%= @resource.title %>.&rdquo;</p>
 
-<p>You are a listed author of a recently published dataset &ldquo;<%= @invite.resource.title %>.&rdquo;</p>
-
-<p>We encourage you to register your ORCID researcher information
-for this dataset by following the URL below:</p>
+<p>We encourage you to register your ORCID researcher information for this dataset by following the URL below:</p>
 
 <p><a href="<%= @url %>"><%= @url %></a></p>
 
-<p>Please do not reply to this email. If you have any questions you may contact us at <a href="mailto:uc3@ucop.edu">uc3@ucop.edu</a>.</p>
-
-</body>
-</html>
+<p>If you have questions or concerns, please visit the help page or get in touch with us <a href="mailto:<%= @helpdesk_email %>"><%= @helpdesk_email %></a>.</p>
