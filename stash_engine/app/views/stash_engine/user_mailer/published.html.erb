@@ -1,0 +1,11 @@
+<p>Dear @user.name,</p>
+
+<p>Your dataset “<%= @resource.title %>” (<%= @resource.identifier_str %>) has been approved by our curation team. Your dataset is now published and public.</p>
+
+<p>We recommend that you cite and promote your dataset with this citation: <%= @resource.identifier.citations.first %>.</p>
+
+If at any time you would like to version or update your dataset you may do so by clicking “Update” on your “My Datasets” page.
+
+Thanks again for making your research openly available.
+
+We welcome your feedback! Contact us at <a href="mailto:<%= @helpdesk_email %>"><%= @helpdesk_email %></a>.

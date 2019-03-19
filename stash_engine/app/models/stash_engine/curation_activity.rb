@@ -1,6 +1,7 @@
 require 'stash/doi/id_gen'
 require 'stash/payments/invoicer'
 
+# rubocop:disable Metrics/ClassLength
 module StashEngine
 
   class CurationActivity < ActiveRecord::Base
@@ -50,9 +51,17 @@ module StashEngine
 
     # Callbacks
     # ------------------------------------------
-    # When the status is published send to Stripe and DataCite
+    # When the status is published/embargoed send to Stripe and DataCite
     after_create :submit_to_datacite, :update_solr, :submit_to_stripe,
-                 if: proc { |ca| ca.published? || ca.embargoed? }
+                 if: proc { |ca| (ca.published? || ca.embargoed?) && latest_curation_status_changed? }
+
+    # Email the primary author when submitted, peer_review, published or embargoed
+    after_create :email_author,
+                 if: proc { |ca| %w[published embargoed peer_review submitted].include?(ca.status) && latest_curation_status_changed? }
+
+    # Email invitations to register ORCIDs to authors when published
+    after_create :email_orcid_invitations,
+                 if: proc { |ca| ca.published? && latest_curation_status_changed? }
 
     after_create :update_resource_reference!
     after_destroy :remove_resource_reference!
@@ -132,9 +141,37 @@ module StashEngine
     end
 
     def update_solr
-      return unless (published? || embargoed?) && latest_curation_status_changed?
       resource.submit_to_solr
     end
+
+    def email_author
+      UserMailer.status_change(resource)
+    end
+
+    # rubocop:disable Metrics/AbcSize
+    # rubocop:disable Metrics/MethodLength
+    def email_orcid_invitations
+      # Do not send an invitation to users who have already attached their ORCID or have an
+      # existing invitation for the identifier
+      existing_invites = StashEngine::OrcidInvitation.where(identifier_id: resource.identifier_id).pluck(:email).uniq
+      resource.authors.joins('LEFT OUTER JOIN stash_engine_users ON stash_engine_authors.author_email = stash_engine_users.email')
+        .where.not(author_email: existing_invites)
+        .where('stash_engine_users.orcid IS NULL').each do |author|
+
+        UserMailer.orcid_invitation(
+          StashEngine::OrcidInvitation.create(
+            email: author.author_email,
+            identifier_id: resource.identifier_id,
+            first_name: author.author_first_name,
+            last_name: author.author_last_name,
+            secret: SecureRandom.urlsafe_base64,
+            invited_at: Time.new
+          )
+        )
+      end
+    end
+    # rubocop:enable Metrics/MethodLength
+    # rubocop:enable Metrics/AbcSize
 
     # Helper methods
     # ------------------------------------------
@@ -160,3 +197,4 @@ module StashEngine
     end
   end
 end
+# rubocop:enable Metrics/ClassLength

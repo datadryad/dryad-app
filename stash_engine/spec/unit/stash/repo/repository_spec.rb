@@ -116,13 +116,6 @@ module Stash
             allow(job).to receive(:description).and_return('test')
           end
 
-          it 'sends a "submission succeeded" email' do
-            message = instance_double(ActionMailer::MessageDelivery)
-            expect(StashEngine::UserMailer).to receive(:submission_succeeded).with(resource).and_return(message)
-            expect(message).to receive(:deliver_now)
-            submit_resource
-          end
-
           it 'leaves the state as "processing"' do
             expect(resource).to receive(:current_state=).with('processing')
             expect(resource).not_to receive(:current_state=).with('submitted')
@@ -142,7 +135,9 @@ module Stash
             before(:each) do
               allow_any_instance_of(ActionMailer::MessageDelivery).to receive(:deliver_now).and_raise(Net::SMTPAuthenticationError)
             end
-            it 'logs the error' do
+            # We moved the success email to the curation_activity so this error does not fire
+            # TODO: find another suitable method to raise the error on
+            xit 'logs the error' do
               msg = nil
               expect(logger).to(receive(:error)).once { |m| msg = m }
               submit_resource
