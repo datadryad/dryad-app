@@ -37,7 +37,7 @@ RSpec.feature 'MigrateData', type: :feature do
     end
 
     it 'goes to migration if clicking yes in migrate banner dialog' do
-      click_button 'Yes. Migrate my data.'
+      click_button 'Yes migrate my data.'
       expect(page).to have_text('Migrate Your Data')
     end
 
