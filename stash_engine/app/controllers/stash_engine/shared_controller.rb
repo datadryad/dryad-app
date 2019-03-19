@@ -89,7 +89,7 @@ module StashEngine
     end
 
     def default_date(t)
-      return '' if t.class != Time
+      return '' unless t.is_a? Time
       local_time(t)&.strftime('%m/%d/%y')
     end
 
