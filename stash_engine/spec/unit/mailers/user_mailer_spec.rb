@@ -33,6 +33,7 @@ module StashEngine
       allow(@author1).to receive(:author_first_name).and_return(@user.first_name)
       allow(@author1).to receive(:author_last_name).and_return(@user.last_name)
       allow(@author1).to receive(:author_email).and_return(@user.email)
+      allow(@author1).to receive(:author_standard_name).and_return(@user.name)
 
       @author2 = double(Author)
       allow(@author2).to receive(:author_first_name).and_return('Foo')
@@ -84,9 +85,9 @@ module StashEngine
         if mailable.include?(status)
           it "should send an email when '#{status}'" do
             allow(@resource).to receive(:current_curation_status).and_return(status)
-            allow(@resource).to receive(:publication_date).and_return(Date.today.to_s)
+            allow(@resource).to receive(:publication_date).and_return(Date.today)
 
-            UserMailer.status_change(@resource).deliver_now
+            UserMailer.status_change(@resource, status).deliver_now
             delivery = assert_email("[test] Dryad Submission \"#{@resource.title}\"")
 
             case status
@@ -97,9 +98,8 @@ module StashEngine
               expect(delivery.body.to_s).to include(@resource.share.sharing_link)
               expect(delivery.body.to_s).to include('You should receive an update within two business days.')
             when 'published'
-              doi_href = "https://doi.org/#{@identifier.identifier}"
               expect(delivery.body.to_s).to include('Your dataset is now published and public.')
-              expect(delivery.body.to_s).to include(doi_href)
+              expect(delivery.body.to_s).to include('We recommend that you cite and promote your dataset with this citation')
             when 'embargoed'
               delivery = assert_email("[test] Dryad Submission \"#{@resource.title}\"")
               expect(delivery.body.to_s).to include('will be embargoed until')
@@ -108,7 +108,7 @@ module StashEngine
         else
           it "should not send an email when '#{status}'" do
             allow(@resource).to receive(:current_curation_status).and_return(status)
-            UserMailer.status_change(@resource).deliver_now
+            UserMailer.status_change(@resource, status).deliver_now
             assert_no_email
           end
         end
@@ -125,6 +125,8 @@ module StashEngine
       allow(@invite).to receive(:secret).and_return('my_secret')
       allow(@invite).to receive(:landing).and_return("https://#{@request_host}/fake_invite")
       allow(@invite).to receive(:email).and_return(@user.email)
+      allow(@invite).to receive(:first_name).and_return(@user.email)
+      allow(@invite).to receive(:last_name).and_return(@user.email)
 
       url_helpers = double(Module)
       routes = double(Module)

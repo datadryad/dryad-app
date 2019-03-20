@@ -47,6 +47,12 @@ RSpec.configure do |config|
     DatabaseCleaner.clean
   end
 
+  config.before(:each) do
+    # Mock all the mailers fired by callbacks because these tests don't load everything we need
+    allow_any_instance_of(StashEngine::CurationActivity).to receive(:email_author).and_return(true)
+    allow_any_instance_of(StashEngine::CurationActivity).to receive(:email_orcid_invitations).and_return(true)
+  end
+
   config.after(:each) do
     DatabaseCleaner.clean
   end

@@ -1,9 +1,9 @@
-<p>Dear @user.name,</p>
+<p>Dear <%= @user_name %>,</p>
 
-<p>Your dataset “<%= @resource.title %>” (<%= @resource.identifier_str %>) has been successfully submitted. Your dataset will now remain private until your related manuscript has been accepted. At that point we will begin the curation process.</p>
+<p>Your dataset "<%= @resource.title %>" (<%= @resource.identifier_str %>) has been successfully submitted. Your dataset will now remain private until your related manuscript has been accepted. At that point we will begin the curation process.</p>
 
 <p>For private access during this review period, you may share your unpublished dataset using this temporary link: <a href="<%= @resource.share.sharing_link %>"><%= @resource.share.sharing_link %></a>.</p>
 
-<p>To see the status of your dataset, visit your My Datasets page. Under “Submitted” If you click on the dataset you will have a preview of your data publication as well as access to your private URL. You may update your dataset at any point prior to the curation process, utilizing the “Update” option.</p>
+<p>To see the status of your dataset, visit your My Datasets page. Under "Submitted" If you click on the dataset you will have a preview of your data publication as well as access to your private URL. You may update your dataset at any point prior to the curation process, utilizing the "Update" option.</p>
 
 <p>If you have questions or concerns, please visit the help page or get in touch with us <a href="mailto:<%= @helpdesk_email %>"><%= @helpdesk_email %></a>.</p>

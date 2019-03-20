@@ -118,6 +118,11 @@ module StashEngine
 
       context :submit_to_datacite do
 
+        before(:each) do
+          allow_any_instance_of(StashEngine::CurationActivity).to receive(:email_author).and_return(true)
+          allow_any_instance_of(StashEngine::CurationActivity).to receive(:orcid_invitation).and_return(true)
+        end
+
         it 'calls submit_to_datacite when published' do
           @resource.update(publication_date: Date.today.to_s)
           ca = CurationActivity.new(resource_id: @resource.id, status: 'published')
@@ -141,6 +146,10 @@ module StashEngine
       end
 
       context :submit_to_stripe do
+
+        before(:each) do
+          allow_any_instance_of(StashEngine::CurationActivity).to receive(:email_author).and_return(true)
+        end
 
         it 'calls submit_to_stripe when published' do
           allow_any_instance_of(StashEngine::CurationActivity).to receive(:ready_for_payment?).and_return(true)
@@ -166,6 +175,10 @@ module StashEngine
       end
 
       context :email_author do
+
+        before(:each) do
+          allow_any_instance_of(StashEngine::UserMailer).to receive(:status_change).and_return(true)
+        end
 
         StashEngine::CurationActivity.statuses.each do |status|
 
@@ -193,6 +206,8 @@ module StashEngine
 
         before(:each) do
           allow_any_instance_of(StashEngine::CurationActivity).to receive(:email_orcid_invitations).and_return(false)
+          allow_any_instance_of(StashEngine::UserMailer).to receive(:status_change).and_return(true)
+          allow_any_instance_of(StashEngine::UserMailer).to receive(:orcid_invitation).and_return(true)
           @user = Author.create(author_first_name: 'Foo', author_last_name: 'Bar', author_email: 'foo.bar@example.edu', resource_id: @resource.id)
           @ca = CurationActivity.new(resource_id: @resource.id, status: 'published')
         end

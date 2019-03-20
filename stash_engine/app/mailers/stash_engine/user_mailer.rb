@@ -3,11 +3,17 @@ module StashEngine
   # Mails users about submissions
   class UserMailer < ApplicationMailer
 
+    # include ::StashDatacite::LandingMixin
+
     # Called from CurationActivity when the status is submitted, peer_review, published or embargoed
-    def status_change(resource)
-      return unless %w[submitted peer_review published embargoed].include?(resource.current_curation_status)
-      @resource = resource
-      mail(to: @resource.user.email, template_name: @resource.current_curation_status,
+    def status_change(resource, status)
+      return unless %w[submitted peer_review published embargoed].include?(status)
+      user = resource.authors.first || resource.user
+      return unless user.present? && user_email(user).present?
+      @user_name = user_name(user)
+      # @citation = generate_citation(resource) if status == 'published'
+      assign_variables(resource)
+      mail(to: user_email(user), template_name: status,
            subject: "#{rails_env} Dryad Submission \"#{@resource.title}\"")
     end
 
@@ -16,7 +22,8 @@ module StashEngine
       # need to calculate url here because url helpers work erratically in the mailer template itself
       path = StashEngine::Engine.routes.url_helpers.show_path(orcid_invite.identifier.to_s, invitation: orcid_invite.secret)
       @url = orcid_invite.landing(path)
-      @resource = orcid_invite.resource
+      @user_name = "#{orcid_invite.first_name} #{orcid_invite.last_name}"
+      assign_variables(orcid_invite.resource)
       mail(to: orcid_invite.email,
            subject: "#{rails_env} Dryad Submission \"#{@resource.title}\"")
     end
@@ -25,9 +32,9 @@ module StashEngine
     def submission_failed(resource, error)
       warn("Unable to report submission failure #{error}; nil resource") unless resource.present?
       return false unless resource.present?
-      @resource = resource
-      mail(to: @resource.user.email,
-           bcc: @submission_error_emails,
+      @host = Rails.application.default_url_options[:host]
+      assign_variables(resource)
+      mail(to: @resource.user.email, bcc: @submission_error_emails,
            subject: "#{rails_env} Dryad Submission Failure \"#{@resource.title}\"")
     end
 
@@ -35,17 +42,39 @@ module StashEngine
     def error_report(resource, error)
       warn("Unable to report update error #{error}; nil resource") unless resource.present?
       return unless resource.present?
-
-      @resource = resource
+      assign_variables(resource)
       @backtrace = to_backtrace(error)
-
-      to_address = address_list(APP_CONFIG['submission_error_email'])
-      bcc_address = address_list(APP_CONFIG['submission_bc_emails'])
-      mail(to: to_address, bcc: bcc_address,
+      mail(to: @submission_error_emails, bcc: @bcc_emails,
            subject: "#{rails_env} Submitting dataset \"#{@title}\" (doi:#{@identifier_value}) failed")
     end
 
     private
+
+    # rubocop:disable Style/NestedTernaryOperator
+    def user_email(user)
+      user.present? ? (user.respond_to?(:author_email) ? user.author_email : user.email) : nil
+    end
+
+    def user_name(user)
+      user.present? ? (user.respond_to?(:author_standard_name) ? user.author_standard_name : user.name) : nil
+    end
+    # rubocop:enable Style/NestedTernaryOperator
+
+    # defer to the StashDatacite::LandingMixin methods to create a citation
+    #  def generate_citation(resource)
+    #   return unless resource.is_a?(StashEngine::Resource)
+    #   publisher = StashDatacite::Publisher.find_by(resource_id: resource.id).try(:publisher)
+    #   resource_type = StashDatacite::ResourceType.find_by(resource_id: resource.id).try(:resource_type_general_friendly)
+    #   citation(resource.authors, resource.title, resource_type, resource.version, resource.identifier, publisher, resource.publication_years)
+    # end
+
+    def assign_variables(resource)
+      @resource = resource
+      @helpdesk_email = APP_CONFIG['helpdesk_email'] || 'help@datadryad.org'
+      @bcc_emails = APP_CONFIG['submission_bc_emails'] || [@helpdesk_email]
+      @submission_error_emails = APP_CONFIG['submission_error_email'] || [@helpdesk_email]
+      @page_error_emails = APP_CONFIG['page_error_email'] || [@helpdesk_email]
+    end
 
     def rails_env
       return "[#{Rails.env}]" unless Rails.env == 'production'
