@@ -1,15 +1,8 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <meta content='text/html; charset=UTF-8' http-equiv='Content-Type'/>
-</head>
-<body>
-
-<p>Dear <%= @to_name %>:</p>
+<p>Dear <%= @resource.user.email %>:</p>
 
 <p>
-  An error occurred while submitting your dataset &ldquo;<%= @title %>&rdquo;
-  (<%= link_to(@identifier_uri, @identifier_uri)%>)
+  An error occurred while submitting your dataset "<%= @resource.title %>""
+  (<%= link_to(@resource.identifier_uri, @resource.identifier_uri)%>)
   to Dash.
 </p>
 
@@ -27,5 +20,3 @@
 
 <p>Please do not reply to this email.</p>
 
-</body>
-</html>

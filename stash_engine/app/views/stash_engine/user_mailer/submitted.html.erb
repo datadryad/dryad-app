@@ -1,6 +1,6 @@
-<p>Dear @user.name,</p>
+<p>Dear <%= @user_name %>,</p>
 
-<p>Your dataset “<%= @resource.title %>” (<%= @resource.identifier_str %>) has been successfully submitted and will soon enter the curation process. You should receive an update within two business days. (Large or complex submissions may require a longer response time).</p>
+<p>Your dataset "<%= @resource.title %>" (<%= @resource.identifier_str %>) has been successfully submitted and will soon enter the curation process. You should receive an update within two business days. (Large or complex submissions may require a longer response time).</p>
 
 <p>For private access prior to publication, you may share your dataset using this temporary link: <a href="<%= @resource.share.sharing_link %>"><%= @resource.share.sharing_link %></a>.</p>
 

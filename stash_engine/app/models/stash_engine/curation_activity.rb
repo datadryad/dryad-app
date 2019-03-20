@@ -138,6 +138,10 @@ module StashEngine
       return unless should_update_doi?
       idg = Stash::Doi::IdGen.make_instance(resource: resource)
       idg.update_identifier_metadata!
+
+      # Send out emails now that the citation has been registered
+      email_author if published?
+      email_orcid_invitations if published?
     end
 
     def update_solr
@@ -145,20 +149,21 @@ module StashEngine
     end
 
     def email_author
-      UserMailer.status_change(resource)
+      StashEngine::UserMailer.status_change(resource, status).deliver_now
     end
 
     # rubocop:disable Metrics/AbcSize
     # rubocop:disable Metrics/MethodLength
     def email_orcid_invitations
-      # Do not send an invitation to users who have already attached their ORCID or have an
+      return unless published?
+      # Do not send an invitation to users who have no email address and do not have an
       # existing invitation for the identifier
       existing_invites = StashEngine::OrcidInvitation.where(identifier_id: resource.identifier_id).pluck(:email).uniq
-      resource.authors.joins('LEFT OUTER JOIN stash_engine_users ON stash_engine_authors.author_email = stash_engine_users.email')
-        .where.not(author_email: existing_invites)
-        .where('stash_engine_users.orcid IS NULL').each do |author|
+      authors = resource.authors.where.not(author_email: existing_invites).where.not(author_email: nil)
 
-        UserMailer.orcid_invitation(
+      return if authors.length <= 1
+      authors[1..authors.legnth].each do |author|
+        StashEngine::UserMailer.orcid_invitation(
           StashEngine::OrcidInvitation.create(
             email: author.author_email,
             identifier_id: resource.identifier_id,
@@ -167,7 +172,7 @@ module StashEngine
             secret: SecureRandom.urlsafe_base64,
             invited_at: Time.new
           )
-        )
+        ).deliver_now
       end
     end
     # rubocop:enable Metrics/MethodLength
