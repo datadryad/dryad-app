@@ -1,6 +1,5 @@
 require_dependency 'stash_datacite/application_controller'
 require 'httparty'
-require 'byebug'
 
 module StashDatacite
   class PublicationsController < ApplicationController
