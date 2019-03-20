@@ -11,7 +11,7 @@ module StashDatacite
       @pub_issn = StashEngine::InternalDatum.find_or_create_by(stash_identifier: @se_id, data_type: 'publicationISSN')
       @msid = StashEngine::InternalDatum.find_or_create_by(stash_identifier: @se_id, data_type: 'manuscriptNumber')
       @doi = StashEngine::InternalDatum.find_or_create_by(stash_identifier: @se_id, data_type: 'publicationDOI')
-      issn =  params[:internal_datum][:publication_issn]
+      issn = params[:internal_datum][:publication_issn]
       msid = params[:internal_datum][:msid]
       doi = params[:internal_datum][:doi]
       @pub_issn.update(value: issn) unless issn.blank?
