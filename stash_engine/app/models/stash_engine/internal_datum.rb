@@ -1,7 +1,7 @@
 module StashEngine
   class InternalDatum < ActiveRecord::Base
     belongs_to :stash_identifier, class_name: 'StashEngine::Identifier', foreign_key: 'identifier_id'
-    validates :data_type, inclusion: { in: %w[manuscriptNumber mismatchedDOI duplicateItem formerManuscriptNumber publicationISSN],
+    validates :data_type, inclusion: { in: %w[manuscriptNumber mismatchedDOI duplicateItem formerManuscriptNumber publicationISSN publicationDOI],
                                        message: '%{value} is not a valid data type' }
     validates :data_type, presence: true
     validates :value, presence: true
@@ -12,7 +12,7 @@ module StashEngine
 
     def self.allows_multiple(type)
       case type
-      when 'manuscriptNumber', 'publicationISSN'
+      when 'manuscriptNumber', 'publicationISSN', 'publicationDOI'
         false
       when 'mismatchedDOI', 'duplicateItem', 'formerManuscriptNumber'
         true

@@ -89,31 +89,34 @@ function loadPublications() {
         $(this).closest("form").submit();
     });
 
-    // show and hide things for clicking by user for pretty form making
-    function setChoiceDisplay(chosen){
-        switch(chosen) {
-            case 'manuscript':
-                $(".js-doi-section").hide();
-                $(".js-ms-section").show();
-                $(".c-import__form-section").show();
-                $(".js-other-info").hide();
-                $(".js-populate-submit").val("Import Manuscript Metadata");
-                break;
-            case 'published':
-                $(".js-ms-section").hide();
-                $(".js-doi-section").show()
-                $(".c-import__form-section").show();
-                $(".js-other-info").hide();
-                $(".js-populate-submit").val("Import Article Metadata");
-                break;
-            default:
-                $(".c-import__form-section").hide();
-                $(".js-other-info").show();
-        }
-    }
-
     // trigger different options for auto-filling data when clicking radio buttons
     $('.js-import-choice input[type=radio]').change(function() {
-        setChoiceDisplay(this.value);
+        setPublicationChoiceDisplay(this.value);
     });
 };
+
+// show and hide things for clicking by user for pretty form making
+function setPublicationChoiceDisplay(chosen){
+    switch(chosen) {
+        case 'manuscript':
+            $(".js-doi-section").hide();
+            $(".js-ms-section").show();
+            $(".c-import__form-section").show();
+            $(".js-other-info").hide();
+            $(".js-populate-submit").val("Import Manuscript Metadata");
+            $("#choose_manuscript").prop("checked", true);
+            break;
+        case 'published':
+            $(".js-ms-section").hide();
+            $(".js-doi-section").show()
+            $(".c-import__form-section").show();
+            $(".js-other-info").hide();
+            $(".js-populate-submit").val("Import Article Metadata");
+            $("#choose_published").prop("checked", true);
+            break;
+        default:
+            $(".c-import__form-section").hide();
+            $(".js-other-info").show();
+            $("#choose_other").prop("checked", true);
+    }
+}
