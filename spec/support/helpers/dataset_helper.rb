@@ -55,6 +55,7 @@ module DatasetHelper
   end
 
   def fill_article_info(name:, msid:)
+    choose('choose_manuscript')
     fill_in 'internal_datum[publication_name]', with: name
     fill_in 'internal_datum[msid]', with: msid
   end
