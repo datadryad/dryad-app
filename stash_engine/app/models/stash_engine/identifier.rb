@@ -167,7 +167,7 @@ module StashEngine
     def publication_name
       publication_data('fullName')
     end
-
+    
     def journal_will_pay?
       plan_type = publication_data('paymentPlanType')
       plan_type == 'SUBSCRIPTION' ||
@@ -180,9 +180,19 @@ module StashEngine
     end
 
     def fee_waiver_country?
-      false
+      Settings.FEE_WAIVER_COUNTRIES.include?(submitter_country)
     end
 
+    def submitter_country
+      affil = latest_resource&.authors&.first&.affiliation&.long_name
+      url = 'https://api.ror.org/organizations'
+      results = HTTParty.get(url,
+                             query: { query: affil },
+                             headers: { 'Content-Type' => 'application/json' })
+      
+      results.parsed_response['items'].first['country']['country_name']
+    end
+    
     private
 
     def abstracts

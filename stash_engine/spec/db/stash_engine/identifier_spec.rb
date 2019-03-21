@@ -1,3 +1,4 @@
+# coding: utf-8
 require 'db_spec_helper'
 require 'webmock/rspec'
 
@@ -258,6 +259,23 @@ module StashEngine
 
         expect(ident.institution_will_pay?).to eq(true)
         expect(ident.user_must_pay?).to eq(false)
+      end
+
+      it 'does not make user pay when first author is from a waiver country' do
+        stub_request(:any, %r{/organizations?query="American University of Afghanistan"})
+          .to_return(body: '{"number_of_results": 1,
+                             "time_taken": 18,
+                             "items": [ {
+                                "id": "https://ror.org/04fe8b875",
+                                "name": "American University of Afghanistan",
+                                "country": {
+                                   "country_code": "AF",
+                                   "country_name": "Afghanistan" } 
+                                    }]}',
+                     status: 200,
+                     headers: { 'Content-Type' => 'application/json' })
+        expect(identifier.fee_waiver_country?).to eq(true)
+        expect(identifier.user_must_pay?).to eq(false)
       end
     end
 
