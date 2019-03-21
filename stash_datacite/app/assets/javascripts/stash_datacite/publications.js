@@ -69,7 +69,8 @@ function loadPublications() {
             });
     });
 
-    $( '.js-msid' ).on('focus', function () {
+    // moving focus saves
+    $( '.js-msid, .js-doi' ).on('focus', function () {
         previous_value = this.value;
         // console.log('previous value:' + previous_value );
     }).change(function() {
@@ -80,10 +81,42 @@ function loadPublications() {
             $(form).trigger('submit.rails');
         }
     });
+
     // trap the submit button, change hidden 'do_import' = 'true' and then submit when this button is clicked
-    $('.js-import-ms').click(function(e){
+    $('.js-populate-submit').click(function(e){
         e.preventDefault();
         $('#internal_datum_do_import').val('true');
         $(this).closest("form").submit();
     });
+
+    // trigger different options for auto-filling data when clicking radio buttons
+    $('.js-import-choice input[type=radio]').change(function() {
+        setPublicationChoiceDisplay(this.value);
+    });
 };
+
+// show and hide things for clicking by user for pretty form making
+function setPublicationChoiceDisplay(chosen){
+    switch(chosen) {
+        case 'manuscript':
+            $(".js-doi-section").hide();
+            $(".js-ms-section").show();
+            $(".c-import__form-section").show();
+            $(".js-other-info").hide();
+            $(".js-populate-submit").val("Import Manuscript Metadata");
+            $("#choose_manuscript").prop("checked", true);
+            break;
+        case 'published':
+            $(".js-ms-section").hide();
+            $(".js-doi-section").show()
+            $(".c-import__form-section").show();
+            $(".js-other-info").hide();
+            $(".js-populate-submit").val("Import Article Metadata");
+            $("#choose_published").prop("checked", true);
+            break;
+        default:
+            $(".c-import__form-section").hide();
+            $(".js-other-info").show();
+            $("#choose_other").prop("checked", true);
+    }
+}
