@@ -262,7 +262,9 @@ module StashEngine
       end
 
       it 'does not make user pay when first author is from a waiver country' do
-        stub_request(:any, %r{/organizations?query="American University of Afghanistan"})
+        Author.create(author_first_name: 'Joanna', author_last_name: 'Jones', author_orcid: '33-22-4838-3322', resource_id: @res3.id)
+        @identifier.latest_resource.authors.first.affiliation_by_name('American University of Afghanistan')
+        stub_request(:any, %r{/organizations})
           .to_return(body: '{"number_of_results": 1,
                              "time_taken": 18,
                              "items": [ {
@@ -274,6 +276,7 @@ module StashEngine
                                     }]}',
                      status: 200,
                      headers: { 'Content-Type' => 'application/json' })
+#        expect(identifier.submitter_country).to eq(true)
         expect(identifier.fee_waiver_country?).to eq(true)
         expect(identifier.user_must_pay?).to eq(false)
       end
