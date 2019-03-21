@@ -161,7 +161,8 @@ module StashEngine
     end
 
     def publication_issn
-      StashEngine::InternalDatum.find_by(identifier_id: id, data_type: 'publicationISSN')&.value
+      internal_data.find_by(data_type: 'publicationISSN')&.value
+      # StashEngine::InternalDatum.find_by(identifier_id: id, data_type: 'publicationISSN')&.value
     end
 
     def publication_name
@@ -180,7 +181,7 @@ module StashEngine
     end
 
     def fee_waiver_country?
-      Settings&.FEE_WAIVER_COUNTRIES&.include?(submitter_country)
+      APP_CONFIG.fee_waiver_countries&.include?(submitter_country)
     end
 
     def submitter_country

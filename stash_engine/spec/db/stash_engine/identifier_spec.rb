@@ -217,67 +217,86 @@ module StashEngine
       end
     end
 
-    describe '#payment' do
-      it 'defaults to user pay' do
+    describe '#user_must_pay?' do
+      before(:each) do
+        allow(@identifier).to receive(:'journal_will_pay?').and_return(false)
+        allow(@identifier).to receive(:'institution_will_pay?').and_return(false)
+        allow(@identifier).to receive(:'fee_waiver_country?').and_return(false)
+      end
+
+      it 'returns true if no one else will pay' do
+        expect(@identifier.user_must_pay?).to eq(true)
+      end
+
+      it 'returns false if journal will pay' do
+        allow(@identifier).to receive(:'journal_will_pay?').and_return(true)
+        expect(@identifier.user_must_pay?).to eq(false)
+      end
+
+      it 'returns false if institution will pay' do
+        allow(@identifier).to receive(:'institution_will_pay?').and_return(true)
+        expect(@identifier.user_must_pay?).to eq(false)
+      end
+
+      it 'returns false if fee is waived' do
+        allow(@identifier).to receive(:'fee_waiver_country?').and_return(true)
+        expect(@identifier.user_must_pay?).to eq(false)
+      end
+    end
+
+    describe '#publication_data' do
+      it 'reads the value correctly from json body' do
         stub_request(:any, %r{/journals/#{@fake_issn}})
-          .to_return(body: '{}',
+          .to_return(body: { blah: 'meow' }.to_json,
                      status: 200,
                      headers: { 'Content-Type' => 'application/json' })
+        expect(@identifier.publication_data('blah')).to eql('meow')
+      end
+    end
 
-        expect(identifier.user_must_pay?).to eq(true)
+    describe '#publication_issn' do
+      it 'gets publication_issn through convenience method' do
+        expect(@identifier.publication_issn).to eql(@fake_issn)
+      end
+    end
+
+    describe '#publication_name' do
+      xit 'tests something just for publication_name' do
+
+      end
+    end
+
+    describe '#journal_will_pay?' do
+      xit "tests something just for this method's concern" do
+
+      end
+    end
+
+    describe '#institution_will_pay?' do
+      xit "tests something just for this method's concern" do
+
+      end
+    end
+
+    describe '#fee_waiver_country?' do
+      it 'returns true for a country that waives the fee' do
+        allow(@identifier).to receive('submitter_country').and_return('Syria')
+        expect(@identifier.fee_waiver_country?).to be(true)
       end
 
-      it 'does not make user pay when journal pays' do
-        stub_request(:any, %r{/journals/#{@fake_issn}})
-          .to_return(body: '{"paymentPlanType":"SUBSCRIPTION"}',
-                     status: 200,
-                     headers: { 'Content-Type' => 'application/json' })
-
-        expect(identifier.journal_will_pay?).to eq(true)
-        expect(identifier.user_must_pay?).to eq(false)
+      it "returns false for a country that doesn't waive the fee" do
+        allow(@identifier).to receive('submitter_country').and_return('Sweden')
+        expect(@identifier.fee_waiver_country?).to be(false)
       end
+    end
 
-      it 'makes the user pay when journal does not pay' do
-        stub_request(:any, %r{/journals/#{@fake_issn}})
-          .to_return(body: '{"paymentPlanType":"NONE"}',
-                     status: 200,
-                     headers: { 'Content-Type' => 'application/json' })
-
-        expect(identifier.journal_will_pay?).to eq(false)
-        expect(identifier.user_must_pay?).to eq(true)
-      end
-
-      it 'does not make user pay when institution pays' do
-        tenant = class_double(Tenant)
-        allow(Tenant).to receive(:find).with('paying-institution').and_return(tenant)
-        allow(Tenant).to receive(:covers_dpc).and_return(true)
-        allow(tenant).to receive(:covers_dpc).and_return(true)
-        ident = Identifier.create
-        Resource.create(tenant_id: 'paying-institution', identifier_id: ident.id)
-        ident.reload
-
-        expect(ident.institution_will_pay?).to eq(true)
-        expect(ident.user_must_pay?).to eq(false)
-      end
-
-      it 'does not make user pay when first author is from a waiver country' do
-        Author.create(author_first_name: 'Joanna', author_last_name: 'Jones', author_orcid: '33-22-4838-3322', resource_id: @res3.id)
-        @identifier.latest_resource.authors.first.affiliation_by_name('American University of Afghanistan')
-        stub_request(:any, %r{/organizations})
-          .to_return(body: '{"number_of_results": 1,
-                             "time_taken": 18,
-                             "items": [ {
-                                "id": "https://ror.org/04fe8b875",
-                                "name": "American University of Afghanistan",
-                                "country": {
-                                   "country_code": "AF",
-                                   "country_name": "Afghanistan" }
-                                    }]}',
-                     status: 200,
-                     headers: { 'Content-Type' => 'application/json' })
-        #        expect(identifier.submitter_country).to eq(true)
-        expect(identifier.fee_waiver_country?).to eq(true)
-        expect(identifier.user_must_pay?).to eq(false)
+    describe '#submitter_country' do
+      xit "this one sucks because stash_engine doesn't know about stash_datacite, but stash_datacite knows about stash_engine"
+        # Probably the way to test this is to put the test in the stash_datacite engine since it knows about both engines.
+        # Or if we transition to using the engines simply as namespacing then we can move all tests to the main app
+        # and save ourselves a lot of pain and everything will load as part of the main app.
+        #
+        # The idea that the metadata schema is going to be separated and replaceable from the core stash_engine makes this hard.
       end
     end
 
