@@ -1,6 +1,5 @@
 require_dependency 'stash_datacite/application_controller'
 require 'httparty'
-require 'byebug'
 
 module StashDatacite
   class PublicationsController < ApplicationController
@@ -11,10 +10,13 @@ module StashDatacite
       @se_id = StashEngine::Identifier.find(params[:internal_datum][:identifier_id])
       @pub_issn = StashEngine::InternalDatum.find_or_create_by(stash_identifier: @se_id, data_type: 'publicationISSN')
       @msid = StashEngine::InternalDatum.find_or_create_by(stash_identifier: @se_id, data_type: 'manuscriptNumber')
+      @doi = StashEngine::InternalDatum.find_or_create_by(stash_identifier: @se_id, data_type: 'publicationDOI')
       issn = params[:internal_datum][:publication_issn]
       msid = params[:internal_datum][:msid]
+      doi = params[:internal_datum][:doi]
       @pub_issn.update(value: issn) unless issn.blank?
       @msid.update(value: msid) unless msid.blank?
+      @doi.update(value: doi) unless doi.blank?
       respond_to do |format|
         format.js do
           if params[:internal_datum][:do_import] == 'true'
