@@ -167,7 +167,7 @@ module StashEngine
     def publication_name
       publication_data('fullName')
     end
-    
+
     def journal_will_pay?
       plan_type = publication_data('paymentPlanType')
       plan_type == 'SUBSCRIPTION' ||
@@ -190,10 +190,10 @@ module StashEngine
       results = HTTParty.get(url,
                              query: { query: affil },
                              headers: { 'Content-Type' => 'application/json' })
-      
+
       results.parsed_response['items'].first['country']['country_name']
     end
-    
+
     private
 
     def abstracts
