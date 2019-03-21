@@ -4291,6 +4291,27 @@ html.no-details .o-showhide__summary {
       -ms-flex: 1 1;
           flex: 1 1; }
 
+.c-import__choicesbox {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: space-evenly;
+      -ms-flex-pack: space-evenly;
+          justify-content: space-evenly; }
+
+.c-import__choicebox {
+  text-align: center; }
+
+.c-import__icon {
+  display: inline-block;
+  margin-bottom: 1rem; }
+
+.c-import__form-section {
+  margin: 2rem 0 0; }
+
+.c-import__info-section {
+  margin: 2rem 0 0; }
+
 .c-keywords {
   margin: 0 0 20px; }
 

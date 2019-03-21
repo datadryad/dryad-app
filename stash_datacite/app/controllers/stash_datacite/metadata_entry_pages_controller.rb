@@ -10,6 +10,7 @@ module StashDatacite
       se_id = StashEngine::Identifier.find(@resource.identifier_id)
       @publication = StashEngine::InternalDatum.find_or_create_by(stash_identifier: se_id, data_type: 'publicationISSN')
       @msid = StashEngine::InternalDatum.find_or_create_by(stash_identifier: se_id, data_type: 'manuscriptNumber')
+      @doi = StashEngine::InternalDatum.find_or_create_by(stash_identifier: se_id, data_type: 'publicationDOI')
 
       respond_to do |format|
         format.js
