@@ -1,0 +1,9 @@
+<p>Dear <%= @user_name %>,</p>
+
+<p>Your dataset "<%= @resource.title %>" (<%= @resource.identifier_str %>) has been successfully submitted and will soon enter the curation process. You should receive an update within two business days. (Large or complex submissions may require a longer response time).</p>
+
+<p>For private access prior to publication, you may share your dataset using this temporary link: <a href="<%= @resource.share.sharing_link %>"><%= @resource.share.sharing_link %></a>.</p>
+
+<p>To see the status of your dataset, visit your My Datasets page. Under "Submitted" If you click on the dataset you will have a preview of your data publication as well as access to your private URL. Please note this URL is not your permanent data citation.</p>
+
+<p>If you have questions or concerns, please visit the help page or get in touch with us <a href="mailto:<%= @helpdesk_email %>"><%= @helpdesk_email %></a>.</p>

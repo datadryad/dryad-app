@@ -2,91 +2,82 @@ module StashEngine
 
   # Mails users about submissions
   class UserMailer < ApplicationMailer
-    # TODO: DRY these methods
 
-    # add the formatted_date helper for view BAH -- doesn't seem to work
-    # helper :formatted_date
+    # include ::StashDatacite::LandingMixin
 
-    default from: "Dash Notifications <#{APP_CONFIG['feedback_email_from']}>",
-            return_path: (APP_CONFIG['feedback_email_from']).to_s
-
-    def error_report(resource, error)
-      warn("Unable to report update error #{error}; nil resource") unless resource
-      return unless resource
-
-      init_from(resource)
-
-      @backtrace = to_backtrace(error)
-
-      to_address = address_list(APP_CONFIG['submission_error_email'])
-      bcc_address = address_list(APP_CONFIG['submission_bc_emails'])
-      mail(to: to_address, bcc: bcc_address,
-           subject: "#{rails_env}Submitting dataset \"#{@title}\" (doi:#{@identifier_value}) failed")
+    # Called from CurationActivity when the status is submitted, peer_review, published or embargoed
+    def status_change(resource, status)
+      return unless %w[submitted peer_review published embargoed].include?(status)
+      user = resource.authors.first || resource.user
+      return unless user.present? && user_email(user).present?
+      @user_name = user_name(user)
+      # @citation = generate_citation(resource) if status == 'published'
+      assign_variables(resource)
+      mail(to: user_email(user), template_name: status,
+           subject: "#{rails_env} Dryad Submission \"#{@resource.title}\"")
     end
 
-    def submission_succeeded(resource) # rubocop:disable Metrics/MethodLength
-      warn('Unable to report successful submission; nil resource') unless resource
-      return unless resource
-
-      init_from(resource)
-      @to_name = @user_name
-
-      tenant = resource.tenant
-      @host = Rails.application.default_url_options[:host]
-
-      @embargo_date = resource.publication_date if resource.present? && !resource.files_published?
-
-      @to_name = @user_name
-      to_address = address_list(@user_email)
-      bcc_address = address_list([APP_CONFIG['submission_bc_emails']] + [tenant.campus_contacts])
-      mail(to: to_address, bcc: bcc_address,
-           subject: "#{rails_env}Dataset \"#{@title}\" (doi:#{@identifier_value}) submitted")
-    end
-
-    def submission_failed(resource, error) # rubocop:disable Metrics/MethodLength
-      warn("Unable to report submission failure #{error}; nil resource") unless resource
-      return unless resource
-
-      init_from(resource)
-      @to_name = @user_name
-
-      user = resource.user
-      @host = Rails.application.default_url_options[:host]
-
-      @backtrace = to_backtrace(error)
-
-      to_address = address_list(user.email)
-      bcc_address = address_list([APP_CONFIG['submission_error_email']].flatten + [APP_CONFIG['submission_bc_emails']].flatten)
-      mail(to: to_address, bcc: bcc_address,
-           subject: "#{rails_env}Submitting dataset \"#{@title}\" (doi:#{@identifier_value}) failed")
-    end
-
+    # Called from the LandingController when an update happens
     def orcid_invitation(orcid_invite)
-      @invite = orcid_invite
       # need to calculate url here because url helpers work erratically in the mailer template itself
-      @url = @invite.landing(StashEngine::Engine.routes.url_helpers.show_path(@invite.identifier.to_s, invitation: @invite.secret))
-      mail(to: @invite.email,
-           subject: "#{rails_env}Your dataset \"#{@invite.resource.title}\" has been published")
+      path = StashEngine::Engine.routes.url_helpers.show_path(orcid_invite.identifier.to_s, invitation: orcid_invite.secret)
+      @url = orcid_invite.landing(path)
+      @user_name = "#{orcid_invite.first_name} #{orcid_invite.last_name}"
+      assign_variables(orcid_invite.resource)
+      mail(to: orcid_invite.email,
+           subject: "#{rails_env} Dryad Submission \"#{@resource.title}\"")
+    end
+
+    # Called from the StashEngine::Repository
+    def submission_failed(resource, error)
+      warn("Unable to report submission failure #{error}; nil resource") unless resource.present?
+      return false unless resource.present?
+      @host = Rails.application.default_url_options[:host]
+      assign_variables(resource)
+      mail(to: @resource.user.email, bcc: @submission_error_emails,
+           subject: "#{rails_env} Dryad Submission Failure \"#{@resource.title}\"")
+    end
+
+    # Called from the StashEngine::Repository
+    def error_report(resource, error)
+      warn("Unable to report update error #{error}; nil resource") unless resource.present?
+      return unless resource.present?
+      assign_variables(resource)
+      @backtrace = to_backtrace(error)
+      mail(to: @submission_error_emails, bcc: @bcc_emails,
+           subject: "#{rails_env} Submitting dataset \"#{@title}\" (doi:#{@identifier_value}) failed")
     end
 
     private
 
-    def init_from(resource)
-      user = resource.user
-      @user_name = "#{user.first_name} #{user.last_name}"
-      @user_email = user.email
-      @title = resource.title
-      @identifier_uri = resource.identifier_uri
-      @identifier_value = resource.identifier_value
+    # rubocop:disable Style/NestedTernaryOperator
+    def user_email(user)
+      user.present? ? (user.respond_to?(:author_email) ? user.author_email : user.email) : nil
     end
 
-    def address_list(addresses)
-      addresses = [addresses] unless addresses.respond_to?(:join)
-      addresses.flatten.reject(&:blank?).join(',')
+    def user_name(user)
+      user.present? ? (user.respond_to?(:author_standard_name) ? user.author_standard_name : user.name) : nil
+    end
+    # rubocop:enable Style/NestedTernaryOperator
+
+    # defer to the StashDatacite::LandingMixin methods to create a citation
+    #  def generate_citation(resource)
+    #   return unless resource.is_a?(StashEngine::Resource)
+    #   publisher = StashDatacite::Publisher.find_by(resource_id: resource.id).try(:publisher)
+    #   resource_type = StashDatacite::ResourceType.find_by(resource_id: resource.id).try(:resource_type_general_friendly)
+    #   citation(resource.authors, resource.title, resource_type, resource.version, resource.identifier, publisher, resource.publication_years)
+    # end
+
+    def assign_variables(resource)
+      @resource = resource
+      @helpdesk_email = APP_CONFIG['helpdesk_email'] || 'help@datadryad.org'
+      @bcc_emails = APP_CONFIG['submission_bc_emails'] || [@helpdesk_email]
+      @submission_error_emails = APP_CONFIG['submission_error_email'] || [@helpdesk_email]
+      @page_error_emails = APP_CONFIG['page_error_email'] || [@helpdesk_email]
     end
 
     def rails_env
-      return "[#{Rails.env}] " unless Rails.env == 'production'
+      return "[#{Rails.env}]" unless Rails.env == 'production'
       ''
     end
 
@@ -95,5 +86,12 @@ module StashEngine
       backtrace = e.respond_to?(:backtrace) && e.backtrace ? e.backtrace.join("\n") : ''
       "#{e.class}: #{e}\n#{backtrace}"
     end
+
+    def address_list(addresses)
+      addresses = [addresses] unless addresses.respond_to?(:join)
+      addresses.flatten.reject(&:blank?).join(',')
+    end
+
   end
+
 end

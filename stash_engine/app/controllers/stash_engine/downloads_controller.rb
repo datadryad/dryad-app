@@ -54,19 +54,22 @@ module StashEngine
     # rubocop:enable Metrics/MethodLength
 
     # method to download by the secret sharing link, must match the string they generated to look up and download
+    # rubocop:disable Metrics/MethodLength
     def share
       @shares = Share.where(secret_id: params[:id])
       raise ActionController::RoutingError, 'Not Found' if @shares.count < 1
 
       @resource = @shares.first.resource
-      unless @resource.files_published?
+      if !@resource.files_published?
         @version_streamer.download(resource: @resource) do
           redirect_to private_async_form_path(id: @resource.identifier_str, big: 'showme', secret_id: params[:id]) # for async
           return
         end
+      else
+        redirect_to_public
       end
-      redirect_to_public
     end
+    # rubocop:enable Metrics/MethodLength
 
     # shows the form for private async.  Usually part of the landing page for dataset, but page may not exist for public
     # anymore because of curation so we create a new page to host the form
