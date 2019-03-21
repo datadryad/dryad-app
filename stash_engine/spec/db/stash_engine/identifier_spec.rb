@@ -291,7 +291,7 @@ module StashEngine
     end
 
     describe '#submitter_country' do
-      xit "this one sucks because stash_engine doesn't know about stash_datacite, but stash_datacite knows about stash_engine"
+      xit "this one sucks because stash_engine doesn't know about stash_datacite, but stash_datacite knows about stash_engine" do
         # Probably the way to test this is to put the test in the stash_datacite engine since it knows about both engines.
         # Or if we transition to using the engines simply as namespacing then we can move all tests to the main app
         # and save ourselves a lot of pain and everything will load as part of the main app.
