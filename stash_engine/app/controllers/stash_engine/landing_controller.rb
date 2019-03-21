@@ -106,7 +106,6 @@ module StashEngine
       StashEngine.repository.harvested(identifier: id, record_identifier: record_identifier)
 
       # success but no content, see RFC 5789 sec. 2.1
-      deliver_invitations!
       update_size!
       # now that the OAI-PMH feed has confirmed it's in Merritt then cleanup, but not before
       ::StashEngine.repository.cleanup_files(@resource)
@@ -171,21 +170,6 @@ module StashEngine
       identifiers.first
     end
 
-    # --- These are for delivering orcid invitations when we get the callback that an item has been processed
-
-    # rubocop:disable Metrics/AbcSize
-    def deliver_invitations!
-      return if resource.nil? || resource.skip_emails
-      authors = resource.authors.where.not(author_email: nil)
-      authors.each do |author|
-        next if author.author_email.blank? || StashEngine::OrcidInvitation.where(email: author.author_email)
-            .where(identifier_id: id.id).count > 0
-        invite = create_invite(author)
-        StashEngine::UserMailer.orcid_invitation(invite).deliver_now
-      end
-    end
-    # rubocop:enable Metrics/AbcSize
-
     # updates the total size & call to update zero sizes for individual files
     def update_size!
       return unless resource
@@ -201,15 +185,5 @@ module StashEngine
       end
     end
 
-    def create_invite(author)
-      StashEngine::OrcidInvitation.create(
-        email: author.author_email,
-        identifier_id: id.id,
-        first_name: author.author_first_name,
-        last_name: author.author_last_name,
-        secret: SecureRandom.urlsafe_base64,
-        invited_at: Time.new
-      )
-    end
   end
 end

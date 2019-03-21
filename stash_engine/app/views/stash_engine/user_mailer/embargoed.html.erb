@@ -1,0 +1,13 @@
+<p>Dear <%= @user_name %>,</p>
+
+<% if @resource.publication_date.blank? %>
+  <p>Your dataset "<%= @resource.title %>" (<%= @resource.identifier_str %>) is now embargoed.</p>
+<% else %>
+  <p>Your dataset "<%= @resource.title %>" (<%= @resource.identifier_str %>) will be embargoed until <%= @resource.publication_date.strftime('%B %d, %Y') %>.</p>
+<% end %>
+
+<p>Your DOI has been registered and the landing page for your dataset is publicly available. However, the data files are not viewable or downloadable. <%= 'When your embargo has lifted we will notify you.' if @resource.publication_date.present? %></p>
+
+<p>Thanks again for making your research openly available.</p>
+
+<p>We welcome your feedback! Contact us at <a href="mailto:<%= @helpdesk_email %>"><%= @helpdesk_email %></a>.</p>
