@@ -60,8 +60,6 @@ group :development do
 end
 
 group :test do
-  # Ruby fast debugger - base + CLI (http://github.com/deivid-rodriguez/byebug)
-  gem 'byebug'
   # Capybara aims to simplify the process of integration testing Rack applications, such as Rails, Sinatra or Merb (https://github.com/teamcapybara/capybara)
   gem 'capybara'
   # Automatically create snapshots when Cucumber steps fail with Capybara and Rails (http://github.com/mattheworiordan/capybara-screenshot)
@@ -101,6 +99,8 @@ end
 
 group :development, :test do
   gem 'binding_of_caller'
+  # Ruby fast debugger - base + CLI (http://github.com/deivid-rodriguez/byebug)
+  gem 'byebug'
   gem 'pry'
   gem 'pry-rails'
   gem 'pry-remote'
