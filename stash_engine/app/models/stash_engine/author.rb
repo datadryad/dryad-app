@@ -1,3 +1,5 @@
+require_relative '../../../../stash_datacite/app/models/stash_datacite/affiliation'
+
 module StashEngine
   class Author < ActiveRecord::Base
 
