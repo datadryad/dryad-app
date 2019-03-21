@@ -1,4 +1,3 @@
-# coding: utf-8
 require 'db_spec_helper'
 require 'webmock/rspec'
 
@@ -272,11 +271,11 @@ module StashEngine
                                 "name": "American University of Afghanistan",
                                 "country": {
                                    "country_code": "AF",
-                                   "country_name": "Afghanistan" } 
+                                   "country_name": "Afghanistan" }
                                     }]}',
                      status: 200,
                      headers: { 'Content-Type' => 'application/json' })
-#        expect(identifier.submitter_country).to eq(true)
+        #        expect(identifier.submitter_country).to eq(true)
         expect(identifier.fee_waiver_country?).to eq(true)
         expect(identifier.user_must_pay?).to eq(false)
       end
