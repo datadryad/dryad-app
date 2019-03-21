@@ -21,6 +21,7 @@ FactoryBot.define do
 
     trait :submitted do
       after(:create) do |resource|
+        resource.share = build(:share, resource_id: resource.id, tenant: resource.tenant_id)
         resource.current_resource_state_id = create(:resource_state, :submitted, user: resource.user, resource: resource).id
         resource.save
         resource.reload
@@ -33,6 +34,7 @@ FactoryBot.define do
   factory :resource_embargoed, parent: :resource, class: StashEngine::Resource do
 
     publication_date { (Date.today + 2.days).to_s }
+    submitted
 
     after(:create) do |resource|
       create(:curation_activity, :curation, user: resource.user, resource: resource)
@@ -49,6 +51,7 @@ FactoryBot.define do
   factory :resource_published, parent: :resource, class: StashEngine::Resource do
 
     publication_date { Date.today.to_s }
+    submitted
 
     after(:create) do |resource|
       create(:curation_activity, :curation, user: resource.user, resource: resource)
