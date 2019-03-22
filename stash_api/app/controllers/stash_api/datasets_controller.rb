@@ -41,7 +41,6 @@ module StashApi
       end
     end
 
-    # rubocop:disable Metrics/MethodLength
     # get /datasets
     def index
       # if a publicationISSN is specified, we want to make sure that we're only working with those:
@@ -67,7 +66,6 @@ module StashApi
         format.json { render json: @datasets }
       end
     end
-    # rubocop:enable Metrics/MethodLength
 
     # we are using PATCH only to update the versionStatus=submitted
     # PUT will be to update/replace the dataset metadata
@@ -75,7 +73,6 @@ module StashApi
     # we are also allowing UPSERT with a PUT as in the pattern at
     # https://www.safaribooksonline.com/library/view/restful-web-services/9780596809140/ch01s09.html or
     # https://stackoverflow.com/questions/18470588/in-rest-is-post-or-put-best-suited-for-upsert-operation
-    # rubocop:disable Metrics/MethodLength
     def update
       do_patch { return } # check if patch and do submission and return early if it is a patch (submission)
       # otherwise this is a PUT of the dataset metadata
@@ -93,7 +90,6 @@ module StashApi
         end
       end
     end
-    # rubocop:enable Metrics/MethodLength
 
     # get /datasets/<id>/download
     def download
@@ -183,9 +179,8 @@ module StashApi
       return if check_may_set_user_id == false
     end
 
-    # rubocop:disable Metrics/MethodLength
     def check_superuser_restricted_params
-      %w[skipDataciteUpdate skipEmails loosenValidation].each do |attr|
+      %w[skipDataciteUpdate skipEmails preserveCurationStatus loosenValidation].each do |attr|
         item_value = params[attr]
         unless item_value.nil? || item_value.class == TrueClass || item_value.class == FalseClass
           render json: { error: "Bad Request: #{attr} must be true or false" }.to_json, status: 400
@@ -197,7 +192,6 @@ module StashApi
         end
       end
     end
-    # rubocop:enable Metrics/MethodLength
 
     def check_may_set_user_id
       return if params['userId'].nil?

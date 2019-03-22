@@ -18,7 +18,6 @@ module StashApi
     end
 
     # this is the basic required metadata
-    # rubocop:disable Metrics/MethodLength
     def parse
       if @resource.nil?
         create_dataset(doi_string: @id_string) # @id string will be nil if not specified, so minted, otherwise to be created
@@ -32,6 +31,7 @@ module StashApi
         current_editor_id: user_id,
         skip_datacite_update: @hash['skipDataciteUpdate'] || false,
         skip_emails: @hash['skipEmails'] || false,
+        preserve_curation_status: @hash['preserveCurationStatus'] || false,
         loosen_validation: @hash['loosenValidation'] || false
       )
       # probably want to clear and re-add authors for data updates
@@ -40,7 +40,6 @@ module StashApi
       TO_PARSE.each { |item| dynamic_parse(my_class: item) }
       @resource.identifier
     end
-    # rubocop:enable Metrics/MethodLength
 
     private
 
