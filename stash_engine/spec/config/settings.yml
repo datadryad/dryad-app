@@ -1,0 +1,89 @@
+# settings.yml provides configuration for GeoBlacklight
+
+# Configurable Logo Used for CartoDB export
+APPLICATION_LOGO_URL: 'http://geoblacklight.org/images/geoblacklight-logo.png'
+
+# Carto OneClick Service https://carto.com/engine/open-in-carto/
+CARTO_ONECLICK_LINK: 'http://oneclick.cartodb.com/'
+
+# Download path can be configured using this setting
+#DOWNLOAD_PATH: "./tmp/cache/downloads"
+
+# DEPRECATED Main Solr geometry field used for spatial search and bounding box. Should be type 'rpt'
+GEOMETRY_FIELD: 'solr_geom'
+
+#Solr field mappings
+FIELDS:
+  :FILE_FORMAT: 'dc_format_s'
+  :GEOMETRY: 'solr_geom'
+  :WXS_IDENTIFIER: 'layer_id_s'
+  :RIGHTS: 'dc_rights_s'
+  :PROVENANCE: 'dct_provenance_s'
+  :GEOM_TYPE: 'layer_geom_type_s'
+  :SPATIAL_COVERAGE: 'dct_spatial_sm'
+  :SUBJECT: 'dc_subject_sm'
+  :REFERENCES: 'dct_references_s'
+  :YEAR: 'solr_year_i'
+  :CREATOR: 'dc_creator_sm'
+  :DESCRIPTION: 'dc_description_s'
+  :PUBLISHER: 'dc_publisher_s'
+  :PART_OF: 'dct_isPartOf_sm'
+  :TEMPORAL: 'dct_temporal_sm'
+  :TITLE: 'dc_title_s'
+
+# Institution deployed at
+INSTITUTION: 'Dryad'
+
+# Metadata shown in tool panel
+METADATA_SHOWN:
+  - 'fgdc'
+  - 'iso19139'
+  - 'mods'
+
+# (For external Download) timeout and open_timeout parameters for Faraday
+TIMEOUT_DOWNLOAD: 16
+
+# (For WMS inspection) timeout and open_timeout parameters for Faraday
+TIMEOUT_WMS: 4
+
+# Web services shown in tool panel
+WEBSERVICES_SHOWN:
+  - 'wms'
+  - 'wfs'
+  - 'iiif'
+  - 'feature_layer'
+  - 'tiled_map_layer'
+  - 'dynamic_map_layer'
+  - 'image_map_layer'
+
+# WMS Parameters
+WMS_PARAMS:
+  :SERVICE: 'WMS'
+  :VERSION: '1.1.1'
+  :REQUEST: 'GetFeatureInfo'
+  :STYLES: ''
+  :SRS: 'EPSG:4326'
+  :EXCEPTIONS: 'application/json'
+  :INFO_FORMAT: 'text/html'
+
+# Settings for leaflet
+OPACITY_CONTROL: &opacity_control
+  CONTROLS:
+    - 'Opacity'
+
+LEAFLET:
+  MAP:
+  LAYERS:
+    DETECT_RETINA: true
+  VIEWERS:
+    WMS:
+      <<: *opacity_control
+    TILEDMAPLAYER:
+      <<: *opacity_control
+    FEATURELAYER:
+      <<: *opacity_control
+    DYNAMICMAPLAYER:
+      <<: *opacity_control
+    IMAGEMAPLAYER:
+      <<: *opacity_control
+
