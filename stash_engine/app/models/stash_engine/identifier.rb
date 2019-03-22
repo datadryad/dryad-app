@@ -162,7 +162,6 @@ module StashEngine
 
     def publication_issn
       internal_data.find_by(data_type: 'publicationISSN')&.value
-      # StashEngine::InternalDatum.find_by(identifier_id: id, data_type: 'publicationISSN')&.value
     end
 
     def publication_name

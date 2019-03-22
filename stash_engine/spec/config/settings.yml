@@ -1,3 +1,5 @@
+# settings.yml provides configuration for GeoBlacklight
+
 # Configurable Logo Used for CartoDB export
 APPLICATION_LOGO_URL: 'http://geoblacklight.org/images/geoblacklight-logo.png'
 

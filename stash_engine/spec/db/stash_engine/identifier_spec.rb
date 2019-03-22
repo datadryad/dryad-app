@@ -196,27 +196,6 @@ module StashEngine
       end
     end
 
-    describe '#journal-metadata' do
-      before(:each) do
-        @fake_journal_name = 'Fake Journal'
-        stub_request(:any, %r{/journals/#{@fake_issn}})
-          .to_return(body: '{"fullName":"' + @fake_journal_name + '",
-                             "issn":"' + @fake_issn + '",
-                             "website":"http://onlinelibrary.wiley.com/journal/10.1111/(ISSN)1365-294X",
-                             "description":"Molecular Ecology publishes papers that utilize molecular genetic techniques..."}',
-                     status: 200,
-                     headers: { 'Content-Type' => 'application/json' })
-      end
-
-      it 'retrieves the publication_issn' do
-        expect(identifier.publication_issn).to eq(@fake_issn)
-      end
-
-      it 'retrieves the publication_name' do
-        expect(identifier.publication_name).to eq(@fake_journal_name)
-      end
-    end
-
     describe '#user_must_pay?' do
       before(:each) do
         allow(@identifier).to receive(:'journal_will_pay?').and_return(false)
@@ -261,20 +240,51 @@ module StashEngine
     end
 
     describe '#publication_name' do
-      xit 'tests something just for publication_name' do
-
+      it 'retrieves the publication_name' do
+        @fake_journal_name = 'Fake Journal'
+        stub_request(:any, %r{/journals/#{@fake_issn}})
+          .to_return(body: '{"fullName":"' + @fake_journal_name + '",
+                             "issn":"' + @fake_issn + '",
+                             "website":"http://onlinelibrary.wiley.com/journal/10.1111/(ISSN)1365-294X",
+                             "description":"Molecular Ecology publishes papers that utilize molecular genetic techniques..."}',
+                     status: 200,
+                     headers: { 'Content-Type' => 'application/json' })
+        expect(identifier.publication_name).to eq(@fake_journal_name)
       end
     end
 
     describe '#journal_will_pay?' do
-      xit "tests something just for this method's concern" do
+      it 'returns true when there is a PREPAID plan' do
+        allow(@identifier).to receive('publication_data').and_return('PREPAID')
+        expect(@identifier.journal_will_pay?).to be(true)
+      end
 
+      it 'returns true when there is a SUBSCRIPTION plan' do
+        allow(@identifier).to receive('publication_data').and_return('SUBSCRIPTION')
+        expect(@identifier.journal_will_pay?).to be(true)
+      end
+
+      it 'returns false when there is a no plan' do
+        allow(@identifier).to receive('publication_data').and_return(nil)
+        expect(@identifier.journal_will_pay?).to be(false)
+      end
+
+      it 'returns false when there is an unrecognized plan' do
+        allow(@identifier).to receive('publication_data').and_return('BOGUS-PLAN')
+        expect(@identifier.journal_will_pay?).to be(false)
       end
     end
 
     describe '#institution_will_pay?' do
-      xit "tests something just for this method's concern" do
-
+      it 'does not make user pay when institution pays' do
+        tenant = class_double(Tenant)
+        allow(Tenant).to receive(:find).with('paying-institution').and_return(tenant)
+        allow(Tenant).to receive(:covers_dpc).and_return(true)
+        allow(tenant).to receive(:covers_dpc).and_return(true)
+        ident = Identifier.create
+        Resource.create(tenant_id: 'paying-institution', identifier_id: ident.id)
+        ident = Identifier.find(ident.id) # need to reload ident from the DB to update latest_resource
+        expect(ident.institution_will_pay?).to eq(true)
       end
     end
 
@@ -289,16 +299,5 @@ module StashEngine
         expect(@identifier.fee_waiver_country?).to be(false)
       end
     end
-
-    describe '#submitter_country' do
-      xit "this one sucks because stash_engine doesn't know about stash_datacite, but stash_datacite knows about stash_engine" do
-        # Probably the way to test this is to put the test in the stash_datacite engine since it knows about both engines.
-        # Or if we transition to using the engines simply as namespacing then we can move all tests to the main app
-        # and save ourselves a lot of pain and everything will load as part of the main app.
-        #
-        # The idea that the metadata schema is going to be separated and replaceable from the core stash_engine makes this hard.
-      end
-    end
-
   end
 end
