@@ -68,7 +68,6 @@ module StashApi
 
     # Publish, embargo or simply change the status
     # rubocop:disable Metrics/AbcSize
-    # rubocop:disable Metrics/MethodLength
     def create_curation_activity(resource)
       user = params[:user_id] || @user.id
       return unless resource.present?
@@ -85,7 +84,7 @@ module StashApi
                                              note: params[:curation_activity][:note])
       end
     end
-    # rubocop:enable Metrics/MethodLength
+
     # rubocop:enable Metrics/AbcSize
 
   end

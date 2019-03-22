@@ -114,7 +114,6 @@ module StashApi
               status: 403) && yield
     end
 
-    # rubocop:disable Metrics/MethodLength
     def save_file_to_db
       md5 = Digest::MD5.file(@file_path).hexdigest
       just_user_fn = @file_path[@resource.upload_dir.length..-1].gsub(%r{^/+}, '') # just user fn and remove any leading slashes
@@ -133,7 +132,6 @@ module StashApi
         original_filename: @original_filename || just_user_fn
       )
     end
-    # rubocop:enable Metrics/MethodLength
 
     def handle_previous_duplicates(upload_filename:)
       StashEngine::FileUpload.where(resource_id: @resource.id, upload_file_name: upload_filename).each do |file_upload|
