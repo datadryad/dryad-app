@@ -35,6 +35,11 @@ module Stash
         end
       end
 
+      # make it give a filename with zip for a version download from Merritt
+      def disposition_from(url)
+        "attachment; filename=\"#{File.basename(URI.parse(url).path)}.zip\""
+      end
+
       def raise_merritt_error(operation, details, resource_id, uri)
         raise Stash::Download::MerrittResponseError, "#{operation}: #{details} for resource ID #{resource_id}, URL #{uri}"
       end
