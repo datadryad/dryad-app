@@ -15,7 +15,7 @@ module Stash
       end
 
       # to stream the response through this UI instead of redirecting, keep login and other stuff private
-      # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
+      # rubocop:disable Metrics/AbcSize
       def stream_response(url:, tenant:)
         # get original header info from http headers
         client = Stash::Repo::HttpClient.new(tenant: tenant, cert_file: APP_CONFIG.ssl_cert_file).client
@@ -33,7 +33,7 @@ module Stash
         cc.response.headers['Last-Modified'] = Time.now.httpdate
         cc.response_body = Stash::Streamer.new(client, url)
       end
-      # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
+      # rubocop:enable Metrics/AbcSize
 
       def self.log_warning_if_needed(error:, resource:)
         return unless Rails.env.development?

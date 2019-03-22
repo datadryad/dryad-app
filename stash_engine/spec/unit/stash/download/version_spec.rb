@@ -76,6 +76,30 @@ module Stash
           expect(result).to eql('streaming')
         end
       end
+
+      describe '#disposition_filename' do
+        before(:each) do
+          @identifier = create(:identifier)
+          @resource = create(:resource, identifier_id: @identifier.id)
+          @ds_version = create(:version, resource_id: @resource.id)
+          @version = Version.new(controller_context: OpenStruct.new(response_body:  '',
+                                                                    response: OpenStruct.new(headers: {})))
+          @version.resource = @resource
+        end
+
+        it 'includes the version in the filename' do
+          expect(@version.disposition_filename).to include("__v#{@ds_version.version}")
+        end
+
+        it 'includes content-disposition to have attachment with filename with zip' do
+          expect(@version.disposition_filename).to match(/attachment; filename=".+zip"/)
+        end
+
+        it 'replaces colon and slashes with underscores' do
+          m = @identifier.to_s.tr(':', '_').tr('/', '_')
+          expect(@version.disposition_filename).to include(m)
+        end
+      end
     end
   end
 end
