@@ -34,10 +34,6 @@ module Stash
       end
       # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
 
-      def disposition_from(url)
-        "attachment; filename=\"#{File.basename(URI.parse(url).path)}.zip\""
-      end
-
       def self.log_warning_if_needed(error:, resource:)
         return unless Rails.env.development?
         msg = "MerrittResponseError checking sync/async download for resource #{resource.id} updated at #{resource.updated_at}"

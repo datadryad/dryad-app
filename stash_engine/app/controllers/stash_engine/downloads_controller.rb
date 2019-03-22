@@ -82,7 +82,7 @@ module StashEngine
       file_upload = FileUpload.find(params[:file_id])
       if file_upload&.resource&.may_download?(ui_user: current_user)
         CounterLogger.general_hit(request: request, file: file_upload)
-        @file_streamer.stream_response(url: file_upload.merritt_url, tenant: current_user.tenant)
+        @file_streamer.download(file: file_upload)
       else
         render status: 403, text: 'You are not authorized to download this file until it has been published.'
       end

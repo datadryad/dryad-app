@@ -7,6 +7,21 @@ module Stash
   module Download
     class File < Base
 
+      attr_accessor :file
+
+      # this downloads a file as a stream from Merritt express
+      def download(file:)
+        @file = file
+        # StashEngine::CounterLogger.version_download_hit(request: cc.request, resource: resource)
+        stream_response(url: file.merritt_express_url, tenant: file.resource.tenant)
+      end
+
+      # tries to make the disposition and we can do it directly from the filename since we know it
+      # url used for consistency
+      def disposition_from(url)
+        "attachment; filename=\"#{@file.upload_file_name}\""
+      end
+
     end
   end
 end
