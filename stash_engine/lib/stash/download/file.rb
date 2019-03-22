@@ -18,8 +18,8 @@ module Stash
 
       # tries to make the disposition and we can do it directly from the filename since we know it
       # url used for consistency
-      def disposition_from(url)
-        "attachment; filename=\"#{@file.upload_file_name}\""
+      def disposition_filename
+        "attachment; filename=\"#{::File.basename(@file.upload_file_name)}\""
       end
 
     end
