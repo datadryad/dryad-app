@@ -183,6 +183,8 @@ module StashEngine
       APP_CONFIG.fee_waiver_countries&.include?(submitter_country)
     end
 
+    # Retrieves the country associated with the submitter's institution
+    # using the ROR API: https://github.com/ror-community/ror-api/blob/master/api_documentation.md
     def submitter_country
       affil = latest_resource&.authors&.first&.affiliation&.long_name
       return if affil.nil?
