@@ -196,8 +196,51 @@ module StashEngine
       end
     end
 
-    describe '#journal-metadata' do
+    describe '#user_must_pay?' do
       before(:each) do
+        allow(@identifier).to receive(:'journal_will_pay?').and_return(false)
+        allow(@identifier).to receive(:'institution_will_pay?').and_return(false)
+        allow(@identifier).to receive(:'fee_waiver_country?').and_return(false)
+      end
+
+      it 'returns true if no one else will pay' do
+        expect(@identifier.user_must_pay?).to eq(true)
+      end
+
+      it 'returns false if journal will pay' do
+        allow(@identifier).to receive(:'journal_will_pay?').and_return(true)
+        expect(@identifier.user_must_pay?).to eq(false)
+      end
+
+      it 'returns false if institution will pay' do
+        allow(@identifier).to receive(:'institution_will_pay?').and_return(true)
+        expect(@identifier.user_must_pay?).to eq(false)
+      end
+
+      it 'returns false if fee is waived' do
+        allow(@identifier).to receive(:'fee_waiver_country?').and_return(true)
+        expect(@identifier.user_must_pay?).to eq(false)
+      end
+    end
+
+    describe '#publication_data' do
+      it 'reads the value correctly from json body' do
+        stub_request(:any, %r{/journals/#{@fake_issn}})
+          .to_return(body: { blah: 'meow' }.to_json,
+                     status: 200,
+                     headers: { 'Content-Type' => 'application/json' })
+        expect(@identifier.publication_data('blah')).to eql('meow')
+      end
+    end
+
+    describe '#publication_issn' do
+      it 'gets publication_issn through convenience method' do
+        expect(@identifier.publication_issn).to eql(@fake_issn)
+      end
+    end
+
+    describe '#publication_name' do
+      it 'retrieves the publication_name' do
         @fake_journal_name = 'Fake Journal'
         stub_request(:any, %r{/journals/#{@fake_issn}})
           .to_return(body: '{"fullName":"' + @fake_journal_name + '",
@@ -206,47 +249,33 @@ module StashEngine
                              "description":"Molecular Ecology publishes papers that utilize molecular genetic techniques..."}',
                      status: 200,
                      headers: { 'Content-Type' => 'application/json' })
-      end
-
-      it 'retrieves the publication_issn' do
-        expect(identifier.publication_issn).to eq(@fake_issn)
-      end
-
-      it 'retrieves the publication_name' do
         expect(identifier.publication_name).to eq(@fake_journal_name)
       end
     end
 
-    describe '#payment' do
-      it 'defaults to user pay' do
-        stub_request(:any, %r{/journals/#{@fake_issn}})
-          .to_return(body: '{}',
-                     status: 200,
-                     headers: { 'Content-Type' => 'application/json' })
-
-        expect(identifier.user_must_pay?).to eq(true)
+    describe '#journal_will_pay?' do
+      it 'returns true when there is a PREPAID plan' do
+        allow(@identifier).to receive('publication_data').and_return('PREPAID')
+        expect(@identifier.journal_will_pay?).to be(true)
       end
 
-      it 'does not make user pay when journal pays' do
-        stub_request(:any, %r{/journals/#{@fake_issn}})
-          .to_return(body: '{"paymentPlanType":"SUBSCRIPTION"}',
-                     status: 200,
-                     headers: { 'Content-Type' => 'application/json' })
-
-        expect(identifier.journal_will_pay?).to eq(true)
-        expect(identifier.user_must_pay?).to eq(false)
+      it 'returns true when there is a SUBSCRIPTION plan' do
+        allow(@identifier).to receive('publication_data').and_return('SUBSCRIPTION')
+        expect(@identifier.journal_will_pay?).to be(true)
       end
 
-      it 'makes the user pay when journal does not pay' do
-        stub_request(:any, %r{/journals/#{@fake_issn}})
-          .to_return(body: '{"paymentPlanType":"NONE"}',
-                     status: 200,
-                     headers: { 'Content-Type' => 'application/json' })
-
-        expect(identifier.journal_will_pay?).to eq(false)
-        expect(identifier.user_must_pay?).to eq(true)
+      it 'returns false when there is a no plan' do
+        allow(@identifier).to receive('publication_data').and_return(nil)
+        expect(@identifier.journal_will_pay?).to be(false)
       end
 
+      it 'returns false when there is an unrecognized plan' do
+        allow(@identifier).to receive('publication_data').and_return('BOGUS-PLAN')
+        expect(@identifier.journal_will_pay?).to be(false)
+      end
+    end
+
+    describe '#institution_will_pay?' do
       it 'does not make user pay when institution pays' do
         tenant = class_double(Tenant)
         allow(Tenant).to receive(:find).with('paying-institution').and_return(tenant)
@@ -254,12 +283,21 @@ module StashEngine
         allow(tenant).to receive(:covers_dpc).and_return(true)
         ident = Identifier.create
         Resource.create(tenant_id: 'paying-institution', identifier_id: ident.id)
-        ident.reload
-
+        ident = Identifier.find(ident.id) # need to reload ident from the DB to update latest_resource
         expect(ident.institution_will_pay?).to eq(true)
-        expect(ident.user_must_pay?).to eq(false)
       end
     end
 
+    describe '#fee_waiver_country?' do
+      it 'returns true for a country that waives the fee' do
+        allow(@identifier).to receive('submitter_country').and_return('Syria')
+        expect(@identifier.fee_waiver_country?).to be(true)
+      end
+
+      it "returns false for a country that doesn't waive the fee" do
+        allow(@identifier).to receive('submitter_country').and_return('Sweden')
+        expect(@identifier.fee_waiver_country?).to be(false)
+      end
+    end
   end
 end

@@ -40,4 +40,9 @@ FactoryBot.define do
   factory(:resource_state, class: StashEngine::ResourceState) do
     resource_state { 'submitted' }
   end
+
+  factory(:internal_datum, class: StashEngine::InternalDatum) do
+    data_type { 'publicationISSN' }
+    value { '1352-3867' }
+  end
 end
