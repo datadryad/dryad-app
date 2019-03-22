@@ -80,8 +80,9 @@ module StashEngine
     def merritt_express_url
       domain, ark = resource.merritt_protodomain_and_local_id
       # the ark is already encoded in the URLs we are given from sword
-      return '' if domain.nil?  # if domain is nil then something is wrong with the ARK too, likely
-      "#{APP_CONFIG.merritt_express_base_url}/dv/#{resource.stash_version.merritt_version}/#{CGI.unescape(ark)}/#{ERB::Util.url_encode(upload_file_name)}"
+      return '' if domain.nil? # if domain is nil then something is wrong with the ARK too, likely
+      "#{APP_CONFIG.merritt_express_base_url}/dv/#{resource.stash_version.merritt_version}" \
+          "/#{CGI.unescape(ark)}/#{ERB::Util.url_encode(upload_file_name)}"
     end
 
     # makes list of directories with numbers. not modified for > 7 days, and whose corresponding resource has been successfully submitted

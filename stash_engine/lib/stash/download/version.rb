@@ -5,7 +5,7 @@ module Stash
   module Download
     class Version < Base
 
-      attr_reader :resource
+      attr_accessor :resource
 
       # this gets an answer from Merritt about whether this is an async download
       def merritt_async_download?(resource:)
@@ -41,7 +41,7 @@ module Stash
 
       # make it give a filename based on DOI and version with stuff sanitized out
       def disposition_filename
-        fn = Zaru.sanitize!(@resource.identifier.to_s.gsub(/[\:\\\/]+/, '_'))
+        fn = Zaru.sanitize!(@resource.identifier.to_s.gsub(%r{[\:\\/]+}, '_'))
         fn.gsub!(/,|;|'|"|\u007F/, '')
         fn << "__v#{@resource.stash_version.version}"
         "attachment; filename=\"#{fn}.zip\""
