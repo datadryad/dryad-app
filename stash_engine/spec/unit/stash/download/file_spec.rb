@@ -36,8 +36,8 @@ module Stash
           expect(@file.disposition_filename).to match(/attachment; filename=".+"/)
         end
 
-        it 'removes any path in the filename and places in the filename' do
-          expect(@file.disposition_filename).to eql("attachment; filename=\"Sidlauskas 2007 Data.xls\"")
+        it 'removes any path in the filename and places it in the filename' do
+          expect(@file.disposition_filename).to eql('attachment; filename="Sidlauskas 2007 Data.xls"')
         end
       end
     end
