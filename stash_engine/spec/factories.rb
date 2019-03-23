@@ -40,4 +40,11 @@ FactoryBot.define do
   factory(:resource_state, class: StashEngine::ResourceState) do
     resource_state { 'submitted' }
   end
+
+  factory(:file_upload, class: StashEngine::FileUpload) do
+    upload_file_name { 'Sidlauskas 2007 Data.xls' }
+    upload_content_type { 'application/vnd.ms-excel' }
+    upload_file_size { 124_664 }
+    temp_file_path { '/apps/dryad/apps/ui/releases/20181115200056/uploads/1136/Sidlauskas 2007 Data.xls' }
+  end
 end
