@@ -18,6 +18,18 @@ module StashEngine
       end
     end
 
+    # this is used by the 'add note, and only for curation history page'
+    def curation_note
+      # only add to latest resource and after latest curation activity, no matter if this page is stale or whatever
+      @resource = Identifier.find_by_id(params[:id]).latest_resource
+      @curation_activity = CurationActivity.create(
+        status: @resource.current_curation_activity.status,
+        note: params[:curation_activity][:note],
+        resource_id: @resource.id,
+        user_id: current_user.id
+      )
+    end
+
     private
 
     def curation_activity_params
