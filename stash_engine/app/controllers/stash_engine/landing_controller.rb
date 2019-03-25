@@ -35,7 +35,8 @@ module StashEngine
       @resource ||=
         if params[:latest] == 'true' && current_user&.superuser? # let superusers see the latest, unpublished if they wish
           id.resources.by_version_desc.first
-        elsif current_user&.id == id.resources.submitted.by_version_desc.first.user_id || current_user&.superuser?
+        # let user see his own if logged in or let superuser see non-latest-preview stuff
+        elsif (current_user && (current_user.id == id.resources.submitted.by_version_desc.first.user_id)) || current_user&.superuser?
           id.resources.submitted.by_version_desc.first
         else # everyone else only gets to see published or embargoed metadata latest version
           id.latest_resource_with_public_metadata
