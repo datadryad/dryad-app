@@ -5,7 +5,9 @@
   <%= button_to "Download Data Publication (PDF)", data_paper_path(params[:id]), class: 'o-download__docs', method: 'get' %>
 </div>
 
-<% if @resource.may_download?(ui_user: current_user) %>
+<% if @resource.current_state != 'submitted' %>
+  <%= render partial: 'stash_engine/landing/unsubmitted_files' %>
+<% elsif @resource.may_download?(ui_user: current_user) %>
   <%= render partial: 'stash_engine/landing/files', locals: {dataset_identifier: @id, resource: @resource} %>
 <% else %>
   <%= render partial: 'stash_engine/landing/files_embargoed', locals: {resource: @resource} %>
