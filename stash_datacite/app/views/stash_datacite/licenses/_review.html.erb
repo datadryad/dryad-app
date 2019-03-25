@@ -38,6 +38,11 @@
   <h3>Payment</h3>	
   <p>Payment for this deposit is sponsored by <b><%= @resource.tenant.long_name %></b>.</p>
 </div>
+<% elsif @resource.identifier.fee_waiver_country? %>
+<div>
+  <h3>Payment</h3>	
+  <p>Payment is not required for this deposit due to association with <b><%= @resource.authors&.first&.affiliation&.long_name %></b> in <b><%= @resource.identifier.submitter_country %></b>.</p>
+</div>
 <% elsif @resource.identifier.user_must_pay? %>
 <div>
   <h3>Payment</h3>
