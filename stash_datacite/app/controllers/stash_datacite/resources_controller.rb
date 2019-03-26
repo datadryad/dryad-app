@@ -1,7 +1,5 @@
 require_dependency 'stash_datacite/application_controller'
 
-# require 'stash_datacite/merritt_packager'
-
 module StashDatacite
   # this is a class for composite (AJAX/UJS?) views starting at the resource or resources
   class ResourcesController < ApplicationController
@@ -20,8 +18,7 @@ module StashDatacite
           # only a page of objects needs calculations for display rather than all objects in list.  However if we need
           # to sort on calculated fields for display we'll need to calculate all values, sort and use the array pager
           # form of kaminari instead (which will likely be slower).
-          @resources = StashEngine::Resource.where(user_id: session[:user_id]).in_progress
-            .order(updated_at: :desc).page(@page).per(@page_size)
+          @resources = StashEngine::Resource.where(user_id: session[:user_id]).in_progress.order(updated_at: :desc).page(@page).per(@page_size)
           @in_progress_lines = @resources.map { |resource| DatasetPresenter.new(resource) }
         end
       end
@@ -30,9 +27,7 @@ module StashDatacite
     def user_submitted
       respond_to do |format|
         format.js do
-          # @resources = StashEngine::Resource.where(user_id: session[:user_id]).submitted.
-          @resources = current_user.latest_completed_resource_per_identifier.order(updated_at: :desc)
-            .page(@page).per(@page_size)
+          @resources = current_user.latest_completed_resource_per_identifier.order(updated_at: :desc).page(@page).per(@page_size)
           @submitted_lines = @resources.map { |resource| DatasetPresenter.new(resource) }
         end
       end
@@ -79,10 +74,8 @@ module StashDatacite
     private
 
     def update_submission_resource_info(resource)
-      resource.update(skip_datacite_update: false,
-                      skip_emails: false,
-                      preserve_curation_status: false,
-                      loosen_validation: false) # these are mostly for API superusers to choose
+      resource.update(skip_datacite_update: false, skip_emails: false,
+                      preserve_curation_status: false, loosen_validation: false) # these are mostly for API superusers to choose
 
       # TODO: put this somewhere more reliable
       StashDatacite::DataciteDate.set_date_available(resource_id: resource.id)
