@@ -67,26 +67,32 @@ module StashApi
     private
 
     # Publish, embargo or simply change the status
-    # rubocop:disable Metrics/AbcSize
-    # rubocop:disable Metrics/MethodLength
     def create_curation_activity(resource)
-      user = params[:user_id] || @user.id
       return unless resource.present?
-      logger.debug("Adding curation activity with status #{params[:curation_activity][:status]}")
+
       case params[:curation_activity][:status]
       when 'published'
-        resource.publish!(user, Date.today, params[:curation_activity][:note])
+        record_published_date(resource)
       when 'embargoed'
-        resource.embargo!(user, Date.today + 1.year, params[:curation_activity][:note])
-      else
-        StashEngine::CurationActivity.create(resource_id: resource.id,
-                                             user_id: user,
-                                             status: params[:curation_activity][:status],
-                                             note: params[:curation_activity][:note])
+        record_embargoed_date(resource)
       end
+
+      user = params[:user_id] || @user.id
+      StashEngine::CurationActivity.create(resource_id: resource.id,
+                                           user_id: user,
+                                           status: params[:curation_activity][:status],
+                                           note: params[:curation_activity][:note])
     end
-    # rubocop:enable Metrics/MethodLength
-    # rubocop:enable Metrics/AbcSize
+
+    def record_published_date(resource)
+      publish_date = params[:curation_activity][:created_at] || date
+      resource.update!(publication_date: publish_date)
+    end
+
+    def record_embargoed_date(resource)
+      embargo_date = (params[:curation_activity][:created_at]&.to_date || Date.today) + 1.year
+      resource.update!(publication_date: embargo_date)
+    end
 
   end
 end
