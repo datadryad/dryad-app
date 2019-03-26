@@ -18,13 +18,8 @@ module StashApi
     end
 
     # this is the basic required metadata
-    # rubocop:disable Metrics/MethodLength
     def parse
-      if @resource.nil?
-        create_dataset(doi_string: @id_string) # @id string will be nil if not specified, so minted, otherwise to be created
-      else
-        clear_previous_metadata
-      end
+      clear_previous_metadata
       user_id = @hash['userId'] || @user.id
       @resource.update(
         title: @hash['title'],
@@ -32,15 +27,16 @@ module StashApi
         current_editor_id: user_id,
         skip_datacite_update: @hash['skipDataciteUpdate'] || false,
         skip_emails: @hash['skipEmails'] || false,
+        preserve_curation_status: @hash['preserveCurationStatus'] || false,
         loosen_validation: @hash['loosenValidation'] || false
       )
+
       # probably want to clear and re-add authors for data updates
       @hash[:authors]&.each { |author| add_author(json_author: author) }
       StashDatacite::Description.create(description: @hash[:abstract], description_type: 'abstract', resource_id: @resource.id)
       TO_PARSE.each { |item| dynamic_parse(my_class: item) }
       @resource.identifier
     end
-    # rubocop:enable Metrics/MethodLength
 
     private
 
@@ -51,10 +47,14 @@ module StashApi
     end
 
     def clear_previous_metadata
-      @resource.update(title: '')
-      @resource.authors.each { |au| @previous_orcids["#{au.author_first_name} #{au.author_last_name}"] = au.author_orcid }
-      @resource.authors.destroy_all
-      @resource.descriptions.type_abstract.destroy_all
+      if @resource.nil?
+        create_dataset(doi_string: @id_string) # @id string will be nil if not specified, so minted, otherwise to be created
+      else
+        @resource.update(title: '')
+        @resource.authors.each { |au| @previous_orcids["#{au.author_first_name} #{au.author_last_name}"] = au.author_orcid }
+        @resource.authors.destroy_all
+        @resource.descriptions.type_abstract.destroy_all
+      end
     end
 
     def create_dataset(doi_string: nil)

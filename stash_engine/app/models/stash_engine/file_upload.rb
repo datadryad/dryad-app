@@ -1,4 +1,5 @@
 require 'zaru'
+require 'cgi'
 
 module StashEngine
   class FileUpload < ActiveRecord::Base
@@ -74,13 +75,15 @@ module StashEngine
       "#{domain}/d/#{ark}/#{resource.stash_version.merritt_version}/#{ERB::Util.url_encode(upload_file_name)}"
     end
 
-    # CHANGEME for Merritt express when/if we get to that.
-    # http://<merritt-express-url>/dl/<ark>/<version>/<encoded-fn> is an example of the URLs Merritt takes
-    # def merritt_url
-    #   domain, ark = resource.merritt_protodomain_and_local_id
-    #   return '' if domain.nil?
-    #   "#{domain}/d/#{ark}/#{resource.stash_version.merritt_version}/#{ERB::Util.url_encode(upload_file_name)}"
-    # end
+    # example
+    # http://mrtexpress-stage.cdlib.org/dv/<version>/<ark>/<file pathname>
+    def merritt_express_url
+      domain, ark = resource.merritt_protodomain_and_local_id
+      # the ark is already encoded in the URLs we are given from sword
+      return '' if domain.nil? # if domain is nil then something is wrong with the ARK too, likely
+      "#{APP_CONFIG.merritt_express_base_url}/dv/#{resource.stash_version.merritt_version}" \
+          "/#{CGI.unescape(ark)}/#{ERB::Util.url_encode(upload_file_name)}"
+    end
 
     # makes list of directories with numbers. not modified for > 7 days, and whose corresponding resource has been successfully submitted
     # this could be handy for doing cleanup and keeping old files around for a little while in case of submission problems

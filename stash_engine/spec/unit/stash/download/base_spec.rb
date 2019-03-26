@@ -36,6 +36,7 @@ module Stash
           allow(Stash::Repo::HttpClient).to receive(:new).and_return(my_http_client)
 
           allow(Stash::Streamer).to receive(:new).with(anything, anything).and_return('This is my stream')
+          allow_any_instance_of(Stash::Download::Base).to receive(:disposition_filename).and_return('12xu.zip')
         end
 
         it 'sets up Content-Type' do
@@ -50,7 +51,7 @@ module Stash
 
         it 'sets up Content-Disposition' do
           @base.stream_response(url: 'http://example.com', tenant: 'tenant would be a better object')
-          expect(@base.cc.response.headers['Content-Disposition']).to eql('attachment; filename="blah.txt"')
+          expect(@base.cc.response.headers['Content-Disposition']).to eql('12xu.zip')
         end
 
         it 'has correct response_body' do
@@ -58,15 +59,6 @@ module Stash
           expect(@base.cc.response_body).to eql('This is my stream')
         end
 
-      end
-
-      describe '#disposition_from(url)' do
-        it 'gets disposition from a merritt url' do
-          @base = Base.new(controller_context: OpenStruct.new(response_body:  '',
-                                                              response: OpenStruct.new(headers: {})))
-          result = @base.disposition_from('http:/example.come/cat/dog/38758444')
-          expect(result).to eql('attachment; filename="38758444.zip"')
-        end
       end
 
       describe 'Base.log_warning_if_needed' do
@@ -82,9 +74,7 @@ module Stash
           expect(@logger_mock).to receive(:warn)
           Base.log_warning_if_needed(error: @error, resource: @resource)
         end
-
       end
-
     end
   end
 end
