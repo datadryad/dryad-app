@@ -276,7 +276,9 @@ module StashEngine
       raise "current_resource_state not initialized for resource #{id}" unless my_state
       my_state.resource_state = value
       # If the resource_state is in_progress or submitted then create a corresponding curation_activity
-      if %w[in_progress submitted].include?(value)
+      # But don't create the curation_activity if preserve_curation_status is set, because a user who has
+      # set that flag is expecting the curation_status to remain as whatever they have already set.
+      if %w[in_progress submitted].include?(value) && !preserve_curation_status
         status = identifier&.internal_data&.present? ? 'peer_review' : value
         StashEngine::CurationActivity.create(resource: self, user: user, status: status)
       end
@@ -470,7 +472,7 @@ module StashEngine
     # Publication
     # Files are published when the publication date has been reached
     def files_published?
-      metadata_published? && publication_date.present? && Date.today.to_s >= publication_date
+      metadata_published? && publication_date.present? && Time.new >= publication_date
     end
 
     # Metadata is published when the curator sets the status to published or embargoed

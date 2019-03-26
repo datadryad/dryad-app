@@ -1,11 +1,15 @@
 require_relative 'base'
+require 'zaru'
 
 module Stash
   module Download
     class Version < Base
 
+      attr_accessor :resource
+
       # this gets an answer from Merritt about whether this is an async download
       def merritt_async_download?(resource:)
+        @resource = resource
         domain, local_id = resource.merritt_protodomain_and_local_id
         url = "#{domain}/async/#{local_id}/#{resource.stash_version.merritt_version}"
 
@@ -33,6 +37,14 @@ module Stash
           StashEngine::CounterLogger.version_download_hit(request: cc.request, resource: resource)
           stream_response(url: resource.merritt_producer_download_uri, tenant: resource.tenant)
         end
+      end
+
+      # make it give a filename based on DOI and version with stuff sanitized out
+      def disposition_filename
+        fn = Zaru.sanitize!(@resource.identifier.to_s.gsub(%r{[\:\\/]+}, '_'))
+        fn.gsub!(/,|;|'|"|\u007F/, '')
+        fn << "__v#{@resource.stash_version.version}"
+        "attachment; filename=\"#{fn}.zip\""
       end
 
       def raise_merritt_error(operation, details, resource_id, uri)
