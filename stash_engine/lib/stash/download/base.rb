@@ -24,8 +24,6 @@ module Stash
 
         content_type = headers.http_header['Content-Type'].try(:first)
         content_length = headers.http_header['Content-Length'].try(:first) || ''
-        # content_disposition = headers.http_header['Content-Disposition'].try(:first) || disposition_from(url)
-        # content_disposition.gsub!(/^inline;/, 'attachment;') # do attachement if we can, not inline
         content_disposition = disposition_filename
         cc.response.headers['Content-Type'] = content_type if content_type
         cc.response.headers['Content-Disposition'] = content_disposition
