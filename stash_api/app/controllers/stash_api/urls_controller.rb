@@ -13,7 +13,7 @@ module StashApi
     before_action :require_permission, only: :create
     before_action :require_correctly_formatted_url, only: :create
 
-    # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
+    # rubocop:disable Metrics/AbcSize
     def create
       file_upload_hash = if params['skipValidation'] == true
                            skipped_validation_hash(params) { return } # return will be yielded to if error is rendered, so it returns here
@@ -34,11 +34,11 @@ module StashApi
         format.json { render json: file.metadata, status: 201 }
       end
     end
-    # rubocop:enable Metrics/MethodLength, Metrics/AbcSize
+    # rubocop:enable Metrics/AbcSize
 
     private
 
-    # rubocop:disable Metrics/CyclomaticComplexity, Metrics/MethodLength, Metrics/PerceivedComplexity
+    # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
     def validate_url(url)
       url_translator = Stash::UrlTranslator.new(url)
       validator = StashEngine::UrlValidator.new(url: url_translator.direct_download || url)
@@ -52,7 +52,7 @@ module StashApi
       end
       validation_hash
     end
-    # rubocop:enable Metrics/CyclomaticComplexity, Metrics/MethodLength, Metrics/PerceivedComplexity
+    # rubocop:enable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
 
     # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
     def skipped_validation_hash(_hsh)
