@@ -472,7 +472,7 @@ module StashEngine
     # Publication
     # Files are published when the publication date has been reached
     def files_published?
-      metadata_published? && publication_date.present? && Date.today.to_s >= publication_date
+      metadata_published? && publication_date.present? && Time.new >= publication_date
     end
 
     # Metadata is published when the curator sets the status to published or embargoed
