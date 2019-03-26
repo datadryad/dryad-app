@@ -72,6 +72,10 @@ module StashApi
         expect(@metadata[:skipEmails]).to eq(nil)
       end
 
+      it 'hides preserveCurationStatus if false' do
+        expect(@metadata[:preserveCurationStatus]).to eq(nil)
+      end
+
       it 'hides loosenValidation if false' do
         expect(@metadata[:loosenValidation]).to eq(nil)
       end
@@ -88,6 +92,13 @@ module StashApi
         @dataset = Dataset.new(identifier: @identifier.to_s)
         @metadata = @dataset.metadata
         expect(@metadata[:skipEmails]).to eq(true)
+      end
+
+      it 'shows preserveCurationStatus when true' do
+        @identifier.in_progress_resource.update(preserve_curation_status: true)
+        @dataset = Dataset.new(identifier: @identifier.to_s)
+        @metadata = @dataset.metadata
+        expect(@metadata[:preserveCurationStatus]).to eq(true)
       end
 
       it 'shows loosenValidation when true' do

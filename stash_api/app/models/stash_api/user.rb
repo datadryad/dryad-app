@@ -8,7 +8,6 @@ module StashApi
       @se_user = StashEngine::User.find(user_id)
     end
 
-    # rubocop:disable Metrics/MethodLength
     def metadata
       { '_links': links }.merge(
         id: @se_user.id,
@@ -23,7 +22,6 @@ module StashApi
         createdAt: @se_user.created_at
       )
     end
-    # rubocop:enable Metrics/MethodLength
 
     def links
       basic_links.compact.merge(stash_curie)
