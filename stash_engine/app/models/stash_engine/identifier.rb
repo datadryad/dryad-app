@@ -203,7 +203,7 @@ module StashEngine
       return nil if parsed_response.blank? || parsed_response.first['country'].blank?
       parsed_response.first['country']['country_name']
     rescue HTTParty::Error, SocketError => ex
-      logger.error("ROR returned an error attempting to organization query #{affil}: #{ex}")
+      logger.error("ROR returned an error attempting organization query #{affil}: #{ex}")
       nil
     end
     # rubocop:enable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/MethodLength
