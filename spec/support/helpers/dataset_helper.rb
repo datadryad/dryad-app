@@ -54,6 +54,12 @@ module DatasetHelper
     agree_to_everything
   end
 
+  def submit_form
+    navigate_to_review
+    submit = find_button('submit_dataset', disabled: :all)
+    submit.click
+  end
+
   def fill_article_info(name:, msid:)
     fill_in 'internal_datum[publication_name]', with: name
     fill_in 'internal_datum[msid]', with: msid

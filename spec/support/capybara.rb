@@ -6,6 +6,7 @@ require_relative 'helpers/capybara_helper'
 require_relative 'helpers/ckeditor_helper'
 require_relative 'helpers/routes_helper'
 require_relative 'helpers/session_helper'
+require_relative '../mocks/orcid'
 
 Capybara.default_driver = :rack_test
 Capybara.javascript_driver = :chrome
@@ -50,4 +51,5 @@ RSpec.configure do |config|
   config.include(CkeditorHelper, type: :feature)
   config.include(RoutesHelper, type: :feature)
   config.include(SessionsHelper, type: :feature)
+  config.include(Mocks::Orcid, type: :feature)
 end

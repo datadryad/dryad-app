@@ -43,8 +43,7 @@ RSpec.feature 'ReviewDataset', type: :feature do
 
     it 'submits', js: true do
       mock_repository!
-      submit = find_button('submit_dataset', disabled: :all)
-      submit.click
+      submit_form
       expect(page).to have_content('My Datasets')
       expect(page).to have_content @resource.title
     end
