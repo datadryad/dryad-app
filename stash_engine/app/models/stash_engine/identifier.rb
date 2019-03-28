@@ -200,7 +200,7 @@ module StashEngine
         return nil
       end
       parsed_response = results.parsed_response['items']
-      return nil if parsed_response&.first&.blank? || parsed_response.first['country'].blank?
+      return nil if parsed_response.blank? || parsed_response.first['country'].blank?
       parsed_response.first['country']['country_name']
     rescue HTTParty::Error, SocketError => ex
       logger.error("ROR returned an error attempting to organization query #{affil}: #{ex}")
