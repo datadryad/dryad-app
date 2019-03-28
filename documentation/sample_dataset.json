@@ -59,8 +59,9 @@
 			 "neLatitude": "38.0"
 			 }
 		 }
-		],
- "skipDataciteUpdate" : true,
- "skipEmails" : true,
- "loosenValidation" : true
+	      ],
+    "skipDataciteUpdate" : true,
+    "skipEmails" : true,
+    "loosenValidation" : true,
+    "preserveCurationStatus": true
 }
