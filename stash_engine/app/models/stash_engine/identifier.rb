@@ -185,6 +185,9 @@ module StashEngine
 
     # Retrieves the country associated with the submitter's institution
     # using the ROR API: https://github.com/ror-community/ror-api/blob/master/api_documentation.md
+    #
+    # This is code-smell-ish right now but we have a ticket to rework when Ryan comes back and will get us by for now
+    # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/MethodLength
     def submitter_country
       affil = latest_resource&.authors&.first&.affiliation&.long_name
       return if affil.nil?
@@ -192,9 +195,18 @@ module StashEngine
       results = HTTParty.get(url,
                              query: { query: affil },
                              headers: { 'Content-Type' => 'application/json' })
-
-      results.parsed_response['items'].first['country']['country_name']
+      if results.code < 200 || results.code > 299
+        logger.error("unable to get results from ROR: #{results.code} returned for #{affil}")
+        return nil
+      end
+      parsed_response = results.parsed_response['items']
+      return nil if parsed_response.blank? || parsed_response.first['country'].blank?
+      parsed_response.first['country']['country_name']
+    rescue HTTParty::Error, SocketError => ex
+      logger.error("ROR returned an error attempting organization query #{affil}: #{ex}")
+      nil
     end
+    # rubocop:enable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/MethodLength
 
     private
 
