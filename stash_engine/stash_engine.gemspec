@@ -23,7 +23,7 @@ Gem::Specification.new do |s| # rubocop:disable Metrics/BlockLength
   s.add_dependency 'amoeba', '~> 3.0.0'
   s.add_dependency 'carrierwave', '~> 0.10.0'
   s.add_dependency 'cirneco'
-  s.add_dependency 'ckeditor'
+  s.add_dependency 'ckeditor', '~> 4.3.0' # lock to 4.x series since upgrading to 5.x blows up until we figure out the upgrade path
   s.add_dependency 'concurrent-ruby', '~> 1.0'
   s.add_dependency 'datacite-mapping', '~> 0.3'
   s.add_dependency 'ezid-client', '~> 1.5'
