@@ -8,20 +8,16 @@ module StashDatacite
     # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
     def update
       @se_id = StashEngine::Identifier.find(params[:internal_datum][:identifier_id])
-      @pub_issn = StashEngine::InternalDatum.find_or_create_by(stash_identifier: @se_id, data_type: 'publicationISSN')
-      @msid = StashEngine::InternalDatum.find_or_create_by(stash_identifier: @se_id, data_type: 'manuscriptNumber')
-      @doi = StashEngine::InternalDatum.find_or_create_by(stash_identifier: @se_id, data_type: 'publicationDOI')
-      issn = params[:internal_datum][:publication_issn]
-      msid = params[:internal_datum][:msid]
-      doi = params[:internal_datum][:doi]
-      @pub_issn.update(value: issn) unless issn.blank?
-      @msid.update(value: msid) unless msid.blank?
-      @doi.update(value: doi) unless doi.blank?
+      save_form_to_internal_data
       respond_to do |format|
         format.js do
           if params[:internal_datum][:do_import] == 'true'
             # take action to do the actual import and reload the page with javascript
-            update_metadata
+            if @doi.value.blank? && !@msid.value.blank?
+              update_manuscript_metadata
+            else
+              update_doi_metadata
+            end
             render 'update' # just the standard update in the associated view directory
           else
             render template: 'stash_datacite/shared/update.js.erb'
@@ -31,7 +27,18 @@ module StashDatacite
     end
     # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
 
-    def update_metadata
+    def save_form_to_internal_data
+      @pub_issn = StashEngine::InternalDatum.where(stash_identifier: @se_id, data_type: 'publicationISSN').first_or_create
+      @pub_issn.update(value: params[:internal_datum][:publication_issn]) unless params[:internal_datum][:publication_issn].blank?
+
+      @msid = StashEngine::InternalDatum.where(stash_identifier: @se_id, data_type: 'manuscriptNumber').first_or_create
+      @msid.update(value: params[:internal_datum][:msid]) unless params[:internal_datum][:msid].blank?
+
+      @doi = StashEngine::InternalDatum.where(stash_identifier: @se_id, data_type: 'publicationDOI').first_or_create
+      @doi.update(value: params[:internal_datum][:doi]) unless params[:internal_datum][:msid].blank?
+    end
+
+    def update_manuscript_metadata
       pub_issn_only = @pub_issn.value
       msid_only = @msid.value
       body = { dryadDOI: 'doi:' + @se_id.identifier,
@@ -42,6 +49,15 @@ module StashDatacite
                               query: { access_token: APP_CONFIG.old_dryad_access_token },
                               body: body,
                               headers: { 'Content-Type' => 'application/json' })
+    end
+
+    def update_doi_metadata
+      url = 'https://api.crossref.org/works/doi:[replaceme]/transform/application/vnd.crossref.unixref+xml'
+      results = HTTParty.get(url,
+                             query: { query: affil },
+                             headers: { 'Content-Type' => 'application/json' })
+    rescue HTTParty::Error, SocketError => ex
+      logger.error("Unable to get results from crossRef for #{@doi.value}: #{ex}")
     end
   end
 end
