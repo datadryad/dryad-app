@@ -20,12 +20,9 @@ Gem::Specification.new do |s| # rubocop:disable Metrics/BlockLength
   s.require_paths = ['lib']
   s.test_files = Dir['spec/**/*']
 
-  # TODO: remove once we're on Rails 5, probably
-  s.add_dependency 'thor', '0.19.1' # HACK: to get around https://github.com/erikhuda/thor/issues/538
-
   s.add_dependency 'amoeba', '~> 3.0.0'
   s.add_dependency 'carrierwave', '~> 0.10.0'
-  s.add_dependency 'cirneco', '~> 0.9.20' # higher versions cause dependency hell with faraday from Martin's Gems
+  s.add_dependency 'cirneco'
   s.add_dependency 'ckeditor'
   s.add_dependency 'concurrent-ruby', '~> 1.0'
   s.add_dependency 'datacite-mapping', '~> 0.3'
@@ -41,7 +38,6 @@ Gem::Specification.new do |s| # rubocop:disable Metrics/BlockLength
   s.add_dependency 'kaminari'
   s.add_dependency 'noid', '~> 0.9.0'
   s.add_dependency 'omniauth', '~> 1.8.1'
-  # s.add_dependency 'omniauth-google-oauth2', '~> 0.5.3' no longer used and causes problems with faraday and cirneco
   s.add_dependency 'omniauth-orcid', '~> 2.1.1'
   s.add_dependency 'omniauth-shibboleth', '~> 1.2.1'
   s.add_dependency 'rails', '~> 4.2.11'

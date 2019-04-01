@@ -19,9 +19,6 @@ Gem::Specification.new do |s| # rubocop:disable Metrics/BlockLength
   s.files = Dir['{app,config,db,lib}/**/*', 'MIT-LICENSE', 'Rakefile', 'README.rdoc']
   s.test_files = Dir['test/**/*']
 
-  # TODO: remove once we're on Rails 5, probably
-  s.add_dependency 'thor', '0.19.1' # see https://github.com/erikhuda/thor/issues/538
-
   s.add_dependency 'blacklight', '~> 6.5.0'
   s.add_dependency 'config'
   s.add_dependency 'ffi', '1.9.21' # peg to 1.9.21 for https://github.com/ffi/ffi/issues/640
