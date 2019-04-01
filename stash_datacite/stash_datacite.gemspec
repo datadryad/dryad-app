@@ -26,6 +26,7 @@ Gem::Specification.new do |s| # rubocop:disable Metrics/BlockLength
   s.add_dependency 'rails', '~> 4.2.11'
   s.add_dependency 'responders', '~> 2.0'
   s.add_dependency 'rubyzip', '>= 1.0.0'
+  s.add_dependency 'serrano' # for CrossRef API
 
   s.add_dependency 'datacite-mapping', '~> 0.3'
   # TODO: do these need versions?

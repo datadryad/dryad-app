@@ -83,8 +83,6 @@ GEM
     amoeba (3.0.0)
       activerecord (>= 3.2.6)
     ansi (1.5.0)
-    archive-zip (0.12.0)
-      io-like (~> 0.3.0)
     arel (6.0.4)
     ast (2.4.0)
     base32-url (0.5)
@@ -130,9 +128,8 @@ GEM
       activesupport (>= 3.2.0)
       json (>= 1.7)
       mime-types (>= 1.16)
-    chromedriver-helper (2.1.0)
-      archive-zip (~> 0.10)
-      nokogiri (~> 1.8)
+    childprocess (0.9.0)
+      ffi (~> 1.0, >= 1.0.11)
     cirneco (0.9.27)
       activesupport (>= 4.2.5, < 6)
       base32-url (~> 0.5)
@@ -219,7 +216,6 @@ GEM
     httpclient (2.8.3)
     i18n (0.9.5)
       concurrent-ruby (~> 1.0)
-    io-like (0.3.0)
     iso8601 (0.9.1)
     jaro_winkler (1.5.2)
     jquery-fileupload-rails (0.4.7)
@@ -284,6 +280,7 @@ GEM
     multipart-post (2.0.0)
     mysql2 (0.4.10)
     namae (1.0.1)
+    net_http_ssl_fix (0.0.10)
     netrc (0.11.0)
     noid (0.9.0)
     nokogiri (1.8.5)
@@ -409,6 +406,7 @@ GEM
       unicode-display_width (~> 1.0, >= 1.0.1)
     ruby-progressbar (1.10.0)
     ruby_dig (0.0.2)
+    rubyzip (1.2.2)
     safe_yaml (1.0.5)
     sass (3.7.3)
       sass-listen (~> 4.0.0)
@@ -418,6 +416,9 @@ GEM
     scss_lint (0.57.1)
       rake (>= 0.9, < 13)
       sass (~> 3.5, >= 3.5.5)
+    selenium-webdriver (3.141.0)
+      childprocess (~> 0.5)
+      rubyzip (~> 1.2, >= 1.2.2)
     simplecov (0.16.1)
       docile (~> 1.1)
       json (>= 1.8, < 3)
@@ -457,6 +458,11 @@ GEM
     unf_ext (0.0.7.5)
     unicode-display_width (1.5.0)
     unicode_utils (1.4.0)
+    webdrivers (3.7.2)
+      net_http_ssl_fix
+      nokogiri (~> 1.6)
+      rubyzip (~> 1.0)
+      selenium-webdriver (~> 3.0)
     webmock (3.5.1)
       addressable (>= 2.3.6)
       crack (>= 0.3.2)
@@ -475,7 +481,6 @@ PLATFORMS
 
 DEPENDENCIES
   byebug
-  chromedriver-helper
   colorize (~> 0.8)
   database_cleaner (~> 1.5)
   diffy (~> 3.1)
@@ -492,6 +497,7 @@ DEPENDENCIES
   sortable-table (~> 0.1)
   stash-sword!
   stash_engine!
+  webdrivers
   webmock (~> 3.0)
   zaru (~> 0.3)
 
