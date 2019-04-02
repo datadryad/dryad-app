@@ -1,5 +1,6 @@
 require_dependency 'stash_datacite/application_controller'
 require 'httparty'
+require 'stash/import/cross_ref'
 
 module StashDatacite
   class PublicationsController < ApplicationController
@@ -13,12 +14,12 @@ module StashDatacite
         format.js do
           if params[:internal_datum][:do_import] == 'true'
             # take action to do the actual import and reload the page with javascript
+            @resource = @se_id.latest_resource
             if @doi.value.blank? && !@msid.value.blank?
               update_manuscript_metadata
             else
               update_doi_metadata
             end
-            render 'update' # just the standard update in the associated view directory
           else
             render template: 'stash_datacite/shared/update.js.erb'
           end
@@ -49,23 +50,23 @@ module StashDatacite
                               query: { access_token: APP_CONFIG.old_dryad_access_token },
                               body: body,
                               headers: { 'Content-Type' => 'application/json' })
+      render 'update' # just the standard update in the associated view directory
     end
 
     def update_doi_metadata
-      require 'pp'
-      works = Serrano.works(ids: @doi.value) #, select: %w[DOI title], filter: {has_full_text: true})
-      # out = works.map { |x| x['message'].select { |k, _v| k[/DOI|type|title/] } }
-      out = works.first['message']
-
-      # this is super hard to read, so this helps
-
-      out.keys.each do |k|
-        puts ''
-        puts "\r\n#{k.capitalize}"
-        pp(out[k])
+      if @doi.value.blank?
+        @error = "Please enter a DOI to import metadata"
+        return
       end
-
-      byebug
+      works = Serrano.works(ids: @doi.value)
+      if !works.is_a?(Array) || works.first['message'].blank?
+        @error = "Couldn't obtain information from CrossRef about this DOI"
+        return
+      end
+      xr_import = Stash::Import::CrossRef.new(resource: @resource, serrano_message: works.first['message'])
+      xr_import.populate
+    rescue Serrano::NotFound, Serrano::BadGateway, Serrano::Error, Serrano::GatewayTimeout, Serrano::InternalServerError, Serrano::ServiceUnavailable
+      @error = "We couldn't retrieve information from CrossRef about this DOI"
     end
   end
 end
