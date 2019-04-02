@@ -35,7 +35,7 @@ module StashDatacite
       @msid.update(value: params[:internal_datum][:msid]) unless params[:internal_datum][:msid].blank?
 
       @doi = StashEngine::InternalDatum.where(stash_identifier: @se_id, data_type: 'publicationDOI').first_or_create
-      @doi.update(value: params[:internal_datum][:doi]) unless params[:internal_datum][:msid].blank?
+      @doi.update(value: params[:internal_datum][:doi]) unless params[:internal_datum][:doi].blank?
     end
 
     def update_manuscript_metadata
@@ -52,12 +52,20 @@ module StashDatacite
     end
 
     def update_doi_metadata
-      url = 'https://api.crossref.org/works/doi:[replaceme]/transform/application/vnd.crossref.unixref+xml'
-      results = HTTParty.get(url,
-                             query: { query: affil },
-                             headers: { 'Content-Type' => 'application/json' })
-    rescue HTTParty::Error, SocketError => ex
-      logger.error("Unable to get results from crossRef for #{@doi.value}: #{ex}")
+      require 'pp'
+      works = Serrano.works(ids: @doi.value) #, select: %w[DOI title], filter: {has_full_text: true})
+      # out = works.map { |x| x['message'].select { |k, _v| k[/DOI|type|title/] } }
+      out = works.first['message']
+
+      # this is super hard to read, so this helps
+
+      out.keys.each do |k|
+        puts ''
+        puts "\r\n#{k.capitalize}"
+        pp(out[k])
+      end
+
+      byebug
     end
   end
 end
