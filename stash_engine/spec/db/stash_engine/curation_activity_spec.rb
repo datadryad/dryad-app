@@ -182,7 +182,7 @@ module StashEngine
 
         StashEngine::CurationActivity.statuses.each do |status|
 
-          if %w[peer_review submitted published embargoed].include?(status)
+          if %w[published embargoed].include?(status)
             it "calls email_author when '#{status}'" do
               allow_any_instance_of(StashEngine::CurationActivity).to receive(:email_author?).and_return(false)
               ca = CurationActivity.new(resource_id: @resource.id, status: status)

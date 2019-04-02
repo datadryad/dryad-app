@@ -36,7 +36,7 @@ module StashEngine
 
     describe :tenant_id do
       it 'returns the user tenant ID' do
-        resource = Resource.create(user_id: user.id, tenant_id: 'ucop')
+        resource = Resource.create(user_id: user.id, tenant_id: 'ucop', skip_emils: true)
         expect(resource.tenant_id).to eq('ucop')
       end
     end
@@ -45,7 +45,7 @@ module StashEngine
       describe :merritt_producer_download_uri do
         it 'returns the producer download URI' do
           download_uri = 'https://merritt.example.edu/d/ark%3A%2Fb5072%2Ffk2736st5z'
-          resource = Resource.create(user_id: user.id)
+          resource = Resource.create(user_id: user.id, skip_emils: true)
           resource.download_uri = download_uri
           expect(resource.merritt_producer_download_uri).to eq('https://merritt.example.edu/u/ark%3A%2Fb5072%2Ffk2736st5z/1')
         end
@@ -55,7 +55,7 @@ module StashEngine
       describe :merritt_protodomain_and_local_id do
         it 'returns the merritt protocol and domain and local ID' do
           download_uri = 'https://merritt.example.edu/d/ark%3A%2Fb5072%2Ffk2736st5z'
-          resource = Resource.create(user_id: user.id)
+          resource = Resource.create(user_id: user.id, skip_emils: true)
           resource.download_uri = download_uri
 
           merritt_protodomain, local_id = resource.merritt_protodomain_and_local_id
@@ -67,14 +67,14 @@ module StashEngine
 
     describe :dataset_in_progress_editor_id do
       it 'defaults to current_editor for no identifier' do
-        resource = Resource.create(user_id: user.id, current_editor_id: 1)
+        resource = Resource.create(user_id: user.id, current_editor_id: 1, skip_emils: true)
         expect(resource.dataset_in_progress_editor_id).to eq(1)
       end
 
       it 'gives editor id of in progress version' do
         identifier = Identifier.create(identifier: 'cat/dog', identifier_type: 'DOI')
-        resource1 = Resource.create(user_id: user.id, identifier_id: identifier.id, current_editor_id: 1)
-        resource2 = Resource.create(user_id: user.id, identifier_id: identifier.id, current_editor_id: 2)
+        resource1 = Resource.create(user_id: user.id, identifier_id: identifier.id, current_editor_id: 1, skip_emils: true)
+        resource2 = Resource.create(user_id: user.id, identifier_id: identifier.id, current_editor_id: 2, skip_emils: true)
         state1 = ResourceState.create(user_id: 1, resource_state: 'submitted', resource_id: resource1.id)
         state2 = ResourceState.create(user_id: 2, resource_state: 'in_progress', resource_id: resource2.id)
         resource1.update(current_resource_state_id: state1.id)
@@ -89,8 +89,8 @@ module StashEngine
         user1 = User.create(tenant_id: 'ucop', first_name: 'Laura', last_name: 'Muckenhaupt')
         user2 = User.create(tenant_id: 'ucop', first_name: 'Gopher', last_name: 'Jones')
         identifier = Identifier.create(identifier: 'cat/dog', identifier_type: 'DOI')
-        resource1 = Resource.create(user_id: user1.id, identifier_id: identifier.id, current_editor_id: user1.id)
-        resource2 = Resource.create(user_id: user1.id, identifier_id: identifier.id, current_editor_id: user2.id)
+        resource1 = Resource.create(user_id: user1.id, identifier_id: identifier.id, current_editor_id: user1.id, skip_emils: true)
+        resource2 = Resource.create(user_id: user1.id, identifier_id: identifier.id, current_editor_id: user2.id, skip_emils: true)
         state1 = ResourceState.create(user_id: 1, resource_state: 'submitted', resource_id: resource1.id)
         state2 = ResourceState.create(user_id: 2, resource_state: 'in_progress', resource_id: resource2.id)
         resource1.update(current_resource_state_id: state1.id)
@@ -107,7 +107,7 @@ module StashEngine
       attr_reader :orig_state_id
       attr_reader :orig_version
       before(:each) do
-        @resource = Resource.create(user_id: user.id)
+        @resource = Resource.create(user_id: user.id, skip_emils: true)
         @orig_state_id = resource.current_resource_state_id
         @orig_version = resource.stash_version
       end
@@ -137,7 +137,7 @@ module StashEngine
     describe 'author' do
       attr_reader :resource
       before(:each) do
-        @resource = Resource.create(user_id: user.id)
+        @resource = Resource.create(user_id: user.id, skip_emils: true)
       end
 
       it 'defaults to no authors' do
@@ -222,7 +222,7 @@ module StashEngine
       attr_reader :resource
       attr_reader :state
       before(:each) do
-        @resource = Resource.create(user_id: user.id)
+        @resource = Resource.create(user_id: user.id, skip_emils: true)
         @state = ResourceState.find_by(resource_id: resource.id)
       end
 
@@ -354,7 +354,7 @@ module StashEngine
         end
         describe :upload_dir do
           it 'returns the upload directory for this resource' do
-            resource = Resource.create
+            resource = Resource.create(skip_emils: true)
             expect(resource.upload_dir).to eq("/apps/stash/stash_engine/uploads/#{resource.id}")
           end
         end
@@ -366,7 +366,7 @@ module StashEngine
         attr_reader :copied_files
         attr_reader :deleted_files
         before(:each) do
-          @res1 = Resource.create(user_id: user.id)
+          @res1 = Resource.create(user_id: user.id, skip_emils: true)
 
           @created_files = Array.new(3) do |i|
             FileUpload.create(
@@ -395,7 +395,7 @@ module StashEngine
         end
 
         it 'defaults to empty' do
-          res2 = Resource.create(user_id: user.id)
+          res2 = Resource.create(user_id: user.id, skip_emils: true)
           expect(res2.current_file_uploads).to be_empty
         end
 
@@ -464,7 +464,7 @@ module StashEngine
 
         describe :new_file_uploads do
           it 'defaults to empty' do
-            res2 = Resource.create(user_id: user.id)
+            res2 = Resource.create(user_id: user.id, skip_emils: true)
             expect(res2.new_file_uploads).to be_empty
           end
 
@@ -483,7 +483,7 @@ module StashEngine
         attr_reader :resource
 
         before(:each) do
-          @resource = Resource.create
+          @resource = Resource.create(skip_emils: true)
           @temp_file_paths = Array.new(3) do |i|
             tempfile = Tempfile.new(["foo-#{i}", 'bin'])
             File.write(tempfile.path, '')
@@ -561,7 +561,7 @@ module StashEngine
     describe 'versioning' do
       attr_reader :resource
       before(:each) do
-        @resource = Resource.create
+        @resource = Resource.create(skip_emils: true)
       end
 
       describe :stash_version do
@@ -618,7 +618,7 @@ module StashEngine
           end
 
           it 'is incremented for the next resource' do
-            new_resource = Resource.create(identifier: resource.identifier)
+            new_resource = Resource.create(identifier: resource.identifier, skip_emils: true)
             expect(new_resource.version_number).to eq(2)
           end
         end
@@ -635,7 +635,7 @@ module StashEngine
           end
 
           it 'is incremented for the next resource' do
-            new_resource = Resource.create(identifier: resource.identifier)
+            new_resource = Resource.create(identifier: resource.identifier, skip_emils: true)
             expect(new_resource.merritt_version).to eq(2)
           end
         end
@@ -655,7 +655,7 @@ module StashEngine
         describe :latest_per_dataset do
           it 'only returns latest resources and new resources' do
             resource.dup.save
-            Resource.create
+            Resource.create(skip_emils: true)
             expect(Resource.latest_per_dataset.count).to eq(2)
           end
         end
@@ -665,7 +665,7 @@ module StashEngine
     describe 'identifiers' do
       attr_reader :resource
       before(:each) do
-        @resource = Resource.create(user_id: user.id)
+        @resource = Resource.create(user_id: user.id, skip_emils?: true)
       end
 
       describe :ensure_identifier do
@@ -751,7 +751,7 @@ module StashEngine
         end
         it 'counts published current states' do
           (0...3).each do |index|
-            resource = Resource.create(user_id: user.id)
+            resource = Resource.create(user_id: user.id, skip_emils: true)
             resource.ensure_identifier("10.123/#{index}")
             resource.current_state = 'submitted'
             resource.save
@@ -760,12 +760,12 @@ module StashEngine
         end
         it 'groups by identifier' do
           (0...3).each do |_index|
-            res1 = Resource.create(user_id: user.id)
+            res1 = Resource.create(user_id: user.id, skip_emils: true)
             res1.ensure_identifier('10.123/456')
             res1.current_state = 'submitted'
             res1.save
 
-            res2 = Resource.create(user_id: user.id)
+            res2 = Resource.create(user_id: user.id, skip_emils: true)
             res2.ensure_identifier('10.345/678')
             res2.current_state = 'submitted'
             res2.save
@@ -775,7 +775,7 @@ module StashEngine
 
         it 'doesn\'t count non-published datasets' do
           %w[in_progress processing error].each_with_index do |state, index|
-            resource = Resource.create(user_id: user.id)
+            resource = Resource.create(user_id: user.id, skip_emils: true)
             resource.ensure_identifier("10.123/#{index}")
             resource.current_state = state
             resource.save
@@ -784,7 +784,7 @@ module StashEngine
         end
         it 'doesn\'t count non-current states' do
           %w[in_progress processing error].each_with_index do |state, index|
-            resource = Resource.create(user_id: user.id)
+            resource = Resource.create(user_id: user.id, skip_emils: true)
             resource.ensure_identifier("10.123/#{index}")
             resource.current_state = 'submitted'
             resource.current_state = state
