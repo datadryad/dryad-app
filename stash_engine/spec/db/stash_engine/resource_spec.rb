@@ -1,9 +1,11 @@
 require 'db_spec_helper'
 
 module StashEngine
-  describe Resource do
-    attr_reader :user
 
+  describe Resource do
+
+    attr_reader :user
+    attr_reader :skip_emails
     attr_reader :future_date
 
     before(:all) do
@@ -40,7 +42,8 @@ module StashEngine
     describe :can_edit do
       it 'returns false if editing by someone else' do
         identifier = Identifier.create(identifier: 'cat/dog', identifier_type: 'DOI')
-        resource = Resource.create(user_id: user.id, identifier_id: identifier.id, current_editor_id: @user.id + 1, tenant_id: 'ucop')
+        resource = Resource.create(user_id: user.id, identifier_id: identifier.id,
+                                   current_editor_id: @user.id + 1, tenant_id: 'ucop')
         ResourceState.create(user_id: @user.id + 1, resource_state: 'in_progress', resource_id: resource.id)
         User.create(first_name: 'L',
                     last_name: 'Mu',
@@ -529,6 +532,16 @@ module StashEngine
             res1.current_state = 'error'
             expect(res1.current_state).to eq('error')
             expect(resource.current_state).to eq('submitted')
+          end
+          it 'does not call prepare_for_curation when :in_progess' do
+            resource.preserve_curation_status = true
+            expect(resource).not_to receive(:prepare_for_curation)
+            resource.current_state = 'in_progress'
+          end
+          it 'does not call prepare_for_curation when `preserve_curation_status == true`' do
+            resource.preserve_curation_status = true
+            expect(resource).not_to receive(:prepare_for_curation)
+            resource.current_state = 'submitted'
           end
         end
       end
@@ -1123,6 +1136,32 @@ module StashEngine
         end
 
       end
+
+      describe :prepare_for_curation do
+
+        before(:each) do
+          @resource = Resource.create(user_id: user.id)
+        end
+
+        it 'sets the current_curation_status to :submitted when it is the initial version' do
+          @resource.current_state = 'submitted'
+          expect(@resource.current_curation_status).to eql('submitted')
+        end
+
+        it 'assigns the resource.user_id to the curation_activity when no editor is defined' do
+          @resource.current_state = 'submitted'
+          expect(@resource.current_curation_status).to eql('submitted')
+          expect(@resource.current_curation_activity.user_id).to eql(@resource.user_id)
+        end
+
+        it 'assigns the resource.current_editor_id to the curation_activity when an editor is defined' do
+
+        end
+
+      end
+
     end
+
   end
+
 end

@@ -66,8 +66,8 @@ module Stash
 
         resource.download_uri = get_download_uri(resource, record_identifier)
         resource.update_uri = get_update_uri(resource, record_identifier)
+        resource.save # current_state calls :reload so we need to save first!
         resource.current_state = 'submitted'
-        resource.save
 
         # Keep files until they've been successfully confirmed in the OAI-PMH feed, don't aggressively clean up until then
         # cleanup_files(resource)
