@@ -49,7 +49,7 @@ module Stash
       end
     end
 
-    def index(harvested_records, harvest_job_id, &block) # rubocop:disable Metrics/MethodLength
+    def index(harvested_records, harvest_job_id, &block)
       index_job_id = begin_index_job(harvest_job_id)
       status = Indexer::IndexStatus::COMPLETED
       begin

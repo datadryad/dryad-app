@@ -153,7 +153,6 @@ module StashEngine
     end
 
     # rubocop:disable Metrics/AbcSize
-    # rubocop:disable Metrics/MethodLength
     def email_orcid_invitations
       return unless published?
       # Do not send an invitation to users who have no email address and do not have an
@@ -175,7 +174,7 @@ module StashEngine
         ).deliver_now
       end
     end
-    # rubocop:enable Metrics/MethodLength
+
     # rubocop:enable Metrics/AbcSize
 
     # Helper methods

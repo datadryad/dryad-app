@@ -32,7 +32,7 @@ module Stash
           MIME::Types['text/xml'].first
         end
 
-        def contents # rubocop:disable Metrics/MethodLength
+        def contents
           Nokogiri::XML::Builder.new do |xml|
             xml.qualifieddc(ROOT_ATTRIBUTES) do
               add_creators(xml)

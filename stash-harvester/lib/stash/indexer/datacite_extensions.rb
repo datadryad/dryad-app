@@ -104,7 +104,7 @@ module Datacite
         elem.name == 'resource' && Datacite::Mapping.datacite_namespace?(elem)
       end
 
-      def calc_bounding_box # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
+      def calc_bounding_box # rubocop:disable Metrics/AbcSize
         lat_min, lat_max, long_min, long_max = nil
         geo_location_points.each do |pt|
           lat_min = [lat_min, pt.latitude].compact.min
@@ -127,7 +127,7 @@ module Datacite
       #
       # method takes the values supplied and also adds every year for a range so people can search for
       # any of those years which may not be explicitly named
-      def dct_temporal_dates # rubocop:disable Metrics/AbcSize
+      def dct_temporal_dates
         items = dates.map(&:to_s).compact
         year_range_items = dates.map do |i|
           (i.range_start.year..i.range_end.year).to_a.map(&:to_s) if i.range_start && i.range_end && i.range_start.year && i.range_end.year
