@@ -1,6 +1,6 @@
 # Help
 
-## [Why Use Dryad?](#why-use)
+## Why Use Dryad?<a name="why-use"></a>
 
 Dryad aims to make data publishing as **simple** and as **rewarding** as possible through a suite of services:
 
@@ -19,7 +19,7 @@ Dryad aims to make data publishing as **simple** and as **rewarding** as possibl
 - **Community-led**. By publishing in Dryad, you are supporting a nonprofit membership organization committed to making data available for research and educational reuse. Modest, one-time Data Publishing Charges help ensure our sustainability.
 
 
-## [Submission Process](#submission)
+## Submission Process<a name="submission"></a>
 
 Before you begin, we recommend reviewing our best practices for creating reusable data publications (add link). 
 
@@ -35,7 +35,7 @@ If you need further assistance, consult our FAQ or contact us at <a href=mailto:
 Dryad has a REST API that allows for download and submission of data. Check out our [documentation](https://dash.ucop.edu/api/docs/index.html) as well as our [How-To Guide](https://github.com/CDL-Dryad/dryad/blob/master/stash_api/basic_submission.md)
 
 
-### Metadata
+### Metadata<a name="metadata"></a>
 
 Comprehensive data documentation (i.e. metadata) is the key to future understanding of data. Without a thorough description of the data file, the context in which the data were collected, the measurements that were made, and the quality of the data, it is unlikely that the data can be easily discovered, understood, or effectively used. 
 
@@ -68,7 +68,7 @@ We have two different options for uploading your data.
 
 Please note that you may only use one of these two upload methods per version, but you may do subsequent versions of your data publication and utilize different methods of upload this way.
 
-### Curation
+### Curation<a name="curation"></a>
 
 Once your data is submitted, Dryad [curators](/stash/about#staff) perform basic checks:
 
@@ -82,15 +82,16 @@ If Dryad curators identify any questions, problems, or areas for improvement, th
 Upon curator approval, the Dryad DOI is officially registered and, if applicable, the Data Publishing Charge is invoiced.
 
 
-### Publication and Citation
+### Publication and Citation<a name="citation"></a>
 
 - We allow you to delay the publication of your data if for the purposes of having a related article under peer review.
 - As soon as your data is public, we recommend citing and publicizing your work with your given DOI.
-  - If there is an article or other publication related to your data, we recommend that the data be cited in the bibliography of the original publication so that the link between the publication and data is indexed by third party services.
+  - Recommended citation format is provided on the dataset landing page.
+  - If there is an article or other publication related to your data, we recommend that the data be cited in the references of the original publication so that the link between the publication and data is indexed by third-party services.
 - If you have edits, additional data, or subsequent related work we recommend versioning your data by using the "update" link. All versions of a dataset will be accessible, but the dataset DOI will always resolve to the newest version.
 - For more details about publication with Dryad see our [Frequently Asked Questions (FAQ)](/stash/faq/)
 
-## [Data Publishing Charges](#fees)
+## Data Publishing Charges<a name="fees"></a>
 
 Dryad is a **nonprofit** organization that provides long-term access to its contents at no cost to users. We are able to provide free access to data due to financial support from members and data submitters. Dryad's Data Publishing Charges (DPCs) are designed to recover the core costs of curating and preserving data.
  
@@ -99,6 +100,10 @@ Dryad is a **nonprofit** organization that provides long-term access to its cont
 **The base DPC per data submission is $120**. DPCs are invoiced upon curator approval/publication, unless:
 
 - the submitter is based at a member institution (determined by login credentials), or
-- an associated journal or publisher has an agreement with Dryad to sponsor the DPC (look up your journal here), or
+- an associated journal or publisher has an agreement with Dryad to sponsor the DPC, or
 - the submitter is based in a fee-waiver country (see above).
+
+### Overage fees
+
+Dryad charges excess storage fees for data submissions totaling over 20GB. For data packages in excess of 20GB, submitters will be charged $50 for each additional 10GB, or part thereof. (Submissions between 20 and 30GB = $50, between 30 and 40GB = $100, and so on).
 

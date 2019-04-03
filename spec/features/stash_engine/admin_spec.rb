@@ -4,13 +4,10 @@ require 'rails_helper'
 RSpec.feature 'Admin', type: :feature do
 
   include Mocks::Stripe
-
-  before(:all) do
-    # Start Solr - shutdown is handled globally when all tests have finished
-    SolrInstance.instance
-  end
+  include Mocks::RSolr
 
   before(:each) do
+    mock_solr!
     @admin = create(:user, role: 'admin', tenant_id: 'ucop')
   end
 
