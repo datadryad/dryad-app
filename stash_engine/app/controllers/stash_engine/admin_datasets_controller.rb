@@ -60,7 +60,7 @@ module StashEngine
       end
     end
 
-    # rubocop#disable Metrics/MethodLength
+    # rubocop:disable Metrics/MethodLength
     def curation_activity_change
       respond_to do |format|
         format.js do
@@ -74,7 +74,7 @@ module StashEngine
         end
       end
     end
-    # rubocop#enable Metrics/MethodLength
+    # rubocop:enable Metrics/MethodLength
 
     # show curation activities for this item
     def activity_log
