@@ -17,7 +17,7 @@ module Stash
 
       def populate_title
         return if @sm['title'].blank? || @sm['title'].first.blank?
-        @resource.update(title: @sm['title'].first )
+        @resource.update(title: @sm['title'].first)
       end
 
       # authors may contain given, family , affiliation, ORCID
@@ -27,8 +27,9 @@ module Stash
           author = @resource.authors.create(
             author_first_name: xr_author['given'],
             author_last_name: xr_author['family'],
-            author_orcid: ( xr_author['ORCID'] ? xr_author['ORCID'].match(/[0-9\-]{19}$/).to_s : nil ) )
-          affil_name = ( xr_author['affiliation']&.first ? xr_author['affiliation'].first['name'] : nil )
+            author_orcid: (xr_author['ORCID'] ? xr_author['ORCID'].match(/[0-9\-]{19}$/).to_s : nil)
+          )
+          affil_name = (xr_author['affiliation']&.first ? xr_author['affiliation'].first['name'] : nil)
           author.affiliation_by_name(affil_name) unless affil_name.blank?
         end
       end
@@ -52,7 +53,7 @@ module Stash
             next
           end
           xr_funder['award'].each do |xr_award|
-            @resource.contributors.create(contributor_name: xr_funder['name'], contributor_type: 'funder', award_number: xr_award )
+            @resource.contributors.create(contributor_name: xr_funder['name'], contributor_type: 'funder', award_number: xr_award)
           end
         end
       end
