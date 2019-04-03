@@ -5,10 +5,10 @@ require 'pry'
 RSpec.feature 'Add Geolocation to Dataset', type: :feature do
 
   include DatasetHelper
+  include Mocks::RSolr
 
-  before(:all) do
-    # Start Solr - shutdown is handled globally when all tests have finished
-    SolrInstance.instance
+  before(:each) do
+    mock_solr!
   end
 
   context 'dataset', js: true do

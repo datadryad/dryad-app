@@ -3,12 +3,10 @@ require 'rails_helper'
 # rubocop:disable Metrics/BlockLength
 RSpec.feature 'MigrateData', type: :feature do
 
-  before(:all) do
-    # Start Solr - shutdown is handled globally when all tests have finished
-    SolrInstance.instance
-  end
+  include Mocks::RSolr
 
   before(:each) do
+    mock_solr!
     @user = create(:user, migration_token: Faker::Lorem.word)
     create(:resource, :submitted, user: @user, identifier: create(:identifier))
     sign_in(@user)
