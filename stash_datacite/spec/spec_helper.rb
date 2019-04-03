@@ -68,3 +68,6 @@ end
 stash_datacite_path = ENGINES['stash_datacite']
 require "#{stash_datacite_path}/config/initializers/patches.rb"
 StashDatacite::ResourcePatch.associate_with_resource(StashEngine::Resource)
+
+require 'stash_datacite/author_patch'
+StashDatacite::AuthorPatch.patch! unless StashEngine::Author.method_defined?(:affiliation)
