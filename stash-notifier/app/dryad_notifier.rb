@@ -8,7 +8,6 @@ class DryadNotifier
     @version = version
   end
 
-  # rubocop:disable Metrics/MethodLength
   def notify
     client = HTTPClient.new
     url = "#{Config.update_base_url}/doi:#{@doi}"
@@ -32,5 +31,5 @@ class DryadNotifier
     end
     true
   end
-  # rubocop:enable Metrics/MethodLength
+
 end

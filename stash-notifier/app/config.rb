@@ -10,8 +10,6 @@ require 'logger'
 module Config
 
   cattr_reader :logger, :environment, :update_base_url, :oai_base_url, :sets
-
-  # rubocop:disable Metrics/MethodLength
   def self.initialize(environment: 'development', logger_std_out: false)
     proj_root = File.expand_path(File.join(File.dirname(__FILE__), '..'))
     path = File.join(proj_root, 'config', 'notifier.yml')
@@ -28,7 +26,6 @@ module Config
     @@oai_base_url = @@settings[:oai_base_url]
     @@sets = @@settings[:sets]
   end
-  # rubocop:enable Metrics/MethodLength
 
 end
 # rubocop:enable Style/ClassVars

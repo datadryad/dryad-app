@@ -97,7 +97,6 @@ module StashEngine
       @page_size = (params[:page_size].blank? || params[:page_size] != '1000000' ? '10' : '1000000')
     end
 
-    # rubocop:disable Metrics/MethodLength
     def setup_ds_sorting
       sort_table = SortableTable::SortTable.new(
         [sort_column_definition('title', 'stash_engine_resources', %w[title]),
@@ -111,7 +110,6 @@ module StashEngine
       )
       @sort_column = sort_table.sort_column(params[:sort], params[:direction])
     end
-    # rubocop:enable Metrics/MethodLength
 
     def build_table_query
       # Retrieve the ids of the all the latest Resources
@@ -162,7 +160,6 @@ module StashEngine
       end
     end
 
-    # rubocop:disable Metrics/MethodLength
     def decipher_curation_activity
       @status = params[:resource][:curation_activity][:status]
       @pub_date = params[:resource][:publication_date]
@@ -178,7 +175,6 @@ module StashEngine
         @pub_date = nil
       end
     end
-    # rubocop:enable Metrics/MethodLength
 
     def publish
       # If the user selected published but the publication date is in the future

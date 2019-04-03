@@ -211,7 +211,6 @@ module StashEngine
     end
 
     # returns the list of fileuploads with duplicate names in created state where we shouldn't have any
-    # rubocop:disable Metrics/MethodLength
     def duplicate_filenames
       sql = <<-SQL
         SELECT *
@@ -225,7 +224,6 @@ module StashEngine
       SQL
       FileUpload.find_by_sql([sql, id, id])
     end
-    # rubocop:enable Metrics/MethodLength
 
     def url_in_version?(url)
       file_uploads.where(url: url).where(file_state: 'created').where(status_code: 200).count > 0
