@@ -491,6 +491,7 @@ module StashEngine
       attr_reader :resource
       attr_reader :state
       before(:each) do
+        allow_any_instance_of(Resource).to receive(:prepare_for_curation).and_return(true)
         @resource = Resource.create(user_id: user.id)
         @state = ResourceState.find_by(resource_id: resource.id)
       end
@@ -1025,6 +1026,10 @@ module StashEngine
 
     describe 'statistics' do
       describe :submitted_dataset_count do
+        before(:each) do
+          allow_any_instance_of(Resource).to receive(:prepare_for_curation).and_return(true)
+        end
+
         it 'defaults to zero' do
           expect(Resource.submitted_dataset_count).to eq(0)
         end
@@ -1086,7 +1091,8 @@ module StashEngine
           resource = Resource.create(identifier: @identifier, user_id: user.id)
           resource.reload
           expect(resource.curation_activities.empty?).to eql(false)
-          expect(resource.current_curation_activity_id).to eql(resource.curation_activities.first.id)
+          expect(resource.current_curation_activity.id).to eql(CurationActivity.last.id)
+          expect(resource.current_curation_status).to eql('in_progress')
         end
 
       end
@@ -1112,50 +1118,10 @@ module StashEngine
         end
 
         it 'is true when current_resource_state == "submitted"' do
+          allow_any_instance_of(Resource).to receive(:prepare_for_curation).and_return(true)
           resource = Resource.create(user_id: user.id)
           resource.current_state = 'submitted'
           expect(resource.reload.curatable?).to eql(true)
-        end
-
-      end
-
-      describe :current_curation_activity do
-
-        before(:each) do
-          allow_any_instance_of(CurationActivity).to receive(:update_solr).and_return(true)
-          @resource = Resource.create
-        end
-
-        it 'should return the most recent curation activity' do
-          ca = CurationActivity.create(status: 'curation', resource_id: @resource.id)
-          expect(@resource.reload.current_curation_activity_id).to eql(ca.id)
-        end
-
-        it 'should have a value when the record is created' do
-          expect(@resource.reload.current_curation_activity_id.present?).to eql(true)
-        end
-
-      end
-
-      describe :prepare_for_curation do
-
-        before(:each) do
-          @resource = Resource.create(user_id: user.id)
-        end
-
-        it 'sets the current_curation_status to :submitted when it is the initial version' do
-          @resource.current_state = 'submitted'
-          expect(@resource.current_curation_status).to eql('submitted')
-        end
-
-        it 'assigns the resource.user_id to the curation_activity when no editor is defined' do
-          @resource.current_state = 'submitted'
-          expect(@resource.current_curation_status).to eql('submitted')
-          expect(@resource.current_curation_activity.user_id).to eql(@resource.user_id)
-        end
-
-        it 'assigns the resource.current_editor_id to the curation_activity when an editor is defined' do
-
         end
 
       end

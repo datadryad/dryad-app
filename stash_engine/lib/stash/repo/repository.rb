@@ -66,9 +66,8 @@ module Stash
 
         resource.download_uri = get_download_uri(resource, record_identifier)
         resource.update_uri = get_update_uri(resource, record_identifier)
-        resource.save # current_state calls :reload so we need to save first!
         resource.current_state = 'submitted'
-
+        resource.save
         # Keep files until they've been successfully confirmed in the OAI-PMH feed, don't aggressively clean up until then
         # cleanup_files(resource)
       end
@@ -101,13 +100,13 @@ module Stash
 
       def handle_success(result)
         result.log_to(log)
-        # resource.current_state = 'submitted'
         update_submission_log(result)
       rescue StandardError => e
         # errors here don't constitute a submission failure, so we don't change the resource state
         log_error(e)
       end
 
+      # rubcop:disable Metrics/MethodLength
       def handle_failure(result)
         result.log_to(log)
         update_submission_log(result)
@@ -117,8 +116,9 @@ module Stash
       rescue StandardError => e
         log_error(e)
       ensure
-        resource.current_state = 'error' if resource
+        resource.current_state = 'error' if resource.present?
       end
+      # rubcop:enable Metrics/MethodLength
 
       def log_error(error)
         log.error(to_msg(error))

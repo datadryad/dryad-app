@@ -57,6 +57,7 @@ module Stash
           tenant_id: 'dataone'
         ).build
         resource.current_state = 'processing'
+        resource.save
         @identifier = resource.identifier
 
         @doi_value = '10.15146/R3RG6G'
