@@ -1,6 +1,6 @@
 # About Dryad
 
-## [Our Mission](#mission)
+## Our Mission<a name="mission"></a>
 
 The Dryad Digital Repository is a curated resource that makes research data **discoverable, freely reusable, and citable**. Dryad provides a general-purpose home for a wide diversity of data types.
 
@@ -13,7 +13,7 @@ Our mission is to provide the infrastructure for, and promote the re-use of, dat
 ### Key features
 - Flexible about data format, while encouraging the use and further development of research community standards.
 - Fits into the manuscript submission workflow of its partner journals, making data submission easy.
-- Assigns data **Digital Object Identifiers (DOIs)** to data so that researchers can gain professional credit through data citation.
+- Assigns Digital Object Identifiers (DOIs) to data so that researchers can gain professional credit through data citation.
 - Promotes data visibility through usage and download metrics and by allowing content to be indexed, searched and retrieved. 
 - Promotes data quality by employing professional curators to ensure the validity of the files and descriptive information.
 - Contents are free to download and re-use under a Creative Commons Zero (CC0) license.
@@ -21,7 +21,7 @@ Our mission is to provide the infrastructure for, and promote the re-use of, dat
 - Open source, standards-compliant technology.
 
 
-## [Our Community](#community)
+## Our Community<a name="community"></a>
 
 **Data are the foundation of the scientific enterprise**. By preserving and providing open access to research data, Dryad provides benefits to individual researchers, educators and students and to a diversity of stakeholder organizations including institutions, publishers, and funders.
 
@@ -40,17 +40,17 @@ You’re already working with research data. Here's how Dryad can help:
 
 We are all part of a stakeholder community involved in data publishing, curation, and preservation. Let's band together and sustain community-owned research data infrastructure. **Join Dryad as a member today**.
 
-Are you a:
+#### Are you a:
 
 - Research institution?
-  - Learn more about institutional membership
-  - Apply for membership now!
+  - Learn more about institutional membership [add link]
+  - Apply for membership now! [add link]
 - Publisher, journal or scholarly society?
-  - Learn more about publisher membership
-  - Apply for membership now!
+  - Learn more about publisher membership [add link]
+  - Apply for membership now! [add link]
+  
 
-
-## [Our Governance](#governance)
+## Our Governance<a name="governance"></a>
 
 Dryad is a not-for-profit membership organization, recognized as a 501(c)3 by the U.S. Internal Revenue Service. Dryad members nominate and elect the Board of Directors, twelve individuals from the stakeholder community who provide strategic planning, fiscal oversight, and oversee the position of the Executive Director. Members also approve any amendments to the organization’s Bylaws, have the opportunity to steer policies and features, and are kept abreast of emerging issues in data publishing.
 
@@ -82,7 +82,7 @@ Dryad is a not-for-profit membership organization, recognized as a 501(c)3 by th
 
 **Günter Waibel (Ex Officio)** is Associate Vice Provost and Executive Director of California Digital Library, one of the world's largest digital research libraries. Collaborating with stakeholders across the UC system and beyond, Waibel is advancing efforts to build and support new models of scholarly communication; provide leadership, strategic planning, management and decision making for the CDL; and foster strategic partnerships at the state, national, and international levels. Waibel brings extensive experience in the digital library and broader cultural heritage communities and is well-known for his work in promoting cross-domain collaboration. In his previous position as the Director of the Digitization Program Office at the Smithsonian Institution, Waibel oversaw the strategic plan for creating a digital Smithsonian out of the institution’s 19 museums and 9 research centers. More at http://www.linkedin.com/in/waibel.
 
-## [Our Staff](#staff)
+## Our Staff<a name="staff"></a>
 
 **Melissanne Scheld**, BA Art History
 Executive Director
@@ -111,16 +111,16 @@ Shavon is a librarian with a background in research support and data management 
 Curator
 Rich not only brings strong research and curation skills to Dryad, but mean coding skills as well.
 
-## [Our Platform](#platform)
+## Our Platform<a name="platform"></a>
 
 Dryad is an open source, community driven project that takes a unique approach to data publication and digital preservation. Dryad focuses on search, presentation, and discovery and delegates the responsibility for the data preservation function to the underlying repository with which it is integrated.
 
-For information about submission to Dryad check out our [guidance here](https://github.com/CDL-Dryad/dryad/blob/master/app/views/layouts/_help.html.md)
+For information about submission to Dryad, see our [guidance here](/stash/help/#submission).
 
 
 ### Architecture and Implementation
 
-Dryad is completely open source.  Our code is made publicly available on GitHub (http://cdluc3.github.io/dash/). Dryad is based on an underlying Ruby-on-Rails data publication platform called Stash. Stash encompasses three main functional components: Store, Harvest, and Share.
+Dryad is completely open source.  Our code is made publicly available on GitHub (https://github.com/CDL-Dryad/dryad). Dryad is based on an underlying Ruby-on-Rails data publication platform called Stash. Stash encompasses three main functional components: Store, Harvest, and Share.
 
 - Store: The Store component is responsible for the selection of datasets; their description in terms of configurable metadata schemas, including specification of ORCID and Fundref identifiers for researcher and funder disambiguation; the assignment of DOIs for stable citation and retrieval; designation of an optional limited time embargo; and packaging and submission to the integrated repository
 - Harvest: The Harvest component is responsible for retrieval of descriptive metadata from that repository for inclusion into a Solr search index
@@ -136,14 +136,14 @@ Dublin Core metadata schemas. Protocol modules are available for the SWORD 2.0 d
 ResourceSync harvesting protocols. Authentication modules are available for InCommon/Shibboleth18 and Google/OAuth
 identity providers (IdPs).
 
-We welcome collaborations to develop additional modules for additional metadata schemas and repository protocols.  Please email the Dryad help desk (help at datadryad dot org) or visit GitHub (http://cdluc3.github.io/dash/) for more information.
+We welcome collaborations to develop additional modules for additional metadata schemas and repository protocols. Please email the Dryad <a href=mailto:help@datadryad.org>help desk</a> or visit GitHub (https://github.com/CDL-Dryad/dryad) for more information.
 
 
 ### Features of Dryad service
 
 | Feature | Tech-focused | User-focused | Description |
 |:---------------------------------|:-------------------------:|:------------------:|:--------------|
-| Open Source | X |  | All components open source, MIT licensed code (http://cdluc3.github.io/dash/) |
+| Open Source | X |  | All components open source, MIT licensed code (https://github.com/CDL-Dryad/dryad) |
 | Standards compliant | X |  | Dash integrates with any SWORD/OAI-PMH-compliant repository |
 | Pluggable Framework | X |  | Inherent extensibility for supporting additional protocols and metadata schemas |
 | Flexible metadata schemas | X |  | Support Datacite metadata schema out-of-the-box, but can be configured to support any schema |
