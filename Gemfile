@@ -98,9 +98,9 @@ group :test do
 end
 
 group :development, :test do
+  gem 'binding_of_caller'
   # Ruby fast debugger - base + CLI (http://github.com/deivid-rodriguez/byebug)
   gem 'byebug'
-  gem 'binding_of_caller'
   gem 'pry'
   gem 'pry-rails'
   gem 'pry-remote'
