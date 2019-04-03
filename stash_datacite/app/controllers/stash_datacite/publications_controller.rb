@@ -5,8 +5,6 @@ require 'stash/import/cross_ref'
 module StashDatacite
   class PublicationsController < ApplicationController
     # include HTTParty
-
-    # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
     def update
       @se_id = StashEngine::Identifier.find(params[:internal_datum][:identifier_id])
       save_form_to_internal_data
@@ -26,8 +24,9 @@ module StashDatacite
         end
       end
     end
-    # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
+    # rubocop:enable
 
+    # rubocop:disable Metrics/AbcSize
     def save_form_to_internal_data
       @pub_issn = StashEngine::InternalDatum.where(stash_identifier: @se_id, data_type: 'publicationISSN').first_or_create
       @pub_issn.update(value: params[:internal_datum][:publication_issn]) unless params[:internal_datum][:publication_issn].blank?
@@ -38,6 +37,7 @@ module StashDatacite
       @doi = StashEngine::InternalDatum.where(stash_identifier: @se_id, data_type: 'publicationDOI').first_or_create
       @doi.update(value: params[:internal_datum][:doi]) unless params[:internal_datum][:doi].blank?
     end
+    # rubocop:enable Metrics/AbcSize
 
     def update_manuscript_metadata
       pub_issn_only = @pub_issn.value
@@ -55,7 +55,7 @@ module StashDatacite
 
     def update_doi_metadata
       if @doi.value.blank?
-        @error = "Please enter a DOI to import metadata"
+        @error = 'Please enter a DOI to import metadata'
         return
       end
       works = Serrano.works(ids: @doi.value)
