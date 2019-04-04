@@ -289,6 +289,7 @@ RSpec.feature 'DatasetVersioning', type: :feature do
     it "has a curation status of 'submitted' when prior version was :embargoed" do
       allow_any_instance_of(Stash::Payments::Invoicer).to receive(:ensure_customer_id_exists).and_return(false)
       allow_any_instance_of(Stash::Payments::Invoicer).to receive(:charge_via_invoice).and_return(Faker::Lorem.word)
+      allow_any_instance_of(Stash::Doi::DataciteGen).to receive(:submit_to_datacite).and_return(true)
       click_link 'Admin'
       find('button[aria-label="Update status"]').click
       find('#resource_curation_activity_status').find('option[value="embargoed"]').select_option
@@ -302,6 +303,7 @@ RSpec.feature 'DatasetVersioning', type: :feature do
     it "has a curation status of 'submitted' when prior version was :published" do
       allow_any_instance_of(Stash::Payments::Invoicer).to receive(:ensure_customer_id_exists).and_return(false)
       allow_any_instance_of(Stash::Payments::Invoicer).to receive(:charge_via_invoice).and_return(Faker::Lorem.word)
+      allow_any_instance_of(Stash::Doi::DataciteGen).to receive(:submit_to_datacite).and_return(true)
       click_link 'Admin'
       find('button[aria-label="Update status"]').click
       find('#resource_curation_activity_status').find('option[value="published"]').select_option
