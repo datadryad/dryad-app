@@ -13,6 +13,10 @@ RSpec.feature 'SolrSanitization', type: :feature do
     @uuid = Faker::Crypto.sha1
   end
 
+  after(:all) do
+    SolrInstance.instance.stop if SolrInstance.present?
+  end
+
   before(:each) do
     @solr.add(uuid: @uuid)
     @solr.commit

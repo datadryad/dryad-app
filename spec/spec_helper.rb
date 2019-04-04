@@ -97,10 +97,4 @@ RSpec.configure do |config|
   # test failures related to randomization by passing the same `--seed` value
   # as the one that triggered the failure.
   Kernel.srand config.seed
-
-  # Stop Solr if its running once we are done
-  # rubocop:disable Style/GlobalVars
-  $solr_running = false
-  config.after(:suite) { SolrInstance.instance.stop if $solr_running }
-  # rubocop:enable Style/GlobalVars
 end
