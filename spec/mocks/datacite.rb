@@ -11,7 +11,7 @@ module Mocks
             'Authorization'=>/Basic.*/,
             'Content-Type'=>'application/xml;charset=UTF-8',
             'Host'=>'mds.test.datacite.org',
-            'User-Agent'=>'Mozilla/5.0 (compatible; Maremma/4.2.1; +https://github.com/datacite/maremma)'
+            'User-Agent'=>/.*/
           })
         .to_return(status: 201, body: "", headers: {})
 
@@ -24,7 +24,7 @@ module Mocks
             'Authorization'=>/Basic.*/,
             'Content-Type'=>'text/plain;charset=UTF-8',
             'Host'=>'mds.test.datacite.org',
-            'User-Agent'=>'Mozilla/5.0 (compatible; Maremma/4.2.1; +https://github.com/datacite/maremma)'
+            'User-Agent'=>/.*/
           })
         .to_return(status: 201, body: "", headers: {})
     end
