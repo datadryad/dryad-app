@@ -57,6 +57,7 @@ module Stash
           tenant_id: 'dataone'
         ).build
         resource.current_state = 'processing'
+        resource.save
         @identifier = resource.identifier
 
         @doi_value = '10.15146/R3RG6G'
@@ -94,6 +95,9 @@ module Stash
 
       describe :harvested do
         it 'sets the download URI, update URI, and status' do
+          # Skip sending emails
+          resource.skip_emails = true
+          resource.save
           repo.harvested(identifier: identifier, record_identifier: record_identifier)
           resource.reload
           expect(resource.download_uri).to eq('http://merritt.cdlib.org/d/ark%3A%2F99999%2Ffk43f5119b')

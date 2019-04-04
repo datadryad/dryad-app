@@ -143,8 +143,9 @@ module StashApi
 
       it 'updates an existing dataset with a new in-progress version' do
         resource = @stash_identifier.in_progress_resource
+        resource.update(skip_emails: true)
         resource.current_state = 'submitted' # make it look like the first was successfully submitted, so this next will be new version
-
+        resource.save
         # this is what happens in the controller if an update to an existing identifier that has last successfully submitted (completed) version
         # I can imagine, that this might be incorporated into the DatasetParser object instead
         new_resource = resource.amoeba_dup

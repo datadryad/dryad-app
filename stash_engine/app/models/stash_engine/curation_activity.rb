@@ -57,14 +57,11 @@ module StashEngine
 
     # Email the primary author when submitted, peer_review, published or embargoed
     after_create :email_author,
-                 if: proc { |ca| %w[published embargoed peer_review submitted].include?(ca.status) && latest_curation_status_changed? }
+                 if: proc { |ca| %w[published embargoed].include?(ca.status) && latest_curation_status_changed? && !resource.skip_emails }
 
     # Email invitations to register ORCIDs to authors when published
     after_create :email_orcid_invitations,
-                 if: proc { |ca| ca.published? && latest_curation_status_changed? }
-
-    after_create :update_resource_reference!
-    after_destroy :remove_resource_reference!
+                 if: proc { |ca| ca.published? && latest_curation_status_changed? && !resource.skip_emails }
 
     # Class methods
     # ------------------------------------------
@@ -116,16 +113,6 @@ module StashEngine
 
     # Callbacks
     # ------------------------------------------
-    def update_resource_reference!
-      StashEngine::Resource.find(resource_id).update(current_curation_activity_id: id)
-    end
-
-    def remove_resource_reference!
-      # Reverts the current_curation_activity pointer on Resource to the prior activity
-      prior = CurationActivity.where(resource_id: resource_id).where.not(id: id).order(updated_at: :desc).first
-      StashEngine::Resource.find(resource_id).update(current_curation_activity_id: prior&.id || '')
-    end
-
     def submit_to_stripe
       return unless ready_for_payment? &&
                     resource.identifier&.user_must_pay?
@@ -148,12 +135,14 @@ module StashEngine
       resource.submit_to_solr
     end
 
+    # Triggered on a status of :published or :embargoed
     def email_author
       StashEngine::UserMailer.status_change(resource, status).deliver_now
     end
 
     # rubocop:disable Metrics/AbcSize
     # rubocop:disable Metrics/MethodLength
+    # Triggered on a status of :published
     def email_orcid_invitations
       return unless published?
       # Do not send an invitation to users who have no email address and do not have an
