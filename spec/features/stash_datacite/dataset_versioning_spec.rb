@@ -6,6 +6,8 @@ RSpec.feature 'DatasetVersioning', type: :feature do
   include DatasetHelper
   include Mocks::Repository
   include Mocks::RSolr
+  include Mocks::Datacite
+  include Mocks::Stripe
 
   before(:each) do
     mock_repository!
@@ -225,8 +227,6 @@ RSpec.feature 'DatasetVersioning', type: :feature do
       click_link 'Admin'
       within(:css, ".c-lined-table__row") do
         # Make sure the appropriate buttons are available
-        expect(page).to have_css('button[aria-label="Update status"]')
-
         # Make sure the right text is shown
         expect(page).to have_link(@resource.title)
         expect(page).to have_text('Submitted')
@@ -269,7 +269,6 @@ RSpec.feature 'DatasetVersioning', type: :feature do
       find('button[aria-label="Update status"]').click
       find('#resource_curation_activity_status').find('option[value="action_required"]').select_option
       click_button 'Submit'
-      wait_for_ajax
       sign_in_as_author_and_update_dataset
       @resource.reload
       expect(@resource.current_curation_status).to eql('curation')
@@ -280,38 +279,42 @@ RSpec.feature 'DatasetVersioning', type: :feature do
       find('button[aria-label="Update status"]').click
       find('#resource_curation_activity_status').find('option[value="withdrawn"]').select_option
       click_button 'Submit'
-      wait_for_ajax
       sign_in_as_author_and_update_dataset
       @resource.reload
       expect(@resource.current_curation_status).to eql('submitted')
     end
 
-    it "has a curation status of 'submitted' when prior version was :embargoed" do
-      allow_any_instance_of(Stash::Payments::Invoicer).to receive(:ensure_customer_id_exists).and_return(false)
-      allow_any_instance_of(Stash::Payments::Invoicer).to receive(:charge_via_invoice).and_return(Faker::Lorem.word)
-      allow_any_instance_of(Stash::Doi::DataciteGen).to receive(:submit_to_datacite).and_return(true)
-      click_link 'Admin'
-      find('button[aria-label="Update status"]').click
-      find('#resource_curation_activity_status').find('option[value="embargoed"]').select_option
-      click_button 'Submit'
-      wait_for_ajax
-      sign_in_as_author_and_update_dataset
-      @resource.reload
-      expect(@resource.current_curation_status).to eql('submitted')
-    end
+    context :published_or_embargoed do
 
-    it "has a curation status of 'submitted' when prior version was :published" do
-      allow_any_instance_of(Stash::Payments::Invoicer).to receive(:ensure_customer_id_exists).and_return(false)
-      allow_any_instance_of(Stash::Payments::Invoicer).to receive(:charge_via_invoice).and_return(Faker::Lorem.word)
-      allow_any_instance_of(Stash::Doi::DataciteGen).to receive(:submit_to_datacite).and_return(true)
-      click_link 'Admin'
-      find('button[aria-label="Update status"]').click
-      find('#resource_curation_activity_status').find('option[value="published"]').select_option
-      click_button 'Submit'
-      wait_for_ajax
-      sign_in_as_author_and_update_dataset
-      @resource.reload
-      expect(@resource.current_curation_status).to eql('submitted')
+      before(:each) do
+        mock_datacite!
+        mock_stripe!
+      end
+
+      it "has a curation status of 'submitted' when prior version was :embargoed" do
+        #allow_any_instance_of(Stash::Payments::Invoicer).to receive(:ensure_customer_id_exists).and_return(false)
+        #allow_any_instance_of(Stash::Payments::Invoicer).to receive(:charge_via_invoice).and_return(Faker::Lorem.word)
+        click_link 'Admin'
+        find('button[aria-label="Update status"]').click
+        find('#resource_curation_activity_status').find('option[value="embargoed"]').select_option
+        click_button 'Submit'
+        sign_in_as_author_and_update_dataset
+        @resource.reload
+        expect(@resource.current_curation_status).to eql('submitted')
+      end
+
+      it "has a curation status of 'submitted' when prior version was :published" do
+        #allow_any_instance_of(Stash::Payments::Invoicer).to receive(:ensure_customer_id_exists).and_return(false)
+        #allow_any_instance_of(Stash::Payments::Invoicer).to receive(:charge_via_invoice).and_return(Faker::Lorem.word)
+        click_link 'Admin'
+        find('button[aria-label="Update status"]').click
+        find('#resource_curation_activity_status').find('option[value="published"]').select_option
+        click_button 'Submit'
+        sign_in_as_author_and_update_dataset
+        @resource.reload
+        expect(@resource.current_curation_status).to eql('submitted')
+      end
+
     end
 
   end
@@ -325,7 +328,6 @@ RSpec.feature 'DatasetVersioning', type: :feature do
     fill_required_fields
     navigate_to_review
     submit_form
-    wait_for_ajax
     @resource = StashEngine::Resource.where(user: @author).last
   end
 
@@ -341,7 +343,6 @@ RSpec.feature 'DatasetVersioning', type: :feature do
       fill_in 'user_comment', with: Faker::Lorem.sentence
     end
     click_button 'Submit'
-    wait_for_ajax
     @resource = StashEngine::Resource.last
     mock_successfull_merritt_submission!(@resource)
     @resource.reload
@@ -365,7 +366,6 @@ RSpec.feature 'DatasetVersioning', type: :feature do
     find('button[aria-label="Update status"]').click
     find('#resource_curation_activity_status').find('option[value="curation"]').select_option
     click_button 'Submit'
-    wait_for_ajax
     @resource.reload
     click_link 'Admin'
   end

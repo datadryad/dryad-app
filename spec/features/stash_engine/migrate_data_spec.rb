@@ -29,11 +29,6 @@ RSpec.feature 'MigrateData', type: :feature do
 
   context :clicked_yes do
 
-    before(:all) do
-      # Start Solr - shutdown is handled globally when all tests have finished
-      SolrInstance.instance
-    end
-
     it 'goes to migration if clicking yes in migrate banner dialog' do
       click_button 'Yes migrate my data.'
       expect(page).to have_text('Migrate Your Data')

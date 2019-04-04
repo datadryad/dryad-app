@@ -69,8 +69,7 @@ RSpec.feature 'Admin', type: :feature do
         within(:css, "form[action=\"#{stash_url_helpers.popup_admin_path(@user.id)}\"]") do
           find('.c-admin-edit-icon').click
         end
-        wait_for_ajax
-        within(:css, 'div.o-admin-dialog') do
+        within(:css, 'div.o-admin-dialog', wait: 5) do
           find('#role_admin').set(true)
           find('input[name=commit]').click
         end

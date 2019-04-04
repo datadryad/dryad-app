@@ -6,7 +6,7 @@ require_relative 'helpers/capybara_helper'
 require_relative 'helpers/ckeditor_helper'
 require_relative 'helpers/routes_helper'
 require_relative 'helpers/session_helper'
-require_relative '../mocks/orcid'
+require_relative 'helpers/webmock_helper'
 
 Capybara.default_driver = :rack_test
 Capybara.javascript_driver = :chrome
@@ -46,10 +46,15 @@ Capybara.configure do |config|
 end
 
 RSpec.configure do |config|
-  config.include(AjaxHelper, type: :feature)
+  # config.include(AjaxHelper, type: :feature)
   config.include(CapybaraHelper, type: :feature)
-  config.include(CkeditorHelper, type: :feature)
-  config.include(RoutesHelper, type: :feature)
-  config.include(SessionsHelper, type: :feature)
-  config.include(Mocks::Orcid, type: :feature)
+
+  config.before(:all, type: :feature) do
+    config.include(CkeditorHelper, type: :feature)
+    config.include(RoutesHelper, type: :feature)
+    config.include(SessionsHelper, type: :feature)
+    config.include(WebmockHelper, type: :feature)
+
+    disable_net_connect!
+  end
 end

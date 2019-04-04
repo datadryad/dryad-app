@@ -1,9 +1,6 @@
 module DatasetHelper
 
-  include Mocks::Ezid
-
   def start_new_dataset
-    mock_minting!
     click_button 'Start New Dataset'
     expect(page).to have_content('Describe Dataset')
     navigate_to_metadata

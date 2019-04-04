@@ -14,9 +14,6 @@ module Mocks
       allow_any_instance_of(LatestController).to receive(:set_cached_latest) do |dbl|
         dbl.instance_variable_set(:@document_list, [])
       end
-
-      # Stub any requests to Solr
-      stub_request(:any, 'http://127.0.0.1:8983/solr/').to_return(status: 200, body: '', headers: {})
     end
 
   end
