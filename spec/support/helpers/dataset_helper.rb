@@ -60,6 +60,12 @@ module DatasetHelper
     fill_in 'internal_datum[msid]', with: msid
   end
 
+  def fill_crossref_info(name:, doi:)
+    choose('choose_published')
+    fill_in 'internal_datum[publication_name]', with: name
+    fill_in 'internal_datum[doi]', with: doi
+  end
+
   def fill_in_author
     fill_in 'author[author_first_name]', with: Faker::Name.unique.first_name
     fill_in 'author[author_last_name]', with: Faker::Name.unique.last_name
