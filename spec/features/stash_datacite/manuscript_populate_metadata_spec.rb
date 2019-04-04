@@ -2,7 +2,8 @@ require 'rails_helper'
 require 'pry'
 require 'webmock/rspec'
 
-RSpec.feature 'Populate manuscript metadata from journal and manuscript id', type: :feature do
+# rubocop:disable Metrics/BlockLength
+RSpec.feature 'Populate manuscript metadata from outside source', type: :feature do
 
   include DatasetHelper
 
@@ -12,7 +13,7 @@ RSpec.feature 'Populate manuscript metadata from journal and manuscript id', typ
     #
   end
 
-  context 'journal-metadata-autofill', js: true do
+  context :journal_metadata_autofill, js: true do
     before(:each) do
       # TODO: we probably need to figure out how to stub ORCID login/api for the entire application instead of relying on sandbox
       WebMock.disable_net_connect!(allow: ['127.0.0.1', 'api.sandbox.orcid.org'])
@@ -43,13 +44,13 @@ RSpec.feature 'Populate manuscript metadata from journal and manuscript id', typ
     end
   end
 
-  context 'crossref-metadata-autofill', js: true do
+  context :crossref_metadata_autofill, js: true do
     before(:each) do
       WebMock.disable_net_connect!(allow: ['127.0.0.1', 'api.sandbox.orcid.org'])
 
       # This requests stubs solr so we don't have to run it just for the home page with the latest datasets shown
       stub_request(:get, %r{\Ahttp://127.0.0.1:8983/solr/geoblacklight/.+\z})
-          .to_return(status: 200, body: '', headers: {})
+        .to_return(status: 200, body: '', headers: {})
 
       sign_in
       start_new_dataset
@@ -60,24 +61,25 @@ RSpec.feature 'Populate manuscript metadata from journal and manuscript id', typ
     end
 
     it 'works for successful dataset request to crossref' do
-      stub_request(:get, "https://api.crossref.org/works/10.1098/rsif.2017.0030").
-          with(
-              headers: {
-                  'Accept'=>'*/*',
-                  'Accept-Encoding'=>/.*/,
-                  'User-Agent'=>/.*/,
-                  'X-User-Agent'=>/.*/
-              }).
-          to_return(status: 200,
-                    body:  File.new(File.join(Rails.root, 'spec', 'fixtures', 'http_responses', 'crossref_response.json')),
-                    headers: {})
+      stub_request(:get, 'https://api.crossref.org/works/10.1098/rsif.2017.0030')
+        .with(
+          headers: {
+            'Accept' => '*/*',
+            'Accept-Encoding' => /.*/,
+            'User-Agent' => /.*/,
+            'X-User-Agent' => /.*/
+          }
+        )
+        .to_return(status: 200,
+                   body:  File.new(File.join(Rails.root, 'spec', 'fixtures', 'http_responses', 'crossref_response.json')),
+                   headers: {})
       journal = 'Journal of The Royal Society Interface'
       doi = '10.1098/rsif.2017.0030'
       fill_crossref_info(name: journal, doi: doi)
       click_button 'Import Article Metadata'
       expect(page).to have_field('title',
                                  with: 'High-skilled labour mobility in Europe before and after the 2004 enlargement',
-                                 wait: 15 )
+                                 wait: 15)
     end
   end
 end
