@@ -10,7 +10,6 @@ RSpec.feature 'ReviewDataset', type: :feature do
   before(:each) do
     mock_solr!
     @user = create(:user)
-    #@resource = create(:resource, :submitted, user: @user, identifier: create(:identifier))
     sign_in(@user)
     start_new_dataset
     navigate_to_review

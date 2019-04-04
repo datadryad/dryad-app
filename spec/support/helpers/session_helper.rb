@@ -18,6 +18,7 @@ module SessionsHelper
     visit stash_url_helpers.sessions_destroy_path
   end
 
+  # rubocop:disable Metrics/MethodLength
   def sign_in_as_user(user, with_shib)
     OmniAuth.config.test_mode = true
     mock_orcid!(user)
@@ -35,5 +36,6 @@ module SessionsHelper
       click_link 'Continue to My Datasets'
     end
   end
+  # rubocop:enable Metrics/MethodLength
 
 end
