@@ -26,7 +26,7 @@ module Mocks
         'Authorization'=>/Bearer .*/,
         'Content-Type'=>'application/vnd.orcid+json',
         'Host'=>'api.sandbox.orcid.org',
-        'User-Agent'=>'rest-client/2.0.2 (darwin18.2.0 x86_64) ruby/2.4.1p111'
+        'User-Agent'=>/.*/
          })
         .to_return(status: 200, body: Mocks::Orcid.email_response(user).to_json, headers: {})
     end
