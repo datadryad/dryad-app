@@ -39,6 +39,7 @@ module StashDatacite
     end
     # rubocop:enable Metrics/AbcSize
 
+    # rubocop:disable Lint/UnreachableCode
     def update_manuscript_metadata
       # this all needs rework, but waiting on new api
       @error = 'Could not retrieve manuscript data.'
@@ -57,6 +58,7 @@ module StashDatacite
                               headers: { 'Content-Type' => 'application/json' })
       render 'update' # just the standard update in the associated view directory
     end
+    # rubocop:enable Lint/UnreachableCode
 
     def update_doi_metadata
       if @doi.value.blank?
