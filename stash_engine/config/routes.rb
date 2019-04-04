@@ -104,6 +104,6 @@ StashEngine::Engine.routes.draw do
   get 'admin/user_dashboard/:id', to: 'admin#user_dashboard', as: 'admin_user_dashboard'
 
   # admin_datasets, this routes actions to ds_admin with a possible id without having to define for each get action, default is index
-  get 'ds_admin/(:action(/:id))', to: 'admin_datasets'
+  get 'ds_admin/(:action(/:id))', controller: 'admin_datasets'
 
 end
