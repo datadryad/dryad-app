@@ -18,7 +18,8 @@ RSpec.feature 'Populate manuscript metadata from journal and manuscript id', typ
       WebMock.disable_net_connect!(allow: ['127.0.0.1', 'api.sandbox.orcid.org'])
 
       # This requests stubs solr so we don't have to run it just for the home page with the latest datasets shown
-      stub_request(:get, 'http://127.0.0.1:8983/solr/geoblacklight/select?q=*:*&q.alt=*:*&rows=10&sort=timestamp%20desc&start=0&wt=ruby')
+      # stub_request(:get, 'http://127.0.0.1:8983/solr/geoblacklight/select?q=*:*&q.alt=*:*&rows=10&sort=timestamp%20desc&start=0&wt=ruby')
+      stub_request(:get, %r{\Ahttp://127.0.0.1:8983/solr/geoblacklight/.+\z})
         .to_return(status: 200, body: '', headers: {})
 
       sign_in
@@ -38,7 +39,45 @@ RSpec.feature 'Populate manuscript metadata from journal and manuscript id', typ
       manuscript = 'APPS-D-grog-plant0001221'
       fill_article_info(name: journal, msid: manuscript)
       click_button 'Import Manuscript Metadata'
-      expect(page.find('div#population-warnings')).to have_content(/Could not retrieve manuscript data..+/, wait: 15)
+      expect(page.find('div#population-warnings')).to have_content(/Could not retrieve manuscript data.+/, wait: 15)
+    end
+  end
+
+  context 'crossref-metadata-autofill', js: true do
+    before(:each) do
+      WebMock.disable_net_connect!(allow: ['127.0.0.1', 'api.sandbox.orcid.org'])
+
+      # This requests stubs solr so we don't have to run it just for the home page with the latest datasets shown
+      stub_request(:get, %r{\Ahttp://127.0.0.1:8983/solr/geoblacklight/.+\z})
+          .to_return(status: 200, body: '', headers: {})
+
+      sign_in
+      start_new_dataset
+    end
+
+    after(:each) do
+      WebMock.disable!
+    end
+
+    it 'works for successful dataset request to crossref' do
+      stub_request(:get, "https://api.crossref.org/works/10.1098/rsif.2017.0030").
+          with(
+              headers: {
+                  'Accept'=>'*/*',
+                  'Accept-Encoding'=>/.*/,
+                  'User-Agent'=>/.*/,
+                  'X-User-Agent'=>/.*/
+              }).
+          to_return(status: 200,
+                    body:  File.new(File.join(Rails.root, 'spec', 'fixtures', 'http_responses', 'crossref_response.json')),
+                    headers: {})
+      journal = 'Journal of The Royal Society Interface'
+      doi = '10.1098/rsif.2017.0030'
+      fill_crossref_info(name: journal, doi: doi)
+      click_button 'Import Article Metadata'
+      expect(page).to have_field('title',
+                                 with: 'High-skilled labour mobility in Europe before and after the 2004 enlargement',
+                                 wait: 15 )
     end
   end
 end

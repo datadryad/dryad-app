@@ -10,6 +10,10 @@ require_relative 'helpers/session_helper'
 Capybara.default_driver = :rack_test
 Capybara.javascript_driver = :chrome
 
+# change :selenium_chrome_headless to just :selenium in this file in order to see your tests and troubleshoot in browser
+# also, comment out --headless option to troubleshoot in the browser. May work with the headless browser and just removing
+# the headless option.
+
 # This is a customisation of the default :selenium_chrome_headless config in:
 # https://github.com/teamcapybara/capybara/blob/master/lib/capybara.rb
 #

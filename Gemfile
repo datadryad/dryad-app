@@ -57,6 +57,7 @@ gem 'stripe'
 group :development do
   gem 'colorize', '~> 0.8'
   gem 'web-console', '~> 2.0'
+  # gem 'httplog', not needed always, but good for troubleshooting HTTP requests to outside http services from the app
 end
 
 group :test do
