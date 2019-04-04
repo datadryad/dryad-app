@@ -40,6 +40,11 @@ module StashDatacite
     # rubocop:enable Metrics/AbcSize
 
     def update_manuscript_metadata
+      # this all needs rework, but waiting on new api
+      @error = 'Could not retrieve manuscript data.'
+      return
+
+      # the rest of this is just here temporarily not sure if Ryan's new api will be like this or different
       pub_issn_only = @pub_issn.value
       msid_only = @msid.value
       body = { dryadDOI: 'doi:' + @se_id.identifier,
