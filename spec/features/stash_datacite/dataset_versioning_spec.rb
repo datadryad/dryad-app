@@ -1,5 +1,6 @@
 require 'rails_helper'
 
+# rubocop:disable Metrics/BlockLength
 RSpec.feature 'DatasetVersioning', type: :feature do
 
   include MerrittHelper
@@ -101,7 +102,7 @@ RSpec.feature 'DatasetVersioning', type: :feature do
         end
 
         it 'displays the proper information on the Admin page', js: true do
-          within(:css, ".c-lined-table__row") do
+          within(:css, '.c-lined-table__row') do
             # Make sure the appropriate buttons are available
             expect(page).not_to have_css('button[title="Edit Dataset"]')
             expect(page).to have_css('button[aria-label="Update status"]')
@@ -136,7 +137,7 @@ RSpec.feature 'DatasetVersioning', type: :feature do
 
   end
 
-  describe :new_version_by_curator, js:true do
+  describe :new_version_by_curator, js: true do
 
     before(:each) do
       initialize_new_dataset
@@ -166,7 +167,7 @@ RSpec.feature 'DatasetVersioning', type: :feature do
     end
 
     it 'displays the proper information on the Admin page', js: true do
-      within(:css, ".c-lined-table__row") do
+      within(:css, '.c-lined-table__row') do
         # Make sure the appropriate buttons are available
         expect(page).to have_css('button[title="Edit Dataset"]')
         expect(page).to have_css('button[aria-label="Update status"]')
@@ -201,7 +202,7 @@ RSpec.feature 'DatasetVersioning', type: :feature do
     before(:each) do
       initialize_new_dataset
       mock_successfull_merritt_submission!(@resource)
-      #Change the status to :curation
+      # Change the status to :curation
       click_link 'My Datasets'
       within(:css, '#user_submitted') do
         click_button 'Update'
@@ -225,7 +226,7 @@ RSpec.feature 'DatasetVersioning', type: :feature do
       sign_out
       sign_in(@curator)
       click_link 'Admin'
-      within(:css, ".c-lined-table__row") do
+      within(:css, '.c-lined-table__row') do
         # Make sure the appropriate buttons are available
         # Make sure the right text is shown
         expect(page).to have_link(@resource.title)
@@ -292,8 +293,6 @@ RSpec.feature 'DatasetVersioning', type: :feature do
       end
 
       it "has a curation status of 'submitted' when prior version was :embargoed" do
-        #allow_any_instance_of(Stash::Payments::Invoicer).to receive(:ensure_customer_id_exists).and_return(false)
-        #allow_any_instance_of(Stash::Payments::Invoicer).to receive(:charge_via_invoice).and_return(Faker::Lorem.word)
         click_link 'Admin'
         find('button[aria-label="Update status"]').click
         find('#resource_curation_activity_status').find('option[value="embargoed"]').select_option
@@ -304,8 +303,6 @@ RSpec.feature 'DatasetVersioning', type: :feature do
       end
 
       it "has a curation status of 'submitted' when prior version was :published" do
-        #allow_any_instance_of(Stash::Payments::Invoicer).to receive(:ensure_customer_id_exists).and_return(false)
-        #allow_any_instance_of(Stash::Payments::Invoicer).to receive(:charge_via_invoice).and_return(Faker::Lorem.word)
         click_link 'Admin'
         find('button[aria-label="Update status"]').click
         find('#resource_curation_activity_status').find('option[value="published"]').select_option
@@ -339,9 +336,7 @@ RSpec.feature 'DatasetVersioning', type: :feature do
     fill_in 'geo_lng_point', with: -123.03
     # Submit the changes
     navigate_to_review
-    if curator
-      fill_in 'user_comment', with: Faker::Lorem.sentence
-    end
+    fill_in('user_comment', with: Faker::Lorem.sentence) if curator
     click_button 'Submit'
     @resource = StashEngine::Resource.last
     mock_successfull_merritt_submission!(@resource)
@@ -351,7 +346,7 @@ RSpec.feature 'DatasetVersioning', type: :feature do
   def sign_in_as_author_and_update_dataset
     sign_out
     sign_in(@author)
-    #Change the status to :curation
+    # Change the status to :curation
     click_link 'My Datasets'
     within(:css, '#user_submitted') do
       click_button 'Update'
@@ -371,3 +366,4 @@ RSpec.feature 'DatasetVersioning', type: :feature do
   end
 
 end
+# rubocop:enable Metrics/BlockLength

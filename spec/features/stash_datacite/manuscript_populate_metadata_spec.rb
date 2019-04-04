@@ -2,6 +2,7 @@ require 'rails_helper'
 require 'pry'
 require 'webmock/rspec'
 
+# rubocop:disable Metrics/BlockLength
 RSpec.feature 'Populate manuscript metadata from journal and manuscript id', type: :feature do
 
   include DatasetHelper
