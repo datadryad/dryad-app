@@ -8,7 +8,7 @@
       <%= f.fields_for :curation_activity, curation_activity do |ca| %>
         <div class="c-input">
           <label class="c-input__label">Status</label>
-          <%= ca.select :status, options_for_select(filter_status_select(@resource.current_curation_activity.status)), include_blank: true %>
+          <%= ca.select :status, options_for_select(filter_status_select(@resource.current_curation_status)), include_blank: true %>
         </div>
       <% end %>
 

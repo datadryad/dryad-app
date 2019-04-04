@@ -15,6 +15,7 @@ module StashEngine
     end
 
     before(:each) do
+      allow_any_instance_of(Resource).to receive(:prepare_for_curation).and_return(true)
       @user = StashEngine::User.create(
         first_name: 'Lisa',
         last_name: 'Muckenhaupt',
@@ -239,6 +240,7 @@ module StashEngine
         it 'sets the state' do
           new_state_value = 'submitted'
           resource.current_state = new_state_value
+          resource.save
           new_state = resource.current_resource_state
           expect(new_state.resource_state).to eq(new_state_value)
         end
@@ -246,21 +248,25 @@ module StashEngine
           state = resource.current_resource_state
           expect(ResourceState.count).to eq(1)
           resource.current_state = 'in_progress'
+          resource.save
           expect(ResourceState.count).to eq(1)
           expect(resource.current_resource_state).to eq(state)
         end
         describe 'amoeba duplication' do
           it 'defaults to in-progress' do
             resource.current_state = 'submitted'
+            resource.save
             res1 = resource.amoeba_dup
             res1.save!
             expect(res1.current_state).to eq('in_progress')
           end
           it 'creates a new instance' do
             resource.current_state = 'submitted'
+            resource.save
             res1 = resource.amoeba_dup
             res1.save!
             res1.current_state = 'error'
+            resource.save
             expect(res1.current_state).to eq('error')
             expect(resource.current_state).to eq('submitted')
           end
@@ -276,6 +282,7 @@ module StashEngine
         it 'reflects state changes' do
           %w[processing error submitted].each do |state_value|
             resource.current_state = state_value
+            resource.save
             new_state = resource.current_resource_state
             expect(new_state.resource_state).to eq(state_value)
           end
@@ -284,6 +291,7 @@ module StashEngine
         it 'is not copied or clobbered in Amoeba duplication' do
           %w[processing error submitted].each do |state_value|
             resource.current_state = state_value
+            resource.save
             new_resource = resource.amoeba_dup
             new_resource.save!
 
@@ -301,12 +309,14 @@ module StashEngine
       describe :submitted? do
         it 'returns true if the current state is published' do
           resource.current_state = 'submitted'
+          resource.save
           expect(resource.submitted?).to eq(true)
         end
         it 'returns false otherwise' do
           expect(resource.submitted?).to eq(false)
           %w[in_progress processing error].each do |state_value|
             resource.current_state = state_value
+            resource.save
             expect(resource.submitted?).to eq(false)
           end
         end
@@ -315,12 +325,14 @@ module StashEngine
       describe :processing? do
         it 'returns true if the current state is processing' do
           resource.current_state = 'processing'
+          resource.save
           expect(resource.processing?).to eq(true)
         end
         it 'returns false otherwise' do
           expect(resource.processing?).to eq(false)
           %w[in_progress submitted error].each do |state_value|
             resource.current_state = state_value
+            resource.save
             expect(resource.processing?).to eq(false)
           end
         end
@@ -331,6 +343,7 @@ module StashEngine
           expect(resource.current_state).to eq('in_progress')
           %w[processing error submitted].each do |state_value|
             resource.current_state = state_value
+            resource.save
             expect(resource.current_state).to eq(state_value)
           end
         end
@@ -599,6 +612,7 @@ module StashEngine
           resource.ensure_identifier("doi:#{doi_value}")
           # TODO: collapse this into single method on resource
           resource.current_state = 'submitted'
+          resource.save
           resource.version_zipfile = "#{resource.id}-archive.zip"
         end
 

@@ -18,7 +18,6 @@ module StashEngine
       my_tenant_id = (current_user.role == 'admin' ? current_user.tenant_id : nil)
       @all_stats = Stats.new
       @seven_day_stats = Stats.new(tenant_id: my_tenant_id, since: (Time.new - 7.days))
-
       @resources = build_table_query
       respond_to do |format|
         format.html
@@ -43,7 +42,7 @@ module StashEngine
     # Unobtrusive Javascript (UJS) to do AJAX by running javascript
     def note_popup
       respond_to do |format|
-        resource = Resource.includes(:identifier, :current_curation_activity).find(params[:id])
+        resource = Resource.includes(:identifier, :curation_activities).find(params[:id])
         @curation_activity = CurationActivity.new(
           resource_id: resource.id,
           status: resource.current_curation_activity.status
@@ -55,24 +54,27 @@ module StashEngine
     # Unobtrusive Javascript (UJS) to do AJAX by running javascript
     def curation_activity_popup
       respond_to do |format|
-        @resource = Resource.includes(:identifier, :current_curation_activity).find(params[:id])
+        @resource = Resource.includes(:identifier, :curation_activities).find(params[:id])
         @curation_activity = StashEngine::CurationActivity.new(resource_id: @resource.id)
         format.js
       end
     end
 
+    # rubocop:disable Metrics/MethodLength
     def curation_activity_change
       respond_to do |format|
         format.js do
           @resource = Resource.find(params[:id])
           decipher_curation_activity
-          @resource.update(publication_date: @pub_date)
-          CurationActivity.create(resource_id: @resource.id, user_id: current_user.id,
-                                  status: @status, note: params[:resource][:curation_activity][:note])
+          @resource.publication_date = @pub_date
+          @resource.curation_activities << CurationActivity.create(user_id: current_user.id, status: @status,
+                                                                   note: params[:resource][:curation_activity][:note])
+          @resource.save
           @resource.reload
         end
       end
     end
+    # rubocop:enable Metrics/MethodLength
 
     # show curation activities for this item
     def activity_log
@@ -117,8 +119,8 @@ module StashEngine
       # Retrieve the ids of the all the latest Resources
       resource_ids = Resource.latest_per_dataset.pluck(:id)
 
-      resources = Resource.joins(:identifier, :authors, :current_resource_state, :current_curation_activity)
-        .includes(:identifier, :authors, :current_resource_state, current_curation_activity: :user)
+      resources = Resource.joins(:identifier, :authors, :current_resource_state, :curation_activities)
+        .includes(:identifier, :authors, :current_resource_state, curation_activities: :user)
         .where(stash_engine_resources: { id: resource_ids })
 
       # If the user is not a super_admin restrict their access to their tenant
@@ -167,7 +169,7 @@ module StashEngine
       @status = params[:resource][:curation_activity][:status]
       @pub_date = params[:resource][:publication_date]
       # If the status was nil then we are just adding a note so get the prior status
-      @status = @resource.current_curation_activity.status unless @status.present?
+      @status = @resource.current_curation_status unless @status.present?
       case @status
       when 'published'
         publish

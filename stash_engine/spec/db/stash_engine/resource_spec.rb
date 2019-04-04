@@ -1,9 +1,11 @@
 require 'db_spec_helper'
 
 module StashEngine
-  describe Resource do
-    attr_reader :user
 
+  describe Resource do
+
+    attr_reader :user
+    attr_reader :skip_emails
     attr_reader :future_date
 
     before(:all) do
@@ -40,7 +42,8 @@ module StashEngine
     describe :can_edit do
       it 'returns false if editing by someone else' do
         identifier = Identifier.create(identifier: 'cat/dog', identifier_type: 'DOI')
-        resource = Resource.create(user_id: user.id, identifier_id: identifier.id, current_editor_id: @user.id + 1, tenant_id: 'ucop')
+        resource = Resource.create(user_id: user.id, identifier_id: identifier.id,
+                                   current_editor_id: @user.id + 1, tenant_id: 'ucop')
         ResourceState.create(user_id: @user.id + 1, resource_state: 'in_progress', resource_id: resource.id)
         User.create(first_name: 'L',
                     last_name: 'Mu',
@@ -488,6 +491,7 @@ module StashEngine
       attr_reader :resource
       attr_reader :state
       before(:each) do
+        allow_any_instance_of(Resource).to receive(:prepare_for_curation).and_return(true)
         @resource = Resource.create(user_id: user.id)
         @state = ResourceState.find_by(resource_id: resource.id)
       end
@@ -529,6 +533,16 @@ module StashEngine
             res1.current_state = 'error'
             expect(res1.current_state).to eq('error')
             expect(resource.current_state).to eq('submitted')
+          end
+          it 'does not call prepare_for_curation when :in_progess' do
+            resource.preserve_curation_status = true
+            expect(resource).not_to receive(:prepare_for_curation)
+            resource.current_state = 'in_progress'
+          end
+          it 'does not call prepare_for_curation when `preserve_curation_status == true`' do
+            resource.preserve_curation_status = true
+            expect(resource).not_to receive(:prepare_for_curation)
+            resource.current_state = 'submitted'
           end
         end
       end
@@ -1012,6 +1026,10 @@ module StashEngine
 
     describe 'statistics' do
       describe :submitted_dataset_count do
+        before(:each) do
+          allow_any_instance_of(Resource).to receive(:prepare_for_curation).and_return(true)
+        end
+
         it 'defaults to zero' do
           expect(Resource.submitted_dataset_count).to eq(0)
         end
@@ -1073,7 +1091,8 @@ module StashEngine
           resource = Resource.create(identifier: @identifier, user_id: user.id)
           resource.reload
           expect(resource.curation_activities.empty?).to eql(false)
-          expect(resource.current_curation_activity_id).to eql(resource.curation_activities.first.id)
+          expect(resource.current_curation_activity.id).to eql(CurationActivity.last.id)
+          expect(resource.current_curation_status).to eql('in_progress')
         end
 
       end
@@ -1099,6 +1118,7 @@ module StashEngine
         end
 
         it 'is true when current_resource_state == "submitted"' do
+          allow_any_instance_of(Resource).to receive(:prepare_for_curation).and_return(true)
           resource = Resource.create(user_id: user.id)
           resource.current_state = 'submitted'
           expect(resource.reload.curatable?).to eql(true)
@@ -1106,23 +1126,8 @@ module StashEngine
 
       end
 
-      describe :current_curation_activity do
-
-        before(:each) do
-          allow_any_instance_of(CurationActivity).to receive(:update_solr).and_return(true)
-          @resource = Resource.create
-        end
-
-        it 'should return the most recent curation activity' do
-          ca = CurationActivity.create(status: 'curation', resource_id: @resource.id)
-          expect(@resource.reload.current_curation_activity_id).to eql(ca.id)
-        end
-
-        it 'should have a value when the record is created' do
-          expect(@resource.reload.current_curation_activity_id.present?).to eql(true)
-        end
-
-      end
     end
+
   end
+
 end

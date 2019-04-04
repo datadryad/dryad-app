@@ -73,24 +73,6 @@ module StashEngine
         allow_any_instance_of(Stash::Payments::Invoicer).to receive(:charge_via_invoice).and_return(true)
       end
 
-      it 'updates the resources.current_curation_activity_id when creating a new record' do
-        ca = CurationActivity.create(resource_id: @resource.id)
-        expect(@resource.reload.current_curation_activity_id).to eql(ca.id)
-      end
-
-      it 'removes the resources.current_curation_activity_id when the record is deleted and no prior curation activity exists' do
-        @resource.current_curation_activity.destroy
-        expect(@resource.reload.current_curation_activity_id).to eql(nil)
-      end
-
-      it 'updates the resources.current_curation_activity_id to the prior curation activity when the record is removed' do
-        original = @resource.current_curation_activity_id
-        ca = CurationActivity.create(resource_id: @resource.id, status: 'submitted')
-
-        ca.destroy
-        expect(@resource.reload.current_curation_activity_id).to eql(original)
-      end
-
       context :update_solr do
 
         it 'calls update_solr when published' do
@@ -182,7 +164,7 @@ module StashEngine
 
         StashEngine::CurationActivity.statuses.each do |status|
 
-          if %w[peer_review submitted published embargoed].include?(status)
+          if %w[published embargoed].include?(status)
             it "calls email_author when '#{status}'" do
               allow_any_instance_of(StashEngine::CurationActivity).to receive(:email_author?).and_return(false)
               ca = CurationActivity.new(resource_id: @resource.id, status: status)

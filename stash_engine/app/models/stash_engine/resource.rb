@@ -23,11 +23,7 @@ module StashEngine
     has_many :submission_logs, class_name: 'StashEngine::SubmissionLog', dependent: :destroy
     has_many :resource_states, class_name: 'StashEngine::ResourceState', dependent: :destroy
     has_many :edit_histories, class_name: 'StashEngine::EditHistory', dependent: :destroy
-    has_many :curation_activities, class_name: 'StashEngine::CurationActivity', dependent: :destroy
-    has_one :current_curation_activity,
-            class_name: 'StashEngine::CurationActivity',
-            primary_key: 'current_curation_activity_id',
-            foreign_key: 'id'
+    has_many :curation_activities, -> { order(id: :asc) }, class_name: 'StashEngine::CurationActivity', dependent: :destroy
 
     accepts_nested_attributes_for :curation_activities
 
@@ -39,7 +35,6 @@ module StashEngine
         # the resource state, but instead it keeps the reference to the old one, so we need to clear it and
         # let init_version do its job
         new_resource.current_resource_state_id = nil
-        new_resource.current_curation_activity_id = nil
 
         new_resource.file_uploads.each do |file|
           raise "Expected #{new_resource.id}, was #{file.resource_id}" unless file.resource_id == new_resource.id
@@ -62,10 +57,10 @@ module StashEngine
     def init_state_and_version
       init_state
       init_version
+      init_curation_status
       save
       # Need to reload self here because some of the associated dependencies
-      # update back on this object when they save (e.g. current_curation_activity,
-      # current_resource_state, etc.)
+      # update back on this object when they save (e.g. current_resource_state, etc.)
       reload
     end
 
@@ -85,7 +80,6 @@ module StashEngine
       Identifier.destroy(identifier_id)
     end
 
-    before_create :init_curation_status
     after_create :init_state_and_version, :update_stash_identifier_last_resource, :create_share
     # for some reason, after_create not working, so had to add after_update
     after_update :update_stash_identifier_last_resource
@@ -107,6 +101,7 @@ module StashEngine
 
     # ------------------------------------------------------------
     # Scopes for Merritt status, which used to be the only status we had
+    default_scope { includes(:curation_activities) }
 
     scope :in_progress, (-> do
       joins(:current_resource_state).where(stash_engine_resource_states: { resource_state:  %i[in_progress error] })
@@ -128,15 +123,23 @@ module StashEngine
 
     # ------------------------------------------------------------
     # Scopes for curation status, which is now how we know about public display (and should imply successful Merritt submission status)
-    scope :with_public_metadata, (-> do
-      joins(:current_curation_activity).where(stash_engine_curation_activities: { status: %i[published embargoed] })
-    end)
+    scope :latest_curation_activity, ->(resource_id = nil) do
+      rslts = joins(:curation_activities)
+      rslts = rslts.where(stash_engine_resources: { id: resource_id }) if resource_id.present?
+      rslts.group('stash_engine_resources.id').maximum('stash_engine_curation_activities.id')
+    end
+
+    scope :with_public_metadata, -> do
+      joins(:curation_activities).where(stash_engine_curation_activities: { id: latest_curation_activity.values,
+                                                                            status: %w[published embargoed] })
+    end
 
     # calculates published as a published status or embargoed and past its publication date
-    scope :published, (-> do
-      joins(:current_curation_activity).where(["stash_engine_curation_activities.status = 'published' OR " \
-          "(stash_engine_curation_activities.status = 'embargoed' AND stash_engine_resources.publication_date < ?)", Time.new])
-    end)
+    scope :published, -> do
+      joins(:curation_activities).where('stash_engine_resources.publication_date < ?', Time.now)
+        .where(stash_engine_curation_activities: { id: latest_curation_activity.values,
+                                                   status: %w[published embargoed] })
+    end
 
     # gets the latest version per dataset and includes items that haven't been assigned an identifer yet but are initially in progress
     # NOTE.  We've now changed it so everything gets an identifier upon creation, so we may be able to simplify or get rid of this.
@@ -274,14 +277,9 @@ module StashEngine
       return if value == current_state
       my_state = current_resource_state
       raise "current_resource_state not initialized for resource #{id}" unless my_state
+      # If the value is :submitted we need to prepare the resource for curation
+      prepare_for_curation if value == 'submitted' && !preserve_curation_status?
       my_state.resource_state = value
-      # If the resource_state is in_progress or submitted then create a corresponding curation_activity
-      # But don't create the curation_activity if preserve_curation_status is set, because a user who has
-      # set that flag is expecting the curation_status to remain as whatever they have already set.
-      if %w[in_progress submitted].include?(value) && !preserve_curation_status
-        status = identifier&.internal_data&.present? ? 'peer_review' : value
-        StashEngine::CurationActivity.create(resource: self, user: user, status: status)
-      end
       my_state.save
     end
 
@@ -294,6 +292,10 @@ module StashEngine
     # Curation helpers
     def curatable?
       submitted? && !files_published?
+    end
+
+    def current_curation_activity
+      curation_activities.order(:id).last
     end
 
     # Shortcut to the current curation activity's status
@@ -511,6 +513,53 @@ module StashEngine
       solr_indexer = Stash::Indexer::SolrIndexer.new(solr_url: Blacklight.connection_config[:url])
       result = solr_indexer.delete_document(doi: identifier.to_s) # returns true/false for success of operation
       update(solr_indexed: false) if result
+    end
+
+    private
+
+    # -----------------------------------------------------------
+    # Handle the 'submitted' state (happens after successful Merritt submission)
+    def prepare_for_curation
+      prior_version = identifier.resources.includes(:curation_activities).where.not(id: id).order(created_at: :desc).first if identifier.present?
+      # Determine if the curator or author is the appropriate attribution
+      attribution = prior_version.present? && prior_version.current_curation_activity.curation? ? current_editor_id : user_id
+      curation_to_submitted(prior_version, attribution)
+    end
+
+    # rubocop:disable Metrics/CyclomaticComplexity
+    def curation_to_submitted(prior_version, attribution)
+      # Determine which submission status to use, :submitted or :peer_review status (if this is the inital
+      # version and the journal needs it)
+      status = (prior_version.blank? && requires_peer_review? ? 'peer_review' : 'submitted')
+      # Update the user in the auto-created :in_progress activity as its set to the author by default
+      current_curation_activity.update(user_id: attribution) if current_curation_activity.present?
+      # Generate the :submitted status
+      curation_activities << StashEngine::CurationActivity.create(user_id: attribution, status: status)
+      # Send out an email to the author if this is the initial version and we are not skipping emails
+      StashEngine::UserMailer.status_change(self, status).deliver_now if prior_version.blank? && !skip_emails
+      curation_to_curation(prior_version, attribution) unless prior_version.blank?
+    end
+    # rubocop:enable Metrics/CyclomaticComplexity
+
+    def curation_to_curation(prior_version, attribution)
+      return if prior_version.blank? || prior_version.current_curation_status.blank?
+      # If the prior version was in author :action_required or :curation status we need to set it
+      # back to :curation status. Also carry over the curators note so that it appears in the activity log
+      return unless %w[action_required curation].include?(prior_version.current_curation_status)
+      # rubocop:disable Layout/AlignHash
+      curation_activities << StashEngine::CurationActivity.create(user_id: attribution, status: 'curation',
+        note: edit_histories.last&.user_comment || 'ready for curation')
+      # rubocop:enable Layout/AlignHash
+    end
+
+    # -----------------------------------------------------------
+    # Determines whether the resource needs to go through a peer review
+    def requires_peer_review?
+      # return false if this is NOT the first version
+      return false if identifier.blank? || identifier.resources.length > 1
+      # TODO: ryscher, we need to add in the call to the service that correctly indicates whether the
+      #       associated journal should enter peer_review status
+      identifier&.internal_data&.where(data_type: %w[publicationISSN publicationDOI manuscriptNumber])&.any?
     end
 
   end
