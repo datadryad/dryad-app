@@ -3,6 +3,8 @@ module Mocks
   module Datacite
 
     def mock_datacite!
+      allow_any_instance_of(Stash::Doi::DataciteGen).to receive(:update_metadata).and_return(true)
+
       stub_request(:post, /mds.test.datacite.org\/metadata/)
         .with(
            body: /.*/,
