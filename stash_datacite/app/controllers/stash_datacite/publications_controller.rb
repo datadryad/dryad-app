@@ -67,7 +67,7 @@ module StashDatacite
       end
       works = Serrano.works(ids: @doi.value)
       if !works.is_a?(Array) || works.first['message'].blank?
-        @error = "Couldn't obtain information from CrossRef about this DOI"
+        @error = "We couldn't obtain information from CrossRef about this DOI"
         return
       end
       xr_import = Stash::Import::CrossRef.new(resource: @resource, serrano_message: works.first['message'])
