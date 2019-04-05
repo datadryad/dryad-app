@@ -102,8 +102,6 @@ module StashApi
         render text: 'download for this dataset is unavailable', status: 404
       end
     end
-
-    # rubocop:disable Metrics/AbcSize
     # rubocop:disable Metrics/LineLength
     # post /datasets/<id>/set_internal_datum
     def set_internal_datum

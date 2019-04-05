@@ -28,7 +28,7 @@ Metrics/LineLength:
 
 # AbcSize is very low at 15 and often catches perfectly readable methods because of two small if statements
 Metrics/AbcSize:
-  Max: 20
+  Max: 30
 
 # The default MethodLength can flag methods which essentially do nothing, simply because they invoke another method with several parameters
 Metrics/MethodLength:
