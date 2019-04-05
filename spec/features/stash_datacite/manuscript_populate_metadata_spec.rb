@@ -14,24 +14,12 @@ RSpec.feature 'Populate manuscript metadata from outside source', type: :feature
 
   context :journal_metadata_autofill, js: true do
     before(:each) do
-      # TODO: we probably need to figure out how to stub ORCID login/api for the entire application instead of relying on sandbox
-      WebMock.disable_net_connect!(allow: ['127.0.0.1', 'api.sandbox.orcid.org'])
-
-      # This requests stubs solr so we don't have to run it just for the home page with the latest datasets shown
-      # stub_request(:get, 'http://127.0.0.1:8983/solr/geoblacklight/select?q=*:*&q.alt=*:*&rows=10&sort=timestamp%20desc&start=0&wt=ruby')
-      stub_request(:get, %r{\Ahttp://127.0.0.1:8983/solr/geoblacklight/.+\z})
-        .to_return(status: 200, body: '', headers: {})
-
       sign_in
       start_new_dataset
     end
 
-    after(:each) do
-      WebMock.disable!
-    end
-
     it 'gives warning for bad dataset info' do
-      # this stubs the old dryad api tha Daisie was calling
+      # this stubs the old dryad api tha Daisie was calling, soon to be changed more
       stub_request(:put, 'https://api.datadryad.example.org/api/v1/journals//packages/?access_token=bad_token')
         .to_return(status: 404, body: '', headers: {})
       journal = 'European Journal of Plant Pathology'
@@ -46,18 +34,8 @@ RSpec.feature 'Populate manuscript metadata from outside source', type: :feature
 
   context :crossref_metadata_autofill, js: true do
     before(:each) do
-      WebMock.disable_net_connect!(allow: ['127.0.0.1', 'api.sandbox.orcid.org'])
-
-      # This requests stubs solr so we don't have to run it just for the home page with the latest datasets shown
-      stub_request(:get, %r{\Ahttp://127.0.0.1:8983/solr/geoblacklight/.+\z})
-        .to_return(status: 200, body: '', headers: {})
-
       sign_in
       start_new_dataset
-    end
-
-    after(:each) do
-      WebMock.disable!
     end
 
     it 'works for successful dataset request to crossref' do
@@ -92,22 +70,22 @@ RSpec.feature 'Populate manuscript metadata from outside source', type: :feature
 
     it "gives a message when it can't find a doi" do
       stub_request(:get, %r{\Ahttps://api.crossref.org/.+\z})
-          .with(
-              headers: {
-                  'Accept' => '*/*',
-                  'Accept-Encoding' => /.*/,
-                  'User-Agent' => /.*/,
-                  'X-User-Agent' => /.*/
-              }
-          )
-          .to_return(status: 404,
-                     body:  'not found',
-                     headers: {})
+        .with(
+          headers: {
+            'Accept' => '*/*',
+            'Accept-Encoding' => /.*/,
+            'User-Agent' => /.*/,
+            'X-User-Agent' => /.*/
+          }
+        )
+        .to_return(status: 404,
+                   body:  'not found',
+                   headers: {})
       journal = 'cats'
       doi = 'scabs'
       fill_crossref_info(name: journal, doi: doi)
       click_button 'Import Article Metadata'
-      expect(page.find('div#population-warnings')).to have_content( "We couldn't retrieve information from CrossRef about this DOI", wait: 15)
+      expect(page.find('div#population-warnings')).to have_content("We couldn't retrieve information from CrossRef about this DOI", wait: 15)
     end
   end
 end
