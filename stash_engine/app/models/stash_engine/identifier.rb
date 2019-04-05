@@ -199,6 +199,7 @@ module StashEngine
         logger.error("unable to get results from ROR: #{results.code} returned for #{affil}")
         return nil
       end
+      return nil if results.parsed_response.blank? || results.parsed_response['items'].blank?
       parsed_response = results.parsed_response['items']
       return nil if parsed_response.blank? || parsed_response.first['country'].blank?
       parsed_response.first['country']['country_name']
