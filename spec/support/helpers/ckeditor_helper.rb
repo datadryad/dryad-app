@@ -30,7 +30,8 @@ module CkeditorHelper
     SCRIPT
     # the blur() above is needed because capybara behaves oddly. https://makandracards.com/makandra/12661-how-to-solve-selenium-focus-issues
     page.execute_script script_text
-    wait_for_ajax
+    expect(first('.cke', wait: 5).present?).to eql(true)
+    # wait_for_ajax
   end
   # rubocop:enable Metrics/MethodLength
 
