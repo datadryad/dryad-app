@@ -26,7 +26,6 @@ module Stash
         id_gen.mint_id
       end
 
-      # rubocop:disable Metrics/AbcSize
       # The method reserves a DOI if needed for a specified DOI or minting one from the pool.  (formerly?) used by Merritt
       # submission to be sure a (minted if needed) stash_engine_identifier exists with the ID filled in before doing fun stuff
       def ensure_identifier
@@ -41,7 +40,6 @@ module Stash
         # this ensures it has a stash_engine_identifier for the resource, mint_id is either EZID or DC mint method
         resource.ensure_identifier(mint_id)
       end
-      # rubocop:enable Metrics/AbcSize
 
       def update_identifier_metadata!
         log_info("updating identifier landing page (#{landing_page_url}) and metadata for resource #{resource.id} (#{resource.identifier_str})")

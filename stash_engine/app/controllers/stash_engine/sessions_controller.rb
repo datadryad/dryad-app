@@ -131,7 +131,7 @@ module StashEngine
     end
 
     # this gets called from metadata entry form and is for adding an author, not for logging in.
-    # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
+    # rubocop:disable Metrics/MethodLength
     def metadata_callback
       params = request.env['omniauth.params']
       author = StashEngine::Author.create(
@@ -145,10 +145,10 @@ module StashEngine
       current_user.update(orcid: @auth_hash.uid)
       redirect_to metadata_entry_pages_find_or_create_path(resource_id: @params['resource_id'])
     end
-    # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
+    # rubocop:enable Metrics/MethodLength
 
     # this is for orcid invitations to add co-authors
-    # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
+    # rubocop:disable Metrics/MethodLength
     def orcid_invitation
       invitations = OrcidInvitation.where(identifier_id: @params['identifier_id']).where(secret: @params['invitation'])
       identifier = Identifier.find(@params['identifier_id'])
@@ -165,7 +165,7 @@ module StashEngine
       update_identifier_metadata(invitation) # TODO: This needs to be more selective and only update if DS is public or embargoed
       redirect_to stash_url_helpers.show_path(identifier.to_s), flash: { info: "Your ORCID #{@auth_hash.uid} has been added for this dataset." }
     end
-    # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
+    # rubocop:enable Metrics/MethodLength
 
     def update_author_orcid(invitation)
       invitation.update(orcid: @auth_hash['uid'], accepted_at: Time.new)

@@ -3,9 +3,7 @@ class MigrateDataToGeolocation < ActiveRecord::Migration
     # move places into new Geolocation table
     StashDatacite::GeolocationPlace.where('resource_id IS NOT NULL').each do |place|
       point = nil
-      if place.latitude && place.longitude
-        point = StashDatacite::GeolocationPoint.create(latitude: place.latitude, longitude: place.longitude)
-      end
+      point = StashDatacite::GeolocationPoint.create(latitude: place.latitude, longitude: place.longitude) if place.latitude && place.longitude
       StashDatacite::Geolocation.create(resource_id: place.resource_id, place_id: place.id, point_id: point.try(:id))
     end
 

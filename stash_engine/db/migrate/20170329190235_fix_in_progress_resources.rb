@@ -15,4 +15,3 @@ class FixInProgressResources < ActiveRecord::Migration
     end
   end
 end
-

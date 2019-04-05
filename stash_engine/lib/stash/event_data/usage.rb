@@ -78,7 +78,7 @@ module Stash
       # and they currently don't allow us to query totals
 
       # this is the old query, going through pages, they changed their api
-      def old_query # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
+      def old_query # rubocop:disable Metrics/MethodLength
         data = []
 
         query_result = generic_query(params: { 'source-id': 'datacite-usage', 'doi': @doi })

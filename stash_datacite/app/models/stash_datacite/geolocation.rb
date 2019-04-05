@@ -107,7 +107,7 @@ module StashDatacite
       resource.save!
     end
 
-    def destroy_place_point_box # rubocop:disable Metrics/CyclomaticComplexity, Metrics/AbcSize
+    def destroy_place_point_box # rubocop:disable Metrics/CyclomaticComplexity
       GeolocationPlace.destroy(place_id) unless place_id.nil? || GeolocationPlace.where(id: place_id).count < 1
       GeolocationPoint.destroy(point_id) unless point_id.nil? || GeolocationPoint.where(id: point_id).count < 1
       GeolocationBox.destroy(box_id) unless box_id.nil? || GeolocationBox.where(id: box_id).count < 1

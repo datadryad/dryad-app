@@ -1,6 +1,5 @@
 class MigrateAffiliationHasAndBelongsToMany < ActiveRecord::Migration
   def change
-
     execute <<-SQL
       INSERT INTO dcs_affiliations_creators (affiliation_id, creator_id, created_at, updated_at)
            SELECT dcs_creators.affiliation_id, dcs_creators.id, NOW(), NOW()
