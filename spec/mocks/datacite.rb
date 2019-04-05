@@ -3,11 +3,10 @@ module Mocks
   module Datacite
 
     # rubocop:disable Metrics/MethodLength
-    # rubocop:disable Style/RegexpLiteral
     def mock_datacite!
       allow_any_instance_of(Stash::Doi::DataciteGen).to receive(:update_metadata).and_return(true)
 
-      stub_request(:post, /mds.test.datacite.org\/metadata/)
+      stub_request(:post, %r{mds\.test\.datacite\.org/metadata})
         .with(
           body: /.*/,
           headers: {
@@ -19,7 +18,7 @@ module Mocks
           }
         ).to_return(status: 201, body: '', headers: {})
 
-      stub_request(:put, /mds.test.datacite.org\/doi\//)
+      stub_request(:put, %r{mds\.test\.datacite\.org/doi})
         .with(
           body: /.*/,
           headers: {
@@ -31,7 +30,6 @@ module Mocks
           }
         ).to_return(status: 201, body: '', headers: {})
     end
-    # rubocop:enable Style/RegexpLiteral
     # rubocop:enable Metrics/MethodLength
 
   end
