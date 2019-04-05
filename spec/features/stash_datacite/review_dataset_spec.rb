@@ -9,6 +9,7 @@ RSpec.feature 'ReviewDataset', type: :feature do
 
   before(:each) do
     mock_solr!
+    mock_ror!
     @user = create(:user)
     sign_in(@user)
     start_new_dataset
