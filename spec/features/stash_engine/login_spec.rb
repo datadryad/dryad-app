@@ -32,7 +32,7 @@ RSpec.feature 'Session', type: :feature do
     end
 
     it 'existing user signs in successfully', js: true do
-      sign_in(create(:user))
+      sign_in
       expect(page).to have_text('My Datasets')
     end
 
