@@ -14,7 +14,7 @@ module CoreExtensions
 
       # something weird happens in here because objects don't match the Hash class and not even is_a? hash.
       # I have to create a new hash/array and see if the classes match to get this to work.  Yuck.
-      # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+      # rubocop:disable Metrics/CyclomaticComplexity
       def helper_hash_compact(hsh)
         hsh.each_with_object({}) do |(k, v), new_hash|
           next if v.nil? || ((v.class == {}.class || v.class == [].class) && v.empty?)
@@ -30,7 +30,7 @@ module CoreExtensions
 
         end
       end
-      # rubocop:enable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+      # rubocop:enable Metrics/CyclomaticComplexity
 
       def helper_array_compact(arr)
         new_arr = arr.map do |i|
