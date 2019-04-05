@@ -6,6 +6,7 @@ require_relative 'helpers/capybara_helper'
 require_relative 'helpers/ckeditor_helper'
 require_relative 'helpers/routes_helper'
 require_relative 'helpers/session_helper'
+require_relative 'helpers/webmock_helper'
 
 Capybara.default_driver = :rack_test
 Capybara.javascript_driver = :chrome
@@ -13,6 +14,7 @@ Capybara.javascript_driver = :chrome
 # change :selenium_chrome_headless to just :selenium in this file in order to see your tests and troubleshoot in browser
 # also, comment out --headless option to troubleshoot in the browser. May work with the headless browser and just removing
 # the headless option.
+Capybara.asset_host = 'http://localhost:33000'
 
 # This is a customisation of the default :selenium_chrome_headless config in:
 # https://github.com/teamcapybara/capybara/blob/master/lib/capybara.rb
@@ -49,9 +51,15 @@ Capybara.configure do |config|
 end
 
 RSpec.configure do |config|
-  config.include(AjaxHelper, type: :feature)
+  # config.include(AjaxHelper, type: :feature)
   config.include(CapybaraHelper, type: :feature)
-  config.include(CkeditorHelper, type: :feature)
-  config.include(RoutesHelper, type: :feature)
-  config.include(SessionsHelper, type: :feature)
+
+  config.before(:all, type: :feature) do
+    config.include(CkeditorHelper, type: :feature)
+    config.include(RoutesHelper, type: :feature)
+    config.include(SessionsHelper, type: :feature)
+    config.include(WebmockHelper, type: :feature)
+
+    disable_net_connect!
+  end
 end

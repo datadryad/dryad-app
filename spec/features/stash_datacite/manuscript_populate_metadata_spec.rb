@@ -6,11 +6,10 @@ require 'webmock/rspec'
 RSpec.feature 'Populate manuscript metadata from outside source', type: :feature do
 
   include DatasetHelper
+  include Mocks::RSolr
 
-  before(:all) do
-    # Start Solr - shutdown is handled globally when all tests have finished
-    # SolrInstance.instance
-    #
+  before(:each) do
+    mock_solr!
   end
 
   context :journal_metadata_autofill, js: true do
@@ -38,6 +37,7 @@ RSpec.feature 'Populate manuscript metadata from outside source', type: :feature
       journal = 'European Journal of Plant Pathology'
       # issn = '1573-8469'
       manuscript = 'APPS-D-grog-plant0001221'
+      find('input[value="manuscript"]').click
       fill_article_info(name: journal, msid: manuscript)
       click_button 'Import Manuscript Metadata'
       expect(page.find('div#population-warnings')).to have_content(/Could not retrieve manuscript data.+/, wait: 15)

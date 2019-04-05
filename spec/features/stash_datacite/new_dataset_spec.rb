@@ -4,13 +4,10 @@ require 'rails_helper'
 RSpec.feature 'NewDataset', type: :feature do
 
   include DatasetHelper
-
-  before(:all) do
-    # Start Solr - shutdown is handled globally when all tests have finished
-    SolrInstance.instance
-  end
+  include Mocks::RSolr
 
   before(:each) do
+    mock_solr!
     @user = create(:user)
     sign_in(@user)
   end
