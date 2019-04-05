@@ -1,7 +1,9 @@
 # ------------------------------------------------------------
 # Rails defaults
 
+# rubocop:disable Style/ExpandPathArguments
 require File.expand_path('../config/application', __FILE__)
+# rubocop:enable Style/ExpandPathArguments
 Rails.application.load_tasks
 
 # ------------------------------------------------------------

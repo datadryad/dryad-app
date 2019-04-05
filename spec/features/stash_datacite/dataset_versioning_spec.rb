@@ -156,7 +156,7 @@ RSpec.feature 'DatasetVersioning', type: :feature do
 
         sign_in(@curator)
         click_link 'Admin'
-          # Edit the Dataset as an admin
+        # Edit the Dataset as an admin
         find('button[title="Edit Dataset"]').click
         expect(page).to have_text("You are editing #{@author.name}'s dataset.", wait: 5)
         update_dataset(curator: true)
