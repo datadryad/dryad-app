@@ -17,6 +17,7 @@ RSpec.feature 'Admin', type: :feature do
       @user = create(:user, tenant_id: @admin.tenant_id)
       @identifier = create(:identifier)
       mock_stripe!
+      mock_ror!
       @resource = create(:resource, :submitted, user: @user, identifier: @identifier)
       sign_in(@admin)
     end
