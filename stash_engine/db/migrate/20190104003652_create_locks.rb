@@ -3,9 +3,9 @@
 class CreateLocks < ActiveRecord::Migration
   def change
     create_table :locks do |t|
-      t.string :name, :limit => 40
+      t.string :name, limit: 40
       t.timestamps
     end
-    add_index :locks, :name, :unique => true
+    add_index :locks, :name, unique: true
   end
 end

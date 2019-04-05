@@ -30,7 +30,6 @@ module StashEngine
     # For admins or logged in owners, they get to see the latest version submitted to Merritt
     #
     # For everyone else they just get to see what is accepted by curation
-    # rubocop:disable Metrics/AbcSize
     def resource
       @resource ||=
         if params[:latest] == 'true' && current_user&.superuser? # let superusers see the latest, unpublished if they wish
@@ -42,7 +41,6 @@ module StashEngine
           id.latest_resource_with_public_metadata
         end
     end
-    # rubocop:enable Metrics/AbcSize
 
     helper_method :resource
 

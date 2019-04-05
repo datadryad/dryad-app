@@ -49,7 +49,7 @@ module StashDatacite
       )
     end
 
-    # rubocop:disable Metrics/ParameterLists, Metrics/AbcSize
+    # rubocop:disable Metrics/ParameterLists
     def citation(authors, title, resource_type, version, identifier, publisher, publication_years)
       citation = []
       citation << h("#{author_citation_format(authors)} (#{pub_year_from(publication_years)})")
@@ -61,7 +61,7 @@ module StashDatacite
       citation << "<a href=\"#{id_str}\">#{h(id_str)}</a>"
       citation.reject(&:blank?).join(', ').html_safe
     end
-    # rubocop:enable Metrics/ParameterLists, Metrics/AbcSize
+    # rubocop:enable Metrics/ParameterLists
 
     def author_citation_format(authors)
       return '' if authors.blank?

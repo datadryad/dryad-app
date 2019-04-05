@@ -119,7 +119,7 @@ module StashEngine
     end
 
     # TODO: move into models or elsewhere for queries, but can't get tests to run right now so holding off
-    def limit_to_tenant! # rubocop:disable Metrics/AbcSize
+    def limit_to_tenant!
       @stats[:user_count] = @stats[:user_count].where(tenant_id: current_user.tenant_id)
       @stats[:dataset_count] = @stats[:dataset_count].joins(resources: :user)
         .where(['stash_engine_users.tenant_id = ?', current_user.tenant_id]).distinct

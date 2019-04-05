@@ -6,7 +6,7 @@ class ChangeFilenameCollaction < ActiveRecord::Migration
       upload_file_name TEXT
       CHARACTER SET utf8mb4 COLLATE utf8mb4_bin
     SQL
-    add_index :stash_engine_file_uploads, :upload_file_name, :length => 100
+    add_index :stash_engine_file_uploads, :upload_file_name, length: 100
   end
 
   def down

@@ -32,7 +32,6 @@ module StashApi
         format.json { render json: file.metadata, status: 201 }
       end
     end
-    # rubocop:enable Metrics/AbcSize
 
     private
 

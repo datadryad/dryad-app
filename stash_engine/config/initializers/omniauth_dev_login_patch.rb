@@ -2,7 +2,7 @@
 OmniAuth::Strategies::Developer.class_eval do
   # pass in the request params so we can use them in the form
   def request_phase
-    form = OmniAuth::Form.new(:title => 'User Info', :url => callback_path, :params => request.params)
+    form = OmniAuth::Form.new(title: 'User Info', url: callback_path, params: request.params)
     options.fields.each do |field|
       form.text_field field.to_s.capitalize.tr('_', ' '), field.to_s
     end
