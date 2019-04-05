@@ -2,7 +2,7 @@ module SessionsHelper
 
   include Mocks::Omniauth
 
-  def sign_in(user = :user, with_shib = false)
+  def sign_in(user, with_shib = false)
     sign_out if have_text('Logout')
     case user
     when StashEngine::User
@@ -25,10 +25,9 @@ module SessionsHelper
     visit root_path
     click_link 'Login'
     click_link 'Login or create your ORCID iD'
-
     if with_shib
-      mock_shibboleth!(user)
-      find('#tenant_id').find('option[value="ucop"]').select_option
+      # mock_shibboleth!(user)
+      # find('#tenant_id').find('option:last-child').select_option
       # click_button 'Login to verify'
       # TODO: figure out how to properly handle the Shibboleth SP redirection
       click_link 'Continue to My Datasets'
