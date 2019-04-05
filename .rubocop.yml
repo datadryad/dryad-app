@@ -36,6 +36,10 @@ Metrics/MethodLength:
   Exclude:
     - '**/spec/**/*.rb'
 
+# reasonable complexity
+Metrics/PerceivedComplexity:
+  Max: 10
+
 # Confusing and weird
 Naming/VariableNumber:
   Enabled: False
