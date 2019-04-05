@@ -81,6 +81,34 @@ RSpec.feature 'Populate manuscript metadata from outside source', type: :feature
                                  with: 'High-skilled labour mobility in Europe before and after the 2004 enlargement',
                                  wait: 15)
     end
+
+    it 'gives message for no doi filled in' do
+      journal = ''
+      doi = ''
+      fill_crossref_info(name: journal, doi: doi)
+      click_button 'Import Article Metadata'
+      expect(page.find('div#population-warnings')).to have_content('Please enter a DOI to import metadata', wait: 15)
+    end
+
+    it "gives a message when it can't find a doi" do
+      stub_request(:get, %r{\Ahttps://api.crossref.org/.+\z})
+          .with(
+              headers: {
+                  'Accept' => '*/*',
+                  'Accept-Encoding' => /.*/,
+                  'User-Agent' => /.*/,
+                  'X-User-Agent' => /.*/
+              }
+          )
+          .to_return(status: 404,
+                     body:  'not found',
+                     headers: {})
+      journal = 'cats'
+      doi = 'scabs'
+      fill_crossref_info(name: journal, doi: doi)
+      click_button 'Import Article Metadata'
+      expect(page.find('div#population-warnings')).to have_content( "We couldn't retrieve information from CrossRef about this DOI", wait: 15)
+    end
   end
 end
 # rubocop:enable Metrics/BlockLength
