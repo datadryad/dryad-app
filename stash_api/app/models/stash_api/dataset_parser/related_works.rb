@@ -18,7 +18,7 @@ module StashApi
       LowerRelationTypes = StashDatacite::RelatedIdentifier::RelationTypes.map(&:downcase)
       LowerIdentifierTypes = StashDatacite::RelatedIdentifier::RelatedIdentifierTypes.map(&:downcase)
 
-      def parse # rubocop:disable Metrics/AbcSize
+      def parse
         clear
         return if @hash['relatedWorks'].blank?
         @hash['relatedWorks'].each do |rw|
