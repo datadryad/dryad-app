@@ -4,9 +4,11 @@ module Mocks
 
     class << self
 
+      # Its a Hash Rubocop, get over yourself!
       # rubocop:disable Metrics/MethodLength
       # rubocop:disable Metrics/AbcSize
       # rubocop:disable Metrics/CyclomaticComplexity
+      # rubocop:disable Metrics/PerceivedComplexity
       def omniauth_response(user)
         {
           uid: user.present? && user.orcid.present? ? user.orcid : Faker::Pid.orcid,
@@ -26,6 +28,7 @@ module Mocks
           }
         }
       end
+      # rubocop:enable Metrics/PerceivedComplexity
       # rubocop:enable Metrics/CyclomaticComplexity
       # rubocop:enable Metrics/AbcSize
       # rubocop:enable Metrics/MethodLength

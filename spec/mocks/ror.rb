@@ -11,7 +11,7 @@ module Mocks
               headers: {
                 'Content-Type' => 'application/json'
               }
-            ).to_return(status: 200, body: "", headers: {})
+            ).to_return(status: 200, body: '', headers: {})
         end
       end
     end
