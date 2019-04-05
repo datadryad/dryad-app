@@ -2,11 +2,10 @@ module Mocks
 
   module Ror
 
-    # rubocop:disable Style/RegexpLiteral
     RSpec.configure do |config|
       config.before(:each) do
         def mock_ror!
-          stub_request(:get, /api\.ror\.org\/organizations\?query/)
+          stub_request(:get, %r{api\.ror\.org/organizations\?query})
             .with(
               headers: {
                 'Content-Type' => 'application/json'
@@ -15,7 +14,6 @@ module Mocks
         end
       end
     end
-    # rubocop:enable Style/RegexpLiteral
 
   end
 
