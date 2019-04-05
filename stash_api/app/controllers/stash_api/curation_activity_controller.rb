@@ -81,7 +81,9 @@ module StashApi
       StashEngine::CurationActivity.create(resource_id: resource.id,
                                            user_id: user,
                                            status: params[:curation_activity][:status],
-                                           note: params[:curation_activity][:note])
+                                           note: params[:curation_activity][:note],
+                                           created_at: params[:curation_activity][:created_at] || date
+                                          )
     end
 
     def record_published_date(resource)
