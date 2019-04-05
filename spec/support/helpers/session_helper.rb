@@ -2,7 +2,7 @@ module SessionsHelper
 
   include Mocks::Omniauth
 
-  def sign_in(user, with_shib = false)
+  def sign_in(user = create(:user), with_shib = false)
     sign_out if have_text('Logout')
     case user
     when StashEngine::User
