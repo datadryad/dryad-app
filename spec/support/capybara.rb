@@ -11,6 +11,8 @@ require_relative 'helpers/webmock_helper'
 Capybara.default_driver = :rack_test
 Capybara.javascript_driver = :chrome
 
+Capybara.asset_host = 'http://localhost:33000'
+
 # This is a customisation of the default :selenium_chrome_headless config in:
 # https://github.com/teamcapybara/capybara/blob/master/lib/capybara.rb
 #

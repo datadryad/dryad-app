@@ -2,21 +2,26 @@ require 'rails_helper'
 
 RSpec.feature 'Session', type: :feature do
 
-  context 'ORCID Login' do
+  include Mocks::RSolr
 
-    let(:user) { create(:user, orcid: nil, tenant_id: nil) }
+  describe :orcid_login do
 
-    it 'New user signs up successfully with ORCID and does not select an organization' do
-      sign_in(user, false)
+    before(:each) do
+      mock_solr!
+      @user = create(:user, role: 'user', tenant_id: nil, orcid: nil)
+    end
+
+    it 'New user signs up successfully with ORCID and does not select an organization', js: true do
+      sign_in(@user)
       expect(page).to have_text('My Datasets')
     end
 
-    it 'New user signs up successfully with ORCID and selects an organization' do
-      sign_in(user, true)
+    it 'New user signs up successfully with ORCID and selects an organization', js: true do
+      sign_in(@user, true)
       expect(page).to have_text('My Datasets')
     end
 
-    it 'User fails ORCID authentication' do
+    it 'User fails ORCID authentication', js: true do
       # OmniAuth.config.test_mode = true
       # OmniAuth.config.add_mock(:orcid, uid: nil, credentials: {}, info: {}, extra: {})
       # visit root_path
@@ -26,7 +31,7 @@ RSpec.feature 'Session', type: :feature do
       # expect(page).to have_text('Login')
     end
 
-    it 'existing user signs in successfully' do
+    it 'existing user signs in successfully', js: true do
       sign_in(create(:user))
       expect(page).to have_text('My Datasets')
     end
