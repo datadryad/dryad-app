@@ -4,13 +4,10 @@ require 'rails_helper'
 RSpec.feature 'Admin', type: :feature do
 
   include Mocks::Stripe
-
-  before(:all) do
-    # Start Solr - shutdown is handled globally when all tests have finished
-    SolrInstance.instance
-  end
+  include Mocks::RSolr
 
   before(:each) do
+    mock_solr!
     @admin = create(:user, role: 'admin', tenant_id: 'ucop')
   end
 
@@ -72,8 +69,7 @@ RSpec.feature 'Admin', type: :feature do
         within(:css, "form[action=\"#{stash_url_helpers.popup_admin_path(@user.id)}\"]") do
           find('.c-admin-edit-icon').click
         end
-        wait_for_ajax
-        within(:css, 'div.o-admin-dialog') do
+        within(:css, 'div.o-admin-dialog', wait: 5) do
           find('#role_admin').set(true)
           find('input[name=commit]').click
         end
