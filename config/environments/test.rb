@@ -12,6 +12,10 @@ Rails.application.configure do
   # preloads Rails for running tests, you may have to set it to true.
   config.eager_load = false
 
+  # Warn about pending migrations that have not been applied instead of just barfing and making all tests error.
+  # In other words, return a useful error about migrations not being current.
+  config.active_record.migration_error = true
+
   # Configure static file server for tests with Cache-Control for performance.
   config.serve_static_files   = true
   config.cache_store = :null_store

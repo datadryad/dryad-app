@@ -4,6 +4,11 @@
 # Similarly, the about and help pages may be customized by adding files to app/views/tenants/<tenant_id>/ .
 # The files are in Markdown format and named such as _about.html.md and _help.html.md
 
+# This example file may also be copied into your config directory for tests from dryad/dryad-config-example/tenants/localhost.yml .
+# You may need to re-copy this file to update to make tests work or possibly run ./symlink_config.sh again from root of application.
+# TODO: It would be good to re-examine this and make it individually symlinked or some other thing to avoid staleness from affecting
+# tests in confusing and hard to troubleshoot ways.
+
 default: &default
   enabled: true
   repository:
