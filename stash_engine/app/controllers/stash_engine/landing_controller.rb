@@ -83,7 +83,7 @@ module StashEngine
       end
     end
 
-    # rubocop:disable Metrics/MethodLength, Metrics/AbcSize, Metrics/CyclomaticComplexity
+    # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity
     # PATCH /dataset/doi:10.xyz/abc
     def update
       return render(nothing: true, status: 404) unless id
@@ -115,7 +115,7 @@ module StashEngine
       logger.debug(e)
       render(nothing: true, status: 422) # 422 Unprocessable Entity, see RFC 5789 sec. 2.2
     end
-    # rubocop:enable Metrics/MethodLength, Metrics/AbcSize, Metrics/CyclomaticComplexity
+    # rubocop:enable Metrics/AbcSize, Metrics/CyclomaticComplexity
 
     # ############################################################
     # Private
@@ -135,7 +135,7 @@ module StashEngine
       resource.save!
     end
 
-    def render_pdf(pdf_meta, show_as_html) # rubocop:disable Metrics/MethodLength
+    def render_pdf(pdf_meta, show_as_html)
       render(
         pdf: review.pdf_filename,
         page_size: 'Letter',

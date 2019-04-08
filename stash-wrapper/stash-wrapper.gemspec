@@ -25,9 +25,6 @@ Gem::Specification.new do |s| # rubocop:disable Metrics/BlockLength
   s.test_files    = s.files.grep(%r{^(test|spec|features)/})
   s.require_paths = ['lib']
 
-  # TODO: remove once we're on Rails 5, probably
-  s.add_dependency 'thor', '0.19.1' # see https://github.com/erikhuda/thor/issues/538
-
   s.add_dependency 'typesafe_enum', '~> 0.1', '>= 0.1.8'
   s.add_dependency 'xml-mapping_extensions', '~> 0.4', '>= 0.4.9'
 
