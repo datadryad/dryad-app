@@ -5,14 +5,7 @@
 </div>
 
 <section class="o-section">
-  <%= render partial: "stash_datacite/shared/citations_pdf",
-             locals: { authors: @review.authors, title: @review.title_str,
-                       resource_type: @review.resource_type,
-                       version: @resource.stash_version.nil? ? 'v0' : "v#{@review.version.version }",
-                       identifier: @resource.identifier.nil? ? 'DOI' : "#{@review.identifier.identifier }",
-                       publisher: "#{@review.publisher}",
-                       publication_years: @resource.publication_years }
-  %>
+  <%= render partial: "stash_datacite/shared/citations_pdf", locals: { resource: @resource } %>
 </section>
 <%= render partial: "stash_datacite/descriptions/show", locals: { abstract: @review.abstract,
                                                                   methods: @review.methods, other: @review.other } %>

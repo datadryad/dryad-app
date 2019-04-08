@@ -11,11 +11,7 @@
     </div>
 
     <section class="o-section">
-    <%= render partial: "stash_datacite/shared/citations", locals: { authors: @review.authors, title: @review.title_str,
-                         resource_type: @review.resource_type, version: "v#{@resource.version_number}",
-                         identifier: @resource.identifier.nil? ? nil : "#{@review.identifier.identifier}",
-                         publisher: @review.publisher,
-                         publication_years: @resource.publication_years } %>
+      <%= render partial: "stash_datacite/shared/citations", locals: { resource: @resource } %>
     </section>
 
     <%= render partial: "stash_datacite/descriptions/show", locals:
