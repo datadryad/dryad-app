@@ -4,6 +4,6 @@ class UpgradeFileSizeToBigInt < ActiveRecord::Migration
   end
 
   def down
-    change_column :stash_engine_file_uploads, :upload_file_size, :integer, limit: 4 #regular int
+    change_column :stash_engine_file_uploads, :upload_file_size, :integer, limit: 4 # regular int
   end
 end

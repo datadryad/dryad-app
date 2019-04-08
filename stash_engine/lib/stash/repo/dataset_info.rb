@@ -17,7 +17,6 @@ module Stash
         @tenant = @resource.tenant if @resource
       end
 
-      # rubocop:disable Metrics/MethodLength
       def manifest
         return @manifest if @manifest
         return nil unless @resource && @tenant
@@ -32,7 +31,6 @@ module Stash
         puts ex
         nil
       end
-      # rubocop:enable Metrics/MethodLength
 
       def nokogiri_doc
         return @nokogiri_doc if @nokogiri_doc

@@ -12,7 +12,7 @@ StashEngine::Engine.routes.draw do
     end
     # TODO: curation_activity is a bit weird because it nests inside the resource in the routes but it is really related to
     # stash_engine_identifiers, not stash_engine_resources
-    #resources :curation_activity
+    # resources :curation_activity
   end
 
   resources :identifiers do
@@ -21,21 +21,21 @@ StashEngine::Engine.routes.draw do
 
   post 'curation_note/:id', to: 'curation_activity#curation_note', as: 'curation_note'
   post 'curation_activity_change/:id', to: 'admin_datasets#curation_activity_change', as: 'curation_activity_change'
-  resources :tenants, only: [:index, :show]
+  resources :tenants, only: %i[index show]
   resources :file_uploads do
     member do
       patch 'remove'
       patch 'remove_unuploaded'
       patch 'restore'
-      patch 'destroy_error' #destroy an errored file in manifest upload
-      patch 'destroy_manifest' #destroy file from manifest method
+      patch 'destroy_error' # destroy an errored file in manifest upload
+      patch 'destroy_manifest' # destroy file from manifest method
     end
   end
 
   resources :edit_histories, only: [:index]
-  match 'file_uploads/validate_urls/:resource_id', to: 'file_uploads#validate_urls', as: 'file_uploads_validate_urls', via: [:get, :post, :put]
+  match 'file_uploads/validate_urls/:resource_id', to: 'file_uploads#validate_urls', as: 'file_uploads_validate_urls', via: %i[get post put]
 
-  resource :file_upload do  # TODO: this is wacky since it's using a resource id rather than a file id maybe this belongs in resource.
+  resource :file_upload do # TODO: this is wacky since it's using a resource id rather than a file id maybe this belongs in resource.
     member do
       patch 'revert'
     end
@@ -48,33 +48,32 @@ StashEngine::Engine.routes.draw do
   get 'upload_basics', to: 'dashboard#upload_basics', as: 'upload_basics'
 
   # download related
-  match 'downloads/download_resource/:resource_id', to: 'downloads#download_resource', as: 'download_resource', via: [:get, :post]
-  match 'downloads/async_request/:resource_id', to: 'downloads#async_request', as: 'download_async_request', via: [:get, :post]
+  match 'downloads/download_resource/:resource_id', to: 'downloads#download_resource', as: 'download_resource', via: %i[get post]
+  match 'downloads/async_request/:resource_id', to: 'downloads#async_request', as: 'download_async_request', via: %i[get post]
   get 'downloads/private_async_form', to: 'downloads#private_async_form', as: 'private_async_form'
-  match 'downloads/capture_email/:resource_id', to: 'downloads#capture_email', as: 'download_capture_email', via: [:get, :post]
+  match 'downloads/capture_email/:resource_id', to: 'downloads#capture_email', as: 'download_capture_email', via: %i[get post]
   get 'downloads/file_stream/:file_id', to: 'downloads#file_stream', as: 'download_stream'
   get 'share/:id', to: 'downloads#share', as: 'share'
 
-
-  match 'metadata_entry_pages/find_or_create', to: 'metadata_entry_pages#find_or_create', via: [:get, :post, :put]
-  match 'metadata_entry_pages/new_version', to: 'metadata_entry_pages#new_version', via: [:post, :get]
+  match 'metadata_entry_pages/find_or_create', to: 'metadata_entry_pages#find_or_create', via: %i[get post put]
+  match 'metadata_entry_pages/new_version', to: 'metadata_entry_pages#new_version', via: %i[post get]
   match 'metadata_entry_pages/reject_agreement', to: 'metadata_entry_pages#reject_agreement', via: [:delete]
   match 'metadata_entry_pages/accept_agreement', to: 'metadata_entry_pages#accept_agreement', via: [:post]
 
   # root 'sessions#index'
   root 'pages#home'
 
-  match 'auth/orcid/callback', to: 'sessions#orcid_callback', via: [:get, :post]
-  match 'auth/developer/callback', to: 'sessions#developer_callback', via: [:get, :post]
-  match 'auth/:provider/callback', to: 'sessions#callback', via: [:get, :post]
-  match 'auth/migrate/mail',  to: 'dashboard#migrate_data_mail', via: [:get]
+  match 'auth/orcid/callback', to: 'sessions#orcid_callback', via: %i[get post]
+  match 'auth/developer/callback', to: 'sessions#developer_callback', via: %i[get post]
+  match 'auth/:provider/callback', to: 'sessions#callback', via: %i[get post]
+  match 'auth/migrate/mail', to: 'dashboard#migrate_data_mail', via: [:get]
   match 'auth/migrate/code', to: 'dashboard#migrate_data', via: [:get]
   match 'auth/migrate/done', to: 'dashboard#migration_complete', via: [:get]
 
-  match 'terms/view', :to => 'dashboard#view_terms', :via => [:get, :post]
+  match 'terms/view', to: 'dashboard#view_terms', via: %i[get post]
 
   get 'auth/failure', to: redirect('/')
-  match 'sessions/destroy', to: 'sessions#destroy', :via => [:get, :post]
+  match 'sessions/destroy', to: 'sessions#destroy', via: %i[get post]
   get 'sessions/choose_login', to: 'sessions#choose_login', as: 'choose_login'
   get 'sessions/choose_sso', to: 'sessions#choose_sso', as: 'choose_sso'
   post 'sessions/no_partner', to: 'sessions#no_partner', as: 'no_partner'
@@ -83,7 +82,7 @@ StashEngine::Engine.routes.draw do
   get 'help', to: 'pages#help'
   get 'faq', to: 'pages#faq'
   get 'about', to: 'pages#about'
-  get 'dda', to: 'pages#dda' #data deposit agreement
+  get 'dda', to: 'pages#dda' # data deposit agreement
   get 'search', to: 'searches#index'
   get 'editor', to: 'pages#editor'
   get 'dataset/*id', to: 'landing#show', as: 'show', constraints: { id: /\S+/ }

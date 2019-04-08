@@ -36,7 +36,6 @@ module Stash
         with_config(config)
       end
 
-      # rubocop:disable Metrics/MethodLength
       def start(from_time: nil, until_time: nil)
         from_time = Util.utc_or_nil(from_time)
         until_time = Util.utc_or_nil(until_time)
@@ -54,7 +53,6 @@ module Stash
           end
         end
       end
-      # rubocop:enable Metrics/MethodLength
 
       def self.config_file_defaults
         [File.expand_path('stash-harvester.yml', Dir.pwd),

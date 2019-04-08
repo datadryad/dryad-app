@@ -20,13 +20,10 @@ Gem::Specification.new do |s| # rubocop:disable Metrics/BlockLength
   s.require_paths = ['lib']
   s.test_files = Dir['spec/**/*']
 
-  # TODO: remove once we're on Rails 5, probably
-  s.add_dependency 'thor', '0.19.1' # HACK: to get around https://github.com/erikhuda/thor/issues/538
-
   s.add_dependency 'amoeba', '~> 3.0.0'
   s.add_dependency 'carrierwave', '~> 0.10.0'
-  s.add_dependency 'cirneco', '~> 0.9.20' # higher versions cause dependency hell with faraday from Martin's Gems
-  s.add_dependency 'ckeditor'
+  s.add_dependency 'cirneco'
+  s.add_dependency 'ckeditor', '~> 4.3.0' # lock to 4.x series since upgrading to 5.x blows up until we figure out the upgrade path
   s.add_dependency 'concurrent-ruby', '~> 1.0'
   s.add_dependency 'datacite-mapping', '~> 0.3'
   s.add_dependency 'ezid-client', '~> 1.5'
@@ -34,28 +31,26 @@ Gem::Specification.new do |s| # rubocop:disable Metrics/BlockLength
   s.add_dependency 'font-awesome-rails'
   s.add_dependency 'httparty', '~> 0.16.4'
   s.add_dependency 'httpclient', '~> 2.8.3'
-  s.add_dependency 'jquery-fileupload-rails', '~> 0.4.6'
+  s.add_dependency 'jquery-fileupload-rails', '~> 0.4.7'
   s.add_dependency 'jquery-rails'
   s.add_dependency 'jquery-turbolinks', '~> 2.1.0'
   s.add_dependency 'jquery-ui-rails'
   s.add_dependency 'kaminari'
   s.add_dependency 'noid', '~> 0.9.0'
   s.add_dependency 'omniauth', '~> 1.8.1'
-  # s.add_dependency 'omniauth-google-oauth2', '~> 0.5.3' no longer used and causes problems with faraday and cirneco
   s.add_dependency 'omniauth-orcid', '~> 2.1.1'
   s.add_dependency 'omniauth-shibboleth', '~> 1.2.1'
   s.add_dependency 'rails', '~> 4.2.11'
   s.add_dependency 'redcarpet', '~> 3.3'
   s.add_dependency 'rest-client'
   s.add_dependency 'rinku'
-  s.add_dependency 'rsolr', '~> 1.1.2'
+  s.add_dependency 'rsolr'
   s.add_dependency 'sortable-table'
   s.add_dependency 'wicked_pdf', '~> 1.1.0'
   s.add_dependency 'wkhtmltopdf-binary', '~> 0.12.3.1'
   s.add_dependency 'zaru', '~> 0.3'
 
   s.add_development_dependency 'byebug'
-  s.add_development_dependency 'chromedriver-helper'
   s.add_development_dependency 'colorize', '~> 0.8'
   s.add_development_dependency 'database_cleaner', '~> 1.5'
   s.add_development_dependency 'diffy', '~> 3.1'
@@ -68,5 +63,6 @@ Gem::Specification.new do |s| # rubocop:disable Metrics/BlockLength
   s.add_development_dependency 'scss_lint'
   s.add_development_dependency 'simplecov', '~> 0.14'
   s.add_development_dependency 'simplecov-console', '~> 0.4'
+  s.add_development_dependency 'webdrivers' # used to be chromedriver-helper, now deprecated
   s.add_development_dependency 'webmock', '~> 3.0'
 end
