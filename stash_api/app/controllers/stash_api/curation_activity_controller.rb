@@ -77,11 +77,11 @@ module StashApi
         record_embargoed_date(resource)
       end
 
-      user = params[:user_id] || @user.id
       StashEngine::CurationActivity.create(resource_id: resource.id,
-                                           user_id: user,
+                                           user_id: params[:user_id] || @user.id,
                                            status: params[:curation_activity][:status],
-                                           note: params[:curation_activity][:note])
+                                           note: params[:curation_activity][:note],
+                                           created_at: params[:curation_activity][:created_at] || date)
     end
 
     def record_published_date(resource)

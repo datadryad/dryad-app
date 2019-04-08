@@ -3,9 +3,7 @@ class MigrateDscDatesDateToString < ActiveRecord::Migration
     add_column(:dcs_dates, :new_date, :string, after: :date)
 
     StashDatacite::DataciteDate.all.each do |date_obj|
-      unless date_obj.date.nil?
-        date_obj.update_column(:new_date, date_obj.date.iso8601)
-      end
+      date_obj.update_column(:new_date, date_obj.date.iso8601) unless date_obj.date.nil?
     end
 
     remove_column :dcs_dates, :date

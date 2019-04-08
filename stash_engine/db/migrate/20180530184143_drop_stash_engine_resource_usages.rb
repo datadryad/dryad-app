@@ -4,6 +4,6 @@ class DropStashEngineResourceUsages < ActiveRecord::Migration
   end
 
   def down
-    fail ActiveRecord::IrreversibleMigration
+    raise ActiveRecord::IrreversibleMigration
   end
 end

@@ -1,6 +1,5 @@
 class DropOrcidIdFromDcsCreators < ActiveRecord::Migration
   def change
-
     # Create missing name identifier records
     execute <<-SQL
       INSERT INTO dcs_name_identifiers
