@@ -24,14 +24,14 @@ RuboCop::RakeTask.new
 
 # clear rspec/rails default :spec task if set already
 
-Rake::Task[ :default ].clear if Rake::Task.task_defined?(:default)
+Rake::Task[:default].clear if Rake::Task.task_defined?(:default)
 
 begin
   require 'rspec/core/rake_task'
 
   RSpec::Core::RakeTask.new(:spec)
 
-  task default: %i[spec rubocop]
+  task default: %i[rubocop spec]
 rescue LoadError
   puts 'There was an error and rspec was not available.'
 end
