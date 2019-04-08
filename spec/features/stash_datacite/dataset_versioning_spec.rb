@@ -5,14 +5,16 @@ RSpec.feature 'DatasetVersioning', type: :feature do
 
   include MerrittHelper
   include DatasetHelper
+  include Mocks::Datacite
   include Mocks::Repository
   include Mocks::RSolr
-  include Mocks::Datacite
+  include Mocks::Ror
   include Mocks::Stripe
 
   before(:each) do
     mock_repository!
     mock_solr!
+    mock_ror!
     @curator = create(:user, role: 'admin', tenant_id: 'dryad')
     @author = create(:user, tenant_id: 'dryad')
     @document_list = []
@@ -312,10 +314,12 @@ RSpec.feature 'DatasetVersioning', type: :feature do
         before(:each) do
           mock_datacite!
           mock_stripe!
+          ActionMailer::Base.deliveries.clear # to lose the submission success email
         end
 
         it "has a curation status of 'submitted' when prior version was :embargoed", js: true do
           create(:curation_activity, user_id: @curator.id, resource_id: @resource.id, status: 'embargoed')
+          expect(ActionMailer::Base.deliveries.count).to eq(1)
           @resource.reload
 
           sign_in(@author)
@@ -331,6 +335,7 @@ RSpec.feature 'DatasetVersioning', type: :feature do
 
         it "has a curation status of 'submitted' when prior version was :published", js: true do
           create(:curation_activity, user_id: @curator.id, resource_id: @resource.id, status: 'published')
+          expect(ActionMailer::Base.deliveries.count).to eq(1)
           @resource.reload
 
           sign_in(@author)
@@ -342,6 +347,7 @@ RSpec.feature 'DatasetVersioning', type: :feature do
           @resource.reload
 
           expect(@resource.current_curation_status).to eql('submitted')
+          expect(ActionMailer::Base.deliveries.count).to eq(1)
         end
 
       end
