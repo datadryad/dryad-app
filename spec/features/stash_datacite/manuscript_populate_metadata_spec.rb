@@ -65,7 +65,7 @@ RSpec.feature 'Populate manuscript metadata from outside source', type: :feature
       doi = ''
       fill_crossref_info(name: journal, doi: doi)
       click_button 'Import Article Metadata'
-      expect(page.find('div#population-warnings')).to have_content('Please enter a DOI to import metadata', wait: 15)
+      expect(page.find('div#population-warnings')).to have_content('Please fill in the form completely', wait: 15)
     end
 
     it "gives a message when it can't find a doi" do
