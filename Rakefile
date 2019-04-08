@@ -22,8 +22,9 @@ RuboCop::RakeTask.new
 # ------------------------------------------------------------
 # Defaults
 
-# clear rspec/rails default :spec task in favor of :coverage
-# Rake::Task[:default].clear if Rake::Task.task_defined?(:default)
+# clear rspec/rails default :spec task if set already
+
+Rake::Task[ :default ].clear if Rake::Task.task_defined?(:default)
 
 begin
   require 'rspec/core/rake_task'
