@@ -140,7 +140,6 @@ module StashEngine
       StashEngine::UserMailer.status_change(resource, status).deliver_now
     end
 
-    # rubocop:disable Metrics/AbcSize
     # Triggered on a status of :published
     def email_orcid_invitations
       return unless published?
@@ -163,8 +162,6 @@ module StashEngine
         ).deliver_now
       end
     end
-
-    # rubocop:enable Metrics/AbcSize
 
     # Helper methods
     # ------------------------------------------

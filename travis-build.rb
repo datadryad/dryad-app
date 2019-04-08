@@ -24,7 +24,7 @@ STASH_ROOT = Pathname.new(__dir__).realpath
 
 TRAVIS_PREP_SH = 'travis-prep.sh'.freeze
 
-IN_TRAVIS = ENV['TRAVIS'] == 'true' ? true : false
+IN_TRAVIS = ENV['TRAVIS'] == 'true'
 
 # ########################################
 # Accessors
@@ -41,7 +41,7 @@ end
 # Helper methods
 
 def warn(msg)
-  $stderr.puts(msg.to_s.red)
+  warn(msg.to_s.red)
 end
 
 def tmp_path
@@ -93,7 +93,7 @@ def redirect_to(shell_command, log_file)
   log_file_path = log_file.relative_path_from(STASH_ROOT)
   puts "#{working_path}: #{shell_command.yellow} > #{log_file_path}"
   system(script_command)
-rescue => ex
+rescue StandardError => ex
   warn("#{shell_command} failed: #{ex}")
   false
 end
@@ -115,9 +115,9 @@ def bundle(project)
       run_task("bundle-#{project}", 'bundle install')
     end
   end
-rescue => e
+rescue StandardError => e
   warn(e)
-  return false
+  false
 end
 
 def prepare(project)
@@ -126,18 +126,18 @@ def prepare(project)
     return true unless File.exist?(travis_prep_sh)
     run_task("prepare-#{project}", travis_prep_sh)
   end
-rescue => e
+rescue StandardError => e
   warn(e)
-  return false
+  false
 end
 
 def build(project)
   in_project(project) do
     run_task("build-#{project}", 'bundle exec rake')
   end
-rescue => e
+rescue StandardError => e
   warn(e)
-  return false
+  false
 end
 
 def bundle_all
@@ -167,7 +167,7 @@ end
 require 'optparse'
 options = {}
 OptionParser.new do |opts|
-  opts.banner = "Usage: travis-build.rb [options]"
+  opts.banner = 'Usage: travis-build.rb [options]'
   opts.on('-h', '--help', 'Show help and exit') do
     puts opts
     exit(0)
@@ -186,9 +186,7 @@ end.parse!
 
 bundle_all
 
-if options[:bundle_only]
-  exit(0)
-end
+exit(0) if options[:bundle_only]
 
 # ####################
 # Build all projects
@@ -198,12 +196,9 @@ build_all
 # ####################
 # Report results
 
-unless successful_builds.empty?
-  puts("The following projects built successfully: #{successful_builds.join(', ').green}")
-end
+puts("The following projects built successfully: #{successful_builds.join(', ').green}") unless successful_builds.empty?
 
 unless failed_builds.empty?
   warn("The following projects failed to build: #{failed_builds.join(', ').red}")
   exit(1)
 end
-

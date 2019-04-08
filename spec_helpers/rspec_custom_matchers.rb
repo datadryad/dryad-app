@@ -161,7 +161,6 @@ RSpec::Matchers.define :include_header do |k, v|
   end
 end
 
-
 # Workaround for https://github.com/rspec/rspec-mocks/issues/1086
 class RSpec::Mocks::ErrorGenerator # rubocop:disable Style/ClassAndModuleChildren
   unless respond_to?(:_default_error_message)
@@ -206,5 +205,3 @@ end
 def basic_auth(username, password)
   'Basic ' + ["#{username}:#{password}"].pack('m').delete("\r\n")
 end
-
-

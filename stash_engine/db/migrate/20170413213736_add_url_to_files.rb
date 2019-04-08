@@ -4,7 +4,7 @@ class AddUrlToFiles < ActiveRecord::Migration
       fu.column :url, :text
       fu.index :url, length: 50
       fu.column :status_code, :integer, index: true
-      fu.column :timed_out, :boolean, index: true, :default => false
+      fu.column :timed_out, :boolean, index: true, default: false
     end
   end
 end

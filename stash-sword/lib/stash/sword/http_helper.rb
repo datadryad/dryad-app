@@ -83,7 +83,8 @@ module Stash
         RestClient::Request.execute(**options)
       end
 
-      def request_options(headers, limit, method, payload, uri, timeout) # rubocop:disable Metrics/ParameterLists
+      # rubocop:disable Metrics/ParameterLists
+      def request_options(headers, limit, method, payload, uri, timeout)
         options = {
           method: method,
           url: uri.to_s,
@@ -97,6 +98,7 @@ module Stash
         options[:password] = password if password
         options
       end
+      # rubocop:enable Metrics/ParameterLists
 
       # TODO: Consider rewriting with RestClient
       def do_get(uri, limit, &block)
