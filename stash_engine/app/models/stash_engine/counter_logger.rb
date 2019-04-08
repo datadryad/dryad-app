@@ -29,7 +29,6 @@ module StashEngine
       StashEngine.counter_log(line)
     end
 
-    # rubocop:disable Metrics/MethodLength
     def self.log_array(request:, resource:, filename:, size:)
       [
         request.remote_ip, # user's IP Address
@@ -43,9 +42,7 @@ module StashEngine
         request.user_agent # the agent sent by the client
       ].concat(log_metadata_array(resource: resource))
     end
-    # rubocop:enable Metrics/MethodLength
 
-    # rubocop:disable Metrics/MethodLength
     def self.log_metadata_array(resource:)
       [
         resource.title,
@@ -59,7 +56,6 @@ module StashEngine
         resource.publication_date
       ]
     end
-    # rubocop:enable Metrics/MethodLength
 
   end
 end

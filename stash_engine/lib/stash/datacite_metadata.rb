@@ -80,7 +80,7 @@ module Stash
       Rails.logger
     end
 
-    def self.test_data # rubocop:disable Metrics/MethodLength
+    def self.test_data
       dois = %w[10.3352/jeehp.2013.10.3 10.5060/D8H59D 10.7280/D1NP4M 10.7932/BDSN 10.13016/M2WK6V
                 10.3886/ICPSR36151.v5 10.2390/biecoll-jib-2009-108 10.1159/000489098 10.14288/1.0303795 10.7916/d8pp0jkc
                 10.5517/ccdc.csd.cc1k1h8c 10.6068/dp15e7605c65e31 10.15156/bio/sh332819.07fu 10.5281/zenodo.809529

@@ -37,7 +37,6 @@ module StashEngine
       serialize_to_db(my_minter)
     end
 
-    # rubocop:disable Metrics/MethodLength
     def self.serialize_to_db(the_minter)
       row_count = NoidState.all.count
       minter_serial = YAML.dump(the_minter.dump)
@@ -51,9 +50,7 @@ module StashEngine
         raise NoidError, 'Only one shared state should exist for the Noid minter'
       end
     end
-    # rubocop:enable Metrics/MethodLength
 
-    # rubocop:disable Metrics/MethodLength
     def self.deserialize_from_db
       row_count = NoidState.all.count
       case row_count
@@ -70,7 +67,6 @@ module StashEngine
       # rubocop:enable Security/YAMLLoad
       Noid::Minter.new(minter_serial) # return the minter
     end
-    # rubocop:enable Metrics/MethodLength
 
     private_class_method :initialize_minter
     private_class_method :serialize_to_db

@@ -12,8 +12,6 @@ module StashApi
     before_action :require_url_current_uploads, only: :create
     before_action :require_permission, only: :create
     before_action :require_correctly_formatted_url, only: :create
-
-    # rubocop:disable Metrics/AbcSize
     def create
       file_upload_hash = if params['skipValidation'] == true
                            skipped_validation_hash(params) { return } # return will be yielded to if error is rendered, so it returns here
@@ -34,11 +32,10 @@ module StashApi
         format.json { render json: file.metadata, status: 201 }
       end
     end
-    # rubocop:enable Metrics/AbcSize
 
     private
 
-    # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+    # rubocop:disable Metrics/CyclomaticComplexity
     def validate_url(url)
       url_translator = Stash::UrlTranslator.new(url)
       validator = StashEngine::UrlValidator.new(url: url_translator.direct_download || url)
@@ -52,9 +49,9 @@ module StashApi
       end
       validation_hash
     end
-    # rubocop:enable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+    # rubocop:enable Metrics/CyclomaticComplexity
 
-    # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+    # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity
     def skipped_validation_hash(_hsh)
       unless params[:size] && params[:mimeType] && params[:url]
         (render json: { error: 'You must supply a size, mimetype and url.' }.to_json, status: 403) && yield
@@ -65,7 +62,7 @@ module StashApi
       { resource_id: @resource.id, url: params[:url], status_code: 200, file_state: 'created',
         upload_file_name: my_path, upload_content_type: params[:mimeType], upload_file_size: params[:size] }
     end
-    # rubocop:enable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+    # rubocop:enable Metrics/AbcSize, Metrics/CyclomaticComplexity
 
     def require_correctly_formatted_url
       (render json: { error: 'The URL you supplied is invalid.' }.to_json, status: 403) unless correctly_formatted_url?(params[:url])

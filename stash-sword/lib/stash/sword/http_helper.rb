@@ -83,7 +83,7 @@ module Stash
         RestClient::Request.execute(**options)
       end
 
-      def request_options(headers, limit, method, payload, uri, timeout) # rubocop:disable Metrics/MethodLength, Metrics/ParameterLists
+      def request_options(headers, limit, method, payload, uri, timeout) # rubocop:disable Metrics/ParameterLists
         options = {
           method: method,
           url: uri.to_s,
@@ -99,7 +99,7 @@ module Stash
       end
 
       # TODO: Consider rewriting with RestClient
-      def do_get(uri, limit, &block) # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
+      def do_get(uri, limit, &block)
         raise "Redirect limit (#{redirect_limit}) exceeded retrieving URI #{uri}" if limit <= 0
         req = Net::HTTP::Get.new(uri, 'User-Agent' => user_agent)
         req.basic_auth(username, password) if username && password
