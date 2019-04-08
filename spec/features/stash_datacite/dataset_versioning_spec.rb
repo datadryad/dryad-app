@@ -13,6 +13,7 @@ RSpec.feature 'DatasetVersioning', type: :feature do
   before(:each) do
     mock_repository!
     mock_solr!
+    mock_ror!
     @curator = create(:user, role: 'admin', tenant_id: 'dryad')
     @author = create(:user, tenant_id: 'dryad')
     @document_list = []
