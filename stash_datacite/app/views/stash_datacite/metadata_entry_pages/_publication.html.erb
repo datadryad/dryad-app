@@ -1,36 +1,35 @@
 <p>My data is related to:</p>
+<%= form_for(@publication, url: publications_update_path, method: :patch, remote: true, authenticity_token: true) do |f| %>
+	<div class="c-import__choicesbox js-import-choice">
+		<div class="c-import__choicebox">
+			<label for="choose_manuscript" class="c-import__icon"><i class="fa fa-pencil-square-o fa-3x" aria-hidden="true"></i></label>
+			<div>
+				<input type="radio" name="import_type" id="choose_manuscript" value="manuscript"/>
+				<label for="choose_manuscript">a manuscript in progress</label>
+			</div>
+		</div>
 
-<div class="c-import__choicesbox js-import-choice">
-	<div class="c-import__choicebox">
-		<label for="choose_manuscript" class="c-import__icon"><i class="fa fa-pencil-square-o fa-3x" aria-hidden="true"></i></label>
-		<div>
-			<input type="radio" name="import_type" id="choose_manuscript" value="manuscript"/>
-			<label for="choose_manuscript">a manuscript in progress</label>
+		<div class="c-import__choicebox">
+			<label for="choose_published" class="c-import__icon"><i class="fa fa-file-text-o fa-3x" aria-hidden="true"></i></label>
+			<div>
+				<input type="radio" name="import_type" id="choose_published" value="published"/>
+				<label for="choose_published">a published article</label>
+			</div>
+		</div>
+
+		<div class="c-import__choicebox">
+			<label for="choose_other" class="c-import__icon"><i class="fa fa-table fa-3x" aria-hidden="true"></i></label>
+			<div>
+				<input type="radio" name="import_type" id="choose_other" value="other" checked="checked"/>
+				<label for="choose_other">other or not applicable</label>
+			</div>
 		</div>
 	</div>
 
-	<div class="c-import__choicebox">
-		<label for="choose_published" class="c-import__icon"><i class="fa fa-file-text-o fa-3x" aria-hidden="true"></i></label>
-		<div>
-			<input type="radio" name="import_type" id="choose_published" value="published"/>
-			<label for="choose_published">a published article</label>
-		</div>
-	</div>
+	<div class="c-import__form-section" style="display: none;">
+		<p>Please provide the following information. You may either enter the information and leave it or choose to autofill
+			your dataset based on the information you supply below.</p>
 
-	<div class="c-import__choicebox">
-		<label for="choose_other" class="c-import__icon"><i class="fa fa-table fa-3x" aria-hidden="true"></i></label>
-		<div>
-			<input type="radio" name="import_type" id="choose_other" value="other" checked="checked"/>
-			<label for="choose_other">other or not applicable</label>
-		</div>
-	</div>
-</div>
-
-<div class="c-import__form-section" style="display: none;">
-	<p>Please provide the following information. You may either enter the information and leave it or choose to autofill
-		your dataset based on the information you supply below.</p>
-
-	<%= form_for(@publication, url: publications_update_path, method: :patch, remote: true, authenticity_token: true) do |f| %>
 		<div class="c-input__inline">
 			<div class="c-input">
 				<%= f.label "journal_name", 'Journal Name', class: 'c-input__label' %>
