@@ -1,0 +1,448 @@
+{
+  "status": "ok",
+  "message-type": "work",
+  "message-version": "1.0.0",
+  "message": {
+    "indexed": {
+      "date-parts": [
+        [
+          2019,
+          2,
+          17
+        ]
+      ],
+      "date-time": "2019-02-17T00:46:44Z",
+      "timestamp": 1550364404107
+    },
+    "reference-count": 43,
+    "publisher": "The Royal Society",
+    "issue": "128",
+    "license": [
+      {
+        "URL": "http:\/\/royalsocietypublishing.org\/licence",
+        "start": {
+          "date-parts": [
+            [
+              2017,
+              3,
+              1
+            ]
+          ],
+          "date-time": "2017-03-01T00:00:00Z",
+          "timestamp": 1488326400000
+        },
+        "delay-in-days": 0,
+        "content-version": "vor"
+      }
+    ],
+    "funder": [
+      {
+        "name": "National Research Program of Italy",
+        "award": []
+      }
+    ],
+    "content-domain": {
+      "domain": [
+        "royalsocietypublishing.org"
+      ],
+      "crossmark-restriction": true
+    },
+    "short-container-title": [
+      "J. R. Soc. Interface"
+    ],
+    "published-print": {
+      "date-parts": [
+        [
+          2017,
+          3
+        ]
+      ]
+    },
+    "DOI": "10.1098\/rsif.2017.0030",
+    "type": "journal-article",
+    "created": {
+      "date-parts": [
+        [
+          2017,
+          3,
+          15
+        ]
+      ],
+      "date-time": "2017-03-15T09:10:17Z",
+      "timestamp": 1489569017000
+    },
+    "page": "20170030",
+    "update-policy": "http:\/\/dx.doi.org\/10.1098\/crossmarkpolicy",
+    "source": "Crossref",
+    "is-referenced-by-count": 4,
+    "title": [
+      "High-skilled labour mobility in Europe before and after the 2004 enlargement"
+    ],
+    "prefix": "10.1098",
+    "volume": "14",
+    "author": [
+      {
+        "ORCID": "http:\/\/orcid.org\/0000-0002-0955-3483",
+        "authenticated-orcid": false,
+        "given": "Alexander M.",
+        "family": "Petersen",
+        "sequence": "first",
+        "affiliation": []
+      },
+      {
+        "given": "Michelangelo",
+        "family": "Puliga",
+        "sequence": "additional",
+        "affiliation": []
+      }
+    ],
+    "member": "175",
+    "published-online": {
+      "date-parts": [
+        [
+          2017,
+          3,
+          15
+        ]
+      ]
+    },
+    "reference": [
+      {
+        "key": "2017031502100696000_14.128.20170030.1",
+        "DOI": "10.1038\/nature06958",
+        "doi-asserted-by": "publisher"
+      },
+      {
+        "key": "2017031502100696000_14.128.20170030.2",
+        "DOI": "10.1038\/nature04292",
+        "doi-asserted-by": "publisher"
+      },
+      {
+        "key": "2017031502100696000_14.128.20170030.3",
+        "DOI": "10.1287\/mnsc.1080.0985",
+        "doi-asserted-by": "publisher"
+      },
+      {
+        "key": "2017031502100696000_14.128.20170030.4",
+        "DOI": "10.1126\/science.1245200",
+        "doi-asserted-by": "publisher"
+      },
+      {
+        "key": "2017031502100696000_14.128.20170030.5",
+        "DOI": "10.1073\/pnas.0808185105",
+        "doi-asserted-by": "publisher"
+      },
+      {
+        "key": "2017031502100696000_14.128.20170030.6",
+        "unstructured": "D'Auria F , McMorrow K , Pichelmann K . A model based analysis. Economic Papers 349, Directorate for Economic and Financial Affairs, European Commission."
+      },
+      {
+        "key": "2017031502100696000_14.128.20170030.7",
+        "doi-asserted-by": "crossref",
+        "first-page": "980",
+        "DOI": "10.1111\/j.1747-7379.2011.00874_2.x",
+        "article-title": "Data sets on international migration",
+        "volume": "45",
+        "author": "Henning",
+        "year": "2011",
+        "journal-title": "Int. Migrat. Rev."
+      },
+      {
+        "key": "2017031502100696000_14.128.20170030.8",
+        "unstructured": "Beine MAR , Docquier F , Ozden C 2011 Dissecting network externalities in international migration. See http:\/\/papers.ssrn.com\/abstract=1756673 ."
+      },
+      {
+        "key": "2017031502100696000_14.128.20170030.9",
+        "unstructured": "Kahanec M . 2013 Labor mobility in an enlarged European Union. In International handbook on the economics of migration (eds AF Constant , KF Zimmermann ), ch. 7, pp. 137\u2013152. Cheltenham, UK: Edward Elgar.",
+        "DOI": "10.4337\/9781782546078.00015",
+        "doi-asserted-by": "crossref"
+      },
+      {
+        "key": "2017031502100696000_14.128.20170030.10",
+        "DOI": "10.1038\/srep04770",
+        "doi-asserted-by": "publisher"
+      },
+      {
+        "key": "2017031502100696000_14.128.20170030.11",
+        "first-page": "1106",
+        "article-title": "The labour market effects of immigration and emigration in OECD countries",
+        "volume": "124",
+        "author": "Docquier",
+        "year": "2014",
+        "journal-title": "Econ. J."
+      },
+      {
+        "key": "2017031502100696000_14.128.20170030.12",
+        "DOI": "10.1126\/science.1248676",
+        "doi-asserted-by": "publisher"
+      },
+      {
+        "key": "2017031502100696000_14.128.20170030.13",
+        "doi-asserted-by": "crossref",
+        "first-page": "83",
+        "DOI": "10.1257\/jep.30.4.83",
+        "article-title": "Global talent flows",
+        "volume": "30",
+        "author": "Kerr",
+        "year": "2016",
+        "journal-title": "J. Econ. Perspect."
+      },
+      {
+        "key": "2017031502100696000_14.128.20170030.14",
+        "DOI": "10.1257\/jel.50.3.681",
+        "doi-asserted-by": "publisher"
+      },
+      {
+        "key": "2017031502100696000_14.128.20170030.15",
+        "unstructured": "Moretti E . 2012 The new geography of jobs. New York, NY: Houghton Mifflin Harcourt."
+      },
+      {
+        "key": "2017031502100696000_14.128.20170030.16",
+        "unstructured": "Brown P , Green A , Lauder H . 2001 High skills: globalization, competitiveness, and skill formation. Oxford, UK: Oxford University Press.",
+        "DOI": "10.1093\/acprof:oso\/9780199244188.001.0001",
+        "doi-asserted-by": "crossref"
+      },
+      {
+        "key": "2017031502100696000_14.128.20170030.17",
+        "DOI": "10.1126\/science.1227970",
+        "doi-asserted-by": "publisher"
+      },
+      {
+        "key": "2017031502100696000_14.128.20170030.18",
+        "doi-asserted-by": "crossref",
+        "first-page": "651",
+        "DOI": "10.1016\/j.respol.2014.10.015",
+        "article-title": "The evolution of networks of innovators within and across borders: evidence from patent data",
+        "volume": "44",
+        "author": "Morescalchi",
+        "year": "2015",
+        "journal-title": "Res. Policy"
+      },
+      {
+        "key": "2017031502100696000_14.128.20170030.19",
+        "unstructured": "Doria Arrieta OA , Pammolli F , Petersen AM . In press. Quantifying the negative impact of brain drain on the integration of European science. Sci. Adv. (doi:10.1126\/sciadv.1602232)"
+      },
+      {
+        "key": "2017031502100696000_14.128.20170030.20",
+        "DOI": "10.1126\/science.1218685",
+        "doi-asserted-by": "publisher"
+      },
+      {
+        "key": "2017031502100696000_14.128.20170030.21",
+        "doi-asserted-by": "crossref",
+        "first-page": "157",
+        "DOI": "10.1038\/501157a",
+        "article-title": "Policy: a single market for European research",
+        "volume": "501",
+        "author": "Boyle",
+        "year": "2013",
+        "journal-title": "Nature"
+      },
+      {
+        "key": "2017031502100696000_14.128.20170030.22",
+        "unstructured": "European Commission and Directorate-General for Research and Innovation. 2013 European Research Area progress report 2013; European Research Area facts and figures 2013. Luxembourg: Publications Office."
+      },
+      {
+        "key": "2017031502100696000_14.128.20170030.23",
+        "DOI": "10.1016\/S0304-3878(00)00133-4",
+        "doi-asserted-by": "publisher"
+      },
+      {
+        "key": "2017031502100696000_14.128.20170030.24",
+        "doi-asserted-by": "crossref",
+        "first-page": "99",
+        "DOI": "10.1111\/j.1468-2435.2005.00343.x",
+        "article-title": "Moving people and knowledge: scientific mobility in the European Union",
+        "volume": "43",
+        "author": "Ackers",
+        "year": "2005",
+        "journal-title": "Int. Migr."
+      },
+      {
+        "key": "2017031502100696000_14.128.20170030.25",
+        "unstructured": "Ackers L , Gill B . 2008 Moving people and knowledge\u2014scientific mobility in an enlarging European Union. Cheltenham, UK: Edward Elgar.",
+        "DOI": "10.4337\/9781848444867",
+        "doi-asserted-by": "crossref"
+      },
+      {
+        "key": "2017031502100696000_14.128.20170030.26",
+        "DOI": "10.1257\/jep.25.3.107",
+        "doi-asserted-by": "publisher"
+      },
+      {
+        "key": "2017031502100696000_14.128.20170030.27",
+        "doi-asserted-by": "crossref",
+        "first-page": "95",
+        "DOI": "10.1016\/j.jdeveco.2010.05.009",
+        "article-title": "Developing science: scientific performance and brain drains in the developing world",
+        "volume": "95",
+        "author": "Weinberg",
+        "year": "2011",
+        "journal-title": "J. Dev. Econ."
+      },
+      {
+        "key": "2017031502100696000_14.128.20170030.28",
+        "DOI": "10.1016\/j.jdeveco.2010.04.007",
+        "doi-asserted-by": "publisher"
+      },
+      {
+        "key": "2017031502100696000_14.128.20170030.29",
+        "unstructured": "Geuna A (eds). 2015 Global mobility of research scientists. New York, NY: Academic Press."
+      },
+      {
+        "key": "2017031502100696000_14.128.20170030.30",
+        "unstructured": "2015 European Commission: The EU single market regulated professionals database (professionals moving abroad). See http:\/\/ec.europa.eu\/growth\/tools-databases\/regprof\/ (accessed November 2015)."
+      },
+      {
+        "key": "2017031502100696000_14.128.20170030.31",
+        "doi-asserted-by": "crossref",
+        "first-page": "315",
+        "DOI": "10.2307\/1925512",
+        "article-title": "Comparative advantage in manufactured goods: a reappraisal",
+        "volume": "2",
+        "author": "Balassa",
+        "year": "1986",
+        "journal-title": "Rev. Econ. Stat."
+      },
+      {
+        "key": "2017031502100696000_14.128.20170030.32",
+        "DOI": "10.1126\/science.1144581",
+        "doi-asserted-by": "publisher"
+      },
+      {
+        "key": "2017031502100696000_14.128.20170030.33",
+        "unstructured": "Page L , Brin S , Motwani R , Winograd T . 1998 Bringing order to the web. Technical report, Stanford University, Stanford, CA, USA."
+      },
+      {
+        "key": "2017031502100696000_14.128.20170030.34",
+        "DOI": "10.1073\/pnas.0601602103",
+        "doi-asserted-by": "publisher"
+      },
+      {
+        "key": "2017031502100696000_14.128.20170030.35",
+        "unstructured": "Blondel VD , Guillaume JL , Lambiotte R , Lefebvre E . 2008 Fast unfolding of communities in large networks. J. Stat. Mech. Theory Exp. P10008. (doi:10.1088\/1742-5468\/2008\/10\/P10008)",
+        "DOI": "10.1088\/1742-5468\/2008\/10\/P10008",
+        "doi-asserted-by": "crossref"
+      },
+      {
+        "key": "2017031502100696000_14.128.20170030.36",
+        "DOI": "10.1111\/j.1467-8306.1983.tb01392.x",
+        "doi-asserted-by": "publisher"
+      },
+      {
+        "key": "2017031502100696000_14.128.20170030.37",
+        "unstructured": "World Bank data sources. See http:\/\/data.worldbank.org\/indicator (accessed Nov 2016)."
+      },
+      {
+        "key": "2017031502100696000_14.128.20170030.38",
+        "unstructured": "Kahanec M , Zimmermann KF (eds). 2010 EU labor markets after post-enlargement migration. Berlin, Germany: Springer."
+      },
+      {
+        "key": "2017031502100696000_14.128.20170030.39",
+        "DOI": "10.1177\/0001839214551943",
+        "doi-asserted-by": "publisher"
+      },
+      {
+        "key": "2017031502100696000_14.128.20170030.40",
+        "doi-asserted-by": "crossref",
+        "first-page": "1304",
+        "DOI": "10.1016\/j.respol.2016.02.002",
+        "article-title": "Do return requirements increase international knowledge diffusion? Evidence from the Fulbright program",
+        "volume": "45",
+        "author": "Kahn",
+        "year": "2016",
+        "journal-title": "Res. Policy"
+      },
+      {
+        "key": "2017031502100696000_14.128.20170030.41",
+        "unstructured": "ERC Consolidator Grants. 2015 Outcome: indicative statistics. See https:\/\/erc.europa.eu\/sites\/default\/files\/document\/file\/erc_2015_cog_statistics.pdf ."
+      },
+      {
+        "key": "2017031502100696000_14.128.20170030.42",
+        "unstructured": "ERC funding activities 2007\u20132013: key facts, patterns and trends. See https:\/\/erc.europa.eu\/sites\/default\/files\/publication\/files\/ERC_funding_activities_2007_2013.pdf ."
+      },
+      {
+        "key": "2017031502100696000_14.128.20170030.43",
+        "DOI": "10.1101\/gr.092759.109",
+        "doi-asserted-by": "publisher"
+      }
+    ],
+    "container-title": [
+      "Journal of The Royal Society Interface"
+    ],
+    "original-title": [],
+    "language": "en",
+    "link": [
+      {
+        "URL": "https:\/\/syndication.highwire.org\/content\/doi\/10.1098\/rsif.2017.0030",
+        "content-type": "unspecified",
+        "content-version": "vor",
+        "intended-application": "similarity-checking"
+      }
+    ],
+    "deposited": {
+      "date-parts": [
+        [
+          2017,
+          6,
+          25
+        ]
+      ],
+      "date-time": "2017-06-25T12:39:00Z",
+      "timestamp": 1498394340000
+    },
+    "score": 1.0,
+    "subtitle": [],
+    "short-title": [],
+    "issued": {
+      "date-parts": [
+        [
+          2017,
+          3
+        ]
+      ]
+    },
+    "references-count": 43,
+    "journal-issue": {
+      "published-online": {
+        "date-parts": [
+          [
+            2017,
+            3,
+            15
+          ]
+        ]
+      },
+      "published-print": {
+        "date-parts": [
+          [
+            2017,
+            3
+          ]
+        ]
+      },
+      "issue": "128"
+    },
+    "alternative-id": [
+      "10.1098\/rsif.2017.0030"
+    ],
+    "URL": "http:\/\/dx.doi.org\/10.1098\/rsif.2017.0030",
+    "relation": {
+      "cites": []
+    },
+    "ISSN": [
+      "1742-5689",
+      "1742-5662"
+    ],
+    "issn-type": [
+      {
+        "value": "1742-5689",
+        "type": "print"
+      },
+      {
+        "value": "1742-5662",
+        "type": "electronic"
+      }
+    ]
+  }
+}
