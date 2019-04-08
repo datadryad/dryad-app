@@ -3,15 +3,12 @@ module StashEngine
   # Mails users about submissions
   class UserMailer < ApplicationMailer
 
-    # include ::StashDatacite::LandingMixin
-
     # Called from CurationActivity when the status is submitted, peer_review, published or embargoed
     def status_change(resource, status)
-      return unless %w[submitted peer_review published embargoed].include?(status)
+      return unless %w[submitted peer_review embargoed].include?(status)
       user = resource.authors.first || resource.user
       return unless user.present? && user_email(user).present?
       @user_name = user_name(user)
-      # @citation = generate_citation(resource) if status == 'published'
       assign_variables(resource)
       mail(to: user_email(user), template_name: status,
            subject: "#{rails_env} Dryad Submission \"#{@resource.title}\"")
@@ -49,37 +46,6 @@ module StashEngine
     end
 
     private
-
-    # rubocop:disable Style/NestedTernaryOperator
-    def user_email(user)
-      user.present? ? (user.respond_to?(:author_email) ? user.author_email : user.email) : nil
-    end
-
-    def user_name(user)
-      user.present? ? (user.respond_to?(:author_standard_name) ? user.author_standard_name : user.name) : nil
-    end
-    # rubocop:enable Style/NestedTernaryOperator
-
-    # defer to the StashDatacite::LandingMixin methods to create a citation
-    #  def generate_citation(resource)
-    #   return unless resource.is_a?(StashEngine::Resource)
-    #   publisher = StashDatacite::Publisher.find_by(resource_id: resource.id).try(:publisher)
-    #   resource_type = StashDatacite::ResourceType.find_by(resource_id: resource.id).try(:resource_type_general_friendly)
-    #   citation(resource.authors, resource.title, resource_type, resource.version, resource.identifier, publisher, resource.publication_years)
-    # end
-
-    def assign_variables(resource)
-      @resource = resource
-      @helpdesk_email = APP_CONFIG['helpdesk_email'] || 'help@datadryad.org'
-      @bcc_emails = APP_CONFIG['submission_bc_emails'] || [@helpdesk_email]
-      @submission_error_emails = APP_CONFIG['submission_error_email'] || [@helpdesk_email]
-      @page_error_emails = APP_CONFIG['page_error_email'] || [@helpdesk_email]
-    end
-
-    def rails_env
-      return "[#{Rails.env}]" unless Rails.env == 'production'
-      ''
-    end
 
     # TODO: look at Rails standard ways to report/format backtrace
     def to_backtrace(e)
