@@ -45,7 +45,7 @@ module StashEngine
     end
 
     # returns the latest version number in which this filename was created
-    def version_file_created_in # rubocop:disable Metrics/MethodLength
+    def version_file_created_in
       return resource.stash_version if file_state == 'created' || file_state.blank?
       sql = <<-SQL
              SELECT versions.*

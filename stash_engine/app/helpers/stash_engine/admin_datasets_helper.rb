@@ -12,7 +12,6 @@ module StashEngine
       end
     end
 
-    # rubocop:disable Metrics/MethodLength
     def filter_status_select(current_status)
       statuses = StashEngine::CurationActivity.statuses
 
@@ -29,7 +28,6 @@ module StashEngine
 
       status_select(statuses)
     end
-    # rubocop:enable Metrics/MethodLength
 
   end
 end

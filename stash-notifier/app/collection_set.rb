@@ -36,7 +36,6 @@ class CollectionSet
     end
   end
 
-  # rubocop:disable Metrics/AbcSize
   # main loop for notifying from OAI-PMH feed
   def notify_dryad
     records = DatasetRecord.find(start_time: last_retrieved, end_time: Time.new.utc, set: name)
@@ -52,7 +51,6 @@ class CollectionSet
     end
     self.last_retrieved = new_last_retrieved
   end
-  # rubocop:enable Metrics/AbcSize
 
   def dois_to_retry
     @retry_hash.keys

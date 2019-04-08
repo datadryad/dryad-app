@@ -14,7 +14,6 @@ module StashEngine
     end
 
     # for downloading the full version
-    # rubocop:disable Metrics/MethodLength
     def download_resource
       @resource = Resource.find(params[:resource_id])
       if @resource.may_download?(ui_user: current_user)
@@ -31,10 +30,8 @@ module StashEngine
       # recently updated, so display a "hold your horses" message
       flash_download_unavailable
     end
-    # rubocop:enable Metrics/MethodLength
 
     # handles a large dataset that may only be downloaded asynchronously from Merritt because of size limits for immediate downloads
-    # rubocop:disable Metrics/MethodLength
     def async_request
       @resource = Resource.find(params[:resource_id])
       @email = params[:email]
@@ -51,10 +48,8 @@ module StashEngine
         end
       end
     end
-    # rubocop:enable Metrics/MethodLength
 
     # method to download by the secret sharing link, must match the string they generated to look up and download
-    # rubocop:disable Metrics/MethodLength
     def share
       @shares = Share.where(secret_id: params[:id])
       raise ActionController::RoutingError, 'Not Found' if @shares.count < 1
@@ -69,7 +64,6 @@ module StashEngine
         redirect_to_public
       end
     end
-    # rubocop:enable Metrics/MethodLength
 
     # shows the form for private async.  Usually part of the landing page for dataset, but page may not exist for public
     # anymore because of curation so we create a new page to host the form
@@ -119,7 +113,6 @@ module StashEngine
       redirect_to landing_show_path(id: @resource.identifier_str)
     end
 
-    # rubocop:disable Metrics/MethodLength
     def api_async_download(resource:, email:)
       url = Stash::Download::Version.merritt_friendly_async_url(resource: resource)
 
@@ -138,6 +131,6 @@ module StashEngine
       Stash::Download::Version.raise_merritt_error('Merritt async download request',
                                                    "unexpected status #{status}", resource.id, "#{url}?#{query_string}")
     end
-    # rubocop:enable Metrics/MethodLength
+
   end
 end

@@ -12,7 +12,7 @@ module StashEngine
         yield
       else
         begin
-          create(:name => name) unless where(name: name).first # changed because find_by deprecated
+          create(name: name) unless where(name: name).first # changed because find_by deprecated
         rescue ActiveRecord::StatementInvalid
           # concurrent create is okay
         end
@@ -37,7 +37,7 @@ module StashEngine
     # if true, the lock is acquired
     # if false, the lock might still be acquired, because we were in another db transaction
     def self.definitely_acquired?(name)
-      !!Thread.current[:definitely_acquired_locks] and Thread.current[:definitely_acquired_locks].has_key?(name)
+      !!Thread.current[:definitely_acquired_locks] && Thread.current[:definitely_acquired_locks].key?(name)
     end
 
     def self.acquired_lock(name)

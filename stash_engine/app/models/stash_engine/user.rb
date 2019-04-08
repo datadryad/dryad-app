@@ -66,7 +66,7 @@ module StashEngine
     end
 
     # gets the latest completed resources by user, a lot of SQL since this becomes complicated
-    def latest_completed_resource_per_identifier # rubocop:disable Metrics/MethodLength
+    def latest_completed_resource_per_identifier
       # Joining on version is messy, so we just assume the latest version in a
       # group is the one with the highest resource_id.
       #

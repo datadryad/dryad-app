@@ -27,8 +27,47 @@ module StashDatacite
 
     private
 
-    def citation(resource)
-      cite(resource) # defer to the CitationHelper for building out the citation text
+    def plain_citation
+      citation = make_citation(review, resource)
+      ActionController::Base.helpers.strip_tags(citation)
+    end
+
+    def make_citation(review, resource)
+      citation(
+        review.authors,
+        review.title_str,
+        review.resource_type,
+        version_string_for(resource, review),
+        identifier_string_for(resource, review),
+        review.publisher,
+        resource.publication_years
+      )
+    end
+
+    # rubocop:disable Metrics/ParameterLists
+    def citation(authors, title, resource_type, version, identifier, publisher, publication_years)
+      citation = []
+      citation << h("#{author_citation_format(authors)} (#{pub_year_from(publication_years)})")
+      citation << h(title)
+      citation << h(version == 'v1' ? '' : version)
+      citation << h(publisher.try(:publisher))
+      citation << h(resource_type.try(:resource_type_general_friendly))
+      id_str = "https://doi.org/#{identifier}"
+      citation << "<a href=\"#{id_str}\">#{h(id_str)}</a>"
+      citation.reject(&:blank?).join(', ').html_safe
+    end
+    # rubocop:enable Metrics/ParameterLists
+
+    def author_citation_format(authors)
+      return '' if authors.blank?
+      str_author = authors.map { |c| c.author_full_name unless c.author_full_name =~ /^[ ,]+$/ }.compact
+      return '' if str_author.blank?
+      return "#{str_author.first} et al." if str_author.length > 4
+      str_author.join('; ')
+    end
+
+    def pub_year_from(publication_years)
+      publication_years.try(:first).try(:publication_year) || Time.now.year
     end
 
     def schema_org_json_for(resource)

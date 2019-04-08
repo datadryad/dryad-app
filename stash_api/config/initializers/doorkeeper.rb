@@ -8,7 +8,7 @@ Doorkeeper.configure do
 
   # This block will be called to check whether the resource owner is authenticated or not.
   resource_owner_authenticator do
-    fail "Please configure doorkeeper resource_owner_authenticator block located in #{__FILE__}"
+    raise "Please configure doorkeeper resource_owner_authenticator block located in #{__FILE__}"
     # Put your resource owner authentication logic here.
     # Example implementation:
     #   User.find_by_id(session[:user_id]) || redirect_to(new_user_session_url)
@@ -17,9 +17,9 @@ Doorkeeper.configure do
 
   # If you want to restrict access to the web interface for adding oauth authorized applications, you need to declare the block below.
   admin_authenticator do
-  #   # Put your admin authentication logic here.
-  #   # Example implementation:
-  #   Admin.find_by_id(session[:admin_id]) || redirect_to(new_admin_session_url)
+    #   # Put your admin authentication logic here.
+    #   # Example implementation:
+    #   Admin.find_by_id(session[:admin_id]) || redirect_to(new_admin_session_url)
     (current_user && (current_user.role == 'superuser')) || redirect_to(stash_url_helpers.choose_login_path)
   end
 

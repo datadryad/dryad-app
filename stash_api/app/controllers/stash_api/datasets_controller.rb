@@ -103,7 +103,6 @@ module StashApi
       end
     end
 
-    # rubocop:disable Metrics/AbcSize
     # rubocop:disable Metrics/LineLength
     # post /datasets/<id>/set_internal_datum
     def set_internal_datum
@@ -117,7 +116,6 @@ module StashApi
         render json: @datum, status: 200
       end
     end
-    # rubocop:enable Metrics/AbcSize
 
     # post /datasets/<id>/add_internal_datum
     def add_internal_datum
