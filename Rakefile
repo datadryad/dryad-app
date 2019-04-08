@@ -7,11 +7,11 @@ Rails.application.load_tasks
 # ------------------------------------------------------------
 # Coverage
 
-desc 'Run all unit tests with coverage'
-task :coverage do
-  ENV['COVERAGE'] = 'true'
-  Rake::Task['spec'].execute
-end
+# desc 'Run all unit tests with coverage'
+# task :coverage do
+#   ENV['COVERAGE'] = 'true'
+#   Rake::Task['spec'].execute
+# end
 
 # ------------------------------------------------------------
 # RuboCop
