@@ -4,40 +4,30 @@ require 'stash/import/cross_ref'
 
 module StashDatacite
   class PublicationsController < ApplicationController
-    # include HTTParty
+    # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity
     def update
       @se_id = StashEngine::Identifier.find(params[:internal_datum][:identifier_id])
       save_form_to_internal_data
       respond_to do |format|
         format.js do
           if params[:internal_datum][:do_import] == 'true'
-            # take action to do the actual import and reload the page with javascript
             @resource = @se_id.latest_resource
-            if @doi.value.blank? && !@msid.value.blank?
-              update_manuscript_metadata
-            else
-              update_doi_metadata
-            end
+            update_manuscript_metadata if !@msid&.value.blank? && params[:import_type] == 'manuscript'
+            update_doi_metadata if !@doi&.value.blank? && params[:import_type] == 'published'
+            @error = 'Please fill in the form completely' if @msid&.value.blank? && @doi&.value.blank?
           else
             render template: 'stash_datacite/shared/update.js.erb'
           end
         end
       end
     end
-    # rubocop:enable
+    # rubocop:enable Metrics/AbcSize, Metrics/CyclomaticComplexity
 
-    # rubocop:disable Metrics/AbcSize
     def save_form_to_internal_data
-      @pub_issn = StashEngine::InternalDatum.where(stash_identifier: @se_id, data_type: 'publicationISSN').first_or_create
-      @pub_issn.update(value: params[:internal_datum][:publication_issn]) unless params[:internal_datum][:publication_issn].blank?
-
-      @msid = StashEngine::InternalDatum.where(stash_identifier: @se_id, data_type: 'manuscriptNumber').first_or_create
-      @msid.update(value: params[:internal_datum][:msid]) unless params[:internal_datum][:msid].blank?
-
-      @doi = StashEngine::InternalDatum.where(stash_identifier: @se_id, data_type: 'publicationDOI').first_or_create
-      @doi.update(value: params[:internal_datum][:doi]) unless params[:internal_datum][:doi].blank?
+      @pub_issn = manage_internal_datum(identifier: @se_id, data_type: 'publicationISSN', value: params[:internal_datum][:publication_issn])
+      @msid = manage_internal_datum(identifier: @se_id, data_type: 'manuscriptNumber', value: params[:internal_datum][:msid])
+      @doi = manage_internal_datum(identifier: @se_id, data_type: 'publicationDOI', value: params[:internal_datum][:doi])
     end
-    # rubocop:enable Metrics/AbcSize
 
     # rubocop:disable Lint/UnreachableCode
     def update_manuscript_metadata
@@ -74,6 +64,17 @@ module StashDatacite
       xr_import.populate
     rescue Serrano::NotFound, Serrano::BadGateway, Serrano::Error, Serrano::GatewayTimeout, Serrano::InternalServerError, Serrano::ServiceUnavailable
       @error = "We couldn't retrieve information from CrossRef about this DOI"
+    end
+
+    def manage_internal_datum(identifier:, data_type:, value:)
+      datum = StashEngine::InternalDatum.where(stash_identifier: identifier, data_type: data_type).first
+      if datum.present?
+        datum.destroy if value.blank?
+        datum.update(value: value) unless value.blank?
+      else
+        datum = StashEngine::InternalDatum.create(stash_identifier: identifier, data_type: data_type, value: value)
+      end
+      datum
     end
   end
 end
