@@ -46,7 +46,7 @@ module StashEngine
       @resource = double(Resource)
       allow(@resource).to receive(:user).and_return(@user)
       allow(@resource).to receive(:identifier).and_return(@identifier)
-      allow(@resource).to receive(:identifier_str).and_return(@identifier.to_s)
+      allow(@resource).to receive(:identifier_str).and_return(@identifier.identifier)
       allow(@resource).to receive(:identifier_uri).and_return("https://#{@request_host}/#{@identifier}")
       allow(@resource).to receive(:share).and_return(@share)
       allow(@resource).to receive(:title).and_return('An Account of a Very Odd Monstrous Calf')
@@ -99,7 +99,7 @@ module StashEngine
               expect(delivery.body.to_s).to include('You should receive an update within two business days.')
             when 'published'
               expect(delivery.body.to_s).to include('Your dataset is now published and public.')
-              expect(delivery.body.to_s).to include('We recommend that you cite and promote your dataset with this citation')
+              expect(delivery.body.to_s).to include("We recommend that you cite it using this DOI: #{@identifier.identifier}")
             when 'embargoed'
               delivery = assert_email("[test] Dryad Submission \"#{@resource.title}\"")
               expect(delivery.body.to_s).to include('will be embargoed until')
