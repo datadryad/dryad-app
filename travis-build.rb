@@ -41,7 +41,7 @@ end
 # Helper methods
 
 def warn(msg)
-  warn(msg.to_s.red)
+  $stderr.puts(msg.to_s.red)
 end
 
 def tmp_path
