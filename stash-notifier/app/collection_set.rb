@@ -23,7 +23,7 @@ class CollectionSet
 
     # changes array of hashes (see above) into key = :doi and value is hash of the rest of hash
     @retry_hash = Hash[*r.map { |i| [i[:doi], i.except(:doi)] }.flatten]
-    @retry_hash.each { |_, v| v[:time] = Time.iso8601(v[:time]) } # convert times from iso8601 strings to ruby times
+    @retry_hash.each_value { |v| v[:time] = Time.iso8601(v[:time]) } # convert times from iso8601 strings to ruby times
   end
 
   # main loop for retrying errors
