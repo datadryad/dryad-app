@@ -5,6 +5,7 @@ RSpec.feature 'ReviewDataset', type: :feature do
 
   include DatasetHelper
   include Mocks::Repository
+  include Mocks::Ror
   include Mocks::RSolr
 
   before(:each) do
