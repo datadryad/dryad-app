@@ -2,8 +2,7 @@
 
 <p>Your dataset "<%= @resource.title %>" (<%= @resource.identifier_str %>) has been approved by our curation team. Your dataset is now published and public.</p>
 
-<p>We recommend that you cite and promote your dataset with this citation:</p>
-<blockquote><%= @citation %></blockquote>
+<p>We recommend that you cite it using this DOI: <%= @resource.identifier_str %></p>
 
 <p>If at any time you would like to version or update your dataset you may do so by clicking "Update" on your "My Datasets" page.</p>
 
