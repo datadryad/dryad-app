@@ -40,7 +40,6 @@ end
 # ########################################
 # Helper methods
 
-# infinite recursion isn't good
 def warn(msg)
   $stderr.puts(msg.to_s.red)
 end
