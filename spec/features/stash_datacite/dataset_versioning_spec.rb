@@ -20,13 +20,10 @@ RSpec.feature 'DatasetVersioning', type: :feature do
     @document_list = []
   end
 
-  after(:each) do
-    ActionMailer::Base.deliveries.clear
-  end
-
   describe :initial_version do
 
     before(:each, js: true) do
+      ActionMailer::Base.deliveries = []
       # Sign in and create a new dataset
       sign_in(@author)
       visit root_path
@@ -75,6 +72,7 @@ RSpec.feature 'DatasetVersioning', type: :feature do
     describe :merrit_submission_sucess do
 
       before(:each) do
+        ActionMailer::Base.deliveries = []
         mock_successfull_merritt_submission!(@resource)
       end
 
@@ -146,6 +144,7 @@ RSpec.feature 'DatasetVersioning', type: :feature do
   describe :new_version do
 
     before(:each) do
+      ActionMailer::Base.deliveries = []
       @identifier = create(:identifier)
       @resource = create(:resource, :submitted, identifier: @identifier, user_id: @author.id, tenant_id: @author.tenant_id)
     end
@@ -216,6 +215,7 @@ RSpec.feature 'DatasetVersioning', type: :feature do
     context :by_author do
 
       before(:each, js: true) do
+        ActionMailer::Base.deliveries = []
         sign_in(@author)
         click_link 'My Datasets'
         within(:css, '#user_submitted') do
@@ -234,7 +234,7 @@ RSpec.feature 'DatasetVersioning', type: :feature do
       end
 
       it 'did not send out an additional email to the author', js: true do
-        expect(ActionMailer::Base.deliveries.count).to eq(1)
+        expect(ActionMailer::Base.deliveries.count).to eq(0)
       end
 
       it 'displays the proper information on the Admin page', js: true do
@@ -312,14 +312,13 @@ RSpec.feature 'DatasetVersioning', type: :feature do
       context :published_or_embargoed do
 
         before(:each) do
+          ActionMailer::Base.deliveries = []
           mock_datacite!
           mock_stripe!
-          ActionMailer::Base.deliveries.clear # to lose the submission success email
         end
 
         it "has a curation status of 'submitted' when prior version was :embargoed", js: true do
           create(:curation_activity, user_id: @curator.id, resource_id: @resource.id, status: 'embargoed')
-          expect(ActionMailer::Base.deliveries.count).to eq(1)
           @resource.reload
 
           sign_in(@author)
@@ -331,11 +330,11 @@ RSpec.feature 'DatasetVersioning', type: :feature do
           @resource.reload
 
           expect(@resource.current_curation_status).to eql('submitted')
+          expect(ActionMailer::Base.deliveries.count).to eq(1)
         end
 
         it "has a curation status of 'submitted' when prior version was :published", js: true do
           create(:curation_activity, user_id: @curator.id, resource_id: @resource.id, status: 'published')
-          expect(ActionMailer::Base.deliveries.count).to eq(1)
           @resource.reload
 
           sign_in(@author)
