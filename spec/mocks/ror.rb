@@ -10,7 +10,9 @@ module Mocks
               headers: {
                 'Content-Type' => 'application/json'
               }
-            ).to_return(status: 200, body: '', headers: {})
+            ).to_return(status: 200, body: {
+              'items': ['country': { 'country_name': Faker::Space.planet }]
+            }.to_json, headers: {})
         end
       end
     end
