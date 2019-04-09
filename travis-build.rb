@@ -40,8 +40,9 @@ end
 # ########################################
 # Helper methods
 
+# infinite recursion isn't good
 def warn(msg)
-  warn(msg.to_s.red)
+  $stderr.puts(msg.to_s.red)
 end
 
 def tmp_path
