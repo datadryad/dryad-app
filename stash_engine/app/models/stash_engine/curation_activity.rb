@@ -55,6 +55,14 @@ module StashEngine
     after_create :submit_to_datacite, :update_solr, :submit_to_stripe,
                  if: proc { |ca| (ca.published? || ca.embargoed?) && latest_curation_status_changed? }
 
+    # Email the primary author when submitted, peer_review, published or embargoed
+    after_create :email_author,
+                 if: proc { |ca| %w[published embargoed].include?(ca.status) && latest_curation_status_changed? && !resource.skip_emails }
+
+    # Email invitations to register ORCIDs to authors when published
+    after_create :email_orcid_invitations,
+                 if: proc { |ca| ca.published? && latest_curation_status_changed? && !resource.skip_emails }
+
     # Class methods
     # ------------------------------------------
     # Translates the enum value to a human readable status
@@ -118,10 +126,9 @@ module StashEngine
       idg = Stash::Doi::IdGen.make_instance(resource: resource)
       idg.update_identifier_metadata!
 
-      # Send out the appropriate emails to the authors
-      email_published if published?
+      # Send out emails now that the citation has been registered
+      email_author if published?
       email_orcid_invitations if published?
-      email_embargoed if embargoed?
     end
 
     def update_solr
@@ -129,14 +136,8 @@ module StashEngine
     end
 
     # Triggered on a status of :published or :embargoed
-    def email_published
-      # This is a bit hacky. The citation functionality in StashDatacite should be available as a service
-      # or defined within StashEngine instead if its not actually unique to Datacite
-      StashDatacite::UserMailer.published(resource).deliver_now if published?
-    end
-
-    def email_embargoed
-      StashEngine::UserMailer.status_change(resource, status).deliver_now if embargoed?
+    def email_author
+      StashEngine::UserMailer.status_change(resource, status).deliver_now
     end
 
     # Triggered on a status of :published

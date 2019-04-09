@@ -3,14 +3,15 @@ require 'loofah'
 module StashDatacite
   # StashDatacite specific accessors for landing page
   module LandingMixin
-
-    include CitationHelper
-
     def self.included(landing_controller)
       landing_controller.helper_method :citation
       landing_controller.helper_method :review
       landing_controller.helper_method :schema_org_ds
       landing_controller.helper_method :page_title
+    end
+
+    def geolocation_data?
+      review.geolocation_data?
     end
 
     def review
@@ -23,6 +24,10 @@ module StashDatacite
 
     def schema_org_ds
       @schema_org_ds ||= schema_org_json_for(resource)
+    end
+
+    def pdf_meta
+      @pdf_meta ||= StashDatacite::ResourcesController::PdfMetadata.new(resource, id, plain_citation)
     end
 
     private
@@ -79,6 +84,20 @@ module StashDatacite
         landing: landing_page_url
       ).generate
       JSON.pretty_generate(schema_dataset).html_safe
+    end
+
+    def identifier_string_for(resource, review)
+      return 'DOI' unless resource.identifier
+      review.identifier.identifier.to_s
+    end
+
+    def version_string_for(resource, review)
+      return 'v0' unless resource.stash_version
+      "v#{review.version.version}"
+    end
+
+    def h(str)
+      ERB::Util.html_escape(str)
     end
 
   end
