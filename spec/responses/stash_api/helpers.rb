@@ -8,7 +8,7 @@ module Helpers
   end
 
   def setup_access_token(doorkeeper_application:)
-    post "/oauth/token",
+    post '/oauth/token',
          { grant_type: 'client_credentials', client_id: doorkeeper_application.uid, client_secret: doorkeeper_application.secret },
          default_json_headers.merge('Content-type' => 'application/x-www-form-urlencoded;charset=UTF-8')
     @access_token = response_body_hash[:access_token]
@@ -24,7 +24,7 @@ module Helpers
   end
 
   def default_authenticated_headers
-    default_json_headers.merge({ 'Authorization' => "Bearer #{@access_token}"})
+    default_json_headers.merge('Authorization' => "Bearer #{@access_token}")
   end
 
 end
