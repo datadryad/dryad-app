@@ -5,15 +5,6 @@ require File.expand_path('../config/application', __FILE__)
 Rails.application.load_tasks
 
 # ------------------------------------------------------------
-# Coverage
-
-# desc 'Run all unit tests with coverage'
-# task :coverage do
-#   ENV['COVERAGE'] = 'true'
-#   Rake::Task['spec'].execute
-# end
-
-# ------------------------------------------------------------
 # RuboCop
 
 require 'rubocop/rake_task'
@@ -34,11 +25,7 @@ begin
     task.rspec_opts = %w[--color --format documentation --order random]
   end
 
-  task :default do
-    # invoke is supposed to only run once
-    Rake::Task['rubocop'].invoke
-    Rake::Task['spec'].invoke
-  end
+  task default: %i[rubocop spec]
 rescue LoadError
   puts 'There was an error and rspec was not available.'
 end
