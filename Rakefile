@@ -29,9 +29,15 @@ Rake::Task[:default].clear if Rake::Task.task_defined?(:default)
 begin
   require 'rspec/core/rake_task'
 
-  RSpec::Core::RakeTask.new(:spec)
+  RSpec::Core::RakeTask.new(:spec) do |task|
+    task.rspec_opts = %w[--color --format documentation --order random]
+  end
 
-  task default: %i[rubocop spec]
+  task :default do
+    # invoke is supposed to only run once
+    Rake::Task['rubocop'].invoke
+    Rake::Task['spec'].invoke
+  end
 rescue LoadError
   puts 'There was an error and rspec was not available.'
 end
