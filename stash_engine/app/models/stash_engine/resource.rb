@@ -486,8 +486,9 @@ module StashEngine
     # gets the in progress editor, if any, for the whole dataset
     # nil means no in progress dataset or the owner is the one in progress
     def dataset_in_progress_editor_id
-      return current_editor_id if identifier.nil? # no identifier, has to be in progress
-      return identifier.in_progress_resource.current_editor_id if identifier.in_progress?
+      # no identifier, has to be in progress
+      return current_editor_id if identifier.nil?
+      return identifier.in_progress_resource.current_editor_id if identifier.in_progress? && identifier.in_progress_resource.present?
       nil
     end
 
