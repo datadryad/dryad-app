@@ -33,6 +33,22 @@ module StashApi
         out_author = output[:authors].first
         expect(in_author).to eq(out_author)
       end
+
+      it 'creates a new basic dataset with a placename' do
+        @meta.add_place
+        response_code = post '/api/datasets', @meta.json, default_authenticated_headers
+        output = JSON.parse(response.body).with_indifferent_access
+        expect(response_code).to eq(201)
+
+        # check it against the database
+        @stash_id = StashEngine::Identifier.find(output[:id])
+        @resource = @stash_id.resources.first
+        expect(@resource.geolocations.first.geolocation_place.geo_location_place).to eq(@meta.hash[:locations].first[:place])
+
+        # check it against the return json
+        expect(output[:locations].first[:place]).to eq(@meta.hash[:locations].first[:place])
+      end
+
     end
   end
 end
