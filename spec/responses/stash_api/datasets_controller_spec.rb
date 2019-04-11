@@ -4,7 +4,7 @@ require 'fixtures/stash_api/metadata'
 
 # see https://relishapp.com/rspec/rspec-rails/v/3-8/docs/request-specs/request-spec
 module StashApi
-  RSpec.describe GeneralController, type: :request do
+  RSpec.describe DatasetsController, type: :request do
 
     before(:all) do
       @user = create(:user, role: 'superuser')
@@ -25,7 +25,13 @@ module StashApi
         response_code = post '/api/datasets', @meta.json, default_authenticated_headers
         output = JSON.parse(response.body).with_indifferent_access
         expect(response_code).to eq(201)
-        expect(/doi:10\.5072\/dryad\..{8}/).to match(output[:identifier])
+        expect(%r{doi:10.5072/dryad\..{8}}).to match(output[:identifier])
+        hsh = @meta.hash
+        expect(hsh[:title]).to eq(output[:title])
+        expect(hsh[:abstract]).to eq(output[:abstract])
+        in_author = hsh[:authors].first
+        out_author = output[:authors].first
+        expect(in_author).to eq(out_author)
       end
     end
   end
