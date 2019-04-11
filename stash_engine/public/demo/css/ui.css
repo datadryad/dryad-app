@@ -4746,9 +4746,26 @@ html.no-details .o-showhide__summary {
       -ms-flex-pack: start;
           justify-content: flex-start;
   margin: 0 0 1em 5em; }
+  .c-institution__container form {
+    width: 100%;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: row;
+            flex-direction: row;
+    -webkit-box-pack: start;
+        -ms-flex-pack: start;
+            justify-content: flex-start; }
 
 .c-institution__column {
   margin-right: 5em; }
+
+.c-institution__datalist {
+  -webkit-box-flex: 2;
+      -ms-flex-positive: 2;
+          flex-grow: 2; }
 
 .c-institution__button {
   margin-top: 1em;
