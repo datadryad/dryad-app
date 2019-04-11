@@ -1,6 +1,16 @@
-// Data Lists //
-.c-data-list {
+// ##### Datalist Object ##### //
+
+.o-data-list {
   display: flex;
   flex-flow: column;
   align-content: flex-start;
+}
+
+.o-data-list > .c-input {
+  flex-grow: 2;
+}
+
+// Ensures the datalist remains hidden when browsers do not support HTML5 Datalist //
+datalist {
+  display: none;
 }
