@@ -16,12 +16,16 @@ module StashApi
     # test creation of a new dataset
     describe '#create' do
       before(:each) do
-        @meta = StashApi::Metadata.new
+        @meta = Fixtures::StashApi::Metadata.new
         @meta.make_minimal
       end
 
       it 'creates a new dataset from minimal metadata (title, author info, abstract)' do
-        expect(true).to eq(true)
+        # the following works for post with headers
+        response_code = post '/api/datasets', @meta.json, default_authenticated_headers
+        output = JSON.parse(response.body).with_indifferent_access
+        expect(response_code).to eq(201)
+        expect(/doi:10\.5072\/dryad\..{8}/).to match(output[:identifier])
       end
     end
   end
