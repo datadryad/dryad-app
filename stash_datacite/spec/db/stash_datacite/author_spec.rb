@@ -26,6 +26,26 @@ module StashEngine # TODO: are we testing Author or Affiliation? (Or AuthorPatch
       end
     end
 
+    describe 'emails' do
+      before(:each) do
+        @auth = Author.new(resource_id: resource.id, author_first_name: 'Jane', author_last_name: 'Doe')
+      end
+      it 'does not require email' do
+        expect(@auth.valid?).to eql(true)
+        expect(@auth.errors.empty?).to eql(true)
+      end
+      it 'validates email format' do
+        %w[abcdefg abcdefg@bademail abcdefg@bademail,bademl @bad.eml abcdefgbad.eml].each do |email|
+          @auth.author_email = email
+          expect(@auth.valid?).to eql(false), "expected '#{email}' to be invalid"
+          expect(@auth.errors[:author_email].first).to eql('is invalid')
+        end
+        @auth.author_email = 'abcdefg@bad.eml'
+        expect(@auth.valid?).to eql(true)
+        expect(@auth.errors.empty?).to eql(true)
+      end
+    end
+
     describe 'affiliations' do
       attr_reader :affiliations
       before(:each) do
