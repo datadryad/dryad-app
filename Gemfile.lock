@@ -50,8 +50,9 @@ PATH
       turbolinks
     stash_engine (0.0.17)
       amoeba (~> 3.0.0)
+      bolognese (~> 0.15.9)
       carrierwave (~> 0.10.0)
-      cirneco
+      cirneco (~> 0.9.27)
       ckeditor (~> 4.3.0)
       concurrent-ruby (~> 1.0)
       datacite-mapping (~> 0.3)
@@ -124,7 +125,7 @@ GEM
       io-like (~> 0.3.0)
     arel (6.0.4)
     ast (2.4.0)
-    autoprefixer-rails (9.5.0)
+    autoprefixer-rails (9.5.1)
       execjs
     base32-url (0.5)
     bcrypt (3.1.12)
