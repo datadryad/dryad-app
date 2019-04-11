@@ -9,9 +9,11 @@ module Stash
       end
 
       def charge_via_invoice
-        Stripe.api_key = StashEngine.app.payments.key
-        add_dpc
-        invoice = create_invoice
+        set_api_key
+        customer_id = stripe_customer_id
+        return unless customer_id.present?
+        add_dpc(customer_id)
+        invoice = create_invoice(customer_id)
         invoice.auto_advance = true
         resource.identifier.invoice_id = invoice.id
         resource.identifier.save
@@ -22,38 +24,56 @@ module Stash
       # ------------------------------------------
       private
 
-      def add_dpc
+      def set_api_key
+        Stripe.api_key = StashEngine.app.payments.key
+      end
+
+      def add_dpc(customer_id)
         Stripe::InvoiceItem.create(
-          customer: stripe_customer_id,
+          customer: customer_id,
           amount: StashEngine.app.payments.data_processing_charge,
           currency: 'usd',
           description: 'Data Processing Charge'
         )
       end
 
-      def create_invoice
+      def create_invoice(customer_id)
         Stripe::Invoice.create(
-          customer: resource.user.customer_id,
+          customer: customer_id,
           description: 'Dryad deposit ' + resource.identifier.to_s + ', ' + resource.title,
           metadata: { 'curator' => curator.name }
         )
       end
 
+      def create_customer(author)
+        Stripe::Customer.create(
+          description: author.author_standard_name,
+          email: author.author_email
+        )
+      end
+
       def stripe_customer_id
         ensure_customer_id_exists
-        resource.user.customer_id
       end
 
       def ensure_customer_id_exists
-        return unless resource.user.customer_id.nil?
-        customer = Stripe::Customer.create(
-          description: resource.user.name,
-          email: resource.user.email
-        )
-        resource.user.customer_id = customer.id
-        resource.user.save
+        # Retrieve the primary author for the dataset
+        author = StashEngine::Author.primary(resource.id)
+        return if author.blank?
+        # See if the author already has a stripe_customer_id
+        customer_id = lookup_prior_stripe_customer_id(author.author_email)
+        # Otherwise we need to generate a new one
+        customer_id = create_customer(author).id unless customer_id.present?
+        # Update the current primary author with the stripe customer id
+        author.update(stripe_customer_id: customer_id)
+        customer_id
       end
 
+      def lookup_prior_stripe_customer_id(email)
+        # Each resource has its own set of authors so look through all the prior records
+        # for the first author to see if they have a stripe_customer_id
+        StashEngine::Author.where(author_email: email).where.not(stripe_customer_id: nil).order(:id).first&.stripe_customer_id
+      end
     end
   end
 end
