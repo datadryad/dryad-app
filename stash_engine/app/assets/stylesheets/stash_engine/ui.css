@@ -4765,7 +4765,10 @@ html.no-details .o-showhide__summary {
 .c-institution__datalist {
   -webkit-box-flex: 2;
       -ms-flex-positive: 2;
-          flex-grow: 2; }
+          flex-grow: 2;
+  height: 30px;
+  margin-top: 5px;
+  margin-right: 5px; }
 
 .c-institution__button {
   margin-top: 1em;
