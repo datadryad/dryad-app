@@ -5,15 +5,6 @@ require File.expand_path('../config/application', __FILE__)
 Rails.application.load_tasks
 
 # ------------------------------------------------------------
-# Coverage
-
-desc 'Run all unit tests with coverage'
-task :coverage do
-  ENV['COVERAGE'] = 'true'
-  Rake::Task['spec'].execute
-end
-
-# ------------------------------------------------------------
 # RuboCop
 
 require 'rubocop/rake_task'
@@ -22,15 +13,19 @@ RuboCop::RakeTask.new
 # ------------------------------------------------------------
 # Defaults
 
-# clear rspec/rails default :spec task in favor of :coverage
-# Rake::Task[:default].clear if Rake::Task.task_defined?(:default)
+# clear rspec/rails default :spec task if set already
+
+Rake::Task[:default].clear if Rake::Task.task_defined?(:default)
+Rake::Task[:spec].clear if Rake::Task.task_defined?(:spec)
 
 begin
   require 'rspec/core/rake_task'
 
-  RSpec::Core::RakeTask.new(:spec)
+  RSpec::Core::RakeTask.new(:spec) do |task|
+    task.rspec_opts = %w[--color --format documentation --order random]
+  end
 
-  task default: %i[spec rubocop]
+  task default: %i[db:migrate rubocop spec]
 rescue LoadError
   puts 'There was an error and rspec was not available.'
 end
