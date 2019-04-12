@@ -3,6 +3,7 @@ require_relative 'helpers'
 require 'fixtures/stash_api/metadata'
 
 # see https://relishapp.com/rspec/rspec-rails/v/3-8/docs/request-specs/request-spec
+# rubocop:disable Metrics/BlockLength
 module StashApi
   RSpec.describe DatasetsController, type: :request do
 

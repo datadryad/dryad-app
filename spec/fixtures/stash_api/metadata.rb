@@ -1,6 +1,7 @@
 require 'faker'
 require 'json'
 
+# rubocop:disable Metrics/ClassLength
 module Fixtures
   module StashApi
     class Metadata
@@ -51,47 +52,47 @@ module Fixtures
       def add_point
         create_key_and_array(key: :locations)
         @metadata[:locations].push(
-            point: random_point
+          point: random_point
         )
       end
 
       def add_box
         create_key_and_array(key: :locations)
         @metadata[:locations].push(
-            box: random_box
+          box: random_box
         )
       end
 
       def add_associated_place_and_point
         create_key_and_array(key: :locations)
         @metadata[:locations].push(
-            place: random_placename,
-            point: random_point
+          place: random_placename,
+          point: random_point
         )
       end
 
       def add_associated_place_and_box
         create_key_and_array(key: :locations)
         @metadata[:locations].push(
-            place: random_placename,
-            box: random_box
+          place: random_placename,
+          box: random_box
         )
       end
 
       def add_associated_place_point_and_box
         create_key_and_array(key: :locations)
         @metadata[:locations].push(
-            place: random_placename,
-            point: random_point,
-            box: random_box
+          place: random_placename,
+          point: random_point,
+          box: random_box
         )
       end
 
       def add_associated_point_and_box
         create_key_and_array(key: :locations)
         @metadata[:locations].push(
-            point: random_point,
-            box: random_box
+          point: random_point,
+          box: random_box
         )
       end
 
@@ -127,3 +128,4 @@ module Fixtures
     end
   end
 end
+# rubocop:enable Metrics/ClassLength
