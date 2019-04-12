@@ -14,6 +14,7 @@ module StashEngine
     before_save :strip_whitespace
 
     scope :names_filled, -> { where("TRIM(IFNULL(author_first_name,'')) <> '' AND TRIM(IFNULL(author_last_name,'')) <> ''") }
+    scope :primary, ->(resource_id) { where(resource_id: resource_id).where.not(author_email: nil).order(:id).first }
 
     amoeba do
       enable
