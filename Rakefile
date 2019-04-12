@@ -25,7 +25,7 @@ begin
     task.rspec_opts = %w[--color --format documentation --order random]
   end
 
-  task default: %i[rubocop spec]
+  task default: %i[db:migrate rubocop spec]
 rescue LoadError
   puts 'There was an error and rspec was not available.'
 end
