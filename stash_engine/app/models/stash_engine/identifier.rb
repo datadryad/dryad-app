@@ -191,6 +191,8 @@ module StashEngine
     def submitter_country
       affil = latest_resource&.authors&.first&.affiliation&.long_name
       return if affil.nil?
+
+=begin
       url = 'https://api.ror.org/organizations'
       results = HTTParty.get(url,
                              query: { query: affil },
@@ -206,6 +208,7 @@ module StashEngine
     rescue HTTParty::Error, SocketError => ex
       logger.error("ROR returned an error attempting organization query #{affil}: #{ex}")
       nil
+=end
     end
     # rubocop:enable Metrics/AbcSize, Metrics/CyclomaticComplexity
 
