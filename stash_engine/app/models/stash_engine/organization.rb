@@ -28,12 +28,15 @@ module StashEngine
     def acronyms
       JSON.parse(super || [].to_json)
     end
+
     def acronyms=(array)
       super(array.to_json)
     end
+
     def aliases
       JSON.parse(super || [].to_json)
     end
+
     def aliases=(array)
       super(array.to_json)
     end
@@ -42,8 +45,8 @@ module StashEngine
 
     # Convert nil values in the JSON array columns to empty arrays before saving
     def nils_to_empty_arrays
-      acronyms = [] if acronyms.nil?
-      aliases = [] if aliases.nil?
+      self.acronyms = [] if acronyms.nil?
+      self.aliases = [] if aliases.nil?
     end
 
   end

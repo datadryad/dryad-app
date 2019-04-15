@@ -2,12 +2,13 @@ require 'httparty'
 
 require_relative 'identifier_rake_functions'
 
+# rubocop:disable Metrics/BlockLength
 namespace :organizations do
 
   desc 'Rebuild the stash_engine_organizations table'
   task rebuild: :environment do
-    Rake::Task["organizations:clear"].execute
-    Rake::Task["organizations:retrieve_from_ror"].execute
+    Rake::Task['organizations:clear'].execute
+    Rake::Task['organizations:retrieve_from_ror'].execute
   end
 
   desc 'Delete all records from the stash_engine_organizations table'
@@ -36,3 +37,4 @@ namespace :organizations do
   end
 
 end
+# rubocop:enable Metrics/BlockLength
