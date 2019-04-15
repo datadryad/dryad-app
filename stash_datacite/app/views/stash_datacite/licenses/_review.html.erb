@@ -42,7 +42,7 @@
 <% elsif submitter_affiliation.fee_waiver_country? %>
 <div>
   <h3>Payment</h3>
-  <p>Payment is not required for this deposit due to association with <b><%= submitter_affiliation.name %></b> in <b><%= submitter_affiliation&.country %></b>.</p>
+  <p>Payment is not required for this deposit due to association with <b><%= submitter_affiliation.name %></b> in <b><%= submitter_affiliation.country %></b>.</p>
 </div>
 <% elsif @resource.identifier.user_must_pay? %>
 <div>
