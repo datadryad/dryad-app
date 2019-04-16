@@ -2,6 +2,7 @@ require_dependency 'stash_datacite/application_controller'
 require 'httparty'
 require 'stash/import/cross_ref'
 require 'stash/import/dryad_manuscript'
+require 'cgi'
 
 module StashDatacite
   class PublicationsController < ApplicationController
@@ -35,8 +36,9 @@ module StashDatacite
         @error = 'Please select your journal from the autocomplete drop-down list'
         return
       end
-      return if params[:internal_datum][:publication_name].blank?  # keeps the default fill-in message
-      response = HTTParty.get("#{APP_CONFIG.old_dryad_url}/api/v1/organizations/#{URI.escape(@pub_issn.value)}/manuscripts/#{URI.escape(@msid.value)}",
+      return if params[:internal_datum][:publication_name].blank? # keeps the default fill-in message
+      my_url = "#{APP_CONFIG.old_dryad_url}/api/v1/organizations/#{CGI.escape(@pub_issn.value)}/manuscripts/#{CGI.escape(@msid.value)}"
+      response = HTTParty.get(my_url,
                               query: { access_token: APP_CONFIG.old_dryad_access_token },
                               headers: { 'Content-Type' => 'application/json' })
       if response.code > 299

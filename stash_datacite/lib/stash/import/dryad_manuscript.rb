@@ -23,9 +23,9 @@ module Stash
         authors = @response[:authors][:author]
         authors.each do |api_author|
           author = @resource.authors.create(
-              author_first_name: api_author['givenNames'],
-              author_last_name: api_author['familyName'],
-              author_orcid: (api_author['identifierType'] == 'orcid' ? api_author[:identifier] : nil)
+            author_first_name: api_author['givenNames'],
+            author_last_name: api_author['familyName'],
+            author_orcid: (api_author['identifierType'] == 'orcid' ? api_author[:identifier] : nil)
           )
           update_email(db_author: author)
         end
@@ -44,8 +44,8 @@ module Stash
         end
       end
 
-
       # the 'correspondingAuthor' may be able to give us one of the authors email addresses, but not for most items
+      # rubocop:disable Metrics/CyclomaticComplexity
       def update_email(db_author:)
         return if @response['correspondingAuthor'].blank? || @response['correspondingAuthor']['author'].blank? ||
             @response['correspondingAuthor']['email'].blank?
@@ -61,7 +61,7 @@ module Stash
         return if email.blank?
         db_author.update(author_email: email)
       end
-
+      # rubocop:enable Metrics/CyclomaticComplexity
     end
   end
 end
