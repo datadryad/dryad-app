@@ -131,7 +131,7 @@ module StashApi
         expect(resource.current_editor_id).to eq(@user2.id)
       end
 
-      it 'puts the invoiceID on the identifier' do
+      it 'puts the invoiceId on the identifier' do
         expect(@stash_identifier.invoice_id). to eq('invoice-123')
       end
     end
