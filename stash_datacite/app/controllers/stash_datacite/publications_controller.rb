@@ -1,6 +1,7 @@
 require_dependency 'stash_datacite/application_controller'
 require 'httparty'
 require 'stash/import/cross_ref'
+require 'stash/import/dryad_manuscript'
 
 module StashDatacite
   class PublicationsController < ApplicationController
@@ -11,10 +12,10 @@ module StashDatacite
       respond_to do |format|
         format.js do
           if params[:internal_datum][:do_import] == 'true'
+            @error = 'Please fill in the form completely' if params[:internal_datum][:msid].blank? && params[:internal_datum][:doi].blank?
             @resource = @se_id.latest_resource
-            update_manuscript_metadata if !@msid&.value.blank? && params[:import_type] == 'manuscript'
+            update_manuscript_metadata if params[:import_type] == 'manuscript'
             update_doi_metadata if !@doi&.value.blank? && params[:import_type] == 'published'
-            @error = 'Please fill in the form completely' if @msid&.value.blank? && @doi&.value.blank?
           else
             render template: 'stash_datacite/shared/update.js.erb'
           end
@@ -29,26 +30,25 @@ module StashDatacite
       @doi = manage_internal_datum(identifier: @se_id, data_type: 'publicationDOI', value: params[:internal_datum][:doi])
     end
 
-    # rubocop:disable Lint/UnreachableCode
     def update_manuscript_metadata
-      # this all needs rework, but waiting on new api
-      @error = 'Could not retrieve manuscript data.'
-      return
-
-      # the rest of this is just here temporarily not sure if Ryan's new api will be like this or different
-      pub_issn_only = @pub_issn.value
-      msid_only = @msid.value
-      body = { dryadDOI: 'doi:' + @se_id.identifier,
-               dashUserID: current_user.id,
-               manuscriptNumber: msid_only }.to_json
-      url = "#{APP_CONFIG.old_dryad_url}/api/v1/journals/#{pub_issn_only}/packages/"
-      @results = HTTParty.put(url,
+      if !params[:internal_datum][:publication_name].blank? && params[:internal_datum][:publication_issn].blank?
+        @error = 'Please select your journal from the autocomplete drop-down list'
+        return
+      end
+      return if params[:internal_datum][:publication_name].blank?  # keeps the default fill-in message
+      response = HTTParty.get("#{APP_CONFIG.old_dryad_url}/api/v1/organizations/#{URI.escape(@pub_issn.value)}/manuscripts/#{URI.escape(@msid.value)}",
                               query: { access_token: APP_CONFIG.old_dryad_access_token },
-                              body: body,
                               headers: { 'Content-Type' => 'application/json' })
-      render 'update' # just the standard update in the associated view directory
+      if response.code > 299
+        @error = 'We could not find metadata to import for this manuscript. Please enter your metadata below.'
+        return
+      end
+      dryad_import = Stash::Import::DryadManuscript.new(resource: @resource, httparty_response: response)
+      dryad_import.populate
+    rescue HTTParty::Error, SocketError => ex
+      logger.error("Dryad manuscript API returned a HTTParty/Socket error for ISSN: #{@pub_issn.value}, MSID: #{@msid.value}\r\n #{ex}")
+      @error = 'We could not find metadata to import for this manuscript. Please enter your metadata below.'
     end
-    # rubocop:enable Lint/UnreachableCode
 
     def update_doi_metadata
       if @doi.value.blank?
