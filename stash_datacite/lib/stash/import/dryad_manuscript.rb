@@ -10,6 +10,8 @@ module Stash
       def populate
         populate_title
         populate_authors
+        populate_abstract
+        populate_keywords
       end
 
       def populate_title
@@ -29,7 +31,21 @@ module Stash
         end
       end
 
-      # the 'correspondingAuthor' may be able to give us one of the authors email addresses, but not for most
+      def populate_abstract
+        return if @response[:abstract].blank?
+        abstract = @resource.descriptions.where(description_type: 'abstract').first_or_create
+        abstract.update(description: @response[:abstract])
+      end
+
+      def populate_keywords
+        return if @response[:keywords].blank?
+        @resource.subjects << @response[:keywords].map do |kw|
+          StashDatacite::Subject.find_or_create_by(subject: kw)
+        end
+      end
+
+
+      # the 'correspondingAuthor' may be able to give us one of the authors email addresses, but not for most items
       def update_email(db_author:)
         return if @response['correspondingAuthor'].blank? || @response['correspondingAuthor']['author'].blank? ||
             @response['correspondingAuthor']['email'].blank?
@@ -45,6 +61,7 @@ module Stash
         return if email.blank?
         db_author.update(author_email: email)
       end
+
     end
   end
 end
