@@ -56,9 +56,9 @@ module Stash
         it 'populates author names' do
           @dm.populate_authors
           @resource.reload
-          0.upto(3) do |index|
-            expect(@resource.authors[index].author_first_name).to eql(@big_hash['authors']['author'][index]['givenNames'])
-            expect(@resource.authors[index].author_last_name).to eql(@big_hash['authors']['author'][index]['familyName'])
+          @big_hash['authors']['author'].each_with_index do |hash_author, index|
+            expect(@resource.authors[index].author_first_name).to eql(hash_author['givenNames'])
+            expect(@resource.authors[index].author_last_name).to eql(hash_author['familyName'])
           end
         end
 
@@ -68,7 +68,7 @@ module Stash
           expect(@resource.authors[2].author_orcid).to eql(@big_hash['authors']['author'][2]['identifier'])
         end
 
-        it 'f*cks around with the "correspondingAuthor" to see if it can match and populate a single email' do
+        it 'watches the "correspondingAuthor" to see if it can match and populate a single email' do
           @dm.populate_authors
           @resource.reload
           expect(@resource.authors[0].author_email).to eql(@big_hash['correspondingAuthor']['email'])
@@ -82,7 +82,7 @@ module Stash
           expect(@resource.authors[0].author_email).to be_nil
         end
 
-        it 'ignores crappy-ass garbage tagged on in the email field' do
+        it 'ignores crappy-ass garbage tacked into the email field' do
           @big_hash['correspondingAuthor']['email'] = 'grogolia@escape.example.com my institution is awesome and I talk about it in here'
           @dm = DryadManuscript.new(resource: @resource, httparty_response: @big_hash)
           @dm.populate_authors
@@ -93,88 +93,48 @@ module Stash
 
       describe '#populate_abstract' do
 
-        xit 'fills in the abstract when it is supplied' do
-          @cr.populate_abstract
+        it 'fills in the abstract when it is supplied' do
+          @dm.populate_abstract
           @resource.reload
-          expect(@resource.descriptions.where(description_type: 'abstract').first.description).to eql(ABSTRACT)
+          expect(@resource.descriptions.where(description_type: 'abstract').first.description).to eql(@big_hash['abstract'])
         end
 
-        xit "leaves off the abstract when it doesn't exist" do
-          @cr = CrossRef.new(resource: @resource, serrano_message: {})
-          @cr.populate_abstract
+        it "leaves off the abstract when it doesn't exist" do
+          @big_hash['abstract'] = nil
+          @dm = DryadManuscript.new(resource: @resource, httparty_response: @big_hash)
+          @dm.populate_abstract
           @resource.reload
           expect(@resource.descriptions.where(description_type: 'abstract').length).to eql(0)
         end
       end
 
-      describe '#populate_funders' do
-
-        xit 'populates a contributor and award for each award number' do
-          @cr.populate_funders
+      describe '#populate_keywords' do
+        it 'populates the keywords supplied' do
+          @dm.populate_keywords
           @resource.reload
-          expect(@resource.contributors.length).to eql(11) # one entry for each award
+          @big_hash['keywords'].each_with_index do |hash_kw, index|
+            expect(@resource.subjects[index].subject).to eql(hash_kw)
+          end
         end
 
-        xit 'populates only one award for a contributor without any award number' do
-          @funder_example[0] = { 'name' => 'National Heart, Lung, and Blood Institute' }
-          @cr = CrossRef.new(resource: @resource, serrano_message: { 'funder' => @funder_example })
-          @cr.populate_funders
+        it 'ignores missing keywords' do
+          @big_hash['keywords'] = nil
+          @dm = DryadManuscript.new(resource: @resource, httparty_response: @big_hash)
+          @dm.populate_keywords
           @resource.reload
-          expect(@resource.contributors.length).to eql(6)
-        end
-
-        xit 'removes blank contributor entries before populating' do
-          @resource.contributors.create(contributor_name: '', contributor_type: 'funder', award_number: '')
-          @cr.populate_funders
-          @resource.reload
-          expect(@resource.contributors.length).to eql(11) # not 12, which it would be if the empty one hadn't been removed
-        end
-
-        xit 'fills in funder name and award number for an individual entry' do
-          @cr.populate_funders
-          @resource.reload
-          contrib = @resource.contributors.first
-          expect(contrib.contributor_name).to eql('National Heart, Lung, and Blood Institute')
-          expect(contrib.award_number).to eql('R01-HL30077')
-          expect(contrib.contributor_type).to eql('funder')
-        end
-
-        xit 'handles missing funders' do
-          @cr = CrossRef.new(resource: @resource, serrano_message: {})
-          @cr.populate_funders
-          @resource.reload
-          expect(@resource.contributors.length).to eql(0)
-        end
-      end
-
-      describe '#populate_cited_by' do
-
-        xit 'takes the DOI URL for the article and turns it into cited_by for this dataset' do
-          @cr.populate_cited_by
-          @resource.reload
-          expect(@resource.related_identifiers.first.related_identifier).to eql(URL)
-        end
-
-        xit 'ignores blank URLs' do
-          @cr = CrossRef.new(resource: @resource, serrano_message: { 'URL' => '' })
-          @cr.populate_cited_by
-          @resource.reload
-          expect(@resource.related_identifiers.length).to eql(0)
+          expect(@resource.subjects.length).to eq(0)
         end
       end
 
       describe '#populate' do
-
-        xit 'calls the other population methods' do
-          @cr.populate
+        it 'calls the other population methods' do
+          @dm.populate
           @resource.reload
-          # just basic tests of these items since tested in-depth individually elsewhere
-          expect(@resource.title).to eql(TITLE)
-          expect(@resource.authors.first.author_first_name).to eql(AUTHOR.first['given'])
-          expect(@resource.authors.first.author_last_name).to eql(AUTHOR.first['family'])
-          expect(@resource.descriptions.where(description_type: 'abstract').first.description).to eql(ABSTRACT)
-          expect(@resource.contributors.length).to eql(11)
-          expect(@resource.related_identifiers.first.related_identifier).to eql(URL)
+          # just superficial tests of these items since tested in-depth elsewhere in individual unit tests for specific methods
+          expect(@resource.title).to eql(@big_hash['title'])
+          expect(@resource.authors.length).to eq(@big_hash['authors']['author'].length)
+          expect(@resource.descriptions.where(description_type: 'abstract').first.description).to eql(@big_hash['abstract'])
+          expect(@resource.subjects.length).to eq(@big_hash['keywords'].length)
         end
       end
     end
