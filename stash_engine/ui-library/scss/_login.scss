@@ -142,10 +142,24 @@
   flex-direction: row;
   justify-content: flex-start;
   margin: 0 0 1em 5em;
+
+  form {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+  }
 }
 
 .c-institution__column {
   margin-right: 5em;
+}
+
+.c-institution__datalist {
+  flex-grow: 2;
+  height: 30px;
+  margin-top: 5px;
+  margin-right: 5px;
 }
 
 .c-institution__button {
