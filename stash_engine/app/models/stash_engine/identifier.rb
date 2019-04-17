@@ -148,7 +148,7 @@ module StashEngine
     def user_must_pay?
       !journal_will_pay? &&
         !institution_will_pay? &&
-        !fee_waiver_country?
+        (!submitter_affiliation.present? || !submitter_affiliation.fee_waivered?)
     end
 
     def publication_data(field_name)
@@ -180,9 +180,7 @@ module StashEngine
     end
 
     def submitter_affiliation
-      affil = latest_resource&.authors&.first&.affiliation&.long_name
-      return if affil.nil?
-      StashEngine::Organization.search(affil)
+      latest_resource&.authors&.first&.affiliation
     end
 
     private
