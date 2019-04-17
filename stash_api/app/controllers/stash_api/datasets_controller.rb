@@ -175,6 +175,7 @@ module StashApi
       # all this bogus return false stuff is to prevent double render errors in some circumstances
       return if check_superuser_restricted_params == false
       return if check_may_set_user_id == false
+      return if check_may_set_invoice_id == false
     end
 
     def check_superuser_restricted_params
@@ -200,6 +201,15 @@ module StashApi
       users = StashEngine::User.where(id: params['userId'])
       return if users.count == 1
       render(json: { error: 'Bad Request: the userId you chose is invalid' }.to_json, status: 400)
+      false
+    end
+
+    def check_may_set_invoice_id
+      return if params['invoiceId'].nil?
+      unless @user.role == 'superuser'
+        render json: { error: 'Unauthorized: only superuser roles may set an invoiceId' }.to_json, status: 401
+        return false
+      end
       false
     end
 
