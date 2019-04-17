@@ -15,6 +15,7 @@ module Stash
       end
 
       def populate_title
+        return if @response[:title].blank?
         @resource.update(title: @response[:title])
       end
 
