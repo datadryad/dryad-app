@@ -25,5 +25,34 @@ module StashDatacite
         expect(affil.smart_name).to eq('Bertelsmann Music Group')
       end
     end
+
+    describe :fee_waivered? do
+      before(:each) do
+        @affil = StashDatacite::Affiliation.create(long_name: 'Bertelsmann Music Group', ror_id: '12345')
+        @ror_org = Stash::Organization::Ror::Organization.new(id: '12345', name: 'Bertelsmann Music Group')
+        allow_any_instance_of(Stash::Organization::Ror).to receive(:find_by_ror_id).and_return(@ror_org)
+        allow(@affil).to receive(:fee_waiver_countries).and_return(['East Timor'])
+      end
+
+      it 'returns false if the affiliation has no ROR id' do
+        @affil.ror_id = nil
+        expect(@affil.fee_waivered?).to eql(false)
+      end
+      it 'returns false if the associated ROR record could not be found' do
+        allow_any_instance_of(Stash::Organization::Ror).to receive(:find_by_ror_id).and_return(nil)
+        expect(@affil.fee_waivered?).to eql(false)
+      end
+      it 'returns false if the associated ROR record does not specify a country' do
+        expect(@affil.fee_waivered?).to eql(false)
+      end
+      it 'returns false if the associated ROR record\'s country is NOT in the fee waiver list' do
+        @ror_org.country = { name: 'Nowhereland' }
+        expect(@affil.fee_waivered?).to eql(false)
+      end
+      it 'returns true if the associated ROR record\'s country is in the fee waiver list' do
+        @ror_org.country = { name: 'East Timor' }
+        expect(@affil.fee_waivered?).to eql(true)
+      end
+    end
   end
 end
