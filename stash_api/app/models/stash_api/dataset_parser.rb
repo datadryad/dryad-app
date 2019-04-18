@@ -37,6 +37,8 @@ module StashApi
       @hash[:authors]&.each { |author| add_author(json_author: author) }
       StashDatacite::Description.create(description: @hash[:abstract], description_type: 'abstract', resource_id: @resource.id)
       TO_PARSE.each { |item| dynamic_parse(my_class: item) }
+      @resource.identifier.invoice_id = @hash['invoiceId']
+      @resource.identifier.save
       @resource.identifier
     end
 
