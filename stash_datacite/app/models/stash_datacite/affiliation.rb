@@ -31,6 +31,18 @@ module StashDatacite
       APP_CONFIG.fee_waiver_countries || []
     end
 
+    def self.reconcile_affiliation(ror_id, long_name)
+      return nil if long_name.blank?
+      # If the Affiliation is already in the DB then get its id and update the ROR id if appropriate
+      affil = Affiliation.where('LOWER(long_name) = LOWER(?)', long_name).first
+      if affil.present?
+        affil.update(ror_id: ror_id) if affil.ror_id.blank? && ror_id.present?
+      else
+        affil = Affiliation.create(ror_id: ror_id, long_name: long_name)
+      end
+      affil
+    end
+
     private
 
     def strip_whitespace

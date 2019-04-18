@@ -4,7 +4,7 @@ var form = $('#<%= params[:form_id] %>');
 form.attr('id', '<%= form_id %>');
 form.attr('action', '<%= authors_update_path %>');
 form.find("#author_id").attr('value', '<%= @author.id %>');
-form.find("#author_affiliation_id").attr('value', '<%= @author.affiliation_id %>');
+form.find("#author_affiliation_id").attr('value', '<%= @author.affiliations.first&.id %>');
 form.find("#form_id").attr('value', '<%= form_id %>');
 
 $('<input>').attr({

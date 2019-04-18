@@ -2,6 +2,8 @@ module Stash
   module Import
     class CrossRef
 
+      include Stash::Organization::Ror
+
       def initialize(resource:, serrano_message:)
         @resource = resource
         @sm = serrano_message # which came form crossref (x-ref)
@@ -30,7 +32,12 @@ module Stash
             author_orcid: (xr_author['ORCID'] ? xr_author['ORCID'].match(/[0-9\-]{19}$/).to_s : nil)
           )
           affil_name = (xr_author['affiliation']&.first ? xr_author['affiliation'].first['name'] : nil)
-          author.affiliation_by_name(affil_name) unless affil_name.blank?
+
+          # If the affiliation was provided try looking up its ROR id
+          if affil_name.present?
+            ror_org = find_first_by_ror_name(affil_name)
+            author.affiliation = StashDatacite::Affiliation.first_or_create(long_name: affil_name, ror_id: ror_org&.id)
+          end
         end
       end
 

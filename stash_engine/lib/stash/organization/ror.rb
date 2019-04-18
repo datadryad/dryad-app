@@ -10,16 +10,26 @@ module Stash
       URI = 'https://api.ror.org/organizations'.freeze
       HEADERS = { 'Content-Type': 'application/json' }.freeze
       ROR_MAX_RESULTS = 20.0
-      MAX_PAGES = 10
+      MAX_PAGES = 5
 
       # Search the ROR API for the given string. This will search name, acronyms, aliases, etc.
       # @return an Array of Hashes { id: 'https://ror.org/12345', name: 'Sample University' }
       # The ROR limit appears to be 40 results (even with paging :/)
       def find_by_ror_name(query)
         resp = query_ror(URI, { 'query.names': query }, HEADERS)
-        results = process_pages(resp, query) if resp.parsed_response.present? &&
-          resp.parsed_response['items'].present?
-        results.flatten.uniq.sort_by { |a| a[:name] }
+        results = process_pages(resp, query) if resp.parsed_response.present? && resp.parsed_response['items'].present?
+        results.present? ? results.flatten.uniq.sort_by { |a| a[:name] } : []
+      end
+
+      # Search ROR and return the first match for the given name
+      # @return a Stash::Organization::Ror::Organization object or nil
+      def find_first_by_ror_name(ror_name)
+        resp = query_ror(URI, { 'query.names': ror_name }, HEADERS)
+        return nil if resp.parsed_response.blank? || resp.parsed_response['items'].blank?
+        result = resp.parsed_response['items'].first
+        return nil if result['id'].blank? || result['name'].blank?
+        find_by_ror_id(result['id'])
+        ror_results_to_hash(resp)
       end
 
       # Search the ROR API for a specific organization.
@@ -34,21 +44,17 @@ module Stash
 
       class Organization
 
+        attr_reader :id
+        attr_reader :name
         attr_accessor :country
+        attr_reader :acronyms
 
-        # rubocop:disable Metrics/CyclomaticComplexity
         def initialize(params)
           @id = params['id']
           @name = params['name']
           @country = params['country'] || { 'code': nil, 'name': nil }
-          @types = params['types'] || []
           @acronyms = params['acronyms'] || []
-          @aliases = params['aliases'] || []
-          @links = params['links'] || []
-          @labels = params['labels'] || []
-          @external_ids = params['external_ids'] || []
         end
-        # rubocop:enable Metrics/CyclomaticComplexity
 
       end
 
@@ -65,7 +71,7 @@ module Stash
           results += ror_results_to_hash(paged_resp) if paged_resp.parsed_response.is_a?(Hash) &&
                                                         paged_resp.parsed_response['items'].present?
         end
-        results
+        results || []
       end
 
       def query_ror(uri, query, headers)
