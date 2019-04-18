@@ -74,7 +74,7 @@ module StashDatacite
     def process_affiliation
       args = author_params
       affil = StashDatacite::Affiliation.reconcile_affiliation(args['affiliation']['ror_id'], args['affiliation']['long_name'])
-      args['affiliation']['id'] = affil.id
+      args['affiliation']['id'] = affil.id unless affil.blank?
 
       # This would not be necessary if the relationship between author and affiliations
       # was updated to a one-one and an accepts_nested_attributes_for definition
