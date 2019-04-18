@@ -81,11 +81,11 @@ module StashApi
                                            user_id: params[:user_id] || @user.id,
                                            status: params[:curation_activity][:status],
                                            note: params[:curation_activity][:note],
-                                           created_at: params[:curation_activity][:created_at] || date)
+                                           created_at: params[:curation_activity][:created_at] || Time.now)
     end
 
     def record_published_date(resource)
-      publish_date = params[:curation_activity][:created_at] || date
+      publish_date = params[:curation_activity][:created_at] || Time.now
       resource.update!(publication_date: publish_date)
     end
 
