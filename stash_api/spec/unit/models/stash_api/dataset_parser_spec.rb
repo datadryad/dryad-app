@@ -69,6 +69,10 @@ module StashApi
 
       dp = DatasetParser.new(hash: @basic_metadata, id: nil, user: @user)
       @stash_identifier = dp.parse
+
+      allow_any_instance_of(Stash::Organization::Ror).to receive(:find_first_by_ror_name).and_return(
+        Stash::Organization::Ror::Organization.new(id: 'abcd', name: 'Test Ror Organization')
+      )
     end
 
     describe :parses_basics do

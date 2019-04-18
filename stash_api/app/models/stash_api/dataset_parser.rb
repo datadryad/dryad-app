@@ -2,6 +2,8 @@ module StashApi
   # takes a dataset hash, parses it out and saves it to the appropriate places in the database
   class DatasetParser
 
+    include Stash::Organization::Ror
+
     TO_PARSE = %w[Funders Methods UsageNotes Keywords RelatedWorks Locations TemporalCoverages].freeze
 
     # If  id_string is set, then populate the desired (doi) into the identifier in format like doi:xxxxx/yyyyy for new dataset.
@@ -79,8 +81,14 @@ module StashApi
         author_orcid: @previous_orcids["#{json_author[:firstName]} #{json_author[:lastName]}"],
         resource_id: @resource.id
       )
+
+      # If the affiliation was provided try looking up its ROR id
+      if json_author[:affiliation].present?
+        ror_org = find_first_by_ror_name(json_author[:affiliation])
+        a.affiliation = StashDatacite::Affiliation.first_or_create(long_name: json_author[:affiliation], ror_id: ror_org&.id)
+      end
+
       a.save(validate: false) # we can validate on submission, keeps from saving otherwise
-      a.affiliation_by_name(json_author[:affiliation]) unless json_author[:affiliation].blank?
     end
 
     # certain things need setting up on initialization based on tenant
