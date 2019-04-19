@@ -6,7 +6,7 @@ module Mocks
       config.before(:each) do
         def mock_ror!
           # Mock a ROR Organization query
-          stub_request(:get, %r{api\.ror\.org/organizations\?query})
+          stub_request(:get, %r{api\.ror\.org/organizations\?query.*})
             .with(
               headers: {
                 'Content-Type' => 'application/json'
