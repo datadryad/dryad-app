@@ -21,12 +21,12 @@ module StashEngine
 
     # they need to include these params for this request to be valid
     def require_referrer_and_pub_id
-       not_found if params[:referrer].blank? || params['pubId'].blank?
+      not_found if params[:referrer].blank? || params['pubId'].blank?
     end
 
     def require_id_format
       # getting the actual id in the kept capture group
-      # matches all these variations
+      # matches all these types of variations
       # https://doi.org/10.5061/dryad.b6vh6
       # https://dx.doi.org/10.5061/dryad.b6vh6
       # http://doi.org/10.5061/dryad.b6vh6
@@ -39,7 +39,7 @@ module StashEngine
 
     def require_id_exists
       @stash_id = Identifier.find_by(identifier: @doi, identifier_type: 'DOI')
-      pmid_record = InternalDatum.find_by(data_type: 'pubmedId', value: @pmid )
+      pmid_record = InternalDatum.find_by(data_type: 'pubmedId', value: @pmid)
       @stash_id = pmid_record.stash_identifier unless pmid_record.blank?
       not_found if @stash_id.blank?
     end
@@ -52,12 +52,11 @@ module StashEngine
       if params[:action] == 'data_package_for_pub'
         # redirect to a not found page
         render('stash_engine/landing/not_available', status: 404)
-        #render app_404_path
+        # render app_404_path
       else
         # show the 1x1 transparent gif
         send_file File.join(Engine.root, 'public', 'transparent.gif'), type: 'image/gif', disposition: 'inline', status: 404
       end
-
     end
   end
 end
