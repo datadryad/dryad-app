@@ -86,4 +86,8 @@ Rails.application.routes.draw do
   # this will route an item at the root of the site into the namespaced engine
   get 'sitemap.xml' => "stash_engine/pages#sitemap", :format => "xml", :as => 'sitemap'
 
+  # routing this into the engine since that is where we have all our models and curation state info which we need
+  get 'widgets/bannerForPub' => 'stash_engine/widgets#banner_for_pub'
+  get 'widgets/dataPackageForPub' => 'stash_engine/widgets#data_package_for_pub'
+
 end
