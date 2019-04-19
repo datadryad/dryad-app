@@ -7,6 +7,8 @@ require 'fixtures/stash_api/metadata'
 module StashApi
   RSpec.describe DatasetsController, type: :request do
 
+    include Mocks::Ror
+
     before(:all) do
       @user = create(:user, role: 'superuser')
       @doorkeeper_application = create(:doorkeeper_application, redirect_uri: 'urn:ietf:wg:oauth:2.0:oob',
@@ -17,6 +19,7 @@ module StashApi
     # test creation of a new dataset
     describe '#create' do
       before(:each) do
+        mock_ror!
         @meta = Fixtures::StashApi::Metadata.new
         @meta.make_minimal
       end
