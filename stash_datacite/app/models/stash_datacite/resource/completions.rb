@@ -60,7 +60,7 @@ module StashDatacite
         num_authors = @resource.authors.count
         return false if num_authors < 1
         # the completely filled in authors must equal number of authors
-        @resource.authors.affiliation_filled.count == num_authors
+        @resource.authors.select { |a| a.affiliation.present? }.count == num_authors
       end
 
       def abstract

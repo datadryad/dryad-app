@@ -200,7 +200,6 @@ module StashEngine
       before(:each) do
         allow(@identifier).to receive(:'journal_will_pay?').and_return(false)
         allow(@identifier).to receive(:'institution_will_pay?').and_return(false)
-        allow(@identifier).to receive(:'fee_waiver_country?').and_return(false)
       end
 
       it 'returns true if no one else will pay' do
@@ -214,11 +213,6 @@ module StashEngine
 
       it 'returns false if institution will pay' do
         allow(@identifier).to receive(:'institution_will_pay?').and_return(true)
-        expect(@identifier.user_must_pay?).to eq(false)
-      end
-
-      it 'returns false if fee is waived' do
-        allow(@identifier).to receive(:'fee_waiver_country?').and_return(true)
         expect(@identifier.user_must_pay?).to eq(false)
       end
     end
@@ -288,16 +282,11 @@ module StashEngine
       end
     end
 
-    describe '#fee_waiver_country?' do
-      it 'returns true for a country that waives the fee' do
-        allow(@identifier).to receive('submitter_country').and_return('Syria')
-        expect(@identifier.fee_waiver_country?).to be(true)
-      end
-
-      it "returns false for a country that doesn't waive the fee" do
-        allow(@identifier).to receive('submitter_country').and_return('Sweden')
-        expect(@identifier.fee_waiver_country?).to be(false)
+    describe '#submitter_affiliation' do
+      it 'returns the current version\'s first author\'s affiliation' do
+        expect(@identifier.submitter_affiliation).to eql(@identifier.latest_resource&.authors&.first&.affiliation)
       end
     end
+
   end
 end
