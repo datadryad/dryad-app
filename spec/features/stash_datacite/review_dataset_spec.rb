@@ -13,13 +13,13 @@ RSpec.feature 'ReviewDataset', type: :feature do
     mock_ror!
     @user = create(:user)
     sign_in(@user)
-    start_new_dataset
-    navigate_to_review
   end
 
   context :requirements_not_met do
 
     it 'submit button should be disabled', js: true do
+      start_new_dataset
+      navigate_to_review
       submit = find_button('submit_dataset', disabled: :all)
       expect(submit).not_to be_nil
       expect(submit).to be_disabled
@@ -30,6 +30,8 @@ RSpec.feature 'ReviewDataset', type: :feature do
   context :requirements_met do
 
     before(:each) do
+      start_new_dataset
+      navigate_to_review
       mock_repository!
       fill_required_fields
     end
