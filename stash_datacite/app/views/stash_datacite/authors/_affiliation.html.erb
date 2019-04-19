@@ -1,0 +1,61 @@
+<%= form.fields_for :affiliation, author.affiliation do |affil_fields| %>
+  <%= affil_fields.label :long_name, "Institutional Affiliation", class: 'c-input__label required' %>
+  <%= affil_fields.text_field(:long_name, class: 'c-input__text js-affiliation') %>
+
+  <%= affil_fields.hidden_field :id %>
+  <%= affil_fields.hidden_field :ror_id, class: 'js-affiliation_id' %>
+<% end %>
+
+<script type="text/javascript">
+  var disable;
+  $(function () {
+    $('<%= "##{form_id}" %> .js-affiliation')
+      // don't navigate away from the field on tab when selecting an item
+      .bind( "keydown", function( event ) {
+        if ( event.keyCode === $.ui.keyCode.TAB &&
+            $( this ).autocomplete( "instance" ).menu.active ) {
+          event.preventDefault();
+        }
+      })
+      .autocomplete({
+        source: function (request, response) {
+          $.ajax({
+            url: "<%= stash_datacite.affiliations_autocomplete_path %>",
+            dataType: "json",
+            data: {
+              term: request.term
+            },
+            success: function (data) {
+              response($.map(data, function (item) {
+                return {
+                  value: item.long_name,
+                  id: item.id
+                }
+              }));
+            }
+          });
+        },
+        minLength: 1,
+        focus: function () {
+          // prevent value inserted on focus
+          return false;
+        },
+        select: function (event, ui) {
+          $('<%= "##{form_id}" %> #author_affiliation_ror_id').val(ui.item.id); // set hidden field ror_id
+          $('<%= "##{form_id}" %> #author_affiliation_id').val(''); // clear the hidden field id
+        },
+        open: function (event, ui) {
+          disable = true
+        },
+        close: function (event, ui) {
+          disable = false;
+          $(this).focus();
+        }
+      }).blur(function (event) {
+        if (!disable) {
+          var form = $(this).parents('form');
+          $(form).trigger('submit.rails');
+        }
+      });
+  });
+</script>

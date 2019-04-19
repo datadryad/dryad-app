@@ -13,8 +13,7 @@
     <%= f.text_field :author_last_name, id: "author_last_name_#{my_suffix}", class: "c-input__text js-author_last_name" %>
   </div>
   <div class="c-input">
-    <%= f.label "affiliation_id_#{my_suffix}", "Institutional Affiliation", class: 'c-input__label required' %>
-    <%= text_field_tag(:affiliation, author.try(:affiliation).try(:smart_name), id: "author_affiliation_id_#{my_suffix}", class: 'c-input__text js-affiliation') %>
+    <%= render partial: 'stash_datacite/authors/affiliation', locals: { author: author, form: f, form_id: form_id } %>
   </div>
   <div class="c-input">
   <%= f.label "author_email", "Author Email", class: 'c-input__label js-author_label' %>
@@ -24,7 +23,6 @@
   <%= link_to 'remove', stash_datacite.authors_delete_path(author.id || 'new'), method: :delete, remote: true, data: {confirm: 'Are you sure?'}, class: 't-describe__remove-button o-button__remove remove_record' %>
   <%= f.hidden_field :resource_id %>
   <%= f.hidden_field :id %>
-  <%= f.hidden_field :affiliation_id, class: 'js-affiliation_id' %>
   <%= hidden_field_tag(:form_id, form_id) %>
 <% end %>
 <!-- Begin Orcid ID Component -->
@@ -43,58 +41,3 @@
 <div>
 
 </div>
-
-<script type="text/javascript">
-var disable;
-  $(function () {
-    // $('.js-affiliation').unbind('blur');
-    $('<%= "##{form_id}" %> .js-affiliation')
-      // don't navigate away from the field on tab when selecting an item
-      .bind( "keydown", function( event ) {
-        if ( event.keyCode === $.ui.keyCode.TAB &&
-            $( this ).autocomplete( "instance" ).menu.active ) {
-          event.preventDefault();
-        }
-      })
-      .autocomplete({
-        source: function (request, response) {
-          $.ajax({
-            url: "<%= stash_datacite.affiliations_autocomplete_path %>",
-            dataType: "json",
-            data: {
-              term: request.term
-            },
-            success: function (data) {
-              response($.map(data, function (item) {
-                    return {
-                      value: item.long_name,
-                      id: item.id
-                    }
-                  }
-              ));
-            }
-          });
-        },
-        minLength: 1,
-        focus: function () {
-          // prevent value inserted on focus
-          return false;
-        },
-        select: function (event, ui) {
-          $('<%= "##{form_id}" %> .js-affiliation_id').val(ui.item.id); // set hidden field id
-        },
-        open: function (event, ui) {
-          disable = true
-        },
-        close: function (event, ui) {
-          disable = false;
-          $(this).focus();
-        }
-      }).blur(function (event) {
-        if (!disable) {
-          var form = $(this).parents('form');
-          $(form).trigger('submit.rails');
-        }
-      });
-  });
-</script>

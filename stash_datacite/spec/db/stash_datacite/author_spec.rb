@@ -57,44 +57,21 @@ module StashEngine # TODO: are we testing Author or Affiliation? (Or AuthorPatch
         expect(author.affiliations.count).to eq(affiliations.size)
       end
 
-      describe '#affiliation_filled' do
-        it 'returns authors with affiliations' do
-          Author.create(resource_id: resource.id, author_first_name: 'Priscilla', author_last_name: 'Presley')
-          filled = Author.affiliation_filled.to_a
-          # TODO: stop returning n copies of the model for n affiliations
-          expect(filled).to be_truthy
-        end
-      end
-
-      describe '#affiliation_id' do
-        it 'returns the ID of the first affiliation' do
-          expect(author.affiliation_id).to eq(affiliations.first.id)
-        end
-      end
-
       describe '#affiliation' do
         it 'returns the first affiliation' do
           expect(author.affiliation).to eq(affiliations.first)
         end
       end
 
-      describe '#affiliation_id=' do
+      describe '#affiliation=' do
         it 'replaces the entire affiliation list' do
           new_affil = StashDatacite::Affiliation.create(long_name: 'Metro-Goldwyn-Mayer')
-          author.affiliation_id = new_affil.id
+          author.affiliation = new_affil
           expect(author.affiliations.count).to eq(1)
           expect(author.affiliation).to eq(new_affil)
         end
       end
 
-      describe '#affiliation=' do
-        it 'replaces the entire affiliation list' do
-          new_affil = StashDatacite::Affiliation.create(long_name: 'United Artists')
-          author.affiliation = new_affil
-          expect(author.affiliations.count).to eq(1)
-          expect(author.affiliation_id).to eq(new_affil.id)
-        end
-      end
     end
 
     describe 'ORCIDs' do
