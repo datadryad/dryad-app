@@ -28,4 +28,3 @@ module StashApi
     end
   end
 end
-# rubocop:enable Metrics/BlockLength
