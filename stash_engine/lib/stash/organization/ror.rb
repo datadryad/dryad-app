@@ -21,7 +21,6 @@ module Stash
         results.present? ? results.flatten.uniq.sort_by { |a| a[:name] } : []
       rescue StandardError => e
         log.error("Unable to connect to the ROR API for `find_by_ror_name`: #{e.message}")
-        return nil
       end
 
       # Search ROR and return the first match for the given name
@@ -35,7 +34,6 @@ module Stash
         ror_results_to_hash(resp)
       rescue StandardError => e
         log.error("Unable to connect to the ROR API for `find_first_by_ror_name`: #{e.message}")
-        return nil
       end
 
       # Search the ROR API for a specific organization.
@@ -48,7 +46,6 @@ module Stash
         Organization.new(resp.parsed_response)
       rescue StandardError => e
         log.error("Unable to connect to the ROR API for `find_by_ror_id`: #{e.message}")
-        return nil
       end
 
       class Organization
