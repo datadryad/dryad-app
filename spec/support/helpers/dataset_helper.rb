@@ -57,9 +57,10 @@ module DatasetHelper
     submit.click
   end
 
-  def fill_article_info(name:, msid:)
+  def fill_manuscript_info(name:, issn:, msid:)
     choose('choose_manuscript')
     fill_in 'internal_datum[publication_name]', with: name
+    page.execute_script("$('#internal_datum_publication_issn').val('#{issn}')") # must do to fill hidden field for issn
     fill_in 'internal_datum[msid]', with: msid
   end
 
