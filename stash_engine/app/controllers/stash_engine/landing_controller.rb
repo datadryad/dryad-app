@@ -54,9 +54,7 @@ module StashEngine
     # Actions
 
     def show
-      if resource.metadata_published?
-        CounterLogger.general_hit(request: request, resource: resource)
-      end
+      CounterLogger.general_hit(request: request, resource: resource) if resource.metadata_published?
       ensure_has_geolocation!
       @invitations = (params[:invitation] ? OrcidInvitation.where(secret: params[:invitation]).where(identifier_id: id.id) : nil)
     end
