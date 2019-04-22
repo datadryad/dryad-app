@@ -123,8 +123,8 @@ module StashEngine
 
     scope :latest_curation_activity_per_resource, -> do
       joins(:curation_activities).group('stash_engine_resources.id')
-                                 .maximum('stash_engine_curation_activities.id')
-                                 .collect{ |k, v| { resource_id: k, curation_activity_id: v} }
+        .maximum('stash_engine_curation_activities.id')
+        .collect { |k, v| { resource_id: k, curation_activity_id: v } }
     end
 
     # ------------------------------------------------------------
