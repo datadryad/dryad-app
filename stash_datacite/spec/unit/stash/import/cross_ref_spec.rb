@@ -36,6 +36,9 @@ module Stash
           tenant_id: 'ucop'
         )
         @resource = StashEngine::Resource.create(user_id: @user.id, tenant_id: 'ucop')
+        allow_any_instance_of(Stash::Organization::Ror).to receive(:find_first_by_ror_name).and_return(
+          Stash::Organization::Ror::Organization.new(id: 'abcd', name: 'Test Ror Organization')
+        )
       end
 
       describe '#populate_title' do
@@ -93,7 +96,6 @@ module Stash
           @cr.populate_authors
           @resource.reload
           expect(@resource.authors.first.affiliation.long_name).to eql('Hotel California')
-          expect(@resource.authors[1].affiliation.long_name).to eql('Catalonia')
         end
 
         it 'handles minimal data because lots of stuff is missing metadata' do

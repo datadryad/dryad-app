@@ -2,6 +2,9 @@ require_dependency 'stash_datacite/application_controller'
 
 module StashDatacite
   class AuthorsController < ApplicationController
+
+    include Stash::Organization::Ror
+
     before_action :set_author, only: %i[update delete]
     before_action :ajax_require_modifiable, only: %i[update create delete]
 
@@ -17,11 +20,8 @@ module StashDatacite
 
     # POST /authors
     def create
-      @author = StashEngine::Author.new(author_params)
       respond_to do |format|
-        @affiliation = find_or_create_affiliation(params[:affiliation])
-        @author.affiliation_id = @affiliation.id if @affiliation
-        @author.save
+        @author = StashEngine::Author.create(process_affiliation)
         @author.reload
         format.js
       end
@@ -30,11 +30,7 @@ module StashDatacite
     # PATCH/PUT /authors/1
     def update
       respond_to do |format|
-        @author.update(author_params)
-        @affiliation = find_or_create_affiliation(params[:affiliation])
-        @author.affiliation_id = @affiliation.id if @affiliation
-        @author.save
-        @author.reload
+        @author.update(process_affiliation)
         format.js { render template: 'stash_datacite/shared/update.js.erb' }
       end
     end
@@ -66,20 +62,27 @@ module StashDatacite
 
     # Only allow a trusted parameter "white list" through.
     def author_params
-      params.require(:author).permit(:id, :author_first_name, :author_last_name, :author_middle_name, :author_email,
-                                     :affiliation_id, :resource_id, :author_orcid)
+      params.require(:author).permit(:id, :author_first_name, :author_last_name, :author_middle_name,
+                                     :author_email, :resource_id, :author_orcid,
+                                     affiliation: %i[id ror_id long_name])
     end
 
     def check_for_orcid(author)
       author.author_orcid ? true : false
     end
 
-    def find_or_create_affiliation(affiliation_param)
-      return nil unless affiliation_param && affiliation_param.present?
-      affiliation_str = affiliation_param.to_s
-      existing = Affiliation.where('long_name LIKE ? OR short_name LIKE ?', affiliation_str, affiliation_str).first
-      return existing if existing
-      Affiliation.create(long_name: affiliation_str)
+    def process_affiliation
+      args = author_params
+      affil = StashDatacite::Affiliation.reconcile_affiliation(args['affiliation']['ror_id'], args['affiliation']['long_name'])
+      args['affiliation']['id'] = affil.id unless affil.blank?
+
+      # This would not be necessary if the relationship between author and affiliations
+      # was updated to a one-one and an accepts_nested_attributes_for definition
+      @author.affiliation = affil
+      @author.save
+
+      args
     end
+
   end
 end

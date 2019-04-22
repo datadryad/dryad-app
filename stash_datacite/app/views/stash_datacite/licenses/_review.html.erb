@@ -28,20 +28,21 @@
   <% end %>
 </div>
 
+<% submitter_affiliation = @resource.identifier.submitter_affiliation %>
 <% if @resource.identifier.journal_will_pay? %>
 <div>
-  <h3>Payment</h3>	
+  <h3>Payment</h3>
   <p>Payment for this deposit is sponsored by <b><%= @resource.identifier.publication_name %></b>.</p>
 </div>
 <% elsif @resource.identifier.institution_will_pay? %>
 <div>
-  <h3>Payment</h3>	
+  <h3>Payment</h3>
   <p>Payment for this deposit is sponsored by <b><%= @resource.tenant.long_name %></b>.</p>
 </div>
-<% elsif @resource.identifier.fee_waiver_country? %>
+<% elsif submitter_affiliation.present? && submitter_affiliation.fee_waivered? %>
 <div>
-  <h3>Payment</h3>	
-  <p>Payment is not required for this deposit due to association with <b><%= @resource.authors&.first&.affiliation&.long_name %></b> in <b><%= @resource.identifier.submitter_country %></b>.</p>
+  <h3>Payment</h3>
+  <p>Payment is not required for this deposit due to association with <b><%= submitter_affiliation.name %></b> in <b><%= submitter_affiliation.country %></b>.</p>
 </div>
 <% elsif @resource.identifier.user_must_pay? %>
 <div>
