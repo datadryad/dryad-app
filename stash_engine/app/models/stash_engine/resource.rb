@@ -121,6 +121,12 @@ module StashEngine
     scope :by_version_desc, -> { joins(:stash_version).order('stash_engine_versions.version DESC') }
     scope :by_version, -> { joins(:stash_version).order('stash_engine_versions.version ASC') }
 
+    scope :latest_curation_activity_per_resource, -> do
+      joins(:curation_activities).group('stash_engine_resources.id')
+        .maximum('stash_engine_curation_activities.id')
+        .collect { |k, v| { resource_id: k, curation_activity_id: v } }
+    end
+
     # ------------------------------------------------------------
     # Scopes for curation status, which is now how we know about public display (and should imply successful Merritt submission status)
     scope :latest_curation_activity, ->(resource_id = nil) do
