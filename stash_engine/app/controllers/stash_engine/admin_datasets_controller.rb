@@ -114,9 +114,7 @@ module StashEngine
     def build_table_query
       # Retrieve the ids of the all the latest Resources
       resource_ids = Resource.latest_per_dataset.pluck(:id)
-      ca_ids = Resource.latest_curation_activity_per_resource.collect{ |i| i[:curation_activity_id] }
-
-p ca_ids
+      ca_ids = Resource.latest_curation_activity_per_resource.collect { |i| i[:curation_activity_id] }
 
       resources = Resource.joins(:identifier, :authors, :current_resource_state, :curation_activities)
         .includes(:identifier, :authors, :current_resource_state, curation_activities: :user)
