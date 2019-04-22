@@ -1,7 +1,5 @@
 module DatasetHelper
 
-  include Mocks::Ror
-
   def start_new_dataset
     click_button 'Start New Dataset'
     expect(page).to have_content('Describe Dataset')
@@ -59,9 +57,10 @@ module DatasetHelper
     submit.click
   end
 
-  def fill_article_info(name:, msid:)
+  def fill_manuscript_info(name:, issn:, msid:)
     choose('choose_manuscript')
     fill_in 'internal_datum[publication_name]', with: name
+    page.execute_script("$('#internal_datum_publication_issn').val('#{issn}')") # must do to fill hidden field for issn
     fill_in 'internal_datum[msid]', with: msid
   end
 
@@ -74,9 +73,8 @@ module DatasetHelper
   def fill_in_author
     fill_in 'author[author_first_name]', with: Faker::Name.unique.first_name
     fill_in 'author[author_last_name]', with: Faker::Name.unique.last_name
-    # TODO: make consistent with other author fields
-    fill_in 'affiliation', with: Faker::Educator.university
     fill_in 'author[author_email]', with: Faker::Internet.safe_email
+    fill_in 'author[affiliation][long_name]', with: Faker::Educator.university
   end
 
   def agree_to_everything

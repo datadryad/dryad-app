@@ -4,10 +4,10 @@ require 'rails_helper'
 RSpec.feature 'Admin', type: :feature do
 
   include Mocks::Stripe
+  include Mocks::Ror
   include Mocks::RSolr
 
   before(:each) do
-    mock_solr!
     @admin = create(:user, role: 'admin', tenant_id: 'ucop')
   end
 
@@ -16,6 +16,7 @@ RSpec.feature 'Admin', type: :feature do
     before(:each) do
       @user = create(:user, tenant_id: @admin.tenant_id)
       @identifier = create(:identifier)
+      mock_solr!
       mock_stripe!
       mock_ror!
       @resource = create(:resource, :submitted, user: @user, identifier: @identifier)

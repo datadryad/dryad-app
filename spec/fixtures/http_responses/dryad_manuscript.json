@@ -1,0 +1,78 @@
+{
+  "authors": {
+    "author": [
+      {
+        "familyName": "Xu",
+        "givenNames": "He",
+        "identifier": null,
+        "identifierType": null,
+        "fullName": "Xu, He"
+      },
+      {
+        "familyName": "Su",
+        "givenNames": "Tao",
+        "identifier": null,
+        "identifierType": null,
+        "fullName": "Su, Tao"
+      },
+      {
+        "familyName": "Zhou",
+        "givenNames": "Zhekun",
+        "identifier": null,
+        "identifierType": null,
+        "fullName": "Zhou, Zhekun"
+      }
+    ]
+  },
+  "correspondingAuthor": {
+    "address": {
+      "addressLine1": "Menglun, Mengla, Yunnan",
+      "addressLine2": null,
+      "addressLine3": null,
+      "city": "Mengla",
+      "zip": "666303",
+      "state": null,
+      "country": "China"
+    },
+    "author": {
+      "familyName": "Su",
+      "givenNames": "Tao",
+      "identifier": "http://orcid.org/0000-0001-7031-2884",
+      "identifierType": "ORCID",
+      "fullName": "Su, Tao"
+    },
+    "email": "sutao@xtbg.org.cn"
+  },
+  "dryadDataDOI": "",
+  "manuscriptId": "JSE-2017-12-137",
+  "status": "submitted",
+  "title": "Leaf and infructescence fossils of Alnus (Betulaceae) from the late Eocene of the southeastern Qinghai-Tibetan Plateau",
+  "publicationDOI": "",
+  "publicationDate": null,
+  "dataReviewURL": "",
+  "dataAvailabilityStatement": "",
+  "optionalProperties": {
+    "Journal": "Journal of Systematics and Evolution",
+    "ISSN": "1674-4918"
+  },
+  "keywords": [
+    "Alnus",
+    "Betulaceae",
+    "Eocene",
+    "Leaf",
+    "The Qinghai-Tibetan Plateau",
+    "Infructescence",
+    "fossil"
+  ],
+  "journalVolume": "",
+  "journalNumber": "",
+  "publisher": "",
+  "fullCitation": "",
+  "pages": "",
+  "taxonomicNames": [],
+  "coverageSpatial": [],
+  "coverageTemporal": [],
+  "publicationDateAsString": "",
+  "skipReviewStep": false,
+  "abstract": "Plant fossils from the Qinghai-Tibetan Plateau, China are pivotal to understand not only the diversification history of plants there, but also the paleoenvironmental conditions. Alnus are deciduous trees, mainly distributed in temperate and subtropical regions of Eurasia and North America, and they are well known in the fossil records throughout the Cenozoic in the Northern Hemisphere. We collected numerous well-preserved Alnus leaf fossils and infructescence fossils from the Lawula Formation (~ 34.6 Ma with 40Ar-39Ar dating) at the present elevation of 3,910 m in the southeastern Qinghai-Tibetan Plateau. Based on detailed morphological comparisons with existing and fossil species, these fossils showed the closest affinity to Alnus ferdinandi-coburgii C.K.Schneid., thus they were named as A. cf. ferdinandi-coburgii. A. cf. ferdinandi-coburgii comprises the earliest megafossil record of Alnus in the QTP, and it provides solid evidence for the distribution of Alnus there as early as the late Eocene. The nearest living relative of A. cf. ferdinandi-coburgii is distributed in areas with mean annual temperature values between 9.7 °C and 16.9 °C, and mean annual precipitation values ranging from 896.2 mm to 1,161.2 mm; therefore, A. cf. ferdinandi-coburgii suggests a much warmer and wetter climate during the late Eocene than today in the southeastern Qinghai-Tibetan Plateau, and the continued uplift of the southeastern Qinghai-Tibetan Plateau after the late Eocene might due to the east extension of the plateau."
+}

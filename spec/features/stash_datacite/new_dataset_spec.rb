@@ -5,9 +5,11 @@ RSpec.feature 'NewDataset', type: :feature do
 
   include DatasetHelper
   include Mocks::RSolr
+  include Mocks::Ror
 
   before(:each) do
     mock_solr!
+    mock_ror!
     @user = create(:user)
     sign_in(@user)
   end
