@@ -33,17 +33,6 @@ module StashEngine
       "<a href=\"mailto:#{CGI.escapeHTML(author_email.strip)}\">#{CGI.escapeHTML(author_standard_name.strip)}</a>"
     end
 
-    def affiliation_by_name(name)
-      affils = StashDatacite::Affiliation.where(['short_name = ? OR long_name = ? or abbreviation = ?', name, name, name])
-      affil =
-        if affils.count > 0
-          affils.first
-        else
-          StashDatacite::Affiliation.create(long_name: name)
-        end
-      affiliations << affil
-    end
-
     # NOTE: this ONLY works b/c we assume that only the resource-owning
     # user can set their own ORCiD
     def init_user_orcid

@@ -2,41 +2,30 @@ module StashDatacite
   # Ensure Author-Affiliation relation & related methods
   # invoked from StashDatacite::Resource::Completions when first needed
   module AuthorPatch
+
     def self.patch!
       StashEngine::Author.instance_eval do
         has_and_belongs_to_many :affiliations, class_name: 'StashDatacite::Affiliation', join_table: 'dcs_affiliations_authors'
       end
 
+      # The join allows for a many to many relationship between authors and affiliations
+      # but the UI only allows for one affiliation. It would be better to refactor the
+      # relationship and drop the join table but simply adding these helper methods will
+      # allow us to treat it as a one-one relationship for MVP
       StashEngine::Author.class_eval do
-        scope :affiliation_filled, -> {
-          joins(:affiliations).where <<-SQL
-            TRIM(IFNULL(dcs_affiliations.long_name,'')) <> ''
-            OR TRIM(IFNULL(dcs_affiliations.short_name,'')) <> ''
-          SQL
-        }
 
-        # this is to simulate the bad old structure where a user can only have one affiliation
-        def affiliation_id=(affil_id)
-          affiliations.clear
-          self.affiliation_ids = affil_id
+        def affiliation
+          affiliations.order(created_at: :desc).first
         end
 
-        # this is to simulate the bad old structure where a user can only have one affiliation
-        def affiliation_id
-          affiliation_ids.try(:first)
-        end
-
-        # this is to simulate the bad old structure where a user can only have one affiliation
         def affiliation=(affil)
-          affiliations.clear
+          return unless affil.is_a?(StashDatacite::Affiliation)
+          affiliations.destroy_all
           affiliations << affil
         end
 
-        # this is to simulate the bad old structure where a user can only have one affiliation
-        def affiliation
-          affiliations.try(:first)
-        end
       end
     end
+
   end
 end
