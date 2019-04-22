@@ -14,7 +14,7 @@ module StashEngine
     end
 
     def data_package_for_pub
-      redirect_to landing_show_path(id: @stash_id.to_s)
+      redirect_to show_path(id: @stash_id.to_s)
     end
 
     private
@@ -50,9 +50,9 @@ module StashEngine
 
     def not_found
       if params[:action] == 'data_package_for_pub'
-        # redirect to a not found page
+        # make this page show not-available instead of redirecting elsewhere
         render('stash_engine/landing/not_available', status: 404)
-        # render app_404_path
+        # redirect_to show_path(id: @stash_id&.to_s || 'not_available')
       else
         # show the 1x1 transparent gif
         send_file File.join(Engine.root, 'public', 'transparent.gif'), type: 'image/gif', disposition: 'inline', status: 404
