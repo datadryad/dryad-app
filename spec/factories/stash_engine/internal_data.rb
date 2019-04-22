@@ -1,4 +1,3 @@
-# rubocop:disable Metrics/BlockLength
 FactoryBot.define do
 
   factory :internal_datum, class: StashEngine::InternalDatum do
