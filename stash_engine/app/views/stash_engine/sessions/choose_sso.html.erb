@@ -6,10 +6,7 @@
     <h2>Your institution may be a member* of Dryad.</h2>
     <div class="c-institution__container">
       <%= form_tag 'sso/', method: :post do %>
-        <%= text_field_tag :tenant_id, '', { class: 'c-institution__datalist', list: 'tenants' } %>
-        <datalist id="tenants">
-          <%= options_from_collection_for_select(@tenants, "id", "name") %>
-        </datalist>
+        <%= select_tag :tenant_id, options_from_collection_for_select(@tenants, "id", "name"), class: '.o-select' %>
         <%= submit_tag 'Login to verify', class: 't-login__buttonlink' %>
       <% end %>
     </div>
