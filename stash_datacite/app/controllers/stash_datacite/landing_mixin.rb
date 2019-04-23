@@ -50,9 +50,9 @@ module StashDatacite
     end
 
     # rubocop:disable Metrics/ParameterLists
-    def citation(authors, title, resource_type, version, identifier, publisher, publication_years)
+    def citation(authors, title, resource_type, version, identifier, publisher, publication_year)
       citation = []
-      citation << h("#{author_citation_format(authors)} (#{pub_year_from(publication_years)})")
+      citation << h("#{author_citation_format(authors)} (#{publication_year})")
       citation << h(title)
       citation << h(version == 'v1' ? '' : version)
       citation << h(publisher.try(:publisher))
@@ -69,10 +69,6 @@ module StashDatacite
       return '' if str_author.blank?
       return "#{str_author.first} et al." if str_author.length > 4
       str_author.join('; ')
-    end
-
-    def pub_year_from(publication_years)
-      publication_years.try(:first).try(:publication_year) || Time.now.year
     end
 
     def schema_org_json_for(resource)

@@ -1,8 +1,8 @@
 module StashDatacite
   module ResourcesHelper
-    def citation(authors, title, resource_type, version, identifier, publisher, publication_years) # rubocop:disable Metrics/ParameterLists
+    def citation(authors, title, resource_type, version, identifier, publisher, publication_year) # rubocop:disable Metrics/ParameterLists
       [
-        "#{author_citation_format(authors)} (#{pub_year_from(publication_years)})",
+        "#{author_citation_format(authors)} (#{publication_year})",
         escape_title(title),
         escape_version(version),
         escape_publisher(publisher),
@@ -27,10 +27,6 @@ module StashDatacite
     end
 
     private
-
-    def pub_year_from(publication_years)
-      publication_years.try(:first).try(:publication_year) || Time.now.year
-    end
 
     def escape_title(title)
       html_escape(title)
