@@ -28,13 +28,15 @@ module StashEngine
     describe '#banner_for_pub' do
       it 'has a banner when valid data and format supplied for a published dataset' do
         create(:curation_activity, user_id: @user.id, resource_id: @resource.id, status: 'published')
-        get '/widgets/bannerForPub', 'pubId' => @identifier.to_s, referrer: 'grog'
+        my_datum = create(:internal_datum, identifier_id: @identifier.id, data_type: 'publicationDOI', value: Faker::Pid.doi)
+        get '/widgets/bannerForPub', 'pubId' => "doi:#{my_datum.value}", referrer: 'grog'
         expect(response).to have_http_status(:ok)
       end
 
       it 'has a banner when valid data and format supplied for an embargoed dataset' do
         create(:curation_activity, user_id: @user.id, resource_id: @resource.id, status: 'embargoed')
-        get '/widgets/bannerForPub', 'pubId' => @identifier.to_s, referrer: 'grog'
+        my_datum = create(:internal_datum, identifier_id: @identifier.id, data_type: 'publicationDOI', value: Faker::Pid.doi)
+        get '/widgets/bannerForPub', 'pubId' => "doi:#{my_datum.value}", referrer: 'grog'
         expect(response).to have_http_status(:ok)
       end
 
@@ -47,7 +49,9 @@ module StashEngine
 
       it 'returns blank image and 404 status with it when pubId or referrer not supplied' do
         create(:curation_activity, user_id: @user.id, resource_id: @resource.id, status: 'embargoed')
-        get '/widgets/bannerForPub', 'pubId' => @identifier.to_s
+        my_datum = create(:internal_datum, identifier_id: @identifier.id, data_type: 'publicationDOI', value: Faker::Pid.doi)
+
+        get '/widgets/bannerForPub', 'pubId' => "doi:#{my_datum.value}"
         expect(response).to have_http_status(:not_found)
 
         get '/widgets/bannerForPub', 'referrer' => 'niblet'
@@ -56,25 +60,28 @@ module StashEngine
 
       it 'accepts the many different valid URLs for DOIs' do
         create(:curation_activity, user_id: @user.id, resource_id: @resource.id, status: 'published')
-        get '/widgets/bannerForPub', 'pubId' => "https://doi.org/#{@identifier.identifier}", referrer: 'grog'
+        my_datum = create(:internal_datum, identifier_id: @identifier.id, data_type: 'publicationDOI', value: Faker::Pid.doi)
+
+        get '/widgets/bannerForPub', 'pubId' => "https://doi.org/#{my_datum.value}", referrer: 'grog'
         expect(response).to have_http_status(:ok)
 
-        get '/widgets/bannerForPub', 'pubId' => "http://doi.org/#{@identifier.identifier}", referrer: 'grog'
+        get '/widgets/bannerForPub', 'pubId' => "http://doi.org/#{my_datum.value}", referrer: 'grog'
         expect(response).to have_http_status(:ok)
 
-        get '/widgets/bannerForPub', 'pubId' => "http://dx.doi.org/#{@identifier.identifier}", referrer: 'grog'
+        get '/widgets/bannerForPub', 'pubId' => "http://dx.doi.org/#{my_datum.value}", referrer: 'grog'
         expect(response).to have_http_status(:ok)
 
-        get '/widgets/bannerForPub', 'pubId' => "https://dx.doi.org/#{@identifier.identifier}", referrer: 'grog'
+        get '/widgets/bannerForPub', 'pubId' => "https://dx.doi.org/#{my_datum.value}", referrer: 'grog'
         expect(response).to have_http_status(:ok)
       end
 
       it 'returns 404 with badly formatted IDs' do
         create(:curation_activity, user_id: @user.id, resource_id: @resource.id, status: 'published')
-        get '/widgets/bannerForPub', 'pubId' => "dog:#{@identifier.identifier}", referrer: 'grog'
+        my_datum = create(:internal_datum, identifier_id: @identifier.id, data_type: 'publicationDOI', value: Faker::Pid.doi)
+        get '/widgets/bannerForPub', 'pubId' => "dog:#{my_datum.value}", referrer: 'grog'
         expect(response).to have_http_status(:not_found)
 
-        get '/widgets/bannerForPub', 'pubId' => "http://drx.doi.org/#{@identifier.identifier}", referrer: 'grog'
+        get '/widgets/bannerForPub', 'pubId' => "http://drx.doi.org/#{my_datum.value}", referrer: 'grog'
         expect(response).to have_http_status(:not_found)
       end
 
@@ -86,7 +93,8 @@ module StashEngine
 
       it "rejects DOIs that haven't been made public from curation" do
         create(:curation_activity, user_id: @user.id, resource_id: @resource.id, status: 'curation')
-        get '/widgets/bannerForPub', 'pubId' => @identifier.to_s, referrer: 'grog'
+        my_datum = create(:internal_datum, identifier_id: @identifier.id, data_type: 'publicationDOI', value: Faker::Pid.doi)
+        get '/widgets/bannerForPub', 'pubId' => "doi:#{my_datum.value}", referrer: 'grog'
         expect(response).to have_http_status(:not_found)
       end
 
@@ -109,7 +117,8 @@ module StashEngine
       # the data_package_for_pub uses all the same checks that the image widget does, it simply returns something else than an image
       it 'redirects to landing page for published dataset by DOI' do
         create(:curation_activity, user_id: @user.id, resource_id: @resource.id, status: 'published')
-        get '/widgets/dataPackageForPub', 'pubId' => @identifier.to_s, referrer: 'grog'
+        my_datum = create(:internal_datum, identifier_id: @identifier.id, data_type: 'publicationDOI', value: Faker::Pid.doi)
+        get '/widgets/dataPackageForPub', 'pubId' => "doi:#{my_datum.value}", referrer: 'grog'
         expect(response).to have_http_status(302)
         expect(response.headers['location']).to end_with(@identifier.to_s)
       end
