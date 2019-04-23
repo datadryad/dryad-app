@@ -1,8 +1,6 @@
 require_dependency 'stash_engine/application_controller'
 
 module StashEngine
-
-  # a controller for some basic pages that really don't need a whole controller jut for them
   class PagesController < ApplicationController
     # the homepage shows latest plans and other things, so more than a static page
     def home
