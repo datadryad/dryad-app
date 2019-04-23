@@ -28,11 +28,6 @@ module StashDatacite
 
     private
 
-    def pub_year_from(publication_years)
-      return publication_years.year if publication_years.is_a?(Date)
-      publication_years.try(:first).try(:publication_year) || Time.now.year
-    end
-
     def escape_title(title)
       html_escape(title)
     end

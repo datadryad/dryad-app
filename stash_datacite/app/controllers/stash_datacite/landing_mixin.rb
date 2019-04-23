@@ -71,10 +71,6 @@ module StashDatacite
       str_author.join('; ')
     end
 
-    def pub_year_from(publication_years)
-      publication_years.try(:first).try(:publication_year) || Time.now.year
-    end
-
     def schema_org_json_for(resource)
       ds_presenter = StashDatacite::ResourcesController::DatasetPresenter.new(resource)
       landing_page_url = stash_url_helpers.show_url(ds_presenter.external_identifier, host: request.host)
