@@ -15,8 +15,6 @@ RSpec.feature 'DatasetVersioning', type: :feature do
     mock_repository!
     mock_solr!
     mock_ror!
-    mock_datacite!
-    mock_stripe!
     @curator = create(:user, role: 'admin', tenant_id: 'dryad')
     @author = create(:user, tenant_id: 'dryad')
     @document_list = []
@@ -71,7 +69,7 @@ RSpec.feature 'DatasetVersioning', type: :feature do
 
     end
 
-    describe :merrit_submission_sucess do
+    describe :merritt_submission_success do
 
       before(:each) do
         ActionMailer::Base.deliveries = []
