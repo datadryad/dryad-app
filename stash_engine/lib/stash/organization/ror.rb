@@ -66,7 +66,6 @@ module Stash
 
       private
 
-      # rubocop:disable Metrics/CyclomaticComplexity
       def process_pages(resp, query)
         results = ror_results_to_hash(resp)
         num_of_results = resp.parsed_response['number_of_results'].to_i
@@ -82,7 +81,6 @@ module Stash
         end
         results || []
       end
-      # rubocop:enable Metrics/CyclomaticComplexity
 
       def query_ror(uri, query, headers)
         resp = HTTParty.get(uri, query: query, headers: headers)
