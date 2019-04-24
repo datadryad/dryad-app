@@ -66,10 +66,13 @@ module Stash
 
       private
 
+      # rubocop:disable Metrics/CyclomaticComplexity
       def process_pages(resp, query)
         results = ror_results_to_hash(resp)
+        num_of_results = resp.parsed_response['number_of_results']
+        return [] unless num_of_results.is_a?(Integer)
         # Detemine if there are multiple pages of results
-        pages = (resp.parsed_response['number_of_results'] / ROR_MAX_RESULTS).to_f.ceil
+        pages = (num_of_results / ROR_MAX_RESULTS).to_f.ceil
         return results unless pages > 1
         # Gather the results from the additional page (only up to the max)
         (2..(pages > MAX_PAGES ? MAX_PAGES : pages)).each do |page|
@@ -79,6 +82,7 @@ module Stash
         end
         results || []
       end
+      # rubocop:enable Metrics/CyclomaticComplexity
 
       def query_ror(uri, query, headers)
         resp = HTTParty.get(uri, query: query, headers: headers)
