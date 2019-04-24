@@ -68,7 +68,7 @@ module Stash
 
       def process_pages(resp, query)
         results = ror_results_to_hash(resp)
-        # Detemine if there are multipe pages of results
+        # Detemine if there are multiple pages of results
         pages = (resp.parsed_response['number_of_results'] / ROR_MAX_RESULTS).to_f.ceil
         return results unless pages > 1
         # Gather the results from the additional page (only up to the max)
