@@ -11,7 +11,7 @@
                        version: @resource.stash_version.nil? ? 'v0' : "v#{@review.version.version }",
                        identifier: @resource.identifier.nil? ? 'DOI' : "#{@review.identifier.identifier }",
                        publisher: "#{@review.publisher}",
-                       publication_years: @resource.publication_years }
+                       publication_year: (@resource.publication_date.present? ? @resource.publication_date.year : @resource.updated_at.year) }
   %>
 </section>
 <%= render partial: "stash_datacite/descriptions/show", locals: { abstract: @review.abstract,
