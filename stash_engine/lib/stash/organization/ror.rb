@@ -19,8 +19,8 @@ module Stash
         resp = query_ror(URI, { 'query.names': query }, HEADERS)
         results = process_pages(resp, query) if resp.parsed_response.present? && resp.parsed_response['items'].present?
         results.present? ? results.flatten.uniq.sort_by { |a| a[:name] } : []
-      # rescue StandardError => e
-      #   logger.error("Unable to connect to the ROR API for `find_by_ror_name`: #{e.message}")
+      rescue HTTParty::Error, SocketError => e
+        logger.error("Unable to connect to the ROR API for `find_by_ror_name`: #{e.message}")
       end
 
       # Search ROR and return the first match for the given name
@@ -32,7 +32,7 @@ module Stash
         return nil if result['id'].blank? || result['name'].blank?
         find_by_ror_id(result['id'])
         ror_results_to_hash(resp)
-      rescue StandardError => e
+      rescue HTTParty::Error, SocketError => e
         logger.error("Unable to connect to the ROR API for `find_first_by_ror_name`: #{e.message}")
       end
 
@@ -44,7 +44,7 @@ module Stash
                       resp.parsed_response['id'].blank? ||
                       resp.parsed_response['name'].blank?
         Organization.new(resp.parsed_response)
-      rescue StandardError => e
+      rescue HTTParty::Error, SocketError => e
         logger.error("Unable to connect to the ROR API for `find_by_ror_id`: #{e.message}")
       end
 
