@@ -69,8 +69,8 @@ module Stash
       # rubocop:disable Metrics/CyclomaticComplexity
       def process_pages(resp, query)
         results = ror_results_to_hash(resp)
-        num_of_results = resp.parsed_response['number_of_results']
-        return [] unless num_of_results.is_a?(Integer)
+        num_of_results = resp.parsed_response['number_of_results'].to_i
+        # return [] unless num_of_results.to_i.is_a?(Integer)
         # Detemine if there are multiple pages of results
         pages = (num_of_results / ROR_MAX_RESULTS).to_f.ceil
         return results unless pages > 1
