@@ -7,7 +7,7 @@
     <% resources.each do |res| %>
       <details class="c-file-group" role="group">
         <summary class="o-showhide__summary c-file-group__summary">
-          <%= formatted_date(res.updated_at) %></summary>
+          <%= formatted_date(res.publication_date.present? ? res.publication_date : res.updated_at) %></summary>
         <ul class="c-file-group__list">
           <% res.current_file_uploads.each do |fu| %>
             <li>
