@@ -39,7 +39,7 @@ RSpec.feature 'DatasetVersioning', type: :feature do
 
     describe :pre_submit do
 
-      it 'should display the proper info on the My Datasets page', js: true do
+      xit 'should display the proper info on the My Datasets page', js: true do
         click_link 'My Datasets'
 
         within(:css, '#user_in_progress tbody tr:first-child') do
