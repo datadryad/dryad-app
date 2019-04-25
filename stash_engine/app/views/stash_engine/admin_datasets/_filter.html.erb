@@ -28,7 +28,14 @@
     $('#publication_name[type="text"]').autocomplete({
       select: function(event, ui) {
         $('#publication_name[type="hidden"]').val(ui.item.label)
+        ui.item.value = ui.item.label
         this.form.submit();
+      },
+      change: function(event, ui) {
+        if($('#publication_name[type="text"]').val() == ''){
+          $('#publication_name[type="hidden"]').val('')
+          this.form.submit();
+        }
       },
       source: <%= @publications.to_json.html_safe %>
     });
