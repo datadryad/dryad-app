@@ -9,6 +9,9 @@ module StashDatacite
     # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity
     def update
       @se_id = StashEngine::Identifier.find(params[:internal_datum][:identifier_id])
+
+p '=============== UPDATING! =========================='
+
       save_form_to_internal_data
       respond_to do |format|
         format.js do
@@ -27,16 +30,17 @@ module StashDatacite
 
     def save_form_to_internal_data
       @pub_issn = manage_internal_datum(identifier: @se_id, data_type: 'publicationISSN', value: params[:internal_datum][:publication_issn])
+      @pub_name = manage_internal_datum(identifier: @se_id, data_type: 'publicationName', value: params[:internal_datum][:publication_name])
       @msid = manage_internal_datum(identifier: @se_id, data_type: 'manuscriptNumber', value: params[:internal_datum][:msid])
       @doi = manage_internal_datum(identifier: @se_id, data_type: 'publicationDOI', value: params[:internal_datum][:doi])
     end
 
     def update_manuscript_metadata
-      if !params[:internal_datum][:publication_name].blank? && params[:internal_datum][:publication_issn].blank?
+      if !params[:internal_datum][:publication].blank? && params[:internal_datum][:publication_issn].blank?
         @error = 'Please select your journal from the autocomplete drop-down list'
         return
       end
-      return if params[:internal_datum][:publication_name].blank? # keeps the default fill-in message
+      return if params[:internal_datum][:publication].blank? # keeps the default fill-in message
       my_url = "#{APP_CONFIG.old_dryad_url}/api/v1/organizations/#{CGI.escape(@pub_issn.value)}/manuscripts/#{CGI.escape(@msid.value)}"
       response = HTTParty.get(my_url,
                               query: { access_token: APP_CONFIG.old_dryad_access_token },
@@ -69,6 +73,9 @@ module StashDatacite
     end
 
     def manage_internal_datum(identifier:, data_type:, value:)
+
+p "********* data_type: #{data_type}, value: #{value}"
+
       datum = StashEngine::InternalDatum.where(stash_identifier: identifier, data_type: data_type).first
       if datum.present?
         datum.destroy if value.blank?

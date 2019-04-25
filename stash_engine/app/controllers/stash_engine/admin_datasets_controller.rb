@@ -19,6 +19,7 @@ module StashEngine
       @all_stats = Stats.new
       @seven_day_stats = Stats.new(tenant_id: my_tenant_id, since: (Time.new - 7.days))
       @resources = build_table_query
+      @publications = InternalDatum.where(data_type: 'publicationName').order(:value).pluck(:value).uniq
       respond_to do |format|
         format.html
         format.csv
@@ -117,7 +118,7 @@ module StashEngine
       ca_ids = Resource.latest_curation_activity_per_resource.collect { |i| i[:curation_activity_id] }
 
       resources = Resource.joins(:identifier, :authors, :current_resource_state, :curation_activities)
-        .includes(:identifier, :authors, :current_resource_state, curation_activities: :user)
+        .includes(:authors, :current_resource_state, identifier: :internal_data, curation_activities: :user)
         .where(stash_engine_resources: { id: resource_ids })
         .where(stash_engine_curation_activities: { id: ca_ids })
 
@@ -139,11 +140,18 @@ module StashEngine
     end
 
     def add_filters(query_obj:)
+      # Filter by Tenant
       if TENANT_IDS.include?(params[:tenant]) && current_user.role == 'superuser'
         query_obj = query_obj.where(stash_engine_resources: { tenant_id: params[:tenant] })
       end
+      # Filter by Curation Status
       if CurationActivity.statuses.include?(params[:curation_status])
         query_obj = query_obj.where(stash_engine_curation_activities: { status: params[:curation_status] })
+      end
+      # Filter by Publication/Journal
+      if params[:publication_name].present?
+        query_obj = query_obj.where(stash_engine_internal_data: { data_type: 'publicationName',
+                                                                  value: params[:publication_name] })
       end
       query_obj
     end
