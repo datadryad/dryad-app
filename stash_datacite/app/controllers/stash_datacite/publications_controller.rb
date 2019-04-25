@@ -9,9 +9,6 @@ module StashDatacite
     # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity
     def update
       @se_id = StashEngine::Identifier.find(params[:internal_datum][:identifier_id])
-
-p '=============== UPDATING! =========================='
-
       save_form_to_internal_data
       respond_to do |format|
         format.js do
@@ -73,9 +70,6 @@ p '=============== UPDATING! =========================='
     end
 
     def manage_internal_datum(identifier:, data_type:, value:)
-
-p "********* data_type: #{data_type}, value: #{value}"
-
       datum = StashEngine::InternalDatum.where(stash_identifier: identifier, data_type: data_type).first
       if datum.present?
         datum.destroy if value.blank?
