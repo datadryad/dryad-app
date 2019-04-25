@@ -27,8 +27,8 @@
   <% if @publications.any? %>
     $('#publication_name[type="text"]').autocomplete({
       select: function(event, ui) {
-        $('#publication_name[type="hidden"]').val(ui.item.label)
-        ui.item.value = ui.item.label
+        $('#publication_name[type="text"]').val(ui.item.value)
+        $('#publication_name[type="hidden"]').val(ui.item.value)
         this.form.submit();
       },
       change: function(event, ui) {
