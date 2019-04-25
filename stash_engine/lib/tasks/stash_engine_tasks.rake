@@ -1,3 +1,4 @@
+require 'httparty'
 require_relative 'identifier_rake_functions'
 
 # rubocop:disable Metrics/BlockLength
@@ -115,6 +116,28 @@ namespace :identifiers do
         p "    Exception! #{e.message}"
       end
     end
+  end
+
+  desc 'populate publicationName'
+  task load_publication_names: :environment do
+    p "Searching CrossRef and the Journal API for publication names: #{Time.now}"
+    already_loaded_ids = StashEngine::InternalDatum.where(data_type: 'publicationName').pluck(:identifier_id).uniq
+    unique_issns = {}
+    StashEngine::InternalDatum.where(data_type: 'publicationISSN').where.not(identifier_id: already_loaded_ids).each do |datum|
+      if unique_issns[datum.value].present?
+        # We already grabbed the title for the ISSN from Crossref
+        title = unique_issns[datum.value]
+      else
+        response = HTTParty.get("https://api.crossref.org/journals/#{datum.value}", headers: { 'Content-Type': 'application/json' })
+        if response.present? && response.parsed_response.present? && response.parsed_response['message'].present?
+          title = response.parsed_response['message']['title']
+          unique_issns[datum.value] = title unless unique_issns[datum.value].present?
+          p "    found title, '#{title}', for #{datum.value}"
+        end
+      end
+      StashEngine::InternalDatum.create(identifier_id: datum.identifier_id, data_type: 'publicationName', value: title) unless title.blank?
+    end
+    p "Finished: #{Time.now}"
   end
 
 end
