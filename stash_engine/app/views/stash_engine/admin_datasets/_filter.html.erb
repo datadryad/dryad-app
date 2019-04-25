@@ -25,7 +25,11 @@
   });
 
   <% if @publications.any? %>
-    $('#publication_name').autocomplete({
+    $('#publication_name[type="text"]').autocomplete({
+      select: function(event, ui) {
+        $('#publication_name[type="hidden"]').val(ui.item.label)
+        this.form.submit();
+      },
       source: <%= @publications.to_json.html_safe %>
     });
   <% end %>
