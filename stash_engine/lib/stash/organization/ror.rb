@@ -19,8 +19,8 @@ module Stash
         resp = query_ror(URI, { 'query.names': query }, HEADERS)
         results = process_pages(resp, query) if resp.parsed_response.present? && resp.parsed_response['items'].present?
         results.present? ? results.flatten.uniq.sort_by { |a| a[:name] } : []
-      rescue StandardError => e
-        log.error("Unable to connect to the ROR API for `find_by_ror_name`: #{e.message}")
+      rescue HTTParty::Error, SocketError => e
+        logger.error("Unable to connect to the ROR API for `find_by_ror_name`: #{e.message}")
       end
 
       # Search ROR and return the first match for the given name
@@ -32,8 +32,8 @@ module Stash
         return nil if result['id'].blank? || result['name'].blank?
         find_by_ror_id(result['id'])
         ror_results_to_hash(resp)
-      rescue StandardError => e
-        log.error("Unable to connect to the ROR API for `find_first_by_ror_name`: #{e.message}")
+      rescue HTTParty::Error, SocketError => e
+        logger.error("Unable to connect to the ROR API for `find_first_by_ror_name`: #{e.message}")
       end
 
       # Search the ROR API for a specific organization.
@@ -44,8 +44,8 @@ module Stash
                       resp.parsed_response['id'].blank? ||
                       resp.parsed_response['name'].blank?
         Organization.new(resp.parsed_response)
-      rescue StandardError => e
-        log.error("Unable to connect to the ROR API for `find_by_ror_id`: #{e.message}")
+      rescue HTTParty::Error, SocketError => e
+        logger.error("Unable to connect to the ROR API for `find_by_ror_id`: #{e.message}")
       end
 
       class Organization
@@ -68,8 +68,10 @@ module Stash
 
       def process_pages(resp, query)
         results = ror_results_to_hash(resp)
-        # Detemine if there are multipe pages of results
-        pages = (resp.parsed_response['number_of_results'] / ROR_MAX_RESULTS).to_f.ceil
+        num_of_results = resp.parsed_response['number_of_results'].to_i
+        # return [] unless num_of_results.to_i.is_a?(Integer)
+        # Detemine if there are multiple pages of results
+        pages = (num_of_results / ROR_MAX_RESULTS).to_f.ceil
         return results unless pages > 1
         # Gather the results from the additional page (only up to the max)
         (2..(pages > MAX_PAGES ? MAX_PAGES : pages)).each do |page|
@@ -91,6 +93,7 @@ module Stash
 
       def ror_results_to_hash(response)
         results = []
+        return results unless response.parsed_response['items'].is_a?(Array)
         response.parsed_response['items'].each do |item|
           next unless item['id'].present? && item['name'].present?
           results << { id: item['id'], name: item['name'] }
