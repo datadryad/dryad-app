@@ -19,12 +19,12 @@ function loadPublications() {
             .autocomplete({
                 create: function(a) {
                     $.ajax({
-                        url: "https://api.crossref.org/journals/"+ document.getElementById("internal_datum_publication_name").value,
+                        url: "https://api.crossref.org/journals/"+ document.getElementById("internal_datum_publication").value,
                         dataType: "json",
                         success: function( data ) {
-                            document.getElementById("internal_datum_publication_name").value = ""
+                            document.getElementById("internal_datum_publication").value = ""
                             if (data.message.title != null) {
-                                document.getElementById("internal_datum_publication_name").value = data.message.title;
+                                document.getElementById("internal_datum_publication").value = data.message.title;
                             }
                         }
                     });
@@ -56,11 +56,23 @@ function loadPublications() {
                 minLength: 3,
                 select: function( event, ui ) {
                     new_value = ui.item.value;
+                    new_label = ui.item.label;
                     document.getElementById("internal_datum_publication_issn").value = new_value;
+                    document.getElementById("internal_datum_publication_name").value = new_label;
                     ui.item.value = ui.item.label;
                     var form = $(this.form);
                     $(form).trigger('submit.rails');
                     previous_value = new_value;
+                    previous_label = new_label;
+                },
+                change: function( event, ui ) {
+                    // clear out the publication info if the user removes the value
+                    if(!ui.item) {
+                        document.getElementById("internal_datum_publication_name").value = '';
+                        document.getElementById("internal_datum_publication_issn").value = '';
+                        var form = $(this.form);
+                        $(form).trigger('submit.rails');
+                    }
                 },
                 focus: function() {
                     // prevent value inserted on focus
@@ -70,9 +82,8 @@ function loadPublications() {
     });
 
     // moving focus saves
-    $( '.js-msid, .js-doi' ).on('focus', function () {
+    $( '.js-msid, .js-doi, .js-publications' ).on('focus', function () {
         previous_value = this.value;
-        // console.log('previous value:' + previous_value );
     }).change(function() {
         new_value = this.value;
         // Save when the new value is different from the previous value
