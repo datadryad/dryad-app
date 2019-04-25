@@ -21,6 +21,8 @@
     e.preventDefault();
     $("#tenant option[value='']").prop('selected',true);
     $("#curation_status option[value='']").prop('selected',true);
+    $('#publication_name[type="text"]').val('');
+    $('#publication_name[type="hidden"]').val('');
     $("#filter_form").submit();
   });
 
