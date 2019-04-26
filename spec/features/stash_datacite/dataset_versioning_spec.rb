@@ -15,6 +15,8 @@ RSpec.feature 'DatasetVersioning', type: :feature do
     mock_repository!
     mock_solr!
     mock_ror!
+    mock_datacite!
+    mock_stripe!
     @curator = create(:user, role: 'admin', tenant_id: 'dryad')
     @author = create(:user, tenant_id: 'dryad')
     @document_list = []
@@ -37,7 +39,7 @@ RSpec.feature 'DatasetVersioning', type: :feature do
 
     describe :pre_submit do
 
-      it 'should display the proper info on the My Datasets page', js: true do
+      xit 'should display the proper info on the My Datasets page', js: true do
         click_link 'My Datasets'
 
         within(:css, '#user_in_progress tbody tr:first-child') do
@@ -69,7 +71,7 @@ RSpec.feature 'DatasetVersioning', type: :feature do
 
     end
 
-    describe :merrit_submission_sucess do
+    describe :merritt_submission_success do
 
       before(:each) do
         ActionMailer::Base.deliveries = []
