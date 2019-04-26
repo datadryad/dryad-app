@@ -25,7 +25,7 @@ RSpec.feature 'Populate manuscript metadata from outside source', type: :feature
         .to_return(status: 404, body: '', headers: {})
       find('input[value="manuscript"]').click
       fill_manuscript_info(name: 'European Journal of Plant Pathology', issn: '1573-8469', msid: 'APPS-D-grog-plant0001221')
-      click_button 'Import Manuscript Metadata'
+      click_button 'Import Manuscript Metadata', wait: 5
       expect(page.find('div#population-warnings')).to have_content('We could not find metadata to import for this manuscript. ' \
           'Please enter your metadata below.', wait: 15)
     end
