@@ -58,7 +58,7 @@ module Stash
         def initialize(params)
           @id = params['id']
           @name = params['name']
-          @country = params['country'] || { 'code': nil, 'name': nil }
+          @country = params['country'] || { 'country_code': nil, 'country_name': nil }
           @acronyms = params['acronyms'] || []
         end
 
