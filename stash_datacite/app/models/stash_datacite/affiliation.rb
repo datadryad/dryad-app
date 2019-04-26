@@ -23,9 +23,9 @@ module StashDatacite
       return nil if ror_id.blank?
       ror_org = find_by_ror_id(ror_id)
       return nil if ror_org.nil? || ror_org.country.nil?
-      ror_org.country["country_name"]
+      ror_org.country['country_name']
     end
-    
+
     def fee_waivered?
       return false if country_name.nil?
       return false unless country_name.present?
