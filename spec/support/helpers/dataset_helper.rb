@@ -59,14 +59,15 @@ module DatasetHelper
 
   def fill_manuscript_info(name:, issn:, msid:)
     choose('choose_manuscript')
-    fill_in 'internal_datum[publication_name]', with: name
+    page.execute_script("$('#internal_datum_publication').val('#{name}')")
     page.execute_script("$('#internal_datum_publication_issn').val('#{issn}')") # must do to fill hidden field for issn
+    page.execute_script("$('#internal_datum_publication_name').val('#{name}')") # must do to fill hidden field for issn
     fill_in 'internal_datum[msid]', with: msid
   end
 
   def fill_crossref_info(name:, doi:)
     choose('choose_published')
-    fill_in 'internal_datum[publication_name]', with: name
+    fill_in 'internal_datum[publication]', with: name
     fill_in 'internal_datum[doi]', with: doi
   end
 
