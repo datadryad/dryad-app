@@ -46,11 +46,11 @@ module StashDatacite
         expect(@affil.fee_waivered?).to eql(false)
       end
       it 'returns false if the associated ROR record\'s country is NOT in the fee waiver list' do
-        @ror_org.country = { name: 'Nowhereland' }
+        @ror_org.country = {"country_code"=>"NoW", "country_name"=>"Nowhereland"} 
         expect(@affil.fee_waivered?).to eql(false)
       end
       it 'returns true if the associated ROR record\'s country is in the fee waiver list' do
-        @ror_org.country = { name: 'East Timor' }
+        @ror_org.country = {"country_code"=>"TL", "country_name"=>"East Timor"}
         expect(@affil.fee_waivered?).to eql(true)
       end
     end
