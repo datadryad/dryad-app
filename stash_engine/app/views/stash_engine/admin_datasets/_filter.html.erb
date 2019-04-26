@@ -4,6 +4,10 @@
                  class: 'c-horizontal-form__input', onchange: "this.form.submit();" ) %>
   <%= select_tag(:curation_status, options_for_select( [['Status', '']] + status_select, params[:curation_status]),
                  class: 'c-horizontal-form__input--status', onchange: "this.form.submit();" ) %>
+  <% if @publications.any? %>
+    <%= text_field_tag(:publication_name, params[:publication_name], class: 'c-horizontal-form__input--search', placeholder: 'Enter journal name') %>
+  <% end %>
+  &nbsp;
   <a href="#" class="c-horizontal-form__input" id="filter_resetter">Reset all filters</a>
 
   <% params.except(:controller, :action, :tenant, :curation_status, :commit, :page, :page_size, :show_all).each_pair do |k,v| %>
@@ -17,6 +21,25 @@
     e.preventDefault();
     $("#tenant option[value='']").prop('selected',true);
     $("#curation_status option[value='']").prop('selected',true);
+    $('#publication_name[type="text"]').val('');
+    $('#publication_name[type="hidden"]').val('');
     $("#filter_form").submit();
   });
+
+  <% if @publications.any? %>
+    $('#publication_name[type="text"]').autocomplete({
+      select: function(event, ui) {
+        $('#publication_name[type="text"]').val(ui.item.value)
+        $('#publication_name[type="hidden"]').val(ui.item.value)
+        this.form.submit();
+      },
+      change: function(event, ui) {
+        if($('#publication_name[type="text"]').val() == ''){
+          $('#publication_name[type="hidden"]').val('')
+          this.form.submit();
+        }
+      },
+      source: <%= @publications.to_json.html_safe %>
+    });
+  <% end %>
 </script>
