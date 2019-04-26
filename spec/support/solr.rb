@@ -92,7 +92,11 @@ class SolrInstance
   def config
     @config ||= begin
       # apparently have to do the true to enable aliases with safe_load
-      blacklight_config = YAML.safe_load(File.read(BLACKLIGHT_YML), [], [], true)['test']
+      # rubocop:disabledd Lint/Debugger: Remove debugger entry point byebug
+      # byebug
+      # rubocop:enabledd Lint/Debugger: Remove debugger entry point byebug
+      blacklight_config = YAML.safe_load(ERB.new(File.read(BLACKLIGHT_YML)).result, [], [], true)['test']
+      # blacklight_config = YAML.safe_load(File.read(BLACKLIGHT_YML), [], [], true)['test']
       solr_uri = URI.parse(blacklight_config['url'])
       {
         port: solr_uri.port,
