@@ -9,7 +9,7 @@ class SolrInstance
 
   SOLR_VERSION = '5.2.1'.freeze
   CONF_DIR = 'spec/config/solr/conf'.freeze
-  BLACKLIGHT_YML = 'config/blacklight.yml'.freeze
+  BLACKLIGHT_YML = 'dryad-config-example/blacklight.yml'.freeze
   COLLECTION_NAME = 'geoblacklight'.freeze
 
   def initialize
@@ -92,11 +92,7 @@ class SolrInstance
   def config
     @config ||= begin
       # apparently have to do the true to enable aliases with safe_load
-      # rubocop:disabledd Lint/Debugger: Remove debugger entry point byebug
-      # byebug
-      # rubocop:enabledd Lint/Debugger: Remove debugger entry point byebug
-      blacklight_config = YAML.safe_load(ERB.new(File.read(BLACKLIGHT_YML)).result, [], [], true)['test']
-      # blacklight_config = YAML.safe_load(File.read(BLACKLIGHT_YML), [], [], true)['test']
+      blacklight_config = YAML.safe_load(File.read(BLACKLIGHT_YML), [], [], true)['test']
       solr_uri = URI.parse(blacklight_config['url'])
       {
         port: solr_uri.port,
