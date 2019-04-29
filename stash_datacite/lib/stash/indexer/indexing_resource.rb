@@ -84,7 +84,8 @@ module Stash
           dct_issued_dt: issued_date,
           dc_rights_s: license_name,
           dc_publisher_s: publisher,
-          dct_temporal_sm: dct_temporal_dates
+          dct_temporal_sm: dct_temporal_dates,
+          dryad_related_publication_name_s: related_publication_name
         }
       end
       # rubocop:enable
@@ -208,6 +209,10 @@ module Stash
 
       def bounding_box_envelope
         (bbox = calc_bounding_box) ? bbox.to_envelope : nil
+      end
+
+      def related_publication_name
+        @resource.identifier.internal_data.where(data_type: 'publicationName').first&.value
       end
 
       private

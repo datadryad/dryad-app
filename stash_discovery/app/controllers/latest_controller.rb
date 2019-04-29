@@ -59,6 +59,7 @@ class LatestController < ApplicationController
     config.add_show_field 'dc_subject_sm', label: 'Subject Area(s)', itemprop: 'keywords', link_to_search: true
     config.add_show_field 'dct_temporal_sm', label: 'Year', itemprop: 'temporal'
     config.add_show_field 'dct_provenance_s', label: 'Held by', link_to_search: true
+    config.add_show_field 'dryad_related_publication_name_s', label: 'Journal', itemprop: 'related_publication_name'
 
   end
 
