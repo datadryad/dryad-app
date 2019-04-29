@@ -51,6 +51,7 @@ module Stash
       before :each do
         @user = create(:user)
         @identifier = create(:identifier)
+        @internal_data = create(:internal_data, identifier_id: @identifier.id)
         @resource = create(:resource, identifier_id: @identifier.id, user_id: @user.id)
         @resource_state = create(:resource_state, resource_id: @resource.id)
         @resource.update(current_resource_state_id: @resource_state.id)
@@ -281,7 +282,8 @@ module Stash
             dct_issued_dt: '2008-09-15T15:53:00Z',
             dc_rights_s: 'CC0 1.0 Universal (CC0 1.0) Public Domain Dedication',
             dc_publisher_s: 'Dryad',
-            dct_temporal_sm: ['2018-11-14']
+            dct_temporal_sm: ['2018-11-14'],
+            dryad_related_publication_name_s: 'Journal of Testing Fun'
           }
           expect(mega_hash).to eql(expected_mega_hash)
         end
