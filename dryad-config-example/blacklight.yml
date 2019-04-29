@@ -4,7 +4,7 @@ development: &DEVELOPMENT
   url: <%= ENV['SOLR_URL'] || "http://localhost:8983/solr/geoblacklight" %> #change me
 test: &test
   adapter: solr
-  url: "http://127.0.0.1:8983/solr/geoblacklight"
+  url: <%= ENV['SOLR_URL'] || "http://127.0.0.1:8983/solr/geoblacklight" %>
 stage:
   adapter: solr
   url: <%= ENV['SOLR_URL'] || "http://my.solr.stage.domain:8983/solr/geoblacklight" %> #change me
