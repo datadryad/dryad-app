@@ -49,6 +49,31 @@ module StashEngine
       end
     end
 
+    def reverse_proxy
+      user = "dash_demo_user"
+      pwd = "p9nP3ddu"
+      url = "http://mrtexpress-stage.cdlib.org/dv/1/ark:/99999/fk48k8jp86/Asha_G.tar.gz"
+      options = { username: user, password: pwd}.with_indifferent_access
+      reverse_proxy url, options do |config|
+        # We got a 404!
+        # config.on_missing do |code, response|
+        #  redirect_to root_url and return
+        # end
+
+        # There's also other callbacks:
+        # - on_set_cookies
+        # - on_connect
+        # - on_response
+        # - on_set_cookies
+        # - on_success
+        # - on_redirect
+        # - on_missing
+        # - on_error
+        # - on_complete
+      end
+      # render text: 'yum'
+    end
+
     # method to download by the secret sharing link, must match the string they generated to look up and download
     def share
       @shares = Share.where(secret_id: params[:id])
