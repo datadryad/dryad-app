@@ -56,26 +56,43 @@ across all repositories where changes are needed.
 
 ## End of sprint activities
 
--
-
-
-
-
-
+- After we've had our end-of-sprint activities and review we generally make a tag of
+all the stable code that has been accepted into master and approved by the
+team and the product manager.
+- In some cases, there may be very *minor* fixes requested before tagging.  We don't want
+to hold up tagging too long for changes since we want to time-box our sprints.  It is also possible
+to tag and then tag again as needed since tags are cheap.
+- The dryad operations page on confluence has instructions for tagging.
+- We generally want to add release notes for a tag explaining the major features
+on github, which is especially useful for public releases. Even broad bullets
+may be sufficient to explain what is worked on and we can determine those from
+completed tickets, pull requests and if needed commits (but usually commits are more
+detailed than we need).
 
 ## Pull request checklists
 
-Changes to database schemas or model classes
+- **It has unit tests for added or changed methods** in *models* or *lib*.
+These tests demonstrate that methods do as expected by themselves without added
+complexity from other outside methods or services.
+- We generally haven't tested controller methods yet and problems with controllers
+generally also show up in *feature* or *request* tests (see info below).
+- **It has *feature* tests for major UI functionality**.  No need for
+tests for simple text changes in the UI
+unless a text change breaks an existing test.  *Feature tests* load a page (or pages)
+through an automated web browser using Capybara/Selenium and also can execute client-side
+Javascript and other complex items.
+- **It has *request* tests for API changes**.  Feature tests are good for testing
+a controller or for testing the request/response cycle for something that doesn't
+need to execute any client-side Javascript code.
+- **It links to any relevant tickets that describe the problem or feature**.
+- **It adds documentation or configuration changes** if either needs to be changed.
+- **It supplies a little information about how to test, if it's not obvious**.  For
+example, if you need a specific identifier or specific data to test, then please note
+in the PR.
+- **It adds major, brand-new layouts as examples in the UI library**.  Not required
+for most things that are minor tweaks or have similar examples in the UI library.
+- Other things?
 
-- Did you add or update any unit tests?
-- Did you include any database migration?
-- If you needed to transform data, did you include the changes in the migration (you may need to drop to raw SQL) or create a rake task?
-- Did you also include the automatic updates to schema.rb when you committed?
-
-Changes to views
-
-- Did you add major UI changes such as new layouts, css styles or images to the [UI library](https://github.com/CDL-Dryad/stash/tree/master/stash_engine/ui-library) ?
-- Are feature tests (browser automation) added or modified in order to test the change?
 
 
 
