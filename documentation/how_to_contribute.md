@@ -81,7 +81,7 @@ tests for simple text changes in the UI
 unless a text change breaks an existing test.  *Feature tests* load a page (or pages)
 through an automated web browser using Capybara/Selenium and also can execute client-side
 Javascript and other complex items.
-- **It has *request* tests for API changes**.  Feature tests are good for testing
+- **It has *request* tests for API changes**.  Request tests are good for testing
 a controller or for testing the request/response cycle for something that doesn't
 need to execute any client-side Javascript code.
 - **It links to any relevant tickets that describe the problem or feature**.
