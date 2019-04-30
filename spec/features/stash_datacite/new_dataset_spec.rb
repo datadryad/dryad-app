@@ -94,6 +94,67 @@ RSpec.feature 'NewDataset', type: :feature do
       fill_in 'related_identifier[related_identifier]', with: Faker::Pid.doi
     end
 
+
+    it 'charges user by default', js: true do
+      # ##############################
+      # Title
+      fill_in 'title', with: Faker::Lorem.sentence
+
+      # ##############################
+      # Author
+      fill_in_author
+
+      # ##############################
+      # Abstract
+      abstract = find_blank_ckeditor_id('description_abstract')
+      fill_in_ckeditor abstract, with: Faker::Lorem.paragraph
+
+      navigate_to_review
+      expect(page).to have_text('you will receive an invoice')
+    end
+
+    it 'waives the fee when institution is in a fee-waiver country', js: true do
+      waiver_country = Faker::Address.country
+      # waiver_university = Faker::Educator.university
+       waiver_university = 'somesuch univ'
+      stub_ror_id_lookup(university: waiver_university, country: waiver_country)
+      allow_any_instance_of(StashDatacite::Affiliation).to receive(:fee_waiver_countries).and_return([waiver_country])
+      
+      # ##############################
+      # Title
+      fill_in 'title', with: Faker::Lorem.sentence
+
+      # ##############################
+      # Author w/ affiliation in specific university
+      fill_in_author
+      page.execute_script("$('#author_affiliation_long_name').val('#{waiver_university}')")
+      page.execute_script("$('#author_affiliation_id').val('1')") 
+      page.execute_script("$('#author_affiliation_ror_id').val('https://ror.org/TEST')") 
+      fill_in 'author[affiliation][long_name]', with: waiver_university
+            
+      # ##############################
+      # Abstract
+      abstract = find_blank_ckeditor_id('description_abstract')
+      fill_in_ckeditor abstract, with: Faker::Lorem.paragraph
+      
+      # ######## test data ################
+      affiltest = StashDatacite::Affiliation.create(long_name: 'Bertelsmann Music Group', ror_id: '12345')
+      country_list = affiltest.fee_waiver_countries
+
+      tres = StashEngine::Resource.last
+      tiden = tres.identifier
+      taffil = tiden.submitter_affiliation
+#      tiden.latest_resource.authors.first.update('a')
+
+      fill_in_ckeditor abstract, with: "Uni = #{waiver_university}, Country = #{waiver_country}, List = #{country_list}, res = #{tres.id} #{tres.title}, tiden = #{tiden}, taffil = #{taffil.present?}|#{taffil}|#{tiden.latest_resource.title}|#{tiden.latest_resource&.authors&.first.author_full_name}|#{tiden.latest_resource&.authors&.first&.affiliation}|"
+      # ######## test data ################
+
+      
+      navigate_to_review
+      expect(page).to have_text('Payment is not required')
+      #expect(page).to have_text('an invoice')
+    end
+
   end
 
 end

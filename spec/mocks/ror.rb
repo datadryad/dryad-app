@@ -8,7 +8,7 @@ module Mocks
     end
 
     # rubocop:disable Metrics/MethodLength
-    def stub_ror_id_lookup
+    def stub_ror_id_lookup(university: 'University of Testing', country: 'United States of America')
       # Mock a request for a specific ROR Organization
       stub_request(:get, %r{api\.ror\.org/organizations/.+})
         .with(
@@ -17,14 +17,14 @@ module Mocks
           }
         ).to_return(status: 200, body: {
           'id': 'https://ror.org/TEST',
-          'name': 'University of Testing',
+          'name': university,
           'types': ['Education'],
           'links': ['http://example.org/test'],
           'aliases': ['testing'],
           'acronyms': ['TST'],
           'wikipedia_url': 'http://example.org/wikipedia/wiki/test',
-          'labels': [{ 'iso639': 'id', 'label': 'University of Testing' }],
-          'country': { 'code': 'US', 'name': 'United States of America' },
+          'labels': [{ 'iso639': 'id', 'label': university }],
+          'country': { 'country_code': 'US', 'country_name': country },
           'external_ids': { 'GRID': { 'prefered': 'grid.test.123' } }
         }.to_json, headers: {})
     end
@@ -49,7 +49,7 @@ module Mocks
               'acronyms': ['TST'],
               'wikipedia_url': 'http://example.org/wikipedia/wiki/test',
               'labels': [{ 'iso639': 'id', 'label': 'University of Testing' }],
-              'country': { 'code': 'US', 'name': 'United States of America' },
+              'country': { 'country_code': 'US', 'country_name': 'United States of America' },
               'external_ids': { 'GRID': { 'prefered': 'grid.test.123' } }
             },
             {
@@ -61,7 +61,7 @@ module Mocks
               'acronyms': ['TST2'],
               'wikipedia_url': 'http://example.org/wikipedia/wiki/test2',
               'labels': [{ 'iso639': 'id', 'label': 'University of Testing v2' }],
-              'country': { 'code': 'US', 'name': 'United States of America' },
+              'country': { 'country_code': 'US', 'country_name': 'United States of America' },
               'external_ids': { 'GRID': { 'prefered': 'grid.test.123v2' } }
             }
           ]
