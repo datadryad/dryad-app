@@ -54,7 +54,6 @@ StashEngine::Engine.routes.draw do
   match 'downloads/capture_email/:resource_id', to: 'downloads#capture_email', as: 'download_capture_email', via: %i[get post]
   get 'downloads/file_stream/:file_id', to: 'downloads#file_stream', as: 'download_stream'
   get 'share/:id', to: 'downloads#share', as: 'share'
-  get 'downloads/reverse_proxy', to: 'downloads#reverse_proxy'
 
   match 'metadata_entry_pages/find_or_create', to: 'metadata_entry_pages#find_or_create', via: %i[get post put]
   match 'metadata_entry_pages/new_version', to: 'metadata_entry_pages#new_version', via: %i[post get]
