@@ -128,12 +128,16 @@ Add the following two references to the 'dryad_related_publication_data' field t
 <schema name="geoblacklight-schema" version="1.5">
 
   ... 
-
+  
+  <!-- for scoring formula -->
+  ...
   <copyField source="layer_slug_s"       dest="layer_slug_ti"       maxChars="100"/>
   <copyField source="dryad_related_publication_name_s" dest="dryad_related_publication_name_ti" maxChars="100"/>
 
   ...
 
+  <!-- for sorting text fields -->
+  ...
   <copyField source="dc_title_s"         dest="dc_title_sort"/>
   <copyField source="dryad_related_publication_name_s" dest="dryad_related_publication_name_sort"/>
 </schema>
