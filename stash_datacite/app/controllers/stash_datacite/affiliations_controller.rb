@@ -17,7 +17,7 @@ module StashDatacite
     def map_affiliation_for_autocomplete(affiliations)
       # This is a bit tricky since we want to prefer short names if they are set (ie defined manually in database),
       # however new user-entered items go into long name.
-      return [] if affiliations.blank?
+      return [] unless affiliations.is_a?(Array)
       affiliations.map { |u| { id: u[:id], long_name: u[:name] } }
     end
 

@@ -31,7 +31,7 @@ module Stash
         result = resp.parsed_response['items'].first
         return nil if result['id'].blank? || result['name'].blank?
         find_by_ror_id(result['id'])
-        ror_results_to_hash(resp)
+        ror_results_to_hash(resp)&.first
       rescue HTTParty::Error, SocketError => e
         logger.error("Unable to connect to the ROR API for `find_first_by_ror_name`: #{e.message}")
       end
