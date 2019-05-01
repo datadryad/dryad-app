@@ -29,4 +29,3 @@ RSpec.describe YamlHelper do
     ENV['SOLR_URL'] = nil
   end
 end
-# rubocop:enable Metrics/BlockLength
