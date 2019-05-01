@@ -88,7 +88,7 @@ module StashApi
       if json_author[:affiliation].present?
         ror_org = find_first_by_ror_name(json_author[:affiliation])
         a.affiliation = StashDatacite::Affiliation.first_or_create(long_name: json_author[:affiliation],
-                                                                   ror_id: ror_org&.id)
+                                                                   ror_id: ror_org.is_a?(Hash) ? ror_org[:id] : nil)
       end
 
       a.save(validate: false) # we can validate on submission, keeps from saving otherwise
