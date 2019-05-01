@@ -6,4 +6,3 @@ FactoryBot.define do
     value { "#{Faker::Number.number(4)}-#{Faker::Number.number(4)}" }
   end
 end
-# rubocop:enable Metrics/BlockLength
