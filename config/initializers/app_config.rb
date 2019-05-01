@@ -1,6 +1,8 @@
 require 'ostruct'
 require 'yaml'
-ac = YAML.load_file(File.join(Rails.root, 'config', 'app_config.yml'))[Rails.env]
+
+# this will interpret any ERB in the yaml file first before bringing in
+ac = YAML.load(ERB.new(File.read(File.join(Rails.root, 'config', 'app_config.yml'))).result)[Rails.env]
 
 # this will make the config available under the APP_CONFIG constant and methods like APP_CONFIG.metadata_engines
 APP_CONFIG = ac.to_ostruct

@@ -7,10 +7,22 @@
 # server 'example.com', user: 'deploy', roles: %w{app web}, other_property: :other_value
 # server 'db.example.com', user: 'deploy', roles: %w{db}
 
-set :rails_env, 'production'
+set :rails_env, 'stage'
 
-set :server_host, ENV["SERVER_HOST"] || 'uc3-dryad-prd.cdlib.org'
-server fetch(:server_host), user: 'dryad', roles: %w{app}
+#set :bundle_env_variables, { 'RAILS_ENV' => 'stage' }
+
+# To override the default host, set $SERVER_HOSTS, e.g.
+#    $ SERVER_HOSTS='localhost' bundle exec cap development deploy
+set :server_hosts, ENV["SERVER_HOSTS"]&.split(' ') || ['uc3-dryad-stg.cdlib.org']
+role :app, fetch(:server_hosts), user: 'dryad'
+
+#on roles(:all) do |host|
+#  puts "setting server host: #{host.hostname}"
+#end
+
+#set :passenger_pid, "#{deploy_to}/passenger.pid"
+#set :passenger_log, "#{deploy_to}/passenger.log"
+#set :passenger_port, "3000"
 
 # role-based syntax
 # ==================
