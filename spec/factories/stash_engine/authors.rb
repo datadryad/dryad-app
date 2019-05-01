@@ -1,18 +1,14 @@
 FactoryBot.define do
 
   factory :author, class: StashEngine::Author do
-
     resource
 
-    author_first_name { Faker::Name.unique.first_name }
-    author_last_name { Faker::Name.unique.last_name }
-    author_email { Faker::Internet.unique.safe_email }
-    author_orcid { Faker::Pid.unique.orcid }
+    author_first_name { Faker::Name.first_name }
+    author_last_name { Faker::Name.last_name }
+    author_email { Faker::Internet.safe_email }
+    author_orcid { Faker::Pid.orcid }
 
-    before(:create) do |author|
-      author.affiliations << create(:affiliation)
-    end
-
+    affiliations { [create(:affiliation)] }
   end
 
 end

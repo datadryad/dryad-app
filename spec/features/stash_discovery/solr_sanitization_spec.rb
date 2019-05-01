@@ -3,6 +3,11 @@ require 'rsolr'
 
 RSpec.feature 'SolrSanitization', type: :feature do
 
+  include Mocks::Datacite
+  include Mocks::Repository
+  include Mocks::Ror
+  include Mocks::Stripe
+
   before(:all) do
     # Start Solr - shutdown is handled globally when all tests have finished
     SolrInstance.instance
@@ -37,6 +42,29 @@ RSpec.feature 'SolrSanitization', type: :feature do
     expect(@solr.get('select', params: { q: '*:*' })['response']['numFound']).to eq(1)
 
     # TODO: see http://mail-archives.apache.org/mod_mbox/lucene-dev/201710.mbox/%3CCAJEmKoC%2BeQdP-E6BKBVDaR_43fRs1A-hOLO3JYuemmUcr1R%2BTA%40mail.gmail.com%3E
+  end
+
+  describe :facets do
+
+    before(:each) do
+      mock_datacite!
+      mock_repository!
+      mock_ror!
+      mock_stripe!
+
+      3.times do
+        resource = create(:resource_published, identifier: create(:identifier))
+        resource.submit_to_solr
+      end
+    end
+
+    it 'displays 3 facets (Placename, Subject and Journal) on the Explore Data page' do
+      visit search_path
+      expect(page).to have_text('Placename')
+      expect(page).to have_text('Subject')
+      expect(page).to have_text('Journal')
+    end
+
   end
 
 end
