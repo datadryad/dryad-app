@@ -5,7 +5,7 @@
   <%= select_tag(:curation_status, options_for_select( [['Status', '']] + status_select, params[:curation_status]),
                  class: 'c-horizontal-form__input--status', onchange: "this.form.submit();" ) %>
   <% if @publications.any? %>
-    <%= text_field_tag(:publication_name, params[:publication_name], class: 'c-horizontal-form__input--search', placeholder: 'Enter journal name') %>
+    <%= text_field_tag(:publication_name, @pub_name, class: 'c-horizontal-form__input--search', placeholder: 'Enter journal name') %>
   <% end %>
   &nbsp;
   <a href="#" class="c-horizontal-form__input" id="filter_resetter">Reset all filters</a>

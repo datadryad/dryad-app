@@ -19,6 +19,8 @@
       })
       .autocomplete({
         source: function (request, response) {
+          // Clear the existing ROR id
+          $('<%= "##{form_id}" %> #author_affiliation_ror_id').val('');
           $.ajax({
             url: "<%= stash_datacite.affiliations_autocomplete_path %>",
             dataType: "json",
