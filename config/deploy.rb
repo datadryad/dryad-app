@@ -56,6 +56,16 @@ set :passenger_port, "3000"
 
 TAG_REGEXP = /^[v\d\.]{3,}.*$/.freeze
 
+namespace :debug do
+  desc 'Print ENV variables'
+  task :env do
+    on roles(:app), in: :sequence, wait: 5 do
+      execute :whoami
+      execute :printenv
+    end
+  end
+end
+
 namespace :deploy do
 
   desc 'Get list of linked files for capistrano'
@@ -80,7 +90,7 @@ namespace :deploy do
 
   desc 'update config repo'
   task :update_config do
-    on roles(:app) do
+    on roles(:app), in: :sequence, wait: 5 do
       my_branch = fetch(:branch, 'development')
       my_branch = "origin/#{my_branch}" unless my_branch.match(TAG_REGEXP) #git acts differently with tags (regex for version #s)
       execute "cd #{deploy_to}/shared; git fetch --tags; git fetch --all; git reset --hard #{my_branch}"
@@ -88,7 +98,7 @@ namespace :deploy do
   end
 
   after :restart, :clear_cache do
-    on roles(:web), in: :groups, limit: 3, wait: 10 do
+    on roles(:app), in: :groups, limit: 3, wait: 10 do
       # Here we can do anything such as:
       # within release_path do
       #   execute :rake, 'cache:clear'
