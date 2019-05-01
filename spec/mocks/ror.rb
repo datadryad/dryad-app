@@ -26,18 +26,18 @@ module Mocks
           'labels': [{ 'iso639': 'id', 'label': 'University of Testing' }],
           'country': { 'code': 'US', 'name': 'United States of America' },
           'external_ids': { 'GRID': { 'prefered': 'grid.test.123' } }
-        }.to_json, headers: {})
+        }.to_json, headers: { 'Content-Type' => 'application/json' })
     end
 
     def stub_ror_name_lookup
       # Mock a ROR Organization query
-      stub_request(:get, %r{api\.ror\.org/organizations\?query.*})
+      stub_request(:get, %r{api\.ror\.org/organizations\?query(.\s)*})
         .with(
           headers: {
             'Content-Type' => 'application/json'
           }
         ).to_return(status: 200, body: {
-          'number_of_results': 1,
+          'number_of_results': 2,
           'time_taken': 3,
           'items': [
             {
@@ -65,7 +65,7 @@ module Mocks
               'external_ids': { 'GRID': { 'prefered': 'grid.test.123v2' } }
             }
           ]
-        }.to_json, headers: {})
+        }.to_json, headers: { 'Content-Type' => 'application/json' })
     end
     # rubocop:enable Metrics/MethodLength
 

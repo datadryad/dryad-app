@@ -15,9 +15,9 @@
  See the License for the specific language governing permissions and
  limitations under the License.
 -->
-<!-- 
+<!--
      For more details about configurations options that may appear in
-     this file, see http://wiki.apache.org/solr/SolrConfigXml. 
+     this file, see http://wiki.apache.org/solr/SolrConfigXml.
 -->
 <config>
   <luceneMatchVersion>4.7</luceneMatchVersion>
@@ -40,16 +40,16 @@
     </autoCommit>
   </updateHandler>
 
-  <!-- realtime get handler, guaranteed to return the latest stored fields 
-    of any document, without the need to commit or open a new searcher. The current 
+  <!-- realtime get handler, guaranteed to return the latest stored fields
+    of any document, without the need to commit or open a new searcher. The current
     implementation relies on the updateLog feature being enabled. -->
   <requestHandler name="/get" class="solr.RealTimeGetHandler">
     <lst name="defaults">
       <str name="omitHeader">true</str>
     </lst>
-  </requestHandler>  
-  
-  <requestHandler name="/replication" class="solr.ReplicationHandler" startup="lazy" /> 
+  </requestHandler>
+
+  <requestHandler name="/replication" class="solr.ReplicationHandler" startup="lazy" />
 
   <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
        Query section - these settings control query time things like caches
@@ -147,6 +147,7 @@
       <str name="facet.field">dc_subject_sm</str>
       <str name="facet.field">layer_geom_type_s</str>
       <str name="facet.field">solr_year_i</str>
+      <str name="facet.field">dryad_related_publication_name_s</str>
     </lst>
   </requestHandler>
 
@@ -161,18 +162,18 @@
     <lst name="defaults">
       <str name="echoParams">all</str>
     </lst>
-    <!-- An optional feature of the PingRequestHandler is to configure the 
-         handler with a "healthcheckFile" which can be used to enable/disable 
+    <!-- An optional feature of the PingRequestHandler is to configure the
+         handler with a "healthcheckFile" which can be used to enable/disable
          the PingRequestHandler.
-         relative paths are resolved against the data dir 
+         relative paths are resolved against the data dir
       -->
     <str name="healthcheckFile">server-enabled.txt</str>
   </requestHandler>
-  
-  <requestHandler name="/analysis/field" 
+
+  <requestHandler name="/analysis/field"
                   startup="lazy"
                   class="solr.FieldAnalysisRequestHandler" />
-                  
+
   <!-- Legacy config for the admin interface -->
   <admin>
     <defaultQuery>*:*</defaultQuery>
