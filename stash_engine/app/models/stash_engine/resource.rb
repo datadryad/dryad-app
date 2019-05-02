@@ -147,6 +147,16 @@ module StashEngine
                                                    status: %w[published embargoed] })
     end
 
+    # returns the resources that are currently in a curation state you specify (not looking at obsolete states)
+    scope :with_curation_states, ->(states) do
+      my_states = (states.is_a?(String) || states.is_a?(Symbol) ? [states] : states)
+      # subquery gets the latest latest curation status for each resource
+      subquery = 'SELECT resource_id, max(id) as id FROM stash_engine_curation_activities GROUP BY resource_id'
+      joins("INNER JOIN (#{subquery}) subq ON stash_engine_resources.id = subq.resource_id " \
+      "INNER JOIN stash_engine_curation_activities ON subq.id = stash_engine_curation_activities.id")
+      .where(stash_engine_curation_activities: { status: my_states })
+    end
+
     # gets the latest version per dataset and includes items that haven't been assigned an identifer yet but are initially in progress
     # NOTE.  We've now changed it so everything gets an identifier upon creation, so we may be able to simplify or get rid of this.
     scope :latest_per_dataset, (-> do
