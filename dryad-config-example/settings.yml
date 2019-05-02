@@ -28,6 +28,7 @@ FIELDS:
   :PART_OF: 'dct_isPartOf_sm'
   :TEMPORAL: 'dct_temporal_sm'
   :TITLE: 'dc_title_s'
+  :RELATED_PUBLICATION_NAME: 'dryad_related_publication_name_s'
 
 # Institution deployed at
 INSTITUTION: 'Stanford'
