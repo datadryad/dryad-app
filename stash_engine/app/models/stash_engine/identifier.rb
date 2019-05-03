@@ -12,6 +12,25 @@ module StashEngine
             primary_key: 'latest_resource_id',
             foreign_key: 'id'
 
+
+    # See https://medium.com/rubyinside/active-records-queries-tricks-2546181a98dd for some good tricks
+    # returns the identifiers that have resources with that *latest* curation state you specify (for any of the resources)
+    scope :with_curation_states, ->(states) do
+      joins(:resources).merge(Resource.with_curation_states(states)).distinct
+    end
+
+    scope :public_view, -> do
+      with_curation_states(%w[published embargoed]).distinct
+    end
+
+    # uggh, no OR in rails for to add to scope
+    # https://stackoverflow.com/questions/3684311/rails-how-to-chain-scope-queries-with-or-instead-of-and
+    scope :user_view, ->(user_id) do
+      # r = Resource.arel_table
+      # with_curation_states(%w[published embargoed]).or(resource: {user_id: user_id}).distinct
+      with_curation_states(%w[published embargoed]).or(['stash_engine_resources.user_id = ?', user_id ])
+    end
+
     # has_many :counter_citations, class_name: 'StashEngine::CounterCitation', dependent: :destroy
     # before_create :build_associations
 
