@@ -45,11 +45,6 @@ module StashEngine
         @timed_out = false
         response = client.head(@url, follow_redirect: true)
         init_from(response)
-
-p @url
-p "WTF? #{status_code} :: #{response.headers.inspect}"
-
-
         # the follow is for google drive which doesn't respond to head requests correctly
         fix_by_get_request(redirected_to || url) if status_code == 503
         return true
@@ -198,18 +193,9 @@ p "WTF? #{status_code} :: #{response.headers.inspect}"
     end
 
     def get_without_download(url, limit = 5)
-
-p "LIMIT: #{limit} --> #{url}"
-
-      raise 'Too many HTTP redirects' if limit <= 0
-      # this is supposed to NOT download the whole file
-      response = Net::HTTP.start(url.host, url.port, use_ssl: (url.scheme == 'https')) do |conn|
-        #conn.request_get(url) { |response| return response }
-        conn.request_get(url)
+      Net::HTTP.start(url.host, url.port, use_ssl: (url.scheme == 'https')) do |conn|
+        conn.request_get(url) { |response| return response }
       end
-      # try the new location if we got a redirect
-      response = get_without_download(response['location'], limit - 1) if response.is_a?(Net::HTTPRedirection)
-      response
     end
 
   end
