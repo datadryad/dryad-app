@@ -5,7 +5,7 @@ module Stash
 
   describe :initialization do
 
-    it "sets the original_url" do
+    it 'sets the original_url' do
       translator = Stash::UrlTranslator.new('http://testing.example.org')
       expect(translator.original_url.present?).to eql(true)
     end
