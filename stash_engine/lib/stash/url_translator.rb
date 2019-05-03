@@ -3,7 +3,8 @@ module Stash
     # a class to translate URLs to direct download links for cloud services.
 
     # test links
-    # google_drive: https://drive.google.com/file/d/0B9diV3DhsADzQ2Q2aDZGRFlkLVU/view?usp=sharing
+    # google_drive_file: https://drive.google.com/file/d/0B9diV3DhsADzQ2Q2aDZGRFlkLVU/view?usp=sharing
+    # google_drive_open: https://drive.google.com/open?id=1P2lVY_NvGipGLYamQcxWcYe4mABha-3w
     # google_doc: https://docs.google.com/document/d/1vrQrKYAWVS9PeQHhOy9mcvDTvhgq85KCndScfrERHBk/edit?usp=sharing
     # google_presentation: https://docs.google.com/presentation/d/1w_S-nfMOnIUob_QqkWkQ-FrbUdQm0tr6X-CqvqOu-yc/edit?usp=sharing
     # google_sheet: https://docs.google.com/spreadsheets/d/1wUMpgSivZyCxqHMpnlJ5uvNcgQY8XvH1_3WBH7kvXjE/edit?usp=sharing
@@ -11,7 +12,8 @@ module Stash
     # box: https://ucop.box.com/s/o39s94g28puss5ttt7vss8b0qrlge184
     # non-mapped: http://www.koalastothemax.com/
 
-    GOOGLE_DRIVE = %r{^https://drive\.google\.com/file/d/(\S+)/(?:view|edit)(?:\?usp=sharing)?$}
+    GOOGLE_DRIVE_FILE = %r{^https://drive\.google\.com/file/d/(\S+)/(?:view|edit)(?:\?usp=sharing)?$}
+    GOOGLE_DRIVE_OPEN = %r{^https://drive\.google\.com/open\?id=(\S+)$}
     GOOGLE_DOC = %r{^https://docs\.google\.com/document/d/(\S+)/edit(?:\?usp=sharing)?$}
     GOOGLE_PRESENTATION = %r{^https://docs\.google\.com/presentation/d/(\S+)/edit(?:\?usp=sharing)?$}
     GOOGLE_SHEET = %r{^https://docs\.google\.com/spreadsheets/d/(\S+)/edit(?:\?usp=sharing)?$}
@@ -25,7 +27,7 @@ module Stash
       @original_url = (u.fragment ? original_url[0..-(u.fragment.length + 2)] : original_url)
       @service = nil
 
-      %w[google_drive google_doc google_presentation google_sheet dropbox box].each do |m|
+      %w[google_drive_file google_drive_open google_doc google_presentation google_sheet dropbox box].each do |m|
         next unless (@direct_download = send(m))
         @service = m
         @service = 'google' if m.start_with?('google')
@@ -36,9 +38,15 @@ module Stash
     private
 
     # these returns are supposed to be assignment, and not equality (==) because I want to check and assign at once
-    def google_drive
-      return nil unless (m = GOOGLE_DRIVE.match(@original_url))
-      "https://drive.google.com/uc?export=download&id=#{m[1]}"
+    def google_drive_file
+      return nil unless (m = GOOGLE_DRIVE_FILE.match(@original_url))
+      # "https://drive.google.com/uc?export=download&id=#{m[1]}"
+      @original_url
+    end
+
+    def google_drive_open
+      return nil unless (m = GOOGLE_DRIVE_OPEN.match(@original_url))
+      @original_url
     end
 
     def google_doc
@@ -63,7 +71,7 @@ module Stash
 
     def box
       return nil unless (m = BOX.match(@original_url))
-      "https://#{m[1]}/shared/static/#{m[2]}"
+      "https://#{m[1]}/public/static/#{m[2]}"
     end
 
   end
