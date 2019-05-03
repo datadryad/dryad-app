@@ -94,7 +94,6 @@ RSpec.feature 'NewDataset', type: :feature do
       fill_in 'related_identifier[related_identifier]', with: Faker::Pid.doi
     end
 
-
     it 'charges user by default', js: true do
       navigate_to_review
       expect(page).to have_text('you will receive an invoice')
@@ -105,13 +104,13 @@ RSpec.feature 'NewDataset', type: :feature do
       waiver_university = Faker::Educator.university
       stub_ror_id_lookup(university: waiver_university, country: waiver_country)
       allow_any_instance_of(StashDatacite::Affiliation).to receive(:fee_waiver_countries).and_return([waiver_country])
-      
+
       # ##############################
       # Author w/ affiliation in specific university
       fill_in_author
       fill_in 'author[affiliation][long_name]', with: waiver_university
       first('.ui-menu-item-wrapper', wait: 5).click
-                  
+
       navigate_to_review
       expect(page).to have_text('Payment is not required')
     end
@@ -121,13 +120,13 @@ RSpec.feature 'NewDataset', type: :feature do
       non_waiver_university = Faker::Educator.university
       stub_ror_id_lookup(university: non_waiver_university, country: non_waiver_country)
       allow_any_instance_of(StashDatacite::Affiliation).to receive(:fee_waiver_countries).and_return(['Waiverlandia'])
-      
+
       # ##############################
       # Author w/ affiliation in specific university
       fill_in_author
       fill_in 'author[affiliation][long_name]', with: non_waiver_university
       first('.ui-menu-item-wrapper', wait: 5).click
-                  
+
       navigate_to_review
       expect(page).to have_text('you will receive an invoice')
     end
