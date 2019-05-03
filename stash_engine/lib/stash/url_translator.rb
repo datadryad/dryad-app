@@ -39,13 +39,13 @@ module Stash
 
     # these returns are supposed to be assignment, and not equality (==) because I want to check and assign at once
     def google_drive_file
-      return nil unless (m = GOOGLE_DRIVE_FILE.match(@original_url))
+      return nil unless (GOOGLE_DRIVE_FILE.match(@original_url))
       # "https://drive.google.com/uc?export=download&id=#{m[1]}"
       @original_url
     end
 
     def google_drive_open
-      return nil unless (m = GOOGLE_DRIVE_OPEN.match(@original_url))
+      return nil unless (GOOGLE_DRIVE_OPEN.match(@original_url))
       @original_url
     end
 

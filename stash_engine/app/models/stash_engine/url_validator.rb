@@ -192,7 +192,7 @@ module StashEngine
       @filename = filename_from(response, u, u)
     end
 
-    def get_without_download(url, limit = 5)
+    def get_without_download(url)
       Net::HTTP.start(url.host, url.port, use_ssl: (url.scheme == 'https')) do |conn|
         conn.request_get(url) { |response| return response }
       end
