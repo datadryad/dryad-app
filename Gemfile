@@ -65,8 +65,10 @@ group :test do
   gem 'capybara'
   # Automatically create snapshots when Cucumber steps fail with Capybara and Rails (http://github.com/mattheworiordan/capybara-screenshot)
   gem 'capybara-screenshot'
+  # chromedriver-helper is now deprecated, use webdriver instead
   # Easy installation and use of chromedriver. (https://github.com/flavorjones/chromedriver-helper)
-  gem 'chromedriver-helper', '>= 1.2'
+  # gem 'chromedriver-helper', '>= 1.2'
+  gem 'webdrivers'
   # Strategies for cleaning databases.  Can be used to ensure a clean state for testing. (http://github.com/DatabaseCleaner/database_cleaner)
   gem 'database_cleaner', require: false
   # factory_bot_rails provides integration between factory_bot and rails 3 or newer (http://github.com/thoughtbot/factory_bot_rails)
@@ -83,9 +85,9 @@ group :test do
   gem 'mocha', require: false
   # RSpec for Rails (https://github.com/rspec/rspec-rails)
   gem 'rspec-collection_matchers'
-  gem 'rspec-rails', '~> 3.0'
+  gem 'rspec-rails'
   # The next generation developer focused tool for automated testing of webapps (https://github.com/SeleniumHQ/selenium)
-  gem 'selenium-webdriver', '~> 3.14'
+  gem 'selenium-webdriver', '~> 3.142.0'
   # Making tests easy on the fingers and eyes (https://github.com/thoughtbot/shoulda)
   gem 'shoulda'
   # Code coverage for Ruby 1.9+ with a powerful configuration library and automatic merging of coverage across test suites (http://github.com/colszowka/simplecov)
