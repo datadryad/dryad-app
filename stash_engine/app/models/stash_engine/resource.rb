@@ -147,14 +147,28 @@ module StashEngine
                                                    status: %w[published embargoed] })
     end
 
-    # returns the resources that are currently in a curation state you specify (not looking at obsolete states)
-    scope :with_curation_states, ->(states) do
+
+    # complicated join & subquery that may be reused to get the last curation state for each resource
+    SUBQUERY_FOR_LATEST_CURATION = 'SELECT resource_id, max(id) as id FROM stash_engine_curation_activities GROUP BY resource_id'.freeze
+    JOIN_FOR_LATEST_CURATION = "INNER JOIN (#{SUBQUERY_FOR_LATEST_CURATION}) subq ON stash_engine_resources.id = subq.resource_id " \
+      "INNER JOIN stash_engine_curation_activities ON subq.id = stash_engine_curation_activities.id".freeze
+
+    # returns the resources that are currently in a curation state you specify (not looking at obsolete states),
+    # ie last state for each resource.  Also if user_id or tenant_id is set it will return those records (your own)
+    # or your organization's without regard to curation state.
+    scope :with_curation_states, ->(states:, user_id: nil, tenant_id: nil) do
       my_states = (states.is_a?(String) || states.is_a?(Symbol) ? [states] : states)
-      # subquery gets the latest latest curation status for each resource
-      subquery = 'SELECT resource_id, max(id) as id FROM stash_engine_curation_activities GROUP BY resource_id'
-      joins("INNER JOIN (#{subquery}) subq ON stash_engine_resources.id = subq.resource_id " \
-      "INNER JOIN stash_engine_curation_activities ON subq.id = stash_engine_curation_activities.id")
-      .where(stash_engine_curation_activities: { status: my_states })
+      str = "stash_engine_curation_activities.status IN (?)"
+      arr = [ states ]
+      if user_id
+        str += " OR stash_engine_resources.user_id = ?"
+        arr.push(user_id)
+      end
+      if tenant_id
+        str += " OR stash_engine_resources.tenant_id = ?"
+        arr.push(tenant_id)
+      end
+      joins(JOIN_FOR_LATEST_CURATION).where(str, *arr)
     end
 
     # gets the latest version per dataset and includes items that haven't been assigned an identifer yet but are initially in progress
