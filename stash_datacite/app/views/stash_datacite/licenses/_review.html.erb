@@ -1,3 +1,4 @@
+
 <div>
   <h3>License and Terms of Service</h3>
   <p>
@@ -42,7 +43,7 @@
 <% elsif submitter_affiliation.present? && submitter_affiliation.fee_waivered? %>
 <div>
   <h3>Payment</h3>
-  <p>Payment is not required for this deposit due to association with <b><%= submitter_affiliation.name %></b> in <b><%= submitter_affiliation.country %></b>.</p>
+   <p>Payment is not required for this deposit due to association with <b><%= submitter_affiliation.smart_name %></b> in <b><%= submitter_affiliation.country_name %></b>.</p>
 </div>
 <% elsif @resource.identifier.user_must_pay? %>
 <div>
@@ -87,3 +88,4 @@ $(document).ready(function(){
     $('#agree_to_license, #agree_to_dda').prop('disabled', true);
   </script>
 <% end %>
+
