@@ -3,18 +3,20 @@
   <p>
     <span><%= check_box_tag 'agree_to_license', 'yes', (@resource.version_number > 1), class: 't-review__agree-to-license js-agrees' %></span>
     <label for="agree_to_license">By checking this box, I agree to the license
-
-    <% if @resource.rights.blank? %>
-      <%= render partial: 'stash_datacite/licenses/license_review', locals:
-          {license: StashEngine::License.by_id(@resource.identifier.license_id), right: nil } %>
-    <% else %>
-      <% @resource.rights.each do |r| %>
+      <% if @resource.rights.blank? %>
         <%= render partial: 'stash_datacite/licenses/license_review', locals:
-            {license: StashEngine::License.by_uri(r.rights_uri), right: r } %>
+            {license: StashEngine::License.by_id(@resource.identifier.license_id), right: nil } %>
+      <% else %>
+        <% @resource.rights.each do |r| %>
+          <%= render partial: 'stash_datacite/licenses/license_review', locals:
+              {license: StashEngine::License.by_uri(r.rights_uri), right: r } %>
+        <% end %>
       <% end %>
-    <% end %>
-      and <%= link_to "Dryad's Terms of Service", stash_url_helpers.terms_view_path, target: '_blank' %>
     </label>
+  </p>
+  <p>
+    <span><%= check_box_tag 'agree_to_tos', 'yes', (@resource.version_number > 1), class: 't-review__agree-to-license js-agrees' %></span>
+    <label for="agree_to_tos">By checking this box, I agree to <%= link_to "Dryad's Terms of Service", stash_url_helpers.terms_view_path, target: '_blank' %></label>
   </p>
 
   <% if current_tenant.data_deposit_agreement? %>
@@ -84,6 +86,6 @@ $(document).ready(function(){
 
 <% if current_user.id != @resource.user_id %>
   <script>
-    $('#agree_to_license, #agree_to_dda').prop('disabled', true);
+    $('#agree_to_license, #agree_to_tos, #agree_to_dda').prop('disabled', true);
   </script>
 <% end %>
