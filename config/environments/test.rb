@@ -11,7 +11,7 @@ Rails.application.configure do
   # just for the purpose of running a single test. If you are using a tool that
   # preloads Rails for running tests, you may have to set it to true.
 
-  https://bibwild.wordpress.com/2016/02/18/struggling-towards-reliable-capybara-javascript-testing/
+  # https://bibwild.wordpress.com/2016/02/18/struggling-towards-reliable-capybara-javascript-testing/
   config.eager_load = true
   config.allow_concurrency = false
 
