@@ -19,12 +19,17 @@ module StashDatacite
       (short_name.blank? ? long_name.strip : short_name.strip)
     end
 
-    def fee_waivered?
-      return false if ror_id.blank?
-      # Retrieve the ROR record and then check if itys a fee waiver country
+    def country_name
+      return nil if ror_id.blank?
       ror_org = find_by_ror_id(ror_id)
-      return false unless ror_org.present? && ror_org.country.present? && ror_org.country[:name].present?
-      fee_waiver_countries&.include?(ror_org.country[:name])
+      return nil if ror_org.nil? || ror_org.country.nil?
+      ror_org.country['country_name']
+    end
+
+    def fee_waivered?
+      return false if country_name.nil?
+      return false unless country_name.present?
+      fee_waiver_countries&.include?(country_name)
     end
 
     def fee_waiver_countries
