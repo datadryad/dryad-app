@@ -128,7 +128,7 @@ RSpec.feature 'NewDataset', type: :feature do
       first('.ui-menu-item-wrapper', wait: 5).click
 
       navigate_to_review
-      expect(page).to have_text('you will receive an invoice')
+      expect(page).to have_text('you will receive an invoice', wait: 5)
     end
 
   end
