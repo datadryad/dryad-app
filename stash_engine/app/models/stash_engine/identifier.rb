@@ -29,7 +29,7 @@ module StashEngine
         publicly_viewable
       elsif user.superuser?
         Identifier.all
-      elsif user.role = 'admin'
+      elsif user.role == 'admin'
         with_visibility(states: %w[published embargoed], tenant_id: user.tenant_id)
       else
         with_visibility(states: %w[published embargoed], user_id: user.id)

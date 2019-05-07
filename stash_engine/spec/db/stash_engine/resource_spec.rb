@@ -1142,11 +1142,6 @@ module StashEngine
                         create(:resource, user_id: @user3.id, tenant_id: @user3.tenant_id),
                         create(:resource, user_id: @user3.id, tenant_id: @user3.tenant_id),
                         create(:resource, user_id: @user3.id, tenant_id: @user3.tenant_id)]
-          CurationActivity.skip_callback(:create, :after, :submit_to_datacite)
-          CurationActivity.skip_callback(:create, :after, :update_solr)
-          CurationActivity.skip_callback(:create, :after, :submit_to_stripe)
-          CurationActivity.skip_callback(:create, :after, :email_author)
-          CurationActivity.skip_callback(:create, :after, :email_orcid_invitations)
 
           @curation_activities = [[create(:curation_activity_no_callbacks, resource: @resources[0], status: 'in_progress'),
                                    create(:curation_activity_no_callbacks, resource: @resources[0], status: 'curation'),
