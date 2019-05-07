@@ -36,13 +36,6 @@ module StashEngine
       end
     end
 
-
-    # uggh, no OR in rails for to add to scope
-    # https://stackoverflow.com/questions/3684311/rails-how-to-chain-scope-queries-with-or-instead-of-and
-    # scope :user_view, ->(user_id) do
-      # with_curation_states(%w[published embargoed]).or(['stash_engine_resources.user_id = ?', user_id])
-    # end
-
     # has_many :counter_citations, class_name: 'StashEngine::CounterCitation', dependent: :destroy
     # before_create :build_associations
 
