@@ -12,24 +12,36 @@ module StashEngine
             primary_key: 'latest_resource_id',
             foreign_key: 'id'
 
-
     # See https://medium.com/rubyinside/active-records-queries-tricks-2546181a98dd for some good tricks
     # returns the identifiers that have resources with that *latest* curation state you specify (for any of the resources)
-    scope :with_curation_states, ->(states) do
-      joins(:resources).merge(Resource.with_curation_states(states)).distinct
+    # These scopes needs some reworking based on changes to the resource state, leaving them commented out for now.
+    # with_visibility, ->(states:, user_id: nil, tenant_id: nil)
+    scope :with_visibility, ->(states:, user_id: nil, tenant_id: nil) do
+      joins(:resources).merge(Resource.with_visibility(states: states, user_id: user_id, tenant_id: tenant_id)).distinct
     end
 
-    scope :public_view, -> do
-      with_curation_states(%w[published embargoed]).distinct
+    scope :publicly_viewable, -> do
+      with_visibility(states: %w[published embargoed])
     end
+
+    scope :user_viewable, ->(user: nil) do
+      if user.nil?
+        publicly_viewable
+      elsif user.superuser?
+        Identifier.all
+      elsif user.role = 'admin'
+        with_visibility(states: %w[published embargoed], tenant_id: user.tenant_id)
+      else
+        with_visibility(states: %w[published embargoed], user_id: user.id)
+      end
+    end
+
 
     # uggh, no OR in rails for to add to scope
     # https://stackoverflow.com/questions/3684311/rails-how-to-chain-scope-queries-with-or-instead-of-and
-    scope :user_view, ->(user_id) do
-      # r = Resource.arel_table
-      # with_curation_states(%w[published embargoed]).or(resource: {user_id: user_id}).distinct
-      with_curation_states(%w[published embargoed]).or(['stash_engine_resources.user_id = ?', user_id ])
-    end
+    # scope :user_view, ->(user_id) do
+      # with_curation_states(%w[published embargoed]).or(['stash_engine_resources.user_id = ?', user_id])
+    # end
 
     # has_many :counter_citations, class_name: 'StashEngine::CounterCitation', dependent: :destroy
     # before_create :build_associations
