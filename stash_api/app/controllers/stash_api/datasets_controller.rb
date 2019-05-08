@@ -15,6 +15,7 @@ module StashApi
     before_action :setup_identifier_and_resource_for_put, only: %i[update set_internal_datum add_internal_datum]
     before_action :doorkeeper_authorize!, only: %i[create update]
     before_action :require_api_user, only: %i[create update]
+    before_action :optional_api_user, except: %i[create update]
     # before_action :require_in_progress_resource, only: :update
     before_action :require_permission, only: :update
     before_action :lock_down_admin_only_params, only: %i[create update]
@@ -52,7 +53,7 @@ module StashApi
           .joins('LEFT JOIN stash_engine_internal_data ON stash_engine_identifiers.id = stash_engine_internal_data.identifier_id')
           .where(query_hash)
       else
-        ds_query = StashEngine::Identifier.all
+        ds_query = StashEngine::Identifier.user_viewable(user: @user)
       end
 
       # now, if a curationStatus is specified, narrow down the previous result.
