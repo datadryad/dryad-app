@@ -40,7 +40,17 @@ FactoryBot.define do
       status { 'published' }
     end
 
+    factory(:curation_activity_no_callbacks) do
+      before(:create) do |ca|
+        # redefine these  methods so I can set this crap in peace without all the horror
+        # https://stackoverflow.com/questions/8751175/skip-callbacks-on-factory-girl-and-rspec
+        ca.define_singleton_method(:submit_to_datacite) {}
+        ca.define_singleton_method(:update_solr) {}
+        ca.define_singleton_method(:submit_to_stripe) {}
+        ca.define_singleton_method(:email_author) {}
+        ca.define_singleton_method(:email_orcid_invitations) {}
+      end
+    end
   end
-
 end
 # rubocop:enable Metrics/BlockLength
