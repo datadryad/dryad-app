@@ -3,7 +3,7 @@ require_relative 'helpers'
 require 'fixtures/stash_api/metadata'
 
 # see https://relishapp.com/rspec/rspec-rails/v/3-8/docs/request-specs/request-spec
-# rubocop:disable Metrics/BlockLength
+# rubocop:disable Metrics/BlockLength, Metrics/ModuleLength
 module StashApi
   RSpec.describe DatasetsController, type: :request do
 
@@ -64,7 +64,7 @@ module StashApi
         @user3 = create(:user, tenant_id: 'ucb', role: 'superuser')
 
         @identifiers = []
-        0.upto(7).each{|i| @identifiers.push(create(:identifier)) }
+        0.upto(7).each { |_i| @identifiers.push(create(:identifier)) }
 
         @resources = [create(:resource, user_id: @user1.id, tenant_id: @user1.tenant_id, identifier_id: @identifiers[0].id),
                       create(:resource, user_id: @user1.id, tenant_id: @user1.tenant_id, identifier_id: @identifiers[0].id),
@@ -120,43 +120,43 @@ module StashApi
 
       describe 'user and role permitted scope' do
         it 'gets a list of public datasets (public status is known by curation status)' do
-          response_code = get '/api/datasets', {}, default_json_headers
+          get '/api/datasets', {}, default_json_headers
           output = JSON.parse(response.body).with_indifferent_access
           expect(output[:count]).to eq(5)
         end
 
         it 'gets a list of all datasets because superusers are omniscient' do
-          response_code = get '/api/datasets', {}, default_authenticated_headers
+          get '/api/datasets', {}, default_authenticated_headers
           output = JSON.parse(response.body).with_indifferent_access
           expect(output[:count]).to eq(@identifiers.count)
         end
 
         it 'gets a list for admins: public items and private items in their own library roost' do
           @doorkeeper_application = create(:doorkeeper_application, redirect_uri: 'urn:ietf:wg:oauth:2.0:oob',
-                                           owner_id: @user2.id, owner_type: 'StashEngine::User')
+                                                                    owner_id: @user2.id, owner_type: 'StashEngine::User')
           setup_access_token(doorkeeper_application: @doorkeeper_application)
-          response_code = get '/api/datasets', {}, default_authenticated_headers
+          get '/api/datasets', {}, default_authenticated_headers
           output = JSON.parse(response.body).with_indifferent_access
           expect(output[:count]).to eq(6)
-          dois = output['_embedded']['stash:datasets'].map{|ds| ds['identifier']}
+          dois = output['_embedded']['stash:datasets'].map { |ds| ds['identifier'] }
           expect(dois).to include(@identifiers[1].to_s) # this would be private otherwise based on curation status
         end
 
         it 'gets a list for an individual user for public and his own' do
           @doorkeeper_application = create(:doorkeeper_application, redirect_uri: 'urn:ietf:wg:oauth:2.0:oob',
-                                           owner_id: @user1.id, owner_type: 'StashEngine::User')
+                                                                    owner_id: @user1.id, owner_type: 'StashEngine::User')
           setup_access_token(doorkeeper_application: @doorkeeper_application)
-          response_code = get '/api/datasets', {}, default_authenticated_headers
+          get '/api/datasets', {}, default_authenticated_headers
           output = JSON.parse(response.body).with_indifferent_access
           expect(output[:count]).to eq(6)
-          dois = output['_embedded']['stash:datasets'].map{|ds| ds['identifier']}
+          dois = output['_embedded']['stash:datasets'].map { |ds| ds['identifier'] }
           expect(dois).to include(@identifiers[1].to_s) # this would be private otherwise based on curation status
         end
       end
 
       describe 'filtering and reduced scoping of list for Dryad special filters' do
         it 'reduces scope to a curation status' do
-          response_code = get '/api/datasets', { 'curationStatus' => 'curation'}, default_authenticated_headers
+          get '/api/datasets', { 'curationStatus' => 'curation' }, default_authenticated_headers
           output = JSON.parse(response.body).with_indifferent_access
           expect(output[:count]).to eq(1)
           expect(output['_embedded']['stash:datasets'].first['identifier']).to eq(@identifiers[1].to_s)
@@ -164,7 +164,7 @@ module StashApi
 
         it 'reduces scope to a publisher ISSN' do
           internal_datum = create(:internal_datum, identifier_id: @identifiers[5].id, data_type: 'publicationISSN')
-          response_code = get '/api/datasets', { 'publicationISSN' => internal_datum.value}, default_authenticated_headers
+          get '/api/datasets', { 'publicationISSN' => internal_datum.value }, default_authenticated_headers
           output = JSON.parse(response.body).with_indifferent_access
           expect(output[:count]).to eq(1)
           expect(output['_embedded']['stash:datasets'].first['identifier']).to eq(@identifiers[5].to_s)
@@ -174,4 +174,4 @@ module StashApi
     end
   end
 end
-# rubocop:enable Metrics/BlockLength
+# rubocop:enable Metrics/BlockLength, Metrics/ModuleLength
