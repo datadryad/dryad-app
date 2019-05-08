@@ -40,7 +40,7 @@ PATH
       blacklight (~> 6.5.0)
       config
       devise-guests (~> 0.5)
-      ffi (= 1.9.21)
+      ffi
       geoblacklight (~> 1.1.2)
       jquery-rails (~> 4.1)
       rails (~> 4.2.11)
@@ -286,7 +286,7 @@ GEM
       concurrent-ruby (~> 1.0)
     dry-equalizer (0.2.2)
     dry-inflector (0.1.2)
-    dry-logic (0.6.0)
+    dry-logic (0.6.1)
       concurrent-ruby (~> 1.0)
       dry-core (~> 0.2)
       dry-equalizer (~> 0.2)
