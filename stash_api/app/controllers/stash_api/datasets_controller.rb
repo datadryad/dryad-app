@@ -44,24 +44,25 @@ module StashApi
 
     # get /datasets
     def index
-      # if a publicationISSN is specified, we want to make sure that we're only working with those:
-      if params.key?('publicationISSN')
-        query_hash = {}
-        query_hash['stash_engine_internal_data.data_type'] = 'publicationISSN'
-        query_hash['stash_engine_internal_data.value'] = params['publicationISSN']
-        ds_query = StashEngine::Identifier
-          .joins('LEFT JOIN stash_engine_internal_data ON stash_engine_identifiers.id = stash_engine_internal_data.identifier_id')
-          .where(query_hash)
-      else
-        ds_query = StashEngine::Identifier.user_viewable(user: @user)
+      ds_query = StashEngine::Identifier.user_viewable(user: @user) # this limits to a user's list based on their role/permissions (or public ones)
+
+      # These filter conditions were things Daisie put in, because of some queries she needed to make.
+      # We probably want to think about the query interface before we do full blown filtering and be sure it is thought out
+      # and we are ready to support whatever we decide.
+
+      # if a publicationISSN is specified, we want to make sure that we're only working those specified.
+      unless params.key?('publicationISSN').blank?
+        # add these conditions to narrow to publicationISSN
+        ds_query = ds_query
+          .joins('INNER JOIN stash_engine_internal_data ON stash_engine_identifiers.id = stash_engine_internal_data.identifier_id')
+          .where("stash_engine_internal_data.data_type = 'publicationISSN' AND stash_engine_internal_data.value = ?", params['publicationISSN'])
       end
 
-      # now, if a curationStatus is specified, narrow down the previous result.
-      unless params['curationStatus'].nil?
-        ds_query = ds_query
-          .joins('LEFT JOIN stash_engine_identifier_states ON stash_engine_identifiers.id = stash_engine_identifier_states.identifier_id')
-          .where('stash_engine_identifier_states.current_curation_status': params['curationStatus'])
+      # now, if a curationStatus is specified, narrow down the previous result more.
+      unless params['curationStatus'].blank?
+        ds_query = ds_query.with_visibility(states: params['curationStatus']) # this finds identifiers with a version with this state, acceptable?
       end
+
       @datasets = paged_datasets(ds_query)
       respond_to do |format|
         format.json { render json: @datasets }
