@@ -65,9 +65,7 @@ group :test do
   gem 'capybara'
   # Automatically create snapshots when Cucumber steps fail with Capybara and Rails (http://github.com/mattheworiordan/capybara-screenshot)
   gem 'capybara-screenshot'
-  # chromedriver-helper is now deprecated, use webdriver instead
-  # Easy installation and use of chromedriver. (https://github.com/flavorjones/chromedriver-helper)
-  # gem 'chromedriver-helper', '>= 1.2'
+  # chromedriver-helper is now deprecated, use webdrivers instead
   gem 'webdrivers'
   # Strategies for cleaning databases.  Can be used to ensure a clean state for testing. (http://github.com/DatabaseCleaner/database_cleaner)
   gem 'database_cleaner', require: false

@@ -81,6 +81,7 @@ module DatasetHelper
   def agree_to_everything
     navigate_to_review
     find('#agree_to_license').click
+    find('#agree_to_tos').click
     find('#agree_to_payment').click
   end
 
