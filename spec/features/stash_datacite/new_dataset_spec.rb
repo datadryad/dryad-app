@@ -112,7 +112,7 @@ RSpec.feature 'NewDataset', type: :feature do
       first('.ui-menu-item-wrapper', wait: 5).click
 
       navigate_to_review
-      expect(page).to have_text('Payment is not required')
+      expect(page).to have_text('Payment is not required', wait: 5)
     end
 
     it 'charges user when institution is not in a fee-waiver country', js: true do
@@ -128,7 +128,7 @@ RSpec.feature 'NewDataset', type: :feature do
       first('.ui-menu-item-wrapper', wait: 5).click
 
       navigate_to_review
-      expect(page).to have_text('you will receive an invoice')
+      expect(page).to have_text('you will receive an invoice', wait: 5)
     end
 
   end
