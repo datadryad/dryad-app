@@ -69,7 +69,7 @@ module StashEngine
         url: url,
         status_code: status_code,
         file_state: 'created',
-        original_url: (translator.direct_download.nil? ? nil : original_url),
+        original_url: (translator.direct_download.nil? ? nil : @url),
         cloud_service: translator.service
       }
       return upload_attributes unless valid && status_code == 200
@@ -193,7 +193,6 @@ module StashEngine
     end
 
     def get_without_download(url)
-      # this is supposed to NOT download the whole file
       Net::HTTP.start(url.host, url.port, use_ssl: (url.scheme == 'https')) do |conn|
         conn.request_get(url) { |response| return response }
       end
