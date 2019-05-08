@@ -20,7 +20,6 @@ Capybara.asset_host = 'http://localhost:33000'
 Webdrivers.install_dir = '~/.webdrivers'
 # Selenium::WebDriver::Chrome.path = '~/.webdrivers/chromedriver'
 
-
 # This is a customisation of the default :selenium_chrome_headless config in:
 # https://github.com/teamcapybara/capybara/blob/master/lib/capybara.rb
 #
@@ -28,7 +27,7 @@ Webdrivers.install_dir = '~/.webdrivers'
 # https://docs.travis-ci.com/user/chrome#sandboxing
 
 Capybara.register_driver :selenium_chrome_headless do |app|
-  Capybara::Selenium::Driver.new(app, :browser => :chrome)
+  Capybara::Selenium::Driver.new(app, browser: :chrome)
   browser_options = ::Selenium::WebDriver::Chrome::Options.new
   browser_options.args << '--headless'
   browser_options.args << '--incognito'
@@ -41,6 +40,8 @@ Capybara.register_driver :selenium_chrome_headless do |app|
   browser_options.args << '--disable-infobars'
   browser_options.args << '--disable-extensions'
   browser_options.args << '--disable-popup-blocking'
+  browser_options.args << '--disable-gpu' if Gem.win_platform?
+  browser_options.args << '--enable-features=NetworkService,NetworkServiceInProcess'
 
   # chromeOptions.AddAdditionalCapability("acceptInsecureCerts", true, true);
   browser_options.args << '--disable-gpu' if Gem.win_platform?

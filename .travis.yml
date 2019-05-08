@@ -25,6 +25,6 @@ before_script:
   # To allow travis to run chrome we need to force chromedriver to use a specific version
   # since Chrome and Chromedriver versions must match :/
   #   There is an open ticket on chromedriver -> https://github.com/flavorjones/chromedriver-helper/issues/78
-  - bundle exec chromedriver-update 2.46
+  # - bundle exec chromedriver-update 2.46
   - sudo chown root /opt/google/chrome/chrome-sandbox
   - sudo chmod 4755 /opt/google/chrome/chrome-sandbox
