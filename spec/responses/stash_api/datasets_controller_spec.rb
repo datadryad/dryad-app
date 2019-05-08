@@ -55,70 +55,71 @@ module StashApi
 
     end
 
-    describe '#get' do
-      describe 'viewable scope' do
-        before(:each) do
-          # these tests are very similar to tests in the model controller for identifier for querying this scope
-          @user1 = create(:user, tenant_id: 'ucop', role: nil)
-          @user2 = create(:user, tenant_id: 'ucop', role: 'admin')
-          @user3 = create(:user, tenant_id: 'ucb', role: 'superuser')
+    describe '#index' do
 
-          @identifiers = []
-          0.upto(7).each{|i| @identifiers.push(create(:identifier)) }
+      before(:each) do
+        # these tests are very similar to tests in the model controller for identifier for querying this scope
+        @user1 = create(:user, tenant_id: 'ucop', role: nil)
+        @user2 = create(:user, tenant_id: 'ucop', role: 'admin')
+        @user3 = create(:user, tenant_id: 'ucb', role: 'superuser')
 
-          @resources = [create(:resource, user_id: @user.id, tenant_id: @user1.tenant_id, identifier_id: @identifiers[0].id),
-                        create(:resource, user_id: @user.id, tenant_id: @user1.tenant_id, identifier_id: @identifiers[0].id),
-                        create(:resource, user_id: @user.id, tenant_id: @user1.tenant_id, identifier_id: @identifiers[1].id),
-                        create(:resource, user_id: @user2.id, tenant_id: @user2.tenant_id, identifier_id: @identifiers[2].id),
-                        create(:resource, user_id: @user2.id, tenant_id: @user2.tenant_id, identifier_id: @identifiers[2].id),
-                        create(:resource, user_id: @user2.id, tenant_id: @user2.tenant_id, identifier_id: @identifiers[3].id),
-                        create(:resource, user_id: @user3.id, tenant_id: @user3.tenant_id, identifier_id: @identifiers[4].id),
-                        create(:resource, user_id: @user3.id, tenant_id: @user3.tenant_id, identifier_id: @identifiers[5].id),
-                        create(:resource, user_id: @user3.id, tenant_id: @user3.tenant_id, identifier_id: @identifiers[6].id),
-                        create(:resource, user_id: @user3.id, tenant_id: @user3.tenant_id, identifier_id: @identifiers[7].id)]
+        @identifiers = []
+        0.upto(7).each{|i| @identifiers.push(create(:identifier)) }
 
-          @curation_activities = [[create(:curation_activity_no_callbacks, resource: @resources[0], status: 'in_progress'),
-                                   create(:curation_activity_no_callbacks, resource: @resources[0], status: 'curation'),
-                                   create(:curation_activity_no_callbacks, resource: @resources[0], status: 'published')]]
+        @resources = [create(:resource, user_id: @user1.id, tenant_id: @user1.tenant_id, identifier_id: @identifiers[0].id),
+                      create(:resource, user_id: @user1.id, tenant_id: @user1.tenant_id, identifier_id: @identifiers[0].id),
+                      create(:resource, user_id: @user1.id, tenant_id: @user1.tenant_id, identifier_id: @identifiers[1].id),
+                      create(:resource, user_id: @user2.id, tenant_id: @user2.tenant_id, identifier_id: @identifiers[2].id),
+                      create(:resource, user_id: @user2.id, tenant_id: @user2.tenant_id, identifier_id: @identifiers[2].id),
+                      create(:resource, user_id: @user2.id, tenant_id: @user2.tenant_id, identifier_id: @identifiers[3].id),
+                      create(:resource, user_id: @user3.id, tenant_id: @user3.tenant_id, identifier_id: @identifiers[4].id),
+                      create(:resource, user_id: @user3.id, tenant_id: @user3.tenant_id, identifier_id: @identifiers[5].id),
+                      create(:resource, user_id: @user3.id, tenant_id: @user3.tenant_id, identifier_id: @identifiers[6].id),
+                      create(:resource, user_id: @user3.id, tenant_id: @user3.tenant_id, identifier_id: @identifiers[7].id)]
 
-          @curation_activities << [create(:curation_activity_no_callbacks, resource: @resources[1], status: 'in_progress'),
-                                   create(:curation_activity_no_callbacks, resource: @resources[1], status: 'curation'),
-                                   create(:curation_activity_no_callbacks, resource: @resources[1], status: 'embargoed')]
+        @curation_activities = [[create(:curation_activity_no_callbacks, resource: @resources[0], status: 'in_progress'),
+                                 create(:curation_activity_no_callbacks, resource: @resources[0], status: 'curation'),
+                                 create(:curation_activity_no_callbacks, resource: @resources[0], status: 'published')]]
 
-          @curation_activities << [create(:curation_activity_no_callbacks, resource: @resources[2], status: 'in_progress'),
-                                   create(:curation_activity_no_callbacks, resource: @resources[2], status: 'curation')]
+        @curation_activities << [create(:curation_activity_no_callbacks, resource: @resources[1], status: 'in_progress'),
+                                 create(:curation_activity_no_callbacks, resource: @resources[1], status: 'curation'),
+                                 create(:curation_activity_no_callbacks, resource: @resources[1], status: 'embargoed')]
 
-          @curation_activities << [create(:curation_activity_no_callbacks, resource: @resources[3], status: 'in_progress'),
-                                   create(:curation_activity_no_callbacks, resource: @resources[3], status: 'curation'),
-                                   create(:curation_activity_no_callbacks, resource: @resources[3], status: 'action_required')]
+        @curation_activities << [create(:curation_activity_no_callbacks, resource: @resources[2], status: 'in_progress'),
+                                 create(:curation_activity_no_callbacks, resource: @resources[2], status: 'curation')]
 
-          @curation_activities << [create(:curation_activity_no_callbacks, resource: @resources[4], status: 'in_progress'),
-                                   create(:curation_activity_no_callbacks, resource: @resources[4], status: 'curation'),
-                                   create(:curation_activity_no_callbacks, resource: @resources[4], status: 'published')]
+        @curation_activities << [create(:curation_activity_no_callbacks, resource: @resources[3], status: 'in_progress'),
+                                 create(:curation_activity_no_callbacks, resource: @resources[3], status: 'curation'),
+                                 create(:curation_activity_no_callbacks, resource: @resources[3], status: 'action_required')]
 
-          @curation_activities << [create(:curation_activity_no_callbacks, resource: @resources[5], status: 'in_progress'),
-                                   create(:curation_activity_no_callbacks, resource: @resources[5], status: 'curation'),
-                                   create(:curation_activity_no_callbacks, resource: @resources[5], status: 'embargoed')]
+        @curation_activities << [create(:curation_activity_no_callbacks, resource: @resources[4], status: 'in_progress'),
+                                 create(:curation_activity_no_callbacks, resource: @resources[4], status: 'curation'),
+                                 create(:curation_activity_no_callbacks, resource: @resources[4], status: 'published')]
 
-          @curation_activities << [create(:curation_activity_no_callbacks, resource: @resources[6], status: 'in_progress'),
-                                   create(:curation_activity_no_callbacks, resource: @resources[6], status: 'curation'),
-                                   create(:curation_activity_no_callbacks, resource: @resources[6], status: 'withdrawn')]
+        @curation_activities << [create(:curation_activity_no_callbacks, resource: @resources[5], status: 'in_progress'),
+                                 create(:curation_activity_no_callbacks, resource: @resources[5], status: 'curation'),
+                                 create(:curation_activity_no_callbacks, resource: @resources[5], status: 'embargoed')]
 
-          @curation_activities << [create(:curation_activity_no_callbacks, resource: @resources[7], status: 'in_progress')]
+        @curation_activities << [create(:curation_activity_no_callbacks, resource: @resources[6], status: 'in_progress'),
+                                 create(:curation_activity_no_callbacks, resource: @resources[6], status: 'curation'),
+                                 create(:curation_activity_no_callbacks, resource: @resources[6], status: 'withdrawn')]
 
-          @curation_activities << [create(:curation_activity_no_callbacks, resource: @resources[8], status: 'in_progress'),
-                                   create(:curation_activity_no_callbacks, resource: @resources[8], status: 'curation'),
-                                   create(:curation_activity_no_callbacks, resource: @resources[8], status: 'published')]
+        @curation_activities << [create(:curation_activity_no_callbacks, resource: @resources[7], status: 'in_progress')]
 
-          @curation_activities << [create(:curation_activity_no_callbacks, resource: @resources[9], status: 'in_progress'),
-                                   create(:curation_activity_no_callbacks, resource: @resources[9], status: 'curation'),
-                                   create(:curation_activity_no_callbacks, resource: @resources[9], status: 'embargoed')]
+        @curation_activities << [create(:curation_activity_no_callbacks, resource: @resources[8], status: 'in_progress'),
+                                 create(:curation_activity_no_callbacks, resource: @resources[8], status: 'curation'),
+                                 create(:curation_activity_no_callbacks, resource: @resources[8], status: 'published')]
 
-          # 5 public datasets
-          #
-        end
+        @curation_activities << [create(:curation_activity_no_callbacks, resource: @resources[9], status: 'in_progress'),
+                                 create(:curation_activity_no_callbacks, resource: @resources[9], status: 'curation'),
+                                 create(:curation_activity_no_callbacks, resource: @resources[9], status: 'embargoed')]
 
-        it 'gets a list of public datasets (public is known by curation status)' do
+        # 5 public datasets
+        #
+      end
+
+      describe 'user and role permitted scope' do
+        it 'gets a list of public datasets (public status is known by curation status)' do
           response_code = get '/api/datasets', {}, default_json_headers
           output = JSON.parse(response.body).with_indifferent_access
           expect(output[:count]).to eq(5)
@@ -129,6 +130,46 @@ module StashApi
           output = JSON.parse(response.body).with_indifferent_access
           expect(output[:count]).to eq(@identifiers.count)
         end
+
+        it 'gets a list for admins: public items and private items in their own library roost' do
+          @doorkeeper_application = create(:doorkeeper_application, redirect_uri: 'urn:ietf:wg:oauth:2.0:oob',
+                                           owner_id: @user2.id, owner_type: 'StashEngine::User')
+          setup_access_token(doorkeeper_application: @doorkeeper_application)
+          response_code = get '/api/datasets', {}, default_authenticated_headers
+          output = JSON.parse(response.body).with_indifferent_access
+          expect(output[:count]).to eq(6)
+          dois = output['_embedded']['stash:datasets'].map{|ds| ds['identifier']}
+          expect(dois).to include(@identifiers[1].to_s) # this would be private otherwise based on curation status
+        end
+
+        it 'gets a list for an individual user for public and his own' do
+          @doorkeeper_application = create(:doorkeeper_application, redirect_uri: 'urn:ietf:wg:oauth:2.0:oob',
+                                           owner_id: @user1.id, owner_type: 'StashEngine::User')
+          setup_access_token(doorkeeper_application: @doorkeeper_application)
+          response_code = get '/api/datasets', {}, default_authenticated_headers
+          output = JSON.parse(response.body).with_indifferent_access
+          expect(output[:count]).to eq(6)
+          dois = output['_embedded']['stash:datasets'].map{|ds| ds['identifier']}
+          expect(dois).to include(@identifiers[1].to_s) # this would be private otherwise based on curation status
+        end
+      end
+
+      describe 'filtering and reduced scoping of list for Dryad special filters' do
+        it 'reduces scope to a curation status' do
+          response_code = get '/api/datasets', { 'curationStatus' => 'curation'}, default_authenticated_headers
+          output = JSON.parse(response.body).with_indifferent_access
+          expect(output[:count]).to eq(1)
+          expect(output['_embedded']['stash:datasets'].first['identifier']).to eq(@identifiers[1].to_s)
+        end
+
+        it 'reduces scope to a publisher ISSN' do
+          internal_datum = create(:internal_datum, identifier_id: @identifiers[5].id, data_type: 'publicationISSN')
+          response_code = get '/api/datasets', { 'publicationISSN' => internal_datum.value}, default_authenticated_headers
+          output = JSON.parse(response.body).with_indifferent_access
+          expect(output[:count]).to eq(1)
+          expect(output['_embedded']['stash:datasets'].first['identifier']).to eq(@identifiers[5].to_s)
+        end
+
       end
     end
   end
