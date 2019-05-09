@@ -136,6 +136,12 @@ namespace :identifiers do
         end
       end
       StashEngine::InternalDatum.create(identifier_id: datum.identifier_id, data_type: 'publicationName', value: title) unless title.blank?
+      # Submit the info to Solr if published/embargoed
+      identifier = StashEngine::Identifier.where(id: datum.identifier_id).first
+      if identifier.present? && identifier.latest_resource.present?
+        current_resource = identifier.latest_resource_with_public_metadata
+        current_resource.submit_to_solr if current_resource.present?
+      end
     end
     p "Finished: #{Time.now}"
   end
