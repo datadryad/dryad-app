@@ -10,16 +10,10 @@ module Stash
       expect(translator.original_url.present?).to eql(true)
     end
 
-    it 'attributes are correct for Google Drive `/file/d/` URLs' do
+    it 'attributes are correct for Google Drive URLs' do
       translator = Stash::UrlTranslator.new('https://drive.google.com/file/d/0B9diV3DhsADzQ2Q2aDZGRFlkLVU/view?usp=sharing')
       expect(translator.service).to eql('google')
-      expect(translator.direct_download).to eql('https://drive.google.com/file/d/0B9diV3DhsADzQ2Q2aDZGRFlkLVU/view?usp=sharing')
-    end
-
-    it 'attributes are correct for Google Drive `/open?id=` URLs' do
-      translator = Stash::UrlTranslator.new('https://drive.google.com/open?id=1P2lVY_NvGipGLYamQcxWcYe4mABha-3w')
-      expect(translator.service).to eql('google')
-      expect(translator.direct_download).to eql('https://drive.google.com/open?id=1P2lVY_NvGipGLYamQcxWcYe4mABha-3w')
+      expect(translator.direct_download).to eql('https://drive.google.com/uc?export=download&id=0B9diV3DhsADzQ2Q2aDZGRFlkLVU')
     end
 
     it 'sets the service to "google" for Google Docs URLs' do
