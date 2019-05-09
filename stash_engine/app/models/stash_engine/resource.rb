@@ -148,7 +148,13 @@ module StashEngine
     end
 
     # complicated join & subquery that may be reused to get the last curation state for each resource
-    SUBQUERY_FOR_LATEST_CURATION = 'SELECT resource_id, max(id) as id FROM stash_engine_curation_activities GROUP BY resource_id'.freeze
+    SUBQUERY_FOR_LATEST_CURATION = <<~HEREDOC
+      SELECT resource_id, max(id) as id
+      FROM stash_engine_curation_activities
+      GROUP BY resource_id
+    HEREDOC
+      .freeze
+
     JOIN_FOR_LATEST_CURATION = "INNER JOIN (#{SUBQUERY_FOR_LATEST_CURATION}) subq ON stash_engine_resources.id = subq.resource_id " \
       'INNER JOIN stash_engine_curation_activities ON subq.id = stash_engine_curation_activities.id'.freeze
 
