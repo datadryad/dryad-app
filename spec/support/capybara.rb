@@ -17,7 +17,7 @@ Capybara.javascript_driver = :chrome
 # the headless option.
 Capybara.asset_host = 'http://localhost:33000'
 
-Webdrivers.install_dir = '~/.webdrivers'
+# Webdrivers.install_dir = '~/.webdrivers'
 # Selenium::WebDriver::Chrome.path = '~/.webdrivers/chromedriver'
 
 # This is a customisation of the default :selenium_chrome_headless config in:
