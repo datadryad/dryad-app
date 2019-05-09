@@ -1,5 +1,7 @@
 require 'db_spec_helper'
 require 'webmock/rspec'
+require_relative '../../../../spec_helpers/factory_helper'
+require 'byebug'
 
 module StashEngine
 
@@ -286,6 +288,118 @@ module StashEngine
       it 'returns the current version\'s first author\'s affiliation' do
         expect(@identifier.submitter_affiliation).to eql(@identifier.latest_resource&.authors&.first&.affiliation)
       end
+    end
+
+    describe :with_visibility do
+      before(:each) do
+        Identifier.destroy_all
+        @user = create(:user, first_name: 'Lisa', last_name: 'Muckenhaupt', email: 'lmuckenhaupt@ucop.edu', tenant_id: 'ucop', role: nil)
+        @user2 = create(:user, first_name: 'Gargola', last_name: 'Jones', email: 'luckin@ucop.edu', tenant_id: 'ucop', role: 'admin')
+        @user3 = create(:user, first_name: 'Merga', last_name: 'Flav', email: 'flavin@ucop.edu', tenant_id: 'ucb', role: 'superuser')
+
+        @identifiers = [create(:identifier, identifier: '10.1072/FK2000'),
+                        create(:identifier, identifier: '10.1072/FK2001'),
+                        create(:identifier, identifier: '10.1072/FK2002'),
+                        create(:identifier, identifier: '10.1072/FK2003'),
+                        create(:identifier, identifier: '10.1072/FK2004'),
+                        create(:identifier, identifier: '10.1072/FK2005'),
+                        create(:identifier, identifier: '10.1072/FK2006'),
+                        create(:identifier, identifier: '10.1072/FK2007')]
+
+        @resources = [create(:resource, user_id: @user.id, tenant_id: @user.tenant_id, identifier_id: @identifiers[0].id),
+                      create(:resource, user_id: @user.id, tenant_id: @user.tenant_id, identifier_id: @identifiers[0].id),
+                      create(:resource, user_id: @user.id, tenant_id: @user.tenant_id, identifier_id: @identifiers[1].id),
+                      create(:resource, user_id: @user2.id, tenant_id: @user2.tenant_id, identifier_id: @identifiers[2].id),
+                      create(:resource, user_id: @user2.id, tenant_id: @user2.tenant_id, identifier_id: @identifiers[2].id),
+                      create(:resource, user_id: @user2.id, tenant_id: @user2.tenant_id, identifier_id: @identifiers[3].id),
+                      create(:resource, user_id: @user3.id, tenant_id: @user3.tenant_id, identifier_id: @identifiers[4].id),
+                      create(:resource, user_id: @user3.id, tenant_id: @user3.tenant_id, identifier_id: @identifiers[5].id),
+                      create(:resource, user_id: @user3.id, tenant_id: @user3.tenant_id, identifier_id: @identifiers[6].id),
+                      create(:resource, user_id: @user3.id, tenant_id: @user3.tenant_id, identifier_id: @identifiers[7].id)]
+
+        @curation_activities = [[create(:curation_activity_no_callbacks, resource: @resources[0], status: 'in_progress'),
+                                 create(:curation_activity_no_callbacks, resource: @resources[0], status: 'curation'),
+                                 create(:curation_activity_no_callbacks, resource: @resources[0], status: 'published')]]
+
+        @curation_activities << [create(:curation_activity_no_callbacks, resource: @resources[1], status: 'in_progress'),
+                                 create(:curation_activity_no_callbacks, resource: @resources[1], status: 'curation'),
+                                 create(:curation_activity_no_callbacks, resource: @resources[1], status: 'embargoed')]
+
+        @curation_activities << [create(:curation_activity_no_callbacks, resource: @resources[2], status: 'in_progress'),
+                                 create(:curation_activity_no_callbacks, resource: @resources[2], status: 'curation')]
+
+        @curation_activities << [create(:curation_activity_no_callbacks, resource: @resources[3], status: 'in_progress'),
+                                 create(:curation_activity_no_callbacks, resource: @resources[3], status: 'curation'),
+                                 create(:curation_activity_no_callbacks, resource: @resources[3], status: 'action_required')]
+
+        @curation_activities << [create(:curation_activity_no_callbacks, resource: @resources[4], status: 'in_progress'),
+                                 create(:curation_activity_no_callbacks, resource: @resources[4], status: 'curation'),
+                                 create(:curation_activity_no_callbacks, resource: @resources[4], status: 'published')]
+
+        @curation_activities << [create(:curation_activity_no_callbacks, resource: @resources[5], status: 'in_progress'),
+                                 create(:curation_activity_no_callbacks, resource: @resources[5], status: 'curation'),
+                                 create(:curation_activity_no_callbacks, resource: @resources[5], status: 'embargoed')]
+
+        @curation_activities << [create(:curation_activity_no_callbacks, resource: @resources[6], status: 'in_progress'),
+                                 create(:curation_activity_no_callbacks, resource: @resources[6], status: 'curation'),
+                                 create(:curation_activity_no_callbacks, resource: @resources[6], status: 'withdrawn')]
+
+        @curation_activities << [create(:curation_activity_no_callbacks, resource: @resources[7], status: 'in_progress')]
+
+        @curation_activities << [create(:curation_activity_no_callbacks, resource: @resources[8], status: 'in_progress'),
+                                 create(:curation_activity_no_callbacks, resource: @resources[8], status: 'curation'),
+                                 create(:curation_activity_no_callbacks, resource: @resources[8], status: 'published')]
+
+        @curation_activities << [create(:curation_activity_no_callbacks, resource: @resources[9], status: 'in_progress'),
+                                 create(:curation_activity_no_callbacks, resource: @resources[9], status: 'curation'),
+                                 create(:curation_activity_no_callbacks, resource: @resources[9], status: 'embargoed')]
+
+        # this does DISTINCT and joins to resources and latest curation statuses
+        # 5 identifers have been published
+      end
+
+      it 'lists publicly viewable in one query' do
+        public_identifiers = Identifier.with_visibility(states: %w[published embargoed])
+        expect(public_identifiers.count).to eq(5)
+        expect(public_identifiers.map(&:id)).to include(@identifiers[7].id)
+        expect(public_identifiers.map(&:id)).not_to include(@identifiers[5].id)
+      end
+
+      it 'lists publicly viewable and private in my tenant for admins' do
+        identifiers = Identifier.with_visibility(states: %w[published embargoed], user_id: nil, tenant_id: 'ucop')
+        expect(identifiers.count).to eq(6)
+        expect(identifiers.map(&:id)).to include(@identifiers[1].id)
+      end
+
+      it 'lists publicly viewable and my own datasets for a user' do
+        identifiers = Identifier.with_visibility(states: %w[published embargoed], user_id: @user.id)
+        expect(identifiers.count).to eq(6)
+        expect(identifiers.map(&:id)).to include(@identifiers[1].id)
+      end
+
+      it 'only picks up on a final resource state for each dataset' do
+        identifiers = Identifier.with_visibility(states: 'curation')
+        expect(identifiers.count).to eq(1)
+        expect(identifiers.map(&:id)).to include(@identifiers[1].id)
+      end
+
+      it 'user_viewable for a regular user' do
+        identifiers = Identifier.user_viewable(user: @user)
+        expect(identifiers.count).to eq(6) # 5 public plus mine in curation
+        expect(identifiers.map(&:id)).to include(@identifiers[1].id) # this is my private one
+      end
+
+      it 'user_viewable for an admin' do
+        identifiers = Identifier.user_viewable(user: @user2)
+        expect(identifiers.count).to eq(6)
+        expect(identifiers.map(&:id)).to include(@identifiers[1].id) # this is some ucop joe blow private one
+      end
+
+      it 'user_viewable for a superuser, they love it all' do
+        identifiers = Identifier.user_viewable(user: @user3)
+        expect(identifiers.count).to eq(@identifiers.length)
+      end
+
     end
 
   end
