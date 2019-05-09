@@ -7,6 +7,7 @@ require_relative 'helpers/ckeditor_helper'
 require_relative 'helpers/routes_helper'
 require_relative 'helpers/session_helper'
 require_relative 'helpers/webmock_helper'
+require 'webdrivers'
 
 Capybara.default_driver = :rack_test
 Capybara.javascript_driver = :chrome
@@ -16,16 +17,33 @@ Capybara.javascript_driver = :chrome
 # the headless option.
 Capybara.asset_host = 'http://localhost:33000'
 
+Webdrivers.install_dir = '~/.webdrivers'
+# Selenium::WebDriver::Chrome.path = '~/.webdrivers/chromedriver'
+
 # This is a customisation of the default :selenium_chrome_headless config in:
 # https://github.com/teamcapybara/capybara/blob/master/lib/capybara.rb
 #
 # This adds the --no-sandbox flag to fix TravisCI as described here:
 # https://docs.travis-ci.com/user/chrome#sandboxing
+
 Capybara.register_driver :selenium_chrome_headless do |app|
+  Capybara::Selenium::Driver.new(app, browser: :chrome)
   browser_options = ::Selenium::WebDriver::Chrome::Options.new
   browser_options.args << '--headless'
+  browser_options.args << '--incognito'
   browser_options.args << '--no-sandbox'
   browser_options.args << '--window-size=1280,1024'
+  browser_options.args << '--use-mock-keychain'
+  browser_options.args << '--allow-insecure-localhost'
+  browser_options.args << '--disable-web-security'
+  browser_options.args << '--disable-dev-shm-usage'
+  browser_options.args << '--disable-infobars'
+  browser_options.args << '--disable-extensions'
+  browser_options.args << '--disable-popup-blocking'
+  browser_options.args << '--disable-gpu' if Gem.win_platform?
+  browser_options.args << '--enable-features=NetworkService,NetworkServiceInProcess'
+
+  # chromeOptions.AddAdditionalCapability("acceptInsecureCerts", true, true);
   browser_options.args << '--disable-gpu' if Gem.win_platform?
   Capybara::Selenium::Driver.new(app, browser: :chrome, options: browser_options)
 end

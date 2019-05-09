@@ -7,7 +7,8 @@ module WebmockHelper
   WHITE_LIST = [
     /localhost/,
     /127\.0\.0\.1/,
-    /\/lucene\/solr\//
+    /\/lucene\/solr\//,
+    /chromedriver\.storage\.googleapis\.com/
   ].freeze
   # rubocop:enable Style/RegexpLiteral
 
