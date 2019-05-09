@@ -139,8 +139,8 @@ namespace :identifiers do
       # Submit the info to Solr if published/embargoed
       identifier = StashEngine::Identifier.where(id: datum.identifier_id).first
       if identifier.present? && identifier.latest_resource.present?
-        current_ca = identifier.latest_resource.current_curation_activity
-        identifier.latest_resource.submit_to_solr if current_ca.present? && (current_ca.published? || current_ca.embargoed?)
+        current_resource = identifier.latest_resource_with_public_metadata
+        current_resource.submit_to_solr if current_resource.present?
       end
     end
     p "Finished: #{Time.now}"
