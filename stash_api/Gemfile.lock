@@ -21,7 +21,7 @@ PATH
       blacklight (~> 6.5.0)
       config
       devise-guests (~> 0.5)
-      ffi (= 1.10.0)
+      ffi
       geoblacklight (~> 1.1.2)
       jquery-rails (~> 4.1)
       rails (~> 4.2.11)
@@ -114,7 +114,7 @@ GEM
       activerecord (>= 3.2.6)
     arel (6.0.4)
     ast (2.4.0)
-    autoprefixer-rails (9.5.1)
+    autoprefixer-rails (9.5.1.1)
       execjs
     base32-url (0.5)
     bcrypt (3.1.12)
