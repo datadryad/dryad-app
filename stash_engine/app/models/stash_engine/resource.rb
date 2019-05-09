@@ -147,6 +147,35 @@ module StashEngine
                                                    status: %w[published embargoed] })
     end
 
+    # complicated join & subquery that may be reused to get the last curation state for each resource
+    SUBQUERY_FOR_LATEST_CURATION = <<~HEREDOC
+      SELECT resource_id, max(id) as id
+      FROM stash_engine_curation_activities
+      GROUP BY resource_id
+    HEREDOC
+      .freeze
+
+    JOIN_FOR_LATEST_CURATION = "INNER JOIN (#{SUBQUERY_FOR_LATEST_CURATION}) subq ON stash_engine_resources.id = subq.resource_id " \
+      'INNER JOIN stash_engine_curation_activities ON subq.id = stash_engine_curation_activities.id'.freeze
+
+    # returns the resources that are currently in a curation state you specify (not looking at obsolete states),
+    # ie last state for each resource.  Also if user_id or tenant_id is set it will return those records (your own)
+    # or your organization's without regard to curation state.
+    scope :with_visibility, ->(states:, user_id: nil, tenant_id: nil) do
+      my_states = (states.is_a?(String) || states.is_a?(Symbol) ? [states] : states)
+      str = 'stash_engine_curation_activities.status IN (?)'
+      arr = [my_states]
+      if user_id
+        str += ' OR stash_engine_resources.user_id = ?'
+        arr.push(user_id)
+      end
+      if tenant_id
+        str += ' OR stash_engine_resources.tenant_id = ?'
+        arr.push(tenant_id)
+      end
+      joins(JOIN_FOR_LATEST_CURATION).where(str, *arr)
+    end
+
     # gets the latest version per dataset and includes items that haven't been assigned an identifer yet but are initially in progress
     # NOTE.  We've now changed it so everything gets an identifier upon creation, so we may be able to simplify or get rid of this.
     scope :latest_per_dataset, (-> do
@@ -551,6 +580,7 @@ module StashEngine
       # If the prior version was in author :action_required or :curation status we need to set it
       # back to :curation status. Also carry over the curators note so that it appears in the activity log
       return unless %w[action_required curation].include?(prior_version.current_curation_status)
+
       # rubocop:disable Layout/AlignHash
       curation_activities << StashEngine::CurationActivity.create(user_id: attribution, status: 'curation',
         note: edit_histories.last&.user_comment || 'ready for curation')
@@ -562,6 +592,7 @@ module StashEngine
     def requires_peer_review?
       # return false if this is NOT the first version
       return false if identifier.blank? || identifier.resources.length > 1
+
       # TODO: ryscher, we need to add in the call to the service that correctly indicates whether the
       #       associated journal should enter peer_review status
       identifier&.internal_data&.where(data_type: %w[publicationISSN publicationDOI manuscriptNumber])&.any?
