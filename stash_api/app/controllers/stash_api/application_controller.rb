@@ -61,8 +61,12 @@ module StashApi
     end
 
     def require_api_user
-      @user = doorkeeper_token.application.owner if doorkeeper_token
+      optional_api_user
       render json: { error: 'Unauthorized, must have current bearer token' }.to_json, status: 401 if @user.blank?
+    end
+
+    def optional_api_user
+      @user = doorkeeper_token.application.owner if doorkeeper_token
     end
 
     def require_in_progress_resource

@@ -1,4 +1,6 @@
 require 'db_spec_helper'
+require_relative '../../../../spec_helpers/factory_helper'
+require 'byebug'
 
 module StashEngine
 
@@ -1123,9 +1125,90 @@ module StashEngine
           resource.current_state = 'submitted'
           expect(resource.reload.curatable?).to eql(true)
         end
-
       end
 
+      describe :with_visibility do
+        before(:each) do
+          # user has only user permission and is part of the UCOP tenant
+          @user2 = create(:user, first_name: 'Gargola', last_name: 'Jones', email: 'luckin@ucop.edu', tenant_id: 'ucop', role: 'admin')
+          @user3 = create(:user, first_name: 'Merga', last_name: 'Flav', email: 'flavin@ucop.edu', tenant_id: 'ucb', role: 'superuser')
+          @resources = [create(:resource, user_id: @user.id, tenant_id: @user.tenant_id),
+                        create(:resource, user_id: @user.id, tenant_id: @user.tenant_id),
+                        create(:resource, user_id: @user.id, tenant_id: @user.tenant_id),
+                        create(:resource, user_id: @user2.id, tenant_id: @user2.tenant_id),
+                        create(:resource, user_id: @user2.id, tenant_id: @user2.tenant_id),
+                        create(:resource, user_id: @user2.id, tenant_id: @user2.tenant_id),
+                        create(:resource, user_id: @user3.id, tenant_id: @user3.tenant_id),
+                        create(:resource, user_id: @user3.id, tenant_id: @user3.tenant_id),
+                        create(:resource, user_id: @user3.id, tenant_id: @user3.tenant_id),
+                        create(:resource, user_id: @user3.id, tenant_id: @user3.tenant_id)]
+
+          @curation_activities = [[create(:curation_activity_no_callbacks, resource: @resources[0], status: 'in_progress'),
+                                   create(:curation_activity_no_callbacks, resource: @resources[0], status: 'curation'),
+                                   create(:curation_activity_no_callbacks, resource: @resources[0], status: 'published')]]
+
+          @curation_activities << [create(:curation_activity_no_callbacks, resource: @resources[1], status: 'in_progress'),
+                                   create(:curation_activity_no_callbacks, resource: @resources[1], status: 'curation'),
+                                   create(:curation_activity_no_callbacks, resource: @resources[1], status: 'embargoed')]
+
+          @curation_activities << [create(:curation_activity_no_callbacks, resource: @resources[2], status: 'in_progress'),
+                                   create(:curation_activity_no_callbacks, resource: @resources[2], status: 'curation')]
+
+          @curation_activities << [create(:curation_activity_no_callbacks, resource: @resources[3], status: 'in_progress'),
+                                   create(:curation_activity_no_callbacks, resource: @resources[3], status: 'curation'),
+                                   create(:curation_activity_no_callbacks, resource: @resources[3], status: 'action_required')]
+
+          @curation_activities << [create(:curation_activity_no_callbacks, resource: @resources[4], status: 'in_progress'),
+                                   create(:curation_activity_no_callbacks, resource: @resources[4], status: 'curation'),
+                                   create(:curation_activity_no_callbacks, resource: @resources[4], status: 'published')]
+
+          @curation_activities << [create(:curation_activity_no_callbacks, resource: @resources[5], status: 'in_progress'),
+                                   create(:curation_activity_no_callbacks, resource: @resources[5], status: 'curation'),
+                                   create(:curation_activity_no_callbacks, resource: @resources[5], status: 'embargoed')]
+
+          @curation_activities << [create(:curation_activity_no_callbacks, resource: @resources[6], status: 'in_progress'),
+                                   create(:curation_activity_no_callbacks, resource: @resources[6], status: 'curation'),
+                                   create(:curation_activity_no_callbacks, resource: @resources[6], status: 'withdrawn')]
+
+          @curation_activities << [create(:curation_activity_no_callbacks, resource: @resources[7], status: 'in_progress')]
+
+          @curation_activities << [create(:curation_activity_no_callbacks, resource: @resources[8], status: 'in_progress'),
+                                   create(:curation_activity_no_callbacks, resource: @resources[8], status: 'curation'),
+                                   create(:curation_activity_no_callbacks, resource: @resources[8], status: 'published')]
+
+          @curation_activities << [create(:curation_activity_no_callbacks, resource: @resources[9], status: 'in_progress'),
+                                   create(:curation_activity_no_callbacks, resource: @resources[9], status: 'curation'),
+                                   create(:curation_activity_no_callbacks, resource: @resources[9], status: 'embargoed')]
+
+          # 6 publicly viewable
+          # admin for UCOP (user2) can see 6 public + 2 extras for other private ucop datasets
+
+        end
+
+        it 'lists publicly viewable (two curation states) in one query' do
+          public_resources = Resource.with_visibility(states: %w[published embargoed])
+          expect(public_resources.count).to eq(6)
+          expect(public_resources.map(&:id)).to include(@resources[0].id)
+        end
+
+        it 'lists publicly viewable and private in my tenant for admins' do
+          resources = Resource.with_visibility(states: %w[published embargoed], user_id: nil, tenant_id: 'ucop')
+          expect(resources.count).to eq(8)
+          expect(resources.map(&:id)).to include(@resources[3].id)
+        end
+
+        it 'lists publicly viewable and my own datasets for a user' do
+          resources = Resource.with_visibility(states: %w[published embargoed], user_id: @user.id)
+          expect(resources.count).to eq(7)
+          expect(resources.map(&:id)).to include(@resources[2].id)
+        end
+
+        it 'only picks up the final state for each dataset' do
+          resources = Resource.with_visibility(states: 'curation')
+          expect(resources.count).to eq(1)
+          expect(resources.map(&:id)).to include(@resources[2].id)
+        end
+      end
     end
 
   end

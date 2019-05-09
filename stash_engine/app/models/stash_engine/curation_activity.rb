@@ -148,7 +148,7 @@ module StashEngine
       authors = resource.authors.where.not(author_email: existing_invites).where.not(author_email: nil)
 
       return if authors.length <= 1
-      authors[1..authors.legnth].each do |author|
+      authors[1..authors.length].each do |author|
         StashEngine::UserMailer.orcid_invitation(
           StashEngine::OrcidInvitation.create(
             email: author.author_email,

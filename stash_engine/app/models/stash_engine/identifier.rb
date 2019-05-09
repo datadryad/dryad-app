@@ -12,6 +12,30 @@ module StashEngine
             primary_key: 'latest_resource_id',
             foreign_key: 'id'
 
+    # See https://medium.com/rubyinside/active-records-queries-tricks-2546181a98dd for some good tricks
+    # returns the identifiers that have resources with that *latest* curation state you specify (for any of the resources)
+    # These scopes needs some reworking based on changes to the resource state, leaving them commented out for now.
+    # with_visibility, ->(states:, user_id: nil, tenant_id: nil)
+    scope :with_visibility, ->(states:, user_id: nil, tenant_id: nil) do
+      joins(:resources).merge(Resource.with_visibility(states: states, user_id: user_id, tenant_id: tenant_id)).distinct
+    end
+
+    scope :publicly_viewable, -> do
+      with_visibility(states: %w[published embargoed])
+    end
+
+    scope :user_viewable, ->(user: nil) do
+      if user.nil?
+        publicly_viewable
+      elsif user.superuser?
+        Identifier.all
+      elsif user.role == 'admin'
+        with_visibility(states: %w[published embargoed], tenant_id: user.tenant_id)
+      else
+        with_visibility(states: %w[published embargoed], user_id: user.id)
+      end
+    end
+
     # has_many :counter_citations, class_name: 'StashEngine::CounterCitation', dependent: :destroy
     # before_create :build_associations
 
