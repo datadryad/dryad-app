@@ -1,6 +1,6 @@
 require 'stash/repo/submission_job'
 require 'fileutils'
-
+require 'concurrent'
 module Stash
   module Repo
     # Abstraction for a repository
@@ -9,8 +9,9 @@ module Stash
 
       # Initializes this repository
       # @param url_helpers [Module] Rails URL helpers
-      def initialize(url_helpers:)
+      def initialize(url_helpers:, executor: Concurrent::FixedThreadPool.new(5))
         @url_helpers = url_helpers
+        @executor = executor
       end
 
       # Creates a {SubmissionJob} for the specified resource
@@ -51,7 +52,7 @@ module Stash
       def submit(resource_id:)
         StashEngine::Resource.find(resource_id).current_state = 'processing'
         submission_job = create_submission_job(resource_id: resource_id)
-        promise = submission_job.submit_async
+        promise = submission_job.submit_async(executor: @executor)
         promise.on_success do |result|
           result.success? ? handle_success(result) : handle_failure(result)
         end

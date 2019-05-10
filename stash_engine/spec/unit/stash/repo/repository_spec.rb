@@ -1,6 +1,7 @@
 require 'spec_helper'
 require 'fileutils'
 require 'tmpdir'
+require 'concurrent'
 
 module Stash
   module Repo
@@ -17,7 +18,7 @@ module Stash
 
       before(:each) do
         @url_helpers = double(Module) # yes, apparently URL helpers are an anonymous module
-        @repo = Repository.new(url_helpers: url_helpers)
+        @repo = Repository.new(url_helpers: url_helpers, executor: Concurrent::ImmediateExecutor.new)
 
         @logger = instance_double(Logger)
         allow(Rails).to receive(:logger).and_return(logger)
