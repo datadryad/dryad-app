@@ -46,7 +46,7 @@ module StashEngine
         response = client.head(@url, follow_redirect: true)
         init_from(response)
         # the follow is for google drive which doesn't respond to head requests correctly
-        fix_by_get_request(redirected_to || url) if status_code == 503
+        fix_by_get_request(redirected_to || url) if google_drive_redirect?(status_code, redirected_to)
         return true
       rescue HTTPClient::TimeoutError
         @timed_out = true
@@ -196,6 +196,10 @@ module StashEngine
       Net::HTTP.start(url.host, url.port, use_ssl: (url.scheme == 'https')) do |conn|
         conn.request_get(url) { |response| return response }
       end
+    end
+
+    def google_drive_redirect?(status_code, redirected_to)
+      status_code >= 500 && redirected_to.include?('googleusercontent.com')
     end
 
   end

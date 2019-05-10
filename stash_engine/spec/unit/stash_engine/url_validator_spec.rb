@@ -76,42 +76,44 @@ module StashEngine
         expect(uv.status_code).to eq(499)
       end
 
-      it 'retries with GET request in the event of a 503 from Google Drive' do
-        headers = instance_double(HTTP::Message::Headers)
-        allow(headers).to receive(:[]).and_return([])
-        head_response = instance_double(HTTP::Message)
-        allow(head_response).to receive(:header).and_return(headers)
-        allow(head_response).to receive(:status_code).and_return(503)
+      it 'retries with GET request in the event of a 500 or 503 from Google Drive' do
+        [500, 503].each do |http_status_code|
+          headers = instance_double(HTTP::Message::Headers)
+          allow(headers).to receive(:[]).and_return([])
+          head_response = instance_double(HTTP::Message)
+          allow(head_response).to receive(:header).and_return(headers)
+          allow(head_response).to receive(:status_code).and_return(http_status_code)
 
-        prev_headers = instance_double(HTTP::Message::Headers)
-        redirect_url = 'http://example.org/foo.bar'
-        allow(prev_headers).to receive(:[]).with('Location').and_return([redirect_url])
+          prev_headers = instance_double(HTTP::Message::Headers)
+          redirect_url = 'https://docs.googleusercontent.com/123'
+          allow(prev_headers).to receive(:[]).with('Location').and_return([redirect_url])
 
-        previous = instance_double(HTTP::Message)
-        allow(previous).to receive(:header).and_return(prev_headers)
-        allow(head_response).to receive(:previous).and_return(previous)
+          previous = instance_double(HTTP::Message)
+          allow(previous).to receive(:header).and_return(prev_headers)
+          allow(head_response).to receive(:previous).and_return(previous)
 
-        expect(client).to receive(:head).and_return(head_response)
+          expect(client).to receive(:head).and_return(head_response)
 
-        expected_mime_type = 'application/octet-stream'
-        expected_size = 12_345
-        expected_filename = 'foo.bar'
-        stub_request(:get, redirect_url).to_return(
-          status: 200,
-          headers: {
-            'Content-Disposition' => "attachment; filename=\"#{expected_filename}\"",
-            'Content-Type' => expected_mime_type,
-            'Content-Length' => expected_size
-          }
-        )
+          expected_mime_type = 'application/octet-stream'
+          expected_size = 12_345
+          expected_filename = 'foo.bar'
+          stub_request(:get, redirect_url).to_return(
+            status: 200,
+            headers: {
+              'Content-Disposition' => "attachment; filename=\"#{expected_filename}\"",
+              'Content-Type' => expected_mime_type,
+              'Content-Length' => expected_size
+            }
+          )
 
-        expect(uv.validate).to eq(true) # just to be sure
-        expect(uv.redirected?).to eq(true)
-        expect(uv.redirected_to).to eq(redirect_url)
-        expect(uv.status_code).to eq(200)
-        expect(uv.size).to eq(expected_size)
-        expect(uv.mime_type).to eq(expected_mime_type)
-        expect(uv.filename).to eq(expected_filename)
+          expect(uv.validate).to eq(true) # just to be sure
+          expect(uv.redirected?).to eq(true)
+          expect(uv.redirected_to).to eq(redirect_url)
+          expect(uv.status_code).to eq(200)
+          expect(uv.size).to eq(expected_size)
+          expect(uv.mime_type).to eq(expected_mime_type)
+          expect(uv.filename).to eq(expected_filename)
+        end
       end
 
       it 'records redirects' do
