@@ -14,6 +14,11 @@ module Stash
         @executor = executor
       end
 
+      # the cached hostname so we can save the host, cached because we don't want to do this everytime
+      def hostname
+        @hostname ||= `hostname`
+      end
+
       # Creates a {SubmissionJob} for the specified resource
       # @param resource_id [Integer] the database ID of the resource
       # @return [SubmissionJob] a job that will submit that resource
