@@ -24,6 +24,7 @@ module StashEngine
     has_many :resource_states, class_name: 'StashEngine::ResourceState', dependent: :destroy
     has_many :edit_histories, class_name: 'StashEngine::EditHistory', dependent: :destroy
     has_many :curation_activities, -> { order(id: :asc) }, class_name: 'StashEngine::CurationActivity', dependent: :destroy
+    has_many :repo_queue_states, class_name: 'StashEngine::RepoQueueState', dependent: :destroy
 
     accepts_nested_attributes_for :curation_activities
 
