@@ -71,3 +71,6 @@ StashDatacite::ResourcePatch.associate_with_resource(StashEngine::Resource)
 
 require 'stash_datacite/author_patch'
 StashDatacite::AuthorPatch.patch! unless StashEngine::Author.method_defined?(:affiliation)
+
+require 'stash_datacite/user_patch'
+StashDatacite::UserPatch.patch! unless StashEngine::User.method_defined?(:affiliation)
