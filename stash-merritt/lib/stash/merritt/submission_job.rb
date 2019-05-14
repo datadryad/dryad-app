@@ -14,8 +14,10 @@ module Stash
         @url_helpers = url_helpers
       end
 
+      # this is where it actually starts running the real submission whenever it activates from the promise
       def submit!
         log.info("#{Time.now.xmlschema} #{description}")
+        Stash::Repo::Repository.update_repo_queue_state(resource_id: @resource_id, state: 'processing')
         do_submit!
       rescue StandardError => e
         Stash::Repo::SubmissionResult.failure(resource_id: resource_id, request_desc: description, error: e)
