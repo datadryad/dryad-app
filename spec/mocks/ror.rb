@@ -2,13 +2,13 @@ module Mocks
 
   module Ror
 
-    def mock_ror!
-      stub_ror_name_lookup
-      stub_ror_id_lookup
+    def mock_ror!(user = nil)
+      stub_ror_name_lookup(name: user.present? && user.affiliation.present? ? user.affiliation.long_name : nil)
+      stub_ror_id_lookup(university: user.present? && user.affiliation.present? ? user.affiliation.long_name : nil)
     end
 
     # rubocop:disable Metrics/MethodLength
-    def stub_ror_id_lookup(university: 'University of Testing', country: 'United States of America')
+    def stub_ror_id_lookup(university: Faker::Educator.university, country: 'United States of America')
       # Mock a request for a specific ROR Organization
       stub_request(:get, %r{api\.ror\.org/organizations/.+})
         .with(
@@ -29,7 +29,7 @@ module Mocks
         }.to_json, headers: { 'Content-Type' => 'application/json' })
     end
 
-    def stub_ror_name_lookup
+    def stub_ror_name_lookup(name: Faker::Educator.university)
       # Mock a ROR Organization query
       stub_request(:get, %r{api\.ror\.org/organizations\?query(.\s)*})
         .with(
@@ -42,13 +42,13 @@ module Mocks
           'items': [
             {
               'id': 'https://ror.org/TEST',
-              'name': 'University of Testing',
+              'name': name,
               'types': ['Education'],
               'links': ['http://example.org/test'],
               'aliases': ['testing'],
               'acronyms': ['TST'],
               'wikipedia_url': 'http://example.org/wikipedia/wiki/test',
-              'labels': [{ 'iso639': 'id', 'label': 'University of Testing' }],
+              'labels': [{ 'iso639': 'id', 'label': name }],
               'country': { 'country_code': 'US', 'country_name': 'United States of America' },
               'external_ids': { 'GRID': { 'prefered': 'grid.test.123' } }
             },

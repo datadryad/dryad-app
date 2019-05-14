@@ -14,7 +14,6 @@ RSpec.feature 'SolrSanitization', type: :feature do
     # Start Solr - shutdown is handled globally when all tests have finished
     # SolrInstance.instance
     # doc = YAML.load(ERB.new(File.read(File.join(Rails.root, SolrInstance::BLACKLIGHT_YML))).result)
-    # rubocop:enable Security/YAMLLoad
     # @solr = RSolr.connect(url: doc['test']['url'])
 
     # @uuid = Faker::Crypto.sha1

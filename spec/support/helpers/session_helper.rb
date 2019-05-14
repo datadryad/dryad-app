@@ -1,6 +1,7 @@
 module SessionsHelper
 
   include Mocks::Omniauth
+  include Mocks::Ror
 
   def sign_in(user = create(:user), with_shib = false)
     sign_out if have_text('Logout')
@@ -18,9 +19,11 @@ module SessionsHelper
     visit stash_url_helpers.sessions_destroy_path
   end
 
+  # rubocop:disable Metrics/MethodLength
   def sign_in_as_user(user, with_shib)
-    OmniAuth.config.test_mode = true
     mock_orcid!(user)
+    mock_ror!
+    OmniAuth.config.test_mode = true
     visit root_path
     click_link 'Login'
     click_link 'Login or create your ORCID iD'
@@ -34,5 +37,6 @@ module SessionsHelper
       click_link 'Continue to My Datasets'
     end
   end
+  # rubocop:enable Metrics/MethodLength
 
 end
