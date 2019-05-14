@@ -81,6 +81,13 @@ module StashEngine
       end
     end
 
+    def metrics
+      @identifier = Identifier.find(params[:identifier_id])
+      respond_to do |format|
+        format.js
+      end
+    end
+
     # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity
     # PATCH /dataset/doi:10.xyz/abc
     def update
