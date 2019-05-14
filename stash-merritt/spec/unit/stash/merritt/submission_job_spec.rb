@@ -73,6 +73,8 @@ module Stash
 
         @job = SubmissionJob.new(resource_id: resource_id, url_helpers: url_helpers)
         allow(@job).to receive(:id_helper).and_return(OpenStruct.new(ensure_identifier: 'xxx'))
+
+        allow(Stash::Repo::Repository).to receive(:'hold_submissions?').and_return(false)
       end
 
       after(:each) do
@@ -86,6 +88,13 @@ module Stash
         end
 
         describe 'create' do
+
+          it "doesn't submit the package if holding submissions for a restart" do
+            allow(Stash::Repo::Repository).to receive(:'hold_submissions?').and_return(true)
+            expect(sword_helper).not_to receive(:submit!)
+            job.submit!
+          end
+
           it 'submits the package' do
             expect(sword_helper).to receive(:submit!)
             job.submit!
