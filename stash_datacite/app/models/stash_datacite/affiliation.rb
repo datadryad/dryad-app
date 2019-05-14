@@ -12,6 +12,7 @@ module StashDatacite
     has_and_belongs_to_many :contributors, class_name: 'StashDatacite::Contributor'
 
     before_save :strip_whitespace
+    after_save :ror_lookup, if: proc { |affil| affil.ror_id.blank? }
 
     # prefer short_name if it is set over long name and make string
     def smart_name
@@ -36,7 +37,7 @@ module StashDatacite
       APP_CONFIG.fee_waiver_countries || []
     end
 
-    def self.reconcile_affiliation(ror_id, long_name)
+    def self.from_ror(ror_id, long_name)
       return nil if long_name.blank?
       # If the Affiliation is already in the DB then get its id and update the ROR id if appropriate
       affil = Affiliation.where('LOWER(long_name) = LOWER(?)', long_name).first
@@ -52,6 +53,13 @@ module StashDatacite
 
     def strip_whitespace
       self.long_name = long_name.strip unless long_name.nil?
+    end
+
+    def ror_lookup
+      # Do a ROR lookup
+      ror_org = find_first_by_ror_name(long_name) unless ror_id.present?
+      return true unless ror_org.present?
+      update!(ror_id: ror_org[:id], long_name: ror_org[:name])
     end
 
   end

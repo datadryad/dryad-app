@@ -66,5 +66,26 @@ module StashDatacite
         expect(@affil.country_name).to eql('East Timor')
       end
     end
+
+    describe :from_ror do
+      before(:each) do
+        @affil = StashDatacite::Affiliation.create(long_name: 'Bertelsmann Music Group', ror_id: '12345')
+      end
+      it 'returns nil if no name is provided' do
+        expect(StashDatacite::Affiliation.from_ror('12345', nil)).to eql(nil)
+      end
+      it 'returns the correct affiliation' do
+        expect(StashDatacite::Affiliation.from_ror(nil, 'Bertelsmann Music Group')).to eql(@affil)
+      end
+      it 'adds the specified ROR id to the correct affiliation' do
+        expect(StashDatacite::Affiliation.from_ror('12345', 'Bertelsmann Music Group')).to eql(@affil)
+        expect(@affil.reload.ror_id).to eql('12345')
+      end
+      it 'creates a new affiliation if not found' do
+        @affil2 = StashDatacite::Affiliation.from_ror('9999', 'New Affiliation')
+        expect(@affil2).to eql(StashDatacite::Affiliation.last)
+        expect(@affil2.ror_id).to eql('9999')
+      end
+    end
   end
 end
