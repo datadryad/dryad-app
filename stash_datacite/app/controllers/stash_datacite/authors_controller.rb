@@ -73,7 +73,8 @@ module StashDatacite
 
     def process_affiliation
       args = author_params
-      affil = StashDatacite::Affiliation.reconcile_affiliation(args['affiliation']['ror_id'], args['affiliation']['long_name'])
+      affil = StashDatacite::Affiliation.first_or_create(name: args['affiliation']['long_name'])
+      affil.update(ror_id: args['affiliation']['ror_id']) if affil.present? && affil.ror_id.blank?
       args['affiliation']['id'] = affil.id unless affil.blank?
 
       # This would not be necessary if the relationship between author and affiliations

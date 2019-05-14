@@ -85,7 +85,7 @@ module Stash
       def query_ror(uri, query, headers)
         resp = HTTParty.get(uri, query: query, headers: headers)
         # If we received anything but a 200 then log an error and return an empty array
-        log.error "Unable to connect to ROR #{URI}?#{query}: status: #{resp.code}" if resp.code != 200
+        logger.error "Unable to connect to ROR #{URI}?#{query}: status: #{resp.code}" if resp.code != 200
         # Return an empty array if the response did not have any results
         return nil if resp.code != 200 || resp.blank?
         resp
