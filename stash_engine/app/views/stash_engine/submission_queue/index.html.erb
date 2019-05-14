@@ -1,0 +1,20 @@
+<h2>Information about the current submission queue for Merritt</h2>
+
+Current host is <%= StashEngine.repository.class.hostname %>
+
+<table class="c-lined-table">
+  <tr class="c-lined-table__head">
+    <th class="c-admin-table">Resource id</th>
+    <th class="c-admin-table">State</th>
+    <th class="c-admin-table">Hostname</th>
+    <th class="c-admin-table">Updated at</th>
+  </tr>
+  <% @queue_rows.each do |qr| %>
+    <tr class="c-lined-table__row">
+      <td><%= qr.resource_id %></td>
+      <td><%= qr.state %></td>
+      <td><%= qr.hostname %></td>
+      <td><%= formatted_datetime(qr.updated_at) %></td>
+    </tr>
+  <% end %>
+</table>
