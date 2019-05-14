@@ -88,7 +88,7 @@ module StashEngine
       end
     end
 
-    # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
+    # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity
     # PATCH /dataset/doi:10.xyz/abc
     def update
       return render(nothing: true, status: 404) unless id
