@@ -39,5 +39,16 @@ module StashEngine
       where(resource_id: resource_id).order(updated_at: :desc, id: :desc).first
     }
 
+    SUBQUERY_FOR_LATEST = <<~HEREDOC
+      SELECT resource_id, max(id) as id
+      FROM stash_engine_repo_queue_states
+      GROUP BY resource_id
+    HEREDOC
+      .freeze
+
+    scope :latest_per_resource, -> do
+      joins("INNER JOIN (#{SUBQUERY_FOR_LATEST}) subque ON stash_engine_repo_queue_states.id = subque.id")
+    end
+
   end
 end
