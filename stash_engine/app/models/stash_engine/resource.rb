@@ -497,7 +497,8 @@ module StashEngine
       l_name = user.last_name
       orcid = (user.orcid.blank? ? nil : user.orcid)
       email = user.email
-      StashEngine::Author.create(resource_id: id, author_orcid: orcid,
+      affiliation = user.affiliation
+      StashEngine::Author.create(resource_id: id, author_orcid: orcid, affiliation: affiliation,
                                  author_first_name: f_name, author_last_name: l_name, author_email: email)
       # disabling because we no longer wnat this with UC Press
       # author.affiliation_by_name(user.tenant.short_name) if user.try(:tenant)
