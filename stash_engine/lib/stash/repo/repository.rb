@@ -9,15 +9,19 @@ module Stash
 
       # Initializes this repository
       # @param url_helpers [Module] Rails URL helpers
-      def initialize(url_helpers:, executor: Concurrent::FixedThreadPool.new(3))
+      def initialize(url_helpers:, executor: Concurrent::FixedThreadPool.new(2))
         @url_helpers = url_helpers
         @executor = executor
       end
 
       # the cached hostname so we can save the host, cached because we don't want to do this everytime
+      # Rubocop is giving dumb advice below since I don't want to have to create an instance to access this and I want to cache it.
+      # It is also always running on the same server so will not change where the code is running.
+      # rubocop:disable Style/ClassVars
       def self.hostname
         @@hostname ||= `hostname`.strip
       end
+      # rubocop:enable Style/ClassVars
 
       # Creates a {SubmissionJob} for the specified resource
       # @param resource_id [Integer] the database ID of the resource
@@ -57,12 +61,12 @@ module Stash
       def submit(resource_id:)
         res = StashEngine::Resource.find(resource_id)
         res.current_state = 'processing'
-        if self.hold_submissions?
-          self.update_repo_queue_state(resource_id: resource_id, state: 'rejected_shutting_down')
+        if self.class.hold_submissions?
+          self.class.update_repo_queue_state(resource_id: resource_id, state: 'rejected_shutting_down')
           return
         end
         submission_job = create_submission_job(resource_id: resource_id)
-        self.update_repo_queue_state(resource_id: resource_id, state: 'enqueued')
+        self.class.update_repo_queue_state(resource_id: resource_id, state: 'enqueued')
         promise = submission_job.submit_async(executor: @executor)
         promise.on_success do |result|
           result.success? ? handle_success(result) : handle_failure(result)
@@ -96,6 +100,15 @@ module Stash
         log.warn(msg)
       end
 
+      def self.update_repo_queue_state(resource_id:, state:)
+        StashEngine::RepoQueueState.create(resource_id: resource_id, hostname: hostname, state: state)
+      end
+
+      # detect if we should be holding submissions because a hold-submissions.txt file exists one directory above Rails.root
+      def self.hold_submissions?
+        File.exist?(File.expand_path(File.join(Rails.root, '..', 'hold-submissions.txt')))
+      end
+
       private
 
       def get_download_uri(resource, record_identifier)
@@ -113,7 +126,7 @@ module Stash
       def handle_success(result)
         result.log_to(log)
         update_submission_log(result)
-        self.update_repo_queue_state(resource_id: result.resource_id, state: 'completed')
+        self.class.update_repo_queue_state(resource_id: result.resource_id, state: 'completed')
       rescue StandardError => e
         # errors here don't constitute a submission failure, so we don't change the resource state
         log_error(e)
@@ -123,7 +136,7 @@ module Stash
       def handle_failure(result)
         result.log_to(log)
         update_submission_log(result)
-        self.update_repo_queue_state(resource_id: result.resource_id, state: 'errored')
+        self.class.update_repo_queue_state(resource_id: result.resource_id, state: 'errored')
         resource = StashEngine::Resource.find(result.resource_id)
         StashEngine::UserMailer.error_report(resource, result.error).deliver_now
         StashEngine::UserMailer.submission_failed(resource, result.error).deliver_now unless resource&.skip_emails
@@ -174,15 +187,6 @@ module Stash
           archive_submission_request: result.request_desc,
           archive_response: (result.message || result.error.to_s)
         )
-      end
-
-      def self.update_repo_queue_state(resource_id:, state:)
-        StashEngine::RepoQueueState.create(resource_id: resource_id, hostname: hostname, state: state)
-      end
-
-      # detect if we should be holding submissions because a hold-submissions.txt file exists one directory above Rails.root
-      def self.hold_submissions?
-        File.exist?(File.expand_path(File.join(Rails.root, '..', 'hold-submissions.txt')))
       end
 
     end
