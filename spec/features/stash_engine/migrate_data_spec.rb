@@ -4,9 +4,11 @@ require 'rails_helper'
 RSpec.feature 'MigrateData', type: :feature do
 
   include Mocks::RSolr
+  include Mocks::Ror
 
   before(:each) do
     mock_solr!
+    mock_ror!
     @user = create(:user, migration_token: Faker::Lorem.word)
     create(:resource, :submitted, user: @user, identifier: create(:identifier))
     sign_in(@user)
