@@ -492,6 +492,8 @@ module StashEngine
       fill_author_from_user!
     end
 
+    # TODO: Move this to the Author model as `Author.from_user` perhaps so that we do not need to comingle
+    # StashDatacite objects directly here.
     def fill_author_from_user!
       f_name = user.first_name
       l_name = user.last_name
