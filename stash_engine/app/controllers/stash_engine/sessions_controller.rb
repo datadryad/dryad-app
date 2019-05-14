@@ -18,7 +18,8 @@ module StashEngine
     def orcid_callback
       emails = orcid_api_emails(orcid: @auth_hash[:uid], bearer_token: @auth_hash[:credentials][:token])
       user = User.from_omniauth_orcid(auth_hash: @auth_hash, emails: emails)
-      user.update(affiliation_id: handle_orcid_employments(orcid: @auth_hash[:uid], bearer_token: @auth_hash[:credentials][:token])&.id)
+      employment = handle_orcid_employments(orcid: @auth_hash[:uid], bearer_token: @auth_hash[:credentials][:token])
+      user.update(affiliation_id: employment&.id) unless employment.blank?
       session[:user_id] = user.id
       user.set_migration_token
       if user.tenant_id.present?
@@ -126,7 +127,7 @@ module StashEngine
                             'Content-type' => 'application/vnd.orcid+json', 'Authorization' => "Bearer #{bearer_token}"
       my_info = JSON.parse(resp.body)
       orgs = my_info['employment-summary'].map { |item| (item['organization'].blank? ? nil : item['organization']) }.compact
-      orgs = orgs.map { |org| StashDatacite::Affiliation.first_or_create(org['name']) }
+      orgs = orgs.map { |org| StashDatacite::Affiliation.find_or_create_by(long_name: org['name']) }
       orgs.first
     rescue RestClient::Exception => e
       logger.error(e)
