@@ -18,7 +18,8 @@ module StashDatacite
     # POST /authors
     def create
       respond_to do |format|
-        @author = StashEngine::Author.create(process_affiliation)
+        @author = StashEngine::Author.create(author_params)
+        process_affiliation
         @author.reload
         format.js
       end
@@ -27,7 +28,8 @@ module StashDatacite
     # PATCH/PUT /authors/1
     def update
       respond_to do |format|
-        @author.update(process_affiliation)
+        @author.update(author_params)
+        process_affiliation
         format.js { render template: 'stash_datacite/shared/update.js.erb' }
       end
     end
@@ -77,8 +79,6 @@ module StashDatacite
       # was updated to a one-one and an accepts_nested_attributes_for definition
       @author.affiliation = affil
       @author.save
-
-      args
     end
 
   end

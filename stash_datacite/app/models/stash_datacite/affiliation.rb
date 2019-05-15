@@ -49,8 +49,8 @@ module StashDatacite
       # The record didn't exist in ROR so just return as is
       return affil if ror_org.blank?
       # Otherwise use the ROR id and long_name
+      affil = find_or_initialize_by_long_name(ror_org[:name])
       affil.ror_id = ror_org[:id]
-      affil.long_name = ror_org[:name]
       affil
     end
 
