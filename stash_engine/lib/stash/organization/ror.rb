@@ -32,7 +32,7 @@ module Stash
         results = process_pages(resp, query) if resp.parsed_response.present? && resp.parsed_response['items'].present?
         results.present? ? results.flatten.uniq.sort_by { |a| a[:name] } : []
       rescue HTTParty::Error, SocketError => e
-        logger.error("Unable to connect to the ROR API for `find_by_ror_name`: #{e.message}")
+        raise "Unable to connect to the ROR API for `find_by_ror_name`: #{e.message}"
       end
 
       # Search ROR and return the first match for the given name
@@ -44,7 +44,7 @@ module Stash
         return nil if result['id'].blank? || result['name'].blank?
         ror_results_to_hash(resp)&.first
       rescue HTTParty::Error, SocketError => e
-        logger.error("Unable to connect to the ROR API for `find_first_by_ror_name`: #{e.message}")
+        raise "Unable to connect to the ROR API for `find_first_by_ror_name`: #{e.message}"
       end
 
       # Search the ROR API for a specific organization.
@@ -54,9 +54,9 @@ module Stash
         return nil if resp.parsed_response.blank? ||
                       resp.parsed_response['id'].blank? ||
                       resp.parsed_response['name'].blank?
-        self.new(resp.parsed_response)
+        new(resp.parsed_response)
       rescue HTTParty::Error, SocketError => e
-        logger.error("Unable to connect to the ROR API for `find_by_ror_id`: #{e.message}")
+        raise "Unable to connect to the ROR API for `find_by_ror_id`: #{e.message}"
       end
 
       class << self
@@ -81,7 +81,7 @@ module Stash
         def query_ror(uri, query, headers)
           resp = HTTParty.get(uri, query: query, headers: headers)
           # If we received anything but a 200 then log an error and return an empty array
-          logger.error "Unable to connect to ROR #{URI}?#{query}: status: #{resp.code}" if resp.code != 200
+          raise "Unable to connect to ROR #{URI}?#{query}: status: #{resp.code}" if resp.code != 200
           # Return an empty array if the response did not have any results
           return nil if resp.code != 200 || resp.blank?
           resp

@@ -86,7 +86,7 @@ module StashApi
 
       # If the affiliation was provided try looking up its ROR id
       if json_author[:affiliation].present?
-        a.affiliation = StashDatacite::Affiliation.from_long_name(long_name: json_author[:affiliation])
+        a.affiliation = StashDatacite::Affiliation.from_long_name(json_author[:affiliation])
         a.save if a.affiliation.present?
       end
 
