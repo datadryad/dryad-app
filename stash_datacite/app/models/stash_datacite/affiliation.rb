@@ -5,7 +5,7 @@ require 'stash/organization/ror'
 module StashDatacite
   class Affiliation < ActiveRecord::Base
 
-    include Stash::Organization::Ror
+    include Stash::Organization
 
     self.table_name = 'dcs_affiliations'
     has_and_belongs_to_many :authors, class_name: 'StashEngine::Author', join_table: 'dcs_affiliations_authors'
@@ -23,7 +23,7 @@ module StashDatacite
 
     def country_name
       return nil if ror_id.blank?
-      ror_org = find_by_ror_id(ror_id)
+      ror_org = Stash::Organization::Ror.find_by_ror_id(ror_id)
       return nil if ror_org.nil? || ror_org.country.nil?
       ror_org.country['country_name']
     end
@@ -60,8 +60,8 @@ module StashDatacite
     end
 
     def self.find_by_ror_long_name(long_name)
-      # Do a ROR lookup for the long_name
-      find_first_by_ror_name(long_name)
+      # Do a Stash::Organization::Ror lookup for the long_name
+      Stash::Organization::Ror.find_first_by_ror_name(long_name)
     end
 
     private

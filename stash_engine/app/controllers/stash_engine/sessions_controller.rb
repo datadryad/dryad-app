@@ -129,7 +129,7 @@ module StashEngine
       orgs = my_info['employment-summary'].map { |item| (item['organization'].blank? ? nil : item['organization']) }.compact
       orgs = orgs.map do |org|
         affil = StashDatacite::Affiliation.from_long_name(org['name'])
-        affil.save
+        affil.save if affil.present?
         affil
       end
       orgs.first
