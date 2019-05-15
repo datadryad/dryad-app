@@ -2,9 +2,6 @@ require_dependency 'stash_datacite/application_controller'
 
 module StashDatacite
   class AuthorsController < ApplicationController
-
-    include Stash::Organization::Ror
-
     before_action :set_author, only: %i[update delete]
     before_action :ajax_require_modifiable, only: %i[update create delete]
 
@@ -21,7 +18,8 @@ module StashDatacite
     # POST /authors
     def create
       respond_to do |format|
-        @author = StashEngine::Author.create(process_affiliation)
+        @author = StashEngine::Author.create(author_params)
+        process_affiliation
         @author.reload
         format.js
       end
@@ -30,7 +28,8 @@ module StashDatacite
     # PATCH/PUT /authors/1
     def update
       respond_to do |format|
-        @author.update(process_affiliation)
+        @author.update(author_params)
+        process_affiliation
         format.js { render template: 'stash_datacite/shared/update.js.erb' }
       end
     end
@@ -73,15 +72,13 @@ module StashDatacite
 
     def process_affiliation
       args = author_params
-      affil = StashDatacite::Affiliation.reconcile_affiliation(args['affiliation']['ror_id'], args['affiliation']['long_name'])
+      affil = StashDatacite::Affiliation.from_long_name(args['affiliation']['long_name'])
       args['affiliation']['id'] = affil.id unless affil.blank?
 
       # This would not be necessary if the relationship between author and affiliations
       # was updated to a one-one and an accepts_nested_attributes_for definition
       @author.affiliation = affil
       @author.save
-
-      args
     end
 
   end
