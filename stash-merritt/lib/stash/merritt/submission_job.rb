@@ -17,9 +17,15 @@ module Stash
       # this is where it actually starts running the real submission whenever it activates from the promise
       def submit!
         log.info("#{Time.now.xmlschema} #{description}")
+        previously_submitted = StashEngine::RepoQueueState.where(resoure_id: @resource_id, state: 'processing').count.positive?
         if Stash::Repo::Repository.hold_submissions?
           # to mark that it needs to be re-enqueued and processed later
           Stash::Repo::Repository.update_repo_queue_state(resource_id: @resource_id, state: 'rejected_shutting_down')
+        elsif previously_submitted
+          # Do not send to the repo again if it has already been sent. If we need to re-send we'll have to delete the statuses
+          # and re-submit manually.  This should be an exceptional case that we send the same resource to Merritt more than once.
+          latest_queue = StashEngine::RepoQueueState.latest(resource_id: @resource__id)
+          latest_queue.destroy if latest_queue.present? && latest_queue.state.enqueued?
         else
           Stash::Repo::Repository.update_repo_queue_state(resource_id: @resource_id, state: 'processing')
           do_submit!
