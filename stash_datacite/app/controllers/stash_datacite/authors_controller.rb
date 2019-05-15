@@ -2,9 +2,6 @@ require_dependency 'stash_datacite/application_controller'
 
 module StashDatacite
   class AuthorsController < ApplicationController
-
-    include Stash::Organization::Ror
-
     before_action :set_author, only: %i[update delete]
     before_action :ajax_require_modifiable, only: %i[update create delete]
 

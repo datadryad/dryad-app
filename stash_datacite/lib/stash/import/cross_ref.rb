@@ -2,8 +2,6 @@ module Stash
   module Import
     class CrossRef
 
-      include Stash::Organization::Ror
-
       def initialize(resource:, serrano_message:)
         @resource = resource
         @sm = serrano_message # which came form crossref (x-ref)

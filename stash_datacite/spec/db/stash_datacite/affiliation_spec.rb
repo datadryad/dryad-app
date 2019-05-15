@@ -29,8 +29,8 @@ module StashDatacite
     describe :fee_waivered? do
       before(:each) do
         @affil = StashDatacite::Affiliation.create(long_name: 'Bertelsmann Music Group', ror_id: '12345')
-        @ror_org = Stash::Organization::Ror::Organization.new(id: '12345', name: 'Bertelsmann Music Group')
-        allow_any_instance_of(Stash::Organization::Ror).to receive(:find_by_ror_id).and_return(@ror_org)
+        @ror_org = Stash::Organization::Ror.new(id: '12345', name: 'Bertelsmann Music Group')
+        allow(Stash::Organization::Ror).to receive(:find_by_ror_id).and_return(@ror_org)
         allow(@affil).to receive(:fee_waiver_countries).and_return(['East Timor'])
       end
 
@@ -58,8 +58,8 @@ module StashDatacite
     describe :country_name do
       before(:each) do
         @affil = StashDatacite::Affiliation.create(long_name: 'Bertelsmann Music Group', ror_id: '12345')
-        @ror_org = Stash::Organization::Ror::Organization.new(id: '12345', name: 'Bertelsmann Music Group')
-        allow_any_instance_of(Stash::Organization::Ror).to receive(:find_by_ror_id).and_return(@ror_org)
+        @ror_org = Stash::Organization::Ror.new(id: '12345', name: 'Bertelsmann Music Group')
+        allow(Stash::Organization::Ror).to receive(:find_by_ror_id).and_return(@ror_org)
       end
       it 'returns the correct country_name when given a country object' do
         @ror_org.country = { 'country_code' => 'TL', 'country_name' => 'East Timor' }
