@@ -127,8 +127,15 @@ module StashEngine
                             'Content-type' => 'application/vnd.orcid+json', 'Authorization' => "Bearer #{bearer_token}"
       my_info = JSON.parse(resp.body)
       orgs = my_info['employment-summary'].map { |item| (item['organization'].blank? ? nil : item['organization']) }.compact
+
+p "FOUND ============================="
+p orgs.inspect
+
       orgs = orgs.map do |org|
         affil = StashDatacite::Affiliation.from_long_name(org['name'])
+
+p affil.inspect
+
         affil.save if affil.present?
         affil
       end
