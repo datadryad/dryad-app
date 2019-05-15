@@ -34,7 +34,8 @@ module Stash
           affil_name = (xr_author['affiliation']&.first ? xr_author['affiliation'].first['name'] : nil)
 
           # If the affiliation was provided try looking up its ROR id
-          author.affiliation = StashDatacite::Affiliation.find_or_create_by(long_name: affil_name) if affil_name.present?
+          author.affiliation = StashDatacite::Affiliation.from_long_name(affil_name) if affil_name.present?
+          author.save if affil_name.present?
         end
       end
 

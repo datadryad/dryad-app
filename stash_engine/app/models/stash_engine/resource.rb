@@ -500,7 +500,7 @@ module StashEngine
       orcid = (user.orcid.blank? ? nil : user.orcid)
       email = user.email
       affiliation = user.affiliation
-      affiliation = StashDatacite::Affiliation.find_or_create_by(long_name: user.tenant.long_name) if affiliation.blank? &&
+      affiliation = StashDatacite::Affiliation.from_long_name(user.tenant.long_name) if affiliation.blank? &&
         user.tenant.present? && user.tenant.abbreviation != 'dryad'
       StashEngine::Author.create(resource_id: id, author_orcid: orcid, affiliation: affiliation,
                                  author_first_name: f_name, author_last_name: l_name, author_email: email)

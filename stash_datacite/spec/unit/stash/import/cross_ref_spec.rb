@@ -36,7 +36,8 @@ module Stash
           tenant_id: 'ucop'
         )
         @resource = StashEngine::Resource.create(user_id: @user.id, tenant_id: 'ucop')
-        allow_any_instance_of(Stash::Organization::Ror).to receive(:find_first_by_ror_name).and_return(id: 'abcd', name: 'Hotel California')
+        # allow_any_instance_of(Stash::Organization::Ror).to receive(:find_first_by_ror_name).and_return(id: 'abcd', name: 'Hotel California')
+        allow(StashDatacite::Affiliation).to receive(:find_by_ror_long_name).and_return(nil)
       end
 
       describe '#populate_title' do

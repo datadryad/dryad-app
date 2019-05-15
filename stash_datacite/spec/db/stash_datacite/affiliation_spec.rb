@@ -67,24 +67,32 @@ module StashDatacite
       end
     end
 
-    describe :from_ror do
+    describe :from_long_name do
       before(:each) do
-        @affil = StashDatacite::Affiliation.create(long_name: 'Bertelsmann Music Group', ror_id: '12345')
+        allow(StashDatacite::Affiliation).to receive(:find_by_ror_long_name).and_return(nil)
       end
+
       it 'returns nil if no name is provided' do
-        expect(StashDatacite::Affiliation.from_ror('12345', nil)).to eql(nil)
+        expect(StashDatacite::Affiliation.from_long_name(nil)).to eql(nil)
       end
-      it 'returns the correct affiliation' do
-        expect(StashDatacite::Affiliation.from_ror(nil, 'Bertelsmann Music Group')).to eql(@affil)
+      it 'returns the correct affiliation if the name exists in the DB' do
+        affil = StashDatacite::Affiliation.create(long_name: 'Test Affiliation')
+        expect(StashDatacite::Affiliation.from_long_name('test affiliation')).to eql(affil)
       end
-      it 'adds the specified ROR id to the correct affiliation' do
-        expect(StashDatacite::Affiliation.from_ror('12345', 'Bertelsmann Music Group')).to eql(@affil)
-        expect(@affil.reload.ror_id).to eql('12345')
+      it 'does NOT do a ROR lookup if the record already has a ROR id' do
+        affil = StashDatacite::Affiliation.create(long_name: 'Test Affiliation', ror_id: '123')
+        expect(StashDatacite::Affiliation).not_to receive(:find_by_ror_long_name).with('test affiliation')
+        expect(StashDatacite::Affiliation.from_long_name('test affiliation')).to eql(affil)
       end
-      it 'creates a new affiliation if not found' do
-        @affil2 = StashDatacite::Affiliation.from_ror('9999', 'New Affiliation')
-        expect(@affil2).to eql(StashDatacite::Affiliation.last)
-        expect(@affil2.ror_id).to eql('9999')
+      it 'does do a ROR lookup if the record does NOT already have a ROR id' do
+        affil = StashDatacite::Affiliation.create(long_name: 'Test Affiliation')
+        expect(StashDatacite::Affiliation).to receive(:find_by_ror_long_name).with('test affiliation')
+        expect(StashDatacite::Affiliation.from_long_name('test affiliation')).to eql(affil)
+      end
+      it 'uses the long_name returned by ROR' do
+        allow(StashDatacite::Affiliation).to receive(:find_by_ror_long_name).and_return(id: '999', name: 'Foo')
+        StashDatacite::Affiliation.create(long_name: 'Test Affiliation')
+        expect(StashDatacite::Affiliation.from_long_name('test affiliation').long_name).to eql('Foo')
       end
     end
   end

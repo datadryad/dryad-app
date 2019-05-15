@@ -48,7 +48,7 @@ FactoryBot.define do
     author_last_name { 'McVie' }
     author_email { 'gargcelia@mailinator.com' }
     author_orcid { '1111-3333-2222-4444' }
-    affiliation { [create(:affiliation)] }
+    affiliation {}
   end
 
   factory(:affiliation, class: StashDatacite::Affiliation) do
