@@ -58,6 +58,7 @@ module StashApi
     describe '#index' do
 
       before(:each) do
+        mock_ror!
         # these tests are very similar to tests in the model controller for identifier for querying this scope
         @user1 = create(:user, tenant_id: 'ucop', role: nil)
         @user2 = create(:user, tenant_id: 'ucop', role: 'admin')

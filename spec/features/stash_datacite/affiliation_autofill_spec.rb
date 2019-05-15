@@ -29,7 +29,7 @@ RSpec.feature 'AffiliationAutofill', type: :feature do
     it 'sets the ROR id when user selects an option', js: true do
       fill_in 'author[affiliation][long_name]', with: 'Testing'
       first('.ui-menu-item-wrapper', wait: 5).click
-      expect(find('#author_affiliation_ror_id', visible: false).value).to eql('https://ror.org/TEST')
+      expect(find('#author_affiliation_ror_id', visible: false).value).to eql('https://ror.org/TEST2')
     end
 
     it 'allows entries that are not registered with ROR', js: true do
