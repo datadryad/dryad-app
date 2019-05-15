@@ -35,9 +35,6 @@ module StashEngine
 
     # Scopes
     # ------------------------------------------
-    scope :latest, ->(resource_id) {
-      where(resource_id: resource_id).order(updated_at: :desc, id: :desc).first
-    }
 
     SUBQUERY_FOR_LATEST = <<~HEREDOC
       SELECT resource_id, max(id) as id
@@ -48,6 +45,13 @@ module StashEngine
 
     scope :latest_per_resource, -> do
       joins("INNER JOIN (#{SUBQUERY_FOR_LATEST}) subque ON stash_engine_repo_queue_states.id = subque.id")
+    end
+
+    # This will not work correctly as a scope since Rails returns all records if it doesn't match one as a scope.  Wow.
+    # Just wow. That is crazy bad design and violates the Principle of Least Surprise.
+    # https://stackoverflow.com/questions/20942672/rails-scope-returns-all-instead-of-nil
+    def self.latest(resource_id:)
+      where(resource_id: resource_id).order(updated_at: :desc, id: :desc).first
     end
 
   end
