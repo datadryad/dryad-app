@@ -1,6 +1,9 @@
 <p>
   Current host is <%= StashEngine.repository.class.hostname %>, refreshed at <%= formatted_datetime(Time.new) %><br/>
   <% if @holding_submissions %>Submissions are being held for shutdown on this server<% else %>Normal submissions in effect on this server<% end %><br/>
+  <%= @server_queued_count %> queued on this server<br/>
+  <%= @server_processing_count %> are currently processing from this server<br/>
+  <br/>
   <%= @queued_count %> are in queued state<br/>
   <%= @processing_count %> are currently processing<br/>
   <%= @errored_count %> errored<br/>
