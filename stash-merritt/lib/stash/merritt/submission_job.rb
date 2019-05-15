@@ -17,7 +17,7 @@ module Stash
       # this is where it actually starts running the real submission whenever it activates from the promise
       def submit!
         log.info("#{Time.now.xmlschema} #{description}")
-        previously_submitted = StashEngine::RepoQueueState.where(resoure_id: @resource_id, state: 'processing').count.positive?
+        previously_submitted = StashEngine::RepoQueueState.where(resource_id: @resource_id, state: 'processing').count.positive?
         if Stash::Repo::Repository.hold_submissions?
           # to mark that it needs to be re-enqueued and processed later
           Stash::Repo::Repository.update_repo_queue_state(resource_id: @resource_id, state: 'rejected_shutting_down')

@@ -1,20 +1,64 @@
 <h2>Information about the current submission queue for Merritt</h2>
 
-Current host is <%= StashEngine.repository.class.hostname %>
 
-<table class="c-lined-table">
-  <tr class="c-lined-table__head">
-    <th class="c-admin-table">Resource id</th>
-    <th class="c-admin-table">State</th>
-    <th class="c-admin-table">Hostname</th>
-    <th class="c-admin-table">Updated at</th>
-  </tr>
-  <% @queue_rows.each do |qr| %>
-    <tr class="c-lined-table__row">
-      <td><%= qr.resource_id %></td>
-      <td><%= qr.state %></td>
-      <td><%= qr.hostname %></td>
-      <td><%= formatted_datetime(qr.updated_at) %></td>
-    </tr>
-  <% end %>
-</table>
+
+<div id="status_table" data-load="<%= url_for(controller: '/stash_engine/submission_queue', action: 'refresh_table') %>">
+  <%# render partial: 'status_table' %>
+  <%= image_tag 'stash_engine/spinner.gif', size: '80x60', alt: 'Loading spinner' %>
+</div>
+
+<h2>Actions you can take</h2>
+
+<h3>Graceful shutdown of submissions</h3>
+<p>
+  A graceful shutdown will allow any processing submissions to finish and change enqueued items to a
+  <em>rejected_shutting_down</em> state so they do not begin processing.  A graceful shutdown allows all activity to stop before
+  a application or system restart and it can be resumed later.
+</p>
+<p>
+  This action adds a <em>hold-submissions.txt</em> file to the file system in the directory above the Rails.root.  You
+    will want to monitor the state above before actually shutting down a server and wait for active <em>processing</em> submissions to clear.</p>
+
+<p>
+  <%= button_to 'Do a graceful shutdown of submissions', { action: 'graceful_shutdown' }, { method: 'get' } %>
+</p>
+
+<h3>Restart gracefully</h3>
+<p>
+  This restarts processing submissions on this server again.  It changes the <em>rejected_shutting_down</em> to
+  a <em>enqueued</em> state and re-inserts them into the internal processing queue which will begin sending them to the
+  storage repository again.  It also removes the hold-submissions.txt file from the file system if it exists.
+</p>
+
+<p>
+  <%= button_to 'Restart submissions which were shutdown gracefully', { action: 'graceful_start' }, { method: 'get'} %>
+</p>
+
+
+<h3>Restart submissions not gracefully shut down</h3>
+<p>
+  This restarts items with the states of <em>enqueued</em> and <em>rejected_shutting_down</em> by inserting them into the internal
+  queue for the workers, which likely has nothing in it if the application wasn't shut down gracefully.
+</p>
+
+<p>
+  If an item is enqueued more than once, it will only be processed once since items already processed by the repository
+  are skipped when it is their turn to be processed.  It also removes the hold-submissions.txt file.
+</p>
+
+<p>
+  <%= button_to 'Restart submissions which were NOT shutdown gracefully', { action: 'ungraceful_start' }, { method: 'get' } %>
+</p>
+
+<script>
+    $(document).ready(function () {
+        setInterval(refreshPartial, 30000)
+    });
+
+    // calls action refreshing the partial
+    function refreshPartial() {
+        $.ajax({
+            url: '<%= url_for(controller: '/stash_engine/submission_queue', action: 'refresh_table') %>'
+        })
+    }
+</script>
