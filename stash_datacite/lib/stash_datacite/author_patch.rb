@@ -6,6 +6,8 @@ module StashDatacite
     def self.patch!
       StashEngine::Author.instance_eval do
         has_and_belongs_to_many :affiliations, class_name: 'StashDatacite::Affiliation', join_table: 'dcs_affiliations_authors'
+
+        accepts_nested_attributes_for :affiliations
       end
 
       # The join allows for a many to many relationship between authors and affiliations
@@ -15,7 +17,7 @@ module StashDatacite
       StashEngine::Author.class_eval do
 
         def affiliation
-          affiliations.order(created_at: :desc).first
+          affiliations.order(created_at: :asc).first
         end
 
         def affiliation=(affil)

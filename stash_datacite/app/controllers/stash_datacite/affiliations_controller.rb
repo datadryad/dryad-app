@@ -3,11 +3,11 @@ require_dependency 'stash_datacite/application_controller'
 module StashDatacite
   class AffiliationsController < ApplicationController
 
-    include Stash::Organization::Ror
+    include Stash::Organization
 
     # GET /affiliations/autocomplete
     def autocomplete
-      @affiliations = find_by_ror_name(params['term']) unless params['term'].blank?
+      @affiliations = Stash::Organization::Ror.find_by_ror_name(params['term']) unless params['term'].blank?
       list = map_affiliation_for_autocomplete(@affiliations)
       render json: list
     end
