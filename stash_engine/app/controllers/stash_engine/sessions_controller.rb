@@ -127,7 +127,11 @@ module StashEngine
                             'Content-type' => 'application/vnd.orcid+json', 'Authorization' => "Bearer #{bearer_token}"
       my_info = JSON.parse(resp.body)
       orgs = my_info['employment-summary'].map { |item| (item['organization'].blank? ? nil : item['organization']) }.compact
-      orgs = orgs.map { |org| StashDatacite::Affiliation.find_or_create_by(long_name: org['name']) }
+      orgs = orgs.map do |org|
+        affil = StashDatacite::Affiliation.from_long_name(org['name'])
+        affil.save
+        affil
+      end
       orgs.first
     rescue RestClient::Exception => e
       logger.error(e)
