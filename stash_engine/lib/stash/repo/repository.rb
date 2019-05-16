@@ -5,13 +5,21 @@ module Stash
   module Repo
     # Abstraction for a repository
     class Repository # rubocop:disable Metrics/ClassLength
-      attr_reader :url_helpers
+      attr_reader :url_helpers, :executor
 
       # Initializes this repository
       # @param url_helpers [Module] Rails URL helpers
-      def initialize(url_helpers:, executor: Concurrent::FixedThreadPool.new(2))
-        @url_helpers = url_helpers
+      # Concurrent::FixedThreadPool.new(2, idletime: 600)
+      def initialize(url_helpers:, executor: nil)
         @executor = executor
+        @url_helpers = url_helpers
+        return unless @executor.nil?
+        @executor = Concurrent::ThreadPoolExecutor.new(
+          min_threads: 0,
+          max_threads: StashEngine::APP_CONFIG.merritt_max_submission_threads,
+          max_queue: 0,
+          fallback_policy: :abort)
+        end
       end
 
       # the cached hostname so we can save the host, cached because we don't want to do this everytime

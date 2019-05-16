@@ -19,6 +19,8 @@ module StashEngine
     def refresh_table
       @queue_rows = RepoQueueState.latest_per_resource.where.not(state: 'completed').order(:hostname, :updated_at)
       @queued_count = RepoQueueState.latest_per_resource.where(state: 'enqueued').count
+      @server_held_count = RepoQueueState.latest_per_resource.where(state: 'rejected_shutting_down')
+        .where(hostname: StashEngine.repository.class.hostname).count
       @server_queued_count = RepoQueueState.latest_per_resource.where(state: 'enqueued')
         .where(hostname: StashEngine.repository.class.hostname).count
       @processing_count = RepoQueueState.latest_per_resource.where(state: 'processing').count
@@ -27,6 +29,7 @@ module StashEngine
       @errored_count = RepoQueueState.latest_per_resource.where(state: 'errored').count
       @day_completed_submissions = RepoQueueState.latest_per_resource.where(state: 'completed').where('created_at > ?', Time.new - 1.day).count
       @holding_submissions = File.exist?(HOLD_SUBMISSIONS_PATH)
+      @executor = StashEngine.repository.executor
     end
     # rubocop:enable Metrics/AbcSize
 
