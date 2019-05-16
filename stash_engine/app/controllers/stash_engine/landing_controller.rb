@@ -111,6 +111,10 @@ module StashEngine
       # lib/stash/repo/repository calls stash-merritt/lib/stash/merritt/repository.rb and this populates download and update URIs into the db
       StashEngine.repository.harvested(identifier: id, record_identifier: record_identifier)
 
+      if StashEngine::RepoQueueState.where(resource_id: @resource_id, state: 'completed').count < 1
+        StashEngine.repository.update_repo_queue_state(resource_id: @resource.id, state: 'completed')
+      end
+
       # success but no content, see RFC 5789 sec. 2.1
       update_size!
       # now that the OAI-PMH feed has confirmed it's in Merritt then cleanup, but not before
