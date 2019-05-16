@@ -80,8 +80,8 @@ module StashApi
 
     # prevent people doing badness like filenames like ../../../foobar
     def setup_file_path
-      sanitized = sanitize_filename(params[:filename])
-      @file_path = ::File.expand_path(sanitized, @resource.upload_dir)
+      @sanitized = sanitize_filename(params[:filename])
+      @file_path = ::File.expand_path(@sanitized, @resource.upload_dir)
       (render json: { error: 'No file shenanigans' }.to_json, status: 403) && yield unless @file_path.start_with?(@resource.upload_dir)
       FileUtils.mkdir_p(::File.dirname(@file_path))
     end
@@ -119,7 +119,7 @@ module StashApi
       just_user_fn = @file_path[@resource.upload_dir.length..-1].gsub(%r{^/+}, '') # just user fn and remove any leading slashes
       handle_previous_duplicates(upload_filename: just_user_fn)
       StashEngine::FileUpload.create(
-        upload_file_name: sanitized,
+        upload_file_name: @sanitized,
         temp_file_path: @file_path,
         upload_content_type: request.headers['CONTENT-TYPE'],
         upload_file_size: ::File.size(@file_path),
