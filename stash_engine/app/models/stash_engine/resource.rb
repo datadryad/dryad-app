@@ -324,7 +324,7 @@ module StashEngine
     # ------------------------------------------------------------
     # Curation helpers
     def curatable?
-      submitted? && !files_published?
+      (submitted? && !files_published?) || current_curation_activity.embargoed?
     end
 
     def current_curation_activity

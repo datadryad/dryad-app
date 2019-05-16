@@ -4,7 +4,7 @@
   <%= form_for :resource, url: curation_activity_change_path(resource.id), method: :post, remote: true do |f| %>
 
     <%# Users cannot change the status or publication date once the files are published %>
-    <% unless resource.files_published? %>
+    <% if resource.curatable? %>
       <%= f.fields_for :curation_activity, curation_activity do |ca| %>
         <div class="c-input">
           <label class="c-input__label">Status</label>
