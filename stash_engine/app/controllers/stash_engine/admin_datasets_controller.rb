@@ -68,7 +68,7 @@ module StashEngine
       respond_to do |format|
         format.js do
           @resource = Resource.find(params[:id])
-          @resource.editor = current_user
+          @resource.current_editor_id = current_user.id
           decipher_curation_activity
           @resource.publication_date = @pub_date
           @resource.curation_activities << CurationActivity.create(user_id: current_user.id, status: @status,
@@ -122,7 +122,7 @@ module StashEngine
       ca_ids = Resource.latest_curation_activity_per_resource.collect { |i| i[:curation_activity_id] }
 
       resources = Resource.joins(:identifier, :authors, :current_resource_state, :curation_activities)
-        .includes(:authors, :current_resource_state, identifier: :internal_data, :curation_activities, :editor)
+        .includes(:authors, :current_resource_state, :curation_activities, :editor, identifier: :internal_data)
         .where(stash_engine_resources: { id: resource_ids })
         .where(stash_engine_curation_activities: { id: ca_ids })
 
