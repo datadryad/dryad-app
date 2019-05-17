@@ -338,7 +338,7 @@ module StashEngine
 
     # Create the initial CurationActivity
     def init_curation_status
-      curation_activities << StashEngine::CurationActivity.new(user_id: user_id)
+      curation_activities << StashEngine::CurationActivity.new(user_id: current_editor_id || user_id)
     end
     private :init_curation_status
 
