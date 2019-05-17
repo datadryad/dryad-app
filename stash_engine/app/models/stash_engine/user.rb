@@ -1,5 +1,6 @@
 module StashEngine
   class User < ActiveRecord::Base
+
     has_many :resources
 
     def self.from_omniauth_orcid(auth_hash:, emails:)
@@ -109,5 +110,6 @@ module StashEngine
       User.create(first_name: auth_hash[:extra][:raw_info][:first_name], last_name: auth_hash[:extra][:raw_info][:last_name],
                   email: temp_email, tenant_id: nil, last_login: Time.new, role: 'user', orcid: auth_hash[:uid])
     end
+
   end
 end

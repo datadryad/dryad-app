@@ -2,7 +2,7 @@ module StashApi
   # takes a dataset hash, parses it out and saves it to the appropriate places in the database
   class DatasetParser
 
-    include Stash::Organization::Ror
+    include Stash::Organization
 
     TO_PARSE = %w[Funders Methods UsageNotes Keywords RelatedWorks Locations TemporalCoverages].freeze
 
@@ -86,9 +86,8 @@ module StashApi
 
       # If the affiliation was provided try looking up its ROR id
       if json_author[:affiliation].present?
-        ror_org = find_first_by_ror_name(json_author[:affiliation])
-        a.affiliation = StashDatacite::Affiliation.first_or_create(long_name: json_author[:affiliation],
-                                                                   ror_id: ror_org.is_a?(Hash) ? ror_org[:id] : nil)
+        a.affiliation = StashDatacite::Affiliation.from_long_name(json_author[:affiliation])
+        a.save if a.affiliation.present?
       end
 
       a.save(validate: false) # we can validate on submission, keeps from saving otherwise
