@@ -16,8 +16,8 @@
     <th class="c-admin-table <%= sort_display('last_modified', @sort_column) %>" colspan="2">
       <%= sort_by 'last_modified', title: 'Last Modified', current_column: @sort_column %>
     </th>
-    <th class="c-admin-table <%= sort_display('modified_by', @sort_column) %>">
-      <%= sort_by 'modified_by', title: 'Last modified by', current_column: @sort_column %>
+    <th class="c-admin-table <%= sort_display('editor', @sort_column) %>">
+      <%= sort_by 'editor', title: 'Last modified by', current_column: @sort_column %>
     </th>
     <th class="c-admin-table <%= sort_display('size', @sort_column) %>">
       <%= sort_by 'size', title: 'Size', current_column: @sort_column %>
@@ -65,7 +65,7 @@
           </button>
         <% end %>
       </td>
-      <td id="js-curation-activity-user-<%= identifier.id %>"><%= resource.current_curation_activity.user&.name %></td>
+      <td id="js-curation-activity-user-<%= identifier.id %>"><%= resource.editor&.name %></td>
       <td><%= filesize(identifier.storage_size) %></td>
       <td class="c-admin" id="js-embargo-state-<%= identifier.id %>">
         <%= formatted_date(resource&.publication_date) %>
