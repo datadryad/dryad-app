@@ -29,8 +29,8 @@ module StashDatacite
     describe :fee_waivered? do
       before(:each) do
         @affil = StashDatacite::Affiliation.create(long_name: 'Bertelsmann Music Group', ror_id: '12345')
-        @ror_org = Stash::Organization::Ror::Organization.new(id: '12345', name: 'Bertelsmann Music Group')
-        allow_any_instance_of(Stash::Organization::Ror).to receive(:find_by_ror_id).and_return(@ror_org)
+        @ror_org = Stash::Organization::Ror.new(id: '12345', name: 'Bertelsmann Music Group')
+        allow(Stash::Organization::Ror).to receive(:find_by_ror_id).and_return(@ror_org)
         allow(@affil).to receive(:fee_waiver_countries).and_return(['East Timor'])
       end
 
@@ -58,12 +58,41 @@ module StashDatacite
     describe :country_name do
       before(:each) do
         @affil = StashDatacite::Affiliation.create(long_name: 'Bertelsmann Music Group', ror_id: '12345')
-        @ror_org = Stash::Organization::Ror::Organization.new(id: '12345', name: 'Bertelsmann Music Group')
-        allow_any_instance_of(Stash::Organization::Ror).to receive(:find_by_ror_id).and_return(@ror_org)
+        @ror_org = Stash::Organization::Ror.new(id: '12345', name: 'Bertelsmann Music Group')
+        allow(Stash::Organization::Ror).to receive(:find_by_ror_id).and_return(@ror_org)
       end
       it 'returns the correct country_name when given a country object' do
         @ror_org.country = { 'country_code' => 'TL', 'country_name' => 'East Timor' }
         expect(@affil.country_name).to eql('East Timor')
+      end
+    end
+
+    describe :from_long_name do
+      before(:each) do
+        allow(StashDatacite::Affiliation).to receive(:find_by_ror_long_name).and_return(nil)
+      end
+
+      it 'returns nil if no name is provided' do
+        expect(StashDatacite::Affiliation.from_long_name(nil)).to eql(nil)
+      end
+      it 'returns the correct affiliation if the name exists in the DB' do
+        affil = StashDatacite::Affiliation.create(long_name: 'Test Affiliation')
+        expect(StashDatacite::Affiliation.from_long_name('test affiliation')).to eql(affil)
+      end
+      it 'does NOT do a ROR lookup if the record already has a ROR id' do
+        affil = StashDatacite::Affiliation.create(long_name: 'Test Affiliation', ror_id: '123')
+        expect(StashDatacite::Affiliation).not_to receive(:find_by_ror_long_name).with('test affiliation')
+        expect(StashDatacite::Affiliation.from_long_name('test affiliation')).to eql(affil)
+      end
+      it 'does do a ROR lookup if the record does NOT already have a ROR id' do
+        affil = StashDatacite::Affiliation.create(long_name: 'Test Affiliation')
+        expect(StashDatacite::Affiliation).to receive(:find_by_ror_long_name).with('test affiliation')
+        expect(StashDatacite::Affiliation.from_long_name('test affiliation')).to eql(affil)
+      end
+      it 'uses the long_name returned by ROR' do
+        allow(StashDatacite::Affiliation).to receive(:find_by_ror_long_name).and_return(id: '999', name: 'Foo')
+        StashDatacite::Affiliation.create(long_name: 'Test Affiliation')
+        expect(StashDatacite::Affiliation.from_long_name('test affiliation').long_name).to eql('Foo')
       end
     end
   end

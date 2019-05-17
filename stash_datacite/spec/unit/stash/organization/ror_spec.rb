@@ -7,30 +7,30 @@ module Stash
   module Organization
     describe Ror do
 
-      include Stash::Organization::Ror
+      include Stash::Organization
 
       # Not the best test since we're allowing our mocked JSON responses to exceed the 20 item
       # per page limit so it doesn't really get into the paging logic.
       it 'should be able to handle a precise query with only one page of results' do
         @response = generate_ror_response(prefix: 'small', nbr_items: 2)
         resp = MockResponse.new(@response, 200)
-        allow_any_instance_of(Stash::Organization::Ror).to receive(:query_ror).and_return(resp)
-        expect(find_by_ror_name('University of somewhere').count).to eql(2)
+        allow(Stash::Organization::Ror).to receive(:query_ror).and_return(resp)
+        expect(Stash::Organization::Ror.find_by_ror_name('University of somewhere').count).to eql(2)
       end
 
       it 'should be able to handle a broader query with several paged results' do
         @response = generate_ror_response(prefix: 'medium', nbr_items: 25)
         resp = MockResponse.new(@response, 200)
-        allow_any_instance_of(Stash::Organization::Ror).to receive(:query_ror).and_return(resp)
-        expect(find_by_ror_name('Somewhere').count).to eql(25)
+        allow(Stash::Organization::Ror).to receive(:query_ror).and_return(resp)
+        expect(Stash::Organization::Ror.find_by_ror_name('Somewhere').count).to eql(25)
       end
 
       it 'should limit the number of paged results allowed' do
         max_results = Stash::Organization::Ror::ROR_MAX_RESULTS * Stash::Organization::Ror::MAX_PAGES
         @response = generate_ror_response(prefix: 'large', nbr_items: max_results + 1)
         resp = MockResponse.new(@response, 200)
-        allow_any_instance_of(Stash::Organization::Ror).to receive(:query_ror).and_return(resp)
-        expect(find_by_ror_name('Somewhere').count).to eql(max_results.to_i)
+        allow(Stash::Organization::Ror).to receive(:query_ror).and_return(resp)
+        expect(Stash::Organization::Ror.find_by_ror_name('Somewhere').count).to eql(max_results.to_i)
       end
 
       def generate_ror_response(prefix:, nbr_items: 1)
