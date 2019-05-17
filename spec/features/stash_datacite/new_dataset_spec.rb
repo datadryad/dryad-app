@@ -103,6 +103,7 @@ RSpec.feature 'NewDataset', type: :feature do
       waiver_country = Faker::Address.country
       waiver_university = Faker::Educator.university
       stub_ror_id_lookup(university: waiver_university, country: waiver_country)
+      stub_ror_name_lookup(name: waiver_university)
       allow_any_instance_of(StashDatacite::Affiliation).to receive(:fee_waiver_countries).and_return([waiver_country])
 
       # ##############################

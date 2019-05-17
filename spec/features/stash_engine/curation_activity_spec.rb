@@ -4,6 +4,7 @@ require 'rails_helper'
 RSpec.feature 'CurationActivity', type: :feature do
 
   include Mocks::Stripe
+  include Mocks::Ror
 
   # TODO: This should probably be defined in routes.rb and have appropriate helpers
   let(:dashboard_path) { '/stash/ds_admin' }
@@ -37,6 +38,7 @@ RSpec.feature 'CurationActivity', type: :feature do
 
       before(:each) do
         mock_stripe!
+        mock_ror!
         # Create a user, identifier and 2 resources for each tenant
         %w[ucop dryad].each do |tenant|
           user = create(:user, tenant_id: tenant)
@@ -65,6 +67,7 @@ RSpec.feature 'CurationActivity', type: :feature do
 
       before(:each) do
         mock_stripe!
+        mock_ror!
         create(:resource, user: create(:user, tenant_id: 'ucop'), identifier: create(:identifier))
         sign_in(create(:user, role: 'admin', tenant_id: 'ucop'))
       end
