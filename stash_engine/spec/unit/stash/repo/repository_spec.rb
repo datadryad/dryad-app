@@ -19,7 +19,7 @@ module Stash
 
       before(:each) do
         @url_helpers = double(Module) # yes, apparently URL helpers are an anonymous module
-        @repo = Repository.new(url_helpers: url_helpers, executor: Concurrent::ImmediateExecutor.new)
+        @repo = Repository.new(url_helpers: url_helpers, executor: Concurrent::ImmediateExecutor.new, threads: 1)
 
         @logger = instance_double(Logger)
         allow(Rails).to receive(:logger).and_return(logger)

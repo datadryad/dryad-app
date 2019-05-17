@@ -9,7 +9,7 @@ module Stash
 
       ARK_PATTERN = %r{ark:/[a-z0-9]+/[a-z0-9]+}
 
-      def initialize(url_helpers:)
+      def initialize(url_helpers:, threads: 1)
         super
       end
 

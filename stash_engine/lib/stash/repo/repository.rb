@@ -10,16 +10,16 @@ module Stash
       # Initializes this repository
       # @param url_helpers [Module] Rails URL helpers
       # Concurrent::FixedThreadPool.new(2, idletime: 600)
-      def initialize(url_helpers:, executor: nil)
+      def initialize(url_helpers:, executor: nil, threads: 1)
         @executor = executor
         @url_helpers = url_helpers
         return unless @executor.nil?
         @executor = Concurrent::ThreadPoolExecutor.new(
           min_threads: 0,
-          max_threads: StashEngine::APP_CONFIG.merritt_max_submission_threads,
+          max_threads: threads,
           max_queue: 0,
-          fallback_policy: :abort)
-        end
+          fallback_policy: :abort
+        )
       end
 
       # the cached hostname so we can save the host, cached because we don't want to do this everytime
@@ -196,7 +196,6 @@ module Stash
           archive_response: (result.message || result.error.to_s)
         )
       end
-
     end
   end
 end
