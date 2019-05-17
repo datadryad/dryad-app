@@ -64,4 +64,10 @@ FactoryBot.define do
     data_type { 'publicationISSN' }
     value { '1352-3867' }
   end
+
+  factory(:repo_queue_state, class: StashEngine::RepoQueueState) do
+    resource_id { 1 }
+    state { 'enqueued' }
+    hostname { 'localhost' }
+  end
 end
