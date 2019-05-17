@@ -68,6 +68,7 @@ module StashEngine
       respond_to do |format|
         format.js do
           @resource = Resource.find(params[:id])
+          @resource.current_editor_id = current_user.id
           decipher_curation_activity
           @resource.publication_date = @pub_date
           @resource.curation_activities << CurationActivity.create(user_id: current_user.id, status: @status,
@@ -108,7 +109,7 @@ module StashEngine
          sort_column_definition('author', 'stash_engine_authors', %w[author_last_name author_first_name]),
          sort_column_definition('doi', 'stash_engine_identifiers', %w[identifier]),
          sort_column_definition('last_modified', 'stash_engine_curation_activities', %w[updated_at]),
-         sort_column_definition('modified_by', 'stash_engine_users', %w[last_name first_name]),
+         sort_column_definition('editor', 'stash_engine_users', %w[last_name first_name]),
          sort_column_definition('size', 'stash_engine_identifiers', %w[storage_size]),
          sort_column_definition('publication_date', 'stash_engine_resources', %w[publication_date])]
       )
@@ -121,7 +122,7 @@ module StashEngine
       ca_ids = Resource.latest_curation_activity_per_resource.collect { |i| i[:curation_activity_id] }
 
       resources = Resource.joins(:identifier, :authors, :current_resource_state, :curation_activities)
-        .includes(:authors, :current_resource_state, identifier: :internal_data, curation_activities: :user)
+        .includes(:authors, :current_resource_state, :curation_activities, :editor, identifier: :internal_data)
         .where(stash_engine_resources: { id: resource_ids })
         .where(stash_engine_curation_activities: { id: ca_ids })
 

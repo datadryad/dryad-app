@@ -325,7 +325,7 @@ module StashEngine
     # ------------------------------------------------------------
     # Curation helpers
     def curatable?
-      submitted? && !files_published?
+      (submitted? && !files_published?) || current_curation_activity.embargoed?
     end
 
     def current_curation_activity
@@ -339,7 +339,7 @@ module StashEngine
 
     # Create the initial CurationActivity
     def init_curation_status
-      curation_activities << StashEngine::CurationActivity.new(user: user)
+      curation_activities << StashEngine::CurationActivity.new(user_id: current_editor_id || user_id)
     end
     private :init_curation_status
 
