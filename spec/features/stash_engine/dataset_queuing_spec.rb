@@ -1,7 +1,10 @@
 require 'rails_helper'
+require 'fileutils'
 
 # rubocop:disable Metrics/BlockLength
 RSpec.feature 'DatasetQueuing', type: :feature do
+
+  HOLD_SUBMISSIONS_PATH = File.expand_path(File.join(Rails.root, '..', 'hold-submissions.txt')).freeze
 
   # include MerrittHelper
   include DatasetHelper
@@ -14,6 +17,7 @@ RSpec.feature 'DatasetQueuing', type: :feature do
   include AjaxHelper
 
   before(:each) do
+    FileUtils.rm(HOLD_SUBMISSIONS_PATH) if File.exist?(HOLD_SUBMISSIONS_PATH)
     # mock_repository!
     # for this we don't want to mock the whole repository, but just the actual submission to Merritt that happens in
     # the queue, Stash::Merritt::SubmissionJob.do_submit!
@@ -25,6 +29,10 @@ RSpec.feature 'DatasetQueuing', type: :feature do
     @curator = create(:user, role: 'admin', tenant_id: 'dryad')
     @author = create(:user, tenant_id: 'dryad', role: 'superuser')
     @document_list = []
+  end
+
+  after(:each) do
+    FileUtils.rm(HOLD_SUBMISSIONS_PATH) if File.exist?(HOLD_SUBMISSIONS_PATH)
   end
 
   describe :submitting_quickly do
@@ -52,6 +60,23 @@ RSpec.feature 'DatasetQueuing', type: :feature do
       wait_for_ajax(15)
       expect(page).to have_text('1 are currently processing from this server')
       expect(page).to have_text('2 queued on this server')
+    end
+
+    it 'should pause transfers', js: true do
+      visit '/stash/submission_queue'
+      click_button 'graceful_shutdown'
+      click_link 'go back to viewing queue updates'
+      wait_for_ajax(15)
+      expect(page).to have_text('Submissions are being held for shutdown on this server')
+    end
+
+    it 'should re-enable transfers', js: true do
+      FileUtils.touch(HOLD_SUBMISSIONS_PATH)
+      visit '/stash/submission_queue'
+      click_button 'graceful_start'
+      click_link 'go back to viewing queue updates'
+      wait_for_ajax(15)
+      expect(page).to have_text('Normal submissions in effect on this server')
     end
   end
 end
