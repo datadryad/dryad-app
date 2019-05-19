@@ -32,7 +32,7 @@ You may login to the Dash server and view the item.
 
 ### Batch migration
 
-The [dryad-utils](https://github.com/datadryad/dryad-utils) repository has tools to facilitate migrating large groups of items. See the file `dash-migration/README.txt`.
+There dryad-utils repository contains many [tools to facilitate migrating groups of datasets](https://github.com/datadryad/dryad-utils/tree/master/dash-migration).
 
 ### Implementation details
 
