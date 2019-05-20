@@ -72,9 +72,9 @@ module StashApi
 
       case params[:curation_activity][:status]
       when 'published'
-        record_published_date(resource)
+        record_published_date(resource) unless resource.publication_date.present?
       when 'embargoed'
-        record_embargoed_date(resource)
+        record_embargoed_date(resource) unless resource.publication_date.present?
       end
 
       StashEngine::CurationActivity.create(resource_id: resource.id,
@@ -86,7 +86,7 @@ module StashApi
 
     def record_published_date(resource)
       publish_date = params[:curation_activity][:created_at] || Time.now
-      resource.update!(publication_date: publish_date)
+      resource.update!(publication_date: publish_date) 
     end
 
     def record_embargoed_date(resource)
