@@ -54,6 +54,10 @@ set :passenger_pid, "#{deploy_to}/passenger.pid"
 set :passenger_log, "#{deploy_to}/passenger.log"
 set :passenger_port, "3000"
 
+# Run migrations on the app server, otherwise they only run on the db role server
+# See https://github.com/capistrano/rails/issues/78
+set :migration_role, :app
+
 TAG_REGEXP = /^[v\d\.]{3,}.*$/.freeze
 
 namespace :debug do
