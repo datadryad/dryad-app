@@ -36,8 +36,8 @@ module Stash
 
       # Executes this task asynchronously and with its own ActiveRecord connection.
       # @return [Promise<SubmissionResult>] a Promise that will provide the result of this job
-      def submit_async
-        Concurrent::Promise.new { ActiveRecord::Base.connection_pool.with_connection { submit! } }.execute
+      def submit_async(executor:)
+        Concurrent::Promise.new(executor: executor) { ActiveRecord::Base.connection_pool.with_connection { submit! } }.execute
       end
 
       def log

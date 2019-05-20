@@ -1,17 +1,35 @@
 require 'stash/repo/submission_job'
 require 'fileutils'
-
+require 'concurrent'
 module Stash
   module Repo
     # Abstraction for a repository
     class Repository # rubocop:disable Metrics/ClassLength
-      attr_reader :url_helpers
+      attr_reader :url_helpers, :executor
 
       # Initializes this repository
       # @param url_helpers [Module] Rails URL helpers
-      def initialize(url_helpers:)
+      # Concurrent::FixedThreadPool.new(2, idletime: 600)
+      def initialize(url_helpers:, executor: nil, threads: 1)
+        @executor = executor
         @url_helpers = url_helpers
+        return unless @executor.nil?
+        @executor = Concurrent::ThreadPoolExecutor.new(
+          min_threads: 0,
+          max_threads: threads,
+          max_queue: 0,
+          fallback_policy: :abort
+        )
       end
+
+      # the cached hostname so we can save the host, cached because we don't want to do this everytime
+      # Rubocop is giving dumb advice below since I don't want to have to create an instance to access this and I want to cache it.
+      # It is also always running on the same server so will not change where the code is running.
+      # rubocop:disable Style/ClassVars
+      def self.hostname
+        @@hostname ||= `hostname`.strip
+      end
+      # rubocop:enable Style/ClassVars
 
       # Creates a {SubmissionJob} for the specified resource
       # @param resource_id [Integer] the database ID of the resource
@@ -49,9 +67,15 @@ module Stash
       # on the result.
       # @param resource_id [Integer] the ID of the resource
       def submit(resource_id:)
-        StashEngine::Resource.find(resource_id).current_state = 'processing'
+        res = StashEngine::Resource.find(resource_id)
+        res.current_state = 'processing'
+        if self.class.hold_submissions?
+          self.class.update_repo_queue_state(resource_id: resource_id, state: 'rejected_shutting_down')
+          return
+        end
         submission_job = create_submission_job(resource_id: resource_id)
-        promise = submission_job.submit_async
+        self.class.update_repo_queue_state(resource_id: resource_id, state: 'enqueued')
+        promise = submission_job.submit_async(executor: @executor)
         promise.on_success do |result|
           result.success? ? handle_success(result) : handle_failure(result)
         end
@@ -84,6 +108,15 @@ module Stash
         log.warn(msg)
       end
 
+      def self.update_repo_queue_state(resource_id:, state:)
+        StashEngine::RepoQueueState.create(resource_id: resource_id, hostname: hostname, state: state)
+      end
+
+      # detect if we should be holding submissions because a hold-submissions.txt file exists one directory above Rails.root
+      def self.hold_submissions?
+        File.exist?(File.expand_path(File.join(Rails.root, '..', 'hold-submissions.txt')))
+      end
+
       private
 
       def get_download_uri(resource, record_identifier)
@@ -101,6 +134,7 @@ module Stash
       def handle_success(result)
         result.log_to(log)
         update_submission_log(result)
+        self.class.update_repo_queue_state(resource_id: result.resource_id, state: 'completed')
       rescue StandardError => e
         # errors here don't constitute a submission failure, so we don't change the resource state
         log_error(e)
@@ -110,6 +144,7 @@ module Stash
       def handle_failure(result)
         result.log_to(log)
         update_submission_log(result)
+        self.class.update_repo_queue_state(resource_id: result.resource_id, state: 'errored')
         resource = StashEngine::Resource.find(result.resource_id)
         StashEngine::UserMailer.error_report(resource, result.error).deliver_now
         StashEngine::UserMailer.submission_failed(resource, result.error).deliver_now unless resource&.skip_emails

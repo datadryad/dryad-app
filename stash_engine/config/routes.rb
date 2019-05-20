@@ -106,4 +106,7 @@ StashEngine::Engine.routes.draw do
   # admin_datasets, this routes actions to ds_admin with a possible id without having to define for each get action, default is index
   get 'ds_admin/(:action(/:id))', controller: 'admin_datasets'
 
+  # flexible routing for submission queue controller
+  get 'submission_queue/(:action(/:id))', controller: 'submission_queue'
+
 end
