@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'concurrent'
 
 module Stash
   module Repo
@@ -41,14 +42,14 @@ module Stash
         it 'delegates to :submit!, asynchronously' do
           result = SubmissionResult.new(resource_id: 17, request_desc: 'test', message: 'whee!')
           job.define_singleton_method(:submit!) { result }
-          promise = job.submit_async
+          promise = job.submit_async(executor: Concurrent::ImmediateExecutor.new)
           raise promise.reason if promise.reason
           expect(promise.value).to be(result)
         end
 
         it 'handles errors' do
           job.define_singleton_method(:submit!) { raise Errno::ENOENT }
-          promise = job.submit_async
+          promise = job.submit_async(executor: Concurrent::ImmediateExecutor.new)
           expect(promise.reason).to be_an(Errno::ENOENT)
         end
       end

@@ -1,6 +1,8 @@
 require 'spec_helper'
 require 'fileutils'
 require 'tmpdir'
+require 'concurrent'
+require 'fileutils'
 
 module Stash
   module Repo
@@ -17,7 +19,7 @@ module Stash
 
       before(:each) do
         @url_helpers = double(Module) # yes, apparently URL helpers are an anonymous module
-        @repo = Repository.new(url_helpers: url_helpers)
+        @repo = Repository.new(url_helpers: url_helpers, executor: Concurrent::ImmediateExecutor.new, threads: 1)
 
         @logger = instance_double(Logger)
         allow(Rails).to receive(:logger).and_return(logger)
@@ -127,6 +129,15 @@ module Stash
               resource_id: resource_id,
               archive_submission_request: 'test',
               archive_response: 'whee!'
+            )
+            submit_resource
+          end
+
+          it 'updates the RepoQueueState table)' do
+            expect(StashEngine::RepoQueueState).to receive(:create).with(
+              resource_id: resource_id,
+              hostname: repo.class.hostname,
+              state: 'enqueued'
             )
             submit_resource
           end
@@ -335,6 +346,33 @@ module Stash
           )
         end
       end
+
+      describe 'Repository#update_repo_queue_state' do
+        it 'creates a queuestate in the database' do
+          expect(StashEngine::RepoQueueState).to receive(:create)
+          repo.class.update_repo_queue_state(resource_id: resource_id, state: 'rejected_shutting_down')
+        end
+      end
+
+      describe 'Repository#hostname' do
+        it "caches and returns the machine's hostname" do
+          expect(repo.class.hostname).to eq(`hostname`.strip)
+        end
+      end
+
+      describe 'Repository#hold_submissions?' do
+        it 'returns false in normal circumstances' do
+          expect(repo.class.hold_submissions?).to be false
+        end
+
+        it 'returns true if a hold-submissions.txt file is in place' do
+          file_path = File.expand_path(File.join(Rails.root, '..', 'hold-submissions.txt'))
+          ::FileUtils.touch(file_path)
+          expect(repo.class.hold_submissions?).to eq(true)
+          ::FileUtils.rm(file_path)
+        end
+      end
+
     end
   end
 end
