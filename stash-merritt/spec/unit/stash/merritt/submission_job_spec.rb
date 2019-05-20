@@ -100,8 +100,6 @@ module Stash
             allow(StashEngine::RepoQueueState).to receive(:where).and_return([1, 2])
             allow(StashEngine::RepoQueueState).to receive(:latest)
               .and_return({ 'present?': true, state: { 'enqueued?': true }.to_ostruct }.to_ostruct)
-            # Stash::Repo::Repository.update_repo_queue_state(resource_id: resource_id, state: 'processing')
-            # Stash::Repo::Repository.update_repo_queue_state(resource_id: resource_id, state: 'enqueued')
             expect(sword_helper).not_to receive(:submit!)
             job.submit!
           end
