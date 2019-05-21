@@ -37,10 +37,10 @@ module StashEngine
     end
 
     scope :cited_by_pubmed, -> do
-      joins(:internal_data).
-        publicly_viewable.
-        where('stash_engine_internal_data.data_type = ? AND stash_engine_internal_data.value IS NOT NULL', 'pubmedID').
-        order(:identifier)
+      joins(:internal_data)
+        .publicly_viewable
+        .where('stash_engine_internal_data.data_type = ? AND stash_engine_internal_data.value IS NOT NULL', 'pubmedID')
+        .order(:identifier)
     end
 
     # has_many :counter_citations, class_name: 'StashEngine::CounterCitation', dependent: :destroy
