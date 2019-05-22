@@ -58,8 +58,8 @@ RSpec.feature 'DatasetQueuing', type: :feature do
     it 'should show queuing', js: true do
       visit '/stash/submission_queue'
       wait_for_ajax(15)
-      expect(page).to have_text('1 are currently processing from this server')
-      expect(page).to have_text('2 queued on this server')
+      expect(page).to have_content(/[01] are currently processing from this server/)
+      expect(page).to have_content(/[23] queued on this server/)
     end
 
     it 'should pause transfers', js: true do
