@@ -8,9 +8,6 @@ module Mocks
     def mock_submission_job!
       allow_any_instance_of(Stash::Merritt::Repository).to receive(:download_uri_for).and_return(mint_id)
       allow_any_instance_of(Stash::Merritt::Repository).to receive(:update_uri_for).and_return(mint_id)
-      # allow_any_instance_of(Stash::Merritt::SubmissionJob).to receive(:'do_submit!').and_return(
-      #  Stash::Repo::SubmissionResult.success(resource_id: 1, request_desc: 'test description', message: 'Success')
-      # )
       Stash::Merritt::SubmissionJob.prepend(Mocks::SubmissionJob::MonkeyPatch) # a way to override this method
     end
 
