@@ -21,8 +21,8 @@ module StashApi
       it 'returns JSON for queue length and executor queue length' do
         get '/api/queue_length', {}, default_authenticated_headers
         output = JSON.parse(response.body).with_indifferent_access
-        expect(output[:queue_length]).to eq(0)
-        expect(output[:executor_queue_length]).to eq(0)
+        expect(output[:queue_length]).to be_a(Integer)
+        expect(output[:executor_queue_length]).to be_a(Integer)
       end
     end
   end
