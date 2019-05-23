@@ -32,4 +32,6 @@ StashApi::Engine.routes.draw do
 
   resources :users, only: %i[index show]
 
+  get '/queue_length', to: 'submisisons_queue#length'
+
 end
