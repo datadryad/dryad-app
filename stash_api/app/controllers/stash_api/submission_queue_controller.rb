@@ -14,7 +14,7 @@ module StashApi
       @queue_length = StashEngine::RepoQueueState.latest_per_resource.where(state: %w[enqueued rejected_shutting_down]).count
       @executor = StashEngine.repository.executor
       respond_to do |format|
-        format.json { render json: {queue_length: @queue_length, executor_queue_length: @executor.queue_length} }
+        format.json { render json: { queue_length: @queue_length, executor_queue_length: @executor.queue_length } }
       end
     end
   end
