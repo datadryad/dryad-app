@@ -17,11 +17,25 @@ module LinkOut
     def initialize
       make_linkout_dir!
 
-      @ftp = APP_CONFIG.link_out.ncbi_pubmed
+      @pubmed_api = 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi'.freeze
+      @pubmed_api_query_prefix = 'db=pubmed&term='.freeze
+      @pubmed_api_query_suffix = '[doi]'.freeze
+
+      @ftp = APP_CONFIG.link_out.pubmed
+      @root_url = Rails.application.routes.url_helpers.root_url.freeze
+
       @schema = 'http://www.ncbi.nlm.nih.gov/entrez/linkout/doc/LinkOut.dtd'.freeze
       @links_file = 'pubmedlinkout.xml'.freeze
       @provider_file = 'providerinfo.xml'.freeze
-      @root_url = Rails.application.routes.url_helpers.root_url.freeze
+    end
+
+    # Retrieve the Pubmed ID for the specified DOI. See below for a sample of the expected XML response
+    def lookup_pubmed_id(doi)
+      return nil unless doi.present?
+      query = "#{@pubmed_api_query_prefix}#{doi}#{@pubmed_api_query_suffix}"
+      results = get_xml_from_api(@pubmed_api, query)
+      return nil if results.blank?
+      extract_pubmed_id(results)
     end
 
     def generate_files!
@@ -49,9 +63,10 @@ module LinkOut
     private
 
     def generate_provider_file!
+      # Note that the view referenced below lives in the Dryad repo in the dryad/app/views dir
       doc = Nokogiri::XML(ActionView::Base.new('app/views')
         .render(
-          file: "link_out/#{@provider_file}.erb",
+          file: 'link_out/pubmed_provider.xml.erb',
           locals: {
             id: @ftp.ftp_provider_id,
             abbreviation: @ftp.ftp_username,
@@ -60,7 +75,7 @@ module LinkOut
             description: 'Dryad is a nonprofit organization and an international repository of data underlying scientific and medical publications.',
           }
         ), nil, 'UTF-8')
-      doc.create_external_subset('Provider', '-//NLM//DTD LinkOut 1.0//EN', @schema)
+      doc.create_internal_subset('Provider', '-//NLM//DTD LinkOut 1.0//EN', @schema)
       File.write("#{TMP_DIR}/#{@provider_file}", doc.to_xml)
       "#{TMP_DIR}/#{@provider_file}"
     end
@@ -70,9 +85,10 @@ module LinkOut
         { doi: identifier.to_s, pubmed_id: identifier.internal_data.where(data_type: 'pubmedID').first.value }
       end
 
+      # Note that the view referenced below lives in the Dryad repo in the dryad/app/views dir
       doc = Nokogiri::XML(ActionView::Base.new('app/views')
         .render(
-          file: "link_out/#{@links_file}.erb",
+          file: 'link_out/pubmed_links.xml.erb',
           locals: {
             provider_id: @ftp.ftp_provider_id,
             database: 'PubMed',
@@ -85,9 +101,36 @@ module LinkOut
           }
         ), nil, 'UTF-8')
 
-      doc.create_external_subset('LinkSet', '-//NLM//DTD LinkOut 1.0//EN', @schema)
+      doc.create_internal_subset('LinkSet', '-//NLM//DTD LinkOut 1.0//EN', @schema)
       File.write("#{TMP_DIR}/#{@links_file}", doc.to_xml)
       "#{TMP_DIR}/#{@links_file}"
+    end
+
+    # Expected XML Response from the NCBI API that returns Pubmed IDs for DOIs
+    # <?xml version="1.0" encoding="UTF-8" ?>
+    # <!DOCTYPE eSearchResult PUBLIC "-//NLM//DTD esearch 20060628//EN" "https://eutils.ncbi.nlm.nih.gov/eutils/dtd/20060628/esearch.dtd">
+    # <eSearchResult>
+    #   <Count>1</Count>
+    #   <RetMax>1</RetMax>
+    #   <RetStart>0</RetStart>
+    #   <IdList>
+    #     <Id>26028437</Id>
+    #   </IdList>
+    #   <TranslationSet/>
+    #   <TranslationStack>
+    #     <TermSet>
+    #       <Term>10.1016/j.cub.2015.04.062[doi]</Term>
+    #       <Field>doi</Field>
+    #       <Count>1</Count>
+    #       <Explode>N</Explode>
+    #     </TermSet>
+    #     <OP>GROUP</OP>
+    #   </TranslationStack>
+    #   <QueryTranslation>10.1016/j.cub.2015.04.062[doi]</QueryTranslation>
+    # </eSearchResult>
+    def extract_pubmed_id(xml)
+      doc = Nokogiri::XML(xml)
+      doc.xpath('eSearchResult//IdList//Id').first&.text
     end
 
   end
