@@ -12,13 +12,13 @@ module LinkOut
   # to the nucleotide databases (and here to the NUCCORE database), which should, however,
   # be the most common use-case, and may also need to be restricted to sequences for those
   # articles that also have a DOI.
-  class GenbankService
+  class PubmedSequenceService
 
     include ::LinkOut::Helper
 
     def initialize
       make_linkout_dir!
-      @ftp = APP_CONFIG.link_out.euro_pubmed_central
+      @ftp = APP_CONFIG.link_out.genbank
       @schema = 'http://europepmc.org/docs/labslink.xsd'.freeze
       @links_file = 'labslink-links.xml'.freeze
       @provider_file = 'labslink-profile.xml'.freeze
@@ -26,8 +26,7 @@ module LinkOut
     end
 
     def generate_files!
-      p "  created #{generate_provider_file!}"
-      p "  created #{generate_links_file!}"
+      p "  TODO: create GenBank sequence files"
     end
 
     def validate_files!
@@ -41,11 +40,11 @@ module LinkOut
     private
 
     def generate_provider_file!
-
+      # Note that the view referenced below lives in the Dryad repo in the dryad/app/views dir
     end
 
     def generate_links_file!
-
+      # Note that the view referenced below lives in the Dryad repo in the dryad/app/views dir
     end
 
   end

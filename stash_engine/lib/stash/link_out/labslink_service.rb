@@ -10,15 +10,16 @@ module LinkOut
   # similar mechanism to NCBI LinkOut, where we provide a list of PMIDs and destination
   # data packages.
   #   Europe PMC LabsLink: http://europepmc.org/LabsLink
-  class LabsLinkService
+  class LabslinkService
 
     include ::LinkOut::Helper
 
     def initialize
       make_linkout_dir!
-      @ftp = APP_CONFIG.link_out.euro_pubmed_central
+      @ftp = APP_CONFIG.link_out.labslink
       @schema = 'http://europepmc.org/docs/labslink.xsd'.freeze
       @links_file = 'labslink-links.xml'.freeze
+      @doi_url_stem = 'http://dx.doi.org/'.freeze
       @provider_file = 'labslink-profile.xml'.freeze
       @root_url = Rails.application.routes.url_helpers.root_url.freeze
     end
@@ -39,9 +40,10 @@ module LinkOut
     private
 
     def generate_provider_file!
+      # Note that the view referenced below lives in the Dryad repo in the dryad/app/views dir
       doc = Nokogiri::XML(ActionView::Base.new('app/views')
         .render(
-          file: "link_out/#{@provider_file}.erb",
+          file: 'link_out/labslink_provider.xml.erb',
           locals: {
             id: @ftp.ftp_provider_id,
             name: 'Dryad Digital Repository',
@@ -56,13 +58,14 @@ module LinkOut
     def generate_links_file!
       identifiers = StashEngine::Identifier.cited_by_pubmed
 
+      # Note that the view referenced below lives in the Dryad repo in the dryad/app/views dir
       doc = Nokogiri::XML(ActionView::Base.new('app/views')
         .render(
-          file: "link_out/#{@links_file}.erb",
+          file: 'link_out/labslink_links.xml.erb',
           locals: {
             provider_id: @ftp.ftp_provider_id,
             database: 'MED',
-            show_url_base: "#{@root_url}stash/dataset/",
+            show_url_base: @doi_url_stem,
             identifiers: identifiers
           }
         ), nil, 'UTF-8')

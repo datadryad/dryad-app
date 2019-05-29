@@ -1,0 +1,94 @@
+require_relative '../stash/link_out/helper'
+require_relative '../stash/link_out/labslink_service'
+require_relative '../stash/link_out/pubmed_sequence_service'
+require_relative '../stash/link_out/pubmed_service'
+
+# rubocop:disable Metrics/BlockLength
+namespace :link_out do
+
+  desc 'Generate and then push the LinkOut file(s) to the LinkOut FTP servers'
+  task publish: :environment do
+    Rake::Task['link_out:create'].execute
+    Rake::Task['link_out:push'].execute
+  end
+
+  desc 'Generate the LinkOut file(s)'
+  task create: :environment do
+    make_dir
+    Rake::Task['link_out:create_pubmed_linkouts'].execute
+    Rake::Task['link_out:create_labslink_linkouts'].execute
+    Rake::Task['link_out:create_pubmed_sequence_linkouts'].execute
+  end
+
+  desc 'Generate the PubMed Link Out files'
+  task create_pubmed_linkouts: :environment do
+    p "Generating LinkOut files for Pubmed #{Time.now.strftime('%H:%m:%s')}"
+    pubmed_service = LinkOut::PubmedService.new
+    pubmed_service.generate_files!
+    p "  finished at #{Time.now.strftime('%H:%m:%s')}"
+  end
+
+  desc 'Generate the LabsLink LinkOut files'
+  task create_labslink_linkouts: :environment do
+    p "Generating LinkOut files for LabLinks #{Time.now.strftime('%H:%m:%s')}"
+    labslink_service = LinkOut::LabslinkService.new
+    labslink_service.generate_files!
+    p "  finished at #{Time.now.strftime('%H:%m:%s')}"
+  end
+
+  desc 'Generate the PubMed GenBank Sequence LinkOut files'
+  task create_pubmed_sequence_linkouts: :environment do
+    p "Generating LinkOut files for GenBank #{Time.now.strftime('%H:%m:%s')}"
+    pubmed_sequence_service = LinkOut::PubmedSequenceService.new
+    pubmed_sequence_service.generate_files!
+    p "  finished at #{Time.now.strftime('%H:%m:%s')}"
+  end
+
+  desc 'Push the LinkOut files to the LinkOut FTP servers'
+  task push: :environment do
+    p "Publishing LinkOut files"
+    p "  processing Pubmed files:"
+    put_to_ftp(compress(EURO_PUBMED_CENTRAL_HASH[:profile_file]), APP_CONFIG.link_out.pubmed_central)
+    put_to_ftp(compress(EURO_PUBMED_CENTRAL_HASH[:linkout_file]), APP_CONFIG.link_out.pubmed_central) if valid_xml?(EURO_PUBMED_CENTRAL_HASH[:linkout_file], EURO_PUBMED_CENTRAL_HASH[:schema])
+    p "  processing LabsLink files"
+    put_to_ftp(compress(NCBI_HASH[:profile_file]), NCBI_HASH.link_out.ncbi) if valid_xml?(NCBI_HASH[:linkout_file], NCBI_HASH[:schema])
+    put_to_ftp(compress(NCBI_HASH[:linkout_file]), NCBI_HASH.link_out.ncbi) if valid_xml?(NCBI_HASH[:linkout_file], NCBI_HASH[:schema])
+    p "  processing GenBank files"
+    put_to_ftp(compress(NCBI_HASH[:profile_file]), NCBI_HASH.link_out.ncbi) if valid_xml?(NCBI_HASH[:linkout_file], NCBI_HASH[:schema])
+    put_to_ftp(compress(NCBI_HASH[:linkout_file]), NCBI_HASH.link_out.ncbi) if valid_xml?(NCBI_HASH[:linkout_file], NCBI_HASH[:schema])
+  end
+
+  desc 'Seed existing datasets with PubMed Ids - WARNING: this will query the API for each dataset that has a publicationDOI!'
+  task seed_pmids: :environment do
+    p "Retrieving Pubmed IDs for existing datasets"
+    pubmed_service = LinkOut::PubmedService.new
+    existing_pmids = StashEngine::Identifier.cited_by_pubmed.pluck(:id)
+    datum = StashEngine::InternalDatum.where.not(identifier_id: existing_pmids).where(data_type: 'publicationDOI').order(created_at: :desc)
+    datum.each do |data|
+      p "  looking for pmid for #{data.value}"
+      pmid = pubmed_service.lookup_pubmed_id(data.value.gsub('doi:', ''))
+      next unless pmid.present?
+
+      p "    found pubmedID, '#{pmid}', ... attaching it to '#{data.value.gsub('doi:', '')}' (identifier: #{data.identifier_id})"
+      StashEngine::InternalDatum.create(identifier_id: data.identifier_id, data_type: 'pubmedID', value: pmid.to_s)
+    end
+  end
+
+  desc 'Seed existing datasets with GenBank Sequence Ids - WARNING: this will query the API for each dataset that has a pubmedID!'
+  task seed_pmids: :environment do
+    p "Retrieving GenBank Sequence IDs for existing datasets"
+    pubmed_sequence_service = LinkOut::PubmedSequenceService.new
+    existing_pmids = StashEngine::Identifier.cited_by_pubmed.pluck(:id)
+    datum = StashEngine::InternalDatum.where(identifier_id: existing_pmids, data_type: 'pubmedID').order(created_at: :desc)
+    datum.each do |data|
+      p "  looking for genbank sequences for PubmedID #{data.value}"
+      #sequences = pubmed_sequence_service.lookup_genbank_sequences(data.value)
+      #next unless sequences.any?
+
+      #p "    found pubmedID, '#{pmid}', ... attaching it to '#{data.value}' (identifier: #{data.identifier_id})"
+      #StashEngine::InternalDatum.create(identifier_id: data.identifier_id, data_type: 'genbankSequences', value: sequences.to_s)
+    end
+  end
+
+end
+# rubocop:enable Metrics/BlockLength

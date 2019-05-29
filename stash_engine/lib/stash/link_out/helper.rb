@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
+require 'httparty'
 require 'net/ftp'
+require 'zlib'
 
 module LinkOut
 
@@ -9,12 +11,25 @@ module LinkOut
 
     TMP_DIR = "#{Rails.root}/tmp/link_out".freeze
 
-    def make_linkout_dir!
-      Dir.mkdir("#{Rails.root}/tmp") unless Dir.exist?("#{Rails.root}/tmp")
-      return if Dir.exist?(LINK_OUT_DIR)
-      Dir.mkdir(LINK_OUT_DIR)
+    # Retrieve the XML from the API (e.g. lookup Pubmed ID for a given DOI)
+    def get_xml_from_api(uri, query)
+      headers = { 'Accept': 'text/xml' }
+      resp = HTTParty.get(uri, query: query, headers: headers)
+      # If we received anything but a 200 then log an error and return an empty array
+      raise "Unable to connect to connect to - #{@pubmed_api}?#{query}: status: #{resp.code}" if resp.code != 200
+      # Return an empty array if the response did not have any results
+      return nil if resp.code != 200 || resp.blank?
+      resp.body
     end
 
+    # Create the TMP_DIR if it does not exist
+    def make_linkout_dir!
+      Dir.mkdir("#{Rails.root}/tmp") unless Dir.exist?("#{Rails.root}/tmp")
+      return if Dir.exist?(TMP_DIR)
+      Dir.mkdir(TMP_DIR)
+    end
+
+    # Download the specified XML schema to the local TMP_DIR
     def download_schema!(uri)
       file_name = "#{TMP_DIR}/#{uri.split('/').last}"
       p "      retrieving latest schema from: #{uri}"
@@ -22,14 +37,7 @@ module LinkOut
       file_name
     end
 
-    def valid_xml?(file_name, schema)
-      p "    validating #{file_name}"
-      local_schema = download_schema(schema)
-      # Do the appropriate validation based on the file type
-      return validate_against_xsd(file_name, local_schema) if schema.downcase.ends_with?('.xsd')
-      validate_against_dtd(file_name, local_schema)
-    end
-
+    # Gzip the specified file
     def compress_file!(file_name)
       zipped = "#{file_name}.gz"
       Zlib::GzipWriter.open(zipped) do |gz|
@@ -40,6 +48,17 @@ module LinkOut
       p "    compressing (gzip) #{file_name} - before: #{File.size(file_name)} after: #{File.size(zipped)}"
       zipped
     end
+
+    # Validate the XML document against the Schema
+    def valid_xml?(file_name, schema)
+      p "    validating #{file_name}"
+      local_schema = download_schema(schema)
+      # Do the appropriate validation based on the file type
+      return validate_against_xsd(file_name, local_schema) if schema.downcase.ends_with?('.xsd')
+      validate_against_dtd(file_name, local_schema)
+    end
+
+    private
 
     def validate_against_xsd(xml_file, xsd_file)
       xsd = Nokogiri::XML::Schema(File.read(xsd_file))
