@@ -1,0 +1,15 @@
+<!-- Dryad LinkOut Links file for European PubMed Central LabsLink -->
+<links>
+  <% identifiers.each do |identifier| %>
+    <link providerId="<%= provider_id %>">
+      <resource>
+        <title><%= identifier.latest_resource.title %></title>
+        <url><%= show_url_base %><%= identifier.to_s %></url>
+      </resource>
+      <record>
+        <source><%= database %></source>
+        <id><%= identifier.internal_data.where(data_type: 'pubmedID').first.value %></id>
+      </record>
+    </link>
+  <% end %>
+</links>

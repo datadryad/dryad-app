@@ -1,0 +1,21 @@
+<!-- Dryad LinkOut Links file for PubMed -->
+<LinkSet>
+  <Link>
+    <LinkId><%= "#{link_base}#{Date.today.strftime("%Y-%m-%d")}" %></LinkId>
+    <ProviderId><%= provider_id %></ProviderId>
+    <IconUrl><%= icon_url %></IconUrl>
+    <ObjectSelector>
+      <Database><%= database %></Database>
+      <ObjectList>
+        <% identifiers.each do |identifier| %>
+          <ObjId><%= identifier[:pubmed_id] %></ObjId> <!-- <%= identifier[:doi] %> -->
+        <% end %>
+      </ObjectList>
+    </ObjectSelector>
+    <ObjectUrl>
+      <Base><%= callback_base %></Base>
+      <Rule><%= callback_rule %></Rule>
+      <SubjectType><%= subject_type %></SubjectType>
+    </ObjectUrl>
+  </Link>
+</LinkSet>
