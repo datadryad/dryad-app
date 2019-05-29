@@ -26,6 +26,7 @@ defaults: &DEFAULTS
     key: <REPLACE-ME>
     data_processing_charge: 12000 #charge in cents
   merritt_express_domain: dummy_domain.example.com
+  merritt_max_submission_threads: 1
   crossref_base_url: https://api.crossref.org
   crossref_mailto: test.dude@example.edu
   fee_waiver_countries:

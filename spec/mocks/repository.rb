@@ -17,7 +17,7 @@ module Mocks
     end
     # rubocop:enable Metrics/AbcSize
 
-    class Repository < Stash::Repo::Repository
+    class Repository < Stash::Merritt::Repository
 
     end
 
