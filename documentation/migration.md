@@ -30,6 +30,10 @@ On the DSpace system:
 
 You may login to the Dash server and view the item.
 
+### Batch migration
+
+The dryad-utils repository contains many [tools to facilitate migrating groups of datasets](https://github.com/datadryad/dryad-utils/tree/master/dash-migration).
+
 ### Implementation details
 
 The DSpace implementation lives in these Java files:
