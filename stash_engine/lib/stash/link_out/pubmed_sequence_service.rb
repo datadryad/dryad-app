@@ -19,15 +19,15 @@ module LinkOut
     attr_reader :links_file
 
     def initialize
-      @genbank_api = 'https://www.ncbi.nlm.nih.gov/entrez/eutils/elink.fcgi'.freeze
+      @genbank_api = 'https://www.ncbi.nlm.nih.gov/entrez/eutils/elink.fcgi'
 
       @ftp = APP_CONFIG.link_out.pubmed
       @root_url = Rails.application.routes.url_helpers.root_url.freeze
       @file_counter = 1
 
-      @schema = 'http://www.ncbi.nlm.nih.gov/entrez/linkout/doc/LinkOut.dtd'.freeze
-      @links_file = 'sequencelinkout[nbr].xml'.freeze
-      @max_nodes_per_file = 50000
+      @schema = 'http://www.ncbi.nlm.nih.gov/entrez/linkout/doc/LinkOut.dtd'
+      @links_file = 'sequencelinkout[nbr].xml'
+      @max_nodes_per_file = 50_000
     end
 
     # Retrieve the GenBank Database ID(s) for the specified PubMedId. See below for a sample of the expected XML response
@@ -77,21 +77,7 @@ module LinkOut
 
         # Note that the view referenced below lives in the Dryad repo in the dryad/app/views dir
         identifiers.each_with_index do |hash, idx|
-          doc.xpath('LinkSet').first << Nokogiri::XML.fragment(ActionView::Base.new('app/views')
-            .render(
-              file: 'link_out/sequence_links.xml.erb',
-              locals: {
-                counter: idx,
-                provider_id: @ftp.ftp_provider_id,
-                database: db,
-                link_base: 'dryad.seq.',
-                icon_url: "#{@root_url}images/DryadLogo-Button.png",
-                callback_base: "#{@root_url}stash/dataset/",
-                callback_rule: hash[:doi],
-                subject_type: 'supplemental materials',
-                ids: JSON.parse(hash[:sequence])
-              }
-            ))
+          doc.xpath('LinkSet').first << generate_fragment(idx, db, hash)
           next unless reached_max_file_size?(doc)
 
           finish_sequence_file(doc)
@@ -108,7 +94,7 @@ module LinkOut
         <!-- Dryad LinkOut Links file for Pubmed GenBank Sequence -->
         <LinkSet></LinkSet>
       XML
-      )
+                         )
       doc.create_internal_subset('LinkSet', '-//NLM//DTD LinkOut 1.0//EN', @schema.split('/').last)
       doc
     end
@@ -121,6 +107,24 @@ module LinkOut
     def reached_max_file_size?(doc)
       return false if doc.xpath('.//*').size < @max_nodes_per_file
       true
+    end
+
+    def generate_fragment(idx, db, hash)
+      Nokogiri::XML.fragment(ActionView::Base.new('app/views')
+        .render(
+          file: 'link_out/sequence_links.xml.erb',
+          locals: {
+            counter: idx,
+            provider_id: @ftp.ftp_provider_id,
+            database: db,
+            link_base: 'dryad.seq.',
+            icon_url: "#{@root_url}images/DryadLogo-Button.png",
+            callback_base: "#{@root_url}stash/dataset/",
+            callback_rule: hash[:doi],
+            subject_type: 'supplemental materials',
+            ids: JSON.parse(hash[:sequence])
+          }
+        ))
     end
 
     # Expected XML Response from the NCBI API that returns Database IDs for PubMed IDs
@@ -147,7 +151,7 @@ module LinkOut
     def extract_genbank_ids(xml)
       doc = Nokogiri::XML(xml)
       return [] unless doc.xpath('eLinkResult//LinkSet//LinkSetDb').first.present?
-      doc.xpath('eLinkResult//LinkSet//LinkSetDb/Link/Id').map { |id| id&.text }.uniq.select { |id| id != '0' }
+      doc.xpath('eLinkResult//LinkSet//LinkSetDb/Link/Id').map { |id| id&.text }.uniq.reject { |id| id == '0' }
     end
 
   end

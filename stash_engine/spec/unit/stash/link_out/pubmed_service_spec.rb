@@ -8,7 +8,7 @@ module LinkOut
   describe PubmedService do
     TEST_FILE_DIR = "#{Dir.pwd}/spec/tmp/link_out".freeze
 
-    RESPONSE = <<~XML
+    RESPONSE = <<~XML.freeze
       <?xml version="1.0" encoding="UTF-8" ?>
       <!DOCTYPE eSearchResult PUBLIC "-//NLM//DTD esearch 20060628//EN" "https://eutils.ncbi.nlm.nih.gov/eutils/dtd/20060628/esearch.dtd">
       <eSearchResult>
@@ -32,7 +32,7 @@ module LinkOut
       </eSearchResult>
     XML
 
-    EMPTY_RESPONSE = <<~XML
+    EMPTY_RESPONSE = <<~XML.freeze
       <?xml version="1.0" encoding="UTF-8" ?>
       <!DOCTYPE eSearchResult PUBLIC "-//NLM//DTD esearch 20060628//EN" "https://eutils.ncbi.nlm.nih.gov/eutils/dtd/20060628/esearch.dtd">
       <eSearchResult>
@@ -61,11 +61,11 @@ module LinkOut
       allow(APP_CONFIG).to receive(:link_out).and_return(link_out)
       allow(link_out).to receive(:pubmed).and_return(OpenStruct.new(link_out.pubmed))
       allow(Rails).to receive(:application).and_return(
-        OpenStruct.new({ routes: OpenStruct.new({ url_helpers: OpenStruct.new({ root_url: 'example.org' }) }) })
+        OpenStruct.new(routes: OpenStruct.new(url_helpers: OpenStruct.new(root_url: 'example.org')))
       )
 
-      stub_request(:get, %r[eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?])
-        .with(headers: { 'Accept'=>'text/xml' })
+      stub_request(:get, %r{eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?})
+        .with(headers: { 'Accept' => 'text/xml' })
         .to_return(status: 200, body: RESPONSE.to_s, headers: {})
 
       @svc = LinkOut::PubmedService.new
@@ -73,8 +73,8 @@ module LinkOut
 
     describe '#lookup_pubmed_id' do
       it 'returns a nil if the API did not find a Pubmed ID' do
-        stub_request(:get, %r[eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?])
-          .with(headers: { 'Accept'=>'text/xml' })
+        stub_request(:get, %r{eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?})
+          .with(headers: { 'Accept' => 'text/xml' })
           .to_return(status: 200, body: EMPTY_RESPONSE.to_s, headers: {})
 
         expect(@svc.lookup_pubmed_id('abcd')).to eql(nil)

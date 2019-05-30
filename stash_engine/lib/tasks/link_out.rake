@@ -48,23 +48,23 @@ namespace :link_out do
 
   desc 'Push the LinkOut files to the LinkOut FTP servers'
   task push: :environment do
-    p "Publishing LinkOut files"
-    p "  processing Pubmed files:"
+    p 'Publishing LinkOut files'
+    p '  processing Pubmed files:'
     pubmed_service = LinkOut::PubmedService.new
     pubmed_service.publish_files! if pubmed_service.validate_files!
 
-    p "  processing GenBank files"
+    p '  processing GenBank files'
     pubmed_sequence_service = LinkOut::PubmedSequenceService.new
     pubmed_sequence_service.publish_files! if pubmed_sequence_service.validate_files!
 
-    p "  processing LabsLink files"
+    p '  processing LabsLink files'
     labslink_service = LinkOut::LabslinkService.new
     labslink_service.publish_files! if labslink_service.validate_files!
   end
 
   desc 'Seed existing datasets with PubMed Ids - WARNING: this will query the API for each dataset that has a publicationDOI!'
   task seed_pmids: :environment do
-    p "Retrieving Pubmed IDs for existing datasets"
+    p 'Retrieving Pubmed IDs for existing datasets'
     pubmed_service = LinkOut::PubmedService.new
     existing_pmids = StashEngine::Identifier.cited_by_pubmed.pluck(:id)
     datum = StashEngine::InternalDatum.where.not(identifier_id: existing_pmids).where(data_type: 'publicationDOI').order(created_at: :desc)
@@ -85,7 +85,7 @@ namespace :link_out do
 
   desc 'Seed existing datasets with GenBank Sequence Ids - WARNING: this will query the API for each dataset that has a pubmedID!'
   task seed_genbank_ids: :environment do
-    p "Retrieving GenBank Sequence IDs for existing datasets"
+    p 'Retrieving GenBank Sequence IDs for existing datasets'
     pubmed_sequence_service = LinkOut::PubmedSequenceService.new
     existing_pmids = StashEngine::Identifier.cited_by_pubmed.pluck(:id)
     datum = StashEngine::InternalDatum.where(identifier_id: existing_pmids, data_type: 'pubmedID').limit(30).order(created_at: :desc)
@@ -102,7 +102,7 @@ namespace :link_out do
         p "    found #{v.length} identifiers for #{k}"
         external_ref.save
       end
-      sleep(1)  # The NCBI API has a threshold for how many times we can hit it
+      sleep(1) # The NCBI API has a threshold for how many times we can hit it
     end
   end
 
