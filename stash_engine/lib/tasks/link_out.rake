@@ -76,6 +76,7 @@ namespace :link_out do
 
       p "    found pubmedID, '#{pmid}', ... attaching it to '#{data.value.gsub('doi:', '')}' (identifier: #{data.identifier_id})"
       internal_datum.save
+      sleep(1)
     end
   end
 
