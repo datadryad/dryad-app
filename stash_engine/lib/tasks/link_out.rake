@@ -21,6 +21,7 @@ namespace :link_out do
 
   desc 'Generate the PubMed Link Out files'
   task create_pubmed_linkouts: :environment do
+    create_link_out_dir!
     p "Generating LinkOut files for Pubmed #{Time.now.strftime('%H:%m:%s')}"
     pubmed_service = LinkOut::PubmedService.new
     pubmed_service.generate_files!
@@ -29,6 +30,7 @@ namespace :link_out do
 
   desc 'Generate the LabsLink LinkOut files'
   task create_labslink_linkouts: :environment do
+    create_link_out_dir!
     p "Generating LinkOut files for LabLinks #{Time.now.strftime('%H:%m:%s')}"
     labslink_service = LinkOut::LabslinkService.new
     labslink_service.generate_files!
@@ -37,6 +39,7 @@ namespace :link_out do
 
   desc 'Generate the PubMed GenBank Sequence LinkOut files'
   task create_pubmed_sequence_linkouts: :environment do
+    create_link_out_dir!
     p "Generating LinkOut files for GenBank #{Time.now.strftime('%H:%m:%s')}"
     pubmed_sequence_service = LinkOut::PubmedSequenceService.new
     pubmed_sequence_service.generate_files!
@@ -101,6 +104,11 @@ namespace :link_out do
       end
       sleep(1)  # The NCBI API has a threshold for how many times we can hit it
     end
+  end
+
+  def create_link_out_dir!
+    Dir.mkdir("#{Dir.pwd}/tmp") unless Dir.exist?("#{Dir.pwd}/tmp")
+    Dir.mkdir("#{Dir.pwd}/tmp/link_out") unless Dir.exist?("#{Dir.pwd}/tmp/link_out")
   end
 
 end

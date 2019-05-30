@@ -14,9 +14,10 @@ module LinkOut
 
     include ::LinkOut::Helper
 
-    def initialize
-      make_linkout_dir!
+    attr_reader :provider_file
+    attr_reader :links_file
 
+    def initialize
       @pubmed_api = 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi'.freeze
       @pubmed_api_query_prefix = 'db=pubmed&term='.freeze
       @pubmed_api_query_suffix = '[doi]'.freeze

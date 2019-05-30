@@ -14,8 +14,10 @@ module LinkOut
 
     include ::LinkOut::Helper
 
+    attr_reader :provider_file
+    attr_reader :links_file
+
     def initialize
-      make_linkout_dir!
       @ftp = APP_CONFIG.link_out.labslink
       @schema = 'http://europepmc.org/docs/labslink.xsd'.freeze
       @links_file = 'labslink-links.xml'.freeze
