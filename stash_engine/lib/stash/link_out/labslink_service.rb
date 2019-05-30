@@ -19,10 +19,10 @@ module LinkOut
 
     def initialize
       @ftp = APP_CONFIG.link_out.labslink
-      @schema = 'http://europepmc.org/docs/labslink.xsd'.freeze
-      @links_file = 'labslink-links.xml'.freeze
-      @doi_url_stem = 'http://dx.doi.org/'.freeze
-      @provider_file = 'labslink-profile.xml'.freeze
+      @schema = 'http://europepmc.org/docs/labslink.xsd'
+      @links_file = 'labslink-links.xml'
+      @doi_url_stem = 'http://dx.doi.org/'
+      @provider_file = 'labslink-profile.xml'
       @root_url = Rails.application.routes.url_helpers.root_url.freeze
     end
 
@@ -34,8 +34,8 @@ module LinkOut
     def validate_files!
       p "    retrieving latest schema from: #{@schema}"
       local_schema = download_schema!(@schema)
-      p "    Provider file passed validation check" if valid_xml?("#{TMP_DIR}/#{@provider_file}", local_schema)
-      p "    Links file passed validation check" if valid_xml?("#{TMP_DIR}/#{@links_file}", local_schema)
+      p '    Provider file passed validation check' if valid_xml?("#{TMP_DIR}/#{@provider_file}", local_schema)
+      p '    Links file passed validation check' if valid_xml?("#{TMP_DIR}/#{@links_file}", local_schema)
     end
 
     def publish_files!

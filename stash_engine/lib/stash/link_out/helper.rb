@@ -8,7 +8,7 @@ module LinkOut
 
   # This helper class provides common methods used by all of the LinkOut services
   module Helper
-    TMP_DIR = "#{Rails.root}/tmp/link_out".freeze
+    TMP_DIR = "#{Rails.root}/tmp/link_out"
 
     # Retrieve the XML from the API (e.g. lookup Pubmed ID for a given DOI)
     def get_xml_from_api(uri, query)
@@ -58,7 +58,7 @@ module LinkOut
       false
     end
 
-    def validate_against_dtd(xml_file, dtd_file)
+    def validate_against_dtd(_xml_file, _dtd_file)
       # The DTD file for the PubMed Linkout file doesn't appear to be valid. The Nokogiri validation
       # fails with the following errors (whether checking against the remote DTD file or a local
       # downloaded copy of it):
@@ -77,7 +77,7 @@ module LinkOut
       #    17:0: ERROR: No declaration for element Base"
       #    18:0: ERROR: No declaration for element Rule"
       #    19:0: ERROR: No declaration for element SubjectType"
-      return true
+      true
 
       # doc = Nokogiri::XML::Document.parse(File.read(xml_file))
       # dtd = Nokogiri::XML::DTD.new(doc.internal_subset.name, Nokogiri::XML::Document.parse(File.read(dtd_file)))

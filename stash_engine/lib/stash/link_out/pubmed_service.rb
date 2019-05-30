@@ -18,16 +18,16 @@ module LinkOut
     attr_reader :links_file
 
     def initialize
-      @pubmed_api = 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi'.freeze
-      @pubmed_api_query_prefix = 'db=pubmed&term='.freeze
-      @pubmed_api_query_suffix = '[doi]'.freeze
+      @pubmed_api = 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi'
+      @pubmed_api_query_prefix = 'db=pubmed&term='
+      @pubmed_api_query_suffix = '[doi]'
 
       @ftp = APP_CONFIG.link_out.pubmed
       @root_url = Rails.application.routes.url_helpers.root_url.freeze
 
-      @schema = 'http://www.ncbi.nlm.nih.gov/entrez/linkout/doc/LinkOut.dtd'.freeze
-      @links_file = 'pubmedlinkout.xml'.freeze
-      @provider_file = 'providerinfo.xml'.freeze
+      @schema = 'http://www.ncbi.nlm.nih.gov/entrez/linkout/doc/LinkOut.dtd'
+      @links_file = 'pubmedlinkout.xml'
+      @provider_file = 'providerinfo.xml'
     end
 
     # Retrieve the Pubmed ID for the specified DOI. See below for a sample of the expected XML response
@@ -47,18 +47,18 @@ module LinkOut
     def validate_files!
       p "    retrieving latest schema from: #{@schema}"
       local_schema = download_schema!(@schema)
-      p "    Provider file passed validation check" if valid_xml?("#{TMP_DIR}/#{@provider_file}", local_schema)
-      p "    Links file passed validation check" if valid_xml?("#{TMP_DIR}/#{@links_file}", local_schema)
+      p '    Provider file passed validation check' if valid_xml?("#{TMP_DIR}/#{@provider_file}", local_schema)
+      p '    Links file passed validation check' if valid_xml?("#{TMP_DIR}/#{@links_file}", local_schema)
     end
 
     def publish_files!
       p "    TODO: sending files to #{@ftp.ftp_host}"
-      #ftp = Net::FTP.new(@ftp.ftp_host)
-      #ftp.login(@ftp.ftp_username, @ftp.ftp_password)
-      #ftp.chdir(@ftp.ftp_dir)
-      #ftp.putbinaryfile(@provider_file)
-      #ftp.putbinaryfile(@links_file)
-      #ftp.close
+      # ftp = Net::FTP.new(@ftp.ftp_host)
+      # ftp.login(@ftp.ftp_username, @ftp.ftp_password)
+      # ftp.chdir(@ftp.ftp_dir)
+      # ftp.putbinaryfile(@provider_file)
+      # ftp.putbinaryfile(@links_file)
+      # ftp.close
     end
 
     private
@@ -73,7 +73,7 @@ module LinkOut
             abbreviation: @ftp.ftp_username,
             url: @root_url,
             name: 'Dryad Digital Repository',
-            description: 'Dryad is a nonprofit organization and an international repository of data underlying scientific and medical publications.',
+            description: 'Dryad is a nonprofit organization and an international repository of data underlying scientific and medical publications.'
           }
         ), nil, 'UTF-8')
       doc.create_internal_subset('Provider', '-//NLM//DTD LinkOut 1.0//EN', @schema.split('/').last)

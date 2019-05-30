@@ -8,7 +8,7 @@ module LinkOut
   describe PubmedSequenceService do
     TEST_FILE_DIR = "#{Dir.pwd}/spec/tmp/link_out".freeze
 
-    RESPONSE = <<~XML
+    RESPONSE = <<~XML.freeze
       <?xml version="1.0" encoding="UTF-8" ?>
       <!DOCTYPE eSearchResult PUBLIC "-//NLM//DTD esearch 20060628//EN" "https://eutils.ncbi.nlm.nih.gov/eutils/dtd/20060628/esearch.dtd">
       <eLinkResult>
@@ -31,7 +31,7 @@ module LinkOut
       </eLinkResult>
     XML
 
-    EMPTY_RESPONSE = <<~XML
+    EMPTY_RESPONSE = <<~XML.freeze
       <?xml version="1.0" encoding="UTF-8" ?>
       <!DOCTYPE eSearchResult PUBLIC "-//NLM//DTD esearch 20060628//EN" "https://eutils.ncbi.nlm.nih.gov/eutils/dtd/20060628/esearch.dtd">
       <eLinkResult>
@@ -51,11 +51,11 @@ module LinkOut
       allow(APP_CONFIG).to receive(:link_out).and_return(link_out)
       allow(link_out).to receive(:pubmed).and_return(OpenStruct.new(link_out.pubmed))
       allow(Rails).to receive(:application).and_return(
-        OpenStruct.new({ routes: OpenStruct.new({ url_helpers: OpenStruct.new({ root_url: 'example.org' }) }) })
+        OpenStruct.new(routes: OpenStruct.new(url_helpers: OpenStruct.new(root_url: 'example.org')))
       )
 
-      stub_request(:get, %r[www.ncbi.nlm.nih.gov/entrez/eutils/elink.fcgi?])
-        .with(headers: { 'Accept'=>'text/xml' })
+      stub_request(:get, %r{www.ncbi.nlm.nih.gov/entrez/eutils/elink.fcgi?})
+        .with(headers: { 'Accept' => 'text/xml' })
         .to_return(status: 200, body: RESPONSE.to_s, headers: {})
 
       @svc = LinkOut::PubmedSequenceService.new
@@ -63,14 +63,14 @@ module LinkOut
 
     describe '#lookup_pubmed_id' do
       it 'returns a nil if the API did not find a Pubmed ID' do
-        stub_request(:get, %r[www.ncbi.nlm.nih.gov/entrez/eutils/elink.fcgi?])
-          .with(headers: { 'Accept'=>'text/xml' })
+        stub_request(:get, %r{www.ncbi.nlm.nih.gov/entrez/eutils/elink.fcgi?})
+          .with(headers: { 'Accept' => 'text/xml' })
           .to_return(status: 200, body: EMPTY_RESPONSE.to_s, headers: {})
 
         expect(@svc.lookup_genbank_sequences('abcd')).to eql({})
       end
       it 'returns the Pubmed ID if the API found a match' do
-        results_hash = Hash[StashEngine::ExternalReference.sources.collect { |db|  [db, ['316925971', '316925605']] }]
+        results_hash = Hash[StashEngine::ExternalReference.sources.collect { |db| [db, %w[316925971 316925605]] }]
         expect(@svc.lookup_genbank_sequences('abcd')).to eql(results_hash)
       end
     end
