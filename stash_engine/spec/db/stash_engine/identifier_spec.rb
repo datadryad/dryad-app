@@ -402,5 +402,37 @@ module StashEngine
 
     end
 
+    describe :cited_by do
+      before(:each) do
+        user = User.new
+        @identifier2 = Identifier.create(identifier_type: 'DOI', identifier: '10.123/789')
+        @identifier3 = Identifier.create(identifier_type: 'DOI', identifier: '10.123/000')
+
+        # Add a resource and make it 'published'
+        [@identifier, @identifier2, @identifier3].each do |identifier|
+          resource = create(:resource, user_id: user.id, tenant_id: user.tenant_id, identifier_id: identifier.id)
+          create(:curation_activity_no_callbacks, resource: resource, status: 'in_progress')
+          create(:curation_activity_no_callbacks, resource: resource, status: 'curation')
+          create(:curation_activity_no_callbacks, resource: resource, status: 'published')
+        end
+      end
+
+      it '#cited_by_pubmed should only return identifiers that have `pubmedID` internal datum' do
+        InternalDatum.create(identifier_id: @identifier.id, data_type: 'pubmedID', value: 'ABCD')
+        InternalDatum.create(identifier_id: @identifier2.id, data_type: 'pubmedID', value: '1234')
+        InternalDatum.create(identifier_id: @identifier3.id, data_type: 'publicationName', value: 'TESTER')
+
+        expect(Identifier.cited_by_pubmed.length).to eql(2)
+      end
+
+      it '#cited_by_external_site should only return identifiers that have the specified site in external references' do
+        ExternalReference.create(identifier_id: @identifier.id, source: 'nuccore', value: 'ABCD')
+        ExternalReference.create(identifier_id: @identifier2.id, source: 'nuccore', value: '1234')
+        ExternalReference.create(identifier_id: @identifier3.id, source: 'bioproject', value: 'TESTER')
+
+        expect(Identifier.cited_by_external_site('nuccore').length).to eql(2)
+      end
+    end
+
   end
 end
