@@ -8,7 +8,6 @@ module LinkOut
 
   # This helper class provides common methods used by all of the LinkOut services
   module Helper
-
     TMP_DIR = "#{Rails.root}/tmp/link_out".freeze
 
     # Retrieve the XML from the API (e.g. lookup Pubmed ID for a given DOI)
@@ -20,13 +19,6 @@ module LinkOut
       # Return an empty array if the response did not have any results
       return nil if resp.code != 200 || resp.blank?
       resp.body
-    end
-
-    # Create the TMP_DIR if it does not exist
-    def make_linkout_dir!
-      Dir.mkdir("#{Rails.root}/tmp") unless Dir.exist?("#{Rails.root}/tmp")
-      return if Dir.exist?(TMP_DIR)
-      Dir.mkdir(TMP_DIR)
     end
 
     # Download the specified XML schema to the local TMP_DIR

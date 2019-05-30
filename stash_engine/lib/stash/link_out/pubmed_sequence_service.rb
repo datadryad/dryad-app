@@ -16,9 +16,9 @@ module LinkOut
 
     include ::LinkOut::Helper
 
-    def initialize
-      make_linkout_dir!
+    attr_reader :links_file
 
+    def initialize
       @genbank_api = 'https://www.ncbi.nlm.nih.gov/entrez/eutils/elink.fcgi'.freeze
 
       @ftp = APP_CONFIG.link_out.pubmed
@@ -39,7 +39,7 @@ module LinkOut
         genbank_ids = extract_genbank_ids(get_xml_from_api(@genbank_api, query))
         hash[db] = genbank_ids unless genbank_ids.empty?
       end
-      return hash
+      hash
     end
 
     def generate_files!
