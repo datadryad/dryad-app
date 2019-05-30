@@ -27,7 +27,7 @@ module LinkOut
 
       @schema = 'http://www.ncbi.nlm.nih.gov/entrez/linkout/doc/LinkOut.dtd'.freeze
       @links_file = 'sequencelinkout[nbr].xml'.freeze
-      @max_nodes_per_file = 80000
+      @max_nodes_per_file = 50000
     end
 
     # Retrieve the GenBank Database ID(s) for the specified PubMedId. See below for a sample of the expected XML response
@@ -47,11 +47,15 @@ module LinkOut
     end
 
     def validate_files!
-
+      p "    retrieving latest schema from: #{@schema}"
+      local_schema = download_schema!(@schema)
+      Dir["#{TMP_DIR}/#{@provider_file}/#{@links_file.gsub('[nbr]', '*')}"].entries.each do |file|
+        p "    Sequence file #{file} passed validation check" if valid_xml?(file, local_schema)
+      end
     end
 
     def publish_files!
-
+      p "    TODO: sending files to #{@ftp.ftp_host}"
     end
 
     private
@@ -105,7 +109,7 @@ module LinkOut
         <LinkSet></LinkSet>
       XML
       )
-      doc.create_internal_subset('LinkSet', '-//NLM//DTD LinkOut 1.0//EN', @schema)
+      doc.create_internal_subset('LinkSet', '-//NLM//DTD LinkOut 1.0//EN', @schema.split('/').last)
       doc
     end
 
@@ -115,7 +119,7 @@ module LinkOut
     end
 
     def reached_max_file_size?(doc)
-      return false if doc.xpath('.//*').size < 500 #@max_nodes_per_file
+      return false if doc.xpath('.//*').size < @max_nodes_per_file
       true
     end
 

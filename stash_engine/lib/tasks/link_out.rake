@@ -14,7 +14,6 @@ namespace :link_out do
 
   desc 'Generate the LinkOut file(s)'
   task create: :environment do
-    make_dir
     Rake::Task['link_out:create_pubmed_linkouts'].execute
     Rake::Task['link_out:create_labslink_linkouts'].execute
     Rake::Task['link_out:create_pubmed_sequence_linkouts'].execute
@@ -48,14 +47,16 @@ namespace :link_out do
   task push: :environment do
     p "Publishing LinkOut files"
     p "  processing Pubmed files:"
-    put_to_ftp(compress(EURO_PUBMED_CENTRAL_HASH[:profile_file]), APP_CONFIG.link_out.pubmed_central)
-    put_to_ftp(compress(EURO_PUBMED_CENTRAL_HASH[:linkout_file]), APP_CONFIG.link_out.pubmed_central) if valid_xml?(EURO_PUBMED_CENTRAL_HASH[:linkout_file], EURO_PUBMED_CENTRAL_HASH[:schema])
-    p "  processing LabsLink files"
-    put_to_ftp(compress(NCBI_HASH[:profile_file]), NCBI_HASH.link_out.ncbi) if valid_xml?(NCBI_HASH[:linkout_file], NCBI_HASH[:schema])
-    put_to_ftp(compress(NCBI_HASH[:linkout_file]), NCBI_HASH.link_out.ncbi) if valid_xml?(NCBI_HASH[:linkout_file], NCBI_HASH[:schema])
+    pubmed_service = LinkOut::PubmedService.new
+    pubmed_service.publish_files! if pubmed_service.validate_files!
+
     p "  processing GenBank files"
-    put_to_ftp(compress(NCBI_HASH[:profile_file]), NCBI_HASH.link_out.ncbi) if valid_xml?(NCBI_HASH[:linkout_file], NCBI_HASH[:schema])
-    put_to_ftp(compress(NCBI_HASH[:linkout_file]), NCBI_HASH.link_out.ncbi) if valid_xml?(NCBI_HASH[:linkout_file], NCBI_HASH[:schema])
+    pubmed_sequence_service = LinkOut::PubmedSequenceService.new
+    pubmed_sequence_service.publish_files! if pubmed_sequence_service.validate_files!
+
+    p "  processing LabsLink files"
+    labslink_service = LinkOut::LabslinkService.new
+    labslink_service.publish_files! if labslink_service.validate_files!
   end
 
   desc 'Seed existing datasets with PubMed Ids - WARNING: this will query the API for each dataset that has a publicationDOI!'

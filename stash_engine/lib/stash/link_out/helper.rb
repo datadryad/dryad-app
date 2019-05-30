@@ -32,7 +32,6 @@ module LinkOut
     # Download the specified XML schema to the local TMP_DIR
     def download_schema!(uri)
       file_name = "#{TMP_DIR}/#{uri.split('/').last}"
-      p "      retrieving latest schema from: #{uri}"
       File.write(file_name, HTTParty.get(uri).body)
       file_name
     end
@@ -51,11 +50,9 @@ module LinkOut
 
     # Validate the XML document against the Schema
     def valid_xml?(file_name, schema)
-      p "    validating #{file_name}"
-      local_schema = download_schema(schema)
       # Do the appropriate validation based on the file type
-      return validate_against_xsd(file_name, local_schema) if schema.downcase.ends_with?('.xsd')
-      validate_against_dtd(file_name, local_schema)
+      return validate_against_xsd(file_name, schema) if schema.downcase.ends_with?('.xsd')
+      validate_against_dtd(file_name, schema)
     end
 
     private
@@ -90,12 +87,13 @@ module LinkOut
       #    19:0: ERROR: No declaration for element SubjectType"
       return true
 
-      dtd = Nokogiri::XML::DTD.new('dtd', Nokogiri::XML::Document.parse(File.read(dtd_file)))
-      doc = Nokogiri::XML::Document.parse(File.read(xml_file))
-      return true if dtd.validate(doc).empty?
-      p "      ERROR! #{xml_file} does not conform to the XML schema defined in: #{dtd_file}:"
-      dtd.validate(doc).each { |err| p "        #{err.to_s}" }
-      false
+      # doc = Nokogiri::XML::Document.parse(File.read(xml_file))
+      # dtd = Nokogiri::XML::DTD.new(doc.internal_subset.name, Nokogiri::XML::Document.parse(File.read(dtd_file)))
+
+      # return true if dtd.validate(doc).empty?
+      # p "      ERROR! #{xml_file} does not conform to the XML schema defined in: #{dtd_file}:"
+      # dtd.validate(doc).each { |err| p "        #{err.to_s}" }
+      # false
     end
 
   end
