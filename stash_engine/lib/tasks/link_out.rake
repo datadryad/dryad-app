@@ -69,24 +69,35 @@ namespace :link_out do
       pmid = pubmed_service.lookup_pubmed_id(data.value.gsub('doi:', ''))
       next unless pmid.present?
 
+      internal_datum = StashEngine::InternalDatum.find_or_initialize_by(identifier_id: data.identifier_id, data_type: 'pubmedID')
+      internal_datum.value = pmid.to_s
+      next unless internal_datum.value_changed?
+
       p "    found pubmedID, '#{pmid}', ... attaching it to '#{data.value.gsub('doi:', '')}' (identifier: #{data.identifier_id})"
-      StashEngine::InternalDatum.create(identifier_id: data.identifier_id, data_type: 'pubmedID', value: pmid.to_s)
+      internal_datum.save
     end
   end
 
   desc 'Seed existing datasets with GenBank Sequence Ids - WARNING: this will query the API for each dataset that has a pubmedID!'
-  task seed_pmids: :environment do
+  task seed_genbank_ids: :environment do
     p "Retrieving GenBank Sequence IDs for existing datasets"
     pubmed_sequence_service = LinkOut::PubmedSequenceService.new
     existing_pmids = StashEngine::Identifier.cited_by_pubmed.pluck(:id)
-    datum = StashEngine::InternalDatum.where(identifier_id: existing_pmids, data_type: 'pubmedID').order(created_at: :desc)
+    datum = StashEngine::InternalDatum.where(identifier_id: existing_pmids, data_type: 'pubmedID').limit(30).order(created_at: :desc)
     datum.each do |data|
       p "  looking for genbank sequences for PubmedID #{data.value}"
-      #sequences = pubmed_sequence_service.lookup_genbank_sequences(data.value)
-      #next unless sequences.any?
+      sequences = pubmed_sequence_service.lookup_genbank_sequences(data.value)
+      next unless sequences.any?
 
-      #p "    found pubmedID, '#{pmid}', ... attaching it to '#{data.value}' (identifier: #{data.identifier_id})"
-      #StashEngine::InternalDatum.create(identifier_id: data.identifier_id, data_type: 'genbankSequences', value: sequences.to_s)
+      sequences.each do |k, v|
+        external_ref = StashEngine::ExternalReference.find_or_initialize_by(identifier_id: data.identifier_id, source: k)
+        external_ref.value = v.to_s
+        next unless external_ref.value_changed?
+
+        p "    found #{v.length} identifiers for #{k}"
+        external_ref.save
+      end
+      sleep(1)  # The NCBI API has a threshold for how many times we can hit it
     end
   end
 

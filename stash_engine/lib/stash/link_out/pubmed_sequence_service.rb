@@ -18,15 +18,32 @@ module LinkOut
 
     def initialize
       make_linkout_dir!
-      @ftp = APP_CONFIG.link_out.genbank
-      @schema = 'http://europepmc.org/docs/labslink.xsd'.freeze
-      @links_file = 'labslink-links.xml'.freeze
-      @provider_file = 'labslink-profile.xml'.freeze
+
+      @genbank_api = 'https://www.ncbi.nlm.nih.gov/entrez/eutils/elink.fcgi'.freeze
+
+      @ftp = APP_CONFIG.link_out.pubmed
       @root_url = Rails.application.routes.url_helpers.root_url.freeze
+      @file_counter = 1
+
+      @schema = 'http://www.ncbi.nlm.nih.gov/entrez/linkout/doc/LinkOut.dtd'.freeze
+      @links_file = 'sequencelinkout[nbr].xml'.freeze
+      @max_nodes_per_file = 100000
+    end
+
+    # Retrieve the GenBank Database ID(s) for the specified PubMedId. See below for a sample of the expected XML response
+    def lookup_genbank_sequences(pmid)
+      return nil unless pmid.present?
+      hash = {}
+      StashEngine::ExternalReference.sources.each do |db|
+        query = "dbfrom=pubmed&db=#{db}&id=#{pmid}"
+        genbank_ids = extract_genbank_ids(get_xml_from_api(@genbank_api, query))
+        hash[db] = genbank_ids unless genbank_ids.empty?
+      end
+      return hash
     end
 
     def generate_files!
-      p "  TODO: create GenBank sequence files"
+      p "  created #{generate_links_file!}"
     end
 
     def validate_files!
@@ -45,6 +62,86 @@ module LinkOut
 
     def generate_links_file!
       # Note that the view referenced below lives in the Dryad repo in the dryad/app/views dir
+      identifiers = StashEngine::Identifier.cited_by_genbank.map do |identifier|
+        {
+          doi: identifier.to_s,
+          database: identifier.internal_data.where(data_type: 'genbankDatabase').first.value,
+          sequence: identifier.internal_data.where(data_type: 'genbankSequence').first.value
+        }
+      end
+
+      doc = start_sequence_file
+
+      # Note that the view referenced below lives in the Dryad repo in the dryad/app/views dir
+      identifiers.each_with_index do |hash, idx|
+        doc.xpath('LinkSet').first << Nokogiri::XML.fragment(ActionView::Base.new('app/views')
+          .render(
+            file: 'link_out/sequence_links.xml.erb',
+            locals: {
+              counter: idx,
+              provider_id: @ftp.ftp_provider_id,
+              database: hash[:database],
+              link_base: 'dryad.seq.',
+              icon_url: "#{@root_url}images/DryadLogo-Button.png",
+              callback_base: "#{@root_url}stash/dataset/",
+              callback_rule: hash[:doi],
+              subject_type: 'supplemental materials',
+              ids: JSON.parse(hash[:sequence])
+            }
+          ))
+        next unless reached_max_file_size?(doc)
+        finish_sequence_file(doc)
+      end
+
+      finish_sequence_file(doc)
+      "#{TMP_DIR}/#{@links_file} - #{@file_counter - 1} file(s)"
+    end
+
+    def start_sequence_file
+      doc = Nokogiri::XML(<<~XML
+        <!-- Dryad LinkOut Links file for Pubmed GenBank Sequence -->
+        <LinkSet></LinkSet>
+      XML
+      )
+      doc.create_internal_subset('LinkSet', '-//NLM//DTD LinkOut 1.0//EN', @schema)
+      doc
+    end
+
+    def finish_sequence_file(doc)
+      File.write("#{TMP_DIR}/#{@links_file.gsub('[nbr]', @file_counter.to_s.rjust(6, '0'))}", doc.to_xml)
+      @file_counter += 1
+    end
+
+    def reached_max_file_size?(doc)
+      return false if doc.xpath('.//*').size < @max_nodes_per_file
+      true
+    end
+
+    # Expected XML Response from the NCBI API that returns Database IDs for PubMed IDs
+    # <?xml version="1.0" encoding="UTF-8" ?>
+    # <!DOCTYPE eSearchResult PUBLIC "-//NLM//DTD esearch 20060628//EN" "https://eutils.ncbi.nlm.nih.gov/eutils/dtd/20060628/esearch.dtd">
+    # <eLinkResult>
+    #   <LinkSet>
+    #     <DbFrom>pubmed</DbFrom>
+    #     <IdList>
+    #       <Id>21166729</Id>
+    #     </IdList>
+    #     <LinkSetDb>
+    #       <DbTo>nuccore</DbTo>
+    #       <LinkName>pubmed_nuccore</LinkName>
+    #       <Link>
+    #         <Id>316925971</Id>
+    #       </Link>
+    #       <Link>
+    #         <Id>316925605</Id>
+    #       </Link>
+    #     </LinkSetDb>
+    #   </LinkSet>
+    # </eLinkResult>
+    def extract_genbank_ids(xml)
+      doc = Nokogiri::XML(xml)
+      return [] unless doc.xpath('eLinkResult//LinkSet//LinkSetDb').first.present?
+      doc.xpath('eLinkResult//LinkSet//LinkSetDb/Link/Id').map { |id| id&.text }.uniq.select { |id| id != '0' }
     end
 
   end
