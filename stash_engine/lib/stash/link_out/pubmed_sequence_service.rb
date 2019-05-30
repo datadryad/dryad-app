@@ -27,7 +27,7 @@ module LinkOut
 
       @schema = 'http://www.ncbi.nlm.nih.gov/entrez/linkout/doc/LinkOut.dtd'.freeze
       @links_file = 'sequencelinkout[nbr].xml'.freeze
-      @max_nodes_per_file = 100000
+      @max_nodes_per_file = 80000
     end
 
     # Retrieve the GenBank Database ID(s) for the specified PubMedId. See below for a sample of the expected XML response
@@ -61,36 +61,38 @@ module LinkOut
     end
 
     def generate_links_file!
-      # Note that the view referenced below lives in the Dryad repo in the dryad/app/views dir
-      identifiers = StashEngine::Identifier.cited_by_genbank.map do |identifier|
-        {
-          doi: identifier.to_s,
-          database: identifier.internal_data.where(data_type: 'genbankDatabase').first.value,
-          sequence: identifier.internal_data.where(data_type: 'genbankSequence').first.value
-        }
-      end
-
       doc = start_sequence_file
 
-      # Note that the view referenced below lives in the Dryad repo in the dryad/app/views dir
-      identifiers.each_with_index do |hash, idx|
-        doc.xpath('LinkSet').first << Nokogiri::XML.fragment(ActionView::Base.new('app/views')
-          .render(
-            file: 'link_out/sequence_links.xml.erb',
-            locals: {
-              counter: idx,
-              provider_id: @ftp.ftp_provider_id,
-              database: hash[:database],
-              link_base: 'dryad.seq.',
-              icon_url: "#{@root_url}images/DryadLogo-Button.png",
-              callback_base: "#{@root_url}stash/dataset/",
-              callback_rule: hash[:doi],
-              subject_type: 'supplemental materials',
-              ids: JSON.parse(hash[:sequence])
-            }
-          ))
-        next unless reached_max_file_size?(doc)
-        finish_sequence_file(doc)
+      StashEngine::ExternalReference.sources.each do |db|
+        identifiers = StashEngine::Identifier.cited_by_external_site(db).map do |identifier|
+          {
+            doi: identifier.to_s,
+            sequence: identifier.external_references.where(source: db).first.value
+          }
+        end
+
+        # Note that the view referenced below lives in the Dryad repo in the dryad/app/views dir
+        identifiers.each_with_index do |hash, idx|
+          doc.xpath('LinkSet').first << Nokogiri::XML.fragment(ActionView::Base.new('app/views')
+            .render(
+              file: 'link_out/sequence_links.xml.erb',
+              locals: {
+                counter: idx,
+                provider_id: @ftp.ftp_provider_id,
+                database: db,
+                link_base: 'dryad.seq.',
+                icon_url: "#{@root_url}images/DryadLogo-Button.png",
+                callback_base: "#{@root_url}stash/dataset/",
+                callback_rule: hash[:doi],
+                subject_type: 'supplemental materials',
+                ids: JSON.parse(hash[:sequence])
+              }
+            ))
+          next unless reached_max_file_size?(doc)
+
+          finish_sequence_file(doc)
+          doc = start_sequence_file
+        end
       end
 
       finish_sequence_file(doc)
@@ -113,7 +115,7 @@ module LinkOut
     end
 
     def reached_max_file_size?(doc)
-      return false if doc.xpath('.//*').size < @max_nodes_per_file
+      return false if doc.xpath('.//*').size < 500 #@max_nodes_per_file
       true
     end
 
