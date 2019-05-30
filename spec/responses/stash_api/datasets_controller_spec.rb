@@ -1,6 +1,8 @@
 require 'rails_helper'
+require 'uri'
 require_relative 'helpers'
 require 'fixtures/stash_api/metadata'
+require 'fixtures/stash_api/curation_metadata'
 
 # see https://relishapp.com/rspec/rspec-rails/v/3-8/docs/request-specs/request-spec
 # rubocop:disable Metrics/BlockLength, Metrics/ModuleLength
@@ -8,6 +10,8 @@ module StashApi
   RSpec.describe DatasetsController, type: :request do
 
     include Mocks::Ror
+    include Mocks::RSolr
+    include Mocks::Stripe
 
     before(:all) do
       @user = create(:user, role: 'superuser')
@@ -20,6 +24,8 @@ module StashApi
     describe '#create' do
       before(:each) do
         mock_ror!
+        mock_solr!
+        mock_stripe!
         @meta = Fixtures::StashApi::Metadata.new
         @meta.make_minimal
       end
@@ -53,6 +59,45 @@ module StashApi
         expect(output[:locations].first[:place]).to eq(@meta.hash[:locations].first[:place])
       end
 
+      it 'creates a new curation activity and sets the publication date' do
+        response_code = post '/api/datasets', @meta.json, default_authenticated_headers
+        output = JSON.parse(response.body).with_indifferent_access
+        expect(response_code).to eq(201)
+        @stash_id = StashEngine::Identifier.find(output[:id])
+        @resource = @stash_id.resources.last
+        expect(@resource.curation_activities.size).to eq(1)
+
+        @curation_activity = Fixtures::StashApi::CurationMetadata.new
+        dataset_id = CGI.escape(output[:identifier])
+        response_code = post "/api/datasets/#{dataset_id}/curation_activity", @curation_activity.json, default_authenticated_headers
+        expect(response_code).to eq(200)
+
+        @resource.reload
+        expect(@resource.curation_activities.size).to eq(2)
+        expect(@resource.publication_date).to be
+      end
+
+      it 'does not update the publication date if one is already set' do
+        response_code = post '/api/datasets', @meta.json, default_authenticated_headers
+        output = JSON.parse(response.body).with_indifferent_access
+        expect(response_code).to eq(201)
+        @stash_id = StashEngine::Identifier.find(output[:id])
+        @resource = @stash_id.resources.last
+        expect(@resource.curation_activities.size).to eq(1)
+
+        # Set a publication date in the past
+        publish_date = Time.now - 10.days
+        @resource.update!(publication_date: publish_date)
+
+        @curation_activity = Fixtures::StashApi::CurationMetadata.new
+        dataset_id = CGI.escape(output[:identifier])
+        response_code = post "/api/datasets/#{dataset_id}/curation_activity", @curation_activity.json, default_authenticated_headers
+        expect(response_code).to eq(200)
+
+        @resource.reload
+        expect(@resource.curation_activities.size).to eq(2)
+        expect(@resource.publication_date).to be_within(10.seconds).of(publish_date)
+      end
     end
 
     describe '#index' do
