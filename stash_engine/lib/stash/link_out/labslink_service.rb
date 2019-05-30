@@ -30,11 +30,14 @@ module LinkOut
     end
 
     def validate_files!
-
+      p "    retrieving latest schema from: #{@schema}"
+      local_schema = download_schema!(@schema)
+      p "    Provider file passed validation check" if valid_xml?("#{TMP_DIR}/#{@provider_file}", local_schema)
+      p "    Links file passed validation check" if valid_xml?("#{TMP_DIR}/#{@links_file}", local_schema)
     end
 
     def publish_files!
-
+      p "    TODO: sending files to #{@ftp.ftp_host}"
     end
 
     private

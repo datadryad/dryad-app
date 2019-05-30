@@ -44,10 +44,10 @@ module LinkOut
     end
 
     def validate_files!
-      local_schema = download_schema(schema)
-      # Do the appropriate validation based on the file type
-      p "    Provider file passed validation check" if valid_xml?(@provider_file)
-      p "    Links file passed validation check" if valid_xml?(@links_file)
+      p "    retrieving latest schema from: #{@schema}"
+      local_schema = download_schema!(@schema)
+      p "    Provider file passed validation check" if valid_xml?("#{TMP_DIR}/#{@provider_file}", local_schema)
+      p "    Links file passed validation check" if valid_xml?("#{TMP_DIR}/#{@links_file}", local_schema)
     end
 
     def publish_files!
@@ -75,7 +75,7 @@ module LinkOut
             description: 'Dryad is a nonprofit organization and an international repository of data underlying scientific and medical publications.',
           }
         ), nil, 'UTF-8')
-      doc.create_internal_subset('Provider', '-//NLM//DTD LinkOut 1.0//EN', @schema)
+      doc.create_internal_subset('Provider', '-//NLM//DTD LinkOut 1.0//EN', @schema.split('/').last)
       File.write("#{TMP_DIR}/#{@provider_file}", doc.to_xml)
       "#{TMP_DIR}/#{@provider_file}"
     end
@@ -101,7 +101,7 @@ module LinkOut
           }
         ), nil, 'UTF-8')
 
-      doc.create_internal_subset('LinkSet', '-//NLM//DTD LinkOut 1.0//EN', @schema)
+      doc.create_internal_subset('LinkSet', '-//NLM//DTD LinkOut 1.0//EN', @schema.split('/').last)
       File.write("#{TMP_DIR}/#{@links_file}", doc.to_xml)
       "#{TMP_DIR}/#{@links_file}"
     end
