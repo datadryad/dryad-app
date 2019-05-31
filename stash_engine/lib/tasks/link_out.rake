@@ -106,6 +106,19 @@ namespace :link_out do
     end
   end
 
+  desc 'Update Solr keywords with publication IDs'
+  task seed_solr_keywords: :environment do
+    p 'Updating Solr keywords with publicationDOI, manuscriptNumber and pubmedID'
+    types = %w[pubmedID publicationDOI manuscriptNumber]
+    identifiers = StashEngine::Identifier.joins(:internal_data)
+      .where('stash_engine_internal_data.data_type IN (?) AND stash_engine_internal_data.value IS NOT NULL', types)
+
+    identifiers.each do |identifier|
+      identifier.update_search_words!
+      identifier.latest_resource.submit_to_solr
+    end
+  end
+
   def create_link_out_dir!
     Dir.mkdir("#{Dir.pwd}/tmp") unless Dir.exist?("#{Dir.pwd}/tmp")
     Dir.mkdir("#{Dir.pwd}/tmp/link_out") unless Dir.exist?("#{Dir.pwd}/tmp/link_out")
