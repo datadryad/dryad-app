@@ -7,11 +7,10 @@ module Mocks
       stub_pubmed_sequence_lookup(pmid: pmid)
     end
 
-    # rubocop:disable Metrics/MethodLength
     def stub_pubmed_lookup(doi: Faker::Pid.doi)
       # Mock a request for a specific DOI
       stub_request(:get, %r{eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi})
-        .with(headers: {'Accept' => 'text/xml'})
+        .with(headers: { 'Accept' => 'text/xml' })
         .to_return(status: 200, body: pubmed_response(doi), headers: { 'Content-Type' => 'text/xml' })
     end
 
@@ -24,7 +23,7 @@ module Mocks
     private
 
     def pubmed_response(doi)
-      <<~XML
+      <<-XML
         <?xml version="1.0" encoding="UTF-8" ?>
         <!DOCTYPE eSearchResult PUBLIC "-//NLM//DTD esearch 20060628//EN" "https://eutils.ncbi.nlm.nih.gov/eutils/dtd/20060628/esearch.dtd">
         <eSearchResult>
@@ -50,7 +49,7 @@ module Mocks
     end
 
     def sequence_response(pmid)
-      <<~XML
+      <<-XML
         <?xml version="1.0" encoding="UTF-8" ?>
         <!DOCTYPE eSearchResult PUBLIC "-//NLM//DTD esearch 20060628//EN" "https://eutils.ncbi.nlm.nih.gov/eutils/dtd/20060628/esearch.dtd">
         <eLinkResult>
