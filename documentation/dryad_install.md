@@ -122,33 +122,45 @@ cp geoblacklight-schema-0.3.2/conf/* ../server/solr/geoblacklight/conf
 
 Edit the following configuration files to include a cudtom field to the schema:
 
-Add the following two references to the 'dryad_related_publication_data' field to apps/solr/data/geoblacklight/conf/schema.xml
+Add the following references to the 'dryad_related_publication_data' fields to apps/solr/data/geoblacklight/conf/schema.xml
 ```
 <?xml version="1.0" encoding="UTF-8"?>
 <schema name="geoblacklight-schema" version="1.5">
 
-  ... 
-  
+  ...
+
   <!-- for scoring formula -->
   ...
-  <copyField source="layer_slug_s"       dest="layer_slug_ti"       maxChars="100"/>
   <copyField source="dryad_related_publication_name_s" dest="dryad_related_publication_name_ti" maxChars="100"/>
-
+  <copyField source="dryad_related_publication_id_s" dest="dryad_related_publication_id_ti" maxChars="100"/>
   ...
 
   <!-- for sorting text fields -->
   ...
-  <copyField source="dc_title_s"         dest="dc_title_sort"/>
   <copyField source="dryad_related_publication_name_s" dest="dryad_related_publication_name_sort"/>
+  <copyField source="dryad_related_publication_id_s" dest="dryad_related_publication_id_sort"/>
 </schema>
 ```
 
-Add the following reference to the 'dryad_related_publication_data' field to add it as a facet in apps/solr/data/geoblacklight/conf/solrconfig.xml
+Add the following reference to the 'dryad_related_publication' fields to add it as a the publication_name as a facet and the publication_id to the search keywords in apps/solr/data/geoblacklight/conf/solrconfig.xml
 ```
     ...
-      
-      <str name="facet.field">solr_year_i</str>
-      <str name="facet.field">dryad_related_publication_name_s</str>
+    <requestHandler name="/select" class="solr.SearchHandler">
+      <lst name="defaults">
+        ...
+        <str name="qf">
+          ...
+          dryad_related_publication_id_ti^11
+        </str>
+        <str name="pf"><!-- phrase boost within result set -->
+          ...
+          dryad_related_publication_id_ti^11
+        </str>
+        ...
+        <str name="facet.field">dryad_related_publication_name_s</str>
+      </lst>
+    </requestHandler>
+
     </lst>
   </requestHandler>
 ```
