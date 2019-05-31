@@ -218,7 +218,7 @@ module Stash
 
       def related_publication_id
         @resource.identifier.internal_data
-          .where(data_type: %w[manuscriptNumber publicationDOI pubmedID])&.map(&:value).join(' ')
+          .where(data_type: %w[manuscriptNumber publicationDOI pubmedID])&.map(&:value)&.join(' ')
       end
 
       private

@@ -251,23 +251,29 @@ class CatalogController < ApplicationController
   def discover
     internal_datum_types = %w[pubmedID publicationDOI manuscriptNumber]
     where_clause = 'stash_engine_internal_data.data_type IN (?) AND stash_engine_internal_data.value = ?'
-    @identifiers = StashEngine::Identifier
+    identifiers = StashEngine::Identifier
       .publicly_viewable.joins(:internal_data)
       .where(where_clause, internal_datum_types, params[:query])
 
-    if @identifiers.length > 1
-        # Found multiple datasets for the publication so do a Blacklight search for their DOIs
-      redirect_to search_path(q: params[:query])
-    elsif @identifiers.length == 1
+    redirect_discover_to_landing(identifiers, params[:query])
+  end
+
+  private
+
+  def redirect_discover_to_landing(identifiers, query)
+    if identifiers.length > 1
+      # Found multiple datasets for the publication so do a Blacklight search for their DOIs
+      redirect_to search_path(q: query.to_s)
+    elsif identifiers.length == 1
       # Found one match so just send them to the landing page
-      redirect_to stash_url_helpers.show_path(@identifiers.first&.to_s)
+      redirect_to stash_url_helpers.show_path(identifiers.first&.to_s)
     else
       # Nothing was found so see if we were sent a Dryad DOI
-      @identifier = StashEngine::Identifier.find_by(identifier: params[:query])
-      redirect_to stash_url_helpers.show_path(@identifier.to_s) if @identifier.present?
+      identifier = StashEngine::Identifier.find_by(identifier: query.to_s)
+      redirect_to stash_url_helpers.show_path(identifier.to_s) if identifier.present?
 
       # Nothing was found so send the user to the Blacklight search page with the original query
-      redirect_to search_path(q: params[:query]) if @identifier.blank?
+      redirect_to search_path(q: query.to_s) if identifier.blank?
     end
   end
 
