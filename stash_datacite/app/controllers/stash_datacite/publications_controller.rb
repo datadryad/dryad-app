@@ -86,10 +86,6 @@ module StashDatacite
     def manage_pubmed_datum(identifier:, doi:)
       pubmed_service = LinkOut::PubmedService.new
       pmid = pubmed_service.lookup_pubmed_id(doi)
-
-p '=================================================================='
-p "DID WE FIND ANYTHING? identifier_id: #{identifier.id}, doi: #{doi} ==> #{pmid}"
-
       return unless pmid.present?
 
       internal_datum = StashEngine::InternalDatum.find_or_initialize_by(identifier_id: identifier.id, data_type: 'pubmedID')
