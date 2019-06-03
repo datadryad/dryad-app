@@ -7,9 +7,11 @@ RSpec.feature 'Populate manuscript metadata from outside source', type: :feature
 
   include DatasetHelper
   include Mocks::RSolr
+  include Mocks::LinkOut
 
   before(:each) do
     mock_solr!
+    mock_link_out!
   end
 
   context :journal_metadata_autofill, js: true do
@@ -27,14 +29,14 @@ RSpec.feature 'Populate manuscript metadata from outside source', type: :feature
       fill_manuscript_info(name: 'European Journal of Plant Pathology', issn: '1573-8469', msid: 'APPS-D-grog-plant0001221')
       click_button 'Import Manuscript Metadata', wait: 5
       expect(page.find('div#population-warnings')).to have_content('We could not find metadata to import for this manuscript. ' \
-          'Please enter your metadata below.', wait: 15)
+          'Please enter your metadata below.', wait: 20)
     end
 
     it "gives message when journal isn't selected" do
       find('input[value="manuscript"]').click
       fill_manuscript_info(name: 'European Journal of Plant Pathology', issn: nil, msid: nil)
       click_button 'Import Manuscript Metadata'
-      expect(page.find('div#population-warnings')).to have_content('Please select your journal from the autocomplete drop-down list', wait: 15)
+      expect(page.find('div#population-warnings')).to have_content('Please select your journal from the autocomplete drop-down list', wait: 20)
     end
 
     it "gives message when form isn't filled" do
@@ -60,7 +62,7 @@ RSpec.feature 'Populate manuscript metadata from outside source', type: :feature
       expect(page).to have_field('title',
                                  with: 'Leaf and infructescence fossils of Alnus (Betulaceae) from the late Eocene ' \
         'of the southeastern Qinghai-Tibetan Plateau',
-                                 wait: 15)
+                                 wait: 20)
       # The autofill just populates info into the database and then displays the info from the database on the page.
       # We already have unit tests for population into the database and also tests for field display on the entry page,
       # so this is just a basic test to be sure population is happening.
@@ -93,7 +95,7 @@ RSpec.feature 'Populate manuscript metadata from outside source', type: :feature
       click_button 'Import Article Metadata'
       expect(page).to have_field('title',
                                  with: 'High-skilled labour mobility in Europe before and after the 2004 enlargement',
-                                 wait: 15)
+                                 wait: 20)
     end
 
     it 'gives message for no doi filled in' do
