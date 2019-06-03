@@ -84,7 +84,7 @@ module StashEngine
                   JOIN stash_engine_resource_states AS states
                   ON resources.current_resource_state_id = states.id
             WHERE resources.user_id = ?
-              AND states.resource_state IN ('submitted', 'processing')
+              AND states.resource_state IN ('submitted', 'processing', 'error')
          GROUP BY resources.identifier_id,
                   IF(resources.identifier_id IS NULL, resources.id, 0))
       SQL
