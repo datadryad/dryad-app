@@ -33,4 +33,4 @@ migration:
   update_base_url: https://dryad-migration.cdlib.org/stash/dataset
   oai_base_url: http://uc3-mrtoai-prd.cdlib.org:37001/mrtoai/oai/v2
   sets:
-    - fill_me_in
+    - cdl_dryad
