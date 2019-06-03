@@ -66,7 +66,7 @@ module StashDatacite
       end
 
       def embargo_status_pretty
-        return 'Processing' if @resource&.current_resource_state.resource_state == 'error'
+        return 'Processing' if @resource&.current_resource_state&.resource_state == 'error'
         @resource&.current_curation_activity&.readable_status
       end
 
