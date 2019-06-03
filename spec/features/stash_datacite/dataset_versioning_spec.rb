@@ -61,11 +61,11 @@ RSpec.feature 'DatasetVersioning', type: :feature do
       it 'displays the proper information on the My Datasets page', js: true do
         mock_unsuccessfull_merritt_submission!(@resource)
         click_link 'My Datasets'
-        within(:css, '#user_in_progress tbody tr:first-child') do
+        within(:css, '#user_submitted tbody tr:first-child') do
           expect(page).to have_text(@resource.title)
-          expect(page).to have_text('In Progress')
-          expect(page).to have_text('to fix this submission error')
-          expect(page).to have_link('contact us')
+          expect(page).to have_text('Processing')
+          # Capybara matcher returns nil for the 'Update' link since it is disabled
+          expect(page).not_to have_link('Update')
         end
       end
 
