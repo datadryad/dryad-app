@@ -147,7 +147,6 @@ module Stash
         self.class.update_repo_queue_state(resource_id: result.resource_id, state: 'errored')
         resource = StashEngine::Resource.find(result.resource_id)
         StashEngine::UserMailer.error_report(resource, result.error).deliver_now
-        StashEngine::UserMailer.submission_failed(resource, result.error).deliver_now unless resource&.skip_emails
       rescue StandardError => e
         log_error(e)
       ensure

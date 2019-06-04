@@ -141,13 +141,6 @@ module StashEngine
 
     describe 'failures' do
 
-      it 'sends a submission failure email' do
-        error = ArgumentError.new
-        UserMailer.submission_failed(@resource, error).deliver_now
-        delivery = assert_email("[test] Dryad Submission Failure \"#{@resource.title}\"")
-        expect(delivery.body.to_s).to include('An error occurred while submitting your dataset')
-      end
-
       it 'sends an error report email' do
         error = ArgumentError.new
         UserMailer.error_report(@resource, error).deliver_now
