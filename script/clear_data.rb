@@ -1,11 +1,15 @@
 module ClearData
 
+  def self.clear_data
+    clear_datasets
+    clear_solr
+  end
+
   def self.clear_datasets
     StashEngine::Identifier.all.each do |iden|
       puts "Destroying #{iden.identifier}"
       iden.destroy
     end
-    clear_solr
   end
 
   def self.clear_solr
