@@ -7,6 +7,7 @@ module StashEngine
     has_many :orcid_invitations, class_name: 'StashEngine::OrcidInvitation', dependent: :destroy
     has_one :counter_stat, class_name: 'StashEngine::CounterStat', dependent: :destroy
     has_many :internal_data, class_name: 'StashEngine::InternalDatum', dependent: :destroy
+    has_many :external_references, class_name: 'StashEngine::ExternalReference', dependent: :destroy
     has_one :latest_resource,
             class_name: 'StashEngine::Resource',
             primary_key: 'latest_resource_id',
@@ -37,10 +38,19 @@ module StashEngine
     end
 
     scope :cited_by_pubmed, -> do
+      ids = publicly_viewable.map(&:id)
       joins(:internal_data)
-        .publicly_viewable
+        .where('stash_engine_identifiers.id IN (?)', ids)
         .where('stash_engine_internal_data.data_type = ? AND stash_engine_internal_data.value IS NOT NULL', 'pubmedID')
-        .order(:identifier)
+        .order('stash_engine_identifiers.identifier')
+    end
+
+    scope :cited_by_external_site, ->(site) do
+      ids = publicly_viewable.map(&:id)
+      joins(:external_references)
+        .where('stash_engine_identifiers.id IN (?)', ids)
+        .where('stash_engine_external_references.source = ? AND stash_engine_external_references.value IS NOT NULL', site)
+        .order('stash_engine_identifiers.identifier')
     end
 
     # has_many :counter_citations, class_name: 'StashEngine::CounterCitation', dependent: :destroy
