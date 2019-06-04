@@ -6,6 +6,9 @@ Rails.application.routes.draw do
   get '/latest', to: 'latest#index', as: 'latest_index'
   # blacklight_for :catalog
 
+  # Endpoint for LinkOut
+  get :discover, to: 'catalog#discover'
+
   # the ones below coming from new routing for geoblacklight
   #--------------------------------------------------------
   mount Geoblacklight::Engine => 'geoblacklight'

@@ -94,4 +94,18 @@ test:
     - 'Zambia'
     - 'India'
     - 'Pakistan'
-
+  link_out:
+    # LinkOut FTP information for Europe PubMed Central
+    labslink:
+      ftp_host: labslink.example.org
+      ftp_dir: testing
+      ftp_username: username
+      ftp_password: password
+      ftp_provider_id: 1234
+    # LinkOut FTP information for NCBI
+    pubmed:
+      ftp_host: pubmed.example.org
+      ftp_dir: testing
+      ftp_username: username
+      ftp_password: password
+      ftp_provider_id: 5678
