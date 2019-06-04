@@ -112,7 +112,7 @@ module StashEngine
       StashEngine.repository.harvested(identifier: id, record_identifier: record_identifier)
 
       if StashEngine::RepoQueueState.where(resource_id: @resource_id, state: 'completed').count < 1
-        StashEngine.repository.update_repo_queue_state(resource_id: @resource.id, state: 'completed')
+        StashEngine.repository.class.update_repo_queue_state(resource_id: @resource.id, state: 'completed')
       end
 
       # success but no content, see RFC 5789 sec. 2.1
