@@ -96,7 +96,7 @@ module StashApi
 
         @resource.reload
         expect(@resource.curation_activities.size).to eq(2)
-        expect(@resource.publication_date).to be_within(10.seconds).of(publish_date)
+        expect(@resource.publication_date).to be_within(10.days).of(publish_date)
       end
     end
 

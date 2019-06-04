@@ -146,6 +146,7 @@
   <copyField source="layer_geom_type_s"  dest="layer_geom_type_ti"  maxChars="100"/>
   <copyField source="layer_slug_s"       dest="layer_slug_ti"       maxChars="100"/>
   <copyField source="dryad_related_publication_name_s" dest="dryad_related_publication_name_ti" maxChars="100"/>
+  <copyField source="dryad_related_publication_id_s" dest="dryad_related_publication_id_ti" maxChars="100"/>
 
   <!-- core text search -->
   <copyField source="*_ti"               dest="text" />
@@ -156,5 +157,6 @@
   <copyField source="dc_publisher_s"     dest="dc_publisher_sort"/>
   <copyField source="dc_title_s"         dest="dc_title_sort"/>
   <copyField source="dryad_related_publication_name_s" dest="dryad_related_publication_name_sort"/>
+  <copyField source="dryad_related_publication_id_s" dest="dryad_related_publication_id_sort"/>
 
 </schema>
