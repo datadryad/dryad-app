@@ -85,7 +85,8 @@ module Stash
           dc_rights_s: license_name,
           dc_publisher_s: publisher,
           dct_temporal_sm: dct_temporal_dates,
-          dryad_related_publication_name_s: related_publication_name
+          dryad_related_publication_name_s: related_publication_name,
+          dryad_related_publication_id_s: related_publication_id
         }
       end
       # rubocop:enable
@@ -213,6 +214,11 @@ module Stash
 
       def related_publication_name
         @resource.identifier.internal_data.where(data_type: 'publicationName').first&.value
+      end
+
+      def related_publication_id
+        @resource.identifier.internal_data
+          .where(data_type: %w[manuscriptNumber publicationDOI pubmedID])&.map(&:value)&.join(' ')
       end
 
       private

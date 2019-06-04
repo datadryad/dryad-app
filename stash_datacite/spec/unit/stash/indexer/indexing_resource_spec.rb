@@ -285,7 +285,8 @@ module Stash
             dc_rights_s: 'CC0 1.0 Universal (CC0 1.0) Public Domain Dedication',
             dc_publisher_s: 'Dryad',
             dct_temporal_sm: ['2018-11-14'],
-            dryad_related_publication_name_s: 'Journal of Testing Fun'
+            dryad_related_publication_name_s: 'Journal of Testing Fun',
+            dryad_related_publication_id_s: ''
           }
           expect(mega_hash).to eql(expected_mega_hash)
         end
