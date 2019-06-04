@@ -29,16 +29,6 @@ module StashEngine
     end
 
     # Called from the StashEngine::Repository
-    def submission_failed(resource, error)
-      warn("Unable to report submission failure #{error}; nil resource") unless resource.present?
-      return false unless resource.present?
-      @host = Rails.application.default_url_options[:host]
-      assign_variables(resource)
-      mail(to: @resource.user.email, bcc: @submission_error_emails,
-           subject: "#{rails_env} Dryad Submission Failure \"#{@resource.title}\"")
-    end
-
-    # Called from the StashEngine::Repository
     def error_report(resource, error)
       warn("Unable to report update error #{error}; nil resource") unless resource.present?
       return unless resource.present?

@@ -191,14 +191,6 @@ module Stash
             allow(job).to receive(:description).and_return('test')
             allow(logger).to receive(:error)
           end
-          it 'sends a "submission failed" email' do
-            message = instance_double(ActionMailer::MessageDelivery)
-            expect(StashEngine::UserMailer).to receive(:submission_failed)
-              .with(resource, kind_of(ActiveRecord::ConnectionTimeoutError))
-              .and_return(message)
-            expect(message).to receive(:deliver_now)
-            submit_resource
-          end
 
           it 'sends an error report email' do
             message = instance_double(ActionMailer::MessageDelivery)
