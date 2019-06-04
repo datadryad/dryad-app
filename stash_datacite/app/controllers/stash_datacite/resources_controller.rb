@@ -18,7 +18,7 @@ module StashDatacite
           # only a page of objects needs calculations for display rather than all objects in list.  However if we need
           # to sort on calculated fields for display we'll need to calculate all values, sort and use the array pager
           # form of kaminari instead (which will likely be slower).
-          @resources = StashEngine::Resource.where(user_id: session[:user_id]).in_progress.order(updated_at: :desc).page(@page).per(@page_size)
+          @resources = StashEngine::Resource.where(user_id: session[:user_id]).in_progress_only.order(updated_at: :desc).page(@page).per(@page_size)
           @in_progress_lines = @resources.map { |resource| DatasetPresenter.new(resource) }
         end
       end
