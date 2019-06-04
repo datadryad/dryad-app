@@ -7,9 +7,9 @@
 # server 'example.com', user: 'deploy', roles: %w{app web}, other_property: :other_value
 # server 'db.example.com', user: 'deploy', roles: %w{db}
 
-set :rails_env, 'stage'
+set :rails_env, 'migration'
 
-#set :bundle_env_variables, { 'RAILS_ENV' => 'stage' }
+#set :bundle_env_variables, { 'RAILS_ENV' => 'migration' }
 
 # To override the default host, set $SERVER_HOSTS, e.g.
 #    $ SERVER_HOSTS='localhost' bundle exec cap development deploy

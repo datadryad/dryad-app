@@ -1,4 +1,8 @@
 Rails.application.configure do
+  # this is so that we can still see output to console, otherwise it gets turned off for some reason with this environment and webrick
+  config.middleware.insert_before(Rails::Rack::Logger, Rails::Rack::LogTailer)
+  config.log_level = :debug
+
   # Settings specified here will take precedence over those in config/application.rb.
 
   # In the development environment your application's code is reloaded on
