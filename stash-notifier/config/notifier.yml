@@ -27,3 +27,10 @@ stage:
     - cdl_dryadstg
     - ucsf_dryadstg
     - ucsb_dryadstg
+
+migration:
+  <<: *defaults
+  update_base_url: https://dryad-migration.cdlib.org/stash/dataset
+  oai_base_url: http://uc3-mrtoai-prd.cdlib.org:37001/mrtoai/oai/v2
+  sets:
+    - cdl_dryad
