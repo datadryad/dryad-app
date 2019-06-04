@@ -85,7 +85,7 @@ Rails.application.configure do
   :email => {
     # :deliver_with => :deliver, # Rails >= 4.2.1 do not need this option since it defaults to :deliver_now
     :email_prefix => "[Dryad Exception]",
-    :sender_address => %{"Dryad Notifier" <no-reply-dryad-stg@ucop.edu>},
+    :sender_address => %{"Dryad Notifier" <no-reply-dryad-migration@ucop.edu>},
     :exception_recipients => %w{scott.fisher@ucop.edu ryan@datadryad.org}
   },
   :error_grouping => true,
@@ -94,7 +94,7 @@ Rails.application.configure do
   config.action_mailer.delivery_method = :sendmail
   config.action_mailer.perform_deliveries = true
   config.action_mailer.raise_delivery_errors = true
-  config.action_mailer.default_url_options = { host: 'dryad-stg.cdlib.org' }
-  Rails.application.default_url_options = { host: 'dryad-stg.cdlib.org' }
+  config.action_mailer.default_url_options = { host: 'dryad-migration.cdlib.org' }
+  Rails.application.default_url_options = { host: 'dryad-migration.cdlib.org' }
 
 end
