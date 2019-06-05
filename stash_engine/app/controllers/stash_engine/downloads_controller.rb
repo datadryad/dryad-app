@@ -40,7 +40,7 @@ module StashEngine
         format.js do
           if can_download? # local method that checks if user may download or if their secret matches
             api_async_download(resource: @resource, email: @email)
-            @message = "Dash will send an email with a download link to #{@email} when your requested dataset is ready."
+            @message = "Dryad will send an email with a download link to #{@email} when your requested dataset is ready."
             CounterLogger.version_download_hit(request: request, resource: @resource)
           else
             @message = 'You do not have the permission to download the dataset.'
