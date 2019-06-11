@@ -42,6 +42,11 @@
   @extend %o-heading__level3;
 }
 
+.o-heading__level3-file-title {
+  @extend %o-heading__level3;
+  margin: 0 0 0 0;
+}
+
 .o-heading__page-span {
   @extend %pull-background;
   margin-bottom: $spacing-md;
