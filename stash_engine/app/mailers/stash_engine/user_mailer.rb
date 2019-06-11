@@ -42,9 +42,6 @@ module StashEngine
       return unless dependency.present?
       @dependency = dependency
       @url = status_dashboard_url
-
-      @submission_error_emails = ['brian.riley@ucop.edu']
-
       mail(to: @submission_error_emails, bcc: @bcc_emails,
            subject: "#{rails_env} dependency offline: #{dependency.name}")
     end
