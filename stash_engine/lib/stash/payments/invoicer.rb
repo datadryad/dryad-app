@@ -20,6 +20,13 @@ module Stash
         invoice.finalize_invoice
       end
 
+      def external_service_online?
+        set_api_key
+        latest = StashEngine::Identifier.where.not(invoice_id: nil).order(updated_at: :desc).first
+        return false unless latest.present?
+        Stripe::Charge.retrieve(latest.invoice_id).present?
+      end
+
       # Helper methods
       # ------------------------------------------
       private

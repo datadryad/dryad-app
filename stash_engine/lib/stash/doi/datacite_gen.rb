@@ -8,6 +8,10 @@ module Stash
 
       include Cirneco::Api
 
+      def ping(identifier)
+        get_doi(identifier, username: account, password: password, sandbox: sandbox)
+      end
+
       # @return [String] the identifier (DOI, ARK, or URN)
       def mint_id
         # datacenter = Cirneco::DataCenter.new(prefix: prefix, username: account, password: password)

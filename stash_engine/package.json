@@ -12,7 +12,6 @@
     "browser-sync": "",
     "browsersync-ssi": "",
     "del": "",
-    "gulp": "~> 4.0",
     "gulp-autoprefixer": "",
     "gulp-clean-css": "",
     "gulp-if": "",
@@ -29,12 +28,18 @@
     "gulp-useref": "",
     "gulp-w3cjs": "",
     "jshint": "",
-    "node-sass": "^4.11.0",
+    "node-sass": "^4.12.0",
     "path": "",
     "postcss-assets": "",
     "run-sequence": ""
   },
   "dependencies": {
-    "bower": "^1.8.8"
+    "bower": "^1.8.8",
+    "browser-sync": "^2.26.7",
+    "del": "^4.1.1",
+    "fsevents": "^2.0.7",
+    "gulp": "^4.0.2",
+    "gulp-autoprefixer": "^6.1.0",
+    "gulp-imagemin": "^6.0.0"
   }
 }

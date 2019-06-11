@@ -112,6 +112,7 @@ config/initializers/secret_token.rb
 /vendor/assets/bower_components
 *.bowerrc
 bower.json
+stash_engine/ui-library/ui-library/bower_components/
 
 # Ignore pow environment settings
 .powenv
