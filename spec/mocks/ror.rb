@@ -7,6 +7,17 @@ module Mocks
       stub_ror_id_lookup(university: user.present? && user.affiliation.present? ? user.affiliation.long_name : nil)
     end
 
+    def stub_ror_heartbeat_check
+      stub_request(:get, "https://api.ror.org/heartbeat")
+        .with(
+           headers: {
+          'Accept'=>'*/*',
+          'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
+          'User-Agent'=>'Ruby'
+           })
+        .to_return(status: 200, body: "", headers: {})
+    end
+
     # rubocop:disable Metrics/MethodLength
     def stub_ror_id_lookup(university: Faker::Educator.university, country: 'United States of America')
       # Mock a request for a specific ROR Organization
