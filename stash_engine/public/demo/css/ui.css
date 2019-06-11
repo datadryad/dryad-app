@@ -3181,11 +3181,14 @@ datalist {
 .o-heading__level2-why-share {
   text-align: center; }
 
-.o-heading__level3 {
+.o-heading__level3, .o-heading__level3-file-title {
   margin: 0 0 20px;
   color: black;
   font-size: 1.1em;
   font-weight: bold; }
+
+.o-heading__level3-file-title {
+  margin: 0 0 0 0; }
 
 .o-heading__page-span {
   margin-bottom: 20px;
@@ -3327,6 +3330,9 @@ datalist {
   text-transform: uppercase; }
 
 .o-metadata__group2-item {
+  margin-bottom: 0.5em; }
+
+.o-metadata__file-usage-entry {
   margin-bottom: 0.5em; }
 
 .o-metadata__autopopulate-message {
