@@ -3,6 +3,7 @@ module Mocks
   module Ror
 
     def mock_ror!(user = nil)
+      stub_ror_heartbeat_check
       stub_ror_name_lookup(name: user.present? && user.affiliation.present? ? user.affiliation.long_name : nil)
       stub_ror_id_lookup(university: user.present? && user.affiliation.present? ? user.affiliation.long_name : nil)
     end
