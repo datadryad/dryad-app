@@ -38,6 +38,17 @@ module StashEngine
            subject: "#{rails_env} Submitting dataset \"#{@title}\" (doi:#{@identifier_value}) failed")
     end
 
+    def dependency_offline(dependency)
+      return unless dependency.present?
+      @dependency = dependency
+      @url = status_dashboard_url
+
+      @submission_error_emails = ['brian.riley@ucop.edu']
+
+      mail(to: @submission_error_emails, bcc: @bcc_emails,
+           subject: "#{rails_env} dependency offline: #{dependency.name}")
+    end
+
     private
 
     # rubocop:disable Style/NestedTernaryOperator
