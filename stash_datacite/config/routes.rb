@@ -82,4 +82,6 @@ StashDatacite::Engine.routes.draw do
   get 'resources/review', to: 'resources#review'
   match 'resources/submission' => 'resources#submission', as: :resources_submission, via: :post
   get 'resources/show', to: 'resources#show'
+
+  patch 'peer_review/toggle', to: 'peer_review#toggle', as: :peer_review
 end
