@@ -601,7 +601,7 @@ module StashEngine
 
       # TODO: ryscher, we need to add in the call to the service that correctly indicates whether the
       #       associated journal should enter peer_review status
-      identifier&.internal_data&.where(data_type: %w[publicationISSN publicationDOI manuscriptNumber])&.any?
+      hold_for_peer_review? || identifier&.internal_data&.where(data_type: %w[publicationISSN publicationDOI manuscriptNumber])&.any?
     end
 
   end
