@@ -1,0 +1,11 @@
+<% help_email = APP_CONFIG[:contact_email].last || 'help@datadryad.org' %>
+<div>
+  <p>By choosing this option, your dataset will be private during your related articles peer review period. You will have access to a private dataset download URL to be shared with collaborators or the journal. Your dataset will not enter curation or be published. Because we may not have the status of your related article, the default for this period is six months. Please email <a href="mail_to:<%= help_email %>"><%= help_email %></a> or uncheck this box at any point if your dataset is ready to enter curation.</p>
+
+  <div>
+    <%= check_box_tag 'peer_review', 'yes', (@resource.version_number > 1), class: 't-review__agree-to-license' %>
+    <label for="agree_to_license">Keep my dataset private while my related article is in peer review</label>
+  </div>
+</div>
+
+<br>
