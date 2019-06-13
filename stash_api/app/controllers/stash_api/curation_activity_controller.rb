@@ -91,6 +91,14 @@ module StashApi
     end
 
     def record_embargoed_date(resource)
+      # If the curation activity has an explicit publication date, use that,
+      # regardless of whether a publication date has been set otherwise.
+      explicit_pub_date = params[:curation_activity][:note].match(/PublicationDate=(\d+-\d+-\d+)/)
+      if explicit_pub_date
+        resource.update!(publication_date: explicit_pub_date[1].to_date)
+        return
+      end
+
       return if resource.publication_date.present?
       embargo_date = (params[:curation_activity][:created_at]&.to_date || Date.today) + 1.year
       resource.update!(publication_date: embargo_date)
