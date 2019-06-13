@@ -118,6 +118,28 @@ namespace :identifiers do
     end
   end
 
+  desc 'Set datasets to `submitted` when their peer review period has expired'
+  task expire_peer_review: :environment do
+    now = Date.today
+    p "Setting resources whose peer_review_end_date <= '#{now}' to 'submitted' curation status"
+    StashEngine::Resource.where(hold_for_peer_review: true)
+      .where('stash_engine_resources.peer_review_end_date <= ?', now).each do |r|
+
+      begin
+        p "Expiring peer review for: Identifier: #{r.identifier_id}, Resource: #{r.id}"
+        r.update(hold_for_peer_review: false, peer_review_end_date: nil)
+        StashEngine::CurationActivity.create(
+          resource_id: r.id,
+          user_id: r.current_curation_activity.user_id,
+          status: 'submitted',
+          note: 'reached the peer review expiration date'
+        )
+      rescue StandardError => e
+        p "    Exception! #{e.message}"
+      end
+    end
+  end
+
   desc 'populate publicationName'
   task load_publication_names: :environment do
     p "Searching CrossRef and the Journal API for publication names: #{Time.now}"

@@ -599,8 +599,10 @@ module StashEngine
       # return false if this is NOT the first version
       return false if identifier.blank? || identifier.resources.length > 1
 
-      # TODO: ryscher, we need to add in the call to the service that correctly indicates whether the
-      #       associated journal should enter peer_review status
+      # TODO: @ryscher, we need to first use the `hold_for_peer_review` flag since it is set by
+      #       the user when submitting their dataset. If the flag has not been set by the user then
+      #       we need to swap out this `internal_data` check with a call to the old Dryad service
+      #       that correctly indicates whether the associated journal should enter peer_review status
       hold_for_peer_review? || identifier&.internal_data&.where(data_type: %w[publicationISSN publicationDOI manuscriptNumber])&.any?
     end
 
