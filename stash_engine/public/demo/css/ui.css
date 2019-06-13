@@ -62,6 +62,8 @@ Selector pattern using above mixin:
   outline: 0; }
   .o-global-search__input:focus::-webkit-input-placeholder, .c-input__text:focus::-webkit-input-placeholder, .c-input__text--copypaste:focus::-webkit-input-placeholder, .c-input__textarea:focus::-webkit-input-placeholder, .c-input__select:focus::-webkit-input-placeholder, .c-location__input:focus::-webkit-input-placeholder {
     opacity: 0.5; }
+  .o-global-search__input:focus::-moz-placeholder, .c-input__text:focus::-moz-placeholder, .c-input__text--copypaste:focus::-moz-placeholder, .c-input__textarea:focus::-moz-placeholder, .c-input__select:focus::-moz-placeholder, .c-location__input:focus::-moz-placeholder {
+    opacity: 0.5; }
   .o-global-search__input:focus:-ms-input-placeholder, .c-input__text:focus:-ms-input-placeholder, .c-input__text--copypaste:focus:-ms-input-placeholder, .c-input__textarea:focus:-ms-input-placeholder, .c-input__select:focus:-ms-input-placeholder, .c-location__input:focus:-ms-input-placeholder {
     opacity: 0.5; }
   .o-global-search__input:focus::-ms-input-placeholder, .c-input__text:focus::-ms-input-placeholder, .c-input__text--copypaste:focus::-ms-input-placeholder, .c-input__textarea:focus::-ms-input-placeholder, .c-input__select:focus::-ms-input-placeholder, .c-location__input:focus::-ms-input-placeholder {
@@ -3148,6 +3150,9 @@ datalist {
   .o-global-search__input::-webkit-input-placeholder {
     opacity: 1;
     color: black; }
+  .o-global-search__input::-moz-placeholder {
+    opacity: 1;
+    color: black; }
   .o-global-search__input:-ms-input-placeholder {
     opacity: 1;
     color: black; }
@@ -4902,7 +4907,7 @@ html.no-details .o-showhide__summary {
       -webkit-box-pack: center;
           -ms-flex-pack: center;
               justify-content: center;
-      height: 34px;
+      height: 33px;
       border: 1px solid #7c7e7f; } }
 
 @media (min-width: 480px) {
@@ -4928,8 +4933,8 @@ html.no-details .o-showhide__summary {
       content: '';
       position: absolute;
       top: 4px;
-      right: -13px;
-      padding: 12px;
+      right: -12px;
+      padding: 11px;
       -webkit-transform: rotate(45deg);
               transform: rotate(45deg);
       border-width: 1px;
@@ -4939,9 +4944,14 @@ html.no-details .o-showhide__summary {
 
 .c-progress__tab1--active,
 .c-progress__tab2--active, .c-progress__tab3--active {
+  height: 34px;
   border-width: 2px;
   border-color: #e65722;
   color: #e65722; }
+  @media (min-width: 480px) {
+    .c-progress__tab1--active::after,
+    .c-progress__tab2--active::after, .c-progress__tab3--active::after {
+      top: 3px; } }
 
 .c-progress__tab1--inactive,
 .c-progress__tab2--inactive {
