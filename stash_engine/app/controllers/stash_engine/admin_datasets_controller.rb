@@ -71,6 +71,8 @@ module StashEngine
           @resource.current_editor_id = current_user.id
           decipher_curation_activity
           @resource.publication_date = @pub_date
+          @resource.hold_for_peer_review = true if @status == 'peer_review'
+          @resource.peer_review_end_date = (Time.now + 6.months) if @status == 'peer_review'
           @resource.curation_activities << CurationActivity.create(user_id: current_user.id, status: @status,
                                                                    note: params[:resource][:curation_activity][:note])
           @resource.save
