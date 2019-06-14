@@ -4989,7 +4989,7 @@ html.no-details .o-showhide__summary {
       -webkit-box-pack: center;
           -ms-flex-pack: center;
               justify-content: center;
-      height: 34px;
+      height: 33px;
       border: 1px solid #7c7e7f; } }
 
 @media (min-width: 480px) {
@@ -5015,8 +5015,8 @@ html.no-details .o-showhide__summary {
       content: '';
       position: absolute;
       top: 4px;
-      right: -13px;
-      padding: 12px;
+      right: -12px;
+      padding: 11px;
       -webkit-transform: rotate(45deg);
               transform: rotate(45deg);
       border-width: 1px;
@@ -5026,9 +5026,14 @@ html.no-details .o-showhide__summary {
 
 .c-progress__tab1--active,
 .c-progress__tab2--active, .c-progress__tab3--active {
+  height: 34px;
   border-width: 2px;
   border-color: #e65722;
   color: #e65722; }
+  @media (min-width: 480px) {
+    .c-progress__tab1--active::after,
+    .c-progress__tab2--active::after, .c-progress__tab3--active::after {
+      top: 3px; } }
 
 .c-progress__tab1--inactive,
 .c-progress__tab2--inactive {
