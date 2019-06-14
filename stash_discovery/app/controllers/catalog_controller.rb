@@ -82,7 +82,6 @@ class CatalogController < ApplicationController
     # config.add_facet_field Settings.FIELDS.CREATOR, :label => 'Author', :limit => 8
     config.add_facet_field 'dc_type_s', label: 'Type', limit: 8
     config.add_facet_field Settings.FIELDS.PUBLISHER, label: 'Institution', limit: 8
-    config.add_facet_field Settings.FIELDS.YEAR, label: 'Year', limit: 10
     config.add_facet_field Settings.FIELDS.SUBJECT, label: 'Subject Area', limit: 8
     config.add_facet_field Settings.FIELDS.SPATIAL_COVERAGE, label: 'Geographical Location', limit: 8
     config.add_facet_field Settings.FIELDS.PART_OF, label: 'Collection', limit: 8
