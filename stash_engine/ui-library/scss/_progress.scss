@@ -21,7 +21,7 @@
     flex: 1 0 auto;
     align-items: center;
     justify-content: center;
-    height: 34px;
+    height: 33px;
     border: 1px solid $design-dark-gray-color;
   }
 
@@ -45,8 +45,8 @@
       content: '';
       position: absolute;
       top: 4px;
-      right: -13px;
-      padding: 12px;
+      right: -12px;
+      padding: 11px;
       transform: rotate(45deg);
       border-width: 1px;
       border-top-style: solid;
@@ -70,9 +70,19 @@
 
 %c-progress__tab--active {
   @extend %c-progress__tab-base;
+  height: 34px;
   border-width: 2px;
   border-color: $design-orange-color;
   color: $design-orange-color;
+
+  &::after {
+
+    // Right angle arrow using borders:
+    @include bp(screen1) {
+      top: 3px;
+    }
+
+  }
 }
 
 %c-progress__tab--inactive {
