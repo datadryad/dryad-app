@@ -7,6 +7,7 @@ module Stash
     class Ror
       # Module that facilitates communications with the ROR API:
       #    https://github.com/ror-community/ror-api/blob/master/api_documentation.md
+      HEARTBEAT_URI = 'https://api.ror.org/heartbeat'.freeze
       URI = 'https://api.ror.org/organizations'.freeze
       HEADERS = { 'Content-Type': 'application/json' }.freeze
       ROR_MAX_RESULTS = 20.0
@@ -22,6 +23,11 @@ module Stash
         @name = params['name']
         @country = params['country'] || { 'country_code': nil, 'country_name': nil }
         @acronyms = params['acronyms'] || []
+      end
+
+      # Ping the ROR API to determine if it is online
+      def self.ping
+        HTTParty.get(HEARTBEAT_URI).code == 200
       end
 
       # Search the ROR API for the given string. This will search name, acronyms, aliases, etc.
@@ -50,6 +56,8 @@ module Stash
       # Search the ROR API for a specific organization.
       # @return a Stash::Organization::Ror::Organization object or nil
       def self.find_by_ror_id(ror_id)
+        return { id: nil, name: query } unless ping
+
         resp = HTTParty.get("#{URI}/#{ror_id}", headers: HEADERS)
         return nil if resp.parsed_response.blank? ||
                       resp.parsed_response['id'].blank? ||
