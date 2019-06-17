@@ -51,5 +51,15 @@ RSpec.feature 'ReviewDataset', type: :feature do
 
   end
 
+  context :peer_review_section do
+
+    it 'should be visible', js: true do
+      start_new_dataset
+      navigate_to_review
+      expect(page).to have_content('Enable Private for Peer Review')
+    end
+
+  end
+
 end
 # rubocop:enable Metrics/BlockLength
