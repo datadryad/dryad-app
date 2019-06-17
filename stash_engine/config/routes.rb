@@ -109,4 +109,6 @@ StashEngine::Engine.routes.draw do
   # flexible routing for submission queue controller
   get 'submission_queue/(:action(/:id))', controller: 'submission_queue'
 
+  # Administrative Status Dashboard that displays statuses of external dependencies
+  get 'status_dashboard', to: 'status_dashboard#show'
 end

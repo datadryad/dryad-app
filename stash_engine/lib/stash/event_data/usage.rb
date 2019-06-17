@@ -11,6 +11,7 @@ module Stash
 
       # BASE_URL = 'https://api.test.datacite.org/events'.freeze
       BASE_URL = 'https://api.datacite.org/events'.freeze
+      HEARTBEAT_URL = 'https://api.test.datacite.org/heartbeat'.freeze
       EMAIL = 'scott.fisher@ucop.edu'.freeze
       UNIQUE_INVESTIGATIONS = %w[unique-dataset-investigations-regular unique-dataset-investigations-machine].freeze
       UNIQUE_REQUESTS = %w[unique-dataset-requests-regular unique-dataset-requests-machine].freeze
@@ -21,6 +22,10 @@ module Stash
         @base_url = BASE_URL
         @email = EMAIL
         @stats = nil
+      end
+
+      def self.ping
+        RestClient.get HEARTBEAT_URL
       end
 
       # types of stats

@@ -3102,6 +3102,88 @@ datalist {
           justify-content: space-between;
   margin: 0 0 20px; }
 
+.o-dependency-group {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-pack: distribute;
+      justify-content: space-around;
+  width: 100%; }
+
+.o-dependency-group__list {
+  list-style: none;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  margin-right: 10px;
+  margin-top: 5px;
+  padding: 25px;
+  border: 1px solid #000; }
+
+.o-dependency-group__list__item {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  margin-bottom: 25px;
+  /* red */
+  /* yellow */
+  /* green */
+  /* The Close Button */ }
+  .o-dependency-group__list__item .dependency-name {
+    font-size: 1.2rem;
+    font-weight: bold;
+    padding-right: 25px; }
+  .o-dependency-group__list__item .fa-times-circle {
+    color: #b30000; }
+  .o-dependency-group__list__item .fa-question-circle {
+    color: #b3b300; }
+  .o-dependency-group__list__item .fa-check-circle {
+    color: #669900; }
+  .o-dependency-group__list__item .dialog {
+    display: none;
+    /* Hidden by default */
+    position: fixed;
+    /* Stay in place */
+    z-index: 1;
+    /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%;
+    /* Full width */
+    height: 100%;
+    /* Full height */
+    overflow: auto;
+    /* Enable scroll if needed */
+    background-color: black;
+    /* Fallback color */
+    background-color: rgba(0, 0, 0, 0.4);
+    /* Black w/ opacity */ }
+  .o-dependency-group__list__item .dialog-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    /* 15% from the top and centered */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    /* Could be more or less, depending on screen size */ }
+  .o-dependency-group__list__item .dialog-close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold; }
+  .o-dependency-group__list__item .dialog-close:hover,
+  .o-dependency-group__list__item .dialog-close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer; }
+
 .o-download {
   padding: 5px;
   background-color: #9fc7d8; }
