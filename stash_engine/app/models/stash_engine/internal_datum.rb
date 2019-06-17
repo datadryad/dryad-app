@@ -3,7 +3,7 @@ module StashEngine
     belongs_to :stash_identifier, class_name: 'StashEngine::Identifier', foreign_key: 'identifier_id'
     validates :data_type, inclusion: {
       in: %w[manuscriptNumber mismatchedDOI duplicateItem formerManuscriptNumber publicationISSN
-             publicationName publicationDOI pubmedID],
+             publicationName publicationDOI pubmedID dansArchiveDate dansEditIRI],
       message: '%{value} is not a valid data type'
     }
     validates :data_type, presence: true
@@ -15,7 +15,7 @@ module StashEngine
 
     def self.allows_multiple(type)
       case type
-      when 'publicationName', 'manuscriptNumber', 'publicationISSN', 'publicationDOI', 'pubmedID'
+      when 'publicationName', 'manuscriptNumber', 'publicationISSN', 'publicationDOI', 'pubmedID', 'dansArchiveDate', 'dansEditIRI'
         false
       when 'mismatchedDOI', 'duplicateItem', 'formerManuscriptNumber'
         true
