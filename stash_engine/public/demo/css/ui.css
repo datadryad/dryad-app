@@ -3084,11 +3084,10 @@ button.o-button__calendar:focus {
           flex-flow: column;
   -ms-flex-line-pack: start;
       align-content: flex-start; }
-
-.o-data-list > .c-input {
-  -webkit-box-flex: 2;
-      -ms-flex-positive: 2;
-          flex-grow: 2; }
+  .o-data-list .c-input {
+    -webkit-box-flex: 2;
+        -ms-flex-positive: 2;
+            flex-grow: 2; }
 
 datalist {
   display: none; }
@@ -3111,7 +3110,6 @@ datalist {
   width: 100%; }
 
 .o-dependency-group__list {
-  list-style: none;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -3119,10 +3117,11 @@ datalist {
   -webkit-box-direction: normal;
       -ms-flex-direction: column;
           flex-direction: column;
-  margin-right: 10px;
   margin-top: 5px;
+  margin-right: 10px;
   padding: 25px;
-  border: 1px solid #000; }
+  list-style: none;
+  border: 1px solid black; }
 
 .o-dependency-group__list__item {
   display: -webkit-box;
@@ -3137,15 +3136,15 @@ datalist {
   /* green */
   /* The Close Button */ }
   .o-dependency-group__list__item .dependency-name {
+    padding-right: 25px;
     font-size: 1.2rem;
-    font-weight: bold;
-    padding-right: 25px; }
+    font-weight: bold; }
   .o-dependency-group__list__item .fa-times-circle {
-    color: #b30000; }
+    color: #d12c1d; }
   .o-dependency-group__list__item .fa-question-circle {
-    color: #b3b300; }
+    color: #e65722; }
   .o-dependency-group__list__item .fa-check-circle {
-    color: #669900; }
+    color: #389818; }
   .o-dependency-group__list__item .dialog {
     display: none;
     /* Hidden by default */
@@ -3153,29 +3152,27 @@ datalist {
     /* Stay in place */
     z-index: 1;
     /* Sit on top */
-    left: 0;
     top: 0;
+    left: 0;
     width: 100%;
     /* Full width */
     height: 100%;
     /* Full height */
     overflow: auto;
     /* Enable scroll if needed */
-    background-color: black;
-    /* Fallback color */
     background-color: rgba(0, 0, 0, 0.4);
     /* Black w/ opacity */ }
   .o-dependency-group__list__item .dialog-content {
-    background-color: #fefefe;
+    width: 80%;
+    /* Could be more or less, depending on screen size */
     margin: 15% auto;
     /* 15% from the top and centered */
     padding: 20px;
-    border: 1px solid #888;
-    width: 80%;
-    /* Could be more or less, depending on screen size */ }
+    border: 1px solid #7c7e7f;
+    background-color: #ebebeb; }
   .o-dependency-group__list__item .dialog-close {
-    color: #aaa;
     float: right;
+    color: #7c7e7f;
     font-size: 28px;
     font-weight: bold; }
   .o-dependency-group__list__item .dialog-close:hover,
@@ -3275,7 +3272,7 @@ datalist {
   font-weight: bold; }
 
 .o-heading__level3-file-title {
-  margin: 0 0 0 0; }
+  margin: 0; }
 
 .o-heading__page-span {
   margin-bottom: 20px;
@@ -4840,7 +4837,6 @@ html.no-details .o-showhide__summary {
           justify-content: flex-start;
   margin: 0 0 1em 5em; }
   .c-institution__container form {
-    width: 100%;
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
@@ -4850,7 +4846,8 @@ html.no-details .o-showhide__summary {
             flex-direction: row;
     -webkit-box-pack: start;
         -ms-flex-pack: start;
-            justify-content: flex-start; }
+            justify-content: flex-start;
+    width: 100%; }
 
 .c-institution__column {
   margin-right: 5em; }
