@@ -95,8 +95,13 @@ module StashApi
       # regardless of whether a publication date has been set otherwise.
       explicit_pub_date = params[:curation_activity][:note].match(/PublicationDate=(\d+-\d+-\d+)/)
       if explicit_pub_date
-        resource.update!(publication_date: explicit_pub_date[1].to_date)
-        return
+        begin
+          resource.update!(publication_date: explicit_pub_date[1].to_date)
+          return
+        rescue StandardError
+          # If the explicit publication date is invalid, ignore it and handle as it if is absent.
+          nil
+        end
       end
 
       return if resource.publication_date.present?
