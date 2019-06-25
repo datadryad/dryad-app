@@ -8,8 +8,19 @@ namespace :publication_updater do
     #  ::Stash::Import::Crossref.query_for_issn(issn: issn.value)
     #end
 
-    dois = StashEngine::InternalDatum.where(data_type: 'publicationDOI').pluck(:value).uniq.first
-    Stash::Import::Crossref.query_for_dois(dois: dois)
+    identifiers = StashEngine::Identifier.publicly_viewable.order(created_at: :desc).limit(15)
+
+    identifiers = identifiers.map do |identifier|
+      {
+        identifier: identifier,
+        doi: identifier.internal_data.where(data_type: 'publicationDOI').where.not(value: nil).first&.value
+      }
+    end
+    identifiers.select { |hash| hash[:doi].present? }.each do |hash|
+      p "Searching for: #{hash[:doi]}"
+
+      p Stash::Import::Crossref.query_by_doi(identifier: hash[:identifier], doi: hash[:doi])
+    end
   end
 
 end
