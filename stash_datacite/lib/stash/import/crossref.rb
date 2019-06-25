@@ -4,8 +4,14 @@ module Stash
   module Import
     class Crossref
 
-      def self.query_for_issn(issn:)
-        return [] unless issn.present?
+      def initialize(resource:, serrano_message:)
+        @resource = resource
+        @proposed_changes = @resource.proposed_changes.find
+        @sm = serrano_message # which came form crossref (x-ref) ... see class methods below
+      end
+
+      def self.query_by_issn(issn:)
+        return nil unless issn.present?
 
         p HTTParty.get("https://api.crossref.org/journals/#{issn}").body
 
@@ -13,17 +19,63 @@ module Stash
         #serrano_response_to_proposed_change(Serrano.journals(query: issn))
       end
 
-      def self.query_for_dois(dois:)
-        return [] unless dois.present?
+      def self.query_by_doi(identifier:, doi:)
+        return nil unless identifier.present? && doi.present?
 
-p dois
+        resp = Serrano.works(ids: doi)
+        return nil unless resp.first.present? && resp.first['message'].present?
+        return nil unless self.validate_crossref_match(identifier, resp)
 
-p Serrano.works(ids: dois)
+        self.new(resource: identifier.latest_resource, serrano_message: resp.first['message']['indexed'])
+      rescue Serrano::NotFound
+        return nil
+      end
 
-        #serrano_response_to_proposed_change(Serrano.works(ids: dois))
+      def self.from_proposed_change(identifier:)
+        proposed_change = StashDatacite::ProposedChange.where(identifier_id: identifier.id)
+        message = {
+          'authors': JSON.parse(proposed_change.authors),
+          'published-online': { 'date-parts': date_to_date_parts(proposed_change.publication_date) },
+          'DOI': proposed_change.publication_doi,
+          'publisher': proposed_change.publication_name,
+          'title': [proposed_change.title]
+        }
+        self.new(resource: identifier.latest_resource, serrano_message: message)
+      end
+
+      def populate
+        populate_abstract
+        populate_authors
+        populate_cited_by
+        populate_funders
+        populate_publication_date
+        populate_publication_doi
+        populate_publication_name
+        populate_title
+        @resource.save
+      end
+
+      def save_changes_for_review
+        params = {
+          identifier_id: @resource.identifier,
+          approved: false,
+          approved_by_id: nil,
+          authors: @sm['authors'].to_s,
+          provenance: 'crossref',
+          publication_date: date_parts_to_date(@sm['published-online']['date-parts']),
+          publication_doi: @sm['DOI'],
+          publication_name: @sm['publisher'],
+          score: @sm['score'],
+          title: @sm['title'].first.to_s
+        }
+        StashDatacite::ProposedChange.new(params)
       end
 
       private
+
+      def self.validate_crossref_match(identifier, response)
+        true
+      end
 
       def known_journals
         excludes = StashEngine::Identifier.publicly_viewable.pluck(:id)
@@ -31,65 +83,41 @@ p Serrano.works(ids: dois)
           .where('stash_engine_internal_data.data_type = ?', 'publicationName')
       end
 
-      def serrano_response_to_proposed_change(response)
-        params = {
-          title: response['title']&.first,
-          authors: response['author'].to_s
-        }
-        changes = StashDatacite::ProposedChange.new(params)
+
+
+      def populate_abstract
+        return unless @sm['abstract'].present?
+        abstract = @resource.descriptions.where(description_type: 'abstract').first_or_initialize
+        abstract.description = @sm['abstract']
       end
 
-
-
-
-
-
-      def populate
-        populate_title
-        populate_authors
-        populate_abstract
-        populate_funders
-        populate_cited_by
-      end
-
-      def populate_title
-        return if @sm['title'].blank? || @sm['title'].first.blank?
-        @resource.update(title: @sm['title'].first)
-      end
-
-      # authors may contain given, family , affiliation, ORCID
       def populate_authors
-        return if @sm['author'].blank?
+        return unless @sm['author'].present? && @sm['author'].any?
         @sm['author'].each do |xr_author|
-          author = @resource.authors.create(
+          author = @resource.authors.new(
             author_first_name: xr_author['given'],
             author_last_name: xr_author['family'],
             author_orcid: (xr_author['ORCID'] ? xr_author['ORCID'].match(/[0-9\-]{19}$/).to_s : nil)
           )
           affil_name = (xr_author['affiliation']&.first ? xr_author['affiliation'].first['name'] : nil)
-
-          # If the affiliation was provided try looking up its ROR id
           author.affiliation = StashDatacite::Affiliation.from_long_name(affil_name) if affil_name.present?
-          author.save if affil_name.present?
+          exists = @resource.authors.where(author_orcid: author.author.orcid).or
+            .where(author_last_name: author.author_last_name, author_first_name: author_first_name).first
+          @resource.authors << author if author.present? && author.valid? && exists.blank?
         end
       end
 
-      def populate_abstract
-        return if @sm['abstract'].blank?
-        abstract = @resource.descriptions.where(description_type: 'abstract').first_or_create
-        abstract.update(description: @sm['abstract'])
+      def populate_cited_by
+        return unless @sm['URL'].present?
+        @resource.related_identifiers.new(related_identifier: @sm['URL'], related_identifier_type: 'doi', relation_type: 'iscitedby')
       end
 
       def populate_funders
-        return if @sm['funder'].blank?
-        # remove any sad blank records
-        @resource.contributors.each do |item|
-          item.destroy if item.contributor_name.blank? && item.award_number.blank?
-        end
+        funders = []
         @sm['funder'].each do |xr_funder|
           next if xr_funder['name'].blank?
           if xr_funder['award'].blank?
-            @resource.contributors.create(contributor_name: xr_funder['name'], contributor_type: 'funder')
+            @resource.contributors.new(contributor_name: xr_funder['name'], contributor_type: 'funder')
             next
           end
           xr_funder['award'].each do |xr_award|
@@ -98,36 +126,48 @@ p Serrano.works(ids: dois)
         end
       end
 
-      def populate_cited_by
-        return if @sm['URL'].blank?
-        @resource.related_identifiers.create(related_identifier: @sm['URL'], related_identifier_type: 'doi', relation_type: 'iscitedby')
+      def populate_publication_date
+        return unless @sm['published-online'].present? && @sm['published-online']['date-parts'].present?
+        @resource.publication_date = date_parts_to_date(@sm['published-online']['date-parts'])
+        populate_published_status if @resource.publication_date <= Date.today
       end
 
-    end
-
-    class CrossrefJournal
-      attr_accessor :title, :issn, :datasets
-
-      def initialize(name:, issn:)
-        @title = name
-        @issn = issn
-        datasets.each do |dataset|
-          identifier = StashEngine::Identifier.joins(:internal_data).includes(:internal_data)
-                                              .where(id: dataset, data_type: %w[publicationDOI manuscriptNumber])
-          next unless identifier.present?
-          @dois = identifier.internal_data.where(data_type: 'publicationDOI').pluck(:value)
-          @manuscripts = identifier.internal_data.where(data_type: 'manuscriptNumber').pluck(:value)
-        end
+      def populate_publication_doi
+        return unless @sm['DOI'].present?
+        datum = @resource.identifier.internal_data.find_or_initialize(data_type: 'publicationDOI')
+        datum.value = @sm['DOI']
       end
 
-      private
-
-      # gather together all of the unique StashEngine::Identifier associated with the Journal
-      def datasets
-        ids = StashEngine::InternalDatum.where(data_type: 'publicationISSN', value: @issn).pluck(:identifier_id)
-        ids << StashEngine::InternalDatum.where(data_type: 'publicationName', value: @name).pluck(:identifier_id)
-        ids.uniq
+      def populate_publication_name
+        return unless @sm['publisher'].present?
+        datum = @resource.identifier.internal_data.find_or_initialize(data_type: 'publicationName')
+        datum.value = @sm['publisher']
       end
+
+      def populate_published_status
+        return unless @sm['published-online'].present? && @sm['published-online']['date-parts'].present?
+        return if @resource.files_published?
+        @resource.curation_activities << StashEngine::CurationActivity.new(
+          user_id: r.current_curation_activity.user_id,
+          status: 'published',
+          note: 'Crossref reported that the related journal has been published'
+        )
+      end
+
+      def populate_title
+        return unless @sm['title'].present && @sm['title'].any?
+        @resource.title = @sm['title'].first
+      end
+
+      def date_parts_to_date(parts_array)
+        Date.new(parts_array.join('-'))
+      end
+
+      def date_to_date_parts(date)
+        date = Date.new(date.to_s)
+        [date.year, date.month, date.day]
+      end
+
     end
 
   end

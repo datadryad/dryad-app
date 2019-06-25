@@ -27,6 +27,11 @@ module Stash
 
       URL = 'http://dx.doi.org/10.1073/pnas.1718211115'.freeze
 
+      DOI = '10.1073/pnas.1718211115'.freeze
+      PAST_PUBLICATION_DATE = ['2018', '01', '01'].freeze
+      FUTURE_PUBLICATION_DATE = ['2035', '01', '01'].freeze
+      PUBLISHER = 'Ficticious Journal'.freeze
+
       before(:each) do
         # I don't see any factories here, so just creating a resource manually
         @user = StashEngine::User.create(
@@ -46,7 +51,7 @@ module Stash
         end
 
         it 'extracts the title' do
-          @cr.populate_title
+          @cr.send(:populate_title)
           @resource.reload
           expect(@resource.title).to eql(TITLE)
         end
@@ -55,7 +60,7 @@ module Stash
           @title = 'meow meow'
           @resource.update(title: @title)
           @cr = CrossRef.new(resource: @resource, serrano_message: {})
-          @cr.populate_title
+          @cr.send(:populate_title)
           @resource.reload
           expect(@resource.title).to eql(@title)
         end
@@ -64,7 +69,8 @@ module Stash
           @title = 'meow meow'
           @resource.update(title: @title)
           @cr = CrossRef.new(resource: @resource, serrano_message: { 'title' => [] })
-          @cr.populate_title
+          resp = @cr.send(:populate_title)
+          expect(resp).to eql(nil)
           @resource.reload
           expect(@resource.title).to eql(@title)
         end
@@ -76,7 +82,7 @@ module Stash
         end
 
         it 'populates names' do
-          @cr.populate_authors
+          @cr.send(:populate_authors)
           @resource.reload
           expect(@resource.authors.first.author_first_name).to eql(AUTHOR.first['given'])
           expect(@resource.authors.first.author_last_name).to eql(AUTHOR.first['family'])
@@ -85,14 +91,14 @@ module Stash
         end
 
         it 'populates ORCIDs' do
-          @cr.populate_authors
+          @cr.send(:populate_authors)
           @resource.reload
           expect(@resource.authors.first.author_orcid).to eql('0000-0002-0955-3483')
           expect(@resource.authors[1].author_orcid).to eql('0000-0002-1212-2233')
         end
 
         it 'populates affiliations' do
-          @cr.populate_authors
+          @cr.send(:populate_authors)
           @resource.reload
           expect(@resource.authors.first.affiliation.long_name).to eql('Hotel California')
         end
@@ -100,7 +106,7 @@ module Stash
         it 'handles minimal data because lots of stuff is missing metadata' do
           @author_example = [{ 'family' => 'Petersen' }, { 'family' => 'Snow' }]
           @cr = CrossRef.new(resource: @resource, serrano_message: { 'author' => @author_example })
-          @cr.populate_authors
+          @cr.send(:populate_authors)
           expect(@resource.authors.length).to eql(2)
           expect(@resource.authors.first.author_orcid).to be_nil
           expect(@resource.authors[1].author_orcid).to be_nil
@@ -115,14 +121,15 @@ module Stash
         end
 
         it 'fills in the abstract when it is supplied' do
-          @cr.populate_abstract
+          @cr.send(:populate_abstract)
           @resource.reload
           expect(@resource.descriptions.where(description_type: 'abstract').first.description).to eql(ABSTRACT)
         end
 
         it "leaves off the abstract when it doesn't exist" do
           @cr = CrossRef.new(resource: @resource, serrano_message: {})
-          @cr.populate_abstract
+          resp = @cr.send(:populate_abstract)
+          expect(resp).to eql(nil)
           @resource.reload
           expect(@resource.descriptions.where(description_type: 'abstract').length).to eql(0)
         end
@@ -135,7 +142,7 @@ module Stash
         end
 
         it 'populates a contributor and award for each award number' do
-          @cr.populate_funders
+          @cr.send(:populate_funders)
           @resource.reload
           expect(@resource.contributors.length).to eql(11) # one entry for each award
         end
@@ -143,20 +150,20 @@ module Stash
         it 'populates only one award for a contributor without any award number' do
           @funder_example[0] = { 'name' => 'National Heart, Lung, and Blood Institute' }
           @cr = CrossRef.new(resource: @resource, serrano_message: { 'funder' => @funder_example })
-          @cr.populate_funders
+          @cr.send(:populate_funders)
           @resource.reload
           expect(@resource.contributors.length).to eql(6)
         end
 
         it 'removes blank contributor entries before populating' do
           @resource.contributors.create(contributor_name: '', contributor_type: 'funder', award_number: '')
-          @cr.populate_funders
+          @cr.send(:populate_funders)
           @resource.reload
           expect(@resource.contributors.length).to eql(11) # not 12, which it would be if the empty one hadn't been removed
         end
 
         it 'fills in funder name and award number for an individual entry' do
-          @cr.populate_funders
+          @cr.send(:populate_funders)
           @resource.reload
           contrib = @resource.contributors.first
           expect(contrib.contributor_name).to eql('National Heart, Lung, and Blood Institute')
@@ -166,7 +173,7 @@ module Stash
 
         it 'handles missing funders' do
           @cr = CrossRef.new(resource: @resource, serrano_message: {})
-          @cr.populate_funders
+          @cr.send(:populate_funders)
           @resource.reload
           expect(@resource.contributors.length).to eql(0)
         end
@@ -178,16 +185,113 @@ module Stash
         end
 
         it 'takes the DOI URL for the article and turns it into cited_by for this dataset' do
-          @cr.populate_cited_by
+          @cr.send(:populate_cited_by)
           @resource.reload
           expect(@resource.related_identifiers.first.related_identifier).to eql(URL)
         end
 
         it 'ignores blank URLs' do
           @cr = CrossRef.new(resource: @resource, serrano_message: { 'URL' => '' })
-          @cr.populate_cited_by
+          resp = @cr.send(:populate_cited_by)
+          expect(resp).to eql(nil)
           @resource.reload
           expect(@resource.related_identifiers.length).to eql(0)
+        end
+      end
+
+      describe '#populate_doi' do
+        before(:each) do
+          @cr = CrossRef.new(resource: @resource, serrano_message: { 'DOI': DOI })
+        end
+
+        it 'adds the publicationDOI to Internal Datum' do
+          @cr.send(:populate_publication_doi)
+          expect(@resource.internal_data.where(data_type: 'publicationDOI').any?).to eql(true)
+          expect(@resource.internal_data.where(data_type: 'publicationDOI').value).to eql(DOI)
+        end
+
+        it 'ignores blank DOIs' do
+          @cr = CrossRef.new(resource: @resource, serrano_message: { 'DOI': nil })
+          resp = @cr.send(:populate_publication_doi)
+          expect(resp).to eql(nil)
+          expect(@resource.internal_data.where(data_type: 'publicationDOI').empty?).to eql(true)
+        end
+      end
+
+      describe '#populate_publication_date' do
+        before(:each) do
+          @cr = CrossRef.new(resource: @resource, serrano_message: { 'published-online': { 'date-parts': FUTURE_PUBLICATION_DATE } })
+        end
+
+        it 'sets the publication_date' do
+          @cr.send(:populate_publication_date)
+          expect(@resource.publication_date).to eql(@cr.send(:date_parts_to_date, FUTURE_PUBLICATION_DATE))
+        end
+
+        it 'ignores blank Publication Dates' do
+          @cr = CrossRef.new(resource: @resource, serrano_message: { 'published-online': nil })
+          resp = @cr.send(:populate_published_status)
+          expect(resp).to eql(nil)
+          expect(@resource.publication_date).to eql(nil)
+        end
+      end
+
+      describe '#populate_publication_name' do
+        before(:each) do
+          @cr = CrossRef.new(resource: @resource, serrano_message: { 'publisher': PUBLISHER })
+        end
+
+        it 'adds the publicationName to Internal Datum' do
+          @cr.send(:populate_publication_name)
+          expect(@resource.internal_data.where(data_type: 'publicationName').any?).to eql(true)
+          expect(@resource.internal_data.where(data_type: 'publicationName').value).to eql(PUBLISHER)
+        end
+
+        it 'ignores blank Publishers' do
+          @cr = CrossRef.new(resource: @resource, serrano_message: { 'publisher': '' })
+          resp = @cr.send(:populate_publication_name)
+          expect(resp).to eql(nil)
+          expect(@resource.internal_data.where(data_type: 'publicationName').empty?).to eql(true)
+        end
+
+      end
+
+      describe '#populate_published_status' do
+        before(:each) do
+          @cr = CrossRef.new(resource: @resource, serrano_message: { 'published-online': { 'date-parts': PAST_PUBLICATION_DATE } })
+        end
+
+        it 'sets the curation state to `published` when the publication date is in the past' do
+          resp = @cr.send(:populate_published_status)
+          @resource.reload
+          expect(@resource.current_curation_status).to eql('published')
+          expect(@resource.current_curation_activity.note).to eql('Crossref reported that the related journal has been published')
+        end
+
+        it 'does NOT set the curation state to `published` when the publication date is in the future' do
+          @cr = CrossRef.new(resource: @resource, serrano_message: { 'published-online': { 'date-parts': FUTURE_PUBLICATION_DATE } })
+          resp = @cr.send(:populate_published_status)
+          expect(resp).to eql(nil)
+          @resource.reload
+          expect(@resource.current_curation_status).to eql('in_progress')
+        end
+
+        it 'ignores resources that are already published' do
+          StashEngine::CurationActivity.create(resource_id: @resource.id, user_id: @user.id, status: 'published', note: 'foo-bar')
+          @resource.reload
+          resp = @cr.send(:populate_published_status)
+          expect(resp).to eql(nil)
+          @resource.reload
+          expect(@resource.current_curation_status).to eql('published')
+          expect(@resource.current_curation_activity.note).to eql('foo-bar')
+        end
+
+        it 'ignores blank Publication Dates' do
+          @cr = CrossRef.new(resource: @resource, serrano_message: { 'published-online': { 'date-parts': nil } })
+          resp = @cr.send(:populate_published_status)
+          expect(resp).to eql(nil)
+          @resource.reload
+          expect(@resource.current_curation_status).to eql('in_progress')
         end
       end
 
