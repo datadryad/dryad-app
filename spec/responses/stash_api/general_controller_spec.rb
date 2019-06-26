@@ -6,8 +6,7 @@ require 'byebug'
 module StashApi
   RSpec.describe GeneralController, type: :request do
 
-    include Mocks::Datacite
-    include Mocks::RSolr
+    include Mocks::CurationActivity
 
     before(:all) do
       @user = create(:user, role: 'superuser')
@@ -20,20 +19,8 @@ module StashApi
     describe '#index' do
 
       before(:each) do
-        mock_solr!
-        mock_datacite!
-        allow_any_instance_of(StashEngine::Resource).to receive(:submit_to_solr).and_return(true)
-        stub_request(:post, 'http://127.0.0.1:8983/solr/geoblacklight/update?wt=ruby')
-          .with(
-            body: /.+/,
-            headers: {
-              'Content-Type' => 'text/xml'
-            }
-          )
-          .to_return(status: 200, body: '', headers: {})
-      end
+        neuter_curation_callbacks!
 
-      before(:all) do
         @users = Array.new(5) { create(:user) }
         @identifiers = []
 
@@ -42,8 +29,8 @@ module StashApi
             @res = iden.resources.create(attributes_for(:resource, :submitted, user_id: @users[i].id))
             @res.descriptions.create(attributes_for(:description))
             @res.authors.create(attributes_for(:author, author_first_name: @users[i].first_name,
-                                                        author_last_name: @users[i].last_name,
-                                                        author_email: @users[i].email))
+                                               author_last_name: @users[i].last_name,
+                                               author_email: @users[i].email))
           end
         end
         @res = @identifiers.map { |id| id.resources.first }
