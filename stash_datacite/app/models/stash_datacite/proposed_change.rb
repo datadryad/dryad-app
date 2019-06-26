@@ -1,14 +1,21 @@
-module StashDatacite
+module StashEngine
   class ProposedChange < ActiveRecord::Base
-    belongs_to :stash_identifier, class_name: 'StashEngine::Identifier', foreign_key: 'identifier_id'
-    belongs_to :approved_by, class_name: 'StashEngine::User', foreign_key: 'approved_by_id'
+    belongs_to :identifier, class_name: 'StashEngine::Identifier', foreign_key: 'identifier_id'
+    belongs_to :user, class_name: 'StashEngine::User', foreign_key: 'user_id'
 
-    def approve
-      # TODO: Logic to update the associated dataset with this model's values
+    def approve!(current_user:)
+      return false unless current_user.is_a?(StashEngine::User)
+
+      cr = Stash::Import::Crossref.from_proposed_change(proposed_change: self)
+      resource = cr.populate_resource
+      resource.save
+      resource.identifier.save
+      self.update(approved: true, user_id: current_user.id)
+      true
     end
 
-    def reject
-      # TODO: Toggle boolean
+    def reject!
+      self.destroy
     end
   end
 end
