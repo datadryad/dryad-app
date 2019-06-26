@@ -12,6 +12,7 @@ module StashApi
     include Mocks::Ror
     include Mocks::RSolr
     include Mocks::Stripe
+    include Mocks::CurationActivity
 
     before(:all) do
       @user = create(:user, role: 'superuser')
@@ -23,9 +24,8 @@ module StashApi
     # test creation of a new dataset
     describe '#create' do
       before(:each) do
+        neuter_curation_callbacks!
         mock_ror!
-        mock_solr!
-        mock_stripe!
         @meta = Fixtures::StashApi::Metadata.new
         @meta.make_minimal
       end
@@ -104,6 +104,7 @@ module StashApi
 
       before(:each) do
         mock_ror!
+        neuter_curation_callbacks!
         # these tests are very similar to tests in the model controller for identifier for querying this scope
         @user1 = create(:user, tenant_id: 'ucop', role: nil)
         @user2 = create(:user, tenant_id: 'ucop', role: 'admin')
