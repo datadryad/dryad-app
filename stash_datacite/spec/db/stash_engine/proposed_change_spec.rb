@@ -26,7 +26,7 @@ module StashEngine
             'affiliation' => ['name' => 'Catalonia'] }
         ].to_json,
         provenance: 'crossref',
-        publication_date: Date.new(2018, 01, 01),
+        publication_date: Date.new(2018, 0o1, 0o1),
         publication_doi: '10.1073/pnas.1718211115',
         publication_name: 'Ficticious Journal',
         score: 2.0,
@@ -40,15 +40,15 @@ module StashEngine
         @proposed_change.approve!(current_user: @user)
         @resource.reload
 
-p @resource.publication_date
-p @resource.publication_date.class.name
+        p @resource.publication_date
+        p @resource.publication_date.class.name
 
         expect(@resource.title).to eql(@params[:title])
         auths = JSON.parse(@params[:authors])
         expect(@resource.authors.first.author_first_name).to eql(auths.first['given'])
         expect(@resource.authors.first.author_last_name).to eql(auths.first['family'])
-        expect(@resource.identifier.internal_data.select{ |id| id.data_type == 'publicationName' }.first.value).to eql(@params[:publication_name])
-        expect(@resource.identifier.internal_data.select{ |id| id.data_type == 'publicationDOI' }.first.value).to eql(@params[:publication_doi])
+        expect(@resource.identifier.internal_data.select { |id| id.data_type == 'publicationName' }.first.value).to eql(@params[:publication_name])
+        expect(@resource.identifier.internal_data.select { |id| id.data_type == 'publicationDOI' }.first.value).to eql(@params[:publication_doi])
         expect(@resource.publication_date.to_date).to eql(@params[:publication_date])
         expect(@resource.current_curation_status).to eql('published')
         expect(@resource.current_curation_activity.note).to eql('Crossref reported that the related journal has been published')

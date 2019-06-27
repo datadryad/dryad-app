@@ -28,8 +28,8 @@ module Stash
       URL = 'http://dx.doi.org/10.1073/pnas.1718211115'.freeze
 
       DOI = '10.1073/pnas.1718211115'.freeze
-      PAST_PUBLICATION_DATE = [2018, 01, 01].freeze
-      FUTURE_PUBLICATION_DATE = [2035, 01, 01].freeze
+      PAST_PUBLICATION_DATE = [2018, 0o1, 0o1].freeze
+      FUTURE_PUBLICATION_DATE = [2035, 0o1, 0o1].freeze
       PUBLISHER = 'Ficticious Journal'.freeze
 
       before(:each) do
@@ -117,14 +117,14 @@ module Stash
 
         it 'fills in the abstract when it is supplied' do
           @cr.send(:populate_abstract)
-          expect(@resource.descriptions.select { |d| d.description_type= 'abstract' }.first.description).to eql(ABSTRACT)
+          expect(@resource.descriptions.select { |d| d.description_type = 'abstract' }.first.description).to eql(ABSTRACT)
         end
 
         it "leaves off the abstract when it doesn't exist" do
           @cr = Crossref.new(resource: @resource, crossref_json: {})
           resp = @cr.send(:populate_abstract)
           expect(resp).to eql(nil)
-          expect(@resource.descriptions.select { |d| d.description_type= 'abstract' }.length).to eql(0)
+          expect(@resource.descriptions.select { |d| d.description_type = 'abstract' }.length).to eql(0)
         end
       end
 
@@ -149,8 +149,8 @@ module Stash
         it 'removes blank contributor entries before populating' do
           funders = [{ 'name' => '' }]
           funders << FUNDER
-          cr = Crossref.new(resource: @resource, crossref_json: funders.flatten)
-          @cr.send(:populate_funders)
+          cr = Crossref.new(resource: @resource, crossref_json: { 'funder' => funders.flatten })
+          cr.send(:populate_funders)
           expect(@resource.contributors.length).to eql(11) # not 12, which it would be if the empty one hadn't been removed
         end
 
@@ -195,14 +195,14 @@ module Stash
 
         it 'adds the publicationDOI to Internal Datum' do
           @cr.send(:populate_publication_doi)
-          expect(@resource.identifier.internal_data.select{ |id| id.data_type == 'publicationDOI' }.first.value).to eql(DOI)
+          expect(@resource.identifier.internal_data.select { |id| id.data_type == 'publicationDOI' }.first.value).to eql(DOI)
         end
 
         it 'ignores blank DOIs' do
           @cr = Crossref.new(resource: @resource, crossref_json: { 'DOI' => nil })
           resp = @cr.send(:populate_publication_doi)
           expect(resp).to eql(nil)
-          expect(@resource.identifier.internal_data.select{ |id| id.data_type == 'publicationDOI' }.empty?).to eql(true)
+          expect(@resource.identifier.internal_data.select { |id| id.data_type == 'publicationDOI' }.empty?).to eql(true)
         end
       end
 
@@ -240,14 +240,14 @@ module Stash
 
         it 'sets the publication_name' do
           @cr.send(:populate_publication_name)
-          expect(@resource.identifier.internal_data.select{ |id| id.data_type == 'publicationName' }.first.value).to eql(PUBLISHER)
+          expect(@resource.identifier.internal_data.select { |id| id.data_type == 'publicationName' }.first.value).to eql(PUBLISHER)
         end
 
         it 'ignores blank publisher names' do
           @cr = Crossref.new(resource: @resource, crossref_json: { 'publisher' => nil })
           resp = @cr.send(:populate_publication_name)
           expect(resp).to eql(nil)
-          expect(@resource.identifier.internal_data.select{ |id| id.data_type == 'publicationName' }.empty?).to eql(true)
+          expect(@resource.identifier.internal_data.select { |id| id.data_type == 'publicationName' }.empty?).to eql(true)
         end
       end
 
@@ -280,7 +280,7 @@ module Stash
       describe 'Date conversions' do
         before(:each) do
           @cr = Crossref.new(resource: @resource, crossref_json: {})
-          @date_as_array = [2019, 06, 24]
+          @date_as_array = [2019, 0o6, 24]
           @date_as_string = '2019-06-24'
         end
 
@@ -297,7 +297,6 @@ module Stash
         end
       end
 
-
       def date_parts_to_date(parts_array)
         Date.parse(parts_array.join('-'))
       end
@@ -311,15 +310,15 @@ module Stash
         before(:each) do
           allow_any_instance_of(StashEngine::Resource).to receive(:submit_to_solr).and_return(true)
           @cr = Crossref.new(resource: @resource, crossref_json: {
-            'title' => [TITLE],
-            'author' => AUTHOR,
-            'abstract' => ABSTRACT,
-            'funder' => FUNDER,
-            'URL' => URL,
-            'DOI' => DOI,
-            'publisher' => PUBLISHER,
-            'published-online' => { 'date-parts' => PAST_PUBLICATION_DATE }
-          })
+                               'title' => [TITLE],
+                               'author' => AUTHOR,
+                               'abstract' => ABSTRACT,
+                               'funder' => FUNDER,
+                               'URL' => URL,
+                               'DOI' => DOI,
+                               'publisher' => PUBLISHER,
+                               'published-online' => { 'date-parts' => PAST_PUBLICATION_DATE }
+                             })
         end
 
         it 'calls the other population methods' do
@@ -328,11 +327,11 @@ module Stash
           expect(@resource.title).to eql(TITLE)
           expect(@resource.authors.first.author_first_name).to eql(AUTHOR.first['given'])
           expect(@resource.authors.first.author_last_name).to eql(AUTHOR.first['family'])
-          expect(@resource.descriptions.select { |d| d.description_type= 'abstract' }.first.description).to eql(ABSTRACT)
+          expect(@resource.descriptions.select { |d| d.description_type = 'abstract' }.first.description).to eql(ABSTRACT)
           expect(@resource.contributors.length).to eql(11)
           expect(@resource.related_identifiers.first.related_identifier).to eql(URL)
-          expect(@resource.identifier.internal_data.select{ |id| id.data_type == 'publicationName' }.first.value).to eql(PUBLISHER)
-          expect(@resource.identifier.internal_data.select{ |id| id.data_type == 'publicationDOI' }.first.value).to eql(DOI)
+          expect(@resource.identifier.internal_data.select { |id| id.data_type == 'publicationName' }.first.value).to eql(PUBLISHER)
+          expect(@resource.identifier.internal_data.select { |id| id.data_type == 'publicationDOI' }.first.value).to eql(DOI)
           expect(@resource.publication_date).to eql(@cr.send(:date_parts_to_date, PAST_PUBLICATION_DATE))
           expect(@resource.current_curation_status).to eql('published')
           expect(@resource.current_curation_activity.note).to eql('Crossref reported that the related journal has been published')
@@ -361,8 +360,8 @@ module Stash
           resource = cr.populate_resource
           auths = JSON.parse(@params[:authors])
           expect(resource.title).to eql(@params[:title])
-          expect(resource.identifier.internal_data.select{ |id| id.data_type == 'publicationName' }.first.value).to eql(@params[:publication_name])
-          expect(resource.identifier.internal_data.select{ |id| id.data_type == 'publicationDOI' }.first.value).to eql(@params[:publication_doi])
+          expect(resource.identifier.internal_data.select { |id| id.data_type == 'publicationName' }.first.value).to eql(@params[:publication_name])
+          expect(resource.identifier.internal_data.select { |id| id.data_type == 'publicationDOI' }.first.value).to eql(@params[:publication_doi])
           expect(resource.publication_date).to eql(@params[:publication_date])
           expect(resource.current_curation_status).to eql('published')
           expect(resource.current_curation_activity.note).to eql('Crossref reported that the related journal has been published')
@@ -375,16 +374,16 @@ module Stash
       describe '#to_proposed_change' do
         before(:each) do
           @cr = Crossref.new(resource: @resource, crossref_json: {
-            'title' => [TITLE],
-            'author' => AUTHOR,
-            'abstract' => ABSTRACT,
-            'funder' => FUNDER,
-            'URL' => URL,
-            'DOI' => DOI,
-            'publisher' => PUBLISHER,
-            'published-online' => { 'date-parts' => FUTURE_PUBLICATION_DATE },
-            'score' => '1.0'
-          })
+                               'title' => [TITLE],
+                               'author' => AUTHOR,
+                               'abstract' => ABSTRACT,
+                               'funder' => FUNDER,
+                               'URL' => URL,
+                               'DOI' => DOI,
+                               'publisher' => PUBLISHER,
+                               'published-online' => { 'date-parts' => FUTURE_PUBLICATION_DATE },
+                               'score' => '1.0'
+                             })
         end
 
         it 'initializes a ProposedChange model' do

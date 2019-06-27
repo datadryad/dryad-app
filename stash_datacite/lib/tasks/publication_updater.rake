@@ -4,9 +4,9 @@ namespace :publication_updater do
 
   desc 'Testing Publication Updater'
   task test: :environment do
-    #StashEngine::InternalDatum.where(data_type: 'publicationISSN').select(:value).distinct.limit(5).each do |issn|
+    # StashEngine::InternalDatum.where(data_type: 'publicationISSN').select(:value).distinct.limit(5).each do |issn|
     #  ::Stash::Import::Crossref.query_for_issn(issn: issn.value)
-    #end
+    # end
 
     identifiers = StashEngine::Identifier.publicly_viewable.order(created_at: :desc).limit(15)
 
