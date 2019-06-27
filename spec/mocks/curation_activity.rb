@@ -2,6 +2,7 @@ module Mocks
 
   module CurationActivity
 
+    # rubocop:disable Metrics/AbcSize
     def neuter_curation_callbacks!
       # These callbacks cause constant grief when you're just trying to set up curation states in order to
       # do things like test dataset visibility.  Mostly we don't want these running in tests unless we're testing that
@@ -12,5 +13,6 @@ module Mocks
       allow_any_instance_of(StashEngine::CurationActivity).to receive(:email_author).and_return(true)
       allow_any_instance_of(StashEngine::CurationActivity).to receive(:email_orcid_invitations).and_return(true)
     end
+    # rubocop:enable Metrics/AbcSize
   end
 end
