@@ -2,6 +2,7 @@ require 'httparty'
 
 module Stash
   module Import
+    # rubocop:disable Metrics/ClassLength
     class Crossref
 
       def initialize(resource:, crossref_json:)
@@ -10,40 +11,41 @@ module Stash
         @sm = crossref_json # which came form crossref (x-ref) ... see class methods below
       end
 
-      def self.query_by_issn(issn:)
-        return nil unless issn.present?
+      class << self
+        def query_by_issn(issn:)
+          return nil unless issn.present?
 
-        p HTTParty.get("https://api.crossref.org/journals/#{issn}").body
+          p HTTParty.get("https://api.crossref.org/journals/#{issn}").body
 
-        p Serrano.journals(query: issn)
-        #serrano_response_to_proposed_change(Serrano.journals(query: issn))
-      end
+          p Serrano.journals(query: issn)
+          # serrano_response_to_proposed_change(Serrano.journals(query: issn))
+        end
 
-      def self.query_by_doi(identifier:, doi:)
-        return nil unless identifier.present? && doi.present?
+        def query_by_doi(identifier:, doi:)
+          return nil unless identifier.present? && doi.present?
 
-        resp = Serrano.works(ids: doi)
-        return nil unless resp.first.present? && resp.first['message'].present?
-        return nil unless self.validate_crossref_match(identifier, resp)
+          resp = Serrano.works(ids: doi)
+          return nil unless resp.first.present? && resp.first['message'].present?
 
-        self.new(resource: identifier.latest_resource, crossref_json: resp.first['message']['indexed'])
-      rescue Serrano::NotFound
-        return nil
-      end
+          new(resource: identifier.latest_resource, crossref_json: resp.first['message']['indexed'])
+        rescue Serrano::NotFound
+          nil
+        end
 
-      def self.from_proposed_change(proposed_change:)
-        return self.new(resource: nil, crossref_json: {}) unless proposed_change.is_a?(StashEngine::ProposedChange)
-        identifier = StashEngine::Identifier.find(proposed_change.identifier_id)
-        date_parts = [proposed_change.publication_date.year, proposed_change.publication_date.month,
-                      proposed_change.publication_date.day]
-        message = {
-          'author' => JSON.parse(proposed_change.authors),
-          'published-online' => { 'date-parts' => date_parts },
-          'DOI' => proposed_change.publication_doi,
-          'publisher' => proposed_change.publication_name,
-          'title' => [proposed_change.title]
-        }
-        self.new(resource: identifier.latest_resource, crossref_json: message)
+        def from_proposed_change(proposed_change:)
+          return new(resource: nil, crossref_json: {}) unless proposed_change.is_a?(StashEngine::ProposedChange)
+          identifier = StashEngine::Identifier.find(proposed_change.identifier_id)
+          date_parts = [proposed_change.publication_date.year, proposed_change.publication_date.month,
+                        proposed_change.publication_date.day]
+          message = {
+            'author' => JSON.parse(proposed_change.authors),
+            'published-online' => { 'date-parts' => date_parts },
+            'DOI' => proposed_change.publication_doi,
+            'publisher' => proposed_change.publication_name,
+            'title' => [proposed_change.title]
+          }
+          new(resource: identifier.latest_resource, crossref_json: message)
+        end
       end
 
       def populate_resource
@@ -75,17 +77,11 @@ module Stash
 
       private
 
-      def self.validate_crossref_match(identifier, response)
-        true
-      end
-
       def known_journals
         excludes = StashEngine::Identifier.publicly_viewable.pluck(:id)
         StashEngine::Identifier.joins(:internal_data).includes(:internal_data).where.not(id: excludes)
           .where('stash_engine_internal_data.data_type = ?', 'publicationName')
       end
-
-
 
       def populate_abstract
         return unless @sm['abstract'].present?
@@ -93,21 +89,30 @@ module Stash
         abstract.description = @sm['abstract']
       end
 
+      def populate_affiliation(author, hash)
+        affil_name = (hash['affiliation']&.first ? hash['affiliation'].first['name'] : nil)
+        author.affiliation = StashDatacite::Affiliation.from_long_name(affil_name) if affil_name.present?
+      end
+
+      def populate_author(hash)
+        exists = @resource.authors.where('stash_engine_authors.author_orcid = ? OR ' \
+            '(stash_engine_authors.author_first_name = ? AND stash_engine_authors.author_last_name = ?)',
+                                         hash['ORCID'], hash['family'], hash['given']).any?
+        return if exists
+
+        author = @resource.authors.new(
+          author_first_name: hash['given'],
+          author_last_name: hash['family'],
+          author_orcid: (hash['ORCID'] ? hash['ORCID'].match(/[0-9\-]{19}$/).to_s : nil)
+        )
+        populate_affiliation(author, hash)
+        @resource.authors << author if author.present? && author.valid?
+      end
+
       def populate_authors
         return unless @sm['author'].present? && @sm['author'].any?
         @sm['author'].each do |xr_author|
-          author = @resource.authors.new(
-            author_first_name: xr_author['given'],
-            author_last_name: xr_author['family'],
-            author_orcid: (xr_author['ORCID'] ? xr_author['ORCID'].match(/[0-9\-]{19}$/).to_s : nil)
-          )
-          affil_name = (xr_author['affiliation']&.first ? xr_author['affiliation'].first['name'] : nil)
-          author.affiliation = StashDatacite::Affiliation.from_long_name(affil_name) if affil_name.present?
-
-          exists = @resource.authors.where('stash_engine_authors.author_orcid = ? OR ' \
-            '(stash_engine_authors.author_first_name = ? AND stash_engine_authors.author_last_name = ?)',
-            author.author_orcid, author.author_last_name, author.author_first_name).any?
-          @resource.authors << author if author.present? && author.valid? && !exists
+          populate_author(xr_author)
         end
       end
 
@@ -117,8 +122,7 @@ module Stash
       end
 
       def populate_funders
-        return unless @sm['funder'].present? && @sm['funder'].any?
-        funders = []
+        return unless @sm['funder'].present? && @sm['funder'].is_a?(Array) && @sm['funder'].any?
         @sm['funder'].each do |xr_funder|
           next if xr_funder['name'].blank?
           if xr_funder['award'].blank?
@@ -174,6 +178,6 @@ module Stash
       end
 
     end
-
+    # rubocop:enable Metrics/ClassLength
   end
 end

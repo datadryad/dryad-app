@@ -10,12 +10,12 @@ module StashEngine
       resource = cr.populate_resource
       resource.save
       resource.identifier.save
-      self.update(approved: true, user_id: current_user.id)
+      update(approved: true, user_id: current_user.id)
       true
     end
 
     def reject!
-      self.destroy
+      destroy
     end
   end
 end
