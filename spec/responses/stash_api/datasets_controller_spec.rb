@@ -201,6 +201,44 @@ module StashApi
         end
       end
 
+      describe 'shows appropriate latest resource metadata under identifier based on user' do
+        before(:each) do
+          # make identifier[0] have a second version that isn't publicly viewable yet
+          @curation_activities[1][2].destroy
+          # versions not getting set correctly for these two resources for some reason
+          @resources[1].stash_version.update(version: 1)
+          @resources[1].stash_version.update(version: 2)
+        end
+
+        it 'shows the first, published version for a public dataset by default' do
+          get '/api/datasets', {}, default_json_headers
+          hsh = response_body_hash
+
+          # the first identifier
+          expect(hsh['_embedded']['stash:datasets'][0]['identifier']).to eq(@identifiers[0].to_s)
+
+          expect(hsh['_embedded']['stash:datasets'][0]['title']).to eq(@resources[0].title)
+
+          # the first version
+          expect(hsh['_embedded']['stash:datasets'][0]['versionNumber']).to eq(1)
+        end
+
+        it 'shows the 2nd, unpublished version to superusers who see everything by default' do
+
+          get '/api/datasets', {}, default_authenticated_headers
+          hsh = response_body_hash
+
+          # the first identifier
+          expect(hsh['_embedded']['stash:datasets'][0]['identifier']).to eq(@identifiers[0].to_s)
+
+          # the second version title
+          expect(hsh['_embedded']['stash:datasets'][0]['title']).to eq(@resources[1].title)
+
+          # the second version
+          expect(hsh['_embedded']['stash:datasets'][0]['versionNumber']).to eq(2)
+        end
+      end
+
       describe 'filtering and reduced scoping of list for Dryad special filters' do
         it 'reduces scope to a curation status' do
           get '/api/datasets', { 'curationStatus' => 'curation' }, default_authenticated_headers

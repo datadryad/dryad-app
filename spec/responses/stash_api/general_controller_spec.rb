@@ -2,6 +2,8 @@ require 'rails_helper'
 require_relative 'helpers'
 require 'byebug'
 
+# rubocop:disable Metrics/BlockLength
+
 # see https://relishapp.com/rspec/rspec-rails/v/3-8/docs/request-specs/request-spec
 module StashApi
   RSpec.describe GeneralController, type: :request do
@@ -36,3 +38,4 @@ module StashApi
     end
   end
 end
+# rubocop:enable Metrics/BlockLength
