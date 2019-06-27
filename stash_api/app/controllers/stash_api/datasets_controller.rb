@@ -25,7 +25,7 @@ module StashApi
       ds = Dataset.new(identifier: @stash_identifier.to_s)
       respond_to do |format|
         format.json { render json: ds.metadata }
-        res = @stash_identifier.last_submitted_resource
+        res = @stash_identifier.latest_viewable_resource(user: @user)
         StashEngine::CounterLogger.general_hit(request: request, resource: res) if res
       end
     end
@@ -36,7 +36,7 @@ module StashApi
         format.json do
           dp = DatasetParser.new(hash: params['dataset'], id: nil, user: @user)
           @stash_identifier = dp.parse
-          ds = Dataset.new(identifier: @stash_identifier.to_s) # sets up display objects
+          ds = Dataset.new(identifier: @stash_identifier.to_s, user: @user) # sets up display objects
           render json: ds.metadata, status: 201
         end
       end
@@ -59,7 +59,7 @@ module StashApi
       end
 
       # now, if a curationStatus is specified, narrow down the previous result more.
-      unless params['curationStatus'].blank?
+      unless params.key?('curationStatus').blank?
         ds_query = ds_query.with_visibility(states: params['curationStatus']) # this finds identifiers with a version with this state, acceptable?
       end
 
@@ -87,7 +87,7 @@ module StashApi
                  DatasetParser.new(hash: params['dataset'], user: @user, id_string: params[:id]) # upsert dataset with identifier
                end
           @stash_identifier = dp.parse
-          ds = Dataset.new(identifier: @stash_identifier.to_s) # sets up display objects
+          ds = Dataset.new(identifier: @stash_identifier.to_s, user: @user) # sets up display objects
           render json: ds.metadata, status: 200
         end
       end
@@ -95,13 +95,12 @@ module StashApi
 
     # get /datasets/<id>/download
     def download
-      res = @stash_identifier.last_submitted_resource
+      res = @stash_identifier.latest_viewable_resource(user: @user)
       if res&.download_uri
-        res = @stash_identifier.last_submitted_resource
         StashEngine::CounterLogger.version_download_hit(request: request, resource: res) if res
         redirect_to res.merritt_producer_download_uri # latest version, friendly download because that's what we do in UI for object
       else
-        render text: 'download for this dataset is unavailable', status: 404
+        render text: 'download for this version of the dataset is unavailable', status: 404
       end
     end
 
@@ -223,7 +222,7 @@ module StashApi
     end
 
     def datasets_with_mapped_metadata(datasets_to_map)
-      datasets_to_map.map { |i| Dataset.new(identifier: "#{i.identifier_type}:#{i.identifier}").metadata }
+      datasets_to_map.map { |i| Dataset.new(identifier: "#{i.identifier_type}:#{i.identifier}", user: @user).metadata }
     end
 
     def paged_datasets(datasets_to_page)
