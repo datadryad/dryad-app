@@ -101,6 +101,14 @@ module StashEngine
       resources.with_public_metadata.by_version_desc.first
     end
 
+    # these are resources that the user can look at because of permissions, some user roles can see non-published others, not
+    def latest_viewable_resource(user: nil)
+      return latest_resource_with_public_metadata if user.nil?
+      lr = latest_resource
+      return lr if user.id == lr.user_id || user.superuser? || (user.role == 'admin' && user.tenant_id == lr.tenant_id)
+      latest_resource_with_public_metadata
+    end
+
     def last_submitted_version_number
       (lsv = last_submitted_resource) && lsv.version_number
     end
