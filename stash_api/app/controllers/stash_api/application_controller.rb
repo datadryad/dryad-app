@@ -66,6 +66,7 @@ module StashApi
     end
 
     def optional_api_user
+      @user = nil
       @user = doorkeeper_token.application.owner if doorkeeper_token
     end
 
