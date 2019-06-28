@@ -84,28 +84,28 @@ module StashApi
 
       it 'shows skipDataciteUpdate when true' do
         @identifier.in_progress_resource.update(skip_datacite_update: true)
-        @dataset = Dataset.new(identifier: @identifier.to_s)
+        @dataset = Dataset.new(identifier: @identifier.to_s, user: @user)
         @metadata = @dataset.metadata
         expect(@metadata[:skipDataciteUpdate]).to eq(true)
       end
 
       it 'shows skipEmails when true' do
         @identifier.in_progress_resource.update(skip_emails: true)
-        @dataset = Dataset.new(identifier: @identifier.to_s)
+        @dataset = Dataset.new(identifier: @identifier.to_s, user: @user)
         @metadata = @dataset.metadata
         expect(@metadata[:skipEmails]).to eq(true)
       end
 
       it 'shows preserveCurationStatus when true' do
         @identifier.in_progress_resource.update(preserve_curation_status: true)
-        @dataset = Dataset.new(identifier: @identifier.to_s)
+        @dataset = Dataset.new(identifier: @identifier.to_s, user: @user)
         @metadata = @dataset.metadata
         expect(@metadata[:preserveCurationStatus]).to eq(true)
       end
 
       it 'shows loosenValidation when true' do
         @identifier.in_progress_resource.update(loosen_validation: true)
-        @dataset = Dataset.new(identifier: @identifier.to_s)
+        @dataset = Dataset.new(identifier: @identifier.to_s, user: @user)
         @metadata = @dataset.metadata
         expect(@metadata[:loosenValidation]).to eq(true)
       end
