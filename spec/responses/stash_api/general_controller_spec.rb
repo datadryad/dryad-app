@@ -1,10 +1,12 @@
 require 'rails_helper'
 require_relative 'helpers'
+require 'byebug'
+
+# rubocop:disable Metrics/BlockLength
 
 # see https://relishapp.com/rspec/rspec-rails/v/3-8/docs/request-specs/request-spec
 module StashApi
   RSpec.describe GeneralController, type: :request do
-
     before(:all) do
       @user = create(:user, role: 'superuser')
       @doorkeeper_application = create(:doorkeeper_application, redirect_uri: 'urn:ietf:wg:oauth:2.0:oob',
@@ -26,5 +28,14 @@ module StashApi
         expect(/invalid_token/).to match(response.headers['WWW-Authenticate'])
       end
     end
+
+    describe '#index' do
+      it 'has a HATEOAS link to the main entry into API, the datasets list' do
+        get '/api/', {}, default_json_headers
+        hsh = response_body_hash
+        expect(hsh['_links']['stash:datasets']['href']).to eql('/api/datasets')
+      end
+    end
   end
 end
+# rubocop:enable Metrics/BlockLength
