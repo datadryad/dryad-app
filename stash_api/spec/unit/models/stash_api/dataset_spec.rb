@@ -15,6 +15,7 @@ module StashApi
       allow(generic_path).to receive(:dataset_path).and_return('dataset_foobar_path')
       allow(generic_path).to receive(:dataset_versions_path).and_return('dataset_versions_foobar_path')
       allow(generic_path).to receive(:version_path).and_return('version_foobar_path')
+      allow(generic_path).to receive(:download_dataset_path).and_return('download_dataset_foobar_path')
 
       allow(Dataset).to receive(:api_url_helper).and_return(generic_path)
 
@@ -44,7 +45,8 @@ module StashApi
     describe :basic_dataset_view do
 
       before(:each) do
-        @dataset = Dataset.new(identifier: @identifier.to_s)
+        @user.update(role: 'superuser') # need to be superuser to see all dataset info
+        @dataset = Dataset.new(identifier: @identifier.to_s, user: @user)
         @metadata = @dataset.metadata
       end
 
