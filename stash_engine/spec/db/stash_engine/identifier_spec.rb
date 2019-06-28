@@ -14,10 +14,11 @@ module StashEngine
     attr_reader :res3
 
     before(:each) do
+      @user = User.new
       @identifier = Identifier.create(identifier_type: 'DOI', identifier: '10.123/456')
-      @res1 = Resource.create(identifier_id: @identifier.id)
-      @res2 = Resource.create(identifier_id: @identifier.id)
-      @res3 = Resource.create(identifier_id: @identifier.id)
+      @res1 = Resource.create(identifier_id: @identifier.id, user: @user)
+      @res2 = Resource.create(identifier_id: @identifier.id, user: @user)
+      @res3 = Resource.create(identifier_id: @identifier.id, user: @user)
       @fake_issn = 'bogus-issn-value'
       int_datum = InternalDatum.new(identifier_id: @identifier.id, data_type: 'publicationISSN', value: @fake_issn)
       int_datum.save!
@@ -145,39 +146,89 @@ module StashEngine
         end
       end
 
-      describe '#latest_resource_with_public_metadata' do
+      describe 'curation activity setup' do
         before(:each) do
-          @user = User.new
+          # @user = User.new
           allow_any_instance_of(CurationActivity).to receive(:update_solr).and_return(true)
           allow_any_instance_of(CurationActivity).to receive(:submit_to_stripe).and_return(true)
           allow_any_instance_of(CurationActivity).to receive(:submit_to_datacite).and_return(true)
         end
 
-        it 'finds the last published resource' do
-          @res1.curation_activities << CurationActivity.create(status: 'curation', user: @user)
-          @res1.curation_activities << CurationActivity.create(status: 'published', user: @user)
-          @res2.curation_activities << CurationActivity.create(status: 'curation', user: @user)
-          @res2.curation_activities << CurationActivity.create(status: 'published', user: @user)
-          @res3.curation_activities << CurationActivity.create(status: 'curation', user: @user)
-          expect(@identifier.latest_resource_with_public_metadata).to eql(@res2)
+        describe '#latest_resource_with_public_metadata' do
+
+          it 'finds the last published resource' do
+            @res1.curation_activities << CurationActivity.create(status: 'curation', user: @user)
+            @res1.curation_activities << CurationActivity.create(status: 'published', user: @user)
+            @res2.curation_activities << CurationActivity.create(status: 'curation', user: @user)
+            @res2.curation_activities << CurationActivity.create(status: 'published', user: @user)
+            @res3.curation_activities << CurationActivity.create(status: 'curation', user: @user)
+            expect(@identifier.latest_resource_with_public_metadata).to eql(@res2)
+          end
+
+          it 'finds embargoed published resource' do
+            @res1.curation_activities << CurationActivity.create(status: 'curation', user: @user)
+            @res1.curation_activities << CurationActivity.create(status: 'published', user: @user)
+            @res2.curation_activities << CurationActivity.create(status: 'curation', user: @user)
+            @res2.curation_activities << CurationActivity.create(status: 'embargoed', user: @user)
+            @res3.curation_activities << CurationActivity.create(status: 'curation', user: @user)
+            expect(@identifier.latest_resource_with_public_metadata).to eql(@res2)
+          end
+
+          it 'finds no published resource' do
+            @res1.curation_activities << CurationActivity.create(status: 'curation', user: @user)
+            @res2.curation_activities << CurationActivity.create(status: 'curation', user: @user)
+            @res3.curation_activities << CurationActivity.create(status: 'curation', user: @user)
+            expect(@identifier.latest_resource_with_public_metadata).to eql(nil)
+          end
+
         end
 
-        it 'finds embargoed published resource' do
-          @res1.curation_activities << CurationActivity.create(status: 'curation', user: @user)
-          @res1.curation_activities << CurationActivity.create(status: 'published', user: @user)
-          @res2.curation_activities << CurationActivity.create(status: 'curation', user: @user)
-          @res2.curation_activities << CurationActivity.create(status: 'embargoed', user: @user)
-          @res3.curation_activities << CurationActivity.create(status: 'curation', user: @user)
-          expect(@identifier.latest_resource_with_public_metadata).to eql(@res2)
-        end
+        describe '#latest_viewable_resource' do
+          # the latest viewable resource depends on the user viewing and their ownership or role may allow them to view
+          # published resources or not
 
-        it 'finds no published resource' do
-          @res1.curation_activities << CurationActivity.create(status: 'curation', user: @user)
-          @res2.curation_activities << CurationActivity.create(status: 'curation', user: @user)
-          @res3.curation_activities << CurationActivity.create(status: 'curation', user: @user)
-          expect(@identifier.latest_resource_with_public_metadata).to eql(nil)
-        end
+          before(:each) do
+            @res1.curation_activities << CurationActivity.create(status: 'curation', user: @user)
+            @res1.curation_activities << CurationActivity.create(status: 'published', user: @user)
+            @res2.curation_activities << CurationActivity.create(status: 'curation', user: @user)
+            @res2.curation_activities << CurationActivity.create(status: 'published', user: @user)
+            @res3.curation_activities << CurationActivity.create(status: 'curation', user: @user)
+          end
 
+          it 'returns the latest published for nil user' do
+            expect(@identifier.latest_viewable_resource(user: nil)).to eql(@identifier.latest_resource_with_public_metadata)
+          end
+
+          it 'returns the latest published for non-owner and regular user' do
+            user2 = User.new
+            expect(@identifier.latest_viewable_resource(user: user2)).to eql(@identifier.latest_resource_with_public_metadata)
+          end
+
+          it 'returns the latest non-published for the owner' do
+            expect(@identifier.latest_viewable_resource(user: @user)).to eql(@identifier.latest_resource)
+          end
+
+          it 'returns the latest non-published for a superuser' do
+            user2 = User.new(role: 'superuser')
+            expect(@identifier.latest_viewable_resource(user: user2)).to eql(@identifier.latest_resource)
+          end
+
+          it 'returns the latest non-published for an admin from the same tenant as the owner' do
+            user2 = User.new(role: 'admin', tenant_id: 'localhost')
+            @res1.update(tenant_id: 'localhost')
+            @res2.update(tenant_id: 'localhost')
+            @res3.update(tenant_id: 'localhost')
+            expect(@identifier.latest_viewable_resource(user: user2)).to eql(@identifier.latest_resource)
+          end
+
+          it 'returns the latest published for an admin from a different tenant as the owner' do
+            user2 = User.new(role: 'admin', tenant_id: 'clownschool')
+            @res1.update(tenant_id: 'localhost')
+            @res2.update(tenant_id: 'localhost')
+            @res3.update(tenant_id: 'localhost')
+            expect(@identifier.latest_viewable_resource(user: user2)).to eql(@identifier.latest_resource_with_public_metadata)
+          end
+        end
       end
 
       describe '#update_search_words!' do
