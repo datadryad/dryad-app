@@ -22,7 +22,7 @@ module StashApi
 
     # get /datasets/<id>
     def show
-      ds = Dataset.new(identifier: @stash_identifier.to_s)
+      ds = Dataset.new(identifier: @stash_identifier.to_s, user: @user)
       respond_to do |format|
         format.json { render json: ds.metadata }
         res = @stash_identifier.latest_viewable_resource(user: @user)
