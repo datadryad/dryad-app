@@ -51,7 +51,7 @@ module StashApi
       # and we are ready to support whatever we decide.
 
       # if a publicationISSN is specified, we want to make sure that we're only working those specified.
-      unless params.key?('publicationISSN').blank?
+      if params.key?('publicationISSN')
         # add these conditions to narrow to publicationISSN
         ds_query = ds_query
           .joins('INNER JOIN stash_engine_internal_data ON stash_engine_identifiers.id = stash_engine_internal_data.identifier_id')
@@ -59,7 +59,7 @@ module StashApi
       end
 
       # now, if a curationStatus is specified, narrow down the previous result more.
-      unless params.key?('curationStatus').blank?
+      if params.key?('curationStatus')
         ds_query = ds_query.with_visibility(states: params['curationStatus']) # this finds identifiers with a version with this state, acceptable?
       end
 
