@@ -3,6 +3,7 @@ require 'uri'
 require_relative 'helpers'
 require 'fixtures/stash_api/metadata'
 require 'fixtures/stash_api/curation_metadata'
+require 'cgi'
 
 # see https://relishapp.com/rspec/rspec-rails/v/3-8/docs/request-specs/request-spec
 # rubocop:disable Metrics/BlockLength, Metrics/ModuleLength
@@ -124,42 +125,42 @@ module StashApi
                       create(:resource, user_id: @user3.id, tenant_id: @user3.tenant_id, identifier_id: @identifiers[6].id),
                       create(:resource, user_id: @user3.id, tenant_id: @user3.tenant_id, identifier_id: @identifiers[7].id)]
 
-        @curation_activities = [[create(:curation_activity_no_callbacks, resource: @resources[0], status: 'in_progress'),
-                                 create(:curation_activity_no_callbacks, resource: @resources[0], status: 'curation'),
-                                 create(:curation_activity_no_callbacks, resource: @resources[0], status: 'published')]]
+        @curation_activities = [[create(:curation_activity, resource: @resources[0], status: 'in_progress'),
+                                 create(:curation_activity, resource: @resources[0], status: 'curation'),
+                                 create(:curation_activity, resource: @resources[0], status: 'published')]]
 
-        @curation_activities << [create(:curation_activity_no_callbacks, resource: @resources[1], status: 'in_progress'),
-                                 create(:curation_activity_no_callbacks, resource: @resources[1], status: 'curation'),
-                                 create(:curation_activity_no_callbacks, resource: @resources[1], status: 'embargoed')]
+        @curation_activities << [create(:curation_activity, resource: @resources[1], status: 'in_progress'),
+                                 create(:curation_activity, resource: @resources[1], status: 'curation'),
+                                 create(:curation_activity, resource: @resources[1], status: 'embargoed')]
 
-        @curation_activities << [create(:curation_activity_no_callbacks, resource: @resources[2], status: 'in_progress'),
-                                 create(:curation_activity_no_callbacks, resource: @resources[2], status: 'curation')]
+        @curation_activities << [create(:curation_activity, resource: @resources[2], status: 'in_progress'),
+                                 create(:curation_activity, resource: @resources[2], status: 'curation')]
 
-        @curation_activities << [create(:curation_activity_no_callbacks, resource: @resources[3], status: 'in_progress'),
-                                 create(:curation_activity_no_callbacks, resource: @resources[3], status: 'curation'),
-                                 create(:curation_activity_no_callbacks, resource: @resources[3], status: 'action_required')]
+        @curation_activities << [create(:curation_activity, resource: @resources[3], status: 'in_progress'),
+                                 create(:curation_activity, resource: @resources[3], status: 'curation'),
+                                 create(:curation_activity, resource: @resources[3], status: 'action_required')]
 
-        @curation_activities << [create(:curation_activity_no_callbacks, resource: @resources[4], status: 'in_progress'),
-                                 create(:curation_activity_no_callbacks, resource: @resources[4], status: 'curation'),
-                                 create(:curation_activity_no_callbacks, resource: @resources[4], status: 'published')]
+        @curation_activities << [create(:curation_activity, resource: @resources[4], status: 'in_progress'),
+                                 create(:curation_activity, resource: @resources[4], status: 'curation'),
+                                 create(:curation_activity, resource: @resources[4], status: 'published')]
 
-        @curation_activities << [create(:curation_activity_no_callbacks, resource: @resources[5], status: 'in_progress'),
-                                 create(:curation_activity_no_callbacks, resource: @resources[5], status: 'curation'),
-                                 create(:curation_activity_no_callbacks, resource: @resources[5], status: 'embargoed')]
+        @curation_activities << [create(:curation_activity, resource: @resources[5], status: 'in_progress'),
+                                 create(:curation_activity, resource: @resources[5], status: 'curation'),
+                                 create(:curation_activity, resource: @resources[5], status: 'embargoed')]
 
-        @curation_activities << [create(:curation_activity_no_callbacks, resource: @resources[6], status: 'in_progress'),
-                                 create(:curation_activity_no_callbacks, resource: @resources[6], status: 'curation'),
-                                 create(:curation_activity_no_callbacks, resource: @resources[6], status: 'withdrawn')]
+        @curation_activities << [create(:curation_activity, resource: @resources[6], status: 'in_progress'),
+                                 create(:curation_activity, resource: @resources[6], status: 'curation'),
+                                 create(:curation_activity, resource: @resources[6], status: 'withdrawn')]
 
-        @curation_activities << [create(:curation_activity_no_callbacks, resource: @resources[7], status: 'in_progress')]
+        @curation_activities << [create(:curation_activity, resource: @resources[7], status: 'in_progress')]
 
-        @curation_activities << [create(:curation_activity_no_callbacks, resource: @resources[8], status: 'in_progress'),
-                                 create(:curation_activity_no_callbacks, resource: @resources[8], status: 'curation'),
-                                 create(:curation_activity_no_callbacks, resource: @resources[8], status: 'published')]
+        @curation_activities << [create(:curation_activity, resource: @resources[8], status: 'in_progress'),
+                                 create(:curation_activity, resource: @resources[8], status: 'curation'),
+                                 create(:curation_activity, resource: @resources[8], status: 'published')]
 
-        @curation_activities << [create(:curation_activity_no_callbacks, resource: @resources[9], status: 'in_progress'),
-                                 create(:curation_activity_no_callbacks, resource: @resources[9], status: 'curation'),
-                                 create(:curation_activity_no_callbacks, resource: @resources[9], status: 'embargoed')]
+        @curation_activities << [create(:curation_activity, resource: @resources[9], status: 'in_progress'),
+                                 create(:curation_activity, resource: @resources[9], status: 'curation'),
+                                 create(:curation_activity, resource: @resources[9], status: 'embargoed')]
 
         # 5 public datasets
         #
@@ -206,7 +207,7 @@ module StashApi
           # make identifier[0] have a second version that isn't publicly viewable yet
           @curation_activities[1][2].destroy
           # versions not getting set correctly for these two resources for some reason
-          @resources[1].stash_version.update(version: 1)
+          @resources[0].stash_version.update(version: 1)
           @resources[1].stash_version.update(version: 2)
         end
 
@@ -256,6 +257,60 @@ module StashApi
         end
 
       end
+    end
+
+    describe '#show' do
+
+      before(:each) do
+        mock_ror!
+        neuter_curation_callbacks!
+
+        @tenant_ids = StashEngine::Tenant.all.map(&:tenant_id)
+
+        # I think @user is created for use with doorkeeper already
+        @user2 = create(:user, tenant_id: @tenant_ids.first, role: 'user')
+
+        @identifier = create(:identifier)
+
+        @resources = [create(:resource, user_id: @user2.id, tenant_id: @user.tenant_id, identifier_id: @identifier.id),
+                      create(:resource, user_id: @user2.id, tenant_id: @user.tenant_id, identifier_id: @identifier.id)]
+
+        @curation_activities = [[create(:curation_activity, resource: @resources[0], status: 'in_progress'),
+                                 create(:curation_activity, resource: @resources[0], status: 'curation'),
+                                 create(:curation_activity, resource: @resources[0], status: 'published')]]
+
+        @curation_activities << [create(:curation_activity, resource: @resources[1], status: 'in_progress'),
+                                 create(:curation_activity, resource: @resources[1], status: 'curation')]
+
+        # set versions correctly seems not correctly working unless created another way.
+        @resources[0].stash_version.update(version: 1)
+        @resources[1].stash_version.update(version: 2)
+      end
+
+      it 'shows a public record for a created indentifier/resource' do
+        get "/api/datasets/#{CGI.escape(@identifier.to_s)}", {}, default_json_headers # not logged in
+        hsh = response_body_hash
+        expect(hsh['versionNumber']).to eq(1)
+        expect(hsh['title']).to eq(@resources[0].title)
+      end
+
+      it 'shows the private record for superuser' do
+        get "/api/datasets/#{CGI.escape(@identifier.to_s)}", {}, default_authenticated_headers
+        hsh = response_body_hash
+        expect(hsh['versionNumber']).to eq(2)
+        expect(hsh['title']).to eq(@resources[1].title)
+      end
+
+      it 'shows the private record for the owner' do
+        @doorkeeper_application2 = create(:doorkeeper_application, redirect_uri: 'urn:ietf:wg:oauth:2.0:oob',
+                                                                   owner_id: @user2.id, owner_type: 'StashEngine::User')
+        access_token = get_access_token(doorkeeper_application: @doorkeeper_application2)
+        get "/api/datasets/#{CGI.escape(@identifier.to_s)}", {}, default_json_headers.merge('Authorization' => "Bearer #{access_token}")
+        hsh = response_body_hash
+        expect(hsh['versionNumber']).to eq(2)
+        expect(hsh['title']).to eq(@resources[1].title)
+      end
+
     end
   end
 end

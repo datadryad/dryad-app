@@ -7,11 +7,15 @@ module Helpers
     config.include Helpers
   end
 
-  def setup_access_token(doorkeeper_application:)
+  def get_access_token(doorkeeper_application:)
     post '/oauth/token',
          { grant_type: 'client_credentials', client_id: doorkeeper_application.uid, client_secret: doorkeeper_application.secret },
          default_json_headers.merge('Content-type' => 'application/x-www-form-urlencoded;charset=UTF-8')
-    @access_token = response_body_hash[:access_token]
+    response_body_hash[:access_token]
+  end
+
+  def setup_access_token(doorkeeper_application:)
+    @access_token = get_access_token(doorkeeper_application: doorkeeper_application)
   end
 
   def response_body_hash
