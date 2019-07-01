@@ -151,13 +151,13 @@ module StashApi
 
     def do_patch
       content_type = request.headers['content-type']
-      return unless request.method == 'PATCH' && content_type && content_type.start_with?('application/json-patch+json')
+      return unless request.method == 'PATCH' && content_type.present? && content_type.start_with?('application/json-patch+json')
       check_patch_prerequisites { yield }
       check_dataset_completions { yield }
       pre_submission_updates
       StashEngine.repository.submit(resource_id: @resource.id)
       # render something
-      ds = Dataset.new(identifier: @stash_identifier.to_s)
+      ds = Dataset.new(identifier: @stash_identifier.to_s, user: @user)
       render json: ds.metadata, status: 202
       yield
     end
