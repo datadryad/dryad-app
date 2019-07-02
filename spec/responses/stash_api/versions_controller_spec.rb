@@ -61,10 +61,7 @@ module StashApi
           expect(my_versions[i]['versionNumber']).to eq(@resources[i].stash_version.version)
         end
       end
-
-
     end
-
   end
 end
 # rubocop:enable Metrics/BlockLength, Metrics/ModuleLength
