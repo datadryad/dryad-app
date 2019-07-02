@@ -35,7 +35,7 @@ module StashApi
       it 'creates a new dataset from minimal metadata (title, author info, abstract)' do
         # the following works for post with headers
         response_code = post '/api/datasets', @meta.json, default_authenticated_headers
-        output = JSON.parse(response.body).with_indifferent_access
+        output = response_body_hash
         expect(response_code).to eq(201)
         expect(%r{doi:10.5072/dryad\..{8}}).to match(output[:identifier])
         hsh = @meta.hash
@@ -49,7 +49,7 @@ module StashApi
       it 'creates a new basic dataset with a placename' do
         @meta.add_place
         response_code = post '/api/datasets', @meta.json, default_authenticated_headers
-        output = JSON.parse(response.body).with_indifferent_access
+        output = response_body_hash
         expect(response_code).to eq(201)
 
         # check it against the database
@@ -63,7 +63,7 @@ module StashApi
 
       it 'creates a new curation activity and sets the publication date' do
         response_code = post '/api/datasets', @meta.json, default_authenticated_headers
-        output = JSON.parse(response.body).with_indifferent_access
+        output = response_body_hash
         expect(response_code).to eq(201)
         @stash_id = StashEngine::Identifier.find(output[:id])
         @resource = @stash_id.resources.last
@@ -81,7 +81,7 @@ module StashApi
 
       it 'does not update the publication date if one is already set' do
         response_code = post '/api/datasets', @meta.json, default_authenticated_headers
-        output = JSON.parse(response.body).with_indifferent_access
+        output = response_body_hash
         expect(response_code).to eq(201)
         @stash_id = StashEngine::Identifier.find(output[:id])
         @resource = @stash_id.resources.last
@@ -170,13 +170,13 @@ module StashApi
       describe 'user and role permitted scope' do
         it 'gets a list of public datasets (public status is known by curation status)' do
           get '/api/datasets', {}, default_json_headers
-          output = JSON.parse(response.body).with_indifferent_access
+          output = response_body_hash
           expect(output[:count]).to eq(5)
         end
 
         it 'gets a list of all datasets because superusers are omniscient' do
           get '/api/datasets', {}, default_authenticated_headers
-          output = JSON.parse(response.body).with_indifferent_access
+          output = response_body_hash
           expect(output[:count]).to eq(@identifiers.count)
         end
 
@@ -185,7 +185,7 @@ module StashApi
                                                                     owner_id: @user2.id, owner_type: 'StashEngine::User')
           setup_access_token(doorkeeper_application: @doorkeeper_application)
           get '/api/datasets', {}, default_authenticated_headers
-          output = JSON.parse(response.body).with_indifferent_access
+          output = response_body_hash
           expect(output[:count]).to eq(6)
           dois = output['_embedded']['stash:datasets'].map { |ds| ds['identifier'] }
           expect(dois).to include(@identifiers[1].to_s) # this would be private otherwise based on curation status
@@ -196,7 +196,7 @@ module StashApi
                                                                     owner_id: @user1.id, owner_type: 'StashEngine::User')
           setup_access_token(doorkeeper_application: @doorkeeper_application)
           get '/api/datasets', {}, default_authenticated_headers
-          output = JSON.parse(response.body).with_indifferent_access
+          output = response_body_hash
           expect(output[:count]).to eq(6)
           dois = output['_embedded']['stash:datasets'].map { |ds| ds['identifier'] }
           expect(dois).to include(@identifiers[1].to_s) # this would be private otherwise based on curation status
@@ -244,7 +244,7 @@ module StashApi
       describe 'filtering and reduced scoping of list for Dryad special filters' do
         it 'reduces scope to a curation status' do
           get '/api/datasets', { 'curationStatus' => 'curation' }, default_authenticated_headers
-          output = JSON.parse(response.body).with_indifferent_access
+          output = response_body_hash
           expect(output[:count]).to eq(1)
           expect(output['_embedded']['stash:datasets'].first['identifier']).to eq(@identifiers[1].to_s)
         end
@@ -252,7 +252,7 @@ module StashApi
         it 'reduces scope to a publisher ISSN' do
           internal_datum = create(:internal_datum, identifier_id: @identifiers[5].id, data_type: 'publicationISSN')
           get '/api/datasets', { 'publicationISSN' => internal_datum.value }, default_authenticated_headers
-          output = JSON.parse(response.body).with_indifferent_access
+          output = response_body_hash
           expect(output[:count]).to eq(1)
           expect(output['_embedded']['stash:datasets'].first['identifier']).to eq(@identifiers[5].to_s)
         end
