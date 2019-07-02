@@ -177,6 +177,18 @@ module StashEngine
       joins(JOIN_FOR_LATEST_CURATION).where(str, *arr)
     end
 
+    scope :visible_to_user, ->(user:) do
+      if user.nil?
+        with_visibility(states: %w[published embargoed])
+      elsif user.superuser?
+        all
+      elsif user.role == 'admin'
+        with_visibility(states: %w[published embargoed], tenant_id: user.tenant_id)
+      else
+        with_visibility(states: %w[published embargoed], user_id: user.id)
+      end
+    end
+
     # gets the latest version per dataset and includes items that haven't been assigned an identifer yet but are initially in progress
     # NOTE.  We've now changed it so everything gets an identifier upon creation, so we may be able to simplify or get rid of this.
     scope :latest_per_dataset, (-> do
