@@ -14,6 +14,7 @@ module StashApi
     include Mocks::RSolr
     include Mocks::Stripe
     include Mocks::CurationActivity
+    include Mocks::Repository
 
     before(:all) do
       @user = create(:user, role: 'superuser')
@@ -101,8 +102,8 @@ module StashApi
       end
     end
 
+    # list of datasets
     describe '#index' do
-
       before(:each) do
         mock_ror!
         neuter_curation_callbacks!
@@ -259,8 +260,8 @@ module StashApi
       end
     end
 
+    # view single dataset
     describe '#show' do
-
       before(:each) do
         mock_ror!
         neuter_curation_callbacks!
@@ -312,6 +313,128 @@ module StashApi
       end
 
     end
+
+    # update, either patch to submit or update metadata
+    describe '#update' do
+      before(:each) do
+        # create a basic dataset to do updates to
+        neuter_curation_callbacks!
+        mock_ror!
+        # mock_repository!, currently this doesn't work right and submissions got put into threadpool background process anyway
+        @meta = Fixtures::StashApi::Metadata.new
+        @meta.make_minimal
+        response_code = post '/api/datasets', @meta.json, default_authenticated_headers
+        @ds_info = response_body_hash
+        expect(response_code).to eq(201)
+        @patch_body = [{ "op": 'replace', "path": '/versionStatus', "value": 'submitted' }].to_json
+      end
+
+      describe 'PATCH to submit dataset' do
+
+        it 'submits dataset when the PATCH operation for versionStatus=submitted (superuser & owner)' do
+          response_code = patch "/api/datasets/#{CGI.escape(@ds_info['identifier'])}", @patch_body,
+                                default_authenticated_headers.merge('Content-Type' => 'application/json-patch+json')
+          expect(response_code).to eq(202)
+          my_info = response_body_hash
+          expect(my_info['versionStatus']).to eq('processing')
+          expect(@ds_info['abstract']).to eq(my_info['abstract'])
+        end
+
+        it "doesn't submit dataset when the PATCH is not allowed for user (not owner or no permission)" do
+          @tenant_ids = StashEngine::Tenant.all.map(&:tenant_id)
+          @user2 = create(:user, tenant_id: @tenant_ids.first, role: 'user')
+          @doorkeeper_application2 = create(:doorkeeper_application, redirect_uri: 'urn:ietf:wg:oauth:2.0:oob',
+                                                                     owner_id: @user2.id, owner_type: 'StashEngine::User')
+          access_token = get_access_token(doorkeeper_application: @doorkeeper_application2)
+          response_code = patch "/api/datasets/#{CGI.escape(@ds_info['identifier'])}", @patch_body,
+                                default_json_headers.merge(
+                                  'Content-Type' =>  'application/json-patch+json', 'Authorization' => "Bearer #{access_token}"
+                                )
+          expect(response_code).to eq(401)
+          expect(response_body_hash['error']).to eq('unauthorized')
+        end
+
+        it "doesn't submit when user isn't logged in" do
+          response_code = patch "/api/datasets/#{CGI.escape(@ds_info['identifier'])}", @patch_body,
+                                default_json_headers.merge('Content-Type' => 'application/json-patch+json')
+          expect(response_code).to eq(401)
+        end
+
+        it 'allows submission if done by owner of the dataset (resource)' do
+          @tenant_ids = StashEngine::Tenant.all.map(&:tenant_id)
+          @user2 = create(:user, tenant_id: @tenant_ids.first, role: 'user')
+          @doorkeeper_application2 = create(:doorkeeper_application, redirect_uri: 'urn:ietf:wg:oauth:2.0:oob',
+                                                                     owner_id: @user2.id, owner_type: 'StashEngine::User')
+          access_token = get_access_token(doorkeeper_application: @doorkeeper_application2)
+
+          # HACK: in update to make this regular user the owner/editor of this item
+          @my_id = StashEngine::Identifier.find(@ds_info['id'])
+          @my_id.in_progress_resource.update(current_editor_id: @user2.id, user_id: @user2.id)
+
+          response_code = patch "/api/datasets/#{CGI.escape(@ds_info['identifier'])}", @patch_body,
+                                default_json_headers.merge(
+                                  'Content-Type' =>  'application/json-patch+json', 'Authorization' => "Bearer #{access_token}"
+                                )
+
+          expect(response_code).to eq(202)
+          expect(response_body_hash['abstract']).to eq(@ds_info['abstract'])
+        end
+      end
+
+      describe 'PUT to replace metadata for dataset' do
+
+        it 'allows replacing of the metadata for a record' do
+          keys_to_extract = %w[title authors abstract]
+          modified_metadata = @ds_info.select { |key, _| keys_to_extract.include?(key) }
+          modified_metadata['title'] = 'Crows wave goodbye'
+          modified_metadata['authors'].first['firstName'] = 'Helen'
+          modified_metadata['abstract'] = 'The implications of ambimorphic archetypes have been far-reaching and pervasive.'
+          response_code = put "/api/datasets/#{CGI.escape(@ds_info['identifier'])}", modified_metadata.to_json,
+                              default_authenticated_headers
+          expect(response_code).to eq(200)
+          expect(@ds_info['identifier']).to eq(response_body_hash['identifier'])
+          expect(response_body_hash['title']).to eq(modified_metadata['title'])
+          expect(response_body_hash['authors']).to eq(modified_metadata['authors'])
+          expect(response_body_hash['abstract']).to eq(modified_metadata['abstract'])
+        end
+
+        it "doesn't allow non-auth users to update" do
+          keys_to_extract = %w[title authors abstract]
+          modified_metadata = @ds_info.select { |key, _| keys_to_extract.include?(key) }
+          modified_metadata['title'] = 'Froozlotter'
+          response_code = put "/api/datasets/#{CGI.escape(@ds_info['identifier'])}", modified_metadata.to_json,
+                              default_json_headers
+          expect(response_code).to eq(401)
+        end
+
+        # I'm not going to test every single auth possibility for every action since they use common methods, but
+        # just doing a sanity check that the endpoints work and return generally expected items.
+      end
+
+      describe 'PUT to upsert a new dataset with a desired DOI' do
+        it 'inserts a new dataset with the DOI I love' do
+          @meta2 = Fixtures::StashApi::Metadata.new
+          @meta2.make_minimal
+          desired_doi = 'doi:10.3072/sasquatch.3711'
+          response_code = put "/api/datasets/#{CGI.escape(desired_doi)}", @meta2.json, default_authenticated_headers
+          expect(response_code).to eq(200)
+          expect(response_body_hash['identifier']).to eq(desired_doi)
+          expect(response_body_hash['title']).to eq(@meta2.hash['title'])
+          expect(response_body_hash['abstract']).to eq(@meta2.hash['abstract'])
+        end
+
+        it 'requires a logged in user for upserting new' do
+          @meta2 = Fixtures::StashApi::Metadata.new
+          @meta2.make_minimal
+          desired_doi = 'doi:10.3072/sasquatch.3711'
+          response_code = put "/api/datasets/#{CGI.escape(desired_doi)}", @meta2.json, default_json_headers
+          expect(response_code).to eq(401)
+        end
+
+        # these would also use the same kinds of authorizations as the other variations on PUT/PATCH.
+      end
+    end
+
   end
 end
 # rubocop:enable Metrics/BlockLength, Metrics/ModuleLength
