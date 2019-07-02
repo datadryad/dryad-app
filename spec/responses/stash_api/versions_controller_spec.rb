@@ -61,6 +61,42 @@ module StashApi
           expect(my_versions[i]['versionNumber']).to eq(@resources[i].stash_version.version)
         end
       end
+
+      it 'shows all versions to the owner' do
+        @doorkeeper_application2 = create(:doorkeeper_application, redirect_uri: 'urn:ietf:wg:oauth:2.0:oob',
+                                          owner_id: @user1.id, owner_type: 'StashEngine::User')
+        access_token = get_access_token(doorkeeper_application: @doorkeeper_application2)
+        response_code = get "/api/datasets/#{CGI.escape(@identifier.to_s)}/versions", {}, default_json_headers.merge(
+            'Content-Type' =>  'application/json-patch+json', 'Authorization' => "Bearer #{access_token}"
+          )
+
+        expect(response_code).to eq(200)
+        expect(response_body_hash['total']).to eq(2)
+        my_versions = response_body_hash['_embedded']['stash:versions']
+
+        0.upto(1) do |i|
+          expect(my_versions[i]['title']).to eq(@resources[i].title)
+          expect(my_versions[i]['versionNumber']).to eq(@resources[i].stash_version.version)
+        end
+      end
+
+      it 'shows only 1st version to a random user' do
+        @user2 = create(:user, tenant_id: @tenant_ids.first, role: 'user')
+        @doorkeeper_application2 = create(:doorkeeper_application, redirect_uri: 'urn:ietf:wg:oauth:2.0:oob',
+                                          owner_id: @user2.id, owner_type: 'StashEngine::User')
+        access_token = get_access_token(doorkeeper_application: @doorkeeper_application2)
+        response_code = get "/api/datasets/#{CGI.escape(@identifier.to_s)}/versions", {}, default_json_headers.merge(
+            'Content-Type' =>  'application/json-patch+json', 'Authorization' => "Bearer #{access_token}"
+        )
+
+        expect(response_code).to eq(200)
+        expect(response_body_hash['total']).to eq(1)
+        my_versions = response_body_hash['_embedded']['stash:versions']
+
+        expect(my_versions.length).to eq(1)
+        expect(my_versions[0]['title']).to eq(@resources[0].title)
+        expect(my_versions[0]['versionNumber']).to eq(@resources[0].stash_version.version)
+      end
     end
   end
 end
