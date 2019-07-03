@@ -2,6 +2,7 @@ require 'spec_helper'
 require 'ostruct'
 require 'byebug'
 require 'stash/import/crossref'
+require 'serrano'
 
 module Stash
   module Import
@@ -32,6 +33,104 @@ module Stash
       FUTURE_PUBLICATION_DATE = [2035, 0o1, 0o1].freeze
       PUBLISHER = 'Ficticious Journal'.freeze
 
+      # Example of a Crossref API journal response: view-source:http://api.crossref.org/journals?query=Journal%20of%20The%20Royal%20Society%20Interface
+      CROSSREF_JOURNAL_RESPONSE = {
+        'status' => 'ok',
+        'message-type' => 'journal-list',
+        'message-version' => '1.0.0',
+        'message' => {
+          'items-per-page' => 20,
+          'query' => {
+            'start-index' => 0,
+            'search-terms' => 'Journal of The Royal Society Interface'
+          },
+          'total-results' => 1,
+          'items' => [
+            {
+              'last-status-check-time' => 1553443941216,
+              'counts' => {
+                'total-dois' => 3163,
+                'current-dois' => 630,
+                'backfile-dois' => 2533
+              },
+              'breakdowns' => {
+                'dois-by-issued-year' => [[2014,378]]
+              },
+              'publisher' => 'The Royal Society',
+              'coverage' => {
+                'affiliations-current' => 0.15714286267757416
+              },
+              'title' => 'Journal of The Royal Society Interface',
+              'subjects' => [{ 'name' => 'Biochemistry', 'ASJC' => 1303 }],
+              'coverage-type' => {
+                'all' => { 'last-status-check-time' => 1553443938923 },
+                'backfile' => { 'last-status-check-time' => 1553443938136 },
+                'current' => { 'last-status-check-time' => 1553443937362 },
+              },
+              'flags' => { 'deposits-abstracts-current' => false },
+              'ISSN' => ['1742-5662', '1742-5689'],
+              'issn-type' => [
+                { 'value' => '1742-5662', 'type' => 'electronic '},
+                { 'value' => '1742-5689', 'type' => 'print' }
+              ]
+            }
+          ]
+        }
+      }.freeze
+
+      # Example of a Crossref API response for a work: view-source:http://api.crossref.org/works/10.1101/139345
+      CROSSREF_WORK_RESPONSE = {
+        'status' => 'ok',
+        'message-type' => 'journal-list',
+        'message-version' => '1.0.0',
+        'message' => {
+          'total-results' => 1,
+          'institution' => {
+            'name' => 'bioRxiv',
+            'place' => ['-'],
+            'acronym' => ['-']
+          },
+          'indexed' => { 'date-parts' => [[2019, 2, 18]], 'date-time' => '2019-02-18T00:54:11Z', 'timestamp' => 1550451251128 },
+          'posted' => { 'date-parts' => [[2017, 5, 17]] },
+          'group-title' => 'Physiology',
+          'reference-count' => 0,
+          'publisher' => 'Cold Spring Harbor Laboratory',
+          'content-domain' => { 'domain' =>[], 'crossmark-restriction' => false },
+          'short-container-title' => [],
+          'accepted' => { 'date-parts' => [[2017, 5, 17]] },
+          'abstract' => 'The aim of the present study was to examine if genetic factors associated with pain perception ...',
+          'DOI' => '10.1101\/139345',
+          'type' => 'posted-content',
+          'created' => { 'date-parts' => [[2017, 5, 18]], 'date-time' => '2017-05-18T05:10:13Z', 'timestamp' => 1495084213000 },
+          'source' => 'Crossref',
+          'is-referenced-by-count' => 0,
+          'title' => ['The Mu-Opioid Receptor Gene OPRM1 As A Genetic Marker For Placebo Analgesia'],
+          'prefix' => '10.1101',
+          'author' => [
+            { 'ORCID' => 'http:\/\/orcid.org\/0000-0002-9299-7260', 'authenticated-orcid' => false, 'given' => 'Per M.', 'family' => 'Aslaksen', 'sequence' => 'first', 'affiliation' => [] },
+            { 'given' => 'June Thorvaldsen', 'family' => 'Forsberg','sequence' => 'additional', 'affiliation' => [] }
+          ],
+          'member' => '246',
+          'container-title' => [],
+          'original-title' => [],
+          'link' => [{
+            'URL' => 'https:\/\/syndication.highwire.org\/content\/doi\/10.1101\/139345',
+            'content-type' => 'unspecified',
+            'content-version' => 'vor',
+            'intended-application' => 'similarity-checking'
+          }],
+          'deposited' => { 'date-parts' => [[2017, 5, 18]], 'date-time' => '2017-05-18T05:10:33Z', 'timestamp' => 1495084233000 },
+          'score' => 1.0,
+          'subtitle' => [],
+          'short-title' => [],
+          'issued' => { 'date-parts' => [[2017, 5, 17]] },
+          'references-count' => 0,
+          'URL' => 'http:\/\/dx.doi.org\/10.1101\/139345',
+          'relation' => {},
+          'subtype' => 'preprint'
+        }
+      }.freeze
+
       before(:each) do
         # I don't see any factories here, so just creating a resource manually
         @user = StashEngine::User.create(
@@ -44,6 +143,9 @@ module Stash
         @resource = StashEngine::Resource.create(user_id: @user.id, tenant_id: 'ucop', identifier_id: @identifier.id)
         # allow_any_instance_of(Stash::Organization::Ror).to receive(:find_first_by_ror_name).and_return(id: 'abcd', name: 'Hotel California')
         allow(StashDatacite::Affiliation).to receive(:find_by_ror_long_name).and_return(nil)
+
+        allow(Serrano).to receive(:works).and_return([CROSSREF_WORK_RESPONSE])
+        allow(Serrano).to receive(:journals).and_return(CROSSREF_JOURNAL_RESPONSE)
       end
 
       describe '#populate_title' do
@@ -212,17 +314,10 @@ module Stash
           @cr = Crossref.new(resource: @resource, crossref_json: { 'published-online' => { 'date-parts' => FUTURE_PUBLICATION_DATE } })
         end
 
-        it 'sets the publication_date and publishes adds a `published` curation state when the date has passed' do
+        it 'sets the publication_date' do
           cr = Crossref.new(resource: @resource, crossref_json: { 'published-online' => { 'date-parts' => PAST_PUBLICATION_DATE } })
           cr.send(:populate_publication_date)
           expect(@resource.publication_date).to eql(cr.send(:date_parts_to_date, PAST_PUBLICATION_DATE))
-          expect(@resource.current_curation_status).to eql('published')
-        end
-
-        it 'sets the publication_date and does NOT add a `published` curation state when the date is in the future' do
-          @cr.send(:populate_publication_date)
-          expect(@resource.publication_date).to eql(@cr.send(:date_parts_to_date, FUTURE_PUBLICATION_DATE))
-          expect(@resource.current_curation_status).to eql('in_progress')
         end
 
         it 'ignores blank published-online dates' do
@@ -248,32 +343,6 @@ module Stash
           resp = @cr.send(:populate_publication_name)
           expect(resp).to eql(nil)
           expect(@resource.identifier.internal_data.select { |id| id.data_type == 'publicationName' }.empty?).to eql(true)
-        end
-      end
-
-      describe '#populate_published_status' do
-        before(:each) do
-          allow_any_instance_of(StashEngine::Resource).to receive(:submit_to_solr).and_return(true)
-          @cr = Crossref.new(resource: @resource, crossref_json: { 'published-online' => { 'date-parts' => PAST_PUBLICATION_DATE } })
-        end
-
-        it 'sets the curation state to `published` when the publication date is in the past' do
-          @cr.send(:populate_published_status)
-          expect(@resource.current_curation_status).to eql('published')
-          expect(@resource.current_curation_activity.note).to eql('Crossref reported that the related journal has been published')
-        end
-
-        it 'ignores resources that are already published' do
-          StashEngine::CurationActivity.create(resource_id: @resource.id, user_id: @user.id, status: 'published', note: 'foo-bar')
-          @cr.send(:populate_published_status)
-          expect(@resource.current_curation_status).to eql('published')
-          expect(@resource.current_curation_activity.note).to eql('foo-bar')
-        end
-
-        it 'ignores blank DOIs' do
-          cr = Crossref.new(resource: @resource, crossref_json: { 'published-online' => nil })
-          cr.send(:populate_published_status)
-          expect(@resource.current_curation_status).to eql('in_progress')
         end
       end
 
@@ -333,8 +402,217 @@ module Stash
           expect(@resource.identifier.internal_data.select { |id| id.data_type == 'publicationName' }.first.value).to eql(PUBLISHER)
           expect(@resource.identifier.internal_data.select { |id| id.data_type == 'publicationDOI' }.first.value).to eql(DOI)
           expect(@resource.publication_date).to eql(@cr.send(:date_parts_to_date, PAST_PUBLICATION_DATE))
-          expect(@resource.current_curation_status).to eql('published')
-          expect(@resource.current_curation_activity.note).to eql('Crossref reported that the related journal has been published')
+        end
+      end
+
+      describe '#query_by_doi' do
+        it 'returns nil if the resource is nil' do
+          expect(Crossref.send(:query_by_doi, resource: nil, doi: '10.123/12345')).to eql(nil)
+        end
+
+        it 'returns nil if the DOI is nil' do
+          expect(Crossref.send(:query_by_doi, resource: @resource, doi: nil)).to eql(nil)
+        end
+
+        it 'returns an initialized Stash::Import::Crossref' do
+          expect(Crossref.send(:query_by_doi, resource: @resource, doi: '10.123/12345').is_a?(Crossref)).to eql(true)
+        end
+      end
+
+      describe '#query_by_author_title' do
+        it 'returns nil if the resource is nil' do
+          expect(Crossref.send(:query_by_author_title, resource: nil)).to eql(nil)
+        end
+
+        it 'returns nil if the resource has no title' do
+          expect(Crossref.send(:query_by_author_title, resource: @resource)).to eql(nil)
+        end
+
+        it 'returns nil if Crossref did not find a suitable match' do
+          @resource.title = 'Testing again' # Mocked title is above
+          expect(Crossref.send(:query_by_author_title, resource: @resource)).to eql(nil)
+        end
+
+        it 'returns an initialized Stash::Import::Crossref' do
+          allow(Crossref).to receive(:valid_serrano_works_response).and_return(true)
+          @resource.title = 'Mu-Opioid Receptor Gene OPRM1 As A Genetic Marker'
+          allow(Crossref).to receive(:match_resource_with_crossref_record).and_return([0.5, { 'title' => @resource.title }])
+          expect(Crossref.send(:query_by_author_title, resource: @resource).is_a?(Crossref)).to eql(true)
+        end
+      end
+
+      describe 'Crossref query helper methods' do
+
+        before(:each) do
+          identifier = StashEngine::Identifier.create(identifier: 'ABCD')
+          identifier.internal_data << StashEngine::InternalDatum.new(data_type: 'publicationISSN', value: '123-456')
+          identifier.save
+          @resource = StashEngine::Resource.create(title: ' Testing  Again\\', identifier: identifier)
+          @resource.authors = [
+            StashEngine::Author.new(author_first_name: 'John', author_last_name: 'Doe', author_orcid: '12345'),
+            StashEngine::Author.new(author_first_name: 'Jane', author_last_name: 'Van-jones')
+          ]
+          @resource.save
+
+          @names = @resource.authors.map do |author|
+            { first: author.author_first_name&.downcase, last: author.author_last_name&.downcase }
+          end
+          @orcids = @resource.authors.map { |author| author.author_orcid&.downcase }
+        end
+
+        describe '#match_resource_with_crossref_record' do
+          before(:each) do
+            @resp = {
+              'items' => [
+                { 'title' => ['Testing Again'], 'score' => 34.78456 },
+                { 'title' => ['Weird Title'], 'score' => 2.231 }
+              ]
+            }
+          end
+
+          it 'returns nil if the resource is nil' do
+            expect(Crossref.send(:match_resource_with_crossref_record, resource: nil, response: @resp)).to eql(nil)
+          end
+
+          it 'returns nil if the response from Crossref was nil' do
+            expect(Crossref.send(:match_resource_with_crossref_record, resource: @resource, response: {})).to eql(nil)
+          end
+
+          it 'returns a the match with the highest score' do
+            @resource.title = 'weird title of a dataset'
+            match = Crossref.send(:match_resource_with_crossref_record, resource: @resource, response: @resp)
+            expect(match.last['title']).to eql(@resp['items'].last['title'])
+          end
+        end
+
+        describe '#crossref_item_scoring' do
+          it 'returns zero id the resource is nil' do
+            expect(Crossref.send(:crossref_item_scoring, nil, { 'title' => 'ABC' }, nil, nil)).to eql(0.0)
+          end
+
+          it 'returns zero id the resource has no title' do
+            @resource.title = nil
+            expect(Crossref.send(:crossref_item_scoring, @resource, {}, nil, nil)).to eql(0.0)
+          end
+
+          it 'returns zero id the Crossref response does not have a title' do
+            expect(Crossref.send(:crossref_item_scoring, @resource, {}, nil, nil)).to eql(0.0)
+          end
+
+          it 'returns a high score when the titles are close' do
+            item = { 'title' => ['Testing Item Scoring'] }
+            @resource.title = 'Data from: Testing Scoring'
+            expect(Crossref.send(:crossref_item_scoring, @resource, item, nil, nil).first >= 0.5).to eql(true)
+          end
+
+          it 'returns a low score when the titles are dissimilar' do
+            item = { 'title' => ['Testing Item Scoring'] }
+            @resource.title = 'A completely different scoring title'
+            expect(Crossref.send(:crossref_item_scoring, @resource, item, nil, nil).first < 0.5).to eql(true)
+          end
+
+          it 'sets the item[`score`] and item[`provenance_score`]' do
+            item = { 'title' => ['Testing Item Scoring'], 'score' => 12.3 }
+            @resource.title = 'A completely different scoring title'
+            item = Crossref.send(:crossref_item_scoring, @resource, item, nil, nil).last
+            expect(item['score'].present?).to eql(true)
+            expect(item['provenance_score'].present?).to eql(true)
+            expect(item['provenance_score']).to eql(12.3)
+          end
+        end
+
+        describe '#crossref_author_scoring' do
+          it 'returns zero if the resource has no authors' do
+            auth = { 'ORCID' => 'ABCD' }
+            expect(Crossref.send(:crossref_author_scoring, [], [], auth)).to eql(0.0)
+          end
+
+          it 'returns zero if there are no author matches' do
+            auth = { 'ORCID' => 'ABCD', 'given' => 'Tester', 'family' => 'Mc-testing' }
+            expect(Crossref.send(:crossref_author_scoring, @names, @orcids, auth)).to eql(0.0)
+          end
+
+          it 'returns .1 if we have one ORCID match' do
+            auth = { 'ORCID' => '12345' }
+            expect(Crossref.send(:crossref_author_scoring, @names, @orcids, auth)).to eql(0.1)
+          end
+
+          it 'returns .025 if all we can match is the last name' do
+            auth = { 'ORCID' => 'ABCD', 'given' => 'Tester', 'family' => 'Doe' }
+            expect(Crossref.send(:crossref_author_scoring, @names, @orcids, auth)).to eql(0.025)
+          end
+
+          it 'returns .05 if all we can match is the author first+last names' do
+            auth = { 'ORCID' => 'ABCD', 'given' => 'John', 'family' => 'Doe' }
+            expect(Crossref.send(:crossref_author_scoring, @names, @orcids, auth)).to eql(0.05)
+          end
+
+          it 'returns .15 if we can match the first+last names and the ORCID' do
+            auth = { 'ORCID' => '12345', 'given' => 'John', 'family' => 'Doe' }
+            expect(Crossref.send(:crossref_author_scoring, @names, @orcids, auth)).to eql(0.15)
+          end
+        end
+
+        describe '#valid_serrano_works_response' do
+          it 'returns false if the Crossref/Serrano response is nil' do
+            resp = nil
+            expect(Crossref.send(:valid_serrano_works_response, resp)).to eql(false)
+          end
+          it 'returns false if the Crossref/Serrano response is does not have a `message`' do
+            resp = { 'testing' => '' }
+            expect(Crossref.send(:valid_serrano_works_response, resp)).to eql(false)
+          end
+          it 'returns false if the Crossref/Serrano response does not have a `total-results' do
+            resp = { 'message' => { 'items' => [{ 'a' => 'b' }] } }
+            expect(Crossref.send(:valid_serrano_works_response, resp)).to eql(false)
+          end
+          it 'returns false if the Crossref/Serrano response has zero results' do
+            resp = { 'message' => { 'total-results' => 0, 'items' => [{ 'a' => 'b' }] } }
+            expect(Crossref.send(:valid_serrano_works_response, resp)).to eql(false)
+          end
+          it 'returns false if the Crossref/Serrano response does not have `items`' do
+            resp = { 'message' => { 'total-results' => 1 } }
+            expect(Crossref.send(:valid_serrano_works_response, resp)).to eql(false)
+          end
+          it 'returns false if the Crossref/Serrano response has a [`message`][`items`] that is empty' do
+            resp = { 'message' => { 'total-results' => 1, 'items' => [] } }
+            expect(Crossref.send(:valid_serrano_works_response, resp)).to eql(false)
+          end
+
+          it 'returns true if the Crossref/Serrano response has a [`message`][`items`].first' do
+            resp = { 'message' => { 'total-results' => 1, 'items' => [{ 'a' => 'b' }] } }
+            expect(Crossref.send(:valid_serrano_works_response, resp)).to eql(true)
+          end
+        end
+
+        describe '#title_author_query_params' do
+          it 'returns nil if the resource is nil' do
+            expect(Crossref.send(:title_author_query_params, nil)).to eql([nil, nil, nil])
+          end
+
+          it 'returns an array containing the [ISSN, TITLE, AUTHOR LAST NAMES]' do
+            issn, title_query, author_query = Crossref.send(:title_author_query_params, @resource)
+            expect(issn).to eql('123-456')
+            expect(title_query).to eql('Testing+Again%5C')
+            expect(author_query).to eql('Doe+Van%20jones')
+          end
+        end
+
+        describe '#get_journal_issn' do
+          it 'returns nil if the hash is empty' do
+            expect(Crossref.send(:get_journal_issn, nil)).to eql(nil)
+            expect(Crossref.send(:get_journal_issn, {})).to eql(nil)
+            expect(Crossref.send(:get_journal_issn, { 'container-title' => '' })).to eql(nil)
+          end
+
+          it 'returns nil if the response from Crossref is empty' do
+            allow(Serrano).to receive(:journals).and_return(nil)
+            expect(Crossref.send(:get_journal_issn, { 'container-title' => 'ABCD' })).to eql(nil)
+          end
+
+          it 'returns the ISSN' do
+            expect(Crossref.send(:get_journal_issn, { 'container-title' => 'ABCD' })).to eql(CROSSREF_JOURNAL_RESPONSE['message']['items'].first['ISSN'])
+          end
         end
       end
 
@@ -363,8 +641,6 @@ module Stash
           expect(resource.identifier.internal_data.select { |id| id.data_type == 'publicationName' }.first.value).to eql(@params[:publication_name])
           expect(resource.identifier.internal_data.select { |id| id.data_type == 'publicationDOI' }.first.value).to eql(@params[:publication_doi])
           expect(resource.publication_date).to eql(@params[:publication_date])
-          expect(resource.current_curation_status).to eql('published')
-          expect(resource.current_curation_activity.note).to eql('Crossref reported that the related journal has been published')
           expect(resource.authors.first.author_first_name).to eql(auths.first['given'])
           expect(resource.authors.first.author_last_name).to eql(auths.first['family'])
 

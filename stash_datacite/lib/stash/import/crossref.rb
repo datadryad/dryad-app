@@ -1,9 +1,16 @@
-require 'httparty'
+require 'amatch'
+
+require_relative '../../../app/models/stash_datacite/proposed_change'
 
 module Stash
   module Import
     # rubocop:disable Metrics/ClassLength
     class Crossref
+
+      include Amatch
+
+      CROSSREF_FIELD_LIST = %w[abstract author container-title DOI funder published-online
+                               published-print publisher score title type URL].freeze
 
       def initialize(resource:, crossref_json:)
         @resource = resource
@@ -12,25 +19,36 @@ module Stash
       end
 
       class << self
-        def query_by_issn(issn:)
-          return nil unless issn.present?
-
-          p HTTParty.get("https://api.crossref.org/journals/#{issn}").body
-
-          p Serrano.journals(query: issn)
-          # serrano_response_to_proposed_change(Serrano.journals(query: issn))
-        end
-
-        def query_by_doi(identifier:, doi:)
-          return nil unless identifier.present? && doi.present?
+        def query_by_doi(resource:, doi:)
+          return nil unless resource.present? && doi.present?
 
           resp = Serrano.works(ids: doi)
           return nil unless resp.first.present? && resp.first['message'].present?
 
-          new(resource: identifier.latest_resource, crossref_json: resp.first['message']['indexed'])
+          new(resource: resource, crossref_json: resp.first['message'])
         rescue Serrano::NotFound
           nil
         end
+
+        # rubocop:disable Metrics/CyclomaticComplexity
+        def query_by_author_title(resource:)
+          return nil if resource.blank? || resource.title&.strip.blank?
+          issn, title_query, author_query = title_author_query_params(resource)
+          resp = Serrano.works(issn: issn, select: CROSSREF_FIELD_LIST, query: title_query,
+                               query_author: author_query, limit: 20, sort: 'score', order: 'desc')
+          resp = resp.first if resp.is_a?(Array)
+          return nil unless valid_serrano_works_response(resp)
+
+          match = match_resource_with_crossref_record(resource: resource, response: resp['message'])
+          return nil if match.blank? || match.first < 0.5
+
+          sm = match.last
+          sm['ISSN'] = get_journal_issn(sm) unless sm['ISSN'].present?
+          new(resource: resource, crossref_json: sm)
+        rescue Serrano::NotFound
+          nil
+        end
+        # rubocop:enable Metrics/CyclomaticComplexity
 
         def from_proposed_change(proposed_change:)
           return new(resource: nil, crossref_json: {}) unless proposed_change.is_a?(StashEngine::ProposedChange)
@@ -42,45 +60,134 @@ module Stash
             'published-online' => { 'date-parts' => date_parts },
             'DOI' => proposed_change.publication_doi,
             'publisher' => proposed_change.publication_name,
-            'title' => [proposed_change.title]
+            'title' => [proposed_change.title],
+            'URL' => proposed_change.url,
+            'score' => proposed_change.score,
+            'provenance_score' => proposed_change.provenance_score
           }
           new(resource: identifier.latest_resource, crossref_json: message)
         end
       end
 
       def populate_resource
+        return unless @sm.present? && @resource.present?
         populate_abstract
         populate_authors
         populate_cited_by
         populate_funders
         populate_publication_date
         populate_publication_doi
+        populate_publication_issn
         populate_publication_name
         populate_title
         @resource
       end
 
       def to_proposed_change
+        return nil unless @sm.present? && @resource.present?
+        resource = populate_resource
+        return nil unless resource.changed?
+
+        # Skip if the identifier already has proposed changes
+        return unless StashEngine::ProposedChange.where(identifier_id: @resource.identifier.id).empty?
+
         params = {
           identifier_id: @resource.identifier.id,
           approved: false,
           authors: @sm['author'].to_json,
           provenance: 'crossref',
-          publication_date: date_parts_to_date(@sm['published-online']['date-parts']),
+          publication_date: date_parts_to_date(publication_date),
           publication_doi: @sm['DOI'],
-          publication_name: @sm['publisher'],
+          publication_issn: @sm['ISSN']&.first,
+          publication_name: publisher,
           score: @sm['score'],
-          title: @sm['title'].first.to_s
+          provenance_score: @sm['provenance_score'],
+          title: @sm['title']&.first&.to_s,
+          url: @sm['URL']
         }
         StashEngine::ProposedChange.new(params)
       end
 
       private
 
-      def known_journals
-        excludes = StashEngine::Identifier.publicly_viewable.pluck(:id)
-        StashEngine::Identifier.joins(:internal_data).includes(:internal_data).where.not(id: excludes)
-          .where('stash_engine_internal_data.data_type = ?', 'publicationName')
+      class << self
+        def match_resource_with_crossref_record(resource:, response:)
+          return nil unless resource.present? && response.present? && resource.title.present?
+          scores = []
+          names = resource.authors.map do |author|
+            { first: author.author_first_name&.downcase, last: author.author_last_name&.downcase }
+          end
+          orcids = resource.authors.map { |author| author.author_orcid&.downcase }
+
+          response['items'].each do |item|
+            next unless item['title'].present?
+            scores << crossref_item_scoring(resource, item, names, orcids)
+          end
+          # Sort by the score and return the one with the highest score
+          scores.max_by { |a| a[0] }
+        end
+
+        def crossref_item_scoring(resource, item, names, orcids)
+          return 0.0 unless resource.present? && resource.title.present? && item.present? && item['title'].present?
+          # Compare the titles using the Amatch NLP library
+          amatch = resource.title.pair_distance_similar(item['title'].first)
+          # If authors are available compare them as well
+          if item['author'].present? && (names.present? || orcids.present?)
+            item['author'].each do |author|
+              next unless author['family'].present?
+              amatch += crossref_author_scoring(names, orcids, author)
+            end
+          end
+          item['provenance_score'] = item['score']
+          item['score'] = amatch
+          [amatch, item]
+        end
+
+        # rubocop:disable Metrics/CyclomaticComplexity
+        def crossref_author_scoring(names, orcids, author)
+          amatch = 0.0
+          # An ORCID match is stronger than a name match
+          amatch += 0.1 if author['ORCID'].present? && orcids.include?(author['ORCID']&.downcase)
+          return amatch unless names.present? && names.any?
+
+          # Last name matches are useful but both first+last matches are better
+          last_name_match = names.map { |h| h[:last] }.include?(author['family']&.downcase)
+          both_name_match = names.select { |h| h[:last] == author['family']&.downcase && h[:first] == author['given']&.downcase }.any?
+
+          amatch += 0.05 if both_name_match
+          amatch += 0.025 if last_name_match && !both_name_match
+          amatch.round(3)
+        end
+        # rubocop:enable Metrics/CyclomaticComplexity
+
+        def valid_serrano_works_response(resp)
+          resp.present? && resp['message'].present? && resp['message']['total-results'].present? &&
+            resp['message']['total-results'] > 0 && resp['message']['items'].present? &&
+            resp['message']['items'].is_a?(Array)
+        end
+
+        def title_author_query_params(resource)
+          return [nil, nil, nil] unless resource.present?
+          issn = resource.identifier.internal_data.where(data_type: 'publicationISSN').first&.value
+          issn = URI.escape(issn) if issn.present?
+          title_query = resource.title&.gsub(/\s+/, ' ')&.strip&.gsub(/\s/, '+')
+          title_query = URI.escape(title_query) if title_query.present?
+          author_query = resource.authors.map { |a| a.author_last_name.tr('-', ' ').strip }.join('+')
+          author_query = URI.escape(author_query) if author_query.present?
+
+          [issn, title_query, author_query]
+        end
+
+        def get_journal_issn(hash)
+          return nil unless hash.present? && (hash['container-title'].present? || hash['publisher'].present?)
+
+          publisher = hash['container-title'].present? ? hash['container-title'].first : hash['publisher'].first
+          resp = Serrano.journals(query: publisher)
+          return nil unless resp.present? && resp['message'].present? && resp['message']['items'].present?
+          return nil unless resp['message']['items'].first['ISSN'].present?
+
+          resp['message']['items'].first['ISSN']
+        end
       end
 
       def populate_abstract
@@ -136,9 +243,9 @@ module Stash
       end
 
       def populate_publication_date
-        return unless @sm['published-online'].present? && @sm['published-online']['date-parts'].present?
-        @resource.publication_date = date_parts_to_date(@sm['published-online']['date-parts'])
-        populate_published_status if @resource.publication_date <= Date.today
+        return unless publication_date.present?
+        @resource.publication_date = date_parts_to_date(publication_date)
+        # populate_published_status if @resource.publication_date <= Date.today
       end
 
       def populate_publication_doi
@@ -147,37 +254,59 @@ module Stash
         datum.value = @sm['DOI']
       end
 
-      def populate_publication_name
-        return unless @sm['publisher'].present?
-        datum = @resource.identifier.internal_data.find_or_initialize_by(data_type: 'publicationName')
-        datum.value = @sm['publisher']
+      def populate_publication_issn
+        return unless @sm['ISSN'].present? && @sm['ISSN'].first.present?
+        datum = @resource.identifier.internal_data.find_or_initialize_by(data_type: 'publicationISSN')
+        datum.value = @sm['ISSN'].first
       end
 
-      def populate_published_status
-        return unless @sm['published-online'].present? && @sm['published-online']['date-parts'].present?
-        return if @resource.current_curation_status == 'published'
-        @resource.curation_activities << StashEngine::CurationActivity.new(
-          user_id: @resource.current_curation_activity.user_id,
-          status: 'published',
-          note: 'Crossref reported that the related journal has been published'
-        )
+      def populate_publication_name
+        return unless publisher.present?
+        datum = @resource.identifier.internal_data.find_or_initialize_by(data_type: 'publicationName')
+        datum.value = publisher
       end
+
+      #       def populate_published_status
+      #         return unless publication_date.present?
+      #         return if @resource.current_curation_status == 'published'
+      #         @resource.curation_activities << StashEngine::CurationActivity.new(
+      #           user_id: @resource.current_curation_activity.user_id,
+      #           status: 'published',
+      #           note: CROSSREF_PUBLISHED_MESSAGE
+      #         )
+      #       end
 
       def populate_title
         return unless @sm['title'].present? && @sm['title'].any?
         @resource.title = @sm['title'].first
       end
 
+      def publication_date
+        return @sm['published-online']['date-parts'] if @sm['published-online'].present? && @sm['published-online']['date-parts'].present?
+        return @sm['published-print']['date-parts'] if @sm['published-print'].present? && @sm['published-print']['date-parts'].present?
+        nil
+      end
+
+      def publisher
+        @sm['container-title'].present? ? @sm['container-title'] : @sm['publisher']
+      end
+
       def date_parts_to_date(parts_array)
+        return nil unless parts_array.present? && parts_array.is_a?(Array)
         Date.parse(parts_array.join('-'))
+      rescue StandardError
+        nil
       end
 
       def date_to_date_parts(date)
         date = date.is_a?(Date) ? date : Date.parse(date.to_s)
         [date.year, date.month, date.day]
+      rescue StandardError
+        nil
       end
 
     end
     # rubocop:enable Metrics/ClassLength
+
   end
 end
