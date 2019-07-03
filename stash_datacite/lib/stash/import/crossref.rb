@@ -26,7 +26,7 @@ module Stash
           return nil unless resp.first.present? && resp.first['message'].present?
 
           new(resource: resource, crossref_json: resp.first['message'])
-        rescue Serrano::NotFound
+        rescue Serrano::NotFound, Serrano::InternalServerError
           nil
         end
 
@@ -45,7 +45,7 @@ module Stash
           sm = match.last
           sm['ISSN'] = get_journal_issn(sm) unless sm['ISSN'].present?
           new(resource: resource, crossref_json: sm)
-        rescue Serrano::NotFound
+        rescue Serrano::NotFound, Serrano::InternalServerError
           nil
         end
         # rubocop:enable Metrics/CyclomaticComplexity
