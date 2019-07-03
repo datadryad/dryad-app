@@ -595,8 +595,8 @@ module Stash
           it 'returns an array containing the [ISSN, TITLE, AUTHOR LAST NAMES]' do
             issn, title_query, author_query = Crossref.send(:title_author_query_params, @resource)
             expect(issn).to eql('123-456')
-            expect(title_query).to eql('Testing%2BAgain%5C')
-            expect(author_query).to eql('Doe%2BVan%20jones')
+            expect(title_query).to eql('Testing+Again%5C')
+            expect(author_query).to eql('Doe+Van-jones')
           end
         end
 

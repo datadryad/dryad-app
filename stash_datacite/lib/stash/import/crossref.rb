@@ -170,10 +170,10 @@ module Stash
           return [nil, nil, nil] unless resource.present?
           issn = resource.identifier.internal_data.where(data_type: 'publicationISSN').first&.value
           issn = CGI.escape(issn) if issn.present?
-          title_query = resource.title&.gsub(/\s+/, ' ')&.strip&.gsub(/\s/, '+')
-          title_query = CGI.escape(title_query) if title_query.present?
-          author_query = resource.authors.map { |a| a.author_last_name.tr('-', ' ').strip }.join('+')
-          author_query = CGI.escape(author_query) if author_query.present?
+          title_query = resource.title&.gsub(/\s+/, ' ')&.strip
+          title_query = CGI.escape(title_query)&.gsub(/\s/, '+') if title_query.present?
+          author_query = resource.authors.map { |a| a.author_last_name.gsub(/\s+/, ' ')&.strip }
+          author_query = author_query.map { |a| CGI.escape(a) }.join('+') if author_query.present?
 
           [issn, title_query, author_query]
         end
