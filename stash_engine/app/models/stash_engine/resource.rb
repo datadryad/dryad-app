@@ -482,6 +482,16 @@ module StashEngine
       false # nope. Not sure if it would ever get here, though
     end
 
+    # see if the user may view based on curation status & roles and etc.  I don't see this as being particularly complex for Rubocop
+    # rubocop:disable Metrics/CyclomaticComplexity
+    def may_view?(ui_user: nil)
+      return true if metadata_published? # anyone can view
+      return false if ui_user.blank? # otherwise unknown person can't view and this prevents later nil checks
+      return true if user_id == ui_user.id || ui_user.superuser? || (ui_user.role == 'admin' && ui_user.tenant_id == tenant_id)
+      false
+    end
+    # rubocop:enable Metrics/CyclomaticComplexity
+
     # ------------------------------------------------------------
     # Usage and statistics
 
