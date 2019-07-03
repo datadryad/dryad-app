@@ -23,32 +23,34 @@ module StashApi
       setup_access_token(doorkeeper_application: @doorkeeper_application)
     end
 
+    # set up some versions with different curation statuses (visibility)
+    before(:each) do
+      neuter_curation_callbacks!
+      mock_ror!
+
+      @tenant_ids = StashEngine::Tenant.all.map(&:tenant_id)
+
+      @user1 = create(:user, tenant_id: @tenant_ids.first, role: 'user')
+
+      @identifier = create(:identifier)
+
+      @resources = [create(:resource, user_id: @user1.id, tenant_id: @user1.tenant_id, identifier_id: @identifier.id),
+                    create(:resource, user_id: @user1.id, tenant_id: @user1.tenant_id, identifier_id: @identifier.id)]
+
+      @curation_activities = [[create(:curation_activity, resource: @resources[0], status: 'in_progress'),
+                               create(:curation_activity, resource: @resources[0], status: 'curation'),
+                               create(:curation_activity, resource: @resources[0], status: 'published')]]
+
+      @curation_activities << [create(:curation_activity, resource: @resources[1], status: 'in_progress'),
+                               create(:curation_activity, resource: @resources[1], status: 'curation')]
+
+      # be sure versions are set correctly, because creating them manually like this doesn't ensure it
+      @resources[0].stash_version.update(version: 1)
+      @resources[1].stash_version.update(version: 2)
+    end
+
     # test creation of a new dataset
     describe '#index' do
-      before(:each) do
-        neuter_curation_callbacks!
-        mock_ror!
-
-        @tenant_ids = StashEngine::Tenant.all.map(&:tenant_id)
-
-        @user1 = create(:user, tenant_id: @tenant_ids.first, role: 'user')
-
-        @identifier = create(:identifier)
-
-        @resources = [create(:resource, user_id: @user1.id, tenant_id: @user1.tenant_id, identifier_id: @identifier.id),
-                      create(:resource, user_id: @user1.id, tenant_id: @user1.tenant_id, identifier_id: @identifier.id)]
-
-        @curation_activities = [[create(:curation_activity, resource: @resources[0], status: 'in_progress'),
-                                 create(:curation_activity, resource: @resources[0], status: 'curation'),
-                                 create(:curation_activity, resource: @resources[0], status: 'published')]]
-
-        @curation_activities << [create(:curation_activity, resource: @resources[1], status: 'in_progress'),
-                                 create(:curation_activity, resource: @resources[1], status: 'curation')]
-
-        # be sure versions are set correctly, because creating them manually like this doesn't ensure it
-        @resources[0].stash_version.update(version: 1)
-        @resources[1].stash_version.update(version: 2)
-      end
 
       it 'shows all versions to a superuser' do
         response_code = get "/api/datasets/#{CGI.escape(@identifier.to_s)}/versions", {}, default_authenticated_headers
@@ -125,6 +127,71 @@ module StashApi
 
         expect(my_versions.length).to eq(2)
       end
+    end
+
+    # shows a version by the version ID (not version number) which can be obtained from the index action above
+    describe '#show' do
+
+      it 'shows published versions to non-users' do
+        response_code = get "/api/versions/#{@resources[0].id}", {}, default_json_headers
+        expect(response_code).to eq(200)
+        h = response_body_hash
+        expect(h['title']).to eq(@resources[0].title)
+        expect(h['abstract']).to eq(@resources[0].descriptions.where(description_type: 'abstract').first.description)
+        expect(h['versionNumber']).to eq(@resources[0].stash_version.version)
+      end
+
+      it "doesn't show unpublished version to non-user" do
+        response_code = get "/api/versions/#{@resources[1].id}", {}, default_json_headers
+        expect(response_code).to eq(404)
+      end
+
+      it "doesn't show unpublished version to random unauthorized user" do
+        @user2 = create(:user, tenant_id: @tenant_ids.first, role: 'user')
+        @doorkeeper_application2 = create(:doorkeeper_application, redirect_uri: 'urn:ietf:wg:oauth:2.0:oob',
+                                          owner_id: @user2.id, owner_type: 'StashEngine::User')
+        access_token = get_access_token(doorkeeper_application: @doorkeeper_application2)
+        response_code = get "/api/versions/#{@resources[1].id}", {}, default_json_headers.merge(
+            'Authorization' => "Bearer #{access_token}"
+        )
+        expect(response_code).to eq(404)
+      end
+
+      it 'shows anything existing to a superuser' do
+        @user2 = create(:user, tenant_id: @tenant_ids.first, role: 'superuser')
+        @doorkeeper_application2 = create(:doorkeeper_application, redirect_uri: 'urn:ietf:wg:oauth:2.0:oob',
+                                          owner_id: @user2.id, owner_type: 'StashEngine::User')
+        access_token = get_access_token(doorkeeper_application: @doorkeeper_application2)
+        response_code = get "/api/versions/#{@resources[1].id}", {}, default_json_headers.merge(
+            'Authorization' => "Bearer #{access_token}"
+        )
+        expect(response_code).to eq(200)
+        h = response_body_hash
+        expect(h['title']).to eq(@resources[1].title)
+        expect(h['abstract']).to eq(@resources[1].descriptions.where(description_type: 'abstract').first.description)
+        expect(h['versionNumber']).to eq(@resources[1].stash_version.version)
+      end
+
+      it 'shows stuff to admin from the same tenant' do
+        @user2 = create(:user, tenant_id: @tenant_ids.first, role: 'admin')
+        @doorkeeper_application2 = create(:doorkeeper_application, redirect_uri: 'urn:ietf:wg:oauth:2.0:oob',
+                                          owner_id: @user2.id, owner_type: 'StashEngine::User')
+        access_token = get_access_token(doorkeeper_application: @doorkeeper_application2)
+        response_code = get "/api/versions/#{@resources[1].id}", {}, default_json_headers.merge(
+            'Authorization' => "Bearer #{access_token}"
+        )
+        expect(response_code).to eq(200)
+        h = response_body_hash
+        expect(h['title']).to eq(@resources[1].title)
+        expect(h['abstract']).to eq(@resources[1].descriptions.where(description_type: 'abstract').first.description)
+        expect(h['versionNumber']).to eq(@resources[1].stash_version.version)
+      end
+
+      it 'returns 404 for non-existant resource, also' do
+        response_code = get "/api/versions/#{@resources[1].id+100}", {}, default_json_headers
+        expect(response_code).to eq(404)
+      end
+
     end
   end
 end
