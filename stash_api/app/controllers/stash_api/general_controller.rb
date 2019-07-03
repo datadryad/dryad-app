@@ -9,7 +9,8 @@ module StashApi
     before_action :doorkeeper_authorize!, only: :test
     before_action :require_api_user, only: :test
 
-    # get /datasets
+    # get /
+    # All this really does is return the basic HATEOAS link to the base level dataset links
     def index
       respond_to do |format|
         format.json { render json: output }
