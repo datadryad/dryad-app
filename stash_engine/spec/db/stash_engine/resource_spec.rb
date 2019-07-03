@@ -290,6 +290,60 @@ module StashEngine
 
     end
 
+    # able to view based on curation state
+    describe '#may_view?' do
+      before(:each) do
+        @resource = Resource.create(user_id: user.id)
+        @merritt_state = ResourceState.create(user_id: @resource.user.id, resource_state: 'submitted', resource_id: @resource.id)
+        @resource.update(current_resource_state_id: @merritt_state.id)
+
+        @curation_activities = [create(:curation_activity_no_callbacks, resource: @resource, status: 'in_progress'),
+                                create(:curation_activity_no_callbacks, resource: @resource, status: 'curation'),
+                                create(:curation_activity_no_callbacks, resource: @resource, status: 'published')]
+      end
+
+      it 'allows anyone to view public resource' do
+        expect(@resource.may_view?(ui_user: nil)).to be_truthy
+      end
+
+      it 'disallows unknown users from viewing private resource' do
+        @curation_activities[2].destroy
+        expect(@resource.may_view?(ui_user: nil)).to be_falsey
+      end
+
+      it 'allows owner to view private resource' do
+        @curation_activities[2].destroy
+        expect(@resource.may_view?(ui_user: user)).to be_truthy
+      end
+
+      it 'disallows other normal user from viewing private' do
+        @user2 = StashEngine::User.create(first_name: 'Gorgonzola', last_name: 'Travesty', tenant_id: 'ucop', role: 'user')
+        @curation_activities[2].destroy
+        expect(@resource.may_view?(ui_user: @user2)).to be_falsey
+      end
+
+      it 'allows admin user from same tenant to view' do
+        @resource.update(tenant_id: user.tenant_id)
+        @user2 = StashEngine::User.create(first_name: 'Gorgonzola', last_name: 'Travesty', tenant_id: user.tenant_id, role: 'admin')
+        @curation_activities[2].destroy
+        expect(@resource.may_view?(ui_user: @user2)).to be_truthy
+      end
+
+      it 'denies admin user from other tenant to view' do
+        @resource.update(tenant_id: 'superca')
+        @user2 = StashEngine::User.create(first_name: 'Gorgonzola', last_name: 'Travesty', tenant_id: user.tenant_id, role: 'admin')
+        @curation_activities[2].destroy
+        expect(@resource.may_view?(ui_user: @user2)).to be_falsey
+      end
+
+      it 'allows superuser to view anything' do
+        @resource.update(tenant_id: 'superca')
+        @user2 = StashEngine::User.create(first_name: 'Gorgonzola', last_name: 'Travesty', tenant_id: user.tenant_id, role: 'superuser')
+        @curation_activities[2].destroy
+        expect(@resource.may_view?(ui_user: @user2)).to be_truthy
+      end
+    end
+
     describe :files_published? do
 
       before(:each) do
