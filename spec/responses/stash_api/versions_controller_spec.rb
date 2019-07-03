@@ -66,11 +66,11 @@ module StashApi
 
       it 'shows all versions to the owner' do
         @doorkeeper_application2 = create(:doorkeeper_application, redirect_uri: 'urn:ietf:wg:oauth:2.0:oob',
-                                          owner_id: @user1.id, owner_type: 'StashEngine::User')
+                                                                   owner_id: @user1.id, owner_type: 'StashEngine::User')
         access_token = get_access_token(doorkeeper_application: @doorkeeper_application2)
         response_code = get "/api/datasets/#{CGI.escape(@identifier.to_s)}/versions", {}, default_json_headers.merge(
-            'Content-Type' =>  'application/json-patch+json', 'Authorization' => "Bearer #{access_token}"
-          )
+          'Content-Type' => 'application/json-patch+json', 'Authorization' => "Bearer #{access_token}"
+        )
 
         expect(response_code).to eq(200)
         expect(response_body_hash['total']).to eq(2)
@@ -85,10 +85,10 @@ module StashApi
       it 'shows only 1st version to a random user' do
         @user2 = create(:user, tenant_id: @tenant_ids.first, role: 'user')
         @doorkeeper_application2 = create(:doorkeeper_application, redirect_uri: 'urn:ietf:wg:oauth:2.0:oob',
-                                          owner_id: @user2.id, owner_type: 'StashEngine::User')
+                                                                   owner_id: @user2.id, owner_type: 'StashEngine::User')
         access_token = get_access_token(doorkeeper_application: @doorkeeper_application2)
         response_code = get "/api/datasets/#{CGI.escape(@identifier.to_s)}/versions", {}, default_json_headers.merge(
-            'Authorization' => "Bearer #{access_token}"
+          'Authorization' => "Bearer #{access_token}"
         )
 
         expect(response_code).to eq(200)
@@ -115,10 +115,10 @@ module StashApi
       it 'shows both versions to an admin for this tenant' do
         @user2 = create(:user, tenant_id: @tenant_ids.first, role: 'admin')
         @doorkeeper_application2 = create(:doorkeeper_application, redirect_uri: 'urn:ietf:wg:oauth:2.0:oob',
-                                          owner_id: @user2.id, owner_type: 'StashEngine::User')
+                                                                   owner_id: @user2.id, owner_type: 'StashEngine::User')
         access_token = get_access_token(doorkeeper_application: @doorkeeper_application2)
         response_code = get "/api/datasets/#{CGI.escape(@identifier.to_s)}/versions", {}, default_json_headers.merge(
-            'Authorization' => "Bearer #{access_token}"
+          'Authorization' => "Bearer #{access_token}"
         )
 
         expect(response_code).to eq(200)
@@ -149,10 +149,10 @@ module StashApi
       it "doesn't show unpublished version to random unauthorized user" do
         @user2 = create(:user, tenant_id: @tenant_ids.first, role: 'user')
         @doorkeeper_application2 = create(:doorkeeper_application, redirect_uri: 'urn:ietf:wg:oauth:2.0:oob',
-                                          owner_id: @user2.id, owner_type: 'StashEngine::User')
+                                                                   owner_id: @user2.id, owner_type: 'StashEngine::User')
         access_token = get_access_token(doorkeeper_application: @doorkeeper_application2)
         response_code = get "/api/versions/#{@resources[1].id}", {}, default_json_headers.merge(
-            'Authorization' => "Bearer #{access_token}"
+          'Authorization' => "Bearer #{access_token}"
         )
         expect(response_code).to eq(404)
       end
@@ -160,10 +160,10 @@ module StashApi
       it 'shows anything existing to a superuser' do
         @user2 = create(:user, tenant_id: @tenant_ids.first, role: 'superuser')
         @doorkeeper_application2 = create(:doorkeeper_application, redirect_uri: 'urn:ietf:wg:oauth:2.0:oob',
-                                          owner_id: @user2.id, owner_type: 'StashEngine::User')
+                                                                   owner_id: @user2.id, owner_type: 'StashEngine::User')
         access_token = get_access_token(doorkeeper_application: @doorkeeper_application2)
         response_code = get "/api/versions/#{@resources[1].id}", {}, default_json_headers.merge(
-            'Authorization' => "Bearer #{access_token}"
+          'Authorization' => "Bearer #{access_token}"
         )
         expect(response_code).to eq(200)
         h = response_body_hash
@@ -175,10 +175,10 @@ module StashApi
       it 'shows stuff to admin from the same tenant' do
         @user2 = create(:user, tenant_id: @tenant_ids.first, role: 'admin')
         @doorkeeper_application2 = create(:doorkeeper_application, redirect_uri: 'urn:ietf:wg:oauth:2.0:oob',
-                                          owner_id: @user2.id, owner_type: 'StashEngine::User')
+                                                                   owner_id: @user2.id, owner_type: 'StashEngine::User')
         access_token = get_access_token(doorkeeper_application: @doorkeeper_application2)
         response_code = get "/api/versions/#{@resources[1].id}", {}, default_json_headers.merge(
-            'Authorization' => "Bearer #{access_token}"
+          'Authorization' => "Bearer #{access_token}"
         )
         expect(response_code).to eq(200)
         h = response_body_hash
@@ -188,7 +188,7 @@ module StashApi
       end
 
       it 'returns 404 for non-existant resource, also' do
-        response_code = get "/api/versions/#{@resources[1].id+100}", {}, default_json_headers
+        response_code = get "/api/versions/#{@resources[1].id + 100}", {}, default_json_headers
         expect(response_code).to eq(404)
       end
 
