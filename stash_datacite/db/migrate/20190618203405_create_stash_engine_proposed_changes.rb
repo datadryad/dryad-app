@@ -8,9 +8,12 @@ class CreateStashEngineProposedChanges < ActiveRecord::Migration
       t.string :provenance
       t.datetime :publication_date
       t.string :publication_doi, index: true
+      t.string :publication_issn, index: true
       t.string :publication_name, index: true
       t.float :score
-      t.string :title
+      t.float :provenance_score
+      t.text :title
+      t.string :url
       t.timestamps null: false
     end
   end
