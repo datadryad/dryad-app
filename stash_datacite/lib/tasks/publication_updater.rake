@@ -17,7 +17,7 @@ namespace :publication_updater do
 
       # Skip the record if we've already captured its info from Crossref
       next if resource.curation_activities.where('stash_engine_curation_activities.note LIKE ?',
-        "%#{StashEngine::ProposedChange::CROSSREF_UPDATE_MESSAGE}").any?
+                                                 "%#{StashEngine::ProposedChange::CROSSREF_UPDATE_MESSAGE}").any?
 
       doi = resource.identifier.internal_data.where(data_type: 'publicationDOI').first
 

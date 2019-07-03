@@ -33,6 +33,7 @@ module Stash
       FUTURE_PUBLICATION_DATE = [2035, 0o1, 0o1].freeze
       PUBLISHER = 'Ficticious Journal'.freeze
 
+      # rubocop:disable Metrics/LineLength
       # Example of a Crossref API journal response: view-source:http://api.crossref.org/journals?query=Journal%20of%20The%20Royal%20Society%20Interface
       CROSSREF_JOURNAL_RESPONSE = {
         'status' => 'ok',
@@ -47,14 +48,14 @@ module Stash
           'total-results' => 1,
           'items' => [
             {
-              'last-status-check-time' => 1553443941216,
+              'last-status-check-time' => 1_553_443_941_216,
               'counts' => {
                 'total-dois' => 3163,
                 'current-dois' => 630,
                 'backfile-dois' => 2533
               },
               'breakdowns' => {
-                'dois-by-issued-year' => [[2014,378]]
+                'dois-by-issued-year' => [[2014, 378]]
               },
               'publisher' => 'The Royal Society',
               'coverage' => {
@@ -63,14 +64,14 @@ module Stash
               'title' => 'Journal of The Royal Society Interface',
               'subjects' => [{ 'name' => 'Biochemistry', 'ASJC' => 1303 }],
               'coverage-type' => {
-                'all' => { 'last-status-check-time' => 1553443938923 },
-                'backfile' => { 'last-status-check-time' => 1553443938136 },
-                'current' => { 'last-status-check-time' => 1553443937362 },
+                'all' => { 'last-status-check-time' => 1_553_443_938_923 },
+                'backfile' => { 'last-status-check-time' => 1_553_443_938_136 },
+                'current' => { 'last-status-check-time' => 1_553_443_937_362 }
               },
               'flags' => { 'deposits-abstracts-current' => false },
               'ISSN' => ['1742-5662', '1742-5689'],
               'issn-type' => [
-                { 'value' => '1742-5662', 'type' => 'electronic '},
+                { 'value' => '1742-5662', 'type' => 'electronic ' },
                 { 'value' => '1742-5689', 'type' => 'print' }
               ]
             }
@@ -90,25 +91,25 @@ module Stash
             'place' => ['-'],
             'acronym' => ['-']
           },
-          'indexed' => { 'date-parts' => [[2019, 2, 18]], 'date-time' => '2019-02-18T00:54:11Z', 'timestamp' => 1550451251128 },
+          'indexed' => { 'date-parts' => [[2019, 2, 18]], 'date-time' => '2019-02-18T00:54:11Z', 'timestamp' => 1_550_451_251_128 },
           'posted' => { 'date-parts' => [[2017, 5, 17]] },
           'group-title' => 'Physiology',
           'reference-count' => 0,
           'publisher' => 'Cold Spring Harbor Laboratory',
-          'content-domain' => { 'domain' =>[], 'crossmark-restriction' => false },
+          'content-domain' => { 'domain' => [], 'crossmark-restriction' => false },
           'short-container-title' => [],
           'accepted' => { 'date-parts' => [[2017, 5, 17]] },
           'abstract' => 'The aim of the present study was to examine if genetic factors associated with pain perception ...',
           'DOI' => '10.1101\/139345',
           'type' => 'posted-content',
-          'created' => { 'date-parts' => [[2017, 5, 18]], 'date-time' => '2017-05-18T05:10:13Z', 'timestamp' => 1495084213000 },
+          'created' => { 'date-parts' => [[2017, 5, 18]], 'date-time' => '2017-05-18T05:10:13Z', 'timestamp' => 1_495_084_213_000 },
           'source' => 'Crossref',
           'is-referenced-by-count' => 0,
           'title' => ['The Mu-Opioid Receptor Gene OPRM1 As A Genetic Marker For Placebo Analgesia'],
           'prefix' => '10.1101',
           'author' => [
             { 'ORCID' => 'http:\/\/orcid.org\/0000-0002-9299-7260', 'authenticated-orcid' => false, 'given' => 'Per M.', 'family' => 'Aslaksen', 'sequence' => 'first', 'affiliation' => [] },
-            { 'given' => 'June Thorvaldsen', 'family' => 'Forsberg','sequence' => 'additional', 'affiliation' => [] }
+            { 'given' => 'June Thorvaldsen', 'family' => 'Forsberg', 'sequence' => 'additional', 'affiliation' => [] }
           ],
           'member' => '246',
           'container-title' => [],
@@ -119,7 +120,7 @@ module Stash
             'content-version' => 'vor',
             'intended-application' => 'similarity-checking'
           }],
-          'deposited' => { 'date-parts' => [[2017, 5, 18]], 'date-time' => '2017-05-18T05:10:33Z', 'timestamp' => 1495084233000 },
+          'deposited' => { 'date-parts' => [[2017, 5, 18]], 'date-time' => '2017-05-18T05:10:33Z', 'timestamp' => 1_495_084_233_000 },
           'score' => 1.0,
           'subtitle' => [],
           'short-title' => [],
@@ -130,6 +131,7 @@ module Stash
           'subtype' => 'preprint'
         }
       }.freeze
+      # rubocop:enable Metrics/LineLength
 
       before(:each) do
         # I don't see any factories here, so just creating a resource manually
@@ -593,8 +595,8 @@ module Stash
           it 'returns an array containing the [ISSN, TITLE, AUTHOR LAST NAMES]' do
             issn, title_query, author_query = Crossref.send(:title_author_query_params, @resource)
             expect(issn).to eql('123-456')
-            expect(title_query).to eql('Testing+Again%5C')
-            expect(author_query).to eql('Doe+Van%20jones')
+            expect(title_query).to eql('Testing%2BAgain%5C')
+            expect(author_query).to eql('Doe%2BVan%20jones')
           end
         end
 
@@ -602,16 +604,16 @@ module Stash
           it 'returns nil if the hash is empty' do
             expect(Crossref.send(:get_journal_issn, nil)).to eql(nil)
             expect(Crossref.send(:get_journal_issn, {})).to eql(nil)
-            expect(Crossref.send(:get_journal_issn, { 'container-title' => '' })).to eql(nil)
+            expect(Crossref.send(:get_journal_issn, 'container-title' => '')).to eql(nil)
           end
 
           it 'returns nil if the response from Crossref is empty' do
             allow(Serrano).to receive(:journals).and_return(nil)
-            expect(Crossref.send(:get_journal_issn, { 'container-title' => 'ABCD' })).to eql(nil)
+            expect(Crossref.send(:get_journal_issn, 'container-title' => 'ABCD')).to eql(nil)
           end
 
           it 'returns the ISSN' do
-            expect(Crossref.send(:get_journal_issn, { 'container-title' => 'ABCD' })).to eql(CROSSREF_JOURNAL_RESPONSE['message']['items'].first['ISSN'])
+            expect(Crossref.send(:get_journal_issn, 'container-title' => 'ABCD')).to eql(CROSSREF_JOURNAL_RESPONSE['message']['items'].first['ISSN'])
           end
         end
       end

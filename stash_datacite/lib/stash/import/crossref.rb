@@ -127,6 +127,7 @@ module Stash
           scores.max_by { |a| a[0] }
         end
 
+        # rubocop:disable Metrics/CyclomaticComplexity
         def crossref_item_scoring(resource, item, names, orcids)
           return 0.0 unless resource.present? && resource.title.present? && item.present? && item['title'].present?
           # Compare the titles using the Amatch NLP library
@@ -143,7 +144,6 @@ module Stash
           [amatch, item]
         end
 
-        # rubocop:disable Metrics/CyclomaticComplexity
         def crossref_author_scoring(names, orcids, author)
           amatch = 0.0
           # An ORCID match is stronger than a name match
@@ -169,15 +169,16 @@ module Stash
         def title_author_query_params(resource)
           return [nil, nil, nil] unless resource.present?
           issn = resource.identifier.internal_data.where(data_type: 'publicationISSN').first&.value
-          issn = URI.escape(issn) if issn.present?
+          issn = CGI.escape(issn) if issn.present?
           title_query = resource.title&.gsub(/\s+/, ' ')&.strip&.gsub(/\s/, '+')
-          title_query = URI.escape(title_query) if title_query.present?
+          title_query = CGI.escape(title_query) if title_query.present?
           author_query = resource.authors.map { |a| a.author_last_name.tr('-', ' ').strip }.join('+')
-          author_query = URI.escape(author_query) if author_query.present?
+          author_query = CGI.escape(author_query) if author_query.present?
 
           [issn, title_query, author_query]
         end
 
+        # rubocop:disable Metrics/CyclomaticComplexity
         def get_journal_issn(hash)
           return nil unless hash.present? && (hash['container-title'].present? || hash['publisher'].present?)
 
@@ -188,6 +189,7 @@ module Stash
 
           resp['message']['items'].first['ISSN']
         end
+        # rubocop:enable Metrics/CyclomaticComplexity
       end
 
       def populate_abstract
@@ -265,16 +267,6 @@ module Stash
         datum = @resource.identifier.internal_data.find_or_initialize_by(data_type: 'publicationName')
         datum.value = publisher
       end
-
-      #       def populate_published_status
-      #         return unless publication_date.present?
-      #         return if @resource.current_curation_status == 'published'
-      #         @resource.curation_activities << StashEngine::CurationActivity.new(
-      #           user_id: @resource.current_curation_activity.user_id,
-      #           status: 'published',
-      #           note: CROSSREF_PUBLISHED_MESSAGE
-      #         )
-      #       end
 
       def populate_title
         return unless @sm['title'].present? && @sm['title'].any?
