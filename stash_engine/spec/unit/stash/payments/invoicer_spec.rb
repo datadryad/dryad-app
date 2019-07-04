@@ -36,24 +36,24 @@ module Stash
 
         @invoicer = Invoicer.new(resource: @resource, curator: @curator)
         allow(@invoicer).to receive(:set_api_key).and_return(true)
-        allow(@invoicer).to receive(:add_dpc).and_return(fake_invoice_item)
+        allow(@invoicer).to receive(:create_invoice_item_for_dpc).and_return(fake_invoice_item)
         allow(@invoicer).to receive(:create_invoice).and_return(fake_invoice)
         allow(@invoicer).to receive(:create_customer).and_return(fake_customer)
         allow(@invoicer).to receive(:lookup_prior_stripe_customer_id).and_return(nil)
       end
 
       it 'creates an invoice for a new stripe customer' do
-        expect(@invoicer.charge_via_invoice).to eql('STRIPE1234')
+        expect(@invoicer.charge_user_via_invoice).to eql('STRIPE1234')
       end
 
       it 'creates an invoice for an existing stripe customer' do
         allow(@invoicer).to receive(:lookup_prior_stripe_customer_id).and_return('999911')
-        expect(@invoicer.charge_via_invoice).to eql('STRIPE1234')
+        expect(@invoicer.charge_user_via_invoice).to eql('STRIPE1234')
       end
 
       it 'does not create an invoice when the resource has no primary author' do
         allow(StashEngine::Author).to receive(:primary).with(@resource_id).and_return(nil)
-        expect(@invoicer.charge_via_invoice).to eql(nil)
+        expect(@invoicer.charge_user_via_invoice).to eql(nil)
       end
 
     end
