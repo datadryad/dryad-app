@@ -1,6 +1,6 @@
 require_dependency 'stash_datacite/application_controller'
 require 'httparty'
-require 'stash/import/cross_ref'
+require 'stash/import/crossref'
 require 'stash/import/dryad_manuscript'
 require 'stash/link_out/pubmed_sequence_service'
 require 'stash/link_out/pubmed_service'
@@ -61,13 +61,13 @@ module StashDatacite
         @error = 'Please enter a DOI to import metadata'
         return
       end
-      works = Serrano.works(ids: @doi.value)
-      if !works.is_a?(Array) || works.first['message'].blank?
+      cr = Stash::Import::Crossref.query_by_doi(resource: @resource, doi: @doi.value)
+      unless cr.present?
         @error = "We couldn't obtain information from CrossRef about this DOI"
         return
       end
-      xr_import = Stash::Import::CrossRef.new(resource: @resource, serrano_message: works.first['message'])
-      xr_import.populate
+      @resource = cr.populate_resource
+      @resource.save
     rescue Serrano::NotFound, Serrano::BadGateway, Serrano::Error, Serrano::GatewayTimeout, Serrano::InternalServerError, Serrano::ServiceUnavailable
       @error = "We couldn't retrieve information from CrossRef about this DOI"
     end
