@@ -29,8 +29,8 @@ module Stash
         set_api_key
         customer_id = stripe_journal_customer_id
         return unless customer_id.present?
-        create_invoice_item_for_dpc(customer_id)
-        resource.identifier.invoice_id = "journal_invoice:#{customer_id}"
+        invoice_item = create_invoice_item_for_dpc(customer_id)
+        resource.identifier.invoice_id = invoice_item&.id
         resource.identifier.save
       end
 
@@ -54,7 +54,7 @@ module Stash
           customer: customer_id,
           amount: StashEngine.app.payments.data_processing_charge,
           currency: 'usd',
-          description: 'Data Processing Charge'
+          description: "Data Processing Charge for #{resource.identifier.to_s}"
         )
       end
 
@@ -74,18 +74,11 @@ module Stash
       end
 
       def stripe_user_customer_id
-        ensure_user_customer_id_exists
-      end
-
-      def stripe_journal_customer_id
-        resource.identifier&.journal_payment_contact
-      end
-
-      def ensure_user_customer_id_exists
-        # Retrieve the primary author for the dataset
         author = StashEngine::Author.primary(resource.id)
         return if author.blank?
-        # See if the author already has a stripe_customer_id
+        return author.stripe_customer_id if author.stripe_customer_id.present?
+
+        # Check whether this author has previously submitted and obtained a customer_id
         customer_id = lookup_prior_stripe_customer_id(author.author_email)
         # Otherwise we need to generate a new one
         customer_id = create_customer(author).id unless customer_id.present?
@@ -94,9 +87,13 @@ module Stash
         customer_id
       end
 
+      def stripe_journal_customer_id
+        resource.identifier&.journal_customer_id
+      end
+
       def lookup_prior_stripe_customer_id(email)
-        # Each resource has its own set of authors so look through all the prior records
-        # for the first author to see if they have a stripe_customer_id
+        # Each resource has its own set of authors so look through all the prior datasets
+        # for the first author to see if they have a stripe_customer_id associated with this email
         StashEngine::Author.where(author_email: email).where.not(stripe_customer_id: nil).order(:id).first&.stripe_customer_id
       end
     end

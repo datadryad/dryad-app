@@ -56,6 +56,7 @@ module Stash
         expect(@invoicer.charge_user_via_invoice).to eql(nil)
       end
 
+      
     end
   end
 end

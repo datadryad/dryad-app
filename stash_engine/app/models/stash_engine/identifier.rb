@@ -216,8 +216,8 @@ module StashEngine
         plan_type == 'DEFERRED'
     end
 
-    def journal_payment_contact
-      contacts =  publication_data('paymentContact')
+    def journal_customer_id
+      publication_data('stripeCustomerID')
     end
 
     def institution_will_pay?
