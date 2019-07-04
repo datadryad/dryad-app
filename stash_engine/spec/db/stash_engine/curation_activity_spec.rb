@@ -70,7 +70,7 @@ module StashEngine
         allow_any_instance_of(Stash::Doi::IdGen).to receive(:make_instance).and_return(true)
         allow_any_instance_of(Stash::Doi::IdGen).to receive(:update_identifier_metadata).and_return(true)
         allow_any_instance_of(Stash::Payments::Invoicer).to receive(:new).and_return(true)
-        allow_any_instance_of(Stash::Payments::Invoicer).to receive(:charge_via_invoice).and_return(true)
+        allow_any_instance_of(Stash::Payments::Invoicer).to receive(:charge_user_via_invoice).and_return(true)
       end
 
       context :update_solr do
