@@ -54,7 +54,7 @@ module Stash
           customer: customer_id,
           amount: StashEngine.app.payments.data_processing_charge,
           currency: 'usd',
-          description: "Data Processing Charge for #{resource.identifier.to_s}"
+          description: "Data Processing Charge for #{resource.identifier}"
         )
       end
 

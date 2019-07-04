@@ -55,8 +55,6 @@ module Stash
         allow(StashEngine::Author).to receive(:primary).with(@resource_id).and_return(nil)
         expect(@invoicer.charge_user_via_invoice).to eql(nil)
       end
-
-      
     end
   end
 end
