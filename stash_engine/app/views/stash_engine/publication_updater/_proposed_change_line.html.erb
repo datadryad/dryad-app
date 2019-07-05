@@ -1,0 +1,30 @@
+<% pubname = resource.identifier.internal_data.where(data_type: 'publicationName') %>
+<% pubissn = resource.identifier.internal_data.where(data_type: 'publicationISSN') %>
+<% pubdoi = resource.identifier.internal_data.where(data_type: 'publicationDOI') %>
+<% old_auths = resource.authors.map{ |a| a.author_full_name }.uniq.sort{ |a, b| a <=> b }.join('<br>') %>
+<% new_auths = JSON.parse(proposed_change.authors).map{ |a| "#{a['family']}, #{a['given']}" }.uniq.sort{ |a, b| a <=> b }.join('<br>') %>
+
+<tr class="c-lined-table__row">
+  <td class="c-admin-hide-border-right">Current</td>
+  <td class="c-admin-hide-border-right"><strong>Dateset:</strong> <%= resource.title %></td>
+  <td class="c-admin-hide-border-right"><%= pubname.first&.value %></td>
+  <td class="c-admin-hide-border-right"><%= pubissn.first&.value %></td>
+  <td class="c-admin-hide-border-right"><%= pubdoi.first&.value %></td>
+  <td class="c-admin-hide-border-right"><%= formatted_date(resource.publication_date) %></td>
+  <td class="c-admin-hide-border-right"><%= old_auths.html_safe %></td>
+  <td>&nbsp;</td>
+</tr>
+<tr class="c-lined-table__row">
+  <td class="c-admin-hide-border-right">Proposed <%= button_tag 'Accept' %><%= button_tag 'Reject' %></td>
+  <td class="c-admin-hide-border-right"><strong>Publication:</strong> <%= proposed_change.title %></td>
+  <td class="c-admin-hide-border-right <%= pubname != proposed_change.publication_name ? 'mergeable' : '' %>"><%= proposed_change.publication_name.gsub('["', '').gsub('"]', '') %></td>
+  <td class="c-admin-hide-border-right <%= pubissn != proposed_change.publication_issn ? 'mergeable' : '' %>"><%= proposed_change.publication_issn %></td>
+  <td class="c-admin-hide-border-right <%= pubdoi != proposed_change.publication_doi ? 'mergeable' : '' %>"><%= link_to proposed_change.publication_doi, proposed_change.url, target: :blank %></td>
+  <td class="c-admin-hide-border-right <%= resource.publication_date != proposed_change.publication_date ? 'mergeable' : '' %>"><%= formatted_date(proposed_change.publication_date) %></td>
+  <td class="c-admin-hide-border-right <%= old_auths != new_auths ? 'mergeable' : '' %>"><%= new_auths.html_safe %></td>
+  <td class="c-admin"><%= proposed_change.score %></td>
+</tr>
+<tr class="c-lined-table__row-separator">
+  <td colspan="9">&nbsp;</td>
+</tr>
+

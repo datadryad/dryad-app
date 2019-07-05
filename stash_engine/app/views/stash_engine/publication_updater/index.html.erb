@@ -1,0 +1,57 @@
+<% @page_title = "Publication Updater" %>
+<style>
+  .mergeable {
+    background-color: rgb(72, 145, 175);
+  }
+  .c-lined-table__row-separator {
+    background-color: rgb(124, 126, 127);
+    max-height: 10px;
+  }
+</style>
+<h1 class="o-heading__level1">Publication Updater</h1>
+
+<div>
+  <h2>Datasets</h2>
+
+  <p>The table below groups datasets with their proposed metadata changes.</p>
+  <p>The first row in a group represents the existing information we have for the dataset. The second row of tthe group represents the proposed changes (highlighted in blue). Clicking the <em>'Accept'</em> button will transfer the proposed changes in 'blue' to the dataset. Clicking <em>'Reject'</em> will cancel the proposed changes</p>
+
+  <table class="c-lined-table">
+    <tr class="c-lined-table__head">
+      <th>&nbsp;</th>
+      <th class="c-admin-table <%= sort_display('title', @sort_column) %>">
+        <%= sort_by 'title', title: 'Title', current_column: @sort_column %>
+      </th>
+      <th class="c-admin-table <%= sort_display('publiction_name', @sort_column) %>">
+        <%= sort_by 'publiction_name', title: 'Publication', current_column: @sort_column %>
+      </th>
+      <th class="c-admin-table <%= sort_display('publiction_issn', @sort_column) %>">
+        <%= sort_by 'publiction_issn', title: 'ISSN', current_column: @sort_column %>
+      </th>
+      <th class="c-admin-table <%= sort_display('publiction_doi', @sort_column) %>">
+        <%= sort_by 'publiction_doi', title: 'DOI', current_column: @sort_column %>
+      </th>
+      <th class="c-admin-table <%= sort_display('publiction_date', @sort_column) %>">
+        <%= sort_by 'publiction_date', title: 'Published', current_column: @sort_column %>
+      </th>
+      <th class="c-admin-table <%= sort_display('authors', @sort_column) %>">
+        <%= sort_by 'authors', title: 'Authors', current_column: @sort_column %>
+      </th>
+      <th class="c-admin-table <%= sort_display('score', @sort_column) %>">
+        <%= sort_by 'score', title: 'Reliability', current_column: @sort_column %>
+      </th>
+    </tr>
+
+    <% @proposed_changes.each do |proposed_change| %>
+      <% resource = @resources.select{ |r| r.identifier_id == proposed_change.identifier_id }.first %>
+      <% if resource.present? %>
+        <%= render partial: 'proposed_change_line',
+                   locals: { proposed_change: proposed_change, resource: resource } %>
+      <% end %>
+    <% end %>
+  </table>
+
+  <div class="c-space-paginator">
+    <%= paginate @proposed_changes, params: { page_size: @page_size, show_all: false } %>
+  </div>
+</div>
