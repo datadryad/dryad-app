@@ -19,6 +19,7 @@ Gem::Specification.new do |s| # rubocop:disable Metrics/BlockLength
   s.files = Dir['{app,config,db,lib}/**/*', 'MIT-LICENSE', 'Rakefile', 'README.rdoc']
   s.test_files = Dir['test/**/*']
 
+  s.add_dependency 'amatch', '>= 0.4.0' # Matching Resource titles against Crossref results
   s.add_dependency 'kaminari'
   s.add_dependency 'leaflet-rails'
   s.add_dependency 'loofah'
