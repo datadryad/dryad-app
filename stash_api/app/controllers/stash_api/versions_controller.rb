@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require_dependency 'stash_api/application_controller'
+require 'stash/download/version'
 
 module StashApi
   class VersionsController < ApplicationController
@@ -31,11 +32,16 @@ module StashApi
 
     # get /versions/<id>/download
     def download
-      # @stash_resources
+      @version_streamer = Stash::Download::Version.new(controller_context: self)
       if @stash_resources.length == 1
         res = @stash_resources.first
-        StashEngine::CounterLogger.version_download_hit(request: request, resource: res)
-        redirect_to res.merritt_producer_download_uri
+        if res.may_download?(ui_user: @user)
+          @version_streamer.download(resource: res) do
+            redirect_to stash_url_helpers.landing_show_path(id: res.identifier_str, big: 'showme') # if it's an async
+          end
+        else
+          render text: 'forbidden', status: 403
+        end
       else
         render text: 'download for this version is unavailable', status: 404
       end
