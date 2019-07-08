@@ -290,6 +290,60 @@ module StashEngine
 
     end
 
+    # able to view based on curation state
+    describe '#may_view?' do
+      before(:each) do
+        @resource = Resource.create(user_id: user.id)
+        @merritt_state = ResourceState.create(user_id: @resource.user.id, resource_state: 'submitted', resource_id: @resource.id)
+        @resource.update(current_resource_state_id: @merritt_state.id)
+
+        @curation_activities = [create(:curation_activity_no_callbacks, resource: @resource, status: 'in_progress'),
+                                create(:curation_activity_no_callbacks, resource: @resource, status: 'curation'),
+                                create(:curation_activity_no_callbacks, resource: @resource, status: 'published')]
+      end
+
+      it 'allows anyone to view public resource' do
+        expect(@resource.may_view?(ui_user: nil)).to be_truthy
+      end
+
+      it 'disallows unknown users from viewing private resource' do
+        @curation_activities[2].destroy
+        expect(@resource.may_view?(ui_user: nil)).to be_falsey
+      end
+
+      it 'allows owner to view private resource' do
+        @curation_activities[2].destroy
+        expect(@resource.may_view?(ui_user: user)).to be_truthy
+      end
+
+      it 'disallows other normal user from viewing private' do
+        @user2 = StashEngine::User.create(first_name: 'Gorgonzola', last_name: 'Travesty', tenant_id: 'ucop', role: 'user')
+        @curation_activities[2].destroy
+        expect(@resource.may_view?(ui_user: @user2)).to be_falsey
+      end
+
+      it 'allows admin user from same tenant to view' do
+        @resource.update(tenant_id: user.tenant_id)
+        @user2 = StashEngine::User.create(first_name: 'Gorgonzola', last_name: 'Travesty', tenant_id: user.tenant_id, role: 'admin')
+        @curation_activities[2].destroy
+        expect(@resource.may_view?(ui_user: @user2)).to be_truthy
+      end
+
+      it 'denies admin user from other tenant to view' do
+        @resource.update(tenant_id: 'superca')
+        @user2 = StashEngine::User.create(first_name: 'Gorgonzola', last_name: 'Travesty', tenant_id: user.tenant_id, role: 'admin')
+        @curation_activities[2].destroy
+        expect(@resource.may_view?(ui_user: @user2)).to be_falsey
+      end
+
+      it 'allows superuser to view anything' do
+        @resource.update(tenant_id: 'superca')
+        @user2 = StashEngine::User.create(first_name: 'Gorgonzola', last_name: 'Travesty', tenant_id: user.tenant_id, role: 'superuser')
+        @curation_activities[2].destroy
+        expect(@resource.may_view?(ui_user: @user2)).to be_truthy
+      end
+    end
+
     describe :files_published? do
 
       before(:each) do
@@ -1127,7 +1181,8 @@ module StashEngine
         end
       end
 
-      describe :with_visibility do
+      describe :curation_visibility_setup do
+
         before(:each) do
           # user has only user permission and is part of the UCOP tenant
           @user2 = create(:user, first_name: 'Gargola', last_name: 'Jones', email: 'luckin@ucop.edu', tenant_id: 'ucop', role: 'admin')
@@ -1185,28 +1240,67 @@ module StashEngine
 
         end
 
-        it 'lists publicly viewable (two curation states) in one query' do
-          public_resources = Resource.with_visibility(states: %w[published embargoed])
-          expect(public_resources.count).to eq(6)
-          expect(public_resources.map(&:id)).to include(@resources[0].id)
+        describe :with_visibility do
+          it 'lists publicly viewable (two curation states) in one query' do
+            public_resources = Resource.with_visibility(states: %w[published embargoed])
+            expect(public_resources.count).to eq(6)
+            expect(public_resources.map(&:id)).to include(@resources[0].id)
+          end
+
+          it 'lists publicly viewable and private in my tenant for admins' do
+            resources = Resource.with_visibility(states: %w[published embargoed], user_id: nil, tenant_id: 'ucop')
+            expect(resources.count).to eq(8)
+            expect(resources.map(&:id)).to include(@resources[3].id)
+          end
+
+          it 'lists publicly viewable and my own datasets for a user' do
+            resources = Resource.with_visibility(states: %w[published embargoed], user_id: @user.id)
+            expect(resources.count).to eq(7)
+            expect(resources.map(&:id)).to include(@resources[2].id)
+          end
+
+          it 'only picks up the final state for each dataset' do
+            resources = Resource.with_visibility(states: 'curation')
+            expect(resources.count).to eq(1)
+            expect(resources.map(&:id)).to include(@resources[2].id)
+          end
         end
 
-        it 'lists publicly viewable and private in my tenant for admins' do
-          resources = Resource.with_visibility(states: %w[published embargoed], user_id: nil, tenant_id: 'ucop')
-          expect(resources.count).to eq(8)
-          expect(resources.map(&:id)).to include(@resources[3].id)
-        end
+        # this can test more or less the same stuff as "with visibility" but automatically modifies for the user and
+        # their role.  I think will mostly be used for getting resources for an identifier visible to a user and their role.
+        describe :visible_to_user do
+          before(:each) do
+            @identifier = Identifier.create(identifier: 'cat/dog', identifier_type: 'DOI')
+            @resources[0].update(identifier_id: @identifier.id)
+            @resources[1].update(identifier_id: @identifier.id)
+            @resources[2].update(identifier_id: @identifier.id)
+          end
 
-        it 'lists publicly viewable and my own datasets for a user' do
-          resources = Resource.with_visibility(states: %w[published embargoed], user_id: @user.id)
-          expect(resources.count).to eq(7)
-          expect(resources.map(&:id)).to include(@resources[2].id)
-        end
+          it 'shows all resources for the identifier to the superuser' do
+            resources = @identifier.resources.visible_to_user(user: @user3)
+            expect(resources.count).to eq(3)
+          end
 
-        it 'only picks up the final state for each dataset' do
-          resources = Resource.with_visibility(states: 'curation')
-          expect(resources.count).to eq(1)
-          expect(resources.map(&:id)).to include(@resources[2].id)
+          it 'shows all resources to the owner' do
+            resources = @identifier.resources.visible_to_user(user: @user3)
+            expect(resources.count).to eq(3)
+          end
+
+          it 'only shows curated-visible resources to a non-user' do
+            resources = @identifier.resources.visible_to_user(user: nil)
+            expect(resources.count).to eq(2)
+          end
+
+          it 'shows all resources to an admin for this tenant (ucop)' do
+            resources = @identifier.resources.visible_to_user(user: @user2)
+            expect(resources.count).to eq(3)
+          end
+
+          it 'only shows curated-visible resources to a random user' do
+            @user4 = create(:user, first_name: 'Gorgon', last_name: 'Grup', email: 'st38p@ucop.edu', tenant_id: 'ucb', role: 'user')
+            resources = @identifier.resources.visible_to_user(user: @user4)
+            expect(resources.count).to eq(2)
+          end
         end
       end
     end
