@@ -18,6 +18,19 @@ module Mocks
                      'Accept-Ranges' => 'bytes'
                    })
     end
+
+    # rubocop:enable Metrics/MethodLength
+    def mock_github_bad_head_request!
+      stub_request(:head, 'http://github.com/CDL-Dryad/dryad/raw/master/app/assets/images/favicon.ico')
+        .with(
+          headers: {
+            'Accept' => '*/*'
+          }
+        )
+        .to_return(status: 404, body: '', headers: {
+                     'Cache-Control' => 'max-age=300'
+                   })
+    end
     # rubocop:enable Metrics/MethodLength
   end
 

@@ -6,7 +6,7 @@ require 'fixtures/stash_api/curation_metadata'
 require 'cgi'
 require 'digest'
 
-# rubocop:disable Metrics/BlockLength
+# rubocop:disable Metrics/BlockLength, Metrics/ModuleLength
 # see https://relishapp.com/rspec/rspec-rails/v/3-8/docs/request-specs/request-spec
 module StashApi
   RSpec.describe UrlsController, type: :request do
@@ -87,9 +87,53 @@ module StashApi
         end
       end
 
+      it 'does not allow regular users to populate urls that are not validated' do
+        @user.update(role: 'user')
+        response_code = post "/api/datasets/#{CGI.escape(@identifier.to_s)}/urls", FILE_HASH.to_json, default_authenticated_headers
+        expect(response_code).to eq(401)
+      end
 
+      it "doesn't allow anonymous (not logged in) users to add urls" do
+        mock_github_head_request!
+        test_url = 'http://github.com/CDL-Dryad/dryad/raw/master/app/assets/images/favicon.ico'
+        response_code = post "/api/datasets/#{CGI.escape(@identifier.to_s)}/urls", { url: test_url }.to_json, default_json_headers
+        expect(response_code).to eq(401)
+      end
+
+      it "doesn't allow adding the same URL multiple times" do
+        mock_github_head_request!
+        test_url = 'http://github.com/CDL-Dryad/dryad/raw/master/app/assets/images/favicon.ico'
+        post "/api/datasets/#{CGI.escape(@identifier.to_s)}/urls", { url: test_url }.to_json, default_authenticated_headers
+        response_code = post "/api/datasets/#{CGI.escape(@identifier.to_s)}/urls", { url: test_url }.to_json, default_authenticated_headers
+        expect(response_code).to eq(403)
+        expect(response_body_hash.key?('error')).to eq(true)
+      end
+
+      it 'disallows invalid-format urls' do
+        mock_github_head_request!
+        test_url = 'groogalona.fun/'
+        response_code = post "/api/datasets/#{CGI.escape(@identifier.to_s)}/urls", { url: test_url }.to_json, default_authenticated_headers
+        expect(response_code).to eq(403)
+      end
+
+      it 'gives an error for non-validating urls (404)' do
+        mock_github_bad_head_request!
+        test_url = 'http://github.com/CDL-Dryad/dryad/raw/master/app/assets/images/favicon.ico'
+        response_code = post "/api/datasets/#{CGI.escape(@identifier.to_s)}/urls", { url: test_url }.to_json, default_authenticated_headers
+        expect(response_code).to eq(403)
+        expect(response_body_hash.key?('error')).to eq(true)
+      end
+
+      it "doesn't allow updates without an in-progress version (Merritt-status)" do
+        @resources[0].current_resource_state.update(resource_state: 'submitted')
+        @resources[1].current_resource_state.update(resource_state: 'processing')
+        mock_github_head_request!
+        test_url = 'http://github.com/CDL-Dryad/dryad/raw/master/app/assets/images/favicon.ico'
+        response_code = post "/api/datasets/#{CGI.escape(@identifier.to_s)}/urls", { url: test_url }.to_json, default_authenticated_headers
+        expect(response_code).to eq(403)
+        expect(response_body_hash.key?('error')).to eq(true)
+      end
     end
-
   end
 end
-# rubocop:enable Metrics/BlockLength
+# rubocop:enable Metrics/BlockLength, Metrics/ModuleLength
