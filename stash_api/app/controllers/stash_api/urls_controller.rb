@@ -12,6 +12,8 @@ module StashApi
     before_action :require_url_current_uploads, only: :create
     before_action :require_permission, only: :create
     before_action :require_correctly_formatted_url, only: :create
+
+    # POST '/datasets/:dataset_id/urls'
     def create
       file_upload_hash = if params['skipValidation'] == true
                            skipped_validation_hash(params) { return } # return will be yielded to if error is rendered, so it returns here
