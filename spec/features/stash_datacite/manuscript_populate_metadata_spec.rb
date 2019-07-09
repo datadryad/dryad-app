@@ -123,7 +123,7 @@ RSpec.feature 'Populate manuscript metadata from outside source', type: :feature
       doi = 'scabs'
       fill_crossref_info(name: journal, doi: doi)
       click_button 'Import Article Metadata'
-      expect(page.find('div#population-warnings')).to have_content("We couldn't retrieve information from CrossRef about this DOI", wait: 15)
+      expect(page.find('div#population-warnings')).to have_content("We couldn't obtain information from CrossRef about this DOI", wait: 15)
     end
   end
 end
