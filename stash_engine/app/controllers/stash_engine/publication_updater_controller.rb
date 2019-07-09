@@ -12,16 +12,24 @@ module StashEngine
 
     # the admin datasets main page showing users and stats, but slightly different in scope for superusers vs tenant admins
     def index
-      proposed_changes = StashEngine::ProposedChange.where(approved: false)
+      proposed_changes = StashEngine::ProposedChange.where(approved: false, rejected: false)
       @resources = StashEngine::Resource.latest_per_dataset.where(identifier_id: proposed_changes.map(&:identifier_id))
       @proposed_changes = proposed_changes.order(@sort_column.order).page(@page).per(@page_size)
     end
 
     def update
+      proposed_change = StashEngine::ProposedChange.where(proposed_change_params[:id]).first
+      flash[:alert] = 'Unable to approve the specified changes' unless proposed_change.present?
+      flash[:notice] = 'We approved it' if proposed_change.present?
+      proposed_change.approve!(current_user) if proposed_change.present?
       redirect_to 'index'
     end
 
     def destroy
+      proposed_change = StashEngine::ProposedChange.where(proposed_change_params[:id]).first
+      flash[:alert] = 'Unable to reject the specified changes' unless proposed_change.present?
+      flash[:notice] = 'We rejected it' if proposed_change.present?
+      proposed_change.reject!(current_user) if proposed_change.present?
       redirect_to 'index'
     end
 

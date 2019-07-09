@@ -1,30 +1,50 @@
-<% pubname = resource.identifier.internal_data.where(data_type: 'publicationName') %>
-<% pubissn = resource.identifier.internal_data.where(data_type: 'publicationISSN') %>
-<% pubdoi = resource.identifier.internal_data.where(data_type: 'publicationDOI') %>
-<% old_auths = resource.authors.map{ |a| a.author_full_name }.uniq.sort{ |a, b| a <=> b }.join('<br>') %>
-<% new_auths = JSON.parse(proposed_change.authors).map{ |a| "#{a['family']}, #{a['given']}" }.uniq.sort{ |a, b| a <=> b }.join('<br>') %>
-
+<%
+  existing_pubname = fetch_identifier_metadata(resource: resource, data_type: 'publicationName')
+  existing_pubissn = fetch_identifier_metadata(resource: resource, data_type: 'publicationISSN')
+  existing_pubdoi = fetch_identifier_metadata(resource: resource, data_type: 'publicationDOI')
+%>
 <tr class="c-lined-table__row">
-  <td class="c-admin-hide-border-right">Current</td>
-  <td class="c-admin-hide-border-right"><strong>Dateset:</strong> <%= resource.title %></td>
-  <td class="c-admin-hide-border-right"><%= pubname.first&.value %></td>
-  <td class="c-admin-hide-border-right"><%= pubissn.first&.value %></td>
-  <td class="c-admin-hide-border-right"><%= pubdoi.first&.value %></td>
-  <td class="c-admin-hide-border-right"><%= formatted_date(resource.publication_date) %></td>
-  <td class="c-admin-hide-border-right"><%= old_auths.html_safe %></td>
+  <td>
+    <strong>Dateset:</strong>
+    <%= link_to resource.title, show_path(id: resource.identifier.to_s, latest: true), target: :blank %>
+  </td>
+  <td class="c-proposed-change-table__column-centered"><strong>Current Metadata</strong></td>
+  <td><%= existing_pubname %></td>
+  <td><%= existing_pubissn %></td>
+  <td><%= existing_pubdoi %></td>
+  <td><%= formatted_date(resource.publication_date) %></td>
+  <td><%= existing_authors(resource: resource).html_safe %></td>
   <td>&nbsp;</td>
 </tr>
 <tr class="c-lined-table__row">
-  <td class="c-admin-hide-border-right">Proposed <%= button_tag 'Accept' %><%= button_tag 'Reject' %></td>
-  <td class="c-admin-hide-border-right"><strong>Publication:</strong> <%= proposed_change.title %></td>
-  <td class="c-admin-hide-border-right <%= pubname != proposed_change.publication_name ? 'mergeable' : '' %>"><%= proposed_change.publication_name.gsub('["', '').gsub('"]', '') %></td>
-  <td class="c-admin-hide-border-right <%= pubissn != proposed_change.publication_issn ? 'mergeable' : '' %>"><%= proposed_change.publication_issn %></td>
-  <td class="c-admin-hide-border-right <%= pubdoi != proposed_change.publication_doi ? 'mergeable' : '' %>"><%= link_to proposed_change.publication_doi, proposed_change.url, target: :blank %></td>
-  <td class="c-admin-hide-border-right <%= resource.publication_date != proposed_change.publication_date ? 'mergeable' : '' %>"><%= formatted_date(proposed_change.publication_date) %></td>
-  <td class="c-admin-hide-border-right <%= old_auths != new_auths ? 'mergeable' : '' %>"><%= new_auths.html_safe %></td>
-  <td class="c-admin"><%= proposed_change.score %></td>
-</tr>
-<tr class="c-lined-table__row-separator">
-  <td colspan="9">&nbsp;</td>
-</tr>
+  <td>
+    <strong>Publication:</strong>
+    <%= link_to proposed_change.title, proposed_change.url, target: :blank %>
+  </td>
+  <td class="c-proposed-change-table__column-centered">
+    <strong>Changes</strong>
+    <% url = "#{stash_url_helpers.publication_updater_path}/#{proposed_change.id}" %>
+    <%= form_for :proposed_change, url: url, method: :PUT, remote: true do |f| %>
+      <button name="accept_changes" type="submit">Accept</button>
+    <% end %>
+    <%= form_for :proposed_change, url: url, method: :DELETE, remote: true do |f| %>
+       <button name="reject_changes" type="submit">Reject</button>
+      <% end %>
+  </td>
 
+  <%= render_column(old_val: existing_pubname, new_val: proposed_change.publication_name).html_safe %>
+  <%= render_column(old_val: existing_pubissn, new_val: proposed_change.publication_issn).html_safe %>
+  <%= render_column(old_val: existing_pubdoi, new_val: proposed_change.publication_doi).html_safe %>
+  <%= render_column(
+    old_val: formatted_date(resource.publication_date),
+    new_val: formatted_date(proposed_change.publication_date)
+  ).html_safe %>
+  <%= render_column(
+    old_val: existing_authors(resource: resource),
+    new_val: proposed_authors(json: proposed_change.authors)
+  ).html_safe %>
+
+  <td class="c-proposed-change-table__column-centered" title="Dryad score (<%= proposed_change.provenance.capitalize %> score)">
+    <%= proposed_change.score&.round(2) %><br>(<%= proposed_change.provenance_score&.round(2) || 'DOI match' %>)
+  </td>
+</tr>
