@@ -3456,6 +3456,33 @@ datalist {
   float: left;
   font-size: 1.3em; }
 
+/* Proposed Change Object */
+.c-proposed-change-table__row-separator {
+  max-height: 10px;
+  background-color: #7c7e7f; }
+
+.c-proposed-change-table__column-mergeable {
+  position: relative;
+  background-color: #9fc7d8; }
+  .c-proposed-change-table__column-mergeable .c-proposed-change-table__column-mergeable-icon {
+    position: absolute;
+    top: -7px;
+    left: 40%; }
+
+.c-proposed-change-table__column-centered {
+  text-align: center; }
+  .c-proposed-change-table__column-centered button {
+    margin-top: 5px; }
+
+.c-proposed-change-table__column-small {
+  width: 10%; }
+
+.c-proposed-change-table__column-medium {
+  width: 20%; }
+
+.c-proposed-change-table__column-large {
+  width: 30%; }
+
 .o-quote {
   display: -webkit-box;
   display: -ms-flexbox;

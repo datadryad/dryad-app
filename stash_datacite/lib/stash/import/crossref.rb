@@ -99,7 +99,7 @@ module Stash
           publication_date: date_parts_to_date(publication_date),
           publication_doi: @sm['DOI'],
           publication_issn: @sm['ISSN']&.first,
-          publication_name: publisher,
+          publication_name: publisher.is_a?(Array) ? publisher&.first : publisher,
           score: @sm['score'],
           provenance_score: @sm['provenance_score'],
           title: @sm['title']&.first&.to_s,

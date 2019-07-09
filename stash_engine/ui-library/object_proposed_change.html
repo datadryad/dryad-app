@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+<head>
+  <meta charset="UTF-8">
+  <title>Metrics Object</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <!-- build:css css/ui.css -->
+  <link rel="stylesheet" href="css/main.css">
+  <!-- endbuild -->
+  <style>
+    /* styles for this page only */
+    .o-metrics {
+      max-width: 300px;
+    }
+  </style>
+  <script
+    src="https://code.jquery.com/jquery-2.2.3.min.js"
+    integrity="sha256-a23g1Nt4dtEYOj7bR+vTu7+T8VP13humZFBJNIYoEJo="
+    crossorigin="anonymous"></script>
+</head>
+<body>
+
+  <table class="c-lined-table">
+    <tr class="c-lined-table__head">
+      <th class="c-admin-table c-admin-table__sort-asc c-proposed-change-table__column-medium">
+        <a href="/stash/publication_updater?direction=asc&amp;page_size=10&amp;show_all=false&amp;sort=title">Title</a>
+      </th>
+      <th class="c-proposed-change-table__column-small">&nbsp;</th>
+      <th class="c-admin-table c-admin-table__sort-asc c-proposed-change-table__column-small">
+        <a href="/stash/publication_updater?direction=asc&amp;page_size=10&amp;show_all=false&amp;sort=publiction_name">Publication</a>
+      </th>
+      <th class="c-admin-table c-admin-table__sort-asc c-proposed-change-table__column-small">
+        <a href="/stash/publication_updater?direction=asc&amp;page_size=10&amp;show_all=false&amp;sort=publiction_issn">ISSN</a>
+      </th>
+      <th class="c-admin-table c-admin-table__sort-asc c-proposed-change-table__column">
+        <a href="/stash/publication_updater?direction=asc&amp;page_size=10&amp;show_all=false&amp;sort=publiction_doi">DOI</a>
+      </th>
+      <th class="c-admin-table c-admin-table__sort-asc c-proposed-change-table__column-small">
+        <a href="/stash/publication_updater?direction=asc&amp;page_size=10&amp;show_all=false&amp;sort=publiction_date">Published</a>
+      </th>
+      <th class="c-admin-table c-proposed-change-table__column-medium">
+        <a href="/stash/publication_updater?direction=asc&amp;page_size=10&amp;show_all=false&amp;sort=authors">Authors</a>
+      </th>
+      <th class="c-admin-table c-admin-table__sort-asc c-proposed-change-table__column-small">
+        <a class="current asc " href="/stash/publication_updater?direction=desc&amp;page_size=10&amp;show_all=false&amp;sort=score">Reliability</a>
+      </th>
+    </tr>
+
+    <!--#include file="includes/proposed_change.html" -->
+  </table>
+
+  <div class="svg-codeblock">
+  <!--#include file="images/images.svg" -->
+  </div>
+
+  <!-- build:js js/ui.js -->
+  <script src="js/modernizr-custombuild.js"></script>
+  <script src="js/details-polyfill.js"></script>
+  <script src="js/main.js"></script>
+  <!-- endbuild -->
+
+</body>
+</html>
