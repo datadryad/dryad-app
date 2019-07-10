@@ -177,6 +177,18 @@ module StashEngine
       joins(JOIN_FOR_LATEST_CURATION).where(str, *arr)
     end
 
+    scope :visible_to_user, ->(user:) do
+      if user.nil?
+        with_visibility(states: %w[published embargoed])
+      elsif user.superuser?
+        all
+      elsif user.role == 'admin'
+        with_visibility(states: %w[published embargoed], tenant_id: user.tenant_id)
+      else
+        with_visibility(states: %w[published embargoed], user_id: user.id)
+      end
+    end
+
     # gets the latest version per dataset and includes items that haven't been assigned an identifer yet but are initially in progress
     # NOTE.  We've now changed it so everything gets an identifier upon creation, so we may be able to simplify or get rid of this.
     scope :latest_per_dataset, (-> do
@@ -462,13 +474,25 @@ module StashEngine
     # 3. if not public then the author can still download: resource.user_id = current_user.id
     # 4. if not public then the current user has the 'superuser' role for seeing all files
     # Note: the special download links mean anyone with that link may download and this doesn't apply
+    # rubocop:disable Metrics/CyclomaticComplexity
     def may_download?(ui_user: nil) # doing this to avoid collision with the association called user
       return false unless current_resource_state&.resource_state == 'submitted' # merritt state available
       return true if files_published? # curation state of public or embargoed and expired
       return false if ui_user.blank? # the rest of the cases require users
-      return true if ui_user.id == user_id || ui_user.role == 'superuser' # owner viewing or superuser viewing
+      return true if ui_user.id == user_id || ui_user.role == 'superuser' || (ui_user.role == 'admin' && ui_user.tenant_id == tenant_id)
       false # nope. Not sure if it would ever get here, though
     end
+    # rubocop:enable Metrics/CyclomaticComplexity
+
+    # see if the user may view based on curation status & roles and etc.  I don't see this as being particularly complex for Rubocop
+    # rubocop:disable Metrics/CyclomaticComplexity
+    def may_view?(ui_user: nil)
+      return true if metadata_published? # anyone can view
+      return false if ui_user.blank? # otherwise unknown person can't view and this prevents later nil checks
+      return true if user_id == ui_user.id || ui_user.superuser? || (ui_user.role == 'admin' && ui_user.tenant_id == tenant_id)
+      false
+    end
+    # rubocop:enable Metrics/CyclomaticComplexity
 
     # ------------------------------------------------------------
     # Usage and statistics
