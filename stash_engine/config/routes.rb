@@ -111,4 +111,9 @@ StashEngine::Engine.routes.draw do
 
   # Administrative Status Dashboard that displays statuses of external dependencies
   get 'status_dashboard', to: 'status_dashboard#show'
+
+  # Publication updater page - Allows admins to accept/reject metadata changes from external sources like Crrossref
+  get 'publication_updater', to: 'publication_updater#index'
+  put 'publication_updater/:id', to: 'publication_updater#update'
+  delete 'publication_updater/:id', to: 'publication_updater#destroy'
 end

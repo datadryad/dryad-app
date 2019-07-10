@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+<head>
+  <meta charset="UTF-8">
+  <title>Metrics Object</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <link rel="stylesheet" href="css/ui.css">
+  <style>
+    /* styles for this page only */
+    .o-metrics {
+      max-width: 300px;
+    }
+  </style>
+  <script
+    src="https://code.jquery.com/jquery-2.2.3.min.js"
+    integrity="sha256-a23g1Nt4dtEYOj7bR+vTu7+T8VP13humZFBJNIYoEJo="
+    crossorigin="anonymous"></script>
+</head>
+<body>
+
+  <table class="c-lined-table">
+    <tr class="c-lined-table__head">
+      <th class="c-admin-table c-admin-table__sort-asc c-proposed-change-table__column-medium">
+        <a href="/stash/publication_updater?direction=asc&amp;page_size=10&amp;show_all=false&amp;sort=title">Title</a>
+      </th>
+      <th class="c-proposed-change-table__column-small">&nbsp;</th>
+      <th class="c-admin-table c-admin-table__sort-asc c-proposed-change-table__column-small">
+        <a href="/stash/publication_updater?direction=asc&amp;page_size=10&amp;show_all=false&amp;sort=publiction_name">Publication</a>
+      </th>
+      <th class="c-admin-table c-admin-table__sort-asc c-proposed-change-table__column-small">
+        <a href="/stash/publication_updater?direction=asc&amp;page_size=10&amp;show_all=false&amp;sort=publiction_issn">ISSN</a>
+      </th>
+      <th class="c-admin-table c-admin-table__sort-asc c-proposed-change-table__column">
+        <a href="/stash/publication_updater?direction=asc&amp;page_size=10&amp;show_all=false&amp;sort=publiction_doi">DOI</a>
+      </th>
+      <th class="c-admin-table c-admin-table__sort-asc c-proposed-change-table__column-small">
+        <a href="/stash/publication_updater?direction=asc&amp;page_size=10&amp;show_all=false&amp;sort=publiction_date">Published</a>
+      </th>
+      <th class="c-admin-table c-proposed-change-table__column-medium">
+        <a href="/stash/publication_updater?direction=asc&amp;page_size=10&amp;show_all=false&amp;sort=authors">Authors</a>
+      </th>
+      <th class="c-admin-table c-admin-table__sort-asc c-proposed-change-table__column-small">
+        <a class="current asc " href="/stash/publication_updater?direction=desc&amp;page_size=10&amp;show_all=false&amp;sort=score">Reliability</a>
+      </th>
+    </tr>
+
+    <tr class="c-lined-table__row">
+  <td><strong>Dateset:</strong> Data from: A carnivorous sundew plant has a taste for protein but not for chitin from its insect prey</td>
+  <td class="c-proposed-change-table__column-centered"><strong>Current Metadata</strong></td>
+  <td>Proceedings of The Royal Society B Biological Sciences</td>
+  <td>0962-8452</td>
+  <td></td>
+  <td>Not available</td>
+  <td>Adamec, Lubomír<br>Krausko, Miroslav<br>Pavlovič, Andrej</td>
+  <td>&nbsp;</td>
+</tr>
+
+<tr class="c-lined-table__row">
+  <td><strong>Publication:</strong> A carnivorous sundew plant prefers protein over chitin as a source of nitrogen from its traps</td>
+  <td class="c-proposed-change-table__column-centered"><strong>Changes</strong><button name="button" type="submit">Accept</button><button name="button" type="submit">Reject</button></td>
+  <td class="c-proposed-change-table__column-mergeable">Plant Physiology and Biochemistry<div class="c-proposed-change-table__column-mergeable-icon"><em class="fa fa-arrow-down"></em></div></td>
+  <td class="c-proposed-change-table__column-mergeable">0981-9428<div class="c-proposed-change-table__column-mergeable-icon"><em class="fa fa-arrow-down"></em></div></td>
+  <td class="c-proposed-change-table__column-mergeable"><a target="blank" href="http://dx.doi.org/10.1016/j.plaphy.2016.03.008">10.1016/j.plaphy.2016.03.008</a><div class="c-proposed-change-table__column-mergeable-icon"><em class="fa fa-arrow-down"></em></div></td>
+  <td class="c-proposed-change-table__column-mergeable">September 13th 2017<div class="c-proposed-change-table__column-mergeable-icon"><em class="fa fa-arrow-down"></em></div></td>
+  <td>Adamec, Lubomír<br>Krausko, Miroslav<br>Pavlovič, Andrej</td>
+  <td class="c-proposed-change-table__column-centered">77% (0.053)</td>
+</tr>
+
+<tr class="c-proposed-change-table__row-separator">
+  <td colspan="9">&nbsp;</td>
+</tr>
+  </table>
+
+  <div class="svg-codeblock">
+  <svg xmlns="http://www.w3.org/2000/svg"/>
+  </div>
+
+  <script src="js/ui.js"></script>
+
+</body>
+</html>
