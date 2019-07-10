@@ -185,7 +185,7 @@ module Stash
           return nil unless hash.present? && (hash['container-title'].present? || hash['publisher'].present?)
 
           pub = hash['container-title'].present? ? hash['container-title'] : hash['publisher']
-          pub = publisher.first if pub.present? && pub.is_a?(Array)
+          pub = pub.first if pub.present? && pub.is_a?(Array)
           resp = Serrano.journals(query: pub)
           return nil unless resp.present? && resp['message'].present? && resp['message']['items'].present?
           return nil unless resp['message']['items'].first['ISSN'].present?
