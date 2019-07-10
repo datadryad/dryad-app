@@ -94,10 +94,11 @@ module StashEngine
 
     describe :approve! do
       it 'approves the changes' do
+        old_title = @resource.title
         @proposed_change.approve!(current_user: @user)
         @resource.reload
 
-        expect(@resource.title).to eql(@params[:title])
+        expect(@resource.title).to eql(old_title)
         auths = JSON.parse(@params[:authors])
         expect(@resource.authors.first.author_first_name).to eql(auths.first['given'])
         expect(@resource.authors.first.author_last_name).to eql(auths.first['family'])

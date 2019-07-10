@@ -53,8 +53,10 @@ module Stash
         def from_proposed_change(proposed_change:)
           return new(resource: nil, crossref_json: {}) unless proposed_change.is_a?(StashEngine::ProposedChange)
           identifier = StashEngine::Identifier.find(proposed_change.identifier_id)
-          date_parts = [proposed_change.publication_date.year, proposed_change.publication_date.month,
-                        proposed_change.publication_date.day]
+          if proposed_change.publication_date.present?
+            date_parts = [proposed_change.publication_date.year, proposed_change.publication_date.month,
+                          proposed_change.publication_date.day]
+          end
           message = {
             'author' => JSON.parse(proposed_change.authors),
             'published-online' => { 'date-parts' => date_parts },
@@ -69,7 +71,7 @@ module Stash
         end
       end
 
-      def populate_resource
+      def populate_resource!
         return unless @sm.present? && @resource.present?
         populate_abstract
         populate_authors
@@ -80,13 +82,12 @@ module Stash
         populate_publication_issn
         populate_publication_name
         populate_title
-        @resource
+        @resource.save
+        @resource.reload
       end
 
       def to_proposed_change
         return nil unless @sm.present? && @resource.present?
-        resource = populate_resource
-        return nil unless resource.changed?
 
         # Skip if the identifier already has proposed changes
         return unless StashEngine::ProposedChange.where(identifier_id: @resource.identifier.id).empty?
@@ -105,7 +106,8 @@ module Stash
           title: @sm['title']&.first&.to_s,
           url: @sm['URL']
         }
-        StashEngine::ProposedChange.new(params)
+        pc = StashEngine::ProposedChange.new(params)
+        resource_will_change?(proposed_change: pc) ? pc : nil
       end
 
       private
@@ -182,7 +184,7 @@ module Stash
         def get_journal_issn(hash)
           return nil unless hash.present? && (hash['container-title'].present? || hash['publisher'].present?)
 
-          publisher = hash['container-title'].present? ? hash['container-title'].first : hash['publisher'].first
+          publisher = hash['container-title'].present? ? hash['container-title'] : hash['publisher']
           resp = Serrano.journals(query: publisher)
           return nil unless resp.present? && resp['message'].present? && resp['message']['items'].present?
           return nil unless resp['message']['items'].first['ISSN'].present?
@@ -190,32 +192,55 @@ module Stash
           resp['message']['items'].first['ISSN']
         end
         # rubocop:enable Metrics/CyclomaticComplexity
+
+      end
+
+      def resource_will_change?(proposed_change:)
+        if proposed_change.authors.present?
+          auths = JSON.parse(proposed_change.authors).map do |auth|
+            StashEngine::Author.new(resource_id: @resource.id, author_orcid: auth['ORCID'],
+                                    author_first_name: auth['given'], author_last_name: auth['family'])
+          end
+        end
+
+        proposed_change.publication_date != @resource.publication_date ||
+          internal_datum_will_change?(proposed_change: proposed_change) ||
+          (proposed_change.authors.present? && (auths & @resource.authors).any?)
+      end
+
+      def internal_datum_will_change?(proposed_change:)
+        internal_data = @resource.identifier.internal_data
+        proposed_change.publication_name != internal_data.select { |d| d.data_type == 'publicationName' }.first&.value ||
+          proposed_change.publication_name != internal_data.select { |d| d.data_type == 'publicationISSN' }.first&.value ||
+          proposed_change.publication_name != internal_data.select { |d| d.data_type == 'publicationDOI' }.first&.value
       end
 
       def populate_abstract
         return unless @sm['abstract'].present?
         abstract = @resource.descriptions.first_or_initialize(description_type: 'abstract')
-        abstract.description = @sm['abstract']
+        abstract.update(description: @sm['abstract'])
       end
 
       def populate_affiliation(author, hash)
         affil_name = (hash['affiliation']&.first ? hash['affiliation'].first['name'] : nil)
-        author.affiliation = StashDatacite::Affiliation.from_long_name(affil_name) if affil_name.present?
+        affiliation = StashDatacite::Affiliation.from_long_name(affil_name) if affil_name.present?
+        affiliation.authors << author if affiliation.present? && !affiliation.authors.include?(author)
+        affiliation.save if affiliation.present?
       end
 
       def populate_author(hash)
-        exists = @resource.authors.where('stash_engine_authors.author_orcid = ? OR ' \
-            '(stash_engine_authors.author_first_name = ? AND stash_engine_authors.author_last_name = ?)',
-                                         hash['ORCID'], hash['family'], hash['given']).any?
-        return if exists
+        new_auth = StashEngine::Author.new(resource_id: @resource.id, author_orcid: hash['ORCID'],
+                                           author_first_name: hash['given'], author_last_name: hash['family'])
+        # Try to find an existing author already attached to the resource
+        author = @resource.authors.select { |a| a == new_auth }.first
+        @resource.authors << new_auth unless author.present?
+        author = @resource.authors.last unless author.present?
 
-        author = @resource.authors.new(
-          author_first_name: hash['given'],
-          author_last_name: hash['family'],
-          author_orcid: (hash['ORCID'] ? hash['ORCID'].match(/[0-9\-]{19}$/).to_s : nil)
-        )
+        author.author_first_name = hash['given'] if hash['given'].present?
+        author.author_last_name = hash['family'] if hash['family'].present?
+        author.author_orcid = hash['ORCID'].match(/[0-9\-]{19}$/).to_s if hash['ORCID'].present?
         populate_affiliation(author, hash)
-        @resource.authors << author if author.present? && author.valid?
+        author.save
       end
 
       def populate_authors
@@ -247,25 +272,27 @@ module Stash
       def populate_publication_date
         return unless publication_date.present?
         @resource.publication_date = date_parts_to_date(publication_date)
-        # populate_published_status if @resource.publication_date <= Date.today
       end
 
       def populate_publication_doi
         return unless @sm['DOI'].present?
-        datum = @resource.identifier.internal_data.find_or_initialize_by(data_type: 'publicationDOI')
-        datum.value = @sm['DOI']
+        datum = StashEngine::InternalDatum.find_or_initialize_by(identifier_id: @resource.identifier.id,
+                                                                 data_type: 'publicationDOI')
+        datum.update(value: @sm['DOI'])
       end
 
       def populate_publication_issn
         return unless @sm['ISSN'].present? && @sm['ISSN'].first.present?
-        datum = @resource.identifier.internal_data.find_or_initialize_by(data_type: 'publicationISSN')
-        datum.value = @sm['ISSN'].first
+        datum = StashEngine::InternalDatum.find_or_initialize_by(identifier_id: @resource.identifier.id,
+                                                                 data_type: 'publicationISSN')
+        datum.update(value: @sm['ISSN'].first)
       end
 
       def populate_publication_name
         return unless publisher.present?
-        datum = @resource.identifier.internal_data.find_or_initialize_by(data_type: 'publicationName')
-        datum.value = publisher
+        datum = StashEngine::InternalDatum.find_or_initialize_by(identifier_id: @resource.identifier.id,
+                                                                 data_type: 'publicationName')
+        datum.update(value: publisher)
       end
 
       def populate_title
