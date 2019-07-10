@@ -181,6 +181,7 @@ module Stash
         end
 
         # rubocop:disable Metrics/CyclomaticComplexity
+        # rubocop:disable Metrics/PerceivedComplexity
         def get_journal_issn(hash)
           return nil unless hash.present? && (hash['container-title'].present? || hash['publisher'].present?)
 
@@ -193,7 +194,7 @@ module Stash
           resp['message']['items'].first['ISSN']
         end
         # rubocop:enable Metrics/CyclomaticComplexity
-
+        # rubocop:enable Metrics/PerceivedComplexity
       end
 
       def resource_will_change?(proposed_change:)
