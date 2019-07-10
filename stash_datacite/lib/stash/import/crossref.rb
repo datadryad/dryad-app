@@ -184,8 +184,9 @@ module Stash
         def get_journal_issn(hash)
           return nil unless hash.present? && (hash['container-title'].present? || hash['publisher'].present?)
 
-          publisher = hash['container-title'].present? ? hash['container-title'] : hash['publisher']
-          resp = Serrano.journals(query: publisher)
+          pub = hash['container-title'].present? ? hash['container-title'] : hash['publisher']
+          pub = publisher.first if pub.present? && pub.is_a?(Array)
+          resp = Serrano.journals(query: pub)
           return nil unless resp.present? && resp['message'].present? && resp['message']['items'].present?
           return nil unless resp['message']['items'].first['ISSN'].present?
 
@@ -307,7 +308,8 @@ module Stash
       end
 
       def publisher
-        @sm['container-title'].present? ? @sm['container-title'] : @sm['publisher']
+        pub = @sm['container-title'].present? ? @sm['container-title'] : @sm['publisher']
+        pub.is_a?(Array) ? pub.first : pub
       end
 
       def date_parts_to_date(parts_array)
