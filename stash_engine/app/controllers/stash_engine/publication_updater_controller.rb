@@ -18,26 +18,26 @@ module StashEngine
     end
 
     def update
-      proposed_change = StashEngine::ProposedChange.where(proposed_change_params[:id]).first
-      flash[:alert] = 'Unable to approve the specified changes' unless proposed_change.present?
-      flash[:notice] = 'We approved it' if proposed_change.present?
-      proposed_change.approve!(current_user) if proposed_change.present?
-      redirect_to 'index'
+      respond_to do |format|
+        @proposed_change = StashEngine::ProposedChange.find(params[:id])
+        @resource = @proposed_change.identifier&.latest_resource if @proposed_change.present?
+        @proposed_change.approve!(current_user: current_user)
+        @proposed_change.reload
+        format.js
+      end
     end
 
     def destroy
-      proposed_change = StashEngine::ProposedChange.where(proposed_change_params[:id]).first
-      flash[:alert] = 'Unable to reject the specified changes' unless proposed_change.present?
-      flash[:notice] = 'We rejected it' if proposed_change.present?
-      proposed_change.reject!(current_user) if proposed_change.present?
-      redirect_to 'index'
+      respond_to do |format|
+        @proposed_change = StashEngine::ProposedChange.find(params[:id])
+        @resource = @proposed_change.identifier&.latest_resource if @proposed_change.present?
+        @proposed_change.reject!(current_user: current_user)
+        @proposed_change.reload
+        format.js
+      end
     end
 
     private
-
-    def proposed_change_params
-      params.require(:proposed_change).permit(:id)
-    end
 
     def setup_paging
       @page = params[:page] || '1'

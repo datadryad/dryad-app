@@ -41,12 +41,26 @@
         <%= render partial: 'proposed_change_line',
                    locals: { proposed_change: proposed_change, resource: resource } %>
 
-        <tr class="c-proposed-change-table__row-separator"><td colspan="9">&nbsp;</td></tr>
+        <tr id="separator_<%= proposed_change.id %>" class="c-proposed-change-table__row-separator"><td colspan="9">&nbsp;</td></tr>
       <% end %>
     <% end %>
   </table>
 
+  <div id="proposed-change-dialog" class="o-admin-dialog">Processing your request ...</div>
+
   <div class="c-space-paginator">
     <%= paginate @proposed_changes, params: { page_size: @page_size, show_all: false } %>
   </div>
+
+  <script type="text/javascript">
+    $("#proposed-change-dialog").dialog({
+      autoOpen: false,
+      modal: true,
+      title: 'Please wait'
+    });
+
+    $('.c-lined-table').on('click', 'button[name="accept_changes"], button[name="reject_changes"]', function(){
+      $("#proposed-change-dialog").dialog("open");
+    });
+  </script>
 </div>
