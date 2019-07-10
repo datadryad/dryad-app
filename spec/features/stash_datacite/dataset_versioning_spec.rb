@@ -104,7 +104,8 @@ RSpec.feature 'DatasetVersioning', type: :feature do
         before(:each, js: true) do
           sign_out
           sign_in(@curator)
-          click_link 'Admin'
+          find('.o-sites__summary', text: 'Admin').click
+          click_link 'Dataset Curation', wait: 5
         end
 
         it 'displays the proper information on the Admin page', js: true do
@@ -158,13 +159,15 @@ RSpec.feature 'DatasetVersioning', type: :feature do
         @resource.reload
 
         sign_in(@curator)
-        click_link 'Admin'
+        find('.o-sites__summary', text: 'Admin').click
+        click_link 'Dataset Curation', wait: 5
         # Edit the Dataset as an admin
         find('button[title="Edit Dataset"]').click
         expect(page).to have_text("You are editing #{@author.name}'s dataset.", wait: 5)
         update_dataset(curator: true)
         @resource.reload
-        click_link 'Admin'
+        find('.o-sites__summary', text: 'Admin').click
+        click_link 'Dataset Curation', wait: 5
       end
 
       it 'has a resource_state (Merritt status) of "submitted"', js: true do
@@ -242,7 +245,8 @@ RSpec.feature 'DatasetVersioning', type: :feature do
       it 'displays the proper information on the Admin page', js: true do
         sign_out
         sign_in(@curator)
-        click_link 'Admin'
+        find('.o-sites__summary', text: 'Admin').click
+        click_link 'Dataset Curation', wait: 5
         within(:css, '.c-lined-table__row') do
           # Make sure the appropriate buttons are available
           # Make sure the right text is shown
@@ -257,7 +261,8 @@ RSpec.feature 'DatasetVersioning', type: :feature do
       it 'displays the proper information on the Activity Log page', js: true do
         sign_out
         sign_in(@curator)
-        click_link 'Admin'
+        find('.o-sites__summary', text: 'Admin').click
+        click_link 'Dataset Curation', wait: 5
 
         within(:css, '.c-lined-table__row') do
           find('button[aria-label="View Activity Log"]').click
