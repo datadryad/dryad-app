@@ -87,8 +87,9 @@ namespace :link_out do
   task seed_genbank_ids: :environment do
     p 'Retrieving GenBank Sequence IDs for existing datasets'
     pubmed_sequence_service = LinkOut::PubmedSequenceService.new
-    existing_pmids = StashEngine::Identifier.cited_by_pubmed.pluck(:id)
-    datum = StashEngine::InternalDatum.where(identifier_id: existing_pmids, data_type: 'pubmedID').limit(30).order(created_at: :desc)
+    existing_refs = StashEngine::ExternalReference.all.pluck(:identifier_id).uniq
+    existing_pmids = StashEngine::Identifier.cited_by_pubmed.where.not(id: existing_refs).pluck(:id)
+    datum = StashEngine::InternalDatum.where(identifier_id: existing_pmids, data_type: 'pubmedID').order(created_at: :desc)
     datum.each do |data|
       p "  looking for genbank sequences for PubmedID #{data.value}"
       sequences = pubmed_sequence_service.lookup_genbank_sequences(data.value)

@@ -20,6 +20,16 @@ module StashEngine
       enable
     end
 
+    # rubocop:disable Metrics/CyclomaticComplexity
+    def ==(other)
+      return false unless other.present?
+      return true if author_orcid.present? && other.author_orcid == author_orcid
+      return true if author_email.present? && other.author_email == author_email
+      other.author_last_name&.strip&.downcase == author_last_name&.strip&.downcase &&
+        other.author_first_name&.strip&.downcase == author_first_name&.strip&.downcase
+    end
+    # rubocop:enable Metrics/CyclomaticComplexity
+
     def author_full_name
       [author_last_name, author_first_name].reject(&:blank?).join(', ')
     end

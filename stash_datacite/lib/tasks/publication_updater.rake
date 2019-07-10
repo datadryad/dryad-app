@@ -11,8 +11,10 @@ namespace :publication_updater do
     p "Scanning Crossref API for #{resources.length} resources"
 
     resources.each do |resource|
-      # Skip any identifiers that already have proposed changes in the queue or are published
-      next if StashEngine::ProposedChange.where(identifier_id: resource.identifier_id).present?
+      existing_pc = StashEngine::ProposedChange.where(identifier_id: resource.identifier_id).first
+      # Skip any identifiers that already have proposed changes that is approved and published
+      # or are already marked as published in Dryad
+      next if existing_pc.present? && existing_pc.approved? && existing_pc.publication_date.present?
       next if resource.current_curation_activity.blank? || resource.current_curation_status == 'published'
 
       # Skip the record if we've already captured its info from Crossref
@@ -25,6 +27,8 @@ namespace :publication_updater do
       cr = Stash::Import::Crossref.query_by_author_title(resource: resource) unless cr.present?
 
       pc = cr.to_proposed_change if cr.present?
+      # Skip the change if we already have proposed changes and the information is not different
+      next if existing_pc == pc
       p "  found changes for: #{resource.id} (#{resource&.current_curation_status}) - #{resource.title}" if pc.present?
       pc.save if pc.present?
     end

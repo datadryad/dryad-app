@@ -1,0 +1,30 @@
+<td>
+  <strong>Publication:</strong>
+  <%= link_to proposed_change.title, proposed_change.url, target: :blank %>
+</td>
+<td class="c-proposed-change-table__column-centered">
+  <strong>Changes</strong>
+  <% url = "#{stash_url_helpers.publication_updater_path}/#{proposed_change.id}" %>
+  <%= form_for :proposed_change, url: url, method: :PUT, remote: true do |f| %>
+    <button name="accept_changes" type="submit">Accept</button>
+  <% end %>
+  <%= form_for :proposed_change, url: url, method: :DELETE, remote: true do |f| %>
+     <button name="reject_changes" type="submit">Reject</button>
+    <% end %>
+</td>
+
+<%= render_column(old_val: existing_pubname, new_val: proposed_change.publication_name).html_safe %>
+<%= render_column(old_val: existing_pubissn, new_val: proposed_change.publication_issn).html_safe %>
+<%= render_column(old_val: existing_pubdoi, new_val: proposed_change.publication_doi).html_safe %>
+<%= render_column(
+  old_val: formatted_date(resource.publication_date),
+  new_val: formatted_date(proposed_change.publication_date)
+).html_safe %>
+<%= render_column(
+  old_val: existing_authors(resource: resource),
+  new_val: proposed_authors(json: proposed_change.authors)
+).html_safe %>
+
+<td class="c-proposed-change-table__column-centered" title="Dryad score (<%= proposed_change.provenance.capitalize %> score)">
+  <%= proposed_change.score&.round(2) %><br>(<%= proposed_change.provenance_score&.round(2) || 'DOI match' %>)
+</td>
