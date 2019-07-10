@@ -29,7 +29,7 @@ RSpec.feature 'Populate manuscript metadata from outside source', type: :feature
       fill_manuscript_info(name: 'European Journal of Plant Pathology', issn: '1573-8469', msid: 'APPS-D-grog-plant0001221')
       click_button 'Import Manuscript Metadata', wait: 5
       expect(page.find('div#population-warnings')).to have_content('We could not find metadata to import for this manuscript. ' \
-          'Please enter your metadata below.', wait: 20)
+          'Please enter your metadata below.', wait: 30)
     end
 
     it "gives message when journal isn't selected" do
@@ -62,7 +62,7 @@ RSpec.feature 'Populate manuscript metadata from outside source', type: :feature
       expect(page).to have_field('title',
                                  with: 'Leaf and infructescence fossils of Alnus (Betulaceae) from the late Eocene ' \
         'of the southeastern Qinghai-Tibetan Plateau',
-                                 wait: 20)
+                                 wait: 40)
       # The autofill just populates info into the database and then displays the info from the database on the page.
       # We already have unit tests for population into the database and also tests for field display on the entry page,
       # so this is just a basic test to be sure population is happening.

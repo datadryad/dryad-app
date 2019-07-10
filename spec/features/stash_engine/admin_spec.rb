@@ -25,10 +25,7 @@ RSpec.feature 'Admin', type: :feature do
 
     it 'has admin link' do
       visit root_path
-      find('.o-sites__summary', text: 'Admin').click
-      expect(page).to have_link('Dataset Curation', wait: 5)
-      expect(page).to have_link('Publication Updater')
-      expect(page).to have_link('Status Dashboard')
+      expect(page).to have_link('Admin')
     end
 
     it 'shows users for institution' do
