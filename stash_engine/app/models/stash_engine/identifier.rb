@@ -224,6 +224,10 @@ module StashEngine
         plan_type == 'DEFERRED'
     end
 
+    def journal_customer_id
+      publication_data('stripeCustomerID')
+    end
+
     def institution_will_pay?
       latest_resource&.tenant&.covers_dpc == true
     end
