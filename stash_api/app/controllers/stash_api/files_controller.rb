@@ -55,8 +55,6 @@ module StashApi
     end
 
     # DELETE /files/<id>
-    # has set @stash_file and @resource and checked user would be able to edit this resource (permission), but not that it's in-progress
-    # HATEOAS seems to allow a response with links and other fun stuff.
     def destroy
       unless @resource.current_state == 'in_progress'
         render json: { error: 'This file must be part of an an in-progress version' }.to_json, status: 403
@@ -171,7 +169,8 @@ module StashApi
       }
     end
 
-    # make a file deleted and return the hash for what it looks like after with HATEOAS
+    # make a file deleted and return the hash for what it looks like after with HATEOAS, I forgot this marks for deletion
+    # also in second version
     def make_deleted(file_upload:)
       case file_upload.file_state
       when 'created' # delete from db since it's new in this version
