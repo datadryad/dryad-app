@@ -231,6 +231,11 @@ module StashApi
         response_code = delete "/api/files/#{@files[1].first.id}", {}, default_authenticated_headers
         expect(response_code).to eq(401)
       end
+
+      it "blocks destroying file if the version isn't being edited" do
+        response_code = delete "/api/files/#{@files[0].first.id}", {}, default_authenticated_headers
+        expect(response_code).to eq(403)
+      end
     end
   end
 end
