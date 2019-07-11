@@ -5719,6 +5719,18 @@ html.no-details .o-showhide__summary {
 .c-why-share__text-group-side div {
   margin-bottom: 3em; }
 
+.about-page .bio {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  margin-bottom: 15px; }
+  .about-page .bio img {
+    width: 150px;
+    height: 150px;
+    margin-right: 15px; }
+  .about-page .bio p {
+    margin-top: 0; }
+
 .t-describe__remove-button {
   -ms-flex-item-align: center;
       align-self: center;
