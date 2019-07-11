@@ -51,9 +51,10 @@
           <summary class="o-showhide__summary o-sites__summary">Help</summary>
           <div class="o-sites__group">
             <%= link_to 'Why Use Dryad?', "#{stash_url_helpers.help_path(anchor: 'why_use')}", class: 'o-sites__group-item' %>
+            <%= link_to 'Curation', "#{stash_url_helpers.help_path(anchor: 'curation')}", class: 'o-sites__group-item' %>
             <%= link_to 'Submission Information', "#{stash_url_helpers.help_path(anchor: 'submission')}", class: 'o-sites__group-item' %>
-            <%= link_to 'Data Processing Charges', "#{stash_url_helpers.help_path(anchor: 'fees')}", class: 'o-sites__group-item' %>
-            <%= link_to 'Fequently Asked Questions', stash_url_helpers.faq_path, class: 'o-sites__group-item' %>
+            <%= link_to 'Data Publishing Charges', "#{stash_url_helpers.help_path(anchor: 'fees')}", class: 'o-sites__group-item' %>
+            <%= link_to 'Frequently Asked Questions', stash_url_helpers.faq_path, class: 'o-sites__group-item' %>
           </div>
         </details>
       </div>

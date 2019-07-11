@@ -84,6 +84,7 @@ StashEngine::Engine.routes.draw do
   get 'about', to: 'pages#about'
   get 'dda', to: 'pages#dda' # data deposit agreement
   get 'search', to: 'searches#index'
+  get 'terms', to: 'pages#terms'
   get 'editor', to: 'pages#editor'
   get 'dataset/*id', to: 'landing#show', as: 'show', constraints: { id: /\S+/ }
   get 'data_paper/*id', to: 'landing#data_paper', as: 'data_paper', constraints: { id: /\S+/ }
