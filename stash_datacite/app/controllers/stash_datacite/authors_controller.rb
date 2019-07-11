@@ -67,10 +67,12 @@ module StashDatacite
     end
 
     def check_for_orcid(author)
-      author.author_orcid ? true : false
+      author&.author_orcid ? true : false
     end
 
     def process_affiliation
+      return nil unless @author.present?
+
       args = author_params
       affil = StashDatacite::Affiliation.from_long_name(args['affiliation']['long_name'])
       args['affiliation']['id'] = affil.id unless affil.blank?
