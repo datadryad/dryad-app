@@ -7,7 +7,9 @@
       <!-- The content specific to the tenant can come form the partial below -->
       <%#= render "tenants/#{current_tenant.tenant_id}/about", toc: true %>
     </div>
-    <%= render "layouts/about" %>
+    <div class="about-page">
+      <%= render "layouts/about" %>
+    </div>
     <%#= render "tenants/#{current_tenant.tenant_id}/about" %>
 <% else %>
     <p>A placeholder for the About page.</p>

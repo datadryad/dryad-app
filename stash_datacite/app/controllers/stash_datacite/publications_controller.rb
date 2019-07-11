@@ -66,8 +66,7 @@ module StashDatacite
         @error = "We couldn't obtain information from CrossRef about this DOI"
         return
       end
-      @resource = cr.populate_resource
-      @resource.save
+      @resource = cr.populate_resource!
     rescue Serrano::NotFound, Serrano::BadGateway, Serrano::Error, Serrano::GatewayTimeout, Serrano::InternalServerError, Serrano::ServiceUnavailable
       @error = "We couldn't retrieve information from CrossRef about this DOI"
     end

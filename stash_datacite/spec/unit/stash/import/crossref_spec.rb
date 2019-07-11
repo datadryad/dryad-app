@@ -393,7 +393,7 @@ module Stash
         end
 
         it 'calls the other population methods' do
-          @resource = @cr.populate_resource
+          @resource = @cr.populate_resource!
           # just basic tests of these items since tested in-depth individually elsewhere
           expect(@resource.title).to eql(TITLE)
           expect(@resource.authors.first.author_first_name).to eql(AUTHOR.first['given'])
@@ -403,7 +403,7 @@ module Stash
           expect(@resource.related_identifiers.first.related_identifier).to eql(URL)
           expect(@resource.identifier.internal_data.select { |id| id.data_type == 'publicationName' }.first.value).to eql(PUBLISHER)
           expect(@resource.identifier.internal_data.select { |id| id.data_type == 'publicationDOI' }.first.value).to eql(DOI)
-          expect(@resource.publication_date).to eql(@cr.send(:date_parts_to_date, PAST_PUBLICATION_DATE))
+          expect(@resource.publication_date.strftime('%Y-%m-%d')).to eql(@cr.send(:date_parts_to_date, PAST_PUBLICATION_DATE).to_s)
         end
       end
 
@@ -637,12 +637,12 @@ module Stash
 
         it 'properly extracts the data from the ProposedChange' do
           cr = Crossref.from_proposed_change(proposed_change: @proposed_change)
-          resource = cr.populate_resource
+          resource = cr.populate_resource!
           auths = JSON.parse(@params[:authors])
           expect(resource.title).to eql(@params[:title])
           expect(resource.identifier.internal_data.select { |id| id.data_type == 'publicationName' }.first.value).to eql(@params[:publication_name])
           expect(resource.identifier.internal_data.select { |id| id.data_type == 'publicationDOI' }.first.value).to eql(@params[:publication_doi])
-          expect(resource.publication_date).to eql(@params[:publication_date])
+          expect(resource.publication_date.strftime('%Y-%m-%d')).to eql(@params[:publication_date].to_s)
           expect(resource.authors.first.author_first_name).to eql(auths.first['given'])
           expect(resource.authors.first.author_last_name).to eql(auths.first['family'])
 

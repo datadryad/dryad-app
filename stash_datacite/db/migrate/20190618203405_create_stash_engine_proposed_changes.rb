@@ -3,6 +3,7 @@ class CreateStashEngineProposedChanges < ActiveRecord::Migration
     create_table :stash_engine_proposed_changes do |t|
       t.references :identifier, index: true
       t.boolean :approved
+      t.boolean :rejected
       t.references :user, index: true
       t.text :authors
       t.string :provenance

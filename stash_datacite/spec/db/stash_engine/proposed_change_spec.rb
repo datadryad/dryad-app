@@ -26,8 +26,9 @@ module StashEngine
             'affiliation' => ['name' => 'Catalonia'] }
         ].to_json,
         provenance: 'crossref',
-        publication_date: Date.new(2018, 0o1, 0o1),
+        publication_date: Date.new(2018, 8, 13),
         publication_doi: '10.1073/pnas.1718211115',
+        publication_issn: '1234-1234',
         publication_name: 'Ficticious Journal',
         score: 2.0,
         title: 'High-skilled labour mobility in Europe before and after the 2004 enlargement'
@@ -35,12 +36,69 @@ module StashEngine
       @proposed_change = StashEngine::ProposedChange.new(@params)
     end
 
+    describe ':== (equality)' do
+      it 'returns false if the proposed_change passed in is nil' do
+        expect(@proposed_change.nil?).to eql(false)
+      end
+
+      it 'returns false if the proposed_change passed in is not a ProposedChange' do
+        expect(@proposed_change == { 'title' => 'Foo' }).to eql(false)
+      end
+
+      context 'relevant attributes result in a FALSE if they do not match' do
+        before(:each) do
+          @pc = StashEngine::ProposedChange.new(@params)
+        end
+
+        it 'checking identifier_id' do
+          @pc.identifier_id = 789_578
+          expect(@proposed_change == @pc).to eql(false)
+        end
+        it 'checking authors' do
+          @pc.authors = [{ 'given' => 'Julia M.', 'family' => 'Petersen' }]
+          expect(@proposed_change == @pc).to eql(false)
+        end
+        it 'checking provenance' do
+          @pc.provenance = 'some other site'
+          expect(@proposed_change == @pc).to eql(false)
+        end
+        it 'checking publication_date' do
+          @pc.publication_date = Date.today
+          expect(@proposed_change == @pc).to eql(false)
+        end
+        it 'checking publication_name' do
+          @pc.publication_name = 'Foo'
+          expect(@proposed_change == @pc).to eql(false)
+        end
+        it 'checking publication_issn' do
+          @pc.publication_issn = nil
+          expect(@proposed_change == @pc).to eql(false)
+        end
+        it 'checking publication_doi' do
+          @pc.publication_doi = nil
+          expect(@proposed_change == @pc).to eql(false)
+        end
+        it 'checking title' do
+          @pc.title = 'Foo'
+          expect(@proposed_change == @pc).to eql(false)
+        end
+      end
+
+      it 'returns true if all the relevant attributes match' do
+        pc = StashEngine::ProposedChange.new(@params)
+        pc.score = 45.342
+        pc.approved = true
+        expect(@proposed_change == pc).to eql(true)
+      end
+    end
+
     describe :approve! do
       it 'approves the changes' do
+        old_title = @resource.title
         @proposed_change.approve!(current_user: @user)
         @resource.reload
 
-        expect(@resource.title).to eql(@params[:title])
+        expect(@resource.title).to eql(old_title)
         auths = JSON.parse(@params[:authors])
         expect(@resource.authors.first.author_first_name).to eql(auths.first['given'])
         expect(@resource.authors.first.author_last_name).to eql(auths.first['family'])
@@ -63,9 +121,10 @@ module StashEngine
       it 'returns the user tenant ID' do
         id = @proposed_change.id
         identifier = @proposed_change.identifier
-        @proposed_change.reject!
+        @proposed_change.reject!(current_user: @user)
         expect(StashEngine::ProposedChange.where(id: id).empty?).to eql(true)
-        expect(StashEngine::ProposedChange.where(identifier_id: identifier.id).empty?).to eql(true)
+        expect(StashEngine::ProposedChange.where(identifier_id: identifier.id).first&.rejected?).to eql(true)
+        expect(StashEngine::ProposedChange.where(identifier_id: identifier.id).first&.user_id).to eql(@user.id)
       end
     end
 

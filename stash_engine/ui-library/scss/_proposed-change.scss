@@ -1,0 +1,37 @@
+/* Proposed Change Object */
+
+.c-proposed-change-table__row-separator {
+  max-height: 10px;
+  background-color: $design-dark-gray-color;
+}
+
+.c-proposed-change-table__column-mergeable {
+  position: relative;
+  background-color: $design-lighter-blue-color;
+
+  .c-proposed-change-table__column-mergeable-icon {
+    position: absolute;
+    top: -7px;
+    left: 40%;
+  }
+}
+
+.c-proposed-change-table__column-centered {
+  text-align: center;
+
+  button {
+    margin-top: 5px;
+  }
+}
+
+.c-proposed-change-table__column-small {
+  width: 10%;
+}
+
+.c-proposed-change-table__column-medium {
+  width: 20%;
+}
+
+.c-proposed-change-table__column-large {
+  width: 30%;
+}
