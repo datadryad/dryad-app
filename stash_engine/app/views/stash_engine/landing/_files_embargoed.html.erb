@@ -2,12 +2,13 @@
 <div class="c-sidebox">
   <h3 class="c-sidebox__heading">Data Files</h3>
   <p>
-    This dataset is private for peer review<% if @resource.publication_date.present? && @resource.publication_date > Time.new -%>
+    This dataset is embargoed <% if @resource.publication_date.present? && @resource.publication_date > Time.new -%>
       and will be released on <%= formatted_date(@resource.publication_date) %>
     <% end -%>.
-    Please contact
-    <%= raw(english_list(array: @resource.authors.map(&:author_html_email_string).compact, conjunction: 'or')) %>
-    with any questions.
+    <% if auth.present? %>
+      Please contact <a href="mailto:<%= auth.email %>"><%= auth.author_standard_name
+      %></a> with any questions.
+    <% end %>
   </p>
   <p>Lists of files and downloads will become available to the public when released.</p>
 </div>
