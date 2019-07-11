@@ -17,9 +17,12 @@ module StashApi
     before_action -> { require_stash_identifier(doi: params[:id]) }, only: %i[update]
     before_action :doorkeeper_authorize!, only: %i[update destroy]
     before_action :require_api_user, only: %i[update destroy]
+    before_action :optional_api_user, except: %i[create update]
     before_action :require_in_progress_resource, only: %i[update]
     before_action :require_file_current_uploads, only: :update
     before_action :require_permission, only: %i[update destroy]
+    before_action :require_viewable_file, only: :show
+    before_action -> { require_viewable_resource(resource_id: params[:version_id]) }, only: :index
 
     # GET /files/<id>
     def show
@@ -179,6 +182,11 @@ module StashApi
         file_upload.update!(file_state: 'deleted')
       end
       StashApi::File.new(file_id: file_upload.id).metadata
+    end
+
+    def require_viewable_file
+      f = StashEngine::FileUpload.where(id: params[:id]).first
+      render json: { error: 'not-found' }.to_json, status: 404 if f.nil? || !f.resource.may_view?(ui_user: @user)
     end
   end
 end

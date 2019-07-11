@@ -77,6 +77,11 @@ module StashApi
       @resource = @stash_identifier.in_progress_resource
     end
 
+    def require_viewable_resource(resource_id:)
+      res = StashEngine::Resource.where(id: resource_id).first
+      render json: { error: 'not-found' }.to_json, status: 404 if res.nil? || !res.may_view?(ui_user: @user)
+    end
+
     # based on user and resource set in "require_api_user" and 'require_resource_in_progress'
     def require_permission
       return if @resource.nil? # this not needed for dataset upsert with identifier
