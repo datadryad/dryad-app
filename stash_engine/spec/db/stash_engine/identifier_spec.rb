@@ -300,6 +300,22 @@ module StashEngine
       end
     end
 
+    describe '#journal_customer_id' do
+      it 'retrieves the journal Stripe customer ID' do
+        @fake_journal_name = 'Fake Journal'
+        @fake_customer_id = 'cust_abc123'
+        stub_request(:any, %r{/journals/#{@fake_issn}})
+          .to_return(body: '{"fullName":"' + @fake_journal_name + '",
+                             "issn":"' + @fake_issn + '",
+                             "website":"http://onlinelibrary.wiley.com/journal/10.1111/(ISSN)1365-294X",
+                             "description":"Molecular Ecology publishes papers that utilize molecular genetic techniques...",
+                             "stripeCustomerID":"' + @fake_customer_id + '"}',
+                     status: 200,
+                     headers: { 'Content-Type' => 'application/json' })
+        expect(identifier.journal_customer_id).to eq(@fake_customer_id)
+      end
+    end
+
     describe '#journal_will_pay?' do
       it 'returns true when there is a PREPAID plan' do
         allow(@identifier).to receive('publication_data').and_return('PREPAID')

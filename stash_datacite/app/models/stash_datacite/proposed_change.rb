@@ -6,20 +6,34 @@ module StashEngine
     CROSSREF_PUBLISHED_MESSAGE = 'reported that the related journal has been published'.freeze
     CROSSREF_UPDATE_MESSAGE = 'provided additional metadata'.freeze
 
-    def approve!(current_user:)
-      return false unless current_user.is_a?(StashEngine::User)
+    # Overriding equality check to make sure we're only comparing the fields we care about
+    # rubocop:disable Metrics/CyclomaticComplexity
+    def ==(other)
+      return false unless other.present? && other.is_a?(StashEngine::ProposedChange)
 
+      other.identifier_id == identifier_id && other.authors == authors && other.provenance == provenance &&
+        other.publication_date == publication_date && other.publication_issn == publication_issn &&
+        other.publication_doi == publication_doi && other.publication_name == publication_name &&
+        other.title == title
+    end
+    # rubocop:enable Metrics/CyclomaticComplexity
+
+    def approve!(current_user:)
+      return false if current_user.blank? || !current_user.is_a?(StashEngine::User)
       cr = Stash::Import::Crossref.from_proposed_change(proposed_change: self)
-      resource = cr.populate_resource
+      existing_title = identifier.latest_resource&.title
+      resource = cr.populate_resource!
+      # We don't acvtually want to update the dataset title in this scenario
+      resource.update(title: existing_title) unless resource.title == existing_title
       add_metadata_updated_curation_note(cr.class.name.downcase.split('::').last, resource)
-      resource.save
-      resource.identifier.save
       update(approved: true, user_id: current_user.id)
       true
     end
 
-    def reject!
-      destroy
+    def reject!(current_user:)
+      return false if current_user.blank? || !current_user.is_a?(StashEngine::User)
+      update(rejected: true, user_id: current_user.id)
+      true
     end
 
     private

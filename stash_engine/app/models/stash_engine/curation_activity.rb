@@ -114,11 +114,14 @@ module StashEngine
     # Callbacks
     # ------------------------------------------
     def submit_to_stripe
-      return unless ready_for_payment? &&
-                    resource.identifier&.user_must_pay?
+      return unless ready_for_payment?
 
       inv = Stash::Payments::Invoicer.new(resource: resource, curator: user)
-      inv.charge_via_invoice
+      if resource.identifier&.user_must_pay?
+        inv.charge_user_via_invoice
+      elsif resource.identifier&.journal_will_pay?
+        inv.charge_journal_via_invoice
+      end
     end
 
     def submit_to_datacite
