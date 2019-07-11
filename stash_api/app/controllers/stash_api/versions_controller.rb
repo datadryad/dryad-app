@@ -10,7 +10,7 @@ module StashApi
     before_action -> { require_stash_identifier(doi: params[:dataset_id]) }, only: [:index]
     before_action -> { require_resource_id(resource_id: params[:id]) }, only: %i[show download]
     before_action :optional_api_user
-    before_action :require_viewable_resource, only: :show
+    before_action -> { require_viewable_resource(resource_id: params[:id]) }, only: :show
 
     # get /versions/<id>
     def show
@@ -67,9 +67,5 @@ module StashApi
       }
     end
 
-    def require_viewable_resource
-      res = StashEngine::Resource.where(id: params[:id]).first
-      render json: { error: 'not-found' }.to_json, status: 404 if res.nil? || !res.may_view?(ui_user: @user)
-    end
   end
 end
