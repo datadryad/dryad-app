@@ -17,15 +17,13 @@ module StashApi
     include Mocks::Repository
     include Mocks::UrlUpload
 
-    before(:all) do
+    # set up some versions with different curation statuses (visibility)
+    before(:each) do
       @user = create(:user, role: 'superuser')
       @doorkeeper_application = create(:doorkeeper_application, redirect_uri: 'urn:ietf:wg:oauth:2.0:oob',
                                                                 owner_id: @user.id, owner_type: 'StashEngine::User')
       setup_access_token(doorkeeper_application: @doorkeeper_application)
-    end
 
-    # set up some versions with different curation statuses (visibility)
-    before(:each) do
       neuter_curation_callbacks!
       mock_ror!
 
@@ -53,7 +51,6 @@ module StashApi
       @file_path = Rails.root.join('spec/fixtures/http_responses/favicon.ico')
       @mime_type = 'image/vnd.microsoft.icon'
     end
-
 
     # working with files
     describe '#update' do
@@ -103,12 +100,13 @@ module StashApi
         expect(response_code).to eq(404)
       end
 
-      it "shows non-public files to the owner" do
+      it 'shows non-public files to the owner' do
         @doorkeeper_application2 = create(:doorkeeper_application, redirect_uri: 'urn:ietf:wg:oauth:2.0:oob',
-                                          owner_id: @user1.id, owner_type: 'StashEngine::User')
+                                                                   owner_id: @user1.id, owner_type: 'StashEngine::User')
         access_token = get_access_token(doorkeeper_application: @doorkeeper_application2)
         response_code = get @the_path, {}, default_json_headers.merge(
-            'Content-Type' => 'application/json-patch+json', 'Authorization' => "Bearer #{access_token}")
+          'Content-Type' => 'application/json-patch+json', 'Authorization' => "Bearer #{access_token}"
+        )
         expect(response_code).to eq(200)
         # return message tested elsewhere already
       end
@@ -116,10 +114,11 @@ module StashApi
       it 'shows non-public files to an admin for the same tenant' do
         @user1.update(role: 'admin')
         @doorkeeper_application2 = create(:doorkeeper_application, redirect_uri: 'urn:ietf:wg:oauth:2.0:oob',
-                                          owner_id: @user1.id, owner_type: 'StashEngine::User')
+                                                                   owner_id: @user1.id, owner_type: 'StashEngine::User')
         access_token = get_access_token(doorkeeper_application: @doorkeeper_application2)
         response_code = get @the_path, {}, default_json_headers.merge(
-            'Content-Type' => 'application/json-patch+json', 'Authorization' => "Bearer #{access_token}")
+          'Content-Type' => 'application/json-patch+json', 'Authorization' => "Bearer #{access_token}"
+        )
         expect(response_code).to eq(200)
       end
     end
@@ -137,7 +136,7 @@ module StashApi
         expect(response_code).to eq(200)
         expect(hsh['total']).to eq(25)
         item_hash = hsh['_embedded']['stash:files'].first
-        %w{path size mimeType status}.each do |i|
+        %w[path size mimeType status].each do |i|
           expect(item_hash[i]).not_to be_nil
         end
       end
@@ -152,10 +151,11 @@ module StashApi
 
       it 'shows an index of files for a private dataset version to the owner' do
         @doorkeeper_application2 = create(:doorkeeper_application, redirect_uri: 'urn:ietf:wg:oauth:2.0:oob',
-                                          owner_id: @user1.id, owner_type: 'StashEngine::User')
+                                                                   owner_id: @user1.id, owner_type: 'StashEngine::User')
         access_token = get_access_token(doorkeeper_application: @doorkeeper_application2)
         response_code = get "/api/versions/#{@resources[1].id}/files", {}, default_json_headers.merge(
-            'Authorization' => "Bearer #{access_token}")
+          'Authorization' => "Bearer #{access_token}"
+        )
         hsh = response_body_hash
         expect(response_code).to eq(200)
         expect(hsh['total']).to eq(4)
@@ -171,15 +171,65 @@ module StashApi
 
       it "doesn't show private version's list of file to non-user" do
         response_code = get "/api/versions/#{@resources[1].id}/files", {}, default_json_headers
-        hsh = response_body_hash
         expect(response_code).to eq(404)
       end
 
       it "doesn't show private versions list of files to a random user" do
         @user.update(role: 'user', tenant_id: @tenant_ids.first)
         response_code = get "/api/versions/#{@resources[1].id}/files", {}, default_authenticated_headers
-        hsh = response_body_hash
         expect(response_code).to eq(404)
+      end
+    end
+
+    describe '#destroy' do
+      before(:each) do
+        # make two lists of files for versions that are representative of how stuff works for versioning
+        # with second version inheriting the files from the first showing as copied over internally
+        @files = [create_list(:file_upload, 4, resource_id: @resources[0].id)]
+        tmp = @files.first.map(&:amoeba_dup)
+        tmp.each do |f|
+          f.file_state = 'copied'
+          f.resource_id = @resources[1].id
+          f.save!
+        end
+        @files << tmp
+      end
+
+      it 'allows destroying file if superuser' do
+        response_code = delete "/api/files/#{@files[1].first.id}", {}, default_authenticated_headers
+        expect(response_code).to eq(200) # maybe this should be 202 for an item that is marked for deletion when we revise
+        hsh = response_body_hash
+        expect(hsh['status']).to eq('deleted')
+      end
+
+      it 'allows destroying file if owner' do
+        @doorkeeper_application2 = create(:doorkeeper_application, redirect_uri: 'urn:ietf:wg:oauth:2.0:oob',
+                                                                   owner_id: @user1.id, owner_type: 'StashEngine::User')
+        access_token = get_access_token(doorkeeper_application: @doorkeeper_application2)
+        response_code = delete "/api/files/#{@files[1].first.id}", {}, default_authenticated_headers
+          .merge('Authorization' => "Bearer #{access_token}")
+        expect(response_code).to eq(200) # maybe this should be 202 for an item that is marked for deletion when we revise
+        hsh = response_body_hash
+        expect(hsh['status']).to eq('deleted')
+      end
+
+      it 'allows destroying file if admin for same tenant' do
+        @user.update(role: 'admin', tenant_id: @tenant_ids.first)
+        response_code = delete "/api/files/#{@files[1].first.id}", {}, default_authenticated_headers
+        expect(response_code).to eq(200)
+        hsh = response_body_hash
+        expect(hsh['status']).to eq('deleted')
+      end
+
+      it 'blocks anonymous users from destroying files' do
+        response_code = delete "/api/files/#{@files[1].first.id}", {}, default_json_headers
+        expect(response_code).to eq(401)
+      end
+
+      it 'blocks destroying file if another regular user' do
+        @user.update(role: 'user')
+        response_code = delete "/api/files/#{@files[1].first.id}", {}, default_authenticated_headers
+        expect(response_code).to eq(401)
       end
     end
   end
