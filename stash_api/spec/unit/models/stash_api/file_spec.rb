@@ -22,6 +22,7 @@ module StashApi
       allow(generic_path).to receive(:version_path).and_return('version_foobar_path')
       allow(generic_path).to receive(:file_path).and_return('file_foobar_path')
       allow(generic_path).to receive(:version_files_path).and_return('version_files_foobar_path')
+      allow(generic_path).to receive(:download_file_path).and_return('file_download_foobar_path')
 
       allow_any_instance_of(Dataset).to receive(:api_url_helper).and_return(generic_path)
       allow_any_instance_of(File).to receive(:api_url_helper).and_return(generic_path)
