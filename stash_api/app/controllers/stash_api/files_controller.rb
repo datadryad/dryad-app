@@ -5,6 +5,7 @@
 require 'fileutils'
 
 require_dependency 'stash_api/application_controller'
+require 'stash/download/file'
 
 # rubocop:disable Metrics/ClassLength
 module StashApi
@@ -12,8 +13,7 @@ module StashApi
 
     before_action :require_json_headers, only: %i[show index destroy]
     before_action -> { require_resource_id(resource_id: params[:version_id]) }, only: [:index]
-    before_action -> { require_file_id(file_id: params[:id]) }, only: %i[show destroy]
-
+    before_action -> { require_file_id(file_id: params[:id]) }, only: %i[show destroy download]
     before_action -> { require_stash_identifier(doi: params[:id]) }, only: %i[update]
     before_action :doorkeeper_authorize!, only: %i[update destroy]
     before_action :require_api_user, only: %i[update destroy]
@@ -21,7 +21,7 @@ module StashApi
     before_action :require_in_progress_resource, only: %i[update]
     before_action :require_file_current_uploads, only: :update
     before_action :require_permission, only: %i[update destroy]
-    before_action :require_viewable_file, only: :show
+    before_action :require_viewable_file, only: %i[show download]
     before_action -> { require_viewable_resource(resource_id: params[:version_id]) }, only: :index
 
     # GET /files/<id>
@@ -63,6 +63,17 @@ module StashApi
       file_hash = make_deleted(file_upload: @stash_file)
       respond_to do |format|
         format.json { render json: file_hash, status: 200 }
+      end
+    end
+
+    # GET /files/<id>/download
+    def download
+      if @resource.may_download?(ui_user: @user)
+        @file_streamer = Stash::Download::File.new(controller_context: self)
+        StashEngine::CounterLogger.general_hit(request: request, file: @stash_file)
+        @file_streamer.download(file: @stash_file)
+      else
+        render status: 404, text: 'Not found'
       end
     end
 
