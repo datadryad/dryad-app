@@ -280,10 +280,10 @@ module StashApi
       it 'allows download by owner for unpublished but in Merritt' do
         @curation_activities[0][2].destroy!
         @doorkeeper_application2 = create(:doorkeeper_application, redirect_uri: 'urn:ietf:wg:oauth:2.0:oob',
-                                          owner_id: @user1.id, owner_type: 'StashEngine::User')
+                                                                   owner_id: @user1.id, owner_type: 'StashEngine::User')
         access_token = get_access_token(doorkeeper_application: @doorkeeper_application2)
         response_code = get "/api/files/#{@files[0].first.id}/download", {}, default_json_headers
-                                                                                 .merge('Accept' => '*', 'Authorization' => "Bearer #{access_token}")
+          .merge('Accept' => '*', 'Authorization' => "Bearer #{access_token}")
         expect(response_code).to eq(200)
         expect(response.body).to eq('This file is awesome')
       end
