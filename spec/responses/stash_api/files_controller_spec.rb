@@ -237,6 +237,83 @@ module StashApi
         expect(response_code).to eq(403)
       end
     end
+
+    describe 'download' do
+      before(:each) do
+        # make two lists of files for versions that are representative of how stuff works for versioning
+        # with second version inheriting the files from the first showing as copied over internally
+        @files = [create_list(:file_upload, 4, resource_id: @resources[0].id)]
+        tmp = @files.first.map(&:amoeba_dup)
+        tmp.each do |f|
+          f.file_state = 'copied'
+          f.resource_id = @resources[1].id
+          f.save!
+        end
+        @files << tmp
+
+        allow_any_instance_of(Stash::Download::File).to receive(:download) do |o|
+          # o is the object instance and cc is the controller context
+          o.cc.response.headers['Content-Type'] = 'text/plain'
+          o.cc.response.headers['Content-Disposition'] = 'inline' # normally attachment for downloads, really, though
+          o.cc.response.headers['Content-Length'] = 20
+          o.cc.response.headers['Last-Modified'] = Time.now.httpdate
+          o.cc.response_body = 'This file is awesome'
+          # o.cc.render -- this isn't needed in the tests and causes a double-render which is different than the actual method
+        end
+      end
+
+      it 'allows download by public for published' do
+        @resources[0].update(publication_date: Time.new - 24.hours) # needs a publication date to be published
+        @resources[0].current_state = 'submitted'
+        response_code = get "/api/files/#{@files[0].first.id}/download", {}, {}
+        expect(response_code).to eq(200)
+        expect(response.body).to eq('This file is awesome')
+      end
+
+      it 'allows download by superuser for unpublished but in Merritt' do
+        @curation_activities[0][2].destroy!
+        response_code = get "/api/files/#{@files[0].first.id}/download", {}, default_authenticated_headers.merge('Accept' => '*')
+        expect(response_code).to eq(200)
+        expect(response.body).to eq('This file is awesome')
+      end
+
+      it 'allows download by owner for unpublished but in Merritt' do
+        @curation_activities[0][2].destroy!
+        @doorkeeper_application2 = create(:doorkeeper_application, redirect_uri: 'urn:ietf:wg:oauth:2.0:oob',
+                                          owner_id: @user1.id, owner_type: 'StashEngine::User')
+        access_token = get_access_token(doorkeeper_application: @doorkeeper_application2)
+        response_code = get "/api/files/#{@files[0].first.id}/download", {}, default_json_headers
+                                                                                 .merge('Accept' => '*', 'Authorization' => "Bearer #{access_token}")
+        expect(response_code).to eq(200)
+        expect(response.body).to eq('This file is awesome')
+      end
+
+      it 'allows download by admin for tenant for unpublished but in Merritt' do
+        @curation_activities[0][2].destroy!
+        @user.update(role: 'admin', tenant_id: @tenant_ids.first)
+        response_code = get "/api/files/#{@files[0].first.id}/download", {}, default_authenticated_headers.merge('Accept' => '*')
+        expect(response_code).to eq(200)
+        expect(response.body).to eq('This file is awesome')
+      end
+
+      it 'disallows download by anonymous for unpublished' do
+        @curation_activities[0][2].destroy!
+        response_code = get "/api/files/#{@files[0].first.id}/download", {}, default_json_headers.merge('Accept' => '*')
+        expect(response_code).to eq(404)
+      end
+
+      it 'disallows download by random normal user for unpublished' do
+        @curation_activities[0][2].destroy!
+        @user.update(role: 'user', tenant_id: @tenant_ids.first)
+        response_code = get "/api/files/#{@files[0].first.id}/download", {}, default_authenticated_headers.merge('Accept' => '*')
+        expect(response_code).to eq(404)
+      end
+
+      it 'disallows download for an unsubmitted to Merritt version' do
+        response_code = get "/api/files/#{@files[1].first.id}/download", {}, default_authenticated_headers.merge('Accept' => '*')
+        expect(response_code).to eq(404)
+      end
+    end
   end
 end
 # rubocop:enable Metrics/BlockLength, Metrics/ModuleLength
