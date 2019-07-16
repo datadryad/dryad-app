@@ -21,7 +21,7 @@ StashApi::Engine.routes.draw do
     resources :versions, shallow: true do
       get 'download', on: :member
       resources :files, shallow: true do
-        resources :downloads
+        get :download, on: :member
       end
     end
     resources :urls, shallow: true, only: [:create]
