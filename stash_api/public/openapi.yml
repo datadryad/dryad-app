@@ -4,16 +4,22 @@ servers:
 
 info:
   title: dryad-api
-  description: >-
-    API for the [Dryad](https://datadryad.org) data publication and
+  description: |
+    The API for the [Dryad](https://datadryad.org) data publication and
     preservation platform.
-  version: 0.0.1
+
+    In addition to this documentation, please see the [API Submission Examples](https://github.com/CDL-Dryad/dryad/blob/master/documentation/api_submission.md) which give concrete examples of submission through the Dryad API.
+
+    Our [Github Documentation Directory](https://github.com/CDL-Dryad/dryad/tree/master/documentation) may also be expanded further in the future as more documentation is created (though not all of it may be relevant to API users).
+
+  version: "2.0.0"
 
 paths:
   # --- root uri ----
   /:
     get:
       summary: The root of the API
+      description: Mainly to have HATEOAS links to root level objects like datasets.
       responses:
         '200':
           description: The root of the API
@@ -29,7 +35,8 @@ paths:
     get:
       security:
         - bearerAuth: []
-      summary: test out the bearer authentication
+      summary: Test OAuth2 and bearer authentication.
+      description: "Test authentication by sending authenticated headers like **'Accept: application/json'**, **'Content-Type: application/json'**, **'Authorization: Bearer {your-token}'**."
       responses:
         '200':
           description: a welcome message if successful
@@ -47,10 +54,11 @@ paths:
   # --- datasets uris ---
   /datasets:
     get:
-      summary: Get list of all datasets, items returned may depend on user or permission
+      summary: Get list of all datasets
+      description: Items returned may depend on user or permission and are paged.  Search API to come later.
       responses:
         '200':
-          description: A list of datasets
+          description: A list of datasets.
           content:
             application/json:
               schema:
@@ -59,11 +67,11 @@ paths:
             application/json:
               $ref: api/docs/examples/datasets.json
     post:
+      summary: Create a new dataset with a DOI automatically generated
+      description: You must be logged in. Use the JSON structure and schema as shown below.
       security:
         - bearerAuth: []
-      summary: start a new dataset with a DOI automatically generated, requires oauth bearer token
       requestBody:
-        description: "json needed for creating a new dataset: example doesn't show because OpenAPI is broken it seems"
         required: true
         content:
           application/json:
@@ -85,7 +93,8 @@ paths:
 
   '/datasets/{doi}':
     get:
-      summary: Get a dataset
+      summary: Get a dataset by its doi
+      description: Be sure to encode the DOI (see below for format)
       parameters:
         - $ref: '#/components/parameters/doi'
       responses:
@@ -99,12 +108,12 @@ paths:
             application/json:
               $ref: api/docs/examples/dataset.json
     put:
+      summary: Update (overwrite) dataset metadata for DOI or insert new with specified DOI
+      description: This will overwrite writeable metadata for an in-progress dataset or will create a new dataset with the specified DOI identifier if one doesn't exist.  This is an insert or update action (upsert).
       parameters:
         - $ref: '#/components/parameters/doi'
       security:
         - bearerAuth: []
-      summary: Overwrite writeable metadata for in-progress dataset with that supplied in request. This action will create a new dataset with the specified DOI identifier if
-        one doesn't exist, so can act as an insert/update action.
       requestBody:
         description: "json needed for updating a new dataset: example doesn't show because OpenAPI is broken it seems"
         required: true
@@ -130,7 +139,8 @@ paths:
         - $ref: '#/components/parameters/doi'
       security:
         - bearerAuth: []
-      summary: update the versionStatus to submitted to indicate a submission
+      summary: Submit the in-progress dataset
+      description: "Submit by sending a JSON patch request whose JSON body looks like **[ { 'op': 'replace', 'path': '/versionStatus', 'value': 'submitted' } ]**. (This tells it to attempt changing the versionStatus to Submitted.) Set http header **'Content-Type: application/json-patch+json'** when making the request instead of a standard json content-type."
       requestBody:
         description: json for patching the versionStatus to a 'submitted' state
         required: true
@@ -153,7 +163,8 @@ paths:
 
   '/datasets/{doi}/download':
     get:
-      summary: Get download package for dataset from latest visible version
+      summary: Get download package for dataset.
+      description: This would download the zip file for the latest submitted and visible version of the dataset to the user (if authorized) or the public.
       parameters:
         - $ref: '#/components/parameters/doi'
       responses:
@@ -168,6 +179,7 @@ paths:
   '/datasets/{doi}/versions':
     get:
       summary: Show all versions of a dataset
+      description: The versions endpoint allows seeing all (visible) versions. This is in contrast to GETting the datasets endpoiunt for a DOI, since it only embeds metadata for the latest visible version.
       parameters:
         - $ref: '#/components/parameters/doi'
       responses:
@@ -184,7 +196,8 @@ paths:
   # --- versions uris ---
   '/versions/{id}':
     get:
-      summary: Show the version of the dataset
+      summary: Show a specific dataset version
+      description: "If you know the dataset version's internal id, you can request to see it directly. The versions endpoint lists the versions and their ids if you need to find this id."
       parameters:
         - $ref: '#/components/parameters/version_id'
       responses:
@@ -200,7 +213,8 @@ paths:
 
   '/versions/{id}/files':
     get:
-      summary: Get the files in a dataset
+      summary: Show a list of files and file metadata
+      description: Returns the list of files and file metadata for a known version of a dataset with the version id you specify.
       parameters:
         - $ref: '#/components/parameters/version_id'
       responses:
@@ -216,7 +230,8 @@ paths:
 
   '/versions/{id}/download':
     get:
-      summary: Get download package for dataset version
+      summary: Get a download package for a dataset version
+      description: This only works for versions submitted to the repository (and assuming permission to view).  Allows you to download a zip file for the contents for that version of the dataset.
       parameters:
         - $ref: '#/components/parameters/version_id'
       responses:
@@ -230,7 +245,8 @@ paths:
 
   '/files/{id}':
     get:
-      summary: Get a specific file in a dataset
+      summary: Get metadata information about a file
+      description: Returns file metadata information (if visible to you) and if you know the internal id.  The version file list embeds this and also gives the internal ids.
       parameters:
         - $ref: '#/components/parameters/file_id'
       responses:
@@ -243,14 +259,49 @@ paths:
           examples:
             application/json:
               $ref: api/docs/examples/file.json
+    delete:
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/file_id'
+      summary: Remove a file from an in-progress dataset version
+      description: "This action only works on an in-progress dataset (this means that the latest version of a dataset associated with this file has to be in-progress). It will destroy the metadata and file if it's a staged file that hasn't been submitted to the repository yet.  If the file was submitted previously in an earlier version of the same dataset it will stage removal from the in-progress dataset version.  In order to finalize staged file changes into the storage repository, the in-progress dataset must be submitted again after all changes are ready."
+      responses:
+        '201':
+          description: The file and metadata was removed from staging.  Or the file and metadata was staged for removal from this version.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/file'
+          examples:
+            application/json:
+              $ref: api/docs/examples/file.json
+
+  '/files/{id}/download':
+    get:
+      summary: Download a specific file
+      description: Only files that have been stored in the storage repository may be downloaded (and ability to download may depend on the user).  Versions of a dataset still in-progress only have staged files that may not be downloaded until they have been submitted to the storage repository.
+      parameters:
+        - $ref: '#/components/parameters/file_id'
+      responses:
+        '200':
+          description: The binary content of the file downloads as the http body.  The "Content-Type" and "Content-Disposition" headers will be set to reflect the file content-type and filename when downloading (following http standards).
+          content:
+            "*/*":
+              schema:
+                type: string
+                format: binary
 
   # --- upload a file in body with filename in url ---
   '/datasets/{doi}/files/{filename}':
     put:
+      summary: Upload and stage a file for an in-progress dataset.
+      description: Allows uploading a file to be staged for submission to the storage repository. The files will be stored in the storage repository after the dataset is submitted.  The body of the request will be the file you are uploading.  Set the **'Content-Type'** http header to the appropriate mimetype for your file when uploading.
       security:
         - bearerAuth: []
       parameters:
         - $ref: '#/components/parameters/doi'
+        - $ref: '#/components/parameters/filename'
       requestBody:
         description: a binary file with content-type set
         required: true
@@ -259,10 +310,33 @@ paths:
             schema:
               type: string
               format: binary
-      summary: upload a file for an in-progress dataset
       responses:
         '201':
           description: file was created on the server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/file'
+          examples:
+            application/json:
+              $ref: api/docs/examples/file.json
+
+  '/datasets/{doi}/urls':
+    put:
+      summary: Stage a file submission by URL
+      description: "The URL you specify will be deposited into the storage repository from a publicly accessible URL on the internet when the in-progress dataset is submitted.  The dataset must be an in-progress dataset. The URL will be validated and metadata about it obtained to populate metadata about the file when it is added.  Send the url to be retrieved as part of a JSON document like **{'url': 'http://example.org/testing/my/file.csv' }**.  Priviliged users may have additional options to specify URL metadata rather than having live-validation and metadata gathering performed from the Internet."
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/doi'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/url_json'
+      responses:
+        '201':
+          description: Metadata for the URL was saved and the response json indicates information populated for a file object based on the URL.
           content:
             application/json:
               schema:
@@ -467,6 +541,13 @@ components:
           allOf:
             - $ref: '#/components/schemas/hal_self_link'
             - $ref: '#/components/schemas/hal_file_links'
+
+
+    # singular
+    url:
+      properties:
+        url:
+          type: string
 
     hal_file_links:
       properties:
@@ -683,6 +764,15 @@ components:
                 - $ref: '#/components/schemas/hal_page_links'
         - $ref: '#/components/schemas/paging_counts'
 
+    url_json:
+      type: object
+      properties:
+        url:
+          type: string
+      required:
+        - url
+
+  # parameters for going into URLs (and json?)
   parameters:
     doi:
       in: path
@@ -707,6 +797,14 @@ components:
         type: integer
       required: true
       description: "The file id is a unique integer and can be obtained from the list of files for a version of a dataset"
+
+    filename:
+      in: path
+      name: id
+      schema:
+        type: string
+      required: true
+      description: "The filename is the filename for the file. It should be escaped in the URL (for example 'cat tundra.jpg' would be 'cat%20tundra.jpg'.  Your programming language will have a library to encode for you."
 
   securitySchemes:
     bearerAuth:
