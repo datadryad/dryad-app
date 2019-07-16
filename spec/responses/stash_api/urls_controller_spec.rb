@@ -64,7 +64,7 @@ module StashApi
     # Test creation of new manifest URL by getting basic info from a HEAD request and populating it. Just a basic test.
     # There are workarounds in the URL discovering library for Google drive and doing GET requests and some other stuff,
     # but that really belongs being tested at that component level and probably not here.
-    describe '#index' do
+    describe '#create' do
       it 'will retrive, validate and fill in info from a URL from the internet by HEAD request' do
         mock_github_head_request!
         test_url = 'http://github.com/CDL-Dryad/dryad/raw/master/app/assets/images/favicon.ico'
