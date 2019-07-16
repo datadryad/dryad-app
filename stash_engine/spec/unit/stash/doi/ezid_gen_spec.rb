@@ -21,6 +21,9 @@ module Stash
         @identifier_str = 'doi:10.15146/R38675309'
         @url_helpers = double(Module)
 
+        allow(@resource).to receive(:id).with(no_args).and_return(@resource_id)
+        allow(@resource).to receive(:identifier_str).with(no_args).and_return(@identifier_str)
+
         path_to_landing = "/stash/#{identifier_str}"
         @landing_page_url = URI::HTTPS.build(host: 'stash.example.edu', path: path_to_landing).to_s
         allow(url_helpers).to receive(:show_path).with(identifier_str).and_return(path_to_landing)
@@ -64,24 +67,33 @@ module Stash
       end
 
       describe :update_metadata do
-        it 'updates the metadata and landing page' do
-          dc4_xml = '<resource/>'
+        before(:each) do
+          @dc4_xml = '<resource/>'
+          @ezid_client = instance_double(::Ezid::Client)
 
-          ezid_client = instance_double(::Ezid::Client)
           allow(::Ezid::Client).to receive(:new)
             .with(host: 'ezid.cdlib.org', port: 80, user: 'stash', password: '3cc9d3fbd9788148c6a32a1415fa673a')
-            .and_return(ezid_client)
+            .and_return(@ezid_client)
+        end
 
-          expect(ezid_client).to receive(:modify_identifier).with(
-            identifier_str,
-            datacite: dc4_xml,
+        it 'updates the metadata and landing page' do
+          expect(@ezid_client).to receive(:modify_identifier).with(
+            @identifier_str,
+            datacite: @dc4_xml,
             target: landing_page_url,
             status: 'public',
             owner: 'stash_admin'
           )
+          expect(resource).to receive(:identifier_str).and_return(@identifier_str)
+          helper.update_metadata(dc4_xml: @dc4_xml, landing_page_url: landing_page_url)
+        end
 
-          expect(resource).to receive(:identifier_str).and_return(identifier_str)
-          helper.update_metadata(dc4_xml: dc4_xml, landing_page_url: landing_page_url)
+        it 'raises an error when the status from Ezid does not equal 201' do
+          ezid_error = ::Ezid::Error.new('Testing errors')
+          # allow(ezid_error).to receive(:message).with(no_args).and_return('Testing errors')
+          allow(@ezid_client).to receive(:modify_identifier).with(any_args).and_raise(ezid_error)
+          dc = IdGen.make_instance(resource: @resource)
+          expect { dc.update_metadata(dc4_xml: @dc4_xml, landing_page_url: 'http://example.com') }.to raise_error(Stash::Doi::EzidError)
         end
       end
     end

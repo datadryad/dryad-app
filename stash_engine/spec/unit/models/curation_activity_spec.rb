@@ -59,7 +59,6 @@ module StashEngine
         # these two never need to fire to test this example
         # CurationActivity.set_callback(:create, :after, :update_solr)
         # CurationActivity.set_callback(:save, :after, :submit_to_stripe)
-
       end
 
       it "doesn't submit when a status besides Embargoed or Published is set" do
@@ -96,6 +95,34 @@ module StashEngine
         CurationActivity.create(resource: @resource2, status: 'published')
         CurationActivity.set_callback(:create, :after, :submit_to_datacite)
         expect(@mock_idgen).to_not have_received(:update_identifier_metadata)
+      end
+    end
+
+    describe 'Datacite and EzId failures are properly handled' do
+      before(:each) do
+        @user = create(:user, first_name: 'Test', last_name: 'User', email: 'test.user@example.org')
+        @identifier = create(:identifier)
+        @resource = create(:resource, identifier_id: @identifier.id, user: @user)
+
+        CurationActivity.skip_callback(:create, :after, :update_solr)
+        CurationActivity.skip_callback(:save, :after, :submit_to_stripe)
+        allow_any_instance_of(CurationActivity).to receive(:should_update_doi?).and_return(true)
+
+        logger = double(ActiveSupport::Logger)
+        allow(logger).to receive(:error).with(any_args).and_return(true)
+        allow(Rails).to receive(:logger).and_return(logger)
+
+        allow_any_instance_of(ActionMailer::MessageDelivery).to receive(:deliver_now)
+      end
+
+      it 'catches errors and emails the admins' do
+        dc_error = Stash::Doi::DataciteError.new('Testing errors')
+        allow(Stash::Doi::IdGen).to receive(:make_instance).with(any_args).and_raise(dc_error)
+
+        message = instance_double(ActionMailer::MessageDelivery)
+        expect(StashEngine::UserMailer).to receive(:error_report).with(any_args).and_return(message)
+        expect(message).to receive(:deliver_now)
+        CurationActivity.create(resource_id: @resource.id, status: 'embargoed')
       end
     end
 
