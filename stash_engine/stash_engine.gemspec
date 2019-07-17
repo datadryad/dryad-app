@@ -40,6 +40,7 @@ Gem::Specification.new do |s| # rubocop:disable Metrics/BlockLength
   s.add_dependency 'noid', '~> 0.9.0'
   s.add_dependency 'omniauth', '~> 1.8.1'
   s.add_dependency 'omniauth-orcid', '~> 2.1.1'
+  s.add_dependency 'omniauth-rails_csrf_protection'
   s.add_dependency 'omniauth-shibboleth', '~> 1.2.1'
   s.add_dependency 'rails', '~> 4.2.11'
   s.add_dependency 'redcarpet', '~> 3.3'
