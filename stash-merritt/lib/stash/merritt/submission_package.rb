@@ -65,10 +65,6 @@ module Stash
         resource.current_file_uploads
       end
 
-      def embargo_end_date
-        @embargo_end_date ||= resource.publication_date
-      end
-
       def new_uploads
         resource.new_file_uploads.reject { |upload| upload.file_state == 'deleted' }
       end
