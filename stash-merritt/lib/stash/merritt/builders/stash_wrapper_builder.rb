@@ -19,14 +19,12 @@ module Stash
         attr_reader :dcs_resource
         attr_reader :uploads
         attr_reader :version_number
-        attr_reader :embargo_end_date
 
-        def initialize(dcs_resource:, version_number:, uploads:, embargo_end_date:)
+        def initialize(dcs_resource:, version_number:, uploads:)
           super(file_name: 'stash-wrapper.xml')
           @dcs_resource = dcs_resource
           @version_number = version_number
           @uploads = uploads
-          @embargo_end_date = date_or_nil(embargo_end_date)
         end
 
         def mime_type
@@ -39,8 +37,7 @@ module Stash
             version: Version.new(number: version_number, date: Date.today),
             license: to_sw_license(dcs_resource.rights_list),
             inventory: to_sw_inventory(uploads),
-            descriptive_elements: [dcs_resource.save_to_xml],
-            embargo: to_sw_embargo(embargo_end_date)
+            descriptive_elements: [dcs_resource.save_to_xml]
           ).write_xml
         end
 
