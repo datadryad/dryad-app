@@ -121,7 +121,7 @@ module StashEngine
                     resource.identifier&.user_must_pay?
 
       inv = Stash::Payments::Invoicer.new(resource: resource, curator: user)
-      inv.charge_via_invoice
+      inv.charge_user_via_invoice
     end
 
     def submit_to_datacite
