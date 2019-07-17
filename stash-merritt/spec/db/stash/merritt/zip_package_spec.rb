@@ -137,24 +137,6 @@ module Stash
             expect(mrt_delete).to include(filename)
           end
         end
-
-        describe 'mrt-embargo.txt' do
-          it 'includes the embargo end date if present' do
-            end_date = Time.new(2020, 1, 1, 0, 0, 1, '+12:45')
-            resource.publication_date = end_date.to_s
-            package = ZipPackage.new(resource: resource)
-            @zipfile_path = package.zipfile
-            mrt_embargo = zip_entry('mrt-embargo.txt')
-            expect(mrt_embargo.strip).to eq('embargoEndDate:2019-12-31T11:15:01Z')
-          end
-
-          it 'sets end date to none if no end date present' do
-            package = ZipPackage.new(resource: resource)
-            @zipfile_path = package.zipfile
-            mrt_embargo = zip_entry('mrt-embargo.txt')
-            expect(mrt_embargo.strip).to eq('embargoEndDate:none')
-          end
-        end
       end
 
       describe :dc4_xml do

@@ -47,25 +47,6 @@ module Stash
 
         private
 
-        def date_or_nil(embargo_end_date)
-          return unless embargo_end_date
-          return embargo_end_date if embargo_end_date.is_a?(Date)
-          return embargo_end_date.utc.to_date if embargo_end_date.respond_to?(:utc)
-          raise ArgumentError, "Specified end date #{embargo_end_date} does not appear to be a date or time"
-        end
-
-        def to_sw_embargo(embargo_end_date)
-          return unless embargo_end_date
-          start_date = default_start_date(embargo_end_date)
-          Embargo.new(type: EmbargoType::DOWNLOAD, period: EmbargoType::NONE.value, start_date: start_date, end_date: embargo_end_date)
-        end
-
-        def default_start_date(embargo_end_date)
-          start_date = Date.today
-          return start_date if start_date < embargo_end_date
-          embargo_end_date
-        end
-
         def to_sw_identifier(dcs_identifier)
           return unless dcs_identifier
           raise "Invalid identifier type; expected DOI, was #{dcs_identifier.identifier_type}" unless dcs_identifier.identifier_type == 'DOI'

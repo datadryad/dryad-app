@@ -143,22 +143,6 @@ module Stash
             expect(actual).to be_xml(expected)
           end
 
-          describe 'mrt-embargo.txt' do
-            it 'sets end date to none if no end date present' do
-              actual = File.read("#{public_system}/#{resource.id}/mrt-embargo.txt")
-              expect(actual.strip).to eq('embargoEndDate:none')
-            end
-
-            it 'includes the embargo end date if present' do
-              end_date = Time.new(2020, 1, 1, 0, 0, 1, '+12:45')
-              resource.publication_date = end_date.to_s
-              @package = ObjectManifestPackage.new(resource: resource)
-              @manifest_path = package.create_manifest
-              actual = File.read("#{public_system}/#{resource.id}/mrt-embargo.txt")
-              expect(actual.strip).to eq('embargoEndDate:2019-12-31T11:15:01Z')
-            end
-          end
-
           it 'writes mrt-delete.txt if needed' do
             deleted = []
             resource.file_uploads.each_with_index do |upload, index|
