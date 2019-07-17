@@ -29,20 +29,16 @@ module Stash
       # @param identifier [Identifier] the identifier
       # @param version [Version] the version
       # @param license [License] the license
-      # @param embargo [Embargo, nil] the embargo information. If no `Embargo`
-      #   is supplied, it will default to an embargo of type {EmbargoType::NONE}
-      #   with the current date as start and end.
       # @param inventory [Inventory, nil] the (optional) file inventory
       # @param descriptive_elements [Array<REXML::Element>] the encapsulated
       #   XML metadata
-      def initialize(identifier:, version:, license:, embargo: nil, inventory: nil, descriptive_elements:) # rubocop:disable Metrics/ParameterLists
+      def initialize(identifier:, version:, license:, inventory: nil, descriptive_elements:) # rubocop:disable Metrics/ParameterLists
         raise ArgumentError, "identifier does not appear to be an Identifier object: #{identifier || 'nil'}" unless identifier.is_a?(Identifier)
 
         self.identifier = identifier
         self.stash_administrative = StashAdministrative.new(
           version: version,
           license: license,
-          embargo: embargo,
           inventory: inventory
         )
         self.stash_descriptive = descriptive_elements
@@ -78,18 +74,6 @@ module Stash
 
       def license_uri
         license.uri
-      end
-
-      def embargo
-        stash_administrative.embargo
-      end
-
-      def embargo_type
-        embargo.type
-      end
-
-      def embargo_end_date
-        embargo.end_date
       end
 
       def inventory

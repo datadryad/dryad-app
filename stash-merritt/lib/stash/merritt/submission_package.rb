@@ -75,12 +75,11 @@ module Stash
 
       def builders
         @builders ||= [
-          StashWrapperBuilder.new(dcs_resource: dc4_resource, version_number: version_number, uploads: uploads, embargo_end_date: embargo_end_date),
+          StashWrapperBuilder.new(dcs_resource: dc4_resource, version_number: version_number, uploads: uploads),
           dc4_builder,
           MerrittOAIDCBuilder.new(resource_id: resource_id),
           DataONEManifestBuilder.new(new_uploads),
-          MerrittDeleteBuilder.new(resource_id: resource_id),
-          MerrittEmbargoBuilder.new(embargo_end_date: embargo_end_date)
+          MerrittDeleteBuilder.new(resource_id: resource_id)
         ]
       end
     end
