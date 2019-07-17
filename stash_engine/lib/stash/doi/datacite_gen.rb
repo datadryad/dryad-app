@@ -1,8 +1,9 @@
 require 'cirneco'
+require 'ostruct'
 
 module Stash
   module Doi
-    class DataciteError < StandardError; end
+    class DataciteError < IdGenError; end
 
     class DataciteGen < IdGen
 
@@ -33,6 +34,11 @@ module Stash
 
         response = put_doi(bare_identifier, username: account, password: password, sandbox: sandbox, url: landing_page_url)
         validate_response(response: response, operation: 'update target')
+      rescue Faraday::ConnectionFailed, Faraday::ResourceNotFound, Faraday::TimeoutError, Faraday::ClientError => e
+        err = DataciteError.new("Datacite failed to update metadata for resource #{resource&.identifier_str}" \
+                                " (#{e.message}) with params: #{dc4_xml.inspect}")
+        err.set_backtrace(e.backtrace) if e.backtrace.present?
+        raise err
       end
 
       private
@@ -51,7 +57,7 @@ module Stash
       end
 
       def validate_response(response:, operation:)
-        raise DataciteError, "DataCite failed to #{operation} for resource #{resource.id}" unless response.status == 201
+        raise DataciteError, "DataCite failed to #{operation} for resource #{@resource&.id} -- #{response.inspect}" unless response.status == 201
       end
 
     end

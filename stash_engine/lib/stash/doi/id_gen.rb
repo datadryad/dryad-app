@@ -7,6 +7,8 @@
 
 module Stash
   module Doi
+    class IdGenError < StandardError; end
+
     class IdGen
       attr_reader :resource
 

@@ -2,6 +2,8 @@ require 'ezid/client'
 
 module Stash
   module Doi
+    class EzidError < IdGenError; end
+
     class EzidGen < IdGen
 
       # @return [String] the identifier (DOI, ARK, or URN)
@@ -40,6 +42,10 @@ module Stash
         params[:owner] = owner unless owner.blank?
         params[:target] = landing_page_url if landing_page_url
         ezid_client.modify_identifier(resource.identifier_str, params)
+      rescue Ezid::Error => e
+        err = EzidError.new("Ezid failed to update metadata for resource #{resource&.identifier_str} (#{e.message}) with params: #{params.inspect}")
+        err.set_backtrace(e.backtrace) if e.backtrace.present?
+        raise err
       end
 
       private
