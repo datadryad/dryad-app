@@ -53,7 +53,10 @@ module StashEngine
     # ------------------------------------------
     # When the status is published/embargoed send to Stripe and DataCite
     after_create :submit_to_datacite, :update_solr, :submit_to_stripe,
-                 if: proc { |ca| (ca.published? || ca.embargoed?) && latest_curation_status_changed? }
+                 if: proc { |ca|
+                       !ca.resource.skip_datacite_update? && (ca.published? || ca.embargoed?) &&
+                                 latest_curation_status_changed?
+                     }
 
     # Email the primary author when submitted, peer_review, published or embargoed
     after_create :email_author,
@@ -114,23 +117,23 @@ module StashEngine
     # Callbacks
     # ------------------------------------------
     def submit_to_stripe
-      return unless ready_for_payment?
+      return unless ready_for_payment? &&
+                    resource.identifier&.user_must_pay?
 
       inv = Stash::Payments::Invoicer.new(resource: resource, curator: user)
-      if resource.identifier&.user_must_pay?
-        inv.charge_user_via_invoice
-      elsif resource.identifier&.journal_will_pay?
-        inv.charge_journal_via_invoice
-      end
+      inv.charge_via_invoice
     end
 
     def submit_to_datacite
       return unless should_update_doi?
       idg = Stash::Doi::IdGen.make_instance(resource: resource)
       idg.update_identifier_metadata!
-
       # Send out orcid invitations now that the citation has been registered
       email_orcid_invitations if published?
+    rescue Stash::Doi::IdGenError => ige
+      Rails.logger.error "Stash::Doi::IdGen - Unable to submit metadata changes for : '#{resource&.identifier&.to_s}'"
+      Rails.logger.error ige.message
+      StashEngine::UserMailer.error_report(resource, ige).deliver_now
     end
 
     def update_solr
