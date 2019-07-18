@@ -7,7 +7,6 @@ https://stash.example.edu/system/{resource_id}/stash-wrapper.xml | md5 | 17c2836
 https://stash.example.edu/system/{resource_id}/mrt-datacite.xml | md5 | cfe0378a6c8990877fa12ea03f27949f | 5724 |  | mrt-datacite.xml | text/xml
 https://stash.example.edu/system/{resource_id}/mrt-oaidc.xml | md5 | d355279abcd705e8cfce43d510532626 | 3050 |  | mrt-oaidc.xml | text/xml
 https://stash.example.edu/system/{resource_id}/mrt-dataone-manifest.txt | md5 | e9d8bebd2f87e5a39315a72629dcf2b9 | 3378 |  | mrt-dataone-manifest.txt | text/plain
-https://stash.example.edu/system/{resource_id}/mrt-embargo.txt | md5 | eabcae2cf6a1bb92e0ac0ad78ba0c172 | 20 |  | mrt-embargo.txt | text/plain
 http://example.org/uploads/Laney_300394_Exempt_Determination_Letter.pdf |  |  | 42686 |  | Laney_300394_Exempt_Determination_Letter.pdf
 http://example.org/uploads/Laney_IRBProposal.docx |  |  | 1097848 |  | Laney_IRBProposal.docx
 http://example.org/uploads/SensorSurvey_Printout.pdf |  |  | 1728537 |  | SensorSurvey_Printout.pdf

@@ -107,8 +107,6 @@ module Stash
           expect(wrapper.version_date).to eq(Date.new(2012, 8, 17))
           expect(wrapper.license_name).to eq('Creative Commons Attribution 4.0 International (CC BY 4.0)')
           expect(wrapper.license_uri).to eq(URI('https://creativecommons.org/licenses/by/4.0/'))
-          expect(wrapper.embargo_type).to eq(EmbargoType::NONE)
-          expect(wrapper.embargo_end_date).to eq(Date.new(2012, 8, 17))
         end
 
         it 'works with the old (cdlib.org) schema location' do
@@ -187,8 +185,6 @@ module Stash
           expect(wrapper.version_date).to eq(Date.new(2015, 9, 8))
           expect(wrapper.license_name).to eq('Creative Commons Attribution 4.0 International (CC BY 4.0)')
           expect(wrapper.license_uri).to eq(URI('https://creativecommons.org/licenses/by/4.0/'))
-          expect(wrapper.embargo_type).to eq(EmbargoType::DOWNLOAD)
-          expect(wrapper.embargo_end_date).to eq(Date.new(2016, 3, 7))
 
           inventory = wrapper.inventory
           expect(inventory.num_files).to eq(1)
@@ -231,29 +227,6 @@ module Stash
         end
       end
 
-      describe '#initialize' do
-        it 'defaults to no embargo' do
-          wrapper = StashWrapper.new(
-            identifier: Identifier.new(type: IdentifierType::DOI, value: '10.14749/1407399498'),
-            version: Version.new(number: 1, date: Date.new(2013, 8, 18), note: 'Sample wrapped Datacite document'),
-            license: License::CC_BY,
-            inventory: Inventory.new(
-              files: [
-                StashFile.new(pathname: 'HSRC_MasterSampleII.dat', size_bytes: 12_345, mime_type: 'text/plain')
-              ]
-            ),
-            descriptive_elements: []
-          )
-          embargo = wrapper.embargo
-          expect(embargo).to be_an(Embargo)
-          expect(embargo.type).to eq(EmbargoType::NONE)
-          expect(embargo.period).to eq('none')
-          today = Date.today
-          expect(embargo.start_date).to eq(today)
-          expect(embargo.end_date).to eq(today)
-        end
-      end
-
       describe '#save_to_xml' do
 
         describe 'namespace handling' do
@@ -262,7 +235,6 @@ module Stash
               identifier: Identifier.new(type: IdentifierType::DOI, value: '10.14749/1407399498'),
               version: Version.new(number: 1, date: Date.new(2013, 8, 18), note: 'Sample wrapped Datacite document'),
               license: License::CC_BY,
-              embargo: Embargo.new(type: EmbargoType::DOWNLOAD, period: '1 year', start_date: Date.new(2013, 8, 18), end_date: Date.new(2014, 8, 18)),
               inventory: Inventory.new(
                 files: [
                   StashFile.new(pathname: 'HSRC_MasterSampleII.dat', size_bytes: 12_345, mime_type: 'text/plain')
@@ -322,7 +294,6 @@ module Stash
             identifier: Identifier.new(type: IdentifierType::DOI, value: '10.14749/1407399498'),
             version: Version.new(number: 1, date: Date.new(2013, 8, 18), note: 'Sample wrapped Datacite document'),
             license: License::CC_BY,
-            embargo: Embargo.new(type: EmbargoType::DOWNLOAD, period: '1 year', start_date: Date.new(2013, 8, 18), end_date: Date.new(2014, 8, 18)),
             inventory: Inventory.new(
               files: [
                 StashFile.new(pathname: 'HSRC_MasterSampleII.dat', size_bytes: 12_345, mime_type: 'text/plain'),
@@ -342,6 +313,8 @@ module Stash
 
           wrapper_xml = wrapper.save_to_xml
 
+          puts wrapper_xml
+
           # File.open('spec/data/wrapper/wrapper-2-actual.xml', 'w') do |file|
           #   formatter = REXML::Formatters::Pretty.new
           #   formatter.width = 200
@@ -349,8 +322,11 @@ module Stash
           #   file.write(formatter.write(wrapper_xml, ''))
           # end
 
-          expected_xml = File.read('spec/data/wrapper/wrapper-2.xml')
-          expect(wrapper_xml).to be_xml(expected_xml)
+          r = %r{<st:embargo>.+</st:embargo>}m
+
+          # ignore the embargo which is no longer used in stash wrapper for Merritt
+          expected_xml = File.read('spec/data/wrapper/wrapper-2.xml').gsub(r, '')
+          expect(wrapper_xml.to_s.gsub(r, '')).to be_xml(expected_xml)
         end
       end
 
