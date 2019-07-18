@@ -45,7 +45,7 @@ module Stash
       def unique_dataset_investigations_count
         stats.inject(0) do |sum, item|
           if UNIQUE_INVESTIGATIONS.include?(item['id'])
-            sum + item['year-months'].inject(0) { |sum2, x| sum2 + x['sum'] }.to_i
+            sum + item['count'].to_i
           else
             sum
           end
@@ -55,7 +55,7 @@ module Stash
       def unique_dataset_requests_count
         stats.inject(0) do |sum, item|
           if UNIQUE_REQUESTS.include?(item['id'])
-            sum + item['year-months'].inject(0) { |sum2, x| sum2 + x['sum'] }.to_i
+            sum + item['count'].to_i
           else
             sum
           end
@@ -64,9 +64,8 @@ module Stash
 
       def query
         query_result = generic_query(params:
-          { 'source-id' => 'datacite-usage', 'doi' => @doi, 'page[size]' => 0,
+          { 'source-id' => 'datacite-usage', 'doi' => @doi, 'page[size]' => 0, 'rows' => nil,
             'relation-type-id' => (UNIQUE_INVESTIGATIONS + UNIQUE_REQUESTS).join(',') })
-
         query_result['meta']['relation-types'] || []
       rescue RestClient::ExceptionWithResponse => err
         logger.error('DataCite event-data error')

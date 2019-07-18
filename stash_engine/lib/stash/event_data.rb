@@ -5,6 +5,7 @@ module Stash
   module EventData
     Dir.glob(File.expand_path('event_data/*.rb', __dir__)).sort.each(&method(:require))
 
+    TIME_BETWEEN_RETRIES = 0.8
     def logger
       Rails.logger
     end
@@ -28,7 +29,7 @@ module Stash
       rescue RestClient::InternalServerError => ex
         raise ex if retries < 1
         retries -= 1
-        sleep 0.6
+        sleep TIME_BETWEEN_RETRIES
         retry
       end
     end
