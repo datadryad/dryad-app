@@ -30,7 +30,7 @@ module StashEngine
       # only update stats if it's after the date of the last updated date for record
       return unless new_record? || updated_at.nil? || Time.new.localtime.to_date > updated_at.localtime.to_date
       update_usage!
-      # update_citation_count!
+      update_citation_count!
       self.updated_at = Time.new # seem to need this for some reason
 
       save!
