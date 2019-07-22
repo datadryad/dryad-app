@@ -34,7 +34,7 @@ module Stash
       # @return an Array of Hashes { id: 'https://ror.org/12345', name: 'Sample University' }
       # The ROR limit appears to be 40 results (even with paging :/)
       def self.find_by_ror_name(query)
-        resp = query_ror(URI, { 'query.names': query }, HEADERS)
+        resp = query_ror(URI, { 'query': query }, HEADERS)
         results = process_pages(resp, query) if resp.parsed_response.present? && resp.parsed_response['items'].present?
         results.present? ? results.flatten.uniq.sort_by { |a| a[:name] } : []
       rescue HTTParty::Error, SocketError => e
@@ -44,7 +44,7 @@ module Stash
       # Search ROR and return the first match for the given name
       # @return a Stash::Organization::Ror::Organization object or nil
       def self.find_first_by_ror_name(ror_name)
-        resp = query_ror(URI, { 'query.names': ror_name }, HEADERS)
+        resp = query_ror(URI, { 'query': ror_name }, HEADERS)
         return nil if resp.parsed_response.blank? || resp.parsed_response['items'].blank?
         result = resp.parsed_response['items'].first
         return nil if result['id'].blank? || result['name'].blank?
