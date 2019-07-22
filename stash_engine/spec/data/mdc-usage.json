@@ -1,0 +1,125 @@
+{
+  "data": [],
+  "meta": {
+    "total": 19,
+    "total-pages": 0,
+    "page": 1,
+    "sources": [
+      {
+        "id": "datacite-usage",
+        "title": "DataCite Usage Stats",
+        "count": 19
+      }
+    ],
+    "prefixes": [
+      {
+        "id": "10.6071",
+        "title": "10.6071",
+        "count": 19
+      }
+    ],
+    "citation-types": [],
+    "relation-types": [
+      {
+        "id": "unique-dataset-investigations-regular",
+        "title": "unique-dataset-investigations-regular",
+        "count": 172.0,
+        "year-months": [
+          {
+            "id": "2018-04",
+            "title": "April 2018",
+            "sum": 16.0
+          },
+          {
+            "id": "2018-05",
+            "title": "May 2018",
+            "sum": 4.0
+          },
+          {
+            "id": "2018-06",
+            "title": "June 2018",
+            "sum": 18.0
+          },
+          {
+            "id": "2018-07",
+            "title": "July 2018",
+            "sum": 5.0
+          },
+          {
+            "id": "2018-08",
+            "title": "August 2018",
+            "sum": 16.0
+          },
+          {
+            "id": "2019-02",
+            "title": "February 2019",
+            "sum": 7.0
+          },
+          {
+            "id": "2019-03",
+            "title": "March 2019",
+            "sum": 12.0
+          },
+          {
+            "id": "2019-04",
+            "title": "April 2019",
+            "sum": 10.0
+          },
+          {
+            "id": "2019-05",
+            "title": "May 2019",
+            "sum": 24.0
+          },
+          {
+            "id": "2019-06",
+            "title": "June 2019",
+            "sum": 52.0
+          },
+          {
+            "id": "2019-07",
+            "title": "July 2019",
+            "sum": 8.0
+          }
+        ]
+      },
+      {
+        "id": "unique-dataset-requests-regular",
+        "title": "unique-dataset-requests-regular",
+        "count": 6.0,
+        "year-months": [
+          {
+            "id": "2018-04",
+            "title": "April 2018",
+            "sum": 4.0
+          },
+          {
+            "id": "2019-02",
+            "title": "February 2019",
+            "sum": 1.0
+          },
+          {
+            "id": "2019-07",
+            "title": "July 2019",
+            "sum": 1.0
+          }
+        ]
+      },
+      {
+        "id": "unique-dataset-investigations-machine",
+        "title": "unique-dataset-investigations-machine",
+        "count": 2.0,
+        "year-months": [
+          {
+            "id": "2018-08",
+            "title": "August 2018",
+            "sum": 2.0
+          }
+        ]
+      }
+    ]
+  },
+  "links": {
+    "self": "https://api.datacite.org/events?mailto=scott.fisher%40ucop.edu\u0026source-id=datacite-usage\u0026doi=10.6071%2Fm3rp49\u0026page%5Bsize%5D=0\u0026rows\u0026relation-type-id=unique-dataset-investigations-regular%2Cunique-dataset-investigations-machine%2Cunique-dataset-requests-regular%2Cunique-dataset-requests-machine",
+    "next": "https://api.datacite.org/events?doi=10.6071%2Fm3rp49\u0026page%5Bnumber%5D=2\u0026page%5Bsize%5D=0\u0026relation-type-id=unique-dataset-investigations-regular%2Cunique-dataset-investigations-machine%2Cunique-dataset-requests-regular%2Cunique-dataset-requests-machine\u0026source-id=datacite-usage"
+  }
+}

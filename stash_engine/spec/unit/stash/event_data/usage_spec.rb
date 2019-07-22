@@ -1,60 +1,38 @@
 require 'spec_helper'
+require 'webmock/rspec'
+require 'byebug'
 
 module Stash
   module EventData
     describe Usage do
 
       before(:each) do
-        @usage = Usage.new(doi: 'doi:54321/09876')
+        @usage = Usage.new(doi: 'doi:10.6071/m3rp49')
+        WebMock.disable_net_connect!
 
-        fake_results =
-          [
-            {
-              'id' => 'unique-dataset-investigations-regular', # 16 count
-              'year-months' => [
-                { 'id' => '2018-07', 'sum' => 3 },
-                { 'id' => '2018-08', 'sum' => 13 }
-              ]
-            },
-            {
-              'id' => 'unique-dataset-investigations-machine', # 32 count
-              'year-months' => [
-                { 'id' => '2018-07', 'sum' => 5 },
-                { 'id' => '2018-08', 'sum' => 27 }
-              ]
-            },
-            {
-              'id' => 'unique-dataset-requests-regular', # 64 count
-              'year-months' => [
-                { 'id' => '2018-07', 'sum' => 11 },
-                { 'id' => '2018-08', 'sum' => 53 }
-              ]
-            },
-            {
-              'id' => 'unique-dataset-requests-machine', # 128 count
-              'year-months' => [
-                { 'id' => '2018-07', 'sum' => 37 },
-                { 'id' => '2018-08', 'sum' => 91 }
-              ]
-            }
-          ]
-
-        allow(@usage).to receive(:query).and_return(fake_results)
+        stub_request(:get, 'https://api.datacite.org/events?doi=10.6071/m3rp49&mailto=scott.fisher@ucop.edu&page%5Bsize%5D=0&relation-type-id=unique-dataset-investigations-regular,unique-dataset-investigations-machine,unique-dataset-requests-regular,unique-dataset-requests-machine&rows&source-id=datacite-usage').
+            with(
+                headers: {
+                    'Accept'=>'*/*',
+                    'Host'=>'api.datacite.org'
+                }).
+            to_return(status: 200, body: File.read(StashEngine::Engine.root.join('spec', 'data', 'mdc-usage.json')),
+                      headers: {'Content-Type' => 'application/json'})
       end
 
       describe :initializes do
         it 'removes prefix from doi' do
-          expect(@usage.doi).to eq('54321/09876')
+          expect(@usage.doi).to eq('10.6071/m3rp49')
         end
       end
 
       describe :counts do
         it 'calculates unique investigations count' do
-          expect(@usage.unique_dataset_investigations_count).to eq(48)
+          expect(@usage.unique_dataset_investigations_count).to eq(174)
         end
 
         it 'calculates unique requests count' do
-          expect(@usage.unique_dataset_requests_count).to eq(192)
+          expect(@usage.unique_dataset_requests_count).to eq(6)
         end
       end
     end
