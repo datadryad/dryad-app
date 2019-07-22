@@ -65,22 +65,17 @@ module Stash
         resource.current_file_uploads
       end
 
-      def embargo_end_date
-        @embargo_end_date ||= resource.publication_date
-      end
-
       def new_uploads
         resource.new_file_uploads.reject { |upload| upload.file_state == 'deleted' }
       end
 
       def builders
         @builders ||= [
-          StashWrapperBuilder.new(dcs_resource: dc4_resource, version_number: version_number, uploads: uploads, embargo_end_date: embargo_end_date),
+          StashWrapperBuilder.new(dcs_resource: dc4_resource, version_number: version_number, uploads: uploads),
           dc4_builder,
           MerrittOAIDCBuilder.new(resource_id: resource_id),
           DataONEManifestBuilder.new(new_uploads),
-          MerrittDeleteBuilder.new(resource_id: resource_id),
-          MerrittEmbargoBuilder.new(embargo_end_date: embargo_end_date)
+          MerrittDeleteBuilder.new(resource_id: resource_id)
         ]
       end
     end

@@ -10,7 +10,6 @@ require 'time'
 
 PROJECTS = %w[
   stash-wrapper
-  stash-harvester
   stash-notifier
   stash-sword
   stash-merritt
