@@ -76,8 +76,7 @@ namespace :identifiers do
   task embargo_datasets: :environment do
     now = Date.today
     p "Embargoing legacy records with a resource whose publication_date >= '#{now}'"
-    StashEngine::Resource.joins(:current_curation_activity)
-      .includes(:current_curation_activity)
+    StashEngine::Resource.joins(:curation_activities).includes(:curation_activities)
       .where('stash_engine_curation_activities.status != ?', 'embargoed')
       .where('stash_engine_resources.publication_date >= ?', now).each do |r|
 
@@ -99,8 +98,7 @@ namespace :identifiers do
   task publish_datasets: :environment do
     now = Date.today
     p "Publishing resources whose publication_date <= '#{now}'"
-    StashEngine::Resource.joins(:current_curation_activity)
-      .includes(:current_curation_activity)
+    StashEngine::Resource.joins(:curation_activities).includes(:curation_activities)
       .where('stash_engine_curation_activities.status != ?', 'published')
       .where('stash_engine_resources.publication_date <= ?', now).each do |r|
 
