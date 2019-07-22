@@ -11,7 +11,7 @@ module Stash
 
       # BASE_URL = 'https://api.test.datacite.org/events'.freeze
       BASE_URL = 'https://api.datacite.org/events'.freeze
-      HEARTBEAT_URL = 'https://api.test.datacite.org/heartbeat'.freeze
+      HEARTBEAT_URL = 'https://api.datacite.org/heartbeat'.freeze
       EMAIL = 'scott.fisher@ucop.edu'.freeze
       UNIQUE_INVESTIGATIONS = %w[unique-dataset-investigations-regular unique-dataset-investigations-machine].freeze
       UNIQUE_REQUESTS = %w[unique-dataset-requests-regular unique-dataset-requests-machine].freeze
@@ -73,34 +73,6 @@ module Stash
         logger.error("#{Time.new} #{err}")
         []
       end
-
-      # try this doi, at least on test 10.7291/d1q94r
-      # or how about this one? doi:10.7272/Q6Z60KZD
-      # or this one has machine hits, I think.  doi:10.6086/D1H59V
-
-      # can't set large page sizes so have to keep following ['links']['next'] until no more to follow
-      # and they currently don't allow us to query totals
-
-      # this is the old query, going through pages, they changed their api
-      def old_query
-        data = []
-
-        query_result = generic_query(params: { 'source-id': 'datacite-usage', 'doi': @doi })
-        data += query_result['data'] if query_result['data']
-
-        while query_result['links']['next']
-          query_result = make_reliable { RestClient.get query_result['links']['next'] }
-          query_result = JSON.parse(query_result)
-          data += query_result['data'] if query_result['data']
-        end
-
-        data
-      rescue RestClient::ExceptionWithResponse => err
-        logger.error("#{Time.new} Could not get response from DataCite event data source-id=datacite-usage&doi=#{CGI.escape(@doi)}")
-        logger.error("#{Time.new} #{err}")
-        []
-      end
-
     end
   end
 end
