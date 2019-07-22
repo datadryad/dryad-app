@@ -76,6 +76,7 @@ module Stash
       def stripe_user_customer_id
         author = StashEngine::Author.primary(resource.id)
         return if author.blank?
+        return if author.author_email.blank?
         return author.stripe_customer_id if author.stripe_customer_id.present?
 
         # Check whether this author has previously submitted and obtained a customer_id
