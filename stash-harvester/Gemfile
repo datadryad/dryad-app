@@ -1,7 +1,0 @@
-source 'https://rubygems.org'
-
-gemspec
-
-gem 'sqlite3', '~>1.3.13'
-gem 'standalone_migrations', git: 'https://github.com/thuss/standalone-migrations.git', ref: 'de391a69e4ed'
-gem 'stash-wrapper', path: '../stash-wrapper'
