@@ -180,6 +180,17 @@ namespace :deploy do
     end
   end
 
+  desc 'Setup the shell script that is executed by Cron for the environment'
+  task :setup_cron do
+    on roles(:app) do
+      # Create sub directories
+      execute "mkdir -p #{deploy_to}/shared/cron/backups"
+      execute "mkdir -p #{deploy_to}/shared/cron/logs"
+      # Make the shell scripts executable
+      execute "chmod 750 #{deploy_to}/shared/cron/*.sh"
+    end
+  end
+
   before :starting, :update_config
   before :starting, :clone_engines
   after :started, :update_local_engines
