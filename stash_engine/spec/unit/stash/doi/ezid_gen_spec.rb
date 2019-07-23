@@ -48,21 +48,32 @@ module Stash
       end
 
       describe :mint_id do
-        it 'mints a new identifier' do
-          identifier = instance_double(::Ezid::MintIdentifierResponse)
-          allow(identifier).to receive(:id).and_return(identifier_str)
-          allow(@resource).to receive(:identifier).and_return(nil)
+        before(:each) do
+          @ezid_client = instance_double(::Ezid::Client)
 
-          ezid_client = instance_double(::Ezid::Client)
           allow(::Ezid::Client).to receive(:new)
             .with(host: 'ezid.cdlib.org', port: 80, user: 'stash', password: '3cc9d3fbd9788148c6a32a1415fa673a')
-            .and_return(ezid_client)
+            .and_return(@ezid_client)
 
-          expect(ezid_client).to receive(:mint_identifier)
+          @identifier = instance_double(::Ezid::MintIdentifierResponse)
+          allow(@identifier).to receive(:id).and_return(@identifier_str)
+          allow(@resource).to receive(:identifier).and_return(nil)
+        end
+
+        it 'mints a new identifier' do
+          expect(@ezid_client).to receive(:mint_identifier)
             .with('doi:10.15146/R3', status: 'reserved', profile: 'datacite')
-            .and_return(identifier)
+            .and_return(@identifier)
 
-          expect(helper.mint_id).to eq(identifier_str)
+          expect(@helper.mint_id).to eq(@identifier_str)
+        end
+
+        it 'raises an error when Ezid could not mint and identifier' do
+          ezid_error = ::Ezid::Error.new('Testing errors')
+          # allow(ezid_error).to receive(:message).with(no_args).and_return('Testing errors')
+          allow(@ezid_client).to receive(:mint_identifier).with(any_args).and_raise(ezid_error)
+          dc = IdGen.make_instance(resource: @resource)
+          expect { dc.mint_id }.to raise_error(Stash::Doi::EzidError)
         end
       end
 

@@ -14,6 +14,10 @@ module Stash
           ezid_response = ezid_client.mint_identifier(shoulder, status: 'reserved', profile: 'datacite')
           ezid_response.id
         end
+      rescue Ezid::Error => e
+        err = EzidError.new("Ezid failed to mint an id (#{e.message})")
+        err.set_backtrace(e.backtrace) if e.backtrace.present?
+        raise err
       end
 
       def id_exists?
@@ -35,6 +39,11 @@ module Stash
           ezid_client.create_identifier(doi, status: 'reserved', profile: 'datacite')
           doi
         end
+      rescue Ezid::Error => e
+        err = EzidError.new("Ezid failed to reserver an id for resource #{resource&.identifier_str}" \
+                                " (#{e.message}) with doi: #{doi.to_s}")
+        err.set_backtrace(e.backtrace) if e.backtrace.present?
+        raise err
       end
 
       def update_metadata(dc4_xml:, landing_page_url:)
