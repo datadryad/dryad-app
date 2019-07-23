@@ -11,9 +11,9 @@ set :rails_env, 'stage'
 
 #set :bundle_env_variables, { 'RAILS_ENV' => 'stage' }
 
-# To override the default host, set $SERVER_HOST, e.g.
-#    $ SERVER_HOST='localhost1 localhost2' bundle exec cap development deploy
-set :server_hosts, ENV["SERVER_HOSTS"]&.split(' ') || %w[uc3-dryad-stg.cdlib.org]
+# To override the default host, set $SERVER_HOSTS, e.g.
+#    $ SERVER_HOSTS='localhost' bundle exec cap development deploy
+set :server_hosts, ENV["SERVER_HOSTS"]&.split(' ') || ['uc3-dryaduix2-stg-2c.cdlib.org']
 role :app, fetch(:server_hosts), user: 'dryad'
 
 #on roles(:all) do |host|
