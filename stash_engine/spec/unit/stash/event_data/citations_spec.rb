@@ -9,7 +9,8 @@ module Stash
       before(:each) do
         @citations = Citations.new(doi: 'doi:10.6071/m3rp49')
         WebMock.disable_net_connect!
-        stub_request(:get, 'https://api.datacite.org/events?mailto=scott.fisher@ucop.edu&obj-id=https://doi.org/10.6071/m3rp49&page%5Bsize%5D=10000&relation-type-id=cites,describes,is-supplemented-by,references,compiles,reviews,requires,has-metadata,documents,is-source-of')
+        stub_request(:get, %r{https://api\.datacite\.org/events\?mailto=.+&obj-id=https://doi.org/10.6071/m3rp49&page%5Bsize%5D=10000
+            &relation-type-id=cites,describes,is-supplemented-by,references,compiles,reviews,requires,has-metadata,documents,is-source-of}x)
           .with(
             headers: {
               'Accept' => '*/*',
@@ -19,7 +20,9 @@ module Stash
           .to_return(status: 200, body: File.read(StashEngine::Engine.root.join('spec', 'data', 'event-data-citations1.json')),
                      headers: { 'Content-Type' => 'application/json' })
 
-        stub_request(:get, 'https://api.datacite.org/events?mailto=scott.fisher@ucop.edu&page%5Bsize%5D=10000&relation-type-id=is-cited-by,is-supplement-to,is-described-by,is-metadata-for,is-referenced-by,is-documented-by,is-compiled-by,is-reviewed-by,is-derived-from,is-required-by&subj-id=https://doi.org/10.6071/m3rp49')
+        stub_request(:get, %r{https://api\.datacite\.org/events\?mailto=.+&page%5Bsize%5D=10000&relation-type-id=is-cited-by,
+            is-supplement-to,is-described-by,is-metadata-for,is-referenced-by,is-documented-by,is-compiled-by,is-reviewed-by,
+            is-derived-from,is-required-by&subj-id=https://doi.org/10.6071/m3rp49}x)
           .with(
             headers: {
               'Accept' => '*/*',
