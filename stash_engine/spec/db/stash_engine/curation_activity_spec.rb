@@ -154,6 +154,14 @@ module StashEngine
           ca.save
         end
 
+        it 'does not call submit_to_stripe if skip_datacite' do
+          allow_any_instance_of(StashEngine::CurationActivity).to receive(:ready_for_payment?).and_return(true)
+          allow_any_instance_of(StashEngine::Resource).to receive(:skip_datacite_update).and_return(true)
+          ca = CurationActivity.new(resource_id: @resource.id, status: 'published')
+          expect(ca).not_to receive(:submit_to_stripe)
+          ca.save
+        end
+
       end
 
       context :email_author do
