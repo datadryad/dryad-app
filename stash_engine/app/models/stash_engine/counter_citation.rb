@@ -2,28 +2,16 @@ module StashEngine
   class CounterCitation < ActiveRecord::Base
     # belongs_to :identifier, class_name: 'StashEngine::Identifier'
 
-    # this class caches the counter_citations so it doesn't take so long to get them all from DataCite
-    # but it still retrieves the DOIs for the citations to display from Crossref :-/
+    # this class caches the counter_citations so it doesn't take so long to get them all
 
     def self.citations(stash_identifier:)
       cite_events = Stash::EventData::Citations.new(doi: stash_identifier.identifier)
       logger.debug('before getting citation events')
-      r = cite_events.results
+      dois = cite_events.results
       logger.debug('after getting citation events')
-      r.map do |citation_event|
-        citation(crossref_event: citation_event)
+      dois.map do |citation_event|
+        citation_metadata(doi: citation_event)
       end
-    end
-
-    # this may imply we need a crossref_event class
-    def self.citation(crossref_event:)
-      the_doi = citing_doi(crossref_event: crossref_event)
-      citation_metadata(doi: the_doi)
-    end
-
-    # this may indicate having additional classes for crossref_event?
-    def self.citing_doi(crossref_event:)
-      (crossref_event['source_id'] == 'datacite' ? crossref_event['obj_id'] : crossref_event['subj_id'])
     end
 
     def self.citation_metadata(doi:)
@@ -33,7 +21,6 @@ module StashEngine
 
       datacite_metadata = Stash::DataciteMetadata.new(doi: doi)
       create(citation: datacite_metadata.html_citation, doi: doi)
-      # { doi: doi, html: (datacite_metadata.raw_metadata.nil? ? nil : datacite_metadata.html_citation) }
     end
   end
 end
