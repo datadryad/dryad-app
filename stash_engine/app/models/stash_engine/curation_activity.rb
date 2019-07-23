@@ -126,6 +126,9 @@ module StashEngine
 
     def submit_to_datacite
       return unless should_update_doi?
+
+raise Stash::Doi::IdGenError.new("Foo bar")
+
       idg = Stash::Doi::IdGen.make_instance(resource: resource)
       idg.update_identifier_metadata!
       # Send out orcid invitations now that the citation has been registered
@@ -134,6 +137,7 @@ module StashEngine
       Rails.logger.error "Stash::Doi::IdGen - Unable to submit metadata changes for : '#{resource&.identifier&.to_s}'"
       Rails.logger.error ige.message
       StashEngine::UserMailer.error_report(resource, ige).deliver_now
+      raise ige
     end
 
     def update_solr
