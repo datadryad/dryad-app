@@ -3,6 +3,8 @@
 
   <%= form_for :resource, url: curation_activity_change_path(resource.id), method: :post, remote: true do |f| %>
 
+    <p class="c-alert--error">Unable to save your changes at this time. This is typically due to a Datacite/Ezid error.</p>
+
     <%# Users cannot change the status or publication date once the files are published %>
     <% if resource.curatable? %>
       <%= f.fields_for :curation_activity, curation_activity do |ca| %>
@@ -34,3 +36,11 @@
   <% end %>
 
 </div>
+
+<script type="text/javascript">
+  $('.o-admin-dialog form .c-alert--error').hide();
+
+  $('.o-admin-dialog form').on("ajax:error", function(e) {
+    $(e.target).find('.c-alert--error').show();
+  });
+</script>
