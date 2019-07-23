@@ -15,7 +15,7 @@ module Stash
     protected
 
     def generic_query(params:)
-      hash = { 'mailto'  =>  @email } # this was for crossref, but doesn't hurt for DataCite so they can contact us if there are problems
+      hash = { 'mailto' => @email } # this was for crossref, but doesn't hurt for DataCite so they can contact us if there are problems
       response = make_reliable { RestClient.get @base_url, params: hash.merge(params) }
       JSON.parse(response.body)
     end

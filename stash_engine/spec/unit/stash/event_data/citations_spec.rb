@@ -1,18 +1,33 @@
 require 'spec_helper'
+require 'webmock/rspec'
+require 'byebug'
 
 module Stash
   module EventData
     describe Citations do
 
       before(:each) do
-        @citations = Citations.new(doi: '54321/09876')
-        fake_dc_result = [{ 'obj_id' => 1, 'test_name' => 'one_dcs' },
-                          { 'obj_id' => 2, 'test_name' => 'two_dcs' }]
-        allow(@citations).to receive(:datacite_query).and_return(fake_dc_result)
+        @citations = Citations.new(doi: 'doi:10.6071/m3rp49')
+        WebMock.disable_net_connect!
+        stub_request(:get, 'https://api.datacite.org/events?mailto=scott.fisher@ucop.edu&obj-id=https://doi.org/10.6071/m3rp49&page%5Bsize%5D=10000&relation-type-id=cites,describes,is-supplemented-by,references,compiles,reviews,requires,has-metadata,documents,is-source-of')
+          .with(
+            headers: {
+              'Accept' => '*/*',
+              'Host' => 'api.datacite.org'
+            }
+          )
+          .to_return(status: 200, body: File.read(StashEngine::Engine.root.join('spec', 'data', 'event-data-citations1.json')),
+                     headers: { 'Content-Type' => 'application/json' })
 
-        fake_xref_result = [{ 'subj_id' => 2, 'test_name' => 'two_xref' },
-                            { 'subj_id' => 3, 'test_name' => 'three_xref' }]
-        allow(@citations).to receive(:crossref_query).and_return(fake_xref_result)
+        stub_request(:get, 'https://api.datacite.org/events?mailto=scott.fisher@ucop.edu&page%5Bsize%5D=10000&relation-type-id=is-cited-by,is-supplement-to,is-described-by,is-metadata-for,is-referenced-by,is-documented-by,is-compiled-by,is-reviewed-by,is-derived-from,is-required-by&subj-id=https://doi.org/10.6071/m3rp49')
+          .with(
+            headers: {
+              'Accept' => '*/*',
+              'Host' => 'api.datacite.org'
+            }
+          )
+          .to_return(status: 200, body: File.read(StashEngine::Engine.root.join('spec', 'data', 'event-data-citations2.json')),
+                     headers: { 'Content-Type' => 'application/json' })
       end
 
       describe :initializes do
@@ -32,9 +47,9 @@ module Stash
           expect(@citations.results).to be_kind_of(Array)
         end
 
-        it 'deduplicates duplicate items (preferring datacite)' do
-          expect(@citations.results.length).to eq(3)
-          expect(@citations.results).to include('obj_id' => 2, 'test_name' => 'two_dcs')
+        it 'gets citations and combines from two queries from event data' do
+          res = @citations.results
+          expect(res).to eq(['https://doi.org/10.1126/sciadv.1602232', 'https://doi.org/10.1098/rsif.2017.0030'])
         end
 
       end
