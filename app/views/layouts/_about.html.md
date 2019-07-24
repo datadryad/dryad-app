@@ -17,7 +17,7 @@ Our mission is to provide the infrastructure for, and promote the re-use of, dat
 - Promotes data visibility through usage and download metrics and by allowing content to be indexed, searched and retrieved.
 - Promotes data quality by employing professional curators to ensure the validity of the files and descriptive information.
 - Contents are free to download and re-use under a Creative Commons Zero (CC0) license.
-- Contents are preserved for the long term, in partnership with the DataONE network and with Data Archiving and Networked Services (DANS) to guarantee access to contents indefinitely.
+- Contents are preserved for the long term to guarantee access to contents indefinitely.
 - Open source, standards-compliant technology.
 
 
@@ -76,7 +76,7 @@ Dryad is a not-for-profit membership organization, recognized as a 501(c)3 by th
 
 <div class="bio">
   <img src="/images/horstmann.jpg" alt="Wolfram Horstmann" title="Wolfram Horstmann">
-  <p><strong>Wolfram Horstmann (Class of 2021)</strong> has been Director of Göttingen State and University Library since 2014. Prior to that, he was Associate Director at the Bodleian Libraries of the University of Oxford, UK and CIO at Bielefeld University, Germany. He is Professor at the Information School of the Humboldt University in Berlin, teaching Electronic Publishing, Open Access and Open Science. He is biologist by training and worked on the epistemology of simulations for his doctoral thesis. <a href="https://www.sub.uni-goettingen.de/en/contact/staff-a-z/staff-details/person/wolfram-horstmann/" target="_blank" title="Read more about Wolfram (opens in a new window)">Read more details.</a></p>
+  <p><strong>Wolfram Horstmann (Class of 2021)</strong> has been Director of Göttingen State and University Library since 2014. Prior to that, he was Associate Director at the Bodleian Libraries of the University of Oxford, UK and CIO at Bielefeld University, Germany. He is Professor at the Information School of the Humboldt University in Berlin, teaching Electronic Publishing, Open Access and Open Science. He is biologist by training and worked on the epistemology of simulations for his doctoral thesis. <a href="https://www.sub.uni-goettingen.de/en/contact/staff-a-z/staff-details/person/wolfram-horstmann/" target="_blank" title="Read more about Wolfram (opens in a new window)">Read more details.</a></p>
 </div>
 
 <div class="bio">
