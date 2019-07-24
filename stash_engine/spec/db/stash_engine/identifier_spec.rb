@@ -316,6 +316,26 @@ module StashEngine
       end
     end
 
+    describe '#journal_allows' do
+      it 'allows review when there is no journal' do
+        allow(@identifier).to receive('publication_name').and_return(nil)
+        allow(@identifier).to receive('publication_data').and_return(false)
+        expect(@identifier.allow_review?).to be(true)
+      end
+
+      it 'allows review when the journal allows review' do
+        allow(@identifier).to receive('publication_name').and_return('fakename')
+        allow(@identifier).to receive('publication_data').and_return(true)
+        expect(@identifier.allow_review?).to be(true)
+      end
+
+      it 'disallows review when the journal disallows review' do
+        allow(@identifier).to receive('publication_name').and_return('fakename')
+        allow(@identifier).to receive('publication_data').and_return(false)
+        expect(@identifier.allow_review?).to be(false)
+      end
+    end
+    
     describe '#journal_will_pay?' do
       it 'returns true when there is a PREPAID plan' do
         allow(@identifier).to receive('publication_data').and_return('PREPAID')
@@ -356,7 +376,7 @@ module StashEngine
         expect(@identifier.submitter_affiliation).to eql(@identifier.latest_resource&.authors&.first&.affiliation)
       end
     end
-
+    
     describe :with_visibility do
       before(:each) do
         Identifier.destroy_all
