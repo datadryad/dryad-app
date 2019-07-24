@@ -49,9 +49,6 @@ module Stash
       def do_submit!
         package = create_package
         submit(package)
-        # We don't update DataCite here now and only when embargoing or releasing datasets from curation
-        # TODO: We should remove this cleanup and only cleanup once the harvester has called us back and Merritt was successful
-        cleanup(package)
         Stash::Repo::SubmissionResult.success(resource_id: resource_id, request_desc: description, message: 'Success')
       end
 
@@ -83,11 +80,6 @@ module Stash
         log_info("submitting resource #{resource_id} (#{resource.identifier_str})")
         sword_helper = SwordHelper.new(package: package, logger: log)
         sword_helper.submit!
-      end
-
-      def cleanup(package)
-        log_info("cleaning up temporary files for resource #{resource_id} (#{resource.identifier_str})")
-        package.cleanup!
       end
 
       def description_for(resource)
