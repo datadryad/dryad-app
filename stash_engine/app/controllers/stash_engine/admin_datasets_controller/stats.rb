@@ -3,7 +3,7 @@ module StashEngine
   class AdminDatasetsController
     class Stats
 
-      PREHISTORIC_TIME = Time.new(-60_000, 1, 1)
+      PREHISTORIC_TIME = Time.new(-60_000, 1, 1).utc
 
       # leave tenant_id blank if you want stats for all
       def initialize(tenant_id: nil, since: PREHISTORIC_TIME)

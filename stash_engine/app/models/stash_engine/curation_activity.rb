@@ -162,7 +162,7 @@ module StashEngine
             first_name: author.author_first_name,
             last_name: author.author_last_name,
             secret: SecureRandom.urlsafe_base64,
-            invited_at: Time.new
+            invited_at: Time.new.utc
           )
         ).deliver_now
       end

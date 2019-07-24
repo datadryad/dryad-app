@@ -8,7 +8,7 @@ module StashDatacite
 
     def self.ensure_pub_year(resource)
       return if resource.publication_years.exists?
-      create(publication_year: Time.now.year, resource_id: resource.id)
+      create(publication_year: Time.now.utc.year, resource_id: resource.id)
     end
   end
 end

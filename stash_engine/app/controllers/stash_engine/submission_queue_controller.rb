@@ -27,7 +27,7 @@ module StashEngine
       @server_processing_count = RepoQueueState.latest_per_resource.where(state: 'processing')
         .where(hostname: StashEngine.repository.class.hostname).count
       @errored_count = RepoQueueState.latest_per_resource.where(state: 'errored').count
-      @day_completed_submissions = RepoQueueState.latest_per_resource.where(state: 'completed').where('created_at > ?', Time.new - 1.day).count
+      @day_completed_submissions = RepoQueueState.latest_per_resource.where(state: 'completed').where('created_at > ?', Time.new.utc - 1.day).count
       @holding_submissions = File.exist?(HOLD_SUBMISSIONS_PATH)
       @executor = StashEngine.repository.executor
     end

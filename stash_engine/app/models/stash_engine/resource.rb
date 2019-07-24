@@ -143,7 +143,7 @@ module StashEngine
 
     # calculates published as a published status or embargoed and past its publication date
     scope :published, -> do
-      joins(:curation_activities).where('stash_engine_resources.publication_date < ?', Time.now)
+      joins(:curation_activities).where('stash_engine_resources.publication_date < ?', Time.now.utc)
         .where(stash_engine_curation_activities: { id: latest_curation_activity.values,
                                                    status: %w[published embargoed] })
     end
@@ -537,7 +537,7 @@ module StashEngine
     # Publication
     # Files are published when the publication date has been reached
     def files_published?
-      metadata_published? && publication_date.present? && Time.new >= publication_date
+      metadata_published? && publication_date.present? && Time.new.utc >= publication_date
     end
 
     # Metadata is published when the curator sets the status to published or embargoed

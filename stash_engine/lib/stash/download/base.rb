@@ -29,7 +29,7 @@ module Stash
         cc.response.headers['Content-Type'] = content_type if content_type
         cc.response.headers['Content-Disposition'] = content_disposition
         cc.response.headers['Content-Length'] = content_length
-        cc.response.headers['Last-Modified'] = Time.now.httpdate
+        cc.response.headers['Last-Modified'] = Time.now.utc.httpdate
         cc.response_body = Stash::Streamer.new(client, url)
       end
 
