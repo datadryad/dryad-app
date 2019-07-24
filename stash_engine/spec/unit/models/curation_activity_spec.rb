@@ -116,13 +116,13 @@ module StashEngine
       end
 
       it 'catches errors and emails the admins' do
-        dc_error = Stash::Doi::DataciteError.new('Testing errors')
+        dc_error = Stash::Doi::IdGenError.new('Testing errors')
         allow(Stash::Doi::IdGen).to receive(:make_instance).with(any_args).and_raise(dc_error)
 
         message = instance_double(ActionMailer::MessageDelivery)
         expect(StashEngine::UserMailer).to receive(:error_report).with(any_args).and_return(message)
         expect(message).to receive(:deliver_now)
-        CurationActivity.create(resource_id: @resource.id, status: 'embargoed')
+        expect { CurationActivity.create(resource_id: @resource.id, status: 'embargoed') }.to raise_error(Stash::Doi::IdGenError)
       end
     end
 
