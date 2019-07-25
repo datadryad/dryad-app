@@ -65,7 +65,6 @@ module Stash
         @package = instance_double(ZipPackage)
         allow(ZipPackage).to receive(:new).with(resource: resource).and_return(package)
         allow(package).to receive(:dc4_xml)
-        allow(package).to receive(:cleanup!)
 
         @sword_helper = instance_double(SwordHelper)
         allow(SwordHelper).to receive(:new).with(package: package, logger: logger).and_return(sword_helper)
@@ -116,11 +115,6 @@ module Stash
             job.submit!
           end
 
-          it 'cleans up the package' do
-            expect(package).to receive(:cleanup!)
-            job.submit!
-          end
-
           it 'returns a result' do
             result = job.submit!
             expect(result).to be_a(Stash::Repo::SubmissionResult)
@@ -135,11 +129,6 @@ module Stash
 
           it 'submits the package' do
             expect(sword_helper).to receive(:submit!)
-            job.submit!
-          end
-
-          it 'cleans up the package' do
-            expect(package).to receive(:cleanup!)
             job.submit!
           end
 
@@ -161,11 +150,6 @@ module Stash
           it 'fails on a SWORD submission error' do
             expect(sword_helper).to receive(:submit!).and_raise(RestClient::RequestFailed)
             expect(job.submit!.error).to be_a(RestClient::RequestFailed)
-          end
-
-          it 'fails on a package cleanup error' do
-            expect(package).to receive(:cleanup!).and_raise(Errno::ENOENT)
-            expect(job.submit!.error).to be_a(Errno::ENOENT)
           end
         end
       end
