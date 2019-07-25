@@ -4,7 +4,7 @@
   <p>The following lists represent the current status of Dryad's external dependencies. A green icon indicates that the service is online and operational, red indicates that the service is offline and orange indicates that we could not determine it's status. Clicking on a red or orange icon will open a dialog with troubleshooting information.</p>
   <p>For general troubleshooting information, please refer to the: <%= link_to 'Main Dryad Documentation', @main_documentation %></p>
 
-  <p><strong>The following dependencies were last checked on: <em><%= @latest_check.to_s %></em></strong></p>
+  <p><strong>The following dependencies were last checked on: <em><%= formatted_datetime(@latest_check) %></em></strong></p>
 
   <div class="o-dependency-group">
     <div>

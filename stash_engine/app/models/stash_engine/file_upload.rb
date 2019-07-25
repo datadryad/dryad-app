@@ -97,7 +97,7 @@ module StashEngine
 
     def self.older_resource_named_dirs(uploads_dir)
       Dir.glob(File.join(uploads_dir, '*')).select { |i| %r{/\d+$}.match(i) }
-        .select { |i| File.directory?(i) }.select { |i| File.mtime(i) + 7.days < Time.new }.map { |i| File.basename(i) }
+        .select { |i| File.directory?(i) }.select { |i| File.mtime(i) + 7.days < Time.new.utc }.map { |i| File.basename(i) }
     end
 
     def self.sanitize_file_name(name)

@@ -59,7 +59,7 @@ module Stash
       end
 
       def log_info(message)
-        Rails.logger.info("#{Time.now.xmlschema} #{self.class}: #{message}")
+        Rails.logger.info("#{Time.now.utc.xmlschema} #{self.class}: #{message}")
       end
 
       # subclasses should implement mint_id and update_metadata(dc4_xml:, landing_page_url:) methods

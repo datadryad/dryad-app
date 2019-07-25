@@ -11,7 +11,7 @@ module StashDatacite
 
       begin
         @resource.hold_for_peer_review = peer_review_params[:hold_for_peer_review]
-        @resource.peer_review_end_date = (@resource.hold_for_peer_review? ? Time.now + 6.months : nil)
+        @resource.peer_review_end_date = (@resource.hold_for_peer_review? ? Time.now.utc + 6.months : nil)
         @resource.save
       rescue ActiveRecord::RecordInvalid
         @error = 'Unable to enable peer review status at this time.'

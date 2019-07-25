@@ -110,11 +110,11 @@ module StashEngine
         {
           user_count: User.all,
           dataset_count: Identifier.all,
-          user_7days: User.where(['stash_engine_users.created_at > ?', Time.new - 7.days]),
+          user_7days: User.where(['stash_engine_users.created_at > ?', Time.new.utc - 7.days]),
           dataset_started_7days: Resource.joins(:current_resource_state)
             .where(stash_engine_resource_states: { resource_state: %i[in_progress] })
-            .where(['stash_engine_resources.created_at > ?', Time.new - 7.days]),
-          dataset_submitted_7days: Identifier.where(['stash_engine_identifiers.created_at > ?', Time.new - 7.days])
+            .where(['stash_engine_resources.created_at > ?', Time.new.utc - 7.days]),
+          dataset_submitted_7days: Identifier.where(['stash_engine_identifiers.created_at > ?', Time.new.utc - 7.days])
         }
     end
 
