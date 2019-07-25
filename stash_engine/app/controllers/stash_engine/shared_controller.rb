@@ -4,7 +4,7 @@ require 'nokogiri'
 
 module StashEngine
   module SharedController # rubocop:disable Metrics/ModuleLength
-    DEFAULT_TZ = 'America/Los_Angeles'.freeze
+    DEFAULT_TZ = 'UTC'.freeze
 
     require 'uri'
     require 'securerandom'
@@ -68,19 +68,19 @@ module StashEngine
     def formatted_date(t)
       return 'Not available' if t.blank?
       t = t.to_time if t.class == String
-      t.strftime('%B %e, %Y')
+      local_time(t)&.strftime('%B %e, %Y')
     end
 
     def formatted_datetime(t)
       return 'Not available' if t.blank?
       t = t.to_time if t.class == String
-      t.in_time_zone('Pacific Time (US & Canada)').strftime('%m/%d/%Y %H:%M:%S')
+      local_time(t)&.strftime('%m/%d/%Y %H:%M:%S %Z')
     end
 
     def formatted_html5_date(t)
       return 'Not available' if t.blank?
       t = t.to_time if t.class == String
-      t.strftime('%Y-%m-%d')
+      local_time(t)&.strftime('%Y-%m-%d')
     end
 
     def local_time(t)

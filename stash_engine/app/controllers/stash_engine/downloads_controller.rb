@@ -25,7 +25,7 @@ module StashEngine
       end
     rescue Stash::Download::MerrittResponseError => e
       # if it's a recent submission, suggest they try again later; otherwise fail
-      raise e unless @resource.updated_at > Time.new - 2.hours
+      raise e unless @resource.updated_at > Time.new.utc - 2.hours
       Stash::Download::Base.log_warning_if_needed(error: e, resource: @resource)
       # recently updated, so display a "hold your horses" message
       flash_download_unavailable
