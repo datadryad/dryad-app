@@ -335,7 +335,7 @@ module StashEngine
         expect(@identifier.allow_review?).to be(false)
       end
     end
-    
+
     describe '#journal_will_pay?' do
       it 'returns true when there is a PREPAID plan' do
         allow(@identifier).to receive('publication_data').and_return('PREPAID')
@@ -376,7 +376,7 @@ module StashEngine
         expect(@identifier.submitter_affiliation).to eql(@identifier.latest_resource&.authors&.first&.affiliation)
       end
     end
-    
+
     describe :with_visibility do
       before(:each) do
         Identifier.destroy_all

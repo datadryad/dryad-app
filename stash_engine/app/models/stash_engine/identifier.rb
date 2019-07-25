@@ -216,7 +216,7 @@ module StashEngine
     def publication_name
       publication_data('fullName')
     end
-    
+
     def journal_will_pay?
       plan_type = publication_data('paymentPlanType')
       plan_type == 'SUBSCRIPTION' ||
@@ -231,7 +231,7 @@ module StashEngine
     def allow_review?
       publication_data('allowReviewWorkflow') || publication_name.blank?
     end
-    
+
     def institution_will_pay?
       latest_resource&.tenant&.covers_dpc == true
     end
