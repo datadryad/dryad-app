@@ -146,17 +146,6 @@ module Stash
         end
       end
 
-      describe :cleanup! do
-        it 'removes the working directory' do
-          package = ZipPackage.new(resource: resource)
-          @zipfile_path = package.zipfile
-          workdir = File.dirname(zipfile_path)
-          package.cleanup!
-          expect(File.exist?(workdir)).to eq(false)
-        end
-
-      end
-
       describe :to_s do
         attr_reader :package_str
         before(:each) do
