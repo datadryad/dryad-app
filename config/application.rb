@@ -32,5 +32,8 @@ module Dash2
     config.active_record.raise_in_transactional_callbacks = true
     config.generators.javascript_engine = :js
     config.autoload_paths << Rails.root.join("lib")
+
+    config.time_zone = "UTC"
+    config.active_record.default_timezone = :utc
   end
 end
