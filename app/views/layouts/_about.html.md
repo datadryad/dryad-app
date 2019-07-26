@@ -29,9 +29,9 @@
 <li><a href="#publisher">Learn more about Publisher Membership</a></li>
 </ul>
 
-<h3>Why Join Dryad?<a name="why-join"></a></h3>
+<h3>Why join Dryad?<a name="why-join"></a></h3>
 
-<p>Be part of a non-profit, shared community working together to promote data publishing, curation, and preservation. Our community is open to a full spectrum of stakeholder organizations such as journals, learned societies, publishers, research institutions, and academic libraries. Since each stakeholder community comes to Dryad for different approaches, we have created distinct Membership opportunities to best support these efforts.<p>
+<p>Be part of a non-profit, shared community working together to promote data publishing, curation, and preservation. Our community is open to a full spectrum of stakeholder organizations such as journals, learned societies, publishers, research institutions, and academic libraries. Since each stakeholder community comes to Dryad for different approaches, we have created distinct membership opportunities to best support these efforts.<p>
 
 <p>All members of the Dryad community benefit by sustaining shared infrastructure that:</p>
 <ul>
@@ -52,7 +52,7 @@ Your researchers’ data publications will be safely stored and backed up in a C
 </li>
 
 <li><strong>Remains committed to continually improving</strong><br/>
-Dryad’s development team works with an Agile framework; therefore upgrades and enhanced system functions will be ongoing as a way to continually improve workflows for researchers and related stakeholders.</li>
+Upgrades and enhanced system functions will be ongoing as a way to continually improve workflows for researchers and related stakeholders.</li>
 </ul> 
 
 <p>All members of the Dryad community will influence the future by:</p>
@@ -82,7 +82,7 @@ Administrators will have access to a dashboard of all data submission activity f
 Users logging onto Dryad from member institutions will access a custom-branded interface.</li>
  		
 <li><strong>Enhanced curation opportunities</strong><br/>
-Dryad’s highly skilled staff curates each dataset to increase discoverability and extend the impact of researcher’s work. Institutional Members will have the opportunity to discuss workflows with Dryad where staff at member institutions might apply supplemental curation steps in addition to the standard Dryad procedures.</li>
+Dryad’s highly skilled staff curates each dataset to increase discoverability and extend the impact of researcher’s work. Institutional members will have the opportunity to discuss workflows with Dryad where staff at member institutions might apply supplemental curation steps in addition to the standard Dryad procedures.</li>
 									
 <li><strong>Bespoke services</strong><br/>
 Dryad is open to working with institutions on an individual basis to develop custom services and alternative partnership opportunities.</li>
@@ -93,10 +93,11 @@ Dryad is open to working with institutions on an individual basis to develop cus
 <li><strong>Level III</strong>:  $13,000</li>
 <li><strong>Level II</strong>:   $ 7,500</li>
 <li><strong>Level I</strong>:    $ 3,000</li>
+</ul>
 
 <p>Dryad membership brings significant value to institutions. As such, we recognize that any metric for assessing fees might not seem equitable to every institution. Therefore, we are asking institutions to self-determine your level of commitment. Below are some parameters you may use, but you make the decision about which level corresponds most closely to your institution’s resources.</p>
 
-<h5>Suggested Examples for Determining Size </h5>
+<h5>Suggested Examples for Determining Size</h5>
 <ul>
 <li><strong>Level III</strong>: RI or FTE +10K FTE or +$300M in research grant funding.
 <li><strong>Level II</strong>: R2 or FTE 5K - 10K or $50M - $300M in research grant funding.
@@ -119,7 +120,7 @@ Dryad is open to working with institutions on an individual basis to develop cus
 Members will have access to a dashboard of all data submissions from your authors including curation and publication statuses of all relevant submissions.</li>
 
 <li><strong>Expertly curated data - at a savings to your organization</strong><br/>
-To increase discoverability and extend the impact of an author’s work, each dataset is thoroughly curated by Dryad’s highly skilled staff. This essential step involves applying enhanced metadata and performing  data quality checks, thus removing the costs of these checks from your organization.</li>
+To increase discoverability and extend the impact of an author’s work, each dataset is thoroughly curated by Dryad’s highly skilled staff. This essential step involves applying enhanced metadata and performing data quality checks, thus removing the costs of these checks from your organization.</li>
 
 <li><strong>Saving money when supporting your data policies</strong><br/>
 Dryad encourages publishers to support their data policies by sponsoring the Data Publishing Fees (DPCs). Members will receive discounts on the sponsorship opportunities.</li>
