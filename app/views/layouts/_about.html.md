@@ -363,10 +363,7 @@ identity providers (IdPs).</p>
 | Support Data Reuse |  | X | Focus researchers on describing methods and explaining ways to reuse their datasets |
 | Satisfies Data Availability Requirements |  | X | Many publishers and funders require researchers to make their data available. Dryad is an readily accepted and easy way to comply |
 
+<h3>History<a name="history"></a></h3>
 
-<h2>History<a name="history"></a></h2>
-
-Dryad's original iteration launched in 2009 and was built upon the open-source DSpace repository software. In 2019, Dryad merged with Dash, a data publication service developed at the [University of California Curation Center](http://www.cdlib.org/uc3) (UC3), a program at [California Digital Library](http://www.cdlib.org) (CDL).
-
-
+<p>Dryad's original iteration launched in 2009 and was built upon the open-source DSpace repository software. In 2019, Dryad merged with Dash, a data publication service developed at the [University of California Curation Center](http://www.cdlib.org/uc3) (UC3), a program at [California Digital Library](http://www.cdlib.org) (CDL).</p>
 
