@@ -80,14 +80,16 @@
 <p>Please note that you may only use one of these two upload methods per version, but you may do subsequent versions of your data publication and utilize different methods of upload this way.</p>
 
 <h3>Curation<a name="curation"></a></h3>
-<p>Once your data is submitted, Dryad <a href="/stash/about#staff">curators</a> perform basic checks:</p>
+<p><strong>What is data curation?</strong> Data curators review and enrich research data to help make it <a href="https://www.force11.org/group/fairgroup/fairprinciples">Findable, Accessible, Interoperable, and Reusable (FAIR)</a>. According to the <a href="https://datacurationnetwork.org/about/our-mission/">Data Curation Network<a> (of which Dryad is a member),<blockquote>Data curation enables data discovery and retrieval, maintains data quality, adds value, and provides for re-use over time through activities including authentication, archiving, metadata creation, digital preservation, and transformation.</blockquote></p>
+<p>Dryad has a team of <a href="/stash/about#staff">professional curators</a> who check every submission to ensure the validity of files and metadata. Once your data is submitted, Dryad curators perform basic checks:</p>
 <ul>
 <li>Can the files be opened?</li>
 <li>Are they free of copyright restrictions?</li>
 <li>Do they appear to be free of sensitive data?</li>
 <li>Are the metadata and documentation complete and correct?</li>
+<li>Is adequate description provided to ensure reusability?</li>
 </ul>
-<p>If Dryad curators identify any questions, problems, or areas for improvement, they will contact you directly via the email address associated with your account. You may contact the curation team for questions or consultations at <a href=mailto:curator@datadryad.org>curator@datadryad.org</a></p>
+<p>If Dryad curators identify questions, problems, or areas for improvement, they will contact you directly via the email address associated with your account. You may contact the curation team for questions or consultations at <a href=mailto:curator@datadryad.org>curator@datadryad.org</a></p>
 <p>Upon curator approval, the Dryad DOI is officially registered and, if applicable, the <a href="#fees">Data Publishing Charge</a> is invoiced.</p>
 
 <h3>Publication and Citation<a name="citation"></a></h3>
