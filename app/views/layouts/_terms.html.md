@@ -1,6 +1,6 @@
 # Terms of Service
 
-<p>Last revised 26 July 2019</p>
+<p><i>Last revised 26 July 2019</i></p>
 
 <p>These Terms of Service apply to Individuals and Organizations who use or publish content in the Dryad Digital Repository, pay for others to publish content (whether through vouchers, deferred payment plans, subscriptions or otherwise), or obtain and reuse content from the Dryad Digital Repository. These terms apply with equal force to Individuals and Organizations using the web interface or an application programming interface to the Dryad Digital Repository.</p>
 
@@ -455,7 +455,7 @@
 </p>
 
 <h2 id="submitter-obligations">5. Submitter Obligations, Representations and Warranties to Dryad</h2>
-<br />
+
 <h3 id="permission">5.1 Permission</h3>
 
 <ul>
@@ -512,7 +512,7 @@
 
 		
 <h2 id="usage">7. Usage</h2>
-<br />
+
 <h3 id="content-usage">7.1 Content Usage</h3>
 <p>
 	<ul>
