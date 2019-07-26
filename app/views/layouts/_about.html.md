@@ -1,58 +1,58 @@
-# About Dryad
+<h1>About Dryad</h1>
 
-## Our Mission<a name="mission"></a>
+<h2>Our Mission<a name="mission"></a></h2>
 
-The Dryad Digital Repository is a curated resource that makes research data **discoverable, freely reusable, and citable**. Dryad provides a general-purpose home for a wide diversity of data types.
+<p>The Dryad Digital Repository is a curated resource that makes research data <strong>discoverable, freely reusable, and citable</strong>. Dryad provides a general-purpose home for a wide diversity of data types.</p>
+<p>Dryad originated from an initiative among a group of leading journals and scientific societies to adopt a joint data archiving policy (JDAP) for their publications, and the recognition that <strong>open, easy-to-use, not-for-profit, community-governed data infrastructure</strong> was needed to support such a policy. These remain our guiding principles.</p>
+<p>Dryad’s vision is to promote a world where research data is openly available, integrated with the scholarly literature, and routinely re-used to create knowledge.</p>
+<p>Our mission is to provide the infrastructure for, and promote the re-use of, data underlying the scholarly literature.</p>
 
-Dryad originated from an initiative among a group of leading journals and scientific societies to adopt a joint data archiving policy (JDAP) for their publications, and the recognition that **open, easy-to-use, not-for-profit, community-governed data infrastructure** was needed to support such a policy. These remain our guiding principles.
+<h3>Key features</h3>
+<ul>
+<li>Flexible about data format, while encouraging the use and further development of research community standards.</li>
+<li>Fits into the manuscript submission workflow of its partner journals, making data submission easy.</li>
+<li>Assigns Digital Object Identifiers (DOIs) to data so that researchers can gain professional credit through data citation.</li>
+<li>Promotes data visibility through usage and download metrics and by allowing content to be indexed, searched and retrieved.</li>
+<li>Promotes data quality by employing professional curators to ensure the validity of the files and descriptive information.</li>
+<li>Contents are free to download and re-use under a Creative Commons Zero (CC0) license.</li>
+<li>Contents are preserved for the long term to guarantee access to contents indefinitely.</li>
+<li>Open source, standards-compliant technology.</li>
+</ul>
 
-Dryad’s vision is to promote a world where research data is openly available, integrated with the scholarly literature, and routinely re-used to create knowledge.
+<h2>Our Community<a name="community"></a></h2>
 
-Our mission is to provide the infrastructure for, and promote the re-use of, data underlying the scholarly literature.
+<p><strong>Data are the foundation of the scientific enterprise</strong>. By preserving and providing open access to research data, Dryad provides benefits to individual researchers, educators and students and to a diversity of stakeholder organizations including institutions, publishers, and funders.</p>
 
-### Key features
-- Flexible about data format, while encouraging the use and further development of research community standards.
-- Fits into the manuscript submission workflow of its partner journals, making data submission easy.
-- Assigns Digital Object Identifiers (DOIs) to data so that researchers can gain professional credit through data citation.
-- Promotes data visibility through usage and download metrics and by allowing content to be indexed, searched and retrieved.
-- Promotes data quality by employing professional curators to ensure the validity of the files and descriptive information.
-- Contents are free to download and re-use under a Creative Commons Zero (CC0) license.
-- Contents are preserved for the long term to guarantee access to contents indefinitely.
-- Open source, standards-compliant technology.
+<h3>Membership<a name="membership"></a></h3>
 
+<p>Dryad is sustained by community support for research data preservation and the culture of open science. Membership is open to the full spectrum of stakeholder organizations, such as journals, learned societies, publishers, research institutions, and libraries.</p>
 
-## Our Community<a name="community"></a>
+<p>You’re already working with research data. Here's how Dryad can help:</p>
+<ul>
+<li>Focuses on data that underlies scholarly literature, is linked to the literature, and is openly available</li>
+<li>works with data from a broad range of fields and formats</li>
+<li>provides high visibility and discoverability of data</li>
+<li>curates all data packages to ensure the validity of the files and metadata</li>
+<li>provides data free to the public under CC0 terms of reuse-cares about long-term preservation of research objects</li>
+</ul>
 
-**Data are the foundation of the scientific enterprise**. By preserving and providing open access to research data, Dryad provides benefits to individual researchers, educators and students and to a diversity of stakeholder organizations including institutions, publishers, and funders.
+<p>We are all part of a stakeholder community involved in data publishing, curation, and preservation. Let&#39;s band together and sustain community-owned research data infrastructure. <strong>Join Dryad as a member today</strong>.</p>
+<h4>Are you a:</h4>
+<ul>
+<li>Research institution?<ul>
+<li>Learn more about institutional membership [add link]</li>
+<li>Apply for membership now! [add link]</li>
+</ul>
+</li>
+<li>Publisher, journal or scholarly society?<ul>
+<li>Learn more about publisher membership [add link]</li>
+<li>Apply for membership now! [add link]</li>
+</ul>
+</li>
+</ul>
 
-### Membership<a name="membership"></a>
-
-Dryad is sustained by community support for research data preservation and the culture of open science. Membership is open to the full spectrum of stakeholder organizations, such as journals, learned societies, publishers, research institutions, and libraries.
-
-You’re already working with research data. Here's how Dryad can help:
-
-- Focuses on data that underlies scholarly literature, is linked to the literature, and is openly available
-- works with data from a broad range of fields and formats
-- provides high visibility and discoverability of data
-- curates all data packages to ensure the validity of the files and metadata
-- provides data free to the public under CC0 terms of reuse
-*-cares about long-term preservation of research objects
-
-We are all part of a stakeholder community involved in data publishing, curation, and preservation. Let's band together and sustain community-owned research data infrastructure. **Join Dryad as a member today**.
-
-#### Are you a:
-
-- Research institution?
-  - Learn more about institutional membership [add link]
-  - Apply for membership now! [add link]
-- Publisher, journal or scholarly society?
-  - Learn more about publisher membership [add link]
-  - Apply for membership now! [add link]
-
-
-## Our Governance<a name="governance"></a>
-
-Dryad is a not-for-profit membership organization, recognized as a 501(c)3 by the U.S. Internal Revenue Service. Dryad members nominate and elect the Board of Directors, twelve individuals from the stakeholder community who provide strategic planning, fiscal oversight, and oversee the position of the Executive Director. Members also approve any amendments to the organization’s Bylaws, have the opportunity to steer policies and features, and are kept abreast of emerging issues in data publishing.
+<h2>Our Governance<a name="governance"></a></h2>
+<p>Dryad is a not-for-profit membership organization, recognized as a 501(c)3 by the U.S. Internal Revenue Service. Dryad members nominate and elect the Board of Directors, twelve individuals from the stakeholder community who provide strategic planning, fiscal oversight, and oversee the position of the Executive Director. Members also approve any amendments to the organization’s <strong>Bylaws, [add link to PDF]</strong> have the opportunity to steer policies and features, and are kept abreast of emerging issues in data publishing.</p>
 
 <div class="bio">
   <img src="/images/bruna.jpg" alt="Emilio Bruna" title="Emilo Bruna">
@@ -124,16 +124,52 @@ Dryad is a not-for-profit membership organization, recognized as a 501(c)3 by th
   <p><strong>Günter Waibel (Ex Officio)</strong> is Associate Vice Provost and Executive Director of California Digital Library, one of the world's largest digital research libraries. Collaborating with stakeholders across the UC system and beyond, Waibel is advancing efforts to build and support new models of scholarly communication; provide leadership, strategic planning, management and decision making for the CDL; and foster strategic partnerships at the state, national, and international levels. Waibel brings extensive experience in the digital library and broader cultural heritage communities and is well-known for his work in promoting cross-domain collaboration. In his previous position as the Director of the Digitization Program Office at the Smithsonian Institution, Waibel oversaw the strategic plan for creating a digital Smithsonian out of the institution’s 19 museums and 9 research centers. More at <a href="http://www.linkedin.com/in/waibel" target="_blank" title="Günter's linked in profile (opens in a new window)">http://www.linkedin.com/in/waibel.</a></p>
 </div>
 
-## Our Staff<a name="staff"></a>
+<h3>Funding</h3>
+
+<p>Dryad gratefully acknowledges support from the following organizations. Any opinions, findings, and conclusions or recommendations expressed in this material are those of the project staff and do not necessarily reflect the views of the funders.</p>
+
+<ul>
+<li>"<a href="http://wiki.datadryad.org/NSF_grant_2016-2019">Enabling the preservation of research data underlying scientific findings through the Dryad Digital Repository</a>", from the U.S. National Science Foundation, 2016-2019. </li>
+<li>"<a href="http://project-thor.eu/">Technical and Human Infrastructure for Open Research (THOR)</a>", a project funded by the European Commission under the Horizon 2020 programme, 2015-2018.</li>
+<li><a href="https://cos.io/pr/2015-09-24/">Dryad-Open Science Framework integration grant</a>, 2015.</li>
+</ul>
+
+<p>See <a href="http://wiki.datadryad.org/Grants">past awards</a>.</p>
+
+<h3>Annual Reports</h3>
+
+<p>Dryad produces annual reports on the state of the organization's operations: <strong>[fix links]</strong></p>
+      
+<ul>
+<li>
+<a href="/themes/Mirage/docs/DryadAnnualReport2018.pdf">Annual report for 2018</a>
+</li>
+<li>
+<a href="/themes/Mirage/docs/DryadAnnualReport2017.pdf">Annual report for 2017</a>
+</li>
+<li>
+<a href="/themes/Mirage/docs/DryadAnnualReport2016.pdf">Annual report for 2016</a>
+</li>
+<li>
+<a href="/themes/Mirage/docs/DryadAnnualReport2015.pdf">Annual report for 2015</a>
+</li>
+<li>
+<a href="/themes/Mirage/docs/DryadAnnualReport2014.pdf">Annual report for 2014</a>
+</li>
+<li>
+<a href="/themes/Mirage/docs/DryadAnnualReport2013.pdf">Annual report for 2013</a>
+</li>
+<li>
+<a href="/themes/Mirage/docs/DryadAnnualReport2012.pdf">Annual report for 2012</a>
+</li>
+</ul>
+
+
+<h2>Our Staff<a name="staff"></a></h2>
 
 <div class="bio">
   <img src="/images/scheld.jpg" alt="Melissanne Scheld" title="Melissanne Scheld">
   <p><strong>Melissanne Scheld</strong>, BA Art History<br>Executive Director<br>With 25+ years of working with scholarly publishing and researchers, Melissanne has a long history of successfully leading teams who promote research.</p>
-</div>
-
-<div class="bio">
-  <img src="/images/ehull.jpg" alt="Elizabeth Hull" title="Elizabeth Hull">
-  <p><strong>Elizabeth Hull</strong>, BA Archaeology; MA American History<br>Associate Director<br>We rely on Elizabeth’s deep knowledge of the organization and her management skills to keeps things running smoothly and efficiently.</p>
 </div>
 
 <div class="bio">
@@ -161,34 +197,36 @@ Dryad is a not-for-profit membership organization, recognized as a 501(c)3 by th
   <p><strong>Rich Yaxley</strong>, BS Aerospace Studies; PhD Cognitive Psychology<br>Curator<br>Rich not only brings strong research and curation skills to Dryad, but mean coding skills as well.</p>
 </div>
 
-## Our Platform<a name="platform"></a>
+
+<h2>Our Platform<a name="platform"></a></h2>
 
 Dryad is an open source, community driven project that takes a unique approach to data publication and digital preservation. Dryad focuses on search, presentation, and discovery and delegates the responsibility for the data preservation function to the underlying repository with which it is integrated.
 
 For information about submission to Dryad, see our [guidance here](/stash/help/#submission).
 
 
-### Architecture and Implementation
+<h3>Architecture and Implementation<a name="architecture"></a></h3>
 
-Dryad is completely open source.  Our code is made publicly available on GitHub (https://github.com/CDL-Dryad/dryad). Dryad is based on an underlying Ruby-on-Rails data publication platform called Stash. Stash encompasses three main functional components: Store, Harvest, and Share.
+<p>Dryad is completely open source.  Our code is made publicly available on GitHub (<a href="https://github.com/CDL-Dryad/dryad">https://github.com/CDL-Dryad/dryad</a>). Dryad is based on an underlying Ruby-on-Rails data publication platform called Stash. Stash encompasses three main functional components: Store, Harvest, and Share.</p>
 
-- Store: The Store component is responsible for the selection of datasets; their description in terms of configurable metadata schemas, including specification of ORCID and Fundref identifiers for researcher and funder disambiguation; the assignment of DOIs for stable citation and retrieval; designation of an optional limited time embargo; and packaging and submission to the integrated repository
-- Harvest: The Harvest component is responsible for retrieval of descriptive metadata from that repository for inclusion into a Solr search index
-- Share: The Share component, based on GeoBlacklight, is responsible for the faceted search and browse interface
+<ul>
+<li>Store: The Store component is responsible for the selection of datasets; their description in terms of configurable metadata schemas, including specification of ORCID and Fundref identifiers for researcher and funder disambiguation; the assignment of DOIs for stable citation and retrieval; designation of an optional limited time embargo; and packaging and submission to the integrated repository</li>
+<li>Harvest: The Harvest component is responsible for retrieval of descriptive metadata from that repository for inclusion into a Solr search index</li>
+<li>Share: The Share component, based on GeoBlacklight, is responsible for the faceted search and browse interface</li>
+</ul>
 
-<a href="/dash_architecture_diagram.png"><img src="/dash_architecture_diagram.png" alt="Dash Architecture Diagram" style="width: 500px;"/></a>
+<p><a href="/dash_architecture_diagram.png"><img src="/dash_architecture_diagram.png" alt="Dash Architecture Diagram" style="width: 500px;"/></a></p>
 
-Individual dataset landing pages are formatted as an online version of a data paper, presenting all appropriate descriptive and administrative metadata in a form that can be downloaded as an individual PDF file, or as part of the complete dataset download package, incorporating all data files for all versions.
+<p>Individual dataset landing pages are formatted as an online version of a data paper, presenting all appropriate descriptive and administrative metadata in a form that can be downloaded as an individual PDF file, or as part of the complete dataset download package, incorporating all data files for all versions.</p>
 
-To facilitate flexible configuration and future enhancement, all support for the various external service providers and
+<p>To facilitate flexible configuration and future enhancement, all support for the various external service providers and
 repository protocols are fully encapsulated into pluggable modules. Metadata modules are available for the DataCitemetadata schema. Protocol modules are available for the SWORD 2.0 deposit protocol and the OAI-PMH and
 ResourceSync harvesting protocols. Authentication modules are available for InCommon/Shibboleth18 and ORCID
-identity providers (IdPs).
+identity providers (IdPs).</p>
 
-We welcome collaborations to develop additional modules for additional metadata schemas and repository protocols. Please email the Dryad <a href=mailto:help@datadryad.org>help desk</a> or visit GitHub (https://github.com/CDL-Dryad/dryad) for more information.
+<p>We welcome collaborations to develop additional modules for additional metadata schemas and repository protocols. Please email the Dryad <a href=mailto:help@datadryad.org>help desk</a> or visit GitHub (<a href="https://github.com/CDL-Dryad/dryad">https://github.com/CDL-Dryad/dryad</a>) for more information.</p>
 
-
-### Features of Dryad service
+<h3>Features of Dryad service</h3>
 
 | Feature | Tech-focused | User-focused | Description |
 |:---------------------------------|:-------------------------:|:------------------:|:--------------|
@@ -219,7 +257,7 @@ We welcome collaborations to develop additional modules for additional metadata 
 | Satisfies Data Availability Requirements |  | X | Many publishers and funders require researchers to make their data available. Dryad is an readily accepted and easy way to comply |
 
 
-### History
+<h2>History<a name="history"></a></h2>
 
 Dryad's original iteration launched in 2009 and was built upon the open-source DSpace repository software. In 2019, Dryad merged with Dash, a data publication service developed at the [University of California Curation Center](http://www.cdlib.org/uc3) (UC3), a program at [California Digital Library](http://www.cdlib.org) (CDL).
 
