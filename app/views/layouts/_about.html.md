@@ -161,6 +161,8 @@ Dryad is open to working directly with organizations on an individual basis to d
 <h2>Our Governance<a name="governance"></a></h2>
 <p>Dryad is a not-for-profit membership organization, recognized as a 501(c)3 by the U.S. Internal Revenue Service. Dryad members nominate and elect the Board of Directors, twelve individuals from the stakeholder community who provide strategic planning, fiscal oversight, and oversee the position of the Executive Director. Members also approve any amendments to the organization’s <strong>Bylaws, [add link to PDF]</strong> have the opportunity to steer policies and features, and are kept abreast of emerging issues in data publishing.</p>
 
+<h3>Current Board Members<a name="board"></h3>
+
 <div class="bio">
   <img src="/images/bruna.jpg" alt="Emilio Bruna" title="Emilo Bruna">
   <p><strong>Emilio Bruna (Class of 2020)</strong> is a Distinguished Teaching Scholar and Professor of Tropical Ecology and Latin American Studies at the University of Florida. He is Editor-in-Chief of Biotropica and previously served on the Editorial Board of Ecology and Ecological Monographs. He brings to the Board the perspective of a research scientist (>65 peer-reviewed publications) and Editor (~600 decisions on manuscripts) who works in close collaboration with scientists and students in developing countries. He also has experience curating and archiving ecological datasets, including several in Dryad.</p>
