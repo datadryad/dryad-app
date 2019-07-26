@@ -109,7 +109,7 @@ Dryad is open to working with institutions on an individual basis to develop cus
 <p><strong>For more information on Institutional Membership, please contact <a href=mailto:director@datadryad.org>director@datadryad.org</a>.</strong></p>
 
 
-<h3>Learn more about Publisher Membership (including journals and scholarly societies)<a name="publisher"><a><h3>
+<h3>Learn more about Publisher Membership (including journals and scholarly societies)<a name="publisher"></a></h3>
 
 <p>Individual journals, publishers, and scholarly societies can be part of the Dryad community through a stand-alone publisher membership, or as a sponsor of data publishing fees, or in a combination of both. Publisher support for Dryad is essential in allowing us to provide open data infrastructure and simple workflows for your authors. </p>
 
