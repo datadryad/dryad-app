@@ -276,6 +276,8 @@ Dryad is open to working directly with organizations on an individual basis to d
 
 <h2>Our Staff<a name="staff"></a></h2>
 
+<p>Our team applies their diverse backgrounds in scientific research, librarianship, non-profits, business administration, publishing, and computer science to support open data infrastructure and the preservation of knowledge. To reach us, contact <a href=mailto:help@datadryad.org>help@datadryad.org</a>.</p>
+
 <div class="bio">
   <img src="/images/scheld.jpg" alt="Melissanne Scheld" title="Melissanne Scheld">
   <p><strong>Melissanne Scheld</strong>, BA Art History<br>Executive Director<br>With 25+ years of working with scholarly publishing and researchers, Melissanne has a long history of successfully leading teams who promote research.</p>
