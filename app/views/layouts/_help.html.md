@@ -57,18 +57,18 @@
 
 <p><strong>Required fields</strong>:</p>
 <ul>
-<li>Title : Title of the dataset. Make sure to be as descriptive as possible</li>
+<li>Title: Title of the dataset. Make sure to be as descriptive as possible</li>
 <li>Author(s): Name, email address, institutional affliation of main researcher(s) involved in producing the data. If you include your <a href="http://orcid.org">ORCID</a>, we will request the ORCID registry auto-populate this publication on your ORCID profile</li>
 <li>Abstract: Short description of dataset</li>
 </ul>
 <p><strong>Optional fields</strong> (the more you describe your dataset, the wider the reach):</p>
 <ul>
-<li>Keyword(s) : Descriptive words that may help others discover your dataset. We recommend that you determine whether your discipline has an existing controlled vocabulary from which to choose your keywords. Please enter as many keywords as applicable</li>
-<li>Methods : Any technical or methodological information that may help others to understand how the data were generated (i.e. equipment/tools/reagents used, or procedures followed)</li>
+<li>Keyword(s): Descriptive words that may help others discover your dataset. We recommend that you determine whether your discipline has an existing controlled vocabulary from which to choose your keywords. Please enter as many keywords as applicable</li>
+<li>Methods: Any technical or methodological information that may help others to understand how the data were generated (i.e. equipment/tools/reagents used, or procedures followed)</li>
 <li>Usage Notes : Any technical or methodological information that may help others determine how the data may be properly re-used, replicated, or re-analyzed</li>
-<li>Funding Information : Name of the funding organization that supported creation of the resource, including applicable grant number(s)</li>
-<li>Related Works : Use this field to indicate other resources that are associated with the data. Examples include publications, other datasets, code etc.</li>
-<li>Location information : Include the geo-coordinates or name of the location where your data were generated or the location that is the focus of your research</li>
+<li>Funding Information: Name of the funding organization that supported creation of the resource, including applicable grant number(s)</li>
+<li>Related Works: Use this field to indicate other resources that are associated with the data. Examples include publications, other datasets, code etc.</li>
+<li>Location information: Include the geo-coordinates or name of the location where your data were generated or the location that is the focus of your research</li>
 </ul>
 
 <h3 id="upload-methods">Upload Methods</h3>
