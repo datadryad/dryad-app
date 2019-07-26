@@ -21,7 +21,7 @@
 <li><strong>Networked</strong>. Dryad is responsive to the needs of the researchers through its community of users and members, and is a participant in organizations such as BioSharing, DataCite and DataONE. You as a researcher benefit from, and contribute to, the work of these organizations by submitting to and using Dryad.</li>
 <li><strong>Community-led</strong>. By publishing in Dryad, you are supporting a nonprofit membership organization committed to making data available for research and educational reuse. Modest, one-time Data Publishing Charges help ensure our sustainability.</li>
 </ul>
-<p>You may find our <a href="/stash/faq">FAQ</a> and best practices guidance helpful as you get started. Log in and go to My Datasets to begin your data submission now!</p>
+<p>You may find our <a href="/stash/faq">FAQ</a> and best practices guidance helpful as you get started. Log in and go to "My Datasets" to begin your data submission now!</p>
 
 <h2>Submission Process<a name="submission"></a></h2>
 
@@ -37,7 +37,7 @@
 
 <p>Dryad has a REST API that allows for download and submission of data. Check out our <a href="https://dash.ucop.edu/api/docs/index.html">documentation</a> as well as our <a href="https://github.com/CDL-Dryad/dryad/blob/master/stash_api/basic_submission.md">How-To Guide</a></p>
 
-<p>If you need further assistance, consult our <a href="/stash/faq">FAQ</a or contact us at <a href=mailto:help@datadryad.org>help@datadryad.org</a>. Log in and go to My Datasets to begin your data submission now!</p>
+<p>If you need further assistance, consult our <a href="/stash/faq">FAQ</a> or contact us at <a href=mailto:help@datadryad.org>help@datadryad.org</a>. Log in and go to "My Datasets" to begin your data submission now!</p>
 
 <p>View more information about:</p>
 <ul>
