@@ -21,22 +21,31 @@
 <li><strong>Networked</strong>. Dryad is responsive to the needs of the researchers through its community of users and members, and is a participant in organizations such as BioSharing, DataCite and DataONE. You as a researcher benefit from, and contribute to, the work of these organizations by submitting to and using Dryad.</li>
 <li><strong>Community-led</strong>. By publishing in Dryad, you are supporting a nonprofit membership organization committed to making data available for research and educational reuse. Modest, one-time Data Publishing Charges help ensure our sustainability.</li>
 </ul>
+<p>You may find our <a href="/stash/faq">FAQ</a> and best practices guidance helpful as you get started. Log in and go to My Datasets to begin your data submission now!</p>
 
 <h2>Submission Process<a name="submission"></a></h2>
 
-<p>Before you begin, we recommend reviewing our best practices for creating reusable data publications <strong>(add link)</strong>. </p>
+<p>Before you begin, we recommend reviewing our best practices for creating reusable data publications or, if you're in a hurry, our quickstart guide to data sharing <strong>(add links)</strong>.</p>
 
 <p>General reminders and suggestions for publishing your data with Dryad:</p>
 <ul>
-<li>We accept all file formats, although it is good practice to share data using open formats. See the <a href="http://www.data-archive.ac.uk/create-manage/format/formats-table">UK Data Archive</a> for a list of optimal file formats</li>
-<li>Any data submitted will be published under the CC0 license. We do not currently support any other license types, nor do we allow for restrictions on data access or use</li>
-<li>It is your responsibility to ensure your data are being shared responsibly and ethically. Please be careful about sharing sensitive data and ensure you are complying with institutional and governmental regulations</li>
-<li>When preparing your complete version of a dataset, remember to collate all relevant explantory documents and metadata. This includes relevant documentation necessary for the re-use and replication of your dataset (e.g., readme.txt files, formal metadata records, or other critical information)</li>
+<li><strong>We accept all file formats, although it is good practice to share data using open formats</strong>. See the <a href="http://www.data-archive.ac.uk/create-manage/format/formats-table">UK Data Archive</a> for a list of optimal file formats</li>
+  <li><strong>Any data submitted will be published under the CC0 license</strong>. We do not currently support any other license types, nor do we allow for restrictions on data access or use</li>
+<li><strong>It is your responsibility to ensure your data are being shared responsibly and ethically</strong>. Please be careful about sharing sensitive data and ensure you are complying with institutional and governmental regulations</li>
+<li><strong>When preparing your complete version of a dataset, remember to collate all relevant explantory documents and metadata</strong>. This includes relevant documentation necessary for the re-use and replication of your dataset (e.g., readme.txt files, formal metadata records, or other critical information)</li>
 </ul>
 
-<p>If you need further assistance, consult our FAQ or contact us at <a href=mailto:help@datadryad.org>help@datadryad.org</a>.</p>
-
 <p>Dryad has a REST API that allows for download and submission of data. Check out our <a href="https://dash.ucop.edu/api/docs/index.html">documentation</a> as well as our <a href="https://github.com/CDL-Dryad/dryad/blob/master/stash_api/basic_submission.md">How-To Guide</a></p>
+
+<p>If you need further assistance, consult our <a href="/stash/faq">FAQ</a or contact us at <a href=mailto:help@datadryad.org>help@datadryad.org</a>. Log in and go to My Datasets to begin your data submission now!</p>
+
+<p>View more information about:</p>
+<ul>
+  <li><a href="#metadata">Metadata</a></li>
+  <li><a href="#upload-methods">Upload methods</a></li>
+  <li><a href="#curation">Curation</a></li>
+  <li><a href="#citation">Publication and citation</a></li>
+  </ul>
 
 <h3>Metadata<a name="metadata"></a></h3>
 
