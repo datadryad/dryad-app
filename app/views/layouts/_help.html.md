@@ -89,7 +89,7 @@
 <li>Are the metadata and documentation complete and correct?</li>
 <li>Is adequate description provided to ensure reusability?</li>
 </ul>
-<p>If Dryad curators identify questions, problems, or areas for improvement, they will contact you directly via the email address associated with your account. You may contact the curation team for questions or consultations at <a href=mailto:curator@datadryad.org>curator@datadryad.org</a></p>
+<p>If Dryad curators identify questions, problems, or areas for improvement, they will contact you directly via the email address associated with your submission. You may contact the curation team for questions or consultations at <a href=mailto:curator@datadryad.org>curator@datadryad.org</a></p>
 <p>Upon curator approval, the Dryad DOI is officially registered and, if applicable, the <a href="#fees">Data Publishing Charge</a> is invoiced.</p>
 
 <h3>Publication and Citation<a name="citation"></a></h3>
