@@ -41,7 +41,7 @@
 
 <p>View more information about:</p>
 <ul>
-  <li><a href="#login">Metadata</a></li>
+  <li><a href="#login">Login</a></li>
   <li><a href="#metadata">Metadata</a></li>
   <li><a href="#upload-methods">Upload methods</a></li>
   <li><a href="#curation">Curation</a></li>
