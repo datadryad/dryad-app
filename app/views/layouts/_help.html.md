@@ -75,7 +75,7 @@
 <p>We have two different options for uploading your data.</p>
 <ul>
 <li>Upload directly from your computer: by using drag and drop or the upload button. We allow for 10gb of data per DOI to be uploaded this way.</li>
-<li>Upload from a server or the cloud: by entering the URL of the location where data are held on a server, or the sharing link for Box, Dropbox, or Google Drive. We allow for 100gb of data per DOI to be validated and uploaded this way.</li>
+<li>Upload from a server or the cloud: by entering the URL of the location where data are held on a server, or the sharing link for Box, Dropbox, or Google Drive. We allow for 300gb (in a URL or dispersed through many URLs) of data per DOI to be validated and uploaded this way.</li>
 </ul>
 <p>Please note that you may only use one of these two upload methods per version, but you may do subsequent versions of your data publication and utilize different methods of upload this way.</p>
 
