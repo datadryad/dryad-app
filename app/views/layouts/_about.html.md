@@ -111,9 +111,9 @@ Dryad is open to working with institutions on an individual basis to develop cus
 
 <h3>Learn more about Publisher Membership (including journals and scholarly societies)<a name="publisher"></a></h3>
 
-<p>Individual journals, publishers, and scholarly societies can be part of the Dryad community through a stand-alone publisher membership, or as a sponsor of data publishing fees, or in a combination of both. Publisher support for Dryad is essential in allowing us to provide open data infrastructure and simple workflows for your authors. </p>
+<p>Individual journals, publishers, and scholarly societies can be part of the Dryad community through a stand-alone publisher membership, as a sponsor of data publishing fees, through <a href="#submission-integration">submission integration</a>, or a combination of these. Publisher support for Dryad is essential in allowing us to provide open data infrastructure and simple workflows for your authors. </p>
 
-<h4>Publisher Membership benefits include:</h4> 
+<p>Publisher Membership benefits include:</p> 
 
 <ul>
 <li><strong>Transparent reporting and easier monitoring</strong><br/>
@@ -146,7 +146,7 @@ Dryad is open to working directly with organizations on an individual basis to d
 <p><strong>Members</strong>: $40 per published research article</p>
 <p><strong>Non-Members</strong>: $50 per published research article</p>
 
-<p>A journal (or journals) with an active subscription may make an unlimited number of submissions for a fixed, up-front cost. Publishers or groups that publish more than one journal can set up a subscription to cover all or any number of journals. The cost is calculated based on the total number of research articles published by the journal(s) in the prior year. The minimum contract duration is two years. Submission integration is required for subscribing journals.</p>
+<p>A journal (or journals) with an active subscription may make an unlimited number of submissions for a fixed, up-front cost. Publishers or groups that publish more than one journal can set up a subscription to cover all or any number of journals. The cost is calculated based on the total number of research articles published by the journal(s) in the prior year. The minimum contract duration is two years. <a href="#submission-integration">Submission integration</a> is required for subscribing journals.</p>
 
 <h5>II. Usage-Based Plan </h5>
 <p>Based on actual number of published research datasets</p>
@@ -156,6 +156,28 @@ Dryad is open to working directly with organizations on an individual basis to d
 <p>Organizations can either purchase a block of vouchers for future submissions (prepaid) at an additional discount, or be invoiced for the number of packages submitted by your authors in the previous quarter (deferred).</p>
 
 <p><strong>For more information on Publisher Membership, please contact <a href=mailto:director@datadryad.org>director@datadryad.org</a>.</strong></p>
+
+<h4>Submission Integration<a name="submission-integration"></a></h4>
+
+<p>Submission integration is a <strong>free service</strong> that allows journal publishers to coordinate the submission of manuscripts with submission of data to Dryad.</p>
+<p>The integration process works with many different online manuscript processing systems. It is <strong>lightweight</strong> and <strong>customizable</strong> to each journal's needs.</p> 
+<p><a href="mailto:director@datadryad.org">Contact us</a> to integrate your journal now.</p>
+	 
+<p>Benefits of integration:</p>
+     <ul>
+         <li>
+<strong>Simplify</strong> the process of data submission for authors.</li>
+         <li>Allow authors to deposit, to a single repository, gigabytes of data files in their <strong>original formats</strong>.</li>
+         <li>Help <strong>ensure compliance</strong> with journal data policy.</li>
+         <li>Have the option of making data available for editorial or peer <strong>review</strong>, via secure access for editors and reviewers.</li>
+         <li>Ensure <strong>bidirectional links</strong> between the article and the data, and <strong>increased visibility</strong> for both.</li>
+         <li>Ensure that the data is <strong>freely accessible</strong> once the article becomes available online.</li>
+         <li>Give authors the option to <strong>embargo</strong> public access to data for a limited time after publication, if permitted by the journal's data policy.</li>
+     </ul>
+
+<p>See a list of currently <a href="/pages/journalLookup">integrated journals</a>.</p>
+     
+<p>We welcome submission integration for any organization that publishes a scientific journal, regardless of their membership status in the Dryad organization. Please contact <a href="mailto:director@datadryad.org">director@datadryad.org</a> for more information.</p>
   
 
 <h2>Our Governance<a name="governance"></a></h2>
