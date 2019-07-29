@@ -35,17 +35,22 @@
 <li><strong>When preparing your complete version of a dataset, remember to collate all relevant explantory documents and metadata</strong>. This includes relevant documentation necessary for the re-use and replication of your dataset (e.g., readme.txt files, formal metadata records, or other critical information)</li>
 </ul>
 
-<p>Dryad has a REST API that allows for download and submission of data. Check out our <a href="https://dash.ucop.edu/api/docs/index.html">documentation</a> as well as our <a href="https://github.com/CDL-Dryad/dryad/blob/master/stash_api/basic_submission.md">How-To Guide</a></p>
+<p>Dryad has a REST API that allows for download and submission of data. Check out our <a href="https://dryad-stg.cdlib.org/api/docs/">documentation</a> as well as our <a href="https://github.com/CDL-Dryad/dryad/blob/master/stash_api/basic_submission.md">How-To Guide</a></p>
 
 <p>If you need further assistance, consult our <a href="/stash/faq">FAQ</a> or contact us at <a href=mailto:help@datadryad.org>help@datadryad.org</a>. Log in and go to "My Datasets" to begin your data submission now!</p>
 
 <p>View more information about:</p>
 <ul>
+  <li><a href="#login">Metadata</a></li>
   <li><a href="#metadata">Metadata</a></li>
   <li><a href="#upload-methods">Upload methods</a></li>
   <li><a href="#curation">Curation</a></li>
   <li><a href="#citation">Publication and citation</a></li>
   </ul>
+
+<h3>Login<a name="login"></a></h3>
+
+<p>Dryad requires an ORCID ID (https://orcid.org) for login. If you do not have an ORCID, you will have the opportunity to create a free, unique, identifier for yourself at the login page. Dryad uses ORCID so that we can authenticate and identify each individual researcher regardless of your route of entry to Dryad (i.e. through the website, through the API, through a journal integration, etc.). When datasets are published, they should appear in your ORCID profile along with articles and other works. For institutional members, we require a second form of authentication at login for campus single-sign-on. After you have logged in with your institutional credentials, Dryad ties together your ORCID and institutional affiliation so that you will not have to include this information a second time.</p>
 
 <h3>Metadata<a name="metadata"></a></h3>
 
