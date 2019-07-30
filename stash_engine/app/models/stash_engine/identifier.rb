@@ -228,6 +228,10 @@ module StashEngine
       publication_data('stripeCustomerID')
     end
 
+    def allow_review?
+      publication_data('allowReviewWorkflow') || publication_name.blank?
+    end
+
     def institution_will_pay?
       latest_resource&.tenant&.covers_dpc == true
     end
