@@ -33,12 +33,6 @@ module Stash
         zipfile_path
       end
 
-      def cleanup!
-        return unless File.exist?(workdir)
-        FileUtils.remove_dir(workdir)
-        @zipfile = nil
-      end
-
       def to_s
         "#{self.class}: zipfile submission package for resource #{resource_id} (#{resource_title}"
       end

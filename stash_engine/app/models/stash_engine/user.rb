@@ -101,14 +101,14 @@ module StashEngine
 
     # convenience method for updating and returning user
     def update_user_orcid(orcid:, temp_email:)
-      update(last_login: Time.new, orcid: orcid)
+      update(last_login: Time.new.utc, orcid: orcid)
       update(email: temp_email) if temp_email && email.nil?
       self
     end
 
     def self.create_user_with_orcid(auth_hash:, temp_email:)
       User.create(first_name: auth_hash[:extra][:raw_info][:first_name], last_name: auth_hash[:extra][:raw_info][:last_name],
-                  email: temp_email, tenant_id: nil, last_login: Time.new, role: 'user', orcid: auth_hash[:uid])
+                  email: temp_email, tenant_id: nil, last_login: Time.new.utc, role: 'user', orcid: auth_hash[:uid])
     end
 
   end

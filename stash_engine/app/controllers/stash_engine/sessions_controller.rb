@@ -183,7 +183,7 @@ module StashEngine
     end
 
     def update_author_orcid(invitation)
-      invitation.update(orcid: @auth_hash['uid'], accepted_at: Time.new)
+      invitation.update(orcid: @auth_hash['uid'], accepted_at: Time.new.utc)
       last_submitted_resource = invitation.resource
       resources = invitation.identifier.resources.where(['id >= ?', last_submitted_resource.id])
       # updates all orcids for last submitted resource and resources after, even in-progress, error ... whatever

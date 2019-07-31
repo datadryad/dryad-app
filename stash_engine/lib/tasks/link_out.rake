@@ -22,28 +22,28 @@ namespace :link_out do
   desc 'Generate the PubMed Link Out files'
   task create_pubmed_linkouts: :environment do
     create_link_out_dir!
-    p "Generating LinkOut files for Pubmed #{Time.now.strftime('%H:%m:%s')}"
+    p "Generating LinkOut files for Pubmed #{Time.now.utc.strftime('%H:%m:%s')}"
     pubmed_service = LinkOut::PubmedService.new
     pubmed_service.generate_files!
-    p "  finished at #{Time.now.strftime('%H:%m:%s')}"
+    p "  finished at #{Time.now.utc.strftime('%H:%m:%s')}"
   end
 
   desc 'Generate the LabsLink LinkOut files'
   task create_labslink_linkouts: :environment do
     create_link_out_dir!
-    p "Generating LinkOut files for LabLinks #{Time.now.strftime('%H:%m:%s')}"
+    p "Generating LinkOut files for LabLinks #{Time.now.utc.strftime('%H:%m:%s')}"
     labslink_service = LinkOut::LabslinkService.new
     labslink_service.generate_files!
-    p "  finished at #{Time.now.strftime('%H:%m:%s')}"
+    p "  finished at #{Time.now.utc.strftime('%H:%m:%s')}"
   end
 
   desc 'Generate the PubMed GenBank Sequence LinkOut files'
   task create_pubmed_sequence_linkouts: :environment do
     create_link_out_dir!
-    p "Generating LinkOut files for GenBank #{Time.now.strftime('%H:%m:%s')}"
+    p "Generating LinkOut files for GenBank #{Time.now.utc.strftime('%H:%m:%s')}"
     pubmed_sequence_service = LinkOut::PubmedSequenceService.new
     pubmed_sequence_service.generate_files!
-    p "  finished at #{Time.now.strftime('%H:%m:%s')}"
+    p "  finished at #{Time.now.utc.strftime('%H:%m:%s')}"
   end
 
   desc 'Push the LinkOut files to the LinkOut FTP servers'

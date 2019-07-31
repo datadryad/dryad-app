@@ -37,8 +37,8 @@ module Stash
 
         (array1 | array2) # returns the union of two sets, which deduplicates identical items, even if in the same original array
       rescue RestClient::ExceptionWithResponse => err
-        logger.error("#{Time.new} Could not get citations from DataCite for event data obj-id: #{DATACITE_URL}#{@doi}")
-        logger.error("#{Time.new} #{err}")
+        logger.error("#{Time.new.utc} Could not get citations from DataCite for event data obj-id: #{DATACITE_URL}#{@doi}")
+        logger.error("#{Time.new.utc} #{err}")
         []
       end
     end
