@@ -4,7 +4,7 @@ module StashEngine
 
     # rubocop:disable Style/ClassVars
     def self.logger
-      mdy = Time.new.strftime('%Y-%m-%d')
+      mdy = Time.new.utc.strftime('%Y-%m-%d')
       path = File.join(Rails.root, 'log', "counter_#{mdy}.log")
       if File.file?(path)
         @@logger ||= ActiveSupport::Logger.new(path)
@@ -20,7 +20,7 @@ module StashEngine
 
     def self.log(items) # array of items to log, will be separated by tabs
       items.flatten!
-      items.unshift(Time.new)
+      items.unshift(Time.new.utc)
       items.map! { |i| (i.respond_to?(:iso8601) ? i.iso8601 : i.to_s) }
       items.map! { |i| (i.blank? ? '-' : i) }
       logger.info(items.join("\t"))

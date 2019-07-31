@@ -134,6 +134,7 @@ module StashEngine
       Rails.logger.error "Stash::Doi::IdGen - Unable to submit metadata changes for : '#{resource&.identifier&.to_s}'"
       Rails.logger.error ige.message
       StashEngine::UserMailer.error_report(resource, ige).deliver_now
+      raise ige
     end
 
     def update_solr
@@ -162,7 +163,7 @@ module StashEngine
             first_name: author.author_first_name,
             last_name: author.author_last_name,
             secret: SecureRandom.urlsafe_base64,
-            invited_at: Time.new
+            invited_at: Time.new.utc
           )
         ).deliver_now
       end

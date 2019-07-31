@@ -69,8 +69,8 @@ module Stash
         query_result['meta']['relation-types'] || []
       rescue RestClient::ExceptionWithResponse => err
         logger.error('DataCite event-data error')
-        logger.error("#{Time.new} Could not get response from DataCite event data source-id=datacite-usage&doi=#{CGI.escape(@doi)}")
-        logger.error("#{Time.new} #{err}")
+        logger.error("#{Time.new.utc} Could not get response from DataCite event data source-id=datacite-usage&doi=#{CGI.escape(@doi)}")
+        logger.error("#{Time.new.utc} #{err}")
         []
       end
     end

@@ -33,11 +33,6 @@ module Stash
         manifest_path
       end
 
-      def cleanup!
-        # TODO: I'm not sure this is the right place to cleanup since we want to wait to cleanup the files
-        # we've exposed to Merritt until after it has finished processing, but required to keep contract with SubmissionJob
-      end
-
       def to_s
         "#{self.class}: object manifest submission package for resource #{resource_id} (#{resource_title}"
       end

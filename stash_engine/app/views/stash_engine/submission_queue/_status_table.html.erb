@@ -10,7 +10,7 @@
 </div>
 <div>
   <p>
-    Current host is <%= StashEngine.repository.class.hostname %>, refreshed at <%= formatted_datetime(Time.new) %><br/>
+    Current host is <%= StashEngine.repository.class.hostname %>, refreshed at <%= formatted_datetime(Time.new.utc) %><br/>
     <% if @holding_submissions %>Submissions are being held for shutdown on this server<% else %>Normal submissions in effect on this server<% end %><br/><br/>
     <%= @server_held_count %> items being held on this server<br/>
     <%= @server_queued_count %> queued on this server<br/>

@@ -106,7 +106,7 @@ module Stash
       end
 
       def do_put(uri, payload, packaging)
-        boundary        = "========#{Time.now.to_i}=="
+        boundary        = "========#{Time.now.utc.to_i}=="
         stream          = stream_for(payload: File.open(payload, 'rb'), boundary: boundary, packaging: packaging)
         begin
           return helper.put(uri: uri, headers: update_request_headers(stream, boundary), payload: stream)

@@ -28,10 +28,10 @@ module StashEngine
     def update_if_necessary
       # we should have a counter stat already if it got to this class
       # only update stats if it's after the date of the last updated date for record
-      return unless new_record? || updated_at.nil? || Time.new.localtime.to_date > updated_at.localtime.to_date
+      return unless new_record? || updated_at.nil? || Time.new.utc.to_date > updated_at.to_date
       update_usage!
       update_citation_count!
-      self.updated_at = Time.new # seem to need this for some reason
+      self.updated_at = Time.new.utc # seem to need this for some reason
 
       save!
     end
