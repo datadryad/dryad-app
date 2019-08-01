@@ -1,5 +1,6 @@
 require 'stash/import/crossref'
 
+# rubocop:disable Metrics/BlockLength
 namespace :publication_updater do
 
   desc 'Scan Crossref for metadata about unpublished datasets that were created within the past 6 months'
@@ -44,3 +45,4 @@ namespace :publication_updater do
   end
 
 end
+# rubocop:enable Metrics/BlockLength
