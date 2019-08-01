@@ -73,7 +73,7 @@ module StashEngine
           decipher_curation_activity
           @resource.publication_date = @pub_date
           @resource.hold_for_peer_review = true if @status == 'peer_review'
-          @resource.peer_review_end_date = (Time.now.utc + 6.months) if @status == 'peer_review'          
+          @resource.peer_review_end_date = (Time.now.utc + 6.months) if @status == 'peer_review'
           @resource.curation_activities << CurationActivity.create(user_id: current_user.id,
                                                                    status: @status,
                                                                    note: @note)
