@@ -23,8 +23,14 @@ namespace :publication_updater do
 
       doi = resource.identifier.internal_data.where(data_type: 'publicationDOI').first
 
-      cr = Stash::Import::Crossref.query_by_doi(resource: resource, doi: doi.value) if doi.present?
-      cr = Stash::Import::Crossref.query_by_author_title(resource: resource) unless cr.present?
+      begin
+        cr = Stash::Import::Crossref.query_by_doi(resource: resource, doi: doi.value) if doi.present?
+        cr = Stash::Import::Crossref.query_by_author_title(resource: resource) unless cr.present?
+      rescue URI::InvalidURIError => iue
+        # If the URI is invalid, just skip to the next record
+        p "ERROR querying Crossref for '#{doi.value}' : #{iue.message}"
+        next
+      end
 
       pc = cr.to_proposed_change if cr.present?
       # Skip the change if we already have proposed changes and the information is not different
