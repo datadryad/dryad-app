@@ -13,7 +13,9 @@ module StashEngine
       @user_name = user_name(user)
       # @citation = generate_citation(resource) if status == 'published'
       assign_variables(resource)
-      mail(to: user_email(user), template_name: status,
+      mail(to: user_email(user),
+           bcc: @resource&.tenant&.campus_contacts,
+           template_name: status,
            subject: "#{rails_env} Dryad Submission \"#{@resource.title}\"")
     end
 
