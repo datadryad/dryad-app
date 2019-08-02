@@ -71,14 +71,16 @@ module StashEngine
     def curation_activity_change
       respond_to do |format|
         format.js do
+          @note = params[:resource][:curation_activity][:note]
           @resource = Resource.find(params[:id])
           @resource.current_editor_id = current_user.id
           decipher_curation_activity
           @resource.publication_date = @pub_date
           @resource.hold_for_peer_review = true if @status == 'peer_review'
           @resource.peer_review_end_date = (Time.now.utc + 6.months) if @status == 'peer_review'
-          @resource.curation_activities << CurationActivity.create(user_id: current_user.id, status: @status,
-                                                                   note: params[:resource][:curation_activity][:note])
+          @resource.curation_activities << CurationActivity.create(user_id: current_user.id,
+                                                                   status: @status,
+                                                                   note: @note)
           @resource.save
           @resource.reload
         end
@@ -204,11 +206,22 @@ module StashEngine
     end
 
     def publish
-      # If the user selected published but the publication date is in the future
-      # revert to embargoed status. The item will publish when the date is reached
-      @status = 'embargoed' if @pub_date.present? && @pub_date > Date.today.to_s
+      if @pub_date.present? && @pub_date > Date.today.to_s
+        # If the user selected published but the publication date is in the future
+        # revert to embargoed status. The item will publish when the date is reached
+        @status = 'embargoed'
+      end
+
+      return if @pub_date.present?
+
       # If the user published but did not provide a publication date then default to today
-      @pub_date = Date.today.to_s unless @pub_date.present?
+      @pub_date = Date.today.to_s
+
+      return unless @resource.identifier.allow_blackout?
+      # BUT, if the associated journal allows Blackout, default to a year from today
+      @note << ' Adding 1-year blackout period due to journal settings.'
+      @status = 'embargoed'
+      @pub_date = (Date.today + 1.year).to_s
     end
 
     def embargo
