@@ -93,7 +93,7 @@
 </ul>
 
 
-<img src="dataset-structure.png" alt="Dataset organization">
+<img src="/images/dataset-structure.jpeg" alt="Dataset organization">
 
 
 
