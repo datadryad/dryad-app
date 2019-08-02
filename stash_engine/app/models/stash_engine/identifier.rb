@@ -232,6 +232,10 @@ module StashEngine
       publication_data('allowReviewWorkflow') || publication_name.blank?
     end
 
+    def allow_blackout?
+      publication_data('allowBlackout').present? && publication_data('allowBlackout')
+    end
+
     def institution_will_pay?
       latest_resource&.tenant&.covers_dpc == true
     end

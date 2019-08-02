@@ -334,6 +334,16 @@ module StashEngine
         allow(@identifier).to receive('publication_data').and_return(false)
         expect(@identifier.allow_review?).to be(false)
       end
+
+      it 'disallows blackout by default' do
+        allow(@identifier).to receive('publication_data').and_return(nil)
+        expect(@identifier.allow_blackout?).to be(false)
+      end
+
+      it 'allows blackout when the journal allows blackout' do
+        allow(@identifier).to receive('publication_data').and_return(true)
+        expect(@identifier.allow_blackout?).to be(true)
+      end
     end
 
     describe '#journal_will_pay?' do
