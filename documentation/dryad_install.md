@@ -60,6 +60,7 @@ Most of the configuration can be left as default. Items to check before first la
 2. dryad-config/app_config.yml, particularly the ORCID key and secret
 
 ## Installing MySQL and Solr
+
 ### MySQL
 
 The procedure to install MySQL and Solr vary from one operating system to another, but this guide shows a way to configure it in Ubuntu linux:
@@ -98,33 +99,9 @@ Now edit the dryad-config/config/database.yml file to fill in the *dashuser* and
 ### Solr
 Solr requires a Java runtime.  Try *java -version* and if it says that "java can be found in the following packages" rather than giving you a version you probably need to install java with a command like *sudo apt-get install default-jre* .
 
-```
-# Download Solr using wget
-wget http://archive.apache.org/dist/lucene/solr/5.5.3/solr-5.5.3.tgz
+[This readme contains updated information](../config/solr_config/README.md)
 
-# Extract the Solr files to a directory without the version in the name
-mkdir -p solr && tar zxvf solr-5.5.3.tgz -C solr --strip 1
 
-cd solr
-
-# start Solr with this command, you can stop it later by using stop instead of start
-bin/solr start
-
-# create the geoblacklight core
-bin/solr create -c geoblacklight
-
-# download and copy the geoblacklight schema to the core
-mkdir tmp && cd tmp
-wget -L https://github.com/geoblacklight/geoblacklight-schema/archive/v0.3.2.tar.gz
-tar zxvf v0.3.2.tar.gz
-cp geoblacklight-schema-0.3.2/conf/* ../server/solr/geoblacklight/conf
-```
-
-Replace the default Geoblacklight configuration files with ones found in `config/solr_config/`. These changes add the Journal facet and alow users to search by publication DOI or manuscript number
-
-# restart the Solr server
-cd .. && bin/solr restart
-```
 <br>Make sure Solr is working by going to  [http://localhost:8983](http://localhost:8983). You should see a Solr admin page.
 
 ![Solr screen](images/solr1.png)
