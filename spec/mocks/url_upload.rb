@@ -31,7 +31,7 @@ module Mocks
                      'Cache-Control' => 'max-age=300'
                    })
     end
-    # rubocop:enable Metrics/MethodLength
+
   end
 
 end
