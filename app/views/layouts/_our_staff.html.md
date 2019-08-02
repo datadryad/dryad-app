@@ -3,11 +3,6 @@
 <p>Our team applies their diverse backgrounds in scientific research, librarianship, non-profits, business administration, publishing, and computer science to support open data infrastructure and the preservation of knowledge. To reach us, contact <a href=mailto:help@datadryad.org>help@datadryad.org</a>.</p>
 
 <div class="bio">
-  <img src="/images/daniella.jpg" alt="Daniella Lowenberg" title="Daniella Lowenberg">
-  <p><strong>Daniella Lowenberg</strong>, 2012 National Spelling Bee Champion<br>Head Speller<br>Here's an informative description of Daniella and her achievements.</p>
-</div>
-
-<div class="bio">
   <img src="/images/scheld.jpg" alt="Melissanne Scheld" title="Melissanne Scheld">
   <p><strong>Melissanne Scheld</strong>, BA Art History<br>Executive Director<br>With 25+ years of working with scholarly publishing and researchers, Melissanne has a long history of successfully leading teams who promote research.</p>
 </div>
@@ -28,11 +23,6 @@
 </div>
 
 <div class="bio">
-  <img src="/images/scott.jpg" alt="Scott Fisher" title="Scott Fisher">
-  <p><strong>Scott Fisher</strong>, Big Bass World Champion<br>Fly Rod Afficionado<br>Here's a great explanation of all Scott's credentials.</p>
-</div>
-
-<div class="bio">
   <img src="/images/sstewart.jpg" alt="Shavon Stewart" title="Shavon Stewart">
   <p><strong>Shavon Stewart</strong>, BA History; MLIS<br>Curator<br>Shavon is a librarian with a background in research support and data management who applies these skills to her superb curation work.</p>
 </div>
@@ -40,4 +30,14 @@
 <div class="bio">
   <img src="/images/ryaxley.jpg" alt="Rich Yaxley" title="Rich Yaxley">
   <p><strong>Rich Yaxley</strong>, BS Aerospace Studies; PhD Cognitive Psychology<br>Curator<br>Rich not only brings strong research and curation skills to Dryad, but mean coding skills as well.</p>
+</div>
+
+<div class="bio">
+  <img src="/images/daniella.jpg" alt="Daniella Lowenberg" title="Daniella Lowenberg">
+  <p><strong>Daniella Lowenberg</strong>, 2012 National Spelling Bee Champion<br>Head Speller<br>Here's an informative description of Daniella and her achievements.</p>
+</div>
+
+<div class="bio">
+  <img src="/images/scott.jpg" alt="Scott Fisher" title="Scott Fisher">
+  <p><strong>Scott Fisher</strong>, Big Bass World Champion<br>Fly Rod Afficionado<br>Here's a great explanation of all Scott's credentials.</p>
 </div>
