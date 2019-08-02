@@ -4,7 +4,7 @@
 
 <p>We want to help you share your research with the scientific community to increase its <a href="https://peerj.com/articles/175/">visibility</a> and foster collaborations. The following guidelines will help make your Dryad datasets as interpretable and reusable as possible.</p>
 
-<p>No time to dig into the details? Check out our <a href="https://datadryad.org/pages/quickstart-guide">quickstart guide to data sharing</a>.</p>
+<p>No time to dig into the details? Check out our <a href="/docs/QuickstartGuideToDataSharing.pdf">quickstart guide to data sharing</a>.</p>
 
 <p class="toc_title">Contents:</p>
 <ul>
@@ -35,8 +35,8 @@
 <li><strong>All files submitted to Dryad must abide by the terms of the <a href="https://creativecommons.org/publicdomain/zero/1.0/">Creative Commons Zero (CC0 1.0)</a></strong>. Under these terms, the author releases the data to the public domain.
 <ul><li>Review all files and ensure they conform to <code>CC0</code> terms and are not covered by copyright claims or other terms-of-use. We cannot archive any files that contain licenses incompatible with <code>CC0</code> (<code>GNU GPL, MIT, CC-BY,</code> etc.), but we can link to content in a dedicated software repository (Github, Zenodo, Bitbucket, or CRAN, etc.). </li>
 <li>For more information on <a href="https://blog.datadryad.org/2011/10/05/why-does-dryad-use-cc0/">why Dryad uses <code>CC0</code></a>, and <a href="https://blog.datadryad.org/2017/09/11/some-dos-and-donts-for-cc0/">some dos and don'ts for <code>CC0</code></a></li></ul></li>
-<li>Human subjects data must be properly anonymized and prepared under applicable legal and ethical guidelines (see tips for <a href="https://datadryad.org/pages/humanSubjectsData">human subjects data</a>)</li>
-<li>If you work with vulnerable or endangered species, it may be necessary to mask location to prevent any further threat to the population. Please review our recommendations for responsibly sharing data collected from vulnerable species. (see tips <a href="https://datadryad.org/pages/endangeredSpecies">endangered species data</a> ).</li>
+<li>Human subjects data must be properly anonymized and prepared under applicable legal and ethical guidelines (see tips for <a href="/docs/HumanSubjectsData.pdf">human subjects data</a>)</li>
+<li>If you work with vulnerable or endangered species, it may be necessary to mask location to prevent any further threat to the population. Please review our recommendations for responsibly sharing data collected from vulnerable species. (see tips <a href="/docs/EndangeredSpeciesData.pdf">endangered species data</a> ).</li>
 </ul>
 
 

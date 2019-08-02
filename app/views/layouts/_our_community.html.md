@@ -155,6 +155,6 @@ Dryad is open to working directly with organizations on an individual basis to d
   <li>Give authors the option to <strong>embargo</strong> public access to data for a limited time after publication, if permitted by the journal's data policy.</li>
 </ul>
 
-<p>See a list of currently <a href="/pages/journalLookup">integrated journals</a>.</p>
+<p>See a list of currently <a href="/docs/JournalLookup.pdf">integrated journals</a>.</p>
 
 <p>We welcome submission integration for any organization that publishes a scientific journal, regardless of their membership status in the Dryad organization. Please contact <a href="mailto:director@datadryad.org">director@datadryad.org</a> for more information.</p>
