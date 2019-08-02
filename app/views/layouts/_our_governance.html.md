@@ -1,6 +1,6 @@
 <h1>Our Governance</h1>
 
-<p>Dryad is a not-for-profit membership organization, recognized as a 501(c)3 by the U.S. Internal Revenue Service. Dryad members nominate and elect the Board of Directors, twelve individuals from the stakeholder community who provide strategic planning, fiscal oversight, and oversee the position of the Executive Director. Members also approve any amendments to the organization’s <strong>Bylaws, [add link to PDF]</strong> have the opportunity to steer policies and features, and are kept abreast of emerging issues in data publishing.</p>
+<p>Dryad is a not-for-profit membership organization, recognized as a 501(c)3 by the U.S. Internal Revenue Service. Dryad members nominate and elect the Board of Directors, twelve individuals from the stakeholder community who provide strategic planning, fiscal oversight, and oversee the position of the Executive Director. Members also approve any amendments to the organization’s <strong><a href="/docs/DryadBylaws.pdf">Bylaws</a></strong>, have the opportunity to steer policies and features, and are kept abreast of emerging issues in data publishing.</p>
 
 <h2>Current Board Members<a name="board"></h2>
 
@@ -88,28 +88,28 @@
 
 <h2>Annual Reports</h2>
 
-<p>Dryad produces annual reports on the state of the organization's operations: <strong>[fix links]</strong></p>
+<p>Dryad produces annual reports on the state of the organization's operations:</p>
 
 <ul>
 <li>
-<a href="/themes/Mirage/docs/DryadAnnualReport2018.pdf">Annual report for 2018</a>
+<a href="/docs/DryadAnnualReport2018.pdf">Annual report for 2018</a>
 </li>
 <li>
-<a href="/themes/Mirage/docs/DryadAnnualReport2017.pdf">Annual report for 2017</a>
+<a href="/docs/DryadAnnualReport2017.pdf">Annual report for 2017</a>
 </li>
 <li>
-<a href="/themes/Mirage/docs/DryadAnnualReport2016.pdf">Annual report for 2016</a>
+<a href="/docs/DryadAnnualReport2016.pdf">Annual report for 2016</a>
 </li>
 <li>
-<a href="/themes/Mirage/docs/DryadAnnualReport2015.pdf">Annual report for 2015</a>
+<a href="/docs/DryadAnnualReport2015.pdf">Annual report for 2015</a>
 </li>
 <li>
-<a href="/themes/Mirage/docs/DryadAnnualReport2014.pdf">Annual report for 2014</a>
+<a href="/docs/DryadAnnualReport2014.pdf">Annual report for 2014</a>
 </li>
 <li>
-<a href="/themes/Mirage/docs/DryadAnnualReport2013.pdf">Annual report for 2013</a>
+<a href="/docs/DryadAnnualReport2013.pdf">Annual report for 2013</a>
 </li>
 <li>
-<a href="/themes/Mirage/docs/DryadAnnualReport2012.pdf">Annual report for 2012</a>
+<a href="/docs/DryadAnnualReport2012.pdf">Annual report for 2012</a>
 </li>
 </ul>

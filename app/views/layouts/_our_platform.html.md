@@ -15,7 +15,7 @@ For information about submission to Dryad, see our [guidance here](<%= stash_url
 <li>Share: The Share component, based on GeoBlacklight, is responsible for the faceted search and browse interface</li>
 </ul>
 
-<p><a href="/dash_architecture_diagram.png"><img src="/dash_architecture_diagram.png" alt="Dash Architecture Diagram" style="width: 500px;"/></a></p>
+<p><a href="/dash_architecture_diagram.png"><img src="/images/dash_architecture_diagram.png" alt="Dash Architecture Diagram" style="width: 500px;"/></a></p>
 
 <p>Individual dataset landing pages are formatted as an online version of a data paper, presenting all appropriate descriptive and administrative metadata in a form that can be downloaded as an individual PDF file, or as part of the complete dataset download package, incorporating all data files for all versions.</p>
 
