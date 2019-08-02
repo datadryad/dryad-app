@@ -12,7 +12,7 @@
 
 <p>Dryad has a REST API that allows for download and submission of data. Check out our <a href="https://dryad-stg.cdlib.org/api/docs/">documentation</a> as well as our <a href="https://github.com/CDL-Dryad/dryad/blob/master/stash_api/basic_submission.md">How-To Guide</a></p>
 
-<p>If you need further assistance, consult our <a href="/stash/faq">FAQ</a> or contact us at <a href=mailto:help@datadryad.org>help@datadryad.org</a>. Log in and go to "My Datasets" to begin your data submission now!</p>
+<p>If you need further assistance, consult our <a href="<%= stash_url_helpers.faq_path %>">FAQ</a> or contact us at <a href=mailto:help@datadryad.org>help@datadryad.org</a>. Log in and go to "My Datasets" to begin your data submission now!</p>
 
 <p>View more information about:</p>
 <ul>
@@ -61,7 +61,7 @@
 
 <h2>Curation<a name="curation"></a></h2>
 <p><strong>What is data curation?</strong> Data curators review and enrich research data to help make it <a href="https://www.force11.org/group/fairgroup/fairprinciples">Findable, Accessible, Interoperable, and Reusable (FAIR)</a>. According to the <a href="https://datacurationnetwork.org/about/our-mission/">Data Curation Network<a> (of which Dryad is a member),<blockquote>Data curation enables data discovery and retrieval, maintains data quality, adds value, and provides for re-use over time through activities including authentication, archiving, metadata creation, digital preservation, and transformation.</blockquote></p>
-<p>Dryad has a team of <a href="/stash/our_staff">professional curators</a> who check every submission to ensure the validity of files and metadata. Once your data is submitted, Dryad curators perform basic checks:</p>
+<p>Dryad has a team of <a href="<%= stash_url_helpers.our_staff_path %>">professional curators</a> who check every submission to ensure the validity of files and metadata. Once your data is submitted, Dryad curators perform basic checks:</p>
 <ul>
 <li>Can the files be opened?</li>
 <li>Are they free of copyright restrictions?</li>
@@ -70,7 +70,7 @@
 <li>Is adequate description provided to ensure reusability?</li>
 </ul>
 <p>If Dryad curators identify questions, problems, or areas for improvement, they will contact you directly via the email address associated with your submission. You may contact the curation team for questions or consultations at <a href=mailto:curator@datadryad.org>curator@datadryad.org</a></p>
-<p>Upon curator approval, the Dryad DOI is officially registered and, if applicable, the <a href="#fees">Data Publishing Charge</a> is invoiced.</p>
+<p>Upon curator approval, the Dryad DOI is officially registered and, if applicable, the <a href="<%= stash_url_helpers.publishing_charges_path %>">Data Publishing Charge</a> is invoiced.</p>
 
 <h2>Publication and Citation<a name="citation"></a></h2>
 <ul>
@@ -81,5 +81,5 @@
 <li>If there is an article or other publication related to your data, we recommend that the data be cited in the references of the original publication so that the link between the publication and data is indexed by third-party services.</li>
 </ul></li>
 <li>If you have edits, additional data, or subsequent related work we recommend versioning your data by using the &quot;update&quot; link. All versions of a dataset will be accessible, but the dataset DOI will always resolve to the newest version.</li>
-<li>For more details about publication with Dryad see our <a href="/stash/faq/">Frequently Asked Questions (FAQ)</a></li>
+<li>For more details about publication with Dryad see our <a href="<%= stash_url_helpers.faq_path %>">Frequently Asked Questions (FAQ)</a></li>
 </ul>
