@@ -147,7 +147,7 @@
 <ul>
 <li>Institutional data librarians are an outstanding resource. Check with your university library's data management services team.</li>
 <li><a href="https://data.research.cornell.edu/content/readme">Cornell University Research Data Management Service Group's Guide to writing "readme" style metadata</a></li>
-<li><a href="https://datadryad.org/pages/faq#info-cc0">Why Dryad uses Creative Commons Zero</a></li>
+<li><a href="https://blog.datadryad.org/2011/10/05/why-does-dryad-use-cc0/">Why Dryad uses Creative Commons Zero</a></li>
 <li><a href="https://www.dataone.org/sites/all/documents/DataONE_BP_Primer_020212.pdf">DataONE Primer on Data Management Best Practices</a></li>
 <li><a href="http://blogs.lse.ac.uk/impactofsocialsciences/2015/02/09/data-versioning-open-science/">Introduction to Open Science: Why data versioning and data care practices are key for science and social science</a></li>
 <li><a href="https://www.force11.org/group/fairgroup/fairprinciples">Making data Findable, Accessible, Interoperable, and Reusable (FAIR)</a></li>

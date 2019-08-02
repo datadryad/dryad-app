@@ -2,7 +2,7 @@
 
 Dryad is an open source, community driven project that takes a unique approach to data publication and digital preservation. Dryad focuses on search, presentation, and discovery and delegates the responsibility for the data preservation function to the underlying repository with which it is integrated.
 
-For information about submission to Dryad, see our [guidance here](/stash/help/#submission).
+For information about submission to Dryad, see our [guidance here](<%= stash_url_helpers.submission_process_path %>).
 
 
 <h2>Architecture and Implementation<a name="architecture"></a></h2>
@@ -58,4 +58,4 @@ identity providers (IdPs).</p>
 
 <h2>History<a name="history"></a></h2>
 
-<p>Dryad's original iteration launched in 2009 and was built upon the open-source DSpace repository software. In 2019, Dryad merged with Dash, a data publication service developed at the [University of California Curation Center](http://www.cdlib.org/uc3) (UC3), a program at [California Digital Library](http://www.cdlib.org) (CDL).</p>
+<p>Dryad's original iteration launched in 2009 and was built upon the open-source DSpace repository software. In 2019, Dryad merged with Dash, a data publication service developed at the <a href="http://www.cdlib.org/uc3">University of California Curation Center</a> (UC3), a program at <a href="http://www.cdlib.org">California Digital Library</a> (CDL).</p>

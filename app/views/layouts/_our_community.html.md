@@ -43,6 +43,7 @@ Upgrades and enhanced system functions will be ongoing as a way to continually i
 
 <strong>Let's band together and sustain community-owned research data infrastructure!</strong>
 
+---
 
 <h2>Learn more about Institutional Membership<a name="institutional"></a></h2>
 
@@ -87,6 +88,7 @@ Dryad is open to working with institutions on an individual basis to develop cus
 
 <p><strong>For more information on Institutional Membership, please contact <a href=mailto:director@datadryad.org>director@datadryad.org</a>.</strong></p>
 
+---
 
 <h2>Learn more about Publisher Membership (including journals and scholarly societies)<a name="publisher"></a></h2>
 
@@ -143,16 +145,15 @@ Dryad is open to working directly with organizations on an individual basis to d
 <p><a href="mailto:director@datadryad.org">Contact us</a> to integrate your journal now.</p>
 
 <p>Benefits of integration:</p>
-     <ul>
-         <li>
-<strong>Simplify</strong> the process of data submission for authors.</li>
-         <li>Allow authors to deposit, to a single repository, gigabytes of data files in their <strong>original formats</strong>.</li>
-         <li>Help <strong>ensure compliance</strong> with journal data policy.</li>
-         <li>Have the option of making data available for editorial or peer <strong>review</strong>, via secure access for editors and reviewers.</li>
-         <li>Ensure <strong>bidirectional links</strong> between the article and the data, and <strong>increased visibility</strong> for both.</li>
-         <li>Ensure that the data is <strong>freely accessible</strong> once the article becomes available online.</li>
-         <li>Give authors the option to <strong>embargo</strong> public access to data for a limited time after publication, if permitted by the journal's data policy.</li>
-     </ul>
+<ul>
+  <li><strong>Simplify</strong> the process of data submission for authors.</li>
+  <li>Allow authors to deposit, to a single repository, gigabytes of data files in their <strong>original formats</strong>.</li>
+  <li>Help <strong>ensure compliance</strong> with journal data policy.</li>
+  <li>Have the option of making data available for editorial or peer <strong>review</strong>, via secure access for editors and reviewers.</li>
+  <li>Ensure <strong>bidirectional links</strong> between the article and the data, and <strong>increased visibility</strong> for both.</li>
+  <li>Ensure that the data is <strong>freely accessible</strong> once the article becomes available online.</li>
+  <li>Give authors the option to <strong>embargo</strong> public access to data for a limited time after publication, if permitted by the journal's data policy.</li>
+</ul>
 
 <p>See a list of currently <a href="/pages/journalLookup">integrated journals</a>.</p>
 
