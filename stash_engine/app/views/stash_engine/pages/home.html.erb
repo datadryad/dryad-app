@@ -7,7 +7,7 @@
     <div class="o-quote__quote">
       Dryad is a community-owned resource.
       <br>
-      <a href="<%= stash_url_helpers.about_path(anchor: 'membership') %>" class="o-quote__quote">Learn more about our organizational memberships.</a>
+      <a href="<%= stash_url_helpers.our_community_path %>" class="o-quote__quote">Learn more about our organizational memberships.</a>
     </div>
   </div>
   <div class="t-home__search o-home-search">
@@ -23,8 +23,10 @@
 
 <%= render partial: 'why_use' %>
 
-<h1 class="o-heading__level1-home">Most recent datasets</h1>
-<div id="latest_tiles"
-     data-load="<%= main_app.latest_index_path(format: :js, q: '*:*') %>">
-  <%= image_tag 'stash_engine/spinner.gif', size: '80x60', alt: 'Loading spinner' %>
-</div>
+<% unless @hostname == 'localhost' %>
+  <h1 class="o-heading__level1-home">Most recent datasets</h1>
+  <div id="latest_tiles"
+       data-load="<%= main_app.latest_index_path(format: :js, q: '*:*') %>">
+    <%= image_tag 'stash_engine/spinner.gif', size: '80x60', alt: 'Loading spinner' %>
+  </div>
+<% end %>

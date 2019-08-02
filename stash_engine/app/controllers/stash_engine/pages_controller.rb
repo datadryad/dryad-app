@@ -5,13 +5,28 @@ module StashEngine
     # the homepage shows latest plans and other things, so more than a static page
     def home
       @dataset_count = Resource.submitted_dataset_count
+      @hostname = request.host
     end
 
-    # The help controller uses the standard app layout, so the default is here.
-    # Perhaps specific views would override it in the base application.
-    def help; end
+    def best_practices; end
 
-    # The help controller uses the standard app layout, so the default is here.
+    def our_community; end
+
+    def our_governance; end
+
+    def our_mission; end
+
+    def our_platform; end
+
+    def our_staff; end
+
+    def publishing_charges; end
+
+    def submission_process; end
+
+    def why_use; end
+
+    # The faq controller uses the standard app layout, so the default is here.
     # Perhaps specific views would override it in the base application.
     def faq; end
 
