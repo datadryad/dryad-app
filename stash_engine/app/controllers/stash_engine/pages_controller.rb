@@ -5,6 +5,7 @@ module StashEngine
     # the homepage shows latest plans and other things, so more than a static page
     def home
       @dataset_count = Resource.submitted_dataset_count
+      @hostname = request.host
     end
 
     def best_practices; end
