@@ -13,7 +13,7 @@ Rails.application.routes.draw do
 
   #get '/', :requirements => { :protocol => 'https' }, to: redirect(path: APP_CONFIG.stash_mount, protocol: 'https' )
   #     constraints: { protocol: 'https' }
-  
+
   # You can have the root of your site routed with "root"
   #root 'host_pages#index'
   # map.redirect '/', controller: '/stash/pages', action: 'home'
@@ -89,5 +89,17 @@ Rails.application.routes.draw do
   # routing this into the engine since that is where we have all our models and curation state info which we need
   get 'widgets/bannerForPub' => 'stash_engine/widgets#banner_for_pub'
   get 'widgets/dataPackageForPub' => 'stash_engine/widgets#data_package_for_pub'
+
+  # Routing to redirect old Dryad URLs to their correct locations in this system
+  get '/themes/Mirage/docs/:doc', to: redirect('/docs/%{doc}.%{format}')
+  get '/themes/Dryad/images/:', to: redirect('/images/%{image}')
+  get '/themes/Dryad/images/dryadLogo.png', to: redirect('/images/logo_dryad.png')
+  get '/pages/organization', to: redirect('stash/our_mission')
+  get '/pages/membershipOverview', to: redirect('stash/our_community')
+  get '/pages/policies', to: redirect('stash/terms')
+  get '/pages/searching', to: redirect('search')
+  get '/pages/publicationBlackout', to: redirect('stash/submission_process#citation')
+  get '/pages/dryadlab', to: redirect('http://wiki.datadryad.org/Category:DryadLab')
+  get '/pages/jdap', to: redirect('http://wiki.datadryad.org/Joint_Data_Archiving_Policy_(JDAP)')
 
 end
