@@ -79,9 +79,16 @@ StashEngine::Engine.routes.draw do
   post 'sessions/no_partner', to: 'sessions#no_partner', as: 'no_partner'
   post 'sessions/sso', to: 'sessions#sso', as: 'sso'
 
-  get 'help', to: 'pages#help'
   get 'faq', to: 'pages#faq'
-  get 'about', to: 'pages#about'
+  get 'best_practices', to: 'pages#best_practices'
+  get 'our_community', to: 'pages#our_community'
+  get 'our_governance', to: 'pages#our_governance'
+  get 'our_mission', to: 'pages#our_mission'
+  get 'our_platform', to: 'pages#our_platform'
+  get 'our_staff', to: 'pages#our_staff'
+  get 'publishing_charges', to: 'pages#publishing_charges'
+  get 'submission_process', to: 'pages#submission_process'
+  get 'why_use', to: 'pages#why_use'
   get 'dda', to: 'pages#dda' # data deposit agreement
   get 'search', to: 'searches#index'
   get 'terms', to: 'pages#terms'
