@@ -81,15 +81,21 @@ Rails.application.configure do
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
 
-  Rails.application.config.middleware.use ExceptionNotification::Rack,
-  :email => {
-    # :deliver_with => :deliver, # Rails >= 4.2.1 do not need this option since it defaults to :deliver_now
-    :email_prefix => "[Dryad Exception]",
-    :sender_address => %{"Dryad Notifier" <no-reply-dryad-stg@ucop.edu>},
-    :exception_recipients => %w{scott.fisher@ucop.edu ryan@datadryad.org}
-  },
-  :error_grouping => true,
-  :error_grouping_period => 3.hours
+  #this is obnoxious because the initializers haven't run yet, so have to duplicate code to read config
+  # this will interpret any ERB in the yaml file first before bringing in
+  ac = YAML.load(ERB.new(File.read(File.join(Rails.root, 'config', 'app_config.yml'))).result)[Rails.env]
+
+  unless ac['page_error_email'].blank?
+    Rails.application.config.middleware.use ExceptionNotification::Rack,
+                                            :email => {
+                                                # :deliver_with => :deliver, # Rails >= 4.2.1 do not need this option since it defaults to :deliver_now
+                                                :email_prefix => "[Dryad Exception]",
+                                                :sender_address => %{"Dryad Notifier" <no-reply-dryad@dryad-stg.cdlib.org>},
+                                                :exception_recipients => ac['page_error_email']
+                                            },
+                                            :error_grouping => true,
+                                            :error_grouping_period => 3.hours
+  end
 
   config.action_mailer.delivery_method = :sendmail
   config.action_mailer.perform_deliveries = true
