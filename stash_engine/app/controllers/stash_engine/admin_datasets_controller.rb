@@ -158,6 +158,7 @@ module StashEngine
       query_obj
     end
 
+    # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity
     def add_filters(query_obj:)
       # If no filters have been specified then auto filter by the following curation states to reduce the number
       # of records
@@ -180,6 +181,7 @@ module StashEngine
       end
       query_obj
     end
+    # rubocop:enable Metrics/AbcSize, Metrics/CyclomaticComplexity
 
     # this sets up the select list for internal data and will not offer options for items that are only allowed once and one is present
     def setup_internal_data_list
