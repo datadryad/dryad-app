@@ -1,3 +1,5 @@
+require 'yaml'
+
 # rubocop:disable Metrics/BlockLength
 namespace :dev_ops do
 
@@ -72,6 +74,16 @@ namespace :dev_ops do
         puts ''
       end
     end
+  end
+
+  desc 'Backup database by mysqldump'
+  task :backup => :environment do
+    directory = '/apps/dryad/apps/ui/shared/cron/backups'
+    FileUtils.mkdir directory unless File.exists?(directory)
+    db = YAML::load( File.open( File.join(Rails.root, 'config', 'database.yml') ) )[ Rails.env ]
+    file = File.join(directory, "#{Rails.env}_#{DateTime.now.to_s}.sql" )
+    p command = "mysqldump --opt --skip-add-locks --single-transaction --no-create-db -h #{db['host']} -u #{db['username']} -p#{db['password']} #{db['database']} | gzip > #{file}.gz"
+    exec command
   end
 
 end
