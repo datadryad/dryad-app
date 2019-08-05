@@ -5732,6 +5732,26 @@ html.no-details .o-showhide__summary {
   .about-page .bio p {
     margin-top: 0; }
 
+.about-page table {
+  padding: 10px;
+  border-spacing: 0;
+  border-collapse: collapse; }
+  .about-page table tr {
+    margin: 10px;
+    padding: 10px;
+    border-top: 0.5px solid #9d9fa2;
+    background-color: white; }
+  .about-page table th,
+  .about-page table td {
+    margin: 10px;
+    padding: 10px 18px;
+    border: 0.5px solid #9d9fa2;
+    font-weight: bold;
+    line-height: 1.8;
+    text-align: left; }
+  .about-page table tr:nth-child(even) {
+    background-color: #ebebeb; }
+
 .t-describe__remove-button {
   -ms-flex-item-align: center;
       align-self: center;
