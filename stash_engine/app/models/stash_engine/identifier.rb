@@ -244,6 +244,10 @@ module StashEngine
       latest_resource&.authors&.first&.affiliation
     end
 
+    def large_files?
+      latest_resource.size > StashEngine.app.payments.large_file_size
+    end
+
     private
 
     def abstracts
