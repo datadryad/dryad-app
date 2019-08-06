@@ -158,7 +158,14 @@ module StashEngine
       query_obj
     end
 
+    # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity
     def add_filters(query_obj:)
+      # If no filters have been specified then auto filter by the following curation states to reduce the number
+      # of records
+      if params[:tenant].blank? && params[:curation_status].blank? && params[:publication_name].blank?
+        query_obj = query_obj.where(stash_engine_curation_activities: { status: %w[curation submitted action_required] })
+      end
+
       # Filter by Tenant
       if TENANT_IDS.include?(params[:tenant]) && current_user.role == 'superuser'
         query_obj = query_obj.where(stash_engine_resources: { tenant_id: params[:tenant] })
@@ -174,6 +181,7 @@ module StashEngine
       end
       query_obj
     end
+    # rubocop:enable Metrics/AbcSize, Metrics/CyclomaticComplexity
 
     # this sets up the select list for internal data and will not offer options for items that are only allowed once and one is present
     def setup_internal_data_list
