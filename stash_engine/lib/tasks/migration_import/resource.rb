@@ -16,9 +16,14 @@ module MigrationImport
           accepted_agreement tenant_id])
       save_hash.merge!(identifier_id: @identifier.id, skip_datacite_update: true, skip_emails: true, user_id: user_id,
                        current_editor_id: user_id)
+      save_hash.merge!(embargo_fields)
       # fields to add - current_resource_state_id, hold_for_peer_review, peer_review_end_date
       @resource_obj = StashEngine::Resource.create(save_hash)
       puts @resource_obj
+    end
+
+    def embargo_fields
+      byebug
     end
 
   end
