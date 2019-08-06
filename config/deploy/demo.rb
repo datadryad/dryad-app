@@ -14,7 +14,7 @@ set :rails_env, 'demo'
 # To override the default host, set $SERVER_HOSTS, e.g.
 #    $ SERVER_HOSTS='localhost1 localhost2' bundle exec cap development deploy
 set :server_hosts, ENV["SERVER_HOSTS"]&.split(' ') || ['uc3-dashdemo-stg.cdlib.org']
-role :app, fetch(:server_hosts), user: 'dryad'
+role %i[app web], fetch(:server_hosts), user: 'dryad'
 
 #on roles(:all) do |host|
 #  puts "setting server host: #{host.hostname}"
