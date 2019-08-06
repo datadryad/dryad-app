@@ -1,6 +1,6 @@
 require 'pp'
 require 'byebug'
-require_relative 'migration_importer'
+require_relative 'migration_import'
 require 'database_cleaner'
 namespace :dryad_migration do
 
@@ -15,7 +15,8 @@ namespace :dryad_migration do
 
     record_hash = JSON.parse(File.read(StashEngine::Engine.root.join('spec', 'data', 'migration_input.json')))
 
-    # migration_importer = MigrationImporter.new(record_hash)
+    id_importer = MigrationImport::Identifier.new(hash: record_hash)
+    id_importer.import
 
 
     # my_id = StashEngine::Identifier.find(t)
