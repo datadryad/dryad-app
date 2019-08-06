@@ -14,7 +14,7 @@ set :rails_env, 'migration'
 # To override the default host, set $SERVER_HOSTS, e.g.
 #    $ SERVER_HOSTS='localhost' bundle exec cap development deploy
 set :server_hosts, ENV["SERVER_HOSTS"]&.split(' ') || ['uc3-dryadui-stg-2c.cdlib.org']
-role :app, fetch(:server_hosts), user: 'dryad'
+role %i[app web], fetch(:server_hosts), user: 'dryad'
 
 #on roles(:all) do |host|
 #  puts "setting server host: #{host.hostname}"
