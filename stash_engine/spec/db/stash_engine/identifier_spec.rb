@@ -19,6 +19,16 @@ module StashEngine
       @res1 = Resource.create(identifier_id: @identifier.id, user: @user)
       @res2 = Resource.create(identifier_id: @identifier.id, user: @user)
       @res3 = Resource.create(identifier_id: @identifier.id, user: @user)
+
+      @created_files = Array.new(3) do |i|
+        FileUpload.create(
+          resource: @res3,
+          file_state: 'created',
+          upload_file_name: "created#{i}.bin",
+          upload_file_size: i * 3
+        )
+      end
+
       @fake_issn = 'bogus-issn-value'
       int_datum = InternalDatum.new(identifier_id: @identifier.id, data_type: 'publicationISSN', value: @fake_issn)
       int_datum.save!
@@ -136,19 +146,18 @@ module StashEngine
         before(:each) do
           FileUpload.create(resource_id: res1.id, upload_file_name: 'cat', file_state: 'created')
           FileUpload.create(resource_id: res2.id, upload_file_name: 'cat', file_state: 'copied')
-          FileUpload.create(resource_id: res3.id, upload_file_name: 'cat', file_state: 'copied')
+          FileUpload.create(resource_id: res3.id, upload_file_name: 'cat', file_state: 'created')
         end
 
         it 'returns the version that changed' do
           resources = identifier.resources_with_file_changes
           expect(resources.first.id).to eq(res1.id)
-          expect(resources.count).to eq(1)
+          expect(resources.count).to eq(2)
         end
       end
 
       describe 'curation activity setup' do
         before(:each) do
-          # @user = User.new
           allow_any_instance_of(CurationActivity).to receive(:update_solr).and_return(true)
           allow_any_instance_of(CurationActivity).to receive(:submit_to_stripe).and_return(true)
           allow_any_instance_of(CurationActivity).to receive(:submit_to_datacite).and_return(true)
@@ -385,6 +394,29 @@ module StashEngine
       it 'returns the current version\'s first author\'s affiliation' do
         expect(@identifier.submitter_affiliation).to eql(@identifier.latest_resource&.authors&.first&.affiliation)
       end
+    end
+
+    describe '#large_files?' do
+      before(:each) do
+        app = double(Rails::Application)
+        allow(app).to receive(:payments).and_return(OpenStruct.new(large_file_size: 100))
+        allow(StashEngine).to receive(:app).and_return(app)
+      end
+
+      it 'returns false when large files are not present' do
+        expect(@identifier.large_files?).to eq(false)
+      end
+
+      it 'returns true when large files are present' do
+        FileUpload.create(
+          resource: @res3,
+          file_state: 'created',
+          upload_file_name: 'created.bin',
+          upload_file_size: 10_000
+        )
+        expect(@identifier.large_files?).to eq(true)
+      end
+
     end
 
     describe :with_visibility do
