@@ -103,9 +103,9 @@ module StashEngine
         expect(@resource.authors.first.author_first_name).to eql(auths.first['given'])
         expect(@resource.authors.first.author_last_name).to eql(auths.first['family'])
         expect(@resource.identifier.internal_data.select { |id| id.data_type == 'publicationName' }.first.value).to eql(@params[:publication_name])
-        expect(@resource.related_identifiers.select { |id|
+        expect(@resource.related_identifiers.select do |id|
           id.related_identifier_type == 'doi' && id.relation_type == 'issupplementto'
-        }.first&.related_identifier).to eql(@params[:publication_doi])
+        end.first&.related_identifier).to eql(@params[:publication_doi])
 
         expect(@resource.publication_date.to_date).to eql(@params[:publication_date])
 

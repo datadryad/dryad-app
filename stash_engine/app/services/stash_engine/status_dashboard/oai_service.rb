@@ -9,11 +9,8 @@ module StashEngine
 
       def ping_dependency
         super
-        timeframe = (Time.now - 5.minutes).utc.strftime('%y-%m-%dT%H:%M:%SZ')
         env = Rails.env.production? ? 'prd' : 'stg'
-        base_url = "http://uc3-mrtoai-#{env}.cdlib.org:37001/mrtoai/oai/v2"
-        target = "#{base_url}?verb=ListRecords&metadataPrefix=dcs3.1&from=#{timeframe}"
-
+        target = "http://uc3-mrtoai-#{env}.cdlib.org:37001/mrtoai/state"
         resp = HTTParty.get(target)
         online = resp.code == 200
         msg = resp.body unless online

@@ -7,6 +7,7 @@ require 'stash/link_out/pubmed_service'
 require 'cgi'
 
 module StashDatacite
+  # rubocop:disable Metrics/ClassLength
   class PublicationsController < ApplicationController
     # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity
     def update
@@ -134,4 +135,5 @@ module StashDatacite
     end
 
   end
+  # rubocop:enable Metrics/ClassLength
 end
