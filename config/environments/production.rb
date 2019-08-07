@@ -82,13 +82,15 @@ Rails.application.configure do
   config.active_record.dump_schema_after_migration = false
 
   #this is obnoxious because the initializers haven't run yet, so have to duplicate code to read config
-  ac = YAML.load_file(File.join(Rails.root, 'config', 'app_config.yml'))[Rails.env]
+  # this will interpret any ERB in the yaml file first before bringing in
+  ac = YAML.load(ERB.new(File.read(File.join(Rails.root, 'config', 'app_config.yml'))).result)[Rails.env]
+
   unless ac['page_error_email'].blank?
     Rails.application.config.middleware.use ExceptionNotification::Rack,
       :email => {
           # :deliver_with => :deliver, # Rails >= 4.2.1 do not need this option since it defaults to :deliver_now
-          :email_prefix => "[Dash Exception]",
-          :sender_address => %{"Dash Notifier" <no-reply-dash2@ucop.edu>},
+          :email_prefix => "[Dryad Exception]",
+          :sender_address => %{"Dryad Notifier" <no-reply-dryad@dryad-prd.cdlib.org>},
           :exception_recipients => ac['page_error_email']
       },
       :error_grouping => true,
