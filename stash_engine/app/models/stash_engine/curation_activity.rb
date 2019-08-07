@@ -3,9 +3,8 @@ require 'stash/payments/invoicer'
 
 # rubocop:disable Metrics/ClassLength
 module StashEngine
-
   class CurationActivity < ActiveRecord::Base
-
+    include StashEngine::ApplicationHelper
     include StashEngine::Concerns::StringEnum
 
     # Associations
@@ -157,7 +156,7 @@ module StashEngine
     end
 
     def email_large_file_notice
-      message = "This item contains large files (#{resource.size}) -- Please discuss the file size and associated fees with the submitter."
+      message = "This item contains large files (#{filesize(resource.size)}) -- Please discuss the file size and associated fees with the submitter."
       StashEngine::UserMailer.helpdesk_notice(resource, message).deliver_now
     end
 
