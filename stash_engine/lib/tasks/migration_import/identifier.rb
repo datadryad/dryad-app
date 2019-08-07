@@ -1,7 +1,7 @@
 module MigrationImport
   class Identifier
 
-    attr_reader :hash
+    attr_reader :hash, :ar_identifier
 
     def initialize(hash:)
       @hash = hash.with_indifferent_access
@@ -11,11 +11,20 @@ module MigrationImport
     def import
       # handle myself
       save_hash = @hash.slice(*%w[identifier identifier_type storage_size created_at updated_at])
-      @id_obj = StashEngine::Identifier.create(save_hash)
-      puts @id_obj
+      @ar_identifier = StashEngine::Identifier.create(save_hash)
+
+      # delegate to resources
       @hash[:resources].each do |json_resource|
-        @resource_obj = Resource.new(hash: json_resource, identifier: @id_obj)
+        @resource_obj = Resource.new(hash: json_resource, ar_identifier: @ar_identifier)
         @resource_obj.import
+      end
+      add_orcid_invitations
+    end
+
+    def add_orcid_invitations
+      @hash[:orcid_invitations].each do |json_invitation|
+        my_hash = json_invitation.slice(*%w[email first_name last_name secret orcid invited_at accepted_at])
+        @ar_identifier.orcid_invitations << StashEngine::OrcidInvitation.create(my_hash)
       end
     end
 
