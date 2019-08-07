@@ -91,15 +91,16 @@ Rails.application.routes.draw do
   get 'widgets/dataPackageForPub' => 'stash_engine/widgets#data_package_for_pub'
 
   # Routing to redirect old Dryad URLs to their correct locations in this system
-  get '/themes/Mirage/docs/:doc', to: redirect('/docs/%{doc}.%{format}')
+  get '/pages/dryadlab', to: redirect('http://wiki.datadryad.org/Category:DryadLab')
+  get '/pages/faq', to: redirect('stash/faq')
+  get '/pages/jdap', to: redirect('http://wiki.datadryad.org/Joint_Data_Archiving_Policy_(JDAP)')
+  get '/pages/membershipOverview', to: redirect('stash/our_community')
+  get '/pages/organization', to: redirect('stash/our_mission')
+  get '/pages/policies', to: redirect('stash/terms')
+  get '/pages/publicationBlackout', to: redirect('stash/submission_process#citation')
+  get '/pages/searching', to: redirect('search')
   get '/themes/Dryad/images/:', to: redirect('/images/%{image}')
   get '/themes/Dryad/images/dryadLogo.png', to: redirect('/images/logo_dryad.png')
-  get '/pages/organization', to: redirect('stash/our_mission')
-  get '/pages/membershipOverview', to: redirect('stash/our_community')
-  get '/pages/policies', to: redirect('stash/terms')
-  get '/pages/searching', to: redirect('search')
-  get '/pages/publicationBlackout', to: redirect('stash/submission_process#citation')
-  get '/pages/dryadlab', to: redirect('http://wiki.datadryad.org/Category:DryadLab')
-  get '/pages/jdap', to: redirect('http://wiki.datadryad.org/Joint_Data_Archiving_Policy_(JDAP)')
+  get '/themes/Mirage/docs/:doc', to: redirect('/docs/%{doc}.%{format}')
 
 end
