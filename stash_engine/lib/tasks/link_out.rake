@@ -62,22 +62,24 @@ namespace :link_out do
     labslink_service.publish_files! if labslink_service.validate_files!
   end
 
-  desc 'Seed existing datasets with PubMed Ids - WARNING: this will query the API for each dataset that has a publicationDOI!'
+  desc 'Seed existing datasets with PubMed Ids - WARNING: this will query the API for each dataset that has a isSupplementTo DOI!'
   task seed_pmids: :environment do
     p 'Retrieving Pubmed IDs for existing datasets'
     pubmed_service = LinkOut::PubmedService.new
     existing_pmids = StashEngine::Identifier.cited_by_pubmed.pluck(:id)
-    datum = StashEngine::InternalDatum.where.not(identifier_id: existing_pmids).where(data_type: 'publicationDOI').order(created_at: :desc)
-    datum.each do |data|
-      p "  looking for pmid for #{data.value}"
-      pmid = pubmed_service.lookup_pubmed_id(data.value.gsub('doi:', ''))
+    resource_ids = StashEngine::Resource.latest_per_dataset.where.not(identifier_id: existing_pmids).pluck(:id)
+    related_identifiers = StashDatacite::RelatedIdentifier.where(resource_id: resource_ids, related_identifier_type: 'doi',
+                                                                 relation_type: 'issupplementto').order(created_at: :desc)
+    related_identifiers.each do |data|
+      p "  looking for pmid for #{data.related_identifier}"
+      pmid = pubmed_service.lookup_pubmed_id(data.related_identifier.gsub('doi:', ''))
       next unless pmid.present?
 
-      internal_datum = StashEngine::InternalDatum.find_or_initialize_by(identifier_id: data.identifier_id, data_type: 'pubmedID')
+      internal_datum = StashEngine::InternalDatum.find_or_initialize_by(identifier_id: data.resource.identifier_id, data_type: 'pubmedID')
       internal_datum.value = pmid.to_s
       next unless internal_datum.value_changed?
 
-      p "    found pubmedID, '#{pmid}', ... attaching it to '#{data.value.gsub('doi:', '')}' (identifier: #{data.identifier_id})"
+      p "    found pubmedID, '#{pmid}', ... attaching it to '#{data.related_identifier.gsub('doi:', '')}' (identifier: #{data.identifier_id})"
       internal_datum.save
       sleep(1)
     end
@@ -109,14 +111,19 @@ namespace :link_out do
 
   desc 'Update Solr keywords with publication IDs'
   task seed_solr_keywords: :environment do
-    p 'Updating Solr keywords with publicationDOI, manuscriptNumber and pubmedID'
-    types = %w[pubmedID publicationDOI manuscriptNumber]
-    identifiers = StashEngine::Identifier.joins(:internal_data)
-      .where('stash_engine_internal_data.data_type IN (?) AND stash_engine_internal_data.value IS NOT NULL', types)
+    p 'Updating Solr keywords with manuscriptNumber, pubmedID or a isSupplementTo related identifier'
+    types = %w[pubmedID manuscriptNumber]
 
-    identifiers.each do |identifier|
-      identifier.update_search_words!
-      identifier.latest_resource.submit_to_solr
+     StashEngine::Identifier.all.each do |identifier|
+      datum = identifier.joins(:internal_data, resource: :related_identifiers)
+        .where('(stash_engine_internal_data.data_type IN (?) AND stash_engine_internal_data.value IS NOT NULL) \
+          OR (dcs_related_identifiers.related_identifier_type = ? AND dcs_related_identifiers.relation_type = ? AND \
+              dcs_related_identifiers.related_identifier IS NOT NULL)', types, 'doi', 'issupplementto')
+
+       if datum.any?
+        identifier.update_search_words!
+        identifier.latest_resource.submit_to_solr
+      end
     end
   end
 

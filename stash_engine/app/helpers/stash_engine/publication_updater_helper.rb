@@ -26,6 +26,12 @@ module StashEngine
       resource.identifier.internal_data.where(data_type: data_type).first&.value || 'Not available'
     end
 
+    def fetch_related_identifier_metadata(resource:, related_identifier_type:, relation_type:)
+      return nil unless resource.present? && related_identifier_type.present? && relation_type.present?
+      resource.related_identifiers.where(related_identifier_type: related_identifier_type,
+                                         relation_type: relation_type).first&.value || 'Not available'
+    end
+
     def existing_authors(resource:)
       return nil unless resource.present?
       resource.authors.map(&:author_full_name).uniq.sort { |a, b| a <=> b }.join('<br>')

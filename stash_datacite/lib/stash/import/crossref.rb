@@ -197,6 +197,7 @@ module Stash
         # rubocop:enable Metrics/PerceivedComplexity
       end
 
+      # rubocop:disable Metrics/CyclomaticComplexity
       def resource_will_change?(proposed_change:)
         if proposed_change.authors.present?
           json = JSON.parse(proposed_change.authors)
@@ -213,6 +214,7 @@ module Stash
           related_identifier_will_change?(proposed_change: proposed_change) ||
           (proposed_change.authors.present? && (auths & @resource.authors).any?)
       end
+      # rubocop:enable Metrics/CyclomaticComplexity
 
       def internal_datum_will_change?(proposed_change:)
         internal_data = @resource.identifier.internal_data

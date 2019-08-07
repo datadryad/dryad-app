@@ -38,9 +38,11 @@ module StashEngine
     end
 
     def require_id_exists
-      pmid_record = InternalDatum.find_by(data_type: 'pubmedID', value: @pmid) ||
-          InternalDatum.find_by(data_type: 'publicationDOI', value: @doi)
-      @stash_id = pmid_record.stash_identifier unless pmid_record.blank?
+      pmid = InternalDatum.find_by(data_type: 'pubmedID', value: @pmid)
+      doi = StashDatacite::RelatedIdentifier.find_by(related_identifier_type: 'doi', relation_type: 'issupplementto',
+                                                     related_identifier: @doi)
+      @stash_id = pmid.stash_identifier unless pmid.blank?
+      @stash_id = doi.resource.identifier if @stash_id.blank? && doi.present?
       not_found if @stash_id.blank?
     end
 
