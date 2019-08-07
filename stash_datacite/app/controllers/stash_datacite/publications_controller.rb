@@ -20,7 +20,7 @@ module StashDatacite
             @resource = @se_id.latest_resource
             update_manuscript_metadata if params[:import_type] == 'manuscript'
             update_doi_metadata if !@doi&.related_identifier.blank? && params[:import_type] == 'published'
-            manage_pubmed_datum(identifier: @se_id, doi: @doi.value) if !@doi&.value.blank? && params[:import_type] == 'published'
+            manage_pubmed_datum(identifier: @se_id, doi: @doi.related_identifier) if !@doi&.related_identifier.blank? && params[:import_type] == 'published'
             params[:import_type] == 'published'
           else
             render template: 'stash_datacite/shared/update.js.erb'
