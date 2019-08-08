@@ -32,9 +32,12 @@ module MigrationImport
       # formats, languages and name identifiers (for contributors) not used in Dash, though ORCIDs for authors in author table
       # TODO: adding locations later, complicated
       add_publication_years
-
-
-
+      add_publisher
+      add_related_identifiers
+      add_resource_type
+      add_rights
+      add_sizes
+      add_subjects
 
       enable_callback_methods
     end
@@ -183,6 +186,54 @@ module MigrationImport
       @hash[:publication_years].each do |json_pub_year|
         my_hash = json_pub_year.slice(*%w[publication_year created_at updated_at])
         @ar_resource.publication_years << StashDatacite::PublicationYear.create(my_hash)
+      end
+    end
+
+    def add_publisher
+      my_hash = @hash[:publisher].slice(*%w[publisher created_at updated_at]).merge(resource_id: @ar_resource.id)
+      StashDatacite::Publisher.create(my_hash)
+    end
+
+    def add_related_identifiers
+      @hash[:related_identifiers].each do |json_rel_id|
+        my_hash = json_rel_id.slice(*%w[related_identifier related_identifier_type relation_type related_metadata_scheme
+            scheme_URI scheme_type created_at updated_at])
+        @ar_resource.related_identifiers << StashDatacite::RelatedIdentifier.create(my_hash)
+      end
+    end
+
+    def add_resource_type
+      my_hash = @hash[:resource_type].slice(*%w[resource_type_general resource_type created_at updated_at]).merge(resource_id: @ar_resource.id)
+      StashDatacite::ResourceType.create(my_hash)
+    end
+
+    def add_rights
+      @hash[:rights].each do |json_right|
+        my_hash = json_right.slice(*%w[rights rights_uri created_at updated_at])
+        @ar_resource.rights << StashDatacite::Right.create(my_hash)
+      end
+    end
+
+    def add_sizes
+      @hash[:sizes].each do |json_size|
+        my_hash = json_size.slice(*%w[size created_at updated_at])
+        @ar_resource.sizes << StashDatacite::Size.create(my_hash)
+      end
+    end
+
+    def add_subjects
+      @hash[:subjects].each do |json_subject|
+        existing_subjects = StashDatacite::Subject.where(subject: json_subject[:subject],
+                                   subject_scheme: json_subject[:subject_scheme],
+                                   'scheme_URI': json_subject['scheme_URI'])
+        if existing_subjects.length < 1
+          # Create & link subject
+          my_hash = json_subject.slice(*%w[subject subject_scheme scheme_URI created_at updated_at])
+          @ar_resource.subjects << StashDatacite::Subject.create(my_hash)
+        else
+          # link subject
+          @ar_resource.subjects << existing_subjects.first
+        end
       end
     end
 
