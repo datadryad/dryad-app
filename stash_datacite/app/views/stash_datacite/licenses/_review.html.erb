@@ -31,35 +31,39 @@
   <% end %>
 </div>
 
-<% submitter_affiliation = @resource.identifier.submitter_affiliation %>
-<% if @resource.identifier.journal_will_pay? %>
 <div>
-  <h3>Payment</h3>
-  <p>Payment for this deposit is sponsored by <b><%= @resource.identifier.publication_name %></b>.</p>
-</div>
-<% elsif @resource.identifier.institution_will_pay? %>
-<div>
-  <h3>Payment</h3>
-  <p>Payment for this deposit is sponsored by <b><%= @resource.tenant.long_name %></b>.</p>
-</div>
-<% elsif submitter_affiliation.present? && submitter_affiliation.fee_waivered? %>
-<div>
-  <h3>Payment</h3>
-   <p>Payment is not required for this deposit due to association with <b><%= submitter_affiliation.smart_name %></b> in <b><%= submitter_affiliation.country_name %></b>.</p>
-</div>
-<% elsif @resource.identifier.user_must_pay? %>
-<div>
-  <h3>Payment</h3>
-  <p>
-    Dryad charges a fee for data publication that covers curation and preservation of published datasets. Upon
-    publication of your dataset, you will receive an invoice for $120 (or more if larger than 20GB). If you have a
-    fee waiver, are at an institution that is a Dryad member, or are publishing at journal that is a Dryad member,
-    you will not receive this invoice. Read more about our business model and payment terms.</p>
+    <h3>Payment</h3>
+    <% submitter_affiliation = @resource.identifier.submitter_affiliation %>
+    <% if @resource.identifier.journal_will_pay? %>
+	<p>Payment for this deposit is sponsored by <b><%= @resource.identifier.publication_name %></b>.</p>
+    <% elsif @resource.identifier.institution_will_pay? %>
+	<p>Payment for this deposit is sponsored by <b><%= @resource.tenant.long_name %></b>.</p>
+    <% elsif submitter_affiliation.present? && submitter_affiliation.fee_waivered? %>
+	<p>Payment is not required for this deposit due to association with <b><%= submitter_affiliation.smart_name %></b> in <b><%= submitter_affiliation.country_name %></b>.</p>
+    <% elsif @resource.identifier.user_must_pay? %>
+	<p>
+	    Dryad charges a fee for data publication that covers curation and preservation of published datasets. Upon
+	    publication of your dataset, you will receive an invoice for
+	    &dollar;<%=  StashEngine.app.payments.data_processing_charge / 100 %> (or more if larger than
+	    <%= filesize(StashEngine.app.payments.large_file_size) %>). If you have a
+	    fee waiver, are at an institution that is a Dryad member, or are publishing an assiciated article with journal
+	    that is a Dryad member, please <a href="mailto:help@datadryad.org">contact us</a> for assistance with payment.
+	</p>
 
-    <span><%= check_box_tag 'agree_to_payment', 'yes', (@resource.version_number > 1), class: 't-review__agree-to-license js-agrees' %></span>
-    <label for="agree_to_payment">I agree to Dryad's payment terms</label>
+	<% if @resource.identifier.large_files? %>
+	    <div class="js-alert c-alert--error" role="alert">
+		<div class="c-alert__text">
+		    This submisison has large files (over <%= filesize(StashEngine.app.payments.large_file_size) %>). We will contact you regarding fees. 
+		</div>
+	    </div>
+	<% end %>
+	
+	<span><%= check_box_tag 'agree_to_payment', 'yes', (@resource.version_number > 1), class: 't-review__agree-to-license js-agrees' %></span>
+	<label for="agree_to_payment">I agree to Dryad's payment terms</label>
+    <% else %>
+	<p>This submisison does not require a payment.</p>
+    <% end %>
 </div>
-<% end %>
 
 <br>
 
