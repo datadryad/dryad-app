@@ -25,4 +25,22 @@ namespace :dryad_migration do
 
     # puts(hash.to_json)
   end
+
+  desc 'Read in array of identifiers to db'
+  task read_identifiers: :environment do
+    # see https://stackoverflow.com/questions/27913457/ruby-on-rails-specify-environment-in-rake-task
+    ActiveRecord::Base.establish_connection('test') # we only want to test against the local test db right now
+    DatabaseCleaner.strategy = :truncation
+    DatabaseCleaner.clean
+
+
+    id_records = JSON.parse(File.read('/Users/sfisher/workspace/direct-to-old-dash2/dashv2/identifiers.json'))
+
+    id_records.each_with_index do |id_record, counter|
+      puts "#{counter+1} of #{id_records.length}  #{id_record['identifier']}"
+      id_importer = MigrationImport::Identifier.new(hash: id_record)
+      id_importer.import
+    end
+
+  end
 end
