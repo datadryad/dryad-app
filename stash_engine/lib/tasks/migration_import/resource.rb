@@ -25,7 +25,6 @@ module MigrationImport
       add_version
 
       # adding DataCite metadata
-      # TODO: add affiliations for authors with ROR ids, not used for real data for contributors in Dash afaict
       add_contributors
       add_dcs_dates
       add_descriptions
@@ -89,8 +88,11 @@ module MigrationImport
     def add_authors
       @hash[:authors].each do |json_author|
         my_hash = json_author.slice(*%w[author_first_name author_last_name author_email author_orcid created_at updated_at])
-        @ar_resource.authors << StashEngine::Author.create(my_hash)
-        # TODO: Handle affilications which is a subhash
+                      .merge(resource_id: @ar_resource.id)
+        this_author = StashEngine::Author.create(my_hash)
+        json_author[:affiliations].each do |json_affiliation|
+          add_affiliation(ar_author: this_author, json_affiliation: json_affiliation)
+        end
       end
     end
 
@@ -268,5 +270,30 @@ module MigrationImport
       StashDatacite::GeolocationBox.create(my_hash)
     end
 
+    def add_affiliation(ar_author:, json_affiliation:)
+      name = json_affiliation[:long_name] || json_affiliation[:short_name] || json_affiliation[:abbreviation]
+      return if name.blank?
+      name.strip!
+      ar_existing_affil = StashDatacite::Affiliation.find_by(long_name: name)
+      ar_existing_affil = make_affil_with_ror(name: name) if ar_existing_affil.blank?
+      ar_existing_affil = make_rorless_affil(name: name) if ar_existing_affil.blank?
+      ar_author.affiliations << ar_existing_affil
+    end
+
+    def make_affil_with_ror(name:)
+      ror_affil = Stash::Organization::Ror.find_first_by_ror_name(name)
+      return nil if ror_affil.nil?
+      if name.downcase == ror_affil[:name].downcase.strip
+        # just write the ror name as the name in long name
+        StashDatacite::Affiliation.create(long_name: ror_affil[:name].strip, ror_id: ror_affil[:id] )
+      else
+        # write ror name into the short name so we can compare and fix since short name isn't normally used
+        StashDatacite::Affiliation.create(short_name: ror_affil[:name].strip, long_name: name, ror_id: ror_affil[:id] )
+      end
+    end
+
+    def make_rorless_affil(name:)
+      StashDatacite::Affiliation.create(long_name: name)
+    end
   end
 end
