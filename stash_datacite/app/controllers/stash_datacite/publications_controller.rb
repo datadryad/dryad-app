@@ -19,7 +19,7 @@ module StashDatacite
             @error = 'Please fill in the form completely' if params[:internal_datum][:msid].blank? && params[:internal_datum][:doi].blank?
             @resource = @se_id.latest_resource
             update_manuscript_metadata if params[:import_type] == 'manuscript'
-            update_doi_metadata if !@doi&.related_identifier.blank? && params[:import_type] == 'published'
+            update_doi_metadata if params[:internal_datum][:doi].present? && params[:import_type] == 'published'
             manage_pubmed_datum(identifier: @se_id, doi: @doi.related_identifier) if !@doi&.related_identifier.blank? &&
               params[:import_type] == 'published'
             params[:import_type] == 'published'
@@ -35,8 +35,6 @@ module StashDatacite
       @pub_issn = manage_internal_datum(identifier: @se_id, data_type: 'publicationISSN', value: params[:internal_datum][:publication_issn])
       @pub_name = manage_internal_datum(identifier: @se_id, data_type: 'publicationName', value: params[:internal_datum][:publication_name])
       @msid = manage_internal_datum(identifier: @se_id, data_type: 'manuscriptNumber', value: params[:internal_datum][:msid])
-      @doi = manage_related_identifier(identifier: @se_id, related_identifier_type: 'doi', relation_type: 'issupplementto',
-                                       value: params[:internal_datum][:doi])
     end
 
     def update_manuscript_metadata
@@ -61,13 +59,13 @@ module StashDatacite
     end
 
     def update_doi_metadata
-      if @doi.related_identifier.blank?
+      unless params[:internal_datum][:doi].present?
         @error = 'Please enter a DOI to import metadata'
         return
       end
-      cr = Stash::Import::Crossref.query_by_doi(resource: @resource, doi: @doi.related_identifier)
+      cr = Stash::Import::Crossref.query_by_doi(resource: @resource, doi: params[:internal_datum][:doi])
       unless cr.present?
-        @error = "We couldn't obtain information from CrossRef about this DOI: #{@doi.related_identifier}"
+        @error = "We couldn't obtain information from CrossRef about this DOI: #{params[:internal_datum][:doi]}"
         return
       end
       @resource = cr.populate_resource!
@@ -81,23 +79,9 @@ module StashDatacite
         datum.destroy unless value.present?
         datum.update(value: value) if value.present?
       else
-        datum = StashEngine::InternalDatum.create(stash_identifier: identifier, data_type: data_type, value: value)
+        datum = StashEngine::InternalDatum.create(stash_identifier: identifier, data_type: data_type, value: value) if value.present?
       end
       datum
-    end
-
-    def manage_related_identifier(identifier:, related_identifier_type:, relation_type:, value:)
-      related_identifier = get_related_identifier(identifier: identifier, related_identifier_type: related_identifier_type,
-                                                  relation_type: relation_type)
-      if related_identifier.present?
-        related_identifier.destroy unless value.present?
-        related_identifier.update(related_identifier: value) if value.present?
-      else
-        related_identifier = StashDatacite::RelatedIdentifier.create(resource_id: @resource.id, relation_type: relation_type,
-                                                                     related_identifier_type: related_identifier_type,
-                                                                     related_identifier: value)
-      end
-      related_identifier
     end
 
     def manage_pubmed_datum(identifier:, doi:)

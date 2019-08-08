@@ -265,8 +265,9 @@ module Stash
       def populate_supplement_to
         return unless @sm['URL'].present? || @sm['DOI'].present?
         # Use the URL if available otherwise just use the DOI
-        @resource.related_identifiers.new(related_identifier: @sm['URL'] || @sm['DOI'], related_identifier_type: 'doi',
-                                          relation_type: 'issupplementto')
+        @resource.related_identifiers.find_or_initialize_by(related_identifier: @sm['URL'] || @sm['DOI'],
+                                                            related_identifier_type: 'doi',
+                                                            relation_type: 'issupplementto')
       end
 
       def populate_funders
@@ -274,11 +275,11 @@ module Stash
         @sm['funder'].each do |xr_funder|
           next if xr_funder['name'].blank?
           if xr_funder['award'].blank?
-            @resource.contributors.new(contributor_name: xr_funder['name'], contributor_type: 'funder')
+            @resource.contributors.find_or_initialize_by(contributor_name: xr_funder['name'], contributor_type: 'funder')
             next
           end
           xr_funder['award'].each do |xr_award|
-            @resource.contributors.new(contributor_name: xr_funder['name'], contributor_type: 'funder', award_number: xr_award)
+            @resource.contributors.find_or_initialize_by(contributor_name: xr_funder['name'], contributor_type: 'funder', award_number: xr_award)
           end
         end
       end
