@@ -53,6 +53,7 @@ module StashEngine
       allow(@resource).to receive(:tenant).and_return(@tenant)
       allow(@resource).to receive(:files_published?).and_return(true)
       allow(@resource).to receive(:authors).and_return([@author1, @author2])
+      allow(@resource).to receive(:identifier_value).and_return('10.1098/rstl.1665.0007')
 
       allow_any_instance_of(ActionView::Helpers::UrlHelper)
         .to receive(:url_for)
