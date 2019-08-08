@@ -9,10 +9,6 @@ module StashEngine
 
     attr_writer :resource
 
-    def log
-      Rails.logger
-    end
-
     def resource
       @resource ||= (resource_id = params[:id]) && Resource.find(resource_id)
     end
@@ -59,7 +55,7 @@ module StashEngine
       resource.fill_blank_author!
       redirect_to metadata_entry_pages_find_or_create_path(resource_id: resource.id)
     rescue StandardError => error
-      log.error("Unable to create new resource: #{to_backtrace(error)}")
+      logger.error("Unable to create new resource: #{to_backtrace(error)}")
       redirect_to dashboard_path, alert: 'Unable to register a DOI at this time. Please contact help@datadryad.org for assistance.'
     end
 
