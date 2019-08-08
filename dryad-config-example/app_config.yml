@@ -26,8 +26,9 @@ defaults: &DEFAULTS
   old_dryad_url: https://api.datadryad.org
   payments:
     service: stripe
-    key: <REPLACE-ME>
-    data_processing_charge: 12000 #charge in cents
+    key: replace-me
+    data_processing_charge: 12000 # charge in cents
+    large_file_size: 5.0e+10
   merritt_express_domain: dummy_domain.example.com
   merritt_max_submission_threads: 1
   crossref_base_url: https://api.crossref.org
