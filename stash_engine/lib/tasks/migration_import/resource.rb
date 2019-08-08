@@ -29,8 +29,8 @@ module MigrationImport
       add_contributors
       add_dcs_dates
       add_descriptions
-      # formats, languages and name identifiers (for contributors) not used in Dash, though ORCIDs for authors in author table
-      # TODO: adding locations later, complicated
+      # formats, languages and name identifiers (for contributors) not used in Dash, though ORCIDs for authors are in author table instead
+      add_geolocations
       add_publication_years
       add_publisher
       add_related_identifiers
@@ -235,6 +235,37 @@ module MigrationImport
           @ar_resource.subjects << existing_subjects.first
         end
       end
+    end
+
+    def add_geolocations
+      @hash[:geolocations].each do |json_geo|
+        geo_place = make_place(json_geo[:geolocation_place])
+        geo_point = make_point(json_geo[:geolocation_point])
+        geo_box = make_box(json_geo[:geolocaton_box])
+        next if geo_place.nil? && geo_point.nil? && geo_box.nil?
+        StashDatacite::Geolocation.create(resource_id: @ar_resource.id,
+                                          place_id: geo_place&.id,
+                                          point_id: geo_point&.id,
+                                          box_id: geo_box&.id)
+      end
+    end
+
+    def make_place(json_place)
+      return nil if json_place.nil?
+      my_hash = json_place.slice(*%w[geo_location_place created_at updated_at])
+      StashDatacite::GeolocationPlace.create(my_hash)
+    end
+
+    def make_point(json_point)
+      return nil if json_point.nil?
+      my_hash = json_point.slice(*%w[latitude longitude created_at updated_at])
+      StashDatacite::GeolocationPoint.create(my_hash)
+    end
+
+    def make_box(json_box)
+      return nil if json_box.nil?
+      my_hash = json_box.slice(*%w[sw_latitude ne_latitude sw_longitude ne_longitude created_at updated_at])
+      StashDatacite::GeolocationBox.create(my_hash)
     end
 
   end
