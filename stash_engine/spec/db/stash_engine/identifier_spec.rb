@@ -412,7 +412,7 @@ module StashEngine
           resource: @res3,
           file_state: 'created',
           upload_file_name: 'created.bin',
-          upload_file_size: 10_000
+          upload_file_size: 1.0e+14
         )
         expect(@identifier.large_files?).to eq(true)
       end
