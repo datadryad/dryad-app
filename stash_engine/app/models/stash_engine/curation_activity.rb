@@ -157,8 +157,7 @@ module StashEngine
     end
 
     def email_large_file_notice
-      message = "This item contains large files (#{filesize(resource.size)}) -- Please discuss the file size and associated fees with the submitter."
-      StashEngine::UserMailer.helpdesk_notice(resource, message).deliver_now
+      StashEngine::UserMailer.large_file_notice(resource).deliver_now
     end
 
     # Triggered on a status of :published

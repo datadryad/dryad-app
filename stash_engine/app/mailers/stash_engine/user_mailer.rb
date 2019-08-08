@@ -49,6 +49,16 @@ module StashEngine
            subject: "#{rails_env} dependency offline: #{dependency.name}")
     end
 
+    def large_file_notice(resource)
+      warn('Unable to send helpdesk notice; nil resource') unless resource.present?
+      return unless resource.present?
+      assign_variables(resource)
+      @message = message
+      mail(to: @helpdesk_email,
+           bcc: @bcc_emails,
+           subject: "#{rails_env} Large files in \"#{@resource.title}\" (doi:#{@resource.identifier_value})")
+    end
+
     def helpdesk_notice(resource, message)
       warn('Unable to send helpdesk notice; nil resource') unless resource.present?
       return unless resource.present?
