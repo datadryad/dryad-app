@@ -5,8 +5,7 @@ require 'stash/payments/invoicer'
 module StashEngine
 
   class CurationActivity < ActiveRecord::Base
-    
-    include StashEngine::ApplicationHelper
+
     include StashEngine::Concerns::StringEnum
 
     # Associations
