@@ -3,7 +3,9 @@ require 'stash/payments/invoicer'
 
 # rubocop:disable Metrics/ClassLength
 module StashEngine
+
   class CurationActivity < ActiveRecord::Base
+    
     include StashEngine::ApplicationHelper
     include StashEngine::Concerns::StringEnum
 
