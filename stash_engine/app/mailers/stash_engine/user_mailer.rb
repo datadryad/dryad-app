@@ -37,7 +37,7 @@ module StashEngine
       assign_variables(resource)
       @backtrace = to_backtrace(error)
       mail(to: @submission_error_emails, bcc: @bcc_emails,
-           subject: "#{rails_env} Submitting dataset \"#{@title}\" (doi:#{@identifier_value}) failed")
+           subject: "#{rails_env} Submitting dataset \"#{@resource.title}\" (doi:#{@resource.identifier_value}) failed")
     end
 
     def dependency_offline(dependency)
@@ -47,6 +47,26 @@ module StashEngine
       @submission_error_emails = APP_CONFIG['submission_error_email'] || [@helpdesk_email]
       mail(to: @submission_error_emails, bcc: @bcc_emails,
            subject: "#{rails_env} dependency offline: #{dependency.name}")
+    end
+
+    def large_file_notice(resource)
+      warn('Unable to send helpdesk notice; nil resource') unless resource.present?
+      return unless resource.present?
+      assign_variables(resource)
+      @message = message
+      mail(to: @helpdesk_email,
+           bcc: @bcc_emails,
+           subject: "#{rails_env} Large files in \"#{@resource.title}\" (doi:#{@resource.identifier_value})")
+    end
+
+    def helpdesk_notice(resource, message)
+      warn('Unable to send helpdesk notice; nil resource') unless resource.present?
+      return unless resource.present?
+      assign_variables(resource)
+      @message = message
+      mail(to: @helpdesk_email,
+           bcc: @bcc_emails,
+           subject: "#{rails_env} Need assistance: \"#{@resource.title}\" (doi:#{@resource.identifier_value})")
     end
 
     private
