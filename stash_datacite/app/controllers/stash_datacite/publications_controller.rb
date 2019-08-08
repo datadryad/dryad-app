@@ -7,7 +7,6 @@ require 'stash/link_out/pubmed_service'
 require 'cgi'
 
 module StashDatacite
-  # rubocop:disable Metrics/ClassLength
   class PublicationsController < ApplicationController
     # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity
     def update
@@ -78,8 +77,8 @@ module StashDatacite
       if datum.present?
         datum.destroy unless value.present?
         datum.update(value: value) if value.present?
-      else
-        datum = StashEngine::InternalDatum.create(stash_identifier: identifier, data_type: data_type, value: value) if value.present?
+      elsif value.present?
+        datum = StashEngine::InternalDatum.create(stash_identifier: identifier, data_type: data_type, value: value)
       end
       datum
     end
@@ -120,5 +119,4 @@ module StashDatacite
     end
 
   end
-  # rubocop:enable Metrics/ClassLength
 end
