@@ -244,6 +244,11 @@ module StashEngine
       latest_resource&.authors&.first&.affiliation
     end
 
+    def large_files?
+      return if latest_resource.nil?
+      latest_resource.size > APP_CONFIG.payments['large_file_size']
+    end
+
     private
 
     def abstracts

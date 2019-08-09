@@ -121,7 +121,7 @@ module StashEngine
           @id_value[@target_prefix.strip.length..-1].strip
         else
           # they must've given it as a bare id if it didn't have the prefix (and isn't a URL)
-          @id_value.strip
+          @id_value&.strip
         end
       end
 

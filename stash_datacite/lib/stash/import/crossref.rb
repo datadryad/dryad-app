@@ -75,10 +75,9 @@ module Stash
         return unless @sm.present? && @resource.present?
         populate_abstract
         populate_authors
-        populate_cited_by
+        populate_supplement_to
         populate_funders
         populate_publication_date
-        populate_publication_doi
         populate_publication_issn
         populate_publication_name
         populate_title
@@ -95,6 +94,7 @@ module Stash
         params = {
           identifier_id: @resource.identifier.id,
           approved: false,
+          rejected: false,
           authors: @sm['author'].to_json,
           provenance: 'crossref',
           publication_date: date_parts_to_date(publication_date),
@@ -197,24 +197,34 @@ module Stash
         # rubocop:enable Metrics/PerceivedComplexity
       end
 
+      # rubocop:disable Metrics/CyclomaticComplexity
       def resource_will_change?(proposed_change:)
         if proposed_change.authors.present?
-          auths = JSON.parse(proposed_change.authors).map do |auth|
-            StashEngine::Author.new(resource_id: @resource.id, author_orcid: auth['ORCID'],
-                                    author_first_name: auth['given'], author_last_name: auth['family'])
+          json = JSON.parse(proposed_change.authors)
+          if json.is_a?(Array) && json.any?
+            auths = json.map do |auth|
+              StashEngine::Author.new(resource_id: @resource.id, author_orcid: auth['ORCID'],
+                                      author_first_name: auth['given'], author_last_name: auth['family'])
+            end
           end
         end
 
         proposed_change.publication_date != @resource.publication_date ||
           internal_datum_will_change?(proposed_change: proposed_change) ||
+          related_identifier_will_change?(proposed_change: proposed_change) ||
           (proposed_change.authors.present? && (auths & @resource.authors).any?)
       end
+      # rubocop:enable Metrics/CyclomaticComplexity
 
       def internal_datum_will_change?(proposed_change:)
         internal_data = @resource.identifier.internal_data
         proposed_change.publication_name != internal_data.select { |d| d.data_type == 'publicationName' }.first&.value ||
-          proposed_change.publication_name != internal_data.select { |d| d.data_type == 'publicationISSN' }.first&.value ||
-          proposed_change.publication_name != internal_data.select { |d| d.data_type == 'publicationDOI' }.first&.value
+          proposed_change.publication_name != internal_data.select { |d| d.data_type == 'publicationISSN' }.first&.value
+      end
+
+      def related_identifier_will_change?(proposed_change:)
+        related_identifier = @resource.related_identifiers.where(related_identifier_type: 'doi', relation_type: 'issupplementto').first
+        proposed_change.publication_doi != related_identifier&.related_identifier
       end
 
       def populate_abstract
@@ -252,9 +262,12 @@ module Stash
         end
       end
 
-      def populate_cited_by
-        return unless @sm['URL'].present?
-        @resource.related_identifiers.new(related_identifier: @sm['URL'], related_identifier_type: 'doi', relation_type: 'iscitedby')
+      def populate_supplement_to
+        return unless @sm['URL'].present? || @sm['DOI'].present?
+        # Use the URL if available otherwise just use the DOI
+        @resource.related_identifiers.find_or_initialize_by(related_identifier: @sm['URL'] || @sm['DOI'],
+                                                            related_identifier_type: 'doi',
+                                                            relation_type: 'issupplementto')
       end
 
       def populate_funders
@@ -262,11 +275,11 @@ module Stash
         @sm['funder'].each do |xr_funder|
           next if xr_funder['name'].blank?
           if xr_funder['award'].blank?
-            @resource.contributors.new(contributor_name: xr_funder['name'], contributor_type: 'funder')
+            @resource.contributors.find_or_initialize_by(contributor_name: xr_funder['name'], contributor_type: 'funder')
             next
           end
           xr_funder['award'].each do |xr_award|
-            @resource.contributors.new(contributor_name: xr_funder['name'], contributor_type: 'funder', award_number: xr_award)
+            @resource.contributors.find_or_initialize_by(contributor_name: xr_funder['name'], contributor_type: 'funder', award_number: xr_award)
           end
         end
       end
@@ -274,13 +287,6 @@ module Stash
       def populate_publication_date
         return unless publication_date.present?
         @resource.publication_date = date_parts_to_date(publication_date)
-      end
-
-      def populate_publication_doi
-        return unless @sm['DOI'].present?
-        datum = StashEngine::InternalDatum.find_or_initialize_by(identifier_id: @resource.identifier.id,
-                                                                 data_type: 'publicationDOI')
-        datum.update(value: @sm['DOI'])
       end
 
       def populate_publication_issn

@@ -62,6 +62,16 @@ module StashEngine
     after_create :email_author,
                  if: proc { |ca| %w[published embargoed].include?(ca.status) && latest_curation_status_changed? && !resource.skip_emails }
 
+    # Email the helpdesk when submitted and there are large files that the user must pay for
+    after_create :email_large_file_notice,
+                 if: proc { |ca|
+                       ca.submitted? &&
+                            latest_curation_status_changed? &&
+                            !resource.skip_emails &&
+                            resource.identifier.large_files? &&
+                            resource.identifier.user_must_pay?
+                     }
+
     # Email invitations to register ORCIDs to authors when published
     after_create :email_orcid_invitations,
                  if: proc { |ca| ca.published? && latest_curation_status_changed? && !resource.skip_emails }
@@ -144,6 +154,10 @@ module StashEngine
     # Triggered on a status of :published or :embargoed
     def email_author
       StashEngine::UserMailer.status_change(resource, status).deliver_now
+    end
+
+    def email_large_file_notice
+      StashEngine::UserMailer.large_file_notice(resource).deliver_now
     end
 
     # Triggered on a status of :published
