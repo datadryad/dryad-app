@@ -19,10 +19,6 @@ module StashEngine
         it 'returns false if hold_for_peer_review flag is not set and there is no publication defined' do
           expect(resource.send(:requires_peer_review?)).to eql(false)
         end
-        it 'returns true if hold_for_peer_review flag is not set but there is a publication defined' do
-          resource.identifier.internal_data << create(:internal_datum, data_type: 'publicationDOI')
-          expect(resource.send(:requires_peer_review?)).to eql(true)
-        end
 
       end
 
