@@ -52,9 +52,14 @@ module Stash
         @user = create(:user)
         @identifier = create(:identifier)
         @internal_data = create(:internal_data, identifier_id: @identifier.id)
+        create(:internal_data, identifier_id: @identifier.id, data_type: 'manuscriptNumber', value: 'manuscript123')
+        create(:internal_data, identifier_id: @identifier.id, data_type: 'pubmedID', value: 'pubmed123')
+        create(:internal_data, identifier_id: @identifier.id, data_type: 'mismatchedDOI', value: 'doi987')
         @resource = create(:resource, identifier_id: @identifier.id, user_id: @user.id)
         @resource_state = create(:resource_state, resource_id: @resource.id)
         @resource.update(current_resource_state_id: @resource_state.id)
+        create(:related_identifier, resource_id: @resource.id, related_identifier_type: 'doi', relation_type: 'issupplementto',
+                                    related_identifier: 'doi123')
         @version = create(:version, resource_id: @resource.id)
         @affil1 = create(:affiliation, long_name: 'Lafayette Tech')
         @affil2 = create(:affiliation, long_name: 'Orinda Tech')
@@ -286,7 +291,7 @@ module Stash
             dc_publisher_s: 'Dryad',
             dct_temporal_sm: ['2018-11-14'],
             dryad_related_publication_name_s: 'Journal of Testing Fun',
-            dryad_related_publication_id_s: ''
+            dryad_related_publication_id_s: 'manuscript123 pubmed123 doi123'
           }
           expect(mega_hash).to eql(expected_mega_hash)
         end

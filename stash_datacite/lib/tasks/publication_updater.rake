@@ -22,14 +22,14 @@ namespace :publication_updater do
       next if resource.curation_activities.where('stash_engine_curation_activities.note LIKE ?',
                                                  "%#{StashEngine::ProposedChange::CROSSREF_UPDATE_MESSAGE}").any?
 
-      doi = resource.identifier.internal_data.where(data_type: 'publicationDOI').first
+      doi = resource.related_identifiers.where(relation_type: 'issupplementto', related_identifier_type: 'doi').first
 
       begin
-        cr = Stash::Import::Crossref.query_by_doi(resource: resource, doi: doi.value) if doi.present?
+        cr = Stash::Import::Crossref.query_by_doi(resource: resource, doi: doi.related_identifier) if doi.present?
         cr = Stash::Import::Crossref.query_by_author_title(resource: resource) unless cr.present?
       rescue URI::InvalidURIError => iue
         # If the URI is invalid, just skip to the next record
-        p "ERROR querying Crossref for '#{doi.value}' : #{iue.message}"
+        p "ERROR querying Crossref for publication DOI: '#{doi&.related_identifier}' for identifier: '#{resource.identifier}' : #{iue.message}"
         next
       end
 
