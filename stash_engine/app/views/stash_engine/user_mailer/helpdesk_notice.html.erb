@@ -1,0 +1,10 @@
+<p>Assistance is requested with dataset &ldquo;<%= @resource.title %>&rdquo;
+  (<%= link_to(@resource.identifier_uri, @resource.identifier_uri)%>)
+  for user <%= link_to(@resource.user.name, "mailto:#{@resource.user.email }") %>. The details are below.
+</p>
+
+<hr/>
+
+<pre>
+<%= @message %>
+</pre>

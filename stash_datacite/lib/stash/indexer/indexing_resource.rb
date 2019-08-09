@@ -217,8 +217,9 @@ module Stash
       end
 
       def related_publication_id
-        @resource.identifier.internal_data
-          .where(data_type: %w[manuscriptNumber publicationDOI pubmedID])&.map(&:value)&.join(' ')
+        ids = @resource.identifier.internal_data.where(data_type: %w[manuscriptNumber pubmedID])&.map(&:value)&.join(' ')
+        pub_doi = @resource.related_identifiers.where(related_identifier_type: 'doi', relation_type: 'issupplementto').first
+        (pub_doi.present? ? "#{ids} #{pub_doi.related_identifier}" : ids)
       end
 
       private

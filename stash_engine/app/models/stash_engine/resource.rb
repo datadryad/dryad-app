@@ -620,14 +620,8 @@ module StashEngine
     # -----------------------------------------------------------
     # Determines whether the resource needs to go through a peer review
     def requires_peer_review?
-      # return false if this is NOT the first version
-      return false if identifier.blank? || identifier.resources.length > 1
-
-      # TODO: @ryscher, we need to first use the `hold_for_peer_review` flag since it is set by
-      #       the user when submitting their dataset. If the flag has not been set by the user then
-      #       we need to swap out this `internal_data` check with a call to the old Dryad service
-      #       that correctly indicates whether the associated journal should enter peer_review status
-      hold_for_peer_review? || identifier&.internal_data&.where(data_type: %w[publicationISSN publicationDOI manuscriptNumber])&.any?
+      # If this is the first version and the user opted to hold for peer review
+      identifier.present? && identifier.resources.length == 1 && hold_for_peer_review?
     end
 
   end
