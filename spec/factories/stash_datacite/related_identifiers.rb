@@ -14,7 +14,7 @@ FactoryBot.define do
     end
 
     trait :publication_doi do
-      related_identifier      { Faker::Pid.doi || Faker::Number.number(8) }
+      related_identifier      { Faker::Pid.doi }
       related_identifier_type { 'doi' }
       relation_type           { 'issupplementto' }
     end
