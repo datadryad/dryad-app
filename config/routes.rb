@@ -90,6 +90,19 @@ Rails.application.routes.draw do
   get 'widgets/bannerForPub' => 'stash_engine/widgets#banner_for_pub'
   get 'widgets/dataPackageForPub' => 'stash_engine/widgets#data_package_for_pub'
 
+  # Routing to redirect old Dryad URLs to their correct locations in this system
+  get '/pages/dryadlab', to: redirect('http://wiki.datadryad.org/Category:DryadLab')
+  get '/pages/faq', to: redirect('stash/faq')
+  get '/pages/jdap', to: redirect('http://wiki.datadryad.org/Joint_Data_Archiving_Policy_(JDAP)')
+  get '/pages/membershipOverview', to: redirect('stash/our_community')
+  get '/pages/organization', to: redirect('stash/our_mission')
+  get '/pages/policies', to: redirect('stash/terms')
+  get '/pages/publicationBlackout', to: redirect('stash/submission_process#citation')
+  get '/pages/searching', to: redirect('search')
+  get '/themes/Dryad/images/:image', to: redirect('/images/%{image}')
+  get '/themes/Dryad/images/dryadLogo.png', to: redirect('/images/logo_dryad.png')
+  get '/themes/Mirage/docs/:doc', to: redirect('/docs/%{doc}.%{format}')
+
   # Routing to redirect old Dryad landing pages to the correct location
   # Dataset:            https://datadryad.org/resource/doi:10.5061/dryad.kq201
   # Version of Dataset: https://datadryad.org/resource/doi:10.5061/dryad.kq201.2
@@ -105,18 +118,5 @@ Rails.application.routes.draw do
     doi_prefix: /[^\/]+/,
     doi_suffix: /[a-zA-Z0-9]+\.[a-zA-Z0-9]+/,
     to: redirect{ |p, req| "stash/dataset/#{p[:doi_prefix]}/#{p[:doi_suffix]}?latest=true" }
-
-  # Routing to redirect old Dryad URLs to their correct locations in this system
-  get '/pages/dryadlab', to: redirect('http://wiki.datadryad.org/Category:DryadLab')
-  get '/pages/faq', to: redirect('stash/faq')
-  get '/pages/jdap', to: redirect('http://wiki.datadryad.org/Joint_Data_Archiving_Policy_(JDAP)')
-  get '/pages/membershipOverview', to: redirect('stash/our_community')
-  get '/pages/organization', to: redirect('stash/our_mission')
-  get '/pages/policies', to: redirect('stash/terms')
-  get '/pages/publicationBlackout', to: redirect('stash/submission_process#citation')
-  get '/pages/searching', to: redirect('search')
-  get '/themes/Dryad/images/:image', to: redirect('/images/%{image}')
-  get '/themes/Dryad/images/dryadLogo.png', to: redirect('/images/logo_dryad.png')
-  get '/themes/Mirage/docs/:doc', to: redirect('/docs/%{doc}.%{format}')
 
 end
