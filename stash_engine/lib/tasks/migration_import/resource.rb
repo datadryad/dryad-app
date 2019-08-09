@@ -281,14 +281,19 @@ module MigrationImport
     end
 
     def make_affil_with_ror(name:)
-      ror_affil = Stash::Organization::Ror.find_first_by_ror_name(name)
-      return nil if ror_affil.nil?
-      if name.downcase == ror_affil[:name].downcase.strip
-        # just write the ror name as the name in long name
-        StashDatacite::Affiliation.create(long_name: ror_affil[:name].strip, ror_id: ror_affil[:id] )
-      else
-        # write ror name into the short name so we can compare and fix since short name isn't normally used
-        StashDatacite::Affiliation.create(short_name: ror_affil[:name].strip, long_name: name, ror_id: ror_affil[:id] )
+      begin
+        ror_affil = Stash::Organization::Ror.find_first_by_ror_name(name)
+        return nil if ror_affil.nil?
+        if name.downcase == ror_affil[:name].downcase.strip
+          # just write the ror name as the name in long name
+          StashDatacite::Affiliation.create(long_name: ror_affil[:name].strip, ror_id: ror_affil[:id] )
+        else
+          # write ror name into the short name so we can compare and fix since short name isn't normally used
+          StashDatacite::Affiliation.create(short_name: ror_affil[:name].strip, long_name: name, ror_id: ror_affil[:id] )
+        end
+      rescue Exception
+        # Ror pooped, ignore and the ROR module doesn't give a specific class of error so catching exception
+        return nil
       end
     end
 
