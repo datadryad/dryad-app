@@ -70,18 +70,18 @@ RSpec.feature 'CurationActivity', type: :feature do
         mock_ror!
         create(:resource, user: create(:user, tenant_id: 'ucop'), identifier: create(:identifier))
         sign_in(create(:user, role: 'admin', tenant_id: 'ucop'))
+        visit "#{dashboard_path}?curation_status=in_progress"
+        # find('#curation_status').select('In Progress')
       end
 
       it 'do not have any "edit" pencil icons' do
-        visit dashboard_path
-        within(:css, '.c-lined-table__row') do
+        within(:css, '.c-lined-table__row', wait: 10) do
           expect(all('.fa-pencil').length).to eql(0)
         end
       end
 
       it 'have a "history" clock icon to view the activity log' do
-        visit dashboard_path
-        within(:css, '.c-lined-table__row') do
+        within(:css, '.c-lined-table__row', wait: 10) do
           expect(all('.fa-clock-o').length).to eql(1)
         end
       end
