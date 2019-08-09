@@ -19,7 +19,7 @@ module MigrationImport
         @resource_obj.import
       end
       add_orcid_invitations
-      @ar_identifier.update_column(:latest_resource_id, @ar_identifier&.latest_resource&.id)
+      @ar_identifier.update_column(:latest_resource_id, @ar_identifier&.resources&.last&.id)
       @ar_identifier.update_search_words!
     end
 
