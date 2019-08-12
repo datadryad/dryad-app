@@ -32,7 +32,7 @@ module StashEngine
 
       def extract_last_log_date(log)
         contents = File.open(log).to_a
-        last_run_date = Time.parse(line.match(DATE_TIME_MATCHER).to_s) unless contents.empty?
+        last_run_date = Time.parse(contents.last.match(DATE_TIME_MATCHER).to_s) unless contents.empty?
         last_run_date
       end
 
