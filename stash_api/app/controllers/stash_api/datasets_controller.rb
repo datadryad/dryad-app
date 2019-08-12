@@ -50,12 +50,18 @@ module StashApi
       # We probably want to think about the query interface before we do full blown filtering and be sure it is thought out
       # and we are ready to support whatever we decide.
 
-      # if a publicationISSN is specified, we want to make sure that we're only working those specified.
+      # if a publicationISSN or manuscriptNumber is specified,
+      # we want to make sure that we're only working those specified.
       if params.key?('publicationISSN')
         # add these conditions to narrow to publicationISSN
         ds_query = ds_query
           .joins('INNER JOIN stash_engine_internal_data ON stash_engine_identifiers.id = stash_engine_internal_data.identifier_id')
           .where("stash_engine_internal_data.data_type = 'publicationISSN' AND stash_engine_internal_data.value = ?", params['publicationISSN'])
+      elsif params.key?('manuscriptNumber')
+        # add these conditions to narrow to manuscriptNumber
+        ds_query = ds_query
+          .joins('INNER JOIN stash_engine_internal_data ON stash_engine_identifiers.id = stash_engine_internal_data.identifier_id')
+          .where("stash_engine_internal_data.data_type = 'manuscriptNumber' AND stash_engine_internal_data.value = ?", params['manuscriptNumber'])
       end
 
       # now, if a curationStatus is specified, narrow down the previous result more.
