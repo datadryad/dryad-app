@@ -1,4 +1,6 @@
-<h1>Best practices for creating reusable data publications</h1>
+<h1>FAIR Data</h1>
+
+<h2>Best practices for creating reusable data publications</h2>
 
 <p>So, you want to share your research data in Dryad, but are unsure where to start or what you 'should' share? Don't worry, it's not always clear how to craft a dataset with reusability in mind.</p>
 
