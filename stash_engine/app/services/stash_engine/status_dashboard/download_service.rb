@@ -18,7 +18,8 @@ module StashEngine
         client = Stash::Repo::HttpClient.new(tenant: resource.tenant, cert_file: APP_CONFIG.ssl_cert_file).client
         resp = client.head(resource.download_uri, follow_redirect: true)
         online = resp.code == 200
-        msg = resp.body unless online
+        msg = "Merritt Download service is reporting an HTTP #{resp.code}!" unless online
+        msg += resp.body if !online && resp.body.present?
         record_status(online: online, message: msg)
         online
       rescue StandardError => e
