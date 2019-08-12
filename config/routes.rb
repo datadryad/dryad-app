@@ -109,7 +109,7 @@ Rails.application.routes.draw do
   get '/resource/:doi_prefix/:doi_suffix',
     doi_prefix: /[^\/]+/,
     doi_suffix: /[a-zA-Z0-9]+\.[a-zA-Z0-9]+/,
-    to: redirect{ |p, req| "stash/dataset/#{p[:doi_prefix]}/#{p[:doi_suffix]}?latest=true" }
+    to: redirect{ |p, req| "stash/dataset/#{p[:doi_prefix]}/#{p[:doi_suffix]}" }
   # File within a Dataset:            https://datadryad.org/resource/doi:10.5061/dryad.kq201/3
   # Version of File within a Dataset: https://datadryad.org/resource/doi:10.5061/dryad.kq201/3.1
   # File within a Version:            https://datadryad.org/resource/doi:10.5061/dryad.kq201.2/3
@@ -117,6 +117,6 @@ Rails.application.routes.draw do
   get '/resource/:doi_prefix/:doi_suffix*file',
     doi_prefix: /[^\/]+/,
     doi_suffix: /[a-zA-Z0-9]+\.[a-zA-Z0-9]+/,
-    to: redirect{ |p, req| "stash/dataset/#{p[:doi_prefix]}/#{p[:doi_suffix]}?latest=true" }
+    to: redirect{ |p, req| "stash/dataset/#{p[:doi_prefix]}/#{p[:doi_suffix]}" }
 
 end
