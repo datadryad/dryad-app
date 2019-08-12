@@ -162,7 +162,7 @@ module StashEngine
     def add_filters(query_obj:)
       # If no filters have been specified then auto filter by the following curation states to reduce the number
       # of records
-      if params[:tenant].blank? && params[:curation_status].blank? && params[:publication_name].blank?
+      if params[:tenant].blank? && params[:curation_status].blank? && params[:publication_name].blank? && params[:q].blank?
         query_obj = query_obj.where(stash_engine_curation_activities: { status: %w[curation submitted action_required] })
       end
 
