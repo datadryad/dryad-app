@@ -20,6 +20,7 @@ module MigrationImport
         @ar_resource.update(identifier_id: ar_identifier.id)
       end
       @ar_identifier = ar_identifier
+      @ar_resource.update(identifier_id: @ar_identifier.id)
     end
 
     # rubocop:disable Metrics/MethodLength
