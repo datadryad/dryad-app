@@ -1,3 +1,5 @@
+require 'stash/doi/id_gen'
+
 module MigrationImport
   class Resource
 
@@ -6,13 +8,22 @@ module MigrationImport
 
     def initialize(hash:, ar_identifier:)
       @hash = hash.with_indifferent_access
+
+      disable_callback_methods
+      create_base_resource
+
+      if ar_identifier.nil?
+        my_id = Stash::Doi::IdGen.mint_id(resource: @ar_resource)
+        id_type, id_text = my_id.split(':', 2)
+        ar_identifier = StashEngine::Identifier.create(identifier: id_text, identifier_type: id_type.upcase)
+        @ar_resource.update(identifier_id: ar_identifier.id)
+      end
       @ar_identifier = ar_identifier
     end
 
 
     def import
       disable_callback_methods
-      create_base_resource
 
       # a bunch of stash_engine things attached to the resource
       add_authors
@@ -45,7 +56,7 @@ module MigrationImport
       @ar_user_id = User.new(hash: hash[:user]).user_id
       save_hash = @hash.slice(*%w[created_at updated_at has_geolocation download_uri update_uri title publication_date
           accepted_agreement tenant_id])
-      save_hash.merge!(identifier_id: @ar_identifier.id, skip_datacite_update: true, skip_emails: true, user_id: @ar_user_id,
+      save_hash.merge!(identifier_id: @ar_identifier&.id, skip_datacite_update: true, skip_emails: true, user_id: @ar_user_id,
                        current_editor_id: @ar_user_id)
       save_hash.merge!(embargo_fields)
       @ar_resource = StashEngine::Resource.create(save_hash)
@@ -192,6 +203,7 @@ module MigrationImport
     end
 
     def add_publisher
+      return if @hash[:publisher].nil?
       my_hash = @hash[:publisher].slice(*%w[publisher created_at updated_at]).merge(resource_id: @ar_resource.id)
       StashDatacite::Publisher.create(my_hash)
     end
@@ -205,6 +217,7 @@ module MigrationImport
     end
 
     def add_resource_type
+      return if @hash[:resource_type].nil?
       my_hash = @hash[:resource_type].slice(*%w[resource_type_general resource_type created_at updated_at]).merge(resource_id: @ar_resource.id)
       StashDatacite::ResourceType.create(my_hash)
     end

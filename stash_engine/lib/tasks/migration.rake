@@ -29,6 +29,7 @@ namespace :dryad_migration do
   desc 'Read in array of identifiers to db'
   task read_identifiers: :environment do
     # see https://stackoverflow.com/questions/27913457/ruby-on-rails-specify-environment-in-rake-task
+    # TODO: get rid of this database cleaner when we run real migration
     ActiveRecord::Base.establish_connection('test') # we only want to test against the local test db right now
     DatabaseCleaner.strategy = :truncation
     DatabaseCleaner.clean
@@ -40,6 +41,26 @@ namespace :dryad_migration do
       puts "#{counter+1} of #{id_records.length}  #{id_record['identifier']}"
       id_importer = MigrationImport::Identifier.new(hash: id_record)
       id_importer.import
+    end
+
+  end
+
+  desc 'Read in array of resources without identifiers to db'
+  task read_resources: :environment do
+    # see https://stackoverflow.com/questions/27913457/ruby-on-rails-specify-environment-in-rake-task
+    # TODO: get rid of this database cleaner when we run real migration
+
+    ActiveRecord::Base.establish_connection('test') # we only want to test against the local test db right now
+    DatabaseCleaner.strategy = :truncation
+    DatabaseCleaner.clean
+
+
+    resource_records = JSON.parse(File.read('/Users/sfisher/workspace/direct-to-old-dash2/dashv2/resources.json'))
+
+    resource_records.each_with_index do |res_record, counter|
+      puts "#{counter+1} of #{resource_records.length}  #{res_record['title']}"
+      res_importer = MigrationImport::Resource.new(hash: res_record, ar_identifier: nil)
+      res_importer.import
     end
 
   end
