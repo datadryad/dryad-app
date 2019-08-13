@@ -2,16 +2,14 @@ require 'pp'
 require 'byebug'
 require_relative 'migration_import'
 require 'database_cleaner'
-
-# rubocop:disable Metrics/BlockLength
 namespace :dryad_migration do
   desc 'Test reading single item'
   task test: :environment do
     # see https://stackoverflow.com/questions/27913457/ruby-on-rails-specify-environment-in-rake-task
-    ActiveRecord::Base.establish_connection('test') # we only want to test against the local test db right now
+    # ActiveRecord::Base.establish_connection('test') # we only want to test against the local test db right now
 
-    DatabaseCleaner.strategy = :truncation
-    DatabaseCleaner.clean
+    # DatabaseCleaner.strategy = :truncation
+    # DatabaseCleaner.clean
 
     record_hash = JSON.parse(File.read(StashEngine::Engine.root.join('spec', 'data', 'migration_input.json')))
 
@@ -29,9 +27,9 @@ namespace :dryad_migration do
   task read_identifiers: :environment do
     # see https://stackoverflow.com/questions/27913457/ruby-on-rails-specify-environment-in-rake-task
     # TODO: get rid of this database cleaner when we run real migration
-    ActiveRecord::Base.establish_connection('test') # we only want to test against the local test db right now
-    DatabaseCleaner.strategy = :truncation
-    DatabaseCleaner.clean
+    # ActiveRecord::Base.establish_connection('test') # we only want to test against the local test db right now
+    # DatabaseCleaner.strategy = :truncation
+    # DatabaseCleaner.clean
 
     id_records = JSON.parse(File.read('/Users/sfisher/workspace/direct-to-old-dash2/dashv2/identifiers.json'))
 
@@ -48,9 +46,9 @@ namespace :dryad_migration do
     # see https://stackoverflow.com/questions/27913457/ruby-on-rails-specify-environment-in-rake-task
     # TODO: get rid of this database cleaner when we run real migration
 
-    ActiveRecord::Base.establish_connection('test') # we only want to test against the local test db right now
-    DatabaseCleaner.strategy = :truncation
-    DatabaseCleaner.clean
+    # ActiveRecord::Base.establish_connection('test') # we only want to test against the local test db right now
+    # DatabaseCleaner.strategy = :truncation
+    # DatabaseCleaner.clean
 
     resource_records = JSON.parse(File.read('/Users/sfisher/workspace/direct-to-old-dash2/dashv2/resources.json'))
 
@@ -63,4 +61,3 @@ namespace :dryad_migration do
   end
 
 end
-# rubocop:enable Metrics/BlockLength
