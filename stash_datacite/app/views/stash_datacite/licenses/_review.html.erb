@@ -49,13 +49,14 @@
 	    fee waiver, are at an institution that is a Dryad member, or are publishing an assiciated article with journal
 	    that is a Dryad member, please <a href="mailto:help@datadryad.org">contact us</a> for assistance with payment.
 	</p>
-
+	
 	<% if @resource.identifier.large_files? %>
-	    <div class="js-alert c-alert--error" role="alert">
-		<div class="c-alert__text">
-		    This submisison has large files (over <%= filesize(StashEngine.app.payments.large_file_size) %>). We will contact you regarding fees. 
-		</div>
-	    </div>
+	    <p>
+		This submisison contains large files. 
+		For data packages in excess of <%= filesize(StashEngine.app.payments.large_file_size) %>,
+		submitters will be charged $50 for each additional 10GB,
+		or part thereof. (Submissions between 50 and 60GB = $50, between 60 and 70GB = $100, and so on).
+	    </p>
 	<% end %>
 	
 	<span><%= check_box_tag 'agree_to_payment', 'yes', (@resource.version_number > 1), class: 't-review__agree-to-license js-agrees' %></span>
