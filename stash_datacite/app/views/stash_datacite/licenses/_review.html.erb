@@ -44,10 +44,8 @@
 	<p>
 	    Dryad charges a fee for data publication that covers curation and preservation of published datasets. Upon
 	    publication of your dataset, you will receive an invoice for
-	    &dollar;<%=  StashEngine.app.payments.data_processing_charge / 100 %> (or more if larger than
-	    <%= filesize(StashEngine.app.payments.large_file_size) %>). If you have a
-	    fee waiver, are at an institution that is a Dryad member, or are publishing an assiciated article with journal
-	    that is a Dryad member, please <a href="mailto:help@datadryad.org">contact us</a> for assistance with payment.
+	    &dollar;<%=  StashEngine.app.payments.data_processing_charge / 100 %>. If you have any questions,
+	    please <a href="mailto:help@datadryad.org">contact us</a>.
 	</p>
 	
 	<% if @resource.identifier.large_files? %>
