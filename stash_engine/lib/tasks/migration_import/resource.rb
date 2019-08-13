@@ -57,7 +57,7 @@ module MigrationImport
     def create_base_resource
       @ar_user_id = User.new(hash: hash[:user]).user_id
       save_hash = @hash.slice('created_at', 'updated_at', 'has_geolocation', 'download_uri', 'update_uri', 'title',
-                              'publication_date', 'accepted_agreement', 'tenant_id')
+                              'publication_date', 'accepted_agreement', 'tenant_id', 'old_resource_id')
       save_hash.merge!(identifier_id: @ar_identifier&.id, skip_datacite_update: true, skip_emails: true, user_id: @ar_user_id,
                        current_editor_id: @ar_user_id)
       save_hash.merge!(embargo_fields)
