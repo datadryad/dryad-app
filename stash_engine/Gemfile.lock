@@ -16,6 +16,7 @@ PATH
       cirneco (~> 0.9.27)
       ckeditor (~> 4.3.0)
       concurrent-ruby (~> 1.0)
+      database_cleaner
       datacite-mapping (~> 0.3)
       ezid-client (~> 1.5)
       filesize (~> 0.1.1)
