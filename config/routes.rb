@@ -99,8 +99,24 @@ Rails.application.routes.draw do
   get '/pages/policies', to: redirect('stash/terms')
   get '/pages/publicationBlackout', to: redirect('stash/submission_process#citation')
   get '/pages/searching', to: redirect('search')
-  get '/themes/Dryad/images/:', to: redirect('/images/%{image}')
+  get '/themes/Dryad/images/:image', to: redirect('/images/%{image}')
   get '/themes/Dryad/images/dryadLogo.png', to: redirect('/images/logo_dryad.png')
   get '/themes/Mirage/docs/:doc', to: redirect('/docs/%{doc}.%{format}')
+
+  # Routing to redirect old Dryad landing pages to the correct location
+  # Dataset:            https://datadryad.org/resource/doi:10.5061/dryad.kq201
+  # Version of Dataset: https://datadryad.org/resource/doi:10.5061/dryad.kq201.2
+  get '/resource/:doi_prefix/:doi_suffix',
+    doi_prefix: /[^\/]+/,
+    doi_suffix: /[a-zA-Z0-9]+\.[a-zA-Z0-9]+/,
+    to: redirect{ |p, req| "stash/dataset/#{p[:doi_prefix]}/#{p[:doi_suffix]}" }
+  # File within a Dataset:            https://datadryad.org/resource/doi:10.5061/dryad.kq201/3
+  # Version of File within a Dataset: https://datadryad.org/resource/doi:10.5061/dryad.kq201/3.1
+  # File within a Version:            https://datadryad.org/resource/doi:10.5061/dryad.kq201.2/3
+  # Version of File within a Version: https://datadryad.org/resource/doi:10.5061/dryad.kq201.2/3.1
+  get '/resource/:doi_prefix/:doi_suffix*file',
+    doi_prefix: /[^\/]+/,
+    doi_suffix: /[a-zA-Z0-9]+\.[a-zA-Z0-9]+/,
+    to: redirect{ |p, req| "stash/dataset/#{p[:doi_prefix]}/#{p[:doi_suffix]}" }
 
 end
