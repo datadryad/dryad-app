@@ -37,7 +37,7 @@ migration:
 
 production:
   <<: *defaults
-  update_base_url: https://dryadx2-prd.cdlib.org/stash/stash/dataset
+  update_base_url: https://datadryad.org/stash/dataset
   oai_base_url: http://uc3-mrtoai-prd.cdlib.org:37001/mrtoai/oai/v2
   sets:
     - cdl_dryad
