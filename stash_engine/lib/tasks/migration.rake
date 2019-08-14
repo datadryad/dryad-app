@@ -1,5 +1,4 @@
 require 'pp'
-require 'byebug'
 require_relative 'migration_import'
 require 'database_cleaner'
 namespace :dryad_migration do
