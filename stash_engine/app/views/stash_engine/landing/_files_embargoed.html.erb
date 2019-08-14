@@ -6,9 +6,11 @@
       and will be released on <%= formatted_date(@resource.publication_date) %>
     <% end -%>.
     <% auth = @resource.authors.first %>
-    <% if auth.present? %>
-      Please contact <a href="mailto:<%= auth.email %>"><%= auth.author_standard_name
+    <% if auth&.author_email&.present? %>
+      Please contact <a href="mailto:<%= auth.author_email %>"><%= auth.author_standard_name
       %></a> with any questions.
+    <% else %>
+      <!-- the author sucks and didn't give an email.  Maybe imported data? -->
     <% end %>
   </p>
   <p>Lists of files and downloads will become available to the public when released.</p>
