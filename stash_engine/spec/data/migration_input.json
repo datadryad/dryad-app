@@ -1,0 +1,858 @@
+{
+  "id": 327,
+  "identifier": "10.7272/Q6RX997G",
+  "identifier_type": "DOI",
+  "storage_size": 5168709,
+  "created_at": "2017-08-22T19:34:58.000Z",
+  "updated_at": "2017-09-12T22:06:42.000Z",
+  "resources": [
+    {
+      "created_at": "2017-08-21T17:55:41.000Z",
+      "updated_at": "2017-10-25T00:04:34.000Z",
+      "has_geolocation": true,
+      "download_uri": "http://merritt.cdlib.org/d/ark%3A%2Fb7272%2Fq6rx997g",
+      "update_uri": "http://uc3-mrtsword-prd.cdlib.org:39001/mrtsword/edit/ucsf_lib_datashare/doi%3A10.7272%2FQ6RX997G",
+      "title": "Gut Microbiota from Multiple Sclerosis patients triggers spontaneous autoimmune encephalomyelitis in mice --16S data--",
+      "publication_date": "2017-10-02T07:00:00.000Z",
+      "accepted_agreement": null,
+      "tenant_id": "ucop",
+      "user": {
+        "first_name": "Sergio",
+        "last_name": "Baranzini",
+        "email": "sebaran@cgl.ucsf.edu",
+        "uid": "087193@ucsf.edu",
+        "provider": "shibboleth",
+        "oauth_token": null,
+        "created_at": "2017-08-21T17:55:34.000Z",
+        "updated_at": "2019-03-14T18:12:12.000Z",
+        "tenant_id": "ucop",
+        "last_login": "2019-03-14T18:12:12.000Z",
+        "role": "user",
+        "orcid": "0000-0003-0067-194X",
+        "doorkeeper_applications": []
+      },
+      "current_resource_state": {
+        "resource_state": "submitted",
+        "created_at": "2017-08-21T17:55:41.000Z",
+        "updated_at": "2017-08-22T19:40:02.000Z",
+        "user": {
+          "first_name": "Sergio",
+          "last_name": "Baranzini",
+          "email": "sebaran@cgl.ucsf.edu",
+          "uid": "087193@ucsf.edu",
+          "provider": "shibboleth",
+          "oauth_token": null,
+          "created_at": "2017-08-21T17:55:34.000Z",
+          "updated_at": "2019-03-14T18:12:12.000Z",
+          "tenant_id": "ucop",
+          "last_login": "2019-03-14T18:12:12.000Z",
+          "role": "user",
+          "orcid": "0000-0003-0067-194X",
+          "doorkeeper_applications": []
+        }
+      },
+      "authors": [
+        {
+          "author_first_name": "Hartmut",
+          "author_last_name": "Wekerle",
+          "author_email": "hwekerle@neuro.mpg.de",
+          "author_orcid": null,
+          "created_at": "2017-08-21T17:55:41.000Z",
+          "updated_at": "2017-08-22T19:32:16.000Z",
+          "affiliations": [
+            {
+              "short_name": null,
+              "long_name": "Max Planck Institute of Neurobiology",
+              "abbreviation": null,
+              "created_at": "2017-08-21T18:01:06.000Z",
+              "updated_at": "2017-08-21T18:01:06.000Z"
+            }
+          ]
+        },
+        {
+          "author_first_name": "Sergio",
+          "author_last_name": "Baranzini",
+          "author_email": "sergio.baranzini@ucsf.edu",
+          "author_orcid": "0000-0003-0067-194X",
+          "created_at": "2017-08-22T19:33:12.000Z",
+          "updated_at": "2017-08-22T19:34:17.000Z",
+          "affiliations": [
+            {
+              "short_name": null,
+              "long_name": "University of California San Francisco",
+              "abbreviation": null,
+              "created_at": "2017-08-21T18:02:42.000Z",
+              "updated_at": "2017-08-21T18:02:42.000Z"
+            }
+          ]
+        }
+      ],
+      "edit_histories": [
+        {
+          "user_comment": null,
+          "created_at": "2017-08-22T19:34:57.000Z",
+          "updated_at": "2017-08-22T19:34:57.000Z"
+        }
+      ],
+      "embargo": {
+        "end_date": "2017-10-02T07:00:00.000Z",
+        "created_at": "2017-08-21T18:49:39.000Z",
+        "updated_at": "2017-08-22T19:34:54.000Z"
+      },
+      "file_uploads": [
+        {
+          "upload_file_name": "Max_Planck_Twin_metadata.txt",
+          "upload_content_type": "text/plain",
+          "upload_file_size": 4617,
+          "upload_updated_at": "2017-08-21T19:18:52.000Z",
+          "created_at": "2017-08-21T19:18:52.000Z",
+          "updated_at": "2017-08-21T19:18:52.000Z",
+          "temp_file_path": "/apps/dash2/apps/ui/releases/20170818001111/uploads/494/Max_Planck_Twin_metadata.txt",
+          "file_state": "created",
+          "url": null,
+          "status_code": null,
+          "timed_out": false,
+          "original_url": null,
+          "cloud_service": null
+        },
+        {
+          "upload_file_name": "Max_Planck_Twin_OTU_table.txt",
+          "upload_content_type": "text/plain",
+          "upload_file_size": 5092912,
+          "upload_updated_at": "2017-08-21T19:18:58.000Z",
+          "created_at": "2017-08-21T19:18:58.000Z",
+          "updated_at": "2017-08-21T19:18:58.000Z",
+          "temp_file_path": "/apps/dash2/apps/ui/releases/20170818001111/uploads/494/Max_Planck_Twin_OTU_table.txt",
+          "file_state": "created",
+          "url": null,
+          "status_code": null,
+          "timed_out": false,
+          "original_url": null,
+          "cloud_service": null
+        }
+      ],
+      "share": {
+        "secret_id": "5ATYuvmjECMr12HdycK9BJ4m5HibQuZsRGQwlBj_BBI",
+        "created_at": "2017-08-23T01:10:22.000Z",
+        "updated_at": "2017-08-23T01:10:22.000Z"
+      },
+      "submission_logs": [
+        {
+          "archive_response": "Success",
+          "created_at": "2017-08-22T19:35:08.000Z",
+          "updated_at": "2017-08-22T19:35:08.000Z",
+          "archive_submission_request": "Stash::Merritt::SubmissionJob for resource 494 (): posting new object to http://uc3-mrtsword-prd.cdlib.org:39001/mrtsword/collection/ucsf_lib_datashare (tenant: ucsf)"
+        }
+      ],
+      "version": {
+        "version": 1,
+        "zip_filename": "494_archive.zip",
+        "created_at": "2017-08-21T17:55:41.000Z",
+        "updated_at": "2017-08-22T19:35:08.000Z",
+        "merritt_version": 1
+      },
+      "contributors": [
+        {
+          "contributor_name": "Max-Planck-Gesellschaft",
+          "contributor_type": "funder",
+          "created_at": "2017-08-21T18:08:58.000Z",
+          "updated_at": "2017-08-21T18:09:04.000Z",
+          "award_number": "SFB TR-128",
+          "affiliations": [
+            {
+              "short_name": null,
+              "long_name": "Max Planck Institute of Neurobiology",
+              "abbreviation": null,
+              "created_at": "2017-08-21T18:01:06.000Z",
+              "updated_at": "2017-08-21T18:01:06.000Z"
+            }
+          ]
+        },
+        {
+          "contributor_name": "German Competence Network on Multiple Sclerosis",
+          "contributor_type": "funder",
+          "created_at": "2017-08-21T18:09:14.000Z",
+          "updated_at": "2017-08-21T18:09:14.000Z",
+          "award_number": "",
+          "affiliations": [ ]
+        },
+        {
+          "contributor_name": "Max Planck Society",
+          "contributor_type": "funder",
+          "created_at": "2017-08-21T18:09:35.000Z",
+          "updated_at": "2017-08-21T18:09:35.000Z",
+          "award_number": "",
+          "affiliations": [ ]
+        }
+      ],
+      "datacite_dates": [
+        {
+          "date": "2017-10-02T07:00:00Z",
+          "date_type": "available",
+          "created_at": "2017-08-22T19:34:57.000Z",
+          "updated_at": "2017-08-22T19:34:57.000Z"
+        }
+      ],
+      "descriptions": [
+        {
+          "description": "\u003cp\u003eThe commensal microbiota has emerged as a key factor influencing human health and has been associated with several diseases, including those of the central nervous system (CNS). To investigate the role of the microbiome in multiple sclerosis (MS), a complex autoimmune disorder shaped by a multitude of genetic and environmental factors, we recruited a cohort of 34 monozygotic twin pairs discordant for MS, and compared their gut microbial composition by 16S ribosomal RNA sequencing of stool samples. While no major differences in the microbial profiles between MS-affected twins and their healthy co-twins were detected, a significant increase in some taxa (including Akkermansia) was seen in affected untreated subjects. To search for possible functional differences, we used a transgenic mouse model, in which spontaneous anti-CNS autoimmunity is dependent on the commensal gut flora. Germ-free mice colonized with microbiota from MS-affected twins, developed the MS-like disease with a significantly higher incidence than mice colonized with healthy twin-derived microbiota. Although alpha diversity was reduced compared to human donors, the microbial profiles of the colonized mice showed high intraindividual, remarkable temporal stability and a high transfer rate,. Analysis of the transplanted mouse microbiome at the level of individual taxa revealed several differences, including a significantly reduced abundance of the potentially autoimmune-protective genus Sutterella in mice colonized with MS-twin-derived microbiota. These findings provide first evidence that MS-derived microbiota contain factors that precipitate an MS-like autoimmune disease in a transgenic mouse model. This model lends itself to identify protective and pathogenic microbial component in human MS. \u003c/p\u003e",
+          "description_type": "abstract",
+          "created_at": "2017-08-21T17:55:42.000Z",
+          "updated_at": "2017-10-25T00:04:34.000Z"
+        },
+        {
+          "description": "\u003cp\u003eStudy design. \u003c/p\u003e\u003cp\u003eMZ twins were recruited by launching a national televised appeal as well as internet notification in Germany with support from the German Multiple Sclerosis Society (DMSG). Inclusion criteria for study participation were met for MZ twins with an MS diagnosis according to the revised McDonald criteria or clinically isolated syndrome (CIS) in one twin only. Exclusion criteria were antibiotic, glucocorticosteroidal or immunosuppressive treatment, gastrointestinal infection or diet irregularities in the 3 months prior to study entry. In total, 34 pairs (see Table 1) visited the outpatient department at the Institute of Clinical Neuroimmunology in Munich for a detailed interview on past and present medical, family and social history, a neurological examination as well as a nutrition questionnaire. To confirm the MS diagnosis, medical records including MRI scans were obtained and reviewed. Fecal samples were either directly collected in hospital or taken at home, stored at -20°C and transferred to the hospital in cooling bags. Finally, all samples were stored at -80°C. Of all participants buccal swabs for zygosity testing were taken. The study was approved by the local Ethics Committee of the Ludwig-Maximilians University Munich and all participants gave written informed consent. \u003c/p\u003e\u003cp\u003e16S rRNA Sequencing and Analysis.\u003c/p\u003e\u003cp\u003eThe V3-V5 region of bacterial 16S rRNA gene was amplified using the universal forward (5’-CCGTCAATTCMTTTGAGTTT-3’) and reverse primer (5’-ACTCCTA CGGGAGGCAGCAG-3’) incorporating the FLX Titanium adapters and a unique barcode sequence. PCR products were sequenced on a 454 GS FLX titanium pyrosequencer (454 Life Sciences, Branford, CT, USA) at BGI-Shenzhen. Analysis was performed using QIIME v1.9 as described (1). Essentially, amplicon sequences were quality-filtered and grouped to operational taxonomic units (OTUs) using SortMeRNA method (2) using GreenGenes version 13.8 97% dataset for closed reference. Sequences that did not match reference sequences in the GreenGenes database were dropped from the analysis. Taxonomy was assigned to the retained OTUs based on the GreenGenes reference sequence and the GreenGenes tree was used for all downstream phylogenetic community comparisons. Samples were filtered to at least 10000 sequences per sample and OTUs were filtered to retain only OTUs present in at least 5% of samples, covering at least 0.01% of total reads. After filtering, human samples were rarefied to 10975 sequences, while mouse samples were rarefied to 8137 sequences per sample, which were the lowest number of sequences per sample, respectively. For comparison between human and mouse samples, the human and mouse datasets were combined before OTU filtering and rarefaction. The resulting OTUs were filtered as described above and samples were rarefied to 6200 sequences per sample. Alpha diversity was calculated using phylogenetic diversity index method (3). For analysis of beta diversity, pairwise distance matrices were generated by phylogenetic metric of weighted UniFrac (4) and used for PCoA. For comparison of individual taxa, samples were not rarefied. Instead, OTU abundances were normalized using variance-stabilizing transformation and taxa distributions were compared using the Wald negative binomial test from the R software package DESeq2 (as described in (4, 5) with Benjamini-Hochberg correction for multiple comparisons. All statistical analyses of differences between individual bacterial species were performed using QIIME v.1.9 or R (packages DESeq2 and phyloseq). \u003c/p\u003e",
+          "description_type": "methods",
+          "created_at": "2017-08-21T17:55:42.000Z",
+          "updated_at": "2017-10-25T00:04:34.000Z"
+        },
+        {
+          "description": "\u003cp\u003eTwo files are uploaded. The dataset contains both human and mice samples. \u003c/p\u003e\u003cp\u003eMax_Planck_Twin_metadata.txt: Contains the sample metadata\u003c/p\u003e\u003cp\u003eMax_Planck_Twin_OTU_table.txt: contains the normalized OTU abundances for each individual\u003c/p\u003e\u003cp\u003eOTU abundances were normalized using variance-stabilizing transformation and taxa distributions were compared using the Wald negative binomial test from the R software package DESeq2 (as described in (4, 5) with Benjamini-Hochberg correction for multiple comparisons.\u003c/p\u003e",
+          "description_type": "other",
+          "created_at": "2017-08-21T17:55:42.000Z",
+          "updated_at": "2017-10-25T00:04:34.000Z"
+        }
+      ],
+      "geolocations": [
+        {
+          "geolocation_place": {
+            "geo_location_place": "Germany",
+            "created_at": "2017-08-21T18:20:45.000Z",
+            "updated_at": "2017-08-21T18:20:45.000Z"
+          },
+          "geolocation_point": {
+            "latitude": "51.196755",
+            "longitude": "9.62743",
+            "created_at": "2017-08-21T18:20:45.000Z",
+            "updated_at": "2017-08-21T18:20:45.000Z"
+          },
+          "geolocaton_box": {
+            "sw_latitude": "47.270352",
+            "ne_latitude": "55.057375",
+            "sw_longitude": "5.866003",
+            "ne_longitude": "15.04149",
+            "created_at": "2017-08-21T18:20:45.000Z",
+            "updated_at": "2017-08-21T18:20:45.000Z"
+          }
+        },
+        {
+          "geolocation_place": {
+            "geo_location_place": "San Francisco, CA, USA",
+            "created_at": "2017-08-22T01:02:51.000Z",
+            "updated_at": "2017-08-22T01:02:51.000Z"
+          },
+          "geolocation_point": {
+            "latitude": "37.778008",
+            "longitude": "-122.431272",
+            "created_at": "2017-08-22T01:02:51.000Z",
+            "updated_at": "2017-08-22T01:02:51.000Z"
+          },
+          "geolocaton_box": {
+            "sw_latitude": "37.70808",
+            "ne_latitude": "37.83239",
+            "sw_longitude": "-122.51489",
+            "ne_longitude": "-122.35698",
+            "created_at": "2017-08-22T01:02:51.000Z",
+            "updated_at": "2017-08-22T01:02:51.000Z"
+          }
+        },
+        {
+          "geolocation_place": {
+            "geo_location_place": "New York, USA",
+            "created_at": "2017-08-22T01:03:15.000Z",
+            "updated_at": "2017-08-22T01:03:15.000Z"
+          },
+          "geolocation_point": {
+            "latitude": "43.00035",
+            "longitude": "-75.4999",
+            "created_at": "2017-08-22T01:03:15.000Z",
+            "updated_at": "2017-08-22T01:03:15.000Z"
+          },
+          "geolocaton_box": null
+        }
+      ],
+      "publication_years": [
+        {
+          "publication_year": "2017",
+          "created_at": "2017-08-22T19:34:58.000Z",
+          "updated_at": "2017-08-22T19:34:58.000Z"
+        }
+      ],
+      "publisher": {
+        "publisher": "UC San Francisco",
+        "created_at": "2017-08-21T17:55:42.000Z",
+        "updated_at": "2017-08-21T17:55:42.000Z"
+      },
+      "related_identifiers": [
+        {
+          "related_identifier": "10.1073/pnas.1711233114",
+          "related_identifier_type": "doi",
+          "relation_type": "iscitedby",
+          "related_metadata_scheme": null,
+          "scheme_URI": null,
+          "scheme_type": null,
+          "created_at": "2017-08-22T19:14:29.000Z",
+          "updated_at": "2017-08-22T19:14:29.000Z"
+        }
+      ],
+      "resource_type": {
+        "resource_type_general": "dataset",
+        "resource_type": "dataset",
+        "created_at": "2017-08-21T17:55:42.000Z",
+        "updated_at": "2017-08-21T17:55:42.000Z"
+      },
+      "rights": [
+        {
+          "rights": "Creative Commons Attribution 4.0 International (CC BY 4.0)",
+          "rights_uri": "https://creativecommons.org/licenses/by/4.0/",
+          "created_at": "2017-08-21T17:55:42.000Z",
+          "updated_at": "2017-08-21T17:55:42.000Z"
+        }
+      ],
+      "sizes": [{"size":"18421","created_at":"2016-11-16T23:49:25.000Z","updated_at":"2016-11-16T23:49:25.000Z"}],
+      "subjects": [
+        {
+          "subject": "gut microbiota",
+          "subject_scheme": null,
+          "scheme_URI": null,
+          "created_at": "2017-08-21T18:09:45.000Z",
+          "updated_at": "2017-08-21T18:09:45.000Z"
+        },
+        {
+          "subject": "Multiple sclerosis",
+          "subject_scheme": "PLOS Subject Area Thesaurus",
+          "scheme_URI": "https://github.com/PLOS/plos-thesaurus",
+          "created_at": "2017-02-21T20:18:28.000Z",
+          "updated_at": "2017-02-21T20:18:28.000Z"
+        },
+        {
+          "subject": "Twins",
+          "subject_scheme": "PLOS Subject Area Thesaurus",
+          "scheme_URI": "https://github.com/PLOS/plos-thesaurus",
+          "created_at": "2017-02-21T20:17:47.000Z",
+          "updated_at": "2017-02-21T20:17:47.000Z"
+        }
+      ]
+    },
+    {
+      "created_at": "2017-08-30T21:39:35.000Z",
+      "updated_at": "2017-10-25T00:04:39.000Z",
+      "has_geolocation": true,
+      "download_uri": "http://merritt.cdlib.org/d/ark%3A%2Fb7272%2Fq6rx997g",
+      "update_uri": "http://uc3-mrtsword-prd.cdlib.org:39001/mrtsword/edit/ucsf_lib_datashare/doi%3A10.7272%2FQ6RX997G",
+      "title": "Gut Microbiota from Multiple Sclerosis patients triggers spontaneous autoimmune encephalomyelitis in mice --16S data--",
+      "publication_date": "2017-10-02T07:00:00.000Z",
+      "accepted_agreement": null,
+      "tenant_id": "ucop",
+      "user": {
+        "first_name": "Sergio",
+        "last_name": "Baranzini",
+        "email": "sebaran@cgl.ucsf.edu",
+        "uid": "087193@ucsf.edu",
+        "provider": "shibboleth",
+        "oauth_token": null,
+        "created_at": "2017-08-21T17:55:34.000Z",
+        "updated_at": "2019-03-14T18:12:12.000Z",
+        "tenant_id": "ucop",
+        "last_login": "2019-03-14T18:12:12.000Z",
+        "role": "user",
+        "orcid": "0000-0003-0067-194X",
+        "doorkeeper_applications": []
+      },
+      "current_resource_state": {
+        "resource_state": "submitted",
+        "created_at": "2017-08-30T21:39:35.000Z",
+        "updated_at": "2017-08-30T21:50:03.000Z",
+        "user": {
+          "first_name": "Sergio",
+          "last_name": "Baranzini",
+          "email": "sebaran@cgl.ucsf.edu",
+          "uid": "087193@ucsf.edu",
+          "provider": "shibboleth",
+          "oauth_token": null,
+          "created_at": "2017-08-21T17:55:34.000Z",
+          "updated_at": "2019-03-14T18:12:12.000Z",
+          "tenant_id": "ucop",
+          "last_login": "2019-03-14T18:12:12.000Z",
+          "role": "user",
+          "orcid": "0000-0003-0067-194X",
+          "doorkeeper_applications": []
+        }
+      },
+      "authors": [
+        {
+          "author_first_name": "Hartmut",
+          "author_last_name": "Wekerle",
+          "author_email": "hwekerle@neuro.mpg.de",
+          "author_orcid": null,
+          "created_at": "2017-08-30T21:39:35.000Z",
+          "updated_at": "2017-08-30T21:39:35.000Z",
+          "affiliations": [
+            {
+              "short_name": null,
+              "long_name": "Max Planck Institute of Neurobiology",
+              "abbreviation": null,
+              "created_at": "2017-08-21T18:01:06.000Z",
+              "updated_at": "2017-08-21T18:01:06.000Z"
+            }
+          ]
+        },
+        {
+          "author_first_name": "Kerstin",
+          "author_last_name": "Berer",
+          "author_email": "",
+          "author_orcid": null,
+          "created_at": "2017-08-30T21:39:51.000Z",
+          "updated_at": "2017-08-30T21:39:53.000Z",
+          "affiliations": [
+            {
+              "short_name": null,
+              "long_name": "Max Planck Institute of Neurobiology",
+              "abbreviation": null,
+              "created_at": "2017-08-21T18:01:06.000Z",
+              "updated_at": "2017-08-21T18:01:06.000Z"
+            }
+          ]
+        },
+        {
+          "author_first_name": "Lisa Ann",
+          "author_last_name": "Gerdes",
+          "author_email": "",
+          "author_orcid": null,
+          "created_at": "2017-08-30T21:40:15.000Z",
+          "updated_at": "2017-08-30T21:40:18.000Z",
+          "affiliations": [
+            {
+              "short_name": null,
+              "long_name": "Ludwig-Maximillians University",
+              "abbreviation": null,
+              "created_at": "2017-08-21T18:04:55.000Z",
+              "updated_at": "2017-08-21T18:04:55.000Z"
+            }
+          ]
+        },
+        {
+          "author_first_name": "Egle",
+          "author_last_name": "Cekanaviciute",
+          "author_email": "",
+          "author_orcid": null,
+          "created_at": "2017-08-30T21:40:34.000Z",
+          "updated_at": "2017-08-30T21:40:47.000Z",
+          "affiliations": [
+            {
+              "short_name": null,
+              "long_name": "University of California San Francisco",
+              "abbreviation": null,
+              "created_at": "2017-08-21T18:02:42.000Z",
+              "updated_at": "2017-08-21T18:02:42.000Z"
+            }
+          ]
+        },
+        {
+          "author_first_name": "Sherman",
+          "author_last_name": "Jia",
+          "author_email": "",
+          "author_orcid": null,
+          "created_at": "2017-08-30T21:40:51.000Z",
+          "updated_at": "2017-08-30T21:40:52.000Z",
+          "affiliations": [
+            {
+              "short_name": null,
+              "long_name": "University of California San Francisco",
+              "abbreviation": null,
+              "created_at": "2017-08-21T18:02:42.000Z",
+              "updated_at": "2017-08-21T18:02:42.000Z"
+            }
+          ]
+        },
+        {
+          "author_first_name": "Liang",
+          "author_last_name": "Xiao",
+          "author_email": "",
+          "author_orcid": null,
+          "created_at": "2017-08-30T21:41:43.000Z",
+          "updated_at": "2017-08-30T21:41:45.000Z",
+          "affiliations": [
+            {
+              "short_name": null,
+              "long_name": "BGI-Shenzhen",
+              "abbreviation": null,
+              "created_at": "2017-08-30T21:33:14.000Z",
+              "updated_at": "2017-08-30T21:33:14.000Z"
+            }
+          ]
+        },
+        {
+          "author_first_name": "Zhongkui",
+          "author_last_name": "Xia",
+          "author_email": "",
+          "author_orcid": null,
+          "created_at": "2017-08-30T21:41:58.000Z",
+          "updated_at": "2017-08-30T21:41:59.000Z",
+          "affiliations": [
+            {
+              "short_name": null,
+              "long_name": "BGI-Shenzhen",
+              "abbreviation": null,
+              "created_at": "2017-08-30T21:33:14.000Z",
+              "updated_at": "2017-08-30T21:33:14.000Z"
+            }
+          ]
+        },
+        {
+          "author_first_name": "Chuan",
+          "author_last_name": "Liu",
+          "author_email": "",
+          "author_orcid": null,
+          "created_at": "2017-08-30T21:42:07.000Z",
+          "updated_at": "2017-08-30T21:42:09.000Z",
+          "affiliations": [
+            {
+              "short_name": null,
+              "long_name": "BGI-Shenzhen",
+              "abbreviation": null,
+              "created_at": "2017-08-30T21:33:14.000Z",
+              "updated_at": "2017-08-30T21:33:14.000Z"
+            }
+          ]
+        },
+        {
+          "author_first_name": "Luisa",
+          "author_last_name": "Klotz",
+          "author_email": "",
+          "author_orcid": null,
+          "created_at": "2017-08-30T21:42:19.000Z",
+          "updated_at": "2017-08-30T21:42:22.000Z",
+          "affiliations": [
+            {
+              "short_name": null,
+              "long_name": "University Hospital Münster, Münster",
+              "abbreviation": null,
+              "created_at": "2017-08-30T21:34:20.000Z",
+              "updated_at": "2017-08-30T21:34:20.000Z"
+            }
+          ]
+        },
+        {
+          "author_first_name": "Uta",
+          "author_last_name": "Stauffer",
+          "author_email": "",
+          "author_orcid": null,
+          "created_at": "2017-08-30T21:42:49.000Z",
+          "updated_at": "2017-08-30T21:43:04.000Z",
+          "affiliations": [
+            {
+              "short_name": null,
+              "long_name": "Max Planck Institute of Immunobiology and Epigenetics",
+              "abbreviation": null,
+              "created_at": "2017-08-30T21:36:02.000Z",
+              "updated_at": "2017-08-30T21:36:02.000Z"
+            },
+            {
+              "short_name": null,
+              "long_name": "Max Planck Institute of Immunobiology and Epigenetics",
+              "abbreviation": null,
+              "created_at": "2017-08-30T21:36:02.000Z",
+              "updated_at": "2017-08-30T21:36:02.000Z"
+            }
+          ]
+        },
+        {
+          "author_first_name": "Sergio",
+          "author_last_name": "Baranzini",
+          "author_email": null,
+          "author_orcid": "0000-0003-0067-194X",
+          "created_at": "2017-08-30T21:43:11.000Z",
+          "updated_at": "2017-08-30T21:43:11.000Z",
+          "affiliations": []
+        },
+        {
+          "author_first_name": "Tania",
+          "author_last_name": "Kümpfel",
+          "author_email": "",
+          "author_orcid": null,
+          "created_at": "2017-08-30T21:43:20.000Z",
+          "updated_at": "2017-08-30T21:43:35.000Z",
+          "affiliations": [
+            {
+              "short_name": null,
+              "long_name": "Ludwig-Maximillians University",
+              "abbreviation": null,
+              "created_at": "2017-08-21T18:04:55.000Z",
+              "updated_at": "2017-08-21T18:04:55.000Z"
+            }
+          ]
+        },
+        {
+          "author_first_name": "Reinhard",
+          "author_last_name": "Hohlfeld",
+          "author_email": "",
+          "author_orcid": null,
+          "created_at": "2017-08-30T21:43:53.000Z",
+          "updated_at": "2017-08-30T21:43:56.000Z",
+          "affiliations": [
+            {
+              "short_name": null,
+              "long_name": "Ludwig-Maximillians University",
+              "abbreviation": null,
+              "created_at": "2017-08-21T18:04:55.000Z",
+              "updated_at": "2017-08-21T18:04:55.000Z"
+            }
+          ]
+        },
+        {
+          "author_first_name": "Gurumoorthy",
+          "author_last_name": "Krishnamoorthy",
+          "author_email": "",
+          "author_orcid": null,
+          "created_at": "2017-08-30T21:44:15.000Z",
+          "updated_at": "2017-08-30T21:44:15.000Z",
+          "affiliations": [
+            {
+              "short_name": null,
+              "long_name": "Max Planck Institute of Neurobiology",
+              "abbreviation": null,
+              "created_at": "2017-08-21T18:01:06.000Z",
+              "updated_at": "2017-08-21T18:01:06.000Z"
+            }
+          ]
+        }
+      ],
+      "edit_histories": [
+        {
+          "user_comment": null,
+          "created_at": "2017-08-30T21:45:22.000Z",
+          "updated_at": "2017-08-30T21:45:22.000Z"
+        }
+      ],
+      "embargo": {
+        "end_date": "2017-10-02T07:00:00.000Z",
+        "created_at": "2017-08-30T21:39:35.000Z",
+        "updated_at": "2017-08-30T21:39:35.000Z"
+      },
+      "file_uploads": [
+        {
+          "upload_file_name": "Max_Planck_Twin_metadata.txt",
+          "upload_content_type": "text/plain",
+          "upload_file_size": 4617,
+          "upload_updated_at": "2017-08-21T19:18:52.000Z",
+          "created_at": "2017-08-30T21:39:35.000Z",
+          "updated_at": "2017-08-30T21:39:35.000Z",
+          "temp_file_path": "/apps/dash2/apps/ui/releases/20170818001111/uploads/494/Max_Planck_Twin_metadata.txt",
+          "file_state": "copied",
+          "url": null,
+          "status_code": null,
+          "timed_out": false,
+          "original_url": null,
+          "cloud_service": null
+        },
+        {
+          "upload_file_name": "Max_Planck_Twin_OTU_table.txt",
+          "upload_content_type": "text/plain",
+          "upload_file_size": 5092912,
+          "upload_updated_at": "2017-08-21T19:18:58.000Z",
+          "created_at": "2017-08-30T21:39:35.000Z",
+          "updated_at": "2017-08-30T21:39:35.000Z",
+          "temp_file_path": "/apps/dash2/apps/ui/releases/20170818001111/uploads/494/Max_Planck_Twin_OTU_table.txt",
+          "file_state": "copied",
+          "url": null,
+          "status_code": null,
+          "timed_out": false,
+          "original_url": null,
+          "cloud_service": null
+        }
+      ],
+      "share": null,
+      "submission_logs": [
+        {
+          "archive_response": "Success",
+          "created_at": "2017-08-30T21:45:28.000Z",
+          "updated_at": "2017-08-30T21:45:28.000Z",
+          "archive_submission_request": "Stash::Merritt::SubmissionJob for resource 519 (doi:10.7272/Q6RX997G): posting update to http://uc3-mrtsword-prd.cdlib.org:39001/mrtsword/edit/ucsf_lib_datashare/doi%3A10.7272%2FQ6RX997G (tenant: ucsf)"
+        }
+      ],
+      "version": {
+        "version": 2,
+        "zip_filename": "519_archive.zip",
+        "created_at": "2017-08-30T21:39:35.000Z",
+        "updated_at": "2017-08-30T21:45:28.000Z",
+        "merritt_version": 2
+      },
+      "contributors": [
+        {
+          "contributor_name": "Max-Planck-Gesellschaft",
+          "contributor_type": "funder",
+          "created_at": "2017-08-30T21:39:35.000Z",
+          "updated_at": "2017-08-30T21:39:35.000Z",
+          "award_number": "SFB TR-128",
+          "affiliations": []
+        },
+        {
+          "contributor_name": "German Competence Network on Multiple Sclerosis",
+          "contributor_type": "funder",
+          "created_at": "2017-08-30T21:39:35.000Z",
+          "updated_at": "2017-08-30T21:39:35.000Z",
+          "award_number": "",
+          "affiliations": []
+        },
+        {
+          "contributor_name": "Max Planck Society",
+          "contributor_type": "funder",
+          "created_at": "2017-08-30T21:39:35.000Z",
+          "updated_at": "2017-08-30T21:39:35.000Z",
+          "award_number": "",
+          "affiliations": []
+        }
+      ],
+      "datacite_dates": [
+        {
+          "date": "2017-10-02T07:00:00Z",
+          "date_type": "available",
+          "created_at": "2017-08-30T21:39:35.000Z",
+          "updated_at": "2017-08-30T21:39:35.000Z"
+        }
+      ],
+      "descriptions": [
+        {
+          "description": "\u003cp\u003eThe commensal microbiota has emerged as a key factor influencing human health and has been associated with several diseases, including those of the central nervous system (CNS). To investigate the role of the microbiome in multiple sclerosis (MS), a complex autoimmune disorder shaped by a multitude of genetic and environmental factors, we recruited a cohort of 34 monozygotic twin pairs discordant for MS, and compared their gut microbial composition by 16S ribosomal RNA sequencing of stool samples. While no major differences in the microbial profiles between MS-affected twins and their healthy co-twins were detected, a significant increase in some taxa (including Akkermansia) was seen in affected untreated subjects. To search for possible functional differences, we used a transgenic mouse model, in which spontaneous anti-CNS autoimmunity is dependent on the commensal gut flora. Germ-free mice colonized with microbiota from MS-affected twins, developed the MS-like disease with a significantly higher incidence than mice colonized with healthy twin-derived microbiota. Although alpha diversity was reduced compared to human donors, the microbial profiles of the colonized mice showed high intraindividual, remarkable temporal stability and a high transfer rate,. Analysis of the transplanted mouse microbiome at the level of individual taxa revealed several differences, including a significantly reduced abundance of the potentially autoimmune-protective genus Sutterella in mice colonized with MS-twin-derived microbiota. These findings provide first evidence that MS-derived microbiota contain factors that precipitate an MS-like autoimmune disease in a transgenic mouse model. This model lends itself to identify protective and pathogenic microbial component in human MS. \u003c/p\u003e",
+          "description_type": "abstract",
+          "created_at": "2017-08-30T21:39:35.000Z",
+          "updated_at": "2017-10-25T00:04:39.000Z"
+        },
+        {
+          "description": "\u003cp\u003eStudy design. \u003c/p\u003e\u003cp\u003eMZ twins were recruited by launching a national televised appeal as well as internet notification in Germany with support from the German Multiple Sclerosis Society (DMSG). Inclusion criteria for study participation were met for MZ twins with an MS diagnosis according to the revised McDonald criteria or clinically isolated syndrome (CIS) in one twin only. Exclusion criteria were antibiotic, glucocorticosteroidal or immunosuppressive treatment, gastrointestinal infection or diet irregularities in the 3 months prior to study entry. In total, 34 pairs (see Table 1) visited the outpatient department at the Institute of Clinical Neuroimmunology in Munich for a detailed interview on past and present medical, family and social history, a neurological examination as well as a nutrition questionnaire. To confirm the MS diagnosis, medical records including MRI scans were obtained and reviewed. Fecal samples were either directly collected in hospital or taken at home, stored at -20°C and transferred to the hospital in cooling bags. Finally, all samples were stored at -80°C. Of all participants buccal swabs for zygosity testing were taken. The study was approved by the local Ethics Committee of the Ludwig-Maximilians University Munich and all participants gave written informed consent. \u003c/p\u003e\u003cp\u003e16S rRNA Sequencing and Analysis.\u003c/p\u003e\u003cp\u003eThe V3-V5 region of bacterial 16S rRNA gene was amplified using the universal forward (5’-CCGTCAATTCMTTTGAGTTT-3’) and reverse primer (5’-ACTCCTA CGGGAGGCAGCAG-3’) incorporating the FLX Titanium adapters and a unique barcode sequence. PCR products were sequenced on a 454 GS FLX titanium pyrosequencer (454 Life Sciences, Branford, CT, USA) at BGI-Shenzhen. Analysis was performed using QIIME v1.9 as described (1). Essentially, amplicon sequences were quality-filtered and grouped to operational taxonomic units (OTUs) using SortMeRNA method (2) using GreenGenes version 13.8 97% dataset for closed reference. Sequences that did not match reference sequences in the GreenGenes database were dropped from the analysis. Taxonomy was assigned to the retained OTUs based on the GreenGenes reference sequence and the GreenGenes tree was used for all downstream phylogenetic community comparisons. Samples were filtered to at least 10000 sequences per sample and OTUs were filtered to retain only OTUs present in at least 5% of samples, covering at least 0.01% of total reads. After filtering, human samples were rarefied to 10975 sequences, while mouse samples were rarefied to 8137 sequences per sample, which were the lowest number of sequences per sample, respectively. For comparison between human and mouse samples, the human and mouse datasets were combined before OTU filtering and rarefaction. The resulting OTUs were filtered as described above and samples were rarefied to 6200 sequences per sample. Alpha diversity was calculated using phylogenetic diversity index method (3). For analysis of beta diversity, pairwise distance matrices were generated by phylogenetic metric of weighted UniFrac (4) and used for PCoA. For comparison of individual taxa, samples were not rarefied. Instead, OTU abundances were normalized using variance-stabilizing transformation and taxa distributions were compared using the Wald negative binomial test from the R software package DESeq2 (as described in (4, 5) with Benjamini-Hochberg correction for multiple comparisons. All statistical analyses of differences between individual bacterial species were performed using QIIME v.1.9 or R (packages DESeq2 and phyloseq). \u003c/p\u003e",
+          "description_type": "methods",
+          "created_at": "2017-08-30T21:39:35.000Z",
+          "updated_at": "2017-10-25T00:04:39.000Z"
+        },
+        {
+          "description": "\u003cp\u003eTwo files are uploaded. The dataset contains both human and mice samples. \u003c/p\u003e\u003cp\u003eMax_Planck_Twin_metadata.txt: Contains the sample metadata\u003c/p\u003e\u003cp\u003eMax_Planck_Twin_OTU_table.txt: contains the normalized OTU abundances for each individual\u003c/p\u003e\u003cp\u003eOTU abundances were normalized using variance-stabilizing transformation and taxa distributions were compared using the Wald negative binomial test from the R software package DESeq2 (as described in (4, 5) with Benjamini-Hochberg correction for multiple comparisons.\u003c/p\u003e",
+          "description_type": "other",
+          "created_at": "2017-08-30T21:39:35.000Z",
+          "updated_at": "2017-10-25T00:04:39.000Z"
+        }
+      ],
+      "geolocations": [
+        {
+          "geolocation_place": {
+            "geo_location_place": "Germany",
+            "created_at": "2017-08-30T21:39:34.000Z",
+            "updated_at": "2017-08-30T21:39:34.000Z"
+          },
+          "geolocation_point": {
+            "latitude": "51.196755",
+            "longitude": "9.62743",
+            "created_at": "2017-08-30T21:39:34.000Z",
+            "updated_at": "2017-08-30T21:39:34.000Z"
+          },
+          "geolocaton_box": {
+            "sw_latitude": "47.270352",
+            "ne_latitude": "55.057375",
+            "sw_longitude": "5.866003",
+            "ne_longitude": "15.04149",
+            "created_at": "2017-08-30T21:39:34.000Z",
+            "updated_at": "2017-08-30T21:39:34.000Z"
+          }
+        },
+        {
+          "geolocation_place": {
+            "geo_location_place": "San Francisco, CA, USA",
+            "created_at": "2017-08-30T21:39:34.000Z",
+            "updated_at": "2017-08-30T21:39:34.000Z"
+          },
+          "geolocation_point": {
+            "latitude": "37.778008",
+            "longitude": "-122.431272",
+            "created_at": "2017-08-30T21:39:34.000Z",
+            "updated_at": "2017-08-30T21:39:34.000Z"
+          },
+          "geolocaton_box": {
+            "sw_latitude": "37.70808",
+            "ne_latitude": "37.83239",
+            "sw_longitude": "-122.51489",
+            "ne_longitude": "-122.35698",
+            "created_at": "2017-08-30T21:39:34.000Z",
+            "updated_at": "2017-08-30T21:39:34.000Z"
+          }
+        },
+        {
+          "geolocation_place": {
+            "geo_location_place": "New York, USA",
+            "created_at": "2017-08-30T21:39:34.000Z",
+            "updated_at": "2017-08-30T21:39:34.000Z"
+          },
+          "geolocation_point": {
+            "latitude": "43.00035",
+            "longitude": "-75.4999",
+            "created_at": "2017-08-30T21:39:34.000Z",
+            "updated_at": "2017-08-30T21:39:34.000Z"
+          },
+          "geolocaton_box": null
+        }
+      ],
+      "publication_years": [
+        {
+          "publication_year": "2017",
+          "created_at": "2017-08-30T21:39:35.000Z",
+          "updated_at": "2017-08-30T21:39:35.000Z"
+        }
+      ],
+      "publisher": {
+        "publisher": "UC San Francisco",
+        "created_at": "2017-08-30T21:39:35.000Z",
+        "updated_at": "2017-08-30T21:39:35.000Z"
+      },
+      "related_identifiers": [
+        {
+          "related_identifier": "10.1073/pnas.1711233114",
+          "related_identifier_type": "doi",
+          "relation_type": "iscitedby",
+          "related_metadata_scheme": null,
+          "scheme_URI": null,
+          "scheme_type": null,
+          "created_at": "2017-08-30T21:39:35.000Z",
+          "updated_at": "2017-08-30T21:39:35.000Z"
+        }
+      ],
+      "resource_type": {
+        "resource_type_general": "dataset",
+        "resource_type": "dataset",
+        "created_at": "2017-08-30T21:39:35.000Z",
+        "updated_at": "2017-08-30T21:39:35.000Z"
+      },
+      "rights": [
+        {
+          "rights": "Creative Commons Attribution 4.0 International (CC BY 4.0)",
+          "rights_uri": "https://creativecommons.org/licenses/by/4.0/",
+          "created_at": "2017-08-30T21:39:35.000Z",
+          "updated_at": "2017-08-30T21:39:35.000Z"
+        }
+      ],
+      "sizes": [],
+      "subjects": [
+        {
+          "subject": "gut microbiota",
+          "subject_scheme": null,
+          "scheme_URI": null,
+          "created_at": "2017-08-21T18:09:45.000Z",
+          "updated_at": "2017-08-21T18:09:45.000Z"
+        },
+        {
+          "subject": "Multiple sclerosis",
+          "subject_scheme": "PLOS Subject Area Thesaurus",
+          "scheme_URI": "https://github.com/PLOS/plos-thesaurus",
+          "created_at": "2017-02-21T20:18:28.000Z",
+          "updated_at": "2017-02-21T20:18:28.000Z"
+        },
+        {
+          "subject": "Twins",
+          "subject_scheme": "PLOS Subject Area Thesaurus",
+          "scheme_URI": "https://github.com/PLOS/plos-thesaurus",
+          "created_at": "2017-02-21T20:17:47.000Z",
+          "updated_at": "2017-02-21T20:17:47.000Z"
+        }
+      ]
+    }
+  ],
+  "orcid_invitations": [{"email":"mconklin@ucmerced.edu","first_name":"Martha","last_name":"Conklin","secret":"_UhMed-hHfcv-tG4SjVY1A","orcid":null,"invited_at":"2017-09-29T19:55:03.000Z","accepted_at":null}]
+}
