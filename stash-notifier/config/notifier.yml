@@ -34,3 +34,21 @@ migration:
   oai_base_url: http://uc3-mrtoai-prd.cdlib.org:37001/mrtoai/oai/v2
   sets:
     - cdl_dryad
+
+production:
+  <<: *defaults
+  update_base_url: https://datadryad.org/stash/dataset
+  oai_base_url: http://uc3-mrtoai-prd.cdlib.org:37001/mrtoai/oai/v2
+  sets:
+    - cdl_dryad
+    - lbnl_dash
+    - uci_dash
+    - ucb_dash
+    - ucd_lib_dash
+    - ucla_dash
+    - ucm_dash
+    - ucop_dash
+    - ucr_lib_dash
+    - ucsb_dash
+    - ucsc_dash
+    - ucsf_lib_datashare
