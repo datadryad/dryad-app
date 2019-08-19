@@ -12,4 +12,4 @@ $('#validated_errors').html("<%= escape_javascript(
   $('#location_urls').effect("pulsate", { times:1 }, 1000);
 <% end %>
 
-setUploadMethodLockout('<%= @resource.upload_type %>');
+setUploadMethodLockout('<%= escape_javascript(@resource.upload_type) %>');

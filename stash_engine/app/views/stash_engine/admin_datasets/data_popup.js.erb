@@ -10,13 +10,12 @@ $('#popup_dialog').html("<%= escape_javascript(
 
 // now open a jquery ui modal dialog
 $(function() {
-
     $("#popup_dialog").dialog({
         autoOpen: true,
         height: 'auto',
         width: '500px',
         modal: true,
-        title: '<%= title %>'
+        title: '<%= escape_javascript(title) %>'
     });
 
     // make the cancel button in the dialog hide the dialog
