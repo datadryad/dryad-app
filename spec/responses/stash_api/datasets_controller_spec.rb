@@ -113,7 +113,7 @@ module StashApi
         @user3 = create(:user, tenant_id: 'ucb', role: 'superuser')
 
         @identifiers = []
-        0.upto(8).each { |_i| @identifiers.push(create(:identifier)) }
+        0.upto(7).each { |_i| @identifiers.push(create(:identifier)) }
 
         @resources = [create(:resource, user_id: @user1.id, tenant_id: @user1.tenant_id, identifier_id: @identifiers[0].id),
                       create(:resource, user_id: @user1.id, tenant_id: @user1.tenant_id, identifier_id: @identifiers[0].id),
@@ -124,8 +124,7 @@ module StashApi
                       create(:resource, user_id: @user3.id, tenant_id: @user3.tenant_id, identifier_id: @identifiers[4].id),
                       create(:resource, user_id: @user3.id, tenant_id: @user3.tenant_id, identifier_id: @identifiers[5].id),
                       create(:resource, user_id: @user3.id, tenant_id: @user3.tenant_id, identifier_id: @identifiers[6].id),
-                      create(:resource, user_id: @user3.id, tenant_id: @user3.tenant_id, identifier_id: @identifiers[7].id),
-                      create(:resource, user_id: @user3.id, tenant_id: @user3.tenant_id, identifier_id: @identifiers[8].id)]
+                      create(:resource, user_id: @user3.id, tenant_id: @user3.tenant_id, identifier_id: @identifiers[7].id)]
 
         @curation_activities = [[create(:curation_activity, resource: @resources[0], status: 'in_progress'),
                                  create(:curation_activity, resource: @resources[0], status: 'curation'),
