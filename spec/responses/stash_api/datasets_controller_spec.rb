@@ -113,7 +113,7 @@ module StashApi
         @user3 = create(:user, tenant_id: 'ucb', role: 'superuser')
 
         @identifiers = []
-        0.upto(7).each { |_i| @identifiers.push(create(:identifier)) }
+        0.upto(8).each { |_i| @identifiers.push(create(:identifier)) }
 
         @resources = [create(:resource, user_id: @user1.id, tenant_id: @user1.tenant_id, identifier_id: @identifiers[0].id),
                       create(:resource, user_id: @user1.id, tenant_id: @user1.tenant_id, identifier_id: @identifiers[0].id),
@@ -124,7 +124,8 @@ module StashApi
                       create(:resource, user_id: @user3.id, tenant_id: @user3.tenant_id, identifier_id: @identifiers[4].id),
                       create(:resource, user_id: @user3.id, tenant_id: @user3.tenant_id, identifier_id: @identifiers[5].id),
                       create(:resource, user_id: @user3.id, tenant_id: @user3.tenant_id, identifier_id: @identifiers[6].id),
-                      create(:resource, user_id: @user3.id, tenant_id: @user3.tenant_id, identifier_id: @identifiers[7].id)]
+                      create(:resource, user_id: @user3.id, tenant_id: @user3.tenant_id, identifier_id: @identifiers[7].id),
+                      create(:resource, user_id: @user3.id, tenant_id: @user3.tenant_id, identifier_id: @identifiers[8].id)]
 
         @curation_activities = [[create(:curation_activity, resource: @resources[0], status: 'in_progress'),
                                  create(:curation_activity, resource: @resources[0], status: 'curation'),
@@ -312,6 +313,14 @@ module StashApi
         expect(hsh['title']).to eq(@resources[1].title)
       end
 
+      it 'shows the peer review URL when the dataset is in review status' do
+        @resources << create(:resource, user_id: @user2.id, tenant_id: @user.tenant_id, identifier_id: @identifier.id)
+        @curation_activities << [create(:curation_activity, resource: @resources[2], status: 'in_progress'),
+                                 create(:curation_activity, resource: @resources[2], status: 'peer_review')]
+        get "/api/datasets/#{CGI.escape(@identifier.to_s)}", {}, default_authenticated_headers
+        hsh = response_body_hash
+        expect(hsh['sharingLink']).to match(/http/)
+      end
     end
 
     # update, either patch to submit or update metadata
