@@ -524,6 +524,10 @@ module StashEngine
       l_name = user.last_name
       orcid = (user.orcid.blank? ? nil : user.orcid)
       email = user.email
+
+      # TODO: This probably belongs somewhere else, but without it here, the affiliation sometimes doesn't exist
+      StashDatacite::AuthorPatch.patch! unless StashEngine::Author.method_defined?(:affiliation)
+
       affiliation = user.affiliation
       affiliation = StashDatacite::Affiliation.from_long_name(user.tenant.long_name) if affiliation.blank? &&
         user.tenant.present? && !%w[dryad localhost].include?(user.tenant.abbreviation.downcase)
