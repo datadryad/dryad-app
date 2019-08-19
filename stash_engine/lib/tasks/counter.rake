@@ -1,5 +1,6 @@
 require 'byebug'
 require 'net/scp'
+require_relative 'counter/validate_file'
 
 namespace :counter do
   LOG_DIRECTORY = '/Users/sfisher/workspace/direct-to-cdl-dryad/dryad/log'.freeze
@@ -32,32 +33,43 @@ namespace :counter do
 
         # copy other server's files over if possible
         v.each_pair do |k2, v2|
-          if k2.class == Integer
-            begin
-              if v2 == false
-                puts "downloading #{f}"
-                Net::SCP.download!(SCP_HOSTS[k2], 'dryad', File.join(SCP_PATH, f), "#{f}_#{k2}")
-              end
-            rescue Net::SCP::Error => e
-              raise e unless e.to_s.include?('No such file or directory')
-              puts "Skipping #{f}: file doesn't exist on secondary server"
-              bad_scp = true
-              break
+          next unless k2.class == Integer
+          begin
+            if v2 == false
+              puts "downloading #{f}"
+              Net::SCP.download!(SCP_HOSTS[k2], 'dryad', File.join(SCP_PATH, f), "#{f}_#{k2}")
             end
+          rescue Net::SCP::Error => e
+            raise e unless e.to_s.include?('No such file or directory')
+            puts "Skipping #{f}: file doesn't exist on secondary server"
+            bad_scp = true
+            break
           end
         end
 
         # sort and combine logs if possible
         next if v[:combined_file] || bad_scp
         puts "combining files to #{f}_combined"
-        other_files = 0.upto(SCP_HOSTS.length - 1).map{|i| "#{f}_#{i}" }.join(' ')
+        other_files = 0.upto(SCP_HOSTS.length - 1).map { |i| "#{f}_#{i}" }.join(' ')
         `cat #{f} #{other_files} | sort > #{f}_combined` # now combine & sort them in linux
       end
     end # end of working inside directory
+  end # end of task
 
-    desc 'cleanup old logs'
-    task :cleanup_logs do
+  desc 'cleanup old logs'
+  task :cleanup_logs do
 
+  end # end of task
+
+  desc 'validate logs that come after this on the command line'
+  task :validate_logs do
+    ARGV.each do |filename|
+      next if filename == 'counter:validate_logs'
+      puts "Validating #{filename}"
+      cv = Counter::ValidateFile.new(filename: filename)
+      cv.validate_file
+      puts ''
     end
-  end
+    exit # makes the arguments not be interpreted as other rake tasks
+  end # end of task
 end
