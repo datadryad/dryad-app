@@ -94,7 +94,10 @@ module StashApi
     end
 
     def add_curation_status(hsh)
-      hsh[:curationStatus] = StashEngine::CurationActivity.latest(@se_identifier.latest_resource&.id)&.readable_status
+      res = @se_identifier.latest_resource
+      curation_activity = StashEngine::CurationActivity.latest(res&.id)
+      hsh[:curationStatus] = curation_activity&.readable_status
+      hsh[:sharingLink] = res&.share&.sharing_link if curation_activity&.peer_review?
     end
 
   end
