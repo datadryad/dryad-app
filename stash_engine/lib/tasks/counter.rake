@@ -17,6 +17,12 @@ namespace :counter do
   end
 
   desc 'get and combine files from the other servers'
+  task :remove_old_logs do
+    lc = Counter::LogCombiner.new(log_directory: LOG_DIRECTORY, scp_hosts: SCP_HOSTS, scp_path: SCP_PATH)
+    lc.remove_old_logs(days_old: 60)
+  end
+
+  desc 'get and combine files from the other servers'
   task :combine_filesss do
     Dir.chdir(LOG_DIRECTORY) do
 
