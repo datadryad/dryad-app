@@ -537,7 +537,7 @@ module StashEngine
       # disabling because we no longer wnat this with UC Press
       # author.affiliation_by_name(user.tenant.short_name) if user.try(:tenant)
     end
-    # rubocop:enable Metrics/AbcSize, Metrics/CyclomaticComplexity
+    # rubocop:enable Metrics/AbcSize
 
     # -----------------------------------------------------------
     # Publication
