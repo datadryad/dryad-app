@@ -12,7 +12,6 @@ module Counter
       @log_directory = log_directory
       @scp_hosts = scp_hosts
       @scp_path = scp_path
-      @scp_path = scp_path
 
       Dir.chdir(@log_directory) do
         filenames = Dir.glob('*.log')
