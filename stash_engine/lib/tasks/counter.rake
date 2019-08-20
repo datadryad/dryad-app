@@ -2,6 +2,7 @@ require 'net/scp'
 require_relative 'counter/validate_file'
 require_relative 'counter/log_combiner'
 
+# rubocop:disable Metrics/BlockLength
 namespace :counter do
   LOG_DIRECTORY = '/apps/dryad/apps/ui/current/log'.freeze
   SCP_HOSTS = ['uc3-dryaduix2-stg-2c.cdlib.org'].freeze
@@ -36,3 +37,4 @@ namespace :counter do
     exit # makes the arguments not be interpreted as other rake tasks
   end # end of task
 end
+# rubocop:enable Metrics/BlockLength
