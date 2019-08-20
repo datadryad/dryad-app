@@ -1,6 +1,7 @@
 require 'byebug'
 require 'net/scp'
 require_relative 'counter/validate_file'
+require_relative 'counter/log_combiner'
 
 namespace :counter do
   LOG_DIRECTORY = '/Users/sfisher/workspace/direct-to-cdl-dryad/dryad/log'.freeze
@@ -10,6 +11,13 @@ namespace :counter do
 
   desc 'get and combine files from the other servers'
   task :combine_files do
+    lc = Counter::LogCombiner.new(log_directory: LOG_DIRECTORY, scp_hosts: SCP_HOSTS, scp_path: SCP_PATH)
+    lc.copy_missing_files
+    lc.combine_logs
+  end
+
+  desc 'get and combine files from the other servers'
+  task :combine_filesss do
     Dir.chdir(LOG_DIRECTORY) do
 
       filenames = Dir.glob('*.log')
@@ -27,7 +35,7 @@ namespace :counter do
            .merge(combined_file: File.exist?("#{x}_combined"))]
       end.to_h
 
-      # go through fils and copy and combine them
+      # go through files and copy and combine them
       outhash.each do |f, v|
         bad_scp = false
 
@@ -61,7 +69,7 @@ namespace :counter do
 
   end # end of task
 
-  desc 'validate logs that come after this on the command line'
+  desc 'validate log filenames (that come after rake task)'
   task :validate_logs do
     ARGV.each do |filename|
       next if filename == 'counter:validate_logs'
