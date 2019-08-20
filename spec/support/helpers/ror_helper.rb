@@ -1,5 +1,3 @@
-
-
 module RorHelper
 
   def mock_query(query:, file:)
