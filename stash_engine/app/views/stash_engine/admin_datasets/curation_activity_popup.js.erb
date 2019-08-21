@@ -13,7 +13,7 @@ $(function() {
     height: 'auto',
     width: '500px',
     modal: true,
-    title: '<%= title %>'
+    title: '<%= escape_javascript(title) %>'
   });
 
   // make the cancel button in the dialog hide the dialog
