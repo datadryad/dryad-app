@@ -5,7 +5,7 @@ require_relative 'counter/log_combiner'
 # rubocop:disable Metrics/BlockLength
 namespace :counter do
   LOG_DIRECTORY = '/apps/dryad/apps/ui/current/log'.freeze
-  SCP_HOSTS = ['uc3-dryaduix2-stg-2c.cdlib.org'].freeze
+  SCP_HOSTS = ['uc3-dryaduix2-prd-2c.cdlib.org'].freeze
   PRIMARY_FN_PATTERN = /counter_\d{4}-\d{2}-\d{2}.log/
 
   desc 'get and combine files from the other servers'
