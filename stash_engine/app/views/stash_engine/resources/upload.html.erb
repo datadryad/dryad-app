@@ -41,7 +41,7 @@
   updateButtonLinkStates(); // for file upload method
 
   $(function () {
-    setUploadMethodLockout('<%= @resource.upload_type %>'); // set lockout so you can't change view if you have files already
+    setUploadMethodLockout('<%= escape_javascript(@resource.upload_type) %>'); // set lockout so you can't change view if you have files already
     confirmToValidate(); // add event to require checking acceptance before validating
     confirmToUpload(); // add event to require checking acceptance before uploading
   });
