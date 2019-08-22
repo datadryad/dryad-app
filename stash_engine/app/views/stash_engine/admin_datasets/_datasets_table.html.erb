@@ -38,7 +38,7 @@
         <% end %>
       </td>
       <td class="c-admin-hide-border-right" id="js-curation-state-<%= dataset.identifier_id %>">
-        <%= dataset.status %>
+        <%= StashEngine::CurationActivity.readable_status(dataset.status) %>
       </td>
       <td class="c-admin-hide-border-left">
         <% if %w[admin superuser].include?(current_user.role) && dataset.resource_state == 'submitted' && %w[published embargoed].include?(dataset.status) %>
