@@ -14,17 +14,12 @@ module StashEngine
     TENANT_IDS = Tenant.all.map(&:tenant_id)
 
     # the admin datasets main page showing users and stats, but slightly different in scope for superusers vs tenant admins
-    # rubocop:disable Metrics/AbcSize
     def index
       my_tenant_id = (current_user.role == 'admin' ? current_user.tenant_id : nil)
       @all_stats = Stats.new
       @seven_day_stats = Stats.new(tenant_id: my_tenant_id, since: (Time.new.utc - 7.days))
 
-      @datasets = StashEngine::AdminDatasets::CurationTableRow.where(search_term: params[:q], tenant_filter: params[:tenant_id],
-        status_filter: params[:curation_status], publication_filter: params[:publication_name],
-        sort_column: params[:sort], sort_direction: params[:direction])
-
-      @datasets = Kaminari.paginate_array(@datasets).page(@page).per(@page_size)
+      @datasets = Kaminari.paginate_array(StashEngine::AdminDatasets::CurationTableRow.where(params)).page(@page).per(@page_size)
 
       @publications = InternalDatum.where(data_type: 'publicationName').order(:value).pluck(:value).uniq
       @pub_name = params[:publication_name] || nil
@@ -34,7 +29,6 @@ module StashEngine
         format.csv
       end
     end
-    # rubocop:enable Metrics/AbcSize
 
     # Unobtrusive Javascript (UJS) to do AJAX by running javascript
     def data_popup
