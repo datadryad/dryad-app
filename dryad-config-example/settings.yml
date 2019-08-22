@@ -29,9 +29,10 @@ FIELDS:
   :TEMPORAL: 'dct_temporal_sm'
   :TITLE: 'dc_title_s'
   :RELATED_PUBLICATION_NAME: 'dryad_related_publication_name_s'
+  :AUTHOR_AFFILIATION_NAME: 'dryad_author_affiliation_name_sm'
 
 # Institution deployed at
-INSTITUTION: 'Stanford'
+INSTITUTION: 'Dryad'
 
 # Metadata shown in tool panel
 METADATA_SHOWN:
