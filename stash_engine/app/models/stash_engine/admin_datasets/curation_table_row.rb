@@ -46,6 +46,7 @@ module StashEngine
       STATUS_CLAUSE = 'seca.status = %{term}'
       PUBLICATION_CLAUSE = 'seid.value = %{term}'
 
+      # rubocop:disable Metrics/AbcSize
       def initialize(result)
         return unless result.is_a?(Array) && result.length >= 18
 
@@ -69,32 +70,37 @@ module StashEngine
         @author_names = result[17]
         @relevance = result.length > 18 ? result[18] : nil
       end
+      # rubocop:enable Metrics/AbcSize
 
       class << self
 
-        def where(search_term:, tenant_filter:, status_filter:, publication_filter:, sort_column:, sort_direction:)
+        def where(params)
+          return [] unless params.is_a?(Hash)
+
           # If a search term was provided include the relevance score in the results for sorting purposes
-          relevance = search_term.present? ? ", (#{add_term_to_clause(SEARCH_CLAUSE, search_term)}) relevance" : ''
+          relevance = params.fetch(:q, '').blank? ? '' : ", (#{add_term_to_clause(SEARCH_CLAUSE, params.fetch(:q, ''))}) relevance"
+          # editor_name is derived from 2 DB fields so use the last_name instead
+          column = (params.fetch(:sort, '') == 'editor_name' ? 'last_name' : params.fetch(:sort, ''))
 
           query = " \
             #{SELECT_CLAUSE}
             #{relevance}
             #{FROM_CLAUSE}
-            #{build_where_clause(search_term, tenant_filter, status_filter, publication_filter)}
-            #{build_order_clause(search_term.present?, sort_column, sort_direction)}
+            #{build_where_clause(params.fetch(:q, ''), params.fetch(:tenant_id, ''), params.fetch(:curation_status, ''),
+                                 params.fetch(:publication_name, ''))}
+            #{build_order_clause(params.fetch(:q, '').present?, column, params.fetch(:direction, ''))}
           "
           results = ActiveRecord::Base.connection.execute(query).map { |result| new(result) }
           # If the user is trying to sort by author names, then
-          (sort_column == 'author_names' ? sort_by_author_names(results, sort_direction) : results)
+          (column == 'author_names' ? sort_by_author_names(results, params.fetch(:direction, '')) : results)
         end
 
         private
 
-        # Create the WHERE portion of the query based on the search and filters set by the user
+        # Create the WHERE portion of the query based on the filters set by the user (if any)
         def build_where_clause(search_term, tenant_filter, status_filter, publication_filter)
           where_clause = [
-            (search_term.present? ? "((#{add_term_to_clause(SEARCH_CLAUSE, search_term)}) OR \
-              #{add_term_to_clause(SCAN_CLAUSE, "%#{search_term}%")})" : nil),
+            (search_term.present? ? build_search_clause(search_term) : nil),
             add_term_to_clause(TENANT_CLAUSE, tenant_filter),
             add_term_to_clause(STATUS_CLAUSE, status_filter),
             add_term_to_clause(PUBLICATION_CLAUSE, publication_filter)
@@ -102,10 +108,15 @@ module StashEngine
           where_clause.empty? ? '' : " WHERE #{where_clause.join(' AND ')}"
         end
 
+        # Build the WHERE portion of the query for the specified search term (if any)
+        def build_search_clause(term)
+          return '' unless term.present?
+          "((#{add_term_to_clause(SEARCH_CLAUSE, term)}) OR #{add_term_to_clause(SCAN_CLAUSE, "%#{term}%")})"
+        end
+
         # Create the ORDER BY portion of the query. If the user included a search term order by relevance first!
         # We cannot sort by author_names here, so ignore if that is the :sort_column
         def build_order_clause(searching, column, direction)
-          column = 'last_name' if column == 'editor_name'
           order_by = [
             (searching ? 'relevance DESC' : nil),
             (column.present? && column != 'author_names' ? "#{column} #{direction || 'ASC'}" : nil)
@@ -114,9 +125,8 @@ module StashEngine
         end
 
         def sort_by_author_names(results, direction)
-          results.sort do |a, b|
-            direction.downcase == 'desc' ? b.author_names.downcase <=> a.author_names.downcase : a.author_names.downcase <=> b.author_names.downcase
-          end
+          return results.sort { |a, b| b.author_names.downcase <=> a.author_names.downcase } if direction.casecmp('desc').zero?
+          results.sort { |a, b| a.author_names.downcase <=> b.author_names.downcase }
         end
 
         # Swap a term into the SQL snippet/clause
