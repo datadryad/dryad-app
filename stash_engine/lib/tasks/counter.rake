@@ -4,20 +4,17 @@ require_relative 'counter/log_combiner'
 
 # rubocop:disable Metrics/BlockLength
 namespace :counter do
-  LOG_DIRECTORY = '/apps/dryad/apps/ui/current/log'.freeze
-  SCP_HOSTS = ['uc3-dryaduix2-stg-2c.cdlib.org'].freeze
-  PRIMARY_FN_PATTERN = /counter_\d{4}-\d{2}-\d{2}.log/
 
   desc 'get and combine files from the other servers'
   task :combine_files do
-    lc = Counter::LogCombiner.new(log_directory: LOG_DIRECTORY, scp_hosts: SCP_HOSTS, scp_path: LOG_DIRECTORY)
+    lc = Counter::LogCombiner.new(log_directory: ENV['LOG_DIRECTORY'], scp_hosts: ENV['SCP_HOSTS'].split(' '), scp_path: ENV['LOG_DIRECTORY'])
     lc.copy_missing_files
     lc.combine_logs
   end
 
   desc 'remove log files we are not keeping because of our privacy policy'
   task :remove_old_logs do
-    lc = Counter::LogCombiner.new(log_directory: LOG_DIRECTORY, scp_hosts: SCP_HOSTS, scp_path: LOG_DIRECTORY)
+    lc = Counter::LogCombiner.new(log_directory: ENV['LOG_DIRECTORY'], scp_hosts: ENV['SCP_HOSTS'].split(' '), scp_path: ENV['LOG_DIRECTORY'])
     lc.remove_old_logs(days_old: 60)
   end
 
@@ -36,5 +33,12 @@ namespace :counter do
     end
     exit # makes the arguments not be interpreted as other rake tasks
   end # end of task
+
+  desc 'test environment is passed in'
+  task :test_env do
+    puts "LOG_DIRECTORY is set as #{ENV['LOG_DIRECTORY']}" if ENV['LOG_DIRECTORY']
+    puts "SCP_HOSTS are set as #{ENV['SCP_HOSTS'].split(' ')}" if ENV['SCP_HOSTS']
+    puts "note: in order to scp, you must add this server's public key to the authorized keys for the server you want to copy from"
+  end
 end
 # rubocop:enable Metrics/BlockLength
