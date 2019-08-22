@@ -41,5 +41,5 @@
 
 <div class="bio">
   <img src="/images/scott.jpg" alt="Scott Fisher" title="Scott Fisher">
-  <p><strong>Scott Fisher</strong> <br>Dryad Developer<br>Here's a great explanation of all Scott's credentials.</p>
+  <p><strong>Scott Fisher</strong> <br>Dryad Developer<br>Scott has information and UX design experience and graduated with a Master's degree from the UC Berkeley School of information.  He has worked in the computer industry writing software and more recently at The University of California. His previous work includes projects to archive web pages, plan for data preservation, preserve data itself and make data metrics available. Scott is a lead developer at the California Digital Library.</p>
 </div>
