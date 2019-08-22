@@ -19,13 +19,16 @@ module StashEngine
       my_tenant_id = (current_user.role == 'admin' ? current_user.tenant_id : nil)
       @all_stats = Stats.new
       @seven_day_stats = Stats.new(tenant_id: my_tenant_id, since: (Time.new.utc - 7.days))
-      @resources = build_table_query
-      # If no records were found and a search parameter was specified, requery with
-      # a ful text search to find partial word matches
-      @resources = build_table_query(true) if @resources.empty? && params[:q].present? && params[:q].length > 4
-      @publications = InternalDatum.where(data_type: 'publicationName').order(:value).pluck(:value).uniq
 
-      @resources = Kaminari.paginate_array(@resources).page(@page).per(@page_size)
+      @datasets = StashEngine::AdminDatasets::CurationTableRow.where(search_term: params[:q], tenant_filter: params[:tenant_id],
+        status_filter: params[:curation_status], publication_filter: params[:publication_name],
+        sort_column: params[:sort], sort_direction: params[:direction])
+
+      @datasets = Kaminari.paginate_array(@datasets).page(@page).per(@page_size)
+
+      @publications = InternalDatum.where(data_type: 'publicationName').order(:value).pluck(:value).uniq
+      @pub_name = params[:publication_name] || nil
+
       respond_to do |format|
         format.html
         format.csv
@@ -100,6 +103,20 @@ module StashEngine
 
     private
 
+    def setup_ds_sorting
+      sort_table = SortableTable::SortTable.new(
+        [sort_column_definition('title', nil, %w[title]),
+         sort_column_definition('status', nil, %w[status]),
+         sort_column_definition('author_names', nil, %w[author_names]),
+         sort_column_definition('identifier', nil, %w[identifier]),
+         sort_column_definition('updated_at', nil, %w[updated_at]),
+         sort_column_definition('editor_name', nil, %w[editor_name]),
+         sort_column_definition('storage_size', nil, %w[storage_size]),
+         sort_column_definition('publication_date', nil, %w[publication_date])]
+      )
+      @sort_column = sort_table.sort_column(params[:sort], params[:direction])
+    end
+
     def setup_paging
       if request.format.csv?
         @page = 1
@@ -109,79 +126,6 @@ module StashEngine
       @page = params[:page] || '1'
       @page_size = (params[:page_size].blank? || params[:page_size] != '1000000' ? '10' : '1000000')
     end
-
-    def setup_ds_sorting
-      sort_table = SortableTable::SortTable.new(
-        [sort_column_definition('title', 'stash_engine_resources', %w[title]),
-         sort_column_definition('status', 'stash_engine_curation_activities', %w[status]),
-         sort_column_definition('author', 'stash_engine_authors', %w[author_last_name author_first_name]),
-         sort_column_definition('doi', 'stash_engine_identifiers', %w[identifier]),
-         sort_column_definition('last_modified', 'stash_engine_curation_activities', %w[updated_at]),
-         sort_column_definition('editor', 'stash_engine_users', %w[last_name first_name]),
-         sort_column_definition('size', 'stash_engine_identifiers', %w[storage_size]),
-         sort_column_definition('publication_date', 'stash_engine_resources', %w[publication_date])]
-      )
-      @sort_column = sort_table.sort_column(params[:sort], params[:direction])
-    end
-
-    def build_table_query(full_table_scan = false)
-      # Retrieve the ids of the all the latest Resources
-      resource_ids = Resource.latest_per_dataset.pluck(:id)
-      ca_ids = Resource.latest_curation_activity_per_resource.collect { |i| i[:curation_activity_id] }
-
-      resources = Resource.joins(:identifier, :authors, :current_resource_state, :curation_activities)
-        .includes(:authors, :current_resource_state, :curation_activities, :editor, identifier: :internal_data)
-        .where(stash_engine_resources: { id: resource_ids })
-        .where(stash_engine_curation_activities: { id: ca_ids })
-
-      # If the user is not a super_admin restrict their access to their tenant
-      resources = resources.where(stash_engine_resources: { tenant_id: current_user.tenant_id }) unless current_user.role == 'superuser'
-
-      # Add any filters, sorots, searches and pagination
-      resources = add_searches(query_obj: resources) unless full_table_scan
-      resources = add_full_table_scan(query_obj: resources) if full_table_scan
-      resources = add_filters(query_obj: resources)
-      resources.order(@sort_column.order)
-    end
-
-    def add_searches(query_obj:)
-      # We'll have to play with this search to get it to be reasonable with the insane interface so that it narrows to a small enough
-      # set so that it is useful to people for finding something and a large enough set to have what they want without hunting too long.
-      # It doesn't really support sorting by relevance because of the other sorts.
-      query_obj = query_obj.where('MATCH(stash_engine_identifiers.search_words) AGAINST(?) > 05', params[:q]) unless params[:q].blank?
-      query_obj
-    end
-
-    def add_full_table_scan(query_obj:)
-      # Do a table scan (inefficient but necessary for partial word search)
-      query_obj = query_obj.where('stash_engine_identifiers.search_words LIKE ?', "%#{params[:q]}%") unless params[:q].blank?
-      query_obj
-    end
-
-    # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity
-    def add_filters(query_obj:)
-      # If no filters have been specified then auto filter by the following curation states to reduce the number
-      # of records
-      if params[:tenant].blank? && params[:curation_status].blank? && params[:publication_name].blank? && params[:q].blank?
-        query_obj = query_obj.where(stash_engine_curation_activities: { status: %w[curation submitted action_required] })
-      end
-
-      # Filter by Tenant
-      if TENANT_IDS.include?(params[:tenant]) && current_user.role == 'superuser'
-        query_obj = query_obj.where(stash_engine_resources: { tenant_id: params[:tenant] })
-      end
-      # Filter by Curation Status
-      if CurationActivity.statuses.include?(params[:curation_status])
-        query_obj = query_obj.where(stash_engine_curation_activities: { status: params[:curation_status] })
-      end
-      # Filter by Publication/Journal
-      if params[:publication_name].present?
-        query_obj = query_obj.where(stash_engine_internal_data: { data_type: 'publicationName',
-                                                                  value: params[:publication_name] })
-      end
-      query_obj
-    end
-    # rubocop:enable Metrics/AbcSize, Metrics/CyclomaticComplexity
 
     # this sets up the select list for internal data and will not offer options for items that are only allowed once and one is present
     def setup_internal_data_list
