@@ -1,7 +1,9 @@
 <%= form_tag({ controller: '/stash_engine/admin_datasets', action: 'index' }, method: 'get', id: 'filter_form' ) do -%>
   <div class="c-horizontal-form__input--filter-by">Filter by:</div>
-  <%= select_tag(:tenant, options_for_select( [['Institution', '']] + institution_select, params[:tenant]),
-                 class: 'c-horizontal-form__input', onchange: "this.form.submit();" ) %>
+  <% if current_user.superuser? %>
+    <%= select_tag(:tenant, options_for_select( [['Institution', '']] + institution_select, params[:tenant]),
+                   class: 'c-horizontal-form__input', onchange: "this.form.submit();" ) %>
+  <% end %>
   <%= select_tag(:curation_status, options_for_select( [['Status', '']] + status_select, params[:curation_status]),
                  class: 'c-horizontal-form__input--status', onchange: "this.form.submit();" ) %>
   <% if @publications.any? %>
