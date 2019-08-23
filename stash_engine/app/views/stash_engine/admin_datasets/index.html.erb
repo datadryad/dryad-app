@@ -8,12 +8,10 @@
   <%= render partial: 'search' %>
   <%= render partial: 'filter' %>
 
-  <p>Note: if no filters are set above the list of datasets is restricted to ones with a status of 'Curation', 'Submitted' and 'Author Action Required'.</p>
-
-  <%= render partial: 'datasets_table', locals: { resources: @resources } %>
+  <%= render partial: 'datasets_table', locals: { datasets: @datasets } %>
 
   <div class="c-space-paginator">
-    <%= paginate @resources, params: { page_size: @page_size, show_all: false } %>
+    <%= paginate @datasets, params: { page_size: @page_size, show_all: false } %>
   </div>
 
   <div>
