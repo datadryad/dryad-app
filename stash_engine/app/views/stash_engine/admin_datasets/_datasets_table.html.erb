@@ -52,7 +52,13 @@
           <% end %>
         <% end %>
       </td>
-      <td><%= dataset.author_names %></td>
+      <td>
+        <% if dataset.author_names.length > 50 %>
+          <%= "#{dataset.author_names[0..49]} ..." %>
+        <% else %>
+          <%= dataset.author_names %>
+        <% end %>
+      </td>
       <td><%= dataset.identifier %></td>
       <td class="c-admin-hide-border-right" id="js-curation-activity-date-<%= dataset.identifier_id %>">
         <%= formatted_datetime(dataset.updated_at) %>
