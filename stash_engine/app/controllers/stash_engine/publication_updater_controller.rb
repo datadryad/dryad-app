@@ -12,9 +12,10 @@ module StashEngine
 
     # the admin datasets main page showing users and stats, but slightly different in scope for superusers vs tenant admins
     def index
-      proposed_changes = StashEngine::ProposedChange.where(approved: false, rejected: false)
-      @resources = StashEngine::Resource.latest_per_dataset.where(identifier_id: proposed_changes.map(&:identifier_id))
+      proposed_changes = StashEngine::ProposedChange.includes(identifier: :resources)
+        .joins(identifier: :resources).where(approved: false, rejected: false)
       @proposed_changes = proposed_changes.order(@sort_column.order).page(@page).per(@page_size)
+      @resources = StashEngine::Resource.latest_per_dataset.where(identifier_id: @proposed_changes.map(&:identifier_id))
     end
 
     def update
@@ -47,10 +48,10 @@ module StashEngine
     def setup_ds_sorting
       sort_table = SortableTable::SortTable.new(
         [sort_column_definition('title', 'stash_engine_proposed_changes', %w[title]),
-         sort_column_definition('publiction_name', 'stash_engine_proposed_changes', %w[publiction_name]),
-         sort_column_definition('publiction_issn', 'stash_engine_proposed_changes', %w[publiction_issn]),
-         sort_column_definition('publiction_doi', 'stash_engine_proposed_changes', %w[publiction_doi]),
-         sort_column_definition('publiction_date', 'stash_engine_proposed_changes', %w[publiction_date]),
+         sort_column_definition('publication_name', 'stash_engine_proposed_changes', %w[publication_name]),
+         sort_column_definition('publication_issn', 'stash_engine_proposed_changes', %w[publication_issn]),
+         sort_column_definition('publication_doi', 'stash_engine_proposed_changes', %w[publication_doi]),
+         sort_column_definition('publication_date', 'stash_engine_proposed_changes', %w[publication_date]),
          sort_column_definition('authors', 'stash_engine_proposed_changes', %w[authors]),
          sort_column_definition('provenance', 'stash_engine_proposed_changes', %w[provenance]),
          sort_column_definition('score', 'stash_engine_proposed_changes', %w[score])]
