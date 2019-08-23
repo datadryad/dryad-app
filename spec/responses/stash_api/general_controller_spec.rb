@@ -16,14 +16,14 @@ module StashApi
 
     describe '#test' do
       it 'returns welcome message and authenticated user id for good token' do
-        post '/api/test', nil, default_authenticated_headers
+        post '/api/v2/test', nil, default_authenticated_headers
         hsh = response_body_hash
         expect(/Welcome application owner.+$/).to match(hsh[:message])
         expect(@user.id).to eql(hsh[:user_id])
       end
 
       it 'returns 401 unauthorized for non-authenticated user' do
-        response_code = post '/api/test', nil, default_json_headers
+        response_code = post '/api/v2/test', nil, default_json_headers
         expect(response_code).to eq(401) # unauthorized
         expect(/invalid_token/).to match(response.headers['WWW-Authenticate'])
       end
@@ -31,9 +31,9 @@ module StashApi
 
     describe '#index' do
       it 'has a HATEOAS link to the main entry into API, the datasets list' do
-        get '/api/', {}, default_json_headers
+        get '/api/v2/', {}, default_json_headers
         hsh = response_body_hash
-        expect(hsh['_links']['stash:datasets']['href']).to eql('/api/datasets')
+        expect(hsh['_links']['stash:datasets']['href']).to eql('/api/v2/datasets')
       end
     end
   end

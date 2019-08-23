@@ -32,7 +32,7 @@ Our demo instance of Dryad is available at [https://dashdemo.ucop.edu](https://d
 
 * A basic generalized introduction to Dryad's Dash is available at [https://dash.ucop.edu/stash/about](https://dash.ucop.edu/stash/about) .
 
-* API documentation: [https://github.com/CDLUC3/stash/blob/master/stash_api/basic_submission.md](https://github.com/CDLUC3/stash/blob/master/stash_api/basic_submission.md) and [https://dash.ucop.edu/api/docs/](https://dash.ucop.edu/api/docs/) 
+* API documentation: [https://github.com/CDLUC3/stash/blob/master/stash_api/basic_submission.md](https://github.com/CDLUC3/stash/blob/master/stash_api/basic_submission.md) and [https://datadryad.org/api/v2/docs/](https://dash.ucop.edu/api/v2/docs/)
 
 * A database [Entity-Relationship diagram](other_files/dash_er_2018-06.pdf).  
 

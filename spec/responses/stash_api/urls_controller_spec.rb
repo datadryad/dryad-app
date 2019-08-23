@@ -68,7 +68,7 @@ module StashApi
       it 'will retrive, validate and fill in info from a URL from the internet by HEAD request' do
         mock_github_head_request!
         test_url = 'http://github.com/CDL-Dryad/dryad/raw/master/app/assets/images/favicon.ico'
-        response_code = post "/api/datasets/#{CGI.escape(@identifier.to_s)}/urls", { url: test_url }.to_json, default_authenticated_headers
+        response_code = post "/api/v2/datasets/#{CGI.escape(@identifier.to_s)}/urls", { url: test_url }.to_json, default_authenticated_headers
         expect(response_code).to eq(201)
         hsh = response_body_hash
         expect(hsh['path']).to eq('favicon.ico')
@@ -79,7 +79,7 @@ module StashApi
       end
 
       it 'will take a manual population of url info without validation.  At your own risk and may barf on Merritt submission' do
-        response_code = post "/api/datasets/#{CGI.escape(@identifier.to_s)}/urls", FILE_HASH.to_json, default_authenticated_headers
+        response_code = post "/api/v2/datasets/#{CGI.escape(@identifier.to_s)}/urls", FILE_HASH.to_json, default_authenticated_headers
         expect(response_code).to eq(201)
         hsh = response_body_hash
         FILE_HASH.keys.reject { |k| k == 'skipValidation' }.each do |key|
@@ -89,22 +89,22 @@ module StashApi
 
       it 'does not allow regular users to populate urls that are not validated' do
         @user.update(role: 'user')
-        response_code = post "/api/datasets/#{CGI.escape(@identifier.to_s)}/urls", FILE_HASH.to_json, default_authenticated_headers
+        response_code = post "/api/v2/datasets/#{CGI.escape(@identifier.to_s)}/urls", FILE_HASH.to_json, default_authenticated_headers
         expect(response_code).to eq(401)
       end
 
       it "doesn't allow anonymous (not logged in) users to add urls" do
         mock_github_head_request!
         test_url = 'http://github.com/CDL-Dryad/dryad/raw/master/app/assets/images/favicon.ico'
-        response_code = post "/api/datasets/#{CGI.escape(@identifier.to_s)}/urls", { url: test_url }.to_json, default_json_headers
+        response_code = post "/api/v2/datasets/#{CGI.escape(@identifier.to_s)}/urls", { url: test_url }.to_json, default_json_headers
         expect(response_code).to eq(401)
       end
 
       it "doesn't allow adding the same URL multiple times" do
         mock_github_head_request!
         test_url = 'http://github.com/CDL-Dryad/dryad/raw/master/app/assets/images/favicon.ico'
-        post "/api/datasets/#{CGI.escape(@identifier.to_s)}/urls", { url: test_url }.to_json, default_authenticated_headers
-        response_code = post "/api/datasets/#{CGI.escape(@identifier.to_s)}/urls", { url: test_url }.to_json, default_authenticated_headers
+        post "/api/v2/datasets/#{CGI.escape(@identifier.to_s)}/urls", { url: test_url }.to_json, default_authenticated_headers
+        response_code = post "/api/v2/datasets/#{CGI.escape(@identifier.to_s)}/urls", { url: test_url }.to_json, default_authenticated_headers
         expect(response_code).to eq(403)
         expect(response_body_hash.key?('error')).to eq(true)
       end
@@ -112,14 +112,14 @@ module StashApi
       it 'disallows invalid-format urls' do
         mock_github_head_request!
         test_url = 'groogalona.fun/'
-        response_code = post "/api/datasets/#{CGI.escape(@identifier.to_s)}/urls", { url: test_url }.to_json, default_authenticated_headers
+        response_code = post "/api/v2/datasets/#{CGI.escape(@identifier.to_s)}/urls", { url: test_url }.to_json, default_authenticated_headers
         expect(response_code).to eq(403)
       end
 
       it 'gives an error for non-validating urls (404)' do
         mock_github_bad_head_request!
         test_url = 'http://github.com/CDL-Dryad/dryad/raw/master/app/assets/images/favicon.ico'
-        response_code = post "/api/datasets/#{CGI.escape(@identifier.to_s)}/urls", { url: test_url }.to_json, default_authenticated_headers
+        response_code = post "/api/v2/datasets/#{CGI.escape(@identifier.to_s)}/urls", { url: test_url }.to_json, default_authenticated_headers
         expect(response_code).to eq(403)
         expect(response_body_hash.key?('error')).to eq(true)
       end
@@ -129,7 +129,7 @@ module StashApi
         @resources[1].current_resource_state.update(resource_state: 'processing')
         mock_github_head_request!
         test_url = 'http://github.com/CDL-Dryad/dryad/raw/master/app/assets/images/favicon.ico'
-        response_code = post "/api/datasets/#{CGI.escape(@identifier.to_s)}/urls", { url: test_url }.to_json, default_authenticated_headers
+        response_code = post "/api/v2/datasets/#{CGI.escape(@identifier.to_s)}/urls", { url: test_url }.to_json, default_authenticated_headers
         expect(response_code).to eq(403)
         expect(response_body_hash.key?('error')).to eq(true)
       end

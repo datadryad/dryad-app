@@ -1,7 +1,7 @@
 # Doing a basic submission and an version update with the Dryad API
 The Dryad API now enables submission.  For authentication, it uses an OAuth2 client credentials grant (see [A Guide To OAuth 2.0 Grants](https://alexbilbie.com/guide-to-oauth-2-grants/)).
 
-This document gives practical information for working with the API in order to submit a dataset and [fuller API documentation is available](https://dash.ucop.edu/api/docs/index.html).
+This document gives practical information for working with the API in order to submit a dataset and [fuller API documentation is available](https://datadryad.org/api/v2/docs/index.html).
 
 ## Log in to Dryad and request a an application id and secret
 
@@ -39,7 +39,7 @@ token = JSON.parse(response)['access_token']
 Now make sure you can use your key to access secured areas of the API.  Test with some code like the following.
 
 ```bash
-curl -i -H "Accept: application/json" -H "Content-Type: application/json" -H "Authorization: Bearer <token>" -X GET https://<domain>/api/test
+curl -i -H "Accept: application/json" -H "Content-Type: application/json" -H "Authorization: Bearer <token>" -X GET https://<domain>/api/v2/test
 ```
 
 or
@@ -48,7 +48,7 @@ or
 # this Ruby example continues from the section above and assumes the variables above are already set
 headers = { 'Accept' => 'application/json', 'Content-Type' => 'application/json', 'Authorization' => "Bearer #{token}" }
 
-resp = RestClient.get "https://#{domain_name}/api/test", headers
+resp = RestClient.get "https://#{domain_name}/api/v2/test", headers
 
 j = JSON.parse(resp)
 ```
@@ -66,7 +66,7 @@ After a successful dataset POST, you should see the dataset created with your me
 For the cURL example, create a file called my_metadata.json that contains your json for the descriptive metadata to send with cURL.
 
 ```bash
-curl --data "@my_metadata.json" -i -X POST https://<domain-name>/api/datasets -H "Authorization: Bearer <token>" -H "Content-Type: application/json"
+curl --data "@my_metadata.json" -i -X POST https://<domain-name>/api/v2/datasets -H "Authorization: Bearer <token>" -H "Content-Type: application/json"
 ```
 Or
 
@@ -85,7 +85,7 @@ metadata_hash =
    	 ],
     "abstract": "Cyberneticists agree that concurrent models are an interesting new topic in the field of machine learning, and security experts concur."
   }
-resp = RestClient.post "https://#{domain_name}/api/datasets", metadata_hash.to_json, headers
+resp = RestClient.post "https://#{domain_name}/api/v2/datasets", metadata_hash.to_json, headers
 # you should see a 201 response here
 
 # to see information about the dataset created
@@ -119,10 +119,10 @@ You may upload multiple files for your dataset. Only all direct file uploads or 
 
 Find a file on your file system to upload, get its path and determine its Content-Type.  You would send it to the server like the example below by changing the file\_path and content\_type values.
 
-For direct file uploads, do a PUT to {{url-domain-name}}/api/datasets/{{doi_encoded}}/files/{{filename-encoded}} and the body being sent would be the binary file.  Set the HTTP "Content-Description" header to add a short description.  Set the HTTP Content-Type appropriately for the file type (for example image/jpeg).
+For direct file uploads, do a PUT to {{url-domain-name}}/api/v2/datasets/{{doi_encoded}}/files/{{filename-encoded}} and the body being sent would be the binary file.  Set the HTTP "Content-Description" header to add a short description.  Set the HTTP Content-Type appropriately for the file type (for example image/jpeg).
 
 ```bash
-curl --data-binary "@</path/to/my/file>" -i -X PUT "https://<domain-name>/api/datasets/<encoded-doi>/files/<encoded-file-name>" -H "Authorization: Bearer <token>" -H "Content-Type: <mime-type>" -H "Accept: application/json"
+curl --data-binary "@</path/to/my/file>" -i -X PUT "https://<domain-name>/api/v2/datasets/<encoded-doi>/files/<encoded-file-name>" -H "Authorization: Bearer <token>" -H "Content-Type: <mime-type>" -H "Accept: application/json"
 ```
 
 Or
@@ -142,7 +142,7 @@ file_name = URI.escape(File.basename(file_path))
 content_type = 'image/gif'
 
 resp = RestClient.put(
-  "https://#{domain_name}/api/datasets/#{doi_encoded}/files/#{file_name}",
+  "https://#{domain_name}/api/v2/datasets/#{doi_encoded}/files/#{file_name}",
   File.read(file_path),
   headers.merge({'Content-Type' => content_type})
 )
@@ -154,11 +154,11 @@ return_hash = JSON.parse(resp)
 ```
 
 After a file upload you will get a digest and digestType back in the JSON.  You can check this against your local file to be certain it was uploaded correctly if you wish.
-The other method is adding by URL.  You can do a POST to {{url-domain-name}}/api/datasets/{{doi_encoded}}/urls with json something like the following:
+The other method is adding by URL.  You can do a POST to {{url-domain-name}}/api/v2/datasets/{{doi_encoded}}/urls with json something like the following:
 
 ### Upload by URL reference
 
-To upload a file that is referenced by URL, do a POST to `{{url-domain-name}}/api/datasets/{{doi_encoded}}/urls` with json something like the following:
+To upload a file that is referenced by URL, do a POST to `{{url-domain-name}}/api/v2/datasets/{{doi_encoded}}/urls` with json something like the following:
 
 ```
 {
@@ -183,7 +183,7 @@ This will add entries to the database with the information you specify.  Only th
 
 After adding the descriptive metadata and any files, you're ready to publish your dataset.
 
-Publication is accomplished by sending a PATCH request to /api/datasets/&lt;encoded-doi&gt; with some json patch information that tells the server to try and set the /versionStatus value to 'submitted' like below:
+Publication is accomplished by sending a PATCH request to /api/v2/datasets/&lt;encoded-doi&gt; with some json patch information that tells the server to try and set the /versionStatus value to 'submitted' like below:
 
 ```json
 [
@@ -195,7 +195,7 @@ You also need to set the Content-Type header to 'application/json-patch+json'
 For the cURL example, please save a file called my_patch.json with the patch content shown above.
 
 ```bash
-curl --data "@my_patch.json" -i -X PATCH "https://<domain-name>/api/datasets/<encoded-doi>" -H "Authorization: Bearer <token>" -H "Content-Type: application/json-patch+json" -H "Accept: application/json"
+curl --data "@my_patch.json" -i -X PATCH "https://<domain-name>/api/v2/datasets/<encoded-doi>" -H "Authorization: Bearer <token>" -H "Content-Type: application/json-patch+json" -H "Accept: application/json"
 ```
 Or
 
@@ -204,14 +204,14 @@ Or
 body = [ { "op": "replace", "path": "/versionStatus", "value": "submitted" } ].to_json
 
 resp = RestClient.patch(
-  "https://#{domain_name}/api/datasets/#{doi_encoded}",
+  "https://#{domain_name}/api/v2/datasets/#{doi_encoded}",
   body,
   headers.merge({'Content-Type' =>  'application/json-patch+json'})
 )
 
 # A successful response will be a 202 and you should receive a json response
 # with information about the submission.  You may continue to do GET requests
-# on the dataset /api/datasets/<encoded-doi> to see the status changes until
+# on the dataset /api/v2/datasets/<encoded-doi> to see the status changes until
 # a successful ingest which will be 'submitted'.
 
 return_hash = JSON.parse(resp)
@@ -303,7 +303,7 @@ To modify your dataset you'll do a PUT request to the /datasets/<encoded-doi> UR
 ```ruby
 # this example continues the ones from above and asumes you already have variables defined
 
-resp = RestClient.put "https://#{domain_name}/api/datasets/#{doi_encoded}", metadata_hash.to_json, headers
+resp = RestClient.put "https://#{domain_name}/api/v2/datasets/#{doi_encoded}", metadata_hash.to_json, headers
 # You will see a 200 response code if all is well.
 ```
 
