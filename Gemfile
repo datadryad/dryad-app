@@ -6,6 +6,7 @@ require File.join(File.dirname(__FILE__), 'lib', 'bundler_help.rb')
 
 gem 'mysql2', '~> 0.4.10'
 gem 'rails', '4.2.11'
+gem 'rb-readline'
 
 # ############################################################
 # Local engines
@@ -54,7 +55,7 @@ gem 'stripe'
 # ############################################################
 # Development and testing
 
-group :development do
+group :development, :local_dev do
   gem 'colorize', '~> 0.8'
   gem 'web-console', '~> 2.0'
   # gem 'httplog', not needed always, but good for troubleshooting HTTP requests to outside http services from the app
@@ -98,7 +99,7 @@ group :test do
   gem 'webmock'
 end
 
-group :development, :test do
+group :development, :test, :local_dev do
   gem 'binding_of_caller'
   # Ruby fast debugger - base + CLI (http://github.com/deivid-rodriguez/byebug)
   gem 'byebug'
