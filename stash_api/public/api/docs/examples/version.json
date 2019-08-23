@@ -1,16 +1,16 @@
 {
   "_links": {
     "self": {
-      "href": "/api/versions/231"
+      "href": "/api/v2/versions/231"
     },
     "stash:dataset": {
-      "href": "/api/datasets/doi%3A10.5072%2FFK2708471V"
+      "href": "/api/v2/datasets/doi%3A10.5072%2FFK2708471V"
     },
     "stash:files": {
-      "href": "/api/versions/231/files"
+      "href": "/api/v2/versions/231/files"
     },
     "stash:download": {
-      "href": "/api/versions/231/download"
+      "href": "/api/v2/versions/231/download"
     },
     "curies": [
       {

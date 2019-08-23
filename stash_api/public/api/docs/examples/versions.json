@@ -1,13 +1,13 @@
 {
   "_links": {
     "self": {
-      "href": "/api/datasets/doi%3A10.5072%2FFK2MK6CD6D/versions"
+      "href": "/api/v2/datasets/doi%3A10.5072%2FFK2MK6CD6D/versions"
     },
     "first": {
-      "href": "/api/datasets/doi%3A10.5072%2FFK2MK6CD6D/versions"
+      "href": "/api/v2/datasets/doi%3A10.5072%2FFK2MK6CD6D/versions"
     },
     "last": {
-      "href": "/api/datasets/doi%3A10.5072%2FFK2MK6CD6D/versions?page=1"
+      "href": "/api/v2/datasets/doi%3A10.5072%2FFK2MK6CD6D/versions?page=1"
     }
   },
   "count": 3,
@@ -17,16 +17,16 @@
       {
         "_links": {
           "self": {
-            "href": "/api/versions/18"
+            "href": "/api/v2/versions/18"
           },
           "stash:dataset": {
-            "href": "/api/datasets/doi%3A10.5072%2FFK2MK6CD6D"
+            "href": "/api/v2/datasets/doi%3A10.5072%2FFK2MK6CD6D"
           },
           "stash:files": {
-            "href": "/api/versions/18/files"
+            "href": "/api/v2/versions/18/files"
           },
           "stash:download": {
-            "href": "/api/versions/18/download"
+            "href": "/api/v2/versions/18/download"
           },
           "curies": [
             {
@@ -53,16 +53,16 @@
       {
         "_links": {
           "self": {
-            "href": "/api/versions/32"
+            "href": "/api/v2/versions/32"
           },
           "stash:dataset": {
-            "href": "/api/datasets/doi%3A10.5072%2FFK2MK6CD6D"
+            "href": "/api/v2/datasets/doi%3A10.5072%2FFK2MK6CD6D"
           },
           "stash:files": {
-            "href": "/api/versions/32/files"
+            "href": "/api/v2/versions/32/files"
           },
           "stash:download": {
-            "href": "/api/versions/32/download"
+            "href": "/api/v2/versions/32/download"
           },
           "curies": [
             {
@@ -89,16 +89,16 @@
       {
         "_links": {
           "self": {
-            "href": "/api/versions/69"
+            "href": "/api/v2/versions/69"
           },
           "stash:dataset": {
-            "href": "/api/datasets/doi%3A10.5072%2FFK2MK6CD6D"
+            "href": "/api/v2/datasets/doi%3A10.5072%2FFK2MK6CD6D"
           },
           "stash:files": {
-            "href": "/api/versions/69/files"
+            "href": "/api/v2/versions/69/files"
           },
           "stash:download": {
-            "href": "/api/versions/69/download"
+            "href": "/api/v2/versions/69/download"
           },
           "curies": [
             {
