@@ -41,7 +41,8 @@
         <%= StashEngine::CurationActivity.readable_status(dataset.status) %>
       </td>
       <td class="c-admin-hide-border-left">
-        <% if %w[admin superuser].include?(current_user.role) && dataset.resource_state == 'submitted' && %w[published embargoed].include?(dataset.status) %>
+        <% if %w[admin superuser].include?(current_user.role) && dataset.resource_state == 'submitted' &&
+          !%w[published embargoed].include?(dataset.status) %>
           <%= form_tag({ controller: '/stash_engine/admin_datasets',
                          action: 'curation_activity_popup', id: dataset.resource_id },
                          method: :get, remote: true) do -%>
