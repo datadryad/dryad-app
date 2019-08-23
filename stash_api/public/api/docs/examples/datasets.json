@@ -1,19 +1,19 @@
 {
   "_links": {
     "self": {
-      "href": "/api/datasets?page=2"
+      "href": "/api/v2/datasets?page=2"
     },
     "first": {
-      "href": "/api/datasets"
+      "href": "/api/v2/datasets"
     },
     "last": {
-      "href": "/api/datasets?page=9"
+      "href": "/api/v2/datasets?page=9"
     },
     "prev": {
-      "href": "/api/datasets?page=1"
+      "href": "/api/v2/datasets?page=1"
     },
     "next": {
-      "href": "/api/datasets?page=3"
+      "href": "/api/v2/datasets?page=3"
     }
   },
   "count": 10,
@@ -23,16 +23,16 @@
       {
         "_links": {
           "self": {
-            "href": "/api/datasets/doi%3A10.5072%2FFK2HM58Q3S"
+            "href": "/api/v2/datasets/doi%3A10.5072%2FFK2HM58Q3S"
           },
           "stash:versions": {
-            "href": "/api/datasets/doi%3A10.5072%2FFK2HM58Q3S/versions"
+            "href": "/api/v2/datasets/doi%3A10.5072%2FFK2HM58Q3S/versions"
           },
           "stash:version": {
-            "href": "/api/versions/11"
+            "href": "/api/v2/versions/11"
           },
           "stash:download": {
-            "href": "/api/datasets/doi%3A10.5072%2FFK2HM58Q3S/download"
+            "href": "/api/v2/datasets/doi%3A10.5072%2FFK2HM58Q3S/download"
           },
           "curies": [
             {
@@ -61,16 +61,16 @@
       {
         "_links": {
           "self": {
-            "href": "/api/datasets/doi%3A10.5072%2FFK2474DX0J"
+            "href": "/api/v2/datasets/doi%3A10.5072%2FFK2474DX0J"
           },
           "stash:versions": {
-            "href": "/api/datasets/doi%3A10.5072%2FFK2474DX0J/versions"
+            "href": "/api/v2/datasets/doi%3A10.5072%2FFK2474DX0J/versions"
           },
           "stash:version": {
-            "href": "/api/versions/28"
+            "href": "/api/v2/versions/28"
           },
           "stash:download": {
-            "href": "/api/datasets/doi%3A10.5072%2FFK2474DX0J/download"
+            "href": "/api/v2/datasets/doi%3A10.5072%2FFK2474DX0J/download"
           },
           "curies": [
             {
@@ -187,16 +187,16 @@
       {
         "_links": {
           "self": {
-            "href": "/api/datasets/doi%3A10.5072%2FFK28W3G720"
+            "href": "/api/v2/datasets/doi%3A10.5072%2FFK28W3G720"
           },
           "stash:versions": {
-            "href": "/api/datasets/doi%3A10.5072%2FFK28W3G720/versions"
+            "href": "/api/v2/datasets/doi%3A10.5072%2FFK28W3G720/versions"
           },
           "stash:version": {
-            "href": "/api/versions/16"
+            "href": "/api/v2/versions/16"
           },
           "stash:download": {
-            "href": "/api/datasets/doi%3A10.5072%2FFK28W3G720/download"
+            "href": "/api/v2/datasets/doi%3A10.5072%2FFK28W3G720/download"
           },
           "curies": [
             {
@@ -234,16 +234,16 @@
       {
         "_links": {
           "self": {
-            "href": "/api/datasets/doi%3A10.5072%2FFK2MK6CD6D"
+            "href": "/api/v2/datasets/doi%3A10.5072%2FFK2MK6CD6D"
           },
           "stash:versions": {
-            "href": "/api/datasets/doi%3A10.5072%2FFK2MK6CD6D/versions"
+            "href": "/api/v2/datasets/doi%3A10.5072%2FFK2MK6CD6D/versions"
           },
           "stash:version": {
-            "href": "/api/versions/32"
+            "href": "/api/v2/versions/32"
           },
           "stash:download": {
-            "href": "/api/datasets/doi%3A10.5072%2FFK2MK6CD6D/download"
+            "href": "/api/v2/datasets/doi%3A10.5072%2FFK2MK6CD6D/download"
           },
           "curies": [
             {
@@ -276,16 +276,16 @@
       {
         "_links": {
           "self": {
-            "href": "/api/datasets/doi%3A10.5072%2FFK24T6N929"
+            "href": "/api/v2/datasets/doi%3A10.5072%2FFK24T6N929"
           },
           "stash:versions": {
-            "href": "/api/datasets/doi%3A10.5072%2FFK24T6N929/versions"
+            "href": "/api/v2/datasets/doi%3A10.5072%2FFK24T6N929/versions"
           },
           "stash:version": {
-            "href": "/api/versions/68"
+            "href": "/api/v2/versions/68"
           },
           "stash:download": {
-            "href": "/api/datasets/doi%3A10.5072%2FFK24T6N929/download"
+            "href": "/api/v2/datasets/doi%3A10.5072%2FFK24T6N929/download"
           },
           "curies": [
             {
@@ -333,16 +333,16 @@
       {
         "_links": {
           "self": {
-            "href": "/api/datasets/doi%3A10.5072%2FFK2QJ7G49H"
+            "href": "/api/v2/datasets/doi%3A10.5072%2FFK2QJ7G49H"
           },
           "stash:versions": {
-            "href": "/api/datasets/doi%3A10.5072%2FFK2QJ7G49H/versions"
+            "href": "/api/v2/datasets/doi%3A10.5072%2FFK2QJ7G49H/versions"
           },
           "stash:version": {
-            "href": "/api/versions/27"
+            "href": "/api/v2/versions/27"
           },
           "stash:download": {
-            "href": "/api/datasets/doi%3A10.5072%2FFK2QJ7G49H/download"
+            "href": "/api/v2/datasets/doi%3A10.5072%2FFK2QJ7G49H/download"
           },
           "curies": [
             {
@@ -391,16 +391,16 @@
       {
         "_links": {
           "self": {
-            "href": "/api/datasets/doi%3A10.5072%2FFK2J966H3B"
+            "href": "/api/v2/datasets/doi%3A10.5072%2FFK2J966H3B"
           },
           "stash:versions": {
-            "href": "/api/datasets/doi%3A10.5072%2FFK2J966H3B/versions"
+            "href": "/api/v2/datasets/doi%3A10.5072%2FFK2J966H3B/versions"
           },
           "stash:version": {
-            "href": "/api/versions/53"
+            "href": "/api/v2/versions/53"
           },
           "stash:download": {
-            "href": "/api/datasets/doi%3A10.5072%2FFK2J966H3B/download"
+            "href": "/api/v2/datasets/doi%3A10.5072%2FFK2J966H3B/download"
           },
           "curies": [
             {
@@ -429,16 +429,16 @@
       {
         "_links": {
           "self": {
-            "href": "/api/datasets/doi%3A10.5072%2FFK2T151W7S"
+            "href": "/api/v2/datasets/doi%3A10.5072%2FFK2T151W7S"
           },
           "stash:versions": {
-            "href": "/api/datasets/doi%3A10.5072%2FFK2T151W7S/versions"
+            "href": "/api/v2/datasets/doi%3A10.5072%2FFK2T151W7S/versions"
           },
           "stash:version": {
-            "href": "/api/versions/54"
+            "href": "/api/v2/versions/54"
           },
           "stash:download": {
-            "href": "/api/datasets/doi%3A10.5072%2FFK2T151W7S/download"
+            "href": "/api/v2/datasets/doi%3A10.5072%2FFK2T151W7S/download"
           },
           "curies": [
             {
