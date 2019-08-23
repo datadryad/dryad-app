@@ -70,6 +70,7 @@ module StashEngine
     # ------------------------------------------
     # Translates the enum value to a human readable status
     def self.readable_status(status)
+      return '' unless status.present?
       case status
       when 'peer_review'
         'Private for Peer Review'
