@@ -29,7 +29,7 @@ module StashEngine
     def fetch_related_identifier_metadata(resource:, related_identifier_type:, relation_type:)
       return nil unless resource.present? && related_identifier_type.present? && relation_type.present?
       resource.related_identifiers.where(related_identifier_type: related_identifier_type,
-                                         relation_type: relation_type).first&.value || 'Not available'
+                                         relation_type: relation_type).first&.related_identifier || 'Not available'
     end
 
     def existing_authors(resource:)
