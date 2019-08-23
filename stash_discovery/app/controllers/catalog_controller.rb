@@ -81,11 +81,12 @@ class CatalogController < ApplicationController
     # config.add_facet_field Settings.FIELDS.PROVENANCE, label: 'Institution', limit: 8, partial: "icon_facet"
     # config.add_facet_field Settings.FIELDS.CREATOR, :label => 'Author', :limit => 8
     config.add_facet_field 'dc_type_s', label: 'Type', limit: 8
-    config.add_facet_field Settings.FIELDS.PUBLISHER, label: 'Institution', limit: 8
+    # config.add_facet_field Settings.FIELDS.PUBLISHER, label: 'Institution', limit: 8
     config.add_facet_field Settings.FIELDS.SUBJECT, label: 'Subject Area', limit: 8
     config.add_facet_field Settings.FIELDS.SPATIAL_COVERAGE, label: 'Geographical Location', limit: 8
     config.add_facet_field Settings.FIELDS.PART_OF, label: 'Collection', limit: 8
     config.add_facet_field Settings.FIELDS.RELATED_PUBLICATION_NAME, label: 'Journal', limit: 8
+    config.add_facet_field Settings.FIELDS.AUTHOR_AFFILIATION_NAME, label: 'Institution', limit: 8
 
     # config.add_facet_field Settings.FIELDS.RIGHTS, label: 'Access', limit: 8, partial: "icon_facet"
     # config.add_facet_field Settings.FIELDS.GEOM_TYPE, label: 'Data type', limit: 8, partial: "icon_facet"
@@ -115,8 +116,9 @@ class CatalogController < ApplicationController
     config.add_index_field Settings.FIELDS.YEAR
     config.add_index_field Settings.FIELDS.CREATOR
     config.add_index_field Settings.FIELDS.DESCRIPTION, helper_method: :snippit
-    config.add_index_field Settings.FIELDS.PUBLISHER
+    # config.add_index_field Settings.FIELDS.PUBLISHER
     config.add_index_field Settings.FIELDS.RELATED_PUBLICATION_NAME
+    config.add_index_field Settings.FIELDS.AUTHOR_AFFILIATION_NAME
 
     # solr fields to be displayed in the show (single result) view
     #  The ordering of the field names is the order of the display
@@ -126,13 +128,14 @@ class CatalogController < ApplicationController
     # helper_method: [Symbol] method that can be used to render the value
     config.add_show_field Settings.FIELDS.CREATOR, label: 'Author(s)', itemprop: 'author'
     config.add_show_field Settings.FIELDS.DESCRIPTION, label: 'Description', itemprop: 'description', helper_method: :render_value_as_truncate_abstract
-    config.add_show_field Settings.FIELDS.PUBLISHER, label: 'Institution', itemprop: 'publisher'
+    # config.add_show_field Settings.FIELDS.PUBLISHER, label: 'Institution', itemprop: 'publisher'
     config.add_show_field Settings.FIELDS.PART_OF, label: 'Collection', itemprop: 'isPartOf'
     config.add_show_field Settings.FIELDS.SPATIAL_COVERAGE, label: 'Geographical Location(s)', itemprop: 'spatial', link_to_search: true
     config.add_show_field Settings.FIELDS.SUBJECT, label: 'Subject Area(s)', itemprop: 'keywords', link_to_search: true
     config.add_show_field Settings.FIELDS.TEMPORAL, label: 'Year', itemprop: 'temporal'
     config.add_show_field Settings.FIELDS.PROVENANCE, label: 'Held by', link_to_search: true
     config.add_show_field Settings.FIELDS.RELATED_PUBLICATION_NAME, label: 'Journal', itemprop: 'related_publication_name'
+    config.add_show_field Settings.FIELDS.AUTHOR_AFFILIATION_NAME, label: 'Institution', itemprop: 'author_affiliation_name'
 
     # "fielded" search configuration. Used by pulldown among other places.
     # For supported keys in hash, see rdoc for Blacklight::SearchFields
