@@ -7,45 +7,44 @@
     <th class="c-admin-table <%= sort_display('status', @sort_column) %>" colspan="2">
       <%= sort_by 'status', title: 'Status', current_column: @sort_column %>
     </th>
-    <th class="c-admin-table <%= sort_display('author', @sort_column) %>">
-      <%= sort_by 'author', title: 'Author', current_column: @sort_column %>
+    <th class="c-admin-table <%= sort_display('author_names', @sort_column) %>">
+      <%= sort_by 'author_names', title: 'Author', current_column: @sort_column %>
     </th>
-    <th class="c-admin-table <%= sort_display('doi', @sort_column) %>">
-      <%= sort_by 'doi', title: 'DOI', current_column: @sort_column %>
+    <th class="c-admin-table <%= sort_display('identifier', @sort_column) %>">
+      <%= sort_by 'identifier', title: 'DOI', current_column: @sort_column %>
     </th>
-    <th class="c-admin-table <%= sort_display('last_modified', @sort_column) %>" colspan="2">
-      <%= sort_by 'last_modified', title: 'Last Modified', current_column: @sort_column %>
+    <th class="c-admin-table <%= sort_display('updated_at', @sort_column) %>" colspan="2">
+      <%= sort_by 'updated_at', title: 'Last Modified', current_column: @sort_column %>
     </th>
-    <th class="c-admin-table <%= sort_display('editor', @sort_column) %>">
-      <%= sort_by 'editor', title: 'Last modified by', current_column: @sort_column %>
+    <th class="c-admin-table <%= sort_display('editor_name', @sort_column) %>">
+      <%= sort_by 'editor_name', title: 'Last modified by', current_column: @sort_column %>
     </th>
-    <th class="c-admin-table <%= sort_display('size', @sort_column) %>">
-      <%= sort_by 'size', title: 'Size', current_column: @sort_column %>
+    <th class="c-admin-table <%= sort_display('storage_size', @sort_column) %>">
+      <%= sort_by 'storage_size', title: 'Size', current_column: @sort_column %>
     </th>
     <th class="c-admin-table <%= sort_display('publication_date', @sort_column) %>" colspan="2">
       <%= sort_by 'publication_date', title: 'Publication Date', current_column: @sort_column %>
     </th>
   </tr>
 
-  <% resources.each do |resource| %>
-    <% identifier = resource.identifier %>
-
+  <% datasets.each do |dataset| %>
     <tr class="c-lined-table__row">
       <td class="c-admin-hide-border-right">
-        <%= link_to resource.title, show_path(id: identifier.to_s, latest: true), target: :blank %>
+        <%= link_to dataset.title, show_path(id: dataset.identifier, latest: true), target: :blank %>
       </td>
-      <td class="c-admin-hide-border-left" id="js-edit-dataset-button-column-<%= resource.id %>">
-        <% if resource&.current_curation_activity.curation? || resource&.dataset_in_progress_editor&.id == current_user.id %>
-          <%= render partial: 'stash_engine/admin_datasets/edit_dataset_button', locals: { resource_id: resource.id } %>
+      <td class="c-admin-hide-border-left" id="js-edit-dataset-button-column-<%= dataset.resource_id %>">
+        <% if dataset.status == 'curation' || dataset.editor_id == current_user.id %>
+          <%= render partial: 'stash_engine/admin_datasets/edit_dataset_button', locals: { resource_id: dataset.resource_id } %>
         <% end %>
       </td>
-      <td class="c-admin-hide-border-right" id="js-curation-state-<%= identifier.id %>">
-        <%= resource.current_curation_activity.readable_status %>
+      <td class="c-admin-hide-border-right" id="js-curation-state-<%= dataset.identifier_id %>">
+        <%= StashEngine::CurationActivity.readable_status(dataset.status) %>
       </td>
       <td class="c-admin-hide-border-left">
-        <% if %w[admin superuser].include?(current_user.role) && resource.curatable? %>
+        <% if %w[admin superuser].include?(current_user.role) && dataset.resource_state == 'submitted' &&
+          !%w[published embargoed].include?(dataset.status) %>
           <%= form_tag({ controller: '/stash_engine/admin_datasets',
-                         action: 'curation_activity_popup', id: resource.id },
+                         action: 'curation_activity_popup', id: dataset.resource_id },
                          method: :get, remote: true) do -%>
             <button class="c-admin-edit-icon" aria-label="Update status" alt="Update status">
               <i class="fa fa-pencil" aria-hidden="true"></i>
@@ -53,23 +52,34 @@
           <% end %>
         <% end %>
       </td>
-      <td><%= resource&.authors.first&.author_standard_name %></td>
-      <td><%= identifier.identifier %></td>
-      <td class="c-admin-hide-border-right" id="js-curation-activity-date-<%= identifier.id %>">
-        <%= formatted_datetime(resource.current_curation_activity.updated_at) %>
+      <td>
+        <% if dataset.author_names.length > 50 %>
+          <%= "#{dataset.author_names[0..49]} ..." %>
+        <% else %>
+          <%= dataset.author_names %>
+        <% end %>
+      </td>
+      <td><%= dataset.identifier %></td>
+      <td class="c-admin-hide-border-right" id="js-curation-activity-date-<%= dataset.identifier_id %>">
+        <%= formatted_datetime(dataset.updated_at) %>
       </td>
       <td class="c-admin-hide-border-left">
-        <%= form_tag({ controller: '/stash_engine/admin_datasets', action: 'activity_log', id: identifier.id }, method: :get) do -%>
+        <%= form_tag({ controller: '/stash_engine/admin_datasets', action: 'activity_log', id: dataset.identifier_id }, method: :get) do -%>
           <button class="c-admin-edit-icon" aria-label="View Activity Log" alt="View Activity Log">
             <i class="fa fa-clock-o" aria-hidden="true"></i>
           </button>
         <% end %>
       </td>
-      <td id="js-curation-activity-user-<%= identifier.id %>"><%= resource.editor&.name %></td>
-      <td><%= filesize(identifier.storage_size) %></td>
-      <td class="c-admin" id="js-embargo-state-<%= identifier.id %>">
-        <%= formatted_date(resource&.publication_date) %>
+      <td id="js-curation-activity-user-<%= dataset.identifier_id %>"><%= dataset.editor_name %></td>
+      <td><%= filesize(dataset.storage_size) %></td>
+      <td class="c-admin" id="js-embargo-state-<%= dataset.identifier_id %>">
+        <%= formatted_date(dataset.publication_date) %>
       </td>
     </tr>
+  <% end %>
+  <% if datasets.empty? %>
+    <tr><td colspan="8">
+      No datasets matched your search term and/or filter settings.
+    </td></tr>
   <% end %>
 </table>

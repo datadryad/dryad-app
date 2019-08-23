@@ -22,6 +22,10 @@ module StashEngine
       "#{first_name} #{last_name}".strip
     end
 
+    def name_last_first
+      [last_name, first_name].join(', ')
+    end
+
     def superuser?
       role == 'superuser'
     end
