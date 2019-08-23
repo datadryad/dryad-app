@@ -118,8 +118,8 @@ RSpec.feature 'DatasetVersioning', type: :feature do
             within(:css, "#js-curation-state-#{@resource.id}") do
               expect(page).to have_text('Submitted')
             end
-            expect(page).to have_text(@resource.authors.first.author_standard_name)
-            expect(page).not_to have_text(@curator.name)
+            expect(page).to have_text(@resource.authors.collect(&:author_last_name).join('; '))
+            expect(page).not_to have_text(@curator.name_last_first)
             expect(page).to have_text(@resource.identifier.identifier)
           end
         end
@@ -185,6 +185,7 @@ RSpec.feature 'DatasetVersioning', type: :feature do
 
       it 'displays the proper information on the Admin page', js: true do
         within(:css, '.c-lined-table__row') do
+
           # Make sure the appropriate buttons are available
           expect(page).to have_css('button[title="Edit Dataset"]')
           expect(page).to have_css('button[aria-label="Update status"]')
@@ -192,8 +193,8 @@ RSpec.feature 'DatasetVersioning', type: :feature do
           # Make sure the right text is shown
           expect(page).to have_link(@resource.title)
           expect(page).to have_text('Curation')
-          expect(page).to have_text(@resource.authors.first.author_standard_name)
-          expect(page).to have_text(@curator.name)
+          expect(page).to have_text(@resource.authors.collect(&:author_last_name).join('; '))
+          expect(page).to have_text(@curator.name_last_first)
           expect(page).to have_text(@resource.identifier.identifier)
         end
       end
@@ -248,8 +249,8 @@ RSpec.feature 'DatasetVersioning', type: :feature do
           # Make sure the right text is shown
           expect(page).to have_link(@resource.title)
           expect(page).to have_text('Submitted')
-          expect(page).to have_text(@resource.authors.first.author_standard_name)
-          expect(page).not_to have_text(@curator.name)
+          expect(page).to have_text(@resource.authors.collect(&:author_last_name).join('; '))
+          expect(page).not_to have_text(@curator.name_last_first)
           expect(page).to have_text(@resource.identifier.identifier)
         end
       end

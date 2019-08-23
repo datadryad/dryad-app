@@ -426,7 +426,7 @@ GEM
     launchy (2.4.3)
       addressable (~> 2.3)
     leaflet-rails (0.7.7)
-    libv8 (3.16.14.19-x86_64-linux)
+    libv8 (3.16.14.19)
     link_header (0.0.8)
     listen (3.1.5)
       rb-fsevent (~> 0.9, >= 0.9.4)
@@ -559,6 +559,7 @@ GEM
     rb-fsevent (0.10.3)
     rb-inotify (0.10.0)
       ffi (~> 1.0)
+    rb-readline (0.5.5)
     rdf (3.0.12)
       hamster (~> 3.0)
       link_header (~> 0.0, >= 0.0.8)
@@ -779,6 +780,7 @@ DEPENDENCIES
   pry-rails
   pry-remote
   rails (= 4.2.11)
+  rb-readline
   rspec-collection_matchers
   rspec-rails
   rubocop (~> 0.52.1)
