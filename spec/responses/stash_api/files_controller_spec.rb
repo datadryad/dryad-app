@@ -55,7 +55,7 @@ module StashApi
     # working with files
     describe '#update' do
       it 'will add a file upload to the server and add metadata' do
-        response_code = put "/api/datasets/#{CGI.escape(@identifier.to_s)}/files/#{CGI.escape(::File.basename(@file_path))}",
+        response_code = put "/api/v2/datasets/#{CGI.escape(@identifier.to_s)}/files/#{CGI.escape(::File.basename(@file_path))}",
                             IO.read(@file_path), default_authenticated_headers.merge('Content-Type' => @mime_type)
         expect(response_code).to eq(201)
         hsh = response_body_hash
@@ -69,7 +69,7 @@ module StashApi
       end
 
       it 'will not allow non-logged in to add a file' do
-        response_code = put "/api/datasets/#{CGI.escape(@identifier.to_s)}/files/#{CGI.escape(::File.basename(@file_path))}",
+        response_code = put "/api/v2/datasets/#{CGI.escape(@identifier.to_s)}/files/#{CGI.escape(::File.basename(@file_path))}",
                             IO.read(@file_path), default_json_headers.merge('Content-Type' => @mime_type)
         expect(response_code).to eq(401)
       end
@@ -77,7 +77,7 @@ module StashApi
 
     describe '#show' do
       before(:each) do
-        put "/api/datasets/#{CGI.escape(@identifier.to_s)}/files/#{CGI.escape(::File.basename(@file_path))}",
+        put "/api/v2/datasets/#{CGI.escape(@identifier.to_s)}/files/#{CGI.escape(::File.basename(@file_path))}",
             IO.read(@file_path), default_authenticated_headers.merge('Content-Type' => @mime_type)
         hsh = response_body_hash
         @the_path = hsh['_links']['self']['href'] # this is a little weird, may need fixing
@@ -152,7 +152,7 @@ module StashApi
       end
 
       it 'shows an index of files for a public dataset version' do
-        response_code = get "/api/versions/#{@resources[0].id}/files", {}, default_authenticated_headers
+        response_code = get "/api/v2/versions/#{@resources[0].id}/files", {}, default_authenticated_headers
         hsh = response_body_hash
         expect(response_code).to eq(200)
         expect(hsh['total']).to eq(25)
@@ -164,7 +164,7 @@ module StashApi
 
       it 'shows an index of files for a private dataset version to the superuser' do
         # check the superuser
-        response_code = get "/api/versions/#{@resources[1].id}/files", {}, default_authenticated_headers
+        response_code = get "/api/v2/versions/#{@resources[1].id}/files", {}, default_authenticated_headers
         hsh = response_body_hash
         expect(response_code).to eq(200)
         expect(hsh['total']).to eq(4)
@@ -174,7 +174,7 @@ module StashApi
         @doorkeeper_application2 = create(:doorkeeper_application, redirect_uri: 'urn:ietf:wg:oauth:2.0:oob',
                                                                    owner_id: @user1.id, owner_type: 'StashEngine::User')
         access_token = get_access_token(doorkeeper_application: @doorkeeper_application2)
-        response_code = get "/api/versions/#{@resources[1].id}/files", {}, default_json_headers.merge(
+        response_code = get "/api/v2/versions/#{@resources[1].id}/files", {}, default_json_headers.merge(
           'Authorization' => "Bearer #{access_token}"
         )
         hsh = response_body_hash
@@ -184,20 +184,20 @@ module StashApi
 
       it 'shows an index of files for a private dataset version to the admin' do
         @user.update(role: 'admin', tenant_id: @tenant_ids.first)
-        response_code = get "/api/versions/#{@resources[1].id}/files", {}, default_authenticated_headers
+        response_code = get "/api/v2/versions/#{@resources[1].id}/files", {}, default_authenticated_headers
         hsh = response_body_hash
         expect(response_code).to eq(200)
         expect(hsh['total']).to eq(4)
       end
 
       it "doesn't show private version's list of file to non-user" do
-        response_code = get "/api/versions/#{@resources[1].id}/files", {}, default_json_headers
+        response_code = get "/api/v2/versions/#{@resources[1].id}/files", {}, default_json_headers
         expect(response_code).to eq(404)
       end
 
       it "doesn't show private versions list of files to a random user" do
         @user.update(role: 'user', tenant_id: @tenant_ids.first)
-        response_code = get "/api/versions/#{@resources[1].id}/files", {}, default_authenticated_headers
+        response_code = get "/api/v2/versions/#{@resources[1].id}/files", {}, default_authenticated_headers
         expect(response_code).to eq(404)
       end
     end
@@ -217,7 +217,7 @@ module StashApi
       end
 
       it 'allows destroying file if superuser' do
-        response_code = delete "/api/files/#{@files[1].first.id}", {}, default_authenticated_headers
+        response_code = delete "/api/v2/files/#{@files[1].first.id}", {}, default_authenticated_headers
         expect(response_code).to eq(200) # maybe this should be 202 for an item that is marked for deletion when we revise
         hsh = response_body_hash
         expect(hsh['status']).to eq('deleted')
@@ -227,7 +227,7 @@ module StashApi
         @doorkeeper_application2 = create(:doorkeeper_application, redirect_uri: 'urn:ietf:wg:oauth:2.0:oob',
                                                                    owner_id: @user1.id, owner_type: 'StashEngine::User')
         access_token = get_access_token(doorkeeper_application: @doorkeeper_application2)
-        response_code = delete "/api/files/#{@files[1].first.id}", {}, default_authenticated_headers
+        response_code = delete "/api/v2/files/#{@files[1].first.id}", {}, default_authenticated_headers
           .merge('Authorization' => "Bearer #{access_token}")
         expect(response_code).to eq(200) # maybe this should be 202 for an item that is marked for deletion when we revise
         hsh = response_body_hash
@@ -236,25 +236,25 @@ module StashApi
 
       it 'allows destroying file if admin for same tenant' do
         @user.update(role: 'admin', tenant_id: @tenant_ids.first)
-        response_code = delete "/api/files/#{@files[1].first.id}", {}, default_authenticated_headers
+        response_code = delete "/api/v2/files/#{@files[1].first.id}", {}, default_authenticated_headers
         expect(response_code).to eq(200)
         hsh = response_body_hash
         expect(hsh['status']).to eq('deleted')
       end
 
       it 'blocks anonymous users from destroying files' do
-        response_code = delete "/api/files/#{@files[1].first.id}", {}, default_json_headers
+        response_code = delete "/api/v2/files/#{@files[1].first.id}", {}, default_json_headers
         expect(response_code).to eq(401)
       end
 
       it 'blocks destroying file if another regular user' do
         @user.update(role: 'user')
-        response_code = delete "/api/files/#{@files[1].first.id}", {}, default_authenticated_headers
+        response_code = delete "/api/v2/files/#{@files[1].first.id}", {}, default_authenticated_headers
         expect(response_code).to eq(401)
       end
 
       it "blocks destroying file if the version isn't being edited" do
-        response_code = delete "/api/files/#{@files[0].first.id}", {}, default_authenticated_headers
+        response_code = delete "/api/v2/files/#{@files[0].first.id}", {}, default_authenticated_headers
         expect(response_code).to eq(403)
       end
     end
@@ -286,14 +286,14 @@ module StashApi
       it 'allows download by public for published' do
         @resources[0].update(publication_date: Time.new - 24.hours) # needs a publication date to be published
         @resources[0].current_state = 'submitted'
-        response_code = get "/api/files/#{@files[0].first.id}/download", {}, {}
+        response_code = get "/api/v2/files/#{@files[0].first.id}/download", {}, {}
         expect(response_code).to eq(200)
         expect(response.body).to eq('This file is awesome')
       end
 
       it 'allows download by superuser for unpublished but in Merritt' do
         @curation_activities[0][2].destroy!
-        response_code = get "/api/files/#{@files[0].first.id}/download", {}, default_authenticated_headers.merge('Accept' => '*')
+        response_code = get "/api/v2/files/#{@files[0].first.id}/download", {}, default_authenticated_headers.merge('Accept' => '*')
         expect(response_code).to eq(200)
         expect(response.body).to eq('This file is awesome')
       end
@@ -303,7 +303,7 @@ module StashApi
         @doorkeeper_application2 = create(:doorkeeper_application, redirect_uri: 'urn:ietf:wg:oauth:2.0:oob',
                                                                    owner_id: @user1.id, owner_type: 'StashEngine::User')
         access_token = get_access_token(doorkeeper_application: @doorkeeper_application2)
-        response_code = get "/api/files/#{@files[0].first.id}/download", {}, default_json_headers
+        response_code = get "/api/v2/files/#{@files[0].first.id}/download", {}, default_json_headers
           .merge('Accept' => '*', 'Authorization' => "Bearer #{access_token}")
         expect(response_code).to eq(200)
         expect(response.body).to eq('This file is awesome')
@@ -312,26 +312,26 @@ module StashApi
       it 'allows download by admin for tenant for unpublished but in Merritt' do
         @curation_activities[0][2].destroy!
         @user.update(role: 'admin', tenant_id: @tenant_ids.first)
-        response_code = get "/api/files/#{@files[0].first.id}/download", {}, default_authenticated_headers.merge('Accept' => '*')
+        response_code = get "/api/v2/files/#{@files[0].first.id}/download", {}, default_authenticated_headers.merge('Accept' => '*')
         expect(response_code).to eq(200)
         expect(response.body).to eq('This file is awesome')
       end
 
       it 'disallows download by anonymous for unpublished' do
         @curation_activities[0][2].destroy!
-        response_code = get "/api/files/#{@files[0].first.id}/download", {}, default_json_headers.merge('Accept' => '*')
+        response_code = get "/api/v2/files/#{@files[0].first.id}/download", {}, default_json_headers.merge('Accept' => '*')
         expect(response_code).to eq(404)
       end
 
       it 'disallows download by random normal user for unpublished' do
         @curation_activities[0][2].destroy!
         @user.update(role: 'user', tenant_id: @tenant_ids.first)
-        response_code = get "/api/files/#{@files[0].first.id}/download", {}, default_authenticated_headers.merge('Accept' => '*')
+        response_code = get "/api/v2/files/#{@files[0].first.id}/download", {}, default_authenticated_headers.merge('Accept' => '*')
         expect(response_code).to eq(404)
       end
 
       it 'disallows download for an unsubmitted to Merritt version' do
-        response_code = get "/api/files/#{@files[1].first.id}/download", {}, default_authenticated_headers.merge('Accept' => '*')
+        response_code = get "/api/v2/files/#{@files[1].first.id}/download", {}, default_authenticated_headers.merge('Accept' => '*')
         expect(response_code).to eq(404)
       end
     end
