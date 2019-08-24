@@ -34,6 +34,13 @@
         <h4>Journal</h4>
         <%= render_facet_tags [Settings.FIELDS.RELATED_PUBLICATION_NAME] %>
       </div>
+      <div class='category-block'>
+        <div class='category-icon'>
+          <span><i class="fa fa-university" aria-hidden="true" style="color: steelblue;size: 100px;"></i></span>
+        </div>
+        <h4>Institutions</h4>
+        <%= render_facet_tags [Settings.FIELDS.AUTHOR_AFFILIATION_NAME] %>
+      </div>
     </div>
     <div class='col-md-6 text-center'>
       <%= content_tag :h3, t('geoblacklight.home.map_heading') %>
