@@ -15,17 +15,17 @@
         <%= sort_by 'title', title: 'Title', current_column: @sort_column %>
       </th>
       <th class="c-proposed-change-table__column-small">&nbsp;</th>
-      <th class="c-admin-table <%= sort_display('publiction_name', @sort_column) %> c-proposed-change-table__column-small">
-        <%= sort_by 'publiction_name', title: 'Publication', current_column: @sort_column %>
+      <th class="c-admin-table <%= sort_display('publication_name', @sort_column) %> c-proposed-change-table__column-small">
+        <%= sort_by 'publication_name', title: 'Publication', current_column: @sort_column %>
       </th>
-      <th class="c-admin-table <%= sort_display('publiction_issn', @sort_column) %> c-proposed-change-table__column-small">
-        <%= sort_by 'publiction_issn', title: 'ISSN', current_column: @sort_column %>
+      <th class="c-admin-table <%= sort_display('publication_issn', @sort_column) %> c-proposed-change-table__column-small">
+        <%= sort_by 'publication_issn', title: 'ISSN', current_column: @sort_column %>
       </th>
-      <th class="c-admin-table <%= sort_display('publiction_doi', @sort_column) %> c-proposed-change-table__column">
-        <%= sort_by 'publiction_doi', title: 'DOI', current_column: @sort_column %>
+      <th class="c-admin-table <%= sort_display('publication_doi', @sort_column) %> c-proposed-change-table__column">
+        <%= sort_by 'publication_doi', title: 'DOI', current_column: @sort_column %>
       </th>
-      <th class="c-admin-table <%= sort_display('publiction_date', @sort_column) %> c-proposed-change-table__column-small">
-        <%= sort_by 'publiction_date', title: 'Published', current_column: @sort_column %>
+      <th class="c-admin-table <%= sort_display('publication_date', @sort_column) %> c-proposed-change-table__column-small">
+        <%= sort_by 'publication_date', title: 'Published', current_column: @sort_column %>
       </th>
       <th class="c-admin-table <%= sort_display('authors', @sort_column) %> c-proposed-change-table__column-medium">
         <%= sort_by 'authors', title: 'Authors', current_column: @sort_column %>
