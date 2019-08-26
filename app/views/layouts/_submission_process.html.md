@@ -10,7 +10,7 @@
 <li><strong>When preparing your complete version of a dataset, remember to collate all relevant explantory documents and metadata</strong>. This includes relevant documentation necessary for the re-use and replication of your dataset (e.g., readme.txt files, formal metadata records, or other critical information)</li>
 </ul>
 
-<p>Dryad has a REST API that allows for download and submission of data. Check out our <a href="https://dryad-stg.cdlib.org/api/docs/">documentation</a> as well as our <a href="https://github.com/CDL-Dryad/dryad/blob/master/stash_api/basic_submission.md">How-To Guide</a></p>
+<p>Dryad has a REST API that allows for download and submission of data. Check out our <a href="https://dryad-stg.cdlib.org/api/v2/docs/">documentation</a> as well as our <a href="https://github.com/CDL-Dryad/dryad/blob/master/stash_api/basic_submission.md">How-To Guide</a></p>
 
 <p>If you need further assistance, consult our <a href="<%= stash_url_helpers.faq_path %>">FAQ</a> or contact us at <a href=mailto:help@datadryad.org>help@datadryad.org</a>. Log in and go to "My Datasets" to begin your data submission now!</p>
 
