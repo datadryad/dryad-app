@@ -63,7 +63,7 @@ module StashEngine
     def email_code
       current_user.update(old_dryad_email: params[:email])
       current_user.set_migration_token
-      StashEngine::MigrationMailer.migration_email.deliver_now
+      StashEngine::MigrationMailer.migration_email(current_user).deliver_now
     end
 
     def validate_form_email
