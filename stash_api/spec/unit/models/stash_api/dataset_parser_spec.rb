@@ -5,7 +5,7 @@ module StashApi
   RSpec.describe DatasetParser do
     before(:each) do
       # app = double(Rails::Application)
-      # allow(app).to receive(:stash_mount).and_return('/api')
+      # allow(app).to receive(:stash_mount).and_return('/api/v2')
       # TODO: We need to figure out how to load the other engines without errors (spec_helper probably)
       # allow(StashEngine).to receive(:app).and_return(app)
 
