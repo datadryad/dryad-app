@@ -139,11 +139,13 @@
 .c-input__emailcode-text {
 	@extend %c-input;
 	flex: 2 1;
+	width: 350px;
 }
 
 .c-input__emailcode-button {
 	@extend %c-input;
 	flex: 1 1;
+	width: 180px;
 }
 
 .c-input__emailcode-spacer {
