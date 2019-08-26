@@ -61,8 +61,8 @@ module Stash
         create(:related_identifier, resource_id: @resource.id, related_identifier_type: 'doi', relation_type: 'issupplementto',
                                     related_identifier: 'doi123')
         @version = create(:version, resource_id: @resource.id)
-        @affil1 = create(:affiliation, long_name: 'Lafayette Tech')
-        @affil2 = create(:affiliation, long_name: 'Orinda Tech')
+        @affil1 = create(:affiliation, long_name: 'Lafayette Tech', ror_id: 'https://ror.example.org/16xx22bs')
+        @affil2 = create(:affiliation, long_name: 'Orinda Tech', ror_id: 'https://ror.example.org/18dl67sn1')
         @author1 = create(:author, resource_id: @resource.id)
         @author1.update(affiliations: [@affil1])
         @author2 = create(:author, author_first_name: 'Horace', author_last_name: 'Liu', author_email: 'holyu@example.org',
@@ -290,6 +290,8 @@ module Stash
             dc_rights_s: 'CC0 1.0 Universal (CC0 1.0) Public Domain Dedication',
             dc_publisher_s: 'Dryad',
             dct_temporal_sm: ['2018-11-14'],
+            dryad_author_affiliation_id_sm: ['https://ror.example.org/16xx22bs', 'https://ror.example.org/18dl67sn1'],
+            dryad_author_affiliation_name_sm: ['Lafayette Tech', 'Orinda Tech'],
             dryad_related_publication_name_s: 'Journal of Testing Fun',
             dryad_related_publication_id_s: 'manuscript123 pubmed123 doi123'
           }

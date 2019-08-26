@@ -67,6 +67,7 @@ module Stash
       end
 
       # this is really what we want to get out of this for solr indexing, the rest is for compatibility with old indexing
+      # rubocop:disable Metrics/MethodLength
       def to_index_document
         georss = calc_bounding_box
         {
@@ -91,7 +92,7 @@ module Stash
           dryad_author_affiliation_id_sm: author_affiliation_ids
         }
       end
-      # rubocop:enable
+      # rubocop:enable Metrics/MethodLength
 
       def default_title
         @resource&.title&.strip
