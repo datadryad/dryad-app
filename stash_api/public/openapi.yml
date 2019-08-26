@@ -28,7 +28,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/root_links'
               examples:
-                $ref: api/docs/examples/root.json
+                $ref: 'api/v2/docs/examples/root.json'
 
   # --- test for bearer authentication ---
   /test:
@@ -65,7 +65,7 @@ paths:
                 $ref: '#/components/schemas/datasets'
           examples:
             application/json:
-              $ref: api/docs/examples/datasets.json
+              $ref: api/v2/docs/examples/datasets.json
     post:
       summary: Create a new dataset with a DOI automatically generated
       description: You must be logged in. Use the JSON structure and schema as shown below.
@@ -79,7 +79,7 @@ paths:
               $ref: '#/components/schemas/dc_metadata'
             # https://github.com/swagger-api/swagger-ui/issues/3771 -- examples don't work
             example:
-              $ref: api/docs/examples/dataset_post_request.json
+              $ref: api/v2/docs/examples/dataset_post_request.json
       responses:
         '201':
           description: response showing dataset info that has been saved
@@ -89,7 +89,7 @@ paths:
                 $ref: '#/components/schemas/datasets'
           examples:
             application/json:
-              $ref: api/docs/examples/dataset.json
+              $ref: api/v2/docs/examples/dataset.json
 
   '/datasets/{doi}':
     get:
@@ -106,7 +106,7 @@ paths:
                 $ref: '#/components/schemas/dataset'
           examples:
             application/json:
-              $ref: api/docs/examples/dataset.json
+              $ref: api/v2/docs/examples/dataset.json
     put:
       summary: Update (overwrite) dataset metadata for DOI or insert new with specified DOI
       description: This will overwrite writeable metadata for an in-progress dataset or will create a new dataset with the specified DOI identifier if one doesn't exist.  This is an insert or update action (upsert).
@@ -123,7 +123,7 @@ paths:
               $ref: '#/components/schemas/dc_metadata'
             # https://github.com/swagger-api/swagger-ui/issues/3771 -- examples don't work
             example:
-              $ref: api/docs/examples/dataset_post_request.json
+              $ref: api/v2/docs/examples/dataset_post_request.json
       responses:
         '200':
           description: response showing dataset info that has been saved
@@ -133,7 +133,7 @@ paths:
                 $ref: '#/components/schemas/datasets'
           examples:
             application/json:
-              $ref: api/docs/examples/dataset.json
+              $ref: api/v2/docs/examples/dataset.json
     patch:
       parameters:
         - $ref: '#/components/parameters/doi'
@@ -159,7 +159,7 @@ paths:
                 $ref: '#/components/schemas/dataset'
           examples:
             application/json:
-              $ref: api/docs/examples/dataset.json
+              $ref: api/v2/docs/examples/dataset.json
 
   '/datasets/{doi}/download':
     get:
@@ -191,7 +191,7 @@ paths:
                 $ref: '#/components/schemas/versions'
           examples:
             application/json:
-              $ref: api/docs/examples/versions.json
+              $ref: api/v2/docs/examples/versions.json
 
   # --- versions uris ---
   '/versions/{id}':
@@ -209,7 +209,7 @@ paths:
                 $ref: '#/components/schemas/version'
           examples:
             application/json:
-              $ref: api/docs/examples/version.json
+              $ref: api/v2/docs/examples/version.json
 
   '/versions/{id}/files':
     get:
@@ -226,7 +226,7 @@ paths:
                 $ref: '#/components/schemas/files'
           examples:
             application/json:
-              $ref: api/docs/examples/files.json
+              $ref: api/v2/docs/examples/files.json
 
   '/versions/{id}/download':
     get:
@@ -258,7 +258,7 @@ paths:
                 $ref: '#/components/schemas/file'
           examples:
             application/json:
-              $ref: api/docs/examples/file.json
+              $ref: api/v2/docs/examples/file.json
     delete:
       security:
         - bearerAuth: []
@@ -275,7 +275,7 @@ paths:
                 $ref: '#/components/schemas/file'
           examples:
             application/json:
-              $ref: api/docs/examples/file.json
+              $ref: api/v2/docs/examples/file.json
 
   '/files/{id}/download':
     get:
@@ -319,7 +319,7 @@ paths:
                 $ref: '#/components/schemas/file'
           examples:
             application/json:
-              $ref: api/docs/examples/file.json
+              $ref: api/v2/docs/examples/file.json
 
   '/datasets/{doi}/urls':
     put:
@@ -343,7 +343,7 @@ paths:
                 $ref: '#/components/schemas/file'
           examples:
             application/json:
-              $ref: api/docs/examples/file.json
+              $ref: api/v2/docs/examples/file.json
 
 # ------------------
 # --- components ---

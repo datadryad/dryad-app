@@ -67,6 +67,7 @@ module Stash
       end
 
       # this is really what we want to get out of this for solr indexing, the rest is for compatibility with old indexing
+      # rubocop:disable Metrics/MethodLength
       def to_index_document
         georss = calc_bounding_box
         {
@@ -86,10 +87,12 @@ module Stash
           dc_publisher_s: publisher,
           dct_temporal_sm: dct_temporal_dates,
           dryad_related_publication_name_s: related_publication_name,
-          dryad_related_publication_id_s: related_publication_id
+          dryad_related_publication_id_s: related_publication_id,
+          dryad_author_affiliation_name_sm: author_affiliations,
+          dryad_author_affiliation_id_sm: author_affiliation_ids
         }
       end
-      # rubocop:enable
+      # rubocop:enable Metrics/MethodLength
 
       def default_title
         @resource&.title&.strip
@@ -220,6 +223,18 @@ module Stash
         ids = @resource.identifier.internal_data.where(data_type: %w[manuscriptNumber pubmedID])&.map(&:value)&.join(' ')
         pub_doi = @resource.related_identifiers.where(related_identifier_type: 'doi', relation_type: 'issupplementto').first
         (pub_doi.present? ? "#{ids} #{pub_doi.related_identifier}" : ids)
+      end
+
+      def author_affiliations
+        @resource.authors.map do |author|
+          author.affiliations.map(&:long_name)
+        end.flatten.reject(&:blank?).uniq
+      end
+
+      def author_affiliation_ids
+        @resource.authors.map do |author|
+          author.affiliations.map(&:ror_id)
+        end.flatten.reject(&:blank?).uniq
       end
 
       private

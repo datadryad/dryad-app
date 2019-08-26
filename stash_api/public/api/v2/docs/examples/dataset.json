@@ -1,16 +1,16 @@
 {
   "_links": {
     "self": {
-      "href": "/api/versions/231"
+      "href": "/api/v2/datasets/doi%3A10.5072%2FFK2708471V"
     },
-    "stash:dataset": {
-      "href": "/api/datasets/doi%3A10.5072%2FFK2708471V"
+    "stash:versions": {
+      "href": "/api/v2/datasets/doi%3A10.5072%2FFK2708471V/versions"
     },
-    "stash:files": {
-      "href": "/api/versions/231/files"
+    "stash:version": {
+      "href": "/api/v2/versions/231"
     },
     "stash:download": {
-      "href": "/api/versions/231/download"
+      "href": "/api/v2/datasets/doi%3A10.5072%2FFK2708471V/download"
     },
     "curies": [
       {
@@ -20,6 +20,8 @@
       }
     ]
   },
+  "id": "doi:10.5072/FK2708471V",
+  "storage_size": 54151,
   "title": "A Study of Red-Black Trees with Weight",
   "authors": [
     {
