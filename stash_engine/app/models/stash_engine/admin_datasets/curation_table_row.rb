@@ -8,7 +8,7 @@ module StashEngine
     class CurationTableRow
 
       attr_reader :publication_name
-      attr_reader :identifier_id, :identifier, :storage_size, :search_words
+      attr_reader :identifier_id, :identifier, :qualified_identifier, :storage_size, :search_words
       attr_reader :resource_id, :title, :publication_date, :tenant_id
       attr_reader :resource_state_id, :resource_state
       attr_reader :curation_activity_id, :status, :updated_at
@@ -18,7 +18,7 @@ module StashEngine
 
       SELECT_CLAUSE = <<-SQL
         SELECT seid.value,
-          sei.id, sei.identifier, sei.storage_size, sei.search_words,
+          sei.id, sei.identifier, CONCAT(LOWER(sei.identifier_type), ':', sei.identifier), sei.storage_size, sei.search_words,
           ser.id, ser.title, ser.publication_date, ser.tenant_id,
           sers.id, sers.resource_state,
           seca.id, seca.status, seca.updated_at,
@@ -48,27 +48,28 @@ module StashEngine
 
       # rubocop:disable Metrics/AbcSize
       def initialize(result)
-        return unless result.is_a?(Array) && result.length >= 18
+        return unless result.is_a?(Array) && result.length >= 19
 
         # Convert the array of results into attribute values
         @publication_name = result[0]
         @identifier_id = result[1]
         @identifier = result[2]
-        @storage_size = result[3]
-        @search_words = result[4]
-        @resource_id = result[5]
-        @title = result[6]
-        @publication_date = result[7]
-        @tenant_id = result[8]
-        @resource_state_id = result[9]
-        @resource_state = result[10]
-        @curation_activity_id = result[11]
-        @status = result[12]
-        @updated_at = result[13]
-        @editor_id = result[14]
-        @editor_name = result[15..16].join(', ')
-        @author_names = result[17]
-        @relevance = result.length > 18 ? result[18] : nil
+        @qualified_identifier = result[3]
+        @storage_size = result[4]
+        @search_words = result[5]
+        @resource_id = result[6]
+        @title = result[7]
+        @publication_date = result[8]
+        @tenant_id = result[9]
+        @resource_state_id = result[10]
+        @resource_state = result[11]
+        @curation_activity_id = result[12]
+        @status = result[13]
+        @updated_at = result[14]
+        @editor_id = result[15]
+        @editor_name = result[16..17].join(', ')
+        @author_names = result[18]
+        @relevance = result.length > 19 ? result[19] : nil
       end
       # rubocop:enable Metrics/AbcSize
 
