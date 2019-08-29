@@ -6,7 +6,7 @@ namespace :publication_updater do
   # Query to retrieve the latest resource and its latest curation activity
   # where the status is not in_progress (Merritt has already processed it) and not published
   # and its most recent curation activity was within the past 6 months
-  QUERY = <<-SQL
+  QUERY = <<-SQL.freeze
     SELECT ser.id, ser.identifier_id, seca.status, dri.related_identifier, ser.title, sepc.id
     FROM stash_engine_resources ser
       INNER JOIN stash_engine_identifiers sei ON ser.identifier_id = sei.id
@@ -26,14 +26,14 @@ namespace :publication_updater do
     from_date = (Time.now - 6.months).strftime('%Y-%m-%d %H:%M:%S')
 
     results = ActiveRecord::Base.connection.execute("#{QUERY} AND seca.created_at >= '#{from_date}'").map do |rec|
-      OpenStruct.new({resource_id: rec[0], identifier_id: rec[1], status: rec[2], doi: rec[3], title: rec[4], change_id: rec[5]})
+      OpenStruct.new(resource_id: rec[0], identifier_id: rec[1], status: rec[2], doi: rec[3], title: rec[4], change_id: rec[5])
     end
     p "Scanning Crossref API for #{results.length} resources"
 
     results.each do |result|
       # Skip the record if we've already captured its info from Crossref at any point
       next if StashEngine::CurationActivity.where(resource_id: result.resource_id)
-        .where('stash_engine_curation_activities.note LIKE ?', "%#{StashEngine::ProposedChange::CROSSREF_UPDATE_MESSAGE}").any?
+          .where('stash_engine_curation_activities.note LIKE ?', "%#{StashEngine::ProposedChange::CROSSREF_UPDATE_MESSAGE}").any?
 
       begin
         resource = StashEngine::Resource.find(result.resource_id)
