@@ -14,3 +14,18 @@ currently defined as an endpoint of the dash-stage SP
 	</AttributeRule>
 </AttributeFilterPolicy>
 
+ <!-- 
+       Dryad production server
+   -->
+   <AttributeFilterPolicy id="Dryad Production">
+       <PolicyRequirementRule xsi:type="basic:AttributeRequesterString"
+	   value="https://datadryad.org/shibboleth" />
+
+       <AttributeRule attributeID="eduPersonPrincipalName">
+           <PermitValueRule xsi:type="basic:ANY" />
+       </AttributeRule>
+       <AttributeRule attributeID="mail">
+           <PermitValueRule xsi:type="basic:ANY" />
+       </AttributeRule>
+   </AttributeFilterPolicy>
+

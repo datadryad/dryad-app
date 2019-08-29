@@ -73,7 +73,7 @@ Rails.application.routes.draw do
 
   mount StashEngine::Engine, at: APP_CONFIG.stash_mount
   mount StashDatacite::Engine, at: '/stash_datacite'
-  mount StashApi::Engine, at: '/api'
+  mount StashApi::Engine, at: '/api/v2'
 
   # we have to do this to make the geoblacklight routes come before catchall
   # http://blog.arkency.com/2015/02/how-to-split-routes-dot-rb-into-smaller-parts/
