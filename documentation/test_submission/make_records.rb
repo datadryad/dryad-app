@@ -22,7 +22,7 @@ token = JSON.parse(response)['access_token']
 
 
 headers = { 'Accept' => 'application/json', 'Content-Type' => 'application/json', 'Authorization' => "Bearer #{token}" }
-resp = RestClient.get "#{domain_name}/api/test", headers
+resp = RestClient.get "#{domain_name}/api/v2/test", headers
 j = JSON.parse(resp)
 raise 'Invalid API connection' if j['user_id'].nil?
 puts "Logged in as #{j['user_id']}"
@@ -39,7 +39,7 @@ PATCH_SUBMISSION = [{ "op": "replace", "path": "/versionStatus", "value": "submi
 
   puts "  creating ds w/ title: #{metadata_hash[:title]}"
   # create new dataset with metadata
-  resp = RestClient.post "#{domain_name}/api/datasets", metadata_hash.to_json, headers
+  resp = RestClient.post "#{domain_name}/api/v2/datasets", metadata_hash.to_json, headers
   return_hash = JSON.parse(resp)
   doi = return_hash['identifier']
   doi_encoded = CGI.escape(doi)
@@ -56,7 +56,7 @@ PATCH_SUBMISSION = [{ "op": "replace", "path": "/versionStatus", "value": "submi
   puts "  uploading the file: #{fn}"
   content_type = 'text/plain'
   resp = RestClient.put(
-      "#{domain_name}/api/datasets/#{doi_encoded}/files/#{URI.escape(fn)}",
+      "#{domain_name}/api/v2/datasets/#{doi_encoded}/files/#{URI.escape(fn)}",
       File.read(fn),
       headers.merge({'Content-Type' => content_type})
   )
@@ -66,7 +66,7 @@ PATCH_SUBMISSION = [{ "op": "replace", "path": "/versionStatus", "value": "submi
   puts "  submitting the dataset"
   # submit the dataset to the storage repository
   resp = RestClient.patch(
-      "#{domain_name}/api/datasets/#{doi_encoded}",
+      "#{domain_name}/api/v2/datasets/#{doi_encoded}",
       PATCH_SUBMISSION,
       headers.merge({'Content-Type' =>  'application/json-patch+json'})
   )
