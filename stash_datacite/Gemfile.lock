@@ -50,6 +50,7 @@ PATH
       rinku
       rsolr
       sortable-table
+      stripe (~> 4.16.0)
       wicked_pdf (~> 1.1.0)
       wkhtmltopdf-binary (~> 0.12.3.1)
       zaru (~> 0.3)
@@ -203,6 +204,7 @@ GEM
       activesupport (>= 3.0)
       deep_merge (~> 1.2.1)
       dry-validation (>= 0.12.2)
+    connection_pool (2.2.2)
     crass (1.0.4)
     csl (1.5.0)
       namae (~> 1.0)
@@ -383,6 +385,8 @@ GEM
     multipart-post (2.0.0)
     mysql2 (0.4.10)
     namae (1.0.1)
+    net-http-persistent (3.1.0)
+      connection_pool (~> 2.2)
     netrc (0.11.0)
     noid (0.9.0)
     nokogiri (1.8.5)
@@ -567,6 +571,9 @@ GEM
       actionpack (>= 4.0)
       activesupport (>= 4.0)
       sprockets (>= 3.0.0)
+    stripe (4.16.0)
+      faraday (~> 0.13)
+      net-http-persistent (~> 3.0)
     sxp (1.0.2)
       rdf (~> 3.0)
     temple (0.8.1)
