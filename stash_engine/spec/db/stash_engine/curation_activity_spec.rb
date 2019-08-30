@@ -198,8 +198,12 @@ module StashEngine
           allow_any_instance_of(StashEngine::CurationActivity).to receive(:email_orcid_invitations).and_return(false)
           allow_any_instance_of(StashEngine::UserMailer).to receive(:status_change).and_return(true)
           allow_any_instance_of(StashEngine::UserMailer).to receive(:orcid_invitation).and_return(true)
-          @user = Author.create(author_first_name: 'Foo', author_last_name: 'Bar', author_email: 'foo.bar@example.edu', resource_id: @resource.id)
+          @author = Author.create(author_first_name: 'Foo', author_last_name: 'Bar', author_email: 'foo.bar@example.edu', resource_id: @resource.id)
           @ca = CurationActivity.new(resource_id: @resource.id, status: 'published')
+          # in theory stash_engine doesn't depend on datacite_engine, so mocking this out for now instead of bringing that engine in
+          allow_any_instance_of(StashEngine::Author).to receive(:affiliation).and_return(
+            { long_name: 'Western New Mexico University', ror_id: 'https://ror.org/00r5mr697' }.to_ostruct
+          )
         end
 
         it 'calls email_orcid_invitations when published' do
