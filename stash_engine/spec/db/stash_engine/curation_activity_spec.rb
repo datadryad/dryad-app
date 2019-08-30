@@ -215,14 +215,14 @@ module StashEngine
           allow_any_instance_of(StashEngine::User).to receive(:orcid_id).and_return(nil)
           allow_any_instance_of(StashEngine::User).to receive(:email).and_return('fool.bar@example.edu')
           allow_any_instance_of(StashEngine::OrcidInvitation).to receive(:identifier_id).and_return(@identifier.id)
-          allow_any_instance_of(StashEngine::OrcidInvitation).to receive(:email).and_return(@user.author_email)
+          allow_any_instance_of(StashEngine::OrcidInvitation).to receive(:email).and_return(@author.author_email)
           expect(UserMailer).not_to receive(:orcid_invitation)
           @ca.save
         end
 
         it 'does not call email_orcid_invitations to authors who already have an ORCID registered' do
           allow_any_instance_of(StashEngine::User).to receive(:orcid_id).and_return('12345')
-          allow_any_instance_of(StashEngine::User).to receive(:email).and_return(@user.author_email)
+          allow_any_instance_of(StashEngine::User).to receive(:email).and_return(@author.author_email)
           expect(UserMailer).not_to receive(:orcid_invitation)
           @ca.save
         end
