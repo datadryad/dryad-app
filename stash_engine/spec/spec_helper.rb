@@ -1,3 +1,4 @@
+require 'byebug'
 # ------------------------------------------------------------
 # Simplecov
 
@@ -35,6 +36,7 @@ APP_CONFIG = OpenStruct.new(YAML.load_file(File.expand_path('config/app_config.y
 Settings = OpenStruct.new(YAML.load_file(File.expand_path('config/settings.yml', __dir__))['test'])
 
 ENGINE_PATH = Gem::Specification.find_by_name('stash_engine').gem_dir
+
 %W[
   #{ENGINE_PATH}/app/models/stash_engine/concerns
   #{ENGINE_PATH}/app/models/stash_engine
@@ -52,6 +54,12 @@ end
 ].each do |initializer|
   require "#{ENGINE_PATH}/config/initializers/#{initializer}.rb"
 end
+
+StashEngine.setup do |config|
+  config.app = APP_CONFIG
+end
+# another hack on initializing because it sucks
+StashEngine.app.payments = StashEngine.app.payments.to_ostruct
 
 # Note: Even if we're not doing any database work, ActiveRecord callbacks will still raise warnings
 ActiveRecord::Base.raise_in_transactional_callbacks = true
