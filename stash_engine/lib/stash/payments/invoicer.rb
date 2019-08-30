@@ -1,3 +1,7 @@
+# this require needed in tests, but not really in app, though it doesn't hurt anything
+require_relative '../../../app/helpers/stash_engine/application_helper'
+require 'stripe'
+
 # rubocop:disable Metrics/ClassLength
 module Stash
   module Payments
@@ -73,6 +77,16 @@ module Stash
         (over_bytes / StashEngine.app.payments.additional_storage_chunk_size).ceil
       end
 
+      def overage_message
+        msg = <<~MESSAGE
+          Oversize submission charges for #{resource.identifier}. Overage amount is #{filesize(overage_bytes)} @
+          #{ActionController::Base.helpers.number_to_currency(StashEngine.app.payments.additional_storage_chunk_cost / 100)}
+          per #{filesize(StashEngine.app.payments.additional_storage_chunk_size)} or part thereof
+          over #{filesize(StashEngine.app.payments.large_file_size)} (see https://datadryad.org/stash/publishing_charges for details)
+        MESSAGE
+        msg.strip.gsub(/\s+/, ' ')
+      end
+
       # Helper methods
       # ------------------------------------------
       private
@@ -82,7 +96,6 @@ module Stash
       end
 
       # this is mostly just long because of long text & formatting text
-      # rubocop:disable Metrics/MethodLength
       def create_invoice_items_for_dpc(customer_id)
         items = [Stripe::InvoiceItem.create(
           customer: customer_id,
@@ -97,17 +110,11 @@ module Stash
                        unit_amount: StashEngine.app.payments.additional_storage_chunk_cost,
                        currency: 'usd',
                        quantity: over_chunks,
-                       description: "Oversize submission charges for #{resource.identifier}. Overage amount is " \
-                         "#{filesize(overage_bytes)} @ " \
-                         "#{ActionController::Base.helpers.number_to_currency(StashEngine.app.payments.additional_storage_chunk_cost / 100)} " \
-                         "per #{filesize(StashEngine.app.payments.additional_storage_chunk_size)} or part thereof " \
-                         "over #{filesize(StashEngine.app.payments.large_file_size)} " \
-                         '(see https://datadryad.org/stash/publishing_charges for details)'
+                       description: overage_message
                      ))
         end
         items
       end
-      # rubocop:enable Metrics/MethodLength
 
       def create_invoice(customer_id)
         Stripe::Invoice.create(
