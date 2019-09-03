@@ -40,6 +40,11 @@
 </div>
 
 <div class="bio">
+  <img src="/images/maccallum.jpg" alt="Catriona MacCallum" title="Catriona MacCallum">
+  <p><strong>Catriona MacCallum (Class of 2022)</strong> is a new member of our board. Her background should go here</p>
+</div>
+
+<div class="bio">
   <img src="/images/murphy.jpg" alt="Fiona Murphy" title="Fiona Murphy">
   <p><strong>Fiona Murphy (Class of 2020)</strong> held a range of scholarly publishing roles with Oxford University Press, Bloomsbury Academic and Wiley after completing a DPhil in English Literature. As Publisher for Earth and Environmental Sciences at Wiley, she began to specialize in emerging scholarly communications with particular emphasis on Open Science and Open Data. Now an independent research data and publishing consultant advising institutions, learned societies and commercial publishing companies, Fiona is also an Associate Fellow at the University of Reading and has written and presented widely on data publishing, open data and open science. She is a past and current member of several research projects including PREPARDE (Peer Review of Research Data in the Earth Sciences), Data2Paper (a cloud-based app for automating the data article submission process) and the Scholarly Commons Working Group (a Force11 project devising principles and practices for open science systems). An active member – and sometime Co-Chair – for several Research Data Alliance Groups focusing on data publishing policies, workflows and accreditation systems, Fiona has organized a number of data-related events and sessions at scientific meetings. She regularly writes and reviews articles on these topics and recently co-edited a special issue on persistent identifiers.</p>
 </div>
@@ -47,6 +52,11 @@
 <div class="bio">
   <img src="/images/nilsson.jpg" alt="Johan Nilsson" title="Johan Nilsson">
   <p><strong>Johan Nilsson (Class of 2019)</strong> works at the Oikos Editorial Office, a society-owned publishing foundation based at Lund University, Sweden. His main responsibilities are to manage the peer-review, production and marketing of one of their journals, Journal of Avian Biology. He also coordinates the society’s projects on open access, open data and public outreach. Johan has a background as a research scientist in evolutionary ecology and remain actively engaged in research in this field. He has a strong passion for scientific communication and social media engagement and is particularly interested in how the benefits of open science (and open data in particular) can be better communicated to researchers.</p>
+</div>
+
+<div class="bio">
+  <img src="/images/naomipenfold.png" alt="Naomi Penfold" title="Naomi Penfold">
+  <p><strong>Naomi Penfold (Class of 2022)</strong> is Associate Director of ASAPbio, a non-profit organisation with the mission to increase transparency and innovation in life and biomedical science communication. At ASAPbio and as member of the PREreview advisory board, Naomi works to increase the productive use of preprinting in biology. She brings to the Board experience as a life scientist (PhD, 2017, University of Cambridge), in science publishing and open science innovation (eLife, 2016-2018), and a current focus on scientific community engagement as a fellow of the AAAS Community Engagement Fellowship Program (CEFP) 2019. Read more about Naomi (hyperlink: <a href="https://asapbio.org/dt_team/naomi-penfold" target="_blank" title="Naomi's profile at ASAPbio">https://asapbio.org/dt_team/naomi-penfold</a>)</p>
 </div>
 
 <div class="bio">
