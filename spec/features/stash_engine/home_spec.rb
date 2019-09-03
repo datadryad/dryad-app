@@ -10,7 +10,7 @@ RSpec.feature 'HomePage', type: :feature do
 
   it 'resolves to the "Landing Page" when not logged in' do
     visit root_path
-    expect(page).to have_text('Promoting scholarship through open data')
+    expect(page).to have_css('.o-banner__tagline')
   end
 
 end
