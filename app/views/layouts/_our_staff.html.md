@@ -4,7 +4,7 @@
 
 <div class="bio">
   <img src="/images/ehull.jpg" alt="Elizabeth Hull" title="Elizabeth Hull">
-  <p><strong>Elizabeth Hull</strong>, BA Archaeology; MA American History<br>Associate Director<br>We rely on Elizabeth’s deep knowledge of the organization and her management skills to keeps things running smoothly and efficiently.</p>
+  <p><strong>Elizabeth Hull</strong><br>Associate Director<br>Elizabeth has been with Dryad since 2013 in a succession of roles -- curator, operations manager, and now Associate Director. She holds a varied background in libraries/archives, web content management, public history, and archaeology, all of which converge into an overarching commitment to open access and usability of knowledge.</p>
 </div>
 
 <div class="bio">
