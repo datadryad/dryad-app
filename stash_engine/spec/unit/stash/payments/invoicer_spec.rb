@@ -1,6 +1,7 @@
 require 'ostruct'
 require 'spec_helper'
 require_relative '../../../../lib/stash/payments/invoicer'
+require 'action_controller'
 
 module Stash
   module Payments
@@ -11,6 +12,7 @@ module Stash
         allow(@identifier).to receive(:to_s).and_return('doi:10.123/a1b.c2d3')
         allow(@identifier).to receive(:invoice_id=)
         allow(@identifier).to receive(:save).and_return(true)
+        allow(@identifier).to receive(:storage_size).and_return(5.01e+10.to_i)
 
         @resource_id = 17
         @resource = double(StashEngine::Resource)
@@ -41,6 +43,8 @@ module Stash
         allow(@invoicer).to receive(:create_invoice).and_return(fake_invoice)
         allow(@invoicer).to receive(:create_customer).and_return(fake_customer)
         allow(@invoicer).to receive(:lookup_prior_stripe_customer_id).and_return(nil)
+
+        allow(Stripe::InvoiceItem).to receive(:create) { |hsh| hsh }
       end
 
       it 'creates an invoice for a new stripe customer' do
@@ -56,6 +60,23 @@ module Stash
       it 'does not create an invoice when the resource has no primary author' do
         allow(StashEngine::Author).to receive(:primary).with(@resource_id).and_return(nil)
         expect(@invoicer.charge_user_via_invoice).to eql(nil)
+      end
+
+      it 'gets the dataset size' do
+        expect(@invoicer.ds_size).to eq(50_100_000_000)
+      end
+
+      it 'calculates overage bytes' do
+        expect(@invoicer.overage_bytes).to eq(100_000_000)
+      end
+
+      it 'calculates overage chunks' do
+        expect(@invoicer.overage_chunks).to eq(1)
+      end
+
+      it 'makes an overage message' do
+        expect(@invoicer.overage_message).to eq('Oversize submission charges for doi:10.123/a1b.c2d3. Overage amount is 100 MB ' \
+          '@ $50.00 per 10 GB or part thereof over 50 GB (see https://datadryad.org/stash/publishing_charges for details)')
       end
     end
   end

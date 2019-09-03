@@ -62,6 +62,7 @@ html.no-multiplebgs .o-banner {
   margin: 0 0 10px;
   color: $design-white-color;
   font-size: 1.7em;
+  font-style: italic;
 
   @include bp(screen1) {
     margin: 0 0 2vw;
