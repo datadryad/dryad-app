@@ -3,6 +3,11 @@
 <p>Our team applies their diverse backgrounds in scientific research, librarianship, non-profits, business administration, publishing, and computer science to support open data infrastructure and the preservation of knowledge. To reach us, contact <a href=mailto:help@datadryad.org>help@datadryad.org</a>.</p>
 
 <div class="bio">
+  <img src="/images/ehull.jpg" alt="Elizabeth Hull" title="Elizabeth Hull">
+  <p><strong>Elizabeth Hull</strong>, BA Archaeology; MA American History<br>Associate Director<br>We rely on Elizabeth’s deep knowledge of the organization and her management skills to keeps things running smoothly and efficiently.</p>
+</div>
+
+<div class="bio">
   <img src="/images/eclary.jpg" alt="Erin Clary" title="Erin Clary">
   <p><strong>Erin Clary</strong>, BS Biology; MLS<br>Senior Curator<br><a href="mailto:curator@datadryad.org">curator@datadryad.org</a><br>Erin has worked at Dryad since 2014 when she was hired as a curator through the Metadata Research Center at the University of North Carolina (now at Drexel University). Erin has an undergraduate degree in Biology, and an MS in Library Science. She is interested in open scholarship, data reusability, data citation, and the development of shared resources and standards to assist researchers and data curators in data sharing and data archiving. </p>
 </div>
