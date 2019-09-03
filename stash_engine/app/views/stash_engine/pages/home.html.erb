@@ -1,6 +1,6 @@
 <% @page_title = 'Home - Publish and Preserve your Data' %>
 <div class="t-home__banner o-banner" style="background-image: url(<%= asset_path 'stash_engine/bg_drawer-of-bugs.jpg' %>)">
-  <div class="o-banner__tagline">Promoting scholarship through open data</div>
+  <div class="o-banner__tagline">for your research data</div>
 </div>
 <div class="t-home__quote-search-group">
   <div class="t-home__quote o-quote">
@@ -11,12 +11,11 @@
     </div>
   </div>
   <div class="t-home__search o-home-search">
-    <form action="/search" accept-charset="UTF-8" method="get">
-      <div class="o-home__search-group">
-        <input class="o-home-search__input" id="home-search-input" type="search" name="q">
-        <button class="o-home-search__submit-button">Search</button>
-      </div>
-    </form>
+    <div class="o-home__search-group">
+      <% lnk = current_user ? stash_url_helpers.dashboard_path : stash_url_helpers.choose_login_path %>
+      <% txt = current_user ? 'Submit a new dataset' : 'Login and then submit a new dataset' %>
+      <%= button_to 'Submit Now', lnk, method: :get, class: "o-home-search__submit-button", title: txt %>
+    </div>
   </div>
 </div>
 <%= render partial: 'why_share' %>
