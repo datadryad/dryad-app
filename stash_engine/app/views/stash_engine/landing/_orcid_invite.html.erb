@@ -4,7 +4,7 @@
 
   <p style="text-align: center;">
     <%= link_to "Connect your ORCID iD", "/stash/auth/orcid?#{{invitation: params[:invitation], identifier_id: identifier_id }.to_param}",
-                class: "js-add_my_Orcid_ID t-describe__add-button o-button__connect-orcid" %>
+                class: "js-add_my_Orcid_ID t-describe__add-button o-button__connect-orcid", method: :post %>
   </p>
 
 </div>
