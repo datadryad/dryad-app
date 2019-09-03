@@ -31,6 +31,7 @@
 
 .o-home__search-group {
 	display: flex;
+  justify-content: center;
 	height: 35px;
 
   @include bp(screen1) {
@@ -46,9 +47,10 @@
 }
 
 .o-home-search__submit-button {
-  margin: 0 0 0 5px;
-  padding: 0 15px;
+  margin: -10px auto 0;
+  padding: 15px 35px 18px;
   border: 1px solid $design-white-color;
-  background-color: $design-dark-blue-color;
-  color: $design-white-color;
+  background-color: $design-white-color;
+  color: $design-dark-blue-color;
+  font-weight: 2em;
 }
