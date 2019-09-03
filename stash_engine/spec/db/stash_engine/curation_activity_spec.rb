@@ -198,8 +198,12 @@ module StashEngine
           allow_any_instance_of(StashEngine::CurationActivity).to receive(:email_orcid_invitations).and_return(false)
           allow_any_instance_of(StashEngine::UserMailer).to receive(:status_change).and_return(true)
           allow_any_instance_of(StashEngine::UserMailer).to receive(:orcid_invitation).and_return(true)
-          @user = Author.create(author_first_name: 'Foo', author_last_name: 'Bar', author_email: 'foo.bar@example.edu', resource_id: @resource.id)
+          @author = Author.create(author_first_name: 'Foo', author_last_name: 'Bar', author_email: 'foo.bar@example.edu', resource_id: @resource.id)
           @ca = CurationActivity.new(resource_id: @resource.id, status: 'published')
+          # in theory stash_engine doesn't depend on datacite_engine, so mocking this out for now instead of bringing that engine in
+          allow_any_instance_of(StashEngine::Author).to receive(:affiliation).and_return(
+            { long_name: 'Western New Mexico University', ror_id: 'https://ror.org/00r5mr697' }.to_ostruct
+          )
         end
 
         it 'calls email_orcid_invitations when published' do
@@ -211,14 +215,14 @@ module StashEngine
           allow_any_instance_of(StashEngine::User).to receive(:orcid_id).and_return(nil)
           allow_any_instance_of(StashEngine::User).to receive(:email).and_return('fool.bar@example.edu')
           allow_any_instance_of(StashEngine::OrcidInvitation).to receive(:identifier_id).and_return(@identifier.id)
-          allow_any_instance_of(StashEngine::OrcidInvitation).to receive(:email).and_return(@user.author_email)
+          allow_any_instance_of(StashEngine::OrcidInvitation).to receive(:email).and_return(@author.author_email)
           expect(UserMailer).not_to receive(:orcid_invitation)
           @ca.save
         end
 
         it 'does not call email_orcid_invitations to authors who already have an ORCID registered' do
           allow_any_instance_of(StashEngine::User).to receive(:orcid_id).and_return('12345')
-          allow_any_instance_of(StashEngine::User).to receive(:email).and_return(@user.author_email)
+          allow_any_instance_of(StashEngine::User).to receive(:email).and_return(@author.author_email)
           expect(UserMailer).not_to receive(:orcid_invitation)
           @ca.save
         end

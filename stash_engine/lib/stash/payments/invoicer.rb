@@ -1,6 +1,16 @@
+# this require needed in tests, but not really in app, though it doesn't hurt anything
+require_relative '../../../app/helpers/stash_engine/application_helper'
+require 'stripe'
+
+# rubocop:disable Metrics/ClassLength
 module Stash
   module Payments
     class Invoicer
+
+      # this drops in a couple methods and makes "def filesize(bytes, decimal_points = 2)" available
+      # to output digital storage sizes
+      include StashEngine::ApplicationHelper
+
       attr_reader :resource, :curator
 
       def initialize(resource:, curator:)
@@ -14,7 +24,7 @@ module Stash
         set_api_key
         customer_id = stripe_user_customer_id
         return unless customer_id.present?
-        create_invoice_item_for_dpc(customer_id)
+        create_invoice_items_for_dpc(customer_id)
         invoice = create_invoice(customer_id)
         invoice.auto_advance = true
         resource.identifier.invoice_id = invoice.id
@@ -29,7 +39,8 @@ module Stash
         set_api_key
         customer_id = stripe_journal_customer_id
         return unless customer_id.present?
-        invoice_item = create_invoice_item_for_dpc(customer_id)
+        # the following line was creating invoice_item from return value, but didn't seem used anywhere
+        create_invoice_items_for_dpc(customer_id)
         resource.identifier.invoice_id = invoice_item&.id
         resource.identifier.save
       end
@@ -41,6 +52,41 @@ module Stash
         Stripe::Charge.retrieve(latest.invoice_id).present?
       end
 
+      # takes a size and returns overage charges in cents
+      def overage_charges
+        overage_chunks * StashEngine.app.payments.additional_storage_chunk_cost
+      end
+
+      def ds_size
+        # generally we should have populated this into the identifier from Merritt by callback, but the sum of
+        # all the file sizes for a version is a fallback
+        resource.identifier.storage_size || StashEngine::FileUpload.where(resource_id: resource.id).sum(:upload_file_size)
+      end
+
+      def overage_bytes
+        size_in_bytes = ds_size
+        return 0 if size_in_bytes <= StashEngine.app.payments.large_file_size
+
+        size_in_bytes - StashEngine.app.payments.large_file_size
+      end
+
+      def overage_chunks
+        over_bytes = overage_bytes
+        return 0 if over_bytes == 0
+
+        (over_bytes / StashEngine.app.payments.additional_storage_chunk_size).ceil
+      end
+
+      def overage_message
+        msg = <<~MESSAGE
+          Oversize submission charges for #{resource.identifier}. Overage amount is #{filesize(overage_bytes)} @
+          #{ActionController::Base.helpers.number_to_currency(StashEngine.app.payments.additional_storage_chunk_cost / 100)}
+          per #{filesize(StashEngine.app.payments.additional_storage_chunk_size)} or part thereof
+          over #{filesize(StashEngine.app.payments.large_file_size)} (see https://datadryad.org/stash/publishing_charges for details)
+        MESSAGE
+        msg.strip.gsub(/\s+/, ' ')
+      end
+
       # Helper methods
       # ------------------------------------------
       private
@@ -49,13 +95,25 @@ module Stash
         Stripe.api_key = StashEngine.app.payments.key
       end
 
-      def create_invoice_item_for_dpc(customer_id)
-        Stripe::InvoiceItem.create(
+      # this is mostly just long because of long text & formatting text
+      def create_invoice_items_for_dpc(customer_id)
+        items = [Stripe::InvoiceItem.create(
           customer: customer_id,
           amount: StashEngine.app.payments.data_processing_charge,
           currency: 'usd',
-          description: "Data Processing Charge for #{resource.identifier}"
-        )
+          description: "Data Processing Charge for #{resource.identifier} (#{filesize(ds_size)})"
+        )]
+        over_chunks = overage_chunks
+        if over_chunks.positive?
+          items.push(Stripe::InvoiceItem.create(
+                       customer: customer_id,
+                       unit_amount: StashEngine.app.payments.additional_storage_chunk_cost,
+                       currency: 'usd',
+                       quantity: over_chunks,
+                       description: overage_message
+                     ))
+        end
+        items
       end
 
       def create_invoice(customer_id)
@@ -100,3 +158,4 @@ module Stash
     end
   end
 end
+# rubocop:enable Metrics/ClassLength
