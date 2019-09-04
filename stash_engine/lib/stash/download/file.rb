@@ -41,7 +41,7 @@ module Stash
         cc.response.headers['Content-Length'] = content_length
         # cc.response.headers['Transfer-Encoding'] = 'chunked'
         # transfer encoding chunked makes it fail with zero bytes
-        cc.response.headers['Last-Modified'] = Time.now.utc.httpdate
+        cc.response.headers['Last-Modified'] = file.updated_at.utc.httpdate
         cc.response_body = Stash::Streamer.new(client, url)
       end
       # rubocop:enable Metrics/AbcSize
