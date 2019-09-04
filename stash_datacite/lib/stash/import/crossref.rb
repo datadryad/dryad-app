@@ -1,6 +1,6 @@
 require 'amatch'
 
-require_relative '../../../app/models/stash_datacite/proposed_change'
+require_relative '../../../app/models/stash_engine/proposed_change'
 
 module Stash
   module Import
