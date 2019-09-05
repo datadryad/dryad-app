@@ -1,3 +1,5 @@
+require 'stash/import/crossref'
+
 module StashEngine
   class ProposedChange < ActiveRecord::Base
     belongs_to :identifier, class_name: 'StashEngine::Identifier', foreign_key: 'identifier_id'
