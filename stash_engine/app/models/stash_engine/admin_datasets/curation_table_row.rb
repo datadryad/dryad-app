@@ -126,8 +126,8 @@ module StashEngine
         end
 
         def sort_by_author_names(results, direction)
-          return results.sort { |a, b| b.author_names.downcase <=> a.author_names.downcase } if direction.casecmp('desc').zero?
-          results.sort { |a, b| a.author_names.downcase <=> b.author_names.downcase }
+          multiply_by = (direction.casecmp('desc').zero? ? -1 : 1)
+          results.sort { |a, b| multiply_by * ((a&.author_names&.downcase || '') <=> (b&.author_names&.downcase || '')) }
         end
 
         # Swap a term into the SQL snippet/clause
