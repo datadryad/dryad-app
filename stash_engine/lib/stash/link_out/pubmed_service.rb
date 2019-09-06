@@ -25,7 +25,7 @@ module LinkOut
       @ftp = APP_CONFIG.link_out.pubmed
       @root_url = Rails.application.routes.url_helpers.root_url.freeze
 
-      @schema = 'http://www.ncbi.nlm.nih.gov/entrez/linkout/doc/LinkOut.dtd'
+      @schema = 'https://www.ncbi.nlm.nih.gov/projects/linkout/doc/LinkOut.dtd'
       @links_file = 'pubmedlinkout.xml'
       @provider_file = 'providerinfo.xml'
     end

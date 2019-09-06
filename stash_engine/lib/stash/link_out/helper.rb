@@ -79,13 +79,13 @@ module LinkOut
       #    19:0: ERROR: No declaration for element SubjectType"
       true
 
-      # doc = Nokogiri::XML::Document.parse(File.read(xml_file))
-      # dtd = Nokogiri::XML::DTD.new(doc.internal_subset.name, Nokogiri::XML::Document.parse(File.read(dtd_file)))
+      doc = Nokogiri::XML::Document.parse(File.read(xml_file))
+      dtd = Nokogiri::XML::DTD.new(doc.internal_subset.name, Nokogiri::XML::Document.parse(File.read(dtd_file)))
+      return true if dtd.validate(doc).empty?
 
-      # return true if dtd.validate(doc).empty?
-      # p "      ERROR! #{xml_file} does not conform to the XML schema defined in: #{dtd_file}:"
-      # dtd.validate(doc).each { |err| p "        #{err.to_s}" }
-      # false
+      p "      ERROR! #{xml_file} does not conform to the XML schema defined in: #{dtd_file}:"
+      dtd.validate(doc).each { |err| p "        #{err.to_s}" }
+      false
     end
 
   end

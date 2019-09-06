@@ -103,7 +103,12 @@ namespace :link_out do
         next unless external_ref.value_changed?
 
         p "    found #{v.length} identifiers for #{k}"
-        external_ref.save
+        begin
+          external_ref.save
+        rescue Exception => e
+          p "    ERROR: #{e.message} ... skipping update for #{data.identifier_id}"
+          next
+        end
       end
       sleep(1) # The NCBI API has a threshold for how many times we can hit it
     end
