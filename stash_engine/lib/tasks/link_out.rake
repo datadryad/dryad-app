@@ -105,7 +105,7 @@ namespace :link_out do
         p "    found #{v.length} identifiers for #{k}"
         begin
           external_ref.save
-        rescue Exception => e
+        rescue StandardError => e
           p "    ERROR: #{e.message} ... skipping update for #{data.identifier_id}"
           next
         end
