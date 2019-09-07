@@ -30,7 +30,7 @@ module Counter
 
           validate_line(line: my_line)
           if @badline == false
-            f.write("#{my_line}\n")
+            f.write("#{@pieces.join("\t")}\n")
           else
             output_badinfo
           end
@@ -40,6 +40,8 @@ module Counter
 
     def validate_line(line:)
       @pieces = line.split("\t")
+      # the following is a bad hack to fix missing grid ids everywhere
+      @pieces.insert(12, 'grid.466587.e') if @pieces.length == 18
       if @pieces.length != VALIDATION_METHODS.length
         return error(msg: "Incorrect number of fields: should be #{VALIDATION_METHODS.length} fields, #{@pieces.length} found")
       end
