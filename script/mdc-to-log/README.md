@@ -17,3 +17,33 @@ bundle install # to install gems
 ./main.rb <db_filename.sqlite>
 # it will create <db_filename.log>
 ```
+
+## Some other notes about related activities
+
+1. Get good log files, without errors from dryad
+2. Get the dash log files from this script
+3. Combine duplicate months with a command like
+```
+cat good-counter/counter_2019-04.log dash-stats/counter_db_2019-04.log | sort > counter_2019-04.log
+```
+
+
+This will help you run counter for months.
+
+```
+export PATH=$HOME/opt/bin:$PATH
+export PYTHONPATH=$HOME/opt/bin/python-3.6.9
+python --version
+cd /apps/dryad/apps/counter/counter-processor
+
+for file in /apps/dryad-prd-shared/good-counter/*.log
+do
+  YEAR_MONTH=$(echo "$file" | grep -oP '201\d{1}-\d{2}')
+  LOG_NAME_PATTERN="$file"
+  export YEAR_MONTH
+  export LOG_NAME_PATTERN
+  UPLOAD_TO_HUB=False ./main.py
+  unset -v YEAR_MONTH LOG_NAME_PATTERN
+  break
+done
+```
