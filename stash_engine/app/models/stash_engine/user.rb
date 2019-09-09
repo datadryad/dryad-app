@@ -36,7 +36,27 @@ module StashEngine
       migration_token == NO_MIGRATE_STRING
     end
 
-    def migration_complete!
+    # Merges the other user into this user.  Updates so that this user owns other user's old stuff and has their critical info.
+    # Also overwrites some selected fields from this user with other user's info which should be more current.
+    # The other_user passed in is generally a newly logged in user that is having any of their new stuff transferred into their existing, old
+    # user account. Then they will use that old user account from then on (current user and other things will be switched around on the fly
+    # in the controller).
+    def merge_user!(other_user:)
+      # these methods do not invoke callbacks, since not really needed for taking ownership
+      CurationActivity.where(user_id: other_user.id).update_all(user_id: id)
+      ProposedChange.where(user_id: other_user.id).update_all(user_id: id)
+      ResourceState.where(user_id: other_user.id).update_all(user_id: id)
+      Resource.where(user_id: other_user.id).update_all(user_id: id)
+      Resource.where(current_editor_id: other_user.id).update_all(current_editor_id: id)
+
+      # merge in any special things updated in other user and prefer these details from other_user over self.user
+      out_hash = {}
+      %i[first_name last_name email tenant_id last_login orcid].each do |i|
+        out_hash[i] = other_user.send(i) unless other_user.send(i).blank?
+      end
+      out_hash[:migration_token] = NO_MIGRATE_STRING
+      update(out_hash)
+
       self.migration_token = NO_MIGRATE_STRING
       save
     end
