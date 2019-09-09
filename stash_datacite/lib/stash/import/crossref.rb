@@ -53,13 +53,7 @@ module Stash
         def from_proposed_change(proposed_change:)
           return new(resource: nil, crossref_json: {}) unless proposed_change.is_a?(StashEngine::ProposedChange)
           identifier = StashEngine::Identifier.find(proposed_change.identifier_id)
-          if proposed_change.publication_date.present?
-            date_parts = [proposed_change.publication_date.year, proposed_change.publication_date.month,
-                          proposed_change.publication_date.day]
-          end
           message = {
-            'author' => JSON.parse(proposed_change.authors),
-            'published-online' => { 'date-parts' => date_parts },
             'DOI' => proposed_change.publication_doi,
             'publisher' => proposed_change.publication_name,
             'title' => [proposed_change.title],
