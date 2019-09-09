@@ -25,7 +25,7 @@ module LinkOut
       @root_url = Rails.application.routes.url_helpers.root_url.freeze
       @file_counter = 1
 
-      @schema = 'http://www.ncbi.nlm.nih.gov/entrez/linkout/doc/LinkOut.dtd'
+      @schema = 'https://www.ncbi.nlm.nih.gov/projects/linkout/doc/LinkOut.dtd'
       @links_file = 'sequencelinkout[nbr].xml'
       @max_nodes_per_file = 50_000
     end

@@ -16,6 +16,10 @@ module Counter
     VALIDATION_METHODS = %w[event_time ip_address session_cookie user_cookie user_id request_url
                             doi filename size user_agent title publisher publisher_id authors publication_date version
                             alternate_id target_url year_of_publication].freeze
+
+    # used for display of bad items
+    LONGEST_METHOD = VALIDATION_METHODS.map(&:length).max.freeze
+
     def validate_file
       File.open(@out_file, 'w:UTF-8') do |f|
         File.open(@filename).each_with_index do |line, index|
@@ -25,17 +29,25 @@ module Counter
           next if my_line.start_with?('#') || my_line == ''
 
           validate_line(line: my_line)
-          f.write("#{my_line}\n") if @badline == false
+          if @badline == false
+            f.write("#{@pieces.join("\t")}\n")
+          else
+            output_badinfo
+          end
         end
       end
     end
 
     def validate_line(line:)
-      pieces = line.split("\t")
-      return error(msg: 'Incorrect number of pieces') if pieces.length != VALIDATION_METHODS.length
+      @pieces = line.split("\t")
+      # the following is a bad hack to fix missing grid ids everywhere
+      @pieces.insert(12, 'grid.466587.e') if @pieces.length == 18
+      if @pieces.length != VALIDATION_METHODS.length
+        return error(msg: "Incorrect number of fields: should be #{VALIDATION_METHODS.length} fields, #{@pieces.length} found")
+      end
 
       VALIDATION_METHODS.each_with_index do |meth, index|
-        send("validate_#{meth}", pieces[index])
+        send("validate_#{meth}", @pieces[index])
       end
     end
 
@@ -157,6 +169,13 @@ module Counter
 
     def blank?(i)
       ['-', ''].include?(i)
+    end
+
+    def output_badinfo
+      VALIDATION_METHODS.each_with_index do |v, i|
+        puts "#{v.rjust(LONGEST_METHOD)}: #{(i >= @pieces.length ? 'MISSING FIELD' : @pieces[i])}"
+      end
+      puts ''
     end
   end
 end

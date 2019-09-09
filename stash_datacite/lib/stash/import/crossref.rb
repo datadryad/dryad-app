@@ -1,6 +1,6 @@
 require 'amatch'
 
-require_relative '../../../app/models/stash_datacite/proposed_change'
+require_relative '../../../app/models/stash_engine/proposed_change'
 
 module Stash
   module Import
@@ -257,9 +257,11 @@ module Stash
       end
 
       def populate_supplement_to
-        return unless @sm['URL'].present? || @sm['DOI'].present?
+        my_related = @sm['URL'] || @sm['DOI']
+        return if my_related.blank? || duplicate_reference_doi?(target_doi: my_related)
+
         # Use the URL if available otherwise just use the DOI
-        @resource.related_identifiers.find_or_initialize_by(related_identifier: @sm['URL'] || @sm['DOI'],
+        @resource.related_identifiers.find_or_initialize_by(related_identifier: my_related,
                                                             related_identifier_type: 'doi',
                                                             relation_type: 'issupplementto')
       end
@@ -325,6 +327,20 @@ module Stash
         [date.year, date.month, date.day]
       rescue StandardError
         nil
+      end
+
+      # this is a helper method to detect duplicate reference dois
+      def duplicate_reference_doi?(target_doi:)
+        bare_ids = @resource.related_identifiers.map { |i| bare_doi(doi_string: i.related_identifier) }.compact
+        bare_target_doi = bare_doi(doi_string: target_doi)
+        bare_ids.include?(bare_target_doi)
+      end
+
+      # returns the bare part (no prefix, just the identifier part) or the full string if it can't parse out a bare identifier from the DOI
+      def bare_doi(doi_string:)
+        bare_match = %r{^(doi:|https?://dx\.doi\.org/|https?://doi\.org/)(.+)$}
+        my_match = doi_string.match(bare_match)
+        my_match.present? ? my_match[2] : doi_string
       end
 
     end
