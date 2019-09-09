@@ -25,8 +25,14 @@ module StashEngine
     end
 
     def migrate_data
+      # this validates the user is also the same one as is logged in by the validation id
+      # also the old_dryad_email gets filled when
       return unless validate_form_token_format && validate_form_token
 
+      # make sure there is any old account to actually migrate
+      return unless validate_old_dryad_email
+
+      # this fills in the email if blank because ORCID doesn't always release email address
       create_missing_email_address
       do_data_migration
       render 'migrate_successful'
@@ -97,17 +103,37 @@ module StashEngine
       true
     end
 
+    def validate_old_dryad_email
+      # this query is a bit weird since apparantly NULL oesn't compare with != as you might think
+      @old_user = User.where(email: current_user.old_dryad_email).where("id != ? AND (migration_token IS NULL OR migration_token != ?)",
+                                                                        current_user.id, StashEngine::User::NO_MIGRATE_STRING)
+      unless @old_user.count.positive?
+        flash.now[:alert] = "The email address you've validated does not match any that was used in the previous system.  Please contact us if you need assistance."
+        return false
+      end
+      @old_user = @old_user.first
+      true
+    end
+
     def create_missing_email_address
       current_user.update(email: current_user.old_dryad_email) if current_user.email.blank? && !current_user.old_dryad_email.blank?
     end
 
-    # it's not clear the full mechanics of this yet, yet it's likely to be close to these:
-    # 1) find the old user record for the previous account
-    # 2) update the resource.user_id (owner) for resources from the old user_id to the new user_id so this new user now owns them
-    # 3) update any resource.current_editor_ids using the old user_id to the new user_id
-    # 4) remove or disable the old user account after migration since their datasets have been moved to their new login
+
     def do_data_migration
-      current_user.migration_complete!
+      # we want to merge this current user account into the old user account and then switch the current user to be the old user account
+      # variables are @current_user, session[:user_id] and @old_user for doing this operation
+
+      old_current_user = current_user
+
+      @old_user.merge_user!(other_user: current_user)
+
+      # after done, switch around the users to use the one that previously existed and is being migrated to
+      @current_user = @old_user
+      session[:user_id] = @old_user.id
+
+      # make the newer user inaccessible from the database (rather than deleting for now in case anything goes awry, we can purge later)
+      old_current_user.update(orcid: "#{old_current_user.orcid}-migrated", migration_token: StashEngine::User::NO_MIGRATE_STRING)
     end
 
   end
