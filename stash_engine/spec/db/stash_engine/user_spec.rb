@@ -227,10 +227,6 @@ module StashEngine
         @mock_idgen = double('idgen')
         allow(@mock_idgen).to receive('update_identifier_metadata!'.intern).and_raise('submitted DOI')
         allow(Stash::Doi::IdGen).to receive(:make_instance).and_return(@mock_idgen)
-
-        @mock_update = double('mock_update')
-        allow(@mock_update).to receive(:update_all).and_return(true)
-        allow(ProposedChange).to receive(:where).and_return(@mock_update)
       end
 
       it 'moves the dependendent resources from user2 to user1' do
