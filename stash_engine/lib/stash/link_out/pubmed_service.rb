@@ -103,7 +103,7 @@ module LinkOut
         ), nil, 'UTF-8')
 
       doc.create_internal_subset('LinkSet', '-//NLM//DTD LinkOut 1.0//EN', @schema.split('/').last)
-      File.write("#{TMP_DIR}/#{@links_file}", doc.to_xml)
+      File.write("#{TMP_DIR}/#{@links_file}", unencode_callback_ampersand(doc.to_xml))
       "#{TMP_DIR}/#{@links_file}"
     end
 
@@ -132,6 +132,15 @@ module LinkOut
     def extract_pubmed_id(xml)
       doc = Nokogiri::XML(xml)
       doc.xpath('eSearchResult//IdList//Id').first&.text
+    end
+
+    # Nokogiri and other libraries encode ampersands `&amp;`
+    # https://github.com/sparklemotion/nokogiri/issues/1127
+    #
+    # The PubMed Linkout system though wants it to be unencoded `&` which technically makes the
+    # XML document invalid so we need to swap the `&` for `&amp;` after doing our Nokogiri `doc.to_xml`
+    def unencode_callback_ampersand(text)
+      text.gsub(/query\=%22&amp;lo\.doi;%22/, 'query=%22&lo.doi;%22')
     end
 
   end

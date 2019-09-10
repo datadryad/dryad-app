@@ -13,10 +13,9 @@ module StashEngine
     def ==(other)
       return false unless other.present? && other.is_a?(StashEngine::ProposedChange)
 
-      other.identifier_id == identifier_id && other.authors == authors && other.provenance == provenance &&
-        other.publication_date == publication_date && other.publication_issn == publication_issn &&
-        other.publication_doi == publication_doi && other.publication_name == publication_name &&
-        other.title == title
+      other.identifier_id == identifier_id && other.provenance == provenance &&
+        other.publication_issn == publication_issn && other.publication_doi == publication_doi &&
+        other.publication_name == publication_name && other.title == title
     end
     # rubocop:enable Metrics/CyclomaticComplexity
 
