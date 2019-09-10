@@ -178,6 +178,15 @@ module StashEngine
         )
       end
 
+      it 'detects migration is not complete' do
+        expect(user.migration_complete?).to be false
+      end
+
+      it 'migration_complete! sets and detects a migration_complete?' do
+        user.migration_complete!
+        expect(user.migration_complete?).to be true
+      end
+
       it "set_migration_token doesn't set a new token if one exists" do
         user.set_migration_token
         expect(user.migration_token).to eq('123456')
