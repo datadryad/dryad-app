@@ -44,7 +44,7 @@ module StashEngine
     def merge_user!(other_user:)
       # these methods do not invoke callbacks, since not really needed for taking ownership
       CurationActivity.where(user_id: other_user.id).update_all(user_id: id)
-      StashDatacite::ProposedChange.where(user_id: other_user.id).update_all(user_id: id)
+      ProposedChange.where(user_id: other_user.id).update_all(user_id: id)
       ResourceState.where(user_id: other_user.id).update_all(user_id: id)
       Resource.where(user_id: other_user.id).update_all(user_id: id)
       Resource.where(current_editor_id: other_user.id).update_all(current_editor_id: id)

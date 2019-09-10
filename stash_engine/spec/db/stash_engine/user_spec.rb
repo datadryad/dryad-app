@@ -228,16 +228,12 @@ module StashEngine
         allow(@mock_idgen).to receive('update_identifier_metadata!'.intern).and_raise('submitted DOI')
         allow(Stash::Doi::IdGen).to receive(:make_instance).and_return(@mock_idgen)
 
-        # this is for monkeypatching and mocking since it's not loaded.
-        # Probably the proposed changes might be in StashEngine instead, but either way it's ugly.  Not worth all the
-        # work of modifying just to check this one item.
-        module ::StashDatacite
-          module ProposedChange;end
-        end
+        # this is for monkeypatching and mocking since it's not loaded for some reason
+        module ::ProposedChange;end
 
         @mock_update = double('mock_update')
         allow(@mock_update).to receive(:update_all).and_return(true)
-        allow(StashDatacite::ProposedChange).to receive(:where).and_return(@mock_update)
+        allow(ProposedChange).to receive(:where).and_return(@mock_update)
       end
 
       it 'moves the dependendent resources from user2 to user1' do
