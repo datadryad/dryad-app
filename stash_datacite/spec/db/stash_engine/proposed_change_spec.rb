@@ -55,18 +55,12 @@ module StashEngine
           @pc.identifier_id = 789_578
           expect(@proposed_change == @pc).to eql(false)
         end
-        it 'checking authors' do
-          @pc.authors = [{ 'given' => 'Julia M.', 'family' => 'Petersen' }]
-          expect(@proposed_change == @pc).to eql(false)
-        end
+
         it 'checking provenance' do
           @pc.provenance = 'some other site'
           expect(@proposed_change == @pc).to eql(false)
         end
-        it 'checking publication_date' do
-          @pc.publication_date = Date.today
-          expect(@proposed_change == @pc).to eql(false)
-        end
+
         it 'checking publication_name' do
           @pc.publication_name = 'Foo'
           expect(@proposed_change == @pc).to eql(false)
@@ -101,14 +95,10 @@ module StashEngine
 
         expect(@resource.title).to eql(old_title)
         auths = JSON.parse(@params[:authors])
-        expect(@resource.authors.first.author_first_name).to eql(auths.first['given'])
-        expect(@resource.authors.first.author_last_name).to eql(auths.first['family'])
         expect(@resource.identifier.internal_data.select { |id| id.data_type == 'publicationName' }.first.value).to eql(@params[:publication_name])
         expect(@resource.related_identifiers.select do |id|
           id.related_identifier_type == 'doi' && id.relation_type == 'issupplementto'
         end.first&.related_identifier).to eql(@params[:publication_doi])
-
-        expect(@resource.publication_date.to_date).to eql(@params[:publication_date])
 
         @proposed_change.reload
         expect(@proposed_change.approved).to eql(true)
