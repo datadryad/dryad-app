@@ -204,21 +204,21 @@ module StashEngine
         # create users1 and user2 to be merged and user3 to be left alone
 
         @user1 = create(:user, first_name: 'Gloriana', last_name: 'McSweeney', email: 'gmc@example.com',
-                        tenant_id: 'exemplia', role: 'user', orcid: '1098-415-1212', migration_token: nil)
+                               tenant_id: 'exemplia', role: 'user', orcid: '1098-415-1212', migration_token: nil)
         @identifier1 = create(:identifier)
         @resource1 = create(:resource, identifier_id: @identifier1.id, user_id: @user1.id, current_editor_id: @user1.id)
         @curation_activity1 = create(:curation_activity, resource: @resource1, user_id: @user1.id)
         @resource_state1 = create(:resource_state, user_id: @user1.id, resource_state: 'submitted', resource_id: @resource1.id)
 
         @user2 = create(:user, first_name: 'Henry', last_name: 'Hale', email: 'hh@example.com',
-                        tenant_id: 'ucop', role: 'admin', orcid: '1099-9999-9999', migration_token: nil)
+                               tenant_id: 'ucop', role: 'admin', orcid: '1099-9999-9999', migration_token: nil)
         @identifier2 = create(:identifier)
         @resource2 = create(:resource, identifier_id: @identifier2.id, user_id: @user2.id, current_editor_id: @user2.id)
         @curation_activity2 = create(:curation_activity, resource: @resource2, user_id: @user2.id)
         @resource_state2 = create(:resource_state, user_id: @user2.id, resource_state: 'submitted', resource_id: @resource2.id)
 
         @user3 = create(:user, first_name: 'Rodrigo', last_name: 'Sandoval', email: 'rjsand@example.com',
-                        tenant_id: 'exemplia', role: 'superuser', orcid: '1234-9999-9999', migration_token: '666444')
+                               tenant_id: 'exemplia', role: 'superuser', orcid: '1234-9999-9999', migration_token: '666444')
         @identifier3 = create(:identifier)
         @resource3 = create(:resource, identifier_id: @identifier3.id, user_id: @user3.id, current_editor_id: @user3.id)
         @curation_activity3 = create(:curation_activity, resource: @resource3, user_id: @user3.id)
@@ -229,7 +229,9 @@ module StashEngine
         allow(Stash::Doi::IdGen).to receive(:make_instance).and_return(@mock_idgen)
 
         # this is for monkeypatching and mocking since it's not loaded for some reason
-        module ::ProposedChange;end
+        # rubocop:disable Style/ClassAndModuleChildren
+        module ::ProposedChange; end
+        # rubocop:enable Style/ClassAndModuleChildren
 
         @mock_update = double('mock_update')
         allow(@mock_update).to receive(:update_all).and_return(true)
@@ -299,7 +301,7 @@ module StashEngine
 
         # a grab bag of some things missing from @user2, so retained from @user1
         @user2 = create(:user, first_name: nil, last_name: 'Hale', email: nil,
-                        tenant_id: nil, role: 'admin', orcid: '1099-9999-9999', migration_token: nil)
+                               tenant_id: nil, role: 'admin', orcid: '1099-9999-9999', migration_token: nil)
 
         @user1.merge_user!(other_user: @user2)
         @user1.reload

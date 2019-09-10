@@ -105,10 +105,11 @@ module StashEngine
 
     def validate_old_dryad_email
       # this query is a bit weird since apparantly NULL oesn't compare with != as you might think
-      @old_user = User.where(email: current_user.old_dryad_email).where("id != ? AND (migration_token IS NULL OR migration_token != ?)",
+      @old_user = User.where(email: current_user.old_dryad_email).where('id != ? AND (migration_token IS NULL OR migration_token != ?)',
                                                                         current_user.id, StashEngine::User::NO_MIGRATE_STRING)
       unless @old_user.count.positive?
-        flash.now[:alert] = "The email address you've validated does not match any that was used in the previous system.  Please contact us if you need assistance."
+        flash.now[:alert] = "The email address you've validated does not match any that was used in the previous system.  " \
+                             'Please contact us if you need assistance.'
         return false
       end
       @old_user = @old_user.first
@@ -118,7 +119,6 @@ module StashEngine
     def create_missing_email_address
       current_user.update(email: current_user.old_dryad_email) if current_user.email.blank? && !current_user.old_dryad_email.blank?
     end
-
 
     def do_data_migration
       # we want to merge this current user account into the old user account and then switch the current user to be the old user account
