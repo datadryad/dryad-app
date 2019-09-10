@@ -10,7 +10,7 @@ RSpec.feature 'MigrateData', type: :feature do
     mock_solr!
     mock_ror!
     @user = create(:user, migration_token: Faker::Lorem.word)
-    create(:resource, :submitted, user: @user, identifier: create(:identifier))
+    @res = create(:resource, :submitted, user: @user, identifier: create(:identifier))
     sign_in(@user)
     visit stash_url_helpers.dashboard_path
   end
@@ -36,13 +36,14 @@ RSpec.feature 'MigrateData', type: :feature do
       expect(page).to have_text('Migrate Your Data')
     end
 
-    it 'finishes migration', js: true do
+    it 'rejects migration if no matching email', js: true do
       @user.update(migration_token: Faker::Number.number(6))
       @user.reload
       visit stash_url_helpers.auth_migrate_mail_path
       fill_in 'code', with: @user.migration_token
       click_button 'Migrate data'
-      expect(page).to have_text('Your old Dryad data packages and submissions have now been connected')
+      expect(page).to  have_text("The email address you've validated does not match any that was used in the previous system." \
+        ' Please contact us if you need assistance.')
     end
 
     context :invalid_request do
@@ -78,6 +79,35 @@ RSpec.feature 'MigrateData', type: :feature do
         fill_in 'code', with: '000000'
         click_button 'Migrate data'
         expect(page).to have_text("You've had too many incorrect code validation attempts.")
+      end
+    end
+
+    context :migrates_data do
+
+      before(:each) do
+        @user2 = create(:user, migration_token: Faker::Lorem.word)
+        @res2 = create(:resource, :submitted, user: @user2, identifier: create(:identifier))
+      end
+
+      it "displays old user's datasets after merging" do
+        @user.update(migration_token: Faker::Number.number(6), old_dryad_email: @user2.email)
+        @user.reload
+
+        # note the email should already be in the form from the stored value in old_dryad_email
+        visit stash_url_helpers.auth_migrate_mail_path
+
+        fill_in 'code', with: @user.migration_token
+
+        click_button 'Migrate data'
+        expect(page).to have_text('Your old Dryad data packages and submissions have now been connected')
+
+        @user2.reload
+        @user.reload
+
+        # had a lot of trouble getting the ajax to load right here and the display is tested elsewhere, so just check that this
+        # user has two datasets now
+        expect(@user2.resources.count).to eq(2)
+        expect(@user.resources.count).to eq(0)
       end
 
     end
