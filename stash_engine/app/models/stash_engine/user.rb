@@ -57,6 +57,10 @@ module StashEngine
       out_hash[:migration_token] = NO_MIGRATE_STRING
       update(out_hash)
 
+      migration_complete!
+    end
+
+    def migration_complete!
       self.migration_token = NO_MIGRATE_STRING
       save
     end
