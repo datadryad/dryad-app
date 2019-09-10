@@ -94,7 +94,6 @@ module StashEngine
         @resource.reload
 
         expect(@resource.title).to eql(old_title)
-        auths = JSON.parse(@params[:authors])
         expect(@resource.identifier.internal_data.select { |id| id.data_type == 'publicationName' }.first.value).to eql(@params[:publication_name])
         expect(@resource.related_identifiers.select do |id|
           id.related_identifier_type == 'doi' && id.relation_type == 'issupplementto'
