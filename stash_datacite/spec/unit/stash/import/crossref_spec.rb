@@ -624,7 +624,6 @@ module Stash
           auths = JSON.parse(@params[:authors])
           expect(resource.title).to eql(@params[:title])
           expect(resource.identifier.internal_data.select { |id| id.data_type == 'publicationName' }.first.value).to eql(@params[:publication_name])
-          expect(resource.publication_date.strftime('%Y-%m-%d')).to eql(@params[:publication_date].to_s)
           expect(resource.authors.first.author_first_name).to eql(auths.first['given'])
           expect(resource.authors.first.author_last_name).to eql(auths.first['family'])
           doi = resource.related_identifiers.select { |id| id.related_identifier_type == 'doi' && id.relation_type == 'issupplementto' }
