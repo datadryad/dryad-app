@@ -621,7 +621,6 @@ module Stash
         it 'properly extracts the data from the ProposedChange' do
           cr = Crossref.from_proposed_change(proposed_change: @proposed_change)
           resource = cr.populate_resource!
-          auths = JSON.parse(@params[:authors])
           expect(resource.title).to eql(@params[:title])
           expect(resource.identifier.internal_data.select { |id| id.data_type == 'publicationName' }.first.value).to eql(@params[:publication_name])
           doi = resource.related_identifiers.select { |id| id.related_identifier_type == 'doi' && id.relation_type == 'issupplementto' }
