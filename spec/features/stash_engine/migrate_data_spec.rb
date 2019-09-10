@@ -42,7 +42,7 @@ RSpec.feature 'MigrateData', type: :feature do
       visit stash_url_helpers.auth_migrate_mail_path
       fill_in 'code', with: @user.migration_token
       click_button 'Migrate data'
-      expect(page).to  have_text("The email address you've validated does not match any that was used in the previous system." \
+      expect(page).to have_text("The email address you've validated does not match any that was used in the previous system." \
         ' Please contact us if you need assistance.')
     end
 
