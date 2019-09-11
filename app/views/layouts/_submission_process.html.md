@@ -1,10 +1,10 @@
 <h1>Submission Process</h1>
 
-<p>Before you begin, we recommend reviewing our best practices for creating reusable data publications or, if you're in a hurry, our quickstart guide to data sharing <strong>(add links)</strong>.</p>
+<p>Before you begin, we recommend reviewing our <a href="<%= stash_url_helpers.best_practices_path %>">best practices for creating FAIR data publications</a> or if you're in a hurry, our <a href="/docs/QuickstartGuideToDataSharing.pdf">quickstart guide to data sharing</a>.</p>
 
 <p>General reminders and suggestions for publishing your data with Dryad:</p>
 <ul>
-<li><strong>We accept all file formats, although it is good practice to share data using open formats</strong>. See the <a href="http://www.data-archive.ac.uk/create-manage/format/formats-table">UK Data Archive</a> for a list of optimal file formats</li>
+<li><strong>We accept all file formats, although it is good practice to share data using open formats</strong>.</li>
   <li><strong>Any data submitted will be published under the CC0 license</strong>. We do not currently support any other license types, nor do we allow for restrictions on data access or use</li>
 <li><strong>It is your responsibility to ensure your data are being shared responsibly and ethically</strong>. Please be careful about sharing sensitive data and ensure you are complying with institutional and governmental regulations</li>
 <li><strong>When preparing your complete version of a dataset, remember to collate all relevant explantory documents and metadata</strong>. This includes relevant documentation necessary for the re-use and replication of your dataset (e.g., readme.txt files, formal metadata records, or other critical information)</li>
@@ -25,7 +25,7 @@
 
 <h2>Login<a name="login"></a></h2>
 
-<p>Dryad requires an ORCID ID (https://orcid.org) for login. If you do not have an ORCID, you will have the opportunity to create a free, unique, identifier for yourself at the login page. Dryad uses ORCID so that we can authenticate and identify each individual researcher regardless of your route of entry to Dryad (i.e. through the website, through the API, through a journal integration, etc.). When datasets are published, they should appear in your ORCID profile along with articles and other works. For institutional members, we require a second form of authentication at login for campus single-sign-on. After you have logged in with your institutional credentials, Dryad ties together your ORCID and institutional affiliation so that you will not have to include this information a second time.</p>
+<p>Dryad requires an <a href="https://orcid.org">ORCID ID</a> for login. If you do not have an ORCID, you will have the opportunity to create a free, unique, identifier for yourself at the login page. Dryad uses ORCID so that we can authenticate and identify each individual researcher regardless of your route of entry to Dryad (i.e. through the website, through the API, through a journal integration, etc.). When datasets are published, they should appear in your ORCID profile along with articles and other works. For institutional members, we require a second form of authentication at login for campus single-sign-on. After you have logged in with your institutional credentials, Dryad ties together your ORCID and institutional affiliation so that you will not have to include this information a second time.</p>
 
 <h2>Metadata<a name="metadata"></a></h2>
 
@@ -38,7 +38,7 @@
 <p><strong>Required fields</strong>:</p>
 <ul>
 <li>Title: Title of the dataset. Make sure to be as descriptive as possible</li>
-<li>Author(s): Name, email address, institutional affliation of main researcher(s) involved in producing the data. If you include your <a href="http://orcid.org">ORCID</a>, we will request the ORCID registry auto-populate this publication on your ORCID profile</li>
+<li>Author(s): Name, email address, institutional affliation of main researcher(s) involved in producing the data. We will request the <a href="http://orcid.org">ORCID</a> registry auto-populate this publication on your ORCID profile</li>
 <li>Abstract: Short description of dataset</li>
 </ul>
 <p><strong>Optional fields</strong> (the more you describe your dataset, the wider the reach):</p>
@@ -60,7 +60,7 @@
 <p>Please note that you may only use one of these two upload methods per version, but you may do subsequent versions of your data publication and utilize different methods of upload this way.</p>
 
 <h2>Curation<a name="curation"></a></h2>
-<p><strong>What is data curation?</strong> Data curators review and enrich research data to help make it <a href="https://www.force11.org/group/fairgroup/fairprinciples">Findable, Accessible, Interoperable, and Reusable (FAIR)</a>. According to the <a href="https://datacurationnetwork.org/about/our-mission/">Data Curation Network<a> (of which Dryad is a member),<blockquote>Data curation enables data discovery and retrieval, maintains data quality, adds value, and provides for re-use over time through activities including authentication, archiving, metadata creation, digital preservation, and transformation.</blockquote></p>
+<p><strong>What is data curation?</strong> Data curators review and enrich research data to help make it <a href="https://www.force11.org/group/fairgroup/fairprinciples">Findable, Accessible, Interoperable, and Reusable (FAIR)</a>. According to the <a href="https://datacurationnetwork.org/about/our-mission/">Data Curation Network<a> (of which Dryad is a partner),<blockquote>Data curation enables data discovery and retrieval, maintains data quality, adds value, and provides for re-use over time through activities including authentication, archiving, metadata creation, digital preservation, and transformation.</blockquote></p>
 <p>Dryad has a team of <a href="<%= stash_url_helpers.our_staff_path %>">professional curators</a> who check every submission to ensure the validity of files and metadata. Once your data is submitted, Dryad curators perform basic checks:</p>
 <ul>
 <li>Can the files be opened?</li>
