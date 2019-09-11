@@ -10,16 +10,6 @@
 </div>
 
 <div class="bio">
-  <img src="/images/eaton.jpg" alt="Alf Eaton" title="Alf Eaton">
-  <p><strong>Alf Eaton (Class of 2019)</strong> has been working as a software developer on the whole lifecycle of science publishing for the past 14 years, building tools for authors, readers, editors, curators and reviewers at Nature, Mendeley, and the open access journal PeerJ. Alf is currently part of the Manuscripts team at Atypon, building an open source editor for collaboratively authoring research articles.</p>
-</div>
-
-<div class="bio">
-  <img src="/images/fox.jpg" alt="Charles Fox" title="Charles Fox">
-  <p><strong>Charles Fox (Class of 2019)</strong> is a professor of evolutionary biology, Senior Editor of Functional Ecology, co-editor of five books in evolutionary biology, and co-editor of the Year in Evolution series (published by Wiley-Blackwell). He brings to the Board the perspective of a research scientist (with over 100 refereed articles) with extensive experience in the publishing industry as an editor and previous member of British Ecological Society's Publications Committee. <a href="http://www.uky.edu/~cfox/" target="_blank" title="Read more about Chuck (opens in a new window)">Read more about Chuck.</a></p>
-</div>
-
-<div class="bio">
   <img src="/images/hole.jpg" alt="Brian Hole" title="Brian Hole">
   <p><strong>Brian Hole (Class of 2020)</strong> is the CEO of <a href="https://www.ubiquitypress.com/" target="_blank" title="Ubiquity Press website (opens in a new window)">Ubiquity Press</a>, an open access publisher with a strong focus on alternative research outputs such as data, software, hardware and bioresources. Prior to this he worked at the British Library, managing the DryadUK project which focussed on establishing a sustainable business model and publisher integrations, and also on building cost models for digital preservation. Earlier positions included product development on the Elsevier journals platform, and of analytic applications for enterprise data warehousing at Business Objects. Brian has a research background, and continues to undertake data-centric research at the Institute of Archaeology at University College London when he finds the time.</p>
 </div>
@@ -31,7 +21,7 @@
 
 <div class="bio">
   <img src="/images/lin.jpg" alt="Jennifer Lin" title="Jennifer Lin">
-  <p><strong>Jennifer Lin (Class of 2019)</strong> has fifteen years’ experience in product development, project management, community outreach, and change management within scholarly communications, education, and the public sector. She is currently Director of Product Management at Crossref, a scholarly infrastructure provider. She previously worked for PLOS where she oversaw product strategy and development for their data program, article-level metrics initiative, and open assessment activities. She worked to promote data sharing through data repositories and the development of tools to make data discoverable and re-usable. Jennifer earned her PhD at Johns Hopkins University. See Jennifer’s <a href="http://orcid.org/0000-0002-9680-2328" target="_blank" title="Jennifer's ORCiD Profile (opens in a new window)">ORCiD profile.</a></p>
+  <p><strong>Jennifer Lin (Class of 2022)</strong> has fifteen years’ experience in product development, project management, community outreach, and change management within scholarly communications, education, and the public sector. She is currently Director of Product Management at Crossref, a scholarly infrastructure provider. She previously worked for PLOS where she oversaw product strategy and development for their data program, article-level metrics initiative, and open assessment activities. She worked to promote data sharing through data repositories and the development of tools to make data discoverable and re-usable. Jennifer earned her PhD at Johns Hopkins University. See Jennifer’s <a href="http://orcid.org/0000-0002-9680-2328" target="_blank" title="Jennifer's ORCiD Profile (opens in a new window)">ORCiD profile.</a></p>
 </div>
 
 <div class="bio">
@@ -41,7 +31,7 @@
 
 <div class="bio">
   <img src="/images/maccallum.jpg" alt="Catriona MacCallum" title="Catriona MacCallum">
-  <p><strong>Catriona MacCallum (Class of 2022)</strong> is a new member of our board. Her background should go here</p>
+  <p><strong>Catriona MacCallum (Class of 2022)</strong> is Director of Open Science at Hindawi Ltd, London, UK. She has almost 20 years experience in scholarly publishing and 15 years in Open Access Publishing. She initially worked as Editor of Trends in Ecology & Evolution for Elsevier before joining the Open-Access publisher PLOS in 2003 to launch PLOS Biology as one of the Senior Editors. She also acted as a Consulting Editor on PLOS ONE, leaving PLOS as Advocacy Director in 2017. She is currently a member of the European Commission’s Open Science Policy Platform and the UKRI Open Access Practitioners Group. She also serves on the Advisory Boards of OpenAire and the Royal Society (Publishing), and is on the newly launched steering committee of DORA. She is a founding individual of I4OC (the Initiative for Open Citations) campaign. She has a PhD (on speciation) from the University of Edinburgh.</p>
 </div>
 
 <div class="bio">
@@ -51,7 +41,7 @@
 
 <div class="bio">
   <img src="/images/nilsson.jpg" alt="Johan Nilsson" title="Johan Nilsson">
-  <p><strong>Johan Nilsson (Class of 2019)</strong> works at the Oikos Editorial Office, a society-owned publishing foundation based at Lund University, Sweden. His main responsibilities are to manage the peer-review, production and marketing of one of their journals, Journal of Avian Biology. He also coordinates the society’s projects on open access, open data and public outreach. Johan has a background as a research scientist in evolutionary ecology and remain actively engaged in research in this field. He has a strong passion for scientific communication and social media engagement and is particularly interested in how the benefits of open science (and open data in particular) can be better communicated to researchers.</p>
+  <p><strong>Johan Nilsson (Class of 2022)</strong> works at the Oikos Editorial Office, a society-owned publishing foundation based at Lund University, Sweden. His main responsibilities are to manage the peer-review, production and marketing of one of their journals, Journal of Avian Biology. He also coordinates the society’s projects on open access, open data and public outreach. Johan has a background as a research scientist in evolutionary ecology and remain actively engaged in research in this field. He has a strong passion for scientific communication and social media engagement and is particularly interested in how the benefits of open science (and open data in particular) can be better communicated to researchers.</p>
 </div>
 
 <div class="bio">
@@ -75,8 +65,8 @@
 </div>
 
 <div class="bio">
-  <img src="/images/vision.jpg" alt="Todd Vision" title="Todd Vision">
-  <p><strong>Todd Vision (Ex Officio)</strong> has a research background in evolutionary genetics and bioinformatics, and more recently has investigated various aspects of scholarly communication in science. He served as the Associate Director of Informatics at the <a href="http://www.nescent.org/" target="_blank" title="National Evolutionary Synthesis Center (opens in a new window)">National Evolutionary Synthesis Center</a> from 2006-2015 and, in that position, helped steer a wide variety of community-oriented informatics capacity-building programs. Vision has been Principal Investigator on the primary NSF grant funding Dryad since 2008. He also serves on the Board of Directors for Phoenix Bioinformatics.</p>
+  <img src="/images/fox.jpg" alt="Charles Fox" title="Charles Fox">
+  <p><strong>Charles Fox (Ex Officio)</strong> is a professor of evolutionary biology, Senior Editor of Functional Ecology, co-editor of five books in evolutionary biology, and co-editor of the Year in Evolution series (published by Wiley-Blackwell). He brings to the Board the perspective of a research scientist (with over 100 refereed articles) with extensive experience in the publishing industry as an editor and previous member of British Ecological Society's Publications Committee. <a href="http://www.uky.edu/~cfox/" target="_blank" title="Read more about Chuck (opens in a new window)">Read more about Chuck.</a></p>
 </div>
 
 <div class="bio">
