@@ -4,7 +4,7 @@
 
 <p>So, you want to share your research data in Dryad, but are unsure where to start or what you 'should' share? Don't worry, it's not always clear how to craft a dataset with reusability in mind.</p>
 
-<p>We want to help you share your research with the scientific community to increase its <a href="https://peerj.com/articles/175/">visibility</a> and foster collaborations. The following guidelines will help make your Dryad datasets as interpretable and reusable as possible.</p>
+<p>We want to help you share your research with the scientific community to increase its <a href="https://peerj.com/articles/175/">visibility</a> and foster collaborations. The following guidelines will help make your Dryad datasets as <a href="https://www.force11.org/group/fairgroup/fairprinciples">Findable, Accessible, Interoperable, and Reusable (FAIR)</a> as possible.</p>
 
 <p>No time to dig into the details? Check out our <a href="/docs/QuickstartGuideToDataSharing.pdf">quickstart guide to data sharing</a>.</p>
 
@@ -130,7 +130,7 @@
 
 
 
-<h3>Log in and go to "My Datasets" to start your submission now!</h3>
+<h3>> Log in and go to "My Datasets" to start your submission now! </h3>
 
 
 <h2 id="examples">Examples of good reusability practices</h2>
