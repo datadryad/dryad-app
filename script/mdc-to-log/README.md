@@ -36,14 +36,14 @@ export PYTHONPATH=$HOME/opt/bin/python-3.6.9
 python --version
 cd /apps/dryad/apps/counter/counter-processor
 
-for file in /apps/dryad-prd-shared/good-counter/*.log
+for file in /apps/dryad/good-counter/*.log
 do
+  # YEAR_MONTH=2014-01 LOG_NAME_PATTERN="/path/to/my/log/counter_2014-01.log" ./main.py
   YEAR_MONTH=$(echo "$file" | grep -oP '201\d{1}-\d{2}')
   LOG_NAME_PATTERN="$file"
   export YEAR_MONTH
   export LOG_NAME_PATTERN
-  UPLOAD_TO_HUB=False ./main.py
+  UPLOAD_TO_HUB=True OUTPUT_FILE="$YEAR_MONTH" ./main.py
   unset -v YEAR_MONTH LOG_NAME_PATTERN
-  break
 done
 ```
