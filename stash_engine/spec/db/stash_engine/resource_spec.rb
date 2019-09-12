@@ -427,6 +427,33 @@ module StashEngine
       end
     end
 
+    describe 'self.need_publishing' do
+      before(:each) do
+        @resources = []
+        @resource_states = []
+        @curation_activities = []
+        0.upto(3) do
+          res = Resource.create(publication_date: Time.new - 1.day)
+          res.current_resource_state.update(resource_state: 'submitted')
+          @curation_activities << [
+            CurationActivity.create(status: 'submitted', resource_id: res.id),
+            CurationActivity.create(status: 'embargoed', resource_id: res.id)
+          ]
+          @resources << res
+        end
+        # disqualify all of these from the query
+        @resources[0].update(publication_date: Time.new + 1.day) # get rid of time expired on first one
+        @curation_activities[1][1].destroy! # get rid of embargoed on this one
+        @resources[2].current_resource_state.update(resource_state: 'in_progress')
+      end
+
+      it 'returns only published to merritt, embargoed and out of embargo date item' do
+        items = StashEngine::Resource.need_publishing
+        expect(items.count).to eq(1) # only the last should be able to be changed
+        expect(items.first.id).to eq(@resources[3].id) # only last one should be eligible
+      end
+    end
+
     describe :ensure_state_and_version do
       attr_reader :resource
       attr_reader :orig_state_id

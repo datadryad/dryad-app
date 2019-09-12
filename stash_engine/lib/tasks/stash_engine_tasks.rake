@@ -94,7 +94,7 @@ namespace :identifiers do
           resource_id: r[0],
           user_id: r[2],
           status: 'embargoed',
-          note: 'Embargo Datasets CRON - publiction date has not yet been reached, changing status to `embargo`'
+          note: 'Embargo Datasets CRON - publication date has not yet been reached, changing status to `embargo`'
         )
       rescue StandardError => e
         p "    Exception! #{e.message}"
@@ -107,29 +107,16 @@ namespace :identifiers do
   task publish_datasets: :environment do
     now = Time.now
     p "Publishing resources whose publication_date <= '#{now}'"
-    query = <<-SQL
-      SELECT ser.id, ser.identifier_id, seca.user_id
-      FROM stash_engine_resources ser
-        LEFT OUTER JOIN stash_engine_identifiers sei ON ser.identifier_id = sei.id
-        INNER JOIN (SELECT MAX(r2.id) r_id FROM stash_engine_resources r2 GROUP BY r2.identifier_id) j1 ON j1.r_id = ser.id
-        LEFT OUTER JOIN (SELECT ca2.resource_id, MAX(ca2.id) latest_curation_activity_id FROM stash_engine_curation_activities ca2 GROUP BY ca2.resource_id) j3 ON j3.resource_id = ser.id
-        LEFT OUTER JOIN stash_engine_curation_activities seca ON seca.id = j3.latest_curation_activity_id
-      WHERE seca.status != 'published' AND ser.publication_date <=
-    SQL
 
-    query += " '#{now.strftime('%Y-%m-%d %H:%M:%S')}'"
-    ActiveRecord::Base.connection.execute(query).each do |r|
-      begin
-        p "Publishing: Identifier: #{r[1]}, Resource: #{r[0]}"
-        StashEngine::CurationActivity.create(
-          resource_id: r[0],
-          user_id: r[2],
-          status: 'published',
-          note: 'Publish Datasets CRON - reached the publication date, changing status to `published`'
-        )
-      rescue StandardError => e
-        p "    Exception! #{e.message}"
-      end
+    resources = StashEngine::Resource.need_publishing
+
+    resources.each do |res|
+      last_cur_activity = res.curation_activities.last
+      res.curation_activities << StashEngine::CurationActivity.create(
+        user_id: last_cur_activity.user_id,
+        status: 'published',
+        note: 'Publish Datasets CRON - reached the publication date, changing status to `published`'
+      )
     end
   end
 
