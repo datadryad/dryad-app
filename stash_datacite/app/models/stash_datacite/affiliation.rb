@@ -66,7 +66,6 @@ module StashDatacite
       # Do a Stash::Organization::Ror lookup for the long_name
       Stash::Organization::Ror.find_first_by_ror_name(long_name)
     rescue Stash::Organization::RorError
-      # what do we return here if no affiliation can be found? nil or [] ?
       []
     end
 
