@@ -51,27 +51,30 @@ module Stash
         end
 
         it 'should handle a sample request' do
-          stub_request(:get, "https://api.ror.org/organizations?query=gro").
-              with(
-                  headers: {
-                      'Content-Type'=>'application/json'
-                  }).
-              to_return(status: 200, body: @one_response, headers: {'content-type' => 'application/json'})
+          stub_request(:get, 'https://api.ror.org/organizations?query=gro')
+            .with(
+              headers: {
+                'Content-Type' => 'application/json'
+              }
+            )
+            .to_return(status: 200, body: @one_response, headers: { 'content-type' => 'application/json' })
 
-          response = Stash::Organization::Ror.find_first_by_ror_name("gro")
+          response = Stash::Organization::Ror.find_first_by_ror_name('gro')
           expect(response[:id]).to eq('https://ror.org/01jjrt576')
           expect(response[:name]).to eq('Sun Gro Horticulture (Canada)')
         end
 
         it 'should handle ror puking' do
-          stub_request(:get, "https://api.ror.org/organizations?query=INFOTEC+Research+Inc.%2FApplied+Earthworks%2C+Inc.").
-              with(
-                  headers: {
-                      'Content-Type'=>'application/json'
-                  }).
-              to_return(status: 500, body: 'Internal Server Error (PUKE)', headers: {'content-type' => 'text/html'})
+          stub_request(:get, 'https://api.ror.org/organizations?query=INFOTEC+Research+Inc.%2FApplied+Earthworks%2C+Inc.')
+            .with(
+              headers: {
+                'Content-Type' => 'application/json'
+              }
+            )
+            .to_return(status: 500, body: 'Internal Server Error (PUKE)', headers: { 'content-type' => 'text/html' })
 
-          expect { Stash::Organization::Ror.find_first_by_ror_name("INFOTEC Research Inc./Applied Earthworks, Inc.") }.to raise_error(Stash::Organization::RorError)
+          expect { Stash::Organization::Ror.find_first_by_ror_name('INFOTEC Research Inc./Applied Earthworks, Inc.') }
+            .to raise_error(Stash::Organization::RorError)
 
         end
       end
