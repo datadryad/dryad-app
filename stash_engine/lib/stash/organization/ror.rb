@@ -4,7 +4,7 @@ module Stash
 
   module Organization
 
-    class RorError < StandardError;end
+    class RorError < StandardError; end
 
     class Ror
       # Module that facilitates communications with the ROR API:
