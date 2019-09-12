@@ -111,12 +111,17 @@ namespace :identifiers do
     resources = StashEngine::Resource.need_publishing
 
     resources.each do |res|
-      last_cur_activity = res.curation_activities.last
-      res.curation_activities << StashEngine::CurationActivity.create(
-        user_id: last_cur_activity.user_id,
-        status: 'published',
-        note: 'Publish Datasets CRON - reached the publication date, changing status to `published`'
-      )
+      begin
+        last_cur_activity = res.curation_activities.last
+        res.curation_activities << StashEngine::CurationActivity.create(
+          user_id: last_cur_activity.user_id,
+          status: 'published',
+          note: 'Publish Datasets CRON - reached the publication date, changing status to `published`'
+        )
+      rescue StandardError => e
+        # note we get errors with test data updating DOI and some of the other callbacks on publishing
+        p "    Exception! #{e.message}"
+      end
     end
   end
 
