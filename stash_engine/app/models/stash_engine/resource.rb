@@ -551,6 +551,11 @@ module StashEngine
       current_curation_activity.present? && (current_curation_activity.published? || current_curation_activity.embargoed?)
     end
 
+    # this is a query for the publication updating on a cron, but putting here so we can test more easily unlike the
+    def self.needs_publishing
+
+    end
+
     # -----------------------------------------------------------
     # editor
 

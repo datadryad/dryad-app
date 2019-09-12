@@ -125,7 +125,7 @@ namespace :identifiers do
           resource_id: r[0],
           user_id: r[2],
           status: 'published',
-          note: 'Publish Datasets CRON - reached the publiction date, changing status to `published`'
+          note: 'Publish Datasets CRON - reached the publication date, changing status to `published`'
         )
       rescue StandardError => e
         p "    Exception! #{e.message}"
