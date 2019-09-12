@@ -2,6 +2,7 @@ require 'spec_helper'
 require 'ostruct'
 require 'byebug'
 require 'stash/organization/ror'
+require 'webmock/rspec'
 
 module Stash
   module Organization
@@ -31,6 +32,48 @@ module Stash
         resp = MockResponse.new(@response, 200)
         allow(Stash::Organization::Ror).to receive(:query_ror).and_return(resp)
         expect(Stash::Organization::Ror.find_by_ror_name('Somewhere').count).to eql(max_results.to_i)
+      end
+
+      describe 'webmock' do
+
+        before(:each) do
+
+          WebMock.disable_net_connect!
+
+          @one_response = <<~HEREDOC
+            {"number_of_results":1,"time_taken":4,"items":[{"id":"https://ror.org/01jjrt576","name":"Sun Gro Horticulture (Canada)",
+            "types":["Company"],"links":["http://www.sungro.com/"],"aliases":["Western Peat Company Ltd"],"acronyms":[],
+            "wikipedia_url":"https://en.wikipedia.org/wiki/Sun_Gro_Horticulture","labels":[],"country":{"country_name":"Canada",
+            "country_code":"CA"},"external_ids":{"GRID":{"preferred":"grid.451025.7","all":"grid.451025.7"}}}],"meta":{"types":
+            [{"id":"company","title":"Company","count":1}],"countries":[{"id":"ca","title":"Canada","count":1}]}}
+          HEREDOC
+
+        end
+
+        it 'should handle a sample request' do
+          stub_request(:get, "https://api.ror.org/organizations?query=gro").
+              with(
+                  headers: {
+                      'Content-Type'=>'application/json'
+                  }).
+              to_return(status: 200, body: @one_response, headers: {'content-type' => 'application/json'})
+
+          response = Stash::Organization::Ror.find_first_by_ror_name("gro")
+          expect(response[:id]).to eq('https://ror.org/01jjrt576')
+          expect(response[:name]).to eq('Sun Gro Horticulture (Canada)')
+        end
+
+        it 'should handle ror puking' do
+          stub_request(:get, "https://api.ror.org/organizations?query=INFOTEC+Research+Inc.%2FApplied+Earthworks%2C+Inc.").
+              with(
+                  headers: {
+                      'Content-Type'=>'application/json'
+                  }).
+              to_return(status: 500, body: 'Internal Server Error (PUKE)', headers: {'content-type' => 'text/html'})
+
+          expect { Stash::Organization::Ror.find_first_by_ror_name("INFOTEC Research Inc./Applied Earthworks, Inc.") }.to raise_error(Stash::Organization::RorError)
+
+        end
       end
 
       def generate_ror_response(prefix:, nbr_items: 1)
