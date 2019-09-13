@@ -551,6 +551,12 @@ module StashEngine
       current_curation_activity.present? && (current_curation_activity.published? || current_curation_activity.embargoed?)
     end
 
+    # this is a query for the publication updating on a cron, but putting here so we can test the query more easily
+    def self.need_publishing
+      # submitted to merritt, curation embargoed, past publication date
+      all.submitted.with_visibility(states: %w[embargoed]).where('stash_engine_resources.publication_date < ?', Time.now)
+    end
+
     # -----------------------------------------------------------
     # editor
 
