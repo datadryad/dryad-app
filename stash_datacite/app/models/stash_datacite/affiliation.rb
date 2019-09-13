@@ -42,12 +42,15 @@ module StashDatacite
     # long name as well as the ROR-ized version of the long_name to find our record
     def self.from_long_name(long_name)
       return nil if long_name.blank?
+
       affil = find_or_initialize_by_long_name(long_name)
       # If the record already has a ROR id, no need to do a lookup
       return affil if affil.ror_id.present?
+
       ror_org = find_by_ror_long_name(long_name)
       # The record didn't exist in ROR so just return as is
       return affil if ror_org.blank?
+
       # Otherwise use the ROR id and long_name
       affil = find_or_initialize_by_long_name(ror_org[:name])
       affil.ror_id = ror_org[:id]
@@ -62,6 +65,8 @@ module StashDatacite
     def self.find_by_ror_long_name(long_name)
       # Do a Stash::Organization::Ror lookup for the long_name
       Stash::Organization::Ror.find_first_by_ror_name(long_name)
+    rescue Stash::Organization::RorError
+      []
     end
 
     private
