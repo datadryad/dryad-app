@@ -75,27 +75,3 @@
     <%= link_to "add another related work", stash_datacite.related_identifiers_new_path( resource_id: @resource.id ), remote: :true, class: 'o-button__add' %>
     </fieldset>
   </details>
-
-  <details class="c-fgroup" role="group">
-    <summary id="location_opener" class="o-showhide__summary c-fgroup__summary">Location Information (optional)</summary>
-    <p>Where was the data collected? Does it focus on particular locations?</p>
-    <fieldset class="c-fieldset">
-      <legend class="c-fieldset__legend">Add a point or rectangular area with lat/long coordinates</legend>
-      <div class="c-location">
-        <div class="c-location__button-group">
-          <button id="geo_point" class="js-location__point-button c-location__point-button--active">Point</button>
-          <button id="geo_box" class="js-location__box-button c-location__box-button">Bounding Box</button>
-        </div>
-
-        <%= render partial: "stash_datacite/geolocation_points/form", locals: { geolocation_point: @metadata_entry.new_geolocation_point } %>
-        <%= render partial: "stash_datacite/geolocation_boxes/form", locals: { geolocation_box: @metadata_entry.new_geolocation_box } %>
-      </div>
-    </fieldset>
-
-    <p class="t-describe__map-label">Add a point or draw a rectangle on the map</p>
-    <%= render partial: "stash_datacite/shared/map" %>
-    <div class="c-locations" role="group" aria-labelledby="c-locations__label">
-      <div class="c-locations__label" id="c-locations__label">Locations Added</div>
-      <%= render partial: "stash_datacite/shared/locations" %>
-    </div>
-  </details>
