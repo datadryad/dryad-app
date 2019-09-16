@@ -32,7 +32,7 @@ module StashEngine
     end
 
     def self.initialize_minter
-      my_minter = Noid::Minter.new(template: '.reeeeeeee')
+      my_minter = Noid::Minter.new(template: '.reeeeeeeee')
       my_minter.seed(9281, 0)
       serialize_to_db(my_minter)
     end
