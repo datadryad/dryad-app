@@ -30,7 +30,7 @@
 </div>
 
 <div class="bio">
-  <img src="/images/maccallum.jpg" alt="Catriona MacCallum" title="Catriona MacCallum">
+  <img src="/images/maccallum.png" alt="Catriona MacCallum" title="Catriona MacCallum">
   <p><strong>Catriona MacCallum (Class of 2022)</strong> is Director of Open Science at Hindawi Ltd, London, UK. She has almost 20 years experience in scholarly publishing and 15 years in Open Access Publishing. She initially worked as Editor of Trends in Ecology & Evolution for Elsevier before joining the Open-Access publisher PLOS in 2003 to launch PLOS Biology as one of the Senior Editors. She also acted as a Consulting Editor on PLOS ONE, leaving PLOS as Advocacy Director in 2017. She is currently a member of the European Commission’s Open Science Policy Platform and the UKRI Open Access Practitioners Group. She also serves on the Advisory Boards of OpenAire and the Royal Society (Publishing), and is on the newly launched steering committee of DORA. She is a founding individual of I4OC (the Initiative for Open Citations) campaign. She has a PhD (on speciation) from the University of Edinburgh.</p>
 </div>
 
