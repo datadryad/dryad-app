@@ -11,9 +11,9 @@ module StashEngine
         id1 = NoidState.mint
         id2 = NoidState.mint
         id3 = NoidState.mint
-        expect(id1).to eq('4qrfj6r0')
-        expect(id2).to eq('x95x69v0')
-        expect(id3).to eq('5qfttf00')
+        expect(id1).to eq('4qrfj6q5t')
+        expect(id2).to eq('x95x69pcr')
+        expect(id3).to eq('5qfttdz10')
       end
     end
   end
