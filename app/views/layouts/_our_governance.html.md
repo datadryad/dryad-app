@@ -30,7 +30,7 @@
 </div>
 
 <div class="bio">
-  <img src="/images/maccallum.jpg" alt="Catriona MacCallum" title="Catriona MacCallum">
+  <img src="/images/maccallum.png" alt="Catriona MacCallum" title="Catriona MacCallum">
   <p><strong>Catriona MacCallum (Class of 2022)</strong> is Director of Open Science at Hindawi Ltd, London, UK. She has almost 20 years experience in scholarly publishing and 15 years in Open Access Publishing. She initially worked as Editor of Trends in Ecology & Evolution for Elsevier before joining the Open-Access publisher PLOS in 2003 to launch PLOS Biology as one of the Senior Editors. She also acted as a Consulting Editor on PLOS ONE, leaving PLOS as Advocacy Director in 2017. She is currently a member of the European Commission’s Open Science Policy Platform and the UKRI Open Access Practitioners Group. She also serves on the Advisory Boards of OpenAire and the Royal Society (Publishing), and is on the newly launched steering committee of DORA. She is a founding individual of I4OC (the Initiative for Open Citations) campaign. She has a PhD (on speciation) from the University of Edinburgh.</p>
 </div>
 
@@ -46,7 +46,7 @@
 
 <div class="bio">
   <img src="/images/naomipenfold.png" alt="Naomi Penfold" title="Naomi Penfold">
-  <p><strong>Naomi Penfold (Class of 2022)</strong> is Associate Director of ASAPbio, a non-profit organisation with the mission to increase transparency and innovation in life and biomedical science communication. At ASAPbio and as member of the PREreview advisory board, Naomi works to increase the productive use of preprinting in biology. She brings to the Board experience as a life scientist (PhD, 2017, University of Cambridge), in science publishing and open science innovation (eLife, 2016-2018), and a current focus on scientific community engagement as a fellow of the CSCCE Community Engagement Fellowship Program (CEFP) 2019. Read more about Naomi (hyperlink: <a href="https://asapbio.org/dt_team/naomi-penfold" target="_blank" title="Naomi's profile at ASAPbio">https://asapbio.org/dt_team/naomi-penfold</a>)</p>
+  <p><strong>Naomi Penfold (Class of 2022)</strong> is Associate Director of ASAPbio, a non-profit organisation with the mission to increase transparency and innovation in life and biomedical science communication. At ASAPbio and as member of the PREreview advisory board, Naomi works to increase the productive use of preprinting in biology. She brings to the Board experience as a life scientist (PhD, 2017, University of Cambridge), in science publishing and open science innovation (eLife, 2016-2018), and a current focus on scientific community engagement as a fellow of the CSCCE Community Engagement Fellowship Program (CEFP) 2019. Read more about Naomi: <a href="https://asapbio.org/dt_team/naomi-penfold" target="_blank" title="Naomi's profile at ASAPbio">https://asapbio.org/dt_team/naomi-penfold</a></p>
 </div>
 
 <div class="bio">
