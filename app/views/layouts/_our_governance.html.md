@@ -46,7 +46,7 @@
 
 <div class="bio">
   <img src="/images/naomipenfold.png" alt="Naomi Penfold" title="Naomi Penfold">
-  <p><strong>Naomi Penfold (Class of 2022)</strong> is Associate Director of ASAPbio, a non-profit organisation with the mission to increase transparency and innovation in life and biomedical science communication. At ASAPbio and as member of the PREreview advisory board, Naomi works to increase the productive use of preprinting in biology. She brings to the Board experience as a life scientist (PhD, 2017, University of Cambridge), in science publishing and open science innovation (eLife, 2016-2018), and a current focus on scientific community engagement as a fellow of the CSCCE Community Engagement Fellowship Program (CEFP) 2019. Read more about Naomi (<a href="https://asapbio.org/dt_team/naomi-penfold" target="_blank" title="Naomi's profile at ASAPbio">https://asapbio.org/dt_team/naomi-penfold</a>)</p>
+  <p><strong>Naomi Penfold (Class of 2022)</strong> is Associate Director of ASAPbio, a non-profit organisation with the mission to increase transparency and innovation in life and biomedical science communication. At ASAPbio and as member of the PREreview advisory board, Naomi works to increase the productive use of preprinting in biology. She brings to the Board experience as a life scientist (PhD, 2017, University of Cambridge), in science publishing and open science innovation (eLife, 2016-2018), and a current focus on scientific community engagement as a fellow of the CSCCE Community Engagement Fellowship Program (CEFP) 2019. Read more about Naomi: <a href="https://asapbio.org/dt_team/naomi-penfold" target="_blank" title="Naomi's profile at ASAPbio">https://asapbio.org/dt_team/naomi-penfold</a></p>
 </div>
 
 <div class="bio">
