@@ -33,7 +33,7 @@
   <p class="c-input__required-note">required fields</p>
 
   <details class="c-fgroup" role="group">
-    <summary class="o-showhide__summary c-fgroup__summary">Data Description</summary>
+    <summary class="o-showhide__summary c-fgroup__summary" id="data_description_opener">Data Description</summary>
 
     <% if @metadata_entry.subjects.empty? %>
     <%= render partial: "stash_datacite/subjects/form", locals: { subject: @metadata_entry.new_subject, resource_id: @resource.id } %>
