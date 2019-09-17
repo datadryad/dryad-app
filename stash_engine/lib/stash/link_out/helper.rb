@@ -10,6 +10,10 @@ module LinkOut
   module Helper
     TMP_DIR = "#{Rails.root}/tmp/link_out"
 
+    def root_url_ssl
+      Rails.application.routes.url_helpers.root_url.gsub(/^http:/, 'https:')
+    end
+
     # Retrieve the XML from the API (e.g. lookup Pubmed ID for a given DOI)
     def get_xml_from_api(uri, query)
       headers = { 'Accept': 'text/xml' }

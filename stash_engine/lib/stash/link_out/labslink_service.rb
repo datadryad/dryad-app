@@ -23,7 +23,7 @@ module LinkOut
       @links_file = 'labslink-links.xml'
       @doi_url_stem = 'http://dx.doi.org/'
       @provider_file = 'labslink-profile.xml'
-      @root_url = Rails.application.routes.url_helpers.root_url.freeze
+      @root_url = root_url_ssl
     end
 
     def generate_files!
@@ -39,7 +39,14 @@ module LinkOut
     end
 
     def publish_files!
-      p "    TODO: sending files to #{@ftp.ftp_host}"
+      ftp = Net::FTP.new(@ftp.ftp_host)
+      ftp.login(@ftp.ftp_username, @ftp.ftp_password)
+      ftp.chdir(@ftp.ftp_dir)
+      ftp.putbinaryfile("#{TMP_DIR}/#{@provider_file}")
+      ftp.putbinaryfile("#{TMP_DIR}/#{@links_file}")
+      ftp.close
+    rescue StandardError => se
+      p "    FTP Error: #{se.message}"
     end
 
     private
