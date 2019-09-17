@@ -42,7 +42,7 @@ module LinkOut
     def generate_files!
       p "  created #{generate_provider_file!}"
       p "  created #{generate_links_file!}"
-      p "  pushing files to PubMed FTP server"
+      p '  pushing files to PubMed FTP server'
       publish_files!
     end
 
