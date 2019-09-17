@@ -22,7 +22,7 @@ module LinkOut
       @genbank_api = 'https://www.ncbi.nlm.nih.gov/entrez/eutils/elink.fcgi'
 
       @ftp = APP_CONFIG.link_out.pubmed
-      @root_url = Rails.application.routes.url_helpers.root_url.freeze
+      @root_url = root_url_ssl
       @file_counter = 1
 
       @schema = 'https://www.ncbi.nlm.nih.gov/projects/linkout/doc/LinkOut.dtd'
@@ -55,7 +55,15 @@ module LinkOut
     end
 
     def publish_files!
-      p "    TODO: sending files to #{@ftp.ftp_host}"
+      ftp = Net::FTP.new(@ftp.ftp_host)
+      ftp.login(@ftp.ftp_username, @ftp.ftp_password)
+      ftp.chdir(@ftp.ftp_dir)
+      Dir["#{TMP_DIR}/#{@links_file.gsub('[nbr]', '*')}"].entries.each do |file|
+        ftp.putbinaryfile(file)
+      end
+      ftp.close
+    rescue StandardError => se
+      p "    FTP Error: #{se.message}"
     end
 
     private

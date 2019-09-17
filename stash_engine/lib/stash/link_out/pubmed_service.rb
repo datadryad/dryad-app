@@ -23,7 +23,7 @@ module LinkOut
       @pubmed_api_query_suffix = '[doi]'
 
       @ftp = APP_CONFIG.link_out.pubmed
-      @root_url = Rails.application.routes.url_helpers.root_url.freeze
+      @root_url = root_url_ssl
 
       @schema = 'https://www.ncbi.nlm.nih.gov/projects/linkout/doc/LinkOut.dtd'
       @links_file = 'pubmedlinkout.xml'
@@ -42,6 +42,8 @@ module LinkOut
     def generate_files!
       p "  created #{generate_provider_file!}"
       p "  created #{generate_links_file!}"
+      p "  pushing files to PubMed FTP server"
+      publish_files!
     end
 
     def validate_files!
@@ -52,13 +54,14 @@ module LinkOut
     end
 
     def publish_files!
-      p "    TODO: sending files to #{@ftp.ftp_host}"
-      # ftp = Net::FTP.new(@ftp.ftp_host)
-      # ftp.login(@ftp.ftp_username, @ftp.ftp_password)
-      # ftp.chdir(@ftp.ftp_dir)
-      # ftp.putbinaryfile(@provider_file)
-      # ftp.putbinaryfile(@links_file)
-      # ftp.close
+      ftp = Net::FTP.new(@ftp.ftp_host)
+      ftp.login(@ftp.ftp_username, @ftp.ftp_password)
+      ftp.chdir(@ftp.ftp_dir)
+      ftp.putbinaryfile("#{TMP_DIR}/#{@provider_file}")
+      ftp.putbinaryfile("#{TMP_DIR}/#{@links_file}")
+      ftp.close
+    rescue StandardError => se
+      p "    FTP Error: #{se.message}"
     end
 
     private
