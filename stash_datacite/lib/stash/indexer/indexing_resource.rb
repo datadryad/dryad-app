@@ -200,8 +200,14 @@ module Stash
       # any of those years which may not be explicitly named
       def dct_temporal_dates
         items = @resource.datacite_dates.map(&:date).reject(&:blank?)
-        items.map! { |dt| Date.iso8601(dt).strftime('%Y-%m-%d') }
-        items
+        items.map! do |dt|
+          begin
+            Date.iso8601(dt)&.strftime('%Y-%m-%d')
+          rescue ArgumentError => ex
+            nil
+          end
+        end
+        items.compact
 
         # the below is the old stuff.  We don't have ranges in our dates.
         # items = dates.map(&:to_s).compact
