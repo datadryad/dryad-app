@@ -51,15 +51,15 @@ namespace :link_out do
     p 'Publishing LinkOut files'
     p '  processing Pubmed files:'
     pubmed_service = LinkOut::PubmedService.new
-    pubmed_service.publish_files! if pubmed_service.validate_files!
+    pubmed_service.publish_files! # if pubmed_service.validate_files!
 
     p '  processing GenBank files'
     pubmed_sequence_service = LinkOut::PubmedSequenceService.new
-    pubmed_sequence_service.publish_files! if pubmed_sequence_service.validate_files!
+    pubmed_sequence_service.publish_files! # if pubmed_sequence_service.validate_files!
 
     p '  processing LabsLink files'
     labslink_service = LinkOut::LabslinkService.new
-    labslink_service.publish_files! if labslink_service.validate_files!
+    labslink_service.publish_files! # if labslink_service.validate_files!
   end
 
   desc 'Seed existing datasets with PubMed Ids - WARNING: this will query the API for each dataset that has a isSupplementTo DOI!'
