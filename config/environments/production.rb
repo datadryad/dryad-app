@@ -47,7 +47,7 @@ Rails.application.configure do
 
   # Use the lowest log level to ensure availability of diagnostic information
   # when problems arise.
-  config.log_level = :warn
+  config.log_level = :info
 
   # Prepend all log lines with the following tags.
   # config.log_tags = [ :subdomain, :uuid ]
@@ -98,6 +98,6 @@ Rails.application.configure do
   config.action_mailer.perform_deliveries = true
   config.action_mailer.raise_delivery_errors = true
 
-  config.action_mailer.default_url_options = { host: 'dryadx2-prd.cdlib.org' }
-  Rails.application.default_url_options = { host: 'dryadx2-prd.cdlib.org' }
+  config.action_mailer.default_url_options = { host: 'datadryad.org' }
+  Rails.application.default_url_options = { host: 'datadryad.org' }
 end
