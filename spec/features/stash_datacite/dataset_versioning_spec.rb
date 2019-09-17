@@ -361,9 +361,8 @@ RSpec.feature 'DatasetVersioning', type: :feature do
   def update_dataset(curator: false)
     # Add a value to the dataset, submit it and then mock a successful submission
     navigate_to_metadata
-    find('#location_opener').click
-    fill_in 'geo_lat_point', with: 37.43
-    fill_in 'geo_lng_point', with: -123.03
+    find('#data_description_opener').click
+    fill_in 'related_identifier[related_identifier]', with: 'http://doi.org/10.5061/dryad.888gm50'
     # Submit the changes
     navigate_to_review
     fill_in('user_comment', with: Faker::Lorem.sentence) if curator
