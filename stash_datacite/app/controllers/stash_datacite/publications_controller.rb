@@ -28,7 +28,6 @@ module StashDatacite
         end
       end
     end
-    # rubocop:enable Metrics/AbcSize, Metrics/CyclomaticComplexity
 
     def save_form_to_internal_data
       @pub_issn = manage_internal_datum(identifier: @se_id, data_type: 'publicationISSN', value: params[:internal_datum][:publication_issn])
@@ -42,6 +41,8 @@ module StashDatacite
         return
       end
       return if params[:internal_datum][:publication].blank? # keeps the default fill-in message
+      return if @pub_issn.blank?
+      return if @msid.blank?
       my_url = "#{APP_CONFIG.old_dryad_url}/api/v1/organizations/#{CGI.escape(@pub_issn.value)}/manuscripts/#{CGI.escape(@msid.value)}"
       response = HTTParty.get(my_url,
                               query: { access_token: APP_CONFIG.old_dryad_access_token },
@@ -56,6 +57,7 @@ module StashDatacite
       logger.error("Dryad manuscript API returned a HTTParty/Socket error for ISSN: #{@pub_issn.value}, MSID: #{@msid.value}\r\n #{ex}")
       @error = 'We could not find metadata to import for this manuscript. Please enter your metadata below.'
     end
+    # rubocop:enable Metrics/AbcSize, Metrics/CyclomaticComplexity
 
     def update_doi_metadata
       unless params[:internal_datum][:doi].present?

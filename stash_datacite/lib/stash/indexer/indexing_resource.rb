@@ -203,7 +203,7 @@ module Stash
         items.map! do |dt|
           begin
             Date.iso8601(dt)&.strftime('%Y-%m-%d')
-          rescue ArgumentError => ex
+          rescue ArgumentError
             nil
           end
         end
