@@ -37,7 +37,7 @@
         <% end %>
       </td>
       <td class="c-admin-hide-border-left" id="js-edit-dataset-button-column-<%= dataset.resource_id %>">
-        <% if dataset.resource&.can_edit?(user: current_user) && dataset.resource_state == 'submitted' %>
+        <% if dataset.resource&.permission_to_edit?(user: current_user) && dataset.resource_state == 'submitted' %>
           <%= render partial: 'stash_engine/admin_datasets/edit_dataset_button', locals: { resource_id: dataset.resource_id } %>
         <% end %>
       </td>
