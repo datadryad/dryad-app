@@ -148,12 +148,13 @@ module StashEngine
     end
 
     # Triggered on a status of :published
+    # rubocop:disable Metrics/AbcSize
     def email_orcid_invitations
       return unless published?
       # Do not send an invitation to users who have no email address and do not have an
       # existing invitation for the identifier
       existing_invites = StashEngine::OrcidInvitation.where(identifier_id: resource.identifier_id).pluck(:email).uniq
-      authors = resource.authors.where.not(author_email: existing_invites).where.not(author_email: nil).reject(&:blank?)
+      authors = resource.authors.where.not(author_email: existing_invites).where.not(author_email: nil).reject { |au| au&.author_email.blank? }
 
       return if authors.length <= 1
       authors[1..authors.length].each do |author|
@@ -169,6 +170,7 @@ module StashEngine
         ).deliver_now
       end
     end
+    # rubocop:enable Metrics/AbcSize
 
     # Helper methods
     # ------------------------------------------
