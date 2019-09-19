@@ -33,7 +33,7 @@
         <%= link_to dataset.title, show_path(id: dataset.qualified_identifier, latest: true), target: :blank %>
       </td>
       <td class="c-admin-hide-border-left" id="js-edit-dataset-button-column-<%= dataset.resource_id %>">
-        <% if dataset.status == 'curation' || dataset.editor_id == current_user.id %>
+        <% if dataset.resource&.can_edit?(user: current_user) && dataset.resource_state == 'submitted' %>
           <%= render partial: 'stash_engine/admin_datasets/edit_dataset_button', locals: { resource_id: dataset.resource_id } %>
         <% end %>
       </td>
