@@ -3,6 +3,8 @@
 # This is NOT an ActiveRecord model and does not persist data!!
 # This class represents a row in the Admin's Curation page. It only retrieves the information
 # necessary to populate the table on that page.
+
+# rubocop:disable Metrics/ClassLength
 module StashEngine
   module AdminDatasets
     class CurationTableRow
@@ -72,6 +74,12 @@ module StashEngine
         @relevance = result.length > 19 ? result[19] : nil
       end
       # rubocop:enable Metrics/AbcSize
+      #
+
+      # lets you get a resource when you need it and caches it
+      def resource
+        @resource ||= StashEngine::Resource.find_by(id: @resource_id)
+      end
 
       class << self
 
@@ -141,3 +149,4 @@ module StashEngine
     end
   end
 end
+# rubocop:enable Metrics/ClassLength
