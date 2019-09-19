@@ -119,10 +119,12 @@ namespace :link_out do
     p 'Updating Solr keywords with manuscriptNumber, pubmedID or a isSupplementTo related identifier'
     types = %w[pubmedID manuscriptNumber]
 
+    # rubocop:disable Metrics/LineLength
     StashEngine::Identifier.joins(:internal_data).where("stash_engine_internal_data.data_type IN (?) AND stash_engine_internal_data.value IS NOT NULL AND stash_engine_internal_data.value != ''", types).each do |identifier|
       identifier.update_search_words!
       identifier.latest_resource.submit_to_solr
     end
+    # rubocop:enable Metrics/LineLength
   end
 
   def create_link_out_dir!
