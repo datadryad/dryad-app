@@ -99,7 +99,7 @@ module LinkOut
             link_base: 'dryad.pubmed.',
             icon_url: "#{@root_url}images/DryadLogo-Button.png",
             callback_base: "#{@root_url}discover?",
-            callback_rule: 'query=%22&lo.doi;%22',
+            callback_rule: 'query=&lo.doi;',
             subject_type: 'supplemental materials',
             identifiers: identifiers
           }
