@@ -41,9 +41,9 @@ module StashDatacite
         return
       end
       return if params[:internal_datum][:publication].blank? # keeps the default fill-in message
-      return if @pub_issn.blank?
-      return if @msid.blank?
-      my_url = "#{APP_CONFIG.old_dryad_url}/api/v1/organizations/#{CGI.escape(@pub_issn.value)}/manuscripts/#{CGI.escape(@msid.value)}"
+      return if @pub_issn&.value.blank?
+      return if @msid&.value.blank?
+      my_url = "#{APP_CONFIG.old_dryad_url}/api/v1/organizations/#{CGI.escape(@pub_issn&.value)}/manuscripts/#{CGI.escape(@msid&.value)}"
       response = HTTParty.get(my_url,
                               query: { access_token: APP_CONFIG.old_dryad_access_token },
                               headers: { 'Content-Type' => 'application/json' })
