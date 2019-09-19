@@ -17,7 +17,7 @@
     <%= default_date(line.updated_at) %>
   </td>
   <td>
-    <% if line.resource.dataset_in_progress_editor.id == current_user.id %>
+    <% if line.resource&.dataset_in_progress_editor&.id == current_user.id %>
       <% if line.status == 'error' %>
         Please <%= link_to 'contact us', StashEngine.app.contact_us_uri %> to fix this submission error.
       <% else %>
