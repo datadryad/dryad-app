@@ -30,10 +30,17 @@
   <% datasets.each do |dataset| %>
     <tr class="c-lined-table__row">
       <td class="c-admin-hide-border-right">
-        <%= link_to dataset.title, show_path(id: dataset.qualified_identifier, latest: true), target: :blank %>
+        <% if dataset&.qualified_identifier %>
+            <%= link_to dataset.title, show_path(id: dataset.qualified_identifier, latest: true), target: :blank %>
+        <% else %>
+          <%= dataset.title %>
+        <% end %>
       </td>
       <td class="c-admin-hide-border-left" id="js-edit-dataset-button-column-<%= dataset.resource_id %>">
-        <% if dataset.status == 'curation' || dataset.editor_id == current_user.id %>
+        <%# only with permission and not being messed with or in_progress or they're the ones futzing with it and making it in progress, lockout other concurrent editing %>
+        <% if (dataset.resource&.permission_to_edit?(user: current_user) && dataset.resource_state == 'submitted') ||
+            (dataset.resource_state == 'in_progress' && dataset.resource.current_editor_id == current_user.id)
+        %>
           <%= render partial: 'stash_engine/admin_datasets/edit_dataset_button', locals: { resource_id: dataset.resource_id } %>
         <% end %>
       </td>
