@@ -3,6 +3,8 @@
 # This is NOT an ActiveRecord model and does not persist data!!
 # This class represents a row in the Admin's Curation page. It only retrieves the information
 # necessary to populate the table on that page.
+
+# rubocop:disable Metrics/ClassLength
 module StashEngine
   module AdminDatasets
     class CurationTableRow
@@ -30,7 +32,7 @@ module StashEngine
 
       FROM_CLAUSE = <<-SQL
           FROM stash_engine_resources ser
-          LEFT OUTER JOIN stash_engine_identifiers sei ON ser.identifier_id = sei.id
+          INNER JOIN stash_engine_identifiers sei ON ser.identifier_id = sei.id
           LEFT OUTER JOIN stash_engine_internal_data seid ON sei.id = seid.identifier_id AND seid.data_type = 'publicationName'
           LEFT OUTER JOIN stash_engine_users seu ON ser.current_editor_id = seu.id
           INNER JOIN (SELECT MAX(r2.id) r_id FROM stash_engine_resources r2 GROUP BY r2.identifier_id) j1 ON j1.r_id = ser.id
@@ -72,6 +74,12 @@ module StashEngine
         @relevance = result.length > 19 ? result[19] : nil
       end
       # rubocop:enable Metrics/AbcSize
+      #
+
+      # lets you get a resource when you need it and caches it
+      def resource
+        @resource ||= StashEngine::Resource.find_by(id: @resource_id)
+      end
 
       class << self
 
@@ -141,3 +149,4 @@ module StashEngine
     end
   end
 end
+# rubocop:enable Metrics/ClassLength
