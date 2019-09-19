@@ -30,7 +30,11 @@
   <% datasets.each do |dataset| %>
     <tr class="c-lined-table__row">
       <td class="c-admin-hide-border-right">
-        <%= link_to dataset.title, show_path(id: dataset.qualified_identifier, latest: true), target: :blank %>
+        <% if dataset&.qualified_identifier %>
+            <%= link_to dataset.title, show_path(id: dataset.qualified_identifier, latest: true), target: :blank %>
+        <% else %>
+          <%= dataset.title %>
+        <% end %>
       </td>
       <td class="c-admin-hide-border-left" id="js-edit-dataset-button-column-<%= dataset.resource_id %>">
         <% if dataset.resource&.can_edit?(user: current_user) && dataset.resource_state == 'submitted' %>
