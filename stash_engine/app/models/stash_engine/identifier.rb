@@ -109,6 +109,17 @@ module StashEngine
       latest_resource_with_public_metadata
     end
 
+    def latest_resource_with_public_download
+      resources.published.by_version_desc.first
+    end
+
+    def latest_downloadable_resource(user: nil)
+      return latest_resource_with_public_download if user.nil?
+      lr = latest_resource
+      return lr if user.id == lr.user_id || user.superuser? || (user.role == 'admin' && user.tenant_id == lr.tenant_id)
+      latest_resource_with_public_download
+    end
+
     def last_submitted_version_number
       (lsv = last_submitted_resource) && lsv.version_number
     end
