@@ -98,6 +98,7 @@ module StashEngine
 
     # these are items that are embargoed or published and can show metadata
     def latest_resource_with_public_metadata
+      return nil if resources&.last&.curation_activities&.last&.status == 'withdrawn'
       resources.with_public_metadata.by_version_desc.first
     end
 
