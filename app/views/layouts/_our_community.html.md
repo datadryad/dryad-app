@@ -1,5 +1,6 @@
 <h1>Our Community</h1>
 
+<strong>Join our growing Dryad institutional member community by contacting <a href=mailto:director@datadryad.org>director@datadryad.org</a>!</strong>
 -  California State University, East Bay
 -  King Abdullah University of Science and Technology
 -  Montana State University
@@ -19,8 +20,6 @@
 -  University of New Mexico
 -  Yale University
  </ul>
-
-<strong>Join the Dryad community by contacting <a href=mailto:director@datadryad.org>director@datadryad.org</a>!</strong>
 
 <ul>
 <li><a href="#why-join">Why join Dryad?</a></li>
