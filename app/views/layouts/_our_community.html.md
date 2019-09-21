@@ -1,24 +1,23 @@
 <h1>Our Community</h1>
 
-<ul>
- California State University, East Bay
- King Abdullah University of Science and Technology
- Montana State University
- Northern State University
- University of California, California Digital Library
- Lawrence Berkeley National Lab
- UC Berkeley
- UC Davis
- UC Irvine
- UCLA
- UC Merced
- UC Riverside
- UC San Francisco
- UC San Diego
- UC Santa Cruz
- University of Illinois, Urbana-Champagne
- University of New Mexico
- Yale University
+-  California State University, East Bay
+-  King Abdullah University of Science and Technology
+-  Montana State University
+-  Northern State University
+-  University of California, California Digital Library
+-  Lawrence Berkeley National Lab
+-  UC Berkeley
+-  UC Davis
+-  UC Irvine
+-  UCLA
+-  UC Merced
+-  UC Riverside
+-  UC San Francisco
+-  UC San Diego
+-  UC Santa Cruz
+-  University of Illinois, Urbana-Champagne
+-  University of New Mexico
+-  Yale University
  </ul>
 
 <strong>Join the Dryad community by contacting <a href=mailto:director@datadryad.org>director@datadryad.org</a>!</strong>
