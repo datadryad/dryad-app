@@ -190,6 +190,16 @@ module StashEngine
             expect(@identifier.latest_resource_with_public_metadata).to eql(nil)
           end
 
+          it 'disallows any access if latest state is withdrawn' do
+            @res1.curation_activities << CurationActivity.create(status: 'curation', user: @user)
+            @res1.curation_activities << CurationActivity.create(status: 'published', user: @user)
+            @res2.curation_activities << CurationActivity.create(status: 'curation', user: @user)
+            @res2.curation_activities << CurationActivity.create(status: 'published', user: @user)
+            @res3.curation_activities << CurationActivity.create(status: 'curation', user: @user)
+            @res3.curation_activities << CurationActivity.create(status: 'withdrawn', user: @user)
+            expect(@identifier.latest_resource_with_public_metadata).to eql(nil)
+          end
+
         end
 
         describe '#latest_viewable_resource' do
@@ -238,6 +248,46 @@ module StashEngine
             expect(@identifier.latest_viewable_resource(user: user2)).to eql(@identifier.latest_resource_with_public_metadata)
           end
         end
+
+        describe '#latest_resource_with_public_download' do
+
+          it 'finds the last download resource' do
+            @res1.curation_activities << CurationActivity.create(status: 'curation', user: @user)
+            @res1.curation_activities << CurationActivity.create(status: 'published', user: @user)
+            @res2.curation_activities << CurationActivity.create(status: 'curation', user: @user)
+            @res2.curation_activities << CurationActivity.create(status: 'published', user: @user)
+            @res3.curation_activities << CurationActivity.create(status: 'curation', user: @user)
+            expect(@identifier.latest_resource_with_public_download).to eql(@res2)
+          end
+
+          it 'finds published resource' do
+            @res1.curation_activities << CurationActivity.create(status: 'curation', user: @user)
+            @res1.curation_activities << CurationActivity.create(status: 'published', user: @user)
+            @res2.curation_activities << CurationActivity.create(status: 'curation', user: @user)
+            @res2.curation_activities << CurationActivity.create(status: 'embargoed', user: @user)
+            @res3.curation_activities << CurationActivity.create(status: 'curation', user: @user)
+            expect(@identifier.latest_resource_with_public_download).to eql(@res1)
+          end
+
+          it 'finds no published resource' do
+            @res1.curation_activities << CurationActivity.create(status: 'curation', user: @user)
+            @res2.curation_activities << CurationActivity.create(status: 'curation', user: @user)
+            @res3.curation_activities << CurationActivity.create(status: 'curation', user: @user)
+            expect(@identifier.latest_resource_with_public_metadata).to eql(nil)
+          end
+
+          it 'disallows any access if latest state is withdrawn' do
+            @res1.curation_activities << CurationActivity.create(status: 'curation', user: @user)
+            @res1.curation_activities << CurationActivity.create(status: 'published', user: @user)
+            @res2.curation_activities << CurationActivity.create(status: 'curation', user: @user)
+            @res2.curation_activities << CurationActivity.create(status: 'published', user: @user)
+            @res3.curation_activities << CurationActivity.create(status: 'curation', user: @user)
+            @res3.curation_activities << CurationActivity.create(status: 'withdrawn', user: @user)
+            expect(@identifier.latest_resource_with_public_metadata).to eql(nil)
+          end
+
+        end
+
       end
 
       describe '#update_search_words!' do
