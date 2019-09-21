@@ -144,8 +144,8 @@ module StashEngine
     scope :files_published, -> do
       # this also depends on the publication updater to update statuses to published daily
       joins(:curation_activities)
-          .where(stash_engine_curation_activities: { id: latest_curation_activity.values,
-                                                     status: %w[published] })
+        .where(stash_engine_curation_activities: { id: latest_curation_activity.values,
+                                                   status: %w[published] })
     end
 
     # this is METADATA published
