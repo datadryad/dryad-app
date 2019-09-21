@@ -47,7 +47,7 @@ Upgrades and enhanced system functions will be ongoing as a way to continually i
 
 <h2>Learn more about Institutional Membership<a name="institutional"></a></h2>
 
-<b> Thank you to our growing institutional members who support their researchers publishing in Dryad </b>
+<b> Thank you to our growing list of institutional members who support their researchers publishing in Dryad </b>
 -  California State University, East Bay
 -  King Abdullah University of Science and Technology
 -  Montana State University
@@ -112,20 +112,23 @@ Dryad is open to working with institutions on an individual basis to develop cus
 
 <h2>Learn more about Publisher Membership (including journals and scholarly societies)<a name="publisher"></a></h2>
 
-<b> We are proud of our publisher membership community that has supported Dryad </b>
+<b> We are proud of our publisher membership community that supports data availability and Dryad </b>
 
 - American Academy for the Advancement of Science
 - American Genetic Association
 - American Society of Naturalists
 - Association for Tropical Biology and Conservation
+- Botanical Society of America
 - British Ecological Society
 - Cambridge University Press
 - European Society for Evolutionary Biology
+- German National Library of Medicine
 - Nordic Society Oikos
 - Oxford University Press
 - Society for the Study of Evolution
 - Society of Systematic Biologists
 - The Genetics Society
+- The Royal Society
 - US Fish and Wildlife Service
 - Wiley
 
