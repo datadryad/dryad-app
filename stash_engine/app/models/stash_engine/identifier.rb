@@ -111,7 +111,7 @@ module StashEngine
     end
 
     def latest_resource_with_public_download
-      resources.published.by_version_desc.first
+      resources.files_published.by_version_desc.first
     end
 
     def latest_downloadable_resource(user: nil)
