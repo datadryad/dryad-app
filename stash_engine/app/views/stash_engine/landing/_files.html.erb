@@ -1,13 +1,25 @@
 <%# takes local variable of dataset_identifier and resource %>
-<% resources = dataset_identifier.resources_with_file_changes.by_version
-   resources.to_a.keep_if { |i| i.may_download?(ui_user: current_user) } %>
+<%
+  resources = dataset_identifier.resources_with_file_changes.by_version
+  ldr = dataset_identifier.latest_downloadable_resource(user: current_user)
+  resources.to_a.keep_if { |i| i.id <= ldr.id }
+
+  # this IF is for a data problem, we should never have files that were only copied from previous versions, yet we did.
+  # maybe because curators needed hacks on hacks to remove previous versions. There should always be a version when they
+  # were added.
+  if resources.empty?
+    resources = [ ldr ] if ldr.file_uploads.count.positive?
+  end
+%>
 <% if resources.count.positive? %>
   <div class="c-sidebox">
     <h3 class="c-sidebox__heading">Data Files</h3>
     <% resources.each do |res| %>
       <details class="c-file-group" role="group">
         <summary class="o-showhide__summary c-file-group__summary">
-          <%= formatted_date(res.publication_date.present? ? res.publication_date : res.updated_at) %></summary>
+          <%= formatted_date(res.publication_date.present? && res.publication_date < Time.new ?
+                                 res.publication_date : res.updated_at) %>
+        </summary>
         <ul class="c-file-group__list">
           <% res.current_file_uploads.each do |fu| %>
             <li>
