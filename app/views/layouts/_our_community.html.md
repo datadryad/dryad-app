@@ -48,6 +48,7 @@ Upgrades and enhanced system functions will be ongoing as a way to continually i
 <h2>Learn more about Institutional Membership<a name="institutional"></a></h2>
 
 <b> Thank you to our growing list of institutional members who support their researchers publishing in Dryad </b>
+
 -  California State University, East Bay
 -  King Abdullah University of Science and Technology
 -  Montana State University
