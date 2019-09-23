@@ -72,7 +72,7 @@ namespace :identifiers do
     end
   end
 
-  desc 'embargo legacy datasets that already had a publication_date in the future'
+  desc 'embargo legacy datasets that already had a publication_date in the future -- note that this is somewhat drastic, and may over-embargo items.'
   task embargo_datasets: :environment do
     now = Time.now
     p "Embargoing resources whose publication_date > '#{now}'"
