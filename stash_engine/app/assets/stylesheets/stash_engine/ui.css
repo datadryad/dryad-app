@@ -5859,8 +5859,8 @@ html.no-details .o-showhide__summary {
     padding: 0.25em 1em; }
 
 .t-landing__text-wall {
-  line-height: 3ex;
-  margin-bottom: 1.5em; }
+  margin-bottom: 1.5em;
+  line-height: 3ex; }
 
 .t-review__edit-button-top {
   margin: 0 0 20px; }
