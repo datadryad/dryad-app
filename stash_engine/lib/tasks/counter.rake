@@ -1,6 +1,7 @@
 require 'net/scp'
 require_relative 'counter/validate_file'
 require_relative 'counter/log_combiner'
+require_relative 'counter/json_stats'
 
 # rubocop:disable Metrics/BlockLength
 namespace :counter do
@@ -34,7 +35,18 @@ namespace :counter do
     exit # makes the arguments not be interpreted as other rake tasks
   end # end of task
 
-  desc 'test environment is passed in'
+  desc 'manually populate CoP stats from json files'
+  task cop_manual: :environment do
+    puts "JSON_DIRECTORY is #{ENV['JSON_DIRECTORY']}"
+
+    Dir.glob(File.join(ENV['JSON_DIRECTORY'], '*.json')).sort.each do |f|
+      puts f
+      js = JsonStats.new(f)
+      js.update_stats
+    end
+  end
+
+  desc 'test that environment is passed in'
   task :test_env do
     puts "LOG_DIRECTORY is set as #{ENV['LOG_DIRECTORY']}" if ENV['LOG_DIRECTORY']
     puts "SCP_HOSTS are set as #{ENV['SCP_HOSTS'].split(' ')}" if ENV['SCP_HOSTS']
