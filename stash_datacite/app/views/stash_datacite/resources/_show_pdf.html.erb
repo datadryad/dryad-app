@@ -24,19 +24,24 @@
   <div style="page-break-inside: avoid;">
     <h3 class="o-heading__level2">Location</h3>
     <div style="overflow: hidden">
-      <div id="map_review" class="o-map"></div>
+      <%
+        has_map_meta = review.geolocation_points.count.positive? || review.geolocation_boxes.count.positive?
+        if has_map_meta %>
+        <div id="map_review" class="o-map"></div>
+      <% end %>
     </div>
     <div class="c-locations">
-      <%= render partial: "stash_datacite/geolocation_points/show",
-                 locals: { geolocation_points: @review.geolocation_points } %>
-      <%= render partial: "stash_datacite/geolocation_boxes/show",
-                 locals: { geolocation_boxes: @review.geolocation_boxes } %>
+      <% if has_map_meta %>
+        <%= render partial: "stash_datacite/geolocation_points/show",
+                   locals: { geolocation_points: @review.geolocation_points } %>
+        <%= render partial: "stash_datacite/geolocation_boxes/show",
+                   locals: { geolocation_boxes: @review.geolocation_boxes } %>
+      <% end %>
       <%= render partial: "stash_datacite/geolocation_places/show",
                  locals: { geolocation_places: @review.geolocation_places } %>
     </div>
   </div>
 <% end %>
-
 
 
 <%= render partial: "stash_datacite/subjects/show", locals: { subjects: @review.subjects } %>
