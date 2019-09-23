@@ -5858,6 +5858,10 @@ html.no-details .o-showhide__summary {
   .t-landing__pdftable td {
     padding: 0.25em 1em; }
 
+.t-landing__text-wall {
+  margin-bottom: 1.5em;
+  line-height: 3ex; }
+
 .t-review__edit-button-top {
   margin: 0 0 20px; }
   @media (min-width: 480px) {
