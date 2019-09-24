@@ -100,7 +100,7 @@ Dryad is open to working with institutions on an individual basis to develop cus
 
 <h4>Suggested Examples for Determining Size</h4>
 <ul>
-<li><strong>Level III</strong>: RI or FTE +10K FTE or +$300M in research grant funding.
+<li><strong>Level III</strong>: RI or FTE +10K or +$300M in research grant funding.
 <li><strong>Level II</strong>: R2 or FTE 5K - 10K or $50M - $300M in research grant funding.
 <li><strong>Level I</strong>: R3 or FTE under 5K or less than $50M in research grant funding.
 </ul>
