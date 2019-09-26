@@ -37,7 +37,7 @@ We welcome collaborations to develop additional modules for additional metadata 
 | Persistent Identifers - Funder Registry | X | X | Dryad tracks funder information using Crossref's Funder Registry, allowing researchers and funders to track their reasearch outputs |
 | Persistent Identifers - Research Organization Registry | X | X | Dryad tracks institutional affiliations with ROR IDs, allowing institutions to track their reasearch outputs |
 | Login - Shibboleth /OAuth2 | X | X | We offer easy single-sign with your campus credentials and ORCID account |
-| Versioning | X | X | Datasets can change. Dash offers a quick way for you to upload new versions of your datasets and offer a simple process for tracking updates |
+| Versioning | X | X | Datasets can change. Dryad offers a quick way for you to upload new versions of your datasets and offer a simple process for tracking updates |
 | Accessibility | X | X | The technology, design, and user workflows have all been built with accessibility in mind |
 | Better user experience |  | X | Self-depositing made easy. Simple workflow, drag-and-drop upload, simple navigation, clean data publication pages, user dashboards |
 | Geolocation - Search |  | X | With GeoBlacklight, we can offer search by location |
