@@ -287,6 +287,10 @@ module StashEngine
       file_uploads.where(url: url).where(file_state: 'created').where(status_code: 200).count > 0
     end
 
+    def files_unchanged?
+      file_uploads.where(file_state: %w[created deleted]).count < 1
+    end
+
     # ------------------------------------------------------------
     # Special merritt download URLs
 
