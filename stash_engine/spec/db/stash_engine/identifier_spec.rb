@@ -469,6 +469,165 @@ module StashEngine
 
     end
 
+    describe '#calculated_pub_state' do
+
+      before(:each) do
+        # a way to neuter all the callback activity
+        allow_any_instance_of(CurationActivity).to receive(:update_solr).and_return(true)
+        allow_any_instance_of(CurationActivity).to receive(:submit_to_stripe).and_return(true)
+        allow_any_instance_of(CurationActivity).to receive(:submit_to_datacite).and_return(true)
+      end
+
+      it 'detects withdrawn state' do
+        res = @identifier.resources.last
+        res.curation_activities << CurationActivity.create(status: 'withdrawn', user: @user)
+        expect(@identifier.calculated_pub_state).to eq('withdrawn')
+      end
+
+      it 'detects last published state' do
+        resources = @identifier.resources
+        resources[1].curation_activities << CurationActivity.create(status: 'published', user: @user)
+        expect(@identifier.calculated_pub_state).to eq('published')
+      end
+
+      it 'detects last embargoed state' do
+        resources = @identifier.resources
+        resources[0].curation_activities << CurationActivity.create(status: 'embargoed', user: @user)
+        expect(@identifier.calculated_pub_state).to eq('embargoed')
+      end
+
+      it 'detects unpublished' do
+        expect(@identifier.calculated_pub_state).to eq('unpublished')
+      end
+
+      it 'handles no curation activities' do
+        @identifier.resources.each do |res|
+          res.curation_activities.destroy_all
+        end
+        expect(@identifier.calculated_pub_state).to eq('unpublished')
+      end
+
+      it 'handles no resources' do
+        @identifier.resources.destroy_all
+        expect(@identifier.calculated_pub_state).to eq('unpublished')
+      end
+
+    end
+
+    # because it overrides the ActiveRecord one
+    describe '#pub_state' do
+
+      before(:each) do
+        # a way to neuter all the callback activity
+        allow_any_instance_of(CurationActivity).to receive(:update_solr).and_return(true)
+        allow_any_instance_of(CurationActivity).to receive(:submit_to_stripe).and_return(true)
+        allow_any_instance_of(CurationActivity).to receive(:submit_to_datacite).and_return(true)
+      end
+
+      it "retrieves a pub state, even when one isn't set" do
+        expect(@identifier.pub_state).to eq(@identifier.calculated_pub_state)
+      end
+
+      it 'retrieves a pub state saved to the database' do
+        @identifier.update(pub_state: 'embargoed')
+        @identifier.reload
+        expect(@identifier.pub_state).to eq('embargoed')
+      end
+    end
+
+    describe '#fill_resource_view_flags' do
+      before(:each) do
+        # a way to neuter all the callback activity
+        allow_any_instance_of(CurationActivity).to receive(:update_solr).and_return(true)
+        allow_any_instance_of(CurationActivity).to receive(:submit_to_stripe).and_return(true)
+        allow_any_instance_of(CurationActivity).to receive(:submit_to_datacite).and_return(true)
+      end
+
+      it 'sets nothing when no published states' do
+        @identifier.fill_resource_view_flags
+        @identifier.reload
+        @identifier.resources.each do |res|
+          expect(res.meta_view).to eq(false)
+          expect(res.file_view).to eq(false)
+        end
+      end
+
+      it 'sets the file view when published and changed' do
+        resources = @identifier.resources
+        resources[1].curation_activities << CurationActivity.create(status: 'published', user: @user)
+        resources[2].curation_activities << CurationActivity.create(status: 'published', user: @user)
+        @identifier.fill_resource_view_flags
+        @identifier.reload
+        expect(@identifier.resources[1].meta_view).to be(true)
+        expect(@identifier.resources[1].file_view).to be(false) # no files added yet
+        expect(@identifier.resources[2].meta_view).to be(true)
+        expect(@identifier.resources[2].file_view).to be(true) # files added this version
+      end
+
+      it 'sets the file when published and changed 2' do
+        resources = @identifier.resources
+        resources[0].curation_activities << CurationActivity.create(status: 'published', user: @user)
+        resources[2].curation_activities << CurationActivity.create(status: 'published', user: @user)
+
+        resources[0].file_uploads << FileUpload.create(file_state: 'created', upload_file_name: 'fun.cat', upload_file_size: 666)
+
+        @identifier.fill_resource_view_flags
+
+        @identifier.reload
+
+        expect(@identifier.resources[0].meta_view).to be(true) # yes published
+        expect(@identifier.resources[0].file_view).to be(true) # yes, new file added
+        expect(@identifier.resources[1].meta_view).to be(false) # no, not published
+        expect(@identifier.resources[1].file_view).to be(false) # no new files added or deleted, and not published
+        expect(@identifier.resources[2].meta_view).to be(true)  # yes, published
+        expect(@identifier.resources[2].file_view).to be(true) # files added this version
+      end
+
+      it "doesn't set the file_view when published, but files are not changed between published versions" do
+        resources = @identifier.resources
+        resources[0].curation_activities << CurationActivity.create(status: 'published', user: @user)
+        resources[2].curation_activities << CurationActivity.create(status: 'published', user: @user)
+
+        resources[0].file_uploads << FileUpload.create(file_state: 'created', upload_file_name: 'fun.cat', upload_file_size: 666)
+        resources[1].file_uploads << FileUpload.create(file_state: 'copied', upload_file_name: 'fun.cat', upload_file_size: 666)
+        resources[2].file_uploads.destroy_all
+        resources[2].file_uploads << FileUpload.create(file_state: 'copied', upload_file_name: 'fun.cat', upload_file_size: 666)
+
+        @identifier.fill_resource_view_flags
+
+        @identifier.reload
+
+        expect(@identifier.resources[0].meta_view).to be(true) # yes published
+        expect(@identifier.resources[0].file_view).to be(true) # yes, new file added
+        expect(@identifier.resources[1].meta_view).to be(false) # no, not published
+        expect(@identifier.resources[1].file_view).to be(false) # no new files added or deleted, and not published
+        expect(@identifier.resources[2].meta_view).to be(true)  # yes, published
+        expect(@identifier.resources[2].file_view).to be(false) # files added this version
+      end
+
+      it 'sets the file_view when published, but files are deleted' do
+        resources = @identifier.resources
+        resources[0].curation_activities << CurationActivity.create(status: 'published', user: @user)
+        resources[2].curation_activities << CurationActivity.create(status: 'published', user: @user)
+
+        resources[0].file_uploads << FileUpload.create(file_state: 'created', upload_file_name: 'fun.cat', upload_file_size: 666)
+        resources[1].file_uploads << FileUpload.create(file_state: 'deleted', upload_file_name: 'fun.cat', upload_file_size: 666)
+        resources[2].file_uploads.destroy_all
+        resources[2].file_uploads << FileUpload.create(file_state: 'copied', upload_file_name: 'fun.cat', upload_file_size: 666)
+
+        @identifier.fill_resource_view_flags
+
+        @identifier.reload
+
+        expect(@identifier.resources[0].meta_view).to be(true) # yes published
+        expect(@identifier.resources[0].file_view).to be(true) # yes, new file added
+        expect(@identifier.resources[1].meta_view).to be(false) # no, not published
+        expect(@identifier.resources[1].file_view).to be(false) # no new files added or deleted, and not published
+        expect(@identifier.resources[2].meta_view).to be(true)  # yes, published
+        expect(@identifier.resources[2].file_view).to be(true) # files added this version
+      end
+    end
+
     describe :with_visibility do
       before(:each) do
         Identifier.destroy_all

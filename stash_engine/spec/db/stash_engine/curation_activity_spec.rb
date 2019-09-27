@@ -1,4 +1,5 @@
 require 'db_spec_helper'
+require 'byebug'
 
 module StashEngine
   describe CurationActivity do
@@ -71,6 +72,7 @@ module StashEngine
         allow_any_instance_of(Stash::Doi::IdGen).to receive(:update_identifier_metadata).and_return(true)
         allow_any_instance_of(Stash::Payments::Invoicer).to receive(:new).and_return(true)
         allow_any_instance_of(Stash::Payments::Invoicer).to receive(:charge_user_via_invoice).and_return(true)
+        # allow_any_instance_of(StashEngine::CurationActivity).to receive(:update_publication_flags).and_return(true)
       end
 
       context :update_solr do
@@ -227,6 +229,14 @@ module StashEngine
           @ca.save
         end
 
+      end
+
+      context :update_publication_flags do
+
+        it 'does something' do
+          puts 'hi'
+          byebug
+        end
       end
 
     end

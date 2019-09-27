@@ -261,6 +261,59 @@ module StashEngine
       latest_resource.size > APP_CONFIG.payments['large_file_size']
     end
 
+    # overrides reading the pub state so it can set it for caching if it's not set yet
+    def pub_state
+      my_state = read_attribute(:pub_state)
+      return my_state unless my_state.nil?
+
+      my_state = calculated_pub_state
+      update_column(:pub_state, my_state) # avoid any callbacks and validations which will only stir up trouble
+      my_state
+    end
+
+    # returns the publication state based on history
+    # finds the latest applicable state from terminal states for each resource/version.
+    # We only really care about whether it's some form of published, embargoed or withdrawn
+    def calculated_pub_state
+      states = resources.map { |res| res.curation_activities&.last&.status }.compact
+
+      return 'withdrawn' if states.last == 'withdrawn'
+
+      states.reverse_each do |state|
+        return state if %w[published embargoed].include?(state)
+      end
+
+      'unpublished'
+    end
+
+    # this is a method that will likely only be used to fill & migrate data to deal with more fine-grained version display
+    def fill_resource_view_flags
+      resources.each_with_index do |res, _idx|
+        ca = res.current_curation_activity
+        case ca.status
+        when 'withdrawn'
+          res.update_columns(meta_view: false, file_view: false)
+        when 'embargoed'
+          res.update_columns(meta_view: true, file_view: false)
+        when 'published'
+          res.update_columns(meta_view: true, file_view: true)
+        end
+      end
+
+      reload
+
+      # walk through the changes and see if no changes between the file_view (published) ones, if so, reset file_view to false
+      # because there is nothing of interest to see in this version of no-file changes between publishing
+      unchanged = true
+      resources.each do |res|
+        unchanged &&= res.files_unchanged?
+        if res.file_view == true
+          res.update_column(:file_view, false) if unchanged
+          unchanged = true
+        end
+      end
+    end
+
     private
 
     def abstracts
