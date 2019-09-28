@@ -28,7 +28,7 @@ module Stash
         invoice = create_invoice(customer_id)
         resource.identifier.invoice_id = invoice.id
         resource.identifier.save
-        invoice.finalize_invoice
+        invoice.send_invoice
       end
 
       # For a journal, generate an invoice item for the DPC.
@@ -117,10 +117,10 @@ module Stash
 
       def create_invoice(customer_id)
         Stripe::Invoice.create(
-          auto_advance: 'true',
+          auto_advance: true,
           collection_method: 'send_invoice',
           customer: customer_id,
-          days_until_due: '30',
+          days_until_due: 30,
           description: 'Dryad deposit ' + resource.identifier.to_s + ', ' + resource.title,
           metadata: { 'curator' => curator.name }
         )
