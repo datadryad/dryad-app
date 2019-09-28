@@ -26,7 +26,6 @@ module Stash
         return unless customer_id.present?
         create_invoice_items_for_dpc(customer_id)
         invoice = create_invoice(customer_id)
-        invoice.auto_advance = true
         resource.identifier.invoice_id = invoice.id
         resource.identifier.save
         invoice.finalize_invoice
@@ -118,7 +117,10 @@ module Stash
 
       def create_invoice(customer_id)
         Stripe::Invoice.create(
+          auto_advance: 'true',
+          collection_method: 'send_invoice',
           customer: customer_id,
+          days_until_due: '30',
           description: 'Dryad deposit ' + resource.identifier.to_s + ', ' + resource.title,
           metadata: { 'curator' => curator.name }
         )
@@ -126,7 +128,7 @@ module Stash
 
       def create_customer(author)
         Stripe::Customer.create(
-          description: author.author_standard_name,
+          name: author.author_standard_name,
           email: author.author_email
         )
       end
