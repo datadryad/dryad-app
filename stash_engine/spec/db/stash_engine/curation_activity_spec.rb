@@ -233,9 +233,35 @@ module StashEngine
 
       context :update_publication_flags do
 
-        it 'does something' do
-          puts 'hi'
-          byebug
+        it 'sets flags for embargo' do
+          @resource.curation_activities << CurationActivity.create(status: 'embargoed', user: @user)
+          @identifier.reload
+          @resource.reload
+          expect(@identifier.pub_state).to eq('embargoed')
+          expect(@resource.meta_view).to eq(true)
+          expect(@resource.file_view).to eq(false)
+        end
+
+        it 'sets flags for published with file changes' do
+          @resource.file_uploads << FileUpload.create(file_state: 'created', upload_file_name: 'fun.cat', upload_file_size: 666)
+          @resource.reload
+          @resource.curation_activities << CurationActivity.create(status: 'published', user: @user)
+
+          @identifier.reload
+          @resource.reload
+
+          expect(@identifier.pub_state).to eq('published')
+          expect(@resource.meta_view).to eq(true)
+          expect(@resource.file_view).to eq(true)
+        end
+
+        it 'sets flags for withdrawn' do
+          @resource.curation_activities << CurationActivity.create(status: 'withdrawn', user: @user)
+          @identifier.reload
+          @resource.reload
+          expect(@identifier.pub_state).to eq('withdrawn')
+          expect(@resource.meta_view).to eq(false)
+          expect(@resource.file_view).to eq(false)
         end
       end
 
