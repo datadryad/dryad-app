@@ -302,8 +302,10 @@ module StashEngine
 
       reload
 
+      return if borked_file_history? # curators had us orphan versions so we don't see all the file history, leave it alone to show files
+
       # walk through the changes and see if no changes between the file_view (published) ones, if so, reset file_view to false
-      # because there is nothing of interest to see in this version of no-file changes between publishing
+      # because there is nothing of interest to see in this version of no-file changes between published versions
       unchanged = true
       resources.each do |res|
         unchanged &&= res.files_unchanged?
@@ -312,6 +314,19 @@ module StashEngine
           unchanged = true
         end
       end
+    end
+
+    # This tells us if the curators made us orphan all old versions in the resource history in order to make display look pretty.
+    # In this case we still may call this and want to show some version of the files because there was never a version remaining
+    # in which these files were added to the dataset.
+    #
+    # I hope once we get the versioning to do what the curators like then we will not have to bork our version data in order to
+    # make the display look desireable.  We can also put the old versions back and re-process the info to get corect views for these datasets.
+    def borked_file_history?
+      # I have been setting resources curators don't like to the negative identifier_id on the resource foreign key to orphan them
+      return true if Resource.where(identifier_id: -id).count.positive? || resources_with_file_changes.count.zero?
+
+      false
     end
 
     private

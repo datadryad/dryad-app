@@ -628,6 +628,38 @@ module StashEngine
       end
     end
 
+    describe '#borked_file_history' do
+      before(:each) do
+        # a way to neuter all the callback activity
+        allow_any_instance_of(CurationActivity).to receive(:update_solr).and_return(true)
+        allow_any_instance_of(CurationActivity).to receive(:submit_to_stripe).and_return(true)
+        allow_any_instance_of(CurationActivity).to receive(:submit_to_datacite).and_return(true)
+      end
+
+      it "detects we've disassociated version history with negative resource_ids" do
+        resources = @identifier.resources
+        resources[2].curation_activities << CurationActivity.create(status: 'published', user: @user)
+
+        # this is how we bork things for curators to get the pretty views, I hope this doesn't last long
+        resources[0].update(identifier_id: -resources[0].identifier_id)
+        resources[1].update(identifier_id: -resources[1].identifier_id)
+
+        expect(@identifier.borked_file_history?).to eq(true)
+      end
+
+      it "detects we've disassociated version history because nothing was ever changed (created/deleted), just copied from previous versions" do
+        resources = @identifier.resources
+
+        resources[2].curation_activities << CurationActivity.create(status: 'published', user: @user)
+
+        resources[2].file_uploads << FileUpload.create(file_state: 'copied', upload_file_name: 'fun.cat', upload_file_size: 666)
+        resources[2].file_uploads.each{ |fu| fu.update(file_state: 'copied') } # make them all copied, so invalid file history with no one ever adding files
+        @identifier.reload
+
+        expect(@identifier.borked_file_history?).to eq(true)
+      end
+    end
+
     describe :with_visibility do
       before(:each) do
         Identifier.destroy_all
