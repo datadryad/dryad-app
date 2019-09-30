@@ -287,22 +287,26 @@ module StashEngine
     end
 
     # this is a method that will likely only be used to fill & migrate data to deal with more fine-grained version display
+    # rubocop:disable Metrics/CyclomaticComplexity, Metrics/MethodLength
     def fill_resource_view_flags
-      resources.each_with_index do |res, _idx|
+      my_pub = false
+      resources.each do |res|
         ca = res.current_curation_activity
-        case ca.status
+        case ca&.status # nil for no status
         when 'withdrawn'
           res.update_columns(meta_view: false, file_view: false)
         when 'embargoed'
           res.update_columns(meta_view: true, file_view: false)
         when 'published'
           res.update_columns(meta_view: true, file_view: true)
+          my_pub = true
         end
       end
 
       reload
 
-      return if borked_file_history? # curators had us orphan versions so we don't see all the file history, leave it alone to show files
+      # don't see if published versions need to be excluded if there are none or if we borked the version history for curators to hide their edits
+      return if my_pub == false || borked_file_history?
 
       # walk through the changes and see if no changes between the file_view (published) ones, if so, reset file_view to false
       # because there is nothing of interest to see in this version of no-file changes between published versions
@@ -315,6 +319,7 @@ module StashEngine
         end
       end
     end
+    # rubocop:enable Metrics/CyclomaticComplexity, Metrics/MethodLength
 
     # This tells us if the curators made us orphan all old versions in the resource history in order to make display look pretty.
     # In this case we still may call this and want to show some version of the files because there was never a version remaining

@@ -653,7 +653,7 @@ module StashEngine
         resources[2].curation_activities << CurationActivity.create(status: 'published', user: @user)
 
         resources[2].file_uploads << FileUpload.create(file_state: 'copied', upload_file_name: 'fun.cat', upload_file_size: 666)
-        resources[2].file_uploads.each{ |fu| fu.update(file_state: 'copied') } # make them all copied, so invalid file history with no one ever adding files
+        resources[2].file_uploads.each { |fu| fu.update(file_state: 'copied') } # make them all copied, so invalid file history
         @identifier.reload
 
         expect(@identifier.borked_file_history?).to eq(true)
