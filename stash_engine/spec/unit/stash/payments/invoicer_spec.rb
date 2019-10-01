@@ -34,7 +34,7 @@ module Stash
         @cust_id = '9999'
         fake_invoice_item = OpenStruct.new(customer: @cust_id, amount: '99.99', currency: 'usd', description: 'Data Processing Charge')
         fake_invoice = OpenStruct.new(customer: @cust_id, description: 'Dryad deposit',
-                                      metadata: { curator: 'The Curator' }, finalize_invoice: 'STRIPE1234')
+                                      metadata: { curator: 'The Curator' }, send_invoice: 'STRIPE1234')
         fake_customer = OpenStruct.new(id: @cust_id, email: @author.author_email, description: @author.author_standard_name)
 
         @invoicer = Invoicer.new(resource: @resource, curator: @curator)
