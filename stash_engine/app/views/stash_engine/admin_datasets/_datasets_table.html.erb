@@ -31,7 +31,7 @@
     <tr class="c-lined-table__row">
       <td class="c-admin-hide-border-right">
         <% if dataset&.qualified_identifier %>
-            <%= link_to dataset.title, show_path(id: dataset.qualified_identifier, latest: true), target: :blank %>
+            <%= link_to dataset.title, show_path(id: dataset.qualified_identifier), target: :blank %>
         <% else %>
           <%= dataset.title %>
         <% end %>
