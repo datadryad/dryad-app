@@ -124,6 +124,7 @@ module StashEngine
     private
 
     def require_identifier_and_resource
+      # at least one of these will be nil when it doesn't exist or the user doesn't have permission
       render('not_available', status: 404) unless id && resource
     end
 
