@@ -36,6 +36,9 @@ module StashEngine
         # the resource state, but instead it keeps the reference to the old one, so we need to clear it and
         # let init_version do its job
         new_resource.current_resource_state_id = nil
+        # do not mark these resources for public view until they've been re-curated and embargoed/published again
+        new_resource.meta_view = false
+        new_resource.file_view = false
 
         new_resource.file_uploads.each do |file|
           raise "Expected #{new_resource.id}, was #{file.resource_id}" unless file.resource_id == new_resource.id
