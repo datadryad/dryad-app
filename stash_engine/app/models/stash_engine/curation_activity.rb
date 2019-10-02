@@ -192,12 +192,15 @@ module StashEngine
       return if %w[withdrawn embargoed].include?(status)
 
       # find out if there were not file changes since last publication and reset file_view, if so.
-      unchanged = true
+      changed = false # want to see that none are changed
       resource.identifier.resources.reverse_each do |res|
         break if res.id != resource.id && res&.current_curation_activity&.status == 'published' # break once reached previous published
-        unchanged &&= res.files_unchanged?
+        if res.files_changed?
+          changed = true
+          break
+        end
       end
-      resource.update_column(:file_view, false) if unchanged # if nothing changed between previous published and this, don't view same files again
+      resource.update_column(:file_view, false) unless changed # if nothing changed between previous published and this, don't view same files again
     end
     # rubocop:enable Metrics/AbcSize, Metrics/CyclomaticComplexity
 
