@@ -261,6 +261,79 @@ module StashEngine
       latest_resource.size > APP_CONFIG.payments['large_file_size']
     end
 
+    # overrides reading the pub state so it can set it for caching if it's not set yet
+    def pub_state
+      my_state = read_attribute(:pub_state)
+      return my_state unless my_state.nil?
+
+      my_state = calculated_pub_state
+      update_column(:pub_state, my_state) # avoid any callbacks and validations which will only stir up trouble
+      my_state
+    end
+
+    # returns the publication state based on history
+    # finds the latest applicable state from terminal states for each resource/version.
+    # We only really care about whether it's some form of published, embargoed or withdrawn
+    def calculated_pub_state
+      states = resources.map { |res| res.curation_activities&.last&.status }.compact
+
+      return 'withdrawn' if states.last == 'withdrawn'
+
+      states.reverse_each do |state|
+        return state if %w[published embargoed].include?(state)
+      end
+
+      'unpublished'
+    end
+
+    # this is a method that will likely only be used to fill & migrate data to deal with more fine-grained version display
+    # rubocop:disable Metrics/CyclomaticComplexity, Metrics/MethodLength
+    def fill_resource_view_flags
+      my_pub = false
+      resources.each do |res|
+        ca = res.current_curation_activity
+        case ca&.status # nil for no status
+        when 'withdrawn'
+          res.update_columns(meta_view: false, file_view: false)
+        when 'embargoed'
+          res.update_columns(meta_view: true, file_view: false)
+        when 'published'
+          res.update_columns(meta_view: true, file_view: true)
+          my_pub = true
+        end
+      end
+
+      reload
+
+      # don't see if published versions need to be excluded if there are none or if we borked the version history for curators to hide their edits
+      return if my_pub == false || borked_file_history?
+
+      # walk through the changes and see if no changes between the file_view (published) ones, if so, reset file_view to false
+      # because there is nothing of interest to see in this version of no-file changes between published versions
+      unchanged = true
+      resources.each do |res|
+        unchanged &&= res.files_unchanged?
+        if res.file_view == true
+          res.update_column(:file_view, false) if unchanged
+          unchanged = true
+        end
+      end
+    end
+    # rubocop:enable Metrics/CyclomaticComplexity, Metrics/MethodLength
+
+    # This tells us if the curators made us orphan all old versions in the resource history in order to make display look pretty.
+    # In this case we still may call this and want to show some version of the files because there was never a version remaining
+    # in which these files were added to the dataset.
+    #
+    # I hope once we get the versioning to do what the curators like then we will not have to bork our version data in order to
+    # make the display look desireable.  We can also put the old versions back and re-process the info to get corect views for these datasets.
+    def borked_file_history?
+      # I have been setting resources curators don't like to the negative identifier_id on the resource foreign key to orphan them
+      return true if Resource.where(identifier_id: -id).count.positive? || resources_with_file_changes.count.zero?
+
+      false
+    end
+
     private
 
     def abstracts

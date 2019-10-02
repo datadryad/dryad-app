@@ -1,4 +1,5 @@
 require 'db_spec_helper'
+require 'byebug'
 
 module StashEngine
   describe CurationActivity do
@@ -71,6 +72,7 @@ module StashEngine
         allow_any_instance_of(Stash::Doi::IdGen).to receive(:update_identifier_metadata).and_return(true)
         allow_any_instance_of(Stash::Payments::Invoicer).to receive(:new).and_return(true)
         allow_any_instance_of(Stash::Payments::Invoicer).to receive(:charge_user_via_invoice).and_return(true)
+        # allow_any_instance_of(StashEngine::CurationActivity).to receive(:update_publication_flags).and_return(true)
       end
 
       context :update_solr do
@@ -227,6 +229,40 @@ module StashEngine
           @ca.save
         end
 
+      end
+
+      context :update_publication_flags do
+
+        it 'sets flags for embargo' do
+          @resource.curation_activities << CurationActivity.create(status: 'embargoed', user: @user)
+          @identifier.reload
+          @resource.reload
+          expect(@identifier.pub_state).to eq('embargoed')
+          expect(@resource.meta_view).to eq(true)
+          expect(@resource.file_view).to eq(false)
+        end
+
+        it 'sets flags for published with file changes' do
+          @resource.file_uploads << FileUpload.create(file_state: 'created', upload_file_name: 'fun.cat', upload_file_size: 666)
+          @resource.reload
+          @resource.curation_activities << CurationActivity.create(status: 'published', user: @user)
+
+          @identifier.reload
+          @resource.reload
+
+          expect(@identifier.pub_state).to eq('published')
+          expect(@resource.meta_view).to eq(true)
+          expect(@resource.file_view).to eq(true)
+        end
+
+        it 'sets flags for withdrawn' do
+          @resource.curation_activities << CurationActivity.create(status: 'withdrawn', user: @user)
+          @identifier.reload
+          @resource.reload
+          expect(@identifier.pub_state).to eq('withdrawn')
+          expect(@resource.meta_view).to eq(false)
+          expect(@resource.file_view).to eq(false)
+        end
       end
 
     end

@@ -66,6 +66,8 @@ module StashEngine
     after_create :email_orcid_invitations,
                  if: proc { |ca| ca.published? && latest_curation_status_changed? && !resource.skip_emails }
 
+    after_create :update_publication_flags, if: proc { |ca| %w[published embargoed withdrawn].include?(ca.status) }
+
     # Class methods
     # ------------------------------------------
     # Translates the enum value to a human readable status
@@ -171,6 +173,36 @@ module StashEngine
       end
     end
     # rubocop:enable Metrics/AbcSize
+
+    # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity
+    def update_publication_flags
+      case status
+      when 'withdrawn'
+        resource.update_columns(meta_view: false, file_view: false)
+      when 'embargoed'
+        resource.update_columns(meta_view: true, file_view: false)
+      when 'published'
+        resource.update_columns(meta_view: true, file_view: true)
+      end
+
+      return if resource&.identifier.nil?
+
+      resource.identifier.update_column(:pub_state, status)
+
+      return if %w[withdrawn embargoed].include?(status)
+
+      # find out if there were not file changes since last publication and reset file_view, if so.
+      changed = false # want to see that none are changed
+      resource.identifier.resources.reverse_each do |res|
+        break if res.id != resource.id && res&.current_curation_activity&.status == 'published' # break once reached previous published
+        if res.files_changed?
+          changed = true
+          break
+        end
+      end
+      resource.update_column(:file_view, false) unless changed # if nothing changed between previous published and this, don't view same files again
+    end
+    # rubocop:enable Metrics/AbcSize, Metrics/CyclomaticComplexity
 
     # Helper methods
     # ------------------------------------------
