@@ -1,5 +1,8 @@
 <div class="c-columns">
 	<main class="t-landing__main c-columns__content">
+		<% if @user_type == 'privileged' %>
+			<%= render(partial: 'priveleged_banner') %>
+		<% end %>
 		<div id="display_resource">
 		  <%# image_tag 'stash_engine/spinner.gif', size: '80x60', alt: 'Loading spinner' %>
       <%# render(partial: 'stash_datacite/resources/show') %>

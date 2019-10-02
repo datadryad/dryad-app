@@ -21,25 +21,17 @@ module StashEngine
     helper_method :id
 
     # -- gets the resource for display from the identifier --
-    # This gets more complicated because we are displaying the latest curation state of
-    # 'published' or 'embargoed' if it's to the public.
-    #
-    # For logged in curators (role: 'superuser'), they get to see the latest version, no matter what state
-    # if the param '?show_latest=true' is stuck on the URL.
-    #
-    # For admins or logged in owners, they get to see the latest version submitted to Merritt
-    #
-    # For everyone else they just get to see what is accepted by curation
+    # some users get to see more than the public such as owners, superusers, admins
     def resource
-      @resource ||=
-        if params[:latest] == 'true' && current_user&.superuser? # let superusers see the latest, unpublished if they wish
-          id.resources.by_version_desc.first
-        # let user see his own if logged in or let superuser see non-latest-preview stuff
-        elsif (current_user && (current_user.id == id.resources.submitted&.by_version_desc&.first&.user_id)) || current_user&.superuser?
-          id.resources.submitted.by_version_desc.first
-        else # everyone else only gets to see published or embargoed metadata latest version
-          id.latest_resource_with_public_metadata
-        end
+      return @resource unless @resource.nil?
+
+      @user_type = 'public'
+      @resource = if (current_user && (current_user.id == id.resources.submitted&.by_version_desc&.first&.user_id)) || current_user&.superuser?
+        @user_type = 'privileged'
+        id.resources.submitted.by_version_desc.first
+      else # everyone else only gets to see published or embargoed metadata latest version
+        id.latest_resource_with_public_metadata
+      end
     end
 
     helper_method :resource
