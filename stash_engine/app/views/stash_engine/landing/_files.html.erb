@@ -1,14 +1,13 @@
 <%# takes local variable of dataset_identifier and resource %>
 <%
-  resources = dataset_identifier.resources_with_file_changes.by_version
-  ldr = dataset_identifier.latest_downloadable_resource(user: current_user)
-  resources.to_a.keep_if { |i| i.id <= ldr.id }
-
-  # this IF is for a data problem, we should never have files that were only copied from previous versions, yet we did.
-  # maybe because curators needed hacks on hacks to remove previous versions. There should always be a version when they
-  # were added.
-  if resources.empty?
-    resources = [ ldr ] if ldr.file_uploads.count.positive?
+  resources = dataset_identifier.resources.files_published  # the public ones
+  res_id = -9999 # negagive for no special file views
+  if @user_type == 'privileged' # add any non-public, submitted to merritt resources with changes
+    res_id = resources.last&.id || 0
+    # rails 5 has an OR we could use, but not yet in rails 4.2, so change to an array rather than an ActiveRecord Relation
+    # note: resources_with_file_changes is a method and not a scope, so must come first
+    # The rest are scopes on resources, greater than the last ID means submitted after the last version shown to public
+    resources = resources.to_a + dataset_identifier.resources_with_file_changes.submitted.where('stash_engine_resources.id > ?', res_id).to_a
   end
 %>
 <% if resources.count.positive? %>
@@ -19,6 +18,7 @@
         <summary class="o-showhide__summary c-file-group__summary">
           <%= formatted_date(res.publication_date.present? && res.publication_date < Time.new ?
                                  res.publication_date : res.updated_at) %>
+          <%= ( res_id.positive? && res.id > res_id ? '*' : '' ) -%>
         </summary>
         <ul class="c-file-group__list">
           <% res.current_file_uploads.each do |fu| %>
@@ -31,5 +31,13 @@
         </ul>
       </details>
     <% end %>
+    <% if res_id != -9999 %>
+      <br/><em>* changes not displayed to the public</em>
+    <% end %>
+  </div>
+<% else %>
+  <div class="c-sidebox">
+    <h3 class="c-sidebox__heading">Data Files</h3>
+    <p>No data files are available for display.</p>
   </div>
 <% end %>
