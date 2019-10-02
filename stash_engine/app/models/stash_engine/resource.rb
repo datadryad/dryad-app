@@ -113,6 +113,9 @@ module StashEngine
     scope :submitted, (-> do
       joins(:current_resource_state).where(stash_engine_resource_states: { resource_state:  %i[submitted processing] })
     end)
+    scope :submitted_only, (-> do
+      joins(:current_resource_state).where(stash_engine_resource_states: { resource_state:  %i[submitted] })
+    end)
     scope :processing, (-> do
       joins(:current_resource_state).where(stash_engine_resource_states: { resource_state:  [:processing] })
     end)
@@ -137,15 +140,12 @@ module StashEngine
     end
 
     scope :with_public_metadata, -> do
-      joins(:curation_activities).where(stash_engine_curation_activities: { id: latest_curation_activity.values,
-                                                                            status: %w[published embargoed] })
+      where(meta_view: true)
     end
 
     scope :files_published, -> do
       # this also depends on the publication updater to update statuses to published daily
-      joins(:curation_activities)
-        .where(stash_engine_curation_activities: { id: latest_curation_activity.values,
-                                                   status: %w[published] })
+        where(file_view: true)
     end
 
     # this is METADATA published
@@ -487,8 +487,8 @@ module StashEngine
     # Note: the special download links mean anyone with that link may download and this doesn't apply
     # rubocop:disable Metrics/CyclomaticComplexity
     def may_download?(ui_user: nil) # doing this to avoid collision with the association called user
-      return false unless current_resource_state&.resource_state == 'submitted' # merritt state available
-      return true if files_published? # curation state of public or embargoed and expired
+      return false unless current_resource_state&.resource_state == 'submitted' # is available in Merritt
+      return true if files_published? # curation state of public
       return false if ui_user.blank? # the rest of the cases require users
       return true if ui_user.id == user_id || ui_user.role == 'superuser' || (ui_user.role == 'admin' && ui_user.tenant_id == tenant_id)
       false # nope. Not sure if it would ever get here, though
@@ -552,9 +552,8 @@ module StashEngine
 
     # -----------------------------------------------------------
     # Publication
-    # Files are published when the publication date has been reached
     def files_published?
-      metadata_published? && publication_date.present? && Time.new.utc >= publication_date
+      identifier.pub_state == 'published'
     end
 
     # Metadata is published when the curator sets the status to published or embargoed
