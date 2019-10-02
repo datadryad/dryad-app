@@ -1,7 +1,7 @@
 <%# takes local variable of dataset_identifier and resource %>
 <%
   resources = dataset_identifier.resources.files_published  # the public ones
-  res_id = -9999 # negagive for no special file views
+  res_id = -9999 # negative for no special file views
   if @user_type == 'privileged' # add any non-public, submitted to merritt resources with changes
     res_id = resources.last&.id || 0
     # rails 5 has an OR we could use, but not yet in rails 4.2, so change to an array rather than an ActiveRecord Relation
