@@ -288,7 +288,11 @@ module StashEngine
     end
 
     def files_unchanged?
-      file_uploads.where(file_state: %w[created deleted]).count < 1
+      !files_changed?
+    end
+
+    def files_changed?
+      file_uploads.where(file_state: %w[created deleted]).count.positive?
     end
 
     # ------------------------------------------------------------
