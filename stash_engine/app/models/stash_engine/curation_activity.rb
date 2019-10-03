@@ -147,6 +147,7 @@ module StashEngine
     # Triggered on a status of :published or :embargoed
     def email_author
       StashEngine::UserMailer.status_change(resource, status).deliver_now
+      StashEngine::UserMailer.journal_published_notice(resource, status).deliver_now
     end
 
     # Triggered on a status of :published

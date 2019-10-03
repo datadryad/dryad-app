@@ -1,0 +1,10 @@
+
+<p>The dataset "<%= @resource.title %>" has been approved by our curation team.</p>
+
+<p>
+    Data DOI: <%= @resource.identifier_str %><br/>
+    Journal: <%= @resource.identifier.publication_name %><br/>
+    Journal manuscript number: <%= @resource.identifier.manuscript_number %><br/>
+</p>
+
+<p>We welcome your feedback! Contact us at <a href="mailto:<%= @helpdesk_email %>"><%= @helpdesk_email %></a>.</p>
