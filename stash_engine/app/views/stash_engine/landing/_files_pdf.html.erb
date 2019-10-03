@@ -1,20 +1,36 @@
 <h3 class="o-heading__level2">Files</h3>
-<p><%= @resource.file_uploads.count %> files for this dataset</p>
-<table class="t-landing__pdftable">
-  <% @resource.file_uploads[0..99].each do |fu| %>
-    <tr>
-      <td><%= fu.upload_file_name.ellipsisize(32) %></td>
-      <td style="text-align: right"><%= filesize(fu.upload_file_size) %></td>
-      <td><%= fu.upload_content_type %></td>
-    </tr>
-  <% end %>
-  <% if @resource.file_uploads.length > 100 %>
-    <tr>
-      <td>
-        <span style="font-weight: bold;"><%= @resource.file_uploads.count - 100 %> additional files not shown</span>
-      </td>
-      <td>&nbsp;</td>
-      <td>&nbsp;</td>
-    </tr>
-  <% end %>
-</table>
+<%
+  view_resource = if @user_type == "privileged"
+                    @id.last_submitted_resource
+                  else
+                    @id.resources.files_published.last
+                  end
+%>
+<%
+  view_files = view_resource&.current_file_uploads
+  if view_files.present? && view_files.count.positive?
+%>
+  <p><%= view_files.count %> files for this dataset</p>
+  <table class="t-landing__pdftable">
+    <% view_files[0..99].each do |fu| %>
+      <tr>
+        <td><%= fu.upload_file_name.ellipsisize(32) %></td>
+        <td style="text-align: right"><%= filesize(fu.upload_file_size) %></td>
+        <td><%= fu.upload_content_type %></td>
+      </tr>
+    <% end %>
+    <% if @resource.file_uploads.length > 100 %>
+      <tr>
+        <td>
+          <span style="font-weight: bold;"><%= @resource.file_uploads.count - 100 %> additional files not shown</span>
+        </td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+      </tr>
+    <% end %>
+  </table>
+<% else %>
+  <p>
+    No files are present for this dataset.
+  </p>
+<% end %>
