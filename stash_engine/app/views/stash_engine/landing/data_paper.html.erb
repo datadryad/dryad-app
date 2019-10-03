@@ -8,6 +8,15 @@
 <div id="header">
   <main class="t-landing__main c-columns__content">
     <div id="display_resource">
+      <% if (@resource.meta_view == false || @resource.file_view == false) && @user_type == 'privileged' %>
+        <p><em>
+          This data paper is a pre-release preview that may show additional information or files that have
+          not been published yet.
+        </em></p>
+        <p><em>
+          To see the public version, please log out or use the incognito or anonymous mode in your browser.
+        </em></p>
+      <% end %>
       <%= render(partial: metadata_render_path('resources', 'show_pdf')) %>
     </div>
   </main>

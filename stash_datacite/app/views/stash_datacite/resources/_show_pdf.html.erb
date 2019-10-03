@@ -46,7 +46,8 @@
 
 <%= render partial: "stash_datacite/subjects/show", locals: { subjects: @review.subjects } %>
 
-<%= render partial: 'stash_engine/landing/versions_pdf' %>
+<%# this just doesn't make much sense to show version dates in a PDF with no additional info, just show the one that has files
+ # render partial: 'stash_engine/landing/versions_pdf' %>
 
 <%= render partial: 'stash_engine/landing/files_pdf' %>
 
