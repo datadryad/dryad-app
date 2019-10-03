@@ -3,27 +3,16 @@ require 'db_spec_helper'
 module StashEngine
   describe Share do
     attr_reader :user
-    attr_reader :resource
-    attr_reader :tenant
+    attr_reader :identifier
     attr_reader :share
 
     before(:each) do
-      @resource = Resource.create(tenant_id: 'ucop')
-      @tenant = double(Tenant)
-      allow(Tenant).to receive(:find).with('ucop').and_return(tenant)
-
-      @share = Share.create(resource_id: resource.id)
+      @share = Share.create(identifier_id: identifier.id)
     end
 
-    describe :resource do
-      it 'returns the resource' do
-        expect(share.resource).to eq(resource)
-      end
-    end
-
-    describe :tenant do
-      it 'returns the resource tenant' do
-        expect(share.tenant).to be(tenant)
+    describe :identifier do
+      it 'returns the identifier' do
+        expect(share.identifier).to eq(identifier)
       end
     end
 

@@ -13,7 +13,6 @@ module StashEngine
     has_many :edit_histories, class_name: 'StashEngine::EditHistory'
     has_one :stash_version, class_name: 'StashEngine::Version', dependent: :destroy
     belongs_to :identifier, class_name: 'StashEngine::Identifier', foreign_key: 'identifier_id'
-    has_one :share, class_name: 'StashEngine::Share', dependent: :destroy
     belongs_to :user, class_name: 'StashEngine::User'
     has_one :current_resource_state,
             class_name: 'StashEngine::ResourceState',
@@ -84,7 +83,7 @@ module StashEngine
       Identifier.destroy(identifier_id)
     end
 
-    after_create :init_state_and_version, :update_stash_identifier_last_resource, :create_share
+    after_create :init_state_and_version, :update_stash_identifier_last_resource
     # for some reason, after_create not working, so had to add after_update
     after_update :update_stash_identifier_last_resource
     after_destroy :remove_identifier_with_no_resources, :update_stash_identifier_last_resource
@@ -96,11 +95,6 @@ module StashEngine
       init_state unless current_resource_state_id
       init_curation_status if curation_activities.empty?
       save
-    end
-
-    # creates a share for this resource if not present
-    def create_share
-      StashEngine::Share.create(resource_id: id) unless share.present?
     end
 
     # ------------------------------------------------------------
