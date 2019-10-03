@@ -93,10 +93,10 @@ module StashEngine
 
             case status
             when 'peer_review'
-              expect(delivery.body.to_s).to include(@resource.share.sharing_link)
+              expect(delivery.body.to_s).to include(@resource.identifier.shares.first.sharing_link)
               expect(delivery.body.to_s).to include('Your dataset will now remain private until your related manuscript has been accepted.')
             when 'submitted'
-              expect(delivery.body.to_s).to include(@resource.share.sharing_link)
+              expect(delivery.body.to_s).to include(@resource.identifier.shares.first.sharing_link)
               expect(delivery.body.to_s).to include('You should receive an update within five business days.')
             when 'published'
               expect(delivery.body.to_s).to include('Your dataset is now published and public.')

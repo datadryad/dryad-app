@@ -8,10 +8,14 @@ module StashEngine
     has_one :counter_stat, class_name: 'StashEngine::CounterStat', dependent: :destroy
     has_many :internal_data, class_name: 'StashEngine::InternalDatum', dependent: :destroy
     has_many :external_references, class_name: 'StashEngine::ExternalReference', dependent: :destroy
+    # there are places we may have more than one from our old versions
+    has_many :shares, class_name: 'StashEngine::Share', dependent: :destroy
     has_one :latest_resource,
             class_name: 'StashEngine::Resource',
             primary_key: 'latest_resource_id',
             foreign_key: 'id'
+
+    after_create :create_share
 
     # See https://medium.com/rubyinside/active-records-queries-tricks-2546181a98dd for some good tricks
     # returns the identifiers that have resources with that *latest* curation state you specify (for any of the resources)
@@ -338,6 +342,11 @@ module StashEngine
       return true if Resource.where(identifier_id: -id).count.positive? || resources_with_file_changes.count.zero?
 
       false
+    end
+
+    # creates a share for this resource if not present
+    def create_share
+      StashEngine::Share.create(identifier_id: id) if shares.blank?
     end
 
     private

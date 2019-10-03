@@ -101,9 +101,7 @@ StashEngine::Engine.routes.draw do
 
   patch 'dataset/*id', to: 'landing#update', constraints: { id: /\S+/ }
 
-  post 'shares/create', to: 'shares#create'
-  patch 'shares/update', to: 'shares#update'
-  delete 'shares/:id/delete', to: 'shares#delete'
+  get 'shares/show', to 'shares#show'
 
   # admin area
   get 'admin', to: 'admin#index'

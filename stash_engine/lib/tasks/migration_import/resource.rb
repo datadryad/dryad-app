@@ -33,7 +33,8 @@ module MigrationImport
       add_edit_histories
       add_file_uploads
       add_queue_states
-      add_shares
+      # add_shares
+      # This code will likely never be used again, for importing old dash datasets into the new database for Dryad
       add_submission_logs
       add_version
 
