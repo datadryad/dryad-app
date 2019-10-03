@@ -87,10 +87,10 @@ module StashDatacite
       end
 
       def share
-        @share = if @resource.share.present?
-                   @resource.share
+        @share = if @resource&.identifier&.shares&.present?
+                   @resource&.identifier&.shares&.first
                  else
-                   StashEngine::Share.create(resource_id: @resource.id)
+                   StashEngine::Share.create(identifier_id: @resource.identifier.id)
                  end
       end
 
