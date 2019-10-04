@@ -101,8 +101,6 @@ StashEngine::Engine.routes.draw do
 
   patch 'dataset/*id', to: 'landing#update', constraints: { id: /\S+/ }
 
-  get 'shares/:id', to: 'shares#show'
-
   # admin area
   get 'admin', to: 'admin#index'
   get 'admin/popup/:id', to: 'admin#popup', as: 'popup_admin'
