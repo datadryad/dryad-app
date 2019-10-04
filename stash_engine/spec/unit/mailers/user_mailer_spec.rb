@@ -5,6 +5,9 @@ module StashEngine
   describe UserMailer do
 
     before(:each) do
+
+      # TODO: this is completely ridiculous for number of mocks and we should be using factorybot instead and only disbling some callbacks
+
       @delivery_method = ActionMailer::Base.delivery_method
       stash_engine_path = Gem::Specification.find_by_name('stash_engine').gem_dir
       ActionMailer::Base.delivery_method = :test
@@ -48,12 +51,13 @@ module StashEngine
       allow(@resource).to receive(:identifier).and_return(@identifier)
       allow(@resource).to receive(:identifier_str).and_return(@identifier.identifier)
       allow(@resource).to receive(:identifier_uri).and_return("https://#{@request_host}/#{@identifier}")
-      allow(@resource).to receive(:share).and_return(@share)
       allow(@resource).to receive(:title).and_return('An Account of a Very Odd Monstrous Calf')
       allow(@resource).to receive(:tenant).and_return(@tenant)
       allow(@resource).to receive(:files_published?).and_return(true)
       allow(@resource).to receive(:authors).and_return([@author1, @author2])
       allow(@resource).to receive(:identifier_value).and_return('10.1098/rstl.1665.0007')
+
+      allow(@identifier).to receive(:shares).and_return([@share])
 
       allow_any_instance_of(ActionView::Helpers::UrlHelper)
         .to receive(:url_for)
@@ -94,7 +98,7 @@ module StashEngine
             case status
             when 'peer_review'
               expect(delivery.body.to_s).to include(@resource.identifier.shares.first.sharing_link)
-              expect(delivery.body.to_s).to include('Your dataset will now remain private until your related manuscript has been accepted.')
+              expect(delivery.body.to_s).to include('will now remain private until your related manuscript has been accepted.')
             when 'submitted'
               expect(delivery.body.to_s).to include(@resource.identifier.shares.first.sharing_link)
               expect(delivery.body.to_s).to include('You should receive an update within five business days.')
