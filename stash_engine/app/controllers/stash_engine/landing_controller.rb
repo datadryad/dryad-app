@@ -27,11 +27,11 @@ module StashEngine
 
       @user_type = 'public'
       @resource = if (current_user && (current_user.id == id.resources.submitted&.by_version_desc&.first&.user_id)) || current_user&.superuser?
-        @user_type = 'privileged'
-        id.resources.submitted.by_version_desc.first
-      else # everyone else only gets to see published or embargoed metadata latest version
-        id.latest_resource_with_public_metadata
-      end
+                    @user_type = 'privileged'
+                    id.resources.submitted.by_version_desc.first
+                  else # everyone else only gets to see published or embargoed metadata latest version
+                    id.latest_resource_with_public_metadata
+                  end
     end
 
     helper_method :resource

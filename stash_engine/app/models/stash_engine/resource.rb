@@ -142,7 +142,7 @@ module StashEngine
 
     scope :files_published, -> do
       # this also depends on the publication updater to update statuses to published daily
-        where(file_view: true)
+      where(file_view: true)
     end
 
     # this is METADATA published
