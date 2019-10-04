@@ -21,20 +21,15 @@ module StashEngine
 
     # Called from CurationActivity when the status is published or embargoed
     def journal_published_notice(resource, status)
-      logger.info('############ journal_published_notice #############')
-      logger.info("status #{status}, config #{APP_CONFIG['send_journal_published_notices']}, notify #{@resource}")
       return unless %w[published embargoed].include?(status)
       return unless APP_CONFIG['send_journal_published_notices']
       assign_variables(resource)
-      logger.info("#### status #{status}, config #{APP_CONFIG['send_journal_published_notices']}, notify #{@resource.identifier.publication_issn}, title #{@resource.title}")
       return unless @resource&.identifier&.journal_notify_contacts&.present?
-      logger.info('############# made it through the gates ############')
-      
 
       mail(to: @resource&.identifier&.journal_notify_contacts,
            subject: "#{rails_env} Dryad Submission: \"#{@resource.title}\"")
     end
-    
+
     # Called from the LandingController when an update happens
     def orcid_invitation(orcid_invite)
       # need to calculate url here because url helpers work erratically in the mailer template itself

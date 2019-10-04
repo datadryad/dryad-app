@@ -170,6 +170,7 @@ module StashEngine
 
         before(:each) do
           allow_any_instance_of(StashEngine::UserMailer).to receive(:status_change).and_return(true)
+          allow_any_instance_of(StashEngine::UserMailer).to receive(:journal_published_notice).and_return(true)
         end
 
         StashEngine::CurationActivity.statuses.each do |status|
@@ -191,9 +192,7 @@ module StashEngine
           end
 
         end
-
       end
-
       context :email_orcid_invitations do
 
         before(:each) do
