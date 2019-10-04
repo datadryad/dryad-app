@@ -23,7 +23,6 @@ module MigrationImport
       @ar_resource.update(identifier_id: @ar_identifier.id)
     end
 
-    # rubocop:disable Metrics/MethodLength
     def import
       disable_callback_methods
 
@@ -54,7 +53,6 @@ module MigrationImport
 
       enable_callback_methods
     end
-    # rubocop:enable Metrics/MethodLength
 
     def create_base_resource
       @ar_user_id = User.new(hash: hash[:user]).user_id

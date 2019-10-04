@@ -3,6 +3,7 @@ require 'stash/download/file'
 require 'stash/download/version'
 # require 'rest-client'
 
+# rubocop:disable Metrics/ClassLength
 module StashEngine
   class DownloadsController < ApplicationController
     before_action :setup_streaming
@@ -91,7 +92,7 @@ module StashEngine
 
     def can_download?
       @resource.may_download?(ui_user: current_user) ||
-          ( !params[:secret_id].blank? && @resource&.identifier&.shares&.where(secret_id: params[:secret_id])&.count&.positive?)
+          (!params[:secret_id].blank? && @resource&.identifier&.shares&.where(secret_id: params[:secret_id])&.count&.positive?)
     end
 
     def redirect_to_public
@@ -135,3 +136,4 @@ module StashEngine
 
   end
 end
+# rubocop:enable Metrics/ClassLength
