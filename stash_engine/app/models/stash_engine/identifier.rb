@@ -227,8 +227,8 @@ module StashEngine
 
     def manuscript_number
       internal_data.find_by(data_type: 'manuscriptNumber')&.value
-    end      
-    
+    end
+
     def publication_name
       publication_data('fullName')
     end
@@ -247,7 +247,7 @@ module StashEngine
     def journal_notify_contacts
       publication_data('notifyContacts')
     end
-    
+
     def allow_review?
       publication_data('allowReviewWorkflow') || publication_name.blank?
     end

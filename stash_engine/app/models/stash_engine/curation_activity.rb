@@ -147,7 +147,21 @@ module StashEngine
     # Triggered on a status of :published or :embargoed
     def email_author
       StashEngine::UserMailer.status_change(resource, status).deliver_now
-      StashEngine::UserMailer.journal_published_notice(resource, status).deliver_now
+      StashEngine::UserMailer.journal_published_notice(resource, status).deliver_now unless previously_published?
+    end
+
+    def previously_published?
+      # ignoring the current CA, is there an embargoed or published status at any point for this identifier?
+      prev_pub = false
+      resource.identifier.resources.each do |res|
+        res.curation_activities.each do |ca|
+          if (ca.id != id) && %w[published embargoed].include?(ca.status)
+            prev_pub = true
+            break
+          end
+        end
+      end
+      prev_pub
     end
 
     # Triggered on a status of :published
