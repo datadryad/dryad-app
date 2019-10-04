@@ -2,7 +2,6 @@ require 'db_spec_helper'
 require 'webmock/rspec'
 require_relative '../../../../spec_helpers/factory_helper'
 require 'byebug'
-require_relative '../../../../stash_datacite/app/models/stash_datacite/related_identifier.rb'
 
 module StashEngine
 
