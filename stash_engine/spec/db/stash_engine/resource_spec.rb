@@ -218,19 +218,17 @@ module StashEngine
 
     describe :may_download? do
       before(:each) do
-        @resource = Resource.create(user_id: user.id)
+        @identifier = Identifier.create(identifier: 'cat/dog', identifier_type: 'DOI', pub_state: 'published')
+        @resource = Resource.create(user_id: user.id, identifier_id: @identifier.id, meta_view: true, file_view: true)
         @merritt_state = ResourceState.create(user_id: @resource.user.id, resource_state: 'submitted', resource_id: @resource.id)
         @resource.update(current_resource_state_id: @merritt_state.id)
       end
 
       # Checks if someone may download files for this resource
-      # 1. Merritt's status, resource_state = 'submitted', meaning they are available to download from Merritt
-      # 2. Curation state of files_public? means anyone may download
-      # 3. if not public then the author can still download: resource.user_id = current_user.id
-      # 4. if not public then the current user has the 'superuser' role for seeing all files
-      # Note: the special download links mean anyone with that link may download and this doesn't apply
 
-      it 'returns false if no curation state' do
+      it 'returns false if not marked for download' do
+        @resource.update(file_view: false)
+        @resource.reload
         expect(@resource.may_download?(ui_user: nil)).to be false
       end
 
@@ -243,47 +241,34 @@ module StashEngine
       end
 
       it 'returns true if published' do
-        @resource.update(publication_date: Date.today.to_s)
-        @resource.curation_activities << CurationActivity.new(status: 'published')
-        @resource.reload
+        # already set to published in identifier and this file_view is true
         expect(@resource.may_download?(ui_user: nil)).to be true
       end
 
-      it 'returns true if embargoed but the publication_date has been reached' do
-        @resource.update(publication_date: (Date.today - 1.days).to_s)
-        @resource.curation_activities << CurationActivity.new(status: 'embargoed')
-        @resource.reload
-        expect(@resource.may_download?(ui_user: nil)).to be true
-      end
-
-      it 'returns false if embargoed with a future publication_date' do
-        @resource.update(publication_date: (Date.today + 2.days).to_s)
-        @resource.curation_activities << CurationActivity.new(status: 'embargoed')
-        @resource.reload
-        expect(@resource.may_download?(ui_user: nil)).to be false
-      end
-
-      it 'returns false if embargoed with a nil publication_date' do
-        @resource.update(publication_date: nil)
-        @resource.curation_activities << CurationActivity.new(status: 'embargoed')
+      it 'returns false if embargoed' do
+        @resource.identifier.update(pub_state: 'embargoed')
+        @resource.update(file_view: false)
         @resource.reload
         expect(@resource.may_download?(ui_user: nil)).to be false
       end
 
       it 'returns false if not published' do
-        @resource.curation_activities << CurationActivity.new(status: 'curation')
+        @resource.identifier.update(pub_state: 'unpublished')
+        @resource.update(file_view: false)
         @resource.reload
         expect(@resource.may_download?(ui_user: nil)).to be false
       end
 
       it 'returns true if unpublished, but if viewing user is the owner' do
-        @resource.curation_activities << CurationActivity.new(status: 'curation')
+        @resource.identifier.update(pub_state: 'unpublished')
+        @resource.update(file_view: false)
         @resource.reload
         expect(@resource.may_download?(ui_user: @resource.user)).to be true
       end
 
       it 'returns true if being viewed by a superuser' do
-        @resource.curation_activities << CurationActivity.new(status: 'curation')
+        @resource.identifier.update(pub_state: 'unpublished')
+        @resource.update(file_view: false)
         @resource.reload
         expect(@resource.may_download?(ui_user: @resource.user)).to be true
       end
@@ -293,13 +278,10 @@ module StashEngine
     # able to view based on curation state
     describe '#may_view?' do
       before(:each) do
-        @resource = Resource.create(user_id: user.id)
+        @identifier = Identifier.create(identifier: 'cat/dog', identifier_type: 'DOI', pub_state: 'embargoed')
+        @resource = Resource.create(user_id: user.id, identifier_id: @identifier.id, meta_view: true, file_view: true)
         @merritt_state = ResourceState.create(user_id: @resource.user.id, resource_state: 'submitted', resource_id: @resource.id)
         @resource.update(current_resource_state_id: @merritt_state.id)
-
-        @curation_activities = [create(:curation_activity_no_callbacks, resource: @resource, status: 'in_progress'),
-                                create(:curation_activity_no_callbacks, resource: @resource, status: 'curation'),
-                                create(:curation_activity_no_callbacks, resource: @resource, status: 'published')]
       end
 
       it 'allows anyone to view public resource' do
@@ -307,39 +289,45 @@ module StashEngine
       end
 
       it 'disallows unknown users from viewing private resource' do
-        @curation_activities[2].destroy
+        @resource.update(meta_view: false, file_view: false)
+        @resource.reload
         expect(@resource.may_view?(ui_user: nil)).to be_falsey
       end
 
       it 'allows owner to view private resource' do
-        @curation_activities[2].destroy
+        @identifier.update(pub_state: 'unpublished')
+        @resource.update(meta_view: false, file_view: false)
+        @resource.reload
         expect(@resource.may_view?(ui_user: user)).to be_truthy
       end
 
       it 'disallows other normal user from viewing private' do
         @user2 = StashEngine::User.create(first_name: 'Gorgonzola', last_name: 'Travesty', tenant_id: 'ucop', role: 'user')
-        @curation_activities[2].destroy
+        @resource.update(meta_view: false, file_view: false)
+        @resource.reload
         expect(@resource.may_view?(ui_user: @user2)).to be_falsey
       end
 
       it 'allows admin user from same tenant to view' do
+        @identifier.update(pub_state: 'unpublished')
         @resource.update(tenant_id: user.tenant_id)
         @user2 = StashEngine::User.create(first_name: 'Gorgonzola', last_name: 'Travesty', tenant_id: user.tenant_id, role: 'admin')
-        @curation_activities[2].destroy
+        @resource.update(meta_view: false, file_view: false)
+        @resource.reload
         expect(@resource.may_view?(ui_user: @user2)).to be_truthy
       end
 
       it 'denies admin user from other tenant to view' do
-        @resource.update(tenant_id: 'superca')
+        @identifier.update(pub_state: 'unpublished')
+        @resource.update(tenant_id: 'superca', meta_view: false, file_view: false)
         @user2 = StashEngine::User.create(first_name: 'Gorgonzola', last_name: 'Travesty', tenant_id: user.tenant_id, role: 'admin')
-        @curation_activities[2].destroy
         expect(@resource.may_view?(ui_user: @user2)).to be_falsey
       end
 
       it 'allows superuser to view anything' do
-        @resource.update(tenant_id: 'superca')
+        @identifier.update(pub_state: 'unpublished')
+        @resource.update(tenant_id: 'superca', meta_view: false, file_view: false)
         @user2 = StashEngine::User.create(first_name: 'Gorgonzola', last_name: 'Travesty', tenant_id: user.tenant_id, role: 'superuser')
-        @curation_activities[2].destroy
         expect(@resource.may_view?(ui_user: @user2)).to be_truthy
       end
     end
@@ -347,51 +335,37 @@ module StashEngine
     describe :files_published? do
 
       before(:each) do
-        @resource = Resource.create(user_id: user.id)
+        @identifier = Identifier.create(identifier: 'cat/dog', identifier_type: 'DOI', pub_state: nil)
+        @resource = Resource.create(user_id: user.id, identifier_id: @identifier.id, meta_view: true, file_view: false)
       end
 
       it 'defaults to false' do
         expect(@resource.files_published?).to eql(false)
       end
 
-      it 'returns true for expired embargoes' do
-        @resource.update(publication_date: Time.new - 1.year)
-        @resource.curation_activities << CurationActivity.new(status: 'embargoed')
-        @resource.reload
-        expect(@resource.files_published?).to eq(true)
-      end
-
-      it 'returns false for in-force embargoes' do
-        @resource.update(publication_date: Time.new + 1.year)
-        @resource.curation_activities << CurationActivity.new(status: 'embargoed')
+      it 'returns false for embargoes' do
+        @identifier.update(pub_state: 'embargoed')
         @resource.reload
         expect(@resource.files_published?).to eq(false)
       end
 
       it 'returns true for published status' do
-        @resource.update(publication_date: Time.new - 1.day)
-        @resource.curation_activities << CurationActivity.new(status: 'published')
+        @identifier.update(pub_state: 'published')
+        @resource.update(file_view: true)
         @resource.reload
         expect(@resource.files_published?).to eq(true)
       end
 
-      it 'returns false for embargoes with no publication_date' do
-        @resource.update(publication_date: nil)
-        @resource.curation_activities << CurationActivity.new(status: 'embargoed')
+      it 'returns false for unpublished status' do
+        @identifier.update(pub_state: 'unpublished')
         @resource.reload
         expect(@resource.files_published?).to eq(false)
       end
 
-      it 'returns false for other random status' do
-        @resource.curation_activities << CurationActivity.new(status: 'curation')
-        @resource.reload
-        expect(@resource.files_published?).to eq(false)
-      end
-
-      it 'returns false for other random status with a publication_date' do
-        # This scenario should technically never happen
-        @resource.update(publication_date: Time.new - 1.day)
-        @resource.curation_activities << CurationActivity.new(status: 'curation')
+      it 'returns false for other random status with file_view true' do
+        # This scenario should probably not happen, but object status can override
+        @identifier.update(pub_state: 'unpublished')
+        @resource.update(file_view: true)
         @resource.reload
         expect(@resource.files_published?).to eq(false)
       end
@@ -400,7 +374,8 @@ module StashEngine
     describe :metadata_published? do
 
       before(:each) do
-        @resource = Resource.create(user_id: user.id)
+        @identifier = Identifier.create(identifier: 'cat/dog', identifier_type: 'DOI', pub_state: nil)
+        @resource = Resource.create(user_id: user.id, identifier_id: @identifier.id, meta_view: false, file_view: false)
       end
 
       it 'defaults to false' do
@@ -408,20 +383,22 @@ module StashEngine
       end
 
       it 'returns true for embargoed' do
-        @resource.update(publication_date: Time.new + 1.year)
-        @resource.curation_activities << CurationActivity.new(status: 'embargoed')
+        @identifier.update(pub_state: 'embargoed')
+        @resource.update(meta_view: true)
         @resource.reload
         expect(@resource.metadata_published?).to eq(true)
       end
 
       it 'returns true for published' do
-        @resource.curation_activities << CurationActivity.new(status: 'published')
+        @identifier.update(pub_state: 'published')
+        @resource.update(meta_view: true)
         @resource.reload
         expect(@resource.metadata_published?).to eq(true)
       end
 
       it 'returns false for other random status' do
-        @resource.curation_activities << CurationActivity.new(status: 'curation')
+        @identifier.update(pub_state: 'unpublished')
+        @resource.update(meta_view: true)
         @resource.reload
         expect(@resource.metadata_published?).to eq(false)
       end
