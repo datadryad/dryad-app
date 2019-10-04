@@ -489,7 +489,7 @@ module StashEngine
     # rubocop:disable Metrics/CyclomaticComplexity
     def may_download?(ui_user: nil) # doing this to avoid collision with the association called user
       return false unless current_resource_state&.resource_state == 'submitted' # is available in Merritt
-      return true if files_published? # curation state of public
+      return true if files_published? # published and this one available for download
       return false if ui_user.blank? # the rest of the cases require users
       return true if ui_user.id == user_id || ui_user.role == 'superuser' || (ui_user.role == 'admin' && ui_user.tenant_id == tenant_id)
       false # nope. Not sure if it would ever get here, though
@@ -554,12 +554,12 @@ module StashEngine
     # -----------------------------------------------------------
     # Publication
     def files_published?
-      identifier.pub_state == 'published'
+      identifier&.pub_state == 'published' && file_view == true
     end
 
     # Metadata is published when the curator sets the status to published or embargoed
     def metadata_published?
-      current_curation_activity.present? && (current_curation_activity.published? || current_curation_activity.embargoed?)
+      %w[published embargoed].include?(identifier&.pub_state) && meta_view == true
     end
 
     # this is a query for the publication updating on a cron, but putting here so we can test the query more easily
