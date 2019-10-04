@@ -13,6 +13,7 @@ FactoryBot.define do
 
     # Make sure the latest_resource_id is updated
     after(:create) do |identifier|
+      identifier.shares = [build(:share, identifier_id: identifier.id)]
       identifier.latest_resource_id { identifier.resources.last.id } unless identifier.resources.empty?
     end
 
