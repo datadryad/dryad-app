@@ -30,8 +30,11 @@ module StashEngine
       end
 
       @fake_issn = 'bogus-issn-value'
-      int_datum = InternalDatum.new(identifier_id: @identifier.id, data_type: 'publicationISSN', value: @fake_issn)
-      int_datum.save!
+      int_datum_issn = InternalDatum.new(identifier_id: @identifier.id, data_type: 'publicationISSN', value: @fake_issn)
+      int_datum_issn.save!
+      @fake_manuscript_number = 'bogus-manuscript-number'
+      int_datum_manu = InternalDatum.new(identifier_id: @identifier.id, data_type: 'manuscriptNumber', value: @fake_manuscript_number)
+      int_datum_manu.save!
       @identifier.reload
 
       WebMock.disable_net_connect!
@@ -342,6 +345,22 @@ module StashEngine
     describe '#publication_issn' do
       it 'gets publication_issn through convenience method' do
         expect(@identifier.publication_issn).to eql(@fake_issn)
+      end
+    end
+
+    describe '#manuscript_number' do
+      it 'gets manuscript_number through convenience method' do
+        expect(@identifier.manuscript_number).to eql(@fake_manuscript_number)
+      end
+    end
+
+    describe '#publication_article_doi' do
+      it 'gets publication_article_doi through convenience method' do
+        @fake_article_doi = 'http://doi.org/10.1234/bogus-doi'
+        allow_any_instance_of(Resource).to receive(:related_identifiers).and_return([OpenStruct.new(related_identifier: @fake_article_doi,
+                                                                                                    related_identifier_type: 'doi',
+                                                                                                    relation_type: 'issupplementto')])
+        expect(@identifier.publication_article_doi).to eql(@fake_article_doi)
       end
     end
 
