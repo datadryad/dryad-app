@@ -18,12 +18,12 @@ module LinkOut
     attr_reader :links_file
 
     def initialize
-      @pubmed_api = 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi'
-      @pubmed_api_query_prefix = 'db=pubmed&term='
-      @pubmed_api_query_suffix = '[doi]'
-
       @ftp = APP_CONFIG.link_out.pubmed
       @root_url = root_url_ssl
+
+      @pubmed_api = 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi'
+      @pubmed_api_query_prefix = 'db=pubmed&term='
+      @pubmed_api_query_suffix = "[doi]&api_key=#{@ftp.api_key}"
 
       @schema = 'https://www.ncbi.nlm.nih.gov/projects/linkout/doc/LinkOut.dtd'
       @links_file = 'pubmedlinkout.xml'
