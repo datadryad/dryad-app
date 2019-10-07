@@ -100,3 +100,4 @@ module StashEngine
 
   end
 end
+# rubocop:enable Metrics/BlockLength
