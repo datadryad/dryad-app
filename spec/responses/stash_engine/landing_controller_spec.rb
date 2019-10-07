@@ -31,7 +31,7 @@ module StashEngine
 
     it 'creates basic_dataset that is valid with required metadata with factory bot' do
       expect(@resource.identifier).to eq(@identifier)
-      expect(@resource.authors).to have(2).items
+      expect(@resource.authors.count.positive?).to eq(true)
       expect(@resource.descriptions).to have(1).items
       expect(@resource.authors.first.affiliations).to have(1).items
       expect(@resource.current_resource_state.resource_state).to eq('submitted')
@@ -46,6 +46,7 @@ module StashEngine
       @identifier.reload
       expect(@identifier.resources).to have(2).items
       res = @identifier.resources.last
+      @identifier.reload
       expect(res.stash_version.version).to eq(2)
       expect(res.stash_version.merritt_version).to eq(2)
       # this file was copied over from a previous version and isn't a new file
@@ -69,6 +70,7 @@ module StashEngine
       duplicate_resource!(resource: @identifier.resources.last)
       res2 = @identifier.resources.last
       res2.update(title: 'Treecats and friends')
+      @identifier.reload
 
       get "/stash/dataset/#{@identifier}"
       expect(response.body).to include(res.title)
@@ -88,6 +90,7 @@ module StashEngine
       res2 = @identifier.resources.last
       res2.update(title: 'Treecats and friends')
       create(:file_upload, resource_id: res2.id, file_state: 'created')
+      @identifier.reload
 
       get "/stash/dataset/#{@identifier}"
       expect(response.body).to include(res.title)
