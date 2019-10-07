@@ -69,14 +69,14 @@ module MigrationImport
     def disable_callback_methods
       StashEngine::Resource.skip_callback(:create, :after, :init_state_and_version)
       StashEngine::Resource.skip_callback(:create, :after, :update_stash_identifier_last_resource)
-      StashEngine::Resource.skip_callback(:create, :after, :create_share)
+      # StashEngine::Resource.skip_callback(:create, :after, :create_share)
       StashEngine::Resource.skip_callback(:update, :after, :update_stash_identifier_last_resource)
     end
 
     def enable_callback_methods
       StashEngine::Resource.set_callback(:create, :after, :init_state_and_version)
       StashEngine::Resource.set_callback(:create, :after, :update_stash_identifier_last_resource)
-      StashEngine::Resource.set_callback(:create, :after, :create_share)
+      # StashEngine::Resource.set_callback(:create, :after, :create_share)
       StashEngine::Resource.set_callback(:update, :after, :update_stash_identifier_last_resource)
     end
 
@@ -149,7 +149,7 @@ module MigrationImport
         my_hash = @hash[:share].slice('secret_id', 'created_at', 'updated_at').merge(resource_id: @ar_resource.id)
         StashEngine::Share.create(my_hash)
       else
-        @ar_resource.create_share # in the new system, there is always a share
+        # @ar_resource.create_share # in the new system, there is always a share
       end
     end
 
