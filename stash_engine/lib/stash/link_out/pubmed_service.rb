@@ -143,7 +143,7 @@ module LinkOut
     # The PubMed Linkout system though wants it to be unencoded `&` which technically makes the
     # XML document invalid so we need to swap the `&` for `&amp;` after doing our Nokogiri `doc.to_xml`
     def unencode_callback_ampersand(text)
-      text.gsub(/query\=%22&amp;lo\.doi;%22/, 'query=%22&lo.doi;%22')
+      text.gsub(/query\=&amp;lo\.doi;/, 'query=2&lo.doi;')
     end
 
   end
