@@ -145,12 +145,11 @@ module MigrationImport
     end
 
     def add_shares
-      if @hash[:share].present? && @hash[:share][:secret_id].present?
-        my_hash = @hash[:share].slice('secret_id', 'created_at', 'updated_at').merge(resource_id: @ar_resource.id)
-        StashEngine::Share.create(my_hash)
-      else
-        # @ar_resource.create_share # in the new system, there is always a share
-      end
+      return unless @hash[:share].present? && @hash[:share][:secret_id].present?
+      my_hash = @hash[:share].slice('secret_id', 'created_at', 'updated_at').merge(resource_id: @ar_resource.id)
+      StashEngine::Share.create(my_hash)
+      # else
+      # @ar_resource.create_share # in the new system, there is always a share
     end
 
     def add_submission_logs
