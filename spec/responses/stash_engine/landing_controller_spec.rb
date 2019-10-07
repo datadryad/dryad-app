@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 require 'byebug'
 
 # see https://relishapp.com/rspec/rspec-rails/v/3-8/docs/request-specs/request-spec
-# rubocop:disable Metrics/ModuleLength, Metrics/BlockLength
+# rubocop:disable Metrics/BlockLength
 module StashEngine
   RSpec.describe LandingController, type: :request do
 
@@ -52,34 +54,34 @@ module StashEngine
     end
 
     it "doesn't show a submitted but not embargoed/published version of the landing page" do
-      get "/stash/dataset/#{@identifier.to_s}"
+      get "/stash/dataset/#{@identifier}"
       expect(response).to have_http_status(:not_found)
     end
 
-    it "shows version of the dataset marked for metadata view" do
+    it 'shows version of the dataset marked for metadata view' do
       # make first look embargoed and second isn't yet
       res = @identifier.resources.first
       res.update(meta_view: true, publication_date: Time.new + 1.day)
       @identifier.update(pub_state: 'embargoed')
-      create(:curation_activity, status: 'embargoed', user_id: @user.id, resource_id: res.id )
+      create(:curation_activity, status: 'embargoed', user_id: @user.id, resource_id: res.id)
 
       # 2nd resource not seen yet
       duplicate_resource!(resource: @identifier.resources.last)
       res2 = @identifier.resources.last
       res2.update(title: 'Treecats and friends')
 
-      get "/stash/dataset/#{@identifier.to_s}"
+      get "/stash/dataset/#{@identifier}"
       expect(response.body).to include(res.title)
       expect(response.body).not_to include(res2.title)
       expect(response.body).to include('This dataset is embargoed')
     end
 
-    it "shows version of the dataset marked as published" do
+    it 'shows version of the dataset marked as published' do
       # make first look embargoed and second isn't yet
       res = @identifier.resources.first
       res.update(meta_view: true, file_view: true, publication_date: Time.new)
       @identifier.update(pub_state: 'published')
-      create(:curation_activity, status: 'published', user_id: @user.id, resource_id: res.id )
+      create(:curation_activity, status: 'published', user_id: @user.id, resource_id: res.id)
 
       # 2nd resource not seen yet
       duplicate_resource!(resource: @identifier.resources.last)
@@ -87,7 +89,7 @@ module StashEngine
       res2.update(title: 'Treecats and friends')
       create(:file_upload, resource_id: res2.id, file_state: 'created')
 
-      get "/stash/dataset/#{@identifier.to_s}"
+      get "/stash/dataset/#{@identifier}"
       expect(response.body).to include(res.title)
       expect(response.body).not_to include(res2.title)
       expect(response.body).not_to include('This dataset is embargoed')
