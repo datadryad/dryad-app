@@ -18,12 +18,12 @@ module LinkOut
     attr_reader :links_file
 
     def initialize
-      @pubmed_api = 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi'
-      @pubmed_api_query_prefix = 'db=pubmed&term='
-      @pubmed_api_query_suffix = '[doi]'
-
       @ftp = APP_CONFIG.link_out.pubmed
       @root_url = root_url_ssl
+
+      @pubmed_api = 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi'
+      @pubmed_api_query_prefix = 'db=pubmed&term='
+      @pubmed_api_query_suffix = "[doi]&api_key=#{@ftp.api_key}"
 
       @schema = 'https://www.ncbi.nlm.nih.gov/projects/linkout/doc/LinkOut.dtd'
       @links_file = 'pubmedlinkout.xml'
@@ -143,7 +143,7 @@ module LinkOut
     # The PubMed Linkout system though wants it to be unencoded `&` which technically makes the
     # XML document invalid so we need to swap the `&` for `&amp;` after doing our Nokogiri `doc.to_xml`
     def unencode_callback_ampersand(text)
-      text.gsub(/query\=%22&amp;lo\.doi;%22/, 'query=%22&lo.doi;%22')
+      text.gsub(/query\=&amp;lo\.doi;/, 'query=&lo.doi;')
     end
 
   end

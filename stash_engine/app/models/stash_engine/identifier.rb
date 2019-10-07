@@ -235,6 +235,20 @@ module StashEngine
       internal_data.find_by(data_type: 'publicationISSN')&.value
     end
 
+    def manuscript_number
+      internal_data.find_by(data_type: 'manuscriptNumber')&.value
+    end
+
+    def publication_article_doi
+      doi = nil
+      resources.each do |res|
+        dois = res.related_identifiers&.select { |id| id.related_identifier_type == 'doi' && id.relation_type == 'issupplementto' }
+        doi = dois&.first&.related_identifier
+        break unless doi.nil?
+      end
+      doi
+    end
+
     def publication_name
       publication_data('fullName')
     end
@@ -248,6 +262,10 @@ module StashEngine
 
     def journal_customer_id
       publication_data('stripeCustomerID')
+    end
+
+    def journal_notify_contacts
+      publication_data('notifyContacts')
     end
 
     def allow_review?
