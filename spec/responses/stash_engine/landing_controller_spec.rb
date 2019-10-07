@@ -48,7 +48,52 @@ module StashEngine
       expect(res.stash_version.merritt_version).to eq(2)
       # this file was copied over from a previous version and isn't a new file
       expect(res.file_uploads.first.file_state).to eq('copied')
-      expect(res.file_uplaods.first.upload_file_name).to eq(@resource.file_uploads.first.upload_file_name)
+      expect(res.file_uploads.first.upload_file_name).to eq(@resource.file_uploads.first.upload_file_name)
+    end
+
+    it "doesn't show a submitted but not embargoed/published version of the landing page" do
+      get "/stash/dataset/#{@identifier.to_s}"
+      expect(response).to have_http_status(:not_found)
+    end
+
+    it "shows version of the dataset marked for metadata view" do
+      # make first look embargoed and second isn't yet
+      res = @identifier.resources.first
+      res.update(meta_view: true, publication_date: Time.new + 1.day)
+      @identifier.update(pub_state: 'embargoed')
+      create(:curation_activity, status: 'embargoed', user_id: @user.id, resource_id: res.id )
+
+      # 2nd resource not seen yet
+      duplicate_resource!(resource: @identifier.resources.last)
+      res2 = @identifier.resources.last
+      res2.update(title: 'Treecats and friends')
+
+      get "/stash/dataset/#{@identifier.to_s}"
+      expect(response.body).to include(res.title)
+      expect(response.body).not_to include(res2.title)
+      expect(response.body).to include('This dataset is embargoed')
+    end
+
+    it "shows version of the dataset marked as published" do
+      # make first look embargoed and second isn't yet
+      res = @identifier.resources.first
+      res.update(meta_view: true, file_view: true, publication_date: Time.new)
+      @identifier.update(pub_state: 'published')
+      create(:curation_activity, status: 'published', user_id: @user.id, resource_id: res.id )
+
+      # 2nd resource not seen yet
+      duplicate_resource!(resource: @identifier.resources.last)
+      res2 = @identifier.resources.last
+      res2.update(title: 'Treecats and friends')
+      create(:file_upload, resource_id: res2.id, file_state: 'created')
+
+      get "/stash/dataset/#{@identifier.to_s}"
+      expect(response.body).to include(res.title)
+      expect(response.body).not_to include(res2.title)
+      expect(response.body).not_to include('This dataset is embargoed')
+      expect(response.body).to include(res.file_uploads.first.upload_file_name)
+      # shows old file, but not new file that isn't published yet
+      expect(response.body).not_to include(res2.file_uploads.where(file_state: 'created').first.upload_file_name)
     end
 
   end
