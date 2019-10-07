@@ -36,7 +36,7 @@ module LinkOut
       return nil unless pmid.present?
       hash = {}
       StashEngine::ExternalReference.sources.each do |db|
-        query = "dbfrom=pubmed&db=#{db}&id=#{pmid}"
+        query = "dbfrom=pubmed&db=#{db}&id=#{pmid}&api_key=#{@ftp.api_key}"
         genbank_ids = extract_genbank_ids(get_xml_from_api(@genbank_api, query))
         hash[db] = genbank_ids unless genbank_ids.empty?
       end
