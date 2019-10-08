@@ -61,7 +61,7 @@ end
 StashEngine.app.payments = StashEngine.app.payments.to_ostruct
 
 # Note: Even if we're not doing any database work, ActiveRecord callbacks will still raise warnings
-ActiveRecord::Base.raise_in_transactional_callbacks = true
+# ActiveRecord::Base.raise_in_transactional_callbacks = true
 
 # ------------------------------------------------------------
 # Mocks
