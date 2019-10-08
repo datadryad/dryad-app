@@ -647,9 +647,7 @@
 </p>
 
 <h3 id="indemnity">9.4 Indemnity</h3>
-<p>Except as otherwise stated in a Membership Organization Agreement: (i) each Submitter agrees to indemnify and hold harmless the Dryad Parties against any Claims or threatened Claims (including, without limitation, reasonable attorney’s fees) arising out of or related to Content Submitted by the Submitter or a breach of the Prohibited Uses set forth in Section 7.2; (ii) Each User agrees to indemnify and hold harmless the Dryad Parties against any Claims or threatened Claims(including, without limitation, reasonable attorney’s fees)   arising out of or related to a breach of the Prohibited Uses set forth in <a href="#prohibited-use">Section 7.2</a>.</p> 
-<p>Each Submitter agrees to indemnify and hold harmless the Dryad Parties against any Claims or threatened Claims (including, without limitation, reasonable attorneys' fees) arising out of or related to Content Submitted by the Submitter or a breach of the Prohibited Uses set forth in <a href="#prohibited-use">Section 7.2</a>.</p>
-<p>Each User agrees to indemnify and hold harmless the Dryad Parties against any Claims or threatened Claims arising out of or related beach of the Prohibited Uses set forth in <a href="#prohibited-use">Section 7.2</a>.</p>
+<p>Except as otherwise stated in a Membership Organization Agreement: (i) each Submitter agrees to indemnify and hold harmless the Dryad Parties against any Claims or threatened Claims (including, without limitation, reasonable attorney’s fees) arising out of or related to Content Submitted by the Submitter or a breach of the Prohibited Uses set forth in <a href="#prohibited-use">Section 7.2</a>; (ii) Each User agrees to indemnify and hold harmless the Dryad Parties against any Claims or threatened Claims(including, without limitation, reasonable attorney’s fees) arising out of or related to a breach of the Prohibited Uses set forth in <a href="#prohibited-use">Section 7.2</a>.</p> 
 
 
 <h3 id="notices">9.5 Notices</h3>

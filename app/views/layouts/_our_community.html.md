@@ -1,6 +1,6 @@
 <h1>Our Community</h1>
 
-<strong>Join the Dryad community by contacting <a href=mailto:director@datadryad.org>director@datadryad.org</a>!</strong>
+<strong>Join our growing Dryad institutional member community by contacting <a href=mailto:director@datadryad.org>director@datadryad.org</a>!</strong>
 
 <ul>
 <li><a href="#why-join">Why join Dryad?</a></li>
@@ -47,6 +47,27 @@ Upgrades and enhanced system functions will be ongoing as a way to continually i
 
 <h2>Learn more about Institutional Membership<a name="institutional"></a></h2>
 
+<b> Thank you to our growing list of institutional members who support their researchers publishing in Dryad </b>
+
+-  California State University, East Bay
+-  King Abdullah University of Science and Technology
+-  Montana State University
+-  Northern State University
+-  University of California, California Digital Library
+-  Lawrence Berkeley National Lab
+-  UC Berkeley
+-  UC Davis
+-  UC Irvine
+-  UCLA
+-  UC Merced
+-  UC Riverside
+-  UC San Francisco
+-  UC San Diego
+-  UC Santa Cruz
+-  University of Illinois, Urbana-Champagne
+-  University of New Mexico
+-  Yale University
+
 <p>Any research institution that supports the educational, scientific, and charitable mission of Dryad is eligible to become a member.</p>
 
 <h3>Institutional Membership benefits include:</h3>
@@ -79,7 +100,7 @@ Dryad is open to working with institutions on an individual basis to develop cus
 
 <h4>Suggested Examples for Determining Size</h4>
 <ul>
-<li><strong>Level III</strong>: RI or FTE +10K FTE or +$300M in research grant funding.
+<li><strong>Level III</strong>: RI or FTE +10K or +$300M in research grant funding.
 <li><strong>Level II</strong>: R2 or FTE 5K - 10K or $50M - $300M in research grant funding.
 <li><strong>Level I</strong>: R3 or FTE under 5K or less than $50M in research grant funding.
 </ul>
@@ -91,6 +112,26 @@ Dryad is open to working with institutions on an individual basis to develop cus
 ---
 
 <h2>Learn more about Publisher Membership (including journals and scholarly societies)<a name="publisher"></a></h2>
+
+<b> We are proud of our publisher membership community that supports data availability and Dryad </b>
+
+- American Academy for the Advancement of Science
+- American Genetic Association
+- American Society of Naturalists
+- Association for Tropical Biology and Conservation
+- Botanical Society of America
+- British Ecological Society
+- Cambridge University Press
+- European Society for Evolutionary Biology
+- German National Library of Medicine
+- Nordic Society Oikos
+- Oxford University Press
+- Society for the Study of Evolution
+- Society of Systematic Biologists
+- The Genetics Society
+- The Royal Society
+- US Fish and Wildlife Service
+- Wiley
 
 <p>Individual journals, publishers, and scholarly societies can be part of the Dryad community through a stand-alone publisher membership, as a sponsor of data publishing fees, through <a href="#submission-integration">submission integration</a>, or a combination of these. Publisher support for Dryad is essential in allowing us to provide open data infrastructure and simple workflows for your authors. </p>
 

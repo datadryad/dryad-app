@@ -26,7 +26,7 @@ RSpec.feature 'Add Geolocation to Dataset', type: :feature do
 
     context 'points' do
 
-      it 'adds by lat/long' do
+      xit 'adds by lat/long' do
         fill_in 'geolocation_point[latitude]', with: @n_lat
         fill_in 'geolocation_point[longitude]', with: @e_lng
         click_button 'add_geo_point'
@@ -44,7 +44,7 @@ RSpec.feature 'Add Geolocation to Dataset', type: :feature do
 
     context 'boxes' do
 
-      it 'adds by lat/long' do
+      xit 'adds by lat/long' do
         click_button 'Bounding Box'
         fill_in 'geolocation_box[sw_latitude]', with: @s_lat
         fill_in 'geolocation_box[sw_longitude]', with: @w_lng
@@ -69,7 +69,7 @@ RSpec.feature 'Add Geolocation to Dataset', type: :feature do
 
     context 'google_geocoding' do
 
-      it 'adds a place by name' do
+      xit 'adds a place by name' do
         item = find('div.leaflet-control-geosearch input.glass')
         item.set('Oakland, CA, USA')
         item.send_keys(:return)
