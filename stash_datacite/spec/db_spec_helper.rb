@@ -42,6 +42,16 @@ RSpec.configure do |config|
   config.before(:suite) do
     run_migrations!
 
+    # rubocop:disable Lint/HandleExceptions
+    # had problems in tests with the columns being out of date, but only in a new database such as on Travis, ick. OUr nasty, janky test setup.
+    ActiveRecord::Base.descendants.each do |model|
+      begin
+        model.connection.schema_cache.clear!
+        model.reset_column_information
+      rescue NameError; end
+    end
+    # rubocop:enable Lint/HandleExceptions
+
     DatabaseCleaner.strategy = :deletion
     puts 'Clearing test database'.colorize(:yellow)
     DatabaseCleaner.clean
