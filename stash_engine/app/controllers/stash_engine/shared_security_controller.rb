@@ -4,7 +4,7 @@ module StashEngine
     def self.included(c)
       c.helper_method \
         %i[
-          owner? admin?
+          owner? admin? superuser?
         ]
     end
 
@@ -52,12 +52,16 @@ module StashEngine
     end
 
     # these owner/admin need to be in controller since they address the current_user from session, not easily available from model
-    def owner?
-      resource.user_id == current_user.id
+    def owner?(resource:)
+      current_user.present? && resource&.user_id == current_user.id
     end
 
-    def admin?
-      (current_user.tenant_id == resource.tenant_id && current_user.role == 'admin')
+    def admin?(resource:)
+      current_user.present? && (current_user.tenant_id == resource.tenant_id && current_user.role == 'admin')
+    end
+
+    def superuser?
+      current_user.present? && current_user.superuser?
     end
 
     def ajax_blocked
