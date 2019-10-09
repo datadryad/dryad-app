@@ -26,12 +26,12 @@ RSpec.describe MigrationImport do
       @identifier = StashEngine::Identifier.all.last
     end
 
-    it 'imports a sample dataset -- identifier set' do
+    xit 'imports a sample dataset -- identifier set' do
       expect(@identifier.identifier).to eq('10.7272/Q6RX997G')
       expect(@identifier.storage_size).to eq(5_168_709)
     end
 
-    it 'has resources' do
+    xit 'has resources' do
       expect(@identifier.resources.count).to eq(2)
       expect(@identifier.resources.first.slice('created_at', 'has_geolocation', 'download_uri',
                                                'update_uri', 'title', 'publication_date', 'accepted_agreement',
@@ -57,7 +57,7 @@ RSpec.describe MigrationImport do
                                                )
     end
 
-    it 'has subsidiary objects and some spot checks of objects off the resource' do
+    xit 'has subsidiary objects and some spot checks of objects off the resource' do
       res = @identifier.resources.first
       expect(res.authors.count).to eq(2)
       expect(res.file_uploads.count).to eq(2)
