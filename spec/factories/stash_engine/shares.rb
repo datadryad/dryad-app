@@ -1,13 +1,9 @@
 FactoryBot.define do
 
   factory :share, class: StashEngine::Share do
-    resource
+    identifier
 
     secret_id { SecureRandom.uuid }
-
-    transient do
-      tenant { 'dryad' }
-    end
   end
 
 end
