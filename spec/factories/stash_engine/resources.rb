@@ -21,7 +21,6 @@ FactoryBot.define do
 
     trait :submitted do
       after(:create) do |resource|
-        resource.share = build(:share, resource_id: resource.id, tenant: resource.tenant_id)
         resource.current_state = 'submitted'
         resource.save
         resource.reload
