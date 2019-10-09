@@ -1,5 +1,9 @@
 <div>
-  <p>By choosing this option, your dataset will be private during your related article's peer review period. You will have access to a private dataset download URL to be shared with collaborators or the journal. Your dataset will not enter curation or be published. Because we may not have the status of your related article, the default for this period is six months. Please email <a href="mail_to:<%= @help_email %>"><%= @help_email %></a> or uncheck this box at any point if your dataset is ready to enter curation.</p>
+  <p>By choosing this option, your dataset will be private during your related article's peer review period. You will
+    have access to a private dataset download URL to be shared with collaborators or the journal. Your dataset will not
+    enter curation or be published. Because we may not have the status of your related article, the default for this
+    period is six months. Please email <a href="mail_to:<%= @help_email %>"><%= @help_email %></a> or uncheck this box
+    at any point if your dataset is ready to enter curation.</p>
 
   <div>
     <%= form_for @resource, url: stash_datacite.peer_review_path, remote: true, authenticity_token: true do |f| %>

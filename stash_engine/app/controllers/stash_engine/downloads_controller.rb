@@ -3,6 +3,7 @@ require 'stash/download/file'
 require 'stash/download/version'
 # require 'rest-client'
 
+# rubocop:disable Metrics/ClassLength
 module StashEngine
   class DownloadsController < ApplicationController
     before_action :setup_streaming
@@ -54,7 +55,7 @@ module StashEngine
       @shares = Share.where(secret_id: params[:id])
       raise ActionController::RoutingError, 'Not Found' if @shares.count < 1
 
-      @resource = @shares.first.resource
+      @resource = @shares.first.identifier&.last_submitted_resource
       if !@resource.files_published?
         @version_streamer.download(resource: @resource) do
           redirect_to private_async_form_path(id: @resource.identifier_str, big: 'showme', secret_id: params[:id]) # for async
@@ -69,7 +70,7 @@ module StashEngine
     # anymore because of curation so we create a new page to host the form
     def private_async_form
       @share = Share.where(secret_id: params[:secret_id])&.first
-      @resource = @share.resource
+      @resource = @share.resource.identifier&.last_submitted_resource
     end
 
     def file_stream
@@ -90,7 +91,8 @@ module StashEngine
     end
 
     def can_download?
-      @resource.may_download?(ui_user: current_user) || (params[:secret_id] == @resource.share.secret_id)
+      @resource.may_download?(ui_user: current_user) ||
+          (!params[:secret_id].blank? && @resource&.identifier&.shares&.where(secret_id: params[:secret_id])&.count&.positive?)
     end
 
     def redirect_to_public
@@ -134,3 +136,4 @@ module StashEngine
 
   end
 end
+# rubocop:enable Metrics/ClassLength

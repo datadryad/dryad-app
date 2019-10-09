@@ -8,10 +8,14 @@ module StashEngine
     has_one :counter_stat, class_name: 'StashEngine::CounterStat', dependent: :destroy
     has_many :internal_data, class_name: 'StashEngine::InternalDatum', dependent: :destroy
     has_many :external_references, class_name: 'StashEngine::ExternalReference', dependent: :destroy
+    # there are places we may have more than one from our old versions
+    has_many :shares, class_name: 'StashEngine::Share', dependent: :destroy
     has_one :latest_resource,
             class_name: 'StashEngine::Resource',
             primary_key: 'latest_resource_id',
             foreign_key: 'id'
+
+    after_create :create_share
 
     # See https://medium.com/rubyinside/active-records-queries-tricks-2546181a98dd for some good tricks
     # returns the identifiers that have resources with that *latest* curation state you specify (for any of the resources)
@@ -22,14 +26,14 @@ module StashEngine
     end
 
     scope :publicly_viewable, -> do
-      with_visibility(states: %w[published embargoed])
+      where(pub_state: %w[published embargoed])
     end
 
     scope :user_viewable, ->(user: nil) do
       if user.nil?
         publicly_viewable
       elsif user.superuser?
-        Identifier.all
+        all
       elsif user.role == 'admin'
         with_visibility(states: %w[published embargoed], tenant_id: user.tenant_id)
       else
@@ -98,15 +102,17 @@ module StashEngine
 
     # these are items that are embargoed or published and can show metadata
     def latest_resource_with_public_metadata
-      return nil if resources&.last&.curation_activities&.last&.status == 'withdrawn'
+      return nil if pub_state == 'withdrawn'
       resources.with_public_metadata.by_version_desc.first
     end
 
     # these are resources that the user can look at because of permissions, some user roles can see non-published others, not
     def latest_viewable_resource(user: nil)
       return latest_resource_with_public_metadata if user.nil?
+
       lr = latest_resource
-      return lr if user.id == lr.user_id || user.superuser? || (user.role == 'admin' && user.tenant_id == lr.tenant_id)
+      return lr if user.id == lr&.user_id || user.superuser? || (user.role == 'admin' && user.tenant_id == lr&.tenant_id)
+
       latest_resource_with_public_metadata
     end
 
@@ -116,9 +122,13 @@ module StashEngine
 
     def latest_downloadable_resource(user: nil)
       return latest_resource_with_public_download if user.nil?
-      lr = latest_resource
-      return lr if user.id == lr.user_id || user.superuser? || (user.role == 'admin' && user.tenant_id == lr.tenant_id)
+      lr = resources.submitted_only.by_version_desc.first
+      return lr if user.id == lr&.user_id || user.superuser? || (user.role == 'admin' && user.tenant_id == lr&.tenant_id)
       latest_resource_with_public_download
+    end
+
+    def may_download?(user: nil)
+      !latest_downloadable_resource(user: user).blank?
     end
 
     def last_submitted_version_number
@@ -350,6 +360,11 @@ module StashEngine
       return true if Resource.where(identifier_id: -id).count.positive? || resources_with_file_changes.count.zero?
 
       false
+    end
+
+    # creates a share for this resource if not present
+    def create_share
+      StashEngine::Share.create(identifier_id: id) if shares.blank?
     end
 
     private
