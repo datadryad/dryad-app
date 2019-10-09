@@ -17,6 +17,16 @@ ActiveRecord::Migration.verbose = false
 puts "Executing migrations from #{migration_paths.join(':')}"
 ActiveRecord::Migrator.up migration_paths
 
+# rubocop:disable Lint/HandleExceptions
+# had problems in tests with the columns being out of date, but only in a new database such as on Travis, ick. OUr nasty, janky test setup.
+ActiveRecord::Base.descendants.each do |model|
+  begin
+    model.connection.schema_cache.clear!
+    model.reset_column_information
+  rescue NameError; end
+end
+# rubocop:enable Lint/HandleExceptions
+
 RSpec.configure do |config|
   config.before(:suite) do
     DatabaseCleaner.strategy = :deletion

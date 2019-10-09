@@ -2,16 +2,11 @@ require 'securerandom'
 
 module StashEngine
   class Share < ActiveRecord::Base
-    belongs_to :resource, class_name: 'StashEngine::Resource'
+    belongs_to :identifier, class_name: 'StashEngine::Identifier', foreign_key: 'identifier_id'
 
     before_create :generate_secret_id
 
-    def tenant
-      resource.tenant
-    end
-
     def sharing_link
-      return nil unless tenant
       StashEngine::Engine.routes.url_helpers.share_url(protocol: 'https', id: secret_id)
     end
 

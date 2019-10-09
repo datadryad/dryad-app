@@ -13,7 +13,6 @@ module StashEngine
     has_many :edit_histories, class_name: 'StashEngine::EditHistory'
     has_one :stash_version, class_name: 'StashEngine::Version', dependent: :destroy
     belongs_to :identifier, class_name: 'StashEngine::Identifier', foreign_key: 'identifier_id'
-    has_one :share, class_name: 'StashEngine::Share', dependent: :destroy
     belongs_to :user, class_name: 'StashEngine::User'
     has_one :current_resource_state,
             class_name: 'StashEngine::ResourceState',
@@ -36,6 +35,9 @@ module StashEngine
         # the resource state, but instead it keeps the reference to the old one, so we need to clear it and
         # let init_version do its job
         new_resource.current_resource_state_id = nil
+        # do not mark these resources for public view until they've been re-curated and embargoed/published again
+        new_resource.meta_view = false
+        new_resource.file_view = false
 
         new_resource.file_uploads.each do |file|
           raise "Expected #{new_resource.id}, was #{file.resource_id}" unless file.resource_id == new_resource.id
@@ -81,7 +83,7 @@ module StashEngine
       Identifier.destroy(identifier_id)
     end
 
-    after_create :init_state_and_version, :update_stash_identifier_last_resource, :create_share
+    after_create :init_state_and_version, :update_stash_identifier_last_resource
     # for some reason, after_create not working, so had to add after_update
     after_update :update_stash_identifier_last_resource
     after_destroy :remove_identifier_with_no_resources, :update_stash_identifier_last_resource
@@ -93,11 +95,6 @@ module StashEngine
       init_state unless current_resource_state_id
       init_curation_status if curation_activities.empty?
       save
-    end
-
-    # creates a share for this resource if not present
-    def create_share
-      StashEngine::Share.create(resource_id: id) unless share.present?
     end
 
     # ------------------------------------------------------------
@@ -112,6 +109,9 @@ module StashEngine
     end)
     scope :submitted, (-> do
       joins(:current_resource_state).where(stash_engine_resource_states: { resource_state:  %i[submitted processing] })
+    end)
+    scope :submitted_only, (-> do
+      joins(:current_resource_state).where(stash_engine_resource_states: { resource_state:  %i[submitted] })
     end)
     scope :processing, (-> do
       joins(:current_resource_state).where(stash_engine_resource_states: { resource_state:  [:processing] })
@@ -137,15 +137,12 @@ module StashEngine
     end
 
     scope :with_public_metadata, -> do
-      joins(:curation_activities).where(stash_engine_curation_activities: { id: latest_curation_activity.values,
-                                                                            status: %w[published embargoed] })
+      where(meta_view: true)
     end
 
     scope :files_published, -> do
       # this also depends on the publication updater to update statuses to published daily
-      joins(:curation_activities)
-        .where(stash_engine_curation_activities: { id: latest_curation_activity.values,
-                                                   status: %w[published] })
+      where(file_view: true)
     end
 
     # this is METADATA published
@@ -491,8 +488,8 @@ module StashEngine
     # Note: the special download links mean anyone with that link may download and this doesn't apply
     # rubocop:disable Metrics/CyclomaticComplexity
     def may_download?(ui_user: nil) # doing this to avoid collision with the association called user
-      return false unless current_resource_state&.resource_state == 'submitted' # merritt state available
-      return true if files_published? # curation state of public or embargoed and expired
+      return false unless current_resource_state&.resource_state == 'submitted' # is available in Merritt
+      return true if files_published? # published and this one available for download
       return false if ui_user.blank? # the rest of the cases require users
       return true if ui_user.id == user_id || ui_user.role == 'superuser' || (ui_user.role == 'admin' && ui_user.tenant_id == tenant_id)
       false # nope. Not sure if it would ever get here, though
@@ -556,14 +553,13 @@ module StashEngine
 
     # -----------------------------------------------------------
     # Publication
-    # Files are published when the publication date has been reached
     def files_published?
-      metadata_published? && publication_date.present? && Time.new.utc >= publication_date
+      identifier&.pub_state == 'published' && file_view == true
     end
 
     # Metadata is published when the curator sets the status to published or embargoed
     def metadata_published?
-      current_curation_activity.present? && (current_curation_activity.published? || current_curation_activity.embargoed?)
+      %w[published embargoed].include?(identifier&.pub_state) && meta_view == true
     end
 
     # this is a query for the publication updating on a cron, but putting here so we can test the query more easily
