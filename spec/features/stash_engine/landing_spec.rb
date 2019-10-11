@@ -1,6 +1,7 @@
 require 'rails_helper'
 require 'byebug'
 
+# rubocop:disable Metrics/BlockLength
 RSpec.feature 'Landing', type: :feature do
 
   include MerrittHelper
@@ -24,10 +25,10 @@ RSpec.feature 'Landing', type: :feature do
     create_basic_dataset!
   end
 
-  describe 'works correctly with the share fake landing page', :js => true do
+  describe 'works correctly with the share fake landing page', js: true do
     it 'shows popup on fake landing page for asych download share' do
       # creates an async download query that is asynchrounous (wait and email to download)
-      stub_request(:get, %r{merritt-fake.cdlib.org/async}).with(headers: { 'Accept'=>'*/*'}).to_return(status: 200)
+      stub_request(:get, %r{merritt-fake.cdlib.org/async}).with(headers: { 'Accept' => '*/*' }).to_return(status: 200)
       res = @identifier.resources.first
       res.update(meta_view: true, file_view: true, publication_date: Time.new)
       create(:curation_activity, status: 'curation', user_id: @user.id, resource_id: res.id)
@@ -36,3 +37,4 @@ RSpec.feature 'Landing', type: :feature do
     end
   end
 end
+# rubocop:enable Metrics/BlockLength
