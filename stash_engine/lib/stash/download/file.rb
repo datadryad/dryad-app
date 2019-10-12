@@ -51,7 +51,7 @@ module Stash
 
         # rack hijack takes a proc to run and in another thread so it frees web server thread for normal short requests
         cc.response.headers['rack.hijack'] = proc do |stream|
-          stream.autoclose = false
+          # stream.autoclose = false
           # stream.sync = true
 
           Thread.new do
@@ -63,7 +63,7 @@ module Stash
               client.connect_timeout = 7200
               client.keep_alive_timeout = 3600
               client.get_content(url) do |chunk|
-                stream << chunk #.force_encoding('UTF-8') # may be required for webrick
+                stream.write(chunk) #.force_encoding('UTF-8') # may be required for webrick
               end
             rescue StandardError => ex
               cc.logger.error("while downloading #{ex}")
