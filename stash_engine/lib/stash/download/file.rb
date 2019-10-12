@@ -65,8 +65,8 @@ module Stash
               client.get_content(url) do |chunk|
                 stream << chunk #.force_encoding('UTF-8') # may be required for webrick
               end
-            # rescue Error => ex
-            #   cc.logger.error("while downloading #{ex}")
+            rescue StandardError => ex
+              cc.logger.error("while downloading #{ex}")
             ensure
               stream.close
             end
