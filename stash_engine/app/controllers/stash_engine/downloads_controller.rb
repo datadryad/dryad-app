@@ -95,11 +95,11 @@ module StashEngine
 
         Thread.new do
           begin
-            http = HTTP.timeout(connect: 3000, read: 3000, write: 1500).timeout(3000)
+            http = HTTP.timeout(connect: 3000, read: 3000, write: 1500).timeout(7200)
             # .basic_auth(user: 'xxx', pass: 'xxx')
             response = http.get(url)
             response.body.each do |chunk|
-              stream.write(chunk.force_encoding("UTF-8"))
+              stream.write(chunk)
             end
           rescue HTTP::Error => ex
             logger.error("while streaming: #{ex}")
