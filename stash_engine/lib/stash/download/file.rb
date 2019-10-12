@@ -61,6 +61,7 @@ module Stash
               client.keep_alive_timeout = 3600
               client.get_content(url) do |chunk|
                 stream.write(chunk) # force_encoding('UTF-8') may be required for webrick
+                stream.flush
               end
             rescue Error => ex
               cc.logger.error("while downloading #{ex}")
