@@ -58,8 +58,8 @@ module Stash
                          .basic_auth(user: tenant.repository.username, pass: tenant.repository.password)
               response = http.get(url)
               response.body.each do |chunk|
-                # stream.write(chunk)
-                stream.write(chunk.force_encoding("UTF-8")) # I don't know why this is necessary, maybe only in webrick
+                stream.write(chunk)
+                # stream.write(chunk.force_encoding("UTF-8")) # I don't know why this is necessary, maybe only in webrick
               end
             ensure
               stream.close
