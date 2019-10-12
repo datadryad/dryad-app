@@ -51,13 +51,15 @@ module Stash
         cc.response.headers["rack.hijack"] = proc do |stream|
 
           Thread.new do
-            # chunk_size = 1024 * 1024 # 1 MB
+            chunk_size = 1024 * 1024 # 1 MB
             begin
               # see https://twin.github.io/httprb-is-great/ or https://github.com/httprb/http/wiki
               http = HTTP.timeout(connect: 3000, read: 3000, write: 1500).timeout(3000)
                          .basic_auth(user: tenant.repository.username, pass: tenant.repository.password)
               response = http.get(url)
-              response.body.each do |chunk|
+              while true
+                chunk = response.body.readpartial(chunk_size)
+                break if chunk.nil?
                 stream.write(chunk)
                 # stream.write(chunk.force_encoding("UTF-8")) # I don't know why this is necessary, maybe only in webrick
               end
