@@ -54,7 +54,7 @@ module Stash
             # chunk_size = 1024 * 1024 # 1 MB
             begin
               # see https://twin.github.io/httprb-is-great/ or https://github.com/httprb/http/wiki
-              http = HTTP.timeout(connect: 30, read: 300, write: 15)
+              http = HTTP.timeout(connect: 3000, read: 3000, write: 1500)
                          .basic_auth(user: tenant.repository.username, pass: tenant.repository.password)
               response = http.get(url)
               response.body.each do |chunk|
