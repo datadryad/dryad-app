@@ -99,7 +99,7 @@ module StashEngine
             # .basic_auth(user: 'xxx', pass: 'xxx')
             response = http.get(url)
             response.body.each do |chunk|
-              stream.write(chunk)
+              stream.write(chunk.force_encoding("UTF-8"))
             end
           rescue HTTP::Error => ex
             logger.error("while streaming: #{ex}")
