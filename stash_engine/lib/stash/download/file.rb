@@ -49,12 +49,13 @@ module Stash
 
         # rack hijack takes a proc to run and in another thread so it frees web server thread for normal short requests
         cc.response.headers["rack.hijack"] = proc do |stream|
+
           Thread.new do
             # chunk_size = 1024 * 1024 # 1 MB
             begin
               # see https://twin.github.io/httprb-is-great/ or https://github.com/httprb/http/wiki
               http = HTTP.timeout(connect: 30, read: 300, write: 15)
-                         .basic_auth(user: tenant.repository.username, pass: tenant.repository.username)
+                         .basic_auth(user: tenant.repository.username, pass: tenant.repository.password)
               response = http.get(url)
               response.body.each do |chunk|
                 # stream.write(chunk)
