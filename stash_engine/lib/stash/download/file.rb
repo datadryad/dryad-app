@@ -61,6 +61,8 @@ module Stash
                 stream.write(chunk)
                 # stream.write(chunk.force_encoding("UTF-8")) # I don't know why this is necessary, maybe only in webrick
               end
+            rescue HTTP::Error => ex
+              cc.logger.error("while downloading #{ex}")
             ensure
               stream.close
             end
