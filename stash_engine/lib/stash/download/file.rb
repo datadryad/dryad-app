@@ -42,7 +42,8 @@ module Stash
         cc.response.headers['Content-Type'] = content_type if content_type
         cc.response.headers['Content-Disposition'] = content_disposition
         cc.response.headers['Content-Length'] = content_length unless content_length.blank?
-        cc.response.headers['Transfer-Encoding'] = 'chunked'
+        # cc.response.headers['Transfer-Encoding'] = 'chunked'
+        # messes it up
 
         cc.response.headers['X-Accel-Buffering'] = 'no'
         cc.response.headers['Cache-Control'] = 'no-cache'
