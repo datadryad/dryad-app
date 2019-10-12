@@ -52,7 +52,7 @@ module Stash
         # rack hijack takes a proc to run and in another thread so it frees web server thread for normal short requests
         cc.response.headers['rack.hijack'] = proc do |stream|
           stream.autoclose = false
-          stream.sync = true
+          # stream.sync = true
 
           Thread.new do
             # chunk_size = 1024 * 1024 # 1 MB
