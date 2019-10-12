@@ -103,6 +103,7 @@ module StashEngine
             end
           rescue HTTP::Error => ex
             logger.error("while streaming: #{ex}")
+            logger.error("while streaming: #{ex.backtrace}")
           ensure
             stream.close
           end
