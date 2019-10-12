@@ -83,6 +83,34 @@ module StashEngine
       end
     end
 
+    def test_stream
+      url = 'https://www.spacetelescope.org/static/archives/images/publicationtiff40k/heic1502a.tif'
+      response.headers['Content-Type'] = 'image/tiff'
+      response.headers['Content-Disposition'] = 'attachment; filename="funn.tif"'
+      response.headers["X-Accel-Buffering"] = 'no'
+      response.headers["Cache-Control"] = 'no-cache'
+      response.headers["Last-Modified"] = Time.zone.now.ctime.to_s
+
+      response.headers["rack.hijack"] = proc do |stream|
+
+        Thread.new do
+          begin
+            http = HTTP.timeout(connect: 3000, read: 3000, write: 1500).timeout(3000)
+            # .basic_auth(user: 'xxx', pass: 'xxx')
+            response = http.get(url)
+            response.body.each do |chunk|
+              stream.write(chunk)
+            end
+          rescue HTTP::Error => ex
+            logger.error("while streaming: #{ex}")
+          ensure
+            stream.close
+          end
+        end
+      end
+      head :ok
+    end
+
     private
 
     def unavailable_for_download

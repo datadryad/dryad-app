@@ -66,6 +66,7 @@ module Stash
                 stream.write(chunk) #.force_encoding('UTF-8') # may be required for webrick
               end
             rescue StandardError => ex
+              # error reading from socket: Could not parse data entirely (1 != 0)
               cc.logger.error("while downloading #{ex}")
             ensure
               stream.close
