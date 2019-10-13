@@ -202,6 +202,52 @@ module StashEngine
       head :ok
     end
 
+    def test_stream5
+      url = 'https://www.spacetelescope.org/static/archives/images/publicationtiff40k/heic1502a.tif'
+      response.headers['Content-Type'] = 'image/tiff'
+      response.headers['Content-Disposition'] = 'attachment; filename="funn.tif"'
+      response.headers["X-Accel-Buffering"] = 'no'
+      response.headers["Cache-Control"] = 'no-cache'
+      response.headers["Last-Modified"] = Time.zone.now.ctime.to_s
+
+      response.headers["rack.hijack"] = proc do |stream|
+
+        Thread.new do
+          begin
+            # first stream entire file to file system
+            # see https://twin.github.io/httprb-is-great/ or https://github.com/httprb/http/wiki
+            http = HTTP.timeout(connect: 3600, read: 3600, write: 3600).timeout(3600)
+            response = http.get(url)
+            logger.info('downloading file in chunks')
+            f = File.open('outfile.tif', 'wb')
+            response.body.each do |chunk|
+              f.write(chunk)
+            end
+          rescue HTTP::Error => ex
+            logger.error("while retrieving: #{ex}")
+            logger.error("while retrieving: #{ex.backtrace}")
+          ensure
+            f.close
+          end
+
+          begin
+            chunk_size = 1024 * 1024
+            logger.info('sending file in chunks')
+            f = File.open('outfile.tif', 'rb')
+            until f.eof?
+              stream.write(f.read(chunk_size))
+            end
+          rescue StandardError => ex
+            logger.error("while sending: #{ex}")
+            logger.error("while sending: #{ex.backtrace}")
+          ensure
+            stream.close
+          end
+        end
+      end
+      head :ok
+    end
+
     private
 
     def unavailable_for_download
