@@ -29,6 +29,7 @@ Gem::Specification.new do |s| # rubocop:disable Metrics/BlockLength
   s.add_dependency 'database_cleaner' # for one migration task, but need to keep capistrano from barfing can remove after migration
   s.add_dependency 'datacite-mapping', '~> 0.3'
   s.add_dependency 'ezid-client', '~> 1.5'
+  s.add_dependency 'excon'
   s.add_dependency 'faraday'
   s.add_dependency 'filesize', '~> 0.1.1'
   s.add_dependency 'font-awesome-rails'
