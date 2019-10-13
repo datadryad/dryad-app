@@ -175,6 +175,28 @@ module StashEngine
       head :ok
     end
 
+    def test_stream4
+      url = 'https://www.spacetelescope.org/static/archives/images/publicationtiff40k/heic1502a.tif'
+      response.headers['Content-Type'] = 'image/tiff'
+      response.headers['Content-Disposition'] = 'attachment; filename="funn.tif"'
+      response.headers["X-Accel-Buffering"] = 'no'
+      response.headers["Cache-Control"] = 'no-cache'
+      response.headers["Last-Modified"] = Time.zone.now.ctime.to_s
+
+      response.headers["rack.hijack"] = proc do |stream|
+
+        Thread.new do
+          streamer = lambda do |chunk, remaining_bytes, total_bytes|
+            stream.write(chunk)
+            # puts "Remaining: #{remaining_bytes.to_f / total_bytes}%"
+          end
+
+          Excon.get(url, :response_block => streamer)
+        end
+      end
+      head :ok
+    end
+
     private
 
     def unavailable_for_download
