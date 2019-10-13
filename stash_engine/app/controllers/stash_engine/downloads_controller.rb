@@ -124,6 +124,7 @@ module StashEngine
 
         Thread.new do
           begin
+            conn = Faraday.new(url: url)
             conn.get(url) do |req|
               # Set a callback which will receive tuples of chunk Strings
               # and the sum of characters received so far
