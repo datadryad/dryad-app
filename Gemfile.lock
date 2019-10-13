@@ -59,6 +59,7 @@ PATH
       database_cleaner
       datacite-mapping (~> 0.3)
       ezid-client (~> 1.5)
+      faraday
       filesize (~> 0.1.1)
       font-awesome-rails
       http
