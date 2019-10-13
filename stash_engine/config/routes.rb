@@ -58,6 +58,7 @@ StashEngine::Engine.routes.draw do
   get 'downloads/test_stream2', to: 'downloads#test_stream2'
   get 'downloads/test_stream3', to: 'downloads#test_stream3'
   get 'downloads/test_stream4', to: 'downloads#test_stream4'
+  get 'downloads/test_stream5', to: 'downloads#test_stream5'
 
   match 'metadata_entry_pages/find_or_create', to: 'metadata_entry_pages#find_or_create', via: %i[get post put]
   match 'metadata_entry_pages/new_version', to: 'metadata_entry_pages#new_version', via: %i[post get]
