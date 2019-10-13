@@ -144,6 +144,36 @@ module StashEngine
       head :ok
     end
 
+    def test_stream3
+      url = 'https://www.spacetelescope.org/static/archives/images/publicationtiff40k/heic1502a.tif'
+      response.headers['Content-Type'] = 'image/tiff'
+      response.headers['Content-Disposition'] = 'attachment; filename="funn.tif"'
+      response.headers["X-Accel-Buffering"] = 'no'
+      response.headers["Cache-Control"] = 'no-cache'
+      response.headers["Last-Modified"] = Time.zone.now.ctime.to_s
+
+      response.headers["rack.hijack"] = proc do |stream|
+      # downloaded_file = File.open 'huge.iso', 'wb'
+        Thread.new do
+          request = Typhoeus::Request.new(url)
+          request.on_headers do |response|
+            if response.code != 200
+              raise "Request failed"
+              logger.error ('while streaming: request failed')
+            end
+          end
+          request.on_body do |chunk|
+            stream.write(chunk)
+          end
+          request.on_complete do |response|
+            stream.close
+            # Note that response.body is ""
+          end
+          request.run
+        end
+      end
+    end
+
     private
 
     def unavailable_for_download

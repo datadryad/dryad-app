@@ -56,6 +56,7 @@ StashEngine::Engine.routes.draw do
   get 'share/:id', to: 'downloads#share', as: 'share'
   get 'downloads/test_stream', to: 'downloads#test_stream'
   get 'downloads/test_stream2', to: 'downloads#test_stream2'
+  get 'downloads/test_stream3', to: 'downloads#test_stream3'
 
   match 'metadata_entry_pages/find_or_create', to: 'metadata_entry_pages#find_or_create', via: %i[get post put]
   match 'metadata_entry_pages/new_version', to: 'metadata_entry_pages#new_version', via: %i[post get]
