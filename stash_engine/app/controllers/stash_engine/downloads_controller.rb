@@ -112,6 +112,37 @@ module StashEngine
       head :ok
     end
 
+    def test_stream2
+      url = 'https://www.spacetelescope.org/static/archives/images/publicationtiff40k/heic1502a.tif'
+      response.headers['Content-Type'] = 'image/tiff'
+      response.headers['Content-Disposition'] = 'attachment; filename="funn.tif"'
+      response.headers["X-Accel-Buffering"] = 'no'
+      response.headers["Cache-Control"] = 'no-cache'
+      # response.headers["Last-Modified"] = Time.zone.now.ctime.to_s
+
+      response.headers["rack.hijack"] = proc do |stream|
+
+        Thread.new do
+          begin
+            conn.get(url) do |req|
+              # Set a callback which will receive tuples of chunk Strings
+              # and the sum of characters received so far
+              req.options.on_data = Proc.new do |chunk, overall_received_bytes|
+                # puts "Received #{overall_received_bytes} characters"
+                stream << chunk
+              end
+            end
+          rescue StandardError => ex
+            logger.error("while streaming: #{ex}")
+            logger.error("while streaming: #{ex.backtrace}")
+          ensure
+            stream.close
+          end
+        end
+      end
+      head :ok
+    end
+
     private
 
     def unavailable_for_download
