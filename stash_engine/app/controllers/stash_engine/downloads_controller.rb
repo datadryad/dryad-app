@@ -129,7 +129,7 @@ module StashEngine
               # and the sum of characters received so far
               req.options.on_data = Proc.new do |chunk, overall_received_bytes|
                 # puts "Received #{overall_received_bytes} characters"
-                stream << chunk
+                stream.write(chunk)
               end
             end
           rescue StandardError => ex
