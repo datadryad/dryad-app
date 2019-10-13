@@ -1,6 +1,7 @@
 require_dependency 'stash_engine/application_controller'
 require 'stash/download/file'
 require 'stash/download/version'
+require 'tempfile'
 # require 'rest-client'
 
 # rubocop:disable Metrics/ClassLength
@@ -214,34 +215,40 @@ module StashEngine
 
         Thread.new do
           begin
-            # first stream entire file to file system
-            # see https://twin.github.io/httprb-is-great/ or https://github.com/httprb/http/wiki
-            http = HTTP.timeout(connect: 3600, read: 3600, write: 3600).timeout(3600)
-            response = http.get(url)
-            logger.info('downloading file in chunks')
-            f = File.open('outfile.tif', 'wb')
-            response.body.each do |chunk|
-              f.write(chunk)
+            # create tempfile here
+            f = Tempfile.new('dlfile', Rails.root.join('uploads'))
+            begin
+              # first stream entire file to file system
+              # see https://twin.github.io/httprb-is-great/ or https://github.com/httprb/http/wiki
+              http = HTTP.timeout(connect: 3600, read: 3600, write: 3600).timeout(3600)
+              response = http.get(url)
+              logger.info('downloading file in chunks')
+              # f = File.open('outfile.tif', 'wb')
+              response.body.each do |chunk|
+                f.write(chunk)
+              end
+            rescue HTTP::Error => ex
+              logger.error("while retrieving: #{ex}")
+              logger.error("while retrieving: #{ex.backtrace}")
             end
-          rescue HTTP::Error => ex
-            logger.error("while retrieving: #{ex}")
-            logger.error("while retrieving: #{ex.backtrace}")
+
+            begin
+              chunk_size = 1024 * 1024
+              logger.info('sending file in chunks')
+              # f = File.open('outfile.tif', 'rb')
+              f.rewind
+              until f.eof?
+                stream.write(f.read(chunk_size))
+              end
+            rescue StandardError => ex
+              logger.error("while sending: #{ex}")
+              logger.error("while sending: #{ex.backtrace}")
+            ensure
+              stream.close
+            end
           ensure
             f.close
-          end
-
-          begin
-            chunk_size = 1024 * 1024
-            logger.info('sending file in chunks')
-            f = File.open('outfile.tif', 'rb')
-            until f.eof?
-              stream.write(f.read(chunk_size))
-            end
-          rescue StandardError => ex
-            logger.error("while sending: #{ex}")
-            logger.error("while sending: #{ex.backtrace}")
-          ensure
-            stream.close
+            f.unlink
           end
         end
       end
