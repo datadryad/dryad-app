@@ -58,6 +58,7 @@ PATH
       concurrent-ruby (~> 1.0)
       database_cleaner
       datacite-mapping (~> 0.3)
+      excon
       ezid-client (~> 1.5)
       faraday
       filesize (~> 0.1.1)
