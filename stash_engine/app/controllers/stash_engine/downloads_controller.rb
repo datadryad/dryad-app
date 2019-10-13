@@ -223,7 +223,7 @@ module StashEngine
               response = http.get(url)
               logger.info('downloading file in chunks')
               # f = File.open('outfile.tif', 'wb')
-              # according to docs create doesn't autodelete tempfile, thus ensures
+              # according to docs create doesn't autodelete tempfile and acts like normal file, we need to ensure deletion
               f = Tempfile.create('dlfile', Rails.root.join('uploads')).binmode
               response.body.each do |chunk|
                 f.write(chunk)
@@ -247,10 +247,10 @@ module StashEngine
               logger.error("while sending: #{ex.backtrace}")
             ensure
               stream.close
+              f2.close
             end
           ensure
             f.unlink
-            f2.close
           end
         end
       end
