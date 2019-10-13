@@ -191,7 +191,12 @@ module StashEngine
             # puts "Remaining: #{remaining_bytes.to_f / total_bytes}%"
           end
 
-          Excon.get(url, :response_block => streamer)
+          begin
+            Excon.get(url, :response_block => streamer)
+          rescue Excon::Errors, StandardError => ex
+            logger.error("while streaming: #{ex}")
+            logger.error("while streaming: #{ex.backtrace}")
+          end
         end
       end
       head :ok
