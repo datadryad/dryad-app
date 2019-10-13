@@ -172,6 +172,7 @@ module StashEngine
           request.run
         end
       end
+      head :ok
     end
 
     private
