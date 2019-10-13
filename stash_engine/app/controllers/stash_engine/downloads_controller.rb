@@ -215,8 +215,7 @@ module StashEngine
 
         Thread.new do
           begin
-            # create tempfile here
-            f = Tempfile.new('dlfile', Rails.root.join('uploads'))
+            f = nil
             begin
               # first stream entire file to file system
               # see https://twin.github.io/httprb-is-great/ or https://github.com/httprb/http/wiki
@@ -224,21 +223,24 @@ module StashEngine
               response = http.get(url)
               logger.info('downloading file in chunks')
               # f = File.open('outfile.tif', 'wb')
+              # according to docs create doesn't autodelete tempfile, thus ensures
+              f = Tempfile.create('dlfile', Rails.root.join('uploads')).binmode
               response.body.each do |chunk|
                 f.write(chunk)
               end
             rescue HTTP::Error => ex
               logger.error("while retrieving: #{ex}")
               logger.error("while retrieving: #{ex.backtrace}")
+            ensure
+              f.close
             end
 
             begin
               chunk_size = 1024 * 1024
               logger.info('sending file in chunks')
-              # f = File.open('outfile.tif', 'rb')
-              f.rewind
-              until f.eof?
-                stream.write(f.read(chunk_size))
+              f2 = File.open(f.path, 'rb')
+              until f2.eof?
+                stream.write(f2.read(chunk_size))
               end
             rescue StandardError => ex
               logger.error("while sending: #{ex}")
@@ -247,8 +249,8 @@ module StashEngine
               stream.close
             end
           ensure
-            f.close
             f.unlink
+            f2.close
           end
         end
       end
