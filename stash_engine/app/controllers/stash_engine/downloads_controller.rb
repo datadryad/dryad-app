@@ -191,8 +191,11 @@ module StashEngine
       response.headers["rack.hijack"] = proc do |stream|
 
         Thread.new do
+          counter = 0
           streamer = lambda do |chunk, remaining_bytes, total_bytes|
+            counter += 1
             stream.write(chunk)
+            GC.start if i%50==0
             # puts "Remaining: #{remaining_bytes.to_f / total_bytes}%"
           end
 
