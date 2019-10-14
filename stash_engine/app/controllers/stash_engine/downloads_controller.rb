@@ -338,9 +338,9 @@ module StashEngine
 
       send_headers(stream, remote_file.data[:headers])
 
-      # Thread.new do
+      Thread.new do
         perform_task(stream, remote_file)
-      # end
+      end
 
       response.close
     end
