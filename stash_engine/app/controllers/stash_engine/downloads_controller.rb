@@ -336,9 +336,8 @@ module StashEngine
 
       remote_file = Down::Wget.open(url)
 
-      send_headers(stream, remote_file.data[:headers])
-
       Thread.new do
+        send_headers(stream, remote_file.data[:headers])
         perform_task(stream, remote_file)
       end
 
