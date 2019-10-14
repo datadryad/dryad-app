@@ -334,9 +334,8 @@ module StashEngine
       request.env['rack.hijack'].call
       stream = request.env['rack.hijack_io']
 
-      remote_file = Down::Wget.open(url)
-
       Thread.new do
+        remote_file = Down::Wget.open(url)
         send_headers(stream, remote_file.data[:headers])
         perform_task(stream, remote_file)
       end
