@@ -330,7 +330,6 @@ module StashEngine
 
     def test_stream8
       url = 'https://www.spacetelescope.org/static/archives/images/publicationtiff40k/heic1502a.tif'
-      remote_file.data[:headers]
 
       request.env['rack.hijack'].call
       stream = request.env['rack.hijack_io']
