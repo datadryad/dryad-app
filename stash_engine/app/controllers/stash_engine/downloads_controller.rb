@@ -7,6 +7,15 @@ require 'down/wget'
 gem "posix-spawn" # omit if on JRuby
 gem "http_parser.rb"
 # require 'rest-client'
+#
+
+class Rack::Response
+  def close
+    @body.close if @body.respond_to?(:close)
+  end
+end
+
+
 
 # rubocop:disable Metrics/ClassLength
 module StashEngine
@@ -191,19 +200,18 @@ module StashEngine
       response.headers["rack.hijack"] = proc do |stream|
 
         Thread.new do
-          counter = 0
-          streamer = lambda do |chunk, remaining_bytes, total_bytes|
-            counter += 1
+          downloader = lambda do |chunk, remaining_bytes, total_bytes|
             stream.write(chunk)
-            GC.start if counter % 50 == 0
             # puts "Remaining: #{remaining_bytes.to_f / total_bytes}%"
           end
 
           begin
-            Excon.get(url, :response_block => streamer)
+            Excon.get(url, :response_block => downloader)
           rescue Excon::Errors, StandardError => ex
             logger.error("while streaming: #{ex}")
             logger.error("while streaming: #{ex.backtrace}")
+          ensure
+            stream.close
           end
         end
       end
