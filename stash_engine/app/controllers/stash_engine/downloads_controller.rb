@@ -343,6 +343,22 @@ module StashEngine
       response.close
     end
 
+    def test_stream9
+      url = 'https://www.spacetelescope.org/static/archives/images/publicationtiff40k/heic1502a.tif'
+
+      request.env['rack.hijack'].call
+      stream = request.env['rack.hijack_io']
+
+      Thread.new do
+        # this is the style that doesn't use WGET
+        remote_file = Down.open(url)
+        send_headers(stream, remote_file.data[:headers])
+        perform_task(stream, remote_file)
+      end
+
+      response.close
+    end
+
     private
 
     # these are for rack full hijacking
