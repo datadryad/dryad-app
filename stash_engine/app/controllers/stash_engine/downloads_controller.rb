@@ -3,6 +3,7 @@ require 'stash/download/file'
 require 'stash/download/version'
 require 'tempfile'
 require 'down'
+require 'down/wget'
 gem "posix-spawn" # omit if on JRuby
 gem "http_parser.rb"
 # require 'rest-client'
