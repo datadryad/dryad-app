@@ -195,7 +195,7 @@ module StashEngine
           streamer = lambda do |chunk, remaining_bytes, total_bytes|
             counter += 1
             stream.write(chunk)
-            GC.start if counter % 50==0
+            GC.start if counter % 50 == 0
             # puts "Remaining: #{remaining_bytes.to_f / total_bytes}%"
           end
 
