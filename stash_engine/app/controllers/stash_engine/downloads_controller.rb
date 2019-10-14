@@ -275,7 +275,7 @@ module StashEngine
             until remote_file.eof?
               stream.write(remote_file.read(chunk_size))
             end
-          rescue HTTP::Error => ex
+          rescue StandardError => ex
             logger.error("while streaming: #{ex}")
             logger.error("while streaming: #{ex.backtrace}")
           ensure
