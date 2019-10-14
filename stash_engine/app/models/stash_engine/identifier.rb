@@ -299,6 +299,21 @@ module StashEngine
       my_state
     end
 
+    def embargoed_until_article_appears?
+      return false unless pub_state == 'embargoed'
+
+      found_article_appears = false
+      resources.each do |res|
+        res.curation_activities.each do |ca|
+          next unless ca.status == 'embargoed' && (ca.note&.match('untilArticleAppears') ||
+                                          ca.note&.match('1-year blackout period'))
+          found_article_appears = true
+          break
+        end
+      end
+      found_article_appears
+    end
+
     # returns the publication state based on history
     # finds the latest applicable state from terminal states for each resource/version.
     # We only really care about whether it's some form of published, embargoed or withdrawn

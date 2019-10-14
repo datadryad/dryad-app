@@ -552,6 +552,18 @@ module StashEngine
         @identifier.reload
         expect(@identifier.pub_state).to eq('embargoed')
       end
+
+      describe '#embargoed_until_article?' do
+        it 'defaults to not embargoed_until_article' do
+          expect(@identifier.embargoed_until_article_appears?).to be(false)
+        end
+
+        it 'detects embargoed_until_article' do
+          @res3.curation_activities << CurationActivity.create(status: 'embargoed', user: @user,
+                                                               note: 'Adding 1-year blackout period due to journal settings.')
+          expect(@identifier.embargoed_until_article_appears?).to be(true)
+        end
+      end
     end
 
     describe '#fill_resource_view_flags' do
