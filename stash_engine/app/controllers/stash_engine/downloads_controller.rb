@@ -190,7 +190,7 @@ module StashEngine
 
       response.headers["rack.hijack"] = proc do |stream|
 
-        Thread.new do
+        # Thread.new do
           counter = 0
           streamer = lambda do |chunk, remaining_bytes, total_bytes|
             counter += 1
@@ -205,7 +205,7 @@ module StashEngine
             logger.error("while streaming: #{ex}")
             logger.error("while streaming: #{ex.backtrace}")
           end
-        end
+        # end
       end
       head :ok
     end
