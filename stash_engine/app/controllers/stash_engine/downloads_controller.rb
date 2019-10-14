@@ -3,6 +3,8 @@ require 'stash/download/file'
 require 'stash/download/version'
 require 'tempfile'
 require 'down'
+gem "posix-spawn" # omit if on JRuby
+gem "http_parser.rb"
 # require 'rest-client'
 
 # rubocop:disable Metrics/ClassLength
@@ -272,6 +274,35 @@ module StashEngine
           chunk_size = 1024 * 1024
           begin
             remote_file = Down.open(url, rewindable: false)
+            # .basic_auth(user: 'xxx', pass: 'xxx')
+            until remote_file.eof?
+              stream.write(remote_file.read(chunk_size))
+            end
+          rescue StandardError => ex
+            logger.error("while streaming: #{ex}")
+            logger.error("while streaming: #{ex.backtrace}")
+          ensure
+            stream.close
+          end
+        end
+      end
+      head :ok
+    end
+
+    def test_stream7
+      url = 'https://www.spacetelescope.org/static/archives/images/publicationtiff40k/heic1502a.tif'
+      response.headers['Content-Type'] = 'image/tiff'
+      response.headers['Content-Disposition'] = 'attachment; filename="funn.tif"'
+      response.headers["X-Accel-Buffering"] = 'no'
+      response.headers["Cache-Control"] = 'no-cache'
+      response.headers["Last-Modified"] = Time.zone.now.ctime.to_s
+
+      response.headers["rack.hijack"] = proc do |stream|
+
+        Thread.new do
+          chunk_size = 1024 * 1024
+          begin
+            remote_file = Down::Wget.open(url)
             # .basic_auth(user: 'xxx', pass: 'xxx')
             until remote_file.eof?
               stream.write(remote_file.read(chunk_size))
