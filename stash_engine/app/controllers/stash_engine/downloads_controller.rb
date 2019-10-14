@@ -338,9 +338,9 @@ module StashEngine
 
       send_headers(stream, remote_file.data[:headers])
 
-      Thread.new do
+      # Thread.new do
         perform_task(stream, remote_file)
-      end
+      # end
 
       response.close
     end
@@ -353,7 +353,7 @@ module StashEngine
     def send_headers(stream, header_obj)
       headers = [ 'HTTP/1.1 200 OK' ]
       headers_to_keep = ['Content-Type', 'content-type', 'Content-Length', 'content-length', 'ETag']
-      heads = header_obj.data[:headers].slice(headers_to_keep)
+      heads = header_obj.slice(headers_to_keep)
       heads.merge( 'Content-Disposition'  => 'attachment; funn.file',
                    'X-Accel-Buffering'    => 'no',
                    'Cache-Control'        => 'no-cache',
