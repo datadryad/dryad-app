@@ -271,7 +271,7 @@ module StashEngine
         Thread.new do
           chunk_size = 1024 * 1024
           begin
-            remote_file = Down.open(url)
+            remote_file = Down.open(url, rewindable: false)
             # .basic_auth(user: 'xxx', pass: 'xxx')
             until remote_file.eof?
               stream.write(remote_file.read(chunk_size))
