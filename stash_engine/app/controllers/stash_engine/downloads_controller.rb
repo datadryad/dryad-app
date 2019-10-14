@@ -4,8 +4,6 @@ require 'stash/download/version'
 require 'tempfile'
 require 'down'
 require 'down/wget'
-gem "posix-spawn" # omit if on JRuby
-gem "http_parser.rb"
 # require 'rest-client'
 #
 
@@ -330,7 +328,65 @@ module StashEngine
       head :ok
     end
 
+    def test_stream8
+      url = 'https://www.spacetelescope.org/static/archives/images/publicationtiff40k/heic1502a.tif'
+      remote_file.data[:headers]
+
+      request.env['rack.hijack'].call
+      stream = request.env['rack.hijack_io']
+
+      remote_file = Down::Wget.open(url)
+
+      send_headers(stream, remote_file.data[:headers])
+
+      Thread.new do
+        perform_task(stream, remote_file)
+      end
+
+      response.close
+    end
+
     private
+
+    # these are for rack full hijacking
+
+
+    def send_headers(stream, header_obj)
+      headers = [ 'HTTP/1.1 200 OK' ]
+      headers_to_keep = ['Content-Type', 'content-type', 'Content-Length', 'content-length', 'ETag']
+      heads = header_obj.data[:headers].slice(headers_to_keep)
+      heads.merge( 'Content-Disposition'  => 'attachment; funn.file',
+                   'X-Accel-Buffering'    => 'no',
+                   'Cache-Control'        => 'no-cache',
+                   'Last-Modified'        => Time.zone.now.ctime.to_s )
+      heads.each_pair { |k,v| headers.push("#{k}: #{v}")  }
+
+      stream.write(headers.map { |header| header + "\r\n" }.join)
+      stream.write("\r\n")
+      stream.flush
+    rescue
+      stream.close
+      raise
+    end
+
+    def perform_task(out_stream, in_stream)
+      chunk_size = 1024 * 1024
+      begin
+        until in_stream.eof?
+          out_stream.write(in_stream.read(chunk_size))
+        end
+      rescue StandardError => ex
+        logger.error("while streaming: #{ex}")
+        logger.error("while streaming: #{ex.backtrace}")
+      ensure
+        out_stream.close
+        in_stream.close
+      end
+    end
+
+
+
+    # rack hijacking
 
     def unavailable_for_download
       flash[:alert] = 'This dataset is private and may not be downloaded.'
