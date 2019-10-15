@@ -36,6 +36,7 @@ module Stash
           remote_file = Down::Wget.open(url,
                                         http_user: tenant.repository.username,
                                         http_password: tenant.repository.password,
+                                        max_redirect: 10,  # Merritt seems to love as many redirects as possible
                                         dns_timeout: 2,
                                         connect_timeout: 2,
                                         read_timeout: read_timeout)
@@ -48,7 +49,6 @@ module Stash
 
       # these send methods are the streaming methods for a 'rack.hijack',
       def send_headers(stream:, header_obj:, filename:)
-        Rails.logger.warn('started headers')
         out_headers = [ 'HTTP/1.1 200 OK' ]
 
         # keep some heads from this request and write them over to the outgoing headers
@@ -63,7 +63,6 @@ module Stash
              "Last-Modified: #{Time.zone.now.ctime.to_s}" ]
 
         stream.write(out_headers.map { |header| header + "\r\n" }.join)
-        Rails.logger.warn(out_headers.map { |header| header + "\r\n" }.join)
         stream.write("\r\n")
         stream.flush
       rescue StandardError => ex
