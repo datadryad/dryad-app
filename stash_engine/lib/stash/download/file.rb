@@ -42,8 +42,6 @@ module Stash
           send_headers(stream: stream, header_obj: remote_file.data[:headers], filename: disposition_filename)
           send_stream(out_stream: stream, in_stream: remote_file)
         end
-
-        sleep 2
         cc.response.close
       end
       # rubocop:enable Metrics/AbcSize
