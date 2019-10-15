@@ -54,10 +54,11 @@ module Stash
         heads.each_pair { |k,v| out_headers.push("#{k}: #{v}")  }
 
         # add these headers
-        out_headers.merge( 'Content-Disposition'  => "attachment; filename=\"#{filename}\"",
-                     'X-Accel-Buffering'    => 'no',
-                     'Cache-Control'        => 'no-cache',
-                     'Last-Modified'        => Time.zone.now.ctime.to_s )
+        out_headers +=
+            ["Content-Disposition: attachment; filename=\"#{filename}\"",
+             'X-Accel-Buffering: no',
+             'Cache-Control: no-cache',
+             "Last-Modified: #{Time.zone.now.ctime.to_s}" ]
 
         stream.write(out_headers.map { |header| header + "\r\n" }.join)
         Rails.logger.warn(outheaders.map { |header| header + "\r\n" }.join)
