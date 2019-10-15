@@ -3,6 +3,7 @@ require 'http'
 require 'down'
 require 'down/wget'
 require 'zaru'
+require 'active_support'
 
 # helpful about URL streaming https://web.archive.org/web/20130310175732/http://blog.sparqcode.com/2012/02/04/streaming-data-with-rails-3-1-or-3-2/
 # https://stackoverflow.com/questions/3507594/ruby-on-rails-3-streaming-data-through-rails-to-client
@@ -49,7 +50,7 @@ module Stash
         out_headers = ['HTTP/1.1 200 OK']
 
         # keep some heads from this request and write them over to the outgoing headers
-        heads = header_obj.slice(%w[Content-Type content-type Content-Length content-length ETag])
+        heads = header_obj.slice('Content-Type', 'content-type', 'Content-Length', 'content-length', 'ETag')
         heads.each_pair { |k, v| out_headers.push("#{k}: #{v}") }
 
         # add these headers
