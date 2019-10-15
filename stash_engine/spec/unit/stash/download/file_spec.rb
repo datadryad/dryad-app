@@ -32,12 +32,8 @@ module Stash
           @file.file = @file_upload
         end
 
-        it 'includes content-disposition to have attachment and set the filename' do
-          expect(@file.disposition_filename).to match(/attachment; filename=".+"/)
-        end
-
         it 'removes any path in the filename and places it in the filename' do
-          expect(@file.disposition_filename).to eql('attachment; filename="Sidlauskas 2007 Data.xls"')
+          expect(@file.disposition_filename).to eql('Sidlauskas 2007 Data.xls')
         end
       end
     end
