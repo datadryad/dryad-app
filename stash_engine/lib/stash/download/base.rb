@@ -2,6 +2,7 @@ require 'logger'
 require 'http'
 require 'down'
 require 'down/wget'
+require 'zaru'
 
 # helpful about URL streaming https://web.archive.org/web/20130310175732/http://blog.sparqcode.com/2012/02/04/streaming-data-with-rails-3-1-or-3-2/
 # https://stackoverflow.com/questions/3507594/ruby-on-rails-3-streaming-data-through-rails-to-client
@@ -19,32 +20,33 @@ module Stash
         @cc = controller_context
       end
 
-      # to stream the response through this UI instead of redirecting, keep login and other stuff private
-      def stream_response(url:, tenant:)
-        # get original header info from http headers
-        client = Stash::Repo::HttpClient.new(tenant: tenant, cert_file: APP_CONFIG.ssl_cert_file).client
+      # this is a method that should be overridden
 
-        headers = client.head(url, follow_redirect: true)
+      # rubocop:disable Metrics/AbcSize
+      def stream_response(url:, tenant:, filename:, read_timeout: 30)
+        cc.request.env['rack.hijack'].call
+        stream = cc.request.env['rack.hijack_io']
 
-        content_type = headers.http_header['Content-Type'].try(:first)
-        content_length = headers.http_header['Content-Length'].try(:first) || ''
-        content_disposition = disposition_filename
-        cc.response.headers['Content-Type'] = content_type if content_type
-        cc.response.headers['Content-Disposition'] = content_disposition
-        cc.response.headers['Content-Length'] = content_length
-        cc.response.headers['Last-Modified'] = Time.now.utc.httpdate
-        cc.response_body = Stash::Streamer.new(client, url)
+        # If the number of downloads becomes outrageous then we may need to have a limited thread pool, throttle individual
+        # downloads or throttle overall requests to download from individual IP addresses or something else.
+        Thread.new do
+          # I believe these timeouts are reasonable for this type of read since Merritt Express should respond quickly
+          # and doesn't need to assemble files into a zipe file like the full version download does.
+          # We don't want to hold dead download threads open too long for resource and network reasons.
+          remote_file = Down::Wget.open(url,
+                                        http_user: tenant.repository.username,
+                                        http_password: tenant.repository.password,
+                                        dns_timeout: 2,
+                                        connect_timeout: 2,
+                                        read_timeout: read_timeout)
+          send_headers(stream: stream, header_obj: remote_file.data[:headers], filename: filename)
+          send_stream(out_stream: stream, in_stream: remote_file)
+        end
+        cc.response.close
       end
-
-      def self.log_warning_if_needed(error:, resource:)
-        return unless Rails.env.development?
-        msg = "MerrittResponseError checking sync/async download for resource #{resource.id} updated at #{resource.updated_at}"
-        backtrace = error.respond_to?(:backtrace) && error.backtrace ? error.backtrace.join("\n") : ''
-        Rails.logger.warn("#{msg}: #{error.class}: #{error}\n#{backtrace}")
-      end
+      # rubocop:enable Metrics/AbcSize
 
       # these send methods are the streaming methods for a 'rack.hijack',
-
       def send_headers(stream:, header_obj:, filename:)
         Rails.logger.warn('started headers')
         out_headers = [ 'HTTP/1.1 200 OK' ]
@@ -65,7 +67,7 @@ module Stash
         stream.write("\r\n")
         stream.flush
       rescue StandardError => ex
-        Rails.logger.warn("HEADER ERROR: #{ex}")
+        Rails.logger.error("Error writing header: #{ex}")
         stream.close
         raise ex
       end
@@ -77,14 +79,14 @@ module Stash
             out_stream.write(in_stream.read(chunk_size))
           end
         rescue StandardError => ex
-          cc.logger.error("while streaming: #{ex}")
-          cc.logger.error("while streaming: #{ex.backtrace}")
+          cc.logger.error("Error while streaming: #{ex}")
+          cc.logger.error("Error while streaming: #{ex.backtrace}")
         ensure
           out_stream.close
           in_stream.close
         end
       end
-
+      # end methods for 'rack.hijack'
 
     end
   end
