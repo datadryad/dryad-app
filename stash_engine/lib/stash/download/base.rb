@@ -61,7 +61,7 @@ module Stash
              "Last-Modified: #{Time.zone.now.ctime.to_s}" ]
 
         stream.write(out_headers.map { |header| header + "\r\n" }.join)
-        Rails.logger.warn(outheaders.map { |header| header + "\r\n" }.join)
+        Rails.logger.warn(out_headers.map { |header| header + "\r\n" }.join)
         stream.write("\r\n")
         stream.flush
       rescue StandardError => ex
