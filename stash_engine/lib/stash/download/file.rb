@@ -43,6 +43,7 @@ module Stash
           send_stream(out_stream: stream, in_stream: remote_file)
         end
 
+        sleep 2
         cc.response.close
       end
       # rubocop:enable Metrics/AbcSize
