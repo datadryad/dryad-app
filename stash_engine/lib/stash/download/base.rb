@@ -56,6 +56,7 @@ module Stash
         heads.each_pair { |k,v| headers.push("#{k}: #{v}")  }
 
         stream.write(headers.map { |header| header + "\r\n" }.join)
+        cc.logger.info(headers.map { |header| header + "\r\n" }.join)
         stream.write("\r\n")
         stream.flush
       rescue
