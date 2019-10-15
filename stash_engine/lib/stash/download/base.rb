@@ -46,6 +46,7 @@ module Stash
       # these send methods are the streaming methods for a 'rack.hijack',
 
       def send_headers(stream:, header_obj:, filename:)
+        Rails.logger.warn('started headers')
         headers = [ 'HTTP/1.1 200 OK' ]
         headers_to_keep = %w[Content-Type content-type Content-Length content-length ETag]
         heads = header_obj.slice(headers_to_keep)
@@ -56,10 +57,11 @@ module Stash
         heads.each_pair { |k,v| headers.push("#{k}: #{v}")  }
 
         stream.write(headers.map { |header| header + "\r\n" }.join)
-        cc.logger.info(headers.map { |header| header + "\r\n" }.join)
+        Rails.logger.warn(headers.map { |header| header + "\r\n" }.join)
         stream.write("\r\n")
         stream.flush
-      rescue
+      rescue StandardError => ex
+        Rails.logger.warn("HEADER ERROR: #{ex}")
         stream.close
         raise
       end
