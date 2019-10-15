@@ -1,5 +1,7 @@
 require 'logger'
 require 'http'
+require 'down'
+require 'down/wget'
 
 # helpful about URL streaming https://web.archive.org/web/20130310175732/http://blog.sparqcode.com/2012/02/04/streaming-data-with-rails-3-1-or-3-2/
 # https://stackoverflow.com/questions/3507594/ruby-on-rails-3-streaming-data-through-rails-to-client
@@ -40,6 +42,43 @@ module Stash
         backtrace = error.respond_to?(:backtrace) && error.backtrace ? error.backtrace.join("\n") : ''
         Rails.logger.warn("#{msg}: #{error.class}: #{error}\n#{backtrace}")
       end
+
+      # these send methods are the streaming methods for a 'rack.hijack',
+
+      def send_headers(stream:, header_obj:, filename:)
+        headers = [ 'HTTP/1.1 200 OK' ]
+        headers_to_keep = %w[Content-Type content-type Content-Length content-length ETag]
+        heads = header_obj.slice(headers_to_keep)
+        heads.merge( 'Content-Disposition'  => "attachment; filename=\"#{filename}\"",
+                     'X-Accel-Buffering'    => 'no',
+                     'Cache-Control'        => 'no-cache',
+                     'Last-Modified'        => Time.zone.now.ctime.to_s )
+        heads.each_pair { |k,v| headers.push("#{k}: #{v}")  }
+
+        stream.write(headers.map { |header| header + "\r\n" }.join)
+        stream.write("\r\n")
+        stream.flush
+      rescue
+        stream.close
+        raise
+      end
+
+      def send_stream(out_stream:, in_stream:)
+        chunk_size = 1024 * 1024
+        begin
+          until in_stream.eof?
+            out_stream.write(in_stream.read(chunk_size))
+          end
+        rescue StandardError => ex
+          cc.logger.error("while streaming: #{ex}")
+          cc.logger.error("while streaming: #{ex.backtrace}")
+        ensure
+          out_stream.close
+          in_stream.close
+        end
+      end
+
+
     end
   end
 end
