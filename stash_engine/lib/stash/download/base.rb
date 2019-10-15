@@ -47,23 +47,26 @@ module Stash
 
       def send_headers(stream:, header_obj:, filename:)
         Rails.logger.warn('started headers')
-        headers = [ 'HTTP/1.1 200 OK' ]
-        headers_to_keep = %w[Content-Type content-type Content-Length content-length ETag]
-        heads = header_obj.slice(headers_to_keep)
-        heads.merge( 'Content-Disposition'  => "attachment; filename=\"#{filename}\"",
+        out_headers = [ 'HTTP/1.1 200 OK' ]
+
+        # keep some heads from this request and write them over to the outgoing headers
+        heads = header_obj.slice(%w[Content-Type content-type Content-Length content-length ETag])
+        heads.each_pair { |k,v| out_headers.push("#{k}: #{v}")  }
+
+        # add these headers
+        out_headers.merge( 'Content-Disposition'  => "attachment; filename=\"#{filename}\"",
                      'X-Accel-Buffering'    => 'no',
                      'Cache-Control'        => 'no-cache',
                      'Last-Modified'        => Time.zone.now.ctime.to_s )
-        heads.each_pair { |k,v| headers.push("#{k}: #{v}")  }
 
-        stream.write(headers.map { |header| header + "\r\n" }.join)
-        Rails.logger.warn(headers.map { |header| header + "\r\n" }.join)
+        stream.write(out_headers.map { |header| header + "\r\n" }.join)
+        Rails.logger.warn(outheaders.map { |header| header + "\r\n" }.join)
         stream.write("\r\n")
         stream.flush
       rescue StandardError => ex
         Rails.logger.warn("HEADER ERROR: #{ex}")
         stream.close
-        raise
+        raise ex
       end
 
       def send_stream(out_stream:, in_stream:)
