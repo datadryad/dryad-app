@@ -1,19 +1,6 @@
 require_dependency 'stash_engine/application_controller'
 require 'stash/download/file'
 require 'stash/download/version'
-require 'tempfile'
-require 'down'
-require 'down/wget'
-# require 'rest-client'
-#
-
-class Rack::Response
-  def close
-    @body.close if @body.respond_to?(:close)
-  end
-end
-
-
 
 # rubocop:disable Metrics/ClassLength
 module StashEngine
@@ -94,48 +81,8 @@ module StashEngine
         render status: 403, text: 'You are not authorized to download this file until it has been published.'
       end
     end
-    
+
     private
-
-    # these are for rack full hijacking
-
-
-    def send_headers(stream, header_obj)
-      headers = [ 'HTTP/1.1 200 OK' ]
-      headers_to_keep = ['Content-Type', 'content-type', 'Content-Length', 'content-length', 'ETag']
-      heads = header_obj.slice(headers_to_keep)
-      heads.merge( 'Content-Disposition'  => 'attachment; funn.file',
-                   'X-Accel-Buffering'    => 'no',
-                   'Cache-Control'        => 'no-cache',
-                   'Last-Modified'        => Time.zone.now.ctime.to_s )
-      heads.each_pair { |k,v| headers.push("#{k}: #{v}")  }
-
-      stream.write(headers.map { |header| header + "\r\n" }.join)
-      stream.write("\r\n")
-      stream.flush
-    rescue
-      stream.close
-      raise
-    end
-
-    def perform_task(out_stream, in_stream)
-      chunk_size = 1024 * 1024
-      begin
-        until in_stream.eof?
-          out_stream.write(in_stream.read(chunk_size))
-        end
-      rescue StandardError => ex
-        logger.error("while streaming: #{ex}")
-        logger.error("while streaming: #{ex.backtrace}")
-      ensure
-        out_stream.close
-        in_stream.close
-      end
-    end
-
-
-
-    # rack hijacking
 
     def unavailable_for_download
       flash[:alert] = 'This dataset is private and may not be downloaded.'

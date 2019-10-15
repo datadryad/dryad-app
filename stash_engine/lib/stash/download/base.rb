@@ -21,8 +21,6 @@ module Stash
       end
 
       # this is a method that should be overridden
-
-      # rubocop:disable Metrics/AbcSize
       def stream_response(url:, tenant:, filename:, read_timeout: 30)
         cc.request.env['rack.hijack'].call
         stream = cc.request.env['rack.hijack_io']
@@ -36,7 +34,7 @@ module Stash
           remote_file = Down::Wget.open(url,
                                         http_user: tenant.repository.username,
                                         http_password: tenant.repository.password,
-                                        max_redirect: 10,  # Merritt seems to love as many redirects as possible
+                                        max_redirect: 10, # Merritt seems to love as many redirects as possible
                                         dns_timeout: 2,
                                         connect_timeout: 2,
                                         read_timeout: read_timeout)
@@ -45,22 +43,21 @@ module Stash
         end
         cc.response.close
       end
-      # rubocop:enable Metrics/AbcSize
 
       # these send methods are the streaming methods for a 'rack.hijack',
       def send_headers(stream:, header_obj:, filename:)
-        out_headers = [ 'HTTP/1.1 200 OK' ]
+        out_headers = ['HTTP/1.1 200 OK']
 
         # keep some heads from this request and write them over to the outgoing headers
         heads = header_obj.slice(%w[Content-Type content-type Content-Length content-length ETag])
-        heads.each_pair { |k,v| out_headers.push("#{k}: #{v}")  }
+        heads.each_pair { |k, v| out_headers.push("#{k}: #{v}") }
 
         # add these headers
         out_headers +=
-            ["Content-Disposition: attachment; filename=\"#{filename}\"",
-             'X-Accel-Buffering: no',
-             'Cache-Control: no-cache',
-             "Last-Modified: #{Time.zone.now.ctime.to_s}" ]
+          ["Content-Disposition: attachment; filename=\"#{filename}\"",
+           'X-Accel-Buffering: no',
+           'Cache-Control: no-cache',
+           "Last-Modified: #{Time.zone.now.ctime}"]
 
         stream.write(out_headers.map { |header| header + "\r\n" }.join)
         stream.write("\r\n")
@@ -74,9 +71,7 @@ module Stash
       def send_stream(out_stream:, in_stream:)
         chunk_size = 1024 * 1024
         begin
-          until in_stream.eof?
-            out_stream.write(in_stream.read(chunk_size))
-          end
+          out_stream.write(in_stream.read(chunk_size)) until in_stream.eof?
         rescue StandardError => ex
           cc.logger.error("Error while streaming: #{ex}")
           cc.logger.error("Error while streaming: #{ex.backtrace}")
