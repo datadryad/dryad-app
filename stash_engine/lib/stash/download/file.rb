@@ -31,14 +31,14 @@ module Stash
         # client = Stash::Repo::HttpClient.new(tenant: tenant, cert_file: APP_CONFIG.ssl_cert_file).client
 
         # url = 'https://www.spacetelescope.org/static/archives/images/publicationtiff40k/heic1502a.tif'
-        url = url.gsub('://', "://#{tenant.repository.username}:#{tenant.repository.password}")
+        # url = url.gsub('://', "://#{tenant.repository.username}:#{tenant.repository.password}")
 
         cc.request.env['rack.hijack'].call
         stream = cc.request.env['rack.hijack_io']
 
         Thread.new do
-          # TODO: set more options for download stream
-          remote_file = Down::Wget.open(url)
+          # TODO: set more options for download stream, like timeouts
+          remote_file = Down::Wget.open(url, http_user: tenant.repository.username, http_password: tenant.repository.password)
           send_headers(stream: stream, header_obj: remote_file.data[:headers], filename: disposition_filename)
           send_stream(out_stream: stream, in_stream: remote_file)
         end
