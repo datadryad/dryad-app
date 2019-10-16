@@ -135,7 +135,6 @@ module StashEngine
       end
     end
 
-    
     it 'sends an invitation' do
       @invite = double(OrcidInvitation)
       allow(@invite).to receive(:resource).and_return(@resource)
