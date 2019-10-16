@@ -58,9 +58,9 @@ module StashEngine
                                  latest_curation_status_changed?
                      }
 
-    # Email the primary author when submitted, peer_review, published or embargoed
-    after_create :email_author,
-                 if: proc { |ca| %w[published embargoed].include?(ca.status) && latest_curation_status_changed? && !resource.skip_emails }
+    # Email the author and/or journal about status changes
+    after_create :email_status_change_notices,
+                 if: proc { |ca| latest_curation_status_changed? && !resource.skip_emails }
 
     # Email invitations to register ORCIDs to authors when published
     after_create :email_orcid_invitations,
@@ -144,10 +144,19 @@ module StashEngine
       resource.submit_to_solr
     end
 
-    # Triggered on a status of :published or :embargoed
+    # Triggered on a status change
     def email_author
-      StashEngine::UserMailer.status_change(resource, status).deliver_now
-      StashEngine::UserMailer.journal_published_notice(resource, status).deliver_now unless previously_published?
+      case status
+      when 'published'
+        StashEngine::UserMailer.status_change(resource, status).deliver_now
+        StashEngine::UserMailer.journal_published_notice(resource, status).deliver_now unless previously_published?
+      when 'embargoed'
+        StashEngine::UserMailer.status_change(resource, status).deliver_now
+        StashEngine::UserMailer.journal_published_notice(resource, status).deliver_now unless previously_published?
+      when 'peer_review'
+        StashEngine::UserMailer.status_change(resource, status).deliver_now
+        StashEngine::UserMailer.journal_review_notice(resource, status).deliver_now unless previously_published?
+      end
     end
 
     def previously_published?
