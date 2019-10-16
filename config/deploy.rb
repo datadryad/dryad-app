@@ -145,8 +145,8 @@ namespace :deploy do
           execute "PASSENGER_RESPONSE_BUFFER_HIGH_WATERMARK=65536; PASSENGER_BUFFER_RESPONSE=no; "\
               "cd #{deploy_to}/current; bundle exec passenger start -d --environment #{fetch(:rails_env)} "\
               "--pid-file #{fetch(:passenger_pid)} -p #{fetch(:passenger_port)} "\
-              "--log-file #{fetch(:passenger_log)} --pool-idle-time 86400 --data-buffer-dir=/apps/dryad-dev-shared/passenger "\
-              "--unlimited_concurrency_path=/download_test/stream2"
+              "--log-file #{fetch(:passenger_log)} --pool-idle-time 86400 --data-buffer-dir /apps/dryad-dev-shared/passenger "\
+              "--unlimited_concurrency_path /download_test/stream2"
         end
       end
     end
