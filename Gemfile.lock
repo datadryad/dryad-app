@@ -521,7 +521,7 @@ GEM
     parallel (1.17.0)
     parser (2.6.3.0)
       ast (~> 2.4.0)
-    passenger (5.3.7)
+    passenger (6.0.4)
       rack
       rake (>= 0.8.1)
     posix-spawn (0.3.13)
@@ -791,7 +791,7 @@ DEPENDENCIES
   jquery-rails
   mocha
   mysql2 (~> 0.4.10)
-  passenger
+  passenger (~> 6.0.2)
   pry
   pry-rails
   pry-remote
