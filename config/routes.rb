@@ -103,6 +103,8 @@ Rails.application.routes.draw do
   get '/themes/Dryad/images/dryadLogo.png', to: redirect('/images/logo_dryad.png')
   get '/themes/Mirage/docs/:doc', to: redirect('/docs/%{doc}.%{format}')
 
+  get '/download_test/(:action(/:id))', controller: 'download_test'
+
   # Routing to redirect old Dryad landing pages to the correct location
   # Dataset:            https://datadryad.org/resource/doi:10.5061/dryad.kq201
   # Version of Dataset: https://datadryad.org/resource/doi:10.5061/dryad.kq201.2

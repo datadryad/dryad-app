@@ -521,7 +521,7 @@ GEM
     parallel (1.17.0)
     parser (2.6.3.0)
       ast (~> 2.4.0)
-    passenger (6.0.2)
+    passenger (5.3.7)
       rack
       rake (>= 0.8.1)
     posix-spawn (0.3.13)
@@ -778,12 +778,14 @@ DEPENDENCIES
   coffee-rails (~> 4.1.0)
   colorize (~> 0.8)
   database_cleaner
+  down
   exception_notification
   factory_bot_rails
   faker
   fuubar
   guard
   guard-rspec
+  http
   httparty
   jbuilder (~> 2.0)
   jquery-rails
