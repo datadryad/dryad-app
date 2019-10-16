@@ -52,6 +52,11 @@ gem 'httparty'
 gem 'jbuilder', '~> 2.0'
 gem 'stripe'
 
+# #########################
+# Testing download examples
+gem 'down'
+gem 'http'
+
 # ############################################################
 # Development and testing
 
