@@ -50,13 +50,13 @@ module Stash
         out_headers = ['HTTP/1.1 200 OK']
 
         # keep some heads from this request and write them over to the outgoing headers
-        heads = header_obj.slice('Content-Type', 'content-type', 'Content-Length', 'content-length', 'ETag')
-        heads.each_pair { |k, v| out_headers.push("#{k}: #{v}") }
+        # heads = header_obj.slice('Content-Type', 'content-type', 'Content-Length', 'content-length', 'ETag')
+        # heads.each_pair { |k, v| out_headers.push("#{k}: #{v}") }
 
         # add these headers
         out_headers +=
           ["Content-Disposition: attachment; filename=\"#{filename}\"",
-           # 'X-Accel-Buffering: no',
+           'X-Accel-Buffering: no',
            'Cache-Control: no-cache',
            "Last-Modified: #{Time.zone.now.ctime}"]
 
