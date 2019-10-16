@@ -70,9 +70,26 @@ module Stash
       end
 
       def send_stream(out_stream:, in_stream:)
-        chunk_size = 1024 * 1024
+        chunk_size = 1024 * 256
+        begin_time = Time.new.to_f
         begin
-          out_stream.write(in_stream.read(chunk_size)) until in_stream.eof?
+          until in_stream.eof?
+            out_stream.write(in_stream.read(chunk_size))
+            # promising methods: to_io, sync = true, inspect
+            # promising to_io methods: ready?, stat, raw, wait_writeable, bytes, wait, flush, to_io, to_i, iflush, fsync, fdatasync, sync, sync =, tell
+            # pos, pos =, syssync, advise
+            # cc.logger.info("elapsed: #{Time.new.to_f - begin_time} seconds")
+            # cc.logger.info("out_stream.pos: #{out_stream.to_io.pos}")
+            # cc.logger.info("out_stream.class: #{out_stream.class}")
+            # cc.logger.info("out_stream.to_io.stat: #{out_stream.to_io.stat.methods}")
+            # cc.logger.info("out_stream.to_io.stat.size: #{out_stream.to_io.stat.size}") # always return 0
+            # cc.logger.info("out_stream.to_io.stat.pos: #{out_stream.to_io.stat.pos}") # gives undefined method
+
+            # cc.logger.info("methods: #{out_stream.to_io.methods}")
+            # sleep(0.12)
+            cc.logger.info("to_io.ready?: #{out_stream.to_io.ready?}")
+
+          end
         rescue StandardError => ex
           cc.logger.error("Error while streaming: #{ex}")
           cc.logger.error("Error while streaming: #{ex.backtrace}")
