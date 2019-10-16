@@ -791,7 +791,7 @@ DEPENDENCIES
   jquery-rails
   mocha
   mysql2 (~> 0.4.10)
-  passenger (~> 6.0.2)
+  passenger (~> 6.0.4)
   pry
   pry-rails
   pry-remote
