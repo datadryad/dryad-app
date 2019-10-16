@@ -56,7 +56,7 @@ module Stash
         # add these headers
         out_headers +=
           ["Content-Disposition: attachment; filename=\"#{filename}\"",
-           'X-Accel-Buffering: no',
+           # 'X-Accel-Buffering: no',
            'Cache-Control: no-cache',
            "Last-Modified: #{Time.zone.now.ctime}"]
 
