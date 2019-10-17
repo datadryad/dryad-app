@@ -60,7 +60,7 @@ module StashEngine
 
     # Email the author and/or journal about status changes
     after_create :email_status_change_notices,
-                 if: proc { |ca| latest_curation_status_changed? && !resource.skip_emails }
+                 if: proc { |_ca| latest_curation_status_changed? && !resource.skip_emails }
 
     # Email invitations to register ORCIDs to authors when published
     after_create :email_orcid_invitations,
@@ -145,25 +145,27 @@ module StashEngine
     end
 
     # Triggered on a status change
-    def email_author
+    def email_status_change_notices
+      return if previously_published?
+
       case status
       when 'published'
         StashEngine::UserMailer.status_change(resource, status).deliver_now
-        StashEngine::UserMailer.journal_published_notice(resource, status).deliver_now unless previously_published?
+        StashEngine::UserMailer.journal_published_notice(resource, status).deliver_now
       when 'embargoed'
         StashEngine::UserMailer.status_change(resource, status).deliver_now
-        StashEngine::UserMailer.journal_published_notice(resource, status).deliver_now unless previously_published?
+        StashEngine::UserMailer.journal_published_notice(resource, status).deliver_now
       when 'peer_review'
         StashEngine::UserMailer.status_change(resource, status).deliver_now
-        StashEngine::UserMailer.journal_review_notice(resource, status).deliver_now unless previously_published?
+        StashEngine::UserMailer.journal_review_notice(resource, status).deliver_now
       end
     end
 
     def previously_published?
       # ignoring the current CA, is there an embargoed or published status at any point for this identifier?
       prev_pub = false
-      resource.identifier.resources.each do |res|
-        res.curation_activities.each do |ca|
+      resource.identifier&.resources&.each do |res|
+        res.curation_activities&.each do |ca|
           if (ca.id != id) && %w[published embargoed].include?(ca.status)
             prev_pub = true
             break

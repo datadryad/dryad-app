@@ -613,7 +613,6 @@ module StashEngine
       curation_to_submitted(prior_version, attribution)
     end
 
-    # rubocop:disable Metrics/CyclomaticComplexity
     def curation_to_submitted(prior_version, attribution)
       # Determine which submission status to use, :submitted or :peer_review status (if this is the inital
       # version and the journal needs it)
@@ -621,12 +620,10 @@ module StashEngine
       # Update the user in the auto-created :in_progress activity as its set to the author by default
       current_curation_activity.update(user_id: attribution) if current_curation_activity.present?
       # Generate the :submitted status
+      # This will usually have the side effect of sending out notification emails to the author/journal
       curation_activities << StashEngine::CurationActivity.create(user_id: attribution, status: status)
-      # Send out an email to the author if this is the initial version and we are not skipping emails
-      StashEngine::UserMailer.status_change(self, status).deliver_now if prior_version.blank? && !skip_emails
       curation_to_curation(prior_version, attribution) unless prior_version.blank?
     end
-    # rubocop:enable Metrics/CyclomaticComplexity
 
     def curation_to_curation(prior_version, attribution)
       return if prior_version.blank? || prior_version.current_curation_status.blank?
