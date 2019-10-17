@@ -70,7 +70,7 @@ module StashEngine
     # anymore because of curation so we create a new page to host the form
     def private_async_form
       @share = Share.where(secret_id: params[:secret_id])&.first
-      @resource = @share.resource.identifier&.last_submitted_resource
+      @resource = @share.identifier&.last_submitted_resource
     end
 
     def file_stream
