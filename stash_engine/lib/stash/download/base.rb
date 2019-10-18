@@ -76,7 +76,7 @@ module Stash
         chunk_size = 1024 * 512
         begin
           until merritt_stream.eof?
-            user_stream.write(merritt_stream.read(chunk_size))
+            user_stream.write(merritt_stream.readpartial(chunk_size))
           end
         rescue StandardError => ex
           cc.logger.error("Error while streaming: #{ex}")
