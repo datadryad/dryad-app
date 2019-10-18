@@ -34,12 +34,16 @@ module Stash
           # and doesn't need to assemble files into a zipe file like the full version download does.
           # We don't want to hold dead download threads open too long for resource and network reasons.
 
-          merritt_response = HTTP.timeout(connect: 30, read: read_timeout).timeout(7200)
+          begin
+            merritt_response = HTTP.timeout(connect: 30, read: read_timeout).timeout(7200)
                               .basic_auth(user: tenant.repository.username, pass: tenant.repository.password)
                               .get(url)
 
-          send_headers(stream: user_stream, header_obj: merritt_stream.headers.to_h, filename: filename)
-          send_stream(merritt_stream: merritt_response.body, user_stream: user_stream)
+            send_headers(stream: user_stream, header_obj: merritt_stream.headers.to_h, filename: filename)
+            send_stream(merritt_stream: merritt_response.body, user_stream: user_stream)
+          rescue StandardError => ex
+            cc.logger.error("Error opening merritt URL: #{ex}")
+          end
         end
         cc.response.close
       end
