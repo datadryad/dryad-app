@@ -37,10 +37,10 @@ module Stash
           begin
             merritt_response = HTTP.timeout(connect: 30, read: read_timeout).timeout(7200)
                               .basic_auth(user: tenant.repository.username, pass: tenant.repository.password)
-                              .get(url)
+                              .streaming(true).get(url)
 
             send_headers(stream: user_stream, header_obj: merritt_response.headers.to_h, filename: filename)
-            send_stream(merritt_stream: merritt_response.body, user_stream: user_stream)
+            send_stream(merritt_stream: merritt_response, user_stream: user_stream)
           rescue StandardError => ex
             cc.logger.error("Error opening merritt URL: #{ex}")
           end
@@ -75,8 +75,8 @@ module Stash
       def send_stream(user_stream:, merritt_stream:)
         chunk_size = 1024 * 512
         begin
-          until merritt_stream.eof?
-            user_stream.write(merritt_stream.readpartial(chunk_size))
+          while (chunk = merritt_stream.readpartial(chunk_size))
+            user_stream.write(chunk)
           end
         rescue StandardError => ex
           cc.logger.error("Error while streaming: #{ex}")
