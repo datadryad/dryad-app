@@ -4,6 +4,7 @@ require 'down'
 require 'down/wget'
 require 'zaru'
 require 'active_support'
+require 'pry-remote'
 
 # helpful about URL streaming https://web.archive.org/web/20130310175732/http://blog.sparqcode.com/2012/02/04/streaming-data-with-rails-3-1-or-3-2/
 # https://stackoverflow.com/questions/3507594/ruby-on-rails-3-streaming-data-through-rails-to-client
@@ -24,7 +25,7 @@ module Stash
       # this is a method that should be overridden
       def stream_response(url:, tenant:, filename:, read_timeout: 30)
         cc.request.env['rack.hijack'].call
-        stream = cc.request.env['rack.hijack_io']
+        user_stream = cc.request.env['rack.hijack_io']
 
         # If the number of downloads becomes outrageous then we may need to have a limited thread pool, throttle individual
         # downloads or throttle overall requests to download from individual IP addresses or something else.
@@ -32,15 +33,13 @@ module Stash
           # I believe these timeouts are reasonable for this type of read since Merritt Express should respond quickly
           # and doesn't need to assemble files into a zipe file like the full version download does.
           # We don't want to hold dead download threads open too long for resource and network reasons.
-          remote_file = Down::Wget.open(url,
-                                        http_user: tenant.repository.username,
-                                        http_password: tenant.repository.password,
-                                        max_redirect: 10, # Merritt seems to love as many redirects as possible
-                                        dns_timeout: 2,
-                                        connect_timeout: 2,
-                                        read_timeout: read_timeout)
-          send_headers(stream: stream, header_obj: remote_file.data[:headers], filename: filename)
-          send_stream(out_stream: stream, in_stream: remote_file)
+
+          merritt_response = HTTP.timeout(connect: 30, read: read_timeout).timeout(7200)
+                              .basic_auth(user: tenant.repository.username, pass: tenant.repository.password)
+                              .get(url)
+
+          send_headers(stream: user_stream, header_obj: merritt_stream.headers.to_h, filename: filename)
+          send_stream(merritt_stream: merritt_response.body, user_stream: user_stream)
         end
         cc.response.close
       end
@@ -69,37 +68,21 @@ module Stash
         raise ex
       end
 
-      def send_stream(out_stream:, in_stream:)
-        chunk_size = 1024 * 256
-        begin_time = Time.new.to_f
+      def send_stream(user_stream:, merritt_stream:)
+        chunk_size = 1024 * 512
         begin
-          until in_stream.eof?
-            out_stream.write(in_stream.read(chunk_size))
-            # promising methods: to_io, sync = true, inspect
-            # promising to_io methods: ready?, stat, raw, wait_writeable, bytes, wait, flush, to_io, to_i, iflush, fsync, fdatasync, sync, sync =, tell
-            # pos, pos =, syssync, advise
-            # cc.logger.info("elapsed: #{Time.new.to_f - begin_time} seconds")
-            # cc.logger.info("out_stream.pos: #{out_stream.to_io.pos}")
-            # cc.logger.info("out_stream.class: #{out_stream.class}")
-            # cc.logger.info("out_stream.to_io.stat: #{out_stream.to_io.stat.methods}")
-            # cc.logger.info("out_stream.to_io.stat.size: #{out_stream.to_io.stat.size}") # always return 0
-            # cc.logger.info("out_stream.to_io.stat.pos: #{out_stream.to_io.stat.pos}") # gives undefined method
-
-            # cc.logger.info("methods: #{out_stream.to_io.methods}")
-            # sleep(0.12)
-            cc.logger.info("to_io.ready?: #{out_stream.to_io.ready?}")
-
+          until merritt_stream.eof?
+            user_stream.write(merritt_stream.read(chunk_size))
           end
         rescue StandardError => ex
           cc.logger.error("Error while streaming: #{ex}")
           cc.logger.error("Error while streaming: #{ex.backtrace}")
         ensure
-          out_stream.close
-          in_stream.close
+          user_stream.close
+          merritt_stream.close
         end
       end
       # end methods for 'rack.hijack'
-
     end
   end
 end
