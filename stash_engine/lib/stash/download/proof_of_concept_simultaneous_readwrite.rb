@@ -13,12 +13,12 @@
 STDOUT.sync = true
 require 'byebug'
 
-READ_CHUNK_SIZE = 10.freeze
+READ_CHUNK_SIZE = 10
 
 require 'tempfile'
 
 write_file = Tempfile.create('foo', '/Users/sfisher/workspace/direct-to-cdl-dryad/dryad').binmode
-write_file.flock(File::LOCK_NB|File::LOCK_SH)
+write_file.flock(File::LOCK_NB | File::LOCK_SH)
 write_file.sync = true
 
 read_file = File.open(write_file, 'r')
@@ -30,7 +30,7 @@ write_thread = Thread.new do
     1.upto(100 + (rand * 100).to_i) do |i|
       # puts "wrote line #{i}, position #{write_file.pos}" if i % 10 == 0
       write_file.write("line #{i}\n")
-      sleep(rand/100)  # simulate delays in writing data
+      sleep(rand / 100) # simulate delays in writing data
     end
   ensure
     write_file.close
@@ -41,8 +41,8 @@ read_thread = Thread.new do
   begin
     until read_file.closed?
       # puts "read_file.closed? #{read_file.closed?}, write_file.closed? #{write_file.closed?}"
-      while (write_file.closed? && !read_file.closed? )|| ( read_file.pos + READ_CHUNK_SIZE < write_file.pos )
-        sleep(rand/30) # simulate delays in reading data
+      while (write_file.closed? && !read_file.closed?) || (read_file.pos + READ_CHUNK_SIZE < write_file.pos)
+        sleep(rand / 30) # simulate delays in reading data
         data = read_file.read(10)
         # puts "#{data}, position #{read_file.pos}"
         $stdout.write data
@@ -52,7 +52,7 @@ read_thread = Thread.new do
           break
         end
       end
-      sleep 2  # a sleep to wait for more data to be consumed
+      sleep 2 # a sleep to wait for more data to be consumed
     end
   ensure
     read_file.close unless read_file.closed?
