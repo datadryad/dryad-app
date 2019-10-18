@@ -81,7 +81,7 @@ module Stash
 
           # use this file object which is the same underlying file as above, but code ensures it doesn't
           # read past the end of what has been written so far
-          read_file = File.open(write_file, 'r')
+          read_file = ::File.open(write_file, 'r')
 
           write_thread = Thread.new do
             # this only modifies the write file with contents of merritt stream
@@ -102,10 +102,10 @@ module Stash
           cc.logger.error("Error while streaming: #{ex.backtrace}")
         ensure
           user_stream&.close unless user_stream&.closed?
-          merritt_stream&.close unless merritt_stream&.closed?
+          # merritt_stream&.close unless merritt_stream&.closed?
           read_file&.close unless read_file&.closed?
           write_file&.close unless write_file&.closed?
-          File.unlink(write_file.path) if File.exist?(write_file.path)
+          ::File.unlink(write_file.path) if ::File.exist?(write_file.path)
         end
       end
 
