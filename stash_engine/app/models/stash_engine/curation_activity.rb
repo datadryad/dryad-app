@@ -1,10 +1,8 @@
 require 'stash/doi/id_gen'
 require 'stash/payments/invoicer'
-
-# rubocop:disable Metrics/ClassLength
 module StashEngine
 
-  class CurationActivity < ActiveRecord::Base
+  class CurationActivity < ActiveRecord::Base # rubocop:disable Metrics/ClassLength
 
     include StashEngine::Concerns::StringEnum
 
@@ -52,7 +50,7 @@ module StashEngine
     # Callbacks
     # ------------------------------------------
     # When the status is published/embargoed send to Stripe and DataCite
-    after_create :submit_to_datacite, :update_solr, :submit_to_stripe,
+    after_create :submit_to_datacite, :update_solr, :submit_to_stripe, :remove_peer_review,
                  if: proc { |ca|
                        !ca.resource.skip_datacite_update && (ca.published? || ca.embargoed?) &&
                                  latest_curation_status_changed?
@@ -144,6 +142,10 @@ module StashEngine
       resource.submit_to_solr
     end
 
+    def remove_peer_review
+      resource.hold_for_peer_review = false
+    end
+
     # Triggered on a status change
     def email_status_change_notices
       return if previously_published?
@@ -198,9 +200,8 @@ module StashEngine
         ).deliver_now
       end
     end
-    # rubocop:enable Metrics/AbcSize
 
-    # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity
+    # rubocop:disable Metrics/CyclomaticComplexity
     def update_publication_flags
       case status
       when 'withdrawn'
@@ -228,7 +229,8 @@ module StashEngine
       end
       resource.update_column(:file_view, false) unless changed # if nothing changed between previous published and this, don't view same files again
     end
-    # rubocop:enable Metrics/AbcSize, Metrics/CyclomaticComplexity
+    # rubocop:enable Metrics/AbcSize
+    # rubocop:enable Metrics/CyclomaticComplexity
 
     # Helper methods
     # ------------------------------------------
@@ -254,4 +256,3 @@ module StashEngine
     end
   end
 end
-# rubocop:enable Metrics/ClassLength
