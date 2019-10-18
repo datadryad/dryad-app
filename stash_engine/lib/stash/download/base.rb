@@ -30,7 +30,7 @@ module Stash
         # downloads or throttle overall requests to download from individual IP addresses or something else.
         Thread.new do
           # I believe these timeouts are reasonable for this type of read since Merritt Express should respond quickly
-          # and doesn't need to assemble files into a zipe file like the full version download does.
+          # and doesn't need to assemble files into a zip file like the full version download does.
           # We don't want to hold dead download threads open too long for resource and network reasons.
 
           begin
