@@ -37,7 +37,7 @@ module Stash
           begin
             merritt_response = HTTP.timeout(connect: 30, read: read_timeout).timeout(7200)
                               .basic_auth(user: tenant.repository.username, pass: tenant.repository.password)
-                              .streaming(true).get(url)
+                              .get(url)
 
             send_headers(stream: user_stream, header_obj: merritt_response.headers.to_h, filename: filename)
             send_stream(merritt_stream: merritt_response, user_stream: user_stream)
