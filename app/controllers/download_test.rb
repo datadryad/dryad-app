@@ -13,8 +13,9 @@ class DownloadTestController < ApplicationController
 
     response.headers["rack.hijack"] = proc do |stream|
       Thread.new do
+        # binding.pry_remote
         begin
-          response = HTTP.get(url)
+          response = HTTP.timeout(connect: 5, write: 180, read: 180).get(url)
           response.body.each do |chunk|
             stream.write(chunk)
           end
