@@ -2,7 +2,6 @@ require 'logger'
 require 'http'
 require 'zaru'
 require 'active_support'
-require 'pry-remote'
 require 'tempfile'
 
 # helpful about URL streaming https://web.archive.org/web/20130310175732/http://blog.sparqcode.com/2012/02/04/streaming-data-with-rails-3-1-or-3-2/
@@ -35,8 +34,8 @@ module Stash
 
           begin
             http = HTTP.timeout(connect: 30, read: read_timeout).timeout(7200)
-                  .basic_auth(user: tenant.repository.username, pass: tenant.repository.password)
-                  # .persistent(URI.join(url, '/').to_s)
+              .basic_auth(user: tenant.repository.username, pass: tenant.repository.password)
+            # .persistent(URI.join(url, '/').to_s)
             merritt_response = http.get(url)
 
             send_headers(stream: user_stream, header_obj: merritt_response.headers.to_h, filename: filename)
@@ -53,8 +52,8 @@ module Stash
         out_headers = ['HTTP/1.1 200 OK']
 
         # keep some heads from this request and write them over to the outgoing headers
-        # heads = header_obj.slice('Content-Type', 'content-type', 'Content-Length', 'content-length', 'ETag')
-        # heads.each_pair { |k, v| out_headers.push("#{k}: #{v}") }
+        heads = header_obj.slice('Content-Type', 'content-type', 'Content-Length', 'content-length', 'ETag')
+        heads.each_pair { |k, v| out_headers.push("#{k}: #{v}") }
 
         # add these headers
         out_headers +=
@@ -73,40 +72,37 @@ module Stash
       end
 
       def send_stream(user_stream:, merritt_stream:)
-        begin
-          # use this file to write contents of the stream
-          write_file = Tempfile.create('dl_file', Rails.root.join('uploads')).binmode
-          write_file.flock(::File::LOCK_NB|::File::LOCK_SH)
-          write_file.sync = true
+        # use this file to write contents of the stream
+        write_file = Tempfile.create('dl_file', Rails.root.join('uploads')).binmode
+        write_file.flock(::File::LOCK_NB | ::File::LOCK_SH)
+        write_file.sync = true
 
-          # use this file object which is the same underlying file as above, but code ensures it doesn't
-          # read past the end of what has been written so far
-          read_file = ::File.open(write_file, 'r')
+        # use this file object which is the same underlying file as above, but code ensures it doesn't
+        # read past the end of what has been written so far
+        read_file = ::File.open(write_file, 'r')
 
-          write_thread = Thread.new do
-            # this only modifies the write file with contents of merritt stream
-            save_to_file(merritt_stream: merritt_stream, write_file: write_file)
-          end
-
-          read_thread = Thread.new do
-            # this only modifies the user stream based on the contents of read file.  The other other
-            # objects are only read or have state checked.  Ensures it doesn't read past the end of content.
-            stream_from_file(read_file: read_file, write_file: write_file, user_stream: user_stream)
-          end
-
-          write_thread.join
-          read_thread.join
-
-        rescue StandardError => ex
-          cc.logger.error("Error while streaming: #{ex}")
-          cc.logger.error("Error while streaming: #{ex.backtrace}")
-        ensure
-          user_stream&.close unless user_stream&.closed?
-          # merritt_stream&.close unless merritt_stream&.closed?
-          read_file&.close unless read_file&.closed?
-          write_file&.close unless write_file&.closed?
-          ::File.unlink(write_file.path) if ::File.exist?(write_file.path)
+        write_thread = Thread.new do
+          # this only modifies the write file with contents of merritt stream
+          save_to_file(merritt_stream: merritt_stream, write_file: write_file)
         end
+
+        read_thread = Thread.new do
+          # this only modifies the user stream based on the contents of read file.  The other other
+          # objects are only read or have state checked.  Ensures it doesn't read past the end of content.
+          stream_from_file(read_file: read_file, write_file: write_file, user_stream: user_stream)
+        end
+
+        write_thread.join
+        read_thread.join
+      rescue StandardError => ex
+        cc.logger.error("Error while streaming: #{ex}")
+        cc.logger.error("Error while streaming: #{ex.backtrace}")
+      ensure
+        user_stream&.close unless user_stream&.closed?
+        # merritt_stream&.close unless merritt_stream&.closed?
+        read_file&.close unless read_file&.closed?
+        write_file&.close unless write_file&.closed?
+        ::File.unlink(write_file.path) if ::File.exist?(write_file.path)
       end
 
       def save_to_file(merritt_stream:, write_file:)
@@ -123,7 +119,7 @@ module Stash
         read_chunk_size = 1024 * 16 # 16k
 
         until read_file.closed?
-          while (write_file.closed? && !read_file.closed? ) || ( read_file.pos + read_chunk_size < write_file.pos )
+          while (write_file.closed? && !read_file.closed?) || (read_file.pos + read_chunk_size < write_file.pos)
             data = read_file.read(read_chunk_size)
 
             user_stream.write(data)
@@ -135,7 +131,6 @@ module Stash
           # no data to read right now, so wait a bit, if error read file should eventually close
           sleep(2)
         end
-
       ensure
         read_file.close unless read_file.closed?
       end
