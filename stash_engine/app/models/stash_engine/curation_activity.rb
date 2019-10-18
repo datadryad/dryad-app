@@ -144,6 +144,7 @@ module StashEngine
 
     def remove_peer_review
       resource.hold_for_peer_review = false
+      resource.save
     end
 
     # Triggered on a status change
