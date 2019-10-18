@@ -39,7 +39,7 @@ module Stash
                               .basic_auth(user: tenant.repository.username, pass: tenant.repository.password)
                               .get(url)
 
-            send_headers(stream: user_stream, header_obj: merritt_stream.headers.to_h, filename: filename)
+            send_headers(stream: user_stream, header_obj: merritt_response.headers.to_h, filename: filename)
             send_stream(merritt_stream: merritt_response.body, user_stream: user_stream)
           rescue StandardError => ex
             cc.logger.error("Error opening merritt URL: #{ex}")
