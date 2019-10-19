@@ -3,6 +3,8 @@ require 'http'
 require 'zaru'
 require 'active_support'
 require 'tempfile'
+require 'fileutils'
+require 'byebug'
 
 # helpful about URL streaming https://web.archive.org/web/20130310175732/http://blog.sparqcode.com/2012/02/04/streaming-data-with-rails-3-1-or-3-2/
 # https://stackoverflow.com/questions/3507594/ruby-on-rails-3-streaming-data-through-rails-to-client
@@ -71,8 +73,10 @@ module Stash
         raise ex
       end
 
+      # rubocop:disable Metrics/AbcSize
       def send_stream(user_stream:, merritt_stream:)
         # use this file to write contents of the stream
+        FileUtils.mkdir_p(Rails.root.join('uploads')) # ensures this file is created if it doesn't exist, needed mostly for tests
         write_file = Tempfile.create('dl_file', Rails.root.join('uploads')).binmode
         write_file.flock(::File::LOCK_NB | ::File::LOCK_SH)
         write_file.sync = true
@@ -102,8 +106,10 @@ module Stash
         # merritt_stream&.close unless merritt_stream&.closed?
         read_file&.close unless read_file&.closed?
         write_file&.close unless write_file&.closed?
-        ::File.unlink(write_file.path) if ::File.exist?(write_file.path)
+        ::File.unlink(write_file&.path) if ::File.exist?(write_file&.path)
       end
+      # rubocop:enable Metrics/AbcSize
+
 
       def save_to_file(merritt_stream:, write_file:)
         chunk_size = 1024 * 512 # 512k
@@ -115,6 +121,7 @@ module Stash
         write_file.close
       end
 
+      # rubocop:disable Metrics/CyclomaticComplexity
       def stream_from_file(read_file:, write_file:, user_stream:)
         read_chunk_size = 1024 * 16 # 16k
 
@@ -134,6 +141,7 @@ module Stash
       ensure
         read_file.close unless read_file.closed?
       end
+      # rubocop:enable Metrics/CyclomaticComplexity
     end
   end
 end
