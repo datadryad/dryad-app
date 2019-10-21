@@ -168,16 +168,16 @@ Dryad is open to working directly with organizations on an individual basis to d
 <p><strong>Members</strong>: $40 per published research article</p>
 <p><strong>Non-Members</strong>: $50 per published research article</p>
 
-<p>A journal (or journals) with an active subscription may make an unlimited number of submissions for a fixed, up-front cost. Publishers or groups that publish more than one journal can set up a subscription to cover all or any number of journals. The cost is calculated based on the total number of research articles published by the journal(s) in the prior year. The minimum contract duration is two years. <a href="#submission-integration">Submission integration</a> is required for subscribing journals.</p>
+<p>A journal (or journals) with an active subscription may make an unlimited number of submissions for a fixed, up-front cost. Publishers or groups that publish more than one journal can set up a subscription to cover all or any number of journals. The cost is calculated based on the total number of research articles published by the journal(s) in the prior year.</p>
 
 <h4>II. Usage-Based Plan </h4>
 <p>Based on actual number of published research datasets</p>
-<p><strong>Members</strong>: $95 prepaid, $105 deferred</p>
-<p><strong>Non-Members</strong>: $105 prepaid, $115 deferred</p>
+<p><strong>Members</strong>: $105 per dataset</p>
+<p><strong>Non-Members</strong>: $115 per dataset</p>
 
-<p>Organizations can either purchase a block of vouchers for future submissions (prepaid) at an additional discount, or be invoiced for the number of packages submitted by your authors in the previous quarter (deferred).</p>
+<p>Organizations will be invoiced quarterly on a deferred basis for the number of datasets published by your authors.</p>
 
-<p><strong>For more information on Publisher Membership, please contact <a href=mailto:director@datadryad.org>director@datadryad.org</a>.</strong></p>
+<p><strong>For more information on Publisher Membership and Sponsorship, please contact <a href=mailto:director@datadryad.org>director@datadryad.org</a>.</strong></p>
 
 <h3>Submission Integration<a name="submission-integration"></a></h3>
 
