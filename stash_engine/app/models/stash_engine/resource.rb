@@ -616,7 +616,7 @@ module StashEngine
     def curation_to_submitted(prior_version, attribution)
       # Determine which submission status to use, :submitted or :peer_review status (if this is the inital
       # version and the journal needs it)
-      status = (prior_version.blank? && requires_peer_review? ? 'peer_review' : 'submitted')
+      status = (hold_for_peer_review? ? 'peer_review' : 'submitted')
       # Update the user in the auto-created :in_progress activity as its set to the author by default
       current_curation_activity.update(user_id: attribution) if current_curation_activity.present?
       # Generate the :submitted status
@@ -636,13 +636,5 @@ module StashEngine
         note: edit_histories.last&.user_comment || 'ready for curation')
       # rubocop:enable Layout/AlignHash
     end
-
-    # -----------------------------------------------------------
-    # Determines whether the resource needs to go through a peer review
-    def requires_peer_review?
-      # If this is the first version and the user opted to hold for peer review
-      identifier.present? && identifier.resources.length == 1 && hold_for_peer_review?
-    end
-
   end
 end
