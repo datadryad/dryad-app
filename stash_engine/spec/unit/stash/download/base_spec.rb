@@ -106,14 +106,14 @@ module Stash
           # this should block until it has streamed to 'user' completely (ie, @user_stream)
           @base.stream_from_file(read_file: @read_file, write_file: @write_file, user_stream: @user_stream)
 
-          expect(@user_stream.string).to eql(open(@write_file).read)
+          expect(@user_stream.string).to eql(File.open(@write_file).read)
         end
 
-        it "(save_to_file) saves contents from a stream to a file (in chunks)" do
+        it '(save_to_file) saves contents from a stream to a file (in chunks)' do
           contents = StringIO.new((0...50).map { ('a'..'z').to_a[rand(26)] }.join)
           @base.save_to_file(merritt_stream: contents, write_file: @write_file)
           expect(@write_file.closed?).to eq(true)
-          expect(open(@write_file).read).to eq(contents.string)
+          expect(File.open(@write_file).read).to eq(contents.string)
         end
       end
     end
