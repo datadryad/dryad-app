@@ -73,7 +73,7 @@ module Stash
         raise ex
       end
 
-      # rubocop:disable Metrics/AbcSize
+      # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
       def send_stream(user_stream:, merritt_stream:)
         # use this file to write contents of the stream
         FileUtils.mkdir_p(Rails.root.join('uploads')) # ensures this file is created if it doesn't exist, needed mostly for tests
@@ -108,8 +108,7 @@ module Stash
         write_file&.close unless write_file&.closed?
         ::File.unlink(write_file&.path) if ::File.exist?(write_file&.path)
       end
-      # rubocop:enable Metrics/AbcSize
-
+      # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
 
       def save_to_file(merritt_stream:, write_file:)
         chunk_size = 1024 * 512 # 512k
