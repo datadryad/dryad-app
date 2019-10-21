@@ -20,28 +20,24 @@ module Mocks
       OmniAuth.config.add_mock(:orcid, Mocks::Orcid.omniauth_response(user))
 
       # https://api.sandbox.orcid.org/v2.1/5441f05582ea0983f9ad8b683127e6e6/email
-      stub_request(:get, %r{api\.sandbox\.orcid\.org/.*/email})
+      stub_request(:get, %r{api\.sandbox\.orcid\.org/v2\.1/.*/email})
         .with(
           headers: {
             'Accept' => '*/*',
-            'Accept-Encoding' => 'gzip, deflate',
             'Authorization' => /Bearer .*/,
             'Content-Type' => 'application/vnd.orcid+json',
-            'Host' => 'api.sandbox.orcid.org',
-            'User-Agent' => /.*/
+            'Host' => 'api.sandbox.orcid.org'
           }
         ).to_return(status: 200, body: Mocks::Orcid.email_response(user).to_json, headers: {})
 
       # https://api.sandbox.orcid.org/v2.1/5441f05582ea0983f9ad8b683127e6e6/email
-      stub_request(:get, %r{api\.sandbox\.orcid\.org/.*/employments})
+      stub_request(:get, %r{api\.sandbox\.orcid\.org/v2\.1/.*/employments})
         .with(
           headers: {
             'Accept' => '*/*',
-            'Accept-Encoding' => 'gzip, deflate',
             'Authorization' => /Bearer .*/,
             'Content-Type' => 'application/vnd.orcid+json',
-            'Host' => 'api.sandbox.orcid.org',
-            'User-Agent' => /.*/
+            'Host' => 'api.sandbox.orcid.org'
           }
         ).to_return(status: 200, body: Mocks::Orcid.employment_response(user).to_json, headers: {})
     end
