@@ -24,7 +24,7 @@ module StashEngine
       @identifier = create(:identifier)
       @resource = create(:resource, :submitted, identifier: @identifier, user_id: @user.id, tenant_id: @user.tenant_id)
       @publication_doi = create(:related_identifier, :publication_doi, resource: @resource)
-      @pmid = create(:internal_datum, identifier_id: @identifier.id, data_type: 'pubmedID', value: Faker::Number.number(8))
+      @pmid = create(:internal_datum, identifier_id: @identifier.id, data_type: 'pubmedID', value: Faker::Number.number(digits: 8))
     end
 
     describe '#banner_for_pub' do

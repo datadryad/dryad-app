@@ -7,7 +7,7 @@ FactoryBot.define do
 
     has_geolocation { false }
     title { Faker::Lorem.sentence }
-    download_uri { "http://merritt-fake.cdlib.org/d/ark%3A%2F99999%2Ffk#{Faker::Alphanumeric.alphanumeric(8)}" }
+    download_uri { "http://merritt-fake.cdlib.org/d/ark%3A%2F99999%2Ffk#{Faker::Alphanumeric.alphanumeric(number: 8)}" }
     update_uri { Faker::Internet.url }
 
     before(:create) do |resource|
