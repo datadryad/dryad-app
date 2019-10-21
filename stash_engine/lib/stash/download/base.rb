@@ -125,7 +125,6 @@ module Stash
         cc.logger.info("EoF reached in Merritt Stream: #{ex}")
       ensure
         write_file.close unless write_file.closed?
-        merritt_stream.close unless merritt_stream.closed?
       end
 
       # rubocop:disable Metrics/CyclomaticComplexity
