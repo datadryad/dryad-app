@@ -37,7 +37,7 @@ RSpec.feature 'MigrateData', type: :feature do
     end
 
     it 'rejects migration if no matching email', js: true do
-      @user.update(migration_token: Faker::Number.number(6))
+      @user.update(migration_token: Faker::Number.number(digits: 6))
       @user.reload
       visit stash_url_helpers.auth_migrate_mail_path
       fill_in 'code', with: @user.migration_token
@@ -90,7 +90,7 @@ RSpec.feature 'MigrateData', type: :feature do
       end
 
       it "displays old user's datasets after merging" do
-        @user.update(migration_token: Faker::Number.number(6), old_dryad_email: @user2.email)
+        @user.update(migration_token: Faker::Number.number(digits: 6), old_dryad_email: @user2.email)
         @user.reload
 
         # note the email should already be in the form from the stored value in old_dryad_email

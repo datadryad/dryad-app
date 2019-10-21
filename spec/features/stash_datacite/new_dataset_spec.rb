@@ -71,7 +71,7 @@ RSpec.feature 'NewDataset', type: :feature do
 
       # TODO: stop calling this section 'contributor'
       fill_in 'contributor[contributor_name]', with: Faker::Company.name
-      fill_in 'contributor[award_number]', with: Faker::Number.number(5)
+      fill_in 'contributor[award_number]', with: Faker::Number.number(digits: 5)
 
       # ##############################
       # Keywords
