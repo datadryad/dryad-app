@@ -68,11 +68,9 @@ module Stash
           # maybe I can read these if they are not closed
         end
 
-        it 'closes the streams after use' do
+        it 'closes the stream after use' do
           @base.send_stream(merritt_stream: @in_stream, user_stream: @out_stream)
           expect(@out_stream.closed?).to eq(true)
-          expect(@in_stream.closed?).to eq(true)
-          # I couldn't figure out how to get the contents of out stream, even if I prevented it from closing
         end
 
         it 'makes the out-stream have the same contents as the in-stream' do
