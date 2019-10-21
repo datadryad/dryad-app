@@ -1,10 +1,8 @@
 require 'stash/doi/id_gen'
 require 'stash/payments/invoicer'
-
-# rubocop:disable Metrics/ClassLength
 module StashEngine
 
-  class CurationActivity < ActiveRecord::Base
+  class CurationActivity < ActiveRecord::Base # rubocop:disable Metrics/ClassLength
 
     include StashEngine::Concerns::StringEnum
 
@@ -52,15 +50,15 @@ module StashEngine
     # Callbacks
     # ------------------------------------------
     # When the status is published/embargoed send to Stripe and DataCite
-    after_create :submit_to_datacite, :update_solr, :submit_to_stripe,
+    after_create :submit_to_datacite, :update_solr, :submit_to_stripe, :remove_peer_review,
                  if: proc { |ca|
                        !ca.resource.skip_datacite_update && (ca.published? || ca.embargoed?) &&
                                  latest_curation_status_changed?
                      }
 
-    # Email the primary author when submitted, peer_review, published or embargoed
-    after_create :email_author,
-                 if: proc { |ca| %w[published embargoed].include?(ca.status) && latest_curation_status_changed? && !resource.skip_emails }
+    # Email the author and/or journal about status changes
+    after_create :email_status_change_notices,
+                 if: proc { |_ca| latest_curation_status_changed? && !resource.skip_emails }
 
     # Email invitations to register ORCIDs to authors when published
     after_create :email_orcid_invitations,
@@ -144,17 +142,33 @@ module StashEngine
       resource.submit_to_solr
     end
 
-    # Triggered on a status of :published or :embargoed
-    def email_author
-      StashEngine::UserMailer.status_change(resource, status).deliver_now
-      StashEngine::UserMailer.journal_published_notice(resource, status).deliver_now unless previously_published?
+    def remove_peer_review
+      resource.hold_for_peer_review = false
+      resource.save
+    end
+
+    # Triggered on a status change
+    def email_status_change_notices
+      return if previously_published?
+
+      case status
+      when 'published'
+        StashEngine::UserMailer.status_change(resource, status).deliver_now
+        StashEngine::UserMailer.journal_published_notice(resource, status).deliver_now
+      when 'embargoed'
+        StashEngine::UserMailer.status_change(resource, status).deliver_now
+        StashEngine::UserMailer.journal_published_notice(resource, status).deliver_now
+      when 'peer_review'
+        StashEngine::UserMailer.status_change(resource, status).deliver_now
+        StashEngine::UserMailer.journal_review_notice(resource, status).deliver_now
+      end
     end
 
     def previously_published?
       # ignoring the current CA, is there an embargoed or published status at any point for this identifier?
       prev_pub = false
-      resource.identifier.resources.each do |res|
-        res.curation_activities.each do |ca|
+      resource.identifier&.resources&.each do |res|
+        res.curation_activities&.each do |ca|
           if (ca.id != id) && %w[published embargoed].include?(ca.status)
             prev_pub = true
             break
@@ -187,9 +201,8 @@ module StashEngine
         ).deliver_now
       end
     end
-    # rubocop:enable Metrics/AbcSize
 
-    # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity
+    # rubocop:disable Metrics/CyclomaticComplexity
     def update_publication_flags
       case status
       when 'withdrawn'
@@ -217,7 +230,8 @@ module StashEngine
       end
       resource.update_column(:file_view, false) unless changed # if nothing changed between previous published and this, don't view same files again
     end
-    # rubocop:enable Metrics/AbcSize, Metrics/CyclomaticComplexity
+    # rubocop:enable Metrics/AbcSize
+    # rubocop:enable Metrics/CyclomaticComplexity
 
     # Helper methods
     # ------------------------------------------
@@ -243,4 +257,3 @@ module StashEngine
     end
   end
 end
-# rubocop:enable Metrics/ClassLength

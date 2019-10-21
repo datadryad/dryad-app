@@ -34,7 +34,7 @@ RSpec.configure do |config|
 
   config.before(:each) do
     # Mock all the mailers fired by callbacks because these tests don't load everything we need
-    allow_any_instance_of(StashEngine::CurationActivity).to receive(:email_author).and_return(true)
+    allow_any_instance_of(StashEngine::CurationActivity).to receive(:email_status_change_notices).and_return(true)
     allow_any_instance_of(StashEngine::CurationActivity).to receive(:email_orcid_invitations).and_return(true)
   end
 

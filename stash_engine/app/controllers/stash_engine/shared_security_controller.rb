@@ -57,7 +57,7 @@ module StashEngine
     end
 
     def admin?(resource:)
-      current_user.present? && (current_user.tenant_id == resource.tenant_id && current_user.role == 'admin')
+      current_user.present? && (current_user&.tenant_id == resource.tenant_id && current_user&.role == 'admin')
     end
 
     def superuser?

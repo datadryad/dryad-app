@@ -21,6 +21,7 @@ module StashEngine
       allow(@identifier).to receive(:identifier_type).and_return('DOI')
       allow(@identifier).to receive(:publication_issn).and_return(nil)
       allow(@identifier).to receive(:citations).and_return(["https://doi.org/#{@identifier.identifier}"])
+      allow(@identifier).to receive(:embargoed_until_article_appears?).and_return(false)
 
       @tenant = double(Tenant)
       allow(@tenant).to receive(:campus_contacts).and_return(%w[gorgath@example.edu lajuana@example.edu])
@@ -120,6 +121,18 @@ module StashEngine
 
       end
 
+    end
+
+    describe 'embargoed status changes' do
+      it "should send an modified email when embargoed_until_article_appears'" do
+        allow(@resource).to receive(:current_curation_status).and_return('embargoed')
+        allow(@resource).to receive(:publication_date).and_return(Date.today)
+        allow(@identifier).to receive(:embargoed_until_article_appears?).and_return(true)
+
+        UserMailer.status_change(@resource, 'embargoed').deliver_now
+        delivery = assert_email("[test] Dryad Submission \"#{@resource.title}\"")
+        expect(delivery.body.to_s).to include('until the associated article appears')
+      end
     end
 
     it 'sends an invitation' do
