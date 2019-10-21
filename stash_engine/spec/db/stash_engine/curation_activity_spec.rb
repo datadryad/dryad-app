@@ -103,7 +103,7 @@ module StashEngine
       context :submit_to_datacite do
 
         before(:each) do
-          allow_any_instance_of(StashEngine::CurationActivity).to receive(:email_author).and_return(true)
+          allow_any_instance_of(StashEngine::CurationActivity).to receive(:email_status_change_notices).and_return(true)
           allow_any_instance_of(StashEngine::CurationActivity).to receive(:orcid_invitation).and_return(true)
         end
 
@@ -132,7 +132,7 @@ module StashEngine
       context :submit_to_stripe do
 
         before(:each) do
-          allow_any_instance_of(StashEngine::CurationActivity).to receive(:email_author).and_return(true)
+          allow_any_instance_of(StashEngine::CurationActivity).to receive(:email_status_change_notices).and_return(true)
         end
 
         it 'calls submit_to_stripe when published' do
@@ -166,7 +166,7 @@ module StashEngine
 
       end
 
-      context :email_author do
+      context :email_status_change_notices do
 
         before(:each) do
           allow_any_instance_of(StashEngine::UserMailer).to receive(:status_change).and_return(true)
@@ -175,18 +175,16 @@ module StashEngine
 
         StashEngine::CurationActivity.statuses.each do |status|
 
-          if %w[published embargoed].include?(status)
-            it "calls email_author when '#{status}'" do
-              allow_any_instance_of(StashEngine::CurationActivity).to receive(:email_author?).and_return(false)
+          if %w[published embargoed peer_review].include?(status)
+            it "sends email when '#{status}'" do
               ca = CurationActivity.new(resource_id: @resource.id, status: status)
-              expect(ca).to receive(:email_author)
+              expect_any_instance_of(StashEngine::UserMailer).to receive(:status_change)
               ca.save
             end
           else
-            it "does not call email_author when '#{status}'" do
-              allow_any_instance_of(StashEngine::CurationActivity).to receive(:email_author?).and_return(false)
+            it "does not send email when '#{status}'" do
               ca = CurationActivity.new(resource_id: @resource.id, status: status)
-              expect(ca).not_to receive(:email_author)
+              expect_any_instance_of(StashEngine::UserMailer).not_to receive(:status_change)
               ca.save
             end
           end
