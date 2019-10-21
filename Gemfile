@@ -110,6 +110,5 @@ group :development, :test, :local_dev do
   gem 'byebug'
   gem 'pry'
   gem 'pry-rails'
-  gem 'pry-remote', :require => "pry-remote"
+  gem 'pry-remote', require: 'pry-remote'
 end
-
