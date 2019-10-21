@@ -268,6 +268,10 @@ module StashEngine
       publication_data('notifyContacts')
     end
 
+    def journal_review_contacts
+      publication_data('reviewContacts')
+    end
+
     def allow_review?
       publication_data('allowReviewWorkflow') || publication_name.blank?
     end
@@ -297,6 +301,21 @@ module StashEngine
       my_state = calculated_pub_state
       update_column(:pub_state, my_state) # avoid any callbacks and validations which will only stir up trouble
       my_state
+    end
+
+    def embargoed_until_article_appears?
+      return false unless pub_state == 'embargoed'
+
+      found_article_appears = false
+      resources.each do |res|
+        res.curation_activities.each do |ca|
+          next unless ca.status == 'embargoed' && (ca.note&.match('untilArticleAppears') ||
+                                          ca.note&.match('1-year blackout period'))
+          found_article_appears = true
+          break
+        end
+      end
+      found_article_appears
     end
 
     # returns the publication state based on history
