@@ -262,6 +262,16 @@ module StashEngine
         end
       end
 
+      context :peer_review_status do
+        it 'disables the default peer_review setting after publication' do
+          @resource.hold_for_peer_review = true
+          @resource.save
+          @resource.curation_activities << CurationActivity.create(status: 'peer_review', user: @user)
+          @resource.curation_activities << CurationActivity.create(status: 'published', user: @user)
+          @resource.reload
+          expect(@resource.hold_for_peer_review?).to eq(false)
+        end
+      end
     end
 
   end
