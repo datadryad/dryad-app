@@ -117,8 +117,15 @@ module Stash
         while (chunk = merritt_stream.readpartial(chunk_size))
           write_file.write(chunk)
         end
+      rescue EOFError => ex
+        # I believe Ruby has this error with certain kinds of IO objects such as StringIO in testing, but seems to have written
+        # the chunk, anyway.  But if it does happen I guess it's all fine, the stream is done and time to close it anyway
+        # with the ensure.  Doesn't seem to happen with the HTTP library.
+        # https://github.com/ohler55/ox/issues/7
+        cc.logger.info("EoF reached in Merritt Stream: #{ex}")
       ensure
-        write_file.close
+        write_file.close unless write_file.closed?
+        merritt_stream.close unless merritt_stream.closed?
       end
 
       # rubocop:disable Metrics/CyclomaticComplexity
@@ -140,6 +147,7 @@ module Stash
         end
       ensure
         read_file.close unless read_file.closed?
+        user_stream.close unless user_stream.closed?
       end
       # rubocop:enable Metrics/CyclomaticComplexity
     end
