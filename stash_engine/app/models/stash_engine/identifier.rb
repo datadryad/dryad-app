@@ -268,6 +268,10 @@ module StashEngine
       publication_data('notifyContacts')
     end
 
+    def journal_review_contacts
+      publication_data('reviewContacts')
+    end
+
     def allow_review?
       publication_data('allowReviewWorkflow') || publication_name.blank?
     end
