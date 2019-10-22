@@ -10,7 +10,7 @@ module Mocks
       allow_any_instance_of(StashEngine::CurationActivity).to receive(:submit_to_datacite).and_return(true)
       allow_any_instance_of(StashEngine::CurationActivity).to receive(:update_solr).and_return(true)
       allow_any_instance_of(StashEngine::CurationActivity).to receive(:submit_to_stripe).and_return(true)
-      allow_any_instance_of(StashEngine::CurationActivity).to receive(:email_author).and_return(true)
+      allow_any_instance_of(StashEngine::CurationActivity).to receive(:email_status_change_notices).and_return(true)
       allow_any_instance_of(StashEngine::CurationActivity).to receive(:email_orcid_invitations).and_return(true)
     end
     # rubocop:enable Metrics/AbcSize

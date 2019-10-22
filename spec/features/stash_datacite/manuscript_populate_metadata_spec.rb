@@ -78,13 +78,10 @@ RSpec.feature 'Populate manuscript metadata from outside source', type: :feature
     end
 
     it 'works for successful dataset request to crossref' do
-      stub_request(:get, 'https://api.crossref.org/works/10.1098/rsif.2017.0030')
+      stub_request(:get, 'https://api.crossref.org/works/10.1098%2Frsif.2017.0030')
         .with(
           headers: {
-            'Accept' => '*/*',
-            'Accept-Encoding' => /.*/,
-            'User-Agent' => /.*/,
-            'X-User-Agent' => /.*/
+            'Accept' => '*/*'
           }
         )
         .to_return(status: 200,

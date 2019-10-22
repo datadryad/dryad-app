@@ -4,7 +4,7 @@ FactoryBot.define do
 
     resource
 
-    related_identifier      { Faker::Number.number(8) }
+    related_identifier      { Faker::Number.number(digits: 8) }
     related_identifier_type { %w[doi ean13 eissn handle isbn issn istc lissn lsid pmid purl upc url urn].sample }
     relation_type           do
       %w[iscitedby cites issupplementto issupplementedby iscontinuedby continues isnewversionof
