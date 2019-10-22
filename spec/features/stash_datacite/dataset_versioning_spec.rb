@@ -86,10 +86,6 @@ RSpec.feature 'DatasetVersioning', type: :feature do
         expect(@resource.current_curation_status).to eql('submitted')
       end
 
-      it 'sent out an email to the author', js: true do
-        expect(ActionMailer::Base.deliveries.count).to eq(1)
-      end
-
       it 'displays the proper information on the My Datasets page', js: true do
         click_link 'My Datasets'
         within(:css, '#user_submitted tbody tr:first-child') do
@@ -178,10 +174,6 @@ RSpec.feature 'DatasetVersioning', type: :feature do
 
       it 'carried over the curation note to the curation_activity record', js: true do
         expect(@resource.current_curation_activity.note.include?(@resource.edit_histories.last.user_comment)).to eql(true)
-      end
-
-      it 'did not send out an additional email to the author', js: true do
-        expect(ActionMailer::Base.deliveries.count).to eq(1)
       end
 
       it 'displays the proper information on the Admin page', js: true do
