@@ -69,12 +69,6 @@ module Stash
         it 'detects an async download and yields to the block' do
           expect(@version.download(resource: @resource) { 'this would do async' }).to eql('this would do async')
         end
-
-        it 'detects a normal download and starts' do
-          allow(@version).to receive(:'merritt_async_download?').and_return(false)
-          result = @version.download(resource: @resource) { 'this would do async' }
-          expect(result).to eql('streaming')
-        end
       end
 
       describe '#disposition_filename' do
@@ -91,13 +85,8 @@ module Stash
           expect(@version.disposition_filename).to include("__v#{@ds_version.version}")
         end
 
-        it 'includes content-disposition to have attachment with filename with zip' do
-          expect(@version.disposition_filename).to match(/attachment; filename=".+zip"/)
-        end
-
         it 'replaces colon and slashes with underscores' do
-          m = @identifier.to_s.tr(':', '_').tr('/', '_')
-          expect(@version.disposition_filename).to include(m)
+          expect(@version.disposition_filename).to eql('doi_10.1072_FK2something__v1.zip')
         end
       end
     end
