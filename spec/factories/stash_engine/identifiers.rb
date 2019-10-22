@@ -4,7 +4,7 @@ FactoryBot.define do
 
     identifier { Faker::Pid.doi }
     identifier_type { 'DOI' }
-    storage_size { Faker::Number.number(5) }
+    storage_size { Faker::Number.number(digits: 5) }
     license_id { 'cc0' }
 
     transient do

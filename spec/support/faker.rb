@@ -19,7 +19,7 @@ module Faker
 
       def doi
         # Example: 12.1234/foo.b1a2r
-        "10.#{Faker::Number.number(4)}/#{Faker::Alphanumeric.alphanumeric(4)}.#{Faker::Alphanumeric.alphanumeric(5)}"
+        "10.#{Faker::Number.number(digits: 4)}/#{Faker::Alphanumeric.alphanumeric(number: 4)}.#{Faker::Alphanumeric.alphanumeric(number: 5)}"
       end
 
       def orcid

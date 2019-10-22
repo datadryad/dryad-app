@@ -14,7 +14,7 @@ module Mocks
         .to_return(status: 200, body: pubmed_response(doi), headers: { 'Content-Type' => 'text/xml' })
     end
 
-    def stub_pubmed_sequence_lookup(pmid: Faker::Number.number(5))
+    def stub_pubmed_sequence_lookup(pmid: Faker::Number.number(digits: 5))
       stub_request(:get, %r{www.ncbi.nlm.nih.gov/entrez/eutils/elink.fcgi?})
         .with(headers: { 'Accept' => 'text/xml' })
         .to_return(status: 200, body: sequence_response(pmid), headers: { 'Content-Type' => 'text/xml' })
@@ -31,7 +31,7 @@ module Mocks
           <RetMax>1</RetMax>
           <RetStart>0</RetStart>
           <IdList>
-            <Id>#{Faker::Number.number(6)}</Id>
+            <Id>#{Faker::Number.number(digits: 6)}</Id>
           </IdList>
           <TranslationSet/>
           <TranslationStack>
@@ -62,10 +62,10 @@ module Mocks
               <DbTo>nuccore</DbTo>
               <LinkName>pubmed_nuccore</LinkName>
               <Link>
-                <Id>#{Faker::Number.number(9)}</Id>
+                <Id>#{Faker::Number.number(digits: 9)}</Id>
               </Link>
               <Link>
-                <Id>#{Faker::Number.number(9)}</Id>
+                <Id>#{Faker::Number.number(digits: 9)}</Id>
               </Link>
             </LinkSetDb>
           </LinkSet>

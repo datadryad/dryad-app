@@ -26,7 +26,7 @@ end
 gem 'capistrano', '~> 3.4.1'
 gem 'capistrano-passenger'
 gem 'capistrano-rails', '~> 1.1'
-gem 'passenger'
+gem 'passenger', '~> 6.0.4'
 gem 'rubocop', '~> 0.52.1'
 
 # ############################################################
@@ -51,6 +51,11 @@ gem 'exception_notification'
 gem 'httparty'
 gem 'jbuilder', '~> 2.0'
 gem 'stripe'
+
+# #########################
+# Testing download examples
+gem 'down'
+gem 'http'
 
 # ############################################################
 # Development and testing
@@ -105,5 +110,5 @@ group :development, :test, :local_dev do
   gem 'byebug'
   gem 'pry'
   gem 'pry-rails'
-  gem 'pry-remote'
+  gem 'pry-remote', require: 'pry-remote'
 end

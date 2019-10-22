@@ -57,10 +57,10 @@ RSpec.feature 'Admin', type: :feature do
 
       before(:each) do
         @superuser = create(:user, role: 'superuser', tenant_id: 'dryad')
-        sign_in(@superuser)
+        sign_in(@superuser, false)
       end
 
-      it 'has admin link' do
+      it 'has admin link', js: true do
         visit root_path
         find('.o-sites__summary', text: 'Admin').click
         expect(page).to have_link('Dataset Curation', wait: 5)

@@ -6,7 +6,7 @@ module Mocks
       {
         uid: user.present? && user.email.present? ? user.email : Faker::Internet.safe_email,
         credentials: {
-          token: "#{Faker::Alphanumeric.alphanumeric(4)}.#{Faker::Alphanumeric.alphanumeric(26)}"
+          token: "#{Faker::Alphanumeric.alphanumeric(number: 4)}.#{Faker::Alphanumeric.alphanumeric(number: 26)}"
         },
         info: {
           email: user.present? && user.email.present? ? user.email : Faker::Internet.safe_email,
