@@ -2,77 +2,118 @@ require 'spec_helper'
 require 'stash/download/base'
 require 'stash/streamer'
 require 'ostruct'
+require 'stringio'
+require 'active_support/core_ext/time/zones' # required for time
+require 'active_support' # required for slice
+require 'active_support/core_ext/kernel/reporting'
+require 'pathname'
+require 'active_support/logger'
+require 'byebug'
 
 # a base class for version and file downloads, providing some basic functions
 module Stash
   module Download
     describe 'Base' do
 
+      before(:each) do
+        # need to hack in Rails.root because our test framework setup sucks
+        rails_root = Dir.mktmpdir('rails_root')
+        allow(Rails).to receive(:root).and_return(Pathname.new(rails_root))
+
+        @controller_context = 'blah'
+        @logger = ActiveSupport::Logger.new(STDOUT)
+        allow(@controller_context).to receive(:logger).and_return(@logger)
+      end
+
       it 'initializes with a controller context object' do
-        item = Base.new(controller_context: 'blah')
+        item = Base.new(controller_context: @controller_context)
         expect(item.cc).to eql('blah')
       end
 
-      describe '#stream_response' do
-
+      describe 'send_headers(stream:, header_obj:, filename:)' do
         before(:each) do
-
-          # make controller context have response_body and response.headers[]
-          @base = Base.new(controller_context: OpenStruct.new(response_body:  '',
-                                                              response: OpenStruct.new(headers: {})))
-
-          cli = double('client')
-
-          head_response = OpenStruct.new(http_header:
-                                             { 'Content-Type' => ['text/plain'],
-                                               'Content-Length' => [37],
-                                               'Content-Disposition' => ['inline; filename="blah.txt"'] })
-
-          allow(cli).to receive(:head).with(anything, anything).and_return(head_response)
-
-          my_http_client = double(Stash::Repo::HttpClient)
-
-          allow(my_http_client).to receive(:client).and_return(cli)
-          allow(Stash::Repo::HttpClient).to receive(:new).and_return(my_http_client)
-
-          allow(Stash::Streamer).to receive(:new).with(anything, anything).and_return('This is my stream')
-          allow_any_instance_of(Stash::Download::Base).to receive(:disposition_filename).and_return('12xu.zip')
+          Time.zone = 'Pacific Time (US & Canada)'
+          @base = Base.new(controller_context: @controller_context)
+          @stream = StringIO.new
+          @header_obj = { 'Content-Type' => 'yum/good',
+                          'Content-Length' => 10_101,
+                          'ETag' => 'kslj34898',
+                          'Squirrel-Fun' => 'noggin' }
+          @filename = 'num_num.jpg'
+          allow(@stream).to receive(:flush).and_return('cats') # flush destroys the output so I can't see if afterward
         end
 
-        it 'sets up Content-Type' do
-          @base.stream_response(url: 'http://example.com', tenant: 'tenant would be a better object')
-          expect(@base.cc.response.headers['Content-Type']).to eql('text/plain')
+        it 'adds these headers into the IO stream' do
+          @base.send_headers(stream: @stream, header_obj: @header_obj, filename: @filename)
+          @stream.rewind
+          output = @stream.read
+          expect(output).to include("Content-Type: yum/good\r\n")
+          expect(output).to include("Content-Length: 10101\r\n")
+          expect(output).to include("ETag: kslj34898\r\n")
+          expect(output).to include("Content-Disposition: attachment; filename=\"num_num.jpg\"\r\n")
+          expect(output).to include("X-Accel-Buffering: no\r\n")
+          expect(output).to include("Cache-Control: no-cache\r\n")
+          expect(output).to start_with("HTTP/1.1 200 OK\r\n")
         end
-
-        it 'sets up Content-Length' do
-          @base.stream_response(url: 'http://example.com', tenant: 'tenant would be a better object')
-          expect(@base.cc.response.headers['Content-Length']).to eql(37)
-        end
-
-        it 'sets up Content-Disposition' do
-          @base.stream_response(url: 'http://example.com', tenant: 'tenant would be a better object')
-          expect(@base.cc.response.headers['Content-Disposition']).to eql('12xu.zip')
-        end
-
-        it 'has correct response_body' do
-          @base.stream_response(url: 'http://example.com', tenant: 'tenant would be a better object')
-          expect(@base.cc.response_body).to eql('This is my stream')
-        end
-
       end
 
-      describe 'Base.log_warning_if_needed' do
+      describe 'send_stream(out_stream:, in_stream:)' do
         before(:each) do
-          @logger_mock = double('Rails.logger').as_null_object
-          @error = OpenStruct.new(class: 'TestClass', backtrace: %w[1 2 3 4])
-          @resource = StashEngine::Resource.create
-          allow(Rails).to receive(:env).and_return(OpenStruct.new('development?' => true))
+          Time.zone = 'Pacific Time (US & Canada)'
+          @base = Base.new(controller_context: @controller_context)
+          @in_stream = StringIO.new
+          @in_stream.puts 'My cat has many fleas. He needs a flea collar.'
+          @in_stream.rewind
+          @out_stream = StringIO.new
+          # maybe I can read these if they are not closed
         end
 
-        it 'logs a message' do
-          expect(Rails).to receive(:logger).and_return(@logger_mock)
-          expect(@logger_mock).to receive(:warn)
-          Base.log_warning_if_needed(error: @error, resource: @resource)
+        it 'closes the stream after use' do
+          @base.send_stream(merritt_stream: @in_stream, user_stream: @out_stream)
+          expect(@out_stream.closed?).to eq(true)
+        end
+
+        it 'makes the out-stream have the same contents as the in-stream' do
+          @base.send_stream(merritt_stream: @in_stream, user_stream: @out_stream)
+          expect(@out_stream.string).to eq(@in_stream.string)
+        end
+      end
+
+      # this takes two copies of the same file.  One is being written to, one is being read from and and output user_stream
+      describe 'stream to file methods' do
+        before(:each) do
+          Time.zone = 'Pacific Time (US & Canada)'
+          @base = Base.new(controller_context: @controller_context)
+
+          @write_file = Tempfile.create('dl_file', Rails.root).binmode
+          @write_file.flock(::File::LOCK_NB | ::File::LOCK_SH)
+          @write_file.sync = true
+
+          @read_file = ::File.open(@write_file, 'r')
+
+          @user_stream = StringIO.new
+        end
+
+        it "(stream_from_file) doesn't read past the end or close if writing to the file is slower than reading it" do
+          contents = (0...50).map { ('a'..'z').to_a[rand(26)] }.join # random string, import Faker sometime in here
+
+          Thread.new do
+            sleep 3
+            @write_file.write(contents)
+            @write_file.close
+          end
+
+          # this should block until it has streamed to 'user' completely (ie, @user_stream)
+          @base.stream_from_file(read_file: @read_file, write_file: @write_file, user_stream: @user_stream)
+
+          expect(@user_stream.string).to eql(::File.open(@write_file).read)
+        end
+
+        it '(save_to_file) saves contents from a stream to a file (in chunks)' do
+          contents = StringIO.new((0...50).map { ('a'..'z').to_a[rand(26)] }.join)
+          @base.save_to_file(merritt_stream: contents, write_file: @write_file)
+          expect(@write_file.closed?).to eq(true)
+          expect(::File.open(@write_file).read).to eq(contents.string)
         end
       end
     end

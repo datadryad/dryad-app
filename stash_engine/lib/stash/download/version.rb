@@ -1,5 +1,4 @@
 require_relative 'base'
-require 'zaru'
 
 module Stash
   module Download
@@ -35,7 +34,8 @@ module Stash
           yield
         else
           StashEngine::CounterLogger.version_download_hit(request: cc.request, resource: resource)
-          stream_response(url: resource.merritt_producer_download_uri, tenant: resource.tenant)
+          # longer read timeout since Merritt may need to assemble zip file before starting download
+          stream_response(url: resource.merritt_producer_download_uri, tenant: resource.tenant, filename: disposition_filename, read_timeout: 180)
         end
       end
 
@@ -44,7 +44,7 @@ module Stash
         fn = Zaru.sanitize!(@resource.identifier.to_s.gsub(%r{[\:\\/]+}, '_'))
         fn.gsub!(/,|;|'|"|\u007F/, '')
         fn << "__v#{@resource.stash_version.version}"
-        "attachment; filename=\"#{fn}.zip\""
+        "#{fn}.zip"
       end
 
       def raise_merritt_error(operation, details, resource_id, uri)

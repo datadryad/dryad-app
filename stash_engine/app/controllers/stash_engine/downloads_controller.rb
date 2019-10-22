@@ -1,7 +1,6 @@
 require_dependency 'stash_engine/application_controller'
 require 'stash/download/file'
 require 'stash/download/version'
-# require 'rest-client'
 
 # rubocop:disable Metrics/ClassLength
 module StashEngine
