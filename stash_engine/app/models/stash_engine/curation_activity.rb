@@ -237,6 +237,7 @@ module StashEngine
     # ------------------------------------------
 
     def ready_for_payment?
+      resource&.identifier&.reload
       StashEngine.app&.payments&.service == 'stripe' &&
         resource&.identifier&.invoice_id.nil? &&
         (status == 'published' || status == 'embargoed')
