@@ -148,9 +148,11 @@ module StashEngine
 
       it 'considers changed to be false if the last two curation statuses are equal' do
         @curation_activity1 = create(:curation_activity, status: :embargoed, resource: @resource)
-        @curation_activity2 = create(:curation_activity, status: :embargoed, resource: @resource, note: 'We need more about cats')
+        @curation_activity2 = create(:curation_activity, status: :embargoed, resource: @resource,
+                                                         note: 'We need more about cats')
         expect(@curation_activity2.latest_curation_status_changed?).to be false
       end
     end
+
   end
 end
