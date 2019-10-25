@@ -85,7 +85,7 @@ module StashApi
       # that is, don't change a status that is already published, embargoed, or curation
       if ca_note&.match(/based on notification from journal/) &&
          %w[published embargoed curation].include?(resource.current_curation_status)
-        ca_note = "received #{ca_status} notification from journal, but retaining current curation status due to workflow rules"
+        ca_note = "received #{ca_status} notification from journal module, but retaining current curation status due to workflow rules"
         ca_status = resource.current_curation_status
       end
 
