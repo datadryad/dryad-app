@@ -164,7 +164,7 @@ module Stash
       end
 
       def remove_file_uploads(resource)
-        resource.file_uploads.map(&:temp_file_path).each { |file| remove_if_exists(file) }
+        resource.file_uploads.map(&:calc_file_path).compact.each { |file| remove_if_exists(file) }
       end
 
       def remove_upload_dir(resource)

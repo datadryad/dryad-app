@@ -219,13 +219,6 @@ module StashEngine
       Resource.upload_dir_for(id)
     end
 
-    # clean up the uploads with files that no longer exist for this resource
-    def clean_uploads
-      file_uploads.each do |fu|
-        fu.destroy unless File.exist?(fu.temp_file_path)
-      end
-    end
-
     # gets the latest files that are not deleted in db, current files for this version
     def current_file_uploads
       subquery = FileUpload.where(resource_id: id).where("file_state <> 'deleted' AND " \
