@@ -132,7 +132,6 @@ module StashApi
       handle_previous_duplicates(upload_filename: just_user_fn)
       StashEngine::FileUpload.create(
         upload_file_name: @sanitized,
-        temp_file_path: @file_path,
         upload_content_type: request.headers['CONTENT-TYPE'],
         upload_file_size: ::File.size(@file_path),
         resource_id: @resource.id,

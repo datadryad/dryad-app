@@ -90,8 +90,8 @@ module StashEngine
         file.file_state = 'deleted'
         file.save!
       elsif file.file_state == 'created'
-        temp_file_path = file.temp_file_path
-        File.delete(temp_file_path) if !temp_file_path.blank? && File.exist?(temp_file_path)
+        calc_file_path = file.calc_file_path
+        File.delete(calc_file_path) if !calc_file_path.blank? && File.exist?(calc_file_path)
         file.destroy
       end
     end
@@ -149,7 +149,6 @@ module StashEngine
     def create_db_file(path)
       FileUpload.create(
         upload_file_name: File.basename(path),
-        temp_file_path: path,
         upload_content_type: @file_upload.content_type,
         upload_file_size: File.size(path),
         resource_id: params[:resource_id],
@@ -175,7 +174,7 @@ module StashEngine
 
     # delete this old file before overwriting with this one, there can be only one current with same name
     def delete_original(original)
-      File.delete(original.temp_file_path) if File.exist?(original.temp_file_path)
+      File.delete(original.calc_file_path) if File.exist?(original.calc_file_path)
       original.destroy
     end
 

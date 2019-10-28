@@ -818,18 +818,18 @@ module StashEngine
       end
 
       describe :file_uploads do
-        attr_reader :temp_file_paths
+        attr_reader :calc_file_paths
         attr_reader :uploads
         attr_reader :resource
 
         before(:each) do
           @resource = Resource.create
-          @temp_file_paths = Array.new(3) do |i|
+          @calc_file_paths = Array.new(3) do |i|
             tempfile = Tempfile.new(["foo-#{i}", 'bin'])
             File.write(tempfile.path, '')
             tempfile.path
           end
-          @uploads = temp_file_paths.map do |path|
+          @uploads = calc_file_paths.map do |path|
             FileUpload.create(
               resource_id: resource.id,
               upload_file_name: File.basename(path),
@@ -855,15 +855,6 @@ module StashEngine
           end
         end
 
-        describe :clean_uploads do
-          it 'removes all upload records without files' do
-            (0...3).each { |i| FileUpload.create(resource_id: resource.id, temp_file_path: "/missing-file-#{i}.bin", file_state: :created) }
-            expect(FileUpload.where(resource_id: resource.id).count).to eq(6) # just to be sure
-            resource.clean_uploads
-            expect(FileUpload.where(resource_id: resource.id).count).to eq(3)
-          end
-        end
-
         describe :duplicate_filenames do
           it 'identifies duplicate files' do
             original = uploads[0]
@@ -871,7 +862,6 @@ module StashEngine
             duplicate = FileUpload.create(
               resource_id: resource.id,
               upload_file_name: file_name,
-              temp_file_path: temp_file_paths[0].sub('.bin', '-1.bin'),
               file_state: :created
             )
             duplicates = resource.duplicate_filenames
