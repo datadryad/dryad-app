@@ -833,7 +833,6 @@ module StashEngine
             FileUpload.create(
               resource_id: resource.id,
               upload_file_name: File.basename(path),
-              temp_file_path: path,
               file_state: :created
             )
           end
@@ -841,11 +840,10 @@ module StashEngine
 
         describe :latest_file_states do
           it 'finds the latest version of each file' do
-            new_latest = uploads.each_with_index.map do |upload, i|
+            new_latest = uploads.each_with_index.map do |upload, _i|
               FileUpload.create(
                 resource_id: upload.resource_id,
                 upload_file_name: upload.upload_file_name,
-                temp_file_path: Tempfile.new(["foo-#{i}", 'bin']),
                 file_state: :copied
               )
             end
