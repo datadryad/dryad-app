@@ -48,7 +48,7 @@ module StashEngine
     def calc_file_path
       return nil if file_state == 'copied' || file_state == 'deleted' # no current file to have a path for
 
-      # the uploads directory and well files are saved is well defined so we can calculate it and don't need to store it
+      # the uploads directory is well defined so we can calculate it and don't need to store it
       Rails.root.join('uploads', resource_id.to_s, upload_file_name).to_s
     end
 
