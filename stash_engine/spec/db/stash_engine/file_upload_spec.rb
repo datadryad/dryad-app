@@ -157,5 +157,32 @@ module StashEngine
       end
 
     end
+
+    describe :calc_file_path do
+      before(:each) do
+        # need to hack in Rails.root because our test framework setup sucks and doesn't use rails testapp setup
+        @rails_root = Dir.mktmpdir('rails_root')
+        allow(Rails).to receive(:root).and_return(Pathname.new(@rails_root))
+      end
+
+      it "returns path in uploads containing resource_id and filename" do
+        cfp = @upload.calc_file_path
+        expect(cfp.match(%r{/uploads/})).to be_truthy
+        expect(cfp).to start_with(@rails_root.to_s)
+        expect(cfp).to end_with(@upload.upload_file_name)
+      end
+
+      it "returns nil if it is copied" do
+        @upload.update(file_state: 'copied')
+        @upload.reload
+        expect(@upload.calc_file_path).to eq(nil)
+      end
+
+      it "returns nil if it is deleted" do
+        @upload.update(file_state: 'deleted')
+        @upload.reload
+        expect(@upload.calc_file_path).to eq(nil)
+      end
+    end
   end
 end

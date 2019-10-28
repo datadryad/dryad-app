@@ -49,7 +49,7 @@ module StashEngine
       return nil if file_state == 'copied' || file_state == 'deleted' # no current file to have a path for
 
       # the uploads directory and well files are saved is well defined so we can calculate it and don't need to store it
-      Rails.root.join('uploads', resource_id, upload_file_name).to_s
+      Rails.root.join('uploads', resource_id.to_s, upload_file_name).to_s
     end
 
     # returns the latest version number in which this filename was created
