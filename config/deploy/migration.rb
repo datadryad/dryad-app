@@ -8,6 +8,7 @@
 # server 'db.example.com', user: 'deploy', roles: %w{db}
 
 set :rails_env, 'migration'
+set :passenger_pool, '6'
 
 #set :bundle_env_variables, { 'RAILS_ENV' => 'migration' }
 

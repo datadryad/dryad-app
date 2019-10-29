@@ -8,6 +8,7 @@
 # server 'db.example.com', user: 'deploy', roles: %w{db}
 
 set :rails_env, "development"
+set :passenger_pool, '6'
 
 # To override the default host, set $SERVER_HOSTS, e.g.
 #    $ SERVER_HOSTS='localhost1 localhost2' bundle exec cap development deploy
