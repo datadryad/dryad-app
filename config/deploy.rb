@@ -142,9 +142,10 @@ namespace :deploy do
       within current_path do
         with rails_env: fetch(:rails_env) do
           execute "cd #{deploy_to}/current; bundle install --deployment"
+          # see https://www.phusionpassenger.com/library/config/standalone/optimization/
           execute "cd #{deploy_to}/current; bundle exec passenger start -d --environment #{fetch(:rails_env)} "\
               "--pid-file #{fetch(:passenger_pid)} -p #{fetch(:passenger_port)} "\
-              "--log-file #{fetch(:passenger_log)} --pool-idle-time 86400"
+              "--log-file #{fetch(:passenger_log)} --pool-idle-time 86400 --max-pool-size=10"
         end
       end
     end
