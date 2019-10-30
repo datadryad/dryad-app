@@ -53,9 +53,9 @@ module Stash
 
         @uploads = Array.new(3) do |index|
           upload = double(StashEngine::FileUpload)
-          temp_file_path = File.join(res_upload_dir, "file-#{index}.bin")
-          FileUtils.touch(temp_file_path)
-          allow(upload).to receive(:temp_file_path).and_return(temp_file_path)
+          calc_file_path = File.join(res_upload_dir, "file-#{index}.bin")
+          FileUtils.touch(calc_file_path)
+          allow(upload).to receive(:calc_file_path).and_return(calc_file_path)
           upload
         end
         allow(resource).to receive(:file_uploads).and_return(uploads)
@@ -159,7 +159,7 @@ module Stash
             it 'leaves uploaded files in place on failure' do
               submit_resource
               uploads.each do |upload|
-                expect(File.exist?(upload.temp_file_path)).to be_truthy
+                expect(File.exist?(upload.calc_file_path)).to be_truthy
               end
             end
 
@@ -212,7 +212,7 @@ module Stash
           it 'leaves uploaded files in place on failure' do
             submit_resource
             uploads.each do |upload|
-              expect(File.exist?(upload.temp_file_path)).to be_truthy
+              expect(File.exist?(upload.calc_file_path)).to be_truthy
             end
           end
 
@@ -251,7 +251,7 @@ module Stash
             it 'leaves uploaded files in place on failure' do
               submit_resource
               uploads.each do |upload|
-                expect(File.exist?(upload.temp_file_path)).to be_truthy
+                expect(File.exist?(upload.calc_file_path)).to be_truthy
               end
             end
 
