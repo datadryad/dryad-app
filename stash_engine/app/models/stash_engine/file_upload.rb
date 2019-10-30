@@ -1,6 +1,7 @@
 require 'zaru'
 require 'cgi'
 
+# rubocop:disable Metrics/ClassLength
 module StashEngine
   class FileUpload < ActiveRecord::Base
     belongs_to :resource, class_name: 'StashEngine::Resource'
@@ -88,6 +89,30 @@ module StashEngine
           "/#{CGI.unescape(ark)}/#{ERB::Util.url_encode(upload_file_name)}"
     end
 
+    # This will get rid of a file, either immediately, when not submitted yet, or mark it for deletion when it's submitted to Merritt.
+    # We also need to refresh the file list for this resource and check for other files with this same name to be deleted since
+    # users find ways to do multiple deletions in the UI (multiple windows or perhaps uploading two files with the same name).
+    def smart_destroy!
+      files_with_name = FileUpload.where(resource_id: resource_id).where(upload_file_name: upload_file_name)
+
+      # destroy any files for this version and and not yet sent to Merritt, shouldn't have nil, but if so, it's newly created
+      files_with_name.where(file_state: ['created', nil]).each do |f|
+        ::File.delete(f.temp_file_path) if !temp_file_path.blank? && ::File.exist?(f.temp_file_path)
+        f.destroy
+      end
+
+      # leave only one delete directive for this filename for this resource (ie the first listed file), if there is already
+      # a delete directive then it must've been copied at one point from the last resource, so keep one
+      files_with_name.where(file_state: %w[deleted copied]).each_with_index do |f, idx|
+        if idx == 0
+          f.update(file_state: 'deleted')
+        else
+          f.destroy
+        end
+      end
+      resource.reload
+    end
+
     # makes list of directories with numbers. not modified for > 7 days, and whose corresponding resource has been successfully submitted
     # this could be handy for doing cleanup and keeping old files around for a little while in case of submission problems
     # currently not used since it would make sense to cron this or something similar
@@ -122,3 +147,4 @@ module StashEngine
     end
   end
 end
+# rubocop:enable Metrics/ClassLength
