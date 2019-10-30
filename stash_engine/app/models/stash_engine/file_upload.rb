@@ -99,9 +99,9 @@ module StashEngine
       files_with_name = FileUpload.where(resource_id: resource_id).where(upload_file_name: upload_file_name)
 
       # destroy any files for this version and and not yet sent to Merritt, shouldn't have nil, but if so, it's newly created
-      files_with_name.where(file_state: ['created', nil]).each do |f|
-        ::File.delete(f.calc_file_path) if !calc_file_path.blank? && ::File.exist?(f.calc_file_path)
-        f.destroy
+      files_with_name.where(file_state: ['created', nil]).each do |fl|
+        ::File.delete(fl.calc_file_path) if !fl.calc_file_path.blank? && ::File.exist?(fl.calc_file_path)
+        fl.destroy
       end
 
       # leave only one delete directive for this filename for this resource (ie the first listed file), if there is already

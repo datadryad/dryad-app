@@ -1,3 +1,4 @@
+# coding: utf-8
 require 'db_spec_helper'
 require 'fileutils'
 require_relative '../../../../spec_helpers/factory_helper'
@@ -126,12 +127,8 @@ module StashEngine
         allow_any_instance_of(FileUpload).to receive(:calc_file_path).and_return(@testfile)
       end
 
-      after(:each) do
-        FileUtils.rm_rf('tmp')
-      end
-
       it 'deletes a file that was just created, from the database and file system' do
-        expect(::File.exist?(::File.expand_path(@testfile))).to eq(true)
+        expect(::File.exist?(@testfile)).to eq(true)
         @files[1].smart_destroy!
         expect(::File.exist?(::File.expand_path(@testfile))).to eq(false)
         @resource.reload
