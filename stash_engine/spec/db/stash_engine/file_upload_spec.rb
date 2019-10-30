@@ -1,4 +1,3 @@
-# coding: utf-8
 require 'db_spec_helper'
 require 'fileutils'
 require_relative '../../../../spec_helpers/factory_helper'
