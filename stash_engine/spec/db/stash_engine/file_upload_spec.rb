@@ -118,10 +118,12 @@ module StashEngine
         @testfile = FileUtils.touch('tmp/noggin2.jpg').first # touch returns an array
         @files = [
           create(:file_upload, upload_file_name: 'noggin1.jpg', file_state: 'copied', resource_id: @resource.id),
-          create(:file_upload, upload_file_name: 'noggin2.jpg', file_state: 'created', resource_id: @resource.id,
-                               temp_file_path: File.expand_path(@testfile)),
+          create(:file_upload, upload_file_name: 'noggin2.jpg', file_state: 'created', resource_id: @resource.id),
           create(:file_upload, upload_file_name: 'noggin3.jpg', file_state: 'deleted', resource_id: @resource.id)
         ]
+
+        # I tried just modifying one instance but it doesn't work from the internal method if I do that.
+        allow_any_instance_of(FileUpload).to receive(:calc_file_path).and_return(@testfile)
       end
 
       after(:each) do
