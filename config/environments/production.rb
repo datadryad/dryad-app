@@ -91,7 +91,9 @@ Rails.application.configure do
           :exception_recipients => ac['page_error_email']
       },
       :error_grouping => true,
-      :error_grouping_period => 3.hours
+      :error_grouping_period => 3.hours,
+      :ignore_exceptions => ['ActionController::InvalidAuthenticityToken', 'ActionController::InvalidCrossOriginRequest'] + ExceptionNotifier.ignored_exceptions,
+      :ignore_crawlers => %w{Googlebot bingbot}
   end
 
   config.action_mailer.delivery_method = :sendmail

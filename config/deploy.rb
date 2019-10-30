@@ -142,9 +142,13 @@ namespace :deploy do
       within current_path do
         with rails_env: fetch(:rails_env) do
           execute "cd #{deploy_to}/current; bundle install --deployment"
+          # see https://www.phusionpassenger.com/library/config/standalone/optimization/
+          # also looks like there is some memory leak and passenger grows ever bigger if it services too many requests
+          # https://www.phusionpassenger.com/library/config/standalone/reference/#--max-requests-max_requests
           execute "cd #{deploy_to}/current; bundle exec passenger start -d --environment #{fetch(:rails_env)} "\
               "--pid-file #{fetch(:passenger_pid)} -p #{fetch(:passenger_port)} "\
-              "--log-file #{fetch(:passenger_log)} --pool-idle-time 86400"
+              "--log-file #{fetch(:passenger_log)} --pool-idle-time 86400 --max-pool-size=#{fetch(:passenger_pool)} "\
+              "--max-requests=500"
         end
       end
     end
