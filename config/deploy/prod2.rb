@@ -8,7 +8,7 @@
 # server 'db.example.com', user: 'deploy', roles: %w{db}
 
 set :rails_env, 'production'
-set :passenger_pool, '10'
+set :passenger_pool, '12'
 
 #set :bundle_env_variables, { 'RAILS_ENV' => 'stage' }
 
