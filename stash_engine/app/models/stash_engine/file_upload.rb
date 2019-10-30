@@ -102,7 +102,7 @@ module StashEngine
 
       # destroy any files for this version and and not yet sent to Merritt, shouldn't have nil, but if so, it's newly created
       files_with_name.where(file_state: ['created', nil]).each do |f|
-        ::File.delete(f.temp_file_path) if !temp_file_path.blank? && ::File.exist?(f.temp_file_path)
+        ::File.delete(f.calc_file_path) if !calc_file_path.blank? && ::File.exist?(f.calc_file_path)
         f.destroy
       end
 

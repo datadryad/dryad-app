@@ -133,7 +133,7 @@ module MigrationImport
     def add_file_uploads
       @hash['file_uploads'].each do |json_file|
         my_hash = json_file.slice('upload_file_name', 'upload_content_type', 'upload_file_size', 'upload_updated_at',
-                                  'created_at', 'updated_at', 'temp_file_path', 'file_state', 'url', 'status_code',
+                                  'created_at', 'updated_at', 'file_state', 'url', 'status_code',
                                   'timed_out', 'original_url', 'cloud_service')
         @ar_resource.file_uploads << StashEngine::FileUpload.create(my_hash)
       end

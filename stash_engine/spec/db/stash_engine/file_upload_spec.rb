@@ -1,3 +1,4 @@
+# coding: utf-8
 require 'db_spec_helper'
 require 'fileutils'
 require_relative '../../../../spec_helpers/factory_helper'
@@ -118,10 +119,13 @@ module StashEngine
         @testfile = FileUtils.touch('tmp/noggin2.jpg').first # touch returns an array
         @files = [
           create(:file_upload, upload_file_name: 'noggin1.jpg', file_state: 'copied', resource_id: @resource.id),
-          create(:file_upload, upload_file_name: 'noggin2.jpg', file_state: 'created', resource_id: @resource.id,
-                               temp_file_path: File.expand_path(@testfile)),
+          create(:file_upload, upload_file_name: 'noggin2.jpg', file_state: 'created', resource_id: @resource.id),
           create(:file_upload, upload_file_name: 'noggin3.jpg', file_state: 'deleted', resource_id: @resource.id)
         ]
+
+        # need to hack in Rails.root because our test framework setup sucks and doesn't use rails testapp setup
+        @rails_root = Dir.mktmpdir('rails_root')
+        allow(Rails).to receive(:root).and_return(Pathname.new(@rails_root))
       end
 
       after(:each) do

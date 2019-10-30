@@ -159,7 +159,7 @@ module Stash
             it 'leaves uploaded files in place on failure' do
               submit_resource
               uploads.each do |upload|
-                expect(File.exist?(upload.temp_file_path)).to be_truthy
+                expect(File.exist?(upload.calc_file_path)).to be_truthy
               end
             end
 
@@ -212,7 +212,7 @@ module Stash
           it 'leaves uploaded files in place on failure' do
             submit_resource
             uploads.each do |upload|
-              expect(File.exist?(upload.temp_file_path)).to be_truthy
+              expect(File.exist?(upload.calc_file_path)).to be_truthy
             end
           end
 
@@ -251,7 +251,7 @@ module Stash
             it 'leaves uploaded files in place on failure' do
               submit_resource
               uploads.each do |upload|
-                expect(File.exist?(upload.temp_file_path)).to be_truthy
+                expect(File.exist?(upload.calc_file_path)).to be_truthy
               end
             end
 
