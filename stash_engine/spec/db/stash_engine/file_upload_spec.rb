@@ -118,18 +118,16 @@ module StashEngine
         @testfile = FileUtils.touch('tmp/noggin2.jpg').first # touch returns an array
         @files = [
           create(:file_upload, upload_file_name: 'noggin1.jpg', file_state: 'copied', resource_id: @resource.id),
-          create(:file_upload, upload_file_name: 'noggin2.jpg', file_state: 'created', resource_id: @resource.id,
-                               temp_file_path: File.expand_path(@testfile)),
+          create(:file_upload, upload_file_name: 'noggin2.jpg', file_state: 'created', resource_id: @resource.id),
           create(:file_upload, upload_file_name: 'noggin3.jpg', file_state: 'deleted', resource_id: @resource.id)
         ]
-      end
 
-      after(:each) do
-        FileUtils.rm_rf('tmp')
+        # I tried just modifying one instance but it doesn't work from the internal method if I do that.
+        allow_any_instance_of(FileUpload).to receive(:calc_file_path).and_return(@testfile)
       end
 
       it 'deletes a file that was just created, from the database and file system' do
-        expect(::File.exist?(::File.expand_path(@testfile))).to eq(true)
+        expect(::File.exist?(@testfile)).to eq(true)
         @files[1].smart_destroy!
         expect(::File.exist?(::File.expand_path(@testfile))).to eq(false)
         @resource.reload
@@ -209,6 +207,33 @@ module StashEngine
         expect(StashEngine::FileUpload.sanitize_file_name('abc😂123')).to eql('abc😂123')
       end
 
+    end
+
+    describe :calc_file_path do
+      before(:each) do
+        # need to hack in Rails.root because our test framework setup sucks and doesn't use rails testapp setup
+        @rails_root = Dir.mktmpdir('rails_root')
+        allow(Rails).to receive(:root).and_return(Pathname.new(@rails_root))
+      end
+
+      it 'returns path in uploads containing resource_id and filename' do
+        cfp = @upload.calc_file_path
+        expect(cfp.match(%r{/uploads/})).to be_truthy
+        expect(cfp).to start_with(@rails_root.to_s)
+        expect(cfp).to end_with(@upload.upload_file_name)
+      end
+
+      it 'returns nil if it is copied' do
+        @upload.update(file_state: 'copied')
+        @upload.reload
+        expect(@upload.calc_file_path).to eq(nil)
+      end
+
+      it 'returns nil if it is deleted' do
+        @upload.update(file_state: 'deleted')
+        @upload.reload
+        expect(@upload.calc_file_path).to eq(nil)
+      end
     end
   end
 end

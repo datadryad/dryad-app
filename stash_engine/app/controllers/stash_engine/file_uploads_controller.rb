@@ -133,7 +133,6 @@ module StashEngine
       @resource.file_uploads.where(upload_file_name: File.basename(path)).destroy_all
       FileUpload.create(
         upload_file_name: File.basename(path),
-        temp_file_path: path,
         upload_content_type: @file_upload.content_type,
         upload_file_size: File.size(path),
         resource_id: params[:resource_id],
