@@ -5,7 +5,6 @@ FactoryBot.define do
     upload_content_type { 'text/plain' }
     upload_file_size { 12_345 }
     resource_id { nil }
-    temp_file_path { '/home/ubuntu/dryad/uploads/25/test.txt' }
     file_state { 'created' }
     url { 'http://example.org/test.txt' }
     status_code { 200 }

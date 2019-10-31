@@ -1,15 +1,10 @@
 require 'zaru'
 require 'cgi'
-
-# rubocop:disable Metrics/ClassLength
 module StashEngine
   class FileUpload < ActiveRecord::Base
     belongs_to :resource, class_name: 'StashEngine::Resource'
     include StashEngine::Concerns::ResourceUpdated
     # mount_uploader :uploader, FileUploader # it seems like maybe I don't need this since I'm doing so much manually
-
-    before_create :fix_server_temp_file_path
-    before_save :fix_server_temp_file_path
 
     scope :deleted_from_version, -> { where(file_state: :deleted) }
     scope :newly_created, -> { where("file_state = 'created' OR file_state IS NULL") }
@@ -46,6 +41,14 @@ module StashEngine
       else
         'The given URL is invalid. Please check the URL and resubmit.'
       end
+    end
+
+    # this is to replace temp_file_path which tells where a file was saved when staged for upload by a user
+    def calc_file_path
+      return nil if file_state == 'copied' || file_state == 'deleted' # no current file to have a path for
+
+      # the uploads directory is well defined so we can calculate it and don't need to store it
+      Rails.root.join('uploads', resource_id.to_s, upload_file_name).to_s
     end
 
     # returns the latest version number in which this filename was created
@@ -96,9 +99,9 @@ module StashEngine
       files_with_name = FileUpload.where(resource_id: resource_id).where(upload_file_name: upload_file_name)
 
       # destroy any files for this version and and not yet sent to Merritt, shouldn't have nil, but if so, it's newly created
-      files_with_name.where(file_state: ['created', nil]).each do |f|
-        ::File.delete(f.temp_file_path) if !temp_file_path.blank? && ::File.exist?(f.temp_file_path)
-        f.destroy
+      files_with_name.where(file_state: ['created', nil]).each do |fl|
+        ::File.delete(fl.calc_file_path) if !fl.calc_file_path.blank? && ::File.exist?(fl.calc_file_path)
+        fl.destroy
       end
 
       # leave only one delete directive for this filename for this resource (ie the first listed file), if there is already
@@ -137,14 +140,5 @@ module StashEngine
       # replace spaces with underscores
       sanitized.gsub(/,|;|'|"|\u007F/, '').strip.gsub(/\s+/, '_')
     end
-
-    # this is a hack for the servers and is only temporary until we can sort through a lot more code.
-    # It should create paths that are not destroyed by release directories changing on the server
-    # Replace the release directories with current which is always the current deploy
-    def fix_server_temp_file_path
-      return if temp_file_path.blank?
-      self.temp_file_path = temp_file_path.gsub(%r{/releases/\d+/}, '/current/')
-    end
   end
 end
-# rubocop:enable Metrics/ClassLength
