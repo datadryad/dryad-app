@@ -88,8 +88,9 @@ module StashEngine
       domain, ark = resource.merritt_protodomain_and_local_id
       # the ark is already encoded in the URLs we are given from sword
       return '' if domain.nil? # if domain is nil then something is wrong with the ARK too, likely
+      # the slash is being double-encoded and normally shouldn't be present, except in a couple of one-off datasets that we regret.
       "#{APP_CONFIG.merritt_express_base_url}/dv/#{resource.stash_version.merritt_version}" \
-          "/#{CGI.unescape(ark)}/#{ERB::Util.url_encode(upload_file_name)}"
+          "/#{CGI.unescape(ark)}/#{ERB::Util.url_encode(upload_file_name).gsub('%252F', '%2F')}"
     end
 
     # This will get rid of a file, either immediately, when not submitted yet, or mark it for deletion when it's submitted to Merritt.
