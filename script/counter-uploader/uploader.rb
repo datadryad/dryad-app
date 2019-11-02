@@ -64,7 +64,8 @@ class Uploader
                       headers: headers,
                       timeout: 100)
         end
-    raise 'submission failed' if response.status < 200 || response.status > 299
+    raise "submission failed, got #{response.status} from server\r\n#{response.body}" if response.status < 200 || response.status > 299
+
     response['body']['data']['report']['id']
   end
 end
