@@ -1,6 +1,6 @@
 # About the script directory
 
-These are standalone scripts that we might use again and do
+These are standalone scripts that we might or might not use again and do
 not require running under Rails or Rake.
 
 For items that need to run in the Rails environment to

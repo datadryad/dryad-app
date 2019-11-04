@@ -1,7 +1,10 @@
 # What is all the crap in this directory?
 
+These are mostly one-off scripts for manual COUNTER stuff we needed to get
+old reports pushed to the hub.
+
 - `main.rb <filename>` will take an argument for a json report file and
-mess tweak it so that it can be uploaded to DataCite Counter hub as a gz file.
+tweak it so that it can be uploaded to DataCite Counter hub as a gz file.
   - The `uploader.rb` file is used by the above.  It modifies the headers for the
   very special upload and gzips and sends it.
 - `up_it.rb` will just upload report files to the hub without doing compression shenanigans.
