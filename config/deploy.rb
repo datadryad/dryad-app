@@ -147,8 +147,9 @@ namespace :deploy do
           # https://www.phusionpassenger.com/library/config/standalone/reference/#--max-requests-max_requests
           execute "cd #{deploy_to}/current; bundle exec passenger start -d --environment #{fetch(:rails_env)} "\
               "--pid-file #{fetch(:passenger_pid)} -p #{fetch(:passenger_port)} "\
-              "--log-file #{fetch(:passenger_log)} --pool-idle-time 86400 --max-pool-size=#{fetch(:passenger_pool)} "\
-              "--max-requests=500"
+              "--log-file #{fetch(:passenger_log)} --pool-idle-time 86400 --max-pool-size=#{fetch(:passenger_pool)} "
+              # "--max-requests=500" -- can't do this since it kills submissions, but we should manually kill if a process gets too
+              # big and seems to have a memory leak, unfortunately, this feature in passenger is a "pro" feature and isn't free.
         end
       end
     end
