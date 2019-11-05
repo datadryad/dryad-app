@@ -6,7 +6,7 @@ module DevOps
 
     attr_reader :status, :stdout
 
-    BLOATED_MB = 600.freeze
+    BLOATED_MB = 600
 
     def initialize
       @stdout, @stderr, @status = Open3.capture3('passenger-status')
@@ -17,6 +17,7 @@ module DevOps
       @stderr.include?("Phusion Passenger doesn't seem to be running")
     end
 
+    # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
     def bloated_pids
       # return (empty) array if not running or return array it is already cached with bloated pids
       return @bloated_pids if not_running? || @bloated_pids.length.positive?
@@ -34,6 +35,7 @@ module DevOps
       end
       @bloated_pids
     end
+    # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
 
     def kill_bloated_pids!
       bloated_pids.each do |my_pid|
@@ -42,8 +44,8 @@ module DevOps
     end
 
     def items_submitting?
-      items = StashEngine::RepoQueueState.latest_per_resource.where(state: 'processing')
-                  .where(hostname: StashEngine.repository.class.hostname).count.positive?
+      StashEngine::RepoQueueState.latest_per_resource.where(state: 'processing')
+        .where(hostname: StashEngine.repository.class.hostname).count.positive?
     end
 
   end
