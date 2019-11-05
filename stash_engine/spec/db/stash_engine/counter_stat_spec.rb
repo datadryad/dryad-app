@@ -10,11 +10,11 @@ module StashEngine
       # mock out the stat objects which are used within this class and are unit tested elsewhere
       allow_any_instance_of(Stash::EventData::Usage).to receive(:unique_dataset_investigations_count).and_return(54)
       allow_any_instance_of(Stash::EventData::Usage).to receive(:unique_dataset_requests_count).and_return(16)
-      allow_any_instance_of(Stash::EventData::Citations).to receive(:results).and_return({count: 2}.to_ostruct)
+      allow_any_instance_of(Stash::EventData::Citations).to receive(:results).and_return({ count: 2 }.to_ostruct)
 
       @identifier = Identifier.create(identifier_type: 'DOI', identifier: '10.123/456')
       @identifier.counter_stat.update(identifier_id: @identifier.id, citation_count: 5, unique_investigation_count: 105,
-                               unique_request_count: 31, updated_at: Time.new - 7.days)
+                                      unique_request_count: 31, updated_at: Time.new - 7.days)
     end
 
     describe :check_unique_investigation_count do
