@@ -1,7 +1,5 @@
 require 'rails_helper'
 require 'rsolr'
-
-# rubocop:disable Metrics/BlockLength
 RSpec.feature 'SolrSanitization', type: :feature do
 
   include Mocks::Datacite
@@ -67,4 +65,3 @@ RSpec.feature 'SolrSanitization', type: :feature do
   end
 
 end
-# rubocop:enable Metrics/BlockLength

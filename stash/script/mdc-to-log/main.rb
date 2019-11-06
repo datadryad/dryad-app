@@ -6,13 +6,13 @@ require 'sqlite3'
 require 'active_record'
 require 'time'
 
-filename=ARGV.first
+filename = ARGV.first
 
 ActiveRecord::Base.logger = Logger.new(STDERR)
 ActiveRecord::Base.logger.level = :warn
 ActiveRecord::Base.establish_connection(
-    adapter: 'sqlite3',
-    database: filename
+  adapter: 'sqlite3',
+  database: filename
 )
 
 class LogItem < ActiveRecord::Base
@@ -36,9 +36,9 @@ out_fn = "#{File.basename(filename, '.sqlite3')}.log"
 records = LogItem.joins(:metadata_item)
 puts 'Writing log'
 
-File.open(out_fn, "w:UTF-8") do |f|
+File.open(out_fn, 'w:UTF-8') do |f|
   records.each_with_index do |r, idx|
-    puts "Processing record #{idx}" if idx % 10000 == 0
+    puts "Processing record #{idx}" if idx % 10_000 == 0
     out = [
       r.event_time&.iso8601,
       r.client_ip,
@@ -60,6 +60,6 @@ File.open(out_fn, "w:UTF-8") do |f|
       r&.metadata_item&.target_url,
       r&.metadata_item&.publication_year
     ]
-    f.write("#{out.map{|i| (i.blank? ? '-' : i) }.join("\t")}\n")
+    f.write("#{out.map { |i| (i.blank? ? '-' : i) }.join("\t")}\n")
   end
 end

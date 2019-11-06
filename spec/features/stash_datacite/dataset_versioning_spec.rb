@@ -1,6 +1,4 @@
 require 'rails_helper'
-
-# rubocop:disable Metrics/BlockLength
 RSpec.feature 'DatasetVersioning', type: :feature do
 
   include MerrittHelper
@@ -365,4 +363,3 @@ RSpec.feature 'DatasetVersioning', type: :feature do
   end
 
 end
-# rubocop:enable Metrics/BlockLength

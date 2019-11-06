@@ -13,8 +13,6 @@ class Rack::Response
   end
 end
 
-
-
 # rubocop:disable Metrics/ClassLength
 module StashEngine
   class DownloadsController < ApplicationController
@@ -99,11 +97,11 @@ module StashEngine
       url = 'https://www.spacetelescope.org/static/archives/images/publicationtiff40k/heic1502a.tif'
       response.headers['Content-Type'] = 'image/tiff'
       response.headers['Content-Disposition'] = 'attachment; filename="funn.tif"'
-      response.headers["X-Accel-Buffering"] = 'no'
-      response.headers["Cache-Control"] = 'no-cache'
-      response.headers["Last-Modified"] = Time.zone.now.ctime.to_s
+      response.headers['X-Accel-Buffering'] = 'no'
+      response.headers['Cache-Control'] = 'no-cache'
+      response.headers['Last-Modified'] = Time.zone.now.ctime.to_s
 
-      response.headers["rack.hijack"] = proc do |stream|
+      response.headers['rack.hijack'] = proc do |stream|
 
         Thread.new do
           begin
@@ -128,11 +126,11 @@ module StashEngine
       url = 'https://www.spacetelescope.org/static/archives/images/publicationtiff40k/heic1502a.tif'
       response.headers['Content-Type'] = 'image/tiff'
       response.headers['Content-Disposition'] = 'attachment; filename="funn.tif"'
-      response.headers["X-Accel-Buffering"] = 'no'
-      response.headers["Cache-Control"] = 'no-cache'
+      response.headers['X-Accel-Buffering'] = 'no'
+      response.headers['Cache-Control'] = 'no-cache'
       # response.headers["Last-Modified"] = Time.zone.now.ctime.to_s
 
-      response.headers["rack.hijack"] = proc do |stream|
+      response.headers['rack.hijack'] = proc do |stream|
 
         Thread.new do
           begin
@@ -140,7 +138,7 @@ module StashEngine
             conn.get(url) do |req|
               # Set a callback which will receive tuples of chunk Strings
               # and the sum of characters received so far
-              req.options.on_data = Proc.new do |chunk, overall_received_bytes|
+              req.options.on_data = proc do |chunk, _overall_received_bytes|
                 # puts "Received #{overall_received_bytes} characters"
                 stream.write(chunk)
               end
@@ -160,24 +158,24 @@ module StashEngine
       url = 'https://www.spacetelescope.org/static/archives/images/publicationtiff40k/heic1502a.tif'
       response.headers['Content-Type'] = 'image/tiff'
       response.headers['Content-Disposition'] = 'attachment; filename="funn.tif"'
-      response.headers["X-Accel-Buffering"] = 'no'
-      response.headers["Cache-Control"] = 'no-cache'
-      response.headers["Last-Modified"] = Time.zone.now.ctime.to_s
+      response.headers['X-Accel-Buffering'] = 'no'
+      response.headers['Cache-Control'] = 'no-cache'
+      response.headers['Last-Modified'] = Time.zone.now.ctime.to_s
 
-      response.headers["rack.hijack"] = proc do |stream|
-      # downloaded_file = File.open 'huge.iso', 'wb'
+      response.headers['rack.hijack'] = proc do |stream|
+        # downloaded_file = File.open 'huge.iso', 'wb'
         Thread.new do
           request = Typhoeus::Request.new(url)
           request.on_headers do |response|
             if response.code != 200
-              raise "Request failed"
-              logger.error ('while streaming: request failed')
+              raise 'Request failed'
+              logger.error 'while streaming: request failed'
             end
           end
           request.on_body do |chunk|
             stream.write(chunk)
           end
-          request.on_complete do |response|
+          request.on_complete do |_response|
             stream.close
             # Note that response.body is ""
           end
@@ -195,16 +193,16 @@ module StashEngine
       response.headers['Cache-Control'] = 'no-cache'
       response.headers['Last-Modified'] = Time.zone.now.ctime.to_s
 
-      response.headers["rack.hijack"] = proc do |stream|
+      response.headers['rack.hijack'] = proc do |stream|
 
         Thread.new do
-          downloader = lambda do |chunk, remaining_bytes, total_bytes|
+          downloader = ->(chunk, _remaining_bytes, _total_bytes) do
             stream.write(chunk)
             # puts "Remaining: #{remaining_bytes.to_f / total_bytes}%"
           end
 
           begin
-            Excon.get(url, :response_block => downloader)
+            Excon.get(url, response_block: downloader)
           rescue Excon::Errors, StandardError => ex
             logger.error("while streaming: #{ex}")
             logger.error("while streaming: #{ex.backtrace}")
@@ -220,11 +218,11 @@ module StashEngine
       url = 'https://www.spacetelescope.org/static/archives/images/publicationtiff40k/heic1502a.tif'
       response.headers['Content-Type'] = 'image/tiff'
       response.headers['Content-Disposition'] = 'attachment; filename="funn.tif"'
-      response.headers["X-Accel-Buffering"] = 'no'
-      response.headers["Cache-Control"] = 'no-cache'
-      response.headers["Last-Modified"] = Time.zone.now.ctime.to_s
+      response.headers['X-Accel-Buffering'] = 'no'
+      response.headers['Cache-Control'] = 'no-cache'
+      response.headers['Last-Modified'] = Time.zone.now.ctime.to_s
 
-      response.headers["rack.hijack"] = proc do |stream|
+      response.headers['rack.hijack'] = proc do |stream|
 
         Thread.new do
           begin
@@ -252,9 +250,7 @@ module StashEngine
               chunk_size = 1024 * 1024
               logger.info('sending file in chunks')
               f2 = File.open(f.path, 'rb')
-              until f2.eof?
-                stream.write(f2.read(chunk_size))
-              end
+              stream.write(f2.read(chunk_size)) until f2.eof?
             rescue StandardError => ex
               logger.error("while sending: #{ex}")
               logger.error("while sending: #{ex.backtrace}")
@@ -274,20 +270,18 @@ module StashEngine
       url = 'https://www.spacetelescope.org/static/archives/images/publicationtiff40k/heic1502a.tif'
       response.headers['Content-Type'] = 'image/tiff'
       response.headers['Content-Disposition'] = 'attachment; filename="funn.tif"'
-      response.headers["X-Accel-Buffering"] = 'no'
-      response.headers["Cache-Control"] = 'no-cache'
-      response.headers["Last-Modified"] = Time.zone.now.ctime.to_s
+      response.headers['X-Accel-Buffering'] = 'no'
+      response.headers['Cache-Control'] = 'no-cache'
+      response.headers['Last-Modified'] = Time.zone.now.ctime.to_s
 
-      response.headers["rack.hijack"] = proc do |stream|
+      response.headers['rack.hijack'] = proc do |stream|
 
         Thread.new do
           chunk_size = 1024 * 1024
           begin
             remote_file = Down.open(url, rewindable: false)
             # .basic_auth(user: 'xxx', pass: 'xxx')
-            until remote_file.eof?
-              stream.write(remote_file.read(chunk_size))
-            end
+            stream.write(remote_file.read(chunk_size)) until remote_file.eof?
           rescue StandardError => ex
             logger.error("while streaming: #{ex}")
             logger.error("while streaming: #{ex.backtrace}")
@@ -303,20 +297,18 @@ module StashEngine
       url = 'https://www.spacetelescope.org/static/archives/images/publicationtiff40k/heic1502a.tif'
       response.headers['Content-Type'] = 'image/tiff'
       response.headers['Content-Disposition'] = 'attachment; filename="funn.tif"'
-      response.headers["X-Accel-Buffering"] = 'no'
-      response.headers["Cache-Control"] = 'no-cache'
-      response.headers["Last-Modified"] = Time.zone.now.ctime.to_s
+      response.headers['X-Accel-Buffering'] = 'no'
+      response.headers['Cache-Control'] = 'no-cache'
+      response.headers['Last-Modified'] = Time.zone.now.ctime.to_s
 
-      response.headers["rack.hijack"] = proc do |stream|
+      response.headers['rack.hijack'] = proc do |stream|
 
         Thread.new do
           chunk_size = 1024 * 1024
           begin
             remote_file = Down::Wget.open(url)
             # .basic_auth(user: 'xxx', pass: 'xxx')
-            until remote_file.eof?
-              stream.write(remote_file.read(chunk_size))
-            end
+            stream.write(remote_file.read(chunk_size)) until remote_file.eof?
           rescue StandardError => ex
             logger.error("while streaming: #{ex}")
             logger.error("while streaming: #{ex.backtrace}")
@@ -363,21 +355,20 @@ module StashEngine
 
     # these are for rack full hijacking
 
-
     def send_headers(stream, header_obj)
-      headers = [ 'HTTP/1.1 200 OK' ]
+      headers = ['HTTP/1.1 200 OK']
       headers_to_keep = ['Content-Type', 'content-type', 'Content-Length', 'content-length', 'ETag']
       heads = header_obj.slice(headers_to_keep)
-      heads.merge( 'Content-Disposition'  => 'attachment; funn.file',
-                   'X-Accel-Buffering'    => 'no',
-                   'Cache-Control'        => 'no-cache',
-                   'Last-Modified'        => Time.zone.now.ctime.to_s )
-      heads.each_pair { |k,v| headers.push("#{k}: #{v}")  }
+      heads.merge('Content-Disposition' => 'attachment; funn.file',
+                  'X-Accel-Buffering'    => 'no',
+                  'Cache-Control'        => 'no-cache',
+                  'Last-Modified'        => Time.zone.now.ctime.to_s)
+      heads.each_pair { |k, v| headers.push("#{k}: #{v}") }
 
       stream.write(headers.map { |header| header + "\r\n" }.join)
       stream.write("\r\n")
       stream.flush
-    rescue
+    rescue StandardError
       stream.close
       raise
     end
@@ -385,9 +376,7 @@ module StashEngine
     def perform_task(out_stream, in_stream)
       chunk_size = 1024 * 1024
       begin
-        until in_stream.eof?
-          out_stream.write(in_stream.read(chunk_size))
-        end
+        out_stream.write(in_stream.read(chunk_size)) until in_stream.eof?
       rescue StandardError => ex
         logger.error("while streaming: #{ex}")
         logger.error("while streaming: #{ex.backtrace}")
@@ -396,8 +385,6 @@ module StashEngine
         in_stream.close
       end
     end
-
-
 
     # rack hijacking
 

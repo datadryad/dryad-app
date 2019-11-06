@@ -1,8 +1,6 @@
 module Mocks
 
   module Datacite
-
-    # rubocop:disable Metrics/MethodLength
     def mock_datacite!
       allow_any_instance_of(Stash::Doi::DataciteGen).to receive(:update_metadata).and_return(true)
 
@@ -30,7 +28,6 @@ module Mocks
           }
         ).to_return(status: 201, body: '', headers: {})
     end
-    # rubocop:enable Metrics/MethodLength
 
   end
 

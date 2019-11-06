@@ -1,7 +1,5 @@
 require 'rails_helper'
 require 'pry'
-
-# rubocop:disable Metrics/BlockLength
 RSpec.feature 'Add Geolocation to Dataset', type: :feature do
 
   include DatasetHelper
@@ -89,4 +87,3 @@ RSpec.feature 'Add Geolocation to Dataset', type: :feature do
   end
 
 end
-# rubocop:enable Metrics/BlockLength

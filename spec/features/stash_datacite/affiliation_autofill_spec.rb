@@ -1,6 +1,4 @@
 require 'rails_helper'
-
-# rubocop:disable Metrics/BlockLength
 RSpec.feature 'AffiliationAutofill', type: :feature do
 
   include DatasetHelper
@@ -40,4 +38,3 @@ RSpec.feature 'AffiliationAutofill', type: :feature do
   end
 
 end
-# rubocop:enable Metrics/BlockLength

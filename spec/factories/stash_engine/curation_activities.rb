@@ -1,4 +1,3 @@
-# rubocop:disable Metrics/BlockLength
 FactoryBot.define do
 
   factory :curation_activity, class: StashEngine::CurationActivity do
@@ -53,4 +52,3 @@ FactoryBot.define do
     end
   end
 end
-# rubocop:enable Metrics/BlockLength

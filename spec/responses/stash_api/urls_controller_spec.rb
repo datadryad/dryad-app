@@ -5,8 +5,6 @@ require 'fixtures/stash_api/metadata'
 require 'fixtures/stash_api/curation_metadata'
 require 'cgi'
 require 'digest'
-
-# rubocop:disable Metrics/BlockLength, Metrics/ModuleLength
 # see https://relishapp.com/rspec/rspec-rails/v/3-8/docs/request-specs/request-spec
 module StashApi
   RSpec.describe UrlsController, type: :request do
@@ -136,4 +134,4 @@ module StashApi
     end
   end
 end
-# rubocop:enable Metrics/BlockLength, Metrics/ModuleLength
+# rubocop:enable

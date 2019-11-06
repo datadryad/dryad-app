@@ -2,8 +2,6 @@ require 'rails_helper'
 
 # TODO: Setting this model up as an example using shoulda helpers. We should just
 #       move the stash_engine model tests into this repo
-
-# rubocop:disable Metrics/BlockLength
 module StashEngine
 
   RSpec.describe User, type: :model do
@@ -68,4 +66,3 @@ module StashEngine
   end
 
 end
-# rubocop:enable Metrics/BlockLength

@@ -1,6 +1,4 @@
 require 'rails_helper'
-
-# rubocop:disable Metrics/BlockLength
 RSpec.feature 'MigrateData', type: :feature do
 
   include Mocks::RSolr
@@ -115,4 +113,3 @@ RSpec.feature 'MigrateData', type: :feature do
   end
 
 end
-# rubocop:enable Metrics/BlockLength

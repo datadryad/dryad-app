@@ -11,12 +11,10 @@ require 'httparty'
 require_relative 'uploader'
 require 'fileutils'
 
-
 # create directories if needed
 %w[json-reports json-state tmp].each do |dirname|
   FileUtils.mkdir_p(dirname) unless File.directory?(dirname)
 end
-
 
 #### setup the script ####
 state_hash = JSON.parse(File.read('json-state/statefile.json'))

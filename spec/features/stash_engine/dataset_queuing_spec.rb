@@ -1,7 +1,5 @@
 require 'rails_helper'
 require 'fileutils'
-
-# rubocop:disable Metrics/BlockLength
 RSpec.feature 'DatasetQueuing', type: :feature do
 
   HOLD_SUBMISSIONS_PATH = File.expand_path(File.join(Rails.root, '..', 'hold-submissions.txt')).freeze
@@ -80,4 +78,3 @@ RSpec.feature 'DatasetQueuing', type: :feature do
     end
   end
 end
-# rubocop:enable Metrics/BlockLength

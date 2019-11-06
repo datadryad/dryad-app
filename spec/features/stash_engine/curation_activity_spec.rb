@@ -1,6 +1,4 @@
 require 'rails_helper'
-
-# rubocop:disable Metrics/BlockLength
 RSpec.feature 'CurationActivity', type: :feature do
 
   include Mocks::Stripe
@@ -91,4 +89,3 @@ RSpec.feature 'CurationActivity', type: :feature do
   end
 
 end
-# rubocop:enable Metrics/BlockLength

@@ -17,7 +17,6 @@ module DevOps
       @stderr.include?("Phusion Passenger doesn't seem to be running")
     end
 
-    # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
     def bloated_pids
       # return (empty) array if not running or return array it is already cached with bloated pids
       return @bloated_pids if not_running? || @bloated_pids.length.positive?
@@ -35,7 +34,7 @@ module DevOps
       end
       @bloated_pids
     end
-    # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
+    # rubocop:enable
 
     def kill_bloated_pids!
       bloated_pids.each do |my_pid|

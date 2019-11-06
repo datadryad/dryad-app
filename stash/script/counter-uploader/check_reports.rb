@@ -23,11 +23,11 @@ end.sort!
 
 reps.each do |rep|
   subj_id = "https://api.datacite.org/reports/#{rep.split("\t")[1]}"
-  str = "https://api.datacite.org/events?source-id=datacite-usage&subj-id=#{CGI::escape(subj_id)}"
+  str = "https://api.datacite.org/events?source-id=datacite-usage&subj-id=#{CGI.escape(subj_id)}"
   # puts str
   resp = HTTParty.get(str)
 
-  if resp['meta']['total'] == 0 ||  resp['meta']['total-pages'] == 0
+  if resp['meta']['total'] == 0 || resp['meta']['total-pages'] == 0
     puts "#{rep} -- no data"
   else
     puts "#{rep} -- total pages: #{resp['meta']['total-pages']}"

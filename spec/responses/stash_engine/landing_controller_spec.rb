@@ -4,7 +4,6 @@ require 'rails_helper'
 require 'byebug'
 
 # see https://relishapp.com/rspec/rspec-rails/v/3-8/docs/request-specs/request-spec
-# rubocop:disable Metrics/BlockLength
 module StashEngine
   RSpec.describe LandingController, type: :request do
 
@@ -103,4 +102,3 @@ module StashEngine
 
   end
 end
-# rubocop:enable Metrics/BlockLength

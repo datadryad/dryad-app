@@ -1,8 +1,6 @@
 require 'rails_helper'
 require 'pry'
 require 'webmock/rspec'
-
-# rubocop:disable Metrics/BlockLength
 RSpec.feature 'Populate manuscript metadata from outside source', type: :feature do
 
   include DatasetHelper
@@ -125,4 +123,3 @@ RSpec.feature 'Populate manuscript metadata from outside source', type: :feature
     end
   end
 end
-# rubocop:enable Metrics/BlockLength

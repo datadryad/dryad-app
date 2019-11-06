@@ -1,7 +1,6 @@
 require 'rails_helper'
 
 # see https://relishapp.com/rspec/rspec-rails/v/3-8/docs/request-specs/request-spec
-# rubocop:disable Metrics/ModuleLength, Metrics/BlockLength
 module StashEngine
   RSpec.describe WidgetsController, type: :request do
 
@@ -133,4 +132,4 @@ module StashEngine
     end
   end
 end
-# rubocop:enable Metrics/ModuleLength, Metrics/BlockLength
+# rubocop:enable
