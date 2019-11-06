@@ -1,4 +1,3 @@
-# rubocop:disable Metrics/BlockLength
 FactoryBot.define do
 
   factory :resource, class: StashEngine::Resource do
@@ -60,4 +59,3 @@ FactoryBot.define do
   end
 
 end
-# rubocop:enable Metrics/BlockLength

@@ -1,7 +1,5 @@
 require 'rails_helper'
 require 'byebug'
-
-# rubocop:disable Metrics/BlockLength
 RSpec.feature 'Landing', type: :feature do
 
   include MerrittHelper
@@ -37,4 +35,3 @@ RSpec.feature 'Landing', type: :feature do
     end
   end
 end
-# rubocop:enable Metrics/BlockLength

@@ -19,7 +19,6 @@ hub_base_url = YAML.load_file('json-state/config.yaml')['hub_base_url']
 # a special hack for the uploader class
 ENV['TOKEN'] = hub_api_token
 
-
 filenames = Dir.glob('json-reports/*.json').sort
 
 filenames.each do |fn|
@@ -47,4 +46,3 @@ filenames.each do |fn|
   puts "reported id #{report_id}"
   puts "Finished #{fn}\r\n\r\n"
 end
-

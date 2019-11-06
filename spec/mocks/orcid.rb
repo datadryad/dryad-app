@@ -5,7 +5,6 @@ module Mocks
     class << self
 
       # Its a Hash Rubocop, get over yourself!
-      # rubocop:disable Metrics/MethodLength
       # rubocop:disable Metrics/AbcSize
       # rubocop:disable Metrics/CyclomaticComplexity
       # rubocop:disable Metrics/PerceivedComplexity
@@ -31,7 +30,6 @@ module Mocks
       # rubocop:enable Metrics/PerceivedComplexity
       # rubocop:enable Metrics/CyclomaticComplexity
       # rubocop:enable Metrics/AbcSize
-      # rubocop:enable Metrics/MethodLength
 
       def email_response(user)
         {

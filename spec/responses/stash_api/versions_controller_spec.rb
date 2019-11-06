@@ -7,7 +7,6 @@ require 'cgi'
 require 'stash/download/version'
 
 # see https://relishapp.com/rspec/rspec-rails/v/3-8/docs/request-specs/request-spec
-# rubocop:disable Metrics/BlockLength, Metrics/ModuleLength
 module StashApi
   RSpec.describe VersionsController, type: :request do
 
@@ -266,4 +265,4 @@ module StashApi
     end
   end
 end
-# rubocop:enable Metrics/BlockLength, Metrics/ModuleLength
+# rubocop:enable

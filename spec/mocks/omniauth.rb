@@ -12,8 +12,6 @@ module Mocks
         .to_return(status: 200, body: '', headers: {})
     end
 
-    # rubocop:disable Metrics/MethodLength
-    # rubocop:disable Metrics/AbcSize
     def mock_orcid!(user)
       # Mocks the Omniauth response from ORCID
       raise 'No tenant with id "localhost"; did you run travis-prep.sh?' unless StashEngine::Tenant.exists?('localhost')
@@ -41,8 +39,6 @@ module Mocks
           }
         ).to_return(status: 200, body: Mocks::Orcid.employment_response(user).to_json, headers: {})
     end
-    # rubocop:enable Metrics/MethodLength
-    # rubocop:enable Metrics/AbcSize
 
   end
 
