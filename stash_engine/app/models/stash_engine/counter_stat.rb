@@ -27,12 +27,12 @@ module StashEngine
     # but unfortunately, we can really only display stats against production
     def update_if_necessary
       # we should have a counter stat already if it got to this class
-      # only update stats if it's a later calendar week than this record was updated
-      return unless new_record? || updated_at.nil? || calendar_week(Time.new) > calendar_week(updated_at)
-
-      update_usage!
+      # only update stats if it's after the date of the last updated date for record
+      return unless new_record? || updated_at.nil? || Time.new.utc.to_date > updated_at.to_date
+      # update_usage!
       update_citation_count!
-      self.updated_at = Time.new.utc # seem to need this for some reason, since not always updating automatically
+      self.updated_at = Time.new.utc # seem to need this for some reason
+
       save!
     end
 
@@ -45,16 +45,6 @@ module StashEngine
     def update_citation_count!
       cites = Stash::EventData::Citations.new(doi: identifier.identifier)
       self.citation_count = cites.results.count
-    end
-
-    # This will return the calendar year and week of that year for checking if something has been updated in the last calendar week.
-    # If it is nil or not a time then return week 30 days ago.
-    def calendar_week(time)
-      # %W calculates weeks based on starting Monday and not Sunday, %U is Sunday and %V is ???.
-      # This produces year-week string.
-      return (Time.new - 30.days).strftime('%G-%W') if time.nil? || !time.is_a?(Time)
-
-      time.strftime('%G-%W')
     end
 
   end
