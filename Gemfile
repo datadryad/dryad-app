@@ -11,7 +11,7 @@ gem 'rb-readline'
 # ############################################################
 # Local engines
 
-path '../stash' do
+path 'stash' do
   gem 'stash_api'
   gem 'stash_datacite'
   gem 'stash_discovery'
