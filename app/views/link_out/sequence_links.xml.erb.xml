@@ -1,0 +1,18 @@
+<Link>
+  <LinkId><%= "#{link_base}#{Date.today.strftime("%Y-%m-%d")}.#{counter}" %></LinkId>
+  <ProviderId><%= provider_id %></ProviderId>
+  <IconUrl><%= icon_url %></IconUrl>
+  <ObjectSelector>
+    <Database><%= database %></Database>
+    <ObjectList>
+      <% ids.each do |id| %>
+        <ObjId><%= id %></ObjId>
+      <% end %>
+    </ObjectList>
+  </ObjectSelector>
+  <ObjectUrl>
+    <Base><%= callback_base %></Base>
+    <Rule><%= callback_rule %></Rule>
+    <SubjectType><%= subject_type %></SubjectType>
+  </ObjectUrl>
+</Link>
