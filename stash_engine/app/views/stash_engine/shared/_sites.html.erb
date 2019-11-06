@@ -1,0 +1,20 @@
+<% if current_user %>
+  <div class="o-logout">
+    <div class="o-logout__name">
+      <%= current_user.email %>
+    </div>
+  </div>
+<% else %>
+  <div class="o-sites">
+    <details class="o-showhide o-sites__details" role="group">
+      <summary class="o-showhide__summary o-sites__summary">More Dash Sites</summary>
+      <div class="o-sites__group">
+        <!-- <span class="o-sites__group-heading">Participating UC Campuses</span> -->
+        <span class="o-sites__group-heading">Participating Partners</span>
+        <%= render partial: "stash_engine/shared/sites_list" %>
+      </div>
+    </details>
+  </div>
+<% end %>
+
+

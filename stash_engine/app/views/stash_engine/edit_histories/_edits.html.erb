@@ -1,0 +1,34 @@
+<%# locals: presenters (array of StashDatacite::ResourcesController::DatasetPresenter) %>
+<table class="c-lined-table">
+  <tr class="c-lined-table__head">
+    <th class="<%= sort_display('resource_created_at', @sort_column) %>">
+      <%= sort_by 'resource_created_at', title: 'Timestamp', current_column: @sort_column %>
+    </th>
+    <th class="<%= sort_display('edited_by_name_w_role', @sort_column) %>">
+      <%= sort_by 'edited_by_name_w_role', title: 'Modified By', current_column: @sort_column %>
+    </th>
+    <th class="<%= sort_display('version', @sort_column) %>">
+      <%= sort_by 'version', title: 'Version', current_column: @sort_column %>
+    </th>
+    <th class="<%= sort_display('comment', @sort_column) %>">
+      <%= sort_by 'comment', title: 'Notes', current_column: @sort_column %>
+    </th>
+  </tr>
+
+  <% presenters.each do |p| %>
+    <tr class="c-lined-table__row">
+      <td>
+        <%= formatted_datetime(p.resource_created_at) %>
+      </td>
+      <td>
+        <%= p.edited_by_name_w_role %>
+      </td>
+      <td>
+        <%= p.version %> (<%= p.embargo_status_pretty %>)
+      </td>
+      <td>
+        <%= p.comment %>
+      </td>
+    </tr>
+  <% end %>
+</table>

@@ -1,0 +1,15 @@
+<% unless authors.nil? %>
+  <% authors.each do |author| %>
+    <div class="o-metadata__group1">
+      <%= ([ (author.author_full_name ?
+              "<span class='o-metadata__author'>#{h(author.author_full_name)}</span>" : nil) ] +
+         author.affiliations.map{|i|
+              (i.try(:smart_name) ? "<span class='o-metadata__affiliation'>#{h(i.try(:smart_name))}</span>" : nil) } +
+         [ (author.author_orcid ? "<a class='c-orcid__icon' title='orcid_website' href='http://orcid.org'></a><span>#{display_author_orcid(author)}</span>" : nil) ])
+          .flatten.reject(&:blank?).join(", ").html_safe %>
+    </div>
+  <% end %>
+  <div class="o-metadata__group1">
+    <%= authors.map{ |author| author.author_email }.reject(&:blank?).join(", ").html_safe  %>
+  </div>
+<% end %>

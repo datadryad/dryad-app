@@ -1,0 +1,26 @@
+// ##### Element Resets ##### //
+
+abbr {
+  border: none; // for older browsers
+  text-decoration: none; // for newer browsers
+  cursor: default;
+
+  &[title] {
+    border: none; // override normalize.scss
+  }
+
+}
+
+// Remove rounded corners from WebKit search fields on iOS:
+
+// scss-lint:disable ImportantRule
+input[type='search'] {
+	border-radius: 0 !important;
+  appearance: none !important;
+}
+
+// Remove details arrow icon from Chrome & Safari:
+
+summary::-webkit-details-marker {
+  display: none;
+}

@@ -1,0 +1,17 @@
+// ##### Sidebox Component ##### //
+
+$sidebox-padding: 10px;
+
+.c-sidebox {
+  padding: $sidebox-padding;
+  border: 1px solid $design-dark-blue-color;
+}
+
+.c-sidebox__heading {
+  margin: (-$sidebox-padding) (-$sidebox-padding) $sidebox-padding;
+  padding: $sidebox-padding;
+  background-color: $design-dark-blue-color;
+  color: $design-white-color;
+  font-size: 1.3em;
+  font-weight: normal;
+}

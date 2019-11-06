@@ -1,0 +1,301 @@
+// ##### Buttons Object ##### //
+
+%o-button__plain-text {
+  display: inline-block;
+  padding: 8px 12px;
+  border: none;
+  text-decoration: none;
+}
+
+.o-button__plain-text1 {
+  @extend %o-button__plain-text;
+  background-color: $design-dark-blue-color;
+  color: $design-white-color;
+}
+
+.o-button__plain-text2 {
+  @extend %o-button__plain-text;
+  background-color: $design-lighter-blue-color;
+}
+
+.o-button__plain-text3 {
+  @extend %o-button__plain-text;
+  border: 1px solid $design-light-gray-color;
+  border-radius: 0;
+  background-color: $design-white-color;
+}
+
+.o-button__plain-text4 {
+  padding: 5px 0;
+  border: none;
+  background-color: $design-white-color;
+  color: $design-dark-blue-color;
+  font-size: 0.9em;
+}
+
+.o-button__plain-text5 {
+  padding: 4px 10px;
+  border: 1px solid $design-white-color;
+  border-radius: 0;
+  background-color: $design-dark-blue-color;
+  color: $design-white-color;
+}
+
+.o-button__plain-text6 {
+  margin: 0 8px 0 0;
+  padding: 0 12px 0 0;
+  border: none;
+  border-right: 2px solid $design-light-gray-color;
+  background-color: $design-white-color;
+  color: $design-dark-blue-color;
+  font-weight: bold;
+
+  @include bp(screen2) {
+    margin: 0 8px 10px 0;
+  }
+
+  &[disabled] {
+    color: $design-dark-gray-color;
+  }
+
+}
+
+.o-button__plain-text7 {
+  padding: 0;
+  border: none;
+  background-color: $design-white-color;
+  color: $design-dark-blue-color;
+  font-weight: bold;
+  text-align: left;
+
+  &[disabled] {
+    color: $design-dark-gray-color;
+  }
+
+}
+
+// If a <button> is a flexbox child and is implemented in Rails using "button_to", add "form_class" and add this class to it:
+.o-button__inline-form {
+  display: inline;
+  text-align: center;
+}
+
+%o-button__icon {
+  display: inline-block;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  border: 1px solid $design-light-gray-color;
+  border-radius: 0;
+  color: $design-black-color;
+}
+
+%o-button__icon-left {
+  @extend %o-button__icon;
+  display: flex;
+  align-items: center;
+  padding-right: 12px;
+  padding-left: 35px;
+  background: $design-white-color inline('../images/icon_left-blue-arrow.svg') left 10px center no-repeat;
+}
+
+.o-button__icon-left {
+  @extend %o-button__icon-left;
+}
+
+.o-button__icon-left--active {
+  @extend %o-button__icon-left;
+  border: 1px solid $design-lighter-blue-color;
+  background-color: $design-lighter-blue-color;
+}
+
+%o-button__icon-right {
+  @extend %o-button__icon;
+  padding-right: 35px;
+  padding-left: 12px;
+  background: $design-white-color inline('../images/icon_right-blue-arrow.svg') right 10px center no-repeat;
+}
+
+.o-button__icon-right {
+  @extend %o-button__icon-right;
+}
+
+.o-button__icon-right--active {
+  @extend %o-button__icon-right;
+  border: 1px solid $design-lighter-blue-color;
+  background-color: $design-lighter-blue-color;
+}
+
+.o-button__submit {
+  width: 180px;
+  height: 35px;
+  padding: 0 12px;
+  border: none;
+  background-color: $design-lighter-blue-color;
+  text-decoration: none;
+
+  &[disabled] {
+    background-color: lighten($design-light-gray-color, 20%);
+    color: $design-dark-gray-color;
+  }
+
+}
+
+%o-button__no-bg-icon-left {
+  padding: 3px 0 3px 25px;
+  border: none;
+  background-color: $design-white-color;
+  color: $design-dark-blue-color;
+  font-size: 0.9em;
+}
+
+.o-button__no-bg-icon-left1 {
+  @extend %o-button__no-bg-icon-left;
+  background: inline('../images/icon_point-blue.svg') left center no-repeat;
+}
+
+.o-button__no-bg-icon-left2 {
+  @extend %o-button__no-bg-icon-left;
+  background: inline('../images/icon_details.svg') left center no-repeat;
+}
+
+.o-button__undo {
+  @extend %o-button__no-bg-icon-left;
+  background: inline('../images/icon_undo-blue.png') left center no-repeat;
+}
+
+.o-button__undo-disabled {
+  @extend %o-button__no-bg-icon-left;
+  background: inline('../images/icon_undo-disabled.png') left center no-repeat;
+  color: $design-light-gray-color;
+}
+
+%o-button__prev-next {
+  border: none;
+  background-color: $design-white-color;
+  font-size: 0.9em;
+}
+
+.o-button__previous {
+  @extend %o-button__prev-next;
+  padding: 5px 5px 5px 20px;
+  background: inline('../images/icon_left-blue-arrow.svg') left center no-repeat;
+}
+
+.o-button__next {
+  @extend %o-button__prev-next;
+  padding: 5px 20px 5px 5px;
+  background: inline('../images/icon_right-blue-arrow.svg') right center no-repeat;
+}
+
+%o-button__text-number {
+  border: none;
+  background-color: $design-white-color;
+}
+
+.o-button__text-number {
+  @extend %o-button__text-number;
+}
+
+.o-button__text-number--active {
+  @extend %o-button__text-number;
+  color: $design-dark-blue-color;
+}
+
+.o-button__menu {
+  padding: 15px;
+  border: none;
+  background: inline('../images/icon_menu.svg') center / 35px no-repeat;
+}
+
+.o-button__close {
+  padding: 10px;
+  border: none;
+  background: transparent inline('../images/icon_close.svg') center / 15px no-repeat;
+}
+
+%o-button__add-remove {
+  display: inline-block;
+  text-align: left;
+  text-decoration: none;
+
+  &::before {
+    margin: 0 0.25em 0 0;
+  }
+
+}
+
+.o-button__add {
+  @extend %o-button__add-remove;
+  padding: 5px 8px;
+  border: 1px solid $design-lighter-blue-color;
+  background-color: $design-lighter-blue-color;
+  color: $design-black-color;
+
+  &::before {
+    content: '+';
+  }
+
+}
+
+.o-button__import-manuscript {
+  @extend %o-button__add-remove;
+  display: block;
+  margin: 0 0 20px;
+  padding: 5px 8px;
+  clear: both;
+  border: 1px solid $design-lighter-blue-color;
+  background-color: $design-lighter-blue-color;
+  color: $design-black-color;
+}
+
+.o-button__remove {
+  @extend %o-button__add-remove;
+  padding: 2px 0;
+  border: none;
+  background-color: $design-white-color;
+  color: $design-dark-blue-color;
+
+  &::before {
+    content: '\00d7'; // multiply sign
+  }
+
+}
+
+.o-button__connect-orcid {
+  display: inline-block;
+  padding: 5px 5px 5px 25px;
+  border: 1px solid $design-extra-light-gray-color;
+  border-radius: 8px;
+  outline: none;
+  background: $design-white-color inline('../images/icon_orcid.png') left 5px center no-repeat;
+  background-color: $design-white-color;
+  box-shadow: 1px 1px 3px $design-light-gray-color;
+  color: $design-light-gray-color;
+  font-size: .8em;
+  font-weight: bold;
+  line-height: 24px;
+  text-decoration: none;
+  vertical-align: right;
+  cursor: pointer;
+}
+
+.o-button__connect-orcid:hover {
+  border: 1px solid $bhavis-random-color;
+  color: $bhavis-random-color;
+}
+
+.o-button__help {
+  display: inline-block;
+  padding: 8px;
+  border: none;
+  background: $design-white-color inline('../images/icon_question-mark.svg') center / 15px no-repeat;
+  text-decoration: none;
+}
+
+.o-button__calendar {
+  padding: 15px;
+  border: none;
+  background: transparent inline('../images/icon_mini_calendar.png') top / 22px no-repeat;
+}
+
+button.o-button__calendar:focus { outline: none; }

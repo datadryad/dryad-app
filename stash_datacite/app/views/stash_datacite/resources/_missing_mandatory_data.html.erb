@@ -1,0 +1,11 @@
+<% if data.present? %>
+  <div class="js-alert c-alert--error" role="alert">
+    <div class="c-alert__text">
+      Please edit the following in order to submit your dataset:
+      <br><br><strong><%= data.join("<br>").html_safe %></strong>
+    </div>
+    <button aria-label="close" class="js-alert__close o-button__close c-alert__close"></button>
+  </div>
+<% else %>
+  <%= '' %>
+<% end %>

@@ -1,0 +1,9 @@
+<% @page_title = "Submission history for #{@resource.title}" %>
+<h1 class="o-heading__level1">Version history for
+  <% if @resource.identifier && @resource.identifier.identifier %>
+    <%= link_to @resource.title, stash_url_helpers.show_path(@resource.identifier.to_s), class: 'o-link__primary' %></h1>
+  <% else %>
+    <%= @resource.title %></h1>
+  <% end %>
+
+<%= render partial: 'edits', locals: {presenters: @presenters} %>

@@ -1,0 +1,5 @@
+// reload the internal data table with the new contents
+$('#internal_data_table').html("<%= escape_javascript(render partial: 'stash_engine/internal_data/table') %>");
+
+// close the popup dialog
+$('#popup_dialog').dialog('close');

@@ -1,0 +1,79 @@
+{
+  "_links": {
+    "self": {
+      "href": "/api/v2/versions/32/files"
+    },
+    "first": {
+      "href": "/api/v2/versions/32/files"
+    },
+    "last": {
+      "href": "/api/v2/versions/32/files?page=1"
+    }
+  },
+  "count": 2,
+  "total": 2,
+  "_embedded": {
+    "stash:files": [
+      {
+        "_links": {
+          "self": {
+            "href": "/api/v2/files/66"
+          },
+          "stash:dataset": {
+            "href": "/api/v2/datasets/doi%3A10.5072%2FFK2MK6CD6D"
+          },
+          "stash:version": {
+            "href": "/api/v2/versions/32"
+          },
+          "stash:files": {
+            "href": "/api/v2/versions/32/files"
+          },
+          "stash:download": {
+            "href": "/api/v2/downloads/66"
+          },
+          "curies": [
+            {
+              "name": "stash",
+              "href": "https://github.com/CDL-Dryad/stash/blob/master/stash_api/link-relations.md#{rel}",
+              "templated": "true"
+            }
+          ]
+        },
+        "path": "I0006475A.jpg",
+        "size": 218594,
+        "mimeType": "image/jpeg",
+        "status": "copied"
+      },
+      {
+        "_links": {
+          "self": {
+            "href": "/api/v2/files/67"
+          },
+          "stash:dataset": {
+            "href": "/api/v2/datasets/doi%3A10.5072%2FFK2MK6CD6D"
+          },
+          "stash:version": {
+            "href": "/api/v2/versions/32"
+          },
+          "stash:files": {
+            "href": "/api/v2/versions/32/files"
+          },
+          "stash:download": {
+            "href": "/api/v2/downloads/67"
+          },
+          "curies": [
+            {
+              "name": "stash",
+              "href": "https://github.com/CDLUC3/stash/blob/development/stash_api/link-relations.md#{rel}",
+              "templated": "true"
+            }
+          ]
+        },
+        "path": "admin_editing2.jpg",
+        "size": 185621,
+        "mimeType": "image/jpeg",
+        "status": "created"
+      }
+    ]
+  }
+}

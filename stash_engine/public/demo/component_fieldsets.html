@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+<head>
+	<meta charset="UTF-8">
+	<title>Fieldsets Component</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+	<link rel="stylesheet" href="css/ui.css">
+	<style>
+		/* styles for this page only */
+		
+	</style>
+	<script
+		src="https://code.jquery.com/jquery-2.2.3.min.js"
+		integrity="sha256-a23g1Nt4dtEYOj7bR+vTu7+T8VP13humZFBJNIYoEJo="
+		crossorigin="anonymous"></script>
+</head>
+<body>
+
+  <div class="ui-library-header">
+    <h1><a href="index.html">Dash UI Library</a></h1>
+    <h2>Fieldsets Component</h2>
+  </div>
+
+  
+<fieldset class="c-fieldset">
+	<legend class="c-fieldset__legend">Legend</legend>
+
+	<div class="c-input">
+		<label class="c-input__label" for="c-input__1">Related work(s) <span class="c-input__hint">articles, other datasets: e.g., This dataset is cited by DOI 10.1000/182.</span></label>
+		<input class="c-input__text" id="c-input__1" type="text" name="">
+		<div class="c-input__error">Error message.</div>
+	</div>
+
+	<br>
+
+	<div class="c-input">
+		<label class="c-input__label" for="c-input__2">Sample Field 2<span class="c-input__hint"></span></label>
+		<input class="c-input__text" id="c-input__2" type="text" name="" required>
+		<div class="c-input__error">Error message.</div>
+	</div>
+
+</fieldset>
+
+
+	<script src="js/ui.js"></script>
+	
+</body>
+</html>

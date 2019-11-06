@@ -1,0 +1,51 @@
+/*
+  Place all the styles related to the matching controller here.
+  They will automatically be included in application.css.
+*/
+.review {
+  width: 1100px;
+  margin: auto;
+}
+.review_headers {
+  margin: 10px 0px 10px 0px;
+  border: 1px solid;
+  padding: 6px 6px 6px 6px;
+  width: 1090px;
+  background-repeat: no-repeat;
+  background-color: #336699;
+  color: #ffffff;
+}
+
+#map_review
+{
+  height: 400px;
+  width: 450px;
+  margin: 0 auto auto auto;
+  padding-bottom: 30px;
+  // page-break-inside: avoid; // causes overflows to previous footer if it would break across pages
+  // transform: none !important;
+}
+.review li {
+  margin: -15px;
+  padding: -15px;
+}
+
+.error
+{
+  border: 1px solid;
+  margin: 10px 0px;
+  padding:15px 10px 15px 50px;
+  background-repeat: no-repeat;
+  background-position: 10px center;
+  color: #D8000C;
+  background-color: #FFBABA;
+}
+
+.error_close img {
+    display: block;
+    float:right;
+    position:relative;
+    top:-12px;
+    right: -10px;
+    height: 20px;
+}

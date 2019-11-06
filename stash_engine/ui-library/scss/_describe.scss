@@ -1,0 +1,32 @@
+// ##### Metadata Entry Theme ##### //
+
+.t-describe__remove-button {
+	align-self: center;
+	margin: 0 0 $spacing-md;
+
+	@include bp(screen2) {
+		margin: 0 0 0 $spacing-md;
+	}
+
+}
+
+.t-describe__add-orcid {
+	display: inline-flex;
+	align-items: flex-start;
+}
+
+.t-describe__add-button {
+	margin: 0 1em 20px 0;
+}
+
+.t-describe__select1 {
+	align-items: flex-start;
+}
+
+.t-describe__add-funder-button {
+	margin: 0 0 20px;
+}
+
+.t-describe__map-label {
+	font-weight: bold;
+}

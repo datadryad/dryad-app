@@ -1,0 +1,32 @@
+// ##### Quote Object ##### //
+
+.o-quote {
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: center;
+  justify-content: center;
+  height: 150px;
+  background: linear-gradient(rgba($design-extra-light-gray-color, 0.85) 150px, transparent 0), inline('../images/bg_ramon-y-cajal.png') 0 0 / cover no-repeat;
+  text-align: center;
+}
+
+html.no-multiplebgs .o-quote {
+	background: $design-light-gray-color;
+}
+
+.o-quote__quote {
+	width: 450px;
+	margin: 5px 0 15px;
+  padding: 5px;
+  opacity: 0.9;
+	background-color: $design-dark-gray-color;
+  color: $design-white-color;
+	font-size: 18px;
+	line-height: 1.3em;
+}
+
+.o-quote__author {
+	width: 380px;
+	color: $design-white-color;
+	text-align: right;
+}

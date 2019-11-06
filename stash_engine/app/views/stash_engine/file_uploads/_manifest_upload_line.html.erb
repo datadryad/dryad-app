@@ -1,0 +1,28 @@
+<!-- manifest workflow -->
+<% f = uploaded_file %>
+<% i = uploaded_file_counter + 1 %>
+<% if i == 11 %>
+  <tbody id="table_hider">
+<% end %>
+<tr id="manifest_file_<%= f.id %>" class="c-lined-table__row <%= f.file_state == 'copied' ? 'js-copied_file' : 'js-created_file' %>">
+  <td>
+    <span title="<%= f.upload_file_name %>"><%= truncate(f.upload_file_name, length: 30) %></span>
+    <span class="js-filename" style="display: none;"><%= f.upload_file_name %></span>
+    <span class="js-hidden_bytes" style="display: none;"><%= f.upload_file_size %></span>
+  </td>
+  <td><%= shorten_linked_url(url: f.url, length: 60) %></td>
+  <td class="c-manifest-table__td-size"><%= filesize(f.upload_file_size) %><%# f.upload_file_size %></td>
+  <td class="c-manifest-table__td-version">
+    <%= f.file_state == 'created' ? 'New' : 'Submitted' %>
+    <%# f.version_file_created_in.version %>
+  </td>
+  <td>
+    <%= button_to 'Delete', destroy_manifest_file_upload_path(f), method: :patch, remote: true,
+                  class: "c-upload__button", form_class: 'o-button__inline-form', id: "destroy_10_#{f.id}", style: 'display: none' %>
+    <%= button_to 'Delete', destroy_manifest_file_upload_path(f, rows: 99999), method: :patch, remote: true,
+                  class: "c-upload__button", form_class: 'o-button__inline-form', id: "destroy_all_#{f.id}", style: 'display: none' %>
+  </td>
+  <script>
+    showCorrectDelete(<%= f.id %>);
+  </script>
+</tr>

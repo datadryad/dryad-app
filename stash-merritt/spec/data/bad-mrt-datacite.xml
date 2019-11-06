@@ -1,0 +1,121 @@
+<?xml version='1.0'?>
+<resource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://datacite.org/schema/kernel-4" xsi:schemaLocation="http://datacite.org/schema/kernel-4 http://schema.datacite.org/meta/kernel-4/metadata.xsd">
+  <bad_xml>I do not belong in datacite XML</bad_xml>
+  <identifier identifierType="DOI">10.15146/R3RG6G</identifier>
+  <creators>
+    <creator>
+      <creatorName>Chen, Hao</creatorName>
+      <nameIdentifier nameIdentifierScheme="ORCID" schemeURI="http://orcid.org/">0123-4567-8910-1112</nameIdentifier>
+      <affiliation>North Carolina Central University</affiliation>
+    </creator>
+  </creators>
+  <titles>
+    <title>A Zebrafish Model for Studies on Esophageal Epithelial Biology</title>
+  </titles>
+  <publisher>DataONE</publisher>
+  <publicationYear>2016</publicationYear>
+  <subjects>
+    <subject>Zebrafish</subject>
+    <subject>Epithelium</subject>
+    <subject>Barrett's esophagus</subject>
+  </subjects>
+  <fundingReferences>
+    <fundingReference>
+      <funderName>U.S. Environmental Protection Agency</funderName>
+      <awardNumber>EPA STAR Fellowship 2011</awardNumber>
+    </fundingReference>
+    <fundingReference>
+      <funderName>CYBER-ShARE Center of Excellence National Science Foundation (NSF) CREST grants</funderName>
+      <awardNumber>HRD-0734825 and HRD-1242122</awardNumber>
+    </fundingReference>
+    <fundingReference>
+      <funderName>CI-Team Grant</funderName>
+      <awardNumber>OCI-1135525</awardNumber>
+    </fundingReference>
+  </fundingReferences>
+  <contributors>
+    <contributor contributorType="ProjectMember">
+      <contributorName>Chen, Xiaoxin</contributorName>
+      <nameIdentifier nameIdentifierScheme="ORCID" schemeURI="http://orcid.org/">1234-5678-9101-1121</nameIdentifier>
+      <affiliation>University of North Carolina at Chapel Hill</affiliation>
+    </contributor>
+    <contributor contributorType="DataManager">
+      <contributorName>Wilson, James</contributorName>
+    </contributor>
+  </contributors>
+  <dates>
+    <date dateType="Available">2015-12-02</date>
+    <date dateType="Collected">2009/2011</date>
+  </dates>
+  <language>en</language>
+  <resourceType resourceTypeGeneral="Dataset">application/octet-stream</resourceType>
+  <alternateIdentifiers>
+    <alternateIdentifier alternateIdentifierType="URL">
+      https://oneshare.cdlib.org/xtf/view?docId=dataone/ark%2B%3Dc5146%3Dr3rg6g/mrt-datacite.xml
+    </alternateIdentifier>
+  </alternateIdentifiers>
+  <relatedIdentifiers>
+    <relatedIdentifier relationType="IsCitedBy" relatedIdentifierType="DOI">10.1371/journal.pone.0143878</relatedIdentifier>
+    <relatedIdentifier relationType="IsDocumentedBy" relatedIdentifierType="URL">http://journals.plos.org/plosone/article?id=10.1371/journal.pone.0143878</relatedIdentifier>
+  </relatedIdentifiers>
+  <sizes>
+    <size>3286679 bytes</size>
+  </sizes>
+  <formats>
+    <format>text/plain</format>
+    <format>text/application/vnd.openxmlformats-officedocument.wordprocessingml.document</format>
+    <format>application/xml</format>
+    <format>application/pdf</format>
+  </formats>
+  <version>1</version>
+  <rightsList>
+    <rights rightsURI="https://creativecommons.org/publicdomain/zero/1.0/">CC0 1.0 Universal (CC0 1.0) Public Domain Dedication</rights>
+  </rightsList>
+  <descriptions>
+    <description descriptionType="Abstract">
+      Mammalian esophagus exhibits a remarkable change in epithelial structure
+      during the transition from embryo to adult. However, the molecular
+      mechanisms of esophageal epithelial development are not well understood.
+      Zebrafish (Danio rerio), a common model organism for vertebrate
+      development and gene function, has not previously been characterized as a
+      model system for esophageal epithelial development. In this study, we
+      characterized a piece of non-keratinized stratified squamous epithelium
+      similar to human esophageal epithelium in the upper digestive tract of
+      developing zebrafish. Under the microscope, this piece was detectable at
+      5dpf and became stratified at 7dpf. Expression of esophageal epithelial
+      marker genes (Krt5, P63, Sox2 and Pax9) was detected by
+      immunohistochemistry and in situ hybridization. Knockdown of P63, a gene
+      known to be critical for esophageal epithelium, disrupted the development
+      of this epithelium. With this model system, we found that Pax9 knockdown
+      resulted in loss or disorganization of the squamous epithelium, as well as
+      down-regulation of the differentiation markers Krt4 and Krt5. In summary,
+      we characterized a region of stratified squamous epithelium in the
+      zebrafish upper digestive tract which can be used for functional studies
+      of candidate genes involved in esophageal epithelial biology.
+    </description>
+  </descriptions>
+  <geoLocations>
+    <geoLocation>
+      <geoLocationBox>
+        <westBoundLongitude>-119.211</westBoundLongitude>
+        <eastBoundLongitude>-119.182</eastBoundLongitude>
+        <southBoundLatitude>37.046</southBoundLatitude>
+        <northBoundLatitude>37.075</northBoundLatitude>
+      </geoLocationBox>
+      <geoLocationPlace>Providence Creek (Lower, Upper and P301)</geoLocationPlace>
+    </geoLocation>
+    <geoLocation>
+      <geoLocationPoint>
+        <pointLatitude>31.233</pointLatitude>
+        <pointLongitude>-67.302</pointLongitude>
+      </geoLocationPoint>
+      <geoLocationBox>
+        <westBoundLongitude>-71.032</westBoundLongitude>
+        <eastBoundLongitude>-68.211</eastBoundLongitude>
+        <southBoundLatitude>41.09</southBoundLatitude>
+        <northBoundLatitude>42.893</northBoundLatitude>
+      </geoLocationBox>
+      <geoLocationPlace>Atlantic Ocean</geoLocationPlace>
+    </geoLocation>
+  </geoLocations>
+</resource>

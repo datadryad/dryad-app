@@ -1,0 +1,55 @@
+<%# locals: file, resource, uploads %>
+<h2 class="t-upload__choose-heading--active">Step 2: Choose Files</h2>
+
+<div>
+  <%= form_for file, html: {multipart: true, id: 'fileupload'} do |f| %>
+    <div class="c-choose">
+      <%= f.hidden_field :resource_id %>
+      <div id="upload_bg" class="c-choose__drop o-drop">
+        Drag and drop files here<br/><br/>
+        or<br/><br/>
+        <%= label_tag(:upload_upload, "Choose Files", class: 'c-input__file-label') %>
+        <%= file_field_tag 'upload[upload]', multiple: true, class: 'c-input__file' %>
+      </div>
+      <div class="c-choose__label">
+      </div>
+    </div>
+  <% end %>
+</div>
+<div class="t-upload__container">
+  <h2 class="t-upload__choose-heading--active" id="upload_tweaker_head">Step 3: Upload New Files</h2>
+  <%# button_to 'undo all changes', revert_file_upload_path(resource_id: resource.id), method: :patch, remote: true,
+                class: "o-button__undo", form_class: 'o-button__inline-form', id: 'revert_all' %>
+</div>
+<div class="c-upload">
+  <div id="upload_list">
+    <%# render partial: 'stash_engine/file_uploads/files_upload_line', locals: {resource: resource, uploads: uploads} %>
+  </div>
+</div>
+
+<div>
+  <div id="size_in_upload"></div>
+  <div id="confirm_text_upload" style="display: none;">
+    <p>
+      <span><%= check_box_tag 'confirm_to_upload', 'yes', false, id: 'confirm_to_upload' %></span>
+      <strong style="color: red;"> *</strong>
+      <label for="confirm_to_upload">I confirm that no Personal Health Information or Sensitive Data are being uploaded with this submission.</label>
+    </p>
+  </div>
+  <button id="upload_all" type="button" disabled class="o-button__submit confirm_upload">Upload</button>
+  <button id="cancel_all" type="button" class="o-button__submit" style="display: none;" >Cancel all</button>
+</div>
+
+<h2 class="t-upload__choose-heading--active">Uploaded Files</h2>
+
+<div class="c-upload" id="validated_files" data-load="<%= file_uploads_path(resource_id: @resource.id, format: :js) %>">
+  <%# render partial: 'stash_engine/file_uploads/validated_files', locals: {resource: @resource} %>
+    <%= image_tag 'stash_engine/spinner.gif', size: '80x60', alt: 'Loading spinner' %>
+</div>
+
+<div class="c-upload__upload-complete-text" id="upload_complete" style="display: none;">
+  <p>Upload complete.</p>
+</div>
+
+<%# this gets put in the page as a JS template that jquery file upload uses to show things in process %>
+<%= render partial: 'stash_engine/file_uploads/dropped_file' %>

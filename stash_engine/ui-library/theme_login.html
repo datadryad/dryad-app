@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+<head>
+  <meta charset="UTF-8">
+  <title>Home Page Theme</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <!-- build:css css/ui.css -->
+  <link rel="stylesheet" href="css/main.css">
+  <!-- endbuild -->
+  <style>
+    /* styles for this page only */
+
+  </style>
+  <script
+        src="https://code.jquery.com/jquery-2.2.3.min.js"
+        integrity="sha256-a23g1Nt4dtEYOj7bR+vTu7+T8VP13humZFBJNIYoEJo="
+        crossorigin="anonymous"></script>
+</head>
+<body>
+
+<div class="ui-library-header">
+  <h1><a href="index.html">Dash UI Library</a></h1>
+  <h2>Login Page Theme</h2>
+</div>
+
+<!-- Begin Header Component -->
+<header class="t-home__header c-header">
+  <div class="c-header__logos">
+    <button aria-label="mobile menu" class="o-button__menu c-header__menu-button js-header__menu-button"></button>
+    <a href="" class="c-header__dash-logo-link">
+      <img class="c-header__dash-logo-svg" src="images/logo_dryad.png" alt="University of California, Dash. Data sharing made easy.">
+    </a>
+  </div>
+  <nav class="c-header__nav js-header__nav">
+    <div class="o-global-search c-header__global-search">
+      <label class="o-global-search__label" for="search-field-input1">Search</label>
+      <input class="o-global-search__input" id="search-field-input1" type="search" name="[name]" placeholder="Search">
+      <button aria-label="Submit" class="o-global-search__submit-button"></button>
+    </div>
+    <div class="c-header__nav-group">
+      <a href="" class="c-header__nav-item">Home</a>
+      <a href="" class="c-header__nav-item--active">Browse Data</a>
+      <a href="" class="c-header__nav-item">Help</a>
+      <a href="" class="c-header__nav-item">My Datasets</a>
+      <!--##include file="includes/sites.html" -->
+    </div>
+  </nav>
+</header>
+<!-- End Header Component -->
+
+
+
+<div class="t-login__section">
+  <div class="t-login__box">
+    <h1>Login</h1>
+    <a href="" class="t-login__buttonlink"><img src="images/icon_orcid.svg" class="t-login__orcid-small" alt="ORCID logo"/> Login or create your ORCID iD</a>
+    <p>Dryad uses ORCiD as its primary login method.<br>Please use your ORCiD login credentials to login to Dryad.</p>
+  </div>
+  <div class="t-login__info">
+    <h2>Dryad's Commitment to You</h2>
+
+    <h3>High Quality</h3>
+    <p>All datasets are curated</p>
+
+    <h3>Low Cost or Community Supported</h3>
+    <p>Researcher-led and non-commercial</p>
+
+    <h3>Long Term</h3>
+    <p>Archiving, compliance to mandates, credit for your data</p>
+  </div>
+</div>
+
+
+
+<!--#include file="includes/footer.html" -->
+
+<!-- build:js js/ui.js -->
+<script src="js/modernizr-custombuild.js"></script>
+<script src="js/details-polyfill.js"></script>
+<script src="js/main.js"></script>
+<!-- endbuild -->
+
+</body>
+</html>

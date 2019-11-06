@@ -1,0 +1,11 @@
+<div id="map" class="o-map"></div>
+
+<script type="text/javascript">
+$(document).ready(function(){
+    $("#location_section").click(function() {
+        setTimeout(function() {
+            map.invalidateSize();
+        }, 1000);
+    });
+});
+</script>

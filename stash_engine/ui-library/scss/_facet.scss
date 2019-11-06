@@ -1,0 +1,173 @@
+// ##### Facet Component ##### //
+
+.c-facet {
+  border: 1px solid $design-dark-blue-color;
+}
+
+.c-facet__header {
+  display: flex;
+  flex-flow: column nowrap;
+
+  @include bp(screen2) {
+    flex-flow: row nowrap;
+    justify-content: space-between;
+    padding: 10px;
+    background-color: $design-dark-blue-color;
+  }
+
+}
+
+.c-facet__heading {
+  position: relative; // to %c-facet__toggle-button
+  padding: 10px;
+  background-color: $design-dark-blue-color;
+
+  @include bp(screen2) {
+    padding: 0;
+  }
+
+}
+
+.c-facet__heading-text {
+  color: $design-white-color;
+  font-size: 1.2em;
+}
+
+%c-facet__toggle-button {
+  position: absolute; // to .c-facet__heading
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  border: none;
+  background-color: transparent;
+
+  @include bp(screen2) {
+    display: none;
+  }
+
+  &::after {content: '';
+    position: absolute; // to %c-facet__toggle-button
+    top: 10px;
+    right: 10px;
+    padding: 10px; // reveals icon
+    background: inline('../images/icon_right-white-arrow.svg') center no-repeat;
+  }
+
+}
+
+.c-facet__toggle-button {
+  @extend %c-facet__toggle-button;
+
+  &::after {
+    transform: rotate(90deg);
+  }
+
+}
+
+.c-facet__toggle-button--open {
+  @extend %c-facet__toggle-button;
+
+  &::after {
+    transform: rotate(-90deg);
+  }
+
+}
+
+%c-facet__deselect-button {
+  padding: 10px;
+  border: none;
+  background-color: $design-light-gray-color;
+
+  @include bp(screen2) {
+    padding: 0;
+    background-color: transparent;
+    color: $design-white-color;
+    font-size: 0.9em;
+  }
+
+  &[disabled] {
+    background-color: lighten($design-light-gray-color, 20%);
+    color: $design-light-gray-color;
+
+    @include bp(screen2) {
+      display: none;
+    }
+
+  }
+
+}
+
+.c-facet__deselect-button {
+  @extend %c-facet__deselect-button;
+  display: none;
+
+  @include bp(screen2) {
+    display: block;
+  }
+
+}
+
+.c-facet__deselect-button--open {
+  @extend %c-facet__deselect-button;
+}
+
+.c-facet__refine-label {
+  @extend %hide;
+}
+
+.c-facet__refine {
+  display: block; // if flexbox not supported
+  flex: 1 0 auto;
+  min-height: 25px;
+  margin: 10px;
+  padding: 0 35px 0 5px;
+  border: 1px solid $design-light-gray-color;
+  background: inline('../images/icon_magnifying-glass-blue.svg') right 5px center no-repeat;
+}
+
+%c-facet__check-group {
+  display: none;
+  flex-flow: column nowrap;
+  max-height: 11em;
+  overflow: auto;
+
+  @include bp(screen2) {
+    display: flex;
+  }
+
+}
+
+.c-facet__check-group {
+  @extend %c-facet__check-group;
+}
+
+.c-facet__check-group--open {
+  @extend %c-facet__check-group;
+  display: flex;
+}
+
+html.svg .c-facet__check-input {
+  @extend %hide;
+
+  &:checked + .c-facet__check-label {
+    background: inline('../images/icon_checkbox-checked.svg') right 10px center no-repeat;
+  }
+
+}
+
+.c-facet__check-label {
+  display: block; // if flexbox not supported
+  flex: 1 0 auto; // for Safari
+  padding: 10px;
+  cursor: pointer;
+
+  &:not(:first-of-type) {
+    border-top: 1px solid $design-dark-blue-color;
+  }
+
+}
+
+html.svg .c-facet__check-label {
+  background: inline('../images/icon_checkbox-unchecked.svg') right 10px center no-repeat;
+}

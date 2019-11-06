@@ -1,0 +1,23 @@
+// ##### Table Heading Component ##### //
+
+.c-table-heading {
+	@extend %pull-background;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	height: 40px;
+	background-color: $design-dark-blue-color;
+}
+
+.c-table-heading__text {
+	color: $design-white-color;
+	font-size: 1.2em;
+}
+
+.c-table-heading__button {
+
+	@include bp(screen2) {
+		display: none;
+	}
+
+}

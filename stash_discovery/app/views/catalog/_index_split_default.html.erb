@@ -1,0 +1,24 @@
+<% # header bar for doc items in index view -%>
+<%= content_tag :div, class: 'documentHeader row', data: { layer_id: document.id, bbox: document.bounding_box_as_wsen } do %>
+  <div class='status-icons'>
+    <%= render partial: 'header_icons', locals: { document: document } %>
+  </div>
+  <h3 class="index_title col-sm-9s cosl-lg-10 text-span">
+    <span class='caret-toggle'></span>
+    <% counter = document_counter_with_offset(document_counter) %>
+    <span class="document-counter">
+      <%= t('blacklight.search.documents.counter', :counter => counter) if counter %>
+    </span>
+    <%= link_to document['dc_title_s'], stash_url_helpers.show_path(document['dc_identifier_s']), title: document['dc_title_s'] %>
+    <%# link_to_document document, document_show_link_field(document), counter: counter, title: document[blacklight_config.index.title_field] %>
+  </h3>
+
+  <div class='col-md-12 more-info-area'>
+    <div class='collapse' data-collapse-target="<%= document.id %>">
+      <small>
+        <%= geoblacklight_present(:index_fields_display, document).html_safe %>
+      </small>
+    </div>
+  </div>
+<% end %>
+

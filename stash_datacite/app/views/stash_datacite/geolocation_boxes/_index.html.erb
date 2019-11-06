@@ -1,0 +1,10 @@
+<div class = "geolocation_boxes" >
+  <% geolocation_boxes.each do |geolocation_box| %>
+    <div class="c-locations__area"
+         data-bbox="<%= geolocation_box.bounding_box_str %>" >
+      <div class="c-locations__data"><abbr title="Southwest" class="c-locations__coordinate">SW</abbr> <%= geolocation_box.sw_latitude %>,&nbsp; <%= geolocation_box.sw_longitude %></div>
+      <div class="c-locations__data"><abbr title="Northeast" class="c-locations__coordinate">NE</abbr> <%= geolocation_box.ne_latitude %>,&nbsp; <%= geolocation_box.ne_longitude %></div>
+      <%= link_to 'remove', stash_datacite.geolocation_boxes_delete_path(geolocation_box, resource_id: @resource.id), method: :delete, remote: true, class: 'o-button__remove', role: 'button' %>
+    </div>
+  <% end %>
+</div>

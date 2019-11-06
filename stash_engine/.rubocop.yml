@@ -1,0 +1,14 @@
+inherit_from: ../.rubocop.yml
+
+AllCops:
+  Exclude:
+    - 'bin/**/*'
+    - 'config/**/*'
+    - 'db/**/*'
+    - 'script/**/*'
+    - 'spec/dummy/db/**/*'
+    - 'test/dummy/db/**/*'
+    - 'vendor/**/*'
+    - 'ui-library/**/*'
+    - 'node_modules/**/*'
+    - 'app/models/stash_engine/lock.rb'

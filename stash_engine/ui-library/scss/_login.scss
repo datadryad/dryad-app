@@ -1,0 +1,183 @@
+.t-login__section {
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+  justify-content: space-evenly;
+  width: 100%;
+  text-align: center;
+}
+
+.t-login__box {
+  padding-right: 25px;
+
+  a:link,
+  a:visited,
+  a:hover,
+  a:active {
+    color: $design-black-color;
+    font-weight: bold;
+    text-decoration: none;
+  }
+
+  h1 {
+    margin-bottom: 45px;
+    color: $design-orange-color;
+  }
+
+  p {
+    margin-top: 45px;
+  }
+}
+
+.t-login__choose {
+  padding-right: 25px;
+  text-align: left;
+
+  a:link,
+  a:visited,
+  a:hover,
+  a:active {
+    color: $design-black-color;
+    text-decoration: none;
+  }
+
+  h1 {
+    margin-bottom: 45px;
+    color: $design-orange-color;
+    text-align: center;
+  }
+
+  p {
+    margin-top: 45px;
+  }
+
+  .c-institution__container {
+    margin-bottom: 25px;
+    margin-left: 0;
+
+    select {
+      width: 20rem;
+      margin-right: 10px;
+    }
+  }
+}
+
+.t-login__buttonlink {
+  padding: 10px 15px;
+  border: 2px solid $design-orange-color;
+  border-radius: 35px;
+  background-color: $design-white-color;
+}
+
+.t-login__buttonlink:hover {
+  border: 2px solid $design-orange-color;
+  border-radius: 35px;
+  background-color: $design-white-color;
+}
+
+
+.t-login__info {
+  flex-basis: 35rem;
+  padding-left: 35px;
+  border-left: 1px solid $design-orange-color;
+  text-align: left;
+
+  h3 {
+    margin-top: 35px;
+  }
+}
+
+.t-login__or-box {
+  width: 100px;
+  margin: 0 auto;
+}
+
+.t-login__more-messages {
+  display: flex;
+  align-items: center;
+  width: 300px;
+  margin: 0 auto;
+}
+
+.t-login__orcid {
+  display: block;
+  width: 300px;
+  height: 90px;
+  margin-right: auto;
+  margin-left: auto;
+  background: inline('../images/logo_orcid.svg') center no-repeat;
+}
+
+.t-login__orcid-big {
+  display: block;
+  width: 10em;
+  height: 10em;
+  margin: 0 auto 2em;
+  padding: 20px;
+}
+
+.t-login__orcid-small {
+  display: inline-block;
+  width: 1.5em;
+  height: 1.5em;
+  vertical-align: middle;
+}
+
+/*
+.t-login__orcid-small {
+  display: inline-block;
+  width: 80px;
+  height: 30px;
+  background: inline('../images/logo_orcid.svg') center / 80px no-repeat;
+}*/
+
+.t-login__selector {
+  display: inline-block;
+  padding: 35px 0 0;
+  text-align: center;
+}
+
+.c-institution__container {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  margin: 0 0 1em 5em;
+
+  form {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    width: 100%;
+  }
+}
+
+.c-institution__column {
+  margin-right: 5em;
+}
+
+.c-institution__datalist {
+  flex-grow: 2;
+  height: 30px;
+  margin-top: 5px;
+  margin-right: 5px;
+}
+
+.c-institution__button {
+  margin-top: 1em;
+  padding: 10px;
+}
+
+.o-heading__level2-login-with {
+  @extend %o-heading__level2;
+  margin-bottom: 0;
+  font-size: 1.6em;
+  text-align: center;
+
+  a:link,
+  a:visited,
+  a:hover,
+  a:active {
+    color: $design-dark-blue-color;
+    text-decoration: none;
+  }
+}

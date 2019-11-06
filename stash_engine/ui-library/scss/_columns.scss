@@ -1,0 +1,35 @@
+// ##### Column Layout Component ##### //
+
+.c-columns {
+
+  @include bp(screen2) {
+    display: flex;
+    align-items: flex-start;
+  }
+
+}
+
+.c-columns__content {
+  flex: 1;
+}
+
+.c-columns__sidebar1,
+.c-columns__sidebar2 {
+  flex: 0 0 28%; // column width
+}
+
+.c-columns__sidebar1 {
+
+  @include bp(screen2) {
+    padding: 0 20px 0 0;
+  }
+
+}
+
+.c-columns__sidebar2 {
+
+	@include bp(screen2) {
+    padding: 0 0 0 20px;
+  }
+
+}

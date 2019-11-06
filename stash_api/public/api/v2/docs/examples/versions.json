@@ -1,0 +1,135 @@
+{
+  "_links": {
+    "self": {
+      "href": "/api/v2/datasets/doi%3A10.5072%2FFK2MK6CD6D/versions"
+    },
+    "first": {
+      "href": "/api/v2/datasets/doi%3A10.5072%2FFK2MK6CD6D/versions"
+    },
+    "last": {
+      "href": "/api/v2/datasets/doi%3A10.5072%2FFK2MK6CD6D/versions?page=1"
+    }
+  },
+  "count": 3,
+  "total": 3,
+  "_embedded": {
+    "stash:versions": [
+      {
+        "_links": {
+          "self": {
+            "href": "/api/v2/versions/18"
+          },
+          "stash:dataset": {
+            "href": "/api/v2/datasets/doi%3A10.5072%2FFK2MK6CD6D"
+          },
+          "stash:files": {
+            "href": "/api/v2/versions/18/files"
+          },
+          "stash:download": {
+            "href": "/api/v2/versions/18/download"
+          },
+          "curies": [
+            {
+              "name": "stash",
+              "href": "https://github.com/CDL-Dryad/stash/blob/master/stash_api/link-relations.md#{rel}",
+              "templated": "true"
+            }
+          ]
+        },
+        "title": "test1",
+        "authors": [
+          {
+            "firstName": "Scott",
+            "lastName": "Fisher",
+            "email": "scott.fisher@ucop.edu",
+            "affiliation": "UC Office of the President",
+            "orcid": null
+          }
+        ],
+        "abstract": "<p>test</p>",
+        "versionNumber": 1,
+        "versionStatus": "submitted"
+      },
+      {
+        "_links": {
+          "self": {
+            "href": "/api/v2/versions/32"
+          },
+          "stash:dataset": {
+            "href": "/api/v2/datasets/doi%3A10.5072%2FFK2MK6CD6D"
+          },
+          "stash:files": {
+            "href": "/api/v2/versions/32/files"
+          },
+          "stash:download": {
+            "href": "/api/v2/versions/32/download"
+          },
+          "curies": [
+            {
+              "name": "stash",
+              "href": "https://github.com/CDL-Dryad/stash/blob/master/stash_api/link-relations.md#{rel}",
+              "templated": "true"
+            }
+          ]
+        },
+        "title": "test1",
+        "authors": [
+          {
+            "firstName": "Scott",
+            "lastName": "Fisher",
+            "email": "scott.fisher@ucop.edu",
+            "affiliation": "UC Office of the President",
+            "orcid": null
+          }
+        ],
+        "abstract": "<p>test</p>",
+        "versionNumber": 2,
+        "versionStatus": "submitted"
+      },
+      {
+        "_links": {
+          "self": {
+            "href": "/api/v2/versions/69"
+          },
+          "stash:dataset": {
+            "href": "/api/v2/datasets/doi%3A10.5072%2FFK2MK6CD6D"
+          },
+          "stash:files": {
+            "href": "/api/v2/versions/69/files"
+          },
+          "stash:download": {
+            "href": "/api/v2/versions/69/download"
+          },
+          "curies": [
+            {
+              "name": "stash",
+              "href": "https://github.com/CDL-Dryad/stash/blob/master/stash_api/link-relations.md#{rel}",
+              "templated": "true"
+            }
+          ]
+        },
+        "title": "test1",
+        "authors": [
+          {
+            "firstName": "Scott",
+            "lastName": "Fisher",
+            "email": "scott.fisher@ucop.edu",
+            "affiliation": "UC Office of the President",
+            "orcid": null
+          }
+        ],
+        "abstract": "<p>test</p>",
+        "locations": [
+          {
+            "point": {
+              "latitude": "37.0",
+              "longitude": "-122.0"
+            }
+          }
+        ],
+        "versionNumber": 3,
+        "versionStatus": "error"
+      }
+    ]
+  }
+}

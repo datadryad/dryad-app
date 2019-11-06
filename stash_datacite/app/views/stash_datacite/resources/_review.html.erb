@@ -1,0 +1,121 @@
+  <h1 class="o-heading__level1">Finalize Submission</h1>
+    <%= render partial: "stash_datacite/resources/missing_mandatory_data", locals: { data: @data } %>
+  <h2 class="o-heading__page-span">Review Description</h2>
+    <%= link_to "Edit Description",
+                stash_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: @resource.id),
+                class: 't-review__edit-button-top o-button__icon-left', role: 'button' %>
+    <%= render partial: "stash_datacite/titles/show", locals: { title: @review.title_str } %>
+    <div class="o-metadata__group2">
+      <%= render partial: "stash_datacite/authors/show", locals: { authors: @review.authors } %>
+      <%= render partial: "stash_datacite/publishers/publication_info", locals: {resource: @resource } %>
+    </div>
+
+    <section class="o-section">
+    <%= render partial: "stash_datacite/shared/citations", locals: { authors: @review.authors, title: @review.title_str,
+                         resource_type: @review.resource_type, version: "v#{@resource.version_number}",
+                         identifier: @resource.identifier.nil? ? nil : "#{@review.identifier.identifier}",
+                         publisher: @review.publisher,
+                         publication_year: (@resource.publication_date.present? ? @resource.publication_date.year : @resource.updated_at.year) } %>
+    </section>
+
+    <%= render partial: "stash_datacite/descriptions/show", locals:
+        { abstract: @review.abstract, methods: @review.methods, other: @review.other } %>
+    <%= render partial: "stash_datacite/subjects/show", locals: { subjects: @review.subjects } %>
+
+    <% unless @review.contributors.length + @review.related_identifiers.length < 1 %>
+      <section class="t-review__funding-section o-section">
+        <%= render partial: "stash_datacite/contributors/show", locals: { contributors: @review.contributors } %>
+        <%= render partial: "stash_datacite/related_identifiers/show", locals:
+            { related_identifiers: @review.related_identifiers } %>
+        <%= link_to "Edit Description",
+                    stash_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: @resource.id),
+                    class: 't-review__edit-button-bottom o-button__icon-left', role: 'button' %>
+      </section>
+    <% end %>
+
+    <% if @resource.geolocations.count.positive? %>
+      <h3 class="o-heading__level2">Location</h3>
+      <%
+        has_map_meta = @resource.geolocations.where("point_id IS NOT NULL OR box_id IS NOT NULL").count.positive?
+        if has_map_meta %>
+        <div id="map_review" class="o-map"></div>
+      <% end %>
+        <div class="c-locations">
+          <% if has_map_meta %>
+            <%= render partial: "stash_datacite/geolocation_points/show",
+                     locals: { geolocation_points: @review.geolocation_points } %>
+            <%= render partial: "stash_datacite/geolocation_boxes/show",
+                     locals: { geolocation_boxes: @review.geolocation_boxes } %>
+          <% end %>
+        <%= render partial: "stash_datacite/geolocation_places/show",
+                   locals: { geolocation_places: @review.geolocation_places } %>
+      </div>
+    <% end %>
+
+    <h2 class="o-heading__page-span">Review Data Files</h2>
+
+    <div class="c-review-files">
+      <%= render partial: "stash_engine/file_uploads/show", locals: { file_uploads:  @review.file_uploads } %>
+      <%= link_to 'Edit Files', stash_engine.upload_resource_path(@resource), id: 'upload_path',
+                  class: 'c-review-files-button o-button__icon-left', role: 'button' %>
+    </div>
+
+  <% if !@resource.submitted? && @resource.identifier.allow_review? %>
+    <!-- This is only available if the version has not yet been submitted to the repository AND
+    	 the associated journal allows a review workflow -->
+    <h2 class="o-heading__page-span">Enable Private for Peer Review</h2>
+      <div id="peer_review_section">
+        <%= render partial: "stash_datacite/peer_review/review" %>
+      </div>
+  <% end %>
+
+  <h2 class="o-heading__page-span">Agree to Terms</h2>
+    <%= render partial: "stash_datacite/licenses/review" %>
+
+<div class="o-dataset-nav">
+  <%= link_to 'Back to Upload Files', stash_url_helpers.upload_resource_path(@resource), id: 'dashboard_path',
+            class: 'o-button__icon-left', role: 'button' %>
+
+  <% if @data.blank? # valid data %>
+    <%= form_tag stash_datacite.resources_submission_path do -%>
+      <%= hidden_field_tag :resource_id, @resource.id %>
+      <%= check_box_tag 'all_filled',  1, true, :style => "display: none;", class: 'all_filled js-agrees' %>
+      <div>
+        <% if current_user.id != @resource.user_id # only show to admins %>
+          <%= text_field_tag :user_comment, @resource.edit_histories.first.try(:user_comment), size: 50,
+              placeholder: 'Describe edits made (required)', class: 't-review__user-comment' %>
+        <% end %>
+        <%= button_tag("Submit", disabled: (@resource.version_number < 2),
+                    class: 'o-button__submit js-submission', id: 'submit_dataset') %>
+      </div>
+    <% end -%>
+  <% else %>
+    <%= check_box_tag 'all_filled',  1, false, :style => "display: none;", class: 'all_filled js-agrees' %>
+    <%= button_to("Submit", '#', disabled: true, class: 'o-button__submit js-submission', id: 'submit_dataset') %>
+  <% end %>
+</div>
+
+<script type="text/javascript">
+  // display some flash messages, (why do we need this?, ajax?)
+  <% flash.each do |type, message| %>
+    $("#flash_messages").html("<%= type.to_s.humanize %>: <%= message.html_safe %>")
+  <% end %>
+
+  // handle the events for user_comment box & submit if it is present
+  if($('#user_comment').length){
+    updateSubmitCommentDisabled();
+    $('#user_comment').on('input propertychange paste', function() {
+      updateSubmitCommentDisabled();
+    });
+  }
+
+  function updateSubmitCommentDisabled(){
+    if($('#all_filled').length && $('#user_comment').val().length > 0){
+      $('#submit_dataset').prop('disabled', false);
+    }else{
+      $('#submit_dataset').prop('disabled', true);
+    }
+  }
+</script>
+
+

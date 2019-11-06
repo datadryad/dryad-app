@@ -1,0 +1,18 @@
+<% if params[:action] == 'graceful_shutdown' %>
+  <h2>Now shutting down gracefully</h2>
+
+  <p>Please monitor the queue from the previous page to see when all <strong>processing</strong> and <strong>enqueued</strong>
+  states clear for this server.</p>
+<% elsif params[:action] == 'graceful_start' %>
+  <h2>Now starting up from a graceful shutdown</h2>
+
+  <p>You may monitor the states from the previous screen to see items get re-queued and processed on this server.</p>
+<% else %>
+  <h2>Now starting up from an un-graceful shutdown</h2>
+
+  <p>You may monitor the states from the previous screen to see items get re-queued and processed on this server.</p>
+<% end %>
+
+
+
+<%= link_to 'go back to viewing queue updates', controller: '/stash_engine/submission_queue', action: 'index' %> (updates automatically every 30 seconds)

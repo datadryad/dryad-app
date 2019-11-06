@@ -1,0 +1,10 @@
+$('div.geolocation_places').replaceWith('<%= j render partial: "stash_datacite/geolocation_places/index", locals: { geolocation_places: @geolocation_places, resource_id: @resource.id } %>')
+// var marker = L.marker([<%= @latitude %>, <%= @longitude %>]);
+//   console.log(marker);
+// map.removeLayer(marker);
+// $('.remove_geo').bind('ajax:success', function() {
+//   $(this).closest('tr').fadeOut();
+// });
+bnds = map.getBounds();
+map.remove();
+loadMap(bnds);

@@ -1,0 +1,20 @@
+// ##### Orcid Component ##### //
+
+.c-orcid {
+	display: flex;
+	align-items: center;
+	margin: 0 0 20px;
+}
+
+.c-orcid__icon {
+	display: inline-block;
+	width: 16px;
+	height: 16px;
+	margin: 0 5px 0 0;
+	background: inline('../images/icon_orcid.png') no-repeat;
+}
+
+.c-orcid__id {
+	@extend %o-link__primary;
+	color: $design-dark-blue-color;
+}

@@ -1,0 +1,36 @@
+inherit_from: ../.rubocop.yml
+
+AllCops:
+  Exclude:
+    - 'bin/**/*'
+    - 'config/**/*'
+    - 'db/**/*'
+    - 'script/**/*'
+    - 'spec/dummy/db/**/*'
+    - 'test/dummy/db/**/*'
+    - 'vendor/**/*'
+    - 'lib/tasks/embargo_fix.rake'
+
+# These files are just inherently long lists of things
+Metrics/MethodLength:
+  Exclude:
+    - lib/stash_datacite/resource_patch.rb
+    - lib/stash_datacite/author_patch.rb
+
+# These files are just inherently long lists of things
+Metrics/BlockLength:
+  Exclude:
+    - lib/stash_datacite/resource_patch.rb
+    - lib/stash_datacite/author_patch.rb
+
+# These files are just inherently long lists of things
+Metrics/AbcSize:
+  Exclude:
+    - lib/stash_datacite/resource_patch.rb
+    - lib/stash_datacite/author_patch.rb
+
+# Too many semantically similar things that are only coincidentally constants or not-constants
+Naming/ConstantName:
+  Exclude:
+  - app/models/stash_datacite/related_identifier.rb
+  - app/models/stash_datacite/resource_type.rb

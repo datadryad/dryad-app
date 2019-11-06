@@ -1,0 +1,30 @@
+<%# The container tag
+  - available local variables
+    current_page:  a page object for the currently displayed page
+    total_pages:   total number of pages
+    per_page:      number of items to fetch per page
+    remote:        data-remote
+    paginator:     the paginator that renders the pagination tags inside
+-%>
+<% if per_page == 1000000 && !(params[:show_all] == false) %>
+  <%= link_to 'Show pages', params.merge(page_size: 5, page: 1), remote: remote %>
+<% end %>
+<%= paginator.render do -%>
+  <nav class="pagination">
+    <% unless params[:show_all] == false %>
+      <%= link_to 'Show all', params.merge(page_size: '1000000', page: 1), remote: remote %>
+    <% end %>
+
+    <%= first_page_tag unless current_page.first? %>
+    <%= prev_page_tag unless current_page.first? %>
+    <% each_page do |page| -%>
+      <% if page.left_outer? || page.right_outer? || page.inside_window? -%>
+        <%= page_tag page %>
+      <% elsif !page.was_truncated? -%>
+        <%= gap_tag %>
+      <% end -%>
+    <% end -%>
+    <%= next_page_tag unless current_page.last? %>
+    <%= last_page_tag unless current_page.last? %>
+  </nav>
+<% end -%>

@@ -1,0 +1,46 @@
+// ##### UI Library ##### //
+
+.ui-library-header {
+  @extend %pull-background;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+  margin-top: -10px;
+  margin-bottom: 10px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  overflow: hidden;
+  background-color: lighten($design-light-gray-color, 20%);
+
+
+  h1,
+  h2 {
+    flex: 0 0 auto;
+    margin: 0;
+    font-size: 2em;
+    font-weight: normal;
+  }
+
+  h1 {
+  	margin: 0 1em 0 0;
+    color: $design-dark-blue-color;
+
+  	a {
+  		color: inherit;
+  	}
+
+  }
+
+}
+
+p {
+  line-height: 150%;
+}
+
+
+ol li,
+ul li {
+   margin-bottom: 1em;
+   line-height: 125%;
+}
+

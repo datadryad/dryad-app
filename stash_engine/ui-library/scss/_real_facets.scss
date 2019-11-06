@@ -1,0 +1,68 @@
+.c-facet-title--open,
+.c-facet-title--closed {
+  margin: 5px 0;
+  padding: 10px;
+  border-color: $design-extra-light-gray-color;
+  background-color: $design-offwhite-color;
+  color: inherit;
+  cursor: pointer;
+}
+
+.js-title-toggle>a:link,
+.js-title-toggle>a:visited,
+.js-title-toggle>a:hover,
+.js-title-toggle>a:active {
+  color: $design-black-color;
+  text-decoration: none;
+}
+
+/* open drop-down */
+.c-facet-title--closed:after {
+  content: '\f105';
+  float: right;
+  color: $design-dark-gray-color;
+  font-family: 'FontAwesome';
+  font-size: 1em;
+  line-height: normal;
+}
+
+/* this one is closed */
+.c-facet-title--open:after {
+  content: '\f107';
+  float: right;
+  color: $design-dark-gray-color;
+  font-family: 'FontAwesome';
+  font-size: 1em;
+  line-height: normal;
+}
+
+.c-facet-list {
+  margin: 10px 5px;
+  padding: 0;
+  list-style: none;
+
+  li {
+    display: block;
+    margin: 10px 0 10px 10px;
+  }
+
+  a:visited,
+  a:link,
+  a:hover { color: $design-light-blue-color; }
+}
+
+.c-facet-li__selected {
+  font-size: 110%;
+  font-weight: bold;
+}
+
+.c-facet-remove {
+  color: $design-red-color;
+}
+
+.c-facet-remove-link {
+  display: block;
+  float: right;
+  text-decoration: none;
+}
+

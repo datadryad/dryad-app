@@ -1,0 +1,7 @@
+<% @page_title = 'Data Deposit Agreement - Publish and Preserve your Data' %>
+
+<% if current_tenant.data_deposit_agreement? %>
+  <%= render partial: "tenants/#{current_tenant.tenant_id}/dda" %>
+<% else %>
+  <p>This institution does not have a data deposit agreement.</p>
+<% end %>

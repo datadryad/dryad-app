@@ -1,0 +1,9 @@
+<div class = "geolocation_places" >
+  <% geolocation_places.each do |geolocation_place| %>
+  <div class="c-locations__place"
+       data-bbox="<%= geolocation_place.bounding_box_str %>" >
+  	<div class="c-locations__data"><%= geolocation_place.geo_location_place %></div>
+  	<%= link_to 'remove', stash_datacite.geolocation_places_delete_path(geolocation_place, resource_id: @resource.id), method: :delete, remote: true, class: 'remove_geo o-button__remove', role: 'button' %>
+  </div>
+  <% end %>
+<div>

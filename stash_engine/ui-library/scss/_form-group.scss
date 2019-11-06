@@ -1,0 +1,42 @@
+// ##### Form Group Component ##### //
+
+.c-fgroup {
+  margin: 0 0 20px;
+
+  &[open] .c-fgroup__summary {
+
+    &::after {
+      transform: rotate(-90deg);
+    }
+
+  }
+
+}
+
+.c-fgroup__summary {
+  @extend %pull-background;
+  position: relative;
+  margin-bottom: 20px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  background-color: $design-dark-blue-color;
+  color: $design-white-color;
+  font-size: 1.3em;
+
+  &::after {
+    content: inline('../images/icon_right-white-arrow.svg');
+    position: absolute;
+    right: $spacing-body;
+    transform: rotate(90deg);
+
+    @include bp(screen1) {
+      right: $spacing-body + $spacing-sm;
+    }
+
+    @include bp(screen2) {
+      right: $spacing-body + $spacing-md;
+    }
+
+  }
+
+}

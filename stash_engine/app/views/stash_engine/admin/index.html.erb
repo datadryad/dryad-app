@@ -1,0 +1,24 @@
+<% @page_title = "Manage Users" %>
+<h1 class="o-heading__level1">Manage Users</h1>
+
+<%= render partial: 'admin_head', locals: { stats: @stats} %>
+
+<div class="o-admin-container">
+  <div class="o-admin-left">
+    <% if current_user.role == 'superuser' %>
+      <h2>Filters</h2>
+      <%= render partial: 'tenant_facet', locals: { facets: @tenant_facets } %>
+    <% end %>
+  </div>
+  <div class="o-admin-right">
+    <h2>User Administration</h2>
+    <!-- table and paging here -->
+    <%= render partial: 'stash_engine/users/admin_table', locals: { users: @users } %>
+    <div class="c-space-paginator">
+      <%= paginate @users, params: {page_size: @page_size} %>
+    </div>
+  </div>
+</div>
+
+<div id="change_user_dialog" style="display:none;">
+</div>

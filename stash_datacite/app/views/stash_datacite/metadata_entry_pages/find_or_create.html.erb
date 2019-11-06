@@ -1,0 +1,22 @@
+<%= render partial: "stash_datacite/metadata_entry_pages/find_or_create", locals: { resource_id: @resource.id } %>
+
+<script type="text/javascript">
+$(function() {
+  loadAccordion();
+  loadResourceTypes();
+  loadTitles();
+  loadAuthors();
+  hideRemoveLinkAuthors();
+  hideRemoveRequiredLabelAuthors();
+  loadDescriptions();
+  loadContributors();
+  loadPublications();
+  hideRemoveLinkContributors();
+  loadSubjects();
+  loadRelatedIdentifiers();
+  hideRemoveLinkRelatedIdentifiers();
+  loadGeolocationBoxes();
+  loadGeolocationPoints();
+  loadMap();
+});
+</script>

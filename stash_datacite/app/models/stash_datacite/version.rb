@@ -1,0 +1,9 @@
+# frozen_string_literal: true
+
+module StashDatacite
+  class Version < ActiveRecord::Base
+    self.table_name = 'dcs_versions'
+    belongs_to :resource, class_name: StashEngine::Resource.to_s
+    include StashEngine::Concerns::ResourceUpdated
+  end
+end

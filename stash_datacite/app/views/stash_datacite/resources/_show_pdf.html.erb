@@ -1,0 +1,131 @@
+<%= render partial: "stash_datacite/titles/show", locals: { title: @review.title_str } %>
+<div class="t-landing__metadata o-metadata">
+  <%= render partial: "stash_datacite/authors/show", locals: { authors: @review.authors } %>
+  <%= render partial: "stash_datacite/publishers/publication_info_pdf", locals: {resource: @resource } %>
+</div>
+
+<section class="o-section">
+  <%= render partial: "stash_datacite/shared/citations_pdf",
+             locals: { authors: @review.authors, title: @review.title_str,
+                       resource_type: @review.resource_type,
+                       version: @resource.stash_version.nil? ? 'v0' : "v#{@review.version.version }",
+                       identifier: @resource.identifier.nil? ? 'DOI' : "#{@review.identifier.identifier }",
+                       publisher: "#{@review.publisher}",
+                       publication_year: (@resource.publication_date.present? ? @resource.publication_date.year : @resource.updated_at.year) }
+  %>
+</section>
+<%= render partial: "stash_datacite/descriptions/show", locals: { abstract: @review.abstract,
+                                                                  methods: @review.methods, other: @review.other } %>
+<%= render partial: "stash_datacite/contributors/show", locals: { contributors: @review.contributors } %>
+<%= render partial: "stash_datacite/related_identifiers/show",
+           locals: { related_identifiers: @review.related_identifiers } %>
+
+<% if @review.geolocation_data? %>
+  <div style="page-break-inside: avoid;">
+    <h3 class="o-heading__level2">Location</h3>
+    <div style="overflow: hidden">
+      <%
+        has_map_meta = review.geolocation_points.count.positive? || review.geolocation_boxes.count.positive?
+        if has_map_meta %>
+        <div id="map_review" class="o-map"></div>
+      <% end %>
+    </div>
+    <div class="c-locations">
+      <% if has_map_meta %>
+        <%= render partial: "stash_datacite/geolocation_points/show",
+                   locals: { geolocation_points: @review.geolocation_points } %>
+        <%= render partial: "stash_datacite/geolocation_boxes/show",
+                   locals: { geolocation_boxes: @review.geolocation_boxes } %>
+      <% end %>
+      <%= render partial: "stash_datacite/geolocation_places/show",
+                 locals: { geolocation_places: @review.geolocation_places } %>
+    </div>
+  </div>
+<% end %>
+
+
+<%= render partial: "stash_datacite/subjects/show", locals: { subjects: @review.subjects } %>
+
+<%# this just doesn't make much sense to show version dates in a PDF with no additional info, just show the one that has files
+ # render partial: 'stash_engine/landing/versions_pdf' %>
+
+<%= render partial: 'stash_engine/landing/files_pdf' %>
+
+<%= render partial: 'stash_datacite/licenses/datapaper' %>
+
+<script>
+
+  // function to get strings from page and turn them into array of 4 part bounding boxes (even points just repeat)
+  function getBbox(css_selector){
+    var items = $(css_selector).map( function(){
+      var nums = $( this ).attr('data-bbox').split(' ');
+      return [ $.map( nums, function( a ) { return Number(a); }) ];
+    });
+    return items;
+  }
+
+  // setup the map
+  var map;
+  $( document ).ready(function() {
+    $('#map_review').removeClass('o-map');
+    $('#map_review').css('position', 'static');
+    $('#map_review').css('width', '800px');
+    // $('#map_review').css('overflow', 'auto');
+    // loadReviewMap(<%=@resource.id%>);
+    setupMap();
+    // $('.testdiv').text('hi there');
+  });
+
+  function setupMap(){
+    // the following is important for leaflet not to go crazy and render tiles in wrong places across pages
+    L.Browser.any3d = false;
+
+    // draw map and tiles and fit it
+    map = L.map('map_review', { zoomControl: false, scrollWheelZoom: false }).setView([36.778259, -119.417931], 3);
+    mapLink = '<a href="https://openstreetmap.org">OpenStreetMap</a>';
+    var tileLayer = L.tileLayer(
+        'https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}{retina}.png', {
+          attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="http://cartodb.com/attributions">CartoDB</a>',
+          worldCopyJump: true,
+          retina: '@2x',
+          detectRetina: false
+        });
+    tileLayer.addTo(map);
+    map.fitBounds(mapBounds(), { padding: [25, 25] } );
+
+
+    // draw the points on the map
+    var points = getBbox(".c-locations__point");
+    for (i = 0; i < points.length; i++){
+      var markerLocation = new L.LatLng(points[i][1], points[i][0]);
+      marker = new L.Marker(markerLocation).addTo(map)
+    }
+
+    // draw the bounding boxes on the map
+    var boxes = getBbox(".c-locations__area");
+    for (i = 0; i < boxes.length; i++){
+      var bounds = [ [boxes[i][1], boxes[i][0]], [boxes[i][3], boxes[i][2]] ];
+      var newRectangle = L.rectangle(bounds, {color: "#ff7800", weight: 1}).addTo(map);
+    }
+
+    // draw the places on the map
+    var customIcon = new L.Icon({
+      iconUrl: 'https://upload.wikimedia.org/wikipedia/commons/0/0b/Blue_globe_icon.svg',
+      iconSize: [25, 25], // size of the icon
+      iconAnchor: [12, 25], // point of the icon which will correspond to marker's location
+      popupAnchor: [0, -25] // point from which the popup should open relative to the iconAnchor
+    });
+
+    var mrk = getBbox(".c-locations__place");
+    console.log(mrk);
+    for (i = 0; i < mrk.length; i++) {
+      var lat = (mrk[i][1] + mrk[i][3]) / 2;
+      var lng = (mrk[i][0] + mrk[i][2]) / 2;
+      console.log( lat + ', ' + lng);
+      var newMarkerLocation = new L.LatLng(lat, lng);
+      var marker = new L.marker(newMarkerLocation, { icon: customIcon }).addTo(map);
+    }
+  }
+</script>
+
+<%# render partial: "stash_datacite/licenses/review" %>

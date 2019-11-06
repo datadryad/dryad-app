@@ -1,0 +1,89 @@
+{
+  "data": [
+    {
+      "id": "3e04b382-d3d4-4c86-9569-3e7fcb43f08e",
+      "type": "events",
+      "attributes": {
+        "subj-id": "https://doi.org/10.6071/m3rp49",
+        "obj-id": "https://doi.org/10.1098/rsif.2017.0030",
+        "source-id": "datacite-crossref",
+        "relation-type-id": "is-supplement-to",
+        "total": 1,
+        "message-action": "create",
+        "source-token": "28276d12-b320-41ba-9272-bb0adc3466ff",
+        "license": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "occurred-at": "2019-03-05T20:32:29.000Z",
+        "timestamp": "2019-03-05T20:32:36.921Z"
+      },
+      "relationships": {
+        "subj": {
+          "data": {
+            "id": "https://doi.org/10.6071/m3rp49",
+            "type": "objects"
+          }
+        },
+        "obj": {
+          "data": {
+            "id": "https://doi.org/10.1098/rsif.2017.0030",
+            "type": "objects"
+          }
+        }
+      }
+    }
+  ],
+  "meta": {
+    "total": 1,
+    "total-pages": 1,
+    "page": 1,
+    "sources": [
+      {
+        "id": "datacite-crossref",
+        "title": "DataCite to Crossref",
+        "count": 1
+      }
+    ],
+    "prefixes": [
+      {
+        "id": "10.6071",
+        "title": "10.6071",
+        "count": 1
+      },
+      {
+        "id": "10.1098",
+        "title": "10.1098",
+        "count": 1
+      }
+    ],
+    "citation-types": [
+      {
+        "id": "Collection-ScholarlyArticle",
+        "title": "Collection-ScholarlyArticle",
+        "count": 1,
+        "year-months": [
+          {
+            "id": "2019-03",
+            "title": "March 2019",
+            "sum": 1.0
+          }
+        ]
+      }
+    ],
+    "relation-types": [
+      {
+        "id": "is-supplement-to",
+        "title": "is-supplement-to",
+        "count": 1.0,
+        "year-months": [
+          {
+            "id": "2019-03",
+            "title": "March 2019",
+            "sum": 1.0
+          }
+        ]
+      }
+    ]
+  },
+  "links": {
+    "self": "https://api.datacite.org/events?mailto=scott.fisher%40ucop.edu&page%5Bsize%5D=10000&subj-id=https%3A%2F%2Fdoi.org%2F10.6071%2Fm3rp49&relation-type-id=is-cited-by%2Cis-supplement-to%2Cis-described-by%2Cis-metadata-for%2Cis-referenced-by%2Cis-documented-by%2Cis-compiled-by%2Cis-reviewed-by%2Cis-derived-from%2Cis-required-by"
+  }
+}

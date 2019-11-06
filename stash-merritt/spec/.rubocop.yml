@@ -1,0 +1,6 @@
+inherit_from: ../.rubocop.yml
+
+# These 'set' methods aren't conventional accessors, but Rubocop doesn't know that
+Naming/AccessorMethodName:
+  Exclude:
+    - 'util/resource_builder.rb'

@@ -1,0 +1,30 @@
+{
+  "_links": {
+    "self": {
+      "href": "/api/v2/files/66"
+    },
+    "stash:dataset": {
+      "href": "/api/v2/datasets/doi%3A10.5072%2FFK2MK6CD6D"
+    },
+    "stash:version": {
+      "href": "/api/v2/versions/32"
+    },
+    "stash:files": {
+      "href": "/api/v2/versions/32/files"
+    },
+    "stash:download": {
+      "href": "/api/v2/downloads/66"
+    },
+    "curies": [
+      {
+        "name": "stash",
+        "href": "https://github.com/CDL-Dryad/stash/blob/master/stash_api/link-relations.md#{rel}",
+        "templated": "true"
+      }
+    ]
+  },
+  "path": "I0006475A.jpg",
+  "size": 218594,
+  "mimeType": "image/jpeg",
+  "status": "copied"
+}

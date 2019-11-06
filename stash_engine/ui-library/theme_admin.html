@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+<head>
+	<meta charset="UTF-8">
+	<title>Metadata Entry Theme</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+	<!-- build:css css/ui.css -->
+	<link rel="stylesheet" href="css/main.css">
+	<!-- endbuild -->
+	<style>
+		/* styles for this page only */
+	</style>
+	<script
+    src="https://code.jquery.com/jquery-2.2.3.min.js"
+    integrity="sha256-a23g1Nt4dtEYOj7bR+vTu7+T8VP13humZFBJNIYoEJo="
+    crossorigin="anonymous"></script>
+  <script src="bower_components/jquery-ui/jquery-ui.min.js"></script>
+</head>
+<body>
+
+  <div class="ui-library-header">
+    <h1><a href="index.html">Dash UI Library</a></h1>
+    <h2>Admin Theme</h2>
+  </div>
+
+	<!-- Begin Header Component -->
+	<!--#include file="includes/header.html" -->
+	<!-- End Header Component -->
+
+  <h1 class="o-heading__level1">Manage Users</h1>
+
+  <!--#include file="includes/admin-head.html" -->
+
+  <div class="o-admin-container">
+    <div class="o-admin-left">
+      <h2>Filters</h2>
+      <!--#include file="includes/admin-facet1.html" -->
+      <!--#include file="includes/admin-facet2.html" -->
+
+    </div>
+
+    <div class="o-admin-right">
+      <h2>User Administration</h2>
+
+      <table class="c-lined-table">
+        <tr class="c-lined-table__head">
+          <th class="c-admin-table__user-campus"><a href="#">Institution</a></th>
+          <th class="c-admin-table__user-name c-admin-table__sort-asc"><a href="#">Name</a></th>
+          <th class="c-admin-table__user-role" colspan="2"><a href="#">Role</a></th>
+          <th class="c-admin-table__user-last-login"><a href="#">Last login</a></th>
+        </tr>
+        <tr class="c-lined-table__row">
+          <td>UC Berkeley</td>
+          <td><a href="#">Cornelia Hassengrab</a></td>
+          <td class="c-admin-hide-border-right">
+            Admin
+          </td>
+          <td class="c-admin-hide-border-left">
+            <button class="c-admin-edit-icon" aria-label="Edit user role" alt="Edit user role" style="vertical-align: middle;">
+              <i class="fa fa-pencil" aria-hidden="true"></i>
+            </button>
+          </td>
+          <td>03/18/2017 17:24:36</td>
+        </tr>
+        <tr class="c-lined-table__row">
+          <td>UC San Diego</td>
+          <td><a href="#">Marvin Jones</a></td>
+          <td class="c-admin-hide-border-right">User</td>
+          <td class="c-admin-hide-border-left">
+            <button class="c-admin-edit-icon" aria-label="Edit user role" alt="Edit user role" style="vertical-align: middle;">
+              <i class="fa fa-pencil" aria-hidden="true"></i>
+            </button>
+          </td>
+          <td>03/20/2017 13:11:03</td>
+        </tr>
+        <tr class="c-lined-table__row">
+          <td>UC Merced</td>
+          <td><a href="#">Fanula Kettering</a></td>
+          <td class="c-admin-hide-border-right">User</td>
+          <td class="c-admin-hide-border-left">
+            <button class="c-admin-edit-icon" aria-label="Edit user role" alt="Edit user role" style="vertical-align: middle;">
+              <i class="fa fa-pencil" aria-hidden="true"></i>
+            </button>
+          </td>
+          <td>05/01/2017 09:54:23</td>
+        </tr>
+        <tr class="c-lined-table__row">
+          <td>UC Merced</td>
+          <td><a href="#">Chin Zhu</a></td>
+          <td class="c-admin-hide-border-right">Admin</td>
+          <td class="c-admin-hide-border-left">
+            <button class="c-admin-edit-icon" aria-label="Edit user role" alt="Edit user role" style="vertical-align: middle;">
+              <i class="fa fa-pencil" aria-hidden="true"></i>
+            </button>
+          </td>
+          <td>01/04/2017 14:15:09</td>
+        </tr>
+        <tr class="c-lined-table__row">
+          <td>...</td>
+          <td>...</td>
+          <td colspan="2">...</td>
+          <td>...</td>
+        </tr>
+        <tr class="c-lined-table__row">
+          <td>...</td>
+          <td>...</td>
+          <td colspan="2">...</td>
+          <td>...</td>
+        </tr>
+        <tr class="c-lined-table__row">
+          <td>...</td>
+          <td>...</td>
+          <td colspan="2">...</td>
+          <td>...</td>
+        </tr>
+        <tr class="c-lined-table__row">
+          <td>...</td>
+          <td>...</td>
+          <td colspan="2">...</td>
+          <td>...</td>
+        </tr>
+        <tr class="c-lined-table__row">
+          <td>...</td>
+          <td>...</td>
+          <td colspan="2">...</td>
+          <td>...</td>
+        </tr>
+        <tr class="c-lined-table__row">
+          <td>...</td>
+          <td>...</td>
+          <td colspan="2">...</td>
+          <td>...</td>
+        </tr>
+      </table>
+
+      <div class="c-space-paginator">
+        <nav class="pagination">
+          <a href="#">Show all</a>
+          <span class="page current">1</span>
+          <span class="page"><a rel="next" href="#">2</a></span>
+          <span class="page"><a rel="next" href="#">3</a></span>
+          <span class="page"><a rel="next" href="#">4</a></span>
+          <span class="next"><a rel="next" href="#">Next »</a></span>
+          <span class="last"><a href="#">Last »</a></span>
+        </nav>
+      </div>
+    </div>
+  </div>
+
+	<!--#include file="includes/footer.html" -->
+
+	<!-- build:js js/ui.js -->
+  <script src="js/modernizr-custombuild.js"></script>
+  <script src="js/details-polyfill.js"></script>
+  <script src="js/main.js"></script>
+  <!-- endbuild -->
+
+
+  <!-- javascript for the facet open/close -->
+  <script>
+    $( document ).ready(function() {
+      $('.js-hideshow').hide();
+    });
+    $( ".js-title-toggle" ).click(function(event) {
+      toggleMenu($(this));
+    });
+    $( ".js-title-toggle a").click(function(event) {
+      event.preventDefault();
+    });
+
+    function toggleMenu(t){
+      var el = t.next('.js-hideshow');
+      if(el.is(':visible')){
+        el.slideUp();
+        t.removeClass('c-facet-title--open');
+        t.addClass('c-facet-title--closed');
+      }else{
+        el.slideDown();
+        t.addClass('c-facet-title--open');
+        t.removeClass('c-facet-title--closed');
+      }
+    }
+  </script>
+</body>
+</html>

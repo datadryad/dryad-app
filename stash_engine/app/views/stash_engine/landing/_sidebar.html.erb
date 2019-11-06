@@ -1,0 +1,49 @@
+<% may_download = @id.may_download?(user: current_user) %>
+<% if may_download %>
+  <%= render partial: 'stash_engine/landing/download', locals: {dataset_identifier: @id} %>
+<% end %>
+<div class="o-download">
+  <%= button_to "Download Data Publication (PDF)", data_paper_path(params[:id]), class: 'o-download__docs', method: 'get' %>
+</div>
+
+<% if may_download %>
+  <%= render partial: 'stash_engine/landing/files', locals: {dataset_identifier: @id, resource: @resource} %>
+<% else %>
+  <%= render partial: 'stash_engine/landing/files_embargoed', locals: {resource: @resource} %>
+<% end %>
+
+<div class="c-sidebox">
+  <h3 class="c-sidebox__heading">Metrics</h3>
+  <div class="o-metrics">
+    <%# render partial: 'stash_engine/landing/metrics', locals: {identifier: @id} %>
+    <div id="show_metrics"
+         data-load="<%= stash_url_helpers.show_metrics_path(identifier_id: @id.id) %>">
+      <%= image_tag 'stash_engine/spinner.gif', size: '80x60', alt: 'Loading spinner' %>
+    </div>
+  </div>
+
+  <div style="clear:both"></div>
+</div>
+
+<div class="c-sidebox" id="keyword_section">
+  <h3 class="c-sidebox__heading">Keywords</h3>
+  <div id="show_subjects"
+       data-load="<%= metadata_url_helpers.subjects_landing_path(resource_id: @resource.id, format: :js) %>">
+    <%= image_tag 'stash_engine/spinner.gif', size: '80x60', alt: 'Loading spinner' %>
+  </div>
+</div>
+
+<div class="c-sidebox">
+  <h3 class="c-sidebox__heading">License</h3>
+  <div id="show_license"
+       data-load="<%= metadata_url_helpers.license_details_path(resource_id: @resource.id, format: :js) %>">
+    <%= image_tag 'stash_engine/spinner.gif', size: '80x60', alt: 'Loading spinner' %>
+  </div>
+</div>
+
+<script>
+  $( "#citation_link" ).click(function() {
+    $('#metrics_citation_spinner').show();
+    $('#metrics_citation_count').hide();
+  });
+</script>

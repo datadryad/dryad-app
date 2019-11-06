@@ -1,0 +1,50 @@
+// ##### Search Results Theme ##### //
+
+.t-search-results__columns {
+	margin: 0 0 20px;
+}
+
+// ***** Facet Alignment at Responsive Breakpoints ***** //
+
+.t-search-results__sidebar {
+	display: flex;
+	flex-flow: row wrap;
+	align-items: flex-start;
+	margin: 0 0 20px;
+
+	@include bp(screen2) {
+		margin: 0;
+	}
+
+	.c-facet {
+		flex: 1 0 100%;
+		margin: 0 0 2px;
+
+		@include bp(screen1) {
+			flex: 1 0 45%;
+		}
+
+		@include bp(screen2) {
+			flex: 1 0 100%;
+
+			&:not(:last-of-type) {
+				margin: 0 0 30px;
+			}
+
+		}
+
+		&:nth-of-type(odd) {
+
+			@include bp(screen1) {
+				margin: 0 10px 2px 0;
+			}
+
+			@include bp(screen2) {
+				margin: 0 0 30px;
+			}
+
+		}
+
+	}
+
+}

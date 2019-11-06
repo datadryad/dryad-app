@@ -1,0 +1,21 @@
+{
+  "name": "dash-ui",
+  "description": "A library of static themes, components, and objects for the Dash application.",
+  "main": "index.html",
+  "authors": [
+    "Joel Hagedorn"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/cdlib/dash-ui",
+  "moduleType": [],
+  "private": true,
+  "devDependencies": {
+    "normalize-scss": "^3.0.3",
+    "moment": "^2.13.0"
+  },
+  "dependencies": {
+    "font-awesome": "fontawesome#^4.6.3",
+    "jquery-ui": "^1.12.1",
+    "datalist-polyfill": "^1.23.3"
+  }
+}

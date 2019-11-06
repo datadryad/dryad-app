@@ -1,0 +1,25 @@
+.c-admin-editing-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 10px 0 20px;
+  padding: 15px;
+  border: $design-dark-gray-color;
+  border-width: 1px;
+  border-style: solid;
+  background-color: $design-orange-color;
+  color: $design-white-color;
+}
+
+.o-button__cancel-edit {
+  width: 270px;
+  height: 35px;
+  padding: 0 12px;
+  border: none;
+  background-color: $design-dark-blue-color;
+  text-decoration: none;
+}
+
+.o-div__placeholder {
+  width: 270px;
+}

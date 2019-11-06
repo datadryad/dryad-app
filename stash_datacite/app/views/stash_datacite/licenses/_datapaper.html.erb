@@ -1,0 +1,11 @@
+<h2 class="o-heading__level2">License</h2>
+
+<% if @resource.rights.blank? %>
+  <%= render partial: 'stash_datacite/licenses/license_pdf', locals:
+      {license: StashEngine::License.by_id(@resource.identifier.license_id), right: nil } %>
+<% else %>
+  <% @resource.rights.each do |r| %>
+    <%= render partial: 'stash_datacite/licenses/license_pdf', locals:
+        {license: StashEngine::License.by_uri(r.rights_uri), right: r } %>
+  <% end %>
+<% end %>

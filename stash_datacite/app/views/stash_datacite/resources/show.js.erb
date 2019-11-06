@@ -1,0 +1,7 @@
+var resource_id = '<%= params[:id] %>';
+if(window.location.pathname.startsWith("/stash/dataset")) {
+  var title = "<%= escape_javascript(@resource.title) %>";
+  document.title = title;
+}
+$('#display_resource').html("<%= escape_javascript(render(partial: 'show')) %>");
+loadReviewMap(resource_id);

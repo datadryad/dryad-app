@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+<head>
+	<meta charset="UTF-8">
+	<title>Review &amp; Submit Theme</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+	<!-- build:css css/ui.css -->
+	<link rel="stylesheet" href="css/main.css">
+	<!-- endbuild -->
+	<style>
+		/* styles for this page only */
+	</style>
+	<script
+    src="https://code.jquery.com/jquery-2.2.3.min.js"
+    integrity="sha256-a23g1Nt4dtEYOj7bR+vTu7+T8VP13humZFBJNIYoEJo="
+    crossorigin="anonymous"></script>
+</head>
+<body>
+
+  <div class="ui-library-header">
+    <h1><a href="index.html">Dash UI Library</a></h1>
+    <h2>Review &amp; Submit Theme</h2>
+  </div>
+
+	<!-- Begin Header Component -->
+	<!--#include file="includes/header.html" -->
+	<!-- End Header Component -->
+
+	<div class="c-progress">
+		<a class="c-progress__tab1" href="">Describe Dataset</a>
+		<a class="c-progress__tab2" href="">Upload files</a>
+		<a class="c-progress__tab3--active" href="">Review and Submit</a>
+	</div>
+
+	<h1 class="o-heading__level1">Finalize Submission</h1>
+
+	<h2 class="o-heading__page-span">Review Description</h2>
+
+	<a role="button" href="" class="t-review__edit-button-top o-button__icon-left">Edit Description</a>
+
+	<p>Type of Data</p>	
+
+	<h1 class="o-heading__level1">Title of Datasets</h1>
+
+	<!-- Begin Metadata Object -->
+	<div class="o-metadata">
+		<div class="o-metadata__group1">
+			<span class="o-metadata__author">Author Name</span>,
+			<span class="o-metadata__affiliation">Affiliation</span>,
+			<span class="o-metadata__orcid">Orcid</span>
+		</div>
+		<div class="o-metadata__group2">
+			<div class="o-metadata__group2-item">Submission Date: </div>
+			<div class="o-metadata__group2-item">Published Date: </div>
+			<div class="o-metadata__group2-item">Publisher: </div>
+			<div class="o-metadata__group2-item">doi: xxxxx/xxxxxxxx</div>
+		</div>
+	</div>
+	<!-- End Metadata Object -->
+
+	<section class="o-section">
+		<h2 class="o-heading__level2">Cite as</h2>
+		<p>Author Name and Author Name, Title_of_dataset. Type_of_data. Publisher. Version n (DD Month YYYY). http://dx.doi.org/xxxx.xxxx</p>
+	</section>
+
+	<h2 class="o-heading__level2">Abstract</h2>
+
+	<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Distinctio quod, eius aliquid, placeat quos nisi consectetur maiores iusto accusamus! Repellat nihil esse quis consequatur mollitia, optio itaque nulla veritatis, natus!</p>
+	<p>Veritatis tenetur, perspiciatis, commodi numquam repudiandae, voluptas asperiores reprehenderit dolor sint voluptatibus quam quo, itaque quidem nobis. Harum atque, officiis modi ipsum neque, odit, voluptate aspernatur, error porro vitae ad.</p>
+
+	<h2 class="o-heading__level2">Methods</h2>
+
+	<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Praesentium laborum inventore totam dolorem ipsam in at ratione, odio, atque sequi aliquid. Exercitationem nobis maiores facilis vel repellendus, neque, quas assumenda.</p>
+
+	<h2 class="o-heading__level2">Usage Notes</h2>
+
+	<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quas eveniet tenetur amet ipsum ullam modi dicta illo repellendus, reiciendis, labore aut minus. Quidem amet architecto odit. Quae, expedita maxime assumenda.</p>
+
+	<h2 class="o-heading__level2">Location</h2>
+
+	<!-- Begin Map Object -->
+	<!--#include file="includes/map.html" -->
+	<!-- End Map Object -->
+
+	<!-- Begin Locations Component -->
+	<!--#include file="includes/locations.html" -->
+	<!-- End Locations Component -->
+
+	<section class="t-review__funding-section o-section">
+		<h2 class="o-heading__level2">Funding</h2>
+		<p>Granting Organization Name, award ##########</p>
+		<h2 class="o-heading__level2">References</h2>
+		<p class="t-review__doi">This dataset is cited by doi: http://dx.doi.org/xxxx.xxxx</p>
+		<a role="button" href="" class="t-review__edit-button-bottom o-button__icon-left">Edit Description</a>
+	</section>
+
+	<h2 class="o-heading__page-span">Review Data Files</h2>
+
+	<!-- Begin Review Files Component -->
+	<!--#include file="includes/review-files.html" -->
+	<!-- End Review Files Component -->
+
+	<h2 class="o-heading__page-span">Choose License</h2>
+
+	<!-- Begin License Component -->
+	<!--#include file="includes/license.html" -->
+	<!-- End License Component -->
+
+	<h2 class="o-heading__page-span">Choose Publication Date</h2>
+
+  <p>
+    You may choose to publish your dataset on a specific date up to 180 days from today.
+  </p>
+	<!-- Begin License Component -->
+	<!--#include file="includes/pubdate.html" -->
+	<!-- End License Component -->
+
+	<!-- Begin Dataset Navigation Object -->
+	<div class="o-dataset-nav">
+		<button class="o-button__icon-left">Back to My Datasets</button>
+    <div>
+      <input type="text" name="user_comment" id="user_comment" size="50"
+             class="t-review__user-comment" placeholder="Describe edits made (required)">
+		  <button class="o-button__submit">Submit</button>
+    </div>
+	</div>
+	<!-- End Dataset Navigation Object -->
+
+	<!--#include file="includes/footer.html" -->
+
+	<!-- build:js js/ui.js -->
+  <script src="js/modernizr-custombuild.js"></script>
+  <script src="bower_components/moment/min/moment.min.js"></script>
+  <script src="js/details-polyfill.js"></script>
+  <script src="js/main.js"></script>
+  <!-- endbuild -->
+	
+</body>
+</html>

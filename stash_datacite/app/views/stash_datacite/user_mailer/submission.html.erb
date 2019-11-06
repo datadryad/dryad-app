@@ -1,0 +1,7 @@
+<h4>Hello <%= @vars[:user].last_name %> <%= @vars[:user].first_name %>,</h4>
+
+<p>Your dataset "<%= @vars[:title] %>" has been successfully submitted to Dash with DOI
+<%= link_to "https://doi.org/#{@vars[:identifier].identifier}", "https://doi.org/#{@vars[:identifier].identifier}" %>.</p>
+<p/>There may be a brief delay for processing before the dataset is published.</p>
+
+<%= render partial: 'stash_datacite/user_mailer/notification_boilerplate.html.erb' %>

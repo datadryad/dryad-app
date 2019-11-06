@@ -1,0 +1,20 @@
+<%# license object from main configuration should be passed in as local 'license', rights object as 'right' %>
+<% if license.nil? %>
+  <%= render partial: 'stash_datacite/licenses/no_license_review', locals: {right: right} %>
+<% else %>
+  <% if params[:debug] %>
+    <%= image_tag("licenses/#{license['badge']}", alt: "#{license['name']} logo",
+                  style: 'float: right') %>
+  <% else %>
+    <%= wicked_pdf_image_tag("licenses/#{license['badge']}", alt: "#{license['name']} logo",
+                  style: 'float: right') %>
+  <% end %>
+  <p>
+    This work is licensed under a <%= link_to license['name'], license['uri'] %> license.
+  </p>
+
+  <p>
+    <%= license['explanation'] %>
+  </p>
+  <div style="clear: both"></div>
+<% end %>

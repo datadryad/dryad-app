@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+<head>
+	<meta charset="UTF-8">
+	<title>Metadata Entry Theme</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+	<link rel="stylesheet" href="css/ui.css">
+	<style>
+		/* styles for this page only */
+	</style>
+	<script
+    src="https://code.jquery.com/jquery-2.2.3.min.js"
+    integrity="sha256-a23g1Nt4dtEYOj7bR+vTu7+T8VP13humZFBJNIYoEJo="
+    crossorigin="anonymous"></script>
+  <script src="bower_components/jquery-ui/jquery-ui.min.js"></script>
+</head>
+<body>
+
+  <div class="ui-library-header">
+    <h1><a href="index.html">Dash UI Library</a></h1>
+    <h2>Admin Theme</h2>
+  </div>
+
+	<!-- Begin Header Component -->
+	
+<header class="c-header">
+	<div class="c-header__logos">
+		<button aria-label="mobile menu" class="o-button__menu c-header__menu-button js-header__menu-button"></button>
+		<a href="" class="c-header__dash-logo-link">
+			<img class="c-header__dash-logo-svg" src="images/logo_ucop.svg" alt="UCOP logo">
+			<img class="c-header__dash-logo-svg" src="images/logo_dryad.png" alt="Dash logo">
+		</a>
+	</div>
+	<nav class="c-header__nav js-header__nav">
+		<div class="o-global-search c-header__global-search">
+			<label class="o-global-search__label" for="search-field-input1">Search</label>
+			<input class="o-global-search__input" id="search-field-input1" type="search" name="[name]" placeholder="Search">
+			<button aria-label="Submit" class="o-global-search__submit-button"></button>
+		</div>
+		<div class="c-header__nav-group">
+			<div class="c-header__nav-item js-nav-out"><a href="">Explore Data</a></div>
+			<div class="o-sites c-header__nav-item">
+  <details class="o-showhide o-sites__details" role="group">
+    <summary class="o-showhide__summary o-sites__summary">About</summary>
+    <div class="o-sites__group">
+      <a href="" class="o-sites__group-item">Our Mission</a>
+      <a href="" class="o-sites__group-item">Our Member Community</a>
+      <a href="" class="o-sites__group-item">Our Governence</a>
+      <a href="" class="o-sites__group-item">Our Staff</a>
+    </div>
+  </details>
+</div>
+			<div class="o-sites c-header__nav-item">
+  <details class="o-showhide o-sites__details" role="group">
+    <summary class="o-showhide__summary o-sites__summary">Help</summary>
+    <div class="o-sites__group">
+      <a href="" class="o-sites__group-item">Why Use Dryad?</a>
+      <a href="" class="o-sites__group-item">Submission Information</a>
+      <a href="" class="o-sites__group-item">Data Processing Charges</a>
+      <a href="" class="o-sites__group-item">Frequently Asked Questions</a>
+    </div>
+  </details>
+</div>
+		</div>
+	</nav>
+</header>
+
+	<!-- End Header Component -->
+
+  <h1 class="o-heading__level1">Manage Users</h1>
+
+  <div class="o-admin-container">
+  <div class="o-admin-left-head">
+    <div class="o-heading__level3">At a glance</div>
+    23 Users<br/>
+    402 Datasets<br/>
+  </div>
+  <div class="o-admin-right-head">
+    <div class="o-heading__level3">Activity in the last 7 days</div>
+    12 users added<br/>
+    308 MB added<br/>
+    3 datasets started<br/>
+    7 datasets submitted
+  </div>
+</div>
+
+  <div class="o-admin-container">
+    <div class="o-admin-left">
+      <h2>Filters</h2>
+      <h3 class="c-facet-title--closed js-title-toggle"><a data-no-turbolink="true" href="#">Institution</a></h3>
+<div class="js-hideshow">
+  <ul class="c-facet-list">
+    <li><a href="#">UC Berkeley</a></li>
+    <li><a href="#">UC Davis</a></li>
+    <li><a href="#">UC Los Angeles</a></li>
+    <li><a href="#">UC San Diego</a></li>
+  </ul>
+</div>
+
+      <h3 class="c-facet-title--closed js-title-toggle"><a data-no-turbolink="true" href="#">Person</a></h3>
+<div class="js-hideshow">
+  <ul class="c-facet-list">
+    <li><a href="#">Scott Fisher</a></li>
+    <li><a href="#">Daniella Lowenberg</a></li>
+    <li><a href="#">David Moles</a></li>
+    <li><a href="#">Marisa Strong</a></li>
+  </ul>
+</div>
+
+    </div>
+
+    <div class="o-admin-right">
+      <h2>User Administration</h2>
+
+      <table class="c-lined-table">
+        <tr class="c-lined-table__head">
+          <th class="c-admin-table__user-campus"><a href="#">Institution</a></th>
+          <th class="c-admin-table__user-name c-admin-table__sort-asc"><a href="#">Name</a></th>
+          <th class="c-admin-table__user-role" colspan="2"><a href="#">Role</a></th>
+          <th class="c-admin-table__user-last-login"><a href="#">Last login</a></th>
+        </tr>
+        <tr class="c-lined-table__row">
+          <td>UC Berkeley</td>
+          <td><a href="#">Cornelia Hassengrab</a></td>
+          <td class="c-admin-hide-border-right">
+            Admin
+          </td>
+          <td class="c-admin-hide-border-left">
+            <button class="c-admin-edit-icon" aria-label="Edit user role" alt="Edit user role" style="vertical-align: middle;">
+              <i class="fa fa-pencil" aria-hidden="true"></i>
+            </button>
+          </td>
+          <td>03/18/2017 17:24:36</td>
+        </tr>
+        <tr class="c-lined-table__row">
+          <td>UC San Diego</td>
+          <td><a href="#">Marvin Jones</a></td>
+          <td class="c-admin-hide-border-right">User</td>
+          <td class="c-admin-hide-border-left">
+            <button class="c-admin-edit-icon" aria-label="Edit user role" alt="Edit user role" style="vertical-align: middle;">
+              <i class="fa fa-pencil" aria-hidden="true"></i>
+            </button>
+          </td>
+          <td>03/20/2017 13:11:03</td>
+        </tr>
+        <tr class="c-lined-table__row">
+          <td>UC Merced</td>
+          <td><a href="#">Fanula Kettering</a></td>
+          <td class="c-admin-hide-border-right">User</td>
+          <td class="c-admin-hide-border-left">
+            <button class="c-admin-edit-icon" aria-label="Edit user role" alt="Edit user role" style="vertical-align: middle;">
+              <i class="fa fa-pencil" aria-hidden="true"></i>
+            </button>
+          </td>
+          <td>05/01/2017 09:54:23</td>
+        </tr>
+        <tr class="c-lined-table__row">
+          <td>UC Merced</td>
+          <td><a href="#">Chin Zhu</a></td>
+          <td class="c-admin-hide-border-right">Admin</td>
+          <td class="c-admin-hide-border-left">
+            <button class="c-admin-edit-icon" aria-label="Edit user role" alt="Edit user role" style="vertical-align: middle;">
+              <i class="fa fa-pencil" aria-hidden="true"></i>
+            </button>
+          </td>
+          <td>01/04/2017 14:15:09</td>
+        </tr>
+        <tr class="c-lined-table__row">
+          <td>...</td>
+          <td>...</td>
+          <td colspan="2">...</td>
+          <td>...</td>
+        </tr>
+        <tr class="c-lined-table__row">
+          <td>...</td>
+          <td>...</td>
+          <td colspan="2">...</td>
+          <td>...</td>
+        </tr>
+        <tr class="c-lined-table__row">
+          <td>...</td>
+          <td>...</td>
+          <td colspan="2">...</td>
+          <td>...</td>
+        </tr>
+        <tr class="c-lined-table__row">
+          <td>...</td>
+          <td>...</td>
+          <td colspan="2">...</td>
+          <td>...</td>
+        </tr>
+        <tr class="c-lined-table__row">
+          <td>...</td>
+          <td>...</td>
+          <td colspan="2">...</td>
+          <td>...</td>
+        </tr>
+        <tr class="c-lined-table__row">
+          <td>...</td>
+          <td>...</td>
+          <td colspan="2">...</td>
+          <td>...</td>
+        </tr>
+      </table>
+
+      <div class="c-space-paginator">
+        <nav class="pagination">
+          <a href="#">Show all</a>
+          <span class="page current">1</span>
+          <span class="page"><a rel="next" href="#">2</a></span>
+          <span class="page"><a rel="next" href="#">3</a></span>
+          <span class="page"><a rel="next" href="#">4</a></span>
+          <span class="next"><a rel="next" href="#">Next »</a></span>
+          <span class="last"><a href="#">Last »</a></span>
+        </nav>
+      </div>
+    </div>
+  </div>
+
+	
+<footer class="c-footer">
+	<div class="c-footer__link-group">
+		<div class="c-footer__nav-group">
+			<a href="" class="c-footer__nav-item">Explore Data</a>
+			<a href="" class="c-footer__nav-item">Help</a>
+			<a href="" class="c-footer__nav-item">My Datasets</a>
+			<div class="c-footer__logged-in-or-out">
+			
+<div class="o-sites">
+	<details class="o-showhide o-sites__details" role="group">
+		<summary class="o-showhide__summary o-sites__summary">More Dash Sites</summary>
+		<div class="o-sites__group">
+			<span class="o-sites__group-heading">Participating UC Campuses</span>
+			<a href="" class="o-sites__group-item">dash site 1</a>
+			<a href="" class="o-sites__group-item">dash site 2</a>
+			<a href="" class="o-sites__group-item">dash site 3</a>
+		</div>
+	</details>
+	<a href="" class="o-sites__login">Login</a>
+</div>
+
+			</div>
+		</div>
+		<div class="c-footer__policy-group">
+			<a href="">Terms of Use</a>
+			<a href="">Privacy Policy</a>
+			<a href="">Accessibility Policy</a>
+		</div>
+	</div>
+	<p>Dash is a collaborative project between X and the UC Curation Center of the <a href="http://www.cdlib.org" class="o-link__primary">California Digital Library</a></p>
+	<p>© The Regents of the University of California</p>
+</footer>
+
+
+	<script src="js/ui.js"></script>
+
+
+  <!-- javascript for the facet open/close -->
+  <script>
+    $( document ).ready(function() {
+      $('.js-hideshow').hide();
+    });
+    $( ".js-title-toggle" ).click(function(event) {
+      toggleMenu($(this));
+    });
+    $( ".js-title-toggle a").click(function(event) {
+      event.preventDefault();
+    });
+
+    function toggleMenu(t){
+      var el = t.next('.js-hideshow');
+      if(el.is(':visible')){
+        el.slideUp();
+        t.removeClass('c-facet-title--open');
+        t.addClass('c-facet-title--closed');
+      }else{
+        el.slideDown();
+        t.addClass('c-facet-title--open');
+        t.removeClass('c-facet-title--closed');
+      }
+    }
+  </script>
+</body>
+</html>

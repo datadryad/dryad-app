@@ -1,0 +1,21 @@
+source 'https://rubygems.org'
+
+gemspec
+
+gem 'byebug', group: %i[development test]
+gem 'httparty'
+gem 'mysql2', '< 0.5x', '>= 0.3.13'
+gem 'parallel_tests', group: %i[development test]
+
+path '..' do
+  gem 'stash-sword'
+  gem 'stash-wrapper'
+  gem 'stash_discovery'
+  gem 'stash_engine'
+end
+
+group :development, :test do
+  gem 'factory_bot_rails', require: false
+  # gem 'factory_bot'
+  gem 'rspec-rails'
+end

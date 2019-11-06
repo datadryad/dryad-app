@@ -1,0 +1,15 @@
+<%# the local variable 'geolocation_box' should be passed in to this partial when there are multiple per page %>
+<%= form_for(geolocation_box, url: stash_datacite.geolocation_boxes_create_path, remote: true, authenticity_token: true, html: {id: "geolocation_box_new_form", class: 'c-location__box-inputs'}) do |f| %>
+  <div class="c-location__coordinates" role="group" aria-labelledby="c-location__legend1">
+    <div class="c-location__legend" id="c-location__legend1"><abbr title="Southwest">SW</abbr></div>
+    <%= f.text_field :sw_latitude, class: 'c-location__input', id: "geo_sw_lat_point" %>
+    <%= f.text_field :sw_longitude, class: 'c-location__input', id: "geo_sw_lng_point" %>&nbsp;,&nbsp;
+  </div>
+  <div class="c-location__coordinates" role="group" aria-labelledby="c-location__legend2">
+    <div class="c-location__legend" id="c-location__legend2"><abbr title="Northeast">NE</abbr></div>
+    <%= f.text_field :ne_latitude, class: 'c-location__input', id: "geo_ne_lat_point" %>
+    <%= f.text_field :ne_longitude, class: 'c-location__input', id: "geo_ne_lng_point" %>
+    <%= hidden_field_tag :resource_id, @resource.id %>
+  </div>
+  <%= f.submit "Add", id: "add_geo_box", class: 'c-location__add-button o-button__plain-text2' %>
+<% end %>

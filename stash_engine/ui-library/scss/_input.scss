@@ -1,0 +1,155 @@
+// ##### Input Component ##### //
+
+%c-input {
+	display: flex;
+	flex: 1 1 auto;
+	flex-flow: column nowrap;
+	margin: 0 0 20px;
+}
+
+.c-input {
+	@extend %c-input;
+}
+
+.c-input__inline {
+
+	@include bp(screen2) {
+		display: flex;
+
+		.c-input ~ .c-input {
+			margin: 0 0 20px 20px;
+		}
+
+	}
+
+}
+
+%c-input__label {
+	font-weight: bold;
+}
+
+.c-input__label {
+	@extend %c-input__label;
+}
+
+.c-input__label--required {
+	@extend %c-input__label;
+
+	&::after {
+      content: ' *';
+      color: $design-orange-color;
+	}
+
+}
+
+.c-input__hint {
+	font-weight: normal;
+}
+
+%c-input__element {
+	@extend %fcontrol-focus;
+    box-sizing: border-box;
+	border: 1px solid $design-dark-gray-color;
+}
+
+.c-input__text {
+	@extend %c-input__element;
+	height: $input-height;
+	padding: 0 5px;
+}
+
+.c-input__text--copypaste {
+	@extend %c-input__element;
+	display: inline-block;
+	width: 80%;
+	margin-bottom: 1rem;
+}
+
+.c-input__textarea {
+	@extend %c-input__element;
+	height: $input-height + 50px;
+	padding: 3px 5px;
+    word-wrap: break-word;
+    word-break: break-all;
+    overflow-wrap: break-word;
+}
+
+.c-input__select {
+	@extend %c-input__element;
+	height: $input-height;
+	padding: 0 35px 0 5px;
+	border-radius: 0;
+	background: inline('../images/icon_up-down-arrows.svg') right 9px center / 12px no-repeat, linear-gradient($design-light-blue-color, $design-light-blue-color) right / 30px 30px no-repeat;
+	appearance: none; // removes default down arrow for Chrome and FF 35 and higher
+	// background: linear-gradient(90deg, blue 50%, green 50%);
+
+	option,
+	optgroup {
+		margin: 0.3em 0;
+	}
+
+	&::-ms-expand { // removes default down arrow for IE 10 and higher
+  	display: none;
+  }
+
+}
+
+%c-input__error-message {
+	display: none;
+	padding: 5px;
+	background-color: $design-red-color;
+	color: $design-white-color;
+}
+
+.c-input__error-message {
+	@extend %c-input__error-message;
+}
+
+.c-input__error-message--active {
+	@extend %c-input__error-message;
+	display: flex;
+}
+
+.c-input__required-note {
+	margin: 0 0 $spacing-md;
+
+	&::before {
+      content: '* ';
+	  color: $design-orange-color;
+	}
+
+}
+
+// ***** File Input ***** //
+
+.c-input__file-label {
+	display: inline-block;
+	padding: 10px 20px;
+	background-color: $design-lighter-blue-color;
+	font-size: 75%;
+	cursor: pointer;
+}
+
+.c-input__file {
+	@extend %hide;
+}
+
+// ***** Email Code ***** //
+
+.c-input__emailcode-text {
+	@extend %c-input;
+	flex: 2 1;
+	width: 350px;
+}
+
+.c-input__emailcode-button {
+	@extend %c-input;
+	flex: 1 1;
+	width: 180px;
+}
+
+.c-input__emailcode-spacer {
+	@extend %c-input;
+	flex: 1 1;
+}
+

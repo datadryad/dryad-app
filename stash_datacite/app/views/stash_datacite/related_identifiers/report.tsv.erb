@@ -1,0 +1,16 @@
+<%= "Dataset DOI\tVersion\tResource ID\tTitle\tRelationship\tIdentifier\tResolver" %>
+<% @resources.each do |res| -%>
+  <% res.related_identifiers.each do |ri|
+    result = StashEngine::LinkGenerator.create_link(type: ri.related_identifier_type, value: ri.related_identifier)
+      unless result.class == Array
+        result = [result, result]
+      end
+  -%>
+<%=
+    "#{res.identifier.identifier_type.downcase}:#{res.identifier.identifier}\t#{res.stash_version.version}\t"\
+    "#{res.id}\t"\
+    "#{res.title}\t#{ri.relation_name_english}\t"\
+    "#{result[0]}\t#{result[1]}"
+%>
+  <% end -%>
+<% end -%>

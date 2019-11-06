@@ -1,0 +1,6 @@
+$('div.geolocation_points').replaceWith('<%= j render partial: "stash_datacite/geolocation_points/index", locals: { geolocation_points: @geolocation_points } %>')
+// var marker = L.marker([<%= @latitude %>, <%= @longitude %>]);
+// map.removeLayer(marker);
+bnds = map.getBounds();
+map.remove();
+loadMap(bnds);

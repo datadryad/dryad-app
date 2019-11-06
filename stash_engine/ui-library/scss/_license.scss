@@ -1,0 +1,13 @@
+// ##### License Component ##### //
+
+.c-license__version {
+	display: flex;
+	justify-content: space-between;
+}
+
+.c-license__logo {
+	flex: 0 0 auto;
+	width: 120px;
+	height: 42px;
+	margin: 0 0 0 20px;
+}

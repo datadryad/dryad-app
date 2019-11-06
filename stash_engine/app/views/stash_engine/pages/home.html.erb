@@ -1,0 +1,33 @@
+<% @page_title = 'Home - Publish and Preserve your Data' %>
+<div class="t-home__banner o-banner" style="background-image: url(<%= asset_path 'stash_engine/bg_drawer-of-bugs.jpg' %>)">
+  <div class="o-banner__tagline">for your research data</div>
+  <!-- Promoting scholarship through open data -->
+  <!-- the above may be required for Nagios check -->
+</div>
+<div class="t-home__quote-search-group">
+  <div class="t-home__quote o-quote">
+    <div class="o-quote__quote">
+      Dryad is a community-owned resource
+      <br>
+      <a href="<%= stash_url_helpers.our_community_path %>" class="o-quote__quote">Learn more about our organizational memberships</a>
+    </div>
+  </div>
+  <div class="t-home__search o-home-search">
+    <div class="o-home__search-group">
+      <% lnk = current_user ? stash_url_helpers.dashboard_path : stash_url_helpers.choose_login_path %>
+      <% txt = current_user ? 'Submit a new dataset' : 'Login and then submit a new dataset' %>
+      <%= button_to 'Submit Now', lnk, method: :get, class: "o-home-search__submit-button", title: txt %>
+    </div>
+  </div>
+</div>
+<%= render partial: 'why_share' %>
+
+<%= render partial: 'why_use' %>
+
+<% unless @hostname == 'localhost' %>
+  <h1 class="o-heading__level1-home">Most recent datasets</h1>
+  <div id="latest_tiles"
+       data-load="<%= main_app.latest_index_path(format: :js, q: '*:*') %>">
+    <%= image_tag 'stash_engine/spinner.gif', size: '80x60', alt: 'Loading spinner' %>
+  </div>
+<% end %>

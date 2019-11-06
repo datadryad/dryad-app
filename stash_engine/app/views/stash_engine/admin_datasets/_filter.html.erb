@@ -1,0 +1,47 @@
+<%= form_tag({ controller: '/stash_engine/admin_datasets', action: 'index' }, method: 'get', id: 'filter_form' ) do -%>
+  <div class="c-horizontal-form__input--filter-by">Filter by:</div>
+  <% if current_user.superuser? %>
+    <%= select_tag(:tenant, options_for_select( [['Institution', '']] + institution_select, params[:tenant]),
+                   class: 'c-horizontal-form__input', onchange: "this.form.submit();" ) %>
+  <% end %>
+  <%= select_tag(:curation_status, options_for_select( [['Status', '']] + status_select, params[:curation_status]),
+                 class: 'c-horizontal-form__input--status', onchange: "this.form.submit();" ) %>
+  <% if @publications.any? %>
+    <%= text_field_tag(:publication_name, @pub_name, class: 'c-horizontal-form__input--search', placeholder: 'Enter journal name') %>
+  <% end %>
+  &nbsp;
+  <a href="#" class="c-horizontal-form__input" id="filter_resetter">Reset all filters</a>
+
+  <% params.except(:controller, :action, :tenant, :curation_status, :commit, :page, :page_size, :show_all).each_pair do |k,v| %>
+    <%= hidden_field_tag k, v %>
+  <% end %>
+<% end -%>
+
+<script>
+  // put this in here because it goes along with this form only
+  $("#filter_resetter").click(function(e) {
+    e.preventDefault();
+    $("#tenant option[value='']").prop('selected',true);
+    $("#curation_status option[value='']").prop('selected',true);
+    $('#publication_name[type="text"]').val('');
+    $('#publication_name[type="hidden"]').val('');
+    $("#filter_form").submit();
+  });
+
+  <% if @publications.any? %>
+    $('#publication_name[type="text"]').autocomplete({
+      select: function(event, ui) {
+        $('#publication_name[type="text"]').val(ui.item.value)
+        $('#publication_name[type="hidden"]').val(ui.item.value)
+        this.form.submit();
+      },
+      change: function(event, ui) {
+        if($('#publication_name[type="text"]').val() == ''){
+          $('#publication_name[type="hidden"]').val('')
+          this.form.submit();
+        }
+      },
+      source: <%= @publications.to_json.html_safe %>
+    });
+  <% end %>
+</script>

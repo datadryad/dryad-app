@@ -1,0 +1,6 @@
+<%# pass in the right %>
+<% if right.blank? || right.rights_uri.blank? || right.rights.blank? %>
+  No licensing description is set.
+<% else %>
+  <%= link_to right.rights, right.rights_uri %>
+<% end %>

@@ -1,0 +1,31 @@
+// ##### Datasets Heading Component ##### //
+
+.c-datasets-heading {
+	display: flex;
+	flex-flow: column nowrap;
+	margin-bottom: $spacing-md;
+
+	@include bp(screen1) {
+		flex-flow: row nowrap;
+		justify-content: space-between;
+	}
+
+}
+
+.c-datasets-heading__heading {
+
+	@include bp(screen1) {
+		margin: 0;
+	}
+
+}
+
+.c-datasets-heading__button {
+	align-self: center;
+	height: 45px;
+	padding: 0 40px 0 65px;
+	border: none;
+	background: $design-light-blue-color inline('../images/icon_plus-white.svg') left 33px center / 12px no-repeat;
+	color: $design-white-color;
+	font-size: 1.1em;
+}

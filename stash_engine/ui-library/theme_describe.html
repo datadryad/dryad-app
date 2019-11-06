@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+<head>
+	<meta charset="UTF-8">
+	<title>Metadata Entry Theme</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+	<!-- build:css css/ui.css -->
+	<link rel="stylesheet" href="css/main.css">
+	<!-- endbuild -->
+	<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+	<style>
+		/* styles for this page only */
+	</style>
+	<script
+    src="https://code.jquery.com/jquery-2.2.3.min.js"
+    integrity="sha256-a23g1Nt4dtEYOj7bR+vTu7+T8VP13humZFBJNIYoEJo="
+    crossorigin="anonymous"></script>
+  <script
+		src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js"
+		integrity="sha256-xNjb53/rY+WmG+4L6tTl9m6PpqknWZvRt0rO1SRnJzw="
+		crossorigin="anonymous"></script>
+</head>
+<body>
+
+  <div class="ui-library-header">
+    <h1><a href="index.html">Dash UI Library</a></h1>
+    <h2>Metadata Entry Theme</h2>
+  </div>
+
+	<!-- Begin Header Component -->
+	<!--#include file="includes/header.html" -->
+	<!-- End Header Component -->
+
+  <!--#include file="includes/admin-edit.html" -->
+
+	<div class="c-progress">
+		<a role="button" href="" class="c-progress__tab1--active" href="">Describe Dataset</a>
+		<a role="button" href="" class="c-progress__tab2" href="">Upload files</a>
+		<a role="button" href="" class="c-progress__tab3" href="">Review and Submit</a>
+	</div>
+	<!-- Begin Autosave Component -->
+	<div class="c-autosave-header">
+		<h1 class="o-heading__level1">Describe Your Datasets</h1>
+		<div class="c-autosave__text js-autosave__text">Saving&hellip;</div>
+	</div>
+	<!-- End Autosave Component -->
+	<h3 class="o-heading__page-span">Basic Information</h3>
+	<div class="c-input">
+		<label class="c-input__label" for="t-describe__input1">Title</label>
+		<input class="c-input__text" id="t-describe__input1" type="text" name="" required>
+		<div class="c-input__error-message js-input__error-message">Error message.</div>
+	</div>
+	<fieldset class="c-fieldset">
+		<legend class="c-fieldset__legend">Author(s)</legend>
+		<div class="c-input__inline">
+			<div class="c-input">
+				<label class="c-input__label" for="t-describe__input2">First Name</label>
+				<input class="c-input__text" id="t-describe__input2" type="text" name="" required>
+				<div class="c-input__error-message js-input__error-message">Error message.</div>
+			</div>
+			<div class="c-input">
+				<label class="c-input__label" for="t-describe__input3">Last Name</label>
+				<input class="c-input__text" id="t-describe__input3" type="text" name="" required>
+				<div class="c-input__error-message js-input__error-message">Error message.</div>
+			</div>
+			<div class="c-input">
+				<label class="c-input__label" for="t-describe__input4">Institutional Affiliation</label>
+				<input class="c-input__text" id="t-describe__input4" type="text" name="">
+				<div class="c-input__error-message js-input__error-message">Error message.</div>
+			</div>
+			<a role="button" href="" class="t-describe__remove-button o-button__remove">remove</a>
+		</div>
+		<!-- Begin Orcid ID Component -->
+			<!--#include file="includes/orcid.html" -->
+		<!-- End Orcid ID Component -->
+		<a role="button" href="" class="t-describe__add-button o-button__add">add another author</a>
+		<div class="t-describe__add-orcid">
+			<a role="button" href="" class="t-describe__add-button o-button__connect-orcid">Connect your ORCID ID</a>
+			<a role="button" aria-label="help" href="" class="o-button__help" title="ORCID provides a persistent digital identifier that distinguishes you from other researchers. Learn more at orcid.org"></a>
+		</div>
+	</fieldset>
+	<div class="t-describe__select1 c-input">
+		<label class="c-input__label" for="t-describe__input5">Type of Data</label>
+		<select class="c-input__select" name="" id="t-describe__input5" required>
+			<option value="">Spreadsheet/Database</option>
+			<option value="">Image</option>
+			<option value="">Sound</option>
+			<option value="">Video</option>
+			<option value="">Text</option>
+		</select>
+	</div>
+	<div class="c-input">
+		<label class="c-input__label" for="t-describe__input6">Abstract</label>
+		<textarea name="" class="c-input__textarea" id="t-describe__input6" required></textarea>
+		<div class="c-input__error-message js-input__error-message">Error message.</div>
+	</div>
+	<p class="c-input__required-note">required fields</p>
+
+	<details class="c-fgroup" role="group">
+		<summary class="o-showhide__summary c-fgroup__summary">Data Description (optional)</summary>
+		<fieldset class="c-fieldset">
+			<legend class="c-fieldset__legend">Funding</legend>
+			<div class="c-input__inline">
+				<div class="c-input">
+					<label class="c-input__label" for="t-describe__input7">Granting Organization</label>
+					<select class="c-input__select" name="" id="t-describe__input7">
+						<option value="">Please Choose</option>
+						<option value="">One</option>
+						<option value="">Two</option>
+						<option value="">Three</option>
+					</select>
+				</div>
+				<div class="c-input">
+					<label class="c-input__label" for="t-describe__input8">Award Number</label>
+					<input class="c-input__text" id="t-describe__input8" type="text" name="">
+					<div class="c-input__error-message js-input__error-message">Error message.</div>
+				</div>
+				<a role="button" href="" class="t-describe__remove-button o-button__remove">remove</a>
+			</div>
+			<a role="button" href="" class="t-describe__add-funder-button o-button__add">add another funder</a>
+		</fieldset>
+		<!-- Begin Keywords Component -->
+				<!--#include file="includes/keywords.html" -->
+		<!-- End Keywords Component -->
+		<div class="c-input">
+			<label class="c-input__label" for="c-input__10">Methods <span class="c-input__hint">How was this dataset collected? How has it been processed?</span></label>
+			<textarea name="" class="c-input__textarea" id="c-input__10"></textarea>
+			<div class="c-input__error-message js-input__error-message">Error message.</div>
+		</div>
+		<div class="c-input">
+			<label class="c-input__label" for="c-input__11">Usage Notes <span class="c-input__hint">What else would someone need to know to use this dataset?</span></label>
+			<textarea name="" class="c-input__textarea" id="c-input__11"></textarea>
+			<div class="c-input__error-message js-input__error-message">Error message.</div>
+		</div>
+		<fieldset class="c-fieldset">
+			<legend class="c-fieldset__legend">Related work(s) <span class="c-input__hint">articles, other datasets: e.g., This dataset is cited by DOI 10.1000/182.</span></legend>
+			<div class="c-input__inline">
+				<div class="c-input">
+					<label class="c-input__label" for="t-describe__input12">Relationship</label>
+					<select class="c-input__select" name="" id="t-describe__input12">
+						<option value="">Select Relationship</option>
+						<option value="">One</option>
+						<option value="">Two</option>
+						<option value="">Three</option>
+					</select>
+				</div>
+				<div class="c-input">
+					<label class="c-input__label" for="t-describe__input13">ID Type</label>
+					<select class="c-input__select" name="" id="t-describe__input13">
+						<option value="">DOI</option>
+						<option value="">One</option>
+						<option value="">Two</option>
+						<option value="">Three</option>
+					</select>
+				</div>
+				<div class="c-input">
+					<label class="c-input__label" for="t-describe__input14">Identifier</label>
+					<input class="c-input__text" id="t-describe__input14" type="text" name="">
+					<div class="c-input__error-message js-input__error-message">Error message.</div>
+				</div>
+			</div>
+			<a role="button" href="" class="o-button__add">add another funder</a>
+		</fieldset>
+	</details>
+
+	<details class="c-fgroup" role="group">
+		<summary class="o-showhide__summary c-fgroup__summary">Location Information (optional)</summary>
+		<fieldset class="c-fieldset">
+			<legend class="c-fieldset__legend">Where was the data collected? <span class="c-input__hint">Does it focus on particular locations?</span></legend>
+			<span>To add a location: type a name or enter coordinates or draw on a map.</span>
+			<fieldset class="c-fieldset">
+				<legend class="c-fieldset__legend">Add location with lat/long coordinates</legend>
+				<!-- Begin Location Component -->
+				<!--#include file="includes/location.html" -->
+				<!-- End Location Component -->
+			</fieldset>
+		</fieldset>
+		<p class="t-describe__map-label" id="t-describe__map-label">Add a point or draw a rectangle on the map</p>
+
+		<!-- Begin Map Object -->
+		<!--#include file="includes/map.html" -->
+		<!-- End Map Object -->
+
+		<!-- Begin Locations Component -->
+		<div class="t-describe__locations c-locations" role="group" aria-labelledby="c-locations__label">
+			<div class="c-locations__label" id="c-locations__label">Locations Added</div>
+			<div class="c-locations__point">
+				<div class="c-locations__data">37.806749, 122.255495</div>
+				<a href="" class="o-button__remove" role="button">remove</a>
+			</div>
+			<div class="c-locations__place">
+				<div class="c-locations__data">Oakland: 37.8000, -122.2667</div>
+				<a href="" class="o-button__remove" role="button">remove</a>
+			</div>
+			<div class="c-locations__area">
+				<div class="c-locations__data"><abbr title="Southwest" class="c-locations__coordinate">SW</abbr> 37.799656, -122.264230</div>
+				<div class="c-locations__data"><abbr title="Northwest" class="c-locations__coordinate">NW</abbr> 37.809435, -122.249700</div>
+				<a href="" class="o-button__remove" role="button">remove</a>
+			</div>
+		</div>
+		<!-- End Locations Component -->
+	</details>
+	<!-- Begin Autosave Component -->
+	<div class="c-autosave-footer">
+		<div class="c-autosave__text js-autosave__text">Saving&hellip;</div>
+	</div>
+	<!-- End Autosave Component -->
+	<!-- Begin Dataset Navigation Object -->
+	<div class="o-dataset-nav">
+		<a href="" class="o-button__icon-left">Back to My Datasets</a>
+		<a href="" class="o-button__icon-right">Proceed to Upload</a>
+	</div>
+	<!-- End Dataset Navigation Object -->
+
+	<!--#include file="includes/footer.html" -->
+
+	<!-- build:js js/ui.js -->
+  <script src="js/modernizr-custombuild.js"></script>
+  <script src="js/details-polyfill.js"></script>
+  <script src="js/main.js"></script>
+  <!-- endbuild -->
+	
+</body>
+</html>

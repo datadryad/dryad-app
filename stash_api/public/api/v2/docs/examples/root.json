@@ -1,0 +1,17 @@
+{
+  "_links": {
+    "self": {
+      "href": "/"
+    },
+    "stash:datasets": {
+      "href": "datasets"
+    },
+    "curies": [
+      {
+        "name": "stash",
+        "href": "https://github.com/CDL-Dryad/stash/blob/master/stash_api/link-relations.md",
+        "templated": "true"
+      }
+    ]
+  }
+}
