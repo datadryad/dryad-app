@@ -1,0 +1,25 @@
+default: &default
+  adapter: mysql2
+  host: 127.0.0.1 # change these lines or override lines from default if they are not right
+  database: dryad
+  password: blank
+  port: 3306
+  encoding: utf8mb4
+  collation: utf8mb4_unicode_ci
+
+development: &DEVELOPMENT
+  <<: *default
+  username: root
+  password: ""
+
+local:
+  <<: *default
+  username: travis
+  password: ""
+
+test:
+  <<: *default
+  host: localhost
+  database: dashv2_test
+  username: travis
+  password: ""

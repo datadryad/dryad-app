@@ -1,0 +1,156 @@
+defaults: &DEFAULTS
+  metadata_engine: StashDatacite
+  shared_resource_model: StashEngine::Resource
+  repository: Stash::Merritt::Repository
+  stash_mount: /stash
+  max_review_days: 180
+  ezid:
+    host: ezid.cdlib.org
+    port: 443
+  google_maps_api_key: <add_key_here>
+  contact_us_uri: http://www.cdlib.org/services/uc3/contact.html
+  orcid:
+    site: https://sandbox.orcid.org/
+    authorize_url: https://sandbox.orcid.org/oauth/authorize
+    token_url: https://api.sandbox.orcid.org/oauth/token
+    key:  APP-I07IMI2NJTMP9Z6G
+    secret: <REPLACE-ME>
+    member: true
+    sandbox: true
+    api: https://api.sandbox.orcid.org
+  submission_error_email: [my.fun.submission.error.emails@example.com]
+  submission_bc_emails: [""]
+  contact_email: ["changeme@example.org"]
+  default_tenant: dryad
+  old_dryad_access_token: <REPLACE-ME>
+  old_dryad_url: https://api.datadryad.org
+  payments:
+    service: stripe
+    key: replace-me
+    data_processing_charge: 12000 # charge in cents
+    large_file_size: 5.0e+10
+    additional_storage_chunk_size: 1.0e+10 # 10 GB
+    additional_storage_chunk_cost: 5000 # in cents
+  merritt_express_domain: dummy_domain.example.com
+  merritt_max_submission_threads: 1
+  crossref_base_url: https://api.crossref.org
+  crossref_mailto: test.dude@example.edu
+  fee_waiver_countries:
+    - 'Afghanistan'
+    - 'Guinea-Bissau'
+    - 'Sierra Leone'
+    - 'Benin'
+    - 'Haiti'
+    - 'Somalia'
+    - 'Burkina Faso'
+    - 'North Korea'
+    - 'South Sudan'
+    - 'Burundi Liberia'
+    - 'Syria'
+    - 'Central African Republic'
+    - 'Madagascar'
+    - 'Tajikistan'
+    - 'Chad'
+    - 'Malawi'
+    - 'Tanzania'
+    - 'Comoros'
+    - 'Mali'
+    - 'Togo'
+    - 'Republic of the Congo'
+    - 'Democratic Republic of the Congo'
+    - 'Mozambique'
+    - 'Uganda'
+    - 'Eritrea'
+    - 'Nepal'
+    - 'Yemen'
+    - 'Ethiopia'
+    - 'Niger'
+    - 'Zimbabwe'
+    - 'Gambia'
+    - 'Rwanda'
+    - 'Guinea'
+    - 'Senegal'
+    - 'Angola'
+    - 'Indonesia'
+    - 'Papua New Guinea'
+    - 'Bangladesh'
+    - 'Kenya'
+    - 'Philippines'
+    - 'Bhutan'
+    - 'Kiribati'
+    - 'Sao Tome and Principe'
+    - 'Bolivia'
+    - 'Kosovo'
+    - 'Solomon Islands'
+    - 'Cabo Verde'
+    - 'Kyrgyzstan'
+    - 'Sri Lanka'
+    - 'Cambodia'
+    - 'Laos'
+    - 'Sudan'
+    - 'Cameroon'
+    - 'Lesotho'
+    - 'Swaziland'
+    - 'Congo'
+    - 'Mauritania'
+    - 'East Timor'
+    - 'Ivory Coast'
+    - 'Micronesia'
+    - 'Tunisia'
+    - 'Djibouti'
+    - 'Moldova'
+    - 'Ukraine'
+    - 'Egypt'
+    - 'Mongolia'
+    - 'Uzbekistan'
+    - 'El Salvador'
+    - 'Morocco'
+    - 'Vanuatu'
+    - 'Georgia'
+    - 'Myanmar'
+    - 'Vietnam'
+    - 'Ghana'
+    - 'Nicaragua'
+    - 'State of Palestine'
+    - 'Honduras'
+    - 'Nigeria'
+    - 'Zambia'
+    - 'India'
+    - 'Pakistan'
+  link_out:
+    # LinkOut FTP information for Europe PubMed Central
+    labslink:
+      ftp_host: labslink.example.org
+      ftp_dir: testing
+      ftp_username: username
+      ftp_password: password
+      ftp_provider_id: 1234
+    # LinkOut FTP information for NCBI
+    pubmed:
+      ftp_host: pubmed.example.org
+      ftp_dir: testing
+      ftp_username: username
+      ftp_password: password
+      ftp_provider_id: 9876
+
+development: &DEVELOPMENT
+  <<: *DEFAULTS
+  submission_error_email: [emailme@example.org]
+  shib_sp_host: <fill-me-in>
+  page_error_email: ~
+  feedback_email_from: no-reply@example.org
+  collection_uri: http://uc3-mrtsword-dev.cdlib.org:39001/mrtsword/
+  google_analytics_id: <fill-me-in>
+
+local:
+  <<: *DEVELOPMENT
+
+test:
+  <<: *DEFAULTS
+  google_maps_api_key: ~
+  repository: Mocks::Repository::Repository
+  contact_email: ["contact1@example.edu", "contact2@example.edu"]
+  default_tenant: localhost
+  old_dryad_access_token: bad_token
+  old_dryad_url: https://api.datadryad.example.org
+
