@@ -1,4 +1,4 @@
-inherit_from: ../.rubocop.yml
+inherit_from: ../../.rubocop.yml
 
 # NOTE:
 #   We can't depend on the top-level (Method|Module|Block)Length
