@@ -7,7 +7,7 @@ AllCops:
     - 'vendor/**/*'
     - 'documentation/**/*'
   # Suppress complaints about post-2.0 syntax
-  TargetRubyVersion: 2.2
+  TargetRubyVersion: 2.4
 
 # Allow one line around block body (Layout/EmptyLines will still disallow two or more)
 Layout/EmptyLinesAroundBlockBody:
@@ -33,17 +33,63 @@ Layout/MultilineOperationIndentation:
 Metrics/LineLength:
   Max: 150
 
+# AbcSize is very low at 15 and often catches perfectly readable methods because of two small if statements
+Metrics/AbcSize:
+  Max: 30
+
+# The default MethodLength can flag methods which essentially do nothing, simply because they invoke another method with several parameters
+Metrics/MethodLength:
+  Max: 20
+  Exclude:
+    - '**/spec/**/*.rb'
+
+# reasonable complexity
+Metrics/PerceivedComplexity:
+  Max: 10
+
+# We meant to do that
+Naming/MemoizedInstanceVariableName:
+  Enabled: False
+
+# It works in context, trust us
+Naming/UncommunicativeMethodParamName:
+  Enabled: False
+
+# Do what's readable in the context you're in
+Style/AccessModifierDeclarations:
+  Enabled: false
+
 # 👎 to cultural imperialism
 Style/AsciiComments:
   Enabled: false
+
+# Seriously?
+Style/CommentedKeyword:
+  Enabled: False
 
 # Disable problematic module documentation check (see https://github.com/bbatsov/rubocop/issues/947)
 Style/Documentation:
   Enabled: false
 
+# Adding more line noise to format strings will not improve them
+Style/FormatStringToken:
+  Enabled: false
+
+# Putting '# frozen_string_literal: true' everywhere does not make the world a better place
+Style/FrozenStringLiteralComment:
+  Enabled: false
+
 # Requiring the lambda() method just makes wordy calls wordier
 Style/Lambda:
   EnforcedStyle: literal
+
+# `foo.positive?` is cute, but it's not actually more readable than `foo > 0`
+Style/NumericPredicate:
+  Enabled: false
+
+# The semantics of `foo&.bar` are a lot less interchangeable with `foo && foo.bar` than RuboCop thinks
+Style/SafeNavigation:
+  Enabled: false
 
 # Unclear why it's a good idea to give parameters semantically meaningless names
 Style/SingleLineBlockParams:
@@ -56,3 +102,14 @@ Naming/VariableNumber:
 # Allow some special handling for engines
 Bundler/OrderedGems:
   TreatCommentsAsGroupSeparators: true
+
+# ############################################################
+# Special cases for specs
+
+Metrics/BlockLength:
+  Exclude:
+    - '**/spec/**/*.rb'
+
+Metrics/ModuleLength:
+  Exclude:
+    - '**/spec/**/*.rb'
