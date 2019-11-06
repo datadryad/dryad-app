@@ -6,6 +6,7 @@ AllCops:
     - 'script/**/*'
     - 'vendor/**/*'
     - 'documentation/**/*'
+
   # Suppress complaints about post-2.0 syntax
   TargetRubyVersion: 2.4
 

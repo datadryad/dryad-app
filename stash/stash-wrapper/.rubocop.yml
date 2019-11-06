@@ -1,4 +1,4 @@
-inherit_from: ../.rubocop.yml
+inherit_from: ../../.rubocop.yml
 
 # Disable various checks for sample code
 Style/ClassAndModuleChildren:

@@ -1,4 +1,4 @@
-inherit_from: ../.rubocop.yml
+inherit_from: ../../.rubocop.yml
 
 # These 'set' methods aren't conventional accessors, but Rubocop doesn't know that
 Naming/AccessorMethodName:
