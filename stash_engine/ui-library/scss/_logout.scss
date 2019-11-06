@@ -1,0 +1,48 @@
+// ##### Logout Object ##### //
+
+.o-logout {
+	position: relative;
+
+	@include bp(screen3) {
+		display: flex;
+		justify-content: space-between;
+		width: $global-search-width;
+	}
+
+}
+
+.o-logout__button {
+	position: absolute;
+	width: 100%;
+	padding: 10px;
+	border: none;
+	background-color: transparent;
+	color: $design-white-color;
+	text-align: left;
+
+	@include bp(screen3) {
+		position: static;
+		width: auto;
+		padding: 0;
+		background: none;
+		color: $design-light-blue-color;
+	}
+
+}
+
+.o-logout__name {
+	padding: 10px 10px 10px 4em;
+	background-color: $design-dark-blue-color;
+	color: $design-white-color;
+
+	@include bp(screen3) {
+      margin: 0 0 0 10px;
+	  padding: 0;
+      overflow: hidden;
+	  background-color: transparent;
+	  color: $design-black-color;
+  	  text-align: right;
+  	  text-overflow: ellipsis; // truncate text if too long
+	}
+
+}

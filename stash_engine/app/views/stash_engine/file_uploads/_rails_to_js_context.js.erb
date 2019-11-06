@@ -1,0 +1,11 @@
+<%# locals: resource %>
+
+function addUploadTypeChangeEvent(){
+  $('#files_from_computer, #files_from_manifest').on('change', function() {
+    if($('#files_from_manifest').is(':checked')){
+      window.location.href='<%= upload_manifest_resource_path %>';
+    }else{
+      window.location.href='<%= upload_resource_path %>';
+    }
+  });
+}

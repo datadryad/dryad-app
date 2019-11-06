@@ -1,0 +1,109 @@
+// ##### Getting Started section ##### //
+
+
+.c-getting-started {
+
+  @include bp(screen1) {
+    margin: 0 -10px;
+  }
+
+  @include bp(screen3) {
+    display: flex;
+    flex-flow: row wrap;
+    // margin: 0 -20px;
+  }
+
+}
+
+.o-heading__level1-getting-started {
+  @extend %o-heading__level1;
+}
+
+.o-heading__steps {
+  margin: 20px 10px $spacing-md;
+  color: $design-dark-blue-color;
+  font-size: 1.3em;
+  font-weight: bold;
+}
+
+.c-steps__text-group {
+  margin: 0 0 30px;
+  padding: 10px;
+  color: $design-dark-blue-color;
+  font-size: 1.3em;
+}
+
+.c-getting-started-heading__button {
+  display: inline-block;
+  z-index: 1;
+  height: 45px;
+  margin: 10px;
+  padding: 6px 12px;
+  border: none;
+  background: $design-light-blue-color;
+  color: $design-white-color;
+  font-size: 1.1em;
+  text-decoration: none;
+
+  @include bp(screen1) {
+    padding: 6px 2vw;
+  }
+
+  @include bp(screen3) {
+    padding: 7px 16px;
+  }
+}
+
+/*
+.c-why-share__icon {
+  color: $design-dark-blue-color;
+  text-align: center;
+
+  @include bp(screen1) {
+    width: 80px;
+    height: 120px;
+    float: left;
+    clear: left;
+    text-align: center;
+  }
+
+  @include bp(screen3) {
+    width: 100%;
+    height: auto;
+    margin: 30px 0 40px;
+    float: none;
+  }
+}
+*/
+
+.o-heading__level2-why-side {
+  @extend %o-heading__level2;
+  font-size: 1.4em;
+
+  @include bp(screen3) {
+    text-align: center;
+  }
+}
+
+.c-why-share__text-group-side {
+
+  @include bp(screen1) {
+    div {
+      font-size: 1em;
+      line-height: 1.5em;
+    }
+  }
+
+  @include bp(screen3) {
+    padding: 0 40px;
+
+    div {
+      font-size: 1.2em;
+      line-height: 1.5em;
+    }
+  }
+
+  div {
+    margin-bottom: 3em;
+  }
+}

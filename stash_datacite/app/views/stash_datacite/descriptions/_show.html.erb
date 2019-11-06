@@ -1,0 +1,20 @@
+<% unless abstract.try(:description).blank? %>
+  <h3 class="o-heading__level2">Abstract</h3>
+  <div class="t-landing__text-wall">
+    <%= raw(abstract.description) %>
+  </div>
+<% end %>
+
+<% unless methods.try(:description).blank? %>
+  <h3 class="o-heading__level2">Methods</h3>
+  <div class="t-landing__text-wall">
+    <%= raw(methods.description) %>
+  </div>
+<% end %>
+
+<% unless other.try(:description).blank? %>
+  <h3 class="o-heading__level2">Usage Notes</h3>
+  <div class="t-landing__text-wall">
+    <%= raw(other.description) %>
+  </div>
+<% end %>

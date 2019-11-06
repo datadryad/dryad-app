@@ -1,0 +1,23 @@
+<% @page_title = "Admin Dashboard" %>
+<h1 class="o-heading__level1">Admin Dashboard</h1>
+
+<%= render partial: 'admin_head', locals: { all_stats: @all_stats, seven_day_stats: @seven_day_stats } %>
+
+<div>
+  <h2>Datasets</h2>
+  <%= render partial: 'search' %>
+  <%= render partial: 'filter' %>
+
+  <%= render partial: 'datasets_table', locals: { datasets: @datasets } %>
+
+  <div class="c-space-paginator">
+    <%= paginate @datasets, params: { page_size: @page_size, show_all: false } %>
+  </div>
+
+  <div>
+    <%= link_to 'Get Comma Separated Values (CSV) for import into Excel', params.merge(format: :csv) %>
+  </div>
+</div>
+
+<div id="popup_dialog" style="display:none;">
+</div>

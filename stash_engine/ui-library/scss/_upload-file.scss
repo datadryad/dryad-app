@@ -1,0 +1,122 @@
+// ##### Upload File Component ##### //
+
+.c-upload {
+	margin: 0 0 20px;
+}
+
+%c-upload__item {
+	@extend %pull-borders;
+	display: flex;
+	flex-flow: row nowrap;
+	align-items: center;
+	justify-content: space-between;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	border-top: 1px solid $design-light-gray-color;
+	border-bottom: 1px solid $design-light-gray-color;
+
+	&:not(:first-child) {
+		border-top: none;
+	}
+
+}
+
+.c-upload__item {
+	@extend %c-upload__item;
+}
+
+.c-upload__item--complete {
+	@extend %c-upload__item;
+
+	.c-upload__filename {
+		padding: 0 0 0 25px;
+		background: inline('../images/icon_check-green.svg') left center / 15px no-repeat;
+	}
+
+}
+
+.c-upload__filename {
+  margin: 0 10px 0 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.c-upload__filesize {
+	margin: 0 0 0 0.25em;
+}
+
+.c-upload__action {
+	flex: 0 0 auto;
+
+  /* getting progress color to set is a PITA:
+     http://thenewcode.com/866/Using-The-HTML5-progress-Element
+     http://html5doctor.com/the-progress-element/
+  */
+
+  progress {
+    border: none;
+    background-color: $design-offwhite-color;
+    color: $design-dark-blue-color;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+
+  /* bar color, firefox */
+  progress::-moz-progress-bar { background: $design-dark-blue-color; }
+
+  /* foreground bar -- chrome and safari */
+  progress::-webkit-progress-value {background: $design-dark-blue-color;  }
+
+  /* background of unfilled bar -- chrome and safari */
+  progress::-webkit-progress-bar { background: $design-offwhite-color; }
+
+  progress::-webkit-progress-bar,
+  progress::-moz-progress-bar,
+  progress::progress-bar {
+    background-color: $design-dark-blue-color;
+  }
+
+  progress[value] {
+      width: 20vw;
+      height: 10px;
+      border: none;
+      /* appearance: none; */
+  }
+
+}
+
+.c-upload__button {
+	padding: 0 10px;
+	border: none;
+	background-color: transparent;
+	color: $design-dark-blue-color;
+	font-weight: bold;
+}
+
+.c-upload__no-files-text {
+	margin: 0 0 10px;
+	color: $design-dark-gray-color;
+	font-weight: bold;
+}
+
+%c-upload__total-size {
+	margin: 10px 0;
+}
+
+.c-upload__total-size {
+	@extend %c-upload__total-size;
+}
+
+.c-upload__total-size--warning {
+	@extend %c-upload__total-size;
+	padding: 0 0 0 25px;
+	background: inline('../images/icon_warning.svg') left center / 18px no-repeat;
+}
+
+.c-upload__upload-complete-text {
+	margin: 10px 0 0;
+	color: $design-green-color;
+	font-weight: bold;
+}

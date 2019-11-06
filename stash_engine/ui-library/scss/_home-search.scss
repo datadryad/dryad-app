@@ -1,0 +1,56 @@
+// ##### Home Search Object ##### //
+
+.o-home-search {
+  padding: 10px;
+  background-color: $design-dark-blue-color;
+
+  @include bp(screen1) {
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: center;
+    justify-content: center;
+    min-height: 150px;
+    padding: 0;
+  }
+
+}
+
+.o-home-search__label {
+  display: block;
+  margin: 0 0 10px;
+  color: $design-white-color;
+  font-size: 1.4em;
+  text-align: center;
+
+  @include bp(screen1) {
+    margin: 0 0 15px;
+    font-size: 18px;
+  }
+
+}
+
+.o-home__search-group {
+	display: flex;
+  justify-content: center;
+	height: 35px;
+
+  @include bp(screen1) {
+    width: 350px;
+  }
+
+}
+
+.o-home-search__input {
+  flex: 1 0 auto;
+  padding: 0 0.5em;
+  border: none;
+}
+
+.o-home-search__submit-button {
+  margin: -10px auto 0;
+  padding: 15px 35px 18px;
+  border: 1px solid $design-white-color;
+  background-color: $design-white-color;
+  color: $design-dark-blue-color;
+  font-weight: 2em;
+}

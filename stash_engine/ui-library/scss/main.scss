@@ -1,0 +1,120 @@
+// ##### Styles for Dash ##### //
+
+// ***** Global Settings ***** //u
+
+@import 'variables';
+@import 'mixins';
+@import 'testing';
+
+// ***** Vendor Libraries ***** //
+
+@import '../bower_components/normalize-scss/_normalize.scss';
+@import '../bower_components/font-awesome/scss/font-awesome.scss';
+
+// ***** Objects ***** //
+
+@import 'banner';
+@import 'buttons';
+@import 'data-list';
+@import 'dataset-nav';
+@import 'dependency-list';
+@import 'download';
+@import 'drop';
+@import 'global-search';
+@import 'headings';
+@import 'home-search';
+@import 'links';
+@import 'list';
+@import 'logout';
+@import 'map';
+@import 'metadata';
+@import 'metrics';
+@import 'proposed-change';
+@import 'quote';
+@import 'section';
+@import 'select';
+@import 'showhide';
+@import 'sites';
+@import 'table';
+
+// ***** Components ***** //
+
+@import 'admin-layout';
+@import 'admin-edit';
+@import 'alert';
+@import 'autosave';
+@import 'choose';
+@import 'columns';
+@import 'datasets-heading';
+@import 'data-results';
+@import 'real_facets';
+@import 'fieldsets';
+@import 'file-group';
+@import 'footer';
+@import 'form-group';
+@import 'header';
+@import 'horizontal-inputs';
+@import 'input';
+@import 'import_metadata';
+@import 'keywords';
+@import 'latest';
+@import 'license';
+@import 'location';
+@import 'locations';
+@import 'login';
+@import 'migrate_banner';
+@import 'orcid';
+@import 'pagination';
+@import 'progress';
+@import 'pubdate';
+@import 'review-files';
+@import 'sidebox';
+@import 'table-admin';
+@import 'table-heading';
+@import 'table-latest';
+@import 'table-progress';
+@import 'table-submitted';
+@import 'upload-file';
+@import 'upload-manifest';
+@import 'why-share';
+@import 'why-use';
+@import 'sharing-steps';
+@import 'getting-started';
+
+// ***** Themes ***** //
+
+@import 'about';
+@import 'datasets';
+@import 'describe';
+@import 'help';
+@import 'home';
+@import 'landing';
+@import 'review';
+@import 'search-results';
+@import 'upload';
+@import 'geoblacklight-icons';
+
+// ***** Global Styles ***** //
+
+@import 'fonts';
+@import 'resets';
+@import 'ui-library';
+
+body {
+	max-width: $screen-max - ($spacing-lg * 2);
+	margin: 0 auto;
+	padding: 10px;
+	font-family: 'KievitWeb';
+
+	/* Blacklight/geoblacklight resets */
+	font-size: initial;
+
+	@include bp(screen1) {
+		padding: 10px 20px;
+	}
+
+	@include bp(screen2) {
+		padding: 10px 30px;
+	}
+
+}

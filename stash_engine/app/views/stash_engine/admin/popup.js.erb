@@ -1,0 +1,25 @@
+// replace dialog div with contents of dialog text from partial
+$('#change_user_dialog').html("<%= escape_javascript(
+          render partial: 'stash_engine/admin/admin_level_form', locals: { user: @user }) %>");
+
+
+// now open a jquery ui modal dialog
+$(function() {
+
+  $("#change_user_dialog").dialog({
+    autoOpen: true,
+    height: 'auto',
+    width: 'auto',
+    modal: true,
+  });
+
+  // make the cancel button in the dialog hide the dialog
+  $( "#cancel_dialog" ).click(function(e) {
+    e.preventDefault();
+    $('#change_user_dialog').dialog('close');
+  });
+
+  /* $("#button").on("click", function() {
+    $("change_user_dialog").dialog("open");
+  }); */
+});

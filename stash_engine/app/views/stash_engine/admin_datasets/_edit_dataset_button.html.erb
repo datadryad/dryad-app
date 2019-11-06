@@ -1,0 +1,4 @@
+<%= form_tag(metadata_entry_pages_new_version_path, method: :post) do -%>
+  <button class="c-admin-edit-icon" title="Edit Dataset"><i class="fa fa-pencil" aria-hidden="true"></i></button>
+  <%= hidden_field_tag :resource_id, resource_id %>
+<% end %>

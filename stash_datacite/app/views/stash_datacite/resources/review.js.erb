@@ -1,0 +1,5 @@
+var resource_id = '<%= params[:id] %>';
+console.log('resource_id = ' + resource_id);
+$('#review').html("<%= escape_javascript(render(partial: 'review')) %>");
+console.log('just before loading the review map');
+loadReviewMap(resource_id);

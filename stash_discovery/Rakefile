@@ -1,0 +1,72 @@
+# ------------------------------------------------------------
+# RSpec
+
+require 'rspec/core'
+require 'rspec/core/rake_task'
+
+namespace :spec do
+  desc 'Run unit and database tests as single suite (for coverage)'
+  task :unified do
+    puts "TODO: unit & db specs for #{File.basename(__dir__)}"
+  end
+
+  desc 'Run Selenium feature tests'
+  task :feature do
+    puts "TODO: feature specs for #{File.basename(__dir__)}"
+  end
+end
+
+# ------------------------------------------------------------
+# Coverage
+
+desc 'Run all unit tests with coverage'
+task :coverage do
+  ENV['COVERAGE'] = 'true'
+  Rake::Task['spec:unified'].execute
+end
+
+# ------------------------------------------------------------
+# RuboCop
+
+require 'rubocop/rake_task'
+RuboCop::RakeTask.new
+
+# ------------------------------------------------------------
+# Defaults
+
+desc 'Run unit tests, check test coverage, check code style, run feature tests'
+task default: %i[coverage rubocop spec:feature]
+
+# begin
+#   require 'bundler/setup'
+# rescue LoadError
+#   puts 'You must `gem install bundler` and `bundle install` to run rake tasks'
+# end
+#
+# require 'rdoc/task'
+#
+# RDoc::Task.new(:rdoc) do |rdoc|
+#   rdoc.rdoc_dir = 'rdoc'
+#   rdoc.title    = 'StashDiscovery'
+#   rdoc.options << '--line-numbers'
+#   rdoc.rdoc_files.include('README.rdoc')
+#   rdoc.rdoc_files.include('lib/**/*.rb')
+# end
+#
+# APP_RAKEFILE = File.expand_path('test/dummy/Rakefile', __dir__)
+# load 'rails/tasks/engine.rake'
+#
+# load 'rails/tasks/statistics.rake'
+#
+# Bundler::GemHelper.install_tasks
+#
+# require 'rake/testtask'
+#
+# Rake::TestTask.new(:test) do |t|
+#   t.libs << 'lib'
+#   t.libs << 'test'
+#   t.pattern = 'test/**/*_test.rb'
+#   t.verbose = false
+# end
+#
+# task default: :test

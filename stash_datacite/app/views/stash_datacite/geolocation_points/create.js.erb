@@ -1,0 +1,38 @@
+$('div.geolocation_points').replaceWith('<%= j render partial: "stash_datacite/geolocation_points/index", locals: { geolocation_points: @geolocation_points } %>')
+// Add id to a marker
+customMarker = L.Marker.extend({
+   options: {
+      id: 'Custom data!'
+   }
+});
+
+var newMarker = new customMarker(new L.LatLng(<%= @geolocation_point.latitude %>, <%= @geolocation_point.longitude %>),
+     { title: 'Marker', draggable: true, id: <%= @geolocation_point.id %> });
+newMarker.addTo(map).bindPopup(<%= @geolocation_point.latitude %> +","+ <%= @geolocation_point.longitude %> + " " +"<button class='delete-button'>Delete</button>");
+
+newMarker.on("popupopen", function(event) {
+  onPopupOpen(event.target);
+});
+
+newMarker.on('dragend', function(event){
+  var chagedPos = event.target.getLatLng();
+  this.bindPopup(chagedPos.toString() + " " +"<button class='delete-button'>Delete</button>");
+});
+
+function onPopupOpen(marker) {
+  $( ".delete-button" ).click(function() {
+    map.removeLayer(marker);
+    $.ajax({
+        type: "DELETE",
+        dataType: "script",
+        url: "/stash_datacite/geolocation_points/delete_coordinates",
+        data: {'id' : marker.options.id, 'resource_id' : $.urlParam('resource_id') },
+        success: function() {
+        },
+        error: function() {
+        }
+      });
+  });
+}
+$('#geo_lat_point').val('');
+$('#geo_lng_point').val('');

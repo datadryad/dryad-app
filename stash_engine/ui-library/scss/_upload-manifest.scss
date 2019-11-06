@@ -1,0 +1,102 @@
+// ##### Upload File Component ##### //
+
+.c-manifest {
+	margin: 0 0 20px;
+}
+
+%c-manifest__item {
+	@extend %pull-borders;
+	display: flex;
+	flex-flow: row nowrap;
+	align-items: center;
+	justify-content: space-between;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	border-top: 1px solid $design-light-gray-color;
+	border-bottom: 1px solid $design-light-gray-color;
+
+	&:not(:first-child) {
+		border-top: none;
+	}
+
+}
+
+.c-manifest__item {
+	@extend %c-upload__item;
+}
+
+.c-manifest__url {
+	margin: 0 10px 0 0;
+    overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.c-manifest__error {
+	margin: 0 0 0 0.25em;
+}
+
+.c-manifest__action {
+	flex: 0 0 auto;
+
+  /* getting progress color to set is a PITA:
+     http://thenewcode.com/866/Using-The-HTML5-progress-Element
+     http://html5doctor.com/the-progress-element/
+  */
+
+}
+
+.c-manifest__button {
+	padding: 0 10px;
+	border: none;
+	background-color: transparent;
+	color: $design-dark-blue-color;
+	font-weight: bold;
+}
+
+.c-lined-table {
+  width: 100%;
+  margin: 1em 0;
+  border-collapse: collapse;
+  border: 1px solid $design-dark-gray-color;
+}
+
+.c-lined-table__head>th {
+  padding: 8px;
+  border-collapse: collapse;
+  border: 1px solid $design-dark-gray-color;
+  font-weight: bold;
+  text-align: left;
+}
+
+.c-lined-table__row>td {
+  padding: 8px;
+  border-collapse: collapse;
+  border: 1px solid $design-dark-gray-color;
+  font-weight: normal;
+}
+
+.c-manifest-table__td-size,
+.c-manifest-table__td-version {
+  text-align: right;
+}
+
+.c-manifest-table__filename-col {
+  width: 23%;
+}
+
+.c-manifest-table__url-col {
+  width: 45%;
+}
+
+.c-manifest-table__size-col {
+  width: 10%;
+}
+
+.c-manifest-table__version-col {
+  width: 5%;
+}
+
+.c-manifest-table__actions-col {
+  width: 17%;
+}

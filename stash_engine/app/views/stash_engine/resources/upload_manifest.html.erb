@@ -1,0 +1,35 @@
+<% @page_title = 'Upload Your Files - Publish and Preserve your Data' %>
+<%= render partial: 'stash_engine/shared/dataset_non_user_editor', locals: {resource: @resource} %>
+<%= render partial: 'stash_engine/shared/dataset_steps_nav' %>
+
+<h1 class="o-heading__level1">Upload Your Files <span class="t-upload__heading-optional">(optional)</span></h1>
+
+<div id="choose_method">
+  <%= render partial: 'stash_engine/file_uploads/choose_upload_method', locals: { resource: @resource, upload_method: :manifest} %>
+</div>
+
+<!-- manifest workflow -->
+<div class="manifest_upload" class="limits_and_part_2">
+  <%= render partial: 'stash_engine/file_uploads/manifest_upload',
+       locals: { resource: @resource } %>
+</div>
+
+<div class="o-dataset-nav">
+  <%= link_to 'Back to Describe Dataset', metadata_entry_pages_find_or_create_path(resource_id: params[:id]), class: 'o-button__icon-left', role: 'button', id: 'describe_back' %>
+  <%= link_to 'Proceed to Review', review_resource_path(params[:id]), class: 'o-button__icon-right', role: 'button', id: 'proceed_review' %>
+</div>
+
+
+<script type="text/javascript" charset="utf-8">
+
+  <%= render partial: 'stash_engine/file_uploads/rails_to_js_context.js', locals: { resource: @resource} %>
+  addUploadTypeChangeEvent();
+
+  $(function () {
+    // set up initial page loaded state
+    setUploadMethodLockout('<%= escape_javascript(@resource.upload_type.to_s) %>'); // set lockout so you can't change view if you have files already
+    $('#post_submit_spinner').hide(); // hide the submit spinner for manifest uploads
+    console.log('should be adding confirm to validate button');
+    confirmToValidate(); // add event to require checking acceptance before validating
+  });
+</script>

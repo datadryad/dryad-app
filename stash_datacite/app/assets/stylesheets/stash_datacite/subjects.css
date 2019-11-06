@@ -1,0 +1,27 @@
+.keywords_list {
+  border:0.5px solid black;
+  width:1080px;
+  height:60px;
+ }
+
+span.keywords {
+  background-color: #FF7F50;
+  border-radius: 15px;
+  padding: 4px 6px 4px 6px;
+  margin: 4px;
+}
+
+/*span.delete_keyword {
+  background: #FFFFFF;
+  margin: 2px;
+  border-radius: 40px;
+  padding-left: 5px;
+  padding-right: 5px;
+}*/
+
+/*#keyword {
+  border:none;
+  border-radius: 15px;
+  padding: 6px;
+  margin: 4px;
+}*/

@@ -1,0 +1,14 @@
+// this changes the parts of the form that need to be changed so it converts it to a patch action (POST)
+<% form_id = unique_form_id(@related_identifier) %>
+var form = $('#<%= params[:form_id] %>');
+form.attr('id', '<%= form_id %>');
+form.attr('action', '<%= stash_datacite.related_identifiers_update_path %>');
+form.find("#related_identifier_id").attr('value', '<%= @related_identifier.id %>');
+form.find("#form_id").attr('value', '<%= form_id %>');
+
+$('<input>').attr({
+  type: 'hidden',
+  name: '_method',
+  value: 'patch'
+}).appendTo(form);
+hideRemoveLinkRelatedIdentifiers();

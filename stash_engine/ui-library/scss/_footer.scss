@@ -1,0 +1,47 @@
+// ##### Footer Component ##### //
+
+.c-footer {
+  @extend %pull-borders;
+  margin-top: 2em;
+  margin-bottom: $spacing-md;
+  padding-top: 10px;
+  clear: both;
+  border-top: 1px solid $design-dark-gray-color;
+  font-size: 1em;
+
+  @include bp(screen3) {
+    font-size: 0.8em;
+  }
+
+}
+
+.c-footer__link-group {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.c-footer__policy-group,
+.c-footer__social-group {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  text-align: left;
+
+  a {
+    @extend %o-link__primary;
+
+    .fa {
+      vertical-align: middle;
+    }
+  }
+
+  a:not(:last-child) {
+    padding: 0 20px 0 0;
+  }
+
+}

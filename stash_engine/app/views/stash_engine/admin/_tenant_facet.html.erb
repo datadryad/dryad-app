@@ -1,0 +1,18 @@
+<%# takes tenants as local: facets %>
+<h3 class="<%= ( params[:institution] ? 'c-facet-title--open' : 'c-facet-title--closed' ) %> js-title-toggle"><a data-no-turbolink="true" href="#">Institution</a></h3>
+<div class="js-hideshow">
+  <ul class="c-facet-list">
+    <% facets.each do |f| %>
+      <li>
+        <% if params[:institution] == f.tenant_id %>
+          <span class="c-facet-li__selected"><%= f.short_name %></span>
+          <%= link_to params.merge(institution: nil, page: 1), class: 'c-facet-remove-link' do %>
+            <i class="fa fa-times c-facet-remove" title="Remove filter"></i>
+          <% end %>
+        <% else %>
+         <%= link_to f.short_name, params.merge(institution: f.tenant_id, page: 1) %>
+        <% end %>
+      </li>
+    <% end %>
+  </ul>
+</div>

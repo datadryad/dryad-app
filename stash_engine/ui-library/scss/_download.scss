@@ -1,0 +1,24 @@
+// ##### Download Object ##### //
+
+.o-download {
+	padding: 5px;
+	background-color: $design-lighter-blue-color;
+}
+
+%o-download__button {
+	min-height: 28px;
+	padding: 0 0 0 50px;
+	border: none;
+	background: left 10px center no-repeat;
+	text-align: left;
+}
+
+.o-download__files {
+	@extend %o-download__button;
+	background-image: inline('../images/icon_download.svg');
+}
+
+.o-download__docs {
+	@extend %o-download__button;
+	background-image: inline('../images/icon_pdf.svg');
+}

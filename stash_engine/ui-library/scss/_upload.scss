@@ -1,0 +1,43 @@
+// ##### Upload Files Theme ##### //
+
+.t-upload__heading-optional {
+	font-size: 0.5em;
+}
+
+%t-upload__choose-heading {
+	font-size: 1.2em;
+
+}
+
+.t-upload__container {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-top: 1em;
+}
+
+.t-upload__choose-heading {
+	@extend %t-upload__choose-heading;
+	color: $design-light-gray-color;
+}
+
+.t-upload__choose-heading--active {
+	@extend %t-upload__choose-heading;
+	color: $design-dark-blue-color;
+}
+
+.t-upload__method-section {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.t-uploads__method-choice {
+  margin: 0 2em 0 0;
+}
+
+.t-uploads__method-input {
+  margin: 0 1ex 0 0;
+}

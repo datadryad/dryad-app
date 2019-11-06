@@ -1,0 +1,154 @@
+// ##### Header Component ##### //
+
+.c-header {
+  @extend %pull-borders;
+  margin-bottom: $spacing-md;
+
+  @include bp(screen3) {
+    display: flex;
+    position: relative;
+    z-index: 1; /* positioning is so that dd-menu goes in a higher order and context than some other parts of page */
+    justify-content: space-between;
+    padding-bottom: 10px;
+    border-bottom: 1px solid $design-dark-gray-color;
+  }
+
+}
+
+.c-header__logos {
+  display: flex;
+  flex: 1 0 auto; // IE 11 fix
+
+  @include bp(screen3) {
+    margin: 5px 0; // The space between the top & bottom of logo separator line. Sets height of header, in addition to the .c-header__dash-logo-svg height properties below.
+  }
+
+}
+
+.c-header__menu-button {
+  margin: 0 25px 0 0;
+
+  @include bp(screen3) {
+    display: none;
+  }
+
+}
+
+.c-header__dash-logo-link {
+  display: flex;
+}
+
+// The SVG height properties below also set the header height, in addition to the c-header__logos margin property above.
+
+.c-header__dash-logo-svg {
+  /* Blacklight/geoblacklight resets */
+  box-sizing: content-box;
+  height: 30px;
+  padding: 5px 0;
+
+  @include bp(screen3) {
+    height: 40px;
+  }
+
+  &:nth-child(2) {
+    margin-left: 15px;
+    padding-left: 15px;
+    border-left: 2px solid $design-dark-gray-color;
+  }
+
+}
+
+%c-header__nav {
+  display: none;
+  flex-flow: column nowrap;
+  margin: 5px 0 0;
+
+  @include bp(screen3) {
+    display: flex;
+    justify-content: space-between;
+    margin: 0;
+  }
+
+}
+
+.c-header__nav {
+  @extend %c-header__nav;
+}
+
+.c-header__nav--is-open {
+  @extend %c-header__nav;
+  display: flex;
+}
+
+.c-header__global-search {
+  margin: 0 0 2px;
+  padding: 6px;
+  background-color: $design-light-blue-color;
+
+  @include bp(screen3) {
+    align-self: flex-end;
+    width: $global-search-width;
+    margin: 0;
+    padding: 0;
+    background-color: $design-white-color;
+  }
+
+}
+
+.c-header__nav-group {
+  display: flex;
+  flex-flow: column nowrap;
+
+  @include bp(screen3) {
+    z-index: 1;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+  }
+
+}
+
+%c-header__nav-item {
+  margin: 0 0 2px;
+  padding: 10px;
+  background-color: $design-light-blue-color;
+  color: $design-white-color;
+  text-decoration: none;
+
+  @include bp(screen3) {
+    display: flex;
+    flex: 1 0 auto;
+    margin: 0;
+    padding: 0 15px;
+    background-color: $design-white-color;
+    color: $design-black-color;
+
+    &:hover,
+    &:focus {
+      color: $design-light-blue-color;
+    }
+
+    &:not(:last-child) {
+      border-right: 1px solid $design-orange-color;
+    }
+
+  }
+}
+
+.c-header__nav-item {
+  @extend %c-header__nav-item;
+}
+
+.c-header__nav-item:last-child {
+  @extend %c-header__nav-item;
+  padding-right: 0;
+}
+
+.c-header__nav-item--active {
+  @extend %c-header__nav-item;
+  color: $design-black-color;
+
+  @include bp(screen3) {
+    color: $design-dark-blue-color;
+  }
+
+}

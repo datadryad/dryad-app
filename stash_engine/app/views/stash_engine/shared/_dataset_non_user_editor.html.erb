@@ -1,0 +1,13 @@
+<% # takes resource as local %>
+<% unless current_user.id == resource.user_id %>
+  <div class="c-admin-editing-banner">
+    <div class="o-div__placeholder"></div>
+    <div class="o-div__editing_msg">
+      You are editing <%= resource.user.name %>'s dataset.
+    </div>
+    <div>
+      <%= button_to 'Cancel and Discard Changes', stash_url_helpers.resource_path(resource), method: :delete, data: { confirm: 'Are you sure?' },
+          form_class: 'o-button__inline-form', class: 'o-button__cancel-edit' %>
+    </div>
+  </div>
+<% end %>

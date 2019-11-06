@@ -1,0 +1,10 @@
+// ##### Section Object ##### //
+
+.o-section {
+	@extend %pull-borders;
+	margin-bottom: $spacing-md;
+	padding-top: $spacing-md;
+	clear: right; // for .t-review__edit-button-top float: right
+	border-top: 1px solid $design-dark-gray-color;
+	border-bottom: 1px solid $design-dark-gray-color;
+}

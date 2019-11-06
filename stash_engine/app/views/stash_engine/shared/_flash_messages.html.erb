@@ -1,0 +1,42 @@
+<%
+flash.each do |type, message|
+  message = [ message ] if message.class == String
+  message.each do |m| %>
+
+    <% if type == "alert" %>
+      <div class="js-alert c-alert--error" role="alert">
+        <div class="c-alert__text">
+          <%= m %>
+        </div>
+        <button aria-label="close" class="js-alert__close o-button__close c-alert__close flash_button"></button>
+      </div>
+    <% elsif type == "notice" %>
+      <div class="js-alert c-alert--success" role="alert">
+        <div class="c-alert__text">
+          <%= m %>
+        </div>
+        <button aria-label="close" class="js-alert__close o-button__close c-alert__close flash_button"></button>
+      </div>
+    <% elsif type == "info" %>
+      <div class="js-alert c-alert--informational" role="alert">
+        <div class="c-alert__text">
+          <%= m %>
+        </div>
+        <button aria-label="close" class="js-alert__close o-button__close c-alert__close flash_button"></button>
+      </div>
+    <% end %>
+
+  <% end %>
+<% end %>
+
+<% # once displayed, get rid of them, may be set by previous action or this one in some circumstances
+  # %w[alert notice info].each {|i| flash.delete(i)}
+%>
+
+<script type="text/javascript">
+$(document).ready(function(e) {
+    $('.flash_button').click(function() {
+      $( this ).parent().remove();
+    });
+});
+</script>

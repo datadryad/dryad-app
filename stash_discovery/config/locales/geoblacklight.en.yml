@@ -1,0 +1,31 @@
+en:
+  geoblacklight:
+    download:
+      download: 'Download'
+      success: 'Your file %{title} is ready for download'
+      hgl_success: 'You should receive an email when your download is ready'
+      error: 'Sorry, the requested file could not be downloaded'
+      error_with_url: 'Sorry, the requested file could not be downloaded, try downloading it directly from: %{link}'
+    home:
+      headline: 'Explore and discover...'
+      search_heading: 'Find the data you need'
+      category_heading: 'Find by...'
+      map_heading: 'Find by location'
+    tools:
+      login_to_view: 'Login to view and download'
+    formats:
+      arcgrid: 'ArcGRID'
+      geojson: 'GeoJSON'
+      geotiff: 'GeoTIFF'
+      kmz: 'KMZ'
+      shapefile: 'Shapefile'
+    references:
+      wms: 'Web Mapping Service (WMS)'
+      wfs: 'Web Feature Service (WFS)'
+      iso19139: 'ISO 19139'
+      mods: 'MODS'
+      fgdc: 'FGDC'
+      feature_layer: 'ArcGIS Feature Layer'
+      tiled_map_layer: 'ArcGIS Tiled Map Layer'
+      dynamic_map_layer: 'ArcGIS Dynamic Map Layer'
+      image_map_layer: 'ArcGIS Image Map Layer'

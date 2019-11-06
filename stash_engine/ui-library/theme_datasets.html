@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+<head>
+	<meta charset="UTF-8">
+	<title>My Datasets Theme</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+	<!-- build:css css/ui.css -->
+	<link rel="stylesheet" href="css/main.css">
+	<!-- endbuild -->
+	<style>
+		/* styles for this page only */
+	</style>
+	<script
+		src="https://code.jquery.com/jquery-2.2.3.min.js"
+		integrity="sha256-a23g1Nt4dtEYOj7bR+vTu7+T8VP13humZFBJNIYoEJo="
+		crossorigin="anonymous"></script>
+</head>
+<body>
+
+  <div class="ui-library-header">
+    <h1><a href="index.html">Dash UI Library</a></h1>
+    <h2>My Datasets Theme</h2>
+  </div>
+
+	<!-- Begin Header Component -->
+	<!--#include file="includes/header.html" -->
+	<!-- End Header Component -->
+
+	<!-- Begin Alert Component -->
+	<div class="js-alert c-alert--success" role="alert">
+		<div class="c-alert__text">[Title] submitted with doi:XXXXXXXXXX. There may be a delay for processing before the item is available.</div>
+		<button aria-label="close" class="js-alert__close o-button__close c-alert__close"></button>
+	</div>
+	<!-- End Alert Component -->
+
+	<!-- Begin Datasets Heading Component -->
+	<!--#include file="includes/datasets-heading.html" -->
+	<!-- End Datasets Heading Component -->
+
+	<!-- Begin Table Heading Component -->
+	<div class="c-table-heading">
+		<div class="c-table-heading__text">
+			In Progress
+		</div>
+		<div class="c-table-heading__button">
+			<button class="o-button__plain-text5 js-table-heading__button-show">Show Details</button>
+			<button class="o-button__plain-text5 js-table-heading__button-hide">Hide Details</button>
+		</div>
+	</div>
+	<!-- End Table Heading Component -->
+
+	<div> <!-- this <div> parent is present in Rails, so it's included here to match jQuery traversal -->
+		<!-- Begin Progress Table Component -->
+		<!--#include file="includes/table-progress.html" -->
+		<!-- End Progress Table Component -->
+	</div>
+
+	<!-- Begin Pagination Component -->
+	<!--#include file="includes/pagination.html" -->
+	<!-- End Pagination Component -->
+
+	<!-- Begin Table Heading Component -->
+	<div class="c-table-heading">
+		<div class="c-table-heading__text">
+			Submitted
+		</div>
+		<div class="c-table-heading__button">
+			<button class="o-button__plain-text5 js-table-heading__button-show">Show Details</button>
+			<button class="o-button__plain-text5 js-table-heading__button-hide">Hide Details</button>
+		</div>
+	</div>
+	<!-- End Table Heading Component -->
+
+	<div> <!-- this <div> parent is present in Rails, so it's included here to match jQuery traversal -->
+		<!-- Begin Submitted Table Component -->
+		<!--#include file="includes/table-submitted.html" -->
+		<!-- End Submitted Table Component -->
+	</div>
+
+	<!-- Begin Pagination Component -->
+	<!--#include file="includes/pagination.html" -->
+	<!-- End Pagination Component -->
+
+	<!-- Begin Table Heading Component -->
+	<div class="c-table-heading">
+		<div class="c-table-heading__text">
+			Latest Activity
+		</div>
+	</div>
+	<!-- End Table Heading Component -->
+
+	<!-- Begin Submitted Table Component -->
+	<!--#include file="includes/table-latest.html" -->
+	<!-- End Submitted Table Component -->
+
+	<!-- Begin Pagination Component -->
+	<!--#include file="includes/pagination.html" -->
+	<!-- End Pagination Component -->
+
+	<!--#include file="includes/footer.html" -->
+
+	<!-- build:js js/ui.js -->
+  <script src="js/modernizr-custombuild.js"></script>
+  <script src="js/details-polyfill.js"></script>
+  <script src="js/main.js"></script>
+  <!-- endbuild -->
+	
+</body>
+</html>

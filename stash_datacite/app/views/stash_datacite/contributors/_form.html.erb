@@ -1,0 +1,19 @@
+<%# the local variable 'contributor' should be passed in to this partial when there are multiple per page %>
+<% form_id = unique_form_id(contributor) %>
+<%= form_for(contributor, url: path, remote: true, authenticity_token: true, html: { id: form_id, class: 'c-input__inline' }) do |f| %>
+<% my_suffix = field_suffix(contributor) %>
+<%#= render "datacite/shared/error_messages", target: @contributor %>
+	<div class="c-input">
+		<%= f.label "name_#{my_suffix}", "Granting Organization", class: 'c-input__label' %>
+		<%= f.text_field :contributor_name, id: "contributor_name_#{my_suffix}", class: "js-funders c-input__text" %>
+	</div>
+	<div class="c-input">
+		<%= f.label "award_number_#{my_suffix}", "Award Number", class: 'c-input__label' %>
+		<%= f.text_field :award_number, id: "contributor_award_number_#{my_suffix}", class: "js-award_number c-input__text" %>
+	</div>
+	<%= link_to 'remove', stash_datacite.contributors_delete_path(contributor.id || 'new'), method: :delete, remote: true, data: { confirm: 'Are you sure?' }, class: 'remove_record t-describe__remove-button o-button__remove' %>
+	<%= f.hidden_field :contributor_type, value: :funder %>
+	<%= f.hidden_field :resource_id %>
+	<%= f.hidden_field :id %>
+	<%= hidden_field_tag(:form_id, form_id) %>
+<% end %>

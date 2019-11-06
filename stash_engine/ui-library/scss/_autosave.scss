@@ -1,0 +1,17 @@
+// ##### Autosave Component ##### //
+
+.c-autosave-header {
+	display: flex;
+	align-items: baseline;
+	justify-content: space-between;
+}
+
+.c-autosave-footer {
+	display: flex;
+	justify-content: flex-end;
+	margin: 0 0 $spacing-md;
+}
+
+.c-autosave__text {
+	margin: 0 0 0 1em;
+}

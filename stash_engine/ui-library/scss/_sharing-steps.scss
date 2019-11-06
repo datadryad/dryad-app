@@ -1,0 +1,43 @@
+.c-sharing-steps__section {
+  width: 100%;
+  margin: 3em 0;
+  padding: 30px 0;
+  background-color: $design-dark-blue-color;
+  color: $design-offwhite-color;
+  line-height: 1.7;
+}
+
+.o-heading__level2-sharing-steps {
+  @extend %o-heading__level2;
+  color: $design-white-color;
+  font-size: 2em;
+  text-align: center;
+}
+
+.c-sharing-steps__ol {
+  margin-top: 30px;
+  font-size: 1.3em;
+  font-weight: normal;
+}
+
+.c-sharing-steps__li {
+  margin: 30px 20px;
+  padding-left: 1em;
+
+  a {
+    color: $design-offwhite-color;
+    text-decoration: none;
+  }
+
+  a:hover {
+    text-decoration: underline;
+  }
+}
+
+.c-sharing-steps__strong {
+  display: inline-block;
+  padding: 0 0.27em 0 0;
+  color: $design-white-color;
+  font-size: 1.15em;
+  font-weight: bold;
+}

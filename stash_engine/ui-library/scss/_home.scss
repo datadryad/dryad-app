@@ -1,0 +1,49 @@
+// ##### Home Page Theme ##### //
+
+.t-home__header {
+    position: relative;
+    z-index: 10;
+	margin-bottom: 10px;
+	border-bottom: none;
+
+	@include bp(screen3) {
+		margin-bottom: 0;
+	}
+
+}
+
+.t-home__banner {
+	@extend %pull-full-bleed;
+	margin-bottom: 10px;
+}
+
+.t-home__quote-search-group {
+	@extend %pull-full-bleed;
+	margin-bottom: $spacing-md;
+	padding: 0;
+
+	@include bp(screen1) {
+		display: flex;
+	}
+
+}
+
+.t-home__quote {
+	display: none;
+
+	@include bp(screen2) {
+		display: flex;
+		flex: 1 0 0%; // 0% instead of 0 fixes ie bug
+		margin: 0 5px 0 0;
+	}
+
+}
+
+.t-home__search {
+	flex: 1 0 0%; // 0% instead of 0 fixes ie bug
+
+	@include bp(screen2) {
+		margin: 0 0 0 5px;
+	}
+
+}

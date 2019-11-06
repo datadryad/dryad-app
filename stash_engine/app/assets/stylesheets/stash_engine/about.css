@@ -1,0 +1,76 @@
+/*
+ * This is a manifest file that'll be compiled into application.css, which will include all the files
+ * listed below.
+ *
+ * Any CSS and SCSS file within this directory, lib/assets/stylesheets, vendor/assets/stylesheets,
+ * or any plugin's vendor/assets/stylesheets directory can be referenced here using a relative path.
+ *
+ * You're free to add application-wide styles to this file and they'll appear at the bottom of the
+ * compiled file so the styles you add here take precedence over styles defined in any styles
+ * defined in the other CSS/SCSS files in this directory. It is generally better to create a new
+ * file per style scope.
+ *
+ *= require_tree .
+ *= require_self
+ */
+
+.pages_about ul {
+  list-style: circle outside;
+}
+.pages_about li {
+  padding: 10px;
+}
+
+.pages_about h1 {
+  color: #e65722;
+}
+.pages_about h3 {
+  font-size: 1.19em;
+  color: #e65722;
+}
+.pages_about h2 {
+  color: #005581;
+}
+.pages_about h4 {
+  color: #005581;
+}
+
+.pages_about table {
+  padding: 10px;
+}
+.pages_about table tr {
+  border-top: 0.5px solid #cccccc;
+  background-color: white;
+  margin: 10px;
+  padding: 10px;
+}
+.pages_about table tr:nth-child(2n) {
+  background-color: #f8f8f8;
+}
+.pages_about table tr th {
+  font-weight: bold;
+  border: 0.5px solid #cccccc;
+  text-align: left;
+  margin: 10px;
+  padding: 10px 18px;
+  line-height: 1.8;
+}
+.pages_about table tr td {
+  border: 0.5px solid #cccccc;
+  text-align: left;
+  margin: 10px;
+  padding: 10px 18px;
+  line-height: 1.8;
+}
+.pages_about table tr th :first-child {
+  margin-top: 20;
+}
+.pages_about table tr td :first-child {
+  margin-top: 20;
+}
+.pages_about table tr th :last-child {
+  margin-bottom: 20;
+}
+.pages_about table tr td :last-child {
+  margin-bottom: 20;
+}

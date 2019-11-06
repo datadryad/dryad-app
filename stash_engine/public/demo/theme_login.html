@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+<head>
+  <meta charset="UTF-8">
+  <title>Home Page Theme</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <link rel="stylesheet" href="css/ui.css">
+  <style>
+    /* styles for this page only */
+
+  </style>
+  <script
+        src="https://code.jquery.com/jquery-2.2.3.min.js"
+        integrity="sha256-a23g1Nt4dtEYOj7bR+vTu7+T8VP13humZFBJNIYoEJo="
+        crossorigin="anonymous"></script>
+</head>
+<body>
+
+<div class="ui-library-header">
+  <h1><a href="index.html">Dash UI Library</a></h1>
+  <h2>Login Page Theme</h2>
+</div>
+
+<!-- Begin Header Component -->
+<header class="t-home__header c-header">
+  <div class="c-header__logos">
+    <button aria-label="mobile menu" class="o-button__menu c-header__menu-button js-header__menu-button"></button>
+    <a href="" class="c-header__dash-logo-link">
+      <img class="c-header__dash-logo-svg" src="images/logo_dryad.png" alt="University of California, Dash. Data sharing made easy.">
+    </a>
+  </div>
+  <nav class="c-header__nav js-header__nav">
+    <div class="o-global-search c-header__global-search">
+      <label class="o-global-search__label" for="search-field-input1">Search</label>
+      <input class="o-global-search__input" id="search-field-input1" type="search" name="[name]" placeholder="Search">
+      <button aria-label="Submit" class="o-global-search__submit-button"></button>
+    </div>
+    <div class="c-header__nav-group">
+      <a href="" class="c-header__nav-item">Home</a>
+      <a href="" class="c-header__nav-item--active">Browse Data</a>
+      <a href="" class="c-header__nav-item">Help</a>
+      <a href="" class="c-header__nav-item">My Datasets</a>
+      <!--##include file="includes/sites.html" -->
+    </div>
+  </nav>
+</header>
+<!-- End Header Component -->
+
+
+
+<div class="t-login__section">
+  <div class="t-login__box">
+    <h1>Login</h1>
+    <a href="" class="t-login__buttonlink"><img src="images/icon_orcid.svg" class="t-login__orcid-small" alt="ORCID logo"/> Login or create your ORCID iD</a>
+    <p>Dryad uses ORCiD as its primary login method.<br>Please use your ORCiD login credentials to login to Dryad.</p>
+  </div>
+  <div class="t-login__info">
+    <h2>Dryad's Commitment to You</h2>
+
+    <h3>High Quality</h3>
+    <p>All datasets are curated</p>
+
+    <h3>Low Cost or Community Supported</h3>
+    <p>Researcher-led and non-commercial</p>
+
+    <h3>Long Term</h3>
+    <p>Archiving, compliance to mandates, credit for your data</p>
+  </div>
+</div>
+
+
+
+
+<footer class="c-footer">
+	<div class="c-footer__link-group">
+		<div class="c-footer__nav-group">
+			<a href="" class="c-footer__nav-item">Explore Data</a>
+			<a href="" class="c-footer__nav-item">Help</a>
+			<a href="" class="c-footer__nav-item">My Datasets</a>
+			<div class="c-footer__logged-in-or-out">
+			
+<div class="o-sites">
+	<details class="o-showhide o-sites__details" role="group">
+		<summary class="o-showhide__summary o-sites__summary">More Dash Sites</summary>
+		<div class="o-sites__group">
+			<span class="o-sites__group-heading">Participating UC Campuses</span>
+			<a href="" class="o-sites__group-item">dash site 1</a>
+			<a href="" class="o-sites__group-item">dash site 2</a>
+			<a href="" class="o-sites__group-item">dash site 3</a>
+		</div>
+	</details>
+	<a href="" class="o-sites__login">Login</a>
+</div>
+
+			</div>
+		</div>
+		<div class="c-footer__policy-group">
+			<a href="">Terms of Use</a>
+			<a href="">Privacy Policy</a>
+			<a href="">Accessibility Policy</a>
+		</div>
+	</div>
+	<p>Dash is a collaborative project between X and the UC Curation Center of the <a href="http://www.cdlib.org" class="o-link__primary">California Digital Library</a></p>
+	<p>© The Regents of the University of California</p>
+</footer>
+
+
+<script src="js/ui.js"></script>
+
+</body>
+</html>

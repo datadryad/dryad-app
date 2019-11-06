@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+<head>
+	<meta charset="UTF-8">
+	<title>Metadata Entry Theme</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+	<link rel="stylesheet" href="css/ui.css">
+	<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+	<style>
+		/* styles for this page only */
+	</style>
+	<script
+    src="https://code.jquery.com/jquery-2.2.3.min.js"
+    integrity="sha256-a23g1Nt4dtEYOj7bR+vTu7+T8VP13humZFBJNIYoEJo="
+    crossorigin="anonymous"></script>
+  <script
+		src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js"
+		integrity="sha256-xNjb53/rY+WmG+4L6tTl9m6PpqknWZvRt0rO1SRnJzw="
+		crossorigin="anonymous"></script>
+</head>
+<body>
+
+  <div class="ui-library-header">
+    <h1><a href="index.html">Dash UI Library</a></h1>
+    <h2>Metadata Entry Theme</h2>
+  </div>
+
+	<!-- Begin Header Component -->
+	
+<header class="c-header">
+	<div class="c-header__logos">
+		<button aria-label="mobile menu" class="o-button__menu c-header__menu-button js-header__menu-button"></button>
+		<a href="" class="c-header__dash-logo-link">
+			<img class="c-header__dash-logo-svg" src="images/logo_ucop.svg" alt="UCOP logo">
+			<img class="c-header__dash-logo-svg" src="images/logo_dryad.png" alt="Dash logo">
+		</a>
+	</div>
+	<nav class="c-header__nav js-header__nav">
+		<div class="o-global-search c-header__global-search">
+			<label class="o-global-search__label" for="search-field-input1">Search</label>
+			<input class="o-global-search__input" id="search-field-input1" type="search" name="[name]" placeholder="Search">
+			<button aria-label="Submit" class="o-global-search__submit-button"></button>
+		</div>
+		<div class="c-header__nav-group">
+			<div class="c-header__nav-item js-nav-out"><a href="">Explore Data</a></div>
+			<div class="o-sites c-header__nav-item">
+  <details class="o-showhide o-sites__details" role="group">
+    <summary class="o-showhide__summary o-sites__summary">About</summary>
+    <div class="o-sites__group">
+      <a href="" class="o-sites__group-item">Our Mission</a>
+      <a href="" class="o-sites__group-item">Our Member Community</a>
+      <a href="" class="o-sites__group-item">Our Governence</a>
+      <a href="" class="o-sites__group-item">Our Staff</a>
+    </div>
+  </details>
+</div>
+			<div class="o-sites c-header__nav-item">
+  <details class="o-showhide o-sites__details" role="group">
+    <summary class="o-showhide__summary o-sites__summary">Help</summary>
+    <div class="o-sites__group">
+      <a href="" class="o-sites__group-item">Why Use Dryad?</a>
+      <a href="" class="o-sites__group-item">Submission Information</a>
+      <a href="" class="o-sites__group-item">Data Processing Charges</a>
+      <a href="" class="o-sites__group-item">Frequently Asked Questions</a>
+    </div>
+  </details>
+</div>
+		</div>
+	</nav>
+</header>
+
+	<!-- End Header Component -->
+
+  <div class="c-admin-editing-banner">
+  <div class="o-div__placeholder"></div>
+  <div class="o-div__editing_msg">
+    You are editing Karen Carpenter's dataset.
+  </div>
+  <div>
+    <button class="o-button__cancel-edit">Cancel and Discard Changes</button>
+  </div>
+</div>
+
+	<div class="c-progress">
+		<a role="button" href="" class="c-progress__tab1--active" href="">Describe Dataset</a>
+		<a role="button" href="" class="c-progress__tab2" href="">Upload files</a>
+		<a role="button" href="" class="c-progress__tab3" href="">Review and Submit</a>
+	</div>
+	<!-- Begin Autosave Component -->
+	<div class="c-autosave-header">
+		<h1 class="o-heading__level1">Describe Your Datasets</h1>
+		<div class="c-autosave__text js-autosave__text">Saving&hellip;</div>
+	</div>
+	<!-- End Autosave Component -->
+	<h3 class="o-heading__page-span">Basic Information</h3>
+	<div class="c-input">
+		<label class="c-input__label" for="t-describe__input1">Title</label>
+		<input class="c-input__text" id="t-describe__input1" type="text" name="" required>
+		<div class="c-input__error-message js-input__error-message">Error message.</div>
+	</div>
+	<fieldset class="c-fieldset">
+		<legend class="c-fieldset__legend">Author(s)</legend>
+		<div class="c-input__inline">
+			<div class="c-input">
+				<label class="c-input__label" for="t-describe__input2">First Name</label>
+				<input class="c-input__text" id="t-describe__input2" type="text" name="" required>
+				<div class="c-input__error-message js-input__error-message">Error message.</div>
+			</div>
+			<div class="c-input">
+				<label class="c-input__label" for="t-describe__input3">Last Name</label>
+				<input class="c-input__text" id="t-describe__input3" type="text" name="" required>
+				<div class="c-input__error-message js-input__error-message">Error message.</div>
+			</div>
+			<div class="c-input">
+				<label class="c-input__label" for="t-describe__input4">Institutional Affiliation</label>
+				<input class="c-input__text" id="t-describe__input4" type="text" name="">
+				<div class="c-input__error-message js-input__error-message">Error message.</div>
+			</div>
+			<a role="button" href="" class="t-describe__remove-button o-button__remove">remove</a>
+		</div>
+		<!-- Begin Orcid ID Component -->
+			
+			<div class="c-orcid">
+				<a class="c-orcid__icon" href="http://orcid.org" title="orcid website" aria-label="orcid website"></a>
+				<a class="c-orcid__id" href="http://orcid.org/0000-0002-1825-0097">http://orcid.org/0000-0002-1825-0097</a>
+			</div>
+
+		<!-- End Orcid ID Component -->
+		<a role="button" href="" class="t-describe__add-button o-button__add">add another author</a>
+		<div class="t-describe__add-orcid">
+			<a role="button" href="" class="t-describe__add-button o-button__connect-orcid">Connect your ORCID ID</a>
+			<a role="button" aria-label="help" href="" class="o-button__help" title="ORCID provides a persistent digital identifier that distinguishes you from other researchers. Learn more at orcid.org"></a>
+		</div>
+	</fieldset>
+	<div class="t-describe__select1 c-input">
+		<label class="c-input__label" for="t-describe__input5">Type of Data</label>
+		<select class="c-input__select" name="" id="t-describe__input5" required>
+			<option value="">Spreadsheet/Database</option>
+			<option value="">Image</option>
+			<option value="">Sound</option>
+			<option value="">Video</option>
+			<option value="">Text</option>
+		</select>
+	</div>
+	<div class="c-input">
+		<label class="c-input__label" for="t-describe__input6">Abstract</label>
+		<textarea name="" class="c-input__textarea" id="t-describe__input6" required></textarea>
+		<div class="c-input__error-message js-input__error-message">Error message.</div>
+	</div>
+	<p class="c-input__required-note">required fields</p>
+
+	<details class="c-fgroup" role="group">
+		<summary class="o-showhide__summary c-fgroup__summary">Data Description (optional)</summary>
+		<fieldset class="c-fieldset">
+			<legend class="c-fieldset__legend">Funding</legend>
+			<div class="c-input__inline">
+				<div class="c-input">
+					<label class="c-input__label" for="t-describe__input7">Granting Organization</label>
+					<select class="c-input__select" name="" id="t-describe__input7">
+						<option value="">Please Choose</option>
+						<option value="">One</option>
+						<option value="">Two</option>
+						<option value="">Three</option>
+					</select>
+				</div>
+				<div class="c-input">
+					<label class="c-input__label" for="t-describe__input8">Award Number</label>
+					<input class="c-input__text" id="t-describe__input8" type="text" name="">
+					<div class="c-input__error-message js-input__error-message">Error message.</div>
+				</div>
+				<a role="button" href="" class="t-describe__remove-button o-button__remove">remove</a>
+			</div>
+			<a role="button" href="" class="t-describe__add-funder-button o-button__add">add another funder</a>
+		</fieldset>
+		<!-- Begin Keywords Component -->
+				
+<div class="c-keywords">
+	<label class="c-keywords__label" for="c-keywords__input">Keywords</label>
+	<div id="js-keywords__container" class="c-keywords__container">
+		<span class="c-keywords__keyword">apples
+			<a href="" class="c-keywords__keyword-remove" role="button" aria-label="remove keyword"></a>
+		</span>
+		<span class="c-keywords__keyword">here is a long keyword to investigate wrapping at small screens
+			<a href="" class="c-keywords__keyword-remove" role="button" aria-label="remove keyword"></a>
+		</span>
+		<span class="c-keywords__keyword">strawberries
+			<a href="" class="c-keywords__keyword-remove" role="button" aria-label="remove keyword"></a>
+		</span>
+		<span class="c-keywords__keyword">grapes
+			<a href="" class="c-keywords__keyword-remove" role="button" aria-label="remove keyword"></a>
+		</span>
+		<input id="c-keywords__input" class="js-keywords__input c-keywords__input" type="text">
+	</div>
+</div>
+
+		<!-- End Keywords Component -->
+		<div class="c-input">
+			<label class="c-input__label" for="c-input__10">Methods <span class="c-input__hint">How was this dataset collected? How has it been processed?</span></label>
+			<textarea name="" class="c-input__textarea" id="c-input__10"></textarea>
+			<div class="c-input__error-message js-input__error-message">Error message.</div>
+		</div>
+		<div class="c-input">
+			<label class="c-input__label" for="c-input__11">Usage Notes <span class="c-input__hint">What else would someone need to know to use this dataset?</span></label>
+			<textarea name="" class="c-input__textarea" id="c-input__11"></textarea>
+			<div class="c-input__error-message js-input__error-message">Error message.</div>
+		</div>
+		<fieldset class="c-fieldset">
+			<legend class="c-fieldset__legend">Related work(s) <span class="c-input__hint">articles, other datasets: e.g., This dataset is cited by DOI 10.1000/182.</span></legend>
+			<div class="c-input__inline">
+				<div class="c-input">
+					<label class="c-input__label" for="t-describe__input12">Relationship</label>
+					<select class="c-input__select" name="" id="t-describe__input12">
+						<option value="">Select Relationship</option>
+						<option value="">One</option>
+						<option value="">Two</option>
+						<option value="">Three</option>
+					</select>
+				</div>
+				<div class="c-input">
+					<label class="c-input__label" for="t-describe__input13">ID Type</label>
+					<select class="c-input__select" name="" id="t-describe__input13">
+						<option value="">DOI</option>
+						<option value="">One</option>
+						<option value="">Two</option>
+						<option value="">Three</option>
+					</select>
+				</div>
+				<div class="c-input">
+					<label class="c-input__label" for="t-describe__input14">Identifier</label>
+					<input class="c-input__text" id="t-describe__input14" type="text" name="">
+					<div class="c-input__error-message js-input__error-message">Error message.</div>
+				</div>
+			</div>
+			<a role="button" href="" class="o-button__add">add another funder</a>
+		</fieldset>
+	</details>
+
+	<details class="c-fgroup" role="group">
+		<summary class="o-showhide__summary c-fgroup__summary">Location Information (optional)</summary>
+		<fieldset class="c-fieldset">
+			<legend class="c-fieldset__legend">Where was the data collected? <span class="c-input__hint">Does it focus on particular locations?</span></legend>
+			<span>To add a location: type a name or enter coordinates or draw on a map.</span>
+			<fieldset class="c-fieldset">
+				<legend class="c-fieldset__legend">Add location with lat/long coordinates</legend>
+				<!-- Begin Location Component -->
+				
+<div class="c-location">
+	<div class="c-location__button-group">
+		<button class="js-location__point-button c-location__point-button--active">Point</button>
+		<button class="js-location__box-button c-location__box-button">Bounding Box</button>
+	</div>
+	<div class="js-location__point-inputs c-location__point-inputs">
+		<label class="c-location__label" for="c-location__input1">Latitude</label>
+		<input name="name1" type="number" class="c-location__input" id="c-location__input1">,
+		<label class="c-location__label" for="c-location__input2">Longitude</label>
+		<input name="name2" type="number" class="c-location__input" id="c-location__input2">
+	</div>
+	<div class="js-location__box-inputs c-location__box-inputs">
+		<div class="c-location__coordinates" role="group" aria-labelledby="c-location__legend1">
+			<div class="c-location__legend" id="c-location__legend1"><abbr title="Southwest">SW</abbr></div>
+			<label class="c-location__label" for="c-location__input3">Latitude</label>
+			<input name="name1" type="number" class="c-location__input" id="c-location__input3">,
+			<label class="c-location__label" for="c-location__input4">Longitude</label>
+			<input name="name2" type="number" class="c-location__input" id="c-location__input4">
+		</div>
+		<div class="c-location__coordinates" role="group" aria-labelledby="c-location__legend2">
+			<div class="c-location__legend" id="c-location__legend2"><abbr title="Northeast">NE</abbr></div>
+			<label class="c-location__label" for="c-location__input5">Longitude</label>
+			<input name="name3" type="number" class="c-location__input" id="c-location__input5">,
+			<label class="c-location__label" for="c-location__input6">Longitude</label>
+			<input name="name4" type="number" class="c-location__input" id="c-location__input6">
+		</div>
+		<button class="c-location__add-button o-button__plain-text2">Add</button>
+	</div>
+</div>
+
+				<!-- End Location Component -->
+			</fieldset>
+		</fieldset>
+		<p class="t-describe__map-label" id="t-describe__map-label">Add a point or draw a rectangle on the map</p>
+
+		<!-- Begin Map Object -->
+		
+<!-- Example map using a Google map -->
+<iframe class="o-map" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d6304.759860707394!2d-122.2607413703927!3d37.804568969016145!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x808f87484f20d7f9%3A0xf205c3eb3932afae!2sLake+Merritt!5e0!3m2!1sen!2sus!4v1460155136795" height="450" style="border:0; pointer-events: none;" allowfullscreen></iframe>
+
+		<!-- End Map Object -->
+
+		<!-- Begin Locations Component -->
+		<div class="t-describe__locations c-locations" role="group" aria-labelledby="c-locations__label">
+			<div class="c-locations__label" id="c-locations__label">Locations Added</div>
+			<div class="c-locations__point">
+				<div class="c-locations__data">37.806749, 122.255495</div>
+				<a href="" class="o-button__remove" role="button">remove</a>
+			</div>
+			<div class="c-locations__place">
+				<div class="c-locations__data">Oakland: 37.8000, -122.2667</div>
+				<a href="" class="o-button__remove" role="button">remove</a>
+			</div>
+			<div class="c-locations__area">
+				<div class="c-locations__data"><abbr title="Southwest" class="c-locations__coordinate">SW</abbr> 37.799656, -122.264230</div>
+				<div class="c-locations__data"><abbr title="Northwest" class="c-locations__coordinate">NW</abbr> 37.809435, -122.249700</div>
+				<a href="" class="o-button__remove" role="button">remove</a>
+			</div>
+		</div>
+		<!-- End Locations Component -->
+	</details>
+	<!-- Begin Autosave Component -->
+	<div class="c-autosave-footer">
+		<div class="c-autosave__text js-autosave__text">Saving&hellip;</div>
+	</div>
+	<!-- End Autosave Component -->
+	<!-- Begin Dataset Navigation Object -->
+	<div class="o-dataset-nav">
+		<a href="" class="o-button__icon-left">Back to My Datasets</a>
+		<a href="" class="o-button__icon-right">Proceed to Upload</a>
+	</div>
+	<!-- End Dataset Navigation Object -->
+
+	
+<footer class="c-footer">
+	<div class="c-footer__link-group">
+		<div class="c-footer__nav-group">
+			<a href="" class="c-footer__nav-item">Explore Data</a>
+			<a href="" class="c-footer__nav-item">Help</a>
+			<a href="" class="c-footer__nav-item">My Datasets</a>
+			<div class="c-footer__logged-in-or-out">
+			
+<div class="o-sites">
+	<details class="o-showhide o-sites__details" role="group">
+		<summary class="o-showhide__summary o-sites__summary">More Dash Sites</summary>
+		<div class="o-sites__group">
+			<span class="o-sites__group-heading">Participating UC Campuses</span>
+			<a href="" class="o-sites__group-item">dash site 1</a>
+			<a href="" class="o-sites__group-item">dash site 2</a>
+			<a href="" class="o-sites__group-item">dash site 3</a>
+		</div>
+	</details>
+	<a href="" class="o-sites__login">Login</a>
+</div>
+
+			</div>
+		</div>
+		<div class="c-footer__policy-group">
+			<a href="">Terms of Use</a>
+			<a href="">Privacy Policy</a>
+			<a href="">Accessibility Policy</a>
+		</div>
+	</div>
+	<p>Dash is a collaborative project between X and the UC Curation Center of the <a href="http://www.cdlib.org" class="o-link__primary">California Digital Library</a></p>
+	<p>© The Regents of the University of California</p>
+</footer>
+
+
+	<script src="js/ui.js"></script>
+	
+</body>
+</html>

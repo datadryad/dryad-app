@@ -1,0 +1,10 @@
+inherit_from: ../.rubocop.yml
+
+# Disable various checks for sample code
+Style/ClassAndModuleChildren:
+  Exclude:
+    - 'example.rb'
+
+Style/MixinUsage:
+  Exclude:
+    - 'example.rb'

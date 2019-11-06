@@ -1,0 +1,14 @@
+<div class="t-login__section">
+  <div class="t-login__box">
+    <h1>Login</h1>
+
+    <%= link_to '/stash/auth/orcid?origin=login', class: 't-login__buttonlink', method: :post do %>
+      <%= image_tag('stash_engine/icon_orcid.svg', class: 't-login__orcid-small', alt: 'ORCID logo') %>
+      Login or create your ORCID iD
+    <% end %>
+
+    <p>Dryad uses ORCID as its primary login method.<br>Please use, or create, your ORCID login credentials to login to Dryad.</p>
+  </div>
+
+  <%= render partial: 'login_info' %>
+</div>

@@ -1,0 +1,469 @@
+{
+  "_links": {
+    "self": {
+      "href": "/api/v2/datasets?page=2"
+    },
+    "first": {
+      "href": "/api/v2/datasets"
+    },
+    "last": {
+      "href": "/api/v2/datasets?page=9"
+    },
+    "prev": {
+      "href": "/api/v2/datasets?page=1"
+    },
+    "next": {
+      "href": "/api/v2/datasets?page=3"
+    }
+  },
+  "count": 10,
+  "total": 80,
+  "_embedded": {
+    "stash:datasets": [
+      {
+        "_links": {
+          "self": {
+            "href": "/api/v2/datasets/doi%3A10.5072%2FFK2HM58Q3S"
+          },
+          "stash:versions": {
+            "href": "/api/v2/datasets/doi%3A10.5072%2FFK2HM58Q3S/versions"
+          },
+          "stash:version": {
+            "href": "/api/v2/versions/11"
+          },
+          "stash:download": {
+            "href": "/api/v2/datasets/doi%3A10.5072%2FFK2HM58Q3S/download"
+          },
+          "curies": [
+            {
+              "name": "stash",
+              "href": "https://github.com/CDL-Dryad/stash/blob/master/stash_api/link-relations.md#{rel}",
+              "templated": "true"
+            }
+          ]
+        },
+        "id": "doi:10.5072/FK2HM58Q3S",
+        "storage_size": 157841,
+        "title": "The Influence of Large-Scale Archetypes on Cryptoanalysis",
+        "authors": [
+          {
+            "firstName": "Helga",
+            "lastName": "Smuin",
+            "email": "scott.fisher@ucop.edu",
+            "affiliation": "UC Merced",
+            "orcid": null
+          }
+        ],
+        "abstract": "<p>Many futurists would agree that, had it not been for write-back caches, the understanding of public-private key pairs might never have occurred. In fact, few cyberinformaticians would disagree with the construction of hierarchical databases, which embodies the typical principles of robotics [13]. KeyEdgebone, our new application for homogeneous theory, is the solution to all of these grand challenges. This technique at first glance seems unexpected but is derived from known results.</p>",
+        "versionNumber": 1,
+        "versionStatus": "submitted"
+      },
+      {
+        "_links": {
+          "self": {
+            "href": "/api/v2/datasets/doi%3A10.5072%2FFK2474DX0J"
+          },
+          "stash:versions": {
+            "href": "/api/v2/datasets/doi%3A10.5072%2FFK2474DX0J/versions"
+          },
+          "stash:version": {
+            "href": "/api/v2/versions/28"
+          },
+          "stash:download": {
+            "href": "/api/v2/datasets/doi%3A10.5072%2FFK2474DX0J/download"
+          },
+          "curies": [
+            {
+              "name": "stash",
+              "href": "https://github.com/CDLUC3/stash/blob/development/stash_api/link-relations.md#{rel}",
+              "templated": "true"
+            }
+          ]
+        },
+        "id": "doi:10.5072/FK2474DX0J",
+        "storage_size": 1209660,
+        "title": "Analyzing the Lookaside Buffer and E-Commerce with HAIL",
+        "authors": [
+          {
+            "firstName": "Scott",
+            "lastName": "Fisher",
+            "email": "scott.fisher@ucop.edu",
+            "affiliation": "UC Berkeley",
+            "orcid": null
+          }
+        ],
+        "abstract": "<p>The robotics approach to massive multiplayer online role-playing games is defined not only by the simulation of SMPs, but also by the structured need for replication. In fact, few cryptographers would disagree with the improvement of operating systems. In this paper, we verify that write-back caches can be made electronic, psychoacoustic, and embedded.</p>",
+        "funders": [
+          {
+            "organization": "Albani Fonden",
+            "awardNumber": "FondAlb28"
+          }
+        ],
+        "keywords": [
+          "Aircraft",
+          "Crabs",
+          "Abnormal uterine bleeding",
+          "Noodles",
+          "Garlic",
+          "Babesia",
+          "Columbian supercontinent",
+          "Acromegaly",
+          "Epithelial sodium channels",
+          "Grackus",
+          "Snowdrift game",
+          "Picramic acid",
+          "Flour",
+          "Inflorescences",
+          "Ab initio quantum chemistry methods",
+          "Abaxial surface",
+          "Academic medicine",
+          "Aedes aegypti",
+          "Affective consciousness",
+          "Agar dilution method",
+          "Bahrain",
+          "Acid-fast stain",
+          "Leishmania major",
+          "AKT signaling cascade",
+          "Acute renal failure",
+          "Acanthamoeba",
+          "Acute pain management",
+          "Cura\u008dao",
+          "ACE inhibitor therapy",
+          "Amyloid plaques",
+          "Adenocarcinoma cells",
+          "Acid phosphatase",
+          "Acetates",
+          "Animal slaughter",
+          "Alphaviruses",
+          "Administrative law",
+          "Acetylene reduction assay",
+          "Azerbaijan",
+          "Acinetobacter",
+          "Gibberellins",
+          "Subcellular fractionation",
+          "Female subfertility",
+          "Czech Republic",
+          "Digestive enzymes"
+        ],
+        "methods": "<p>Made many subjects.</p>",
+        "usageNotes": "<p>tricks.</p>",
+        "locations": [
+          {
+            "place": "Frufällan, Sweden",
+            "point": {
+              "latitude": "57.78333",
+              "longitude": "12.96667"
+            }
+          },
+          {
+            "point": {
+              "latitude": "57.492214",
+              "longitude": "13.996582"
+            }
+          },
+          {
+            "box": {
+              "swLongitude": "13.161621",
+              "swLatitude": "56.848972",
+              "neLongitude": "15.358887",
+              "neLatitude": "57.539417"
+            }
+          }
+        ],
+        "relatedWorks": [
+          {
+            "relationship": "Cites",
+            "identifierType": "DOI",
+            "identifier": "foosball"
+          }
+        ],
+        "versionNumber": 5,
+        "versionStatus": "submitted"
+      },
+      {
+        "id": "doi:10.5072/FK22N55P2B",
+        "message": "identifier is missing required elements"
+      },
+      {
+        "_links": {
+          "self": {
+            "href": "/api/v2/datasets/doi%3A10.5072%2FFK28W3G720"
+          },
+          "stash:versions": {
+            "href": "/api/v2/datasets/doi%3A10.5072%2FFK28W3G720/versions"
+          },
+          "stash:version": {
+            "href": "/api/v2/versions/16"
+          },
+          "stash:download": {
+            "href": "/api/v2/datasets/doi%3A10.5072%2FFK28W3G720/download"
+          },
+          "curies": [
+            {
+              "name": "stash",
+              "href": "https://github.com/CDLUC3/stash/blob/development/stash_api/link-relations.md#{rel}",
+              "templated": "true"
+            }
+          ]
+        },
+        "id": "doi:10.5072/FK28W3G720",
+        "storage_size": 155899,
+        "title": "Quick Test of New Dataset for UC Davis BAE",
+        "authors": [
+          {
+            "firstName": "Scott",
+            "lastName": "Fisher",
+            "email": "scott.fisher@ucop.edu",
+            "affiliation": "UC Davis",
+            "orcid": null
+          }
+        ],
+        "abstract": "<p>testing a new dev tenant.</p>",
+        "locations": [
+          {
+            "place": "UC Davis Bookstore, University of California Davis, CA, USA",
+            "point": {
+              "latitude": "38.542788",
+              "longitude": "-121.749248"
+            }
+          }
+        ],
+        "versionNumber": 1,
+        "versionStatus": "submitted"
+      },
+      {
+        "_links": {
+          "self": {
+            "href": "/api/v2/datasets/doi%3A10.5072%2FFK2MK6CD6D"
+          },
+          "stash:versions": {
+            "href": "/api/v2/datasets/doi%3A10.5072%2FFK2MK6CD6D/versions"
+          },
+          "stash:version": {
+            "href": "/api/v2/versions/32"
+          },
+          "stash:download": {
+            "href": "/api/v2/datasets/doi%3A10.5072%2FFK2MK6CD6D/download"
+          },
+          "curies": [
+            {
+              "name": "stash",
+              "href": "https://github.com/CDLUC3/stash/blob/development/stash_api/link-relations.md#{rel}",
+              "templated": "true"
+            }
+          ]
+        },
+        "id": "doi:10.5072/FK2MK6CD6D",
+        "storage_size": 423587,
+        "title": "test1",
+        "authors": [
+          {
+            "firstName": "Scott",
+            "lastName": "Fisher",
+            "email": "scott.fisher@ucop.edu",
+            "affiliation": "UC Office of the President",
+            "orcid": null
+          }
+        ],
+        "abstract": "<p>test</p>",
+        "versionNumber": 2,
+        "versionStatus": "submitted"
+      },
+      {
+        "id": "doi:10.5072/FK2C82BM6C",
+        "message": "identifier is missing required elements"
+      },
+      {
+        "_links": {
+          "self": {
+            "href": "/api/v2/datasets/doi%3A10.5072%2FFK24T6N929"
+          },
+          "stash:versions": {
+            "href": "/api/v2/datasets/doi%3A10.5072%2FFK24T6N929/versions"
+          },
+          "stash:version": {
+            "href": "/api/v2/versions/68"
+          },
+          "stash:download": {
+            "href": "/api/v2/datasets/doi%3A10.5072%2FFK24T6N929/download"
+          },
+          "curies": [
+            {
+              "name": "stash",
+              "href": "https://github.com/CDLUC3/stash/blob/development/stash_api/link-relations.md#{rel}",
+              "templated": "true"
+            }
+          ]
+        },
+        "id": "doi:10.5072/FK24T6N929",
+        "storage_size": 192633,
+        "title": "My Chocolate Cat Thurber Jones",
+        "authors": [
+          {
+            "firstName": "Yves",
+            "lastName": "Thuries",
+            "email": "yves.thuries@mailinator.com",
+            "affiliation": "UC Office of the President",
+            "orcid": null
+          }
+        ],
+        "abstract": "<p>I like my chocolate cat.  His name is Thurber Jones.</p>",
+        "keywords": [
+          "Affinity chromatography"
+        ],
+        "usageNotes": "<p>Use this very carefully.</p>",
+        "locations": [
+          {
+            "place": "Chicago, IL, USA",
+            "point": {
+              "latitude": "41.87897",
+              "longitude": "-87.66063"
+            },
+            "box": {
+              "swLongitude": "-87.940114",
+              "swLatitude": "41.644543",
+              "neLongitude": "-87.524137",
+              "neLatitude": "42.023039"
+            }
+          }
+        ],
+        "versionNumber": 6,
+        "versionStatus": "submitted"
+      },
+      {
+        "_links": {
+          "self": {
+            "href": "/api/v2/datasets/doi%3A10.5072%2FFK2QJ7G49H"
+          },
+          "stash:versions": {
+            "href": "/api/v2/datasets/doi%3A10.5072%2FFK2QJ7G49H/versions"
+          },
+          "stash:version": {
+            "href": "/api/v2/versions/27"
+          },
+          "stash:download": {
+            "href": "/api/v2/datasets/doi%3A10.5072%2FFK2QJ7G49H/download"
+          },
+          "curies": [
+            {
+              "name": "stash",
+              "href": "https://github.com/CDLUC3/stash/blob/development/stash_api/link-relations.md#{rel}",
+              "templated": "true"
+            }
+          ]
+        },
+        "id": "doi:10.5072/FK2QJ7G49H",
+        "storage_size": 10882,
+        "title": "Data McDataface",
+        "authors": [
+          {
+            "firstName": "Testy",
+            "lastName": "McTestface",
+            "email": "test@example.edu",
+            "affiliation": "Test University",
+            "orcid": null
+          }
+        ],
+        "abstract": "<p>Test</p>",
+        "funders": [
+          {
+            "organization": "Ministry of Magic",
+            "awardNumber": "9 3/4"
+          }
+        ],
+        "locations": [
+          {
+            "point": {
+              "latitude": "36.421282",
+              "longitude": "-121.464844"
+            }
+          },
+          {
+            "point": {
+              "latitude": "37.160317",
+              "longitude": "-121.860352"
+            }
+          }
+        ],
+        "versionNumber": 1,
+        "versionStatus": "submitted"
+      },
+      {
+        "_links": {
+          "self": {
+            "href": "/api/v2/datasets/doi%3A10.5072%2FFK2J966H3B"
+          },
+          "stash:versions": {
+            "href": "/api/v2/datasets/doi%3A10.5072%2FFK2J966H3B/versions"
+          },
+          "stash:version": {
+            "href": "/api/v2/versions/53"
+          },
+          "stash:download": {
+            "href": "/api/v2/datasets/doi%3A10.5072%2FFK2J966H3B/download"
+          },
+          "curies": [
+            {
+              "name": "stash",
+              "href": "https://github.com/CDLUC3/stash/blob/development/stash_api/link-relations.md#{rel}",
+              "templated": "true"
+            }
+          ]
+        },
+        "id": "doi:10.5072/FK2J966H3B",
+        "storage_size": 183404,
+        "title": "Kathryn Cats",
+        "authors": [
+          {
+            "firstName": "Kathryn",
+            "lastName": "Cats",
+            "email": "kathryncats@mailinator.com",
+            "affiliation": "UC Office of the President",
+            "orcid": null
+          }
+        ],
+        "abstract": "<p>test</p>",
+        "versionNumber": 3,
+        "versionStatus": "submitted"
+      },
+      {
+        "_links": {
+          "self": {
+            "href": "/api/v2/datasets/doi%3A10.5072%2FFK2T151W7S"
+          },
+          "stash:versions": {
+            "href": "/api/v2/datasets/doi%3A10.5072%2FFK2T151W7S/versions"
+          },
+          "stash:version": {
+            "href": "/api/v2/versions/54"
+          },
+          "stash:download": {
+            "href": "/api/v2/datasets/doi%3A10.5072%2FFK2T151W7S/download"
+          },
+          "curies": [
+            {
+              "name": "stash",
+              "href": "https://github.com/CDLUC3/stash/blob/development/stash_api/link-relations.md#{rel}",
+              "templated": "true"
+            }
+          ]
+        },
+        "id": "doi:10.5072/FK2T151W7S",
+        "storage_size": 162465,
+        "title": "Glo-ball the Elephant Measurements",
+        "authors": [
+          {
+            "firstName": "Gloria",
+            "lastName": "Arnand",
+            "email": "gloria.arnand@mailinator.com",
+            "affiliation": "UC Davis",
+            "orcid": null
+          }
+        ],
+        "abstract": "<p>The measurements for Glo-ball the Elephant.</p>",
+        "versionNumber": 1,
+        "versionStatus": "submitted"
+      }
+    ]
+  }
+}

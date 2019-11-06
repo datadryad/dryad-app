@@ -1,0 +1,39 @@
+<%# locals: users %>
+<table class="c-lined-table">
+  <tr class="c-lined-table__head">
+    <th class="c-admin-table__user-campus <%= sort_display('tenant_id', @sort_column) %>">
+      <%= sort_by 'tenant_id', title: 'Institution', current_column: @sort_column %>
+    </th>
+    <th class="c-admin-table__user-name <%= sort_display('name', @sort_column) %>">
+      <%= sort_by 'name', title: 'Name', current_column: @sort_column %>
+    </th>
+    <th class="c-admin-table__user-role <%= sort_display('role', @sort_column) %>" colspan="2">
+      <%= sort_by 'role', title: 'Role', current_column: @sort_column %>
+    </th>
+    <th class="c-admin-table__user-last-login <%= sort_display('last_login', @sort_column) %>">
+      <%= sort_by 'last_login', title: 'Last login', current_column: @sort_column %>
+    </th>
+  </tr>
+
+  <% users.each do |u| %>
+    <% if StashEngine::Tenant.exists?(u.tenant_id) %>
+      <tr class="c-lined-table__row">
+        <td><%= StashEngine::Tenant.find(u.tenant_id).short_name %></td>
+        <td><%= link_to "#{u.first_name} #{u.last_name}".strip, admin_user_dashboard_path(u) %></td>
+        <td class="c-admin-hide-border-right" id="user_role_<%= u.id %>">
+          <%= u.role.capitalize %>
+        </td>
+        <td class="c-admin-hide-border-left">
+          <% if current_user.role == 'superuser' %>
+            <%= form_tag(popup_admin_path(u.id), method: :get, remote: true) do -%>
+              <button class="c-admin-edit-icon" aria-label="Edit user role" alt="Edit user role">
+                <i class="fa fa-pencil" aria-hidden="true"></i>
+              </button>
+            <% end %>
+          <% end %>
+        </td>
+        <td><%= formatted_datetime(u.last_login) %></td>
+      </tr>
+    <% end %>
+  <% end %>
+</table>

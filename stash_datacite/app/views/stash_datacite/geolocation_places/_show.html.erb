@@ -1,0 +1,8 @@
+<% unless geolocation_places.nil? %>
+  <% geolocation_places.each do |geolocation_place| %>
+    <div class="c-locations__place"
+         data-bbox="<%= geolocation_place.bounding_box_str %>">
+			<div class="c-locations__data"><%= geolocation_place.geo_location_place %></div>
+		</div>
+  <% end %>
+<% end %>

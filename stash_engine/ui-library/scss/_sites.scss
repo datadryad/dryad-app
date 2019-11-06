@@ -1,0 +1,138 @@
+// ##### Dash Sites Object ##### //
+
+.o-sites {
+
+  width: 60px;
+
+  @include bp(screen3) {
+    position: relative; // to .o-sites__group
+  }
+
+}
+
+// Rotate icon when details open:
+
+.o-sites__details {
+
+  @include bp(screen3) {
+    position: absolute;
+    width: auto;
+
+    &[open] .o-sites__summary {
+
+      &::after {
+        transform: rotate(-90deg);
+
+        @include bp(screen3) {
+          transform: rotate(-180deg);
+        }
+
+      }
+
+    }
+  }
+
+}
+
+%o-sites__item {
+  display: block;
+  margin: 0 0 2px;
+  padding: 10px;
+  background-color: $design-light-blue-color;
+  color: $design-white-color;
+  text-decoration: none;
+
+  @include bp(screen3) {
+    margin: 0;
+    background-color: $design-white-color;
+    color: $design-black-color;
+  }
+
+}
+
+.o-sites__summary {
+  @extend %o-sites__item;
+  position: relative;
+  padding: 0 20px 0 0;
+
+  @include bp(screen3) {
+    background-color: transparent;
+    text-align: right; // if browser text size is increased beyond normal size
+  }
+
+  &::after {
+    // content: inline('../images/icon_right-white-arrow.svg');
+    position: absolute;
+    // right: 0;
+    // transform: rotate(90deg);
+
+    @include bp(screen3) {
+      content: inline('../images/icon_down-blue-arrow.svg');
+      display: inline-block;
+      right: 0;
+      transform: rotate(0deg);
+    }
+
+  }
+
+}
+
+.o-sites__group {
+
+  width: 200px;
+
+  @include bp(screen3) {
+    position: absolute; // to .o-sites
+    right: -15px;
+    margin: 10px 0 0;
+  }
+
+}
+
+.o-sites__group-heading {
+  @extend %o-sites__item;
+  padding: 5px 10px;
+  background-color: $design-dark-gray-color;
+
+  @include bp(screen3) {
+    background-color: $design-dark-blue-color;
+    color: $design-white-color;
+  }
+
+}
+
+.o-sites__group-item {
+  @extend %o-sites__item;
+
+  @include bp(screen3) {
+    border-right: 1px solid $design-light-gray-color;
+    border-bottom: 1px solid $design-light-gray-color;
+    border-left: 1px solid $design-light-gray-color;
+
+    &:hover {
+      color: $design-light-blue-color;
+      text-decoration: underline;
+    }
+
+  }
+}
+
+.o-sites__login {
+  @extend %o-sites__item;
+  background-color: $design-dark-blue-color;
+  text-align: center;
+
+  @include bp(screen3) {
+    margin-left: 1em;
+    padding: 0;
+    background-color: transparent;
+    color: $design-dark-blue-color;
+    text-align: left;
+
+    &:hover {
+      color: $design-light-blue-color;
+    }
+
+  }
+
+}

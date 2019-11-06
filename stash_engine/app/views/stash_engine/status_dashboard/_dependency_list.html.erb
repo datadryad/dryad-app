@@ -1,0 +1,30 @@
+<ul class="o-dependency-group__list">
+  <% dependencies.each do |dependency| %>
+    <%
+    status_class = case dependency.status
+      when 0
+        'fa-times-circle'
+      when 1
+        'fa-check-circle'
+      else
+        'fa-question-circle'
+    end
+    %>
+    <li title="<%= dependency.description %>" class="o-dependency-group__list__item">
+      <span class="dependency-name"><%= dependency.name %></span>
+      <span class="fa <%= status_class %>" title="<%= dependency.status != 1 ? 'Offline - Click for troubleshooting information' : 'Online' %>"></span>
+      <% if dependency.documentation.present? %>
+        <div class="dialog">
+          <div class="dialog-content">
+            <span class="dialog-close">&times;</span>
+            <h3><%= dependency.name %> troubleshooting information:</h3>
+            <p><%= dependency.documentation.html_safe %></p>
+            <br>
+            <h4>Error message:</h4>
+            <p><%= dependency.error_message %></p>
+          </div>
+        </div>
+      <% end %>
+    </li>
+  <% end %>
+</ul>

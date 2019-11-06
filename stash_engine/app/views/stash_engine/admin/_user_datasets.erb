@@ -1,0 +1,62 @@
+<%# locals: presenters (array of StashDatacite::ResourcesController::DatasetPresenter) %>
+<table class="c-lined-table">
+  <tr class="c-lined-table__head">
+    <th class="<%= sort_display('title', @sort_column) %>" colspan="2">
+      <%= sort_by 'title', title: 'Dataset Title', current_column: @sort_column %>
+    </th>
+    <th class="<%= sort_display('embargo_status', @sort_column) %>">
+      <%= sort_by 'embargo_status', title: 'Status', current_column: @sort_column %>
+    </th>
+    <th class="<%= sort_display('publication_date', @sort_column) %>">
+      <%= sort_by 'publication_date', title: 'Publication Date', current_column: @sort_column %>
+    </th>
+    <th class="<%= sort_display('updated_at', @sort_column) %>">
+      <%= sort_by 'updated_at', title: 'Last Modified', current_column: @sort_column %>
+    </th>
+    <th class="<%= sort_display('size', @sort_column) %>">
+      <%= sort_by 'size', title: 'Size', current_column: @sort_column %>
+    </th>
+    <th class="<%= sort_display('edited_by_name', @sort_column) %>" colspan="2">
+      <%= sort_by 'edited_by_name', title: 'Edited By', current_column: @sort_column %>
+    </th>
+  </tr>
+
+  <% presenters.each do |p| %>
+    <tr class="c-lined-table__row">
+      <td class="c-admin-hide-border-right">
+        <span title="<%= p.title %>"><%= link_to truncate(p.title), edit_histories_path(resource_id: p.resource.id)  %></span>
+      </td>
+      <td class="c-admin-hide-border-left">
+        <% if p.resource.submitted? || p.resource.dataset_in_progress_editor.id == current_user.id %>
+          <%= form_tag(metadata_entry_pages_new_version_path, method: :post) do -%>
+            <button class="c-admin-edit-icon" title="Edit Dataset"><i class="fa fa-pencil" aria-hidden="true"></i></button>
+            <%= hidden_field_tag :resource_id, p.resource.id %>
+          <% end %>
+        <% end %>
+      </td>
+      <td>
+        <%= p.embargo_status_pretty %>
+      </td>
+      <td>
+        <% if p.resource.submitted? %>
+          <%= default_date(p.publication_date) %>
+        <% end %>
+      </td>
+      <td>
+        <%= default_date(p.updated_at) %>
+      </td>
+      <td>
+        <%= filesize(p.size) %>
+      </td>
+      <td class="c-admin-hide-border-right">
+        <%= p.edited_by_name_w_role %>
+      </td>
+      <td class="c-admin-hide-border-left">
+        <%= form_tag(edit_histories_path, method: :get) do -%>
+          <%= hidden_field_tag :resource_id, p.resource.id %>
+          <button class="c-admin-edit-icon" title="See History"><i class="fa fa-history" aria-hidden="true"></i></button>
+        <% end %>
+      </td>
+    </tr>
+  <% end %>
+</table>

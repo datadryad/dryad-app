@@ -1,0 +1,50 @@
+<%# if params[:debug]
+        # stylesheet_link_tag 'stash_engine/ui'
+      #else
+      #  wicked_pdf_stylesheet_link_tag('/assets/stash_engine/ui')
+      #end  -%>
+<%# wicked_pdf_javascript_include_tag "number_pages" %>
+<meta charset="utf-8" />
+<%= stylesheet_link_tag wicked_pdf_asset_base64("stash_engine/ui.css") %>
+<%= stylesheet_link_tag wicked_pdf_asset_base64("stash_datacite/review.css") %>
+<%= stylesheet_link_tag wicked_pdf_asset_base64("leaflet.css") %>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/0.4.0/leaflet.draw.css"/>
+<%= javascript_include_tag wicked_pdf_asset_base64("jquery.js") %>
+<%= javascript_include_tag wicked_pdf_asset_base64("leaflet.js") %>
+<%= javascript_include_tag wicked_pdf_asset_base64("stash_datacite/leaflet_draw.js") %>
+<%# javascript_include_tag wicked_pdf_asset_base64("stash_datacite/map_review.js") %>
+<%= javascript_include_tag wicked_pdf_asset_base64("stash_datacite/map_bounds.js") %>
+<%# javascript_include_tag wicked_pdf_asset_base64("stash_datacite/get_and_load_geo_box.js") %>
+<%# javascript_include_tag wicked_pdf_asset_base64("stash_datacite/get_and_load_geo_place.js") %>
+<style>
+  /* AARGH.  It was a nightmare to get the styles to work for these background images.  Lots of conflicting
+   information online.  Some say you can only use jpg (not true).  Even jpg didn't work.  However,
+   it turned out I had to override what was in the stylesheets and NOT use shortcut notation that Joel
+   put in for the background.  Instead, use separate CSS for image, repeat, position, etc.
+   */
+
+  .c-locations__point {
+    /* background: url('<%# wicked_pdf_asset_base64('icon_point-blue.png') %>') left 2px center no-repeat */
+    background-image: url('<%= wicked_pdf_asset_base64('icon_point-blue.png') %>') !important;
+    background-repeat: no-repeat;
+    background-position: 4px center;
+  }
+
+  .c-locations__place {
+    /* background: url('/demo/images/icon_globe.svg') left 1px center no-repeat; */
+    background-image: url('<%= wicked_pdf_asset_base64('icon_globe.png') %>') !important;
+    background-repeat: no-repeat;
+    background-position: 4px center;
+  }
+
+  .c-locations__area {
+    /* background: url('/demo/images/icon_box-blue.svg') left 1px center no-repeat; */
+    background-image: url('<%= wicked_pdf_asset_base64('icon_box-blue.png') %>') !important;
+    background-repeat: no-repeat;
+    background-position: 4px center;
+  }
+
+  div.map_review {
+    page-break-inside: avoid !important;
+  }
+</style>

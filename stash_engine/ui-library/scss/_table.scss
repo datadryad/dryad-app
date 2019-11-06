@@ -1,0 +1,98 @@
+// ##### Table Object ##### //
+
+// Inspired from: https://css-tricks.com/examples/ResponsiveTables/responsive.php
+
+$table-cell-label-width: 110px;
+
+.o-table__highlight1 {
+  color: $design-orange-color;
+}
+
+.o-table__highlight2 {
+  color: $design-dark-blue-color;
+}
+
+// ***** Large Screen Styles ***** //
+
+@include bp(screen2) {
+  .o-table {
+    width: 100%;
+    margin: 0 (-$spacing-md) $spacing-md;
+  }
+
+  .o-table tr {
+    border-bottom: 1px solid $design-light-gray-color;
+  }
+
+  .o-table th,
+  .o-table td {
+    padding: $spacing-md;
+    text-align: left;
+    vertical-align: top;
+  }
+
+}
+
+// ***** Small Screen Styles ***** //
+
+@media (max-width: $screen-md-min - 1) {
+  .o-table table,
+  .o-table thead,
+  .o-table tbody,
+  .o-table th,
+  .o-table td,
+  .o-table tr {
+    display: block;
+  }
+
+  .o-table {
+    width: 100%;
+  }
+
+  .o-table thead tr {
+    position: absolute;
+    left: -9999px;
+  }
+
+  .o-table tbody {
+
+    tr {
+      padding: $spacing-sm 0;
+
+      &:not(:first-child) {
+        border-top: 1px solid $design-light-gray-color;
+      }
+
+    }
+
+  }
+
+  .o-table td {
+    position: relative;
+    margin: 0 0 0 $table-cell-label-width;
+    padding: 5px 0;
+    font-weight: bold;
+
+    &:before {
+      position: absolute;
+      left: (-$table-cell-label-width);
+      width: $table-cell-label-width - $spacing-sm;
+      font-weight: normal;
+      text-align: right;
+      white-space: nowrap;
+    }
+
+  }
+
+}
+
+// ***** Show / Hide Table Data ***** //
+
+// .o-table__td-toggle {
+//   display: none;
+
+//   @include bp(screen2) {
+//     display: table-cell;
+//   }
+
+// }

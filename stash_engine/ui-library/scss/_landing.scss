@@ -1,0 +1,47 @@
+// ##### Landing Page Theme ##### //
+
+.t-landing__data-type {
+	margin: 0 0 $spacing-md;
+}
+
+.t-landing__metadata {
+	margin: 0 0 $spacing-md;
+}
+
+.t-landing__main {
+
+	@include bp(screen2) {
+		margin: 0 30px 0 0;
+	}
+
+}
+
+.t-landing__sidebar {
+	margin: 0 0 $spacing-md;
+
+	@include bp(screen2) {
+		margin: 0;
+	}
+
+	.o-download {
+		margin: 0 0 $spacing-md;
+	}
+
+	.c-sidebox {
+		margin: 30px 0 0;
+	}
+
+}
+
+.t-landing__pdftable {
+  margin-bottom: 1.5em;
+
+  td {
+    padding: 0.25em 1em;
+  }
+}
+
+.t-landing__text-wall {
+	margin-bottom: 1.5em;
+	line-height: 3ex;
+}

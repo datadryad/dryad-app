@@ -1,0 +1,77 @@
+
+<div class="c-autosave-header">
+  <h1 class="o-heading__level1">Describe Your Dataset</h1>
+  <div class="c-autosave__text saving_text" style="display: none;">Saving&hellip;</div>
+  <div class="c-autosave__text saved_text" style="display: none;">All Progress Saved.</div>
+</div>
+
+<h3 class="o-heading__page-span">Preliminary Information</h3>
+  <div class="js-contributors_form">
+    <%= render partial: "stash_datacite/metadata_entry_pages/publication", locals: { publication: @publication, resource: @resource } %>
+  </div>
+
+<h3 class="o-heading__page-span">Dataset: Basic Information</h3>
+  <%= render partial: "stash_datacite/titles/form", locals: { resource: @resource } %><br/>
+
+  <fieldset class="c-fieldset">
+  <legend class="c-fieldset__legend">Author(s)</legend>
+    <div class="js-authors_form">
+      <% if @metadata_entry.authors.exists? %>
+        <% @metadata_entry.authors.each do |author| %>
+          <%= render partial: "stash_datacite/authors/form", locals: { author: author, path: stash_datacite.authors_update_path } %>
+        <% end %>
+      <% else %>
+          <%= render partial: "stash_datacite/authors/form", locals: { author: @metadata_entry.new_author, path: stash_datacite.authors_create_path } %>
+      <% end %>
+    </div>
+    <%= link_to "Add Author", stash_datacite.authors_new_path( resource_id: @resource.id ), remote: :true, class: 't-describe__add-button o-button__add' %>
+  </fieldset>
+
+    <%= label_tag :description, "Abstract", class: 'c-input__label required', for: 'description_abstract' %>
+    <%= render partial: "stash_datacite/descriptions/form", locals: { description: @metadata_entry.abstract, description_type: :abstract }  %>
+
+  <p class="c-input__required-note">required fields</p>
+
+  <details class="c-fgroup" role="group">
+    <summary class="o-showhide__summary c-fgroup__summary" id="data_description_opener">Data Description</summary>
+
+    <% if @metadata_entry.subjects.empty? %>
+    <%= render partial: "stash_datacite/subjects/form", locals: { subject: @metadata_entry.new_subject, resource_id: @resource.id } %>
+    <% else %>
+    <%= render partial: "stash_datacite/subjects/form", locals: { resource_id: @resource.id } %>
+    <% end %>
+
+    <%= label_tag :description, "Methods:", class: 'c-input__label', for: 'description_methods' %>&nbsp;&nbsp;How was this dataset collected? How has it been processed?
+    <%= render partial: "stash_datacite/descriptions/form", locals: { description: @metadata_entry.methods, description_type: :methods } %>
+
+    <%= label_tag :description, "Usage Notes:", class: 'c-input__label', for: 'description_other' %>&nbsp;&nbsp;What else would someone need to know to use this dataset? Are there any missing values? Please upload any files necessary for re-use (i.e. ReadMe files) and note them.
+    <%= render partial: "stash_datacite/descriptions/form", locals: { description: @metadata_entry.other, description_type: :other } %>
+
+    <fieldset class="c-fieldset">
+    <legend class="c-fieldset__legend">Funding</legend>
+    <div class="js-contributors_form">
+      <% if @metadata_entry.contributors.exists? %>
+        <% @metadata_entry.contributors.each do |contributor| %>
+          <%= render partial: "stash_datacite/contributors/form", locals: { contributor: contributor, path: stash_datacite.contributors_update_path } %>
+        <% end %>
+      <% else %>
+          <%= render partial: "stash_datacite/contributors/form", locals: { contributor: @metadata_entry.new_contributor, path: stash_datacite.contributors_create_path } %>
+      <% end %>
+    </div>
+    <%= link_to "add another funder", stash_datacite.contributors_new_path( resource_id: @resource.id ), remote: :true, class: 't-describe__add-funder-button o-button__add', role: 'button' %>
+    </fieldset>
+
+    <fieldset class="c-fieldset">
+    <legend class="c-fieldset__legend">Related Work(s): <span class="c-input__hint">Are there any articles (posted or published), datasets, or code that are related to this Data Publication? Please choose the relation type and identifier type from the drop downs and enter your unique permanent identifier below.</span></legend>
+    <div class="js-related_identifiers_form">
+      <% if @metadata_entry.related_identifiers.exists? %>
+        <% @metadata_entry.related_identifiers.each do |related_identifier| %>
+          <%= render partial: "stash_datacite/related_identifiers/form", locals: { related_identifier: related_identifier, path: stash_datacite.related_identifiers_update_path } %>
+        <% end %>
+      <% else %>
+        <%= render partial: "stash_datacite/related_identifiers/form", locals: { related_identifier: @metadata_entry.new_related_identifier, path: stash_datacite.related_identifiers_create_path } %>
+      <% end %>
+    </div>
+    <%= link_to "add another related work", stash_datacite.related_identifiers_new_path( resource_id: @resource.id ), remote: :true, class: 'o-button__add' %>
+    </fieldset>
+  </details>
