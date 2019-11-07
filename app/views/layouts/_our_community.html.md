@@ -55,6 +55,7 @@ Upgrades and enhanced system functions will be ongoing as a way to continually i
 -  Northern State University
 -  University of California, California Digital Library
 -  Lawrence Berkeley National Lab
+-  North Carolina State University
 -  UC Berkeley
 -  UC Davis
 -  UC Irvine
@@ -66,6 +67,7 @@ Upgrades and enhanced system functions will be ongoing as a way to continually i
 -  UC Santa Cruz
 -  University of Illinois, Urbana-Champagne
 -  University of New Mexico
+-  Victoria University
 -  Yale University
 
 <p>Any research institution that supports the educational, scientific, and charitable mission of Dryad is eligible to become a member.</p>

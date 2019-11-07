@@ -59,6 +59,8 @@
 </ul>
 <p>Please note that you may only use one of these two upload methods per version, but you may do subsequent versions of your data publication and utilize different methods of upload this way.</p>
 
+<h2>Private for Peer Review<a name="Private for Peer Review"></a></h2>
+<p>On page three of the submission process, we offer the option to make the dataset private during a related article's peer review process. After selecting this option, you will be presented with a private, randomized URL that allows for a double-blind download of the dataset. This link can be used at the journal office during the review office or for sharing with collaborators to access the data files while the dataset is not public. Authors can write in when the related article has been accepted for the dataset to move into the curation and publication processes.</p>
 <h2>Curation<a name="curation"></a></h2>
 <p><strong>What is data curation?</strong> Data curators review and enrich research data to help make it <a href="https://www.force11.org/group/fairgroup/fairprinciples">Findable, Accessible, Interoperable, and Reusable (FAIR)</a>. According to the <a href="https://datacurationnetwork.org/about/our-mission/">Data Curation Network<a> (of which Dryad is a partner),<blockquote>Data curation enables data discovery and retrieval, maintains data quality, adds value, and provides for re-use over time through activities including authentication, archiving, metadata creation, digital preservation, and transformation.</blockquote></p>
 <p>Dryad has a team of <a href="<%= stash_url_helpers.our_staff_path %>">professional curators</a> who check every submission to ensure the validity of files and metadata. Once your data is submitted, Dryad curators perform basic checks:</p>
