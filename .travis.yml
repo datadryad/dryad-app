@@ -31,5 +31,5 @@ before_script:
   - sudo chmod 4755 /opt/google/chrome/chrome-sandbox
 
 script:
-  - rake
+  - bundle exec rake
   - stash/travis-build.rb
