@@ -30,6 +30,10 @@ Layout/MultilineMethodCallIndentation:
 Layout/MultilineOperationIndentation:
   Enabled: false
 
+# because you want an exception that applies to your case, not something random
+Lint/ShadowedException:
+  Enabled: false
+
 # Reasonable line-length check; it's too easy for the cure to be worse than the disease
 Metrics/LineLength:
   Max: 150
