@@ -1,3 +1,4 @@
+# rubocop:disable Metrics/BlockLength
 StashEngine::Engine.routes.draw do
 
   get 'landing/show'
@@ -121,3 +122,4 @@ StashEngine::Engine.routes.draw do
   put 'publication_updater/:id', to: 'publication_updater#update'
   delete 'publication_updater/:id', to: 'publication_updater#destroy'
 end
+# rubocop:enable Metrics/BlockLength

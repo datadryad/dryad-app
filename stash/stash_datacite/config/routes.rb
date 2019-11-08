@@ -1,3 +1,4 @@
+# rubocop:disable Metrics/BlockLength
 StashDatacite::Engine.routes.draw do
 
   get 'titles/new', to: 'titles#new'
@@ -85,3 +86,4 @@ StashDatacite::Engine.routes.draw do
 
   patch 'peer_review/toggle', to: 'peer_review#toggle', as: :peer_review
 end
+# rubocop:enable Metrics/BlockLength

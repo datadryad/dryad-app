@@ -1,4 +1,5 @@
 class CopyOrcidToUsers < ActiveRecord::Migration
+  # rubocop:disable Metrics/MethodLength
   def change
     update_stmt = <<-SQL
           UPDATE stash_engine_users u
@@ -52,4 +53,5 @@ class CopyOrcidToUsers < ActiveRecord::Migration
       say(row.values.join("\t"), true)
     end
   end
+  # rubocop:enable Metrics/MethodLength
 end

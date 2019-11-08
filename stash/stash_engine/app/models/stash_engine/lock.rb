@@ -1,5 +1,5 @@
 # see https://makandracards.com/makandra/1026-simple-database-lock-for-mysql for info about simple DB locking
-# rubocop:disable
+# rubocop:disable all
 module StashEngine
   class Lock < ActiveRecord::Base
 
