@@ -18,6 +18,7 @@ before_install:
  - sudo apt-get install mutt
  - gem update --system
  - gem install bundler -v 1.17.3
+ - gem install colorize
  - ./travis-prep.sh
 
 before_script:
