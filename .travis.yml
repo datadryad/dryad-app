@@ -29,3 +29,7 @@ before_script:
   # - bundle exec chromedriver-update 2.46
   - sudo chown root /opt/google/chrome/chrome-sandbox
   - sudo chmod 4755 /opt/google/chrome/chrome-sandbox
+
+script:
+  - rake
+  - stash/travis-build.rb
