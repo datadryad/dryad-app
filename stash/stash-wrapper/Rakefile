@@ -43,5 +43,6 @@ end
 # ------------------------------------------------------------
 # Defaults
 
-desc 'Run unit tests, check test coverage, check code style'
-task default: %i[coverage rubocop]
+desc 'Run unit tests, check test coverage'
+# rubocop now covered in main app
+task default: %i[coverage]
