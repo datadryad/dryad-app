@@ -1,4 +1,5 @@
-# this is a crazy monkeypatch to allow the orcid to be passed into the developer login form if it was previously chosen and this is second phase of login
+# this is a crazy monkeypatch to allow the orcid to be passed into the developer login form if it was previously chosen
+# and this is second phase of login
 OmniAuth::Strategies::Developer.class_eval do
   # pass in the request params so we can use them in the form
   def request_phase

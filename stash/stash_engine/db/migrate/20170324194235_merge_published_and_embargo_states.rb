@@ -1,4 +1,5 @@
 class MergePublishedAndEmbargoStates < ActiveRecord::Migration
+  # rubocop:disable Metrics/MethodLength
   def up
     change_table :stash_engine_resource_states do |t|
       # add 'submitted' state
@@ -70,4 +71,5 @@ class MergePublishedAndEmbargoStates < ActiveRecord::Migration
       SQL
     end
   end
+  # rubocop:enable Metrics/MethodLength
 end
