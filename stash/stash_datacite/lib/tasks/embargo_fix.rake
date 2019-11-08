@@ -10,7 +10,7 @@ namespace :embargo_fix do
   desc 'Embargo manipulation to correct the problem of conservative embargoes from migration'
   task migration_issue: :environment do
     p 'Starting embargo correction'
-    embargo_problem_items = File.readlines('/apps/dryad/embargoIssues.txt').each do |line|
+    File.readlines('/apps/dryad/embargoIssues.txt').each do |line|
       line.gsub!(/doi:/, '')
       line.gsub!(/\s+/, '')
       p "Processing #{line}"
@@ -48,8 +48,8 @@ namespace :embargo_fix do
           cas = r.curation_activities # reload the CurationActivities without the indicator
 
           cas.order(:id).each do |ca|
-            p "      - ca #{ca&.id} #{ca&.created_at} #{ca&.note[0..30]}"
-            if ca&.note&.match /Made available in DSpace on/
+            p "      - ca #{ca&.id} #{ca&.created_at} #{ca.note[0..30]}"
+            if ca&.note&.match(/Made available in DSpace on/)
               p "      - ######### PUBLISH DATE #{ca&.created_at} ##############"
               r.publication_date = ca&.created_at
               r.save
@@ -58,7 +58,7 @@ namespace :embargo_fix do
 
             next unless @publishing
             p '      - updating to published'
-            if ca&.note&.match /publiction date has not yet been reached/
+            if ca&.note&.match(/publiction date has not yet been reached/)
               ca.destroy
             else
               ca.status = 'published'
@@ -75,7 +75,7 @@ namespace :embargo_fix do
   desc 'Embargo manipulation to correct problems caused by Embargo Datasets CRON'
   task cron_issue: :environment do
     p 'Starting embargo CRON correction'
-    embargo_problem_items = File.readlines('/apps/dryad/embargoIssues.txt').each do |line|
+    File.readlines('/apps/dryad/embargoIssues.txt').each do |line|
       line.gsub!(/doi:/, '')
       line.gsub!(/\s+/, '')
       p "Processing #{line}"
@@ -120,8 +120,8 @@ namespace :embargo_fix do
           cas = r.curation_activities # reload the CurationActivities without the indicator
 
           cas.order(:id).each do |ca|
-            p "      - ca #{ca&.id} #{ca&.created_at} #{ca&.note[0..30]}"
-            if ca&.note&.match /Made available in DSpace on/
+            p "      - ca #{ca&.id} #{ca&.created_at} #{ca.note[0..30]}"
+            if ca&.note&.match(/Made available in DSpace on/)
               p "      - ######### PUBLISH DATE #{ca&.created_at} ##############"
               r.publication_date = ca&.created_at
               r.save
@@ -130,7 +130,7 @@ namespace :embargo_fix do
 
             next unless publishing
             p '      - updating to published'
-            if ca&.note&.match /publiction date has not yet been reached/
+            if ca&.note&.match(/publiction date has not yet been reached/)
               ca.destroy
             else
               ca.status = 'published'
@@ -144,4 +144,4 @@ namespace :embargo_fix do
     p 'Finished embargo correction'
   end
 end
-# rubocop:enable
+# rubocop:enable Metrics/BlockLength

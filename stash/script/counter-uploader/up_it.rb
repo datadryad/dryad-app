@@ -1,4 +1,5 @@
 #!/usr/bin/env ruby
+
 require 'rubygems'
 require 'bundler/setup'
 require 'rack/utils'
@@ -14,7 +15,7 @@ require_relative 'uploader'
 
 state_hash = JSON.parse(File.read('json-state/statefile.json'))
 hub_api_token = YAML.load_file('json-state/secrets.yaml')['hub_api_token']
-hub_base_url = YAML.load_file('json-state/config.yaml')['hub_base_url']
+# hub_base_url = YAML.load_file('json-state/config.yaml')['hub_base_url']
 
 # a special hack for the uploader class
 ENV['TOKEN'] = hub_api_token
