@@ -69,7 +69,7 @@ Gem::Specification.new do |s| # rubocop:disable Metrics/BlockLength
   s.add_development_dependency 'rubocop', '0.57.2'
   s.add_development_dependency 'scss_lint'
   s.add_development_dependency 'simplecov', '~> 0.14'
-  s.add_development_dependency 'simplecov-console', '~> 0.4'
+  s.add_development_dependency 'simplecov-console', '~> 0.6'
   s.add_development_dependency 'webdrivers' # used to be chromedriver-helper, now deprecated
   s.add_development_dependency 'webmock', '~> 3.0'
 end
