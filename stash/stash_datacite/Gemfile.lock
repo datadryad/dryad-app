@@ -316,7 +316,6 @@ GEM
       concurrent-ruby (~> 1.0)
     hashdiff (1.0.0)
     hashie (3.5.7)
-    hirb (0.7.3)
     htmlentities (4.3.4)
     http (4.1.1)
       addressable (~> 2.3)
@@ -567,10 +566,10 @@ GEM
       docile (~> 1.1)
       json (>= 1.8, < 3)
       simplecov-html (~> 0.10.0)
-    simplecov-console (0.4.2)
+    simplecov-console (0.6.0)
       ansi
-      hirb
       simplecov
+      terminal-table
     simplecov-html (0.10.2)
     solr_wrapper (2.1.0)
       faraday
@@ -593,6 +592,8 @@ GEM
     sxp (1.0.2)
       rdf (~> 3.0)
     temple (0.8.2)
+    terminal-table (1.8.0)
+      unicode-display_width (~> 1.1, >= 1.1.1)
     terrapin (0.6.0)
       climate_control (>= 0.0.3, < 1.0)
     thor (0.20.3)
@@ -648,7 +649,7 @@ DEPENDENCIES
   rspec-rails
   rubocop (= 0.57.2)
   simplecov (~> 0.14)
-  simplecov-console (~> 0.4)
+  simplecov-console (~> 0.6)
   stash-sword!
   stash-wrapper!
   stash_datacite!

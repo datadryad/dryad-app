@@ -444,7 +444,7 @@ GEM
       docile (~> 1.1)
       json (>= 1.8, < 3)
       simplecov-html (~> 0.10.0)
-    simplecov-console (0.5.0)
+    simplecov-console (0.6.0)
       ansi
       simplecov
       terminal-table
@@ -518,7 +518,7 @@ DEPENDENCIES
   rubocop (= 0.57.2)
   scss_lint
   simplecov (~> 0.14)
-  simplecov-console (~> 0.4)
+  simplecov-console (~> 0.6)
   sortable-table (~> 0.1)
   stash-sword!
   stash_engine!
