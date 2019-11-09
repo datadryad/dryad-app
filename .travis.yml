@@ -5,7 +5,7 @@ matrix:
       addons:
         chrome: stable
       env: TO_TEST=MAIN
-    - php: 2.4.1
+    - rvm: 2.4.1
       env: TO_TEST=STASH
   fast_finish: true
 
