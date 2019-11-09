@@ -1,11 +1,11 @@
 matrix:
   include:
-    - rvm: 2.4.1
+    - rvm: 2.4.4
       sudo: required
       addons:
         chrome: stable
       env: TO_TEST=MAIN
-    - rvm: 2.4.1
+    - rvm: 2.4.4
       env: TO_TEST=STASH
   fast_finish: true
 
