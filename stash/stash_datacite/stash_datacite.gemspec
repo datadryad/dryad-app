@@ -46,6 +46,6 @@ Gem::Specification.new do |s| # rubocop:disable Metrics/BlockLength
   s.add_development_dependency 'rspec-rails', '~> 3.5'
   s.add_development_dependency 'rubocop', '0.57.2'
   s.add_development_dependency 'simplecov', '~> 0.14'
-  s.add_development_dependency 'simplecov-console', '~> 0.4'
+  s.add_development_dependency 'simplecov-console', '~> 0.6'
   s.add_development_dependency 'webmock', '~> 3.0'
 end
