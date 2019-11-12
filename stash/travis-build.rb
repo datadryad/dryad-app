@@ -140,11 +140,11 @@ rescue StandardError => e
 end
 
 def bundle_all
-  PROJECTS.each do |p|
-    bundle_ok = bundle(p)
-    warn("#{p} bundle failed") unless bundle_ok
-    exit(1) unless bundle_ok
-  end
+  # PROJECTS.each do |p|
+  #   bundle_ok = bundle(p)
+  #   warn("#{p} bundle failed") unless bundle_ok
+  #   exit(1) unless bundle_ok
+  # end
   true
 end
 

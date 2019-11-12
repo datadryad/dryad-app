@@ -1,3 +1,6 @@
+# the STASH tests were spending a long, long time installing gems but then only using the libraries installed in the main app, anyway
+# so I disabled the bundle installs for the separate apps and rely on the main bundle to do the job for now.
+
 matrix:
   include:
     - rvm: 2.4.4
@@ -11,7 +14,6 @@ matrix:
       env:
       - TO_TEST=STASH
       - RAILS_ENV=test
-      install: echo "hi"
   fast_finish: true
 
 dist: trusty
