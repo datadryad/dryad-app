@@ -2,7 +2,6 @@ source 'https://rubygems.org'
 
 gemspec
 
-gem 'byebug', group: %i[development test]
 gem 'httparty'
 gem 'mysql2', '< 0.5x', '>= 0.3.13'
 gem 'parallel_tests', group: %i[development test]
@@ -14,7 +13,7 @@ path '..' do
   gem 'stash_engine'
 end
 
-group :development,  :local_dev, :test do
+group :development, :local_dev, :test do
   gem 'byebug'
   gem 'colorize'
   gem 'database_cleaner'

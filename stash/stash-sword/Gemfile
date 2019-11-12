@@ -5,7 +5,7 @@ gemspec
 # gem 'sword2ruby', git: 'https://github.com/dmolesUC3/sword2ruby.git'
 # gem 'multipart-post', git: 'https://github.com/dmolesUC3/multipart-post'
 
-group :development,  :local_dev, :test do
+group :development, :local_dev, :test do
   gem 'byebug'
   gem 'colorize'
   gem 'database_cleaner'
