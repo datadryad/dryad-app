@@ -4,9 +4,13 @@ matrix:
       sudo: required
       addons:
         chrome: stable
-      env: TO_TEST=MAIN
+      env:
+      - TO_TEST=MAIN
+      - RAILS_ENV=test
     - rvm: 2.4.4
-      env: TO_TEST=STASH
+      env:
+      - TO_TEST=STASH
+      - RAILS_ENV=test
   fast_finish: true
 
 dist: trusty
