@@ -96,6 +96,8 @@ group :test do
   gem 'shoulda'
   # Code coverage for Ruby 1.9+ with a powerful configuration library and automatic merging of coverage across test suites (http://github.com/colszowka/simplecov)
   gem 'simplecov', require: false
+  # used by some of the engines and for some reason causes errors without it in the main Gemfile, also.
+  gem 'simplecov-console', require: false
   # Rails application preloader (https://github.com/rails/spring)
   gem 'spring'
   # rspec command for spring (https://github.com/jonleighton/spring-commands-rspec)

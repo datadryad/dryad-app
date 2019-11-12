@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 
 gemspec
 
-group :development,  :local_dev, :test do
+group :development, :local_dev, :test do
   gem 'byebug'
   gem 'colorize'
   gem 'diffy'

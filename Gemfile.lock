@@ -131,6 +131,7 @@ GEM
       tins (~> 1.0)
     amoeba (3.0.0)
       activerecord (>= 3.2.6)
+    ansi (1.5.0)
     arel (6.0.4)
     ast (2.4.0)
     autoprefixer-rails (9.7.1)
@@ -681,6 +682,10 @@ GEM
       docile (~> 1.1)
       json (>= 1.8, < 3)
       simplecov-html (~> 0.10.0)
+    simplecov-console (0.6.0)
+      ansi
+      simplecov
+      terminal-table
     simplecov-html (0.10.2)
     slop (3.6.0)
     solr_wrapper (2.1.0)
@@ -710,6 +715,8 @@ GEM
     sxp (1.0.2)
       rdf (~> 3.0)
     temple (0.8.2)
+    terminal-table (1.8.0)
+      unicode-display_width (~> 1.1, >= 1.1.1)
     terrapin (0.6.0)
       climate_control (>= 0.0.3, < 1.0)
     therubyracer (0.12.3)
@@ -804,6 +811,7 @@ DEPENDENCIES
   selenium-webdriver (~> 3.142.0)
   shoulda
   simplecov
+  simplecov-console
   spring
   spring-commands-rspec
   stash-merritt!
