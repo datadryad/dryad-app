@@ -12,3 +12,14 @@ gemspec
 
 # To use a debugger
 # gem 'byebug', group: [:development, :test]
+
+group :development,  :local_dev, :test do
+  gem 'nokogiri'
+  gem 'rspec', '~> 3.5'
+  gem 'rspec-rails', '~> 3.5'
+  gem 'rubocop', '0.57.2'
+  gem 'scss_lint'
+  gem 'simplecov'
+  gem 'simplecov-console'
+  gem 'sqlite3'
+end
