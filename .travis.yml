@@ -11,6 +11,7 @@ matrix:
       env:
       - TO_TEST=STASH
       - RAILS_ENV=test
+      install: echo "hi"
   fast_finish: true
 
 dist: trusty
