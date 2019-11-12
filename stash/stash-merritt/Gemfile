@@ -16,3 +16,20 @@ path '..' do
   gem 'stash_discovery'
   gem 'stash_engine'
 end
+
+group :development,  :local_dev, :test do
+  gem 'byebug'
+  gem 'colorize'
+  gem 'database_cleaner'
+  gem 'diffy'
+  gem 'equivalent-xml'
+  gem 'factory_bot_rails', require: false
+  gem 'nokogiri'
+  gem 'rspec', '~> 3.5'
+  gem 'rspec-rails', '~> 3.5'
+  gem 'rubocop', '0.57.2'
+  gem 'simplecov'
+  gem 'simplecov-console'
+  gem 'webmock'
+  gem 'yard'
+end

@@ -556,6 +556,8 @@ GEM
     sassc (2.0.1)
       ffi (~> 1.9)
       rake
+    scss_lint (0.59.0)
+      sass (~> 3.5, >= 3.5.5)
     serrano (0.5.0)
       faraday (~> 0.14.0)
       faraday_middleware (~> 0.12.2)
@@ -636,26 +638,27 @@ PLATFORMS
 
 DEPENDENCIES
   byebug
-  colorize (~> 0.8)
-  database_cleaner (~> 1.5)
-  diffy (~> 3.1)
-  equivalent-xml (~> 0.6.0)
+  colorize
+  database_cleaner
+  diffy
+  equivalent-xml
   factory_bot_rails
   httparty
   mysql2 (>= 0.3.13, < 0.5x)
-  nokogiri (~> 1.8)
+  nokogiri
   parallel_tests
   rspec (~> 3.5)
-  rspec-rails
+  rspec-rails (~> 3.5)
   rubocop (= 0.57.2)
-  simplecov (~> 0.14)
-  simplecov-console (~> 0.6)
+  scss_lint
+  simplecov
+  simplecov-console
   stash-sword!
   stash-wrapper!
   stash_datacite!
   stash_discovery!
   stash_engine!
-  webmock (~> 3.0)
+  webmock
 
 BUNDLED WITH
    1.17.3
