@@ -91,6 +91,8 @@ group :test do
   gem 'guard-rspec'
   # Mocking and stubbing library (http://gofreerange.com/mocha/docs)
   gem 'mocha', require: false
+  # IDK why, but even when this loads in the gemfile for the stash-notifier library it doesn't work in tests in Travis.ci
+  gem 'oai'
   # RSpec for Rails (https://github.com/rspec/rspec-rails)
   gem 'rspec-collection_matchers'
   gem 'rspec-rails'
