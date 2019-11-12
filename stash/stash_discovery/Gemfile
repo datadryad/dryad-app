@@ -13,7 +13,7 @@ gemspec
 # To use a debugger
 # gem 'byebug', group: [:development, :test]
 
-group :development,  :local_dev, :test do
+group :development, :local_dev, :test do
   gem 'nokogiri'
   gem 'rspec', '~> 3.5'
   gem 'rspec-rails', '~> 3.5'
