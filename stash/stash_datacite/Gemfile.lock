@@ -316,7 +316,6 @@ GEM
       concurrent-ruby (~> 1.0)
     hashdiff (1.0.0)
     hashie (3.5.7)
-    hirb (0.7.3)
     htmlentities (4.3.4)
     http (4.1.1)
       addressable (~> 2.3)
@@ -557,6 +556,8 @@ GEM
     sassc (2.0.1)
       ffi (~> 1.9)
       rake
+    scss_lint (0.59.0)
+      sass (~> 3.5, >= 3.5.5)
     serrano (0.5.0)
       faraday (~> 0.14.0)
       faraday_middleware (~> 0.12.2)
@@ -567,10 +568,10 @@ GEM
       docile (~> 1.1)
       json (>= 1.8, < 3)
       simplecov-html (~> 0.10.0)
-    simplecov-console (0.4.2)
+    simplecov-console (0.6.0)
       ansi
-      hirb
       simplecov
+      terminal-table
     simplecov-html (0.10.2)
     solr_wrapper (2.1.0)
       faraday
@@ -593,6 +594,8 @@ GEM
     sxp (1.0.2)
       rdf (~> 3.0)
     temple (0.8.2)
+    terminal-table (1.8.0)
+      unicode-display_width (~> 1.1, >= 1.1.1)
     terrapin (0.6.0)
       climate_control (>= 0.0.3, < 1.0)
     thor (0.20.3)
@@ -635,26 +638,27 @@ PLATFORMS
 
 DEPENDENCIES
   byebug
-  colorize (~> 0.8)
-  database_cleaner (~> 1.5)
-  diffy (~> 3.1)
-  equivalent-xml (~> 0.6.0)
+  colorize
+  database_cleaner
+  diffy
+  equivalent-xml
   factory_bot_rails
   httparty
   mysql2 (>= 0.3.13, < 0.5x)
-  nokogiri (~> 1.8)
+  nokogiri
   parallel_tests
   rspec (~> 3.5)
-  rspec-rails
+  rspec-rails (~> 3.5)
   rubocop (= 0.57.2)
-  simplecov (~> 0.14)
-  simplecov-console (~> 0.4)
+  scss_lint
+  simplecov
+  simplecov-console
   stash-sword!
   stash-wrapper!
   stash_datacite!
   stash_discovery!
   stash_engine!
-  webmock (~> 3.0)
+  webmock
 
 BUNDLED WITH
    1.17.3
