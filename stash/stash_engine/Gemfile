@@ -7,8 +7,20 @@ gem 'sortable-table', '~> 0.1'
 gem 'stash-sword', path: '../stash-sword'
 gem 'zaru', '~> 0.3' # Gem for sanitizing file names
 
-group :development, :test do
+group :development,  :local_dev, :test do
+  gem 'byebug'
+  gem 'colorize'
+  gem 'database_cleaner'
+  gem 'diffy'
+  gem 'equivalent-xml'
   gem 'factory_bot_rails', require: false
-  # gem 'factory_bot'
-  gem 'rspec-rails'
+  gem 'nokogiri'
+  gem 'rspec', '~> 3.5'
+  gem 'rspec-rails', '~> 3.5'
+  gem 'rubocop', '0.57.2'
+  gem 'scss_lint'
+  gem 'simplecov'
+  gem 'simplecov-console'
+  gem 'webdrivers' # used to be chromedriver-helper, now deprecated
+  gem 'webmock'
 end

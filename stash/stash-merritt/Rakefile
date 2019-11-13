@@ -44,6 +44,6 @@ RuboCop::RakeTask.new
 
 # ------------------------------------------------------------
 # Defaults
-
+# removed rubocop since it is checked by main app now
 desc 'Run unit tests, check test coverage, check code style'
-task default: %i[coverage rubocop]
+task default: %i[coverage]

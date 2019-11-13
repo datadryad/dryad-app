@@ -1,0 +1,35 @@
+sudo: required
+
+dist: trusty
+
+addons:
+  chrome: stable
+
+language: ruby
+
+rvm:
+  - 2.4.1
+
+services:
+  - mysql
+
+before_install:
+ - sudo apt-get update
+ - sudo apt-get install mutt
+ - gem update --system
+ - gem install bundler -v 1.17.3
+ - gem install colorize
+ - ./travis-prep.sh
+
+before_script:
+  - "bundle exec rake db:migrate RAILS_ENV=test"
+  # To allow travis to run chrome we need to force chromedriver to use a specific version
+  # since Chrome and Chromedriver versions must match :/
+  #   There is an open ticket on chromedriver -> https://github.com/flavorjones/chromedriver-helper/issues/78
+  # - bundle exec chromedriver-update 2.46
+  - sudo chown root /opt/google/chrome/chrome-sandbox
+  - sudo chmod 4755 /opt/google/chrome/chrome-sandbox
+
+script:
+  - bundle exec rake
+  - stash/travis-build.rb
