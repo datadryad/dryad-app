@@ -1,8 +1,8 @@
 # config valid only for current version of Capistrano
-lock '3.4.1'
+lock '3.11.2'
 
 set :application, 'dryad'
-set :repo_url, 'https://github.com/CDL-Dryad/dryad.git'
+set :repo_url, 'https://github.com/CDL-Dryad/dryad-app.git'
 
 # Default branch is :master -- uncomment this to prompt for branch name
 # ask :branch, `git rev-parse --abbrev-ref HEAD`.chomp unless ENV['BRANCH']
