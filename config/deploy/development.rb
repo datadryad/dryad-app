@@ -12,7 +12,6 @@ set :passenger_pool, '6'
 
 # To override the default host, set $SERVER_HOSTS, e.g.
 #    $ SERVER_HOSTS='localhost1 localhost2' bundle exec cap development deploy
-#set :server_hosts, ENV["SERVER_HOSTS"]&.split(' ') || 'dryad-dev.cdlib.org'
 set :server_hosts, ENV["SERVER_HOSTS"]&.split(' ') || 'uc3-dryaduix2-dev.cdlib.org'
 role %i[app web], fetch(:server_hosts), user: 'dryad'
 

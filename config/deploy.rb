@@ -117,24 +117,6 @@ namespace :deploy do
     end
   end
 
-  desc "clone all engines locally if they don't exist"
-  task :clone_engines do
-    on roles(:app) do
-      unless test("[ -d #{deploy_to}/releases/stash ]")
-        execute "cd #{deploy_to}/releases; git clone https://github.com/CDL-Dryad/dryad.git"
-      end
-    end
-  end
-
-  desc 'update local engines to get around requiring version number changes in development'
-  task :update_local_engines do
-    on roles(:app) do
-      my_branch = fetch(:branch, 'development')
-      my_branch = "origin/#{my_branch}" unless my_branch.match(TAG_REGEXP) #git acts differently with branch vs tag
-      execute "cd #{deploy_to}/releases/stash; git fetch --tags; git fetch --all; git reset --hard #{my_branch}"
-    end
-  end
-
   #Rake::Task["start"].clear_actions
   desc 'Start Phusion'
   task :start do
@@ -142,14 +124,11 @@ namespace :deploy do
       within current_path do
         with rails_env: fetch(:rails_env) do
           execute "cd #{deploy_to}/current; bundle install --deployment"
-          # see https://www.phusionpassenger.com/library/config/standalone/optimization/
-          # also looks like there is some memory leak and passenger grows ever bigger if it services too many requests
+
           # https://www.phusionpassenger.com/library/config/standalone/reference/#--max-requests-max_requests
           execute "cd #{deploy_to}/current; bundle exec passenger start -d --environment #{fetch(:rails_env)} "\
               "--pid-file #{fetch(:passenger_pid)} -p #{fetch(:passenger_port)} "\
-              "--log-file #{fetch(:passenger_log)} --pool-idle-time 86400 --max-pool-size=#{fetch(:passenger_pool)} "
-              # "--max-requests=500" -- can't do this since it kills submissions, but we should manually kill if a process gets too
-              # big and seems to have a memory leak, unfortunately, this feature in passenger is a "pro" feature and isn't free.
+              "--log-file #{fetch(:passenger_log)} --pool-idle-time 86400 --max-pool-size=#{fetch(:passenger_pool)}"
         end
       end
     end
@@ -161,26 +140,6 @@ namespace :deploy do
     on roles(:app) do
       if test("[ -f '#{fetch(:passenger_pid)}' ]")
         execute "cd #{deploy_to}/current; bundle exec passenger stop --pid-file #{fetch(:passenger_pid)}"
-      end
-    end
-  end
-
-  Rake::Task["cleanup"].clear_actions
-  desc "Clean up old releases"
-  task :cleanup do
-    on release_roles :all do |host|
-      releases = capture(:ls, "-xtr", releases_path).split.keep_if{|i| i.match(/^[0-9]+$/) }
-      if releases.count >= fetch(:keep_releases)
-        info t(:keeping_releases, host: host.to_s, keep_releases: fetch(:keep_releases), releases: releases.count)
-        directories = (releases - releases.last(fetch(:keep_releases)))
-        if directories.any?
-          directories_str = directories.map do |release|
-            releases_path.join(release)
-          end.join(" ")
-          execute :rm, "-rf", directories_str
-        else
-          info t(:no_old_releases, host: host.to_s, keep_releases: fetch(:keep_releases))
-        end
       end
     end
   end
@@ -197,9 +156,6 @@ namespace :deploy do
   end
 
   before :starting, :update_config
-  before :starting, :clone_engines
-  after :started, :update_local_engines
   before 'deploy:symlink:shared', 'deploy:my_linked_files'
-  #after :published, :update_local_engines
 
 end
