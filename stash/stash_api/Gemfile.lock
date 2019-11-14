@@ -219,7 +219,7 @@ GEM
     csl-styles (1.0.1.9)
       csl (~> 1.0)
     database_cleaner (1.7.0)
-    datacite-mapping (0.4.0)
+    datacite-mapping (0.3.0)
       typesafe_enum (~> 0.1, >= 0.1.7)
       xml-mapping_extensions (~> 0.4, >= 0.4.7)
     deep_merge (1.2.1)
