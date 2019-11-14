@@ -23,9 +23,9 @@ end
 # ############################################################
 # Deployment
 
-gem 'capistrano', '~> 3.4.1'
+gem 'capistrano', '~> 3.11'
 gem 'capistrano-passenger'
-gem 'capistrano-rails', '~> 1.1'
+gem 'capistrano-rails', '~> 1.4'
 gem 'passenger', '~> 6.0.4'
 gem 'rubocop', '~> 0.57.2'
 
