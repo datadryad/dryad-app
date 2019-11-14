@@ -2,63 +2,62 @@ PATH
   remote: ..
   specs:
     stash-wrapper (0.1.12)
-      typesafe_enum (~> 0.1, >= 0.1.8)
-      xml-mapping_extensions (~> 0.4, >= 0.4.9)
+      typesafe_enum (>= 0.1.8)
+      xml-mapping_extensions (>= 0.4.9)
     stash_datacite (0.0.5)
       amatch (>= 0.4.0)
-      datacite-mapping (~> 0.3)
+      datacite-mapping (~> 0.3.0)
       kaminari
       leaflet-rails
       loofah
       mysql2
-      rails (~> 4.2.11)
-      responders (~> 2.4.1)
+      rails (~> 4.2)
+      responders (>= 2.4.1)
       rubyzip (>= 1.0.0)
       serrano (>= 0.5.0)
       stash-wrapper
       stash_discovery
       stash_engine
     stash_discovery (0.0.2)
-      blacklight (~> 6.5.0)
+      blacklight (>= 6.5.0)
       config
-      devise-guests (~> 0.5)
+      devise-guests (>= 0.5)
       ffi
-      geoblacklight (~> 1.1.2)
-      jquery-rails (~> 4.1)
-      rails (~> 4.2.11)
+      geoblacklight (>= 1.1.2)
+      jquery-rails (>= 4.1)
+      rails (~> 4.2)
       rsolr
-      sass-rails (~> 5.0)
+      sass-rails (>= 5.0)
       solr_wrapper
       turbolinks
     stash_engine (0.0.17)
-      amoeba (~> 3.0.0)
-      bolognese (~> 0.15.9)
+      amoeba (>= 3.0.0)
+      bolognese (>= 0.15.9)
       carrierwave (~> 0.10.0)
-      cirneco (~> 0.9.27)
+      cirneco (>= 0.9.27)
       ckeditor (~> 4.3.0)
-      concurrent-ruby (~> 1.0)
+      concurrent-ruby (>= 1.0)
       database_cleaner
-      datacite-mapping (~> 0.3)
-      down (~> 5.0.0)
-      ezid-client (~> 1.5)
-      filesize (~> 0.1.1)
+      datacite-mapping (~> 0.3.0)
+      ezid-client (>= 1.5)
+      filesize
       font-awesome-rails
       http
-      httparty (~> 0.16.4)
-      httpclient (~> 2.8.3)
-      jquery-fileupload-rails (~> 0.4.7)
+      httparty
+      httpclient (>= 2.8.3)
+      jquery-fileupload-rails
       jquery-rails
-      jquery-turbolinks (~> 2.1.0)
+      jquery-turbolinks
       jquery-ui-rails
       kaminari
-      noid (~> 0.9.0)
-      omniauth (~> 1.8.1)
-      omniauth-orcid (~> 2.1.1)
+      noid (>= 0.9.0)
+      omniauth (>= 1.8.1)
+      omniauth-orcid (>= 2.1.1)
       omniauth-rails_csrf_protection
-      omniauth-shibboleth (~> 1.2.1)
-      posix-spawn (~> 0.3.13)
-      rails (~> 4.2.11)
-      redcarpet (~> 3.3)
+      omniauth-shibboleth (>= 1.2.1)
+      posix-spawn (>= 0.3.13)
+      rails (~> 4.2)
+      redcarpet (>= 3.3)
       rest-client
       rinku
       rsolr
@@ -72,9 +71,9 @@ PATH
   remote: .
   specs:
     stash_api (0.0.1)
-      doorkeeper (~> 4.4.2)
+      doorkeeper (>= 4.4.2)
       mysql2
-      rails (~> 4.2.11)
+      rails (~> 4.2)
       stash_datacite
       stash_engine
 
@@ -120,7 +119,7 @@ GEM
     amatch (0.4.0)
       mize
       tins (~> 1.0)
-    amoeba (3.0.0)
+    amoeba (3.1.0)
       activerecord (>= 3.2.6)
     arel (6.0.4)
     ast (2.4.0)
@@ -141,14 +140,15 @@ GEM
       safe_yaml (~> 1.0, >= 1.0.4)
     bibtex-ruby (4.4.7)
       latex-decode (~> 0.0)
-    blacklight (6.5.0)
+    blacklight (6.21.0)
       bootstrap-sass (~> 3.2)
       deprecation
       globalid
+      jbuilder (~> 2.7)
       kaminari (>= 0.15)
       nokogiri (~> 1.6)
       rails (>= 4.2, < 6)
-      rsolr (~> 1.0, >= 1.0.6)
+      rsolr (>= 1.0.6, < 3)
       twitter-typeahead-rails (= 0.11.1.pre.corejavascript)
     bolognese (0.15.9)
       activesupport (>= 4.2.5, < 6)
@@ -237,11 +237,9 @@ GEM
     diffy (3.3.0)
     domain_name (0.5.20190701)
       unf (>= 0.0.5, < 1.0.0)
-    doorkeeper (4.4.3)
+    doorkeeper (5.0.2)
       railties (>= 4.2)
     dotenv (2.7.5)
-    down (5.0.0)
-      addressable (~> 2.5)
     dry-configurable (0.9.0)
       concurrent-ruby (~> 1.0)
       dry-core (~> 0.4, >= 0.4.7)
@@ -298,12 +296,12 @@ GEM
     ffi-compiler (1.0.1)
       ffi (>= 1.0.0)
       rake
-    filesize (0.1.1)
+    filesize (0.2.0)
     font-awesome-rails (4.7.0.5)
       railties (>= 3.2, < 6.1)
     gender_detector (0.1.2)
       unicode_utils (>= 1.3.0)
-    geoblacklight (1.1.2)
+    geoblacklight (1.4.0)
       blacklight (~> 6.3)
       coderay
       config
@@ -321,7 +319,7 @@ GEM
       tilt
     hamster (3.0.0)
       concurrent-ruby (~> 1.0)
-    hashie (3.5.7)
+    hashie (3.6.0)
     htmlentities (4.3.4)
     http (4.2.0)
       addressable (~> 2.3)
@@ -334,7 +332,7 @@ GEM
     http-form_data (2.1.1)
     http-parser (1.2.1)
       ffi-compiler (>= 1.0, < 2.0)
-    httparty (0.16.4)
+    httparty (0.17.1)
       mime-types (~> 3.0)
       multi_xml (>= 0.5.2)
     httpclient (2.8.3)
@@ -342,10 +340,12 @@ GEM
       concurrent-ruby (~> 1.0)
     iso8601 (0.9.1)
     jaro_winkler (1.5.4)
-    jquery-fileupload-rails (0.4.7)
+    jbuilder (2.9.1)
+      activesupport (>= 4.2.0)
+    jquery-fileupload-rails (1.0.0)
       actionpack (>= 3.1)
       railties (>= 3.1)
-      sass (>= 3.2)
+      sassc
     jquery-rails (4.3.5)
       rails-dom-testing (>= 1, < 3)
       railties (>= 4.2.0)
@@ -420,19 +420,19 @@ GEM
       multi_xml (~> 0.5)
       rack (>= 1.2, < 3)
     oj (2.18.5)
-    omniauth (1.8.1)
-      hashie (>= 3.4.6, < 3.6.0)
+    omniauth (1.9.0)
+      hashie (>= 3.4.6, < 3.7.0)
       rack (>= 1.6.2, < 3)
-    omniauth-oauth2 (1.5.0)
+    omniauth-oauth2 (1.6.0)
       oauth2 (~> 1.1)
-      omniauth (~> 1.2)
+      omniauth (~> 1.9)
     omniauth-orcid (2.1.1)
       omniauth-oauth2 (~> 1.3)
       ruby_dig (~> 0.0.2)
     omniauth-rails_csrf_protection (0.1.2)
       actionpack (>= 4.2)
       omniauth (>= 1.3.1)
-    omniauth-shibboleth (1.2.1)
+    omniauth-shibboleth (1.3.0)
       omniauth (>= 1.0.0)
     orm_adapter (0.5.0)
     pandoc-ruby (2.0.2)
@@ -477,9 +477,6 @@ GEM
       thor (>= 0.18.1, < 2.0)
     rainbow (3.0.0)
     rake (13.0.1)
-    rb-fsevent (0.10.3)
-    rb-inotify (0.10.0)
-      ffi (~> 1.0)
     rdf (3.0.13)
       hamster (~> 3.0)
       link_header (~> 0.0, >= 0.0.8)
@@ -512,8 +509,9 @@ GEM
       netrc (~> 0.8)
     retriable (3.1.2)
     rinku (2.0.6)
-    rsolr (1.1.2)
+    rsolr (2.2.1)
       builder (>= 2.1.2)
+      faraday (>= 0.9.0)
     rspec (3.9.0)
       rspec-core (~> 3.9.0)
       rspec-expectations (~> 3.9.0)
@@ -549,19 +547,16 @@ GEM
       sexp_processor (~> 4.9)
     rubyzip (2.0.0)
     safe_yaml (1.0.5)
-    sass (3.7.4)
-      sass-listen (~> 4.0.0)
-    sass-listen (4.0.0)
-      rb-fsevent (~> 0.9, >= 0.9.4)
-      rb-inotify (~> 0.9, >= 0.9.7)
-    sass-rails (5.0.7)
-      railties (>= 4.0.0, < 6)
-      sass (~> 3.1)
-      sprockets (>= 2.8, < 4.0)
-      sprockets-rails (>= 2.0, < 4.0)
-      tilt (>= 1.1, < 3)
+    sass-rails (6.0.0)
+      sassc-rails (~> 2.1, >= 2.1.1)
     sassc (2.2.1)
       ffi (~> 1.9)
+    sassc-rails (2.1.2)
+      railties (>= 4.0.0)
+      sassc (>= 2.0)
+      sprockets (> 3.0)
+      sprockets-rails
+      tilt
     serrano (0.5.2)
       faraday (~> 0.15.0)
       faraday_middleware (>= 0.12.2, < 0.14.0)
