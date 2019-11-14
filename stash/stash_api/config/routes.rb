@@ -6,7 +6,7 @@ StashApi::Engine.routes.draw do
 
   match '/test', to: 'general#test', via: %i[get post]
 
-  resources :datasets, shallow: true, id: /[^\s\/]+?/, format: /json|xml|yaml/ do
+  resources :datasets, shallow: true, id: %r{[^\s/]+?}, format: /json|xml|yaml/ do
     member do
       get 'download'
     end
@@ -28,7 +28,7 @@ StashApi::Engine.routes.draw do
   end
   # this one doesn't follow the pattern since it gloms filename on the end, so manual route
   # This should be PUT, not POST because of filename, see https://stackoverflow.com/questions/630453/put-vs-post-in-rest for example
-  put 'datasets/:id/files/:filename', id: /[^\s\/]+?/, filename: /[^\s\/]+?/, to: 'files#update', as: 'dataset_file', format: false
+  put 'datasets/:id/files/:filename', id: %r{[^\s/]+?}, filename: %r{[^\s/]+?}, to: 'files#update', as: 'dataset_file', format: false
 
   resources :users, only: %i[index show]
 

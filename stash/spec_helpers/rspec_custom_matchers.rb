@@ -90,6 +90,7 @@ RSpec::Matchers.define :be_time do |expected|
   end
 end
 
+# rubocop:disable Metrics/BlockLength
 RSpec::Matchers.define :request do
   match do |actual|
     failures_for(actual).empty?
@@ -146,6 +147,7 @@ RSpec::Matchers.define :request do
   end
 
 end
+# rubocop:enable Metrics/BlockLength
 
 RSpec::Matchers.define :include_header do |k, v|
   def matching_key(k, actual)
