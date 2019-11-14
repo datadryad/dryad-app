@@ -1,3 +1,4 @@
+require 'byebug'
 # ------------------------------------------------------------
 # SimpleCov setup
 
@@ -8,6 +9,11 @@ if ENV['COVERAGE']
   SimpleCov.minimum_coverage 100
   SimpleCov.start do
     add_filter '/spec/'
+    # without this, simplecov was going crazy and including coverage for all, including other people's gems
+    add_filter do |source_file|
+      !source_file.filename.include?('/stash-merritt/')
+    end
+
     SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter.new [
       SimpleCov::Formatter::HTMLFormatter,
       SimpleCov::Formatter::Console

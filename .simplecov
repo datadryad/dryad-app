@@ -1,7 +1,7 @@
 require 'simplecov-console'
 
 # Up one level to include stash
-COVERAGE_ROOT = File.expand_path(File.join(File.dirname(__FILE__), '..'))
+COVERAGE_ROOT = File.expand_path(File.join(File.dirname(__FILE__), '.'))
 
 # Hack for SimpleCov #5 https://github.com/chetan/simplecov-console/issues/5
 SimpleCov::Formatter::Console::ROOT = COVERAGE_ROOT

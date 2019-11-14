@@ -2,9 +2,6 @@ source 'https://rubygems.org'
 
 gemspec
 
-group :test, :development do
-  gem 'byebug'
-end
 gem 'standalone_migrations', git: 'https://github.com/thuss/standalone-migrations.git', ref: 'de391a69e4ed'
 
 gem 'mysql2', '< 0.5x', '>= 0.3.13'
@@ -15,4 +12,21 @@ path '..' do
   gem 'stash_datacite'
   gem 'stash_discovery'
   gem 'stash_engine'
+end
+
+group :development, :local_dev, :test do
+  gem 'byebug'
+  gem 'colorize'
+  gem 'database_cleaner'
+  gem 'diffy'
+  gem 'equivalent-xml'
+  gem 'factory_bot_rails', require: false
+  gem 'nokogiri'
+  gem 'rspec', '~> 3.5'
+  gem 'rspec-rails', '~> 3.5'
+  gem 'rubocop', '0.57.2'
+  gem 'simplecov'
+  gem 'simplecov-console'
+  gem 'webmock'
+  gem 'yard'
 end
