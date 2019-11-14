@@ -82,9 +82,9 @@ module StashApi
       end
 
       # if the status is being updated based on notification from a journal, DON'T go backwards in workflow,
-      # that is, don't change a status that is already published, embargoed, or curation
+      # that is, don't change a status other than submitted or peer_review
       if ca_note&.match(/based on notification from journal/) &&
-         %w[published embargoed curation].include?(resource.current_curation_status)
+         !%w[submitted peer_review].include?(resource.current_curation_status)
         ca_note = "received #{ca_status} notification from journal module, but retaining current curation status due to workflow rules"
         ca_status = resource.current_curation_status
       end
