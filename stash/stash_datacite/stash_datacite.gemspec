@@ -46,7 +46,7 @@ Gem::Specification.new do |s| # rubocop:disable Metrics/BlockLength
   s.add_dependency 'rubyzip', '>= 1.0.0'
   s.add_dependency 'serrano', '>= 0.5.0' # for CrossRef API
 
-  s.add_dependency 'datacite-mapping', '>= 0.3'
+  s.add_dependency 'datacite-mapping', '~> 0.3.0'
   # TODO: do these need versions?
   s.add_dependency 'stash-wrapper'
   s.add_dependency 'stash_discovery'
