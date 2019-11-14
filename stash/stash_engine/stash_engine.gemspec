@@ -44,7 +44,7 @@ Gem::Specification.new do |s| # rubocop:disable Metrics/BlockLength
   s.add_dependency 'ckeditor', '~> 4.3.0' # lock to 4.x series since upgrading to 5.x blows up until we figure out the upgrade path
   s.add_dependency 'concurrent-ruby', '>= 1.0'
   s.add_dependency 'database_cleaner' # for one migration task, but need to keep capistrano from barfing can remove after migration
-  s.add_dependency 'datacite-mapping', '>= 0.3'
+  s.add_dependency 'datacite-mapping', '~> 0.3.0'
   s.add_dependency 'ezid-client', '>= 1.5'
   s.add_dependency 'filesize'
   s.add_dependency 'font-awesome-rails'
