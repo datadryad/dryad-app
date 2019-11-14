@@ -4,12 +4,12 @@ class ModifyTitleTypeEnum < ActiveRecord::Migration
     execute QUERY2
   end
 
-  QUERY1 = <<-eos.freeze
+  QUERY1 = <<-SQL.freeze
     UPDATE dcs_titles SET title_type = NULL
     WHERE title_type = 'main'
-  eos
+  SQL
 
-  QUERY2 = <<-eos.freeze
+  QUERY2 = <<-SQL.freeze
     ALTER TABLE dcs_titles MODIFY COLUMN `title_type` enum('alternativetitle','subtitle','translatedtitle') DEFAULT NULL;
-  eos
+  SQL
 end

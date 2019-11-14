@@ -1,6 +1,7 @@
 # ------------------------------------------------------------
 # RSpec
 
+require 'rubygems'
 require 'rspec/core'
 require 'rspec/core/rake_task'
 require 'rubocop/rake_task'
@@ -27,4 +28,5 @@ RuboCop::RakeTask.new
 # Defaults
 
 desc 'Run unit tests, check code style'
-task default: %i[spec rubocop]
+# removed rubocop, checked my main app
+task default: %i[spec]

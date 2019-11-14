@@ -34,8 +34,9 @@ RuboCop::RakeTask.new
 # ------------------------------------------------------------
 # Defaults
 
-desc 'Run unit tests, check test coverage, check code style, run feature tests'
-task default: %i[coverage rubocop spec:feature]
+desc 'Run unit tests, check test coverage, run feature tests'
+# style checked from running on main app
+task default: %i[coverage spec:feature]
 
 # begin
 #   require 'bundler/setup'

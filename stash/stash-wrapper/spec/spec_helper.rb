@@ -8,6 +8,9 @@ if ENV['COVERAGE']
   SimpleCov.minimum_coverage 100
   SimpleCov.start do
     add_filter '/spec/'
+    add_filter do |source_file|
+      !source_file.filename.include?('/stash-wrapper/')
+    end
     SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter[
       SimpleCov::Formatter::HTMLFormatter,
       SimpleCov::Formatter::Console,

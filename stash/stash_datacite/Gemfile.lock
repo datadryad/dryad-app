@@ -478,6 +478,9 @@ GEM
       thor (>= 0.18.1, < 2.0)
     rainbow (3.0.0)
     rake (13.0.1)
+    rb-fsevent (0.10.3)
+    rb-inotify (0.10.0)
+      ffi (~> 1.0)
     rdf (3.0.13)
       hamster (~> 3.0)
       link_header (~> 0.0, >= 0.0.8)
@@ -547,6 +550,11 @@ GEM
       sexp_processor (~> 4.9)
     rubyzip (2.0.0)
     safe_yaml (1.0.5)
+    sass (3.7.4)
+      sass-listen (~> 4.0.0)
+    sass-listen (4.0.0)
+      rb-fsevent (~> 0.9, >= 0.9.4)
+      rb-inotify (~> 0.9, >= 0.9.7)
     sass-rails (6.0.0)
       sassc-rails (~> 2.1, >= 2.1.1)
     sassc (2.2.1)
@@ -557,6 +565,8 @@ GEM
       sprockets (> 3.0)
       sprockets-rails
       tilt
+    scss_lint (0.59.0)
+      sass (~> 3.5, >= 3.5.5)
     serrano (0.5.2)
       faraday (~> 0.15.0)
       faraday_middleware (>= 0.12.2, < 0.14.0)
@@ -637,26 +647,27 @@ PLATFORMS
 
 DEPENDENCIES
   byebug
-  colorize (>= 0.8)
-  database_cleaner (>= 1.5)
-  diffy (>= 3.1)
-  equivalent-xml (>= 0.6.0)
+  colorize
+  database_cleaner
+  diffy
+  equivalent-xml
   factory_bot_rails
   httparty
   mysql2 (>= 0.3.13, < 0.5x)
-  nokogiri (>= 1.8)
+  nokogiri
   parallel_tests
-  rspec (>= 3.5)
-  rspec-rails
-  rubocop (~> 0.57.2)
-  simplecov (>= 0.14)
-  simplecov-console (>= 0.4)
+  rspec (~> 3.5)
+  rspec-rails (~> 3.5)
+  rubocop (= 0.57.2)
+  scss_lint
+  simplecov
+  simplecov-console
   stash-sword!
   stash-wrapper!
   stash_datacite!
   stash_discovery!
   stash_engine!
-  webmock (>= 3.0)
+  webmock
 
 BUNDLED WITH
    1.17.3

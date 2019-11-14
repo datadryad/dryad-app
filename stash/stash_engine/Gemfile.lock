@@ -509,24 +509,24 @@ PLATFORMS
 
 DEPENDENCIES
   byebug
-  colorize (>= 0.8)
-  database_cleaner (>= 1.5)
-  diffy (>= 3.1)
-  equivalent-xml (>= 0.6.0)
+  colorize
+  database_cleaner
+  diffy
+  equivalent-xml
   factory_bot_rails
   mysql2 (>= 0.3.13, < 0.5x)
-  nokogiri (>= 1.8)
-  rspec (>= 3.5)
-  rspec-rails
+  nokogiri
+  rspec (~> 3.5)
+  rspec-rails (~> 3.5)
   rubocop (= 0.57.2)
   scss_lint
-  simplecov (>= 0.14)
-  simplecov-console (>= 0.4)
+  simplecov
+  simplecov-console
   sortable-table (~> 0.1)
   stash-sword!
   stash_engine!
   webdrivers
-  webmock (>= 3.0)
+  webmock
   zaru (~> 0.3)
 
 BUNDLED WITH
