@@ -23,9 +23,9 @@ end
 # ############################################################
 # Deployment
 
-gem 'capistrano', '~> 3.4.1'
+gem 'capistrano', '~> 3.11'
 gem 'capistrano-passenger'
-gem 'capistrano-rails', '~> 1.1'
+gem 'capistrano-rails', '~> 1.4'
 gem 'passenger', '~> 6.0.4'
 gem 'rubocop', '~> 0.57.2'
 
@@ -75,6 +75,10 @@ group :test do
   gem 'webdrivers'
   # Strategies for cleaning databases.  Can be used to ensure a clean state for testing. (http://github.com/DatabaseCleaner/database_cleaner)
   gem 'database_cleaner', require: false
+  # required for weird-ass rspec_custom_matchers that isn't in any actual gem/engine, but gets loaded in some weird circumstances
+  gem 'diffy'
+  # required for weird-ass rspec_custom_matchers that isn't in any actual gem/engine, but gets loaded in some weird circumstances
+  gem 'equivalent-xml'
   # factory_bot_rails provides integration between factory_bot and rails 3 or newer (http://github.com/thoughtbot/factory_bot_rails)
   gem 'factory_bot_rails'
   # Easily generate fake data (https://github.com/stympy/faker)
@@ -87,6 +91,8 @@ group :test do
   gem 'guard-rspec'
   # Mocking and stubbing library (http://gofreerange.com/mocha/docs)
   gem 'mocha', require: false
+  # IDK why, but even when this loads in the gemfile for the stash-notifier library it doesn't work in tests in Travis.ci
+  gem 'oai'
   # RSpec for Rails (https://github.com/rspec/rspec-rails)
   gem 'rspec-collection_matchers'
   gem 'rspec-rails'
@@ -96,6 +102,8 @@ group :test do
   gem 'shoulda'
   # Code coverage for Ruby 1.9+ with a powerful configuration library and automatic merging of coverage across test suites (http://github.com/colszowka/simplecov)
   gem 'simplecov', require: false
+  # used by some of the engines and for some reason causes errors without it in the main Gemfile, also.
+  gem 'simplecov-console', require: false
   # Rails application preloader (https://github.com/rails/spring)
   gem 'spring'
   # rspec command for spring (https://github.com/jonleighton/spring-commands-rspec)
