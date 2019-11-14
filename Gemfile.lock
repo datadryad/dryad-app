@@ -25,7 +25,7 @@ PATH
       stash_engine
     stash_datacite (0.0.5)
       amatch (>= 0.4.0)
-      datacite-mapping (>= 0.3)
+      datacite-mapping (~> 0.3.0)
       kaminari
       leaflet-rails
       loofah
@@ -57,7 +57,7 @@ PATH
       ckeditor (~> 4.3.0)
       concurrent-ruby (>= 1.0)
       database_cleaner
-      datacite-mapping (>= 0.3)
+      datacite-mapping (~> 0.3.0)
       ezid-client (>= 1.5)
       filesize
       font-awesome-rails
@@ -259,7 +259,7 @@ GEM
     csl-styles (1.0.1.9)
       csl (~> 1.0)
     database_cleaner (1.7.0)
-    datacite-mapping (0.4.0)
+    datacite-mapping (0.3.0)
       typesafe_enum (~> 0.1, >= 0.1.7)
       xml-mapping_extensions (~> 0.4, >= 0.4.7)
     debug_inspector (0.0.3)
