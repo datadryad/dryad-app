@@ -25,20 +25,20 @@ Gem::Specification.new do |s| # rubocop:disable Metrics/BlockLength
   s.test_files    = s.files.grep(%r{^(test|spec|features)/})
   s.require_paths = ['lib']
 
-  s.add_dependency 'rest-client', '~> 2.0'
+  s.add_dependency 'rest-client', '>= 2.0'
   s.add_dependency 'typesafe_enum', '~> 0.1', '>= 0.1.8'
-  s.add_dependency 'xml-mapping_extensions', '~> 0.4', '>= 0.4.9'
+  s.add_dependency 'xml-mapping_extensions', '>= 0.4.9'
 
-  s.add_development_dependency 'equivalent-xml', '~> 0.6.0'
+  s.add_development_dependency 'equivalent-xml', '>= 0.6.0'
 
   s.add_development_dependency 'bundler', '~> 1.17.3'
-  s.add_development_dependency 'diffy', '~> 3.1'
-  s.add_development_dependency 'nokogiri', '~> 1.8'
-  s.add_development_dependency 'rake', '~> 12.0'
-  s.add_development_dependency 'rspec', '~> 3.3'
-  s.add_development_dependency 'rubocop', '0.57.2'
-  s.add_development_dependency 'simplecov', '~> 0.14'
-  s.add_development_dependency 'simplecov-console', '~> 0.4'
-  s.add_development_dependency 'webmock', '~> 3.0'
-  s.add_development_dependency 'yard', '~> 0.9', '>= 0.9.12'
+  s.add_development_dependency 'diffy', '>= 3.1'
+  s.add_development_dependency 'nokogiri', '>= 1.8'
+  s.add_development_dependency 'rake', '>= 12.0'
+  s.add_development_dependency 'rspec', '>= 3.3'
+  s.add_development_dependency 'rubocop', '~> 0.57.2'
+  s.add_development_dependency 'simplecov', '>= 0.14'
+  s.add_development_dependency 'simplecov-console', '>= 0.4'
+  s.add_development_dependency 'webmock', '>= 3.0'
+  s.add_development_dependency 'yard', '>= 0.9.12'
 end
