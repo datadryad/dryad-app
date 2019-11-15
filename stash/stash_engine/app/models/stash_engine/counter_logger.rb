@@ -26,7 +26,7 @@ module StashEngine
 
     def self.log_line(request:, resource:, filename: nil, size: nil)
       line = log_array(request: request, resource: resource, filename: filename, size: size)
-      StashEngine.counter_log(line)
+      StashEngine.counter_log(line) if required_data?(line: line)
     end
 
     def self.log_array(request:, resource:, filename:, size:)
@@ -55,6 +55,17 @@ module StashEngine
         resource.try(:identifier).try(:target), # The landing page url with correct domain and all
         resource.publication_date&.year || Time.new.year
       ]
+    end
+
+    # there is a more intense validator at stash/stash_engine/lib/tasks/counter/validate_file.rb, however if something
+    # isn't filled in then something is really wrong and this item really isn't released or loggable
+    def self.required_data?(line:)
+      # these items are required: 0:ip, 4:original_url, 5:identifier_string, 9:title, 10:publisher, 11:publisher_id,
+      # 12:authors, 13:publication_date, 16:doi_url, 17:publication_year
+      [0, 4, 5, 9, 10, 11, 12, 13, 16, 17].each do |i|
+        return false if line[i].blank?
+      end
+      true
     end
 
   end
