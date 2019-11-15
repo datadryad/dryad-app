@@ -9,7 +9,7 @@ class JsonStats
   end
 
   def update_stats
-    datasets = @stats['report_datasets']
+    datasets = @stats['report-datasets']
     datasets.each_with_index do |ds, idx|
       puts "  #{idx}/#{datasets.length} processed" if idx % 100 == 0
 
