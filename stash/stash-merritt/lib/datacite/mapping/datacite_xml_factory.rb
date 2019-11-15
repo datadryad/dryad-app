@@ -34,7 +34,17 @@ module Datacite
             Creator.new(
               name: c.author_full_name,
               identifier: dcs_identifier_from(c.author_orcid),
-              affiliations: c.affiliations.map(&:smart_name)
+              affiliations: c.affiliations.map do |a|
+                if a.ror_id                  
+                  Affiliation.new(
+                    identifier: a.ror_id,
+                    identifier_scheme: 'ROR',
+                    value: a.smart_name
+                  )
+                else
+                  Affiliation.new(value: a.smart_name)
+                end
+              end
             )
           end,
           titles: [Title.new(value: se_resource.title, type: nil)],
