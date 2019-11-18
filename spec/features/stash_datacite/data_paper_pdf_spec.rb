@@ -8,7 +8,8 @@ RSpec.feature 'DataPaperPdf', type: :feature do
     before(:each) do
       neuter_curation_callbacks!
 
-      @resource = create(:resource, user: create(:user, tenant_id: 'dryad'), meta_view: true, file_view: true, identifier: create(:identifier, pub_state: 'published'))
+      @resource = create(:resource, user: create(:user, tenant_id: 'dryad'), meta_view: true, file_view: true,
+                                    identifier: create(:identifier, pub_state: 'published'))
       create(:publication_year, resource: @resource)
       create(:curation_activity_no_callbacks, :published, resource: @resource)
 
