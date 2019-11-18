@@ -306,7 +306,8 @@ module StashDatacite
     def sd_affiliation_id_for(affiliation_obj)
       sd_affiliations = StashDatacite::Affiliation.where('short_name = ? or long_name = ?', affiliation_obj&.value, affiliation_obj&.value)
       return sd_affiliations.first.id unless sd_affiliations.empty?
-      StashDatacite::Affiliation.create(long_name: affiliation_obj&.value, ror_id: affiliation_obj&.identifier).id unless affiliation_obj&.value&.blank?
+      return nil if affiliation_obj.nil? || affiliation_obj.value.blank?
+      StashDatacite::Affiliation.create(long_name: affiliation_obj&.value, ror_id: affiliation_obj&.identifier).id
     end
 
     def email_from(dcs_name_identifier)
