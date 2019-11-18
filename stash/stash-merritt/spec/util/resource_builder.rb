@@ -105,7 +105,7 @@ module StashDatacite
         author_orcid: orcid_from(dcs_creator.identifier),
         resource_id: se_resource_id
       )
-      se_author.affiliation_ids = dcs_creator.affiliations.map { |affiliation_str| sd_affiliation_id_for(affiliation_str) }
+      se_author.affiliation_ids = dcs_creator.affiliations.map { |affiliation_obj| sd_affiliation_id_for(affiliation_obj) }
       se_author
     end
 
@@ -116,7 +116,7 @@ module StashDatacite
     end
 
     def set_sd_publisher(dcs_publisher)
-      Publisher.create(publisher: dcs_publisher, resource_id: se_resource_id) unless dcs_publisher.blank?
+      Publisher.create(publisher: dcs_publisher&.value, resource_id: se_resource_id) unless dcs_publisher.blank?
     end
 
     def set_sd_pubyear(dcs_publication_year)
@@ -137,7 +137,7 @@ module StashDatacite
         name_identifier_id: sd_name_identifier_id_for(dcs_contributor.identifier),
         resource_id: se_resource_id
       )
-      sd_contributor.affiliation_ids = dcs_contributor.affiliations.map { |affiliation_str| sd_affiliation_id_for(affiliation_str) }
+      sd_contributor.affiliation_ids = dcs_contributor.affiliations.map { |affiliation_obj| sd_affiliation_id_for(affiliation_obj) }
       sd_contributor
     end
 
@@ -305,10 +305,12 @@ module StashDatacite
       name_w_comma.split(',', 2).map(&:strip)
     end
 
-    def sd_affiliation_id_for(affiliation_str)
-      sd_affiliations = StashDatacite::Affiliation.where('short_name = ? or long_name = ?', affiliation_str, affiliation_str)
+    def sd_affiliation_id_for(affiliation_obj)
+      sd_affiliations = StashDatacite::Affiliation.where('short_name = ? or long_name = ?', affiliation_obj&.value, affiliation_obj&.value)
       return sd_affiliations.first.id unless sd_affiliations.empty?
-      StashDatacite::Affiliation.create(long_name: affiliation_str).id unless affiliation_str.blank?
+      return nil if affiliation_obj.nil? || affiliation_obj.value.blank?
+      StashDatacite::Affiliation.create(long_name: affiliation_obj&.value,
+                                        ror_id: affiliation_obj&.identifier).id
     end
 
     def email_from(dcs_name_identifier)

@@ -123,7 +123,7 @@
         <contributor contributorType='ProjectMember'>
           <contributorName>Chen, Xiaoxin</contributorName>
           <nameIdentifier nameIdentifierScheme='ORCID' schemeURI='http://orcid.org/'>1234-5678-9101-1121</nameIdentifier>
-          <affiliation>University of North Carolina at Chapel Hill</affiliation>
+          <affiliation affiliationIdentifier="https://ror.org/0130frc33" affiliationIdentifierScheme="ROR">University of North Carolina at Chapel Hill</affiliation>
         </contributor>
         <contributor contributorType='DataManager'>
           <contributorName>Wilson, James</contributorName>

@@ -28,7 +28,7 @@ PATH
       ckeditor (~> 4.3.0)
       concurrent-ruby (>= 1.0)
       database_cleaner
-      datacite-mapping (~> 0.3.0)
+      datacite-mapping (~> 0.4.0)
       ezid-client (>= 1.5)
       filesize
       font-awesome-rails
@@ -62,7 +62,7 @@ PATH
   specs:
     stash_datacite (0.0.5)
       amatch (>= 0.4.0)
-      datacite-mapping (~> 0.3.0)
+      datacite-mapping (~> 0.4.0)
       kaminari
       leaflet-rails
       loofah
@@ -216,7 +216,7 @@ GEM
     csl-styles (1.0.1.9)
       csl (~> 1.0)
     database_cleaner (1.7.0)
-    datacite-mapping (0.3.0)
+    datacite-mapping (0.4.0)
       typesafe_enum (~> 0.1, >= 0.1.7)
       xml-mapping_extensions (~> 0.4, >= 0.4.7)
     deep_merge (1.2.1)
@@ -399,8 +399,8 @@ GEM
     mini_mime (1.0.2)
     mini_portile2 (2.3.0)
     minitest (5.13.0)
-    mize (0.3.5)
-      protocol
+    mize (0.4.0)
+      protocol (~> 2.0)
     multi_json (1.14.1)
     multi_xml (0.6.0)
     multipart-post (2.1.1)
