@@ -35,6 +35,7 @@ namespace :counter do
     exit # makes the arguments not be interpreted as other rake tasks
   end # end of task
 
+  # example: JSON_DIRECTORY="/user/me/json-reports" RAILS_ENV=production be rake counter:cop_manual
   desc 'manually populate CoP stats from json files'
   task cop_manual: :environment do
     puts "JSON_DIRECTORY is #{ENV['JSON_DIRECTORY']}"

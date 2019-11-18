@@ -30,7 +30,8 @@ module StashEngine
       # only update stats if it's a later calendar week than this record was updated
       return unless new_record? || updated_at.nil? || calendar_week(Time.new) > calendar_week(updated_at)
 
-      update_usage!
+      # do no update the usage data until we can successfully get all of our reports in to DataCite in order to pull them back
+      # update_usage!
       update_citation_count!
       self.updated_at = Time.new.utc # seem to need this for some reason, since not always updating automatically
       save!
