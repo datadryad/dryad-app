@@ -40,8 +40,8 @@ module Stash
       actual_string = to_pretty(to_nokogiri(actual)) || actual
 
       now = Time.now.to_i
-      File.open("tmp/#{now}-expected.xml", 'w') { |f| f.write(expected_string) }
-      File.open("tmp/#{now}-actual.xml", 'w') { |f| f.write(actual_string) }
+      File.open("/tmp/#{now}-expected.xml", 'w') { |f| f.write(expected_string) }
+      File.open("/tmp/#{now}-actual.xml", 'w') { |f| f.write(actual_string) }
 
       diff = Diffy::Diff.new(expected_string, actual_string).to_s(:text)
 

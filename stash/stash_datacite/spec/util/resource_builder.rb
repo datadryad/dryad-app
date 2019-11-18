@@ -135,7 +135,7 @@ module StashDatacite
         name_identifier_id: sd_name_identifier_id_for(dcs_contributor.identifier),
         resource_id: se_resource_id
       )
-      sd_contributor.affiliation_ids = dcs_contributor.affiliations.map { |affiliation_str| sd_affiliation_id_for(affiliation_str) }
+      sd_contributor.affiliation_ids = dcs_contributor.affiliations.map { |affiliation_obj| sd_affiliation_id_for(affiliation_obj) }
       sd_contributor
     end
 
@@ -303,10 +303,11 @@ module StashDatacite
       name_w_comma.split(',', 2).map(&:strip)
     end
 
-    def sd_affiliation_id_for(affiliation_str)
-      sd_affiliations = StashDatacite::Affiliation.where('short_name = ? or long_name = ?', affiliation_str, affiliation_str)
+    def sd_affiliation_id_for(affiliation_obj)
+      sd_affiliations = StashDatacite::Affiliation.where('short_name = ? or long_name = ?', affiliation_obj&.value, affiliation_obj&.value)
       return sd_affiliations.first.id unless sd_affiliations.empty?
-      StashDatacite::Affiliation.create(long_name: affiliation_str).id unless affiliation_str.blank?
+      return nil if affiliation_obj.nil? || affiliation_obj.value.blank?
+      StashDatacite::Affiliation.create(long_name: affiliation_obj&.value, ror_id: affiliation_obj&.identifier).id
     end
 
     def email_from(dcs_name_identifier)
