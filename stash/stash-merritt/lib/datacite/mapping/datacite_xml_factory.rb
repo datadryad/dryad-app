@@ -35,7 +35,7 @@ module Datacite
               name: c.author_full_name,
               identifier: dcs_identifier_from(c.author_orcid),
               affiliations: c.affiliations.map do |a|
-                if a.ror_id                  
+                if a.ror_id && !datacite_3
                   Affiliation.new(
                     identifier: a.ror_id,
                     identifier_scheme: 'ROR',
@@ -59,7 +59,7 @@ module Datacite
         dcs_resource.version = version
 
         add_subjects(dcs_resource)
-        add_contributors(dcs_resource)
+        add_contributors(dcs_resource, datacite_3: datacite_3)
         add_dates(dcs_resource)
         add_alt_ids(dcs_resource)
         add_related_ids(dcs_resource)
@@ -148,13 +148,23 @@ module Datacite
         dcs_resource.subjects = se_resource.subjects.map { |s| Subject.new(value: s.subject) }
       end
 
-      def add_contributors(dcs_resource)
+      def add_contributors(dcs_resource, datacite_3: false)
         se_resource.contributors.completed.where.not(contributor_type: 'funder').each do |c|
           dcs_resource.contributors << Contributor.new(
             name: c.contributor_name,
             identifier: to_dcs_identifier(c.name_identifier),
             type: c.contributor_type_mapping_obj,
-            affiliations: c.affiliations.map(&:long_name)
+            affiliations:  c.affiliations.map do |a|
+              if a.ror_id && !datacite_3
+                Affiliation.new(
+                  identifier: a.ror_id,
+                  identifier_scheme: 'ROR',
+                  value: a.smart_name
+                )
+              else
+                Affiliation.new(value: a.smart_name)
+              end
+            end
           )
         end
       end

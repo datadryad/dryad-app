@@ -91,7 +91,7 @@
         <creator>
           <creatorName>Chen, Hao</creatorName>
           <nameIdentifier nameIdentifierScheme='ORCID' schemeURI='http://orcid.org/'>0123-4567-8910-1112</nameIdentifier>
-          <affiliation>North Carolina Central University</affiliation>
+          <affiliation affiliationIdentifier="https://ror.org/051r3tx83" affiliationIdentifierScheme="ROR">North Carolina Central University</affiliation>
         </creator>
       </creators>
       <titles>
@@ -122,7 +122,7 @@
         <contributor contributorType='ProjectMember'>
           <contributorName>Chen, Xiaoxin</contributorName>
           <nameIdentifier nameIdentifierScheme='ORCID' schemeURI='http://orcid.org/'>1234-5678-9101-1121</nameIdentifier>
-          <affiliation>University of North Carolina at Chapel Hill</affiliation>
+          <affiliation affiliationIdentifier="https://ror.org/0130frc33" affiliationIdentifierScheme="ROR">University of North Carolina at Chapel Hill</affiliation>
         </contributor>
         <contributor contributorType='DataManager'>
           <contributorName>Wilson, James</contributorName>
