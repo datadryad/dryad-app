@@ -4,7 +4,6 @@ AllCops:
   Exclude:
     - 'bin/**/*'
     - 'config/**/*'
-    - 'db/**/*'
     - 'script/**/*'
     - 'spec/dummy/db/**/*'
     - 'test/dummy/db/**/*'
