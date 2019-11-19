@@ -61,10 +61,10 @@ Upgrades and enhanced system functions will be ongoing as a way to continually i
 -  UC Irvine
 -  UCLA
 -  UC Merced
--  UC Santa Barbara
 -  UC Riverside
 -  UC San Francisco
 -  UC San Diego
+-  UC Santa Barbara
 -  UC Santa Cruz
 -  University of Illinois, Urbana-Champagne
 -  University of New Mexico
