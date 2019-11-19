@@ -21,7 +21,7 @@ module StashEngine
     def self.log(items) # array of items to log, will be separated by tabs
       items.flatten!
       items.unshift(Time.new.utc)
-      items.map! { |i| (i.respond_to?(:iso8601) ? i.iso8601 : i.to_s) }
+      items.map! { |i| (i.respond_to?(:iso8601) ? i.iso8601 : i.to_s.strip.gsub(/\p{Cntrl}/, ' ')) }
       items.map! { |i| (i.blank? ? '-' : i) }
       logger.info(items.join("\t"))
     end
@@ -31,7 +31,7 @@ module StashEngine
       l.info('#Version: 0.0.1')
       l.info("#Fields: event_time\tclient_ip\tsession_cookie_id\tuser_cookie_id\tuser_id\trequest_url\tidentifier\tfilename\tsize\tuser-agent\t" \
             "title\tpublisher\tpublisher_id\tauthors\tpublication_date\tversion\tother_id\ttarget_url\tpublication_year")
-      l.info('#Software: Dash')
+      l.info('#Software: Dryad')
       l.info("#Start-Date: #{Time.parse(date_string).iso8601}")
       l.info("#End-Date: #{(Time.parse(date_string) + 24.hours).iso8601}")
     end
