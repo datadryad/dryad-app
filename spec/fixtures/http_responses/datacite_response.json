@@ -1,0 +1,543 @@
+{
+  "indexed": {
+    "date-parts": [
+      [
+        2019,
+        11,
+        7
+      ]
+    ],
+    "date-time": "2019-11-07T13:43:42Z",
+    "timestamp": 1573134222331
+  },
+  "reference-count": 36,
+  "publisher": "Wiley",
+  "issue": "10",
+  "license": [
+    {
+      "URL": "http://doi.wiley.com/10.1002/tdm_license_1.1",
+      "start": {
+        "date-parts": [
+          [
+            2015,
+            9,
+            1
+          ]
+        ],
+        "date-time": "2015-09-01T00:00:00Z",
+        "timestamp": 1441065600000
+      },
+      "delay-in-days": 0,
+      "content-version": "tdm"
+    }
+  ],
+  "funder": [
+    {
+      "DOI": "10.13039/100000011",
+      "name": "Howard Hughes Medical Institute",
+      "doi-asserted-by": "publisher",
+      "award": []
+    },
+    {
+      "DOI": "10.13039/100000001",
+      "name": "National Science Foundation",
+      "doi-asserted-by": "publisher",
+      "award": [
+        "DBI-1248096"
+      ]
+    }
+  ],
+  "content-domain": {
+    "domain": [
+      "wiley.com"
+    ],
+    "crossmark-restriction": true
+  },
+  "published-print": {
+    "date-parts": [
+      [
+        2016,
+        5
+      ]
+    ]
+  },
+  "DOI": "10.1111/mec.13594",
+  "type": "article-journal",
+  "created": {
+    "date-parts": [
+      [
+        2016,
+        2,
+        29
+      ]
+    ],
+    "date-time": "2016-02-29T04:58:36Z",
+    "timestamp": 1456721916000
+  },
+  "page": "2165-2175",
+  "update-policy": "http://dx.doi.org/10.1002/crossmark_policy",
+  "source": "Crossref",
+  "is-referenced-by-count": 32,
+  "title": "Genomic characterization of sex-identification markers inSebastes carnatusandSebastes chrysomelasrockfishes",
+  "prefix": "10.1111",
+  "volume": "25",
+  "author": [
+    {
+      "given": "Benjamin L. S.",
+      "family": "Fowler",
+      "sequence": "first",
+      "affiliation": [
+        {
+          "name": "Department of Biology; Juniata College; 1700 Moore Street Huntingdon PA 16652 USA"
+        }
+      ]
+    },
+    {
+      "given": "Vincent P.",
+      "family": "Buonaccorsi",
+      "sequence": "additional",
+      "affiliation": [
+        {
+          "name": "Department of Biology; Juniata College; 1700 Moore Street Huntingdon PA 16652 USA"
+        }
+      ]
+    }
+  ],
+  "member": "311",
+  "published-online": {
+    "date-parts": [
+      [
+        2016,
+        3,
+        28
+      ]
+    ]
+  },
+  "reference": [
+    {
+      "key": "10.1111/mec.13594-BIB0001|mec13594-cit-0001",
+      "author": "Anderson",
+      "year": "1979",
+      "volume-title": "A Karyological Investigation of the Systematics of the Genus Sebastes (Subgenus Pteropodus)"
+    },
+    {
+      "key": "10.1111/mec.13594-BIB0003|mec13594-cit-0003",
+      "doi-asserted-by": "crossref",
+      "first-page": "2603",
+      "DOI": "10.1111/j.1365-294X.2011.05119.x",
+      "article-title": "Characterization of a genomic divergence island between black-and-yellow and gopher Sebastes rockfishes",
+      "volume": "20",
+      "author": "Buonaccorsi",
+      "year": "2011",
+      "journal-title": "Molecular Ecology"
+    },
+    {
+      "key": "10.1111/mec.13594-BIB0004|mec13594-cit-0004",
+      "doi-asserted-by": "crossref",
+      "first-page": "421",
+      "DOI": "10.1186/1471-2105-10-421",
+      "article-title": "BLAST+: architecture and applications",
+      "volume": "10",
+      "author": "Camacho",
+      "year": "2009",
+      "journal-title": "BMC Bioinformatics"
+    },
+    {
+      "key": "10.1111/mec.13594-BIB0005|mec13594-cit-0005",
+      "doi-asserted-by": "crossref",
+      "first-page": "171",
+      "DOI": "10.1534/g3.111.000240",
+      "article-title": "Stacks: building and genotyping loci de novo from short-read sequences",
+      "volume": "1",
+      "author": "Catchen",
+      "year": "2011",
+      "journal-title": "G3: Genes, Genomes, Genetics"
+    },
+    {
+      "key": "10.1111/mec.13594-BIB0006|mec13594-cit-0006",
+      "doi-asserted-by": "crossref",
+      "first-page": "3124",
+      "DOI": "10.1111/mec.12354",
+      "article-title": "Stacks: an analysis tool set for population genomics",
+      "volume": "22",
+      "author": "Catchen",
+      "year": "2013",
+      "journal-title": "Molecular Ecology"
+    },
+    {
+      "key": "10.1111/mec.13594-BIB0007|mec13594-cit-0007",
+      "doi-asserted-by": "crossref",
+      "first-page": "43",
+      "DOI": "10.1159/000117718",
+      "article-title": "Genetics of sex determination in tilapiine species",
+      "volume": "2",
+      "author": "Cnaani",
+      "year": "2008",
+      "journal-title": "Sexual Development"
+    },
+    {
+      "key": "10.1111/mec.13594-BIB0008|mec13594-cit-0008",
+      "doi-asserted-by": "crossref",
+      "first-page": "577",
+      "DOI": "10.1126/science.213.4507.577",
+      "article-title": "Environmental sex determination - interaction of temperature and genotype in a fish",
+      "volume": "213",
+      "author": "Conover",
+      "year": "1981",
+      "journal-title": "Science"
+    },
+    {
+      "key": "10.1111/mec.13594-BIB0009|mec13594-cit-0009",
+      "unstructured": "Davis MW 2013 ApE; A plasmid Editor http://biologylabs.utah.edu/jorgensen/wayned/ape/"
+    },
+    {
+      "key": "10.1111/mec.13594-BIB0010|mec13594-cit-0010",
+      "doi-asserted-by": "crossref",
+      "first-page": "191",
+      "DOI": "10.1016/S0044-8486(02)00057-1",
+      "article-title": "Sex determination and sex differentiation in fish: an overview of genetic, physiological, and environmental influences",
+      "volume": "208",
+      "author": "Devlin",
+      "year": "2002",
+      "journal-title": "Aquaculture"
+    },
+    {
+      "key": "10.1111/mec.13594-BIB0011|mec13594-cit-0011",
+      "first-page": "902",
+      "article-title": "Identification of sex-specific molecular markers using restriction site-associated DNA sequencing",
+      "volume": "5",
+      "author": "Gamble",
+      "year": "2014",
+      "journal-title": "Molecular Ecology Resources"
+    },
+    {
+      "key": "10.1111/mec.13594-BIB0012|mec13594-cit-0012",
+      "doi-asserted-by": "crossref",
+      "first-page": "44",
+      "DOI": "10.1038/nprot.2008.211",
+      "article-title": "Systematic and integrative analysis of large gene lists using DAVID bioinformatics resources",
+      "volume": "4",
+      "author": "Huang",
+      "year": "2009a",
+      "journal-title": "Nature Protocols"
+    },
+    {
+      "key": "10.1111/mec.13594-BIB0013|mec13594-cit-0013",
+      "doi-asserted-by": "crossref",
+      "first-page": "1",
+      "DOI": "10.1093/nar/gkn923",
+      "article-title": "Bioinformatics enrichment tools: paths toward the comprehensive functional analysis of large gene lists",
+      "volume": "237",
+      "author": "Huang",
+      "year": "2009b",
+      "journal-title": "Nucleic Acids Research"
+    },
+    {
+      "key": "10.1111/mec.13594-BIB0014|mec13594-cit-0014",
+      "doi-asserted-by": "crossref",
+      "first-page": "790",
+      "DOI": "10.1016/j.ympev.2006.12.026",
+      "article-title": "The origin, evolution, and diversification of rockfishes of the genus Sebastes (Cuvier)",
+      "volume": "44",
+      "author": "Hyde",
+      "year": "2007",
+      "journal-title": "Molecular Phylogenetics and Evolution"
+    },
+    {
+      "key": "10.1111/mec.13594-BIB0015|mec13594-cit-0015",
+      "first-page": "162",
+      "article-title": "Karyotypes in 8 species of Sebastes from Japan",
+      "volume": "29",
+      "author": "Ida",
+      "year": "1982",
+      "journal-title": "Japanese Journal of Ichthyology"
+    },
+    {
+      "key": "10.1111/mec.13594-BIB0016|mec13594-cit-0016",
+      "doi-asserted-by": "crossref",
+      "first-page": "e1002798",
+      "DOI": "10.1371/journal.pgen.1002798",
+      "article-title": "A trans-species missense SNP in Amhr2 is associated with sex determination in the tiger Pufferfish, Takifugu rubripes (Fugu)",
+      "volume": "8",
+      "author": "Kamiya",
+      "year": "2012",
+      "journal-title": "PLoS Genetics"
+    },
+    {
+      "key": "10.1111/mec.13594-BIB0018|mec13594-cit-0018",
+      "doi-asserted-by": "crossref",
+      "first-page": "996",
+      "DOI": "10.1101/gr.229102. Article published online before print in May 2002",
+      "article-title": "The human genome browser at UCSC",
+      "volume": "12",
+      "author": "Kent",
+      "year": "2002",
+      "journal-title": "Genome Research"
+    },
+    {
+      "key": "10.1111/mec.13594-BIB0019|mec13594-cit-0019",
+      "doi-asserted-by": "crossref",
+      "first-page": "172",
+      "DOI": "10.1093/bfgp/elt041",
+      "article-title": "Zebrafish sex: a complicated affair",
+      "volume": "13",
+      "author": "Liew",
+      "year": "2014",
+      "journal-title": "Briefings in Functional Genomics"
+    },
+    {
+      "key": "10.1111/mec.13594-BIB0020|mec13594-cit-0020",
+      "author": "Love",
+      "year": "2002",
+      "volume-title": "The Rockfishes of the Northeast Pacific"
+    },
+    {
+      "key": "10.1111/mec.13594-BIB0021|mec13594-cit-0021",
+      "first-page": "1263",
+      "article-title": "Characterization of the Dmrt1 gene in the black rockfish Sebastes schlegeli revealed a remarkable sex-dimorphic expression",
+      "volume": "40",
+      "author": "Ma",
+      "year": "2014",
+      "journal-title": "Fish Physiology and Biochemistry"
+    },
+    {
+      "key": "10.1111/mec.13594-BIB0022|mec13594-cit-0022",
+      "doi-asserted-by": "crossref",
+      "first-page": "1787",
+      "DOI": "10.1016/j.biocon.2009.03.020",
+      "article-title": "Rockfish (Sebastes) that are evolutionarily isolated are also large, morphologically distinctive and vulnerable to overfishing",
+      "volume": "142",
+      "author": "Magnuson-Ford",
+      "year": "2009",
+      "journal-title": "Biological Conservation"
+    },
+    {
+      "key": "10.1111/mec.13594-BIB0023|mec13594-cit-0023",
+      "doi-asserted-by": "crossref",
+      "first-page": "773",
+      "DOI": "10.2307/1441888",
+      "article-title": "Reproduction and development of Sebastodes paucispinis and comparison with other rockfishes off southern California",
+      "volume": "4",
+      "author": "Moser",
+      "year": "1967",
+      "journal-title": "Copeia"
+    },
+    {
+      "key": "10.1111/mec.13594-BIB0024|mec13594-cit-0024",
+      "doi-asserted-by": "crossref",
+      "first-page": "163",
+      "DOI": "10.1534/genetics.111.137497",
+      "article-title": "Tracing the emergence of a novel sex-determining gene in medaka, Oryzias luzonensis",
+      "volume": "191",
+      "author": "Myosho",
+      "year": "2012",
+      "journal-title": "Genetics"
+    },
+    {
+      "key": "10.1111/mec.13594-BIB0025|mec13594-cit-0025",
+      "doi-asserted-by": "crossref",
+      "first-page": "11778",
+      "DOI": "10.1073/pnas.182314699",
+      "article-title": "A duplicated copy of DMRT1 in the sex-determining region of the Y chromosome of the medaka, Oryzias latipes",
+      "volume": "99",
+      "author": "Nanda",
+      "year": "2002",
+      "journal-title": "Proceedings of the National Academy of Sciences of the United States of America"
+    },
+    {
+      "key": "10.1111/mec.13594-BIB0026|mec13594-cit-0026",
+      "doi-asserted-by": "crossref",
+      "first-page": "926",
+      "DOI": "10.1643/CG-02-061R2",
+      "article-title": "Genetic divergence between Gopher Rockfish (Sebastes carnatus) and Black and Yellow Rockfish (S. chrysomelas)",
+      "volume": "4",
+      "author": "Narum",
+      "year": "2004",
+      "journal-title": "Copeia"
+    },
+    {
+      "key": "10.1111/mec.13594-BIB0028|mec13594-cit-0028",
+      "doi-asserted-by": "crossref",
+      "first-page": "1416",
+      "DOI": "10.1016/j.cub.2004.08.030",
+      "article-title": "The master sex-determination locus in threespine sticklebacks is on a nascent Y chromosome",
+      "volume": "14",
+      "author": "Peichel",
+      "year": "2004",
+      "journal-title": "Current Biology"
+    },
+    {
+      "key": "10.1111/mec.13594-BIB0029|mec13594-cit-0029",
+      "doi-asserted-by": "crossref",
+      "first-page": "e37135",
+      "DOI": "10.1371/journal.pone.0037135",
+      "article-title": "Double digest RADseq: an inexpensive method for De Novo SNP discovery and genotyping in model and non-model species",
+      "volume": "7",
+      "author": "Peterson",
+      "year": "2012",
+      "journal-title": "PLoS ONE"
+    },
+    {
+      "key": "10.1111/mec.13594-BIB0030|mec13594-cit-0030",
+      "doi-asserted-by": "crossref",
+      "first-page": "276",
+      "DOI": "10.1016/S0168-9525(00)02024-2",
+      "article-title": "EMBOSS: the European molecular biology open software suite",
+      "volume": "16",
+      "author": "Rice",
+      "year": "2000",
+      "journal-title": "Trends in Genetics"
+    },
+    {
+      "key": "10.1111/mec.13594-BIB0031|mec13594-cit-0031",
+      "doi-asserted-by": "crossref",
+      "first-page": "452",
+      "DOI": "10.1186/1471-2164-14-452",
+      "article-title": "Genomics of sablefish (Anoplopoma fimbria): expressed genes, mitochondrial phylogeny, linkage map and identification of a putative sex gene",
+      "volume": "14",
+      "author": "Rondeau",
+      "year": "2013",
+      "journal-title": "BMC Genomics"
+    },
+    {
+      "key": "10.1111/mec.13594-BIB0032|mec13594-cit-0032",
+      "doi-asserted-by": "crossref",
+      "first-page": "365",
+      "DOI": "10.1002/ajmg.10447",
+      "article-title": "Novel mutation of TBX3 in a Japanese family with Ulnar-Mammary syndrome: implications for impaired sex development",
+      "volume": "110",
+      "author": "Sasaki",
+      "year": "2002",
+      "journal-title": "American Journal of Medical Genetics"
+    },
+    {
+      "key": "10.1111/mec.13594-BIB0033|mec13594-cit-0033",
+      "doi-asserted-by": "crossref",
+      "first-page": "639",
+      "DOI": "10.1016/j.mod.2004.03.001",
+      "article-title": "A comparative view on sex determination in medaka",
+      "volume": "121",
+      "author": "Schartl",
+      "year": "2004",
+      "journal-title": "Mechanisms of Development"
+    },
+    {
+      "key": "10.1111/mec.13594-BIB0034|mec13594-cit-0034",
+      "doi-asserted-by": "crossref",
+      "first-page": "1335",
+      "DOI": "10.1534/genetics.106.068247",
+      "article-title": "Evolution of different Y chromosomes in two medaka species, Oryzias dancena and O. latipes",
+      "volume": "175",
+      "author": "Takehana",
+      "year": "2007",
+      "journal-title": "Genetics"
+    },
+    {
+      "key": "10.1111/mec.13594-BIB0036|mec13594-cit-0036",
+      "doi-asserted-by": "crossref",
+      "first-page": "676",
+      "DOI": "10.1086/368292",
+      "article-title": "Pattern does not equal process: exactly when is sex environmentally determined?",
+      "volume": "161",
+      "author": "Valenzuela",
+      "year": "2003",
+      "journal-title": "The American Naturalist"
+    },
+    {
+      "key": "10.1111/mec.13594-BIB0037|mec13594-cit-0037",
+      "doi-asserted-by": "crossref",
+      "first-page": "9939",
+      "DOI": "10.1073/pnas.0901397106",
+      "article-title": "Natural selection in action during speciation",
+      "volume": "106",
+      "author": "Via",
+      "year": "2009",
+      "journal-title": "Proceedings of the National Academy of Sciences of the United States of America"
+    },
+    {
+      "key": "10.1111/mec.13594-BIB0038|mec13594-cit-0038",
+      "first-page": "14",
+      "article-title": "Implications for reproductive health in rockfish (Sebastes spp) from Puget Sound exposed to polychlorinated biphenyls",
+      "volume": "18",
+      "author": "West",
+      "year": "2001",
+      "journal-title": "Age"
+    },
+    {
+      "key": "10.1111/mec.13594-BIB0039|mec13594-cit-0039",
+      "doi-asserted-by": "crossref",
+      "first-page": "1291",
+      "DOI": "10.1534/genetics.114.169284",
+      "article-title": "Wild sex in zebrafish: loss of the natural sex determinant in domesticated strains",
+      "volume": "198",
+      "author": "Wilson",
+      "year": "2014",
+      "journal-title": "Genetics"
+    },
+    {
+      "key": "10.1111/mec.13594-BIB0040|mec13594-cit-0040",
+      "doi-asserted-by": "crossref",
+      "first-page": "1246338",
+      "DOI": "10.1126/science.1246338",
+      "article-title": "Complex evolutionary trajectories of sex chromosomes across bird taxa",
+      "volume": "346",
+      "author": "Zhou",
+      "year": "2014",
+      "journal-title": "Science"
+    }
+  ],
+  "container-title": "Molecular Ecology",
+  "original-title": [],
+  "language": "en",
+  "link": [
+    {
+      "URL": "https://api.wiley.com/onlinelibrary/tdm/v1/articles/10.1111%2Fmec.13594",
+      "content-type": "unspecified",
+      "content-version": "vor",
+      "intended-application": "text-mining"
+    }
+  ],
+  "deposited": {
+    "date-parts": [
+      [
+        2017,
+        6,
+        24
+      ]
+    ],
+    "date-time": "2017-06-24T07:10:57Z",
+    "timestamp": 1498288257000
+  },
+  "score": 1.0,
+  "subtitle": [],
+  "short-title": [],
+  "issued": {
+    "date-parts": [
+      [
+        2016,
+        3,
+        28
+      ]
+    ]
+  },
+  "references-count": 36,
+  "journal-issue": {
+    "published-print": {
+      "date-parts": [
+        [
+          2016,
+          5
+        ]
+      ]
+    },
+    "issue": "10"
+  },
+  "URL": "http://dx.doi.org/10.1111/mec.13594",
+  "relation": {
+    "cites": []
+  },
+  "ISSN": [
+    "0962-1083"
+  ],
+  "container-title-short": "Mol Ecol"
+}
