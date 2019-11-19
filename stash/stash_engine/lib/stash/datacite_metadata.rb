@@ -2,6 +2,7 @@ require 'rest-client'
 require 'json'
 require 'cgi'
 
+# this is really for DataCite event metadata for citations
 module Stash
   class DataciteMetadata
 
@@ -53,6 +54,10 @@ module Stash
       raw_metadata['publisher']
     end
 
+    def journal
+      raw_metadata['container-title']
+    end
+
     def resource_type
       return raw_metadata['type'].capitalize if raw_metadata['type']
       ''
@@ -72,7 +77,7 @@ module Stash
     def html_citation
       return nil if raw_metadata.nil?
       # html_safe when concatenated with other stuff makes non-html-safe escaped
-      ''.html_safe + "#{author_names} (#{year_published}), #{title}, #{publisher}, #{resource_type}, " +
+      ''.html_safe + "#{author_names} (#{year_published}), #{title}, #{journal}, #{resource_type}, " +
           "<a href=\"#{doi_link}\" target=\"_blank\">#{doi_link}</a>".html_safe
     end
 

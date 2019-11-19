@@ -27,6 +27,15 @@ module Mocks
             'User-Agent' => /.*/
           }
         ).to_return(status: 201, body: '', headers: {})
+
+      stub_request(:get, %r{doi\.org/10\.1111%2Fmec\.13594})
+        .with(
+          headers: {
+            'Accept' => 'application/citeproc+json',
+            'Host' => 'doi.org',
+            'User-Agent' => /.*/
+          }
+        ).to_return(status: 200, body: File.read(Rails.root.join('spec', 'fixtures', 'http_responses', 'datacite_response.json')), headers: {})
     end
 
   end
