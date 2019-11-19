@@ -1,12 +1,9 @@
 require_relative '../../../stash/stash_engine/lib/stash/datacite_metadata'
 require 'byebug'
 
-require "rails_helper"
+require 'rails_helper'
 
-RSpec.configure do |config|
-  config.infer_spec_type_from_file_location!
-end
-
+RSpec.configure(&:infer_spec_type_from_file_location!)
 
 module Stash
   RSpec.describe DataciteMetadata do
