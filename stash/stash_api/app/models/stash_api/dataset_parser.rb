@@ -109,7 +109,8 @@ module StashApi
     def ensure_publisher
       return unless @resource.publisher.blank?
       publisher = StashDatacite::Publisher.where(resource_id: @resource.id).first
-      StashDatacite::Publisher.create(publisher: @resource.tenant.short_name, resource_id: @resource.id) unless publisher
+      return if publisher
+      StashDatacite::Publisher.create(publisher: @resource.tenant.short_name, resource_id: @resource.id) if @resource.tenant
     end
 
     def ensure_resource_type
