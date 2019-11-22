@@ -40,6 +40,10 @@
     "fsevents": "^2.0.7",
     "gulp": "^4.0.2",
     "gulp-autoprefixer": "^6.1.0",
-    "gulp-imagemin": "^6.0.0"
+    "gulp-if": "^3.0.0",
+    "gulp-imagemin": "^6.0.0",
+    "gulp-modernizr": "^3.4.0",
+    "gulp-useref": "^4.0.0",
+    "jshint": "^2.10.3"
   }
 }
