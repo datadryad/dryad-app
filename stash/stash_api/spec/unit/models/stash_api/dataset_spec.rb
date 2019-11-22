@@ -1,10 +1,6 @@
 require 'db_spec_helper'
 require_relative '../../../../../spec_helpers/factory_helper'
 require 'byebug'
-# require 'test_helper'
-
-# something wacky about our setup requires this here.  It seems to be either a) never requiring them or b) requiring them 1000 times otherwise
-# FactoryBot.find_definitions
 
 module StashApi
   RSpec.describe Dataset do
@@ -108,6 +104,22 @@ module StashApi
         @dataset = Dataset.new(identifier: @identifier.to_s, user: @user)
         @metadata = @dataset.metadata
         expect(@metadata[:loosenValidation]).to eq(true)
+      end
+
+      it 'has a curation status' do
+        @dataset = Dataset.new(identifier: @identifier.to_s, user: @user)
+        @metadata = @dataset.metadata
+        expect(@metadata[:curationStatus]).to eq('In Progress')
+      end
+
+      it 'has a sharing link when it is in peer_review status' do
+        bogus_link = 'http://some.sharing.com/linkvalue'
+        allow_any_instance_of(StashEngine::Share).to receive(:sharing_link).and_return(bogus_link)
+        r = @identifier.resources.last
+        StashEngine::CurationActivity.create(resource: r, status: 'peer_review')
+        @dataset = Dataset.new(identifier: @identifier.to_s, user: @user)
+        @metadata = @dataset.metadata
+        expect(@metadata[:sharingLink]).to be(bogus_link)
       end
 
     end
