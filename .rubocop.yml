@@ -6,6 +6,7 @@ AllCops:
     - 'script/**/*'
     - 'vendor/**/*'
     - 'documentation/**/*'
+    - 'stash/stash_engine/node_modules/**/*'
 
   # Suppress complaints about post-2.0 syntax
   TargetRubyVersion: 2.4
