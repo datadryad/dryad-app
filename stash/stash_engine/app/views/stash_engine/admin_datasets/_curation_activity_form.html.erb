@@ -3,7 +3,7 @@
 
   <%= form_for :resource, url: curation_activity_change_path(resource.id), method: :post, remote: true do |f| %>
 
-    <p class="c-alert--error">Unable to save your changes at this time. This is typically due to a Datacite/Ezid error.</p>
+    <p class="c-alert--error">Unable to save your changes at this time due to an internal error. Please contact a developer.</p>
 
     <%# Users cannot change the status or publication date once the files are published %>
     <% if resource.curatable? %>
