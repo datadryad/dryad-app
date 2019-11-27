@@ -2,6 +2,9 @@ AllCops:
   # Suppress complaints about post-2.0 syntax
   TargetRubyVersion: 2.4
 
+  Exclude:
+    - 'node_modules/**/*'
+
 # Allow one line around block body (Layout/EmptyLines will still disallow two or more)
 Layout/EmptyLinesAroundBlockBody:
   Enabled: false
