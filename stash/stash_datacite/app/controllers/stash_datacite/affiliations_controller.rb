@@ -7,7 +7,11 @@ module StashDatacite
 
     # GET /affiliations/autocomplete
     def autocomplete
-      @affiliations = Stash::Organization::Ror.find_by_ror_name(params['term']) unless params['term'].blank?
+      partial_term = params['term']
+      return if partial_term.blank?
+      # clean the partial_term of unwanted characters so it doesn't cause errors when calling the ROR API
+      partial_term.tr!('/-', '  ')
+      @affiliations = Stash::Organization::Ror.find_by_ror_name(partial_term)
       list = map_affiliation_for_autocomplete(@affiliations)
       render json: list
     end
