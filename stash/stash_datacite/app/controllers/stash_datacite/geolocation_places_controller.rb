@@ -9,7 +9,6 @@ module StashDatacite
     def places_coordinates
       @geolocation_places = GeolocationPlace.geo_places(params[:resource_id])
       respond_to do |format|
-        format.html
         format.json { render json: @geolocation_places }
       end
     end
