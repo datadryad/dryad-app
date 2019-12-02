@@ -10,7 +10,6 @@ module StashDatacite
       @geolocation_boxes = GeolocationBox.select(:resource_id, :sw_latitude, :sw_longitude, :ne_latitude, :ne_longitude)
         .only_geo_bbox(params[:resource_id])
       respond_to do |format|
-        format.html
         format.json { render json: @geolocation_boxes }
       end
     end
