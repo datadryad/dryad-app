@@ -10,7 +10,7 @@ module StashDatacite
       partial_term = params['term']
       return if partial_term.blank?
       # clean the partial_term of unwanted characters so it doesn't cause errors when calling the ROR API
-      partial_term.gsub!(%r{[\/\-\\\(\)~!@%&"]}, ' ')
+      partial_term.gsub!(%r{[\/\-\\\(\)~!@%&"\[\]\^\:]}, ' ')
       @affiliations = Stash::Organization::Ror.find_by_ror_name(partial_term)
       list = map_affiliation_for_autocomplete(@affiliations)
       render json: list
