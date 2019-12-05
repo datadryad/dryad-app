@@ -5,12 +5,12 @@
   <div class="c-autosave__text saved_text" style="display: none;">All Progress Saved.</div>
 </div>
 
-<h3 class="o-heading__page-span">Preliminary Information</h3>
+<h2 class="o-heading__page-span">Preliminary Information</h2>
   <div class="js-contributors_form">
     <%= render partial: "stash_datacite/metadata_entry_pages/publication", locals: { publication: @publication, resource: @resource } %>
   </div>
 
-<h3 class="o-heading__page-span">Dataset: Basic Information</h3>
+<h2 class="o-heading__page-span">Dataset: Basic Information</h2>
   <%= render partial: "stash_datacite/titles/form", locals: { resource: @resource } %><br/>
 
   <fieldset class="c-fieldset">
