@@ -13,7 +13,7 @@
 <% end %>
 
 <div class="c-sidebox">
-  <h3 class="c-sidebox__heading">Metrics</h3>
+  <h2 class="c-sidebox__heading">Metrics</h2>
   <div class="o-metrics">
     <%# render partial: 'stash_engine/landing/metrics', locals: {identifier: @id} %>
     <div id="show_metrics"
@@ -26,7 +26,7 @@
 </div>
 
 <div class="c-sidebox" id="keyword_section">
-  <h3 class="c-sidebox__heading">Keywords</h3>
+  <h2 class="c-sidebox__heading">Keywords</h2>
   <div id="show_subjects"
        data-load="<%= metadata_url_helpers.subjects_landing_path(resource_id: @resource.id, format: :js) %>">
     <%= image_tag 'stash_engine/spinner.gif', size: '80x60', alt: 'Loading spinner' %>
@@ -34,7 +34,7 @@
 </div>
 
 <div class="c-sidebox">
-  <h3 class="c-sidebox__heading">License</h3>
+  <h2 class="c-sidebox__heading">License</h2>
   <div id="show_license"
        data-load="<%= metadata_url_helpers.license_details_path(resource_id: @resource.id, format: :js) %>">
     <%= image_tag 'stash_engine/spinner.gif', size: '80x60', alt: 'Loading spinner' %>
