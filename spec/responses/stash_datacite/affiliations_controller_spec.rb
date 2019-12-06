@@ -1,6 +1,6 @@
 require 'rails_helper'
 require 'uri'
-#require_relative 'helpers'
+# require_relative 'helpers'
 require 'fixtures/stash_api/metadata'
 require 'fixtures/stash_api/curation_metadata'
 require 'cgi'
@@ -23,12 +23,12 @@ module StashDatacite
 
     describe 'get affiliations' do
       it 'will retrive an affiliation' do
-       # response_code = post "/api/v2/datasets/#{CGI.escape(@identifier.to_s)}/urls", FILE_HASH.to_json, default_authenticated_headers
-       # expect(response_code).to eq(201)
-       # hsh = response_body_hash
-       # FILE_HASH.keys.reject { |k| k == 'skipValidation' }.each do |key|
-       #   expect(hsh[key]).to eq(FILE_HASH[key])
-       # end
+        # response_code = post "/api/v2/datasets/#{CGI.escape(@identifier.to_s)}/urls", FILE_HASH.to_json, default_authenticated_headers
+        # expect(response_code).to eq(201)
+        # hsh = response_body_hash
+        # FILE_HASH.keys.reject { |k| k == 'skipValidation' }.each do |key|
+        #   expect(hsh[key]).to eq(FILE_HASH[key])
+        # end
       end
 
     end
