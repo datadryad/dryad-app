@@ -1,6 +1,6 @@
 <% @award_string = "<span>Award: </span>".html_safe %>
 <% unless contributors.nil? || contributors.length < 1 %>
-  <h3 class="o-heading__level2">Funding</h3>
+  <h2 class="o-heading__level2">Funding</h2>
   <% contributors.each do |contributor| %>
      <p><%= contributor.contributor_name %><%= "," %>
       <% if contributor.award_number.present? %>
