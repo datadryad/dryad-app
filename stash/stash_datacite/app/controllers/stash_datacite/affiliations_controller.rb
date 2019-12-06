@@ -11,7 +11,6 @@ module StashDatacite
       return if partial_term.blank?
       # clean the partial_term of unwanted characters so it doesn't cause errors when calling the ROR API
       partial_term.gsub!(%r{[\/\-\\\(\)~!@%&"\[\]\^\:]}, ' ')
-      logger.debug("searching affiliations for #{partial_term}")
       @affiliations = Stash::Organization::Ror.find_by_ror_name(partial_term)
       list = map_affiliation_for_autocomplete(bubble_up_exact_matches(affil_list: @affiliations, term: partial_term))
       render json: list
@@ -34,7 +33,6 @@ module StashDatacite
       other_items = []
       match_term = term.downcase
       affil_list.each do |affil_item|
-        logger.debug("affil_item #{affil_item}")
         name = affil_item[:name].downcase
         if name.start_with?(match_term)
           matches_at_beginning << affil_item
