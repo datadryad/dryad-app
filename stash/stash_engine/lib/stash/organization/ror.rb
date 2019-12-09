@@ -38,7 +38,7 @@ module Stash
       def self.find_by_ror_name(query)
         resp = query_ror(URI, { 'query': query }, HEADERS)
         results = process_pages(resp, query) if resp.parsed_response.present? && resp.parsed_response['items'].present?
-        results.present? ? results.flatten.uniq.sort_by { |a| a[:name] } : []
+        results.present? ? results.flatten.uniq : []
       rescue HTTParty::Error, SocketError => e
         raise RorError, "Unable to connect to the ROR API for `find_by_ror_name`: #{e.message}"
       end
