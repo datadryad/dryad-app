@@ -1,11 +1,16 @@
-# require_relative 'datacite_target/somefile'
+require_relative 'datacite_target/dash_updater'
 
 # rubocop:disable Metrics/BlockLength
-namespace :counter do
+namespace :datacite_target do
 
-  desc 'test task'
-  task test_task: :environment do
-    puts 'a test task running in the rails environment'
+  desc 'update_dash DOI targets to reflect new environment'
+  task update_dash: :environment do
+    stash_ids = DashUpdater.dash_items_to_update
+    stash_ids.each_with_index do |stash_id, idx|
+      puts "#{idx}: updating #{stash_id.identifier}"
+      DashUpdater.submit_id_metadata(stash_identifier: stash_id)
+      sleep 1
+    end
   end
 
 end
