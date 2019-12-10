@@ -3846,6 +3846,9 @@ html.no-details .o-showhide__summary {
       font-size: 1.5em;
       font-weight: bold; } }
 
+.c-input__file:focus + .c-input__file-label {
+  outline: 2px solid #005581; }
+
 .c-choose__label {
   -webkit-box-flex: 0;
       -ms-flex: 0 0 auto;
