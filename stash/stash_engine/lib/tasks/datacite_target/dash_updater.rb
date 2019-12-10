@@ -3,8 +3,8 @@ module DashUpdater
   def self.dash_items_to_update
     # I was going to limit this to items created before transition to the new system, but we may want to update others
     # in order to get thier ROR information updated
-    StashEngine::Identifier.joins(:resources).where(pub_state: %w{embargoed published})
-        .where("stash_engine_resources.tenant_id <> 'dryad'").distinct
+    StashEngine::Identifier.joins(:resources).where(pub_state: %w[embargoed published])
+      .where("stash_engine_resources.tenant_id <> 'dryad'").distinct
   end
 
   def self.submit_id_metadata(stash_identifier:, retry_pause: 10)
@@ -23,6 +23,7 @@ module DashUpdater
       puts ''
       sleep retry_pause # pause for a while to let ezid/datacite stop having problems in case temporary
       retry unless tries > 9
+      raise ige # re-raise the exception
     end
   end
 end
