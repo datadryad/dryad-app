@@ -8,8 +8,8 @@
       <div id="upload_bg" class="c-choose__drop o-drop">
         Drag and drop files here<br/><br/>
         or<br/><br/>
-        <%= label_tag(:upload_upload, "Choose Files", class: 'c-input__file-label') %>
         <%= file_field_tag 'upload[upload]', multiple: true, class: 'c-input__file' %>
+        <%= label_tag(:upload_upload, "Choose Files", class: 'c-input__file-label') %>
       </div>
       <div class="c-choose__label">
       </div>
@@ -47,7 +47,7 @@
     <%= image_tag 'stash_engine/spinner.gif', size: '80x60', alt: 'Loading spinner' %>
 </div>
 
-<div class="c-upload__upload-complete-text" id="upload_complete" style="display: none;">
+<div class="c-upload__upload-complete-text" id="upload_complete" style="display: none;" role="status" aria-live="polite">
   <p>Upload complete.</p>
 </div>
 

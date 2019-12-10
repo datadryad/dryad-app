@@ -34,6 +34,10 @@
 
 }
 
+.c-input__file:focus + .c-input__file-label {
+	outline: 2px solid $design-dark-blue-color;
+}
+
 .c-choose__label {
 	flex: 0 0 auto;
 	margin: 0 10vw 0 0;
