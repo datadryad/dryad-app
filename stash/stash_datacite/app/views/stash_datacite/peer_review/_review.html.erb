@@ -8,7 +8,7 @@
   <div>
     <%= form_for @resource, url: stash_datacite.peer_review_path, remote: true, authenticity_token: true do |f| %>
       <%= f.check_box :hold_for_peer_review %>
-      <label for="hold_for_peer_review">Keep my dataset private while my related article is in peer review</label>
+      <label for="resource_hold_for_peer_review">Keep my dataset private while my related article is in peer review</label>
       <span class="c-input__error-message"><%= @error %></span>
       <%= f.hidden_field :id %>
     <% end %>
