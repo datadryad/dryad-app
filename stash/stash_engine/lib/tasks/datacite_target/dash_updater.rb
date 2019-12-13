@@ -10,7 +10,7 @@ module DashUpdater
   def self.dryad_items_to_update
     # always order ID
     StashEngine::Identifier.joins(:resources).where(pub_state: %w[embargoed published])
-        .where("stash_engine_resources.tenant_id = 'dryad'").order('stash_engine_identifiers.id').distinct
+      .where("stash_engine_resources.tenant_id = 'dryad'").order('stash_engine_identifiers.id').distinct
   end
 
   def self.submit_id_metadata(stash_identifier:, retry_pause: 10)

@@ -1,4 +1,6 @@
 require_relative 'datacite_target/dash_updater'
+
+# rubocop:disable Metrics/BlockLength
 namespace :datacite_target do
 
   desc 'update_dash DOI targets to reflect new environment'
@@ -30,10 +32,11 @@ namespace :datacite_target do
         DashUpdater.submit_id_metadata(stash_identifier: stash_id)
       rescue Stash::Doi::IdGenError, ArgumentError => ige
         outstr = "\n#{stash_id.id}: #{stash_id.identifier}\n#{ige.message}\n"
-        IO.write("datacite_update_errors.txt", outstr, mode: 'a')
+        IO.write('datacite_update_errors.txt', outstr, mode: 'a')
       end
       sleep 1
     end
   end
 
 end
+# rubocop:enable Metrics/BlockLength
