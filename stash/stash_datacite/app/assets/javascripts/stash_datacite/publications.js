@@ -17,29 +17,54 @@ function loadPublications() {
                 }
             })
             .autocomplete({
-                create: function(a) {
-                    $.ajax({
-                        url: "https://api.crossref.org/journals/"+ document.getElementById("internal_datum_publication").value,
-                        dataType: "json",
-                        success: function( data ) {
-                            document.getElementById("internal_datum_publication").value = ""
-                            if (data.message.title != null) {
-                                document.getElementById("internal_datum_publication").value = data.message.title;
-                            }
-                        }
-                    });
-                },
+		// when page is loaded, IF the dataset has been filled in already,
+		// internal_datum_publication will have an ISSN, so use this ISSN
+		// to look up the journal title
+                //create: function(a) {
+                //    $.ajax({
+                        //url: "https://api.crossref.org/journals/"+ document.getElementById("internal_datum_publication").value,
+                        //dataType: "json",
+                        //success: function( data ) {
+                        //    document.getElementById("internal_datum_publication").value = ""
+                        //    if (data.message.title != null) {
+                        //        document.getElementById("internal_datum_publication").value = data.message.title;
+                        //    }
+                //   });
+                //},
                 source: function( request, response ) {
-                    $.ajax({
-                        url: "https://api.crossref.org/journals?query="+ extractLast( request.term ),
+                    //$.ajax({
+                    //    url: "https://api.crossref.org/journals?query="+ extractLast( request.term ),
+                    //    dataType: "json",
+                    //    success: function( data ) {
+                    //        $.ajax({
+                    //            url: "https://api.crossref.org/journals?query="+ extractLast( request.term ) + "&rows=" + data.message["total-results"//],
+            //                    dataType: "json",
+            //                    success: function( data ) {
+            //                        var arr = jQuery.map( data.message.items, function( a ) {
+            //                            return [[ a.ISSN[0], a.title ]];
+            //                        });
+            //                        var labels = [];
+            //                        $.each(arr, function(index, value) {
+            //                            if (value[0] != null) {
+            //                                labels.push({value: value[0], label: value[1]});
+            //                            }
+            //                        });
+            //                        response(labels);
+            //                    }
+            //                });
+            //            }
+            //        });
+
+		    $.ajax({
+                        url: "http://ryan-vm.datadryad.org/api/v1/journals/search?query="+ extractLast( request.term ),
                         dataType: "json",
                         success: function( data ) {
                             $.ajax({
-                                url: "https://api.crossref.org/journals?query="+ extractLast( request.term ) + "&rows=" + data.message["total-results"],
+                                url: "http://ryan-vm.datadryad.org/api/v1/journals/search?query="+ extractLast( request.term ) + "&count=" + data.message["total-results"],
                                 dataType: "json",
                                 success: function( data ) {
-                                    var arr = jQuery.map( data.message.items, function( a ) {
-                                        return [[ a.ISSN[0], a.title ]];
+                                    var arr = jQuery.map( data, function( a ) {
+                                        return [[ a.issn, a.fullName ]];
                                     });
                                     var labels = [];
                                     $.each(arr, function(index, value) {
@@ -51,7 +76,7 @@ function loadPublications() {
                                 }
                             });
                         }
-                    });
+                    });		    
                 },
                 minLength: 3,
                 select: function( event, ui ) {
