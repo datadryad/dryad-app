@@ -8,7 +8,7 @@
     <%= f.select(:relation_type, StashDatacite::RelatedIdentifier::RelationTypesLimited.to_a, {}, {id: "relation_type_#{my_suffix}", class: "js-relation_type c-input__select"}) %>
   </div>
   <div class="c-input">
-    <%= f.label "type_id_#{my_suffix}", "ID Type", class: 'c-input__label' %>
+    <%= f.label "#{my_suffix}", "ID Type", class: 'c-input__label' %>
     <%= f.select(:related_identifier_type, StashDatacite::RelatedIdentifier::RelatedIdentifierTypesLimited.to_a, {}, {id: "related_identifier_type_#{my_suffix}", class: "js-related_identifier_type c-input__select"}) %>
   </div>
   <div class="c-input">
