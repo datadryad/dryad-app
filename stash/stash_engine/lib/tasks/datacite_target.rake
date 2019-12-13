@@ -28,7 +28,7 @@ namespace :datacite_target do
 
       begin
         DashUpdater.submit_id_metadata(stash_identifier: stash_id)
-      rescue Stash::Doi::IdGenError => ige
+      rescue Stash::Doi::IdGenError, ArgumentError => ige
         outstr = "\n#{stash_id.id}: #{stash_id.identifier}\n#{ige.message}\n"
         IO.write("datacite_update_errors.txt", outstr, mode: 'a')
       end
