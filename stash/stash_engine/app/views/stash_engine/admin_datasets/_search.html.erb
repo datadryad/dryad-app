@@ -1,6 +1,7 @@
 <div class="c-horizontal-form">
   <%= form_tag({ controller: '/stash_engine/admin_datasets', action: 'index' }, method: 'get', id: 'search_form' ) do %>
-    <%= search_field_tag(:q, params[:q], class: 'c-horizontal-form__input--search', placeholder: 'enter search terms' ) %>
+    <label for="search-terms">Search Terms:</label>
+    <%= search_field_tag(:q, params[:q], class: 'c-horizontal-form__input--search', id: 'search-terms' ) %>
     <%= submit_tag('Search', class: 'c-horizontal-form__input' ) %>
     <a href="#" id="clear_search" class="c-horizontal-form__input">Clear Search</a>
 
