@@ -22,7 +22,7 @@ function loadPublications() {
 		// to look up the journal title
                 create: function(a) {
                     $.ajax({
-                        url: "http://ryan-vm.datadryad.org/api/v1/journals/"+ document.getElementById("internal_datum_publication").value,
+                        url: "https://v1.datadryad.org/api/v1/journals/"+ document.getElementById("internal_datum_publication").value,
                         dataType: "json",
                         success: function( data ) {
                             document.getElementById("internal_datum_publication").value = ""
@@ -34,11 +34,11 @@ function loadPublications() {
 		},
                 source: function( request, response ) {
 		    $.ajax({
-                        url: "http://ryan-vm.datadryad.org/api/v1/journals/search?query="+ extractLast( request.term ),
+                        url: "https://v1.datadryad.org/api/v1/journals/search?query="+ extractLast( request.term ),
                         dataType: "json",
                         success: function( data ) {
                             $.ajax({
-                                url: "http://ryan-vm.datadryad.org/api/v1/journals/search?query="+ extractLast( request.term ),
+                                url: "https://v1.datadryad.org/api/v1/journals/search?query="+ extractLast( request.term ),
                                 dataType: "json",
                                 success: function( data ) {
                                     var arr = jQuery.map( data, function( a ) {
