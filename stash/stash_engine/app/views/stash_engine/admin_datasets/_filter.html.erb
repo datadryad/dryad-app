@@ -1,13 +1,17 @@
 <%= form_tag({ controller: '/stash_engine/admin_datasets', action: 'index' }, method: 'get', id: 'filter_form' ) do -%>
-  <div class="c-horizontal-form__input--filter-by">Filter by:</div>
+  <label for="tenant">Filter by:</div>
   <% if current_user.superuser? %>
     <%= select_tag(:tenant, options_for_select( [['Institution', '']] + institution_select, params[:tenant]),
                    class: 'c-horizontal-form__input', onchange: "this.form.submit();" ) %>
   <% end %>
+  <label for="curation_status">Status:</label>
   <%= select_tag(:curation_status, options_for_select( [['Status', '']] + status_select, params[:curation_status]),
                  class: 'c-horizontal-form__input--status', onchange: "this.form.submit();" ) %>
   <% if @publications.any? %>
-    <%= text_field_tag(:publication_name, @pub_name, class: 'c-horizontal-form__input--search', placeholder: 'Enter journal name') %>
+  <p>
+    <label for="journal-name">Journal Name:</label>
+    <%= text_field_tag(:publication_name, @pub_name, class: 'c-horizontal-form__input--search', id: 'journal-name') %>
+  </p>
   <% end %>
   &nbsp;
   <a href="#" class="c-horizontal-form__input" id="filter_resetter">Reset all filters</a>
