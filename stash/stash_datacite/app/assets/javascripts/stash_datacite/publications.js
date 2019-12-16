@@ -1,3 +1,4 @@
+ 
 function loadPublications() {
     // based on example at http://jqueryui.com/autocomplete/#remote-jsonp
     $(function() {
@@ -20,41 +21,38 @@ function loadPublications() {
 		// when page is loaded, IF the dataset has been filled in already,
 		// internal_datum_publication will have an ISSN, so use this ISSN
 		// to look up the journal title
-                create: function(a) {
-                    $.ajax({
-                        url: "https://v1.datadryad.org/api/v1/journals/"+ document.getElementById("internal_datum_publication").value,
-                        dataType: "json",
-                        success: function( data ) {
-                            document.getElementById("internal_datum_publication").value = ""
-                            if (data.fullName != null) {
-				document.getElementById("internal_datum_publication").value = data.fullName;
-			    }
-			}
-		    });
-		},
-                source: function( request, response ) {
+ //               create: function(a) {
+  //                  $.ajax({
+   //                     url: "https://v1.datadryad.org/api/v1/journals/"+ document.getElementById("internal_datum_publication").value,
+    //                    dataType: "json",
+     //                   success: function( data ) {
+      //                      document.getElementById("internal_datum_publication").value = ""
+       //                     if (data.fullName != null) {
+	//			document.getElementById("internal_datum_publication").value = data.fullName;
+	//		    }
+	//		}
+	//	    });
+	//	},
+                source: function (request, response) {
 		    $.ajax({
-                        url: "https://v1.datadryad.org/api/v1/journals/search?query="+ extractLast( request.term ),
+			url: "/stash_datacite/publications/autocomplete",
                         dataType: "json",
-                        success: function( data ) {
-                            $.ajax({
-                                url: "https://v1.datadryad.org/api/v1/journals/search?query="+ extractLast( request.term ),
-                                dataType: "json",
-                                success: function( data ) {
-                                    var arr = jQuery.map( data, function( a ) {
-                                        return [[ a.issn, a.fullName ]];
-                                    });
-                                    var labels = [];
-                                    $.each(arr, function(index, value) {
-                                        if (value[0] != null) {
-                                            labels.push({value: value[0], label: value[1]});
-                                        }
-                                    });
-                                    response(labels);
+			data: {
+			    term: request.term
+			},
+                        success: function (data) {
+                            var arr = jQuery.map( data, function( a ) {
+                                return [[ a.issn, a.fullName ]];
+                            });
+                            var labels = [];
+                            $.each(arr, function(index, value) {
+                                if (value[0] != null) {
+                                    labels.push({value: value[0], label: value[1]});
                                 }
                             });
+                            response(labels);
                         }
-                    });		    
+                    });
                 },
                 minLength: 3,
                 select: function( event, ui ) {
@@ -134,3 +132,4 @@ function setPublicationChoiceDisplay(chosen){
             $("#choose_other").prop("checked", true);
     }
 }
+

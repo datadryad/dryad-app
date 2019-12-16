@@ -22,6 +22,7 @@ StashDatacite::Engine.routes.draw do
   delete 'contributors/:id/delete', to: 'contributors#delete', as: 'contributors_delete'
 
   get 'publications/new', to: 'publications#new'
+  get 'publications/autocomplete', to: 'publications#autocomplete'
   post 'publications/create', to: 'publications#create'
   patch 'publications/update', to: 'publications#update'
   delete 'publications/:id/delete', to: 'publications#delete', as: 'publications_delete'
