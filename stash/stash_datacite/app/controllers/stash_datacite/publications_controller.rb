@@ -6,6 +6,7 @@ require 'stash/link_out/pubmed_sequence_service'
 require 'stash/link_out/pubmed_service'
 require 'cgi'
 
+# rubocop:disable Metrics/ClassLength
 module StashDatacite
   class PublicationsController < ApplicationController
     # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity
@@ -27,6 +28,19 @@ module StashDatacite
           end
         end
       end
+    end
+
+    # GET /affiliations/autocomplete
+    def autocomplete
+      partial_term = params['term']
+      return if partial_term.blank?
+      # clean the partial_term of unwanted characters so it doesn't cause errors when calling the Journal API
+      partial_term.gsub!(%r{[\/\-\\\(\)~!@%&"\[\]\^\:]}, ' ')
+
+      response = HTTParty.get("#{APP_CONFIG.old_dryad_url}/api/v1/journals/search",
+                              query: { 'query': partial_term, 'count': 20 },
+                              headers: { 'Content-Type' => 'application/json' })
+      render json: response.body
     end
 
     def save_form_to_internal_data
@@ -122,3 +136,4 @@ module StashDatacite
 
   end
 end
+# rubocop:enable Metrics/ClassLength
