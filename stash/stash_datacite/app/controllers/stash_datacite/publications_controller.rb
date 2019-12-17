@@ -43,18 +43,18 @@ module StashDatacite
       render json: response.body
     end
 
-    # GET /publications/name_from_issn/{id}
-    def name_from_issn
+    # GET /publications/issn/{id}
+    def issn
       target_issn = params['id']
       return if target_issn.blank?
-      return unless target_issn.match(/\d+-\w+/)
+      return unless target_issn =~ /\d+-\w+/
 
       response = HTTParty.get("#{APP_CONFIG.old_dryad_url}/api/v1/journals/#{target_issn}",
                               headers: { 'Content-Type' => 'application/json' })
-      result_name = response&.parsed_response['fullName']
-      render json: result_name
+      #      result_name = response&.parsed_response['fullName']
+      render json: response&.parsed_response
     end
-    
+
     def save_form_to_internal_data
       @pub_issn = manage_internal_datum(identifier: @se_id, data_type: 'publicationISSN', value: params[:internal_datum][:publication_issn])
       @pub_name = manage_internal_datum(identifier: @se_id, data_type: 'publicationName', value: params[:internal_datum][:publication_name])
