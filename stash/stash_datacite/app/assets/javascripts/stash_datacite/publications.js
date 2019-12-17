@@ -21,18 +21,18 @@ function loadPublications() {
 		// when page is loaded, IF the dataset has been filled in already,
 		// internal_datum_publication will have an ISSN, so use this ISSN
 		// to look up the journal title
- //               create: function(a) {
-  //                  $.ajax({
-   //                     url: "https://v1.datadryad.org/api/v1/journals/"+ document.getElementById("internal_datum_publication").value,
-    //                    dataType: "json",
-     //                   success: function( data ) {
-      //                      document.getElementById("internal_datum_publication").value = ""
-       //                     if (data.fullName != null) {
-	//			document.getElementById("internal_datum_publication").value = data.fullName;
-	//		    }
-	//		}
-	//	    });
-	//	},
+		create: function(a) {
+                    $.ajax({
+                        url: "/stash_datacite/publications/issn/"+ document.getElementById("internal_datum_publication").value,
+                        dataType: "json",
+                        success: function( data ) {
+                            document.getElementById("internal_datum_publication").value = ""
+                            if (data.fullName != null) {
+				document.getElementById("internal_datum_publication").value = data.fullName;
+			    }
+			}
+		    });
+		},
                 source: function (request, response) {
 		    $.ajax({
 			url: "/stash_datacite/publications/autocomplete",

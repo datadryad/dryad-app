@@ -23,7 +23,7 @@ StashDatacite::Engine.routes.draw do
 
   get 'publications/new', to: 'publications#new'
   get 'publications/autocomplete', to: 'publications#autocomplete'
-  get 'publications/name_from_issn/:id', to: 'publications#name_from_issn'
+  get 'publications/issn/:id', to: 'publications#issn'
   post 'publications/create', to: 'publications#create'
   patch 'publications/update', to: 'publications#update'
   delete 'publications/:id/delete', to: 'publications#delete', as: 'publications_delete'
