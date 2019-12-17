@@ -26,6 +26,7 @@
   <%= favicon_link_tag 'favicon.ico' %>
 </head>
 <body class='<%= "#{controller_name}_#{action_name}" %>'>
+  <a href="#maincontent" style="position: absolute; left: -9999px;">Skip to main content</a>
   <% unless request.path.start_with?(APP_CONFIG.stash_mount) %>
     <%= render partial: 'layouts/geoblacklight_extras' %>
   <% end %>
@@ -48,7 +49,7 @@
 
   </header>
   <%= render partial: "stash_engine/shared/flash_messages" %>
-  <main>
+  <main id="maincontent">
   <%= yield %>
   </main>
 
