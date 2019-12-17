@@ -51,7 +51,6 @@ module StashDatacite
 
       response = HTTParty.get("#{APP_CONFIG.old_dryad_url}/api/v1/journals/#{target_issn}",
                               headers: { 'Content-Type' => 'application/json' })
-      #      result_name = response&.parsed_response['fullName']
       render json: response&.parsed_response
     end
 
