@@ -24,9 +24,12 @@ services:
   - mysql
 
 before_install:
+  - sudo apt-get clean
+  - sudo rm -rf /var/lib/apt/lists/*
   - sudo apt-get update
   - if [ "$TO_TEST" = "MAIN" ]; then sudo apt-get install mutt; fi
-  - gem update --system
+  - gem update --system 2.7.10
+  - gem uninstall -v '>= 2' -i $(rvm gemdir)@global -ax bundler || true
   - gem install bundler -v 1.17.3
   - gem install colorize
   - if [ "$TO_TEST" = "MAIN" ]; then ./travis-prep.sh; fi
