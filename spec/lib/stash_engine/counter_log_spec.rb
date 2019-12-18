@@ -17,11 +17,16 @@ module StashEngine
       end
 
       it 'strips out control characters inside logging fields' do
-        @my_counter_log.log(['a', "big\tfat\ncat\ris\tmine", 'noober'])
+        @my_counter_log.log(['a', "big\tfat\ncat\ris\tmine", 'noober', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16'])
         outs = @output.split("\t")
         expect(outs[1]).to eq('a')
         expect(outs[2]).to eq('big fat cat is mine')
         expect(outs[3]).to eq('noober')
+      end
+
+      it 'will not log if required publication date not set' do
+        @my_counter_log.log(['a', "big\tfat\ncat\ris\tmine", 'noober'])
+        expect(@output).to be(nil)
       end
 
     end
