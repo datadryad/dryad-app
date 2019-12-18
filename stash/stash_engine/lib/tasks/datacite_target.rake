@@ -1,4 +1,6 @@
 require_relative 'datacite_target/dash_updater'
+
+# rubocop:disable Metrics/BlockLength
 namespace :datacite_target do
 
   desc 'update_dash DOI targets to reflect new environment'
@@ -11,4 +13,30 @@ namespace :datacite_target do
     end
   end
 
+  # this will go through the items in the same order, so if it crashes at a point it can be restarted from that item again
+  # saves errors to a separate errors.txt file so we can handle these separately/manually assuming there are only a few
+  desc 'update Dryad DOI targets to reflect new environment'
+  task update_dryad: :environment do
+    STDOUT.sync = true
+
+    start_from = 0
+    start_from = ARGV[1].to_i unless ARGV[1].blank?
+
+    stash_ids = DashUpdater.dryad_items_to_update
+
+    stash_ids.each_with_index do |stash_id, idx|
+      next if idx < start_from
+      puts "#{idx + 1}/#{stash_ids.length}: updating #{stash_id.identifier}"
+
+      begin
+        DashUpdater.submit_id_metadata(stash_identifier: stash_id)
+      rescue Stash::Doi::IdGenError, ArgumentError => ige
+        outstr = "\n#{stash_id.id}: #{stash_id.identifier}\n#{ige.message}\n"
+        IO.write('datacite_update_errors.txt', outstr, mode: 'a')
+      end
+      sleep 1
+    end
+  end
+
 end
+# rubocop:enable Metrics/BlockLength
