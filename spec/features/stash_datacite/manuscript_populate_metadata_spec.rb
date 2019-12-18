@@ -18,7 +18,7 @@ RSpec.feature 'Populate manuscript metadata from outside source', type: :feature
       start_new_dataset
     end
 
-    it 'warns when dataset info could not be found' do
+    xit 'warns when dataset info could not be found' do
       # this stubs the old dryad api tha Daisie was calling, soon to be changed more
       stub_request(:get, 'https://api.datadryad.example.org/api/v1/organizations/1573-8469/manuscripts/APPS-D-grog-plant0001221?access_token=bad_token')
         .with(headers: { 'Content-Type' => 'application/json' })
@@ -30,7 +30,7 @@ RSpec.feature 'Populate manuscript metadata from outside source', type: :feature
           'Please enter your metadata below.', wait: 30)
     end
 
-    it "gives message when journal isn't selected" do
+    xit "gives message when journal isn't selected" do
       find('input[value="manuscript"]').click
       fill_manuscript_info(name: 'European Journal of Plant Pathology', issn: nil, msid: nil)
       click_button 'Import Manuscript Metadata', wait: 7

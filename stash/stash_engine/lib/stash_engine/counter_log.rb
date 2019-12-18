@@ -20,6 +20,8 @@ module StashEngine
 
     def self.log(items) # array of items to log, will be separated by tabs
       items.flatten!
+      return if items[12].blank? || items[16].blank? # do not log items without publication date or year since required for counter
+
       items.unshift(Time.new.utc)
       items.map! { |i| (i.respond_to?(:iso8601) ? i.iso8601 : i.to_s.strip.gsub(/\p{Cntrl}/, ' ')) }
       items.map! { |i| (i.blank? ? '-' : i) }
