@@ -22,6 +22,9 @@ function loadPublications() {
 		// internal_datum_publication will have an ISSN, so use this ISSN
 		// to look up the journal title
 		create: function(a) {
+		    if(!document.getElementById("internal_datum_publication").value){
+			return;
+		    }
                     $.ajax({
                         url: "/stash_datacite/publications/issn/"+ document.getElementById("internal_datum_publication").value,
                         dataType: "json",
