@@ -1,3 +1,4 @@
+ 
 function loadPublications() {
     // based on example at http://jqueryui.com/autocomplete/#remote-jsonp
     $(function() {
@@ -17,39 +18,42 @@ function loadPublications() {
                 }
             })
             .autocomplete({
-                create: function(a) {
+		// when page is loaded, IF the dataset has been filled in already,
+		// internal_datum_publication will have an ISSN, so use this ISSN
+		// to look up the journal title
+		create: function(a) {
+		    if(!document.getElementById("internal_datum_publication").value){
+			return;
+		    }
                     $.ajax({
-                        url: "https://api.crossref.org/journals/"+ document.getElementById("internal_datum_publication").value,
+                        url: "/stash_datacite/publications/issn/"+ document.getElementById("internal_datum_publication").value,
                         dataType: "json",
                         success: function( data ) {
                             document.getElementById("internal_datum_publication").value = ""
-                            if (data.message.title != null) {
-                                document.getElementById("internal_datum_publication").value = data.message.title;
-                            }
-                        }
-                    });
-                },
-                source: function( request, response ) {
-                    $.ajax({
-                        url: "https://api.crossref.org/journals?query="+ extractLast( request.term ),
+                            if (data.fullName != null) {
+				document.getElementById("internal_datum_publication").value = data.fullName;
+			    }
+			}
+		    });
+		},
+                source: function (request, response) {
+		    $.ajax({
+			url: "/stash_datacite/publications/autocomplete",
                         dataType: "json",
-                        success: function( data ) {
-                            $.ajax({
-                                url: "https://api.crossref.org/journals?query="+ extractLast( request.term ) + "&rows=" + data.message["total-results"],
-                                dataType: "json",
-                                success: function( data ) {
-                                    var arr = jQuery.map( data.message.items, function( a ) {
-                                        return [[ a.ISSN[0], a.title ]];
-                                    });
-                                    var labels = [];
-                                    $.each(arr, function(index, value) {
-                                        if (value[0] != null) {
-                                            labels.push({value: value[0], label: value[1]});
-                                        }
-                                    });
-                                    response(labels);
+			data: {
+			    term: request.term
+			},
+                        success: function (data) {
+                            var arr = jQuery.map( data, function( a ) {
+                                return [[ a.issn, a.fullName ]];
+                            });
+                            var labels = [];
+                            $.each(arr, function(index, value) {
+                                if (value[0] != null) {
+                                    labels.push({value: value[0], label: value[1]});
                                 }
                             });
+                            response(labels);
                         }
                     });
                 },
@@ -131,3 +135,4 @@ function setPublicationChoiceDisplay(chosen){
             $("#choose_other").prop("checked", true);
     }
 }
+
