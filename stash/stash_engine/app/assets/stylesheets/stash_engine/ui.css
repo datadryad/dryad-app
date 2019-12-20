@@ -3847,7 +3847,7 @@ html.no-details .o-showhide__summary {
       font-weight: bold; } }
 
 .c-input__file:focus + .c-input__file-label {
-  outline: 2px solid #005581; }
+  outline: 2px solid #e65722; }
 
 .c-choose__label {
   -webkit-box-flex: 0;
@@ -6067,5 +6067,8 @@ body {
   @media (min-width: 760px) {
     body {
       padding: 10px 30px; } }
+
+*:focus {
+  outline: 2px solid #e65722; }
 
 /*# sourceMappingURL=sourcemaps/main.css.map */
