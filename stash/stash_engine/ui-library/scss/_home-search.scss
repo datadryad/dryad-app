@@ -53,4 +53,10 @@
   background-color: $design-white-color;
   color: $design-dark-blue-color;
   font-weight: 2em;
+
+  &:focus,
+  &:hover {
+    outline: 2px solid $design-light-orange-color;
+  }
+
 }
