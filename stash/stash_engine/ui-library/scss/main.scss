@@ -118,3 +118,7 @@ body {
 	}
 
 }
+
+*:focus {
+	outline: 2px solid $design-orange-color;
+}
