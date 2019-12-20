@@ -149,6 +149,7 @@ module StashEngine
     end
 
     # Triggered on a status change
+    # rubocop:disable Metrics/AbcSize
     def email_status_change_notices
       return if previously_published?
 
@@ -182,7 +183,6 @@ module StashEngine
     end
 
     # Triggered on a status of :published
-    # rubocop:disable Metrics/AbcSize
     def email_orcid_invitations
       return unless published?
       # Do not send an invitation to users who have no email address and do not have an
