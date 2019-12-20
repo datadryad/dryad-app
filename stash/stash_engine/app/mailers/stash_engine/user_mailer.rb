@@ -12,7 +12,6 @@ module StashEngine
       return unless user.present? && user_email(user).present?
       @user_name = user_name(user)
       assign_variables(resource)
-      Rails.logger.info("sending email for status=#{status}")
       mail(to: user_email(user),
            bcc: @resource&.tenant&.campus_contacts,
            template_name: status,
