@@ -162,6 +162,8 @@ module StashEngine
       when 'peer_review'
         StashEngine::UserMailer.status_change(resource, status).deliver_now
         StashEngine::UserMailer.journal_review_notice(resource, status).deliver_now
+      when 'submitted'
+        StashEngine::UserMailer.status_change(resource, status).deliver_now
       end
     end
 
