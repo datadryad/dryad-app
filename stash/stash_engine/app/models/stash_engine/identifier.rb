@@ -232,11 +232,11 @@ module StashEngine
     end
 
     def publication_issn
-      internal_data.find_by(data_type: 'publicationISSN')&.value
+      internal_data.find_by(data_type: 'publicationISSN')&.value&.strip
     end
 
     def manuscript_number
-      internal_data.find_by(data_type: 'manuscriptNumber')&.value
+      internal_data.find_by(data_type: 'manuscriptNumber')&.value&.strip
     end
 
     def publication_article_doi
