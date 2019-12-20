@@ -227,8 +227,8 @@ RSpec.feature 'DatasetVersioning', type: :feature do
         expect(@resource.current_curation_status).to eql('submitted')
       end
 
-      it 'did not send out an additional email to the author', js: true do
-        expect(ActionMailer::Base.deliveries.count).to eq(0)
+      it 'sends out a "submitted" email to the author', js: true do
+        expect(ActionMailer::Base.deliveries.count).to eq(1)
       end
 
       it 'displays the proper information on the Admin page', js: true do
