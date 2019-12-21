@@ -175,7 +175,7 @@ module StashEngine
 
         StashEngine::CurationActivity.statuses.each do |status|
 
-          if %w[published embargoed peer_review].include?(status)
+          if %w[published embargoed peer_review submitted].include?(status)
             it "sends email when '#{status}'" do
               ca = CurationActivity.new(resource_id: @resource.id, status: status)
               expect_any_instance_of(StashEngine::UserMailer).to receive(:status_change)
