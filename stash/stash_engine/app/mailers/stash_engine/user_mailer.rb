@@ -11,7 +11,6 @@ module StashEngine
       user = resource.authors.first || resource.user
       return unless user.present? && user_email(user).present?
       @user_name = user_name(user)
-      # @citation = generate_citation(resource) if status == 'published'
       assign_variables(resource)
       mail(to: user_email(user),
            bcc: @resource&.tenant&.campus_contacts,
