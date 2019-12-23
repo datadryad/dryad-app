@@ -25,7 +25,9 @@
 
 <h2>Login<a name="login"></a></h2>
 
-<p>Dryad requires an <a href="https://orcid.org">ORCID ID</a> for login. If you do not have an ORCID, you will have the opportunity to create a free, unique, identifier for yourself at the login page. Dryad uses ORCID so that we can authenticate and identify each individual researcher regardless of your route of entry to Dryad (i.e. through the website, through the API, through a journal integration, etc.). When datasets are published, they should appear in your ORCID profile along with articles and other works. For institutional members, we require a second form of authentication at login for campus single-sign-on. After you have logged in with your institutional credentials, Dryad ties together your ORCID and institutional affiliation so that you will not have to include this information a second time.</p>
+<p>Dryad requires an <a href="https://orcid.org">ORCID ID</a> for login. If you do not have an ORCID, you will have the opportunity to create a free, unique, identifier for yourself at the login page. Dryad uses ORCID so that we can authenticate and identify each individual researcher regardless of your route of entry to Dryad (i.e. through the website, through the API, through a journal integration, etc.). When datasets are published, they should appear in your ORCID profile along with articles and other works.</p> 
+
+<p>For institutional members, we require a second form of authentication at login for campus single-sign-on. After you have logged in with your institutional credentials, Dryad ties together your ORCID and institutional affiliation so that you will not have to include this information a second time.</p>
 
 <h2>Metadata<a name="metadata"></a></h2>
 
@@ -38,14 +40,18 @@
 <p><strong>Required fields</strong>:</p>
 <ul>
 <li>Title: Title of the dataset. Make sure to be as descriptive as possible</li>
-<li>Author(s): Name, email address, institutional affliation of main researcher(s) involved in producing the data. We will request the <a href="http://orcid.org">ORCID</a> registry auto-populate this publication on your ORCID profile</li>
+<li>Author(s): Name, email address, institutional affliation of main researcher(s) involved in producing the data.
+  <ul>
+    <li>Affliations are drawn from the <a href="http://ror.org">Research Organization Registry (ROR)</a></li>
+    <li>If you provide your co-authors' email addresses, when the dataset is published they will receive a message giving them the option to add their <a href="http://orcid.org">ORCID</a> to the Dryad record</li>
+  </ul>
 <li>Abstract: Short description of dataset</li>
 </ul>
 <p><strong>Optional fields</strong> (the more you describe your dataset, the wider the reach):</p>
 <ul>
 <li>Keyword(s): Descriptive words that may help others discover your dataset. We recommend that you determine whether your discipline has an existing controlled vocabulary from which to choose your keywords. Please enter as many keywords as applicable</li>
 <li>Methods: Any technical or methodological information that may help others to understand how the data were generated (i.e. equipment/tools/reagents used, or procedures followed)</li>
-<li>Usage Notes : Any technical or methodological information that may help others determine how the data may be properly re-used, replicated, or re-analyzed</li>
+<li>Usage Notes: Any technical or methodological information that may help others determine how the data may be properly re-used, replicated, or re-analyzed</li>
 <li>Funding Information: Name of the funding organization that supported creation of the resource, including applicable grant number(s)</li>
 <li>Related Works: Use this field to indicate other resources that are associated with the data. Examples include publications, other datasets, code etc.</li>
 <li>Location information: Include the geo-coordinates or name of the location where your data were generated or the location that is the focus of your research</li>
