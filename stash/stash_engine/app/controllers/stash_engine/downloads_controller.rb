@@ -20,14 +20,14 @@ module StashEngine
       # a holiday when we don't have other good ways to block yet without assistance from others.
 
       block_path = Rails.root.join('uploads', 'blacklist.txt').to_s
-      if File.exist?(block_path)
-        File.read(block_path).split("\n").each do |exc|
-          next if exc.blank? || exc.start_with?('#')
+      return unless File.exist?(block_path)
 
-          if request&.remote_ip&.start_with?(exc)
-            head(429)
-            break
-          end
+      File.read(block_path).split("\n").each do |exc|
+        next if exc.blank? || exc.start_with?('#')
+
+        if request&.remote_ip&.start_with?(exc)
+          head(429)
+          break
         end
       end
     end
