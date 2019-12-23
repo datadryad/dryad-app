@@ -11,6 +11,25 @@ module StashEngine
     def setup_streaming
       @version_streamer = Stash::Download::Version.new(controller_context: self)
       @file_streamer = Stash::Download::File.new(controller_context: self)
+
+      # This is pretty hacky, but is a temporary fix since we are getting more bad actors hitting expensive downloads.
+      # This looks for uploads/blacklist.txt and if it's there matches IP addresses that start with things in the file--
+      # one IP address (or beginning of IP Address) per line.
+      #
+      # Can do something better than this when we have more time.  This is a stopgap to stop excessive usage just before
+      # a holiday when we don't have other good ways to block yet without assistance from others.
+
+      block_path = Rails.root.join('uploads', 'blacklist.txt').to_s
+      if File.exist?(block_path)
+        File.read(block_path).split("\n").each do |exc|
+          next if exc.blank? || exc.start_with?('#')
+
+          if request&.remote_ip&.start_with?(exc)
+            head(429)
+            break
+          end
+        end
+      end
     end
 
     # for downloading the full version
