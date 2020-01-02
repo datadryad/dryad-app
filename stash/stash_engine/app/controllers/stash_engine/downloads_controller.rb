@@ -12,13 +12,15 @@ module StashEngine
       @version_streamer = Stash::Download::Version.new(controller_context: self)
       @file_streamer = Stash::Download::File.new(controller_context: self)
 
-      # This is pretty hacky, but is a temporary fix since we are getting more bad actors hitting expensive downloads.
+      # This reads a text file with one line and a regular expression in it and blocks if the user-agent matches the regexp
+      agent_path = Rails.root.join('uploads', 'blacklist_agents.txt').to_s
+      if File.exist?(agent_path) && request.user_agent[Regexp.new(File.read(agent_path))]
+        head(429)
+        return
+      end
+
       # This looks for uploads/blacklist.txt and if it's there matches IP addresses that start with things in the file--
       # one IP address (or beginning of IP Address) per line.
-      #
-      # Can do something better than this when we have more time.  This is a stopgap to stop excessive usage just before
-      # a holiday when we don't have other good ways to block yet without assistance from others.
-
       block_path = Rails.root.join('uploads', 'blacklist.txt').to_s
       return unless File.exist?(block_path)
 
@@ -118,11 +120,6 @@ module StashEngine
         landing_show_path(id: @resource.identifier_str),
         notice: 'This dataset is now published, please use the download button on the right side.'
       )
-    end
-
-    def stream_download
-      CounterLogger.version_download_hit(request: request, resource: @resource)
-      Stash::Download::Version.stream_response(url: @resource.merritt_producer_download_uri, tenant: @resource.tenant)
     end
 
     def flash_download_unavailable
