@@ -20,6 +20,7 @@ module Stash
 
       def initialize(controller_context:)
         @cc = controller_context
+        @download_history = nil
       end
 
       # this is a method that should be overridden
@@ -86,6 +87,9 @@ module Stash
         read_file = ::File.open(write_file, 'r')
 
         write_thread = Thread.new do
+          # tracking downloads needs to happen in the threads
+          @download_history = StashEngine::DownloadHistory.mark_start(ip: cc.request.remote_ip, user_agent: cc.request.user_agent,
+                                                  resource_id: @resource_id, file_id: @file_id)
           # this only modifies the write file with contents of merritt stream
           save_to_file(merritt_stream: merritt_stream, write_file: write_file)
         end
@@ -107,6 +111,7 @@ module Stash
         read_file&.close unless read_file&.closed?
         write_file&.close unless write_file&.closed?
         ::File.unlink(write_file&.path) if ::File.exist?(write_file&.path)
+        StashEngine::DownloadHistory.mark_end(download_history: @download_history) unless @download_history.nil?
       end
       # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
 
