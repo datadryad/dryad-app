@@ -3,6 +3,8 @@ require 'cgi'
 module StashEngine
   class FileUpload < ActiveRecord::Base
     belongs_to :resource, class_name: 'StashEngine::Resource'
+    has_many :download_histories, class_name: 'StashEngine::DownloadHistory', dependent: :destroy
+'
     include StashEngine::Concerns::ResourceUpdated
     # mount_uploader :uploader, FileUploader # it seems like maybe I don't need this since I'm doing so much manually
 
