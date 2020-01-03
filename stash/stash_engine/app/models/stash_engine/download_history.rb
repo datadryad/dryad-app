@@ -4,6 +4,8 @@ module StashEngine
     belongs_to :file_upload, class_name: 'StashEngine::FileUpload'
     enum state: %w[downloading finished].map { |i| [i.to_sym, i] }.to_h
 
+    scope :downloading, -> { where(state: 'downloading') }
+
     def self.mark_start(ip:, user_agent:, resource_id:, file_id: nil)
       create(ip_address: ip, user_agent: user_agent, resource_id: resource_id, file_upload_id: file_id, state: 'downloading')
     end
@@ -14,5 +16,6 @@ module StashEngine
 
       download_history.update(state: 'finished')
     end
+
   end
 end
