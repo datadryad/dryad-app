@@ -147,6 +147,28 @@ namespace :identifiers do
     end
   end
 
+  desc 'Email the submitter when a dataset has been `in_progress` for 3 days'
+  task in_progess_reminder: :environment do
+    limit = 3.days.ago
+    p "Mailing users whose datasets have been in_progress since #{limit}"
+    StashEngine::Resource.need_publishing
+      .where('stash_engine_resources.updated_at <= ?', limit).each do |r|
+
+      begin
+        p "Mailing submitter about in_progress dataset. Identifier: #{r.identifier_id}, Resource: #{r.id}"
+        StashEngine::UserMailer.in_progress_reminder(r).deliver_now
+        StashEngine::CurationActivity.create(
+          resource_id: r.id,
+          user_id: r.current_curation_activity.user_id,
+          status: r.current_curation_activity.status,
+          note: 'Email submitter CRON - reminded submitter that this item is still `in_progress`'
+        )
+      rescue StandardError => e
+        p "    Exception! #{e.message}"
+      end
+    end
+  end
+
   desc 'populate publicationName'
   task load_publication_names: :environment do
     p "Searching CrossRef and the Journal API for publication names: #{Time.now.utc}"
