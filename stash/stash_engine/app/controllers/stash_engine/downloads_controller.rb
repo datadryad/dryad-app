@@ -5,7 +5,10 @@ require 'stash/download/version'
 # rubocop:disable Metrics/ClassLength
 module StashEngine
   class DownloadsController < ApplicationController
-    before_action :check_user_agent, :check_ip, :setup_streaming
+
+    CONCURRENT_DOWNLOAD_LIMIT = 2
+
+    before_action :check_user_agent, :check_ip, :stop_download_hogs, :setup_streaming
 
     def check_user_agent
       # This reads a text file with one line and a regular expression in it and blocks if the user-agent matches the regexp
@@ -27,6 +30,11 @@ module StashEngine
           break
         end
       end
+    end
+
+    def stop_download_hogs
+      dl_count = DownloadHistory.where(ip_address: request&.remote_ip).downloading.count
+      render 'download_limit', status: 429 if dl_count >= CONCURRENT_DOWNLOAD_LIMIT
     end
 
     # set up the Merritt file & version objects so they have access to the controller context before continuing
