@@ -74,7 +74,7 @@ module Stash
         raise ex
       end
 
-      # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
+      # rubocop:disable Metrics/AbcSize, Metrics/MethodLength, Metrics/CyclomaticComplexity
       def send_stream(user_stream:, merritt_stream:)
         # use this file to write contents of the stream
         FileUtils.mkdir_p(Rails.root.join('uploads')) # ensures this file is created if it doesn't exist, needed mostly for tests
@@ -89,7 +89,7 @@ module Stash
         write_thread = Thread.new do
           # tracking downloads needs to happen in the threads
           @download_history = StashEngine::DownloadHistory.mark_start(ip: cc.request.remote_ip, user_agent: cc.request.user_agent,
-                                                  resource_id: @resource_id, file_id: @file_id)
+                                                                      resource_id: @resource_id, file_id: @file_id)
           # this only modifies the write file with contents of merritt stream
           save_to_file(merritt_stream: merritt_stream, write_file: write_file)
         end
@@ -113,7 +113,7 @@ module Stash
         ::File.unlink(write_file&.path) if ::File.exist?(write_file&.path)
         StashEngine::DownloadHistory.mark_end(download_history: @download_history) unless @download_history.nil?
       end
-      # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
+      # rubocop:enable Metrics/AbcSize, Metrics/MethodLength, Metrics/CyclomaticComplexity
 
       def save_to_file(merritt_stream:, write_file:)
         chunk_size = 1024 * 512 # 512k
