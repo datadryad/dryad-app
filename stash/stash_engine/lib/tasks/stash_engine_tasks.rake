@@ -92,7 +92,7 @@ namespace :identifiers do
         p "Embargoing: Identifier: #{r[1]}, Resource: #{r[0]}"
         StashEngine::CurationActivity.create(
           resource_id: r[0],
-          user_id: r[2],
+          user_id: 0,
           status: 'embargoed',
           note: 'Embargo Datasets CRON - publication date has not yet been reached, changing status to `embargo`'
         )
@@ -112,9 +112,8 @@ namespace :identifiers do
 
     resources.each do |res|
       begin
-        last_cur_activity = res.curation_activities.last
         res.curation_activities << StashEngine::CurationActivity.create(
-          user_id: last_cur_activity.user_id,
+          user_id: 0,
           status: 'published',
           note: 'Publish Datasets CRON - reached the publication date, changing status to `published`'
         )
@@ -137,7 +136,7 @@ namespace :identifiers do
         r.update(hold_for_peer_review: false, peer_review_end_date: nil)
         StashEngine::CurationActivity.create(
           resource_id: r.id,
-          user_id: r.current_curation_activity.user_id,
+          user_id: 0,
           status: 'submitted',
           note: 'Expire Peer Review CRON - reached the peer review expiration date, changing status to `submitted`'
         )
@@ -149,20 +148,23 @@ namespace :identifiers do
 
   desc 'Email the submitter when a dataset has been `in_progress` for 3 days'
   task in_progess_reminder: :environment do
-    limit = 3.days.ago
-    p "Mailing users whose datasets have been in_progress since #{limit}"
-    StashEngine::Resource.need_publishing
-      .where('stash_engine_resources.updated_at <= ?', limit).each do |r|
-
+    p "Mailing users whose datasets have been in_progress since #{3.days.ago}"
+    StashEngine::Resource.joins(:current_resource_state)
+      .where("stash_engine_resource_states.resource_state = 'in_progress'")
+      .where('stash_engine_resources.updated_at <= ?', 3.days.ago)
+      .each do |r|
       begin
-        p "Mailing submitter about in_progress dataset. Identifier: #{r.identifier_id}, Resource: #{r.id}"
-        StashEngine::UserMailer.in_progress_reminder(r).deliver_now
-        StashEngine::CurationActivity.create(
-          resource_id: r.id,
-          user_id: r.current_curation_activity.user_id,
-          status: r.current_curation_activity.status,
-          note: 'Email submitter CRON - reminded submitter that this item is still `in_progress`'
-        )
+        reminder_flag = 'in_progress_reminder CRON'
+        if r.curation_activities.where('note LIKE ?', "%#{reminder_flag}%").empty?
+          p "Mailing submitter about in_progress dataset. Identifier: #{r.identifier_id}, Resource: #{r.id} updated #{r.updated_at}"
+          StashEngine::UserMailer.in_progress_reminder(r).deliver_now
+          StashEngine::CurationActivity.create(
+            resource_id: r.id,
+            user_id: 0,
+            status: r.current_curation_activity.status,
+            note: "#{reminder_flag} - reminded submitter that this item is still `in_progress`"
+          )
+        end
       rescue StandardError => e
         p "    Exception! #{e.message}"
       end

@@ -62,7 +62,7 @@ module StashEngine
     end
 
     def in_progress_reminder(resource)
-      warn("Unable to send in_progress_reminder; nil resource") unless resource.present?
+      warn('Unable to send in_progress_reminder; nil resource') unless resource.present?
       return unless resource.present?
       user = resource.authors.first || resource.user
       return unless user.present? && user_email(user).present?
