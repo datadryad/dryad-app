@@ -86,18 +86,20 @@ module Stash
         # read past the end of what has been written so far
         read_file = ::File.open(write_file, 'r')
 
+        download_canceled = false
+
         write_thread = Thread.new do
           # tracking downloads needs to happen in the threads
           @download_history = StashEngine::DownloadHistory.mark_start(ip: cc.request.remote_ip, user_agent: cc.request.user_agent,
                                                                       resource_id: @resource_id, file_id: @file_id)
           # this only modifies the write file with contents of merritt stream
-          save_to_file(merritt_stream: merritt_stream, write_file: write_file)
+          save_to_file(merritt_stream: merritt_stream, write_file: write_file, download_canceled: download_canceled)
         end
 
         read_thread = Thread.new do
           # this only modifies the user stream based on the contents of read file.  The other other
           # objects are only read or have state checked.  Ensures it doesn't read past the end of content.
-          stream_from_file(read_file: read_file, write_file: write_file, user_stream: user_stream)
+          stream_from_file(read_file: read_file, write_file: write_file, user_stream: user_stream, download_canceled: download_canceled)
         end
 
         write_thread.join
@@ -115,11 +117,12 @@ module Stash
       end
       # rubocop:enable Metrics/AbcSize, Metrics/MethodLength, Metrics/CyclomaticComplexity
 
-      def save_to_file(merritt_stream:, write_file:)
+      def save_to_file(merritt_stream:, write_file:, download_canceled:)
         chunk_size = 1024 * 512 # 512k
 
         while (chunk = merritt_stream.readpartial(chunk_size))
           write_file.write(chunk)
+          break if download_canceled
         end
       rescue EOFError => ex
         # I believe Ruby has this error with certain kinds of IO objects such as StringIO in testing, but seems to have written
@@ -132,7 +135,7 @@ module Stash
       end
 
       # rubocop:disable Metrics/CyclomaticComplexity
-      def stream_from_file(read_file:, write_file:, user_stream:)
+      def stream_from_file(read_file:, write_file:, user_stream:, download_canceled:)
         read_chunk_size = 1024 * 16 # 16k
 
         until read_file.closed?
@@ -151,6 +154,7 @@ module Stash
       ensure
         read_file.close unless read_file.closed?
         user_stream.close unless user_stream.closed?
+        download_canceled = true # set user download canceled (finished) to true in shared state to notify other thread to terminate its download
       end
       # rubocop:enable Metrics/CyclomaticComplexity
     end
