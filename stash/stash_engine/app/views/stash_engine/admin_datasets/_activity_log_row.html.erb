@@ -2,7 +2,7 @@
 <tr class="c-lined-table__row">
   <td><%= formatted_datetime(curation_activity.created_at) %></td>
   <td><%= curation_activity.readable_status %></td>
-  <td><%= curation_activity.user&.name %></td>
+  <td><%= curation_activity.user&.name || "System" %></td>
   <td><%= curation_activity.note %></td>
   <td><%= curation_activity.keywords %></td>
 </tr>
