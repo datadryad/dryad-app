@@ -352,7 +352,8 @@ RSpec.feature 'DatasetVersioning', type: :feature do
   def update_dataset(curator: false)
     # Add a value to the dataset, submit it and then mock a successful submission
     navigate_to_metadata
-    find('#data_description_opener').click
+    description_divider = find('h2', text: 'Data Description')
+    description_divider.click
     fill_in 'related_identifier[related_identifier]', with: 'http://doi.org/10.5061/dryad.888gm50'
     # Submit the changes
     navigate_to_review
