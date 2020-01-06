@@ -53,9 +53,9 @@ module StashEngine
     def calendar_week(time)
       # %W calculates weeks based on starting Monday and not Sunday, %U is Sunday and %V is ???.
       # This produces year-week string.
-      return (Time.new - 30.days).strftime('%G-%W') if time.nil? || !time.is_a?(Time)
+      return (30.days.ago).strftime('%Y-%W') if time.nil? || !time.is_a?(Time)
 
-      time.strftime('%G-%W')
+      time.strftime('%Y-%W')
     end
 
   end
