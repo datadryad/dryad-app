@@ -19,8 +19,12 @@ module Stash
         # need to hack in Rails.root because our test framework setup sucks
         rails_root = Dir.mktmpdir('rails_root')
         allow(Rails).to receive(:root).and_return(Pathname.new(rails_root))
+        @my_request = 'requesty'
+        allow(@my_request).to receive(:remote_ip).and_return('127.0.0.1')
+        allow(@my_request).to receive(:user_agent).and_return('HorseBrowser 1.1')
 
         @controller_context = 'blah'
+        allow(@controller_context).to receive(:request).and_return(@my_request)
         @logger = ActiveSupport::Logger.new(STDOUT)
         allow(@controller_context).to receive(:logger).and_return(@logger)
       end

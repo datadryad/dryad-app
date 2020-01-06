@@ -8,9 +8,8 @@
   width: 100%;
   margin: 0;
   padding: 0;
-  background: linear-gradient(rgba($design-light-gray-color, 0.85) 100%, transparent 0), inline('../images/stem.jpg') top left / cover no-repeat;
+  background: linear-gradient(rgba($design-dark-gray-color, 0.75) 100%, transparent 0), inline('../images/stem.jpg') top left / cover no-repeat;
   background-color: $design-dark-gray-color;
-  color: $design-offwhite-color;
 }
 
 .c-why-use__blurb {

@@ -5,7 +5,37 @@ require 'stash/download/version'
 # rubocop:disable Metrics/ClassLength
 module StashEngine
   class DownloadsController < ApplicationController
-    before_action :setup_streaming
+
+    CONCURRENT_DOWNLOAD_LIMIT = 2
+
+    before_action :check_user_agent, :check_ip, :stop_download_hogs, :setup_streaming
+
+    def check_user_agent
+      # This reads a text file with one line and a regular expression in it and blocks if the user-agent matches the regexp
+      agent_path = Rails.root.join('uploads', 'blacklist_agents.txt').to_s
+      head(429) if File.exist?(agent_path) && request.user_agent[Regexp.new(File.read(agent_path))]
+    end
+
+    def check_ip
+      # This looks for uploads/blacklist.txt and if it's there matches IP addresses that start with things in the file--
+      # one IP address (or beginning of IP Address) per line.
+      block_path = Rails.root.join('uploads', 'blacklist.txt').to_s
+      return unless File.exist?(block_path)
+
+      File.read(block_path).split("\n").each do |exc|
+        next if exc.blank? || exc.start_with?('#')
+
+        if request&.remote_ip&.start_with?(exc)
+          head(429)
+          break
+        end
+      end
+    end
+
+    def stop_download_hogs
+      dl_count = DownloadHistory.where(ip_address: request&.remote_ip).downloading.count
+      render 'download_limit', status: 429 if dl_count >= CONCURRENT_DOWNLOAD_LIMIT
+    end
 
     # set up the Merritt file & version objects so they have access to the controller context before continuing
     def setup_streaming
@@ -99,11 +129,6 @@ module StashEngine
         landing_show_path(id: @resource.identifier_str),
         notice: 'This dataset is now published, please use the download button on the right side.'
       )
-    end
-
-    def stream_download
-      CounterLogger.version_download_hit(request: request, resource: @resource)
-      Stash::Download::Version.stream_response(url: @resource.merritt_producer_download_uri, tenant: @resource.tenant)
     end
 
     def flash_download_unavailable
