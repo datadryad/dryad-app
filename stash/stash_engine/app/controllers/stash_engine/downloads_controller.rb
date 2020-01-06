@@ -5,20 +5,20 @@ require 'stash/download/version'
 # rubocop:disable Metrics/ClassLength
 module StashEngine
   class DownloadsController < ApplicationController
-    before_action :setup_streaming
 
-    # set up the Merritt file & version objects so they have access to the controller context before continuing
-    def setup_streaming
-      @version_streamer = Stash::Download::Version.new(controller_context: self)
-      @file_streamer = Stash::Download::File.new(controller_context: self)
+    CONCURRENT_DOWNLOAD_LIMIT = 2
 
-      # This is pretty hacky, but is a temporary fix since we are getting more bad actors hitting expensive downloads.
+    before_action :check_user_agent, :check_ip, :stop_download_hogs, :setup_streaming
+
+    def check_user_agent
+      # This reads a text file with one line and a regular expression in it and blocks if the user-agent matches the regexp
+      agent_path = Rails.root.join('uploads', 'blacklist_agents.txt').to_s
+      head(429) if File.exist?(agent_path) && request.user_agent[Regexp.new(File.read(agent_path))]
+    end
+
+    def check_ip
       # This looks for uploads/blacklist.txt and if it's there matches IP addresses that start with things in the file--
       # one IP address (or beginning of IP Address) per line.
-      #
-      # Can do something better than this when we have more time.  This is a stopgap to stop excessive usage just before
-      # a holiday when we don't have other good ways to block yet without assistance from others.
-
       block_path = Rails.root.join('uploads', 'blacklist.txt').to_s
       return unless File.exist?(block_path)
 
@@ -30,6 +30,17 @@ module StashEngine
           break
         end
       end
+    end
+
+    def stop_download_hogs
+      dl_count = DownloadHistory.where(ip_address: request&.remote_ip).downloading.count
+      render 'download_limit', status: 429 if dl_count >= CONCURRENT_DOWNLOAD_LIMIT
+    end
+
+    # set up the Merritt file & version objects so they have access to the controller context before continuing
+    def setup_streaming
+      @version_streamer = Stash::Download::Version.new(controller_context: self)
+      @file_streamer = Stash::Download::File.new(controller_context: self)
     end
 
     # for downloading the full version
@@ -118,11 +129,6 @@ module StashEngine
         landing_show_path(id: @resource.identifier_str),
         notice: 'This dataset is now published, please use the download button on the right side.'
       )
-    end
-
-    def stream_download
-      CounterLogger.version_download_hit(request: request, resource: @resource)
-      Stash::Download::Version.stream_response(url: @resource.merritt_producer_download_uri, tenant: @resource.tenant)
     end
 
     def flash_download_unavailable
