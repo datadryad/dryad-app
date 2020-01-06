@@ -45,7 +45,13 @@
         <% end %>
       </td>
       <td class="c-admin-hide-border-right" id="js-curation-state-<%= dataset.identifier_id %>">
-        <%= StashEngine::CurationActivity.readable_status(dataset.status) %>
+	  <% if (dataset.resource_state == 'error') %>
+	      Merritt Error
+	  <% elsif (dataset.resource_state == 'processing') %>
+	      Processing
+	  <% else %>
+              <%= StashEngine::CurationActivity.readable_status(dataset.status) %>
+	  <% end %>
       </td>
       <td class="c-admin-hide-border-left">
         <% if %w[admin superuser].include?(current_user.role) && dataset.resource_state == 'submitted' %>
