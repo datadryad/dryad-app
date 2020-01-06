@@ -12,7 +12,9 @@ module Stash
       # this downloads a file as a stream from Merritt express
       def download(file:)
         @file = file
-        # StashEngine::CounterLogger.version_download_hit(request: cc.request, resource: resource)
+        # needs to be set for tracking downloads
+        @resource_id = @file&.resource&.id
+        @file_id = @file.id
 
         stream_response(url: file.merritt_express_url, tenant: file.resource.tenant, filename: disposition_filename)
       end
