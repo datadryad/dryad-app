@@ -33,6 +33,10 @@ module Stash
         if @async_download
           yield
         else
+          # needs to be set for tracking downloads
+          @resource_id = resource.id
+          @file_id = nil
+
           StashEngine::CounterLogger.version_download_hit(request: cc.request, resource: resource)
           # longer read timeout since Merritt may need to assemble zip file before starting download
           stream_response(url: resource.merritt_producer_download_uri, tenant: resource.tenant, filename: disposition_filename, read_timeout: 180)
