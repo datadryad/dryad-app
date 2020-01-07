@@ -53,12 +53,23 @@ module StashEngine
 
     # Called from the StashEngine::Repository
     def error_report(resource, error)
-      warn("Unable to report update error #{error}; nil resource") unless resource.present?
+      logger.warn("Unable to report update error #{error}; nil resource") unless resource.present?
       return unless resource.present?
       assign_variables(resource)
       @backtrace = to_backtrace(error)
       mail(to: @submission_error_emails, bcc: @bcc_emails,
            subject: "#{rails_env} Submitting dataset \"#{@resource.title}\" (doi:#{@resource.identifier_value}) failed")
+    end
+
+    def in_progress_reminder(resource)
+      logger.warn('Unable to send in_progress_reminder; nil resource') unless resource.present?
+      return unless resource.present?
+      user = resource.authors.first || resource.user
+      return unless user.present? && user_email(user).present?
+      @user_name = user_name(user)
+      assign_variables(resource)
+      mail(to: user_email(user),
+           subject: "#{rails_env} REMINDER: Dryad Submission \"#{@resource.title}\"")
     end
 
     def dependency_offline(dependency)
@@ -71,7 +82,7 @@ module StashEngine
     end
 
     def helpdesk_notice(resource, message)
-      warn('Unable to send helpdesk notice; nil resource') unless resource.present?
+      logger.warn('Unable to send helpdesk notice; nil resource') unless resource.present?
       return unless resource.present?
       assign_variables(resource)
       @message = message
