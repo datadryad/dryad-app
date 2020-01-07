@@ -1,6 +1,8 @@
+require 'db_spec_helper'
 require 'spec_helper'
 require 'stash/download/file'
 require 'ostruct'
+require_relative '../../../../../spec_helpers/factory_helper'
 
 # a base class for version and file downloads, providing some basic functions
 module Stash
@@ -10,11 +12,16 @@ module Stash
       describe '#download' do
 
         before(:each) do
+          # there is no db connection here so it blows up using real models
+          @identifier = create(:identifier)
+          @resource = create(:resource, identifier_id: @identifier.id)
+
           @file = File.new(controller_context: OpenStruct.new(response_body:  '',
                                                               response: OpenStruct.new(headers: {})))
           @file_upload = create(:file_upload)
           allow(@file_upload).to receive(:merritt_express_url).and_return('http://grah.example.com')
           allow(@file_upload).to receive_message_chain('resource.tenant') { 'hi, not really used' }
+          allow(@file_upload).to receive_message_chain('resource.id') { 22 }
         end
 
         it 'sets the @file automatically before downloading' do

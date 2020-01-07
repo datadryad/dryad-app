@@ -1,0 +1,20 @@
+<% @page_title = "Concurrent Download Limits" %>
+<h1 class="o-heading__level1">Concurrent download limits</h1>
+
+<p>
+  In order to maintain a responsive service for all users, we limit concurrent downloads to
+  <%= StashEngine::DownloadsController::CONCURRENT_DOWNLOAD_LIMIT %> at a time.  When an in-progress download
+  completes, you may start another.
+</p>
+
+<p>
+  If you need to download all or most files in a dataset, please use the <em>Download dataset</em> button since it will give you
+  all the files in a single zip package and will usually also reduce your download time and size.
+</p>
+
+<p>
+  If you are getting this message and you're using an automated robot or crawler, please reduce your usage to fewer
+  concurrent downloads at the same time. You should also be aware of the
+  <a href="https://en.wikipedia.org/wiki/Robots_exclusion_standard">robots.txt</a> standard which is a voluntary
+  standard honored by most well-behaved crawlers.
+</p>
