@@ -1,0 +1,14 @@
+<p>Dear <%= @user_name %>,</p>
+
+<p>We noticed that you have begun a submission to Dryad, “<%= @resource.title %>”, but have not completed the process.</p>
+
+<p>If you are ready for this dataset to enter the submission process, please follow these steps:</p>
+<ol>
+<li>Login</li>
+<li>Click on “my datasets”</li>
+<li>Click “resume” your dataset submission,</li>
+<li>On page 3 of the submission form, click “submit”</li>
+</ol>
+
+<p>If you do not intend to submit this dataset, you may “delete” this dataset. Please get in touch with any questions at <a href="mailto:<%= @helpdesk_email %>"><%= @helpdesk_email %></a>.</p>
+
