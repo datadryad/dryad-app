@@ -1,6 +1,6 @@
-<p>My data is related to:</p>
+<p id="import-choices-label">My data is related to:</p>
 <%= form_for(@publication, url: publications_update_path, method: :patch, remote: true, authenticity_token: true) do |f| %>
-	<div class="c-import__choicesbox js-import-choice">
+	<div class="c-import__choicesbox js-import-choice" role="group" aria-labelledby="import-choices-label">
 		<div class="c-import__choicebox">
 			<div class="c-import__icon"><i class="fa fa-pencil-square-o fa-3x"></i></div>
 			<div>
