@@ -171,6 +171,18 @@ namespace :identifiers do
     end
   end
 
+  desc 'Generate a report of items that have been published in a given month'
+  task shopping_cart_report: :environment , [:year_month] do |task, args|
+    p "processing #{args}"
+    p "Shopping Cart Report for  #{year_month}"
+    # find the right list of items
+    ## take argument for the year-month
+    ## if none, default to the previously completed month
+    # for each item
+    ## get the variables associated with publication status
+    ## output a CSV of the metadata
+  end
+
   desc 'populate publicationName'
   task load_publication_names: :environment do
     p "Searching CrossRef and the Journal API for publication names: #{Time.now.utc}"
