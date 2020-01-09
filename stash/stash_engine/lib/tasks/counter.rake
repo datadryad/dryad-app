@@ -35,7 +35,7 @@ namespace :counter do
     exit # makes the arguments not be interpreted as other rake tasks
   end # end of task
 
-  # example: JSON_DIRECTORY="/user/me/json-reports" RAILS_ENV=production be rake counter:cop_manual
+  # example: JSON_DIRECTORY="/user/me/json-reports" RAILS_ENV=production bundle exec rake counter:cop_manual
   desc 'manually populate CoP stats from json files'
   task cop_manual: :environment do
     puts "JSON_DIRECTORY is #{ENV['JSON_DIRECTORY']}"
@@ -45,6 +45,11 @@ namespace :counter do
       js = JsonStats.new(f)
       js.update_stats
     end
+  end
+
+  desc 'clear out table of cached Counter stats'
+  task clear_cache: :environment do
+    StashEngine::CounterStat.delete_all
   end
 
   desc 'test that environment is passed in'
