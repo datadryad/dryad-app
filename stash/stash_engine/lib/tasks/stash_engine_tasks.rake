@@ -177,7 +177,7 @@ namespace :identifiers do
     # If none, default to the previously completed month.
     if ENV['YEAR_MONTH'].blank?
       puts 'No month specified, assuming last month.'
-      year_month = 1.month.ago.strftime("%Y-%m")
+      year_month = 1.month.ago.strftime('%Y-%m')
     else
       year_month = ENV['YEAR_MONTH']
     end
