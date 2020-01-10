@@ -333,7 +333,7 @@ module StashEngine
       end
       found_approval_date
     end
-    
+
     # returns the publication state based on history
     # finds the latest applicable state from terminal states for each resource/version.
     # We only really care about whether it's some form of published, embargoed or withdrawn
