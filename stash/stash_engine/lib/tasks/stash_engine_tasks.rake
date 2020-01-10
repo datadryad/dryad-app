@@ -172,15 +172,22 @@ namespace :identifiers do
   end
 
   desc 'Generate a report of items that have been published in a given month'
-  task shopping_cart_report: :environment , [:year_month] do |task, args|
-    p "processing #{args}"
-    p "Shopping Cart Report for  #{year_month}"
-    # find the right list of items
-    ## take argument for the year-month
-    ## if none, default to the previously completed month
+  task shopping_cart_report: :environment do
+    # Get the year-month specified in YEAR_MONTH environment variable.
+    # If none, default to the previously completed month.
+    if ENV['YEAR_MONTH'].blank?
+      puts 'No month specified, assuming last month.'
+      year_month = 1.month.ago.strftime("%Y-%m")
+    else
+      year_month = ENV['YEAR_MONTH']
+    end
+    p "Shopping Cart Report for #{year_month}"
+    # - any identifier that became published or embargoed during the target month
     # for each item
     ## get the variables associated with publication status
     ## output a CSV of the metadata
+    # Exit cleanly (don't let rake assume that an extra argument is another task to process)
+    exit
   end
 
   desc 'populate publicationName'
