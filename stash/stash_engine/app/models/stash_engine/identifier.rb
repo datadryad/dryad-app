@@ -318,6 +318,22 @@ module StashEngine
       found_article_appears
     end
 
+    # returns the date on which this identifier was approved for publication
+    # (i.e., the date on which it entered the status 'published' or 'embargoed'
+    def approval_date
+      return nil unless %w[published embargoed].include?(pub_state)
+
+      found_approval_date = nil
+      resources.each do |res|
+        res.curation_activities.each do |ca|
+          next unless %w[published embargoed].include?(ca.status)
+          found_approval_date = ca.created_at
+          break
+        end
+      end
+      found_approval_date
+    end
+    
     # returns the publication state based on history
     # finds the latest applicable state from terminal states for each resource/version.
     # We only really care about whether it's some form of published, embargoed or withdrawn
