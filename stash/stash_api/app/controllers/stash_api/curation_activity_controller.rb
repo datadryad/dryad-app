@@ -67,7 +67,7 @@ module StashApi
     private
 
     # Publish, embargo or simply change the status
-    # rubocop:disable Metrics/CyclomaticComplexity
+    # rubocop:disable Metrics/CyclomaticComplexity, Metrics/MethodLength
     def create_curation_activity(resource)
       return unless resource.present?
 
@@ -81,6 +81,12 @@ module StashApi
         record_embargoed_date(resource)
       end
 
+      ca_user = if ca_note&.match(/based on notification from journal/)
+                  0
+                else
+                  params[:user_id] || @user.id
+                end
+
       # if the status is being updated based on notification from a journal, DON'T go backwards in workflow,
       # that is, don't change a status other than submitted or peer_review
       if ca_note&.match(/based on notification from journal/) &&
@@ -90,12 +96,12 @@ module StashApi
       end
 
       StashEngine::CurationActivity.create(resource_id: resource.id,
-                                           user_id: params[:user_id] || @user.id,
+                                           user_id: ca_user,
                                            status: ca_status,
                                            note: ca_note,
                                            created_at: params[:curation_activity][:created_at] || Time.now.utc)
     end
-    # rubocop:enable Metrics/CyclomaticComplexity
+    # rubocop:enable Metrics/CyclomaticComplexity, Metrics/MethodLength
 
     def record_published_date(resource)
       return if resource.publication_date.present?
