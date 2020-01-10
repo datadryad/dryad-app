@@ -73,7 +73,6 @@ Gem::Specification.new do |s| # rubocop:disable Metrics/BlockLength
   s.add_dependency 'wkhtmltopdf-binary', '~> 0.12.3.1'
   s.add_dependency 'zaru', '~> 0.3'
 
-  s.add_development_dependency 'byebug'
   s.add_development_dependency 'colorize', '>= 0.8'
   s.add_development_dependency 'database_cleaner', '>= 1.5'
   s.add_development_dependency 'diffy', '>= 3.1'
@@ -82,10 +81,7 @@ Gem::Specification.new do |s| # rubocop:disable Metrics/BlockLength
   s.add_development_dependency 'nokogiri', '>= 1.8'
   s.add_development_dependency 'rspec', '>= 3.5'
   s.add_development_dependency 'rspec-rails', '>= 3.5'
-  s.add_development_dependency 'rubocop', '0.57.2'
-  s.add_development_dependency 'scss_lint'
   s.add_development_dependency 'simplecov', '>= 0.14'
   s.add_development_dependency 'simplecov-console', '>= 0.4'
-  s.add_development_dependency 'webdrivers' # used to be chromedriver-helper, now deprecated
   s.add_development_dependency 'webmock', '>= 3.0'
 end
