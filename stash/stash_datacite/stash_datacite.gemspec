@@ -52,7 +52,6 @@ Gem::Specification.new do |s| # rubocop:disable Metrics/BlockLength
   s.add_dependency 'stash_discovery'
   s.add_dependency 'stash_engine'
 
-  s.add_development_dependency 'byebug'
   s.add_development_dependency 'colorize', '>= 0.8'
   s.add_development_dependency 'database_cleaner', '>= 1.5'
   s.add_development_dependency 'diffy', '>= 3.1'
