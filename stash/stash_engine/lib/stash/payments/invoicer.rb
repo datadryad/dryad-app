@@ -26,7 +26,8 @@ module Stash
         return unless customer_id.present?
         create_invoice_items_for_dpc(customer_id)
         invoice = create_invoice(customer_id)
-        resource.identifier.invoice_id = invoice.id
+        resource.identifier.payment_id = invoice.id
+        resource.identifier.payment_type = 'stripe'
         resource.identifier.save
         invoice.send_invoice
       end
@@ -40,15 +41,16 @@ module Stash
         return unless customer_id.present?
         # the following line was creating invoice_item from return value, but didn't seem used anywhere
         create_invoice_items_for_dpc(customer_id)
-        resource.identifier.invoice_id = invoice_item&.id
+        resource.identifier.payment_id = "#{resource.identifier&.publication_issn}-#{invoice_item&.id}"
+        resource.identifier.payment_type = 'journal'
         resource.identifier.save
       end
 
       def external_service_online?
         set_api_key
-        latest = StashEngine::Identifier.where.not(invoice_id: nil).order(updated_at: :desc).first
+        latest = StashEngine::Identifier.where.not(payment_id: nil).order(updated_at: :desc).first
         return false unless latest.present?
-        Stripe::Charge.retrieve(latest.invoice_id).present?
+        Stripe::Charge.retrieve(latest.payment_id).present?
       end
 
       # takes a size and returns overage charges in cents

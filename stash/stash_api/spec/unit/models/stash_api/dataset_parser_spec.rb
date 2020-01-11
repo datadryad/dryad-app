@@ -46,7 +46,8 @@ module StashApi
         'abstract' =>
               'Cyberneticists agree that concurrent models are an interesting new topic in the field of machine learning.',
         'userId' => @user2.id,
-        'invoiceId' => 'invoice-123'
+        'paymentId' => 'invoice-123',
+        'paymentType' => 'stripe'
       }.with_indifferent_access
 
       @update_metadata = {
@@ -135,8 +136,9 @@ module StashApi
         expect(resource.current_editor_id).to eq(@user2.id)
       end
 
-      it 'puts the invoiceId on the identifier' do
-        expect(@stash_identifier.invoice_id). to eq('invoice-123')
+      it 'puts the paymentId on the identifier' do
+        expect(@stash_identifier.payment_id). to eq('invoice-123')
+        expect(@stash_identifier.payment_type). to eq('stripe')
       end
     end
 
