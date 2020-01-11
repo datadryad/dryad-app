@@ -182,10 +182,10 @@ namespace :identifiers do
       year_month = ENV['YEAR_MONTH']
     end
     p "Shopping Cart Report for #{year_month}"
-    # - any identifier that became published or embargoed during the target month
-    # for each item
-    ## get the variables associated with publication status
-    ## output a CSV of the metadata
+    StashEngine::Identifier.publicly_viewable.each do |i|
+      ## get the variables associated with publication status
+      ## output a CSV of the metadata
+    end
     # Exit cleanly (don't let rake assume that an extra argument is another task to process)
     exit
   end
