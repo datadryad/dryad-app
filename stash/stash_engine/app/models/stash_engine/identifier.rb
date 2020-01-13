@@ -236,7 +236,7 @@ module StashEngine
       else
         self.payment_type = 'unknown'
       end
-      self.save
+      save
     end
 
     def publication_data(field_name)

@@ -72,7 +72,6 @@ module StashEngine
         allow_any_instance_of(Stash::Doi::IdGen).to receive(:update_identifier_metadata).and_return(true)
         allow_any_instance_of(Stash::Payments::Invoicer).to receive(:new).and_return(true)
         allow_any_instance_of(Stash::Payments::Invoicer).to receive(:charge_user_via_invoice).and_return(true)
-        # allow_any_instance_of(StashEngine::CurationActivity).to receive(:update_publication_flags).and_return(true)
       end
 
       context :update_solr do
@@ -129,7 +128,7 @@ module StashEngine
 
       end
 
-      context :submit_to_stripe do
+      context :process_payment do
 
         before(:each) do
           allow_any_instance_of(StashEngine::CurationActivity).to receive(:email_status_change_notices).and_return(true)
@@ -160,6 +159,15 @@ module StashEngine
           allow_any_instance_of(StashEngine::CurationActivity).to receive(:ready_for_payment?).and_return(true)
           allow_any_instance_of(StashEngine::Resource).to receive(:skip_datacite_update).and_return(true)
           ca = CurationActivity.new(resource_id: @resource.id, status: 'published')
+          expect(ca).not_to receive(:submit_to_stripe)
+          ca.save
+        end
+
+        it 'does not call submit_to_stripe when user is not responsible for payment' do
+          allow_any_instance_of(StashEngine::CurationActivity).to receive(:ready_for_payment?).and_return(true)
+          allow_any_instance_of(StashEngine::Identifier).to receive(:user_must_pay?).and_return(false)
+          ca = CurationActivity.new(resource_id: @resource.id, status: 'embargoed')
+          expect(ca).to receive(:process_payment)
           expect(ca).not_to receive(:submit_to_stripe)
           ca.save
         end
