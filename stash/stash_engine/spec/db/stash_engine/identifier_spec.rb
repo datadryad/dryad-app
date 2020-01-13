@@ -162,7 +162,7 @@ module StashEngine
       describe 'curation activity setup' do
         before(:each) do
           allow_any_instance_of(CurationActivity).to receive(:update_solr).and_return(true)
-          allow_any_instance_of(CurationActivity).to receive(:submit_to_stripe).and_return(true)
+          allow_any_instance_of(CurationActivity).to receive(:process_payment).and_return(true)
           allow_any_instance_of(CurationActivity).to receive(:submit_to_datacite).and_return(true)
         end
 
@@ -493,7 +493,7 @@ module StashEngine
       before(:each) do
         # a way to neuter all the callback activity
         allow_any_instance_of(CurationActivity).to receive(:update_solr).and_return(true)
-        allow_any_instance_of(CurationActivity).to receive(:submit_to_stripe).and_return(true)
+        allow_any_instance_of(CurationActivity).to receive(:process_payment).and_return(true)
         allow_any_instance_of(CurationActivity).to receive(:submit_to_datacite).and_return(true)
       end
 
@@ -539,7 +539,7 @@ module StashEngine
       before(:each) do
         # a way to neuter all the callback activity
         allow_any_instance_of(CurationActivity).to receive(:update_solr).and_return(true)
-        allow_any_instance_of(CurationActivity).to receive(:submit_to_stripe).and_return(true)
+        allow_any_instance_of(CurationActivity).to receive(:process_payment).and_return(true)
         allow_any_instance_of(CurationActivity).to receive(:submit_to_datacite).and_return(true)
       end
 
@@ -570,7 +570,7 @@ module StashEngine
       before(:each) do
         # a way to neuter all the callback activity
         allow_any_instance_of(CurationActivity).to receive(:update_solr).and_return(true)
-        allow_any_instance_of(CurationActivity).to receive(:submit_to_stripe).and_return(true)
+        allow_any_instance_of(CurationActivity).to receive(:process_payment).and_return(true)
         allow_any_instance_of(CurationActivity).to receive(:submit_to_datacite).and_return(true)
       end
 
@@ -663,7 +663,7 @@ module StashEngine
       before(:each) do
         # a way to neuter all the callback activity
         allow_any_instance_of(CurationActivity).to receive(:update_solr).and_return(true)
-        allow_any_instance_of(CurationActivity).to receive(:submit_to_stripe).and_return(true)
+        allow_any_instance_of(CurationActivity).to receive(:process_payment).and_return(true)
         allow_any_instance_of(CurationActivity).to receive(:submit_to_datacite).and_return(true)
       end
 

@@ -45,7 +45,7 @@ FactoryBot.define do
         # https://stackoverflow.com/questions/8751175/skip-callbacks-on-factory-girl-and-rspec
         ca.define_singleton_method(:submit_to_datacite) {}
         ca.define_singleton_method(:update_solr) {}
-        ca.define_singleton_method(:submit_to_stripe) {}
+        ca.define_singleton_method(:process_payment) {}
         ca.define_singleton_method(:email_status_change_notices) {}
         ca.define_singleton_method(:email_orcid_invitations) {}
       end

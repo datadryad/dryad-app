@@ -222,6 +222,22 @@ module StashEngine
         (!submitter_affiliation.present? || !submitter_affiliation.fee_waivered?)
     end
 
+    def record_payment
+      return if payment_type.present?
+      if submitter_affiliation&.fee_waivered?
+        self.payment_type = 'waiver'
+        self.payment_id = submitter_affiliation.country_name
+      elsif institution_will_pay?
+        self.payment_type = 'institution'
+        self.payment_id = latest_resource&.tenant&.tenant_id
+      elsif journal_will_pay?
+        self.payment_type = 'journal-' + publication_data('paymentPlanType')
+        self.payment_id = publication_issn
+      else
+        self.payment_type = 'unknown'
+      end
+    end
+
     def publication_data(field_name)
       return nil if publication_issn.nil?
       url = APP_CONFIG.old_dryad_url + '/api/v1/journals/' + publication_issn
