@@ -166,6 +166,21 @@ module StashEngine
           allow_any_instance_of(CurationActivity).to receive(:submit_to_datacite).and_return(true)
         end
 
+        describe '#approval_date' do
+          it 'selects the correct approval_date' do
+            target_date = Date.new(2010, 2, 3)
+            @res1.curation_activities << CurationActivity.create(status: 'curation', user: @user, created_at: '2000-01-01')
+            @res1.curation_activities << CurationActivity.create(status: 'published', user: @user, created_at: target_date)
+            @res1.curation_activities << CurationActivity.create(status: 'published', user: @user, created_at: '2020-01-01')
+            expect(@identifier.approval_date).to eq(target_date)
+          end
+
+          it 'gives no approval_date for unpublished items' do
+            @res1.curation_activities << CurationActivity.create(status: 'curation', user: @user, created_at: '2000-01-01')
+            expect(@identifier.approval_date).to eq(nil)
+          end
+        end
+
         describe '#latest_resource_with_public_metadata' do
 
           it 'finds the last published resource' do
@@ -313,8 +328,8 @@ module StashEngine
 
     describe '#user_must_pay?' do
       before(:each) do
-        allow(@identifier).to receive(:'journal_will_pay?').and_return(false)
-        allow(@identifier).to receive(:'institution_will_pay?').and_return(false)
+        allow(@identifier).to receive(:journal_will_pay?).and_return(false)
+        allow(@identifier).to receive(:institution_will_pay?).and_return(false)
       end
 
       it 'returns true if no one else will pay' do
@@ -322,13 +337,44 @@ module StashEngine
       end
 
       it 'returns false if journal will pay' do
-        allow(@identifier).to receive(:'journal_will_pay?').and_return(true)
+        allow(@identifier).to receive(:journal_will_pay?).and_return(true)
         expect(@identifier.user_must_pay?).to eq(false)
       end
 
       it 'returns false if institution will pay' do
-        allow(@identifier).to receive(:'institution_will_pay?').and_return(true)
+        allow(@identifier).to receive(:institution_will_pay?).and_return(true)
         expect(@identifier.user_must_pay?).to eq(false)
+      end
+    end
+
+    describe '#record_payment' do
+      it 'does nothing when a payment has already been recorded' do
+        @identifier.payment_type = 'bogus_payment_type'
+        expect(@identifier.record_payment).to eq(nil)
+        expect(@identifier.payment_type).to eq('bogus_payment_type')
+      end
+
+      it 'records a journal payment' do
+        allow(@identifier).to receive(:journal_will_pay?).and_return(true)
+        allow(@identifier).to receive(:publication_data).and_return('bogus_journal_data')
+        @identifier.record_payment
+        expect(@identifier.payment_type).to match(/journal/)
+      end
+
+      it 'records an institution payment' do
+        allow(@identifier).to receive(:institution_will_pay?).and_return(true)
+        @identifier.record_payment
+        expect(@identifier.payment_type).to eq('institution')
+      end
+
+      it 'records an a country-based fee waiver' do
+        affil = double(StashDatacite::Affiliation)
+        allow(affil).to receive(:fee_waivered?).and_return(true)
+        allow(affil).to receive(:country_name).and_return('Bogusland')
+        allow(@identifier).to receive(:submitter_affiliation).and_return(affil)
+        allow(@identifier).to receive(:publication_data).and_return('bogus_journal_data')
+        @identifier.record_payment
+        expect(@identifier.payment_type).to eq('waiver')
       end
     end
 

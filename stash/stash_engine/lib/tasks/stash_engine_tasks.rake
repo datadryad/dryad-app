@@ -190,6 +190,15 @@ namespace :identifiers do
     exit
   end
 
+  desc 'populate payment info'
+  task load_payment_info: :environment do
+    p 'Populating payment information for published/embargoed items'
+    StashEngine::Identifier.publicly_viewable.where(payment_type: nil).each do |i|
+      i.record_payment
+      p "#{i.id} #{i.identifier} #{i.payment_type} #{i.payment_id}"
+    end
+  end
+
   desc 'populate publicationName'
   task load_publication_names: :environment do
     p "Searching CrossRef and the Journal API for publication names: #{Time.now.utc}"
