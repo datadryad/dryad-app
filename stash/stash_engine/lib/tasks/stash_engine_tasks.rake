@@ -186,7 +186,9 @@ namespace :identifiers do
       csv << ['DOI', 'Approval Date', 'Payment Type', 'Payment ID', 'Journal Name', 'Sponsor Name']
       StashEngine::Identifier.publicly_viewable.each do |i|
         approval_date_str = i.approval_date&.strftime('%Y-%m-%d')
-        csv << [i.identifier, approval_date_str, i.payment_type, i.payment_id, i.publication_name] if approval_date_str&.start_with?(year_month)
+        if approval_date_str&.start_with?(year_month)
+          csv << [i.identifier, approval_date_str, i.payment_type, i.payment_id, i.publication_name, i.journal_sponsor_name]
+        end
       end
     end
     # Exit cleanly (don't let rake assume that an extra argument is another task to process)
