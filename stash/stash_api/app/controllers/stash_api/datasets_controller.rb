@@ -182,7 +182,7 @@ module StashApi
       # all this bogus return false stuff is to prevent double render errors in some circumstances
       return if check_superuser_restricted_params == false
       return if check_may_set_user_id == false
-      return if check_may_set_invoice_id == false
+      return if check_may_set_payment_id == false
     end
 
     def check_superuser_restricted_params
@@ -211,10 +211,10 @@ module StashApi
       false
     end
 
-    def check_may_set_invoice_id
-      return if params['invoiceId'].nil?
+    def check_may_set_payment_id
+      return if params['paymentId'].nil?
       unless @user.role == 'superuser'
-        render json: { error: 'Unauthorized: only superuser roles may set an invoiceId' }.to_json, status: 401
+        render json: { error: 'Unauthorized: only superuser roles may set a paymentId' }.to_json, status: 401
         return false
       end
       false

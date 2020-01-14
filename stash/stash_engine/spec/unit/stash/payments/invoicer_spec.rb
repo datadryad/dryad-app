@@ -10,7 +10,8 @@ module Stash
       before(:each) do
         @identifier = double(StashEngine::Identifier)
         allow(@identifier).to receive(:to_s).and_return('doi:10.123/a1b.c2d3')
-        allow(@identifier).to receive(:invoice_id=)
+        allow(@identifier).to receive(:payment_id=)
+        allow(@identifier).to receive(:payment_type=)
         allow(@identifier).to receive(:save).and_return(true)
         allow(@identifier).to receive(:storage_size).and_return(5.01e+10.to_i)
 

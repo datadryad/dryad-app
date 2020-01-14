@@ -171,6 +171,39 @@ namespace :identifiers do
     end
   end
 
+  desc 'Generate a report of items that have been published in a given month'
+  task shopping_cart_report: :environment do
+    # Get the year-month specified in YEAR_MONTH environment variable.
+    # If none, default to the previously completed month.
+    if ENV['YEAR_MONTH'].blank?
+      p 'No month specified, assuming last month.'
+      year_month = 1.month.ago.strftime('%Y-%m')
+    else
+      year_month = ENV['YEAR_MONTH']
+    end
+    p "Writing Shopping Cart Report for #{year_month} to file..."
+    CSV.open("shopping_cart_report_#{year_month}.csv", 'w') do |csv|
+      csv << ['DOI', 'Approval Date', 'Payment Type', 'Payment ID', 'Journal Name', 'Sponsor Name']
+      StashEngine::Identifier.publicly_viewable.each do |i|
+        approval_date_str = i.approval_date&.strftime('%Y-%m-%d')
+        if approval_date_str&.start_with?(year_month)
+          csv << [i.identifier, approval_date_str, i.payment_type, i.payment_id, i.publication_name, i.journal_sponsor_name]
+        end
+      end
+    end
+    # Exit cleanly (don't let rake assume that an extra argument is another task to process)
+    exit
+  end
+
+  desc 'populate payment info'
+  task load_payment_info: :environment do
+    p 'Populating payment information for published/embargoed items'
+    StashEngine::Identifier.publicly_viewable.where(payment_type: nil).each do |i|
+      i.record_payment
+      p "#{i.id} #{i.identifier} #{i.payment_type} #{i.payment_id}"
+    end
+  end
+
   desc 'populate publicationName'
   task load_publication_names: :environment do
     p "Searching CrossRef and the Journal API for publication names: #{Time.now.utc}"

@@ -23,7 +23,7 @@ module StashEngine
         tenant_id: 'ucop'
       )
       allow_any_instance_of(CurationActivity).to receive(:update_solr).and_return(true)
-      allow_any_instance_of(CurationActivity).to receive(:submit_to_stripe).and_return(true)
+      allow_any_instance_of(CurationActivity).to receive(:process_payment).and_return(true)
       allow_any_instance_of(CurationActivity).to receive(:submit_to_datacite).and_return(true)
 
       # Mock all the mailers fired by callbacks because these tests don't load everything we need

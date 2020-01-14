@@ -222,6 +222,23 @@ module StashEngine
         (!submitter_affiliation.present? || !submitter_affiliation.fee_waivered?)
     end
 
+    def record_payment
+      return if payment_type.present?
+      if submitter_affiliation&.fee_waivered?
+        self.payment_type = 'waiver'
+        self.payment_id = submitter_affiliation.country_name
+      elsif institution_will_pay?
+        self.payment_type = 'institution'
+        self.payment_id = latest_resource&.tenant&.tenant_id
+      elsif journal_will_pay?
+        self.payment_type = 'journal-' + publication_data('paymentPlanType')
+        self.payment_id = publication_issn
+      else
+        self.payment_type = 'unknown'
+      end
+      save
+    end
+
     def publication_data(field_name)
       return nil if publication_issn.nil?
       url = APP_CONFIG.old_dryad_url + '/api/v1/journals/' + publication_issn
@@ -262,6 +279,10 @@ module StashEngine
 
     def journal_customer_id
       publication_data('stripeCustomerID')
+    end
+
+    def journal_sponsor_name
+      publication_data('sponsorName')
     end
 
     def journal_notify_contacts
@@ -316,6 +337,22 @@ module StashEngine
         end
       end
       found_article_appears
+    end
+
+    # returns the date on which this identifier was approved for publication
+    # (i.e., the date on which it entered the status 'published' or 'embargoed'
+    def approval_date
+      return nil unless %w[published embargoed].include?(pub_state)
+
+      found_approval_date = nil
+      resources.each do |res|
+        res.curation_activities.each do |ca|
+          next unless %w[published embargoed].include?(ca.status)
+          found_approval_date = ca.created_at
+          break
+        end
+      end
+      found_approval_date
     end
 
     # returns the publication state based on history
