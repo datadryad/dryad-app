@@ -182,13 +182,11 @@ namespace :identifiers do
       year_month = ENV['YEAR_MONTH']
     end
     p "Writing Shopping Cart Report for #{year_month} to file..."
-    CSV.open("shopping_cart_report_#{year_month}.csv", "w") do |csv|
-      csv << ["DOI", "Approval Date", "Payment Type", "Payment ID", "Journal Name", "Sponsor Name"]
+    CSV.open("shopping_cart_report_#{year_month}.csv", 'w') do |csv|
+      csv << ['DOI', 'Approval Date', 'Payment Type', 'Payment ID', 'Journal Name', 'Sponsor Name']
       StashEngine::Identifier.publicly_viewable.each do |i|
         approval_date_str = i.approval_date&.strftime('%Y-%m-%d')
-        if approval_date_str&.start_with?(year_month)
-          csv << [ i.identifier, approval_date_str, i.payment_type, i.payment_id, i.publication_name ]
-        end
+        csv << [i.identifier, approval_date_str, i.payment_type, i.payment_id, i.publication_name] if approval_date_str&.start_with?(year_month)
       end
     end
     # Exit cleanly (don't let rake assume that an extra argument is another task to process)
