@@ -281,6 +281,10 @@ module StashEngine
       publication_data('stripeCustomerID')
     end
 
+    def journal_sponsor_name
+      publication_data('sponsorName')
+    end
+
     def journal_notify_contacts
       publication_data('notifyContacts')
     end

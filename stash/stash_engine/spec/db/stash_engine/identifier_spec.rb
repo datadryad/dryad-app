@@ -440,6 +440,22 @@ module StashEngine
       end
     end
 
+    describe '#journal_sponsor_name' do
+      it 'retrieves the journal sponsorName' do
+        @fake_journal_name = 'Fake Journal'
+        @fake_sponsor_name = 'sponsor_abc123'
+        stub_request(:any, %r{/journals/#{@fake_issn}})
+          .to_return(body: '{"fullName":"' + @fake_journal_name + '",
+                             "issn":"' + @fake_issn + '",
+                             "website":"http://onlinelibrary.wiley.com/journal/10.1111/(ISSN)1365-294X",
+                             "description":"Molecular Ecology publishes papers that utilize molecular genetic techniques...",
+                             "sponsorName":"' + @fake_sponsor_name + '"}',
+                     status: 200,
+                     headers: { 'Content-Type' => 'application/json' })
+        expect(identifier.journal_sponsor_name).to eq(@fake_sponsor_name)
+      end
+    end
+
     describe '#journal_allows' do
       it 'allows review when there is no journal' do
         allow(@identifier).to receive('publication_name').and_return(nil)
