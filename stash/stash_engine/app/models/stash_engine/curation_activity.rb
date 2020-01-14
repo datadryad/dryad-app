@@ -51,7 +51,7 @@ module StashEngine
     # ------------------------------------------
 
     # When the status is published/embargoed send to Stripe and DataCite
-    after_create :submit_to_datacite, :update_solr, :submit_to_stripe, :remove_peer_review,
+    after_create :submit_to_datacite, :update_solr, :process_payment, :remove_peer_review,
                  if: proc { |ca|
                        !ca.resource.skip_datacite_update && (ca.published? || ca.embargoed?) &&
                                  latest_curation_status_changed?
@@ -118,10 +118,18 @@ module StashEngine
 
     # Callbacks
     # ------------------------------------------
-    def submit_to_stripe
-      return unless ready_for_payment? &&
-                    resource.identifier&.user_must_pay?
+    def process_payment
+      return unless ready_for_payment?
 
+      if resource.identifier&.user_must_pay?
+        submit_to_stripe
+      else
+        resource.identifier&.record_payment
+      end
+    end
+
+    def submit_to_stripe
+      return unless ready_for_payment?
       inv = Stash::Payments::Invoicer.new(resource: resource, curator: user)
       inv.charge_user_via_invoice
     end
@@ -242,7 +250,7 @@ module StashEngine
     def ready_for_payment?
       resource&.identifier&.reload
       StashEngine.app&.payments&.service == 'stripe' &&
-        resource&.identifier&.invoice_id.nil? &&
+        resource&.identifier&.payment_id.nil? &&
         (status == 'published' || status == 'embargoed')
     end
 
