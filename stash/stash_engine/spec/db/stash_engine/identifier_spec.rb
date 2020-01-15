@@ -362,6 +362,8 @@ module StashEngine
       end
 
       it 'records an institution payment' do
+        allow(@identifier).to receive(:journal_will_pay?).and_return(false)
+        allow(@identifier).to receive(:publication_data).and_return('bogus_journal_data')
         allow(@identifier).to receive(:institution_will_pay?).and_return(true)
         @identifier.record_payment
         expect(@identifier.payment_type).to eq('institution')
