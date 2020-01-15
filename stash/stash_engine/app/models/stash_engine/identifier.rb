@@ -224,15 +224,15 @@ module StashEngine
 
     def record_payment
       return if payment_type.present?
-      if submitter_affiliation&.fee_waivered?
-        self.payment_type = 'waiver'
-        self.payment_id = submitter_affiliation.country_name
+      if journal_will_pay?
+        self.payment_type = 'journal-' + publication_data('paymentPlanType')
+        self.payment_id = publication_issn
       elsif institution_will_pay?
         self.payment_type = 'institution'
         self.payment_id = latest_resource&.tenant&.tenant_id
-      elsif journal_will_pay?
-        self.payment_type = 'journal-' + publication_data('paymentPlanType')
-        self.payment_id = publication_issn
+      elsif submitter_affiliation&.fee_waivered?
+        self.payment_type = 'waiver'
+        self.payment_id = submitter_affiliation.country_name
       else
         self.payment_type = 'unknown'
       end
@@ -345,7 +345,7 @@ module StashEngine
       return nil unless %w[published embargoed].include?(pub_state)
 
       found_approval_date = nil
-      resources.each do |res|
+      resources.reverse_each do |res|
         res.curation_activities.each do |ca|
           next unless %w[published embargoed].include?(ca.status)
           found_approval_date = ca.created_at
