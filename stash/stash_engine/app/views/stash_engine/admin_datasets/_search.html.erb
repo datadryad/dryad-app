@@ -12,7 +12,7 @@
     <a href="#" id="clear_search" class="c-horizontal-form__input">Clear Search</a>
 
     <% params.except(:controller, :action, :q, :commit, :page, :page_size, :show_all, :sort, :direction, :all_advanced).each_pair do |k,v| %>
-        <%= hidden_field_tag k, v %>
+        <%= hidden_field_tag k, v, id: "search_#{k}" %>
     <% end %>
   <% end %>
 </div>
@@ -22,7 +22,7 @@
   $("#clear_search").click(function(e) {
     e.preventDefault();
     $('#search-terms').val("");
-    $('#exact').prop("checked", false);
+    $('#all_advanced').prop("checked", false);
     $("#search_form").submit();
   });
 </script>

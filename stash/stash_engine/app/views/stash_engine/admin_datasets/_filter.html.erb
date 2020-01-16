@@ -7,17 +7,18 @@
   <label for="curation_status">Status:</label>
   <%= select_tag(:curation_status, options_for_select( [['Status', '']] + status_select, params[:curation_status]),
                  class: 'c-horizontal-form__input--status', onchange: "this.form.submit();" ) %>
+
   <% if @publications.any? %>
-  <p>
-    <label for="journal-name">Journal Name:</label>
-    <%= text_field_tag(:publication_name, @pub_name, class: 'c-horizontal-form__input--search', id: 'journal-name') %>
-  </p>
+    <p>
+      <label for="publication_name">Journal Name:</label>
+      <%= text_field_tag(:publication_name, params[:publication_name], class: 'c-horizontal-form__input--search', id: 'publication_name') %>
+    </p>
   <% end %>
   &nbsp;
   <a href="#" class="c-horizontal-form__input" id="filter_resetter">Reset all filters</a>
 
-  <% params.except(:controller, :action, :tenant, :curation_status, :commit, :page, :page_size, :show_all).each_pair do |k,v| %>
-    <%= hidden_field_tag k, v %>
+  <% params.except(:controller, :action, :tenant, :curation_status, :commit, :page, :page_size, :show_all, :publication_name).each_pair do |k,v| %>
+    <%= hidden_field_tag k, v, id: "filter_#{k}" %>
   <% end %>
 <% end -%>
 
@@ -28,7 +29,6 @@
     $("#tenant option[value='']").prop('selected',true);
     $("#curation_status option[value='']").prop('selected',true);
     $('#publication_name[type="text"]').val('');
-    $('#publication_name[type="hidden"]').val('');
     $("#filter_form").submit();
   });
 
