@@ -96,7 +96,7 @@ module StashEngine
             #{SELECT_CLAUSE}
             #{relevance}
             #{FROM_CLAUSE}
-            #{build_where_clause(params.fetch(:q, ''), params.fetch(:all_advanced, false), params.fetch(:tenant_id, ''), params.fetch(:curation_status, ''),
+            #{build_where_clause(params.fetch(:q, ''), params.fetch(:all_advanced, false), params.fetch(:tenant, ''), params.fetch(:curation_status, ''),
                                  params.fetch(:publication_name, ''))}
             #{build_order_clause(column, params.fetch(:direction, ''), params.fetch(:q, ''))}
           "
