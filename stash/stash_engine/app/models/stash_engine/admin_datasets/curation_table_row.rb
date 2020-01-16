@@ -42,7 +42,8 @@ module StashEngine
           LEFT OUTER JOIN stash_engine_curation_activities seca ON seca.id = j3.latest_curation_activity_id
       SQL
 
-      SEARCH_CLAUSE = 'MATCH(sei.search_words) AGAINST(%{term}) > 05'
+      SEARCH_CLAUSE = 'MATCH(sei.search_words) AGAINST(%{term})'
+      BOOLEAN_SEARCH_CLAUSE = 'MATCH(sei.search_words) AGAINST(%{term} IN BOOLEAN MODE)'
       SCAN_CLAUSE = 'sei.search_words LIKE %{term}'
       TENANT_CLAUSE = 'ser.tenant_id = %{term}'
       STATUS_CLAUSE = 'seca.status = %{term}'
@@ -95,7 +96,7 @@ module StashEngine
             #{SELECT_CLAUSE}
             #{relevance}
             #{FROM_CLAUSE}
-            #{build_where_clause(params.fetch(:q, ''), params.fetch(:exact, false), params.fetch(:tenant_id, ''), params.fetch(:curation_status, ''),
+            #{build_where_clause(params.fetch(:q, ''), params.fetch(:all_advanced, false), params.fetch(:tenant_id, ''), params.fetch(:curation_status, ''),
                                  params.fetch(:publication_name, ''))}
             #{build_order_clause(column, params.fetch(:direction, ''), params.fetch(:q, ''))}
           "
@@ -107,9 +108,9 @@ module StashEngine
         private
 
         # Create the WHERE portion of the query based on the filters set by the user (if any)
-        def build_where_clause(search_term, exact, tenant_filter, status_filter, publication_filter)
+        def build_where_clause(search_term, all_advanced, tenant_filter, status_filter, publication_filter)
           where_clause = [
-            (search_term.present? ? build_search_clause(search_term, exact) : nil),
+            (search_term.present? ? build_search_clause(search_term, all_advanced) : nil),
             add_term_to_clause(TENANT_CLAUSE, tenant_filter),
             add_term_to_clause(STATUS_CLAUSE, status_filter),
             add_term_to_clause(PUBLICATION_CLAUSE, publication_filter)
@@ -118,9 +119,25 @@ module StashEngine
         end
 
         # Build the WHERE portion of the query for the specified search term (if any)
-        def build_search_clause(term, exact)
+        def build_search_clause(term, all_advanced)
           return '' unless term.present?
-          ( exact == '1' ? "(#{add_term_to_clause(SCAN_CLAUSE, "%#{term}%")})" : "(#{add_term_to_clause(SEARCH_CLAUSE, term)})" )
+
+          if all_advanced == '1'
+            "(#{add_term_to_clause(BOOLEAN_SEARCH_CLAUSE, advanced_search(term))})"
+          else
+            "(#{add_term_to_clause(SEARCH_CLAUSE, term)})"
+          end
+        end
+
+        # If someone is choosing 'all words' then default to boolean search and determine if they're using common
+        # modifiers, and if so just pass it through because they are likely a special person who knows what they're doing,
+        # otherwise add plusses to all their words to make them required internally
+        def advanced_search(terms)
+          if terms.match(/[~+<>*]/)
+            terms
+          else
+            terms&.split&.map{|i| "+\"#{i}\""}&.join(' ')
+          end
         end
 
         # Create the ORDER BY portion of the query. If the user included a search term order by relevance first!
