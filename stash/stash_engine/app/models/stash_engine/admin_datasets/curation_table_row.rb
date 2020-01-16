@@ -95,9 +95,9 @@ module StashEngine
             #{SELECT_CLAUSE}
             #{relevance}
             #{FROM_CLAUSE}
-            #{build_where_clause(params.fetch(:q, ''), params.fetch(:tenant_id, ''), params.fetch(:curation_status, ''),
+            #{build_where_clause(params.fetch(:q, ''), params.fetch(:exact, false), params.fetch(:tenant_id, ''), params.fetch(:curation_status, ''),
                                  params.fetch(:publication_name, ''))}
-            #{build_order_clause(params.fetch(:q, '').present?, column, params.fetch(:direction, ''))}
+            #{build_order_clause(column, params.fetch(:direction, ''), params.fetch(:q, ''))}
           "
           results = ActiveRecord::Base.connection.execute(query).map { |result| new(result) }
           # If the user is trying to sort by author names, then
@@ -107,9 +107,9 @@ module StashEngine
         private
 
         # Create the WHERE portion of the query based on the filters set by the user (if any)
-        def build_where_clause(search_term, tenant_filter, status_filter, publication_filter)
+        def build_where_clause(search_term, exact, tenant_filter, status_filter, publication_filter)
           where_clause = [
-            (search_term.present? ? build_search_clause(search_term) : nil),
+            (search_term.present? ? build_search_clause(search_term, exact) : nil),
             add_term_to_clause(TENANT_CLAUSE, tenant_filter),
             add_term_to_clause(STATUS_CLAUSE, status_filter),
             add_term_to_clause(PUBLICATION_CLAUSE, publication_filter)
@@ -118,19 +118,21 @@ module StashEngine
         end
 
         # Build the WHERE portion of the query for the specified search term (if any)
-        def build_search_clause(term)
+        def build_search_clause(term, exact)
           return '' unless term.present?
-          "((#{add_term_to_clause(SEARCH_CLAUSE, term)}) OR #{add_term_to_clause(SCAN_CLAUSE, "%#{term}%")})"
+          ( exact == '1' ? "(#{add_term_to_clause(SCAN_CLAUSE, "%#{term}%")})" : "(#{add_term_to_clause(SEARCH_CLAUSE, term)})" )
         end
 
         # Create the ORDER BY portion of the query. If the user included a search term order by relevance first!
         # We cannot sort by author_names here, so ignore if that is the :sort_column
-        def build_order_clause(searching, column, direction)
-          order_by = [
-            (searching ? 'relevance DESC' : nil),
-            (column.present? && column != 'author_names' ? "#{column} #{direction || 'ASC'}" : nil)
-          ].compact
-          order_by.empty? ? '' : "ORDER BY #{order_by.join(', ')}"
+        def build_order_clause(column, direction, q)
+          return 'ORDER BY title' if column == 'relevance' && q.blank?
+
+          if column == 'relevance'
+            'ORDER BY relevance DESC'
+          else
+            (column.present? && column != 'author_names' ? "ORDER BY #{column} #{direction || 'ASC'}" : '')
+          end
         end
 
         def sort_by_author_names(results, direction)

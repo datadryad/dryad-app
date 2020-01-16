@@ -2,10 +2,16 @@
   <%= form_tag({ controller: '/stash_engine/admin_datasets', action: 'index' }, method: 'get', id: 'search_form' ) do %>
     <label for="search-terms">Search Terms:</label>
     <%= search_field_tag(:q, params[:q], class: 'c-horizontal-form__input--search', id: 'search-terms' ) %>
+    <%= hidden_field_tag(:sort, 'relevance') %>
+    <span class="c-horizontal-form__input">
+      &nbsp;
+      <%= check_box_tag(:exact, value = "1", checked = (params[:exact] == '1')) %>
+      <%= label_tag(:exact, 'Exact phrase') %>
+    </span>
     <%= submit_tag('Search', class: 'c-horizontal-form__input' ) %>
     <a href="#" id="clear_search" class="c-horizontal-form__input">Clear Search</a>
 
-    <% params.except(:controller, :action, :q, :commit, :page, :page_size, :show_all).each_pair do |k,v| %>
+    <% params.except(:controller, :action, :q, :commit, :page, :page_size, :show_all, :sort, :direction, :exact).each_pair do |k,v| %>
         <%= hidden_field_tag k, v %>
     <% end %>
   <% end %>
@@ -15,7 +21,8 @@
   // put this in here because it goes along with this form only
   $("#clear_search").click(function(e) {
     e.preventDefault();
-    $('#q').val("");
+    $('#search-terms').val("");
+    $('#exact').prop("checked", false);
     $("#search_form").submit();
   });
 </script>
