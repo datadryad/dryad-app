@@ -19,22 +19,24 @@ function loadPublications() {
             })
             .autocomplete({
 		// when page is loaded, IF the dataset has been filled in already,
-		// internal_datum_publication will have an ISSN, so use this ISSN
-		// to look up the journal title
+		// internal_datum_publication will have an ISSN (for a controlled value),
+		// or internal_datum_publication_name will have a text value, so use one of 
+		// these values to fill in the journal title
 		create: function(a) {
-		    if(!document.getElementById("internal_datum_publication").value){
-			return;
-		    }
-                    $.ajax({
-                        url: "/stash_datacite/publications/issn/"+ document.getElementById("internal_datum_publication").value,
-                        dataType: "json",
-                        success: function( data ) {
-                            document.getElementById("internal_datum_publication").value = ""
-                            if (data.fullName != null) {
-				document.getElementById("internal_datum_publication").value = data.fullName;
+		    if(document.getElementById("internal_datum_publication_issn").value){
+			$.ajax({
+                            url: "/stash_datacite/publications/issn/"+ document.getElementById("internal_datum_publication_issn").value,
+                            dataType: "json",
+                            success: function( data ) {
+				document.getElementById("internal_datum_publication").value = ""
+				if (data.fullName != null) {
+				    document.getElementById("internal_datum_publication").value = data.fullName;
+				}
 			    }
-			}
-		    });
+			});
+		    } else if(document.getElementById("internal_datum_publication_name").value){
+			document.getElementById("internal_datum_publication").value = document.getElementById("internal_datum_publication_name").value
+		    }
 		},
                 source: function (request, response) {
 		    // save the user's typed request in the database with an asterisk, in case they don't click on an autocomplete result
@@ -111,26 +113,26 @@ function loadPublications() {
 // show and hide things for clicking by user for pretty form making
 function setPublicationChoiceDisplay(chosen){
     switch(chosen) {
-        case 'manuscript':
-            $(".js-doi-section").hide();
-            $(".js-ms-section").show();
-            $(".c-import__form-section").show();
-            $(".js-other-info").hide();
-            $(".js-populate-submit").val("Import Manuscript Metadata");
-            $("#choose_manuscript").prop("checked", true);
-            break;
-        case 'published':
-            $(".js-ms-section").hide();
-            $(".js-doi-section").show()
-            $(".c-import__form-section").show();
-            $(".js-other-info").hide();
-            $(".js-populate-submit").val("Import Article Metadata");
-            $("#choose_published").prop("checked", true);
-            break;
-        default:
-            $(".c-import__form-section").hide();
-            $(".js-other-info").show();
-            $("#choose_other").prop("checked", true);
+    case 'published':
+        $(".js-ms-section").hide();
+        $(".js-doi-section").show()
+        $(".c-import__form-section").show();
+        $(".js-other-info").hide();
+        $(".js-populate-submit").val("Import Article Metadata");
+        $("#choose_published").prop("checked", true);
+        break;
+    case 'manuscript':
+        $(".js-doi-section").hide();
+        $(".js-ms-section").show();
+        $(".c-import__form-section").show();
+        $(".js-other-info").hide();
+        $(".js-populate-submit").val("Import Manuscript Metadata");
+        $("#choose_manuscript").prop("checked", true);
+        break;
+    default:
+        $(".c-import__form-section").hide();
+        $(".js-other-info").show();
+        $("#choose_other").prop("checked", true);
     }
 }
 
