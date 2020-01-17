@@ -8,12 +8,15 @@ module StashDatacite
     # GET /affiliations/autocomplete
     def autocomplete
       partial_term = params['term']
-      return if partial_term.blank?
-      # clean the partial_term of unwanted characters so it doesn't cause errors when calling the ROR API
-      partial_term.gsub!(%r{[\/\-\\\(\)~!@%&"\[\]\^\:]}, ' ')
-      @affiliations = Stash::Organization::Ror.find_by_ror_name(partial_term)
-      list = map_affiliation_for_autocomplete(bubble_up_exact_matches(affil_list: @affiliations, term: partial_term))
-      render json: list
+      if partial_term.blank?
+        render json: nil
+      else
+        # clean the partial_term of unwanted characters so it doesn't cause errors when calling the ROR API
+        partial_term.gsub!(%r{[\/\-\\\(\)~!@%&"\[\]\^\:]}, ' ')
+        @affiliations = Stash::Organization::Ror.find_by_ror_name(partial_term)
+        list = map_affiliation_for_autocomplete(bubble_up_exact_matches(affil_list: @affiliations, term: partial_term))
+        render json: list
+      end
     end
 
     private
