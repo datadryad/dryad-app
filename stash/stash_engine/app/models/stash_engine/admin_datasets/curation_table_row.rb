@@ -96,8 +96,8 @@ module StashEngine
             #{SELECT_CLAUSE}
             #{relevance}
             #{FROM_CLAUSE}
-            #{build_where_clause(params.fetch(:q, ''), params.fetch(:all_advanced, false), params.fetch(:tenant, ''), params.fetch(:curation_status, ''),
-                                 params.fetch(:publication_name, ''))}
+            #{build_where_clause(params.fetch(:q, ''), params.fetch(:all_advanced, false), params.fetch(:tenant, ''),
+                                 params.fetch(:curation_status, ''), params.fetch(:publication_name, ''))}
             #{build_order_clause(column, params.fetch(:direction, ''), params.fetch(:q, ''))}
           "
           results = ActiveRecord::Base.connection.execute(query).map { |result| new(result) }
@@ -133,15 +133,16 @@ module StashEngine
         # modifiers, and if so just pass it through because they are likely a special person who knows what they're doing,
         # otherwise add plusses to all their words to make them required internally
         def advanced_search(terms)
-          if terms.match(/[~+<>*]/)
+          if /[~+<>*]/.match?(terms)
             terms
           else
-            terms&.split&.map{|i| "+\"#{i}\""}&.join(' ')
+            terms&.split&.map { |i| "+\"#{i}\"" }&.join(' ')
           end
         end
 
         # Create the ORDER BY portion of the query. If the user included a search term order by relevance first!
         # We cannot sort by author_names here, so ignore if that is the :sort_column
+        # rubocop:disable Metrics/CyclomaticComplexity
         def build_order_clause(column, direction, q)
           return 'ORDER BY title' if column == 'relevance' && q.blank?
 
@@ -151,6 +152,7 @@ module StashEngine
             (column.present? && column != 'author_names' ? "ORDER BY #{column} #{direction || 'ASC'}" : '')
           end
         end
+        # rubocop:enable Metrics/CyclomaticComplexity
 
         def sort_by_author_names(results, direction)
           multiply_by = (direction.casecmp('desc').zero? ? -1 : 1)
