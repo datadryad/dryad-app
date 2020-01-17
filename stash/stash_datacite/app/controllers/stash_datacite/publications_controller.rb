@@ -33,14 +33,16 @@ module StashDatacite
     # GET /publications/autocomplete?term={query_term}
     def autocomplete
       partial_term = params['term']
-      return if partial_term.blank?
-      # clean the partial_term of unwanted characters so it doesn't cause errors when calling the Journal API
-      partial_term.gsub!(%r{[\/\-\\\(\)~!@%&"\[\]\^\:]}, ' ')
-
-      response = HTTParty.get("#{APP_CONFIG.old_dryad_url}/api/v1/journals/search",
-                              query: { 'query': partial_term, 'count': 20 },
-                              headers: { 'Content-Type' => 'application/json' })
-      render json: response.body
+      if partial_term.blank?
+        render json: nil
+      else
+        # clean the partial_term of unwanted characters so it doesn't cause errors when calling the Journal API
+        partial_term.gsub!(%r{[\/\-\\\(\)~!@%&"\[\]\^\:]}, ' ')
+        response = HTTParty.get("#{APP_CONFIG.old_dryad_url}/api/v1/journals/search",
+                                query: { 'query': partial_term, 'count': 20 },
+                                headers: { 'Content-Type' => 'application/json' })
+        render json: response.body
+      end
     end
 
     # GET /publications/issn/{id}
