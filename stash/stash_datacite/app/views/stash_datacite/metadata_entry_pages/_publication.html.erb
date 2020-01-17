@@ -64,10 +64,8 @@
 <script>
 	<% if !@doi&.related_identifier.blank? %>
   	setPublicationChoiceDisplay('published');
-	<% elsif !@msid&.value.blank? %>
-  	setPublicationChoiceDisplay('manuscript');
 	<% else %>
-  	setPublicationChoiceDisplay('other');
+  	setPublicationChoiceDisplay('manuscript');
 	<% end %>
 </script>
 
