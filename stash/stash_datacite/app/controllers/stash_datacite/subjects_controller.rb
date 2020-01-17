@@ -32,8 +32,12 @@ module StashDatacite
 
     # GET /subjects
     def autocomplete
-      @subjects = Subject.order(:subject).where('subject LIKE ?', "%#{params[:term]}%") unless params[:term].blank?
-      render json: @subjects.map(&:subject)
+      if params[:term].blank?
+        render json: nil
+      else
+        @subjects = Subject.order(:subject).where('subject LIKE ?', "%#{params[:term]}%")
+        render json: @subjects.map(&:subject)
+      end
     end
 
     # get subjects/landing(?params), for display of "keywords" on landing page
