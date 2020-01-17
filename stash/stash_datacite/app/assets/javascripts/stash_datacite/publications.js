@@ -37,6 +37,10 @@ function loadPublications() {
 		    });
 		},
                 source: function (request, response) {
+		    // save the user's typed request in the database with an asterisk, in case they don't click on an autocomplete result
+		    document.getElementById("internal_datum_publication_name").value = request.term + "*";
+		    var form = $(this.form);
+                    $(form).trigger('submit.rails');
 		    $.ajax({
 			url: "/stash_datacite/publications/autocomplete",
                         dataType: "json",
@@ -70,16 +74,10 @@ function loadPublications() {
                     previous_label = new_label;
                 },
                 change: function( event, ui ) {
-                    // clear out the publication info if the user removes the value
-                    if(!ui.item) {
-                        document.getElementById("internal_datum_publication_name").value = '';
-                        document.getElementById("internal_datum_publication_issn").value = '';
-                        var form = $(this.form);
-                        $(form).trigger('submit.rails');
-                    }
-                },
+		    // do nothing
+		},
                 focus: function() {
-                    // prevent value inserted on focus
+                    // prevent value inserted on focus		    
                     return false;
                 },
             });
