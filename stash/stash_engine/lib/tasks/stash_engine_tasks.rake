@@ -232,5 +232,25 @@ namespace :identifiers do
     p "Finished: #{Time.now.utc}"
   end
 
+  desc 'update search words for items that are obviously missing them'
+  task update_missing_search_words: :environment do
+    identifiers = StashEngine::Identifier.where('LENGTH(search_words) < 60 OR search_words IS NULL')
+    puts "Updating search words for #{identifiers.length} items"
+    identifiers.each_with_index do |id, idx|
+      id&.update_search_words!
+      puts "Updated #{idx + 1}/#{identifiers.length} items" if (idx + 1) % 100 == 0
+    end
+  end
+
+  desc 'update search words for all items (in case we need to refresh them all)'
+  task update_all_search_words: :environment do
+    identifiers = StashEngine::Identifier.all
+    puts "Updating search words for #{identifiers.length} items"
+    identifiers.each_with_index do |id, idx|
+      id&.update_search_words!
+      puts "Updated #{idx + 1}/#{identifiers.length} items" if (idx + 1) % 100 == 0
+    end
+  end
+
 end
 # rubocop:enable Metrics/BlockLength
