@@ -17,6 +17,15 @@
   <div>
     <%= link_to 'Get Comma Separated Values (CSV) for import into Excel', params.merge(format: :csv) %>
   </div>
+
+  <p>
+    &dagger; By default the search uses relevance ranking and not all terms are required.  Choosing the <em>All terms</em>
+    option requires all the terms in your query to be present in the results.  If you prefer to do an advanced query
+    with more fine-grained options, select <em>All terms</em>
+    and add any of (<em>~ + < > *</em>) that are commonly part of
+    <a href="https://dev.mysql.com/doc/refman/5.5/en/fulltext-boolean.html">the boolean query syntax</a> to use that
+    syntax.
+  </p>
 </div>
 
 <div id="popup_dialog" style="display:none;">
