@@ -54,6 +54,11 @@ namespace :counter do
     StashEngine::CounterStat.delete_all
   end
 
+  desc 'task to populate in citation information'
+  task populate_citations: :environment do
+    # TODO: fill in
+  end
+
   desc 'test that environment is passed in'
   task :test_env do
     puts "LOG_DIRECTORY is set as #{ENV['LOG_DIRECTORY']}" if ENV['LOG_DIRECTORY']
