@@ -56,7 +56,22 @@ namespace :counter do
 
   desc 'task to populate in citation information'
   task populate_citations: :environment do
-    # TODO: fill in
+    puts "Run to update citations at #{Time.new}"
+    identifiers = StashEngine::Identifier.where(pub_state: [:published, :embargoed])
+
+    identifiers.each_with_index do |identifier, idx|
+      puts "Updated #{idx + 1}/#{identifiers.length}" if (idx + 1) % 100 == 0
+
+      counter_stat = identifier.counter_stat
+      next if counter_stat.citation_updated > 30.days.ago # only do this expensive operation once a month, so skip if it's been checked lately
+
+      # identifier.citations automatically checks and caches new ones as needed
+      citations = identifier.citations
+
+      counter_stat.citation_count = citations.length
+      counter_stat.citation_updated = Time.new
+      counter_stat.save!
+    end
   end
 
   desc 'test that environment is passed in'
