@@ -6,6 +6,7 @@ module StashEngine
     before_action :require_modify_permission, except: %i[index new data_paper]
     before_action :require_in_progress, only: %i[upload review upload_manifest]
     before_action :lockout_incompatible_uploads, only: %i[upload upload_manifest]
+    before_action :update_internal_search, only: %i[upload review upload_manifest]
 
     attr_writer :resource
 
@@ -125,6 +126,11 @@ module StashEngine
         redirect_to upload_resource_path(resource)
         false
       end
+    end
+
+    # this is to be sure that our internal search index gets updated occasionally before full submission so search is better
+    def update_internal_search
+      @resource&.identifier&.update_search_words!
     end
 
   end
