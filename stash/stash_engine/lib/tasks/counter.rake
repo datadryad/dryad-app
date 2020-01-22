@@ -54,10 +54,10 @@ namespace :counter do
     StashEngine::CounterStat.delete_all
   end
 
-  desc 'task to populate in citation information'
+  desc 'task to populate in citation information that has not been cached'
   task populate_citations: :environment do
     puts "Run to update citations at #{Time.new}"
-    identifiers = StashEngine::Identifier.where(pub_state: [:published, :embargoed])
+    identifiers = StashEngine::Identifier.where(pub_state: %i[published embargoed])
 
     identifiers.each_with_index do |identifier, idx|
       puts "Updated #{idx + 1}/#{identifiers.length}" if (idx + 1) % 100 == 0
