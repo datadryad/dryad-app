@@ -38,26 +38,22 @@ module StashDatacite
       APP_CONFIG.fee_waiver_countries || []
     end
 
-    # We want to try to always use the ROR long_name when possible so check the incoming
-    # long name as well as the ROR-ized version of the long_name to find our record
+    # Get an affiliation by long_name. We prefer to reuse an existing affiliation
+    # from our DB. If if one isn't present, just create a new affiliation with an
+    # asterisk on the name, so we know it is not associated with ROR.
     def self.from_long_name(long_name)
       return nil if long_name.blank?
-
+      
       affil = find_or_initialize_by_long_name(long_name)
-      # If the record already has a ROR id, no need to do a lookup
       return affil if affil.ror_id.present?
 
-      ror_org = find_by_ror_long_name(long_name)
-      # The record didn't exist in ROR so just return as is
-      return affil if ror_org.blank?
-
-      # Otherwise use the ROR id and long_name
-      affil = find_or_initialize_by_long_name(ror_org[:name])
-      affil.ror_id = ror_org[:id]
+      # The record didn't exist in ROR so return it with the asterisk
+      affil.long_name = affil.long_name + "*"
       affil
     end
 
     def self.find_or_initialize_by_long_name(long_name)
+      logger.info("-----fOIBLn #{long_name}")
       affil = Affiliation.where('LOWER(long_name) = LOWER(?)', long_name)
       (affil.any? ? affil.first : Affiliation.new(long_name: long_name))
     end
