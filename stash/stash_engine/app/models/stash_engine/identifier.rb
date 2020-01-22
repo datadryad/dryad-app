@@ -10,6 +10,7 @@ module StashEngine
     has_many :external_references, class_name: 'StashEngine::ExternalReference', dependent: :destroy
     # there are places we may have more than one from our old versions
     has_many :shares, class_name: 'StashEngine::Share', dependent: :destroy
+    has_many :cached_citations, class_name: 'StashEngine::CounterCitation', dependent: :destroy
     has_one :latest_resource,
             class_name: 'StashEngine::Resource',
             primary_key: 'latest_resource_id',
