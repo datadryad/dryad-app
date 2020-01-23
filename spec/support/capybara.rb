@@ -58,9 +58,9 @@ RSpec.configure do |config|
   end
 
   config.before(:each, type: :feature, js: true) do
-    Capybara.current_driver = :selenium_chrome_headless
-    # uncomment following line to test and see actions in browser (see comment at top)
-    # Capybara.current_driver = :selenium
+    # the selenium_chrome_headless doesn't seem to work with javascript
+    # Capybara.current_driver = :selenium_chrome_headless
+    Capybara.current_driver = :selenium
   end
 
 end
