@@ -43,12 +43,12 @@ module StashDatacite
     # asterisk on the name, so we know it is not associated with ROR.
     def self.from_long_name(long_name)
       return nil if long_name.blank?
-      
+
       affil = find_or_initialize_by_long_name(long_name)
       return affil if affil.ror_id.present?
 
       # The record didn't exist in ROR so return it with the asterisk
-      affil.long_name = affil.long_name + "*"
+      affil.long_name = affil.long_name + '*'
       affil
     end
 
