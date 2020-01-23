@@ -10,11 +10,13 @@ require_relative 'helpers/webmock_helper'
 require 'webdrivers'
 
 Capybara.default_driver = :rack_test
+
+# uncomment following line to see actions in browser
+# Capybara.default_driver = :selenium
 Capybara.javascript_driver = :chrome
 
-# change :selenium_chrome_headless to just :selenium in this file in order to see your tests and troubleshoot in browser
-# also, comment out --headless option to troubleshoot in the browser. May work with the headless browser and just removing
-# the headless option.
+# change all :selenium_chrome_headless to just :selenium in this file in order to see your tests and troubleshoot in browser.
+# also, comment out --headless option.  Also change default_driver from :rack_test to :selenium
 Capybara.asset_host = 'http://localhost:33000'
 
 # Webdrivers.install_dir = '~/.webdrivers'
@@ -26,9 +28,10 @@ Capybara.asset_host = 'http://localhost:33000'
 # This adds the --no-sandbox flag to fix TravisCI as described here:
 # https://docs.travis-ci.com/user/chrome#sandboxing
 
-Capybara.register_driver :selenium_chrome_headless do |app|
+Capybara.register_driver :selenium do |app|
   Capybara::Selenium::Driver.new(app, browser: :chrome)
   browser_options = ::Selenium::WebDriver::Chrome::Options.new
+  # uncomment headless here to see browser doing stuff (see note above)
   browser_options.args << '--headless'
   browser_options.args << '--incognito'
   browser_options.args << '--no-sandbox'
@@ -56,6 +59,8 @@ RSpec.configure do |config|
 
   config.before(:each, type: :feature, js: true) do
     Capybara.current_driver = :selenium_chrome_headless
+    # uncomment following line to test and see actions in browser (see comment at top)
+    # Capybara.current_driver = :selenium
   end
 
 end
