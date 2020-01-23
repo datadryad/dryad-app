@@ -1,0 +1,7 @@
+<%# resource is passed in as a local variable %>
+<%= render partial: 'stash_engine/landing/metrics', locals: {identifier: resource.identifier, no_link: true} %>
+
+<% if resource&.identifier&.cached_citations.count > 0 %>
+  <br/>
+  <%= render partial: 'stash_engine/landing/citations', locals: {identifier: resource.identifier} %>
+<% end %>
