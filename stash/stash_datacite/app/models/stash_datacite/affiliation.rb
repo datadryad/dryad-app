@@ -53,7 +53,6 @@ module StashDatacite
     end
 
     def self.find_or_initialize_by_long_name(long_name)
-      logger.info("-----fOIBLn #{long_name}")
       affil = Affiliation.where('LOWER(long_name) = LOWER(?)', long_name)
       (affil.any? ? affil.first : Affiliation.new(long_name: long_name))
     end
