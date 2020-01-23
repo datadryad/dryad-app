@@ -1,5 +1,5 @@
 <%= form_tag({ controller: '/stash_engine/admin_datasets',
                action: 'stats_popup', id: resource_id },
              method: :get, remote: true) do -%>
-  <button class="c-admin-edit-icon" title="See Dataset Statistics"><i class="fa fa-bar-chart" aria-hidden="true"></i></button>
+  <button class="c-admin-edit-icon js-stats" title="See Dataset Statistics"><i class="fa fa-bar-chart" aria-hidden="true"></i></button>
 <% end %>
