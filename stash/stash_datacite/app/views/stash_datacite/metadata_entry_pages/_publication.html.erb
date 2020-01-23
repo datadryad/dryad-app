@@ -1,5 +1,5 @@
 <p id="import-choices-label">My data is related to:</p>
-<%= form_for(@publication, url: publications_update_path, method: :patch, remote: true, authenticity_token: true) do |f| %>
+<%= form_for(@publication_issn, url: publications_update_path, method: :patch, remote: true, authenticity_token: true) do |f| %>
 	<div class="c-import__choicesbox js-import-choice" role="group" aria-labelledby="import-choices-label">
 		<div class="c-import__choicebox">
 			<div class="c-import__icon"><i class="fa fa-pencil-square-o fa-3x"></i></div>
@@ -33,16 +33,16 @@
 		<div class="c-input__inline">
 			<div class="c-input">
 				<%= f.label "publication", 'Journal Name', class: 'c-input__label' %>
-				<%= f.text_field :publication, value: @publication.value, class: "js-publications c-input__text" %>
+			        <%= f.text_field :publication, value: @publication_name.value, class: "js-publications c-input__text" %>
 				<%= f.hidden_field :identifier_id, value: @resource.identifier_id %>
 				<%= f.hidden_field :resource_id, value: @resource.id %>
-				<%= f.hidden_field :publication_issn, value: @publication.value %>
-				<%= f.hidden_field :publication_name, value: @publication.value %>
+				<%= f.hidden_field :publication_issn, value: @publication_issn.value %>
+				<%= f.hidden_field :publication_name, value: @publication_name.value %>
 				<%= f.hidden_field :do_import, value: 'false' %>
 			</div>
 			<div class="c-input js-ms-section">
 				<%= f.label "msid", 'Manuscript Number', class: 'c-input__label' %>
-				<%= f.text_field :msid, value: @msid.value, class: "js-msid c-input__text", placeholder: 'APPS-D-17-00113' %>
+			        <%= f.text_field :msid, value: @msid.value, class: "js-msid c-input__text", placeholder: 'APPS-D-17-00113' %>
 			</div>
 			<div class="c-input js-doi-section">
 				<%= f.label "doi", 'DOI', class: 'c-input__label' %>
@@ -64,10 +64,8 @@
 <script>
 	<% if !@doi&.related_identifier.blank? %>
   	setPublicationChoiceDisplay('published');
-	<% elsif !@msid&.value.blank? %>
-  	setPublicationChoiceDisplay('manuscript');
 	<% else %>
-  	setPublicationChoiceDisplay('other');
+  	setPublicationChoiceDisplay('manuscript');
 	<% end %>
 </script>
 
