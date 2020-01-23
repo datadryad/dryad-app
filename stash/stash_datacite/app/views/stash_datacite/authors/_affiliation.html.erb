@@ -18,10 +18,8 @@
 	 })
 	 .autocomplete({
              source: function (request, response) {
-		 console.log("source")
 		 // save the user's typed request, in case they don't click on an autocomplete result
 		 $('<%= "##{form_id}" %> #author_affiliation_typed_name').val(request.term);
-		 console.log("form_id", form_id)
 		 var form = $(this).parents('form');
 		 $(form).trigger('submit.rails');
 		 $.ajax({
@@ -46,24 +44,17 @@
 		 return false;
              },
              select: function (event, ui) {
-		 console.log("select")
 		 $('<%= "##{form_id}" %> #author_affiliation_ror_id').val(ui.item.id); // set hidden field ror_id
-		 $('<%= "##{form_id}" %> #author_affiliation_id').val(''); // clear the hidden field id
-		 console.log(ui.item.id)
+		 $('<%= "##{form_id}" %> #author_affiliation_id').val(''); // clear the hidden field id for the affiliation object
              },
              open: function (event, ui) {
-		 console.log("open")
              },
              close: function (event, ui) {
-		 console.log("close")
 		 $(this).focus();
              },
 	     change: function( event, ui ) {
-		 // do nothing
 	     }
 	 }).blur(function (event) {
-	     console.log("blur")
-	     console.log("blursave")
 	     var form = $(this).parents('form');
 	     $(form).trigger('submit.rails');
 	 });
