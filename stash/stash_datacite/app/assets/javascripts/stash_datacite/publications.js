@@ -23,24 +23,24 @@ function loadPublications() {
 		// or internal_datum_publication_name will have a text value, so use one of 
 		// these values to fill in the journal title
 		create: function(a) {
-		    if(document.getElementById("internal_datum_publication_issn").value){
+		    if($("#internal_datum_publication_issn").val()){
 			$.ajax({
-                            url: "/stash_datacite/publications/issn/"+ document.getElementById("internal_datum_publication_issn").value,
+                            url: "/stash_datacite/publications/issn/"+ $("#internal_datum_publication_issn").val(),
                             dataType: "json",
                             success: function( data ) {
-				document.getElementById("internal_datum_publication").value = ""
+				$("#internal_datum_publication").val("")
 				if (data.fullName != null) {
-				    document.getElementById("internal_datum_publication").value = data.fullName;
+				    $("#internal_datum_publication").val(data.fullName);
 				}
 			    }
 			});
-		    } else if(document.getElementById("internal_datum_publication_name").value){
-			document.getElementById("internal_datum_publication").value = document.getElementById("internal_datum_publication_name").value
+		    } else if($("#internal_datum_publication_name").val()){
+			$("#internal_datum_publication").val($("#internal_datum_publication_name").val())
 		    }
 		},
                 source: function (request, response) {
 		    // save the user's typed request in the database with an asterisk, in case they don't click on an autocomplete result
-		    document.getElementById("internal_datum_publication_name").value = request.term + "*";
+		    $("#internal_datum_publication_name").val(request.term + "*");
 		    var form = $(this.form);
                     $(form).trigger('submit.rails');
 		    $.ajax({
@@ -67,8 +67,8 @@ function loadPublications() {
                 select: function( event, ui ) {
                     new_value = ui.item.value;
                     new_label = ui.item.label;
-                    document.getElementById("internal_datum_publication_issn").value = new_value;
-                    document.getElementById("internal_datum_publication_name").value = new_label;
+                    $("#internal_datum_publication_issn").val(new_value);
+                    $("#internal_datum_publication_name").val(new_label);
                     ui.item.value = ui.item.label;
                     var form = $(this.form);
                     $(form).trigger('submit.rails');
