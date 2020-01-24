@@ -31,7 +31,9 @@ module StashEngine
 
       respond_to do |format|
         format.html
-        format.csv
+        format.csv do
+          headers['Content-Disposition'] = "attachment; filename=#{Time.new.strftime('%F')}_report.csv"
+        end
       end
     end
     # rubocop:enable Metrics/AbcSize
