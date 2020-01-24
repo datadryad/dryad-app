@@ -64,13 +64,14 @@ RSpec.feature 'CurationActivity', type: :feature do
         expect(all('.c-lined-table__row').length).to eql(4)
       end
 
-      it 'has ajax showing counter stats and citations', :js => true do
+      it 'has ajax showing counter stats and citations', js: true do
         sign_in(create(:user, role: 'superuser', tenant_id: 'ucop'))
         visit dashboard_path
         el = find('td', text: @identifiers.first.resources.first.title)
         el = el.first(:xpath, './following-sibling::td').find(:css, '.js-stats')
         el.click
         my_stats = @identifiers.first.counter_stat
+        page.first :css, '.o-metrics__icon', wait: 10
         page.should have_content("#{my_stats.citation_count} citations")
         page.should have_content("#{my_stats.unique_investigation_count - my_stats.unique_request_count} views")
         page.should have_content("#{my_stats.unique_request_count} downloads")
