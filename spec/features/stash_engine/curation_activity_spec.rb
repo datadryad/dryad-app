@@ -77,6 +77,22 @@ RSpec.feature 'CurationActivity', type: :feature do
         page.should have_content("#{my_stats.downloads} downloads")
       end
 
+      it 'generates a csv having dataset information with citations, views and downloads' do
+        sign_in(create(:user, role: 'superuser', tenant_id: 'ucop'))
+        visit dashboard_path
+        click_link('Get Comma Separated Values (CSV) for import into Excel')
+
+        title = @identifiers.first.resources.first.title
+        my_stats = @identifiers.first.counter_stat
+
+        csv_line = page.body.split("\n").select { |i| i.start_with?(title) }.first
+        csv_parts = csv_line.split(',')
+
+        expect(csv_parts[-3].to_i).to eql(my_stats.views)
+        expect(csv_parts[-2].to_i).to eql(my_stats.downloads)
+        expect(csv_parts[-1].to_i).to eql(my_stats.citation_count)
+      end
+
     end
 
     context :in_progress_datasets do
