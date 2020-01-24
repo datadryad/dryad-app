@@ -4,6 +4,6 @@ FactoryBot.define do
     identifier
 
     citation { Faker::Lorem.sentence }
-    doi { identifier { "https://doi.org/#{Faker::Pid.doi}" }}
+    doi { identifier { "https://doi.org/#{Faker::Pid.doi}" } }
   end
 end
