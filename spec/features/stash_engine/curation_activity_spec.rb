@@ -73,8 +73,8 @@ RSpec.feature 'CurationActivity', type: :feature do
         my_stats = @identifiers.first.counter_stat
         page.first :css, '.o-metrics__icon', wait: 10
         page.should have_content("#{my_stats.citation_count} citations")
-        page.should have_content("#{my_stats.unique_investigation_count - my_stats.unique_request_count} views")
-        page.should have_content("#{my_stats.unique_request_count} downloads")
+        page.should have_content("#{my_stats.views} views")
+        page.should have_content("#{my_stats.downloads} downloads")
       end
 
     end
