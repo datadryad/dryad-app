@@ -52,7 +52,9 @@ module StashEngine
       STATUS_CLAUSE = 'seca.status = %{term}'
       PUBLICATION_CLAUSE = 'seid.value = %{term}'
 
-      # rubocop:disable Metrics/AbcSize
+      # this method is long, but quite uncomplicated as it mostly just sets variables from the query
+      #
+      # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/MethodLength
       def initialize(result)
         return unless result.is_a?(Array) && result.length >= 22
 
@@ -75,12 +77,12 @@ module StashEngine
         @editor_id = result[15]
         @editor_name = result[16..17].join(', ')
         @author_names = result[18]
-        @views = ( result[20].nil? ? 0 : result[19] - result[20] )
+        @views = (result[20].nil? ? 0 : result[19] - result[20])
         @downloads = result[20] || 0
         @citations = result[21] || 0
         @relevance = result.length > 22 ? result[22] : nil
       end
-      # rubocop:enable Metrics/AbcSize
+      # rubocop:enable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/MethodLength
       #
 
       # lets you get a resource when you need it and caches it
