@@ -82,6 +82,15 @@ module StashEngine
         @resource ||= StashEngine::Resource.find_by(id: @resource_id)
       end
 
+      def counter_stat
+        @counter_stat ||= resource&.identifier&.counter_stat
+      end
+
+      # I do not believe this needs to be cached since shouldn't be called more than once
+      def citations
+        resource&.identifier&.cached_citations || []
+      end
+
       class << self
 
         def where(params)

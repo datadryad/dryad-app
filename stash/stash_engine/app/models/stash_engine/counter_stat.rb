@@ -22,6 +22,18 @@ module StashEngine
       citation_count
     end
 
+    # views is a calculated stat of investigations minus requests since downloads are double-counted as requests also
+    def views
+      return 0 if check_unique_investigation_count.blank? || check_unique_request_count.blank?
+      return 0 if check_unique_request_count > check_unique_investigation_count # if more downloads than views then something is wrong
+      check_unique_investigation_count - check_unique_request_count
+    end
+
+    def downloads
+      return 0 if check_unique_request_count.blank?
+      check_unique_request_count
+    end
+
     # try this doi, at least on test 10.7291/d1q94r
     # or how about this one? doi:10.7272/Q6Z60KZD
     # or this one has machine hits, I think.  doi:10.6086/D1H59V
