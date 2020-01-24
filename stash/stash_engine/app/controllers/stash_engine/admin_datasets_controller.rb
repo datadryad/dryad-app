@@ -26,7 +26,8 @@ module StashEngine
       @publications = @datasets.collect(&:publication_name).compact.uniq.sort { |a, b| a <=> b }
       @pub_name = params[:publication_name] || nil
 
-      @datasets = Kaminari.paginate_array(@datasets).page(@page).per(@page_size)
+      # paginate for display, but if CSV, don't paginate
+      @datasets = Kaminari.paginate_array(@datasets).page(@page).per(@page_size) unless request.format.to_s == 'text/csv'
 
       respond_to do |format|
         format.html
