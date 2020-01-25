@@ -49,9 +49,11 @@ namespace :counter do
     end
   end
 
-  desc 'clear out table of cached Counter stats'
+  # this allows stats to be zeroed without destroying citation count which happens in another process and means that our
+  # stats can be manually rebuilt from our full JSON stat files which DataCite doesn't accept for unknown reasons.
+  desc "zero out table of cached Counter stats without affecting citation count which doesn't come from counter"
   task clear_cache: :environment do
-    StashEngine::CounterStat.delete_all
+    StashEngine::CounterStat.update_all(unique_investigation_count: 0, unique_request_count: 0)
   end
 
   desc 'task to populate in citation information that has not been cached'
