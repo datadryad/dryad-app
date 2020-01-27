@@ -60,7 +60,7 @@ module StashDatacite
       return db_affils.first if db_affils.any?
 
       ror_org = Stash::Organization::Ror.find_by_ror_id(ror_id)
-      Affiliation.new(long_name: ror_org.name, ror_id: ror_id)
+      Affiliation.new(long_name: ror_org&.name, ror_id: ror_id)
     rescue Stash::Organization::RorError
       nil
     end
