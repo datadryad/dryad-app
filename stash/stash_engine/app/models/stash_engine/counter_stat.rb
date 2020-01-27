@@ -5,18 +5,20 @@ module StashEngine
     # this class wraps around some database accessors to cache them so we don't query the same stats more than once
     # per day because that is the max time that we update stats
 
+    # all these "check" methods may be obsolete if we do scripts for population of everything ahead.  See note
+    # above update_if_necessary for details of our fun with datacite.
     def check_unique_investigation_count
-      update_if_necessary
+      # update_if_necessary
       unique_investigation_count
     end
 
     def check_unique_request_count
-      update_if_necessary
+      # update_if_necessary
       unique_request_count
     end
 
     def check_citation_count
-      update_if_necessary
+      # update_if_necessary
       citation_count
     end
 
@@ -25,6 +27,10 @@ module StashEngine
     # or this one has machine hits, I think.  doi:10.6086/D1H59V
     #
     # but unfortunately, we can really only display stats against production
+    #
+    # We are no longer using this until we have everything working with DataCite correctly.
+    # Also we are probably moving to a script to populate citations and data ahead since they want them as part of instant reporting.
+    # Will leave in for now, but can probably be removed if that is the permanent way we do things.
     def update_if_necessary
       # we should have a counter stat already if it got to this class
       # only update stats if it's a later calendar week than this record was updated
@@ -32,7 +38,7 @@ module StashEngine
 
       # do no update the usage data until we can successfully get all of our reports in to DataCite in order to pull them back
       # update_usage!
-      update_citation_count!
+      # update_citation_count!
       self.updated_at = Time.new.utc # seem to need this for some reason, since not always updating automatically
       save!
     end
