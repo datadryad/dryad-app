@@ -19,9 +19,9 @@
 	 .autocomplete({
              source: function (request, response) {
 		 // save the user's typed request, in case they don't click on an autocomplete result
-		 $('<%= "##{form_id}" %> #author_affiliation_typed_name').val(request.term);
-		 var form = $(this).parents('form');
-		 $(form).trigger('submit.rails');
+		 // $('<%= "##{form_id}" %> #author_affiliation_typed_name').val(request.term);
+		 //var form = $(this).parents('form');
+		 //$(form).trigger('submit.rails');
 		 $.ajax({
 		     url: "<%= stash_datacite.affiliations_autocomplete_path %>",
 		     dataType: "json",
@@ -46,6 +46,9 @@
              select: function (event, ui) {
 		 $('<%= "##{form_id}" %> #author_affiliation_ror_id').val(ui.item.id); // set hidden field ror_id
 		 $('<%= "##{form_id}" %> #author_affiliation_id').val(''); // clear the hidden field id for the affiliation object
+		 var form = $(this).parents('form');
+		 $(form).trigger('submit.rails');
+		 var savedval = $('<%= "##{form_id}" %> #author_affiliation_ror_id').val();
              },
              open: function (event, ui) {
              },
