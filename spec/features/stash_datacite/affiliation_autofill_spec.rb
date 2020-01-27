@@ -25,6 +25,7 @@ RSpec.feature 'AffiliationAutofill', type: :feature do
     end
 
     it 'sets the ROR id when user selects an option', js: true do
+      stub_ror_id_lookup(university: 'University of Testing v2')
       fill_in 'author[affiliation][long_name]', with: 'Testing'
       first('.ui-menu-item-wrapper', wait: 5).click
       expect(find('#author_affiliation_ror_id', visible: false).value).to eql('https://ror.org/TEST2')
