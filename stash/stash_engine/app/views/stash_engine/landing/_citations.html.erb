@@ -1,6 +1,6 @@
 <%# takes a local identifier AR object #%>
 <h3>Works Referencing This Dataset</h3>
-<% identifier.citations.each do |cite| %>
+<% identifier.cached_citations.each do |cite| %>
   <p>
     <% if cite.citation.blank? %>
       <%= "Citation metadata for #{cite.doi} was not available from DataCite." %>
