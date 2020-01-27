@@ -39,22 +39,30 @@ module StashDatacite
     end
 
     # Get an affiliation by long_name. We prefer to reuse an existing affiliation
-    # from our DB. If if one isn't present, just create a new affiliation with an
-    # asterisk on the name, so we know it is not associated with ROR.
+    # from our DB. If one isn't present, just create a new affiliation with an
+    # asterisk on the name, so we know it has not been validated with ROR.
     def self.from_long_name(long_name)
       return nil if long_name.blank?
 
-      affil = find_or_initialize_by_long_name(long_name)
-      return affil if affil.ror_id.present?
+      db_affils = Affiliation.where('LOWER(long_name) = LOWER(?)', long_name) +
+                  Affiliation.where('LOWER(long_name) = LOWER(?)', long_name + '*')
+      return db_affils.first if db_affils.any?
 
-      # The record didn't exist in ROR so return it with the asterisk
-      affil.long_name = affil.long_name + '*'
-      affil
+      Affiliation.new(long_name: long_name + '*')
     end
 
-    def self.find_or_initialize_by_long_name(long_name)
-      affil = Affiliation.where('LOWER(long_name) = LOWER(?)', long_name)
-      (affil.any? ? affil.first : Affiliation.new(long_name: long_name))
+    # Get an affiliation by ror_id. We prefer to reuse an existing affiliation
+    # from our DB. If one isn't present, just create a new affiliation.
+    def self.from_ror_id(ror_id)
+      return nil if ror_id.blank?
+
+      db_affils = Affiliation.where('LOWER(ror_id) = LOWER(?)', ror_id)
+      return db_affils.first if db_affils.any?
+
+      ror_org = Stash::Organization::Ror.find_by_ror_id(ror_id)
+      Affiliation.new(long_name: ror_org.name, ror_id: ror_id)
+    rescue Stash::Organization::RorError
+      nil
     end
 
     def self.find_by_ror_long_name(long_name)
