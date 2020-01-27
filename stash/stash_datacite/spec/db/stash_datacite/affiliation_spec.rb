@@ -93,17 +93,6 @@ module StashDatacite
         expect(StashDatacite::Affiliation.from_long_name('test affiliation')).to eql(affil)
       end
 
-      it 'does do a ROR lookup if the record does NOT already have a ROR id' do
-        affil = StashDatacite::Affiliation.create(long_name: 'Test Affiliation')
-        expect(StashDatacite::Affiliation).to receive(:find_by_ror_long_name).with('test affiliation')
-        expect(StashDatacite::Affiliation.from_long_name('test affiliation')).to eql(affil)
-      end
-
-      it 'uses the long_name returned by ROR' do
-        allow(StashDatacite::Affiliation).to receive(:find_by_ror_long_name).and_return(id: '999', name: 'Foo')
-        StashDatacite::Affiliation.create(long_name: 'Test Affiliation')
-        expect(StashDatacite::Affiliation.from_long_name('test affiliation').long_name).to eql('Foo')
-      end
     end
 
     describe 'self.find_by_ror_long_name(long_name)' do

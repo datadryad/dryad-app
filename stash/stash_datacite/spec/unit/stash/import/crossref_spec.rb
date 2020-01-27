@@ -199,7 +199,7 @@ module Stash
 
         it 'populates affiliations' do
           @cr.send(:populate_authors)
-          expect(@resource.authors.first.affiliation.long_name).to eql('Hotel California')
+          expect(@resource.authors.first.affiliation.long_name).to eql('Hotel California*')
         end
 
         it 'handles minimal data because lots of stuff is missing metadata' do
