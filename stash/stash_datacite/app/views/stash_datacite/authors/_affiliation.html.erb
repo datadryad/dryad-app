@@ -18,10 +18,6 @@
 	 })
 	 .autocomplete({
              source: function (request, response) {
-		 // save the user's typed request, in case they don't click on an autocomplete result
-		 // $('<%= "##{form_id}" %> #author_affiliation_typed_name').val(request.term);
-		 //var form = $(this).parents('form');
-		 //$(form).trigger('submit.rails');
 		 $.ajax({
 		     url: "<%= stash_datacite.affiliations_autocomplete_path %>",
 		     dataType: "json",
