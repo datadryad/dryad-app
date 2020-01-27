@@ -1,4 +1,5 @@
-<%# takes local of identifier %>
+<%# takes local of identifier, no_link == true means don't link metrics %>
+<% no_link = false unless defined?(no_link) %>
 <div class="o-metrics__metric">
   <div class="o-metrics__group">
     <%= image_tag 'stash_engine/icon_views.svg', class: 'o-metrics__icon', alt: '' %>
@@ -21,7 +22,7 @@
     <!-- <span class="o-metrics__label">citations</span> -->
   </div>
   <div class="o-metrics__number" id="metrics_citation_count">
-    <% if identifier.counter_stat.citation_count > 0 %>
+    <% if identifier.counter_stat.citation_count > 0 && !no_link %>
       <%= link_to "#{identifier.counter_stat.citation_count} citations", stash_url_helpers.show_citations_path(identifier_id: identifier.id),
                   id: 'citation_link', remote: true %>
     <% else %>
