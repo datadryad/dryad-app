@@ -100,6 +100,14 @@ module StashEngine
       @internal_data = InternalDatum.where(identifier_id: @identifier.id)
     end
 
+    def stats_popup
+      respond_to do |format|
+        format.js do
+          @resource = Resource.find(params[:id])
+        end
+      end
+    end
+
     private
 
     def setup_ds_sorting
