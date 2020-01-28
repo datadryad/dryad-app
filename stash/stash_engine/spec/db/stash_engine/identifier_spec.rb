@@ -330,6 +330,7 @@ module StashEngine
       before(:each) do
         allow(@identifier).to receive(:journal_will_pay?).and_return(false)
         allow(@identifier).to receive(:institution_will_pay?).and_return(false)
+        allow(@identifier).to receive(:funder_will_pay?).and_return(false)
       end
 
       it 'returns true if no one else will pay' do
@@ -377,6 +378,21 @@ module StashEngine
         allow(@identifier).to receive(:publication_data).and_return('bogus_journal_data')
         @identifier.record_payment
         expect(@identifier.payment_type).to eq('waiver')
+      end
+
+      it 'records a funder-based payment' do
+        allow(@identifier).to receive(:journal_will_pay?).and_return(false) # bypass this one
+        allow_any_instance_of(StashEngine::Resource).to receive(:contributors).and_return(
+          [
+            OpenStruct.new('payment_exempted?': false, contributor_name: 'Johann Strauss University', award_number: 'Latke153'),
+            OpenStruct.new('payment_exempted?': true, contributor_name: 'Zorgast Industries', award_number: 'ZI0027')
+          ]
+        )
+        @identifier.record_payment
+        expect(@identifier.payment_type).to start_with('funder:')
+        expect(@identifier.payment_type).to include('Zorgast Industries')
+        expect(@identifier.payment_id).to start_with('award:')
+        expect(@identifier.payment_id).to include('ZI0027')
       end
     end
 
@@ -520,6 +536,44 @@ module StashEngine
         Resource.create(tenant_id: 'paying-institution', identifier_id: ident.id)
         ident = Identifier.find(ident.id) # need to reload ident from the DB to update latest_resource
         expect(ident.institution_will_pay?).to eq(true)
+      end
+    end
+
+    describe '#funder_will_pay?' do
+      it 'does not make user pay when funder pays' do
+        allow_any_instance_of(StashEngine::Resource).to receive(:contributors)
+          .and_return([OpenStruct.new('payment_exempted?': false), OpenStruct.new('payment_exempted?': true)])
+        expect(@identifier.funder_will_pay?).to be_truthy
+      end
+
+      it 'makes the user pay when funder will not' do
+        allow_any_instance_of(StashEngine::Resource).to receive(:contributors)
+          .and_return([OpenStruct.new('payment_exempted?': false), OpenStruct.new('payment_exempted?': false)])
+        expect(@identifier.funder_will_pay?).to be_falsey
+      end
+    end
+
+    describe '#funder_payment_info' do
+      it 'returns payment information if funder is paying' do
+        allow_any_instance_of(StashEngine::Resource).to receive(:contributors).and_return(
+          [
+            OpenStruct.new('payment_exempted?': false, contributor_name: 'Johann Strauss University', award_number: 'Latke153'),
+            OpenStruct.new('payment_exempted?': true,  contributor_name: 'Zorgast Industries', award_number: 'ZI0027')
+          ]
+        )
+        expect(@identifier.funder_payment_info).to eql(
+          OpenStruct.new('payment_exempted?': true, contributor_name: 'Zorgast Industries', award_number: 'ZI0027')
+        )
+      end
+
+      it 'returns nil if no funder payment' do
+        allow_any_instance_of(StashEngine::Resource).to receive(:contributors).and_return(
+          [
+            OpenStruct.new('payment_exempted?': false, contributor_name: 'Johann Strauss University', award_number: 'Latke153'),
+            OpenStruct.new('payment_exempted?': false, contributor_name: 'Zorgast Industries', award_number: 'ZI0027')
+          ]
+        )
+        expect(@identifier.funder_payment_info).to eql(nil)
       end
     end
 
