@@ -1,5 +1,5 @@
 // replace dialog div with contents of dialog text from partial
-<% title = @resource.title.html_safe %>
+<% title = @resource&.title&.html_safe %>
 
 $('#popup_dialog').html("<%= escape_javascript(
           render partial: 'stash_engine/admin_datasets/stats_popup_display', locals: {
