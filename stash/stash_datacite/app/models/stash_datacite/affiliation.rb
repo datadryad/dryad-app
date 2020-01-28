@@ -45,10 +45,10 @@ module StashDatacite
       return nil if long_name.blank?
 
       db_affils = Affiliation.where('LOWER(long_name) = LOWER(?)', long_name) +
-                  Affiliation.where('LOWER(long_name) = LOWER(?)', long_name + '*')
+                  Affiliation.where('LOWER(long_name) = LOWER(?)', "#{long_name}*")
       return db_affils.first if db_affils.any?
 
-      Affiliation.new(long_name: long_name + '*')
+      Affiliation.new(long_name: "#{long_name}*")
     end
 
     # Get an affiliation by ror_id. We prefer to reuse an existing affiliation
