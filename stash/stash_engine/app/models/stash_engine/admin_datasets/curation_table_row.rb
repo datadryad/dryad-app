@@ -16,6 +16,7 @@ module StashEngine
       attr_reader :curation_activity_id, :status, :updated_at
       attr_reader :editor_id, :editor_name
       attr_reader :author_names
+      attr_reader :views, :downloads, :citations
       attr_reader :relevance
 
       SELECT_CLAUSE = <<-SQL
@@ -27,7 +28,8 @@ module StashEngine
           seu.id, seu.last_name, seu.first_name,
           (SELECT GROUP_CONCAT(DISTINCT sea.author_last_name ORDER BY sea.author_last_name SEPARATOR '; ')
            FROM stash_engine_authors sea
-           WHERE sea.resource_id = ser.id)
+           WHERE sea.resource_id = ser.id),
+          secs.unique_investigation_count, secs.unique_request_count, secs.citation_count
       SQL
 
       FROM_CLAUSE = <<-SQL
@@ -40,6 +42,7 @@ module StashEngine
           LEFT OUTER JOIN (SELECT ca2.resource_id, MAX(ca2.id) latest_curation_activity_id FROM stash_engine_curation_activities ca2 GROUP BY ca2.resource_id) j3 ON j3.resource_id = ser.id
           LEFT OUTER JOIN stash_engine_resource_states sers ON sers.id = j2.latest_resource_state_id
           LEFT OUTER JOIN stash_engine_curation_activities seca ON seca.id = j3.latest_curation_activity_id
+          LEFT OUTER JOIN stash_engine_counter_stats secs ON sei.id = secs.identifier_id
       SQL
 
       SEARCH_CLAUSE = 'MATCH(sei.search_words) AGAINST(%{term})'
@@ -49,9 +52,11 @@ module StashEngine
       STATUS_CLAUSE = 'seca.status = %{term}'
       PUBLICATION_CLAUSE = 'seid.value = %{term}'
 
-      # rubocop:disable Metrics/AbcSize
+      # this method is long, but quite uncomplicated as it mostly just sets variables from the query
+      #
+      # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/MethodLength
       def initialize(result)
-        return unless result.is_a?(Array) && result.length >= 19
+        return unless result.is_a?(Array) && result.length >= 22
 
         # Convert the array of results into attribute values
         @publication_name = result[0]
@@ -72,9 +77,12 @@ module StashEngine
         @editor_id = result[15]
         @editor_name = result[16..17].join(', ')
         @author_names = result[18]
-        @relevance = result.length > 19 ? result[19] : nil
+        @views = (result[20].nil? ? 0 : result[19] - result[20])
+        @downloads = result[20] || 0
+        @citations = result[21] || 0
+        @relevance = result.length > 22 ? result[22] : nil
       end
-      # rubocop:enable Metrics/AbcSize
+      # rubocop:enable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/MethodLength
       #
 
       # lets you get a resource when you need it and caches it
