@@ -58,8 +58,6 @@ module Stash
       # Search the ROR API for a specific organization.
       # @return a Stash::Organization::Ror::Organization object or nil
       def self.find_by_ror_id(ror_id)
-        return { id: nil, name: query } unless ping
-
         resp = HTTParty.get("#{URI}/#{ror_id}", headers: HEADERS)
         return nil if resp.parsed_response.blank? ||
                       resp.parsed_response['id'].blank? ||

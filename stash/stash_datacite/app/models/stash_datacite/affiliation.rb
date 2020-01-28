@@ -38,28 +38,31 @@ module StashDatacite
       APP_CONFIG.fee_waiver_countries || []
     end
 
-    # We want to try to always use the ROR long_name when possible so check the incoming
-    # long name as well as the ROR-ized version of the long_name to find our record
+    # Get an affiliation by long_name. We prefer to reuse an existing affiliation
+    # from our DB. If one isn't present, just create a new affiliation with an
+    # asterisk on the name, so we know it has not been validated with ROR.
     def self.from_long_name(long_name)
       return nil if long_name.blank?
 
-      affil = find_or_initialize_by_long_name(long_name)
-      # If the record already has a ROR id, no need to do a lookup
-      return affil if affil.ror_id.present?
+      db_affils = Affiliation.where('LOWER(long_name) = LOWER(?)', long_name) +
+                  Affiliation.where('LOWER(long_name) = LOWER(?)', "#{long_name}*")
+      return db_affils.first if db_affils.any?
 
-      ror_org = find_by_ror_long_name(long_name)
-      # The record didn't exist in ROR so just return as is
-      return affil if ror_org.blank?
-
-      # Otherwise use the ROR id and long_name
-      affil = find_or_initialize_by_long_name(ror_org[:name])
-      affil.ror_id = ror_org[:id]
-      affil
+      Affiliation.new(long_name: "#{long_name}*")
     end
 
-    def self.find_or_initialize_by_long_name(long_name)
-      affil = Affiliation.where('LOWER(long_name) = LOWER(?)', long_name)
-      (affil.any? ? affil.first : Affiliation.new(long_name: long_name))
+    # Get an affiliation by ror_id. We prefer to reuse an existing affiliation
+    # from our DB. If one isn't present, just create a new affiliation.
+    def self.from_ror_id(ror_id)
+      return nil if ror_id.blank?
+
+      db_affils = Affiliation.where('LOWER(ror_id) = LOWER(?)', ror_id)
+      return db_affils.first if db_affils.any?
+
+      ror_org = Stash::Organization::Ror.find_by_ror_id(ror_id)
+      Affiliation.new(long_name: ror_org&.name, ror_id: ror_id)
+    rescue Stash::Organization::RorError
+      nil
     end
 
     def self.find_by_ror_long_name(long_name)
