@@ -20,20 +20,20 @@ function loadContributors() {
 	    })
 	    .autocomplete({
 		source: function( request, response ) {
-		    console.log("csource -- save")
+		    //console.log("csource -- save")
 		    // save the user's typed request, in case they don't click on an autocomplete result
-		    $('<%= "##{form_id}" %> #contributor_name_<%= "##{my_suffix}" %>').val(request.term + "*");
-		    var form = $(this).parents('form');
-		    $(form).trigger('submit.rails');
+		    //$('<%= "##{form_id}" %> #contributor_name_<%= "##{my_suffix}" %>').val(request.term + "*");
+		    //		    var form = $(this).parents('form');
+		    //$(form).trigger('submit.rails');
 		    $.ajax({
-			url: "https://api.crossref.org/funders?query="+ extractLast( request.term ),
+			url: "/stash_datacite/contributors/autocomplete",
+			data: { term: request.term },
 			dataType: "json",
 			success: function( data ) {
 			    console.log("csuccess")
-			    var arr = jQuery.map( data.message.items, function( a ) {
+			    var arr = jQuery.map( data, function( a ) {
 				return [[ a.id, a.name, a.uri ]];
 			    });
-			    // console.log(arr);
 			    var labels = [];
 			    $.each(arr, function(index, value) {
 				labels.push(value[1]);
@@ -45,11 +45,9 @@ function loadContributors() {
 		minLength: 1,
 		select: function( event, ui ) {
 		    console.log("cselect")
-		    new_value = ui.item.value;
-		    this.value = new_value;
+		    this.value = ui.item.value;
 		    var form = $(this.form);
 		    $(form).trigger('submit.rails');
-		    previous_value = new_value;
 		},
 		focus: function() {
 		    // prevent value inserted on focus
@@ -60,27 +58,18 @@ function loadContributors() {
     
     $( '.js-funders' ).on('focus', function () {
 	console.log("cfocus")
-	previous_value = this.value;
-	console.log('previous value:' + previous_value );
     }).change(function() {
-        new_value = this.value;
-        // Save when the new value is different from the previous value
-	if(new_value != previous_value) {
-	    console.log("cfocus -- save")
-	    var form = $(this.form);
-            $(form).trigger('submit.rails');
-	}
+	console.log("cfocus -- save")
+	var form = $(this.form);
+        $(form).trigger('submit.rails');
     });
     
     $( '.js-award_number' ).on('focus', function () {
-	previous_value = this.value;
+	console.log("afocus")
     }).change(function() {
-	new_value = this.value;
-        // Save when the new value is different from the previous value
-	if(new_value != previous_value) {
-            var form = $(this.form);
-	    $(form).trigger('submit.rails');
-	}
+	console.log("afocus -- save")
+        var form = $(this.form);
+	$(form).trigger('submit.rails');
     });
 };
 

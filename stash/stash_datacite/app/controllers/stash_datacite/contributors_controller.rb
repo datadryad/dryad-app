@@ -16,6 +16,7 @@ module StashDatacite
     # POST /contributors
     def create
       @contributor = Contributor.new(contributor_params)
+      process_contributor
       respond_to do |format|
         if @contributor.save
           format.js
@@ -29,6 +30,7 @@ module StashDatacite
     def update
       respond_to do |format|
         if @contributor.update(contributor_params)
+          process_contributor
           format.js { render template: 'stash_datacite/shared/update.js.erb' }
         else
           format.html { render :edit }
@@ -47,8 +49,62 @@ module StashDatacite
       end
     end
 
+    # GET /contributors/autocomplete?term={query_term}
+    def autocomplete
+      partial_term = params['term']
+      if partial_term.blank?
+        render json: nil
+      else
+        # clean the partial_term of unwanted characters so it doesn't cause errors when calling the CrossRef API
+        partial_term.gsub!(%r{[\/\-\\\(\)~!@%&"\[\]\^\:]}, ' ')
+        response = HTTParty.get("https://api.crossref.org/funders",
+                                query: { 'query': partial_term },
+                                headers: { 'Content-Type' => 'application/json' })
+        result_list = response.parsed_response["message"]["items"]
+        render json: bubble_up_exact_matches(result_list: result_list, term: partial_term)
+        #render json: response.body
+      end
+    end
+
     private
 
+
+    def process_contributor
+      return nil unless @contributor.present?
+
+      args = contributor_params
+      Rails.logger.info("============ proc_contrib +======= #{args} ")
+      contrib = if args['affiliation']['ror_id'].present?
+                StashDatacite::Affiliation.from_ror_id(args['affiliation']['ror_id'])
+              else
+                StashDatacite::Affiliation.from_long_name(args['affiliation']['long_name'])
+              end
+      args['affiliation']['id'] = affil.id unless affil.blank?
+
+      @contributor.save
+    end
+    
+    # Re-order the affiliations list to prioritize exact matches at the beginning of the string, then
+    # exact matches within the string, otherwise leaving the order unchanged
+    def bubble_up_exact_matches(result_list:, term:)
+      matches_at_beginning = []
+      matches_within = []
+      other_items = []
+      match_term = term.downcase
+      result_list.each do |result_item|
+        name = result_item["name"].downcase
+        if name.start_with?(match_term)
+          matches_at_beginning << result_item
+        elsif name.include?(match_term)
+          matches_within << result_item
+        else
+          other_items << result_item
+        end
+      end
+      matches_at_beginning + matches_within + other_items
+    end
+
+    
     def resource
       @resource ||= (params[:contributor] ? StashEngine::Resource.find(contributor_params[:resource_id]) : @contributor.resource)
     end
