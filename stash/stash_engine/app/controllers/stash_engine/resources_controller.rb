@@ -91,7 +91,10 @@ module StashEngine
     end
 
     # Review responds as a get request to review the resource before saving
-    def review; end
+    def review
+      # record a payment exemption if there is one, before submission
+      @resource&.identifier&.record_payment
+    end
 
     # Submission of the resource to the repository
     def submission; end

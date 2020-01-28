@@ -222,8 +222,9 @@ module StashEngine
         (!submitter_affiliation.present? || !submitter_affiliation.fee_waivered?)
     end
 
+    # rubocop:disable Metrics/CyclomaticComplexity
     def record_payment
-      return if payment_type.present?
+      return if payment_type.present? && payment_type != 'unknown'
       if journal_will_pay?
         self.payment_type = 'journal-' + publication_data('paymentPlanType')
         self.payment_id = publication_issn
@@ -233,11 +234,16 @@ module StashEngine
       elsif submitter_affiliation&.fee_waivered?
         self.payment_type = 'waiver'
         self.payment_id = submitter_affiliation.country_name
+      elsif funder_will_pay?
+        contrib = funder_payment_info
+        self.payment_type = "funder:#{contrib.contributor_name}"
+        self.payment_id = "award:#{contrib.award_number}"
       else
         self.payment_type = 'unknown'
       end
       save
     end
+    # rubocop:enable Metrics/CyclomaticComplexity
 
     def publication_data(field_name)
       return nil if publication_issn.nil?
@@ -308,9 +314,15 @@ module StashEngine
     def funder_will_pay?
       return false if latest_resource.nil?
 
-      latest_resource.contributors.each{ |contrib| return true if contrib.payment_exempted? }
+      latest_resource.contributors.each { |contrib| return true if contrib.payment_exempted? }
 
       false
+    end
+
+    def funder_payment_info
+      return nil unless funder_will_pay?
+
+      latest_resource.contributors.each { |contrib| return contrib if contrib.payment_exempted? }
     end
 
     def submitter_affiliation
@@ -379,7 +391,7 @@ module StashEngine
     end
 
     # this is a method that will likely only be used to fill & migrate data to deal with more fine-grained version display
-    # rubocop:disable Metrics/CyclomaticComplexity, Metrics/MethodLength
+    # rubocop:disable Metrics/MethodLength, Metrics/CyclomaticComplexity
     def fill_resource_view_flags
       my_pub = false
       resources.each do |res|
@@ -411,7 +423,7 @@ module StashEngine
         end
       end
     end
-    # rubocop:enable Metrics/CyclomaticComplexity, Metrics/MethodLength
+    # rubocop:enable Metrics/MethodLength, Metrics/CyclomaticComplexity
 
     # This tells us if the curators made us orphan all old versions in the resource history in order to make display look pretty.
     # In this case we still may call this and want to show some version of the files because there was never a version remaining
