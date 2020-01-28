@@ -74,7 +74,11 @@ module StashDatacite
       return nil unless @author.present?
 
       args = author_params
-      affil = StashDatacite::Affiliation.from_long_name(args['affiliation']['long_name'])
+      affil = if args['affiliation']['ror_id'].present?
+                StashDatacite::Affiliation.from_ror_id(args['affiliation']['ror_id'])
+              else
+                StashDatacite::Affiliation.from_long_name(args['affiliation']['long_name'])
+              end
       args['affiliation']['id'] = affil.id unless affil.blank?
 
       # This would not be necessary if the relationship between author and affiliations
