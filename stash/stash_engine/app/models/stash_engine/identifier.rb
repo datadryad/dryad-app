@@ -218,8 +218,7 @@ module StashEngine
     # Check if the user must pay for this identifier, or if payment is
     # otherwise covered
     def user_must_pay?
-      !journal_will_pay? &&
-        !institution_will_pay? &&
+      !journal_will_pay? && !institution_will_pay? && !funder_will_pay? &&
         (!submitter_affiliation.present? || !submitter_affiliation.fee_waivered?)
     end
 
@@ -304,6 +303,14 @@ module StashEngine
 
     def institution_will_pay?
       latest_resource&.tenant&.covers_dpc == true
+    end
+
+    def funder_will_pay?
+      return false if latest_resource.nil?
+
+      latest_resource.contributors.each{ |contrib| return true if contrib.payment_exempted? }
+
+      false
     end
 
     def submitter_affiliation
