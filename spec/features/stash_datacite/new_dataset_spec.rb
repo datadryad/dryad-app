@@ -114,6 +114,24 @@ RSpec.feature 'NewDataset', type: :feature do
       expect(page).to have_text('Payment is not required', wait: 5)
     end
 
+    it 'waives the fee when funder has agreed to pay', js: true do
+      # APP_CONFIG.funder_exemptions has the exceptions. Right now, just 'Happy Clown School' in test environment
+      only_fill_required_fields
+      fill_in_funder(name: 'Happy Clown School', value: '12XU')
+
+      navigate_to_review
+      expect(page).to have_text('Payment for this deposit is sponsored by Happy Clown School', wait: 5)
+    end
+
+    it "doesn't waive the fee when funder isn't paying", js: true do
+      # APP_CONFIG.funder_exemptions has the exceptions. Right now, just 'Happy Clown School' in test environment
+      only_fill_required_fields
+      fill_in_funder(name: 'Wiring Harness Solutions', value: '12XU')
+
+      navigate_to_review
+      expect(page).not_to have_text('Payment for this deposit is sponsored by', wait: 5)
+    end
+
     it 'charges user when institution is not in a fee-waiver country', js: true do
       non_waiver_country = Faker::Address.country
       non_waiver_university = Faker::Educator.university
