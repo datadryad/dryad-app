@@ -43,6 +43,7 @@
         %>
           <%= render partial: 'stash_engine/admin_datasets/edit_dataset_button', locals: { resource_id: dataset.resource_id } %>
         <% end %>
+          <%= render partial: 'stash_engine/admin_datasets/show_stats_button', locals: { resource_id: dataset.resource_id } %>
       </td>
       <td class="c-admin-hide-border-right" id="js-curation-state-<%= dataset.identifier_id %>">
 	  <% if (dataset.resource_state == 'error') %>

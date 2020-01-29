@@ -70,8 +70,8 @@
 	height: $input-height + 50px;
 	padding: 3px 5px;
     word-wrap: break-word;
+	overflow-wrap: break-word;
     word-break: break-all;
-    overflow-wrap: break-word;
 }
 
 .c-input__select {

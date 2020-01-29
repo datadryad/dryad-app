@@ -26,11 +26,14 @@ module StashEngine
       @publications = @datasets.collect(&:publication_name).compact.uniq.sort { |a, b| a <=> b }
       @pub_name = params[:publication_name] || nil
 
-      @datasets = Kaminari.paginate_array(@datasets).page(@page).per(@page_size)
+      # paginate for display, but if CSV, don't paginate
+      @datasets = Kaminari.paginate_array(@datasets).page(@page).per(@page_size) unless request.format.to_s == 'text/csv'
 
       respond_to do |format|
         format.html
-        format.csv
+        format.csv do
+          headers['Content-Disposition'] = "attachment; filename=#{Time.new.strftime('%F')}_report.csv"
+        end
       end
     end
     # rubocop:enable Metrics/AbcSize
@@ -98,6 +101,14 @@ module StashEngine
       resource_ids = @identifier.resources.collect(&:id)
       @curation_activities = CurationActivity.where(resource_id: resource_ids).order(@sort_column.order, id: :asc)
       @internal_data = InternalDatum.where(identifier_id: @identifier.id)
+    end
+
+    def stats_popup
+      respond_to do |format|
+        format.js do
+          @resource = Resource.find(params[:id])
+        end
+      end
     end
 
     private
