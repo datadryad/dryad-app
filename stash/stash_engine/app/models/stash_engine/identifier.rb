@@ -236,7 +236,7 @@ module StashEngine
         self.payment_id = submitter_affiliation.country_name
       elsif funder_will_pay?
         contrib = funder_payment_info
-        self.payment_type = "funder"
+        self.payment_type = 'funder'
         self.payment_id = "funder:#{contrib.contributor_name}|award:#{contrib.award_number}"
       else
         self.payment_type = 'unknown'
