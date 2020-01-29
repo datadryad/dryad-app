@@ -117,6 +117,8 @@ defaults: &DEFAULTS
     - 'Zambia'
     - 'India'
     - 'Pakistan'
+  funder_exemptions:
+    - 'Happy Clown School'
   link_out:
     # LinkOut FTP information for Europe PubMed Central
     labslink:

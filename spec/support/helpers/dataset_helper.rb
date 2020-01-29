@@ -28,6 +28,14 @@ module DatasetHelper
   end
 
   def fill_required_fields
+    only_fill_required_fields
+
+    # ##############################
+    # LICENSE/PAYMENT AGREEMENTS
+    agree_to_everything
+  end
+
+  def only_fill_required_fields
     # make sure we're on the right page
     navigate_to_metadata
 
@@ -45,10 +53,6 @@ module DatasetHelper
     # Abstract
     abstract = find_blank_ckeditor_id('description_abstract')
     fill_in_ckeditor abstract, with: Faker::Lorem.paragraph
-
-    # ##############################
-    # LICENSE/PAYMENT AGREEMENTS
-    agree_to_everything
   end
 
   def submit_form
@@ -76,6 +80,13 @@ module DatasetHelper
     fill_in 'author[author_last_name]', with: Faker::Name.unique.last_name
     fill_in 'author[author_email]', with: Faker::Internet.safe_email
     fill_in 'author[affiliation][long_name]', with: Faker::Educator.university
+  end
+
+  def fill_in_funder(name:, value:)
+    funder_el = page.find('input.js-funders', match: :first)
+    award_el = page.find('input.js-award_number', match: :first)
+    funder_el.fill_in(with: name)
+    award_el.fill_in(with: value)
   end
 
   def agree_to_everything
