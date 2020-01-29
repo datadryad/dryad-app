@@ -44,12 +44,12 @@ module StashEngine
     end
 
     describe :check_citation_count do
-      it 'updates counts if from before this week' do
+      xit 'updates counts if from before this week' do
         cs = @identifier.counter_stat
         expect(cs.check_citation_count).to eq(2)
       end
 
-      it "doesn't update counts if from this week" do
+      xit "doesn't update counts if from this week" do
         cs = @identifier.counter_stat
         cs.update(updated_at: Time.new)
         expect(cs.check_citation_count).to eq(5)
