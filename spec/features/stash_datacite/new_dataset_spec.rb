@@ -120,7 +120,7 @@ RSpec.feature 'NewDataset', type: :feature do
       fill_in_funder(name: 'Happy Clown School', value: '12XU')
 
       navigate_to_review
-      expect(page).to have_text('This submisison does not require a payment', wait: 5)
+      expect(page).to have_text('Payment for this deposit is sponsored by Happy Clown School', wait: 5)
     end
 
     it "doesn't waive the fee when funder isn't paying", js: true do
@@ -129,7 +129,7 @@ RSpec.feature 'NewDataset', type: :feature do
       fill_in_funder(name: 'Wiring Harness Solutions', value: '12XU')
 
       navigate_to_review
-      expect(page).not_to have_text('This submisison does not require a payment', wait: 5)
+      expect(page).not_to have_text('Payment for this deposit is sponsored by', wait: 5)
     end
 
     it 'charges user when institution is not in a fee-waiver country', js: true do
