@@ -389,9 +389,9 @@ module StashEngine
           ]
         )
         @identifier.record_payment
-        expect(@identifier.payment_type).to start_with('funder:')
-        expect(@identifier.payment_type).to include('Zorgast Industries')
-        expect(@identifier.payment_id).to start_with('award:')
+        expect(@identifier.payment_type).to eql('funder')
+        expect(@identifier.payment_id).to include('Zorgast Industries')
+        expect(@identifier.payment_id).to include('award:')
         expect(@identifier.payment_id).to include('ZI0027')
       end
     end
