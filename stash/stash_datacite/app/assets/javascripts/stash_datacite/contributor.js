@@ -20,33 +20,33 @@ function loadContributors() {
 	    })
 	    .autocomplete({
 		source: function( request, response ) {
-		    //console.log("csource -- save")
-		    // save the user's typed request, in case they don't click on an autocomplete result
-		    //$('<%= "##{form_id}" %> #contributor_name_<%= "##{my_suffix}" %>').val(request.term + "*");
-		    //		    var form = $(this).parents('form');
-		    //$(form).trigger('submit.rails');
+		    $('.js-funder-id').val('');  // erase hidden field name_identifier_id when searching
 		    $.ajax({
 			url: "/stash_datacite/contributors/autocomplete",
 			data: { term: request.term },
 			dataType: "json",
 			success: function( data ) {
 			    console.log("csuccess")
-			    var arr = jQuery.map( data, function( a ) {
-				return [[ a.id, a.name, a.uri ]];
-			    });
-			    var labels = [];
-			    $.each(arr, function(index, value) {
-				labels.push(value[1]);
-			    });
-			    response(labels);
+			    response($.map(data, function (item) {
+				return {
+				    value: item.name,
+				    id: item.uri
+				}
+			    }));			    
 			}
 		    });
 		},
 		minLength: 1,
 		select: function( event, ui ) {
-		    console.log("cselect")
-		    this.value = ui.item.value;
-		    var form = $(this.form);
+		    console.log("cselect", ui.item)
+		    console.log("-- val", ui.item.value)
+		    console.log("-- lab", ui.item.label)
+		    console.log("-- id", ui.item.id)
+		    console.log("-- formfiedld",$('.js-funder-id'))
+		    
+		    $('.js-funder-id').val(ui.item.id); // set hidden field name_identifier_id
+		    var form = $(this).parents('form');
+		    console.log("trigger A")
 		    $(form).trigger('submit.rails');
 		},
 		focus: function() {
@@ -61,6 +61,7 @@ function loadContributors() {
     }).change(function() {
 	console.log("cfocus -- save")
 	var form = $(this.form);
+	console.log("trigger B")
         $(form).trigger('submit.rails');
     });
     
@@ -69,6 +70,7 @@ function loadContributors() {
     }).change(function() {
 	console.log("afocus -- save")
         var form = $(this.form);
+	console.log("trigger C")
 	$(form).trigger('submit.rails');
     });
 };

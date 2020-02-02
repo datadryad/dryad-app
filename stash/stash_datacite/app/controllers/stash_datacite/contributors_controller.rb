@@ -7,6 +7,7 @@ module StashDatacite
 
     # GET /contributors/new
     def new
+      Rails.logger.info("----------- contrib_new")
       @contributor = Contributor.new(resource_id: params[:resource_id])
       respond_to do |format|
         format.js
@@ -15,6 +16,7 @@ module StashDatacite
 
     # POST /contributors
     def create
+      Rails.logger.info("----------- contrib_create")
       @contributor = Contributor.new(contributor_params)
       process_contributor
       respond_to do |format|
@@ -73,14 +75,18 @@ module StashDatacite
       return nil unless @contributor.present?
 
       args = contributor_params
-      Rails.logger.info("============ proc_contrib +======= #{args} ")
-      contrib = if args['affiliation']['ror_id'].present?
-                StashDatacite::Affiliation.from_ror_id(args['affiliation']['ror_id'])
-              else
-                StashDatacite::Affiliation.from_long_name(args['affiliation']['long_name'])
-              end
-      args['affiliation']['id'] = affil.id unless affil.blank?
+      Rails.logger.info("-------------- proc_contrib +======= #{args} ")
+      
+      if args['name_identifier_id'].present?
+        Rails.logger.info("------------ proc_contrib FOUND ID +======= ")
+        # init with the contrib name as-is
+      else
+        Rails.logger.info("------------- proc_contrib NO ID +======= ")
+        # init with contrib name getting an asterisk
+        @contributor.contributor_name = "#{ args['contributor_name']}*"
+      end
 
+      Rails.logger.info("----- contrip is now #{@contributor.to_json}")
       @contributor.save
     end
     
