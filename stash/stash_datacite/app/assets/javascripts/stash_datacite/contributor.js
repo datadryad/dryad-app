@@ -45,9 +45,9 @@ function loadContributors() {
 		    console.log("-- formfiedld",$('.js-funder-id'))
 		    
 		    $('.js-funder-id').val(ui.item.id); // set hidden field name_identifier_id
-		    var form = $(this).parents('form');
-		    console.log("trigger A")
-		    $(form).trigger('submit.rails');
+//		    var form = $(this).parents('form');
+//		    console.log("trigger A")
+//		    $(form).trigger('submit.rails');
 		},
 		focus: function() {
 		    // prevent value inserted on focus
@@ -60,16 +60,17 @@ function loadContributors() {
 	console.log("cfocus")
     }).change(function() {
 	console.log("cfocus -- save")
-	var form = $(this.form);
+	var form = $(this).parents('form');
 	console.log("trigger B")
-        $(form).trigger('submit.rails');
+	$(form).trigger('submit.rails');
     });
     
     $( '.js-award_number' ).on('focus', function () {
 	console.log("afocus")
     }).change(function() {
 	console.log("afocus -- save")
-        var form = $(this.form);
+	var form = $(this).parents('form');
+	var form = $(this.form);
 	console.log("trigger C")
 	$(form).trigger('submit.rails');
     });

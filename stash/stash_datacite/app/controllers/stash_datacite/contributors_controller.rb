@@ -17,7 +17,8 @@ module StashDatacite
     # POST /contributors
     def create
       Rails.logger.info("----------- contrib_create")
-      @contributor = Contributor.new(contributor_params)
+      @contributor = find_or_initialize
+      Rails.logger.info("----- create contrib is now #{@contributor.to_json}")
       process_contributor
       respond_to do |format|
         if @contributor.save
@@ -126,6 +127,16 @@ module StashDatacite
     def contributor_params
       params.require(:contributor).permit(:id, :contributor_name, :contributor_type, :name_identifier_id,
                                           :affiliation_id, :award_number, :resource_id)
+    end
+
+    def find_or_initialize
+      Rails.logger.info("----- fi contrib is now #{@contributor.to_json}")
+      Rails.logger.info("----- fi params now #{contributor_params}")
+      # if it exists, use it, otherwise make a new one from the params
+      
+      contributor = Contributor.find(contributor_params[:id]) unless contributor_params[:id].blank?
+      contributor = Contributor.new(contributor_params) if contributor.nil?
+      contributor
     end
   end
 end
