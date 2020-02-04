@@ -20,7 +20,7 @@
   <%= f.email_field :author_email, class: 'c-input__text js-author_email', placeholder: 'email@example.com' %>
   <p id="invalid_email" class="c-input__error-message">Please enter a valid email address.</p>
   </div>
-  <%= link_to 'remove', stash_datacite.authors_delete_path(author.id || 'new'), method: :delete, remote: true, data: {confirm: 'Are you sure?'}, class: 't-describe__remove-button o-button__remove remove_record' %>
+  <%= link_to 'remove', stash_datacite.authors_delete_path(author.id || 'new'), method: :delete, remote: true, data: {confirm: 'Are you sure you want to remove this author?'}, class: 't-describe__remove-button o-button__remove remove_record' %>
   <%= f.hidden_field :resource_id %>
   <%= f.hidden_field :id %>
   <%= hidden_field_tag(:form_id, form_id) %>
