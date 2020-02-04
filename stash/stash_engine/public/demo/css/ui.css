@@ -52,7 +52,7 @@ Selector pattern using above mixin:
     .t-home__banner, .t-home__quote-search-group {
       margin: 0 -30px; } }
 
-.o-global-search__label, .c-input__file, .c-location__label {
+.o-global-search__label, .c-skipnav, .c-input__file, .c-location__label {
   position: absolute;
   left: -9999px; }
 
@@ -3352,6 +3352,19 @@ datalist {
   .o-link__primary:hover, .c-footer__policy-group a:hover,
   .c-footer__social-group a:hover, .c-latest__title:hover, .c-orcid__id:hover {
     text-decoration: underline; }
+
+.c-skipnav {
+  z-index: 15;
+  padding: 10px;
+  -webkit-transition: opacity 0.5s;
+  transition: opacity 0.5s;
+  opacity: 0;
+  background-color: #005581;
+  color: white; }
+  .c-skipnav:focus {
+    top: 10px;
+    left: 10px;
+    opacity: 1; }
 
 .o-list {
   margin: 0 0 10px;
