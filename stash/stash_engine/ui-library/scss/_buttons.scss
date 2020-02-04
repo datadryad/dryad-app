@@ -254,11 +254,6 @@
   border: none;
   background-color: $design-white-color;
   color: $design-dark-blue-color;
-
-  &::before {
-    content: '\00d7'; // multiply sign
-  }
-
 }
 
 .o-button__connect-orcid {
