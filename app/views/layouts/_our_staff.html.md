@@ -8,11 +8,6 @@
 </div>
 
 <div class="bio">
-  <img src="/images/eclary.jpg" alt="Erin Clary" title="Erin Clary">
-  <p><strong>Erin Clary</strong>, BS Biology; MLS<br>Senior Curator<br><a href="mailto:curator@datadryad.org">curator@datadryad.org</a><br>Erin has worked at Dryad since 2014 when she was hired as a curator through the Metadata Research Center at the University of North Carolina (now at Drexel University). Erin has an undergraduate degree in Biology, and an MS in Library Science. She is interested in open scholarship, data reusability, data citation, and the development of shared resources and standards to assist researchers and data curators in data sharing and data archiving. </p>
-</div>
-
-<div class="bio">
   <img src="/images/dfagan.jpg" alt="Debra Fagan" title="Debra Fagan">
   <p><strong>Debra Fagan</strong>, BS Computer Science; MLIS<br>Curation and Technical Specialist<br>Debra began her career in software and front end web development after earning a bachelor’s degree in Computer Science. Eventually she earned a Masters in Library and Information Science and adjusted the focus of her career to libraries. During her years as Curation and Technical Specialist with Dryad, her dual background in computers and libraries has allowed her to quickly switch from one ‘side’ to the other in support of two things she feels strongly about--open data and open research. When she is not in front of a computer, Debra enjoys spending time with her family, going to live theater and concerts, reading, and dabbling in photography and painting.</p>
 </div>
