@@ -6,4 +6,3 @@ class ModifyContributorsIdentifierType < ActiveRecord::Migration
     end
   end
 end
-
