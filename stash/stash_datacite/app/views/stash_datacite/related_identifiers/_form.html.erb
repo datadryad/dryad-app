@@ -15,7 +15,7 @@
     <%= f.label "#{my_suffix}", "Identifier", class: 'c-input__label' %>
     <%= f.text_field :related_identifier, size: 40, id: "related_identifier_#{my_suffix}", class: "js-related_identifier c-input__text"  %>
   </div>
-  <%= link_to 'remove', stash_datacite.related_identifiers_delete_path(related_identifier.id || 'new'), method: :delete, remote: true, data: { confirm: 'Are you sure?' }, class: 'remove_record t-describe__remove-button o-button__remove' %>
+  <%= link_to 'remove', stash_datacite.related_identifiers_delete_path(related_identifier.id || 'new'), method: :delete, remote: true, data: { confirm: 'Are you sure you want to remove this related work?' }, class: 'remove_record t-describe__remove-button o-button__remove' %>
     <%= f.hidden_field :resource_id %>
     <%= f.hidden_field :id %>
     <%= hidden_field_tag(:form_id, form_id) %>

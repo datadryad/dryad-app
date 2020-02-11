@@ -50,12 +50,14 @@ Upgrades and enhanced system functions will be ongoing as a way to continually i
 <b> Thank you to our growing list of institutional members who support their researchers publishing in Dryad </b>
 
 -  California State University, East Bay
+-  Chan Zuckerberg Initiative
 -  King Abdullah University of Science and Technology
--  Montana State University
--  Northern State University
--  University of California, California Digital Library
 -  Lawrence Berkeley National Lab
+-  Montana State University
 -  North Carolina State University
+-  Northern State University
+-  The Ohio State University
+-  University of California, California Digital Library
 -  UC Berkeley
 -  UC Davis
 -  UC Irvine
@@ -68,6 +70,7 @@ Upgrades and enhanced system functions will be ongoing as a way to continually i
 -  UC Santa Cruz
 -  University of Illinois, Urbana-Champagne
 -  University of New Mexico
+-  University of New South Wales, Sydney
 -  Victoria University, Melbourne
 -  Yale University
 
