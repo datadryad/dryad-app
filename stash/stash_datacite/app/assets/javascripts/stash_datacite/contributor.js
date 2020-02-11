@@ -26,7 +26,6 @@ function loadContributors() {
 			data: { term: request.term },
 			dataType: "json",
 			success: function( data ) {
-			    console.log("csuccess")
 			    response($.map(data, function (item) {
 				return {
 				    value: item.name,
@@ -38,16 +37,7 @@ function loadContributors() {
 		},
 		minLength: 1,
 		select: function( event, ui ) {
-		    console.log("cselect", ui.item)
-		    console.log("-- val", ui.item.value)
-		    console.log("-- lab", ui.item.label)
-		    console.log("-- id", ui.item.id)
-		    console.log("-- formfiedld",$('.js-funder-id'))
-		    
 		    $('.js-funder-id').val(ui.item.id); // set hidden field name_identifier_id
-//		    var form = $(this).parents('form');
-//		    console.log("trigger A")
-//		    $(form).trigger('submit.rails');
 		},
 		focus: function() {
 		    // prevent value inserted on focus
@@ -57,21 +47,15 @@ function loadContributors() {
     });
     
     $( '.js-funders' ).on('focus', function () {
-	console.log("cfocus")
     }).change(function() {
-	console.log("cfocus -- save")
 	var form = $(this).parents('form');
-	console.log("trigger B")
 	$(form).trigger('submit.rails');
     });
     
     $( '.js-award_number' ).on('focus', function () {
-	console.log("afocus")
     }).change(function() {
-	console.log("afocus -- save")
 	var form = $(this).parents('form');
 	var form = $(this.form);
-	console.log("trigger C")
 	$(form).trigger('submit.rails');
     });
 };
