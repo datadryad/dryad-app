@@ -126,7 +126,7 @@ RSpec.feature 'NewDataset', type: :feature do
     it "doesn't waive the fee when funder isn't paying", js: true do
       # APP_CONFIG.funder_exemptions has the exceptions. Right now, just 'Happy Clown School' in test environment
       only_fill_required_fields
-      fill_in_funder(name: 'Wiring Harness Solutions', name_id: 'https://doi.org/10.123/678' value: '12XU')
+      fill_in_funder(name: 'Wiring Harness Solutions', name_id: 'https://doi.org/10.123/678', value: '12XU')
 
       navigate_to_review
       expect(page).not_to have_text('Payment for this deposit is sponsored by', wait: 5)
