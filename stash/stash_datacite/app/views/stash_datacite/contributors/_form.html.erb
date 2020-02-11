@@ -12,8 +12,7 @@
 		<%= f.label "award_number_#{my_suffix}", "Award Number", class: 'c-input__label' %>
 		<%= f.text_field :award_number, id: "contributor_award_number_#{my_suffix}", class: "js-award_number c-input__text" %>
 	</div>
-	<%= link_to 'remove', stash_datacite.contributors_delete_path(contributor.id || 'new'), method: :delete, remote: true, data: { confirm: 'Are you sure?' }, class: 'remove_record t-describe__remove-button o-button__remove' %>
-
+	<%= link_to 'remove', stash_datacite.contributors_delete_path(contributor.id || 'new'), method: :delete, remote: true, data: { confirm: 'Are you sure you want to remove this funder?' }, class: 'remove_record t-describe__remove-button o-button__remove' %>
 	<%= f.hidden_field :contributor_type, value: :funder %>
 	<%= f.hidden_field :resource_id %>
 	<%= f.hidden_field :id %>
