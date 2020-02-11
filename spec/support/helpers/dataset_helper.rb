@@ -82,10 +82,12 @@ module DatasetHelper
     fill_in 'author[affiliation][long_name]', with: Faker::Educator.university
   end
 
-  def fill_in_funder(name:, value:)
+  def fill_in_funder(name:, name_id:, value:)
     funder_el = page.find('input.js-funders', match: :first)
+    funder_id_el = page.find('input.js-funder-id', match: :first)
     award_el = page.find('input.js-award_number', match: :first)
     funder_el.fill_in(with: name)
+    funder_id_el.fill_in(with: name_id)
     award_el.fill_in(with: value)
   end
 
