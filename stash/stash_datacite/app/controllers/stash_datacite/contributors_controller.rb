@@ -7,7 +7,6 @@ module StashDatacite
 
     # GET /contributors/new
     def new
-      Rails.logger.info("----------- contrib_new")
       @contributor = Contributor.new(resource_id: params[:resource_id])
       respond_to do |format|
         format.js
@@ -16,9 +15,7 @@ module StashDatacite
 
     # POST /contributors
     def create
-      Rails.logger.info("----------- contrib_create")
       @contributor = find_or_initialize
-      Rails.logger.info("----- create contrib is now #{@contributor.to_json}")
       process_contributor
       respond_to do |format|
         if @contributor.save
@@ -76,18 +73,14 @@ module StashDatacite
       return nil unless @contributor.present?
 
       args = contributor_params
-      Rails.logger.info("-------------- proc_contrib +======= #{args} ")
       
       if args['name_identifier_id'].present?
-        Rails.logger.info("------------ proc_contrib FOUND ID +======= ")
         # init with the contrib name as-is
       else
-        Rails.logger.info("------------- proc_contrib NO ID +======= ")
         # init with contrib name getting an asterisk
         @contributor.contributor_name = "#{ args['contributor_name']}*"
       end
 
-      Rails.logger.info("----- contrip is now #{@contributor.to_json}")
       @contributor.save
     end
     
@@ -130,12 +123,17 @@ module StashDatacite
     end
 
     def find_or_initialize
-      Rails.logger.info("----- fi contrib is now #{@contributor.to_json}")
-      Rails.logger.info("----- fi params now #{contributor_params}")
-      # if it exists, use it, otherwise make a new one from the params
-      
-      contributor = Contributor.find(contributor_params[:id]) unless contributor_params[:id].blank?
-      contributor = Contributor.new(contributor_params) if contributor.nil?
+      # If it's the same as the previous one, but the award number changed from blank to non-blank, just add the award number
+      contrib_name = contributor_params[:contributor_name]
+      contributor = Contributor.where("resource_id = ? AND (contributor_name = ? OR contributor_name = ?)",
+                                      contributor_params[:resource_id],
+                                      contrib_name,
+                                      "#{contrib_name}*")&.last unless contrib_name.nil?
+      if contributor.present? && contributor.award_number.blank?
+        contributor.award_number = contributor_params[:award_number]
+      else
+        contributor = Contributor.new(contributor_params)
+      end
       contributor
     end
   end
