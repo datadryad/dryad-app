@@ -118,6 +118,7 @@ RSpec.feature 'NewDataset', type: :feature do
 
     it 'waives the fee when funder has agreed to pay', js: true do
       # APP_CONFIG.funder_exemptions has the exceptions. Right now, just 'Happy Clown School' in test environment
+      stub_funder_name_lookup(name: 'Happy Clown School')
       only_fill_required_fields
       fill_in_funder(name: 'Happy Clown School', value: '12XU')
 
