@@ -4,8 +4,9 @@
 <% my_suffix = field_suffix(contributor) %>
 <%#= render "datacite/shared/error_messages", target: @contributor %>
 	<div class="c-input">
-		<%= f.label "name_#{my_suffix}", "Granting Organization", class: 'c-input__label' %>
-		<%= f.text_field :contributor_name, id: "contributor_name_#{my_suffix}", class: "js-funders c-input__text" %>
+	    <%= f.label "name_#{my_suffix}", "Granting Organization", class: 'c-input__label' %>
+	    <%= f.text_field :contributor_name, id: "contributor_name_#{my_suffix}", class: "js-funders c-input__text" %>
+	    <%= f.hidden_field :name_identifier_id, id: "contributor_name_identifier_id", class: "js-funder-id" %>
 	</div>
 	<div class="c-input">
 		<%= f.label "award_number_#{my_suffix}", "Award Number", class: 'c-input__label' %>
