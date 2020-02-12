@@ -9,7 +9,7 @@ RSpec.feature 'NewDataset', type: :feature do
   before(:each) do
     mock_solr!
     mock_ror!
-    mock_funder!
+    mock_funders!
     @user = create(:user)
     sign_in(@user)
   end
