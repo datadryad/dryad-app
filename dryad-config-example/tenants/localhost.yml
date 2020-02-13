@@ -20,6 +20,9 @@ default: &default
   short_name: "Localhost"
   long_name: "Localhost"
   publisher_id: grid.1234567890
+  # put primary ror_id first
+  ror_ids:
+    - https://ror.org/just-a-fake-localhost-id
   tenant_id: localhost
   identifier_service:
     provider: datacite
