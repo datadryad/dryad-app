@@ -15,6 +15,9 @@ default: &default
   short_name: "DataONE"
   long_name: "DataONE"
   publisher_id: isni:0000000404085195
+  # put primary ror_id first
+  ror_ids:
+    - https://ror.org/not-a-real-dataone-id
   tenant_id: dataone
   identifier_service:
     provider: datacite
