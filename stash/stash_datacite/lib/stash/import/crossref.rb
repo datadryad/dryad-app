@@ -21,8 +21,7 @@ module Stash
       class << self
         def query_by_doi(resource:, doi:)
           return nil unless resource.present? && doi.present?
-
-          resp = Serrano.works(ids: doi)
+          resp = Serrano.works(ids: doi.strip)
           return nil unless resp.first.present? && resp.first['message'].present?
 
           new(resource: resource, crossref_json: resp.first['message'])
