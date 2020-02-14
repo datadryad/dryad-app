@@ -3,11 +3,13 @@
 
 <div>
   <div style="float: left;"><br/><%= @identifier.to_s %></div>
-  <div style="float: right;">
-    <%= form_tag({ controller: '/stash_engine/admin_datasets', action: 'note_popup', id: @identifier&.latest_resource&.id }, method: :get, remote: true) do -%>
-      <button class="o-button__submit">Add Note</button>
-    <% end %>
-  </div>
+  <% if current_user.superuser? %>
+    <div style="float: right;">
+      <%= form_tag({ controller: '/stash_engine/admin_datasets', action: 'note_popup', id: @identifier&.latest_resource&.id }, method: :get, remote: true) do -%>
+        <button class="o-button__submit">Add Note</button>
+      <% end %>
+    </div>
+  <% end %>
   <div style="clear: both";>&nbsp;</div>
   <table class="c-lined-table" id="curation_table">
     <tr class="c-lined-table__head">
@@ -35,12 +37,14 @@
 
 <div id="internal_data">
   <div style="float: left"><h2>Internal Data</h2></div>
-  <div style="float: right">
-    <br/>
-    <%= form_tag({ controller: '/stash_engine/admin_datasets', action: 'data_popup', id: @identifier.id, sub_method: 'post' }, method: :get, remote: true) do -%>
-      <button class="o-button__submit">Add Data</button>
-    <% end %>
-  </div>
+  <% if current_user.superuser? %>
+    <div style="float: right">
+      <br/>
+      <%= form_tag({ controller: '/stash_engine/admin_datasets', action: 'data_popup', id: @identifier.id, sub_method: 'post' }, method: :get, remote: true) do -%>
+        <button class="o-button__submit">Add Data</button>
+      <% end %>
+    </div>
+  <% end %>
 
   <div id="internal_data_table" style="clear: both">
     <%= render partial: 'stash_engine/internal_data/table' %>
