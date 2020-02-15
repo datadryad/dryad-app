@@ -59,7 +59,22 @@ module StashDatacite
     def save_form_to_internal_data
       @pub_issn = manage_internal_datum(identifier: @se_id, data_type: 'publicationISSN', value: params[:internal_datum][:publication_issn])
       @pub_name = manage_internal_datum(identifier: @se_id, data_type: 'publicationName', value: params[:internal_datum][:publication_name])
-      @msid = manage_internal_datum(identifier: @se_id, data_type: 'manuscriptNumber', value: params[:internal_datum][:msid])
+      parsed_msid = parse_msid(issn: params[:internal_datum][:publication_issn], msid: params[:internal_datum][:msid])
+      @msid = manage_internal_datum(identifier: @se_id, data_type: 'manuscriptNumber', value: parsed_msid)
+    end
+
+    # parse out the "relevant" part of the manuscript ID, ignoring the parts that the journal changes for different versions of the same item
+    def parse_msid(issn:, msid:)
+      logger.debug("Parsing msid #{msid} for journal #{issn}")
+      regex = @se_id.journal_manuscript_regex
+      logger.debug("- found regex /#{regex}/")
+      logger.debug("- after regex applied: #{msid.match(regex)[1]}")
+      result = msid.match(regex)[1]
+      if result.present?
+        result
+      else
+        msid
+      end
     end
 
     def update_manuscript_metadata
