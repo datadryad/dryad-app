@@ -475,7 +475,7 @@ module StashEngine
     end
 
     describe '#journal_manuscript_regex' do
-      it 'retrieves the journal sponsorName' do
+      it 'retrieves the journal regex' do
         @fake_journal_name = 'Fake Journal'
         @fake_manuscript_regex = ".*?(\d+-\d+).*?"
         stub_request(:any, %r{/journals/#{@fake_issn}})
