@@ -67,6 +67,7 @@ module StashDatacite
     def parse_msid(issn:, msid:)
       logger.debug("Parsing msid #{msid} for journal #{issn}")
       regex = @se_id.journal_manuscript_regex
+      return msid if regex.blank?
       logger.debug("- found regex /#{regex}/")
       logger.debug("- after regex applied: #{msid.match(regex)[1]}")
       result = msid.match(regex)[1]
