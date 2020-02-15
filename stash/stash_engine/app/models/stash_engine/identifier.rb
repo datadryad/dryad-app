@@ -299,6 +299,10 @@ module StashEngine
       publication_data('reviewContacts')
     end
 
+    def journal_manuscript_regex
+      publication_data('manuscriptNumberRegex')
+    end
+
     def allow_review?
       publication_data('allowReviewWorkflow') || publication_name.blank?
     end
