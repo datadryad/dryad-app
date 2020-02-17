@@ -20,7 +20,7 @@ module StashEngine
       attr_reader :relevance
 
       SELECT_CLAUSE = <<-SQL
-        SELECT seid.value,
+        SELECT DISTINCT seid.value,
           sei.id, sei.identifier, CONCAT(LOWER(sei.identifier_type), ':', sei.identifier), sei.storage_size, sei.search_words,
           ser.id, ser.title, ser.publication_date, ser.tenant_id,
           sers.id, sers.resource_state,
@@ -43,6 +43,14 @@ module StashEngine
           LEFT OUTER JOIN stash_engine_resource_states sers ON sers.id = j2.latest_resource_state_id
           LEFT OUTER JOIN stash_engine_curation_activities seca ON seca.id = j3.latest_curation_activity_id
           LEFT OUTER JOIN stash_engine_counter_stats secs ON sei.id = secs.identifier_id
+      SQL
+
+      # add extra joins when I need to reach into author affiliations for ever dataset
+      FROM_CLAUSE_ADMIN = <<-SQL
+        #{FROM_CLAUSE}
+        LEFT OUTER JOIN stash_engine_authors sea2 ON ser.id = sea2.resource_id
+        LEFT OUTER JOIN dcs_affiliations_authors dcs_aa ON sea2.id = dcs_aa.author_id
+        LEFT OUTER JOIN dcs_affiliations dcs_a ON dcs_aa.affiliation_id = dcs_a.id
       SQL
 
       SEARCH_CLAUSE = 'MATCH(sei.search_words) AGAINST(%{term})'
@@ -92,7 +100,11 @@ module StashEngine
 
       class << self
 
-        def where(params)
+        # params are params from the form.
+        # The tenant, if set, does two things in conjunction.  it limits to items with a tenant_id of the tenant OR
+        # affiliated author institution RORs (may be multiple) for this tenant with additional joins and conditions.
+        # tenant is only set for admins (not superusers).
+        def where(params:, tenant: nil)
           return [] unless params.is_a?(Hash)
 
           # If a search term was provided include the relevance score in the results for sorting purposes
@@ -103,9 +115,13 @@ module StashEngine
           query = " \
             #{SELECT_CLAUSE}
             #{relevance}
-            #{FROM_CLAUSE}
-            #{build_where_clause(params.fetch(:q, ''), params.fetch(:all_advanced, false), params.fetch(:tenant, ''),
-                                 params.fetch(:curation_status, ''), params.fetch(:publication_name, ''))}
+            #{(tenant ? FROM_CLAUSE_ADMIN : FROM_CLAUSE)}
+            #{build_where_clause(search_term: params.fetch(:q, ''),
+                                 all_advanced: params.fetch(:all_advanced, false),
+                                 tenant_filter: params.fetch(:tenant, ''),
+                                 status_filter: params.fetch(:curation_status, ''),
+                                 publication_filter: params.fetch(:publication_name, ''),
+                                 admin_tenant: tenant)}
             #{build_order_clause(column, params.fetch(:direction, ''), params.fetch(:q, ''))}
           "
           results = ActiveRecord::Base.connection.execute(query).map { |result| new(result) }
@@ -116,15 +132,18 @@ module StashEngine
         private
 
         # Create the WHERE portion of the query based on the filters set by the user (if any)
-        def build_where_clause(search_term, all_advanced, tenant_filter, status_filter, publication_filter)
+        # rubocop:disable Metrics/ParameterLists
+        def build_where_clause(search_term:, all_advanced:, tenant_filter:, status_filter:, publication_filter:, admin_tenant:)
           where_clause = [
             (search_term.present? ? build_search_clause(search_term, all_advanced) : nil),
             add_term_to_clause(TENANT_CLAUSE, tenant_filter),
             add_term_to_clause(STATUS_CLAUSE, status_filter),
-            add_term_to_clause(PUBLICATION_CLAUSE, publication_filter)
+            add_term_to_clause(PUBLICATION_CLAUSE, publication_filter),
+            create_tenant_limit(admin_tenant)
           ].compact
           where_clause.empty? ? '' : " WHERE #{where_clause.join(' AND ')}"
         end
+        # rubocop:enable Metrics/ParameterLists
 
         # Build the WHERE portion of the query for the specified search term (if any)
         def build_search_clause(term, all_advanced)
@@ -173,6 +192,12 @@ module StashEngine
           format(clause.to_s, term: ActiveRecord::Base.connection.quote(term))
         end
 
+        def create_tenant_limit(admin_tenant)
+          return nil if admin_tenant.blank?
+
+          ActiveRecord::Base.send(:sanitize_sql_array, ['( ser.tenant_id = ? OR dcs_a.ror_id IN (?) )', admin_tenant.tenant_id,
+                                                        admin_tenant.ror_ids])
+        end
       end
 
     end

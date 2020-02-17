@@ -15,6 +15,9 @@ default: &default
   short_name: "UC Office of the President"
   long_name: "University of California, Office of the President"
   publisher_id: grid.30389.31
+  # put primary ror_id first
+  ror_ids:
+    - https://ror.org/00pjdza24
   tenant_id: ucop
   identifier_service:
     provider: datacite
