@@ -17,11 +17,12 @@ module StashEngine
     # rubocop:disable Metrics/AbcSize
     def index
       my_tenant_id = (current_user.role == 'admin' ? current_user.tenant_id : nil)
+      tenant_limit = (current_user.role == 'admin' ? current_user.tenant : nil)
+
       @all_stats = Stats.new
       @seven_day_stats = Stats.new(tenant_id: my_tenant_id, since: (Time.new.utc - 7.days))
 
-      @datasets = StashEngine::AdminDatasets::CurationTableRow.where(params)
-      @datasets = @datasets.select { |rec| rec.tenant_id == current_user.tenant_id } unless current_user.superuser?
+      @datasets = StashEngine::AdminDatasets::CurationTableRow.where(params: params, tenant: tenant_limit)
 
       @publications = @datasets.collect(&:publication_name).compact.uniq.sort { |a, b| a <=> b }
       @pub_name = params[:publication_name] || nil

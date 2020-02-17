@@ -55,7 +55,7 @@
 	  <% end %>
       </td>
       <td class="c-admin-hide-border-left">
-        <% if %w[admin superuser].include?(current_user.role) && dataset.resource_state == 'submitted' %>
+        <% if current_user.superuser? && dataset.resource_state == 'submitted' %>
           <%= form_tag({ controller: '/stash_engine/admin_datasets',
                          action: 'curation_activity_popup', id: dataset.resource_id },
                          method: :get, remote: true) do -%>
