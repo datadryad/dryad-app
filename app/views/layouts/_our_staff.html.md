@@ -3,6 +3,11 @@
 <p>Our team applies their diverse backgrounds in scientific research, librarianship, non-profits, business administration, publishing, and computer science to support open data infrastructure and the preservation of knowledge. To reach us, contact <a href=mailto:help@datadryad.org>help@datadryad.org</a>.</p>
 
 <div class="bio">
+  <img src="/images/tkteal.jpg" alt="Tracy Teal" title="Tracy Teal">
+  <p><strong>Tracy Teal</strong><br>Executive Director<br>Dr. Tracy Teal joined Dryad as the Executive Director in 2020. She was previously the Executive Director of The Carpentries and a co-founder of Data Carpentry. She has a background in bioinformatics and microbial ecology with a PhD in Computation and Neural Systems from California Institute of Technology. Her work centers on democratizing data, bringing people to data and data to people, with the perspective that we can go further together.</p>
+</div>
+
+<div class="bio">
   <img src="/images/ehull.jpg" alt="Elizabeth Hull" title="Elizabeth Hull">
   <p><strong>Elizabeth Hull</strong><br>Associate Director<br>Elizabeth has been with Dryad since 2013 in a succession of roles -- curator, operations manager, and now Associate Director. She holds a varied background in libraries/archives, web content management, public history, and archaeology, all of which converge into an overarching commitment to open access and usability of knowledge.</p>
 </div>
@@ -10,6 +15,11 @@
 <div class="bio">
   <img src="/images/dfagan.jpg" alt="Debra Fagan" title="Debra Fagan">
   <p><strong>Debra Fagan</strong>, BS Computer Science; MLIS<br>Curation and Technical Specialist<br>Debra began her career in software and front end web development after earning a bachelor’s degree in Computer Science. Eventually she earned a Masters in Library and Information Science and adjusted the focus of her career to libraries. During her years as Curation and Technical Specialist with Dryad, her dual background in computers and libraries has allowed her to quickly switch from one ‘side’ to the other in support of two things she feels strongly about--open data and open research. When she is not in front of a computer, Debra enjoys spending time with her family, going to live theater and concerts, reading, and dabbling in photography and painting.</p>
+</div>
+
+<div class="bio">
+  <img src="/images/lpolischuk.jpg" alt="Lori Polischuk" title="Lori Polischuk">
+  <p><strong>Lori Polischuk</strong>, BA Political Science, MA Political Science<br>Curator<br>Lori has a research and teaching background in political science and public policy. Prior to joining Dryad she worked in healthcare and biotechnology, most recently with Invitae as a Project Manager leading an API integration project. In her spare time, Lori enjoys sharpening her data analysis skills, traveling in an RV with her pets, and following politics.</p>
 </div>
 
 <div class="bio">
