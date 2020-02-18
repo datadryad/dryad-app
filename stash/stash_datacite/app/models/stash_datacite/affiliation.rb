@@ -16,9 +16,14 @@ module StashDatacite
     before_save :strip_whitespace
 
     # prefer short_name if it is set over long name and make string
-    def smart_name
+    def smart_name(show_asterisk: false)
       return '' if short_name.blank? && long_name.blank?
-      (short_name.blank? ? long_name.strip : short_name.strip)
+      chosen_name = (short_name.blank? ? long_name.strip : short_name.strip)
+      if chosen_name.end_with?('*') && !show_asterisk
+        chosen_name[0..-2]
+      else
+        chosen_name
+      end
     end
 
     def country_name
