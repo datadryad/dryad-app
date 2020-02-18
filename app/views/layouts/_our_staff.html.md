@@ -3,7 +3,7 @@
 <p>Our team applies their diverse backgrounds in scientific research, librarianship, non-profits, business administration, publishing, and computer science to support open data infrastructure and the preservation of knowledge. To reach us, contact <a href=mailto:help@datadryad.org>help@datadryad.org</a>.</p>
 
 <div class="bio">
-  <img src="/images/tkteal.jpg" alt="Tracy Teal" title="Tracy Teal">
+  <img src="/images/tkteal.png" alt="Tracy Teal" title="Tracy Teal">
   <p><strong>Tracy Teal</strong><br>Executive Director<br>Dr. Tracy Teal joined Dryad as the Executive Director in 2020. She was previously the Executive Director of The Carpentries and a co-founder of Data Carpentry. She has a background in bioinformatics and microbial ecology with a PhD in Computation and Neural Systems from California Institute of Technology. Her work centers on democratizing data, bringing people to data and data to people, with the perspective that we can go further together.</p>
 </div>
 
@@ -34,7 +34,7 @@
 
 <div class="bio">
   <img src="/images/rscherle.jpg" alt="Ryan Scherle" title="Ryan Scherle">
-  <p><strong>Ryan Scherle</strong>, PhD Computer Science and Cognitive Science<br>Dryad Developer<br>Ryan has been with Dryad since its founding. He spearheaded the initial development of Dryad's technology and has been involved in all aspects of the repository. Before joining Dryad, Ryan worked in the Digital Library Program at Indiana University, building systems to store and manage a wide variety of digital materials. Ryan holds a combined Ph.D. in Computer Science and Cognitive Science. In his free time, Ryan enjoys outdoor activities such as hiking, hang gliding, and whitewater rafting. He also coaches youth teams in both baseball and robotics.
+  <p><strong>Ryan Scherle</strong>, PhD Computer Science and Cognitive Science<br>Dryad Developer<br>Ryan has been with Dryad since its founding. He spearheaded the initial development of Dryad's technology and has been involved in all aspects of the repository. Before joining Dryad, Ryan worked in the Digital Library Program at Indiana University, building systems to store and manage a wide variety of digital materials. In his free time, Ryan enjoys outdoor activities such as hiking, hang gliding, and whitewater rafting. He also coaches youth teams in both baseball and robotics.
 </p>
 </div>
 
