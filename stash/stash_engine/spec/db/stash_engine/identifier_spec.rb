@@ -474,6 +474,20 @@ module StashEngine
       end
     end
 
+    describe '#journal_manuscript_regex' do
+      it 'retrieves the journal regex' do
+        @fake_journal_name = 'Fake Journal'
+        @fake_manuscript_regex = ".*?(\d+-\d+).*?"
+        stub_request(:any, %r{/journals/#{@fake_issn}})
+          .to_return(body: '{"fullName":"' + @fake_journal_name + '",
+                             "issn":"' + @fake_issn + '",
+                             "manuscriptNumberRegex":"' + @fake_manuscript_regex + '"}',
+                     status: 200,
+                     headers: { 'Content-Type' => 'application/json' })
+        expect(identifier.journal_manuscript_regex).to eq(@fake_manuscript_regex)
+      end
+    end
+
     describe '#journal_allows' do
       it 'allows review when there is no journal' do
         allow(@identifier).to receive('publication_name').and_return(nil)
