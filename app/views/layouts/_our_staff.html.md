@@ -18,6 +18,16 @@
 </div>
 
 <div class="bio">
+  <img src="/images/scott.jpg" alt="Scott Fisher" title="Scott Fisher">
+  <p><strong>Scott Fisher</strong> <br>Dryad Developer<br>Scott has information and UX design experience and graduated with a master's degree from the UC Berkeley School of Information.  He has worked in the computer industry writing software and more recently at The University of California. His previous work includes projects to archive web pages, plan for data preservation, preserve data itself and make data metrics available. Scott is a lead developer at the California Digital Library.</p>
+</div>
+
+<div class="bio">
+  <img src="/images/daniella.jpg" alt="Daniella Lowenberg" title="Daniella Lowenberg">
+  <p><strong>Daniella Lowenberg</strong><br>Dryad Product Manager<br>Daniella has a background in Microbiology. After leaving the lab, she was a Publications Manager at PLOS ONE where she implemented and oversaw the PLOS Data Policy. For the last three years, Daniella has been a data publishing and data metrics product manager at California Digital Library, within the University of California. She is currently the Product Manager for Dryad and project lead for the Sloan Foundation funded Make Data Count project.</p>
+</div>
+
+<div class="bio">
   <img src="/images/lpolischuk.jpg" alt="Lori Polischuk" title="Lori Polischuk">
   <p><strong>Lori Polischuk</strong>, BA Political Science, MA Political Science<br>Curator<br>Lori has a research and teaching background in political science and public policy. Prior to joining Dryad she worked in healthcare and biotechnology, most recently with Invitae as a Project Manager leading an API integration project. In her spare time, Lori enjoys sharpening her data analysis skills, traveling in an RV with her pets, and following politics.</p>
 </div>
@@ -36,14 +46,4 @@
 <div class="bio">
   <img src="/images/ryaxley.jpg" alt="Rich Yaxley" title="Rich Yaxley">
   <p><strong>Rich Yaxley</strong>, BS Aerospace Studies; PhD Cognitive Psychology<br>Curator<br>Rich joined Dryad in 2016 and has focused on promoting scientific transparency and the reusability of shared data. Before joining Dryad, he worked as a neuroimaging researcher at the University of North Carolina and Duke University. Rich holds a Ph.D. in Cognitive Psychology. In his free time, Rich enjoys music, hiking, cycling, motorcycling, and traveling.</p>
-</div>
-
-<div class="bio">
-  <img src="/images/daniella.jpg" alt="Daniella Lowenberg" title="Daniella Lowenberg">
-  <p><strong>Daniella Lowenberg</strong><br>Dryad Product Manager<br>Daniella has a background in Microbiology. After leaving the lab, she was a Publications Manager at PLOS ONE where she implemented and oversaw the PLOS Data Policy. For the last three years, Daniella has been a data publishing and data metrics product manager at California Digital Library, within the University of California. She is currently the Product Manager for Dryad and project lead for the Sloan Foundation funded Make Data Count project.</p>
-</div>
-
-<div class="bio">
-  <img src="/images/scott.jpg" alt="Scott Fisher" title="Scott Fisher">
-  <p><strong>Scott Fisher</strong> <br>Dryad Developer<br>Scott has information and UX design experience and graduated with a master's degree from the UC Berkeley School of Information.  He has worked in the computer industry writing software and more recently at The University of California. His previous work includes projects to archive web pages, plan for data preservation, preserve data itself and make data metrics available. Scott is a lead developer at the California Digital Library.</p>
 </div>
