@@ -2,7 +2,11 @@
 <% unless contributors.nil? || contributors.length < 1 %>
   <h2 class="o-heading__level2">Funding</h2>
   <% contributors.each do |contributor| %>
-     <p><%= contributor.contributor_name %><%= "," %>
+      <% if current_user && current_user.role == 'superuser' %>
+	  <p><%= contributor.contributor_name_friendly(show_asterisk: true) %><%= "," %>
+      <% else %>
+	  <p><%= contributor.contributor_name_friendly %><%= "," %>
+      <% end %>
       <% if contributor.award_number.present? %>
         <%= @award_string %><%= contributor.award_number %></p>
       <% end %>

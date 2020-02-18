@@ -46,6 +46,14 @@ module StashDatacite
       Contributor.contributor_type_mapping_obj(contributor_type_friendly)
     end
 
+    def contributor_name_friendly(show_asterisk: false)
+      if contributor_name.end_with?('*') && !show_asterisk
+        contributor_name[0..-2]
+      else
+        contributor_name
+      end
+    end
+
     # this is to simulate the bad old structure where a user can only have one affiliation
     def affiliation_id=(affil_id)
       self.affiliation_ids = affil_id
