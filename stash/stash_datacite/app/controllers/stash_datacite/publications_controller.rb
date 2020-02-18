@@ -69,6 +69,7 @@ module StashDatacite
       regex = @se_id.journal_manuscript_regex
       return msid if regex.blank?
       logger.debug("- found regex /#{regex}/")
+      return msid if msid.match(regex).blank?
       logger.debug("- after regex applied: #{msid.match(regex)[1]}")
       result = msid.match(regex)[1]
       if result.present?
