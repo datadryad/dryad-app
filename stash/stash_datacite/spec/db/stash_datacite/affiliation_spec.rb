@@ -25,6 +25,14 @@ module StashDatacite
         affil = StashDatacite::Affiliation.create(long_name: 'Bertelsmann Music Group')
         expect(affil.smart_name).to eq('Bertelsmann Music Group')
       end
+      it 'shows the asterisk when asked' do
+        affil = StashDatacite::Affiliation.create(long_name: 'Bertelsmann Music Group*')
+        expect(affil.smart_name(show_asterisk: true)).to eq('Bertelsmann Music Group*')
+      end
+      it 'suppresses the asterisk by default' do
+        affil = StashDatacite::Affiliation.create(long_name: 'Bertelsmann Music Group*')
+        expect(affil.smart_name).to eq('Bertelsmann Music Group')
+      end
     end
 
     describe :fee_waivered? do
