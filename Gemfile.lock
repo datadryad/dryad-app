@@ -56,6 +56,7 @@ PATH
       cirneco (>= 0.9.27)
       ckeditor (~> 4.3.0)
       concurrent-ruby (>= 1.0)
+      daemons
       database_cleaner
       datacite-mapping (~> 0.4.0)
       delayed_job_active_record
@@ -261,6 +262,7 @@ GEM
       namae (~> 1.0)
     csl-styles (1.0.1.10)
       csl (~> 1.0)
+    daemons (1.3.1)
     database_cleaner (1.8.3)
     datacite-mapping (0.4.0)
       typesafe_enum (~> 0.1, >= 0.1.7)
