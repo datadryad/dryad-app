@@ -17,7 +17,7 @@ of California’s [Merritt](https://merritt.cdlib.org/) repository service.
 ### Installation
 
 See
-[Dryad Installation](https://github.com/CDL-Dryad/dryad/blob/master/documentation/dryad_install.md)
+[Dryad Installation](https://github.com/CDL-Dryad/dryad-app/blob/master/documentation/dryad_install.md)
 for installation notes.
 
 ### Quick Cheat Sheet
