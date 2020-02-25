@@ -14,6 +14,8 @@ of California’s [Merritt](https://merritt.cdlib.org/) repository service.
 
 ## Development
 
+More detailed documentation is available in the [documentation folder](https://github.com/CDL-Dryad/dryad-app/blob/master/documentation)
+
 ### Installation
 
 See
