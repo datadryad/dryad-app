@@ -59,7 +59,8 @@ module Stash
         end
 
         it 'expects download to return success: true in hash and dl file if 200' do
-          stub_request(:get, @file_dl_obj.download_file_url(filename: @file_upload.upload_file_name)).to_return(status: 200, body: 'My Best File', headers: {})
+          stub_request(:get, @file_dl_obj.download_file_url(filename: @file_upload.upload_file_name))
+            .to_return(status: 200, body: 'My Best File', headers: {})
           dl_status = @file_dl_obj.download_file(filename: @file_upload.upload_file_name)
           expect(dl_status[:success]).to eq(true)
           expect(::File.exist?(::File.join(@file_dl_obj.path, @file_upload.upload_file_name))).to eq(true)
