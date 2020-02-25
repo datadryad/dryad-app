@@ -5,7 +5,7 @@
 # https://dryad-dev.cdlib.org/stash/dataset/doi:10.5061/dryad.n10d7
 # identifier_id: 761
 # resource_id: 785
-# file names: 'Madagascarophis Nexus Files.zip', 'Madagascarophis_trees.zip'
+# file names: 'Madagascarophis Nexus Files.zip', 'Madagascarophis_trees.zip', 'mrt-datacite.xml', 'mrt-oaidc.xml', 'stash-wrapper.xml'
 #
 # require 'stash/merritt_download'
 # resource = StashEngine::Resource.find(785)
@@ -13,7 +13,7 @@
 # smdf.download_file
 
 # I have been favoring the 'httprb/http' gem recently since it is small, fast and pretty easy to use, similar to Python's
-# requests library.
+# requests library. See https://twin.github.io/httprb-is-great/ .
 require 'http'
 require 'tempfile'
 require 'cgi'
@@ -36,21 +36,33 @@ module Stash
         FileUtils.mkdir_p(@path) # makes entire path to this file if is needed
       end
 
-      # add error handling here
-      def download_file(read_timeout: 30)
+      # download file a and return a hash, we should be tracking success routinely since downloads are error-prone
+      def download_file
+        mrt_resp = get_url
+
+        return { success: false, error: "#{mrt_resp.status.code} status code retrieving '#{@filename}' for resource #{@resource.id}"} unless mrt_resp.status.success?
+
+        # this doesn't load everything into memory at once and writes in chunks, which is good for not blowing out memory by slurping
+        ::File.open(::File.join(@path, @filename), 'wb') do |f|
+          mrt_resp.body.each do |chunk|
+            f.write(chunk)
+          end
+        end
+
+        return { success: true }
+
+      rescue HTTP::Error => ex
+        { success: false,  error: "Error retrieving '#{@filename}' for resource #{@resource.id}\n#{ex.to_s}"}
+      end
+
+      # gets the file url and returns an HTTP.get(url) response object
+      def get_url(read_timeout: 30)
         url = download_file_url
 
         http = HTTP.timeout(connect: 30, read: read_timeout).timeout(7200).follow(max_hops: 10)
                    .basic_auth(user: @resource.tenant.repository.username, pass: @resource.tenant.repository.password)
 
-        merritt_response = http.get(url)
-
-        # this doesn't load everything into memory and writes in chunks, which is good for larger files and doesn't blow out memory
-        ::File.open(::File.join(@path, @filename), 'wb') do |f|
-          merritt_response.body.each do |chunk|
-            f.write(chunk)
-          end
-        end
+        http.get(url)
       end
 
       def download_file_url
