@@ -46,6 +46,11 @@
     margin: 0;
     background-color: $design-white-color;
     color: $design-black-color;
+
+    &:hover,
+    &:focus {
+      color: $link-globalnav-hover-color;
+    }
   }
 
 }
@@ -109,8 +114,9 @@
     border-bottom: 1px solid $design-light-gray-color;
     border-left: 1px solid $design-light-gray-color;
 
-    &:hover {
-      color: $design-light-blue-color;
+    &:hover,
+    &:focus {
+      color: $link-globalnav-hover-color;
       text-decoration: underline;
     }
 
@@ -129,7 +135,8 @@
     color: $design-dark-blue-color;
     text-align: left;
 
-    &:hover {
+    &:hover,
+    &:focus {
       color: $design-light-blue-color;
     }
 
