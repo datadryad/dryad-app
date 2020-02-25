@@ -8,13 +8,6 @@
     text-align: center;
   }
 
-  a:link,
-  a:visited,
-  a:hover,
-  a:active {
-    color: $design-dark-blue-color;
-    text-decoration: none;
-  }
 }
 
 .t-home__why-share-group {
@@ -92,6 +85,7 @@
 }
 
 .c-why-share__text-group {
+
   @include bp(screen1) {
     div {
       font-size: 1.1em;
@@ -106,5 +100,9 @@
       font-size: 1.3em;
       line-height: 1.5em;
     }
+  }
+
+  a {
+    @extend %o-link__primary;
   }
 }
