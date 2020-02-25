@@ -1,6 +1,5 @@
 # this is really for an individual file download from Merritt to a file and is not a user file-download and streaming class
 
-
 # notes on development test data
 # https://dryad-dev.cdlib.org/stash/dataset/doi:10.5061/dryad.n10d7
 # identifier_id: 761
@@ -40,7 +39,9 @@ module Stash
       def download_file
         mrt_resp = get_url
 
-        return { success: false, error: "#{mrt_resp.status.code} status code retrieving '#{@filename}' for resource #{@resource.id}"} unless mrt_resp.status.success?
+        unless mrt_resp.status.success?
+          return { success: false, error: "#{mrt_resp.status.code} status code retrieving '#{@filename}' for resource #{@resource.id}" }
+        end
 
         # this doesn't load everything into memory at once and writes in chunks, which is good for not blowing out memory by slurping
         ::File.open(::File.join(@path, @filename), 'wb') do |f|
@@ -49,10 +50,9 @@ module Stash
           end
         end
 
-        return { success: true }
-
+        { success: true }
       rescue HTTP::Error => ex
-        { success: false,  error: "Error retrieving '#{@filename}' for resource #{@resource.id}\n#{ex.to_s}"}
+        { success: false, error: "Error retrieving '#{@filename}' for resource #{@resource.id}\n#{ex}" }
       end
 
       # gets the file url and returns an HTTP.get(url) response object
@@ -60,14 +60,14 @@ module Stash
         url = download_file_url
 
         http = HTTP.timeout(connect: 30, read: read_timeout).timeout(7200).follow(max_hops: 10)
-                   .basic_auth(user: @resource.tenant.repository.username, pass: @resource.tenant.repository.password)
+          .basic_auth(user: @resource.tenant.repository.username, pass: @resource.tenant.repository.password)
 
         http.get(url)
       end
 
       def download_file_url
         # domain is not used for MerrittExpress, because the domain is different than the one given by SWORD, only for Merritt UI
-        domain, ark = @resource.merritt_protodomain_and_local_id
+        _domain, ark = @resource.merritt_protodomain_and_local_id
 
         "#{APP_CONFIG.merritt_express_base_url}/dv/#{@resource.stash_version.merritt_version}" \
           "/#{CGI.unescape(ark)}/#{ERB::Util.url_encode(@filename).gsub('%252F', '%2F')}"
