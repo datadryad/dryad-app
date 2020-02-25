@@ -22,6 +22,7 @@ require 'byebug'
 
 module Stash
   module MerrittDownload
+    # calling this class File means we need to namespace the built-in Ruby file class when calling it in here
     class File
 
       # we need to be able to download any file from Merritt, including a couple of hidden ones we don't track as user-files (mrt-datacite.xml)
@@ -45,7 +46,7 @@ module Stash
         merritt_response = http.get(url)
 
         # this doesn't load everything into memory and writes in chunks, which is good for larger files and doesn't blow out memory
-        File.open(File.join(@path, @filename), 'wb') do |f|
+        ::File.open(::File.join(@path, @filename), 'wb') do |f|
           merritt_response.body.each do |chunk|
             f.write(chunk)
           end
