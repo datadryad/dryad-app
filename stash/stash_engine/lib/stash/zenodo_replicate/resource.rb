@@ -1,5 +1,9 @@
 require 'stash/merritt_download'
 
+# require 'stash/zenodo_replicate'
+# resource = StashEngine::Resource.find(785)
+# szr = Stash::ZenodoReplicate::Resource.new(resource: resource)
+
 module Stash
   module ZenodoReplicate
 
@@ -28,7 +32,7 @@ module Stash
 
       # downloads files and returns directory location
       def download_files
-        smdf = Stash::MerrittDownload::File.new(resource: resource)
+        smdf = Stash::MerrittDownload::File.new(resource: @resource)
 
         copy_files = @resource.file_uploads.where(file_state: %w[created copied])
           .map(&:upload_file_name).append(%w[mrt-datacite.xml mrt-oaidc.xml stash-wrapper.xml]).flatten
