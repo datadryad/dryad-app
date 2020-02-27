@@ -3,6 +3,7 @@ require 'stash/merritt_download'
 # require 'stash/zenodo_replicate'
 # resource = StashEngine::Resource.find(785)
 # szr = Stash::ZenodoReplicate::Resource.new(resource: resource)
+# szr.add_to_zenodo
 
 module Stash
   module ZenodoReplicate
@@ -20,6 +21,7 @@ module Stash
         location = download_files
 
         # create new zenodo object
+        zen = Zenodo.new(resource: @resource, path: location)
 
         # add files
 
