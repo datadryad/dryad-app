@@ -35,6 +35,7 @@ require_relative '../../spec_helpers/rspec_custom_matchers'
 # ActiveRecord
 
 require 'active_record'
+require 'active_job'
 # Note: Even if we're not doing any database work, ActiveRecord callbacks will still raise warnings
 ActiveRecord::Base.raise_in_transactional_callbacks = true
 
@@ -62,7 +63,7 @@ require 'stash_engine'
 ].each do |dir|
   tmp = Dir.glob("#{stash_engine_path}/#{dir}/**/*.rb").sort
   tmp.sort! { |x, y| y.include?('/concerns/').to_s <=> x.include?('/concerns/').to_s } # sort concerns first
-  tmp.each(&method(:require))
+  tmp.reject { |i| i.end_with?('_job.rb') }.each(&method(:require))
 end
 
 $LOAD_PATH.unshift("#{stash_engine_path}/app/models")
