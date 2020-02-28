@@ -12,7 +12,7 @@ module StashEngine
 
     before(:all) do
       tomorrow = Date.today + 1
-      @future_date = Date.new(tomorrow.year + 1, tomorrow.month, tomorrow.day)
+      @future_date = tomorrow + 366.days
     end
 
     before(:each) do
