@@ -11,7 +11,7 @@ module StashDatacite
     has_and_belongs_to_many :authors, class_name: 'StashEngine::Author', join_table: 'dcs_affiliations_authors'
     has_and_belongs_to_many :contributors, class_name: 'StashDatacite::Contributor'
 
-    validates :long_name, presence: true, uniqueness: true
+    validates :long_name, presence: true
 
     before_save :strip_whitespace
 

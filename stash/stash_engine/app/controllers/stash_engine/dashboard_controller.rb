@@ -134,6 +134,7 @@ module StashEngine
 
       # make the newer user inaccessible from the database (rather than deleting for now in case anything goes awry, we can purge later)
       old_current_user.update(orcid: "#{old_current_user.orcid}-migrated", migration_token: StashEngine::User::NO_MIGRATE_STRING)
+      old_current_user.update(email: "#{old_current_user.email}.migrated") unless old_current_user.email.blank?
     end
 
   end

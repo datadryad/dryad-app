@@ -1,18 +1,110 @@
 // ##### Links Object ##### //
 
 %o-link__primary {
-  color: $design-dark-blue-color;
-  text-decoration: none;
+  color: $link-body-color;
+  text-decoration: underline;
 
-  &:hover {
-    text-decoration: underline;
+  &:hover,
+  &:focus,
+  &:visited:hover,
+  &:visited:focus {
+    color: $link-body-hover-color;
+    text-decoration: none;
   }
 
+  &:visited {
+    color: $link-body-visited-color;
+  }
 }
 
 .o-link__primary {
   @extend %o-link__primary;
 }
+
+%o-link__secondary {
+  color: $link-body-color;
+  text-decoration: none;
+
+  &:hover,
+  &:focus,
+  &:visited:hover,
+  &:visited:focus {
+    color: $link-body-hover-color;
+    text-decoration: underline;
+  }
+
+  &:visited {
+    color: $link-body-visited-color;
+  }
+}
+
+.o-link__secondary {
+  @extend %o-link__primary;
+}
+
+// Links in body copy:
+
+.markdown_styles a {
+  @extend %o-link__primary;
+}
+
+.t-landing__main a {
+  @extend %o-link__primary;
+}
+
+// Links in sidebar:
+
+.c-sidebox a {
+  @extend %o-link__secondary;
+}
+
+// Links in Geoblacklight UI:
+
+.category-block .more_facets_link {
+  @extend %o-link__primary;
+}
+
+.facet-values .more_facets_link {
+  @extend %o-link__secondary;
+}
+
+.home-facet-link {
+  @extend %o-link__primary;
+}
+
+.facet_select {
+  @extend %o-link__secondary;
+}
+
+.index_title a {
+  @extend %o-link__secondary;
+  color: $design-medium-blue-color;
+}
+
+.facet-label .selected {
+  color: $design-green-color;
+}
+
+// Submitted table:
+
+.c-table-submitted .o-link__primary {
+  color: $design-medium-blue-color;
+  text-decoration: none;
+
+  &:hover,
+  &:focus,
+  &:visited:hover,
+  &:visited:focus {
+    color: $link-body-hover-color;
+    text-decoration: underline;
+  }
+
+  &:visited {
+    color: $link-body-visited-color;
+  }
+}
+
+// Skipnav component:
 
 .c-skipnav {
   @extend %hide;
@@ -28,5 +120,4 @@
     left: $spacing-sm;
     opacity: 1;
   }
-
 }

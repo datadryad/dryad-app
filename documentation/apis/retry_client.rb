@@ -2,6 +2,8 @@ require 'rest-client'
 require 'json'
 require 'byebug'
 
+# Sample client code to renew expired OAuth2 access tokens
+
 class RetryClient
 
   attr_reader :app_id, :secret, :scheme_host_port, :token
