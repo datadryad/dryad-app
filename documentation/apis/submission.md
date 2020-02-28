@@ -314,7 +314,7 @@ In addition to changing your metadata, you could've added additional files befor
 ## Renewing Your Token
 
 Tokens are only valid for a limited amount of time.  See documentation
-about [retrying_requests made with expired tokens](renew_api/retrying_expired.md) for more information.
+about [retrying_requests made with expired tokens](retrying_expired.md) for more information.
 
 ## Internal metadata fields
 
