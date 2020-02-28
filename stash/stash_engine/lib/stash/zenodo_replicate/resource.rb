@@ -20,13 +20,15 @@ module Stash
         # download files from Merritt
         location = download_files
 
-        # create new zenodo object
-        zen = Zenodo.new(resource: @resource, path: location)
+        # create new object for working with zenodo and start the deposit dataset with metadata
+        zen = ZenodoConnection.new(resource: @resource, path: location)
+        zen.new_deposition
 
         # add files
+        zen.send_files
 
-        # finalize actions
-      rescue ReplicationError => ex
+        # finalize submission
+      rescue ReplicationError, Stash::ZenodoConnection::ZenodoError => ex
         # log this somewhere in the database so we can track it
       ensure
         # ensure clean up or other actions every time

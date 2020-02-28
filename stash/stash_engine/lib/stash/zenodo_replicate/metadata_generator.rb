@@ -8,6 +8,20 @@ module Stash
         @resource = resource
       end
 
+      # returns a hash of the metadata from the list of methods, you can make it into json to send
+      def metadata
+        out_hash = {}.with_indifferent_access
+        %i[doi upload_type publication_date title creators description access_right license
+           keywords notes related_identifiers method].each do |meth|
+          result = send(meth)
+          out_hash[meth] = result unless result.blank?
+        end
+        out_hash
+      end
+
+      def doi
+        "https://doi.org/#{@resource.identifier.identifier}"
+      end
 
       def upload_type
         @resource.resource_type.resource_type_general
@@ -23,15 +37,17 @@ module Stash
       end
 
       def creators
-        @resource.authors.map{|a| creator(author: a)}
+        @resource.authors.map { |a| creator(author: a) }
       end
 
       def creator(author:)
-        {
-            name: author.author_full_name,
-            affiliation: author.affiliations.first&.long_name,
-            orcid: author.author_orcid
-        }
+        affil = author.affiliations.first&.long_name
+        orc = author.author_orcid
+
+        hsh = { name: author.author_full_name }
+        hsh[:affiliation] = affil unless affil.blank?
+        hsh[:orcid] = orc unless orc.blank?
+        hsh
       end
 
       def description
@@ -60,21 +76,19 @@ module Stash
 
       def related_identifiers
         related = @resource.related_identifiers.map do |ri|
-          {relation: ri.relation_type_friendly&.camelize(:lower), identifier: ri.related_identifier }
+          { relation: ri.relation_type_friendly&.camelize(:lower), identifier: ri.related_identifier }
         end
 
         related ||= []
 
         related.push(
-            { relation: 'isIdenticalTo', identifier: "https://doi.org/#{@resource.identifier.identifier})" }
+          relation: 'isIdenticalTo', identifier: "https://doi.org/#{@resource.identifier.identifier}"
         )
-
       end
 
       def method
         @resource.descriptions.where(description_type: 'methods')&.map(&:description)&.join("\n")
       end
-
 
     end
   end
