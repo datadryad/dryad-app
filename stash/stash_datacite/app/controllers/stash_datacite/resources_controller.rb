@@ -27,6 +27,7 @@ module StashDatacite
     def user_submitted
       respond_to do |format|
         format.js do
+          return if current_user.blank?
           @resources = current_user.latest_completed_resource_per_identifier.order(updated_at: :desc).page(@page).per(@page_size)
           @submitted_lines = @resources.map { |resource| DatasetPresenter.new(resource) }
         end

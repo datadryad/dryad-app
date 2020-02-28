@@ -124,7 +124,8 @@
 
     &:hover,
     &:focus {
-      color: $design-light-blue-color;
+      color: $link-globalnav-hover-color;
+      text-decoration: underline;
     }
 
     &:not(:last-child) {
