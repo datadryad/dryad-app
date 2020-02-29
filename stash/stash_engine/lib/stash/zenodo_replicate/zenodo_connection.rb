@@ -43,6 +43,8 @@ module Stash
         # state = unsubmitted
       end
 
+      # may need to break this out into it's own class or at least track file deposits in a better way or check
+      # MD5s or other things.
       def send_files
         path = @path.to_s
         path << '/' unless path.end_with?('/')
@@ -52,9 +54,21 @@ module Stash
         all_files.each do |f|
           short_fn = f[path.length..-1]
           # PUT /api/files/<bucket-id>/<filename>
-          @http.put("#{links[:bucket]}/#{ERB::Util.url_encode(short_fn)}", body: File.open(f, 'rb'))
+          resp = @http.put("#{links[:bucket]}/#{ERB::Util.url_encode(short_fn)}",
+                           params: param_merge,
+                           body: File.open(f, 'rb'))
           byebug
         end
+      end
+
+      def get_files_info
+        # right now this is mostly just used for internal testing
+        resp = @http.get(links[:bucket], params: param_merge)
+      end
+
+      def publish
+        # should be able to publish
+        resp = @http.post(links[:publish], params: params_merge)
       end
 
       private
