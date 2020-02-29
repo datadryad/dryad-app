@@ -20,8 +20,6 @@ module Stash
         # download files from Merritt
         location = download_files
 
-        byebug
-
         # create new object for working with zenodo and start the deposit dataset with metadata
         zen = ZenodoConnection.new(resource: @resource, path: location)
         zen.new_deposition

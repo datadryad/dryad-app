@@ -57,7 +57,6 @@ module Stash
           resp = @http.put("#{links[:bucket]}/#{ERB::Util.url_encode(short_fn)}",
                            params: param_merge,
                            body: File.open(f, 'rb'))
-          byebug
         end
       end
 
