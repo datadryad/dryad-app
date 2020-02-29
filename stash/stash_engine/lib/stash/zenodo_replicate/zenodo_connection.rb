@@ -68,7 +68,7 @@ module Stash
 
       def publish
         # should be able to publish
-        resp = @http.post(links[:publish], params: params_merge)
+        resp = @http.post(links[:publish], params: param_merge)
       end
 
       private
