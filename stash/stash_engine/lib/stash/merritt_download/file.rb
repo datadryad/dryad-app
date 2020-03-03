@@ -18,6 +18,7 @@ require 'digest'
 
 module Stash
   module MerrittDownload
+
     # calling this class File means we need to namespace the built-in Ruby file class when calling it in here
     class File
 
@@ -31,8 +32,8 @@ module Stash
       end
 
       # download file a and return a hash, we should be tracking success routinely since downloads are error-prone
-      def download_file(filename:)
-        mrt_resp = get_url(filename: filename)
+      def download_file(db_file:)
+        mrt_resp = get_url(filename: db_file.upload_file_name)
 
         unless mrt_resp.status.success?
           return { success: false, error: "#{mrt_resp.status.code} status code retrieving '#{filename}' for resource #{@resource.id}" }
@@ -50,9 +51,9 @@ module Stash
           end
         end
 
-        { success: true, sha256_digest: sha256.hexdigest, md5_digest: md5.hexdigest }
+        get_digests(md5_obj: md5, sha256_obj: sha256, db_file: db_file).merge(success: true)
       rescue HTTP::Error => ex
-        { success: false, error: "Error retrieving '#{filename}' for resource #{@resource.id}\n#{ex}" }
+        { success: false, error: "Error downloading file for resource #{@resource.id}\nHTTP::Error #{ex}" }
       end
 
       # gets the file url and returns an HTTP.get(url) response object
@@ -71,6 +72,20 @@ module Stash
 
         "#{APP_CONFIG.merritt_express_base_url}/dv/#{@resource.stash_version.merritt_version}" \
           "/#{CGI.unescape(ark)}/#{ERB::Util.url_encode(filename).gsub('%252F', '%2F')}"
+      end
+
+      def get_digests(md5_obj:, sha256_obj:, db_file:)
+        md5_hex = md5_obj.hexdigest
+        sha256_hex = sha256_obj.hexdigest
+
+        if db_file && !db_file.digest.blank?
+          if (db_file.digest_type == 'md5' && db_file.digest != md5_hex) ||
+              (db_file.digest_type == 'sha-256' && db_file.digest != sha_256_hex)
+            raise Stash::MerrittDownload::DownloadError, "Digest for downloaded file does match database value. File.id: #{db_file.id}"
+          end
+        end
+
+        { md5_hex: md5_hex, sha256_hex: sha256_hex}
       end
 
     end
