@@ -43,7 +43,7 @@ module Stash
         sha256 = Digest::SHA256.new
 
         # this doesn't load everything into memory at once and writes in chunks and calculates digests at the same time
-        ::File.open(::File.join(@path, filename), 'wb') do |f|
+        ::File.open(::File.join(@path, db_file.upload_file_name), 'wb') do |f|
           mrt_resp.body.each do |chunk|
             f.write(chunk)
             md5.update(chunk)
