@@ -2,7 +2,7 @@
 <% form_id = "resource_title_#{resource.id}" %>
 <%= form_tag(titles_update_path, method: :patch, remote: true, authenticity_token: true, html: { id: form_id, class: 'c-input' }) do |f| %>
   <% my_suffix = field_suffix(resource) %>
-  <strong><%= label_tag "#{my_suffix}", "Title", class: 'required c-input__label' %></strong><br/>
+  <strong><%= label_tag "#{my_suffix}", "Data Title", class: 'required c-input__label' %></strong><br/>
   <%= text_field_tag :title, resource.title, id: "title_#{my_suffix}", class: 'title c-input__text', size: 130 %>
   <%= hidden_field_tag :id, resource.id %>
   <%= hidden_field_tag(:form_id, form_id) %>
