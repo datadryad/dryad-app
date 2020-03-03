@@ -33,7 +33,7 @@ module Stash
           status = @smdf.download_file(db_file: f )
           raise Stash::MerrittDownload::DownloadError, "Download: #{status[:error]}\nfile.id #{f.id}" unless status[:success]
 
-          @info_hash[f] = status
+          @info_hash[f.upload_file_name] = status
         end
       end
     end
