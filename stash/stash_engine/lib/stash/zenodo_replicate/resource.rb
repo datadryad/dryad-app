@@ -7,20 +7,21 @@ require 'stash/merritt_download'
 
 module Stash
   module ZenodoReplicate
-
-    class ReplicationError < StandardError; end
-
     class Resource
+
+      attr_reader file_collection
 
       def initialize(resource:)
         @resource = resource
+        @file_collection = Stash::MerrittDownload::FileCollection.new(resource: @resource)
       end
 
       def add_to_zenodo
         # download files from Merritt
-        location = download_files
+        @file_collection.download_files
 
         # create new object for working with zenodo and start the deposit dataset with metadata
+        # TODO: modify the zenodo stuff to take file collection( either in initialize or in send files) so it can validate digests
         zen = ZenodoConnection.new(resource: @resource, path: location)
         zen.new_deposition
 
@@ -29,25 +30,10 @@ module Stash
 
         # finalize submission
         zen.publish
-      rescue ReplicationError, Stash::ZenodoConnection::ZenodoError => ex
+      rescue Stash::MerrittDownload::DownloadError, Stash::ZenodoConnection::ZenodoError => ex
         # log this somewhere in the database so we can track it
       ensure
         # ensure clean up or other actions every time
-      end
-
-      # downloads files and returns directory location
-      def download_files
-        smdf = Stash::MerrittDownload::File.new(resource: @resource)
-
-        copy_files = @resource.file_uploads.where(file_state: %w[created copied])
-          .map(&:upload_file_name).append(%w[mrt-datacite.xml mrt-oaidc.xml stash-wrapper.xml]).flatten
-
-        copy_files.each do |f|
-          status = smdf.download_file(filename: f)
-          raise ReplicationError, "Download: #{status[:error]}" unless status[:success]
-        end
-
-        smdf.path
       end
     end
   end
