@@ -9,7 +9,7 @@ module Stash
   module ZenodoReplicate
     class Resource
 
-      attr_reader file_collection
+      attr_reader :file_collection
 
       def initialize(resource:)
         @resource = resource
