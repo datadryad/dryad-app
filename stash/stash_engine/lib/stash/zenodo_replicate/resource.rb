@@ -30,7 +30,7 @@ module Stash
 
         # finalize submission
         zen.publish
-      rescue Stash::MerrittDownload::DownloadError, Stash::ZenodoConnection::ZenodoError => ex
+      rescue Stash::MerrittDownload::DownloadError, Stash::ZenodoReplicate::ZenodoError => ex
         # log this somewhere in the database so we can track it
       ensure
         # ensure clean up or other actions every time
