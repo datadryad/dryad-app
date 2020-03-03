@@ -22,7 +22,7 @@ module Stash
 
         # create new object for working with zenodo and start the deposit dataset with metadata
         # TODO: modify the zenodo stuff to take file collection( either in initialize or in send files) so it can validate digests
-        zen = ZenodoConnection.new(resource: @resource, path: location)
+        zen = ZenodoConnection.new(resource: @resource, path: @file_collection.path)
         zen.new_deposition
 
         # add files
