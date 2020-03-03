@@ -31,6 +31,7 @@ module Stash
         # finalize submission
         zen.publish
       rescue Stash::MerrittDownload::DownloadError, Stash::ZenodoReplicate::ZenodoError => ex
+        puts "We would be logging an error here.\n#{ex.class}\n#{ex.to_s}"
         # log this somewhere in the database so we can track it
       ensure
         # ensure clean up or other actions every time
