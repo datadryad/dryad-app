@@ -13,8 +13,8 @@
 require 'http'
 require 'tempfile'
 require 'cgi'
-require 'fileutils'
 require 'byebug'
+require 'digest'
 
 module Stash
   module MerrittDownload
@@ -25,12 +25,9 @@ module Stash
 
       # we need to be able to download any file from Merritt, including a couple of hidden ones we don't track as user-files (mrt-datacite.xml)
       # so we will need some individual information such as resource and filename and can't use database file_id since it doesn't exist for some
-      def initialize(resource:)
+      def initialize(resource:, path:)
         @resource = resource
-
-        # the 'upload' path is a symlinked shared EFS mount on servers
-        @path = Rails.root.join('uploads', 'zenodo_replication', resource.id.to_s)
-        FileUtils.mkdir_p(@path) # makes entire path to this file if is needed
+        @path = path
       end
 
       # download file a and return a hash, we should be tracking success routinely since downloads are error-prone
@@ -41,14 +38,19 @@ module Stash
           return { success: false, error: "#{mrt_resp.status.code} status code retrieving '#{filename}' for resource #{@resource.id}" }
         end
 
-        # this doesn't load everything into memory at once and writes in chunks, which is good for not blowing out memory by slurping
+        md5 = Digest::MD5.new
+        sha256 = Digest::SHA256.new
+
+        # this doesn't load everything into memory at once and writes in chunks and calculates digests at the same time
         ::File.open(::File.join(@path, filename), 'wb') do |f|
           mrt_resp.body.each do |chunk|
             f.write(chunk)
+            md5.update(chunk)
+            sha256.update(chunk)
           end
         end
 
-        { success: true }
+        { success: true, sha256_digest: sha256.hexdigest, md5_digest: md5.hexdigest }
       rescue HTTP::Error => ex
         { success: false, error: "Error retrieving '#{filename}' for resource #{@resource.id}\n#{ex}" }
       end
