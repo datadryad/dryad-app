@@ -130,16 +130,20 @@ namespace :identifiers do
     p "Setting resources whose peer_review_end_date <= '#{now}' to 'submitted' curation status"
     StashEngine::Resource.where(hold_for_peer_review: true)
       .where('stash_engine_resources.peer_review_end_date <= ?', now).each do |r|
-
       begin
-        p "Expiring peer review for: Identifier: #{r.identifier_id}, Resource: #{r.id}"
-        r.update(hold_for_peer_review: false, peer_review_end_date: nil)
-        StashEngine::CurationActivity.create(
-          resource_id: r.id,
-          user_id: 0,
-          status: 'submitted',
-          note: 'Expire Peer Review CRON - reached the peer review expiration date, changing status to `submitted`'
-        )
+        if r.current_curation_status == 'peer_review'
+          p "Expiring peer review for: Identifier: #{r.identifier_id}, Resource: #{r.id}"
+          r.update(hold_for_peer_review: false, peer_review_end_date: nil)
+          StashEngine::CurationActivity.create(
+            resource_id: r.id,
+            user_id: 0,
+            status: 'submitted',
+            note: 'Expire Peer Review CRON - reached the peer review expiration date, changing status to `submitted`'
+          )
+        else
+          p "Removing peer review for: Identifier: #{r.identifier_id}, Resource: #{r.id} due to non-peer review curation status"
+          r.update(hold_for_peer_review: false, peer_review_end_date: nil)
+        end
       rescue StandardError => e
         p "    Exception! #{e.message}"
       end
