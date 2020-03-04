@@ -45,7 +45,6 @@ module StashApi
     end
 
     def add_download!(hsh)
-      # TODO: fix the download in here since it depends on the user's permission possibly
       hsh['stash:download'] = { href: api_url_helper.file_download_path(@se_file_upload.id) } if @se_file_upload.resource.submitted? &&
           @se_file_upload.resource.may_download?(ui_user: nil)
     end
