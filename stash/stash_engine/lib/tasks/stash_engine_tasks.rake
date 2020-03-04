@@ -141,7 +141,7 @@ namespace :identifiers do
             note: 'Expire Peer Review CRON - reached the peer review expiration date, changing status to `submitted`'
           )
         else
-          p "Removing peer review for: Identifier: #{r.identifier_id}, Resource: #{r.id} due to non-peer review curation status"
+          p "Removing peer review for: Identifier: #{r.identifier_id}, Resource: #{r.id} due to non-peer_review curation status"
           r.update(hold_for_peer_review: false, peer_review_end_date: nil)
         end
       rescue StandardError => e
