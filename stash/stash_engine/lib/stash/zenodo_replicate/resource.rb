@@ -6,6 +6,8 @@ require 'http'
 # resource = StashEngine::Resource.find(785)
 # szr = Stash::ZenodoReplicate::Resource.new(resource: resource)
 # szr.add_to_zenodo
+#
+# https://sandbox.zenodo.org/record/503933
 
 module Stash
   module ZenodoReplicate
@@ -27,7 +29,10 @@ module Stash
         # @file_collection.path, @file_collection.info_hash
 
         zen = ZenodoConnection.new(resource: @resource, file_collection: @file_collection)
+
+        # either this
         zen.new_deposition
+        # or zen.update by deposition id
 
         # add files
         zen.send_files

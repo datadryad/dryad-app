@@ -3,6 +3,8 @@ require 'http'
 # require 'stash/zenodo_replicate'
 # resource = StashEngine::Resource.find(785)
 # z = Stash::ZenodoReplicate::ZenodoConnection.new(resource: resource, file_collection:)
+# The zenodo newversion seems to be editing the same deposition id
+# 503933
 
 module Stash
   module ZenodoReplicate
@@ -11,7 +13,7 @@ module Stash
 
     class ZenodoConnection
 
-      attr_reader :resource, :file_collection, :deposit_id, :links
+      attr_reader :resource, :file_collection, :deposit_id, :links, :files
 
       # for most actions in here, return the parsed out json and raise error if something not successful
 
@@ -32,21 +34,71 @@ module Stash
         false
       end
 
-      # this creates a new deposit and adds metadata at the same time and returns the json response if successful
+      # this creates a new deposit and adds metadata at the same time and returns the json response if successful, errors if already exists
       def new_deposition
         mg = MetadataGenerator.new(resource: @resource)
         r = @http.post("#{base_url}/api/deposit/depositions", params: param_merge,
                                                               headers: { 'Content-Type': 'application/json' },
                                                               json: { metadata: mg.metadata })
 
-        raise ZenodoError, "Zenodo response: #{r.status.code}" unless r.status.success?
-
         resp = r.parse.with_indifferent_access
+
+        raise ZenodoError, "Zenodo response: #{r.status.code}\n#{resp}" unless r.status.success?
+
+        # {"status"=>400, "message"=>"Validation error.", "errors"=>[{"field"=>"metadata.doi", "message"=>"DOI already exists in Zenodo."}]}
+
         @deposit_id = resp[:id]
         @links = resp[:links]
 
         # state is unsubmitted at this point
         resp
+      end
+
+      # deposition_id is an integer that zenodo gives us on the first deposit
+      def new_version_deposition(deposition_id:)
+        # POST /api/deposit/depositions/123/actions/newversion
+        mg = MetadataGenerator.new(resource: @resource)
+        r = @http.post("#{base_url}/api/deposit/depositions/#{deposition_id}/actions/newversion", params: param_merge,
+                       headers: { 'Content-Type': 'application/json' })
+                       # json: { metadata: mg.metadata }
+
+        resp = r.parse.with_indifferent_access
+
+        raise ZenodoError, "Zenodo response: #{r.status.code}\n#{resp}" unless r.status.success?
+
+        @deposit_id = resp[:id]
+        @links = resp[:links]
+        @files = resp[:files]
+
+        # state is done ???
+        resp
+      end
+
+      def get_by_deposition(desposition_id:)
+        r = @http.get("#{base_url}/api/deposit/depositions/#{deposition_id}", params: param_merge,
+                       headers: { 'Content-Type': 'application/json' },
+                       json: { metadata: mg.metadata })
+
+        resp = r.parse.with_indifferent_access
+
+        raise ZenodoError, "Zenodo response: #{r.status.code}\n#{resp}" unless r.status.success?
+
+        @deposit_id = resp[:id]
+        @links = resp[:links]
+        @files = resp[:files]
+
+        resp
+      end
+
+      def delete_files
+        @files.each do |f|
+          r = @http.delete(f[:links][:download], params: param_merge, headers: { 'Content-Type': 'application/json' } )
+
+          resp = r.parse.with_indifferent_access
+
+          raise ZenodoError, "Zenodo response: #{r.status.code}\n#{resp}" unless r.status.success?
+        end
+        @files = [] # now it's empty
       end
 
       def send_files
