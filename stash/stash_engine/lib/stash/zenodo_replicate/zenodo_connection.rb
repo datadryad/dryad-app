@@ -55,10 +55,10 @@ module Stash
       end
 
       # deposition_id is an integer that zenodo gives us on the first deposit
-      def new_version_deposition(deposition_id:)
+      def new_version_deposition(deposit_id:)
         # POST /api/deposit/depositions/123/actions/newversion
         mg = MetadataGenerator.new(resource: @resource)
-        r = @http.post("#{base_url}/api/deposit/depositions/#{deposition_id}/actions/newversion", params: param_merge,
+        r = @http.post("#{base_url}/api/deposit/depositions/#{deposit_id}/actions/newversion", params: param_merge,
                        headers: { 'Content-Type': 'application/json' })
                        # json: { metadata: mg.metadata }
 
@@ -74,10 +74,29 @@ module Stash
         resp
       end
 
-      def get_by_deposition(desposition_id:)
-        r = @http.get("#{base_url}/api/deposit/depositions/#{deposition_id}", params: param_merge,
+      def put_metadata
+        mg = MetadataGenerator.new(resource: @resource)
+        r = @http.put(@links[:latest_draft], params: param_merge,
                        headers: { 'Content-Type': 'application/json' },
                        json: { metadata: mg.metadata })
+
+        resp = r.parse.with_indifferent_access
+
+        raise ZenodoError, "Zenodo response: #{r.status.code}\n#{resp}" unless r.status.success?
+
+        # {"status"=>400, "message"=>"Validation error.", "errors"=>[{"field"=>"metadata.doi", "message"=>"DOI already exists in Zenodo."}]}
+
+        @deposit_id = resp[:id]
+        @links = resp[:links]
+
+        # state is unsubmitted at this point, but metadata is updated
+        resp
+
+      end
+
+      def get_by_deposition(deposit_id:)
+        r = @http.get("#{base_url}/api/deposit/depositions/#{deposit_id}", params: param_merge,
+                       headers: { 'Content-Type': 'application/json' })
 
         resp = r.parse.with_indifferent_access
 
@@ -91,14 +110,21 @@ module Stash
       end
 
       def delete_files
-        @files.each do |f|
-          r = @http.delete(f[:links][:download], params: param_merge, headers: { 'Content-Type': 'application/json' } )
+        r = @http.get("#{base_url}/api/deposit/depositions/#{deposit_id}", params: param_merge,
+                      headers: { 'Content-Type': 'application/json' })
+        resp = r.parse.with_indifferent_access
 
-          resp = r.parse.with_indifferent_access
-
-          raise ZenodoError, "Zenodo response: #{r.status.code}\n#{resp}" unless r.status.success?
+        resp[:files].map do |f|
+          r2 = @http.delete(f[:links][:download], params: param_merge, headers: { 'Content-Type': 'application/json' } )
+          resp2 = r2.parse_with_indifferent_access
+          raise ZenodoError, "Zenodo response: #{r2.status.code}\n#{resp2}" unless r.status.success?
         end
+
         @files = [] # now it's empty
+
+        r = @http.get("#{base_url}/api/deposit/depositions/#{deposit_id}", params: param_merge,
+                      headers: { 'Content-Type': 'application/json' })
+        resp = r.parse.with_indifferent_access
       end
 
       def send_files
