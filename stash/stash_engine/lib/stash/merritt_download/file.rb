@@ -36,7 +36,7 @@ module Stash
         mrt_resp = get_url(filename: db_file.upload_file_name)
 
         unless mrt_resp.status.success?
-          return { success: false, error: "#{mrt_resp.status.code} status code retrieving '#{filename}' for resource #{@resource.id}" }
+          return { success: false, error: "#{mrt_resp.status.code} status code retrieving '#{db_file.upload_file_name}' for resource #{@resource.id}" }
         end
 
         md5 = Digest::MD5.new
