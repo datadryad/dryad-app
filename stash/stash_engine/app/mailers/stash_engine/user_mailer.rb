@@ -1,3 +1,4 @@
+# rubocop:disable Metrics/ClassLength
 module StashEngine
 
   # Mails users about submissions
@@ -114,14 +115,6 @@ module StashEngine
     end
     # rubocop:enable Style/NestedTernaryOperator
 
-    # defer to the StashDatacite::LandingMixin methods to create a citation
-    #  def generate_citation(resource)
-    #   return unless resource.is_a?(StashEngine::Resource)
-    #   publisher = StashDatacite::Publisher.find_by(resource_id: resource.id).try(:publisher)
-    #   resource_type = StashDatacite::ResourceType.find_by(resource_id: resource.id).try(:resource_type_general_friendly)
-    #   citation(resource.authors, resource.title, resource_type, resource.version, resource.identifier, publisher, resource.publication_years)
-    # end
-
     def assign_variables(resource)
       @resource = resource
       @helpdesk_email = APP_CONFIG['helpdesk_email'] || 'help@datadryad.org'
@@ -149,3 +142,4 @@ module StashEngine
   end
 
 end
+# rubocop:enable Metrics/ClassLength
