@@ -26,26 +26,16 @@ module Stash
 
       # checks that can access API with token and return boolean
       def validate_access
-        r = @http.get("#{base_url}/api/deposit/depositions", params: param_merge)
-        return true if r.status.success?
-
-        false
-      rescue HTTP::Error
+        standard_request(:get, "#{base_url}/api/deposit/depositions")
+        true
+      rescue ZenodoError
         false
       end
 
       # this creates a new deposit and adds metadata at the same time and returns the json response if successful, errors if already exists
       def new_deposition
         mg = MetadataGenerator.new(resource: @resource)
-        r = @http.post("#{base_url}/api/deposit/depositions", params: param_merge,
-                                                              headers: { 'Content-Type': 'application/json' },
-                                                              json: { metadata: mg.metadata })
-
-        resp = r.parse.with_indifferent_access
-
-        raise ZenodoError, "Zenodo response: #{r.status.code}\n#{resp}" unless r.status.success?
-
-        # {"status"=>400, "message"=>"Validation error.", "errors"=>[{"field"=>"metadata.doi", "message"=>"DOI already exists in Zenodo."}]}
+        resp = standard_request(:post, "#{base_url}/api/deposit/depositions", json: { metadata: mg.metadata })
 
         @deposit_id = resp[:id]
         @links = resp[:links]
@@ -156,6 +146,22 @@ module Stash
       end
 
       private
+
+      def standard_request(method, url, **args)
+        my_params = { access_token: APP_CONFIG[:zenodo][:access_token] }.merge(args.fetch(:params, {}))
+        my_headers = { 'Content-Type': 'application/json' }.merge(args.fetch(:headers, {}))
+        my_args = args.merge(params: my_params, headers: my_headers)
+
+        r = @http.send(method, url, my_args)
+
+        resp = r.parse
+        resp = resp.with_indifferent_access if resp.class == Hash
+
+        unless r.status.success?
+          raise ZenodoError, "Zenodo response: #{r.status.code}\n#{resp} for \nhttp.#{method} #{url}\n#{resp}"
+        end
+        resp
+      end
 
       def param_merge(p = {})
         { access_token: APP_CONFIG[:zenodo][:access_token] }.merge(p)
