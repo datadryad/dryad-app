@@ -190,7 +190,7 @@ namespace :identifiers do
       csv << ['DOI', 'Created Date', 'Approval Date', 'Payment Type', 'Payment ID', 'Journal Name', 'Sponsor Name']
       StashEngine::Identifier.publicly_viewable.each do |i|
         approval_date_str = i.approval_date&.strftime('%Y-%m-%d')
-        created_date_str = i.created_date&.strftime('%Y-%m-%d')
+        created_date_str = i.created_at&.strftime('%Y-%m-%d')
         if approval_date_str&.start_with?(year_month)
           csv << [i.identifier, created_date_str, approval_date_str, i.payment_type, i.payment_id, i.publication_name, i.journal_sponsor_name]
         end
