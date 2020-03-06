@@ -124,6 +124,8 @@ namespace :identifiers do
     end
   end
 
+  # This task is deprecated, since we no longer want to automatically expire the review date,
+  # we send reminders instead (below)
   desc 'Set datasets to `submitted` when their peer review period has expired'
   task expire_peer_review: :environment do
     now = Date.today
@@ -150,7 +152,32 @@ namespace :identifiers do
     end
   end
 
-  desc 'Email the submitter when a dataset has been `in_progress` for 3 days'
+  desc 'Email the submitter when a dataset has been in `peer_review` past the deadline, and the last reminder was too long ago'
+  task peer_review_reminder: :environment do
+    p "Mailing users whose datasets have been in peer_review for a while..."
+    StashEngine::Resource.where(hold_for_peer_review: true)
+      .where('stash_engine_resources.peer_review_end_date <= ?', Date.today)
+      .each do |r|
+      begin
+        reminder_flag = 'peer_review_reminder CRON'
+        last_reminder = r.curation_activities.where('note LIKE ?', "%#{reminder_flag}%")&.last
+        if r.current_curation_status == 'peer_review' && (last_reminder.blank? || last_reminder.created_at <= 1.month.ago)
+          p "Reminding submitter about peer_review dataset. Identifier: #{r.identifier_id}, Resource: #{r.id} updated #{r.updated_at}"
+          StashEngine::UserMailer.peer_review_reminder(r).deliver_now
+          StashEngine::CurationActivity.create(
+            resource_id: r.id,
+            user_id: 0,
+            status: r.current_curation_activity.status,
+            note: "#{reminder_flag} - reminded submitter that this item is still in `peer_review`"
+          )
+        end
+      rescue StandardError => e
+        p "    Exception! #{e.message}"
+      end
+    end
+  end
+
+ desc 'Email the submitter when a dataset has been `in_progress` for 3 days'
   task in_progess_reminder: :environment do
     p "Mailing users whose datasets have been in_progress since #{3.days.ago}"
     StashEngine::Resource.joins(:current_resource_state)
