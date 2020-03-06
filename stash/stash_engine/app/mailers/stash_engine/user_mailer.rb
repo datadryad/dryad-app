@@ -72,6 +72,17 @@ module StashEngine
            subject: "#{rails_env} REMINDER: Dryad Submission \"#{@resource.title}\"")
     end
 
+    def peer_review_reminder(resource)
+      logger.warn('Unable to send peer_review_reminder; nil resource') unless resource.present?
+      return unless resource.present?
+      user = resource.authors.first || resource.user
+      return unless user.present? && user_email(user).present?
+      @user_name = user_name(user)
+      assign_variables(resource)
+      mail(to: user_email(user),
+           subject: "#{rails_env} REMINDER: Dryad Submission \"#{@resource.title}\"")
+    end
+
     def dependency_offline(dependency)
       return unless dependency.present?
       @dependency = dependency
