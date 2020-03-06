@@ -154,7 +154,7 @@ namespace :identifiers do
 
   desc 'Email the submitter when a dataset has been in `peer_review` past the deadline, and the last reminder was too long ago'
   task peer_review_reminder: :environment do
-    p "Mailing users whose datasets have been in peer_review for a while..."
+    p 'Mailing users whose datasets have been in peer_review for a while...'
     StashEngine::Resource.where(hold_for_peer_review: true)
       .where('stash_engine_resources.peer_review_end_date <= ?', Date.today)
       .each do |r|
@@ -177,7 +177,7 @@ namespace :identifiers do
     end
   end
 
- desc 'Email the submitter when a dataset has been `in_progress` for 3 days'
+  desc 'Email the submitter when a dataset has been `in_progress` for 3 days'
   task in_progess_reminder: :environment do
     p "Mailing users whose datasets have been in_progress since #{3.days.ago}"
     StashEngine::Resource.joins(:current_resource_state)
