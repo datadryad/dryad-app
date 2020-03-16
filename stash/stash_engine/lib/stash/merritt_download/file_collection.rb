@@ -9,7 +9,7 @@ module Stash
 
       attr_reader :path, :info_hash
       # path is just the path where files are stored
-      # info_hash is like key of the filename and value is a hash with success: t/f and md5_hex and sha256_hex digests
+      # info_hash is key=filename and value={success: t/f, md5_hex, sha256_hex}
 
       def initialize(resource:)
         @resource = resource
@@ -21,8 +21,8 @@ module Stash
         # sets up file download stuff for a resource, but different method for each file download
         @smdf = Stash::MerrittDownload::File.new(resource: @resource, path: @path)
 
-        # Set info hash as files are downloaded.  key is filename, value is { success: <t/f>, sha256_digest:, md5_digest: }.
-        # Unsuccessful files raise DownloadError.  We need status info for file saved in order to save and validate digests.
+        # Set info hash as files are downloaded.  key=filename, value = { success: <t/f>, sha256_digest:, md5_digest: }.
+        # Unsuccessful files raise DownloadError.
         @info_hash = {}
       end
 
