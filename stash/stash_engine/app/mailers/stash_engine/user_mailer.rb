@@ -1,3 +1,4 @@
+# rubocop:disable Metrics/ClassLength
 module StashEngine
 
   # Mails users about submissions
@@ -72,6 +73,17 @@ module StashEngine
            subject: "#{rails_env} REMINDER: Dryad Submission \"#{@resource.title}\"")
     end
 
+    def peer_review_reminder(resource)
+      logger.warn('Unable to send peer_review_reminder; nil resource') unless resource.present?
+      return unless resource.present?
+      user = resource.authors.first || resource.user
+      return unless user.present? && user_email(user).present?
+      @user_name = user_name(user)
+      assign_variables(resource)
+      mail(to: user_email(user),
+           subject: "#{rails_env} REMINDER: Dryad Submission \"#{@resource.title}\"")
+    end
+
     def dependency_offline(dependency)
       return unless dependency.present?
       @dependency = dependency
@@ -103,14 +115,6 @@ module StashEngine
     end
     # rubocop:enable Style/NestedTernaryOperator
 
-    # defer to the StashDatacite::LandingMixin methods to create a citation
-    #  def generate_citation(resource)
-    #   return unless resource.is_a?(StashEngine::Resource)
-    #   publisher = StashDatacite::Publisher.find_by(resource_id: resource.id).try(:publisher)
-    #   resource_type = StashDatacite::ResourceType.find_by(resource_id: resource.id).try(:resource_type_general_friendly)
-    #   citation(resource.authors, resource.title, resource_type, resource.version, resource.identifier, publisher, resource.publication_years)
-    # end
-
     def assign_variables(resource)
       @resource = resource
       @helpdesk_email = APP_CONFIG['helpdesk_email'] || 'help@datadryad.org'
@@ -138,3 +142,4 @@ module StashEngine
   end
 
 end
+# rubocop:enable Metrics/ClassLength
