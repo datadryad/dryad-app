@@ -56,3 +56,27 @@ of the services provided by Merritt, see this document: <a href="https://merritt
 
 <h2 id="delete">Can I delete my data?</h2>
 <p>Data deposited in Dryad is intended to remain permanently archived and available. Removal of a deposited dataset is considered an exceptional action which should be requested and fully justified by the original contributor (e.g., if there are concerns over privacy or data ownership). To request the withdrawal of data from Dryad, contact <a href="mailto:help@datadryad.org">help@datadryad.org</a>.</p>
+
+
+<h2 id="searching">How can I best construct my search terms when exploring data at Dryad?</h2>
+
+<p>When searching in the Dryad user interface, the normal behavior is to
+treat each search term as being combined by AND. A search for <code>cat
+dog</code> will return only datasets that contain both <code>cat</code> and <code>dog</code>.</p>
+
+<p>Search terms may have a wildcard <code>*</code> appended. A search for <code>cat*</code>
+will return datasets that contain <code>cat</code>, <code>catch</code>, <code>catsup</code>, etc.</p>
+
+<p>Search terms may be negated with a minus sign. A search for <code>cat -dog</code>
+will return datasets that contain <code>cat</code>, but exclude any datasets that
+also contain <code>dog</code>.</p>
+
+<p>Phrases may be searched by using quotes. A search for <code>"dog my cats"</code>
+will only return datasets that contain this specific phrase, and not
+datasets that contain the individual terms.</p>
+
+<p>Proximity searches may be performed. To find datasets containing
+<code>dog</code> within four words of <code>cat</code>, search for <code>"dog cat"~4</code></p>
+
+<p>Searches may also be further constrained by the filters displayed on
+the left side of the search results screen.</p>
