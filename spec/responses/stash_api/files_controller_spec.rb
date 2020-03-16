@@ -281,10 +281,10 @@ module StashApi
         end
       end
 
-      # TODO: fix when we update API for new public view flags.
-      xit 'allows download by public for published' do
-        @resources[0].update(publication_date: Time.new - 24.hours) # needs a publication date to be published
-        @resources[0].current_state = 'submitted'
+      it 'allows download by public for published' do
+        @resources[0].update(publication_date: Time.new - 24.hours,
+                             current_state: 'submitted',
+                             file_view: true)
         response_code = get "/api/v2/files/#{@files[0].first.id}/download", {}, {}
         expect(response_code).to eq(200)
         expect(response.body).to eq('This file is awesome')
