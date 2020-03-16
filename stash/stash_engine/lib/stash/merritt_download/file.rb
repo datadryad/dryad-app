@@ -1,6 +1,6 @@
 # this is really for an individual file download from Merritt to a file
 
-# example file names: 'Madagascarophis Nexus Files.zip', 'Madagascarophis_trees.zip', 'mrt-datacite.xml', 'mrt-oaidc.xml', 'stash-wrapper.xml'
+# example file names: 'Madagascarophis Nexus Files.zip', 'Madagascarophis_trees.zip'
 #
 # example:
 # require 'stash/merritt_download'
@@ -11,7 +11,6 @@
 # I have been favoring the 'httprb/http' gem recently since it is small, fast and pretty easy to use, similar to Python's
 # requests library. See https://twin.github.io/httprb-is-great/ .
 require 'http'
-require 'tempfile'
 require 'cgi'
 require 'byebug'
 require 'digest'
@@ -24,8 +23,6 @@ module Stash
 
       attr_reader :path
 
-      # we need to be able to download any file from Merritt, including a couple of hidden ones we don't track as user-files (mrt-datacite.xml)
-      # so we will need some individual information such as resource and filename and can't use database file_id since it doesn't exist for some
       def initialize(resource:, path:)
         @resource = resource
         @path = path
