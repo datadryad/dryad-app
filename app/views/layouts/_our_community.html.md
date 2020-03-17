@@ -51,12 +51,14 @@ Upgrades and enhanced system functions will be ongoing as a way to continually i
 
 -  California State University, East Bay
 -  Chan Zuckerberg Initiative
+-  Columbia University
 -  King Abdullah University of Science and Technology
 -  Lawrence Berkeley National Lab
 -  Montana State University
 -  North Carolina State University
 -  Northern State University
 -  The Ohio State University
+-  Stanford University
 -  University of California, California Digital Library
 -  UC Berkeley
 -  UC Davis
