@@ -133,6 +133,16 @@ Edit `stash/stash-notifier/notifier.yml` and add the
 merritt collection to the “sets” section for any environments that
 will need it.
 
+Updating pre-existing users in the database
+-------------------------------------------
+
+*Only do this after a tenant has gone live on the production server.*
+
+Existing users in the database will want to take advantage of the new
+tenant status. To do this, determine the email suffix that applies to
+users of the tenant, and update them with a command like:
+
+`update stash_engine_users set tenant_id='columbia' where email like '%columbia.edu';`
 
 Testing the setup
 -------------------
