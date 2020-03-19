@@ -13,42 +13,85 @@ module Stash
   module ZenodoReplicate
     class Resource
 
-      attr_reader :file_collection
-
       def initialize(resource:)
         @resource = resource
         @file_collection = Stash::MerrittDownload::FileCollection.new(resource: @resource)
       end
 
       def add_to_zenodo
+        # sanity checks
+        error_if_not_enqueued
+        error_if_replicating
+
+        # database status for this copy
+        third_copy_record = @resource.zenodo_third_copy
+        third_copy_record.update(state: 'replicating')
+
+        # a zenodo deposit class
+        @deposit = Deposit.new(resource: @resource)
+
         # download files from Merritt
         @file_collection.download_files
 
-        deposit = Deposit.new(resource: @resource, file_collection: @file_collection)
+        # get/create the deposit(ion) from zenodo
+        resp = get_or_create_deposition
+        third_copy_record.update(deposition_id: @deposit.deposition_id)
 
-        # either this
-        resp = deposit.new_deposition
+        # update metadata
+        resp = @deposit.update_metadata
 
+        # update files
 
-        # deposit_id = zen.deposit_id
-        # or zen.update by deposition id
+        # submit it, publishing will fail if there isn't at least one file
+        @deposit.publish
+        third_copy_record.update(state: 'finished')
 
-        # add files, this will mostly just raise an error if it can't upload something.
-        # zen.send_files
-
-        # finalize submission
-        # resp = zen.publish
-
-        # now see if I can create a new version by this way!
-        # resp = new_version_deposition(deposition_id: deposit_id)
-
-        # it looks like resp[:latest_draft] is the URL we really want now.  The desposition in the end of the URL
+        byebug
 
       rescue Stash::MerrittDownload::DownloadError, Stash::ZenodoReplicate::ZenodoError, HTTP::Error => ex
-        puts "We would be logging an error here.\n#{ex.class}\n#{ex.to_s}"
-        # log this somewhere in the database so we can track it
+        # log this in the database so we can track it
+        z3c = StashEngine::ZenodoThirdCopy.first_or_initialize(resource_id: @resource.id)
+        z3c.update_attributes(state: 'error',
+                              error_info: "#{ex.class}\n#{ex.to_s}",
+                              identifier_id: @resource.identifier.id)
       ensure
         # ensure clean up or other actions every time
+      end
+
+      private
+
+      # error if not starting as enqueued
+      def error_if_not_enqueued
+        unless @resource.zenodo_third_copy&.state == 'enqueued'
+          raise ZenodoError, "resource_id #{@resource.id}: You should never start replicating unless it starting in an enqueued state"
+        end
+      end
+
+      # return an error if replicating already, shouldn't start another replication
+      def error_if_replicating
+        repli_count = @resource.identifier.zenodo_third_copies.where(state: %w[replicating error]).count
+        if repli_count.positive?
+          raise ZenodoError, "identifier_id #{@resource.identifier.id}: Cannot replicate a version while a previous version is replicating or has an error"
+        end
+      end
+
+      def previous_deposition_id
+        last = @resource.identifier.zenodo_third_copies.where.not(deposition_id: nil).last
+        return nil if last.nil?
+
+        last.deposition_id
+      end
+
+      def get_or_create_deposition
+        @deposition_id = previous_deposition_id
+
+        if @deposition_id.nil?
+          # create a new deposit for this
+          @deposit.new_deposition
+        else
+          # retrieve and open for editing
+          @deposit.get_by_deposition(deposition_id: @deposition_id)
+        end
       end
     end
   end

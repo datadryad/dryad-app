@@ -11,23 +11,22 @@ module Stash
   module ZenodoReplicate
     class Files
 
-      attr_reader :resource, :file_collection, :deposit_id, :links, :files
+      attr_reader :resource, :file_collection, :deposition_id, :links, :files
 
       def initialize(resource:, file_collection:)
         @resource = resource
         @file_collection = file_collection
+        @zenodo_files = nil
       end
 
       def delete_files
-        resp = standard_request(:get, "#{base_url}/api/deposit/depositions/#{deposit_id}")
+        resp = standard_request(:get, "#{base_url}/api/deposit/depositions/#{deposition_id}")
 
         resp[:files].map do |f|
           standard_request(:delete, f[:links][:download])
         end
 
-        @files = [] # now it's empty
-
-        standard_request(:get, "#{base_url}/api/deposit/depositions/#{deposit_id}")
+        standard_request(:get, "#{base_url}/api/deposit/depositions/#{deposition_id}")
       end
 
       def send_files
