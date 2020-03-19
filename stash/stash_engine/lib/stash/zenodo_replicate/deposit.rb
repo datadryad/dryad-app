@@ -4,68 +4,68 @@ module Stash
   module ZenodoReplicate
     class Deposit
 
-      attr_reader :resource, :file_collection, :deposit_id, :links, :files
+      attr_reader :resource, :deposition_id
 
       ZC = Stash::ZenodoReplicate::ZenodoConnection # keep code shorter with this
 
-      def initialize(resource:, file_collection:)
+      def initialize(resource:)
         @resource = resource
-        @file_collection = file_collection
       end
 
-      # this creates a new deposit and adds metadata at the same time and returns the json response if successful, errors if already exists
+      # this creates a new deposit and returns the json response if successful
+      # POST /api/deposit/depositions
       def new_deposition
-        mg = MetadataGenerator.new(resource: @resource)
-        resp = ZC.standard_request(:post, "#{ZC.base_url}/api/deposit/depositions", json: { metadata: mg.metadata })
+        # mg = MetadataGenerator.new(resource: @resource)
+        resp = ZC.standard_request(:post, "#{ZC.base_url}/api/deposit/depositions", json: {})
 
-        @deposit_id = resp[:id]
+        @deposition_id = resp[:id]
         @links = resp[:links]
+        @files = resp[:files]
 
-        # state is unsubmitted at this point
         resp
       end
 
-      # deposition_id is an integer that zenodo gives us on deposit and this generates a new version with a new id, but
-      # currently unused
-      def new_version_deposition(deposit_id:)
-        # POST /api/deposit/depositions/123/actions/newversion
-        mg = MetadataGenerator.new(resource: @resource)
+      # deposition_id is an integer that zenodo gives us on deposit and this generates a new version with a new id
+      # POST /api/deposit/depositions/123/actions/newversion
+      def new_version_deposition(deposition_id:)
+        # mg = MetadataGenerator.new(resource: @resource)
         resp = ZC.standard_request(:post, "#{ZC.base_url}/api/deposit/depositions/#{deposit_id}/actions/newversion")
 
         raise ZenodoError, "Zenodo response: #{r.status.code}\n#{resp}" unless r.status.success?
 
-        @deposit_id = resp[:id]
+        @deposition_id = resp[:id]
         @links = resp[:links]
         @files = resp[:files]
 
         resp
       end
 
-      def put_metadata
+      # PUT /api/deposit/depositions/123
+      # Need to have gotten or created the deposition for this to work
+      def update_metadata
         mg = MetadataGenerator.new(resource: @resource)
 
-        resp = ZC.standard_request(:put, @links[:latest_draft], json: { metadata: mg.metadata })
-
-        # {"status"=>400, "message"=>"Validation error.", "errors"=>[{"field"=>"metadata.doi", "message"=>"DOI already exists in Zenodo."}]}
-
-        @deposit_id = resp[:id]
-        @links = resp[:links]
-
-        resp
+        ZC.standard_request(:put, @links[:latest_draft], json: { metadata: mg.metadata })
       end
 
-      def get_by_deposition(deposit_id:)
-        resp = ZC.standard_request(:get, "#{ZC.base_url}/api/deposit/depositions/#{deposit_id}")
+      # GET /api/deposit/depositions/123
+      def get_by_deposition(deposition_id:)
+        resp = ZC.standard_request(:get, "#{ZC.base_url}/api/deposit/depositions/#{deposition_id}")
 
-        @deposit_id = resp[:id]
+        @deposition_id = resp[:id]
         @links = resp[:links]
         @files = resp[:files]
 
         resp
       end
 
+      # send files calls the files class instead
+
+
+      # POST /api/deposit/depositions/456/actions/publish
+      # Need to have gotten or created the deposition for this to work
       def publish
-        ZC.standard_request(:post, links[:publish])
+        ZC.standard_request(:post, @links[:publish])
       end
     end
   end
