@@ -1,4 +1,5 @@
 require 'http'
+require 'stash/zenodo_replicate/zenodo_connection'
 
 # require 'stash/zenodo_replicate'
 # resource = StashEngine::Resource.find(785)

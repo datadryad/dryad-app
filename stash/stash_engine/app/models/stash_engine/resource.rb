@@ -25,6 +25,7 @@ module StashEngine
     has_many :curation_activities, -> { order(id: :asc) }, class_name: 'StashEngine::CurationActivity', dependent: :destroy
     has_many :repo_queue_states, class_name: 'StashEngine::RepoQueueState', dependent: :destroy
     has_many :download_histories, class_name: 'StashEngine::DownloadHistory', dependent: :destroy
+    has_one :zenodo_third_copy, class_name: 'StashEngine::ZenodoThirdCopy', dependent: :destroy
 
     accepts_nested_attributes_for :curation_activities
 
