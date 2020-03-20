@@ -59,9 +59,6 @@ module Stash
         resp
       end
 
-      # send files calls the files class instead
-
-
       # POST /api/deposit/depositions/456/actions/publish
       # Need to have gotten or created the deposition for this to work
       def publish
