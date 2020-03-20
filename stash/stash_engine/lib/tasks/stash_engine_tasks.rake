@@ -161,7 +161,9 @@ namespace :identifiers do
       begin
         reminder_flag = 'peer_review_reminder CRON'
         last_reminder = r.curation_activities.where('note LIKE ?', "%#{reminder_flag}%")&.last
-        if r.current_curation_status == 'peer_review' && (last_reminder.blank? || last_reminder.created_at <= 1.month.ago)
+        if r.current_curation_status == 'peer_review' &&
+           r.identifier.latest_resource_id == r.id &&
+           (last_reminder.blank? || last_reminder.created_at <= 1.month.ago)
           p "Reminding submitter about peer_review dataset. Identifier: #{r.identifier_id}, Resource: #{r.id} updated #{r.updated_at}"
           StashEngine::UserMailer.peer_review_reminder(r).deliver_now
           StashEngine::CurationActivity.create(
