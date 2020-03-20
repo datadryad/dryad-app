@@ -1,51 +1,69 @@
 require 'http'
 require 'stash/zenodo_replicate/zenodo_connection'
 
-# require 'stash/zenodo_replicate'
-# resource = StashEngine::Resource.find(785)
-# z = Stash::ZenodoReplicate::ZenodoConnection.new(resource: resource, file_collection:)
-# The zenodo newversion seems to be editing the same deposition id
-# 503933
-
 module Stash
   module ZenodoReplicate
     class Files
 
-      attr_reader :resource, :file_collection, :deposition_id, :links, :files
+      ZC = Stash::ZenodoReplicate::ZenodoConnection # keep code shorter with this
+
+      attr_reader :resource, :file_collection
 
       def initialize(resource:, file_collection:)
         @resource = resource
         @file_collection = file_collection
-        @zenodo_files = nil
-      end
 
-      def delete_files
-        resp = standard_request(:get, "#{base_url}/api/deposit/depositions/#{deposition_id}")
+        # the file_collection has .path and .info_hash properties
+        # the info hash of Merritt files is like key=filename, value = { success: <t/f>, sha256_digest:, md5_digest: }
 
-        resp[:files].map do |f|
-          standard_request(:delete, f[:links][:download])
-        end
+        @resp = ZC.standard_request(:get, "#{ZC.base_url}/api/deposit/depositions/#{@resource.zenodo_third_copy.deposition_id}")
 
-        standard_request(:get, "#{base_url}/api/deposit/depositions/#{deposition_id}")
-      end
+        # just gets filenames for items already in Zenodo
+        @existing_zenodo_filenames = @resp[:files].map{ |f| f[:filename] }
 
-      def send_files
-        path = @file_collection.path.to_s
-        path << '/' unless path.end_with?('/')
+        @existing_dryad_filenames = @file_collection.info_hash.keys
 
-        all_files = Dir["#{path}/**/*"]
-
-        all_files.each do |f|
-          short_fn = f[path.length..-1]
-          resp = standard_request(:put, "#{links[:bucket]}/#{ERB::Util.url_encode(short_fn)}", body: File.open(f, 'rb'))
-
-          # TODO: check the response digest against the known digest
+        @zenodo_fn_hash = {}
+        @resp[:files].each do |f|
+          @zenodo_fn_hash[f[:filename]] = f
         end
       end
 
-      def get_files_info
-        # right now this is mostly just used for internal testing
-        standard_request(:get, links[:bucket])
+      def replicate
+        remove_files
+        upload_files
+      end
+
+      def upload_files
+        @existing_dryad_filenames.each do |fn|
+          # upload if file doesn't exist in Zenodo or the previous digest doesn't match the new digest
+          if @zenodo_fn_hash[fn].nil? || @zenodo_fn_hash[fn][:checksum] != @file_collection.info_hash[fn][:md5_hex]
+            upload_file(filename: fn)
+          end
+        end
+      end
+
+      def upload_file(filename:)
+        upload_file = File.join(@file_collection.path.to_s, filename)
+        upload_url = "#{@resp[:links][:bucket]}/#{ERB::Util.url_encode(filename)}"
+
+        # remove the json content type since this is binary
+        resp = ZC.standard_request(:put, upload_url,body: File.open(upload_file, 'rb'), headers: {'Content-Type': nil})
+
+        unless resp[:checksum] == "md5:#{@file_collection.info_hash[filename][:md5_hex]}"
+          raise ZenodoError, "Mismatched digests for #{upload_url}\n#{resp[:checksum]} vs #{@file_collection.info_hash[filename][:md5_hex]}"
+        end
+        resp
+      end
+
+      def remove_files
+        removed_filenames.each do |fn|
+          standard_request(:delete, @zenodo_fn_hash[fn][:links][:download])
+        end
+      end
+
+      def removed_filenames
+        @zenodo_fn_hash.keys - @existing_dryad_filenames
       end
     end
   end

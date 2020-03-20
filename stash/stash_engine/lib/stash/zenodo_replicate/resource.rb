@@ -41,12 +41,12 @@ module Stash
         resp = @deposit.update_metadata
 
         # update files
+        file_replicator = Files.new(resource: @resource, file_collection: @file_collection )
+        file_replicator.replicate
 
         # submit it, publishing will fail if there isn't at least one file
         @deposit.publish
         third_copy_record.update(state: 'finished')
-
-        byebug
 
       rescue Stash::MerrittDownload::DownloadError, Stash::ZenodoReplicate::ZenodoError, HTTP::Error => ex
         # log this in the database so we can track it
