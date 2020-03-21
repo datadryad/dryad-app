@@ -50,10 +50,8 @@ module Stash
 
       rescue Stash::MerrittDownload::DownloadError, Stash::ZenodoReplicate::ZenodoError, HTTP::Error => ex
         # log this in the database so we can track it
-        z3c = StashEngine::ZenodoThirdCopy.first_or_initialize(resource_id: @resource.id)
-        z3c.update_attributes(state: 'error',
-                              error_info: "#{ex.class}\n#{ex.to_s}",
-                              identifier_id: @resource.identifier.id)
+        record = StashEngine::ZenodoThirdCopy.where(resource_id: @resource.id).first_or_create
+        record.update(state: 'error', error_info: "#{ex.class}\n#{ex.to_s}", identifier_id: @resource.identifier.id)
       ensure
         # ensure clean up or other actions every time
       end

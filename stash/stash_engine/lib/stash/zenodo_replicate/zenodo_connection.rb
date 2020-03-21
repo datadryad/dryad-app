@@ -39,7 +39,7 @@ module Stash
         end
         resp
       rescue HTTP::Error => e
-        raise ZenodoError, "Error from HTTP #{method} #{url}\nOriginal error: #{e}"
+        raise ZenodoError, "Error from HTTP #{method} #{url}\nOriginal error: #{e}\n#{e.backtrace.join("\n")}"
       end
 
       def self.param_merge(p = {})
