@@ -16,18 +16,38 @@ module Stash
       before(:each) do
         @resource = create(:resource)
         @file_upload = create(:file_upload, resource_id: @resource.id)
-        @file_dl_obj = Stash::MerrittDownload::File.new(resource: @resource)
+        @file_dl_obj = Stash::MerrittDownload::File.new(resource: @resource, path: Rails.root.join('upload', 'zenodo_replication') )
       end
 
       after(:each) do
         FileUtils.rm_rf(@file_dl_obj.path)
       end
 
-      describe '#download_file_url' do
-        it 'generates a Merritt Express file url' do
-          dl_url = @file_dl_obj.download_file_url(filename: @file_upload.upload_file_name)
-          expect(dl_url).to start_with("#{APP_CONFIG.merritt_express_base_url}/dv/#{@resource.stash_version.merritt_version}")
-          expect(dl_url).to end_with(ERB::Util.url_encode(@file_upload.upload_file_name))
+      describe '#download_file' do
+        it 'expects download to return success: false in hash if 404' do
+          stub_request(:get, @file_dl_obj.download_file_url(filename: @file_upload.upload_file_name)).to_return(status: 404, body: '', headers: {})
+          dl_status = @file_dl_obj.download_file(db_file: @file_upload)
+          expect(dl_status[:success]).to eq(false)
+          expect(dl_status[:error]).to include('404')
+          expect(dl_status[:error]).to include(@file_upload.upload_file_name)
+          expect(dl_status[:error]).to include("resource #{@resource.id}")
+        end
+
+        it 'expects download to return success: false in hash if 500' do
+          stub_request(:get, @file_dl_obj.download_file_url(filename: @file_upload.upload_file_name)).to_return(status: 500, body: '', headers: {})
+          dl_status = @file_dl_obj.download_file(db_file: @file_upload)
+          expect(dl_status[:success]).to eq(false)
+          expect(dl_status[:error]).to include('500')
+          expect(dl_status[:error]).to include(@file_upload.upload_file_name)
+          expect(dl_status[:error]).to include("resource #{@resource.id}")
+        end
+
+        it 'expects download to return success: true in hash and dl file if 200' do
+          stub_request(:get, @file_dl_obj.download_file_url(filename: @file_upload.upload_file_name))
+              .to_return(status: 200, body: 'My Best File', headers: {})
+          dl_status = @file_dl_obj.download_file(db_file: @file_upload)
+          expect(dl_status[:success]).to eq(true)
+          expect(::File.exist?(::File.join(@file_dl_obj.path, @file_upload.upload_file_name))).to eq(true)
         end
       end
 
@@ -39,32 +59,16 @@ module Stash
         end
       end
 
-      describe '#download_file' do
-        it 'expects download to return success: false in hash if 404' do
-          stub_request(:get, @file_dl_obj.download_file_url(filename: @file_upload.upload_file_name)).to_return(status: 404, body: '', headers: {})
-          dl_status = @file_dl_obj.download_file(filename: @file_upload.upload_file_name)
-          expect(dl_status[:success]).to eq(false)
-          expect(dl_status[:error]).to include('404')
-          expect(dl_status[:error]).to include(@file_upload.upload_file_name)
-          expect(dl_status[:error]).to include("resource #{@resource.id}")
+      describe '#download_file_url' do
+        it 'generates a Merritt Express file url' do
+          dl_url = @file_dl_obj.download_file_url(filename: @file_upload.upload_file_name)
+          expect(dl_url).to start_with("#{APP_CONFIG.merritt_express_base_url}/dv/#{@resource.stash_version.merritt_version}")
+          expect(dl_url).to end_with(ERB::Util.url_encode(@file_upload.upload_file_name))
         end
+      end
 
-        it 'expects download to return success: false in hash if 500' do
-          stub_request(:get, @file_dl_obj.download_file_url(filename: @file_upload.upload_file_name)).to_return(status: 500, body: '', headers: {})
-          dl_status = @file_dl_obj.download_file(filename: @file_upload.upload_file_name)
-          expect(dl_status[:success]).to eq(false)
-          expect(dl_status[:error]).to include('500')
-          expect(dl_status[:error]).to include(@file_upload.upload_file_name)
-          expect(dl_status[:error]).to include("resource #{@resource.id}")
-        end
+      describe '#get_digests' do
 
-        it 'expects download to return success: true in hash and dl file if 200' do
-          stub_request(:get, @file_dl_obj.download_file_url(filename: @file_upload.upload_file_name))
-            .to_return(status: 200, body: 'My Best File', headers: {})
-          dl_status = @file_dl_obj.download_file(filename: @file_upload.upload_file_name)
-          expect(dl_status[:success]).to eq(true)
-          expect(::File.exist?(::File.join(@file_dl_obj.path, @file_upload.upload_file_name))).to eq(true)
-        end
       end
     end
   end
