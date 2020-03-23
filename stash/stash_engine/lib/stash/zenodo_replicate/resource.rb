@@ -85,11 +85,13 @@ module Stash
 
         if @deposition_id.nil?
           # create a new deposit for this
-          @deposit.new_deposition
+          resp = @deposit.new_deposition
         else
           # retrieve and open for editing
-          @deposit.get_by_deposition(deposition_id: @deposition_id)
+          resp = @deposit.get_by_deposition(deposition_id: @deposition_id)
+          @deposit.reopen_for_editing unless resp[:state] == 'inprogress'
         end
+        resp
       end
     end
   end

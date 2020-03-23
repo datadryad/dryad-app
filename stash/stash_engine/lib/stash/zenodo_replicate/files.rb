@@ -58,7 +58,7 @@ module Stash
 
       def remove_files
         removed_filenames.each do |fn|
-          standard_request(:delete, @zenodo_fn_hash[fn][:links][:download])
+          ZC.standard_request(:delete, @zenodo_fn_hash[fn][:links][:download])
         end
       end
 

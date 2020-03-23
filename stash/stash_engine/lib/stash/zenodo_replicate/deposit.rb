@@ -44,8 +44,7 @@ module Stash
       # Need to have gotten or created the deposition for this to work
       def update_metadata
         mg = MetadataGenerator.new(resource: @resource)
-
-        ZC.standard_request(:put, @links[:latest_draft], json: { metadata: mg.metadata })
+        ZC.standard_request(:put, "#{ZC.base_url}/api/deposit/depositions/#{@deposition_id}", json: { metadata: mg.metadata })
       end
 
       # GET /api/deposit/depositions/123
@@ -57,6 +56,10 @@ module Stash
         @files = resp[:files]
 
         resp
+      end
+
+      def reopen_for_editing
+        ZC.standard_request(:post, @links[:edit])
       end
 
       # POST /api/deposit/depositions/456/actions/publish
