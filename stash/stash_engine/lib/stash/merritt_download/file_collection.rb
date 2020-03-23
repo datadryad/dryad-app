@@ -38,6 +38,10 @@ module Stash
           @info_hash[f.upload_file_name] = status
         end
       end
+
+      def cleanup_files
+        FileUtils.rm_rf(@path)
+      end
     end
   end
 end
