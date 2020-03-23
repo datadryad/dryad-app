@@ -26,13 +26,12 @@ module Stash
         @info_hash = {}
       end
 
-
       # downloads files and sets status in list, raises error if something fails
       def download_files
         copy_files = @resource.file_uploads.where(file_state: %w[created copied])
 
         copy_files.each do |f|
-          status = @smdf.download_file(db_file: f )
+          status = @smdf.download_file(db_file: f)
           raise Stash::MerrittDownload::DownloadError, "Download: #{status[:error]}\nfile.id #{f.id}" unless status[:success]
 
           @info_hash[f.upload_file_name] = status

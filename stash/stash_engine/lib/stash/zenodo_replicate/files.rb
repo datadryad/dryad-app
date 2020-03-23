@@ -19,7 +19,7 @@ module Stash
         @resp = ZC.standard_request(:get, "#{ZC.base_url}/api/deposit/depositions/#{@resource.zenodo_third_copy.deposition_id}")
 
         # just gets filenames for items already in Zenodo
-        @existing_zenodo_filenames = @resp[:files].map{ |f| f[:filename] }
+        @existing_zenodo_filenames = @resp[:files].map { |f| f[:filename] }
 
         @existing_dryad_filenames = @file_collection.info_hash.keys
 
@@ -37,9 +37,7 @@ module Stash
       def upload_files
         @existing_dryad_filenames.each do |fn|
           # upload if file doesn't exist in Zenodo or the previous digest doesn't match the new digest
-          if @zenodo_fn_hash[fn].nil? || @zenodo_fn_hash[fn][:checksum] != @file_collection.info_hash[fn][:md5_hex]
-            upload_file(filename: fn)
-          end
+          upload_file(filename: fn) if @zenodo_fn_hash[fn].nil? || @zenodo_fn_hash[fn][:checksum] != @file_collection.info_hash[fn][:md5_hex]
         end
       end
 
@@ -48,7 +46,7 @@ module Stash
         upload_url = "#{@resp[:links][:bucket]}/#{ERB::Util.url_encode(filename)}"
 
         # remove the json content type since this is binary
-        resp = ZC.standard_request(:put, upload_url,body: File.open(upload_file, 'rb'), headers: {'Content-Type': nil})
+        resp = ZC.standard_request(:put, upload_url, body: File.open(upload_file, 'rb'), headers: { 'Content-Type': nil })
 
         unless resp[:checksum] == "md5:#{@file_collection.info_hash[filename][:md5_hex]}"
           raise ZenodoError, "Mismatched digests for #{upload_url}\n#{resp[:checksum]} vs #{@file_collection.info_hash[filename][:md5_hex]}"

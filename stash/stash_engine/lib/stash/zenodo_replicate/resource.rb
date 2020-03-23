@@ -1,7 +1,6 @@
 require 'stash/merritt_download'
 require 'http'
 
-
 # require 'stash/zenodo_replicate'
 # resource = StashEngine::Resource.find(785)
 # szr = Stash::ZenodoReplicate::Resource.new(resource: resource)
@@ -34,24 +33,23 @@ module Stash
         @file_collection.download_files
 
         # get/create the deposit(ion) from zenodo
-        resp = get_or_create_deposition
+        get_or_create_deposition
         third_copy_record.update(deposition_id: @deposit.deposition_id)
 
         # update metadata
-        resp = @deposit.update_metadata
+        @deposit.update_metadata
 
         # update files
-        file_replicator = Files.new(resource: @resource, file_collection: @file_collection )
+        file_replicator = Files.new(resource: @resource, file_collection: @file_collection)
         file_replicator.replicate
 
         # submit it, publishing will fail if there isn't at least one file
         @deposit.publish
         third_copy_record.update(state: 'finished')
-
       rescue Stash::MerrittDownload::DownloadError, Stash::ZenodoReplicate::ZenodoError, HTTP::Error => ex
         # log this in the database so we can track it
         record = StashEngine::ZenodoThirdCopy.where(resource_id: @resource.id).first_or_create
-        record.update(state: 'error', error_info: "#{ex.class}\n#{ex.to_s}", identifier_id: @resource.identifier.id)
+        record.update(state: 'error', error_info: "#{ex.class}\n#{ex}", identifier_id: @resource.identifier.id)
       ensure
         @file_collection.cleanup_files
       end
@@ -60,17 +58,20 @@ module Stash
 
       # error if not starting as enqueued
       def error_if_not_enqueued
-        unless @resource.zenodo_third_copy&.state == 'enqueued'
-          raise ZenodoError, "resource_id #{@resource.id}: You should never start replicating unless it starting in an enqueued state"
-        end
+        raise ZenodoError, "resource_id #{@resource.id}: You should never start replicating unless it starting in an enqueued state" unless
+            @resource.zenodo_third_copy&.state == 'enqueued'
       end
 
       # return an error if replicating already, shouldn't start another replication
       def error_if_replicating
         repli_count = @resource.identifier.zenodo_third_copies.where(state: %w[replicating error]).count
+        # rubocop goes bonkers on this and suggests guardclause but when you do it suggests an if statement
+        # rubocop:disable Style/GuardClause
         if repli_count.positive?
-          raise ZenodoError, "identifier_id #{@resource.identifier.id}: Cannot replicate a version while a previous version is replicating or has an error"
+          raise ZenodoError, "identifier_id #{@resource.identifier.id}: Cannot replicate a version while a previous version " \
+              'is replicating or has an error'
         end
+        # rubocop:enable Style/GuardClause
       end
 
       def previous_deposition_id
@@ -80,6 +81,7 @@ module Stash
         last.deposition_id
       end
 
+      # rubocop:disable Naming/AccessorMethodName
       def get_or_create_deposition
         @deposition_id = previous_deposition_id
 
@@ -93,6 +95,7 @@ module Stash
         end
         resp
       end
+      # rubocop:enable Naming/AccessorMethodName
     end
   end
 end
