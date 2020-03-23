@@ -53,7 +53,7 @@ module Stash
         record = StashEngine::ZenodoThirdCopy.where(resource_id: @resource.id).first_or_create
         record.update(state: 'error', error_info: "#{ex.class}\n#{ex.to_s}", identifier_id: @resource.identifier.id)
       ensure
-        # ensure clean up or other actions every time
+        @file_collection.cleanup_files
       end
 
       private
