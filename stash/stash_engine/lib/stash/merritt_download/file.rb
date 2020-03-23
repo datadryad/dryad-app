@@ -33,7 +33,8 @@ module Stash
         mrt_resp = get_url(filename: db_file.upload_file_name)
 
         unless mrt_resp.status.success?
-          return { success: false, error: "#{mrt_resp.status.code} status code retrieving '#{db_file.upload_file_name}' for resource #{@resource.id}" }
+          return { success: false, error: "#{mrt_resp.status.code} status code retrieving '#{db_file.upload_file_name}' " \
+              "for resource #{@resource.id}" }
         end
 
         md5 = Digest::MD5.new
@@ -71,19 +72,21 @@ module Stash
           "/#{CGI.unescape(ark)}/#{ERB::Util.url_encode(filename).gsub('%252F', '%2F')}"
       end
 
+      # rubocop:disable Metrics/CyclomaticComplexity
       def get_digests(md5_obj:, sha256_obj:, db_file:)
         md5_hex = md5_obj.hexdigest
         sha256_hex = sha256_obj.hexdigest
 
-        if db_file && !db_file.digest.blank?
-          if (db_file.digest_type == 'md5' && db_file.digest != md5_hex) ||
-              (db_file.digest_type == 'sha-256' && db_file.digest != sha_256_hex)
-            raise Stash::MerrittDownload::DownloadError, "Digest for downloaded file does match database value. File.id: #{db_file.id}"
-          end
+        return { md5_hex: md5_hex, sha256_hex: sha256_hex } if db_file.blank? || db_file.digest.blank?
+
+        if (db_file.digest_type == 'md5' && db_file.digest != md5_hex) ||
+            (db_file.digest_type == 'sha-256' && db_file.digest != sha_256_hex)
+          raise Stash::MerrittDownload::DownloadError, "Digest for downloaded file doesn't match database value. File.id: #{db_file.id}"
         end
 
-        { md5_hex: md5_hex, sha256_hex: sha256_hex}
+        { md5_hex: md5_hex, sha256_hex: sha256_hex }
       end
+      # rubocop:enable Metrics/CyclomaticComplexity
 
     end
   end
