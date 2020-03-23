@@ -1,12 +1,6 @@
 require 'http'
 require 'byebug'
 
-# require 'stash/zenodo_replicate'
-# resource = StashEngine::Resource.find(785)
-# z = Stash::ZenodoReplicate::ZenodoConnection.new(resource: resource, file_collection:)
-# The zenodo newversion seems to be editing the same deposition id
-# 503933
-
 module Stash
   module ZenodoReplicate
 

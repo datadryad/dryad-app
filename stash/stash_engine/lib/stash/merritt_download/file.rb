@@ -1,13 +1,3 @@
-# this is really for an individual file download from Merritt to a file
-
-# example file names: 'Madagascarophis Nexus Files.zip', 'Madagascarophis_trees.zip'
-#
-# example:
-# require 'stash/merritt_download'
-# resource = StashEngine::Resource.find(785)
-# smdf = Stash::MerrittDownload::File.new(resource: resource)
-# smdf.download_file(filename: 'Madagascarophis Nexus Files.zip')
-
 # I have been favoring the 'httprb/http' gem recently since it is small, fast and pretty easy to use, similar to Python's
 # requests library. See https://twin.github.io/httprb-is-great/ .
 require 'http'
