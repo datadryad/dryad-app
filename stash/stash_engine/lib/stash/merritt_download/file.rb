@@ -4,6 +4,7 @@ require 'http'
 require 'cgi'
 require 'byebug'
 require 'digest'
+require 'fileutils'
 
 module Stash
   module MerrittDownload
@@ -16,6 +17,7 @@ module Stash
       def initialize(resource:, path:)
         @resource = resource
         @path = path
+        FileUtils.mkdir_p(@path) unless ::File.directory?(@path)
       end
 
       # download file a and return a hash, we should be tracking success routinely since downloads are error-prone
