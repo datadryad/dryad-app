@@ -93,7 +93,7 @@ module Stash
       end
 
       describe '#get_digests' do
-
+        # get digests is a helper already tested through download_file which checks digests and exception for mismatch
       end
     end
   end
