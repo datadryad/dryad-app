@@ -49,6 +49,31 @@ module Stash
           expect(dl_status[:success]).to eq(true)
           expect(::File.exist?(::File.join(@file_dl_obj.path, @file_upload.upload_file_name))).to eq(true)
         end
+
+        it 'expects downloads to have correct digests' do
+          stub_request(:get, @file_dl_obj.download_file_url(filename: @file_upload.upload_file_name))
+              .to_return(status: 200, body: 'So many fun times', headers: {})
+          dl_status = @file_dl_obj.download_file(db_file: @file_upload)
+          expect(dl_status[:success]).to eq(true)
+          expect(dl_status[:md5_hex]).to eq('c5849711a1f1ff03de4d96873defa382')
+          expect(dl_status[:sha256_hex]).to eq('a31ef897643f897b3938b98aae772196d1546c8c94c55b872e73e6c5985ff20f')
+        end
+
+        it 'expect digest not to match normal values if body is changed' do
+          stub_request(:get, @file_dl_obj.download_file_url(filename: @file_upload.upload_file_name))
+              .to_return(status: 200, body: 'The cat meows in my face.', headers: {})
+          dl_status = @file_dl_obj.download_file(db_file: @file_upload)
+          expect(dl_status[:success]).to eq(true)
+          expect(dl_status[:md5_hex]).not_to eq('c5849711a1f1ff03de4d96873defa382')
+          expect(dl_status[:sha256_hex]).not_to eq('a31ef897643f897b3938b98aae772196d1546c8c94c55b872e73e6c5985ff20f')
+        end
+
+        it "should raise an error if a digest is specified in the database and it doesn't match" do
+          @file_upload = create(:file_upload, resource_id: @resource.id, digest_type: 'md5', digest: 'c5849711a1f1ff03de4d96873defa382')
+          stub_request(:get, @file_dl_obj.download_file_url(filename: @file_upload.upload_file_name))
+              .to_return(status: 200, body: 'The cat meows in my face.', headers: {})
+          expect{ @file_dl_obj.download_file(db_file: @file_upload) }.to raise_error(Stash::MerrittDownload::DownloadError)
+        end
       end
 
       describe '#get_url' do
