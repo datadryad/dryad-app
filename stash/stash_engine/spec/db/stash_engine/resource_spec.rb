@@ -1173,6 +1173,17 @@ module StashEngine
         end
       end
 
+      describe :submitted_date do
+
+        it 'returns the correct submitted_date' do
+          res = create(:resource, user_id: @user.id, tenant_id: @user.tenant_id)
+          create(:curation_activity_no_callbacks, resource: res, created_at: '2020-01-01', status: 'in_progress')
+          create(:curation_activity_no_callbacks, resource: res, created_at: '2020-01-02', status: 'submitted')
+          create(:curation_activity_no_callbacks, resource: res, created_at: '2020-01-03', status: 'published')
+          expect(res.submitted_date.to_date).to eql(Date.parse('2020-01-02'))
+        end
+      end
+
       describe :curation_visibility_setup do
 
         before(:each) do
