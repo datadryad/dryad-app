@@ -215,7 +215,7 @@ namespace :identifiers do
     p "Writing Shopping Cart Report for #{year_month} to file..."
     CSV.open("shopping_cart_report_#{year_month}.csv", 'w') do |csv|
       csv << ['DOI', 'Created Date', 'Submitted Date', 'Approval Date',
-              'Payment Type', 'Payment ID', 'Institution Name',
+              'Size', 'Payment Type', 'Payment ID', 'Institution Name',
               'Journal Name', 'Sponsor Name']
       StashEngine::Identifier.publicly_viewable.each do |i|
         created_date_str = i.created_at&.strftime('%Y-%m-%d')
@@ -223,7 +223,7 @@ namespace :identifiers do
         approval_date_str = i.approval_date&.strftime('%Y-%m-%d')
         next unless approval_date_str&.start_with?(year_month)
         csv << [i.identifier, created_date_str, submitted_date_str, approval_date_str,
-                i.payment_type, i.payment_id, i.submitter_affiliation&.long_name,
+                i.storage_size, i.payment_type, i.payment_id, i.submitter_affiliation&.long_name,
                 i.publication_name, i.journal_sponsor_name]
       end
     end
