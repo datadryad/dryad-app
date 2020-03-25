@@ -25,7 +25,7 @@ module Stash
       end
 
       it 'has upload_type output' do
-        right = create(:resource_type, resource_id: @resource.id)
+        create(:resource_type, resource_id: @resource.id)
         expect(@mg.upload_type).to eq(@resource.resource_type.resource_type_general)
       end
 
@@ -69,8 +69,8 @@ module Stash
       end
 
       it 'has related_identifiers output for itself' do
-        expect(@mg.related_identifiers).to eq([{:relation=>"isIdenticalTo",
-                                                :identifier=>"https://doi.org/#{@resource.identifier.identifier}"}])
+        expect(@mg.related_identifiers).to eq([{ relation: 'isIdenticalTo',
+                                                 identifier: "https://doi.org/#{@resource.identifier.identifier}" }])
       end
 
       it 'has method output' do

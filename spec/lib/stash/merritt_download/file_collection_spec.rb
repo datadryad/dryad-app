@@ -38,14 +38,14 @@ module Stash
         end
 
         it 'it raises an exception for download errors' do
-          stub_request(:get, %r{http://mrtexpress-test\.example\.org/dv/.+}).
-              to_return(status: 404, body: "", headers: {})
+          stub_request(:get, %r{http://mrtexpress-test\.example\.org/dv/.+})
+            .to_return(status: 404, body: '', headers: {})
           expect { @fc.download_files }.to raise_error(Stash::MerrittDownload::DownloadError)
         end
 
         it 'sets up info_hash on success' do
-          stub_request(:get, %r{http://mrtexpress-test\.example\.org/dv/.+}).
-              to_return(status: 200, body: "", headers: {})
+          stub_request(:get, %r{http://mrtexpress-test\.example\.org/dv/.+})
+            .to_return(status: 200, body: '', headers: {})
           @fc.download_files
           expect(@fc.info_hash.keys).to include(@file_upload.upload_file_name)
         end
