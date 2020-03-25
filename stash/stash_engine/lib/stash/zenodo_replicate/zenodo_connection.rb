@@ -34,10 +34,6 @@ module Stash
         raise ZenodoError, "Error from HTTP #{method} #{url}\nOriginal error: #{e}\n#{e.backtrace.join("\n")}"
       end
 
-      def self.param_merge(p = {})
-        { access_token: APP_CONFIG[:zenodo][:access_token] }.merge(p)
-      end
-
       def self.base_url
         APP_CONFIG[:zenodo][:base_url]
       end
