@@ -40,3 +40,32 @@ to submit:
 ```
 StashEngine.repository.submit(resource_id: <resource_id>)
 ```
+
+Setting embargo on a Dataset that was accidentally published
+=============================================================
+
+First, go to the UI and add a curation note about manually embargoing
+it; don't worry about the actual status, you'll change it in the DB.
+
+In the database, run these commands, filling in the appropriate
+identifiers at the end of each line, and the appropriate embargo date:
+```
+select id,identifier,pub_state from stash_engine_identifiers where identifier like '%';
+select id, file_view, meta_view from stash_engine_resources where identifier_id=;
+select * from stash_engine_curation_activities where resource_id=;
+update stash_engine_curation_activities set status='embargoed' where id=;
+update stash_engine_resources set file_view=false where identifier_id=;
+update stash_engine_resources set publication_date='2020-07-25 01:01:01' where id=;
+update stash_engine_identifiers set pub_state='embargoed' where id=;
+```
+
+
+Error message: Maybe you tried to change something you didn't have access to
+============================================================================
+
+This error message almost always means there was an error validating
+an author.
+
+The problem can be that an author's first or last name is blank,
+OR it can be that an author's affiliation has a duplicate affiliation
+in the DB. 
