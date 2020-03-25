@@ -12,66 +12,70 @@ module Stash
     RSpec.describe ZenodoConnection do
       describe 'self.validate_access' do
         it "fails if it can't return valid response records" do
-          stub_request(:get, "https://sandbox.zenodo.org/api/deposit/depositions?access_token=ThisIsAFakeToken").
-              with(headers: { 'Content-Type'=>'application/json', 'Host'=>'sandbox.zenodo.org' }).
-              to_return(status: 403, body: "[]", headers: { 'Content-Type' => 'application/json' })
+          stub_request(:get, 'https://sandbox.zenodo.org/api/deposit/depositions?access_token=ThisIsAFakeToken')
+            .with(headers: { 'Content-Type' => 'application/json', 'Host' => 'sandbox.zenodo.org' })
+            .to_return(status: 403, body: '[]', headers: { 'Content-Type' => 'application/json' })
           expect(ZenodoConnection.validate_access).to eq(false)
         end
 
-        it "succeeds if it returns OK response" do
-          stub_request(:get, "https://sandbox.zenodo.org/api/deposit/depositions?access_token=ThisIsAFakeToken").
-              with(headers: { 'Content-Type'=>'application/json', 'Host'=>'sandbox.zenodo.org' }).
-              to_return(status: 200, body: "[]", headers: { 'Content-Type' => 'application/json' })
+        it 'succeeds if it returns OK response' do
+          stub_request(:get, 'https://sandbox.zenodo.org/api/deposit/depositions?access_token=ThisIsAFakeToken')
+            .with(headers: { 'Content-Type' => 'application/json', 'Host' => 'sandbox.zenodo.org' })
+            .to_return(status: 200, body: '[]', headers: { 'Content-Type' => 'application/json' })
           expect(ZenodoConnection.validate_access).to eq(true)
         end
       end
 
       describe 'self.standard_request(method, url, **args)' do
         it 'merges params' do
-          stub_request(:get, "https://example.test.com/?access_token=ThisIsAFakeToken&sugarplum=catnip").
-              with(
-                  headers: {
-                      'Content-Type'=>'application/json',
-                      'Host'=>'example.test.com'
-                  }).
-              to_return(status: 200, body: "[]", headers: { 'Content-Type' => 'application/json' })
-          resp = ZenodoConnection.standard_request(:get, 'https://example.test.com', params: { sugarplum: 'catnip'} )
+          stub_request(:get, 'https://example.test.com/?access_token=ThisIsAFakeToken&sugarplum=catnip')
+            .with(
+              headers: {
+                'Content-Type' => 'application/json',
+                'Host' => 'example.test.com'
+              }
+            )
+            .to_return(status: 200, body: '[]', headers: { 'Content-Type' => 'application/json' })
+          resp = ZenodoConnection.standard_request(:get, 'https://example.test.com', params: { sugarplum: 'catnip' })
           expect(resp).to eq([]) # otherwise it will raise a webmock error earlier if that url is different
         end
 
         it 'merges headers' do
-          stub_request(:get, "https://example.test.com/?access_token=ThisIsAFakeToken").
-              with(
-                  headers: {
-                      'Cat-Attrib': 'Siamese',
-                      'Content-Type'=>'application/json',
-                      'Host'=>'example.test.com'
-                  }).
-              to_return(status: 200, body: "[]", headers: { 'Content-Type' => 'application/json' })
-          resp = ZenodoConnection.standard_request(:get, 'https://example.test.com', headers: { 'Cat-Attrib': 'Siamese'} )
+          stub_request(:get, 'https://example.test.com/?access_token=ThisIsAFakeToken')
+            .with(
+              headers: {
+                'Cat-Attrib': 'Siamese',
+                'Content-Type' => 'application/json',
+                'Host' => 'example.test.com'
+              }
+            )
+            .to_return(status: 200, body: '[]', headers: { 'Content-Type' => 'application/json' })
+          resp = ZenodoConnection.standard_request(:get, 'https://example.test.com', headers: { 'Cat-Attrib': 'Siamese' })
           expect(resp).to eq([]) # otherwise it will raise a webmock error earlier if that url is different
         end
 
         it 'raises error if not a success status' do
-          stub_request(:get, "https://example.test.com/?access_token=ThisIsAFakeToken").
-              with(
-                  headers: {
-                      'Content-Type'=>'application/json',
-                      'Host'=>'example.test.com'
-                  }).
-              to_return(status: 403, body: "[]", headers: { 'Content-Type' => 'application/json' })
-          expect { ZenodoConnection.standard_request(:get, 'https://example.test.com' ) }.to raise_error(Stash::ZenodoReplicate::ZenodoError)
+          stub_request(:get, 'https://example.test.com/?access_token=ThisIsAFakeToken')
+            .with(
+              headers: {
+                'Content-Type' => 'application/json',
+                'Host' => 'example.test.com'
+              }
+            )
+            .to_return(status: 403, body: '[]', headers: { 'Content-Type' => 'application/json' })
+          expect { ZenodoConnection.standard_request(:get, 'https://example.test.com') }.to raise_error(Stash::ZenodoReplicate::ZenodoError)
         end
 
         it 'raises error if there is an HTTP or parsing error' do
-          stub_request(:get, "https://example.test.com/?access_token=ThisIsAFakeToken").
-              with(
-                  headers: {
-                      'Content-Type'=>'application/json',
-                      'Host'=>'example.test.com'
-                  }).
-              to_return(status: 200)
-          expect { ZenodoConnection.standard_request(:get, 'https://example.test.com' ) }.to raise_error(Stash::ZenodoReplicate::ZenodoError)
+          stub_request(:get, 'https://example.test.com/?access_token=ThisIsAFakeToken')
+            .with(
+              headers: {
+                'Content-Type' => 'application/json',
+                'Host' => 'example.test.com'
+              }
+            )
+            .to_return(status: 200)
+          expect { ZenodoConnection.standard_request(:get, 'https://example.test.com') }.to raise_error(Stash::ZenodoReplicate::ZenodoError)
         end
       end
 
