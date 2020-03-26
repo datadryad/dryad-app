@@ -138,7 +138,6 @@ module Stash
           resp = @szd.publish # it got here and didn't raise an error from response or exception
           expect(resp).to eq({})
         end
-
       end
     end
   end
