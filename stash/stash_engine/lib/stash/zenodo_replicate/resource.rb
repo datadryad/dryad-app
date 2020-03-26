@@ -58,8 +58,9 @@ module Stash
 
       # error if not starting as enqueued
       def error_if_not_enqueued
-        raise ZenodoError, "resource_id #{@resource.id}: You should never start replicating unless it starting in an enqueued state" unless
-            @resource.zenodo_third_copy&.state == 'enqueued'
+        return if @resource.zenodo_third_copy&.state == 'enqueued'
+
+        raise ZenodoError, "resource_id #{@resource.id}: You should never start replicating unless starting from an enqueued state"
       end
 
       # return an error if replicating already, shouldn't start another replication
