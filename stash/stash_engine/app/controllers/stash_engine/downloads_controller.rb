@@ -1,5 +1,5 @@
 require_dependency 'stash_engine/application_controller'
-require 'stash/download/file'
+require 'stash/download/file_presigned'
 require 'stash/download/version'
 
 # rubocop:disable Metrics/ClassLength
@@ -40,7 +40,7 @@ module StashEngine
     # set up the Merritt file & version objects so they have access to the controller context before continuing
     def setup_streaming
       @version_streamer = Stash::Download::Version.new(controller_context: self)
-      @file_streamer = Stash::Download::File.new(controller_context: self)
+      @file_presigned = Stash::Download::FilePresigned.new(controller_context: self)
     end
 
     # for downloading the full version
@@ -106,7 +106,7 @@ module StashEngine
       file_upload = FileUpload.find(params[:file_id])
       if file_upload&.resource&.may_download?(ui_user: current_user)
         CounterLogger.general_hit(request: request, file: file_upload)
-        @file_streamer.download(file: file_upload)
+        @file_presigned.download(file: file_upload)
       else
         render status: 403, text: 'You are not authorized to download this file until it has been published.'
       end

@@ -5,7 +5,7 @@
 require 'fileutils'
 
 require_dependency 'stash_api/application_controller'
-require 'stash/download/file'
+require 'stash/download/file_presigned'
 
 # rubocop:disable Metrics/ClassLength
 module StashApi
@@ -69,9 +69,9 @@ module StashApi
     # GET /files/<id>/download
     def download
       if @resource.may_download?(ui_user: @user)
-        @file_streamer = Stash::Download::File.new(controller_context: self)
+        @file_presigned = Stash::Download::FilePresigned.new(controller_context: self)
         StashEngine::CounterLogger.general_hit(request: request, file: @stash_file)
-        @file_streamer.download(file: @stash_file)
+        @file_presigned.download(file: @stash_file)
       else
         render status: 404, text: 'Not found'
       end
