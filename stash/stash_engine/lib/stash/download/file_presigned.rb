@@ -21,7 +21,7 @@ module Stash
       def download(file:)
         tenant = file&.resource&.tenant
         if file.blank? || tenant.blank?
-          render status: 404, text: 'Not found'
+          cc.render status: 404, text: 'Not found'
           return
         end
 
