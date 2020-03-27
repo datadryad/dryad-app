@@ -190,7 +190,8 @@ module StashEngine
       elsif user.role == 'admin'
         with_visibility(states: %w[published embargoed], tenant_id: user.tenant_id).files_published
       else
-        with_visibility(states: %w[published embargoed], user_id: user.id).files_published
+        with_visibility(states: %w[published embargoed], user_id: user.id).files_published +
+          with_visibility(states: %w[in_progress], user_id: user.id)
       end
     end
 
