@@ -270,14 +270,11 @@ module StashApi
         end
         @files << tmp
 
-        allow_any_instance_of(Stash::Download::File).to receive(:download) do |o|
+        allow_any_instance_of(Stash::Download::FilePresigned).to receive(:download) do |o|
           # o is the object instance and cc is the controller context
-          o.cc.response.headers['Content-Type'] = 'text/plain'
-          o.cc.response.headers['Content-Disposition'] = 'inline' # normally attachment for downloads, really, though
-          o.cc.response.headers['Content-Length'] = 20
-          o.cc.response.headers['Last-Modified'] = Time.now.httpdate
-          o.cc.response_body = 'This file is awesome'
+          # o.cc.response.headers['Location'] = 'http://example.com'
           # o.cc.render -- this isn't needed in the tests and causes a double-render which is different than the actual method
+          o.cc.redirect_to 'http://example.com'
         end
       end
 
@@ -286,15 +283,13 @@ module StashApi
                              current_state: 'submitted',
                              file_view: true)
         response_code = get "/api/v2/files/#{@files[0].first.id}/download", {}, {}
-        expect(response_code).to eq(200)
-        expect(response.body).to eq('This file is awesome')
+        expect(response_code).to eq(302)
       end
 
       it 'allows download by superuser for unpublished but in Merritt' do
         @curation_activities[0][2].destroy!
         response_code = get "/api/v2/files/#{@files[0].first.id}/download", {}, default_authenticated_headers.merge('Accept' => '*')
-        expect(response_code).to eq(200)
-        expect(response.body).to eq('This file is awesome')
+        expect(response_code).to eq(302)
       end
 
       it 'allows download by owner for unpublished but in Merritt' do
@@ -304,16 +299,14 @@ module StashApi
         access_token = get_access_token(doorkeeper_application: @doorkeeper_application2)
         response_code = get "/api/v2/files/#{@files[0].first.id}/download", {}, default_json_headers
           .merge('Accept' => '*', 'Authorization' => "Bearer #{access_token}")
-        expect(response_code).to eq(200)
-        expect(response.body).to eq('This file is awesome')
+        expect(response_code).to eq(302)
       end
 
       it 'allows download by admin for tenant for unpublished but in Merritt' do
         @curation_activities[0][2].destroy!
         @user.update(role: 'admin', tenant_id: @tenant_ids.first)
         response_code = get "/api/v2/files/#{@files[0].first.id}/download", {}, default_authenticated_headers.merge('Accept' => '*')
-        expect(response_code).to eq(200)
-        expect(response.body).to eq('This file is awesome')
+        expect(response_code).to eq(302)
       end
 
       it 'disallows download by anonymous for unpublished' do
