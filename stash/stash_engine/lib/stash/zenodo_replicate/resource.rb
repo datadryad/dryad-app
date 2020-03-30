@@ -23,7 +23,7 @@ module Stash
         error_if_replicating
 
         # database status for this copy
-        third_copy_record = @resource.zenodo_third_copy
+        third_copy_record = @resource.zenodo_copy
         third_copy_record.update(state: 'replicating')
 
         # a zenodo deposit class
@@ -48,7 +48,7 @@ module Stash
         third_copy_record.update(state: 'finished')
       rescue Stash::MerrittDownload::DownloadError, Stash::ZenodoReplicate::ZenodoError, HTTP::Error => ex
         # log this in the database so we can track it
-        record = StashEngine::ZenodoThirdCopy.where(resource_id: @resource.id).first_or_create
+        record = StashEngine::ZenodoCopy.where(resource_id: @resource.id).first_or_create
         record.update(state: 'error', error_info: "#{ex.class}\n#{ex}", identifier_id: @resource.identifier.id)
       ensure
         @file_collection.cleanup_files
@@ -58,14 +58,14 @@ module Stash
 
       # error if not starting as enqueued
       def error_if_not_enqueued
-        return if @resource.zenodo_third_copy&.state == 'enqueued'
+        return if @resource.zenodo_copy&.state == 'enqueued'
 
         raise ZenodoError, "resource_id #{@resource.id}: You should never start replicating unless starting from an enqueued state"
       end
 
       # return an error if replicating already, shouldn't start another replication
       def error_if_replicating
-        repli_count = @resource.identifier.zenodo_third_copies.where(state: %w[replicating error]).count
+        repli_count = @resource.identifier.zenodo_copies.where(state: %w[replicating error]).count
         # rubocop goes bonkers on this and suggests guardclause but when you do it suggests an if statement
         # rubocop:disable Style/GuardClause
         if repli_count.positive?
@@ -76,7 +76,7 @@ module Stash
       end
 
       def previous_deposition_id
-        last = @resource.identifier.zenodo_third_copies.where.not(deposition_id: nil).last
+        last = @resource.identifier.zenodo_copies.where.not(deposition_id: nil).last
         return nil if last.nil?
 
         last.deposition_id

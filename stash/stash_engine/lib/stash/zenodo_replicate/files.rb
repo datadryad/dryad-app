@@ -16,7 +16,7 @@ module Stash
         # the file_collection has .path and .info_hash properties
         # the info hash of Merritt files is like key=filename, value = { success: <t/f>, sha256_digest:, md5_digest: }
 
-        @resp = ZC.standard_request(:get, "#{ZC.base_url}/api/deposit/depositions/#{@resource.zenodo_third_copy.deposition_id}")
+        @resp = ZC.standard_request(:get, "#{ZC.base_url}/api/deposit/depositions/#{@resource.zenodo_copy.deposition_id}")
 
         # just gets filenames for items already in Zenodo
         @existing_zenodo_filenames = @resp[:files].map { |f| f[:filename] }

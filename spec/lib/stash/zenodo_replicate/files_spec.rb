@@ -15,7 +15,7 @@ module Stash
 
       before(:each) do
         @resource = create(:resource)
-        @ztc = create(:zenodo_third_copy, resource: @resource, identifier: @resource.identifier)
+        @ztc = create(:zenodo_copy, resource: @resource, identifier: @resource.identifier)
         @file_uploads = [
           create(:file_upload, resource_id: @resource.id),
           create(:file_upload, resource_id: @resource.id)

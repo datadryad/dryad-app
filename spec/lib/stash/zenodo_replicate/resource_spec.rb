@@ -18,7 +18,7 @@ module Stash
 
       before(:each) do
         @resource = create(:resource)
-        @ztc = create(:zenodo_third_copy, resource: @resource, identifier: @resource.identifier)
+        @ztc = create(:zenodo_copy, resource: @resource, identifier: @resource.identifier)
         @szr = Stash::ZenodoReplicate::Resource.new(resource: @resource)
       end
 
@@ -41,8 +41,8 @@ module Stash
         it "rejects later submission for one that has previous errored that hasn't been corrected" do
           @ztc.update(state: 'error')
           @resource2 = create(:resource, identifier_id: @resource.identifier_id)
-          @ztc2 = create(:zenodo_third_copy, resource: @resource2, identifier: @resource2.identifier,
-                                             deposition_id: @ztc.deposition_id)
+          @ztc2 = create(:zenodo_copy, resource: @resource2, identifier: @resource2.identifier,
+                                       deposition_id: @ztc.deposition_id)
           @szr2 = Stash::ZenodoReplicate::Resource.new(resource: @resource2)
           @szr2.add_to_zenodo
           @ztc2.reload

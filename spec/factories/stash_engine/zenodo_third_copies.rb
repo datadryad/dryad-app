@@ -1,6 +1,6 @@
 FactoryBot.define do
 
-  factory :zenodo_third_copy, class: StashEngine::ZenodoThirdCopy do
+  factory :zenodo_copy, class: StashEngine::ZenodoCopy do
     resource
 
     state { 'enqueued' }

@@ -11,7 +11,7 @@ module StashEngine
     # there are places we may have more than one from our old versions
     has_many :shares, class_name: 'StashEngine::Share', dependent: :destroy
     has_many :cached_citations, class_name: 'StashEngine::CounterCitation', dependent: :destroy
-    has_many :zenodo_third_copies, class_name: 'StashEngine::ZenodoThirdCopy', dependent: :destroy
+    has_many :zenodo_copies, class_name: 'StashEngine::ZenodoCopy', dependent: :destroy
     has_one :latest_resource,
             class_name: 'StashEngine::Resource',
             primary_key: 'latest_resource_id',
