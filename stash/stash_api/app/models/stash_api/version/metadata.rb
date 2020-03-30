@@ -24,6 +24,7 @@ module StashApi
           relatedWorks: RelatedWorks.new(resource: @resource).value,
           versionNumber: @resource.try(:stash_version).try(:version),
           versionStatus: @resource.current_state,
+          curationStatus: StashEngine::CurationActivity.latest(@resource&.id)&.readable_status,
           userId: @resource.user_id,
           skipDataciteUpdate: @resource.skip_datacite_update || nil,
           skipEmails: @resource.skip_emails || nil,
