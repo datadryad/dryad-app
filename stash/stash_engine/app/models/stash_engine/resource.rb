@@ -356,6 +356,12 @@ module StashEngine
       current_curation_activity.status
     end
 
+    # Date on which the user first submitted this dataset
+    # (for peer_review datasets, the date at which it came out of peer_review)
+    def submitted_date
+      curation_activities.order(:id).where(status: 'submitted')&.first&.created_at
+    end
+
     # Create the initial CurationActivity
     def init_curation_status
       curation_activities << StashEngine::CurationActivity.new(user_id: current_editor_id || user_id)
