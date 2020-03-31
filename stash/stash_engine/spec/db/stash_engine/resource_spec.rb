@@ -1179,8 +1179,15 @@ module StashEngine
           res = create(:resource, user_id: @user.id, tenant_id: @user.tenant_id)
           create(:curation_activity_no_callbacks, resource: res, created_at: '2020-01-01', status: 'in_progress')
           create(:curation_activity_no_callbacks, resource: res, created_at: '2020-01-02', status: 'submitted')
-          create(:curation_activity_no_callbacks, resource: res, created_at: '2020-01-03', status: 'published')
+          create(:curation_activity_no_callbacks, resource: res, created_at: '2020-01-03', status: 'submitted')
+          create(:curation_activity_no_callbacks, resource: res, created_at: '2020-01-04', status: 'published')
           expect(res.submitted_date.to_date).to eql(Date.parse('2020-01-02'))
+        end
+
+        it 'returns nil if there is no submitted_date' do
+          res = create(:resource, user_id: @user.id, tenant_id: @user.tenant_id)
+          create(:curation_activity_no_callbacks, resource: res, created_at: '2020-01-01', status: 'in_progress')
+          expect(res.submitted_date).to be_nil
         end
       end
 
