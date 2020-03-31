@@ -4,6 +4,8 @@
 
 require_dependency 'stash_api/application_controller'
 require_relative 'datasets/submission_mixin'
+require 'stash/download/file'
+require 'stash/download/version'
 
 module StashApi
   class DatasetsController < ApplicationController
@@ -19,7 +21,14 @@ module StashApi
     # before_action :require_in_progress_resource, only: :update
     before_action :require_permission, only: :update
     before_action :lock_down_admin_only_params, only: %i[create update]
+    before_action :setup_streaming
 
+    # set up the Merritt file & version objects so they have access to the controller context before continuing
+    def setup_streaming
+      @version_streamer = Stash::Download::Version.new(controller_context: self)
+      @file_streamer = Stash::Download::File.new(controller_context: self)
+    end
+    
     # get /datasets/<id>
     def show
       ds = Dataset.new(identifier: @stash_identifier.to_s, user: @user)
@@ -101,10 +110,19 @@ module StashApi
 
     # get /datasets/<id>/download
     def download
-      res = @stash_identifier.latest_viewable_resource(user: @user)
-      if res&.download_uri
-        StashEngine::CounterLogger.version_download_hit(request: request, resource: res) if res
-        redirect_to res.merritt_producer_download_uri # latest version, friendly download because that's what we do in UI for object
+      res = @stash_identifier.latest_downloadable_resource(user: @user)
+
+      #render text: " was going to log res #{res.id}, current_user #{@user.id}", status: 404
+      logger.info(" res #{res.id}, current_user #{@user.id}")
+      if res.may_download?(ui_user: @user)
+        @version_streamer.download(resource: res) do
+          redirect_to landing_show_path(id: res.identifier_str, big: 'showme') # if it's an async
+        end
+
+      #if res&.download_uri
+      #  StashEngine::CounterLogger.version_download_hit(request: request, resource: res) if res
+      #  redirect_to res.merritt_producer_download_uri # latest version, friendly download because that's what we do in UI for object
+
       else
         render text: 'download for this version of the dataset is unavailable', status: 404
       end
