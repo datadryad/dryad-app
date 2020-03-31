@@ -111,18 +111,10 @@ module StashApi
     # get /datasets/<id>/download
     def download
       res = @stash_identifier.latest_downloadable_resource(user: @user)
-
-      #render text: " was going to log res #{res.id}, current_user #{@user.id}", status: 404
-      logger.info(" res #{res.id}, current_user #{@user.id}")
-      if res.may_download?(ui_user: @user)
+      if res&.may_download?(ui_user: @user)
         @version_streamer.download(resource: res) do
-          redirect_to landing_show_path(id: res.identifier_str, big: 'showme') # if it's an async
+          redirect_to stash_url_helpers.landing_show_path(id: res.identifier_str, big: 'showme') # if it's an async
         end
-
-      #if res&.download_uri
-      #  StashEngine::CounterLogger.version_download_hit(request: request, resource: res) if res
-      #  redirect_to res.merritt_producer_download_uri # latest version, friendly download because that's what we do in UI for object
-
       else
         render text: 'download for this version of the dataset is unavailable', status: 404
       end
