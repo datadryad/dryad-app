@@ -358,10 +358,7 @@ module StashEngine
     # Date on which the user first submitted this dataset
     # (for peer_review datasets, the date at which it came out of peer_review)
     def submitted_date
-      curation_activities.order(:id).each do |ca|
-        return ca.created_at if ca.status == 'submitted'
-      end
-      nil
+      curation_activities.order(:id).where(status: 'submitted')&.first&.created_at
     end
 
     # Create the initial CurationActivity
