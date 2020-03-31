@@ -1,56 +1,49 @@
-# this is really for an individual file download from Merritt to a file
-
-# example file names: 'Madagascarophis Nexus Files.zip', 'Madagascarophis_trees.zip', 'mrt-datacite.xml', 'mrt-oaidc.xml', 'stash-wrapper.xml'
-#
-# example:
-# require 'stash/merritt_download'
-# resource = StashEngine::Resource.find(785)
-# smdf = Stash::MerrittDownload::File.new(resource: resource)
-# smdf.download_file(filename: 'Madagascarophis Nexus Files.zip')
-
 # I have been favoring the 'httprb/http' gem recently since it is small, fast and pretty easy to use, similar to Python's
 # requests library. See https://twin.github.io/httprb-is-great/ .
 require 'http'
-require 'tempfile'
 require 'cgi'
-require 'fileutils'
 require 'byebug'
+require 'digest'
+require 'fileutils'
 
 module Stash
   module MerrittDownload
+
     # calling this class File means we need to namespace the built-in Ruby file class when calling it in here
     class File
 
       attr_reader :path
 
-      # we need to be able to download any file from Merritt, including a couple of hidden ones we don't track as user-files (mrt-datacite.xml)
-      # so we will need some individual information such as resource and filename and can't use database file_id since it doesn't exist for some
-      def initialize(resource:)
+      def initialize(resource:, path:)
         @resource = resource
-
-        # the 'upload' path is a symlinked shared EFS mount on servers
-        @path = Rails.root.join('uploads', 'zenodo_replication', resource.id.to_s)
-        FileUtils.mkdir_p(@path) # makes entire path to this file if is needed
+        @path = path
+        FileUtils.mkdir_p(@path) unless ::File.directory?(@path)
       end
 
       # download file a and return a hash, we should be tracking success routinely since downloads are error-prone
-      def download_file(filename:)
-        mrt_resp = get_url(filename: filename)
+      def download_file(db_file:)
+        mrt_resp = get_url(filename: db_file.upload_file_name)
 
         unless mrt_resp.status.success?
-          return { success: false, error: "#{mrt_resp.status.code} status code retrieving '#{filename}' for resource #{@resource.id}" }
+          return { success: false, error: "#{mrt_resp.status.code} status code retrieving '#{db_file.upload_file_name}' " \
+              "for resource #{@resource.id}" }
         end
 
-        # this doesn't load everything into memory at once and writes in chunks, which is good for not blowing out memory by slurping
-        ::File.open(::File.join(@path, filename), 'wb') do |f|
+        md5 = Digest::MD5.new
+        sha256 = Digest::SHA256.new
+
+        # this doesn't load everything into memory at once and writes in chunks and calculates digests at the same time
+        ::File.open(::File.join(@path, db_file.upload_file_name), 'wb') do |f|
           mrt_resp.body.each do |chunk|
             f.write(chunk)
+            md5.update(chunk)
+            sha256.update(chunk)
           end
         end
 
-        { success: true }
+        get_digests(md5_obj: md5, sha256_obj: sha256, db_file: db_file).merge(success: true)
       rescue HTTP::Error => ex
-        { success: false, error: "Error retrieving '#{filename}' for resource #{@resource.id}\n#{ex}" }
+        { success: false, error: "Error downloading file for resource #{@resource.id}\nHTTP::Error #{ex}" }
       end
 
       # gets the file url and returns an HTTP.get(url) response object
@@ -70,6 +63,22 @@ module Stash
         "#{APP_CONFIG.merritt_express_base_url}/dv/#{@resource.stash_version.merritt_version}" \
           "/#{CGI.unescape(ark)}/#{ERB::Util.url_encode(filename).gsub('%252F', '%2F')}"
       end
+
+      # rubocop:disable Metrics/CyclomaticComplexity
+      def get_digests(md5_obj:, sha256_obj:, db_file:)
+        md5_hex = md5_obj.hexdigest
+        sha256_hex = sha256_obj.hexdigest
+
+        return { md5_hex: md5_hex, sha256_hex: sha256_hex } if db_file.blank? || db_file.digest.blank?
+
+        if (db_file.digest_type == 'md5' && db_file.digest != md5_hex) ||
+            (db_file.digest_type == 'sha-256' && db_file.digest != sha_256_hex)
+          raise Stash::MerrittDownload::DownloadError, "Digest for downloaded file doesn't match database value. File.id: #{db_file.id}"
+        end
+
+        { md5_hex: md5_hex, sha256_hex: sha256_hex }
+      end
+      # rubocop:enable Metrics/CyclomaticComplexity
 
     end
   end
