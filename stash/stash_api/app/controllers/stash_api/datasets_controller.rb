@@ -28,7 +28,7 @@ module StashApi
       @version_streamer = Stash::Download::Version.new(controller_context: self)
       @file_streamer = Stash::Download::File.new(controller_context: self)
     end
-    
+
     # get /datasets/<id>
     def show
       ds = Dataset.new(identifier: @stash_identifier.to_s, user: @user)
