@@ -44,7 +44,7 @@ module Stash
       rescue HTTP::Error => ex
         { success: false, error: "Error downloading file for resource #{@resource.id}\nHTTP::Error #{ex}" }
       rescue Stash::Download::MerrittError => ex
-        { success: false, error: "Error downloading file for resource #{@resource.id}\nMerrittError: #{ex}"}
+        { success: false, error: "Error downloading file for resource #{@resource.id}\nMerrittError: #{ex}" }
       end
 
       # gets the file url and returns an HTTP.get(url) response object
