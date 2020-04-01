@@ -25,25 +25,14 @@ module Stash
           return
         end
 
-        http = HTTP.timeout(connect: 30, read: 30).timeout(7200).follow(max_hops: 2)
-          .basic_auth(user: tenant.repository.username, pass: tenant.repository.password)
+        url = file.s3_presigned_url
 
-        # ui: GET /api/presign-file/:object/:version/producer%2F:file
-        r = http.get(file.merritt_presign_info_url)
-        handle_bad_status(r, file)
-        resp = r.parse.with_indifferent_access
-        cc.redirect_to resp[:url]
+        cc.redirect_to url
       rescue HTTP::Error => e
         raise MerrittError, "HTTP Error while creating presigned URL with Merritt\n" \
           "#{file.merritt_presign_info_url}\n" \
           "Original HTTP library error: #{e}\n" \
           "#{e.backtrace.join("\n")}"
-      end
-
-      def handle_bad_status(r, file)
-        return if r.status.success?
-
-        raise MerrittError, "Merritt couldn't create presigned URL for #{url(file: file)}\nHttp status code: #{r.status.code}"
       end
     end
   end
