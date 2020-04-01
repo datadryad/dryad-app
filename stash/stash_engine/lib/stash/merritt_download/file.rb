@@ -24,7 +24,7 @@ module Stash
         s3_resp = get_url(url: db_file.s3_presigned_url)
 
         unless s3_resp.status.success?
-          return { success: false, error: "#{mrt_resp.status.code} status code retrieving '#{db_file.upload_file_name}' " \
+          return { success: false, error: "#{s3_resp.status.code} status code retrieving '#{db_file.upload_file_name}' " \
               "for resource #{@resource.id}" }
         end
 
@@ -43,6 +43,8 @@ module Stash
         get_digests(md5_obj: md5, sha256_obj: sha256, db_file: db_file).merge(success: true)
       rescue HTTP::Error => ex
         { success: false, error: "Error downloading file for resource #{@resource.id}\nHTTP::Error #{ex}" }
+      rescue Stash::Download::MerrittError => ex
+        { success: false, error: "Error downloading file for resource #{@resource.id}\nMerrittError: #{ex}"}
       end
 
       # gets the file url and returns an HTTP.get(url) response object

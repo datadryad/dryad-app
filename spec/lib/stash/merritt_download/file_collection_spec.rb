@@ -37,14 +37,31 @@ module Stash
           @file_upload = create(:file_upload, resource_id: @resource.id)
         end
 
-        it 'it raises an exception for download errors' do
-          stub_request(:get, %r{http://mrtexpress-test\.example\.org/dv/.+})
+        it 'raises an exception for Merritt download errors' do
+          stub_request(:get, %r{http://merritt-fake\.cdlib\.org/api/presign-file/.+})
             .to_return(status: 404, body: '', headers: {})
           expect { @fc.download_files }.to raise_error(Stash::MerrittDownload::DownloadError)
         end
 
+        it 'raises an exception for S3 download errors' do
+          # first return from Merritt
+          stub_request(:get, @file_upload.merritt_presign_info_url).to_return(status: 200,
+                                                                              body: '{"url": "http://presigned.example.com/is/great/39768945"}',
+                                                                              headers: {'Content-Type': 'application/json' })
+
+          stub_request(:get, "http://presigned.example.com/is/great/39768945")
+              .to_return(status: 404, body: '', headers: {})
+
+          expect { @fc.download_files }.to raise_error(Stash::MerrittDownload::DownloadError)
+        end
+
         it 'sets up info_hash on success' do
-          stub_request(:get, %r{http://mrtexpress-test\.example\.org/dv/.+})
+          # first return from Merritt
+          stub_request(:get, @file_upload.merritt_presign_info_url).to_return(status: 200,
+                                                                              body: '{"url": "http://presigned.example.com/is/great/39768945"}',
+                                                                              headers: {'Content-Type': 'application/json' })
+
+          stub_request(:get, "http://presigned.example.com/is/great/39768945")
             .to_return(status: 200, body: '', headers: {})
           @fc.download_files
           expect(@fc.info_hash.keys).to include(@file_upload.upload_file_name)
