@@ -29,22 +29,15 @@ module Stash
           .basic_auth(user: tenant.repository.username, pass: tenant.repository.password)
 
         # ui: GET /api/presign-file/:object/:version/producer%2F:file
-        r = http.get(url(file: file))
+        r = http.get(file.presign_info_url)
         handle_bad_status(r, file)
         resp = r.parse.with_indifferent_access
         cc.redirect_to resp[:url]
       rescue HTTP::Error => e
         raise MerrittError, "HTTP Error while creating presigned URL with Merritt\n" \
-          "#{url(file: file)}\n" \
+          "#{file.presign_info_url}\n" \
           "Original HTTP library error: #{e}\n" \
           "#{e.backtrace.join("\n")}"
-      end
-
-      def url(file:)
-        resource = file.resource
-        domain, local_id = resource.merritt_protodomain_and_local_id
-        "#{domain}/api/presign-file/#{local_id}/#{resource.stash_version.merritt_version}/" \
-          "producer%2F#{ERB::Util.url_encode(file.upload_file_name)}?no_redirect=true"
       end
 
       def handle_bad_status(r, file)
