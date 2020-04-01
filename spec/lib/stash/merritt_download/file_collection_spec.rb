@@ -47,10 +47,10 @@ module Stash
           # first return from Merritt
           stub_request(:get, @file_upload.merritt_presign_info_url).to_return(status: 200,
                                                                               body: '{"url": "http://presigned.example.com/is/great/39768945"}',
-                                                                              headers: {'Content-Type': 'application/json' })
+                                                                              headers: { 'Content-Type': 'application/json' })
 
-          stub_request(:get, "http://presigned.example.com/is/great/39768945")
-              .to_return(status: 404, body: '', headers: {})
+          stub_request(:get, 'http://presigned.example.com/is/great/39768945')
+            .to_return(status: 404, body: '', headers: {})
 
           expect { @fc.download_files }.to raise_error(Stash::MerrittDownload::DownloadError)
         end
@@ -59,9 +59,9 @@ module Stash
           # first return from Merritt
           stub_request(:get, @file_upload.merritt_presign_info_url).to_return(status: 200,
                                                                               body: '{"url": "http://presigned.example.com/is/great/39768945"}',
-                                                                              headers: {'Content-Type': 'application/json' })
+                                                                              headers: { 'Content-Type': 'application/json' })
 
-          stub_request(:get, "http://presigned.example.com/is/great/39768945")
+          stub_request(:get, 'http://presigned.example.com/is/great/39768945')
             .to_return(status: 200, body: '', headers: {})
           @fc.download_files
           expect(@fc.info_hash.keys).to include(@file_upload.upload_file_name)
