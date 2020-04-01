@@ -86,7 +86,8 @@ module StashEngine
       "#{domain}/d/#{ark}/#{resource.stash_version.merritt_version}/#{ERB::Util.url_encode(upload_file_name)}"
     end
 
-    def presign_info_url
+    # the Merritt URL to query in order to get the information on the presigned URL
+    def merritt_presign_info_url
       domain, local_id = resource.merritt_protodomain_and_local_id
       "#{domain}/api/presign-file/#{local_id}/#{resource.stash_version.merritt_version}/" \
           "producer%2F#{ERB::Util.url_encode(upload_file_name)}?no_redirect=true"

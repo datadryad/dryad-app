@@ -29,13 +29,13 @@ module Stash
           .basic_auth(user: tenant.repository.username, pass: tenant.repository.password)
 
         # ui: GET /api/presign-file/:object/:version/producer%2F:file
-        r = http.get(file.presign_info_url)
+        r = http.get(file.merritt_presign_info_url)
         handle_bad_status(r, file)
         resp = r.parse.with_indifferent_access
         cc.redirect_to resp[:url]
       rescue HTTP::Error => e
         raise MerrittError, "HTTP Error while creating presigned URL with Merritt\n" \
-          "#{file.presign_info_url}\n" \
+          "#{file.merritt_presign_info_url}\n" \
           "Original HTTP library error: #{e}\n" \
           "#{e.backtrace.join("\n")}"
       end
