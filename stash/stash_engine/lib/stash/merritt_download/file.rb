@@ -1,7 +1,6 @@
 # I have been favoring the 'httprb/http' gem recently since it is small, fast and pretty easy to use, similar to Python's
 # requests library. See https://twin.github.io/httprb-is-great/ .
 require 'http'
-require 'cgi'
 require 'byebug'
 require 'digest'
 require 'fileutils'
@@ -22,10 +21,10 @@ module Stash
 
       # download file a and return a hash, we should be tracking success routinely since downloads are error-prone
       def download_file(db_file:)
-        mrt_resp = get_url(filename: db_file.upload_file_name)
+        s3_resp = get_url(url: db_file.s3_presigned_url)
 
-        unless mrt_resp.status.success?
-          return { success: false, error: "#{mrt_resp.status.code} status code retrieving '#{db_file.upload_file_name}' " \
+        unless s3_resp.status.success?
+          return { success: false, error: "#{s3_resp.status.code} status code retrieving '#{db_file.upload_file_name}' " \
               "for resource #{@resource.id}" }
         end
 
@@ -34,7 +33,7 @@ module Stash
 
         # this doesn't load everything into memory at once and writes in chunks and calculates digests at the same time
         ::File.open(::File.join(@path, db_file.upload_file_name), 'wb') do |f|
-          mrt_resp.body.each do |chunk|
+          s3_resp.body.each do |chunk|
             f.write(chunk)
             md5.update(chunk)
             sha256.update(chunk)
@@ -44,24 +43,14 @@ module Stash
         get_digests(md5_obj: md5, sha256_obj: sha256, db_file: db_file).merge(success: true)
       rescue HTTP::Error => ex
         { success: false, error: "Error downloading file for resource #{@resource.id}\nHTTP::Error #{ex}" }
+      rescue Stash::Download::MerrittError => ex
+        { success: false, error: "Error downloading file for resource #{@resource.id}\nMerrittError: #{ex}" }
       end
 
       # gets the file url and returns an HTTP.get(url) response object
-      def get_url(filename:, read_timeout: 30)
-        url = download_file_url(filename: filename)
-
+      def get_url(url:, read_timeout: 30)
         http = HTTP.timeout(connect: 30, read: read_timeout).timeout(7200).follow(max_hops: 10)
-          .basic_auth(user: @resource.tenant.repository.username, pass: @resource.tenant.repository.password)
-
         http.get(url)
-      end
-
-      def download_file_url(filename:)
-        # domain is not used for MerrittExpress, because the domain is different than the one given by SWORD, only for Merritt UI
-        _domain, ark = @resource.merritt_protodomain_and_local_id
-
-        "#{APP_CONFIG.merritt_express_base_url}/dv/#{@resource.stash_version.merritt_version}" \
-          "/#{CGI.unescape(ark)}/#{ERB::Util.url_encode(filename).gsub('%252F', '%2F')}"
       end
 
       # rubocop:disable Metrics/CyclomaticComplexity
