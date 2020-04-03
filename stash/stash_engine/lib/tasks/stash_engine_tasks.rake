@@ -220,10 +220,13 @@ namespace :identifiers do
               'Size', 'Payment Type', 'Payment ID', 'Institution Name',
               'Journal Name', 'Sponsor Name']
       StashEngine::Identifier.publicly_viewable.each do |i|
-        created_date_str = i.created_at&.strftime('%Y-%m-%d')
-        submitted_date_str = i.first_submitted_resource&.submitted_date&.strftime('%Y-%m-%d')
         approval_date_str = i.approval_date&.strftime('%Y-%m-%d')
         next unless approval_date_str&.start_with?(year_month)
+        created_date_str = i.created_at&.strftime('%Y-%m-%d')
+        submitted_date = i.resources.submitted.each do |r|
+          break r.submitted_date if r.submitted_date.present?
+        end
+        submitted_date_str = submitted_date&.strftime('%Y-%m-%d')
         csv << [i.identifier, created_date_str, submitted_date_str, approval_date_str,
                 i.storage_size, i.payment_type, i.payment_id, i.submitter_affiliation&.long_name,
                 i.publication_name, i.journal_sponsor_name]
