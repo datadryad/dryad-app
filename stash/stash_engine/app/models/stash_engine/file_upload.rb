@@ -1,5 +1,6 @@
 require 'zaru'
 require 'cgi'
+require 'stash/download/file_presigned' # to import the Stash::Download::Merritt exception
 
 # rubocop:disable Metrics/ClassLength
 module StashEngine
@@ -84,6 +85,31 @@ module StashEngine
       domain, ark = resource.merritt_protodomain_and_local_id
       return '' if domain.nil?
       "#{domain}/d/#{ark}/#{resource.stash_version.merritt_version}/#{ERB::Util.url_encode(upload_file_name)}"
+    end
+
+    # the Merritt URL to query in order to get the information on the presigned URL
+    def merritt_presign_info_url
+      domain, local_id = resource.merritt_protodomain_and_local_id
+      "#{domain}/api/presign-file/#{local_id}/#{resource.stash_version.merritt_version}/" \
+          "producer%2F#{ERB::Util.url_encode(upload_file_name)}?no_redirect=true"
+    end
+
+    # this will do the http request to Merritt to get the presigned URL, putting here instead of other classes since it gets
+    # reused in a few places.  If we move to a different repo this will need to change.
+    #
+    # If you use this method, you need to rescue the HTTP::Error and Stash::Download::Merritt errors if you don't want them raised
+    def s3_presigned_url
+      raise Stash::Download::MerrittError, "Tenant not defined for resource_id: #{resource&.id}" if resource&.tenant.blank?
+
+      http = HTTP.timeout(connect: 30, read: 30).timeout(60).follow(max_hops: 2)
+        .basic_auth(user: resource.tenant.repository.username, pass: resource.tenant.repository.password)
+
+      r = http.get(merritt_presign_info_url)
+
+      return r.parse.with_indifferent_access[:url] if r.status.success?
+
+      raise Stash::Download::MerrittError,
+            "Merritt couldn't create presigned URL for #{merritt_presign_info_url}\nHttp status code: #{r.status.code}"
     end
 
     # example

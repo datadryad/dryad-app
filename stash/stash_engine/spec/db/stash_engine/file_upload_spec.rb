@@ -17,7 +17,7 @@ module StashEngine
         tenant_id: 'ucop'
       )
 
-      @resource = Resource.create(user_id: user.id)
+      @resource = Resource.create(user_id: user.id, tenant_id: 'ucop')
       resource.ensure_identifier('10.123/456')
       @upload = FileUpload.create(
         resource_id: resource.id,
@@ -235,5 +235,64 @@ module StashEngine
         expect(@upload.calc_file_path).to eq(nil)
       end
     end
+
+    describe :merritt_presign_info_url do
+      before(:each) do
+        allow_any_instance_of(Resource).to receive(:merritt_protodomain_and_local_id).and_return(
+          ['https://merritt.example.com', 'ark%3A%2F12345%2F38568']
+        )
+      end
+
+      it 'returns the url to get the merritt presigned url to s3' do
+        expect(@upload.merritt_presign_info_url).to eq(
+          'https://merritt.example.com/api/presign-file/ark%3A%2F12345%2F38568/1/producer%2Ffoo.bar?no_redirect=true'
+        )
+      end
+    end
+
+    describe :s3_presigned_url do
+      before(:each) do
+        allow_any_instance_of(Resource).to receive(:merritt_protodomain_and_local_id).and_return(
+          ['https://merritt.example.com', 'ark%3A%2F12345%2F38568']
+        )
+
+        tenant = { repository: { username: 'martinka', password: '123987xurp' }.to_ostruct }.to_ostruct
+        allow(Tenant).to receive(:find).with('ucop').and_return(tenant)
+      end
+
+      it 'raises Stash::Download::MerrittError for missing resource.tenant' do
+        @upload.resource.update(tenant_id: nil)
+        @upload.resource.reload
+        expect { @upload.s3_presigned_url }.to raise_error(Stash::Download::MerrittError)
+      end
+
+      it 'raises Stash::Download::MerrittError for unsuccessful response from Merritt' do
+        stub_request(:get, 'https://merritt.example.com/api/presign-file/ark:%2F12345%2F38568/1/producer%2Ffoo.bar?no_redirect=true')
+          .with(
+            headers: {
+              'Authorization' => 'Basic bWFydGlua2E6MTIzOTg3eHVycA==',
+              'Host' => 'merritt.example.com'
+            }
+          )
+          .to_return(status: 404, body: '[]', headers: { 'Content-Type': 'application/json' })
+        expect { @upload.s3_presigned_url }.to raise_error(Stash::Download::MerrittError)
+      end
+
+      it 'returns a URL based on json response and url in the data' do
+        stub_request(:get, 'https://merritt.example.com/api/presign-file/ark:%2F12345%2F38568/1/producer%2Ffoo.bar?no_redirect=true')
+          .with(
+            headers: {
+              'Authorization' => 'Basic bWFydGlua2E6MTIzOTg3eHVycA==',
+              'Host' => 'merritt.example.com'
+            }
+          )
+          .to_return(status: 200, body: '{"url": "http://my.presigned.url/is/great/39768945"}',
+                     headers: { 'Content-Type': 'application/json' })
+
+        expect(@upload.s3_presigned_url).to eq('http://my.presigned.url/is/great/39768945')
+      end
+
+    end
+
   end
 end
