@@ -1324,6 +1324,34 @@ module StashEngine
       end
     end
 
-  end
+    describe '#send_to_zenodo' do
 
+      before(:each) do
+        # This is all horribly hacky because of the way these tests don't load Rails correctly, we need move tests to
+        # a real Rails environment.
+
+        require 'active_job'
+        rails_root = Dir.mktmpdir('rails_root')
+        root_path = Pathname.new(rails_root)
+        allow(Rails).to receive(:root).and_return(root_path)
+
+        require_relative '../../../app/jobs/stash_engine/zenodo_copy_job'
+
+        @resource = create(:resource)
+      end
+
+      it 'creates a zenodo_copy record in database' do
+        allow(ZenodoCopyJob).to receive(:perform_later).and_return(nil)
+        @resource.send_to_zenodo
+        @resource.reload
+        expect(@resource.zenodo_copy).not_to be_nil
+        expect(@resource.zenodo_copy.state).to eq('enqueued')
+      end
+
+      it 'calls perform_later' do
+        expect(ZenodoCopyJob).to receive(:perform_later).with(@resource.id)
+        @resource.send_to_zenodo
+      end
+    end
+  end
 end
