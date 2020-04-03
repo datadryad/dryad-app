@@ -37,7 +37,7 @@ module Stash
           # We don't want to hold dead download threads open too long for resource and network reasons.
 
           begin
-            http = HTTP.timeout(connect: 30, read: read_timeout).timeout(3.hours).follow(max_hops: 10)
+            http = HTTP.timeout(connect: 30, read: read_timeout).timeout(3.hours.to_i).follow(max_hops: 10)
               .basic_auth(user: tenant.repository.username, pass: tenant.repository.password)
             # .persistent(URI.join(url, '/').to_s)
             merritt_response = http.get(url)
