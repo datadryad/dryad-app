@@ -1,29 +1,48 @@
+require 'stash/zenodo_replicate'
+
 module StashEngine
   class ZenodoCopyJob < ActiveJob::Base
     queue_as :zenodo_copy
 
+    DEFERRED_TOUCH_FILE = Rails.root.join('..', 'defer_jobs.txt').to_s
+
     TEST_FILE = Rails.root.join('log', 'test_active_job.txt')
 
-    before_enqueue do |job|
-      File.open(TEST_FILE, 'a') { |f| f.puts "before_enqueue:\n#{job.inspect}\n" }
-    end
+    # There is no real way to do a graceful pause of possibly long-running jobs ahead of a restart with ActiveJob or with
+    # delayed_job, so the only real solution is to add another status in a database state for
+    # a long running item such as 'deferred' outside of the queuing system (where I think it would naturally belong).
+    #
+    # Then before a shutdown/reboot make some logic that checks for the presence of a file like 'defer_jobs.txt'.
+    #
+    # If it exists then change the state to 'deferred' on the item and return early so it doesn't run and wait for
+    # any processing/in-progress to drain before restarting the workers.
+    #
+    # Then after the workers have restarted, have a method to re-enqueue the deferred jobs so they will get processed.
 
-    after_enqueue do |job|
-      File.open(TEST_FILE, 'a') { |f| f.puts "after_enqueue:\n#{job.inspect}\n" }
-    end
-
-    before_perform do |job|
-      File.open(TEST_FILE, 'a') { |f| f.puts "before_perform:\n#{job.inspect}\n" }
-    end
-
-    after_perform do |job|
-      File.open(TEST_FILE, 'a') { |f| f.puts "after_perform:\n#{job.inspect}\n" }
-    end
-
+    # the only argument for this is really the resource ID to copy
     def perform(*args)
-      # Do something later
-      sleep rand(10)
-      File.open(TEST_FILE, 'a') { |f| f.puts "\n\nRUNNING MY JOB #{args[0]}\n\n" }
+      # what do we need to log in here?
+      resource = StashEngine::Resource.where(id: args[0]).first
+      return if resource.nil? || resource.zenodo_copy.state != 'enqueued' || should_defer?(resource: resource)
+
+      zr = Stash::ZenodoReplicate::Resource.new(resource: @resource)
+      zr.add_to_zenodo
+    end
+
+    def should_defer?(resource:)
+      zc = resource.zenodo_copy
+      if File.exist?(DEFERRED_TOUCH_FILE)
+        zc.update(state: 'deferred')
+        return true
+      end
+      false
+    end
+
+    def self.enqueue_deferred
+      StashEngine::ZenodoCopy.where(state: 'deferred').each do |zc|
+        zc.update(state: 'enqueued')
+        self.perform_later(zc.resource_id)
+      end
     end
   end
 end
