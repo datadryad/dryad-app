@@ -24,6 +24,7 @@ module Stash
       end
 
       # this is a method that should be overridden
+      # rubocop:disable Metrics/AbcSize
       def stream_response(url:, tenant:, filename:, read_timeout: 30)
         cc.request.env['rack.hijack'].call
         user_stream = cc.request.env['rack.hijack_io']
@@ -49,6 +50,7 @@ module Stash
         end
         cc.response.close
       end
+      # rubocop:enable Metrics/AbcSize
 
       # these send methods are the streaming methods for a 'rack.hijack',
       def send_headers(stream:, header_obj:, filename:)
