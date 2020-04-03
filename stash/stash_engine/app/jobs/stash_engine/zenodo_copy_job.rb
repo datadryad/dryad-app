@@ -6,8 +6,6 @@ module StashEngine
 
     DEFERRED_TOUCH_FILE = Rails.root.join('..', 'defer_jobs.txt').to_s
 
-    TEST_FILE = Rails.root.join('log', 'test_active_job.txt')
-
     # There is no real way to do a graceful pause of possibly long-running jobs ahead of a restart with ActiveJob or with
     # delayed_job, so the only real solution is to add another status in a database state for
     # a long running item such as 'deferred' outside of the queuing system (where I think it would naturally belong).
@@ -23,13 +21,13 @@ module StashEngine
     def perform(*args)
       # what do we need to log in here?
       resource = StashEngine::Resource.where(id: args[0]).first
-      return if resource.nil? || resource.zenodo_copy.state != 'enqueued' || should_defer?(resource: resource)
+      return if resource.nil? || resource.zenodo_copy.state != 'enqueued' || self.class.should_defer?(resource: resource)
 
-      zr = Stash::ZenodoReplicate::Resource.new(resource: @resource)
+      zr = Stash::ZenodoReplicate::Resource.new(resource: resource)
       zr.add_to_zenodo
     end
 
-    def should_defer?(resource:)
+    def self.should_defer?(resource:)
       zc = resource.zenodo_copy
       if File.exist?(DEFERRED_TOUCH_FILE)
         zc.update(state: 'deferred')
