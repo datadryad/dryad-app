@@ -21,7 +21,7 @@ module StashEngine
     def perform(*args)
       # what do we need to log in here?
       resource = StashEngine::Resource.where(id: args[0]).first
-      return if resource.nil? || resource.zenodo_copy.state != 'enqueued' || self.class.should_defer?(resource: resource)
+      return if resource.nil? || resource&.zenodo_copy&.state != 'enqueued' || self.class.should_defer?(resource: resource)
 
       zr = Stash::ZenodoReplicate::Resource.new(resource: resource)
       zr.add_to_zenodo
