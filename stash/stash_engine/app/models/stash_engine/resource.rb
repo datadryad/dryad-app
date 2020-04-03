@@ -604,8 +604,7 @@ module StashEngine
     end
 
     def send_to_zenodo
-      byebug
-      ZenodoCopy.create(state: 'enqueued', identifier_id: identifier_id, resource_id: id)
+      ZenodoCopy.create(state: 'enqueued', identifier_id: identifier_id, resource_id: id) if zenodo_copy.nil?
       ZenodoCopyJob.perform_later(id)
     end
 
