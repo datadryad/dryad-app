@@ -17,7 +17,7 @@ module Stash
       end
 
       def self.standard_request(method, url, **args)
-        http = HTTP.timeout(connect: 30, read: 60).timeout(6.hours).follow(max_hops: 10)
+        http = HTTP.timeout(connect: 30, read: 60).timeout(6.hours.to_i).follow(max_hops: 10)
 
         my_params = { access_token: APP_CONFIG[:zenodo][:access_token] }.merge(args.fetch(:params, {}))
         my_headers = { 'Content-Type': 'application/json' }.merge(args.fetch(:headers, {}))
