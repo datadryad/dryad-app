@@ -22,28 +22,10 @@ module Stash
         @fp = FilePresigned.new(controller_context: @controller_context)
       end
 
-      describe '#handle_bad_status(r, file)' do
-        it 'raises exception if r.status.success? is false' do
-          r = double
-          allow(r).to receive(:status).and_return({ 'success?': false }.to_ostruct)
-          expect { @fp.handle_bad_status(r, @file_upload) }.to raise_error(Stash::Download::MerrittError)
-        end
-      end
-
-      describe '#url(file:)' do
-        it 'creates the url for a file' do
-          ark = @resource.download_uri.match(/ark.+/).to_s
-          resp = @fp.url(file: @file_upload)
-          out_url = "http://merritt-fake.cdlib.org/api/presign-file/#{ark}/1/producer%2F" \
-            "#{ERB::Util.url_encode(@file_upload.upload_file_name)}?no_redirect=true"
-          expect(resp).to eq(out_url)
-        end
-      end
-
       describe '#download(file:)' do
 
         before(:each) do
-          @stubby = stub_request(:get, @fp.url(file: @file_upload))
+          @stubby = stub_request(:get, @file_upload.merritt_presign_info_url)
             .with(
               headers: {
                 'Authorization' => 'Basic c3Rhc2hfc3VibWl0dGVyOmNvcnJlY3TigItob3JzZeKAi2JhdHRlcnnigItzdGFwbGU=',
@@ -67,7 +49,7 @@ module Stash
         it 'raises an error for bad status response from Merritt' do
           remove_request_stub(@stubby)
 
-          stub_request(:get, @fp.url(file: @file_upload))
+          stub_request(:get, @file_upload.merritt_presign_info_url)
             .with(
               headers: {
                 'Authorization' => 'Basic c3Rhc2hfc3VibWl0dGVyOmNvcnJlY3TigItob3JzZeKAi2JhdHRlcnnigItzdGFwbGU=',
