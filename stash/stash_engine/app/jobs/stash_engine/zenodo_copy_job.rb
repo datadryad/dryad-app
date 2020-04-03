@@ -39,7 +39,7 @@ module StashEngine
     def self.enqueue_deferred
       StashEngine::ZenodoCopy.where(state: 'deferred').each do |zc|
         zc.update(state: 'enqueued')
-        self.perform_later(zc.resource_id)
+        perform_later(zc.resource_id)
       end
     end
   end
