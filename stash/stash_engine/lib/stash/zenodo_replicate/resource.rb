@@ -21,6 +21,7 @@ module Stash
         # sanity checks
         error_if_not_enqueued
         error_if_replicating
+        error_if_out_of_order
 
         # database status for this copy
         third_copy_record = @resource.zenodo_copy
@@ -73,6 +74,16 @@ module Stash
               'is replicating or has an error'
         end
         # rubocop:enable Style/GuardClause
+      end
+
+      def error_if_out_of_order
+        # this is a little similar to error_if_replicating, but catches defered or other odd states
+        prev_unfinished_count = StashEngine::ZenodoCopy.where(identifier_id: @resource.identifier_id)
+            .where("id < ?", @resource.zenodo_copy.id).where.not(state: 'finished').count
+        return if prev_unfinished_count == 0
+
+        raise ZenodoError, "identifier_id #{@resource.identifier.id}: Cannot replicate a version when a previous version " \
+              'has not replicated yet. Items must replicate in order.'
       end
 
       def previous_deposition_id

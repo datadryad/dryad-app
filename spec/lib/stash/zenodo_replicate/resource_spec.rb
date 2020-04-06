@@ -60,6 +60,27 @@ module Stash
           expect(@ztc.error_info).to include('You should never start replicating unless starting from an enqueued state')
           # note error logging is also tested in here
         end
+
+        it 'rejects an out-of-order replication for the same identifier with one deferred' do
+          @ztc.update(state: 'deferred')
+          @resource2 = create(:resource, identifier_id: @resource.identifier_id)
+          @ztc2 = create(:zenodo_copy, resource: @resource2, identifier: @resource.identifier)
+          @szr = Stash::ZenodoReplicate::Resource.new(resource: @resource2)
+          @szr.add_to_zenodo
+          @ztc2.reload
+          expect(@ztc2.state).to eq('error')
+          expect(@ztc2.error_info).to include('Items must replicate in order')
+        end
+
+        it 'rejects an out-of-order replication for the same identifier later replicating first' do
+          @resource2 = create(:resource, identifier_id: @resource.identifier_id)
+          @ztc2 = create(:zenodo_copy, resource: @resource2, identifier: @resource.identifier)
+          @szr = Stash::ZenodoReplicate::Resource.new(resource: @resource2)
+          @szr.add_to_zenodo
+          @ztc2.reload
+          expect(@ztc2.state).to eq('error')
+          expect(@ztc2.error_info).to include('Items must replicate in order')
+        end
       end
     end
   end
