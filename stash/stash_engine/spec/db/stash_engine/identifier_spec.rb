@@ -27,6 +27,8 @@ module StashEngine
           upload_file_name: "created#{i}.bin",
           upload_file_size: i * 3
         )
+
+        allow_any_instance_of(StashEngine::CurationActivity).to receive(:copy_to_zenodo).and_return(true)
       end
 
       @fake_issn = 'bogus-issn-value'

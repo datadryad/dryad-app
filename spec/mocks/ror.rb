@@ -8,6 +8,10 @@ module Mocks
       stub_ror_id_lookup(university: user.present? && user.affiliation.present? ? user.affiliation.long_name : nil)
     end
 
+    def ignore_zenodo!
+      allow_any_instance_of(StashEngine::CurationActivity).to receive(:copy_to_zenodo).and_return(true)
+    end
+
     def stub_ror_heartbeat_check
       stub_request(:get, 'https://api.ror.org/heartbeat')
         .with(
