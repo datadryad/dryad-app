@@ -79,7 +79,7 @@ module Stash
       def error_if_out_of_order
         # this is a little similar to error_if_replicating, but catches defered or other odd states
         prev_unfinished_count = StashEngine::ZenodoCopy.where(identifier_id: @resource.identifier_id)
-            .where("id < ?", @resource.zenodo_copy.id).where.not(state: 'finished').count
+          .where('id < ?', @resource.zenodo_copy.id).where.not(state: 'finished').count
         return if prev_unfinished_count == 0
 
         raise ZenodoError, "identifier_id #{@resource.identifier.id}: Cannot replicate a version when a previous version " \
