@@ -19,6 +19,7 @@ module StashEngine
       mock_ror!
       mock_datacite!
       mock_stripe!
+      ignore_zenodo!
       @user = create(:user, role: 'superuser')
       @identifier = create(:identifier)
       @resource = create(:resource, :submitted, identifier: @identifier, user_id: @user.id, tenant_id: @user.tenant_id)

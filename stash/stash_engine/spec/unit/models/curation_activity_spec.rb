@@ -10,6 +10,11 @@ require 'byebug'
 module StashEngine
   RSpec.describe CurationActivity do
     # this is just a basic test to be sure FactoryBot works.  It likes to break a lot.
+
+    before(:each) do
+      allow_any_instance_of(StashEngine::CurationActivity).to receive(:copy_to_zenodo).and_return(true)
+    end
+
     describe :factories do
       it 'creates a FactoryBot factory that works' do
         @identifier = create(:identifier)

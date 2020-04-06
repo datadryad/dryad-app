@@ -23,6 +23,7 @@ module StashEngine
       mock_ror!
       mock_datacite!
       mock_stripe!
+      ignore_zenodo!
 
       # below will create @identifier, @resource, @user and the basic required things for an initial version of a dataset
       create_basic_dataset!

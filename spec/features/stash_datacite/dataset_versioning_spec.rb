@@ -15,6 +15,7 @@ RSpec.feature 'DatasetVersioning', type: :feature do
     mock_ror!
     mock_datacite!
     mock_stripe!
+    ignore_zenodo!
     @curator = create(:user, role: 'superuser', tenant_id: 'dryad')
     @author = create(:user, tenant_id: 'dryad')
     @document_list = []
