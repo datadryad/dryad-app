@@ -57,6 +57,10 @@ module StashEngine
                                  latest_curation_status_changed?
                      }
 
+    after_create :copy_to_zenodo, if: proc { |ca|
+      !ca.resource.skip_datacite_update && ca.published? && latest_curation_status_changed?
+    }
+
     # Email the author and/or journal about status changes
     after_create :email_status_change_notices,
                  if: proc { |_ca| latest_curation_status_changed? && !resource.skip_emails }
@@ -149,6 +153,10 @@ module StashEngine
 
     def update_solr
       resource.submit_to_solr
+    end
+
+    def copy_to_zenodo
+      resource.send_to_zenodo
     end
 
     def remove_peer_review
