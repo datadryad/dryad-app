@@ -64,3 +64,54 @@ We really may want to move our Merritt submissions to use something
 like this rather than the expansion I made to David's home-baked
 queueing system which still runs inside the UI server processes and
 can have problems if the UI server goes down at a bad time.
+
+
+To test jobs go through and get processed with ActiveJob
+--------------------------------------------------------
+
+```
+RAILS_ENV=local_dev bin/delayed_job start
+```
+
+from RAILS_ENV=local_dev rails console:
+```
+resource = StashEngine::Resource.find(<id>)
+resource.send_to_zenodo
+```
+
+You can now check the stash_engine_zenodo_copies and delayed_jobs tables for status
+or if you want to look at the item on zenodo (it has their id in the table).
+
+
+To test draining long running jobs before a restart
+---------------------------------------------------
+
+In the directory above the application root.  (We don't want this in
+the application root since it gets changed with a new deploy on the
+servers.)
+```
+touch defer_jobs.txt
+```
+
+Send another Zenodo job as documented above for testing jobs go
+through.
+
+Wait for it to run and see that it didn't run and status was changed
+to deferred in the zenodo_copies.state field.
+
+
+To test sending through again later
+-----------------------------------
+
+remove the defer file
+```
+rm defer_jobs.txt
+```
+
+in rails console
+```
+StashEngine::ZenodoCopyJob.enqueue_deferred
+```
+
+Now wait for it to be enqueued and run and check the tables as above
+for status to see it go through.
