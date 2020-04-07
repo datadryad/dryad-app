@@ -603,6 +603,11 @@ module StashEngine
       update(solr_indexed: false) if result
     end
 
+    def send_to_zenodo
+      ZenodoCopy.create(state: 'enqueued', identifier_id: identifier_id, resource_id: id) if zenodo_copy.nil?
+      ZenodoCopyJob.perform_later(id)
+    end
+
     private
 
     # -----------------------------------------------------------

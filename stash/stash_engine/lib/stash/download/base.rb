@@ -24,6 +24,7 @@ module Stash
       end
 
       # this is a method that should be overridden
+      # rubocop:disable Metrics/AbcSize
       def stream_response(url:, tenant:, filename:, read_timeout: 30)
         cc.request.env['rack.hijack'].call
         user_stream = cc.request.env['rack.hijack_io']
@@ -36,7 +37,7 @@ module Stash
           # We don't want to hold dead download threads open too long for resource and network reasons.
 
           begin
-            http = HTTP.timeout(connect: 30, read: read_timeout).timeout(7200).follow(max_hops: 10)
+            http = HTTP.timeout(connect: 30, read: read_timeout).timeout(3.hours.to_i).follow(max_hops: 10)
               .basic_auth(user: tenant.repository.username, pass: tenant.repository.password)
             # .persistent(URI.join(url, '/').to_s)
             merritt_response = http.get(url)
@@ -49,6 +50,7 @@ module Stash
         end
         cc.response.close
       end
+      # rubocop:enable Metrics/AbcSize
 
       # these send methods are the streaming methods for a 'rack.hijack',
       def send_headers(stream:, header_obj:, filename:)
