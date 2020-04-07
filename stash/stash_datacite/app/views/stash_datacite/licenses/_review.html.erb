@@ -90,7 +90,7 @@ $(document).ready(function(){
 });
 </script>
 
-<% if current_user.id != @resource.user_id %>
+<% if current_user&.id != @resource.user_id %>
   <script>
     $('#agree_to_license, #agree_to_tos, #agree_to_dda').prop('disabled', true);
   </script>
