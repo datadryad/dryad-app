@@ -12,7 +12,7 @@ module Stash
       def metadata
         out_hash = {}.with_indifferent_access
         # took out the DOI since I don't want to use it in zenodo because of versioning problems
-        %i[upload_type publication_date title creators description access_right license
+        %i[doi upload_type publication_date title creators description access_right license
            keywords notes related_identifiers method].each do |meth|
           result = send(meth)
           out_hash[meth] = result unless result.blank?
