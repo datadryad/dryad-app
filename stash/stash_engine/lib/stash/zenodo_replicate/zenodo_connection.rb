@@ -33,7 +33,7 @@ module Stash
 
         raise ZenodoError, "Zenodo response: #{r.status.code}\n#{resp} for \nhttp.#{method} #{url}\n#{resp}" unless r.status.success?
         resp
-      rescue HTTP::Error => e
+      rescue HTTP::Error, JSON::ParserError => e
         raise ZenodoError, "Error from HTTP #{method} #{url}\nOriginal error: #{e}\n#{e.backtrace.join("\n")}"
       end
       # rubocop:enable Metrics/AbcSize
