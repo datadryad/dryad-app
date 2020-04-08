@@ -21,7 +21,7 @@ module Stash
       end
 
       def doi
-        "https://doi.org/#{@resource.identifier.identifier}"
+        "https://doi.org/#{bork_doi_for_zenodo_sandbox(doi: @resource.identifier.identifier)}"
       end
 
       def upload_type
@@ -89,6 +89,17 @@ module Stash
 
       def method
         @resource.descriptions.where(description_type: 'methods')&.map(&:description)&.join("\n")
+      end
+
+      private
+
+      # this is a workaround for the zenodo sandbox in non-production environments since they claim all test DOIs
+      # as their own and their added functionality for re-editing things doesn't work with them unless we give them
+      # a non-test DOI so they don't do the wrong thing.
+      def bork_doi_for_zenodo_sandbox(doi:)
+        return doi if Rails.env == 'production'
+
+        doi.gsub(/^10\.5072/, '10.55072') # bork our datacite test dois into non-test shoulders because Zenodo reserves them as their own
       end
 
     end

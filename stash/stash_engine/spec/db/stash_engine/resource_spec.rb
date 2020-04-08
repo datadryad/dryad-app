@@ -1340,6 +1340,7 @@ module StashEngine
         require_relative '../../../app/jobs/stash_engine/zenodo_copy_job'
 
         @resource = create(:resource)
+        create(:file_upload, resource: @resource)
       end
 
       it 'creates a zenodo_copy record in database' do

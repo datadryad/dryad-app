@@ -16,7 +16,9 @@ module Stash
         false
       end
 
+      # rubocop:disable Metrics/AbcSize
       def self.standard_request(method, url, **args)
+        resp = nil
         http = HTTP.timeout(connect: 30, read: 60).timeout(6.hours.to_i).follow(max_hops: 10)
 
         my_params = { access_token: APP_CONFIG[:zenodo][:access_token] }.merge(args.fetch(:params, {}))
@@ -25,7 +27,8 @@ module Stash
 
         r = http.send(method, url, my_args)
 
-        resp = r.parse
+        # zenodo returns application/json even with a 204 and no content to parse as application/json
+        resp = r.parse if r.headers['content-type'] == 'application/json' && r.code != 204 # 204 is no-content
         resp = resp.with_indifferent_access if resp.class == Hash
 
         raise ZenodoError, "Zenodo response: #{r.status.code}\n#{resp} for \nhttp.#{method} #{url}\n#{resp}" unless r.status.success?
@@ -33,6 +36,7 @@ module Stash
       rescue HTTP::Error => e
         raise ZenodoError, "Error from HTTP #{method} #{url}\nOriginal error: #{e}\n#{e.backtrace.join("\n")}"
       end
+      # rubocop:enable Metrics/AbcSize
 
       def self.base_url
         APP_CONFIG[:zenodo][:base_url]
