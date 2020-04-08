@@ -74,7 +74,7 @@ module Stash
                 'Host' => 'example.test.com'
               }
             )
-            .to_return(status: 200, headers: { 'Content-Type' => 'application/json' } )
+            .to_return(status: 200, headers: { 'Content-Type' => 'application/json' })
           expect { ZenodoConnection.standard_request(:get, 'https://example.test.com') }.to raise_error(Stash::ZenodoReplicate::ZenodoError)
         end
       end
