@@ -69,3 +69,15 @@ an author.
 The problem can be that an author's first or last name is blank,
 OR it can be that an author's affiliation has a duplicate affiliation
 in the DB. 
+
+
+Error message:  Net::ReadTimeout
+==================================
+
+This timeout occurs when an external dependency is taking too long to
+respond.
+
+For "An ActionView::Template::Error occurred in resources#review",
+check on the journal module. The review page in the submission system
+may not be getting quick enough feedback.
+
