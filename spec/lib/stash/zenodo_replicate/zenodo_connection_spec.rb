@@ -66,7 +66,7 @@ module Stash
           expect { ZenodoConnection.standard_request(:get, 'https://example.test.com') }.to raise_error(Stash::ZenodoReplicate::ZenodoError)
         end
 
-        it 'raises error if there is an HTTP or parsing error' do
+        it 'raises error if there is a parsing error' do
           stub_request(:get, 'https://example.test.com/?access_token=ThisIsAFakeToken')
             .with(
               headers: {
@@ -74,7 +74,7 @@ module Stash
                 'Host' => 'example.test.com'
               }
             )
-            .to_return(status: 200)
+            .to_return(status: 200, headers: { 'Content-Type' => 'application/json' } )
           expect { ZenodoConnection.standard_request(:get, 'https://example.test.com') }.to raise_error(Stash::ZenodoReplicate::ZenodoError)
         end
       end
