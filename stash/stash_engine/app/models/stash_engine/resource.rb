@@ -604,6 +604,7 @@ module StashEngine
     end
 
     def send_to_zenodo
+      return if file_uploads.empty? # no files? Then don't send to Zenodo for duplication.
       ZenodoCopy.create(state: 'enqueued', identifier_id: identifier_id, resource_id: id) if zenodo_copy.nil?
       ZenodoCopyJob.perform_later(id)
     end
