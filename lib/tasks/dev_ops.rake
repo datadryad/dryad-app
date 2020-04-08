@@ -103,6 +103,7 @@ namespace :dev_ops do
     # puts passenger.items_submitting?
   end
 
+  # we really don't want to babysit all of our processes too much and have them re-attempt a few times over days
   desc "Re-enqueue errored Zenodo copies that haven't been tried 3 times"
   task retry_zenodo_errors: :environment do
     puts ''
