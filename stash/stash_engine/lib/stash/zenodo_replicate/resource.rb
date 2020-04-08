@@ -26,6 +26,7 @@ module Stash
         # database status for this copy
         third_copy_record = @resource.zenodo_copy
         third_copy_record.update(state: 'replicating')
+        third_copy_record.increment!(:retries)
 
         # a zenodo deposit class
         @deposit = Deposit.new(resource: @resource)
