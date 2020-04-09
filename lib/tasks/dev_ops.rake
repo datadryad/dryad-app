@@ -115,14 +115,14 @@ namespace :dev_ops do
     end
   end
 
-  desc "Lists numbers of long jobs"
+  desc 'Lists numbers of long jobs'
   task long_jobs: :environment do
     # note, ignore the supposedly processing items languishing over a week since they're unlikely to really be processing
     merritt_enqueued = StashEngine::RepoQueueState.latest_per_resource.where(state: 'enqueued').count
     merritt_processing = StashEngine::RepoQueueState.latest_per_resource.where(state: 'processing')
-      .where("updated_at > ?", Time.now - 7.days).count
+      .where('updated_at > ?', Time.now - 7.days).count
     zenodo_enqueued = StashEngine::ZenodoCopy.where(state: 'enqueued').count
-    zenodo_processing = StashEngine::ZenodoCopy.where(state: 'replicating').where("updated_at > ?", Time.now - 7.days).count
+    zenodo_processing = StashEngine::ZenodoCopy.where(state: 'replicating').where('updated_at > ?', Time.now - 7.days).count
 
     puts ''
     puts "#{merritt_enqueued} items in Merritt submission queue"
