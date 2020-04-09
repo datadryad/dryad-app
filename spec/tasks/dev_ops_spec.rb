@@ -26,3 +26,30 @@ describe 'dev_ops:retry_zenodo_errors', type: :task do
     end
   end
 end
+
+describe 'dev_ops:long_jobs', type: :task do
+
+  it 'detects no jobs if none in interesting states' do
+    create(:repo_queue_state, state: 'completed')
+    create(:zenodo_copy, state: 'finished')
+    expect { task.execute}.to output(%r{0\sitems\sin\sMerritt.+
+      0\sitems\sare\sbeing\ssent\sto\sMerritt.+
+      0\sitems\sin\sZenodo.+
+      0\sitems\sare\sstill\sbeing\sreplicated\sto\sZenodo}xm).to_stdout
+  end
+
+  it "detects Merritt queued and executing" do
+    create(:repo_queue_state, state: 'enqueued')
+    create(:repo_queue_state, state: 'processing')
+    expect { task.execute}.to output(%r{1\sitems\sin\sMerritt.+
+      1\sitems\sare\sbeing\ssent\sto\sMerritt.+}xm).to_stdout
+  end
+
+  it "detects zenodo queued and executing" do
+    create(:zenodo_copy, state: 'enqueued')
+    create(:zenodo_copy, state: 'replicating')
+    expect { task.execute}.to output(%r{1\sitems\sin\sZenodo.+
+      1\sitems\sare\sstill\sbeing\sreplicated\sto\sZenodo}xm).to_stdout
+  end
+
+end
