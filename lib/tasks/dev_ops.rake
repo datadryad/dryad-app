@@ -103,5 +103,16 @@ namespace :dev_ops do
     # puts passenger.items_submitting?
   end
 
+  # we really don't want to babysit all of our processes too much and have them re-attempt a few times over days
+  desc "Re-enqueue errored Zenodo copies that haven't been tried 3 times"
+  task retry_zenodo_errors: :environment do
+    puts ''
+    puts "Re-enqueuing errored ZenodoCopies in DelayedJob at #{Time.new.utc.iso8601}"
+    StashEngine::ZenodoCopy.where('retries < 4').where(state: 'error').order(:resource_id).each do |zc|
+      puts "Adding resource_id: #{zc.resource_id}"
+      zc.update(state: 'enqueued')
+      StashEngine::ZenodoCopyJob.perform_later(zc.resource_id)
+    end
+  end
 end
 # rubocop:enable Metrics/BlockLength
