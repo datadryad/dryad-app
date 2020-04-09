@@ -10,6 +10,7 @@ module StashEngine
       # reload so that it picks up any associated models that are initialized
       # (e.g. CurationActivity and ResourceState)
       @resource.reload
+      allow_any_instance_of(StashEngine::CurationActivity).to receive(:copy_to_zenodo).and_return(true)
     end
 
     context :new do
@@ -38,6 +39,7 @@ module StashEngine
     context :readable_status do
       before(:each) do
         @ca = CurationActivity.create(resource_id: @resource.id)
+        allow_any_instance_of(StashEngine::CurationActivity).to receive(:copy_to_zenodo).and_return(true)
       end
 
       it 'class method allows conversion of status to humanized status' do
@@ -73,6 +75,7 @@ module StashEngine
         allow_any_instance_of(Stash::Payments::Invoicer).to receive(:new).and_return(true)
         allow_any_instance_of(Stash::Payments::Invoicer).to receive(:charge_user_via_invoice).and_return(true)
         allow_any_instance_of(StashEngine::Resource).to receive(:contributors).and_return([])
+        allow_any_instance_of(StashEngine::CurationActivity).to receive(:copy_to_zenodo).and_return(true)
       end
 
       context :update_solr do
