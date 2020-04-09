@@ -158,4 +158,15 @@ namespace :deploy do
   before :starting, :update_config
   before 'deploy:symlink:shared', 'deploy:my_linked_files'
 
+  after :deploy, 'git:symlink_git'  # this prevents all the garbage display when running tasks, I hope
+
+end
+
+namespace :git do
+  desc "Symlink the git executable into the bin/ dir"
+  task :symlink_git do
+    on roles(:app), wait: 1 do
+      execute "ln -s /bin/git #{release_path}/bin/"
+    end
+  end
 end
