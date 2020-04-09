@@ -11,8 +11,7 @@ module Stash
       # returns a hash of the metadata from the list of methods, you can make it into json to send
       def metadata
         out_hash = {}.with_indifferent_access
-        # took out the DOI since I don't want to use it in zenodo because of versioning problems
-        %i[upload_type publication_date title creators description access_right license
+        %i[doi upload_type publication_date title creators description access_right license
            keywords notes related_identifiers method].each do |meth|
           result = send(meth)
           out_hash[meth] = result unless result.blank?
@@ -21,7 +20,7 @@ module Stash
       end
 
       def doi
-        "https://doi.org/#{@resource.identifier.identifier}"
+        "https://doi.org/#{bork_doi_for_zenodo_sandbox(doi: @resource.identifier.identifier)}"
       end
 
       def upload_type
@@ -89,6 +88,17 @@ module Stash
 
       def method
         @resource.descriptions.where(description_type: 'methods')&.map(&:description)&.join("\n")
+      end
+
+      private
+
+      # this is a workaround for the zenodo sandbox in non-production environments since they claim all test DOIs
+      # as their own and their added functionality for re-editing things doesn't work with them unless we give them
+      # a non-test DOI so they don't do the wrong thing.
+      def bork_doi_for_zenodo_sandbox(doi:)
+        return doi if Rails.env == 'production'
+
+        doi.gsub(/^10\.5072/, '10.55072') # bork our datacite test dois into non-test shoulders because Zenodo reserves them as their own
       end
 
     end
