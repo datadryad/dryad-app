@@ -28,6 +28,13 @@ module Stash
           expect { @szr.add_to_zenodo }.to raise_error(WebMock::NetConnectNotAllowedError)
         end
 
+        it 'increments the retries counter' do
+          expect { @szr.add_to_zenodo }.to raise_error(WebMock::NetConnectNotAllowedError)
+          zc = @resource.zenodo_copy
+          zc.reload
+          expect(zc.retries).to eq(1) # this has been incremented from 0 to 1 when it started attempting adding to zenodo
+        end
+
         it 'rejects submission of an errored submission (needs to be enqueued)' do
           @ztc.update(state: 'error')
           @szr.add_to_zenodo
