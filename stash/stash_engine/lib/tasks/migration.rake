@@ -1,7 +1,30 @@
 require 'pp'
 require_relative 'migration_import'
 require 'database_cleaner'
+
+# Tasks for migration of various content into the Dryad environment. Tasks in this file are not intended for
+# long-term use; they are either for a single migration or for use over a limited time period.
+
 namespace :dryad_migration do
+  
+  desc 'Migrate content from the v1 journal module'
+  task migrate_journal_metadata: :environment do  
+    i = 1
+    File.foreach("journalISSNs.txt") do |issn|
+      issn = issn.strip
+      puts "#{i} #{issn}"
+      i += 1
+      url = APP_CONFIG.old_dryad_url + '/api/v1/journals/' + issn
+      results = HTTParty.get(url,
+                             query: { access_token: APP_CONFIG.old_dryad_access_token },
+                             headers: { 'Content-Type' => 'application/json' })
+      pr = results.parsed_response
+      next if pr['fullName'].blank?
+      puts pr['fullName']
+    end
+  end
+
+  
   desc 'Test reading single item'
   task test: :environment do
     # see https://stackoverflow.com/questions/27913457/ruby-on-rails-specify-environment-in-rake-task
