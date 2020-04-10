@@ -130,5 +130,11 @@ namespace :dev_ops do
     puts "#{zenodo_enqueued} items in Zenodo-replication queue"
     puts "#{zenodo_processing} items are still being replicated to Zenodo"
   end
+
+  desc 'Re-enqueue deferred Zenodo copy jobs'
+  task enqueue_zenodo_deferred: :environment do
+    puts 'Re-enqueuing Zenodo replication jobs that were deferred'
+    StashEngine::ZenodoCopyJob.enqueue_deferred
+  end
 end
 # rubocop:enable Metrics/BlockLength
