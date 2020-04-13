@@ -5,12 +5,12 @@ require 'database_cleaner'
 # Tasks for migration of various content into the Dryad environment. Tasks in this file are not intended for
 # long-term use; they are either for a single migration or for use over a limited time period.
 
+# rubocop:disable Metrics/BlockLength
 namespace :dryad_migration do
-  
   desc 'Migrate content from the v1 journal module'
-  task migrate_journal_metadata: :environment do  
+  task migrate_journal_metadata: :environment do
     i = 1
-    File.foreach("journalISSNs.txt") do |issn|
+    File.foreach('journalISSNs.txt') do |issn|
       issn = issn.strip
       puts "#{i} #{issn}"
       i += 1
@@ -24,7 +24,6 @@ namespace :dryad_migration do
     end
   end
 
-  
   desc 'Test reading single item'
   task test: :environment do
     # see https://stackoverflow.com/questions/27913457/ruby-on-rails-specify-environment-in-rake-task
@@ -83,3 +82,4 @@ namespace :dryad_migration do
   end
 
 end
+# rubocop:enable Metrics/BlockLength
