@@ -4,9 +4,9 @@ module StashEngine
   class ResourcesController < ApplicationController
     before_action :require_login, except: %i[data_paper]
     before_action :require_modify_permission, except: %i[index new data_paper]
-    before_action :require_in_progress, only: %i[upload review upload_manifest]
-    before_action :lockout_incompatible_uploads, only: %i[upload upload_manifest]
-    before_action :update_internal_search, only: %i[upload review upload_manifest]
+    before_action :require_in_progress, only: %i[upload review upload_manifest up_code up_code_manifest]
+    before_action :lockout_incompatible_uploads, only: %i[upload upload_manifest up_code up_code_manifest]
+    before_action :update_internal_search, only: %i[upload review upload_manifest up_code up_code_manifest]
 
     attr_writer :resource
 
@@ -108,6 +108,22 @@ module StashEngine
 
     # upload by manifest view for resource
     def upload_manifest; end
+
+    # Upload files view for resource
+    def up_code
+      @file = FileUpload.new(resource_id: resource.id) # this is apparantly needed for the upload control
+      @uploads = resource.latest_file_states
+      if resource.upload_type == :manifest
+        render 'upload_manifest'
+      else
+        render 'upload'
+      end
+    end
+
+    # upload by manifest view for resource
+    def up_code_manifest
+      render 'upload_manifest'
+    end
 
     private
 

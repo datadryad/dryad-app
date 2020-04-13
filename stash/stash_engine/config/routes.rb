@@ -8,6 +8,8 @@ StashEngine::Engine.routes.draw do
       get 'review'
       get 'upload'
       get 'upload_manifest'
+      get 'up_code'
+      get 'up_code_manifest'
       get 'submission'
       get 'show_files'
     end
