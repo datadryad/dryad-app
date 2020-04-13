@@ -21,6 +21,7 @@ namespace :dryad_migration do
       pr = results.parsed_response
       next if pr['fullName'].blank?
       puts pr['fullName']
+      j = StashEngine::Journal.create(title: pr['fullName'])
     end
   end
 
