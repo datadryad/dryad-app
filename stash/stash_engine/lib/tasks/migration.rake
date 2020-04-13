@@ -35,6 +35,7 @@ namespace :dryad_migration do
                payment_contact: pr['paymentContact'],
                manuscript_number_regex: pr['manuscriptNumberRegex'],
                sponsor_name: pr['sponsorName'],
+               stripe_customer_id: pr['stripeCustomerID'],
                notify_contacts: pr['notifyContacts'],
                review_contacts: pr['reviewContacts'],
                allow_review_workflow: pr['allowReviewWorkflow'],

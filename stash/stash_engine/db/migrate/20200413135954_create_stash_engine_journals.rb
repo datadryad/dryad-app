@@ -9,6 +9,7 @@ class CreateStashEngineJournals < ActiveRecord::Migration
       t.string :payment_contact
       t.string :manuscript_number_regex
       t.string :sponsor_name
+      t.string :stripe_customer_id
       t.text :notify_contacts
       t.text :review_contacts
       t.boolean :allow_review_workflow
