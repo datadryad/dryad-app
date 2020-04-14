@@ -423,7 +423,7 @@ module StashEngine
         expect(identifier.journal.title).to eq(@bogus_title)
       end
 
-      it 'allows review when there is no journal' do        
+      it 'allows review when there is no journal' do
         expect(@identifier.allow_review?).to be(true)
       end
 

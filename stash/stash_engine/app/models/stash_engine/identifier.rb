@@ -260,9 +260,17 @@ module StashEngine
       return false if journal.blank?
       journal.allow_blackout?
     end
-    
+
     def publication_issn
       internal_data.find_by(data_type: 'publicationISSN')&.value&.strip
+    end
+
+    # This is the name typed by the user. If there is an associated journal, the
+    # journal.title will be the same. But we keep it copied here in case there is no
+    # associated journal object.
+    # Curators will probably create an associated journal object later.
+    def publication_name
+      internal_data.find_by(data_type: 'publicationName')&.value&.strip
     end
 
     def manuscript_number
@@ -278,7 +286,6 @@ module StashEngine
       end
       doi
     end
-
 
     def institution_will_pay?
       latest_resource&.tenant&.covers_dpc == true
