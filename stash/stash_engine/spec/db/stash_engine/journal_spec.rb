@@ -1,7 +1,4 @@
 require 'db_spec_helper'
-require 'webmock/rspec'
-require_relative '../../../../spec_helpers/factory_helper'
-require 'byebug'
 
 module StashEngine
   describe Journal do
