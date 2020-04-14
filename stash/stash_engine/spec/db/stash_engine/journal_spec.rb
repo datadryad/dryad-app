@@ -5,11 +5,11 @@ require 'byebug'
 
 module StashEngine
   describe Journal do
-    
+
     before(:each) do
       @journal = Journal.create(issn: '1234-5678')
     end
-      
+
     describe '#will_pay?' do
       it 'returns true when there is a PREPAID plan' do
         allow(@journal).to receive('payment_plan_type').and_return('PREPAID')
