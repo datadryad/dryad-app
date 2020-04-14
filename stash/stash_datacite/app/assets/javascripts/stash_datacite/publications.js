@@ -29,8 +29,8 @@ function loadPublications() {
                             dataType: "json",
                             success: function( data ) {
 				$("#internal_datum_publication").val("")
-				if (data.fullName != null) {
-				    $("#internal_datum_publication").val(data.fullName);
+				if (data.title != null) {
+				    $("#internal_datum_publication").val(data.title);
 				}
 			    }
 			});
@@ -51,7 +51,7 @@ function loadPublications() {
 			},
                         success: function (data) {
                             var arr = jQuery.map( data, function( a ) {
-                                return [[ a.issn, a.fullName ]];
+                                return [[ a.issn, a.title ]];
                             });
                             var labels = [];
                             $.each(arr, function(index, value) {

@@ -36,12 +36,12 @@ module StashDatacite
       if partial_term.blank?
         render json: nil
       else
-        # clean the partial_term of unwanted characters so it doesn't cause errors when calling the Journal API
+        # clean the partial_term of unwanted characters so it doesn't cause errors
         partial_term.gsub!(%r{[\/\-\\\(\)~!@%&"\[\]\^\:]}, ' ')
-        response = HTTParty.get("#{APP_CONFIG.old_dryad_url}/api/v1/journals/search",
-                                query: { 'query': partial_term, 'count': 20 },
-                                headers: { 'Content-Type' => 'application/json' })
-        render json: response.body
+
+        matches = StashEngine::Journal.where("title like '%#{partial_term}%'").limit(40)
+
+        render json: bubble_up_exact_matches(result_list: matches, term: partial_term)
       end
     end
 
@@ -50,10 +50,8 @@ module StashDatacite
       target_issn = params['id']
       return if target_issn.blank?
       return unless target_issn =~ /\d+-\w+/
-
-      response = HTTParty.get("#{APP_CONFIG.old_dryad_url}/api/v1/journals/#{target_issn}",
-                              headers: { 'Content-Type' => 'application/json' })
-      render json: response&.parsed_response
+      match = StashEngine::Journal.where(issn: target_issn).first
+      render json: match
     end
 
     def save_form_to_internal_data
@@ -162,6 +160,31 @@ module StashDatacite
       return nil unless @resource.present? && related_identifier_type.present? && relation_type.present?
       StashDatacite::RelatedIdentifier.where(resource_id: @resource.id, relation_type: relation_type,
                                              related_identifier_type: related_identifier_type).first
+    end
+
+    private
+
+    # Re-order a journal list to prioritize exact matches at the beginning of the string, then
+    # exact matches within the string, otherwise leaving the order unchanged
+    def bubble_up_exact_matches(result_list:, term:)
+      exact_match = []
+      matches_at_beginning = []
+      matches_within = []
+      other_items = []
+      match_term = term.downcase
+      result_list.each do |result_item|
+        name = result_item['title'].downcase
+        if name == match_term
+          exact_match << result_item
+        elsif name.start_with?(match_term)
+          matches_at_beginning << result_item
+        elsif name.include?(match_term)
+          matches_within << result_item
+        else
+          other_items << result_item
+        end
+      end
+      exact_match + matches_at_beginning + matches_within + other_items
     end
 
   end
