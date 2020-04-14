@@ -1,7 +1,50 @@
 require 'pp'
 require_relative 'migration_import'
 require 'database_cleaner'
+
+# Tasks for migration of various content into the Dryad environment. Tasks in this file are not intended for
+# long-term use; they are either for a single migration or for use over a limited time period.
+
+# rubocop:disable Metrics/BlockLength
 namespace :dryad_migration do
+  desc 'Migrate content from the v1 journal module'
+  task migrate_journal_metadata: :environment do
+    File.foreach('journalISSNs.txt') do |issn|
+      issn = issn.strip
+      url = APP_CONFIG.old_dryad_url + '/api/v1/journals/' + issn
+      results = HTTParty.get(url,
+                             query: { access_token: APP_CONFIG.old_dryad_access_token },
+                             headers: { 'Content-Type' => 'application/json' })
+      pr = results.parsed_response
+      next if pr['fullName'].blank?
+
+      # The API can return an empty string for paymentPlan; convert to nil
+      pr['paymentPlanType'] = nil if pr['paymentPlanType'] == ''
+
+      # Create/update journals using the ISSN received from the API, because that
+      # is the primary ISSN. We don't want to use a secondary ISSN if it was
+      # present in the input file.
+      j = StashEngine::Journal.find_or_create_by(issn: pr['issn'])
+      puts "migrating journal #{j.id} -- #{j.issn} -- #{pr['fullName']}"
+
+      j.update(title: pr['fullName'],
+               issn: pr['issn'],
+               website: pr['website'],
+               description: pr['description'],
+               payment_plan_type: pr['paymentPlanType'],
+               payment_contact: pr['paymentContact'],
+               manuscript_number_regex: pr['manuscriptNumberRegex'],
+               sponsor_name: pr['sponsorName'],
+               stripe_customer_id: pr['stripeCustomerID'],
+               notify_contacts: pr['notifyContacts'],
+               review_contacts: pr['reviewContacts'],
+               allow_review_workflow: pr['allowReviewWorkflow'],
+               allow_embargo: pr['allowEmbargo'],
+               allow_blackout: pr['allowBlackout'])
+      j.save!
+    end
+  end
+
   desc 'Test reading single item'
   task test: :environment do
     # see https://stackoverflow.com/questions/27913457/ruby-on-rails-specify-environment-in-rake-task
@@ -60,3 +103,4 @@ namespace :dryad_migration do
   end
 
 end
+# rubocop:enable Metrics/BlockLength
