@@ -219,15 +219,20 @@ module StashEngine
     # Check if the user must pay for this identifier, or if payment is
     # otherwise covered
     def user_must_pay?
-      !journal_will_pay? && !institution_will_pay? && !funder_will_pay? &&
+      !journal&.will_pay? && !institution_will_pay? && !funder_will_pay? &&
         (!submitter_affiliation.present? || !submitter_affiliation.fee_waivered?)
+    end
+
+    def journal
+      return nil if publication_issn.nil?
+      Journal.where(issn: publication_issn).first
     end
 
     # rubocop:disable Metrics/CyclomaticComplexity
     def record_payment
       return if payment_type.present? && payment_type != 'unknown'
-      if journal_will_pay?
-        self.payment_type = 'journal-' + publication_data('paymentPlanType')
+      if journal&.will_pay?
+        self.payment_type = 'journal-' + journal.payment_plan_type
         self.payment_id = publication_issn
       elsif institution_will_pay?
         self.payment_type = 'institution'
@@ -246,17 +251,26 @@ module StashEngine
     end
     # rubocop:enable Metrics/CyclomaticComplexity
 
-    def publication_data(field_name)
-      return nil if publication_issn.nil?
-      url = APP_CONFIG.old_dryad_url + '/api/v1/journals/' + publication_issn
-      results = HTTParty.get(url,
-                             query: { access_token: APP_CONFIG.old_dryad_access_token },
-                             headers: { 'Content-Type' => 'application/json' })
-      results.parsed_response[field_name]
+    def allow_review?
+      return true if journal.blank?
+      journal.allow_review_workflow?
+    end
+
+    def allow_blackout?
+      return false if journal.blank?
+      journal.allow_blackout?
     end
 
     def publication_issn
       internal_data.find_by(data_type: 'publicationISSN')&.value&.strip
+    end
+
+    # This is the name typed by the user. If there is an associated journal, the
+    # journal.title will be the same. But we keep it copied here in case there is no
+    # associated journal object.
+    # Curators will probably create an associated journal object later.
+    def publication_name
+      internal_data.find_by(data_type: 'publicationName')&.value&.strip
     end
 
     def manuscript_number
@@ -271,45 +285,6 @@ module StashEngine
         break unless doi.nil?
       end
       doi
-    end
-
-    def publication_name
-      publication_data('fullName')
-    end
-
-    def journal_will_pay?
-      plan_type = publication_data('paymentPlanType')
-      plan_type == 'SUBSCRIPTION' ||
-        plan_type == 'PREPAID' ||
-        plan_type == 'DEFERRED'
-    end
-
-    def journal_customer_id
-      publication_data('stripeCustomerID')
-    end
-
-    def journal_sponsor_name
-      publication_data('sponsorName')
-    end
-
-    def journal_notify_contacts
-      publication_data('notifyContacts')
-    end
-
-    def journal_review_contacts
-      publication_data('reviewContacts')
-    end
-
-    def journal_manuscript_regex
-      publication_data('manuscriptNumberRegex')
-    end
-
-    def allow_review?
-      publication_data('allowReviewWorkflow') || publication_name.blank?
-    end
-
-    def allow_blackout?
-      publication_data('allowBlackout').present? && publication_data('allowBlackout')
     end
 
     def institution_will_pay?
