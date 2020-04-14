@@ -34,7 +34,7 @@
 <div>
     <h3>Payment</h3>
     <% submitter_affiliation = @resource.identifier.submitter_affiliation %>
-    <% if @resource.identifier.journal_will_pay? %>
+    <% if @resource.identifier.journal&.will_pay? %>
 	<p>Payment for this deposit is sponsored by <b><%= @resource.identifier.journal.title %></b>.</p>
     <% elsif @resource.identifier.institution_will_pay? %>
 	<p>Payment for this deposit is sponsored by <b><%= @resource.tenant.long_name %></b>.</p>
