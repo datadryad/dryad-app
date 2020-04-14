@@ -24,9 +24,9 @@ module StashEngine
       return unless %w[published embargoed].include?(status)
       return unless APP_CONFIG['send_journal_published_notices']
       assign_variables(resource)
-      return unless @resource&.identifier&.journal_notify_contacts&.present?
+      return unless @resource&.identifier&.journal&.notify_contacts&.present?
 
-      mail(to: @resource&.identifier&.journal_notify_contacts,
+      mail(to: @resource&.identifier&.journal&.notify_contacts,
            subject: "#{rails_env} Dryad Submission: \"#{@resource.title}\"")
     end
 
@@ -35,9 +35,9 @@ module StashEngine
       return unless status == 'peer_review'
       return unless APP_CONFIG['send_journal_published_notices']
       assign_variables(resource)
-      return unless @resource&.identifier&.journal_review_contacts&.present?
+      return unless @resource&.identifier&.journal&.review_contacts&.present?
 
-      mail(to: @resource&.identifier&.journal_review_contacts,
+      mail(to: @resource&.identifier&.journal&.review_contacts,
            subject: "#{rails_env} Dryad Submission: \"#{@resource.title}\"")
     end
 
