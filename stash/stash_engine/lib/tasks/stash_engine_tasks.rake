@@ -229,7 +229,7 @@ namespace :identifiers do
         submitted_date_str = submitted_date&.strftime('%Y-%m-%d')
         csv << [i.identifier, created_date_str, submitted_date_str, approval_date_str,
                 i.storage_size, i.payment_type, i.payment_id, i.submitter_affiliation&.long_name,
-                i.publication_name, i.journal_sponsor_name]
+                i.publication_name, i.journal&.sponsor_name]
       end
     end
     # Exit cleanly (don't let rake assume that an extra argument is another task to process)

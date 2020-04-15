@@ -156,7 +156,7 @@ module StashEngine
     end
 
     def copy_to_zenodo
-      resource.send_to_zenodo
+      # resource.send_to_zenodo
     end
 
     def remove_peer_review
