@@ -2,7 +2,7 @@ module Mocks
 
   module UrlUpload
     def mock_github_head_request!
-      stub_request(:head, 'http://github.com/CDL-Dryad/dryad/raw/master/app/assets/images/favicon.ico')
+      stub_request(:head, 'http://github.com/CDL-Dryad/dryad-app/raw/master/app/assets/images/favicon.ico')
         .with(
           headers: {
             'Accept' => '*/*'
@@ -18,7 +18,7 @@ module Mocks
     end
 
     def mock_github_bad_head_request!
-      stub_request(:head, 'http://github.com/CDL-Dryad/dryad/raw/master/app/assets/images/favicon.ico')
+      stub_request(:head, 'http://github.com/CDL-Dryad/dryad-app/raw/master/app/assets/images/favicon.ico')
         .with(
           headers: {
             'Accept' => '*/*'
