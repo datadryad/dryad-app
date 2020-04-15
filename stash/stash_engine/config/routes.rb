@@ -25,7 +25,7 @@ StashEngine::Engine.routes.draw do
   post 'curation_note/:id', to: 'curation_activity#curation_note', as: 'curation_note'
   post 'curation_activity_change/:id', to: 'admin_datasets#curation_activity_change', as: 'curation_activity_change'
   resources :tenants, only: %i[index show]
-  resources :file_uploads do
+  resources :file_uploads, :software_uploads do
     member do
       patch 'remove'
       patch 'remove_unuploaded'

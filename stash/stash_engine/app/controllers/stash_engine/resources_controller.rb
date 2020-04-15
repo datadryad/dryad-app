@@ -102,7 +102,7 @@ module StashEngine
 
     # Upload files view for resource
     def upload
-      @file = FileUpload.new(resource_id: resource.id) # this is apparantly needed for the upload control
+      @file = FileUpload.new(resource_id: resource.id) # this seems needed for the upload control
       @uploads = resource.latest_file_states
       render 'upload_manifest' if resource.upload_type == :manifest
     end
@@ -112,9 +112,9 @@ module StashEngine
 
     # Upload files view for resource
     def up_code
-      @file = FileUpload.new(resource_id: resource.id) # this is apparantly needed for the upload control
-      @uploads = resource.latest_file_states
-      if resource.upload_type == :manifest
+      @file = SoftwareUpload.new(resource_id: resource.id) # this seems needed for the upload control
+      @uploads = resource.latest_file_states(model: 'StashEngine::SoftwareUpload')
+      if resource.upload_type(method: 'software_uploads') == :manifest
         render 'upload_manifest'
       else
         render 'upload'
