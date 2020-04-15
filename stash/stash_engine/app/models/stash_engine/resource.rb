@@ -238,10 +238,11 @@ module StashEngine
     end
 
     # the states of the latest files of the same name in the resource (version), included deleted
-    def latest_file_states
-      subquery = FileUpload.where(resource_id: id)
+    def latest_file_states(model: 'StashEngine::FileUpload')
+      my_model = model.constantize
+      subquery = my_model.where(resource_id: id)
         .select('max(id) last_id, upload_file_name').group(:upload_file_name)
-      FileUpload.joins("INNER JOIN (#{subquery.to_sql}) sub on id = sub.last_id").order(upload_file_name: :asc)
+      my_model.joins("INNER JOIN (#{subquery.to_sql}) sub on id = sub.last_id").order(upload_file_name: :asc)
     end
 
     # the size of this resource (created + copied files)
@@ -255,9 +256,9 @@ module StashEngine
     end
 
     # returns the upload type either :files, :manifest, :unknown (unknown if no files are started for this version yet)
-    def upload_type
-      return :manifest if file_uploads.newly_created.url_submission.count > 0
-      return :files if file_uploads.newly_created.file_submission.count > 0
+    def upload_type(method: 'file_uploads')
+      return :manifest if send(method).newly_created.url_submission.count > 0
+      return :files if send(method).newly_created.file_submission.count > 0
       :unknown
     end
 
