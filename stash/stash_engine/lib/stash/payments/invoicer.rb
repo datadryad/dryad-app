@@ -151,7 +151,7 @@ module Stash
       end
 
       def stripe_journal_customer_id
-        resource.identifier&.journal_customer_id
+        resource.identifier&.journal&.stripe_customer_id
       end
 
       def lookup_prior_stripe_customer_id(email)

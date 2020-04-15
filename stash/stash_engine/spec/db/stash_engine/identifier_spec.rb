@@ -330,7 +330,6 @@ module StashEngine
 
     describe '#user_must_pay?' do
       before(:each) do
-        allow(@identifier).to receive(:journal_will_pay?).and_return(false)
         allow(@identifier).to receive(:institution_will_pay?).and_return(false)
         allow(@identifier).to receive(:funder_will_pay?).and_return(false)
       end
@@ -340,7 +339,7 @@ module StashEngine
       end
 
       it 'returns false if journal will pay' do
-        allow(@identifier).to receive(:journal_will_pay?).and_return(true)
+        Journal.create(issn: @fake_issn, payment_plan_type: 'SUBSCRIPTION')
         expect(@identifier.user_must_pay?).to eq(false)
       end
 
@@ -358,15 +357,12 @@ module StashEngine
       end
 
       it 'records a journal payment' do
-        allow(@identifier).to receive(:journal_will_pay?).and_return(true)
-        allow(@identifier).to receive(:publication_data).and_return('bogus_journal_data')
+        Journal.create(issn: @fake_issn, payment_plan_type: 'SUBSCRIPTION')
         @identifier.record_payment
         expect(@identifier.payment_type).to match(/journal/)
       end
 
       it 'records an institution payment' do
-        allow(@identifier).to receive(:journal_will_pay?).and_return(false)
-        allow(@identifier).to receive(:publication_data).and_return('bogus_journal_data')
         allow(@identifier).to receive(:institution_will_pay?).and_return(true)
         @identifier.record_payment
         expect(@identifier.payment_type).to eq('institution')
@@ -377,13 +373,11 @@ module StashEngine
         allow(affil).to receive(:fee_waivered?).and_return(true)
         allow(affil).to receive(:country_name).and_return('Bogusland')
         allow(@identifier).to receive(:submitter_affiliation).and_return(affil)
-        allow(@identifier).to receive(:publication_data).and_return('bogus_journal_data')
         @identifier.record_payment
         expect(@identifier.payment_type).to eq('waiver')
       end
 
       it 'records a funder-based payment' do
-        allow(@identifier).to receive(:journal_will_pay?).and_return(false) # bypass this one
         allow_any_instance_of(StashEngine::Resource).to receive(:contributors).and_return(
           [
             OpenStruct.new('payment_exempted?': false, contributor_name: 'Johann Strauss University', award_number: 'Latke153'),
@@ -395,16 +389,6 @@ module StashEngine
         expect(@identifier.payment_id).to include('Zorgast Industries')
         expect(@identifier.payment_id).to include('award:')
         expect(@identifier.payment_id).to include('ZI0027')
-      end
-    end
-
-    describe '#publication_data' do
-      it 'reads the value correctly from json body' do
-        stub_request(:any, %r{/journals/#{@fake_issn}})
-          .to_return(body: { blah: 'meow' }.to_json,
-                     status: 200,
-                     headers: { 'Content-Type' => 'application/json' })
-        expect(@identifier.publication_data('blah')).to eql('meow')
       end
     end
 
@@ -430,115 +414,34 @@ module StashEngine
       end
     end
 
-    describe '#publication_name' do
-      it 'retrieves the publication_name' do
-        @fake_journal_name = 'Fake Journal'
-        stub_request(:any, %r{/journals/#{@fake_issn}})
-          .to_return(body: '{"fullName":"' + @fake_journal_name + '",
-                             "issn":"' + @fake_issn + '",
-                             "website":"http://onlinelibrary.wiley.com/journal/10.1111/(ISSN)1365-294X",
-                             "description":"Molecular Ecology publishes papers that utilize molecular genetic techniques..."}',
-                     status: 200,
-                     headers: { 'Content-Type' => 'application/json' })
-        expect(identifier.publication_name).to eq(@fake_journal_name)
+    describe '#journal' do
+      it 'retrieves the associated journal' do
+        @bogus_title = 'Some Bogus Title'
+        Journal.create(issn: @fake_issn, title: @bogus_title)
+        expect(identifier.journal.title).to eq(@bogus_title)
       end
-    end
 
-    describe '#journal_customer_id' do
-      it 'retrieves the journal Stripe customer ID' do
-        @fake_journal_name = 'Fake Journal'
-        @fake_customer_id = 'cust_abc123'
-        stub_request(:any, %r{/journals/#{@fake_issn}})
-          .to_return(body: '{"fullName":"' + @fake_journal_name + '",
-                             "issn":"' + @fake_issn + '",
-                             "website":"http://onlinelibrary.wiley.com/journal/10.1111/(ISSN)1365-294X",
-                             "description":"Molecular Ecology publishes papers that utilize molecular genetic techniques...",
-                             "stripeCustomerID":"' + @fake_customer_id + '"}',
-                     status: 200,
-                     headers: { 'Content-Type' => 'application/json' })
-        expect(identifier.journal_customer_id).to eq(@fake_customer_id)
-      end
-    end
-
-    describe '#journal_sponsor_name' do
-      it 'retrieves the journal sponsorName' do
-        @fake_journal_name = 'Fake Journal'
-        @fake_sponsor_name = 'sponsor_abc123'
-        stub_request(:any, %r{/journals/#{@fake_issn}})
-          .to_return(body: '{"fullName":"' + @fake_journal_name + '",
-                             "issn":"' + @fake_issn + '",
-                             "website":"http://onlinelibrary.wiley.com/journal/10.1111/(ISSN)1365-294X",
-                             "description":"Molecular Ecology publishes papers that utilize molecular genetic techniques...",
-                             "sponsorName":"' + @fake_sponsor_name + '"}',
-                     status: 200,
-                     headers: { 'Content-Type' => 'application/json' })
-        expect(identifier.journal_sponsor_name).to eq(@fake_sponsor_name)
-      end
-    end
-
-    describe '#journal_manuscript_regex' do
-      it 'retrieves the journal regex' do
-        @fake_journal_name = 'Fake Journal'
-        @fake_manuscript_regex = ".*?(\d+-\d+).*?"
-        stub_request(:any, %r{/journals/#{@fake_issn}})
-          .to_return(body: '{"fullName":"' + @fake_journal_name + '",
-                             "issn":"' + @fake_issn + '",
-                             "manuscriptNumberRegex":"' + @fake_manuscript_regex + '"}',
-                     status: 200,
-                     headers: { 'Content-Type' => 'application/json' })
-        expect(identifier.journal_manuscript_regex).to eq(@fake_manuscript_regex)
-      end
-    end
-
-    describe '#journal_allows' do
       it 'allows review when there is no journal' do
-        allow(@identifier).to receive('publication_name').and_return(nil)
-        allow(@identifier).to receive('publication_data').and_return(false)
         expect(@identifier.allow_review?).to be(true)
       end
 
       it 'allows review when the journal allows review' do
-        allow(@identifier).to receive('publication_name').and_return('fakename')
-        allow(@identifier).to receive('publication_data').and_return(true)
+        Journal.create(issn: @fake_issn, allow_review_workflow: true)
         expect(@identifier.allow_review?).to be(true)
       end
 
       it 'disallows review when the journal disallows review' do
-        allow(@identifier).to receive('publication_name').and_return('fakename')
-        allow(@identifier).to receive('publication_data').and_return(false)
+        Journal.create(issn: @fake_issn, allow_review_workflow: false)
         expect(@identifier.allow_review?).to be(false)
       end
 
       it 'disallows blackout by default' do
-        allow(@identifier).to receive('publication_data').and_return(nil)
         expect(@identifier.allow_blackout?).to be(false)
       end
 
       it 'allows blackout when the journal allows blackout' do
-        allow(@identifier).to receive('publication_data').and_return(true)
+        Journal.create(issn: @fake_issn, allow_blackout: true)
         expect(@identifier.allow_blackout?).to be(true)
-      end
-    end
-
-    describe '#journal_will_pay?' do
-      it 'returns true when there is a PREPAID plan' do
-        allow(@identifier).to receive('publication_data').and_return('PREPAID')
-        expect(@identifier.journal_will_pay?).to be(true)
-      end
-
-      it 'returns true when there is a SUBSCRIPTION plan' do
-        allow(@identifier).to receive('publication_data').and_return('SUBSCRIPTION')
-        expect(@identifier.journal_will_pay?).to be(true)
-      end
-
-      it 'returns false when there is a no plan' do
-        allow(@identifier).to receive('publication_data').and_return(nil)
-        expect(@identifier.journal_will_pay?).to be(false)
-      end
-
-      it 'returns false when there is an unrecognized plan' do
-        allow(@identifier).to receive('publication_data').and_return('BOGUS-PLAN')
-        expect(@identifier.journal_will_pay?).to be(false)
       end
     end
 
