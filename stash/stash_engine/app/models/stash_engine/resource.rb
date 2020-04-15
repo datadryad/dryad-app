@@ -10,6 +10,7 @@ module StashEngine
 
     has_many :authors, class_name: 'StashEngine::Author', dependent: :destroy
     has_many :file_uploads, class_name: 'StashEngine::FileUpload', dependent: :destroy
+    has_many :software_uploads, class_name: 'StashEngine::SoftwareUpload', dependent: :destroy
     has_many :edit_histories, class_name: 'StashEngine::EditHistory'
     has_one :stash_version, class_name: 'StashEngine::Version', dependent: :destroy
     belongs_to :identifier, class_name: 'StashEngine::Identifier', foreign_key: 'identifier_id'
