@@ -9,7 +9,13 @@ module StashEngine
                  :s3_presigned_url, :merritt_express_url
 
     # seems like most methods are OK to have, but probably need to be overridden
-    # calc_file_path
+
+    def calc_file_path
+      return nil if file_state == 'copied' || file_state == 'deleted' # no current file to have a path for
+
+      # the uploads directory is well defined so we can calculate it and don't need to store it
+      Rails.root.join('uploads', "#{resource_id}_sfw", upload_file_name).to_s
+    end
 
   end
 end

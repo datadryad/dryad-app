@@ -8,7 +8,7 @@
 // ********************************************************************************
 $(function () {
   // only do this stuff on the file upload page.
-  if($('body.resources_upload').length < 1){
+  if($('body.resources_upload,body.resources_up_code').length < 1){
     return;
   }
 

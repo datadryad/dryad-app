@@ -29,6 +29,7 @@ module StashEngine
           format.js do
             @url = @file.url
             @file.destroy
+            render 'stash_engine/file_uploads/destroy_error.js.erb'
           end
         end
       end
@@ -38,6 +39,7 @@ module StashEngine
         respond_to do |format|
           format.js do
             @file.smart_destroy!
+            render 'stash_engine/file_uploads/destroy_manifest.js.erb'
           end
         end
       end
@@ -53,6 +55,7 @@ module StashEngine
               return
             end
             @my_file = save_final_file
+            render 'stash_engine/file_uploads/create.js.erb'
           end
         end
       end
@@ -64,7 +67,9 @@ module StashEngine
           url_param = params[:url]
           return if url_param.blank?
           urls_from(url_param).each { |url| create_upload(url) }
-          format.js
+          format.js do
+            render 'stash_engine/file_uploads/validate_urls.js.erb'
+          end
         end
       end
 
@@ -73,7 +78,7 @@ module StashEngine
       # set the resource correctly per action
       def resource
         @resource ||= if %w[destroy_error destroy_manifest].include?(params[:action])
-                        FileUpload.find(params[:id]).resource
+                        file_model.find(params[:id]).resource
                       else
                         Resource.find(params[:resource_id])
                       end
@@ -82,7 +87,7 @@ module StashEngine
       def create_upload(url)
         url_translator = Stash::UrlTranslator.new(url)
         validator = StashEngine::UrlValidator.new(url: url_translator.direct_download || url)
-        FileUpload.create(validator.upload_attributes_from(translator: url_translator, resource: resource))
+        file_model.create(validator.upload_attributes_from(translator: url_translator, resource: resource))
       end
 
       def more_bytes_coming
@@ -115,13 +120,8 @@ module StashEngine
         @file_upload = upload_params[:upload]
       end
 
-      def ensure_upload_dir(resource_id)
-        @upload_dir = StashEngine::Resource.upload_dir_for(resource_id)
-        FileUtils.mkdir_p @upload_dir unless File.exist?(@upload_dir)
-      end
-
       def set_file_info
-        @file = FileUpload.find(params[:id])
+        @file = file_model.find(params[:id])
       end
 
       # write a chunk to the file.
@@ -132,8 +132,8 @@ module StashEngine
       # for standard uploads, create standard file in DB, this only happens once a file upload is finished
       def create_db_file(path)
         # destroy any previous with this name and overwrite with this one
-        @resource.file_uploads.where(upload_file_name: File.basename(path)).destroy_all
-        FileUpload.create(
+        @resource.send(resource_assoc).where(upload_file_name: File.basename(path)).destroy_all
+        file_model.create(
             upload_file_name: File.basename(path),
             upload_content_type: @file_upload.content_type,
             upload_file_size: File.size(path),
@@ -148,7 +148,7 @@ module StashEngine
       def sanitize_filename
         uploaded_file = params[:upload][:upload]
         return unless uploaded_file.is_a?(ActionDispatch::Http::UploadedFile)
-        sanitized = StashEngine::FileUpload.sanitize_file_name(uploaded_file.original_filename)
+        sanitized = file_model.sanitize_file_name(uploaded_file.original_filename)
         @original_filename = uploaded_file.original_filename
         uploaded_file.original_filename = sanitized
       end

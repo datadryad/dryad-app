@@ -222,6 +222,18 @@ module StashEngine
       Resource.upload_dir_for(id)
     end
 
+    # ---------
+    # software file utility methods
+
+    def self.software_upload_dir_for(resource_id)
+      File.join(uploads_dir, "#{resource_id.to_s}_sfw")
+    end
+
+    def software_upload_dir
+      Resource.software_upload_dir_for(id)
+    end
+
+
     # gets the latest files that are not deleted in db, current files for this version
     def current_file_uploads
       subquery = FileUpload.where(resource_id: id).where("file_state <> 'deleted' AND " \
