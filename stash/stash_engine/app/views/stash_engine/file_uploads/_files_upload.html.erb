@@ -42,7 +42,7 @@
 
 <h2 class="t-upload__choose-heading--active">Uploaded Files</h2>
 
-<div class="c-upload" id="validated_files" data-load="<%= file_uploads_path(resource_id: @resource.id, format: :js) %>">
+<div class="c-upload" id="validated_files" data-load="<%= polymorphic_path(file, resource_id: @resource.id, format: :js) %>">
   <%# render partial: 'stash_engine/file_uploads/validated_files', locals: {resource: @resource} %>
     <%= image_tag 'stash_engine/spinner.gif', size: '80x60', alt: 'Loading spinner' %>
 </div>

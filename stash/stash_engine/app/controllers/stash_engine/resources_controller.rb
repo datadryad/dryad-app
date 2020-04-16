@@ -102,6 +102,9 @@ module StashEngine
 
     # Upload files view for resource
     def upload
+      @file_model = StashEngine::FileUpload
+      @resource_assoc = :file_uploads
+
       @file = FileUpload.new(resource_id: resource.id) # this seems needed for the upload control
       @uploads = resource.latest_file_states
       render 'upload_manifest' if resource.upload_type == :manifest
@@ -112,6 +115,11 @@ module StashEngine
 
     # Upload files view for resource
     def up_code
+      @file_model = StashEngine::SoftwareUpload
+      @resource_assoc = :software_uploads
+
+      @file_model = StashEngine::FileUpload
+      @resource_assoc = :file_uploads
       @file = SoftwareUpload.new(resource_id: resource.id) # this seems needed for the upload control
       @uploads = resource.latest_file_states(model: 'StashEngine::SoftwareUpload')
       if resource.upload_type(method: 'software_uploads') == :manifest
