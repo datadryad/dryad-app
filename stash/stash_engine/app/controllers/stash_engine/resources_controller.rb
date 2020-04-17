@@ -111,7 +111,10 @@ module StashEngine
     end
 
     # upload by manifest view for resource
-    def upload_manifest; end
+    def upload_manifest
+      @file_model = StashEngine::FileUpload
+      @resource_assoc = :file_uploads
+    end
 
     # Upload files view for resource
     def up_code
