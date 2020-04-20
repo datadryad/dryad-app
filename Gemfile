@@ -114,6 +114,7 @@ group :development, :test, :local_dev do
   gem 'pry'
   gem 'pry-rails'
   gem 'pry-remote', require: 'pry-remote'
+  gem 'puma'
   # Rails application preloader (https://github.com/rails/spring), says not to install in production
   gem 'spring'
   # rspec command for spring (https://github.com/jonleighton/spring-commands-rspec)
