@@ -118,7 +118,7 @@ function updateUiStates(){
   if($(".js-unuploaded").length > 0){
     disableUploadMethod();
   }else{
-    enableUploadMethod();
+    // enableUploadMethod();
     // resetFileTablesToDbState();
   }
   updateWaitingSize();
@@ -146,26 +146,22 @@ function confirmToUpload(){
 // The items for showing only upload method or manifest method
 // **********************************************************************************
 function setUploadMethodLockout(resourceUploadType){
+  console.log('lockout called: ' + resourceUploadType);
   if(resourceUploadType == 'unknown') {
     enableUploadMethod();
   }else{
-    disableUploadMethod()
+    disableUploadMethod();
   }
 }
 
 function disableUploadMethod(){
-  if ($('#files_from_computer').prop('checked')) {
-    $('#files_from_manifest').attr('disabled', true);
-  }
-  else {
-    $('#files_from_computer').attr('disabled', true);
-  }
+  console.log('disabling link for other upload method');
+  $('#alternate_up_method').hide();
 }
 
 function enableUploadMethod(){
-  $('#files_from_manifest').attr('disabled', false);
-  $('#files_from_computer').attr('disabled', false);
-  // resetFileTablesToDbState();
+  console.log('enabling link for other upload method');
+  $('#alternate_up_method').show();
 }
 
 // **********************************************************************************

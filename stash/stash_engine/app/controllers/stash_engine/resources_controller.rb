@@ -6,7 +6,8 @@ module StashEngine
     before_action :require_login, except: %i[data_paper]
     before_action :require_modify_permission, except: %i[index new data_paper]
     before_action :require_in_progress, only: %i[upload review upload_manifest up_code up_code_manifest]
-    before_action :lockout_incompatible_uploads, only: %i[upload upload_manifest up_code up_code_manifest]
+    before_action :lockout_incompatible_uploads, only: %i[upload upload_manifest]
+    before_action :lockout_incompatible_sfw_uploads, only: %i[up_code up_code_manifest]
     before_action :update_internal_search, only: %i[upload review upload_manifest up_code up_code_manifest]
 
     attr_writer :resource
@@ -134,6 +135,8 @@ module StashEngine
 
     # upload by manifest view for resource
     def up_code_manifest
+      @file_model = StashEngine::SoftwareUpload
+      @resource_assoc = :software_uploads
       render 'upload_manifest'
     end
 
@@ -152,10 +155,16 @@ module StashEngine
     def lockout_incompatible_uploads
       if request[:action] == 'upload' && resource.upload_type == :manifest
         redirect_to upload_manifest_resource_path(resource)
-        false
       elsif request[:action] == 'upload_manifest' && resource.upload_type == :files
         redirect_to upload_resource_path(resource)
-        false
+      end
+    end
+
+    def lockout_incompatible_sfw_uploads
+      if request[:action] == 'up_code' && resource.upload_type(method: 'software_uploads') == :manifest
+        redirect_to up_code_manifest_resource_path(resource)
+      elsif request[:action] == 'up_code_manifest' && resource.upload_type(method: 'software_uploads') == :files
+        redirect_to up_code_resource_path(resource)
       end
     end
 
