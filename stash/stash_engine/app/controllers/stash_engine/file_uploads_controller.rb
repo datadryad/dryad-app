@@ -3,7 +3,7 @@ require 'fileutils'
 require 'stash/url_translator'
 
 module StashEngine
-  class FileUploadsController < ApplicationController # rubocop:disable Metrics/ClassLength
+  class FileUploadsController < ApplicationController
 
     def setup_class_info
       @file_model = StashEngine::FileUpload

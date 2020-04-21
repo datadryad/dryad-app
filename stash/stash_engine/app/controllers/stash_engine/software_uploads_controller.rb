@@ -3,7 +3,7 @@ require 'fileutils'
 require 'stash/url_translator'
 
 module StashEngine
-  class SoftwareUploadsController < ApplicationController # rubocop:disable Metrics/ClassLength
+  class SoftwareUploadsController < ApplicationController
 
     def setup_class_info
       @file_model = StashEngine::SoftwareUpload
