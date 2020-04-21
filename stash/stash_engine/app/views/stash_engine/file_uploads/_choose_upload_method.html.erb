@@ -11,9 +11,9 @@
     <div class="t-uploads__method-choice">
       <% if params[:action].include?('code') %>
         <% if params[:action].include?('manifest') %>
-          <%= link_to 'Upload files directly instead', up_code_resource_path(resource.id), id: 'alternate_up_method' %>
+          <%= link_to 'Upload files directly', up_code_resource_path(resource.id), id: 'alternate_up_method' %>
         <% else %>
-          <%= link_to 'Upload files from public URLs instead', up_code_manifest_resource_path(@resource.id), id: 'alternate_up_method' %>
+          <%= link_to 'Upload files from public URLs', up_code_manifest_resource_path(@resource.id), id: 'alternate_up_method' %>
         <% end %>
       <% else %>
         <% if params[:action].include?('manifest') %>

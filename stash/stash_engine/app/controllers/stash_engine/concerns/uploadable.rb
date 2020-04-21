@@ -1,5 +1,6 @@
 require 'active_support/concern'
 
+# rubocop:disable Metrics/ModuleLength
 # makes the actions so they can be used by multiple controllers without duplicating code
 module StashEngine
   module Concerns
@@ -135,13 +136,13 @@ module StashEngine
         # destroy any previous with this name and overwrite with this one
         @resource.send(@resource_assoc).where(upload_file_name: File.basename(path)).destroy_all
         @file_model.create(
-            upload_file_name: File.basename(path),
-            upload_content_type: @file_upload.content_type,
-            upload_file_size: File.size(path),
-            resource_id: params[:resource_id],
-            upload_updated_at: Time.new.utc,
-            file_state: 'created',
-            original_filename: @original_filename || File.basename(path)
+          upload_file_name: File.basename(path),
+          upload_content_type: @file_upload.content_type,
+          upload_file_size: File.size(path),
+          resource_id: params[:resource_id],
+          upload_updated_at: Time.new.utc,
+          file_state: 'created',
+          original_filename: @original_filename || File.basename(path)
         )
       end
 
@@ -156,3 +157,4 @@ module StashEngine
     end
   end
 end
+# rubocop:enable Metrics/ModuleLength
