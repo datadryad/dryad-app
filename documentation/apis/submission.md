@@ -101,7 +101,7 @@ doi_encoded = URI.escape(doi)
 ```
 ## Dataset options
 
-To see the dataset fields and option in use, see the [Sample Dataset Object](https://github.com/CDL-Dryad/dryad/blob/master/documentation/sample_dataset.json).
+To see the dataset fields and option in use, see the [Sample Dataset Object](https://github.com/CDL-Dryad/dryad-app/blob/master/documentation/sample_dataset.json).
 
 Useful options that control a dataset's behavior:
 - `skipDataciteUpdate` - If true, doesn't send any requests to DataCite when registering the dataset. This is useful when the dataset already has a DOI, which is present in the metadata being submitted.
@@ -162,7 +162,7 @@ To upload a file that is referenced by URL, do a POST to `{{url-domain-name}}/ap
 
 ```
 {
-    "url": "https://raw.githubusercontent.com/CDL-Dryad/dryad/master/documentation/api_submission.md",
+    "url": "https://raw.githubusercontent.com/CDL-Dryad/dryad-app/master/documentation/apis/submission.md",
     "digest": "aca3032d20c829a6060f1b90afda6d14",
     "digestType": "md5",
     "description": "This is the best file ever!",

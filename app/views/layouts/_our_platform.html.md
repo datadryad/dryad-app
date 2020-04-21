@@ -7,7 +7,7 @@ For information about submission to Dryad, see our [guidance here](<%= stash_url
 
 ## Architecture and Implementation
 
-Dryad is completely open source.  Our code is made publicly available on GitHub [https://github.com/CDL-Dryad/dryad](https://github.com/CDL-Dryad/dryad). Dryad is based on an underlying Ruby-on-Rails data publication platform called Stash. Stash encompasses three main functional components: Store, Harvest, and Share.
+Dryad is completely open source.  Our code is made publicly available on GitHub [https://github.com/CDL-Dryad/dryad-app](https://github.com/CDL-Dryad/dryad-app). Dryad is based on an underlying Ruby-on-Rails data publication platform called Stash. Stash encompasses three main functional components: Store, Harvest, and Share.
 
 - Store: The Store component is responsible for the selection of datasets; their description in terms of configurable metadata schemas, including specification of ORCID and Fundref identifiers for researcher and funder disambiguation; the assignment of DOIs for stable citation and retrieval; designation of an optional limited time embargo; and packaging and submission to the integrated repository
 - Harvest: The Harvest component is responsible for retrieval of descriptive metadata from that repository for inclusion into a Solr search index
@@ -19,13 +19,13 @@ Individual dataset landing pages are formatted as an online version of a data pa
 
 To facilitate flexible configuration and future enhancement, all support for the various external service providers and repository protocols are fully encapsulated into pluggable modules. Metadata modules are available for the DataCitemetadata schema. Protocol modules are available for the SWORD 2.0 deposit protocol and the OAI-PMH and ResourceSync harvesting protocols. Authentication modules are available for InCommon/Shibboleth18 and ORCID identity providers (IdPs).
 
-We welcome collaborations to develop additional modules for additional metadata schemas and repository protocols. Please email the Dryad [help desk](mailto:help@datadryad.org) or visit GitHub [https://github.com/CDL-Dryad/dryad](https://github.com/CDL-Dryad/dryad) for more information.
+We welcome collaborations to develop additional modules for additional metadata schemas and repository protocols. Please email the Dryad [help desk](mailto:help@datadryad.org) or visit GitHub [https://github.com/CDL-Dryad/dryad-app](https://github.com/CDL-Dryad/dryad-app) for more information.
 
 ## Features of Dryad service
 
 | Feature | Tech-focused | User-focused | Description |
 |:---------------------------------|:-------------------------:|:------------------:|:--------------|
-| Open Source | X |  | All components open source, MIT licensed code [https://github.com/CDL-Dryad/dryad](https://github.com/CDL-Dryad/dryad) |
+| Open Source | X |  | All components open source, MIT licensed code [https://github.com/CDL-Dryad/dryad-app](https://github.com/CDL-Dryad/dryad-app) |
 | Standards compliant | X |  | Dryad integrates with any SWORD/OAI-PMH-compliant repository |
 | Pluggable Framework | X |  | Inherent extensibility for supporting additional protocols and metadata schemas |
 | Flexible metadata schemas | X |  | Support Datacite metadata schema out-of-the-box, but can be configured to support any schema |

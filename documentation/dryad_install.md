@@ -7,8 +7,7 @@ The Dryad application is made of a number of parts intended to keep it more flex
 You'll need the following parts installed and configured on a (local) UI development server to do development on the full UI application.  Don't worry, there are more detailed installation instructions in other sections below and this is meant to give an overview of the larger dependencies to configure.
 
 - (Recommended) A ruby version manager such as [rbenv](https://github.com/rbenv/rbenv) or [rvm](https://rvm.io/)
-- The [bare Dryad application](https://github.com/CDL-Dryad/dryad) cloned from github
-- The [stash](https://github.com/CDL-Dryad/stash) repository cloned from github
+- The [bare Dryad application](https://github.com/CDL-Dryad/dryad-app) cloned from github
 
 You'll also need the following components installed either on the same server or on separate servers for all the application features to work:
 
@@ -28,8 +27,7 @@ The application also requires some means to log in outside of a development envi
 Open a (bash) shell and type these commands inside a directory where you want to work with this code. These will clone the development code and an example config.
 
 ```
-git clone https://github.com/CDL-Dryad/dryad
-git clone https://github.com/CDL-Dryad/stash
+git clone https://github.com/CDL-Dryad/dryad-app
 ```
 
 Your config files will be stored in a separate directory from your application. It can be handy to keep them apart from the application so that you can back them up or commit them to a private repository for configuration separate from the application.  The application will need to have these configuration files symlinked into the application. To copy the example config to an external directory and symlink the files in using a bash shell, type these commands:
