@@ -183,13 +183,38 @@ module StashEngine
       joins(JOIN_FOR_LATEST_CURATION).where(str, *arr)
     end
 
+    JOIN_FOR_INTERNAL_DATA = "INNER JOIN stash_engine_identifiers ON stash_engine_identifiers.id = stash_engine_resources.identifier_id " \
+                       "LEFT OUTER JOIN stash_engine_internal_data ON stash_engine_internal_data.identifier_id = stash_engine_identifiers.id".freeze
+
+    scope :with_journal_visibility, ->(states:, journal_issns:nil, user_id: nil, tenant_id: nil) do
+      my_states = (states.is_a?(String) || states.is_a?(Symbol) ? [states] : states)
+      str = 'stash_engine_curation_activities.status IN (?)'
+      arr = [my_states]
+
+      if user_id
+        str += ' OR stash_engine_resources.user_id = ?'
+        arr.push(user_id)
+      end
+      if tenant_id
+        str += ' OR stash_engine_resources.tenant_id = ?'
+        arr.push(tenant_id)
+      end
+      if journal_issns.present?
+        str += " OR (stash_engine_internal_data.data_type = 'publicationISSN' AND stash_engine_internal_data.value IN (?))"
+        arr.push(journal_issns)
+      end
+      joins(JOIN_FOR_LATEST_CURATION).joins(JOIN_FOR_INTERNAL_DATA).distinct.where(str, *arr)
+    end
+    
     scope :visible_to_user, ->(user:) do
       if user.nil?
         with_visibility(states: %w[published embargoed])
       elsif user.superuser?
         all
       elsif user.role == 'admin'
-        with_visibility(states: %w[published embargoed], tenant_id: user.tenant_id)
+        with_visibility(states: %w[published embargoed], tenant_id: user.tenant_id, user_id: user.id)
+      elsif user.journals_as_admin.size > 0
+        with_journal_visibility(states: %w[published embargoed], journal_issns: user.journals_as_admin.map(&:issn), user_id: user.id)
       else
         with_visibility(states: %w[published embargoed], user_id: user.id)
       end
