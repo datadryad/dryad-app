@@ -33,7 +33,7 @@ module StashEngine
       role == 'superuser'
     end
 
-    def admins_journals
+    def journals_as_admin
       journals.merge(JournalRole.admins)
     end
 

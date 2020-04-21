@@ -27,3 +27,12 @@ To create an API account:
 4. Then, in the database, update the `oauth_applications` table to
    relate the user with the application:
    `update oauth_applications set owner_type = 'StashEngine::User', owner_id = <user id> where id = <application id>;`
+
+To set permissions for the API account:
+- The user can be set to a `superuser` or tenant-based `admin` role using
+  either the database or rails console:
+  `update stash_engine_users set role='admin' where id= <user id>;`
+  `StashEngine::User.find(<user id>).update(role: 'admin')`
+- The user can be set as a journal administrator using either the database or rails console:
+  `insert into stash_engine_journal_roles (journal_id, user_id, role) values (1, 3, 'admin');`
+  `StashEngine::JournalRole.new(user:u, journal:j, role:'admin').save`
