@@ -29,7 +29,7 @@ repository.
 
 The next generation of [Dryad](https://datadryad.org) is being rebuilt
 with the Stash core. For the Dryad source code, see the
-[dryad](https://github.com/CDL-Dryad/dryad) repository.
+[dryad](https://github.com/CDL-Dryad/dryad-app) repository.
 
 ## Architecture
 
