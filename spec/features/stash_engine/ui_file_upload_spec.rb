@@ -145,23 +145,25 @@ RSpec.feature 'UiFileUpload', type: :feature do
       @resource_id = page.current_path.match(%r{resources/(\d+)/up})[1].to_i
       @resource = StashEngine::Resource.find(@resource_id)
 
-      stub_request(:head, "http://example.org/funbar.txt").
-          with(
-              headers: {
-                  'Accept'=>'*/*',
-              }).
-          to_return(status: 200, headers: {'Content-Length': 37221, 'Content-Type': 'text/plain'})
+      stub_request(:head, 'http://example.org/funbar.txt')
+        .with(
+          headers: {
+            'Accept' => '*/*'
+          }
+        )
+        .to_return(status: 200, headers: { 'Content-Length': 37_221, 'Content-Type': 'text/plain' })
 
-      stub_request(:head, "http://example.org/foobar.txt").
-          with(
-              headers: {
-                  'Accept'=>'*/*',
-              }).
-          to_return(status: 404)
+      stub_request(:head, 'http://example.org/foobar.txt')
+        .with(
+          headers: {
+            'Accept' => '*/*'
+          }
+        )
+        .to_return(status: 404)
     end
 
     it 'validates a URL that works', js: true do
-      fill_in('location_urls', :with => 'http://example.org/funbar.txt')
+      fill_in('location_urls', with: 'http://example.org/funbar.txt')
       check('confirm_to_validate')
       click_on('validate_files')
 
@@ -172,11 +174,11 @@ RSpec.feature 'UiFileUpload', type: :feature do
       fu = @resource.file_uploads.first
       expect(fu.upload_file_name).to eq('funbar.txt')
       expect(fu.upload_content_type).to eq('text/plain')
-      expect(fu.upload_file_size).to eq(37221)
+      expect(fu.upload_file_size).to eq(37_221)
     end
 
     it 'shows problem with bad URL', js: true do
-      fill_in('location_urls', :with => 'http://example.org/foobar.txt')
+      fill_in('location_urls', with: 'http://example.org/foobar.txt')
       check('confirm_to_validate')
       click_on('validate_files')
 
@@ -201,23 +203,25 @@ RSpec.feature 'UiFileUpload', type: :feature do
       @resource_id = page.current_path.match(%r{resources/(\d+)/up})[1].to_i
       @resource = StashEngine::Resource.find(@resource_id)
 
-      stub_request(:head, "http://example.org/funbar.txt").
-          with(
-              headers: {
-                  'Accept'=>'*/*',
-              }).
-          to_return(status: 200, headers: {'Content-Length': 37221, 'Content-Type': 'text/plain'})
+      stub_request(:head, 'http://example.org/funbar.txt')
+        .with(
+          headers: {
+            'Accept' => '*/*'
+          }
+        )
+        .to_return(status: 200, headers: { 'Content-Length': 37_221, 'Content-Type': 'text/plain' })
 
-      stub_request(:head, "http://example.org/foobar.txt").
-          with(
-              headers: {
-                  'Accept'=>'*/*',
-              }).
-          to_return(status: 404)
+      stub_request(:head, 'http://example.org/foobar.txt')
+        .with(
+          headers: {
+            'Accept' => '*/*'
+          }
+        )
+        .to_return(status: 404)
     end
 
     it 'validates a URL that works', js: true do
-      fill_in('location_urls', :with => 'http://example.org/funbar.txt')
+      fill_in('location_urls', with: 'http://example.org/funbar.txt')
       check('confirm_to_validate')
       click_on('validate_files')
 
@@ -228,11 +232,11 @@ RSpec.feature 'UiFileUpload', type: :feature do
       su = @resource.software_uploads.first
       expect(su.upload_file_name).to eq('funbar.txt')
       expect(su.upload_content_type).to eq('text/plain')
-      expect(su.upload_file_size).to eq(37221)
+      expect(su.upload_file_size).to eq(37_221)
     end
 
     it 'shows problem with bad URL', js: true do
-      fill_in('location_urls', :with => 'http://example.org/foobar.txt')
+      fill_in('location_urls', with: 'http://example.org/foobar.txt')
       check('confirm_to_validate')
       click_on('validate_files')
 
