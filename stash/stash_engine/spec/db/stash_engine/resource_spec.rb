@@ -408,11 +408,12 @@ module StashEngine
 
     describe 'self.need_publishing' do
       before(:each) do
+        @identifier = Identifier.create(identifier: 'dog/cat', identifier_type: 'DOI')
         @resources = []
         @resource_states = []
         @curation_activities = []
         0.upto(3) do
-          res = Resource.create(publication_date: Time.new - 1.day)
+          res = Resource.create(publication_date: Time.new - 1.day, identifier_id: @identifier.id)
           res.current_resource_state.update(resource_state: 'submitted')
           @curation_activities << [
             CurationActivity.create(status: 'submitted', resource_id: res.id),
@@ -426,7 +427,7 @@ module StashEngine
         @resources[2].current_resource_state.update(resource_state: 'in_progress')
       end
 
-      it 'returns only published to merritt, embargoed and out of embargo date item' do
+      it 'returns only items that have been published to merritt, curation status embargoed, and embargo date passed' do
         items = StashEngine::Resource.need_publishing
         expect(items.count).to eq(1) # only the last should be able to be changed
         expect(items.first.id).to eq(@resources[3].id) # only last one should be eligible
@@ -1208,16 +1209,17 @@ module StashEngine
           # user has only user permission and is part of the UCOP tenant
           @user2 = create(:user, first_name: 'Gargola', last_name: 'Jones', email: 'luckin@ucop.edu', tenant_id: 'ucop', role: 'admin')
           @user3 = create(:user, first_name: 'Merga', last_name: 'Flav', email: 'flavin@ucop.edu', tenant_id: 'ucb', role: 'superuser')
-          @resources = [create(:resource, user_id: @user.id, tenant_id: @user.tenant_id),
-                        create(:resource, user_id: @user.id, tenant_id: @user.tenant_id),
-                        create(:resource, user_id: @user.id, tenant_id: @user.tenant_id),
-                        create(:resource, user_id: @user2.id, tenant_id: @user2.tenant_id),
-                        create(:resource, user_id: @user2.id, tenant_id: @user2.tenant_id),
-                        create(:resource, user_id: @user2.id, tenant_id: @user2.tenant_id),
-                        create(:resource, user_id: @user3.id, tenant_id: @user3.tenant_id),
-                        create(:resource, user_id: @user3.id, tenant_id: @user3.tenant_id),
-                        create(:resource, user_id: @user3.id, tenant_id: @user3.tenant_id),
-                        create(:resource, user_id: @user3.id, tenant_id: @user3.tenant_id)]
+          @identifier = Identifier.create(identifier: 'cat/dog', identifier_type: 'DOI')
+          @resources = [create(:resource, user_id: @user.id, tenant_id: @user.tenant_id, identifier_id: @identifier.id),
+                        create(:resource, user_id: @user.id, tenant_id: @user.tenant_id, identifier_id: @identifier.id),
+                        create(:resource, user_id: @user.id, tenant_id: @user.tenant_id, identifier_id: @identifier.id),
+                        create(:resource, user_id: @user2.id, tenant_id: @user2.tenant_id, identifier_id: @identifier.id),
+                        create(:resource, user_id: @user2.id, tenant_id: @user2.tenant_id, identifier_id: @identifier.id),
+                        create(:resource, user_id: @user2.id, tenant_id: @user2.tenant_id, identifier_id: @identifier.id),
+                        create(:resource, user_id: @user3.id, tenant_id: @user3.tenant_id, identifier_id: @identifier.id),
+                        create(:resource, user_id: @user3.id, tenant_id: @user3.tenant_id, identifier_id: @identifier.id),
+                        create(:resource, user_id: @user3.id, tenant_id: @user3.tenant_id, identifier_id: @identifier.id),
+                        create(:resource, user_id: @user3.id, tenant_id: @user3.tenant_id, identifier_id: @identifier.id)]
 
           @curation_activities = [[create(:curation_activity_no_callbacks, resource: @resources[0], status: 'in_progress'),
                                    create(:curation_activity_no_callbacks, resource: @resources[0], status: 'curation'),
