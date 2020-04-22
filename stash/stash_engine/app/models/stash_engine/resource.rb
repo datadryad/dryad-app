@@ -274,18 +274,20 @@ module StashEngine
     end
 
     # returns the list of fileuploads with duplicate names in created state where we shouldn't have any
-    def duplicate_filenames
+    def duplicate_filenames(method: 'file_uploads')
+      table_name = (method == 'file_uploads' ? 'stash_engine_file_uploads' : 'stash_engine_software_uploads')
       sql = <<-SQL
         SELECT *
-        FROM stash_engine_file_uploads AS a
+        FROM #{table_name} AS a
         JOIN (SELECT upload_file_name
-          FROM stash_engine_file_uploads
+          FROM #{table_name}
           WHERE resource_id = ? AND (file_state IS NULL OR file_state = 'created')
           GROUP BY upload_file_name HAVING count(*) >= 2) AS b
         ON a.upload_file_name = b.upload_file_name
         WHERE a.resource_id = ?
       SQL
-      FileUpload.find_by_sql([sql, id, id])
+      # get the correct ActiveRecord model based on the method name
+      "StashEngine::#{method.to_s.singularize.camelize}".constantize.find_by_sql([sql, id, id])
     end
 
     def url_in_version?(url)

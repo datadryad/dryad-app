@@ -1,10 +1,10 @@
 <% #takes local variable of resource %>
-<% dups = resource.duplicate_filenames %>
+<% dups = resource.duplicate_filenames(method: @resource_assoc) %>
 <div class="c-manifest">
   <div id="manifest_errors">
-    <% if resource.file_uploads.newly_created.errors.count > 0 || dups.count > 0 %>
+    <% if resource.send(@resource_assoc).newly_created.errors.count > 0 || dups.count > 0 %>
       <h2 class="t-upload__choose-heading--active">Validation Status</h2>
-      <% resource.file_uploads.newly_created.errors.each do |fu| %>
+      <% resource.send(@resource_assoc).newly_created.errors.each do |fu| %>
         <div class="c-manifest__item">
           <div class="c-manifest__url"><%= fu.url %></div>
           <div class="c-manifest__error"><%= fu.error_message %></div>
