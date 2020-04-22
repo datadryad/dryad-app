@@ -146,7 +146,6 @@ function confirmToUpload(){
 // The items for showing only upload method or manifest method
 // **********************************************************************************
 function setUploadMethodLockout(resourceUploadType){
-  console.log('lockout called: ' + resourceUploadType);
   if(resourceUploadType == 'unknown') {
     enableUploadMethod();
   }else{
@@ -155,12 +154,10 @@ function setUploadMethodLockout(resourceUploadType){
 }
 
 function disableUploadMethod(){
-  console.log('disabling link for other upload method');
   $('#alternate_up_method').hide();
 }
 
 function enableUploadMethod(){
-  console.log('enabling link for other upload method');
   $('#alternate_up_method').show();
 }
 

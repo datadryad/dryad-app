@@ -26,7 +26,6 @@
     // set up initial page loaded state
     setUploadMethodLockout('<%= escape_javascript(@resource.upload_type(method: @resource_assoc).to_s) %>'); // set lockout so you can't change view if you have files already
     $('#post_submit_spinner').hide(); // hide the submit spinner for manifest uploads
-    console.log('should be adding confirm to validate button');
     confirmToValidate(); // add event to require checking acceptance before validating
   });
 </script>
