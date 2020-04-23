@@ -21,10 +21,8 @@ module StashEngine
 
     # See https://medium.com/rubyinside/active-records-queries-tricks-2546181a98dd for some good tricks
     # returns the identifiers that have resources with that *latest* curation state you specify (for any of the resources)
-    # These scopes needs some reworking based on changes to the resource state, leaving them commented out for now.
-    # with_visibility, ->(states:, user_id: nil, tenant_id: nil)
     scope :with_visibility, ->(states:, user_id: nil, tenant_id: nil) do
-      joins(:resources).merge(Resource.with_visibility(states: states, user_id: user_id, tenant_id: tenant_id)).distinct
+      where(id: Resource.with_visibility(states: states, user_id: user_id, tenant_id: tenant_id).select("identifier_id").distinct.map(&:identifier_id))
     end
 
     scope :publicly_viewable, -> do
