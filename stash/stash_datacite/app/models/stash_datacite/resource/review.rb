@@ -92,11 +92,12 @@ module StashDatacite
       end
 
       def share
-        @share ||= if @resource&.identifier&.shares&.present?
-                   @resource&.identifier&.shares&.first
-                 else
-                   StashEngine::Share.create(identifier_id: @resource.identifier.id)
-                 end
+        @share ||=
+          if @resource&.identifier&.shares&.present?
+            @resource&.identifier&.shares&.first
+          else
+            StashEngine::Share.create(identifier_id: @resource.identifier.id)
+          end
       end
 
       def pdf_filename
