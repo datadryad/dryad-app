@@ -16,6 +16,7 @@ module StashEngine
             class_name: 'StashEngine::Resource',
             primary_key: 'latest_resource_id',
             foreign_key: 'id'
+    has_one :software_license, class_name: 'StashEngine::SoftwareLicense'
 
     after_create :create_share
 
