@@ -34,10 +34,15 @@
 	<div>
 		<h3>License and Terms of Service for Software</h3>
 		<p>Software files will be stored and managed by Zenodo . . .</p>
-		<p>
-			Select license for files:
-			<%= select_tag 'zenodo_license', options_for_select([ ["MIT License", 'mit'], ["GNU public dedication", 'gnu'] ]) %>
-		</p>
+		<div>
+			<label for="zenodo_license">Select license for files (type to search within list)</label>
+			<%# select_tag 'zenodo_license', options_for_select([ ["MIT License", 'mit'], ["GNU public dedication", 'gnu'] ]) %>
+			<%= select_tag 'zenodo_license',
+		 		options_from_collection_for_select(StashEngine::SoftwareLicense.all, 'identifier', 'name',
+																					 @resource&.identifier&.software_license&.identifier || 'MIT') %>
+
+		</div>
+		<p>Having trouble choosing on a license? See <a href="https://choosealicense.com/" target="_blank">Choose a License</a>.</p>
 	</div>
 <% end %>
 
@@ -92,11 +97,14 @@ $(document).ready(function(){
 
     if (allChecked) {
         $('.js-submission').attr('disabled', false); //enable input
-
     } else {
         $('.js-submission').attr('disabled', true); //disable input
     }
   });
+
+	$('#zenodo_license').selectize({
+		sortField: 'text'
+	});
 });
 </script>
 
