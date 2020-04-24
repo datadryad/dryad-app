@@ -6,10 +6,13 @@
   <%= button_to "Download Data Publication (PDF)", data_paper_path(params[:id]), class: 'o-download__docs', method: 'get' %>
 </div>
 
-<% if may_download %>
-  <%= render partial: 'stash_engine/landing/files', locals: {dataset_identifier: @id, resource: @resource} %>
-<% else %>
-  <%= render partial: 'stash_engine/landing/files_embargoed', locals: {resource: @resource} %>
+<% # don't show the files to download at all for DataONE--not working in Merritt, they just need to download the full dataset version %>
+<% unless resource.tenant_id == 'dataone' %>
+  <% if may_download %>
+    <%= render partial: 'stash_engine/landing/files', locals: {dataset_identifier: @id, resource: @resource} %>
+  <% else %>
+    <%= render partial: 'stash_engine/landing/files_embargoed', locals: {resource: @resource} %>
+  <% end %>
 <% end %>
 
 <div class="c-sidebox">
