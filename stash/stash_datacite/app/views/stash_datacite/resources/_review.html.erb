@@ -54,21 +54,26 @@
 
     <h2 class="o-heading__page-span">Review Files</h2>
 
-    <h2 class="o-heading__level2">Files Hosted by Dryad</h2>
+    <%= image_tag('stash_engine/logo_dryad.png', alt: 'Dryad logo', class: 'c-review-dryad') %>
+
+    <h2 class="o-heading__level2">Data Files Hosted by Dryad</h2>
 
     <div class="c-review-files">
-      <%= render partial: "stash_engine/file_uploads/show", locals: { file_uploads:  @review.file_uploads } %>
-      <%= link_to 'Edit Files', stash_engine.upload_resource_path(@resource), id: 'upload_path',
+        <%= render partial: "stash_engine/file_uploads/show", locals: { file_uploads:  @review.file_uploads } %>
+        <%= link_to 'Edit Files', stash_engine.upload_resource_path(@resource), id: 'upload_path',
                   class: 'c-review-files-button o-button__icon-left', role: 'button' %>
     </div>
 
-    <h2 class="o-heading__level2">Files Hosted by Zenodo</h2>
+    <% if @review.software_uploads.count > 0 %>
+      <%= image_tag('stash_engine/logo_zenodo.png', alt: 'Zenodo logo', class: 'c-review-zenodo') %>
+      <h2 class="o-heading__level2">Software Files Hosted by Zenodo</h2>
 
-    <div class="c-review-files">
-      <%= render partial: "stash_engine/file_uploads/show", locals: { file_uploads:  @review.software_uploads } %>
-      <%= link_to 'Edit Files', stash_engine.up_code_resource_path(@resource), id: 'software_upload_path',
-                  class: 'c-review-files-button o-button__icon-left', role: 'button' %>
-    </div>
+      <div class="c-review-files">
+        <%= render partial: "stash_engine/file_uploads/show", locals: { file_uploads:  @review.software_uploads } %>
+        <%= link_to 'Edit Files', stash_engine.up_code_resource_path(@resource), id: 'software_upload_path',
+                    class: 'c-review-files-button o-button__icon-left', role: 'button' %>
+      </div>
+    <% end %>
 
   <% if !@resource.submitted? && @resource.identifier.allow_review? %>
     <!-- This is only available if the version has not yet been submitted to the repository AND
