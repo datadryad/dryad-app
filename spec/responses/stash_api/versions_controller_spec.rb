@@ -127,6 +127,26 @@ module StashApi
 
         expect(my_versions.length).to eq(2)
       end
+
+      it 'shows both versions to an admin for this journal' do
+        # set up @user2 as a journal admin, and @identifier as belonging to that journal
+        @user2 = create(:user, tenant_id: @tenant_ids.first, role: nil)
+        journal = create(:journal)
+        create(:journal_role, journal: journal, user: @user2, role: 'admin')
+        create(:internal_datum, identifier_id: @identifier.id, data_type: 'publicationISSN', value: journal.issn)
+        @doorkeeper_application2 = create(:doorkeeper_application, redirect_uri: 'urn:ietf:wg:oauth:2.0:oob',
+                                                                   owner_id: @user2.id, owner_type: 'StashEngine::User')
+        access_token = get_access_token(doorkeeper_application: @doorkeeper_application2)
+        response_code = get "/api/v2/datasets/#{CGI.escape(@identifier.to_s)}/versions", {}, default_json_headers.merge(
+          'Authorization' => "Bearer #{access_token}"
+        )
+
+        expect(response_code).to eq(200)
+        expect(response_body_hash['total']).to eq(2)
+        my_versions = response_body_hash['_embedded']['stash:versions']
+
+        expect(my_versions.length).to eq(2)
+      end
     end
 
     # shows a version by the version ID (not version number) which can be obtained from the index action above
@@ -265,4 +285,3 @@ module StashApi
     end
   end
 end
-# rubocop:enable
