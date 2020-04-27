@@ -82,6 +82,16 @@ module StashEngine
         expect(resource.permission_to_edit?(user: @user)).to eq(true)
       end
 
+      it 'returns true if admin for same journal' do
+        journal = Journal.create(title: 'Test Journal', issn: '1234-4321')
+        identifier = Identifier.create(identifier: 'cat/dog', identifier_type: 'DOI')
+        InternalDatum.create(identifier_id: identifier.id, data_type: 'publicationISSN', value: journal.issn)
+        resource = Resource.create(user_id: @user.id + 1, tenant_id: 'ucop', identifier_id: identifier.id)
+        JournalRole.create(journal: journal, user: @user, role: 'admin')
+
+        expect(resource.permission_to_edit?(user: @user)).to eq(true)
+      end
+
     end
 
     describe :tenant_id do
@@ -230,7 +240,6 @@ module StashEngine
 
       it 'returns false if not marked for download' do
         @resource.update(file_view: false)
-        @resource.reload
         expect(@resource.may_download?(ui_user: nil)).to be false
       end
 
@@ -272,7 +281,20 @@ module StashEngine
         @resource.identifier.update(pub_state: 'unpublished')
         @resource.update(file_view: false)
         @resource.reload
-        expect(@resource.may_download?(ui_user: @resource.user)).to be true
+        a_superuser = User.create(role: 'superuser')
+        expect(@resource.may_download?(ui_user: a_superuser)).to be true
+      end
+
+      it 'returns true if being viewed by a journal admin' do
+        journal = Journal.create(title: 'Test Journal', issn: '1234-4321')
+        identifier = Identifier.create(identifier: 'cat/dog', identifier_type: 'DOI')
+        identifier.update(pub_state: 'unpublished')
+        InternalDatum.create(identifier_id: identifier.id, data_type: 'publicationISSN', value: journal.issn)
+        resource = Resource.create(user_id: @user.id + 1, tenant_id: 'ucop', identifier_id: identifier.id)
+        resource.update(file_view: false)
+        JournalRole.create(journal: journal, user: @user, role: 'admin')
+
+        expect(@resource.may_download?(ui_user: @user)).to be true
       end
 
     end
@@ -324,6 +346,17 @@ module StashEngine
         @resource.update(tenant_id: 'superca', meta_view: false, file_view: false)
         @user2 = StashEngine::User.create(first_name: 'Gorgonzola', last_name: 'Travesty', tenant_id: user.tenant_id, role: 'admin')
         expect(@resource.may_view?(ui_user: @user2)).to be_falsey
+      end
+
+      it 'allows admin user from journal to view' do
+        @identifier.update(pub_state: 'unpublished')
+        @resource.update(tenant_id: 'superca', meta_view: false, file_view: false)
+        @user2 = StashEngine::User.create(first_name: 'Gorgonzola', last_name: 'Travesty', tenant_id: user.tenant_id, role: 'user')
+        journal = Journal.create(title: 'Test Journal', issn: '1234-4321')
+        InternalDatum.create(identifier_id: @identifier.id, data_type: 'publicationISSN', value: journal.issn)
+        JournalRole.create(journal: journal, user: @user2, role: 'admin')
+
+        expect(@resource.may_view?(ui_user: @user2)).to be_truthy
       end
 
       it 'allows superuser to view anything' do
@@ -1315,6 +1348,14 @@ module StashEngine
           end
 
           it 'shows all resources to an admin for this tenant (ucop)' do
+            resources = @identifier.resources.visible_to_user(user: @user2)
+            expect(resources.count).to eq(3)
+          end
+
+          it 'shows all resources to an admin for this journal' do
+            journal = Journal.create(title: 'Test Journal', issn: '1234-4321')
+            InternalDatum.create(identifier_id: @identifier.id, data_type: 'publicationISSN', value: journal.issn)
+            JournalRole.create(journal: journal, user: @user2, role: 'admin')
             resources = @identifier.resources.visible_to_user(user: @user2)
             expect(resources.count).to eq(3)
           end
