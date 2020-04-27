@@ -24,7 +24,7 @@
         <%= button_to 'Resume', stash_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: line.resource.id), form_class: 'o-button__inline-form', class: 'o-button__plain-text6' %>
         <%= button_to 'Delete', stash_url_helpers.resource_path(line.resource), method: :delete, data: { confirm: 'Are you sure you want to remove this dataset?' }, form_class: 'o-button__inline-form', class: 'o-button__plain-text7' %>
       <% end %>
-    <% else %>
+    <% elsif line.resource&.dataset_in_progress_editor.present? %>
       Dataset being edited by <%= line.resource.dataset_in_progress_editor.name %>
     <% end %>
   </td>
