@@ -105,6 +105,12 @@ $(document).ready(function(){
 	$('#zenodo_license').selectize({
 		sortField: 'text'
 	});
+
+	// write this into the form that gets sent on submission of dataset
+	$('#zenodo_license').change(function (){
+		var selected = $(this).children("option:selected").val();
+		$("#software_license").val(selected);
+	});
 });
 </script>
 
