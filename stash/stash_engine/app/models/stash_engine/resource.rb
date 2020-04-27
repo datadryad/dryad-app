@@ -491,7 +491,10 @@ module StashEngine
     def permission_to_edit?(user:)
       return false unless user
       # superuser, dataset owner or admin for the same tenant
-      user.superuser? || user_id == user.id || (user.tenant_id == tenant_id && user.role == 'admin')
+      user.superuser? ||
+        user_id == user.id ||
+        (user.tenant_id == tenant_id && user.role == 'admin') ||
+        user.journals_as_admin.include?(identifier&.journal)
     end
 
     # Checks if someone may download files for this resource
@@ -505,7 +508,10 @@ module StashEngine
       return false unless current_resource_state&.resource_state == 'submitted' # is available in Merritt
       return true if files_published? # published and this one available for download
       return false if ui_user.blank? # the rest of the cases require users
-      return true if ui_user.id == user_id || ui_user.role == 'superuser' || (ui_user.role == 'admin' && ui_user.tenant_id == tenant_id)
+      return true if ui_user.id == user_id ||
+                     ui_user.role == 'superuser' ||
+                     (ui_user.role == 'admin' && ui_user.tenant_id == tenant_id) ||
+                     ui_user.journals_as_admin.include?(identifier&.journal)
       false # nope. Not sure if it would ever get here, though
     end
     # rubocop:enable Metrics/CyclomaticComplexity
@@ -515,7 +521,10 @@ module StashEngine
     def may_view?(ui_user: nil)
       return true if metadata_published? # anyone can view
       return false if ui_user.blank? # otherwise unknown person can't view and this prevents later nil checks
-      return true if user_id == ui_user.id || ui_user.superuser? || (ui_user.role == 'admin' && ui_user.tenant_id == tenant_id)
+      return true if user_id == ui_user.id ||
+                     ui_user.superuser? ||
+                     (ui_user.role == 'admin' && ui_user.tenant_id == tenant_id) ||
+                     ui_user.journals_as_admin.include?(identifier&.journal)
       false
     end
     # rubocop:enable Metrics/CyclomaticComplexity
