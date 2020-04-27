@@ -163,12 +163,19 @@ module StashEngine
       .freeze
 
     JOIN_FOR_LATEST_CURATION = "INNER JOIN (#{SUBQUERY_FOR_LATEST_CURATION}) subq ON stash_engine_resources.id = subq.resource_id " \
-      'INNER JOIN stash_engine_curation_activities ON subq.id = stash_engine_curation_activities.id'.freeze
+                               'INNER JOIN stash_engine_curation_activities ON subq.id = stash_engine_curation_activities.id'.freeze
+
+    JOIN_FOR_INTERNAL_DATA = 'INNER JOIN stash_engine_identifiers ON stash_engine_identifiers.id = stash_engine_resources.identifier_id ' \
+                             'LEFT OUTER JOIN stash_engine_internal_data ' \
+                             'ON stash_engine_internal_data.identifier_id = stash_engine_identifiers.id'.freeze
 
     # returns the resources that are currently in a curation state you specify (not looking at obsolete states),
-    # ie last state for each resource.  Also if user_id or tenant_id is set it will return those records (your own)
-    # or your organization's without regard to curation state.
-    scope :with_visibility, ->(states:, user_id: nil, tenant_id: nil) do
+    # ie last state for each resource.  Also returns resources (regardless of curation state) that the user can
+    # see due to special privileges:
+    #  - resources owned by this user_id
+    #  - if tenant is specified, resources associated with the tenant
+    #  - if one or more journal_issns are specified, resources associated with the journal(s)
+    scope :with_visibility, ->(states:, journal_issns: nil, user_id: nil, tenant_id: nil) do
       my_states = (states.is_a?(String) || states.is_a?(Symbol) ? [states] : states)
       str = 'stash_engine_curation_activities.status IN (?)'
       arr = [my_states]
@@ -180,7 +187,11 @@ module StashEngine
         str += ' OR stash_engine_resources.tenant_id = ?'
         arr.push(tenant_id)
       end
-      joins(JOIN_FOR_LATEST_CURATION).where(str, *arr)
+      if journal_issns.present?
+        str += " OR (stash_engine_internal_data.data_type = 'publicationISSN' AND stash_engine_internal_data.value IN (?))"
+        arr.push(journal_issns)
+      end
+      joins(JOIN_FOR_LATEST_CURATION).joins(JOIN_FOR_INTERNAL_DATA).distinct.where(str, *arr)
     end
 
     scope :visible_to_user, ->(user:) do
@@ -188,10 +199,12 @@ module StashEngine
         with_visibility(states: %w[published embargoed])
       elsif user.superuser?
         all
-      elsif user.role == 'admin'
-        with_visibility(states: %w[published embargoed], tenant_id: user.tenant_id)
       else
-        with_visibility(states: %w[published embargoed], user_id: user.id)
+        tenant_admin = (user.tenant_id if user.role == 'admin')
+        with_visibility(states: %w[published embargoed],
+                        tenant_id: tenant_admin,
+                        journal_issns: user.journals_as_admin.map(&:issn),
+                        user_id: user.id)
       end
     end
 

@@ -107,12 +107,13 @@ module StashApi
         mock_ror!
         neuter_curation_callbacks!
         # these tests are very similar to tests in the model controller for identifier for querying this scope
-        @user1 = create(:user, tenant_id: 'ucop', role: nil)
-        @user2 = create(:user, tenant_id: 'ucop', role: 'admin')
-        @user3 = create(:user, tenant_id: 'ucb', role: 'superuser')
 
         @identifiers = []
         0.upto(7).each { |_i| @identifiers.push(create(:identifier)) }
+
+        @user1 = create(:user, tenant_id: 'ucop', role: nil)
+        @user2 = create(:user, tenant_id: 'ucop', role: 'admin')
+        @user3 = create(:user, tenant_id: 'ucb', role: 'superuser')
 
         @resources = [create(:resource, user_id: @user1.id, tenant_id: @user1.tenant_id, identifier_id: @identifiers[0].id),
                       create(:resource, user_id: @user1.id, tenant_id: @user1.tenant_id, identifier_id: @identifiers[0].id),
@@ -125,6 +126,7 @@ module StashApi
                       create(:resource, user_id: @user3.id, tenant_id: @user3.tenant_id, identifier_id: @identifiers[6].id),
                       create(:resource, user_id: @user3.id, tenant_id: @user3.tenant_id, identifier_id: @identifiers[7].id)]
 
+        # identifiers[0]
         @curation_activities = [[create(:curation_activity, resource: @resources[0], status: 'in_progress'),
                                  create(:curation_activity, resource: @resources[0], status: 'curation'),
                                  create(:curation_activity, resource: @resources[0], status: 'published')]]
@@ -132,9 +134,11 @@ module StashApi
         @curation_activities << [create(:curation_activity, resource: @resources[1], status: 'in_progress'),
                                  create(:curation_activity, resource: @resources[1], status: 'curation')]
 
+        # identifiers[1]
         @curation_activities << [create(:curation_activity, resource: @resources[2], status: 'in_progress'),
                                  create(:curation_activity, resource: @resources[2], status: 'curation')]
 
+        # identifiers[2]
         @curation_activities << [create(:curation_activity, resource: @resources[3], status: 'in_progress'),
                                  create(:curation_activity, resource: @resources[3], status: 'curation'),
                                  create(:curation_activity, resource: @resources[3], status: 'action_required')]
@@ -143,20 +147,25 @@ module StashApi
                                  create(:curation_activity, resource: @resources[4], status: 'curation'),
                                  create(:curation_activity, resource: @resources[4], status: 'published')]
 
+        # identifiers[3]
         @curation_activities << [create(:curation_activity, resource: @resources[5], status: 'in_progress'),
                                  create(:curation_activity, resource: @resources[5], status: 'curation'),
                                  create(:curation_activity, resource: @resources[5], status: 'embargoed')]
 
+        # identifiers[4]
         @curation_activities << [create(:curation_activity, resource: @resources[6], status: 'in_progress'),
                                  create(:curation_activity, resource: @resources[6], status: 'curation'),
                                  create(:curation_activity, resource: @resources[6], status: 'withdrawn')]
 
+        # identifiers[5]
         @curation_activities << [create(:curation_activity, resource: @resources[7], status: 'in_progress')]
 
+        # identifiers[6]
         @curation_activities << [create(:curation_activity, resource: @resources[8], status: 'in_progress'),
                                  create(:curation_activity, resource: @resources[8], status: 'curation'),
                                  create(:curation_activity, resource: @resources[8], status: 'published')]
 
+        # identifiers[7]
         @curation_activities << [create(:curation_activity, resource: @resources[9], status: 'in_progress'),
                                  create(:curation_activity, resource: @resources[9], status: 'curation'),
                                  create(:curation_activity, resource: @resources[9], status: 'embargoed')]
@@ -198,6 +207,23 @@ module StashApi
           expect(output[:count]).to eq(6)
           dois = output['_embedded']['stash:datasets'].map { |ds| ds['identifier'] }
           expect(dois).to include(@identifiers[1].to_s) # this would be private otherwise based on curation status
+        end
+
+        it 'gets a list for journal admins: public items and private items associated with the journal' do
+          # set up user4 as a journal admin, and identifiers[1] as belonging to that journal
+          user4 = create(:user, tenant_id: 'ucop', role: nil)
+          journal = create(:journal)
+          create(:journal_role, journal: journal, user: user4, role: 'admin')
+          create(:internal_datum, identifier_id: @identifiers[1].id, data_type: 'publicationISSN', value: journal.issn)
+          @doorkeeper_application = create(:doorkeeper_application, redirect_uri: 'urn:ietf:wg:oauth:2.0:oob',
+                                                                    owner_id: user4.id, owner_type: 'StashEngine::User')
+          setup_access_token(doorkeeper_application: @doorkeeper_application)
+          get '/api/v2/datasets', {}, default_authenticated_headers
+          output = response_body_hash
+          expect(output[:count]).to eq(6)
+          dois = output['_embedded']['stash:datasets'].map { |ds| ds['identifier'] }
+          # this would be private based on curation status, but the journal admin should be able to see it
+          expect(dois).to include(@identifiers[1].to_s)
         end
       end
 
