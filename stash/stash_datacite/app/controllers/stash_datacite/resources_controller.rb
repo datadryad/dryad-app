@@ -1,5 +1,6 @@
 require_dependency 'stash_datacite/application_controller'
 
+# rubocop:disable Metrics/ClassLength
 module StashDatacite
   # this is a class for composite (AJAX/UJS?) views starting at the resource or resources
   class ResourcesController < ApplicationController
@@ -79,7 +80,7 @@ module StashDatacite
                       preserve_curation_status: false, loosen_validation: false) # these are mostly for API superusers to choose
 
       # write the software license to the database
-      license_id = ( params[:software_license].blank? ? 'MIT' : params[:software_license] )
+      license_id = (params[:software_license].blank? ? 'MIT' : params[:software_license])
       id_for_license = StashEngine::SoftwareLicense.where(identifier: license_id).first&.id
       resource.identifier.update(software_license_id: id_for_license)
 
@@ -143,3 +144,4 @@ module StashDatacite
 
   end
 end
+# rubocop:enable Metrics/ClassLength
