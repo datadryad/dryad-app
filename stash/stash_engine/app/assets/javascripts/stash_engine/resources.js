@@ -8,7 +8,7 @@
 // ********************************************************************************
 $(function () {
   // only do this stuff on the file upload page.
-  if($('body.resources_upload').length < 1){
+  if($('body.resources_upload,body.resources_up_code').length < 1){
     return;
   }
 
@@ -118,7 +118,7 @@ function updateUiStates(){
   if($(".js-unuploaded").length > 0){
     disableUploadMethod();
   }else{
-    enableUploadMethod();
+    // enableUploadMethod();
     // resetFileTablesToDbState();
   }
   updateWaitingSize();
@@ -149,23 +149,16 @@ function setUploadMethodLockout(resourceUploadType){
   if(resourceUploadType == 'unknown') {
     enableUploadMethod();
   }else{
-    disableUploadMethod()
+    disableUploadMethod();
   }
 }
 
 function disableUploadMethod(){
-  if ($('#files_from_computer').prop('checked')) {
-    $('#files_from_manifest').attr('disabled', true);
-  }
-  else {
-    $('#files_from_computer').attr('disabled', true);
-  }
+  $('#alternate_up_method').hide();
 }
 
 function enableUploadMethod(){
-  $('#files_from_manifest').attr('disabled', false);
-  $('#files_from_computer').attr('disabled', false);
-  // resetFileTablesToDbState();
+  $('#alternate_up_method').show();
 }
 
 // **********************************************************************************

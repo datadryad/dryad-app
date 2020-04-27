@@ -3,11 +3,11 @@ require 'fileutils'
 require 'stash/url_translator'
 
 module StashEngine
-  class FileUploadsController < ApplicationController
+  class SoftwareUploadsController < ApplicationController
 
     def setup_class_info
-      @file_model = StashEngine::FileUpload
-      @resource_assoc = :file_uploads
+      @file_model = StashEngine::SoftwareUpload
+      @resource_assoc = :software_uploads
     end
 
     include StashEngine::Concerns::Uploadable
@@ -16,7 +16,7 @@ module StashEngine
     helper_method :resource
 
     def ensure_upload_dir(resource_id)
-      @upload_dir = StashEngine::Resource.upload_dir_for(resource_id)
+      @upload_dir = StashEngine::Resource.software_upload_dir_for(resource_id)
       FileUtils.mkdir_p @upload_dir unless File.exist?(@upload_dir)
     end
 

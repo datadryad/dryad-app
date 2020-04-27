@@ -73,7 +73,7 @@
     <%= render partial: "stash_datacite/licenses/review" %>
 
 <div class="o-dataset-nav">
-  <%= link_to 'Back to Upload Files', stash_url_helpers.upload_resource_path(@resource), id: 'dashboard_path',
+  <%= link_to 'Back to Upload Software', stash_url_helpers.up_code_resource_path(@resource), id: 'dashboard_path',
             class: 'o-button__icon-left', role: 'button' %>
 
   <% if @data.blank? # valid data %>
