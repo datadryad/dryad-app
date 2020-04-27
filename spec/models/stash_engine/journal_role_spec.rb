@@ -18,8 +18,8 @@ module StashEngine
         expect(JournalRole.admins.first.journal).to eql(@journal2)
       end
     end
-    
-    describe 'users are associated with journals' do        
+
+    describe 'users are associated with journals' do
       it 'returns all journals associated with the user' do
         expect(@user.journals.size).to eql(2)
       end
