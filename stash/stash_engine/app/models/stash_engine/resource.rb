@@ -488,6 +488,7 @@ module StashEngine
     end
 
     def admin_for_this_item?(user: nil)
+      return false if user.nil?
       user.superuser? ||
         user_id == user.id ||
         (user.tenant_id == tenant_id && user.role == 'admin') ||
