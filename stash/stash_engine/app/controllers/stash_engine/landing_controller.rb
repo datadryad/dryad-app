@@ -28,7 +28,7 @@ module StashEngine
       @user_type = 'public'
       res = id.resources.submitted&.by_version_desc&.first
       return res if res.nil? # no submitted resources
-      @resource = if owner?(resource: res) || superuser? || admin?(resource: res)
+      @resource = if admin?(resource: res)
                     @user_type = 'privileged'
                     id.resources.submitted.by_version_desc.first
                   else # everyone else only gets to see published or embargoed metadata latest version
