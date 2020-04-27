@@ -29,8 +29,10 @@ class CreateStashEngineSoftwareLicenses < ActiveRecord::Migration
       json = JSON.parse(http.body.to_s)
       json['licenses'].each do |license|
         # the list is ridiculously huge without limiting to OsiApproved and not deprecated items
-        StashEngine::SoftwareLicense.create(name: license['name'], identifier: license['licenseId'],
-          details_url: license['detailsUrl']) if license['isOsiApproved'] == true && license['isDeprecatedLicenseId'] == false
+        if license['isOsiApproved'] == true && license['isDeprecatedLicenseId'] == false
+          StashEngine::SoftwareLicense.create(name: license['name'], identifier: license['licenseId'],
+                                              details_url: license['detailsUrl'])
+        end
       end
     end
   rescue HTTP::Error
