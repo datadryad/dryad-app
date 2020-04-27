@@ -78,6 +78,11 @@ module StashDatacite
       resource.update(skip_datacite_update: false, skip_emails: false,
                       preserve_curation_status: false, loosen_validation: false) # these are mostly for API superusers to choose
 
+      # write the software license to the database
+      license_id = ( params[:software_license].blank? ? 'MIT' : params[:software_license] )
+      id_for_license = StashEngine::SoftwareLicense.where(identifier: license_id).first&.id
+      resource.identifier.update(software_license_id: id_for_license)
+
       # TODO: put this somewhere more reliable
       StashDatacite::DataciteDate.set_date_available(resource_id: resource.id)
 

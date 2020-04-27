@@ -539,7 +539,6 @@ module StashEngine
 
     # -----------------------------------------------------------
     # Authors
-
     def fill_blank_author!
       return if authors.count > 0 || user.blank? # already has some authors filled in or no user to know about
       fill_author_from_user!
