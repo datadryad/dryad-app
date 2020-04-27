@@ -487,47 +487,38 @@ module StashEngine
       permission_to_edit?(user: user) && (dataset_in_progress_editor.id == user.id || user.superuser?)
     end
 
-    # have the permission to edit
-    def permission_to_edit?(user:)
-      return false unless user
-      # superuser, dataset owner or admin for the same tenant
+    def admin_for_this_item?(user: nil)
       user.superuser? ||
         user_id == user.id ||
         (user.tenant_id == tenant_id && user.role == 'admin') ||
         user.journals_as_admin.include?(identifier&.journal)
     end
 
+    # have the permission to edit
+    def permission_to_edit?(user:)
+      return false unless user
+      # superuser, dataset owner or admin for the same tenant
+      admin_for_this_item?(user: user)
+    end
+
     # Checks if someone may download files for this resource
     # 1. Merritt's status, resource_state = 'submitted', meaning they are available to download from Merritt
     # 2. Curation state of files_public? means anyone may download
-    # 3. if not public then the author can still download: resource.user_id = current_user.id
-    # 4. if not public then the current user has the 'superuser' role for seeing all files
+    # 3. if not public then users with admin privileges over the item can still download
     # Note: the special download links mean anyone with that link may download and this doesn't apply
-    # rubocop:disable Metrics/CyclomaticComplexity
     def may_download?(ui_user: nil) # doing this to avoid collision with the association called user
       return false unless current_resource_state&.resource_state == 'submitted' # is available in Merritt
       return true if files_published? # published and this one available for download
       return false if ui_user.blank? # the rest of the cases require users
-      return true if ui_user.id == user_id ||
-                     ui_user.role == 'superuser' ||
-                     (ui_user.role == 'admin' && ui_user.tenant_id == tenant_id) ||
-                     ui_user.journals_as_admin.include?(identifier&.journal)
-      false # nope. Not sure if it would ever get here, though
+      admin_for_this_item?(user: ui_user)
     end
-    # rubocop:enable Metrics/CyclomaticComplexity
 
     # see if the user may view based on curation status & roles and etc.  I don't see this as being particularly complex for Rubocop
-    # rubocop:disable Metrics/CyclomaticComplexity
     def may_view?(ui_user: nil)
       return true if metadata_published? # anyone can view
       return false if ui_user.blank? # otherwise unknown person can't view and this prevents later nil checks
-      return true if user_id == ui_user.id ||
-                     ui_user.superuser? ||
-                     (ui_user.role == 'admin' && ui_user.tenant_id == tenant_id) ||
-                     ui_user.journals_as_admin.include?(identifier&.journal)
-      false
+      admin_for_this_item?(user: ui_user)
     end
-    # rubocop:enable Metrics/CyclomaticComplexity
 
     # ------------------------------------------------------------
     # Usage and statistics

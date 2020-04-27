@@ -112,10 +112,8 @@ module StashEngine
     # these are resources that the user can look at because of permissions, some user roles can see non-published others, not
     def latest_viewable_resource(user: nil)
       return latest_resource_with_public_metadata if user.nil?
-
       lr = latest_resource
-      return lr if user.id == lr&.user_id || user.superuser? || (user.role == 'admin' && user.tenant_id == lr&.tenant_id)
-
+      return lr if lr.admin_for_this_item?(user: user)
       latest_resource_with_public_metadata
     end
 
@@ -126,7 +124,7 @@ module StashEngine
     def latest_downloadable_resource(user: nil)
       return latest_resource_with_public_download if user.nil?
       lr = resources.submitted_only.by_version_desc.first
-      return lr if user.id == lr&.user_id || user.superuser? || (user.role == 'admin' && user.tenant_id == lr&.tenant_id)
+      return lr if lr.admin_for_this_item?(user: user)
       latest_resource_with_public_download
     end
 
