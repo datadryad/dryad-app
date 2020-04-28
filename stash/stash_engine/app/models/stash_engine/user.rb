@@ -1,7 +1,10 @@
 module StashEngine
+  # rubocop:disable Metrics/ClassLength
   class User < ActiveRecord::Base
 
     has_many :resources
+    has_many :journal_roles
+    has_many :journals, through: :journal_roles
 
     def self.from_omniauth_orcid(auth_hash:, emails:)
       users = find_by_orcid_or_emails(orcid: auth_hash[:uid], emails: emails)
@@ -28,6 +31,10 @@ module StashEngine
 
     def superuser?
       role == 'superuser'
+    end
+
+    def journals_as_admin
+      journals.merge(JournalRole.admins)
     end
 
     NO_MIGRATE_STRING = 'xxxxxx'.freeze
@@ -139,4 +146,5 @@ module StashEngine
     end
 
   end
+  # rubocop:enable Metrics/ClassLength
 end

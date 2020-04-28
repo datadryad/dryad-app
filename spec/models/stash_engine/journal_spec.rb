@@ -1,7 +1,7 @@
-require 'db_spec_helper'
+require 'rails_helper'
 
 module StashEngine
-  describe Journal do
+  RSpec.describe Journal, type: :model do
 
     before(:each) do
       @journal = Journal.create(issn: '1234-5678')
