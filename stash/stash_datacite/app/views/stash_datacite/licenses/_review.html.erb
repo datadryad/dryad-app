@@ -33,7 +33,9 @@
 <% if @review.software_uploads.count > 0 %>
 	<div>
 		<h3>License and Terms of Service for Software</h3>
-		<p>Software files will be stored and managed by Zenodo . . .</p>
+		<p>Software and other files uploaded will be managed and preserved at Zenodo. Your related DOI will be linked to
+			your dataset. Please select a license from the below dropdown list for your Zenodo deposit. For guidance,
+			check <a href="https://choosealicense.com/" target="_blank">choosealicense.org</a>.</p>
 		<div>
 			<label for="zenodo_license">Select license for files (type to search within list)</label>
 			<%# select_tag 'zenodo_license', options_for_select([ ["MIT License", 'mit'], ["GNU public dedication", 'gnu'] ]) %>
@@ -42,7 +44,6 @@
 																					 @resource&.identifier&.software_license&.identifier || 'MIT') %>
 
 		</div>
-		<p>Having trouble choosing on a license? See <a href="https://choosealicense.com/" target="_blank">Choose a License</a>.</p>
 	</div>
 <% end %>
 

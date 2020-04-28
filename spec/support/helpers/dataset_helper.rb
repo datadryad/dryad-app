@@ -19,7 +19,7 @@ module DatasetHelper
   end
 
   def navigate_to_upload
-    click_link 'Upload Files'
+    click_link 'Upload Data'
     expect(page).to have_content('Step 2: Choose Files', wait: 10)
   end
 
