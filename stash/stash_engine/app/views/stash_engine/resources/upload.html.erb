@@ -5,7 +5,7 @@
 
 <h1 class="o-heading__level1">Upload Your <%= @datatype %></h1>
 
-<div id="choose_method">
+<div id="choose_method" style="margin-bottom: 2em;">
   <%= render partial: 'stash_engine/file_uploads/choose_upload_method', locals: { resource: @resource, upload_method: :files} %>
 </div>
 
@@ -52,6 +52,15 @@
   $( document ).ready(function() {
     $('#files_from_computer').click(function(){
       updateUiStates();
+    });
+
+    $('.files_upload').hide();
+
+    $('.alternate_up_method').click(function(e){
+      if(window.location.href == this.href){
+        e.preventDefault();
+        $('.files_upload').show();
+      }
     });
   });
 
