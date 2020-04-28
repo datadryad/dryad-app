@@ -9,7 +9,7 @@ module StashEngine
     include SharedSecurityController
     # include StashEngine::Concerns::Sortable
 
-    before_action :require_admin
+    before_action :require_superuser
 
     def index
       # nothing just now
