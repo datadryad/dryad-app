@@ -22,8 +22,8 @@ cp geoblacklight-schema-0.3.2/conf/* ~/apps/solr/server/solr/geoblacklight/conf
 ```
 # copy our customizations
 cd ~/apps/solr/server/solr/geoblacklight/conf/
-wget https://raw.githubusercontent.com/CDL-Dryad/dryad/master/config/solr_config/schema.xml
-wget https://raw.githubusercontent.com/CDL-Dryad/dryad/master/config/solr_config/solrconfig.xml
+wget https://raw.githubusercontent.com/CDL-Dryad/dryad-app/master/config/solr_config/schema.xml
+wget https://raw.githubusercontent.com/CDL-Dryad/dryad-app/master/config/solr_config/solrconfig.xml
 ```
 
 ```

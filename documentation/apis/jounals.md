@@ -6,6 +6,29 @@ The journal module provides information about the journals associated
 with Dryad. It runs from the old (v1) Dryad server, so its API is
 separate from the newer [data-access API](https://datadryad.org/api/v2/docs/).
 
+The journal module performs two functions:
+
+1. Managing metadata about the journals and their workflows. (**This
+   feature is deprecated.**)
+2. Processing metadata emails from journals and updating the status of
+   associated datasets.
+
+Journal metadata
+=================
+
+Metadata about the journals and their workflows is stored in Dryad's
+`StashEngine::Journal` model.
+
+Until we have a proper editing UI in Dryad, journal metadata is still
+edited with the UI in the v1 system, and then updates are imported
+to the production server using a command like:
+`RAILS_ENV=production bundle exec rake dryad_migration:migrate_journal_metadata`
+
+
+
+Journal metadata is still available through the v1 journal module's API,
+but **this feature is deprecated**.
+
 List all journals:
 `https://datadryad.org/api/v1/journals`
 

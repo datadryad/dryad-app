@@ -267,6 +267,14 @@ module StashEngine
             @res3.update(tenant_id: 'localhost')
             expect(@identifier.latest_viewable_resource(user: user2)).to eql(@identifier.latest_resource_with_public_metadata)
           end
+
+          it 'returns the latest non-published for an admin from journal' do
+            user2 = User.new(role: 'user', tenant_id: 'localhost')
+            journal = Journal.create(title: 'Test Journal', issn: '1234-4321')
+            InternalDatum.create(identifier_id: @identifier.id, data_type: 'publicationISSN', value: journal.issn)
+            JournalRole.create(journal: journal, user: user2, role: 'admin')
+            expect(@identifier.latest_viewable_resource(user: user2)).to eql(@identifier.latest_resource)
+          end
         end
 
         describe '#latest_resource_with_public_download' do

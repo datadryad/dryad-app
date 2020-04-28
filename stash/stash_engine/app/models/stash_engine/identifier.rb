@@ -22,10 +22,9 @@ module StashEngine
 
     # See https://medium.com/rubyinside/active-records-queries-tricks-2546181a98dd for some good tricks
     # returns the identifiers that have resources with that *latest* curation state you specify (for any of the resources)
-    # These scopes needs some reworking based on changes to the resource state, leaving them commented out for now.
-    # with_visibility, ->(states:, user_id: nil, tenant_id: nil)
-    scope :with_visibility, ->(states:, user_id: nil, tenant_id: nil) do
-      joins(:resources).merge(Resource.with_visibility(states: states, user_id: user_id, tenant_id: tenant_id)).distinct
+    scope :with_visibility, ->(states:, journal_issns: nil, user_id: nil, tenant_id: nil) do
+      where(id: Resource.with_visibility(states: states, journal_issns: journal_issns, user_id: user_id, tenant_id: tenant_id)
+                        .select('identifier_id').distinct.map(&:identifier_id))
     end
 
     scope :publicly_viewable, -> do
@@ -37,10 +36,12 @@ module StashEngine
         publicly_viewable
       elsif user.superuser?
         all
-      elsif user.role == 'admin'
-        with_visibility(states: %w[published embargoed], tenant_id: user.tenant_id)
       else
-        with_visibility(states: %w[published embargoed], user_id: user.id)
+        tenant_admin = (user.tenant_id if user.role == 'admin')
+        with_visibility(states: %w[published embargoed],
+                        tenant_id: tenant_admin,
+                        journal_issns: user.journals_as_admin.map(&:issn),
+                        user_id: user.id)
       end
     end
 
@@ -112,10 +113,8 @@ module StashEngine
     # these are resources that the user can look at because of permissions, some user roles can see non-published others, not
     def latest_viewable_resource(user: nil)
       return latest_resource_with_public_metadata if user.nil?
-
       lr = latest_resource
-      return lr if user.id == lr&.user_id || user.superuser? || (user.role == 'admin' && user.tenant_id == lr&.tenant_id)
-
+      return lr if lr.admin_for_this_item?(user: user)
       latest_resource_with_public_metadata
     end
 
@@ -126,7 +125,7 @@ module StashEngine
     def latest_downloadable_resource(user: nil)
       return latest_resource_with_public_download if user.nil?
       lr = resources.submitted_only.by_version_desc.first
-      return lr if user.id == lr&.user_id || user.superuser? || (user.role == 'admin' && user.tenant_id == lr&.tenant_id)
+      return lr if lr.admin_for_this_item?(user: user)
       latest_resource_with_public_download
     end
 

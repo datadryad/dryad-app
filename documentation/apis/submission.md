@@ -7,7 +7,7 @@ This document gives practical information for working with the API in order to s
 
 Before you can submit from the API, you need to log in to Dryad at least once to create a user record.  You may log in to your associated campus/organization or use the DataONE login with your Google login credentials.
 
-To request access, please [contact us](mailto:uc3@ucop.edu). (Developers see [Adding a New API Account](https://confluence.ucop.edu/pages/viewpage.action?spaceKey=Stash&title=Dryad+Operations#DryadOperations-AddingaNewAPIAccountforSubmission))
+To request access, please [contact us](mailto:uc3@ucop.edu). (Developers see [Adding a New API Account](README.md))
 
 ## Get a token for making requests for secure parts of the API
 Before making secure requests to the Dryad API, you'll need a token.  Currently our tokens last 10 hours and a token will need to be renewed if it expires.  You may get a token using these examples from a few programming environments.  Replace &lt;bracketed&gt; items with the values you were given.  For testing, you may choose to use a bash shell, a programming environment or a tool such as Postman.
@@ -101,7 +101,7 @@ doi_encoded = URI.escape(doi)
 ```
 ## Dataset options
 
-To see the dataset fields and option in use, see the [Sample Dataset Object](https://github.com/CDL-Dryad/dryad/blob/master/documentation/sample_dataset.json).
+To see the dataset fields and option in use, see the [Sample Dataset Object](https://github.com/CDL-Dryad/dryad-app/blob/master/documentation/sample_dataset.json).
 
 Useful options that control a dataset's behavior:
 - `skipDataciteUpdate` - If true, doesn't send any requests to DataCite when registering the dataset. This is useful when the dataset already has a DOI, which is present in the metadata being submitted.
@@ -162,7 +162,7 @@ To upload a file that is referenced by URL, do a POST to `{{url-domain-name}}/ap
 
 ```
 {
-    "url": "https://raw.githubusercontent.com/CDL-Dryad/dryad/master/documentation/api_submission.md",
+    "url": "https://raw.githubusercontent.com/CDL-Dryad/dryad-app/master/documentation/apis/submission.md",
     "digest": "aca3032d20c829a6060f1b90afda6d14",
     "digestType": "md5",
     "description": "This is the best file ever!",

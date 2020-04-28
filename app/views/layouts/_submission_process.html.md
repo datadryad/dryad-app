@@ -10,7 +10,7 @@
 <li><strong>When preparing your complete version of a dataset, remember to collate all relevant explantory documents and metadata</strong>. This includes relevant documentation necessary for the re-use and replication of your dataset (e.g., readme.txt files, formal metadata records, or other critical information)</li>
 </ul>
 
-<p><b>Dryad has a REST API that allows for download and submission of data. Check out our <a href="https://datadryad.org/api/v2/docs/">documentation</a> as well as our <a href="https://github.com/CDL-Dryad/dryad/blob/master/stash_api/basic_submission.md">How-To Guide</a>.</b></p>
+<p><b>Dryad has a REST API that allows for download and submission of data. Check out our <a href="https://datadryad.org/api/v2/docs/">documentation</a> as well as our <a href="https://github.com/CDL-Dryad/dryad-app/blob/master/documentation/apis/submission.md">How-To Guide</a>.</b></p>
 
 <p>If you need further assistance, consult our <a href="<%= stash_url_helpers.faq_path %>">FAQ</a> or contact us at <a href=mailto:help@datadryad.org>help@datadryad.org</a>. Log in and go to "My Datasets" to begin your data submission now!</p>
 
@@ -61,7 +61,7 @@
 <p>We have two different options for uploading your data.</p>
 <ul>
 <li>Upload directly from your computer: by using drag and drop or the upload button. We allow for 10gb of data per DOI to be uploaded this way.</li>
-<li>Upload from a server or the cloud: by entering the URL of the location where data are held on a server, or the sharing link for Box, Dropbox, or Google Drive. We allow for 300gb (in a URL or dispersed through many URLs) of data per DOI to be validated and uploaded this way.</li>
+<li>Upload from a server or the cloud: by entering the URL of the location where data are held on a server, or the sharing link for Box or Dropbox. (Google Drive is not recommended). We allow for 300gb (in a URL or dispersed through many URLs) of data per DOI to be validated and uploaded this way.</li>
 </ul>
 <p>Please note that you may only use one of these two upload methods per version, but you may do subsequent versions of your data publication and utilize different methods of upload this way.</p>
 
