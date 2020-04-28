@@ -47,6 +47,7 @@ Capybara.register_driver :selenium_chrome_headless do |app|
   Capybara::Selenium::Driver.new(app, browser: :chrome, options: browser_options)
 end
 
+# Capybara.javascript_driver = :selenium_chrome
 Capybara.javascript_driver = :selenium_chrome_headless
 
 RSpec.configure do |config|
