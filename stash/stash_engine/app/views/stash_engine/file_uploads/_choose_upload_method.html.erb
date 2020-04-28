@@ -12,17 +12,13 @@
   <div class="t-upload__method-section">
     <div class="t-uploads__method-choice">
       <% if params[:action].include?('code') %>
-        <% if params[:action].include?('manifest') %>
-          <%= link_to 'Upload software files directly', up_code_resource_path(resource.id), id: 'alternate_up_method' %>
-        <% else %>
-          <%= link_to 'Upload software files from public URLs', up_code_manifest_resource_path(@resource.id), id: 'alternate_up_method' %>
-        <% end %>
+        <%= link_to 'Upload directly', up_code_resource_path(resource.id), class: 'alternate_up_method' %>
+        OR
+        <%= link_to 'Upload by URL', up_code_manifest_resource_path(@resource.id), class: 'alternate_up_method' %>
       <% else %>
-        <% if params[:action].include?('manifest') %>
-          <%= link_to 'Upload files directly', upload_resource_path(@resource.id), id: 'alternate_up_method' %>
-        <% else %>
-          <%= link_to 'Upload files from public URLs', upload_manifest_resource_path(resource.id), id: 'alternate_up_method' %>
-        <% end %>
+        <%= link_to 'Upload directly', upload_resource_path(@resource.id), class: 'alternate_up_method' %>
+        OR
+        <%= link_to 'Upload by URL', upload_manifest_resource_path(resource.id), class: 'alternate_up_method' %>
       <% end %>
     </div>
   </div>
