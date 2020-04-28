@@ -6,7 +6,7 @@ module StashApi
     before_action :require_json_headers
     before_action :doorkeeper_authorize!
     before_action :require_api_user
-    before_action :require_curator # curators and superusers are conflated
+    before_action :require_superuser
 
     # gets the length of items waiting to process ie, queued or held with rejected_shutting_down
     def length
