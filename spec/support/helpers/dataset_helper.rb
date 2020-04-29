@@ -13,16 +13,27 @@ module DatasetHelper
     expect(page).to have_content('Dataset: Basic Information', wait: 10)
   end
 
+  def navigate_to_software_upload
+    click_link 'Upload Software'
+    expect(page).to have_content('Choose Files')
+  end
+
   def navigate_to_upload
-    # Make sure you switch to the Selenium driver for the test calling this helper method
-    # e.g. `it 'should test this amazing thing', js: true do`
     click_link 'Upload Files'
     expect(page).to have_content('Step 2: Choose Files', wait: 10)
   end
 
+  def navigate_to_upload_urls
+    click_link 'Upload files from public URLs'
+    expect(page).to have_content('Step 2: Enter Files', wait: 10)
+  end
+
+  def navigate_to_software_upload_urls
+    click_link 'Upload software files from public URLs'
+    expect(page).to have_content('Step 2: Enter Files', wait: 10)
+  end
+
   def navigate_to_review
-    # Make sure you switch to the Selenium driver for the test calling this helper method
-    # e.g. `it 'should test this amazing thing', js: true do`
     click_link 'Review and Submit'
     expect(page).to have_content('Review Description', wait: 10)
   end

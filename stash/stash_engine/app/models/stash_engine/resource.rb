@@ -10,6 +10,7 @@ module StashEngine
 
     has_many :authors, class_name: 'StashEngine::Author', dependent: :destroy
     has_many :file_uploads, class_name: 'StashEngine::FileUpload', dependent: :destroy
+    has_many :software_uploads, class_name: 'StashEngine::SoftwareUpload', dependent: :destroy
     has_many :edit_histories, class_name: 'StashEngine::EditHistory'
     has_one :stash_version, class_name: 'StashEngine::Version', dependent: :destroy
     belongs_to :identifier, class_name: 'StashEngine::Identifier', foreign_key: 'identifier_id'
@@ -221,12 +222,23 @@ module StashEngine
       Resource.upload_dir_for(id)
     end
 
+    # ---------
+    # software file utility methods
+
+    def self.software_upload_dir_for(resource_id)
+      File.join(uploads_dir, "#{resource_id}_sfw")
+    end
+
+    def software_upload_dir
+      Resource.software_upload_dir_for(id)
+    end
+
     # gets the latest files that are not deleted in db, current files for this version
-    def current_file_uploads
-      subquery = FileUpload.where(resource_id: id).where("file_state <> 'deleted' AND " \
+    def current_file_uploads(my_class: StashEngine::FileUpload)
+      subquery = my_class.where(resource_id: id).where("file_state <> 'deleted' AND " \
                                          '(url IS NULL OR (url IS NOT NULL AND status_code = 200))')
         .select('max(id) last_id, upload_file_name').group(:upload_file_name)
-      FileUpload.joins("INNER JOIN (#{subquery.to_sql}) sub on id = sub.last_id").order(upload_file_name: :asc)
+      my_class.joins("INNER JOIN (#{subquery.to_sql}) sub on id = sub.last_id").order(upload_file_name: :asc)
     end
 
     # gets new files in this version
@@ -237,10 +249,11 @@ module StashEngine
     end
 
     # the states of the latest files of the same name in the resource (version), included deleted
-    def latest_file_states
-      subquery = FileUpload.where(resource_id: id)
+    def latest_file_states(model: 'StashEngine::FileUpload')
+      my_model = model.constantize
+      subquery = my_model.where(resource_id: id)
         .select('max(id) last_id, upload_file_name').group(:upload_file_name)
-      FileUpload.joins("INNER JOIN (#{subquery.to_sql}) sub on id = sub.last_id").order(upload_file_name: :asc)
+      my_model.joins("INNER JOIN (#{subquery.to_sql}) sub on id = sub.last_id").order(upload_file_name: :asc)
     end
 
     # the size of this resource (created + copied files)
@@ -254,25 +267,27 @@ module StashEngine
     end
 
     # returns the upload type either :files, :manifest, :unknown (unknown if no files are started for this version yet)
-    def upload_type
-      return :manifest if file_uploads.newly_created.url_submission.count > 0
-      return :files if file_uploads.newly_created.file_submission.count > 0
+    def upload_type(method: 'file_uploads')
+      return :manifest if send(method).newly_created.url_submission.count > 0
+      return :files if send(method).newly_created.file_submission.count > 0
       :unknown
     end
 
     # returns the list of fileuploads with duplicate names in created state where we shouldn't have any
-    def duplicate_filenames
+    def duplicate_filenames(method: 'file_uploads')
+      table_name = (method == 'file_uploads' ? 'stash_engine_file_uploads' : 'stash_engine_software_uploads')
       sql = <<-SQL
         SELECT *
-        FROM stash_engine_file_uploads AS a
+        FROM #{table_name} AS a
         JOIN (SELECT upload_file_name
-          FROM stash_engine_file_uploads
+          FROM #{table_name}
           WHERE resource_id = ? AND (file_state IS NULL OR file_state = 'created')
           GROUP BY upload_file_name HAVING count(*) >= 2) AS b
         ON a.upload_file_name = b.upload_file_name
         WHERE a.resource_id = ?
       SQL
-      FileUpload.find_by_sql([sql, id, id])
+      # get the correct ActiveRecord model based on the method name
+      "StashEngine::#{method.to_s.singularize.camelize}".constantize.find_by_sql([sql, id, id])
     end
 
     def url_in_version?(url)
@@ -524,7 +539,6 @@ module StashEngine
 
     # -----------------------------------------------------------
     # Authors
-
     def fill_blank_author!
       return if authors.count > 0 || user.blank? # already has some authors filled in or no user to know about
       fill_author_from_user!
