@@ -10,15 +10,15 @@
 <div>
 
   <div class="t-upload__method-section">
-    <div class="t-uploads__method-choice">
+    <div class="t-uploads__method-choice" id="alternate_up_method">
       <% if params[:action].include?('code') %>
-        <%= link_to 'Upload directly', up_code_resource_path(resource.id), class: 'alternate_up_method' %>
+        <%= link_to 'Upload directly', up_code_resource_path(resource.id, anchor: 'open'), class: 'choosing_up_method' %>
         OR
-        <%= link_to 'Upload by URL', up_code_manifest_resource_path(@resource.id), class: 'alternate_up_method' %>
+        <%= link_to 'Upload by URL', up_code_manifest_resource_path(@resource.id, anchor: 'open'), class: 'choosing_up_method' %>
       <% else %>
-        <%= link_to 'Upload directly', upload_resource_path(@resource.id), class: 'alternate_up_method' %>
+        <%= link_to 'Upload directly', upload_resource_path(@resource.id, anchor: 'open'), class: 'choosing_up_method' %>
         OR
-        <%= link_to 'Upload by URL', upload_manifest_resource_path(resource.id), class: 'alternate_up_method' %>
+        <%= link_to 'Upload by URL', upload_manifest_resource_path(resource.id, anchor: 'open'), class: 'choosing_up_method' %>
       <% end %>
     </div>
   </div>
