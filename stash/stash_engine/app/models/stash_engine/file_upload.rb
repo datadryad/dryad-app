@@ -127,7 +127,7 @@ module StashEngine
     # We also need to refresh the file list for this resource and check for other files with this same name to be deleted since
     # users find ways to do multiple deletions in the UI (multiple windows or perhaps uploading two files with the same name).
     def smart_destroy!
-      files_with_name = FileUpload.where(resource_id: resource_id).where(upload_file_name: upload_file_name)
+      files_with_name = self.class.where(resource_id: resource_id).where(upload_file_name: upload_file_name)
 
       # destroy any files for this version and and not yet sent to Merritt, shouldn't have nil, but if so, it's newly created
       files_with_name.where(file_state: ['created', nil]).each do |fl|

@@ -22,14 +22,10 @@
 
 <script type="text/javascript" charset="utf-8">
 
-  <%= render partial: 'stash_engine/file_uploads/rails_to_js_context.js', locals: { resource: @resource} %>
-  addUploadTypeChangeEvent();
-
   $(function () {
     // set up initial page loaded state
-    setUploadMethodLockout('<%= escape_javascript(@resource.upload_type.to_s) %>'); // set lockout so you can't change view if you have files already
+    setUploadMethodLockout('<%= escape_javascript(@resource.upload_type(method: @resource_assoc).to_s) %>'); // set lockout so you can't change view if you have files already
     $('#post_submit_spinner').hide(); // hide the submit spinner for manifest uploads
-    console.log('should be adding confirm to validate button');
     confirmToValidate(); // add event to require checking acceptance before validating
   });
 </script>
