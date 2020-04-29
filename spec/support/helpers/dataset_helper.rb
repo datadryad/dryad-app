@@ -15,21 +15,23 @@ module DatasetHelper
 
   def navigate_to_software_upload
     click_link 'Upload Software'
+    click_link 'Upload directly'
     expect(page).to have_content('Choose Files')
   end
 
   def navigate_to_upload
     click_link 'Upload Data'
+    click_link 'Upload directly'
     expect(page).to have_content('Step 2: Choose Files', wait: 10)
   end
 
   def navigate_to_upload_urls
-    click_link 'Upload files from public URLs'
+    click_link 'Upload by URL'
     expect(page).to have_content('Step 2: Enter Files', wait: 10)
   end
 
   def navigate_to_software_upload_urls
-    click_link 'Upload software files from public URLs'
+    click_link 'Upload by URL'
     expect(page).to have_content('Step 2: Enter Files', wait: 10)
   end
 
