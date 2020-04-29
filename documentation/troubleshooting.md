@@ -115,3 +115,14 @@ For "An ActionView::Template::Error occurred in resources#review",
 check on the journal module. The review page in the submission system
 may not be getting quick enough feedback.
 
+
+Updating DataCite Metadata
+===========================
+
+Occasionally, there will be a problem sending metadata to DataCite for
+an item. You can force the metadata in DataCite to update by:
+
+```
+idg = Stash::Doi::IdGen.make_instance(resource: r)
+idg.update_identifier_metadata!
+```

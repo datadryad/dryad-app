@@ -82,6 +82,16 @@ module StashEngine
         expect(resource.permission_to_edit?(user: @user)).to eq(true)
       end
 
+      it 'returns true if admin for same journal' do
+        journal = Journal.create(title: 'Test Journal', issn: '1234-4321')
+        identifier = Identifier.create(identifier: 'cat/dog', identifier_type: 'DOI')
+        InternalDatum.create(identifier_id: identifier.id, data_type: 'publicationISSN', value: journal.issn)
+        resource = Resource.create(user_id: @user.id + 1, tenant_id: 'ucop', identifier_id: identifier.id)
+        JournalRole.create(journal: journal, user: @user, role: 'admin')
+
+        expect(resource.permission_to_edit?(user: @user)).to eq(true)
+      end
+
     end
 
     describe :tenant_id do
@@ -230,7 +240,6 @@ module StashEngine
 
       it 'returns false if not marked for download' do
         @resource.update(file_view: false)
-        @resource.reload
         expect(@resource.may_download?(ui_user: nil)).to be false
       end
 
@@ -272,7 +281,20 @@ module StashEngine
         @resource.identifier.update(pub_state: 'unpublished')
         @resource.update(file_view: false)
         @resource.reload
-        expect(@resource.may_download?(ui_user: @resource.user)).to be true
+        a_superuser = User.create(role: 'superuser')
+        expect(@resource.may_download?(ui_user: a_superuser)).to be true
+      end
+
+      it 'returns true if being viewed by a journal admin' do
+        journal = Journal.create(title: 'Test Journal', issn: '1234-4321')
+        identifier = Identifier.create(identifier: 'cat/dog', identifier_type: 'DOI')
+        identifier.update(pub_state: 'unpublished')
+        InternalDatum.create(identifier_id: identifier.id, data_type: 'publicationISSN', value: journal.issn)
+        resource = Resource.create(user_id: @user.id + 1, tenant_id: 'ucop', identifier_id: identifier.id)
+        resource.update(file_view: false)
+        JournalRole.create(journal: journal, user: @user, role: 'admin')
+
+        expect(@resource.may_download?(ui_user: @user)).to be true
       end
 
     end
@@ -324,6 +346,17 @@ module StashEngine
         @resource.update(tenant_id: 'superca', meta_view: false, file_view: false)
         @user2 = StashEngine::User.create(first_name: 'Gorgonzola', last_name: 'Travesty', tenant_id: user.tenant_id, role: 'admin')
         expect(@resource.may_view?(ui_user: @user2)).to be_falsey
+      end
+
+      it 'allows admin user from journal to view' do
+        @identifier.update(pub_state: 'unpublished')
+        @resource.update(tenant_id: 'superca', meta_view: false, file_view: false)
+        @user2 = StashEngine::User.create(first_name: 'Gorgonzola', last_name: 'Travesty', tenant_id: user.tenant_id, role: 'user')
+        journal = Journal.create(title: 'Test Journal', issn: '1234-4321')
+        InternalDatum.create(identifier_id: @identifier.id, data_type: 'publicationISSN', value: journal.issn)
+        JournalRole.create(journal: journal, user: @user2, role: 'admin')
+
+        expect(@resource.may_view?(ui_user: @user2)).to be_truthy
       end
 
       it 'allows superuser to view anything' do
@@ -408,11 +441,12 @@ module StashEngine
 
     describe 'self.need_publishing' do
       before(:each) do
+        @identifier = Identifier.create(identifier: 'dog/cat', identifier_type: 'DOI')
         @resources = []
         @resource_states = []
         @curation_activities = []
         0.upto(3) do
-          res = Resource.create(publication_date: Time.new - 1.day)
+          res = Resource.create(publication_date: Time.new - 1.day, identifier_id: @identifier.id)
           res.current_resource_state.update(resource_state: 'submitted')
           @curation_activities << [
             CurationActivity.create(status: 'submitted', resource_id: res.id),
@@ -426,7 +460,7 @@ module StashEngine
         @resources[2].current_resource_state.update(resource_state: 'in_progress')
       end
 
-      it 'returns only published to merritt, embargoed and out of embargo date item' do
+      it 'returns only items that have been published to merritt, curation status embargoed, and embargo date passed' do
         items = StashEngine::Resource.need_publishing
         expect(items.count).to eq(1) # only the last should be able to be changed
         expect(items.first.id).to eq(@resources[3].id) # only last one should be eligible
@@ -1208,16 +1242,17 @@ module StashEngine
           # user has only user permission and is part of the UCOP tenant
           @user2 = create(:user, first_name: 'Gargola', last_name: 'Jones', email: 'luckin@ucop.edu', tenant_id: 'ucop', role: 'admin')
           @user3 = create(:user, first_name: 'Merga', last_name: 'Flav', email: 'flavin@ucop.edu', tenant_id: 'ucb', role: 'superuser')
-          @resources = [create(:resource, user_id: @user.id, tenant_id: @user.tenant_id),
-                        create(:resource, user_id: @user.id, tenant_id: @user.tenant_id),
-                        create(:resource, user_id: @user.id, tenant_id: @user.tenant_id),
-                        create(:resource, user_id: @user2.id, tenant_id: @user2.tenant_id),
-                        create(:resource, user_id: @user2.id, tenant_id: @user2.tenant_id),
-                        create(:resource, user_id: @user2.id, tenant_id: @user2.tenant_id),
-                        create(:resource, user_id: @user3.id, tenant_id: @user3.tenant_id),
-                        create(:resource, user_id: @user3.id, tenant_id: @user3.tenant_id),
-                        create(:resource, user_id: @user3.id, tenant_id: @user3.tenant_id),
-                        create(:resource, user_id: @user3.id, tenant_id: @user3.tenant_id)]
+          @identifier = Identifier.create(identifier: 'cat/dog', identifier_type: 'DOI')
+          @resources = [create(:resource, user_id: @user.id, tenant_id: @user.tenant_id, identifier_id: @identifier.id),
+                        create(:resource, user_id: @user.id, tenant_id: @user.tenant_id, identifier_id: @identifier.id),
+                        create(:resource, user_id: @user.id, tenant_id: @user.tenant_id, identifier_id: @identifier.id),
+                        create(:resource, user_id: @user2.id, tenant_id: @user2.tenant_id, identifier_id: @identifier.id),
+                        create(:resource, user_id: @user2.id, tenant_id: @user2.tenant_id, identifier_id: @identifier.id),
+                        create(:resource, user_id: @user2.id, tenant_id: @user2.tenant_id, identifier_id: @identifier.id),
+                        create(:resource, user_id: @user3.id, tenant_id: @user3.tenant_id, identifier_id: @identifier.id),
+                        create(:resource, user_id: @user3.id, tenant_id: @user3.tenant_id, identifier_id: @identifier.id),
+                        create(:resource, user_id: @user3.id, tenant_id: @user3.tenant_id, identifier_id: @identifier.id),
+                        create(:resource, user_id: @user3.id, tenant_id: @user3.tenant_id, identifier_id: @identifier.id)]
 
           @curation_activities = [[create(:curation_activity_no_callbacks, resource: @resources[0], status: 'in_progress'),
                                    create(:curation_activity_no_callbacks, resource: @resources[0], status: 'curation'),
@@ -1313,6 +1348,14 @@ module StashEngine
           end
 
           it 'shows all resources to an admin for this tenant (ucop)' do
+            resources = @identifier.resources.visible_to_user(user: @user2)
+            expect(resources.count).to eq(3)
+          end
+
+          it 'shows all resources to an admin for this journal' do
+            journal = Journal.create(title: 'Test Journal', issn: '1234-4321')
+            InternalDatum.create(identifier_id: @identifier.id, data_type: 'publicationISSN', value: journal.issn)
+            JournalRole.create(journal: journal, user: @user2, role: 'admin')
             resources = @identifier.resources.visible_to_user(user: @user2)
             expect(resources.count).to eq(3)
           end

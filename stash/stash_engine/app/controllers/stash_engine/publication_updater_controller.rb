@@ -6,7 +6,7 @@ module StashEngine
     include SharedSecurityController
     include StashEngine::Concerns::Sortable
 
-    before_action :require_admin
+    before_action :require_superuser
     before_action :setup_paging, only: [:index]
     before_action :setup_ds_sorting, only: [:index]
 

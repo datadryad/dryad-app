@@ -164,12 +164,19 @@ module StashEngine
       .freeze
 
     JOIN_FOR_LATEST_CURATION = "INNER JOIN (#{SUBQUERY_FOR_LATEST_CURATION}) subq ON stash_engine_resources.id = subq.resource_id " \
-      'INNER JOIN stash_engine_curation_activities ON subq.id = stash_engine_curation_activities.id'.freeze
+                               'INNER JOIN stash_engine_curation_activities ON subq.id = stash_engine_curation_activities.id'.freeze
+
+    JOIN_FOR_INTERNAL_DATA = 'INNER JOIN stash_engine_identifiers ON stash_engine_identifiers.id = stash_engine_resources.identifier_id ' \
+                             'LEFT OUTER JOIN stash_engine_internal_data ' \
+                             'ON stash_engine_internal_data.identifier_id = stash_engine_identifiers.id'.freeze
 
     # returns the resources that are currently in a curation state you specify (not looking at obsolete states),
-    # ie last state for each resource.  Also if user_id or tenant_id is set it will return those records (your own)
-    # or your organization's without regard to curation state.
-    scope :with_visibility, ->(states:, user_id: nil, tenant_id: nil) do
+    # ie last state for each resource.  Also returns resources (regardless of curation state) that the user can
+    # see due to special privileges:
+    #  - resources owned by this user_id
+    #  - if tenant is specified, resources associated with the tenant
+    #  - if one or more journal_issns are specified, resources associated with the journal(s)
+    scope :with_visibility, ->(states:, journal_issns: nil, user_id: nil, tenant_id: nil) do
       my_states = (states.is_a?(String) || states.is_a?(Symbol) ? [states] : states)
       str = 'stash_engine_curation_activities.status IN (?)'
       arr = [my_states]
@@ -181,7 +188,11 @@ module StashEngine
         str += ' OR stash_engine_resources.tenant_id = ?'
         arr.push(tenant_id)
       end
-      joins(JOIN_FOR_LATEST_CURATION).where(str, *arr)
+      if journal_issns.present?
+        str += " OR (stash_engine_internal_data.data_type = 'publicationISSN' AND stash_engine_internal_data.value IN (?))"
+        arr.push(journal_issns)
+      end
+      joins(JOIN_FOR_LATEST_CURATION).joins(JOIN_FOR_INTERNAL_DATA).distinct.where(str, *arr)
     end
 
     scope :visible_to_user, ->(user:) do
@@ -189,10 +200,12 @@ module StashEngine
         with_visibility(states: %w[published embargoed])
       elsif user.superuser?
         all
-      elsif user.role == 'admin'
-        with_visibility(states: %w[published embargoed], tenant_id: user.tenant_id)
       else
-        with_visibility(states: %w[published embargoed], user_id: user.id)
+        tenant_admin = (user.tenant_id if user.role == 'admin')
+        with_visibility(states: %w[published embargoed],
+                        tenant_id: tenant_admin,
+                        journal_issns: user.journals_as_admin.map(&:issn),
+                        user_id: user.id)
       end
     end
 
@@ -489,38 +502,39 @@ module StashEngine
       permission_to_edit?(user: user) && (dataset_in_progress_editor.id == user.id || user.superuser?)
     end
 
+    def admin_for_this_item?(user: nil)
+      return false if user.nil?
+      user.superuser? ||
+        user_id == user.id ||
+        (user.tenant_id == tenant_id && user.role == 'admin') ||
+        user.journals_as_admin.include?(identifier&.journal)
+    end
+
     # have the permission to edit
     def permission_to_edit?(user:)
       return false unless user
       # superuser, dataset owner or admin for the same tenant
-      user.superuser? || user_id == user.id || (user.tenant_id == tenant_id && user.role == 'admin')
+      admin_for_this_item?(user: user)
     end
 
     # Checks if someone may download files for this resource
     # 1. Merritt's status, resource_state = 'submitted', meaning they are available to download from Merritt
     # 2. Curation state of files_public? means anyone may download
-    # 3. if not public then the author can still download: resource.user_id = current_user.id
-    # 4. if not public then the current user has the 'superuser' role for seeing all files
+    # 3. if not public then users with admin privileges over the item can still download
     # Note: the special download links mean anyone with that link may download and this doesn't apply
-    # rubocop:disable Metrics/CyclomaticComplexity
     def may_download?(ui_user: nil) # doing this to avoid collision with the association called user
       return false unless current_resource_state&.resource_state == 'submitted' # is available in Merritt
       return true if files_published? # published and this one available for download
       return false if ui_user.blank? # the rest of the cases require users
-      return true if ui_user.id == user_id || ui_user.role == 'superuser' || (ui_user.role == 'admin' && ui_user.tenant_id == tenant_id)
-      false # nope. Not sure if it would ever get here, though
+      admin_for_this_item?(user: ui_user)
     end
-    # rubocop:enable Metrics/CyclomaticComplexity
 
     # see if the user may view based on curation status & roles and etc.  I don't see this as being particularly complex for Rubocop
-    # rubocop:disable Metrics/CyclomaticComplexity
     def may_view?(ui_user: nil)
       return true if metadata_published? # anyone can view
       return false if ui_user.blank? # otherwise unknown person can't view and this prevents later nil checks
-      return true if user_id == ui_user.id || ui_user.superuser? || (ui_user.role == 'admin' && ui_user.tenant_id == tenant_id)
-      false
+      admin_for_this_item?(user: ui_user)
     end
-    # rubocop:enable Metrics/CyclomaticComplexity
 
     # ------------------------------------------------------------
     # Usage and statistics
