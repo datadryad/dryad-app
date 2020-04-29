@@ -54,10 +54,13 @@
       updateUiStates();
     });
 
-    $('.files_upload').hide();
+    // hide step 2 if no files are uploaded and showing in the table or the state isn't open in anchor hash
+    if(<%= @uploads.length %> < 1 && window.location.href.indexOf('#open') == -1) {
+      $('.files_upload').hide();
+    }
 
-    $('.alternate_up_method').click(function(e){
-      if(window.location.href == this.href){
+    $('.choosing_up_method').click(function(e){
+      if(window.location.href.match(/(^[^#]*)/)[0] == this.href.match(/(^[^#]*)/)[0]){
         e.preventDefault();
         $('.files_upload').show();
       }
