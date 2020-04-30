@@ -4,7 +4,7 @@
 <p><strong>Waivers</strong> are granted upon request (<a href=mailto:help@datadryad.org>help@datadryad.org</a>) for submissions originating from researchers based in countries <a href="http://data.worldbank.org/about/country-classifications/country-and-lending-groups">classified by the World Bank as low-income or lower-middle-income economies</a>.</p>
 <p><strong>The base DPC per data submission is $120</strong>. DPCs are invoiced upon curator approval/publication, unless:</p>
 <ul>
-<li>the submitter is based at a member institution (determined by login credentials), or</li>
+<li>the submitter is based at a <a href="https://datadryad.org/stash/our_community#institutional">member institution</a> (determined by login credentials), or</li>
 <li>an associated journal or publisher has an agreement with Dryad to sponsor the DPC (<a href="/docs/JournalLookup.pdf">see list</a>), or</li>
 <li>the submitter is based in a fee-waiver country (see above).</li>
 </ul>
