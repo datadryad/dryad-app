@@ -37,9 +37,10 @@ RSpec.feature 'UiFileUpload', type: :feature, js: true do
 
       # get resource and clean up uploads directories
       @resource_id = page.current_path.match(%r{resources/(\d+)/up})[1].to_i
-      FileUtils.rm_rf(File.join(StashEngine::Resource.uploads_dir, @resource_id.to_s)) unless @resource_id.blank?
-      FileUtils.rm_rf(File.join(StashEngine::Resource.uploads_dir, "#{@resource_id}_sfw")) unless @resource_id.blank?
       @resource = StashEngine::Resource.find(@resource_id)
+      FileUtils.rm_rf(@resource.upload_dir) unless @resource_id.blank?
+      FileUtils.rm_rf(@resource.software_upload_dir) unless @resource_id.blank?
+
     end
 
     it 'uploads a file' do
@@ -89,9 +90,9 @@ RSpec.feature 'UiFileUpload', type: :feature, js: true do
 
       # get resource and clean up uploads directories
       @resource_id = page.current_path.match(%r{resources/(\d+)/up})[1].to_i
-      FileUtils.rm_rf(File.join(StashEngine::Resource.uploads_dir, @resource_id.to_s)) unless @resource_id.blank?
-      FileUtils.rm_rf(File.join(StashEngine::Resource.uploads_dir, "#{@resource_id}_sfw")) unless @resource_id.blank?
       @resource = StashEngine::Resource.find(@resource_id)
+      FileUtils.rm_rf(File.join(@resource.upload_dir)) unless @resource_id.blank?
+      FileUtils.rm_rf(File.join(@resource.software_upload_dir)) unless @resource_id.blank?
     end
 
     it 'uploads a file' do
@@ -106,7 +107,7 @@ RSpec.feature 'UiFileUpload', type: :feature, js: true do
       expect(page).to have_content('Upload complete')
 
       # it copied the file to the appropriate place on the file system
-      expect(File.exist?(File.join(StashEngine::Resource.uploads_dir, "#{@resource_id}_sfw", 'favicon.ico'))).to eq(true)
+      expect(File.exist?(File.join(@resource.software_upload_dir, 'favicon.ico'))).to eq(true)
 
       # it put it in the database
       expect(@resource.software_uploads.first.upload_file_name).to eq('favicon.ico')
@@ -128,7 +129,7 @@ RSpec.feature 'UiFileUpload', type: :feature, js: true do
       expect(page).to have_content('No files have been uploaded.')
 
       # it copied the file to the appropriate place on the file system
-      expect(File.exist?(File.join(StashEngine::Resource.uploads_dir, "#{@resource_id}_sfw", 'favicon.ico'))).to eq(false)
+      expect(File.exist?(File.join(@resource.software_upload_dir, 'favicon.ico'))).to eq(false)
 
       # it put it in the database
       expect(@resource.software_uploads.count).to eq(0)
