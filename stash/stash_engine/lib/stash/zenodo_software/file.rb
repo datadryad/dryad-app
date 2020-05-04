@@ -1,5 +1,6 @@
 require 'digest'
 require 'http'
+require 'fileutils'
 
 module Stash
   module ZenodoSoftware
@@ -17,6 +18,8 @@ module Stash
       # this take an ActiveRecord StashEngine::SoftwareUpload object
       def initialize(file_obj:)
         @file_obj = file_obj
+        updir = file_obj.resource.software_upload_dir
+        FileUtils.mkdir_p(updir) unless ::File.exist?(updir)
       end
 
       def check_file_exists
