@@ -4,39 +4,24 @@ module Stash
     class FileError < StandardError; end
 
     # A class to ensure that the collection files represented in the database is available on the file system.
+    # Most major problems raise exceptions since if something goes wrong it should error and not proceed with bad data
     class FileCollection
-
       attr_accessor :path
 
       # takes the resource for the files we want to manage
       def initialize(resource:)
         @resource = resource
-        @path = resource.software_upload_path
+        @path = resource.software_upload_dir
       end
 
-      def ensure_files
+      def ensure_local_files
         @resource.software_uploads.newly_created.each do |upload|
-          if upload.url.blank?
-            check_file_exists?(upload)
-            check_digest(upload)
-          else
-            puts 'this is a file download from the internets'
-            # URL upload
-          end
-
+          zen_file = Stash::ZenodoSoftware::File.new(file_obj: upload)
+          zen_file.download unless upload.url.blank?
+          zen_file.check_file_exists
+          zen_file.check_digest
         end
       end
-
-      private
-
-      def check_file_exists?(file_obj)
-        return if File.exist?(File.join(@path, file_obj.upload_file_name))
-        raise FileError, "Uploaded file doesn't exist: resource_id: #{file_obj.resource_id}, file_id: #{file_obj.id}, " \
-          "name: #{file_obj.upload_file_name}"
-      end
-
-      def check_digest; end
-
     end
   end
 end
