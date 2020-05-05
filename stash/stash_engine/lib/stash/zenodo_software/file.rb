@@ -9,12 +9,12 @@ module Stash
       # MD2 is obsolete and doesn't seem to have a good implementation in Ruby
       # CRC-32 and adler-32 are checksums that don't think we're really using.
       DIGESTS = {
-          'md5' => -> (file){ Digest::MD5.file(file).hexdigest },
-          'sha-1' => -> (file){ Digest::SHA1.file(file).hexdigest },
-          'sha-256' => -> (file){ Digest::SHA256.file(file).hexdigest },
-          'sha-384' => -> (file){ Digest::SHA384.file(file).hexdigest },
-          'sha-512' => -> (file){ Digest::SHA512.file(file).hexdigest }
-      }
+        'md5' => ->(file) { Digest::MD5.file(file).hexdigest },
+        'sha-1' => ->(file) { Digest::SHA1.file(file).hexdigest },
+        'sha-256' => ->(file) { Digest::SHA256.file(file).hexdigest },
+        'sha-384' => ->(file) { Digest::SHA384.file(file).hexdigest },
+        'sha-512' => ->(file) { Digest::SHA512.file(file).hexdigest }
+      }.freeze
       # this take an ActiveRecord StashEngine::SoftwareUpload object
       def initialize(file_obj:)
         @file_obj = file_obj
@@ -29,9 +29,9 @@ module Stash
       end
 
       def check_digest
-        return unless DIGESTS.keys.include?(@file_obj.digest_type)
+        return unless DIGESTS.key?(@file_obj.digest_type)
         my_digest = DIGESTS[@file_obj.digest_type].call(@file_obj.calc_file_path)
-        return if  my_digest == @file_obj.digest
+        return if my_digest == @file_obj.digest
         raise Stash::ZenodoSoftware::FileError, "Digest mismatch for file: resource_id: #{@file_obj.resource_id}, " \
           "file_id: #{@file_obj.id}, name: #{@file_obj.upload_file_name}\n" \
           "Type: #{@file_obj.digest_type}\n" \
