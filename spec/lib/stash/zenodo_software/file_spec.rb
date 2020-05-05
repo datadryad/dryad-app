@@ -1,5 +1,4 @@
 require 'byebug'
-require 'SecureRandom'
 require 'fileutils'
 require 'stash/zenodo_software'
 
