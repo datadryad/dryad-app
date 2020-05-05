@@ -97,9 +97,14 @@ module StashApi
       res = @se_identifier.latest_resource
       curation_activity = StashEngine::CurationActivity.latest(res&.id)
       hsh[:curationStatus] = curation_activity&.readable_status
-      return unless %w[submitted peer_review curation action_required embargoed].include?(curation_activity.status)
-      hsh[:sharingLink] = res&.identifier&.shares&.first&.sharing_link
-    end
 
+      if curation_activity.in_progress?
+        # if it's in_progress, return the sharing_link for the previous submitted version
+        prev_submitted_res = @se_identifier.last_submitted_resource
+        hsh[:sharingLink] = prev_submitted_res&.identifier&.shares&.first&.sharing_link if prev_submitted_res
+      elsif !curation_activity.withdrawn?
+        hsh[:sharingLink] = res&.identifier&.shares&.first&.sharing_link
+      end
+    end
   end
 end
