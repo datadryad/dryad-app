@@ -17,7 +17,7 @@ module Stash
         # make some random file contents for testing
         @file_contents = []
         0.upto(2) do
-          @file_contents.push(Random.new.bytes(rand(1000)))
+          @file_contents.push(Random.new.bytes(rand(1000)).b)
         end
 
         @software_direct_upload = create(:software_upload, upload_file_size: @file_contents.first.length, resource: @resource)
@@ -119,6 +119,44 @@ module Stash
           @software_direct_upload.update(digest: digest, digest_type: 'sha-512')
           f = Stash::ZenodoSoftware::File.new(file_obj: @software_direct_upload)
           expect{ f.check_digest }.to raise_exception(Stash::ZenodoSoftware::FileError)
+        end
+      end
+
+      describe '#download' do
+        it 'successfully downloads a file from the internet' do
+          stub_request(:get, "http://example.org/example").
+              to_return(status: 200, body: @file_contents.second, headers: {})
+
+          f = Stash::ZenodoSoftware::File.new(file_obj: @software_http_upload)
+          expect{ f.download }.not_to raise_exception
+          expect(::File.exist?(@software_http_upload.calc_file_path)).to eq(true)
+          expect(::File.open(@software_http_upload.calc_file_path, 'rb') { |io| io.read }).to eq(@file_contents.second)
+        end
+
+        it 'handles an unsuccessful response from the web server and raises an error' do
+          stub_request(:get, "http://example.org/example").
+              to_return(status: 404, body: '', headers: {})
+
+          f = Stash::ZenodoSoftware::File.new(file_obj: @software_http_upload)
+          expect{ f.download }.to raise_exception(Stash::ZenodoSoftware::FileError)
+          expect(::File.exist?(@software_http_upload.calc_file_path)).to eq(false)
+        end
+
+
+        it 'handles an unsuccessful response due to HTTP::Error' do
+          stub_request(:get, "http://example.org/example").to_raise(HTTP::Error)
+
+          f = Stash::ZenodoSoftware::File.new(file_obj: @software_http_upload)
+          expect{ f.download }.to raise_exception(Stash::ZenodoSoftware::FileError)
+          expect(::File.exist?(@software_http_upload.calc_file_path)).to eq(false)
+        end
+
+        it 'handles an unsuccessful response due to timeout' do
+          stub_request(:get, "http://example.org/example").to_timeout
+
+          f = Stash::ZenodoSoftware::File.new(file_obj: @software_http_upload)
+          expect{ f.download }.to raise_exception(Stash::ZenodoSoftware::FileError)
+          expect(::File.exist?(@software_http_upload.calc_file_path)).to eq(false)
         end
       end
     end

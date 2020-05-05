@@ -54,7 +54,7 @@ module Stash
       rescue HTTP::Error => ex
         raise Stash::ZenodoSoftware::FileError, "Received HTTP error while downloading\n" \
           "resource_id: #{@file_obj.resource_id}, file_id: #{@file_obj.id}, name: #{@file_obj.upload_file_name}, url: #{@file_obj.url}" \
-          "Original Exception:\n#{ex.full_message}"
+          "Original Exception:\n#{ex}\n#{ex.backtrace.join("\n")}"
       end
     end
   end
