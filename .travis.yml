@@ -3,20 +3,20 @@
 
 matrix:
   include:
-    - rvm: 2.4.4
+    - rvm: 2.4.10
       sudo: required
       addons:
         chrome: stable
       env:
       - TO_TEST=MAIN
       - RAILS_ENV=test
-    - rvm: 2.4.4
+    - rvm: 2.4.10
       env:
       - TO_TEST=STASH
       - RAILS_ENV=test
   fast_finish: true
 
-dist: trusty
+dist: bionic
 
 language: ruby
 
