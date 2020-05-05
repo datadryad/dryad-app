@@ -46,9 +46,9 @@ RSpec.feature 'Admin', type: :feature do
       visit stash_url_helpers.admin_user_dashboard_path(@user)
       expect(page).to have_css('button[title="Edit Dataset"]')
       find('button[title="Edit Dataset"]').click
-      expect(page).to have_text("You are editing #{@user.name}'s dataset.", wait: 15)
+      expect(page).to have_text("You are editing #{@user.name}'s dataset.")
       click_link 'Review and Submit'
-      expect(page).to have_css('input#user_comment', wait: 15)
+      expect(page).to have_css('input#user_comment')
     end
 
     context :superuser do

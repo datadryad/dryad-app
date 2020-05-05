@@ -98,7 +98,7 @@ module DatasetHelper
   def fill_in_funder(name:, value:)
     funder_el = page.find('input.js-funders', match: :first)
     funder_el.fill_in(with: name)
-    first('.ui-menu-item-wrapper', wait: 5).click
+    first('.ui-menu-item-wrapper').click
     award_el = page.find('input.js-award_number', match: :first)
     award_el.fill_in(with: value)
   end

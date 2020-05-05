@@ -20,7 +20,7 @@ RSpec.feature 'AffiliationAutofill', type: :feature do
 
     it 'displays affiliation choices from the ROR API', js: true do
       fill_in 'author[affiliation][long_name]', with: 'Testing'
-      expect(page).to have_text('University of Testing', wait: 10)
+      expect(page).to have_text('University of Testing')
       expect(page).to have_text('University of Testing v2')
     end
 

@@ -113,7 +113,7 @@ RSpec.feature 'CurationActivity', type: :feature do
       end
 
       it 'has a "history" clock icon to view the activity log' do
-        within(:css, '.c-lined-table__row', wait: 10) do
+        within(:css, '.c-lined-table__row') do
           expect(all('.fa-clock-o').length).to eql(1)
         end
       end
