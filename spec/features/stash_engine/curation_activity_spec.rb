@@ -71,7 +71,7 @@ RSpec.feature 'CurationActivity', type: :feature do
         el = el.first(:xpath, './following-sibling::td').find(:css, '.js-stats')
         el.click
         my_stats = @identifiers.first.counter_stat
-        page.first :css, '.o-metrics__icon', wait: 10
+        page.first :css, '.o-metrics__icon'
         page.should have_content("#{my_stats.citation_count} citations")
         page.should have_content("#{my_stats.views} views")
         page.should have_content("#{my_stats.downloads} downloads")
@@ -107,7 +107,7 @@ RSpec.feature 'CurationActivity', type: :feature do
       end
 
       it 'do not have any "edit" pencil icons' do
-        within(:css, '.c-lined-table__row', wait: 10) do
+        within(:css, '.c-lined-table__row') do
           expect(all('.fa-pencil').length).to eql(0)
         end
       end

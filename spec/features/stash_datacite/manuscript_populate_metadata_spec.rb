@@ -25,7 +25,7 @@ RSpec.feature 'Populate manuscript metadata from outside source', type: :feature
         .to_return(status: 404, body: '', headers: {})
       find('input[value="manuscript"]').click
       fill_manuscript_info(name: 'European Journal of Plant Pathology', issn: '1573-8469', msid: 'APPS-D-grog-plant0001221')
-      click_button 'Import Manuscript Metadata', wait: 7
+      click_button 'Import Manuscript Metadata'
       expect(page.find('div#population-warnings')).to have_content('We could not find metadata to import for this manuscript. ' \
           'Please enter your metadata below.', wait: 30)
     end
@@ -33,13 +33,13 @@ RSpec.feature 'Populate manuscript metadata from outside source', type: :feature
     xit "gives message when journal isn't selected" do
       find('input[value="manuscript"]').click
       fill_manuscript_info(name: 'European Journal of Plant Pathology', issn: nil, msid: nil)
-      click_button 'Import Manuscript Metadata', wait: 7
+      click_button 'Import Manuscript Metadata'
       expect(page.find('div#population-warnings')).to have_content('Please select your journal from the autocomplete drop-down list', wait: 20)
     end
 
     it "gives message when form isn't filled" do
       find('input[value="manuscript"]').click
-      click_button 'Import Manuscript Metadata', wait: 7
+      click_button 'Import Manuscript Metadata'
       expect(page.find('div#population-warnings')).to have_content('Please fill in the form completely', wait: 15)
     end
 

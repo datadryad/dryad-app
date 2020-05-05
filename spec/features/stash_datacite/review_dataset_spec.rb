@@ -44,7 +44,7 @@ RSpec.feature 'ReviewDataset', type: :feature do
     it 'submits', js: true do
       submit = find_button('submit_dataset', disabled: :all)
       submit.click
-      expect(page).to have_content(StashEngine::Resource.last.title, wait: 10)
+      expect(page).to have_content(StashEngine::Resource.last.title)
       expect(page).to have_content('submitted with DOI')
     end
 

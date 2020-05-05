@@ -61,7 +61,7 @@ RSpec.feature 'Admin', type: :feature do
       it 'has admin link', js: true do
         visit root_path
         find('.o-sites__summary', text: 'Admin').click
-        expect(page).to have_link('Dataset Curation', wait: 5)
+        expect(page).to have_link('Dataset Curation')
         expect(page).to have_link('Publication Updater')
         expect(page).to have_link('Status Dashboard')
         expect(page).to have_link('Submission Queue')
@@ -73,11 +73,11 @@ RSpec.feature 'Admin', type: :feature do
         within(:css, "form[action=\"#{stash_url_helpers.popup_admin_path(@user.id)}\"]") do
           find('.c-admin-edit-icon').click
         end
-        within(:css, 'div.o-admin-dialog', wait: 5) do
+        within(:css, 'div.o-admin-dialog') do
           find('#role_admin').set(true)
           find('input[name=commit]').click
         end
-        expect(page.find("#user_role_#{@user.id}")).to have_text('Admin', wait: 5)
+        expect(page.find("#user_role_#{@user.id}")).to have_text('Admin')
       end
     end
 

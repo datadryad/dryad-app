@@ -65,7 +65,7 @@ RSpec.configure do |config|
 end
 
 Capybara.configure do |config|
-  config.default_max_wait_time = 5 # seconds
+  config.default_max_wait_time = 15 # seconds
   config.server                = :webrick
   config.raise_server_errors   = true
   config.server_port = 33_000
