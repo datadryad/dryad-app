@@ -10,7 +10,7 @@ module DatasetHelper
     # Make sure you switch to the Selenium driver for the test calling this helper method
     # e.g. `it 'should test this amazing thing', js: true do`
     click_link 'Describe Dataset'
-    expect(page).to have_content('Dataset: Basic Information', wait: 10)
+    expect(page).to have_content('Dataset: Basic Information')
   end
 
   def navigate_to_software_upload
@@ -22,22 +22,22 @@ module DatasetHelper
   def navigate_to_upload
     click_link 'Upload Data'
     click_link 'Upload directly'
-    expect(page).to have_content('Step 2: Choose Files', wait: 10)
+    expect(page).to have_content('Step 2: Choose Files')
   end
 
   def navigate_to_upload_urls
     click_link 'Upload by URL'
-    expect(page).to have_content('Step 2: Enter Files', wait: 10)
+    expect(page).to have_content('Step 2: Enter Files')
   end
 
   def navigate_to_software_upload_urls
     click_link 'Upload by URL'
-    expect(page).to have_content('Step 2: Enter Files', wait: 10)
+    expect(page).to have_content('Step 2: Enter Files')
   end
 
   def navigate_to_review
     click_link 'Review and Submit'
-    expect(page).to have_content('Review Description', wait: 10)
+    expect(page).to have_content('Review Description')
   end
 
   def fill_required_fields
