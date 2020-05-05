@@ -6,4 +6,3 @@ module StashEngine
     # TODO: this is a stub
   end
 end
-

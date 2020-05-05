@@ -20,13 +20,13 @@ module Stash
 
         @software_direct_upload = create(:software_upload, upload_file_size: @file_contents.first.length, resource: @resource)
         @software_http_upload = create(:software_upload, upload_file_size: @file_contents.second.length,
-                                       url: 'http://example.org/example', resource: @resource)
+                                                         url: 'http://example.org/example', resource: @resource)
 
         FileUtils.mkdir_p(@resource.software_upload_dir)
-        ::File.open(@software_direct_upload.calc_file_path, 'wb') {|f| f.write(@file_contents.first) }
+        ::File.open(@software_direct_upload.calc_file_path, 'wb') { |f| f.write(@file_contents.first) }
 
-        stub_request(:get, "http://example.org/example").
-            to_return(status: 200, body: @file_contents.second, headers: {})
+        stub_request(:get, 'http://example.org/example')
+          .to_return(status: 200, body: @file_contents.second, headers: {})
       end
 
       after(:each) do
@@ -36,7 +36,7 @@ module Stash
       it 'uses all the methods to ensure files are available locally' do
         # individual methods of the ZenodoSoftware::File class are tested there
         fc = Stash::ZenodoSoftware::FileCollection.new(resource: @resource)
-        expect{ fc.ensure_local_files }.not_to raise_exception
+        expect { fc.ensure_local_files }.not_to raise_exception
         expect(Dir["#{@resource.software_upload_dir}/*"].length).to eq(2)
       end
     end

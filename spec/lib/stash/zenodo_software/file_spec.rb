@@ -22,10 +22,10 @@ module Stash
 
         @software_direct_upload = create(:software_upload, upload_file_size: @file_contents.first.length, resource: @resource)
         @software_http_upload = create(:software_upload, upload_file_size: @file_contents.second.length,
-                                       url: 'http://example.org/example', resource: @resource)
+                                                         url: 'http://example.org/example', resource: @resource)
 
         FileUtils.mkdir_p(@resource.software_upload_dir)
-        ::File.open(@software_direct_upload.calc_file_path, 'wb') {|f| f.write(@file_contents.first) }
+        ::File.open(@software_direct_upload.calc_file_path, 'wb') { |f| f.write(@file_contents.first) }
       end
 
       after(:each) do
@@ -35,127 +35,126 @@ module Stash
       describe '#check_file_exists' do
         it 'raises no exception if the direct upload file exists that should' do
           f = Stash::ZenodoSoftware::File.new(file_obj: @software_direct_upload)
-          expect{ f.check_file_exists }.not_to raise_exception
+          expect { f.check_file_exists }.not_to raise_exception
         end
 
         it "raises an exception if the file that should exist doesn't" do
           FileUtils.rm(@software_direct_upload.calc_file_path)
           f = Stash::ZenodoSoftware::File.new(file_obj: @software_direct_upload)
-          expect{ f.check_file_exists }.to raise_exception(Stash::ZenodoSoftware::FileError)
+          expect { f.check_file_exists }.to raise_exception(Stash::ZenodoSoftware::FileError)
         end
       end
 
       describe '#check_digest' do
         it 'ignores items with unknown digest type' do
           f = Stash::ZenodoSoftware::File.new(file_obj: @software_direct_upload)
-          expect{ f.check_digest }.not_to raise_exception
+          expect { f.check_digest }.not_to raise_exception
         end
 
         it 'works with correct md5' do
           digest = Digest::MD5.file(@software_direct_upload.calc_file_path).hexdigest
           @software_direct_upload.update(digest: digest, digest_type: 'md5')
           f = Stash::ZenodoSoftware::File.new(file_obj: @software_direct_upload)
-          expect{ f.check_digest }.not_to raise_exception
+          expect { f.check_digest }.not_to raise_exception
         end
 
         it 'catches bad md5' do
           digest = Digest::MD5.hexdigest(@file_contents.second)
           @software_direct_upload.update(digest: digest, digest_type: 'md5')
           f = Stash::ZenodoSoftware::File.new(file_obj: @software_direct_upload)
-          expect{ f.check_digest }.to raise_exception(Stash::ZenodoSoftware::FileError)
+          expect { f.check_digest }.to raise_exception(Stash::ZenodoSoftware::FileError)
         end
 
         it 'works with correct sha-1' do
           digest = Digest::SHA1.file(@software_direct_upload.calc_file_path).hexdigest
           @software_direct_upload.update(digest: digest, digest_type: 'sha-1')
           f = Stash::ZenodoSoftware::File.new(file_obj: @software_direct_upload)
-          expect{ f.check_digest }.not_to raise_exception
+          expect { f.check_digest }.not_to raise_exception
         end
 
         it 'catches bad sha-1' do
           digest = Digest::SHA1.hexdigest(@file_contents.second)
           @software_direct_upload.update(digest: digest, digest_type: 'sha-1')
           f = Stash::ZenodoSoftware::File.new(file_obj: @software_direct_upload)
-          expect{ f.check_digest }.to raise_exception(Stash::ZenodoSoftware::FileError)
+          expect { f.check_digest }.to raise_exception(Stash::ZenodoSoftware::FileError)
         end
 
         it 'works with correct sha-256' do
           digest = Digest::SHA256.file(@software_direct_upload.calc_file_path).hexdigest
           @software_direct_upload.update(digest: digest, digest_type: 'sha-256')
           f = Stash::ZenodoSoftware::File.new(file_obj: @software_direct_upload)
-          expect{ f.check_digest }.not_to raise_exception
+          expect { f.check_digest }.not_to raise_exception
         end
 
         it 'catches bad sha-256' do
           digest = Digest::SHA256.hexdigest(@file_contents.second)
           @software_direct_upload.update(digest: digest, digest_type: 'sha-256')
           f = Stash::ZenodoSoftware::File.new(file_obj: @software_direct_upload)
-          expect{ f.check_digest }.to raise_exception(Stash::ZenodoSoftware::FileError)
+          expect { f.check_digest }.to raise_exception(Stash::ZenodoSoftware::FileError)
         end
 
         it 'works with correct sha-384' do
           digest = Digest::SHA384.file(@software_direct_upload.calc_file_path).hexdigest
           @software_direct_upload.update(digest: digest, digest_type: 'sha-384')
           f = Stash::ZenodoSoftware::File.new(file_obj: @software_direct_upload)
-          expect{ f.check_digest }.not_to raise_exception
+          expect { f.check_digest }.not_to raise_exception
         end
 
         it 'catches bad sha-384' do
           digest = Digest::SHA384.hexdigest(@file_contents.second)
           @software_direct_upload.update(digest: digest, digest_type: 'sha-384')
           f = Stash::ZenodoSoftware::File.new(file_obj: @software_direct_upload)
-          expect{ f.check_digest }.to raise_exception(Stash::ZenodoSoftware::FileError)
+          expect { f.check_digest }.to raise_exception(Stash::ZenodoSoftware::FileError)
         end
 
         it 'works with correct sha-512' do
           digest = Digest::SHA512.file(@software_direct_upload.calc_file_path).hexdigest
           @software_direct_upload.update(digest: digest, digest_type: 'sha-512')
           f = Stash::ZenodoSoftware::File.new(file_obj: @software_direct_upload)
-          expect{ f.check_digest }.not_to raise_exception
+          expect { f.check_digest }.not_to raise_exception
         end
 
         it 'catches bad sha-512' do
           digest = Digest::SHA512.hexdigest(@file_contents.second)
           @software_direct_upload.update(digest: digest, digest_type: 'sha-512')
           f = Stash::ZenodoSoftware::File.new(file_obj: @software_direct_upload)
-          expect{ f.check_digest }.to raise_exception(Stash::ZenodoSoftware::FileError)
+          expect { f.check_digest }.to raise_exception(Stash::ZenodoSoftware::FileError)
         end
       end
 
       describe '#download' do
         it 'successfully downloads a file from the internet' do
-          stub_request(:get, "http://example.org/example").
-              to_return(status: 200, body: @file_contents.second, headers: {})
+          stub_request(:get, 'http://example.org/example')
+            .to_return(status: 200, body: @file_contents.second, headers: {})
 
           f = Stash::ZenodoSoftware::File.new(file_obj: @software_http_upload)
-          expect{ f.download }.not_to raise_exception
+          expect { f.download }.not_to raise_exception
           expect(::File.exist?(@software_http_upload.calc_file_path)).to eq(true)
-          expect(::File.open(@software_http_upload.calc_file_path, 'rb') { |io| io.read }).to eq(@file_contents.second)
+          expect(::File.open(@software_http_upload.calc_file_path, 'rb', &:read)).to eq(@file_contents.second)
         end
 
         it 'handles an unsuccessful response from the web server and raises an error' do
-          stub_request(:get, "http://example.org/example").
-              to_return(status: 404, body: '', headers: {})
+          stub_request(:get, 'http://example.org/example')
+            .to_return(status: 404, body: '', headers: {})
 
           f = Stash::ZenodoSoftware::File.new(file_obj: @software_http_upload)
-          expect{ f.download }.to raise_exception(Stash::ZenodoSoftware::FileError)
+          expect { f.download }.to raise_exception(Stash::ZenodoSoftware::FileError)
           expect(::File.exist?(@software_http_upload.calc_file_path)).to eq(false)
         end
 
-
         it 'handles an unsuccessful response due to HTTP::Error' do
-          stub_request(:get, "http://example.org/example").to_raise(HTTP::Error)
+          stub_request(:get, 'http://example.org/example').to_raise(HTTP::Error)
 
           f = Stash::ZenodoSoftware::File.new(file_obj: @software_http_upload)
-          expect{ f.download }.to raise_exception(Stash::ZenodoSoftware::FileError)
+          expect { f.download }.to raise_exception(Stash::ZenodoSoftware::FileError)
           expect(::File.exist?(@software_http_upload.calc_file_path)).to eq(false)
         end
 
         it 'handles an unsuccessful response due to timeout' do
-          stub_request(:get, "http://example.org/example").to_timeout
+          stub_request(:get, 'http://example.org/example').to_timeout
 
           f = Stash::ZenodoSoftware::File.new(file_obj: @software_http_upload)
-          expect{ f.download }.to raise_exception(Stash::ZenodoSoftware::FileError)
+          expect { f.download }.to raise_exception(Stash::ZenodoSoftware::FileError)
           expect(::File.exist?(@software_http_upload.calc_file_path)).to eq(false)
         end
       end
