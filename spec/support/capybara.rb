@@ -9,6 +9,8 @@ require_relative 'helpers/session_helper'
 require_relative 'helpers/webmock_helper'
 require 'webdrivers'
 
+Webdrivers::Chromedriver.update
+
 Capybara.default_driver = :rack_test
 
 # uncomment following line to see actions in browser
