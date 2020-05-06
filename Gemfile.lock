@@ -514,6 +514,7 @@ GEM
       net-ssh (>= 2.6.5, < 6.0.0)
     net-ssh (5.2.0)
     netrc (0.11.0)
+    nio4r (2.5.2)
     noid (0.9.0)
     nokogiri (1.8.5)
       mini_portile2 (~> 2.3.0)
@@ -570,6 +571,8 @@ GEM
       pry (~> 0.9)
       slop (~> 3.0)
     public_suffix (2.0.5)
+    puma (4.3.3)
+      nio4r (~> 2.0)
     rack (1.6.13)
     rack-test (0.6.3)
       rack (>= 1.0)
@@ -834,6 +837,7 @@ DEPENDENCIES
   pry
   pry-rails
   pry-remote
+  puma
   rails (= 4.2.11)
   rb-readline
   rspec-collection_matchers
