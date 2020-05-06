@@ -2,7 +2,7 @@ require 'rails_helper'
 require 'pry-remote'
 require 'fileutils'
 # binding.remote_pry
-RSpec.feature 'UiFileUpload', type: :feature do
+RSpec.feature 'UiFileUpload', type: :feature, js: true do
 
   include MerrittHelper
   include DatasetHelper
@@ -32,7 +32,7 @@ RSpec.feature 'UiFileUpload', type: :feature do
   end
 
   describe :file_uploads do
-    before(:each, js: true) do
+    before(:each) do
       navigate_to_upload
 
       # get resource and clean up uploads directories
@@ -42,7 +42,7 @@ RSpec.feature 'UiFileUpload', type: :feature do
       @resource = StashEngine::Resource.find(@resource_id)
     end
 
-    it 'uploads a file', js: true do
+    it 'uploads a file' do
       page.attach_file(Rails.root.join('spec', 'fixtures', 'http_responses', 'favicon.ico')) do
         page.find('#choose-the-files').click
       end
@@ -60,7 +60,7 @@ RSpec.feature 'UiFileUpload', type: :feature do
       expect(@resource.file_uploads.first.upload_file_name).to eq('favicon.ico')
     end
 
-    it 'deletes a file', js: true do
+    it 'deletes a file' do
       page.attach_file(Rails.root.join('spec', 'fixtures', 'http_responses', 'favicon.ico')) do
         page.find('#choose-the-files').click
       end
@@ -84,7 +84,7 @@ RSpec.feature 'UiFileUpload', type: :feature do
   end
 
   describe :software_uploads do
-    before(:each, js: true) do
+    before(:each) do
       navigate_to_software_upload
 
       # get resource and clean up uploads directories
@@ -94,7 +94,7 @@ RSpec.feature 'UiFileUpload', type: :feature do
       @resource = StashEngine::Resource.find(@resource_id)
     end
 
-    it 'uploads a file', js: true do
+    it 'uploads a file' do
       page.attach_file(Rails.root.join('spec', 'fixtures', 'http_responses', 'favicon.ico')) do
         page.find('#choose-the-files').click
       end
@@ -112,7 +112,7 @@ RSpec.feature 'UiFileUpload', type: :feature do
       expect(@resource.software_uploads.first.upload_file_name).to eq('favicon.ico')
     end
 
-    it 'deletes a file', js: true do
+    it 'deletes a file' do
       page.attach_file(Rails.root.join('spec', 'fixtures', 'http_responses', 'favicon.ico')) do
         page.find('#choose-the-files').click
       end
@@ -137,7 +137,7 @@ RSpec.feature 'UiFileUpload', type: :feature do
 
   describe 'normal URL validation' do
 
-    before(:each, js: true) do
+    before(:each) do
       navigate_to_upload
       navigate_to_upload_urls
 
@@ -162,7 +162,7 @@ RSpec.feature 'UiFileUpload', type: :feature do
         .to_return(status: 404)
     end
 
-    it 'validates a URL that works', js: true do
+    it 'validates a URL that works' do
       fill_in('location_urls', with: 'http://example.org/funbar.txt')
       check('confirm_to_validate')
       click_on('validate_files')
@@ -177,7 +177,7 @@ RSpec.feature 'UiFileUpload', type: :feature do
       expect(fu.upload_file_size).to eq(37_221)
     end
 
-    it 'shows problem with bad URL', js: true do
+    it 'shows problem with bad URL' do
       fill_in('location_urls', with: 'http://example.org/foobar.txt')
       check('confirm_to_validate')
       click_on('validate_files')
@@ -195,7 +195,7 @@ RSpec.feature 'UiFileUpload', type: :feature do
 
   describe 'software URL validation' do
 
-    before(:each, js: true) do
+    before(:each) do
       navigate_to_software_upload
       navigate_to_software_upload_urls
 
@@ -220,7 +220,7 @@ RSpec.feature 'UiFileUpload', type: :feature do
         .to_return(status: 404)
     end
 
-    it 'validates a URL that works', js: true do
+    it 'validates a URL that works' do
       fill_in('location_urls', with: 'http://example.org/funbar.txt')
       check('confirm_to_validate')
       click_on('validate_files')
@@ -235,7 +235,7 @@ RSpec.feature 'UiFileUpload', type: :feature do
       expect(su.upload_file_size).to eq(37_221)
     end
 
-    it 'shows problem with bad URL', js: true do
+    it 'shows problem with bad URL' do
       fill_in('location_urls', with: 'http://example.org/foobar.txt')
       check('confirm_to_validate')
       click_on('validate_files')

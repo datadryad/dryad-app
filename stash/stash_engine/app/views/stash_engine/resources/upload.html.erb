@@ -1,10 +1,11 @@
-<% @page_title = 'Upload Your Files - Publish and Preserve your Data' %>
+<%  @datatype = (params[:action] == 'upload' ? 'Data' : 'Software')
+  @page_title = "Upload Your #{@datatype} - Publish and Preserve your Data" %>
 <%= render partial: 'stash_engine/shared/dataset_non_user_editor', locals: {resource: @resource} %>
 <%= render partial: 'stash_engine/shared/dataset_steps_nav' %>
 
-<h1 class="o-heading__level1">Upload Your Files</h1>
+<h1 class="o-heading__level1">Upload Your <%= @datatype %></h1>
 
-<div id="choose_method">
+<div id="choose_method" style="margin-bottom: 2em;">
   <%= render partial: 'stash_engine/file_uploads/choose_upload_method', locals: { resource: @resource, upload_method: :files} %>
 </div>
 
@@ -18,7 +19,7 @@
     <%= link_to 'Back to Describe Dataset', metadata_entry_pages_find_or_create_path(resource_id: params[:id]), class: 'o-button__icon-left', role: 'button', id: 'describe_back' %>
     <%= link_to 'Proceed to Upload Software', up_code_resource_path(params[:id]), class: 'o-button__icon-right', role: 'button', id: 'proceed_review' %>
   <% else %>
-    <%= link_to 'Back to Upload Files', stash_engine.upload_resource_path(params[:id]), class: 'o-button__icon-left', role: 'button', id: 'describe_back' %>
+    <%= link_to 'Back to Upload Data', stash_engine.upload_resource_path(params[:id]), class: 'o-button__icon-left', role: 'button', id: 'describe_back' %>
     <%= link_to 'Proceed to Review', review_resource_path(params[:id]), class: 'o-button__icon-right', role: 'button', id: 'proceed_review' %>
   <% end %>
 </div>
@@ -51,6 +52,18 @@
   $( document ).ready(function() {
     $('#files_from_computer').click(function(){
       updateUiStates();
+    });
+
+    // hide step 2 if no files are uploaded and showing in the table or the state isn't open in anchor hash
+    if(<%= @uploads.length %> < 1 && window.location.href.indexOf('#open') == -1) {
+      $('.files_upload').hide();
+    }
+
+    $('.choosing_up_method').click(function(e){
+      if(window.location.href.match(/(^[^#]*)/)[0] == this.href.match(/(^[^#]*)/)[0]){
+        e.preventDefault();
+        $('.files_upload').show();
+      }
     });
   });
 

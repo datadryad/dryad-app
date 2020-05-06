@@ -1,26 +1,24 @@
 <%# locals: resource, upload_method [:files, :manifest] %>
 <h2 class="t-upload__choose-heading--active">Step 1: Choose File Upload Technique</h2>
-<p>You may upload data via two mechanisms: directly from your computer, or from a URL on an external server (Box, Dropbox,
-  lab server).
-  Please note that for this submission you may only use one of these two upload mechanisms.
-</p>
+<% if @datatype == 'Software' %>
+  <p>
+    Software and other supporting files may be uploaded to Zenodo through our partnership and integration. You will have
+    the opportunity to choose a separate license for your code on the review page. For more information about our integration: [XXX]
+  </p>
+<% end %>
 <%= render 'stash_engine/file_uploads/file_size_text' %>
 <div>
 
   <div class="t-upload__method-section">
-    <div class="t-uploads__method-choice">
+    <div class="t-uploads__method-choice" id="alternate_up_method">
       <% if params[:action].include?('code') %>
-        <% if params[:action].include?('manifest') %>
-          <%= link_to 'Upload software files directly', up_code_resource_path(resource.id), id: 'alternate_up_method' %>
-        <% else %>
-          <%= link_to 'Upload software files from public URLs', up_code_manifest_resource_path(@resource.id), id: 'alternate_up_method' %>
-        <% end %>
+        <%= link_to 'Upload directly', up_code_resource_path(resource.id, anchor: 'open'), class: 'choosing_up_method' %>
+        OR
+        <%= link_to 'Upload by URL', up_code_manifest_resource_path(@resource.id, anchor: 'open'), class: 'choosing_up_method' %>
       <% else %>
-        <% if params[:action].include?('manifest') %>
-          <%= link_to 'Upload files directly', upload_resource_path(@resource.id), id: 'alternate_up_method' %>
-        <% else %>
-          <%= link_to 'Upload files from public URLs', upload_manifest_resource_path(resource.id), id: 'alternate_up_method' %>
-        <% end %>
+        <%= link_to 'Upload directly', upload_resource_path(@resource.id, anchor: 'open'), class: 'choosing_up_method' %>
+        OR
+        <%= link_to 'Upload by URL', upload_manifest_resource_path(resource.id, anchor: 'open'), class: 'choosing_up_method' %>
       <% end %>
     </div>
   </div>
