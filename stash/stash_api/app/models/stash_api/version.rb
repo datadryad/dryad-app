@@ -12,7 +12,6 @@ module StashApi
     def metadata
       m = Metadata.new(resource: @resource)
       m.value.delete_if { |_k, v| v.blank? && v != false }
-      #      add_curation_status(m)
     end
 
     def metadata_with_links
