@@ -122,6 +122,16 @@ module StashApi
         expect(@metadata[:sharingLink]).to be(bogus_link)
       end
 
+      it 'has no sharingLink when it is in withdrawn status' do
+        bogus_link = 'http://some.sharing.com/linkvalue'
+        allow_any_instance_of(StashEngine::Share).to receive(:sharing_link).and_return(bogus_link)
+        r = @identifier.resources.last
+        StashEngine::CurationActivity.create(resource: r, status: 'withdrawn')
+        @dataset = Dataset.new(identifier: @identifier.to_s, user: @user)
+        @metadata = @dataset.metadata
+        expect(@metadata[:sharingLink]).to be(nil)
+      end
+
       it 'has a sharingLink when the current version is in_progress, but the previous version is still peer_review' do
         bogus_link = 'http://some.sharing.com/linkvalue'
         allow_any_instance_of(StashEngine::Share).to receive(:sharing_link).and_return(bogus_link)
