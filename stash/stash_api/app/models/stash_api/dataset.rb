@@ -29,8 +29,6 @@ module StashApi
       id_size_hsh = id_and_size_hash
       metadata = id_size_hsh.merge(lv.metadata)
       add_embargo_date!(metadata, lv)
-      add_curation_status(metadata)
-      # metadata.compact!
 
       # gives the links to nearby objects
       { '_links': links }.merge(metadata).recursive_compact
@@ -91,14 +89,6 @@ module StashApi
 
     def add_embargo_date!(hsh, version)
       hsh[:embargoEndDate] = version.resource.publication_date.strftime('%Y-%m-%d') unless version.resource.publication_date.nil?
-    end
-
-    def add_curation_status(hsh)
-      res = @se_identifier.latest_resource
-      curation_activity = StashEngine::CurationActivity.latest(res&.id)
-      hsh[:curationStatus] = curation_activity&.readable_status
-      return unless %w[submitted peer_review curation action_required embargoed].include?(curation_activity.status)
-      hsh[:sharingLink] = res&.identifier&.shares&.first&.sharing_link
     end
 
   end
