@@ -190,6 +190,7 @@ module StashApi
         expect(h['title']).to eq(@resources[1].title)
         expect(h['abstract']).to eq(@resources[1].descriptions.where(description_type: 'abstract').first.description)
         expect(h['versionNumber']).to eq(@resources[1].stash_version.version)
+        expect(h['sharingLink']).to match(/http/)
       end
 
       it 'shows stuff to admin from the same tenant' do
