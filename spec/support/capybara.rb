@@ -65,7 +65,7 @@ end
 
 Capybara.configure do |config|
   config.default_max_wait_time = 5 # seconds
-  config.server                = :webrick
+  config.server                = :puma
   config.raise_server_errors   = true
   config.server_port = 33_000
   config.app_host = 'http://localhost:33000'
