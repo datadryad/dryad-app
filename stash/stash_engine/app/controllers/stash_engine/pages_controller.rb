@@ -10,6 +10,8 @@ module StashEngine
 
     def best_practices; end
 
+    def jounrla_integration; end
+
     def our_community; end
 
     def our_governance; end
