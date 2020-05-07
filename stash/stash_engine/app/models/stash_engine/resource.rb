@@ -26,7 +26,7 @@ module StashEngine
     has_many :curation_activities, -> { order(id: :asc) }, class_name: 'StashEngine::CurationActivity', dependent: :destroy
     has_many :repo_queue_states, class_name: 'StashEngine::RepoQueueState', dependent: :destroy
     has_many :download_histories, class_name: 'StashEngine::DownloadHistory', dependent: :destroy
-    has_one :zenodo_copy, class_name: 'StashEngine::ZenodoCopy', dependent: :destroy
+    has_many :zenodo_copies, class_name: 'StashEngine::ZenodoCopy', dependent: :destroy
 
     accepts_nested_attributes_for :curation_activities
 
@@ -633,7 +633,7 @@ module StashEngine
 
     def send_to_zenodo
       return if file_uploads.empty? # no files? Then don't send to Zenodo for duplication.
-      ZenodoCopy.create(state: 'enqueued', identifier_id: identifier_id, resource_id: id) if zenodo_copy.nil?
+      ZenodoCopy.create(state: 'enqueued', identifier_id: identifier_id, resource_id: id, copy_type: 'data') if zenodo_copies.data.empty?
       ZenodoCopyJob.perform_later(id)
     end
 

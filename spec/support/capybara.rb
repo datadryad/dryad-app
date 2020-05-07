@@ -9,6 +9,8 @@ require_relative 'helpers/session_helper'
 require_relative 'helpers/webmock_helper'
 require 'webdrivers'
 
+Webdrivers::Chromedriver.update
+
 Capybara.default_driver = :rack_test
 
 # uncomment following line to see actions in browser
@@ -65,8 +67,8 @@ RSpec.configure do |config|
 end
 
 Capybara.configure do |config|
-  config.default_max_wait_time = 5 # seconds
-  config.server                = :webrick
+  config.default_max_wait_time = 15 # used to be 5 or 15 seconds until travis started acting up
+  config.server                = :puma # used to be webrick
   config.raise_server_errors   = true
   config.server_port = 33_000
   config.app_host = 'http://localhost:33000'

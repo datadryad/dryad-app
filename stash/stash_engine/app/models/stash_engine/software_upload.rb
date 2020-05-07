@@ -1,15 +1,15 @@
 module StashEngine
-  class SoftwareUpload < FileUpload
-    self.table_name = 'stash_engine_software_uploads'
+  class SoftwareUpload < ActiveRecord::Base
+    # self.table_name = 'stash_engine_software_uploads'
+    belongs_to :resource, class_name: 'StashEngine::Resource'
 
-    undef_method :download_histories, :version_file_created_in, :merritt_url, :merritt_presign_info_url,
-                 :s3_presigned_url, :merritt_express_url
+    include StashEngine::Concerns::ModelUploadable
 
     def calc_file_path
       return nil if file_state == 'copied' || file_state == 'deleted' # no current file to have a path for
 
       # the uploads directory is well defined so we can calculate it and don't need to store it
-      Rails.root.join('uploads', "#{resource_id}_sfw", upload_file_name).to_s
+      File.join(Resource.software_upload_dir_for(resource_id), upload_file_name).to_s
     end
 
   end
