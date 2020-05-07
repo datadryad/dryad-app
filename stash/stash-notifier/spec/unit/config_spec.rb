@@ -24,7 +24,7 @@ class ConfigSpec
       end
 
       it 'sets oai_base_url' do
-        expect(Config.oai_base_url).to be_eql('http://uc3-mrtoai-stg.cdlib.org:37001/mrtoai/oai/v2')
+        expect(Config.oai_base_url).to be_eql('http://mrtoai-stg.cdlib.org:37001/mrtoai/oai/v2')
       end
 
       it 'sets sets' do
