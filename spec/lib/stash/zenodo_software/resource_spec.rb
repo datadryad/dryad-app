@@ -93,6 +93,25 @@ module Stash
           expect(@zc2.state).to eq('error')
           expect(@zc2.error_info).to include('Items must replicate in order')
         end
+
+        it 'rejects a replication if earlier ones have never been done and are missing from table' do
+          @resource2 = create(:resource, identifier_id: @resource.identifier_id)
+          @zc.destroy
+          @zc2 = create(:zenodo_copy, resource: @resource2, identifier: @resource.identifier, copy_type: 'software')
+          @zsr = Stash::ZenodoSoftware::Resource.new(resource: @resource2)
+          @zsr.add_to_zenodo
+          @zc2.reload
+          expect(@zc2.state).to eq('error')
+          expect(@zc2.error_info).to include('Earlier is missing from ZenodoCopies table')
+        end
+
+        it 'rejects multiple replications for the same resource and type (software)' do
+          @zc2 = create(:zenodo_copy, resource: @resource, identifier: @resource.identifier, copy_type: 'software')
+          @zsr.add_to_zenodo
+          @zc2.reload@zc
+          expect(@zc2.state).to eq('error')
+          expect(@zc2.error_info).to include('Only one replication of the same type')
+        end
       end
     end
   end
