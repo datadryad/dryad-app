@@ -16,7 +16,7 @@ module Stash
 
       def ensure_local_files
         @resource.software_uploads.newly_created.each do |upload|
-          zen_file = Stash::ZenodoSoftware::File.new(file_obj: upload)
+          zen_file = Stash::ZenodoSoftware::FileDownload.new(file_obj: upload)
           zen_file.download unless upload.url.blank?
           zen_file.check_file_exists
           zen_file.check_digest
