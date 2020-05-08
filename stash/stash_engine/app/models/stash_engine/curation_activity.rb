@@ -43,8 +43,8 @@ module StashEngine
 
     # Scopes
     # ------------------------------------------
-    scope :latest, ->(resource_id) {
-      where(resource_id: resource_id).order(updated_at: :desc, id: :desc).first
+    scope :latest, ->(resource:) {
+      where(resource_id: resource.id).order(updated_at: :desc, id: :desc).first
     }
 
     # Callbacks

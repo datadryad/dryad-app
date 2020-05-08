@@ -32,7 +32,7 @@ module StashEngine
 
       it 'returns the most recent activity' do
         ca2 = CurationActivity.create(resource_id: @resource.id, status: 'peer_review')
-        expect(CurationActivity.latest(@resource)).to eql(ca2)
+        expect(CurationActivity.latest(resource: @resource)).to eql(ca2)
       end
     end
 

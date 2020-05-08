@@ -8,7 +8,7 @@ module StashApi
         @resource = resource
       end
 
-      # rubocop:disable Metrics/AbcSize
+      # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
       def value
         # setting some false values to nil because they get compacted.  Don't really want to advertise these options for
         # use by others besides ourselves because we don't want others to use them.
@@ -25,7 +25,8 @@ module StashApi
           relatedWorks: RelatedWorks.new(resource: @resource).value,
           versionNumber: @resource.try(:stash_version).try(:version),
           versionStatus: @resource.current_state,
-          curationStatus: StashEngine::CurationActivity.latest(@resource&.id)&.readable_status,
+          curationStatus: StashEngine::CurationActivity.latest(resource: @resource)&.readable_status,
+          sharingLink: sharing_link,
           userId: @resource.user_id,
           skipDataciteUpdate: @resource.skip_datacite_update || nil,
           skipEmails: @resource.skip_emails || nil,
@@ -33,7 +34,18 @@ module StashApi
           loosenValidation: @resource.loosen_validation || nil
         }
       end
-      # rubocop:enable Metrics/AbcSize
+      # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
+
+      def sharing_link
+        curation_activity = StashEngine::CurationActivity.latest(resource: @resource)
+        if curation_activity.in_progress?
+          # if it's in_progress, return the sharing_link for the previous submitted version
+          prev_submitted_res = @resource&.identifier&.last_submitted_resource
+          prev_submitted_res&.identifier&.shares&.first&.sharing_link if prev_submitted_res
+        elsif !curation_activity.withdrawn?
+          @resource&.identifier&.shares&.first&.sharing_link
+        end
+      end
 
     end
   end
