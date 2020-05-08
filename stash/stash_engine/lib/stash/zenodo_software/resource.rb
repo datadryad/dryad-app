@@ -23,13 +23,10 @@ module Stash
         error_if_out_of_order
         # error_if_previous_unfinished
 
-        r = HTTP.get('http://example.org/')
-        byebug
-
         # database status for this copy
-        # third_copy_record = @resource.zenodo_copies.data.first
-        # third_copy_record.update(state: 'replicating')
-        # third_copy_record.increment!(:retries)
+        copy_record = @resource.zenodo_copies.software.first
+        copy_record.update(state: 'replicating')
+        copy_record.increment!(:retries)
 
         # a zenodo deposit class
         # @deposit = Deposit.new(resource: @resource)
@@ -51,7 +48,7 @@ module Stash
         # submit it, publishing will fail if there isn't at least one file
         # @deposit.publish
         # third_copy_record.update(state: 'finished')
-        'pusdog'
+        r = HTTP.get('http://example.org/')
       rescue Stash::MerrittDownload::DownloadError, Stash::ZenodoReplicate::ZenodoError, HTTP::Error => ex
         record = @resource.zenodo_copies.software.first
         if record.nil?
