@@ -82,6 +82,7 @@ StashEngine::Engine.routes.draw do
 
   get 'faq', to: 'pages#faq'
   get 'best_practices', to: 'pages#best_practices'
+  get 'journal_integration', to: 'pages#journal_integration'
   get 'our_community', to: 'pages#our_community'
   get 'our_governance', to: 'pages#our_governance'
   get 'our_mission', to: 'pages#our_mission'
