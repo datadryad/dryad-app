@@ -55,8 +55,11 @@ module Stash
         third_copy_record.update(state: 'finished')
       rescue Stash::MerrittDownload::DownloadError, Stash::ZenodoReplicate::ZenodoError, HTTP::Error => ex
         # log this in the database so we can track it
-        record = StashEngine::ZenodoCopy.where(resource_id: @resource.id).first_or_create
-        record.update(state: 'error', error_info: "#{ex.class}\n#{ex}", identifier_id: @resource.identifier.id)
+        record = @resource.zenodo_copies.data.first
+        if record.nil?
+          record = StashEngine::ZenodoCopy.create(resource_id: @resource.id, identifier_id: @resource.identifier.id, copy_type: 'data')
+        end
+        record.update(state: 'error', error_info: "#{ex.class}\n#{ex}")
       ensure
         @file_collection.cleanup_files
       end
