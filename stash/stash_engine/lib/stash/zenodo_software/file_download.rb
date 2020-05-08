@@ -4,7 +4,7 @@ require 'fileutils'
 
 module Stash
   module ZenodoSoftware
-    class File
+    class FileDownload
 
       # MD2 is obsolete and doesn't seem to have a good implementation in Ruby
       # CRC-32 and adler-32 are checksums that don't think we're really using.
