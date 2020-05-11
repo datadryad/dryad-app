@@ -1,6 +1,6 @@
 defaults: &defaults
   update_base_url: http://localhost:3000/stash/dataset
-  oai_base_url: http://uc3-mrtoai-stg.cdlib.org:37001/mrtoai/oai/v2
+  oai_base_url: http://mrtoai-stg.cdlib.org:37001/mrtoai/oai/v2
 
 test:
   <<: *defaults
