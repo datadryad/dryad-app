@@ -15,9 +15,24 @@ module Stash
 
       before(:each) do
         @resource = create(:resource)
-        @mg = Stash::ZenodoReplicate::MetadataGenerator.new(resource: @resource)
+        4.times do
+          place = create(:geolocation_place)
+          point = create(:geolocation_point)
+          box = create(:geolocation_box)
+          create(:geolocation, place_id: place.id, point_id: point.id, box_id: box.id, resource_id: @resource.id)
+        end
+        @g = @resource.geolocations
+        @g[0].update(point_id: nil, box_id: nil) # remove point and box
+        @g[1].update(place_id: nil, box_id: nil) # remove place and box
+        @g[2].update(place_id: nil, point_id: nil) # remove place and point
+        # g[3] has all 3
+
         create(:description, description_type: 'other', resource_id: @resource.id)
         create(:description, description_type: 'methods', resource_id: @resource.id)
+
+        @resource.reload
+
+        @mg = Stash::ZenodoReplicate::MetadataGenerator.new(resource: @resource)
       end
 
       it 'has doi output' do
@@ -75,6 +90,19 @@ module Stash
 
       it 'has method output' do
         expect(@mg.method).to eq(@resource.descriptions.where(description_type: 'methods').first.description)
+      end
+
+      it 'has geolocation point output' do
+        expect(@mg.locations[1]).to eq('lat' => @g[1].geolocation_point.latitude, 'lon' => @g[1].geolocation_point.longitude)
+      end
+
+      it 'has geolocation place' do
+        expect(@mg.locations[0]).to eq('place' => @g[0].geolocation_place.geo_location_place)
+      end
+
+      it 'has both point and place' do
+        expect(@mg.locations[2]).to eq('lat' => @g[3].geolocation_point.latitude, 'lon' => @g[3].geolocation_point.longitude,
+                                       'place' => @g[3].geolocation_place.geo_location_place)
       end
     end
   end

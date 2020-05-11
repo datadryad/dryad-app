@@ -50,11 +50,12 @@
         <details class="o-showhide o-sites__details" role="group">
           <summary class="o-showhide__summary o-sites__summary">Help</summary>
           <div class="o-sites__group">
-            <%= link_to 'Submission Process', "#{stash_url_helpers.submission_process_path}", class: 'o-sites__group-item' %>
-            <%= link_to 'Curation', "#{stash_url_helpers.submission_process_path(anchor: 'curation')}", class: 'o-sites__group-item' %>
-            <%= link_to 'Data Publishing Charges', "#{stash_url_helpers.publishing_charges_path}", class: 'o-sites__group-item' %>
-            <%= link_to 'FAIR Data', "#{stash_url_helpers.best_practices_path}", class: 'o-sites__group-item' %>
-            <%= link_to 'Frequently Asked Questions', stash_url_helpers.faq_path, class: 'o-sites__group-item' %>
+              <%= link_to 'Submission Process', "#{stash_url_helpers.submission_process_path}", class: 'o-sites__group-item' %>
+              <%= link_to 'Curation', "#{stash_url_helpers.submission_process_path(anchor: 'curation')}", class: 'o-sites__group-item' %>
+              <%= link_to 'Data Publishing Charges', "#{stash_url_helpers.publishing_charges_path}", class: 'o-sites__group-item' %>
+              <%= link_to 'FAIR Data', "#{stash_url_helpers.best_practices_path}", class: 'o-sites__group-item' %>
+	      <%= link_to 'Journal Integration', "#{stash_url_helpers.journal_integration_path}", class: 'o-sites__group-item' %>
+              <%= link_to 'Frequently Asked Questions', stash_url_helpers.faq_path, class: 'o-sites__group-item' %>
           </div>
         </details>
       </div>
@@ -64,6 +65,5 @@
       <%= link_to 'My Datasets', stash_url_helpers.dashboard_path, class: 'c-header__nav-item js-nav-out border-left' %>
     <% end %>
     <%= render partial: 'stash_engine/shared/log_in_out' %>
-    <%# render partial: "stash_engine/shared/sites" %>
   </div>
 </nav>
