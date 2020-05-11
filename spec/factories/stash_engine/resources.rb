@@ -4,7 +4,7 @@ FactoryBot.define do
     identifier
     user
 
-    has_geolocation { false }
+    has_geolocation { true }
     title { Faker::Lorem.sentence }
     download_uri { "http://merritt-fake.cdlib.org/d/ark%3A%2F99999%2Ffk#{Faker::Alphanumeric.alphanumeric(number: 8)}" }
     update_uri { Faker::Internet.url }
