@@ -4,15 +4,17 @@ module Stash
     # to generate the metadata for the Zenodo API, see https://developers.zenodo.org/#depositions
     # and the "Deposit metadata" they request, which is kind of similar to ours, but slightly different
     class MetadataGenerator
-      def initialize(resource:)
+      def initialize(resource:, use_zenodo_doi: false)
         @resource = resource
+        @use_zenodo_doi = use_zenodo_doi
       end
 
       # returns a hash of the metadata from the list of methods, you can make it into json to send
       def metadata
         out_hash = {}.with_indifferent_access
         %i[doi upload_type publication_date title creators description access_right license
-           keywords notes related_identifiers method].each do |meth|
+           keywords notes related_identifiers method locations].each do |meth|
+          next if meth == 'doi' && @use_zenodo_doi
           result = send(meth)
           out_hash[meth] = result unless result.blank?
         end
@@ -81,6 +83,7 @@ module Stash
 
         related ||= []
 
+        # if DOi is different
         related.push(
           relation: 'isIdenticalTo', identifier: "https://doi.org/#{@resource.identifier.identifier}"
         )
@@ -88,6 +91,24 @@ module Stash
 
       def method
         @resource.descriptions.where(description_type: 'methods')&.map(&:description)&.join("\n")
+      end
+
+      def locations
+        @resource.geolocations.map do |geo|
+          location(geo)
+        end.compact
+      end
+
+      def location(geolocation)
+        # no way to represent boxes in zenodo?
+        return nil if geolocation.place_id.nil? && geolocation.point_id.nil?
+        hsh = {}
+        unless geolocation.point_id.nil?
+          hsh['lat'] = geolocation.geolocation_point.latitude
+          hsh['lon'] = geolocation.geolocation_point.longitude
+        end
+        hsh['place'] = geolocation.geolocation_place.geo_location_place unless geolocation.place_id.nil?
+        hsh
       end
 
       private
