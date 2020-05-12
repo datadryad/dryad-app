@@ -5,6 +5,7 @@ module StashApi
     include Stash::Organization
 
     TO_PARSE = %w[Funders Methods UsageNotes Keywords RelatedWorks Locations TemporalCoverages].freeze
+    INTERNAL_DATA_FIELDS = %w[publicationISSN publicationName manuscriptNumber].freeze
 
     # If  id_string is set, then populate the desired (doi) into the identifier in format like doi:xxxxx/yyyyy for new dataset.
     # the id is a stash_engine_identifier object and indicates an already existing object.  May not set both.
@@ -33,17 +34,23 @@ module StashApi
         loosen_validation: @hash['loosenValidation'] || false
       )
 
-      # probably want to clear and re-add authors for data updates
       @hash[:authors]&.each { |author| add_author(json_author: author) }
       StashDatacite::Description.create(description: @hash[:abstract], description_type: 'abstract', resource_id: @resource.id)
       TO_PARSE.each { |item| dynamic_parse(my_class: item) }
       @resource.identifier.payment_type = @hash['paymentType']
       @resource.identifier.payment_id = @hash['paymentId']
+      parse_internal_data
       @resource.identifier.save
       @resource.identifier
     end
 
     private
+
+    def parse_internal_data
+      INTERNAL_DATA_FIELDS.each do |int_field|
+        StashEngine::InternalDatum.create(data_type: int_field, stash_identifier: @resource.identifier, value: @hash[int_field]) if @hash[int_field]
+      end
+    end
 
     def dynamic_parse(my_class:)
       c = Object.const_get("StashApi::DatasetParser::#{my_class}")
