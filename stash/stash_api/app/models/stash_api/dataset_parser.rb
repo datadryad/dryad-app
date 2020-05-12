@@ -88,7 +88,7 @@ module StashApi
         author_first_name: json_author[:firstName],
         author_last_name: json_author[:lastName],
         author_email: json_author[:email],
-        author_orcid: @previous_orcids["#{json_author[:firstName]} #{json_author[:lastName]}"],
+        author_orcid: json_author[:orcid] || @previous_orcids["#{json_author[:firstName]} #{json_author[:lastName]}"],
         resource_id: @resource.id
       )
 

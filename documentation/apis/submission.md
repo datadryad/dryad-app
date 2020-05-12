@@ -103,7 +103,11 @@ doi_encoded = URI.escape(doi)
 ```
 ## Dataset options
 
-To see the dataset fields and option in use, see the [Sample Dataset Object](https://github.com/CDL-Dryad/dryad-app/blob/master/documentation/sample_dataset.json).
+To see the dataset fields and options in use, see the [Sample Dataset Object](https://github.com/CDL-Dryad/dryad-app/blob/master/documentation/sample_dataset.json).
+
+Journal administrators that are creating a dataset on behalf of
+another user *must* include the `publicationISSN` field to indicate
+the associated journal. They *may* also include `publicationName` and `manuscriptNumber`.
 
 Superusers have access to some extra options that control a dataset's behavior:
 - `skipDataciteUpdate` - If true, doesn't send any requests to DataCite when registering the dataset. This is useful when the dataset already has a DOI, which is present in the metadata being submitted.
