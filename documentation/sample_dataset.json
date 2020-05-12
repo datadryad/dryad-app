@@ -9,9 +9,13 @@
 		     "identifier" : "10.1111/j.1558-5646.2007.00022.x"
 		     } ],
  "publicationISSN" : "1558-5646",
+ "publicationName" : "Evolution",
+ "manuscriptNumber" : "ABC123", 
  "authors" : [ {
-		"firstName" : "Brian",
-		"lastName" : "Sidlauskas"
+     "firstName" : "Brian",
+     "lastName" : "Sidlauskas",
+     "email" : "brian_sidlauskas@somewhere.com",
+     "orcid" : "0000-0003-0597-4085"
 		} ],
  "funders": [ {
 	       "organization": "Savannah River Operations Office, U.S. Department of Energy",
