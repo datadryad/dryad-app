@@ -131,10 +131,12 @@ Fixing incorrect ROR affiliations
 =================================
 
 When a user has an affiliation that doesn't appear in ROR, but they
-accidentally selected a ROR affiliation from the autocomplete:
+accidentally selected a ROR affiliation from the autocomplete box, the
+UI won't allow them to change it. The UI assumes that we don't want to
+replace a controlled value with an uncontrolled one.
 
-In console, find the authors associated with the item and note the id
-of the author you want to change.
+To add the new (non-ROR) affiliation and associate it with the author,
+follow a process like this:
 
 ```
 i=StashEngine::Identifier.where(identifier: '10.5061/dryad.z8w9ghx8g').first
