@@ -48,9 +48,9 @@ module StashApi
     private
 
     def establish_owning_user_id
-      if @hash['userId']&.match(/\d{4}-\d{4}-\d{4}-\d{3,4}X?/)
+      if @hash['userId']&.to_s&.match(/\d{4}-\d{4}-\d{4}-\d{3,4}X?/)
         owning_user_id_from_orcid
-      elsif @hash['userId']&.match(/\A\d+\z/)
+      elsif @hash['userId'].to_s&.match(/\A\d+\z/)
         # If the userId is an integer, treat it as the id of an existing user
         begin
           StashEngine::User.find(@hash['userId']).id
