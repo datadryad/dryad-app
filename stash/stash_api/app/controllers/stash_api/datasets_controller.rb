@@ -217,10 +217,6 @@ module StashApi
         render json: { error: 'Unauthorized: only superusers and journal administrators may set a specific user' }.to_json, status: 401
         return false
       end
-      # users = StashEngine::User.where(id: params['userId'])
-      # return if users.count == 1
-      # render(json: { error: 'Bad Request: the userId you chose is invalid' }.to_json, status: 400)
-      # false
     end
 
     def check_may_set_payment_id
