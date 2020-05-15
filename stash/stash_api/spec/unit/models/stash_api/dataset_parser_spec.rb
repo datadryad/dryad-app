@@ -130,16 +130,19 @@ module StashApi
         expect(des.description_type).to eq('abstract')
       end
 
+      it 'puts the paymentId on the identifier' do
+        expect(@stash_identifier.payment_id). to eq('invoice-123')
+        expect(@stash_identifier.payment_type). to eq('stripe')
+      end
+    end
+
+    describe 'dataset ownership' do
       it 'sets the owner' do
         resource = @stash_identifier.resources.first
         expect(resource.user_id). to eq(@user2.id)
         expect(resource.current_editor_id).to eq(@user2.id)
       end
 
-      it 'puts the paymentId on the identifier' do
-        expect(@stash_identifier.payment_id). to eq('invoice-123')
-        expect(@stash_identifier.payment_type). to eq('stripe')
-      end
     end
 
     describe 'identifier handling' do
