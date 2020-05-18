@@ -73,7 +73,9 @@ module Stash
       end
 
       def notes
-        @resource.descriptions.where(description_type: 'other')&.map(&:description)&.join("\n")
+        my_notes = @resource.descriptions.where(description_type: 'other')&.map(&:description)&.join("\n")
+        funder_info = @resource.contributors.where(contributor_type: 'funder').map { |contrib| funding_text(contrib) }.join("\n\n")
+        "#{my_notes}\n\n#{funder_info}".strip
       end
 
       def related_identifiers
@@ -120,6 +122,12 @@ module Stash
         return doi if Rails.env == 'production'
 
         doi.gsub(/^10\.5072/, '10.55072') # bork our datacite test dois into non-test shoulders because Zenodo reserves them as their own
+      end
+
+      def funding_text(contributor)
+        ["Funding provided by: #{contributor.contributor_name}",
+         (contributor.name_identifier_id.nil? ? nil : "Crossref Funder Registry ID: #{contributor.name_identifier_id}"),
+         (contributor.award_number.nil? ? nil : "Award Number: #{contributor.award_number}")].compact.join("\n")
       end
 
     end
