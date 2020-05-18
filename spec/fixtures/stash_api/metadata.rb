@@ -38,7 +38,8 @@ module Fixtures
           { "firstName": Faker::Name.first_name,
             "lastName": Faker::Name.last_name,
             email: Faker::Internet.email,
-            orcid: "#{Faker::Number.number(digits: 4)}-#{Faker::Number.number(digits: 4)}-#{Faker::Number.number(digits: 4)}-#{Faker::Number.number(digits: 4)}",
+            orcid: "#{Faker::Number.number(digits: 4)}-#{Faker::Number.number(digits: 4)}-" \
+                   "#{Faker::Number.number(digits: 4)}-#{Faker::Number.number(digits: 4)}",
             affiliation: Faker::University.name }.with_indifferent_access
         )
       end
