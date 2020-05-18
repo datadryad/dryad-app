@@ -70,12 +70,13 @@ module StashApi
 
     private
 
-    # a simple identifier without any versions, shouldn't be happening but it did on dev at least
+    # a simple identifier without any versions, indicates that we created
+    # an identifier that cannot be viewed
     def simple_identifier
       {
         identifier: @se_identifier.to_s,
         id: @se_identifier.id,
-        message: 'identifier is missing required elements'
+        message: 'identifier cannot be viewed, may be missing required elements'
       }
     end
 
