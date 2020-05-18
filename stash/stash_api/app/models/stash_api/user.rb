@@ -19,7 +19,7 @@ module StashApi
         role: @se_user.role,
         orcid: @se_user.orcid,
         affiliation: afilliation&.long_name,
-        affiliation_ror: afilliation&.ror_id,
+        affiliationROR: afilliation&.ror_id,
         oldDryadEmail: @se_user.old_dryad_email,
         ePersonId: @se_user.eperson_id,
         createdAt: @se_user.created_at
