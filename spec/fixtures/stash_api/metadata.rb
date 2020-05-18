@@ -24,6 +24,10 @@ module Fixtures
         add_author
       end
 
+      def add_field(field_name:, value: nil)
+        @metadata[field_name.to_sym] = value
+      end
+
       def add_title
         @metadata.merge!(title: Faker::Book.title)
       end
@@ -34,6 +38,8 @@ module Fixtures
           { "firstName": Faker::Name.first_name,
             "lastName": Faker::Name.last_name,
             email: Faker::Internet.email,
+            orcid: "#{Faker::Number.number(digits: 4)}-#{Faker::Number.number(digits: 4)}-" \
+                   "#{Faker::Number.number(digits: 4)}-#{Faker::Number.number(digits: 4)}",
             affiliation: Faker::University.name }.with_indifferent_access
         )
       end
