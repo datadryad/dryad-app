@@ -126,3 +126,26 @@ an item. You can force the metadata in DataCite to update by:
 idg = Stash::Doi::IdGen.make_instance(resource: r)
 idg.update_identifier_metadata!
 ```
+
+Fixing incorrect ROR affiliations
+=================================
+
+When a user has an affiliation that doesn't appear in ROR, but they
+accidentally selected a ROR affiliation from the autocomplete box, the
+UI won't allow them to change it. The UI assumes that we don't want to
+replace a controlled value with an uncontrolled one.
+
+To add the new (non-ROR) affiliation and associate it with the author,
+follow a process like this:
+
+```
+i=StashEngine::Identifier.where(identifier: '10.5061/dryad.z8w9ghx8g').first
+r=i.resources.last
+r.authors
+# pick out the correct one and save it
+a=r.authors.first
+# create a new affiliation (append * to indicate it's not ROR-controlled)
+a.affiliation=StashDatacite::Affiliation.create(long_name: 'Universidad Politécnica de Madrid*')
+a.save
+```
+	  

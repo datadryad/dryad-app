@@ -5,9 +5,11 @@ This document gives practical information for working with the API in order to s
 
 ## Log in to Dryad and request a an application id and secret
 
-Before you can submit from the API, you need to log in to Dryad at least once to create a user record.  You may log in to your associated campus/organization or use the DataONE login with your Google login credentials.
+Before you can submit from the API, you need to log in to Dryad at
+least once to create a user record and (if applicable) associate it
+with your associated campus/organization. 
 
-To request access, please [contact us](mailto:uc3@ucop.edu). (Developers see [Adding a New API Account](README.md))
+To request access, please [contact us](mailto:help@datadryad.org). (Developers see [Adding a New API Account](README.md))
 
 ## Get a token for making requests for secure parts of the API
 Before making secure requests to the Dryad API, you'll need a token.  Currently our tokens last 10 hours and a token will need to be renewed if it expires.  You may get a token using these examples from a few programming environments.  Replace &lt;bracketed&gt; items with the values you were given.  For testing, you may choose to use a bash shell, a programming environment or a tool such as Postman.
@@ -59,7 +61,7 @@ You should see a 200 response and some information something like:
 
 ## Create a new in-progress dataset
 
-The first real step is to create a new in-progress dataset.  Currently, only minimal required DataCite metadata is supported and fuller support will be added soon.  See the example below for example metadata supported.
+The first real step is to create a new in-progress dataset. See the example below for example metadata supported.
 
 After a successful dataset POST, you should see the dataset created with your metadata, an id (DOI identifier) and a versionStatus of 'in_progress'
 
@@ -101,9 +103,13 @@ doi_encoded = URI.escape(doi)
 ```
 ## Dataset options
 
-To see the dataset fields and option in use, see the [Sample Dataset Object](https://github.com/CDL-Dryad/dryad-app/blob/master/documentation/sample_dataset.json).
+To see the dataset fields and options in use, see the [Sample Dataset Object](https://github.com/CDL-Dryad/dryad-app/blob/master/documentation/sample_dataset.json).
 
-Useful options that control a dataset's behavior:
+Journal administrators that are creating a dataset on behalf of
+another user *must* include the `publicationISSN` field to indicate
+the associated journal. They *may* also include `publicationName` and `manuscriptNumber`.
+
+Superusers have access to some extra options that control a dataset's behavior:
 - `skipDataciteUpdate` - If true, doesn't send any requests to DataCite when registering the dataset. This is useful when the dataset already has a DOI, which is present in the metadata being submitted.
 - `skipEmails` - If true, prevents emails from being sent to users on submission. Prevents emails regardless of whether the submission is successful or an error. Also stopps the emails that ask co-authors to register their ORCID. Does *not* stop the internal emails that are sent to Dryad admins if there is a submission error.
 - `preserveCurationStatus` - If true, prevents Dryad from automatically setting the curation status to "submitted". This is useful when the dataset already has a curation status that will be set in a later API call.
