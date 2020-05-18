@@ -46,6 +46,9 @@ module StashApi
         'abstract' =>
               'Cyberneticists agree that concurrent models are an interesting new topic in the field of machine learning.',
         'userId' => @user2.id,
+        'publicationISSN' => '0000-1111',
+        'publicationName' => 'Some Great Journal',
+        'manuscriptNumber' => 'ABC123',
         'paymentId' => 'invoice-123',
         'paymentType' => 'stripe'
       }.with_indifferent_access
@@ -130,16 +133,103 @@ module StashApi
         expect(des.description_type).to eq('abstract')
       end
 
-      it 'sets the owner' do
-        resource = @stash_identifier.resources.first
-        expect(resource.user_id). to eq(@user2.id)
-        expect(resource.current_editor_id).to eq(@user2.id)
+      it 'creates internal data for the publication metadata' do
+        expect(@stash_identifier.publication_issn).to eq('0000-1111')
+        expect(@stash_identifier.publication_name).to eq('Some Great Journal')
+        expect(@stash_identifier.manuscript_number).to eq('ABC123')
       end
 
       it 'puts the paymentId on the identifier' do
         expect(@stash_identifier.payment_id). to eq('invoice-123')
         expect(@stash_identifier.payment_type). to eq('stripe')
       end
+    end
+
+    describe 'dataset ownership' do
+      it 'sets the owner' do
+        resource = @stash_identifier.resources.first
+        expect(resource.user_id).to eq(@user2.id)
+        expect(resource.current_editor_id).to eq(@user2.id)
+      end
+
+      it 'sets the owner to an existing user from an ORCID' do
+        test_user = StashEngine::User.create(first_name: 'Lena',
+                                             last_name: 'Jarre',
+                                             email: 'lj123@ucop.edu',
+                                             orcid: '1234-5678-0000-1111')
+        test_metadata = {
+          'title' => 'Visualizing Congestion Control Using Self-Learning Epistemologies',
+          'authors' => [{
+            'firstName' => 'Wanda',
+            'lastName' => 'Jackson',
+            'email' => 'wanda.jackson@example.com'
+          }],
+          'abstract' => 'Cyberneticists agree that concurrent models are fun.',
+          'userId' => test_user.orcid
+        }.with_indifferent_access
+
+        dp = DatasetParser.new(hash: test_metadata, id: nil, user: @user)
+        test_identifier = dp.parse
+
+        resource = test_identifier.resources.first
+        expect(resource.user_id).to eq(test_user.id)
+      end
+
+      it 'sets the owner to user specified in the metadata with an ORCID' do
+        test_orcid = '0000-1111-2222-3333'
+        test_metadata = {
+          'title' => 'Visualizing Congestion Control Using Self-Learning Epistemologies',
+          'authors' => [{
+            'firstName' => 'Wanda',
+            'lastName' => 'Jackson',
+            'email' => 'wanda.jackson@example.com',
+            'orcid' => test_orcid
+          }],
+          'abstract' => 'Cyberneticists agree that concurrent models are fun.',
+          'userId' => test_orcid
+        }.with_indifferent_access
+
+        dp = DatasetParser.new(hash: test_metadata, id: nil, user: @user)
+        test_identifier = dp.parse
+        resource = test_identifier.resources.first
+        expect(resource.user.first_name).to eq('Wanda')
+      end
+
+      it 'defaults ownership to the submitter when the userId is invalid' do
+        test_metadata = {
+          'title' => 'Visualizing Congestion Control Using Self-Learning Epistemologies',
+          'authors' => [{
+            'firstName' => 'Wanda',
+            'lastName' => 'Jackson',
+            'email' => 'wanda.jackson@example.com'
+          }],
+          'abstract' => 'Cyberneticists agree that concurrent models are fun.',
+          'userId' => 'BOGUS-junk'
+        }.with_indifferent_access
+
+        dp = DatasetParser.new(hash: test_metadata, id: nil, user: @user)
+        test_identifier = dp.parse
+        resource = test_identifier.resources.first
+        expect(resource.user).to eq(@user)
+      end
+
+      it 'errors when the userId is an ORCID, but does not match one set in the author list' do
+        test_metadata = {
+          'title' => 'Visualizing Congestion Control Using Self-Learning Epistemologies',
+          'authors' => [{
+            'firstName' => 'Wanda',
+            'lastName' => 'Jackson',
+            'email' => 'wanda.jackson@example.com',
+            'orcid' => '4444-4444-4444-4444'
+          }],
+          'abstract' => 'Cyberneticists agree that concurrent models are fun.',
+          'userId' => '5555-5555-5555-5555'
+        }.with_indifferent_access
+
+        dp = DatasetParser.new(hash: test_metadata, id: nil, user: @user)
+        expect { dp.parse }.to raise_error(RuntimeError)
+      end
+
     end
 
     describe 'identifier handling' do
