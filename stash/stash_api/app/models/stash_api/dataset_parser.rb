@@ -55,7 +55,7 @@ module StashApi
         begin
           StashEngine::User.find(@hash['userId']).id
         rescue ActiveRecord::RecordNotFound
-          raise 'The userId is not known to Dryad. Please supply the id of an existing Drayd user, or an orcid matching an author of the dataset.'
+          raise 'The userId is not known to Dryad. Please supply the id of an existing Dryad user, or an orcid matching an author of the dataset.'
         end
       else
         # otherwise, give ownership to the API user
