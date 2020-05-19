@@ -22,6 +22,7 @@ module Stash
         @file_collection = Stash::MerrittDownload::FileCollection.new(resource: @resource)
       end
 
+      # rubocop:disable Metrics/MethodLength
       def add_to_zenodo
         # sanity checks
         error_if_not_enqueued
@@ -56,13 +57,12 @@ module Stash
       rescue Stash::MerrittDownload::DownloadError, Stash::ZenodoReplicate::ZenodoError, HTTP::Error => ex
         # log this in the database so we can track it
         record = @resource.zenodo_copies.data.first
-        if record.nil?
-          record = StashEngine::ZenodoCopy.create(resource_id: @resource.id, identifier_id: @resource.identifier.id, copy_type: 'data')
-        end
+        record = StashEngine::ZenodoCopy.create(resource_id: @resource.id, identifier_id: @resource.identifier.id, copy_type: 'data') if record.nil?
         record.update(state: 'error', error_info: "#{ex.class}\n#{ex}")
       ensure
         @file_collection.cleanup_files
       end
+      # rubocop:enable Metrics/MethodLength
 
       private
 

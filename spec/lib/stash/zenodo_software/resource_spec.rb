@@ -56,7 +56,7 @@ module Stash
           @zc.update(state: 'error')
           @resource2 = create(:resource, identifier_id: @resource.identifier_id)
           @zc2 = create(:zenodo_copy, resource: @resource2, identifier: @resource2.identifier,
-                                       deposition_id: @zc.deposition_id, copy_type: 'software')
+                                      deposition_id: @zc.deposition_id, copy_type: 'software')
           @zsr2 = Stash::ZenodoSoftware::Resource.new(resource: @resource2)
           @zsr2.add_to_zenodo
           @zc2.reload
@@ -108,7 +108,7 @@ module Stash
         it 'rejects multiple replications for the same resource and type (software)' do
           @zc2 = create(:zenodo_copy, resource: @resource, identifier: @resource.identifier, copy_type: 'software')
           @zsr.add_to_zenodo
-          @zc2.reload@zc
+          @zc2.reload
           expect(@zc2.state).to eq('error')
           expect(@zc2.error_info).to include('Only one replication of the same type')
         end
