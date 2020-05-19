@@ -4,6 +4,7 @@ require 'stash/zenodo_replicate'
 require 'byebug'
 require 'http'
 require 'fileutils'
+require 'cgi'
 
 require 'rails_helper'
 
@@ -29,6 +30,9 @@ module Stash
 
         create(:description, description_type: 'other', resource_id: @resource.id)
         create(:description, description_type: 'methods', resource_id: @resource.id)
+
+        @funder1 = create(:contributor, resource_id: @resource.id)
+        @funder2 = create(:contributor, resource_id: @resource.id, award_number: nil)
 
         @resource.reload
 
@@ -80,7 +84,16 @@ module Stash
       end
 
       it 'has notes output' do
-        expect(@mg.notes).to eq(@resource.descriptions.where(description_type: 'other').first.description)
+        expect(@mg.notes).to include(@resource.descriptions.where(description_type: 'other').first.description)
+      end
+
+      it 'puts funder information into notes' do
+        expect(@mg.notes).to include(CGI.escapeHTML("Funding provided by: #{@funder1.contributor_name}"))
+        expect(@mg.notes).to include(CGI.escapeHTML("Crossref Funder Registry ID: #{@funder1.name_identifier_id}"))
+        expect(@mg.notes).to include(CGI.escapeHTML("Award Number: #{@funder1.award_number}"))
+        expect(@mg.notes).to include(CGI.escapeHTML("Funding provided by: #{@funder2.contributor_name}"))
+        expect(@mg.notes).to include(CGI.escapeHTML("Crossref Funder Registry ID: #{@funder2.name_identifier_id}"))
+        expect(@mg.notes.scan(/Award Number/).count).to eq(1)
       end
 
       it 'has related_identifiers output for itself' do
