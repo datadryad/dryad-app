@@ -1,3 +1,5 @@
+require 'fileutils'
+
 module Stash
   module ZenodoSoftware
 
@@ -21,6 +23,10 @@ module Stash
           zen_file.check_file_exists
           zen_file.check_digest
         end
+      end
+
+      def cleanup_files
+        FileUtils.rm_rf(@path)
       end
     end
   end
