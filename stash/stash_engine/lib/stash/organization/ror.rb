@@ -50,7 +50,7 @@ module Stash
         return nil if resp.parsed_response.blank? || resp.parsed_response['items'].blank?
         result = resp.parsed_response['items'].first
         return nil if result['id'].blank? || result['name'].blank?
-        ror_results_to_hash(resp)&.first
+        new(result)
       rescue HTTParty::Error, SocketError => e
         raise RorError, "Unable to connect to the ROR API for `find_first_by_ror_name`: #{e.message}"
       end

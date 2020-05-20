@@ -87,29 +87,36 @@ module StashDatacite
       end
 
       it 'returns nil if no name is provided' do
-        expect(StashDatacite::Affiliation.from_long_name(nil)).to eql(nil)
+        expect(StashDatacite::Affiliation.from_long_name(long_name: nil)).to eql(nil)
       end
 
       it 'returns the correct affiliation if the name exists in the DB' do
         affil = StashDatacite::Affiliation.create(long_name: 'Test Affiliation')
-        expect(StashDatacite::Affiliation.from_long_name('test affiliation')).to eql(affil)
+        expect(StashDatacite::Affiliation).not_to receive(:find_by_ror_long_name)
+        expect(StashDatacite::Affiliation.from_long_name(long_name: 'test affiliation')).to eql(affil)
       end
 
       it 'does NOT do a ROR lookup if the record already has a ROR id' do
         affil = StashDatacite::Affiliation.create(long_name: 'Test Affiliation', ror_id: '123')
-        expect(StashDatacite::Affiliation).not_to receive(:find_by_ror_long_name).with('test affiliation')
-        expect(StashDatacite::Affiliation.from_long_name('test affiliation')).to eql(affil)
+        expect(StashDatacite::Affiliation).not_to receive(:find_by_ror_long_name)
+        expect(StashDatacite::Affiliation.from_long_name(long_name: 'test affiliation')).to eql(affil)
+      end
+
+      it 'does a ROR lookup if the caller requests' do        
+        expect(StashDatacite::Affiliation).to receive(:find_by_ror_long_name).with({:long_name=>"test affiliation"})
+        test_affil = StashDatacite::Affiliation.from_long_name(long_name: 'test affiliation', check_ror: true)
+        expect(test_affil.long_name).to eql('test affiliation*')
       end
 
     end
 
-    describe 'self.find_by_ror_long_name(long_name)' do
+    describe 'self.find_by_ror_long_name(long_name:)' do
       before(:each) do
         allow(Stash::Organization::Ror).to receive(:find_first_by_ror_name).with('cats').and_raise(Stash::Organization::RorError)
       end
 
       it 'handles bad responses from ROR with empty results instead of barfing' do
-        expect(Affiliation.find_by_ror_long_name('cats')).to eq([])
+        expect(Affiliation.find_by_ror_long_name(long_name: 'cats')).to eq([])
       end
     end
   end

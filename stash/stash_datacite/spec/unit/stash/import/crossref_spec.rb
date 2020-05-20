@@ -143,9 +143,8 @@ module Stash
         )
         @identifier = StashEngine::Identifier.create(identifier: '10.1234/abcd123')
         @resource = StashEngine::Resource.create(user_id: @user.id, tenant_id: 'ucop', identifier_id: @identifier.id)
-        # allow_any_instance_of(Stash::Organization::Ror).to receive(:find_first_by_ror_name).and_return(id: 'abcd', name: 'Hotel California')
-        allow(StashDatacite::Affiliation).to receive(:find_by_ror_long_name).and_return(nil)
 
+        allow(StashDatacite::Affiliation).to receive(:find_by_ror_long_name).and_return(nil)
         allow(Serrano).to receive(:works).and_return([CROSSREF_WORK_RESPONSE])
         allow(Serrano).to receive(:journals).and_return(CROSSREF_JOURNAL_RESPONSE)
       end
