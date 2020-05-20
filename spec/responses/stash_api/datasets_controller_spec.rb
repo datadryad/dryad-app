@@ -45,6 +45,36 @@ module StashApi
         expect(in_author[:email]).to eq(out_author[:email])
       end
 
+      it 'creates a new dataset with a userId explicitly set by superuser)' do
+        test_user = StashEngine::User.create(first_name: Faker::Name.first_name,
+                                             last_name: Faker::Name.last_name,
+                                             email: Faker::Internet.email)
+        @meta.add_field(field_name: 'userId', value: test_user.id)
+        response_code = post '/api/v2/datasets', @meta.json, default_authenticated_headers
+        output = response_body_hash
+        expect(response_code).to eq(201)
+        expect(output[:userId]).to eq(test_user.id)
+      end
+
+      it 'creates a new dataset with a userId explicitly set by journal admin' do
+        # journal_user is the journal administrator, test_user is the user that will own the dataset
+        journal_user = create(:user, tenant_id: 'ucop', role: nil)
+        journal = create(:journal, issn: "#{Faker::Number.number(digits: 4)}-#{Faker::Number.number(digits: 4)}")
+        create(:journal_role, journal: journal, user: journal_user, role: 'admin')
+        doorkeeper_application = create(:doorkeeper_application, redirect_uri: 'urn:ietf:wg:oauth:2.0:oob',
+                                                                 owner_id: journal_user.id, owner_type: 'StashEngine::User')
+        setup_access_token(doorkeeper_application: doorkeeper_application)
+        test_user = StashEngine::User.create(first_name: Faker::Name.first_name,
+                                             last_name: Faker::Name.last_name,
+                                             email: Faker::Internet.email)
+        @meta.add_field(field_name: 'userId', value: test_user.id)
+        @meta.add_field(field_name: 'publicationISSN', value: journal.issn)
+        response_code = post '/api/v2/datasets', @meta.json, default_authenticated_headers
+        output = response_body_hash
+        expect(response_code).to eq(201)
+        expect(output[:userId]).to eq(test_user.id)
+      end
+
       it 'creates a new basic dataset with a placename' do
         @meta.add_place
         response_code = post '/api/v2/datasets', @meta.json, default_authenticated_headers
