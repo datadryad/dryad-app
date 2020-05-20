@@ -211,14 +211,12 @@ module StashApi
 
     def check_may_set_user_id
       return if params['userId'].nil?
-      unless @user.role == 'superuser' || params['userId'].to_i == @user.id # or it is your own user
-        render json: { error: 'Unauthorized: only superuser roles may set a specific user' }.to_json, status: 401
+      unless @user.role == 'superuser' ||
+             params['userId'].to_i == @user.id || # or it is your own user
+             @user.journals_as_admin&.map(&:issn)&.include?(params['dataset']['publicationISSN']) # or you admin the target journal
+        render json: { error: 'Unauthorized: only superusers and journal administrators may set a specific user' }.to_json, status: 401
         return false
       end
-      users = StashEngine::User.where(id: params['userId'])
-      return if users.count == 1
-      render(json: { error: 'Bad Request: the userId you chose is invalid' }.to_json, status: 400)
-      false
     end
 
     def check_may_set_payment_id
