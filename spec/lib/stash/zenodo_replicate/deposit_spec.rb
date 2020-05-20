@@ -62,6 +62,21 @@ module Stash
           resp = @szd.update_metadata
           expect(resp).to eq('id' => 5738, 'links' => [])
         end
+
+        it 'makes a request to update the metadata with options not to set doi (use_zenodo_doi)' do
+          stub_request(:put, "https://sandbox.zenodo.org/api/deposit/depositions/#{@szd.deposition_id}?access_token=ThisIsAFakeToken")
+              .with(
+                  body: /.*/,
+                  headers: {
+                      'Content-Type' => 'application/json',
+                      'Host' => 'sandbox.zenodo.org'
+                  }
+              )
+              .to_return(status: 200, body: '{"id":5738,"links":[]}', headers: { 'Content-Type': 'application/json' })
+          expect(MetadataGenerator).to receive(:new).with(resource: @resource, use_zenodo_doi: true).and_call_original
+          resp = @szd.update_metadata(doi: 'http://doi.org/12577/snakk')
+          expect(resp).to eq('id' => 5738, 'links' => [])
+        end
       end
 
       describe '#get_by_deposition(deposition_id:)' do
@@ -137,6 +152,44 @@ module Stash
             .to_return(status: 200, body: '{}', headers: { 'Content-Type': 'application/json' })
           resp = @szd.publish # it got here and didn't raise an error from response or exception
           expect(resp).to eq({})
+        end
+      end
+
+      describe 'new_version' do
+        before(:each) do
+          return_hash = {
+              id: '5738',
+              links:
+                  {
+                      latest_draft: "https://sandbox.zenodo.org/my/awesome/link"
+                  }
+          }
+          stub_request(:post, 'https://sandbox.zenodo.org/api/deposit/depositions/123/actions/newversion?access_token=ThisIsAFakeToken')
+              .with(
+                  body: /.*/,
+                  headers: {
+                      'Content-Type' => 'application/json',
+                      'Host' => 'sandbox.zenodo.org'
+                  }
+              )
+              .to_return(status: 200, body: return_hash.to_json,
+                         headers: { 'Content-Type': 'application/json' })
+
+          stub_request(:get, "#{return_hash[:links][:latest_draft]}?access_token=ThisIsAFakeToken")
+              .with(
+                  body: /.*/,
+                  headers: {
+                      'Content-Type' => 'application/json',
+                      'Host' => 'sandbox.zenodo.org'
+                  }
+              )
+              .to_return(status: 200, body: '{"id":5738,"links":{"publish":"https://sandbox.zenodo.org/api/returned/publish/link?id=893"}}',
+                         headers: { 'Content-Type': 'application/json' })
+        end
+
+        it 'creates a new version from previous deposition' do
+          resp = @szd.new_version(deposition_id: 123)
+          expect(resp['id']).to eq(5738)
         end
       end
     end
