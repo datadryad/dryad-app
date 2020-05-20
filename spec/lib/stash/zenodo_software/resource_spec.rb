@@ -2,6 +2,7 @@
 # from the manual setup that doesn't really load rails right in the engines
 require 'stash/zenodo_software'
 require 'byebug'
+require 'fileutils'
 
 require 'rails_helper'
 
@@ -20,6 +21,15 @@ module Stash
         @resource = create(:resource)
         @zc = create(:zenodo_copy, resource: @resource, identifier: @resource.identifier, copy_type: 'software')
         @zsr = Stash::ZenodoSoftware::Resource.new(resource: @resource)
+        @file = create(:software_upload, resource_id: @resource.id)
+        my_path = @file.calc_file_path[0..-(File.basename(@file.calc_file_path).length+1)]
+        FileUtils.mkdir_p(my_path)
+        FileUtils.touch(@file.calc_file_path)
+      end
+
+      after(:each) do
+        my_path = @file.calc_file_path[0..-(File.basename(@file.calc_file_path).length+1)]
+        FileUtils.rm_rf(my_path)
       end
 
       describe '#add_to_zenodo' do
