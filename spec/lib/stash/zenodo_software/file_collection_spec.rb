@@ -39,6 +39,12 @@ module Stash
         expect { fc.ensure_local_files }.not_to raise_exception
         expect(Dir["#{@resource.software_upload_dir}/*"].length).to eq(2)
       end
+
+      it 'removes files and directory for cleanup_files' do
+        fc = Stash::ZenodoSoftware::FileCollection.new(resource: @resource)
+        fc.cleanup_files
+        expect(Dir.exist?(@resource.software_upload_dir)).to eq(false)
+      end
     end
   end
 end
