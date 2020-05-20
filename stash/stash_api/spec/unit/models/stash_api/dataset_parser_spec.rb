@@ -4,11 +4,6 @@ require 'byebug'
 module StashApi
   RSpec.describe DatasetParser do
     before(:each) do
-      # app = double(Rails::Application)
-      # allow(app).to receive(:stash_mount).and_return('/api/v2')
-      # TODO: We need to figure out how to load the other engines without errors (spec_helper probably)
-      # allow(StashEngine).to receive(:app).and_return(app)
-
       @tenants = StashEngine.tenants
       StashEngine.tenants = begin
         tenants = HashWithIndifferentAccess.new
@@ -73,12 +68,11 @@ module StashApi
       allow(repo).to receive(:mint_id).and_return('doi:12345/67890')
       allow(StashEngine).to receive(:repository).and_return(repo)
 
+      allow(Stash::Organization::Ror).to receive(:find_by_ror_id).and_return(nil)
+      allow(Stash::Organization::Ror).to receive(:find_first_by_ror_name).and_return(nil)
+      
       dp = DatasetParser.new(hash: @basic_metadata, id: nil, user: @user)
       @stash_identifier = dp.parse
-
-      allow_any_instance_of(Stash::Organization::Ror).to receive(:find_first_by_ror_name).and_return(
-        id: 'https://ror.org/abc123', name: 'Test Ror Organization'
-      )
     end
 
     describe :parses_basics do
@@ -145,6 +139,8 @@ module StashApi
       end
 
       it 'creates the author with a ROR id, matching to an existing affiliation in the ROR system' do
+        allow(Stash::Organization::Ror).to receive(:find_by_ror_id).and_return({ id: 'https://ror.org/abc123',
+                                                                                 name: 'Test Ror Organization' }.to_ostruct)
         @basic_metadata = {
           'authors' => [
             {
@@ -180,8 +176,11 @@ module StashApi
 
         expect(author.affiliation.id).to eq(target_affil.id)
       end
-      
+
       it 'creates the author with an affiliation whose name matches an existing entry in the ROR system' do
+        allow(Stash::Organization::Ror).to receive(:find_first_by_ror_name).and_return({ id: 'https://ror.org/abc123',
+                                                                                         name: 'Test Ror Organization' }.to_ostruct)
+              
         @basic_metadata = {
           'authors' => [
             {

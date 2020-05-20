@@ -43,36 +43,45 @@ module StashDatacite
       APP_CONFIG.fee_waiver_countries || []
     end
 
-    # Get an affiliation by long_name. We prefer to reuse an existing affiliation
-    # from our DB. If one isn't present, just create a new affiliation with an
-    # asterisk on the name, so we know it has not been validated with ROR.
-    def self.from_long_name(long_name)
+    # Get an affiliation by long_name.
+    # Our first preference is to reuse an existing affiliation from our DB.
+    # Otherwise, if check_ror is true, search for a name match in ROR.
+    # As a last resort, create a new affiliation with an asterisk on the name, so we know it has not been validated.
+    def self.from_long_name(long_name:, check_ror: false)
       return nil if long_name.blank?
 
       db_affils = Affiliation.where('LOWER(long_name) = LOWER(?)', long_name) +
                   Affiliation.where('LOWER(long_name) = LOWER(?)', "#{long_name}*")
       return db_affils.first if db_affils.any?
 
+      if check_ror
+        ror_affil = find_by_ror_long_name(long_name: long_name)
+        puts "XXX ror_affil.present? #{ror_affil.present? }"
+        return ror_affil if ror_affil.present?
+      end
+
       Affiliation.new(long_name: "#{long_name}*")
     end
 
     # Get an affiliation by ror_id. We prefer to reuse an existing affiliation
     # from our DB. If one isn't present, just create a new affiliation.
-    def self.from_ror_id(ror_id)
+    def self.from_ror_id(ror_id:)
       return nil if ror_id.blank?
-
       db_affils = Affiliation.where('LOWER(ror_id) = LOWER(?)', ror_id)
       return db_affils.first if db_affils.any?
-
       ror_org = Stash::Organization::Ror.find_by_ror_id(ror_id)
       Affiliation.new(long_name: ror_org&.name, ror_id: ror_id)
     rescue Stash::Organization::RorError
       nil
     end
 
-    def self.find_by_ror_long_name(long_name)
+    def self.find_by_ror_long_name(long_name:)
       # Do a Stash::Organization::Ror lookup for the long_name
-      Stash::Organization::Ror.find_first_by_ror_name(long_name)
+      puts "XXXX affiliation find_by_ror_long_name #{long_name}"
+      ror_org = Stash::Organization::Ror.find_first_by_ror_name(long_name)
+      puts "XXX ro #{ror_org}"
+      puts "XXX ro.present? #{ror_org.present?}"
+      Affiliation.new(long_name: ror_org.name, ror_id: ror_org.id) if ror_org.present?
     rescue Stash::Organization::RorError
       []
     end
