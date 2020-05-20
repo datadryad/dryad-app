@@ -35,7 +35,7 @@ module Stash
         zenodo_sfw.update(state: 'replicating')
         zenodo_sfw.increment!(:retries)
 
-        @deposit = Deposit.new(resource: @resource)
+        @deposit = Stash::ZenodoReplicate::Deposit.new(resource: @resource)
 
         if zenodo_sfw.copy_type == 'software_publish'
           # hit publish if that is the action.
@@ -74,7 +74,7 @@ module Stash
 
         # zenodo_sfw.update(state: 'finished')
         # @file_collection.cleanup_files # only cleanup files after success and finished
-        # r = HTTP.get('http://example.org/')
+        # r = HTTP.get('http://example.org/') # this is temporary in order to get tests to pass
       rescue Stash::MerrittDownload::DownloadError, Stash::ZenodoReplicate::ZenodoError, HTTP::Error => ex
         record = @resource.zenodo_copies.software.last
         if record.nil?
@@ -123,7 +123,7 @@ module Stash
       end
 
       def previous_submission
-        @prev_submission ||= StashEngine::ZenodoCopies.where(identifier_id: @resource.identifier_id)
+        @prev_submission ||= StashEngine::ZenodoCopy.where(identifier_id: @resource.identifier_id)
           .where('resource_id <> ? ', @resource.id).software.order(resource_id: :desc).last
       end
 
