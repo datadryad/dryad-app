@@ -122,6 +122,14 @@ module Stash
           expect(@zc2.state).to eq('error')
           expect(@zc2.error_info).to include('Only one replication of the same type')
         end
+
+        it 'returns early with info if trying to replicate something with no software' do
+          @file.destroy
+          @zsr.add_to_zenodo
+          @zc.reload
+          expect(@zc.state).to eq('finished')
+          expect(@zc.error_info).to start_with('No software to submit')
+        end
       end
     end
   end
