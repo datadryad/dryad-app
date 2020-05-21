@@ -132,10 +132,11 @@ module StashApi
 
       # If the affiliation was provided, prefer the ROR id over a textual name.
       if json_author[:affiliationROR].present?
-        puts "XXX afror #{json_author[:affiliationROR]}"
         a.affiliation = StashDatacite::Affiliation.from_ror_id(ror_id: json_author[:affiliationROR])
+      elsif json_author[:affiliationISNI].present?
+        afis = StashDatacite::Affiliation.from_isni_id(isni_id: json_author[:affiliationISNI])
+        a.affiliation = afis
       elsif json_author[:affiliation].present?
-        puts "XXX affil #{json_author[:affiliation]}"
         a.affiliation = StashDatacite::Affiliation.from_long_name(long_name: json_author[:affiliation], check_ror: true)
       end
 

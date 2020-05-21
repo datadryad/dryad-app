@@ -56,7 +56,6 @@ module StashDatacite
 
       if check_ror
         ror_affil = find_by_ror_long_name(long_name: long_name)
-        puts "XXX ror_affil.present? #{ror_affil.present? }"
         return ror_affil if ror_affil.present?
       end
 
@@ -75,12 +74,17 @@ module StashDatacite
       nil
     end
 
+    def self.from_isni_id(isni_id:)
+      puts "called affiliation.from_isni_id with |#{isni_id}|"
+      return nil if isni_id.blank?
+      ror_org = Stash::Organization::Ror.find_by_isni_id(isni_id)
+      return nil if ror_org.blank?
+      from_ror_id(ror_id: ror_org.id)
+    end
+
     def self.find_by_ror_long_name(long_name:)
       # Do a Stash::Organization::Ror lookup for the long_name
-      puts "XXXX affiliation find_by_ror_long_name #{long_name}"
       ror_org = Stash::Organization::Ror.find_first_by_ror_name(long_name)
-      puts "XXX ro #{ror_org}"
-      puts "XXX ro.present? #{ror_org.present?}"
       Affiliation.new(long_name: ror_org.name, ror_id: ror_org.id) if ror_org.present?
     rescue Stash::Organization::RorError
       []

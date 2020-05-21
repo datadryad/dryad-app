@@ -102,8 +102,8 @@ module StashDatacite
         expect(StashDatacite::Affiliation.from_long_name(long_name: 'test affiliation')).to eql(affil)
       end
 
-      it 'does a ROR lookup if the caller requests' do        
-        expect(StashDatacite::Affiliation).to receive(:find_by_ror_long_name).with({:long_name=>"test affiliation"})
+      it 'does a ROR lookup if the caller requests' do
+        expect(StashDatacite::Affiliation).to receive(:find_by_ror_long_name).with(long_name: 'test affiliation')
         test_affil = StashDatacite::Affiliation.from_long_name(long_name: 'test affiliation', check_ror: true)
         expect(test_affil.long_name).to eql('test affiliation*')
       end
