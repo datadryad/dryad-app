@@ -56,7 +56,7 @@ module Stash
             zenodo_sfw.update(deposition_id: resp[:id], software_doi: resp[:doi_url])
           else
             # this version should be open already, so just retrieve it and update database
-            @deposit.get_by_deposition(deposition_id: previous_submission.deposition_id)
+            resp = @deposit.get_by_deposition(deposition_id: previous_submission.deposition_id)
             zenodo_sfw.update(deposition_id: previous_submission.deposition_id, software_doi: previous_submission.software_doi)
           end
         else
@@ -68,14 +68,12 @@ module Stash
         # update metadata
         @deposit.update_metadata(doi: zenodo_sfw.software_doi)
 
-        # update files
-        # file_replicator = Files.new(resource: @resource, file_collection: @file_collection)
-        # file_replicator.replicate
+        # synchronize files
+        @file_collection.synchronize_to_zenodo(bucket_url: resp[:links][:bucket])
 
-        # zenodo_sfw.update(state: 'finished')
-        # @file_collection.cleanup_files # only cleanup files after success and finished
-        # r = HTTP.get('http://example.org/') # this is temporary in order to get tests to pass
-      rescue Stash::MerrittDownload::DownloadError, Stash::ZenodoReplicate::ZenodoError, HTTP::Error => ex
+        zenodo_sfw.update(state: 'finished')
+        @file_collection.cleanup_files # only cleanup files after success and finished, keep on fs so we have them otherwise
+      rescue Stash::ZenodoReplicate::ZenodoError, HTTP::Error => ex
         record = @resource.zenodo_copies.software.last
         if record.nil?
           record = StashEngine::ZenodoCopy.create(resource_id: @resource.id, identifier_id: @resource.identifier.id, copy_type: 'software')

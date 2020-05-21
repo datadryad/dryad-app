@@ -1,4 +1,5 @@
 require 'stash/zenodo_replicate/zenodo_connection'
+require 'stash/zenodo_replicate/metadata_generator'
 
 module Stash
   module ZenodoReplicate
@@ -28,7 +29,7 @@ module Stash
       # Need to have gotten or created the deposition for this to work
       # If passing in a DOI then the metadata generator doesn't use the one from the main dataset, but the one you say instead
       def update_metadata(doi: nil)
-        mg = MetadataGenerator.new(resource: @resource, use_zenodo_doi: !doi.nil?)
+        mg = Stash::ZenodoReplicate::MetadataGenerator.new(resource: @resource, use_zenodo_doi: !doi.nil?)
         my_metadata = mg.metadata
         my_metadata[:doi] = doi unless doi.nil?
         ZC.standard_request(:put, "#{ZC.base_url}/api/deposit/depositions/#{@deposition_id}", json: { metadata: my_metadata })
