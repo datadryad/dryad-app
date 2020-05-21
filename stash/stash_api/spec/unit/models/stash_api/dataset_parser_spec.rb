@@ -70,7 +70,7 @@ module StashApi
 
       allow(Stash::Organization::Ror).to receive(:find_by_ror_id).and_return(nil)
       allow(Stash::Organization::Ror).to receive(:find_first_by_ror_name).and_return(nil)
-      
+
       dp = DatasetParser.new(hash: @basic_metadata, id: nil, user: @user)
       @stash_identifier = dp.parse
     end
@@ -158,6 +158,28 @@ module StashApi
         expect(author.affiliation.long_name).to eq('Test Ror Organization')
       end
 
+      it 'creates the author with an ISNI id, matching to an existing affiliation in the ROR system' do
+        allow(Stash::Organization::Ror).to receive(:find_by_isni_id).and_return({ id: 'https://ror.org/abc1234',
+                                                                                  name: 'Test Ror ISNI Organization' }.to_ostruct)
+        allow(Stash::Organization::Ror).to receive(:find_by_ror_id).and_return({ id: 'https://ror.org/abc1234',
+                                                                                 name: 'Test Ror ISNI Organization' }.to_ostruct)
+        @basic_metadata = {
+          'authors' => [
+            {
+              'firstName' => 'Wanda',
+              'lastName' => 'Jackson',
+              'affiliationISNI' => '0000 0001 1957 5136',
+              'affiliation' => 'abcaaaaa'
+            }
+          ]
+        }.with_indifferent_access
+        dp = DatasetParser.new(hash: @basic_metadata, id: nil, user: @user)
+        @stash_identifier = dp.parse
+        resource = @stash_identifier.resources.first
+        author = resource.authors.first
+        expect(author.affiliation.long_name).to eq('Test Ror ISNI Organization')
+      end
+
       it 'creates the author with an affiliation whose name matches an existing affiliation in the database' do
         target_affil = StashDatacite::Affiliation.create(long_name: 'Some Great Institution', ror_id: 'https://ror.org/sgi123')
         @basic_metadata = {
@@ -180,7 +202,7 @@ module StashApi
       it 'creates the author with an affiliation whose name matches an existing entry in the ROR system' do
         allow(Stash::Organization::Ror).to receive(:find_first_by_ror_name).and_return({ id: 'https://ror.org/abc123',
                                                                                          name: 'Test Ror Organization' }.to_ostruct)
-              
+
         @basic_metadata = {
           'authors' => [
             {
