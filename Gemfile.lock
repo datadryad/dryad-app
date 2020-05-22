@@ -554,7 +554,7 @@ GEM
     passenger (6.0.4)
       rack
       rake (>= 0.8.1)
-    posix-spawn (0.3.13)
+    posix-spawn (0.3.14)
     postrank-uri (1.0.24)
       addressable (>= 2.4.0)
       nokogiri (>= 1.8.0)
