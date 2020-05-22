@@ -15,7 +15,7 @@ module Stash
       def metadata
         out_hash = {}.with_indifferent_access
         %i[doi upload_type publication_date title creators description access_right license
-           keywords notes related_identifiers method locations].each do |meth|
+           keywords notes related_identifiers method locations communities].each do |meth|
           next if meth == 'doi' && @use_zenodo_doi
           result = send(meth)
           out_hash[meth] = result unless result.blank?
@@ -98,6 +98,10 @@ module Stash
         @resource.geolocations.map do |geo|
           location(geo)
         end.compact
+      end
+
+      def communities
+        [{ identifier: APP_CONFIG.zenodo.community_id }]
       end
 
       def location(geolocation)
