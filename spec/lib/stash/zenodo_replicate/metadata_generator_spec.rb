@@ -96,6 +96,10 @@ module Stash
         expect(@mg.notes.scan(/Award Number/).count).to eq(1)
       end
 
+      it 'sets an item to the community' do
+        expect(@mg.communities).to eq([{ identifier: APP_CONFIG.zenodo.community_id }])
+      end
+
       it 'has method output' do
         expect(@mg.method).to eq(@resource.descriptions.where(description_type: 'methods').first.description)
       end
