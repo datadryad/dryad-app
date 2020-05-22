@@ -87,11 +87,7 @@ module Stash
         end
 
         related ||= []
-
-        # if DOi is different
-        related.push(
-          relation: 'isIdenticalTo', identifier: "https://doi.org/#{@resource.identifier.identifier}"
-        )
+        related
       end
 
       def method
