@@ -98,6 +98,11 @@ module StashApi
       render json: { error: 'unauthorized' }.to_json, status: 401
     end
 
+    def require_admin
+      return if @user.role == 'superuser' || @user.role == 'admin' || @user.journals_as_admin.present?
+      render json: { error: 'unauthorized' }.to_json, status: 401
+    end
+
     # call this like return_error(messages: 'blah', status: 400) { yield }
     def return_error(messages:, status:)
       if messages.class == String

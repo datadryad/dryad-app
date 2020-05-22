@@ -4,11 +4,6 @@ require 'byebug'
 module StashApi
   RSpec.describe DatasetParser do
     before(:each) do
-      # app = double(Rails::Application)
-      # allow(app).to receive(:stash_mount).and_return('/api/v2')
-      # TODO: We need to figure out how to load the other engines without errors (spec_helper probably)
-      # allow(StashEngine).to receive(:app).and_return(app)
-
       @tenants = StashEngine.tenants
       StashEngine.tenants = begin
         tenants = HashWithIndifferentAccess.new
@@ -40,6 +35,7 @@ module StashApi
             'firstName' => 'Wanda',
             'lastName' => 'Jackson',
             'email' => 'wanda.jackson@example.com',
+            'orcid' => '0000-1111-2222-3333',
             'affiliation' => 'University of the Example'
           }
         ],
@@ -72,12 +68,11 @@ module StashApi
       allow(repo).to receive(:mint_id).and_return('doi:12345/67890')
       allow(StashEngine).to receive(:repository).and_return(repo)
 
+      allow(Stash::Organization::Ror).to receive(:find_by_ror_id).and_return(nil)
+      allow(Stash::Organization::Ror).to receive(:find_first_by_ror_name).and_return(nil)
+
       dp = DatasetParser.new(hash: @basic_metadata, id: nil, user: @user)
       @stash_identifier = dp.parse
-
-      allow_any_instance_of(Stash::Organization::Ror).to receive(:find_first_by_ror_name).and_return(
-        id: 'abcd', name: 'Test Ror Organization'
-      )
     end
 
     describe :parses_basics do
@@ -92,29 +87,27 @@ module StashApi
         expect(resource.title).to eq(@basic_metadata[:title])
       end
 
-      it 'creates the author as specified' do
+      it 'creates the basic author metadata as specified' do
         resource = @stash_identifier.resources.first
         expect(resource.authors.count).to eq(1)
         author = resource.authors.first
         expect(author.author_first_name).to eq(@basic_metadata[:authors].first['firstName'])
         expect(author.author_last_name).to eq(@basic_metadata[:authors].first['lastName'])
         expect(author.author_email).to eq(@basic_metadata[:authors].first['email'])
+        expect(author.author_orcid).to eq(@basic_metadata[:authors].first['orcid'])
+        # Since default affiliation doesn't match ROR, it should have an asterisk appended
+        expect(author.affiliation.long_name).to eq("#{@basic_metadata[:authors].first['affiliation']}*")
       end
 
       it 'allows bad (not blank, but invalid) emails' do
         @basic_metadata = {
-          'title' => 'Visualizing Congestion Control Using Self-Learning Epistemologies',
           'authors' => [
             {
               'firstName' => 'Wanda',
               'lastName' => 'Jackson',
-              'email' => 'grog-to-drink',
-              'affiliation' => 'never'
+              'email' => 'grog-to-drink'
             }
-          ],
-          'abstract' =>
-                'Cyberneticists agree that concurrent models are an interesting new topic in the field of machine learning.',
-          'userId' => @user2.id
+          ]
         }.with_indifferent_access
 
         dp = DatasetParser.new(hash: @basic_metadata, id: nil, user: @user)
@@ -124,6 +117,107 @@ module StashApi
         expect(author.author_first_name).to eq(@basic_metadata[:authors].first['firstName'])
         expect(author.author_last_name).to eq(@basic_metadata[:authors].first['lastName'])
         expect(author.author_email).to eq(@basic_metadata[:authors].first['email'])
+      end
+
+      it 'creates the author with a ROR id, matching to an existing affiliation in the database' do
+        target_affil = StashDatacite::Affiliation.create(long_name: 'Some Great Institution', ror_id: 'https://ror.org/sgi123')
+        @basic_metadata = {
+          'authors' => [
+            {
+              'firstName' => 'Wanda',
+              'lastName' => 'Jackson',
+              'affiliationROR' => 'https://ror.org/sgi123'
+            }
+          ]
+        }.with_indifferent_access
+        dp = DatasetParser.new(hash: @basic_metadata, id: nil, user: @user)
+        @stash_identifier = dp.parse
+        resource = @stash_identifier.resources.first
+        author = resource.authors.first
+
+        expect(author.affiliation.id).to eq(target_affil.id)
+      end
+
+      it 'creates the author with a ROR id, matching to an existing affiliation in the ROR system' do
+        allow(Stash::Organization::Ror).to receive(:find_by_ror_id).and_return({ id: 'https://ror.org/abc123',
+                                                                                 name: 'Test Ror Organization' }.to_ostruct)
+        @basic_metadata = {
+          'authors' => [
+            {
+              'firstName' => 'Wanda',
+              'lastName' => 'Jackson',
+              'affiliationROR' => 'https://ror.org/abc123'
+            }
+          ]
+        }.with_indifferent_access
+        dp = DatasetParser.new(hash: @basic_metadata, id: nil, user: @user)
+        @stash_identifier = dp.parse
+        resource = @stash_identifier.resources.first
+        author = resource.authors.first
+
+        expect(author.affiliation.long_name).to eq('Test Ror Organization')
+      end
+
+      it 'creates the author with an ISNI id, matching to an existing affiliation in the ROR system' do
+        allow(Stash::Organization::Ror).to receive(:find_by_isni_id).and_return({ id: 'https://ror.org/abc1234',
+                                                                                  name: 'Test Ror ISNI Organization' }.to_ostruct)
+        allow(Stash::Organization::Ror).to receive(:find_by_ror_id).and_return({ id: 'https://ror.org/abc1234',
+                                                                                 name: 'Test Ror ISNI Organization' }.to_ostruct)
+        @basic_metadata = {
+          'authors' => [
+            {
+              'firstName' => 'Wanda',
+              'lastName' => 'Jackson',
+              'affiliationISNI' => '0000 0001 1957 5136',
+              'affiliation' => 'abcaaaaa'
+            }
+          ]
+        }.with_indifferent_access
+        dp = DatasetParser.new(hash: @basic_metadata, id: nil, user: @user)
+        @stash_identifier = dp.parse
+        resource = @stash_identifier.resources.first
+        author = resource.authors.first
+        expect(author.affiliation.long_name).to eq('Test Ror ISNI Organization')
+      end
+
+      it 'creates the author with an affiliation whose name matches an existing affiliation in the database' do
+        target_affil = StashDatacite::Affiliation.create(long_name: 'Some Great Institution', ror_id: 'https://ror.org/sgi123')
+        @basic_metadata = {
+          'authors' => [
+            {
+              'firstName' => 'Wanda',
+              'lastName' => 'Jackson',
+              'affiliation' => 'Some Great Institution'
+            }
+          ]
+        }.with_indifferent_access
+        dp = DatasetParser.new(hash: @basic_metadata, id: nil, user: @user)
+        @stash_identifier = dp.parse
+        resource = @stash_identifier.resources.first
+        author = resource.authors.first
+
+        expect(author.affiliation.id).to eq(target_affil.id)
+      end
+
+      it 'creates the author with an affiliation whose name matches an existing entry in the ROR system' do
+        allow(Stash::Organization::Ror).to receive(:find_first_by_ror_name).and_return({ id: 'https://ror.org/abc123',
+                                                                                         name: 'Test Ror Organization' }.to_ostruct)
+
+        @basic_metadata = {
+          'authors' => [
+            {
+              'firstName' => 'Wanda',
+              'lastName' => 'Jackson',
+              'affiliation' => 'Test Ror Organization'
+            }
+          ]
+        }.with_indifferent_access
+        dp = DatasetParser.new(hash: @basic_metadata, id: nil, user: @user)
+        @stash_identifier = dp.parse
+        resource = @stash_identifier.resources.first
+        author = resource.authors.first
+
+        expect(author.affiliation.ror_id).to eq('https://ror.org/abc123')
       end
 
       it 'creates the abstract' do

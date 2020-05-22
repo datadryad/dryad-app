@@ -60,8 +60,8 @@ module Stash
             .to_return(status: 200, body: @one_response, headers: { 'content-type' => 'application/json' })
 
           response = Stash::Organization::Ror.find_first_by_ror_name('gro')
-          expect(response[:id]).to eq('https://ror.org/01jjrt576')
-          expect(response[:name]).to eq('Sun Gro Horticulture (Canada)')
+          expect(response.id).to eq('https://ror.org/01jjrt576')
+          expect(response.name).to eq('Sun Gro Horticulture (Canada)')
         end
 
         it 'should handle ror puking' do

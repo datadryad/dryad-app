@@ -130,7 +130,7 @@ module StashEngine
       my_info = JSON.parse(resp.body)
       orgs = my_info['employment-summary'].map { |item| (item['organization'].blank? ? nil : item['organization']) }.compact
       orgs = orgs.map do |org|
-        affil = StashDatacite::Affiliation.from_long_name(org['name'])
+        affil = StashDatacite::Affiliation.from_long_name(long_name: org['name'])
         affil.save if affil.present?
         affil
       end
