@@ -96,11 +96,6 @@ module Stash
         expect(@mg.notes.scan(/Award Number/).count).to eq(1)
       end
 
-      it 'has related_identifiers output for itself' do
-        expect(@mg.related_identifiers).to eq([{ relation: 'isIdenticalTo',
-                                                 identifier: "https://doi.org/#{@resource.identifier.identifier}" }])
-      end
-
       it 'has method output' do
         expect(@mg.method).to eq(@resource.descriptions.where(description_type: 'methods').first.description)
       end
