@@ -31,9 +31,15 @@ module StashEngine
       end
 
       def extract_last_log_date(log)
-        contents = File.open(log).to_a
+        contents = read_end_of_file(log)
         last_run_date = Time.parse(contents.last.match(DATE_TIME_MATCHER).to_s) unless contents.empty?
         last_run_date
+      end
+
+      def read_end_of_file(log)
+        f = File.new(log)
+        f.seek(-512, IO::SEEK_END) # to 512 bytes before end of file
+        f.read.strip.split("\n") # this reads just end of file, strips whitespace and converts to array of lines
       end
 
     end
