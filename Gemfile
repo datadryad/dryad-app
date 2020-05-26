@@ -67,8 +67,6 @@ group :development, :local_dev do
 end
 
 group :test do
-  # passenger doesn't work with tests with capybara, but puma does. and I believe is a better alternative than webrick and is a bit faster
-  gem 'puma'
   # Capybara aims to simplify the process of integration testing Rack applications, such as Rails, Sinatra or Merb (https://github.com/teamcapybara/capybara)
   gem 'capybara'
   # Automatically create snapshots when Cucumber steps fail with Capybara and Rails (http://github.com/mattheworiordan/capybara-screenshot)

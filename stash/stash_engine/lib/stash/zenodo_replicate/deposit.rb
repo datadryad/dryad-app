@@ -26,9 +26,12 @@ module Stash
 
       # PUT /api/deposit/depositions/123
       # Need to have gotten or created the deposition for this to work
-      def update_metadata
-        mg = MetadataGenerator.new(resource: @resource)
-        ZC.standard_request(:put, "#{ZC.base_url}/api/deposit/depositions/#{@deposition_id}", json: { metadata: mg.metadata })
+      # If passing in a DOI then the metadata generator doesn't use the one from the main dataset, but the one you say instead
+      def update_metadata(doi: nil)
+        mg = MetadataGenerator.new(resource: @resource, use_zenodo_doi: !doi.nil?)
+        my_metadata = mg.metadata
+        my_metadata[:doi] = doi unless doi.nil?
+        ZC.standard_request(:put, "#{ZC.base_url}/api/deposit/depositions/#{@deposition_id}", json: { metadata: my_metadata })
       end
 
       # GET /api/deposit/depositions/123
@@ -39,6 +42,18 @@ module Stash
         @links = resp[:links]
 
         resp
+      end
+
+      def new_version(deposition_id:)
+        # a two-step process according to the notes -- newversion and then get the latest draft link out and get that item for editing
+        resp = ZC.standard_request(:post, "#{ZC.base_url}/api/deposit/depositions/#{deposition_id}/actions/newversion")
+
+        resp2 = ZC.standard_request(:get, resp[:links][:latest_draft])
+
+        @deposition_id = resp2[:id]
+        @links = resp2[:links]
+
+        resp2
       end
 
       def reopen_for_editing
