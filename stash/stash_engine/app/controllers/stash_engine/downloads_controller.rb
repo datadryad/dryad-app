@@ -1,6 +1,6 @@
 require_dependency 'stash_engine/application_controller'
 require 'stash/download/file_presigned'
-require 'stash/download/version'
+require 'stash/download/version_presigned'
 
 # rubocop:disable Metrics/ClassLength
 module StashEngine
@@ -39,7 +39,6 @@ module StashEngine
 
     # set up the Merritt file & version objects so they have access to the controller context before continuing
     def setup_streaming
-      @version_streamer = Stash::Download::Version.new(controller_context: self)
       @file_presigned = Stash::Download::FilePresigned.new(controller_context: self)
     end
 
@@ -47,18 +46,16 @@ module StashEngine
     def download_resource
       @resource = Resource.find(params[:resource_id])
       if @resource.may_download?(ui_user: current_user)
-        @version_streamer.download(resource: @resource) do
-          redirect_to landing_show_path(id: @resource.identifier_str, big: 'showme') # if it's an async
+        @version_presigned = Stash::Download::VersionPresigned.new(resource: @resource)
+        unless version_presigned.valid_resource?
+          cc.render status: 404, text: 'Not found'
+          return
         end
+        @version_presigned.assemble
+        @version_presigned.status(token: @version_presigned.token)
       else
         unavailable_for_download
       end
-    rescue Stash::Download::MerrittResponseError => e
-      # if it's a recent submission, suggest they try again later; otherwise fail
-      raise e unless @resource.updated_at > Time.new.utc - 2.hours
-      Stash::Download::Base.log_warning_if_needed(error: e, resource: @resource)
-      # recently updated, so display a "hold your horses" message
-      flash_download_unavailable
     end
 
     # handles a large dataset that may only be downloaded asynchronously from Merritt because of size limits for immediate downloads
