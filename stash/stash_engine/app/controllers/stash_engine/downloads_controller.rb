@@ -47,12 +47,19 @@ module StashEngine
       @resource = Resource.find(params[:resource_id])
       if @resource.may_download?(ui_user: current_user)
         @version_presigned = Stash::Download::VersionPresigned.new(resource: @resource)
-        unless version_presigned.valid_resource?
-          cc.render status: 404, text: 'Not found'
+        unless @version_presigned.valid_resource?
+          render status: 404, text: 'Not found'
           return
         end
-        @version_presigned.assemble
-        @version_presigned.status(token: @version_presigned.token)
+        status_hash = @version_presigned.download
+        if status_hash[:status] == 200
+          redirect_to status_hash[:url]
+        elsif status_hash[:status] == 202
+          # do something with progressbar
+          render status: 200, text: 'This would show progress'
+        else
+          render status: 404, text: 'Not found'
+        end
       else
         unavailable_for_download
       end
