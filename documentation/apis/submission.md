@@ -72,9 +72,29 @@ You should see a 200 response and some information something like:
 
 ## Create metadata for the dataset
 
-Create the appropriate metadata. See the
-[dataset metadata](dataset_metadata.md) page for a complete
+## Create metadata for the dataset
+
+Create the appropriate metadata. A sample of the bare minimum metadata
+is shown below, but typical metadata should be more complete:
+
+```
+  {
+    "title": "Visualizing Congestion Control Using Self-Learning Epistemologies",
+    "authors": [
+      {
+        "firstName": "Wanda",
+        "lastName": "Jackson",
+        "email": "wanda.jackson@example.com",
+        "affiliation": "University of the Example"
+      }
+   	 ],
+    "abstract": "Cyberneticists agree that concurrent models are an interesting new topic, and security experts concur."
+  }
+```
+
+See the [dataset metadata](dataset_metadata.md) page for a complete
 description of the available fields.
+
 
 ## Create a new in-progress dataset
 
