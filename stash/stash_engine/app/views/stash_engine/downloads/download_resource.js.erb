@@ -1,0 +1,9 @@
+<% if @status_hash[:status] == 200 %>
+  window.location.href = "<%= raw(@status_hash[:url]) %>";
+<% elsif @status_hash[:status] == 202
+  msg = "The version of the dataset is being assembled. Check back in around #{time_ago_in_words(@resource.download_token.available + 30.seconds)}"
+%>
+  alert("<%= msg %>");
+<% else %>
+  alert('not found');
+<% end %>

@@ -50,14 +50,14 @@ module Stash
       end
 
       def poll_and_download
-        puts "\n\nPOLLING FOR DOWNLOAD\n\n"
         status_hash = {}
+        # poll a couple of times to see if gets ready quickly and if not, return the last status
         1.upto(2) do
-          sleep 7
+          sleep 4
           status_hash = status
           break if status_hash[:status] == 200
         end
-        status_hash
+        status_hash # finally, return status hash whether download is ready or not
       end
 
       # resp.status.success?  # resp.status == 200

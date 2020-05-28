@@ -5,6 +5,7 @@ require 'stash/download/version_presigned'
 # rubocop:disable Metrics/ClassLength
 module StashEngine
   class DownloadsController < ApplicationController
+    include ActionView::Helpers::DateHelper
 
     CONCURRENT_DOWNLOAD_LIMIT = 2
 
@@ -45,24 +46,36 @@ module StashEngine
     # for downloading the full version
     def download_resource
       @resource = Resource.find(params[:resource_id])
-      if @resource.may_download?(ui_user: current_user)
-        @version_presigned = Stash::Download::VersionPresigned.new(resource: @resource)
-        unless @version_presigned.valid_resource?
-          render status: 404, text: 'Not found'
-          return
-        end
-        status_hash = @version_presigned.download
-        if status_hash[:status] == 200
-          redirect_to status_hash[:url]
-        elsif status_hash[:status] == 202
-          # do something with progressbar
-          render status: 200, text: 'This would show progress'
-        else
-          render status: 404, text: 'Not found'
-        end
-      else
+
+      unless @resource.may_download?(ui_user: current_user)
         unavailable_for_download
+        return
       end
+
+      @version_presigned = Stash::Download::VersionPresigned.new(resource: @resource)
+      unless @version_presigned.valid_resource?
+        render status: 404, text: 'Not found, invalid resource'
+        return
+      end
+
+      respond_to do |format|
+        format.html do
+          @status_hash = @version_presigned.download
+          if @status_hash[:status] == 200
+            redirect_to status_hash[:url]
+          elsif @status_hash[:status] == 202
+            render status: 202, text: "The version of the dataset is being assembled. " \
+              "Check back in around #{time_ago_in_words(@resource.download_token.available + 30.seconds)} and it should be ready to download."
+          else
+            render status: 404, text: 'Not found'
+          end
+        end
+        format.js do
+          @status_hash = @version_presigned.download
+        end
+      end
+
+
     end
 
     # handles a large dataset that may only be downloaded asynchronously from Merritt because of size limits for immediate downloads
