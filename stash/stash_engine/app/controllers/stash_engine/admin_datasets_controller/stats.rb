@@ -3,7 +3,7 @@ module StashEngine
   class AdminDatasetsController
     class Stats
 
-      START_OF_AD_TIME = Time.new(0000, 1, 1).utc
+      START_OF_AD_TIME = Time.new(0, 1, 1).utc
 
       # leave tenant_id blank if you want stats for all
       def initialize(tenant_id: nil, since: START_OF_AD_TIME)
