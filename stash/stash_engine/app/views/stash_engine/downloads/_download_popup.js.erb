@@ -1,0 +1,75 @@
+<% title = 'Preparing Download' %>
+
+$('#popup_dialog').html("<%= escape_javascript(render partial: 'download_popup_initial') %>");
+
+// now open a jquery ui modal dialog
+$(function() {
+    $("#popup_dialog").dialog({
+        autoOpen: true,
+        height: 'auto',
+        width: '500px',
+        modal: true,
+        title: '<%= escape_javascript(title) %>'
+    });
+
+    // Set up progressbar and at 0%
+    console.log("Creating progressbar at 0%")
+    $( "#progressbar" ).progressbar({
+        value: 0
+    });
+
+    var totalSeconds = <%= @resource.download_token.availability_delay_seconds %> + 15;
+    var startedAt = new Date();
+
+    var pollInterval = Math.ceil((totalSeconds * 2) / 20); // number of counts that would be 5% of progressbar
+    if(pollInterval < 10) pollInterval = 10;
+
+    var count = 0;
+    var myInterval = setInterval(function() {
+        updateBar(elapsedSeconds(startedAt), totalSeconds);
+        count++;
+        if(count % pollInterval == 0){
+            console.log("Polling at " + count);
+            // call AJAX here
+            $.ajax({
+                type: "GET",
+                dataType: "json",
+                cache: false,
+                url: "<%= download_assembly_status(id: @resource.id) %>",
+                async: true,
+                success: function(data) {
+                    console.log("Polling Data: " + data);
+                },
+                error: function(err) {
+                    console.log('Polling Error occurred: ' + err);
+                },
+                complete: function() {
+                    // hi
+                }
+            });
+        }
+    }, 500);
+
+    // make the cancel button in the dialog hide the dialog and stop the polling
+    $("#cancel_dialog").click(function (e) {
+        e.preventDefault();
+        $('#popup_dialog').dialog('close');
+        clearInterval(myInterval);
+        $('.js-download').prop('disabled', false);
+    });
+
+});
+
+
+function updateBar(elapsed, expectedLength) {
+    var percentComplete = Math.round(elapsed / expectedLength * 100);
+    if(percentComplete > 100 ){
+        percentComplete = 99;
+    }
+    $( "#progressbar" ).progressbar( "option", "value", percentComplete );
+}
+
+function elapsedSeconds(startedAt){
+    return ((new Date()).getTime() - startedAt.getTime()) / 1000;
+}
+

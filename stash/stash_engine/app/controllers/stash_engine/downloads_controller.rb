@@ -9,7 +9,8 @@ module StashEngine
 
     CONCURRENT_DOWNLOAD_LIMIT = 2
 
-    before_action :check_user_agent, :check_ip, :stop_download_hogs, :setup_streaming
+    before_action :check_user_agent, :check_ip, :setup_streaming
+    # :stop_download_hogs,
 
     def check_user_agent
       # This reads a text file with one line and a regular expression in it and blocks if the user-agent matches the regexp
@@ -74,26 +75,18 @@ module StashEngine
           @status_hash = @version_presigned.download
         end
       end
-
-
     end
 
-    # handles a large dataset that may only be downloaded asynchronously from Merritt because of size limits for immediate downloads
-    def async_request
-      @resource = Resource.find(params[:resource_id])
-      @email = params[:email]
-      session[:saved_email] = @email
-      respond_to do |format|
-        format.js do
-          if can_download? # local method that checks if user may download or if their secret matches
-            api_async_download(resource: @resource, email: @email)
-            @message = "Dryad will send an email with a download link to #{@email} when your requested dataset is ready."
-            CounterLogger.version_download_hit(request: request, resource: @resource)
-          else
-            @message = 'You do not have the permission to download the dataset.'
-          end
-        end
+    # checks assembly status for a resource and returns json from Merritt and http-ish status code
+    def assembly_status
+      @resource = Resource.where(params[:id]).first
+      if @resource.nil? || !@resource.may_download?(ui_user: current_user)
+        render json: {status: 202} # it will never be ready for them
+        return
       end
+      @version_presigned = Stash::Download::VersionPresigned.new(resource: @resource)
+      @status_hash = @version_presigned.status
+      render json: @status_hash
     end
 
     # method to download by the secret sharing link, must match the string they generated to look up and download
@@ -105,19 +98,12 @@ module StashEngine
       @resource = @shares.first.identifier&.last_submitted_resource
       if !@resource.files_published?
         @version_streamer.download(resource: @resource) do
-          redirect_to private_async_form_path(id: @resource.identifier_str, big: 'showme', secret_id: params[:id]) # for async
+          # redirect_to private_async_form_path(id: @resource.identifier_str, big: 'showme', secret_id: params[:id]) # for async
           return
         end
       else
         redirect_to_public
       end
-    end
-
-    # shows the form for private async.  Usually part of the landing page for dataset, but page may not exist for public
-    # anymore because of curation so we create a new page to host the form
-    def private_async_form
-      @share = Share.where(secret_id: params[:secret_id])&.first
-      @resource = @share.identifier&.last_submitted_resource
     end
 
     def file_stream

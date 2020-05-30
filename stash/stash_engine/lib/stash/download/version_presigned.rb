@@ -15,7 +15,7 @@ module Stash
         _ignored, @local_id = @resource.merritt_protodomain_and_local_id
         @domain = @tenant.repository.domain
 
-        @http = HTTP.timeout(connect: 30, read: 30).timeout(1.hour.to_i).follow(max_hops: 10)
+        @http = HTTP.timeout(connect: 30, read: 30).timeout(30.seconds.to_i).follow(max_hops: 3)
                     .basic_auth(user: @tenant&.repository&.username, pass: @tenant&.repository&.password)
       end
 
@@ -75,8 +75,10 @@ module Stash
           token.token = json[:token]
           token.available = Time.parse(json['anticipated-availability-time'])
           token.save
+          json
+        else
+          {status: resp.status}
         end
-        json
       end
 
       # {"status"=>202, "token"=>"ed3b8dc1-afac-4487-bfac-fb89d654e4d9", "cloud-content-byte"=>1228236, "message"=>"Object is not ready"}
@@ -92,14 +94,14 @@ module Stash
       def assemble_version_url
         URI::HTTPS.build(
             host: @domain,
-            path: File.join('/api', 'assemble-version', ERB::Util.url_encode(@local_id), @version.to_s),
+            path: ::File.join('/api', 'assemble-version', ERB::Util.url_encode(@local_id), @version.to_s),
             query: {format: 'zip', content: 'producer'}.to_query).to_s
       end
 
       def status_url
         URI::HTTPS.build(
           host: @domain,
-          path: File.join('/api', 'presign-obj-by-token', ERB::Util.url_encode(@resource.download_token.token)),
+          path: ::File.join('/api', 'presign-obj-by-token', ERB::Util.url_encode(@resource.download_token.token)),
           query: {no_redirect: true, filename: filename}.to_query).to_s
       end
 
