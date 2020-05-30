@@ -1,9 +1,8 @@
 <% if @status_hash[:status] == 200 %>
   window.location.href = "<%= raw(@status_hash[:url]) %>";
-<% elsif @status_hash[:status] == 202
-  msg = "The version of the dataset is being assembled. Check back in around #{time_ago_in_words(@resource.download_token.available + 30.seconds)}"
-%>
-  alert("<%= msg %>");
+<% elsif @status_hash[:status] == 202 %>
+  $('.js-download').prop('disabled', true);
+  <%= render partial: 'download_popup', formats: :js %>
 <% else %>
   alert('not found');
 <% end %>
