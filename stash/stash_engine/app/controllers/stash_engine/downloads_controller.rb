@@ -79,7 +79,7 @@ module StashEngine
 
     # checks assembly status for a resource and returns json from Merritt and http-ish status code
     def assembly_status
-      @resource = Resource.where(params[:id]).first
+      @resource = Resource.where(id: params[:id]).first
       if @resource.nil? || !@resource.may_download?(ui_user: current_user)
         render json: {status: 202} # it will never be ready for them
         return
