@@ -16,11 +16,16 @@ module StashEngine
 
     def edit_by_doi
       doi = params[:doi]
-      p "XXX DOI #{doi}"
+      doi.match(/doi:(.*)/) do |m|
+        doi = m[1]
+      end
       id = Identifier.where(identifier: doi).first
-      p "XXX id #{id}"
-      @resource = id.latest_resource
-      redirect_to(metadata_entry_pages_new_version_path(resource_id: @resource.id))
+      if id.blank?
+        redirect_to dashboard_path, alert: "Unable to find dataset with DOI #{doi}"
+      else
+        @resource = id.latest_resource
+        redirect_to(metadata_entry_pages_new_version_path(resource_id: @resource.id))
+      end
     end
 
     # GET/POST/PUT  /generals/find_or_create
