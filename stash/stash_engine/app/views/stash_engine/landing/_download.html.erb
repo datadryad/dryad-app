@@ -2,6 +2,6 @@
   <% resource = dataset_identifier.latest_downloadable_resource(user: current_user) %>
 
   <%= button_to "Download dataset ~ #{filesize(resource.size, 0)}", download_resource_path(resource.id), remote: true,
-                class: 'o-download__files js-download', id: "dl_res_#{resource.id}" %>
+                class: 'o-download__files js-download', id: "dl_res_#{resource.id}", data: { disable: true } %>
 
 </div>

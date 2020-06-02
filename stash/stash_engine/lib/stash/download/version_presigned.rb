@@ -40,7 +40,7 @@ module Stash
           assemble
         end
 
-        if @resource.download_token.availability_delay_seconds < 35
+        if @resource.download_token.availability_delay_seconds < 25  # Merritt pads everything to 20 seconds, even though it often doesn't take that
           poll_and_download
         else
           status
@@ -51,7 +51,7 @@ module Stash
         status_hash = {}
         # poll a couple of times to see if gets ready quickly and if not, return the last status
         1.upto(2) do
-          sleep 4
+          sleep 2.5
           status_hash = status
           break if status_hash[:status] == 200
         end
