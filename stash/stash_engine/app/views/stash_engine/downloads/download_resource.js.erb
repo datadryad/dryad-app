@@ -1,8 +1,8 @@
 <% if @status_hash[:status] == 200 %>
+  $('.js-download').prop('disabled', false);
   window.location.href = "<%= raw(@status_hash[:url]) %>";
 <% elsif @status_hash[:status] == 202 %>
-  $('.js-download').prop('disabled', true);
   <%= render partial: 'download_popup', formats: :js %>
 <% else %>
-  alert('not found');
+  $('.js-download').prop('disabled', false);
 <% end %>
