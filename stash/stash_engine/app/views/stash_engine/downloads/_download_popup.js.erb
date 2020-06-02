@@ -13,7 +13,7 @@ $(function() {
     });
 
     // Set up progressbar and at 0%
-    console.log("Creating progressbar at 0%")
+    console.log("Creating progressbar")
     $( "#progressbar" ).progressbar({
         value: 0
     });
@@ -31,9 +31,9 @@ $(function() {
 
     var count = 0;
     var myInterval = setInterval(function() {
-        updateBar(elapsedSeconds(startedAt), totalSeconds);
+        downloading.updateBar(downloading.elapsedSeconds(startedAt), totalSeconds);
         count++;
-        if((count % pollInterval == 0) && (percentComplete(elapsedSeconds(startedAt), totalSeconds) > 49)){
+        if((count % pollInterval == 0) && (downloading.percentComplete(downloading.elapsedSeconds(startedAt), totalSeconds) > 49)){
             console.log("Polling for completion at approximately " + count/2 + " seconds.");
             // call AJAX here
             $.ajax({
@@ -46,16 +46,13 @@ $(function() {
                     console.log("Polling Data: " + JSON.stringify(data));
                     if(data["status"] == 200){
                         $( "#progressbar" ).progressbar( "option", "value", 100 );
-                        $("#cancel_dialog").click(); // click cancel which closes popup and resets status
+                        $("#cancel_dialog").click(); // click cancel which closes popup
                         window.location.href = data["url"]; // navigate to URL
                     }
                 },
                 error: function(err) {
                     console.log('Polling Error occurred: ' + err);
                     $("#cancel_dialog").click(); // click cancel which closes popup and resets status
-                },
-                complete: function() {
-                    // hi
                 }
             });
         }
@@ -73,29 +70,3 @@ $(function() {
     });
 
 });
-
-function percentComplete(elapsed, expectedLength) {
-    return Math.round(elapsed / expectedLength * 100);
-}
-
-function neverComplete(elapsed, expectedLength) {
-    var comp = elapsed / expectedLength;
-    if(comp < 0.5) {
-        return Math.round(comp * 100);
-    }
-    // this formula will slow progress more and more as it approaches 1 (100%)
-    return Math.round((Math.pow(Math.E, comp - 0.3) / (Math.pow(Math.E, comp - 0.3) + 1.2)) * 100);
-}
-
-function updateBar(elapsed, expectedLength) {
-    var myPercentComplete = neverComplete(elapsed, expectedLength);
-    if(myPercentComplete > 97 ){
-        myPercentComplete = 97; // haha, never gets to 100% for wildy offbase estimates for large objects from Merritt
-    }
-    $( "#progressbar" ).progressbar( "option", "value", myPercentComplete );
-}
-
-function elapsedSeconds(startedAt){
-    return ((new Date()).getTime() - startedAt.getTime()) / 1000;
-}
-
