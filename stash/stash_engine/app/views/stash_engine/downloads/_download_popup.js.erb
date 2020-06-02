@@ -18,30 +18,41 @@ $(function() {
         value: 0
     });
 
-    var totalSeconds = <%= @resource.download_token.availability_delay_seconds %> + 15;
+    var totalSeconds = <%= @resource.download_token.availability_delay_seconds %>;
     var startedAt = new Date();
 
+    console.log('Current time: <%= Time.new %>')
+    <% @resource.download_token.reload %>
+    console.log('Available at <%= @resource.download_token.available.localtime %>');
+    console.log("Total seconds: " + totalSeconds);
+
     var pollInterval = Math.ceil((totalSeconds * 2) / 20); // number of counts that would be 5% of progressbar
-    if(pollInterval < 10) pollInterval = 10;
+    if(pollInterval < 30) pollInterval = 30; // 15 seconds
 
     var count = 0;
     var myInterval = setInterval(function() {
         updateBar(elapsedSeconds(startedAt), totalSeconds);
         count++;
-        if(count % pollInterval == 0){
-            console.log("Polling at " + count);
+        if((count % pollInterval == 0) && (percentComplete(elapsedSeconds(startedAt), totalSeconds) > 49)){
+            console.log("Polling for completion at approximately " + count/2 + " seconds.");
             // call AJAX here
             $.ajax({
                 type: "GET",
                 dataType: "json",
                 cache: false,
-                url: "<%= download_assembly_status(id: @resource.id) %>",
+                url: "<%= download_assembly_status_path(id: @resource.id) %>",
                 async: true,
                 success: function(data) {
-                    console.log("Polling Data: " + data);
+                    console.log("Polling Data: " + JSON.stringify(data));
+                    if(data["status"] == 200){
+                        $( "#progressbar" ).progressbar( "option", "value", 100 );
+                        $("#cancel_dialog").click(); // click cancel which closes popup and resets status
+                        window.location.href = data["url"]; // navigate to URL
+                    }
                 },
                 error: function(err) {
                     console.log('Polling Error occurred: ' + err);
+                    $("#cancel_dialog").click(); // click cancel which closes popup and resets status
                 },
                 complete: function() {
                     // hi
@@ -54,19 +65,34 @@ $(function() {
     $("#cancel_dialog").click(function (e) {
         e.preventDefault();
         $('#popup_dialog').dialog('close');
+    });
+
+    $('#popup_dialog').on('dialogclose', function(event) {
         clearInterval(myInterval);
         $('.js-download').prop('disabled', false);
     });
 
 });
 
+function percentComplete(elapsed, expectedLength) {
+    return Math.round(elapsed / expectedLength * 100);
+}
+
+function neverComplete(elapsed, expectedLength) {
+    var comp = elapsed / expectedLength;
+    if(comp < 0.5) {
+        return Math.round(comp * 100);
+    }
+    // this formula will slow progress more and more as it approaches 1 (100%)
+    return Math.round((Math.pow(Math.E, comp - 0.3) / (Math.pow(Math.E, comp - 0.3) + 1.2)) * 100);
+}
 
 function updateBar(elapsed, expectedLength) {
-    var percentComplete = Math.round(elapsed / expectedLength * 100);
-    if(percentComplete > 100 ){
-        percentComplete = 99;
+    var myPercentComplete = neverComplete(elapsed, expectedLength);
+    if(myPercentComplete > 97 ){
+        myPercentComplete = 97; // haha, never gets to 100% for wildy offbase estimates for large objects from Merritt
     }
-    $( "#progressbar" ).progressbar( "option", "value", percentComplete );
+    $( "#progressbar" ).progressbar( "option", "value", myPercentComplete );
 }
 
 function elapsedSeconds(startedAt){

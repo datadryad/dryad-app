@@ -40,9 +40,7 @@ module Stash
           assemble
         end
 
-        ready_time = @resource.download_token.available - Time.new
-
-        if ready_time.positive? && ready_time < 30.seconds
+        if @resource.download_token.availability_delay_seconds < 35
           poll_and_download
         else
           status
