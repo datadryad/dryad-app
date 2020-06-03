@@ -7,10 +7,7 @@ module StashEngine
   class DownloadsController < ApplicationController
     include ActionView::Helpers::DateHelper
 
-    CONCURRENT_DOWNLOAD_LIMIT = 2
-
     before_action :check_user_agent, :check_ip, :setup_streaming
-    # :stop_download_hogs,
 
     def check_user_agent
       # This reads a text file with one line and a regular expression in it and blocks if the user-agent matches the regexp
@@ -34,11 +31,6 @@ module StashEngine
       end
     end
 
-    def stop_download_hogs
-      dl_count = DownloadHistory.where(ip_address: request&.remote_ip).downloading.count
-      render 'download_limit', status: 429 if dl_count >= CONCURRENT_DOWNLOAD_LIMIT
-    end
-
     # set up the Merritt file & version objects so they have access to the controller context before continuing
     def setup_streaming
       @file_presigned = Stash::Download::FilePresigned.new(controller_context: self)
@@ -58,7 +50,7 @@ module StashEngine
 
       respond_to do |format|
         format.html do
-          html_response_for_download
+          non_ajax_response_for_download
         end
         format.js do
           @status_hash = @version_presigned.download
@@ -90,6 +82,7 @@ module StashEngine
       redirect_to_public if @resource.files_published?
     end
 
+    # uses presigned
     def file_stream
       file_upload = FileUpload.find(params[:file_id])
       if file_upload&.resource&.may_download?(ui_user: current_user)
@@ -102,7 +95,7 @@ module StashEngine
 
     private
 
-    def html_response_for_download
+    def non_ajax_response_for_download
       @status_hash = @version_presigned.download
       if @status_hash[:status] == 200
         redirect_to status_hash[:url]
@@ -156,25 +149,6 @@ module StashEngine
         'Downloads generally become available in less than 2 hours.'
       ].join(' ')
       redirect_to landing_show_path(id: @resource.identifier_str)
-    end
-
-    def api_async_download(resource:, email:)
-      url = Stash::Download::Version.merritt_friendly_async_url(resource: resource)
-
-      email_from = [APP_CONFIG['contact_email']].flatten.first
-      email_subject = "Your download for #{resource.title} is ready"
-      email_body = File.read(File.join(StashEngine::Engine.root, 'app', 'views', 'stash_engine', 'downloads', 'async_email.txt.erb'))
-
-      params = { user_agent_email: email, userFriendly: true, losFrom: email_from, losSubject: email_subject, losBody: email_body }
-
-      res = Stash::Repo::HttpClient.new(tenant: resource.tenant, cert_file: APP_CONFIG.ssl_cert_file)
-        .client.get(url, query: params, follow_redirect: true)
-      status = res.status_code
-      return if status == 200
-
-      query_string = HTTP::Message.create_query_part_str(params)
-      Stash::Download::Version.raise_merritt_error('Merritt async download request',
-                                                   "unexpected status #{status}", resource.id, "#{url}?#{query_string}")
     end
 
   end
