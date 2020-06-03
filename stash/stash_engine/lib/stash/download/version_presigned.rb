@@ -9,6 +9,7 @@ module Stash
 
       def initialize(resource:)
         @resource = resource
+        return if @resource.blank?
         @tenant = resource&.tenant
         @version = @resource&.stash_version&.merritt_version
         # local_id is encoded, so later it gets double-encoded which is required by Merritt for some crazy reason

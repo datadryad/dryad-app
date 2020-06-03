@@ -46,16 +46,17 @@ module StashEngine
 
     # for downloading the full version
     def download_resource
-      @resource = Resource.find(params[:resource_id])
+      @sharing_link = false
+      @resource = Resource.where(id: params[:resource_id]).first
 
-      unless @resource.may_download?(ui_user: current_user)
-        unavailable_for_download
-        return
+      if @resource.blank? && !params[:resource_id].blank? && !params[:resource_id].match(/^\d+$/)
+        @resource = resource_from_share
+        @sharing_link = true unless @resource.blank?
       end
 
       @version_presigned = Stash::Download::VersionPresigned.new(resource: @resource)
-      unless @version_presigned.valid_resource?
-        render status: 404, text: 'Not found, invalid resource'
+      unless @version_presigned.valid_resource? && ( @resource.may_download?(ui_user: current_user) || @sharing_link )
+        render status: 404, text: "404: Not found or invalid download\n"
         return
       end
 
@@ -77,7 +78,7 @@ module StashEngine
       end
     end
 
-    # checks assembly status for a resource and returns json from Merritt and http-ish status code
+    # checks assembly status for a resource and returns json from Merritt and http-ish status code, from progressbar polling
     def assembly_status
       @resource = Resource.where(id: params[:id]).first
       if @resource.nil? || !@resource.may_download?(ui_user: current_user)
@@ -91,17 +92,10 @@ module StashEngine
 
     # method to download by the secret sharing link, must match the string they generated to look up and download
     def share
-      return if params.blank?
-      @shares = Share.where(secret_id: params[:id])
-      raise ActionController::RoutingError, 'Not Found' if @shares.count < 1
+      @resource = resource_from_share
+      raise ActionController::RoutingError, 'Not Found' if @resource.blank?
 
-      @resource = @shares.first.identifier&.last_submitted_resource
-      if !@resource.files_published?
-        @version_streamer.download(resource: @resource) do
-          # redirect_to private_async_form_path(id: @resource.identifier_str, big: 'showme', secret_id: params[:id]) # for async
-          return
-        end
-      else
+      if @resource.files_published?
         redirect_to_public
       end
     end
@@ -117,6 +111,16 @@ module StashEngine
     end
 
     private
+
+    def resource_from_share
+      my_id = params[:id] || params[:resource_id]
+      return nil if params.blank? || my_id.blank?
+
+      @share = Share.where(secret_id: my_id).first
+      return nil if @share.blank?
+
+      @share&.identifier&.last_submitted_resource
+    end
 
     def unavailable_for_download
       flash[:alert] = 'This dataset is private and may not be downloaded.'
