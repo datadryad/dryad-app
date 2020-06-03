@@ -4,8 +4,11 @@
   <h1 class="c-datasets-heading__heading o-heading__level1"><%= @resource.title %></h1>
 </div>
 
-<p>An author has shared
-  <%= link_to 'a pre-publication download link', download_resource_path(resource_id: 0, share: params[:id]), class: 'js-download', remote: true %> with you.</p>
+<p>
+  We are assembling your
+  <%= link_to 'requested download', download_resource_path(resource_id: 0, share: params[:id]), class: 'js-download', remote: true %>
+  for this dataset that is currently private for peer review.
+</p>
 
 <p>If the download process does not begin automatically within several seconds, click the link above to start the download.</p>
 
