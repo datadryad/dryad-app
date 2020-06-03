@@ -5,7 +5,6 @@ require 'zaru'
 module Stash
   module Download
     class VersionPresigned
-      attr_accessor :token
 
       def initialize(resource:)
         @resource = resource
