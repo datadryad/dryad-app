@@ -58,15 +58,7 @@ module StashEngine
 
       respond_to do |format|
         format.html do
-          @status_hash = @version_presigned.download
-          if @status_hash[:status] == 200
-            redirect_to status_hash[:url]
-          elsif @status_hash[:status] == 202
-            render status: 202, text: 'The version of the dataset is being assembled. ' \
-              "Check back in around #{time_ago_in_words(@resource.download_token.available + 30.seconds)} and it should be ready to download."
-          else
-            render status: 404, text: 'Not found'
-          end
+          html_response_for_download
         end
         format.js do
           @status_hash = @version_presigned.download
@@ -110,6 +102,18 @@ module StashEngine
 
     private
 
+    def html_response_for_download
+      @status_hash = @version_presigned.download
+      if @status_hash[:status] == 200
+        redirect_to status_hash[:url]
+      elsif @status_hash[:status] == 202
+        render status: 202, text: 'The version of the dataset is being assembled. ' \
+              "Check back in around #{time_ago_in_words(@resource.download_token.available + 30.seconds)} and it should be ready to download."
+      else
+        render status: 404, text: 'Not found'
+      end
+    end
+
     def resource_from_share
       my_id = params[:share] || params[:id]
       return nil if my_id.blank?
@@ -123,10 +127,10 @@ module StashEngine
     def check_for_sharing
       @sharing_link = false
 
-      if @resource.blank? && params[:share]
-        @resource = resource_from_share
-        @sharing_link = true if @resource
-      end
+      return unless @resource.blank? && params[:share]
+
+      @resource = resource_from_share
+      @sharing_link = true if @resource
     end
 
     def unavailable_for_download
