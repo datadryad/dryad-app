@@ -1,10 +1,20 @@
-<h1>Enjoy your download</h1>
+<% @page_title = "Pre-publication sharing link" %>
 
-<p>An author has chosen to share a <%= link_to 'pre-publication link', download_resource_path(resource_id: params[:id]), class: 'js-download', remote: true %> with you.</p>
+<div class="c-datasets-heading">
+  <h1 class="c-datasets-heading__heading o-heading__level1"><%= @resource.title %></h1>
+</div>
 
-<p>If your download does not begin, feel free to click the link above.</p>
+<p>An author has shared
+  <%= link_to 'a pre-publication download link', download_resource_path(resource_id: 0, share: params[:id]), class: 'js-download', remote: true %> with you.</p>
 
-<p>Enjoy.</p>
+<p>If the download process does not begin automatically within a several seconds, click the link above to start the download.</p>
 
 <!-- placeholder empty div that can have contents inserted for popup and then shown -->
-<div id="popup_dialog" style="display:none;">
+<div id="popup_dialog" style="display:none;"></div>
+
+<script>
+    // This will trigger the AJAX action from the link wtih remote: true
+    $(document).ready(function(){
+        $(".js-download").trigger('click');
+    });
+</script>
