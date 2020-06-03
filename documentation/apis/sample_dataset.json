@@ -1,0 +1,80 @@
+{
+    "title" : "Data from: Testing for unequal rates of morphological diversification in the absence of a detailed phylogeny: case study from characiform fishes",
+    "abstract" : "This study develops the random phylogenies rate test (RAPRATE), a likelihood method that simulates morphological evolution along randomly generated phylogenies, and uses it to determine whether a considerable difference in morphological diversity between two sister clades of South American fishes should be taken as evidence of differing rates of morphological change or lineage turnover.",
+    "authors" : [ 
+	{
+	    "firstName" : "Brian",
+	    "lastName" : "Sidlauskas",
+	    "email" : "brian_sidlauskas@somewhere.com",
+	    "orcid" : "0000-0003-0597-4085",
+	    "affiliation" : "Oregon State University",
+	    "affiliationROR" : "https://ror.org/00ysfqy60"
+	}, 
+	{
+	    "firstName" : "Breshaun",
+	    "lastName" : "Lawrence",
+	    "email" : "blaw@somewhere.com",
+	    "affiliationISNI" : "http://isni.org/isni/0000000122995297"
+	}
+    ],
+    "relatedWorks" : [ {
+	"relationship" : "IsCitedBy",
+	"identifierType" : "DOI",
+	"identifier" : "10.1111/j.1558-5646.2007.00022.x"
+    } ],
+    "funders": [ 
+	{
+	    "organization": "Savannah River Operations Office, U.S. Department of Energy",
+	    "awardNumber": "12345" },
+	{
+	    "organization": "The Cat Chronicles",
+	    "awardNumber": "cat383"
+	}],
+    "methods": "My cat will help you to discover why you can't get the data to work.",
+    "usageNotes": "Use carefully and parse results underwater.",
+    "keywords": [
+	"Cat",
+	"Computer",
+	"Noodlecast",
+	"Intercropping"
+    ],
+    "locations": [ 
+	{
+	    "place": "Grogan's Mill, USA",
+	    "point": {
+		"latitude": "30.130379",
+		"longitude": "-95.402929"
+	    },
+	    "box": {
+		"swLongitude": "-95.527852",
+		"swLatitude": "30.049326",
+		"neLongitude": "-95.32743",
+		"neLatitude": "30.164696"
+	    }
+	},
+	{
+	    "point": {
+		"latitude": "37.0",
+		"longitude": "-122.0"
+	    }
+	},
+	{
+	    "box": {
+		"swLongitude": "-122.0",
+		"swLatitude": "37.0",
+		"neLongitude": "-121.0",
+		"neLatitude": "38.0"
+	    }
+	}
+    ],
+    "publicationISSN" : "0002-9122",                                                                                                                                       
+    "publicationName" :"Some Great Journal",                                                                                                                               
+    "manuscriptNumber" : "ABC123",
+    "identifier" : "doi:10.5061/dryad.20",
+    "userId" : "0000-0003-0597-4085",
+    "invoiceId" : "invoice-abc123",
+    "skipDataciteUpdate" : false,
+    "skipEmails" : false,
+    "loosenValidation" : false,
+    "preserveCurationStatus": false
+}
