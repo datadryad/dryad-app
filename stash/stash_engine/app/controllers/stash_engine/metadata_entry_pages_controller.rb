@@ -30,7 +30,6 @@ module StashEngine
 
     # GET/POST/PUT  /generals/find_or_create
     def find_or_create
-      Rails.logger.debug('XXX a')
       return unless @resource.submitted? # create a new version if this is a submitted version
       redirect_to(metadata_entry_pages_new_version_path(resource_id: params[:resource_id]))
     end
