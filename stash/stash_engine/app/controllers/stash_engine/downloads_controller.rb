@@ -51,7 +51,7 @@ module StashEngine
       check_for_sharing
 
       @version_presigned = Stash::Download::VersionPresigned.new(resource: @resource)
-      unless @version_presigned.valid_resource? && ( @resource.may_download?(ui_user: current_user) || @sharing_link )
+      unless @version_presigned.valid_resource? && (@resource.may_download?(ui_user: current_user) || @sharing_link)
         render status: 404, text: "404: Not found or invalid download\n"
         return
       end
@@ -62,7 +62,7 @@ module StashEngine
           if @status_hash[:status] == 200
             redirect_to status_hash[:url]
           elsif @status_hash[:status] == 202
-            render status: 202, text: "The version of the dataset is being assembled. " \
+            render status: 202, text: 'The version of the dataset is being assembled. ' \
               "Check back in around #{time_ago_in_words(@resource.download_token.available + 30.seconds)} and it should be ready to download."
           else
             render status: 404, text: 'Not found'
@@ -81,8 +81,8 @@ module StashEngine
       check_for_sharing
 
       @version_presigned = Stash::Download::VersionPresigned.new(resource: @resource)
-      unless @version_presigned.valid_resource? && ( @resource.may_download?(ui_user: current_user) || @sharing_link )
-        render json: {status: 202} # it will never be ready for them
+      unless @version_presigned.valid_resource? && (@resource.may_download?(ui_user: current_user) || @sharing_link)
+        render json: { status: 202 } # it will never be ready for them
         return
       end
 
@@ -95,9 +95,7 @@ module StashEngine
       @resource = resource_from_share
       raise ActionController::RoutingError, 'Not Found' if @resource.blank?
 
-      if @resource.files_published?
-        redirect_to_public
-      end
+      redirect_to_public if @resource.files_published?
     end
 
     def file_stream
