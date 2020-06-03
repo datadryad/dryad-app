@@ -40,7 +40,7 @@ module Stash
             ssl_context = OpenSSL::SSL::SSLContext.new
             ssl_context.verify_mode = OpenSSL::SSL::VERIFY_NONE
             http = HTTP.timeout(connect: 30, read: read_timeout).timeout(3.hours.to_i).follow(max_hops: 10)
-              .basic_auth(user: tenant.repository.username, pass: tenant.repository.password)# .ssl(ssl_context: ssl_context)
+              .basic_auth(user: tenant.repository.username, pass: tenant.repository.password) # .ssl(ssl_context: ssl_context)
             # http = http.new(ssl_context: ssl_context)
             # .persistent(URI.join(url, '/').to_s)
             merritt_response = http.get(url)

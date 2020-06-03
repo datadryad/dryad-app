@@ -17,7 +17,7 @@ module Stash
         @domain = @tenant.repository.domain
 
         @http = HTTP.timeout(connect: 30, read: 30).timeout(30.seconds.to_i).follow(max_hops: 3)
-                    .basic_auth(user: @tenant&.repository&.username, pass: @tenant&.repository&.password)
+          .basic_auth(user: @tenant&.repository&.username, pass: @tenant&.repository&.password)
       end
 
       def valid_resource?
@@ -37,11 +37,9 @@ module Stash
 
         return status_hash if status_hash[:status] == 200 # it's here, do a download
 
-        if [404, 410].include?(status_hash[:status]) # not found or expired, then assemble it again
-          assemble
-        end
+        assemble if [404, 410].include?(status_hash[:status]) # not found or expired, then assemble it again
 
-        if @resource.download_token.availability_delay_seconds < 25  # Merritt pads everything to 20 seconds, even though it often doesn't take that
+        if @resource.download_token.availability_delay_seconds < 25 # Merritt pads everything to 20 seconds, even though it often doesn't take that
           poll_and_download
         else
           status
@@ -76,7 +74,7 @@ module Stash
           token.save
           json
         else
-          {status: resp.status}
+          { status: resp.status }
         end
       end
 
@@ -92,16 +90,18 @@ module Stash
 
       def assemble_version_url
         URI::HTTPS.build(
-            host: @domain,
-            path: ::File.join('/api', 'assemble-version', ERB::Util.url_encode(@local_id), @version.to_s),
-            query: {format: 'zip', content: 'producer'}.to_query).to_s
+          host: @domain,
+          path: ::File.join('/api', 'assemble-version', ERB::Util.url_encode(@local_id), @version.to_s),
+          query: { format: 'zip', content: 'producer' }.to_query
+        ).to_s
       end
 
       def status_url
         URI::HTTPS.build(
           host: @domain,
           path: ::File.join('/api', 'presign-obj-by-token', ERB::Util.url_encode(@resource.download_token.token)),
-          query: {no_redirect: true, filename: filename}.to_query).to_s
+          query: { no_redirect: true, filename: filename }.to_query
+        ).to_s
       end
 
       def filename
