@@ -26,6 +26,5 @@ module StashEngine
         expect(@download_token.availability_delay_seconds).to be_within(10).of(60)
       end
     end
-
   end
 end
