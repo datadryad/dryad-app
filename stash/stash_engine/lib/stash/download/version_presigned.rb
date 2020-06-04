@@ -13,7 +13,7 @@ module Stash
         @version = @resource&.stash_version&.merritt_version
         # local_id is encoded, so later it gets double-encoded which is required by Merritt for some crazy reason
         _ignored, @local_id = @resource.merritt_protodomain_and_local_id
-        @domain = @tenant.repository.domain
+        @domain = @tenant&.repository&.domain
 
         @http = HTTP.timeout(connect: 30, read: 30).timeout(30.seconds.to_i).follow(max_hops: 3)
           .basic_auth(user: @tenant&.repository&.username, pass: @tenant&.repository&.password)
@@ -34,22 +34,26 @@ module Stash
 
         status_hash = status
 
-        return status_hash if status_hash[:status] == 200 # it's here, do a download
+        return status_hash if status_hash[:status] == 200 # it's available, do a download
 
-        assemble if [404, 410].include?(status_hash[:status]) # not found or expired, then assemble it again
-
-        if @resource.download_token.availability_delay_seconds < 25 # Merritt pads everything to 20 seconds, even though it often doesn't take that
-          poll_and_download
-        else
-          status
+        # if token not found or expired, then attempt to assemble it again
+        if [404, 410].include?(status_hash[:status])
+          assemble
+          status_hash = status # refresh status hash after assembling again
         end
+
+        # Merritt pads estimates 20+ seconds for stuff that can be assembled very quickly and started downloads within a few seconds
+        return poll_and_download if @resource.download_token.availability_delay_seconds < 25
+
+        status_hash
       end
 
-      def poll_and_download
+      # this does a limited poll and download if it becomes available within a reasonable time
+      def poll_and_download(delay: 2.5, tries: 2)
         status_hash = {}
         # poll a couple of times to see if gets ready quickly and if not, return the last status
-        1.upto(2) do
-          sleep 2.5
+        1.upto(tries) do
+          sleep delay
           status_hash = status
           break if status_hash[:status] == 200
         end
