@@ -40,7 +40,7 @@
 <p><strong>Required fields</strong>:</p>
 <ul>
 <li>Title: Title of the dataset. Make sure to be as descriptive as possible</li>
-<li>Author(s): Name, email address, institutional affliation of main researcher(s) involved in producing the data.
+<li>Author(s): Name, email address, institutional affiliation of main researcher(s) involved in producing the data.
   <ul>
     <li>Affliations are drawn from the <a href="http://ror.org">Research Organization Registry (ROR)</a></li>
     <li>If you provide your co-authors' email addresses, when the dataset is published they will receive a message giving them the option to add their <a href="http://orcid.org">ORCID</a> to the Dryad record</li>
