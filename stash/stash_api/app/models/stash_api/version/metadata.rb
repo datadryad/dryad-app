@@ -46,7 +46,6 @@ module StashApi
           @resource&.identifier&.shares&.first&.sharing_link
         end
       end
-
     end
   end
 end

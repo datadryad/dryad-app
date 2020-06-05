@@ -14,6 +14,13 @@ module StashEngine
     end
     helper_method :resource
 
+    # GET/POST/PUT  /generals/find_or_create
+    def find_or_create
+      return unless @resource.submitted? # create a new version if this is a submitted version
+      redirect_to(metadata_entry_pages_new_version_path(resource_id: params[:resource_id]))
+    end
+
+    # GET /stash/edit/{doi}
     def edit_by_doi
       doi = params[:doi]
       doi.match(/doi:(.*)/) do |m|
@@ -26,12 +33,6 @@ module StashEngine
         @resource = id.latest_resource
         redirect_to(metadata_entry_pages_new_version_path(resource_id: @resource.id))
       end
-    end
-
-    # GET/POST/PUT  /generals/find_or_create
-    def find_or_create
-      return unless @resource.submitted? # create a new version if this is a submitted version
-      redirect_to(metadata_entry_pages_new_version_path(resource_id: params[:resource_id]))
     end
 
     # create a new version of this resource before editing with find or create
