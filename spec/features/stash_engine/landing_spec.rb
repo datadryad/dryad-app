@@ -1,6 +1,9 @@
 require 'rails_helper'
 require 'byebug'
-RSpec.feature 'Landing', type: :feature do
+require 'pry-remote'
+require_relative '../../responses/stash_engine/download_helpers'
+
+RSpec.feature 'Landing', type: :feature, js: true do
 
   include MerrittHelper
   include DatasetHelper
@@ -21,7 +24,21 @@ RSpec.feature 'Landing', type: :feature do
 
     # below will create @identifier, @resource, @user and the basic required things for an initial version of a dataset
     create_basic_dataset!
+    @resource.identifier.update(pub_state: 'published')
+    @resource.current_resource_state.update(resource_state: 'submitted')
+    @resource.reload
+    @token = create(:download_token, resource_id: @resource.id, available: Time.new + 5.minutes.to_i)
   end
 
-  # the fake share copy of the landing page is now gone because the email process has changed
+  it 'shows popup for download assembly progress and allows it to close' do
+    res = @identifier.resources.first
+    res.update(meta_view: true, file_view: true, publication_date: Time.new)
+    create(:curation_activity, status: 'curation', user_id: @user.id, resource_id: res.id)
+    stub_202_status
+    visit stash_url_helpers.landing_show_path(id: @identifier.to_s)
+    click_on 'Download dataset'
+    expect(page).to have_text('Preparing Download')
+    click_on 'cancel_dialog'
+    expect(page).not_to have_text('Preparing Download')
+  end
 end
