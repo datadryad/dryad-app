@@ -66,7 +66,7 @@ module StashEngine
 
       @version_presigned = Stash::Download::VersionPresigned.new(resource: @resource)
       unless @version_presigned.valid_resource? && (@resource.may_download?(ui_user: current_user) || @sharing_link)
-        render json: { status: 202 } # it will never be ready for them
+        render json: { status: 202 } # it will never be ready for them, this url isn't useful except to legit users so shouldn't happen
         return
       end
 
