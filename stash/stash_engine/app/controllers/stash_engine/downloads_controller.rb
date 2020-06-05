@@ -54,6 +54,7 @@ module StashEngine
         end
         format.js do
           @status_hash = @version_presigned.download
+          log_counter_version if @status_hash[:status] == 200
         end
       end
     end
@@ -71,6 +72,7 @@ module StashEngine
       end
 
       @status_hash = @version_presigned.status
+      log_counter_version if @status_hash[:status] == 200 # because this triggers the download when it has this status
       render json: @status_hash
     end
 
@@ -98,6 +100,7 @@ module StashEngine
     def non_ajax_response_for_download
       @status_hash = @version_presigned.download
       if @status_hash[:status] == 200
+        log_counter_version
         redirect_to @status_hash[:url]
       elsif @status_hash[:status] == 202
         render status: 202, text: 'The version of the dataset is being assembled. ' \
@@ -149,6 +152,10 @@ module StashEngine
         'Downloads generally become available in less than 2 hours.'
       ].join(' ')
       redirect_to landing_show_path(id: @resource.identifier_str)
+    end
+
+    def log_counter_version
+      CounterLogger.version_download_hit(request: request, resource: @resource)
     end
 
   end
