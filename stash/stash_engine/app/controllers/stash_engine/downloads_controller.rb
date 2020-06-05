@@ -98,7 +98,7 @@ module StashEngine
     def non_ajax_response_for_download
       @status_hash = @version_presigned.download
       if @status_hash[:status] == 200
-        redirect_to status_hash[:url]
+        redirect_to @status_hash[:url]
       elsif @status_hash[:status] == 202
         render status: 202, text: 'The version of the dataset is being assembled. ' \
               "Check back in around #{time_ago_in_words(@resource.download_token.available + 30.seconds)} and it should be ready to download."
