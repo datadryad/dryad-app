@@ -16,8 +16,7 @@ module Stash
         @vp = VersionPresigned.new(resource: @resource)
       end
 
-
-      describe "urls for Merritt service" do
+      describe 'urls for Merritt service' do
         it 'creates correct assemble_version_url' do
           u = @vp.assemble_version_url
           expect(u).to eq("https://localhost/api/assemble-version/#{ERB::Util.url_encode(@local_id)}/1?content=producer&format=zip")
@@ -31,7 +30,6 @@ module Stash
       end
 
       describe '#valid_resource?' do
-        !(@resource.blank? || @tenant.blank? || @version.blank? || @domain.blank? || @local_id.blank?)
         it 'is false if resource is blank' do
           @resource = nil
           @vp = VersionPresigned.new(resource: @resource)
@@ -52,8 +50,8 @@ module Stash
         end
 
         it 'is false if domain is blank' do
-          allow(@resource).to receive(:tenant).
-              and_return({ repository: { domain: nil}.to_ostruct}.to_ostruct)
+          allow(@resource).to receive(:tenant)
+            .and_return({ repository: { domain: nil }.to_ostruct }.to_ostruct)
           @vp = VersionPresigned.new(resource: @resource)
           expect(@vp.valid_resource?).to be_falsey
         end
@@ -67,20 +65,19 @@ module Stash
 
       describe '#assemble' do
         it 'returns non-success status in hash for items not in the 200 http status range' do
-          stub_request(:get, %r{/api/assemble-version/.+/1\?content=producer&format=zip}).
-              to_return(status: 500, body: "Internal server error", headers: {})
+          stub_request(:get, %r{/api/assemble-version/.+/1\?content=producer&format=zip})
+            .to_return(status: 500, body: 'Internal server error', headers: {})
 
-          expect(@vp.assemble).to eq({ status: 500 })
+          expect(@vp.assemble).to eq(status: 500)
         end
 
         it 'saves token and predicted availability time to database on good response' do
           token = SecureRandom.uuid
-          stub_request(:get, %r{/api/assemble-version/.+/1\?content=producer&format=zip}).
-              to_return(status: 200, body:
+          stub_request(:get, %r{/api/assemble-version/.+/1\?content=producer&format=zip})
+            .to_return(status: 200, body:
                   { status: 200, token: token,
-                    'anticipated-availability-time': (Time.new + 30).to_s
-                  }.to_json,
-                headers: { 'Content-Type' => 'application/json' })
+                    'anticipated-availability-time': (Time.new + 30).to_s }.to_json,
+                       headers: { 'Content-Type' => 'application/json' })
           outhash = @vp.assemble
           expect(outhash[:status]).to eq(200)
           expect(outhash[:token]).to eq(token)
@@ -95,20 +92,19 @@ module Stash
         it 'parses and returns json status' do
           # do assembly first so we have status to check
           token = SecureRandom.uuid
-          stub_request(:get, %r{/api/assemble-version/.+/1\?content=producer&format=zip}).
-              to_return(status: 200, body:
+          stub_request(:get, %r{/api/assemble-version/.+/1\?content=producer&format=zip})
+            .to_return(status: 200, body:
                   { status: 200, token: token,
-                    'anticipated-availability-time': (Time.new + 30).to_s
-                  }.to_json,
-                        headers: { 'Content-Type' => 'application/json' })
+                    'anticipated-availability-time': (Time.new + 30).to_s }.to_json,
+                       headers: { 'Content-Type' => 'application/json' })
 
-          stub_request(:get, %r{/api/presign-obj-by-token/#{token}.+}).
-              to_return(status: 202, body:
+          stub_request(:get, %r{/api/presign-obj-by-token/#{token}.+})
+            .to_return(status: 202, body:
                   {  status: 202,
                      token: token,
-                     "cloud-content-byte": 4393274895,
+                     "cloud-content-byte": 4_393_274_895,
                      message: 'Object is not ready' }.to_json,
-                headers: { 'Content-Type' => 'application/json' })
+                       headers: { 'Content-Type' => 'application/json' })
           @vp.assemble
 
           s = @vp.status
@@ -120,24 +116,24 @@ module Stash
 
       describe '#download' do
         it 'just returns the status if it has an unexpired token that works for (ie 200 code)' do
-          expect(@vp).to receive(:status).and_return({ status: 200 })
-          expect(@vp.download).to eq({ status: 200 })
+          expect(@vp).to receive(:status).and_return(status: 200)
+          expect(@vp.download).to eq(status: 200)
         end
 
         it 'just returns the status if token has a pending (202) status and a long waiting time' do
           @resource.download_token.update(available: Time.new + 6.minutes.to_i)
           @resource.reload
           @vp = VersionPresigned.new(resource: @resource)
-          expect(@vp).to receive(:status).and_return({ status: 202 })
-          expect(@vp.download).to eq({ status: 202 })
+          expect(@vp).to receive(:status).and_return(status: 202)
+          expect(@vp.download).to eq(status: 202)
         end
 
         it 'calls poll_and_download for things ready very soon to try to avoid extra popup' do
           @resource.download_token.update(available: Time.new + 15.seconds.to_i)
           @resource.reload
           @vp = VersionPresigned.new(resource: @resource)
-          allow(@vp).to receive(:status).and_return({ status: 202 })
-          expect(@vp).to receive(:poll_and_download).and_return({ status: 200})
+          allow(@vp).to receive(:status).and_return(status: 202)
+          expect(@vp).to receive(:poll_and_download).and_return(status: 200)
           resp = @vp.download
           expect(resp[:status]).to eq(200)
         end
@@ -146,7 +142,7 @@ module Stash
           @resource.download_token.update(available: Time.new + 6.minutes.to_i)
           @resource.reload
           @vp = VersionPresigned.new(resource: @resource)
-          allow(@vp).to receive(:status).and_return({ status: 410}, {status: 200} )
+          allow(@vp).to receive(:status).and_return({ status: 410 }, status: 200)
           expect(@vp).to receive(:assemble)
           resp = @vp.download
           expect(resp[:status]).to eq(200)
@@ -155,13 +151,13 @@ module Stash
 
       describe '#poll_and_download' do
         it 'only polls up to :tries: times' do
-          allow(@vp).to receive(:status).and_return({ status: 202}, {status: 202 }, {status: 200 })
+          allow(@vp).to receive(:status).and_return({ status: 202 }, { status: 202 }, status: 200)
           output = @vp.poll_and_download(delay: 0.01, tries: 2)
           expect(output[:status]).to eq(202) # should be second value in allow, not third
         end
 
         it 'exits early on geting a 200 status' do
-          expect(@vp).to receive(:status).and_return({status: 200 })
+          expect(@vp).to receive(:status).and_return(status: 200)
           output = @vp.poll_and_download(delay: 0.01, tries: 2)
           expect(output[:status]).to eq(200) # should be second value in allow, not third
         end
