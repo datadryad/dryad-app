@@ -12,8 +12,8 @@ module StashEngine
       @token = create(:download_token, resource_id: @resource.id, available: Time.new + 5.minutes.to_i)
       @resource.reload
 
-      # hack in session because requests specs don't allow session in rails 4
-      allow_any_instance_of(DownloadsController).to receive(:session).and_return({user_id: @user.id}.to_ostruct)
+      # HACK: in session because requests specs don't allow session in rails 4
+      allow_any_instance_of(DownloadsController).to receive(:session).and_return({ user_id: @user.id }.to_ostruct)
     end
 
     # this ultimately may give a redirect (depends on status)
@@ -45,7 +45,7 @@ module StashEngine
 
       it 'returns 404 for item where not available because of permissions' do
         # couldn't get 'unstub' to work here for deprecation warnings and other problems, so just redefining it
-        allow_any_instance_of(DownloadsController).to receive(:session).and_return({user_id: nil}.to_ostruct)
+        allow_any_instance_of(DownloadsController).to receive(:session).and_return({ user_id: nil }.to_ostruct)
         stub_202_status # the 404 is from us, not merritt, which is what this stub is for, not sure it's used
         response_code = get "/stash/downloads/download_resource/#{@resource.id}"
         expect(response_code).to eq(404)
@@ -54,7 +54,7 @@ module StashEngine
 
       it 'lets people pass who have the secret sharing link' do
         # couldn't get 'unstub' to work here for deprecation warnings and other problems, so just redefining it
-        allow_any_instance_of(DownloadsController).to receive(:session).and_return({user_id: nil}.to_ostruct)
+        allow_any_instance_of(DownloadsController).to receive(:session).and_return({ user_id: nil }.to_ostruct)
         share_id = @resource.identifier.shares.first.secret_id
         stub_202_status
         response_code = get "/stash/downloads/download_resource/0?share=#{share_id}"
@@ -64,7 +64,7 @@ module StashEngine
 
       it 'will not let people get item who have incorrect secret sharing link' do
         # couldn't get 'unstub' to work here for deprecation warnings and other problems, so just redefining it
-        allow_any_instance_of(DownloadsController).to receive(:session).and_return({user_id: nil}.to_ostruct)
+        allow_any_instance_of(DownloadsController).to receive(:session).and_return({ user_id: nil }.to_ostruct)
         share_id = @resource.identifier.shares.first.secret_id
         # stub_404_status
         response_code = get "/stash/downloads/download_resource/0?share=#{share_id}lol"
@@ -106,7 +106,7 @@ module StashEngine
 
       it 'lets people pass who have the secret sharing link' do
         # couldn't get 'unstub' to work here for deprecation warnings and other problems, so just redefining it
-        allow_any_instance_of(DownloadsController).to receive(:session).and_return({user_id: nil}.to_ostruct)
+        allow_any_instance_of(DownloadsController).to receive(:session).and_return({ user_id: nil }.to_ostruct)
         share_id = @resource.identifier.shares.first.secret_id
         stub_202_status
         response_code = get "/stash/downloads/assembly_status/0?share=#{share_id}"
@@ -118,7 +118,7 @@ module StashEngine
 
       it 'will not let people get item who have incorrect secret sharing link' do
         # couldn't get 'unstub' to work here for deprecation warnings and other problems, so just redefining it
-        allow_any_instance_of(DownloadsController).to receive(:session).and_return({user_id: nil}.to_ostruct)
+        allow_any_instance_of(DownloadsController).to receive(:session).and_return({ user_id: nil }.to_ostruct)
         share_id = @resource.identifier.shares.first.secret_id
         response_code = get "/stash/downloads/assembly_status/0?share=#{share_id}lol"
         json = JSON.parse(response.body).with_indifferent_access
