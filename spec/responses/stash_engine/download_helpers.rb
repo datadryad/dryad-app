@@ -41,4 +41,20 @@ module DownloadHelpers
               "message":"Payload contains token info"}.to_json,
             headers: { 'Content-Type' => 'application/json' })
   end
+
+  def stub_404_status
+    stub_request(:get, %r{/api/presign-obj-by-token/#{@token.token}.+}).
+        to_return(status: 404, body:
+            {  status: 404,
+               token: @token.token,
+               "cloud-content-byte": 4393274895,
+               message: 'Not found' }.to_json,
+                  headers: { 'Content-Type' => 'application/json' })
+  end
+
+  def stub_404_assemble
+    stub_request(:get, %r{/api/assemble-version/.+/1\?content=producer&format=zip}).
+        to_return(status: 404, body: "Internal server error", headers: {})
+  end
+
 end
