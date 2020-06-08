@@ -28,7 +28,6 @@ module StashApi
       return simple_identifier if lv.nil?
       id_size_hsh = id_and_size_hash
       metadata = id_size_hsh.merge(lv.metadata)
-      add_embargo_date!(metadata, lv)
       add_edit_link!(metadata, lv)
 
       # gives the links to nearby objects
@@ -87,10 +86,6 @@ module StashApi
         id: @se_identifier.id,
         storage_size: @se_identifier.storage_size
       }
-    end
-
-    def add_embargo_date!(hsh, version)
-      hsh[:embargoEndDate] = version.resource.publication_date.strftime('%Y-%m-%d') unless version.resource.publication_date.nil?
     end
 
     def add_edit_link!(hsh, version)
