@@ -17,6 +17,7 @@ end
 
 require 'stash_datacite/author_patch'
 
+# rubocop:disable Metrics/ClassLength
 module StashDatacite
   module Resource
     # TODO: is this class really necessary? as with Review, seems like we could just patch Resource
@@ -65,6 +66,16 @@ module StashDatacite
 
       def abstract
         @resource.descriptions.where(description_type: 'abstract').where.not(description: [nil, '']).count > 0
+      end
+
+      # If the journal is filled in, either the manuscript_number or publication_article_doi must be present
+      def article_id
+        Rails.logger.debug('XXX article_id')
+        Rails.logger.debug("XXX article_id -- j #{@resource.identifier.publication_name}")
+        Rails.logger.debug("XXX article_id -- m #{@resource.identifier.manuscript_number}")
+        Rails.logger.debug("XXX article_id -- p #{@resource.identifier.publication_article_doi}")
+        return true unless @resource.identifier.publication_name
+        @resource.identifier.manuscript_number || @resource.identifier.publication_article_doi
       end
 
       def required_completed
@@ -130,8 +141,9 @@ module StashDatacite
         messages = []
         messages << 'Add a dataset title' unless title
         messages << 'Add an abstract' unless abstract
+        messages << 'For data related to a journal article, you must supply a manuscript number or DOI' unless article_id
         messages << 'You must have at least one author name and they need to be complete' unless author_name
-        messages << 'At least one author must have an email supplied' unless author_email
+        messages << 'The first author must have an email supplied' unless author_email
         messages << 'Authors must have affiliations' unless author_affiliation
         messages << 'Fix or remove upload URLs that were unable to validate' unless urls_validated?
         messages
@@ -147,3 +159,4 @@ module StashDatacite
     end
   end
 end
+# rubocop:enable Metrics/ClassLength

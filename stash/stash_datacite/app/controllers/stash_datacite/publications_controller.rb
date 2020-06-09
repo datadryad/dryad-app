@@ -5,7 +5,6 @@ require 'stash/import/dryad_manuscript'
 require 'stash/link_out/pubmed_sequence_service'
 require 'stash/link_out/pubmed_service'
 require 'cgi'
-
 # rubocop:disable Metrics/ClassLength
 module StashDatacite
   class PublicationsController < ApplicationController
@@ -59,6 +58,18 @@ module StashDatacite
       @pub_name = manage_internal_datum(identifier: @se_id, data_type: 'publicationName', value: params[:internal_datum][:publication_name])
       parsed_msid = parse_msid(issn: params[:internal_datum][:publication_issn], msid: params[:internal_datum][:msid])
       @msid = manage_internal_datum(identifier: @se_id, data_type: 'manuscriptNumber', value: parsed_msid)
+      save_doi
+    end
+
+    def save_doi
+      form_doi = params[:internal_datum][:doi]
+      related_doi = @se_id.publication_article_doi
+      return unless form_doi.present? && related_doi.blank?
+      bare_form_doi = Stash::Import::Crossref.bare_doi(doi_string: form_doi)
+      res = @se_id.latest_resource
+      res.related_identifiers.find_or_initialize_by(related_identifier: bare_form_doi,
+                                                    related_identifier_type: 'doi',
+                                                    relation_type: 'issupplementto')
     end
 
     # parse out the "relevant" part of the manuscript ID, ignoring the parts that the journal changes for different versions of the same item
