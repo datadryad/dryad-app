@@ -1,14 +1,13 @@
 require_dependency 'stash_engine/application_controller'
 require 'stash/download/file_presigned'
-require 'stash/download/version'
+require 'stash/download/version_presigned'
 
 # rubocop:disable Metrics/ClassLength
 module StashEngine
   class DownloadsController < ApplicationController
+    include ActionView::Helpers::DateHelper
 
-    CONCURRENT_DOWNLOAD_LIMIT = 2
-
-    before_action :check_user_agent, :check_ip, :stop_download_hogs, :setup_streaming
+    before_action :check_user_agent, :check_ip, :setup_streaming
 
     def check_user_agent
       # This reads a text file with one line and a regular expression in it and blocks if the user-agent matches the regexp
@@ -32,77 +31,60 @@ module StashEngine
       end
     end
 
-    def stop_download_hogs
-      dl_count = DownloadHistory.where(ip_address: request&.remote_ip).downloading.count
-      render 'download_limit', status: 429 if dl_count >= CONCURRENT_DOWNLOAD_LIMIT
-    end
-
     # set up the Merritt file & version objects so they have access to the controller context before continuing
     def setup_streaming
-      @version_streamer = Stash::Download::Version.new(controller_context: self)
       @file_presigned = Stash::Download::FilePresigned.new(controller_context: self)
     end
 
     # for downloading the full version
     def download_resource
-      @resource = Resource.find(params[:resource_id])
-      if @resource.may_download?(ui_user: current_user)
-        @version_streamer.download(resource: @resource) do
-          redirect_to landing_show_path(id: @resource.identifier_str, big: 'showme') # if it's an async
-        end
-      else
-        unavailable_for_download
+      @resource = nil
+      @resource = Resource.where(id: params[:resource_id]).first if params[:share].nil?
+      check_for_sharing
+
+      @version_presigned = Stash::Download::VersionPresigned.new(resource: @resource)
+      unless @version_presigned.valid_resource? && (@resource.may_download?(ui_user: current_user) || @sharing_link)
+        render status: 404, text: "404: Not found or invalid download\n"
+        return
       end
-    rescue Stash::Download::MerrittResponseError => e
-      # if it's a recent submission, suggest they try again later; otherwise fail
-      raise e unless @resource.updated_at > Time.new.utc - 2.hours
-      Stash::Download::Base.log_warning_if_needed(error: e, resource: @resource)
-      # recently updated, so display a "hold your horses" message
-      flash_download_unavailable
+
+      respond_to do |format|
+        format.html do
+          non_ajax_response_for_download
+        end
+        format.js do
+          @status_hash = @version_presigned.download
+          log_counter_version if @status_hash[:status] == 200
+        end
+      end
     end
 
-    # handles a large dataset that may only be downloaded asynchronously from Merritt because of size limits for immediate downloads
-    def async_request
-      @resource = Resource.find(params[:resource_id])
-      @email = params[:email]
-      session[:saved_email] = @email
-      respond_to do |format|
-        format.js do
-          if can_download? # local method that checks if user may download or if their secret matches
-            api_async_download(resource: @resource, email: @email)
-            @message = "Dryad will send an email with a download link to #{@email} when your requested dataset is ready."
-            CounterLogger.version_download_hit(request: request, resource: @resource)
-          else
-            @message = 'You do not have the permission to download the dataset.'
-          end
-        end
+    # checks assembly status for a resource and returns json from Merritt and http-ish status code, from progressbar polling
+    def assembly_status
+      @resource = nil
+      @resource = Resource.where(id: params[:id]).first if params[:share].nil?
+      check_for_sharing
+
+      @version_presigned = Stash::Download::VersionPresigned.new(resource: @resource)
+      unless @version_presigned.valid_resource? && (@resource.may_download?(ui_user: current_user) || @sharing_link)
+        render json: { status: 202 } # it will never be ready for them, this url isn't useful except to legit users so shouldn't happen
+        return
       end
+
+      @status_hash = @version_presigned.status
+      log_counter_version if @status_hash[:status] == 200 # because this triggers the download when it has this status
+      render json: @status_hash
     end
 
     # method to download by the secret sharing link, must match the string they generated to look up and download
     def share
-      return if params.blank?
-      @shares = Share.where(secret_id: params[:id])
-      raise ActionController::RoutingError, 'Not Found' if @shares.count < 1
+      @resource = resource_from_share
+      raise ActionController::RoutingError, 'Not Found' if @resource.blank?
 
-      @resource = @shares.first.identifier&.last_submitted_resource
-      if !@resource.files_published?
-        @version_streamer.download(resource: @resource) do
-          redirect_to private_async_form_path(id: @resource.identifier_str, big: 'showme', secret_id: params[:id]) # for async
-          return
-        end
-      else
-        redirect_to_public
-      end
+      redirect_to_public if @resource.files_published?
     end
 
-    # shows the form for private async.  Usually part of the landing page for dataset, but page may not exist for public
-    # anymore because of curation so we create a new page to host the form
-    def private_async_form
-      @share = Share.where(secret_id: params[:secret_id])&.first
-      @resource = @share.identifier&.last_submitted_resource
-    end
-
+    # uses presigned
     def file_stream
       file_upload = FileUpload.find(params[:file_id])
       if file_upload&.resource&.may_download?(ui_user: current_user)
@@ -114,6 +96,38 @@ module StashEngine
     end
 
     private
+
+    def non_ajax_response_for_download
+      @status_hash = @version_presigned.download
+      if @status_hash[:status] == 200
+        log_counter_version
+        redirect_to @status_hash[:url]
+      elsif @status_hash[:status] == 202
+        render status: 202, text: 'The version of the dataset is being assembled. ' \
+              "Check back in around #{time_ago_in_words(@resource.download_token.available + 30.seconds)} and it should be ready to download."
+      else
+        render status: 404, text: 'Not found'
+      end
+    end
+
+    def resource_from_share
+      my_id = params[:share] || params[:id]
+      return nil if my_id.blank?
+
+      @share = Share.where(secret_id: my_id).first
+      return nil if @share.blank?
+
+      @share&.identifier&.last_submitted_resource
+    end
+
+    def check_for_sharing
+      @sharing_link = false
+
+      return unless @resource.blank? && params[:share]
+
+      @resource = resource_from_share
+      @sharing_link = true if @resource
+    end
 
     def unavailable_for_download
       flash[:alert] = 'This dataset is private and may not be downloaded.'
@@ -140,23 +154,8 @@ module StashEngine
       redirect_to landing_show_path(id: @resource.identifier_str)
     end
 
-    def api_async_download(resource:, email:)
-      url = Stash::Download::Version.merritt_friendly_async_url(resource: resource)
-
-      email_from = [APP_CONFIG['contact_email']].flatten.first
-      email_subject = "Your download for #{resource.title} is ready"
-      email_body = File.read(File.join(StashEngine::Engine.root, 'app', 'views', 'stash_engine', 'downloads', 'async_email.txt.erb'))
-
-      params = { user_agent_email: email, userFriendly: true, losFrom: email_from, losSubject: email_subject, losBody: email_body }
-
-      res = Stash::Repo::HttpClient.new(tenant: resource.tenant, cert_file: APP_CONFIG.ssl_cert_file)
-        .client.get(url, query: params, follow_redirect: true)
-      status = res.status_code
-      return if status == 200
-
-      query_string = HTTP::Message.create_query_part_str(params)
-      Stash::Download::Version.raise_merritt_error('Merritt async download request',
-                                                   "unexpected status #{status}", resource.id, "#{url}?#{query_string}")
+    def log_counter_version
+      CounterLogger.version_download_hit(request: request, resource: @resource)
     end
 
   end

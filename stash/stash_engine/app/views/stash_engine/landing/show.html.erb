@@ -15,9 +15,11 @@
 		</div>
 	</aside>
 </div>
-<%= render partial: 'stash_engine/downloads/modal_capture_email',
-    locals: { resource: @resource }%>
 
 <% unless @invitations.blank? %>
   <%= render partial: 'orcid_invite', locals: {identifier_id: id.id} %>
 <% end %>
+
+<!-- placeholder empty div that can have contents inserted for popup and then shown -->
+<div id="popup_dialog" style="display:none;">
+</div>
