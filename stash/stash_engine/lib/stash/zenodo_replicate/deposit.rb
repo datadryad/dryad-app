@@ -41,6 +41,7 @@ module Stash
         resp
       end
 
+      # POST /api/deposit/depositions/123/actions/edit
       def reopen_for_editing
         ZC.standard_request(:post, @links[:edit])
       end
