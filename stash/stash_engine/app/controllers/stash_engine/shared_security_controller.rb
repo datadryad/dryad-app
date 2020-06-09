@@ -9,8 +9,19 @@ module StashEngine
     end
 
     def require_login
-      return if current_user
+      if current_user
+        target_page = session[:target_page]
+        if target_page.present?
+          # This session had originally been navigating to a specific target_page and was redirected
+          # to the login page. Now that they are logged in, we will redirect to the target_page,
+          # but first clear it from the session so we don't continually redirect to it.
+          session[:target_page] = nil
+          redirect_to target_page
+        end
+        return
+      end
       flash[:alert] = 'You must be logged in.'
+      session[:target_page] = request.fullpath
       redirect_to stash_url_helpers.choose_login_path
     end
 
