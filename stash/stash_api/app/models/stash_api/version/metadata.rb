@@ -26,6 +26,7 @@ module StashApi
           versionNumber: @resource.try(:stash_version).try(:version),
           versionStatus: @resource.current_state,
           curationStatus: StashEngine::CurationActivity.latest(resource: @resource)&.readable_status,
+          publicationDate: @resource.publication_date&.strftime('%Y-%m-%d'),
           sharingLink: sharing_link,
           userId: @resource.user_id,
           skipDataciteUpdate: @resource.skip_datacite_update || nil,
