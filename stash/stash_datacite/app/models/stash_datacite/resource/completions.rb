@@ -70,10 +70,6 @@ module StashDatacite
 
       # If the journal is filled in, either the manuscript_number or publication_article_doi must be present
       def article_id
-        Rails.logger.debug('XXX article_id')
-        Rails.logger.debug("XXX article_id -- j #{@resource.identifier.publication_name}")
-        Rails.logger.debug("XXX article_id -- m #{@resource.identifier.manuscript_number}")
-        Rails.logger.debug("XXX article_id -- p #{@resource.identifier.publication_article_doi}")
         return true unless @resource.identifier.publication_name
         @resource.identifier.manuscript_number || @resource.identifier.publication_article_doi
       end

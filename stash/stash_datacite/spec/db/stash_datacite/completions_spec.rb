@@ -71,6 +71,32 @@ module StashDatacite
         end
       end
 
+      describe :article_id do
+        before(:each) do
+          @identifier = double(StashEngine::Identifier)
+          allow(@resource).to receive(:identifier).and_return(@identifier)
+        end
+
+        it 'passes if journal name is omitted' do
+          allow(@identifier).to receive(:publication_name).and_return(nil)
+          expect(completions.article_id).to be_truthy
+        end
+
+        it 'fails if journal name is present, but manuscript number and DOI are not' do
+          allow(@identifier).to receive(:publication_name).and_return('abc')
+          allow(@identifier).to receive(:manuscript_number).and_return(nil)
+          allow(@identifier).to receive(:publication_article_doi).and_return(nil)
+          expect(completions.article_id).to be_falsey
+        end
+
+        it 'passes if journal name is present, along with a manuscript number' do
+          allow(@identifier).to receive(:publication_name).and_return('abc')
+          allow(@identifier).to receive(:manuscript_number).and_return('def')
+          allow(@identifier).to receive(:publication_article_doi).and_return(nil)
+          expect(completions.article_id).to be_truthy
+        end
+      end
+
       describe :author_name do
         it 'passes if all authors have first names' do
           expect(completions.author_name).to be_truthy
