@@ -50,11 +50,10 @@ StashEngine::Engine.routes.draw do
 
   # download related
   match 'downloads/download_resource/:resource_id', to: 'downloads#download_resource', as: 'download_resource', via: %i[get post]
-  match 'downloads/async_request/:resource_id', to: 'downloads#async_request', as: 'download_async_request', via: %i[get post]
-  get 'downloads/private_async_form', to: 'downloads#private_async_form', as: 'private_async_form'
   match 'downloads/capture_email/:resource_id', to: 'downloads#capture_email', as: 'download_capture_email', via: %i[get post]
   get 'downloads/file_stream/:file_id', to: 'downloads#file_stream', as: 'download_stream'
   get 'share/:id', to: 'downloads#share', as: 'share'
+  get 'downloads/assembly_status/:id', to: 'downloads#assembly_status', as: 'download_assembly_status'
 
   get 'edit/:doi', to: 'metadata_entry_pages#edit_by_doi', as: 'edit', constraints: { doi: /\S+/ }
   match 'metadata_entry_pages/find_or_create', to: 'metadata_entry_pages#find_or_create', via: %i[get post put]
