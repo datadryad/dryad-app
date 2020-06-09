@@ -338,8 +338,8 @@ module Stash
 
       # this is a helper method to detect duplicate reference dois
       def duplicate_reference_doi?(target_doi:)
-        bare_ids = @resource.related_identifiers.map { |i| bare_doi(doi_string: i.related_identifier) }.compact
-        bare_target_doi = bare_doi(doi_string: target_doi)
+        bare_ids = @resource.related_identifiers.map { |i| Crossref.bare_doi(doi_string: i.related_identifier) }.compact
+        bare_target_doi = Crossref.bare_doi(doi_string: target_doi)
         bare_ids.include?(bare_target_doi)
       end
     end
