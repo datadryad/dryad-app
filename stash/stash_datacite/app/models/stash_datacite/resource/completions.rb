@@ -16,8 +16,6 @@ class TrueClass
 end
 
 require 'stash_datacite/author_patch'
-
-# rubocop:disable Metrics/ClassLength
 module StashDatacite
   module Resource
     # TODO: is this class really necessary? as with Review, seems like we could just patch Resource
