@@ -26,8 +26,14 @@ module StashEngine
     has_many :repo_queue_states, class_name: 'StashEngine::RepoQueueState', dependent: :destroy
     has_many :download_histories, class_name: 'StashEngine::DownloadHistory', dependent: :destroy
     has_one :zenodo_copy, class_name: 'StashEngine::ZenodoCopy', dependent: :destroy
+    has_one :download_token, class_name: 'StashEngine::DownloadToken', dependent: :destroy
 
     accepts_nested_attributes_for :curation_activities
+
+    # ensures there is always an associated download_token record
+    def download_token
+      super || build_download_token(token: nil, available: nil)
+    end
 
     amoeba do
       include_association :authors

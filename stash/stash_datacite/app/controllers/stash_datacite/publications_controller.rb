@@ -38,7 +38,7 @@ module StashDatacite
         # clean the partial_term of unwanted characters so it doesn't cause errors
         partial_term.gsub!(%r{[\/\-\\\(\)~!@%&"\[\]\^\:]}, ' ')
 
-        matches = StashEngine::Journal.where("title like '%#{partial_term}%'").limit(40)
+        matches = StashEngine::Journal.where('title like ?', "%#{partial_term}%").limit(40)
 
         render json: bubble_up_exact_matches(result_list: matches, term: partial_term)
       end

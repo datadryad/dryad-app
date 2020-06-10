@@ -75,7 +75,6 @@ module StashDatacite
     end
 
     def self.from_isni_id(isni_id:)
-      puts "called affiliation.from_isni_id with |#{isni_id}|"
       return nil if isni_id.blank?
       ror_org = Stash::Organization::Ror.find_by_isni_id(isni_id)
       return nil if ror_org.blank?
