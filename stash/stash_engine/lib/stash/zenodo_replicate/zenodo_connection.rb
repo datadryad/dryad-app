@@ -20,7 +20,7 @@ module Stash
       # rubocop:disable Metrics/AbcSize
       def self.standard_request(method, url, **args)
         resp = nil
-        http = HTTP.use(:normalize_uri => {:normalizer => Stash::Download::NORMALIZER})
+        http = HTTP.use(normalize_uri: { normalizer: Stash::Download::NORMALIZER })
           .timeout(connect: 30, read: 60).timeout(6.hours.to_i).follow(max_hops: 10)
 
         my_params = { access_token: APP_CONFIG[:zenodo][:access_token] }.merge(args.fetch(:params, {}))

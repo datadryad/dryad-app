@@ -50,7 +50,7 @@ module Stash
 
       # gets the file url and returns an HTTP.get(url) response object
       def get_url(url:, read_timeout: 30)
-        http = HTTP.use(:normalize_uri => {:normalizer => Stash::Download::NORMALIZER})
+        http = HTTP.use(normalize_uri: { normalizer: Stash::Download::NORMALIZER })
           .timeout(connect: 30, read: read_timeout).timeout(6.hours.to_i).follow(max_hops: 10)
         http.get(url)
       end
