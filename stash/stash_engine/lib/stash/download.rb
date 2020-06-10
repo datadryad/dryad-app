@@ -12,15 +12,15 @@ module Stash
     # And now http.get will not mangle the URL into new characters.
     #
     # The change here from the default normalizer in http.rb is that this was the old value :path => uri.normalized_path
-    NORMALIZER = lambda do |uri|
+    NORMALIZER = ->(uri) do
       uri = HTTP::URI.parse uri
 
       HTTP::URI.new(
-          :scheme    => uri.normalized_scheme,
-          :authority => uri.normalized_authority,
-          :path      => uri.path,
-          :query     => uri.query,
-          :fragment  => uri.normalized_fragment
+        scheme: uri.normalized_scheme,
+        authority: uri.normalized_authority,
+        path: uri.path,
+        query: uri.query,
+        fragment: uri.normalized_fragment
       )
     end
   end
