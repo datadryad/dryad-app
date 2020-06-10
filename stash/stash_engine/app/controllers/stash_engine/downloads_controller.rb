@@ -12,6 +12,7 @@ module StashEngine
     def check_user_agent
       # This reads a text file with one line and a regular expression in it and blocks if the user-agent matches the regexp
       agent_path = Rails.root.join('uploads', 'blacklist_agents.txt').to_s
+      return if request.user_agent.blank?
       head(429) if File.exist?(agent_path) && request.user_agent[Regexp.new(File.read(agent_path))]
     end
 
