@@ -75,9 +75,9 @@ module StashDatacite
 
       args = author_params
       affil = if args['affiliation']['ror_id'].present?
-                StashDatacite::Affiliation.from_ror_id(args['affiliation']['ror_id'])
+                StashDatacite::Affiliation.from_ror_id(ror_id: args['affiliation']['ror_id'])
               else
-                StashDatacite::Affiliation.from_long_name(args['affiliation']['long_name'])
+                StashDatacite::Affiliation.from_long_name(long_name: args['affiliation']['long_name'])
               end
       args['affiliation']['id'] = affil.id unless affil.blank?
 

@@ -96,9 +96,8 @@ module Stash
         expect(@mg.notes.scan(/Award Number/).count).to eq(1)
       end
 
-      it 'has related_identifiers output for itself' do
-        expect(@mg.related_identifiers).to eq([{ relation: 'isIdenticalTo',
-                                                 identifier: "https://doi.org/#{@resource.identifier.identifier}" }])
+      it 'sets an item to the community' do
+        expect(@mg.communities).to eq([{ identifier: APP_CONFIG.zenodo.community_id }])
       end
 
       it 'has method output' do

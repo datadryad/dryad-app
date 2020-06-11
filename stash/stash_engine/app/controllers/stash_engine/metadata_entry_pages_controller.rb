@@ -3,8 +3,8 @@ require_dependency 'stash_engine/application_controller'
 module StashEngine
   class MetadataEntryPagesController < ApplicationController
     before_action :require_login
-    before_action :resource_exist, except: [:metadata_callback]
-    before_action :require_modify_permission, except: [:metadata_callback]
+    before_action :resource_exist, except: %i[metadata_callback edit_by_doi]
+    before_action :require_modify_permission, except: %i[metadata_callback edit_by_doi]
     before_action :require_in_progress_editor, only: %i[find_or_create]
     before_action :require_can_duplicate, only: :new_version
     before_action :ajax_require_modifiable, only: %i[reject_agreement accept_agreement]
@@ -18,6 +18,21 @@ module StashEngine
     def find_or_create
       return unless @resource.submitted? # create a new version if this is a submitted version
       redirect_to(metadata_entry_pages_new_version_path(resource_id: params[:resource_id]))
+    end
+
+    # GET /stash/edit/{doi}
+    def edit_by_doi
+      doi = params[:doi]
+      doi.match(/doi:(.*)/) do |m|
+        doi = m[1]
+      end
+      id = Identifier.where(identifier: doi).first
+      if id.blank?
+        redirect_to dashboard_path, alert: "Unable to find dataset with DOI #{doi}"
+      else
+        @resource = id.latest_resource
+        redirect_to(metadata_entry_pages_new_version_path(resource_id: @resource.id))
+      end
     end
 
     # create a new version of this resource before editing with find or create

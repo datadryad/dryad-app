@@ -50,7 +50,7 @@ module Stash
         return nil if resp.parsed_response.blank? || resp.parsed_response['items'].blank?
         result = resp.parsed_response['items'].first
         return nil if result['id'].blank? || result['name'].blank?
-        ror_results_to_hash(resp)&.first
+        new(result)
       rescue HTTParty::Error, SocketError => e
         raise RorError, "Unable to connect to the ROR API for `find_first_by_ror_name`: #{e.message}"
       end
@@ -65,6 +65,19 @@ module Stash
         new(resp.parsed_response)
       rescue HTTParty::Error, SocketError => e
         raise "Unable to connect to the ROR API for `find_by_ror_id`: #{e.message}"
+      end
+
+      # Search the ROR API for a specific organization.
+      # @return a Stash::Organization::Ror::Organization object or nil
+      def self.find_by_isni_id(isni_id)
+        isni_id = standardize_isni_format(isni_id)
+        resp = query_ror(URI, { 'query': isni_id }, HEADERS)
+        return nil if resp.parsed_response.blank? ||
+                      resp.parsed_response['number_of_results'] == 0 ||
+                      resp.parsed_response['items'].blank?
+        new(resp.parsed_response['items'][0])
+      rescue HTTParty::Error, SocketError => e
+        raise "Unable to connect to the ROR API for `find_by_isni_id`: #{e.message}"
       end
 
       class << self
@@ -87,7 +100,7 @@ module Stash
         end
 
         def query_ror(uri, query, headers)
-          resp = HTTParty.get(uri, query: query, headers: headers)
+          resp = HTTParty.get(uri, query: query, headers: headers, debug_output: $stdout)
           # If we received anything but a 200 then log an error and return an empty array
           raise RorError, "Unable to connect to ROR #{URI}?#{query}: status: #{resp.code}" if resp.code != 200
           # Return an empty array if the response did not have any results
@@ -104,6 +117,25 @@ module Stash
           end
           results
         end
+
+        def standardize_isni_format(isni_id)
+          # Remove standardized prefix if it exists
+          isni_id.match(%r{http://www.isni.org/isni/(.*)/}) do |m|
+            isni_id = m[1]
+          end
+          isni_id.match(/ISNI?:(.*)/) do |m|
+            isni_id = m[1]
+          end
+          # If it has the digits with embedded spaces, keep it
+          return isni_id if isni_id =~ /\d{4} \d{4} \d{4} \d{3,4}X?/
+          # If it has no spaces, add them
+          isni_id.match(/(\d{4})(\d{4})(\d{4})(\d{3,4}X?)/) do |m|
+            return "#{m[1]} #{m[2]} #{m[3]} #{m[4]}"
+          end
+          # Otherwise, throw an error
+          raise "Unexpected structure of ISNI: #{isni_id}; use either 16 digits or 4 sets of 4 digits with spaces between."
+        end
+
       end
 
     end

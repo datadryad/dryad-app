@@ -9,10 +9,15 @@ Before you can submit from the API, you need to log in to Dryad at
 least once to create a user record and (if applicable) associate it
 with your associated campus/organization. 
 
-To request access, please [contact us](mailto:help@datadryad.org). (Developers see [Adding a New API Account](README.md))
+Once you have logged in, please
+[contact us](mailto:help@datadryad.org) to request API access. In your
+request, please specify whether you are associated with an institution
+or journal that is a Dryad member. Dryad developers will then [grant
+you the necessary permissions](adding_api_accounts.md).
 
 ## Get a token for making requests for secure parts of the API
-Before making secure requests to the Dryad API, you'll need a token.  Currently our tokens last 10 hours and a token will need to be renewed if it expires.  You may get a token using these examples from a few programming environments.  Replace &lt;bracketed&gt; items with the values you were given.  For testing, you may choose to use a bash shell, a programming environment or a tool such as Postman.
+
+Before making secure requests to the Dryad API, you'll need a token.  Currently our tokens last 10 hours and a token will need to be renewed when it expires.  You may get a token using these examples from a few programming environments.  Replace &lt;bracketed&gt; items with the values you were given.  For testing, you may choose to use a bash shell, a programming environment or a tool such as Postman.
 
 
 ```bash
@@ -37,8 +42,14 @@ response = RestClient.post "https://#{domain_name}/oauth/token", {
 token = JSON.parse(response)['access_token']
 ```
 
-## Test that your key works
-Now make sure you can use your key to access secured areas of the API.  Test with some code like the following.
+### Renewing your token
+
+Tokens are only valid for a limited amount of time.  See documentation
+about [retrying_requests made with expired tokens](retrying_expired.md) for more information.
+
+
+## Test that your token works
+Now make sure you can use your token to access secured areas of the API.  Test with some code like the following.
 
 ```bash
 curl -i -H "Accept: application/json" -H "Content-Type: application/json" -H "Authorization: Bearer <token>" -X GET https://<domain>/api/v2/test
@@ -59,9 +70,35 @@ You should see a 200 response and some information something like:
 
 {"message" => "Welcome application owner &lt;name&gt;", "user_id" => &lt;number&gt;}
 
+## Create metadata for the dataset
+
+## Create metadata for the dataset
+
+Create the appropriate metadata. A sample of the bare minimum metadata
+is shown below, but typical metadata should be more complete:
+
+```
+  {
+    "title": "Visualizing Congestion Control Using Self-Learning Epistemologies",
+    "authors": [
+      {
+        "firstName": "Wanda",
+        "lastName": "Jackson",
+        "email": "wanda.jackson@example.com",
+        "affiliation": "University of the Example"
+      }
+   	 ],
+    "abstract": "Cyberneticists agree that concurrent models are an interesting new topic, and security experts concur."
+  }
+```
+
+See the [dataset metadata](dataset_metadata.md) page for a complete
+description of the available fields.
+
+
 ## Create a new in-progress dataset
 
-The first real step is to create a new in-progress dataset. See the example below for example metadata supported.
+The first real step is to create a new in-progress dataset. 
 
 After a successful dataset POST, you should see the dataset created with your metadata, an id (DOI identifier) and a versionStatus of 'in_progress'
 
@@ -101,21 +138,6 @@ return_hash = JSON.parse(resp)
 doi = return_hash['id']
 doi_encoded = URI.escape(doi)
 ```
-## Dataset options
-
-To see the dataset fields and options in use, see the [Sample Dataset Object](https://github.com/CDL-Dryad/dryad-app/blob/master/documentation/sample_dataset.json).
-
-Journal administrators that are creating a dataset on behalf of
-another user *must* include the `publicationISSN` field to indicate
-the associated journal. They *may* also include `publicationName` and `manuscriptNumber`.
-
-Superusers have access to some extra options that control a dataset's behavior:
-- `skipDataciteUpdate` - If true, doesn't send any requests to DataCite when registering the dataset. This is useful when the dataset already has a DOI, which is present in the metadata being submitted.
-- `skipEmails` - If true, prevents emails from being sent to users on submission. Prevents emails regardless of whether the submission is successful or an error. Also stopps the emails that ask co-authors to register their ORCID. Does *not* stop the internal emails that are sent to Dryad admins if there is a submission error.
-- `preserveCurationStatus` - If true, prevents Dryad from automatically setting the curation status to "submitted". This is useful when the dataset already has a curation status that will be set in a later API call.
-- `loosenValidation` - Allows a dataset to be processed even if author information is incomplete (e.g., missing affiliations), or if the abstract is missing. It does still perform some basic validation of the dataset.
-
-The above settings get carried with a dataset into future API submissions, but the UI resets all of these values to `false` so that people can't avoid being good research citizens when they manually update their datasets. These settings are hidden when they're in the default (false) state to keep people from seeing them and trying to set them (since most people can't set them).
 
 ## Add data file(s) to your dataset
 
@@ -185,11 +207,15 @@ This will add entries to the database with the information you specify.  Only th
 - `digest` and `digestType` are not required, but if they are added then they will be passed as part of the ingest manifest to Merritt. If the digest doesn't match when Merritt downloads the files from the internet, then Merritt will cause an error on ingesting and you'll need to check/fix it.
 - `skipValidation`, if true, will tell DASH to skip the step of validating the existence of the file
 
-## Publish your dataset
+## Submit your dataset
 
-After adding the descriptive metadata and any files, you're ready to publish your dataset.
+After adding the descriptive metadata and any files, you're ready to
+submit your dataset for curation.
 
-Publication is accomplished by sending a PATCH request to /api/v2/datasets/&lt;encoded-doi&gt; with some json patch information that tells the server to try and set the /versionStatus value to 'submitted' like below:
+Submitting is accomplished by sending a PATCH request to
+/api/v2/datasets/&lt;encoded-doi&gt; with some json patch information
+that tells the server to try and set the /versionStatus value to
+'submitted' like below: 
 
 ```json
 [
@@ -225,86 +251,12 @@ return_hash = JSON.parse(resp)
 
 ## Revise your metadata in a new version
 
-After you've successfully submitted your dataset and seen the dataset become available ('submitted' value for the versionStatus), you decide to expanded your metadata like the following set.
+After you've successfully submitted your dataset and seen the dataset
+become available ('submitted' value for the versionStatus), you decide
+to expanded your metadata to include more of the details described in
+the [dataset metadata](dataset_metadata.md) examples.
 
-```ruby
-metadata_hash =
-    {
-        "title": "Visualizing Congestion Control Using Self-Learning Epistemologies",
-        "authors": [
-            {
-                "firstName": "Wanda",
-                "lastName": "Jackson",
-                "email": "wanda.jackson@example.com",
-                "affiliation": "University of the Example"
-            }
-        ],
-        "abstract": "Cyberneticists agree that concurrent models are an interesting new topic in the field of machine learning, and security experts concur.",
-        "funders": [
-            {
-                "organization": "Savannah River Operations Office, U.S. Department of Energy",
-                "awardNumber": "12345"
-            },
-            {
-                "organization": "The Cat Chronicles",
-                "awardNumber": "cat383"
-            }
-        ],
-        'methods': "My cat will help you to discover why you can't get the data to work.",
-        "usageNotes": 'Use carefully and parse results underwater.',
-        "keywords": [
-            "Abnormal bleeding",
-            "Cat",
-            "Host",
-            "Computer",
-            "Log",
-            "Noodlecast",
-            "Intercropping"
-        ],
-        "relatedWorks": [
-            {
-                "relationship": "Cites",
-                "identifierType": "URL",
-                "identifier": "http://example.org/cats"
-            },
-            {
-                "relationship": "isNewVersionOf",
-                "identifierType": "URL",
-                "identifier": "http://thedog.example.org/cats"
-            }],
-        "locations": [
-            {
-                "place": "Grogan's Mill, USA",
-                "point": {
-                    "latitude": "30.130379",
-                    "longitude": "-95.402929"
-                },
-                "box": {
-                    "swLongitude": "-95.527852",
-                    "swLatitude": "30.049326",
-                    "neLongitude": "-95.32743",
-                    "neLatitude": "30.164696"
-                }
-            },
-            {
-                "point": {
-                    "latitude": "37.0",
-                    "longitude": "-122.0"
-                }
-            },
-            {
-                "box": {
-                    "swLongitude": "-122.0",
-                    "swLatitude": "37.0",
-                    "neLongitude": "-121.0",
-                    "neLatitude": "38.0"
-                }
-            }
-        ]
-    }
-```
-
-To modify your dataset you'll do a PUT request to the /datasets/<encoded-doi> URL for this dataset.
+To modify a dataset, do a PUT request to the /datasets/<encoded-doi> URL:
 
 ```ruby
 # this example continues the ones from above and asumes you already have variables defined
@@ -313,29 +265,18 @@ resp = RestClient.put "https://#{domain_name}/api/v2/datasets/#{doi_encoded}", m
 # You will see a 200 response code if all is well.
 ```
 
-Once staging is complete and to publish the changes to your dataset, please follow the "Publish your dataset" instructions again from the section above to publish this new version of your dataset.
+Once staging is complete and to submit the changes to your dataset,
+please follow the "Submit your dataset" instructions again from the
+section above to submit this new version of your dataset.
 
-In addition to changing your metadata, you could've added additional files before re-publishing this updated version of your dataset.
+In addition to changing your metadata, you may also add additional
+files before re-submitting the updated version of your dataset.
 
-## Renewing Your Token
+## Moidifying internal metadata fields
 
-Tokens are only valid for a limited amount of time.  See documentation
-about [retrying_requests made with expired tokens](retrying_expired.md) for more information.
-
-## Internal metadata fields
-
-### As an aggregate
-
-The internal metadata can be manipulated using either the internal id of a resource, or a dataset id:
-- GET /internal_data/{id}
-- PUT /internal_data/{id}
-- DELETE /internal_data/{id}
-- GET /datasets/{dataset_id}/internal_data
-- POST /datasets/{dataset_id}/internal_data
-
-### As individual fields
-
-You can POST request to either `api/datasets/<id>/add_internal_datum` or `api/datasets/<id>/set_internal_datum`, depending on the type of data. The body should be JSON in the form of `{"data_type":"mismatchedDOI","value":"223342”}`
+Dryad maintains some "internal" fields separately from the descriptive
+dataset metadata. Although these can be modified by changing the
+dataset metadata, they can also be manipulated independently.
 
 Fields that have single values (set_internal_datum):
 - publicationISSN
@@ -346,9 +287,29 @@ Field that allow multiple values (add_internal_datum):
 - formerManuscriptNumber
 - duplicateItem
 
-## Curation status information
+### As an aggregate
 
-- GET /resources/{id}/curation_activity
+The internal metadata can be manipulated using either the internal id of a version, or a dataset id:
+- GET /internal_data/{id}
+- PUT /internal_data/{id}
+- DELETE /internal_data/{id}
+- GET /datasets/{dataset_id}/internal_data
+- POST /datasets/{dataset_id}/internal_data
 
-Curation activity does lock down a few fields: the identifier_id is set by the dataset_id on creation and can’t be modified by PUT. Similarly, the user_id is set to the api user that creates the record and can’t be modified by PUT.
+### As individual fields
+
+You can POST request to either `api/datasets/<id>/add_internal_datum` or `api/datasets/<id>/set_internal_datum`, depending on the type of data. The body should be JSON in the form of `{"data_type":"mismatchedDOI","value":"223342”}`
+
+## Curation history information
+
+Superusers can view and modify the curation history associated with a
+dataset.
+
+- GET /datasets/{dataset_id}/curation_activity
+- POST /datasets/{dataset_id}/curation_activity
+
+Curation activity does lock down a few fields: the `identifier_id` is
+set by the `dataset_id` on creation and can’t be modified by
+PUT. Similarly, the `user_id` is set to the api user that creates the
+record and can’t be modified by PUT. 
 

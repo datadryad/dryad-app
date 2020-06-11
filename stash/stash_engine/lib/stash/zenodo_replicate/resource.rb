@@ -76,7 +76,7 @@ module Stash
         else
           # retrieve and open for editing
           resp = @deposit.get_by_deposition(deposition_id: @deposition_id)
-          @deposit.reopen_for_editing unless resp[:state] == 'inprogress'
+          @deposit.reopen_for_editing if resp[:state] == 'done'
         end
         resp
       end
