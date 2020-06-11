@@ -98,7 +98,7 @@ module StashDatacite
         {
           '@type' => 'DataDownload',
           'encodingFormat' => 'application/zip',
-          'contentUrl' => download_resource_path(@resource.id)
+          'contentUrl' => @resource.download_uri
         }
       end
 
