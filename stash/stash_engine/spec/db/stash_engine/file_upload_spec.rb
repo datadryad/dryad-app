@@ -2,6 +2,7 @@ require 'db_spec_helper'
 require 'fileutils'
 require_relative '../../../../spec_helpers/factory_helper'
 require 'byebug'
+require 'cgi'
 
 module StashEngine
   describe FileUpload do
@@ -290,6 +291,26 @@ module StashEngine
                      headers: { 'Content-Type': 'application/json' })
 
         expect(@upload.s3_presigned_url).to eq('http://my.presigned.url/is/great/39768945')
+      end
+
+      it "it doesn't create a mangled URL because http.rb has modified the URL with some foreign characters so it no longer matches" do
+        str = 'javois%CC%8C_et_al_data.xls'
+        fn = CGI.unescape(str)
+        stub_request(:get, "https://merritt.example.com/api/presign-file/ark:%2F12345%2F38568/1/producer%2F#{str}?no_redirect=true")
+          .with(
+            headers: {
+              'Authorization' => 'Basic bWFydGlua2E6MTIzOTg3eHVycA==',
+              'Host' => 'merritt.example.com'
+            }
+          )
+          .to_return(status: 200, body: '{"url": "http://my.presigned.url/is/great/34snak"}',
+                     headers: { 'Content-Type': 'application/json' })
+        @upload2 = FileUpload.create(
+          resource_id: resource.id,
+          file_state: 'created',
+          upload_file_name: fn
+        )
+        expect(@upload2.s3_presigned_url).to eq('http://my.presigned.url/is/great/34snak') # returned the value from matching the url
       end
 
     end
