@@ -6,7 +6,7 @@ module StashApi
     before_action :require_json_headers
     before_action :doorkeeper_authorize!, only: %i[show index]
     before_action :require_api_user, only: %i[show index]
-    before_action :require_superuser, only: %i[show index]
+    before_action :require_admin, only: %i[show index]
 
     # Things we want to expose
     # id, first_name, last_name, email, created_at, tenant_id, role, orcid, old_dryad_email, eperson_id

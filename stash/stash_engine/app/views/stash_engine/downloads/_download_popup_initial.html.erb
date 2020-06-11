@@ -1,0 +1,15 @@
+<div class="o-admin-dialog">
+  <strong><%= truncate(@resource.title, length: 80) %></strong>
+
+  <p>Dryad is now preparing your download. Your requested download will start automatically as soon as it is ready.</p>
+
+  <p>
+    Closing this window will cancel the download process.
+  </p>
+
+  <div id="progressbar"></div>
+
+  <p>
+    <%= button_tag 'Close', type: 'button', id: 'cancel_dialog' %>
+  </p>
+</div>

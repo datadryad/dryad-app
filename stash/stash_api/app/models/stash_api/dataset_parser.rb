@@ -130,10 +130,14 @@ module StashApi
         resource_id: @resource.id
       )
 
-      # If the affiliation was provided try looking up its ROR id
-      if json_author[:affiliation].present?
-        a.affiliation = StashDatacite::Affiliation.from_long_name(json_author[:affiliation])
-        a.save if a.affiliation.present?
+      # If the affiliation was provided, prefer the ROR id over a textual name.
+      if json_author[:affiliationROR].present?
+        a.affiliation = StashDatacite::Affiliation.from_ror_id(ror_id: json_author[:affiliationROR])
+      elsif json_author[:affiliationISNI].present?
+        afis = StashDatacite::Affiliation.from_isni_id(isni_id: json_author[:affiliationISNI])
+        a.affiliation = afis
+      elsif json_author[:affiliation].present?
+        a.affiliation = StashDatacite::Affiliation.from_long_name(long_name: json_author[:affiliation], check_ror: true)
       end
 
       a.save(validate: false) # we can validate on submission, keeps from saving otherwise

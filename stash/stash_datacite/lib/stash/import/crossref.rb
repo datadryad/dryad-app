@@ -62,6 +62,14 @@ module Stash
           }
           new(resource: identifier.latest_resource, crossref_json: message)
         end
+
+        # returns the bare part (no prefix, just the identifier part) or the full string
+        # if it can't parse out a bare identifier from the DOI
+        def bare_doi(doi_string:)
+          bare_match = %r{^(doi:|https?://dx\.doi\.org/|https?://doi\.org/)(.+)$}
+          my_match = doi_string.match(bare_match)
+          my_match.present? ? my_match[2] : doi_string
+        end
       end
 
       def populate_resource!
@@ -228,7 +236,7 @@ module Stash
 
       def populate_affiliation(author, hash)
         affil_name = (hash['affiliation']&.first ? hash['affiliation'].first['name'] : nil)
-        affiliation = StashDatacite::Affiliation.from_long_name(affil_name) if affil_name.present?
+        affiliation = StashDatacite::Affiliation.from_long_name(long_name: affil_name, check_ror: true) if affil_name.present?
         affiliation.authors << author if affiliation.present? && !affiliation.authors.include?(author)
         affiliation.save if affiliation.present?
       end
@@ -330,18 +338,10 @@ module Stash
 
       # this is a helper method to detect duplicate reference dois
       def duplicate_reference_doi?(target_doi:)
-        bare_ids = @resource.related_identifiers.map { |i| bare_doi(doi_string: i.related_identifier) }.compact
-        bare_target_doi = bare_doi(doi_string: target_doi)
+        bare_ids = @resource.related_identifiers.map { |i| Crossref.bare_doi(doi_string: i.related_identifier) }.compact
+        bare_target_doi = Crossref.bare_doi(doi_string: target_doi)
         bare_ids.include?(bare_target_doi)
       end
-
-      # returns the bare part (no prefix, just the identifier part) or the full string if it can't parse out a bare identifier from the DOI
-      def bare_doi(doi_string:)
-        bare_match = %r{^(doi:|https?://dx\.doi\.org/|https?://doi\.org/)(.+)$}
-        my_match = doi_string.match(bare_match)
-        my_match.present? ? my_match[2] : doi_string
-      end
-
     end
     # rubocop:enable Metrics/ClassLength
 
