@@ -2,8 +2,6 @@ require 'zaru'
 require 'cgi'
 require 'stash/download/file_presigned' # to import the Stash::Download::Merritt exception
 require 'stash/download' # for the thing that prevents character mangling in http.rb library
-
-# rubocop:disable Metrics/ClassLength
 module StashEngine
   class FileUpload < ActiveRecord::Base
     belongs_to :resource, class_name: 'StashEngine::Resource'
