@@ -26,9 +26,15 @@ module StashEngine
     has_many :curation_activities, -> { order(id: :asc) }, class_name: 'StashEngine::CurationActivity', dependent: :destroy
     has_many :repo_queue_states, class_name: 'StashEngine::RepoQueueState', dependent: :destroy
     has_many :download_histories, class_name: 'StashEngine::DownloadHistory', dependent: :destroy
-    has_many :zenodo_copies, class_name: 'StashEngine::ZenodoCopy', dependent: :destroy
+    has_one :zenodo_copy, class_name: 'StashEngine::ZenodoCopy', dependent: :destroy
+    has_one :download_token, class_name: 'StashEngine::DownloadToken', dependent: :destroy
 
     accepts_nested_attributes_for :curation_activities
+
+    # ensures there is always an associated download_token record
+    def download_token
+      super || build_download_token(token: nil, available: nil)
+    end
 
     amoeba do
       include_association :authors
@@ -571,7 +577,7 @@ module StashEngine
       StashDatacite::AuthorPatch.patch! unless StashEngine::Author.method_defined?(:affiliation)
 
       affiliation = user.affiliation
-      affiliation = StashDatacite::Affiliation.from_long_name(user.tenant.long_name) if affiliation.blank? &&
+      affiliation = StashDatacite::Affiliation.from_long_name(long_name: user.tenant.long_name) if affiliation.blank? &&
         user.tenant.present? && !%w[dryad localhost].include?(user.tenant.abbreviation.downcase)
       StashEngine::Author.create(resource_id: id, author_orcid: orcid, affiliation: affiliation,
                                  author_first_name: f_name, author_last_name: l_name, author_email: email)

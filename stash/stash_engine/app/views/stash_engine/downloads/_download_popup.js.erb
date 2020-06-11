@@ -1,0 +1,72 @@
+<% title = 'Preparing Download' %>
+
+$('#popup_dialog').html("<%= escape_javascript(render partial: 'download_popup_initial') %>");
+
+// now open a jquery ui modal dialog
+$(function() {
+    $("#popup_dialog").dialog({
+        autoOpen: true,
+        height: 'auto',
+        width: '500px',
+        modal: true,
+        title: '<%= escape_javascript(title) %>'
+    });
+
+    // Set up progressbar and at 0%
+    console.log("Creating progressbar")
+    $( "#progressbar" ).progressbar({
+        value: 0
+    });
+
+    var totalSeconds = <%= @resource.download_token.availability_delay_seconds %>;
+    var startedAt = new Date();
+
+    console.log('Current time: <%= Time.new %>')
+    <% @resource.download_token.reload %>
+    console.log('Available at <%= @resource.download_token.available.localtime %>');
+    console.log("Total seconds: " + totalSeconds);
+
+    var pollInterval = Math.ceil((totalSeconds * 2) / 20); // number of counts that would be 5% of progressbar
+    if(pollInterval < 30) pollInterval = 30; // 15 seconds
+
+    var count = 0;
+    var myInterval = setInterval(function() {
+        downloading.updateBar(downloading.elapsedSeconds(startedAt), totalSeconds);
+        count++;
+        if((count % pollInterval == 0) && (downloading.percentComplete(downloading.elapsedSeconds(startedAt), totalSeconds) > 49)){
+            console.log("Polling for completion at approximately " + count/2 + " seconds.");
+            // call AJAX here
+            $.ajax({
+                type: "GET",
+                dataType: "json",
+                cache: false,
+                url: "<%= download_assembly_status_path(id: @resource.id, share: params[:share]) %>",
+                async: true,
+                success: function(data) {
+                    console.log("Polling Data: " + JSON.stringify(data));
+                    if(data["status"] == 200){
+                        $( "#progressbar" ).progressbar( "option", "value", 100 );
+                        $("#cancel_dialog").click(); // click cancel which closes popup
+                        window.location.href = data["url"]; // navigate to URL
+                    }
+                },
+                error: function(err) {
+                    console.log('Polling Error occurred: ' + err);
+                    $("#cancel_dialog").click(); // click cancel which closes popup and resets status
+                }
+            });
+        }
+    }, 500);
+
+    // make the cancel button in the dialog hide the dialog and stop the polling
+    $("#cancel_dialog").click(function (e) {
+        e.preventDefault();
+        $('#popup_dialog').dialog('close');
+    });
+
+    $('#popup_dialog').on('dialogclose', function(event) {
+        clearInterval(myInterval);
+        $('.js-download').prop('disabled', false);
+    });
+
+});

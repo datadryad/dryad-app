@@ -52,6 +52,7 @@ module StashDatacite
 
     # GET /contributors/autocomplete?term={query_term}
     def autocomplete
+      return if params.blank?
       partial_term = params['term']
       if partial_term.blank?
         render json: nil
@@ -61,9 +62,10 @@ module StashDatacite
         response = HTTParty.get('https://api.crossref.org/funders',
                                 query: { 'query': partial_term },
                                 headers: { 'Content-Type' => 'application/json' })
+        return if response.parsed_response.blank?
+        return if response.parsed_response['message'].blank?
         result_list = response.parsed_response['message']['items']
         render json: bubble_up_exact_matches(result_list: result_list, term: partial_term)
-        # render json: response.body
       end
     end
 
@@ -92,6 +94,7 @@ module StashDatacite
       other_items = []
       match_term = term.downcase
       result_list.each do |result_item|
+        next if result_item.blank?
         name = result_item['name'].downcase
         if name.start_with?(match_term)
           matches_at_beginning << result_item
