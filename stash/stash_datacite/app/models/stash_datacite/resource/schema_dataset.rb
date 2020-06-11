@@ -148,8 +148,10 @@ module StashDatacite
       end
 
       def citation
-        article_doi = Stash::Import::Crossref.bare_doi(doi_string: @resource.identifier.publication_article_doi)
-        "http://doi.org/#{article_doi}"
+        if @resource.identifier&.publication_article_doi
+          article_doi = Stash::Import::Crossref.bare_doi(doi_string: @resource.identifier.publication_article_doi)
+          "http://doi.org/#{article_doi}"
+        end
       end
 
       def license
