@@ -5,19 +5,18 @@ require 'stash/import/dryad_manuscript'
 require 'stash/link_out/pubmed_sequence_service'
 require 'stash/link_out/pubmed_service'
 require 'cgi'
-
 # rubocop:disable Metrics/ClassLength
 module StashDatacite
   class PublicationsController < ApplicationController
     # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity
     def update
       @se_id = StashEngine::Identifier.find(params[:internal_datum][:identifier_id])
+      @resource = StashEngine::Resource.find(params[:internal_datum][:resource_id])
       save_form_to_internal_data
       respond_to do |format|
         format.js do
           if params[:internal_datum][:do_import] == 'true'
             @error = 'Please fill in the form completely' if params[:internal_datum][:msid].blank? && params[:internal_datum][:doi].blank?
-            @resource = @se_id.latest_resource
             update_manuscript_metadata if params[:import_type] == 'manuscript'
             update_doi_metadata if params[:internal_datum][:doi].present? && params[:import_type] == 'published'
             manage_pubmed_datum(identifier: @se_id, doi: @doi.related_identifier) if !@doi&.related_identifier.blank? &&
@@ -37,7 +36,7 @@ module StashDatacite
         render json: nil
       else
         # clean the partial_term of unwanted characters so it doesn't cause errors
-        partial_term.gsub!(%r{[\/\-\\\(\)~!@%&"\[\]\^\:]}, ' ')
+        partial_term.gsub!(%r{[\/\-\\\(\)~!@%&\"\[\]\^\:]}, ' ')
 
         matches = StashEngine::Journal.where('title like ?', "%#{partial_term}%").limit(40)
 
@@ -59,6 +58,30 @@ module StashDatacite
       @pub_name = manage_internal_datum(identifier: @se_id, data_type: 'publicationName', value: params[:internal_datum][:publication_name])
       parsed_msid = parse_msid(issn: params[:internal_datum][:publication_issn], msid: params[:internal_datum][:msid])
       @msid = manage_internal_datum(identifier: @se_id, data_type: 'manuscriptNumber', value: parsed_msid)
+      save_doi
+    end
+
+    def save_doi
+      form_doi = params[:internal_datum][:doi]
+      return if form_doi.blank?
+      bare_form_doi = Stash::Import::Crossref.bare_doi(doi_string: form_doi)
+      related_dois = @resource.related_identifiers&.where(relation_type: 'issupplementto')
+
+      related_dois.each do |rd|
+        bare_related_doi = Stash::Import::Crossref.bare_doi(doi_string: rd.related_identifier)
+        return nil if bare_related_doi.include? bare_form_doi # user is entering a DOI that we already have
+        next unless bare_form_doi.include? bare_related_doi
+        # user is expanding on a DOI that we already have; update it in the DB
+        rd.update(related_identifier: bare_form_doi)
+        return nil
+      end
+
+      # none of the existing related_dois overlap with the form_doi; add the form_doi as a completely new relation
+      RelatedIdentifier.create(resource_id: @resource.id,
+                               related_identifier: bare_form_doi,
+                               related_identifier_type: 'doi',
+                               relation_type: 'issupplementto')
+      @resource.reload
     end
 
     # parse out the "relevant" part of the manuscript ID, ignoring the parts that the journal changes for different versions of the same item
