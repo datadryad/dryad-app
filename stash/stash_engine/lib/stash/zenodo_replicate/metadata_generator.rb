@@ -124,7 +124,9 @@ module Stash
       def bork_doi_for_zenodo_sandbox(doi:)
         return doi if Rails.env == 'production'
 
-        doi.gsub(/^10\.5072/, '10.55072') # bork our datacite test dois into non-test shoulders because Zenodo reserves them as their own
+        # bork our datacite test dois into non-test shoulders because Zenodo reserves them as their own, don't bork their own
+        doi.gsub!(/^10\.5072/, '10.55072') unless @use_zenodo_doi
+        doi
       end
 
       def funding_text(contributor)

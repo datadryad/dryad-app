@@ -4,6 +4,16 @@ require 'stash/zenodo_replicate/resource_mixin'
 require 'stash/zenodo_replicate/deposit'
 require 'byebug'
 
+# manual testing
+# require 'stash/zenodo_software'
+# resource = StashEngine::Resource.find(2926)
+# zc = StashEngine::ZenodoCopy.create(state: 'enqueued', identifier_id: resource.identifier_id, resource_id: resource.id, copy_type: 'software')
+# zen_soft_res = Stash::ZenodoSoftware::Resource.new(resource: resource)
+# zen_soft_res.add_to_zenodo
+#
+# Why does this have a different recid ?
+# (byebug) resp[:metadata]
+# {"prereserve_doi"=>{"doi"=>"10.5072/zenodo.623097", "recid"=>623097}}
 module Stash
   module ZenodoSoftware
     class Resource
@@ -48,22 +58,27 @@ module Stash
         # download and prepare any files that are software to be uploaded again to Zenodo
         @file_collection.ensure_local_files
 
+        resp = nil
         if submitted_before?
           if previous_submission_published?
             # generate new version based on the old version
             resp = @deposit.new_version(deposition_id: previous_submission.deposition_id)
             # save the new DOI and deposition_id
-            zenodo_sfw.update(deposition_id: resp[:id], software_doi: resp[:doi_url])
+            # TODO: remove the following commented line if it can be the same for every case
+            # zenodo_sfw.update(deposition_id: resp[:id], software_doi: resp[:metadata][:prereserve_doi][:doi])
           else
             # this version should be open already, so just retrieve it and update database
             resp = @deposit.get_by_deposition(deposition_id: previous_submission.deposition_id)
-            zenodo_sfw.update(deposition_id: previous_submission.deposition_id, software_doi: previous_submission.software_doi)
+            # TODO: remove the following commented line if it can be the same for every case
+            # zenodo_sfw.update(deposition_id: previous_submission.deposition_id, software_doi: previous_submission.software_doi)
           end
         else
           # create entirely new dataset
           resp = @deposit.new_deposition
-          zenodo_sfw.update(deposition_id: resp[:id], software_doi: resp[:doi_url])
+          # TODO: remove the following commented line if it can be the same for every case
+          # zenodo_sfw.update(deposition_id: resp[:id], software_doi: resp[:metadata][:prereserve_doi][:doi])
         end
+        zenodo_sfw.update(deposition_id: resp[:id], software_doi: resp[:metadata][:prereserve_doi][:doi])
 
         # update metadata
         @deposit.update_metadata(doi: zenodo_sfw.software_doi)

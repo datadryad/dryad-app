@@ -15,9 +15,11 @@ module Stash
 
       # this creates a new deposit and returns the json response if successful
       # POST /api/deposit/depositions
-      def new_deposition
+      # TODO: do I need this pre-reserve?  Seems to do it whether I tell it to or not.
+      def new_deposition(pre_reserve_doi: false)
         # mg = MetadataGenerator.new(resource: @resource)
-        resp = ZC.standard_request(:post, "#{ZC.base_url}/api/deposit/depositions", json: {})
+        json = ( pre_reserve_doi ? { metadata: { prereserve_doi: true } } : {} )
+        resp = ZC.standard_request(:post, "#{ZC.base_url}/api/deposit/depositions", json: json)
 
         @deposition_id = resp[:id]
         @links = resp[:links]
