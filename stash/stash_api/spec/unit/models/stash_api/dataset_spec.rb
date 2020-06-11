@@ -112,6 +112,16 @@ module StashApi
         expect(@metadata[:curationStatus]).to eq('In Progress')
       end
 
+      it 'has an edit link' do
+        expect(@metadata[:editLink]).to include('/edit/')
+      end
+
+      it 'does not have an edit link when the request is made by a non-privileged user' do
+        @dataset = Dataset.new(identifier: @identifier.to_s, user: create(:user))
+        @metadata = @dataset.metadata
+        expect(@metadata[:editLink]).to eq(nil)
+      end
+
       it 'has a sharingLink when it is in peer_review status' do
         bogus_link = 'http://some.sharing.com/linkvalue'
         allow_any_instance_of(StashEngine::Share).to receive(:sharing_link).and_return(bogus_link)

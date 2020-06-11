@@ -9,8 +9,8 @@ module StashEngine
 
       def ping_dependency
         super
-        env = Rails.env.production? ? 'prd' : 'stg'
-        target = "http://uc3-mrtoai-#{env}.cdlib.org:37001/mrtoai/state"
+        env = Rails.env.production? ? 'mrtoai.cdlib.org' : 'mrtoai-stg.cdlib.org'
+        target = "http://#{env}:37001/mrtoai/state"
         resp = HTTParty.get(target)
         online = resp.code == 200
         msg = resp.body unless online

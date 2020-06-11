@@ -52,3 +52,4 @@ production:
     - ucsb_dash
     - ucsc_dash
     - ucsf_lib_datashare
+    - dataone_dash

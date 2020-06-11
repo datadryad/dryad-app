@@ -30,6 +30,11 @@ module StashEngine
 
     accepts_nested_attributes_for :curation_activities
 
+    # ensures there is always an associated download_token record
+    def download_token
+      super || build_download_token(token: nil, available: nil)
+    end
+
     amoeba do
       include_association :authors
       include_association :file_uploads
@@ -571,7 +576,7 @@ module StashEngine
       StashDatacite::AuthorPatch.patch! unless StashEngine::Author.method_defined?(:affiliation)
 
       affiliation = user.affiliation
-      affiliation = StashDatacite::Affiliation.from_long_name(user.tenant.long_name) if affiliation.blank? &&
+      affiliation = StashDatacite::Affiliation.from_long_name(long_name: user.tenant.long_name) if affiliation.blank? &&
         user.tenant.present? && !%w[dryad localhost].include?(user.tenant.abbreviation.downcase)
       StashEngine::Author.create(resource_id: id, author_orcid: orcid, affiliation: affiliation,
                                  author_first_name: f_name, author_last_name: l_name, author_email: email)

@@ -51,6 +51,20 @@ RSpec.feature 'Admin', type: :feature do
       expect(page).to have_css('input#user_comment')
     end
 
+    it 'redirects to the dataset editing page when requesting an edit link that the user has access to', js: true do
+      visit stash_url_helpers.dashboard_path
+      visit "/stash/edit/#{@identifier.identifier}"
+      expect(page).to have_text('Describe Your Dataset')
+    end
+
+    it 'does not redirect to the dataset editing page when requesting an edit link for a different tenant', js: true do
+      @resource.tenant_id = 'dryad'
+      @resource.save
+      visit stash_url_helpers.dashboard_path
+      visit "/stash/edit/#{@identifier.identifier}"
+      expect(page).to have_text('do not have permission to modify')
+    end
+
     context :superuser do
 
       before(:each) do
@@ -79,8 +93,8 @@ RSpec.feature 'Admin', type: :feature do
         end
         expect(page.find("#user_role_#{@user.id}")).to have_text('Admin')
       end
-    end
 
+    end
   end
 
 end
