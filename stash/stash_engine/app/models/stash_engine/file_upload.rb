@@ -1,6 +1,7 @@
 require 'zaru'
 require 'cgi'
 require 'stash/download/file_presigned' # to import the Stash::Download::Merritt exception
+require 'stash/download' # for the thing that prevents character mangling in http.rb library
 
 # rubocop:disable Metrics/ClassLength
 module StashEngine
@@ -98,10 +99,12 @@ module StashEngine
     # reused in a few places.  If we move to a different repo this will need to change.
     #
     # If you use this method, you need to rescue the HTTP::Error and Stash::Download::Merritt errors if you don't want them raised
+    # rubocop:disable Metrics/AbcSize
     def s3_presigned_url
       raise Stash::Download::MerrittError, "Tenant not defined for resource_id: #{resource&.id}" if resource&.tenant.blank?
 
-      http = HTTP.timeout(connect: 30, read: 30).timeout(60).follow(max_hops: 2)
+      http = HTTP.use(normalize_uri: { normalizer: Stash::Download::NORMALIZER })
+        .timeout(connect: 30, read: 30).timeout(60).follow(max_hops: 2)
         .basic_auth(user: resource.tenant.repository.username, pass: resource.tenant.repository.password)
 
       r = http.get(merritt_presign_info_url)
@@ -111,6 +114,7 @@ module StashEngine
       raise Stash::Download::MerrittError,
             "Merritt couldn't create presigned URL for #{merritt_presign_info_url}\nHttp status code: #{r.status.code}"
     end
+    # rubocop:enable Metrics/AbcSize
 
     # example
     # http://mrtexpress-stage.cdlib.org/dv/<version>/<ark>/<file pathname>
