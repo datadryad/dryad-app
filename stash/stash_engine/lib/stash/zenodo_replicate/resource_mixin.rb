@@ -4,9 +4,9 @@ module Stash
 
       # error if not starting as enqueued
       def error_if_not_enqueued
-        return if @resource.zenodo_copies.send(@assoc_method).first&.state == 'enqueued'
+        return if @copy.state == 'enqueued'
 
-        raise ZenodoError, "resource_id #{@resource.id}: You should never start replicating unless starting from an enqueued state"
+        raise ZenodoError, "copy_id #{@copy.id}: You should never start replicating unless starting from an enqueued state"
       end
 
       # return an error if replicating already, shouldn't start another replication
@@ -23,19 +23,18 @@ module Stash
 
       def error_if_out_of_order
         # this is a little similar to error_if_replicating, but catches defered or other odd states
-        prev_unfinished_count = StashEngine::ZenodoCopy.where(identifier_id: @resource.identifier_id)
-          .where('id < ?', @resource.zenodo_copies.send(@assoc_method).first.id).where.not(state: 'finished').count
+        prev_unfinished_count = StashEngine::ZenodoCopy.where(identifier_id: @copy.identifier_id)
+          .where('id < ?', @copy.id).send(@assoc_method).where.not(state: 'finished').count
         return if prev_unfinished_count == 0
 
-        raise ZenodoError, "identifier_id #{@resource.identifier.id}: Cannot replicate a version when a previous version " \
-              'has not replicated yet. Items must replicate in order.'
+        raise ZenodoError, "identifier_id #{@copy.identifier_id}: Cannot replicate when a previous replication for the " \
+              'identifier has not finished yet. Items must replicate in order.'
       end
 
       def previous_deposition_id
-        last = @resource.identifier.zenodo_copies.send(@assoc_method).where.not(deposition_id: nil).last
-        return nil if last.nil?
+        return @previous_copy.deposition_id unless @previous_copy.nil?
 
-        last.deposition_id
+        nil
       end
     end
   end
