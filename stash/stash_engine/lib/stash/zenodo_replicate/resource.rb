@@ -4,7 +4,8 @@ require 'stash/zenodo_replicate/resource_mixin'
 
 # require 'stash/zenodo_replicate'
 # resource = StashEngine::Resource.find(785)
-# szr = Stash::ZenodoReplicate::Resource.new(resource: resource)
+# szc = Stash::ZenodoCopy.create(identifier_id: resource.identifier_id, resource_id: resource.id, copy_type: 'data', state: 'enqueued')
+# szr = Stash::ZenodoReplicate::Resource.new(copy_id: @szc.id)
 # szr.add_to_zenodo
 #
 # https://sandbox.zenodo.org/record/503933
@@ -16,9 +17,12 @@ module Stash
       # these are methods to help out for this class
       include Stash::ZenodoReplicate::ResourceMixin
 
-      def initialize(resource:)
+      def initialize(copy_id:)
         @assoc_method = :data
-        @resource = resource
+        @copy = StashEngine::ZenodoCopy.find(copy_id)
+        @previous_copy = StashEngine::ZenodoCopy.where(identifier_id: @copy.identifier_id).where('id < ? ', @copy.id)
+                             .data.order(id: :desc).first
+        @resource = StashEngine::Resource.find(@copy.resource_id)
         @file_collection = Stash::MerrittDownload::FileCollection.new(resource: @resource)
       end
 
@@ -29,10 +33,8 @@ module Stash
         error_if_replicating
         error_if_out_of_order
 
-        # database status for this copy
-        third_copy_record = @resource.zenodo_copies.data.first
-        third_copy_record.update(state: 'replicating')
-        third_copy_record.increment!(:retries)
+        @copy.update(state: 'replicating')
+        @copy.increment!(:retries)
 
         # a zenodo deposit class
         @deposit = Deposit.new(resource: @resource)
@@ -42,7 +44,7 @@ module Stash
 
         # get/create the deposit(ion) from zenodo
         get_or_create_deposition
-        third_copy_record.update(deposition_id: @deposit.deposition_id)
+        @copy.update(deposition_id: @deposit.deposition_id)
 
         # update metadata
         @deposit.update_metadata
@@ -53,12 +55,10 @@ module Stash
 
         # submit it, publishing will fail if there isn't at least one file
         @deposit.publish
-        third_copy_record.update(state: 'finished')
+        @copy.update(state: 'finished')
       rescue Stash::MerrittDownload::DownloadError, Stash::ZenodoReplicate::ZenodoError, HTTP::Error => ex
         # log this in the database so we can track it
-        record = @resource.zenodo_copies.data.first
-        record = StashEngine::ZenodoCopy.create(resource_id: @resource.id, identifier_id: @resource.identifier.id, copy_type: 'data') if record.nil?
-        record.update(state: 'error', error_info: "#{ex.class}\n#{ex}")
+        @copy.update(state: 'error', error_info: "#{ex.class}\n#{ex}")
       ensure
         @file_collection.cleanup_files
       end
