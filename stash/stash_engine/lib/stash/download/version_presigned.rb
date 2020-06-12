@@ -1,6 +1,7 @@
 require 'http'
 require 'byebug'
 require 'zaru'
+require 'stash/download'
 
 module Stash
   module Download
@@ -15,7 +16,8 @@ module Stash
         _ignored, @local_id = @resource.merritt_protodomain_and_local_id
         @domain = @tenant&.repository&.domain
 
-        @http = HTTP.timeout(connect: 30, read: 30).timeout(30.seconds.to_i).follow(max_hops: 3)
+        @http = HTTP.use(normalize_uri: { normalizer: Stash::Download::NORMALIZER })
+          .timeout(connect: 30, read: 30).timeout(30.seconds.to_i).follow(max_hops: 3)
           .basic_auth(user: @tenant&.repository&.username, pass: @tenant&.repository&.password)
       end
 
