@@ -51,7 +51,8 @@ module Stash
           # hit publish if that is the action.
           # TODO: will publishing fail if no file changes but just metadata changes from an old version? This gets more complicated if so.
           @deposit.publish
-          zenodo_sfw.update(state: 'finished', deposition_id: previous_submission.deposition_id, software_doi: previous_submission.software_doi)
+          zenodo_sfw.update(state: 'finished', deposition_id: previous_submission.deposition_id,
+                            software_doi: previous_submission.software_doi, concept_doi: previous_submission.concept_doi)
           return
         end
 
@@ -78,7 +79,8 @@ module Stash
           # TODO: remove the following commented line if it can be the same for every case
           # zenodo_sfw.update(deposition_id: resp[:id], software_doi: resp[:metadata][:prereserve_doi][:doi])
         end
-        zenodo_sfw.update(deposition_id: resp[:id], software_doi: resp[:metadata][:prereserve_doi][:doi])
+        zenodo_sfw.update(deposition_id: resp[:id], software_doi: resp[:metadata][:prereserve_doi][:doi],
+                          concept_doi: resp[:concept_doi] )
 
         # update metadata
         @deposit.update_metadata(doi: zenodo_sfw.software_doi)

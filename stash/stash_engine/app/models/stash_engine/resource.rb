@@ -39,6 +39,7 @@ module StashEngine
     amoeba do
       include_association :authors
       include_association :file_uploads
+      include_association :software_uploads
       customize(->(_, new_resource) do
         # you'd think 'include_association :current_resource_state' would do the right thing and deep-copy
         # the resource state, but instead it keeps the reference to the old one, so we need to clear it and
@@ -48,11 +49,13 @@ module StashEngine
         new_resource.meta_view = false
         new_resource.file_view = false
 
-        new_resource.file_uploads.each do |file|
-          raise "Expected #{new_resource.id}, was #{file.resource_id}" unless file.resource_id == new_resource.id
-          if file.file_state == 'created'
-            file.file_state = 'copied'
-            file.save
+        %i[file_uploads software_uploads].each do |meth|
+          new_resource.public_send(meth).each do |file|
+            raise "Expected #{new_resource.id}, was #{file.resource_id}" unless file.resource_id == new_resource.id
+            if file.file_state == 'created'
+              file.file_state = 'copied'
+              file.save
+            end
           end
         end
 
