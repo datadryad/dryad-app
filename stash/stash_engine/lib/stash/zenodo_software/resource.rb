@@ -14,6 +14,21 @@ require 'byebug'
 # Why does this have a different recid ?
 # (byebug) resp[:metadata]
 # {"prereserve_doi"=>{"doi"=>"10.5072/zenodo.623097", "recid"=>623097}}
+#
+# The zenodo states are wacky and follow this as far as I can tell
+# unpublished submission -- state: unsubmitted,   submitted: false
+# published              -- state: done,          submitted: true
+# published-reopened     -- state: inprogress,    submitted: true
+# published again        -- state: done,          submitted: true
+# new_version            -- state: unsubmitted,   submitted: false
+#
+# The best wey to handle metadata-only changes
+# - Don't update metadata-only unless unsubmitted
+# - When publishing, no files ever change with publishing action (separate from the others)
+#   - if unsubmitted, update metadata and then publish
+#   - if done, reopen (inprogress), update metadata and then publish
+#
+#
 module Stash
   module ZenodoSoftware
     class Resource
@@ -77,7 +92,6 @@ module Stash
         resp = nil
         if submitted_before?
           if previous_submission_published?
-            byebug
             resp = @deposit.new_version(deposition_id: @previous_copy.deposition_id)
           else
             resp = @deposit.get_by_deposition(deposition_id: @previous_copy.deposition_id)

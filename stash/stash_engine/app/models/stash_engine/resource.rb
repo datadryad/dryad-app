@@ -61,8 +61,10 @@ module StashEngine
 
         # for some reason a where clause will not work with AR in this instance
         # new_resource.file_uploads.where(file_state: 'deleted').delete_all
-        resources = new_resource.file_uploads.select { |ar_record| ar_record.file_state == 'deleted' }
-        resources.each(&:delete)
+        %i[file_uploads software_uploads].each do |meth|
+          resources = new_resource.public_send(meth).select { |ar_record| ar_record.file_state == 'deleted' }
+          resources.each(&:delete)
+        end
       end)
     end
 
