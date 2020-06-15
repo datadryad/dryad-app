@@ -57,7 +57,6 @@ module StashDatacite
 
       # google says URLs of the Location of a page describing the dataset
       def url
-        # the url should be the dx.doi, this seems like view logic
         "https://doi.org/#{@resource.try(:identifier).try(:identifier)}"
       end
 
@@ -94,11 +93,13 @@ module StashDatacite
       end
 
       def distribution
-        return nil unless @resource.download_uri
+        target_id = CGI.escape(@resource.identifier&.to_s)
+        download_url = StashApi::Engine.routes.url_helpers.download_dataset_url(target_id)
+        return nil unless download_url
         {
           '@type' => 'DataDownload',
           'encodingFormat' => 'application/zip',
-          'contentUrl' => @resource.download_uri
+          'contentUrl' => download_url
         }
       end
 
@@ -148,10 +149,9 @@ module StashDatacite
       end
 
       def citation
-        if @resource.identifier&.publication_article_doi
-          article_doi = Stash::Import::Crossref.bare_doi(doi_string: @resource.identifier.publication_article_doi)
-          "http://doi.org/#{article_doi}"
-        end
+        return unless @resource.identifier&.publication_article_doi
+        article_doi = Stash::Import::Crossref.bare_doi(doi_string: @resource.identifier.publication_article_doi)
+        "http://doi.org/#{article_doi}"
       end
 
       def license
