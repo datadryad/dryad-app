@@ -60,6 +60,7 @@ module Stash
         # sanity checks
         error_if_not_enqueued
         error_if_replicating
+        error_if_bad_type
         error_if_out_of_order
         error_if_any_previous_unfinished
         error_if_more_than_one_replication_for_resource
@@ -155,6 +156,11 @@ module Stash
       def files_changed?
         change_count = @resource.software_uploads.deleted_from_version.count + @resource.software_uploads.newly_created.count
         change_count.positive?
+      end
+
+      def error_if_bad_type
+        return if %w[software software_publish].include?(@copy.copy_type)
+        raise ZE, "copy_id #{@copy.id}: Needs to be of the correct type (software not data)"
       end
 
       def nothing_to_submit?
