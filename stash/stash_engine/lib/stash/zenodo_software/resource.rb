@@ -27,12 +27,12 @@ module Stash
     class Resource
 
       def self.test_submit(resource_id:, publication: false)
-        rep_type = (publication == true ? 'software_publish': 'software')
+        rep_type = (publication == true ? 'software_publish' : 'software')
         resource = StashEngine::Resource.find(resource_id)
         zc = StashEngine::ZenodoCopy.where(resource_id: resource.id).where(copy_type: rep_type).first
         if zc.nil?
           zc = StashEngine::ZenodoCopy.create(state: 'enqueued', identifier_id: resource.identifier_id,
-            resource_id: resource.id, copy_type: rep_type)
+                                              resource_id: resource.id, copy_type: rep_type)
         elsif zc.state != 'enqueued'
           zc.update(state: 'enqueued')
         end
@@ -69,11 +69,11 @@ module Stash
         @copy.increment!(:retries)
 
         @deposit = Stash::ZenodoReplicate::Deposit.new(resource: @resource)
-        if @previous_copy
-          @resp = @deposit.get_by_deposition(deposition_id: @previous_copy.deposition_id)
-        else
-          @resp = @deposit.new_deposition
-        end
+        @resp = if @previous_copy
+                  @deposit.get_by_deposition(deposition_id: @previous_copy.deposition_id)
+                else
+                  @deposit.new_deposition
+                end
 
         # update the database with current information on this dataset from Zenodo, does prereserve_doi work for all states?
         @copy.update(deposition_id: @resp[:id], software_doi: @resp[:metadata][:prereserve_doi][:doi],
@@ -121,8 +121,8 @@ module Stash
         if @resp[:state] == 'done'
           # don't reopen for file changes and just update status
           @copy.update(state: 'finished',
-            error_info: "Warning: metadata wasn't updated because the dataset is closed for editing since "\
-                          "creating new versions for metadata-only changes is not allowed in Zenodo.")
+                       error_info: "Warning: metadata wasn't updated because the dataset is closed for editing since "\
+                          'creating new versions for metadata-only changes is not allowed in Zenodo.')
           return
         end
         @deposit.update_metadata(doi: @copy.software_doi)
@@ -139,7 +139,7 @@ module Stash
 
         return if resources.count < 1
 
-        unsubmitted_count = resources.map{ |res| res.software_uploads.count }.reduce(0, :+)
+        unsubmitted_count = resources.map { |res| res.software_uploads.count }.reduce(0, :+)
 
         return unless unsubmitted_count.positive?
 
