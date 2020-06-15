@@ -6,29 +6,22 @@ require 'byebug'
 
 # manual testing
 # require 'stash/zenodo_software'
-# resource = StashEngine::Resource.find(2926)
-# zc = StashEngine::ZenodoCopy.create(state: 'enqueued', identifier_id: resource.identifier_id, resource_id: resource.id, copy_type: 'software')
-# zen_soft_res = Stash::ZenodoSoftware::Resource.new(copy_id: zc.id)
-# zen_soft_res.add_to_zenodo
+# Stash::ZenodoSoftware::Resource.test_submit(resource_id: xxxx, publication: false)
 #
-# Why does this have a different recid ?
-# (byebug) resp[:metadata]
-# {"prereserve_doi"=>{"doi"=>"10.5072/zenodo.623097", "recid"=>623097}}
 #
-# The zenodo states are wacky and follow this as far as I can tell
+# The zenodo states are these
 # unpublished submission -- state: unsubmitted,   submitted: false
 # published              -- state: done,          submitted: true
 # published-reopened     -- state: inprogress,    submitted: true
 # published again        -- state: done,          submitted: true
 # new_version            -- state: unsubmitted,   submitted: false
 #
-# The best wey to handle metadata-only changes
-# - Don't update metadata-only unless unsubmitted
-# - When publishing, no files ever change with publishing action (separate from the others)
-#   - if unsubmitted, update metadata and then publish
-#   - if done, reopen (inprogress), update metadata and then publish
+# Metadata-only changes are inconsistent, because they can be updated at time of change if the zenodo dataset is open, but
+# if the dataset is closed then they can be deferred until publication when they might mean the dataset is re-opened and re-published.
 #
-#
+# We may lose some history of metadata changes for zenodo software but we only care about published versions at Zenodo and
+# at least the latest metadata changes on publication are present.  File changes get versioned internally at Zenodo.
+
 module Stash
   module ZenodoSoftware
     class Resource
@@ -57,6 +50,7 @@ module Stash
         @copy = StashEngine::ZenodoCopy.find(copy_id)
         @previous_copy = StashEngine::ZenodoCopy.where(identifier_id: @copy.identifier_id).where('id < ? ', @copy.id)
           .software.order(id: :desc).first
+        @resp = {}
         @resource = StashEngine::Resource.find(@copy.resource_id)
         @file_collection = FileCollection.new(resource: @resource)
       end
@@ -75,38 +69,35 @@ module Stash
         @copy.increment!(:retries)
 
         @deposit = Stash::ZenodoReplicate::Deposit.new(resource: @resource)
-
-        if @copy.copy_type == 'software_publish'
-          # hit publish if that is the action.
-          # TODO: will publishing fail if no file changes but just metadata changes from an old version? This gets more complicated if so.
-          resp = @deposit.get_by_deposition(deposition_id: @previous_copy.deposition_id)
-          @deposit.publish
-          @copy.update(state: 'finished', deposition_id: resp[:id], software_doi: resp[:metadata][:prereserve_doi][:doi],
-                       conceptrecid: resp[:conceptrecid] )
-          return
-        end
-
-        # download and prepare any files that are software to be uploaded again to Zenodo
-        @file_collection.ensure_local_files
-
-        resp = nil
-        if submitted_before?
-          if previous_submission_published?
-            resp = @deposit.new_version(deposition_id: @previous_copy.deposition_id)
-          else
-            resp = @deposit.get_by_deposition(deposition_id: @previous_copy.deposition_id)
-          end
+        if @previous_copy
+          @resp = @deposit.get_by_deposition(deposition_id: @previous_copy.deposition_id)
         else
-          resp = @deposit.new_deposition
+          @resp = @deposit.new_deposition
         end
-        @copy.update(deposition_id: resp[:id], software_doi: resp[:metadata][:prereserve_doi][:doi],
-                          conceptrecid: resp[:conceptrecid] )
+
+        # update the database with current information on this dataset from Zenodo, does prereserve_doi work for all states?
+        @copy.update(deposition_id: @resp[:id], software_doi: @resp[:metadata][:prereserve_doi][:doi],
+                     conceptrecid: @resp[:conceptrecid])
+
+        return publish_dataset if @copy.copy_type == 'software_publish'
+
+        return metadata_only_update unless files_changed?
+
+        # if it's gotten here then we're making file changes, the main case
+
+        if @resp[:state] == 'done' # then create new version
+          @resp = @deposit.new_version(deposition_id: @previous_copy.deposition_id)
+          # the doi and deposition id have changed, so update
+          @copy.update(deposition_id: @resp[:id], software_doi: @resp[:metadata][:prereserve_doi][:doi],
+                       conceptrecid: @resp[:conceptrecid])
+        end
 
         # update metadata
         @deposit.update_metadata(doi: @copy.software_doi)
 
-        # synchronize files
-        @file_collection.synchronize_to_zenodo(bucket_url: resp[:links][:bucket])
+        # update files
+        @file_collection.ensure_local_files
+        @file_collection.synchronize_to_zenodo(bucket_url: @resp[:links][:bucket])
 
         @copy.update(state: 'finished')
         @file_collection.cleanup_files # only cleanup files after success and finished, keep on fs so we have them otherwise
@@ -114,6 +105,29 @@ module Stash
         @copy.update(state: 'error', error_info: "#{ex.class}\n#{ex}")
       end
       # rubocop:enable Metrics/MethodLength, Metrics/AbcSize, Metrics/CyclomaticComplexity
+
+      # Publishing should never come with file changes because it's a separate operation than updating files or metadata
+      # However, metadata may not have been updated for locked datasets, so update it.
+      def publish_dataset
+        # Zenodo only allows publishing if there are file changes in this version, so it's different depending on status
+        @deposit.reopen_for_editing if @resp[:state] == 'done'
+        @deposit.update_metadata(doi: @copy.software_doi)
+        @deposit.publish
+        @copy.update(state: 'finished')
+      end
+
+      # no files are changing, but a previous version should always exist
+      def metadata_only_update
+        if @resp[:state] == 'done'
+          # don't reopen for file changes and just update status
+          @copy.update(state: 'finished',
+            error_info: "Warning: metadata wasn't updated because the dataset is closed for editing since "\
+                          "creating new versions for metadata-only changes is not allowed in Zenodo.")
+          return
+        end
+        @deposit.update_metadata(doi: @copy.software_doi)
+        @copy.update(state: 'finished')
+      end
 
       private
 
@@ -152,11 +166,6 @@ module Stash
 
       def submitted_before?
         !@previous_copy.nil?
-      end
-
-      def previous_submission_published?
-        return true if submitted_before? && @previous_copy.copy_type == 'software_publish'
-        false
       end
     end
   end
