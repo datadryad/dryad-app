@@ -22,7 +22,8 @@ module StashEngine
       resource = StashEngine::Resource.where(id: args[0]).first
       return if resource.nil? || resource&.zenodo_copies&.data&.first&.state != 'enqueued' || self.class.should_defer?(resource: resource)
 
-      zr = Stash::ZenodoReplicate::Resource.new(resource: resource)
+      data_copy = resource&.zenodo_copies&.data&.first
+      zr = Stash::ZenodoReplicate::Copier.new(copy_id: data_copy.id)
       zr.add_to_zenodo
     end
 

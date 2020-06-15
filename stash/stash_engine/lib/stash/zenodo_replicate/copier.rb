@@ -1,6 +1,6 @@
 require 'stash/merritt_download'
 require 'http'
-require 'stash/zenodo_replicate/resource_mixin'
+require 'stash/zenodo_replicate/copier_mixin'
 
 # require 'stash/zenodo_replicate'
 # resource = StashEngine::Resource.find(785)
@@ -12,10 +12,10 @@ require 'stash/zenodo_replicate/resource_mixin'
 
 module Stash
   module ZenodoReplicate
-    class Resource
+    class Copier
 
       # these are methods to help out for this class
-      include Stash::ZenodoReplicate::ResourceMixin
+      include Stash::ZenodoReplicate::CopierMixin
 
       def initialize(copy_id:)
         @assoc_method = :data

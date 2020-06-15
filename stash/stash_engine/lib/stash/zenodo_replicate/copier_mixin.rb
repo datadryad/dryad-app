@@ -1,6 +1,6 @@
 module Stash
   module ZenodoReplicate
-    module ResourceMixin
+    module CopierMixin
 
       # error if not starting as enqueued
       def error_if_not_enqueued
