@@ -21,12 +21,11 @@ module Stash
         @assoc_method = :data
         @copy = StashEngine::ZenodoCopy.find(copy_id)
         @previous_copy = StashEngine::ZenodoCopy.where(identifier_id: @copy.identifier_id).where('id < ? ', @copy.id)
-                             .data.order(id: :desc).first
+          .data.order(id: :desc).first
         @resource = StashEngine::Resource.find(@copy.resource_id)
         @file_collection = Stash::MerrittDownload::FileCollection.new(resource: @resource)
       end
 
-      # rubocop:disable Metrics/MethodLength
       def add_to_zenodo
         # sanity checks
         error_if_not_enqueued
@@ -62,7 +61,6 @@ module Stash
       ensure
         @file_collection.cleanup_files
       end
-      # rubocop:enable Metrics/MethodLength
 
       private
 
