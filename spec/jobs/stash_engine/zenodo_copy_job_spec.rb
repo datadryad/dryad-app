@@ -11,7 +11,7 @@ module StashEngine
     before(:each) do
       @resource = create(:resource)
       @new_zen = double('newZenodo')
-      allow(Stash::ZenodoReplicate::Resource).to receive(:new).and_return(@new_zen)
+      allow(Stash::ZenodoReplicate::Copier).to receive(:new).and_return(@new_zen)
     end
 
     describe '#perform' do
