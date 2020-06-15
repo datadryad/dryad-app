@@ -1,10 +1,10 @@
 # frozen_string_literal: true
+
 # rubocop:disable Metrics/ClassLength
 
 require_dependency 'stash_api/application_controller'
 require_relative 'datasets/submission_mixin'
-require 'stash/download/file_presigned'
-require 'stash/download/version_presigned' 
+require 'stash/download/version_presigned'
 
 module StashApi
   class DatasetsController < ApplicationController
@@ -20,7 +20,6 @@ module StashApi
     # before_action :require_in_progress_resource, only: :update
     before_action :require_permission, only: :update
     before_action :lock_down_admin_only_params, only: %i[create update]
-
 
     # get /datasets/<id>
     def show
