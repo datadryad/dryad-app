@@ -5,7 +5,7 @@ require 'stash/zenodo_replicate/copier_mixin'
 # require 'stash/zenodo_replicate'
 # resource = StashEngine::Resource.find(785)
 # szc = Stash::ZenodoCopy.create(identifier_id: resource.identifier_id, resource_id: resource.id, copy_type: 'data', state: 'enqueued')
-# szr = Stash::ZenodoReplicate::Resource.new(copy_id: @szc.id)
+# szr = Stash::ZenodoReplicate::Copier.new(copy_id: @szc.id)
 # szr.add_to_zenodo
 #
 # https://sandbox.zenodo.org/record/503933
