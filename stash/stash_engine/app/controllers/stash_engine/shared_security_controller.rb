@@ -74,7 +74,7 @@ module StashEngine
     end
 
     def admin?(resource:)
-      resource.admin_for_this_item?(user: current_user)
+      resource&.admin_for_this_item?(user: current_user)
     end
 
     def superuser?
