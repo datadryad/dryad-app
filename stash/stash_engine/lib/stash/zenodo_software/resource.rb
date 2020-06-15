@@ -43,7 +43,7 @@ module Stash
       ZE = Stash::ZenodoReplicate::ZenodoError
 
       # these are methods to help out for this class
-      include Stash::ZenodoReplicate::ResourceMixin
+      include Stash::ZenodoReplicate::CopierMixin
 
       def initialize(copy_id:)
         @assoc_method = :software
