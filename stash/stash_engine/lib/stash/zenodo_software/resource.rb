@@ -6,7 +6,7 @@ require 'byebug'
 
 # manual testing
 # require 'stash/zenodo_software'
-# Stash::ZenodoSoftware::Resource.test_submit(resource_id: xxxx, publication: false)
+# Stash::ZenodoSoftware::Copier.test_submit(resource_id: xxxx, publication: false)
 #
 #
 # The zenodo states are these
@@ -22,9 +22,10 @@ require 'byebug'
 # We may lose some history of metadata changes for zenodo software but we only care about published versions at Zenodo and
 # at least the latest metadata changes on publication are present.  File changes get versioned internally at Zenodo.
 
+# rubocop:disable Metrics/ClassLength
 module Stash
   module ZenodoSoftware
-    class Resource
+    class Copier
 
       def self.test_submit(resource_id:, publication: false)
         rep_type = (publication == true ? 'software_publish' : 'software')
@@ -36,7 +37,7 @@ module Stash
         elsif zc.state != 'enqueued'
           zc.update(state: 'enqueued')
         end
-        zen_soft_res = Stash::ZenodoSoftware::Resource.new(copy_id: zc.id)
+        zen_soft_res = Stash::ZenodoSoftware::Copier.new(copy_id: zc.id)
         zen_soft_res.add_to_zenodo
       end
 
@@ -176,3 +177,4 @@ module Stash
     end
   end
 end
+# rubocop:enable Metrics/ClassLength
