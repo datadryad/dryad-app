@@ -48,22 +48,22 @@ module StashDatacite
     end
 
     def populate_se_resource! # rubocop:disable Metrics/AbcSize
-      set_sd_identifier(dcs_resource.identifier)
+      sd_identifier(dcs_resource.identifier)
       stash_files.each { |stash_file| add_stash_file(stash_file) }
       dcs_resource.creators.each { |dcs_creator| add_se_author(dcs_creator) }
       dcs_resource.titles.each { |dcs_title| add_se_title(dcs_title) }
-      set_sd_publisher(dcs_resource.publisher)
-      set_sd_pubyear(dcs_resource.publication_year)
+      sd_publisher(dcs_resource.publisher)
+      sd_pubyear(dcs_resource.publication_year)
       dcs_resource.subjects.each { |dcs_subject| add_sd_subject(dcs_subject) }
       dcs_resource.contributors.each { |dcs_contributor| add_sd_contributor(dcs_contributor) }
       dcs_resource.dates.each { |dcs_date| add_sd_date(dcs_date) }
-      set_sd_language(dcs_resource.language)
-      set_sd_resource_type(dcs_resource.resource_type)
+      sd_language(dcs_resource.language)
+      sd_resource_type(dcs_resource.resource_type)
       dcs_resource.alternate_identifiers.each { |dcs_alternate_ident| add_sd_alternate_ident(dcs_alternate_ident) }
       dcs_resource.related_identifiers.each { |dcs_related_ident| add_sd_related_ident(dcs_related_ident) }
       dcs_resource.sizes.each { |dcs_size| add_sd_size(dcs_size) }
       dcs_resource.formats.each { |dcs_format| add_sd_format(dcs_format) }
-      set_sd_version(dcs_resource.version)
+      sd_version(dcs_resource.version)
       dcs_resource.rights_list.each { |dcs_rights| add_sd_rights(dcs_rights) }
       dcs_resource.descriptions.each { |dcs_description| add_sd_description(dcs_description) }
       dcs_resource.geo_locations.each { |dcs_geo_location| add_sd_geo_location(dcs_geo_location) }
@@ -72,7 +72,7 @@ module StashDatacite
       se_resource
     end
 
-    def set_sd_identifier(dcs_identifier)
+    def sd_identifier(dcs_identifier)
       return unless dcs_identifier
       se_resource.identifier_id = StashEngine::Identifier.create(
         identifier: dcs_identifier.value && dcs_identifier.value.strip,
@@ -111,11 +111,11 @@ module StashDatacite
       se_resource.title = dcs_title && dcs_title.value.strip
     end
 
-    def set_sd_publisher(dcs_publisher)
+    def sd_publisher(dcs_publisher)
       Publisher.create(publisher: dcs_publisher, resource_id: se_resource_id) unless dcs_publisher.blank?
     end
 
-    def set_sd_pubyear(dcs_publication_year)
+    def sd_pubyear(dcs_publication_year)
       return if dcs_publication_year.blank?
       PublicationYear.create(publication_year: dcs_publication_year, resource_id: se_resource_id)
     end
@@ -146,12 +146,12 @@ module StashDatacite
       )
     end
 
-    def set_sd_language(dcs_language)
+    def sd_language(dcs_language)
       return nil if dcs_language.blank?
       Language.create(language: dcs_language, resource_id: se_resource_id)
     end
 
-    def set_sd_resource_type(dcs_resource_type)
+    def sd_resource_type(dcs_resource_type)
       return nil unless dcs_resource_type
       dcs_resource_type_general = dcs_resource_type.resource_type_general
       dcs_resource_type_value = dcs_resource_type.value
@@ -204,7 +204,7 @@ module StashDatacite
       Format.create(format: dcs_format, resource_id: se_resource_id)
     end
 
-    def set_sd_version(dcs_version)
+    def sd_version(dcs_version)
       return if dcs_version.blank?
       Version.create(version: dcs_version, resource_id: se_resource_id)
     end
