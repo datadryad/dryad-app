@@ -33,9 +33,7 @@ module StashDatacite
         resource.download_uri = "https://repo.example.edu/#{resource.identifier_str}.zip"
         resource.save
 
-        landing_page_url = "https://stash-dev.example.edu/#{resource.identifier_str}"
-        citation = 'Chen, Hao (2016), A Zebrafish Model for Studies on Esophageal Epithelial Biology, Dataset, https://doi.org/10.15146/R3RG6G'
-        @schema_dataset = SchemaDataset.new(resource: resource, citation: citation, landing: landing_page_url)
+        @schema_dataset = SchemaDataset.new(resource: resource)
       end
 
       it 'generates schema.org JSON' do
