@@ -1,4 +1,4 @@
-require 'db_spec_helper'
+require 'rails_helper'
 require 'stash/organization/ror'
 
 module StashDatacite
@@ -49,7 +49,7 @@ module StashDatacite
       end
 
       it 'returns false if the associated ROR record could not be found' do
-        allow_any_instance_of(Stash::Organization::Ror).to receive(:find_by_ror_id).and_return(nil)
+        allow(Stash::Organization::Ror).to receive(:find_by_ror_id).and_return(nil)
         expect(@affil.fee_waivered?).to eql(false)
       end
 
