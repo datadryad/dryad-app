@@ -37,7 +37,7 @@ module StashEngine
     end
 
     def self.enqueue_deferred
-      StashEngine::ZenodoCopy.where(state: 'deferred').each do |zc|
+      StashEngine::ZenodoCopy.data.where(state: 'deferred').each do |zc|
         zc.update(state: 'enqueued')
         perform_later(zc.resource_id)
       end
