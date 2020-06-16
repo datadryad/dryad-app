@@ -648,6 +648,14 @@ module StashEngine
       ZenodoCopyJob.perform_later(id)
     end
 
+    # if publish: true then it just publishes, which is a separate operation than updating files
+    def send_software_to_zenodo(publish: false)
+      return unless identifier.has_zenodo_software?
+      rep_type = (publish == true ? 'software_publish' : 'software')
+      zc = ZenodoCopy.create(state: 'enqueued', identifier_id: identifier_id, resource_id: id, copy_type: rep_type)
+      ZenodoSoftwareJob.perform_later(zc.id)
+    end
+
     private
 
     # -----------------------------------------------------------
