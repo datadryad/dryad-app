@@ -236,6 +236,35 @@ namespace :identifiers do
     exit
   end
 
+  desc 'Generate a summary report of all items in Dryad'
+  task dataset_info_report: :environment do
+    # Get the year-month specified in YEAR_MONTH environment variable.
+    # If none, default to the previously completed month.
+    if ENV['YEAR_MONTH'].blank?
+      p 'No month specified, assuming all months.'
+      year_month = nil
+      filename = "dataset_info_report-#{Date.today.strftime('%Y-%m-%d')}.csv"
+    else
+      year_month = ENV['YEAR_MONTH']
+      filename = "dataset_info_report-#{year_month}.csv"
+    end
+
+    p "Writing dataset info report to file #{filename}"
+    CSV.open(filename, 'w') do |csv|
+      csv << ['Dataset DOI', 'Article DOI', 'Approval Date', 'Title',
+              'Size', 'Institution Name', 'Journal Name']
+      StashEngine::Identifier.publicly_viewable.each do |i|
+        approval_date_str = i.approval_date&.strftime('%Y-%m-%d')
+        res = i.latest_viewable_resource
+        next unless year_month.blank? || approval_date_str&.start_with?(year_month)
+        csv << [i.identifier, i.publication_article_doi, approval_date_str, res&.title,
+                i.storage_size, i.submitter_affiliation&.long_name, i.publication_name]
+      end
+    end
+    # Exit cleanly (don't let rake assume that an extra argument is another task to process)
+    exit
+  end
+
   desc 'populate payment info'
   task load_payment_info: :environment do
     p 'Populating payment information for published/embargoed items'
