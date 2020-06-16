@@ -4,8 +4,7 @@
 
 require_dependency 'stash_api/application_controller'
 require_relative 'datasets/submission_mixin'
-require 'stash/download/file'
-require 'stash/download/version'
+require 'stash/download/version_presigned'
 
 module StashApi
   class DatasetsController < ApplicationController
@@ -21,13 +20,6 @@ module StashApi
     # before_action :require_in_progress_resource, only: :update
     before_action :require_permission, only: :update
     before_action :lock_down_admin_only_params, only: %i[create update]
-    before_action :setup_streaming
-
-    # set up the Merritt file & version objects so they have access to the controller context before continuing
-    def setup_streaming
-      @version_streamer = Stash::Download::Version.new(controller_context: self)
-      @file_streamer = Stash::Download::File.new(controller_context: self)
-    end
 
     # get /datasets/<id>
     def show
@@ -111,9 +103,17 @@ module StashApi
     # get /datasets/<id>/download
     def download
       res = @stash_identifier.latest_downloadable_resource(user: @user)
-      if res&.may_download?(ui_user: @user)
-        @version_streamer.download(resource: res) do
-          redirect_to stash_url_helpers.landing_show_path(id: res.identifier_str, big: 'showme') # if it's an async
+      @version_presigned = Stash::Download::VersionPresigned.new(resource: res)
+      if res&.may_download?(ui_user: @user) && @version_presigned.valid_resource?
+        @status_hash = @version_presigned.download
+        if @status_hash[:status] == 200
+          StashEngine::CounterLogger.version_download_hit(request: request, resource: res)
+          redirect_to @status_hash[:url]
+        elsif @status_hash[:status] == 202
+          render status: 202, text: 'The version of the dataset is being assembled. ' \
+          "Check back in around #{time_ago_in_words(@resource.download_token.available + 30.seconds)} and it should be ready to download."
+        else
+          render status: 404, text: 'Not found'
         end
       else
         render text: 'download for this version of the dataset is unavailable', status: 404
