@@ -1,5 +1,4 @@
-require 'db_spec_helper'
-require 'json'
+require 'rails_helper'
 
 module StashDatacite
   module Resource
