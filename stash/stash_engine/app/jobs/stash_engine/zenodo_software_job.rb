@@ -10,7 +10,7 @@ module StashEngine
       @job_entry = StashEngine::ZenodoCopy.where(id: args[0]).first
       return if @job_entry.nil? || should_defer?
 
-      zr = Stash::ZenodoReplicate::Copier.new(copy_id: @job_entry.id)
+      zr = Stash::ZenodoSoftware::Copier.new(copy_id: @job_entry.id)
       zr.add_to_zenodo
     end
 
