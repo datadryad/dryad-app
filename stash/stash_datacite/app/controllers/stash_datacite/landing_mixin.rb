@@ -45,7 +45,7 @@ module StashDatacite
         version_string_for(resource, review),
         identifier_string_for(resource, review),
         review.publisher,
-        resource.publication_years
+        resource.publication_date&.strftime('%Y')
       )
     end
 
@@ -72,12 +72,8 @@ module StashDatacite
     end
 
     def schema_org_json_for(resource)
-      ds_presenter = StashDatacite::ResourcesController::DatasetPresenter.new(resource)
-      landing_page_url = stash_url_helpers.show_url(ds_presenter.external_identifier, host: request.host)
       schema_dataset = StashDatacite::Resource::SchemaDataset.new(
-        resource: resource,
-        citation: plain_citation,
-        landing: landing_page_url
+        resource: resource
       ).generate
       JSON.pretty_generate(schema_dataset).html_safe
     end
