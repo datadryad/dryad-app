@@ -17,15 +17,6 @@ module StashEngine # TODO: are we testing Author or Affiliation? (Or AuthorPatch
       )
     end
 
-    describe 'scopes' do
-      describe :affiliation_filled do
-        xit 'includes affiliations w/short name'
-        xit 'includes affiliations w/long name'
-        xit 'includes affiliations w/both'
-        xit 'excludes affiliations w/neither'
-      end
-    end
-
     describe 'emails' do
       before(:each) do
         @auth = Author.new(resource_id: resource.id, author_first_name: 'Jane', author_last_name: 'Doe')
@@ -45,21 +36,21 @@ module StashEngine # TODO: are we testing Author or Affiliation? (Or AuthorPatch
         expect(@auth.errors.empty?).to eql(true)
       end
     end
-
+    
     describe 'affiliations' do
-      attr_reader :affiliations
+#      attr_reader :affiliations
       before(:each) do
         @affiliations = ['Graceland', 'RCA', 'RCA Camden', 'Pickwick', 'BMG'].map do |affil|
           StashDatacite::Affiliation.create(long_name: affil)
         end
-        author.affiliation_ids = affiliations.map(&:id)
+        author.affiliation_ids = @affiliations.map(&:id)
         author.save
-        expect(author.affiliations.count).to eq(affiliations.size)
+        expect(author.affiliations.count).to eq(@affiliations.size)
       end
 
       describe '#affiliation' do
         it 'returns the first affiliation' do
-          expect(author.affiliation).to eq(affiliations.first)
+          expect(author.affiliation).to eq(@affiliations.first)
         end
       end
 
