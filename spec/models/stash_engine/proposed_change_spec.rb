@@ -1,5 +1,4 @@
 require 'rails_helper'
-#require_relative '../../../app/models/stash_engine/proposed_change'
 
 module StashEngine
   describe ProposedChange do
