@@ -25,7 +25,7 @@
   "distribution": {
     "@type": "DataDownload",
     "encodingFormat": "application/zip",
-    "contentUrl": "https://repo.example.edu/doi:10.15146/R3RG6G.zip"
+    "contentUrl": "http://localhost:3000/api/v2/datasets/doi%253A10.15146%252FR3RG6G/download"
   },
   "temporalCoverage": [
     "2016",
