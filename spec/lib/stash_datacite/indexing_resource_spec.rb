@@ -233,20 +233,33 @@ module Stash
           expect(@ir.calc_bounding_box.class).to eql(Datacite::Mapping::GeoLocationBox)
         end
 
-        xit 'should calculate the bounding box of a box as itself' do
-          @resource.geolocations.each_with_index { |obj, index| obj.destroy if index != 0 } # delete all but first item
-          @resource.geolocations.first.geolocation_point.destroy # destroy the point coordinates for this
+        it 'should calculate the bounding box of a box as itself' do
+          the_box = StashDatacite::GeolocationBox.create(sw_latitude: -63.393966,
+                                                         ne_latitude: -53.668786,
+                                                         sw_longitude: -105.476213,
+                                                         ne_longitude: -43.8285)
+          @resource.geolocations = [StashDatacite::Geolocation.create(box_id: the_box.id)]
           @resource.reload
-
           temp_ir = IndexingResource.new(resource: @resource)
-
-          box = Datacite::Mapping::GeoLocationBox.new(34.270836, -128.671875, 43.612217, -95.888672)
-          expect(temp_ir.calc_bounding_box).to eq(box)
+          mapbox = Datacite::Mapping::GeoLocationBox.new(south_latitude: -63.393966,
+                                                         north_latitude: -53.668786,
+                                                         west_longitude: -105.476213,
+                                                         east_longitude: -43.8285)
+          expect(temp_ir.calc_bounding_box).to eq(mapbox)
         end
 
-        xit 'should calculate the bounding box of a combination of points and boxes' do
-          box = Datacite::Mapping::GeoLocationBox.new(34.270836, -128.671875, 43.612217, -95.888672)
-          expect(@ir.calc_bounding_box).to eq(box)
+        it 'should calculate the bounding box of a combination of points and boxes' do
+          the_box = StashDatacite::GeolocationBox.create(sw_latitude: -63.393966,
+                                                         ne_latitude: -53.668786,
+                                                         sw_longitude: -105.476213,
+                                                         ne_longitude: -43.8285)
+          the_point = StashDatacite::GeolocationPoint.create(latitude: 23.45,
+                                                             longitude: 123.45)
+          @resource.geolocations = [StashDatacite::Geolocation.create(box_id: the_box.id),
+                                    StashDatacite::Geolocation.create(point_id: the_point.id)]
+          @resource.reload
+          mapbox = Datacite::Mapping::GeoLocationBox.new(-63.393966, -105.476213, 23.45, 123.45)
+          expect(@ir.calc_bounding_box).to eq(mapbox)
         end
       end
 
@@ -257,8 +270,14 @@ module Stash
       end
 
       describe '#bounding_box_envelope' do
-        xit 'gives a set of numbers like SOLR or Geoblacklight likes' do
-          expect(@ir.bounding_box_envelope).to eql('ENVELOPE(-128.671875, -95.888672, 43.612217, 34.270836)')
+        it 'gives a set of numbers like SOLR or Geoblacklight likes' do
+          the_box = StashDatacite::GeolocationBox.create(sw_latitude: -63.393966,
+                                                         ne_latitude: -53.668786,
+                                                         sw_longitude: -105.476213,
+                                                         ne_longitude: -43.8285)
+          @resource.geolocations = [StashDatacite::Geolocation.create(box_id: the_box.id)]
+          @resource.reload
+          expect(@ir.bounding_box_envelope).to eql('ENVELOPE(-105.476213, -43.8285, -53.668786, -63.393966)')
         end
       end
 
