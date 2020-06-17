@@ -1,8 +1,5 @@
-require 'spec_helper'
-require 'ostruct'
-require 'byebug'
-require 'stash/import/crossref'
-require 'serrano'
+# -*- coding: utf-8 -*-
+require 'rails_helper'
 
 module Stash
   module Import
@@ -300,7 +297,7 @@ module Stash
         it 'sets the publication_date' do
           cr = Crossref.new(resource: @resource, crossref_json: { 'published-online' => { 'date-parts' => PAST_PUBLICATION_DATE } })
           cr.send(:populate_publication_date)
-          expect(@resource.publication_date).to eql(cr.send(:date_parts_to_date, PAST_PUBLICATION_DATE))
+          expect(@resource.publication_date.strftime('%Y-%m-%d')).to eql(cr.send(:date_parts_to_date, PAST_PUBLICATION_DATE).strftime('%Y-%m-%d'))
         end
 
         it 'ignores blank published-online dates' do
@@ -649,7 +646,7 @@ module Stash
           expect(proposed_change.approved).to eql(false)
           expect(proposed_change.authors).to eql(AUTHOR.to_json)
           expect(proposed_change.provenance).to eql('crossref')
-          expect(proposed_change.publication_date).to eql(@cr.send(:date_parts_to_date, FUTURE_PUBLICATION_DATE))
+          expect(proposed_change.publication_date.strftime('%Y-%m-%d')).to eql(@cr.send(:date_parts_to_date, FUTURE_PUBLICATION_DATE).strftime('%Y-%m-%d'))
           expect(proposed_change.publication_doi).to eql(DOI)
           expect(proposed_change.publication_name).to eql(PUBLISHER)
           expect(proposed_change.score).to eql(1.0)
