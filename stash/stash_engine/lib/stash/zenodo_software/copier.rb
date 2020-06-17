@@ -97,7 +97,7 @@ module Stash
         end
 
         # update metadata
-        @deposit.update_metadata(doi: @copy.software_doi)
+        @deposit.update_metadata(software_upload: true, doi: @copy.software_doi)
 
         # update files
         @file_collection.ensure_local_files
@@ -115,7 +115,7 @@ module Stash
       def publish_dataset
         # Zenodo only allows publishing if there are file changes in this version, so it's different depending on status
         @deposit.reopen_for_editing if @resp[:state] == 'done'
-        @deposit.update_metadata(doi: @copy.software_doi)
+        @deposit.update_metadata(software_upload: true, doi: @copy.software_doi)
         @deposit.publish
         @copy.update(state: 'finished')
       end
@@ -129,7 +129,7 @@ module Stash
                           'creating new versions for metadata-only changes is not allowed in Zenodo.')
           return
         end
-        @deposit.update_metadata(doi: @copy.software_doi)
+        @deposit.update_metadata(software_upload: true, doi: @copy.software_doi)
         @copy.update(state: 'finished')
       end
 
