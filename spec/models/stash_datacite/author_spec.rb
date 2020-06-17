@@ -36,9 +36,8 @@ module StashEngine # TODO: are we testing Author or Affiliation? (Or AuthorPatch
         expect(@auth.errors.empty?).to eql(true)
       end
     end
-    
+
     describe 'affiliations' do
-#      attr_reader :affiliations
       before(:each) do
         @affiliations = ['Graceland', 'RCA', 'RCA Camden', 'Pickwick', 'BMG'].map do |affil|
           StashDatacite::Affiliation.create(long_name: affil)
