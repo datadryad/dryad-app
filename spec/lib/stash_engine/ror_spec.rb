@@ -1,8 +1,4 @@
-require 'spec_helper'
-require 'ostruct'
-require 'byebug'
-require 'stash/organization/ror'
-require 'webmock/rspec'
+require 'rails_helper'
 
 module Stash
   module Organization
