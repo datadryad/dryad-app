@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 require 'rails_helper'
 
 module Stash
@@ -646,7 +645,8 @@ module Stash
           expect(proposed_change.approved).to eql(false)
           expect(proposed_change.authors).to eql(AUTHOR.to_json)
           expect(proposed_change.provenance).to eql('crossref')
-          expect(proposed_change.publication_date.strftime('%Y-%m-%d')).to eql(@cr.send(:date_parts_to_date, FUTURE_PUBLICATION_DATE).strftime('%Y-%m-%d'))
+          target_date = @cr.send(:date_parts_to_date, FUTURE_PUBLICATION_DATE).strftime('%Y-%m-%d')
+          expect(proposed_change.publication_date.strftime('%Y-%m-%d')).to eql(target_date)
           expect(proposed_change.publication_doi).to eql(DOI)
           expect(proposed_change.publication_name).to eql(PUBLISHER)
           expect(proposed_change.score).to eql(1.0)
