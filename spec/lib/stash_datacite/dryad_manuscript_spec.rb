@@ -1,7 +1,5 @@
-require 'spec_helper'
-require 'byebug'
-require 'stash/import/dryad_manuscript'
-require 'fixtures/dryad_manuscript_sim'
+require 'rails_helper'
+require 'fixtures/stash_datacite/dryad_manuscript_sim'
 
 module Stash
   module Import
