@@ -1,4 +1,4 @@
-require 'db_spec_helper'
+require 'rails_helper'
 
 module StashEngine # TODO: are we testing Author or Affiliation? (Or AuthorPatch?)
   describe Author do
