@@ -70,6 +70,10 @@ module Stash
         end
       end
 
+      def license_for_software
+        @resource&.identifier&.software_license&.identifier || 'MIT'
+      end
+
       def keywords
         @resource.subjects&.map(&:subject)
       end
@@ -86,6 +90,10 @@ module Stash
           { relation: ri.relation_type_friendly&.camelize(:lower), identifier: ri.related_identifier }
         end
 
+        # this relation is for myself and created in Dryad, so doesn't make sense here
+        related.delete_if{|i| i[:relation] == 'isSupplementTo' && i[:identifier].include?('/zenodo.') && @software_upload }
+
+        related.push({ relation: 'isSupplementTo', identifier: @resource.identifier.identifier }) if @software_upload
         related ||= []
         related
       end
