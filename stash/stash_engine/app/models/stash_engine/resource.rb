@@ -652,6 +652,7 @@ module StashEngine
     def send_software_to_zenodo(publish: false)
       return unless identifier.has_zenodo_software?
       rep_type = (publish == true ? 'software_publish' : 'software')
+      return if ZenodoCopy.where(resource_id: id, copy_type: rep_type).count.positive? # don't add again if it's already sent
       zc = ZenodoCopy.create(state: 'enqueued', identifier_id: identifier_id, resource_id: id, copy_type: rep_type)
       ZenodoSoftwareJob.perform_later(zc.id)
     end
