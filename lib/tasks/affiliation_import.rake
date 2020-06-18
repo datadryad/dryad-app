@@ -1,108 +1,106 @@
 # -*- coding: utf-8 -*-
 require 'csv'
 
+
+
 namespace :affiliation_import do
 
-  ROOT = Rails.root.join('tmp', 'Results').freeze
+  ROOT = Rails.root.join('/tmp').freeze
 
   desc 'Process all of the TSV files'
-  task process_ror_tsv: :environment do
+  task process_ror_csv: :environment do
     start_time = Time.now
-    p "Loading Journal, Author and Affiliation info from TSV files in tmp/Results"
+    @dois_to_skip = []
+    @live_mode = false
 
-    crosswalk = CSV.read("#{ROOT}/Crosswalk.csv", headers: true)
-
-    entries = []
-    dois_to_skip = []
+    case ENV['AFFILIATION_MODE']
+    when nil
+      puts 'Environment variable AFFILIATION_MODE is blank, assuming test mode.'
+    when 'live'
+      puts 'Starting live processing due to environment variable AFFILIATION_MODE.'
+      @live_mode = true
+    else
+      puts "Environment variable AFFILIATION_MODE is #{ENV['AFFILIATION_MODE']}, entering test mode."
+    end
+    
+    puts 'Loading affiliation info from CSV files in /tmp/dryad_affiliations*'
+    
     Dir.entries(ROOT).each do |f|
-      next unless f.end_with?('.tsv')
-
+      next unless f.start_with?('dryad_affiliations')
       qualified_file_name = "#{ROOT}/#{f}"
-      entries += read_tsv_file(file_name: qualified_file_name).select do |row|
-        row['selected']&.downcase == 'true' && row['tokenIndex'] == '1'
-      end
+      puts "===== Processing file #{qualified_file_name} ====="
+      process_file(file_name: qualified_file_name)
     end
-    p "Found #{entries.length} entries to process."
 
-    curr_doi = ''
-    entries.map do |entry|
-      next if dois_to_skip.include?(entry['DOI'])
-      matched = crosswalk.select { |cw| cw['ArticleDOI']&.gsub('doi:', '') == entry['DOI']&.gsub('doi:', '') }.first
-      next unless entry['DOI'].present? && matched.present?
+    puts "DONE! Elapsed time: #{Time.at(Time.now - start_time).utc.strftime("%H:%M:%S")}"
+  end
 
-      identifier = StashEngine::Identifier.where("stash_engine_identifiers.identifier like ?", "%#{matched['PackageDOI'].gsub('doi:', '')}").first
-      dois_to_skip << entry['DOI'] unless identifier.present?
-      p "****** NO MATCH FOR: (#{entry['DOI']}) #{entry['title']}" unless identifier.present?
+  def process_file(file_name:)
+    CSV.foreach(file_name) do |entry|
+      #puts "<< #{entry} >>"
+      next if entry[0] == 'DOI' && entry[1] == 'person' # header row
+
+      doi, person, organization, ror_original, ror, identifier_date, supplement_to, \
+      publication_date, title, type, update_date, organization_date = entry
+      
+      next if @dois_to_skip.include?(doi)
+      next unless doi.present?
+      identifier = StashEngine::Identifier.where(identifier: doi).first
+      @dois_to_skip << doi unless identifier.present?
+      puts "****** NO DATASET FOUND WITH ID: #{doi} -- #{title}" unless identifier.present?
       next unless identifier.present?
-
-      p "Matched: #{entry['title']} -- Journal DOI: #{entry['DOI']} => Dataset DOI: #{identifier.to_s}" unless curr_doi == entry['DOI']
-      curr_doi = entry['DOI']
-      handle_journal_name(identifier: identifier, hash: entry)
-      handle_journal_doi(identifier: identifier, hash: entry)
-
       next unless identifier.latest_resource.present?
-      handle_author(resource: identifier.latest_resource, hash: entry)
+      puts "Processing #{identifier.to_s} #{title}"
+      handle_author(resource: identifier.latest_resource, name: person, ror: ror, org_name: organization)
     end
-    p "DONE! Elapsed time: #{(Time.now - start_time).strftime('%H:%M:%S')}"
   end
 
-  def handle_author(resource:, hash:)
-    return nil unless resource.present? && hash['family'].present?
-    author = StashEngine::Author.where('stash_engine_authors.resource_id = ? AND LOWER(stash_engine_authors.author_last_name) = ? AND LOWER(stash_engine_authors.author_first_name) = ?',
-      resource.id, hash['family'], hash['given']).first
-    author = StashEngine::Author.new(resource_id: resource.id, author_last_name: hash['family'], author_first_name: hash['given']) unless author.present?
-    p "    Assigning author: #{author.author_last_name}, #{author.author_first_name}"
-    author.save
-    handle_affiliation(author: author, hash: hash)
-  end
+  def handle_author(resource:, name:, ror:, org_name:)
+    return nil unless resource.present? && name.present?
+    
+    # start with the assuption that the firstname lastname split is at the first space
+    parts = name.split(' ')
+    first = parts[0]
+    last = parts[1..-1].join(' ')
+    puts "searching authors for resource #{resource.id}, first[#{first}], last[#{last}]"
+    author = StashEngine::Author.where('stash_engine_authors.resource_id = ? AND LOWER(stash_engine_authors.author_last_name) = ? AND LOWER(stash_engine_authors.author_first_name) = ?', resource.id, last, first).first
 
-  def handle_affiliation(author:, hash:)
-    return nil unless author.present? && hash['organizationLookupName'].present?
-    affiliation = StashDatacite::Affiliation.where('dcs_affiliations.ror_id = ? OR dcs_affiliations.long_name = ?',
-      hash['ROR'], hash['organizationLookupName']).first
-    affiliation = StashDatacite::Affiliation.find_or_initialize_by(long_name: hash['organizationLookupName'], ror_id: hash['ROR'])
-    p "    Assigning affiliation: #{affiliation.long_name} --> #{affiliation.ror_id}"
-    affiliation.authors << author
-    affiliation.save
-  end
-
-  def handle_journal_name(identifier:, hash:)
-    return nil unless identifier.present? && hash['journal'].present?
-    datum = StashEngine::InternalDatum.find_or_initialize_by(identifier_id: identifier.id, data_type: 'publicationName')
-    datum.value = hash['journal']
-    p "    Assigning Journal: '#{datum.value}'" if datum.value&.include?('�')
-    datum.save
-  end
-
-  def handle_journal_doi(identifier:, hash:)
-    return nil unless identifier.present? && hash['DOI'].present?
-    datum = StashEngine::InternalDatum.find_or_initialize_by(identifier_id: identifier.id, data_type: 'publicationDOI')
-    datum.value = hash['DOI']
-    p "    Assigning Journal DOI: '#{datum.value}'"
-    datum.save if hash['DOI']
-  end
-
-  def read_tsv_file(file_name:)
-    params = {
-      col_sep: "\t",
-      headers: true,
-      encoding: "utf-8"
-    }
-    return nil unless File.exists?(file_name)
-    CSV.read(file_name, params.merge({ quote_char: '^' }))
-
-  rescue CSV::MalformedCSVError
-    begin
-      CSV.read(file_name, params.merge({ quote_char: '|' }))
-
-    rescue CSV::MalformedCSVError
-      begin
-        CSV.read(file_name, params.merge({ quote_char: '~' }))
-
-      rescue CSV::MalformedCSVError
-        CSV.read(file_name, params.merge({ quote_char: '@' }))
+    if author.nil? && parts.size > 2
+      # try split at second space, see if we find an author that way
+      first = parts[0..1].join(' ')
+      last = parts[2..-1].join(' ')
+      puts "searching authors for resource #{resource.id}, first[#{first}], last[#{last}]"
+      author = StashEngine::Author.where('stash_engine_authors.resource_id = ? AND LOWER(stash_engine_authors.author_last_name) = ? AND LOWER(stash_engine_authors.author_first_name) = ?', resource.id, last, first).first
+    end
+    
+    if author.blank?
+      puts "    Creating new author: #{author.author_last_name}, #{author.author_first_name}"
+      if @live_mode
+        author = StashEngine::Author.new(resource_id: resource.id, author_last_name: last, author_first_name: first)
+        author.save
       end
     end
+    handle_affiliation(author: author, ror: ror, org_name: org_name)
   end
 
+  def handle_affiliation(author:, ror:, org_name:)
+    # what does brian's code do?
+    # - find an existing affiliation (twice?)
+    # - add it to the author
+    # what do I want my code to do?
+    # - If there is a difference between the ror and the existing item
+    #   ROR, and the item is pre-launch, update it
+    # - If there is no ror in the item, add it (either by ror or by the long_name)
+
+    return nil unless author.present? && org_name.present?
+    affiliation = StashDatacite::Affiliation.where('dcs_affiliations.ror_id = ? OR dcs_affiliations.long_name = ?',
+      ror, org_name).first
+
+    puts "    Assigning affiliation: #{affiliation.long_name} --> #{affiliation.ror_id}"
+    if @live_mode
+      affiliation = StashDatacite::Affiliation.find_or_initialize_by(long_name: org_name, ror_id: ror)
+      affiliation.authors << author
+      affiliation.save
+    end
+  end
 end
