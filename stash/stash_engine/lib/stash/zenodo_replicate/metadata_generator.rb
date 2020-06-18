@@ -9,7 +9,7 @@ module Stash
     class MetadataGenerator
       def initialize(resource:, software_upload: false)
         # Software uploads are a little different because 1) they use Zenodo DOIs, and 2) They use a different license
-        # than the dataset license.
+        # than the dataset license and they should be 'software' rather than 'dataset'.
         @resource = resource
         @software_upload = software_upload
       end
@@ -31,8 +31,8 @@ module Stash
       end
 
       def upload_type
-        @resource.resource_type.resource_type_general
-        # @resource&.&resource_type&.resource_type_general
+        return @resource.resource_type.resource_type_general unless @software_upload
+        'software'
       end
 
       def publication_date
