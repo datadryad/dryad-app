@@ -99,9 +99,9 @@ module Stash
         end
 
         # this relation is for myself and created in Dryad, so doesn't make sense here
-        related.delete_if{|i| i[:relation] == 'isSupplementTo' && i[:identifier].include?('/zenodo.') && @software_upload }
+        related.delete_if { |i| i[:relation] == 'isSupplementTo' && i[:identifier].include?('/zenodo.') && @software_upload }
 
-        related.push({ relation: 'isSupplementTo', identifier: @resource.identifier.identifier }) if @software_upload
+        related.push(relation: 'isSupplementTo', identifier: @resource.identifier.identifier) if @software_upload
         related ||= []
         related
       end
