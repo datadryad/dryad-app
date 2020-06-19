@@ -1369,6 +1369,62 @@ module StashEngine
       end
     end
 
+    describe :software_uploads_duplication do
+      attr_reader :res1
+      attr_reader :created_files
+      attr_reader :copied_files
+      attr_reader :deleted_files
+      before(:each) do
+        @res1 = Resource.create(user_id: user.id)
+
+        @created_files = Array.new(3) do |i|
+          SoftwareUpload.create(
+              resource: res1,
+              file_state: 'created',
+              upload_file_name: "created#{i}.bin",
+              upload_file_size: i * 3
+          )
+        end
+        @copied_files = Array.new(3) do |i|
+          SoftwareUpload.create(
+              resource: res1,
+              file_state: 'copied',
+              upload_file_name: "copied#{i}.bin",
+              upload_file_size: i * 5
+          )
+        end
+        @deleted_files = Array.new(3) do |i|
+          SoftwareUpload.create(
+              resource: res1,
+              file_state: 'deleted',
+              upload_file_name: "deleted#{i}.bin",
+              upload_file_size: i * 7
+          )
+        end
+      end
+
+      describe 'amoeba duplication' do
+        attr_reader :res2
+        before(:each) do
+          @res2 = res1.amoeba_dup
+        end
+
+        it 'copies the records' do
+          expected_names = res1.software_uploads.map(&:upload_file_name)
+          actual_names = res2.software_uploads.map(&:upload_file_name)
+          expect(actual_names).to contain_exactly(*expected_names)
+        end
+
+        it 'sets non-deleted records to "copied"' do
+          res2.software_uploads.where.not(file_state: 'deleted').each { |f| expect(f.file_state).to eq('copied') }
+        end
+
+        it 'doesn\'t copy deleted files' do
+          expect(res2.software_uploads.deleted).to be_empty
+        end
+      end
+    end
+
     describe '#send_to_zenodo' do
 
       before(:each) do
