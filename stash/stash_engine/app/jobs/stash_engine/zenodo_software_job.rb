@@ -4,6 +4,8 @@ module StashEngine
   class ZenodoSoftwareJob < ::ActiveJob::Base
     queue_as :zenodo_software
 
+    attr_accessor :job_entry
+
     # unlike the zenodo_copy_job, this one takes a ZenodoCopy.id instead of a resource_id since it needs a little more info
     # and may do multiple actions on the same resource (such as sending and then publishing the same resource)
     def perform(*args)
@@ -16,7 +18,7 @@ module StashEngine
 
     def should_defer?
       if File.exist?(ZenodoCopyJob::DEFERRED_TOUCH_FILE) # use same touch file for both software and replication for Zenodo
-        @job.update(state: 'deferred')
+        @job_entry.update(state: 'deferred')
         return true
       end
       false
