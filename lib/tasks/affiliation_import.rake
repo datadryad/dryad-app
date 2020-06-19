@@ -63,7 +63,7 @@ namespace :affiliation_import do
     parts = name.split(' ')
     first = parts[0]
     last = parts[1..-1].join(' ')
-    puts "searching authors for resource #{resource.id}, first[#{first}], last[#{last}]"
+    puts "  searching authors for resource #{resource.id}, first[#{first}], last[#{last}]"
     author = StashEngine::Author.where('stash_engine_authors.resource_id = ? ' \
                                        'AND LOWER(stash_engine_authors.author_last_name) = ? ' \
                                        'AND LOWER(stash_engine_authors.author_first_name) = ?', resource.id, last, first).first
@@ -72,14 +72,14 @@ namespace :affiliation_import do
       # try split at second space, see if we find an author that way
       first = parts[0..1].join(' ')
       last = parts[2..-1].join(' ')
-      puts "searching authors for resource #{resource.id}, first[#{first}], last[#{last}]"
+      puts "  searching authors for resource #{resource.id}, first[#{first}], last[#{last}]"
       author = StashEngine::Author.where('stash_engine_authors.resource_id = ? ' \
                                          'AND LOWER(stash_engine_authors.author_last_name) = ? ' \
                                          'AND LOWER(stash_engine_authors.author_first_name) = ?', resource.id, last, first).first
     end
 
     if author.blank?
-      puts "  WARNING! AUTHOR NOT FOUND!! #{author.author_last_name}, #{author.author_first_name}"
+      puts "    WARNING! AUTHOR NOT FOUND!! #{author.author_last_name}, #{author.author_first_name}"
       if @live_mode
         # author = StashEngine::Author.new(resource_id: resource.id, author_last_name: last, author_first_name: first)
         # author.save
@@ -92,7 +92,7 @@ namespace :affiliation_import do
     return nil unless author.present? && org_name.present?
 
     if author.affiliations.present? && author.affiliations.size > 1
-      puts "   WARNING! Skipping author with multiple affiliations. author_id=#{author.id}"
+      puts "    WARNING! Skipping author with multiple affiliations. author_id=#{author.id}"
       return
     end
 
@@ -103,7 +103,7 @@ namespace :affiliation_import do
     end
 
     if author.affiliations.present? && ror.blank?
-      puts "   WARNING! Author already has affiliation, and input file has no ROR. author_id=#{author.id}"
+      puts "    WARNING! Author already has affiliation, and input file has no ROR. author_id=#{author.id}"
       return
     end
 
