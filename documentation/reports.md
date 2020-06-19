@@ -7,7 +7,8 @@ Shopping Cart Report
 -----------------------
 
 The "Shopping Cart Report" is a report of how/when we collected
-payment for individual datasets.
+payment for individual datasets. It is primarily used for internal
+tracking of payments.
 
 Run it with a command like:
 ```
@@ -24,6 +25,28 @@ Fields in the shopping cart report
 - Institution Name
 - Journal Name
 - Sponsor Name
+
+
+Dataset Info Report
+---------------------
+
+The "Dataset Info Report" is a summary report of the most important
+information for individual datasets. It is primarily used to provide a
+list of Dryad's contents to external users.
+
+Run it with a command like:
+```
+RAILS_ENV=production bundle exec rake identifiers:dataset_info_report
+```
+
+Fields in the dataset info report
+- Dataset DOI
+- Article DOI
+- Approval Date
+- Title
+- Size
+- Institution Name
+- Journal Name
 
 
 Make Data Count / Counter Report

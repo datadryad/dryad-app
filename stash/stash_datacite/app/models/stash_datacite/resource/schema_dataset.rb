@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 require 'json'
+require 'stash/import/crossref'
+
 module StashDatacite
   module Resource
     # this class creates a schema.org dataset structure that can be output as json+ld or others
@@ -11,11 +13,10 @@ module StashDatacite
         'name' => :names,
         'description' => :descriptions,
         'url' => :url,
-        'sameAs' => :same_as,
+        'identifier' => :url,
         'version' => :version,
         'keywords' => :keywords,
         'creator' => :authors,
-        'includedInDataCatalog' => :included_in_data_catalog,
         'distribution' => :distribution,
         'temporalCoverage' => :temporal_coverages,
         'spatialCoverage' => :spatial_coverages,
@@ -23,10 +24,8 @@ module StashDatacite
         'license' => :license
       }.freeze
 
-      def initialize(resource:, citation:, landing:)
+      def initialize(resource:)
         @resource = resource
-        @citation = citation
-        @landing = landing
       end
 
       def generate
@@ -58,12 +57,7 @@ module StashDatacite
 
       # google says URLs of the Location of a page describing the dataset
       def url
-        # the url should be the dx.doi, this seems like view logic
         "https://doi.org/#{@resource.try(:identifier).try(:identifier)}"
-      end
-
-      def same_as
-        @landing
       end
 
       def version
@@ -78,17 +72,35 @@ module StashDatacite
       def authors
         return [] unless @resource.authors
         @resource.authors.map do |i|
-          { '@type' => 'Person', 'givenName' => i.author_first_name, 'familyName' => i.author_last_name }
+          orcid = i.author_orcid
+          affiliation = i.affiliation
+          author_hash = {
+            '@type' => 'Person',
+            'name' => i.author_standard_name,
+            'givenName' => i.author_first_name,
+            'familyName' => i.author_last_name
+          }.compact
+          author_hash[:sameAs] = "http://orcid.org/#{orcid}" if orcid
+          if affiliation
+            author_hash[:affiliation] = {
+              '@type' => 'Organization',
+              'sameAs' => affiliation.ror_id,
+              'name' => affiliation.smart_name
+            }.compact
+          end
+          author_hash
         end
       end
 
-      def included_in_data_catalog
-        'https://merritt.cdlib.org'
-      end
-
       def distribution
-        return nil unless @resource.download_uri
-        { '@type' => 'DataDownload', 'fileFormat' => 'application/zip', 'contentURL' => @resource.download_uri }
+        target_id = CGI.escape(@resource.identifier&.to_s)
+        download_url = StashApi::Engine.routes.url_helpers.download_dataset_url(target_id)
+        return nil unless download_url
+        {
+          '@type' => 'DataDownload',
+          'encodingFormat' => 'application/zip',
+          'contentUrl' => download_url
+        }
       end
 
       def temporal_coverages
@@ -136,7 +148,11 @@ module StashDatacite
         end
       end
 
-      attr_reader :citation
+      def citation
+        return unless @resource.identifier&.publication_article_doi
+        article_doi = Stash::Import::Crossref.bare_doi(doi_string: @resource.identifier.publication_article_doi)
+        "http://doi.org/#{article_doi}"
+      end
 
       def license
         return [] unless @resource.rights

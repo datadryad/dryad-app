@@ -1,5 +1,0 @@
-test:
-  feedback_email_from: stash-noreply@example.edu
-  feedback_email_to: [stash-dev@example.edu, stash-ops@example.edu]
-  funder_exemptions:
-    - 'Happy Clown School'
