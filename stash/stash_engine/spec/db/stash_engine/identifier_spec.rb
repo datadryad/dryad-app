@@ -880,5 +880,24 @@ module StashEngine
       end
     end
 
+    describe '#has_zenodo_software' do
+      before(:each) do
+        @software_upload = SoftwareUpload.create(upload_file_name: 'test', file_state: 'created')
+      end
+
+      it 'correctly detects current zenodo software' do
+        @res3.software_uploads << @software_upload
+        expect(@identifier.has_zenodo_software?).to eq(true)
+      end
+
+      it 'correctly detects former zenodo software' do
+        @res1.software_uploads << @software_upload
+        expect(@identifier.has_zenodo_software?).to eq(true)
+      end
+
+      it 'correctly detects no zenodo software' do
+        expect(@identifier.has_zenodo_software?).to eq(false)
+      end
+    end
   end
 end
