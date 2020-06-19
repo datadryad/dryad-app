@@ -1379,26 +1379,26 @@ module StashEngine
 
         @created_files = Array.new(3) do |i|
           SoftwareUpload.create(
-              resource: res1,
-              file_state: 'created',
-              upload_file_name: "created#{i}.bin",
-              upload_file_size: i * 3
+            resource: res1,
+            file_state: 'created',
+            upload_file_name: "created#{i}.bin",
+            upload_file_size: i * 3
           )
         end
         @copied_files = Array.new(3) do |i|
           SoftwareUpload.create(
-              resource: res1,
-              file_state: 'copied',
-              upload_file_name: "copied#{i}.bin",
-              upload_file_size: i * 5
+            resource: res1,
+            file_state: 'copied',
+            upload_file_name: "copied#{i}.bin",
+            upload_file_size: i * 5
           )
         end
         @deleted_files = Array.new(3) do |i|
           SoftwareUpload.create(
-              resource: res1,
-              file_state: 'deleted',
-              upload_file_name: "deleted#{i}.bin",
-              upload_file_size: i * 7
+            resource: res1,
+            file_state: 'deleted',
+            upload_file_name: "deleted#{i}.bin",
+            upload_file_size: i * 7
           )
         end
       end
