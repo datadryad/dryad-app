@@ -24,7 +24,7 @@
 
 <div class="bio">
   <img src="/images/lpolischuk.jpg" alt="Lori Polischuk" title="Lori Polischuk">
-  <p><strong>Lori Polischuk</strong>, BA Political Science, MA Political Science<br>Curator<br>Lori has a research and teaching background in political science and public policy. Prior to joining Dryad she worked in healthcare and biotechnology, most recently with Invitae as a Project Manager leading an API integration project. In her spare time, Lori enjoys sharpening her data analysis skills, traveling in an RV with her pets, and following politics.</p>
+  <p><strong>Lori Polischuk</strong>, BA Political Science, MA Political Science<br>Curation Program Manager<br>Lori has a research and teaching background in political science and public policy. Prior to joining Dryad she worked in healthcare and biotechnology, most recently with Invitae as a Project Manager leading an API integration project. In her spare time, Lori enjoys sharpening her data analysis skills, traveling in an RV with her pets, and following politics.</p>
 </div>
 
 <div class="bio">
