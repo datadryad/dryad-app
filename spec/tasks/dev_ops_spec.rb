@@ -17,7 +17,17 @@ describe 'dev_ops:retry_zenodo_errors', type: :task do
       allow(StashEngine::ZenodoCopyJob).to receive(:perform_later).and_return(nil)
     end
 
-    it 'only processes ones with less than 4 retries' do
+    it 'only processes ones with less than 4 retries (zenodo_copy)' do
+      expect { task.execute }.to output(/Adding resource_id: #{@zc2.resource_id}/).to_stdout
+      @zc1.reload
+      @zc2.reload
+      expect(@zc2.state).to eq('enqueued')
+      expect(@zc1.state).to eq('error')
+    end
+
+    it 'processes ones with less than 4 retries (zenodo software)' do
+      @zc1.update(copy_type: 'software')
+      @zc2.update(copy_type: 'software')
       expect { task.execute }.to output(/Adding resource_id: #{@zc2.resource_id}/).to_stdout
       @zc1.reload
       @zc2.reload
