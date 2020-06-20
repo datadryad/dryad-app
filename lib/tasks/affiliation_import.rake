@@ -79,7 +79,7 @@ namespace :affiliation_import do
     end
 
     if author.blank?
-      puts "    WARNING! AUTHOR NOT FOUND!! #{author.author_last_name}, #{author.author_first_name}"
+      puts "    WARNING! AUTHOR NOT FOUND!! #{last}, #{first}"
       if @live_mode
         # author = StashEngine::Author.new(resource_id: resource.id, author_last_name: last, author_first_name: first)
         # author.save
@@ -93,6 +93,11 @@ namespace :affiliation_import do
 
     if author.affiliations.present? && author.affiliations.size > 1
       puts "    WARNING! Skipping author with multiple affiliations. author_id=#{author.id}"
+      return
+    end
+
+    if author.resource.blank? || author.resource.publication_date.blank?
+      puts "    WARNING! Skipping author with blank publication date. author_id=#{author.id}"
       return
     end
 
