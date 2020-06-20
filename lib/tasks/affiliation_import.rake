@@ -80,6 +80,16 @@ namespace :affiliation_import do
                                          'AND LOWER(stash_engine_authors.author_first_name) = ?', resource.id, last, first).first
     end
 
+    if author.nil? && parts.size > 3
+      # try split at third space, see if we find an author that way
+      first = parts[0..2].join(' ')
+      last = parts[3..-1].join(' ')
+      puts "  searching authors for resource #{resource.id}, first[#{first}], last[#{last}]"
+      author = StashEngine::Author.where('stash_engine_authors.resource_id = ? ' \
+                                         'AND LOWER(stash_engine_authors.author_last_name) = ? ' \
+                                         'AND LOWER(stash_engine_authors.author_first_name) = ?', resource.id, last, first).first
+    end
+
     if author.blank?
       puts "    WARNING! AUTHOR NOT FOUND!! #{last}, #{first}"
       if @live_mode
@@ -94,7 +104,7 @@ namespace :affiliation_import do
     return nil unless author.present? && org_name.present?
 
     if author.affiliations.present? && author.affiliations.size > 1
-      puts "    WARNING! Skipping author with multiple affiliations. author_id=#{author.id}"
+      puts "    Skipping author with multiple affiliations. author_id=#{author.id}"
       return
     end
 
@@ -105,12 +115,12 @@ namespace :affiliation_import do
 
     dryad_v2_launch_date = Date.parse('2019-9-17')
     if author.resource.publication_date >= dryad_v2_launch_date
-      puts "    skipping post-lauch item; assuming its affiliations are correct resource_id=#{author.resource}"
+      puts "    Skipping post-lauch item; assuming its affiliations are correct resource_id=#{author.resource}"
       return
     end
 
     if author.affiliations.present? && ror.blank?
-      puts "    WARNING! Author already has affiliation, and input file has no ROR. author_id=#{author.id}"
+      puts "    Author already has affiliation, and input file has no ROR, but replacing anyway. author_id=#{author.id}"
       return
     end
 
